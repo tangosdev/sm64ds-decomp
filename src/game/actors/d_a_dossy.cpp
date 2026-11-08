@@ -16,9 +16,9 @@
 // - dExtAnmModel_c::SetAnim and the other Fix12<int>-by-value calls stay
 //   mangled. A member SetAnim with Fix12<int> speed in func_ov065_021182e4
 //   changes that function.
-// - func_ov065_021180d4, func_ov065_02118c4c and func_ov065_02119210 take
-//   daDossyCap_c, so they stay free functions. decl_common.h still
-//   declares those forms.
+// - These three helpers stay as address-named free-function seams. The
+//   original ownership and names are unproven; func_ov065_02119210 is typed
+//   with its caller's daDossyCap_c * view.
 // - func_ov065_02118838 keeps `(i << 9)` platform addressing, spelled
 //   `((daDossy_c *)(c + (i << 9)))->mPlatforms[0].field`. A typed
 //   DorriePlatform walk, a DorriePlatform * local over that address, or
@@ -149,15 +149,13 @@ unsigned short DecIfAbove0_Short(
     unsigned short *counter); /* local extern: named parameters preserve @NNN identities */
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern void hold_d_a_dossy(void *self, void *kcl, void *mtx, Fix12i r, short s, void *clps);
-extern void func_020393d4(void *collider, BeforeClsnCallback callback);
-extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i r, Fix12i h, void *p, void *q);
 extern int AngleDiff(int a, int b);
 
 int func_ov065_021180d4(char* self);
 void func_ov065_02118c4c(char* c);
-int func_ov065_02119210(unsigned char* c);
+int func_ov065_02119210(daDossyCap_c *cap);
 void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
 void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
 }
@@ -218,7 +216,7 @@ void daDossy_c::func_ov065_0211956c(dActor_c *other)
 int daDossyCap_c::InitResources()
 {
     mModel.SetFile((BMD_File *)data_ov002_0210d9c0.filePtr, 1, -1);
-    mCapIcon.func_ov001_020ab228((char *)this, 2, 2, 0);
+    mCapIcon.Link((char *)this, 2, 2, 0);
     mdCcAc_c.Init(this, 0x96000, 0x96000, 0x100002, 0x8000);
     mCarrier = 0;
     return 1;
@@ -246,11 +244,11 @@ int daDossy_c::InitResources()
                 ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), *(const Matrix4x3 *)(mtx), 0x1000, mAngleY,
                                       *(CLPS_Block *)(data_ov065_0211cd68[j]));
             if ((unsigned)j <= 2) {
-                func_020393d4(mmc, &dBgW::UpdatePosAndAngs);
+                ((dBgW *)mmc)->SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
                 if (j == 2)
-                    func_020393c4((dBgW *)mmc, func_ov065_021195bc);
+                    ((dBgW *)mmc)->SetStoodOnCallback(func_ov065_021195bc);
                 else
-                    func_020393c4((dBgW *)mmc, func_ov065_021195d0);
+                    ((dBgW *)mmc)->SetStoodOnCallback(func_ov065_021195d0);
             }
             ((dBgW_KcMbg *)mmc)->Enable(this);
             mtx += sizeof(DorriePlatform);
@@ -306,9 +304,7 @@ int daDossy_c::InitResources()
     return 1;
 }
 
-extern "C" int func_ov065_02119210(unsigned char *c)
-{
-    daDossyCap_c *cap = (daDossyCap_c *)c;
+extern "C" int func_ov065_02119210(daDossyCap_c *cap) {
     int flags = cap->mCapIcon.mFlags << 30;
     return ((unsigned)flags >> 31) != 0;
 }
@@ -328,7 +324,7 @@ int daDossyCap_c::Behavior()
             mFlags &= ~0x20000;
             mEatingPlayer = 0;
             mCapIcon.Unlink();
-            mCapIcon.func_ov001_020ab228((char *)this, 2, 0, 0);
+            mCapIcon.Link((char *)this, 2, 0, 0);
         }
         return 1;
     }
@@ -629,7 +625,7 @@ void daDossy_c::func_ov065_021183c8()
 
     if (mClsnPlayer != 0) {
         if (mClsnState == 2 && mRideCooldown == 0) {
-            if (mCap == 0 || func_ov065_02119210((unsigned char *)mCap) == 0) {
+            if (mCap == 0 || func_ov065_02119210(mCap) == 0) {
                 playerPos = mClsnPlayer->mPos;
                 if (playerPos.y >= mHomePosY &&
                     Vec3_HorzDist(&playerPos, reinterpret_cast<const Vector3 *>(&mHomePosX)) <
@@ -739,7 +735,7 @@ extern "C" int func_ov065_021180d4(char *self)
 
                     if (dActor_c::Spawn(0x10d, 0x1210, pos, &cap->mAngle, cap->mAreaId, -1) != 0) {
                         cap->mCapIcon.Unlink();
-                        cap->mCapIcon.func_ov001_020ab228(self, 2, 0, 0);
+                        cap->mCapIcon.Link(self, 2, 0, 0);
                         ((daDossy_c *)cap->mCarrier)->mRideCooldown = 0x1e;
                     }
                 }

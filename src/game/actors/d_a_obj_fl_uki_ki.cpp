@@ -35,8 +35,6 @@
  * chooses where the D1/D0 pair lands on its own.
  *
  * Notes:
- * - func_020393d4 is a 4-byte store into dBgW+0x18 (beforeClsnCallback).
- *   d_bg_w.cpp defines it and no header declares it.
  * - data_ov064_0211ba6c is the CLPS block, in overlay .data this TU does not
  *   own.
  * - g_profile_FL_UKI_KI, the FL_UKI_KI registry row that names this factory,
@@ -74,9 +72,6 @@ FlUkiKiCollisionFile FloatingFloorLllBig_ClsnFile(ASSET_FL_UKI_KI_KCL);
 extern CLPS_Block data_ov064_0211ba6c; /* the CLPS block SetFile is handed */
 extern s16 data_02082214[];            /* shared sin/cos table, sin at [i*2] */
 
-/* local extern: d_bg_w.cpp defines it and no header declares it. */
-extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-
 /* The registry's allocator for FL_UKI_KI. The implicit default constructor is
    inlined into it at -O4: operator new, dBgActor_c's constructor, the vptr
    store. Historical alias in the rename ledger: LavaPlank_Spawn. */
@@ -95,7 +90,7 @@ s32 daObjFl_UkiKi_c::InitResources() {
 
     /* The platform carries the mesh along by velocity rather than by its
        transform -- it slides straight up and down. */
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
 
     mOriginalPosY = mPosY;
     mPhaseAngle = mAngleX;

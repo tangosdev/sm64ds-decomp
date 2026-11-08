@@ -9,10 +9,10 @@
  * 20 functions, .text 0x020cc028..0x020ccb54, one TU: the seven dScene_c
  * slots it overrides (0, 3, 6, 9, 12, 16, 17 -- the class adds no new
  * virtual), two slots of the nested dScDSMT_c::graphCallback_c, four small
- * free helpers (a save-file slot lookup, installing the save-file buffer,
- * arming a deferred music change, and the per-file summary the client
- * displays), the client's command dispatcher func_ov007_020cc600, five allocator/file veneers for
- * the interface the client calls, and the factory dScDSMT_c_classInit.
+ * free helpers (DSMT_GetFileBuffer, DSMT_SetFileBuffers, DSMT_SetPendingMusic
+ * and DSMT_UpdateBootArgs), the menu's command callback DSMT_MenuCallback,
+ * five allocator/file hooks for the menu, and the factory
+ * dScDSMT_c_classInit.
  *
  * The destructor is inline in the class body and the key function is
  * InitResources, so this TU emits D1 then D0 -- the cartridge's order --
@@ -25,9 +25,10 @@
  * the out-of-line arm9 dFdDummy_c::dFdDummy_c() on the fader member.
  */
 
-// leftovers: the four func_ov007_* helpers, the dispatcher and the wrappers
-// keep address-derived names (no ROM symbol table for them --
-// func_ov007_020cc600, 020cc168, 020cc118, 020cc0e4, 020cc0cc). data_0209b340
+// leftovers: the DSMT_* helper and hook names are coined from their bodies
+// and from the Ov007MenuHooks fields (src/ui/menus/unit020b6eb4.cpp); the
+// ROM keeps no names for them. They keep C linkage because the menu reaches
+// the six hooks through a function-pointer table. data_0209b340
 // is decl_common.h's int[], but it is the Ov007BootArgs table
 // (Ov007Settings.h), so every access goes through the sBootArgs view. The
 // dispatcher reads the save block's active-file byte
@@ -46,6 +47,7 @@
 #include "nitro/spi/tp.h"
 #include "Memory.h"
 #include "GX.h"
+#include "nitro/hw/registers.h"
 #include "math/CalcLib.h"
 #include "Ov007Settings.h"
 
@@ -64,17 +66,17 @@ extern u8 gSoftResetPending;
    (func_02019404), GraphCallback2 and GraphCallback3 in the VBlank IRQ
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 extern void *data_020a0ea0;
 /* Linker-defined overlay IDs: the address is the overlay number. */
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
 
-FileSaveData *func_ov007_020cc0cc(int idx);
-void func_ov007_020cc0e4(FileSaveData *files);
-int func_ov007_020cc118(int musicId, unsigned int delayFrames);
-void func_ov007_020cc168(u32 saveSlot);
+FileSaveData *DSMT_GetFileBuffer(int slot);
+void DSMT_SetFileBuffers(FileSaveData *files);
+int DSMT_SetPendingMusic(int musicId, unsigned int delayFrames);
+void DSMT_UpdateBootArgs(u32 saveSlot);
 int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
 int func_ov007_020b6eb4(void);
 void func_0203cbc0(void *buffer);
@@ -95,32 +97,36 @@ extern "C" dScDSMT_c *dScDSMT_c_classInit(void) {
     return new dScDSMT_c;
 }
 
-/* Heap thunks onto the game heap; `bx ip` sibcalls. */
-extern "C" void *func_ov007_020ccab4(u32 a) {
-    return ((Heap *)data_020a0ea0)->Allocate(a);
+/* The menu hooks. InitResources hands func_ov007_020b7138 the table at
+ * data_ov007_02103290, which holds them in Ov007MenuHooks order: alloc,
+ * free, query, fileLoad, fileRelease, callback.
+ *
+ * Heap thunks onto the game heap; `bx ip` sibcalls. */
+extern "C" void *DSMT_MenuAlloc(u32 size) {
+    return ((Heap *)data_020a0ea0)->Allocate(size);
 }
 
-extern "C" void func_ov007_020cca98(void *a) {
-    ((Heap *)data_020a0ea0)->_Deallocate(a);
+extern "C" void DSMT_MenuFree(void *ptr) {
+    ((Heap *)data_020a0ea0)->_Deallocate(ptr);
 }
 
-extern "C" void func_ov007_020cca80(void) {
+extern "C" void DSMT_MenuMaxAllocSize(void) {
     (void)((Heap *)data_020a0ea0)->MaxAllocationUnitSize();
 }
 
 /* File-op veneers: `#pragma long_calls` emits the pooled absolute tail call. */
 #pragma long_calls on
 extern "C" void *LoadFile(int);
-extern "C" void *func_ov007_020cca74(int a) {
-    return LoadFile(a);
+extern "C" void *DSMT_MenuLoadFile(int fileId) {
+    return LoadFile(fileId);
 }
-extern "C" void func_ov007_020cca68(void *p) {
-    Deallocate(p);
+extern "C" void DSMT_MenuReleaseFile(void *file) {
+    Deallocate(file);
 }
 #pragma long_calls off
 
-/* Client command dispatcher: sound/backlight/save-file/minigame codes. */
-extern "C" u8 func_ov007_020cc600(s32 command) {
+/* The menu's command callback: sound/backlight/save-file/minigame codes. */
+extern "C" u8 DSMT_MenuCallback(s32 command) {
     u8 failed = 0;
 
     if (command == 1) {
@@ -134,57 +140,57 @@ extern "C" u8 func_ov007_020cc600(s32 command) {
     } else if (command == 5) {
         TurnBacklightOff();
     } else if (command == 8) {
-        SaveData::EraseSaveFile(0, (char *)func_ov007_020cc0cc(0));
-        func_02013c84(0, func_ov007_020cc0cc(0), -1, &data_0209caa0.file);
+        SaveData::EraseSaveFile(0, (char *)DSMT_GetFileBuffer(0));
+        func_02013c84(0, DSMT_GetFileBuffer(0), -1, &data_0209caa0.file);
     } else if (command == 9) {
-        SaveData::EraseSaveFile(1, (char *)func_ov007_020cc0cc(1));
-        func_02013c84(1, func_ov007_020cc0cc(1), -1, &data_0209caa0.file);
+        SaveData::EraseSaveFile(1, (char *)DSMT_GetFileBuffer(1));
+        func_02013c84(1, DSMT_GetFileBuffer(1), -1, &data_0209caa0.file);
     } else if (command == 10) {
-        SaveData::EraseSaveFile(2, (char *)func_ov007_020cc0cc(2));
-        func_02013c84(2, func_ov007_020cc0cc(2), -1, &data_0209caa0.file);
+        SaveData::EraseSaveFile(2, (char *)DSMT_GetFileBuffer(2));
+        func_02013c84(2, DSMT_GetFileBuffer(2), -1, &data_0209caa0.file);
     } else if (command == 11) {
-        FileSaveData *fileBuffer = func_ov007_020cc0cc(0);
-        if (func_02013c84(0, fileBuffer, 1, func_ov007_020cc0cc(1)) == 0)
+        FileSaveData *fileBuffer = DSMT_GetFileBuffer(0);
+        if (func_02013c84(0, fileBuffer, 1, DSMT_GetFileBuffer(1)) == 0)
             failed = 1;
-        func_02013c84(1, func_ov007_020cc0cc(1), -1, &data_0209caa0.file);
+        func_02013c84(1, DSMT_GetFileBuffer(1), -1, &data_0209caa0.file);
     } else if (command == 12) {
-        FileSaveData *fileBuffer = func_ov007_020cc0cc(0);
-        if (func_02013c84(0, fileBuffer, 2, func_ov007_020cc0cc(2)) == 0)
+        FileSaveData *fileBuffer = DSMT_GetFileBuffer(0);
+        if (func_02013c84(0, fileBuffer, 2, DSMT_GetFileBuffer(2)) == 0)
             failed = 1;
-        func_02013c84(2, func_ov007_020cc0cc(2), -1, &data_0209caa0.file);
+        func_02013c84(2, DSMT_GetFileBuffer(2), -1, &data_0209caa0.file);
     } else if (command == 13) {
-        FileSaveData *fileBuffer = func_ov007_020cc0cc(1);
-        if (func_02013c84(1, fileBuffer, 0, func_ov007_020cc0cc(0)) == 0)
+        FileSaveData *fileBuffer = DSMT_GetFileBuffer(1);
+        if (func_02013c84(1, fileBuffer, 0, DSMT_GetFileBuffer(0)) == 0)
             failed = 1;
-        func_02013c84(0, func_ov007_020cc0cc(0), -1, &data_0209caa0.file);
+        func_02013c84(0, DSMT_GetFileBuffer(0), -1, &data_0209caa0.file);
     } else if (command == 14) {
-        FileSaveData *fileBuffer = func_ov007_020cc0cc(1);
-        if (func_02013c84(1, fileBuffer, 2, func_ov007_020cc0cc(2)) == 0)
+        FileSaveData *fileBuffer = DSMT_GetFileBuffer(1);
+        if (func_02013c84(1, fileBuffer, 2, DSMT_GetFileBuffer(2)) == 0)
             failed = 1;
-        func_02013c84(2, func_ov007_020cc0cc(2), -1, &data_0209caa0.file);
+        func_02013c84(2, DSMT_GetFileBuffer(2), -1, &data_0209caa0.file);
     } else if (command == 15) {
-        FileSaveData *fileBuffer = func_ov007_020cc0cc(2);
-        if (func_02013c84(2, fileBuffer, 0, func_ov007_020cc0cc(0)) == 0)
+        FileSaveData *fileBuffer = DSMT_GetFileBuffer(2);
+        if (func_02013c84(2, fileBuffer, 0, DSMT_GetFileBuffer(0)) == 0)
             failed = 1;
-        func_02013c84(0, func_ov007_020cc0cc(0), -1, &data_0209caa0.file);
+        func_02013c84(0, DSMT_GetFileBuffer(0), -1, &data_0209caa0.file);
     } else if (command == 16) {
-        FileSaveData *fileBuffer = func_ov007_020cc0cc(2);
-        if (func_02013c84(2, fileBuffer, 1, func_ov007_020cc0cc(1)) == 0)
+        FileSaveData *fileBuffer = DSMT_GetFileBuffer(2);
+        if (func_02013c84(2, fileBuffer, 1, DSMT_GetFileBuffer(1)) == 0)
             failed = 1;
-        func_02013c84(1, func_ov007_020cc0cc(1), -1, &data_0209caa0.file);
+        func_02013c84(1, DSMT_GetFileBuffer(1), -1, &data_0209caa0.file);
     } else if (command == 17) {
-        func_ov007_020cc118(0x37, 8);
+        DSMT_SetPendingMusic(0x37, 8);
     } else if (command == 18) {
-        func_ov007_020cc118(0x38, 8);
+        DSMT_SetPendingMusic(0x38, 8);
     } else if (command == 20) {
         u8 *fileBytes = (u8 *)Memory::operator_new2(0xcc);
         u32 saveSlot;
-        func_ov007_020cc0e4((FileSaveData *)fileBytes);
+        DSMT_SetFileBuffers((FileSaveData *)fileBytes);
         for (saveSlot = 0; (s32)saveSlot < 3; saveSlot++, fileBytes += 0x44) {
             if (SaveData::ReadFileData(saveSlot, (FileSaveData *)fileBytes) == 0)
                 failed = 1;
             func_02013c84(saveSlot, fileBytes, -1, &data_0209caa0.file);
-            func_ov007_020cc168(saveSlot);
+            DSMT_UpdateBootArgs(saveSlot);
         }
     } else if (command == 21) {
         if (SaveData::ReadMinigameData(&data_0209cae4) == 0)
@@ -192,7 +198,7 @@ extern "C" u8 func_ov007_020cc600(s32 command) {
     } else if (command == 22) {
         s32 saveSlot;
         for (saveSlot = 0; saveSlot < 3; saveSlot++) {
-            FileSaveData *fileBuffer = func_ov007_020cc0cc(saveSlot);
+            FileSaveData *fileBuffer = DSMT_GetFileBuffer(saveSlot);
             if ((fileBuffer->flags1 & 1) == 0)
                 SaveData::EraseSaveFile(saveSlot, (char *)fileBuffer);
         }
@@ -201,7 +207,7 @@ extern "C" u8 func_ov007_020cc600(s32 command) {
     } else if (command == 19) {
         Sound::StopLoadedMusic_Layer1(0x3c);
     }
-    func_ov007_020cc168(data_0209caa0.activeFile);
+    DSMT_UpdateBootArgs(data_0209caa0.activeFile);
     return failed;
 }
 
@@ -219,12 +225,12 @@ s32 dScDSMT_c::InitResources() {
         func_0201a428();
 
     sBootArgs.messages = (void *)data_0209d6fc;
-    *(volatile u16 *)0x4000304 = (*(volatile u16 *)0x4000304 & 0xfffffdf1) | 0x20e;
+    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
     GX::DispOn();
-    *(volatile u32 *)0x4001000 |= 0x10000;
+    REG_DISPCNT_SUB |= 0x10000;
     Enable3dEngines();
     ::Initialise3dGraphics(0);
-    data_0209d4a8 = &mGraphCallback;
+    gGraphCallback = &mGraphCallback;
     dScene_c::SetFaders(&fader);
     data_0208ee44 = 1;
     GX::DisableAllBanks();
@@ -237,7 +243,7 @@ s32 dScDSMT_c::InitResources() {
 
 /* CleanupResources: unregister callback, record exit reason, release voice group. */
 s32 dScDSMT_c::CleanupResources() {
-    data_0209d4a8 = 0;
+    gGraphCallback = 0;
     dScene_c::SetAndStopColorFader();
     sBootArgs.bootFlags = func_ov007_020b6f4c();
     sBootArgs.status = 2;
@@ -302,8 +308,9 @@ s32 dScDSMT_c::Render() {
 /* OnPendingDestroy: no unwind; the slot exists for dScene_c's teardown. */
 void dScDSMT_c::OnPendingDestroy() {}
 
-/* Fill the selected save slot's download-play summary in the byte-packed table. */
-extern "C" void func_ov007_020cc168(u32 saveSlot) {
+/* Refresh the boot-args table: the sound mode and backlight, then save file
+ * `saveSlot`'s summary (in use, characters, stars and coin records). */
+extern "C" void DSMT_UpdateBootArgs(u32 saveSlot) {
     int highestUnlockedPlusOne;
     int character;
     int course;
@@ -339,7 +346,7 @@ extern "C" void func_ov007_020cc168(u32 saveSlot) {
 }
 
 /* Arm the deferred music change Behavior commits. Declines if one is pending. */
-extern "C" int func_ov007_020cc118(int musicId, unsigned int delayFrames) {
+extern "C" int DSMT_SetPendingMusic(int musicId, unsigned int delayFrames) {
     if (data_ov007_02103260 >= 0) {
         return 0;
     }
@@ -360,14 +367,14 @@ int dScDSMT_c::graphCallback_c::GraphCallback2() {
     return 0;
 }
 
-/* Install the save-slot buffer pointer. */
-extern "C" void func_ov007_020cc0e4(FileSaveData *files) {
+/* Install the three save-file buffers the callback reads and writes. */
+extern "C" void DSMT_SetFileBuffers(FileSaveData *files) {
     data_0209b33c = files;
 }
 
-/* Address of save-slot record `idx` (0x44 stride is in the ROM's mla). */
-extern "C" FileSaveData *func_ov007_020cc0cc(int idx) {
-    return &data_0209b33c[idx];
+/* Address of save file `slot`'s buffer (0x44 stride is in the ROM's mla). */
+extern "C" FileSaveData *DSMT_GetFileBuffer(int slot) {
+    return &data_0209b33c[slot];
 }
 
 extern "C" {

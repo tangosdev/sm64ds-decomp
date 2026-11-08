@@ -38,6 +38,7 @@
 #include "MgBanner.h"
 #include "Sound.h"
 #include "types.h"
+#include "nitro/fx/fx_trig.h"
 #include "dEnemyBase_c.h"
 #include "PlayerInput.h"
 #include "CP15.h"
@@ -92,11 +93,11 @@ OamAttr *sMgSparkleSprites[16];
 
 extern "C" {
 extern void *sMgWorkBuffer;
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 void Mg_UpdateMenu(char *c);
 void Banner_Update(MgBanner *e);
 void Mg_UpdateFx(MgFx *c);
-extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
+extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern unsigned short data_020a0e5a[];
 extern int data_0208ee44;
 extern void Mg_CommitRecords(void);
@@ -1118,15 +1119,14 @@ void Mg_DrawSpriteList(void *self, int a1, int a2, void *a3);
 extern int *sMgMenuItem0SpritesByLanguage[];
 extern int *sMgMenuItem1SpritesByLanguage[];
 extern int *sMgMenuItem2SpritesByLanguage[];
-extern s16 data_02082214[];
 extern OamAttr *data_ov006_021346bc;
 
 /* Draws the three-item overlay menu: each item's per-language sprite list
    at its mMenuItemNX/Y, followed by data_ov006_021346bc at the same spot.
    The highlighted item (mMenuCursor) goes through a matrix whose diagonal
-   is func_02053200 of a pulse that mMenuCursorPhase drives through the
-   sin/cos table data_02082214. Nothing is drawn while
-   mTouchOptions.Draw() returns nonzero. */
+   is func_02053200 of a pulse that mMenuCursorPhase drives through
+   FX_SinIdx. Nothing is drawn while mTouchOptions.Draw() returns
+   nonzero. */
 extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
 {
     int extra[3];
@@ -1152,8 +1152,7 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
             s16 *pos;
             u16 v;
             int *pbuf = buf;
-            int scale =
-                func_02053200((int)((((s64)data_02082214[idx * 2] << 11) + 0x800) >> 12) + 0x1000);
+            int scale = func_02053200(FX_MUL(FX_SinIdx(idx), 0x800) + 0x1000);
 
             {
                 volatile int *vp = pbuf;
@@ -1328,7 +1327,7 @@ after:
         return;
     case 1:
         dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.func_0202ec9c(1);
+        data_0209f61c.SetType(1);
         dScene_c::StartSceneFade(5, 0, 0);
         if (self->mQuitFadeStarted != 0) return;
         func_02012dd0(0x3c);
@@ -2188,7 +2187,7 @@ int dScMgBase_c::BeforeBehavior()
     if (dScene_c::BeforeBehavior() == 0)
         return 0;
 
-    if (data_0209f5bc->IsAtStart()) {
+    if (gSceneFader->IsAtStart()) {
         mode = gActivePlayerSlot;
         flags = data_020a0e5a[mode * 2];
         if ((flags & 8) || (flags & 4) || (flags & 1) || (flags & 2)) {
@@ -2235,7 +2234,7 @@ int dScMgBase_c::BeforeBehavior()
     }
 
     if (mRunDuringFade == 0) {
-        if (data_0209f5bc->IsAtStart() == 0)
+        if (gSceneFader->IsAtStart() == 0)
             return 0;
     }
 
@@ -2253,7 +2252,7 @@ void dScMgBase_c::AfterCleanupResources(u32 vfSuccess)
     if (vfSuccess == 2) {
         if (gMgMenuRow.ownRecords == 0)
             Mg_CommitRecords();
-        data_0209d4a8 = 0;
+        gGraphCallback = 0;
         sMgGraphCallback.mScene = 0;
         FreeGfxSlotsById(0x1d);
         if (sMgWorkBuffer != 0) {
@@ -2313,7 +2312,7 @@ bool dScMgBase_c::BeforeInitResources()
     InitEngines();
     Mg_LoadBannerFiles();
     dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.func_0202ec9c(0);
+    data_0209f61c.SetType(0);
     data_0209d460 = 0;
     data_0209d458 = 0;
     InitSubScreenBg();
@@ -3203,7 +3202,6 @@ extern "C" {
    the products written out in the body it lands in ip or r3. */
 struct M { int _00, _01, _10, _11; };
 extern void Mg_RenderSpriteOnMtx(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
-extern s16 data_02082214[];
 extern OamAttr *sMgDigitSprites[];
 
 static inline int FX_Mul(int v1, int v2)
@@ -3219,9 +3217,6 @@ static inline void MTX_Rot22(struct M *p, int sinVal, int cosVal)
     p->_10 = -sinVal;
     p->_11 = cosVal;
 }
-
-static inline s16 FX_SinIdx(int idx) { return data_02082214[idx << 1]; }
-static inline s16 FX_CosIdx(int idx) { return data_02082214[(idx << 1) + 1]; }
 
 void Mg_DrawNumberRotated(int x, int y, int value, int a3, int a4, int scale, u16 angle)
 {
@@ -3347,7 +3342,7 @@ extern "C" {
    GetGameLanguage into sMgStockCounterFiles) is decompressed into BOTH engines'
    BG char VRAM at 0x06404000 and 0x06604000, OBJ palette file 0xc3 is loaded
    into both, and the scene object is published into the global registry --
-   sMgGraphCallback.mScene = this, then data_0209d4a8 points at that registry.
+   sMgGraphCallback.mScene = this, then gGraphCallback points at that registry.
    The object fields it touches are its own: +0x68 cleared and +0x6c set to -1.
 
    WHEN IT RUNS.  First out of dScMgBase_c::BeforeInitResources
@@ -3378,7 +3373,7 @@ extern int sMgTopScreenYOffset;
 extern u8 gMainScreenLayers;
 extern int sMgStockCounterFiles[];
 extern u8 gSubScreenLayers;
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 }
 }
@@ -3391,7 +3386,7 @@ void dScMgBase_c::InitEngines() {
     using s20b265c::data_0208ee44;
     using s20b265c::gSubScreenLayers;
     using s20b265c::gMainScreenLayers;
-    using s20b265c::data_0209d4a8;
+    using s20b265c::gGraphCallback;
     using s20b265c::sMgStockCounterFiles;
     using s20b265c::sMgTopScreenYOffset;
     using s20b265c::Ov004_LoadFile;
@@ -3434,7 +3429,7 @@ void dScMgBase_c::InitEngines() {
     Ov004_Deallocate(p);
     gSubScreenLayers = 0x10;
     sMgGraphCallback.mScene = this;
-    data_0209d4a8 = &sMgGraphCallback;
+    gGraphCallback = &sMgGraphCallback;
     Mg_ResetOverlays();
     FreeGfxSlotsById(0x1d);
     data_0208ee44 = 1;

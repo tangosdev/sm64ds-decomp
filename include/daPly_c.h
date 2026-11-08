@@ -304,7 +304,7 @@ struct daPly_c : dActor_c {
     /* Yoshi's per-player material word for VS mode. func_ov002_020e5948 sets it
        to word +0x20 of material 0 of Yoshi's body model (GetBodyModelID(3))
        plus mPlayerNo * 2; the draw path copies it into word +0x20 of every
-       body and head material when data_0209f2d8 == 1 and param1 == 3. */
+       body and head material when gGameMode == 1 and param1 == 3. */
     s32 mVsYoshiMaterialParam;          /* 0x61c */
     s32 mLoopingSoundHandle;            /* 0x620 */
     s32 mSurfaceSoundHandle;            /* 0x624  Sound::PlayLong handle recycled by func_ov002_020bfa74 */
@@ -312,7 +312,7 @@ struct daPly_c : dActor_c {
     s32 mParticle2;            /* 0x62c */
     s32 mParticle3;            /* 0x630 */
     /* Particle handles at the water surface. func_ov002_020ce8bc passes each
-       back to func_02022cbc (Particle::System::New) at x/z of the player and
+       back to Particle::System::NewFitWater at x/z of the player and
        y = data_0209f32c + 0x3000: the first when its speed argument (mHorzSpeed
        or mPrevVertSpeed) is nonzero, the second when it is zero. Leaving Mega
        (func_ov002_020bdd2c) zeroes both along with mParticle1. */

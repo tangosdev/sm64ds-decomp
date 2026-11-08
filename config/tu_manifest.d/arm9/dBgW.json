@@ -137,7 +137,7 @@
       "ordinal": 15
     },
     {
-      "symbol": "func_020393c4",
+      "symbol": "_ZN4dBgW18SetStoodOnCallbackEPFvPS_P8dActor_cS2_E",
       "address": "0x020393c4",
       "size": "0x00000008",
       "legacy_source": "src/func_020393c4.c",
@@ -151,7 +151,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "func_020393d4",
+      "symbol": "_ZN4dBgW21SetBeforeClsnCallbackEPFvRS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_E",
       "address": "0x020393d4",
       "size": "0x00000008",
       "legacy_source": "src/func_020393d4.c",

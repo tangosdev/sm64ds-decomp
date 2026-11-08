@@ -7,32 +7,32 @@
  *
  * What the code does. Each menu item is an Ov007ItemView: the 0x2c-byte item
  * record func_ov007_020aea6c allocates and the sprite that places it.
- * func_ov007_020b4c04 builds a view for item id arg0 from the item tables
- * (layout row, hit box, texture cell) and func_ov007_020b4bd4 frees one.
- * func_ov007_020b44ec runs a view's frame: it ticks the item's state and
- * runs the state-0 handler (func_ov007_020b5068: the B button selects
- * items 8, 0x14 and 0x17) or the state-2 handler (func_ov007_020b50e8: the
+ * ItemView_Create builds a view for an item id from the item tables
+ * (layout row, hit box, texture cell) and ItemView_Destroy frees one.
+ * ItemView_Update runs a view's frame: it ticks the item's state and
+ * runs the state-0 handler (ItemView_UpdateIdle: the B button selects
+ * items 8, 0x14 and 0x17) or the state-2 handler (ItemView_UpdateChosen: the
  * pop / nudge / squash animation that then requests the next menu states).
- * func_ov007_020b45b0 selects an item once it is selectable, and
- * func_ov007_020b46b0 does the same for a stylus press or hold.
- * func_ov007_020b4b5c resets a view's sprite to its home point and
+ * ItemView_TryChoose selects an item once it is selectable, and
+ * ItemView_HandleTouch does the same for a stylus press or hold.
+ * ItemView_ResetSprite resets a view's sprite to its home point and
  * func_ov007_020b4464 re-places a sprite that moved.
- * func_ov007_020b42d8 builds the three number sprites (Ov007Work's
+ * NumberSprite_Create builds the three number sprites (Ov007Work's
  * numberSprites) and func_ov007_020b413c draws a number with them on top
  * of a view's sprite. func_ov007_020b43dc and func_ov007_020b4438 set and
  * read the item-0x16/0x17 choice word, data_ov007_02103428.
  *
  * Edges. The .rodata tables the functions read interleave:
- * func_ov007_020b42d8 reads data_ov007_020d75e0, 020d75e4, 020d75f0,
- * 020d75f1, 020d761c and 020d761e, func_ov007_020b4c04 reads 020d75e8,
+ * NumberSprite_Create reads data_ov007_020d75e0, 020d75e4, 020d75f0,
+ * 020d75f1, 020d761c and 020d761e, ItemView_Create reads 020d75e8,
  * 020d75f8, 020d7600 and 020d7608, and func_ov007_020b413c reads 020d7610.
  * A TU's .rodata is contiguous, so those three functions are one TU. The
  * bss word data_ov007_02103428 is referenced by func_ov007_020b43dc,
- * func_ov007_020b4438 and func_ov007_020b50e8 and nothing else, so they are
+ * func_ov007_020b4438 and ItemView_UpdateChosen and nothing else, so they are
  * one TU too. The two runs overlap and .text is contiguous per TU, so
  * 0x020b413c..0x020b58e4 is one unit. The previous function,
  * func_ov007_020b4100, ends unit020b3edc (bss 0x02103368..0x02103428). The
- * unit may run on past func_ov007_020b50e8 (func_ov007_020b44ec calls
+ * unit may run on past ItemView_UpdateChosen (ItemView_Update calls
  * func_ov007_020b58e4 and func_ov007_020b5bf0), but calls are not evidence,
  * so those stay one-function sources until a private data reference ties
  * them in.
@@ -47,7 +47,8 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
+ * The functions keep C linkage. The ItemView_ names are coined from the
+ * bodies, after the in-tree Ov007ItemView.
  */
 #include "types.h"
 #include "cstd.h"
@@ -118,11 +119,11 @@ extern void func_ov007_020b63e4(Ov007ItemView *view);
 extern void func_ov007_020b647c(int r0, int r1, short r2);
 extern void func_ov007_020b64a8(int dir);
 extern int func_ov007_020b79e4(void);
-extern void func_ov007_020b7a44(void);
+extern void MessageWindow_Close(void);
 extern void func_ov007_020b7d94(int kind);
 extern void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
-extern Ov007MenuState *func_ov007_020b8f78(void);
-extern int func_ov007_020b8fa0(void);
+extern Ov007MenuState *PickerScene_GetDisplayState(void);
+extern int PickerScene_IsAwaitingTap(void);
 extern void func_ov007_020c1d78(int i);
 extern void func_ov007_020c1d8c(int i);
 extern int func_ov007_020c1da0(int i);
@@ -132,45 +133,45 @@ extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c9080(void *tween);
 extern struct Ov007Tween *func_ov007_020c908c(s32 *out);
 
-void func_ov007_020b45b0(Ov007ItemView *view);
+void ItemView_TryChoose(Ov007ItemView *view);
 
 /* The item's state-2 step: on the state's first tick, sends the follow-up
  * state requests for this item, then over `thresh` ticks pops (ids 3/4),
  * nudges sideways (ids 10/11) or squashes its sprite; when the ticks run out
  * it resets the scale and requests the item's next state. */
-void func_ov007_020b50e8(Ov007ItemView *view) {
-    Ov007Item *st;
-    u16 state;
+void ItemView_UpdateChosen(Ov007ItemView *view) {
+    Ov007Item *item;
+    u16 id;
     int t;
-    int result;
-    int is34;
+    int scale;
+    int pops;
     int thresh;
     Ov007MenuState *pv;
     Ov007BootArgs *bootArgs;
-    int v4;
+    int kind;
     int posX;
-    Ov007ItemLayout *r3p;
+    Ov007ItemLayout *layout;
 
-    st = view->item;
-    state = st->id;
-    r3p = st->layout;
+    item = view->item;
+    id = item->id;
+    layout = item->layout;
     bootArgs = WORK->settings->bootArgs;
-    t = st->state->stateTicks;
-    v4 = r3p->kind;
-    is34 = (state == 3 || state == 4);
-    thresh = is34 ? 0x18 : 8;
+    t = item->state->stateTicks;
+    kind = layout->kind;
+    pops = (id == 3 || id == 4);
+    thresh = pops ? 0x18 : 8;
     pv = WORK->states[1];
-    posX = r3p->homeX << 12;
-    result = 0x1000;
+    posX = layout->homeX << 12;
+    scale = 0x1000;
 
     if (t == 0) {
         func_ov007_020c1d8c(0);
-        if (v4 == 0) {
+        if (kind == 0) {
             func_ov007_020b647c(view->item->id, 0, 6);
             func_ov007_020b647c(view->item->id, 1, 6);
             func_ov007_020b647c(view->item->id, 2, 6);
             func_ov007_020b647c(view->item->id, 7, 6);
-        } else if ((u32)(state - 0xe) <= 2 && pv->currentState == 0) {
+        } else if ((u32)(id - 0xe) <= 2 && pv->currentState == 0) {
             func_ov007_020b647c(view->item->id, 0xe, 4);
             func_ov007_020b647c(view->item->id, 0xf, 4);
             func_ov007_020b647c(view->item->id, 0x10, 4);
@@ -180,8 +181,8 @@ void func_ov007_020b50e8(Ov007ItemView *view) {
         {
             int flag;
             flag = 1;
-            func_ov007_020b6208(state);
-            switch (st->id) {
+            func_ov007_020b6208(id);
+            switch (item->id) {
             case 9:
                 break;
             case 11:
@@ -219,7 +220,7 @@ void func_ov007_020b50e8(Ov007ItemView *view) {
         } else {
             q = cstd::div(t << 12, thresh);
         }
-        if (is34 != 0) {
+        if (pops != 0) {
             if (q < 0x555) {
                 int c;
                 int w;
@@ -232,7 +233,7 @@ void func_ov007_020b50e8(Ov007ItemView *view) {
                 } else {
                     c = FX_MUL(w - 0x3000, -0x2000) + 0x2000;
                 }
-                result = 0x1000 - FX_MUL(c, 0x4b0);
+                scale = 0x1000 - FX_MUL(c, 0x4b0);
             } else {
                 int c;
                 int w;
@@ -244,11 +245,11 @@ void func_ov007_020b50e8(Ov007ItemView *view) {
                 } else {
                     c = FX_MUL(w - 0x3000, -0x1000) + 0x1000;
                 }
-                result = FX_MUL(c, 0x640) + 0x1000;
+                scale = FX_MUL(c, 0x640) + 0x1000;
             }
         } else {
             u16 s2;
-            s2 = st->id;
+            s2 = item->id;
             if (s2 == 10 || s2 == 11) {
                 int dir;
                 int w;
@@ -271,7 +272,7 @@ void func_ov007_020b50e8(Ov007ItemView *view) {
                 } else {
                     c = FX_MUL(w - 0x3000, -0xa28) + 0xa28;
                 }
-                result = 0x1000 - FX_MUL(c, 0x514);
+                scale = 0x1000 - FX_MUL(c, 0x514);
             }
         }
     } else {
@@ -282,7 +283,7 @@ void func_ov007_020b50e8(Ov007ItemView *view) {
         next = 0;
         p->scaleY = 0x1000;
         p->scaleX = p->scaleY;
-        s = st->id;
+        s = item->id;
         switch (s) {
         case 0:
             func_ov007_020aec94(9);
@@ -366,21 +367,21 @@ void func_ov007_020b50e8(Ov007ItemView *view) {
                 data_ov007_02103428 = 3;
                 WORK->itemViews[0x16]->item->state->requestedState = 4;
             }
-            func_ov007_020b7a44();
+            MessageWindow_Close();
             next = 4;
             break;
         }
-        st->state->requestedState = next;
+        item->state->requestedState = next;
     }
 
-    view->sprite->scaleY = result;
+    view->sprite->scaleY = scale;
     view->sprite->scaleX = view->sprite->scaleY;
     view->item->posX = posX;
 }
 
 /* The item's state-0 step: items 8, 0x14 and 0x17 are selected with the
- * B button (pressed this frame, not held) through func_ov007_020b45b0. */
-void func_ov007_020b5068(Ov007ItemView *view) {
+ * B button (pressed this frame, not held) through ItemView_TryChoose. */
+void ItemView_UpdateIdle(Ov007ItemView *view) {
     u16 id = view->item->id;
     Ov007Pad *pad;
 
@@ -394,21 +395,22 @@ void func_ov007_020b5068(Ov007ItemView *view) {
         return;
     if (func_ov007_020c1da0(0))
         return;
-    func_ov007_020b45b0(view);
+    ItemView_TryChoose(view);
 }
 
-Ov007ItemView *func_ov007_020b4c04(int arg0) {
+Ov007ItemView *ItemView_Create(int id) {
     Ov007ItemView *view;
     Ov007Sprite *sprite;
-    s32 r5;
+    s32 hitBoxIndex;
     u8 t;
 
     view = (Ov007ItemView *)func_ov007_020c3df4(0, 0x1c);
-    r5 = data_ov007_020d77d8[arg0].hitBoxIndex;
-    view->item = func_ov007_020aea6c(arg0, &data_ov007_020d76e8[arg0], &data_ov007_020d78f8[r5]);
+    hitBoxIndex = data_ov007_020d77d8[id].hitBoxIndex;
+    view->item =
+        func_ov007_020aea6c(id, &data_ov007_020d76e8[id], &data_ov007_020d78f8[hitBoxIndex]);
     view->sprite = func_ov007_020c44e4(data_ov007_020d77d8[view->item->id].spriteMode);
     sprite = view->sprite;
-    if (arg0 == 0x15) {
+    if (id == 0x15) {
         sprite->polygonId = 0x1c;
     } else {
         sprite->polygonId = 0x1b;
@@ -427,30 +429,30 @@ Ov007ItemView *func_ov007_020b4c04(int arg0) {
     view->slideToY = view->item->layout->homeY;
     view->slideFromY = view->slideToY;
 
-    if (arg0 >= 0 && arg0 <= 2) {
+    if (id >= 0 && id <= 2) {
         sprite->frames[0] = WORK->textures[6];
-        sprite->texS = data_ov007_020d75e8[arg0];
-        sprite->texT = data_ov007_020d75f8[arg0];
+        sprite->texS = data_ov007_020d75e8[id];
+        sprite->texT = data_ov007_020d75f8[id];
         if (WORK->settings->language == 5) {
-            view->item->hitBox = &data_ov007_020d76c0[r5 - 1];
-            view->item->layout = &data_ov007_020d7680[arg0];
-            if (arg0 != 0) {
+            view->item->hitBox = &data_ov007_020d76c0[hitBoxIndex - 1];
+            view->item->layout = &data_ov007_020d7680[id];
+            if (id != 0) {
                 sprite->width = 0x48;
             } else {
                 sprite->depth += 0xc;
             }
         }
-    } else if (arg0 >= 3 && arg0 <= 6) {
+    } else if (id >= 3 && id <= 6) {
         sprite->frames[0] = WORK->textures[1];
-        sprite->texS = data_ov007_020d7608[arg0 - 3];
-        sprite->texT = data_ov007_020d7600[arg0 - 3];
-    } else if (arg0 >= 7 && arg0 <= 0xd) {
-        if (arg0 == 7) {
+        sprite->texS = data_ov007_020d7608[id - 3];
+        sprite->texT = data_ov007_020d7600[id - 3];
+    } else if (id >= 7 && id <= 0xd) {
+        if (id == 7) {
             sprite->frames[0] = WORK->textures[6];
         } else {
             sprite->frames[0] = WORK->textures[8];
         }
-        switch (arg0) {
+        switch (id) {
         case 7:
             sprite->texS = 0x60;
             break;
@@ -489,21 +491,21 @@ Ov007ItemView *func_ov007_020b4c04(int arg0) {
             sprite->texT = 0x20;
             break;
         }
-    } else if (arg0 >= 0xe && arg0 <= 0x15) {
+    } else if (id >= 0xe && id <= 0x15) {
         sprite->frames[0] = WORK->textures[2];
-        sprite->texS = data_ov007_020d7628[arg0 - 0xe];
-        sprite->texT = data_ov007_020d7638[arg0 - 0xe];
-    } else if (arg0 >= 0x16 && arg0 <= 0x17) {
+        sprite->texS = data_ov007_020d7628[id - 0xe];
+        sprite->texT = data_ov007_020d7638[id - 0xe];
+    } else if (id >= 0x16 && id <= 0x17) {
         sprite->frames[0] = WORK->textures[2];
-        sprite->texS = (arg0 - 0x16) * 0x48;
+        sprite->texS = (id - 0x16) * 0x48;
         sprite->texT = 0x80;
     }
     return view;
 }
 
-/* Frees a view built by func_ov007_020b4c04: its slide tween, its item,
+/* Frees a view built by ItemView_Create: its slide tween, its item,
  * its sprite, then the view itself. */
-void func_ov007_020b4bd4(Ov007ItemView *view) {
+void ItemView_Destroy(Ov007ItemView *view) {
     func_ov007_020c9080(view->slideTween);
     func_ov007_020aea4c(view->item);
     func_ov007_020c44c4(view->sprite);
@@ -513,7 +515,7 @@ void func_ov007_020b4bd4(Ov007ItemView *view) {
 /* Resets the view's sprite to unit scale, full alpha and white, sizes it
  * for `camera` (func_ov007_020c43bc), puts it at the item's home point
  * and places it in the world (func_ov007_020c4388). */
-void func_ov007_020b4b5c(Ov007ItemView *view, Ov007Camera *camera) {
+void ItemView_ResetSprite(Ov007ItemView *view, Ov007Camera *camera) {
     Ov007Sprite *o = view->sprite;
     o->scaleY = 0x1000;
     o->scaleX = o->scaleY;
@@ -526,7 +528,7 @@ void func_ov007_020b4b5c(Ov007ItemView *view, Ov007Camera *camera) {
 }
 
 /* The ROM contains this block twice, verbatim, once per path of
- * func_ov007_020b46b0, and once more as func_ov007_020b45b0. `inline` is
+ * ItemView_HandleTouch, and once more as ItemView_TryChoose. `inline` is
  * required, not stylistic: plain `static` is not inlined at -O4 and emits a
  * separate symbol, which breaks the size. */
 static inline int elem_selectable(Ov007ItemView *elem) {
@@ -568,7 +570,7 @@ static inline int elem_selectable(Ov007ItemView *elem) {
 /* Title/menu per-element stylus hit test.
  *
  * func_ov007_020aed98 calls this once per element per frame, for all 24
- * elements: func_ov007_020b46b0(work->itemViews[i], work->touch). arg0 is
+ * elements: ItemView_HandleTouch(work->itemViews[i], work->touch). arg0 is
  * the element (an Ov007ItemView), arg1 is the Ov007Touch record that
  * func_ov007_020c1db0 maintains. A hit acts by calling
  * func_ov007_020b63e4, which parks the chosen item's id in chosenItemId.
@@ -600,7 +602,7 @@ static inline int elem_selectable(Ov007ItemView *elem) {
  * FREE at 0; the transform is written out longhand only to keep the four
  * edges reading alike.
  */
-void func_ov007_020b46b0(void *arg0, void *arg1) {
+void ItemView_HandleTouch(void *arg0, void *arg1) {
     Ov007ItemView *elem = (Ov007ItemView *)arg0;
     Ov007Touch *tp = (Ov007Touch *)arg1;
     int held = 0;
@@ -662,7 +664,8 @@ void func_ov007_020b46b0(void *arg0, void *arg1) {
         u16 t0 = ((Ov007ItemView *)arg0)->item->id;
         if (t0 == 3 || t0 == 6) {
             if (elem_selectable(elem) && func_ov007_020c1da0(0) == 0 && tp->cur.touch != 0 &&
-                func_ov007_020b8f78()->currentState == 5 && func_ov007_020b8fa0() == 0) {
+                PickerScene_GetDisplayState()->currentState == 5 &&
+                PickerScene_IsAwaitingTap() == 0) {
                 int pos_y = elem->sprite->screenY >> 12;
                 int pos_x = elem->sprite->screenX >> 12;
                 int max_y = elem->item->hitBox->maxY + pos_y;
@@ -699,7 +702,7 @@ done:
 
 /* Selects the view's item (func_ov007_020b63e4) if it is selectable: the
  * same test as elem_selectable, written out. */
-void func_ov007_020b45b0(Ov007ItemView *view) {
+void ItemView_TryChoose(Ov007ItemView *view) {
     Ov007Item *p = view->item;
     int call_it = 0;
     int t0 = 0;
@@ -740,7 +743,7 @@ void func_ov007_020b45b0(Ov007ItemView *view) {
  * work is 0xff: requests func_ov007_020b58e4's state, ticks the item, runs
  * the state-0 or state-2 handler, then func_ov007_020b5bf0 while the item
  * is visible. */
-void func_ov007_020b44ec(Ov007ItemView *view) {
+void ItemView_Update(Ov007ItemView *view) {
     Ov007Item *o = view->item;
     Ov007ItemLayout *p24 = o->layout;
     if (p24->kind == 0xa)
@@ -755,10 +758,10 @@ void func_ov007_020b44ec(Ov007ItemView *view) {
     menu = o->state;
     switch (menu->currentState) {
     case 0:
-        func_ov007_020b5068(view);
+        ItemView_UpdateIdle(view);
         break;
     case 2:
-        func_ov007_020b50e8(view);
+        ItemView_UpdateChosen(view);
         break;
     case 1:
     case 3:
@@ -815,7 +818,7 @@ void func_ov007_020b43dc(int kind) {
 /* Builds number sprite `index` (Ov007Work's numberSprites): a frame of
  * texture 2 at the row's screen position, texel cell and size, parented to
  * item view 14's sprite for camera 1. */
-Ov007Sprite *func_ov007_020b42d8(int index) {
+Ov007Sprite *NumberSprite_Create(int index) {
     Ov007Sprite *parent = WORK->itemViews[14]->sprite;
     Ov007Sprite *obj;
     WORK->numberSprites[index] = func_ov007_020c44e4(1);

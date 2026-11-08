@@ -34,6 +34,7 @@ enum d_a_propeller_heyho_AssetId {
 
 #include "daPropeller_Heyho_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "SpawnInfo.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
@@ -231,7 +232,6 @@ extern daPropeller_Heyho_c::State data_ov070_021235cc;
 extern daPropeller_Heyho_c::State data_ov070_021235bc;
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void func_ov070_02120070(daPropeller_Heyho_c *c);
 extern void func_ov070_0211f100(daPropeller_Heyho_c *c);
 }
 
@@ -253,13 +253,13 @@ int daPropeller_Heyho_c::Behavior()
                 mdCcAc_c.Update();
             }
         }
-        func_ov070_02120070(this);
+        func_ov070_02120070();
         return 1;
     }
 
     if (mDeathState != 0) {
         UpdateDeath(mWithMeshClsn);
-        func_ov070_02120070(this);
+        func_ov070_02120070();
         return 1;
     }
 
@@ -299,7 +299,7 @@ int daPropeller_Heyho_c::Behavior()
         mAngleZ = mPrevAngleZ;
     }
 
-    func_ov070_02120070(this);
+    func_ov070_02120070();
 
     if (mCurrentState != &data_ov070_021235bc) {
         func_ov070_0211f100(this);
@@ -363,6 +363,7 @@ extern void Vec3_Asr(void* d, void* s, int sh);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern Matrix4x3 data_020a0e68;
+}
 
 /* The matrix copies go through the flat Mtx43: assigning Matrix4x3 grows
    .text by 0x34 bytes. */
@@ -371,18 +372,15 @@ extern Matrix4x3 data_020a0e68;
  * and the three angles, copied into mAnmModel.mat4x3; the shadow matrix from the
  * position with Y lowered by 10.0 units, then DropShadowRadHeight(radius 118.0,
  * depth 800.0, opacity 15). Behavior calls it on every exit path. */
-void func_ov070_02120070(daPropeller_Heyho_c* c)
-{
+void daPropeller_Heyho_c::func_ov070_02120070() {
     Vector3 v;
-    Vec3_Asr(&v, &c->mPosX, 3);
+    Vec3_Asr(&v, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
-    *(Mtx43 *)&c->mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
-    Matrix4x3_FromTranslation(&data_020a0e68, c->mPosX >> 3, (c->mPosY - 0xa000) >> 3,
-                              c->mPosZ >> 3);
-    *(Mtx43 *)c->mShadowMatrix = *(Mtx43 *)&data_020a0e68;
-    c->DropShadowRadHeight(c->mShadowModel, *(Matrix4x3 *)c->mShadowMatrix, 0x76000, 0x320000, 0xf);
-}
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    Matrix4x3_FromTranslation(&data_020a0e68, mPosX >> 3, (mPosY - 0xa000) >> 3, mPosZ >> 3);
+    *(Mtx43 *)mShadowMatrix = *(Mtx43 *)&data_020a0e68;
+    DropShadowRadHeight(mShadowModel, *(Matrix4x3 *)mShadowMatrix, 0x76000, 0x320000, 0xf);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -921,8 +919,8 @@ typedef int Fix12i;
 
 extern "C" unsigned d_a_propeller_heyhoNewHold(unsigned a, unsigned b, Fix12i c, Fix12i d, Fix12i e,
                                                void *f, void *g);
-extern "C" u32 d_a_propeller_heyhoNewUnkCallback818Hold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
-                                                        const Vector3_16f *f);
+extern "C" u32 d_a_propeller_heyhoNewCleanParticleHold(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e,
+                                                       const Vector3_16f *f);
 
 /* Knocked main. While mStateStep is non-zero (normally a fire hit; the
  * mega-character hit leaves it unchanged) it refreshes the effects 0x13a and
@@ -940,8 +938,9 @@ extern "C" int func_ov070_0211f368(daPropeller_Heyho_c* c)
         ((int*)&v)[0] = x;
         ((int*)&v)[1] = y;
         ((int*)&v)[2] = z;
-        c->mParticle0 = Particle::System::New(c->mParticle0, 0x13a, v.x, v.y, v.z, 0, 0);
-        c->mParticle1 = Particle::System::NewUnkCallback818(c->mParticle1, 0x13b, v.x, v.y, v.z, 0);
+        c->mParticle0 = Particle::System::New(c->mParticle0, kPtclDeathA, v.x, v.y, v.z, 0, 0);
+        c->mParticle1 =
+            Particle::System::NewCleanParticle(c->mParticle1, kPtclDeathB, v.x, v.y, v.z, 0);
     }
     ApproachAngle(&c->mAngleX, -0x4000, 0xa, 0x200, 0x100);
     ApproachLinear(c->mAngleX, -0x4000, 0x200);

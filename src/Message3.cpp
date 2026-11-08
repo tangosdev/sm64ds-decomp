@@ -39,6 +39,7 @@
 #include "MessageBank.h"
 #include "G2x.h"
 #include "G2.h"
+#include "private/mb_views.h"
 
 struct OamAttr;
 
@@ -117,7 +118,7 @@ extern u8 data_02092824[];
 extern u32 data_0209283c[];
 extern u32 data_0209287c[];
 
-extern void *func_0203d8a0(int idx);
+extern MBUserInfo *func_0203d8a0(int idx);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
 extern void MultiStore_Int(int val, int *dst, int len);
@@ -181,22 +182,22 @@ extern "C" s32 GetLanguageIndexVS(void) {
 }
 
 extern "C" void func_02031028(int arg) {
-    u16 *p;
+    MBUserInfo *p;
     int i;
     int j;
     u8 *out;
     int n;
     u16 val;
-    p = (u16 *)func_0203d8a0(data_0209fc84);
+    p = func_0203d8a0(data_0209fc84);
     i = 0;
-    data_0209fca0 = ((u8 *)p)[1];
+    data_0209fca0 = p->nameLength;
     n = data_0209fca0;
     if (n <= 0) {
         return;
     }
     out = data_02092818;
     do {
-        val = (p + i)[1];
+        val = p->name[i];
         j = 0;
         while (CharDiffers(data_02075b14[j], val) && CharDiffers(data_02075d14[j], val) &&
                j < 0x100) {
@@ -1099,7 +1100,9 @@ extern "C" void func_02032f9c(int a) {
     data_0209fc94 = 1;
     data_0209fc78 = 0;
     data_0209fd00 = (int)((char *)data_0209fd08 + idx * 8);
-    data_0209fd0c = (u8 *)(v + 0x28 + data_0209fcf8[1] + *(int *)((char *)data_0209fd08 + idx * 8));
+    data_0209fd0c = (u8 *)(v + (sizeof(MessageBankHeader) + sizeof(MessageDataSection)) +
+                           ((MessageInfoSection *)data_0209fcf8)->sectionSize +
+                           ((MessageEntry *)((char *)data_0209fd08 + idx * 8))->textOffset);
 
     p = func_02054d88() + 0x4000;
     li = 0;
@@ -1568,7 +1571,10 @@ extern "C" void func_02033e50(int p0, int p1) {
     int n = (p1 >> 3) & 0xff;
 
     data_0209fd00 = (int)(base + idx * 8);
-    data_0209fd0c = (u8 *)(data_0209fd14 + 0x28 + data_0209fcf8[1] + *(int *)(base + idx * 8));
+    data_0209fd0c =
+        (u8 *)(data_0209fd14 + (sizeof(MessageBankHeader) + sizeof(MessageDataSection)) +
+               ((MessageInfoSection *)data_0209fcf8)->sectionSize +
+               ((MessageEntry *)(base + idx * 8))->textOffset);
     data_0209fcc8 = 0;
 
     do {
@@ -1643,7 +1649,10 @@ extern "C" void Message_DrawLineBG2VS(void) {
     int idx = data_0209fce8;
     char *base = (char *)data_0209fd08;
     data_0209fd00 = (int)(base + idx * 8);
-    data_0209fd0c = (u8 *)(data_0209fd14 + 0x28 + data_0209fcf8[1] + *(int *)(base + idx * 8));
+    data_0209fd0c =
+        (u8 *)(data_0209fd14 + (sizeof(MessageBankHeader) + sizeof(MessageDataSection)) +
+               ((MessageInfoSection *)data_0209fcf8)->sectionSize +
+               ((MessageEntry *)(base + idx * 8))->textOffset);
     func_02031cd4((void *)1);
     data_0209fc7c = 0;
     n = ((data_0209fc88 + 7) / 8) << 6;
@@ -1663,7 +1672,10 @@ extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
     int idx = data_0209fce8;
     char *base = (char *)data_0209fd08;
     data_0209fd00 = (int)(base + idx * 8);
-    data_0209fd0c = (u8 *)(data_0209fd14 + 0x28 + data_0209fcf8[1] + *(int *)(base + idx * 8));
+    data_0209fd0c =
+        (u8 *)(data_0209fd14 + (sizeof(MessageBankHeader) + sizeof(MessageDataSection)) +
+               ((MessageInfoSection *)data_0209fcf8)->sectionSize +
+               ((MessageEntry *)(base + idx * 8))->textOffset);
     func_02031cd4((void *)1);
     oldc = data_0209fc88;
     data_0209fc7c = (((a1 << 3) - oldc) & 0xf) >> 1;
@@ -1747,7 +1759,7 @@ extern "C" void func_02034504(void) {
 }
 
 extern "C" void func_020345b0(int arg0) {
-    void *scr;
+    u16 *scr;
     s32 i;
     s32 cols;
     s32 last;
@@ -1767,8 +1779,10 @@ extern "C" void func_020345b0(int arg0) {
     data_0209fc74 = 0x87;
     data_0209fcd4 = 0;
     data_0209fd00 = (int)((char *)data_0209fd08 + data_0209fce8 * 8);
-    data_0209fd0c = (u8 *)(data_0209fd14 + 0x28 + *(s32 *)((char *)data_0209fcf8 + 4) +
-                           *(s32 *)((char *)data_0209fd08 + data_0209fce8 * 8));
+    data_0209fd0c =
+        (u8 *)(data_0209fd14 + (sizeof(MessageBankHeader) + sizeof(MessageDataSection)) +
+               ((MessageInfoSection *)data_0209fcf8)->sectionSize +
+               ((MessageEntry *)((char *)data_0209fd08 + data_0209fce8 * 8))->textOffset);
     data_0209fc78 = (u8)((*(u16 *)((char *)data_0209fd00 + 4) + 7) / 8);
     data_0209fce4 = 0x7f;
     data_0209fc6c = (u8)(((0x20 - (data_0209fc78 + 2)) / 2) * 8);
@@ -1792,7 +1806,7 @@ extern "C" void func_020345b0(int arg0) {
         MultiStore16(ls, (char *)s, 0x800);
     }
 
-    scr = (char *)G2::GetBG3ScrPtr() + 0x42;
+    scr = (u16 *)G2::GetBG3ScrPtr() + 0x21;
     SetBg3Offset(-(int)data_0209fc6c, 4 - (int)data_0209fce0);
 
     i = 0;
@@ -1801,9 +1815,9 @@ extern "C" void func_020345b0(int arg0) {
         last = cols - 1;
         do {
             s32 rem = i % cols;
-            *(u16 *)((char *)scr + rem * 2) = (u16)(i + 0x200);
+            scr[rem] = (u16)(i + 0x200);
             if (last == rem) {
-                scr = (char *)scr + 0x40;
+                scr += 0x20;
             }
             i++;
         } while (i < (s32)(cols * (*(u8 *)((char *)data_0209fd00 + 6)) * 2));

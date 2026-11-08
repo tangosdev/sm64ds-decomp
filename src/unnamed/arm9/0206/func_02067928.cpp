@@ -43,7 +43,8 @@ int func_02067928(void *a, void *b)
     u32 state;
     u8 i;
 
-    end = (char *)b + 0x160 + ((RomHeaderView *)b)->main.size + ((RomHeaderView *)b)->sub.size;
+    end = (char *)b + sizeof(RomHeaderView) + ((RomHeaderView *)b)->main.size +
+          ((RomHeaderView *)b)->sub.size;
     idx = 0xff;
 
     state = IRQ::Disable();

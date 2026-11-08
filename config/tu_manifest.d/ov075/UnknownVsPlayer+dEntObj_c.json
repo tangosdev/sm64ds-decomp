@@ -66,182 +66,182 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114010Ev",
+      "symbol": "_ZN15UnknownVsPlayer12AnimFastGaitEv",
       "address": "0x02114010",
       "size": "0x000000d4",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114010Ev.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021140e4Ev",
+      "symbol": "_ZN15UnknownVsPlayer12AnimSlowGaitEv",
       "address": "0x021140e4",
       "size": "0x000000d4",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021140e4Ev.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021141b8Ev",
+      "symbol": "_ZN15UnknownVsPlayer15AnimWaitForIdleEv",
       "address": "0x021141b8",
       "size": "0x00000060",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021141b8Ev.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114218Ev",
+      "symbol": "_ZN15UnknownVsPlayer15AnimWaitForNextEv",
       "address": "0x02114218",
       "size": "0x00000064",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114218Ev.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211427cEv",
+      "symbol": "_ZN15UnknownVsPlayer14AnimWalkSoundsEv",
       "address": "0x0211427c",
       "size": "0x00000080",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_0211427cEv.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021142fcEv",
+      "symbol": "_ZN15UnknownVsPlayer8AnimNoneEv",
       "address": "0x021142fc",
       "size": "0x00000004",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021142fcEv.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114300Ev",
+      "symbol": "_ZN15UnknownVsPlayer17MovePoseParticlesEv",
       "address": "0x02114300",
       "size": "0x00000090",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114300Ev.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114390Ev",
+      "symbol": "_ZN15UnknownVsPlayer20MoveWaitForPoseSoundEv",
       "address": "0x02114390",
       "size": "0x00000054",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114390Ev.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021143e4Ev",
+      "symbol": "_ZN15UnknownVsPlayer14MoveChoosePoseEv",
       "address": "0x021143e4",
       "size": "0x0000017c",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021143e4Ev.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114560Ev",
+      "symbol": "_ZN15UnknownVsPlayer15MoveRunOffStageEv",
       "address": "0x02114560",
       "size": "0x000001dc",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114560Ev.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211473cEv",
+      "symbol": "_ZN15UnknownVsPlayer14MoveTurnToExitEv",
       "address": "0x0211473c",
       "size": "0x00000050",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_0211473cEv.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211478cEv",
+      "symbol": "_ZN15UnknownVsPlayer15MoveWaitForExitEv",
       "address": "0x0211478c",
       "size": "0x00000048",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_0211478cEv.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021147d4Ev",
+      "symbol": "_ZN15UnknownVsPlayer10MoveToSlotEv",
       "address": "0x021147d4",
       "size": "0x000000bc",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021147d4Ev.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114890Ev",
+      "symbol": "_ZN15UnknownVsPlayer8MoveNoneEv",
       "address": "0x02114890",
       "size": "0x00000004",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114890Ev.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114894Ev",
+      "symbol": "_ZN15UnknownVsPlayer16StartRunOffStageEv",
       "address": "0x02114894",
       "size": "0x0000005c",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114894Ev.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021148f0Ev",
+      "symbol": "_ZN15UnknownVsPlayer8IsAtExitEv",
       "address": "0x021148f0",
       "size": "0x00000014",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021148f0Ev.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114904Ei",
+      "symbol": "_ZN15UnknownVsPlayer8GoToExitEi",
       "address": "0x02114904",
       "size": "0x00000084",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114904Ei.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114988Ev",
+      "symbol": "_ZN15UnknownVsPlayer14PlaySelectAnimEv",
       "address": "0x02114988",
       "size": "0x00000048",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114988Ev.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021149d0Ei",
+      "symbol": "_ZN15UnknownVsPlayer10WalkToSlotEi",
       "address": "0x021149d0",
       "size": "0x00000088",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_021149d0Ei.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114a58Ev",
+      "symbol": "_ZN15UnknownVsPlayer6IsIdleEv",
       "address": "0x02114a58",
       "size": "0x00000014",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114a58Ev.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114a6cEv",
+      "symbol": "_ZN15UnknownVsPlayer9StartIdleEv",
       "address": "0x02114a6c",
       "size": "0x00000058",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114a6cEv.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114ac4EP7Vector3S1_",
+      "symbol": "_ZN15UnknownVsPlayer12UpdateCameraEP7Vector3S1_",
       "address": "0x02114ac4",
       "size": "0x0000009c",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114ac4EP7Vector3S1_.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114b60Ev",
+      "symbol": "_ZN15UnknownVsPlayer23RestoreBoneTranslationsEv",
       "address": "0x02114b60",
       "size": "0x00000084",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114b60Ev.c",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114be4Ev",
+      "symbol": "_ZN15UnknownVsPlayer6RenderEv",
       "address": "0x02114be4",
       "size": "0x000000f4",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114be4Ev.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114cd8Ev",
+      "symbol": "_ZN15UnknownVsPlayer8BehaviorEv",
       "address": "0x02114cd8",
       "size": "0x00000104",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114cd8Ev.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi",
+      "symbol": "_ZN15UnknownVsPlayer4InitEhhi",
       "address": "0x02114ddc",
       "size": "0x000001cc",
       "legacy_source": "src/_ZN15UnknownVsPlayer19func_ov075_02114ddcEhhi.cpp",
@@ -276,28 +276,28 @@
       "ordinal": 32
     },
     {
-      "symbol": "_ZN9dEntObj_c19func_ov075_021151b4Ei",
+      "symbol": "_ZN9dEntObj_c17SetMarkerPositionEi",
       "address": "0x021151b4",
       "size": "0x00000098",
       "legacy_source": "src/_ZN9dEntObj_c19func_ov075_021151b4Ei.c",
       "ordinal": 33
     },
     {
-      "symbol": "_ZN9dEntObj_c19func_ov075_0211524cEi",
+      "symbol": "_ZN9dEntObj_c8GetExitXEi",
       "address": "0x0211524c",
       "size": "0x00000044",
       "legacy_source": "src/_ZN9dEntObj_c19func_ov075_0211524cEi.c",
       "ordinal": 34
     },
     {
-      "symbol": "_ZN9dEntObj_c19func_ov075_02115290Ei",
+      "symbol": "_ZN9dEntObj_c12GetStandingXEi",
       "address": "0x02115290",
       "size": "0x00000044",
       "legacy_source": "src/_ZN9dEntObj_c19func_ov075_02115290Ei.c",
       "ordinal": 35
     },
     {
-      "symbol": "_ZN9dEntObj_c19func_ov075_021152d4Ev",
+      "symbol": "_ZN9dEntObj_c9SetCameraEv",
       "address": "0x021152d4",
       "size": "0x000000b4",
       "legacy_source": "src/_ZN9dEntObj_c19func_ov075_021152d4Ev.cpp",
@@ -352,70 +352,70 @@
       "address": "0x0211c5c0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_021147d4Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer10MoveToSlotEv"
     },
     {
       "symbol": "@1040",
       "address": "0x0211c5c8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114300Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer17MovePoseParticlesEv"
     },
     {
       "symbol": "@1077",
       "address": "0x0211c5d0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114890Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer8MoveNoneEv"
     },
     {
       "symbol": "@1038",
       "address": "0x0211c5d8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_021143e4Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer14MoveChoosePoseEv"
     },
     {
       "symbol": "@1039",
       "address": "0x0211c5e0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114390Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer20MoveWaitForPoseSoundEv"
     },
     {
       "symbol": "@1035",
       "address": "0x0211c5e8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114890Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer8MoveNoneEv"
     },
     {
       "symbol": "@1026",
       "address": "0x0211c5f0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_021141b8Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer15AnimWaitForIdleEv"
     },
     {
       "symbol": "@1042",
       "address": "0x0211c5f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114218Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer15AnimWaitForNextEv"
     },
     {
       "symbol": "@1068",
       "address": "0x0211c600",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_0211427cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer14AnimWalkSoundsEv"
     },
     {
       "symbol": "@1041",
       "address": "0x0211c608",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_021142fcEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer8AnimNoneEv"
     },
     {
       "symbol": "g_profile_ENTRY_OBJECT",
@@ -429,42 +429,42 @@
       "address": "0x0211c618",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_0211478cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer15MoveWaitForExitEv"
     },
     {
       "symbol": "@1036",
       "address": "0x0211c620",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114560Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer15MoveRunOffStageEv"
     },
     {
       "symbol": "@1031",
       "address": "0x0211c628",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114010Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer12AnimFastGaitEv"
     },
     {
       "symbol": "@1037",
       "address": "0x0211c630",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_02114890Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer8MoveNoneEv"
     },
     {
       "symbol": "@1029",
       "address": "0x0211c638",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_021140e4Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer12AnimSlowGaitEv"
     },
     {
       "symbol": "@1034",
       "address": "0x0211c640",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer19func_ov075_0211473cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN15UnknownVsPlayer14MoveTurnToExitEv"
     }
   ],
   "bss": [
@@ -777,14 +777,14 @@
       "evidence": "compiler-generated destructor-registration node for data_ov075_0211d39c"
     },
     {
-      "symbol": "data_ov075_0211d53c",
+      "symbol": "sVsPlayerAnimStates",
       "address": "0x0211d53c",
       "size": "0x30",
       "binding": "STB_GLOBAL",
       "evidence": "UnknownVsPlayer animation dispatch table: six pointer-to-member rows indexed by mAnimState, populated by the initializer"
     },
     {
-      "symbol": "data_ov075_0211d56c",
+      "symbol": "sVsPlayerMoveStates",
       "address": "0x0211d56c",
       "size": "0x50",
       "binding": "STB_GLOBAL",
@@ -1392,12 +1392,12 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "Vector3 four-byte destructor, vague linkage from the Vector3 locals in _ZN15UnknownVsPlayer19func_ov075_02114300Ev and _ZN9dEntObj_c19func_ov075_021151b4Ei. The cartridge owns the one copy at arm9:0x020072c0."
+      "reason": "Vector3 four-byte destructor, vague linkage from the Vector3 locals in _ZN15UnknownVsPlayer17MovePoseParticlesEv and _ZN9dEntObj_c17SetMarkerPositionEi. The cartridge owns the one copy at arm9:0x020072c0."
     },
     {
       "symbol": "_ZN9Matrix4x3D1Ev",
       "disposition": "deadstrip",
-      "reason": "Matrix4x3 vague-linkage destructor from the view-matrix local in _ZN9dEntObj_c19func_ov075_021152d4Ev. No configured ROM symbol of that name exists in any module and no surviving reference reaches it."
+      "reason": "Matrix4x3 vague-linkage destructor from the view-matrix local in _ZN9dEntObj_c9SetCameraEv. No configured ROM symbol of that name exists in any module and no surviving reference reaches it."
     },
     {
       "symbol": "_ZTV9dEntObj_c",
@@ -1519,194 +1519,194 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1079",
-      "to": "@1016",
-      "evidence": "mwcc emits this compiler temp as @1063; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1093 to @1095; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1082 to @1079 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1080",
-      "to": "@1018",
-      "evidence": "mwcc emits this compiler temp as @1064; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1094 to @1096; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1083 to @1080 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1081",
-      "to": "@1020",
-      "evidence": "mwcc emits this compiler temp as @1065; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1095 to @1097; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1084 to @1081 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1082",
-      "to": "@1022",
-      "evidence": "mwcc emits this compiler temp as @1066; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1096 to @1098; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1085 to @1082 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1083",
-      "to": "@1024",
-      "evidence": "mwcc emits this compiler temp as @1067; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1097 to @1099; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1086 to @1083 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1087",
-      "to": "@1028",
-      "evidence": "mwcc emits this compiler temp as @1071; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1101 to @1103; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1090 to @1087 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1089",
-      "to": "@1030",
-      "evidence": "mwcc emits this compiler temp as @1073; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1103 to @1105; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1092 to @1089 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1095",
-      "to": "@1032",
-      "evidence": "mwcc emits this compiler temp as @1079; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1109 to @1111; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1098 to @1095 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1097",
-      "to": "@1033",
-      "evidence": "mwcc emits this compiler temp as @1081; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1111 to @1113; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1100 to @1097 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
       "from": "@1099",
-      "to": "@1034",
-      "evidence": "mwcc emits this compiler temp as @1083; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1113 to @1115; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1102 to @1099 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
+      "to": "@1016",
+      "evidence": "mwcc emits this compiler temp as @1063; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1093 to @1095; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1082 to @1079 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1079 to @1099 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1100",
+      "to": "@1018",
+      "evidence": "mwcc emits this compiler temp as @1064; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1094 to @1096; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1083 to @1080 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1080 to @1100 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
       "from": "@1101",
-      "to": "@1035",
-      "evidence": "mwcc emits this compiler temp as @1085; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1115 to @1117; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1104 to @1101 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
+      "to": "@1020",
+      "evidence": "mwcc emits this compiler temp as @1065; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1095 to @1097; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1084 to @1081 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1081 to @1101 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1102",
+      "to": "@1022",
+      "evidence": "mwcc emits this compiler temp as @1066; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1096 to @1098; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1085 to @1082 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1082 to @1102 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
       "from": "@1103",
-      "to": "@1036",
-      "evidence": "mwcc emits this compiler temp as @1087; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1117 to @1119; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1106 to @1103 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1105",
-      "to": "@1037",
-      "evidence": "mwcc emits this compiler temp as @1089; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1119 to @1121; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1108 to @1105 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
+      "to": "@1024",
+      "evidence": "mwcc emits this compiler temp as @1067; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1097 to @1099; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1086 to @1083 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1083 to @1103 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
       "from": "@1107",
-      "to": "@1038",
-      "evidence": "mwcc emits this compiler temp as @1091; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1121 to @1123; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1110 to @1107 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
+      "to": "@1028",
+      "evidence": "mwcc emits this compiler temp as @1071; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1101 to @1103; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1090 to @1087 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1087 to @1107 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
       "from": "@1109",
-      "to": "@1039",
-      "evidence": "mwcc emits this compiler temp as @1093; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1123 to @1125; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1112 to @1109 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1111",
-      "to": "@1040",
-      "evidence": "mwcc emits this compiler temp as @1095; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1125 to @1127; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1114 to @1111 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1113",
-      "to": "@1041",
-      "evidence": "mwcc emits this compiler temp as @1097; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1127 to @1129; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1116 to @1113 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1117",
-      "to": "@1042",
-      "evidence": "mwcc emits this compiler temp as @1099; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1129 to @1131; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1120 to @1117 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1093",
-      "to": "@1077",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1107 now; licensed under the existing pin @1077 Current scalar-interface migration renumbers @1107 to @1109; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1096 to @1093 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1119",
-      "to": "@1026",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1130 now; licensed under the existing pin @1100 Current scalar-interface migration renumbers @1130 to @1132; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1122 to @1119 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
+      "to": "@1030",
+      "evidence": "mwcc emits this compiler temp as @1073; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1103 to @1105; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1092 to @1089 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1089 to @1109 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
       "from": "@1115",
-      "to": "@1068",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1128 now; licensed under the existing pin @1098 Current scalar-interface migration renumbers @1128 to @1130; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1118 to @1115 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
+      "to": "@1032",
+      "evidence": "mwcc emits this compiler temp as @1079; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1109 to @1111; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1098 to @1095 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1095 to @1115 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
-      "from": "@1123",
-      "to": "@1031",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1134 now; licensed under the existing pin @1104 Current scalar-interface migration renumbers @1134 to @1136; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1126 to @1123 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
+      "from": "@1117",
+      "to": "@1033",
+      "evidence": "mwcc emits this compiler temp as @1081; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1111 to @1113; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1100 to @1097 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1097 to @1117 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1119",
+      "to": "@1034",
+      "evidence": "mwcc emits this compiler temp as @1083; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1113 to @1115; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1102 to @1099 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1099 to @1119 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
       "from": "@1121",
+      "to": "@1035",
+      "evidence": "mwcc emits this compiler temp as @1085; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1115 to @1117; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1104 to @1101 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1101 to @1121 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1123",
+      "to": "@1036",
+      "evidence": "mwcc emits this compiler temp as @1087; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1117 to @1119; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1106 to @1103 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1103 to @1123 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1125",
+      "to": "@1037",
+      "evidence": "mwcc emits this compiler temp as @1089; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1119 to @1121; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1108 to @1105 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1105 to @1125 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1127",
+      "to": "@1038",
+      "evidence": "mwcc emits this compiler temp as @1091; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1121 to @1123; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1110 to @1107 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1107 to @1127 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1129",
+      "to": "@1039",
+      "evidence": "mwcc emits this compiler temp as @1093; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1123 to @1125; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1112 to @1109 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1109 to @1129 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1131",
+      "to": "@1040",
+      "evidence": "mwcc emits this compiler temp as @1095; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1125 to @1127; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1114 to @1111 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1111 to @1131 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1133",
+      "to": "@1041",
+      "evidence": "mwcc emits this compiler temp as @1097; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1127 to @1129; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1116 to @1113 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1113 to @1133 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1137",
+      "to": "@1042",
+      "evidence": "mwcc emits this compiler temp as @1099; batch renumber to unused same-length name, batch-mates ov085/daC_Jugem_c and ov081/daGmch_c promote the same temp names globally Current scalar-interface migration renumbers @1129 to @1131; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1120 to @1117 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1117 to @1137 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1113",
+      "to": "@1077",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1107 now; licensed under the existing pin @1077 Current scalar-interface migration renumbers @1107 to @1109; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1096 to @1093 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1093 to @1113 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1139",
+      "to": "@1026",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1130 now; licensed under the existing pin @1100 Current scalar-interface migration renumbers @1130 to @1132; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1122 to @1119 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1119 to @1139 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1135",
+      "to": "@1068",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1128 now; licensed under the existing pin @1098 Current scalar-interface migration renumbers @1128 to @1130; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1118 to @1115 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1115 to @1135 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1143",
+      "to": "@1031",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1134 now; licensed under the existing pin @1104 Current scalar-interface migration renumbers @1134 to @1136; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1126 to @1123 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1123 to @1143 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1141",
       "to": "@1029",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1132 now; licensed under the existing pin @1102 Current scalar-interface migration renumbers @1132 to @1134; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1124 to @1121 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1132 now; licensed under the existing pin @1102 Current scalar-interface migration renumbers @1132 to @1134; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1124 to @1121 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1121 to @1141 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
-      "from": "@1085",
+      "from": "@1105",
       "to": "@1069",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1099 now; licensed under the existing pin @1069 Current scalar-interface migration renumbers @1099 to @1101; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1088 to @1085 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1070",
-      "to": "@1054",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1084 now; licensed under the existing pin @1054 Current scalar-interface migration renumbers @1084 to @1086; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1073 to @1070 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1071",
-      "to": "@1055",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1085 now; licensed under the existing pin @1055 Current scalar-interface migration renumbers @1085 to @1087; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1074 to @1071 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1072",
-      "to": "@1056",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1086 now; licensed under the existing pin @1056 Current scalar-interface migration renumbers @1086 to @1088; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1075 to @1072 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1091",
-      "to": "@1075",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1105 now; licensed under the existing pin @1075 Current scalar-interface migration renumbers @1105 to @1107; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1094 to @1091 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1073",
-      "to": "@1057",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1087 now; licensed under the existing pin @1057 Current scalar-interface migration renumbers @1087 to @1089; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1076 to @1073 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1074",
-      "to": "@1058",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1088 now; licensed under the existing pin @1058 Current scalar-interface migration renumbers @1088 to @1090; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1077 to @1074 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1075",
-      "to": "@1059",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1089 now; licensed under the existing pin @1059 Current scalar-interface migration renumbers @1089 to @1091; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1078 to @1075 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1076",
-      "to": "@1060",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1090 now; licensed under the existing pin @1060 Current scalar-interface migration renumbers @1090 to @1092; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1079 to @1076 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1077",
-      "to": "@1061",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1091 now; licensed under the existing pin @1061 Current scalar-interface migration renumbers @1091 to @1093; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1080 to @1077 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1078",
-      "to": "@1062",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1092 now; licensed under the existing pin @1062 Current scalar-interface migration renumbers @1092 to @1094; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1081 to @1078 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1084",
-      "to": "@1098",
-      "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1087 to @1084 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1086",
-      "to": "@1100",
-      "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1089 to @1086 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
-    },
-    {
-      "from": "@1088",
-      "to": "@1102",
-      "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1091 to @1088 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1099 now; licensed under the existing pin @1069 Current scalar-interface migration renumbers @1099 to @1101; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1088 to @1085 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1085 to @1105 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
       "from": "@1090",
+      "to": "@1054",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1084 now; licensed under the existing pin @1054 Current scalar-interface migration renumbers @1084 to @1086; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1073 to @1070 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1070 to @1090 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1091",
+      "to": "@1055",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1085 now; licensed under the existing pin @1055 Current scalar-interface migration renumbers @1085 to @1087; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1074 to @1071 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1071 to @1091 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1092",
+      "to": "@1056",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1086 now; licensed under the existing pin @1056 Current scalar-interface migration renumbers @1086 to @1088; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1075 to @1072 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1072 to @1092 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1111",
+      "to": "@1075",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1105 now; licensed under the existing pin @1075 Current scalar-interface migration renumbers @1105 to @1107; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1094 to @1091 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1091 to @1111 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1093",
+      "to": "@1057",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1087 now; licensed under the existing pin @1057 Current scalar-interface migration renumbers @1087 to @1089; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1076 to @1073 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1073 to @1093 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1094",
+      "to": "@1058",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1088 now; licensed under the existing pin @1058 Current scalar-interface migration renumbers @1088 to @1090; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1077 to @1074 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1074 to @1094 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1095",
+      "to": "@1059",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1089 now; licensed under the existing pin @1059 Current scalar-interface migration renumbers @1089 to @1091; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1078 to @1075 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1075 to @1095 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1096",
+      "to": "@1060",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1090 now; licensed under the existing pin @1060 Current scalar-interface migration renumbers @1090 to @1092; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1079 to @1076 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1076 to @1096 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1097",
+      "to": "@1061",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1091 now; licensed under the existing pin @1061 Current scalar-interface migration renumbers @1091 to @1093; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1080 to @1077 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1077 to @1097 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1098",
+      "to": "@1062",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @1092 now; licensed under the existing pin @1062 Current scalar-interface migration renumbers @1092 to @1094; complete allocated payload, symbol attributes, section/order and typed-relocation comparison preserves the existing canonical destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1081 to @1078 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1078 to @1098 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1104",
+      "to": "@1098",
+      "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1087 to @1084 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1084 to @1104 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1106",
+      "to": "@1100",
+      "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1089 to @1086 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1086 to @1106 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1108",
+      "to": "@1102",
+      "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1091 to @1088 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1088 to @1108 when the TU included nitro/fx/fx_trig.h (#821)."
+    },
+    {
+      "from": "@1110",
       "to": "@1104",
-      "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1093 to @1090 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821)."
+      "evidence": "Measured +2 compiler temporary shift; retain existing canonical name and licensed destination. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1093 to @1090 when the remainder read through a long-long __aeabi_uidiv became the % operator (#821). Re-keyed from @1090 to @1110 when the TU included nitro/fx/fx_trig.h (#821)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -2867,7 +2867,7 @@
       "source": "0x0211bab8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov075_0211d56c",
+      "symbol": "sVsPlayerMoveStates",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x0211d56c"
@@ -2977,7 +2977,7 @@
       "source": "0x0211bae4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov075_0211d53c",
+      "symbol": "sVsPlayerAnimStates",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x0211d53c"
@@ -3057,7 +3057,7 @@
       "source": "0x0211c5c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021147d4Ev",
+      "symbol": "_ZN15UnknownVsPlayer10MoveToSlotEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x021147d4"
@@ -3067,7 +3067,7 @@
       "source": "0x0211c5c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114300Ev",
+      "symbol": "_ZN15UnknownVsPlayer17MovePoseParticlesEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114300"
@@ -3077,7 +3077,7 @@
       "source": "0x0211c5d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114890Ev",
+      "symbol": "_ZN15UnknownVsPlayer8MoveNoneEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114890"
@@ -3087,7 +3087,7 @@
       "source": "0x0211c5d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021143e4Ev",
+      "symbol": "_ZN15UnknownVsPlayer14MoveChoosePoseEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x021143e4"
@@ -3097,7 +3097,7 @@
       "source": "0x0211c5e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114390Ev",
+      "symbol": "_ZN15UnknownVsPlayer20MoveWaitForPoseSoundEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114390"
@@ -3107,7 +3107,7 @@
       "source": "0x0211c5e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114890Ev",
+      "symbol": "_ZN15UnknownVsPlayer8MoveNoneEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114890"
@@ -3117,7 +3117,7 @@
       "source": "0x0211c5f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021141b8Ev",
+      "symbol": "_ZN15UnknownVsPlayer15AnimWaitForIdleEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x021141b8"
@@ -3127,7 +3127,7 @@
       "source": "0x0211c5f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114218Ev",
+      "symbol": "_ZN15UnknownVsPlayer15AnimWaitForNextEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114218"
@@ -3137,7 +3137,7 @@
       "source": "0x0211c600",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211427cEv",
+      "symbol": "_ZN15UnknownVsPlayer14AnimWalkSoundsEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x0211427c"
@@ -3147,7 +3147,7 @@
       "source": "0x0211c608",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021142fcEv",
+      "symbol": "_ZN15UnknownVsPlayer8AnimNoneEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x021142fc"
@@ -3157,7 +3157,7 @@
       "source": "0x0211c618",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211478cEv",
+      "symbol": "_ZN15UnknownVsPlayer15MoveWaitForExitEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x0211478c"
@@ -3167,7 +3167,7 @@
       "source": "0x0211c620",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114560Ev",
+      "symbol": "_ZN15UnknownVsPlayer15MoveRunOffStageEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114560"
@@ -3177,7 +3177,7 @@
       "source": "0x0211c628",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114010Ev",
+      "symbol": "_ZN15UnknownVsPlayer12AnimFastGaitEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114010"
@@ -3187,7 +3187,7 @@
       "source": "0x0211c630",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_02114890Ev",
+      "symbol": "_ZN15UnknownVsPlayer8MoveNoneEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x02114890"
@@ -3197,7 +3197,7 @@
       "source": "0x0211c638",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_021140e4Ev",
+      "symbol": "_ZN15UnknownVsPlayer12AnimSlowGaitEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x021140e4"
@@ -3207,7 +3207,7 @@
       "source": "0x0211c640",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN15UnknownVsPlayer19func_ov075_0211473cEv",
+      "symbol": "_ZN15UnknownVsPlayer14MoveTurnToExitEv",
       "addend": 0,
       "target_module": "ov075",
       "target_address": "0x0211473c"

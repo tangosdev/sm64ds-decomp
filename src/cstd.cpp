@@ -20,8 +20,8 @@
 #include "cstd.h"
 
 extern "C" {
-int func_02052fdc(void);
-void func_02053008(int n);
+int FX_GetSqrtResult(void);
+void FX_SqrtAsync(int n);
 }
 
 /* Squared distance |a-b|^2 through the hardware sqrt unit; returns the
@@ -97,18 +97,17 @@ int func_020531a4(int a)
     sqrtParam[1] = a;
     *imeReg;
     *imeReg = savedIME;
-    return func_02052fdc();
+    return FX_GetSqrtResult();
 }
 }
 
 extern "C" {
-s32 func_02053130(s32 x)
-{
+s32 FX_InvSqrt(s32 x) {
     s64 quotient;
 
     if (x > 0) {
         cstd::reciprocal_async(x);
-        func_02053008(x);
+        FX_SqrtAsync(x);
         quotient = cstd::ldiv_result();
 
         while (REG_SQRTCNT & SQRT_CONTROL_BUSY)
@@ -150,8 +149,7 @@ void reciprocal_async(Fix12i a) {
 }
 
 extern "C" {
-void func_02053008(int n)
-{
+void FX_SqrtAsync(int n) {
     volatile unsigned short *imeReg = (volatile unsigned short *)0x4000208;
     volatile unsigned short *sqrtcnt = (volatile unsigned short *)0x40002b0;
     volatile unsigned int *sqrtParam = (volatile unsigned int *)0x40002b8;
@@ -177,7 +175,7 @@ void func_02053008(int n)
 }
 
 extern "C" {
-int func_02052fdc(void) {
+int FX_GetSqrtResult(void) {
     while (*(volatile unsigned short *)0x40002b0 & 0x8000)
         ;
     return (*(volatile unsigned int *)0x40002b4 + 0x200) >> 10;

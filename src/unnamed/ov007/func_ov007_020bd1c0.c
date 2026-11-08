@@ -16,7 +16,7 @@ extern void func_ov007_020b2998(void);
 extern void func_ov007_020bfbdc(void* self);
 extern void func_ov007_020c14b8(struct Ov007Texture *t);
 extern void func_ov007_020b77ac(void);
-extern void func_ov007_020b9880(int a, int b);
+extern void PickerScene_Create(int a, int b);
 extern void func_ov007_020bf428(void);
 extern void func_ov007_020b3edc(int r0);
 
@@ -75,7 +75,7 @@ void func_ov007_020bd1c0(int n)
         func_ov007_020c14b8(WORK->textures[1]);
         func_ov007_020c14b8(WORK->textures[3]);
         func_ov007_020c14b8(WORK->textures[4]);
-        func_ov007_020b9880(WORK->transitionMode, WORK->figureIndex);
+        PickerScene_Create(WORK->transitionMode, WORK->figureIndex);
         break;
     case 2:
         {

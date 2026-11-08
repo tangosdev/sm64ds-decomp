@@ -34,14 +34,15 @@
  * (dCcAcPos_c, dBgCh_Actr, dExtAnmModel_c, dExtShadowModel_c) come from the implicit
  * default constructor with zero mangled calls.
  *
- * The fourteen address-named functions whose first parameter was the owl are
- * non-static methods. The cartridge keeps no English spelling, so the method
- * name is the ROM address. func_ov094_02136188 still takes the State pointer.
+ * The fourteen functions whose first parameter was the owl are non-static
+ * methods. The cartridge keeps no English spelling. Each Enter/Update pair is
+ * one state's enter and main handler. ChangeState still takes the State
+ * pointer.
  *
- * The actor-id test in func_ov094_021357a4 goes through the int-returning
+ * The actor-id test in TryPickUpRider goes through the int-returning
  *   IsPlayerActor; a bare `other->actorID != ACTOR_PLAYER` shrinks the method
  *   from ROM 0x110 to object 0x104.
- * Leftover: func_ov094_02136024 stores mPos into `d` and then overwrites all
+ * Leftover: UpdateDormant stores mPos into `d` and then overwrites all
  *   three fields. Dropping those three stores shrank the method from ROM
  *   0x12c to object 0x114. The stores stay.
  * Leftover: dBgCh_Actr::Unk_0203589c has no member declaration in a shared
@@ -53,7 +54,7 @@
  *   Writing them as mAnmModel members hoists the base.
  * Leftover: state-timer reads use a u16 cast. mStateTimer is s16; the ROM
  *   loads it unsigned.
- * Leftover: RandomIntInternal stays unsigned so func_ov094_02135e64 keeps its
+ * Leftover: RandomIntInternal stays unsigned so EnterHover keeps its
  *   logical shift. Behavior tests the carry state twice; the else is what
  *   the ROM emits.
  */
@@ -150,7 +151,7 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 
 extern "C" {
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f220;
+extern unsigned char gCurrentStarId;
 extern short data_02082214[];
 
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
@@ -191,8 +192,7 @@ daOwl_c::~daOwl_c()
  * The contact owner is the actor id in the hit-box; only the player (0xbf)
  * counts. Attaches the player, zeroes the owl's velocity and enters the carry
  * state; if the attach is refused the rider is dropped again. */
-void daOwl_c::func_ov094_021357a4()
-{
+void daOwl_c::TryPickUpRider() {
     int st[3];
     VecFx32 tmp;
     tmp.x = data_ov094_02136a1c[0];
@@ -220,14 +220,13 @@ void daOwl_c::func_ov094_021357a4()
         mRider = 0;
         return;
     }
-    func_ov094_02136188(OWL_STATE_CARRY);
+    ChangeState(OWL_STATE_CARRY);
 }
 
 /* Main of the return state. Phase 0 fades the owl out (with an upward speed);
  * once invisible it jumps to just above the anchor and starts phase 1, which
  * eases it onto the anchor while fading back in, then goes to hover. */
-int daOwl_c::func_ov094_021358b4()
-{
+int daOwl_c::UpdateReturn() {
     if (unk_3e8 == 0) {
         if (mOpacity != 0) {
             mOpacity--;
@@ -249,7 +248,7 @@ int daOwl_c::func_ov094_021358b4()
             mOpacity++;
         } else {
             mOpacity = OPACITY_MAX;
-            func_ov094_02136188(OWL_STATE_HOVER);
+            ChangeState(OWL_STATE_HOVER);
         }
     }
     return 1;
@@ -257,8 +256,7 @@ int daOwl_c::func_ov094_021358b4()
 
 /* Enter of the return state: restart the fade and play the animation
  * data_ov094_02136af8[1] at double speed. */
-int daOwl_c::func_ov094_0213598c()
-{
+int daOwl_c::EnterReturn() {
     unk_3e8 = 0;
     mStateTimer = 0;
     mAnimSpeed = 0x2000;
@@ -270,8 +268,7 @@ int daOwl_c::func_ov094_0213598c()
  * sound 0x18c playing, plays sound 0x139 once per animation loop, levels the pitch, and
  * hands the rider back (to the return state) when the rider lets go, is lost,
  * or the owl hits a wall. */
-int daOwl_c::func_ov094_021359d8()
-{
+int daOwl_c::UpdateCarrying() {
     daPly_c *rider;
 
     if (OWL_TIMER(this) == 1) {
@@ -308,7 +305,7 @@ int daOwl_c::func_ov094_021359d8()
             mRider = 0;
             unk_3e8 = 0;
             mStateTimer = 0;
-            func_ov094_02136188(OWL_STATE_RETURN);
+            ChangeState(OWL_STATE_RETURN);
             return 1;
         }
     }
@@ -319,14 +316,13 @@ int daOwl_c::func_ov094_021359d8()
         mRider = 0;
         unk_3e8 = 0;
         mStateTimer = 0;
-        func_ov094_02136188(OWL_STATE_RETURN);
+        ChangeState(OWL_STATE_RETURN);
     }
     return 1;
 }
 
 /* Enter of the carry state: 30-frame timer, animation data_ov094_02136af8[1] at double speed. */
-int daOwl_c::func_ov094_02135bd4()
-{
+int daOwl_c::EnterCarrying() {
     mStateTimer = 0x1e;
     unk_3e8 = 0;
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af8.filePtr, 0, 0x1000, 0);
@@ -339,8 +335,7 @@ int daOwl_c::func_ov094_02135bd4()
  * state. Otherwise it wanders: when it is too far from the anchor it turns
  * back toward it, else it picks a random heading and duration. It bobs on a
  * sine table around the anchor's height and moves along its heading. */
-int daOwl_c::func_ov094_02135c28()
-{
+int daOwl_c::UpdateHover() {
     int result;
     int ang;
     int *p3e8;
@@ -357,7 +352,7 @@ int daOwl_c::func_ov094_02135c28()
                         if (mTalkTarget->ShowMessage(*this, 0xa2, &mPos, 0, 0) == 1) {
                             func_02012694(0x176, &mCamSpacePosX);
                             mTalkState = TALK_TALKING;
-                            func_ov094_02136188(OWL_STATE_TALK);
+                            ChangeState(OWL_STATE_TALK);
                             return 1;
                         }
                     }
@@ -399,8 +394,7 @@ int daOwl_c::func_ov094_02135c28()
 
 /* Enter of the hover state: animation data_ov094_02136af0[1] at normal speed, random heading and a
  * 50..113 frame wander timer. */
-int daOwl_c::func_ov094_02135e64()
-{
+int daOwl_c::EnterHover() {
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af0.filePtr, 0, 0x1000, 0);
     mWanderAngleY = (short)((RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
     mStateTimer = (short)(((RandomIntInternal(&data_0209e650.value) >> 8) & 0x3f) + 0x32);
@@ -411,10 +405,9 @@ int daOwl_c::func_ov094_02135e64()
 /* Main of the talk state: turn to face the player (yaw, then pitch toward a
  * point 200 units above its feet). When the player's talk state goes negative
  * the conversation is over; mark it done and return to hover. */
-int daOwl_c::func_ov094_02135ee0()
-{
+int daOwl_c::UpdateTalk() {
     if (mTalkTarget == 0) {
-        func_ov094_02136188(OWL_STATE_HOVER);
+        ChangeState(OWL_STATE_HOVER);
         return 1;
     }
     VecFx32 v = *(VecFx32 *)&mTalkTarget->mPosX;
@@ -431,14 +424,13 @@ int daOwl_c::func_ov094_02135ee0()
     ApproachAngle(&mPrevAngleX, Vec3_VertAngle(&mPos, &u), 0xa, 0x200, 0x100);
     if (mTalkTarget->GetTalkState() < 0) {
         mTalkState = TALK_DONE;
-        func_ov094_02136188(OWL_STATE_HOVER);
+        ChangeState(OWL_STATE_HOVER);
     }
     return 1;
 }
 
 /* Enter of the talk state: stop, and play the animation data_ov094_02136af0[1]. */
-int daOwl_c::func_ov094_02135fe0()
-{
+int daOwl_c::EnterTalk() {
     mSpeedX = 0;
     mVertSpeed = 0;
     mSpeedZ = 0;
@@ -451,8 +443,7 @@ int daOwl_c::func_ov094_02135fe0()
  * within 40 units of the owl (LenVec3 < 0x28000) it sets the anchor 800 units
  * from the owl along a fixed yaw, faces it, and enters hover.
  */
-int daOwl_c::func_ov094_02136024()
-{
+int daOwl_c::UpdateDormant() {
     daPly_c *p = ClosestPlayer();
     if (p != 0 && p->mClimbClsn != 0) {
         VecFx32 *playerPos = (VecFx32 *)&p->mPosX;
@@ -484,22 +475,20 @@ int daOwl_c::func_ov094_02136024()
             }
             mPrevAngleY = Vec3_HorzAngle(&mPos, &mAnchor);
             mAngleY = mPrevAngleY;
-            func_ov094_02136188(OWL_STATE_HOVER);
+            ChangeState(OWL_STATE_HOVER);
         }
     }
     return 1;
 }
 
 /* Enter of the dormant state: animation data_ov094_02136af0[1]. */
-int daOwl_c::func_ov094_02136150()
-{
+int daOwl_c::EnterDormant() {
     mAnmModel.SetAnim((BCA_File *)data_ov094_02136af0.filePtr, 0, 0x1000, 0);
     return 1;
 }
 
 /* Switch state: store it, then run its enter handler if it has one. */
-int daOwl_c::func_ov094_02136188(State *state)
-{
+int daOwl_c::ChangeState(State *state) {
     mCurrentState = state;
     State *s = mCurrentState;
     if (s->mEnter == 0)
@@ -509,8 +498,7 @@ int daOwl_c::func_ov094_02136188(State *state)
 
 /* Per-frame model setup: world matrix from position (>> 3) and angles, the
  * model's opacity, its shadow matrix, and the drop shadow. */
-void daOwl_c::func_ov094_021361d8()
-{
+void daOwl_c::UpdateModelTransform() {
     Matrix4x3 out;
     VecFx32 v;
     Vec3_Asr((Vector3 *)&v, &mPos, 3);
@@ -531,8 +519,7 @@ void daOwl_c::func_ov094_021361d8()
 /* Carry state's placement: take the rider's matrix (pointer at rider + 0xc8),
  * offset and rotate it, and use the result as the owl's own position, yaw and
  * model matrix. */
-void daOwl_c::func_ov094_021362e0()
-{
+void daOwl_c::FollowRiderMatrix() {
     daPly_c *m;
     if (mRider == 0)
         return;
@@ -597,13 +584,13 @@ int daOwl_c::Behavior()
     /* The ROM tests this state twice; the else is unreachable. */
     if (mCurrentState == OWL_STATE_CARRY) {
         if (mCurrentState == OWL_STATE_CARRY) {
-            func_ov094_021362e0();
+            FollowRiderMatrix();
             mAngleX = mPrevAngleX;
             mAngleY = mPrevAngleY;
             mAngleZ = mPrevAngleZ;
             UpdateWMClsn(mWithMeshClsn, 0);
         } else {
-            func_ov094_021361d8();
+            UpdateModelTransform();
         }
         return 1;
     }
@@ -620,9 +607,9 @@ int daOwl_c::Behavior()
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
-    func_ov094_021361d8();
+    UpdateModelTransform();
     if (mCurrentState == OWL_STATE_HOVER && mTalkState == TALK_DONE) {
-        func_ov094_021357a4();
+        TryPickUpRider();
     }
     mdCcAcPos_c.Clear();
     mdCcAcPos_c.Update();
@@ -651,10 +638,10 @@ int daOwl_c::InitResources()
     mAnimSpeed = 0x1000;
     mOpacity = OPACITY_MAX;
     mWithMeshClsn.Init(this, 0x50000, 0x64000, (Vector3_16 *)0, 0);
-    func_ov094_02136188(OWL_STATE_DORMANT);
+    ChangeState(OWL_STATE_DORMANT);
 
     if (gCurrentSublevel == 7) {
-        if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
+        if (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) {
             MarkForDestruction();
             return 0;
         }
@@ -676,8 +663,8 @@ daOwlAnimationFilePtr data_ov094_02136af8(ASSET_OWL_FLY_1_BCA);
 daOwlAnimationFilePtr data_ov094_02136ae8(ASSET_OWL_FLY_2_BCA);
 daOwlAnimationFilePtr data_ov094_02136af0(ASSET_OWL_FLY_FREE_BCA);
 
-OwlState data_ov094_02136b40(&daOwl_c::func_ov094_02136150, &daOwl_c::func_ov094_02136024);
-OwlState data_ov094_02136b50(&daOwl_c::func_ov094_02135fe0, &daOwl_c::func_ov094_02135ee0);
-OwlState data_ov094_02136b60(&daOwl_c::func_ov094_02135e64, &daOwl_c::func_ov094_02135c28);
-OwlState data_ov094_02136b70(&daOwl_c::func_ov094_02135bd4, &daOwl_c::func_ov094_021359d8);
-OwlState data_ov094_02136b30(&daOwl_c::func_ov094_0213598c, &daOwl_c::func_ov094_021358b4);
+OwlState data_ov094_02136b40(&daOwl_c::EnterDormant, &daOwl_c::UpdateDormant);
+OwlState data_ov094_02136b50(&daOwl_c::EnterTalk, &daOwl_c::UpdateTalk);
+OwlState data_ov094_02136b60(&daOwl_c::EnterHover, &daOwl_c::UpdateHover);
+OwlState data_ov094_02136b70(&daOwl_c::EnterCarrying, &daOwl_c::UpdateCarrying);
+OwlState data_ov094_02136b30(&daOwl_c::EnterReturn, &daOwl_c::UpdateReturn);

@@ -4,7 +4,7 @@ struct Ring
 {
     u16 head;
     u16 pad;
-    u16 tail;
+    volatile u16 tail; /* advanced by the debugger as it drains the ring */
 };
 
 /* optimize_for_size is this library's own build setting, not a matching lever:
@@ -21,7 +21,7 @@ void func_0206ca7c(struct Ring *r, int val)
     struct DebuggerBlock *sh = (struct DebuggerBlock *)0x027fff60;
     u16 head = r->head;
     u16 next = (head + 1) & 0x3fff;
-    u16 tail = *(volatile u16 *)&r->tail;
+    u16 tail = r->tail;
     char *buf = sh->buf + 0x8000;
     int off;
     u16 cur;

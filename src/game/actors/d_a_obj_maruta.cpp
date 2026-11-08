@@ -19,14 +19,10 @@
  *   daObjFlMaruta_c (ov022) and daObjHmMaruta_c (ov030) forward
  *   InitResources, Behavior and CleanupResources into them, so naming them
  *   means converting both leaves in the same change.
- * - func_020393d4 / func_020393c4 are 4-byte stores into dBgW+0x18 / +0x1c.
- *   This TU stores dBgW::UpdatePosWithVelocity and StoodOnCallback there;
- *   dBgW.h has no setter.
  * - func_02012694 (sound 0x1e at mCamSpacePosX), Matrix4x3_FromRotationXYZExt,
  *   Vec3_Sub, LenVec3 and AngleDiff are arm9 C helpers no header declares yet.
  * - (Vector3 *)&mRestPosX / &mHitPosX: the class stores those triples as
  *   scalars (issue #2566).
- * - The sine table keeps its arm9 linker name, data_02082214.
  * - Abstract class: the leaves own classInit.
  * - common.h comes first so UpdateModelTransform's Matrix4x3 translation
  *   stores use the flat s32 m[12] spelling (math/Matrix.h nested form
@@ -42,6 +38,7 @@
 #include "Sound.h"
 #include "dBgW.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 
 #include "ResourceDescriptor.h"
@@ -53,14 +50,10 @@ int AngleDiff(int a, int b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 int LenVec3(void *v);
 
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-
 int func_ov080_021270dc(daObjMaruta_c *self, ResourceDescriptor *arg);
 int func_ov080_0212714c(daObjMaruta_c *self, int *maxDist);
 int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg);
 }
-extern s16 data_02082214[];
 
 /* -------------------------------------------------------------------------- */
 /* ROM 0x02126fbc (D0, size 0x58) and 0x02127014 (D1, size 0x44)              */
@@ -248,8 +241,8 @@ extern "C" int func_ov080_021274ac(daObjMaruta_c *self, ResourceDescriptor *arg)
     ((dBgW_KcMbg *)(&self->mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*arg->collision), *(&self->mClsnMat),
                               0x1000, self->mAngleY, *(arg->clps));
-    func_020393d4(&self->mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4(&self->mMeshCollider, &daObjMaruta_c::StoodOnCallback);
+    self->mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
+    self->mMeshCollider.SetStoodOnCallback(&daObjMaruta_c::StoodOnCallback);
     self->mRestPosX = self->mPosX;
     self->mRestPosY = self->mPosY;
     self->mRestPosZ = self->mPosZ;
@@ -281,20 +274,8 @@ void daObjMaruta_c::HandlePlayerContact(dActor_c *other) {
         mHitTimer = 0x78;
 
         half = mHorzSpeed >> 1;
-
-        {
-            int idx = ((u16)mAngleY) >> 4;
-            int sc = data_02082214[idx * 2];
-            int v = position->x;
-            position->x = v + FX_MUL(half, sc);
-        }
-
-        {
-            int idx = ((u16)mAngleY) >> 4;
-            int sc = data_02082214[idx * 2 + 1];
-            int v = position->z;
-            position->z = v + FX_MUL(half, sc);
-        }
+        position->x += FX_MUL(half, FX_SinIdx((u16)mAngleY >> 4));
+        position->z += FX_MUL(half, FX_CosIdx((u16)mAngleY >> 4));
     }
 }
 

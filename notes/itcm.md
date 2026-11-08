@@ -62,7 +62,7 @@ the module string is right.
 | group | count | bytes | notes |
 |---|---|---|---|
 | `MeshCollider` collision core | 8 | 10,412 | the octree; three `DetectClsn` overloads plus five named accessors |
-| `MeshCollider`, unnamed | 6 | 88 | `func_01ffb07c`..`func_01ffb0c8` — all matched, see below |
+| `MeshCollider` field accessors | 6 | 88 | 0x01ffb07c..0x01ffb0c8, now `dBgW_Kc::SetDepthDir`..`GetFile` — all matched, see below |
 | unnamed `func_01ff…`, unexamined | 19 | 10,764 | `func_01ff8000`..`func_01ffde98` |
 | runtime / SDK | 8 | 1,640 | `__aeabi_idiv`, `__aeabi_uidiv`, `__aeabi_uldiv`, `__aeabi_ulmod`, `OSReadROMArea`, `DMAStartTransfer`, `DMAStartTransferFB`, `IRQ::UserInterruptHandler` |
 
@@ -90,12 +90,12 @@ unmatched function in the game.
 
 | function | addr | size |
 |---|---|---|
-| `func_01ffb07c` — copies a Vector3 into the 0x38 member | 0x01ffb07c | 0x1c |
-| `func_01ffb098` — clears the 0x35 flag | 0x01ffb098 | 0xc |
-| `func_01ffb0a4` — sets the 0x35 flag | 0x01ffb0a4 | 0xc |
-| `func_01ffb0b0` — clears the 0x34 flag | 0x01ffb0b0 | 0xc |
-| `func_01ffb0bc` — sets the 0x34 flag | 0x01ffb0bc | 0xc |
-| `func_01ffb0c8` — `GetFile()`, returns the 0x20 member | 0x01ffb0c8 | 0x8 |
+| `dBgW_Kc::SetDepthDir` (was `func_01ffb07c`) — copies a Vector3 into the 0x38 member | 0x01ffb07c | 0x1c |
+| `dBgW_Kc::ClearDepthByDir` (was `func_01ffb098`) — clears the 0x35 flag | 0x01ffb098 | 0xc |
+| `dBgW_Kc::SetDepthByDir` (was `func_01ffb0a4`) — sets the 0x35 flag | 0x01ffb0a4 | 0xc |
+| `dBgW_Kc::ClearShallowOnly` (was `func_01ffb0b0`) — clears the 0x34 flag | 0x01ffb0b0 | 0xc |
+| `dBgW_Kc::SetShallowOnly` (was `func_01ffb0bc`) — sets the 0x34 flag | 0x01ffb0bc | 0xc |
+| `dBgW_Kc::GetFile() const` (was `func_01ffb0c8`) — returns the 0x20 member | 0x01ffb0c8 | 0x8 |
 | `MeshCollider::GetUnkOctreeY() const` | 0x01ffb0d0 | 0x1c |
 | `MeshCollider::GetOctreeOriginY() const` | 0x01ffb0ec | 0x10 |
 | `MeshCollider::GetTriangleOrigin(s16, Vector3&)` | 0x01ffd890 | 0x48 |
@@ -105,10 +105,11 @@ unmatched function in the game.
 All `1.2/sp2p3`, all byte-identical with reloc destinations checked.
 
 The six `func_01ff…` entries are MeshCollider methods whose symbols were never
-recovered, so they keep their `func_` names — `symbols.txt` is the authority and the
-filename is the symbol. They sit immediately before the named accessors, which is how
+recovered, so they kept their `func_` names at first. They are now `dBgW_Kc` members
+named for the fields they write (`symbols/actor_renames.tsv` records the evidence); the
+ROM still carries no symbol for them. They sit immediately before the named accessors, which is how
 they were found: disassembling the gap between the last unnamed function and
-`GetUnkOctreeY` turned up six one-liners. `func_01ffb07c` is what pins 0x38..0x40 as a
+`GetUnkOctreeY` turned up six one-liners. `SetDepthDir` (0x01ffb07c) is what pins 0x38..0x40 as a
 single `Vector3` (three word loads copied straight in), corroborated by `SetFile` seeding
 it to (0x1000, 0, 0), the unit X vector. #989 declares those three as scalars
 (`unk_38`/`unk_3c`/`unk_40`) and they are left that way here -- the bytes are identical

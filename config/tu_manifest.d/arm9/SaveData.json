@@ -5,7 +5,7 @@
   "promoted_source": "src/engine/save/SaveData.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
-  "boundary_evidence": "Contiguous .text span 0x02013568..0x02013e80, the save-record half plus the file and minigame methods. Left edge 0x02013568, where src/SublevelToLevel.c ends: the six minigame-block helpers 0x02013568..0x02013650 (record tables at block + 0x54, unlock word + 0x48, seen bits + 0x4c/+0x50) address the same save block at 0x0209caa0 as the rest of the TU, and func_02013868 calls func_0201361c. Right edge ends where src/runtime/actor/ActorDerived.cpp begins (0x02013e80). The absorbed run is SetCoinRecordIfHigher through func_02013944 (coin and star records, cannons, character intros) then the thirteen SaveData file/minigame/cap methods and six free functions already in this TU. SaveData is non-polymorphic per include/SaveData.h: no vtable, no RTTI, all methods static.",
+  "boundary_evidence": "Contiguous .text span 0x02013568..0x02013e80, the save-record half plus the file and minigame methods. Left edge 0x02013568, where src/SublevelToLevel.c ends: the six minigame-block helpers 0x02013568..0x02013650 (record tables at block + 0x54, unlock word + 0x48, seen bits + 0x4c/+0x50) address the same save block at 0x0209caa0 as the rest of the TU, and CollectMinigameKey calls UnlockMinigame. Right edge ends where src/runtime/actor/ActorDerived.cpp begins (0x02013e80). The absorbed run is SetCoinRecordIfHigher through func_02013944 (coin and star records, cannons, character intros) then the thirteen SaveData file/minigame/cap methods and six free functions already in this TU. SaveData is non-polymorphic per include/SaveData.h: no vtable, no RTTI, all methods static.",
   "sections": [
     {
       "name": ".text",
@@ -43,7 +43,7 @@
       "legacy_source": "src/unnamed/arm9/0201/func_020135d0.c"
     },
     {
-      "symbol": "func_0201361c",
+      "symbol": "UnlockMinigame",
       "address": "0x0201361c",
       "size": "0x1c",
       "ordinal": 4,
@@ -148,7 +148,7 @@
       "legacy_source": "src/IsCannonOpen.c"
     },
     {
-      "symbol": "func_02013868",
+      "symbol": "CollectMinigameKey",
       "address": "0x02013868",
       "size": "0x28",
       "ordinal": 19,
@@ -197,7 +197,7 @@
       "legacy_source": "src/_ZN8SaveData22NumGlowingRabbitsFoundEv.cpp"
     },
     {
-      "symbol": "func_020139b8",
+      "symbol": "ClearCapHeldByToad",
       "address": "0x020139b8",
       "size": "0x48",
       "ordinal": 26,
@@ -316,7 +316,7 @@
       "legacy_source": "src/_ZN8SaveData16EraseAllSaveDataEv.cpp"
     },
     {
-      "symbol": "func_02013e64",
+      "symbol": "ClearSaveBlock",
       "address": "0x02013e64",
       "size": "0x1c",
       "ordinal": 43,

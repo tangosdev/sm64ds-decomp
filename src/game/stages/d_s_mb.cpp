@@ -15,10 +15,15 @@
  * makes emission ROM-ascending, so this file is written in ROM order.
  */
 
-// leftovers: OAM::Render stays mangled (Fix12 by value -- this TU's render
-// calls). func_02034b1c initialises the global graph callback, retaining
-// the raw store to its unmodelled byte at +0x0f. func_02034fbc stays free
-// (no receiver).
+// leftovers: func_02034b1c initialises the global graph callback, retaining
+// the raw store to its unmodelled byte at +0x0f; it keeps its placeholder name
+// and its untyped parameters because include/decl_common.h declares it.
+// LoadMultiBootResources stays free (no receiver). Its guarded store to
+// data_020a0c5c under data_020a0c60 is a function-local static
+// (`static mHeap::Heap_t *sPrevHeap = heap->SetDefault();` reproduces it), but
+// folding it moves this TU's .bss start to 0x020a0c5c, which takes a
+// config/arm9/delinks.txt change. The loader-job word data_020a0c64 is an int
+// that decl_common.h spells u8[].
 #include "dScMB_c.h"
 #include "nitro/hw/registers.h"
 #include "AsyncJob.h"
@@ -28,6 +33,7 @@
 #include "OamAttr.h"
 #include "Sound.h"
 #include "GX.h"
+#include "nitro/fx/fx_trig.h"
 
 extern "C" {
 void MultiStore16(u16 val, char *dst, int nbytes);
@@ -43,10 +49,7 @@ extern void *data_020a0c5c;
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
 
-void OamRender10_d_s_mb(int sub, void *attr, int x, int y, int a, int cc, int fx0, int fy0, int rot,
-                        int mode);
 extern struct OamAttr *data_0208a0f8[];
-extern s16 data_02082214[];
 
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
@@ -56,15 +59,25 @@ extern u8 gSubScreenLayers;
    (func_02019404), GraphCallback2 and GraphCallback3 in the VBlank IRQ
    (func_02019144, func_02019100). dGraph_c::callback_c is the ROM-proven base
    of every scene's nested graphCallback_c (include/dGraph_c.h). */
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
+}
+
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   Read through the inline, the ROM builds 0x06401280 as `mov #0x6400000 /
+   add #0x1280` where a literal address would load it from the pool.
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)0x06400000;
 }
 
 /* The scene's graph callback. A global, not a member: InitResources points
    it at the scene and hands it to the graph hook. Its constructor is inline,
    so mwcc emits __sinit_d_s_mb.cpp to run it (was the handwritten
    __sinit_02074fb8). */
-dScMB_c::graphCallback_c data_020a0c68;
+dScMB_c::graphCallback_c sMBGraphCallback;
 
 #pragma defer_codegen off
 
@@ -85,7 +98,7 @@ void func_02034b1c(void *c, void *owner) {
 
 int dScMB_c::graphCallback_c::GraphCallback3() {
     if (mOwner != 0) {
-        ((dScMB_c *)mOwner)->func_02034d34();
+        ((dScMB_c *)mOwner)->UpdateFader();
     }
     OAM::Reset();
 
@@ -95,29 +108,20 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
 
         if (mStillTimer == 0) {
             int spriteAngle = mSpinAngle;
-            int x = 0x80;
-            int one = 1;
-            int drawFlags[3];
-            drawFlags[0] = 0;
-            drawFlags[1] = 0;
-            drawFlags[2] = 0;
+            int anyOnArc = 0;
 
             do {
                 int y;
                 if (spriteAngle >= 0 && spriteAngle < 0x10000) {
-                    // Preserve the narrowing sequence: collapsing it removes 16 ROM bytes.
-                    u16 angleBits = (u16)spriteAngle;
-                    s16 signedAngle = (s16)angleBits;
-                    u16 tableAngle = (u16)signedAngle;
-                    y = data_02082214[(tableAngle >> 4) * 2];
-                    y = (y >> 10) + 0x80;
-                    drawFlags[0] = one;
+                    u16 angle = spriteAngle;
+                    y = (FX_SinIdx((u16)(s16)angle >> 4) >> 10) + 0x80;
+                    anyOnArc = 1;
                 } else {
-                    y = x;
+                    y = 0x80;
                 }
 
-                OAM::Render(drawFlags[1], sprite, x, y, -1, -1, 0x1000, drawFlags[1]);
-                OAM::Render(one, sprite, x, y, -1, -1, 0x1000, drawFlags[2]);
+                OAM::Render(false, sprite, 0x80, y, -1, -1, 0x1000, 0);
+                OAM::Render(true, sprite, 0x80, y, -1, -1, 0x1000, 0);
 
                 if (sprite->attr3 == 0xffff)
                     break;
@@ -127,7 +131,7 @@ int dScMB_c::graphCallback_c::GraphCallback3() {
 
             if (mAdvancing != 0) {
                 mSpinAngle += (data_0208ee44 << 10);
-                if (drawFlags[0] == 0)
+                if (anyOnArc == 0)
                     mStillTimer = 0x78;
             }
         } else {
@@ -153,14 +157,14 @@ int dScMB_c::graphCallback_c::GraphCallback0() {
 }
 
 // Its sole caller ignores the result; AdvanceFade itself returns void.
-void dScMB_c::func_02034d34() {
+void dScMB_c::UpdateFader() {
     if (fader.IsAtStart())
         return;
     fader.AdvanceFade();
 }
 
 s32 dScMB_c::CleanupResources() {
-    data_0209d4a8 = 0;
+    gGraphCallback = 0;
     dScene_c::SetAndStopColorFader();
     return 1;
 }
@@ -178,15 +182,15 @@ s32 dScMB_c::Behavior() {
         DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6600000);
         gMainScreenLayers = DISPLAY_LAYER_OBJ;
         gSubScreenLayers = 0x10;
-        *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x1000;
-        *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1000;
+        REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1000;
+        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | 0x1000;
         mStep++;
         break;
 
     case 1: {
-        int r = func_0201a1bc();
-        *(int *)&data_020a0c64 = r;
-        if (r == 0)
+        int done = func_0201a1bc();
+        *(int *)data_020a0c64 = done;
+        if (done == 0)
             break;
     }
         mStep++;
@@ -198,7 +202,7 @@ s32 dScMB_c::Behavior() {
         mStep++;
         /* fallthrough */
     case 4:
-        func_0201a244(func_02034fbc, 0, 0xf, 0, 0x1000);
+        func_0201a244(LoadMultiBootResources, 0, 0xf, 0, 0x1000);
         mStep++;
         /* fallthrough */
     case 5:
@@ -234,13 +238,11 @@ s32 dScMB_c::Behavior() {
     return 1;
 }
 
-void func_02034fbc(int unused) {
-    void *h;
-
+void LoadMultiBootResources(int unused) {
     LoadArchive(0);
-    h = func_0201a458();
+    mHeap::Heap_t *heap = (mHeap::Heap_t *)func_0201a458();
     if (!(data_020a0c60 & 1)) {
-        data_020a0c5c = ((mHeap::Heap_t *)h)->SetDefault();
+        data_020a0c5c = heap->SetDefault();
         data_020a0c60 |= 1;
     }
     LoadTextNarcs();
@@ -259,53 +261,50 @@ s32 dScMB_c::InitResources() {
     volatile u16 fillSub;
 
     func_02053b98();
-    *(volatile u32 *)0x4001000 &= ~0x10000;
+    REG_DISPCNT_SUB &= ~0x10000;
     func_02030aa4(2);
 
-    *(volatile u16 *)0x4000304 = (*(volatile u16 *)0x4000304 & ~0x20e) | 0x20e;
+    REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
     func_0200f2cc();
 
-    *(volatile u16 *)0x400000a = (*(volatile u16 *)0x400000a & 0x43) | 0x704;
-    *(volatile u16 *)0x400000a &= ~0x40;
-    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & 0x43) | 0x408;
-    *(volatile u16 *)0x400100a &= ~0x40;
+    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x704;
+    REG_BG1CNT &= ~0x40;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x408;
+    REG_DB_BG1CNT &= ~0x40;
 
     fillMain = 0xffff;
     MultiStore16(fillMain, (char *)0x5000000, 2);
     fillSub = 0xffff;
     MultiStore16(fillSub, (char *)0x5000400, 2);
 
-    {
-        char *vram = (char *)0x6400000;
-        vram += 0x1280;
-        DecompressLZ16(&data_0209446c, vram);
-    }
+    /* From OBJ tile 0x94 onwards; a 4bpp tile is 0x20 bytes. */
+    DecompressLZ16(&data_0209446c, (u8 *)G2_GetOBJCharPtr() + 0x94 * 0x20);
     GX::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
     GX::LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
     GXS::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
 
-    *(volatile u16 *)0x400000a &= ~3;
-    *(volatile u16 *)0x400100a &= ~3;
+    REG_BG1CNT &= ~3;
+    REG_DB_BG1CNT &= ~3;
     SetBg1Offset(0, 0);
     SetSubBg1Offset(0, 0);
 
-    *(u8 *)&gMainScreenLayers = 0;
-    *(u8 *)&gSubScreenLayers = 0;
-    *(volatile u32 *)0x4000000 &= ~0x1f00;
-    *(volatile u32 *)0x4001000 &= ~0x1f00;
+    gMainScreenLayers = 0;
+    gSubScreenLayers = 0;
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0x1f00;
     GX::DispOn();
 
-    *(volatile u32 *)0x4001000 |= 0x10000;
-    func_02034b1c(&data_020a0c68, this);
+    REG_DISPCNT_SUB |= 0x10000;
+    func_02034b1c(&sMBGraphCallback, this);
 
-    data_0209d4a8 = &data_020a0c68;
+    gGraphCallback = &sMBGraphCallback;
     mStep = 0;
     mTimeout = 0;
     dScene_c::SetFaders(&fader);
 
     fader.color = 0x7fff;
-    *(int *)&data_0208ee44 = 1;
-    *(int *)&data_020a0c64 = func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
+    data_0208ee44 = 1;
+    *(int *)data_020a0c64 = func_0201a244(func_0201a2f8, 0, 0xf, 0, 0x1000);
 
     return 1;
 }

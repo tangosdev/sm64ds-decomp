@@ -16,8 +16,8 @@
  * parameter-type claim.
  *
  * Notes:
- * - Behavior needs the four-word volatile stack reservation to
- *   reproduce the cartridge's frame; without it the body is 17 words short.
+ * - Behavior's 16-byte frame is the Vector3 copy of mPos it raises
+ *   before handing to the star; the copy itself is optimised away.
  * - data_ov030_02114ee4 is the CLPS block SetFile is handed, in overlay data
  *   this TU does not own.
  * - g_profile_HM_BASKET lives outside this TU.
@@ -30,6 +30,7 @@ enum d_a_obj_hm_bskt_AssetId { ASSET_HM_BASKET_BMD = 0x0618, ASSET_HM_BASKET_KCL
 #include "daObjHmBskt_c.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 struct KCL_File;
 /* CLPS.h keeps the block opaque: an 8-byte header with the entry stride
@@ -98,9 +99,6 @@ s32 daObjHmBskt_c::InitResources() {
 }
 
 s32 daObjHmBskt_c::Behavior() {
-    volatile int dummy[4];
-    (void)&dummy;
-
     IsClsnInRangeOnScreen(0, 0);
     mAngleY = mAngleY + mHorzSpeed;
 
@@ -109,13 +107,12 @@ s32 daObjHmBskt_c::Behavior() {
         UpdatePos(0);
         CheckLanding(&mWithMeshClsn);
 
-        s32 y = mPosY;
-        s32 z = mPosZ;
+        Vector3 pos = mPos;
+        pos.y += 0x3c000;
         dActor_c *star = mStarActor;
-        s32 x = mPosX;
-        star->mPosX = x;
-        star->mPosY = y + 0x3c000;
-        star->mPosZ = z;
+        star->mPos.x = pos.x;
+        star->mPos.y = pos.y;
+        star->mPos.z = pos.z;
     }
 
     return 1;
@@ -152,8 +149,8 @@ int daObjHmBskt_c::CheckLanding(dBgCh_Actr *clsn) {
     int py = mPosY + 0x96000;
     Vector3 p(px, py, pz);
     dActor_c::Spawn(0xb2, (unsigned char)(param1 & 0xf) | 0x20, p, 0, mAreaId, -1);
-    Particle::System::NewSimple(0xb, mPosX, mPosY, mPosZ);
-    Particle::System::NewSimple(0xd, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclBlockBreakA, mPosX, mPosY, mPosZ);
+    Particle::System::NewSimple(kPtclBlockBreakB, mPosX, mPosY, mPosZ);
     MarkForDestruction();
 }
 

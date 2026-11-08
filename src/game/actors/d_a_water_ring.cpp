@@ -24,6 +24,7 @@
 #include "dExtAnmTexSRT_c.h"
 #include "daPly_c.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "daManta_c.h"
@@ -40,7 +41,6 @@ extern int (daWater_Ring_c::*data_ov064_0211c3c8)();
 extern int (daWater_Ring_c::*data_ov064_0211c3c0)();
 extern int (daWater_Ring_c::*data_ov064_0211c3b8)();
 extern Vector3 data_ov064_0211c3d0; /* the collider offset */
-extern s16 data_02082214[];         /* sine/cosine table */
 extern char data_ov002_0210d6dc[];  /* the ring's BTA */
 
 /* local extern: no shared header declares these. */
@@ -74,6 +74,8 @@ void daWater_Ring_c::CheckPlayerPass() {
     isPlayer = (other->actorID == 0xbf);
     if (isPlayer == 0)
         return;
+    /* `otherPos = other->mPos` is 4 bytes short: the ROM materializes
+       &other->mPos before the three copies. */
     {
         const Vector3 &pos = other->mPos;
         otherPos.x = pos.x;
@@ -138,8 +140,7 @@ int daWater_Ring_c::StateActive() {
     mWobblePhase += 0x1000;
     {
         s16 phase = mWobblePhase;
-        int idx = ((u16)phase >> 4) * 2;
-        int wobble = (int)((((s64)data_02082214[idx] << 10) + 0x800) >> 12);
+        int wobble = FX_MUL(FX_SinIdx((u16)phase >> 4), 0x400);
         int target = wobble + mScaleBase;
         ApproachLinear(mScaleBase, 0x2000, spd);
         ApproachLinear(mScaleX, target, spd);
@@ -147,8 +148,7 @@ int daWater_Ring_c::StateActive() {
     mSpinPhase += 0x800;
     {
         s16 phase = mSpinPhase;
-        int idx = ((u16)phase >> 4) * 2;
-        mPrevAngleX += (int)((((s64)data_02082214[idx] << 8) + 0x800) >> 12);
+        mPrevAngleX += FX_MUL(FX_SinIdx((u16)phase >> 4), 0x100);
     }
     mScaleZ = mScaleX;
     mScaleY = mScaleZ;
@@ -160,18 +160,16 @@ int daWater_Ring_c::StateActive() {
 /* Init of the active state. */
 s32 daWater_Ring_c::InitStateActive() {
     mStateTimer = 0xc8;
-    s32 angle = HorzAngleToCPlayer();
-    mPrevPlayerAngle = (s16)angle;
+    mPrevPlayerAngle = HorzAngleToCPlayer();
     return 1;
 }
 
 /* Installs a state and runs its init. */
 int daWater_Ring_c::SetState(const State *state) {
     mState = state;
-    const State *installed = mState;
-    if (installed->init == 0)
+    if (mState->init == 0)
         return 1;
-    return (this->*installed->init)();
+    return (this->*mState->init)();
 }
 
 /* Poses the model: position, rotation and opacity. */
@@ -231,10 +229,7 @@ int daWater_Ring_c::InitResources() {
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
 
-    Vector3 v;
-    v.x = data_ov064_0211c3d0.x;
-    v.y = data_ov064_0211c3d0.y;
-    v.z = data_ov064_0211c3d0.z;
+    Vector3 v = data_ov064_0211c3d0;
     mdCcAcPos_c.Init(this, v, 0x88000, 0xe8000, 0x800006, 0);
 
     mOpacity = 0x1f;

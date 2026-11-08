@@ -28,7 +28,7 @@
  * - Init keeps the two-step probePos.y (combined form size-DIFFs
  *   0x1a8 -> 0x1a4). dBgW_KcMbg::SetFile with Fix12<int> size-DIFFs
  *   0x1a8 -> 0x1ac. Storing beforeClsnCallback directly size-DIFFs
- *   0x1a8 -> 0x1a4; the body calls func_020393d4.
+ *   0x1a8 -> 0x1a4; the body calls dBgW::SetBeforeClsnCallback.
  * - CleanupResources reloads mFileTable around each Release. One pointer
  *   across the three calls is a 20-word DIFF.
  * - The cycle states are StateRise (0), StateHover (1), StateSlam (2),
@@ -47,6 +47,7 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 /* Actor IDs this TU compares. No header vocabulary exists (cleaned callers
@@ -98,13 +99,11 @@ struct DsnCycle {
 /* arm9 C helpers with no shared header.
  * DecIfAbove0_Byte is spelled from its definition at src/DecIfAbove0_Byte.c:
  * unsigned char in, unsigned char out. RandomIntInternal's sites pass the RNG
- * state. func_020393d4 is the 8-byte store into dBgW+0x18
- * (beforeClsnCallback), spelled as src/engine/collision/d_bg_w.cpp has it. */
+ * state. */
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8 *);
 extern int RandomIntInternal(int *);
 extern int Vec3_Dist(const Vector3 *, const Vector3 *);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 
@@ -202,7 +201,7 @@ void daDsnBase_c::StateSlam() {
         dustPos.y = mPosY;
         dustPos.z = mPosZ;
         dustPos.y = dustPos.y + 0x3c000;
-        Particle::System::NewSimple(0x2e, dustPos.x, dustPos.y, dustPos.z);
+        Particle::System::NewSimple(kPtclGrindelLanding, dustPos.x, dustPos.y, dustPos.z);
     }
     quakePos.x = mPosX;
     quakePos.y = mPosY;
@@ -325,7 +324,7 @@ s32 daDsnBase_c::Init() {
     clps = files->clps;
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x199, mAngleY, *(clps));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
 
     texAnim = ((DsnBaseFileTable *)mFileTable)->texAnim;

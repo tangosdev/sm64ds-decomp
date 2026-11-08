@@ -7,7 +7,7 @@
 
 extern "C" {
 extern void func_ov007_020b283c(void);
-extern void func_ov007_020b9770(void);
+extern void PickerScene_Destroy(void);
 extern void func_ov007_020bf304(void);
 extern void func_ov007_020b6544(void);
 extern void func_ov007_020bcba8(int i);
@@ -23,7 +23,7 @@ extern "C" void func_ov007_020b066c(void) {
         func_ov007_020b283c();
         break;
     case 4:
-        func_ov007_020b9770();
+        PickerScene_Destroy();
         break;
     case 5:
         func_ov007_020bf304();

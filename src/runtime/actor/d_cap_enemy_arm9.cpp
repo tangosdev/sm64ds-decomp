@@ -37,9 +37,9 @@
 extern "C" {
 extern SharedFilePtr *data_ov002_020ff028[];
 
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern unsigned char data_0208a0e0;
-extern daPly_c *data_0209f394[];
+extern daPly_c *gPlayers[];
 
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
@@ -94,7 +94,7 @@ int dCapEnemy_c::AddCap(unsigned int param)
     }
 
     *(int *)(&mFlags) &= ~1;
-    mCapIcon.func_ov001_020ab228((char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
+    mCapIcon.Link((char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
 
     int result = func_02005e28();
     if (result != 0) {
@@ -183,7 +183,7 @@ int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
         mEatingPlayer = 0;
         if (mCapBank == 0) {
             idx = mCapId & 7;
-            mCapIcon.func_ov001_020ab228((char *)this, idx, 0, 0);
+            mCapIcon.Link((char *)this, idx, 0, 0);
         }
         return 1;
     }
@@ -217,7 +217,7 @@ int dCapEnemy_c::GetCapState() {
         return 2;
     }
 
-    unsigned char val = *(unsigned char *)&data_0209f2d8;
+    unsigned char val = *(unsigned char *)&gGameMode;
     int check = (val == 1) ? 1 : 0;
     if (check == 0) {
         daPly_c *p = ClosestPlayer();
@@ -242,15 +242,20 @@ int dCapEnemy_c::GetCapState() {
     return 1;
 }
 
-int dCapEnemy_c::DestroyIfCapNotNeeded()
-{
-  if (mCapId >= 6) return 1;
-  if ((int)(data_0209f2d8 == 1) != 0) return 1;
-  daPly_c *p = ClosestPlayer();
-  if (p == 0) { func_02005ed8(); return 0; }
-  if (mCapId != p->mCharacter) return 1;
-  func_02005ed8();
-  return 0;
+int dCapEnemy_c::DestroyIfCapNotNeeded() {
+    if (mCapId >= 6)
+        return 1;
+    if ((int)(gGameMode == 1) != 0)
+        return 1;
+    daPly_c *p = ClosestPlayer();
+    if (p == 0) {
+        func_02005ed8();
+        return 0;
+    }
+    if (mCapId != p->mCharacter)
+        return 1;
+    func_02005ed8();
+    return 0;
 }
 
 void dCapEnemy_c::func_02005ed8() {
@@ -264,11 +269,11 @@ int dCapEnemy_c::func_02005e28()
     int b;
     int i;
     int n;
-    b = (int)(data_0209f2d8 == 1);
+    b = (int)(gGameMode == 1);
     if (b != 0) {
         n = data_0208a0e0;
         for (i = 0; i < n; i++) {
-            daPly_c *p = data_0209f394[i];
+            daPly_c *p = gPlayers[i];
             if (p != 0) {
                 if (p->param1 == mCapId) return 1;
             }
@@ -290,7 +295,7 @@ void dCapEnemy_c::Unk_02005d94()
     if (!(mCapId & 0x80)) return;
     b1 = (mFlags & 8) ? 1 : 0;
     if (b1 == 0) {
-        volatile unsigned char *q = &data_0209f2d8;
+        volatile unsigned char *q = &gGameMode;
         b2 = (q[0] == 1) ? 1 : 0;
         if (b2 == 0) return;
     }

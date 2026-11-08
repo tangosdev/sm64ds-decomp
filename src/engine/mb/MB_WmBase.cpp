@@ -46,6 +46,7 @@
 #include "IRQ.h"
 #include "WmWork.h"
 #include "private/arm9_a9db8_mb_parent.h"
+#include "private/mb_views.h"
 #include "private/wm_views.h"
 
 /* The SDK built this file as C, where the GameInfo copy in
@@ -72,6 +73,10 @@ extern u16 *data_0209a084;
 /* Typed through a cast: the other declarations of data_020a9db8 spell it as
  * a byte pointer (MB_Parent.cpp's MB_WORK). */
 #define MB_WORK ((MbParentWork *)data_020a9db8)
+
+/* nitro/math.h's round-up, which MB_Init uses to align the caller's work
+ * buffer to a cache line before carving it. */
+#define MATH_ROUNDUP(x, base) (((x) + ((base) - 1)) & ~((base) - 1))
 
 /* WMScanParam (data_020a9dc0), WM_StartScan's argument; changeScanChannel steps
  * its channel through the allowed-channel mask. */
@@ -212,7 +217,7 @@ int MBi_IsSendEnabled(void) {
  * MBi_EndCommon, starts the parent with WMi_StartParentEx and keeps the child
  * bitmap from each callback's aid; this one calls the WM functions itself,
  * refreshes the bitmap through WM_ReadStatus and decides on starting MP from
- * the status (+0x10) instead of mpStarted; mStartMpBusy is the SDK's
+ * the status's mp_flag instead of mpStarted; mStartMpBusy is the SDK's
  * start_mp_busy. */
 void func_02069994(char *arg0) {
     WmCallback *cb = (WmCallback *)arg0;
@@ -259,9 +264,7 @@ void func_02069994(char *arg0) {
                 MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&WM_WORK->status));
                 WM_WORK->childBitmap = WM_WORK->status.child_bitmap;
                 WM_WORK->userCallback(0, arg0);
-                /* WmStatus +0x10: a BOOL WM_ReadStatus fills in; which SDK
-                   field it is isn't pinned down here, so it stays raw */
-                if (*(int *)(data_020a9db4 + 0x1428) == 0) {
+                if (WM_WORK->status.mp_flag == 0) {
                     MbParentWork *mb = MB_WORK;
                     if (mb->mStartMpBusy == 0) {
                         int v = 1;
@@ -635,7 +638,7 @@ int MBi_GetBeaconPeriodDispersion(void) {
  * takes (work, user, ggid, tgid, dma), resolves MB_TGID_AUTO and sets the
  * lifetimes and the power-save flag; this one takes the GGID as two halves
  * (a2, a3) and does none of that. */
-int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
+int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma) {
     volatile unsigned short fill_s;
     volatile int fill_i;
     /* base1 (the WmWork) and base2 are byte pointers, not ints: every WmWork
@@ -650,25 +653,25 @@ int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
     if ((data_020a9db8 != 0) && (MB_WORK->mIsMbInitialized != 0)) {
         return 2;
     }
-    base1 = (char *)((a0 + 0x1f) & (~0x1f));
-    base2 = (char *)(((int)base1 + sizeof(WmWork) + 0x1f) & (~0x1f));
+    base1 = (char *)MATH_ROUNDUP((u32)work, 32);
+    base2 = (char *)MATH_ROUNDUP((int)base1 + sizeof(WmWork), 32);
     irq = IRQ::Disable();
     fill_i = 0;
-    data_020a9db0 = (u16)a5;
+    data_020a9db0 = (u16)dma;
     data_020a9db4 = base1;
     data_020a9db8 = base2;
     MultiStore_Int(fill_i, (int *)base1, sizeof(WmWork));
     fill_s = 0;
     MultiStore16(fill_s, base2, 0x1340);
-    /* 0x1e30 and 0x1e38 sit in WmWork.pad_1e2e: nothing else in this file
-     reads them back (and the two copies overlap), so they stay raw */
+    /* The user's name and L"multiboot" (MB_Init's static game-name pointer,
+     stepped as it is read); 10 halfwords overrun the 8-byte uname into
+     gname, which the second copy then overwrites */
     {
         int i = 0;
-        u16 *dst = (u16 *)(base1 + 0x1e30);
-        u16 *rp = a1;
+        u16 *dst = (u16 *)((WmWork *)base1)->uname;
         u16 v;
         do {
-            v = *((rp + i) + 1);
+            v = user->name[i];
             if (v == 0) {
                 break;
             }
@@ -677,7 +680,7 @@ int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
         } while (i < 0xa);
     }
     {
-        u16 *dst = (u16 *)(base1 + 0x1e38);
+        u16 *dst = (u16 *)((WmWork *)base1)->gname;
         int j = 0;
         do {
             u16 *ptr = data_0209a084;
@@ -689,7 +692,7 @@ int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
             *(dst++) = *ptr;
         } while (j < 0x10);
     }
-    CpuCopy8(a1, base2 + 0x1300, 0x16);
+    CpuCopy8(user, base2 + 0x1300, 0x16);
     ((WmWork *)base1)->parentMaxSize = 0x100;
     ((WmWork *)base1)->childMaxSize = 8;
     ((WmWork *)base1)->sendBufSize = 0;
@@ -701,9 +704,9 @@ int func_02068e4c(int a0, u16 *a1, int a2, int a3, u16 a4, int a5) {
         WmParentParam *hdr = &((WmWork *)base1)->parentParam;
         hdr->CS_Flag = 1;
         hdr->KS_Flag = 0;
-        hdr->ggid[0] = (short)a2;
-        hdr->ggid[1] = (short)a3;
-        hdr->tgid = (short)a4;
+        hdr->ggid[0] = (short)ggid0;
+        hdr->ggid[1] = (short)ggid1;
+        hdr->tgid = (short)tgid;
         hdr->entryFlag = 1;
         hdr->multiBootFlag = 0;
         hdr->beaconPeriod = (u16)(MBi_GetBeaconPeriodDispersion() + 0xc8);
@@ -752,7 +755,7 @@ int func_02068d08(void) {
     base->mpStarted = 0;
     WM_WORK->childBitmap = 0;
     WM_WORK->resetting = 0;
-    *(short *)(data_020a9db4 + 0x1e48) = 0; /* in WmWork.pad_1e2e: no reader here */
+    *(short *)(data_020a9db4 + 0x1e48) = 0; /* in WmWork.pad_1e48: no reader here */
     MBi_SetMaxScanTime(0xa);
     do {
         ret = WM_Initialize((int)WM_WORK->wmSysBuf, (void *)WM_WORK->stateCallback, data_020a9db0);

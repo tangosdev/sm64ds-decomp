@@ -58,7 +58,7 @@ enum {
 
 /* The state machine is a pointer (mState) to one of five 16-byte records built at
  * startup by __sinit_ov077_021275fc into data_ov077_02127cd8..02127d18. Each record
- * is two pointer-to-member words: an ENTER handler (run once by func_ov077_02126d5c as
+ * is two pointer-to-member words: an ENTER handler (run once by ChangeState as
  * the state is installed) then an UPDATE handler (run each frame by Behavior). The
  * names below describe what each pair does; they are not labels from the cartridge.
  *
@@ -79,10 +79,10 @@ struct daPopoi_c : dEnemyBase_c {
     dExtShadowModel_c                  mShadowModel;          /* 0x3a4 */
     u8  pad_3cc[0x30];                                   /* 0x3cc -- no function here touches it */
     /* The current state's record; see the table above. Installed by
-       func_ov077_02126d5c, which also runs the record's enter handler. */
+       ChangeState, which also runs the record's enter handler. */
     struct daPopoi_StateRecord  *mState;                /* 0x3fc */
-    /* The daPly_c the sensor was touching when func_ov077_02126528 entered the Grab
-       state. Zero from InitResources; cleared by func_ov077_02126640 once its launch
+    /* The daPly_c the sensor was touching when TryGrabPlayer entered the Grab
+       state. Zero from InitResources; cleared by UpdateGrabState once its launch
        call returns nonzero. If Grab ends (animation Finished) without a launch it is
        left set. */
     daPly_c *mCaughtPlayer; /* 0x400 */
@@ -133,25 +133,25 @@ struct daPopoi_c : dEnemyBase_c {
     /* Probe ahead for a wall/missing floor (Behavior and the Wander/Chase
        updates); 1 = blocked, with the position rolled back. Only casts rays in
        level 0x2a. */
-    int  func_ov077_02126300();
+    int IsBlockedAhead();
     /* Sensor scan for a daPly_c to grab; installs the Grab state. Behavior only. */
-    void func_ov077_02126528();
+    void TryGrabPlayer();
     /* State installer: stores the record in mState and runs its enter handler. */
-    int  func_ov077_02126d5c(daPopoi_StateRecord *next);
+    int ChangeState(daPopoi_StateRecord *next);
     /* Rebuilds mAnmModel.mat4x3 from mAngleY and mPos. Behavior only. */
-    void func_ov077_02126dac();
+    void UpdateModelTransform();
 
     /* The five state records' handler pairs; see the table above. */
-    int  func_ov077_02126758();   /* Grab    enter  (record 02127cd8) */
-    int  func_ov077_02126640();   /* Grab    update */
-    int  func_ov077_02126cd4();   /* Wander  enter  (record 02127ce8) */
-    int  func_ov077_02126ad0();   /* Wander  update */
-    int  func_ov077_02126a84();   /* Pause   enter  (record 02127cf8) */
-    int  func_ov077_02126a50();   /* Pause   update */
-    int  func_ov077_02126930();   /* Chase   enter  (record 02127d08) */
-    int  func_ov077_0212679c();   /* Chase   update */
-    int  func_ov077_02126a04();   /* TurnAway enter (record 02127d18) */
-    int  func_ov077_021269a8();   /* TurnAway update */
+    int EnterGrabState();      /* Grab    enter  (record 02127cd8) */
+    int UpdateGrabState();     /* Grab    update */
+    int EnterWanderState();    /* Wander  enter  (record 02127ce8) */
+    int UpdateWanderState();   /* Wander  update */
+    int EnterPauseState();     /* Pause   enter  (record 02127cf8) */
+    int UpdatePauseState();    /* Pause   update */
+    int EnterChaseState();     /* Chase   enter  (record 02127d08) */
+    int UpdateChaseState();    /* Chase   update */
+    int EnterTurnAwayState();  /* TurnAway enter (record 02127d18) */
+    int UpdateTurnAwayState(); /* TurnAway update */
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -39,6 +39,7 @@ enum daObjDlPyramid_c_AssetId { ASSET_DL_PYRAMID_BMD = 0x05dd, ASSET_DL_PYRAMID_
 #include "dMap_c.h"
 #include "Event.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 struct BMD_File;
@@ -47,9 +48,6 @@ struct CLPS_Block;
 
 extern s16 data_02082214[];            /* sine/cosine table, interleaved */
 extern CLPS_Block data_ov024_021129f0; /* the collision CLPS block */
-
-/* local extern: the dBgW callback store; no shared header. */
-extern "C" void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 
 /* The retail static initializer constructs these two 8-byte resource handles
  * in source order (model 1501, then collision 1502) and lets the C++ runtime
@@ -98,10 +96,10 @@ void daObjDlPyramid_c::FinishDescent() {
     v.y = mPosY;
     v.z = mPosZ;
     v.y += 0xfa000;
-    Particle::System::NewSimple(0x1f, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x20, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x21, v.x, v.y, v.z);
-    Particle::System::NewSimple(0x22, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkA, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkB, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkC, v.x, v.y, v.z);
+    Particle::System::NewSimple(kPtclPyramidTopSunkD, v.x, v.y, v.z);
     MarkForDestruction();
     Event::SetBit(0xe);
     dMap_c::UpdateLevelSpecific();
@@ -129,7 +127,8 @@ void daObjDlPyramid_c::Descend() {
         mAngleY += mAngVelY;
         mPosY += mVertSpeed;
     }
-    mSpinParticleID = Particle::System::New(mSpinParticleID, 0x23, mPosX, mPosY, mPosZ, 0, 0);
+    mSpinParticleID =
+        Particle::System::New(mSpinParticleID, kPtclPyramidTopSinking, mPosX, mPosY, mPosZ, 0, 0);
     if (mStateTimer == 150)
         mState = 2;
 }
@@ -224,7 +223,7 @@ int daObjDlPyramid_c::InitResources() {
     UpdateClsnMatrix();
     void *kcl = dBgW_Kc::LoadFile(gDlPyramidCollisionFile);
     mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat2, 0x199, mAngleY, data_ov024_021129f0);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
     mHomePosX = mPosX;
     mHomePosY = mPosY;

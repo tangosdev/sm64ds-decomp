@@ -25,8 +25,6 @@
  *   id). This TU's Behavior and tap handlers (UpdateGameSelect /
  *   MiniGm_UpdatePageArrows / MiniGm_UpdateExitButton / MiniGm_UpdateGroupTabs)
  *   call it. Naming belongs in arm9.
- * Leftover: _ZN7dWipe_c13func_0202ec9cEi is the wipe start helper. This
- *   TU's UpdateGameSelect hands it data_0209f61c.
  * Leftover: Disable3dEngines / func_020233f4 are arm9 graphics-setup
  *   tails. This TU's InitResources calls them.
  * Leftover: sMiniGmGroupBases group-base table,
@@ -87,7 +85,7 @@ extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern short gSubBg3HOffset;
 extern short gSubBg0HOffset;
-extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
+extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
@@ -820,7 +818,7 @@ extern "C" {
 void MiniGm_UpdateGroupTabs(char *self)
 {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0)
         return;
@@ -914,7 +912,7 @@ extern "C" {
 void MiniGm_UpdatePageArrows(char *self)
 {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0) return;
     if (scene->mPageFlipped == 1) return;
@@ -960,7 +958,7 @@ void dScMiniGm_c::UpdateGameSelect()
     int ok;
     int row;
 
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (mExiting != 0) return;
     if (mPageFlipped == 1) return;
@@ -1010,7 +1008,7 @@ void dScMiniGm_c::UpdateGameSelect()
     MiniGm_LoadIconPalette((char *)this, sel);
     func_02012790(0x1e);
     dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.func_0202ec9c(0);
+    data_0209f61c.SetType(0);
     gMgMenuRow.level = mStartLevel;
     dScene_c::StartSceneFade(sMiniGmRows[gMgLastSelected[0]].id,
                              sMiniGmRows[gMgLastSelected[0]].sceneParam, 0);
@@ -1023,7 +1021,7 @@ extern "C" {
 
 void MiniGm_UpdateExitButton(char *self) {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0) return;
     if (scene->mPageFlipped == 1) return;
@@ -1051,7 +1049,7 @@ extern "C" {
 
 void MiniGm_UpdatePageScroll(char *self) {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0) return;
     if (scene->mPrevPageTimer > 0) return;
@@ -1152,7 +1150,7 @@ void MiniGm_SetRecord(void *a0, int a1, int r2, int r3) {
 extern "C" void MiniGm_SaveIfDirty(char *self)
 {
     if (gMgSaveDirty != 1) return;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     SaveData::SaveMinigames(&data_0209cae4);
     gMgSaveDirty = 0;

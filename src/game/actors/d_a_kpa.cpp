@@ -135,6 +135,7 @@ enum daKpa_c_AssetId {
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "LevelRng.h"
 
 /* -------------------------------------------------------------------------- */
@@ -299,7 +300,7 @@ struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual vo
 
 extern "C" {
 /* The dCamera_c; Bowser publishes himself into its mFramedActor. */
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern int Vec3_HorzDist(const struct Vector3*, const struct Vector3*);
 extern short Vec3_HorzAngle(const struct Vector3*, const struct Vector3*);
 extern int func_020092c4(void*, void*, void*);
@@ -470,7 +471,7 @@ typedef void BgchInitAt_(void *self, void *act, int a, int b, void *d1, void *d2
 /* TUBUILD CONFLICT -- alternate declaration of func_ov060_021123a0, from the legacy file for func_ov060_02115d68, NOT applied: extern "C" void func_ov060_021123a0(void *a, int b); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzDist, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern char* data_0209f318; */
+/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for _ZN7daKpa_c8BehaviorEv, NOT applied: extern char* gCamera; */
 
 /* TUBUILD CONFLICT -- alternate declaration of func_ov060_02111cc0, from the legacy file for _ZN7daKpa_c13InitResourcesEv, NOT applied: extern void func_ov060_02111cc0(void *c, int a, int b); */
 }
@@ -709,7 +710,7 @@ int daKpa_c::Behavior()
     mAnmModel.speed = mAnimSpeed;
     mAnmModel.Advance();
     func_ov060_0211577c();
-    data_0209f318->mFramedActor = this;
+    gCamera->mFramedActor = this;
     mdCcAcPos_c.Clear();
     Vector3 v;
     v.z = 0x50000;
@@ -2141,8 +2142,9 @@ void daKpa_c::func_ov060_02113d8c(){
     case 3:
         this->mStepCounter = 0;
         func_ov060_02111cc0(0x1a, 0x40000000);
-        this->mParticleHandle = (unsigned int)Particle::System::New(
-            this->mParticleHandle, 0x101, this->mPosX, this->mPosY + 0x32000, this->mPosZ, 0, 0);
+        this->mParticleHandle =
+            (unsigned int)Particle::System::New(this->mParticleHandle, kPtclSlideDust, this->mPosX,
+                                                this->mPosY + 0x32000, this->mPosZ, 0, 0);
         if (ApproachLinear(this->mHorzSpeed, 0, 0x1000) != 0)
             this->mStep = 2;
         break;
@@ -2463,8 +2465,8 @@ void daKpa_c::func_ov060_021135fc(){
         pos.y += 0xa0000;
         dActor_c::Spawn(BOWSER_ACTOR_LAST_STAR, 7, pos, 0, mAreaId, -1);
     } else {
-        Particle::System::NewSimple(0xad, base.x, base.y, base.z);
-        Particle::System::NewSimple(0xae, base.x, base.y, base.z);
+        Particle::System::NewSimple(kPtclBowserDefeatA, base.x, base.y, base.z);
+        Particle::System::NewSimple(kPtclBowserDefeatB, base.x, base.y, base.z);
         daObjKey_c *key =
             (daObjKey_c *)dActor_c::Spawn(BOWSER_ACTOR_OBJ_KEY, mVariantID, mPos, 0, mAreaId, -1);
         key->mSpinSpeed = mSpinSpeed;
@@ -3231,7 +3233,7 @@ axis, to a point 0xc0 (192) units ahead along mAngleY and 0xfa000 (250 units) up
 return 1 when func_020092c4 returns non-zero. Step 4: clear bit 0x8 of
 Camera::mFlags. */
 int daKpa_c::func_ov060_02111f08(){
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     daPly_c *player = this->ClosestPlayer();
     struct Vector3 sp;
     struct Vector3* pv;

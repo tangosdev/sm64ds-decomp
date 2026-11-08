@@ -13,7 +13,7 @@
  * writes mode 0, so a mode change cannot light a display that is off.
  *
  * data_02099fd0 is the GX DMA channel (-1: none), shared by the whole GX
- * library. GX_InitGXState (func_02053d9c, the file above) clears the VRAM
+ * library. GX_InitGXState (src/GX_InitGXState.c, the file above) clears the VRAM
  * state block. The empty function just below this run (func_02053a8c) is
  * FX_Init, which the boot sequence calls just before GX_Init; it belongs to
  * the fixed-point library, not to this file.
@@ -28,11 +28,8 @@
 
 #define REG_DISPSTAT      (*(volatile u16 *)0x04000004)
 #define REG_MASTER_BRIGHT (*(volatile u16 *)0x0400006c)
-#define REG_BG2PA         (*(volatile u16 *)0x04000020)
 #define REG_BG2PD         (*(volatile u16 *)0x04000026)
-#define REG_BG3PA         (*(volatile u16 *)0x04000030)
 #define REG_BG3PD         (*(volatile u16 *)0x04000036)
-#define REG_DB_BG2PA      (*(volatile u16 *)0x04001020)
 #define REG_DB_BG2PD      (*(volatile u16 *)0x04001026)
 #define REG_DB_BG3PD      (*(volatile u16 *)0x04001036)
 
@@ -66,7 +63,7 @@ extern u16 data_02099fcc; // display on (TRUE until GX_DispOff)
 extern int data_02099fd0; // GX DMA channel, -1 if none
 extern u16 data_020a6084; // display mode parked by GX_DispOff
 
-void func_02053d9c(void);
+void GX_InitGXState(void);
 void DMASyncFillTransfer(u32 channel, void *dst, u32 data, u32 size);
 void MultiStore_Int(int val, int *dst, int len);
 
@@ -78,7 +75,7 @@ void func_02053c40(void) {
     REG_POWCNT1 = (u16)((REG_POWCNT1 & ~POWCNT_ALL_ENGINES) | POWCNT_ALL_ENGINES);
     REG_POWCNT1 |= POWER_CONTROL_ENABLE;
 
-    func_02053d9c();
+    GX_InitGXState();
 
     REG_DISPSTAT = 0;
     REG_DISPCNT = 0;
@@ -102,7 +99,7 @@ void func_02053c40(void) {
     REG_BG3PD = 0x100;
     REG_DB_BG2PA = 0x100;
     REG_DB_BG2PD = 0x100;
-    *REG_DB_BG3PA = 0x100;
+    REG_DB_BG3PA = 0x100;
     REG_DB_BG3PD = 0x100;
 }
 

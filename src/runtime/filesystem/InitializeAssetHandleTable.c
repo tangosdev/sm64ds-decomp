@@ -2,16 +2,17 @@
  * InitializeAssetHandleTable is a descriptive name, not a recovered ROM name.
  */
 #include "nitro/os/thread.h"
+#include "private/watchdog_alarm.h"
 
 struct WatchdogAlarm;
 extern struct WatchdogAlarm data_0209d574;
 
 extern unsigned char func_0201a9ec(void *timer);
-extern int func_02018a58(int count);
+extern int AllocAssetHandleTable(int count);
 extern int func_020189f0(const char *path);
-extern void func_02018a40(unsigned handle, int fileId);
+extern void SetAssetHandleFileID(unsigned handle, int fileId);
 extern void func_0201a9fc(void *timer);
-extern unsigned char func_0201a96c(void *timer, unsigned char suspended);
+extern unsigned char func_0201a96c(struct WatchdogAlarm *context, int suspended);
 
 enum { ASSET_HANDLE_COUNT = 0x80a, ASSET_LOOKUP_PRIORITY = 0x1f };
 
@@ -2082,7 +2083,7 @@ static const char *sAssetPaths[ASSET_HANDLE_COUNT] = {
 void InitializeAssetHandleTable(void) {
     /* Suspend the timer callback and allocate the zeroed file-ID table. */
     unsigned char savedTimerState = func_0201a9ec(&data_0209d574);
-    func_02018a58(ASSET_HANDLE_COUNT);
+    AllocAssetHandleTable(ASSET_HANDLE_COUNT);
 
     OSThread *currentThread = data_020a6134.current;
     unsigned int savedPriority = OS_GetThreadPriority(currentThread);
@@ -2093,7 +2094,7 @@ void InitializeAssetHandleTable(void) {
     for (handle = 0; handle < ASSET_HANDLE_COUNT; handle++) {
         int fileId = func_020189f0(sAssetPaths[handle]);
         if (fileId != 0) {
-            func_02018a40(handle, fileId);
+            SetAssetHandleFileID(handle, fileId);
         }
     }
 

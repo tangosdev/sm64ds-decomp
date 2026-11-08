@@ -39,6 +39,7 @@
 #include "dExtSimpleModel_c.h"
 #include "Sound.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx.h"
@@ -74,7 +75,7 @@ extern int IsStarCollected(int r0, int r1);
 extern SharedFilePtr data_ov002_0210da10;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f220;
+extern unsigned char gCurrentStarId;
 
 /* D0 is the deleting destructor: it destroys through this class and its
  * bases, which is why more than one vptr store appears, then frees through an
@@ -136,7 +137,8 @@ int daWater_Hakidasi_c::State0() {
     }
 
     if (mNoRings == 0) {
-        mParticle = Particle::System::New(mParticle, 0x138, mPosX, mPosY, mPosZ, 0, 0);
+        mParticle =
+            Particle::System::New(mParticle, kPtclWaterSpoutRings, mPosX, mPosY, mPosZ, 0, 0);
         if (mRingsPassed < 5) {
             if (*(u16 *)&mStateTimer == 0) {
                 ax = *(volatile u16 *)&mAngleX;
@@ -213,7 +215,7 @@ int daWater_Hakidasi_c::State0() {
             }
         }
     } else {
-        mParticle = Particle::System::New(mParticle, 0x7b, mPosX, mPosY, mPosZ, 0, 0);
+        mParticle = Particle::System::New(mParticle, kPtclWaterSpout, mPosX, mPosY, mPosZ, 0, 0);
     }
 
     if (mRingsPassed == 5) {
@@ -297,7 +299,7 @@ s32 daWater_Hakidasi_c::InitResources() {
     if ((param1 & 0xf) > 1)
         mNoRings = 0;
     if (gCurrentSublevel == 8 &&
-        (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0)) {
+        (gCurrentStarId == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0)) {
         return 0;
     }
     mdCcAc_c.Init(this, 0xc8000, 0x190000, 0x800004, 0);

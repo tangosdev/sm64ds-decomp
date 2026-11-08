@@ -149,7 +149,7 @@ extern void func_ov007_020c3fe4(Ov007SpriteItem *item);
 /* the figure and its files */
 extern int data_ov007_020d7c5c[2][2]; /* [figureIndex][index]: animation file */
 extern void *data_ov007_02104bc4[2][2];
-extern int func_02053644(s16 *v);
+extern int VEC_Fx16Mag(s16 *v);
 extern void func_02053380(s16 *in, s16 *out);
 extern void func_ov007_020b3edc(int idx);
 extern void *func_ov007_020b3f20(int idx);
@@ -193,7 +193,7 @@ void func_ov007_020beb80(Ov007Figure *fig) {
             vel = 0;
             frames = 0x1000;
             if (motion.x != 0 || motion.y != 0 || motion.z != 0) {
-                int mag = (short)func_02053644((s16 *)&motion);
+                int mag = (short)VEC_Fx16Mag((s16 *)&motion);
                 int t;
                 if (mag <= 0)
                     speed = 0;

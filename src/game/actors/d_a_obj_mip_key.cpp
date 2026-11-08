@@ -5,7 +5,7 @@
 // Notes:
 // - unk_190 and unk_19c stay the header's names. The loose update
 //   approaches through mSpeedX/mSpeedZ, and 19c selects the entry.
-// - func_02013868, StartMinigameMenu, Vec3_VertAngle, Vec3_Asr and
+// - CollectMinigameKey, StartMinigameMenu, Vec3_VertAngle, Vec3_Asr and
 //   MulVec3Mat4x3 are arm9 C helpers no header declares yet.
 // - The model handle data_ov085_021305d8 is constructed by daMip_c.
 //   g_profile stays with the registry.
@@ -27,11 +27,11 @@ extern "C" {
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int sh);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void func_02013868(int t, int x);
+void CollectMinigameKey(int t, int x);
 void StartMinigameMenu(u8 a);
 }
 
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 extern SaveBlock data_0209caa0;
 extern u8 data_0209d660;
 extern u8 data_0209d684;
@@ -62,7 +62,7 @@ daObj_Mip_Key_c::~daObj_Mip_Key_c() {}
 void daObj_Mip_Key_c::FinishConversation() {
     Sound::PlaySub(0x28, 0x7f, 0, 0x7444, 0);
     Message::EndTalk();
-    data_0209f318->mFlags &= ~8;
+    gCamera->mFlags &= ~8;
     mPlayer->mStateFlags &= ~0x800;
     MarkForDestruction();
 }
@@ -173,7 +173,7 @@ int daObj_Mip_Key_c::StateCarriedEnter() {
     kind = c->unk_19c;
     if (kind != 0x4d) {
         if (kind != 7) {
-            func_02013868(kind, c->mPlayer->param1);
+            CollectMinigameKey(kind, c->mPlayer->param1);
             c->mPlayer->SetNoControlState(2, 0x189, 1);
             c->mTalkState = 0;
         } else {

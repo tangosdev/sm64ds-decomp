@@ -31,7 +31,7 @@ enum d_s_mg_trampoline2_AssetId {
  *
  * leftovers:
  * - 0x7acc has no matched read.
- * - NewUnkCallback818 takes Fix12 by value, which costs the caller bytes
+ * - NewCleanParticle takes Fix12 by value, which costs the caller bytes
  *   (notes/mwccarm-codegen.md 6az).
  * - The 0x78-element pool helpers stay free functions over char *; they
  *   read the record through Trmp2Spinner.h's view. Their
@@ -125,7 +125,7 @@ extern int func_02054d88(void);
 extern void MultiCopy_Int(int *src, int *dst, int len);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern const u16 sTrmp2BrushPltt[];
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 extern int sTrmp2TouchBlocked;
 int TrmpLine_Create(s16 *a, s16 *b);
 extern void Mg_CommitRecords(void);
@@ -135,8 +135,8 @@ struct OamAttr;
 struct Matrix2x2;
 void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
-unsigned int d_s_mg_trampoline2NewUnkCallback818Hold(unsigned int a, unsigned int b, int c, int d,
-                                                     int e, const Vector3_16f *f);
+unsigned int d_s_mg_trampoline2NewCleanParticleHold(unsigned int a, unsigned int b, int c, int d,
+                                                    int e, const Vector3_16f *f);
 void Jump2Popup_UpdateAll(void);
 extern int RandomIntInternal(int *seed);
 extern const VecFx32 sTrmp2RandomSpawnPositions[];
@@ -270,7 +270,7 @@ TrmpItem::TrmpItem() {}
 
 /* `new dScMgTrampoline2_c` reproduces it: the inline dScMgD3DBase_c
    constructor (dScMgBase_c's C2, its vtable, mDrawSubScreen, the empty loop
-   over the two cameras, mSysTracker), then this class's vtable and the six
+   over the two cameras, mParticle), then this class's vtable and the six
    element arrays. Historical alias: MgTrampolineTerror_Spawn. */
 extern "C" dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void) {
     return new dScMgTrampoline2_c;
@@ -824,7 +824,7 @@ s32 dScMgTrampoline2_c::Behavior() {
     Jump2Popup_UpdateAll();
     Trmp2Spinner_UpdateAll();
     mParticleID =
-        Particle::System::NewUnkCallback818(mParticleID, 0xf0, 0x280000, 0x700000, -0x580000, 0);
+        Particle::System::NewCleanParticle(mParticleID, 0xf0, 0x280000, 0x700000, -0x580000, 0);
     Particle::System *trail = Particle::System::FromUniqueID(mParticleID);
     if (trail != 0) {
         trail->emitInterval = mRamp >> 12;
@@ -928,9 +928,9 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
     if (!dScMgBase_c::OnGraphCallback0())
         return 0;
 
-    if (data_0209f5bc->IsAtStart()) {
+    if (gSceneFader->IsAtStart()) {
         sTrmp2TouchBlocked = 0;
-    } else if (data_0209f5bc->IsBetweenStartAndEnd()) {
+    } else if (gSceneFader->IsBetweenStartAndEnd()) {
         sTrmp2TouchBlocked = 1;
     }
 

@@ -108,7 +108,7 @@ void  func_ov002_020aea30(void *self, void *actor, void *collision);
 
 extern Matrix4x3     data_020a0e68;
 extern int           data_02092138;
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern signed char gCurrentSublevel;
 extern int           data_0209f32c;
 
@@ -125,16 +125,13 @@ extern MenboStateFn  data_ov090_021344f4[2];
 extern MenboStateFn  data_ov090_02134504[2];
 extern MenboStateFn  data_ov090_02134514[2];
 
-void func_ov090_021310b4(daMenbo_c *c);
-void func_ov090_02131378(daMenbo_c *c);
 int  func_ov090_021314a0(daMenbo_c *c);
 int  func_ov090_02131e00(MenboState *c, MenboStateFn *p);
-void func_ov090_02131e50(daMenbo_c *c);
 
 }
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
- * off screen. Actor ID 0xbf is PLAYER. data_0209f2d8 is the current game
+ * off screen. Actor ID 0xbf is PLAYER. gGameMode is the current game
  * mode. These int-returning predicates are what make the ROM materialize
  * 0/1 before testing it. */
 static inline int IsOffScreen(dActor_c *actor) {
@@ -146,7 +143,7 @@ static inline int IsPlayerActor(dActor_c *actor) {
 }
 
 static inline int IsGameMode(int mode) {
-    return data_0209f2d8 == mode;
+    return gGameMode == mode;
 }
 
 daMenbo_c::~daMenbo_c()
@@ -188,15 +185,14 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
         v.y = r.y;
         v.z = r.z;
         v.y = c->mSurfaceY;
-        c->mRippleParticles[i] =
-            Particle::System::New(c->mRippleParticles[i], id, v.x, v.y, r.z,
-                                  (const Vector3_16f *)(zero), (Particle::Callback *)(zero));
+        c->mRippleParticles[i] = Particle::System::New(c->mRippleParticles[i], id, v.x, v.y, r.z,
+                                                       (const Vector3_16f *)(zero),
+                                                       (dPa_c::level_c::callback_c *)(zero));
     }
 }
 
 /* Contact response, in the order the tests run. */
-void func_ov090_021310b4(daMenbo_c *c)
-{
+void daMenbo_c::func_ov090_021310b4() {
     short hv[3];
     Vector3 sv;
     Vector3 cv;
@@ -204,70 +200,72 @@ void func_ov090_021310b4(daMenbo_c *c)
     int flags;
     dActor_c *p;
     sv = data_ov090_0213412c;
-    c->mdCcAcPos_c.SetPosRelativeToActor(sv);
+    mdCcAcPos_c.SetPosRelativeToActor(sv);
 
-    if (c->mdCcAcPos_c.otherOwner == 0) return;
-    if ((p = dActor_c::FindWithID(c->mdCcAcPos_c.otherOwner)) == 0) return;
-    flags = (int)((long long)*(int *)&c->mdCcAcPos_c.hitFlags);
+    if (mdCcAcPos_c.otherOwner == 0)
+        return;
+    if ((p = dActor_c::FindWithID(mdCcAcPos_c.otherOwner)) == 0)
+        return;
+    flags = (int)((long long)*(int *)&mdCcAcPos_c.hitFlags);
 
     if (flags & 0x2400) {
-        c->mDeathState = 2;
-        func_ov002_020aea30(c, p, 0);
+        mDeathState = 2;
+        func_ov002_020aea30(this, p, 0);
         return;
     }
     if (flags & 0x40000) {
-        c->mDeathState = 4;
-        func_ov002_020aea30(c, p, 0);
+        mDeathState = 4;
+        func_ov002_020aea30(this, p, 0);
         return;
     }
     if (flags & 0x40) {
-        c->mDeathState = 2;
-        func_ov002_020aea30(c, p, 0);
+        mDeathState = 2;
+        func_ov002_020aea30(this, p, 0);
         return;
     }
-    if (c->JumpedOnByPlayer(*(dCc_c *)&c->mdCcAcPos_c, *(daPly_c *)p)) {
+    if (JumpedOnByPlayer(*(dCc_c *)&mdCcAcPos_c, *(daPly_c *)p)) {
         ((daPly_c *)p)->Bounce(0x28000);
-        c->mDeathState = 1;
-        func_ov002_020aea30(c, p, 0);
+        mDeathState = 1;
+        func_ov002_020aea30(this, p, 0);
         return;
     }
     if (flags & 0x20) {
-        c->mVertAccel = 0;
-        c->mSpeedX = 0;
-        c->mVertSpeed = 0;
-        c->mSpeedZ = 0;
-        c->mDeathState = 1;
-        func_ov002_020aea30(c, p, 0);
+        mVertAccel = 0;
+        mSpeedX = 0;
+        mVertSpeed = 0;
+        mSpeedZ = 0;
+        mDeathState = 1;
+        func_ov002_020aea30(this, p, 0);
         return;
     }
     if (flags & 0x10) {
         hv[0] = 0x1000;
         hv[1] = 0;
         hv[2] = 0;
-        c->KillByInvincibleChar(*(Vector3_16 *)hv, *(daPly_c *)p, 0);
-        func_02012694(0x1d, &c->mCamSpacePos);
+        KillByInvincibleChar(*(Vector3_16 *)hv, *(daPly_c *)p, 0);
+        func_02012694(0x1d, &mCamSpacePos);
         return;
     }
     if (flags & 0x4380) {
-        c->mDeathTumble = 3;
-        c->mDeathState = 3;
-        func_ov002_020aea30(c, p, 0);
+        mDeathTumble = 3;
+        mDeathState = 3;
+        func_ov002_020aea30(this, p, 0);
         return;
     }
     if (!IsPlayerActor(p))
         return;
     if (((daPly_c *)p)->mIsMetal == 1 || ((daPly_c *)p)->IsOnShell() == 1) {
-        cv.x = c->mPosX;
-        cv.y = c->mPosY;
-        cv.z = c->mPosZ;
-        c->SpawnCoins(cv, c->mExtraCoinCount + 1, 0xa000, 0);
-        c->PoofDust();
-        c->KillAndTrackInDeathTable();
+        cv.x = mPosX;
+        cv.y = mPosY;
+        cv.z = mPosZ;
+        SpawnCoins(cv, mExtraCoinCount + 1, 0xa000, 0);
+        PoofDust();
+        KillAndTrackInDeathTable();
         return;
     }
-    hurt.x = c->mPosX;
-    hurt.y = c->mPosY;
-    hurt.z = c->mPosZ;
+    hurt.x = mPosX;
+    hurt.y = mPosY;
+    hurt.z = mPosZ;
     ((daPly_c *)p)->Hurt(hurt, 2, 0xc000, 1, 0, 1);
 }
 
@@ -275,37 +273,36 @@ void func_ov090_021310b4(daMenbo_c *c)
  * Otherwise a hit below the published water height (data_0209f32c) means
  * the skeeter is on the water: record that line, mark mOnWater, ripple.
  * A higher floor is the line instead, and either way Y is clamped up to it. */
-void func_ov090_02131378(daMenbo_c *c)
-{
+void daMenbo_c::func_ov090_02131378() {
     if (IsGameMode(2) && gCurrentSublevel == 0x12) {
-        func_ov090_02130f94(c);
+        func_ov090_02130f94(this);
         return;
     }
     dBgCh_Gnd rg;
     Vector3 v;
-    int vz = c->mPosZ;
-    int vy = c->mPosY + 0x32000;
-    v.x = c->mPosX;
+    int vz = mPosZ;
+    int vy = mPosY + 0x32000;
+    v.x = mPosX;
     v.y = vy;
     v.z = vz;
-    c->mOnWater = 0;
-    if (Vec3_HorzDist(&c->mPos, &c->mPrevPos) != 0) {
-        rg.SetObjAndPos(v, c);
+    mOnWater = 0;
+    if (Vec3_HorzDist(&mPos, &mPrevPos) != 0) {
+        rg.SetObjAndPos(v, this);
         if (rg.DetectClsn() != 0)
-            c->mFloorY = rg.clsnY;
+            mFloorY = rg.clsnY;
     }
-    if (c->mFloorY < data_0209f32c) {
-        c->mSurfaceY = data_0209f32c;
-        if (c->mPosY <= c->mSurfaceY) {
-            c->mOnWater = 1;
-            func_ov090_02130f94(c);
+    if (mFloorY < data_0209f32c) {
+        mSurfaceY = data_0209f32c;
+        if (mPosY <= mSurfaceY) {
+            mOnWater = 1;
+            func_ov090_02130f94(this);
         }
     } else {
-        c->mSurfaceY = c->mFloorY;
+        mSurfaceY = mFloorY;
     }
-    if (c->mPosY <= c->mSurfaceY) {
-        c->mPosY = c->mSurfaceY;
-        c->mVertSpeed = 0;
+    if (mPosY <= mSurfaceY) {
+        mPosY = mSurfaceY;
+        mVertSpeed = 0;
     }
 }
 
@@ -623,17 +620,16 @@ int func_ov090_02131e00(MenboState *c, MenboStateFn *p)
 
 /* dExtSimpleModel_c matrix from position (shifted down 3, the renderer's scale) and
  * the three rotation halfwords. */
-void func_ov090_02131e50(daMenbo_c *c)
-{
+void daMenbo_c::func_ov090_02131e50() {
     int src[3];
     int dst[3];
-    src[0] = c->mPosX;
-    src[1] = c->mPosY;
-    src[2] = c->mPosZ;
+    src[0] = mPosX;
+    src[1] = mPosY;
+    src[2] = mPosZ;
     Vec3_Asr(dst, src, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, dst[0], dst[1], dst[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
-    c->mAnmModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    mAnmModel.mat4x3 = data_020a0e68;
 }
 
 /* The model and the four anims, released in this order. */
@@ -675,7 +671,7 @@ int daMenbo_c::Behavior()
         mdCcAcPos_c.Clear();
         if (mEatenByYoshi != 0 && mSpitOutTimer == 0)
             mdCcAcPos_c.Update();
-        func_ov090_02131e50(this);
+        func_ov090_02131e50();
         return 1;
     }
 
@@ -687,8 +683,8 @@ int daMenbo_c::Behavior()
         UpdateWMClsn(mWithMeshClsn, 0);
         if (UpdateDeath(mWithMeshClsn))
             return 1;
-        func_ov090_02131378(this);
-        func_ov090_02131e50(this);
+        func_ov090_02131378();
+        func_ov090_02131e50();
         if (mDeathState == 0)
             PoofDust();
         if (mDeathTumble == 3) {
@@ -715,7 +711,7 @@ int daMenbo_c::Behavior()
     if (flag) {
         mHorzSpeed = 0;
         UpdatePos(&mdCcAcPos_c);
-        func_ov090_02131378(this);
+        func_ov090_02131378();
         if (gCurrentSublevel == 0x15 && mAreaId == 1) {
             UpdateWMClsn(mWithMeshClsn, 2);
             if (func_02035638((u8 *)(&mWithMeshClsn))) {
@@ -733,7 +729,7 @@ int daMenbo_c::Behavior()
     }
 
     UpdatePos(&mdCcAcPos_c);
-    func_ov090_02131378(this);
+    func_ov090_02131378();
     DecIfAbove0_Short((u16 *)&mStateTimer);
     DecIfAbove0_Short(&mTurnTimer);
     DecIfAbove0_Short(&mSpeedHoldTimer);
@@ -759,8 +755,8 @@ int daMenbo_c::Behavior()
     mAngleY = mPrevAngleY;
     static_cast<dExtFrameCtrl_c &>(mAnmModel).speed = mAnimSpeed;
     static_cast<dExtFrameCtrl_c &>(mAnmModel).Advance();
-    func_ov090_02131e50(this);
-    func_ov090_021310b4(this);
+    func_ov090_02131e50();
+    func_ov090_021310b4();
     mdCcAcPos_c.Clear();
     {
         daPly_c *p = ClosestPlayer();

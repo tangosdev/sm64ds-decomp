@@ -210,10 +210,10 @@
       ]
     },
     "Copy36Bytes": {
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 int *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 int *"
       ]
     },
@@ -314,12 +314,12 @@
         "param:#2 Vector3 *",
         "param:#3 Vector3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *",
         "param:#3 Vec3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *",
         "param:#3 Vec3 *"
@@ -950,11 +950,11 @@
         "param:#2 const Matrix3x3 *",
         "param:#3 Vector3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 int *",
         "param:#2 int *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 int *",
         "param:#2 int *"
       ]
@@ -1036,11 +1036,11 @@
         "param:#1 Vec3 *",
         "param:#2 Vec3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 Vec3 *",
         "param:#2 Vec3 *"
       ],
@@ -4099,10 +4099,10 @@
       "src/WM_SetIndCallback.cpp": [
         "return:int"
       ],
-      "src/unnamed/arm9/0206/func_02065170.cpp": [
+      "src/WBT_End.cpp": [
         "return:int"
       ],
-      "src/unnamed/arm9/0206/func_020657fc.cpp": [
+      "src/WBT_UnregisterBlock.cpp": [
         "return:int"
       ],
       "src/unnamed/arm9/0206/func_02065af0.cpp": [
@@ -4145,16 +4145,16 @@
         "param:#1 int",
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_02065170.cpp": [
+      "src/WBT_End.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_02065234.cpp": [
+      "src/WBT_InitChild.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_020652fc.cpp": [
+      "src/WBT_InitParent.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_020657fc.cpp": [
+      "src/WBT_UnregisterBlock.cpp": [
         "return:void"
       ],
       "src/unnamed/arm9/0206/func_020658c0.cpp": [
@@ -6008,7 +6008,7 @@
         "return:void *"
       ]
     },
-    "_ZN8Particle10SysTracker8Contents6CreateEjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE": {
+    "_ZN5dPa_c7level_c5entryEjR7Vector3PK11Vector3_16fPNS0_10callback_cE": {
       "src/engine/particle/Particle.cpp": [
         "param:#3 void *",
         "param:#4 const void *",
@@ -7068,7 +7068,7 @@
         "param:#2 Vector3 &"
       ]
     },
-    "_ZNK8Particle10SysTracker8Contents8FindDataEj": {
+    "_ZN5dPa_c7level_c3getEj": {
       "src/engine/particle/Particle.cpp": [
         "return:System *"
       ]
@@ -7258,7 +7258,7 @@
         "return:signed char"
       ]
     },
-    "data_0209211c": {
+    "gReturnSublevel": {
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
         "return:unsigned char"
       ]
@@ -7417,7 +7417,7 @@
         "return:unsigned char []"
       ]
     },
-    "data_0209d4a8": {
+    "gGraphCallback": {
       "src/unnamed/arm9/0201/func_02019390.cpp": [
         "return:Obj *"
       ]
@@ -7791,9 +7791,9 @@
         "return:char []"
       ]
     },
-    "gParticleSysTracker": {
+    "gParticleControl": {
       "include/Particle__System.h": [
-        "return:Particle::SysTracker *"
+        "return:dPa_c *"
       ]
     },
     "data_0209ee90": {
@@ -7818,7 +7818,7 @@
         "return:unsigned char []"
       ]
     },
-    "data_0209f220": {
+    "gCurrentStarId": {
       "src/runtime/actor/d_actor.cpp": [
         "return:unsigned char []"
       ]
@@ -7833,7 +7833,7 @@
         "return:unsigned char []"
       ]
     },
-    "data_0209f2d8": {
+    "gGameMode": {
       "src/_ZN7daPly_c16InitWingFeathersEb.cpp": [
         "return:unsigned char []"
       ],
@@ -7856,7 +7856,7 @@
         "return:signed char"
       ]
     },
-    "data_0209f318": {
+    "gCamera": {
       "src/_ZN7daPly_c11St_Fly_InitEv.cpp": [
         "return:int []"
       ],
@@ -7903,7 +7903,7 @@
         "return:dCamera_c *"
       ]
     },
-    "data_0209f394": {
+    "gPlayers": {
       "src/ui/hud/d_map.cpp": [
         "return:daPly_c * []"
       ],
@@ -8053,7 +8053,7 @@
         "return:unsigned char"
       ]
     },
-    "data_0209f5bc": {
+    "gSceneFader": {
       "src/game/stages/d_s_stage_methods.cpp": [
         "return:UnkVis *"
       ],
@@ -8088,17 +8088,17 @@
         "return:void *"
       ]
     },
-    "data_0209f5c0": {
+    "gCurrentScene": {
       "src/minigames/d_mg3d_heyho_obj_adapter.cpp": [
         "return:GObj *"
       ]
     },
-    "data_0209f5d0": {
+    "gSoftResetBrightnessFader": {
       "src/unnamed/arm9/0207/__sinit_02074edc.c": [
         "return:FaderNode"
       ]
     },
-    "data_0209f5e8": {
+    "gSceneColorFader": {
       "src/game/stages/d_s_stage_methods.cpp": [
         "return:unsigned short"
       ],
@@ -8127,7 +8127,7 @@
         "return:int *"
       ]
     },
-    "data_020a0c68": {
+    "sMBGraphCallback": {
       "src/unnamed/arm9/0207/__sinit_02074fb8.c": [
         "return:void * []"
       ]
@@ -11925,7 +11925,7 @@
         "return:void *"
       ]
     },
-    "data_ov075_0211d71c": {
+    "sEntryGraphCallback": {
       "include/decl_common.h": [
         "return:void *"
       ],
@@ -12948,11 +12948,6 @@
         "return:void"
       ]
     },
-    "func_0200b0fc": {
-      "src/engine/view/d_camera.cpp": [
-        "arity:3"
-      ]
-    },
     "func_0200d438": {
       "src/unnamed/ov002/func_ov002_020df300.c": [
         "param:#1 int"
@@ -13070,11 +13065,6 @@
     "func_02016acc": {
       "include/decl_common.h": [
         "param:#2 int"
-      ]
-    },
-    "func_02016ff4": {
-      "src/_ZN17dExtSimpleModel_c14LoadAndSetFileEtii.cpp": [
-        "param:#1 dExtSimpleModel_c *"
       ]
     },
     "func_02017060": {
@@ -15429,11 +15419,11 @@
       ]
     },
     "func_0204c24c": {
-      "src/unnamed/arm9/0204/func_0204b460.c": [
+      "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 unsigned char",
         "param:#2 unsigned char"
       ],
-      "src/unnamed/arm9/0204/func_0204b81c.c": [
+      "src/SPLDraw_DirectionalBillboard.c": [
         "param:#1 unsigned char",
         "param:#2 unsigned char"
       ],
@@ -15851,7 +15841,7 @@
         "param:#3 int"
       ]
     },
-    "func_020650a0": {
+    "WBT_MpChildSendHook": {
       "src/unnamed/arm9/0204/func_02041930.c": [
         "return:int"
       ]
@@ -15860,7 +15850,7 @@
       "src/unnamed/arm9/0206/func_02064888.c": [
         "return:Node *"
       ],
-      "src/unnamed/arm9/0206/func_020657fc.cpp": [
+      "src/WBT_UnregisterBlock.cpp": [
         "return:int *"
       ]
     },
@@ -15877,10 +15867,10 @@
       ]
     },
     "func_02065b94": {
-      "src/unnamed/arm9/0206/func_02065234.cpp": [
+      "src/WBT_InitChild.cpp": [
         "return:char *"
       ],
-      "src/unnamed/arm9/0206/func_020652fc.cpp": [
+      "src/WBT_InitParent.cpp": [
         "return:char *"
       ]
     },
@@ -16877,11 +16867,6 @@
         "param:#1 char *"
       ]
     },
-    "func_ov070_02120070": {
-      "include/decl_common.h": [
-        "param:#1 char *"
-      ]
-    },
     "func_ov074_0212087c": {
       "src/game/actors/d_a_krb.cpp": [
         "param:#1 Vector3 *",
@@ -17172,7 +17157,7 @@
         "return:signed char"
       ]
     },
-    "func_02008550": {
+    "RunCameraCommand": {
       "src/KuppaScript.cpp": [
         "param:#1 dCamera_c *"
       ]

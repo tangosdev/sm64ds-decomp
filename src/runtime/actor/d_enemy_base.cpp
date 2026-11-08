@@ -56,7 +56,9 @@
  */
 #include "dEnemyBase_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "decl_dBgPi.h"
 #include "dBgCh_Lin.h"
 #include "daPly_c.h"
@@ -421,8 +423,8 @@ extern "C" int func_ov002_020ae5c8(dEnemyBase_c *c, int x) {
 extern "C" {
 extern void *d_enemy_baseNewHold(unsigned int a, unsigned int b, int c, int d, int e, const void *f,
                                  void *g);
-extern u32 d_enemy_baseNewUnkCallback818Hold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y,
-                                             Fix12i z, const Vector3_16f *dir);
+extern u32 d_enemy_baseNewCleanParticleHold(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y,
+                                            Fix12i z, const Vector3_16f *dir);
 }
 
 int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
@@ -450,11 +452,11 @@ int EnemyDeathC::func_ov002_020ae4cc(dBgCh_Actr &clsn) {
         return 1;
     }
     mDeathParticleID0 =
-        (u32)Particle::System::New(mDeathParticleID0, 0x13a, *(int *)((char *)v + 0),
+        (u32)Particle::System::New(mDeathParticleID0, kPtclDeathA, *(int *)((char *)v + 0),
                                    *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0, 0);
     mDeathParticleID1 =
-        Particle::System::NewUnkCallback818(mDeathParticleID1, 0x13b, *(int *)((char *)v + 0),
-                                            *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0);
+        Particle::System::NewCleanParticle(mDeathParticleID1, kPtclDeathB, *(int *)((char *)v + 0),
+                                           *(int *)((char *)v + 4), *(int *)((char *)v + 8), 0);
     return 0;
 }
 
@@ -471,10 +473,6 @@ int EnemyDeathC::func_ov002_020ae454(dBgCh_Actr &clsn) {
 /* Written as the real method over the real dBgCh_Lin/dBgPi classes, which is the
    form the legacy shard recovered and byte-matched. The two by-value Fix12i
    parameters the mangled name claims are spelled as themselves. */
-extern "C" {
-extern short data_02082214[];
-}
-
 int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, Fix12i down, s16 maxSlope, bool detectWater,
                                   bool allowObjFloor, Fix12i up) {
     Vector3 start;
@@ -506,9 +504,7 @@ int dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &clsn, Fix12i down, s16 maxSlope, b
             }
             Vector3 normal;
             line.surface.CopyNormalTo(normal);
-            int idx = ((unsigned short)maxSlope >> 4) * 2;
-            short cosMax = data_02082214[idx + 1];
-            if (normal.y < cosMax)
+            if (normal.y < FX_CosIdx((u16)maxSlope >> 4))
                 mCliffState = 2;
         } else {
             mCliffState = 1;
@@ -598,12 +594,9 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
                 mPosZ = o2->z;
                 mPosY += 0x32000;
                 {
-                    dActor_c *o3 = mEatingPlayer;
-                    u16 ang = o3->mAngleY;
-                    int idx = (ang >> 4) << 1;
-                    int dist = 0x32000;
-                    mPosX += FX_MUL(data_02082214[idx], dist);
-                    mPosZ += FX_MUL(data_02082214[idx + 1], dist);
+                    u16 ang = mEatingPlayer->mAngleY;
+                    mPosX += FX_MUL(FX_SinIdx(ang >> 4), 0x32000);
+                    mPosZ += FX_MUL(FX_CosIdx(ang >> 4), 0x32000);
                 }
                 {
                     Vector3_16 *p = &mEatingPlayer->mAngle;
@@ -701,13 +694,9 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
         src.z = pv->z;
     }
 
-    {
-        int t = ((int)(u16)mAngleY) >> 4;
-        dirvec[0] = data_02082214[t * 2];
-        dirvec[1] = 0;
-        t = ((int)(u16)mAngleY) >> 4;
-        dirvec[2] = data_02082214[t * 2 + 1];
-    }
+    dirvec[0] = FX_SinIdx((u16)mAngleY >> 4);
+    dirvec[1] = 0;
+    dirvec[2] = FX_CosIdx((u16)mAngleY >> 4);
 
     if (p != 0) {
         Vector3 delta;
@@ -728,10 +717,10 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
         iX = (u16)aX >> 4;
         iY = (u16)aY >> 4;
 
-        s = FX_MUL(w, data_02082214[iY * 2 + 1]);
-        dst.x += FX_MUL(s, data_02082214[iX * 2]);
-        dst.y += FX_MUL(w, data_02082214[iY * 2]);
-        dst.z += FX_MUL(s, data_02082214[iX * 2 + 1]);
+        s = FX_MUL(w, FX_CosIdx(iY));
+        dst.x += FX_MUL(s, FX_SinIdx(iX));
+        dst.y += FX_MUL(w, FX_SinIdx(iY));
+        dst.z += FX_MUL(s, FX_CosIdx(iX));
 
         dst.y += ((dCc_c *)p)->height >> 1;
     } else {
@@ -744,10 +733,11 @@ void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &other, char *p) {
         dst.y += 0x46000;
     }
 
-    Particle::System::New(0, 0x43, dst.x, dst.y, dst.z, 0, 0);
-    Particle::System::New(0, 0x44, dst.x, dst.y, dst.z, 0, 0);
-    Particle::System::New(0, 0xbf, dst.x, dst.y, dst.z, (const Vector3_16f *)(dirvec), 0);
-    Particle::System::New(0, 0xc0, dst.x, dst.y, dst.z, 0, 0);
+    Particle::System::New(0, kPtclKnockAwayA, dst.x, dst.y, dst.z, 0, 0);
+    Particle::System::New(0, kPtclKnockAwayB, dst.x, dst.y, dst.z, 0, 0);
+    Particle::System::New(0, kPtclAttackHitA, dst.x, dst.y, dst.z, (const Vector3_16f *)(dirvec),
+                          0);
+    Particle::System::New(0, kPtclAttackHitB, dst.x, dst.y, dst.z, 0, 0);
 }
 
 /* What happens when a mega/invincible Mario runs an enemy over. The enemy is
@@ -775,8 +765,8 @@ void dEnemyBase_c::KillByInvincibleChar(const Vector3_16 &spin, daPly_c &player,
     Sound::PlayBank0(9, mCamSpacePos);
     Vector3 pos = mPos;
     pos.y += OnAimedAtWithEgg();
-    Particle::System::NewSimple(0x43, pos.x, pos.y, pos.z);
-    Particle::System::NewSimple(0x44, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclKnockAwayA, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclKnockAwayB, pos.x, pos.y, pos.z);
     player.IncMegaKillCount();
 }
 

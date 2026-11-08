@@ -44,6 +44,9 @@ struct dScMgCurling2_piece {
     s32 xInc;        /* 0x08 */
     s32 yInc;        /* 0x0c */
     s32 yTarget;     /* 0x10, the value yInc ramps toward */
+    /* The countdowns are unsigned: every `!= 0` test loads them with ldrh
+     * (s16 fields make those ldrsh). The clamp after each decrement reads
+     * the value as signed, `if ((s16)countdown < 0)`. */
     u16 countdown;   /* 0x14 */
     u16 countdown2;  /* 0x16 */
     u16 countdown3;  /* 0x18 */
@@ -163,6 +166,9 @@ struct dScMgCurling2_c : dScMgBase_c {
     void DragUpdate();
 
     void SpawnValue(int stone, int other);
+    /* Coined, after dScMgCurling_c::ResolveStoneCollision: StoneSlide calls it
+     * directly and StoneRest through a veneer, both with this in r0. */
+    void ResolveStoneCollision(int);
 
     /* The rest of the class's members, proven the same way: the five
      * Behavior-state handlers ride sCurling2BehaviorTable on mState, the four

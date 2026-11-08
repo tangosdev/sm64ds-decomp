@@ -16,6 +16,7 @@
 //   negated `||` form makes the function 4 bytes larger.
 
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #pragma defer_codegen off
 
 #include "daSnmBth_c.h"
@@ -50,7 +51,7 @@ int *Vec3_LslInPlace(Vector3 *, int);
 int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 /* local extern: these five names hold the @NNN count. */
 void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 extern SharedFilePtr data_ov002_0210da40;
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
@@ -83,7 +84,7 @@ void SnowmanBreathParticle::HitPlayer()
         return;
     if (!IsPlayerActor(actor))
         return;
-    Particle::System::NewSimple(0x100, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSnowmanBreathHit, mPos.x, mPos.y, mPos.z);
 
     daPly_c *player = (daPly_c *)actor;
     if (player->mIsMetal)
@@ -139,7 +140,7 @@ void SnowmanBreathParticle::CheckSnowman()
     s32 distance = Vec3_Dist(&mPos, &snowman->mPos);
     if (distance >= threshold)
         return;
-    Particle::System::NewSimple(0x100, mPos.x, mPos.y, mPos.z);
+    Particle::System::NewSimple(kPtclSnowmanBreathHit, mPos.x, mPos.y, mPos.z);
     mTimer = 0;
 }
 
@@ -157,7 +158,8 @@ void SnowmanBreathParticle::Render()
 {
     if (mTimer == 0)
         return;
-    mParticleID = Particle::System::New(mParticleID, 0x111, mPos.x, mPos.y, mPos.z, 0, 0);
+    mParticleID =
+        Particle::System::New(mParticleID, kPtclSnowmanBreath, mPos.x, mPos.y, mPos.z, 0, 0);
 }
 
 void SnowmanBreathParticle::Behavior()
@@ -236,7 +238,7 @@ void daSnmBth_c::OnPendingDestroy()
 
 int daSnmBth_c::Render()
 {
-    int b = data_0209f2d8;
+    int b = gGameMode;
     b = (b == 2);
     if (b)
         return 1;
@@ -259,7 +261,7 @@ int daSnmBth_c::Behavior()
     SnowmanBreathParticle *slot;
     int zero;
 
-    b = data_0209f2d8;
+    b = gGameMode;
     b = (b == 2);
     if (b) {
         return 1;

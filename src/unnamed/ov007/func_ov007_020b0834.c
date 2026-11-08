@@ -12,7 +12,7 @@ extern void func_ov007_020b2614(int anim, int startFrame, int fadeFrames);
 extern void func_ov007_020c1d8c(int i);
 extern int func_ov007_020b79c8(void);
 extern int func_ov007_020bdeb0(int a);
-extern void func_ov007_020b7a44(void);
+extern void MessageWindow_Close(void);
 extern int func_ov007_020b79e4(void);
 extern void func_ov007_020aec94(int a);
 
@@ -22,7 +22,7 @@ extern void func_ov007_020aec94(int a);
  * key press or a fresh tap answers it: a set filesFailed (only for pending
  * choice 9) / minigamesFailed is replaced with what the owner's commands
  * 0x16 (erase the files not in use) / 0x17 (save the minigame data) return,
- * and func_ov007_020b7a44 runs; once func_ov007_020b79e4 reads 0 it
+ * and MessageWindow_Close runs; once func_ov007_020b79e4 reads 0 it
  * replays the pending choice (func_ov007_020aec94). */
 void func_ov007_020b0834(void) {
     if (WORK->states[1]->stateTicks == 0) {
@@ -63,7 +63,7 @@ void func_ov007_020b0834(void) {
                 int v = WORK->callback(0x17);
                 WORK->settings->minigamesFailed = v;
             }
-            func_ov007_020b7a44();
+            MessageWindow_Close();
             WORK->states[1]->stateWork = 1;
         }
         return;

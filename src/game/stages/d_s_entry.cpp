@@ -15,13 +15,12 @@
  * ENTRY (d_s_entry_entry.cpp) opens the next unit.
  *
  * deslop
- * Leftover: helpers stay func_ov075_*. This TU's GraphCallback2 calls
- *   021160dc; 02115e8c / 0211601c / 02116028 / 02116030 are the icon
- *   and graphCallback writers. Naming belongs with recovered members,
- *   not coined here.
+ * The helpers are members with coined names: icon_c::Place, the three
+ *   graphCallback_c setters, RenderIcons, SetSlotBorderPalette and
+ *   RenderPlayerScores. The cartridge keeps none of their spellings.
  * Leftover: func_ov001_020ab5b0 is still the linker name of the ov001
- *   dThIcon field writer (kind, x, y, w, h). This TU's 02115e8c calls
- *   it. Naming belongs in ov001.
+ *   dThIcon field writer (kind, x, y, w, h). This TU's icon_c::Place
+ *   calls it. Naming belongs in ov001.
  * Leftover: func_0203d974 is still the arm9 vs/region gate
  *   (0x27ffc40 == 2, else data_020a0f10). This TU's icon_c::Render
  *   case 13. Naming belongs in arm9.
@@ -104,8 +103,6 @@ extern "C" EntryPair data_ov075_0211d948[];
 extern "C" EntryPair data_ov075_0211d72c[];
 extern "C" EntryPair data_ov075_0211d740[];
 extern "C" EntryPair data_ov075_0211d754[];
-
-extern "C" void func_ov075_021160dc(dScEntry_c *scene);
 
 /* Written first so D1 and D0 are emitted first, as in the cartridge. The
  * body is empty: tearing down the four OamAnimations and the nine icon_c
@@ -240,50 +237,52 @@ void dScEntry_c::icon_c::Behavior() {
     dThIcon_c::Behavior();
 }
 
-extern "C" {
-
-void func_ov075_02115e8c(char *rawIcon, int iconType, int iconIndex, short x, short y) {
-    dScEntry_c::icon_c *icon = (dScEntry_c::icon_c *)rawIcon;
+/* Coined: sets an icon's type and index, then places its touch area. Types
+ * below 7 fire when the pen enters, 7..12 on a new touch, 13 never. Types
+ * 5, 6 and 11 are captions whose half extents depend on the language; the
+ * rest share one table indexed by type. dMgPsOpt_c's PsOpt_PlaceIcon is the
+ * same routine for the minigame options panel. */
+void dScEntry_c::icon_c::Place(int type, int index, s16 x, s16 y) {
     int touchKind;
     int widthLanguage, heightLanguage;
-    icon->unk_01c = iconType;
-    icon->unk_020 = iconIndex;
-    touchKind = (icon->unk_01c < 7) ? 2 : (icon->unk_01c < 0xd) ? 1 : 0;
-    if (iconType == 5) {
+    unk_01c = type;
+    unk_020 = index;
+    touchKind = (unk_01c < 7) ? 2 : (unk_01c < 0xd) ? 1 : 0;
+    if (type == 5) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0(rawIcon, touchKind, x, y, SH(data_ov075_0211d72c, widthLanguage),
+        func_ov001_020ab5b0((char *)this, touchKind, x, y, SH(data_ov075_0211d72c, widthLanguage),
                             SH(data_ov075_0211d72e, heightLanguage));
-    } else if (iconType == 6) {
+    } else if (type == 6) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0(rawIcon, touchKind, x, y, SH(data_ov075_0211d740, widthLanguage),
+        func_ov001_020ab5b0((char *)this, touchKind, x, y, SH(data_ov075_0211d740, widthLanguage),
                             SH(data_ov075_0211d742, heightLanguage));
-    } else if (iconType == 0xb) {
+    } else if (type == 0xb) {
         widthLanguage = GetLanguageIndex();
         heightLanguage = GetLanguageIndex();
-        func_ov001_020ab5b0(rawIcon, touchKind, x, y, SH(data_ov075_0211d754, widthLanguage),
+        func_ov001_020ab5b0((char *)this, touchKind, x, y, SH(data_ov075_0211d754, widthLanguage),
                             SH(data_ov075_0211d756, heightLanguage));
     } else {
-        func_ov001_020ab5b0(rawIcon, touchKind, x, y, SH(data_ov075_0211d948, iconType),
-                            SH(data_ov075_0211d94a, iconType));
+        func_ov001_020ab5b0((char *)this, touchKind, x, y, SH(data_ov075_0211d948, type),
+                            SH(data_ov075_0211d94a, type));
     }
 }
 
-void func_ov075_0211601c(dScEntry_c::graphCallback_c *callback, dScEntry_c *scene, int screenBase) {
-    callback->entryScene = scene;
-    callback->bg2ScreenBase = screenBase;
+void dScEntry_c::graphCallback_c::Init(dScEntry_c *scene, int screenBase) {
+    entryScene = scene;
+    bg2ScreenBase = screenBase;
 }
 
-void func_ov075_02116028(dScEntry_c::graphCallback_c *callback, int screenBase) {
-    callback->bg2ScreenBase = screenBase;
+void dScEntry_c::graphCallback_c::SetBg2ScreenBase(int screenBase) {
+    bg2ScreenBase = screenBase;
 }
 
-void func_ov075_02116030(void *object, void *screen) {
-    dScEntry_c::graphCallback_c *callback = (dScEntry_c::graphCallback_c *)object;
-    if (callback->compressedBg2Screen == 0)
-        callback->compressedBg2Screen = screen;
-}
+/* GraphCallback2 decompresses the queued screen into BG2 at the next VBlank
+   and frees it. A screen queued before that keeps its place. */
+void dScEntry_c::graphCallback_c::QueueBg2Screen(void *screen) {
+    if (compressedBg2Screen == 0)
+        compressedBg2Screen = screen;
 }
 
 int dScEntry_c::graphCallback_c::GraphCallback2() {
@@ -299,22 +298,23 @@ int dScEntry_c::graphCallback_c::GraphCallback2() {
     }
 
     if (entryScene != 0)
-        func_ov075_021160dc(entryScene);
+        entryScene->RenderIcons();
 
     return 1;
 }
 
 dScEntry_c::graphCallback_c::graphCallback_c() : compressedBg2Screen(0), entryScene(0) {}
 
-extern "C" void func_ov075_021160dc(dScEntry_c *scene) {
-    int iconCount = scene->mIconCount;
+/* Coined: GraphCallback2 calls it in VBlank to draw every live icon. */
+void dScEntry_c::RenderIcons() {
+    int iconCount = mIconCount;
     int iconIndex = 0;
     if (iconCount <= 0)
         return;
-    dScEntry_c::icon_c *icon = scene->mIcons;
+    icon_c *icon = mIcons;
     do {
         icon->Render();
-        iconCount = scene->mIconCount;
+        iconCount = mIconCount;
         iconIndex++;
         icon++;
     } while (iconIndex < iconCount);
@@ -350,7 +350,7 @@ static inline void SetPalette(u16 *entry, u16 pal) {
     *entry = (*entry & 0xfff) | (u16)(pal << 12);
 }
 
-extern "C" void func_ov075_02116128(dScEntry_c *scene, int slot, int dim) {
+void dScEntry_c::SetSlotBorderPalette(int slot, int dim) {
     int players = data_0209fc50;
     u16 *map = (u16 *)G2::GetBG1ScrPtr();
     u16 pal = func_02030958(slot) + 10;
@@ -414,7 +414,7 @@ static inline int EntryPlayerIndex(int arg0) {
     return func_02030958(arg0);
 }
 
-extern "C" void func_ov075_0211621c(dScEntry_c *scene) {
+void dScEntry_c::RenderPlayerScores() {
     int count = data_0209fc50;
     int stride;
     int tens;
@@ -422,7 +422,6 @@ extern "C" void func_ov075_0211621c(dScEntry_c *scene) {
     int i = 0;
     int d = 4 - count;
     int xbase;
-    (void)scene;
     xbase = data_ov075_0211c6e8[d];
     stride = (d * 16) + 0x38;
     {
@@ -679,7 +678,7 @@ extern dScEntry_c::Step data_ov075_0211c8c8;
 extern dScEntry_c::Step data_ov075_0211c8d0;
 extern dScEntry_c::Step data_ov075_0211c8d8;
 
-dScEntry_c::graphCallback_c data_ov075_0211d71c;
+dScEntry_c::graphCallback_c sEntryGraphCallback;
 extern "C" EntryPair data_ov075_0211d948[14] __attribute__((aligned(4))) = {
     EntryPair(0x80, 0x10), EntryPair(0x3c, 0x10), EntryPair(0x1c, 0x10), EntryPair(8, 0x10),
     EntryPair(8, 0x10),    EntryPair(0x20, 0x10), EntryPair(0x30, 0x10), EntryPair(0x20, 0x20),

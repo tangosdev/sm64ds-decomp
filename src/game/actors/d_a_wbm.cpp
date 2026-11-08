@@ -53,10 +53,12 @@ enum daWbm_c_AssetId {
 
 #include "common.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daWbm_c.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
@@ -79,8 +81,6 @@ extern "C" {
 extern SharedFilePtr data_ov002_0210da38;
 /* The five fragments' launch angles. */
 extern u16 data_ov098_0213bf90[];
-/* The sine and cosine table. */
-extern s16 data_02082214[];
 
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 s16 Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
@@ -307,13 +307,13 @@ void daWbm_c::StateDrop()
     angleIdx = (int)uangle >> 4;
     lead = speed >> 12;
     lead = lead * 0x1c;
-    cosine = data_02082214[angleIdx * 2];
-    sine = data_02082214[angleIdx * 2 + 1];
+    sine = FX_SinIdx(angleIdx);
+    cosine = FX_CosIdx(angleIdx);
     lead = lead + 0x64;
-    x = lead * cosine + spawnPos.x;
+    x = lead * sine + spawnPos.x;
     spawnPos.y = y;
     spawnPos.x = x;
-    z = lead * sine + spawnPos.z;
+    z = lead * cosine + spawnPos.z;
     spawnPos.z = z;
     dActor_c::Spawn(ACTOR_WATERBOMB, 1, spawnPos, 0, mAreaId, -1)->mHorzSpeed = 0;
     mStateTimer = 0x96;
@@ -394,8 +394,8 @@ int daWbm_c::func_ov098_0213b6e0()
                 pos.z = mPosZ;
                 other->Hurt(pos, 1, 0xc000, 1, 0, 1);
                 if (mVariant == 1) {
-                    Particle::System::NewSimple(0x1c, mPosX, mPosY, mPosZ);
-                    Particle::System::NewSimple(0x1d, mPosX, mPosY, mPosZ);
+                    Particle::System::NewSimple(kPtclWaterBombBurstA, mPosX, mPosY, mPosZ);
+                    Particle::System::NewSimple(kPtclWaterBombBurstB, mPosX, mPosY, mPosZ);
                     Burst();
                     return 1;
                 }

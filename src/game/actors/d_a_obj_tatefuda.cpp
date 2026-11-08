@@ -34,9 +34,6 @@
  * ROM carries no names for them.
  *
  * deslop leftovers:
- * - RebuildModelMatrix and AttachToHolder retain free C-linkage entry points.
- *   Both compile as C++; their array-backed matrix copies preserve the ROM
- *   block moves under 2004/b56.
  * - Behavior's `enum Bool` casts are a measured codegen view: plain `int`
  *   spellings size-DIFF under 2004/b56.
  * - Unrecovered meanings: mFlags bits 0x100, 0x400, 0x2000, 0x4000 and
@@ -78,6 +75,7 @@ enum daObjTatefuda_c_AssetId {
 #include "dCc_c.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 
@@ -133,9 +131,7 @@ extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern char *func_ov002_020e496c(daPly_c *p);
 extern void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 extern short data_ov002_020ff0d0[];
-extern int data_ov002_020ff0d4[];
-extern int data_ov002_020ff0d8[];
-extern int data_ov002_020ff0dc[];
+extern Vector3 data_ov002_020ff0d4[];
 extern void func_02012694(unsigned int a, void *b);
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
@@ -146,12 +142,10 @@ extern u8 gShowTouchScreenArrows;
 extern s32 Vec3_HorzDist(const struct Vector3 *a, const struct Vector3 *b);
 extern int func_ov002_020bec84(void *player, unsigned int i);
 extern unsigned int gNextActorUpdateMask;
-extern void AttachToHolder(struct daObjTatefuda_c *self);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern void *d_a_obj_tatefudaNewHold(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
-extern u32 d_a_obj_tatefudaNewUnkCallback818Hold(u32 a, u32 b, int c, int d, int e,
-                                                 const Vector3_16f *v);
-extern void RebuildModelMatrix(struct daObjTatefuda_c *self);
+extern u32 d_a_obj_tatefudaNewCleanParticleHold(u32 a, u32 b, int c, int d, int e,
+                                                const Vector3_16f *v);
 extern void hold_d_a_obj_tatefuda(void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh,
                                   CLPS_Block &b);
 /* Parameter names keep this TU's @NNN. */
@@ -229,7 +223,7 @@ int daObjTatefuda_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
 
-    mdCcAc_c.Init((dActor_c *)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
+    mdCcAc_c.Init(this, 0x64000, 0x64000, 0x4800002, 0x41000);
 
     mPoundsLeft = 2;
     mHomePosX = mPosX;
@@ -241,7 +235,7 @@ int daObjTatefuda_c::InitResources()
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
 
-    mWithMeshClsn.Init((dActor_c *)((char *)this), 0x28000, 0x28000, 0, 0);
+    mWithMeshClsn.Init(this, 0x28000, 0x28000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
 
     return 1;
@@ -300,7 +294,7 @@ int daObjTatefuda_c::Behavior()
         if (p != 0 && (enum Bool)((mFlags & 0x4000) != 0) != FALSE &&
             ((dActor_c *)p)->mCarryMatrix != 0) {
             u32 *fp;
-            AttachToHolder(this);
+            AttachToHolder();
             mClipRadius = 0x20000;
             fp = (u32 *)&mFlags;
             *fp = *fp | 0x4000000;
@@ -346,9 +340,9 @@ int daObjTatefuda_c::Behavior()
         ((int *)&v)[2] = z;
         if (DecIfAbove0_Byte(&mBreakTimer) != 0) {
             *(void **)&mParticleHandle1 =
-                (void *)Particle::System::New(mParticleHandle1, 0x13a, v.x, v.y, v.z, 0, 0);
+                (void *)Particle::System::New(mParticleHandle1, kPtclDeathA, v.x, v.y, v.z, 0, 0);
             mParticleHandle2 =
-                Particle::System::NewUnkCallback818(mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
+                Particle::System::NewCleanParticle(mParticleHandle2, kPtclDeathB, v.x, v.y, v.z, 0);
         } else {
             int x2, y2, z2;
             x2 = mPosX;
@@ -375,7 +369,7 @@ int daObjTatefuda_c::Behavior()
     {
         int s = mState;
         if (s == STATE_THROWN) {
-            RebuildModelMatrix(this);
+            RebuildModelMatrix();
         } else if (mPoundsLeft == 2 && (u32)s <= 1) {  /* STATE_IDLE or STATE_TALK */
             DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x50000, 0x28000, 0x28000, 0xf);
         }
@@ -395,7 +389,7 @@ int daObjTatefuda_c::Render() {
     if (r != 0) {
         int b = (mFlags & 0x4000) != 0;
         if (b && ((dActor_c *)r)->mCarryMatrix != 0) {
-            AttachToHolder(this);
+            AttachToHolder();
         }
     }
     mModel.Render(0);
@@ -577,7 +571,7 @@ void daObjTatefuda_c::Dropped(){
     if (mWithMeshClsn.IsOnGround() || mWithMeshClsn.IsOnWall() || mWithMeshClsn.TouchesWater()) {
         Kill();
     } else {
-        RebuildModelMatrix(this);
+        RebuildModelMatrix();
         if (((dBgW *)&mMeshCollider)->IsEnabled())
             ((dBgW *)&mMeshCollider)->Disable();
     }
@@ -989,53 +983,54 @@ int daObjTatefuda_c::OnAttacked1(dActor_c &other)
  * approaches data_ov002_020ff0d0[r4] by 0x1000 per call;
  * the sign copies the holder's Y angle (into mAngleY and mPrevAngleY); the
  * matrix is built from a translation, a pivot offset of 0x8c00 up and back, the
- * sign's rotation (Matrix4x3_ApplyInPlaceToRotationXYZExt), and a per-pose offset taken from the three tables at
- * data_ov002_020ff0d4/d8/dc (12 bytes per pose). The position is that
+ * sign's rotation (Matrix4x3_ApplyInPlaceToRotationXYZExt), and a per-pose offset from the
+ * two-entry Vector3 table at data_ov002_020ff0d4 (the ROM's pool holds
+ * its .x/.y/.z addresses 0d4/0d8/0dc). The position is that
  * matrix's translation shifted left 3 (matrix units are position >> 3) and
  * the matrix itself is stored into mModel at 0xf0. */
-void AttachToHolder(struct daObjTatefuda_c *self)
-{
+void daObjTatefuda_c::AttachToHolder() {
     Vector3 v;
     Vector3 lo;
-    dExtAnmModel_c *body = (dExtAnmModel_c *)func_ov002_020e496c(self->mHoldingPlayer);
+    dExtAnmModel_c *body = (dExtAnmModel_c *)func_ov002_020e496c(mHoldingPlayer);
     Matrix4x3 *bones = body->data.transforms;
     int r4 = 0;
 
-    if (self->mHoldingPlayer->IsFrontSliding())
+    if (mHoldingPlayer->IsFrontSliding())
         r4 = 1;
-    if (self->mHoldingPlayer->LostGrabbedObject()) {
+    if (mHoldingPlayer->LostGrabbedObject()) {
         if ((unsigned int)(body->currFrame << 4) >> 0x10 < 0xe)
             r4 = 1;
     }
 
-    ApproachLinear(self->mAngleX, data_ov002_020ff0d0[r4], 0x1000);
+    ApproachLinear(mAngleX, data_ov002_020ff0d0[r4], 0x1000);
 
-    ((int *)&v)[0] = 0;
-    ((int *)&v)[1] = 0;
-    ((int *)&v)[2] = 0;
+    v.x = 0;
+    v.y = 0;
+    v.z = 0;
     *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&body->mat4x3;
     MulMat4x3Mat4x3(&bones[14], &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.t.x;
     v.y = data_020a0e68.t.y;
     v.z = data_020a0e68.t.z;
 
-    self->mPrevAngleY = self->mHoldingPlayer->mAngleY;
-    self->mAngleY = self->mPrevAngleY;
+    mPrevAngleY = mHoldingPlayer->mAngleY;
+    mAngleY = mPrevAngleY;
 
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x8c00, 0);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, self->mAngleX, self->mAngleY, self->mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, *(int *)((char *)data_ov002_020ff0d4 + r4 * 0xc), *(int *)((char *)data_ov002_020ff0d8 + r4 * 0xc), *(int *)((char *)data_ov002_020ff0dc + r4 * 0xc));
+    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, data_ov002_020ff0d4[r4].x,
+                                        data_ov002_020ff0d4[r4].y, data_ov002_020ff0d4[r4].z);
 
-    self->mPosX = data_020a0e68.t.x;
-    self->mPosY = data_020a0e68.t.y;
-    self->mPosZ = data_020a0e68.t.z;
-    Vec3_Lsl(&lo, &self->mPos, 3);
-    self->mPosX = lo.x;
-    self->mPosY = lo.y;
-    self->mPosZ = lo.z;
-    *(Mtx43 *)&self->mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    mPosX = data_020a0e68.t.x;
+    mPosY = data_020a0e68.t.y;
+    mPosZ = data_020a0e68.t.z;
+    Vec3_Lsl(&lo, &mPos, 3);
+    mPosX = lo.x;
+    mPosY = lo.y;
+    mPosZ = lo.z;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1047,15 +1042,14 @@ void AttachToHolder(struct daObjTatefuda_c *self)
  * offset of 0x8c00 up, the rotation (Matrix4x3_ApplyInPlaceToRotationZXYExt), the pivot offset back
  * down, stored into mModel at 0xf0 through the scratch matrix data_020a0e68.
  * Called by DROPPED's update, and by Behavior while the state is THROWN. */
-void RebuildModelMatrix(struct daObjTatefuda_c* self){
+void daObjTatefuda_c::RebuildModelMatrix() {
     struct Vector3 v;
-    Vec3_Asr(&v, &self->mPos, 3);
+    Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x8c00, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-        self->mAngleX, self->mAngleY, self->mAngleZ);
+    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x8c00, 0);
-    *(Mtx43 *)&self->mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
 /* Rebuild the drop shadow's matrix: a rotation about Y by the sign's angle,

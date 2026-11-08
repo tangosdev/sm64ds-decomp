@@ -134,7 +134,7 @@ void  func_ov002_020c3f2c(void *p);
 void  func_0201f32c(int a);
 
 /* globals */
-extern dCamera_c *data_0209f318;            /* the camera object */
+extern dCamera_c *gCamera;                  /* the camera object */
 extern SaveBlock data_0209caa0;             /* the live save block */
 extern u8             data_0209d66c;
 extern u8             data_0209d6bc;
@@ -199,7 +199,7 @@ daC_Jugem_c::~daC_Jugem_c()
    while the fanfare plays; on the last frame hand the camera back and go
    wait in StateHidden. */
 int daC_Jugem_c::StateIntroMain() {
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     Vector3 look, pos;
     cam->SetFlag_3();
     look.x = -0x4b0000;
@@ -250,7 +250,7 @@ int daC_Jugem_c::StateApproachMain()
     int spd;
     int len;
 
-    cam = data_0209f318;
+    cam = gCamera;
     cam->SetFlag_3();
     mSfxHandle = Sound::PlayLong(mSfxHandle, 3, 0x182, mCamSpacePos, 0);
     ApproachLinear(mAngleY, ::Vec3_HorzAngle(&mPos, (const Vector3 *)&data_ov085_0213084c), 0x200);
@@ -288,7 +288,7 @@ int daC_Jugem_c::StateApproachInit()
     mTimer = 0;
     mAuxCounter = 0;
     unk_2e0 = 0;
-    cam = data_0209f318;
+    cam = gCamera;
     cam->SetFlag_3();
     mCamLook.x = -0x399000;
     mCamLook.y = 0x6ea000;
@@ -351,7 +351,7 @@ int daC_Jugem_c::StateBobInit()
     mTarget.x = mPosX;
     mTarget.y = mPosY;
     mTarget.z = mPosZ;
-    cam = data_0209f318;
+    cam = gCamera;
     cam->SetFlag_3();
     look.x = -0x304000;
     look.y = 0x3c1000;
@@ -448,7 +448,7 @@ int daC_Jugem_c::StateTurnInit()
     mTimer = 0;
     mTalkPlayer = 0;
     mAngleZ = 0;
-    cam = data_0209f318;
+    cam = gCamera;
     cam->SetFlag_3();
     look.x = 0xffadd000;
     look.y = 0x17e000;
@@ -513,7 +513,7 @@ int daC_Jugem_c::StateArriveInit()
         mSavedAngleY = player->mAngleY;
         player->func_ov002_020d228c();
     }
-    cam = data_0209f318;
+    cam = gCamera;
     cam->SetFlag_3();
     look.x = 0xff883000;
     look.y = 0x2ef000;
@@ -696,7 +696,7 @@ int daC_Jugem_c::StateHoverMain()
     Vector3 *src;
     daPly_c *p;
 
-    cam = data_0209f318;
+    cam = gCamera;
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
     src = &cam->pos;

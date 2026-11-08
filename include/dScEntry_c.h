@@ -20,6 +20,10 @@ struct dScEntry_c : dScene_c {
         ~icon_c();
         virtual void Behavior();
         virtual void Render();
+        /* Type, index, centre x, centre y. Parameters stay unnamed in this
+           shared header: a named one takes a compiler @NNN number in every
+           including unit. */
+        void Place(int, int, s16, s16);
     };
 
     struct graphCallback_c;
@@ -69,7 +73,7 @@ struct dScEntry_c : dScene_c {
     s32 InitResultResources();
     s32 InitEntryResources();
     void LeaveSettings();
-    int func_ov075_02116ce4();
+    int ArePlayersReadyForRematch();
     void ResetMatchRecords();
     void UpdateSettingsSync();
     void EnterSettingsSync();
@@ -120,6 +124,22 @@ struct dScEntry_c : dScene_c {
     void RenderWaitingText();
     void EnterPlayerSelectIntro();
     void UpdatePlayerSelectIntro();
+    // Wireless host flow, all coined: recruit players, then either confirm
+    // a solo game or close recruiting and start the game session.
+    void UpdateSessionStart();
+    void EnterSessionStart();
+    void UpdateSoloStart();
+    void EnterSoloStart();
+    void UpdateSoloConfirm();
+    void EnterSoloConfirm();
+    void RenderRecruitText();
+    void UpdateRecruit();
+    void EnterRecruit();
+    // Drawing helpers, coined. Slot and dim flag for the border, unnamed
+    // for the reason given at icon_c::Place.
+    void RenderIcons();
+    void SetSlotBorderPalette(int, int);
+    void RenderPlayerScores();
 
     /* Inlined into both profile factories. The three steps start as a null
        member pointer; icon_c and OamAnimation then construct their arrays. */
@@ -152,6 +172,11 @@ struct dScEntry_c::graphCallback_c : dGraph_c::callback_c {
 
     graphCallback_c();
     virtual int GraphCallback2();
+    /* Coined. Init takes the scene and the screen base; QueueBg2Screen
+       takes a compressed screen and keeps one already queued. */
+    void Init(dScEntry_c *, int);
+    void SetBg2ScreenBase(int);
+    void QueueBg2Screen(void *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

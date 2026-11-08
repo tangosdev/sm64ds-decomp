@@ -6,7 +6,7 @@
  * Particle_Manager.cpp) calls per particle: the resource supplies the
  * EffectData record, the Element the per-particle state, and Func advances
  * the particle's velocity/offset accordingly. The span is bounded on both
- * sides by func_ free functions: func_0204d440 below and func_0204d8e8 above.
+ * sides by C free functions: SPLAnim_Scale below and func_0204d8e8 above.
  * mwccarm emits .text in reverse source order, so the definitions below run
  * ROM-descending; the roster reads ROM-ascending.
  *
@@ -23,11 +23,11 @@
 #include "Particle__Behavior.h"
 #include "math/Matrix.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 
 extern "C" {
-/* local extern: no header declares the sine table or these three matrix
- * entry points (checked include/math/*.h and decl_*.h). */
-extern s16 data_02082214[];
+/* local extern: no header declares these matrix entry points (checked
+ * include/math/*.h and decl_*.h). */
 void MTX_RotX33_(Matrix3x3 *matrix, int sin, int cos);
 void MTX_RotY33_(Matrix3x3 *matrix, int sin, int cos);
 void Matrix3x3_SetRotationZ(Matrix3x3* matrix, int sin, int cos);
@@ -94,16 +94,15 @@ void Turn::Func(EffectData& effect, char* particle, Vector3&)
     switch (effect.turn.axis) {
     case 0:
         idx = effect.turn.angle >> 4;
-        MTX_RotX33_(&matrix, data_02082214[idx * 2], data_02082214[idx * 2 + 1]);
+        MTX_RotX33_(&matrix, FX_SinIdx(idx), FX_CosIdx(idx));
         break;
     case 1:
         idx = effect.turn.angle >> 4;
-        MTX_RotY33_(&matrix, data_02082214[idx * 2], data_02082214[idx * 2 + 1]);
+        MTX_RotY33_(&matrix, FX_SinIdx(idx), FX_CosIdx(idx));
         break;
     case 2:
         idx = effect.turn.angle >> 4;
-        Matrix3x3_SetRotationZ(&matrix, data_02082214[idx * 2],
-                              data_02082214[idx * 2 + 1]);
+        Matrix3x3_SetRotationZ(&matrix, FX_SinIdx(idx), FX_CosIdx(idx));
         break;
     }
 

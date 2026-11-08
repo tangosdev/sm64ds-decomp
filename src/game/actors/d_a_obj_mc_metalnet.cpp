@@ -38,7 +38,7 @@ extern CLPS_Block data_ov009_02112bf8;
 
 /* The global mode byte. Unnamed in config; compared against 1 in fifty-odd
    places across the tree, always to mean "not the ordinary single-player run". */
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 /* The one global SaveData instance (include/SaveData.h). Indexed as int[] here,
    the way d_a_set_se.cpp does it; [2] is the 0x008 unlock word. */
 extern SaveBlock data_0209caa0;
@@ -47,10 +47,10 @@ extern "C" {
 unsigned char NumStars(void);
 }
 
-/* data_0209f2d8 (CURRENT_GAMEMODE) is 1 in VS mode: PrepareVsMode stores it.
+/* gGameMode (CURRENT_GAMEMODE) is 1 in VS mode: PrepareVsMode stores it.
    Both gates below skip in VS. Same predicate as CapIconMgr and d_meter. */
 static inline int IsVsMode(void) {
-    return data_0209f2d8 == 1;
+    return gGameMode == 1;
 }
 
 /* Reconstructed source-style name. Historical alias: MetalNet_Spawn.

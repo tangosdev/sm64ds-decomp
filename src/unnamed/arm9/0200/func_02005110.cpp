@@ -92,12 +92,12 @@ int func_02005110(dCamera_c *cam) {
         } else if (vert > 0x2800) {
             vert = 0x2800;
         }
-        cam->func_020091f8(&aim, horzAngle, vert);
+        cam->ApproachLookAtAndAngles(&aim, horzAngle, vert);
     }
     {
-        u32 r = cam->func_020093f4(eyeDist);
-        if (cam->func_02009138(r) == 0) {
-            cam->func_020089d8();
+        u32 r = cam->ScaleDistByFov(eyeDist);
+        if (cam->ApproachDist(r) == 0) {
+            cam->ClampPosAboveTarget();
         }
     }
     return 1;

@@ -1,39 +1,37 @@
 //cpp
 /* ov080/daPicGate_c -- picture-gate helpers: the mesh machinery under the
  * promoted TU (src/game/actors/d_a_pic_gate_methods.cpp, .text 0x021264ec..0x02126fbc).
- * .text 0x02125404..0x021264ec: the destructor pair, then the sixteen
- * func_ov080_* helpers that fill the range up to the class TU.
+ * .text 0x02125404..0x021264ec: the destructor pair, then the seventeen
+ * helpers that fill the range up to the class TU.
  *
  *   ~daPicGate_c         D1 0x02125404, D0 0x02125428 -- the key function, so
  *                        the vtable and typeinfo come out of this file too.
- *   func_ov080_02125460  LoadMaterial -- texture/palette/light GX ports from
- *                        the material record kept in mTexRecord; states 2/3
- *                        (and a stopped wave) force ambient white.
- *   func_ov080_0212555c  BuildGateMatrix -- mMtx from position, rotation and
- *                        the param1 width, and mInvMtx as its inverse.
- *   func_ov080_02125630  LoadTexture -- decompress this picture's texture
- *                        record to VRAM. `this` is unused: it was a method
- *                        already.
- *   func_ov080_021256f8  HitTest -- map the closest player's current and
- *                        previous position into gate space; inside the mesh
- *                        begins a wave, beyond the far edge begins one and
- *                        plays a sound.
- *   func_ov080_02125940  BuildNormals -- per-cell normal from the neighbour
- *                        cross product, packed for G3_NORMAL.
- *   func_ov080_02125af0  FlattenFrame -- cells on the border of the current
- *                        width/height get z = 0 and the flat packed normal.
- *   func_ov080_02125bb0  RippleHeight -- wave height at a cell's distance.
- *   func_ov080_02125cd4 / func_ov080_02125d08 -- wave-clock math on
- *                        mWaveParams.
- *   func_ov080_02125d64 -- distance of every cell from the wave origin.
- *   func_ov080_02125de0  BeginWave -- store the origin, refresh cell dists,
- *                        pick the WaveParams row, reload mWaveTimer.
- *   func_ov080_02125f00 / func_ov080_02126124 -- mCorners defaults for the
- *                        flat quad states; the texCoord pattern differs.
- *   func_ov080_02125fd0  DrawFlat -- emit the flat quad.
- *   func_ov080_02126120 -- the empty state slot.
- *   func_ov080_021261f4  DrawWave -- the wave-mesh renderer: one triangle
- *                        strip per pair of adjacent cell columns.
+ *   LoadMaterial         texture/palette/light GX ports from the material
+ *                        record kept in mTexRecord; states 2/3 (and a
+ *                        stopped wave) force ambient white.
+ *   BuildGateMatrix      mMtx from position, rotation and the param1 width,
+ *                        and mInvMtx as its inverse.
+ *   LoadTexture          decompress this picture's texture record to VRAM.
+ *                        `this` is unused: it was a method already.
+ *   HitTest              map the closest player's current and previous
+ *                        position into gate space; inside the mesh begins a
+ *                        wave, beyond the far edge begins one and plays a
+ *                        sound.
+ *   BuildNormals         per-cell normal from the neighbour cross product,
+ *                        packed for G3_NORMAL.
+ *   FlattenFrame         cells on the border of the current width/height get
+ *                        z = 0 and the flat packed normal.
+ *   RippleHeight         wave height at a cell's distance.
+ *   WaveAmplitude / WavePhase -- wave-clock math on mWaveParams.
+ *   UpdateCellDistances  distance of every cell from the wave origin.
+ *   BeginWave            store the origin, refresh cell dists, pick the
+ *                        WaveParams row, reload mWaveTimer.
+ *   PlaceCornersMirrored / PlaceCorners -- mCorners defaults for the flat
+ *                        quad states; the texCoord pattern differs.
+ *   DrawFlat             emit the flat quad.
+ *   UpdateFlat           the empty state slot.
+ *   DrawRippleEnvMapped  the environment-mapped wave-mesh renderer: one
+ *                        triangle strip per pair of adjacent cell columns.
  *
  * deslop leftovers:
  * - Vertex.texCoord/colour reach the GX ports through literal
@@ -49,6 +47,7 @@
 #include "SharedFilePtr.h"
 #include "private/Ov080Mat.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g3imm.h"
 #include "math/MtxStack.h"
 
@@ -98,7 +97,6 @@ unsigned int func_02045a50(const void *src, unsigned int size);
 }
 
 extern Matrix4x3 data_0209b3ec;
-extern short data_02082214[];
 extern char data_ov080_021277a8[];
 extern SharedFilePtr *data_ov080_0212775c[];
 extern unsigned char data_ov080_02128688[];
@@ -110,8 +108,7 @@ daPicGate_c::~daPicGate_c()
 {
 }
 
-void daPicGate_c::func_ov080_02125460()
-{
+void daPicGate_c::LoadMaterial() {
     Ov080Mat *mat = (Ov080Mat *)mTexRecord;
     unsigned char mode = (param1 >> 0xd) & 3;
     u32 difAmb = mat->difAmb;
@@ -135,8 +132,7 @@ void daPicGate_c::func_ov080_02125460()
 
 /* mMtx = translate(pos) * rotate(mAngle) * translate(-width/2): the gate's
  * mesh sits centred on its position, and mInvMtx maps back into it. */
-void daPicGate_c::func_ov080_0212555c()
-{
+void daPicGate_c::BuildGateMatrix() {
     VecFx32 v;
     Vec3_Asr((Vector3 *)&v, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
@@ -152,8 +148,7 @@ void daPicGate_c::func_ov080_0212555c()
  * first use (the parallel data_ov080_0212869c table is the loaded flag).
  * The record keeps the texture port address, the palette port address and
  * the packed parameter word LoadMaterial pushes. */
-u8 *daPicGate_c::func_ov080_02125630(s32 i)
-{
+u8 *daPicGate_c::LoadTexture(s32 i) {
     int off = 0x18 * i;
     Ov080Mat *e = (Ov080Mat *)&data_ov080_02128688[off];
     unsigned char *fl = &data_ov080_0212869c[off];
@@ -187,8 +182,7 @@ u8 *daPicGate_c::func_ov080_02125630(s32 i)
  * into gate space (mInvMtx). A z-straddle means the player crossed the gate
  * plane this frame: inside the cell bounds starts a wave toward the field,
  * beyond the far edge starts one from the other side and clicks. */
-void daPicGate_c::func_ov080_021256f8()
-{
+void daPicGate_c::HitTest() {
     VecFx32 a;
     VecFx32 b;
     VecFx32 ob;
@@ -227,7 +221,7 @@ void daPicGate_c::func_ov080_021256f8()
         lim = (nib + 1) * 0x64000;
         if (y > lim)
             return;
-        func_ov080_02125de0(x, y, 1);
+        BeginWave(x, y, 1);
         return;
     }
 
@@ -254,15 +248,14 @@ void daPicGate_c::func_ov080_021256f8()
     lim = (nib + 1) * 0x64000 + 0xc8000;
     if (y > lim)
         return;
-    func_ov080_02125de0(x, y, 0);
+    BeginWave(x, y, 0);
     func_02012694(0x7b, &mCamSpacePosX);
 }
 
 /* BuildNormals: each cell's normal is the cross product of its column and
  * row neighbours (edge cells take the one-sided edge), halved in z, then
  * normalized and packed 10 bits per axis into Vertex::normal. */
-void daPicGate_c::func_ov080_02125940()
-{
+void daPicGate_c::BuildNormals() {
     VecFx32 ej;
     VecFx32 ei;
     VecFx32 n;
@@ -307,8 +300,7 @@ void daPicGate_c::func_ov080_02125940()
 /* FlattenFrame: every cell on the picture's border (x at 0 or the full
  * width, y at 0 or the full height) is reset to z = 0 and the flat packed
  * normal (0x1ff00000); interior cells are left as they are. */
-void daPicGate_c::func_ov080_02125af0()
-{
+void daPicGate_c::FlattenFrame() {
     for (int i = 0; i < mNumCells; i++) {
         Vertex *e = mCells + i;
         if (e->x == 0 || e->x == ((unsigned char)(param1 & 0xf) + 1) * 0x64000 || e->y == 0 ||
@@ -320,15 +312,14 @@ void daPicGate_c::func_ov080_02125af0()
 }
 
 /* RippleHeight: the wave height at a cell, from the phase the wave clock
- * has reached (func_ov080_02125d08) scaled down linearly over the wave's
- * run, looked up in the quarter-wave sine table data_02082214. */
-s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
-{
+ * has reached (WavePhase) scaled down linearly over the wave's
+ * run, through FX_SinIdx of the phase. */
+s32 daPicGate_c::RippleHeight(s32 r6) {
     unsigned short r4 = mWaveTimer;
     const WaveParams *wave;
-    int r5res, r4res, sum, idx;
+    int r5res, r4res, sum;
     Fix12i f;
-    short tv;
+    fx16 tv;
 
     if (r4 == 0)
         return 0;
@@ -345,23 +336,21 @@ s32 daPicGate_c::func_ov080_02125bb0(s32 r6)
         }
     }
 
-    r5res = func_ov080_02125d08(r6);
-    r4res = func_ov080_02125cd4(mWaveParams->duration - mWaveTimer);
+    r5res = WavePhase(r6);
+    r4res = WaveAmplitude(mWaveParams->duration - mWaveTimer);
 
     f = cstd::fdiv(r4res, mWaveParams->radius);
     sum = r4res + FX_MUL(-f, r6);
     if (sum < 0)
         sum = 0;
 
-    idx = (unsigned short)r5res >> 4;
-    tv = *(short *)((char *)data_02082214 + (idx << 2));
+    tv = FX_SinIdx((unsigned short)r5res >> 4);
     return FX_MUL(tv, sum);
 }
 
 /* The wave's amplitude after n frames: it decays linearly from
  * amplitude to 0 over duration. */
-s32 daPicGate_c::func_ov080_02125cd4(s32 n)
-{
+s32 daPicGate_c::WaveAmplitude(s32 n) {
     const WaveParams *p = mWaveParams;
     int r4 = p->amplitude;
     int r1 = p->duration;
@@ -371,44 +360,38 @@ s32 daPicGate_c::func_ov080_02125cd4(s32 n)
 
 /* The wave's phase at distance dist from the origin: dist * 0xffff /
  * wavelength, 4.12 fixed-point, minus the running phase mWavePhase. */
-s32 daPicGate_c::func_ov080_02125d08(s32 dist) {
+s32 daPicGate_c::WavePhase(s32 dist) {
     Fix12i speed = cstd::fdiv(0xffff, mWaveParams->wavelength);
     int result = FX_MUL(dist, speed);
     s16 cur = mWavePhase;
     return (s16)(result - cur);
 }
 
-/* Initialize the plain vector inside the loop: b56 emits the retail block
- * copy in C++ mode. This helper retains its existing C-linkage boundary. */
-struct Elem { struct Vector3 pos; int dist; int pad[2]; };  /* 0x18 */
-
 /* Refresh every cell's planar distance from the wave origin (mWaveOrigin);
- * Elem::dist feeds RippleHeight. */
-extern "C" void func_ov080_02125d64(char *c)
-{
+ * Vertex::dist feeds RippleHeight. The plain vector is initialized inside
+ * the loop: b56 emits the retail block copy for that form. */
+void daPicGate_c::UpdateCellDistances() {
     int i;
 
-    for (i = 0; i < ((daPicGate_c *)c)->mNumCells; i++) {
-        struct Elem *e = (struct Elem *)((char *)((daPicGate_c *)c)->mCells + i * 0x18);
-        VecFx32 tmp = *(VecFx32 *)&e->pos;
+    for (i = 0; i < mNumCells; i++) {
+        Vertex *e = &mCells[i];
+        VecFx32 tmp = *(VecFx32 *)&e->x;
         tmp.z = 0;
-        e->dist =
-            Vec3_Dist((struct Vector3 *)((daPicGate_c *)c)->mWaveOrigin, (struct Vector3 *)&tmp);
+        e->dist = Vec3_Dist((Vector3 *)mWaveOrigin, (Vector3 *)&tmp);
     }
 }
 
 /* BeginWave: the origin in cell space goes to mWaveOrigin, every cell's dist
  * is refreshed, then a WaveParams row is picked for this param1 shape
  * (front/back rows differ) and mWaveTimer reloads from it. */
-void daPicGate_c::func_ov080_02125de0(s32 a1, s32 a2, s32 a3)
-{
+void daPicGate_c::BeginWave(s32 a1, s32 a2, s32 a3) {
     u32 m8;
     int r0;
     unsigned char f;
     mWaveOrigin[0] = a1;
     mWaveOrigin[1] = a2;
     mWaveOrigin[2] = 0;
-    func_ov080_02125d64((char *)this);
+    UpdateCellDistances();
     m8 = param1;
     r0 = 0;
     if ((unsigned char)((m8 >> 0xd) & 3) == 1) {
@@ -433,10 +416,9 @@ void daPicGate_c::func_ov080_02125de0(s32 a1, s32 a2, s32 a3)
     mWaveTimer = mWaveParams->duration;
 }
 
-/* mCorners defaults, state row 0: the picture's four border vertices,
- * scaled by the param1 width/height. */
-void daPicGate_c::func_ov080_02125f00()
-{
+/* Init of state row 3: the picture's four border vertices, scaled by the
+ * param1 width/height, with the s texture coordinate mirrored. */
+void daPicGate_c::PlaceCornersMirrored() {
     mCorners[0].x = 0;
     mCorners[0].y = 0;
     mCorners[0].z = 0;
@@ -462,8 +444,7 @@ void daPicGate_c::func_ov080_02125f00()
 /* DrawFlat: the flat 2x2 quad for states 2/3. mMtx is composed onto the
  * camera matrix, scaled to 32, then each corner emits TEXCOORD, NORMAL and
  * one VTX_16 pair at >>8. */
-void daPicGate_c::func_ov080_02125fd0()
-{
+void daPicGate_c::DrawFlat() {
     Matrix4x3 tmp;
     int i;
     Vertex *p;
@@ -474,7 +455,7 @@ void daPicGate_c::func_ov080_02125fd0()
     func_020553a4(&tmp);
     G3_LIGHT_VECTOR = 0xe0000000;
     G3_LIGHT_COLOR = 0xc0007fff;
-    func_ov080_02125460();
+    LoadMaterial();
 
     G3_MTX_SCALE = 0x20000;
     G3_MTX_SCALE = 0x20000;
@@ -505,14 +486,11 @@ void daPicGate_c::func_ov080_02125fd0()
 }
 
 /* Empty. A no-op row for the state tables that need one. */
-void daPicGate_c::func_ov080_02126120()
-{
-}
+void daPicGate_c::UpdateFlat() {}
 
-/* mCorners defaults, state row 1: same layout as func_ov080_02125f00 with
- * the texCoord pattern rotated. */
-void daPicGate_c::func_ov080_02126124()
-{
+/* Init of state row 2, and the corners both mesh inits place: the same
+ * vertices as PlaceCornersMirrored with s running the other way. */
+void daPicGate_c::PlaceCorners() {
     mCorners[0].x = 0;
     mCorners[0].y = 0;
     mCorners[0].z = 0;
@@ -560,7 +538,7 @@ extern int data_ov080_0212771c[];
 /* DrawWave. The ports this one needs beyond the file's set are spelled
  * the same plain way. The texture binds with normal-based texture
  * coordinates (GX_TEXGEN_NORMAL) and no repeat or flip. */
-void daPicGate_c::func_ov080_021261f4() {
+void daPicGate_c::DrawRippleEnvMapped() {
     Matrix4x3 tmp;
     int i, j, n;
 

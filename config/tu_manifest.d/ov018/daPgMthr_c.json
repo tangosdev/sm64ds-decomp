@@ -53,105 +53,105 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov018_021118fc",
+      "symbol": "_ZN10daPgMthr_c14FindNewToucherEv",
       "address": "0x021118fc",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov018_021118fc.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02111968EPvPc",
+      "symbol": "_ZN10daPgMthr_c9BeginTalkEPvPc",
       "address": "0x02111968",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov018_02111968.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02111a48EPc",
+      "symbol": "_ZN10daPgMthr_c14TurnHeadTowardEPc",
       "address": "0x02111a48",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov018_02111a48.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02111b3cEv",
+      "symbol": "_ZN10daPgMthr_c11CheckFollowEv",
       "address": "0x02111b3c",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov018_02111b3c.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov018_02111bf0",
+      "symbol": "_ZN10daPgMthr_c19UpdateFloorAndWallsEP10dBgCh_Actr",
       "address": "0x02111bf0",
       "size": "0x00000138",
       "legacy_source": "src/func_ov018_02111bf0.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02111d28Ev",
+      "symbol": "_ZN10daPgMthr_c20UpdateModelAndShadowEv",
       "address": "0x02111d28",
       "size": "0x00000100",
       "legacy_source": "src/func_ov018_02111d28.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02111e28Ev",
+      "symbol": "_ZN10daPgMthr_c17StateFollowUpdateEv",
       "address": "0x02111e28",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov018_02111e28.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02111f1cEv",
+      "symbol": "_ZN10daPgMthr_c16StateFollowEnterEv",
       "address": "0x02111f1c",
       "size": "0x00000090",
       "legacy_source": "src/func_ov018_02111f1c.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02111facEv",
+      "symbol": "_ZN10daPgMthr_c15StateTalkUpdateEv",
       "address": "0x02111fac",
       "size": "0x00000230",
       "legacy_source": "src/func_ov018_02111fac.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN10daPgMthr_c19func_ov018_021121dcEv",
+      "symbol": "_ZN10daPgMthr_c14StateTalkEnterEv",
       "address": "0x021121dc",
       "size": "0x00000058",
       "legacy_source": "src/func_ov018_021121dc.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02112234Ev",
+      "symbol": "_ZN10daPgMthr_c16StateStandUpdateEv",
       "address": "0x02112234",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov018_02112234.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN10daPgMthr_c19func_ov018_021122ecEv",
+      "symbol": "_ZN10daPgMthr_c15StateStandEnterEv",
       "address": "0x021122ec",
       "size": "0x00000070",
       "legacy_source": "src/func_ov018_021122ec.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov018_0211235c",
+      "symbol": "_ZN10daPgMthr_c15CallStateUpdateEv",
       "address": "0x0211235c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov018_0211235c.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov018_02112398",
+      "symbol": "_ZN10daPgMthr_c14CallStateEnterEv",
       "address": "0x02112398",
       "size": "0x00000038",
       "legacy_source": "src/func_ov018_02112398.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN10daPgMthr_c19func_ov018_021123d0Ei",
+      "symbol": "_ZN10daPgMthr_c11ChangeStateEi",
       "address": "0x021123d0",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov018_021123d0.c",
@@ -206,42 +206,42 @@
       "address": "0x0211394c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c19func_ov018_021122ecEv"
+      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c15StateStandEnterEv"
     },
     {
       "symbol": "@729",
       "address": "0x02113954",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c19func_ov018_021121dcEv"
+      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c14StateTalkEnterEv"
     },
     {
       "symbol": "@731",
       "address": "0x0211395c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c19func_ov018_02111f1cEv"
+      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c16StateFollowEnterEv"
     },
     {
       "symbol": "@730",
       "address": "0x02113964",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c19func_ov018_02111facEv"
+      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c15StateTalkUpdateEv"
     },
     {
       "symbol": "@732",
       "address": "0x0211396c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c19func_ov018_02111e28Ev"
+      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c17StateFollowUpdateEv"
     },
     {
       "symbol": "@728",
       "address": "0x02113974",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c19func_ov018_02112234Ev"
+      "evidence": "compiler-local PMF literal relocated to _ZN10daPgMthr_c16StateStandUpdateEv"
     }
   ],
   "bss": [
@@ -320,7 +320,7 @@
       "address": "0x02113c4c",
       "size": "0x30",
       "binding": "STB_GLOBAL",
-      "evidence": "three {enter, update} PMF state pairs copied from the literals at 0x0211394c; func_ov018_021123d0 indexes it by state"
+      "evidence": "three {enter, update} PMF state pairs copied from the literals at 0x0211394c; ChangeState indexes it by state"
     }
   ],
   "notes": [
@@ -712,7 +712,7 @@
     {
       "symbol": "_ZN11SurfaceInfoD1Ev",
       "disposition": "deadstrip",
-      "reason": "func_ov018_02111bf0 copy-constructs a local dBgPi from the wall result. That pulls in the implicit destructor of its SurfaceInfo member, which holds a non-POD Vector3, as vague linkage. The body is trivial and nothing here references it, and the cartridge has no copy, so the section is dropped (dBgCh_Actr and daKrb_c book the same symbol the same way)."
+      "reason": "UpdateFloorAndWalls copy-constructs a local dBgPi from the wall result. That pulls in the implicit destructor of its SurfaceInfo member, which holds a non-POD Vector3, as vague linkage. The body is trivial and nothing here references it, and the cartridge has no copy, so the section is dropped (dBgCh_Actr and daKrb_c book the same symbol the same way)."
     }
   ],
   "production_mode": "intact-object",
@@ -1050,7 +1050,7 @@
       "source": "0x0211394c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgMthr_c19func_ov018_021122ecEv",
+      "symbol": "_ZN10daPgMthr_c15StateStandEnterEv",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x021122ec"
@@ -1060,7 +1060,7 @@
       "source": "0x02113954",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgMthr_c19func_ov018_021121dcEv",
+      "symbol": "_ZN10daPgMthr_c14StateTalkEnterEv",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x021121dc"
@@ -1070,7 +1070,7 @@
       "source": "0x0211395c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02111f1cEv",
+      "symbol": "_ZN10daPgMthr_c16StateFollowEnterEv",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02111f1c"
@@ -1080,7 +1080,7 @@
       "source": "0x02113964",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02111facEv",
+      "symbol": "_ZN10daPgMthr_c15StateTalkUpdateEv",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02111fac"
@@ -1090,7 +1090,7 @@
       "source": "0x0211396c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02111e28Ev",
+      "symbol": "_ZN10daPgMthr_c17StateFollowUpdateEv",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02111e28"
@@ -1100,7 +1100,7 @@
       "source": "0x02113974",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgMthr_c19func_ov018_02112234Ev",
+      "symbol": "_ZN10daPgMthr_c16StateStandUpdateEv",
       "addend": 0,
       "target_module": "ov018",
       "target_address": "0x02112234"
@@ -1232,59 +1232,59 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@825",
+      "from": "@820",
       "to": "@826",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @821 to @825 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @821 to @825 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing) | re-keyed when FindNewToucher, CallStateEnter and CallStateUpdate became daPgMthr_c members: deleting their three local externs (one named parameter each) moved every raw @N to @N-3; tubuild verify --no-write ov018/daPgMthr_c gives 23/23 MATCH with no unlicensed @N"
+    },
+    {
+      "from": "@821",
+      "to": "@733",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @822 to @826 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing) | re-keyed when FindNewToucher, CallStateEnter and CallStateUpdate became daPgMthr_c members: deleting their three local externs (one named parameter each) moved every raw @N to @N-3; tubuild verify --no-write ov018/daPgMthr_c gives 23/23 MATCH with no unlicensed @N"
+    },
+    {
+      "from": "@822",
+      "to": "@828",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @823 to @827 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing) | re-keyed when FindNewToucher, CallStateEnter and CallStateUpdate became daPgMthr_c members: deleting their three local externs (one named parameter each) moved every raw @N to @N-3; tubuild verify --no-write ov018/daPgMthr_c gives 23/23 MATCH with no unlicensed @N"
+    },
+    {
+      "from": "@823",
+      "to": "@734",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @824 to @828 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing) | re-keyed when FindNewToucher, CallStateEnter and CallStateUpdate became daPgMthr_c members: deleting their three local externs (one named parameter each) moved every raw @N to @N-3; tubuild verify --no-write ov018/daPgMthr_c gives 23/23 MATCH with no unlicensed @N"
+    },
+    {
+      "from": "@824",
+      "to": "@830",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @825 to @829 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing) | re-keyed when FindNewToucher, CallStateEnter and CallStateUpdate became daPgMthr_c members: deleting their three local externs (one named parameter each) moved every raw @N to @N-3; tubuild verify --no-write ov018/daPgMthr_c gives 23/23 MATCH with no unlicensed @N"
     },
     {
       "from": "@826",
-      "to": "@733",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @822 to @826 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
-    },
-    {
-      "from": "@827",
-      "to": "@828",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @823 to @827 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "to": "@832",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @827 to @831 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing) | re-keyed when FindNewToucher, CallStateEnter and CallStateUpdate became daPgMthr_c members: deleting their three local externs (one named parameter each) moved every raw @N to @N-3; tubuild verify --no-write ov018/daPgMthr_c gives 23/23 MATCH with no unlicensed @N"
     },
     {
       "from": "@828",
-      "to": "@734",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @824 to @828 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
-    },
-    {
-      "from": "@829",
-      "to": "@830",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @825 to @829 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
-    },
-    {
-      "from": "@831",
-      "to": "@832",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @827 to @831 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
-    },
-    {
-      "from": "@833",
       "to": "@728",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @829 to @833 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @829 to @833 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing) | re-keyed when FindNewToucher, CallStateEnter and CallStateUpdate became daPgMthr_c members: deleting their three local externs (one named parameter each) moved every raw @N to @N-3; tubuild verify --no-write ov018/daPgMthr_c gives 23/23 MATCH with no unlicensed @N"
     },
     {
-      "from": "@835",
+      "from": "@830",
       "to": "@729",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @831 to @835 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @831 to @835 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing) | re-keyed when FindNewToucher, CallStateEnter and CallStateUpdate became daPgMthr_c members: deleting their three local externs (one named parameter each) moved every raw @N to @N-3; tubuild verify --no-write ov018/daPgMthr_c gives 23/23 MATCH with no unlicensed @N"
     },
     {
-      "from": "@837",
+      "from": "@832",
       "to": "@730",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @833 to @837 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @833 to @837 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing) | re-keyed when FindNewToucher, CallStateEnter and CallStateUpdate became daPgMthr_c members: deleting their three local externs (one named parameter each) moved every raw @N to @N-3; tubuild verify --no-write ov018/daPgMthr_c gives 23/23 MATCH with no unlicensed @N"
     },
     {
-      "from": "@839",
+      "from": "@834",
       "to": "@731",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @835 to @839 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @835 to @839 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing) | re-keyed when FindNewToucher, CallStateEnter and CallStateUpdate became daPgMthr_c members: deleting their three local externs (one named parameter each) moved every raw @N to @N-3; tubuild verify --no-write ov018/daPgMthr_c gives 23/23 MATCH with no unlicensed @N"
     },
     {
-      "from": "@841",
+      "from": "@836",
       "to": "@732",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @837 to @841 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @837 to @841 when func_ov018_02111bf0 now copy-constructs a real dBgPi from the wall result (the flattened dBgPiRaw view is gone), so the compiler's local numbering moved up by 4.. | re-keyed when func_ov018_02111bf0 became a daPgMthr_c member: every raw @N moved to @N-2 (measured: in the old and new objects the five 12-byte .bss nodes keep their .init use sites +0x128/+0x138/+0x144/+0x154/+0x160 and the six PMF literals keep their targets 021122ec/02112234/021121dc/02111fac/02111f1c/02111e28 and .init sites +0x168..+0x17c; removing decl_common.h's unnamed-parameter prototype alone moves nothing) | re-keyed when FindNewToucher, CallStateEnter and CallStateUpdate became daPgMthr_c members: deleting their three local externs (one named parameter each) moved every raw @N to @N-3; tubuild verify --no-write ov018/daPgMthr_c gives 23/23 MATCH with no unlicensed @N"
     }
   ]
 }

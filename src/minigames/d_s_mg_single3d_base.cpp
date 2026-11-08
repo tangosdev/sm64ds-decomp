@@ -63,7 +63,7 @@ extern int sMgTopScreenYOffset;
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 extern int sSingle3DCommonNcgByLanguage[];
 extern int data_0208ee44;
-extern dGraph_c::callback_c *data_0209d4a8;
+extern dGraph_c::callback_c *gGraphCallback;
 }
 
 /* Slot 33 brings up both graphics engines, assigns VRAM banks and loads
@@ -113,7 +113,7 @@ void dScMgSingle3DBase_c::InitEngines()
     InitialiseVramGlobals();
     FreeGfxSlotsById(0x1d);
     sMgGraphCallback.mScene = this;
-    data_0209d4a8 = &sMgGraphCallback;
+    gGraphCallback = &sMgGraphCallback;
     *(vu32 *)0x40004ccu = 0x7fff;
     *(vu32 *)0x40004ccu = 0x40007fff;
 }
@@ -122,7 +122,7 @@ void dScMgSingle3DBase_c::InitEngines()
 void dScMgSingle3DBase_c::AfterInitResources(u32 vfSuccess)
 {
     dScMgBase_c::AfterInitResources(vfSuccess);
-    mSysTracker.Initialise();
+    mParticle.Initialise();
 }
 
 /* Slot 7 steps the particle tracker only when the global update flag is set. */
@@ -131,7 +131,7 @@ int dScMgSingle3DBase_c::BeforeBehavior()
     if (dScMgBase_c::BeforeBehavior() == 0)
         return 0;
     if (data_020a0db0 & 1)
-        mSysTracker.Update();
+        mParticle.Update();
     return 1;
 }
 

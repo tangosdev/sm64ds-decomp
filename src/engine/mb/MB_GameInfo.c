@@ -157,7 +157,7 @@ void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent) {
     }
     info->ggid = src->ggid;
     if (parent) {
-        MultiCopyHalf(parent, info->fixed.parent, 0x16);
+        MultiCopyHalf(parent, &info->fixed.parent, 0x16);
     }
     info->fixed.maxPlayerNum = src->maxPlayerNum;
     MultiCopyHalf(src->gameNamep, info->fixed.gameName,
@@ -474,7 +474,7 @@ void MBi_SendVolatBeacon(void) {
     dst = data_020a9d50;
     for (i = 0; i < 15; i++) {
         if (mask & (2 << i)) {
-            MultiCopyHalf(data_020a9d2c.nowGameInfop->volat.member[i], dst, 0x16);
+            MultiCopyHalf(&data_020a9d2c.nowGameInfop->volat.member[i], dst, 0x16);
             count++;
             dst += 0x16;
             data_020a9d2c.nowGameInfop->volat.broadcastedPlayerFlag |= 2 << i;

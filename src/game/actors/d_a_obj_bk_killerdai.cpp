@@ -30,8 +30,8 @@
  *   spawn-height add.
  * - Actor 0xde is the bill, daKlr_c (g_profile_KILLER's id half reads
  *   0xde); Behavior hands it this launcher through daKlr_c::mLauncher.
- * - gCurrentSublevel (level id), data_0209caa0 (per-level flags) and
- *   data_0209f220 (star flag) keep linker names; IsStarCollectedInCurLevel
+ * - data_0209caa0 (per-level flags) keeps its linker name;
+ *   IsStarCollectedInCurLevel
  *   is a shared coined helper, naming belongs at its definition.
  * - Vec3_HorzDist / Vec3_HorzAngle stay local externs: their header copies
  *   live in unrelated leaf headers, not a shared home.
@@ -44,6 +44,7 @@
 #include "Sound.h"
 #include "daPly_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "SaveBlock.h"
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
@@ -80,7 +81,7 @@ extern void *data_ov079_02127f64[];
 
 extern s8 gCurrentSublevel;
 extern SaveBlock data_0209caa0;
-extern u8 data_0209f220;
+extern u8 gCurrentStarId;
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
@@ -103,7 +104,7 @@ void daObjBkKillerdai_c::Kill() {
     pos.x = x;
     pos.y = y;
     pos.z = z;
-    Particle::System::NewSimple(0x8d, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclKillerDaiBreak, pos.x, pos.y, pos.z);
     dustPos.x = pos.x;
     dustPos.y = pos.y;
     dustPos.z = pos.z;
@@ -183,7 +184,7 @@ s32 daObjBkKillerdai_c::InitResources() {
             return 0;
     }
     if (course == 7) {
-        if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
+        if (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) {
             if (mPosY >= 0xdac000)
                 return 0;
         }

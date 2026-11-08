@@ -38,6 +38,7 @@ enum daDkk_c_AssetId { ASSET_DONKAKU_BMD = 0x02dc, ASSET_DONKAKU_KCL = 0x02dd };
 #include "Sound.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* The model handle constructs through func_02017acc and destroys through
  * func_02017ab4. The collision handle constructs through func_02017b4c and
@@ -156,7 +157,7 @@ void daDkk_c::StateFall() {
     v[0].y = mPosY;
     v[0].z = mPosZ;
     v[0].y = v[0].y + 0x3c000;
-    Particle::System::NewSimple(0x2e, v[0].x, v[0].y, v[0].z);
+    Particle::System::NewSimple(kPtclGrindelLanding, v[0].x, v[0].y, v[0].z);
     func_0201267c(0xc7, &mCamSpacePos);
 }
 

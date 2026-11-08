@@ -20,14 +20,13 @@
  * fills from the .data records at 0x021309c4. Each state is an {enter, update}
  * pair:
  *
- *   0 func_ov084_0212c92c / func_ov084_0212c8b0  idle: wait for a talk
- *   1 func_ov084_0212c89c / func_ov084_0212c508  talk
- *   2 func_ov084_0212c4a0 / func_ov084_0212c1a0  open the cannon
+ *   0 EnterIdle / UpdateIdle  idle: wait for a talk
+ *   1 EnterTalk / UpdateTalk  talk
+ *   2 EnterCannonOpening / UpdateCannonOpening  open the cannon
  *
  * Source order is the reverse of the ROM. The factory is written first.
  */
-/* leftovers: data_ov084_02130dc4 keeps its address name. The state
- * bodies stay address-named members; the table reaches them by address.
+/* leftovers: data_ov084_02130dc4 keeps its address name.
  */
 
 #include "daRedBombhei_c.h"
@@ -105,17 +104,17 @@ RedBombheiModelFile gRedBombheiModelFile(ASSET_RED_BOMBHEI_BMD);
 RedBombheiAnimFile gRedBombheiWaitAnimFile(ASSET_RED_WAIT_BCA);
 
 RedBombheiState data_ov084_02130dc4[3] = {
-    {&daRedBombhei_c::func_ov084_0212c92c, &daRedBombhei_c::func_ov084_0212c8b0},
-    {&daRedBombhei_c::func_ov084_0212c89c, &daRedBombhei_c::func_ov084_0212c508},
-    {&daRedBombhei_c::func_ov084_0212c4a0, &daRedBombhei_c::func_ov084_0212c1a0},
+    {&daRedBombhei_c::EnterIdle, &daRedBombhei_c::UpdateIdle},
+    {&daRedBombhei_c::EnterTalk, &daRedBombhei_c::UpdateTalk},
+    {&daRedBombhei_c::EnterCannonOpening, &daRedBombhei_c::UpdateCannonOpening},
 };
 
 extern "C" {
 
 /* -- globals -- */
-extern dCamera_c *data_0209f318;           /* the camera */
+extern dCamera_c *gCamera;                 /* the camera */
 extern s8 gCurrentSublevel;                /* current level */
-extern u8  data_0209f220;
+extern u8 gCurrentStarId;
 extern u8 gShowTouchScreenArrows;
 extern u8 gShowRedCoinMarkers;
 extern SaveBlock data_0209caa0;         /* the live save block */
@@ -180,7 +179,7 @@ s32 daRedBombhei_c::InitResources()
     mShadowModel.InitCylinder();
     dExtFrameCtrl_c::LoadFile(gRedBombheiWaitAnimFile);
     mdCcAc_c.Init(this, 0x8c000, 0x8c000, 0x4200004, 0);
-    func_ov084_0212c960(0);
+    ChangeState(0);
     mShutterID = 0;
 
     {
@@ -196,7 +195,7 @@ s32 daRedBombhei_c::InitResources()
     if (ground.DetectClsn() != 0)
         mPosY = ground.clsnY;
 
-    if (func_ov084_0212ca60() != 0) {
+    if (IsCharacterSpecific() != 0) {
         u8 character = ClosestPlayer()->mCharacter;
         if ((character == 0 && param1 == kParamMario) ||
             (character == 1 && param1 == kParamLuigi) ||
@@ -204,8 +203,8 @@ s32 daRedBombhei_c::InitResources()
             return 0;
     }
 
-    if (func_ov084_0212cac0() != 0 && gCurrentSublevel == 8 &&
-        (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0))
+    if (IsCannonRole() != 0 && gCurrentSublevel == 8 &&
+        (gCurrentStarId == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0))
         return 0;
     return 1;
 }
@@ -216,7 +215,7 @@ s32 daRedBombhei_c::Behavior()
 {
     Vector3 playerPos;
     daPly_c *player;
-    func_ov084_0212c9a8();
+    UpdateState();
     player = ClosestPlayer();
     if (player != 0) {
         Vector3 *src = &player->mPos;
@@ -229,7 +228,7 @@ s32 daRedBombhei_c::Behavior()
     mAnmModel.Advance();
     if ((unsigned short)(mAnmModel.currFrame >> 12) == 0)
         func_02012694(0xd7, &mCamSpacePos);
-    func_ov084_0212ce50();
+    UpdateModelTransform();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;
@@ -249,8 +248,7 @@ s32 daRedBombhei_c::CleanupResources()
 }
 
 /* Places the model and drops the shadow under the body. */
-void daRedBombhei_c::func_ov084_0212ce50()
-{
+void daRedBombhei_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&this->mAnmModel.mat4x3, this->mAngleY);
     this->mAnmModel.mat4x3.t.x = this->mPosX >> 3;
     this->mAnmModel.mat4x3.t.y = (this->mPosY + 0x4000) >> 3;
@@ -264,8 +262,7 @@ void daRedBombhei_c::func_ov084_0212ce50()
 
 /* Moves the camera point *cur one step toward target, easing the distance
    between them down toward zero. Returns 1 once it has arrived. */
-int daRedBombhei_c::func_ov084_0212cda0(Vector3 *cur, Vector3 *target)
-{
+int daRedBombhei_c::StepCameraPoint(Vector3 *cur, Vector3 *target) {
     Vector3 delta;
     int len;
     int remaining;
@@ -288,9 +285,8 @@ int daRedBombhei_c::func_ov084_0212cda0(Vector3 *cur, Vector3 *target)
 
 /* Cutscene step 3: pan the camera back to where it was before the cutscene.
    Returns 1 once both points have arrived. */
-int daRedBombhei_c::func_ov084_0212ccb4()
-{
-    dCamera_c *cam = data_0209f318;
+int daRedBombhei_c::PanCameraBack() {
+    dCamera_c *cam = gCamera;
     int posDone;
     Vector3 lookAt;
     Vector3 pos;
@@ -302,8 +298,8 @@ int daRedBombhei_c::func_ov084_0212ccb4()
         const Vector3 &p = cam->pos;
         pos = p;
     }
-    int lookAtDone = func_ov084_0212cda0(&lookAt, &this->mSavedCamLookAt);
-    posDone = func_ov084_0212cda0(&pos, &this->mSavedCamPos);
+    int lookAtDone = StepCameraPoint(&lookAt, &this->mSavedCamLookAt);
+    posDone = StepCameraPoint(&pos, &this->mSavedCamPos);
     if ((this->mAngleX & 0xff) == kVariantCannonCut) {
         lookAtDone = 1;
         posDone = 1;
@@ -320,14 +316,13 @@ int daRedBombhei_c::func_ov084_0212ccb4()
 /* Cutscene step 1: pan the camera over to the cannon shutter -- looking at a
    point 128.0 up and 10.0 behind it from 512.0 up and 200.0 in front. Returns 1
    once both points have arrived. */
-int daRedBombhei_c::func_ov084_0212cae0()
-{
+int daRedBombhei_c::PanCameraToShutter() {
     int posDone, lookAtDone;
     dCamera_c *cam;
     dActor_c *shutter;
     Vector3 lookAt, pos, targetLookAt, targetPos, offset, sum, sum2;
     unsigned id = this->mShutterID;
-    cam = data_0209f318;
+    cam = gCamera;
     if (id != 0) {
         shutter = dActor_c::FindWithID(id);
         if (shutter != 0) {
@@ -358,8 +353,8 @@ int daRedBombhei_c::func_ov084_0212cae0()
                 const Vector3 &p = cam->pos;
                 pos = p;
             }
-            lookAtDone = func_ov084_0212cda0(&lookAt, &targetLookAt);
-            posDone = func_ov084_0212cda0(&pos, &targetPos);
+            lookAtDone = StepCameraPoint(&lookAt, &targetLookAt);
+            posDone = StepCameraPoint(&pos, &targetPos);
             if ((this->mAngleX & 0xff) == kVariantCannonCut) {
                 lookAtDone = 1;
                 posDone = 1;
@@ -376,8 +371,7 @@ int daRedBombhei_c::func_ov084_0212cae0()
 }
 
 /* Is this the buddy that opens the cannon? */
-int daRedBombhei_c::func_ov084_0212cac0()
-{
+int daRedBombhei_c::IsCannonRole() {
     int variant = this->mAngleX;
     int result = 1;
     variant = variant & 0xff;
@@ -387,14 +381,12 @@ int daRedBombhei_c::func_ov084_0212cac0()
 }
 
 /* Is this the red-coin tutor? */
-int daRedBombhei_c::func_ov084_0212caa8()
-{
+int daRedBombhei_c::IsRedCoinRole() {
     return (this->mAngleX & 0xff) == kVariantRedCoins;
 }
 
 /* Was this buddy placed for one character only? */
-int daRedBombhei_c::func_ov084_0212ca60()
-{
+int daRedBombhei_c::IsCharacterSpecific() {
     int result = 1;
     int isMarioOrLuigi = result;
     int param = this->param1;
@@ -410,7 +402,7 @@ int daRedBombhei_c::func_ov084_0212ca60()
 }
 
 /* Opens message msgID on the talking player's screen, with the talk sound. */
-void daRedBombhei_c::func_ov084_0212c9f0(int msgID, u8 msgFlag) {
+void daRedBombhei_c::ShowTalkMessage(int msgID, u8 msgFlag) {
     daPly_c *player = this->mTalkPlayer;
     Vector3 pos;
     int x = this->mPosX;
@@ -423,29 +415,25 @@ void daRedBombhei_c::func_ov084_0212c9f0(int msgID, u8 msgFlag) {
     player->ShowMessage(*this, (s16)msgID, &pos, msgFlag, 0);
 }
 
-void daRedBombhei_c::func_ov084_0212c9a8()
-{
+void daRedBombhei_c::UpdateState() {
     int j = this->mState;
     (this->*data_ov084_02130dc4[j].update)();
 }
 
-void daRedBombhei_c::func_ov084_0212c960(int state)
-{
+void daRedBombhei_c::ChangeState(int state) {
     this->mState = state;
     int j = this->mState;
     (this->*data_ov084_02130dc4[j].enter)();
 }
 
-void daRedBombhei_c::func_ov084_0212c92c()
-{
+void daRedBombhei_c::EnterIdle() {
     unsigned int flags = 0;
     BCA_File *file = (BCA_File *)gRedBombheiWaitAnimFile.filePtr;
     this->mAnmModel.SetAnim((BCA_File *)file, 0, 0x1000, flags);
 }
 
 /* State 0 update: start talking when a player walks into the talk cylinder. */
-void daRedBombhei_c::func_ov084_0212c8b0()
-{
+void daRedBombhei_c::UpdateIdle() {
     dActor_c *other;
     if ((this->mdCcAc_c.hitFlags & 0x8000000) == 0)
         return;
@@ -457,20 +445,18 @@ void daRedBombhei_c::func_ov084_0212c8b0()
     this->mTalkPlayer = (daPly_c *)other;
     if (this->mTalkPlayer->StartTalk(*this, false) == 0)
         return;
-    func_ov084_0212c960(kStateTalk);
+    ChangeState(kStateTalk);
 }
 
 /* State 1 enter. */
-void daRedBombhei_c::func_ov084_0212c89c()
-{
+void daRedBombhei_c::EnterTalk() {
     this->mMsgPage = 0;
     this->mPrevMsgPageState = 0;
 }
 
 /* State 1 update: turn to the player, open the right message, and track the
    message box to light the hint arrow on the pages that point somewhere. */
-void daRedBombhei_c::func_ov084_0212c508()
-{
+void daRedBombhei_c::UpdateTalk() {
     daPly_c *player = this->mTalkPlayer;
     int msgID = 0;
     int param = this->param1;
@@ -491,9 +477,9 @@ void daRedBombhei_c::func_ov084_0212c508()
     }
     angle = Vec3_HorzAngle(&this->mPos, &playerPos);
 
-    if (func_ov084_0212cac0() != 0) {
+    if (IsCannonRole() != 0) {
         if (IsCannonOpenInCurLevel() == 0) {
-            func_ov084_0212c960(kStateCannon);
+            ChangeState(kStateCannon);
             return;
         }
     }
@@ -501,7 +487,7 @@ void daRedBombhei_c::func_ov084_0212c508()
     switch (player->GetTalkState()) {
     case 0:
         if (ApproachLinear(this->mAngleY, angle, 0x800) != 0) {
-            if (func_ov084_0212caa8() != 0) {
+            if (IsRedCoinRole() != 0) {
                 if ((data_0209caa0.file.flags2 & 0x8000) == 0) {
                     data_0209caa0.file.flags2 |= 0x8000;
                     msg = 0x15b;
@@ -514,9 +500,9 @@ void daRedBombhei_c::func_ov084_0212c508()
                 } else {
                     msg = 0x15f;
                 }
-                func_ov084_0212c9f0(msg, 0);
+                ShowTalkMessage(msg, 0);
                 gShowRedCoinMarkers = 1;
-            } else if (func_ov084_0212cac0() != 0 && IsCannonOpenInCurLevel() != 0) {
+            } else if (IsCannonRole() != 0 && IsCannonOpenInCurLevel() != 0) {
                 if (this->mCannonOpened == 0) {
                     if (gCurrentSublevel == 6)
                         msg = 0x8f;
@@ -529,18 +515,18 @@ void daRedBombhei_c::func_ov084_0212c508()
                         msg = 0x14b;
                 }
                 this->mCannonOpened = 1;
-                func_ov084_0212c9f0(msg, 0);
+                ShowTalkMessage(msg, 0);
             } else {
                 msg = ObjectMessageIDToActualMessageID(msgID);
                 msg = msg + player->param1;
-                func_ov084_0212c9f0((u16)msg, 0);
+                ShowTalkMessage((u16)msg, 0);
             }
         }
         break;
     case 1:
         break;
     default:
-        func_ov084_0212c960(kStateIdle);
+        ChangeState(kStateIdle);
         break;
     }
 
@@ -548,7 +534,7 @@ void daRedBombhei_c::func_ov084_0212c508()
         return;
 
     if (data_0209d6bc == 9) {
-        if (func_ov084_0212caa8() != 0)
+        if (IsRedCoinRole() != 0)
             gShowRedCoinMarkers = 0;
     }
 
@@ -563,7 +549,7 @@ void daRedBombhei_c::func_ov084_0212c508()
     }
 
     shownMsg = data_0209d6d4;
-    if (shownMsg == 0x15c || shownMsg == 0x15e || func_ov084_0212ca60() != 0) {
+    if (shownMsg == 0x15c || shownMsg == 0x15e || IsCharacterSpecific() != 0) {
         if (this->mMsgPage == 0)
             gShowTouchScreenArrows = 1;
         else
@@ -592,8 +578,7 @@ void daRedBombhei_c::func_ov084_0212c508()
 }
 
 /* State 2 enter: find this level's closed cannon shutter. */
-void daRedBombhei_c::func_ov084_0212c4a0()
-{
+void daRedBombhei_c::EnterCannonOpening() {
     dActor_c *actor;
     actor = dActor_c::FindWithActorID(kCannonShutterActorID, 0);
     while (actor) {
@@ -608,10 +593,9 @@ void daRedBombhei_c::func_ov084_0212c4a0()
 }
 
 /* State 2 update: the cannon-opening cutscene, one step at a time. */
-void daRedBombhei_c::func_ov084_0212c1a0()
-{
+void daRedBombhei_c::UpdateCannonOpening() {
     daPly_c *player = this->mTalkPlayer;
-    dCamera_c *cam = data_0209f318;
+    dCamera_c *cam = gCamera;
     Vector3 playerPos;
     s16 angle;
     int *src = &player->mPosX;
@@ -631,9 +615,9 @@ void daRedBombhei_c::func_ov084_0212c1a0()
                 return;
             msg = gCurrentSublevel == 6 ? 0x8f : 0x14a;
             if (this->mShutterID != 0)
-                func_ov084_0212c9f0(msg, 1);
+                ShowTalkMessage(msg, 1);
             else
-                func_ov084_0212c9f0(msg, 0);
+                ShowTalkMessage(msg, 0);
             return;
         }
         case 2: {
@@ -653,7 +637,7 @@ void daRedBombhei_c::func_ov084_0212c1a0()
         case -1:
             OpenCannonInCurLevel();
             this->mCannonOpened = 1;
-            func_ov084_0212c960(kStateIdle);
+            ChangeState(kStateIdle);
             return;
         }
         return;
@@ -662,7 +646,7 @@ void daRedBombhei_c::func_ov084_0212c1a0()
         dActor_c *shutter;
         if (this->mShutterID == 0)
             return;
-        if (func_ov084_0212cae0() == 0)
+        if (PanCameraToShutter() == 0)
             return;
         shutter = dActor_c::FindWithID(this->mShutterID);
         if (shutter == 0)
@@ -682,7 +666,7 @@ void daRedBombhei_c::func_ov084_0212c1a0()
     }
     case 3:
         /* dCamera_c back. */
-        if (func_ov084_0212ccb4() != 0)
+        if (PanCameraBack() != 0)
             this->mCutsceneStep += 1;
         return;
     case 4: {
@@ -692,14 +676,14 @@ void daRedBombhei_c::func_ov084_0212c1a0()
             return;
         if (talkState == 2) {
             int msg = gCurrentSublevel == 6 ? 0x90 : 0x14b;
-            func_ov084_0212c9f0(msg, 0);
+            ShowTalkMessage(msg, 0);
             return;
         }
         this->mFlags |= 1;
         OpenCannonInCurLevel();
         this->mCannonOpened = 1;
         cam->mFlags &= ~8;
-        func_ov084_0212c960(kStateIdle);
+        ChangeState(kStateIdle);
         return;
     }
     }

@@ -1,5 +1,5 @@
 /* The multiplayer entry scene object. Its two ROM destructor variants reveal
- * the complete ownership chain: dBase_c, Particle::SysTracker, dExtSimpleModel_c,
+ * the complete ownership chain: dBase_c, dPa_c, dExtSimpleModel_c,
  * dExtAnmModel_c, and four 0x158-byte player records. The record constructor and
  * destructor were previously anonymous address symbols; their four member
  * constructor/destructor calls prove the typed prefix below, while the array
@@ -16,7 +16,7 @@
 #ifdef __cplusplus
 
 #include "dBase_c.h"
-#include "Particle__SysTracker.h"
+#include "dPa_c.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmModel_c.h"
 #include "dExtBlendAnmModel_c.h"
@@ -76,44 +76,44 @@ struct UnknownVsPlayer {
     UnknownVsPlayer();
     ~UnknownVsPlayer();
 
-    /* The mMoveState handlers (data_ov075_0211d56c's indices). */
-    void func_ov075_021147d4(); /* 1 */
-    void func_ov075_0211478c(); /* 2 */
-    void func_ov075_0211473c(); /* 3 */
-    void func_ov075_02114560(); /* 5 */
-    void func_ov075_021143e4(); /* 7 */
-    void func_ov075_02114390(); /* 8 */
-    void func_ov075_02114300(); /* 9 */
-    /* The mAnimState handlers (data_ov075_0211d53c's indices). */
-    void func_ov075_0211427c(); /* 1 */
-    void func_ov075_02114218(); /* 2 */
-    void func_ov075_021141b8(); /* 3 */
-    void func_ov075_021140e4(); /* 4 */
-    void func_ov075_02114010(); /* 5 */
+    /* The mMoveState handlers (indices into sVsPlayerMoveStates). */
+    void MoveToSlot();           /* 1 */
+    void MoveWaitForExit();      /* 2 */
+    void MoveTurnToExit();       /* 3 */
+    void MoveRunOffStage();      /* 5 */
+    void MoveChoosePose();       /* 7 */
+    void MoveWaitForPoseSound(); /* 8 */
+    void MovePoseParticles();    /* 9 */
+    /* The mAnimState handlers (indices into sVsPlayerAnimStates). */
+    void AnimWalkSounds();  /* 1 */
+    void AnimWaitForNext(); /* 2 */
+    void AnimWaitForIdle(); /* 3 */
+    void AnimSlowGait();    /* 4 */
+    void AnimFastGait();    /* 5 */
     /* The empty handler both tables' unused indices point at. */
-    void func_ov075_02114890();
-    void func_ov075_021142fc();
+    void MoveNone();
+    void AnimNone();
 
     /* Send the figure toward its exit slot at x = exitX. */
-    void func_ov075_02114904(int exitX);
+    void GoToExit(int exitX);
     /* The selection one-shot on this figure; returns animation state 3. */
-    int func_ov075_02114988();
+    int PlaySelectAnim();
     /* Walk the figure toward x = targetX. */
-    void func_ov075_021149d0(int targetX);
-    int func_ov075_02114a58(); /* movement state == 0 (idle) */
-    int func_ov075_02114a6c(); /* go idle in the standing animation */
+    void WalkToSlot(int targetX);
+    int IsIdle();    /* movement state == 0 (idle) */
+    int StartIdle(); /* go idle in the standing animation */
     /* dCamera_c follow for the focused figure; nonzero when the view needs
        rebuilding. */
-    int func_ov075_02114ac4(Vector3 *at, Vector3 *pos);
-    void func_ov075_02114894();
-    int func_ov075_021148f0();
-    void func_ov075_02114b60();
-    void func_ov075_02114be4();
+    int UpdateCamera(Vector3 *at, Vector3 *pos);
+    void StartRunOffStage();
+    int IsAtExit();
+    void RestoreBoneTranslations();
+    void Render();
     /* One figure's frame: movement state, model matrix, animation state,
        both animators, the shadow. */
-    void func_ov075_02114cd8();
+    void Behavior();
     /* Set up the figure for player slot playerNo at x. */
-    int func_ov075_02114ddc(unsigned char kind, unsigned char playerNo, int x);
+    int Init(unsigned char kind, unsigned char playerNo, int x);
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -124,7 +124,7 @@ typedef char UnknownVsPlayer_size_must_be_0x158[sizeof(UnknownVsPlayer) == 0x158
 struct dEntObj_c : dBase_c {
     enum SceneState { STATE_IDLE = 0, STATE_WAIT_FOR_EXIT, STATE_RUN_OFF_STAGE };
 
-    Particle::SysTracker mParticles; /* 0x050 */
+    dPa_c mParticle;                 /* 0x050 */
     dExtSimpleModel_c mModel;        /* 0x86c */
     dExtAnmModel_c mAnmModel;        /* 0x8bc */
     UnknownVsPlayer mPlayers[4];     /* 0x920 */
@@ -158,13 +158,13 @@ struct dEntObj_c : dBase_c {
     /* Walk every figure to its slot for the current player count. */
     void func_ov075_02115134();
     /* Put the selection model over player playerNo's figure. */
-    void func_ov075_021151b4(int playerNo);
+    void SetMarkerPosition(int playerNo);
     /* The exit-slot x for figure playerNo. */
-    int func_ov075_0211524c(int playerNo);
+    int GetExitX(int playerNo);
     /* The slot x for figure playerNo under the current player count. */
-    int func_ov075_02115290(int playerNo);
+    int GetStandingX(int playerNo);
     /* Rebuild the projection and view from the camera eye and target. */
-    void func_ov075_021152d4();
+    void SetCamera();
 };
 
 #ifndef SM64DS_PLATFORM_PC

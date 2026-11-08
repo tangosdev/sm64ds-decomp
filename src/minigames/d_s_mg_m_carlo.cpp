@@ -69,7 +69,7 @@ extern void Mg_DrawNumber(int a, int b, int c, int d, int e, int f, int g);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 void Mg_DrawCredits(char *a0, int a1, int a2, int a3);
 void MgCoins_Draw(void);
-void Mg_DrawScoreTally(char *a0, int a1, int a2, int a3);
+void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 void Dealer_Draw(void *p);
 int Dealer_IsIdle(Dealer *dealer);
 void MgCoins_Update(void);
@@ -331,7 +331,7 @@ s32 dScMgMCarlo_c::Render() {
     Camera_InitDealerView(&mCamera);
     Mg_DrawCredits((char *)this, 0xc, 0xc, 0);
     MgCoins_Draw();
-    Mg_DrawScoreTally((char *)this, 0xe0, 0x14, 1);
+    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
 
     {
         dMgMCarloCardObj_c *card = sMCarloCardsTail;
@@ -455,22 +455,20 @@ void dMgMCarloCardObj_c::FlipAway(int slot) {
  * and across the whole board by HasRemovablePair. */
 int dMgMCarloCardObj_c::IsPairWith(dMgMCarloCardObj_c *other) {
     int slot, otherSlot, columnDistance, rowDistance;
-    if (other->mFace != mFace)
-        goto fail;
-    otherSlot = other->mSlot;
-    slot = mSlot;
-    columnDistance = slot % 5 - otherSlot % 5;
-    rowDistance = slot / 5 - otherSlot / 5;
-    if (columnDistance < 0)
-        columnDistance = -columnDistance;
-    if (columnDistance >= 2)
-        goto fail;
-    if (rowDistance < 0)
-        rowDistance = -rowDistance;
-    if (rowDistance >= 2)
-        goto fail;
-    return 1;
-fail:
+    if (other->mFace == mFace) {
+        otherSlot = other->mSlot;
+        slot = mSlot;
+        columnDistance = slot % 5 - otherSlot % 5;
+        rowDistance = slot / 5 - otherSlot / 5;
+        if (columnDistance < 0)
+            columnDistance = -columnDistance;
+        if (columnDistance < 2) {
+            if (rowDistance < 0)
+                rowDistance = -rowDistance;
+            if (rowDistance < 2)
+                return 1;
+        }
+    }
     return 0;
 }
 
@@ -488,24 +486,21 @@ int dMgMCarloCardObj_c::HitTest(void) {
 
     if (sMCarloPickAllowed == 0)
         return 0;
-    if (dScMgMCarlo_c::BoardBusy() != 0)
-        goto fail;
-
-    touchSlot = gActivePlayerSlot;
-    touchOffset = touchSlot * 4;
-    touching = 0;
-    if (gTouchHeld[touchOffset]) {
-        if (gTouchEdge[touchOffset])
-            touching = 1;
+    if (dScMgMCarlo_c::BoardBusy() == 0) {
+        touchSlot = gActivePlayerSlot;
+        touchOffset = touchSlot * 4;
+        touching = 0;
+        if (gTouchHeld[touchOffset]) {
+            if (gTouchEdge[touchOffset])
+                touching = 1;
+        }
+        if (touching != 0) {
+            touchXOffset = gTouchX[touchSlot * 4] - (mX >> 12);
+            touchYOffset = gTouchY[touchSlot * 4] - (mY >> 12);
+            if (touchXOffset > 7 && touchXOffset < 0x28 && touchYOffset > 0 && touchYOffset < 0x31)
+                return 1;
+        }
     }
-    if (touching == 0)
-        goto fail;
-
-    touchXOffset = gTouchX[touchSlot * 4] - (mX >> 12);
-    touchYOffset = gTouchY[touchSlot * 4] - (mY >> 12);
-    if (touchXOffset > 7 && touchXOffset < 0x28 && touchYOffset > 0 && touchYOffset < 0x31)
-        return 1;
-fail:
     return 0;
 }
 

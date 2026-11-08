@@ -5,11 +5,12 @@
 
 /* Reconstructed layout and name, not recovered class identity (no RTTI, no
  * vtable; plain C helpers). The 0x2c-byte texture record func_ov007_020c15ec
- * fills and func_ov007_020c1448 / 020c1404 bind for drawing (unit020c1404);
+ * fills and func_ov007_020c1448 / Texture_BindPalette bind for drawing
+ * (unit020c1404);
  * func_ov007_020c4684 and func_ov007_020ca5f0 read its size. */
 typedef struct Ov007Texture {
-    /* 0x00: bit 0 = has texels (func_ov007_020c1560 loads them),
-     * bit 1 = has a palette (func_ov007_020c14d4 loads it) */
+    /* 0x00: bit 0 = has texels (Texture_LoadTexels loads them),
+     * bit 1 = has a palette (Texture_LoadPalette loads it) */
     u32 flags;
     u32 fmt;             /* 0x04: BMD texture format */
     const void *texSrc;  /* 0x08: texel data */

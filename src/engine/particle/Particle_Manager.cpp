@@ -19,7 +19,7 @@
  *   func_0204a17c  parse the resource into mDefinitions and mTextures
  *   func_0204a0dc  upload textures
  *   func_0204a028  upload palettes
- *   func_02049f58  retire expired systems (SysTracker::Update)
+ *   func_02049f58  retire expired systems (dPa_c::Update)
  *   func_02049ee8  draw active systems (RenderAll)
  *   AddSystem      spawn one system
  *   func_02049d78  return one system's particles and the system itself
@@ -322,7 +322,7 @@ void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
  * -- `& 0x4000` emits a different sequence. The polygon-ID names come from
  * the draw routines (func_0204be40 and its siblings), which put
  * polygonIDs.current into POLYGON_ATTR bits 24-29 and wrap it from max to
- * min; SysTracker::Initialise passes 0x1a and 0x3e, both 6-bit IDs.
+ * min; dPa_c::Initialise passes 0x1a and 0x3e, both 6-bit IDs.
  */
 namespace Particle {
 

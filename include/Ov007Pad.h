@@ -7,8 +7,8 @@
 
 /* The 0x70-byte pad record func_ov007_020c2304 allocates and
  * func_ov007_020c22a0 clears; Ov007Work::pad points at it and
- * func_ov007_020c20b8 updates it each frame. heldFrames and releasedFrames
- * keep one counter per button, in the order func_ov007_020c20b8 tests the
+ * Pad_Update updates it each frame. heldFrames and releasedFrames
+ * keep one counter per button, in the order Pad_Update tests the
  * key bits: up, down, right, left, A, B, X, Y, L, R, START, SELECT. */
 typedef struct Ov007Pad {
     u16 keys;     /* 0x00: held this frame */
@@ -19,7 +19,7 @@ typedef struct Ov007Pad {
     /* 0x34: frames each button has been up, 1 on the release frame; 0 while
      * it is held */
     u32 releasedFrames[12];
-    /* 0x64: bit 0 makes func_ov007_020c20b8 read no keys until every key is
+    /* 0x64: bit 0 makes Pad_Update read no keys until every key is
      * released, then clears it */
     int inputLock;
     /* 0x68..0x6d: this frame's d-pad x (right 1, left -1), d-pad y (up 1,

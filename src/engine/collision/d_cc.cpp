@@ -106,13 +106,10 @@ void dCc_c::Process() {
     Fix12i horizontalDistance;
     Fix12i overlap;
     u32 sharedFlags;
-    Fix12i coincidentDistance;
     Vector3 separation;
 
     if (listHead == 0)
         return;
-
-    coincidentDistance = 0x1000;
 
     do {
         position = &listHead->GetPos();
@@ -140,8 +137,8 @@ void dCc_c::Process() {
             horizontalDistance = Vec3_HorzLen(&separation);
             // Coincident centers need a nonzero separation for division.
             if (horizontalDistance == 0) {
-                horizontalDistance = coincidentDistance;
-                separation.x = horizontalDistance;
+                horizontalDistance = 0x1000;
+                separation.x = 0x1000;
             }
 
             overlap = listHead->radius + other->radius - horizontalDistance;

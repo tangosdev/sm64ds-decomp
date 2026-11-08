@@ -66,6 +66,9 @@ struct CLPS {
     /* Inferred from camera mode in dBgCh::ShouldPassThroughImpl. */
     int IsCameraPassThrough() const;
     int IsCameraOnly() const;
+    /* Store the default entry (0xfc0, 0xff), the words dBgPc's constructor
+       also writes; 0x02037e9c, coined name. */
+    void SetDefault();
 #endif
 };
 

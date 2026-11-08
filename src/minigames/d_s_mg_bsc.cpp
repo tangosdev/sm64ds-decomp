@@ -73,7 +73,7 @@ extern void LoadCard2SubBg3(void *);
 extern s32 GetGameLanguage(void);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
-extern int Dealer_Load(char *c);
+extern int Dealer_Load(void *c);
 }
 
 /* Real C++ declarations for the engine calls below; the namespaces and the
@@ -107,7 +107,7 @@ s32 dScMgBSC_c::InitResources() {
     GXS::LoadOBJPltt(paletteData, 0, 0x100);
     Deallocate(paletteData);
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load((char *)&mDealer) == 0)
+    if (Dealer_Load(&mDealer) == 0)
         return 0;
     Mg_SetTopScreenYOffset(0x20);
     Mg_PlaceBannersOnTopScreen();
@@ -258,35 +258,21 @@ void dScMgBSC_c::StateWaitDeal() {
     int cardIndex;
     int cardsArrived;
     int xReached;
-    char *cardX;
-    char *cardY;
-    short cardsDealt;
 
     cardsArrived = 0;
-    cardIndex = 0;
-    cardsDealt = mCardsDealt;
-    if (cardsDealt <= 0)
-        goto after_loop;
-
-    cardX = (char *)&mCardPos[0].x;
-    cardY = (char *)&mCardPos[0].y;
-    do {
-        if (Math_Function_0203b14c((int *)cardX, sBscLaneX[cardIndex], 0x800, 0x10000, 0x200) == 0)
+    for (cardIndex = 0; cardIndex < mCardsDealt; cardIndex++) {
+        if (Math_Function_0203b14c(&mCardPos[cardIndex].x, sBscLaneX[cardIndex], 0x800, 0x10000,
+                                   0x200) == 0)
             xReached = 1;
         else
             xReached = 0;
 
-        if (Math_Function_0203b14c((int *)cardY, 0x60000, 0x800, 0x10000, 0x200) == 0) {
+        if (Math_Function_0203b14c(&mCardPos[cardIndex].y, 0x60000, 0x800, 0x10000, 0x200) == 0) {
             if (xReached != 0)
                 cardsArrived++;
         }
-        cardX += 8;
-        cardY += 8;
-        cardIndex++;
-        cardsDealt = mCardsDealt;
-    } while (cardIndex < cardsDealt);
+    }
 
-after_loop:
     if (cardsArrived < 2)
         return;
     mState++;
@@ -305,10 +291,8 @@ void dScMgBSC_c::StateChooseCard() {
     if (touchPressed == 0)
         return;
     for (lane = 0; lane < 2; lane++) {
-        unsigned char currentPlayerSlot = *(volatile unsigned char *)&gActivePlayerSlot;
-        unsigned char *touch = &gTouchHeld[(unsigned int)currentPlayerSlot * 4];
-        int dx = (int)touch[2] - (sBscLaneX[lane] >> 12);
-        int dy = (int)touch[3] - 0x60;
+        int dx = (int)((TouchInfo *)gTouchHeld)[gActivePlayerSlot].x - (sBscLaneX[lane] >> 12);
+        int dy = (int)((TouchInfo *)gTouchHeld)[gActivePlayerSlot].y - 0x60;
         if (dx < -0x10)
             continue;
         if (dx > 0x10)

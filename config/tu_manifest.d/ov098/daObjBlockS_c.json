@@ -55,101 +55,101 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_0213814cEv",
+      "symbol": "_ZN13daObjBlockS_c12UpdateBrokenEv",
       "address": "0x0213814c",
       "size": "0x0000009c",
-      "legacy_source": "src/func_ov098_0213814c.cpp",
+      "legacy_source": "src/UpdateBroken.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_021381e8Ev",
+      "symbol": "_ZN13daObjBlockS_c11EnterBrokenEv",
       "address": "0x021381e8",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov098_021381e8.c",
+      "legacy_source": "src/EnterBroken.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138238Ev",
+      "symbol": "_ZN13daObjBlockS_c13UpdateInMouthEv",
       "address": "0x02138238",
       "size": "0x000000e0",
-      "legacy_source": "src/func_ov098_02138238.c",
+      "legacy_source": "src/UpdateInMouth.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138318Ev",
+      "symbol": "_ZN13daObjBlockS_c12EnterInMouthEv",
       "address": "0x02138318",
       "size": "0x0000002c",
-      "legacy_source": "src/func_ov098_02138318.c",
+      "legacy_source": "src/EnterInMouth.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138344Ev",
+      "symbol": "_ZN13daObjBlockS_c14UpdateBouncingEv",
       "address": "0x02138344",
       "size": "0x00000140",
-      "legacy_source": "src/func_ov098_02138344.cpp",
+      "legacy_source": "src/UpdateBouncing.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138484Ev",
+      "symbol": "_ZN13daObjBlockS_c13EnterBouncingEv",
       "address": "0x02138484",
       "size": "0x00000078",
-      "legacy_source": "src/func_ov098_02138484.c",
+      "legacy_source": "src/EnterBouncing.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_021384fcEv",
+      "symbol": "_ZN13daObjBlockS_c13UpdateSpitOutEv",
       "address": "0x021384fc",
       "size": "0x000000e4",
-      "legacy_source": "src/func_ov098_021384fc.cpp",
+      "legacy_source": "src/UpdateSpitOut.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_021385e0Ev",
+      "symbol": "_ZN13daObjBlockS_c12EnterSpitOutEv",
       "address": "0x021385e0",
       "size": "0x00000154",
-      "legacy_source": "src/func_ov098_021385e0.c",
+      "legacy_source": "src/EnterSpitOut.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138734Ev",
+      "symbol": "_ZN13daObjBlockS_c12UpdateThrownEv",
       "address": "0x02138734",
       "size": "0x000000e4",
-      "legacy_source": "src/func_ov098_02138734.cpp",
+      "legacy_source": "src/UpdateThrown.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138818Ev",
+      "symbol": "_ZN13daObjBlockS_c11EnterThrownEv",
       "address": "0x02138818",
       "size": "0x000000a4",
-      "legacy_source": "src/func_ov098_02138818.c",
+      "legacy_source": "src/EnterThrown.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_021388bcEv",
+      "symbol": "_ZN13daObjBlockS_c13UpdateCarriedEv",
       "address": "0x021388bc",
       "size": "0x00000110",
-      "legacy_source": "src/func_ov098_021388bc.cpp",
+      "legacy_source": "src/UpdateCarried.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_021389ccEv",
+      "symbol": "_ZN13daObjBlockS_c12EnterCarriedEv",
       "address": "0x021389cc",
       "size": "0x0000002c",
-      "legacy_source": "src/func_ov098_021389cc.c",
+      "legacy_source": "src/EnterCarried.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_021389f8Ev",
+      "symbol": "_ZN13daObjBlockS_c10UpdateIdleEv",
       "address": "0x021389f8",
       "size": "0x00000120",
-      "legacy_source": "src/func_ov098_021389f8.cpp",
+      "legacy_source": "src/UpdateIdle.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138b18Ev",
+      "symbol": "_ZN13daObjBlockS_c9EnterIdleEv",
       "address": "0x02138b18",
       "size": "0x00000010",
-      "legacy_source": "src/func_ov098_02138b18.c",
+      "legacy_source": "src/EnterIdle.c",
       "ordinal": 15
     },
     {
@@ -160,17 +160,17 @@
       "ordinal": 16
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138b70Ev",
+      "symbol": "_ZN13daObjBlockS_c15CallStateUpdateEv",
       "address": "0x02138b70",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov098_02138b70.cpp",
+      "legacy_source": "src/CallStateUpdate.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138bb8Ev",
+      "symbol": "_ZN13daObjBlockS_c14IsOnWaterFloorEv",
       "address": "0x02138bb8",
       "size": "0x00000044",
-      "legacy_source": "src/func_ov098_02138bb8.cpp",
+      "legacy_source": "src/IsOnWaterFloor.cpp",
       "ordinal": 18
     },
     {
@@ -181,24 +181,24 @@
       "ordinal": 19
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138ce0Ev",
+      "symbol": "_ZN13daObjBlockS_c11ResetToHomeEv",
       "address": "0x02138ce0",
       "size": "0x00000128",
-      "legacy_source": "src/func_ov098_02138ce0.c",
+      "legacy_source": "src/ResetToHome.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138e08Ev",
+      "symbol": "_ZN13daObjBlockS_c15SpawnBreakCoinsEv",
       "address": "0x02138e08",
       "size": "0x00000064",
-      "legacy_source": "src/func_ov098_02138e08.c",
+      "legacy_source": "src/SpawnBreakCoins.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02138e6cEv",
+      "symbol": "_ZN13daObjBlockS_c10HandleHitsEv",
       "address": "0x02138e6c",
       "size": "0x00000204",
-      "legacy_source": "src/func_ov098_02138e6c.cpp",
+      "legacy_source": "src/HandleHits.cpp",
       "ordinal": 22
     },
     {
@@ -209,38 +209,38 @@
       "ordinal": 23
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_021390ecEv",
+      "symbol": "_ZN13daObjBlockS_c13HandleWallHitEv",
       "address": "0x021390ec",
       "size": "0x0000013c",
-      "legacy_source": "src/func_ov098_021390ec.cpp",
+      "legacy_source": "src/HandleWallHit.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02139228Ev",
+      "symbol": "_ZN13daObjBlockS_c18UpdateFloorContactEv",
       "address": "0x02139228",
       "size": "0x0000047c",
-      "legacy_source": "src/func_ov098_02139228.cpp",
+      "legacy_source": "src/UpdateFloorContact.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_021396a4Ev",
+      "symbol": "_ZN13daObjBlockS_c16UpdateDropShadowEv",
       "address": "0x021396a4",
       "size": "0x00000124",
-      "legacy_source": "src/func_ov098_021396a4.cpp",
+      "legacy_source": "src/UpdateDropShadow.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_021397c8Ev",
+      "symbol": "_ZN13daObjBlockS_c18UpdateMeshColliderEv",
       "address": "0x021397c8",
       "size": "0x00000088",
-      "legacy_source": "src/func_ov098_021397c8.cpp",
+      "legacy_source": "src/UpdateMeshCollider.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN13daObjBlockS_c19func_ov098_02139850Ev",
+      "symbol": "_ZN13daObjBlockS_c17UpdateModelMatrixEv",
       "address": "0x02139850",
       "size": "0x00000200",
-      "legacy_source": "src/func_ov098_02139850.c",
+      "legacy_source": "src/UpdateModelMatrix.c",
       "ordinal": 28
     },
     {
@@ -1031,14 +1031,14 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@1647",
+      "from": "@1666",
       "to": "@1560",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its daPly_c & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570); deleting the local Sub vtable shim for the typed mModel.Render call shifts the two local BSS source names down one; ELF symtab indices 72/73 and sizes 0xc map @1644/@1645 to the same @1560/@1561 targets; TU verify remains 37/37 MATCH with clean objisolate and relocation destinations Re-keyed from @1644 to @1647 when func_ov098_021397c8 and func_ov098_02139850 copy the crate position into a Vector3 local instead of a volatile int[3]; the Vector3 locals draw three more compiler numbers."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its daPly_c & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570); deleting the local Sub vtable shim for the typed mModel.Render call shifts the two local BSS source names down one; ELF symtab indices 72/73 and sizes 0xc map @1644/@1645 to the same @1560/@1561 targets; TU verify remains 37/37 MATCH with clean objisolate and relocation destinations Re-keyed from @1644 to @1647 when func_ov098_021397c8 and func_ov098_02139850 copy the crate position into a Vector3 local instead of a volatile int[3]; the Vector3 locals draw three more compiler numbers. Re-keyed +19 (@1647/@1648 -> @1666/@1667) when func_ov098_021385e0 reads the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
     },
     {
-      "from": "@1648",
+      "from": "@1667",
       "to": "@1561",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its daPly_c & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570); deleting the local Sub vtable shim for the typed mModel.Render call shifts the two local BSS source names down one; ELF symtab indices 72/73 and sizes 0xc map @1644/@1645 to the same @1560/@1561 targets; TU verify remains 37/37 MATCH with clean objisolate and relocation destinations Re-keyed from @1645 to @1648 when func_ov098_021397c8 and func_ov098_02139850 copy the crate position into a Vector3 local instead of a volatile int[3]; the Vector3 locals draw three more compiler numbers."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; daObjBlockS_c::OnTurnIntoEgg calls through its daPly_c & parameter instead of a char * alias of it, lowering the per-TU @NNN uniquifier by one, so mwcc emits it under this name now (pairing by rank; tubuild verify ov098/daObjBlockS_c TEXT-VERIFIED) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address); including math/MtxStack.h in place of local prototypes shifts this local number (#4570); deleting the local Sub vtable shim for the typed mModel.Render call shifts the two local BSS source names down one; ELF symtab indices 72/73 and sizes 0xc map @1644/@1645 to the same @1560/@1561 targets; TU verify remains 37/37 MATCH with clean objisolate and relocation destinations Re-keyed from @1645 to @1648 when func_ov098_021397c8 and func_ov098_02139850 copy the crate position into a Vector3 local instead of a volatile int[3]; the Vector3 locals draw three more compiler numbers. Re-keyed +19 (@1647/@1648 -> @1666/@1667) when func_ov098_021385e0 reads the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
     }
   ]
 }

@@ -575,29 +575,29 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@555",
+      "from": "@563",
       "to": "@777",
-      "evidence": "mwcc numbers this registration node @544 per TU and another module already defines @544"
+      "evidence": "mwcc numbers this registration node @544 per TU and another module already defines @544 Re-keyed from @555 to @563 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
-      "from": "@556",
+      "from": "@564",
       "to": "@775",
-      "evidence": "mwcc numbers this registration node @545 per TU and another module already defines @545"
+      "evidence": "mwcc numbers this registration node @545 per TU and another module already defines @545 Re-keyed from @556 to @564 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
-      "from": "@557",
+      "from": "@565",
       "to": "@658",
-      "evidence": "mwcc numbers this registration node @546 per TU and another module already defines @546"
+      "evidence": "mwcc numbers this registration node @546 per TU and another module already defines @546 Re-keyed from @557 to @565 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
-      "from": "@558",
+      "from": "@566",
       "to": "@654",
-      "evidence": "mwcc numbers this registration node @547 per TU and another module already defines @547"
+      "evidence": "mwcc numbers this registration node @547 per TU and another module already defines @547 Re-keyed from @558 to @566 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
-      "from": "@559",
+      "from": "@567",
       "to": "@648",
-      "evidence": "mwcc numbers this registration node @548 per TU and another module already defines @548"
+      "evidence": "mwcc numbers this registration node @548 per TU and another module already defines @548 Re-keyed from @559 to @567 when the TU included nitro/fx/fx_trig.h (#821)."
     }
   ],
   "symbol_binding_rewrites": [

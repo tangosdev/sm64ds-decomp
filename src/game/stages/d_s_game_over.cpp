@@ -15,20 +15,18 @@
  * reverse source order. Do not reorder.
  *
  * deslop leftovers:
- * - func_ov003_020b060c and func_ov003_020b0730 are non-virtual methods.
- *   The address stays the method name.
+ * - UpdateIntro (0x020b060c) and UpdateButtonPalettes (0x020b0730) are
+ *   non-virtual methods under coined names.
  * - OAM::Render's Fix12 overload stays mangled: OAM.h excludes the by-value
  *   Fix12<int> overloads (codegen wall, pinned in
  *   notes/experiments/gameover-2711-oam-render-fix12.md). G2S::GetBG1ScrPtr
- *   comes from G2.h as `void *` and 0730 casts it to u16* for its pointer
+ *   comes from G2.h as `void *` and UpdateButtonPalettes casts it to u16* for its pointer
  *   arithmetic (typing ergonomics, not a codegen wall -- see
  *   notes/experiments/gameover-2711-bg1scrptr-u16.md).
- * - data_0209f5bc (the active scene) gates Behavior through a plain virtual
- *   call on slot 5; the tree's spellings disagree with each other
- *   (SceneVCall6, UnkObj, ...) and none has a ROM RTTI identity. The
- *   TU-local shadow vtable this file used to spell out to slot 5 was
- *   measured inert and dropped for the plain call, so it is no longer a
- *   retained substitution
+ * - gSceneFader, the dFdBrightness_c dScene_c::SetFaders installed, gates
+ *   Behavior through its IsAtStart virtual (slot 5). The TU-local shadow
+ *   vtable this file used to spell out to that slot was measured inert and
+ *   dropped for the plain call, so it is no longer a retained substitution
  *   (notes/experiments/gameover-2711-scenegate-virtual-call.md).
  * - mGlyphUnused[8]: zeroed by InitResources, never read back.
  */
@@ -95,14 +93,14 @@ OamAttr *sGameOverGlyphTemplates[9] = {
 
 /* External scene services not declared by the included headers. */
 extern "C" {
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 extern int data_0208ee44;
 /* Scalars, not tables: the two BG-enable bit registers, main and sub --
  * the spelling the rest of the tree uses for this pair. */
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern u8 data_0209f204;
-/* u16* spelling for 0730's `p += ...` and 16-bit stores, no cast needed.
+/* u16* spelling for UpdateButtonPalettes' `p += ...` and 16-bit stores, no cast needed.
  * Ergonomics, not a constraint: the void* form compiles to identical bytes
  * at both consumers (see notes/experiments/gameover-2711-bg1scrptr-u16.md).
  * Init passes the result to DecompressLZ16's void* param either way. */
@@ -154,32 +152,32 @@ s32 dScGameOver_c::InitResources() {
     GX::SetBankForSubBG(4);
     GX::SetBankForSubOBJ(8);
 
-    *(volatile u32 *)0x4000000 &= 0xffcfffef;
-    *(volatile u32 *)0x4001000 &= 0xffcfffef;
+    REG_DISPCNT &= 0xffcfffef;
+    REG_DISPCNT_SUB &= 0xffcfffef;
     GX::SetGraphicsMode(1, 0, 0);
     GXS::SetGraphicsMode(3);
 
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x38000000) | 0x8000000;
-    *(volatile u16 *)0x4000304 = (*(volatile u16 *)0x4000304 & ~0x20e) | 0x20e;
+    REG_DISPCNT = (REG_DISPCNT & ~0x38000000) | 0x8000000;
+    REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
     GX::DispOn();
 
-    *(volatile u32 *)0x4001000 |= 0x10000;
+    REG_DISPCNT_SUB |= 0x10000;
 
-    *(volatile u16 *)0x4000008 &= ~3;
-    *(volatile u16 *)0x4000008 &= ~0x40;
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0xe10;
+    REG_BG0CNT &= ~3;
+    REG_BG0CNT &= ~0x40;
+    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0xe10;
     SetBg0Offset(0, 0);
 
-    *(volatile u16 *)0x400000a &= ~3;
-    *(volatile u16 *)0x400000a = (*(volatile u16 *)0x400000a & 0x43) | 0x1f1c;
-    *(volatile u16 *)0x400000a &= ~0x40;
+    REG_BG1CNT &= ~3;
+    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1f1c;
+    REG_BG1CNT &= ~0x40;
     SetBg1Offset(0, 0);
 
     LoadDebugFont();
 
-    *(volatile u16 *)0x400000c &= ~3;
-    *(volatile u16 *)0x400000c &= ~0x40;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0xd10;
+    REG_BG2CNT &= ~3;
+    REG_BG2CNT &= ~0x40;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0xd10;
     SetBg2Offset(0, 0);
 
     if (GetOwnerLanguage() == 5) {
@@ -208,9 +206,9 @@ s32 dScGameOver_c::InitResources() {
     DecompressLZ16(f, G2::GetBG0ScrPtr());
     Deallocate(f);
 
-    *(volatile u16 *)0x400000e &= ~3;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1100;
-    *(volatile u16 *)0x400000e &= ~0x40;
+    REG_BG3CNT &= ~3;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1100;
+    REG_BG3CNT &= ~0x40;
     LoadFont(0);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_NCG_BIN);
@@ -223,14 +221,14 @@ s32 dScGameOver_c::InitResources() {
 
     gMainScreenLayers = DISPLAY_LAYER_BG2 | DISPLAY_LAYER_OBJ;
 
-    *(volatile u16 *)0x4001008 &= ~3;
-    *(volatile u16 *)0x4001008 &= ~0x40;
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x1100;
+    REG_DB_BG0CNT &= ~3;
+    REG_DB_BG0CNT &= ~0x40;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x1100;
     SetSubBg0Offset(0, 0);
 
-    *(volatile u16 *)0x400100a &= ~3;
-    *(volatile u16 *)0x400100a &= ~0x40;
-    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & 0x43) | 0xc00;
+    REG_DB_BG1CNT &= ~3;
+    REG_DB_BG1CNT &= ~0x40;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xc00;
     SetSubBg1Offset(0, 0);
 
     if (GetOwnerLanguage() == 5) {
@@ -255,9 +253,9 @@ s32 dScGameOver_c::InitResources() {
     DecompressLZ16(f, G2S::GetBG1ScrPtr());
     Deallocate(f);
 
-    *(volatile u16 *)0x400100c &= ~3;
-    *(volatile u16 *)0x400100c &= ~0x40;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0xd00;
+    REG_DB_BG2CNT &= ~3;
+    REG_DB_BG2CNT &= ~0x40;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0xd00;
     SetSubBg2Offset(0, 0);
 
     f = LoadFile(ASSET_D_2D_BTM_GAME_OVER_BG_NSC_BIN);
@@ -265,7 +263,7 @@ s32 dScGameOver_c::InitResources() {
     Deallocate(f);
 
     func_0201cebc(0x27d);
-    func_ov003_020b0730(1);
+    UpdateButtonPalettes(1);
 
     mCursorState = 0;
     mSelection = 0;
@@ -280,8 +278,8 @@ s32 dScGameOver_c::InitResources() {
     }
 
     gSubScreenLayers = 0x14;
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
-    *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x1400;
+    REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | (gMainScreenLayers << 8);
+    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | 0x1400;
     data_0209f204 = 1;
     Sound::LoadInitialGroup(2);
     Sound::LoadAndSetMusic_Layer1(0x15);
@@ -301,8 +299,8 @@ s32 dScGameOver_c::CleanupResources() {
  * scene fade back out on "no". mIntroPhase gates all of it until the intro
  * is in. */
 s32 dScGameOver_c::Behavior() {
-    if (data_0209f5bc->IsAtStart() != 0) {
-        func_ov003_020b060c();
+    if (gSceneFader->IsAtStart() != 0) {
+        UpdateIntro();
 
         if (mIntroPhase < 2)
             return 1;
@@ -319,7 +317,7 @@ s32 dScGameOver_c::Behavior() {
                 if (mSelection == 0)
                     mFlashTimer = (unsigned char)(data_0208ee44 << 3);
                 mSelection = 0;
-                func_ov003_020b0730(0);
+                UpdateButtonPalettes(0);
                 mCommitTimer = (unsigned char)(data_0208ee44 << 4);
                 func_02012790(0x9a);
                 mCursorState = 1;
@@ -332,7 +330,7 @@ s32 dScGameOver_c::Behavior() {
                 if (mSelection == 1)
                     mFlashTimer = (unsigned char)(data_0208ee44 << 3);
                 mSelection = 1;
-                func_ov003_020b0730(0);
+                UpdateButtonPalettes(0);
                 mCommitTimer = (unsigned char)(data_0208ee44 << 4);
                 func_02012790(0x9b);
                 mCursorState = 1;
@@ -343,7 +341,7 @@ s32 dScGameOver_c::Behavior() {
             if (mFlashTimer != 0) {
                 mFlashTimer -= data_0208ee44;
                 if (mFlashTimer == 0)
-                    func_ov003_020b0730(0);
+                    UpdateButtonPalettes(0);
             }
             if (mCommitTimer != 0) {
                 mCommitTimer -= data_0208ee44;
@@ -381,17 +379,17 @@ void dScGameOver_c::OnPendingDestroy() {}
 
 /* [3] 0x020b0730 -- repaints the sub-screen BG1 palette bank over the two
  * yes/no boxes: two 0x20-by-4 rectangles whose screen-map origins come from
- * sGameOverPromptTileOffsets. `arg` non-zero forces both back to the unselected
+ * sGameOverPromptTileOffsets. `unselectAll` non-zero forces both back to the unselected
  * bank; zero picks the highlighted bank for whichever box mSelection names,
  * and only while the mFlashTimer has run out. */
-void dScGameOver_c::func_ov003_020b0730(int arg) {
+void dScGameOver_c::UpdateButtonPalettes(int unselectAll) {
     int i;
     for (i = 0; i < 2; i++) {
         unsigned int v;
         int j;
         unsigned short *p = (unsigned short *)G2S::GetBG1ScrPtr();
         p += sGameOverPromptTileOffsets[i];
-        if (arg) {
+        if (unselectAll) {
             v = 0x1000;
         } else {
             unsigned int w;
@@ -420,7 +418,7 @@ void dScGameOver_c::func_ov003_020b0730(int arg) {
  * out one more mGlyphDelay tick, then reaches phase 2, which is what unblocks
  * Behavior's cursor FSM and Render's bouncing arrows, and enables the two
  * BG layers the prompt lives on. */
-void dScGameOver_c::func_ov003_020b060c() {
+void dScGameOver_c::UpdateIntro() {
     unsigned char s = this->mIntroPhase;
     int i;
     int ip;

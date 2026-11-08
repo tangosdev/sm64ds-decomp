@@ -39,7 +39,7 @@
 
 struct daJango_c : dEnemyBase_c {
     /* Two cylinders, both owned by this actor. [1] is the one the attack tests in
-       func_ov062_0211b51c read (its hitFlags and otherOwner); [2], which asks for
+       HandleCylinderHit read (its hitFlags and otherOwner); [2], which asks for
        no vulnerability bits at all (Init's last argument is 0), is the one whose
        otherOwner is checked for the player's actorID before the cap is taken.
        Radii and height are fix12: [1] is 100 x 160 units, [2] is 60 x 160. */
@@ -51,26 +51,26 @@ struct daJango_c : dEnemyBase_c {
     /* Both matrices are 12 words rather than a Matrix4x3 member: a Matrix4x3
        member makes the synthesised constructor emit a Matrix4x3 destructor that
        the ROM has no symbol for, and the ROM build refuses the object.
-       Drop-shadow matrix: func_ov062_0211c6a8 builds it from mPos >> 3 (dropped
+       Drop-shadow matrix: UpdateModelAndShadow builds it from mPos >> 3 (dropped
        0x18000 = 24 units) every frame and hands it to DropShadowRadHeight. */
     s32                          mShadowMat[12];        /* 0x3cc -- a Matrix4x3 spelled as 12 words */
     /* Where the carried actor is drawn: the bone matrix of the model (entry 6 of
        its transforms) times the model matrix, then a fixed offset and rotation
-       that depend on mCarriedItem. func_ov062_0211c6a8 builds it and stores its
+       that depend on mCarriedItem. UpdateModelAndShadow builds it and stores its
        address in the carried actor's +0xc8 word. */
     s32                          mHeldMat[12];          /* 0x3fc -- a Matrix4x3 spelled as 12 words */
     /* Behavior reads this word as a pointer to a pair of pointers-to-member,
-       {enter, update}: func_ov062_0211c658(this, record) stores it and calls
+       {enter, update}: ChangeState(this, record) stores it and calls
        `enter` at once, Behavior calls `update` (the +0x08 member) on `this`
        every frame, and the code compares it by address only against the HURT
-       record (Behavior) and the SWOOP record (func_ov062_0211b51c); the other
+       record (Behavior) and the SWOOP record (HandleCylinderHit); the other
        records (data_ov062_0211e15c / _0211e16c / _0211e17c) are only passed to
-       func_ov062_0211c658. The five records are filled in by
+       ChangeState. The five records are filled in by
        __sinit_ov062_0211d6fc; src/game/actors/d_a_jango.cpp names them. */
     void                        *mState;                /* 0x42c */
     /* The path node Klepto is at. InitResources has PathPtr::GetNode write the
        node at mPathNodeIndex here (the carrying-a-star branch then teleports the
-       actor onto it: `mPosX = mPathNodePosX;` ...), and func_ov062_0211c2f4 sets
+       actor onto it: `mPosX = mPathNodePosX;` ...), and UpdateFlyPathState sets
        it to the actor's own position each time it snaps onto a node. */
     union {
         struct {
@@ -78,18 +78,18 @@ struct daJango_c : dEnemyBase_c {
         };
         Vector3 mPathNodePos; /* 0x430 */
     };
-    /* Two uses on the one word. In func_ov062_0211bd10 (circling) it is a phase
+    /* Two uses on the one word. In UpdateCircleState (circling) it is a phase
        counter for the animation switch: 0, then 1 when jango_attack.bca is
        started, then 2..0x18 counting up, then back to 0. In the swoop it is the
-       turn rate: func_ov062_0211bc54 stores 0x300, 0x400, 0x500 or 0x600 (random)
-       and func_ov062_0211ba84 uses it (plus 0x500 outside level id 0x10) as the
-       ApproachLinear step for pitch and yaw. func_ov062_0211c218 stores 0;
-       func_ov062_0211b930 stores 1, then 0 again when it found a held actor.
+       turn rate: EnterSwoopState stores 0x300, 0x400, 0x500 or 0x600 (random)
+       and UpdateSwoopState uses it (plus 0x500 outside level id 0x10) as the
+       ApproachLinear step for pitch and yaw. EnterCircleState stores 0;
+       EnterHurtState stores 1, then 0 again when it found a held actor.
        Named for the states that own it, since the two jobs share no role. */
     s32 mStateParam; /* 0x43c */
     /* Countdown that holds the circling state back from leaving along the path:
-       func_ov062_0211c218 stores 0, or 2 for the silver-star variant and level ids
-       0x18 and 0x19, and func_ov062_0211bd10 takes one off whenever the phase
+       EnterCircleState stores 0, or 2 for the silver-star variant and level ids
+       0x18 and 0x19, and UpdateCircleState takes one off whenever the phase
        counter above moves from 1 to 2 (again only for those variants). The actor
        leaves for the path only when this and mStateTimer are both 0 and mAngleY
        is within 45 degrees of the node's direction. */
@@ -100,22 +100,22 @@ struct daJango_c : dEnemyBase_c {
        target or its cargo: the carried actor is lost, the player was hit, the
        hurt animation ended, the swoop ran out, the player vanished. */
     u16                          mTimer;                /* 0x444 */
-    /* Set to 1 by func_ov062_0211b3ac when the path node it picks is index ^ 2 (assumed
+    /* Set to 1 by ChangeTarget when the path node it picks is index ^ 2 (assumed
        to be the far side of the square), and only on level id 0x10. It is cleared
        first and recomputed on every b3ac call past the tick gate and the
-       no-change check. func_ov062_0211c594
+       no-change check. EnterFlyPathState
        then gives the actor a 20 unit/frame vertical speed and a 60 frame
-       mStateTimer, and func_ov062_0211c2f4 clears it when that timer runs out.
+       mStateTimer, and UpdateFlyPathState clears it when that timer runs out.
        The 20.0 vector is turned by a -0x4000 pitch, so the leg to the far node
        starts as a climb. */
     u8 mRiseToFarNode; /* 0x446 */
-    /* Set to 1 just before func_ov062_0211b51c calls daPly_c::Hurt; the next
-       func_ov062_0211c218 (circling state entry) zeroes mStateTimer and clears
+    /* Set to 1 just before HandleCylinderHit calls daPly_c::Hurt; the next
+       EnterCircleState (circling state entry) zeroes mStateTimer and clears
        it. Set even if Hurt does nothing. */
     u8                           mHitPlayer;            /* 0x447 */
     /* 2 when the spawn word's item field reads 2 (which then forces
        mCarriedItem to 1). What reads it: the hurt state spawns
-       ACTOR_SILVER_STAR instead of ACTOR_STAR, func_ov062_0211b51c never takes
+       ACTOR_SILVER_STAR instead of ACTOR_STAR, HandleCylinderHit never takes
        the player's cap for it, Behavior does not remove it when off screen,
        and the circling and path states treat it like level ids 0x18 / 0x19.
        The name rests on the ACTOR_SILVER_STAR spawns. */
@@ -135,8 +135,8 @@ struct daJango_c : dEnemyBase_c {
     s32                          mHeldPosY;             /* 0x454 */
     s32                          mHeldPosZ;             /* 0x458 */
     u8  pad_45c[0x4];
-    /* Ticked (+1, & 7) at the top of func_ov062_0211b3ac, which only does its
-       work when it wraps to 0; func_ov062_0211c2f4 stores 7 so the very next
+    /* Ticked (+1, & 7) at the top of ChangeTarget, which only does its
+       work when it wraps to 0; UpdateFlyPathState stores 7 so the very next
        call runs. */
     s32 mPathPickTick;                                  /* 0x460 */
     s32                          mPathId;               /* 0x464 */
@@ -149,9 +149,9 @@ struct daJango_c : dEnemyBase_c {
        build the spawn parameter of the actor daJango_c is carrying (and with
        0x40 when the star is let go). */
     s32                          mHeldItemParam;        /* 0x46c */
-    /* InitResources stores 4: the number of path nodes. func_ov062_0211c2f4
+    /* InitResources stores 4: the number of path nodes. UpdateFlyPathState
        reads it as the wrap point of the previous-node index, and
-       func_ov062_0211b3ac and func_ov062_0211c2f4 both loop or wrap at the
+       ChangeTarget and UpdateFlyPathState both loop or wrap at the
        literal 4. */
     s32                          mPathNodeCount;        /* 0x470 */
     s32                          mPathNodeIndex;        /* 0x474 -- the index handed to PathPtr::GetNode */
@@ -177,23 +177,24 @@ struct daJango_c : dEnemyBase_c {
     int Render();
 
     /* The helpers the five state records' pointer-to-member pairs name (the
-       enter/update halves), plus the ones they call. Each takes the object as
-       implicit this where the old C sources took it explicitly. The original
-       names are not recovered; the addresses stand in. */
-    void func_ov062_0211b2fc();    /* circle velocity words */
-    int  func_ov062_0211b3ac();    /* pick the next path node */
-    int  func_ov062_0211b51c();    /* cylinder contact tests (hurt, cap steal) */
-    int  func_ov062_0211b800();    /* RISE update */
-    int  func_ov062_0211b880();    /* RISE enter */
-    int  func_ov062_0211b8d8();    /* HURT update */
-    int  func_ov062_0211b930();    /* HURT enter */
-    int  func_ov062_0211bc54();    /* SWOOP enter */
-    int  func_ov062_0211bd10();    /* CIRCLE update */
-    int  func_ov062_0211c218();    /* CIRCLE enter */
-    int  func_ov062_0211c2f4();    /* FLY_PATH update */
-    int  func_ov062_0211c594();    /* FLY_PATH enter */
-    int  func_ov062_0211c658(void *p); /* select a state record */
-    void func_ov062_0211c6a8();    /* per-frame matrices */
+       enter/update halves), plus the ones they call. The cartridge keeps no
+       names for them; the N64 klepto.inc.c function each one stands in for
+       is noted where there is one. */
+    void UpdateCircleVelocity(); /* circle velocity words */
+    int ChangeTarget();          /* klepto_change_target: pick the next path node */
+    int HandleCylinderHit();     /* cylinder contact tests (hurt, cap steal) */
+    int UpdateRiseState();       /* RISE update */
+    int EnterRiseState();        /* RISE enter */
+    int UpdateHurtState();       /* HURT update: klepto_act_struck_by_mario */
+    int EnterHurtState();        /* HURT enter */
+    int EnterSwoopState();       /* SWOOP enter */
+    int UpdateSwoopState();      /* SWOOP update: klepto_act_dive_at_mario */
+    int UpdateCircleState();     /* CIRCLE update: klepto_circle_target */
+    int EnterCircleState();      /* CIRCLE enter */
+    int UpdateFlyPathState();    /* FLY_PATH update: klepto_approach_target */
+    int EnterFlyPathState();     /* FLY_PATH enter */
+    int ChangeState(void *p);    /* select a state record */
+    void UpdateModelAndShadow(); /* per-frame matrices */
 };
 
 #ifndef SM64DS_PLATFORM_PC

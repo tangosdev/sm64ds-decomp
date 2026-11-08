@@ -8,7 +8,7 @@ extern int FS_UnloadArchive(FSArchive *p_arc);
 extern void FS_SetArchiveProc(FSArchive *p_arc, FS_ARCHIVE_PROC_FUNC proc, u32 flags);
 extern int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32 fnt, u32 fnt_size,
                           FS_ARCHIVE_READ_FUNC read_func, FS_ARCHIVE_WRITE_FUNC write_func);
-extern void func_0205db88(int target, void *ptr, u32 size);
+extern void FS_AttachOverlayTable(int target, void *ptr, u32 size);
 
 extern char data_02099e6c[]; /* "rom" */
 extern int func_02042668(FSFile *p_file, int command);
@@ -30,7 +30,7 @@ struct Pair {
  * - FS_LoadArchive loads it from the FAT and FNT here, at base 0.
  *   func_020426f8 copies from memory for reads, and func_020426f0 fails
  *   writes.
- * - func_0205db88 attaches the two overlay tables.
+ * - FS_AttachOverlayTable attaches the two overlay tables.
  * Returns the block's leading word. */
 int func_020423dc(int *r6) {
     int r5;
@@ -50,7 +50,7 @@ int func_020423dc(int *r6) {
     }
     FS_LoadArchive(h, 0, (u32)arr[0].f0, arr[0].f4, (u32)arr[1].f0, arr[1].f4, &func_020426f8,
                    &func_020426f0);
-    func_0205db88(0, arr[2].f0, arr[2].f4);
-    func_0205db88(1, arr[3].f0, arr[3].f4);
+    FS_AttachOverlayTable(0, arr[2].f0, arr[2].f4);
+    FS_AttachOverlayTable(1, arr[3].f0, arr[3].f4);
     return r5;
 }

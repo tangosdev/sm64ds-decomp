@@ -27,7 +27,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "func_ov007_020b42d8",
+      "symbol": "NumberSprite_Create",
       "address": "0x020b42d8",
       "size": "0x00000104",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b42d8.c",
@@ -55,56 +55,56 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_ov007_020b44ec",
+      "symbol": "ItemView_Update",
       "address": "0x020b44ec",
       "size": "0x000000c4",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b44ec.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov007_020b45b0",
+      "symbol": "ItemView_TryChoose",
       "address": "0x020b45b0",
       "size": "0x00000100",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b45b0.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov007_020b46b0",
+      "symbol": "ItemView_HandleTouch",
       "address": "0x020b46b0",
       "size": "0x000004ac",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b46b0.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov007_020b4b5c",
+      "symbol": "ItemView_ResetSprite",
       "address": "0x020b4b5c",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4b5c.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov007_020b4bd4",
+      "symbol": "ItemView_Destroy",
       "address": "0x020b4bd4",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4bd4.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov007_020b4c04",
+      "symbol": "ItemView_Create",
       "address": "0x020b4c04",
       "size": "0x00000464",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b4c04.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov007_020b5068",
+      "symbol": "ItemView_UpdateIdle",
       "address": "0x020b5068",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b5068.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov007_020b50e8",
+      "symbol": "ItemView_UpdateChosen",
       "address": "0x020b50e8",
       "size": "0x000007fc",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b50e8.cpp",

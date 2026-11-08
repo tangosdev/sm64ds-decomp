@@ -14,8 +14,9 @@
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S.
  *
- * The flames themselves are Particle::System::NewBlueFlame / NewRedFlame
- * (effects 0x117 / 0x118).
+ * Particle::System::NewBlueFlame / NewRedFlame are the arm9 blue/red flame
+ * particle wrappers (effects 0x117 / 0x118). The names are descriptive;
+ * the ROM has none.
  */
 
 #include "daObjFire_c.h"

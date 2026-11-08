@@ -29,11 +29,13 @@
 #include "common.h"
 #include "nitro/hw/registers.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "G2.h"
 #include "G2x.h"
 #include "GX.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g2_oam.h"
 #include "SharedFilePtr.h"
 #include "dScMg3DEsp_c.h"
@@ -117,7 +119,6 @@ extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Intro;
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Wait;
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle_3;
 extern void *sEsp3DTextureAnim;
-extern s16 data_02082214[];
 extern unsigned char gMainScreenLayers;
 extern unsigned char gSubScreenLayers;
 extern int sMgClearBannerX;
@@ -134,7 +135,7 @@ extern volatile Matrix4x3 sEsp3DIdentityMtx;
 /* ---- dScMg3DEsp_c: the destructor (key function) ---------------------- */
 
 /* The body is empty: the members' destructors (reverse declaration order),
-   the vtable stores, mSysTracker's destruction and the chain to
+   the vtable stores, mParticle's destruction and the chain to
    ~dScMgBase_c are all compiler-generated; the deleting variant reaches
    dScMgBase_c's operator delete. */
 dScMg3DEsp_c::~dScMg3DEsp_c()
@@ -286,8 +287,8 @@ void dMg3DEspModel_c::Behavior()
 
     if (mShowSparks == 0) return;
 
-    mParticleSys =
-        (u32)Particle::System::New(mParticleSys, 0xec, 0x48c000, 0x140000, 0x200000, 0, 0);
+    mParticleSys = (u32)Particle::System::New(mParticleSys, kPtclMg3DEspSparks, 0x48c000, 0x140000,
+                                              0x200000, 0, 0);
 }
 
 void dMg3DEspModel_c::Hit()
@@ -797,11 +798,10 @@ void dScMg3DEsp_c::RenderCards() {
 
 void dScMg3DEsp_c::CardSeek(int i) {
     u16 timer;
-    s16 tv1;
-    s16 tv2;
+    s16 cosine;
+    s16 sine;
     int speed2;
     int speed1;
-    int angle1;
 
     timer = mCards[i].mTimer;
     if (timer != 0) {
@@ -813,14 +813,12 @@ void dScMg3DEsp_c::CardSeek(int i) {
     }
 
     speed1 = mCards[i].mSpeed;
-    angle1 = mCards[i].mAngle;
-    angle1 >>= 4;
-    tv1 = data_02082214[(angle1 << 1) + 1];
-    mCards[i].mX += FX_MUL(tv1, speed1);
+    cosine = FX_CosIdx(mCards[i].mAngle >> 4);
+    mCards[i].mX += FX_MUL(cosine, speed1);
 
-    tv2 = data_02082214[(mCards[i].mAngle >> 4) << 1];
+    sine = FX_SinIdx(mCards[i].mAngle >> 4);
     speed2 = mCards[i].mSpeed;
-    mCards[i].mY += FX_MUL(tv2, speed2);
+    mCards[i].mY += FX_MUL(sine, speed2);
     mCards[i].mSpeed += 0x300;
 
     {

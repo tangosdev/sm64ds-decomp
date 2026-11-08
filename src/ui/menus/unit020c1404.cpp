@@ -7,23 +7,23 @@
  * name.
  *
  * What the code does. A texture is one 0x2c-byte Ov007Texture record:
- * func_ov007_020c162c allocates and fills one from a BMD texture and
- * palette pair (func_ov007_020b2308), func_ov007_020c16dc working out its
+ * Texture_Create allocates and fills one from a BMD texture and
+ * palette pair (func_ov007_020b2308), Texture_GetSizes working out its
  * texel and palette byte sizes, and func_ov007_020c1620 frees one.
  * func_ov007_020c14b8 uploads a record's texels and palette into VRAM.
  * Each comes from a bump allocator over one region: four bss words hold
  * the next free texture slot (data_ov007_02104bdc) and the region's end
  * (data_ov007_02104be4), and the next free palette slot
  * (data_ov007_02104be8) and that region's end (data_ov007_02104be0).
- * func_ov007_020c1814 (called from func_ov007_020bd4a0) sizes both regions
+ * Texture_InitRegions (called from func_ov007_020bd4a0) sizes both regions
  * from the VRAM banks mapped to texture and palette use and starts each
  * at the given offset; func_ov007_020c1804 and 020c17f4 read the two next
- * slots back. func_ov007_020c1448 and 020c1404 bind a record for drawing,
- * writing its TEXIMAGE_PARAM and PLTT_BASE.
+ * slots back. func_ov007_020c1448 and Texture_BindPalette bind a record for
+ * drawing, writing its TEXIMAGE_PARAM and PLTT_BASE.
  *
  * Edges: the four bss words 0x02104bdc..0x02104be8 are referenced by these
  * functions and nothing else in the overlay. func_ov007_020c1448 and
- * 020c1404 touch no data; their callers (func_ov007_020c4684,
+ * Texture_BindPalette touch no data; their callers (func_ov007_020c4684,
  * func_ov007_020ca5f0) are outside the run, but both functions take the
  * record the rest of the unit builds. The previous function,
  * func_ov007_020c13f4, is a callee of func_ov007_020c121c's module; the
@@ -35,7 +35,9 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
+ * The functions keep C linkage. The Texture_ names are coined from the
+ * bodies, after the in-tree Ov007Texture (include/Ov007Texture.h); the
+ * other six keep their address names for now.
  */
 #include "types.h"
 #include "GX.h"
@@ -54,14 +56,13 @@ extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c3d1c(void *self);
 
 void func_ov007_020c15ec(Ov007Texture *tex);
-void func_ov007_020c16dc(int fmt, int width, int height, int colorCount, u32 *texSize,
-                         u32 *plttSize);
+void Texture_GetSizes(int fmt, int width, int height, int colorCount, u32 *texSize, u32 *plttSize);
 
 /* Resets both regions to start at 0: the texture region's end from the
  * texture VRAM banks GX::GetBankForTex reports (one 0x20000-byte bank per
  * bit), the palette region's end from the palette banks GX::GetBankForTexPltt
  * reports. */
-void func_ov007_020c184c(void) {
+void Texture_ResetRegions(void) {
     int texBanks = GX::GetBankForTex();
     int plttBanks = GX::GetBankForTexPltt();
 
@@ -119,8 +120,8 @@ void func_ov007_020c184c(void) {
 }
 
 /* Sizes both regions and starts them at the given VRAM offsets. */
-void func_ov007_020c1814(int textureOffset, int paletteOffset) {
-    func_ov007_020c184c();
+void Texture_InitRegions(int textureOffset, int paletteOffset) {
+    Texture_ResetRegions();
     data_ov007_02104bdc = textureOffset;
     data_ov007_02104be8 = paletteOffset;
 }
@@ -138,8 +139,7 @@ int func_ov007_020c17f4(void) {
 /* Texel and palette byte sizes of a width x height texture of format fmt
  * with colorCount palette colours; the direct formats (0, 5 and 7) are
  * given none. */
-void func_ov007_020c16dc(int fmt, int width, int height, int colorCount, u32 *texSize,
-                         u32 *plttSize) {
+void Texture_GetSizes(int fmt, int width, int height, int colorCount, u32 *texSize, u32 *plttSize) {
     switch (fmt) {
     case 0:
         *texSize = 0;
@@ -181,8 +181,8 @@ void func_ov007_020c16dc(int fmt, int width, int height, int colorCount, u32 *te
 /* Allocates and fills a texture record for texels of format fmt at texSrc,
  * (8 << sizeS) by (8 << sizeT), with an optional palette of plttColorCount
  * colours at plttSrc. */
-Ov007Texture *func_ov007_020c162c(int fmt, int texSrc, int sizeS, int sizeT, int plttSrc,
-                                  unsigned short plttColorCount) {
+Ov007Texture *Texture_Create(int fmt, int texSrc, int sizeS, int sizeT, int plttSrc,
+                             unsigned short plttColorCount) {
     Ov007Texture *tex = (Ov007Texture *)func_ov007_020c3df4(0, sizeof(Ov007Texture));
     int width = 8 << sizeS;
     int height = 8 << sizeT;
@@ -197,7 +197,7 @@ Ov007Texture *func_ov007_020c162c(int fmt, int texSrc, int sizeS, int sizeT, int
         tex->flags |= 1;
     if (plttSrc != 0)
         tex->flags |= 2;
-    func_ov007_020c16dc(fmt, width, height, plttColorCount, &tex->texSize, &tex->plttSize);
+    Texture_GetSizes(fmt, width, height, plttColorCount, &tex->texSize, &tex->plttSize);
     return tex;
 }
 
@@ -227,17 +227,17 @@ void func_ov007_020c15ec(Ov007Texture *tex) {
 
 /* Loads a record's texels at the next free texture slot, if it has any;
  * an overflowing region is fatal. */
-void func_ov007_020c1560(Ov007Texture *t) {
-    if (!(t->flags & 1))
+void Texture_LoadTexels(Ov007Texture *tex) {
+    if (!(tex->flags & 1))
         return;
 
-    if (data_ov007_02104bdc + t->texSize <= data_ov007_02104be4) {
+    if (data_ov007_02104bdc + tex->texSize <= data_ov007_02104be4) {
         GX::BeginLoadTex();
-        GX::LoadTex(t->texSrc, data_ov007_02104bdc, t->texSize);
+        GX::LoadTex(tex->texSrc, data_ov007_02104bdc, tex->texSize);
         GX::EndLoadTex();
 
-        t->texAddr = data_ov007_02104bdc;
-        data_ov007_02104bdc += t->texSize;
+        tex->texAddr = data_ov007_02104bdc;
+        data_ov007_02104bdc += tex->texSize;
     } else {
         Crash();
     }
@@ -245,26 +245,26 @@ void func_ov007_020c1560(Ov007Texture *t) {
 
 /* Loads a record's palette at the next free palette slot, if it has one;
  * an overflowing region is fatal. */
-void func_ov007_020c14d4(Ov007Texture *t) {
-    if (!(t->flags & 2))
+void Texture_LoadPalette(Ov007Texture *tex) {
+    if (!(tex->flags & 2))
         return;
 
-    if (data_ov007_02104be8 + t->plttSize <= data_ov007_02104be0) {
+    if (data_ov007_02104be8 + tex->plttSize <= data_ov007_02104be0) {
         GX::BeginLoadTexPltt();
-        GX::LoadTexPltt(t->plttSrc, data_ov007_02104be8, t->plttSize);
+        GX::LoadTexPltt(tex->plttSrc, data_ov007_02104be8, tex->plttSize);
         GX::EndLoadTexPltt();
 
-        t->plttAddr = data_ov007_02104be8;
-        data_ov007_02104be8 += t->plttSize;
+        tex->plttAddr = data_ov007_02104be8;
+        data_ov007_02104be8 += tex->plttSize;
     } else {
         Crash();
     }
 }
 
 /* Loads a record's texels and palette into VRAM. */
-void func_ov007_020c14b8(Ov007Texture *t) {
-    func_ov007_020c1560(t);
-    func_ov007_020c14d4(t);
+void func_ov007_020c14b8(Ov007Texture *tex) {
+    Texture_LoadTexels(tex);
+    Texture_LoadPalette(tex);
 }
 
 /* Binds a record's texels for drawing: TEXIMAGE_PARAM gets its VRAM slot,
@@ -283,7 +283,7 @@ void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u
 /* Binds a record's palette for drawing: PLTT_BASE gets its VRAM slot, in
  * 8-byte units for 4-colour textures (format 2) and 16-byte units
  * otherwise. No record writes 0. */
-void func_ov007_020c1404(Ov007Texture *tex) {
+void Texture_BindPalette(Ov007Texture *tex) {
     if (tex) {
         G3_TexPlttBase(tex->plttAddr, (GXTexFmt)tex->fmt);
     } else {

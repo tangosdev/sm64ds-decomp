@@ -127,6 +127,7 @@ enum daDemo_c_AssetId {
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 struct OamAttr;
 
@@ -396,7 +397,7 @@ extern void SetSubBg1Offset(int a, int b);
 /* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. Kept
    as the void * this file has always declared (the tree's declarations
    disagree); 23f0 casts at the one use. */
-extern void* data_0209f5bc;
+extern void *gSceneFader;
 extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
 extern int func_ov002_020f2630(daDemo_c *self);
@@ -452,8 +453,6 @@ extern void func_ov002_020f396c(char* p);
 extern void func_ov002_020f30d4(char* p);
 extern void func_ov002_020f2ea0(char* p);
 extern void func_ov002_020f2a68(char* p);
-extern void func_ov002_020f2f64(char* self);
-extern void func_ov002_020f2a48(char *p);
 extern void func_ov002_020f2958(char* c);
 extern void func_ov002_020f37fc(char*);
 extern void func_ov002_020f2f9c(void *, int);
@@ -488,7 +487,7 @@ extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
-extern char *data_0209f318;
+extern char *gCamera;
 extern int data_ov002_0210b614;
 extern int data_ov002_0210b958;
 /* local extern dropped: decl_common.h declares data_0209b41c */
@@ -504,8 +503,8 @@ extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
-extern unsigned char data_0209f250;
-extern void *data_0209f394[];
+extern unsigned char gLocalPlayerId;
+extern void *gPlayers[];
 /* void *: every caller passes &mPosX and POD int[3] scratch; retyping that
    scratch as Vector3 renumbers this TU's @NNN literals. */
 extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
@@ -545,7 +544,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z)
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s32 x, s32 y, s32 z);
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b41c;
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern char data_ov002_0211094c;
 extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of gSubScreenLayers, from the legacy file for func_ov002_020f23f0, NOT applied: extern u8 gSubScreenLayers; */
@@ -594,13 +593,13 @@ extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7538, NOT applied: extern int _Z14ApproachLinearRiii(int* dst, int target, int step); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7538, NOT applied: extern unsigned short gKuppaScriptFrame; */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7780, NOT applied: extern unsigned short gKuppaScriptFrame; */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov002_020f7780, NOT applied: extern void *data_0209f318; */
+/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7780, NOT applied: extern void *gCamera; */
 /* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f7780, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7780, NOT applied: extern short Vec3_HorzAngle(const int *v0, const int *v1); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f79c0, NOT applied: extern unsigned short gKuppaScriptFrame; */
 /* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f79c0, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
 /* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov002_020f79c0, NOT applied: extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void *data_0209f318; */
+/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void *gCamera; */
 /* TUBUILD CONFLICT -- alternate declaration of AddVec3, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_VertAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1); */
@@ -767,7 +766,7 @@ int daDemo_c::func_ov002_020f23d0()
 /* ROM ordinal 8 -- func_ov002_020f23f0, 0x020f23f0, size 0x240 */
 /* -------------------------------------------------------------------------- */
 /* Behavior for param1 0x2f: the scroll block's seven states.
- *   0  each frame the scene fader (data_0209f5bc) reports IsAtStart,
+ *   0  each frame the scene fader (gSceneFader) reports IsAtStart,
  *      centerSpriteY[0]++ and centerSpriteY[1]--; next state when
  *      centerSpriteY[0] reaches 8 (it starts at -8)
  *   1  wait for mCue == 3 (written by script handler 26c4), then set
@@ -788,7 +787,7 @@ int daDemo_c::func_ov002_020f23f0()
 {
     switch (mScroll->state) {
     case 0:
-        if (((dFdBrightness_c *)data_0209f5bc)->IsAtStart() != 0) {
+        if (((dFdBrightness_c *)gSceneFader)->IsAtStart() != 0) {
             mScroll->centerSpriteY[0]++;
             mScroll->centerSpriteY[1]--;
             if (mScroll->centerSpriteY[0] == 8) {
@@ -930,8 +929,8 @@ void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
     ((StaffRoll *)c)->kira.unk308 = p3;
     ((StaffRoll *)c)->kira.unk30c = p4;
     ((StaffRoll *)c)->kiraParticle = Particle::System::New(
-        ((StaffRoll *)c)->kiraParticle, 0x3e, p1 << 12, p2 << 12, 0, 0,
-        (Particle::Callback *)((struct ParticleCallback *)&((StaffRoll *)c)->kira));
+        ((StaffRoll *)c)->kiraParticle, kPtclEndingStarSparkle, p1 << 12, p2 << 12, 0, 0,
+        (dPa_c::level_c::callback_c *)((struct ParticleCallback *)&((StaffRoll *)c)->kira));
 }
 }
 
@@ -1031,15 +1030,12 @@ int func_ov002_020f2990(char* c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov002_020f2a48, 0x020f2a48, size 0x20 */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020f2a48(char *p)
-{
+void StaffRoll::func_ov002_020f2a48() {
     /* 0x1d8/0x1d9 and the position: see func_ov002_020f2990. */
-    ((StaffRoll *)p)->endActive = 1;
-    ((StaffRoll *)p)->endVisible = 1;
-    ((StaffRoll *)p)->endX = 524288;
-    ((StaffRoll *)p)->endY = 393216;
-}
+    endActive = 1;
+    endVisible = 1;
+    endX = 524288;
+    endY = 393216;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1261,17 +1257,13 @@ void func_ov002_020f2f18(char* c, int a, int b)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 31 -- func_ov002_020f2f64, 0x020f2f64, size 0x38 */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020f2f64(char* self)
-{
+void StaffRoll::func_ov002_020f2f64() {
     int i;
     for (i = 0; i < 5; i++) {
-        if (((StaffRoll *)self)->dolls[0].active != 0) {
-            ((StaffRoll *)self)->dolls[0].frame++;
+        if (dolls[i].active != 0) {
+            dolls[i].frame++;
         }
-        self += 0x14;
     }
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2862,10 +2854,10 @@ void func_ov002_020f5ad4(char* c)
 void StaffRoll::func_ov002_020f5b24() {
     gSubScreenLayers &= ~6;
     gSubScreenLayers |= 8;
-    func_ov002_020f2f64((char *)this);
+    func_ov002_020f2f64();
     *(volatile unsigned int *)0x4001000 &= ~0xe000;
     this->window[0].active = 0;
-    func_ov002_020f2a48((char *)this);
+    func_ov002_020f2a48();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3695,7 +3687,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
           int m = FX_MUL(r, 0xa000);
           this->mMagnitude = m + 0x19000;
       }
-      AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)data_0209f318)->pos, (Vector3 *)&this->mPosX);
+      AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)gCamera)->pos, (Vector3 *)&this->mPosX);
       if (arg2 > 0x2bc) {
           this->mPosY -= 0x96000;
       }
@@ -3837,9 +3829,12 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
         pos.x = x;
         pos.y = y;
         pos.z = z;
-        mParticleID[0] = Particle::System::New(mParticleID[0], 0x3b, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[1] = Particle::System::New(mParticleID[1], 0x3c, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[2] = Particle::System::New(mParticleID[2], 0x3d, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[0] =
+            Particle::System::New(mParticleID[0], kPtclDemoDescendA, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[1] =
+            Particle::System::New(mParticleID[1], kPtclDemoDescendB, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[2] =
+            Particle::System::New(mParticleID[2], kPtclDemoDescendC, pos.x, pos.y, pos.z, 0, 0);
     }
     return 1;
 }
@@ -3865,9 +3860,12 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
         pos.x = x;
         pos.y = y;
         pos.z = z;
-        mParticleID[0] = Particle::System::New(mParticleID[0], 0x38, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[1] = Particle::System::New(mParticleID[1], 0x39, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[2] = Particle::System::New(mParticleID[2], 0x3a, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[0] =
+            Particle::System::New(mParticleID[0], kPtclDemoFadeInA, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[1] =
+            Particle::System::New(mParticleID[1], kPtclDemoFadeInB, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[2] =
+            Particle::System::New(mParticleID[2], kPtclDemoFadeInC, pos.x, pos.y, pos.z, 0, 0);
     }
     return 1;
 }
@@ -3888,13 +3886,13 @@ int daDemo_c::func_ov002_020f72bc()
     this->mOpacity = 0x1f;
 
     mParticleID[0] =
-        Particle::System::New(mParticleID[0], 0x31, *((Fix12i *)&this->mPosX),
+        Particle::System::New(mParticleID[0], kPtclDemoSpinA, *((Fix12i *)&this->mPosX),
                               *((Fix12i *)&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
     mParticleID[1] =
-        Particle::System::New(mParticleID[1], 0x32, *(Fix12i *)(&this->mPosX),
+        Particle::System::New(mParticleID[1], kPtclDemoSpinB, *(Fix12i *)(&this->mPosX),
                               *(Fix12i *)(&this->mPosY), *(Fix12i *)(&this->mPosZ), 0, 0);
     mParticleID[2] =
-        Particle::System::New(mParticleID[2], 0x33, *(Fix12i *)(&this->mPosX),
+        Particle::System::New(mParticleID[2], kPtclDemoSpinC, *(Fix12i *)(&this->mPosX),
                               *(Fix12i *)(&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
     return 1;
 }
@@ -4031,7 +4029,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
 
 int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 {
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = (dCamera_c *)gCamera;
 
     if (mode == gKuppaScriptFrame) {
         if (mode == 0) {
@@ -4046,9 +4044,9 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
             v[1] = *(int *)((char *)data_ov002_0210b970 + 4);
             v[2] = *(int *)((char *)data_ov002_0210b970 + 8);
 
-            idx = *(volatile unsigned char *)&data_0209f250;
+            idx = *(volatile unsigned char *)&gLocalPlayerId;
             {
-                short ang = ((dActor_c *)data_0209f394[idx])->mAngleY;
+                short ang = ((dActor_c *)gPlayers[idx])->mAngleY;
 
                 Vec3_RotateYAndTranslate(&this->mPosX, (int *)&cam->pos, (short)(ang + 0x8000), v);
             }
@@ -4205,7 +4203,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     }
 
     this->mOpacity = 0x1f;
-    cam = (dCamera_c *)data_0209f318;
+    cam = (dCamera_c *)gCamera;
 
     AddVec3((Vector3 *)&v0, &cam->pos, (Vector3 *)&v0);
     dist = Vec3_Dist(&v0, &cam->pos);
@@ -4414,7 +4412,7 @@ int daDemo_c::InitResources()
         this->mAnmModel = new anmModel_c;
         if (this->mAnmModel == 0)
             return 0;
-        t = (*(volatile unsigned char *)&data_0209f2d8 == 2);
+        t = (*(volatile unsigned char *)&gGameMode == 2);
         if (t == 0) {
             if (((anmModel_c *)this->mAnmModel)
                     ->func_ov002_020f6618((SharedFilePtr *)&data_ov002_02110b98, 1,

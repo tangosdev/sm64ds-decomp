@@ -35,7 +35,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_02037de8",
+      "symbol": "_ZN11SurfaceInfo8CopyFromERKS_",
       "address": "0x02037de8",
       "size": "0x0000002c",
       "legacy_source": "src/func_02037de8.c",
@@ -112,7 +112,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "func_02037e9c",
+      "symbol": "_ZN4CLPS10SetDefaultEv",
       "address": "0x02037e9c",
       "size": "0x00000014",
       "legacy_source": "src/func_02037e9c.c",
@@ -301,21 +301,21 @@
       "ordinal": 39
     },
     {
-      "symbol": "func_02038234",
+      "symbol": "dBgS_RideCallBack",
       "address": "0x02038234",
       "size": "0x00000064",
       "legacy_source": "src/engine/collision/CLPS_BlockRef.cpp",
       "ordinal": 40
     },
     {
-      "symbol": "func_02038298",
+      "symbol": "dBgS_ChkPolySafe",
       "address": "0x02038298",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/arm9/0203/func_02038298.c",
       "ordinal": 41
     },
     {
-      "symbol": "func_02038324",
+      "symbol": "dBgS_MoveBgCrrPos",
       "address": "0x02038324",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0203/func_02038324.cpp",

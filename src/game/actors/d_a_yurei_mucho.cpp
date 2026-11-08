@@ -6,9 +6,11 @@
  * spellings below are recorded in
  * notes/agents/handoffs/daYurei_Mucho_c-ov065.md.
  *
- * func_ov065_02115f84..0211696c are this TU's own state and helper methods.
- * The address is kept as the method name. symbols.txt records the mangled
- * spelling, which is what the State records at the end of this file name.
+ * 0x02115f84..0x0211696c are this TU's own state and helper methods. The
+ * Idle and Shoot states take N64's snufit_act_idle / snufit_act_shoot names;
+ * Chase (the wind-up DS splits out of N64's idle) and Bumped are coined from
+ * their bodies. symbols.txt records the mangled spelling, which is what the
+ * State records at the end of this file name.
  *
  * Remaining reconstruction under issue #2478:
  * - mStateTimer comparisons read it through a (u16) cast, because the ROM
@@ -31,6 +33,7 @@
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
 #include "LevelRng.h"
@@ -42,7 +45,7 @@
 #include "math/MtxStack.h"
 struct V3A { int w[3]; };
 
-/* func_ov065_02116364 builds a five-Vector3 aggregate on the stack. Leaving it
+/* UpdateShoot builds a five-Vector3 aggregate on the stack. Leaving it
    an unnamed local class works, but mwccarm then mangles its implicit
    destructor with a file-and-counter tag (_ZN29@class$NNNd_a_yurei_mucho_cppD1Ev)
    that moves whenever this file does, so the manifest row licensing it would
@@ -71,7 +74,6 @@ extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void func_02012694(unsigned int id, void *v);
-extern short data_02082214[];
 
 /* ov002 -- unnamed particle helper. */
 extern void func_ov002_020aea30(void *self, void *actor, void *collision);
@@ -169,7 +171,7 @@ int daYurei_Mucho_c::InitResources()
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
     mAnmModel.speed = 0x1000;
-    func_ov065_0211691c(&data_ov065_0211d670);
+    ChangeState(&data_ov065_0211d670);
     return 1;
 }
 
@@ -184,11 +186,11 @@ int daYurei_Mucho_c::Behavior()
                 mdCcAc_c.Update();
             }
         }
-        func_ov065_0211696c();
+        UpdateModelTransform();
         mHomePosX = mPosX;
         mHomePosY = mPosY;
         mHomePosZ = mPosZ;
-        func_ov065_0211691c(&data_ov065_0211d670);
+        ChangeState(&data_ov065_0211d670);
         return 1;
     }
     if (UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 3) != 0) {
@@ -197,7 +199,7 @@ int daYurei_Mucho_c::Behavior()
     if (mDeathState != 0) {
         ApproachAngle(&mAngleX, -0x4000, 0xa, 0x200, 0x100);
         UpdateDeath(mWithMeshClsn);
-        func_ov065_0211696c();
+        UpdateModelTransform();
         return 1;
     }
     DecIfAbove0_Short((unsigned short *)&mStateTimer);
@@ -224,26 +226,24 @@ int daYurei_Mucho_c::Behavior()
     }
     if (mCurrentState != &data_ov065_0211d650) {
         int ang;
-        int idx;
-        short tbl;
+        fx16 sine;
         int result;
         mBobAngle += 0x200;
         ang = mBobAngle;
         /* The shift must be LOGICAL so the angle wraps -- writing it on the
            signed s16 would read the wrong table entry for negative angles. */
-        idx = ((unsigned short)(short)ang >> 4) * 2;
-        tbl = data_02082214[idx];
-        result = FX_MUL(tbl, 0x46000);
+        sine = FX_SinIdx((unsigned short)(short)ang >> 4);
+        result = FX_MUL(sine, 0x46000);
         ApproachLinear(mPosY, mHomePosY + (result + 0xb4000), 0x3000);
     }
     UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
-    func_ov065_0211696c();
+    UpdateModelTransform();
     if (mCurrentState != &data_ov065_0211d660) {
         mAngleX = mPrevAngleX;
         mAngleY = mPrevAngleY;
         mAngleZ = mPrevAngleZ;
-        func_ov065_02115ff0();
+        HandleCollision();
     }
     mdCcAc_c.Clear();
     {
@@ -289,8 +289,7 @@ int daYurei_Mucho_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 /* Rebuilds the model matrix from the actor's position and Z/X/Y angles, then
    drops the shadow. Called three times from Behavior. */
-void daYurei_Mucho_c::func_ov065_0211696c()
-{
+void daYurei_Mucho_c::UpdateModelTransform() {
     Vector3 v;
 
     Vec3_Asr(&v, (Vector3 *)&mPosX, 3);
@@ -330,8 +329,7 @@ void daYurei_Mucho_c::func_ov065_0211696c()
    ldrne r1,[r1,r2]; ldreq r1,[r3]; blx r1` sequence, i.e. the Itanium
    {ptr_or_vtable_offset, adj*2|isVirtual} encoding. All eight records in
    ov065's .data carry adj word 0: non-virtual, no this-adjustment. */
-int daYurei_Mucho_c::func_ov065_0211691c(State *s)
-{
+int daYurei_Mucho_c::ChangeState(State *s) {
     mCurrentState = s;
     State *q = mCurrentState;
     if (q->mEnter == 0) {
@@ -345,8 +343,7 @@ int daYurei_Mucho_c::func_ov065_0211691c(State *s)
    timer, then start the wait animation. The BCA file is read straight out of
    the SharedFilePtr's filePtr -- the ROM does `ldr r1,[r0,#4]` off the
    literal at 0x02116918, not a call, so the field read is what reproduces. */
-int daYurei_Mucho_c::func_ov065_021168a8()
-{
+int daYurei_Mucho_c::EnterIdle() {
     mTargetAngle = (short)(((u32)RandomIntInternal(&data_0209e650.value) >> 8) << 0xc);
     mStateTimer = (short)((((u32)RandomIntInternal(&data_0209e650.value) >> 8) & 0x1f) + 0x32);
     mAnmModel.SetAnim((BCA_File *)gYureiMuchoWaitAnimFile.filePtr, 0, 0x1000, 0);
@@ -356,8 +353,7 @@ int daYurei_Mucho_c::func_ov065_021168a8()
 /* -------------------------------------------------------------------------- */
 /* State main hook at 0x0211d670 +0x08: drift, and switch to the attack state
    when a player comes close enough. */
-int daYurei_Mucho_c::func_ov065_02116744()
-{
+int daYurei_Mucho_c::UpdateIdle() {
     Vector3 in;
     Vector3 dp;
     daPly_c *pl;
@@ -381,7 +377,7 @@ int daYurei_Mucho_c::func_ov065_02116744()
     MulVec3Mat4x3(&in, &data_020a0e68, (Vector3 *)&mSpeedX);
 
     if ((u16)mStateTimer == 0) {
-        func_ov065_0211691c(&data_ov065_0211d670);
+        ChangeState(&data_ov065_0211d670);
         return 1;
     }
 
@@ -394,7 +390,7 @@ int daYurei_Mucho_c::func_ov065_02116744()
 
         if (Vec3_Dist(&mPos, &dp) < 0x3e8000) {
             mStateTimer = 0x14;
-            func_ov065_0211691c(&data_ov065_0211d680);
+            ChangeState(&data_ov065_0211d680);
         }
     }
 
@@ -403,8 +399,7 @@ int daYurei_Mucho_c::func_ov065_02116744()
 
 /* -------------------------------------------------------------------------- */
 /* State entry hook at 0x0211d680 +0x00: stop the actor dead. */
-int daYurei_Mucho_c::func_ov065_0211672c()
-{
+int daYurei_Mucho_c::EnterChase() {
     mSpeedX = 0;
     mVertSpeed = 0;
     mSpeedZ = 0;
@@ -417,8 +412,7 @@ int daYurei_Mucho_c::func_ov065_0211672c()
 
    dActor_c::ClosestNonVanishPlayer takes `this` in r0; the ROM emits no `mov`
    before the `bl` at 0x021165e8 because r0 still holds the incoming object. */
-int daYurei_Mucho_c::func_ov065_021165d8()
-{
+int daYurei_Mucho_c::UpdateChase() {
     short pitch = 0;
     daPly_c *p = ClosestNonVanishPlayer();
     if (p != 0) {
@@ -453,7 +447,7 @@ int daYurei_Mucho_c::func_ov065_021165d8()
     ApproachAngle(&mPrevAngleY, mTargetAngle, 1, 0x500, 0x500);
     ApproachAngle(&mPrevAngleX, pitch, 1, 0x500, 0x500);
     if ((u16)mStateTimer == 0)
-        func_ov065_0211691c(&data_ov065_0211d650);
+        ChangeState(&data_ov065_0211d650);
     return 1;
 }
 
@@ -461,8 +455,7 @@ int daYurei_Mucho_c::func_ov065_021165d8()
 /* State entry hook at 0x0211d650 +0x00: start the attack animation. As at
    ordinal 11, the BCA file is the SharedFilePtr's filePtr, read directly
    (`ldr r1,[r0,#4]` at 0x021165a4 off the literal at 0x021165d4). */
-short daYurei_Mucho_c::func_ov065_02116588()
-{
+short daYurei_Mucho_c::EnterShoot() {
     mShotCount = 0;
     mAnmModel.SetAnim((BCA_File *)gYureiMuchoAttackAnimFile.filePtr, 0x40000000, 0x1000, 0);
     mStateTimer = 0;
@@ -472,8 +465,7 @@ short daYurei_Mucho_c::func_ov065_02116588()
 /* -------------------------------------------------------------------------- */
 /* State main hook at 0x0211d650 +0x08: aim, and spawn the projectile (profile
    0xe9) up to three times before returning to a wait state. */
-int daYurei_Mucho_c::func_ov065_02116364()
-{
+int daYurei_Mucho_c::UpdateShoot() {
     V3Quint L;
     daPly_c *pl = ClosestNonVanishPlayer();
     if (pl != 0) {
@@ -514,15 +506,15 @@ int daYurei_Mucho_c::func_ov065_02116364()
             L.d.z = dsrc[2];
             if (Vec3_Dist(&mPos, &L.d) > 0x3e8000) {
                 mStateTimer = 0;
-                func_ov065_0211691c(&data_ov065_0211d670);
+                ChangeState(&data_ov065_0211d670);
             } else {
                 mStateTimer = 0x32;
                 mAnmModel.SetAnim((BCA_File *)gYureiMuchoWaitAnimFile.filePtr, 0, 0x1000, 0);
-                func_ov065_0211691c(&data_ov065_0211d680);
+                ChangeState(&data_ov065_0211d680);
             }
         } else {
             mStateTimer = 0;
-            func_ov065_0211691c(&data_ov065_0211d670);
+            ChangeState(&data_ov065_0211d670);
         }
     }
     return 1;
@@ -530,8 +522,7 @@ int daYurei_Mucho_c::func_ov065_02116364()
 
 /* -------------------------------------------------------------------------- */
 /* State entry hook at 0x0211d660 +0x00: the bumped-from-below pop. */
-int daYurei_Mucho_c::func_ov065_02116328()
-{
+int daYurei_Mucho_c::EnterBumped() {
     mSpeedX = 0;
     mVertSpeed = 0;
     mSpeedZ = 0;
@@ -547,23 +538,21 @@ int daYurei_Mucho_c::func_ov065_02116328()
  *
  * CORRECTED HERE. The retired shard func_ov065_021162c0.c called `_ZN10daIwante_cD0Ev`, which is
  * ov066's name for 0x02115f84. This module's own name for that address is
- * func_ov065_02115f84, the death helper two ordinals below, and ov065 is the
+ * KillWithCoins, the death helper two ordinals below, and ov065 is the
  * module this branch links in. match.py wildcards every relocated word, so the
  * wrong callee still reproduced the bytes; the ROM's own `bl 0x02115f84` at
  * 0x02116314 decides it. */
-int daYurei_Mucho_c::func_ov065_021162c0()
-{
+int daYurei_Mucho_c::UpdateBumped() {
     ApproachAngle(&mAngleX, -0x4000, 0xa, 0x200, 0x100);
     ApproachLinear(mAngleX, -0x4000, 0x200);
     if ((u16)mStateTimer == 0)
-        func_ov065_02115f84();
+        KillWithCoins();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* The collision response, called once from Behavior. */
-void daYurei_Mucho_c::func_ov065_02115ff0()
-{
+void daYurei_Mucho_c::HandleCollision() {
     Vector3_16 v;
     Vector3 hv;
     daPly_c *p;
@@ -596,7 +585,7 @@ void daYurei_Mucho_c::func_ov065_02115ff0()
     }
     if (BumpedUnderneathByPlayer(*p) == 1) {
         func_02012694(0x11e, &mCamSpacePosX);
-        func_ov065_0211691c(&data_ov065_0211d660);
+        ChangeState(&data_ov065_0211d660);
         return;
     }
     if (flags & 0x10) {
@@ -624,7 +613,7 @@ void daYurei_Mucho_c::func_ov065_02115ff0()
         if (b == 0) return;
     }
     if (p->mIsMetal == 1 || p->IsOnShell() == 1) {
-        func_ov065_02115f84();
+        KillWithCoins();
         return;
     }
     if (JumpedOnByPlayer(mdCcAc_c, *p)) {
@@ -642,7 +631,7 @@ void daYurei_Mucho_c::func_ov065_02115ff0()
 
 /* -------------------------------------------------------------------------- */
 /* The death helper: poof, drop the coins, unregister. */
-void daYurei_Mucho_c::func_ov065_02115f84() {
+void daYurei_Mucho_c::KillWithCoins() {
     Vector3 v;
     SmallPoofDust();
     v.x = mPosX;
@@ -666,19 +655,18 @@ void daYurei_Mucho_c::func_ov065_02115f84() {
  * none of it is written out. */
 
 /* The four {enter, main} State records, in the order the retail initializer
- * fills them. func_ov065_02116588 returns short, so its pointer is cast to
+ * fills them. EnterShoot returns short, so its pointer is cast to
  * the record's int-returning type. */
 typedef int (daYurei_Mucho_c::*YureiMuchoStateFn)();
 
-daYurei_Mucho_c::State data_ov065_0211d670 = {&daYurei_Mucho_c::func_ov065_021168a8,
-                                              &daYurei_Mucho_c::func_ov065_02116744};
-daYurei_Mucho_c::State data_ov065_0211d680 = {&daYurei_Mucho_c::func_ov065_0211672c,
-                                              &daYurei_Mucho_c::func_ov065_021165d8};
-daYurei_Mucho_c::State data_ov065_0211d650 = {
-    (YureiMuchoStateFn)&daYurei_Mucho_c::func_ov065_02116588,
-    &daYurei_Mucho_c::func_ov065_02116364};
-daYurei_Mucho_c::State data_ov065_0211d660 = {&daYurei_Mucho_c::func_ov065_02116328,
-                                              &daYurei_Mucho_c::func_ov065_021162c0};
+daYurei_Mucho_c::State data_ov065_0211d670 = {&daYurei_Mucho_c::EnterIdle,
+                                              &daYurei_Mucho_c::UpdateIdle};
+daYurei_Mucho_c::State data_ov065_0211d680 = {&daYurei_Mucho_c::EnterChase,
+                                              &daYurei_Mucho_c::UpdateChase};
+daYurei_Mucho_c::State data_ov065_0211d650 = {(YureiMuchoStateFn)&daYurei_Mucho_c::EnterShoot,
+                                              &daYurei_Mucho_c::UpdateShoot};
+daYurei_Mucho_c::State data_ov065_0211d660 = {&daYurei_Mucho_c::EnterBumped,
+                                              &daYurei_Mucho_c::UpdateBumped};
 
 /* The actor profile, in SpawnInfo's layout (include/SpawnInfo.h). The
  * retail values are unchanged. */

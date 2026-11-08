@@ -146,7 +146,7 @@ struct W2 {
     int w[2];
 };
 extern W2 data_02086b58; /* __ptmf_null's address: the null member pointer */
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 extern dWipe_c data_0209f61c;
 extern int sMgTopScreenYOffset;
 extern int sMgBannerButtonsArmed;
@@ -335,8 +335,8 @@ void dMgState_c::RoundClear_Enter() {
 
 void dMgState_c::RoundClear_Update() {
     dScMgBase_c *scene = gMgScene;
-    if (data_0209f5bc->IsAtEnd()) {
-        data_0209f5bc->SetBackwardTime(0x1e, 0);
+    if (gSceneFader->IsAtEnd()) {
+        gSceneFader->SetBackwardTime(0x1e, 0);
         FreeGfxSlotsById(0x1d);
         Mg_RestoreMusic();
         Mg_StartMusic();
@@ -348,13 +348,13 @@ void dMgState_c::RoundClear_Update() {
     } else {
         if (mTimer != 0)
             return;
-        if (data_0209f5bc->IsBetweenStartAndEnd())
+        if (gSceneFader->IsBetweenStartAndEnd())
             return;
         if (scene == 0)
             return;
         if (scene->CanEndState(mState) == 0)
             return;
-        data_0209f5bc->SetForwardTime(0x1e, 0);
+        gSceneFader->SetForwardTime(0x1e, 0);
     }
 }
 
@@ -364,13 +364,13 @@ void dMgState_c::NextRound_Enter() {
 }
 
 void dMgState_c::NextRound_Update() {
-    if (data_0209f5bc->IsAtEnd() != 0) {
+    if (gSceneFader->IsAtEnd() != 0) {
         dScMgBase_c *scene = gMgScene;
         if (scene == 0)
             return;
         if (scene->CanEndState(mState) == 0)
             return;
-        data_0209f5bc->SetBackwardTime(0x1e, 0);
+        gSceneFader->SetBackwardTime(0x1e, 0);
         FreeGfxSlotsById(0x1d);
         Mg_CallStartRound(scene, (void *)mState);
         mTimer = 0;
@@ -380,9 +380,9 @@ void dMgState_c::NextRound_Update() {
     } else {
         if (mTimer != 0)
             return;
-        if (data_0209f5bc->IsBetweenStartAndEnd() != 0)
+        if (gSceneFader->IsBetweenStartAndEnd() != 0)
             return;
-        data_0209f5bc->SetForwardTime(0x1e, 0);
+        gSceneFader->SetForwardTime(0x1e, 0);
     }
 }
 
@@ -394,13 +394,13 @@ void dMgState_c::RoundBanner5_Enter() {
 }
 
 void dMgState_c::RoundBanner5_Update() {
-    if (data_0209f5bc->IsAtEnd()) {
+    if (gSceneFader->IsAtEnd()) {
         dScMgBase_c *scene = gMgScene;
         if (scene == 0)
             return;
         if (scene->CanEndState(mState) == 0)
             return;
-        data_0209f5bc->SetBackwardTime(0x1e, 0);
+        gSceneFader->SetBackwardTime(0x1e, 0);
         FreeGfxSlotsById(0x1d);
         Mg_RestoreMusic();
         Mg_StartMusic();
@@ -412,8 +412,8 @@ void dMgState_c::RoundBanner5_Update() {
     } else {
         if (mTimer != 0)
             return;
-        if (data_0209f5bc->IsBetweenStartAndEnd() == 0)
-            data_0209f5bc->SetForwardTime(0x1e, 0);
+        if (gSceneFader->IsBetweenStartAndEnd() == 0)
+            gSceneFader->SetForwardTime(0x1e, 0);
     }
 }
 
@@ -434,17 +434,17 @@ void dMgState_c::RetryPrompt_Enter() {
 void dMgState_c ::RetryPrompt_Update() {
     dFdBrightness_c *fader;
     if (Mg_CheckBannerButton(0)) {
-        fader = data_0209f5bc;
+        fader = gSceneFader;
         fader->SetForwardTime(0x1e, 0);
         mBehavior = pmf_dMgState_c_UpdateRetryFadeOut;
         return;
     }
     if (Mg_CheckBannerButton(2) || Mg_CheckBannerButton(1)) {
-        fader = data_0209f5bc;
+        fader = gSceneFader;
         if (fader->IsBetweenStartAndEnd())
             return;
         dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.func_0202ec9c(2);
+        data_0209f61c.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;
@@ -456,12 +456,12 @@ void dMgState_c ::RetryPrompt_Update() {
 }
 
 void dMgState_c::UpdateRetryFadeOut() {
-    if (data_0209f5bc->IsAtEnd() == 0)
+    if (gSceneFader->IsAtEnd() == 0)
         return;
     void *scene = gMgScene;
     if (scene == 0)
         return;
-    data_0209f5bc->SetBackwardTime(0x1e, 0);
+    gSceneFader->SetBackwardTime(0x1e, 0);
     FreeGfxSlotsById(0x1d);
     Mg_RestoreMusic();
     Mg_StartMusic();
@@ -562,11 +562,11 @@ void dMgState_c::UpdateGameOverToMenu() {
     }
     if (v != 0)
         return;
-    fader = data_0209f5bc;
+    fader = gSceneFader;
     if (fader->IsBetweenStartAndEnd() != 0)
         return;
     dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.func_0202ec9c(2);
+    data_0209f61c.SetType(2);
     dScene_c::StartSceneFade(5, 0, 0);
     func_02012dd0((void *)0x3c);
 }
@@ -688,17 +688,17 @@ void dMgState_c::RetryPromptB_Enter() {
 void dMgState_c ::RetryPromptB_Update() {
     dFdBrightness_c *fader;
     if (Mg_CheckBannerButton(0)) {
-        fader = data_0209f5bc;
+        fader = gSceneFader;
         fader->SetForwardTime(0x1e, 0);
         mBehavior = pmf_dMgState_c_UpdateRetryFadeOut_3;
         return;
     }
     if (Mg_CheckBannerButton(2) || Mg_CheckBannerButton(1)) {
-        fader = data_0209f5bc;
+        fader = gSceneFader;
         if (fader->IsBetweenStartAndEnd())
             return;
         dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.func_0202ec9c(2);
+        data_0209f61c.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;
@@ -717,13 +717,13 @@ void dMgState_c::ScoreThenRound_Enter() {
 }
 
 void dMgState_c::ScoreThenRound_Update() {
-    if (data_0209f5bc->IsAtEnd()) {
+    if (gSceneFader->IsAtEnd()) {
         dScMgBase_c *scene = gMgScene;
         if (scene == 0)
             return;
         if (scene->CanEndState(mState) == 0)
             return;
-        data_0209f5bc->SetBackwardTime(0x1e, 0);
+        gSceneFader->SetBackwardTime(0x1e, 0);
         FreeGfxSlotsById(0x1d);
         Mg_RestoreMusic();
         Mg_StartMusic();
@@ -735,8 +735,8 @@ void dMgState_c::ScoreThenRound_Update() {
     } else {
         if (mTimer != 0)
             return;
-        if (data_0209f5bc->IsBetweenStartAndEnd() == 0)
-            data_0209f5bc->SetForwardTime(0x1e, 0);
+        if (gSceneFader->IsBetweenStartAndEnd() == 0)
+            gSceneFader->SetForwardTime(0x1e, 0);
     }
 }
 
@@ -752,7 +752,7 @@ void dMgState_c::RetryPromptWideB_Enter() {
 void dMgState_c::UpdateRetryPrompt() {
     if (mTimer == 0) {
         if (Mg_CheckBannerButton(0) != 0) {
-            data_0209f5bc->SetForwardTime(0x1e, 0);
+            gSceneFader->SetForwardTime(0x1e, 0);
             mBehavior = pmf_dMgState_c_UpdateRetryFadeOut_2;
             return;
         }
@@ -760,10 +760,10 @@ void dMgState_c::UpdateRetryPrompt() {
             if (Mg_CheckBannerButton(1) == 0)
                 return;
         }
-        if (data_0209f5bc->IsBetweenStartAndEnd() != 0)
+        if (gSceneFader->IsBetweenStartAndEnd() != 0)
             return;
         dScene_c::SetFaders(&data_0209f61c);
-        data_0209f61c.func_0202ec9c(2);
+        data_0209f61c.SetType(2);
         dScene_c::StartSceneFade(5, 0, 0);
         func_02012dd0((void *)0x3c);
         return;
@@ -782,13 +782,13 @@ void dMgState_c::DigitsThenRound_Enter() {
 }
 
 void dMgState_c::UpdateFadeThenResume() {
-    if (data_0209f5bc->IsAtEnd()) {
+    if (gSceneFader->IsAtEnd()) {
         dScMgBase_c *scene = gMgScene;
         if (scene == 0)
             return;
         if (scene->CanEndState(mState) == 0)
             return;
-        data_0209f5bc->SetBackwardTime(0x1e, 0);
+        gSceneFader->SetBackwardTime(0x1e, 0);
         Mg_RestoreMusic();
         Mg_StartMusic();
         Mg_CallStartRound(scene, (void *)mState);
@@ -800,8 +800,8 @@ void dMgState_c::UpdateFadeThenResume() {
     } else {
         if (mTimer != 0)
             return;
-        if (data_0209f5bc->IsBetweenStartAndEnd() == 0)
-            data_0209f5bc->SetForwardTime(0x1e, 0);
+        if (gSceneFader->IsBetweenStartAndEnd() == 0)
+            gSceneFader->SetForwardTime(0x1e, 0);
     }
 }
 

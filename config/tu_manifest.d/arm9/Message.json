@@ -454,7 +454,7 @@
       "address": "0x0209d6bc",
       "size": "0x1",
       "binding": "STB_GLOBAL",
-      "evidence": "u8. Referenced by Message::DisplaySaving, Message::LayoutLine, Message::Update, Message::UpdateWindow, daC_Jugem_c::StateTalkMain, daMip_c::StateCaughtMain, daObjTatefuda_c::Talk, daRedBombhei_c::func_ov084_0212c508 and 6 more. Global: also referenced from Message2.cpp, ov002, ov084, ov085."
+      "evidence": "u8. Referenced by Message::DisplaySaving, Message::LayoutLine, Message::Update, Message::UpdateWindow, daC_Jugem_c::StateTalkMain, daMip_c::StateCaughtMain, daObjTatefuda_c::Talk, daRedBombhei_c::UpdateTalk and 6 more. Global: also referenced from Message2.cpp, ov002, ov084, ov085."
     },
     {
       "symbol": "data_0209d6c0",

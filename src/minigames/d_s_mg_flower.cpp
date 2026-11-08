@@ -36,6 +36,7 @@
 #include "Sound.h"
 #include "G2x.h"
 #include "PlayerInput.h"
+#include "Vector2.h"
 #include "Vector2Math.h"
 #include "G2.h"
 #include "CP15.h"
@@ -55,7 +56,7 @@ extern void Mg_SetTopScreenYOffset(int n);
 extern s16 data_02082214[];
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
-/* Plain screen-space vectors used at the scalar C ABI boundary. */
+/* The dragged petal's two adjacent fixed-point coordinates. */
 typedef struct V2 {
     int x;
     int y;
@@ -197,8 +198,8 @@ void dScMgFlower_c::DealPetals() {
     self->mFaceSprite = 2;
     self->mPetalsSettled = 0;
     self->mBgScrollPhase = 0;
-    *(volatile u16 *)0x4000050 = 0;
-    G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
+    REG_BLDCNT = 0;
+    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 4, 8, 6, 0xa);
 }
 
 /* Slot 18: bump mHoldTimer (reset once it passes 0x14), reset the face
@@ -260,9 +261,9 @@ s32 dScMgFlower_c::Behavior() {
     int releaseIndex;
     int playerSlot;
     int newlyCounted;
-    V2 toCursor;
-    V2 toCursor2;
-    V2 drag;
+    Vector2 toCursor;
+    Vector2 toCursor2;
+    Vector2 drag;
 
     if (mPromptBlinkCount == 0) {
         mPromptEnabled = 1;
@@ -315,7 +316,7 @@ s32 dScMgFlower_c::Behavior() {
                         mPetals[attachedIndex].released != 1) {
                         int withinGrabRadius;
                         Vec2_Sub(&toCursor.x, &mPetals[attachedIndex].x, &mCursorX);
-                        withinGrabRadius = Vec2_Len((const Vector2 *)&toCursor) < 0x18000 ? 1 : 0;
+                        withinGrabRadius = Vec2_Len(&toCursor) < 0x18000 ? 1 : 0;
                         if (withinGrabRadius != 0) {
                             Sound::PlayBank2_2D(0x109);
                             mPetals[attachedIndex].held = 1;
@@ -336,8 +337,7 @@ s32 dScMgFlower_c::Behavior() {
                         if (mPetals[freeIndex].active != 0 && mPetals[freeIndex].held != 1) {
                             int withinGrabRadius2;
                             Vec2_Sub(&toCursor2.x, &mPetals[freeIndex].x, &mCursorX);
-                            withinGrabRadius2 =
-                                Vec2_Len((const Vector2 *)&toCursor2) < 0x18000 ? 1 : 0;
+                            withinGrabRadius2 = Vec2_Len(&toCursor2) < 0x18000 ? 1 : 0;
                             if (withinGrabRadius2 != 0) {
                                 mPetals[freeIndex].held = 1;
                                 mPetals[freeIndex].driftX = 0;
@@ -469,7 +469,6 @@ s32 dScMgFlower_c::Behavior() {
 
 /* Slot 0. Sets up BG2 and BG3 on both screens, decompresses their tiles and
  * maps, loads the palettes and the OBJ tiles, then starts the first round.
- * The bare 0x040000xx stores are the BGxCNT and BGxOFS registers, and
  * 0x06400000 and 0x06600000 are the two OBJ VRAM banks. */
 s32 dScMgFlower_c::InitResources() {
     void *fileData;
@@ -478,20 +477,20 @@ s32 dScMgFlower_c::InitResources() {
 
     data_0208ee44 = 1;
 
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x1414;
-    *(volatile u16 *)0x400000c &= ~0x40;
-    *(volatile u32 *)0x4000018 = 0;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 3;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1414;
+    REG_BG2CNT &= ~BG_CONTROL_MOSAIC;
+    *(volatile u32 *)0x4000018 = 0; /* BG2OFS */
+    REG_BG2CNT = (REG_BG2CNT & ~3) | 3;
 
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x1414;
-    *(volatile u16 *)0x400100c &= ~0x40;
-    *(volatile u32 *)0x4001018 = 0;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 3;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1414;
+    REG_DB_BG2CNT &= ~BG_CONTROL_MOSAIC;
+    *(volatile u32 *)0x4001018 = 0; /* DB_BG2OFS */
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 3;
 
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x1414;
-    *(volatile u16 *)0x400100e &= ~0x40;
-    *(volatile u32 *)0x400101c = 0;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x1414;
+    REG_DB_BG3CNT &= ~BG_CONTROL_MOSAIC;
+    *(volatile u32 *)0x400101c = 0; /* DB_BG3OFS */
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 3;
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgUpNcgPath);
     DecompressLZ16(fileData, G2::GetBG2CharPtr());
@@ -520,8 +519,8 @@ s32 dScMgFlower_c::InitResources() {
     GXS::LoadBGPltt(fileData, 0x60, 0x1a0);
     Ov004_Deallocate(fileData);
 
-    *(volatile u16 *)0x4000050 = 0;
-    G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
+    REG_BLDCNT = 0;
+    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 4, 8, 6, 0xa);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 0xc;
@@ -548,7 +547,7 @@ s32 dScMgFlower_c::InitResources() {
     DealPetals();
 
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & ~3) | 1;
+    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
     FlowerFace_Load((char *)&mFace);
     Camera_InitFlowerView(&mCamera);
 
@@ -560,7 +559,7 @@ s32 dScMgFlower_c::InitResources() {
 /* The body is empty: the compiler builds the petal table (through
  * __cxa_vec_ctor with Petal's own constructor and destructor), then mFace;
  * ~dScMgFlower_c() above tears them down in the reverse order. Everything
- * before them (dScMgBase_c's C2, dScMgSingle3DBase_c's vptr and mSysTracker,
+ * before them (dScMgBase_c's C2, dScMgSingle3DBase_c's vptr and mParticle,
  * then this class's own vptr) is the compiler's inlining of the base
  * constructors. */
 inline dScMgFlower_c::dScMgFlower_c() {}

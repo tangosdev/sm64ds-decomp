@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "contiguous run 0x020c3ce4..0x020c3e7c, 9 functions, all byte-matched from the one unit source. A sub-range of build/tu_map.json's unattributed ov007 unit 0x020b72a0..0x020cc028 (397 functions), which the map cannot cut: no ROM RTTI, vtable or static initializer falls in it.",
     "data window: the .data hook words 0x02103254 (free) and 0x02103258 (alloc) and the bss hook word 0x02104c14 are referenced by these functions and nothing else in the overlay; func_ov007_020c3d40 touches none but calls the alloc entry func_ov007_020c3df4.",
-    "the three hook setters func_ov007_020c3e1c / 020c3e2c / 020c3e3c are direct callees of the menu's init dispatcher func_ov007_020b7138.",
+    "the three hook setters MenuMem_SetMaxAllocSizeHook / 020c3e2c / 020c3e3c are direct callees of the menu's init dispatcher func_ov007_020b7138.",
     "default hooks: the .data words 0x02103254 and 0x02103258 carry relocations to func_ov007_020c3e4c and func_ov007_020c3e64 (relocs.txt: from:0x02103254 kind:load to:0x020c3e4c, from:0x02103258 kind:load to:0x020c3e64). Those two words are their only references in the overlay -- no code calls or loads either -- and the words' only code readers are this unit's functions, so the defaults belong to the unit that owns the hooks. The two are exact twins (OS_FreeToHeap / OS_AllocFromHeap with arena 0, heap -1) and sit directly after func_ov007_020c3e3c.",
     "end edge (high): func_ov007_020c3e7c frees a sprite group (Ov007SpriteGroup) and reaches this unit only by calling the free entry func_ov007_020c3d1c, as every module does; it touches none of the hook data. Start edge (medium): func_ov007_020c3bc8 writes the neighbouring .data word 0x02103250 and is also an init-dispatcher callee, so the unit may start there; the RGB555 blend func_ov007_020c3be0 between them references no data and is left out with it."
   ],
@@ -21,7 +21,7 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov007_020c3ce4",
+      "symbol": "MenuMem_GetMaxAllocSize",
       "address": "0x020c3ce4",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c3ce4.cpp",
@@ -35,7 +35,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov007_020c3d40",
+      "symbol": "MenuMem_AllocClear",
       "address": "0x020c3d40",
       "size": "0x000000b4",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c3d40.cpp",
@@ -49,35 +49,35 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_ov007_020c3e1c",
+      "symbol": "MenuMem_SetMaxAllocSizeHook",
       "address": "0x020c3e1c",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c3e1c.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_ov007_020c3e2c",
+      "symbol": "MenuMem_SetFreeHook",
       "address": "0x020c3e2c",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c3e2c.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov007_020c3e3c",
+      "symbol": "MenuMem_SetAllocHook",
       "address": "0x020c3e3c",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c3e3c.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov007_020c3e4c",
+      "symbol": "MenuMem_DefaultFree",
       "address": "0x020c3e4c",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c3e4c.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov007_020c3e64",
+      "symbol": "MenuMem_DefaultAlloc",
       "address": "0x020c3e64",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c3e64.cpp",

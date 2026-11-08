@@ -2295,9 +2295,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@633",
+      "from": "@645",
       "to": "@259",
-      "evidence": "the compiler emits @633, which ov002 already defines as a global, so the pin is the unused @259"
+      "evidence": "the compiler emits @645 (was @633 before the dPa_c.h naming, which daDemo_c.h includes), which ov002 already defines as a global, so the pin is the unused @259"
     }
   ],
   "relocations": [

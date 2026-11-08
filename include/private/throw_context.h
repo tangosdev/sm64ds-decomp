@@ -2,6 +2,7 @@
 #define PRIVATE_THROW_CONTEXT_H
 
 #include "types.h"
+#include "MWCPlusLib.h"
 
 /* CodeWarrior exception runtime: the register/frame state the unwinder walks
  * (func_02072168 interprets actions against it, func_02071910 unwinds one
@@ -37,14 +38,5 @@ typedef char ThrowContext_args_pushed_must_be_at_0x6a[(int)&((ThrowContext *)0)-
                                                           ? 1
                                                           : -1];
 #endif
-
-/* The cursor through one function's exception-action table: func_02072dac
- * finds the table covering a PC, func_02072168 walks it, func_02071f1c jumps
- * to a handler at an offset from mFuncStart. */
-typedef struct ActionIterator {
-    int mFuncStart;              /* 0x00 -- start of the function the actions cover */
-    unsigned char *mActionTable; /* 0x04 -- null when no table covers the PC */
-    unsigned char *mAction;      /* 0x08 -- next action byte; null at end of list */
-} ActionIterator;
 
 #endif

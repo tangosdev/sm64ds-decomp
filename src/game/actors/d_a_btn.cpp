@@ -113,17 +113,10 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
    prototypes for header-declared calls dropped their 33 named parameters
    (-33); Message.h and dCamera_c.h came in (+30). These three names put
    the count back. */
-void func_01ffb07c(void *, void *);
-void func_01ffb098(void *collider);
-void func_01ffb0a4(void *collider);
-void func_01ffb0b0(void *collider);
-void func_01ffb0bc(void *);
 void *func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, void *p);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 int func_ov002_020dd8b8(void *c);
 
 /* Parameter names keep this TU's @NNN. */
@@ -135,11 +128,11 @@ void d_a_btnEarthquakeHold(void *self, const void *v, int f);
 extern s16 data_02082214[];
 extern unsigned int gNextActorUpdateMask;
 extern u8 data_0209d660;
-extern u8 data_0209f21c;
-extern u8 data_0209f220;
+extern u8 gNumPlayers;
+extern u8 gCurrentStarId;
 extern signed char gCurrentSublevel;
-extern dCamera_c *data_0209f318;
-extern daPly_c *data_0209f394[];
+extern dCamera_c *gCamera;
+extern daPly_c *gPlayers[];
 /* local extern: math/MtxStack.h's helpers take Matrix4x3 *, and this file
    hands them mShadowMatrix, which daBtn_c.h keeps as s32[12]. */
 extern Matrix4x3 data_020a0e68;
@@ -318,15 +311,15 @@ int daBtn_c::InitResources()
                 *(CLPS_Block *)(&data_ov015_021135d4));
     }
 
-    func_01ffb0bc(&mMovingMeshCollider);
-    func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMovingMeshCollider.SetShallowOnly();
+    mMovingMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     {
         s32 sp[3];
         sp[0] = 0;
         sp[1] = 0;
         sp[2] = 0x1000;
-        func_01ffb07c(&mMovingMeshCollider, sp);
+        mMovingMeshCollider.SetDepthDir((const Vector3 *)sp);
     }
 
     mMovingMeshCollider.SetDepthDirMinDot(0xb50);
@@ -378,18 +371,18 @@ int daBtn_c::InitResources()
     } while (i < 4);
 
     {
-        s32 cnt = data_0209f21c;
+        s32 cnt = gNumPlayers;
         if (cnt > 0) {
             i = 0;
             do {
-                daPly_c *v = data_0209f394[i];
+                daPly_c *v = gPlayers[i];
                 mPlayers[i] = v;
                 i += 1;
             } while (i < cnt);
         }
     }
 
-    if (mIsKing != 0 && gCurrentSublevel == 7 && data_0209f220 != 1 &&
+    if (mIsKing != 0 && gCurrentSublevel == 7 && gCurrentStarId != 1 &&
         IsStarCollectedInCurLevel(1) != 0) {
         MarkForDestruction();
         return 0;
@@ -406,10 +399,10 @@ int daBtn_c::Behavior()
 {
     if (mIsKing != 0 && mState != 9) {
         if (DistToCPlayer() < 0x1770000) {
-            /* data_0209f318 is the camera (symbols/verified.tsv: CAMERA).
+            /* gCamera is the camera (symbols/verified.tsv: CAMERA).
                While the player is within 0x1770000 the king asks the camera
                to frame him each frame, as daBombking_c::Behavior does. */
-            data_0209f318->mFramedActor = this;
+            gCamera->mFramedActor = this;
         }
     }
 
@@ -852,8 +845,8 @@ void daBtn_c::func_ov079_021254b4()
    the tilt so the face stays on the ground. */
 void daBtn_c::func_ov079_0212538c()
 {
-    func_01ffb0b0(&mMovingMeshCollider);
-    func_01ffb0a4(&mMovingMeshCollider);
+    mMovingMeshCollider.ClearShallowOnly();
+    mMovingMeshCollider.SetDepthByDir();
     mAnmModel.Advance();
     if ((u16)mStateTimer == 0)
         mVertSpeed = data_ov079_021275e4[mIsKing];
@@ -895,8 +888,8 @@ void daBtn_c::func_ov079_02125240(){
     if (!mWithMeshClsn.IsOnGround())
         return;
     mVertSpeed = 0;
-    func_01ffb098(&mMovingMeshCollider);
-    func_01ffb0bc(&mMovingMeshCollider);
+    mMovingMeshCollider.ClearDepthByDir();
+    mMovingMeshCollider.SetShallowOnly();
     mSubState++;
     mAnmModel.SetAnim(
         (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 1])->filePtr), 0x40000000,
@@ -906,7 +899,7 @@ void daBtn_c::func_ov079_02125240(){
     v.z = mPosZ;
     Earthquake(v, 0x7d0000);
     mState = 6;
-    func_020393c4(&mMovingMeshCollider, func_ov079_0212522c);
+    mMovingMeshCollider.SetStoodOnCallback(func_ov079_0212522c);
     if (mIsKing != 0) {
         func_ov079_02123d4c(&a, this);
         func_0200fa04(this, &a, 0);
@@ -990,7 +983,7 @@ void daBtn_c::func_ov079_02124ed4()
             func_02012694(0x134, &mCamSpacePosX);
             {
                 s32 *p = &mPounder->mPosX;
-                Particle::System::NewSimple(3, p[0], p[1], p[2]);
+                Particle::System::NewSimple(kPtclWhompPounded, p[0], p[1], p[2]);
             }
             if (mHitPoints == 0) {
                 mAnmModel.SetAnim((BCA_File *)data_ov079_021281b0.filePtr, 0x40000000, 0x1000, 0);
@@ -1131,7 +1124,7 @@ void daBtn_c::func_ov079_02124b08()
                 0x40000000, 0x1000, 0);
 
             if (mIsKing == 0) {
-                func_020393c4(&mMovingMeshCollider, 0);
+                mMovingMeshCollider.SetStoodOnCallback(0);
             }
             mTouched = 0;
             mPounded = 0;
@@ -1257,7 +1250,7 @@ void daBtn_c::func_ov079_021246dc()
             dp.y = v.y;
             dp.z = v.z;
             TriplePoofDustAt(*(Vector3 *)&dp);
-            Particle::System::NewSimple(4, v.x, v.y, v.z);
+            Particle::System::NewSimple(kPtclWhompKingDefeat, v.x, v.y, v.z);
             mShouldRender = 0;
             UntrackAndSpawnStar(mTrackStarID, mStarID, *(Vector3 *)&starPos, 4);
             if (mMovingMeshCollider.IsEnabled() != 0)
@@ -1273,7 +1266,7 @@ void daBtn_c::func_ov079_021246dc()
         dp2.y = v2.y;
         dp2.z = v2.z;
         PoofDustAt(*(Vector3 *)&dp2);
-        Particle::System::NewSimple(5, v2.x, v2.y, v2.z);
+        Particle::System::NewSimple(kPtclWhompDefeat, v2.x, v2.y, v2.z);
         MarkForDestruction();
     }
 }
@@ -1541,7 +1534,7 @@ void daBtn_c::OnHitByMegaChar(daPly_c &player) {
     dust.y = pos.y;
     dust.z = pos.z;
     PoofDustAt(dust);
-    Particle::System::NewSimple(5, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclWhompDefeat, pos.x, pos.y, pos.z);
     MarkForDestruction();
     if (mMovingMeshCollider.IsEnabled() != 0)
         mMovingMeshCollider.Disable();

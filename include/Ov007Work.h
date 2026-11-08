@@ -5,7 +5,7 @@
 
 /* Reconstructed names and layout, not an original class identity.
  *
- * ov007's work block: func_ov007_020b68e8 allocates it,
+ * ov007's work block: Work_Create allocates it,
  * func_ov007_020c3df4(data_ov007_02102dc4, 0x188), data_ov007_02102dc4 being
  * the heap-name string "global data", and stores it in
  * data_ov007_0210342c; func_ov007_020b65e0 frees it with func_ov007_020c3d1c.
@@ -24,10 +24,10 @@ typedef struct Ov007Work {
      * func_ov007_020b6544 clear it; while it is set func_ov007_020b7090
      * returns pendingChoice and func_ov007_020b6f4c fades out to white */
     int choiceReady; /* 0x014 */
-    /* func_ov007_020b6eb4 starts a display capture (func_ov007_020bd4e8
+    /* func_ov007_020b6eb4 starts a display capture (MenuGfx_StartCapture
      * writes DISPCAPCNT) while it is set, and clears it */
     int pendingCapture; /* 0x018 */
-    /* func_ov007_020b6eb4 hands it to func_ov007_020bd648 and clears it */
+    /* func_ov007_020b6eb4 hands it to MenuGfx_SetBgMode and clears it */
     int pendingBgMode; /* 0x01c */
     /* func_ov007_020b1718 runs mode 1 after a stylus tap, mode 0 after a button */
     int transitionMode; /* 0x020 */
@@ -106,7 +106,7 @@ typedef struct Ov007Work {
     struct Ov007Sprite *numberSprites[3]; /* 0x174 */
     /* the id of the item chosen this frame, -1 = none */
     int chosenItemId; /* 0x180 */
-    /* func_ov007_020b68e8 clears this word after allocating; nothing in
+    /* Work_Create clears this word after allocating; nothing in
      * ov007 reads it, so it stays unnamed */
     int pad_184; /* 0x184 */
 } Ov007Work;
@@ -115,7 +115,7 @@ typedef struct Ov007Work {
 typedef char Ov007Work_size_must_be_0x188[sizeof(Ov007Work) == 0x188 ? 1 : -1];
 #endif
 
-/* The work block itself (func_ov007_020b68e8 stores it, func_ov007_020b65e0
+/* The work block itself (Work_Create stores it, func_ov007_020b65e0
  * frees and clears it). WORK is this tree's short name for it; the ROM
  * gives the global no name. */
 extern Ov007Work *data_ov007_0210342c;

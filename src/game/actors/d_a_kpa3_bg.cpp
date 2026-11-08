@@ -13,9 +13,9 @@
  * Behavior runs data_ov060_0211b1ac[mState]: 0 finds Bowser, 1 watches
  * him, 2 drops the platform. The three handlers are declared in the
  * header so the table's pointer-to-member constants are real.
- * func_ov060_021181b4 and func_ov060_021180e0 are defined as members;
+ * StateStart and StateCheck are defined as members;
  * func_ov060_02117db8 is a free function under the member's mangled name.
- * func_ov060_021181b4 returns an int, so its table entry casts the
+ * StateStart returns an int, so its table entry casts the
  * pointer-to-member to the table's void handler type.
  *
  * __sinit at the end of this file emits compiler-numbered statics; they
@@ -27,10 +27,15 @@
  * deleting one renumbers them. These
  * names are there for the count:
  * - InitResources loads the model through the named local bmd.
- * - func_ov060_021180e0 steps its timer through two named locals.
+ * - StateCheck steps its timer through two named locals.
  *
  * leftovers:
- * - The three handlers keep their address names.
+ * - StateStart and StateCheck take N64's names for the same actions
+ *   (falling_bowser_plat_act_start/check), in the State* spelling this
+ *   tree's single-handler state tables use. func_ov060_02117db8 is N64's
+ *   falling_bowser_plat_act_fall and should become StateFall; renaming it
+ *   changes its hand-spelled mangled name, which needs a source-style
+ *   exception entry.
  * - func_ov060_02117db8 parses as C (cplusplus off): the same body as
  *   C++ DIFFs. Re-measured for #821, because this is the last hand-spelled
  *   mangled method in the tree and the language-mode metric counts it.
@@ -57,8 +62,8 @@
  *   mCamSpacePos, restored afterwards.
  * - dBgW_KcMbg::SetFile is called through its mangled name, with the
  *   Fix12<int> argument passed as a raw int.
- * - func_020393d4 stores dBgW::UpdatePosWithTransform.
- *   func_020393c4 stores the touch veneer func_ov060_021183f4.
+ * - dBgW::SetBeforeClsnCallback stores dBgW::UpdatePosWithTransform.
+ *   dBgW::SetStoodOnCallback stores the touch veneer func_ov060_021183f4.
  * - data_ov060_02119564 is the ten-row (x, z, angle) table. Its pool
  *   words point at row 0's x, z and angle; the delinker named each of
  *   those (02119564 / 02119568 / 0211956c), and the struct fields' base
@@ -103,8 +108,6 @@ extern int data_0208e738;
 /* Three parameter names dropped: kpaCallDestroy took those @NNN slots. */
 extern void hold_d_a_kpa3_bg(void *, KCL_File *, const Matrix4x3 &, int fix, short sh,
                              CLPS_Block &b);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other);
 void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other);
 
@@ -137,7 +140,7 @@ extern "C" daKpa3Bg_c *daKpa3Bg_c_classInit(void)
     return new daKpa3Bg_c;
 }
 
-/* dBgW callback veneer, armed by func_020393c4 in InitResources. Drops the
+/* dBgW callback veneer, armed by dBgW::SetStoodOnCallback in InitResources. Drops the
    collider and forwards the platform and the touching actor into
    func_ov060_021183cc. */
 extern "C" void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other) {
@@ -167,8 +170,8 @@ s32 daKpa3Bg_c::InitResources()
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]),
                               mClsnMat, 0x1000, mAngleY, *data_ov060_0211a980[mVariant]);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, &func_ov060_021183f4);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback(&func_ov060_021183f4);
     mMeshCollider.Enable(this);
     mKoopaUniqueId = 0;
     mTouchedKoopa = 0;
@@ -206,7 +209,7 @@ s32 daKpa3Bg_c::CleanupResources()
 
 /* mState 0: finds the daKpa actor (id 0x117), remembers its uniqueID and
    moves to mState 1. Retries every frame until Bowser exists. */
-int daKpa3Bg_c::func_ov060_021181b4() {
+int daKpa3Bg_c::StateStart() {
     dActor_c *koopa = dActor_c::FindWithActorID(0x117, 0);
     if (koopa) {
         mKoopaUniqueId = koopa->uniqueID;
@@ -221,8 +224,7 @@ int daKpa3Bg_c::func_ov060_021181b4() {
    d_a_kpa.cpp). On his last hit point, in state 3 or while held or being released
    (mHoldState != 0), mActive latches; from then on mTimer counts each frame and the
    platform drops once it passes mVariant * 20. */
-void daKpa3Bg_c::func_ov060_021180e0()
-{
+void daKpa3Bg_c::StateCheck() {
     daKpa_c *koopa = (daKpa_c *)dActor_c::FindWithID(mKoopaUniqueId);
     if (koopa == 0) {
         MarkForDestruction();
@@ -396,7 +398,7 @@ Kpa3BgCollisionFilePtr data_ov060_0211b084(0x634);
 Kpa3BgCollisionFilePtr data_ov060_0211b08c(0x636);
 Kpa3BgCollisionFilePtr data_ov060_0211b04c(0x638);
 HandlerEntry data_ov060_0211b1ac[3] = {
-    {(Handler)&daKpa3Bg_c::func_ov060_021181b4},
-    {&daKpa3Bg_c::func_ov060_021180e0},
+    {(Handler)&daKpa3Bg_c::StateStart},
+    {&daKpa3Bg_c::StateCheck},
     {&daKpa3Bg_c::func_ov060_02117db8},
 };

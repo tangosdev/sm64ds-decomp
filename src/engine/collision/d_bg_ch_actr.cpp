@@ -10,8 +10,10 @@
  * so the ctor and dtor are defined first and the plain functions land in
  * reverse definition order. The func_0203* workers inside the run are its
  * unnamed mFlags plumbing, sub-object accessors, and step helpers; the ROM
- * gives them no member name, so they stay extern "C" free functions taking
- * the object by raw pointer. */
+ * gives them no member name, so they keep address names. CommitFloorHit, the
+ * floor-result commit, and UpdateContinuousExceptSlot0 are members; the rest
+ * stay extern "C" free functions taking the object by raw pointer, the
+ * spelling their callers in other files still use. */
 // leftovers: the checker-family helpers stay local
 // externs (no non-generated header declares them). The func_0203* workers keep
 // address names (no member evidence names them); five of them keep raw-pointer
@@ -30,12 +32,9 @@ extern "C" {
 /* Checker-family helpers shared across the collision TUs, spelled as
    defined. */
 int  func_02037dc4(int p);   /* SurfaceInfo * -> Vector3 * (the hit normal) */
-void func_02038234(int a, int b);
-void func_02038324(void *arg, int b, int c, int d);
+void dBgS_RideCallBack(int a, int b);
+void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d);
 int  SurfaceInfo_TestFlag0x20(int *p);
-
-/* This TU's own workers, defined below. */
-void func_020371b0(dBgCh_Actr *clsn, s32 wasOnGround); /* floor-result commit */
 }
 
 /* Lifecycle first; the group emits at the run's tail. Both bodies are empty:
@@ -55,7 +54,7 @@ void dBgCh_Actr::Init(dActor_c *actor, Fix12i radius, Fix12i height, Vector3_16 
     mFlags = 0;
     mSphereClsn.mMotionAngPtr = (s32)a;
     mAngPtr = (s32)b;
-    mScale = 0x1000;
+    mMaxNormalY = 0x1000;
 }
 
 /* Latch the sphere query's floor normal (the floor contact with the greatest
@@ -114,13 +113,13 @@ extern "C" void func_020371fc(char *self)
    and kill vertical speed unless limited movement is set. `wasOnGround` is
    the frame's ground state on entry, so the just-hit flag only fires on the
    transition. */
-extern "C" void func_020371b0(dBgCh_Actr *clsn, s32 wasOnGround) {
+void dBgCh_Actr::CommitFloorHit(s32 wasOnGround) {
     if (wasOnGround == 0)
-        clsn->SetJustHitGroundFlag();
-    func_02038234((int)clsn->GetFloorResult(), (int)clsn->mActor);
-    clsn->SetGroundFlag();
-    if (clsn->GetLimMovFlag() == 0)
-        clsn->mActor->mVertSpeed = 0;
+        SetJustHitGroundFlag();
+    dBgS_RideCallBack((int)GetFloorResult(), (int)mActor);
+    SetGroundFlag();
+    if (GetLimMovFlag() == 0)
+        mActor->mVertSpeed = 0;
 }
 
 void dBgCh_Actr::UpdateDiscreteNoLava()
@@ -133,8 +132,8 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     struct Vector3 *prev = &mActor->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos()) {
-        func_02038324((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                      mAngPtr);
+        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
+                          mAngPtr);
     }
     onGround = IsOnGround();
     ClearAllGroundFlags();
@@ -144,14 +143,14 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     sphere.z = pos->z;
     sphere.y = y + mHeight;
     mSphereClsn.SetObjAndSphere(sphere, mRadius, mActor);
-    mSphereClsn.mMaxNormalY = mScale;
+    mSphereClsn.mMaxNormalY = mMaxNormalY;
     if (pos->y - prev->y > 0) {
         mSphereClsn.flags |= 0x20;
     }
     if (mSphereClsn.DetectClsn()) {
         disp = &mSphereClsn.disp;
         if (mSphereClsn.flags & 4) {
-            func_020371b0(this, onGround);
+            CommitFloorHit(onGround);
         }
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
@@ -185,14 +184,14 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
     sphere.z = pos->z;
     sphere.y = y + mHeight;
     mSphereClsn.SetObjAndSphere(sphere, mRadius, mActor);
-    mSphereClsn.mMaxNormalY = mScale;
+    mSphereClsn.mMaxNormalY = mMaxNormalY;
     if (pos->y - actor->mPrevPosY > 0) {
         mSphereClsn.flags |= 0x20;
     }
     if (mSphereClsn.DetectClsnSlot0()) {
         disp = &mSphereClsn.disp;
         if (mSphereClsn.flags & 4) {
-            func_020371b0(this, onGround);
+            CommitFloorHit(onGround);
         }
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
@@ -209,12 +208,13 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
     SetLeftGroundFlag();
 }
 
-/* func_02036acc is UpdateContinuous's free twin: the same wall/floor probing
-   sequence but taking the query by raw pointer and running the
-   DetectClsnExceptSlot0 variants, which skip the stage mesh in collider slot 0.
-   The ROM keeps its unmangled name, so it stays extern "C". */
+/* UpdateContinuous's twin: the same wall/floor probing sequence, but running
+   the DetectClsnExceptSlot0 variants, which skip the stage mesh in collider
+   slot 0 and test only actor-owned colliders. Coined name, after the
+   DetectClsnExceptSlot0 queries it is built on. Its only caller is the
+   tail-call veneer func_02038408. */
 
-extern "C" void func_02036acc(dBgCh_Actr *self) {
+void dBgCh_Actr::UpdateContinuousExceptSlot0() {
     bool hitFloor;
     bool hitWall;
     int height;
@@ -224,13 +224,13 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
     bool floorCommitted;
     dActor_c *a;
 
-    a = self->mActor;
+    a = mActor;
     pos = &a->mPos;
     prev = &a->mPrevPos;
 
-    if (self->IsOnGround() && self->IsFlag800Clear() && self->ShouldUpdatePos())
-        func_02038324((void *)self->mSphereClsn.GetFloorResult(), (int)pos,
-                      self->mSphereClsn.mMotionAngPtr, self->mAngPtr);
+    if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos())
+        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
+                          mAngPtr);
 
     hitFloor = false;
     dBgPi floorHit;
@@ -238,7 +238,7 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
     dBgPi wallHit;
     Vector3 lineStart, lineEnd;
 
-    height = self->mHeight;
+    height = mHeight;
     {
         int tx = prev->x;
         int tz = prev->z;
@@ -255,12 +255,12 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
         lineEnd.y = ty;
         lineEnd.z = tz;
     }
-    self->mRaycastLine.SetObjAndLine(lineStart, lineEnd, self->mActor);
-    if (self->mRaycastLine.DetectClsnExceptSlot0()) {
+    mRaycastLine.SetObjAndLine(lineStart, lineEnd, mActor);
+    if (mRaycastLine.DetectClsnExceptSlot0()) {
         int band;
-        Vector3 clsnPos = self->mRaycastLine.GetClsnPos();
+        Vector3 clsnPos = mRaycastLine.GetClsnPos();
         Vector3 normal, newStart, newEnd;
-        self->mRaycastLine.surface.CopyNormalTo(normal);
+        mRaycastLine.surface.CopyNormalTo(normal);
         newStart.x = clsnPos.x + (normal.x >> 2);
         newStart.y = (normal.y >> 2) + clsnPos.y;
         newStart.z = clsnPos.z + (normal.z >> 2);
@@ -270,73 +270,73 @@ extern "C" void func_02036acc(dBgCh_Actr *self) {
         band = dBgW_Kc::ClassifyNormalY(normal.y);
         if (band == 1) {
             hitWall = true;
-            self->mRaycastLine.CopyTo(wallHit);
+            mRaycastLine.CopyTo(wallHit);
         } else if (band == 0) {
             hitFloor = true;
-            self->mRaycastLine.CopyTo(floorHit);
+            mRaycastLine.CopyTo(floorHit);
         }
-        self->mRaycastLine.SetObjAndLine(newStart, newEnd, self->mActor);
-        if (self->mRaycastLine.DetectClsnExceptSlot0()) {
-            Vector3 clsnPos2 = self->mRaycastLine.GetClsnPos();
+        mRaycastLine.SetObjAndLine(newStart, newEnd, mActor);
+        if (mRaycastLine.DetectClsnExceptSlot0()) {
+            Vector3 clsnPos2 = mRaycastLine.GetClsnPos();
             Vector3 normal2;
-            self->mRaycastLine.surface.CopyNormalTo(normal2);
+            mRaycastLine.surface.CopyNormalTo(normal2);
             if (dBgW_Kc::ClassifyNormalY(normal2.y) == 0) {
                 hitFloor = true;
-                self->mRaycastLine.CopyTo(floorHit);
+                mRaycastLine.CopyTo(floorHit);
             }
-            if (self->ShouldUpdatePos()) {
+            if (ShouldUpdatePos()) {
                 pos->x = clsnPos2.x - (normal2.x >> 2);
                 pos->y = clsnPos2.y - (normal2.y >> 2) - (height >> 1);
                 pos->z = clsnPos2.z - (normal2.z >> 2);
             }
-        } else if (self->ShouldUpdatePos()) {
+        } else if (ShouldUpdatePos()) {
             pos->x = newStart.x;
             pos->y = newStart.y - height;
             pos->z = newStart.z;
         }
     }
 
-    onGround = self->IsOnGround();
+    onGround = IsOnGround();
     floorCommitted = false;
-    self->ClearAllGroundFlags();
+    ClearAllGroundFlags();
     Vector3 sphere;
     sphere.x = pos->x;
     sphere.y = pos->y;
     sphere.z = pos->z;
     sphere.y += height;
-    self->mSphereClsn.SetObjAndSphere(sphere, self->mRadius, self->mActor);
-    if (self->IsWaterTrackFlagClear() == 0)
-        self->mSphereClsn.flags |= 0x40;
-    self->mSphereClsn.mMaxNormalY = self->mScale;
+    mSphereClsn.SetObjAndSphere(sphere, mRadius, mActor);
+    if (IsWaterTrackFlagClear() == 0)
+        mSphereClsn.flags |= 0x40;
+    mSphereClsn.mMaxNormalY = mMaxNormalY;
     if (pos->y - prev->y > 0)
-        self->mSphereClsn.flags |= 0x20;
+        mSphereClsn.flags |= 0x20;
     if (hitFloor) {
-        self->mSphereClsn.flags |= 4;
-        self->mSphereClsn.SetFloorResult(floorHit);
-        self->mSphereClsn.flags |= 1;
-        (dBgPi &)self->mSphereClsn = floorHit;
-        func_020371b0(self, onGround);
+        mSphereClsn.flags |= 4;
+        mSphereClsn.SetFloorResult(floorHit);
+        mSphereClsn.flags |= 1;
+        (dBgPi &)mSphereClsn = floorHit;
+        CommitFloorHit(onGround);
         floorCommitted = true;
     }
     if (hitWall) {
-        self->mSphereClsn.flags |= 8;
-        self->mSphereClsn.SetWallResult(wallHit);
-        self->mSphereClsn.flags |= 1;
-        (dBgPi &)self->mSphereClsn = wallHit;
+        mSphereClsn.flags |= 8;
+        mSphereClsn.SetWallResult(wallHit);
+        mSphereClsn.flags |= 1;
+        (dBgPi &)mSphereClsn = wallHit;
     }
-    if (self->mSphereClsn.DetectClsnExceptSlot0()) {
-        Vector3 *disp = &self->mSphereClsn.disp;
-        if ((self->mSphereClsn.flags & 4) && !floorCommitted)
-            func_020371b0(self, onGround);
-        if (self->ShouldUpdatePos()) {
+    if (mSphereClsn.DetectClsnExceptSlot0()) {
+        Vector3 *disp = &mSphereClsn.disp;
+        if ((mSphereClsn.flags & 4) && !floorCommitted)
+            CommitFloorHit(onGround);
+        if (ShouldUpdatePos()) {
             pos->x += disp->x;
-            if (self->ShouldUpdatePosY())
+            if (ShouldUpdatePosY())
                 pos->y += disp->y;
             pos->z += disp->z;
         }
     }
-    if (onGround && self->IsOnGround() == 0)
-        self->SetLeftGroundFlag();
+    if (onGround && IsOnGround() == 0)
+        SetLeftGroundFlag();
 }
 
 
@@ -357,8 +357,8 @@ void dBgCh_Actr::UpdateContinuous()
     prev = &a->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear() && ShouldUpdatePos())
-        func_02038324((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                      mAngPtr);
+        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
+                          mAngPtr);
 
     hitFloor = false;
     dBgPi floorHit;
@@ -435,7 +435,7 @@ void dBgCh_Actr::UpdateContinuous()
     mSphereClsn.SetObjAndSphere(sphere, mRadius, mActor);
     if (IsWaterTrackFlagClear() == 0)
         mSphereClsn.flags |= 0x40;
-    mSphereClsn.mMaxNormalY = mScale;
+    mSphereClsn.mMaxNormalY = mMaxNormalY;
     if (pos->y - prev->y > 0)
         mSphereClsn.flags |= 0x20;
     if (hitFloor) {
@@ -443,7 +443,7 @@ void dBgCh_Actr::UpdateContinuous()
         mSphereClsn.SetFloorResult(floorHit);
         mSphereClsn.flags |= 1;
         (dBgPi &)mSphereClsn = floorHit;
-        func_020371b0(this, onGround);
+        CommitFloorHit(onGround);
         floorCommitted = true;
     }
     if (hitWall) {
@@ -455,7 +455,7 @@ void dBgCh_Actr::UpdateContinuous()
     if (mSphereClsn.DetectClsn()) {
         Vector3 *disp = &mSphereClsn.disp;
         if ((mSphereClsn.flags & 4) && !floorCommitted)
-            func_020371b0(this, onGround);
+            CommitFloorHit(onGround);
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
             if (ShouldUpdatePosY())
@@ -555,7 +555,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
     sphere.z = pos->z;
     sphere.y += height;
     mSphereClsn.SetObjAndSphere(sphere, mRadius, mActor);
-    mSphereClsn.mMaxNormalY = mScale;
+    mSphereClsn.mMaxNormalY = mMaxNormalY;
     if (pos->y - prev->y > 0)
         mSphereClsn.flags |= 0x20;
     if (hitFloor) {
@@ -563,7 +563,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
         mSphereClsn.SetFloorResult(floorHit);
         mSphereClsn.flags |= 1;
         (dBgPi &)mSphereClsn = floorHit;
-        func_020371b0(this, onGround);
+        CommitFloorHit(onGround);
         floorCommitted = true;
     }
     if (hitWall) {
@@ -575,7 +575,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
     if (mSphereClsn.DetectClsnSlot0()) {
         Vector3 *disp = &mSphereClsn.disp;
         if ((mSphereClsn.flags & 4) && !floorCommitted)
-            func_020371b0(this, onGround);
+            CommitFloorHit(onGround);
         if (ShouldUpdatePos()) {
             pos->x += disp->x;
             if (ShouldUpdatePosY())
@@ -610,8 +610,8 @@ void dBgCh_Actr::UpdateExtraContinous()
     prev = &actor->mPrevPos;
 
     if (IsOnGround() && IsFlag800Clear())
-        func_02038324((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
-                      mAngPtr);
+        dBgS_MoveBgCrrPos((void *)mSphereClsn.GetFloorResult(), (int)pos, mSphereClsn.mMotionAngPtr,
+                          mAngPtr);
 
     {
         hitFloor = false;
@@ -727,7 +727,7 @@ void dBgCh_Actr::UpdateExtraContinous()
         sphere.y = sphere.y + height;
         mSphereClsn.SetObjAndSphere(sphere, mRadius, mActor);
 
-        mSphereClsn.mMaxNormalY = mScale;
+        mSphereClsn.mMaxNormalY = mMaxNormalY;
         if (TestFlag200())
             mSphereClsn.flags |= 2;
         if (pos->y - prev->y > 0)
@@ -738,7 +738,7 @@ void dBgCh_Actr::UpdateExtraContinous()
             mSphereClsn.SetFloorResult(floorHit);
             mSphereClsn.flags |= 1;
             (dBgPi &)mSphereClsn = floorHit;
-            func_020371b0(this, wasOnGround);
+            CommitFloorHit(wasOnGround);
             floorCommitted = true;
         }
         if (hitWall) {
@@ -757,7 +757,7 @@ void dBgCh_Actr::UpdateExtraContinous()
         if (mSphereClsn.DetectClsn()) {
             Vector3 *disp = &mSphereClsn.disp;
             if ((mSphereClsn.flags & 4) && !floorCommitted) {
-                func_020371b0(this, wasOnGround);
+                CommitFloorHit(wasOnGround);
                 floorCommitted = true;
             }
             pos->x = pos->x + disp->x;
@@ -810,7 +810,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                             mSphereClsn.flags |= 1;
                             (dBgPi &)mSphereClsn = lineHit;
                             if (!floorCommitted)
-                                func_020371b0(this, wasOnGround);
+                                CommitFloorHit(wasOnGround);
                         } else if (band == 2 && !(mSphereClsn.flags & 0x10)) {
                             const dBgPi &lineHit = mRaycastLine;
                             mSphereClsn.flags |= 0x10;
@@ -909,8 +909,8 @@ void dBgCh_Actr::StopIgnoringType14Walls() {
     mSphereClsn.StopIgnoringType14Walls();
 }
 
-extern "C" void func_02035798(dBgCh_Actr *self, Fix12i scale) {
-    self->mScale = scale;
+extern "C" void func_02035798(dBgCh_Actr *self, Fix12i maxNormalY) {
+    self->mMaxNormalY = maxNormalY;
 }
 
 void dBgCh_Actr::SetFlag200() {

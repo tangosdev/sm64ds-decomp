@@ -73,7 +73,7 @@ struct dScDSMT_c : dScene_c {
     /* 0x050 -- the constructor writes its base-then-derived vptr pair here
        and touches nothing else below 0x54 (see the note above), and
        InitResources publishes its address as the active graph callback,
-       data_0209d4a8. */
+       gGraphCallback. */
     graphCallback_c mGraphCallback;
     dFdDummy_c fader;  /* 0x054 -- member. The cartridge's own ~dScDSMT_c
                                     calls _ZN10dFdDummy_cD1Ev at +0x054

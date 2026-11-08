@@ -11,15 +11,15 @@
  *
  * This file is the whole linker unit 0x0211c600..0x0211d270, 16 functions:
  *   0x0211c600  D1, D0 (the out-of-line destructor, the key function)
- *   0x0211c684  func_ov063_0211c684  model matrix from position and angles
- *   0x0211c6f8  func_ov063_0211c6f8  collision matrix, and the mesh Transform
- *   0x0211c770  func_ov063_0211c770  staircase settle step (per-frame table)
- *   0x0211c7b0  func_ov063_0211c7b0  merry-go-round state  (mIndex 3)
- *   0x0211c82c  func_ov063_0211c82c  merry-go-round occupancy
- *   0x0211c89c  func_ov063_0211c89c  bookshelf state       (mIndex 2)
- *   0x0211cae8  func_ov063_0211cae8  book-switch callback (ORs mBookFlags)
- *   0x0211cb54  func_ov063_0211cb54  trapdoor state       (mIndex 1)
- *   0x0211cc18  func_ov063_0211cc18  staircase rise state (mIndex 0)
+ *   0x0211c684  UpdateModelTransform  model matrix from position and angles
+ *   0x0211c6f8  func_ov063_0211c6f8   collision matrix, and the mesh Transform
+ *   0x0211c770  func_ov063_0211c770   staircase settle step (per-frame table)
+ *   0x0211c7b0  UpdateMerryGoRound    merry-go-round state  (mIndex 3)
+ *   0x0211c82c  UpdateOccupiedFlag    merry-go-round occupancy
+ *   0x0211c89c  UpdateBookshelf       bookshelf state       (mIndex 2)
+ *   0x0211cae8  func_ov063_0211cae8   book-switch callback (ORs mBookFlags)
+ *   0x0211cb54  UpdateTiltingTrap     trapdoor state        (mIndex 1)
+ *   0x0211cc18  UpdateStaircase       staircase rise state  (mIndex 0)
  *   0x0211cdec  CleanupResources, OnPendingDestroy, Render, Behavior,
  *               InitResources
  * Below it, daTrs_c's TU ends at 0x0211c600. Above it, the collision-callback
@@ -40,8 +40,6 @@
  * deslop leftovers:
  * - dBgW_KcMbg::SetFile keeps its mangled TU-local spelling: its signature
  *   carries Fix12<int> by value (wall 6az), so the method form size-DIFFs.
- * - func_020393d4/func_020393c4 install the before-collision and stood-on words;
- *   dBgW carries no setter, and dBgW.h itself blesses this spelling.
  * - The ROM re-reads the loaded KCL from filePtr rather than keeping
  *   dBgW_Kc::LoadFile's return.
  * - The dispatch table is a pointer-to-member of daTrsTrap_c itself. An
@@ -49,11 +47,15 @@
  *   that a polymorphic receiver changes the {ptr, adj} record shape; that is
  *   false here -- under 2004/b56 the real class gives byte-identical bodies
  *   and relocation records.
- * - The four state bodies are members under their func_ov063_* names (the
- *   dispatch table's PMF records need member functions); the matrix refreshes,
- *   the settle step, the merry-go-round occupancy test and the book-switch
- *   callback keep the C linkage they matched with as separate files; they
- *   take the daTrsTrap_c and read its members.
+ * - The four state bodies are members (the dispatch table's PMF records
+ *   need member functions). Three take N64's names for the same objects
+ *   (bhv_merry_go_round_loop, bhv_haunted_bookshelf_loop,
+ *   bhv_bbh_tilting_trap_platform_loop); the staircase's is coined to
+ *   match. So are the model
+ *   matrix refresh and the merry-go-round occupancy test. The collision
+ *   matrix refresh, the settle step and the book-switch callback keep the C
+ *   linkage they matched with as separate files; they take the daTrsTrap_c
+ *   and read its members.
  * - The trapdoor state adds mAngVelX to mAngleX with a plain `+=`. An
  *   earlier draft spelled it through a `(long long)(int)&mAngleX` launder on
  *   the claim that the member form changes codegen; re-measured for #821, it
@@ -129,14 +131,9 @@ struct TrsTrapCollisionFilePtr : SharedFilePtr {
  * The one file-scope extern "C" region.
  * ------------------------------------------------------------------------ */
 extern "C" {
-/* This TU's matrix/collision refresh and the occupancy test, called before
-   their definitions; the mesh callback lives in the factory unit. */
-void func_ov063_0211c684(char *p);
+/* This TU's collision refresh; the mesh callback lives in the factory unit. */
 void func_ov063_0211c6f8(daTrsTrap_c *c);
-void func_ov063_0211c82c(char *p);
 /* dBgW callback-word stores (see above). */
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 /* dBgW_KcMbg::SetFile, mangled (wall 6az, see above). Spelled exactly as the
    free definition declares it; only the TU-local linkage differs. */
 extern void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, short s, void *b);
@@ -169,15 +166,13 @@ daTrsTrap_c::~daTrsTrap_c()
 }
 
 /* The model matrix: position (>> 3) and the three angles, into
-   mModel.mat4x3 at 0xf0. Called from Behavior. Takes char *, as
-   decl_common.h declares it. */
-extern "C" void func_ov063_0211c684(char *p) {
-    daTrsTrap_c *c = (daTrsTrap_c *)p;
+   mModel.mat4x3 at 0xf0. Called from Behavior. */
+void daTrsTrap_c::UpdateModelTransform() {
     int v[3];
-    Vec3_Asr(v, &c->mPosX, 3);
+    Vec3_Asr(v, &mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
-    c->mModel.mat4x3 = data_020a0e68;
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3 = data_020a0e68;
 }
 
 /* The collision matrix mClsnMat from position and angles, then the moving
@@ -200,8 +195,7 @@ extern "C" int func_ov063_0211c770(daTrsTrap_c *c, int idx) {
 
 /* Merry-go-round state: spins by mAngVelY while mState is 0, keeps the
    occupancy flag and the looping sound going. */
-void daTrsTrap_c::func_ov063_0211c7b0()
-{
+void daTrsTrap_c::UpdateMerryGoRound() {
     short *t;
     if (mState != 0) {
         mAngVelY = 0;
@@ -210,31 +204,29 @@ void daTrsTrap_c::func_ov063_0211c7b0()
     mAngVelY = 0x80;
     t = &mAngleY;
     *t = (short)(*t + mAngVelY);
-    func_ov063_0211c82c((char *)this);
+    UpdateOccupiedFlag();
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8f, mCamSpacePos, 0);
 }
 
 /* Merry-go-round occupancy. The first call only latches mInitLatch; after
    that mOccupiedFlag is set while a rider stands on the mesh or the area is
-   showing. Takes char *, as decl_common.h declares it. */
-extern "C" void func_ov063_0211c82c(char *p) {
-    daTrsTrap_c *c = (daTrsTrap_c *)p;
-    if (c->mInitLatch == 0) {
-        c->mInitLatch += 1;
+   showing. */
+void daTrsTrap_c::UpdateOccupiedFlag() {
+    if (mInitLatch == 0) {
+        mInitLatch += 1;
         return;
     }
-    if (c->mStandingActor != 0 || IsAreaShowing(c->mAreaId)) {
-        c->mOccupiedFlag = 1;
+    if (mStandingActor != 0 || IsAreaShowing(mAreaId)) {
+        mOccupiedFlag = 1;
     } else {
-        c->mOccupiedFlag = 0;
+        mOccupiedFlag = 0;
     }
 }
 
 /* Bookshelf state. Hidden (mVisible clear) once the player is past the
    wall; state 0 waits for all three book-switches, 1 plays the secret chime,
    2 slides the shelf, 3 finishes the chime and removes the shelf. */
-void daTrsTrap_c::func_ov063_0211c89c()
-{
+void daTrsTrap_c::UpdateBookshelf() {
     Vector3 pp;
     dActor_c *p;
 
@@ -316,8 +308,7 @@ extern "C" void func_ov063_0211cae8(daTrsTrap_c *c, int m) {
 /* Trapdoor state. While an actor stands on it, mAngVelX tilts toward the
    rider's z offset; with nobody on it the door swings back and stops at
    level. The tilt is applied twice in the standing case, as in the ROM. */
-void daTrsTrap_c::func_ov063_0211cb54()
-{
+void daTrsTrap_c::UpdateTiltingTrap() {
     if (mStandingActor != 0) {
         mAngVelX = (s16)((mStandingActor->mPosZ - mPosZ) >> 0xc);
         mAngleX += mAngVelX;
@@ -343,8 +334,7 @@ void daTrsTrap_c::func_ov063_0211cb54()
 /* Staircase rise state. Waits until the master step (or this one, for the
    master) is released; then rises 8 per frame to this step's limit, settles
    through func_ov063_0211c770, and the last step plays the secret chime. */
-void daTrsTrap_c::func_ov063_0211cc18()
-{
+void daTrsTrap_c::UpdateStaircase() {
     int limit;
     daTrsTrap_c *other;
 
@@ -433,7 +423,7 @@ int daTrsTrap_c::Behavior()
     if (before != mState) {
         mStateTimer = 0;
     }
-    func_ov063_0211c684((char *)this);
+    UpdateModelTransform();
     func_ov063_0211c6f8(this);
     mStandingActor = 0;
     return 1;
@@ -528,8 +518,8 @@ int daTrsTrap_c::InitResources()
         }
     }
 
-    func_020393d4(&mMovingMeshCollider, &dBgW::UpdatePosAndAngs);
-    func_020393c4(&mMovingMeshCollider, &daTrsTrap_c::OnMeshClsnTouch);
+    mMovingMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
+    mMovingMeshCollider.SetStoodOnCallback(&daTrsTrap_c::OnMeshClsnTouch);
     mMovingMeshCollider.Enable(this);
 
     if (mIndex == 2) {
@@ -578,8 +568,8 @@ TrsTrapCollisionFilePtr gThMeryGoCollisionFile(ASSET_TH_MERY_GO_KCL);
 TrsTrapCollisionFilePtr gThTrapCollisionFile(ASSET_TH_TRAP_KCL);
 
 PMF data_ov063_0211ef38[] = {
-    &daTrsTrap_c::func_ov063_0211cc18,
-    &daTrsTrap_c::func_ov063_0211cb54,
-    &daTrsTrap_c::func_ov063_0211c89c,
-    &daTrsTrap_c::func_ov063_0211c7b0,
+    &daTrsTrap_c::UpdateStaircase,
+    &daTrsTrap_c::UpdateTiltingTrap,
+    &daTrsTrap_c::UpdateBookshelf,
+    &daTrsTrap_c::UpdateMerryGoRound,
 };
