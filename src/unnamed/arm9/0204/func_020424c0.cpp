@@ -9,7 +9,12 @@ typedef struct FSFile FSFile;
 extern "C" {
 
 /* Measured: without loop_invariants 7 of 106 words differ (&file and -1 swap
- * r4/r5); without propagation 22; without both 29. for-loop forms are 0x1b0. */
+ * r4/r5); without propagation 22; without both 29. for-loop forms are 0x1b0.
+ * With neither pragma, plain for loops match everything except the first
+ * loop (22 words): the ROM seeds the length from the zeroed counter
+ * (`mov r0, #0` ... `add sl, r0, #4`), which only opt_propagation off
+ * reproduces; `sl = 4`, `sl = sizeof(u32)`, `for (sl = 4, i = 0; ...)` and
+ * `i = 0; for (sl = i + 4; ...)` all fold the seed to a constant. */
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 /* data_020a1fc0, the file-sharing work block, under FileShareWork's names

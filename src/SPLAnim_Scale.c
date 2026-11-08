@@ -11,9 +11,9 @@ struct ScaleAnim {
     unsigned char out; /* 0x7 */
 };
 
-/* The scale animation callback; pret's SPL names it SPLAnim_Scale. lifeRate
- * is the particle's animation time, 0..255. */
-void func_0204d440(ParticleElement *ptcl, PtclDef *def, int lifeRate) {
+/* The scale animation callback. The name is pret's SPL coinage, not a ROM
+ * or SDK symbol. lifeRate is the particle's animation time, 0..255. */
+void SPLAnim_Scale(ParticleElement *ptcl, PtclDef *def, int lifeRate) {
     struct ScaleAnim *anim = def->scaleAnim;
     unsigned char in = anim->in;
     unsigned char out = anim->out;

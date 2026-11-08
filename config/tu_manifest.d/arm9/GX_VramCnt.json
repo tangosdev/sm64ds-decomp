@@ -6,12 +6,12 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "One contiguous run of the Nitro SDK's VRAM bank control (gx_vramcnt.c), 0x02053e1c..0x02054d38: 41 functions, gapless in config/arm9/delinks.txt, each one reads or writes the VRAM state block at data_020a6088 or the VRAMCNT registers 0x04000240..0x04000249, except the size helper func_02053e4c, which turns a bank mask into bytes for its two getters.",
+    "One contiguous run of the Nitro SDK's VRAM bank control (gx_vramcnt.c), 0x02053e1c..0x02054d38: 41 functions, gapless in config/arm9/delinks.txt, each one reads or writes the VRAM state block at data_020a6088 or the VRAMCNT registers 0x04000240..0x04000249, except the size helper GX_GetSizeOfX_ (0x02053e4c), which turns a bank mask into bytes for its two getters.",
     "mwccarm emits .text in reverse source order, and the run reads as the SDK file top-down from the highest address: GX_VRAMCNT_SetLCDC_ (Vram__Map, 0x02054c80), the setters BG, OBJ, BGExtPltt, Tex, TexPltt, LCDC, SubBG, SubOBJ, SubBGExtPltt, SubOBJExtPltt, then resetBankForX_ (func_020541b8) and its wrappers, disableBankForX_ (DisableVramBanks) and its wrappers, the bank getters, and the size helper with its two callers at the bottom. Setters and wrappers the game never calls (OBJExtPltt, ClearImage, ARM7, ...) are absent, as a dead-stripped link leaves them.",
     "The disable wrappers name all thirteen u16 fields of the state block in the SDK's order (BG, OBJ, BGExtPltt, OBJExtPltt, Tex, TexPltt, ClearImage, ARM7, LCDC, SubBG, SubOBJ, SubBGExtPltt, SubOBJExtPltt at offsets 2, 4, 0xe, 0x10, 8, 0xa, 0xc, 6, 0, 0x12, 0x14, 0x16, 0x18); the ext-palette ones also clear DISPCNT bit 30/31 of the matching engine. That fixes the layout of the block every member uses.",
-    "The three functions at the bottom (func_02053e1c, func_02053e34, func_02053e4c) are not in pret/pokediamond's GX_vramcnt.c, which holds only what Pokemon links. They are gx_vramcnt.c's size getters: the NitroSDK reconstruction in RushRE/SonicRushAdventure-Decomp (lib/NitroSDK/src/gx/gx_vramctrl.c) ends the file, after the bank getters, with static GX_GetSizeOfX_ (the same nine-bank size ladder as func_02053e4c) and its GX_GetSizeOfBG .. GX_GetSizeOfARM7 wrappers. func_02053e34 is GX_GetSizeOfTex and func_02053e1c is GX_GetSizeOfTexPltt; the other wrappers are not in this ROM. Reverse emission puts the end of the file at the bottom, so the TU's bottom edge is the file edge.",
+    "The three functions at the bottom (0x02053e1c, 0x02053e34, 0x02053e4c) are not in pret/pokediamond's GX_vramcnt.c, which holds only what Pokemon links. They are gx_vramcnt.c's size getters: the NitroSDK reconstruction in RushRE/SonicRushAdventure-Decomp (lib/NitroSDK/src/gx/gx_vramctrl.c) ends the file, after the bank getters, with static GX_GetSizeOfX_ (the same nine-bank size ladder as 0x02053e4c) and its GX_GetSizeOfBG .. GX_GetSizeOfARM7 wrappers. 0x02053e34 is GX_GetSizeOfTex and 0x02053e1c is GX_GetSizeOfTexPltt (GX::GetSizeOfTex and GX::GetSizeOfTexPltt here); the other wrappers are not in this ROM. Reverse emission puts the end of the file at the bottom, so the TU's bottom edge is the file edge.",
     "TOP EDGE: G2S::GetBG3CharPtr at 0x02054d38 is the first function of the promoted arm9/G2 TU (src/engine/gx/G2.cpp, the SDK's BG-control getters).",
-    "BOTTOM EDGE: func_02053d9c (0x02053d9c..0x02053e1c) zeroes the thirteen state fields and the VRAMCNT A-I registers -- the SDK's GX_InitGXState, which lives with the state block in its own file (gx_state.c), not in gx_vramcnt.c. Below it, GX_Init (func_02053c40) calls it, then GX_HBlankIntr/GX_VBlankIntr, GX_DispOff, GX::DispOn, GX::SetGraphicsMode, GXS::SetGraphicsMode: gx.c, also reverse-ordered. Neither file is absorbed here.",
+    "BOTTOM EDGE: GX_InitGXState (0x02053d9c..0x02053e1c, src/GX_InitGXState.c) zeroes the thirteen state fields and the VRAMCNT A-I registers -- the SDK's GX_InitGXState, which lives with the state block in its own file (gx_state.c), not in gx_vramcnt.c. Below it, GX_Init (func_02053c40) calls it, then GX_HBlankIntr/GX_VBlankIntr, GX_DispOff, GX::DispOn, GX::SetGraphicsMode, GXS::SetGraphicsMode: gx.c, also reverse-ordered. Neither file is absorbed here.",
     "No data, bss or RTTI: the state block is defined by the file below, and nothing but the 41 functions emits."
   ],
   "sections": [
@@ -23,21 +23,21 @@
   ],
   "functions": [
     {
-      "symbol": "func_02053e1c",
+      "symbol": "_ZN2GX16GetSizeOfTexPlttEv",
       "address": "0x02053e1c",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0205/func_02053e1c.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_02053e34",
+      "symbol": "_ZN2GX12GetSizeOfTexEv",
       "address": "0x02053e34",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0205/func_02053e34.c",
       "ordinal": 1
     },
     {
-      "symbol": "func_02053e4c",
+      "symbol": "GX_GetSizeOfX_",
       "address": "0x02053e4c",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0205/func_02053e4c.c",

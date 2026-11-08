@@ -33,6 +33,7 @@
 
 #include "common.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "daBook_c.h"
 #include "daBookGen_c.h"
 #include "daTrsTrap_c.h"
@@ -80,12 +81,11 @@ enum { kFlightSpeed = 0x32000 };
 
 /* dEnemyBase_c declares mStateTimer as an s16, but every use here reads it as
  * an unsigned halfword (ldrh); a signed read is ldrsh and misses by a word.
- * Member-context pun, valid inside the daBook_c methods only. */
+ * Member-context pun, valid inside the daBook_c methods only.
+ * Measured: (u16)mStateTimer value conversions (the popoi treatment) leave
+ * one word in each of the three users with mStateTimer++ (its reload is
+ * ldrsh), and five with mStateTimer = (u16)mStateTimer + 1. */
 #define STATE_TIMER (*(u16 *)&mStateTimer)
-
-/* Index of an unsigned 16-bit angle into data_02082214, the sin/cos table:
- * one s16 sin, s16 cos pair per 16 angle units. */
-#define SINCOS_INDEX(angle) ((*(u16 *)&(angle) >> 4) * 2)
 
 extern "C" {
 short atan2_hold_d_a_book_1(int, int);
@@ -107,7 +107,6 @@ typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int heig
                          Vector3_16 *first, Vector3_16 *second);
 }
 
-extern s16 data_02082214[];     /* sin/cos table, see SINCOS_INDEX */
 /* BOOK_SWITCH push order, indexed by the book's param1: the value the
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
  * is book 0, then book 1, then book 2. */
@@ -518,10 +517,10 @@ void daBook_c::func_ov020_02111c30()
 
         {
             /* velocity = kFlightSpeed along (yaw, pitch) */
-            s32 r = FX_MUL(data_02082214[SINCOS_INDEX(mAngleX) + 1], 0x32000);
-            mSpeedX = FX_MUL(r, data_02082214[SINCOS_INDEX(mAngleY)]);
-            mVertSpeed = FX_MUL(data_02082214[SINCOS_INDEX(mAngleX)], -0x32000);
-            mSpeedZ = FX_MUL(r, data_02082214[SINCOS_INDEX(mAngleY) + 1]);
+            s32 r = FX_MUL(FX_CosIdx((u16)mAngleX >> 4), 0x32000);
+            mSpeedX = FX_MUL(r, FX_SinIdx((u16)mAngleY >> 4));
+            mVertSpeed = FX_MUL(FX_SinIdx((u16)mAngleX >> 4), -0x32000);
+            mSpeedZ = FX_MUL(r, FX_CosIdx((u16)mAngleY >> 4));
         }
         return;
     }

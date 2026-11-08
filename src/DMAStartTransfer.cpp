@@ -8,12 +8,8 @@
  *
  * The channel's register block is three consecutive words at
  * REG_DMA_BASE + channel * 12; the twin DMAStartTransferFB at 0x01ffde00 is the
- * same function plus two dummy reads of REG_DMA_BASE after the stores.
- *
- * The u64 mask is the project's usual launder to stop mwccarm splitting the
- * 0x040000b0 literal into `add #0x4000000` plus a #0xb0 store offset; it keeps
- * the base in one register so all three stores index off it (see
- * notes/mwccarm-codegen.md 6g, and DMASyncFillTransfer.c which does the same).
+ * same function plus two dummy reads of REG_DMA_BASE after the stores, and
+ * indexes the channel block the same way.
  */
 
 #include "nitro/hw/registers.h"
@@ -32,8 +28,7 @@ typedef struct DMAChannelRegs {
 void DMAStartTransfer(u32 channel, u32 src, u32 dest, u32 ctrl)
 {
     u32 state = IRQ::Disable();
-    DMAChannelRegs *reg = (DMAChannelRegs *)((u32)REG_DMA_BASE +
-        channel * sizeof(DMAChannelRegs));
+    DMAChannelRegs *reg = (DMAChannelRegs *)REG_DMA_BASE + channel;
 
     reg->src = src;
     reg->dest = dest;
