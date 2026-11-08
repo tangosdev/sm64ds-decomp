@@ -1222,7 +1222,7 @@ bool launch_due(JV *plan, LobbyKind *kind, bool *host, std::string *match)
     Lock l;
     if (g.room.empty() || !g.plan_set) return false;
     *kind = g.kind;
-    *host = g.you == g.host;
+    *host = g.plan.get("host") ? g.plan.flag("host") : g.you == g.host;   /* the plan's own word, as the launcher reads it */
     if (g.kind == LOBBY_COOP) {
         const int n = (int)g.plan.i("launch");
         if (!g.plan.flag("started") || n <= g.launched_no) return false;
