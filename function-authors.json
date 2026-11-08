@@ -19119,7 +19119,7 @@
     },
     "ov004:0x020aeb24": {
       "author": "tangosdev",
-      "name": "Mg_UpdateMenu"
+      "name": "_ZN11dScMgBase_c10UpdateMenuEv"
     },
     "ov004:0x020aeed8": {
       "author": "andrewboudreau",
@@ -19271,7 +19271,7 @@
     },
     "ov004:0x020b0de0": {
       "author": "tangosdev",
-      "name": "Mg_DrawPrompt"
+      "name": "_ZN11dScMgBase_c10DrawPromptEv"
     },
     "ov004:0x020b0e84": {
       "author": "lunavyqo",
@@ -20055,7 +20055,7 @@
     },
     "ov005:0x020bffc8": {
       "author": "tangosdev",
-      "name": "MiniGm_SetRecord"
+      "name": "_ZN11dScMiniGm_c9SetRecordEiii"
     },
     "ov005:0x020bfff4": {
       "author": "tangosdev",
@@ -20067,7 +20067,7 @@
     },
     "ov005:0x020c0030": {
       "author": "tangosdev",
-      "name": "MiniGm_ClearNew"
+      "name": "_ZN11dScMiniGm_c8ClearNewEi"
     },
     "ov005:0x020c007c": {
       "author": "tangosdev",
@@ -20083,11 +20083,11 @@
     },
     "ov005:0x020c0140": {
       "author": "lunavyqo",
-      "name": "MiniGm_UpdatePageScroll"
+      "name": "_ZN11dScMiniGm_c16UpdatePageScrollEv"
     },
     "ov005:0x020c0250": {
       "author": "tangosdev",
-      "name": "MiniGm_UpdateExitButton"
+      "name": "_ZN11dScMiniGm_c16UpdateExitButtonEv"
     },
     "ov005:0x020c0378": {
       "author": "tangosdev",
@@ -20095,11 +20095,11 @@
     },
     "ov005:0x020c06cc": {
       "author": "tangosdev",
-      "name": "MiniGm_UpdatePageArrows"
+      "name": "_ZN11dScMiniGm_c16UpdatePageArrowsEv"
     },
     "ov005:0x020c0878": {
       "author": "lunavyqo",
-      "name": "MiniGm_UpdateGroupTabs"
+      "name": "_ZN11dScMiniGm_c15UpdateGroupTabsEv"
     },
     "ov005:0x020c0b00": {
       "author": "tangosdev",
@@ -20111,7 +20111,7 @@
     },
     "ov005:0x020c0f38": {
       "author": "tangosdev",
-      "name": "MiniGm_DrawNewBadges"
+      "name": "_ZN11dScMiniGm_c13DrawNewBadgesEv"
     },
     "ov005:0x020c1030": {
       "author": "tangosdev",
@@ -20119,7 +20119,7 @@
     },
     "ov005:0x020c1130": {
       "author": "lunavyqo",
-      "name": "MiniGm_DrawRecords"
+      "name": "_ZN11dScMiniGm_c11DrawRecordsEv"
     },
     "ov005:0x020c14a0": {
       "author": "lunavyqo",
@@ -20131,7 +20131,7 @@
     },
     "ov005:0x020c1688": {
       "author": "tangosdev",
-      "name": "MiniGm_LoadIconPalette"
+      "name": "_ZN11dScMiniGm_c15LoadIconPaletteEi"
     },
     "ov005:0x020c16e4": {
       "author": "lunavyqo",
@@ -25755,7 +25755,7 @@
     },
     "ov006:0x0210c500": {
       "author": "andrewboudreau",
-      "name": "SlotReels_CheckStopped"
+      "name": "_ZN12dScMgSlot1_c22SlotReels_CheckStoppedEv"
     },
     "ov006:0x0210c638": {
       "author": "tangosdev",
@@ -26111,7 +26111,7 @@
     },
     "ov006:0x02112ad8": {
       "author": "andrewboudreau",
-      "name": "SmartballBall_UpdatePhysics"
+      "name": "_ZN19cMgSmartball_ball_c13UpdatePhysicsEv"
     },
     "ov006:0x02113c14": {
       "author": "andrewboudreau",
@@ -27431,7 +27431,7 @@
     },
     "ov006:0x02126948": {
       "author": "andrewboudreau",
-      "name": "Snowball_UpdateCamera"
+      "name": "_ZN15dScMgSnowball_c12UpdateCameraEv"
     },
     "ov006:0x02126a98": {
       "author": "tangosdev",

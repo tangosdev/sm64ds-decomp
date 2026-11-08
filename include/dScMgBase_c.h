@@ -887,6 +887,8 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
        PaintSquare (slot 34); a zero-length line plots once. The amida, teresa
        and both trampoline minigames draw their strokes with it. */
     void Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int size);
+    void UpdateMenu();
+    void DrawPrompt();
 
     s32 mTallyShown;            /* 0x050 */
     s32 mTallyAnimTimer;            /* 0x054 */
@@ -943,7 +945,9 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     s16 mMenuItem2X;        /* 0x463c */
     s16 mMenuItem2Y;        /* 0x463e */
     s32 mMenuCursorPhase;   /* 0x4640 -- drives the highlighted item's pulse */
-    u8  pad_4644[0x2];
+    s16 mMenuPickDelay;     /* 0x4644 -- UpdateMenu counts it down after a
+                                touch picks an item (0x10 for item 0, else 0)
+                                and acts on the pick when it reaches 0 */
     s16 mMenuCursor;        /* 0x4646 -- highlighted item, -1 for none */
     s32 mQuitFadeStarted;           /* 0x4648 */
     s32 mSubmittedScore;           /* 0x464c */

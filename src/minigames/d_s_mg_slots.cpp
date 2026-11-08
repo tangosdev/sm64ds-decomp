@@ -149,7 +149,6 @@ extern void SlotLamp_Tick(void *o);
 extern void SlotBlink_Start(void *o, s16 x, s16 y);
 extern void SlotBlink_Tick(void *o);
 extern void SlotReel_SetSpeed(void *o, int v);
-extern int SlotReels_CheckStopped(void *self);
 extern int sSlotReelScrollSpeeds[];
 extern u8 sSlot1Payouts[];
 extern s16 sSlotMatchBlinkX[][2];
@@ -1072,43 +1071,40 @@ void dScMgSlot1_c::OpenMenu() {
     dScMgBase_c::OpenMenu();
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-int SlotReels_CheckStopped(void *self) {
-    dScMgSlot1_c *scene = (dScMgSlot1_c *)self;
+int dScMgSlot1_c::SlotReels_CheckStopped() {
     int matches;
     int matchedSymbol;
     int reelIndex;
 
-    scene->mWildCount = 0;
+    mWildCount = 0;
     matches = 1;
     for (reelIndex = 0; reelIndex < 3; reelIndex++) {
-        if (scene->mReelStrip[reelIndex][scene->mSymbolIndex[reelIndex]] == 5) {
-            scene->mWildCount++;
+        if (mReelStrip[reelIndex][mSymbolIndex[reelIndex]] == 5) {
+            mWildCount++;
         } else {
-            matchedSymbol = scene->mReelStrip[reelIndex][scene->mSymbolIndex[reelIndex]];
+            matchedSymbol = mReelStrip[reelIndex][mSymbolIndex[reelIndex]];
             break;
         }
     }
-    if (scene->mWildCount >= 3) {
+    if (mWildCount >= 3) {
         matchedSymbol = 5;
     } else if (reelIndex < 2) {
         for (reelIndex = reelIndex + 1; reelIndex < 3; reelIndex++) {
-            u8 symbol = scene->mReelStrip[reelIndex][scene->mSymbolIndex[reelIndex]];
+            u8 symbol = mReelStrip[reelIndex][mSymbolIndex[reelIndex]];
             if (symbol == 5) {
-                scene->mWildCount++;
+                mWildCount++;
             } else if (matchedSymbol != symbol) {
                 matches = 0;
             }
         }
     }
     if (matches) {
-        if (scene->mSpeedTableOffset < 2) {
-            scene->mSpeedTableOffset += 1;
+        if (mSpeedTableOffset < 2) {
+            mSpeedTableOffset += 1;
         }
-        scene->mMatchedSymbol = matchedSymbol;
+        mMatchedSymbol = matchedSymbol;
     }
     return matches;
-}
 }
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
@@ -1292,7 +1288,7 @@ s32 dScMgSlot1_c::Behavior() {
                 }
             }
             if (stopped == 1) {
-                mHasMatch = SlotReels_CheckStopped(this);
+                mHasMatch = SlotReels_CheckStopped();
                 mPayoutMultiplier = 0;
                 if (mHasMatch != 0) {
                     mPayoutMultiplier += sSlot1Payouts[mMatchedSymbol];

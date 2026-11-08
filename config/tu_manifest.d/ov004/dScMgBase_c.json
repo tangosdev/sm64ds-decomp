@@ -402,7 +402,7 @@
       "ordinal": 50
     },
     {
-      "symbol": "Mg_UpdateMenu",
+      "symbol": "_ZN11dScMgBase_c10UpdateMenuEv",
       "address": "0x020aeb24",
       "size": "0x000003b4",
       "legacy_source": "src/func_ov004_020aeb24.cpp",
@@ -668,7 +668,7 @@
       "ordinal": 88
     },
     {
-      "symbol": "Mg_DrawPrompt",
+      "symbol": "_ZN11dScMgBase_c10DrawPromptEv",
       "address": "0x020b0de0",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov004_020b0de0.c",
