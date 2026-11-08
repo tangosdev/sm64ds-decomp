@@ -29,7 +29,6 @@
 // mBombs[j].color = BOMROOM_RAND(2), the macro through the same pointer, or
 // the roll into rnd first all reshuffle the hoisted-constant stack slots
 // (+0x4..+0x10 bytes).
-// CountSortedBombs bumps mLevel through a volatile store.
 // The roaming steps read the table into a block-scoped fx16 before FX_MUL:
 // FX_CosIdx inside the FX_MUL argument swaps the table and speed registers.
 
@@ -100,6 +99,16 @@ enum dScMgBomroom_c_AssetId {
 /* A random integer in [0, n): the top 15 bits of the minigames' shared
    generator, scaled (the PACHINKO_RAND of d_s_mg_pachinko.cpp). */
 #define BOMROOM_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
+
+/* Stores the scene's level, held to 9998. The ROM stores the new value and
+   reloads it for the clamp, the shape of an inline setter on the base
+   (d_s_mg_amida.cpp and d_mg3d_esp_anim_set.cpp keep the same clamp, the
+   latter even after a store of 0); taking a dScMgBomroom_c * instead adds
+   two words. */
+static inline void SetSceneLevel(dScMgBase_c *scene, u32 level) {
+    scene->mLevel = level;
+    if (scene->mLevel > 9998) scene->mLevel = 9998;
+}
 
 #pragma defer_codegen off
 
@@ -579,10 +588,7 @@ void dScMgBomroom_c::CountSortedBombs() {
         mSubState = 0;
         mBlastPen = 0;
         mWinColor = 0;
-        /* Both stores go through volatile: a plain mLevel store makes the
-           function 8 bytes longer. */
-        *(volatile u32 *)&mLevel = mLevel + 1;
-        if (mLevel > 0x270e) mLevel = 0x270e;
+        SetSceneLevel(this, mLevel + 1);
         mFusesFrozen = 1;
         Sound::PlayBank2_2D(0x1e6);
     } else if (colored >= 0x28) {
@@ -590,8 +596,7 @@ void dScMgBomroom_c::CountSortedBombs() {
         mSubState = 0;
         mBlastPen = 0;
         mWinColor = 1;
-        *(volatile u32 *)&mLevel = mLevel + 1;
-        if (mLevel > 0x270e) mLevel = 0x270e;
+        SetSceneLevel(this, mLevel + 1);
         mFusesFrozen = 1;
         Sound::PlayBank2_2D(0x1e6);
     }
