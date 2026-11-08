@@ -57,7 +57,7 @@ extern unsigned char data_0209cab4[]; /* star bits per course */
 extern unsigned char data_0209f224;   /* last collected star id */
 extern void func_0205a588(void *dest, u8 value, u32 size);
 extern void CpuCopy8(const void *src, void *dst, u32 count);
-extern void ClearCapHeldByToad(void);   /* forward: called by func_02013a88 above its definition */
+extern void ClearCapHeldByToad(void); /* forward: called by func_02013a88 above its definition */
 extern void UnlockMinigame(int minigame); /* forward: defined at the end of this file */
 /* local extern: src/SublevelToLevel.cpp is int(int), but these four callers match only as s8.
  * An int declaration widens each of them by 8 bytes. */

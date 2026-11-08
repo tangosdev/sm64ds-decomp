@@ -669,8 +669,8 @@ int MBi_CommParentSendBlock(void) {
 
     idxByte = MB_WORK->mCurrentFile;
     if (MBi_get_blockinfo(&bi, (char *)MB_WORK->mFiles[idxByte].mBlockTable,
-                      MB_WORK->mFiles[idxByte].mCurrentBlock,
-                      (char *)MB_WORK->mFiles[idxByte].mHeader) == 0) {
+                          MB_WORK->mFiles[idxByte].mCurrentBlock,
+                          (char *)MB_WORK->mFiles[idxByte].mHeader) == 0) {
         return 0x15;
     }
 
