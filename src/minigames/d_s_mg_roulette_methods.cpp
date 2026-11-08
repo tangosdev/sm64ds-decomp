@@ -181,11 +181,11 @@ void Mg_DrawNumberRotated(int, int, int, int, int, int, u16);
 void MgCoins_StartPayout(int);
 void MgCoins_Update(void);
 void MgCoins_Reset(void);
-int Dealer_IsAnimDone(char *a);
+int Dealer_IsAnimDone(void *a);
 int Dealer_IsIdle(Dealer *dealer);
-void Dealer_Draw(char *c);
+void Dealer_Draw(void *c);
 void Dealer_Update(Dealer *dealer);
-int Dealer_Load(char *c);
+int Dealer_Load(void *c);
 
 int sRouletteResultsTimer;
 extern int sRouletteResultIndex;
@@ -290,7 +290,7 @@ s32 dScMgRoulette_c::InitResources() {
     *(volatile u16 *)0x04000008 = (*(volatile u16 *)0x04000008 & ~3) | 1;
 
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load((char *)&mDealer) == 0)
+    if (Dealer_Load(&mDealer) == 0)
         return 0;
     if (RouletteBoard_LoadModels((char *)&mBoard) == 0)
         return 0;
@@ -313,7 +313,7 @@ s32 dScMgRoulette_c::Behavior() {
     case 0:
         break;
     case 1:
-        if (Dealer_IsAnimDone((char *)&mDealer) != 0) {
+        if (Dealer_IsAnimDone(&mDealer) != 0) {
             if (mBoard.mRollSound == 0) {
                 mBoard.mRollSound = 1;
             }
@@ -323,7 +323,7 @@ s32 dScMgRoulette_c::Behavior() {
             mPromptBlinkCount = 1;
             mPromptBlinkTimer = 0;
         }
-        if (Dealer_IsAnimDone((char *)&mDealer) != 0) {
+        if (Dealer_IsAnimDone(&mDealer) != 0) {
             mPhaseTimer -= 1;
             if (mPhaseTimer == 0) {
                 mCameraPreset = 1;
@@ -616,7 +616,7 @@ s32 dScMgRoulette_c::Render() {
         if (preset != 0)
             RouletteBoard_Draw((char *)&mBoard);
         else
-            Dealer_Draw((char *)&mDealer);
+            Dealer_Draw(&mDealer);
     }
 
     return 1;

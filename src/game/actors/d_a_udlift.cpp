@@ -34,7 +34,7 @@
  *   InitResources 0x18c->0x160, and its LoadFile reloc then names
  *   _ZN7dBgW_Kc8LoadFileER13SharedFilePtr instead of 0x02017a3c.
  *   StateWait 0xf4->0xe8. StateMoveDown 0x120->0x114.
- * - InitResources: func_020393d4 and func_020393c4 store dBgW+0x18
+ * - InitResources: dBgW::SetBeforeClsnCallback and dBgW::SetStoodOnCallback store dBgW+0x18
  *   (beforeClsnCallback) and dBgW+0x1c (the rider callback). Writing those
  *   fields directly shrinks InitResources 0x18c->0x184 and drops the two
  *   call relocs.
@@ -119,13 +119,6 @@ extern State data_ov095_02137584;
 extern State data_ov095_0213758c;
 extern State data_ov095_0213759c;
 
-/* dBgW+0x18 and dBgW+0x1c. A direct store shrinks InitResources.
-   local extern: no shared header declares these on void *. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-}
-
 extern "C" daUdlift_c *daUdlift_c_classInit_UDLIFT_TERESA()
 {
     return new daUdlift_c();
@@ -178,8 +171,8 @@ int daUdlift_c::InitResources()
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov095_02136f74[mVariant]), mClsnMat,
                           0x199, mAngleY, *data_ov095_021375a4[mVariant]);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, (::StoodOnCallback)&daUdlift_c::OnMeshClsnTouch);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&daUdlift_c::OnMeshClsnTouch);
     mRider = 0;
     mState = 0;
 

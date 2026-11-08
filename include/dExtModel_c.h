@@ -111,7 +111,7 @@ struct ModelComponents {
     BMD_Material *materials;    /* 0x04 - 0x30-byte records, flags at +0x24 */
     ModelBone *bones;           /* 0x08 - one per BMD_File bone */
     Matrix4x3 *transforms;      /* 0x0c - one per bone */
-    void *unk_10;               /* 0x10 */
+    Matrix4x3 *blendTransforms; /* 0x10 - mBlendBuffer, func_0204531c's blend target */
 
     void UpdateVertsUsingBones();               /* 0x02044dcc */
     void UpdateBones(BCA_File *file, int frame);
@@ -230,7 +230,7 @@ struct ModelComponents {
     struct BMD_Material *materials;    /* 0x04 */
     struct ModelBone *bones;           /* 0x08 */
     struct Matrix4x3 *transforms;      /* 0x0c */
-    void *unk_10;                      /* 0x10 */
+    struct Matrix4x3 *blendTransforms; /* 0x10 */
 };
 
 struct dExtModel_c {

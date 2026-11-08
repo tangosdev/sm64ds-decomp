@@ -5,7 +5,7 @@
  * - dBgW_KcMbg::SetFile / DropShadowScaleXYZ / dBgActor_c::IsClsnInRange
  *   are header member calls whose headers spell Fix12 as Fix12i, a plain
  *   s32 (6az)
- * - func_020393d4 stores dBgW+0x18 (beforeClsnCallback); dBgW::SetClipRadius
+ * - dBgW::SetBeforeClsnCallback stores dBgW+0x18 (beforeClsnCallback); dBgW::SetClipRadius
  *   stores +0x0c; dBgW::SetClipOffsetY stores +0x10
  * - data_ov065_0211c0c8 / data_ov065_0211d26c; TTC_MovingBar_ModelFile /
  *   TTC_MovingBar_ClsnFile are symbols.txt BSS labels shared with the
@@ -72,7 +72,6 @@ extern CLPS_Block data_ov035_02112258;
 extern "C" {
 extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *matrix, Vector3 *dst);
 extern void AddVec3(Vector3 *left, Vector3 *right, Vector3 *dst);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 /* CT_MECHA05 is the literal ROM registry ID. The g_profile spelling is a
@@ -97,7 +96,7 @@ int daObjCtMecha05_c::InitResources() {
     UpdateClsnPosAndRot();
     void *collisionFile = dBgW_Kc::LoadFile(TTC_MovingBar_ClsnFile);
     mMeshCollider.SetFile((KCL_File *)collisionFile, mClsnMat, 0x199, mAngleY, data_ov035_02112258);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetClipRadius(0x1c0000);
     mMeshCollider.SetClipOffsetY(0x1000);
     mPrevAngleY = mAngleY;

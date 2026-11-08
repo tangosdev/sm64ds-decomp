@@ -149,8 +149,6 @@ unsigned short DecIfAbove0_Short(
     unsigned short *counter); /* local extern: named parameters preserve @NNN identities */
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern void hold_d_a_dossy(void *self, void *kcl, void *mtx, Fix12i r, short s, void *clps);
-extern void func_020393d4(void *collider, BeforeClsnCallback callback);
-extern void func_020393c4(dBgW *collider, StoodOnCallback callback);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i r, Fix12i h, void *p, void *q);
 extern int AngleDiff(int a, int b);
@@ -246,11 +244,11 @@ int daDossy_c::InitResources()
                 ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), *(const Matrix4x3 *)(mtx), 0x1000, mAngleY,
                                       *(CLPS_Block *)(data_ov065_0211cd68[j]));
             if ((unsigned)j <= 2) {
-                func_020393d4(mmc, &dBgW::UpdatePosAndAngs);
+                ((dBgW *)mmc)->SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
                 if (j == 2)
-                    func_020393c4((dBgW *)mmc, func_ov065_021195bc);
+                    ((dBgW *)mmc)->SetStoodOnCallback(func_ov065_021195bc);
                 else
-                    func_020393c4((dBgW *)mmc, func_ov065_021195d0);
+                    ((dBgW *)mmc)->SetStoodOnCallback(func_ov065_021195d0);
             }
             ((dBgW_KcMbg *)mmc)->Enable(this);
             mtx += sizeof(DorriePlatform);

@@ -548,9 +548,7 @@ void dExtBlendAnmModel_c::Virtual18(u32 mat, const Vector3 *scale) {
 void dExtBlendAnmModel_c::Advance() {
     dExtFrameCtrl_c::Advance();
     if (blendWeight < 0x1000) {
-        /* launder: keep the RMW aliasing the member so the compiler
-           re-reads it the way the ROM does */
-        *(int *)(&blendWeight) += blendStep;
+        blendWeight += blendStep;
     }
 }
 
@@ -662,8 +660,7 @@ void dExtCommonModel_c::Render(const Vector3 *scale) {
     data->Render(&temp, (Vector3 *)scale);
 }
 
-/* ORs flags into every material; the (u32 *) launder on &p->flags keeps the
-   ROM's materialized address for the read-modify-write. */
+/* ORs flags into every material. */
 void dExtCommonModel_c::Func_020160AC(u32 flags) {
     BMD_File *file = data->modelFile;
     u32 n = file->numMaterials;
@@ -671,8 +668,7 @@ void dExtCommonModel_c::Func_020160AC(u32 flags) {
     u32 i;
 
     for (i = 0; i < n; i++) {
-        u32 *f = (u32 *)(&p->flags);
-        *f |= flags;
+        p->flags |= flags;
         p++;
     }
 }
@@ -727,9 +723,7 @@ int dExtShadowModel_c::DoSetFile(char *file, int a, int b) {
         BMD_Material *mat = data->materials;
         u32 i;
         for (i = 0; i < n; i++) {
-            /* (u32 *) launder: keep the ROM's materialized
-               address for the read-modify-write. */
-            *(u32 *)(&mat->flags) |= 0x8000;
+            mat->flags |= 0x8000;
             mat++;
         }
     }
@@ -759,15 +753,9 @@ void dExtShadowModel_c::InitModel(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz,
     this->opacity = opacity;
     if (data_0209ceec)
         return;
-    /* The ROM loads the list head TWICE -- once for the store into next, once
-       for the back-link test -- instead of keeping it in a register, so the
-       first read is volatile. */
-    next = *(dExtShadowModel_c *volatile *)&data_0209cef4;
-    {
-        dExtShadowModel_c *head = data_0209cef4;
-        if (head)
-            head->prev = this;
-    }
+    next = data_0209cef4;
+    if (data_0209cef4)
+        data_0209cef4->prev = this;
     data_0209cef4 = this;
 }
 
@@ -836,12 +824,7 @@ void dExtFrameCtrl_c::Advance() {
     if ((f & 0xc0000000) == 0) {
         currFrame = (currFrame + speed + (int)len) % (int)len;
     } else {
-        /* the ROM materializes the field address for this
-           read-modify-write, and reloads currFrame through the member
-           afterwards; the launder keeps this store aliasing the member so
-           the compiler re-reads it the way the ROM does */
-        int *pFrame = (int *)((int)this + 8);
-        *pFrame = *pFrame + speed;
+        currFrame += speed;
         if (currFrame < 0) {
             currFrame = 0;
         } else if (currFrame >= (int)len) {
@@ -851,9 +834,9 @@ void dExtFrameCtrl_c::Advance() {
 }
 
 void dExtFrameCtrl_c::SetAnimation(u16 numFrames, int flags, Fix12i speed, u16 startFrame) {
-    *(int *)((char *)&this->numFramesAndFlags) = flags | (numFrames << 12);
-    *(int *)((char *)&this->currFrame) = startFrame << 12;
-    *(int *)((char *)&this->speed) = speed;
+    numFramesAndFlags = flags | (numFrames << 12);
+    currFrame = startFrame << 12;
+    this->speed = speed;
 }
 
 u32 dExtFrameCtrl_c::GetFrameCount() const {

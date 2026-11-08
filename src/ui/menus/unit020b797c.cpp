@@ -139,6 +139,11 @@ extern void func_ov007_020c951c(int unused, void *bank, const char *name);
 void func_ov007_020b7a44(void);
 void func_ov007_020b797c(void);
 
+/* Glyph `glyph`'s advance in pixels; 0x4d is the 4-pixel space. */
+static inline int GlyphWidth(int glyph) {
+    return glyph == 0x4d ? 4 : data_ov007_02102df8[glyph];
+}
+
 /* Returns the message index for message id `id`. */
 int func_ov007_020b8ec0(int id) {
     int i = 0;
@@ -186,10 +191,7 @@ void func_ov007_020b8d48(int plane, int glyph) {
         return;
     }
 
-    if (glyph == 0x4d)
-        w = 4;
-    else
-        w = data_ov007_02102df8[glyph];
+    w = GlyphWidth(glyph);
 
     adj = 0;
     if (glyph == 1)
@@ -283,7 +285,7 @@ void func_ov007_020b8b80(int plane, u8 *s, int mode) {
         default:
             buf[n] = (u8)c;
             n++;
-            width += (c == 0x4D) ? 4 : data_ov007_02102df8[c];
+            width += GlyphWidth(c);
             break;
         }
         if (flush) {
@@ -377,7 +379,7 @@ void func_ov007_020b88c0(void) {
 
     i = 0;
     if (h > 0) {
-        row = i;
+        row = 0;
         do {
             data_ov007_02103484[row] = 4;
             data_ov007_02103484[(int)(((long long)row)) + w - 1] = 6;
@@ -788,7 +790,8 @@ void func_ov007_020b7a78(void) {
         if (data_ov007_02102ddc.scale > 0x1000) {
             data_ov007_02102ddc.scale = 0x1000;
             if (data_ov007_02102ddc.kind == 1 || data_ov007_02102ddc.kind == 2 ||
-                (unsigned int)(data_ov007_02102ddc.kind - 6) <= 2U) {
+                data_ov007_02102ddc.kind == 6 || data_ov007_02102ddc.kind == 7 ||
+                data_ov007_02102ddc.kind == 8) {
                 data_ov007_02102ddc.state = OV007_WINDOW_HOLDING;
             } else {
                 data_ov007_02102ddc.state = OV007_WINDOW_SHOWN;
@@ -841,15 +844,11 @@ void func_ov007_020b7a78(void) {
     if (data_ov007_02102ddc.scale > 0) {
         int t = data_ov007_02102ddc.scale;
         int ease = MulFx(t, 0x2000 - t);
-        data_ov007_0210346c->scaleY = ease;
-        data_ov007_0210346c->scaleX = data_ov007_0210346c->scaleY;
-        data_ov007_02103460->scaleY = ease;
-        data_ov007_02103460->scaleX = data_ov007_02103460->scaleY;
+        data_ov007_0210346c->scaleX = data_ov007_0210346c->scaleY = ease;
+        data_ov007_02103460->scaleX = data_ov007_02103460->scaleY = ease;
     } else {
-        data_ov007_0210346c->scaleY = 0;
-        data_ov007_0210346c->scaleX = data_ov007_0210346c->scaleY;
-        data_ov007_02103460->scaleY = 0;
-        data_ov007_02103460->scaleX = data_ov007_02103460->scaleY;
+        data_ov007_0210346c->scaleX = data_ov007_0210346c->scaleY = 0;
+        data_ov007_02103460->scaleX = data_ov007_02103460->scaleY = 0;
     }
 }
 

@@ -25,9 +25,6 @@
  * pair on its own.
  *
  * Notes:
- * - func_020393d4 / func_020393c4 are 4-byte stores into dBgW's callback
- *   slots, and dBgW::SetClipRadius / dBgW::SetClipOffsetY write its collision extents.
- *   d_bg_w.cpp defines them; the callback setters remain local.
  * - The three pointers this class's file table holds -- the ov022 .bss
  *   SharedFilePtrs at 0x02114500 and 0x02114508, and the ov064 CLPS block at
  *   0x0211bbac -- are unnamed rows in their modules' data. The two handles
@@ -79,8 +76,6 @@ extern RingCollisionFilePtr gFlRingCollisionFile;
 
 extern "C" {
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
@@ -129,8 +124,8 @@ s32 daObjFl_Ring_c::InitResources() {
         ->dBgW_KcMbg::SetFile((KCL_File *)(k), mClsnMat, 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov022_02113cc8.mClps));
 
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
-    func_020393c4(&mMeshCollider, (::StoodOnCallback)StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)StoodOnCallback);
 
     /* The ring's own Z channel carries its spin rate, not an angle: it rests
        at -0x100 per frame unless the map row gave it one. */

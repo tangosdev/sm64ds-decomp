@@ -48,6 +48,8 @@
 #define REG_DB_BG2CNT (*(volatile u16 *)0x0400100c)
 #define REG_DB_BG3CNT (*(volatile u16 *)0x0400100e)
 
+#define BG_CONTROL_MOSAIC (1u << 6)
+
 /* Colour special effects (alpha blending and brightness), one per engine. */
 #define REG_BLDCNT    (*(volatile u16 *)0x04000050)
 #define REG_DB_BLDCNT (*(volatile u16 *)0x04001050)

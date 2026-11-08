@@ -113,7 +113,6 @@ typedef char Sprite_size_must_be_0x24[sizeof(Sprite) == 0x24 ? 1 : -1];
 extern "C" {
 extern void Vec2_Sub(void* o, void* a, void* b);
 extern void func_0203d680(void* out, void* in, int scale);
-extern int __aeabi_idiv(int a, int b);
 extern int GetGameLanguage(void);
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 
@@ -849,15 +848,9 @@ extern "C" void Coin_MoveThenRise(Sprite *s) {
    ending near +0.3 px (about 32 px up in all). When mDelay reaches 0 the
    sprite leaves play and resets. */
 extern "C" void Coin_Rise(Sprite* s){
-  int* p = &s->mPos.y;
   int g = sMgCoinRiseFrames;
   int n = -(((short)s->mDelay - (g >> 1)) << 12);
-  int q;
-  int v;
-  n = p ? n : n;  /* code shape: dropping it makes the function 12 bytes shorter */
-  q = __aeabi_idiv(n, g);  /* `n / g` here compiles differently (measured) */
-  v = FX_MUL((q - 0x600), 0x4000);
-  *p += v;
+  s->mPos.y += FX_MUL(n / g - 0x600, 0x4000);
   if (ApproachLinear2(s->mDelay, 0, 1) == 0)
     return;
   ApproachLinear(gMgCoinsInPlay, 0, 1);
@@ -906,14 +899,11 @@ extern "C" void Coin_MoveThenRiseSpent(Sprite *s) {
     if (v[1] == 0) s->mState = pmf_Coin_RiseSpent;
 }
 
-/* State: Coin_Rise's rise, dividing with `/`. */
+/* State: the same rise as Coin_Rise. */
 extern "C" void Coin_RiseSpent(Sprite* s){
-  int* p = &s->mPos.y;
   int g = sMgCoinRiseFrames;
   int n = -(((short)s->mDelay - (g >> 1)) << 12);
-  int q = n / g;
-  int v = FX_MUL((q - 0x600), 0x4000);
-  *p = *p + v;
+  s->mPos.y += FX_MUL(n / g - 0x600, 0x4000);
   if (ApproachLinear2(s->mDelay, 0, 1) == 0)
     return;
   ApproachLinear(gMgCoinsInPlay, 0, 1);

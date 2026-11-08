@@ -76,7 +76,6 @@ int d_a_obj_switchChangeMusicVolumeHold(unsigned int id, int volume);
 extern void hold_d_a_obj_switch(void *self, void *file, const Matrix4x3 *matrix, int scale,
                                 s16 angle, void *clps);
 // The setter stores the collider's stood-on callback at +0x1c.
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 void func_ov002_020baa2c(daObjSwitch_c *self, dActor_c *other);
 int func_02012310(int handle, int sound, int arg);
 unsigned char IsAreaShowing(int area);
@@ -183,7 +182,7 @@ int daObjSwitch_c::InitResources()
         ->dBgW_KcMbg::SetFile((KCL_File *)(f), *(&mClsnMat), 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov002_021098e8[idx].clps));
 
-    func_020393c4(&mMeshCollider, &func_ov002_020baa98);
+    mMeshCollider.SetStoodOnCallback(&func_ov002_020baa98);
 
     {
         u16 h = mTimeLimit;

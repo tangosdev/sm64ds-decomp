@@ -82,12 +82,11 @@ void Puff_Spawn(int x, int y) {
     }
 }
 
-void Puff_Clear(short *p) {
-    ((Puff *)p)->mActive = 0;
+void Puff_Clear(Puff *p) {
+    p->mActive = 0;
 }
 
-void Puff_Update(char *c) {
-    Puff *entry = (Puff *)c;
+void Puff_Update(Puff *entry) {
     if (entry->mActive == 0)
         return;
     entry->mAngle += 0x200;
@@ -103,8 +102,7 @@ void Puff_Update(char *c) {
     }
 }
 
-void Puff_Draw(char *c) {
-    Puff *entry = (Puff *)c;
+void Puff_Draw(Puff *entry) {
     void *sprite;
     int sine;
     int offsetX;
@@ -125,33 +123,24 @@ void Puff_Draw(char *c) {
 
 void Puff_ClearAll(int a0, int a1) {
     int i;
-    short *p = (short *)sPuffs;
     for (i = 0; i < 3; i++) {
-        Puff_Clear(p);
-        p = (short *)((char *)p + 0x20);
+        Puff_Clear(&sPuffs[i]);
     }
     sPuffNextIndex = a0;
     sPuffXTable = (void **)a1;
 }
 
 void Puff_UpdateAll(void) {
-    int i = 0;
-    char *p = (char *)sPuffs;
-    for (;;) {
-        Puff_Update(p);
-        i++;
-        p += 0x20;
-        if (i >= 3)
-            break;
+    int i;
+    for (i = 0; i < 3; i++) {
+        Puff_Update(&sPuffs[i]);
     }
 }
 
 void Puff_DrawAll(void) {
     int i;
-    char *p = (char *)&sPuffs[2];
     for (i = 2; i >= 0; i--) {
-        Puff_Draw(p);
-        p -= 0x20;
+        Puff_Draw(&sPuffs[i]);
     }
 }
 }

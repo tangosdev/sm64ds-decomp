@@ -95,11 +95,10 @@ extern "C" void* dScMgMCarlo2_c_classInit()
  * deals the first board through the slot-18 reset. */
 s32 dScMgMCarlo2_c::InitResources()
 {
-    char *raw = (char *)this;
     int lang;
     void *tiles, *palette;
     Mg_SetTopScreenYOffset(0x20);
-    LoadCard2SubBg3(raw);
+    LoadCard2SubBg3(this);
     lang = GetGameLanguage();
     tiles = LoadFile(sMCarlo2CardNcgByLanguage[lang]);
     palette = LoadFile(0xbb);
@@ -114,7 +113,7 @@ s32 dScMgMCarlo2_c::InitResources()
     *(volatile unsigned short *)0x4000008 = (*(volatile unsigned short *)0x4000008 & ~3) | 1;
     *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
     Camera_InitDealerView(&mCamera);
-    if (Dealer_Load((void *)&mDealer) == 0)
+    if (Dealer_Load(&mDealer) == 0)
         return 0;
     Mg_PlaceBannersOnTopScreen();
     StartRound(-1);
@@ -252,7 +251,7 @@ s32 dScMgMCarlo2_c::Behavior()
         break;
     }
 
-    Dealer_Update((Dealer *)&mDealer);
+    Dealer_Update(&mDealer);
     dScMgMCarlo2_c::UpdateBoard();
     return 1;
 }
@@ -261,7 +260,6 @@ s32 dScMgMCarlo2_c::Behavior()
  * ones. Both passes walk mPrev from sMCarlo2CardsTail. */
 s32 dScMgMCarlo2_c::Render()
 {
-    char *raw = (char *)this;
     short score;
     dMgMCarlo2CardObj_c *lifted;
     int i;
@@ -278,7 +276,7 @@ s32 dScMgMCarlo2_c::Render()
     RenderOamMainScreen(sMCarloHudSprite, 0xe8, 0x18, -1, -1);
 
     if (this->mRoundState == 5)
-        Mg_DrawBlinkSprite(raw, 0xe0, 0xa0);
+        Mg_DrawBlinkSprite(this, 0xe0, 0xa0);
 
     lifted = sMCarlo2CardsTail;
     for (i = 0; i < 0x14; i++) {
@@ -721,10 +719,9 @@ void dScMgMCarlo2_c::UpdateBoard()
             if (sMCarlo2CardsWanted <= 0x14) {
                 {
                     int i = 0;
-                    s16 idx = *(volatile s16 *)&sMCarlo2BoardStep;
-                    int *row = (int *)((char *)sMCarlo2BoardRows + idx * 0x28);
+                    s16 idx = sMCarlo2BoardStep;
                     do {
-                        sMCarlo2FaceCounts[i] = sMCarlo2FaceCounts[i] + row[i];
+                        sMCarlo2FaceCounts[i] += sMCarlo2BoardRows[idx][i];
                         i += 1;
                     } while (i < 10);
                 }
@@ -751,6 +748,10 @@ void dScMgMCarlo2_c::UpdateBoard()
                                 dMgMCarlo2CardObj_c* save = h->mNext;
                                 h->mNext = p;
                                 p->mPrev = h;
+                                /* The ROM reloads p->mNext after the step. A plain
+                                   `p = p->mNext` reuses the load (2 DIFF) and a
+                                   while loop is 8 bytes longer, so the volatile
+                                   read stays. */
                                 if (p->mNext != 0) {
                                     do { p = *(dMgMCarlo2CardObj_c* volatile*)&p->mNext; } while (p->mNext != 0);
                                 }
