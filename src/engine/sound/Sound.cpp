@@ -63,7 +63,7 @@ extern void func_02049cd8(void *a, int b, int mode);
 extern void func_02048f34(void *owner);
 extern int func_0201a9ec(int *c);
 extern int func_02051918(unsigned int id, int arg);
-extern unsigned char func_0201a96c(int *c, int s);
+extern unsigned char func_0201a96c(struct WatchdogAlarm *context, int suspended);
 extern int func_02051fb4(void *g, unsigned int x);
 extern void func_02049764(void);
 extern void func_0204921c(int *g, int v);
@@ -1245,7 +1245,7 @@ extern "C" int func_020134d8(void *a, void *b)
     int s = func_0201a9ec((int *)&data_0209d574);
     int r = func_02051918((u32)a, (int)b);
     func_0201a9fc((char *)&data_0209d574);
-    func_0201a96c((int *)&data_0209d574, s);
+    func_0201a96c(&data_0209d574, s);
     return r;
 }
 
