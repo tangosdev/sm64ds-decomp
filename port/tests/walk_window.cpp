@@ -4816,6 +4816,11 @@ static int cam93_ds_owned(const void *cam)
     return i == 9 || i == 11 || i == 12 || i == 13 || i == 15 || i == 16 || i == 17 || i == 18;
 }
 static int cam93_ds_owned_off(void) { return getenv("SM64DS_CAM93_RIG_ALWAYS") ? 1 : 0; }
+/* CAM10: 1 while a cutscene script runs (data_0209fc48, the same word the draw gates read). The rig takes no stick, key or mouse
+   turn then, and it is re-seeded from the game's eye when the script ends, as after a DS-owned state, so a turn made during a
+   star or boss shot cannot swing the view the moment the shot hands back. SM64DS_CAM10_OLD=1: proof only, the build before. */
+static int cam10_old(void) { static int o = -1; if (o < 0) o = getenv("SM64DS_CAM10_OLD") ? 1 : 0; return o; }
+static int cam10_cutscene(void) { static int nc = -1; if (nc < 0) nc = getenv("SM64DS_NO_CUTSCENE_CAM") ? 1 : 0; return !cam10_old() && !nc && data_0209fc48 != 0; }
 /* CAMPACK1: the DS camera's speed slider. Set in the input phase (walk_window main, the DS rotate block) to the signed binangs
    to add to (or take off) this tick's stepped turn, applied to the eye here, before the camera's tick reads it back: the ROM
    takes the heading from the eye (func_02009e70 recomputes +0x17c from the pivot +0x80 and eye +0x8c) and then steps +-0x400. */
@@ -19324,7 +19329,7 @@ int main(void)
                zoom ...): seed the rig from the game's eye so the hand-over does
                not jump. */
             static int was_ds;
-            const int ds = cam && cam93_ds_owned(cam);
+            const int ds = (cam && cam93_ds_owned(cam)) || cam10_cutscene();
             if (was_ds && !ds && cam_mode != CAM_DS) {
                 fc_seed(cam);
                 if (cam_mode == CAM_ANALOG) an_pivot_live = 0;
@@ -19332,7 +19337,7 @@ int main(void)
             }
             was_ds = ds;
         }
-        if (cam_mode != CAM_DS && !rb_replaying() && !(cam && cam93_ds_owned(cam)) && !cam_paused) {
+        if (cam_mode != CAM_DS && !rb_replaying() && !(cam && cam93_ds_owned(cam)) && !cam10_cutscene() && !cam_paused) {
             /* the rig's own frame: orbit and tilt at a rate proportional to
                the stick, zoom on the bumpers or R/F, C back behind Mario.
                `rig_touched` is what tells the analog auto-recenter to keep its
@@ -19833,7 +19838,11 @@ int main(void)
                g_fc_cam_rot assignment below. */
             unsigned short cam_rot = 0;
             g_ds_extra_turn = 0;
-            if (real_camera && cam_mode == CAM_DS) {
+            /* CAM10: holding Bowser by the tail (camera state 18) the analog and free cameras stand down for the game's own
+               grab camera (cam93_ds_owned), and this block, the only other way a turn reaches the camera, ran in DS mode only,
+               so nothing could turn the view during the swing. In state 18 the DS camera's own turn runs in every mode. */
+            const int cam10_tail = !cam10_old() && cam_mode != CAM_DS && cam && cam93_state_idx(cam) == 18;
+            if (real_camera && (cam_mode == CAM_DS || cam10_tail)) {
                 /* The two bits func_02009e70 reads, picked by the same
                    cam_turn the rig steps its heading with, so DS mode and
                    analog mode turn the same way for the same push. 0x100
