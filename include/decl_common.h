@@ -1075,8 +1075,6 @@ extern void Jump2Popup_ClearAll(void);
 extern void Jump2Popup_InitPool(int, int);
 extern void Jump2_SetLights(void);
 extern void Luigi_PrepareScanlines(void);
-extern void PachinkoBg_Start(char*);
-extern void PachinkoBg_Stop(char*);
 extern void RouletteStrip_ResetAll(void);
 extern void RouletteStrip_LinkAll(char*);
 extern void RouletteBoard_Draw(char*);
