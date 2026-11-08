@@ -141,6 +141,7 @@ KillKnob g_kill[8]; int g_nkill = 0;
 unsigned g_star_frame = 0, g_star_next = 0; int g_star_tries = 0; unsigned long long g_star_base = 0;
 bool g_star_done = true, g_star_spawned = false;   // SM64DS_COOP_STAR=<est frame>: the local player touches a PowerStar
 unsigned g_goto_frame = 0; int g_goto_id = -1; bool g_goto_done = false; int g_goto_tries = 0; int g_goto_dy = 0;
+int g_goto_max = 6;   // COOPCOUNT1: SM64DS_COOP_GOTO's optional 4th field, how many tries (default 6)
 unsigned g_place_frame = 0; int g_place_xyz[3] = {0, 0, 0}; bool g_place_on = false;   // SM64DS_COOP_PLACE (run after093, lane SEESAW1)
 int g_place_level = -1;   // SM64DS_COOP_PLACE ...:L, only in level L (run after093, lane WHOMPBACK1)
 int g_trace_id = -1; unsigned g_trace_every = 5; int g_trace_off = -1;   // SM64DS_COOP_TRACE (run after093, lane SEESAW1)
@@ -203,8 +204,10 @@ void read_env() {
     }
     if (const char *g = std::getenv("SM64DS_COOP_GOTO")) {
         unsigned f = 0; int id = 0;
-        int dy = 0;   // F:class[:dy]  dy units above the actor: the player drops onto it (a stomp)
-        if (std::sscanf(g, "%u:%i:%i", &f, &id, &dy) >= 2) { g_goto_frame = f; g_goto_id = id; g_goto_dy = dy; }
+        int dy = 0, tries = 6;   // F:class[:dy[:tries]]  dy units above the actor: the player drops onto it (a stomp)
+        if (std::sscanf(g, "%u:%i:%i:%i", &f, &id, &dy, &tries) >= 2) {
+            g_goto_frame = f; g_goto_id = id; g_goto_dy = dy; g_goto_max = tries > 0 && tries <= 32 ? tries : 6;
+        }
     }
     if (const char *pl = std::getenv("SM64DS_COOP_PLACE")) {
         // F:x,y,z (world units): put the local player at that point ONCE, F frames after the group state is established in the
@@ -1591,6 +1594,7 @@ void knob_goto(int id, int tries) {
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && n < 32; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
         if (*(const unsigned short *)(a + 0x0c) != (unsigned)id || is_player_ptr(a)) continue;
         if (*(const unsigned char *)(a + 0x0f) || *(const unsigned char *)(a + 0x0e) == 2) continue;
+        if (id == 329 && (*(const unsigned *)(a + 0xd4 + 0x18) & 1u)) continue;   // COOPCOUNT1: a secret already collected here
         c[n++] = a;
     }
     std::sort(c, c + n, [](char *x, char *y) { return *(const short *)(x + 0xce) < *(const short *)(y + 0xce); });
@@ -1823,7 +1827,7 @@ void tick_est(unsigned now) {
     const bool knobs_on = coop_boot_ticking();     // not during a new file's opening or a boot barrier
     for (int i = 0; knobs_on && i < g_nkill; ++i)
         if (!g_kill[i].done && g_est_frames >= g_kill[i].frame) { g_kill[i].done = true; knob_kill(g_kill[i]); }
-    if (g_goto_id >= 0 && g_goto_tries < 6 && g_est_frames >= g_goto_frame + 90u * (unsigned)g_goto_tries) knob_goto(g_goto_id, g_goto_tries++);
+    if (g_goto_id >= 0 && g_goto_tries < g_goto_max && g_est_frames >= g_goto_frame + 90u * (unsigned)g_goto_tries) knob_goto(g_goto_id, g_goto_tries++);
     if (knobs_on && !g_star_done && g_est_frames >= g_star_frame) knob_star();
     if (knobs_on && g_place_on && g_est_frames >= g_place_frame && (g_place_level < 0 || (int)data_0209f2f8 == g_place_level)) {
         g_place_on = false;
