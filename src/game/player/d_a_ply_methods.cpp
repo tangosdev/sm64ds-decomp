@@ -441,187 +441,6 @@ struct S18b2 { short a; short b; int c[5]; };
  * members of one signature. */
 typedef int (daPly_c::*ScriptCommand)(unsigned char *, int, int);
 
-/* Pointers to the state/script handlers are compiler-emitted data. A normal
- * .text accessor keeps the eight-byte PMF literal in .data; spelling the same
- * &daPly_c::... expression directly in __sinit would put it in .init. */
-static inline ScriptCommand PlayerPmf_func_ov002_020bccfc() {
-    return &daPly_c::func_ov002_020bccfc;
-}
-static inline void (daPly_c::*PlayerPmf_func_ov002_020e1c20())() {
-    return &daPly_c::func_ov002_020e1c20;
-}
-static inline int (daPly_c::*PlayerPmf_St_StuckInGround_Main())() {
-    return &daPly_c::St_StuckInGround_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_Land_Main())() {
-    return &daPly_c::St_Land_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_Talk_Init())() {
-    return &daPly_c::St_Talk_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_Talk_Main())() {
-    return &daPly_c::St_Talk_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_Spin_Main())() {
-    return &daPly_c::St_Spin_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_Spin_Cleanup())() {
-    return &daPly_c::St_Spin_Cleanup;
-}
-static inline int (daPly_c::*PlayerPmf_St_CrazedCrate_Cleanup())() {
-    return &daPly_c::St_CrazedCrate_Cleanup;
-}
-static inline int (daPly_c::*PlayerPmf_St_WaitQuicksand_Main())() {
-    return &daPly_c::St_WaitQuicksand_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_Climb_Main())() {
-    return &daPly_c::St_Climb_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_Climb_Init())() {
-    return &daPly_c::St_Climb_Init;
-}
-static inline void (daPly_c::*PlayerPmf_func_ov002_020c71e0())() {
-    return &daPly_c::func_ov002_020c71e0;
-}
-static inline int (daPly_c::*PlayerPmf_St_WallJump_Main())() {
-    return &daPly_c::St_WallJump_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_Climb_Cleanup())() {
-    return &daPly_c::St_Climb_Cleanup;
-}
-static inline ScriptCommand PlayerPmf_func_ov002_020bcd38() {
-    return &daPly_c::func_ov002_020bcd38;
-}
-static inline int (daPly_c::*PlayerPmf_St_SweepKick_Main())() {
-    return &daPly_c::St_SweepKick_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_Headstand_Main())() {
-    return &daPly_c::St_Headstand_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_Climb_Cleanup_2())() {
-    return &daPly_c::St_Climb_Cleanup;
-}
-static inline int (daPly_c::*PlayerPmf_St_WallJump_Init())() {
-    return &daPly_c::St_WallJump_Init;
-}
-static inline void (daPly_c::*PlayerPmf_func_ov002_020c6fe4())() {
-    return &daPly_c::func_ov002_020c6fe4;
-}
-static inline ScriptCommand PlayerPmf_func_ov002_020bd20c() {
-    return &daPly_c::func_ov002_020bd20c;
-}
-static inline void (daPly_c::*PlayerPmf_func_ov002_020c70ac())() {
-    return &daPly_c::func_ov002_020c70ac;
-}
-static inline ScriptCommand PlayerPmf_func_ov002_020bd3a0() {
-    return &daPly_c::func_ov002_020bd3a0;
-}
-static inline int (daPly_c::*PlayerPmf_St_SwingPlayer_Cleanup())() {
-    return &daPly_c::St_SwingPlayer_Cleanup;
-}
-static inline int (daPly_c::*PlayerPmf_St_LedgeHang_Init())() {
-    return &daPly_c::St_LedgeHang_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_WaterJump_Init())() {
-    return &daPly_c::St_WaterJump_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_LedgeGrab_Init())() {
-    return &daPly_c::St_LedgeGrab_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_LedgeGrab_Main())() {
-    return &daPly_c::St_LedgeGrab_Main;
-}
-static inline ScriptCommand PlayerPmf_func_ov002_020bd250() {
-    return &daPly_c::func_ov002_020bd250;
-}
-static inline int (daPly_c::*PlayerPmf_St_CeilingGrate_Init())() {
-    return &daPly_c::St_CeilingGrate_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_CeilingGrate_Main())() {
-    return &daPly_c::St_CeilingGrate_Main;
-}
-static inline void (daPly_c::*PlayerPmf_func_ov002_020c7350())() {
-    return &daPly_c::func_ov002_020c7350;
-}
-static inline ScriptCommand PlayerPmf_func_ov002_020bd354() {
-    return &daPly_c::func_ov002_020bd354;
-}
-static inline int (daPly_c::*PlayerPmf_St_YoshiPower_Cleanup())() {
-    return &daPly_c::St_YoshiPower_Cleanup;
-}
-static inline void (daPly_c::*PlayerPmf_func_ov002_020c75f0())() {
-    return &daPly_c::func_ov002_020c75f0;
-}
-static inline int (daPly_c::*PlayerPmf_St_SwingPlayer_Main())() {
-    return &daPly_c::St_SwingPlayer_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_SlideKick_Init())() {
-    return &daPly_c::St_SlideKick_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_InYoshiMouth_Init())() {
-    return &daPly_c::St_InYoshiMouth_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_InYoshiMouth_Main())() {
-    return &daPly_c::St_InYoshiMouth_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_SwingPlayer_Init())() {
-    return &daPly_c::St_SwingPlayer_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_GrabBowserTail_Cleanup())() {
-    return &daPly_c::St_GrabBowserTail_Cleanup;
-}
-static inline int (daPly_c::*PlayerPmf_St_GrabBowserTail_Main())() {
-    return &daPly_c::St_GrabBowserTail_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_GrabBowserTail_Init())() {
-    return &daPly_c::St_GrabBowserTail_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_DeadPit_Main())() {
-    return &daPly_c::St_DeadPit_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_StomachSlide_Main())() {
-    return &daPly_c::St_StomachSlide_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_Dive_Init())() {
-    return &daPly_c::St_Dive_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_GroundPound_Cleanup())() {
-    return &daPly_c::St_GroundPound_Cleanup;
-}
-static inline int (daPly_c::*PlayerPmf_St_GroundPound_Main())() {
-    return &daPly_c::St_GroundPound_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_GroundPound_Init())() {
-    return &daPly_c::St_GroundPound_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_PunchKick_Main())() {
-    return &daPly_c::St_PunchKick_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_PunchKick_Init())() {
-    return &daPly_c::St_PunchKick_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_EndingFly_Init())() {
-    return &daPly_c::St_EndingFly_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_LongJump_Main())() {
-    return &daPly_c::St_LongJump_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_LongJump_Init())() {
-    return &daPly_c::St_LongJump_Init;
-}
-static inline ScriptCommand PlayerPmf_func_ov002_020bd480() {
-    return &daPly_c::func_ov002_020bd480;
-}
-static inline int (daPly_c::*PlayerPmf_St_SideFlip_Main())() {
-    return &daPly_c::St_SideFlip_Main;
-}
-static inline int (daPly_c::*PlayerPmf_St_BackFlip_Init())() {
-    return &daPly_c::St_BackFlip_Init;
-}
-static inline int (daPly_c::*PlayerPmf_St_Crouch_Main())() {
-    return &daPly_c::St_Crouch_Main;
-}
-
 /* The player states: init, main and cleanup handlers, declared once.
    data_ov002_02110244 stays local: decl_common.h declares it as char at
    file scope. */
@@ -1258,16 +1077,16 @@ int daPly_c::func_ov002_020bd664(unsigned char *cmd, int beginFrame, int endFram
         data_ov002_02110794[1] = data_ov002_0210a124;
         data_ov002_02110794[2] = data_ov002_0210a054;
         data_ov002_02110794[3] = data_ov002_0210a0dc;
-        data_ov002_02110794[4] = PlayerPmf_func_ov002_020bd480();
+        data_ov002_02110794[4] = &daPly_c::func_ov002_020bd480;
         data_ov002_02110794[5] = data_ov002_0210a0b4;
         data_ov002_02110794[6] = data_ov002_0210a094;
-        data_ov002_02110794[7] = PlayerPmf_func_ov002_020bd3a0();
-        data_ov002_02110794[8] = PlayerPmf_func_ov002_020bd354();
-        data_ov002_02110794[9] = PlayerPmf_func_ov002_020bd250();
-        data_ov002_02110794[10] = PlayerPmf_func_ov002_020bd20c();
-        data_ov002_02110794[11] = PlayerPmf_func_ov002_020bcd38();
+        data_ov002_02110794[7] = &daPly_c::func_ov002_020bd3a0;
+        data_ov002_02110794[8] = &daPly_c::func_ov002_020bd354;
+        data_ov002_02110794[9] = &daPly_c::func_ov002_020bd250;
+        data_ov002_02110794[10] = &daPly_c::func_ov002_020bd20c;
+        data_ov002_02110794[11] = &daPly_c::func_ov002_020bcd38;
         data_ov002_02110794[12] = data_ov002_0210a064;
-        data_ov002_02110794[13] = PlayerPmf_func_ov002_020bccfc();
+        data_ov002_02110794[13] = &daPly_c::func_ov002_020bccfc;
     }
     return (this->*data_ov002_02110794[cmd[6]])(cmd + 7, beginFrame, endFrame);
 }
@@ -24551,6 +24370,280 @@ extern void (daPly_c::*data_ov002_0211075c[7])();
 /* The two 32-entry palette ramps func_ov002_020e69c0 and func_ov002_020e6a78 work on. */
 extern unsigned short data_ov002_02110804[];
 
+#pragma section initsec end
+/* The state records and handler tables are initialized once, from the
+ * handlers they name.  Keeping this in an inline .text function lets mwccarm
+ * emit the pointer-to-member records in .data rather than in .init. */
+static inline void PlayerInitStates() {
+    data_ov002_0211013c.mInit = data_ov002_02109e0c;
+    data_ov002_0211013c.mMain = data_ov002_02109f74;
+    data_ov002_0211013c.mCleanup = 0;
+    daPly_c::ST_WAIT.mInit = data_ov002_0210a25c;
+    daPly_c::ST_WAIT.mMain = data_ov002_02109e14;
+    daPly_c::ST_WAIT.mCleanup = data_ov002_02109f84;
+    data_ov002_02110184.mCleanup = 0;
+    data_ov002_02110184.mInit = data_ov002_02109f94;
+    data_ov002_02110184.mMain = data_ov002_02109e1c;
+    data_ov002_0211019c.mInit = data_ov002_02109fa4;
+    data_ov002_0211019c.mCleanup = 0;
+    data_ov002_0211019c.mMain = data_ov002_02109fac;
+    data_ov002_021101b4.mCleanup = 0;
+    data_ov002_021101b4.mInit = data_ov002_02109dec;
+    data_ov002_021101b4.mMain = data_ov002_0210a26c;
+    data_ov002_021101e4.mInit = data_ov002_02109fb4;
+    data_ov002_021101e4.mCleanup = 0;
+    data_ov002_021101e4.mMain = data_ov002_0210a27c;
+    data_ov002_021101fc.mCleanup = 0;
+    data_ov002_021101fc.mInit = data_ov002_02109fbc;
+    data_ov002_021101fc.mMain = data_ov002_02109fc4;
+    data_ov002_02110214.mInit = data_ov002_0210a214;
+    data_ov002_02110214.mCleanup = 0;
+    data_ov002_02110214.mMain = data_ov002_02109fd4;
+    daPly_c::ST_OWL.mInit = data_ov002_02109e9c;
+    daPly_c::ST_OWL.mMain = data_ov002_02109fdc;
+    daPly_c::ST_OWL.mCleanup = data_ov002_0210a2a4;
+    data_ov002_02110274.mCleanup = 0;
+    data_ov002_02110274.mInit = data_ov002_02109eac;
+    data_ov002_02110274.mMain = data_ov002_0210a2b4;
+    data_ov002_0211028c.mInit = data_ov002_0210a2bc;
+    data_ov002_0211028c.mMain = data_ov002_02109fec;
+    data_ov002_0211028c.mCleanup = data_ov002_0210a1e4;
+    data_ov002_021102bc.mCleanup = 0;
+    data_ov002_021102bc.mInit = data_ov002_02109e94;
+    data_ov002_021102bc.mMain = data_ov002_0210a2cc;
+    data_ov002_021102d4.mInit = data_ov002_02109ffc;
+    data_ov002_021102d4.mMain = data_ov002_0210a1c4;
+    data_ov002_021102d4.mCleanup = data_ov002_02109ebc;
+    data_ov002_02110304.mInit = data_ov002_0210a2e4;
+    data_ov002_02110304.mMain = data_ov002_0210a004;
+    data_ov002_02110304.mCleanup = data_ov002_0210a2f4;
+    data_ov002_0211031c.mCleanup = 0;
+    data_ov002_0211031c.mInit = data_ov002_0210a00c;
+    data_ov002_0211031c.mMain = data_ov002_02109e3c;
+    data_ov002_02110334.mInit = data_ov002_0210a18c;
+    data_ov002_02110334.mCleanup = 0;
+    data_ov002_02110334.mMain = data_ov002_0210a304;
+    data_ov002_02110364.mInit = data_ov002_0210a01c;
+    data_ov002_02110364.mMain = data_ov002_02109e44;
+    data_ov002_02110364.mCleanup = data_ov002_0210a314;
+    data_ov002_02110394.mCleanup = 0;
+    data_ov002_02110394.mInit = data_ov002_0210a31c;
+    data_ov002_02110394.mMain = data_ov002_0210a324;
+    data_ov002_021103ac.mInit = data_ov002_0210a164;
+    data_ov002_021103ac.mCleanup = 0;
+    data_ov002_021103ac.mMain = data_ov002_02109dd4;
+    data_ov002_021103dc.mCleanup = 0;
+    data_ov002_021103dc.mInit = data_ov002_0210a33c;
+    data_ov002_021103dc.mMain = data_ov002_0210a034;
+    data_ov002_021103f4.mInit = data_ov002_02109ec4;
+    data_ov002_021103f4.mCleanup = 0;
+    data_ov002_021103f4.mMain = data_ov002_0210a03c;
+    data_ov002_02110424.mCleanup = 0;
+    data_ov002_02110424.mInit = data_ov002_02109ecc;
+    data_ov002_02110424.mMain = &daPly_c::St_Land_Main;
+    data_ov002_0211043c.mInit = data_ov002_0210a044;
+    data_ov002_0211043c.mCleanup = 0;
+    data_ov002_0211043c.mMain = data_ov002_02109e4c;
+    data_ov002_02110454.mInit = data_ov002_0210a04c;
+    data_ov002_02110454.mMain = &daPly_c::St_Spin_Main;
+    data_ov002_02110454.mCleanup = &daPly_c::St_Spin_Cleanup;
+    data_ov002_02110484.mInit = data_ov002_02109e54;
+    data_ov002_02110484.mMain = data_ov002_02109ed4;
+    data_ov002_02110484.mCleanup = &daPly_c::St_CrazedCrate_Cleanup;
+    data_ov002_0211049c.mCleanup = 0;
+    data_ov002_0211049c.mInit = data_ov002_0210a05c;
+    data_ov002_0211049c.mMain = &daPly_c::St_WaitQuicksand_Main;
+    data_ov002_021104cc.mInit = data_ov002_02109ddc;
+    data_ov002_021104cc.mCleanup = 0;
+    data_ov002_021104cc.mMain = data_ov002_0210a0f4;
+    data_ov002_021104e4.mCleanup = 0;
+    data_ov002_021104e4.mInit = data_ov002_02109de4;
+    data_ov002_021104e4.mMain = &daPly_c::St_Crouch_Main;
+    data_ov002_02110514.mInit = data_ov002_02109df4;
+    data_ov002_02110514.mCleanup = 0;
+    data_ov002_02110514.mMain = data_ov002_0210a0d4;
+    data_ov002_0211052c.mCleanup = 0;
+    data_ov002_0211052c.mInit = &daPly_c::St_BackFlip_Init;
+    data_ov002_0211052c.mMain = &daPly_c::St_SideFlip_Main;
+    data_ov002_0211055c.mInit = &daPly_c::St_LongJump_Init;
+    data_ov002_0211055c.mCleanup = 0;
+    data_ov002_0211055c.mMain = &daPly_c::St_LongJump_Main;
+    data_ov002_02110574.mCleanup = 0;
+    data_ov002_02110574.mInit = &daPly_c::St_PunchKick_Init;
+    data_ov002_02110574.mMain = &daPly_c::St_PunchKick_Main;
+    data_ov002_021105a4.mInit = &daPly_c::St_GroundPound_Init;
+    data_ov002_021105a4.mMain = &daPly_c::St_GroundPound_Main;
+    data_ov002_021105a4.mCleanup = &daPly_c::St_GroundPound_Cleanup;
+    data_ov002_021105bc.mCleanup = 0;
+    data_ov002_021105bc.mInit = &daPly_c::St_Dive_Init;
+    data_ov002_021105bc.mMain = &daPly_c::St_StomachSlide_Main;
+    data_ov002_021105d4.mInit = data_ov002_0210a0ac;
+    data_ov002_021105d4.mCleanup = 0;
+    data_ov002_021105d4.mMain = data_ov002_02109f14;
+    data_ov002_021105ec.mInit = &daPly_c::St_GrabBowserTail_Init;
+    data_ov002_021105ec.mMain = &daPly_c::St_GrabBowserTail_Main;
+    data_ov002_021105ec.mCleanup = &daPly_c::St_GrabBowserTail_Cleanup;
+    data_ov002_02110604.mInit = &daPly_c::St_SwingPlayer_Init;
+    data_ov002_02110604.mMain = &daPly_c::St_SwingPlayer_Main;
+    data_ov002_02110604.mCleanup = &daPly_c::St_SwingPlayer_Cleanup;
+    data_ov002_0211061c.mCleanup = 0;
+    data_ov002_0211061c.mInit = data_ov002_0210a1dc;
+    data_ov002_0211061c.mMain = &daPly_c::St_SweepKick_Main;
+    data_ov002_02110634.mInit = &daPly_c::St_SlideKick_Init;
+    data_ov002_02110634.mCleanup = 0;
+    data_ov002_02110634.mMain = data_ov002_0210a09c;
+    data_ov002_0211064c.mInit = data_ov002_02109e6c;
+    data_ov002_0211064c.mMain = data_ov002_0210a0e4;
+    data_ov002_0211064c.mCleanup = data_ov002_0210a13c;
+    data_ov002_02110664.mInit = data_ov002_0210a17c;
+    data_ov002_02110664.mMain = data_ov002_0210a1a4;
+    data_ov002_02110664.mCleanup = data_ov002_02109f5c;
+    data_ov002_0211067c.mInit = data_ov002_0210a204;
+    data_ov002_0211067c.mMain = data_ov002_0210a224;
+    data_ov002_0211067c.mCleanup = data_ov002_0210a24c;
+    data_ov002_02110694.mCleanup = 0;
+    data_ov002_02110694.mInit = &daPly_c::St_WaterJump_Init;
+    data_ov002_02110694.mMain = data_ov002_0210a2fc;
+    data_ov002_021106ac.mInit = data_ov002_0210a2ec;
+    data_ov002_021106ac.mMain = data_ov002_0210a0a4;
+    data_ov002_021106ac.mCleanup = data_ov002_0210a194;
+    data_ov002_021106c4.mInit = data_ov002_0210a294;
+    data_ov002_021106c4.mMain = data_ov002_02109eb4;
+    data_ov002_021106c4.mCleanup = data_ov002_02109e84;
+    data_ov002_021106dc.mInit = &daPly_c::St_Climb_Init;
+    data_ov002_021106dc.mMain = &daPly_c::St_Climb_Main;
+    data_ov002_021106dc.mCleanup = &daPly_c::St_Climb_Cleanup;
+    data_ov002_021106f4.mInit = data_ov002_0210a2c4;
+    data_ov002_021106f4.mMain = &daPly_c::St_Headstand_Main;
+    data_ov002_021106f4.mCleanup = &daPly_c::St_Climb_Cleanup;
+    data_ov002_0211070c.mCleanup = 0;
+    data_ov002_0211070c.mInit = &daPly_c::St_WallJump_Init;
+    data_ov002_0211070c.mMain = &daPly_c::St_WallJump_Main;
+    data_ov002_02110724.mInit = data_ov002_0210a2ac;
+    data_ov002_02110724.mCleanup = 0;
+    data_ov002_02110724.mMain = data_ov002_02109ef4;
+    data_ov002_0210ffec.mInit = &daPly_c::St_LedgeHang_Init;
+    data_ov002_0210ffec.mMain = data_ov002_0210a06c;
+    data_ov002_0210ffec.mCleanup = data_ov002_02109eec;
+    data_ov002_02110004.mCleanup = 0;
+    data_ov002_02110004.mInit = &daPly_c::St_LedgeGrab_Init;
+    data_ov002_02110004.mMain = &daPly_c::St_LedgeGrab_Main;
+    data_ov002_0211001c.mInit = &daPly_c::St_CeilingGrate_Init;
+    data_ov002_0211001c.mCleanup = 0;
+    data_ov002_0211001c.mMain = &daPly_c::St_CeilingGrate_Main;
+    data_ov002_02110034.mInit = data_ov002_02109ee4;
+    data_ov002_02110034.mMain = data_ov002_02109efc;
+    data_ov002_02110034.mCleanup = &daPly_c::St_YoshiPower_Cleanup;
+    data_ov002_0211004c.mCleanup = 0;
+    data_ov002_0211004c.mInit = data_ov002_02109f04;
+    data_ov002_0211004c.mMain = data_ov002_0210a32c;
+    data_ov002_02110064.mInit = &daPly_c::St_InYoshiMouth_Init;
+    data_ov002_02110064.mMain = &daPly_c::St_InYoshiMouth_Main;
+    data_ov002_02110064.mCleanup = data_ov002_0210a08c;
+    data_ov002_0211007c.mCleanup = 0;
+    data_ov002_0211007c.mInit = data_ov002_02109e74;
+    data_ov002_0211007c.mMain = data_ov002_02109e7c;
+    data_ov002_02110094.mInit = data_ov002_02109f1c;
+    data_ov002_02110094.mMain = data_ov002_02109f24;
+    data_ov002_02110094.mCleanup = data_ov002_02109edc;
+    data_ov002_021100ac.mCleanup = 0;
+    data_ov002_021100ac.mInit = data_ov002_02109f2c;
+    data_ov002_021100ac.mMain = data_ov002_0210a2d4;
+    data_ov002_021100c4.mInit = data_ov002_02109e8c;
+    data_ov002_021100c4.mCleanup = 0;
+    data_ov002_021100c4.mMain = data_ov002_02109f34;
+    data_ov002_021100dc.mCleanup = 0;
+    data_ov002_021100dc.mInit = data_ov002_02109f3c;
+    data_ov002_021100dc.mMain = data_ov002_02109e5c;
+    data_ov002_021100f4.mInit = data_ov002_0210a16c;
+    data_ov002_021100f4.mCleanup = 0;
+    data_ov002_021100f4.mMain = data_ov002_02109f4c;
+    data_ov002_0211010c.mCleanup = 0;
+    data_ov002_0211010c.mInit = data_ov002_0210a28c;
+    data_ov002_0211010c.mMain = data_ov002_0210a1bc;
+    data_ov002_02110124.mInit = data_ov002_02109e04;
+    data_ov002_02110124.mCleanup = 0;
+    data_ov002_02110124.mMain = &daPly_c::St_DeadPit_Main;
+    data_ov002_0211016c.mInit = data_ov002_02109f7c;
+    data_ov002_0211016c.mMain = data_ov002_0210a254;
+    data_ov002_0211016c.mCleanup = data_ov002_02109f8c;
+    data_ov002_021101cc.mInit = data_ov002_02109f9c;
+    data_ov002_021101cc.mMain = data_ov002_02109e24;
+    data_ov002_021101cc.mCleanup = data_ov002_0210a234;
+    data_ov002_0211022c.mInit = data_ov002_0210a284;
+    data_ov002_0211022c.mMain = data_ov002_0210a21c;
+    data_ov002_0211022c.mCleanup = data_ov002_02109fcc;
+    data_ov002_0211025c.mCleanup = 0;
+    data_ov002_0211025c.mInit = data_ov002_0210a20c;
+    data_ov002_0211025c.mMain = data_ov002_02109ea4;
+    data_ov002_021102a4.mInit = data_ov002_0210a1f4;
+    data_ov002_021102a4.mCleanup = 0;
+    data_ov002_021102a4.mMain = data_ov002_02109f6c;
+    data_ov002_021102ec.mInit = data_ov002_02109e34;
+    data_ov002_021102ec.mMain = data_ov002_02109f64;
+    data_ov002_021102ec.mCleanup = data_ov002_0210a2dc;
+    data_ov002_0211034c.mInit = data_ov002_0210a1ac;
+    data_ov002_0211034c.mMain = data_ov002_0210a19c;
+    data_ov002_0211034c.mCleanup = data_ov002_0210a014;
+    data_ov002_0211037c.mCleanup = 0;
+    data_ov002_0211037c.mInit = data_ov002_0210a184;
+    data_ov002_0211037c.mMain = data_ov002_0210a024;
+    data_ov002_021103c4.mInit = data_ov002_0210a02c;
+    data_ov002_021103c4.mCleanup = 0;
+    data_ov002_021103c4.mMain = data_ov002_0210a15c;
+    data_ov002_0211040c.mCleanup = 0;
+    data_ov002_0211040c.mInit = data_ov002_0210a344;
+    data_ov002_0211040c.mMain = &daPly_c::St_StuckInGround_Main;
+    data_ov002_0211046c.mInit = &daPly_c::St_Talk_Init;
+    data_ov002_0211046c.mMain = &daPly_c::St_Talk_Main;
+    data_ov002_0211046c.mCleanup = data_ov002_0210a11c;
+    data_ov002_021104b4.mInit = data_ov002_0210a114;
+    data_ov002_021104b4.mMain = data_ov002_0210a104;
+    data_ov002_021104b4.mCleanup = data_ov002_0210a0fc;
+    data_ov002_021104fc.mCleanup = 0;
+    data_ov002_021104fc.mInit = data_ov002_02109e64;
+    data_ov002_021104fc.mMain = data_ov002_0210a0ec;
+    data_ov002_02110544.mInit = data_ov002_0210a0cc;
+    data_ov002_02110544.mCleanup = 0;
+    data_ov002_02110544.mMain = data_ov002_0210a0c4;
+    data_ov002_0211058c.mInit = &daPly_c::St_EndingFly_Init;
+    data_ov002_0211058c.mCleanup = 0;
+    data_ov002_0211058c.mMain = data_ov002_0210a0bc;
+    func_ov002_020e6ad4(data_ov002_02110804);
+    data_ov002_0211073c[0] = data_ov002_02109f0c;
+    data_ov002_0211073c[1] = data_ov002_0210a47c.pmf;
+    data_ov002_0211073c[2] = data_ov002_0210a10c;
+    data_ov002_0211073c[3] = &daPly_c::func_ov002_020e1c20;
+    data_ov002_02110884[0] = data_ov002_02109dfc;
+    data_ov002_02110884[1] = data_ov002_0210a264;
+    data_ov002_02110884[2] = data_ov002_0210a244;
+    data_ov002_02110884[3] = data_ov002_0210a23c;
+    data_ov002_02110884[4] = data_ov002_0210a274;
+    data_ov002_02110884[5] = data_ov002_0210a22c;
+    data_ov002_02110884[6] = data_ov002_0210a29c;
+    data_ov002_02110884[7] = data_ov002_0210a1fc;
+    data_ov002_02110884[8] = data_ov002_0210a1ec;
+    data_ov002_02110884[9] = data_ov002_02109e2c;
+    data_ov002_02110884[10] = data_ov002_0210a1cc;
+    data_ov002_02110884[11] = data_ov002_0210a1b4;
+    data_ov002_02110884[12] = data_ov002_02109f54;
+    data_ov002_02110884[13] = data_ov002_0210a30c;
+    data_ov002_02110884[14] = data_ov002_0210a174;
+    data_ov002_02110884[15] = data_ov002_02109f44;
+    data_ov002_02110884[16] = data_ov002_0210a154;
+    data_ov002_02110884[17] = data_ov002_0210a144;
+    data_ov002_02110884[18] = data_ov002_0210a134;
+    data_ov002_02110884[19] = data_ov002_0210a12c;
+    data_ov002_0211075c[0] = &daPly_c::func_ov002_020c75f0;
+    data_ov002_0211075c[1] = &daPly_c::func_ov002_020c7350;
+    data_ov002_0211075c[2] = &daPly_c::func_ov002_020c71e0;
+    data_ov002_0211075c[3] = data_ov002_0210a074;
+    data_ov002_0211075c[4] = data_ov002_0210a334;
+    data_ov002_0211075c[5] = &daPly_c::func_ov002_020c70ac;
+    data_ov002_0211075c[6] = &daPly_c::func_ov002_020c6fe4;
+}
+
+#pragma section initsec begin
 void __sinit_ov002_021019d0(void) {
     func_0203b9b4(&data_ov002_0210e160, 0x4d2);
     __register_global_object(&data_ov002_0210e160, (void *)func_0201973c, data_ov002_0210f9b0);
@@ -25684,272 +25777,7 @@ void __sinit_ov002_021019d0(void) {
     SharedFilePtr_Construct_TexSeq(&data_ov002_0210e500, 0x80b2);
     __register_global_object(&data_ov002_0210e500, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f2fc);
-    data_ov002_0211013c.mInit = data_ov002_02109e0c;
-    data_ov002_0211013c.mMain = data_ov002_02109f74;
-    data_ov002_0211013c.mCleanup = 0;
-    daPly_c::ST_WAIT.mInit = data_ov002_0210a25c;
-    daPly_c::ST_WAIT.mMain = data_ov002_02109e14;
-    daPly_c::ST_WAIT.mCleanup = data_ov002_02109f84;
-    data_ov002_02110184.mCleanup = 0;
-    data_ov002_02110184.mInit = data_ov002_02109f94;
-    data_ov002_02110184.mMain = data_ov002_02109e1c;
-    data_ov002_0211019c.mInit = data_ov002_02109fa4;
-    data_ov002_0211019c.mCleanup = 0;
-    data_ov002_0211019c.mMain = data_ov002_02109fac;
-    data_ov002_021101b4.mCleanup = 0;
-    data_ov002_021101b4.mInit = data_ov002_02109dec;
-    data_ov002_021101b4.mMain = data_ov002_0210a26c;
-    data_ov002_021101e4.mInit = data_ov002_02109fb4;
-    data_ov002_021101e4.mCleanup = 0;
-    data_ov002_021101e4.mMain = data_ov002_0210a27c;
-    data_ov002_021101fc.mCleanup = 0;
-    data_ov002_021101fc.mInit = data_ov002_02109fbc;
-    data_ov002_021101fc.mMain = data_ov002_02109fc4;
-    data_ov002_02110214.mInit = data_ov002_0210a214;
-    data_ov002_02110214.mCleanup = 0;
-    data_ov002_02110214.mMain = data_ov002_02109fd4;
-    daPly_c::ST_OWL.mInit = data_ov002_02109e9c;
-    daPly_c::ST_OWL.mMain = data_ov002_02109fdc;
-    daPly_c::ST_OWL.mCleanup = data_ov002_0210a2a4;
-    data_ov002_02110274.mCleanup = 0;
-    data_ov002_02110274.mInit = data_ov002_02109eac;
-    data_ov002_02110274.mMain = data_ov002_0210a2b4;
-    data_ov002_0211028c.mInit = data_ov002_0210a2bc;
-    data_ov002_0211028c.mMain = data_ov002_02109fec;
-    data_ov002_0211028c.mCleanup = data_ov002_0210a1e4;
-    data_ov002_021102bc.mCleanup = 0;
-    data_ov002_021102bc.mInit = data_ov002_02109e94;
-    data_ov002_021102bc.mMain = data_ov002_0210a2cc;
-    data_ov002_021102d4.mInit = data_ov002_02109ffc;
-    data_ov002_021102d4.mMain = data_ov002_0210a1c4;
-    data_ov002_021102d4.mCleanup = data_ov002_02109ebc;
-    data_ov002_02110304.mInit = data_ov002_0210a2e4;
-    data_ov002_02110304.mMain = data_ov002_0210a004;
-    data_ov002_02110304.mCleanup = data_ov002_0210a2f4;
-    data_ov002_0211031c.mCleanup = 0;
-    data_ov002_0211031c.mInit = data_ov002_0210a00c;
-    data_ov002_0211031c.mMain = data_ov002_02109e3c;
-    data_ov002_02110334.mInit = data_ov002_0210a18c;
-    data_ov002_02110334.mCleanup = 0;
-    data_ov002_02110334.mMain = data_ov002_0210a304;
-    data_ov002_02110364.mInit = data_ov002_0210a01c;
-    data_ov002_02110364.mMain = data_ov002_02109e44;
-    data_ov002_02110364.mCleanup = data_ov002_0210a314;
-    data_ov002_02110394.mCleanup = 0;
-    data_ov002_02110394.mInit = data_ov002_0210a31c;
-    data_ov002_02110394.mMain = data_ov002_0210a324;
-    data_ov002_021103ac.mInit = data_ov002_0210a164;
-    data_ov002_021103ac.mCleanup = 0;
-    data_ov002_021103ac.mMain = data_ov002_02109dd4;
-    data_ov002_021103dc.mCleanup = 0;
-    data_ov002_021103dc.mInit = data_ov002_0210a33c;
-    data_ov002_021103dc.mMain = data_ov002_0210a034;
-    data_ov002_021103f4.mInit = data_ov002_02109ec4;
-    data_ov002_021103f4.mCleanup = 0;
-    data_ov002_021103f4.mMain = data_ov002_0210a03c;
-    data_ov002_02110424.mCleanup = 0;
-    data_ov002_02110424.mInit = data_ov002_02109ecc;
-    data_ov002_02110424.mMain = PlayerPmf_St_Land_Main();
-    data_ov002_0211043c.mInit = data_ov002_0210a044;
-    data_ov002_0211043c.mCleanup = 0;
-    data_ov002_0211043c.mMain = data_ov002_02109e4c;
-    data_ov002_02110454.mInit = data_ov002_0210a04c;
-    data_ov002_02110454.mMain = PlayerPmf_St_Spin_Main();
-    data_ov002_02110454.mCleanup = PlayerPmf_St_Spin_Cleanup();
-    data_ov002_02110484.mInit = data_ov002_02109e54;
-    data_ov002_02110484.mMain = data_ov002_02109ed4;
-    data_ov002_02110484.mCleanup = PlayerPmf_St_CrazedCrate_Cleanup();
-    data_ov002_0211049c.mCleanup = 0;
-    data_ov002_0211049c.mInit = data_ov002_0210a05c;
-    data_ov002_0211049c.mMain = PlayerPmf_St_WaitQuicksand_Main();
-    data_ov002_021104cc.mInit = data_ov002_02109ddc;
-    data_ov002_021104cc.mCleanup = 0;
-    data_ov002_021104cc.mMain = data_ov002_0210a0f4;
-    data_ov002_021104e4.mCleanup = 0;
-    data_ov002_021104e4.mInit = data_ov002_02109de4;
-    data_ov002_021104e4.mMain = PlayerPmf_St_Crouch_Main();
-    data_ov002_02110514.mInit = data_ov002_02109df4;
-    data_ov002_02110514.mCleanup = 0;
-    data_ov002_02110514.mMain = data_ov002_0210a0d4;
-    data_ov002_0211052c.mCleanup = 0;
-    data_ov002_0211052c.mInit = PlayerPmf_St_BackFlip_Init();
-    data_ov002_0211052c.mMain = PlayerPmf_St_SideFlip_Main();
-    data_ov002_0211055c.mInit = PlayerPmf_St_LongJump_Init();
-    data_ov002_0211055c.mCleanup = 0;
-    data_ov002_0211055c.mMain = PlayerPmf_St_LongJump_Main();
-    data_ov002_02110574.mCleanup = 0;
-    data_ov002_02110574.mInit = PlayerPmf_St_PunchKick_Init();
-    data_ov002_02110574.mMain = PlayerPmf_St_PunchKick_Main();
-    data_ov002_021105a4.mInit = PlayerPmf_St_GroundPound_Init();
-    data_ov002_021105a4.mMain = PlayerPmf_St_GroundPound_Main();
-    data_ov002_021105a4.mCleanup = PlayerPmf_St_GroundPound_Cleanup();
-    data_ov002_021105bc.mCleanup = 0;
-    data_ov002_021105bc.mInit = PlayerPmf_St_Dive_Init();
-    data_ov002_021105bc.mMain = PlayerPmf_St_StomachSlide_Main();
-    data_ov002_021105d4.mInit = data_ov002_0210a0ac;
-    data_ov002_021105d4.mCleanup = 0;
-    data_ov002_021105d4.mMain = data_ov002_02109f14;
-    data_ov002_021105ec.mInit = PlayerPmf_St_GrabBowserTail_Init();
-    data_ov002_021105ec.mMain = PlayerPmf_St_GrabBowserTail_Main();
-    data_ov002_021105ec.mCleanup = PlayerPmf_St_GrabBowserTail_Cleanup();
-    data_ov002_02110604.mInit = PlayerPmf_St_SwingPlayer_Init();
-    data_ov002_02110604.mMain = PlayerPmf_St_SwingPlayer_Main();
-    data_ov002_02110604.mCleanup = PlayerPmf_St_SwingPlayer_Cleanup();
-    data_ov002_0211061c.mCleanup = 0;
-    data_ov002_0211061c.mInit = data_ov002_0210a1dc;
-    data_ov002_0211061c.mMain = PlayerPmf_St_SweepKick_Main();
-    data_ov002_02110634.mInit = PlayerPmf_St_SlideKick_Init();
-    data_ov002_02110634.mCleanup = 0;
-    data_ov002_02110634.mMain = data_ov002_0210a09c;
-    data_ov002_0211064c.mInit = data_ov002_02109e6c;
-    data_ov002_0211064c.mMain = data_ov002_0210a0e4;
-    data_ov002_0211064c.mCleanup = data_ov002_0210a13c;
-    data_ov002_02110664.mInit = data_ov002_0210a17c;
-    data_ov002_02110664.mMain = data_ov002_0210a1a4;
-    data_ov002_02110664.mCleanup = data_ov002_02109f5c;
-    data_ov002_0211067c.mInit = data_ov002_0210a204;
-    data_ov002_0211067c.mMain = data_ov002_0210a224;
-    data_ov002_0211067c.mCleanup = data_ov002_0210a24c;
-    data_ov002_02110694.mCleanup = 0;
-    data_ov002_02110694.mInit = PlayerPmf_St_WaterJump_Init();
-    data_ov002_02110694.mMain = data_ov002_0210a2fc;
-    data_ov002_021106ac.mInit = data_ov002_0210a2ec;
-    data_ov002_021106ac.mMain = data_ov002_0210a0a4;
-    data_ov002_021106ac.mCleanup = data_ov002_0210a194;
-    data_ov002_021106c4.mInit = data_ov002_0210a294;
-    data_ov002_021106c4.mMain = data_ov002_02109eb4;
-    data_ov002_021106c4.mCleanup = data_ov002_02109e84;
-    data_ov002_021106dc.mInit = PlayerPmf_St_Climb_Init();
-    data_ov002_021106dc.mMain = PlayerPmf_St_Climb_Main();
-    data_ov002_021106dc.mCleanup = PlayerPmf_St_Climb_Cleanup();
-    data_ov002_021106f4.mInit = data_ov002_0210a2c4;
-    data_ov002_021106f4.mMain = PlayerPmf_St_Headstand_Main();
-    data_ov002_021106f4.mCleanup = PlayerPmf_St_Climb_Cleanup_2();
-    data_ov002_0211070c.mCleanup = 0;
-    data_ov002_0211070c.mInit = PlayerPmf_St_WallJump_Init();
-    data_ov002_0211070c.mMain = PlayerPmf_St_WallJump_Main();
-    data_ov002_02110724.mInit = data_ov002_0210a2ac;
-    data_ov002_02110724.mCleanup = 0;
-    data_ov002_02110724.mMain = data_ov002_02109ef4;
-    data_ov002_0210ffec.mInit = PlayerPmf_St_LedgeHang_Init();
-    data_ov002_0210ffec.mMain = data_ov002_0210a06c;
-    data_ov002_0210ffec.mCleanup = data_ov002_02109eec;
-    data_ov002_02110004.mCleanup = 0;
-    data_ov002_02110004.mInit = PlayerPmf_St_LedgeGrab_Init();
-    data_ov002_02110004.mMain = PlayerPmf_St_LedgeGrab_Main();
-    data_ov002_0211001c.mInit = PlayerPmf_St_CeilingGrate_Init();
-    data_ov002_0211001c.mCleanup = 0;
-    data_ov002_0211001c.mMain = PlayerPmf_St_CeilingGrate_Main();
-    data_ov002_02110034.mInit = data_ov002_02109ee4;
-    data_ov002_02110034.mMain = data_ov002_02109efc;
-    data_ov002_02110034.mCleanup = PlayerPmf_St_YoshiPower_Cleanup();
-    data_ov002_0211004c.mCleanup = 0;
-    data_ov002_0211004c.mInit = data_ov002_02109f04;
-    data_ov002_0211004c.mMain = data_ov002_0210a32c;
-    data_ov002_02110064.mInit = PlayerPmf_St_InYoshiMouth_Init();
-    data_ov002_02110064.mMain = PlayerPmf_St_InYoshiMouth_Main();
-    data_ov002_02110064.mCleanup = data_ov002_0210a08c;
-    data_ov002_0211007c.mCleanup = 0;
-    data_ov002_0211007c.mInit = data_ov002_02109e74;
-    data_ov002_0211007c.mMain = data_ov002_02109e7c;
-    data_ov002_02110094.mInit = data_ov002_02109f1c;
-    data_ov002_02110094.mMain = data_ov002_02109f24;
-    data_ov002_02110094.mCleanup = data_ov002_02109edc;
-    data_ov002_021100ac.mCleanup = 0;
-    data_ov002_021100ac.mInit = data_ov002_02109f2c;
-    data_ov002_021100ac.mMain = data_ov002_0210a2d4;
-    data_ov002_021100c4.mInit = data_ov002_02109e8c;
-    data_ov002_021100c4.mCleanup = 0;
-    data_ov002_021100c4.mMain = data_ov002_02109f34;
-    data_ov002_021100dc.mCleanup = 0;
-    data_ov002_021100dc.mInit = data_ov002_02109f3c;
-    data_ov002_021100dc.mMain = data_ov002_02109e5c;
-    data_ov002_021100f4.mInit = data_ov002_0210a16c;
-    data_ov002_021100f4.mCleanup = 0;
-    data_ov002_021100f4.mMain = data_ov002_02109f4c;
-    data_ov002_0211010c.mCleanup = 0;
-    data_ov002_0211010c.mInit = data_ov002_0210a28c;
-    data_ov002_0211010c.mMain = data_ov002_0210a1bc;
-    data_ov002_02110124.mInit = data_ov002_02109e04;
-    data_ov002_02110124.mCleanup = 0;
-    data_ov002_02110124.mMain = PlayerPmf_St_DeadPit_Main();
-    data_ov002_0211016c.mInit = data_ov002_02109f7c;
-    data_ov002_0211016c.mMain = data_ov002_0210a254;
-    data_ov002_0211016c.mCleanup = data_ov002_02109f8c;
-    data_ov002_021101cc.mInit = data_ov002_02109f9c;
-    data_ov002_021101cc.mMain = data_ov002_02109e24;
-    data_ov002_021101cc.mCleanup = data_ov002_0210a234;
-    data_ov002_0211022c.mInit = data_ov002_0210a284;
-    data_ov002_0211022c.mMain = data_ov002_0210a21c;
-    data_ov002_0211022c.mCleanup = data_ov002_02109fcc;
-    data_ov002_0211025c.mCleanup = 0;
-    data_ov002_0211025c.mInit = data_ov002_0210a20c;
-    data_ov002_0211025c.mMain = data_ov002_02109ea4;
-    data_ov002_021102a4.mInit = data_ov002_0210a1f4;
-    data_ov002_021102a4.mCleanup = 0;
-    data_ov002_021102a4.mMain = data_ov002_02109f6c;
-    data_ov002_021102ec.mInit = data_ov002_02109e34;
-    data_ov002_021102ec.mMain = data_ov002_02109f64;
-    data_ov002_021102ec.mCleanup = data_ov002_0210a2dc;
-    data_ov002_0211034c.mInit = data_ov002_0210a1ac;
-    data_ov002_0211034c.mMain = data_ov002_0210a19c;
-    data_ov002_0211034c.mCleanup = data_ov002_0210a014;
-    data_ov002_0211037c.mCleanup = 0;
-    data_ov002_0211037c.mInit = data_ov002_0210a184;
-    data_ov002_0211037c.mMain = data_ov002_0210a024;
-    data_ov002_021103c4.mInit = data_ov002_0210a02c;
-    data_ov002_021103c4.mCleanup = 0;
-    data_ov002_021103c4.mMain = data_ov002_0210a15c;
-    data_ov002_0211040c.mCleanup = 0;
-    data_ov002_0211040c.mInit = data_ov002_0210a344;
-    data_ov002_0211040c.mMain = PlayerPmf_St_StuckInGround_Main();
-    data_ov002_0211046c.mInit = PlayerPmf_St_Talk_Init();
-    data_ov002_0211046c.mMain = PlayerPmf_St_Talk_Main();
-    data_ov002_0211046c.mCleanup = data_ov002_0210a11c;
-    data_ov002_021104b4.mInit = data_ov002_0210a114;
-    data_ov002_021104b4.mMain = data_ov002_0210a104;
-    data_ov002_021104b4.mCleanup = data_ov002_0210a0fc;
-    data_ov002_021104fc.mCleanup = 0;
-    data_ov002_021104fc.mInit = data_ov002_02109e64;
-    data_ov002_021104fc.mMain = data_ov002_0210a0ec;
-    data_ov002_02110544.mInit = data_ov002_0210a0cc;
-    data_ov002_02110544.mCleanup = 0;
-    data_ov002_02110544.mMain = data_ov002_0210a0c4;
-    data_ov002_0211058c.mInit = PlayerPmf_St_EndingFly_Init();
-    data_ov002_0211058c.mCleanup = 0;
-    data_ov002_0211058c.mMain = data_ov002_0210a0bc;
-    func_ov002_020e6ad4(data_ov002_02110804);
-    data_ov002_0211073c[0] = data_ov002_02109f0c;
-    data_ov002_0211073c[1] = data_ov002_0210a47c.pmf;
-    data_ov002_0211073c[2] = data_ov002_0210a10c;
-    data_ov002_0211073c[3] = PlayerPmf_func_ov002_020e1c20();
-    data_ov002_02110884[0] = data_ov002_02109dfc;
-    data_ov002_02110884[1] = data_ov002_0210a264;
-    data_ov002_02110884[2] = data_ov002_0210a244;
-    data_ov002_02110884[3] = data_ov002_0210a23c;
-    data_ov002_02110884[4] = data_ov002_0210a274;
-    data_ov002_02110884[5] = data_ov002_0210a22c;
-    data_ov002_02110884[6] = data_ov002_0210a29c;
-    data_ov002_02110884[7] = data_ov002_0210a1fc;
-    data_ov002_02110884[8] = data_ov002_0210a1ec;
-    data_ov002_02110884[9] = data_ov002_02109e2c;
-    data_ov002_02110884[10] = data_ov002_0210a1cc;
-    data_ov002_02110884[11] = data_ov002_0210a1b4;
-    data_ov002_02110884[12] = data_ov002_02109f54;
-    data_ov002_02110884[13] = data_ov002_0210a30c;
-    data_ov002_02110884[14] = data_ov002_0210a174;
-    data_ov002_02110884[15] = data_ov002_02109f44;
-    data_ov002_02110884[16] = data_ov002_0210a154;
-    data_ov002_02110884[17] = data_ov002_0210a144;
-    data_ov002_02110884[18] = data_ov002_0210a134;
-    data_ov002_02110884[19] = data_ov002_0210a12c;
-    data_ov002_0211075c[0] = PlayerPmf_func_ov002_020c75f0();
-    data_ov002_0211075c[1] = PlayerPmf_func_ov002_020c7350();
-    data_ov002_0211075c[2] = PlayerPmf_func_ov002_020c71e0();
-    data_ov002_0211075c[3] = data_ov002_0210a074;
-    data_ov002_0211075c[4] = data_ov002_0210a334;
-    data_ov002_0211075c[5] = PlayerPmf_func_ov002_020c70ac();
-    data_ov002_0211075c[6] = PlayerPmf_func_ov002_020c6fe4();
+    PlayerInitStates();
 }
 }
 
