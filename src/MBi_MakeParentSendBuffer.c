@@ -10,7 +10,7 @@ typedef struct MBCommParentBlockHeader {
     u16 seqno;
 } MBCommParentBlockHeader;
 
-u8 *func_02065d5c(MBCommParentBlockHeader *src, u8 *dst) {
+u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *src, u8 *dst) {
     u8 *d = dst;
     *d++ = src->type;
     switch (src->type) {

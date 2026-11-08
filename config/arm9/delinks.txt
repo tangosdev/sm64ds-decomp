@@ -3172,11 +3172,11 @@ src/unnamed/arm9/0206/func_02065c1c.c:
     complete
     .text start:0x02065c1c end:0x02065c2c
 
-src/unnamed/arm9/0206/func_02065c2c.c:
+src/MBi_SetRecvBufferFromChild.c:
     complete
     .text start:0x02065c2c end:0x02065d5c
 
-src/unnamed/arm9/0206/func_02065d5c.c:
+src/MBi_MakeParentSendBuffer.c:
     complete
     .text start:0x02065d5c end:0x02065de4
 
@@ -3195,7 +3195,7 @@ src/unnamed/arm9/0206/func_020672d0.c:
 src/unnamed/arm9/0206/func_0206736c.c:
     complete
     .text start:0x0206736c end:0x02067530
-src/unnamed/arm9/0206/func_02067530.c:
+src/MBi_get_blockinfo.c:
     complete
     .text start:0x02067530 end:0x02067604
 

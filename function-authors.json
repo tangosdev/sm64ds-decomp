@@ -11359,11 +11359,11 @@
     },
     "arm9:0x02065c2c": {
       "author": "lunavyqo",
-      "name": "func_02065c2c"
+      "name": "MBi_SetRecvBufferFromChild"
     },
     "arm9:0x02065d5c": {
       "author": "ruspecial",
-      "name": "func_02065d5c"
+      "name": "MBi_MakeParentSendBuffer"
     },
     "arm9:0x02065de4": {
       "author": "lunavyqo",
@@ -11459,7 +11459,7 @@
     },
     "arm9:0x02067530": {
       "author": "tangosdev",
-      "name": "func_02067530"
+      "name": "MBi_get_blockinfo"
     },
     "arm9:0x02067604": {
       "author": "andrewboudreau",

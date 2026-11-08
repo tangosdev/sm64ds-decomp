@@ -3,8 +3,8 @@
 
 #include "types.h"
 
-/* NitroSDK MBCommChildBlockHeader, a child packet unpacked by func_02065c2c
- * (MBi_SetRecvBufferFromChild): the type byte, then either the block number a
+/* NitroSDK MBCommChildBlockHeader, a child packet unpacked by
+ * MBi_SetRecvBufferFromChild: the type byte, then either the block number a
  * child asks for (types 8 and 9, the latter with reserved data) or one piece of
  * its entry request (type 7, which func_02065de4 files into mChildRequest). */
 typedef struct MBCommChildBlockHeader {
