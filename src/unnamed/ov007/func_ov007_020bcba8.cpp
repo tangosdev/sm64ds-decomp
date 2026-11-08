@@ -11,7 +11,7 @@ extern void *func_ov007_020b3f20(int n);
 extern void *func_02054ea8(void);
 extern int func_02054d88(void);
 extern void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *plane1,
-                                int plane2, void *bank);
+                          int plane2, void *bank);
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
 extern void func_ov007_020b3edc(int r0);
 extern void func_02056014(const void *src, unsigned int offset, unsigned int count);

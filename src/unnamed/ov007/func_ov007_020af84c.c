@@ -18,7 +18,6 @@ extern void Crash(void);
 extern int func_ov007_020bdeb0(int idx);
 extern void MessageWindow_Close(void);
 
-
 void func_ov007_020af84c(void)
 {
     Ov007Work *b = WORK;

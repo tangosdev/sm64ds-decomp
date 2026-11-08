@@ -406,7 +406,8 @@ Ov007ItemView *ItemView_Create(int id) {
 
     view = (Ov007ItemView *)func_ov007_020c3df4(0, 0x1c);
     hitBoxIndex = data_ov007_020d77d8[id].hitBoxIndex;
-    view->item = func_ov007_020aea6c(id, &data_ov007_020d76e8[id], &data_ov007_020d78f8[hitBoxIndex]);
+    view->item =
+        func_ov007_020aea6c(id, &data_ov007_020d76e8[id], &data_ov007_020d78f8[hitBoxIndex]);
     view->sprite = func_ov007_020c44e4(data_ov007_020d77d8[view->item->id].spriteMode);
     sprite = view->sprite;
     if (id == 0x15) {
@@ -663,7 +664,8 @@ void ItemView_HandleTouch(void *arg0, void *arg1) {
         u16 t0 = ((Ov007ItemView *)arg0)->item->id;
         if (t0 == 3 || t0 == 6) {
             if (elem_selectable(elem) && func_ov007_020c1da0(0) == 0 && tp->cur.touch != 0 &&
-                PickerScene_GetDisplayState()->currentState == 5 && PickerScene_IsAwaitingTap() == 0) {
+                PickerScene_GetDisplayState()->currentState == 5 &&
+                PickerScene_IsAwaitingTap() == 0) {
                 int pos_y = elem->sprite->screenY >> 12;
                 int pos_x = elem->sprite->screenX >> 12;
                 int max_y = elem->item->hitBox->maxY + pos_y;

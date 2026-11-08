@@ -130,7 +130,8 @@ void func_ov007_020afc44(void) {
                             RequestScreenFade(8, 0xa, 0);
                             WORK->states[2]->requestedState = 0xb;
                         }
-                        MenuText_DrawRecordBoard(WORK->targetSlot, WORK->settings, WORK->recordBoardAlt);
+                        MenuText_DrawRecordBoard(WORK->targetSlot, WORK->settings,
+                                                 WORK->recordBoardAlt);
                         scrollLayers = 1;
                         tween0->state = 1;
                         tween0->mode = 1;

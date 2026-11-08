@@ -482,8 +482,8 @@ void func_ov007_020b8690(void) {
  * screen and its two copies, and opens no window. The zero values go
  * through volatile locals, the corpus idiom for MultiStore32Bytes's value
  * argument. */
-void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *plane1,
-                         int plane2, void *bank) {
+void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *plane1, int plane2,
+                   void *bank) {
     func_ov007_020c951c(0, bank, data_ov007_02102ef8);
 
     data_ov007_02103458 = (u16)baseTile;
@@ -594,23 +594,27 @@ void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
         case 1:
             data_ov007_02103464 = s24;
             MenuText_DrawString(
-                t, (u8 *)func_ov007_020c94a0(s28, (unsigned int)MenuText_MessageIDToIndex(0x1f57)), one);
+                t, (u8 *)func_ov007_020c94a0(s28, (unsigned int)MenuText_MessageIDToIndex(0x1f57)),
+                one);
             if (alt != 0) {
                 data_ov007_02103464 = c0;
                 MenuText_DrawString(
-                    t, (u8 *)func_ov007_020c94a0(s2c, (unsigned int)MenuText_MessageIDToIndex(0x1f62)),
+                    t,
+                    (u8 *)func_ov007_020c94a0(s2c, (unsigned int)MenuText_MessageIDToIndex(0x1f62)),
                     one);
             } else {
                 data_ov007_02103464 = c0;
                 MenuText_DrawString(
-                    t, (u8 *)func_ov007_020c94a0(s30, (unsigned int)MenuText_MessageIDToIndex(0x1f58)),
+                    t,
+                    (u8 *)func_ov007_020c94a0(s30, (unsigned int)MenuText_MessageIDToIndex(0x1f58)),
                     one);
             }
             break;
         case 0x11:
             data_ov007_02103464 = s34;
             MenuText_DrawString(
-                t, (u8 *)func_ov007_020c94a0(s38, (unsigned int)MenuText_MessageIDToIndex(0x13b0)), one);
+                t, (u8 *)func_ov007_020c94a0(s38, (unsigned int)MenuText_MessageIDToIndex(0x13b0)),
+                one);
             data_ov007_02103464 = s3c;
             MenuText_DrawGlyph(t, f0);
             MenuText_DrawGlyph(t, ef);
@@ -776,11 +780,11 @@ void MessageWindow_Update(void) {
                 data_ov007_02102dd8 = 0xF;
                 data_ov007_02103464 = 0x80;
                 data_ov007_02103468 = data_ov007_02102ddc.textLine;
-                MenuText_DrawString(
-                    0,
-                    (u8 *)func_ov007_020c94a0(
-                        0, MenuText_MessageIDToIndex(data_ov007_020d7a68[data_ov007_02102ddc.kind])),
-                    0);
+                MenuText_DrawString(0,
+                                    (u8 *)func_ov007_020c94a0(
+                                        0, MenuText_MessageIDToIndex(
+                                               data_ov007_020d7a68[data_ov007_02102ddc.kind])),
+                                    0);
                 data_ov007_02102ddc.textDrawn = 1;
                 if (data_ov007_02102ddc.kind == 5) {
                     func_ov007_020bdeb0(0x10);
