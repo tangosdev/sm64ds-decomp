@@ -112,7 +112,7 @@
 #include "MgBanner.h"
 
 struct M { int _00, _01, _10, _11; };
-struct S3 { int v[3]; };
+struct SlotCharNos { int v[3]; };
 struct Entry { int file; int *sprites; };
 struct EntryTable { Entry e[29]; };
 struct OamAttr;
@@ -144,7 +144,13 @@ void Banner_StartSpin(MgBanner *e);
 void Banner_StartWaveBurst(MgBanner *e);
 }
 
-extern S3 data_ov004_020bc27c;
+/* The first OBJ character number of each graphics slot, {0x380, 0x300, 0x340}
+   (MG_BANNER_SLOTn_CHARS / 32). Banner_Init copies it whole to the stack and
+   indexes the copy: the code of a local `int charNo[3] = {...}`, whose
+   initializer template the ROM keeps here in .data. Written that way, mwccarm
+   emits the same Banner_Init but puts the template in an anonymous .rodata
+   object outside this unit's claimed .data (measured), so the copy stays. */
+extern SlotCharNos sMgBannerGfxSlotCharNo;
 extern int sMgMsgGiveUpSprites;
 static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, &sMgMsgGiveUpSprites}}};
 extern OamAttr *data_ov006_021346bc;
@@ -417,11 +423,11 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
     }
 
     {
-        S3 tmp = data_ov004_020bc27c;
+        SlotCharNos charNo = sMgBannerGfxSlotCharNo;
         e->mOamCount = (short)Mg_CopySpriteList(
             sMgBannerSprites[e->mFileIndex],
             e->mOam,
-            tmp.v[e->mGfxSlot],
+            charNo.v[e->mGfxSlot],
             e->mFileIndex);
     }
 
@@ -574,9 +580,10 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
     Vector2 center(e->mX << 12, e->mY << 12);
     Vector2 spawnPos, spawnVel;
 
-    /* The burst's effect origin: built once, on the first burst, then
-       registered for destruction at exit. */
-    static Vector2 sBannerWaveFxPos(0, 0xc0);
+    /* The particles' acceleration, which MgFx::UpdateDrift adds to their
+       velocity every frame: built once, on the first burst, then registered
+       for destruction at exit. */
+    static Vector2 sBannerWaveFxGravity(0, 0xc0);
 
     for (i = 0; i < 0x20; i++) {
         func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
@@ -584,7 +591,7 @@ extern "C" void Banner_StartWaveBurst(MgBanner *e) {
         func_0203d388((int *)&ringOffset, 0x800);
         func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
-        Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerWaveFxPos);
+        Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerWaveFxGravity);
     }
 }
 
@@ -943,7 +950,7 @@ extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
     Vector2 center(e->mX << 12, e->mY << 12);
     Vector2 spawnPos, spawnVel;
 
-    static Vector2 sBannerZoomFxPos(0, 0xc0);
+    static Vector2 sBannerZoomFxGravity(0, 0xc0);
 
     for (i = 0; i < 0x20; i++) {
         func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
@@ -951,7 +958,7 @@ extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
         func_0203d388((int *)&ringOffset, 0x800);
         func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
-        Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerZoomFxPos);
+        Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerZoomFxGravity);
     }
 }
 
