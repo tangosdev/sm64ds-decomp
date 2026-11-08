@@ -21,7 +21,8 @@ extern int data_ov007_0210325c;
 
 /* NitroSDK G3 immediate-mode commands (g3imm.h). Their arguments are
  * evaluated right to left, which is the load order the ROM shows for the
- * texcoord and translate operands. */
+ * texcoord and translate operands. File-local because adding them to
+ * include/nitro/gx/g3imm.h renumbers ov075/d_s_entry_entry's pinned @NNN. */
 static inline void G3_Color(u16 rgb) {
     reg_G3_COLOR = rgb;
 }

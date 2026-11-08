@@ -14,7 +14,9 @@
 #define reg_G3_SPE_EMI      (*(volatile u32 *)0x040004c4)
 
 /* NitroSDK G3 immediate-mode commands (g3imm.h); the right-to-left argument
- * evaluation is the z, y, x load order the ROM shows for the translate. */
+ * evaluation is the z, y, x load order the ROM shows for the translate.
+ * File-local because adding them to include/nitro/gx/g3imm.h renumbers
+ * ov075/d_s_entry_entry's pinned @NNN. */
 static inline void G3_PushMtx(void) {
     reg_G3_MTX_PUSH = 0;
 }

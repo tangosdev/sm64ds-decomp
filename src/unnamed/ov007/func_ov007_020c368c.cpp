@@ -13,7 +13,9 @@
 #define DIV_CONTROL_BUSY  (1u << 15)
 #define SQRT_CONTROL_64   1
 
-/* NitroSDK's inline IME (os_interrupt.h) and divider/square-root (cp.h) helpers. */
+/* NitroSDK's inline IME (os_interrupt.h) and divider/square-root (cp.h) helpers.
+ * File-local because the tree has no nitro/os interrupt or nitro/cp header, and an
+ * inline body in a shared header renumbers the @NNN symbols of every includer. */
 static inline u16 OS_DisableIrq(void) {
     u16 prep = REG_IME;
     REG_IME = 0;
