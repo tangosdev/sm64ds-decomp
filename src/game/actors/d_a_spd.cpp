@@ -37,6 +37,7 @@ enum Scuttlebug_AssetId {
 #include "dExtFrameCtrl_c.h"
 #include "SurfaceInfo.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "Particle__System.h"
 #include "cstd.h"
@@ -83,7 +84,6 @@ typedef void BgchInitAt_(void *self, dActor_c *actor, int radius, int height, Ve
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern Matrix4x3 data_020a0e68;           /* scratch matrix        */
-extern s16       data_02082214[];         /* sin/cos table         */
 
 /* Intra-TU forward declarations.  mwccarm lays .text down in reverse source
  * order, so this file is written ROM-descending and nearly every intra-TU call
@@ -310,17 +310,9 @@ int daSpd_c::func_ov071_02120028() {
     UpdatePos(&mdCcAc_c);
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround()) {
-        Vector3 v;
-        int x, y, z;
-        x = *(volatile int *)&mPosX;
-        v.x = x;
-        y = *(volatile int *)&mPosY;
-        v.y = y;
-        z = *(volatile int *)&mPosZ;
-        y += 0x28000;
-        v.z = z;
-        *(volatile int *)&v.y = y;
-        Particle::System::NewSimple(kPtclLandingDust, x, y, z);
+        Vector3 v = mPos;
+        v.y += 0x28000;
+        Particle::System::NewSimple(kPtclLandingDust, v.x, v.y, v.z);
         mVertSpeed = mVertSpeed * -0x28 / 100;
     } else if (mWithMeshClsn.IsOnGround()) {
         mVertSpeed = 0;
@@ -500,75 +492,19 @@ done:
 }
 
 int daSpd_c::func_ov071_0211f8d0() {
-    Vector3 *pos;
-    Vector3 v;
-    int zero;
-    char *parent;
-    int *pb0;
-    int *py;
-    int *pz;
-    int s0, s1;
-    u16 hang;
-    int saved_x;
-    int mul;
-    int rnd;
-    int one;
-    Vector3 *srcv;
-    int adj;
-    int y, z, x, y2;
-
-    zero = 0;
-    pb0 = (int *)&mFlags;
-    *pb0 = (*pb0) & 0xfff7fffe;
-
-    parent = (char *)mParent;
-    pos = &mPos;
-    mul = 0x5a000;
-    mHorzSpeed = ((dActor_c *)parent)->mHorzSpeed + 0x7000;
-    mVertSpeed = zero;
-
-    parent = (char *)mParent;
-    rnd = 0x800;
-    mAngleY = ((dActor_c *)parent)->mAngleY;
-    py = &mPosY;
-    pz = &mPosZ;
+    mFlags &= 0xfff7fffe;
+    mHorzSpeed = mParent->mHorzSpeed + 0x7000;
+    mVertSpeed = 0;
+    mAngleY = mParent->mAngleY;
     mPrevAngleY = mAngleY;
-
-    parent = (char *)mParent;
-    one = 1;
-    srcv = &((dActor_c *)parent)->mPos;
-    mPosX = srcv->x;
-    mPosY = srcv->y;
-    mPosZ = srcv->z;
-
-    saved_x = pos->x;
-    /* These two reads are ldrh. mAngleY is signed everywhere else. */
-    hang = *(u16 *)&mAngleY;
-    s0 = data_02082214[(hang >> 4) * 2];
-    adj = (int)(((s64)s0 * mul + rnd) >> 12);
-    pos->x = saved_x + adj;
-
-    *py = *py + 0x50000;
-
-    hang = *(u16 *)&mAngleY;
-    s1 = data_02082214[(hang >> 4) * 2 + 1];
-    adj = (int)(((s64)s1 * mul + rnd) >> 12);
-    *pz = *pz + adj;
-
-    parent = (char *)mParent;
-    y = ((dActor_c *)parent)->mPosY;
-    z = ((dActor_c *)parent)->mPosZ;
-    y2 = y + 0x50000;
-    x = ((dActor_c *)parent)->mPosX;
-    v.x = x;
-    v.y = y2;
-    v.z = z;
-
-    DetectRaycastClsn(v, *pos, one);
-
-    mParent = (dActor_c *)zero;
+    mPos = mParent->mPos;
+    mPosX += FX_MUL(FX_SinIdx((u16)mAngleY >> 4), 0x5a000);
+    mPosY += 0x50000;
+    mPosZ += FX_MUL(FX_CosIdx((u16)mAngleY >> 4), 0x5a000);
+    Vector3 v(mParent->mPosX, mParent->mPosY + 0x50000, mParent->mPosZ);
+    DetectRaycastClsn(v, mPos, 1);
+    mParent = 0;
     mWithMeshClsn.SetLimMovFlag();
-
     mState = 7;
     return 1;
 }

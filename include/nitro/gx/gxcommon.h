@@ -4,9 +4,11 @@
 #include "types.h"
 
 /* NitroSDK's GXOamAttr (gxcommon.h): one 8-byte OAM record, seen as its four
- * attribute halfwords or as the attribute bitfields. In a record of an OBJ
- * affine matrix, attr3 holds one of its parameters (GXOamAffine). */
+ * attribute halfwords, as attr0 and attr1 in one word (attr01, which
+ * G2_SetOBJMode rewrites), or as the attribute bitfields. In a record of an
+ * OBJ affine matrix, attr3 holds one of its parameters (GXOamAffine). */
 typedef union GXOamAttr {
+    u32 attr01;
     struct {
         u16 attr0;
         u16 attr1;

@@ -158,7 +158,6 @@ struct dCc_c;
 
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short *p);
-int __aeabi_idiv(int, int);
 void func_02012694(unsigned int, void *);
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void *m, int angle);
@@ -633,15 +632,12 @@ int daWanwan2_c::Behavior()
 
     int flag = (data_0209f2d8 == 1);
     if (flag != 0 && mCoinTimer == 0) {
-        int q16 = __aeabi_idiv(0x10000, mPathNodeIndex);
+        int q16 = 0x10000 / mPathNodeIndex;
         short spd = (short)q16;
         dActor_c *pl = ClosestPlayer();
         (void)pl;
 
-        volatile Vector3 v;
-        v.x = 0;
-        v.y = 4;
-        v.z = 0;
+        Vector3 v(0, 4, 0);
 
         dActor_c *sp =
             dActor_c::Spawn(daWanwan2_ACTOR_COIN, 2, mPos, (const Vector3_16 *)0, mAreaId, -1);

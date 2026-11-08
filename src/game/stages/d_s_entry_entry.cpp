@@ -36,10 +36,9 @@ void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 unsigned int func_02045ad8(const void *, unsigned int);
 unsigned int func_02045a50(const void *, unsigned int);
-/* local extern: the RTL divide, the geometry-engine matrix load and the
+/* local extern: the geometry-engine matrix load and the
    BMD load through a file handle, declared only in decl_common.h, which
    clashes with dScEntry_c.h's vtable spellings. */
-int __aeabi_idiv(int, int);
 void func_020553a4(void *);
 void *func_0201787c(SharedFilePtr *);
 /* local extern: the veneer to operator delete (src/engine/heap/Heap.cpp). */
@@ -407,8 +406,8 @@ void EntryMesh::InitGrid() {
                 e->pos.z = q[2];
                 e->normal = 0x1ff00000;
 
-                uu = __aeabi_idiv(0x80000, ((int)mGridDim[0]) - 1);
-                vv = __aeabi_idiv(0x80000, ((int)mGridDim[1]) - 1);
+                uu = 0x80000 / (mGridDim[0] - 1);
+                vv = 0x80000 / (mGridDim[1] - 1);
                 c = ((0x80000 - vv * j) << 8) >> 16;
                 b = ((uu * i) << 8) >> 16;
                 e->texCoord = (unsigned short)b | ((unsigned short)c << 16);
@@ -417,7 +416,7 @@ void EntryMesh::InitGrid() {
                 if (i == nb - 2)
                     acc = 0x1f4000;
                 else
-                    acc += __aeabi_idiv(0x1f4000, nb - 1);
+                    acc += 0x1f4000 / (nb - 1);
                 i++;
             } while (i < nb);
         }
@@ -427,7 +426,7 @@ void EntryMesh::InitGrid() {
         if (j == nb - 2)
             q[0] = 0x1f4000;
         else
-            q[0] += __aeabi_idiv(0x1f4000, nb - 1);
+            q[0] += 0x1f4000 / (nb - 1);
 
         j++;
     } while (j < nb);

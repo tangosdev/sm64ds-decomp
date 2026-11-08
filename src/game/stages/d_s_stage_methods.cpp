@@ -122,7 +122,6 @@ bool d_s_stage_methodsPlaySubHold(unsigned int a, unsigned int b, unsigned int c
 
 void OamRender10_d_s_stage_methods(int sub, void *attr, int x, int y, int a, int cc, int fx, int fy,
                                    int rot, int mode);
-int __aeabi_idiv(int a, int b);
 
 extern int data_0208ee44;
 extern u8 data_0208ee3c;
@@ -1125,7 +1124,7 @@ void dScStage_c::RenderNumber(unsigned char num, int x, int y, bool b, int p5) {
     int i;
 
     for (i = 0; i < 3; i++) {
-        int digit = __aeabi_idiv(num, data_020755b8[i]);
+        int digit = num / data_020755b8[i];
         if (digit != 0 || leading != 0 || i == 2) {
             if (b == 0) {
                 OAM::Render(true, OAM::NUMBERS[digit], x, y, p5, -1, mtx);

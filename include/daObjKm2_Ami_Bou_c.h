@@ -8,14 +8,12 @@
 /* daKpa_c in the Fire Sea net pole (profile KM2_AMI_BOU).
  * Direct base dBgActor_c. Factory allocates 0x358.
  * mdCcAc_c is the cylinder at 0x320. mHeightAng at 0x354 is the
- * sine-table phase: Behavior indexes this unsigned halfword, then
- * adds through a signed halfword. A plain u16 add loads ldrh where
- * the cartridge has ldrsh.
+ * sine-table phase, an s16 angle: Behavior's step loads it ldrsh.
  */
 struct daObjKm2_Ami_Bou_c : dBgActor_c {
     u8 pad_31e[0x2];
     dCcAc_c mdCcAc_c; /* 0x320 */
-    u16 mHeightAng;   /* 0x354 */
+    s16 mHeightAng;   /* 0x354 */
 
     /* Inline is load-bearing: out-of-line emits D0 before D1. */
     virtual ~daObjKm2_Ami_Bou_c() {}
