@@ -24,6 +24,7 @@
 #include "types.h"
 #include "dFdBrightness_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "common.h"
 #include "SharedFilePtr.h"
 #include "PlayerInput.h"
@@ -601,7 +602,6 @@ struct Quat {
 };
 
 extern Quat data_02092768;
-extern short data_02082214[];
 
 void FallingPetal_Update(char *self) {
     Vector3 v0;
@@ -622,7 +622,7 @@ void FallingPetal_Update(char *self) {
     PETAL(self)->mAccel.y = -0x40;
     AddVec3(&PETAL(self)->mVel, &PETAL(self)->mAccel, &PETAL(self)->mVel);
     idx = ((PETAL(self)->mPos.y >> 1) << 16) >> 20;
-    val = data_02082214[idx * 2];
+    val = FX_SinIdx(idx);
     v0.x = val;
     v0.y = 0;
     v0.z = val;
@@ -2355,7 +2355,6 @@ extern "C" {
  */
 typedef int s32;
 
-extern short data_02082214[];
 extern dClipper data_0209f43c;
 
 void Camera_UpdateMatrices(MgCamera *camera) {
@@ -2364,7 +2363,6 @@ void Camera_UpdateMatrices(MgCamera *camera) {
     struct Vector3 v28;
     struct Vector3 v34;
     struct Vector3 v40;
-    int idx;
 
     up.x = 0;
     up.y = 0x1000;
@@ -2382,9 +2380,8 @@ void Camera_UpdateMatrices(MgCamera *camera) {
         }
     }
 
-    idx = (camera->mFovAngle >> 4) * 2;
-    G3i::PerspectiveW_(data_02082214[idx], data_02082214[idx + 1], 0x1555, 0x1000, 0x1388000,
-                       0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
+    G3i::PerspectiveW_(FX_SinIdx(camera->mFovAngle >> 4), FX_CosIdx(camera->mFovAngle >> 4),
+                       0x1555, 0x1000, 0x1388000, 0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
 
     G3i::LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
                  (Matrix4x3 *)&camera->mViewMtx);
@@ -2398,16 +2395,12 @@ void Camera_UpdateMatrices(MgCamera *camera) {
 
 namespace s020bfff8 {
 extern "C" {
-extern short data_02082214[];
 
 void Camera_ProjectToScreen(MgCamera *camera, void *r1, int *r6, int *r5) {
     int out[3];
     MulVec3Mat4x3((Vector3 *)r1, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)out);
     int ang = camera->mFovAngle >> 4;
-    int i = ang * 2;
-    int cosv = data_02082214[i];
-    int sinv = data_02082214[i + 1];
-    int f1 = cstd::fdiv(cosv, sinv);
+    int f1 = cstd::fdiv(FX_SinIdx(ang), FX_CosIdx(ang));
     int r = FX_MUL(f1, -out[2]);
     int f2 = cstd::fdiv(out[1], r);
     int t1 = FX_MUL(f2, 0x5f800u);
@@ -2422,16 +2415,12 @@ void Camera_ProjectToScreen(MgCamera *camera, void *r1, int *r6, int *r5) {
 
 namespace s020bfec0 {
 extern "C" {
-extern short data_02082214[];
 
 void Camera_ProjectToScreen16(MgCamera *camera, void *r1, short *r5) {
     int out[3];
     MulVec3Mat4x3((Vector3 *)r1, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)out);
     int ang = camera->mFovAngle >> 4;
-    int i = ang * 2;
-    int cosv = data_02082214[i];
-    int sinv = data_02082214[i + 1];
-    int f1 = cstd::fdiv(cosv, sinv);
+    int f1 = cstd::fdiv(FX_SinIdx(ang), FX_CosIdx(ang));
     int r = FX_MUL(f1, -out[2]);
     int f2 = cstd::fdiv(out[1], r);
     int t1 = FX_MUL(f2, 0x5f800u);
