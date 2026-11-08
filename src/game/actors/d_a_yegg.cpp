@@ -198,8 +198,8 @@ daYegg_c::~daYegg_c()
 /* -------------------------------------------------------------------------- */
 /* Reads mParamHigh bit 7 (param1 bit 11): nonzero when the egg pays out the
  * tracked star when it bursts. */
-int daYegg_c::HasStarPayout(){
-  return ((mParamHigh >> 7) & 1) != 0;
+int daYegg_c::HasStarPayout() {
+    return ((mParamHigh >> 7) & 1) != 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -208,8 +208,8 @@ int daYegg_c::HasStarPayout(){
 /* Reads mParamHigh bit 6 (param1 bit 10): nonzero when the egg pays out a
  * blue coin. InitResources loads the blue-coin model for it and
  * CleanupResources unloads it. */
-int daYegg_c::HasBlueCoinPayout(){
-  return ((mParamHigh >> 6) & 1) != 0;
+int daYegg_c::HasBlueCoinPayout() {
+    return ((mParamHigh >> 6) & 1) != 0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -217,8 +217,8 @@ int daYegg_c::HasBlueCoinPayout(){
 /* -------------------------------------------------------------------------- */
 /* Reads mParamHigh bits 2-5 (param1 bits 6-9): the number of coins to pay out,
  * 0 to 15. */
-unsigned char daYegg_c::GetCoinPayoutCount(){
-  return (mParamHigh >> 2) & 0xf;
+unsigned char daYegg_c::GetCoinPayoutCount() {
+    return (mParamHigh >> 2) & 0xf;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -243,8 +243,7 @@ int daYegg_c::func_ov002_020ec654() {
  * such ID or actor. A DOSUN gets its byte at +0x3a2 set to 1; a BATAN or
  * BATANKING is handed the egg through daBtn_c's hit reaction. Any other actor
  * is left alone. */
-void daYegg_c::HandleWallHit(int arg)
-{
+void daYegg_c::HandleWallHit(int arg) {
     struct dBgPi* cr;
     struct dActor_c* actor;
     u16 type;
@@ -287,8 +286,7 @@ docall:
  * HasBlueCoinPayout says so, both at the egg's position raised by 0x28000
  * (40 units), then marks the slot paid. The 0x2000 handed on is 2.0 in
  * Fix12; what that argument controls is not recovered here. */
-void daYegg_c::PayOut()
-{
+void daYegg_c::PayOut() {
     unsigned int idx = mPayoutIdx;
     unsigned int n;
     struct Vector3 vec;
@@ -333,40 +331,40 @@ void daYegg_c::PayOut()
  * word) are dActor_c's
  * mPrevAngleX/Y/Z and mHorzSpeed; whether the coin reads them as spawn
  * arguments is not shown here. */
-void daYegg_c::SpawnBlueCoins(void* b, int count, int sl, short arg5)
-    {
-        unsigned int r;
-        int zero;
-        dActor_c* coin;
-        int rv;
-        int prev;
-        int i;
-        prev = 0xff;
-        if (count > 1) {
-            if (sl < 0x4000) sl = 0x4000;
+void daYegg_c::SpawnBlueCoins(void *b, int count, int sl, short arg5) {
+    unsigned int r;
+    int zero;
+    dActor_c *coin;
+    int rv;
+    int prev;
+    int i;
+    prev = 0xff;
+    if (count > 1) {
+        if (sl < 0x4000)
+            sl = 0x4000;
+    }
+    i = 0;
+    if (count <= 0)
+        return;
+    zero = i;
+    do {
+        coin = dActor_c::Spawn(ACTOR_BLUE_COIN, 2, *(const Vector3 *)b, 0, mAreaId, -1);
+        if (coin != 0) {
+            do {
+                rv = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) << 27) >>
+                     16;
+            } while (rv == prev);
+            r = (unsigned int)RandomIntInternal(&data_0209e650.value);
+            r = r >> 16;
+            coin->mPrevAngleX = zero;
+            sl = sl * ((r % 50) + 100) / 100;
+            prev = rv;
+            coin->mPrevAngleY = arg5 + rv;
+            coin->mPrevAngleZ = zero;
+            coin->mHorzSpeed = sl;
         }
-        i = 0;
-        if (count <= 0) return;
-        zero = i;
-        do {
-            coin = dActor_c::Spawn(ACTOR_BLUE_COIN, 2, *(const Vector3 *)b, 0, mAreaId, -1);
-            if (coin != 0) {
-                do {
-                    rv = (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16)
-                               << 27) >>
-                         16;
-                } while (rv == prev);
-                r = (unsigned int)RandomIntInternal(&data_0209e650.value);
-                r = r >> 16;
-                coin->mPrevAngleX = zero;
-                sl = sl * ((r % 50) + 100) / 100;
-                prev = rv;
-                coin->mPrevAngleY = arg5 + rv;
-                coin->mPrevAngleZ = zero;
-                coin->mHorzSpeed = sl;
-            }
-            i++;
-        } while (i < count);
+        i++;
+    } while (i < count);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -375,7 +373,7 @@ void daYegg_c::SpawnBlueCoins(void* b, int count, int sl, short arg5)
 /* State 3 (DROP), execute: moves the egg by its speed and gravity, bursts it
  * if it is on the ground, then runs the ground collision and clears the
  * cylinder's hit record. */
-void daYegg_c::ExecuteDrop(){
+void daYegg_c::ExecuteDrop() {
     UpdatePos(&mdCcAc_c);
     if (mWithMeshClsn.IsOnGround())
         func_ov002_020edca4(this);
@@ -461,8 +459,7 @@ void daYegg_c::EnterWobble() {
  * bursts if IsStalled reports the egg stalled, and otherwise clears
  * and, if flying, updates the cylinder, moves the egg and runs the ground
  * collision. */
-void daYegg_c::SeekStraight()
-{
+void daYegg_c::SeekStraight() {
     dActor_c *o;
     u32 id;
     s32 flag;
@@ -541,8 +538,7 @@ void daYegg_c::SeekStraight()
  * ends the frame). Every pass bursts if IsStalled reports the egg
  * stalled, otherwise clears and, if flying, updates the cylinder, moves the
  * egg only when it has no target, and runs the ground collision. */
-void daYegg_c::SeekHoming()
-{
+void daYegg_c::SeekHoming() {
     dActor_c *o;
     s32 flag;
     s32 b;
@@ -620,8 +616,7 @@ void daYegg_c::SeekHoming()
 /* ROM ordinal 15 -- ExecuteSeek, 0x020ecf94, size 0x34 */
 /* -------------------------------------------------------------------------- */
 /* State 1 (SEEK), execute: picks the variant's handler. */
-void daYegg_c::ExecuteSeek()
-{
+void daYegg_c::ExecuteSeek() {
     if (func_ov002_020ec654())
         SeekStraight();
     else
@@ -704,8 +699,7 @@ void daYegg_c::EnterSeek() {
  *  - clears the cylinder, and runs the discrete ground collision unless the
  *    daPly_c's mIsNoControl is set or the daPly_c is 0x190000 (400 units) or
  *    more away. */
-void daYegg_c::ExecuteFollowPlayer()
-{
+void daYegg_c::ExecuteFollowPlayer() {
     Vector3 in, out;
     daPly_c *com;
     int* p;
@@ -853,8 +847,7 @@ void daYegg_c::ExecuteFollowPlayer()
 // (mPlayer): copies its position (mPosX/Y/Z) and Y angle (mAngleY), mirrors
 // the position into mHoldTarget, and copies its rotation triple (mAngleX/Y/Z)
 // into both the goal angles and the eased angles.
-void daYegg_c::EnterFollowPlayer()
-{
+void daYegg_c::EnterFollowPlayer() {
     daPly_c *src;
     int* sp;
     short* m;
@@ -891,7 +884,10 @@ extern "C" void func_ov002_020ed63c(daYegg_c *c, int i) { c->mState = i; int j =
 /* ROM ordinal 20 -- RunState, 0x020ed684, size 0x48 */
 /* -------------------------------------------------------------------------- */
 /* Runs the current state's execute handler. */
-void daYegg_c::RunState() { int j = mState; (this->*data_ov002_02110a5c[j].pmf[1])(); }
+void daYegg_c::RunState() {
+    int j = mState;
+    (this->*data_ov002_02110a5c[j].pmf[1])();
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- IsStalled, 0x020ed6cc, size 0x6c */
@@ -966,8 +962,7 @@ void daYegg_c::UpdateTilt() {
  * flags have 0x40000 (dActor_c.h lists 0x020000 / 0x040000 as yoshi-mouth
  * states written by actor code), or the daPly_c's word at +0x37c is nonzero, or either of
  * func_ov002_020cf700 / func_ov002_020d0d2c says so for the daPly_c. */
-void daYegg_c::UpdateShadow()
-{
+void daYegg_c::UpdateShadow() {
     Vector3 v;
     int r5;
     int r4;
@@ -1017,8 +1012,7 @@ void daYegg_c::UpdateShadow()
  * mPos with 0x14000 (20 units) added to Y, scaled by 1/8 (x << 9 >> 12, rounded),
  * rotated by (mAngleX, mAngleY, mAngleZ), and stored into the model's own
  * matrix (mAnmModel.mat4x3). */
-void daYegg_c::UpdateModelMatrix()
-{
+void daYegg_c::UpdateModelMatrix() {
     int on = (mFlags & daYegg_FLAG_ATTACHED) != 0;
     if (on && *(int *)&mPlayer) {
         Vector3 v(0, 0, 0);
@@ -1053,8 +1047,7 @@ void daYegg_c::UpdateModelMatrix()
  * uniqueID is appended to mTargetedIds, becomes mTargetId and bumps
  * mTargetedCount; the winner is returned, or 0 if none qualified. `a1` is
  * not used. */
-int daYegg_c::FindTarget(int a1, int best)
-{
+int daYegg_c::FindTarget(int a1, int best) {
     dActor_c *found;
     dActor_c *actor;
     int matched;
@@ -1184,8 +1177,7 @@ void func_ov002_020edca4(daYegg_c* self)
  * (BOMBKING, HOLHEI, KURIKING, KURIBO_L, WANWAN, WANWAN2) the egg bursts and
  * returns 1. When it is the actor currently sought (mTargetId) the egg pays
  * out, re-enters state 1 and returns 1. Any other case returns 0. */
-int daYegg_c::HandleCylinderHit()
-{
+int daYegg_c::HandleCylinderHit() {
     daPly_c *actor;
     struct dActor_c* other;
     u32 id;
