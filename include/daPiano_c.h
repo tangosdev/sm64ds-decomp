@@ -35,7 +35,7 @@ struct daPiano_c : dBgActor_c {
     s32 mStateIdx; /* 0x6c8 */
     s32 mMinPosY;  /* 0x6cc */
     /* Chase target: StateSearch stores the first qualifying moving player slot
-     * from data_0209f394 here; StateAttack steers toward it. */
+     * from gPlayers here; StateAttack steers toward it. */
     dActor_c *mTarget; /* 0x6d0 */
     Vector3 mHomePos;  /* 0x6d4 */
     /* Attack windup: InitStateAttack sets 30 on entering state 1,

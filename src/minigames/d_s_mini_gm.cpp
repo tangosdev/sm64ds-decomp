@@ -87,7 +87,7 @@ extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern short gSubBg3HOffset;
 extern short gSubBg0HOffset;
-extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
+extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
@@ -802,7 +802,7 @@ void dScMiniGm_c::OnPendingDestroy()
 }
 
 void dScMiniGm_c::UpdateGroupTabs() {
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (mExiting != 0)
         return;
@@ -892,7 +892,7 @@ void dScMiniGm_c::UpdateGroupTabs() {
 }
 
 void dScMiniGm_c::UpdatePageArrows() {
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (mExiting != 0)
         return;
@@ -943,7 +943,7 @@ void dScMiniGm_c::UpdateGameSelect()
     int ok;
     int row;
 
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (mExiting != 0) return;
     if (mPageFlipped == 1) return;
@@ -1003,7 +1003,7 @@ void dScMiniGm_c::UpdateGameSelect()
 }
 
 void dScMiniGm_c::UpdateExitButton() {
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (mExiting != 0)
         return;
@@ -1032,7 +1032,7 @@ void dScMiniGm_c::UpdateExitButton() {
 }
 
 void dScMiniGm_c::UpdatePageScroll() {
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (mExiting != 0)
         return;
@@ -1131,7 +1131,7 @@ void dScMiniGm_c::SetRecord(int a1, int r2, int r3) {
 extern "C" void MiniGm_SaveIfDirty(char *self)
 {
     if (gMgSaveDirty != 1) return;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     SaveData::SaveMinigames(&data_0209cae4);
     gMgSaveDirty = 0;

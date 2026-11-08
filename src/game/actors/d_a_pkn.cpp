@@ -34,6 +34,7 @@
 #include "SpawnInfo.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daPkn_c_AssetId {
@@ -94,7 +95,6 @@ void  func_020105cc(void *thiz, u32 flags);
 
 
 /* -- shared tables -- */
-extern s16 data_02082214[];              /* the sin/cos table, two shorts a step */
 extern int data_ov084_0213030c[];        /* per-frame particle X/Z offset (0212f460, 0xfb) */
 extern int data_ov084_02130334[];        /* per-frame particle Y offset */
 extern u8  data_ov084_021302ec[];        /* five indices {0,3,4,5,6}; 0212ec60 sums s16 at [i]*0x34+0x1c into ang[1] (dead -- later y-adjust reads ang[0]==0, so the offset is constant 0x32000). 0x34 is not BMD_Bone (0x40). */
@@ -139,8 +139,8 @@ SpawnInfo<daPkn_c> g_profile_PAKUN = {
  * Unlike daFPkn_c's, this one checks its loads: a failed SetFile on either
  * model returns 0.
  *
- * The tail seeds the sleep-bubble position: 0xe0 along the facing angle out
- * of the shared sin and cos table at data_02082214, and 0x37800 above mPosY.
+ * The tail seeds the sleep-bubble position: 0xe0 along the facing angle
+ * (FX_SinIdx / FX_CosIdx), and 0x37800 above mPosY.
  * UpdatePose rewrites mBubblePos every frame.
  */
 int daPkn_c::InitResources()
@@ -177,7 +177,6 @@ int daPkn_c::InitResources()
     mHeadClsnOffset.y = mPosY;
     mHeadClsnOffset.z = mPosZ;
     {
-        s16 *tbl = data_02082214;
         /* Copied through a pointer: `mHomePos = mHeadClsnOffset` emits a
            different copy. */
         Vector3 *home = &mHeadClsnOffset;
@@ -188,8 +187,8 @@ int daPkn_c::InitResources()
         /* Temporaries in the ROM's load order; folding them reorders it. */
         int y0 = mPosY;
         int z0 = mPosZ;
-        int cosv = tbl[(ang << 1) + 1];
-        int sinv = tbl[ang << 1];
+        int cosv = FX_CosIdx(ang);
+        int sinv = FX_SinIdx(ang);
         int z = cosv * 0xe0 + z0;
         int y = y0 + 0x37800;
         int x = sinv * 0xe0 + mPosX;
@@ -506,8 +505,8 @@ void daPkn_c::StateDie()
         pos.x = mPosX;
         pos.y = mPosY;
         pos.z = mPosZ;
-        pos.x += data_ov084_0213030c[(u16)mStateTimer] * data_02082214[((u16)mAngleY >> 4) * 2];
-        pos.z += data_ov084_0213030c[(u16)mStateTimer] * data_02082214[((u16)mAngleY >> 4) * 2 + 1];
+        pos.x += data_ov084_0213030c[(u16)mStateTimer] * FX_SinIdx((u16)mAngleY >> 4);
+        pos.z += data_ov084_0213030c[(u16)mStateTimer] * FX_CosIdx((u16)mAngleY >> 4);
         pos.y += data_ov084_02130334[(u16)mStateTimer] << 12;
         mParticleHandle =
             (s32)Particle::System::New(mParticleHandle, 0xfb, pos.x, pos.y, pos.z, 0, 0);
@@ -747,6 +746,9 @@ void daPkn_c::UpdatePose()
     Vec3_LslInPlace((int *)&mHeadClsnOffset, 3);
     SubVec3((Vector3 *)&mHeadClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mHeadClsnOffset);
 
+    /* Still a hand-indexed FX_SinIdx: through the inline the table base loads
+       before mHeadClsnOffset.y and ang[0], and no spelling tried (local, index
+       local, y read first, split subtraction) gets the ROM's order back. */
     mHeadClsnOffset.y -= data_02082214[((u16)ang[0] >> 4) << 1] * (s16)0x14 + 0x32000;
     mHeadClsnOffset.z += 0x32000;
 
@@ -767,9 +769,9 @@ void daPkn_c::UpdatePose()
         mBubbleScale.z = scale;
     }
 
-    L.tv.x = data_02082214[((u16)mAngleY >> 4) << 1] * (s16)0xe0 + L.tv.x;
+    L.tv.x = FX_SinIdx((u16)mAngleY >> 4) * (s16)0xe0 + L.tv.x;
     scale = scale - 0xc00;
-    L.tv.z = data_02082214[(((u16)mAngleY >> 4) << 1) + 1] * (s16)0xe0 + L.tv.z;
+    L.tv.z = FX_CosIdx((u16)mAngleY >> 4) * (s16)0xe0 + L.tv.z;
     L.tv.y = L.tv.y + (scale * 0x18 + 0x38000);
 
     mBubblePos.x = L.tv.x;

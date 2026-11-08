@@ -1010,84 +1010,84 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@623",
-      "to": "data_ov084_02130e44",
-      "evidence": "compiler temp mapped to 0x02130e44 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@624",
-      "to": "data_ov084_02130e50",
-      "evidence": "compiler temp mapped to 0x02130e50 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@625",
-      "to": "data_ov084_02130e68",
-      "evidence": "compiler temp mapped to 0x02130e68 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@626",
-      "to": "data_ov084_02130e74",
-      "evidence": "compiler temp mapped to 0x02130e74 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@627",
-      "to": "data_ov084_02130e5c",
-      "evidence": "compiler temp mapped to 0x02130e5c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@628",
-      "to": "data_ov084_02130e2c",
-      "evidence": "compiler temp mapped to 0x02130e2c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@629",
-      "to": "data_ov084_02130e38",
-      "evidence": "compiler temp mapped to 0x02130e38 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
       "from": "@631",
-      "to": "data_ov084_02130bb4",
-      "evidence": "compiler temp mapped to 0x02130bb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov084_02130e44",
+      "evidence": "compiler temp mapped to 0x02130e44 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
+    },
+    {
+      "from": "@632",
+      "to": "data_ov084_02130e50",
+      "evidence": "compiler temp mapped to 0x02130e50 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
     },
     {
       "from": "@633",
-      "to": "data_ov084_02130ba4",
-      "evidence": "compiler temp mapped to 0x02130ba4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov084_02130e68",
+      "evidence": "compiler temp mapped to 0x02130e68 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
+    },
+    {
+      "from": "@634",
+      "to": "data_ov084_02130e74",
+      "evidence": "compiler temp mapped to 0x02130e74 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
     },
     {
       "from": "@635",
-      "to": "data_ov084_02130bbc",
-      "evidence": "compiler temp mapped to 0x02130bbc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov084_02130e5c",
+      "evidence": "compiler temp mapped to 0x02130e5c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
+    },
+    {
+      "from": "@636",
+      "to": "data_ov084_02130e2c",
+      "evidence": "compiler temp mapped to 0x02130e2c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
     },
     {
       "from": "@637",
-      "to": "data_ov084_02130bac",
-      "evidence": "compiler temp mapped to 0x02130bac by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov084_02130e38",
+      "evidence": "compiler temp mapped to 0x02130e38 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
     },
     {
       "from": "@639",
-      "to": "data_ov084_02130bc4",
-      "evidence": "compiler temp mapped to 0x02130bc4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov084_02130bb4",
+      "evidence": "compiler temp mapped to 0x02130bb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
     },
     {
       "from": "@641",
-      "to": "data_ov084_02130bcc",
-      "evidence": "compiler temp mapped to 0x02130bcc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov084_02130ba4",
+      "evidence": "compiler temp mapped to 0x02130ba4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
     },
     {
       "from": "@643",
-      "to": "data_ov084_02130bdc",
-      "evidence": "compiler temp mapped to 0x02130bdc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov084_02130bbc",
+      "evidence": "compiler temp mapped to 0x02130bbc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
     },
     {
       "from": "@645",
-      "to": "data_ov084_02130bd4",
-      "evidence": "compiler temp mapped to 0x02130bd4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov084_02130bac",
+      "evidence": "compiler temp mapped to 0x02130bac by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
     },
     {
       "from": "@647",
+      "to": "data_ov084_02130bc4",
+      "evidence": "compiler temp mapped to 0x02130bc4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
+    },
+    {
+      "from": "@649",
+      "to": "data_ov084_02130bcc",
+      "evidence": "compiler temp mapped to 0x02130bcc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
+    },
+    {
+      "from": "@651",
+      "to": "data_ov084_02130bdc",
+      "evidence": "compiler temp mapped to 0x02130bdc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
+    },
+    {
+      "from": "@653",
+      "to": "data_ov084_02130bd4",
+      "evidence": "compiler temp mapped to 0x02130bd4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
+    },
+    {
+      "from": "@655",
       "to": "data_ov084_02130be4",
-      "evidence": "compiler temp mapped to 0x02130be4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp mapped to 0x02130be4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); Re-keyed +8 when InitResources, StateDie and UpdatePose read the angle table through nitro/fx/fx_trig.h's FX_SinIdx/FX_CosIdx (#821)."
     }
   ],
   "symbol_binding_rewrites": [

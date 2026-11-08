@@ -10,11 +10,11 @@
     "contiguous linker run: 0x0202e140..0x0202ec9c, 21 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all 21 marked `complete`).",
     "neighbours differ on both sides: GetStageDebugName (0x0202e118..0x0202e140) ends exactly where the run begins and the Stage_Spawn allocation factory sits below it; func_0202ec9c begins exactly where the run ends. Neither is a Scene member and neither is called from one.",
     "Interleaving evidence: dScStage_c::SetVramBanks (0x0202e73c) and GX::DisableAllBanks (0x0202e78c) lie between Scene graphics methods. Under the contiguous-object layout model, assigning those enclosing methods to one TU includes the two helpers. Co-residence is inferred, not recovered from an original object map.",
-    "Corroborating data evidence: data_02092660, data_02092664 and data_02092668 occupy 0x02092660..0x02092678 immediately before the Scene vtable storage at 0x02092678..0x020926c8. Configured references to these statics lie within the proposed Scene text span, on both sides of the two graphics helpers. Adjacency and shared references support this cut, but do not alone prove original object ownership or static linkage. This promotion claims only the measured text span.",
+    "Corroborating data evidence: data_02092660, gNextSceneId and data_02092668 occupy 0x02092660..0x02092678 immediately before the Scene vtable storage at 0x02092678..0x020926c8. Configured references to these statics lie within the proposed Scene text span, on both sides of the two graphics helpers. Adjacency and shared references support this cut, but do not alone prove original object ownership or static linkage. This promotion claims only the measured text span.",
     "the source order the reverse-emission rule implies is a coherent file: reversing the ROM address order yields BeforeInitResources then AfterInitResources, then the Cleanup pair, then Behavior, then Render -- each Before immediately before its After, the four groups in ActorBase's own declaration order, destructor last. Corroboration, not proof.",
     "The four dGraph_c::callback_c GraphCallback functions at 0x02018ea0..0x02018ec0 lie outside this measured Scene interval. Their system/graphics neighbours and pointer tables near 0x0208ee14 support a different TU assignment under the contiguous-object model; they are not included in this promotion. The original object map is unavailable, so these observations do not prove an absolute prohibition on split contributions.",
     "module sinit corroboration: 23 sinit(s) / 23 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, and NOT narrowing to this TU: `main` has 23 static initialisers against 3067 functions, none of which references any of this TU's four data symbols, so static-initialiser attribution contributes NOTHING here and is recorded as such rather than quoted as support).",
-    "static initializer: __sinit_02074edc (.init 0x02074edc..0x02074f80, .ctor word 0x02086b8c) builds data_0209f5e8 (dFdColor_c) and data_0209f5d0 (dFdBrightness_c). In arm9 every reader of data_0209f5d0 is in this run (dScene_c::BeforeBehavior), and five of the seven readers of data_0209f5e8 are dScene_c methods here (BeforeBehavior, StartSceneFade, ResetFadersAndSound, SetAndStopColorFader); the other two are scene subclasses (LoadLevel, dScBoot_c::InitResources). arm9 .init and .ctor run in .text TU order and the next initializer, 0x02074f80, is d_wipe.cpp's, the TU directly above this one. The .bss run 0x0209f5c4..0x0209f5f8 follows this TU's own data_0209f5b8/0209f5c0 and ends where d_wipe.cpp's begins."
+    "static initializer: __sinit_02074edc (.init 0x02074edc..0x02074f80, .ctor word 0x02086b8c) builds gSceneColorFader (dFdColor_c) and gSoftResetBrightnessFader (dFdBrightness_c). In arm9 every reader of gSoftResetBrightnessFader is in this run (dScene_c::BeforeBehavior), and five of the seven readers of gSceneColorFader are dScene_c methods here (BeforeBehavior, StartSceneFade, ResetFadersAndSound, SetAndStopColorFader); the other two are scene subclasses (LoadLevel, dScBoot_c::InitResources). arm9 .init and .ctor run in .text TU order and the next initializer, 0x02074f80, is d_wipe.cpp's, the TU directly above this one. The .bss run 0x0209f5c4..0x0209f5f8 follows this TU's own gNextSceneParam/0209f5c0 and ends where d_wipe.cpp's begins."
   ],
   "sections": [
     {
@@ -193,11 +193,11 @@
       "symbol": "@332",
       "address": "0x0209f5c4",
       "size": "0xc",
-      "evidence": "compiler-generated destructor-registration node for data_0209f5d0; retail __sinit_02074edc passes it as the third argument of the second __register_global_object call (pool word 0x02074f7c)",
+      "evidence": "compiler-generated destructor-registration node for gSoftResetBrightnessFader; retail __sinit_02074edc passes it as the third argument of the second __register_global_object call (pool word 0x02074f7c)",
       "binding": "STB_GLOBAL"
     },
     {
-      "symbol": "data_0209f5d0",
+      "symbol": "gSoftResetBrightnessFader",
       "address": "0x0209f5d0",
       "size": "0xc",
       "evidence": "namespace-scope dFdBrightness_c (sizeof 0xc), the plain brightness fader dScene_c::BeforeBehavior falls back to; retail __sinit_02074edc runs its inline constructor (dFader_c then dFdBrightness_c vptr, currInterp 0x1000, speed 0) and registers _ZN15dFdBrightness_cD1Ev",
@@ -207,11 +207,11 @@
       "symbol": "@331",
       "address": "0x0209f5dc",
       "size": "0xc",
-      "evidence": "compiler-generated destructor-registration node for data_0209f5e8; retail __sinit_02074edc passes it as the third argument of the first __register_global_object call (pool word 0x02074f70)",
+      "evidence": "compiler-generated destructor-registration node for gSceneColorFader; retail __sinit_02074edc passes it as the third argument of the first __register_global_object call (pool word 0x02074f70)",
       "binding": "STB_GLOBAL"
     },
     {
-      "symbol": "data_0209f5e8",
+      "symbol": "gSceneColorFader",
       "address": "0x0209f5e8",
       "size": "0x10",
       "evidence": "namespace-scope dFdColor_c (sizeof 0x10), the scene-change colour fader; retail __sinit_02074edc runs its inline constructor (dFader_c, dFdBrightness_c, dFdColor_c vptrs, currInterp 0x1000, speed 0, color 0) and registers _ZN10dFdColor_cD1Ev. The next configured bss symbol, 0x0209f5f8, is d_wipe.cpp's.",
@@ -229,7 +229,7 @@
     "2026-10-02 continuation: the current deadstrip-data policy supports exact ROM-body validation for all seven emitted metadata records; historical whole-range collision notes predate that support. No metadata or static-storage ranges are claimed by this text promotion. Direct brightness-fader calls preserve the current native member syntax. The local two-argument fader dispatch remains an explicitly unresolved ABI contract.",
     "SCENE-SR-01: Original object boundaries remain an inference; confidence is medium. The exact 21-function gapless interval and compiler emission order are measured. Remote GraphCallback functions are excluded from this supported interval, without claiming the original linker could never partition text. SCENE-SR-02: retired-source citations updated. SCENE-SR-03: standard metadata report is 4 VERIFIED / 3 PARTIAL; independent exact-body proof covers all 140 emitted bytes including the vtable preamble and string tails.",
     "Declaration repair: ResetFadersAndSound has two exits returning 0 or 1, so bool expresses its actual result and permits dScEntry_c::BeforeInitResources to forward it with a native return. The deleted unused generated BeforeInitResources alias disagreed with the existing bool member. GX bank-reset return declarations now match u16 definitions, and the affine-register pointer matches its mangled volatile u16 type.",
-    "Static initializer folded: data_0209f5e8 (dFdColor_c) and data_0209f5d0 (dFdBrightness_c), the scene's two global faders, are now defined in this TU instead of extern; the handwritten src/unnamed/arm9/0207/__sinit_02074edc.c is retired. mwcc emits __sinit_d_scene.cpp from the headers' inline constructors in definition order, its .ctor word, and the @329/@330 registration nodes; all of it plus the objects' .bss is byte- and relocation-identical to retail. The objects keep their address names because scene subclasses and overlays declare them by those names. @329/@330 are unused in every symbols.txt (ov004 dScMgBase_c only renames its own emitted @329/@330 away)."
+    "Static initializer folded: gSceneColorFader (dFdColor_c) and gSoftResetBrightnessFader (dFdBrightness_c), the scene's two global faders, are now defined in this TU instead of extern; the handwritten src/unnamed/arm9/0207/__sinit_02074edc.c is retired. mwcc emits __sinit_d_scene.cpp from the headers' inline constructors in definition order, its .ctor word, and the @329/@330 registration nodes; all of it plus the objects' .bss is byte- and relocation-identical to retail. The objects keep their address names because scene subclasses and overlays declare them by those names. @329/@330 are unused in every symbols.txt (ov004 dScMgBase_c only renames its own emitted @329/@330 away)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -516,7 +516,7 @@
       "address": "0x02074edc",
       "size": "0xa4",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated static initializer for data_0209f5e8 and data_0209f5d0 is raw-byte-identical to retail __sinit_02074edc (0xa4: two inline constructor chains, two registrations, nine pool words)"
+      "evidence": "compiler-generated static initializer for gSceneColorFader and gSoftResetBrightnessFader is raw-byte-identical to retail __sinit_02074edc (0xa4: two inline constructor chains, two registrations, nine pool words)"
     }
   ],
   "ctor": [
@@ -591,7 +591,7 @@
       "source": "0x02074f60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0209f5e8",
+      "symbol": "gSceneColorFader",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0209f5e8"
@@ -641,7 +641,7 @@
       "source": "0x02074f74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_0209f5d0",
+      "symbol": "gSoftResetBrightnessFader",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0209f5d0"

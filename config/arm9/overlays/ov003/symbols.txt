@@ -99,17 +99,17 @@ data_ov003_020b1620 kind:data(any) addr:0x020b1620 local
 data_ov003_020b1634 kind:data(any) addr:0x020b1634 local
 data_ov003_020b1650 kind:data(any) addr:0x020b1650
 _ZTV10dScTitle_c kind:data(any) addr:0x020b1650
-data_ov003_020b1698 kind:data(any) addr:0x020b1698
+sStarSelectSubBackdropColor kind:data(any) addr:0x020b1698
 sStarSelectCharacterOrder kind:data(any) addr:0x020b169c
-data_ov003_020b16a0 kind:data(any) addr:0x020b16a0
-data_ov003_020b16a4 kind:data(any) addr:0x020b16a4
-data_ov003_020b16a8 kind:data(any) addr:0x020b16a8
+sStarSelectCharYStart kind:data(any) addr:0x020b16a0
+sStarSelectCharSpriteStart kind:data(any) addr:0x020b16a4
+sStarSelectCharXStart kind:data(any) addr:0x020b16a8
 sStarSelectDecimalDivisors kind:data(any) addr:0x020b16ac
 g_profile_STAR_SELECT kind:data(any) addr:0x020b16b4 ambiguous
 _ZTI12dScStarSel_c kind:data(any) addr:0x020b16bc
-data_ov003_020b16c8 kind:data(any) addr:0x020b16c8
+sStarSelectCharYStep kind:data(any) addr:0x020b16c8
 _ZTS12dScStarSel_c kind:data(any) addr:0x020b16d4
-data_ov003_020b16e4 kind:data(any) addr:0x020b16e4
+sStarSelectCharXStep kind:data(any) addr:0x020b16e4
 data_ov003_020b1704 kind:data(any) addr:0x020b1704
 _ZTV12dScStarSel_c kind:data(any) addr:0x020b1704
 sGameOverPromptTileOffsets kind:data(any) addr:0x020b174c

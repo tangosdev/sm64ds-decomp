@@ -44,6 +44,7 @@ enum dScMgLuigi_c_AssetId {
 #include "Sound.h"
 #include "IRQ.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "SpawnInfo.h"
 #include "OamAttr.h"
 #include "nitro/gx/g2_oam.h"
@@ -821,7 +822,6 @@ after_flag:
 
 void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
     extern int sLuigiBounceSpeeds[];
-    extern s16 data_02082214[];
     u8 *started = &mStarted[pictureIndex];
 
     if (*started == 0) {
@@ -834,56 +834,31 @@ void dScMgLuigi_c::MovePictureBounce(int pictureIndex) {
     }
 
     {
-        u8 *characters = mCharacter;
-        int *posX = mPosX;
-        int *posY = mPosY;
-        u16 phase;
-        int angleIndex;
-        int cosine, sine;
-        int speed;
-        s64 scaledStep;
-        int round12 = 0x800;
+        fx16 c = FX_CosIdx(mMovePhase[pictureIndex] >> 4);
+        mPosX[pictureIndex] += FX_MUL(c, sLuigiBounceSpeeds[mCharacter[pictureIndex]]);
+    }
+    {
+        fx16 s = FX_SinIdx(mMovePhase[pictureIndex] >> 4);
+        mPosY[pictureIndex] += FX_MUL(s, sLuigiBounceSpeeds[mCharacter[pictureIndex]]);
+    }
 
-        phase = mMovePhase[pictureIndex];
-        angleIndex = phase >> 4;
-        cosine = data_02082214[angleIndex * 2 + 1];
-        speed = sLuigiBounceSpeeds[characters[pictureIndex]];
-        scaledStep = (s64)cosine * speed;
-        posX[pictureIndex] += (int)((scaledStep + round12) >> 12);
+    int x = mPosX[pictureIndex] >> 0xc;
+    int y = mPosY[pictureIndex] >> 0xc;
 
-        phase = mMovePhase[pictureIndex];
-        angleIndex = phase >> 4;
-        sine = data_02082214[angleIndex * 2];
-        speed = sLuigiBounceSpeeds[characters[pictureIndex]];
-        scaledStep = (s64)sine * speed;
-        posY[pictureIndex] += (int)((scaledStep + round12) >> 12);
+    if (x > 0xf8) {
+        mMovePhase[pictureIndex] = 0x8000 - mMovePhase[pictureIndex];
+        mPosX[pictureIndex] = 0xf8000;
+    } else if (x < 8) {
+        mMovePhase[pictureIndex] = 0x8000 - mMovePhase[pictureIndex];
+        mPosX[pictureIndex] = 0x8000;
+    }
 
-        {
-            int x = mPosX[pictureIndex] >> 0xc;
-            int y = mPosY[pictureIndex] >> 0xc;
-
-            if (x > 0xf8) {
-                mMovePhase[pictureIndex] = 0x8000 - mMovePhase[pictureIndex];
-                mPosX[pictureIndex] = 0xf8000;
-            } else if (x < 8) {
-                mMovePhase[pictureIndex] = 0x8000 - mMovePhase[pictureIndex];
-                mPosX[pictureIndex] = 0x8000;
-            }
-
-            if (y > 0xb8) {
-                mMovePhase[pictureIndex] = -mMovePhase[pictureIndex];
-                mPosY[pictureIndex] = 0xb8000;
-                return;
-            }
-
-            if (y < 8) {
-                mMovePhase[pictureIndex] = -mMovePhase[pictureIndex];
-                mPosY[pictureIndex] = 0x8000;
-                return;
-            }
-
-            return;
-        }
+    if (y > 0xb8) {
+        mMovePhase[pictureIndex] = -mMovePhase[pictureIndex];
+        mPosY[pictureIndex] = 0xb8000;
+    } else if (y < 8) {
+        mMovePhase[pictureIndex] = -mMovePhase[pictureIndex];
+        mPosY[pictureIndex] = 0x8000;
     }
 }
 
@@ -937,7 +912,6 @@ void dScMgLuigi_c::MovePictureSway(int idx) {
 /* Drift on a random angle, one of sixteen steps of 0x1000. */
 void dScMgLuigi_c::MovePictureDriftRandom(int pictureIndex) {
     extern int sLuigiDriftRandomSpeed[];
-    extern s16 data_02082214[];
     if (mStarted[pictureIndex] == 0) {
         unsigned int randomValue =
             ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
@@ -947,14 +921,12 @@ void dScMgLuigi_c::MovePictureDriftRandom(int pictureIndex) {
         return;
     }
     {
-        int angleIndex = mMovePhase[pictureIndex] >> 4;
-        mPosX[pictureIndex] =
-            mPosX[pictureIndex] + FX_MUL(data_02082214[angleIndex * 2 + 1],
-                                         sLuigiDriftRandomSpeed[mCharacter[pictureIndex]]);
-        angleIndex = mMovePhase[pictureIndex] >> 4;
-        mPosY[pictureIndex] =
-            mPosY[pictureIndex] +
-            FX_MUL(data_02082214[angleIndex * 2], sLuigiDriftRandomSpeed[mCharacter[pictureIndex]]);
+        fx16 c = FX_CosIdx(mMovePhase[pictureIndex] >> 4);
+        mPosX[pictureIndex] += FX_MUL(c, sLuigiDriftRandomSpeed[mCharacter[pictureIndex]]);
+    }
+    {
+        fx16 s = FX_SinIdx(mMovePhase[pictureIndex] >> 4);
+        mPosY[pictureIndex] += FX_MUL(s, sLuigiDriftRandomSpeed[mCharacter[pictureIndex]]);
     }
     WrapPicture(pictureIndex);
 }
@@ -962,7 +934,6 @@ void dScMgLuigi_c::MovePictureDriftRandom(int pictureIndex) {
 /* Drift left or right from mRowDir of the slot's row. */
 void dScMgLuigi_c::MovePictureDriftByRow(int pictureIndex) {
     extern int sLuigiDriftByRowSpeed[];
-    extern s16 data_02082214[];
     int rowIndex;
     int columnIndex;
     if (mStarted[pictureIndex] == 0) {
@@ -983,14 +954,12 @@ void dScMgLuigi_c::MovePictureDriftByRow(int pictureIndex) {
         return;
     }
     {
-        int angleIndex = mMovePhase[pictureIndex] >> 4;
-        mPosX[pictureIndex] =
-            mPosX[pictureIndex] + FX_MUL(data_02082214[angleIndex * 2 + 1],
-                                         sLuigiDriftByRowSpeed[mCharacter[pictureIndex]]);
-        angleIndex = mMovePhase[pictureIndex] >> 4;
-        mPosY[pictureIndex] =
-            mPosY[pictureIndex] +
-            FX_MUL(data_02082214[angleIndex * 2], sLuigiDriftByRowSpeed[mCharacter[pictureIndex]]);
+        fx16 c = FX_CosIdx(mMovePhase[pictureIndex] >> 4);
+        mPosX[pictureIndex] += FX_MUL(c, sLuigiDriftByRowSpeed[mCharacter[pictureIndex]]);
+    }
+    {
+        fx16 s = FX_SinIdx(mMovePhase[pictureIndex] >> 4);
+        mPosY[pictureIndex] += FX_MUL(s, sLuigiDriftByRowSpeed[mCharacter[pictureIndex]]);
     }
     WrapPicture(pictureIndex);
 }
@@ -998,7 +967,6 @@ void dScMgLuigi_c::MovePictureDriftByRow(int pictureIndex) {
 /* Drift up or down from mColDir of the slot's column. */
 void dScMgLuigi_c::MovePictureDriftByColumn(int pictureIndex) {
     extern int sLuigiDriftByColumnSpeed[];
-    extern s16 data_02082214[];
     if (mStarted[pictureIndex] == 0) {
         mStarted[pictureIndex]++;
         if (mColDir[pictureIndex & 7] != 0) {
@@ -1009,14 +977,12 @@ void dScMgLuigi_c::MovePictureDriftByColumn(int pictureIndex) {
         return;
     }
     {
-        int angleIndex = mMovePhase[pictureIndex] >> 4;
-        mPosX[pictureIndex] =
-            mPosX[pictureIndex] + FX_MUL(data_02082214[angleIndex * 2 + 1],
-                                         sLuigiDriftByColumnSpeed[mCharacter[pictureIndex]]);
-        angleIndex = mMovePhase[pictureIndex] >> 4;
-        mPosY[pictureIndex] =
-            mPosY[pictureIndex] + FX_MUL(data_02082214[angleIndex * 2],
-                                         sLuigiDriftByColumnSpeed[mCharacter[pictureIndex]]);
+        fx16 c = FX_CosIdx(mMovePhase[pictureIndex] >> 4);
+        mPosX[pictureIndex] += FX_MUL(c, sLuigiDriftByColumnSpeed[mCharacter[pictureIndex]]);
+    }
+    {
+        fx16 s = FX_SinIdx(mMovePhase[pictureIndex] >> 4);
+        mPosY[pictureIndex] += FX_MUL(s, sLuigiDriftByColumnSpeed[mCharacter[pictureIndex]]);
     }
     WrapPicture(pictureIndex);
 }
@@ -1024,20 +990,19 @@ void dScMgLuigi_c::MovePictureDriftByColumn(int pictureIndex) {
 /* Drift on the angle stored for this picture's speed. */
 void dScMgLuigi_c::MovePictureDriftByLevel(int pictureIndex) {
     extern int sLuigiDriftByLevelSpeed[];
-    extern s16 data_02082214[];
     if (mStarted[pictureIndex] == 0) {
         u8 character = mCharacter[pictureIndex];
         mMovePhase[pictureIndex] = mLevelPhase[character];
         mStarted[pictureIndex]++;
     } else {
-        int angleIndex = mMovePhase[pictureIndex] >> 4;
-        mPosX[pictureIndex] =
-            mPosX[pictureIndex] + FX_MUL(data_02082214[angleIndex * 2 + 1],
-                                         sLuigiDriftByLevelSpeed[mCharacter[pictureIndex]]);
-        angleIndex = mMovePhase[pictureIndex] >> 4;
-        mPosY[pictureIndex] =
-            mPosY[pictureIndex] + FX_MUL(data_02082214[angleIndex * 2],
-                                         sLuigiDriftByLevelSpeed[mCharacter[pictureIndex]]);
+        {
+            fx16 c = FX_CosIdx(mMovePhase[pictureIndex] >> 4);
+            mPosX[pictureIndex] += FX_MUL(c, sLuigiDriftByLevelSpeed[mCharacter[pictureIndex]]);
+        }
+        {
+            fx16 s = FX_SinIdx(mMovePhase[pictureIndex] >> 4);
+            mPosY[pictureIndex] += FX_MUL(s, sLuigiDriftByLevelSpeed[mCharacter[pictureIndex]]);
+        }
         WrapPicture(pictureIndex);
     }
 }
@@ -1045,21 +1010,18 @@ void dScMgLuigi_c::MovePictureDriftByLevel(int pictureIndex) {
 /* Drift on a fixed angle of 0x6000. */
 void dScMgLuigi_c::MovePictureDriftFixed(int pictureIndex) {
     extern int sLuigiDriftFixedSpeed[];
-    extern s16 data_02082214[];
     if (mStarted[pictureIndex] == 0) {
         mMovePhase[pictureIndex] = 0x6000;
         mStarted[pictureIndex]++;
         return;
     }
     {
-        int angleIndex = mMovePhase[pictureIndex] >> 4;
-        mPosX[pictureIndex] =
-            mPosX[pictureIndex] + FX_MUL(data_02082214[angleIndex * 2 + 1],
-                                         sLuigiDriftFixedSpeed[mCharacter[pictureIndex]]);
-        angleIndex = mMovePhase[pictureIndex] >> 4;
-        mPosY[pictureIndex] =
-            mPosY[pictureIndex] +
-            FX_MUL(data_02082214[angleIndex * 2], sLuigiDriftFixedSpeed[mCharacter[pictureIndex]]);
+        fx16 c = FX_CosIdx(mMovePhase[pictureIndex] >> 4);
+        mPosX[pictureIndex] += FX_MUL(c, sLuigiDriftFixedSpeed[mCharacter[pictureIndex]]);
+    }
+    {
+        fx16 s = FX_SinIdx(mMovePhase[pictureIndex] >> 4);
+        mPosY[pictureIndex] += FX_MUL(s, sLuigiDriftFixedSpeed[mCharacter[pictureIndex]]);
     }
     WrapPicture(pictureIndex);
 }

@@ -198,8 +198,8 @@ void daPiano_c::InitStateSearch() {
  * within 500.0 and attack it; otherwise refresh the idle cylinder sweep
  * (current position plus a 36.0 lookahead along the facing). */
 void daPiano_c::StateSearch() {
-    extern unsigned char data_0209f21c;
-    extern daPly_c *data_0209f394[];
+    extern unsigned char gNumPlayers;
+    extern daPly_c *gPlayers[];
 
     Vector3 tip;
     Vector3 v;
@@ -211,8 +211,8 @@ void daPiano_c::StateSearch() {
     dCcAcPos_c *cc;
 
     bestDist = 0x7fffffff;
-    for (i = 0; i < data_0209f21c; i++) {
-        cand = data_0209f394[i];
+    for (i = 0; i < gNumPlayers; i++) {
+        cand = gPlayers[i];
         if (cand == 0)
             continue;
         Vec3_Sub(&v, &this->mPos, &cand->mPos);

@@ -165,7 +165,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     /* Slot 22 -- OnGraphCallback1: graphCallback_c::GraphCallback1 forwards
    to it (slot 23 is GraphCallback0's, 24 GraphCallback2's, 25
    GraphCallback3's). When each runs, from the arm9 callers (the scene is
-   the object at data_0209d4a8):
+   the object at gGraphCallback):
      GraphCallback0 (slot 23): the main loop's frame start, func_02019390.
        A 0 return skips OAM::Reset and the 3D flush.
      GraphCallback1 (slot 22): the main loop after the scene step
@@ -738,7 +738,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            a language-indexed compressed character file is decompressed into BG
            character VRAM, OBJ palette file 0xc3 is loaded into both engines, and
            the scene object is published into the global registry at
-           sMgGraphCallback[1] / data_0209d4a8.  The three bodies differ
+           sMgGraphCallback[1] / gGraphCallback.  The three bodies differ
            exactly where the classes differ: the base is 2D (GX mode (1,0,0),
            GXS mode 0, BG bank 3), dScMgD3DBase_c is 3D (DisableAllBanks first,
            texture and texture-palette banks, GX mode (1,0,1), GXS mode 5, BG
