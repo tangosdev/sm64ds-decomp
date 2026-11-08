@@ -68,16 +68,16 @@ struct daIwante_c : dBgActor_c {
     /* Behavior loads this word and calls through the pointer-to-member at
        +8 of what it points at, and compares it against &data_ov066_0211b07c --
        so it is a pointer to the current state descriptor, not a byte.
-       func_ov066_02119454 is what installs one. */
+       SetState is what installs one. */
     EyerokState *mState;                                    /* 0x48c */
-    /* The player locked for the talk state's dialogue (func_ov066_0211903c):
+    /* The player locked for the talk state's dialogue (BodyTalkExecute):
        the message before the fight and the one after it. */
     daPly_c *mTalkPlayer; /* 0x490 */
     /* Per-state scratch; most enter handlers clear both (the dormant enter
        handler does nothing). mStateWork0: attacking-hand toggle (02118cdc),
        stomp count (pattern 8), 20-frame stand-down counter (pattern 5),
        rise-started flag. mStateWork1: ShowMessage latch (0211903c),
-       hit-volume-armed flag (func_ov066_021164ec). */
+       hit-volume-armed flag (BeginVulnerable). */
     s32 mStateWork0;                                        /* 0x494 */
     s32 mStateWork1;                                        /* 0x498 */
     s32 mPartIdx;                                           /* 0x49c */
@@ -118,7 +118,7 @@ struct daIwante_c : dBgActor_c {
     u16 mDustCounter;                                       /* 0x4d4 */
     u8  pad_4d6[0x2];
     /* A hand's remaining hits: InitResources sets 3 on the two hands, the hit
-       check (func_ov066_0211603c) subtracts per hit and a hand with 0 or fewer
+       check (CheckAttacked) subtracts per hit and a hand with 0 or fewer
        left is defeated. Nothing in d_a_iwante.cpp writes it for the main
        instance. */
     s8  mHitPoints;                                         /* 0x4d8 */
@@ -139,7 +139,7 @@ struct daIwante_c : dBgActor_c {
        while mDustCounter is nonzero. Was pad_5cc. */
     u32 mDustParticle1[0x14];                               /* 0x5cc */
     u32 mDustParticle2[0x14];                               /* 0x61c */
-    /* Texture-pattern swap timer and phase (func_ov066_02116390). When the
+    /* Texture-pattern swap timer and phase (UpdateTexturePattern). When the
        timer reaches 0: phase 0 -> switch to the ae2c / ae9c pattern for
        0x32..0x50 frames (random); phase 1 -> back to ae3c / aebc for 8
        frames; the phase flips each time. Which pattern is which is not
@@ -176,59 +176,59 @@ struct daIwante_c : dBgActor_c {
     /* The state handlers the descriptors' pointer-to-member pairs name
        (enter at +0, run at +8), plus the helpers they call. The original
        names are not recovered; the addresses stand in. */
-    int  func_ov066_0211603c();    /* hand hit check (hurt/defeat) */
-    void func_ov066_021162e8();    /* arm a hand's hit volume */
-    void func_ov066_0211632c();    /* disarm a hand's hit volume */
-    void func_ov066_02116390();    /* texture-pattern swap tick */
-    void func_ov066_021164ec();    /* arm hit volume once anim started */
-    void func_ov066_021165cc();    /* hand becomes vulnerable */
-    void func_ov066_021166c8();    /* common state cleanup on exit */
-    int  func_ov066_021168b0();    /* body: wait for both hands to report in */
-    int  func_ov066_021168ec();    /* hand: follow the phase into a state */
-    int  func_ov066_02116a68();    /* closest player's depth band (mPosZ) */
-    void func_ov066_02116ac4(int strength); /* landing dust + shake */
-    int  func_ov066_02116b78();    /* keep a hand inside the arena */
-    int  func_ov066_02116c6c();    /* defeat run (hand) */
-    int  func_ov066_02116d14();    /* defeat enter (hand) */
-    int  func_ov066_02116db0();    /* pattern 9 run (hand) */
-    int  func_ov066_02117190();    /* pattern 9 enter (hand) */
-    int  func_ov066_021171b0();    /* pattern 8 run (hand) */
-    int  func_ov066_021175bc();    /* pattern 8 enter (hand) */
-    int  func_ov066_021175e8();    /* pattern 7 run (hand) */
-    int  func_ov066_02117bd0();    /* pattern 7 enter (hand) */
-    int  func_ov066_02117bf0();    /* pattern 6 run (hand) */
-    int  func_ov066_02118168();    /* pattern 6 enter (hand) */
-    int  func_ov066_02118188();    /* pattern 5 run (hand) */
-    int  func_ov066_021184c0();    /* pattern 5 enter (hand) */
-    int  func_ov066_021184e0();    /* pattern 4 run (hand) */
-    int  func_ov066_021185e4();    /* pattern 4 enter (hand) */
-    int  func_ov066_02118604();    /* waiting run (hand) */
-    int  func_ov066_02118658();    /* waiting enter (hand) */
-    int  func_ov066_02118678();    /* rise run (hand) */
-    int  func_ov066_021187c8();    /* rise enter (hand) */
-    int  func_ov066_021188b0();    /* pattern-running run (body) */
-    int  func_ov066_02118934();    /* pattern-running enter (body) */
-    s32  func_ov066_02118954();    /* pattern 9 run (body) */
-    int  func_ov066_021189a0();    /* pattern 9 enter (body) */
-    int  func_ov066_021189c0();    /* pattern 8 run (body) */
-    int  func_ov066_02118a30();    /* pattern 8 enter (body) */
-    s32  func_ov066_02118a50();    /* pattern 7 run (body) */
-    int  func_ov066_02118b08();    /* pattern 7 enter (body) */
-    s32  func_ov066_02118b28();    /* pattern 6 run (body) */
-    int  func_ov066_02118be0();    /* pattern 6 enter (body) */
-    s32  func_ov066_02118c00();    /* pattern 5 run (body) */
-    int  func_ov066_02118cb8();    /* pattern 5 enter (body) */
-    int  func_ov066_02118cdc();    /* pattern 4 run (body) */
-    int  func_ov066_02118de0();    /* pattern 4 enter (body) */
-    int  func_ov066_02118e04();    /* decision run (body) */
-    int  func_ov066_0211901c();    /* decision enter (body) */
-    int  func_ov066_0211903c();    /* talk run (body) */
-    int  func_ov066_02119348();    /* talk enter (body) */
-    int  func_ov066_02119398();    /* dormant run (body) */
-    int  func_ov066_0211944c();    /* dormant enter (body; does nothing) */
-    int  func_ov066_02119454(void *pv); /* install a state descriptor */
-    void func_ov066_021194a4();    /* refresh the collision matrix */
-    void func_ov066_021194fc();    /* refresh the model matrices */
+    int  CheckAttacked();    /* hand hit check (hurt/defeat) */
+    void SetRestHitVolume();    /* arm a hand's hit volume */
+    void SetPoundHitVolume();    /* disarm a hand's hit volume */
+    void UpdateTexturePattern();    /* texture-pattern swap tick */
+    void BeginVulnerable();    /* arm hit volume once anim started */
+    void EndVulnerable();    /* hand becomes vulnerable */
+    void SetLoweredPose();    /* common state cleanup on exit */
+    int  WaitForHandsReady();    /* body: wait for both hands to report in */
+    int  FollowPhase();    /* hand: follow the phase into a state */
+    int  GetPlayerDepthBand();    /* closest player's depth band (mPosZ) */
+    void PoundGround(int strength); /* landing dust + shake */
+    int  ClampToArena();    /* keep a hand inside the arena */
+    int  HandDefeatExecute();    /* defeat run (hand) */
+    int  HandDefeatEnter();    /* defeat enter (hand) */
+    int  HandPattern9Execute();    /* pattern 9 run (hand) */
+    int  HandPattern9Enter();    /* pattern 9 enter (hand) */
+    int  HandPattern8Execute();    /* pattern 8 run (hand) */
+    int  HandPattern8Enter();    /* pattern 8 enter (hand) */
+    int  HandPattern7Execute();    /* pattern 7 run (hand) */
+    int  HandPattern7Enter();    /* pattern 7 enter (hand) */
+    int  HandPattern6Execute();    /* pattern 6 run (hand) */
+    int  HandPattern6Enter();    /* pattern 6 enter (hand) */
+    int  HandPattern5Execute();    /* pattern 5 run (hand) */
+    int  HandPattern5Enter();    /* pattern 5 enter (hand) */
+    int  HandPattern4Execute();    /* pattern 4 run (hand) */
+    int  HandPattern4Enter();    /* pattern 4 enter (hand) */
+    int  HandWaitingExecute();    /* waiting run (hand) */
+    int  HandWaitingEnter();    /* waiting enter (hand) */
+    int  HandRiseExecute();    /* rise run (hand) */
+    int  HandRiseEnter();    /* rise enter (hand) */
+    int  BodyPatternRunningExecute();    /* pattern-running run (body) */
+    int  BodyPatternRunningEnter();    /* pattern-running enter (body) */
+    s32  BodyPattern9Execute();    /* pattern 9 run (body) */
+    int  BodyPattern9Enter();    /* pattern 9 enter (body) */
+    int  BodyPattern8Execute();    /* pattern 8 run (body) */
+    int  BodyPattern8Enter();    /* pattern 8 enter (body) */
+    s32  BodyPattern7Execute();    /* pattern 7 run (body) */
+    int  BodyPattern7Enter();    /* pattern 7 enter (body) */
+    s32  BodyPattern6Execute();    /* pattern 6 run (body) */
+    int  BodyPattern6Enter();    /* pattern 6 enter (body) */
+    s32  BodyPattern5Execute();    /* pattern 5 run (body) */
+    int  BodyPattern5Enter();    /* pattern 5 enter (body) */
+    int  BodyPattern4Execute();    /* pattern 4 run (body) */
+    int  BodyPattern4Enter();    /* pattern 4 enter (body) */
+    int  BodyDecisionExecute();    /* decision run (body) */
+    int  BodyDecisionEnter();    /* decision enter (body) */
+    int  BodyTalkExecute();    /* talk run (body) */
+    int  BodyTalkEnter();    /* talk enter (body) */
+    int  BodyDormantExecute();    /* dormant run (body) */
+    int  BodyDormantEnter();    /* dormant enter (body; does nothing) */
+    int  SetState(void *pv); /* install a state descriptor */
+    void UpdateCollisionMatrix();    /* refresh the collision matrix */
+    void UpdateModelMatrices();    /* refresh the model matrices */
 };
 
 #ifndef SM64DS_PLATFORM_PC

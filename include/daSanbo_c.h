@@ -46,8 +46,8 @@ struct daSanbo_c : dActor_c {
     s32 mRootPosX;            /* 0x36c */
     s32 mRootPosY;            /* 0x370 */
     s32 mRootPosZ;            /* 0x374 */
-    /* Segment-follow offset: sin/cos of mSegAngY * 0xe000. func_ov096_02136754
-       / func_ov096_02136264 write it; func_ov096_02135efc adds it to pos for
+    /* Segment-follow offset: sin/cos of mSegAngY * 0xe000. UpdateStackedBody
+       / UpdateStackedOnGrowingBody write it; UpdateModelAndShadow adds it to pos for
        the model translation. */
     s32 mOffsetX;             /* 0x378 */
     s32 mOffsetY;             /* 0x37c */
@@ -64,21 +64,21 @@ struct daSanbo_c : dActor_c {
     daSanbo_c *mNextSegment;    /* 0x394 */
     u8  pad_398[0x8];
     /* Particle uniqueIDs: System::New 0x13a and NewUnkCallback818 0x13b in
-       func_ov096_02136434 / func_ov096_02135948. */
+       UpdateKnockback / HandleAttacks. */
     s32 mParticle0;             /* 0x3a0 */
     s32 mParticle1;             /* 0x3a4 */
     /* Head only. InitResources sets it; while it is set,
-       func_ov096_0213670c gives a new segment no delay and full scale
+       EnterLeader gives a new segment no delay and full scale
        instead of a 90-frame wait, so the initial stack sprouts at once.
-       func_ov096_021365d4 clears it once three segments exist, so later
+       UpdateLeader clears it once three segments exist, so later
        regrowth waits. */
     u8 mInstantSprout; /* 0x3a8 */
     u8  pad_3a9[0x1];
     /* Heading copied from the previous segment + 0x13000; feeds the sin table
        that fills mOffset*. */
     s16 mSegAngY;           /* 0x3aa */
-    /* Regrowth / bounce countdown. func_ov096_0213670c stores 0 or 0x5a;
-       func_ov096_02136134 stores 0x2d; DecIfAbove0_Byte ends those states. */
+    /* Regrowth / bounce countdown. EnterLeader stores 0 or 0x5a;
+       EnterMegaKill stores 0x2d; DecIfAbove0_Byte ends those states. */
     u8  mTimer;             /* 0x3ac */
     u8  pad_3ad[0x3];
 
@@ -98,30 +98,30 @@ struct daSanbo_c : dActor_c {
     int Render();
     void OnPendingDestroy();
 
-    daSanbo_c *func_ov096_021357b4();
-    void func_ov096_02135800();
-    int func_ov096_02135838();
-    void func_ov096_0213585c();
-    int func_ov096_02135878(int x);
-    void func_ov096_021358c8();
-    void func_ov096_02135948();
-    void func_ov096_02135e2c(dBgCh_Actr *clsn);
-    void func_ov096_02135efc();
-    int func_ov096_021360c4();
-    int func_ov096_02136134();
-    int func_ov096_02136264();
-    int func_ov096_021363b4();
-    int func_ov096_021363c4();
-    int func_ov096_0213640c();
-    int func_ov096_02136434();
-    int func_ov096_02136534();
-    int func_ov096_021365d4();
-    int func_ov096_0213670c();
-    int func_ov096_02136754();
-    int func_ov096_021368a4();
-    void func_ov096_021368b4();
-    void func_ov096_021368f0();
-    void func_ov096_02136928(int a);
+    daSanbo_c *GetHead();
+    void UnlinkSegment();
+    int GetSegmentIndex();
+    void PoofAndDestroy();
+    int CalcShyAwayAngle(int x);
+    void UpdateWanderYaw();
+    void HandleAttacks();
+    void UpdateFloorAndWalls(dBgCh_Actr *clsn);
+    void UpdateModelAndShadow();
+    int UpdateMegaKill();
+    int EnterMegaKill();
+    int UpdateStackedOnGrowingBody();
+    int EnterStackedGrowing();
+    int UpdateInMouth();
+    int EnterInMouth();
+    int UpdateKnockback();
+    int EnterKnockback();
+    int UpdateLeader();
+    int EnterLeader();
+    int UpdateStackedBody();
+    int EnterStacked();
+    void CallStateUpdate();
+    void CallStateEnter();
+    void ChangeState(int a);
 };
 
 /* Inline destructor is the key function, so this TU emits the vtable. Both

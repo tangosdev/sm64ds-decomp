@@ -22,7 +22,7 @@
  * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
  * names -- dActor_c ends at exactly 0x0d0. The first derived word is
  * the daPly_c pointer written by the mouth/grab machinery and read by
- * func_ov030_02111bc4 when the mouth-state flag is set. Consumers that used the old duplicated names
+ * HandleContact when the mouth-state flag is set. Consumers that used the old duplicated names
  * were repointed to the inherited dActor_c/fBase_c names: mActorID ->
  * actorID, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
  * mFlags (mPosX/Y/Z, mScaleX/Y/Z, mAreaId already share dActor_c's names).
@@ -30,7 +30,7 @@
  * mWithMeshClsn was mistyped `u8` at 0x194 in the generated header --
  * daMky_c_classInit_MONKEY_THIEF/_MONKEY_STAR call _ZN10dBgCh_ActrC1Ev at that
  * offset, so it is the real 0x1bc-byte member (0x194..0x350); the 0x30
- * bytes from 0x350..0x380 hold the matrix copied by func_ov030_02112094
+ * bytes from 0x350..0x380 hold the matrix copied by UpdateModelAndCap
  * in src/game/actors/d_a_mky.cpp. Its original member name is unknown.
  *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. daMky_c overrides
@@ -75,10 +75,10 @@ struct daMky_c : dActor_c {
     s32 mPerchPosX;         /* 0x380 */
     s32 mPerchPosY;         /* 0x384 */
     s32 mPerchPosZ;         /* 0x388 */
-    /* Copy of mPosX/Y/Z seeded in InitResources. func_ov030_02111dd0 updates
-       it after a ground check; func_ov030_02111734 also resets it.
-       [src/game/actors/d_a_mky.cpp: InitResources, func_ov030_02111dd0,
-        func_ov030_02111734] */
+    /* Copy of mPosX/Y/Z seeded in InitResources. UpdateSafePos updates
+       it after a ground check; ReturnToPerch also resets it.
+       [src/game/actors/d_a_mky.cpp: InitResources, UpdateSafePos,
+        ReturnToPerch] */
     s32 mSpawnPosX;            /* 0x38c */
     s32 mSpawnPosY;            /* 0x390 */
     s32 mSpawnPosZ;            /* 0x394 */
@@ -111,7 +111,7 @@ struct daMky_c : dActor_c {
     u8  mAnimIdx;           /* 0x3ca -- 02111a00 indexes data_ov030_02115bc8 */
     u8 mResetTimer;         /* 0x3cb -- counts down from 0x96 before perch-reset checks */
 
-    /* The state machine.  Entered through func_ov030_021141a8(this, N),
+    /* The state machine.  Entered through ChangeState(this, N),
        which installs descriptor N at +0x3a4 and calls its first
        pointer-to-member; each of these writes its own N to mState.  The
        class name and the numbers are the cartridge's; the word
@@ -130,16 +130,16 @@ struct daMky_c : dActor_c {
 
     /* The func_ov030_* methods. r0 is this Ukiki. The address is the
      * name: the cartridge does not spell these. */
-    void func_ov030_02111734();
-    void func_ov030_02111890();
-    void func_ov030_02111908();
-    int func_ov030_02111a00();
-    int func_ov030_02111b20();
-    int func_ov030_02111bc4();
-    int func_ov030_02111dd0();
-    int func_ov030_02111ea4();
-    void func_ov030_02111f6c(dBgCh_Actr* w);
-    void func_ov030_02112094();
+    void ReturnToPerch();
+    void PlayRunFootstepSound();
+    void PlayIdleSounds();
+    int CycleIdleAnimation();
+    int FollowPath();
+    int HandleContact();
+    int UpdateSafePos();
+    int RevertOffLedge();
+    void UpdateFloorAndWalls(dBgCh_Actr* w);
+    void UpdateModelAndCap();
     int func_ov030_021122b0();
     int func_ov030_02112400();
     int func_ov030_02112578();
@@ -151,9 +151,9 @@ struct daMky_c : dActor_c {
     int func_ov030_02113b38();
     int func_ov030_02113d20();
     int func_ov030_02113ff0();
-    void func_ov030_02114134();
-    void func_ov030_02114170();
-    void func_ov030_021141a8(int idx);
+    void CallStateUpdate();
+    void CallStateEnter();
+    void ChangeState(int idx);
 
     virtual ~daMky_c();            /* slots 16 (D1), 17 (D0) */
 

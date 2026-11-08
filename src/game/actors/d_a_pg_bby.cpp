@@ -94,21 +94,21 @@ s32 daPgBby_c::InitResources()
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mEatingPlayer = 0;
     mCarrier = 0;
-    func_ov072_02121d50(0);
-    func_ov072_021210c4();
+    ChangeState(0);
+    UpdateModelAndShadow();
     return 1;
 }
 
 s32 daPgBby_c::Behavior()
 {
     if (IsTooFarAwayFromPlayer(0x7d0000) && mWithMeshClsn.IsOnGround()) {
-        func_ov072_02120d04();
+        CheckRespawn();
     } else {
         if (mMother == 0)
             mMother = FindWithActorID(0x101, 0);
         mRespawnTimer = 0x384;
-        func_ov072_02121cdc();
-        func_ov072_021210c4();
+        CallStateUpdate();
+        UpdateModelAndShadow();
     }
     return 1;
 }
@@ -140,28 +140,28 @@ s32 daPgBby_c::CleanupResources()
 }
 
 /* Switch to state `state` and run its enter step. */
-void daPgBby_c::func_ov072_02121d50(int state)
+void daPgBby_c::ChangeState(int state)
 {
     mState = &gPenguinBabyStates[state];
-    func_ov072_02121d18();
+    CallStateEnter();
 }
 
 /* Run the current state's enter step. */
-void daPgBby_c::func_ov072_02121d18()
+void daPgBby_c::CallStateEnter()
 {
     StateFunc *step = &mState->enter;
     (this->**step)();
 }
 
 /* Run the current state's per-frame update step. */
-void daPgBby_c::func_ov072_02121cdc()
+void daPgBby_c::CallStateUpdate()
 {
     StateFunc *step = &mState->update;
     (this->**step)();
 }
 
 /* State 0, enter. */
-int daPgBby_c::func_ov072_02121c94()
+int daPgBby_c::StateKeepDistanceEnter()
 {
     mSubState = 0;
     mAnmModel.SetAnim((BCA_File *)gPenguinBabyWaitAnimationFile.filePtr, 0, 0x1000, 0);
@@ -171,7 +171,7 @@ int daPgBby_c::func_ov072_02121c94()
 
 /* State 0, update: keep a comfortable distance from the closest player,
    walking away when it comes near and back when it wanders off. */
-int daPgBby_c::func_ov072_02121a84()
+int daPgBby_c::StateKeepDistanceUpdate()
 {
     daPly_c *player;
     int dist;
@@ -219,11 +219,11 @@ int daPgBby_c::func_ov072_02121a84()
     }
     mAnmModel.speed = 0x1000;
     mAnmModel.Advance();
-    func_ov072_02120e20();
-    func_ov072_02120ddc();
+    CheckDive();
+    CheckNearMother();
     UpdatePos(&mCylClsn);
-    func_ov072_02120fd4(&mWithMeshClsn);
-    func_ov072_02120f14();
+    UpdateFloorAndWalls(&mWithMeshClsn);
+    GuardStepHeight();
     func_ov072_02120e50();
     mCylClsn.Clear();
     mCylClsn.Update();
@@ -237,7 +237,7 @@ int daPgBby_c::func_ov072_02121a84()
 }
 
 /* State 1, enter: a hop. */
-int daPgBby_c::func_ov072_02121a28()
+int daPgBby_c::StateDiveEnter()
 {
     mHorzSpeed = 0x19000;
     mVertSpeed = 0xc000;
@@ -248,7 +248,7 @@ int daPgBby_c::func_ov072_02121a28()
 }
 
 /* State 1, update. */
-int daPgBby_c::func_ov072_021218dc()
+int daPgBby_c::StateDiveUpdate()
 {
     switch (mSubState) {
     case 0:
@@ -269,14 +269,14 @@ int daPgBby_c::func_ov072_021218dc()
         break;
     case 2:
         if (mAnmModel.Finished()) {
-            func_ov072_02121d50(0);
+            ChangeState(0);
         }
         break;
     }
     mAnmModel.Advance();
     UpdatePos(&mCylClsn);
-    func_ov072_02120fd4(&mWithMeshClsn);
-    func_ov072_02120f14();
+    UpdateFloorAndWalls(&mWithMeshClsn);
+    GuardStepHeight();
     func_ov072_02120e50();
     mCylClsn.Clear();
     mCylClsn.Update();
@@ -284,7 +284,7 @@ int daPgBby_c::func_ov072_021218dc()
 }
 
 /* State 2, enter: picked up. */
-int daPgBby_c::func_ov072_02121890()
+int daPgBby_c::StateHeldEnter()
 {
     mAnmModel.SetAnim((BCA_File *)gPenguinBabyWaitAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
@@ -294,7 +294,7 @@ int daPgBby_c::func_ov072_02121890()
 
 /* State 2, update: face where the carrier faces; once no longer held, drop
    to the ground under the carrier and return to state 0. */
-int daPgBby_c::func_ov072_021217ac()
+int daPgBby_c::StateHeldUpdate()
 {
     mAngleY = mCarrier->mAngleY;
     mPrevAngleY = mAngleY;
@@ -317,7 +317,7 @@ int daPgBby_c::func_ov072_021217ac()
         from.z = z;
         DetectRaycastClsn(from, mPos, true);
         mCarrier = 0;
-        func_ov072_02121d50(0);
+        ChangeState(0);
     }
 animate:
     mAnmModel.Advance();
@@ -332,7 +332,7 @@ animate:
 }
 
 /* State 3, enter. */
-int daPgBby_c::func_ov072_02121758()
+int daPgBby_c::StateWalkToMotherEnter()
 {
     mAnmModel.SetAnim((BCA_File *)gPenguinBabyWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
@@ -343,7 +343,7 @@ int daPgBby_c::func_ov072_02121758()
 
 /* State 3, update: walk to the mother, keeping between 0xc8 and 0xdc
    units from her. */
-int daPgBby_c::func_ov072_02121670()
+int daPgBby_c::StateWalkToMotherUpdate()
 {
     int dist = Vec3_Dist(&mPos, &mMother->mPos);
     short tgt = mAngleY;
@@ -356,8 +356,8 @@ int daPgBby_c::func_ov072_02121670()
     mPrevAngleY = mAngleY;
     mAnmModel.Advance();
     UpdatePos(&mCylClsn);
-    func_ov072_02120fd4(&mWithMeshClsn);
-    func_ov072_02120f14();
+    UpdateFloorAndWalls(&mWithMeshClsn);
+    GuardStepHeight();
     func_ov072_02120e50();
     mCylClsn.Clear();
     mCylClsn.Update();
@@ -396,7 +396,7 @@ int daPgBby_c::func_ov072_021214dc()
             if (talking) break;
             if (inMouth) break;
             mEatingPlayer = 0;
-            func_ov072_02121d50(0);
+            ChangeState(0);
         }
         break;
     }
@@ -408,7 +408,7 @@ int daPgBby_c::func_ov072_021214dc()
         }
         int spat = (mFlags & 0x80000) != 0;
         if (spat) {
-            func_ov072_02121d50(5);
+            ChangeState(5);
         }
         break;
     }
@@ -422,7 +422,7 @@ int daPgBby_c::func_ov072_021214dc()
     {
         int spat = (mFlags & 0x80000) != 0;
         if (spat) {
-            func_ov072_02121d50(5);
+            ChangeState(5);
         }
         break;
     }
@@ -513,7 +513,7 @@ int daPgBby_c::func_ov072_021212c0()
     } else if (mWithMeshClsn.IsOnGround()) {
         mVertSpeed = 0;
         mWithMeshClsn.ClearLimMovFlag();
-        func_ov072_02121d50(0);
+        ChangeState(0);
     }
     UpdatePos(&mCylClsn);
     func_ov072_02120e50();
@@ -524,7 +524,7 @@ int daPgBby_c::func_ov072_021212c0()
 
 /* Place the model: in the carrier's hands (one of four carry offsets) or at
    the actor, then size the drop shadow by the height above the ground. */
-void daPgBby_c::func_ov072_021210c4()
+void daPgBby_c::UpdateModelAndShadow()
 {
     int idx;
     Matrix4x3 *carry;
@@ -576,7 +576,7 @@ void daPgBby_c::func_ov072_021210c4()
 }
 
 /* Wall/floor pass: on a slope, turn horizontal motion into vertical speed. */
-void daPgBby_c::func_ov072_02120fd4(dBgCh_Actr *clsn)
+void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn)
 {
     Vector3 floorNormal;
     Vector3 wallNormal;
@@ -598,7 +598,7 @@ void daPgBby_c::func_ov072_02120fd4(dBgCh_Actr *clsn)
 
 /* Refuse a step onto ground more than 0x1.9 away from the current height:
    put the actor back where it was last frame. */
-int daPgBby_c::func_ov072_02120f14()
+int daPgBby_c::GuardStepHeight()
 {
     Vector3 v;
 
@@ -641,35 +641,35 @@ int daPgBby_c::func_ov072_02120e50()
     flag = ((mFlags & 0x20000) != 0);
     if (flag) {
         mCarrier = a;
-        func_ov072_02121d50(4);
+        ChangeState(4);
     } else if ((mCylClsn.hitFlags & 0x1000) && a->TryGrab(*this)) {
         mCarrier = a;
-        func_ov072_02121d50(2);
+        ChangeState(2);
     }
     return 1;
 }
 
 /* A diving player nearby startles it into state 1. */
-void daPgBby_c::func_ov072_02120e20()
+void daPgBby_c::CheckDive()
 {
     daPly_c *player = ClosestPlayer();
-    if (player->IsDiving()) func_ov072_02121d50(1);
+    if (player->IsDiving()) ChangeState(1);
 }
 
 /* Within 0x190 of the mother: state 3. */
-void daPgBby_c::func_ov072_02120ddc()
+void daPgBby_c::CheckNearMother()
 {
     dActor_c *mother = mMother;
     if (mother == 0)
         return;
     if (Vec3_Dist(&mPos, &mother->mPos) >= 0x190000)
         return;
-    func_ov072_02121d50(3);
+    ChangeState(3);
 }
 
 /* Respawn: fallen far below the level, or far from home with the timer
    run out, and off screen -- go back to the spawn position. */
-void daPgBby_c::func_ov072_02120d04()
+void daPgBby_c::CheckRespawn()
 {
     Vector3 out;
     Vector3 tmp;
@@ -720,10 +720,10 @@ SharedFilePtr *const gPenguinBabyAnimationFiles[5] = {
 };
 
 daPgBby_c::State gPenguinBabyStates[6] = {
-    {&daPgBby_c::func_ov072_02121c94, &daPgBby_c::func_ov072_02121a84},
-    {&daPgBby_c::func_ov072_02121a28, &daPgBby_c::func_ov072_021218dc},
-    {&daPgBby_c::func_ov072_02121890, &daPgBby_c::func_ov072_021217ac},
-    {&daPgBby_c::func_ov072_02121758, &daPgBby_c::func_ov072_02121670},
+    {&daPgBby_c::StateKeepDistanceEnter, &daPgBby_c::StateKeepDistanceUpdate},
+    {&daPgBby_c::StateDiveEnter, &daPgBby_c::StateDiveUpdate},
+    {&daPgBby_c::StateHeldEnter, &daPgBby_c::StateHeldUpdate},
+    {&daPgBby_c::StateWalkToMotherEnter, &daPgBby_c::StateWalkToMotherUpdate},
     {&daPgBby_c::func_ov072_02121640, &daPgBby_c::func_ov072_021214dc},
     {&daPgBby_c::func_ov072_02121368, &daPgBby_c::func_ov072_021212c0},
 };
