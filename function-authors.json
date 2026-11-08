@@ -14507,7 +14507,7 @@
     },
     "ov002:0x020bf224": {
       "author": "ruspecial",
-      "name": "func_ov002_020bf224"
+      "name": "_ZN7daPly_c19func_ov002_020bf224Eii"
     },
     "ov002:0x020bf27c": {
       "author": "tangosdev",
@@ -14519,11 +14519,11 @@
     },
     "ov002:0x020bf30c": {
       "author": "tangosdev",
-      "name": "Player_ScaleByCharFactor"
+      "name": "_ZN7daPly_c17ScaleByCharFactorEi"
     },
     "ov002:0x020bf340": {
       "author": "tangosdev",
-      "name": "func_ov002_020bf340"
+      "name": "_ZN7daPly_c19func_ov002_020bf340EPiii"
     },
     "ov002:0x020bf36c": {
       "author": "lunavyqo",

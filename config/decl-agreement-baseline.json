@@ -1142,11 +1142,6 @@
         "return:void"
       ]
     },
-    "Player_ScaleByCharFactor": {
-      "src/unnamed/ov002/func_ov002_020dde74.cpp": [
-        "param:#1 daPly_c *"
-      ]
-    },
     "Quaternion_FromVector3": {
       "include/decl_common.h": [
         "param:#1 int *"
@@ -16208,17 +16203,6 @@
       ],
       "src/unnamed/ov002/func_ov002_020e4768.cpp": [
         "param:#2 unsigned int"
-      ]
-    },
-    "func_ov002_020bf224": {
-      "src/_ZN7daPly_c12St_Land_MainEv.cpp": [
-        "param:#1 void *"
-      ],
-      "src/_ZN7daPly_c15St_Balloon_MainEv.cpp": [
-        "param:#1 void *"
-      ],
-      "src/unnamed/ov002/func_ov002_020e28d4.c": [
-        "param:#1 void *"
       ]
     },
     "func_ov002_020c06fc": {
