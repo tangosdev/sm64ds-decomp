@@ -3211,7 +3211,7 @@ int sTrmp2FallSpeed = data_ov006_0212e010;
 int sTrmp2GravityStep = data_ov006_0212e00c;
 int data_ov006_0214053c = data_ov006_0212e018;
 int sTrmpSpeedScale = data_ov006_0212e014;
-int sTrmp2RiseSpeedMax[1] = {data_ov006_0212dff8};
+int sTrmp2RiseSpeedMax = data_ov006_0212dff8;
 int sTrmp2DriftScale = data_ov006_0212e01c;
 }
 

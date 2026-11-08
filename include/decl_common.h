@@ -332,7 +332,7 @@ extern int sTrmp3DHardBounceScale;
 extern int sTrmpSpeedScale;
 extern int sTrmp3DBounceScale;
 extern int sTrmpComboCount;
-extern int sTrmp2RiseSpeedMax[];
+extern int sTrmp2RiseSpeedMax;
 extern int sTrmp2GravityStep;
 extern int sTrmp2FallSpeed;
 extern int sTrmp2MarioCount;
