@@ -40519,59 +40519,59 @@
     },
     "ov077:0x02126300": {
       "author": "lunavyqo",
-      "name": "_ZN9daPopoi_c19func_ov077_02126300Ev"
+      "name": "_ZN9daPopoi_c14IsBlockedAheadEv"
     },
     "ov077:0x02126528": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_02126528Ev"
+      "name": "_ZN9daPopoi_c13TryGrabPlayerEv"
     },
     "ov077:0x02126640": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_02126640Ev"
+      "name": "_ZN9daPopoi_c15UpdateGrabStateEv"
     },
     "ov077:0x02126758": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_02126758Ev"
+      "name": "_ZN9daPopoi_c14EnterGrabStateEv"
     },
     "ov077:0x0212679c": {
       "author": "lunavyqo",
-      "name": "_ZN9daPopoi_c19func_ov077_0212679cEv"
+      "name": "_ZN9daPopoi_c16UpdateChaseStateEv"
     },
     "ov077:0x02126930": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_02126930Ev"
+      "name": "_ZN9daPopoi_c15EnterChaseStateEv"
     },
     "ov077:0x021269a8": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_021269a8Ev"
+      "name": "_ZN9daPopoi_c19UpdateTurnAwayStateEv"
     },
     "ov077:0x02126a04": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_02126a04Ev"
+      "name": "_ZN9daPopoi_c18EnterTurnAwayStateEv"
     },
     "ov077:0x02126a50": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_02126a50Ev"
+      "name": "_ZN9daPopoi_c16UpdatePauseStateEv"
     },
     "ov077:0x02126a84": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_02126a84Ev"
+      "name": "_ZN9daPopoi_c15EnterPauseStateEv"
     },
     "ov077:0x02126ad0": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_02126ad0Ev"
+      "name": "_ZN9daPopoi_c17UpdateWanderStateEv"
     },
     "ov077:0x02126cd4": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_02126cd4Ev"
+      "name": "_ZN9daPopoi_c16EnterWanderStateEv"
     },
     "ov077:0x02126d5c": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_02126d5cEP19daPopoi_StateRecord"
+      "name": "_ZN9daPopoi_c11ChangeStateEP19daPopoi_StateRecord"
     },
     "ov077:0x02126dac": {
       "author": "tangosdev",
-      "name": "_ZN9daPopoi_c19func_ov077_02126dacEv"
+      "name": "_ZN9daPopoi_c20UpdateModelTransformEv"
     },
     "ov077:0x02126dec": {
       "author": "tangosdev",
