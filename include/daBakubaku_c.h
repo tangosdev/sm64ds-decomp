@@ -68,18 +68,18 @@ struct daBakubaku_c : dEnemyBase_c {
      * pointer-to-member constants at 0x0211377c..0x021137c4 prove ten of
      * them are members. The hooks take the EnterX/ExecuteX spelling of
      * daBasabasa_c and daBbl_c, which use the same { enter, main } record. */
-    int  EnterWander(); /* wander enter */
-    int  ExecuteWander(); /* wander main */
-    int  EnterPause(); /* pause enter */
-    int  ExecutePause(); /* pause main */
-    int  EnterChase(); /* chase enter */
-    int  ExecuteChase(); /* chase main */
-    int  EnterSurface(); /* surface enter */
-    int  ExecuteSurface(); /* surface main */
-    int  EnterDive(); /* dive enter */
-    int  ExecuteDive(); /* dive main */
-    int  ShouldReturnHome(); /* abort test: player gone, wall, too far */
-    int  FindChaseTarget(); /* chase-target test: stores player pos */
+    int EnterWander();        /* wander enter */
+    int ExecuteWander();      /* wander main */
+    int EnterPause();         /* pause enter */
+    int ExecutePause();       /* pause main */
+    int EnterChase();         /* chase enter */
+    int ExecuteChase();       /* chase main */
+    int EnterSurface();       /* surface enter */
+    int ExecuteSurface();     /* surface main */
+    int EnterDive();          /* dive enter */
+    int ExecuteDive();        /* dive main */
+    int ShouldReturnHome();   /* abort test: player gone, wall, too far */
+    int FindChaseTarget();    /* chase-target test: stores player pos */
     void HandleCylinderHit(); /* cylinder collision: bite / mega-kill */
     void UpdateModelMatrix(); /* model + shadow matrices */
 };
