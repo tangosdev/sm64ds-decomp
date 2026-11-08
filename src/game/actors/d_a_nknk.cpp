@@ -426,9 +426,15 @@ void daNknk_c::func_ov062_02118cdc()
         SpawnFootstepDust(2, 8, 0x13, 0x19);
     }
     switch (mWalkState) {
-    case 0: UpdateWalkStart(); break;
-    case 1: UpdateWalk(); break;
-    case 2: UpdateWalkEnd(); break;
+    case 0:
+        UpdateWalkStart();
+        break;
+    case 1:
+        UpdateWalk();
+        break;
+    case 2:
+        UpdateWalkEnd();
+        break;
     }
     func_ov062_02118058();
 }
@@ -486,7 +492,8 @@ void daNknk_c::func_ov062_02118a50()
             *p = (u16)(*p - 1);
             if (mTimer != 0)
                 return;
-            SetAnimByIndex(8); return;
+            SetAnimByIndex(8);
+            return;
         }
     }
 
@@ -670,8 +677,7 @@ void daNknk_c::func_ov062_021183e0()
     func_ov062_02118058();
 }
 
-void daNknk_c::UpdateModelMatrixAndShadow()
-{
+void daNknk_c::UpdateModelMatrixAndShadow() {
     short *angleY;
     Vector3 v;
     Vec3_Asr(&v, &mPos, 3);
@@ -691,8 +697,7 @@ void daNknk_c::UpdateModelMatrixAndShadow()
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x50000, 0x50000, 0xf);
 }
 
-void daNknk_c::UpdateClosestPlayer(int lim)
-{
+void daNknk_c::UpdateClosestPlayer(int lim) {
     mClosestPlayer = ClosestPlayer();
 
     if (mClosestPlayer == 0 || Vec3_Dist(&mPos, &mHomePos) > lim) {
@@ -918,7 +923,7 @@ tail:
         mAngleY = (u16)(mPrevAngleY + 0x8000);
 }
 
-void daNknk_c::DropShell(){
+void daNknk_c::DropShell() {
     func_0201267c(0xed, &mCamSpacePos);
     mKoopaVariant = 1;
     mState = 3;
@@ -953,15 +958,13 @@ dActor_c *daNknk_c::FindNearestShell() {
     return best;
 }
 
-int daNknk_c::DistToClosestPlayer()
-{
+int daNknk_c::DistToClosestPlayer() {
     daPly_c *target = mClosestPlayer;
     if (!target) return 0x61a8000;
     return Vec3_Dist(&mPos, &target->mPos);
 }
 
-void daNknk_c::BounceOffHurtPlayer()
-{
+void daNknk_c::BounceOffHurtPlayer() {
     mState = 0;
     mVertSpeed = 81920;
     mHorzSpeed = 0;
@@ -969,7 +972,9 @@ void daNknk_c::BounceOffHurtPlayer()
 
 void daNknk_c::func_ov062_02117acc(){
   switch(mState){
-  case 0: WaitUntilGrounded(); break;
+  case 0:
+      WaitUntilGrounded();
+      break;
   case 1: func_ov062_02118de8(); break;
   case 2: func_ov062_02118cdc(); break;
   case 3: func_ov062_02118b4c(); break;
@@ -980,7 +985,9 @@ void daNknk_c::func_ov062_02117acc(){
 void daNknk_c::func_ov062_02117a3c()
 {
     switch (mState) {
-    case 0: WaitUntilGrounded(); break;
+    case 0:
+        WaitUntilGrounded();
+        break;
     case 1: func_ov062_02118718(); break;
     case 2: func_ov062_02118588(); break;
     case 3: func_ov062_02118588(); break;
@@ -1007,7 +1014,9 @@ void daNknk_c::SetAnimByIndex(int idx) {
 }
 
 // 6f: keep constant live / flip coloring
-void daNknk_c::SpawnFootstepDust(unsigned int a1, unsigned int a2, unsigned int a3, unsigned short a4) /* uxth vs a1-a3: ROM compares h<=a4 after a halfword arg */
+void daNknk_c::SpawnFootstepDust(
+    unsigned int a1, unsigned int a2, unsigned int a3,
+    unsigned short a4) /* uxth vs a1-a3: ROM compares h<=a4 after a halfword arg */
 {
     unsigned int h = (unsigned int)(mAnmModel.currFrame << 4) >> 16;
     if ((h >= a1 && h <= a2) || (h >= a3 && h <= a4)) {
@@ -1060,8 +1069,7 @@ void daNknk_c::SpawnFootstepDust(unsigned int a1, unsigned int a2, unsigned int 
     }
 }
 
-void daNknk_c::SpawnLandingDust()
-{
+void daNknk_c::SpawnLandingDust() {
     volatile Vector3 pos;
     int t;
     u32 spawned;

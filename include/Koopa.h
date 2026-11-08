@@ -88,7 +88,7 @@ struct daNknk_c : dEnemyBase_c {
     void func_ov062_02117a3c();
     void func_ov062_02117acc();
     void BounceOffHurtPlayer();
-    int  DistToClosestPlayer();
+    int DistToClosestPlayer();
     dActor_c *FindNearestShell(); /* nearest SHELL (actor 0x11d), or 0 */
     void DropShell();
     void func_ov062_02117c98();
