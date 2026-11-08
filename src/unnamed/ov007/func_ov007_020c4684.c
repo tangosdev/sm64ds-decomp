@@ -3,7 +3,7 @@
 #include "Ov007Texture.h"
 #include "nitro/fx/fx.h"
 extern void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0);
-extern void func_ov007_020c1404(Ov007Texture *tex);
+extern void Texture_BindPalette(Ov007Texture *tex);
 extern void func_ov007_020c49bc(int a0, int a1, int a2, int a3, int a4, int a5, u16 *a6, int a7);
 extern int data_ov007_0210325c;
 #define reg_G3_COLOR        (*(volatile u32 *)0x04000480)
@@ -95,7 +95,7 @@ void func_ov007_020c4684(Ov007Sprite *s, u16 color, int alpha, int polygonId, in
         th = 8 << tex->sizeT;
     }
     func_ov007_020c1448(tex, 1, s->texRepeat, s->texFlip, s->texColor0);
-    func_ov007_020c1404(tex);
+    Texture_BindPalette(tex);
     texW = tw;
     reg_G3_POLYGON_ATTR = s->polygonAttr | 0x80 | (polygonId << 24) | (alpha << 16);
     if (tex != 0) {

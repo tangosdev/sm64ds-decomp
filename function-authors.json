@@ -28975,7 +28975,7 @@
     },
     "ov007:0x020c1404": {
       "author": "tangosdev",
-      "name": "func_ov007_020c1404"
+      "name": "Texture_BindPalette"
     },
     "ov007:0x020c1448": {
       "author": "andrewboudreau",
@@ -28987,11 +28987,11 @@
     },
     "ov007:0x020c14d4": {
       "author": "tangosdev",
-      "name": "func_ov007_020c14d4"
+      "name": "Texture_LoadPalette"
     },
     "ov007:0x020c1560": {
       "author": "tangosdev",
-      "name": "func_ov007_020c1560"
+      "name": "Texture_LoadTexels"
     },
     "ov007:0x020c15ec": {
       "author": "tangosdev",
@@ -29003,11 +29003,11 @@
     },
     "ov007:0x020c162c": {
       "author": "tangosdev",
-      "name": "func_ov007_020c162c"
+      "name": "Texture_Create"
     },
     "ov007:0x020c16dc": {
       "author": "tangosdev",
-      "name": "func_ov007_020c16dc"
+      "name": "Texture_GetSizes"
     },
     "ov007:0x020c17f4": {
       "author": "tangosdev",
@@ -29019,11 +29019,11 @@
     },
     "ov007:0x020c1814": {
       "author": "tangosdev",
-      "name": "func_ov007_020c1814"
+      "name": "Texture_InitRegions"
     },
     "ov007:0x020c184c": {
       "author": "tangosdev",
-      "name": "func_ov007_020c184c"
+      "name": "Texture_ResetRegions"
     },
     "ov007:0x020c19cc": {
       "author": "lunavyqo",
