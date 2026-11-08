@@ -6075,8 +6075,24 @@ static const char *scn_bmp;
 static const char *scn_bmp_stacked;
 /* The scene's framebuffer, moved out of port_scene_run's body unchanged: the
    same zero-initialised static storage, now reachable by a windowed loop that
-   has to present it. */
-static ntr::Framebuffer scn_fb;
+   has to present it.
+   RESSCALE1: ON THE HEAP, zeroed, allocated on first use. At the 2736x1536 tier a Framebuffer is 16.8 MB, and as a static it
+   pushed the image past dsstate_guard's 0x12000000 limit (the 26-bit IPC payload). First use is at scene run time, after
+   ntr/io.cpp has reserved DS main RAM, so the block cannot land on it. */
+static ntr::Framebuffer *scn_fb_heap;
+static ntr::Framebuffer &scn_fb_get(void)
+{
+    if (!scn_fb_heap) {
+        scn_fb_heap = static_cast<ntr::Framebuffer *>(std::calloc(1, sizeof(ntr::Framebuffer)));
+        if (!scn_fb_heap) {
+            std::fprintf(stderr, "FATAL: the scene framebuffer (%u bytes) could not be allocated.\n",
+                         (unsigned)sizeof(ntr::Framebuffer));
+            std::fflush(stderr);
+            std::exit(3);
+        }
+    }
+    return *scn_fb_heap;
+}
 
 /* THE LAYOUT PREDICATE, ONE COPY (run hunt6, lane MGSAVE1). It lived inline in
    port_scene_layout_propose, which a process asks once at boot. A scene that
@@ -6243,7 +6259,7 @@ extern "C" int port_scene_frames_wanted(void)
    and must not become a second writer of it. */
 extern "C" const void *port_scene_framebuffer(void)
 {
-    return &scn_fb;
+    return &scn_fb_get();
 }
 
 /* TITLE LANE DIAGNOSTIC, run mg12: the two boot-chain entry points the knobs
@@ -7800,7 +7816,7 @@ extern "C" void (*port_scene_ip_hook)(int stage, void *fb, int frame,
 
 extern "C" void port_scene_tick(int frame, int tick_game)
 {
-    ntr::Framebuffer &fb = scn_fb;
+    ntr::Framebuffer &fb = scn_fb_get();
     const int no_render = scn_no_render;
     const int trace = scn_trace;
     /* So sc_gate_report can name the frame it refused on. Written before any
@@ -8195,7 +8211,7 @@ extern "C" int port_scene_finish(int frames_run)
     const int no_render = scn_no_render;
     const char *bmp = scn_bmp;
     const char *bmp_stacked = scn_bmp_stacked;
-    ntr::Framebuffer &fb = scn_fb;
+    ntr::Framebuffer &fb = scn_fb_get();
 
     /* run mg12 TITLE lane, DEFAULT OFF. Its call site was lost in the same
        rebase as title_oam_tail_zero()'s; see the banner there. */

@@ -193,8 +193,11 @@ enum { HOST_PAD_LT = 0x10000, HOST_PAD_RT = 0x20000, HOST_PAD_MASK_MAX = 0x3ffff
 
    MOUSE BUTTONS. Each action may also sit on a mouse button. The value is the Win32
    virtual-key code of the button (GetAsyncKeyState takes it): 0 none, 2 right,
-   4 middle, 5 X1 (back), 6 X2 (forward). The left button is the touch stylus and
-   cannot be bound. A value outside that set reads as the default.
+   4 middle, 5 X1 (back), 6 X2 (forward), and since MOUSELOCK1 1 (left) for every
+   action but MouseCamHold. A left bound to an action is that action in play and
+   stays the touch stylus wherever the pointer is a pen (menus, pause, the scene
+   path, a stacked window: tests/walk_window.cpp mo_pen_moment). A value outside
+   that set reads as the default.
      MouseCamHold   2 (right)  the button that is HELD to steer the camera with mouse
                     movement, today's right-button look. 0 turns the hold off (use
                     MouseCapture for look with no button).
@@ -214,7 +217,7 @@ enum {
 };
 int host_setting_mouse(int action);                     /* VK of the bound button or 0 */
 const char *host_setting_mouse_name(int action);
-int host_setting_set_mouse(int action, int vk);         /* 1 ok, 0 refused (not 0/2/4/5/6) */
+int host_setting_set_mouse(int action, int vk);         /* 1 ok, 0 refused (not 0/1/2/4/5/6; 1 refused for MouseCamHold) */
 /* CameraStickZoom: right stick up / down zooms the camera instead of tilting it.
    Default 0 (off) = today. DS camera: a push is one press of the ROM's close-up. */
 int host_setting_camera_stick_zoom(void);
@@ -358,9 +361,10 @@ int host_setting_gapless_minigames(void);
 int host_setting_lovesme_character(void);
 
 /* ---- MouseCapture: HOLD THE POINTER AND STEER WITH IT --------------------
-   Default 0, which is exactly what this program has always done: the mouse is
-   a stylus, and the camera only follows it while the RIGHT BUTTON IS HELD (see
-   the MOUSE banner in tests/walk_window.cpp). With this key on, an ordinary
+   Default 1 since MOUSELOCK1 (Tango, 11-07: "an on by default toggle"); a
+   settings.json that saved false keeps false. Off, the mouse is a stylus and
+   the camera only follows it while the RIGHT BUTTON IS HELD (see the MOUSE
+   banner in tests/walk_window.cpp). With this key on, an ordinary
    adventure window HOLDS the pointer -- hidden, pinned to the middle of the
    picture and clipped to the window -- and bare mouse movement turns the
    camera with no button at all, the way a modern third-person game does.
@@ -384,7 +388,12 @@ int host_setting_lovesme_character(void);
      * in the DS-EXACT camera mode, where the mouse does not steer anything,
        so holding the pointer would cost the player something and buy nothing;
      * while the run-button rebind row is capturing;
-     * in a selftest, which has no pointer and no player.
+     * in a selftest, which has no pointer and no player;
+     * MOUSELOCK1: while the ROM's pause, the level-clear save menu, a message
+       window, a one-screen menu, the settings page, the white door or the
+       Joining plate is up, and on the star select interlude, the title and
+       every other scene frame (tests/walk_window.cpp mo_pen_moment). Those are
+       the same frames a left button bound to a game action stays the stylus.
 
    It reloads live like the gap and the volume, so the launcher's dialog can
    turn it on and off with the game already running. */
@@ -909,7 +918,8 @@ int host_setting_set_minigame_upscale(int on);
    a wide one), so a settings.json written before this key existed, and a
    file that will not parse, both read as the shipped picture. Absent,
    unparseable and negative all read as 0; a positive value is CLAMPED into
-   1..4, the Aspect rule, so 9 is 4 and not an error. 1 is the DS's own
+   1..8 (RESSCALE1; 1..4 before), the Aspect rule, so 9 is 8 and not an
+   error. 5 is 960 rows, 6 is 1152, 7 is 1344 and 8 is 1536. 1 is the DS's own
    256x192 and is a real choice, which is why it is not folded into 0.
    BOOT-LATCHED: the size is threaded into the framebuffer at boot and a
    mid-run change would be a reallocation nobody tests. SM64DS_RENDER_SCALE
@@ -934,6 +944,10 @@ int host_setting_set_minigame_upscale(int on);
    All three are read once and latched, like Aspect and FrameRate, and the
    launcher's rows promise a restart. */
 int host_setting_render_scale(void);
+/* RESSCALE1: the in-game Settings row. The saved value for the NEXT boot (the running picture stays latched): the value the
+   page last set, else host_setting_render_scale(). The setter sanitises (0..8) and writes RenderScale to settings.json. */
+int host_setting_render_scale_saved(void);
+int host_setting_set_render_scale(int n);
 int host_setting_hd_textures(void);
 const char *host_setting_hd_textures_dir(void);
 int host_setting_smooth_models(void);

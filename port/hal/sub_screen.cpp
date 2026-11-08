@@ -1313,6 +1313,10 @@ void panel_extents(int *l, int *t, int *r, int *b)
  * The picture's height is still the parameter and is no longer read. It stays
  * so that the draw, the trace and the press go on asking this one function,
  * which is the whole reason the square cannot drift from the thing you grab. */
+/* MOUSELOCK1: seated by tests/walk_window.cpp (null on every other target). port_pointer_held_hook: 1 while the window holds the pointer
+   this frame; port_left_action_hook: 1 while a left button bound to a game action is that action (poll_touch then leaves it alone). */
+extern "C" { int (*port_pointer_held_hook)(void) = 0; int (*port_left_action_hook)(void) = 0; }
+extern "C" { int (*port_panel_key_hook)(void) = 0; }   /* MOUSELOCK1: the frame loop's read of the panel key (M), null = the raw key */
 int handle_rect(int *hx, int *hy, int *hs, int h)
 {
     (void)h;
@@ -1323,7 +1327,9 @@ int handle_rect(int *hx, int *hy, int *hs, int h)
        here. */
     if (hal_menu_live()) return 0;
     if (g_pause_fit && g_page_fit.load()) return 0;     /* PAUSESCALE2: the pause's 1:1 bottom screen is not the map: no handle */
-    if (host_setting_mouse_capture()) return 0;
+    /* MOUSELOCK1: the lock is on by default now, so the square goes only while the pointer is really held (it is back the moment Escape,
+       a menu or alt-tab lets go); a target with no window asks the setting as before */
+    if (port_pointer_held_hook ? port_pointer_held_hook() : host_setting_mouse_capture()) return 0;
     PanelGeom g;
     panel_geom(&g);
     int s = (g_pan_w * 8 + 50) / 100;
@@ -2480,11 +2486,13 @@ void poll_touch(void)
        back with the button still held does not revive it. SM64DS_TOUCH_PROBE,
        the in-process stylus and SM64DS_SKIP_MENU never come through here. */
     int btn;
-    if (inj || mc_on) {
+    /* MOUSELOCK1: left is bound to a game action and this is play: the press (real or the injected one) is that action, not a touch */
+    const int left_game = port_left_action_hook && port_left_action_hook();
+    if ((inj && !left_game) || mc_on) {
         btn = 1;
     } else {
         static int raw_was, focus_was, hold_ok;
-        const int raw = (!g_headless && (g_on || g_force_panel.load() || hal_menu_live()) && !menu_bigmap_up() && !(port_join_plate_up_hook && port_join_plate_up_hook()) && GetAsyncKeyState_ &&   /* MAP1: no stylus under the big map; JOINFLOW1: none under the Joining plate */
+        const int raw = (!g_headless && !left_game && (g_on || g_force_panel.load() || hal_menu_live()) && !menu_bigmap_up() && !(port_join_plate_up_hook && port_join_plate_up_hook()) && GetAsyncKeyState_ &&   /* MAP1: no stylus under the big map; JOINFLOW1: none under the Joining plate */
                          (GetAsyncKeyState_(VK_LBUTTON) & 0x8000)) ? 1 : 0;
         const int foc = hal_window_focused();
         if (!raw)              hold_ok = 0;
@@ -3376,7 +3384,7 @@ void hal_sub_screen_init_hw(void *hwnd, int zoom)
     }
     OAM::Reset();
 
-    std::printf("[sub] panel %s (TAB toggles, SM64DS_SUB_PANEL=0 to start "
+    std::printf("[sub] panel %s (M toggles, SM64DS_SUB_PANEL=0 to start "
                 "off)\n", g_on ? "on" : "off");
     if (armed) {
         std::printf("[sub] hw bring-up was already armed; re-armed idempotently"
@@ -3609,12 +3617,22 @@ void hal_sub_screen_frame_begin(void)
        it (poll_touch is gated on g_on) would be a way to lose a minigame by
        leaning on the keyboard. The window size is fixed at creation for the
        same reason, so there is nothing for a toggle to fall back to. */
+    /* MOUSELOCK1 round 2: the key is M now (Tango: Tab is "bring up the mouse"). With the frame loop's hook seated, the key is its
+       key_live read of M (focus gate, stale latch, chat, rebind capture and the M-bound-to-an-action rule all live there); without it,
+       the raw key under the focus latch above. */
     static int tab_was;
     if (GetAsyncKeyState_ && !g_headless && !hal_sub_screen_stacked()) {
-        if (!hal_window_focused()) {
+        if (port_panel_key_hook) {
+            const int k = port_panel_key_hook();
+            if (k && !tab_was) {
+                g_on = !g_on;
+                std::fprintf(stderr, "[sub] panel %s (M)\n", g_on ? "on" : "off");
+            }
+            tab_was = k;
+        } else if (!hal_window_focused()) {
             tab_was = 1;
         } else {
-            const int tab = (GetAsyncKeyState_(VK_TAB) & 0x8000) != 0;
+            const int tab = (GetAsyncKeyState_('M') & 0x8000) != 0;
             if (tab && !tab_was) g_on = !g_on;
             tab_was = tab;
         }

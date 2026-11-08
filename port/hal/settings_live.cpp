@@ -61,7 +61,7 @@ static const SlInfo INFO[] = {
        row two places off, and Reset wrote those rows' wrong defaults) */
     { "PadPartyInvite", SL_KIND_PAD, 0, HOST_PAD_MASK_MAX, 0x0001, 0, 1 },
     { "PadPartyLeave",  SL_KIND_PAD, 0, HOST_PAD_MASK_MAX, 0x0002, 0, 1 },
-    /* mouse buttons, in HOST_MOUSE_ order (CAMPACK1): VK 0 none, 2 right, 4 middle, 5 X1, 6 X2 */
+    /* mouse buttons, in HOST_MOUSE_ order (CAMPACK1): VK 0 none, 1 left (MOUSELOCK1, not MouseCamHold), 2 right, 4 middle, 5 X1, 6 X2 */
     { "MouseCamHold",    SL_KIND_MOUSE, 0, 6, 2, 0, 1 },
     { "MouseCamCenter",  SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
     { "MouseCamLeft",    SL_KIND_MOUSE, 0, 6, 0, 0, 1 },
@@ -90,7 +90,7 @@ static const SlInfo INFO[] = {
     { "InvertCameraY",          SL_KIND_BOOL,    0, 1, 0, 0, 1 },
     { "CameraSensitivity",      SL_KIND_PERCENT, 10, 400, 100, 0, 1 },
     { "MouseSensitivity",       SL_KIND_PERCENT, 10, 400, 100, 0, 1 },
-    { "MouseCapture",           SL_KIND_BOOL,    0, 1, 0, 0, 1 },
+    { "MouseCapture",           SL_KIND_BOOL,    0, 1, 1, 0, 1 },   /* MOUSELOCK1: on by default */
     { "CameraStickZoom",        SL_KIND_BOOL,    0, 1, 0, 0, 1 },
     { "Volume",                 SL_KIND_PERCENT, 0, 100, 50, 0, 1 },
     { "MinimapScale",           SL_KIND_PERCENT, 25, 400, 100, 0, 1 },
@@ -114,6 +114,7 @@ static const SlInfo INFO[] = {
     { "SkipOpening",            SL_KIND_BOOL,    0, 1, 0, 0, 1 },
     { "MinigameHiRes",          SL_KIND_BOOL,    0, 1, 0, 0, 1 },
     { "MinigameUpscale",        SL_KIND_BOOL,    0, 1, 0, 0, 1 },
+    { "RenderScale",            SL_KIND_PERCENT, 0, 8, 0, 0, 0 },     /* RESSCALE1: saved for the next boot */
 };
 
 /* INFO[] is positional: row i describes id i. If a host key or pad is added (HOST_KEY_COUNT / HOST_PAD_COUNT move, for example
@@ -175,6 +176,7 @@ int sl_get(int id)
     case SL_SKIP_OPENING:       return host_setting_skip_opening();
     case SL_MINIGAME_HIRES:     return host_setting_minigame_hires();
     case SL_MINIGAME_UPSCALE:   return host_setting_minigame_upscale();
+    case SL_RENDER_SCALE:       return host_setting_render_scale_saved();
     case SL_GAP_COLOR: {
         const unsigned c = host_setting_gap_color() & 0xffffffu;
         for (int i = 0; i < 6; ++i) if (GAP_COLORS[i] == c) return i;
@@ -225,6 +227,9 @@ int sl_set(int id, int v)
     case SL_SKIP_OPENING:       return host_setting_set_skip_opening(v);
     case SL_MINIGAME_HIRES:     return host_setting_set_minigame_hires(v);
     case SL_MINIGAME_UPSCALE:   return host_setting_set_minigame_upscale(v);
+    case SL_RENDER_SCALE:
+        if (v < 0 || v > 8) return 0;
+        return host_setting_set_render_scale(v);
     case SL_GAP_COLOR:
         if (v < 0 || v > 5) return 0;
         return host_setting_set_gap_color(GAP_COLORS[v]);
@@ -357,6 +362,11 @@ static int pad_reserved(int action, unsigned bit, const char **why)
 int sl_capture_offer_key(int vk)
 {
     if (g_cap_state != SL_CAP_WAITING) return 0;
+    /* MOUSELOCK1: a mouse row takes the left click as its answer now, so Escape is how it keeps the old button */
+    if (vk == 0x1b && g_cap_id >= SL_MOUSE_BASE && !g_cap_either) {
+        g_cap_state = SL_CAP_CANCELLED;
+        return 1;
+    }
     if (g_cap_id >= SL_PAD_BASE && !g_cap_either) return 0;   /* a pad or mouse row waits for its own device */
     if (vk == 0x1b) {
         g_cap_state = SL_CAP_CANCELLED;
@@ -382,7 +392,11 @@ int sl_capture_wants_mouse(void)
 int sl_capture_offer_mouse(int vk)
 {
     if (!sl_capture_wants_mouse()) return 0;
-    if (!(vk == 2 || (vk >= 4 && vk <= 6))) return 0;
+    if (!(vk == 1 || vk == 2 || (vk >= 4 && vk <= 6))) return 0;
+    if (vk == 1 && g_cap_id == SL_MOUSE_BASE + HOST_MOUSE_CAM_HOLD) {     /* MOUSELOCK1: left cannot be the look button */
+        snprintf(g_cap_refused, sizeof g_cap_refused, "Left click cannot be the look button");
+        return 0;
+    }
     host_setting_set_mouse(g_cap_id - SL_MOUSE_BASE, vk);
     g_cap_refused[0] = 0;
     g_cap_state = SL_CAP_BOUND;

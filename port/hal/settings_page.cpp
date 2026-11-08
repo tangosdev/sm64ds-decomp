@@ -3,6 +3,7 @@
 #include "ui_art.h"
 #include "settings_live.h"
 #include "host_settings.h"
+#include "gpu_raster.h"
 #include "ui_text.h"
 #include "menu_hostimg.h"
 #include "menu_compose.h"
@@ -720,11 +721,22 @@ const char *const TAB_NAMES[T_COUNT] = { "GENERAL", "DISPLAY", "CONTROLS", "SOUN
 
 /* DISPLAY is built per call: the Frame rate row is there only when this build's settings_live has a FrameRate row (another lane makes it
    live; until then it stays a launcher setting and the note says so) */
-Row g_disp_rows[12];
+Row g_disp_rows[14];
 int g_disp_n;
 const Row *display_rows(int *n)
 {
     int k = 0;
+    {   /* RESSCALE1: RenderScale by lines. Each label is the nearest common height at or below the rows the step draws, with the
+           real number beside it; 0 is the shipped default (384 at 4:3, derived under a wide Aspect). Read at boot, so the note says so. */
+        static const char *const RES_LABELS[] = { "Default", "DS (192)", "384", "480p (576)", "720p (768)", "1080p (1152)", "1440p (1536)" };
+        static const int RES_VALS[] = { 0, 1, 2, 3, 4, 6, 8 };
+        g_disp_rows[k++] = Row{ R_CHOICE, "Resolution", SL_RENDER_SCALE, -1, 0, RES_LABELS, 7, RES_VALS };
+        g_disp_rows[k++] = Row{ R_NOTE, "Applies after a restart.", -1, -1, 0, 0, 0 };
+        /* RESSCALE1 round 2: on the processor renderer 6x and up miss the frame budget (27.6 to 57 ms at L18), so say so; hidden
+           while the card renderer is drawing (port_gpu_raster_active: setting on and no fallback), shown again if it falls back */
+        if (!port_gpu_raster_active())
+            g_disp_rows[k++] = Row{ R_NOTE, "1080p and up need the graphics card.", -1, -1, 0, 0, 0 };
+    }
     g_disp_rows[k++] = Row{ R_CHECK, "Minigame screen gap", SL_MINIGAME_GAP, -1, 0, 0, 0 };
     g_disp_rows[k++] = Row{ R_CHOICE, "Gap look", SL_GAP_LOOK, -1, 0, GAPLOOK_LABELS, 3 };
     g_disp_rows[k++] = Row{ R_CHOICE, "Gap color", SL_GAP_COLOR, -1, 0, GAPCOLOR_LABELS, 6 };
@@ -746,11 +758,11 @@ const Row *display_rows(int *n)
     const bool has_rate = fi && fi->live;           /* the row exists in this build (another lane makes the frame rate live): the drop-down shows */
     if (has_rate) g_disp_rows[k++] = Row{ R_CHOICE, "Frame rate", fr, -1, 0, RATE_LABELS, 8, RATE_VALS };
     if (has_rate) {
-        g_disp_rows[k++] = Row{ R_NOTE, "Aspect ratio and picture quality are set", -1, -1, 0, 0, 0 };
-        g_disp_rows[k++] = Row{ R_NOTE, "in the launcher.", -1, -1, 0, 0, 0 };
-    } else {
-        g_disp_rows[k++] = Row{ R_NOTE, "Frame rate, aspect ratio and picture quality", -1, -1, 0, 0, 0 };
+        g_disp_rows[k++] = Row{ R_NOTE, "Aspect ratio and the other picture options", -1, -1, 0, 0, 0 };
         g_disp_rows[k++] = Row{ R_NOTE, "are set in the launcher.", -1, -1, 0, 0, 0 };
+    } else {
+        g_disp_rows[k++] = Row{ R_NOTE, "Frame rate, aspect ratio and the other picture", -1, -1, 0, 0, 0 };
+        g_disp_rows[k++] = Row{ R_NOTE, "options are set in the launcher.", -1, -1, 0, 0, 0 };
     }
     g_disp_n = k;
     *n = k;
@@ -859,6 +871,7 @@ const char *id_name(int id, char *buf, int cap)
     if (id >= SL_MOUSE_BASE) {
         switch (sl_get(id)) {      /* CAMPACK1: the mouse buttons, by the Win32 VK the file stores */
         case 0: return "NONE";
+        case 1: return "LEFT";      /* MOUSELOCK1 */
         case 2: return "RIGHT";
         case 4: return "MIDDLE";
         case 5: return "BACK";
@@ -1431,7 +1444,7 @@ extern "C" int settings_page_frame(const SpInput *in)
         else {
             if (why && *why) note(why);
             const int mrow = sl_capture_wants_mouse();      /* CAMPACK1: a mouse row takes the right / middle / side buttons as its answer, only the left click backs out */
-            if (((held & SPK_CAP_CANCEL) && edge_only(9, held)) || l_edge || (r_edge && !mrow) || S.cap_frames > 900) {
+            if (((held & SPK_CAP_CANCEL) && edge_only(9, held)) || (l_edge && !mrow) || (r_edge && !mrow) || S.cap_frames > 900) {   /* MOUSELOCK1: a mouse row takes left too; Esc keeps the old one */
                 sl_capture_cancel();
                 S.cap_active = 0;
                 S.settle = 1; S.settle_n = 0;
@@ -2134,6 +2147,7 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
             char vb[16];
             const char *t = R.names[ci];
             if (R.vals && R.vals[ci] != v) { snprintf(vb, sizeof vb, "%d", v); t = vb; }      /* a value that is not one of the stops (the launcher's own number) */
+            if (R.vals && R.vals[ci] != v && R.id == SL_RENDER_SCALE) snprintf(vb, sizeof vb, "%d", v * 192);   /* RESSCALE1: 5 and 7 by their rows */
             (void)I;
             draw_dd_box(s, L.ctl_x, cy - P(23), L.ctl_w, P(46), t, sel, alpha, clip);
             break;
@@ -2190,7 +2204,7 @@ extern "C" void settings_page_draw(uint32_t *px, int stride, int w, int h)
         const int camrow = S.cursor_shown && S.sel < n && rows[S.sel].t == R_BIND &&
                            (!strncmp(rows[S.sel].label, "Rotate camera", 13) || !strcmp(rows[S.sel].label, "Center camera"));
         const char *msg = S.note[0] ? S.note
-                          : (S.cap_active ? (S.cap_id < SL_PAD_BASE ? "Press a key. Esc keeps the old one." : S.cap_id >= SL_MOUSE_BASE ? "Press a mouse button. Left click keeps the old one." : "Press a button. BACK keeps the old one.")
+                          : (S.cap_active ? (S.cap_id < SL_PAD_BASE ? "Press a key. Esc keeps the old one." : S.cap_id >= SL_MOUSE_BASE ? "Press a mouse button. Esc keeps the old one." : "Press a button. BACK keeps the old one.")
                              : (camrow ? "In the pause, LB / RB and Q / E always slide the screens." : ""));
         const int fy = L.reset[1] + L.reset[3] / 2;
         if (msg[0]) {

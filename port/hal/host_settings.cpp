@@ -614,6 +614,9 @@ const BindKey MOUSE_BIND[HOST_MOUSE_COUNT] = {
 int g_mouse[HOST_MOUSE_COUNT];
 int g_camera_stick_zoom;
 inline int mouse_vk_ok(int v) { return v == 0 || v == 2 || (v >= 4 && v <= 6); }
+/* MOUSELOCK1: the left button (VK 1) may sit on any action but the Mouse look button (a held left that steers would be the press every
+   menu reads as the stylus; Tango asked for left to punch). Where left is the stylus is tests/walk_window.cpp's mo_pen_moment. */
+inline int mouse_vk_ok_for(int action, int v) { return mouse_vk_ok(v) || (v == 1 && action != HOST_MOUSE_CAM_HOLD); }
 int g_key[HOST_KEY_COUNT];
 int g_pad[HOST_PAD_COUNT];
 /* Which action already held the Look default's key / pad button in a file
@@ -864,7 +867,8 @@ int g_net_mode = 1;   /* NetMode: 0 lockstep, 1 rollback (port/rollback); rollba
 
 /* MouseCapture: 1 when the player asked the window to hold the pointer and
    steer the camera with bare movement instead of a right-button drag. Default
-   0, and 0 is what this program has always done. See the header for the list
+   1 since MOUSELOCK1 (Tango, 11-07: an on-by-default toggle); a file that
+   saved 0 keeps 0. See the header for the list
    of places it deliberately does not engage; every one of them is enforced in
    tests/walk_window.cpp, because whether a pointer may be taken is a question
    about the window and not about this file. */
@@ -1378,19 +1382,18 @@ int g_frame_rate_touched = 0;
 
      RenderScale   not a positive number -> 0, the explicit default sentinel:
                    the multiplier the port picks today. Covers absent,
-                   unparseable, 0 itself and negatives. 1..4 are themselves.
-                   Above 4 clamps to 4 rather than being refused, the Aspect
+                   unparseable, 0 itself and negatives. 1..8 are themselves.
+                   Above 8 clamps to 8 rather than being refused, the Aspect
                    rule: a number that is a picture beats an error. The
-                   ceiling is 4 because 4 x 192 is 768 and 4 x 256 is 1024,
-                   which is the largest tier the render path has ever been
-                   compiled at (ntr/ppu.h's NTR_HIRES), so it is the largest
-                   one with any evidence behind it.
+                   ceiling is 8 because 8 x 192 is 1536, the height of the
+                   NTR_WIDE_RT allocation (ntr/ppu.h; RESSCALE1 raised it
+                   from 4 and 768).
      SmoothModels  the same, clamped into 0..3, which is the range the
                    subdivision itself is defined over (ntr/smooth.h). */
 int render_scale_sanitise(int n)
 {
     if (n <= 0) return 0;
-    if (n > 4) return 4;
+    if (n > 8) return 8;            /* RESSCALE1: 8 x 192 = 1536 rows, the NTR_WIDE_RT tier's height (ntr/ppu.h) */
     return n;
 }
 
@@ -1620,7 +1623,7 @@ void load_once(void)
     g_gap_peek = 0;
     g_gapless_minigames = 0;
     g_lovesme_character = 0;
-    g_mouse_capture = 0;
+    g_mouse_capture = 1;     /* MOUSELOCK1: on by default */
     g_custom_palette = 0;
     g_name_tags = 1;
     g_chat_scale = 100;
@@ -1768,7 +1771,7 @@ void load_once(void)
         }
         for (int i = 0; i < HOST_MOUSE_COUNT; ++i) {
             const int m = json_int(text, MOUSE_BIND[i].name, MOUSE_BIND[i].dflt);
-            if (mouse_vk_ok(m)) g_mouse[i] = m;
+            if (mouse_vk_ok_for(i, m)) g_mouse[i] = m;
         }
         g_camera_stick_zoom = json_bool(text, "CameraStickZoom", 0);
         /* THE ALIAS: KeyRun / PadRun win when the file names them WITH A VALUE
@@ -2036,10 +2039,9 @@ void load_once(void)
                 strlen(nm) == 8 && ieq(nm, "lockstep", 8))
                 g_net_mode = 0;
         }
-        /* read against its own default beside the gap keys, for the same
-           reason they are: a settings.json written before this key existed
-           reads exactly as one that turned it off, which is the old program */
-        g_mouse_capture = json_bool(text, "MouseCapture", 0);
+        /* MOUSELOCK1: a file that never named the key gets the default, which
+           is on now; a file that saved false keeps false */
+        g_mouse_capture = json_bool(text, "MouseCapture", 1);
         g_start_fullscreen = json_bool(text, "StartFullscreen", 0);
         g_rich_presence = json_bool(text, "RichPresence", 1);
         g_draw_dist = draw_dist_clamp(json_int(text, "DrawDistance", 100));
@@ -2472,7 +2474,7 @@ int reload_controls(const char *text)
     }
     for (int i = 0; i < HOST_MOUSE_COUNT; ++i) {
         const int m = json_int(text, MOUSE_BIND[i].name, g_mouse[i]);
-        if (mouse_vk_ok(m)) CTL_SET(g_mouse[i], m);
+        if (mouse_vk_ok_for(i, m)) CTL_SET(g_mouse[i], m);
     }
     CTL_SET(g_camera_stick_zoom, json_bool(text, "CameraStickZoom", g_camera_stick_zoom));
     {   /* LLLSHELL1: the turn / tilt defaults follow a gameplay key moved on or off them (cam_turn_yield) */
@@ -3467,7 +3469,7 @@ extern "C" int host_setting_set_mouse(int action, int vk)
 {
     load_once();
     g_refusal[0] = 0;
-    if (action < 0 || action >= HOST_MOUSE_COUNT || !mouse_vk_ok(vk)) return 0;
+    if (action < 0 || action >= HOST_MOUSE_COUNT || !mouse_vk_ok_for(action, vk)) return 0;
     if (g_mouse[action] == vk) return 1;
     g_mouse[action] = vk;
     queue_int(MOUSE_BIND[action].name, vk);
@@ -4208,6 +4210,23 @@ extern "C" int host_setting_render_scale(void)
     if (env >= 0) return env;
     load_once();
     return g_render_scale;
+}
+
+/* RESSCALE1: the in-game Settings row. Boot-latched like the launcher's row: the setter writes the key for the next boot and
+   leaves the running picture (ntr::render_scale, latched at boot) and host_setting_render_scale alone, so the logs that report
+   this run's scale stay true. The page reads the saved value back so the row shows what was picked. */
+static int g_render_scale_saved = -1;   /* <0: nothing picked on the page this run */
+extern "C" int host_setting_render_scale_saved(void)
+{
+    return g_render_scale_saved >= 0 ? g_render_scale_saved : host_setting_render_scale();
+}
+extern "C" int host_setting_set_render_scale(int n)
+{
+    load_once();
+    n = render_scale_sanitise(n);
+    g_render_scale_saved = n;
+    queue_int("RenderScale", n);
+    return 1;
 }
 
 /* ---- THE IMPROVED MINIMAP'S TWO GETTERS ------------------------------------

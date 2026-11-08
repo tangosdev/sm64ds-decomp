@@ -7839,7 +7839,7 @@ void gx_render(Framebuffer &fb) {
     int pass_lo = 0, pass_hi = 1;
     g_wdepth = frame_wdepth();
     /* the tile shape, set below once the frame's work is known */
-    int tile_h = SCREEN_H, ntiles = 1, nt = 1;
+    int tile_h = active_h > 0 && active_h < SCREEN_H ? active_h : SCREEN_H, ntiles = 1, nt = 1;   /* RESSCALE1: the active rows */
     auto band_impl = [&](int tile, auto ftag) {
     /* THE SAMPLER'S MODE IS A COMPILE-TIME CONSTANT IN HERE, which is the
        whole point of the shape (run hd2). The body below is instantiated once
@@ -7852,8 +7852,11 @@ void gx_render(Framebuffer &fb) {
     /* This tile's rows. */
     const int ty0 = tile * tile_h;
     const int ty1 = (ty0 + tile_h < SCREEN_H ? ty0 + tile_h : SCREEN_H) - 1;
+    /* RESSCALE1: the live columns only. No pass reads the stencil outside the clip rect, which is inside the active extent, and
+       at the 2736-wide allocation a whole-stride clear per shadow group would cost a default run five times what it draws. */
+    const int sw = active_w > 0 && active_w < SCREEN_W ? active_w : SCREEN_W;
     auto clear_stencil = [&] {
-        for (int y = ty0; y <= ty1; ++y) std::memset(stencil[y], 0, SCREEN_W);
+        for (int y = ty0; y <= ty1; ++y) std::memset(stencil[y], 0, (size_t)sw);
     };
     for (int pass = pass_lo; pass <= pass_hi; ++pass) {
     /* The stencil clears when a NEW mask group begins -- a mask polygon
@@ -8294,8 +8297,11 @@ void gx_render(Framebuffer &fb) {
         }
         const int pool_n = raster_threads();
         nt = (pool_n > 1 && work >= 16384) ? pool_n : 1;
-        tile_h = nt > 1 ? raster_tile_rows() : SCREEN_H;
-        ntiles = (SCREEN_H + tile_h - 1) / tile_h;
+        /* RESSCALE1: the tiles cover the ACTIVE rows (every binned triangle is clamped to the clip rect, inside them), so a
+           default run does not walk or clear the 1536-row allocation's unused rows */
+        const int rows = active_h > 0 && active_h < SCREEN_H ? active_h : SCREEN_H;
+        tile_h = nt > 1 ? raster_tile_rows() : rows;
+        ntiles = (rows + tile_h - 1) / tile_h;
         for (int ps = 0; ps < 2; ++ps) g_bin_off[ps].assign((size_t)ntiles + 1, 0);
         for (BinTri &bt : g_bin_tmp) {
             bt.k0 /= tile_h;
