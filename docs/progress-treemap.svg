@@ -7817,27 +7817,27 @@ matched: yes</title></rect><rect x="129.29" y="642.54" width="26.75" height="12.
 module: arm9
 addr: 0x0204cebc
 size: 508 bytes
-matched: yes</title></rect><rect x="156.05" y="642.54" width="4.00" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d0b8
+matched: yes</title></rect><rect x="156.05" y="642.54" width="4.00" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLAnim_ChildAlpha
 module: arm9
 addr: 0x0204d0b8
 size: 76 bytes
-matched: yes</title></rect><rect x="160.05" y="642.54" width="4.00" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d104
+matched: yes</title></rect><rect x="160.05" y="642.54" width="4.00" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLAnim_ChildScale
 module: arm9
 addr: 0x0204d104
 size: 76 bytes
-matched: yes</title></rect><rect x="164.05" y="642.54" width="5.27" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d150
+matched: yes</title></rect><rect x="164.05" y="642.54" width="5.27" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLAnim_Texture
 module: arm9
 addr: 0x0204d150
 size: 100 bytes
-matched: yes</title></rect><rect x="169.32" y="642.54" width="11.80" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d1b4
+matched: yes</title></rect><rect x="169.32" y="642.54" width="11.80" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLAnim_Alpha
 module: arm9
 addr: 0x0204d1b4
 size: 224 bytes
-matched: yes</title></rect><rect x="181.12" y="642.54" width="22.54" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d294
+matched: yes</title></rect><rect x="181.12" y="642.54" width="22.54" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLAnim_Color
 module: arm9
 addr: 0x0204d294
 size: 428 bytes
-matched: yes</title></rect><rect x="203.66" y="642.54" width="7.58" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204d440
+matched: yes</title></rect><rect x="203.66" y="642.54" width="7.58" height="12.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SPLAnim_Scale
 module: arm9
 addr: 0x0204d440
 size: 144 bytes
@@ -8833,19 +8833,19 @@ matched: yes</title></rect><rect x="17.23" y="751.50" width="5.12" height="45.56
 module: arm9
 addr: 0x02053c40
 size: 348 bytes
-matched: yes</title></rect><rect x="17.23" y="797.06" width="5.12" height="16.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02053d9c
+matched: yes</title></rect><rect x="17.23" y="797.06" width="5.12" height="16.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>GX_InitGXState
 module: arm9
 addr: 0x02053d9c
 size: 128 bytes
-matched: yes</title></rect><rect x="17.23" y="813.81" width="5.12" height="3.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02053e1c
+matched: yes</title></rect><rect x="17.23" y="813.81" width="5.12" height="3.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN2GX16GetSizeOfTexPlttEv
 module: arm9
 addr: 0x02053e1c
 size: 24 bytes
-matched: yes</title></rect><rect x="17.23" y="816.96" width="5.12" height="3.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02053e34
+matched: yes</title></rect><rect x="17.23" y="816.96" width="5.12" height="3.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN2GX12GetSizeOfTexEv
 module: arm9
 addr: 0x02053e34
 size: 24 bytes
-matched: yes</title></rect><rect x="17.23" y="820.10" width="5.12" height="11.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02053e4c
+matched: yes</title></rect><rect x="17.23" y="820.10" width="5.12" height="11.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>GX_GetSizeOfX_
 module: arm9
 addr: 0x02053e4c
 size: 84 bytes
@@ -9097,23 +9097,23 @@ matched: yes</title></rect><rect x="309.19" y="694.42" width="1.95" height="9.65
 module: arm9
 addr: 0x020553a4
 size: 28 bytes
-matched: yes</title></rect><rect x="311.14" y="694.42" width="10.28" height="9.65" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020553c0
+matched: yes</title></rect><rect x="311.14" y="694.42" width="10.28" height="9.65" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>GXi_NopClearFifo128_
 module: arm9
 addr: 0x020553c0
 size: 148 bytes
-matched: yes</title></rect><rect x="22.35" y="704.07" width="2.31" height="4.65" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02055454
+matched: yes</title></rect><rect x="22.35" y="704.07" width="2.31" height="4.65" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3G3X10SetHOffsetEi
 module: arm9
 addr: 0x02055454
 size: 16 bytes
-matched: yes</title></rect><rect x="22.35" y="708.73" width="2.31" height="12.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02055464
+matched: yes</title></rect><rect x="22.35" y="708.73" width="2.31" height="12.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3G3X18GetMtxStackLevelPJEPi
 module: arm9
 addr: 0x02055464
 size: 44 bytes
-matched: yes</title></rect><rect x="22.35" y="721.53" width="2.31" height="12.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02055490
+matched: yes</title></rect><rect x="22.35" y="721.53" width="2.31" height="12.80" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3G3X18GetMtxStackLevelPVEPi
 module: arm9
 addr: 0x02055490
 size: 44 bytes
-matched: yes</title></rect><rect x="22.35" y="734.33" width="2.31" height="53.53" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020554bc
+matched: yes</title></rect><rect x="22.35" y="734.33" width="2.31" height="53.53" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3G3X9InitTableEv
 module: arm9
 addr: 0x020554bc
 size: 184 bytes
@@ -9133,19 +9133,19 @@ matched: yes</title></rect><rect x="22.35" y="814.63" width="2.31" height="24.44
 module: arm9
 addr: 0x020555d0
 size: 84 bytes
-matched: yes</title></rect><rect x="22.35" y="839.06" width="2.31" height="50.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02055624
+matched: yes</title></rect><rect x="22.35" y="839.06" width="2.31" height="50.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3G3X13ResetMtxStackEv
 module: arm9
 addr: 0x02055624
 size: 172 bytes
-matched: yes</title></rect><rect x="22.35" y="889.10" width="2.31" height="51.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020556d0
+matched: yes</title></rect><rect x="22.35" y="889.10" width="2.31" height="51.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3G3X12InitMtxStackEv
 module: arm9
 addr: 0x020556d0
 size: 176 bytes
-matched: yes</title></rect><rect x="22.35" y="940.31" width="2.31" height="15.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02055780
+matched: yes</title></rect><rect x="22.35" y="940.31" width="2.31" height="15.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3G3X9ClearFifoEv
 module: arm9
 addr: 0x02055780
 size: 52 bytes
-matched: yes</title></rect><rect x="22.35" y="955.43" width="2.31" height="39.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020557b4
+matched: yes</title></rect><rect x="22.35" y="955.43" width="2.31" height="39.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3G3X5ResetEv
 module: arm9
 addr: 0x020557b4
 size: 136 bytes
@@ -9189,7 +9189,7 @@ matched: yes</title></rect><rect x="24.66" y="835.65" width="9.56" height="2.52"
 module: arm9
 addr: 0x02055f90
 size: 36 bytes
-matched: yes</title></rect><rect x="24.66" y="838.17" width="9.56" height="6.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02055fb4
+matched: yes</title></rect><rect x="24.66" y="838.17" width="9.56" height="6.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3GXS11LoadBG3CharEPKvjj
 module: arm9
 addr: 0x02055fb4
 size: 96 bytes
@@ -9197,11 +9197,11 @@ matched: yes</title></rect><rect x="24.66" y="844.91" width="9.56" height="6.73"
 module: arm9
 addr: 0x02056014
 size: 96 bytes
-matched: yes</title></rect><rect x="24.66" y="851.64" width="9.56" height="6.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02056074
+matched: yes</title></rect><rect x="24.66" y="851.64" width="9.56" height="6.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3GXS11LoadBG2CharEPKvjj
 module: arm9
 addr: 0x02056074
 size: 96 bytes
-matched: yes</title></rect><rect x="24.66" y="858.37" width="9.56" height="6.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020560d4
+matched: yes</title></rect><rect x="24.66" y="858.37" width="9.56" height="6.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN2GX11LoadBG2CharEPKvjj
 module: arm9
 addr: 0x020560d4
 size: 96 bytes
@@ -9241,7 +9241,7 @@ matched: yes</title></rect><rect x="24.66" y="918.97" width="9.56" height="6.73"
 module: arm9
 addr: 0x02056434
 size: 96 bytes
-matched: yes</title></rect><rect x="24.66" y="925.71" width="9.56" height="6.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02056494
+matched: yes</title></rect><rect x="24.66" y="925.71" width="9.56" height="6.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN2GX10LoadBG1ScrEPKvii
 module: arm9
 addr: 0x02056494
 size: 96 bytes
@@ -9253,7 +9253,7 @@ matched: yes</title></rect><rect x="24.66" y="939.17" width="9.56" height="6.73"
 module: arm9
 addr: 0x02056554
 size: 96 bytes
-matched: yes</title></rect><rect x="24.66" y="945.90" width="9.56" height="6.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020565b4
+matched: yes</title></rect><rect x="24.66" y="945.90" width="9.56" height="6.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3GXS7LoadOBJEPKvjj
 module: arm9
 addr: 0x020565b4
 size: 96 bytes
