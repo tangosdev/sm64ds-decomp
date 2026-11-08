@@ -2270,10 +2270,10 @@ s32 dScMgPachinko2_c::InitResources() {
     int x;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3; /* main BG3 on */
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
-    *(volatile u16 *)0x400000e &= ~0x40;
-    *(volatile u32 *)0x400001c = 0;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
+    REG_BG3CNT &= ~0x40;
+    REG_BG3OFS = 0;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NCG_BIN);
     DecompressLZ16(f, (void *)func_02054d88());
@@ -2293,10 +2293,10 @@ s32 dScMgPachinko2_c::InitResources() {
     GX::LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd; /* sub BG0, BG2 and BG3 on */
-    *(volatile u16 *)0x400100c &= ~3;
-    *(volatile u16 *)0x400100c &= ~0x40;
-    *(volatile u32 *)0x4001018 = 0;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x418;
+    REG_DB_BG2CNT &= ~3;
+    REG_DB_BG2CNT &= ~0x40;
+    REG_DB_BG2OFS = 0;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x418;
 
     b = (char *)G2S::GetBG2CharPtr();
     spC = 0;
@@ -2314,10 +2314,10 @@ s32 dScMgPachinko2_c::InitResources() {
 
     Mg_InitBrush((char *)this, 0, 2, 0);
 
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 2;
-    *(volatile u16 *)0x400100e &= ~0x40;
-    *(volatile u32 *)0x400101c = 0;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x208;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 2;
+    REG_DB_BG3CNT &= ~0x40;
+    REG_DB_BG3OFS = 0;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x208;
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NCG_BIN);
     DecompressLZ16(f, (void *)G2S::GetBG3CharPtr());
@@ -2331,10 +2331,10 @@ s32 dScMgPachinko2_c::InitResources() {
     func_020562b4(f, 0, 0x800);
     Deallocate(f);
 
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
-    *(volatile u16 *)0x4001008 &= ~0x40;
-    *(volatile u32 *)0x4001010 = 0;
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x608;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 1;
+    REG_DB_BG0CNT &= ~0x40;
+    REG_DB_BG0OFS = 0;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x608;
 
     f = LoadFile(ASSET_D_2D_HEI_TOP_DOWN_NSC_BIN);
     func_020564f4(f, 0, 0x800);
