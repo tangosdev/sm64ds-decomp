@@ -43,9 +43,12 @@ SYMBOLS = """\
 
 
 class Fixture(object):
-    def __init__(self, rows, newline="\n", module="ov002", symbols=SYMBOLS):
+    def __init__(self, rows, newline="\n", module="ov002", symbols=SYMBOLS,
+                 cfg_parts=None):
         self.dir = tempfile.mkdtemp()
-        cfg = os.path.join(self.dir, "config", "arm9", "overlays", module)
+        if cfg_parts is None:
+            cfg_parts = ("config", "arm9", "overlays", module)
+        cfg = os.path.join(self.dir, *cfg_parts)
         os.makedirs(cfg)
         if symbols is not None:
             with io.open(os.path.join(cfg, "symbols.txt"), "w",
@@ -195,6 +198,19 @@ class TestFix(unittest.TestCase):
             self.assertEqual(r.returncode, 1, r.stdout)
             self.assertIn("1 left for a human", r.stdout)
             self.assertEqual(fx.read().splitlines()[1], self.ROW)
+        finally:
+            fx.close()
+
+    def test_tcm_autoload_symbols_live_under_arm9(self):
+        # itcm's table is config/arm9/itcm/symbols.txt, not config/itcm/.
+        sym = "_ZN7dBgW_Kc11SetDepthDirEPK7Vector3 kind:function(arm,size=0x1c) addr:0x01ffb07c\n"
+        fx = Fixture(["itcm\t0x01ffb07c\tfunc_01ffb07c\t"
+                      "_ZN7dBgW_Kc11SetDepthDirEPK7Vector3\tmember setter"],
+                     module="itcm", symbols=sym, cfg_parts=("config", "arm9", "itcm"))
+        try:
+            r = fx.run()
+            self.assertEqual(r.returncode, 0, r.stdout)
+            self.assertNotIn("no symbols.txt", r.stdout)
         finally:
             fx.close()
 
