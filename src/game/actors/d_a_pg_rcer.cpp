@@ -195,20 +195,17 @@ int daPgRcer_c::CleanupResources()
     return 1;
 }
 
-void daPgRcer_c::SetState(int state)
-{
+void daPgRcer_c::SetState(int state) {
     mStateDesc = &data_ov019_0211356c[state];
     CallStateInit();
 }
 
-void daPgRcer_c::CallStateInit()
-{
+void daPgRcer_c::CallStateInit() {
     daPgRcerStateMethod *p = &mStateDesc->init;
     (this->**p)();
 }
 
-void daPgRcer_c::CallStateBehavior()
-{
+void daPgRcer_c::CallStateBehavior() {
     daPgRcerStateMethod *p = &mStateDesc->behavior;
     (this->**p)();
 }
@@ -225,8 +222,7 @@ int daPgRcer_c::InitStateWaitForMario() {
     return 1;
 }
 
-int daPgRcer_c::StateWaitForMario()
-{
+int daPgRcer_c::StateWaitForMario() {
     if (DecIfAbove0_Byte(&mTalkWaitTimer))
         return 1;
     daPly_c *pl = ClosestPlayer();
@@ -589,8 +585,7 @@ void daPgRcer_c::UpdateModelMatrix() {
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
 }
 
-int daPgRcer_c::UpdateFloorAndWalls(dBgCh_Actr *clsn)
-{
+int daPgRcer_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     Vector3 floorNormal;
     Vector3 wallNormal;
     func_02038414(clsn);
@@ -609,8 +604,7 @@ int daPgRcer_c::UpdateFloorAndWalls(dBgCh_Actr *clsn)
     }
 }
 
-void daPgRcer_c::AdvancePathNode()
-{
+void daPgRcer_c::AdvancePathNode() {
     Vector3 node;
     mPathNodeIndex = mPathNodeIndex + 1;
     mPath.GetNode(node, mPathNodeIndex);
@@ -618,8 +612,7 @@ void daPgRcer_c::AdvancePathNode()
     mTargetAngY = Vec3_HorzAngle(&mPos, &node);
 }
 
-int daPgRcer_c::FollowPath()
-{
+int daPgRcer_c::FollowPath() {
     UpdateAngle(mPrevAngleY, mTargetAngY, 2, 0x600);
     int n = mPathNodeIndex;
     if (n >= (int)mPath.NumNodes() - 2) {
@@ -633,8 +626,7 @@ int daPgRcer_c::FollowPath()
     return mPathDist < 0;
 }
 
-void daPgRcer_c::CheckFallCheat()
-{
+void daPgRcer_c::CheckFallCheat() {
     if (mPlayerCheated != 0)
         return;
     daPly_c *t = mTalkPlayer;
@@ -656,8 +648,7 @@ void daPgRcer_c::CheckFallCheat()
     mFallAccum = 0;
 }
 
-int daPgRcer_c::IsNearPathNode(Vector3 *pos, unsigned int nodeIndex)
-{
+int daPgRcer_c::IsNearPathNode(Vector3 *pos, unsigned int nodeIndex) {
     Vector3 node;
     mPath.GetNode(node, nodeIndex);
     Fix12i dist = Vec3_HorzDist(&node, pos);
@@ -666,8 +657,7 @@ int daPgRcer_c::IsNearPathNode(Vector3 *pos, unsigned int nodeIndex)
 
 /* The further ahead the player is, in path nodes, the faster the penguin
  * runs. Clamped to 0x30000..0x65000. */
-int daPgRcer_c::GetTargetSpeed(int playerLead)
-{
+int daPgRcer_c::GetTargetSpeed(int playerLead) {
     int speed = playerLead * 0x54cc + 0x4a800;
 
     if (speed > 0x65000) {

@@ -75,13 +75,13 @@ struct daPgRcer_c : dActor_c {
     virtual int Render();             /* slot 9 */
     virtual void OnPendingDestroy();  /* slot 12 */
 
-    int GetTargetSpeed(int playerLead);                      /* 0x02111254 */
+    int GetTargetSpeed(int playerLead);                       /* 0x02111254 */
     int IsNearPathNode(Vector3 *pos, unsigned int nodeIndex); /* 0x0211127c */
-    void CheckFallCheat();                                   /* 0x021112b8 */
-    int FollowPath();                                        /* 0x0211131c */
-    void AdvancePathNode();                                  /* 0x021113b0 */
-    int UpdateFloorAndWalls(dBgCh_Actr *clsn);               /* 0x0211140c */
-    void UpdateModelMatrix();                                /* 0x021114ec */
+    void CheckFallCheat();                                    /* 0x021112b8 */
+    int FollowPath();                                         /* 0x0211131c */
+    void AdvancePathNode();                                   /* 0x021113b0 */
+    int UpdateFloorAndWalls(dBgCh_Actr *clsn);                /* 0x0211140c */
+    void UpdateModelMatrix();                                 /* 0x021114ec */
 
     /* The six states, after N64 racing_penguin_act_*; InitStateX runs once
        from SetState, StateX every frame from CallStateBehavior. */
