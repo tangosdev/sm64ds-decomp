@@ -52,8 +52,65 @@ enum dScMgLuigi_c_AssetId {
 typedef void (dScMgLuigi_c::*LuigiSlotHandler)(int);
 typedef void (dScMgLuigi_c::*LuigiStateHandler)();
 
-/* Same spelling the matched IRQ::EnableIRQs / IRQ::DisableIRQs shards use. */
-#define IME (*(volatile u16 *)0x04000208)
+/* The HBlank interrupt the iris runs on (NitroSDK's OS_IE_H_BLANK). */
+#define OS_IE_H_BLANK 0x2
+
+/* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
+   previous master enable. */
+static inline int OS_DisableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 0;
+    return prep;
+}
+
+static inline int OS_EnableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 1;
+    return prep;
+}
+
+/* NitroSDK's window helpers (gx/gx.h, gx/g2.h) and the masks they take. */
+#define GX_WNDMASK_NONE 0x0
+#define GX_WNDMASK_W0 0x1
+#define GX_WNDMASK_OW 0x4
+
+#define GX_WND_PLANEMASK_BG2 0x04
+#define GX_WND_PLANEMASK_BG3 0x08
+#define GX_WND_PLANEMASK_OBJ 0x10
+
+static inline void GX_SetVisibleWnd(int window) {
+    REG_DISPCNT = (u32)((REG_DISPCNT & ~0xe000) | (window << 13));
+}
+
+static inline void GXS_SetVisibleWnd(int window) {
+    REG_DISPCNT_SUB = (u32)((REG_DISPCNT_SUB & ~0xe000) | (window << 13));
+}
+
+static inline void G2_SetWnd0InsidePlane(int wnd, int effect) {
+    u32 tmp = ((REG_WININ & ~0x3f) | (u32)wnd);
+    if (effect)
+        tmp |= 0x20;
+    REG_WININ = (u16)tmp;
+}
+
+static inline void G2_SetWndOutsidePlane(int wnd, int effect) {
+    u32 tmp = ((REG_WINOUT & ~0x3f) | (u32)wnd);
+    if (effect)
+        tmp |= 0x20;
+    REG_WINOUT = (u16)tmp;
+}
+
+static inline void G2_SetWndOBJInsidePlane(int wnd, int effect) {
+    u32 tmp = ((REG_WINOUT & ~0x3f00) | ((u32)wnd << 8));
+    if (effect)
+        tmp |= 0x20 << 8;
+    REG_WINOUT = (u16)tmp;
+}
+
+static inline void G2_SetWnd0Position(int x1, int y1, int x2, int y2) {
+    REG_WIN0H = (u16)(((x1 << 8) & 0xff00) | (x2 & 0xff));
+    REG_WIN0V = (u16)(((y1 << 8) & 0xff00) | (y2 & 0xff));
+}
 
 /* Scanline window record pushed to the iris hardware. */
 struct IrisScanlineTable {
@@ -120,39 +177,42 @@ dScMgLuigi_c::~dScMgLuigi_c() {}
 
 /* The base cleanup returns void; call it, don't return it. */
 void dScMgLuigi_c::AfterCleanupResources(u32 vfSuccess) {
-    if (vfSuccess == 2 && IRQ::GetIRQHandler(2) == Luigi_PrepareScanlines) {
-        u16 ime;
-        do {
-            ime = IME;
-            IME = 0;
-        } while (ime != 0);
-        IRQ::DisableIRQs(2);
-        func_02053c10(0);
-        IRQ::SetIRQHandler(2, 0);
-        ime = IME;
-        IME = 1;
+    if (vfSuccess == 2 && IRQ::GetIRQHandler(OS_IE_H_BLANK) == Luigi_PrepareScanlines) {
+        /* The ROM reads IME back until it comes back clear, so this is a
+           loop, not the save/restore pair IrisStop uses. */
+        while (OS_DisableIrq() != 0) {
+        }
+        IRQ::DisableIRQs(OS_IE_H_BLANK);
+        func_02053c10(0); /* GX_HBlankIntr(FALSE) */
+        IRQ::SetIRQHandler(OS_IE_H_BLANK, 0);
+        OS_EnableIrq();
     }
     dScMgBase_c::AfterCleanupResources(vfSuccess);
 }
 
-/* IRQ 2's handler uses the void(*)() callback installed by StartIris.
+extern "C" {
+extern char data_023c0000[]; /* DTCM; the IRQ check word sits at +0x3ff8 */
+}
+
+/* NitroSDK's OS_SetIrqCheckFlag: tells OS_WaitIrq the interrupt was taken. */
+static inline void OS_SetIrqCheckFlag(int intr) {
+    *(volatile u32 *)((u32)data_023c0000 + 0x3ff8) |= (u32)intr;
+}
+
+/* The HBlank handler (OS_IE_H_BLANK) StartIris installs as a void(*)() callback.
  * It accesses shared scanline state and remains a free function. */
 extern "C" {
 void Luigi_PrepareScanlines(void) {
-    extern char data_023c0000[];
     extern int data_0209f608;
     extern int data_0209f648[][192];
     extern void MultiCopy_Int(int *src, int *dst, int byteCount);
     int nextLine;
-    /* The (int) cast is what keeps this handler the same size. It is the
-       only one of 24 launders this TU inherited from its shards that pays;
-       do not re-add the other 23. */
-    *(int *)((int)data_023c0000 + 0x3ff8) |= 2;
+    OS_SetIrqCheckFlag(OS_IE_H_BLANK);
     nextLine = REG_VCOUNT + 1;
     if (nextLine >= 0xc0) {
         Luigi_PushScanlineRecord();
     } else if (nextLine <= 0xc0) {
-        if (*(volatile u16 *)0x04000004 & 2) {
+        if (REG_DISPSTAT & DISPSTAT_HBLANK) {
             MultiCopy_Int(&data_0209f648[data_0209f608][nextLine], (int *)0x04000040, 4);
         }
     }
@@ -218,21 +278,17 @@ extern "C" {
 extern unsigned char gSubScreenLayers;
 }
 void dScMgLuigi_c::IrisStop(int idx) {
-    volatile unsigned short *ime = &IME;
-    unsigned short saved;
+    int enabled;
     mIris[idx].active = 0;
-    saved = *ime;
-    *ime = 0;
-    IRQ::DisableIRQs(2);
+    enabled = OS_DisableIrq();
+    IRQ::DisableIRQs(OS_IE_H_BLANK);
     func_02053c10(0);
-    IRQ::SetIRQHandler(2, 0);
-    if (saved != 0) {
-        *ime;
-        *ime = 1;
-    }
-    REG_DISPCNT &= ~0xe000;
-    REG_DISPCNT_SUB &= ~0xe000;
-    gSubScreenLayers |= 4;
+    IRQ::SetIRQHandler(OS_IE_H_BLANK, 0);
+    if (enabled != 0)
+        OS_EnableIrq();
+    GX_SetVisibleWnd(GX_WNDMASK_NONE);
+    GXS_SetVisibleWnd(GX_WNDMASK_NONE);
+    gSubScreenLayers |= DISPLAY_LAYER_BG2;
 }
 
 extern "C" {
@@ -263,7 +319,7 @@ void dScMgLuigi_c::UpdateIris() {
 void dScMgLuigi_c::StartIris() {
     extern unsigned int data_0209f608;
     extern unsigned char data_0209d460;
-    unsigned short saved;
+    int enabled;
     mIris[0].active = 1;
     mIris[0].x = 0x80000;
     mIris[0].y = 0x60000;
@@ -277,28 +333,18 @@ void dScMgLuigi_c::StartIris() {
     BuildIrisTable(0);
 
     data_0209f608 = 0;
-    saved = IME;
-    IME = 0;
-    IRQ::SetIRQHandler(2, Luigi_PrepareScanlines);
+    enabled = OS_DisableIrq();
+    IRQ::SetIRQHandler(OS_IE_H_BLANK, Luigi_PrepareScanlines);
 
-    REG_DISPCNT = (REG_DISPCNT & ~0xe000) | 0x2000;
+    GX_SetVisibleWnd(GX_WNDMASK_W0);
     data_0209d460 = 1;
-    {
-        unsigned int v = *(volatile unsigned short *)0x04000048;
-        v = (v & ~0x3f) | 0x18;
-        v = v | 0x20;
-        *(volatile unsigned short *)0x04000048 = v;
-    }
-    *(volatile unsigned short *)0x0400004a =
-        (*(volatile unsigned short *)0x0400004a & ~0x3f) | 0x14;
-    *(volatile unsigned short *)0x04000040 = 0;
-    *(volatile unsigned short *)0x04000044 = 0xc0;
-    IRQ::EnableIRQs(2);
+    G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ, 1);
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_BG2 | GX_WND_PLANEMASK_OBJ, 0);
+    G2_SetWnd0Position(0, 0, 0, 0xc0);
+    IRQ::EnableIRQs(OS_IE_H_BLANK);
     func_02053c10(1);
-    if (saved != 0) {
-        IME;
-        IME = 1;
-    }
+    if (enabled != 0)
+        OS_EnableIrq();
 }
 
 void dScMgLuigi_c::DrawReward() {
@@ -580,7 +626,6 @@ void dScMgLuigi_c::CurtainUpdate(int i) {
 void dScMgLuigi_c::CurtainStart(int curtainIndex) {
     extern unsigned char data_0209d460;
     extern int sLuigiCurtainX[];
-    int windowMask;
     int roundInSet;
 
     if (mCurtain[curtainIndex].delay != 0) {
@@ -590,15 +635,9 @@ void dScMgLuigi_c::CurtainStart(int curtainIndex) {
         return;
     }
 
-    windowMask = *(unsigned short *)0x0400004a;
-    windowMask &= ~0x3f00;
-    windowMask |= 0x1800;
-    windowMask &= ~0x2000;
-    windowMask |= 0x2000;
-    *(unsigned short *)0x0400004a = windowMask;
-    windowMask = (*(unsigned short *)0x0400004a & ~0x3f) | 0x14;
-    *(unsigned short *)0x0400004a = windowMask;
-    *(volatile int *)0x04000000 = (*(volatile int *)0x04000000 & ~0xe000) | 0x8000;
+    G2_SetWndOBJInsidePlane(GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ, 1);
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_BG2 | GX_WND_PLANEMASK_OBJ, 0);
+    GX_SetVisibleWnd(GX_WNDMASK_OW);
     data_0209d460 = 4;
 
     mCurtain[curtainIndex].x = sLuigiCurtainX[curtainIndex] << 12;
@@ -1670,7 +1709,7 @@ void dScMgLuigi_c::StartRound(int mode) {
 
     mState = STATE_SETUP;
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    gSubScreenLayers &= ~4;
+    gSubScreenLayers &= ~DISPLAY_LAYER_BG2;
 
     Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
 }
@@ -1707,8 +1746,8 @@ s32 dScMgLuigi_c::InitResources() {
         return 0;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile u16 *)0x0400000e = (*(volatile u16 *)0x0400000e & ~3) | 2;
-    *(volatile u16 *)0x0400000e = (*(volatile u16 *)0x0400000e & 0x43) | 0x1218;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1218;
 
     DecompressLZ16(arc, (void *)func_02054d88());
 
@@ -1721,10 +1760,10 @@ s32 dScMgLuigi_c::InitResources() {
     Deallocate(fileData);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    *(volatile u16 *)0x0400000c &= ~3;
-    *(volatile u16 *)0x0400000c &= ~0x40;
-    *(volatile u32 *)0x04000018 = 0;
-    *(volatile u16 *)0x0400000c = (*(volatile u16 *)0x0400000c & 0x43) | 0x1410;
+    REG_BG2CNT &= ~3;
+    REG_BG2CNT &= ~BG_CONTROL_MOSAIC;
+    REG_BG2OFS = 0;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1410;
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
     DecompressLZ16(fileData, (void *)(G2::GetBG2CharPtr() + 0x4000));
@@ -1743,10 +1782,10 @@ s32 dScMgLuigi_c::InitResources() {
     DecompressLZ16(objectTiles, (void *)0x6400000);
     GX::LoadOBJPltt(fileData, 0, 0x100);
 
-    *(volatile u16 *)0x0400100c &= ~3;
-    *(volatile u16 *)0x0400100c &= ~0x40;
-    *(volatile u32 *)0x04001018 = 0;
-    *(volatile u16 *)0x0400100c = (*(volatile u16 *)0x0400100c & 0x43) | 0x1210;
+    REG_DB_BG2CNT &= ~3;
+    REG_DB_BG2CNT &= ~BG_CONTROL_MOSAIC;
+    REG_DB_BG2OFS = 0;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1210;
 
     {
         void *subFileData;
@@ -1762,9 +1801,9 @@ s32 dScMgLuigi_c::InitResources() {
         func_02056374(subFileData, 0, 0x800);
         Deallocate(subFileData);
 
-        gSubScreenLayers |= 8;
-        *(volatile u16 *)0x0400100e &= ~3;
-        *(volatile u16 *)0x0400100e = (*(volatile u16 *)0x0400100e & 0x43) | 0x1410;
+        gSubScreenLayers |= DISPLAY_LAYER_BG3;
+        REG_DB_BG3CNT &= ~3;
+        REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x1410;
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_BLACK_NSC_BIN);
         screenMap = G2S::GetBG3ScrPtr();

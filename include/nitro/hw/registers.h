@@ -54,7 +54,11 @@
 #define REG_BLDCNT    (*(volatile u16 *)0x04000050)
 #define REG_DB_BLDCNT (*(volatile u16 *)0x04001050)
 
+/* DISPSTAT bit 1 is the HBlank flag; VCOUNT is the line being drawn. */
+#define REG_DISPSTAT (*(volatile u16 *)0x04000004)
 #define REG_VCOUNT (*(volatile u16 *)0x04000006)
+
+#define DISPSTAT_HBLANK (1u << 1)
 
 /* BG0HOFS is 0x04000010 and BG0VOFS 0x04000012; the ROM sets the pair with one
    32-bit store, so this is typed to match that access rather than split in two. */
@@ -134,7 +138,9 @@
 #define DMA_CONTROL_32_BIT    (1u << 26)
 #define DMA_CONTROL_ENABLE    (1u << 31)
 
-/* Interrupt controller */
+/* Interrupt controller. IME is the master enable; NitroSDK's OS_DisableIrq
+   and OS_EnableIrq read the previous value and store 0 or 1. */
+#define REG_IME (*(volatile u16 *)0x04000208)
 #define REG_IE (*(volatile u32 *)0x04000210)
 #define REG_IF (*(volatile u32 *)0x04000214)
 
