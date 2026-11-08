@@ -53,6 +53,7 @@ enum daObjSeesaw_c_AssetId {
 #include "Sound.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 
 /* Profile actor ids (symbols/profile_reconstruction_registry.json).
@@ -99,7 +100,6 @@ struct SeesawCollisionFilePtr : SharedFilePtr {
 };
 
 extern int data_ov095_02136f58[];
-extern s16 data_02082214[];
 
 /* D1 stores this vtable, then dBgActor_c's (inlined), then destroys
  * mMeshCollider and mModel. D0 is that plus the inline operator delete.
@@ -133,8 +133,9 @@ void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
     mPoundedThisFrame = 1;
     weight = GetActorWeight(b);
     diff = AngleDiff(angle, mAngleY);
-    /* data_02082214 is interleaved cos, sin: entry (angle >> 4) * 2 + 1 is the sine. */
-    mAngleX += (s16)(FX_MUL(FX_MUL(dist, weight), data_02082214[((u16)diff >> 4) * 2 + 1]) / 4096);
+    /* The kick is weighted by the cosine of the hitter's bearing off the
+     * seesaw's heading. */
+    mAngleX += (s16)(FX_MUL(FX_MUL(dist, weight), FX_CosIdx((u16)diff >> 4)) / 4096);
     if (mAngleX > kMaxPitch)
         mAngleX = kMaxPitch;
     if (mAngleX < -kMaxPitch)
@@ -284,7 +285,7 @@ void daObjSeesaw_c::OnStoodOn(dActor_c *other) {
     mAngleX += mAngleXSpeed;
     int x = FX_MUL(dist, r);
     s16 d = (s16)AngleDiff(ang, mAngleY);
-    int y = FX_MUL(x, data_02082214[((u16)d >> 4) * 2 + 1]);
+    int y = FX_MUL(x, FX_CosIdx((u16)d >> 4));
 
     int acc;
     if (mAngleXSpeed * x < 0)

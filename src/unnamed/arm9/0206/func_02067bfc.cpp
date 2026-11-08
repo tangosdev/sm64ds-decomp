@@ -35,8 +35,20 @@ extern int func_0205d368(int *o, int r1, int sel);
 extern int FS_CloseFile(char *self);
 extern void func_02067b68(void *s, unsigned int start, unsigned int end, int flag);
 
+/* One entry of the zero-size-terminated list at data_0209a07c. */
+typedef struct {
+    unsigned int start, size;
+} Region;
+
 extern char data_0209a080[];
-extern int *data_0209a07c;
+extern Region *data_0209a07c;
+
+/* Copies one listed range through func_02067b68 (flag 0: CpuCopy8). Taking
+ * the entry by pointer makes the body reload size after the loop test, as the
+ * ROM does. */
+static inline void CopyRegion(Args *args, const Region *r) {
+    func_02067b68(args, r->start, r->start + r->size, 0);
+}
 
 int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
     int result;
@@ -47,7 +59,7 @@ int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
     int flag;
     unsigned int threshold;
     FSArchive *node;
-    int *rgn;
+    Region *rgn;
     Args args;
     FSFile file;
 
@@ -110,12 +122,8 @@ int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
                 args.c = ((unsigned int)b + 0x160) - ctx->wr;
                 args.d = c;
                 func_02067b68(&args, 0x4000, 0x8000, 1);
-                if (*(volatile int *)&rgn[1] != 0) {
-                    do {
-                        func_02067b68(&args, rgn[0], rgn[0] + rgn[1], 0);
-                        rgn += 2;
-                    } while (*(volatile int *)&rgn[1] != 0);
-                }
+                for (; rgn->size != 0; rgn++)
+                    CopyRegion(&args, rgn);
             }
         }
 

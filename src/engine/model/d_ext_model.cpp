@@ -117,8 +117,6 @@ void func_02045e70(char *p, unsigned int color);
 void func_02045ef8(char *p, unsigned int color);
 void func_02045f80(char *p, unsigned int color);
 void func_0204605c(char *p, int id, int index);
-/* defined below; LoadAndSetFile calls it */
-int func_02016ff4(dExtModel_c *self, BMD_File *file, int c, int d);
 u32 func_02017060(void *ptr);
 /* local extern: defined in src/engine/model/Model4.cpp, which types the frame
    `short`; no header declares it. Stores (file, frame) into bone slot i of the
@@ -206,12 +204,12 @@ extern "C" u32 func_02017060(void *ptr) {
 
 /* Loads the file offsets, calls the object's DoSetFile through vtable slot 2,
    and on success reallocs the file down to its reported size. */
-extern "C" int func_02016ff4(dExtModel_c *self, BMD_File *file, int c, int d) {
+int dExtModel_c::func_02016ff4(BMD_File *file, int c, int d) {
     int ret;
     if (!file)
         return 0;
     dExtSimpleModel_c::UpdateFileOffsets(*file);
-    ret = self->DoSetFile((char *)file, c, d);
+    ret = DoSetFile((char *)file, c, d);
     if (ret)
         func_02017060(file);
     return ret;
@@ -224,7 +222,7 @@ int dExtModel_c::SetFile(BMD_File *file, int a, int b) {
 void dExtSimpleModel_c::LoadAndSetFile(u16 ov0ID, int a, int b) {
     BMD_File *file = (BMD_File *)::LoadFile(ov0ID);
     modelFile = file;
-    func_02016ff4(this, file, a, b);
+    func_02016ff4(file, a, b);
 }
 
 void *dExtSimpleModel_c::AddToCommonModelDataArr(BMD_File &file) {

@@ -55,6 +55,7 @@ enum daSlide_Box_c_AssetId {
 #include "Sound.h"
 #include "dBgPi.h"
 #include "dBgCh_Actr.h"
+#include "nitro/fx/fx_trig.h"
 
 namespace cstd {
 int fdiv(int a, int b);
@@ -81,7 +82,6 @@ extern "C" {
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, int actor, Fix12i radius, Fix12i height, int a, int b);
 extern int data_ov016_02113bac[];
-extern short data_02082214[];
 extern void Matrix4x3_FromRotationXYZExt(void *mtx, int angleX, int angleY, int angleZ);
 
 extern void hold_d_a_slide_box(void *thiz, void *kcl, void *mtx, int scale, short angleY,
@@ -130,10 +130,6 @@ enum {
     kStateRide = 2
 };
 
-/* data_02082214 is sin, cos pairs. (u16)angle >> 4 selects the pair.
- * Angle 0 is (0, 4096): the first short is sine, the second cosine. */
-#define Sine(angle) (data_02082214[((u16)(angle) >> 4) * 2])
-#define Cosine(angle) (data_02082214[((u16)(angle) >> 4) * 2 + 1])
 #define FixMul(a, b) ((int)(((long long)(a) * (b) + kFixRound) >> 12))
 
 #define ModelFile gKiSlideBoxModelFile
@@ -204,15 +200,15 @@ int daSlide_Box_c::Behavior()
         mAngleY = shipAngles[1];
         mAngleZ = shipAngles[2];
         mPrevAngleY = mAngleY;
-        mHorzSpeed = Sine(mAngleX) * kSlideScale;
+        mHorzSpeed = FX_SinIdx((u16)mAngleX >> 4) * kSlideScale;
         mHorzPos += mHorzSpeed;
         spd = mHorzPos;
         if (spd >= kHorzPosMax)
             mHorzPos = kHorzPosMax;
         else if (spd < kHorzPosMin)
             mHorzPos = kHorzPosMin;
-        mPosX = mBasePos.x + FixMul(mHorzPos, Sine(mAngleY));
-        mPosZ = mBasePos.z + FixMul(mHorzPos, Cosine(mAngleY));
+        mPosX = mBasePos.x + FixMul(mHorzPos, FX_SinIdx((u16)mAngleY >> 4));
+        mPosZ = mBasePos.z + FixMul(mHorzPos, FX_CosIdx((u16)mAngleY >> 4));
         mHorzSpeed = 0;
         UpdatePos(0);
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
