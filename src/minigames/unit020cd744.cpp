@@ -21,6 +21,9 @@
 
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
+#include "nitro/gx/g3imm.h"
+#include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "common.h"
 #include "SharedFilePtr.h"
@@ -639,10 +642,12 @@ extern "C" int D3D_PlaySeAtX(int a, int b);
 extern "C" void Trmp2Spinner_InitAll(int c);
 extern "C" void TrmpItem_ProjectToScreen(char *c, unsigned short arg1);
 
+/* The ROM re-reads sTrmpItems and recomputes the element address at each use;
+   caching it in a local reallocates the whole loop (load-bearing). */
 #define ELEM ((char *)sTrmpItems + itemIndex * 0x1d0)
 
 extern "C" void TrmpItem_UpdateWithJumper(void *object, int arg1) {
-    char *sb = (char *)object;
+    TrampolineJumperCounts *jumper = (TrampolineJumperCounts *)object;
     int itemIndex;
     int doubling;
     int scoreIncrement;
@@ -651,16 +656,16 @@ extern "C" void TrmpItem_UpdateWithJumper(void *object, int arg1) {
 
     if (sTrmpItemHitsOff != 0)
         return;
-    ((TrampolineJumperCounts *)sb)->mItemPushCount = 0;
+    jumper->mItemPushCount = 0;
 
     for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++) {
         if (TRMPITEM(ELEM)->mActive == 0)
             continue;
-        TrmpItem_ReflectOffLine(ELEM, sb);
-        if (TrmpItem_HitTest2D(ELEM, sb, arg1) == 0)
+        TrmpItem_ReflectOffLine(ELEM, jumper);
+        if (TrmpItem_HitTest2D(ELEM, jumper, arg1) == 0)
             continue;
         ApproachLinear(sTrmpItemsHit, 0x270f, 1);
-        hitCount = ((TrampolineJumperCounts *)sb)->mItemHitCount;
+        hitCount = jumper->mItemHitCount;
         // Double the award for each prior hit, up to six doublings.
         scoreIncrement = 100;
         scoreDoublings = (hitCount > 6) ? 6 : hitCount;
@@ -685,9 +690,9 @@ extern "C" void TrmpItem_UpdateWithJumper(void *object, int arg1) {
             break;
         }
         ApproachLinear(sTrmp2Score, 0xf423f, scoreIncrement);
-        Trmp2Spinner_InitAll(((TrampolineJumperCounts *)sb)->mItemHitCount);
+        Trmp2Spinner_InitAll(jumper->mItemHitCount);
         TrmpItem_ProjectToScreen(ELEM, (short)scoreIncrement);
-        ((TrampolineJumperCounts *)sb)->mItemHitCount++;
+        jumper->mItemHitCount++;
     }
 }
 }
@@ -890,8 +895,10 @@ extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemTy
     TRMPITEM(self)->mForward.x = normal[0];
     TRMPITEM(self)->mForward.y = normal[1];
     TRMPITEM(self)->mForward.z = normal[2];
+    /* Load-bearing: both component-pointer copies below. Plain field copies
+       or a Vector3 assignment reallocate the whole function. */
     {
-        int *normalComponents = (int *)(int)&TRMPITEM(self)->mForward;
+        int *normalComponents = (int *)&TRMPITEM(self)->mForward;
         TRMPITEM(self)->mSide.x = normalComponents[0];
         TRMPITEM(self)->mSide.y = normalComponents[1];
         TRMPITEM(self)->mSide.z = normalComponents[2];
@@ -901,7 +908,7 @@ extern "C" void TrmpItem_Init(char *self, int *position, int *normal, int itemTy
     TRMPITEM(self)->mPrevPos.y = TRMPITEM(self)->mPos.y;
     TRMPITEM(self)->mPrevPos.z = TRMPITEM(self)->mPos.z;
     {
-        int *cachedPosition = (int *)(int)&TRMPITEM(self)->mPrevPos;
+        int *cachedPosition = (int *)&TRMPITEM(self)->mPrevPos;
         TRMPITEM(self)->mSpawnPos.x = cachedPosition[0];
         TRMPITEM(self)->mSpawnPos.y = cachedPosition[1];
         TRMPITEM(self)->mSpawnPos.z = cachedPosition[2];
@@ -1005,18 +1012,11 @@ extern char *sTrmpItems;
 extern "C" void TrmpItem_Update(char *c);
 
 extern "C" void TrmpItem_UpdateAll(void) {
-    int itemIndex = 0;
-    int itemOffset;
-    if (sTrmpItemCount > 0) {
-        itemOffset = 0;
-        do {
-            char *p = sTrmpItems + itemOffset;
-            if (TRMPITEM(p)->mActive != 0) {
-                TrmpItem_Update(p);
-            }
-            itemIndex++;
-            itemOffset += 0x1d0;
-        } while (itemIndex < sTrmpItemCount);
+    int itemIndex;
+    for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++) {
+        char *p = sTrmpItems + itemIndex * 0x1d0;
+        if (TRMPITEM(p)->mActive != 0)
+            TrmpItem_Update(p);
     }
 }
 }
@@ -1039,16 +1039,9 @@ extern int sTrmp2Score;
 }
 extern "C" void TrmpItem_Hide(int *p);
 extern "C" void TrmpItem_HideAll(u32) {
-    int itemIndex = 0;
-    int itemOffset;
-    if (sTrmpItemCount > 0) {
-        itemOffset = 0;
-        do {
-            TrmpItem_Hide((int *)(sTrmpItems + itemOffset));
-            itemIndex++;
-            itemOffset += 0x1d0;
-        } while (itemIndex < sTrmpItemCount);
-    }
+    int itemIndex;
+    for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++)
+        TrmpItem_Hide((int *)(sTrmpItems + itemIndex * 0x1d0));
     sTrmpItemsActive = 0;
     sTrmpItemsHit = 0;
     sTrmp2Score = 0;
@@ -1074,21 +1067,13 @@ extern int sTrmpItemCount;
 
 extern "C" void TrmpItem_LoadAll(char *items, int count) {
     int itemIndex;
-    int itemOffset;
     dExtSimpleModel_c::LoadFile(sTrmpItemRingAModelFile);
     dExtSimpleModel_c::LoadFile(sTrmpItemRingBModelFile);
     dExtSimpleModel_c::LoadFile(sTrmpItemRingCModelFile);
     sTrmpItems = items;
     sTrmpItemCount = count;
-    itemIndex = 0;
-    if (count <= 0)
-        return;
-    itemOffset = 0;
-    do {
-        TrmpItem_Load(sTrmpItems + itemOffset);
-        itemIndex++;
-        itemOffset += 0x1d0;
-    } while (itemIndex < sTrmpItemCount);
+    for (itemIndex = 0; itemIndex < sTrmpItemCount; itemIndex++)
+        TrmpItem_Load(sTrmpItems + itemIndex * 0x1d0);
 }
 }
 
@@ -1133,7 +1118,7 @@ extern "C" int DotVec3(const Vector3 *a, const Vector3 *b);
 extern "C" void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern "C" int LenVec3(const Vector3 *v);
 extern "C" {
-extern int data_ov006_0212e0f0[];
+extern int sTrmpLineFlexWeights[];
 }
 extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint,
                                        const Vector3 *offsetVector) {
@@ -1142,7 +1127,7 @@ extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint,
     int *amplitude = TRMPLINE(sl)->mFlexAmplitude;
     char *restVertex = (char *)TRMPLINE(sl)->mRestVerts;
     int weightedAmplitude;
-    int *gridWeight = data_ov006_0212e0f0;
+    int *gridWeight = sTrmpLineFlexWeights;
     for (row = 0; row < 4; row++) {
         int column;
         for (column = 0; column < 4; column++) {
@@ -1178,7 +1163,6 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
     int *packedNormal;
     int row;
     int column;
-    int componentMask = 0x3ff;
 
     p = (char *)TRMPLINE(self)->mVerts;
     normal = (Vector3 *)TRMPLINE(self)->mNormals;
@@ -1219,9 +1203,8 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
             normal->y = FX_MUL(normal->y, 0xff8);
             normal->z = FX_MUL(normal->z, 0xff8);
 
-            *packedNormal = ((normal->x >> 3) & componentMask) |
-                            (((normal->y >> 3) & componentMask) << 10) |
-                            (((normal->z >> 3) & componentMask) << 20);
+            *packedNormal = ((normal->x >> 3) & 0x3ff) | (((normal->y >> 3) & 0x3ff) << 10) |
+                            (((normal->z >> 3) & 0x3ff) << 20);
 
             normal++;
             packedNormal++;
@@ -1232,8 +1215,6 @@ extern "C" void TrmpLine_ComputeNormals(char *self) {
 }
 
 namespace s020cf2fc {
-typedef volatile unsigned int vu32;
-
 typedef TrmpLine::Vtx Vec3;
 
 extern "C" struct Matrix4x3 data_020a0e68;
@@ -1248,20 +1229,6 @@ extern "C" void MulMat4x3Mat4x3(const struct Matrix4x3 *a, const struct Matrix4x
                                 struct Matrix4x3 *out);
 extern "C" void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *m, int x, int y, int z);
 extern "C" void func_020553a4(int *m);
-
-#define REG_MTX_MODE       (*(vu32 *)0x4000440)
-#define REG_MTX_IDENTITY   (*(vu32 *)0x4000454)
-#define REG_MTX_SCALE      (*(vu32 *)0x400046c)
-#define REG_NORMAL         (*(vu32 *)0x4000484)
-#define REG_TEXCOORD       (*(vu32 *)0x4000488)
-#define REG_VTX_16         (*(vu32 *)0x400048c)
-#define REG_POLYGON_ATTR   (*(vu32 *)0x40004a4)
-#define REG_TEXIMAGE_PARAM (*(vu32 *)0x40004a8)
-#define REG_TEXPLTT_BASE   (*(vu32 *)0x40004ac)
-#define REG_DIF_AMB        (*(vu32 *)0x40004c0)
-#define REG_SPE_EMI        (*(vu32 *)0x40004c4)
-#define REG_BEGIN_VTXS     (*(vu32 *)0x4000500)
-#define REG_END_VTXS       (*(vu32 *)0x4000504)
 
 #define PATCH_VTX(obj) ((Vec3 *)TRMPLINE(obj)->mVerts)
 #define PATCH_NRM(obj) (TRMPLINE(obj)->mPackedNormals)
@@ -1297,19 +1264,20 @@ extern "C" void TrmpLine_Draw(char *obj) {
     REG_MTX_SCALE = 0x100000;
     REG_MTX_MODE = 3;
     REG_MTX_IDENTITY = 0;
-    REG_TEXIMAGE_PARAM = 0x8da70000 | ((u32)sTrmpLineTexAddr >> 3);
-    REG_TEXPLTT_BASE = (u32)sTrmpLinePlttAddr >> 4;
+    G3_TexImageParam(GX_TEXFMT_PLTT16, GX_TEXGEN_NORMAL, GX_TEXSIZE_S32, GX_TEXSIZE_T64,
+                     GX_TEXREPEAT_ST, GX_TEXFLIP_S, GX_TEXPLTTCOLOR0_USE, (u32)sTrmpLineTexAddr);
+    G3_TexPlttBase((u32)sTrmpLinePlttAddr, GX_TEXFMT_PLTT16);
     {
-        short *slotIndex = &TRMPLINE(obj)->mSlotIndex;
-        int sh = *slotIndex;
-        unsigned short *dif = sTrmpLineDiffuse;
+        int polygonId = TRMPLINE(obj)->mSlotIndex;
+        unsigned short *diffuse = sTrmpLineDiffuse;
+        /* Load-bearing launder: a plain mAlpha read reorders the
+           POLYGON_ATTR loads (28 words differ). */
         volatile unsigned char *alpha = &TRMPLINE(obj)->mAlpha;
-        int pl = *alpha;
-        REG_POLYGON_ATTR = (((sh + 1) << 24) | 0x82) | (pl << 16);
+        int polygonAlpha = *alpha;
+        REG_POLYGON_ATTR = (((polygonId + 1) << 24) | 0x82) | (polygonAlpha << 16);
         {
-            unsigned short *bounceCount = &TRMPLINE(obj)->mBounceCount;
-            unsigned idx = *bounceCount;
-            REG_DIF_AMB = dif[idx] | (sTrmpLineAmbient[idx] << 16);
+            unsigned bounce = TRMPLINE(obj)->mBounceCount;
+            REG_DIF_AMB = diffuse[bounce] | (sTrmpLineAmbient[bounce] << 16);
         }
     }
     REG_SPE_EMI = 0x8000;
@@ -1405,9 +1373,6 @@ extern "C" void TrmpLine_ComputeNormals(char *c);
 extern "C" {
 extern int data_020a0db0;
 }
-extern "C" {
-extern s16 data_02082214[];
-}
 
 extern "C" void TrmpLine_StateSettle(char *c) {
     int normalX, normalY;
@@ -1424,16 +1389,13 @@ extern "C" void TrmpLine_StateSettle(char *c) {
         }
     }
 
-    {
-        u16 *phasePtr = &TRMPLINE(c)->mWobblePhase;
-        *phasePtr = *phasePtr + TRMPLINE(c)->mWobbleSpeed;
-        phase = TRMPLINE(c)->mWobblePhase;
-    }
+    TRMPLINE(c)->mWobblePhase += TRMPLINE(c)->mWobbleSpeed;
+    phase = TRMPLINE(c)->mWobblePhase;
 
     normalX = TRMPLINE(c)->mNormal.x;
     normalY = TRMPLINE(c)->mNormal.y;
 
-    negativeSine = -(int)data_02082214[(phase >> 4) * 2];
+    negativeSine = -FX_SinIdx(phase >> 4);
 
     deflectionX = FX_MUL(normalX, negativeSine);
     deflectionY = FX_MUL(normalY, negativeSine);
@@ -1478,9 +1440,6 @@ extern "C" void TrmpLine_SetStateSettle(char *p) {
 namespace s020cfa44 {
 typedef TrmpLine::Vtx Vec3;
 
-extern "C" {
-extern s16 data_02082214[];
-}
 extern "C" int TrmpLine_PushJumper(char *o);
 extern "C" void TrmpLine_ComputeNormals(char *o);
 extern "C" void TrmpLine_SetStateFade(char *o);
@@ -1498,18 +1457,16 @@ extern "C" void TrmpLine_StateFlex(char *o) {
     Vec3 *restPosition;
     Vec3 *position;
     int *amplitude;
-    u16 *phasePtr;
 
     TrmpLine_PushJumper(o);
 
-    phasePtr = &TRMPLINE(o)->mWobblePhase;
-    *phasePtr = *phasePtr + TRMPLINE(o)->mWobbleSpeed;
+    TRMPLINE(o)->mWobblePhase += TRMPLINE(o)->mWobbleSpeed;
 
     normalX = TRMPLINE(o)->mNormal.x;
     normalY = TRMPLINE(o)->mNormal.y;
 
     angleIndex = TRMPLINE(o)->mWobblePhase >> 4;
-    sine = data_02082214[angleIndex * 2];
+    sine = FX_SinIdx(angleIndex);
     negativeSine = -(int)sine;
 
     restPosition = (Vec3 *)TRMPLINE(o)->mRestVerts;
@@ -1738,10 +1695,10 @@ extern "C" int TrmpLine_PushJumper(char *c) {
             }
 
             {
-                int *normalComponents = (int *)&jumpers[jumperIndex]->lineNormal;
-                normalComponents[0] = TRMPLINE(c)->mNormal.x;
-                normalComponents[1] = TRMPLINE(c)->mNormal.y;
-                normalComponents[2] = TRMPLINE(c)->mNormal.z;
+                Vector3 *lineNormal = &jumpers[jumperIndex]->lineNormal;
+                lineNormal->x = TRMPLINE(c)->mNormal.x;
+                lineNormal->y = TRMPLINE(c)->mNormal.y;
+                lineNormal->z = TRMPLINE(c)->mNormal.z;
                 jumpers[jumperIndex]->alongLine = currentAlong;
                 jumpers[jumperIndex]->lineHalfLength = TRMPLINE(c)->mHalfWidth;
                 TRMPLINE(c)->mWobblePhase = 0;
@@ -2095,23 +2052,20 @@ extern Matrix4x3 data_0209b3ec; /* local extern: the view matrix (Graphics3D.cpp
 }
 extern "C" void TrmpLine_DrawAll(void) {
     int light[3];
-    *(volatile int *)0x4000440 = 2;
+    REG_MTX_MODE = 2;
     func_020553a4(&data_0209b3ec);
     light[0] = 0;
     light[1] = 0;
     light[2] = 0xfffff008;
     func_0203cd80(light, -0x2000);
-    *(volatile int *)0x40004c8 = (((short)light[0] >> 3) & 0x3ff) |
-                                 ((((short)light[1] >> 3) & 0x3ff) << 10) |
-                                 ((((short)light[2] >> 3) & 0x3ff) << 20) | 0x40000000;
-    *(volatile int *)0x40004cc = 0x40007fff;
+    REG_LIGHT_VECTOR = (((short)light[0] >> 3) & 0x3ff) | ((((short)light[1] >> 3) & 0x3ff) << 10) |
+                       ((((short)light[2] >> 3) & 0x3ff) << 20) | 0x40000000;
+    REG_LIGHT_COLOR = 0x40007fff;
     int i;
-    char *p = (char *)sTrmpLines;
     for (i = 0; i < 4; i++) {
-        if (TRMPLINE(p)->mStatus != 0) {
-            TrmpLine_Draw(p);
+        if (sTrmpLines[i].mStatus != 0) {
+            TrmpLine_Draw((char *)&sTrmpLines[i]);
         }
-        p += 0x32c;
     }
 }
 }
@@ -2119,28 +2073,21 @@ extern "C" void TrmpLine_DrawAll(void) {
 namespace s020d0ac0 {
 extern "C" void TrmpLine_Update(void *c);
 extern "C" void TrmpLine_UpdateAll(void) {
-    int i = 0;
-    char *p = (char *)sTrmpLines;
-    do {
-        if (TRMPLINE(p)->mStatus != 0)
-            TrmpLine_Update(p);
-        i++;
-        p += 0x32c;
-    } while (i < 4);
+    int i;
+    for (i = 0; i < 4; i++) {
+        if (sTrmpLines[i].mStatus != 0)
+            TrmpLine_Update(&sTrmpLines[i]);
+    }
 }
 }
 
 namespace s020d0b04 {
 
 extern "C" void TrmpLine_ClearAll(u32) {
-    int i = 0;
-    unsigned char *p = (unsigned char *)sTrmpLines;
-    int r0 = i;
-    do {
-        i++;
-        TRMPLINE(p)->mStatus = r0;
-        p += 0x32c;
-    } while (i < 3);
+    int i;
+    for (i = 0; i < 3; i++) {
+        sTrmpLines[i].mStatus = 0;
+    }
 }
 }
 
@@ -2159,48 +2106,36 @@ extern "C" void TrmpLine_LoadTextures(void) {
 }
 
 namespace s020d0b78 {
-extern "C" {
-extern char sTrmpStartLinePoints[];
-}
-extern "C" {
-extern short sTrmpStartLine[];
-}
-extern "C" void TrmpLine_Build(char *g, short *a, short *b);
+extern "C" void TrmpLine_Build(char *slot, short *start, short *end);
+/* The start line always takes the fourth slot, which TrmpLine_Create never hands out. */
 extern "C" void TrmpLine_CreateStartLineT2(void) {
-    short a[2];
-    short b[2];
-    a[0] = 0x10;
-    a[1] = 0xb0;
-    b[0] = 0xf0;
-    b[1] = 0xb0;
-    TrmpLine_Build(sTrmpStartLinePoints, a, b);
-    // sTrmpStartLine is the slot's +0x27c: mBouncesLeft, mBounceCount, mSlotIndex.
-    sTrmpStartLine[0x54] = 3;
-    sTrmpStartLine[0x55] = 0;
-    sTrmpStartLine[0x51] = 3;
+    short start[2];
+    short end[2];
+    start[0] = 0x10;
+    start[1] = 0xb0;
+    end[0] = 0xf0;
+    end[1] = 0xb0;
+    TrmpLine_Build((char *)&sTrmpLines[3], start, end);
+    sTrmpLines[3].mBouncesLeft = 3;
+    sTrmpLines[3].mBounceCount = 0;
+    sTrmpLines[3].mSlotIndex = 3;
 }
 }
 
 namespace s020d0bd8 {
-extern "C" {
-extern char sTrmpStartLinePoints[];
-}
-extern "C" {
-extern short sTrmpStartLine[];
-}
-extern "C" void TrmpLine_Build(char *g, short *a, short *b);
+extern "C" void TrmpLine_Build(char *slot, short *start, short *end);
+/* The start line always takes the fourth slot, which TrmpLine_Create never hands out. */
 extern "C" void TrmpLine_CreateStartLineT1(void) {
-    short a[2];
-    short b[2];
-    a[0] = 0x18;
-    a[1] = 0xb0;
-    b[0] = 0xe8;
-    b[1] = 0xb0;
-    TrmpLine_Build(sTrmpStartLinePoints, a, b);
-    // sTrmpStartLine is the slot's +0x27c: mBouncesLeft, mBounceCount, mSlotIndex.
-    sTrmpStartLine[0x54] = 3;
-    sTrmpStartLine[0x55] = 0;
-    sTrmpStartLine[0x51] = 3;
+    short start[2];
+    short end[2];
+    start[0] = 0x18;
+    start[1] = 0xb0;
+    end[0] = 0xe8;
+    end[1] = 0xb0;
+    TrmpLine_Build((char *)&sTrmpLines[3], start, end);
+    sTrmpLines[3].mBouncesLeft = 3;
+    sTrmpLines[3].mBounceCount = 0;
+    sTrmpLines[3].mSlotIndex = 3;
 }
 }
 
@@ -2231,16 +2166,6 @@ extern "C" void func_0203d630(int *p, int m);
 extern "C" void func_0203d704(int *o, int *a, int *b);
 extern "C" void Vec2_Sub(int *o, int *a, int *b);
 extern "C" void TrmpLine_Build(char *slot, s16 *a, s16 *b);
-
-extern "C" {
-extern s16 data_ov006_02140cb4[];
-}
-extern "C" {
-extern s16 data_ov006_02140cb6[];
-}
-extern "C" {
-extern s16 data_ov006_02140cae[];
-}
 
 extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
     s16 deltaPixels[2];
@@ -2395,11 +2320,12 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
             slotOffset = slotIndex * 0x32c;
             newLine = (char *)sTrmpLines + slotOffset;
             TrmpLine_Build(newLine, startCopy, endCopy);
-            // sTrmpLines + 0x324, 0x326 and 0x31e, addressed through their own
-            // symbols: mBouncesLeft, mBounceCount and mSlotIndex.
-            *(s16 *)((int)data_ov006_02140cb4 + slotOffset) = 1;
-            *(s16 *)((int)data_ov006_02140cb6 + slotOffset) = 0;
-            *(s16 *)((int)data_ov006_02140cae + slotOffset) = (s16)slotIndex;
+            /* Load-bearing: the ROM adds slotOffset as an integer to each field's
+               own address constant. sTrmpLines[slotIndex].field (999 words) and
+               char * arithmetic (7 words) both differ. */
+            *(s16 *)((int)&sTrmpLines[0].mBouncesLeft + slotOffset) = 1;
+            *(u16 *)((int)&sTrmpLines[0].mBounceCount + slotOffset) = 0;
+            *(s16 *)((int)&sTrmpLines[0].mSlotIndex + slotOffset) = (s16)slotIndex;
             return (int)newLine;
         }
         slotIndex++;
