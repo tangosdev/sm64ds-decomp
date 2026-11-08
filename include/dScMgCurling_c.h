@@ -152,11 +152,11 @@ struct dScMgCurling_c : dScMgBase_c {
     s32 mGrabX;           /* 0x4ec0 */
     s32 mGrabY;           /* 0x4ec4 */
     s32 mSwingSpeed;      /* 0x4ec8 */
-    s32 unk_4ecc;         /* 0x4ecc */
-    s32 unk_4ed0;         /* 0x4ed0 */
+    s32 unk_4ecc;         /* 0x4ecc, write-only: Aim_WaitTouch zeroes it */
+    s32 unk_4ed0;         /* 0x4ed0, write-only: Aim_WaitTouch zeroes it */
     s32 mLastSwingDeltaY; /* 0x4ed4 */
     s32 mTopRecord;       /* 0x4ed8, cached Mg_GetTopRecord result */
-    u16 unk_4edc;         /* 0x4edc */
+    u16 unk_4edc;         /* 0x4edc, write-only: ClearStones zeroes it */
     u16 mSwingAng;        /* 0x4ede */
     u16 mStoneDelay;      /* 0x4ee0, before the next stone comes out */
     u16 mStateDelay;      /* 0x4ee2 */
