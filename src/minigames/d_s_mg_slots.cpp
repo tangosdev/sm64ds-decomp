@@ -182,10 +182,8 @@ dScMgSlot3_c::~dScMgSlot3_c() {}
    in include/dScMgBase_c.h's slot-30 block.  The read-modify-write below clobbers
    r1 before the tail call, so the base cannot be taking a second argument. */
 void dScMgSlot3_c::RestoreScreenFromMenu() {
-    void *a = (void *)this;
-
     *(volatile unsigned short *)0x400000A = (*(volatile unsigned short *)0x400000A & 0x43) | 0x1118;
-    ((dScMgBase_c *)a)->dScMgBase_c::RestoreScreenFromMenu();
+    dScMgBase_c::RestoreScreenFromMenu();
 }
 
 /* dScMgSlot3_c::SaveScreenForMenu - slot 29 override.
@@ -197,10 +195,8 @@ void dScMgSlot3_c::RestoreScreenFromMenu() {
    argument passed in r1 would reach dScMgBase_c::SaveScreenForMenu as a
    display-control word, so the base cannot be reading one. */
 int dScMgSlot3_c::SaveScreenForMenu() {
-    void *a = (void *)this;
-
     *(volatile unsigned short *)0x400000A = (*(volatile unsigned short *)0x400000A & 0x43) | 0x1000;
-    return ((dScMgBase_c *)a)->dScMgBase_c::SaveScreenForMenu();
+    return dScMgBase_c::SaveScreenForMenu();
 }
 
 /* dScMgSlot3_c::InitMainScreenBg - slot 32, the only override of it in the family.
@@ -265,14 +261,9 @@ void Slot3_StateGameOver(char *c) {
     }
     if (self->mStateTimer >= 0x3c)
         return;
-    {
-        int *a = &self->mReelWinPos[0];
-        int *b = &self->mReelWinPos[1];
-        int *d = &self->mReelWinPos[2];
-        *a = *a + 0x10000;
-        *b = *b - 0x10000;
-        *d = *d + 0x10000;
-    }
+    self->mReelWinPos[0] += 0x10000;
+    self->mReelWinPos[1] -= 0x10000;
+    self->mReelWinPos[2] += 0x10000;
 }
 }
 
@@ -486,15 +477,12 @@ void Slot3_StateIntro(char *p) {
 
     FreeGfxSlotsById(0x1d);
 
-    {
-        int *state = &scene->mState;
-        if (scene->mPromptBlinkCount == 0) {
-            scene->mPromptEnabled = 1;
-            scene->mPromptBlinkCount = 1;
-            scene->mPromptBlinkTimer = 0;
-        }
-        *state += 1;
+    if (scene->mPromptBlinkCount == 0) {
+        scene->mPromptEnabled = 1;
+        scene->mPromptBlinkCount = 1;
+        scene->mPromptBlinkTimer = 0;
     }
+    scene->mState++;
 }
 }
 
@@ -771,32 +759,24 @@ s32 dScMgSlot3_c::Render() {
  * The state table uses this class's pointer-to-member type.
  */
 s32 dScMgSlot3_c::Behavior() {
-    dScMgSlot3_c *self = this;
     int i;
-    unsigned char t;
+    u8 lightsOn;
 
-    unsigned char *pc;
-    unsigned short *ph1;
-    unsigned short *ph2;
+    (this->*sSlot3StateTable[mState])();
 
-    (self->*sSlot3StateTable[self->mState])();
-
-    pc = &self->mFrameCounter;
-    *pc = *pc + 1;
-    Mascot_Update(&self->mMascot);
+    mFrameCounter++;
+    Mascot_Update(&mMascot);
 
     for (i = 0; i < 3; i++) {
-        if (self->mState == 1) {
-            ph1 = &self->mLamp1Angle;
-            ph2 = &self->mLamp2Angle;
-            *ph1 = *ph1 - 0x200;
-            *ph2 = *ph2 - 0x400;
+        if (mState == 1) {
+            mLamp1Angle -= 0x200;
+            mLamp2Angle -= 0x400;
             break;
         }
     }
 
-    t = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 1;
-    if (t)
+    lightsOn = ((unsigned int)RandomIntInternal(&data_0209e650.value) >> 16) & 1;
+    if (lightsOn)
         gMainScreenLayers |= DISPLAY_LAYER_BG1;
     else
         gMainScreenLayers &= ~DISPLAY_LAYER_BG1;

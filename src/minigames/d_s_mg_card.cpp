@@ -116,13 +116,11 @@ void SetBlendAlpha(volatile u16 *reg, int a, int b, int c, int d);
  * (`add r2, r3, #4`), and that one extra instruction moves the literal pool. */
 s32 dScMgCard_c::InitResources()
 {
-    dScMgCard_c *self = this;
-    char *c = (char *)this;
     void *mainTiles, *mainPalette, *subTiles, *subPalette;
     int pos[2];
 
     Mg_SetTopScreenYOffset(0x20);
-    LoadCard2SubBg3(c);
+    LoadCard2SubBg3(this);
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x18;
     mainTiles = LoadFile(0xbd);
@@ -176,8 +174,8 @@ s32 dScMgCard_c::InitResources()
         }
     }
 
-    self->mState = 0;
-    self->mStateTimer = 0;
+    mState = 0;
+    mStateTimer = 0;
     mCredits = Mg_GetSavedRecord0();
     mCreditsShown = mCredits;
     {
@@ -185,7 +183,7 @@ s32 dScMgCard_c::InitResources()
         if (gMgScene != 0)
             gMgScene->mHudScore = r;
     }
-    self->mScore = 0;
+    mScore = 0;
     Mg_PlaceBannersOnTopScreen();
     StartRound(-1);
     return 1;
@@ -198,7 +196,6 @@ s32 dScMgCard_c::InitResources()
 void dScMgCard_c::StartRound(int mode)
 {
     int i;
-    char *p1, *p2;
 
     mDealCount = 0;
     mPlayerHandFace = 6;
@@ -211,13 +208,9 @@ void dScMgCard_c::StartRound(int mode)
     mDealer.mHand = 2;
     dScMgCard_c::FillWeights(5);
 
-    p1 = (char *)mArray1;
-    p2 = (char *)mArray2;
     for (i = 0; i < 5; i++) {
-        ((dMgCardObj_c *)p1)->Redeal();
-        ((dMgCardObj_c *)p2)->Redeal();
-        p1 += 0x30;
-        p2 += 0x30;
+        mArray1[i].Redeal();
+        mArray2[i].Redeal();
     }
 
     MgCoins_Reset();
@@ -239,7 +232,7 @@ int dScMgCard_c::CanEndState(int mode)
 {
     switch (mState) {
     case 0xe: {
-        int r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
+        int r = dScMgCard_c::CompareHands(mArray1, mArray2);
         if (r == -1)
             FreeGfxSlotsById(0xa);
         else if (r == 1)
@@ -250,13 +243,12 @@ int dScMgCard_c::CanEndState(int mode)
     }
     case 0xf:
         if (Dealer_IsIdle(&mDealer) != 0) {
-            int r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
+            int r = dScMgCard_c::CompareHands(mArray1, mArray2);
             if (r == -1) {
                 MgCoins_StartLose();
                 mStateTimer = 0;
             } else if (r == 1) {
-                int v =
-                    sCardHandPayouts[dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray1, 0)];
+                int v = sCardHandPayouts[dScMgCard_c::EvaluateHand(mArray1, 0)];
                 MgCoins_StartPayout(v * gMgCoinsInPlay);
                 mStateTimer = 0;
             } else {
@@ -268,8 +260,8 @@ int dScMgCard_c::CanEndState(int mode)
         break;
     case 0x10:
         if (gMgCoinsStatus == 1) {
-            int r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
-            dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray1, 0);
+            int r = dScMgCard_c::CompareHands(mArray1, mArray2);
+            dScMgCard_c::EvaluateHand(mArray1, 0);
             if (r == -1) {
                 mState += 1;
             } else {
@@ -282,18 +274,12 @@ int dScMgCard_c::CanEndState(int mode)
         break;
     case 0x11: {
         int i;
-        char* a;
-        char* b;
-        void* p = gMgScene;
-        if ((p != 0 ? ((dScMgBase_c *)p)->mCredits : 0) != 0)
+        dScMgBase_c *g = gMgScene;
+        if ((g != 0 ? g->mCredits : 0) != 0)
             return 1;
-        a = (char *)mArray1;
-        b = (char *)mArray2;
         for (i = 0; i < 5; i++) {
-            ((dMgCardObj_c *)a)->FlyOff();
-            ((dMgCardObj_c *)b)->FlyOff();
-            a += 0x30;
-            b += 0x30;
+            mArray1[i].FlyOff();
+            mArray2[i].FlyOff();
         }
         mStateTimer = 0x3c;
         mState += 1;
@@ -346,9 +332,6 @@ void dScMgCard_c::UpdateState()
     int j;
     int k;
     int n;
-    unsigned char *p;
-    unsigned char *p1;
-    unsigned char *p2;
     int ok;
     int idx;
     int v5;
@@ -382,11 +365,9 @@ void dScMgCard_c::UpdateState()
             if (cnt > 0) {
                 idx = cnt - 1;
                 if (cnt != 0) {
-                    idx = idx * 0x30;
-                    p = &mArray1[0].mState;
-                    if (p[idx] == 0) {
-                        p[idx] = 1;
-                        ((dMgCardObj_c *)((char *)mArray2 + idx))->mState = 1;
+                    if (mArray1[idx].mState == 0) {
+                        mArray1[idx].mState = 1;
+                        mArray2[idx].mState = 1;
                     }
                 }
             }
@@ -402,11 +383,10 @@ void dScMgCard_c::UpdateState()
         idx = gActivePlayerSlot * 4;
         if (gTouchHeld[idx] != 0 && gTouchEdge[idx] != 0)
             ok = 1;
-        if (ok != 0 && dScMgCard_c::AllLifted((const dMgCardObj_c *)mArray1) != 0 &&
-            sCardSelectLocked == 0) {
+        if (ok != 0 && dScMgCard_c::AllLifted(mArray1) != 0 && sCardSelectLocked == 0) {
             v5 = ((u8(*)[4])gTouchX)[gActivePlayerSlot][0];
             v4 = ((u8(*)[4])gTouchY)[gActivePlayerSlot][0];
-            if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 2) != 0) {
+            if (dScMgCard_c::AllInState(mArray1, 2) != 0) {
                 r = v5 - 0x80;
                 if (r < 0)
                     r = -r;
@@ -462,35 +442,32 @@ void dScMgCard_c::UpdateState()
         }
         break;
     case 5:
-        if (sCardSelectLocked != 0 &&
-            dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 2) != 0 &&
+        if (sCardSelectLocked != 0 && dScMgCard_c::AllInState(mArray1, 2) != 0 &&
             Dealer_IsIdle(&mDealer) != 0) {
             mState++;
         } else if (Dealer_IsIdle(&mDealer) != 0) {
-            r = dScMgCard_c::CountInState((const dMgCardObj_c *)mArray1, 6);
+            r = dScMgCard_c::CountInState(mArray1, 6);
             if (r != 0) {
                 mDealCount = 0;
                 mDealer.mReserved = 0;
                 Dealer_StartDeal(&mDealer, (s16)r, &mDealCount);
             }
         } else {
-            r = dScMgCard_c::FindInState((const dMgCardObj_c *)mArray1, 6);
+            r = dScMgCard_c::FindInState(mArray1, 6);
             if (r > -1 && mDealCount != 0) {
-                ((dMgCardObj_c *)mArray1)[r].mState = 5;
+                mArray1[r].mState = 5;
                 mDealCount--;
             }
         }
         break;
     case 6:
-        dScMgCard_c::MarkSingles((dMgCardObj_c *)mArray2);
+        dScMgCard_c::MarkSingles(mArray2);
         mState++;
         break;
     case 7:
-        if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray2, 1) != 0 &&
-            Dealer_IsIdle(&mDealer) != 0) {
-            r = sCardDrawsLeft - 1;
-            sCardDrawsLeft = r;
-            if (r == 0) {
+        if (dScMgCard_c::AllInState(mArray2, 1) != 0 && Dealer_IsIdle(&mDealer) != 0) {
+            sCardDrawsLeft--;
+            if (sCardDrawsLeft == 0) {
                 mState++;
             } else {
                 mState = 4;
@@ -499,16 +476,16 @@ void dScMgCard_c::UpdateState()
                 data_ov006_02141770 = 0;
             }
         } else if (Dealer_IsIdle(&mDealer) != 0) {
-            r = dScMgCard_c::CountInState((const dMgCardObj_c *)mArray2, 6);
+            r = dScMgCard_c::CountInState(mArray2, 6);
             if (r != 0) {
                 mDealCount = 0;
                 mDealer.mReserved = 0;
                 Dealer_StartDeal(&mDealer, (s16)r, &mDealCount);
             }
         } else {
-            r = dScMgCard_c::FindInState((const dMgCardObj_c *)mArray2, 6);
+            r = dScMgCard_c::FindInState(mArray2, 6);
             if (r > -1 && mDealCount != 0) {
-                ((dMgCardObj_c *)mArray2)[r].mState = 5;
+                mArray2[r].mState = 5;
                 mDealCount--;
             }
         }
@@ -523,14 +500,14 @@ void dScMgCard_c::UpdateState()
         mState++;
         break;
     case 9:
-        a = dScMgCard_c::ArrangeHand((dMgCardObj_c *)mArray1);
-        b = dScMgCard_c::ArrangeHand((dMgCardObj_c *)mArray2);
+        a = dScMgCard_c::ArrangeHand(mArray1);
+        b = dScMgCard_c::ArrangeHand(mArray2);
         if (a != 0 || b != 0)
             Sound::PlayBank2_2D(0x152);
         mState++;
         break;
     case 10:
-        if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 8) != 0 && dScMgCard_c::AllInState((const dMgCardObj_c *)mArray2, 8) != 0) {
+        if (dScMgCard_c::AllInState(mArray1, 8) != 0 && dScMgCard_c::AllInState(mArray2, 8) != 0) {
             mStateTimer = 0x14;
             mState++;
         }
@@ -544,8 +521,8 @@ void dScMgCard_c::UpdateState()
                 mArray2[k].mLiftFlag = 1;
                 k++;
             } while (k < 5);
-            dScMgCard_c::SettleHand((dMgCardObj_c *)mArray1);
-            dScMgCard_c::SettleHand((dMgCardObj_c *)mArray2);
+            dScMgCard_c::SettleHand(mArray1);
+            dScMgCard_c::SettleHand(mArray2);
             Sound::PlayBank2_2D(0x147);
             mStateTimer = 0x3c;
             mState++;
@@ -554,8 +531,8 @@ void dScMgCard_c::UpdateState()
     case 12:
         mStateTimer--;
         if (mStateTimer == 0) {
-            t4 = dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray2, &mDealerHandFace);
-            t5 = dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray1, &mPlayerHandFace);
+            t4 = dScMgCard_c::EvaluateHand(mArray2, &mDealerHandFace);
+            t5 = dScMgCard_c::EvaluateHand(mArray1, &mPlayerHandFace);
             if (sCardSelectLocked != 0 && sCardSelectLocked != 0) {
                 /* the hand-value fanfares sit at sound bank 22 up */
                 Mg_ShowBanner(t4 + 22, 0x80, 0x48, 0, -1, 1);
@@ -570,7 +547,7 @@ void dScMgCard_c::UpdateState()
                     mPlayerHandFace2 = 6;
                 }
             }
-            r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
+            r = dScMgCard_c::CompareHands(mArray1, mArray2);
             if (r == -1) {
                 g = gMgScene;
                 a0 = g ? g->mCredits : 0;
@@ -600,7 +577,7 @@ void dScMgCard_c::UpdateState()
     case 13:
         mStateTimer--;
         if (mStateTimer == 0) {
-            r = dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2);
+            r = dScMgCard_c::CompareHands(mArray1, mArray2);
             if (r == -1) {
                 Dealer_PlayLose(&mDealer);
                 g = gMgScene;
@@ -615,8 +592,7 @@ void dScMgCard_c::UpdateState()
                 g = gMgScene;
                 if (g != 0) {
                     if (g->mHudScore < 0x270f) {
-                        int *fld = &g->mHudScore;
-                        *fld = *fld + 1;
+                        g->mHudScore++;
                     }
                     a1 = g->mHudScore;
                     if (a1 > g->mBestHudScore)
@@ -636,16 +612,10 @@ void dScMgCard_c::UpdateState()
         break;
     }
 
-    p1 = (unsigned char *)mArray1;
-    p2 = (unsigned char *)mArray2;
-    n = 0;
-    do {
-        ((dMgCardObj_c *)p1)->Update();
-        ((dMgCardObj_c *)p2)->Update();
-        n++;
-        p1 += 0x30;
-        p2 += 0x30;
-    } while (n < 5);
+    for (n = 0; n < 5; n++) {
+        mArray1[n].Update();
+        mArray2[n].Update();
+    }
     sCardSwapRequested = 0;
 }
 
@@ -679,8 +649,8 @@ s32 dScMgCard_c::Render()
         hiddenRank = -1;
         if (state > 0xe) {
             if (this->mFrameCounter & 8) {
-                if (dScMgCard_c::CompareHands((const dMgCardObj_c *)mArray1, (const dMgCardObj_c *)mArray2) == 1) {
-                    hiddenRank = 6 - dScMgCard_c::EvaluateHand((const dMgCardObj_c *)mArray1, 0);
+                if (dScMgCard_c::CompareHands(mArray1, mArray2) == 1) {
+                    hiddenRank = 6 - dScMgCard_c::EvaluateHand(mArray1, 0);
                 }
             }
         }
@@ -1493,9 +1463,11 @@ void dScMgCard_c::RenderHud()
             y -= 0x10;
         }
     }
-    if (mState != 4) return;
-    if (dScMgCard_c::AllLifted((const dMgCardObj_c *)mArray1) == 0) return;
-    if (dScMgCard_c::AllInState((const dMgCardObj_c *)mArray1, 2) == 0)
+    if (mState != 4)
+        return;
+    if (dScMgCard_c::AllLifted(mArray1) == 0)
+        return;
+    if (dScMgCard_c::AllInState(mArray1, 2) == 0)
         Hud_RenderSprite(sCardHudSprites[0], 0x80, 0x58, -1, -1);
     else
         Hud_RenderSprite(sCardHudSprites[1], 0x80, 0x58, -1, -1);

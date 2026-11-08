@@ -65,7 +65,7 @@ void func_02056674(const void *src, unsigned int offset, unsigned int count);
 void MultiCopy_Int(int *dst, int *src, int len);
 void MultiCopy32Bytes(const void *src, void *dst, int len);
 
-int func_0202043c(int thiz);
+int func_0202043c(void *thiz);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -74,7 +74,7 @@ extern "C" {
 void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabled, u8 affine) {
     anim->frames = (const OamAnimFrame *)src[0];
     anim->frameCount = src[1];
-    func_0202043c((int)anim);
+    func_0202043c(anim);
     anim->palette = -1;
     anim->priority = -1;
     anim->scaleX = 0x1000;
