@@ -265,8 +265,8 @@ void daWanwan_c::UpdateModelTransform() {
     if (t <= 0x1000)
         t = 0x1000;
     /* DropShadowRadHeight takes Fix12<int> by value. */
-    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000 - FX_MUL(t, 0x180),
-                           t + 0x28000, 0xf);
+    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x15e000 - FX_MUL(t, 0x180), t + 0x28000,
+                        0xf);
     tmp = IDENTITY_MATRIX4X3;
     sm = mLinkShadows;
     i = 0;

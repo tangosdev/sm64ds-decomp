@@ -38,8 +38,8 @@ struct daWanwan_c : dEnemyBase_c {
     u16 mSecretSound;       /* 0x5fe -- Sound::PlaySecretSound counter */
     s16 unk_600;            /* 0x600 -- idle lunge and release enter store 0; unread */
     s16 mTargetAngY;        /* 0x602 -- idle faces this; HorzAngleToCPlayer writes it */
-    u8  mReleaseStep;       /* 0x604 -- release cutscene step, StateEscapeDemoMain */
-    u8  mChainBroken;       /* 0x605 -- TryStartReleaseCutscene writes 1; Behavior skips the leash */
+    u8 mReleaseStep;        /* 0x604 -- release cutscene step, StateEscapeDemoMain */
+    u8 mChainBroken;        /* 0x605 -- TryStartReleaseCutscene sets it; Behavior skips the leash */
     u8  pad_606[2];
     s32 mStumpUniqueID;     /* 0x608 -- STUMP (0x1b) spawned by InitResources */
     s32 mFenceUniqueID;     /* 0x60c -- CHAIN_CHOMP_FENCE (0x29), found by Behavior */
