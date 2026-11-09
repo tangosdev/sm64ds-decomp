@@ -1324,14 +1324,23 @@ def test_ban():
           and room.events[-1]["why"] == "kicked", room.events[-1])
     check("the other friend is unaffected", 3 in room.members)
 
-    st, out = S.do_poll({"v": 6, "room": code, "token": g2["token"],
+    st, out = S.do_poll({"v": 7, "room": code, "token": g2["token"],
                          "cursor": 0, "wait": 0}, "10.0.0.2", 1000.0)
-    check("the banned game is told `banned` on its next request (the token)",
+    check("the banned v7 game is told `banned` on its next request (the token)",
           st == 403 and out["error"] == "banned", (st, out))
-    st, out = S.do_chat({"v": 6, "room": code, "token": g2["token"],
+    st, out = S.do_chat({"v": 7, "room": code, "token": g2["token"],
                          "text": "hi"}, "10.0.0.9", 1000.0)
     check("its token stays refused from any address",
           st == 403 and out["error"] == "banned", (st, out))
+    for ov in (5, 6):
+        st, out = S.do_poll({"v": ov, "room": code, "token": g2["token"],
+                             "cursor": 0, "wait": 0}, "10.0.0.2", 1000.0)
+        check("a v%d poll on a banned token is told `kicked` (a word it knows)"
+              % ov, st == 403 and out["error"] == "kicked", (st, out))
+        st, out = S.do_leave({"v": ov, "room": code, "token": g2["token"]},
+                             "10.0.0.2", 1000.0)
+        check("a v%d leave on a banned token is told `kicked` too" % ov,
+              st == 403 and out["error"] == "kicked", (st, out))
 
     st, out = join(code, "rude", who="10.0.0.2", v=7, install=INST_B)
     check("same address, same install (a restarted game): refused banned",
@@ -1340,8 +1349,11 @@ def test_ban():
     check("same address, a new install (the install file deleted): refused",
           st == 403 and out["error"] == "banned", (st, out))
     st, out = join(code, "rude", who="10.0.0.2", v=6)
-    check("same address from an old client with no install: refused",
-          st == 403 and out["error"] == "banned", (st, out))
+    check("same address from an old client with no install: refused `kicked`",
+          st == 403 and out["error"] == "kicked", (st, out))
+    st, out = join(code, "rude", who="10.0.0.2", v=5)
+    check("and a v5 client the same way",
+          st == 403 and out["error"] == "kicked", (st, out))
     st, out = join(code, "rude", who="10.0.0.77", v=7, install=INST_B)
     check("a new address, the same install: refused",
           st == 403 and out["error"] == "banned", (st, out))
@@ -1411,11 +1423,19 @@ def test_ban():
     st2, g = join(host["room"], "old", who="10.0.0.2", v=6)
     check("a v6 client with no install creates and joins as before",
           st == 200 and st2 == 200, (st, host, st2, g))
-    # And a banned old client just sees its join refused.
+    # And a banned old client is told what it already understands.
     _ban(host["room"], host["token"], 2)
+    st, out = S.do_poll({"v": 6, "room": host["room"], "token": g["token"],
+                         "cursor": 0, "wait": 0}, "10.0.0.2", 1000.0)
+    check("a banned old client's next poll says `kicked`, so it leaves",
+          st == 403 and out["error"] == "kicked", (st, out))
     st, out = join(host["room"], "old", who="10.0.0.2", v=6)
-    check("a banned old client's join is refused (403 banned)",
-          st == 403 and out["error"] == "banned", (st, out))
+    check("a banned old client's join is refused (403 kicked)",
+          st == 403 and out["error"] == "kicked", (st, out))
+    later = 1000.0 + S.KICK_COOLDOWN_S + 3600
+    st, out = join(host["room"], "old", who="10.0.0.2", v=6, now=later)
+    check("and stays refused after the kick cooldown (it is still a ban)",
+          st == 403 and out["error"] == "kicked", (st, out))
 
     # The cap on what one room keeps.
     reset()

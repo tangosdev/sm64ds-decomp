@@ -381,6 +381,7 @@ struct Shared {
     bool srv_ban = true;              /* the server took a v7 create / join (it has `ban`); false after the v6 fallback */
     LobbyPhase phase = LOBBY_NONE;
     std::string error;
+    std::string error_head;     /* the failure screen's heading when it is not "could not get in" */
     /* the view */
     std::string state = "lobby", session_type;
     int host = 0, you = 0, max_seats = 4, dial_max = 0, arena_max = 4;
@@ -572,7 +573,7 @@ std::string install_id()
     for (unsigned char c : r) { made += hx[c >> 4]; made += hx[c & 15]; }
     CreateDirectoryA(dir.c_str(), 0);
     if (FILE *f = std::fopen(file.c_str(), "wb")) { std::fwrite(made.data(), 1, made.size(), f); std::fclose(f); }
-    else say("install id: could not write %s (the id lasts this run only)", file.c_str());
+    else say("install id: could not write lobby_install.txt in the save folder (the id lasts this run only)");
     id = made;
     return id;
 }
@@ -770,7 +771,7 @@ void fold_events(const JV &evs, bool resync)
 }
 
 /* the room's answer to a verb or a poll; 0 = fine, else the record was left (the room is gone for this console) */
-void leave_room_locked(const char *why);
+void leave_room_locked(const char *why, const char *head = 0);
 
 void fold(const Answer &a, int gen, bool from_poll)
 {
@@ -778,7 +779,10 @@ void fold(const Answer &a, int gen, bool from_poll)
     if (gen != g.gen) return;   /* an answer for a room this console has left */
     if (!a.ok) {
         if (a.error == "no_such_room" || a.error == "not_a_member" || a.error == "kicked" || a.error == "banned") {
-            leave_room_locked(a.message.c_str());
+            /* the heading over the sentence: a removed player was not trying to get in */
+            const bool removed = a.error == "kicked" || a.error == "banned";
+            const bool was_in = g.phase == LOBBY_IN_ROOM || g.phase == LOBBY_STARTING;
+            leave_room_locked(a.message.c_str(), removed ? "Removed from the room" : was_in ? "Out of the room" : 0);
             return;
         }
         g.error = a.message;
@@ -802,10 +806,10 @@ void fold(const Answer &a, int gen, bool from_poll)
     }
     if (const JV *ev = a.body.get("events")) fold_events(*ev, a.body.flag("resync"));
     if (const JV *p = a.body.get("plan")) { g.plan = *p; g.plan_set = true; }
-    if (g.state == "closed") leave_room_locked("The room closed.");
+    if (g.state == "closed") leave_room_locked("The room closed.", "Out of the room");
 }
 
-void leave_room_locked(const char *why)
+void leave_room_locked(const char *why, const char *head)
 {
     g.room.clear();
     g.token.clear();
@@ -813,6 +817,7 @@ void leave_room_locked(const char *why)
     ++g.gen;
     g.phase = why && *why ? LOBBY_FAILED : LOBBY_NONE;
     g.error = why ? why : "";
+    g.error_head = head ? head : "";
     g.members.clear();
     g.plan_set = false;
     g.start_wanted = false;
@@ -1502,6 +1507,7 @@ void snapshot_locked()
     copy(s.code, sizeof s.code, g.room);
     copy(s.server_name, sizeof s.server_name, g.server_name);
     copy(s.error, sizeof s.error, g.error);
+    copy(s.error_head, sizeof s.error_head, g.phase == LOBBY_FAILED ? g.error_head : std::string());
     s.max_seats = g.max_seats;
     s.n_seats = 0;
     for (const Member &m : g.members) {
@@ -1515,6 +1521,7 @@ void snapshot_locked()
         z.is_host = m.seat == g.host;
         z.is_me = m.seat == g.you;
         z.muted = g.muted.count(m.seat) ? g.muted[m.seat] : 0;
+        z.member = m.seat;
     }
     const bool frozen = g.started || g.state != "lobby";
     if (g.kind == LOBBY_COOP) {
@@ -1577,6 +1584,7 @@ void begin_session_locked(LobbyKind kind)
     g.cursor = 0;
     g.phase = LOBBY_BUSY;
     g.error.clear();
+    g.error_head.clear();
     g.chat.clear();
     g.members.clear();
     g.muted.clear();
@@ -1758,10 +1766,14 @@ void lobby_ban(int seat)
 {
     if (!g_init) return;
     Lock l;
-    if (g.room.empty() || seat < 0 || seat >= (int)g.members.size()) return;
+    if (g.room.empty() || seat < 0 || seat >= g_snap.n_seats) return;
     if (g.you != g.host) { g.error = "Only the host can do that."; return; }
-    const int s = g.members[(size_t)seat].seat;
-    if (s == g.you) return;
+    /* the row the page drew (the last snapshot), by the server's seat number: a roster that moved since then must not shift a ban
+       onto the player now in that row */
+    const int s = g_snap.seats[seat].member;
+    bool here = false;
+    for (const Member &m : g.members) here = here || m.seat == s;
+    if (!here || s == g.you) { say("ban not sent: that player already left"); return; }
     if (!g.srv_ban) {
         g.error = "This lobby server cannot ban players yet. Kick still works.";
         say("ban not sent: %s", g.error.c_str());

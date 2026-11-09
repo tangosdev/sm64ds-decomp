@@ -28,7 +28,7 @@
 /* the contract of hal/lobby_client.h (lane LOBBYNET1), word for word: a tree without that file builds the page on the stand-in below */
 enum LobbyKind  { LOBBY_COOP = 0, LOBBY_VS = 1 };
 enum LobbyPhase { LOBBY_NONE, LOBBY_BUSY, LOBBY_IN_ROOM, LOBBY_STARTING, LOBBY_FAILED };
-struct LobbySeat { char name[32]; unsigned body_rgb, shoe_rgb; int ready, is_host, is_me, muted; };
+struct LobbySeat { char name[32]; unsigned body_rgb, shoe_rgb; int ready, is_host, is_me, muted; int member; };
 struct LobbySetting { const char *key; const char *label; int value, min, max; const char *const *choices; int n_choices; };
 struct LobbyState {
     LobbyPhase phase; LobbyKind kind; int am_host;
@@ -37,6 +37,7 @@ struct LobbyState {
     int n_settings; LobbySetting settings[16];
     int coop_save_continue;
     int n_chat; char chat[32][96];
+    char error_head[40];
 };
 #endif
 
@@ -101,6 +102,8 @@ void fk_seat(const char *name, unsigned body, unsigned shoe, int ready, int host
     memset(&t, 0, sizeof t);
     snprintf(t.name, sizeof t.name, "%s", name);
     t.body_rgb = body; t.shoe_rgb = shoe; t.ready = ready; t.is_host = host; t.is_me = me;
+    static int next_member;
+    t.member = ++next_member;
 }
 
 void fk_chat(const char *line)
@@ -164,6 +167,10 @@ void fk_tick(void)
             snprintf(F.s.error, sizeof F.s.error, "Online rooms are not in this build.");
 #else
             snprintf(F.s.error, sizeof F.s.error, "No room has that code. Check the code and try again.");
+            if (getenv("SM64DS_LOBBY_FAKE_REMOVED")) {     /* proof pictures: the screen a banned player lands on */
+                snprintf(F.s.error, sizeof F.s.error, "You are banned from this room.");
+                snprintf(F.s.error_head, sizeof F.s.error_head, "Removed from the room");
+            }
 #endif
         } else {
             const char code[8] = { F.s.code[0], F.s.code[1], F.s.code[2], F.s.code[3], F.s.code[4], F.s.code[5], 0, 0 };
@@ -346,6 +353,8 @@ struct Page {
     int seat_menu;         /* the seat whose mute / kick / ban buttons are shown (hover or pad focus), -1 none */
     int ban_arm;           /* BAN pressed once on this seat (-1 none): a second press bans; anything else lets it go */
     int ban_arm_t;         /* frames the armed BAN stays armed */
+    int ban_arm_member;    /* the armed seat's player, by the server's seat number and name: a roster change under the arm lets */
+    char ban_arm_name[32]; /* it go instead of moving it onto whoever slid into that row */
     int joining;           /* the page was opened by a room code */
     int seen_phase;        /* the client has been out of LOBBY_NONE since the page opened */
     int keep_tick;         /* the page closed for the start: lobby_tick() goes on once a frame until the client is back to NONE or FAILED */
@@ -544,6 +553,13 @@ void open_panel(int on)
     log_line(on ? "settings panel open" : "settings panel closed");
 }
 
+/* the armed BAN still points at the player it was armed on (same row, same server seat number, same name) */
+int ban_arm_holds(const LobbyState *s)
+{
+    const int i = P.ban_arm;
+    return i >= 0 && i < s->n_seats && s->seats[i].member == P.ban_arm_member && !strcmp(s->seats[i].name, P.ban_arm_name);
+}
+
 void press(const LobbyState *s, int c)
 {
     char b[128];
@@ -636,9 +652,11 @@ void press(const LobbyState *s, int c)
            seat bans. Any other press, a move off the button or about three seconds let it go. A ban lasts until the room closes, so one
            stray click or tap of A must not do it. */
         const int i = c - C_BAN0;
-        if (P.ban_arm != i) {
+        if (P.ban_arm != i || !ban_arm_holds(s)) {
             P.ban_arm = i;
             P.ban_arm_t = 180;
+            P.ban_arm_member = s->seats[i].member;
+            snprintf(P.ban_arm_name, sizeof P.ban_arm_name, "%s", s->seats[i].name);
             snprintf(b, sizeof b, "ban armed on seat %d (%s)", i, s->seats[i].name);
             log_line(b);
             return;
@@ -939,6 +957,25 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
         }
 #endif
         if (P.seat_menu >= seat_count(s)) P.seat_menu = -1;
+        /* a player leaving shifts the rows: an armed BAN must not move onto whoever is in that row now */
+        if (P.ban_arm >= 0 && !ban_arm_holds(s)) { P.ban_arm = -1; log_line("ban let go (the player in that row changed)"); }
+#if LP_PROOF
+        {   /* SM64DS_LOBBY_ARMBAN=<row>@<seats>+<frames>: once the room holds <seats> players the host arms BAN on <row>, and presses it
+               again <frames> later (the G3 row: a player leaving in between must cost the arm, not ban the next player) */
+            static int armed_at = -1, pressed2;
+            const char *ab = getenv("SM64DS_LOBBY_ARMBAN");
+            int row = 0, want = 0, later = 0;
+            if (ab && sscanf(ab, "%d@%d+%d", &row, &want, &later) == 3 && in_room(s) && s->am_host) {
+                if (armed_at < 0 && s->n_seats >= want && row < s->n_seats) {
+                    P.seat_menu = row; P.focus = C_BAN0 + row; press(s, C_BAN0 + row); armed_at = P.frames;
+                } else if (armed_at >= 0 && !pressed2 && P.frames - armed_at >= later && row < s->n_seats) {
+                    pressed2 = 1; P.seat_menu = row; P.focus = C_BAN0 + row;
+                    log_line("ARMBAN second press");
+                    press(s, C_BAN0 + row);
+                }
+            }
+        }
+#endif
     }
     make_geom(&g_geom, P.pw > 0 ? P.pw : 512, P.ph > 0 ? P.ph : 384, s);
     const Geom &g = g_geom;
@@ -1023,7 +1060,7 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
             else if (!seat_button(n)) P.seat_menu = -1;
         }
     }
-    /* an armed BAN lets go when the focus leaves it, the seat menu closes, or its time runs out */
+    /* an armed BAN lets go when the focus leaves it, the seat menu closes, or its time runs out (a roster change: above, every frame) */
     if (P.ban_arm >= 0 && (P.focus != C_BAN0 + P.ban_arm || P.seat_menu != P.ban_arm || --P.ban_arm_t <= 0)) {
         P.ban_arm = -1;
         log_line("ban let go");
@@ -1746,7 +1783,10 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
                 icon_cross(s, k, lit(C_KICK0 + i) ? 0xB01010u : 0xFFF3CCu, u);
                 const Rect &bn = g.r[C_BAN0 + i];
                 const int armed = P.ban_arm == i;
-                framed(s, bn.x, bn.y, bn.w, bn.h, 3 * u, (int)u > 1 ? (int)u : 1, armed ? 0xB01010u : lit(C_BAN0 + i) ? 0xFFF6D8u : 0x5A3010u,
+                const int e1 = (int)u > 1 ? (int)u : 1;
+                /* armed: a white ring outside the dark edge, so the red button stands off any player colour (a red plate too) */
+                if (armed) rrect(s, bn.x - 2 * e1, bn.y - 2 * e1, bn.w + 4 * e1, bn.h + 4 * e1, 3 * u + 2 * e1, 0xFFFFFFu, 255);
+                framed(s, bn.x, bn.y, bn.w, bn.h, 3 * u, armed ? 2 * e1 : e1, armed ? 0xB01010u : lit(C_BAN0 + i) ? 0xFFF6D8u : 0x5A3010u,
                        0x1A0C02u);
                 icon_ban(s, bn, armed ? 0xFFF3CCu : lit(C_BAN0 + i) ? 0xB01010u : 0xFFF3CCu, u);
             }
@@ -1834,12 +1874,12 @@ extern "C" void lobby_page_draw(uint32_t *px, int stride, int w, int h)
     if (st->phase == LOBBY_FAILED) {
         draw_box(s, f, hd, g.fail_box, 2, 0);
         const Rect hr = { g.fail_box.x, g.fail_box.y + (int)(12 * g.u), g.fail_box.w, (int)(28 * g.u) };
-        f.centred(s, hr, "Could not get into the room", 19.0f, C_INK);
+        f.centred(s, hr, st->error_head[0] ? st->error_head : "Could not get into the room", 19.0f, C_INK);
         std::vector<std::string> ln;
         wrap(f, st->error[0] ? st->error : "The lobby server did not answer.", 14.0f, g.fail_box.w - 40 * g.u, &ln);
         for (size_t i = 0; i < ln.size() && i < 3; ++i) {
             const Rect lr = { g.fail_box.x, g.fail_box.y + (int)((50 + 20 * (int)i) * g.u), g.fail_box.w, (int)(18 * g.u) };
-            f.centred(s, lr, ln[i].c_str(), 14.0f, C_DIMINK);
+            f.centred(s, lr, ln[i].c_str(), 14.0f, C_INK);
         }
         draw_box(s, f, hd, g.r[C_FAIL_BACK], 0, focus == C_FAIL_BACK);
         f.centred(s, g.r[C_FAIL_BACK], "Back", 16.0f, ink_on(hd, 0));

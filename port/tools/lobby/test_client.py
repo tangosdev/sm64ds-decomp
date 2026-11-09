@@ -1030,9 +1030,9 @@ def selftest_rooms(c):
     ROOMS1). Every request below is a real HTTP request to a real server."""
     print("\n-- v6: party and coop rooms over the wire")
     status, health = c.get("health")
-    check("/health says contract 5..6",
+    check("/health says contract 5..7",
           status == 200 and health.get("contract_min") == 5
-          and health.get("contract_v") == 6, health)
+          and health.get("contract_v") == 7, health)
 
     for kind in ("party", "coop"):
         body = {"v": 6, "game": GAME, "nick": "h6", "session_type": kind}

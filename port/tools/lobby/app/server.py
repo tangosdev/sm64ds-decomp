@@ -58,7 +58,7 @@ import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-REVISION = "lobby-6"
+REVISION = "lobby-7"
 
 # ------------------------------------------------------- the contract version
 #
@@ -1827,7 +1827,16 @@ def seat_of(room, token):
     return room.by_token.get(token)
 
 
-def refuse_member(room, token, now):
+def ban_word(body):
+    """The error a banned client is given. `banned` is a v7 word: a v5 or v6
+    client (the 1.0 game, the launcher) does not know it, and is answered
+    `kicked` instead so it leaves exactly the way it does today."""
+    if body is not None and request_version(body) < V_BAN:
+        return "kicked"
+    return "banned"
+
+
+def refuse_member(room, token, now, body=None):
     """The 403 a token that is not seated gets, and why.
 
     A token the host kicked is answered `kicked` rather than `not_a_member`,
@@ -1835,7 +1844,7 @@ def refuse_member(room, token, now):
     guessing between "you were removed" and "this room forgot you".
     """
     if token in room.banned_token:
-        return 403, {"error": "banned"}
+        return 403, {"error": ban_word(body)}
     room.forget_old_kicks(now)
     if token in room.kicked_token:
         return 403, {"error": "kicked"}
@@ -1996,7 +2005,7 @@ def do_join(body, who, now):
         return 404, {"error": "no_such_room"}
     # v7: a ban outranks a kick and never expires while the room lives.
     if room.is_banned(who, install):
-        return 403, {"error": "banned"}
+        return 403, {"error": ban_word(body)}
     room.forget_old_kicks(now)
     if who in room.kicked_addr:
         return 403, {"error": "kicked"}
@@ -2075,7 +2084,7 @@ def do_chat(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     m.last_addr = who
@@ -2186,7 +2195,7 @@ def do_params(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     room.members[seat].seen = now
     if seat != room.host_seat:
         return 403, {"error": "not_host"}
@@ -2262,7 +2271,7 @@ def do_settings(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     room.members[seat].seen = now
     if seat != room.host_seat:
         return 403, {"error": "not_host"}
@@ -2298,7 +2307,7 @@ def do_leave(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     drop_member(room, seat, "quit")
     return 200, {"ok": True}
 
@@ -2459,7 +2468,7 @@ def do_kick(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     room.members[seat].seen = now
     if seat != room.host_seat:
         return 403, {"error": "not_host"}
@@ -2515,7 +2524,7 @@ def do_ban(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     room.members[seat].seen = now
     if seat != room.host_seat:
         return 403, {"error": "not_host"}
@@ -2963,7 +2972,7 @@ def do_start(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     room.members[seat].seen = now
     if seat != room.host_seat:
         return 403, {"error": "not_host"}
@@ -3049,7 +3058,7 @@ def do_ready(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     # Every ready/result/failed carries the match id, and a stale one is 409:
@@ -3094,7 +3103,7 @@ def do_failed(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     if room.match is None or match != room.match:
@@ -3188,7 +3197,7 @@ def do_result(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     # ONLY A PLAYING MEMBER MAY REPORT A RESULT (spec 3.2), the same gap as
@@ -3258,7 +3267,7 @@ def do_preflight(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     m.last_addr = who
@@ -3342,7 +3351,7 @@ def do_color(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     m.last_addr = who
@@ -3394,7 +3403,7 @@ def do_poll(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     room.members[seat].seen = now
     room.members[seat].last_addr = who
 
@@ -3416,7 +3425,7 @@ def do_poll(body, who, now):
                     # way a kicked launcher finds out, so it gets the reason
                     # rather than a bare "you are not a member".
                     if seat not in room.members and room.state != "closed":
-                        return refuse_member(room, token, now)
+                        return refuse_member(room, token, now, body)
             finally:
                 WAITERS -= 1
         # Over MAX_WAITERS the answer is immediate, exactly as if wait were 0.
