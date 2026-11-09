@@ -591,7 +591,6 @@ extern short data_020a4bc4;
 extern short data_ov002_020ff0d0[];
 extern short data_ov002_0210c310[];
 extern short data_ov002_02110af4;
-extern short data_ov002_0211118c;
 extern short data_ov003_020b1764[];
 extern short sMCarlo2Score;
 extern short data_ov013_021116ac[];
