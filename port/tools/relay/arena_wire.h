@@ -119,7 +119,8 @@ enum Infect : unsigned char {   // EV_INFECTED field b
     INF_STOMP = 3,   // a Luigi's STOMP claim
     INF_TAG = 4,   // a Luigi's TAG claim (body contact)
     INF_HANDOFF = 5,   // every Luigi left: the referee picked a new one
-    INF_LATE_JOIN = 6,   // joined after the first pick
+    INF_LATE_JOIN = 6,   // a new player joined after the first pick
+    INF_RETURN = 7,   // a Luigi whose connection dropped came back on its seat within REJOIN_KEEP_MS
 };
 
 enum MatchState : unsigned char {
@@ -195,6 +196,7 @@ constexpr int kCapDropMinMs = 1000;
 constexpr int kLuigiCountdownMs = 5000;
 constexpr int kTagReachH = 130;
 constexpr int kTagReachV = 200;
+constexpr int kRejoinKeepMs = 60000;
 
 #pragma pack(push, 1)
 struct RefClaim {

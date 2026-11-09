@@ -390,7 +390,9 @@ INFECT_CAUSES = [(1, "PICK", "the first Luigi, picked at T0"),
                  (3, "STOMP", "a Luigi's STOMP claim"),
                  (4, "TAG", "a Luigi's TAG claim (body contact)"),
                  (5, "HANDOFF", "every Luigi left: the referee picked a new one"),
-                 (6, "LATE_JOIN", "joined after the first pick")]
+                 (6, "LATE_JOIN", "a new player joined after the first pick"),
+                 (7, "RETURN", "a Luigi whose connection dropped came back "
+                               "on its seat within REJOIN_KEEP_MS")]
 
 NUMBERS = {
     "FRAME_MS": 1000.0 / 30.0,
@@ -436,8 +438,14 @@ NUMBERS = {
     "CAP_DROP_WAIT_MS": 150,
     "CAP_DROP_MIN_MS": 1000,
     "LUIGI_COUNTDOWN_MS": 5000,
+    # TAG reach: the player's body cylinder is radius 0x28000 (40 units),
+    # height 0x96000 (150 units) (src/game/player/Player.cpp:27563,
+    # func_ov002_020e63a4 -> dCcAcPos_c::Init): two bodies touch under 80
+    # apart horizontally and 150 vertically; +50 units for the drawn frame,
+    # the margin the stomp reach (130) already uses.
     "TAG_REACH_H": 130,
     "TAG_REACH_V": 200,
+    "REJOIN_KEEP_MS": 60000,
 }
 
 # The 78 Player::State records in g_player_states order
@@ -604,7 +612,12 @@ RULES = [
     "stomp) or TAG (body contact: TAG_REACH_H / TAG_REACH_V) on a survivor "
     "is INFECTED: no hurt, no star, and the victim's invincibility, power and "
     "hit-immunity do not stop it (Classic's guard runs before the ROM's "
-    "resolution); a victim in a mouth or a hold is DENY INVULN. A Luigi's "
+    "resolution); so do its state: a survivor who is hurt, dead, "
+    "respawning or squished is tagged too (Tango 11-09, 'tag anytime', a "
+    "deliberate difference from Classic, whose resolver needs the victim's "
+    "body collision on). A tag stamped before its tagger became a Luigi "
+    "(before the pick at T0, or before its own INFECTED) is DENY STALE. "
+    "A victim in a mouth or a hold is DENY INVULN. A Luigi's "
     "EAT, CATCH, CAP_TAKE and CAP_DROP are DENY TEAM; a survivor's CAP_TAKE of "
     "a Luigi cap (look 1) and a survivor's TAG are DENY TEAM. Survivor vs "
     "survivor is the classic rules. Infecting a player ends any hold or "
@@ -613,14 +626,21 @@ RULES = [
     "no survivor left in the match = LUIGIS_WIN (winners = the Luigis); the "
     "clock runs out with a survivor = SURVIVORS_WIN (winners = the "
     "survivors); one player left of a match that had two or more = that "
-    "player's team wins (5 or 6); everyone left = EVERYONE_LEFT. Leavers: "
-    "the last Luigi leaves with two or more players left = the referee picks "
-    "a new Luigi by the same rule over the players left (INFECTED b "
-    "HANDOFF); the last survivor leaves = LUIGIS_WIN. A player who joins "
-    "after the pick (READY mid-match, a rejoin too) is a Luigi at once "
-    "(INFECTED b LATE_JOIN, before its SNAPSHOT); one who joins before the "
-    "pick is in the pick. A mode 2 SNAPSHOT carries a TEAM_STATE record "
-    "after the START replay.",
+    "player's team wins (5 or 6); everyone left = EVERYONE_LEFT. A mode 2 "
+    "READY with capacity below 2 is DENY BAD. Leavers: the last Luigi leaves "
+    "with two or more players left = the referee picks a new Luigi by the "
+    "same rule over the players left (INFECTED b HANDOFF); the last survivor "
+    "leaves = LUIGIS_WIN. Once the clock has run out (the hold before "
+    "SURVIVORS_WIN) a leave changes nothing and nobody joins (Classic's "
+    "hand-off stands down on the frozen end). Joiners: a seat that dropped "
+    "WITHOUT a QUIT (silent PRESENCE_MS or relay detach) and sends READY "
+    "again on the same seat number (the relay's seat reclaim) within "
+    "REJOIN_KEEP_MS keeps its team: a survivor comes back a survivor (no "
+    "INFECTED; its SNAPSHOT's TEAM_STATE leaves it out), a Luigi comes back "
+    "a Luigi (INFECTED b RETURN). Any other player who joins after the pick "
+    "is a Luigi at once (INFECTED b LATE_JOIN, before its SNAPSHOT); one who "
+    "joins before the pick is in the pick. A mode 2 SNAPSHOT carries a "
+    "TEAM_STATE record after the START replay.",
 ]
 
 
