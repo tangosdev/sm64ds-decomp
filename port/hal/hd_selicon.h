@@ -32,6 +32,7 @@ enum { HDSEL_STAR = 0, HDSEL_COIN = 1, HDSEL_MEDAL = 2, HDSEL_N = 3 };
 struct HdSelJob {
     int id, x, y, w, h, owner;
     int lift;                      /* 1 = the one-screen recipe lifts this layer: hal/menu_compose.cpp paints it */
+    int off;                       /* the compositor's host x offset for this icon's element in a wide picture (0 at 4:3) */
     const HdSelArt *art;
 };
 

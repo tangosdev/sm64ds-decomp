@@ -1356,7 +1356,7 @@ static HdMeterJob g_hdm;
    the art into the piece (hd_selicon_lifted_jobs). No hook (smoke targets), no mod, or any other scene: nothing here runs. */
 extern "C" const HdSelArt *(*port_hd_selicon_hook)(int id) = nullptr;   /* set by hal/hd_selicon.cpp */
 static HdSelJob g_hsj[HDSEL_N], g_hsj_lifted[HDSEL_N];
-static int g_hsj_n, g_hsj_lifted_n, g_hsj_off;
+static int g_hsj_n, g_hsj_lifted_n;
 }  // namespace (HDSELICON1: the two below are the ones hal/menu_compose.cpp calls, so they are not file-local)
 int hd_selicon_lifted_jobs(const HdSelJob **out) { *out = g_hsj_lifted; return g_hsj_lifted_n; }
 const unsigned *hd_selicon_scaled(const HdSelArt *a, int W, int H)
@@ -5116,12 +5116,13 @@ extern "C" void port_message_composite_engine_a(void *fbp)
             if (!art) continue;
             const int owner = id == HDSEL_MEDAL ? 2 : kOwnerObj;
             const int bx = cand[id][0], by = cand[id][1];
-            int n = 0, prio = -1, x0 = 999, x1 = -1, y0 = 999, y1 = -1;
+            int n = 0, prio = -1, x0 = 999, x1 = -1, y0 = 999, y1 = -1, fx = 0, fy = 0, moved = 0;
             for (int y = by < 0 ? 0 : by; y < by + cand[id][3] && y < 192; ++y)
                 for (int x = bx < 0 ? 0 : bx; x < bx + cand[id][2] && x < 256; ++x) {
                     const Cell &c = g_a[y][x];
                     if (!c.hit || c.owner != owner || c.msgcur) continue;
-                    if (n++ == 0) prio = c.prio;
+                    if (n++ == 0) { prio = c.prio; fx = x; fy = y; }
+                    if (g_hud_row_live && g_hud_row[y][x]) ++moved;
                     if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
                 }
             if (!n) continue;
@@ -5141,7 +5142,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                 }
                 ok = false;
             }
-            if (v == 0 && ntr::widescreen && shown3d && !ntr::present_native()) ok = false;   /* only the pillarboxed placement is handled */
+            if (moved) ok = false;   /* the N64 row moved some of these cells into its own plane: leave them to it */
             if (v == 0 && honour3d && layer_behind_3d((unsigned)owner, prio, p3d)) ok = false;
             if (dbg) std::fprintf(stderr, "[hdselicon] icon %d owner %d cells %d bbox %d..%d x %d..%d rect %d,%d %dx%d art %dx%d verdict %d %s\n",
                                   id, owner, n, x0, x1, y0, y1, rx, ry, rw, rh, art->w, art->h, v, ok ? "drawn" : "skipped");
@@ -5153,8 +5154,12 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                 }
             HdSelJob &J = v == 3 ? g_hsj_lifted[g_hsj_lifted_n++] : g_hsj[g_hsj_n++];
             J.id = id; J.x = rx; J.y = ry; J.w = rw; J.h = rh; J.owner = owner; J.lift = v == 3; J.art = art;
+            /* the host offset the placement below gives this icon's first cell (its element's anchor in a wide picture) */
+            J.off = !ntr::widescreen ? 0
+                  : (ntr::present_native() || !shown3d) ? margin / 2
+                  : !bandsplit ? hudelem::g_off[hudelem::g_lbl[fy][fx]]
+                  : (fx < band_l) ? 0 : (fx >= band_r) ? margin : margin / 2;
         }
-        g_hsj_off = ntr::widescreen ? margin / 2 : 0;
     }
     mghr_a_under(fb, pre, margin);   /* MGHIRES1: the picture under the 2D, over the sensitive box */
     g_cz.mark(4);
@@ -5539,7 +5544,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
        number stays on top), through the same three routes as the meter (the card's rects, the card overlay words, the plain frame). */
     for (int j = 0; j < g_hsj_n; ++j) {
         const HdSelJob &J = g_hsj[j];
-        auto hcol = [&](int x) { return ntr::widescreen ? ds_col_x0(x) + g_hsj_off : x * sx; };
+        auto hcol = [&](int x) { return ntr::widescreen ? ds_col_x0(x) + J.off : x * sx; };
         const int HX0 = hcol(J.x), HX1 = hcol(J.x + J.w), HY0 = ds_row_y0(J.y), HY1 = ds_row_y0(J.y + J.h);
         const unsigned *art = hd_selicon_scaled(J.art, HX1 - HX0, HY1 - HY0);
         if (!art) continue;
