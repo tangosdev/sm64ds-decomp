@@ -256,7 +256,7 @@ const char *explain(int status, const std::string &code)
         {"too_long", "That was too long."},
         {"bad_text", "That message has a character the lobby will not take."},
         {"bad_seat", "That player is not in the room any more."},
-        {"game_mismatch", "Someone in this room runs a different game version. Everyone needs the same update to play together."},
+        {"game_mismatch", "This room runs a different game version. Everyone needs the same update."},
         {"bad_save_name", "That save name has a character the lobby will not take."},
         {"already_started", "The room has started, so its settings are locked."},
         {"unknown_game", "This game version is not one the lobby server knows. Check for an update."},
@@ -1317,6 +1317,8 @@ void test_tick()
         done = true;
         wait = 30;
     } else if (s == "fail") { if (st->phase == LOBBY_FAILED) done = true; }
+    else if (!s.compare(0, 5, "wait:")) { wait = std::atoi(s.c_str() + 5); done = true; }
+    else if (!s.compare(0, 5, "name:")) { lobby_set_server_name(s.substr(5).c_str()); done = true; }
     else if (!in_room) return;
     else if (s == "ready") { lobby_set_ready(1); done = true; }
     else if (s == "start") {
@@ -1333,9 +1335,7 @@ void test_tick()
         if (eq != std::string::npos) lobby_set_setting(std::atoi(s.c_str() + 4), std::atoi(s.c_str() + eq + 1));
         done = true;
     } else if (!s.compare(0, 5, "save:")) { lobby_set_coop_save(std::atoi(s.c_str() + 5)); done = true; }
-    else if (!s.compare(0, 5, "name:")) { lobby_set_server_name(s.substr(5).c_str()); done = true; }
     else if (s == "leave") { lobby_leave(); done = true; }
-    else if (!s.compare(0, 5, "wait:")) { wait = std::atoi(s.c_str() + 5); done = true; }
     else if (s == "seats2") { if (st->n_seats >= 2) done = true; }
     else if (s == "seats1") { if (st->n_seats == 1) done = true; }
     else { std::fprintf(stderr, "[lobbytest] unknown step '%s', skipped\n", s.c_str()); done = true; }
