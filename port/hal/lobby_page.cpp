@@ -12,6 +12,7 @@
 #include <windows.h>
 
 #include "lobby_page.h"
+#include "pad_keyboard.h"
 #include "mods.h"
 #include "settings_page.h"
 #include "ui_text.h"
@@ -518,6 +519,7 @@ void close_page(const char *why)
     P.screen = SCR_CLOSED;
     P.field = 0;
     P.panel = 0;
+    if (pkb_owner() == 1) pkb_close();      /* LOBBYKEYS1: the page's letter grid goes with it (kPkbOwner) */
 }
 
 void leave_room(const char *why)
@@ -531,6 +533,22 @@ void open_panel(int on)
     P.panel = on;
     P.focus = -1;
     log_line(on ? "settings panel open" : "settings panel closed");
+}
+
+/* LOBBYKEYS1: THE LETTER GRID (hal/pad_keyboard.h). A field opened by the pad's A gets the grid; opened by the keyboard or a click it types with the
+   keyboard alone, as before. The grid belongs to the page while the page's field is open (kPkbOwner). */
+const int kPkbOwner = 1;
+int g_press_by_pad;        /* the press being handled came from the pad's A */
+void grid_for_field(void)
+{
+    if (g_press_by_pad) {
+        pkb_open(kPkbOwner, PKB_TEXT, P.field == C_CHAT ? PKB_OK_SEND : PKB_OK_OK, (int)(P.field == C_CHAT ? sizeof P.chat_in : sizeof P.name_in) - 1);
+        log_line("the letter grid is up (pad A)");
+    } else if (pkb_owner() == kPkbOwner) pkb_close();
+}
+void grid_sync(void)
+{
+    if (!P.field && pkb_owner() == kPkbOwner) { pkb_close(); log_line("the letter grid is down (the field let go)"); }
 }
 
 void press(const LobbyState *s, int c)
@@ -580,12 +598,17 @@ void press(const LobbyState *s, int c)
         log_line(b);
         return;
     }
-    case C_CHAT: P.field = C_CHAT; log_line("chat field: typing"); return;
+    case C_CHAT:
+        P.field = C_CHAT;
+        log_line("chat field: typing");
+        grid_for_field();
+        return;
     case C_NAME:
         if (!s->am_host) return;
         P.field = C_NAME;
         snprintf(P.name_in, sizeof P.name_in, "%s", s->server_name);
         log_line("server name field: typing");
+        grid_for_field();
         return;
     case C_SETTINGS: open_panel(1); return;
     case C_SAVE:
@@ -636,6 +659,21 @@ void setting_step(const LobbyState *s, int i, int d)
     log_line(b);
 }
 
+/* Enter on the field, or the grid's SEND / OK / START: the chat line is sent (the field keeps the typing), the server name is stored (the field lets go) */
+void field_submit(void)
+{
+    char *buf = P.field == C_CHAT ? P.chat_in : P.name_in;
+    if (P.field == C_CHAT) {
+        if (buf[0]) { char b[128]; snprintf(b, sizeof b, "chat sent: %s", buf); log_line(b); C_chat(buf); buf[0] = 0; }
+    } else if (P.field == C_NAME) {
+        C_name(buf);
+        char b[96];
+        snprintf(b, sizeof b, "server name stored: %s", buf);
+        log_line(b);
+        P.field = 0;
+    }
+}
+
 /* typing into the field that has it: letters, digits, space and a little punctuation. Enter sends the chat line (the field keeps the
    typing) or stores the server name (the field lets go); Escape lets go; Backspace deletes (held, it repeats). */
 void type_frame(const LobbyState *s)
@@ -661,19 +699,63 @@ void type_frame(const LobbyState *s)
         ++P.bs_hold;
     } else P.bs_hold = 0;
     P.prev_vk[VK_BACK] = (unsigned char)key_down(VK_BACK);
-    if (fresh(VK_RETURN)) {
-        if (P.field == C_CHAT) {
-            if (buf[0]) { char b[128]; snprintf(b, sizeof b, "chat sent: %s", buf); log_line(b); C_chat(buf); buf[0] = 0; }
-        } else {
-            C_name(buf);
-            char b[96];
-            snprintf(b, sizeof b, "server name stored: %s", buf);
-            log_line(b);
-            P.field = 0;
-        }
-    }
+    if (fresh(VK_RETURN)) field_submit();
     if (fresh(VK_ESCAPE)) { log_line("field let go (Escape)"); P.field = 0; }
     (void)s;
+}
+
+/* LOBBYKEYS1: the grid's frame while the page's field has it. The pad's own words drive it (A types, B deletes or lets go, START sends, Y is CAPS,
+   the D-pad moves); the stick arrives only inside the page's merged direction bits, which W A S D share, so those count only while no typing key of
+   the keyboard is held (the arrow keys then move the grid too). */
+int typing_key_held(void)
+{
+    for (int vk = 'A'; vk <= 'Z'; ++vk) if (key_down(vk)) return 1;
+    for (int vk = '0'; vk <= '9'; ++vk) if (key_down(vk)) return 1;
+    for (int vk = VK_NUMPAD0; vk <= VK_DIVIDE; ++vk) if (key_down(vk)) return 1;
+    static const int kOther[] = { VK_SPACE, VK_BACK, VK_RETURN, VK_ESCAPE, VK_OEM_1, VK_OEM_2, VK_OEM_3, VK_OEM_4, VK_OEM_5, VK_OEM_6, VK_OEM_7,
+                                  VK_OEM_PLUS, VK_OEM_COMMA, VK_OEM_MINUS, VK_OEM_PERIOD };
+    for (int vk : kOther) if (key_down(vk)) return 1;
+    return 0;
+}
+void grid_apply(int ev, char ch)
+{
+    char *buf = P.field == C_CHAT ? P.chat_in : P.name_in;
+    const size_t cap = P.field == C_CHAT ? sizeof P.chat_in : sizeof P.name_in;
+    const size_t n = strlen(buf);
+    char b[128];
+    switch (ev) {
+    case PKB_TYPE:
+        if (n + 1 < cap && ch) { buf[n] = ch; buf[n + 1] = 0; snprintf(b, sizeof b, "grid typed: %s", buf); log_line(b); }
+        break;
+    case PKB_DELETE:
+        if (n) { buf[n - 1] = 0; snprintf(b, sizeof b, "grid deleted: %s", buf); log_line(b); }
+        break;
+    case PKB_SUBMIT: field_submit(); break;
+    case PKB_CLOSE: log_line("field let go (the grid)"); P.field = 0; break;
+    default: break;
+    }
+}
+void grid_frame(const SpInput *in, unsigned pad, unsigned pe)
+{
+    PkbPad gp;
+    memset(&gp, 0, sizeof gp);
+    gp.dirs = pad & 0x000F;
+    if (in && !typing_key_held()) gp.dirs |= (in->keys & SPK_UP ? 1u : 0) | (in->keys & SPK_DOWN ? 2u : 0) | (in->keys & SPK_LEFT ? 4u : 0) | (in->keys & SPK_RIGHT ? 8u : 0);
+    gp.a = (pe & 0x1000) != 0;
+    gp.b = (pe & 0x2000) != 0;
+    gp.start = (pe & 0x0010) != 0;
+    gp.y = (pe & 0x8000) != 0;
+    char ch = 0;
+    const char *buf = P.field == C_CHAT ? P.chat_in : P.name_in;
+    const int ev = pkb_pad(&gp, (int)strlen(buf), &ch);      /* the event first: ch is written by the call */
+    grid_apply(ev, ch);
+}
+/* the page's picture to the grid's DS units: the grid's 256 x 192 frame is the picture's height, centred */
+void to_grid(int x, int y, float *gx, float *gy)
+{
+    const float h = (float)(P.ph > 0 ? P.ph : 384), w = (float)(P.pw > 0 ? P.pw : 512), sc = h / 192.0f;
+    *gx = (x - (w * 0.5f - 128.0f * sc)) / sc;
+    *gy = y / sc;
 }
 
 void sync_prev_vk(void)
@@ -926,13 +1008,34 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
         type_frame(s);
         const unsigned pe = pad_buttons & ~P.prev_pad;
         edge = 0;
-        if (pe & 0x2000) { P.field = 0; log_line("field let go (pad B)"); }
+        if (pkb_owner() == kPkbOwner) { if (P.field) grid_frame(in, pad_buttons, pe); }     /* LOBBYKEYS1: the grid has the pad */
+        else if (pe & 0x2000) { P.field = 0; log_line("field let go (pad B)"); }
         else if (pe & 0x000F) { P.field = 0; edge = (pe & 1 ? SPK_UP : 0) | (pe & 2 ? SPK_DOWN : 0) | (pe & 4 ? SPK_LEFT : 0) | (pe & 8 ? SPK_RIGHT : 0); }
         P.prev_keys = k;          /* the keys the typing held are not fresh page keys once the field lets go */
     } else {
         for (int vk = 8; vk < 256; ++vk) P.prev_vk[vk] = (unsigned char)key_down(vk);
         edge = k & ~P.prev_keys;
         P.prev_keys = k;
+    }
+    /* LOBBYKEYS1: the mouse over the letter grid works its keys, and nothing of the page under it */
+    if (P.field && pkb_owner() == kPkbOwner && in && in->mouse_valid) {
+        float gx, gy;
+        to_grid(in->mouse_x, in->mouse_y, &gx, &gy);
+        if (pkb_in_panel(gx, gy)) {
+            static int lmx = -1, lmy = -1;
+            if (in->mouse_x != lmx || in->mouse_y != lmy) { pkb_hover(gx, gy); lmx = in->mouse_x; lmy = in->mouse_y; }
+            if (ml && !P.prev_ml) {
+                char ch = 0;
+                const char *buf = P.field == C_CHAT ? P.chat_in : P.name_in;
+                const int ev = pkb_click(gx, gy, (int)strlen(buf), &ch);
+                grid_apply(ev, ch);
+            }
+            P.prev_ml = ml;
+            P.prev_pad = pad_buttons;
+            P.hover = -1;
+            grid_sync();
+            return P.screen != SCR_CLOSED;
+        }
     }
     /* the mouse */
     int hov = -1;
@@ -995,7 +1098,9 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
         char b[48];
         snprintf(b, sizeof b, "accept on control %d", P.focus);
         log_line(b);
+        g_press_by_pad = ((pad_buttons & ~P.prev_pad) & 0x1000) != 0;      /* LOBBYKEYS1: the pad's A opens a field with the letter grid */
         press(s, P.focus);
+        g_press_by_pad = 0;
     }
     else if (edge & SPK_BACK) {
         if (P.panel) open_panel(0);
@@ -1006,6 +1111,7 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
     }
     if (P.copied_t > 0) --P.copied_t;
     P.prev_pad = pad_buttons;
+    grid_sync();
     return P.screen != SCR_CLOSED;
 }
 
@@ -1791,4 +1897,10 @@ extern "C" void lobby_page_draw(uint32_t *px, int stride, int w, int h)
         return;
     }
     draw_room(s, f, hd, g, st);
+    if (P.field && pkb_owner() == kPkbOwner) {          /* LOBBYKEYS1: the letter grid over the page */
+        PkbView v;
+        pkb_view(&v, P.field == C_CHAT ? P.chat_in : P.name_in, ((P.frames / 20) & 1) == 0);
+        const float sc = h / 192.0f;
+        pkb_draw(px, stride, w, h, w * 0.5f - 128.0f * sc, 0.0f, sc, &v);
+    }
 }

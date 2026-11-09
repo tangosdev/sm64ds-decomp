@@ -32,9 +32,12 @@ struct OnlFacts {
     int scr_age;
     int flow;           /* the online file select is the page (ADVENTURE ONLINE was pressed) */
     int help_files;     /* the help screen was opened on the file select (its text differs) */
-    char why[84];       /* the FAIL sentence (PADNAV1: 4 bytes shorter for padfocus below; LOBBYUI1: 8 more for the room code; the sentences are far shorter) */
+    char why[82];       /* the FAIL sentence (PADNAV1: 4 bytes shorter for padfocus below; LOBBYUI1: 8 more for the room code; LOBBYKEYS1: 2 more for the grid; the
+                           longest sentence, hal/online_join.cpp's save folder one, is 80 letters) */
     char rc[7];         /* LOBBYUI1: the room code typed so far (0 to 6 letters of the code alphabet) */
     unsigned char rc_caret;   /* LOBBYUI1: 1 while the caret shows (it blinks while the plank has the keyboard) */
+    unsigned char rc_grid;    /* LOBBYKEYS1: 1 while the letter grid (hal/pad_keyboard.h) is up over the plank */
+    unsigned char rc_key;     /* LOBBYKEYS1: the grid's highlighted key */
     ProfFacts prof;     /* PROFILE1: the name and colour popup */
     int padfocus;       /* PADNAV1: the pad focus is on a host plank: ONL_PF_HELP (the ?) or ONL_PF_NAME, else 0 (the ROM cursor is the focus) */
 };
@@ -87,6 +90,7 @@ int  menu_online_padfocus(void);                         /* TITLEUI1: the host p
 void menu_online_hover_focus(int kind, int pf, int cursor);
 int  menu_online_modal_up(void);                         /* a ? text, the VS note or the wait screen is up (INPUTMATRIX1: the pad is modal for it) */
 int  menu_online_back(int kind);                         /* the back key: 1 = taken (closes a screen or turns the planks back) */
+int  menu_online_rc_pad(unsigned pressed, unsigned held);   /* LOBBYKEYS1: the DS pad words while the ROOM CODE letter grid is up: 1 = the grid took them */
 int  menu_online_rc_backspace(void);                     /* LOBBYUI1: Backspace while the ROOM CODE plank has the keyboard: 1 = it deleted a letter (or closed the empty field) */
 int  menu_online_wide_row(void);
 int  menu_online_flow_now(void);                         /* LOBBYUI1: the online file select is the page (ADVENTURE ONLINE was pressed), with the one-screen menus on */                         /* LOBBYUI1: 1 = HOST sits in the bottom row (a wide window), 0 = beside ROOM CODE (4:3) */

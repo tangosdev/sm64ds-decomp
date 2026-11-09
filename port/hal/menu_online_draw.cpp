@@ -5,6 +5,7 @@
 #include "menu_hostimg.h"
 #include "menu_pause_art_ids.h"
 #include "ui_text.h"
+#include "pad_keyboard.h"
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -424,8 +425,44 @@ void menu_online_add_help(MenuLayout *L, int right_edge_x, int top_y, int size_p
     if (ip >= 0) menu_add_hotspot(L, ip, ONL_HELP_X, ONL_HELP_Y, ONL_HELP_W, ONL_HELP_H, -1);
 }
 
+/* LOBBYKEYS1: the ROOM CODE letter grid (hal/pad_keyboard.h): one custom piece over the grid's DS box draws it from the facts (the typed code, the
+   highlighted key), and a touch only piece over the same box maps a click into DS units for menu_online_touch */
+namespace {
+void rc_grid_draw(const MenuLayout *L, int piece, uint32_t *dst, int w, int h, int stride)
+{
+    const OnlFacts *f = onl_facts_of(L);
+    if (!f || !f->rc_grid) return;
+    int bx, by, bw, bh;
+    pkb_panel_box(PKB_CODE, &bx, &by, &bw, &bh);
+    const int X = L->dest[piece][0], Y = L->dest[piece][1], W = L->dest[piece][2];
+    if (W < 8) return;
+    const float sc = (float)W / (float)bw;
+    PkbView v;
+    v.kind = PKB_CODE; v.ok = PKB_OK_JOIN; v.key = f->rc_key; v.caps = 0; v.text = f->rc; v.caret = f->rc_caret; v.max_len = 6;
+    pkb_draw(dst, stride, w, h, X - bx * sc, Y - by * sc, sc, &v);
+}
+void rc_grid_pieces(MenuLayout *L)
+{
+    int bx, by, bw, bh;
+    pkb_panel_box(PKB_CODE, &bx, &by, &bw, &bh);
+    const int un = L->unum, ud = L->uden;
+    const int fx = L->w / 2 + (bx - 128) * un / ud, fy = by * un / ud, fw = bw * un / ud, fh = bh * un / ud;
+    MenuPiece p = menu_piece_make(SRC_HOSTIMG, 0, 0, 1, 1, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
+    p.lden = 1; p.lnum = 1; p.fixdest = 1; p.fx = (short)fx; p.fy = (short)fy; p.fw = (short)fw; p.fh = (short)fh;
+    p.custom = rc_grid_draw;
+    menu_add_piece(L, p);
+    MenuPiece t = menu_piece_make(SRC_HOSTIMG, bx, by, bw, bh, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
+    t.lden = 1; t.lnum = 1; t.fw = (short)fw; t.fh = (short)fh; t.fx = (short)fx; t.fy = (short)fy;
+    t.touch = 1;
+    t.nodraw = 1;
+    const int ip = menu_add_piece(L, t);
+    if (ip >= 0) menu_add_hotspot(L, ip, bx, by, bw, bh, -1);
+}
+}  // namespace
+
 void menu_online_add_modal(MenuLayout *L, const OnlFacts *f)
 {
+    if (f && f->scr == ONL_SCR_ROOMCODE && f->rc_grid) { rc_grid_pieces(L); return; }   /* LOBBYKEYS1: the letter grid over the page */
     if (!f || f->scr == ONL_SCR_NONE || f->scr == ONL_SCR_ROOMCODE) return;      /* LOBBYUI1: the ROOM CODE plank types in place, no panel */
     if (f->scr == ONL_SCR_PROFILE) { menu_online_profile_modal(L, f); return; }      /* PROFILE1: the name and colour popup builds its own pieces */
     MenuPiece p = menu_piece_make(SRC_HOSTIMG, 0, 0, 1, 1, MENU_AX_L, MENU_AY_T, 0, 0, 1, 1);
