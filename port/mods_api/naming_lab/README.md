@@ -34,12 +34,35 @@ the dialog is open. When you play by hand, just press A yourself.
 | Timeline | 300 frames of every function that ran with the focused actor as `this` (or as the first argument of the `extern "C"` shims), coloured by its own class, base classes, or other | `_penter` lab mode in `port/hal/fn_trace.cpp` (4 words per call: callee, call site, ecx, arg0) |
 | Function info | port signature, **ROM address and symbol**, port address, a link to the source file | `walk_window.symtab` and `config/**/symbols.txt`; a thiscall body inherits the ROM address of its `__ZN` shim |
 | Fields | the class layout from `include/` (`/* 0xNNN */` offsets, base chain, `unk_` gaps), live values, change counts, "changing only"; double-click a value to poke it | `peek`/`poke` through the plugin |
+| Fields → **who?** | every function that wrote that field during one second of play, with the two callers above it, and the ROM address of each | a CPU data breakpoint (DR0–DR3, set by the plugin on the game thread) and a vectored exception handler that records the writing instruction and walks the frame-pointer chain. Only the game's own writes stop it, so the game runs at full speed |
 | Hot | the game's busiest functions (port-only code is hidden) | `hot N` sampling |
 | Assets | every file loaded, the class that owns it, the function that asked for it, and texture thumbnails for `.bmd`; a filter box | an entry hook on each `LoadFile` (Model, SharedFilePtr, TextureSequence, dBgW_Kc, dExtFrameCtrl_c), independent of the trace buffer, so a level load is complete (Bob-omb Battlefield: 184 files, 180 in the load frame, 0 unresolved). File ids resolve through ov0's handle table and the 13 NARC archive ranges (`data_0208ecf4`), both read from the running game. Textures are decoded locally from `extracted/` and never stored |
 | Names | proposals (field / function / class / asset) and a "queue for ROM verify" list | `~/sm64ds-lab/naming-lab/*.jsonl`, outside the repo |
 
 Pause, step 1 and step 10 freeze the game between frames so you can read a
 state.
+
+## Who writes this field?
+
+Click **who?** on any field row. On Bob-omb Battlefield, Mario standing next to
+a Goomba, one second each:
+
+| field | writer ← caller ← caller | frames |
+|---|---|---|
+| `mPosX` (+0x5c) | `AddVec3` ← `dActor_c::UpdatePos` ← `daKrb_c::Behavior` | 28 of 29 |
+| | `dActor_c::UpdatePos` ← `daKrb_c::Behavior` ← `fBase_c::Process` | 28 |
+| | `dBgCh_Actr::UpdateDiscreteNoLava` ← `dEnemyBase_c::UpdateWMClsn` ← `daKrb_c::Behavior` | 3 |
+| `unk_0a4`, `unk_0ac` | `dActor_c::UpdatePos` only | 31 of 32 |
+| `unk_1f4` | `dBgPi::RecordHit` ← `dBgW_Kc::DetectClsn` ← `dBgCh_SphCrr` | 31 |
+
+A gap that only `UpdatePos` writes is probably part of a motion vector. A gap
+that `RecordHit` writes is collision state. These are leads for the ROM to
+settle, not names.
+
+Four fields can be watched at once (the CPU has four debug registers), and each
+must be 1, 2 or 4 bytes, aligned. The server arms the breakpoint, waits, reads
+the hits and clears the breakpoint again, so nothing stays armed. Raw commands:
+`wwatch <addr> [len]`, `writers`, `wwatch clear`.
 
 ## Hot-patching a function (command line)
 
@@ -94,7 +117,7 @@ The server is for one person on one machine.
 
 | file | role |
 |---|---|
-| `naming_lab.c` | the plugin (mod API): UDP command loop, actor list, watch/peek/poke, lab-mode trace drain, focus filter, hot counts, asset-loader hooks, tp/pause/step, detours |
+| `naming_lab.c` | the plugin (mod API): UDP command loop, actor list, watch/peek/poke, data breakpoints (`wwatch`), lab-mode trace drain, focus filter, hot counts, asset-loader hooks, tp/pause/step, detours |
 | `lab_server.py` | stdlib HTTP + SSE server. Symbols (MSVC undecoration via dbghelp, Itanium via `tools/demangle.py`), ROM symbols, header layouts, asset resolution, notes |
 | `lab.html` | the dashboard (one file, no build step) |
 | `patch.py` | the hot-patch CLI |
@@ -111,5 +134,10 @@ The server is for one person on one machine.
   because the trace that would name the running actor is full.
 - A patch's parameters are placeholders. Doubles, 64-bit values and structs
   passed by value need hand-written types, and `new` flags them.
+- **who?** names the callers by walking `ebp`. A function built without a
+  frame pointer is skipped in that chain, so a caller can be one level higher
+  than it looks. The writer itself (the faulting instruction) is always exact.
+  Writes from other threads, and by the kernel (`ReadFile` into a buffer), are
+  not seen.
 - `orig` is valid only on the traced build, where every function starts with
   `call _penter`. `apply` warns when the first byte is not `e8`.

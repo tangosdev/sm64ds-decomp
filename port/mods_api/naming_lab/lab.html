@@ -82,7 +82,7 @@ form.prop textarea{height:48px}
     <label class="small"><input type="checkbox" id="onlychg"> changing only</label>
     <label class="small"><input type="checkbox" id="showunk" checked> gaps</label></h2>
   <div class="scroll" style="flex:1"><table id="ftab"><thead><tr>
-    <th>off</th><th>owner</th><th>type</th><th>name</th><th>value</th><th class="num" title="frames this field changed in the last 300">chg</th>
+    <th>off</th><th>owner</th><th>type</th><th>name</th><th>value</th><th class="num" title="frames this field changed in the last 300">chg</th><th title="arm a hardware write breakpoint on this field for one second and list every function that wrote it">writes</th>
   </tr></thead><tbody></tbody></table></div>
 </section>
 <section style="border-right:0">
@@ -346,7 +346,7 @@ function drawFields() {
     const doc = (f.doc || '') + (f.note ? '\n' + f.note : '');
     html.push(`<tr class="${changed ? 'chg' : 'fade'}" data-o="${k}"><td class="dim">0x${hex(k, 3)}</td><td class="${f.owner === S.focus.cls ? 'own' : 'base'} small">${esc(f.owner || '')}</td>
       <td class="dim">${esc(f.type)}${esc(f.array || '')}</td><td class="${f.gap ? 'unk' : ''}" title="${esc(doc)}">${esc(f.name)}</td>
-      <td class="val" data-e="${d.edit || ''}" title="double-click to write a new value into the running game">${esc(d.txt)}</td><td class="num dim">${hist.length || ''}</td></tr>`);
+      <td class="val" data-e="${d.edit || ''}" title="double-click to write a new value into the running game">${esc(d.txt)}</td><td class="num dim">${hist.length || ''}</td><td><button class="small ww" title="who writes this field? (hardware data breakpoint, 1 s of game time)">who?</button></td></tr>`);
   }
   $('#ftab tbody').innerHTML = html.join('');
 }
@@ -381,10 +381,27 @@ $('#hotgame').onchange = () => drawHot(S.hot || []); $('#tlport').onchange = () 
 $('#onlychg').onchange = () => S.fieldsDirty = true; $('#showunk').onchange = () => S.fieldsDirty = true;
 $('#ftab tbody').addEventListener('click', e => {
   const tr = e.target.closest('tr'); if (!tr || e.target.closest('td.val') || !S.focus) return;
+  if (e.target.closest('button.ww')) { whoWrites(+tr.dataset.o); return; }
   const o = +tr.dataset.o; const f = fieldRows().find(x => x.offset === o); if (!f) return;
   const hist = (S.chg[o] || []);
   fillProposal(`${S.focus.cls}+0x${hex(o)}`, '', f.name, `${f.type}${f.array || ''} at 0x${hex(o)}; changed in ${hist.length} of the last ${NFRAMES} frames; value now ${tr.children[4].textContent}.`);
 });
+
+// who writes a field: the server arms a CPU data breakpoint (DR0-3) on the
+// field for one second of game time, then names each writing instruction's
+// function and the two callers above it.
+async function whoWrites(o) {
+  const f = fieldRows().find(x => x.offset === o); if (!f) return;
+  const len = f.size >= 4 ? 4 : f.size >= 2 ? 2 : 1; const where = `${S.focus.cls}+0x${hex(o)} (${f.name})`;
+  $('#fninfo').textContent = `watching writes to ${where} for 1 s...`;
+  let r; try { r = await api('/api/whowrites', {addr: S.focus.ptr + o, len, secs: 1.0}); } catch (err) { r = {error: String(err)}; }
+  if (r.error) { $('#fninfo').textContent = r.error; return; }
+  const fn = x => x ? `<span class="${x.cls === S.focus.cls ? 'own' : 'other'}">${esc(x.qual)}</span><span class="dim">+0x${hex(x.off)}${x.rom ? ' · ROM ' + hex(x.rom.addr, 8) : ''}</span>` : '<span class="dim">?</span>';
+  const rows = r.hits.map(h => `<tr><td class="num">${h.n}</td><td>${fn(h.writer)}</td><td class="small">${fn(h.caller)}</td><td class="small">${fn(h.caller2)}</td></tr>`).join('');
+  $('#fninfo').innerHTML = `<div><b>writes to ${esc(where)}</b> <span class="dim">${len} byte(s), ${r.frames ?? '?'} frames${r.lost ? ', ' + r.lost + ' not recorded' : ''}</span></div>` +
+    (rows ? `<table class="small"><tr><th class="num">n</th><th>writer</th><th>called from</th><th>and from</th></tr>${rows}</table>` : '<div class="dim">nothing wrote it in that second</div>') +
+    '<div class="small dim">port behaviour: a candidate until the ROM agrees</div>';
+}
 
 // ------------------------------------------------------------------ class methods
 function drawMethods() {

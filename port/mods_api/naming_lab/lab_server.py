@@ -744,6 +744,44 @@ class Lab:
 
 
 # ------------------------------------------------------------------ notes
+WW_LOCK = threading.Lock()
+
+
+def who_writes(addr, length, secs):
+    """Arm a data breakpoint on addr for secs of game time and name every
+    function that wrote there (the writing function, its caller, and the one
+    above). The plugin's breakpoints stay armed only for this call."""
+    secs = max(0.1, min(secs, 5.0))
+    length = length if length in (1, 2, 4) else 4
+    with WW_LOCK:
+        LAB.ask('wwatch clear', 'wwatch')
+        r = LAB.ask(f'wwatch {addr:x} {length}', 'wwatch')
+        ok = bool(r) and r[0].split()[-1] == 'ok'
+        if ok:
+            time.sleep(secs)
+        rep = LAB.ask('writers', 'writers', settle=0.15) if ok else []
+        LAB.ask('wwatch clear', 'wwatch')
+    if not ok:
+        return {'error': 'could not arm the breakpoint: ' + (r[0] if r else 'no reply from the game')}
+
+    def fn(a):
+        s = LAB.syms.at(a) if a else None
+        if not s or not (LAB.syms.text_lo <= a < LAB.syms.text_hi):
+            return None
+        return {'qual': s.qual, 'cls': s.cls, 'sig': s.sig, 'rom': s.rom, 'off': a - s.addr}
+    head, hits = None, []
+    for d in rep:
+        for line in d.split('\n'):
+            p = line.split()
+            if p and p[0] == 'writers':
+                head = {'frames': int(p[2]), 'lost': int(p[3])}
+            elif p and p[0] == 'h' and len(p) == 6:
+                eip, r1, r2, n = int(p[2], 16), int(p[3], 16), int(p[4], 16), int(p[5])
+                hits.append({'eip': eip, 'n': n, 'writer': fn(eip), 'caller': fn(r1), 'caller2': fn(r2)})
+    hits.sort(key=lambda h: -h['n'])
+    return {'addr': addr, 'len': length, 'secs': secs, **(head or {}), 'hits': hits}
+
+
 def notes_path(name):
     os.makedirs(NOTES_DIR, exist_ok=True)
     return os.path.join(NOTES_DIR, name)
@@ -981,6 +1019,8 @@ class H(BaseHTTPRequestHandler):
             LAB.send('unwatch')
             LAB.send('focus')
             self._json({'ok': True})
+        elif u.path == '/api/whowrites':
+            self._json(who_writes(int(b['addr']), int(b.get('len', 4)), float(b.get('secs', 1.0))))
         elif u.path in ('/api/propose', '/api/verify'):
             rec = {k: b[k] for k in list(b)[:32]}
             rec['time'] = time.strftime('%Y-%m-%d %H:%M:%S')

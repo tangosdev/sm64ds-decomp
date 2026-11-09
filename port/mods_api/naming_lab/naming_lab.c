@@ -22,6 +22,8 @@
    COMMANDS (one per datagram; replies go to the sender, streams to every peer
    heard from in the last 10 s):
      hello                      -> "hi ..." (build facts)
+     status                     -> "status tick= level= ... calls= dropped= maxcalls=<n>@<tick>
+                                   dropframes= lastdrop=" (the trace's fill, this frame and since boot)
      actors                     -> "actors <tick> <n>" then "a ..." lines
      watch <ptr> [size]         stream "snap" of that object every frame (<= 4)
      unwatch <ptr|all>
@@ -36,6 +38,9 @@
      pause | resume | step [n]  freeze the game loop in this callback
      detour <addr> <dll> <sym>  hot-patch: jmp from <addr> to <sym> in <dll>
      undetour <addr|all>
+     wwatch <addr> [1|2|4]      data breakpoint: record every write there (4 at once)
+     wwatch clear
+     writers                    -> "writers <tick> <frames> <lost>", "w slot addr len", "h slot eip ret1 ret2 n"
 */
 #define _CRT_SECURE_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN
@@ -633,6 +638,73 @@ static int detour(u32 addr, const char *dll, const char *sym, char *err, int err
     return 1;
 }
 
+/* ---------------------------------------------------------------- who writes
+   x86 data breakpoints on the game thread: DR0..DR3 each watch 1, 2 or 4
+   aligned bytes for writes. The CPU traps after the writing instruction, and a
+   vectored handler records where it stopped: the instruction after the write,
+   and the next two return addresses up the ebp chain (the port keeps frame
+   pointers), so a write done by a shared helper (a Vector3 copy, a memset)
+   still names its caller. The lab server maps those addresses to functions.
+   The handler only reads; it clears DR6 and lets the game continue. */
+#define WW_SLOTS 4
+#define WW_HITS 256
+static struct { u32 addr, len; } g_ww[WW_SLOTS];
+static struct { u32 slot, eip, r1, r2, n; } g_wh[WW_HITS];
+static volatile LONG g_nwh;
+static u32 g_ww_since, g_ww_lost;
+static PVOID g_veh;
+
+static u32 ww_read(u32 a)
+{
+    u32 v = 0;
+    __try { v = *(u32 *)(size_t)a; } __except (EXCEPTION_EXECUTE_HANDLER) { v = 0; }
+    return v;
+}
+
+static LONG CALLBACK ww_handler(EXCEPTION_POINTERS *ep)
+{
+    CONTEXT *c = ep->ContextRecord;
+    u32 hit = c->Dr6 & 0xf, s, eip, r1, r2, ebp, i;
+    if (ep->ExceptionRecord->ExceptionCode != EXCEPTION_SINGLE_STEP || !hit) return EXCEPTION_CONTINUE_SEARCH;
+    eip = c->Eip;
+    ebp = c->Ebp;
+    r1 = ww_read(ebp + 4);
+    r2 = ww_read(ww_read(ebp) + 4);
+    for (s = 0; s < WW_SLOTS; ++s) {
+        if (!(hit & (1u << s))) continue;
+        for (i = 0; i < (u32)g_nwh; ++i)
+            if (g_wh[i].slot == s && g_wh[i].eip == eip && g_wh[i].r1 == r1) { ++g_wh[i].n; break; }
+        if (i == (u32)g_nwh) {
+            if (g_nwh < WW_HITS) {
+                g_wh[i].slot = s; g_wh[i].eip = eip; g_wh[i].r1 = r1; g_wh[i].r2 = r2; g_wh[i].n = 1;
+                ++g_nwh;
+            } else ++g_ww_lost;
+        }
+    }
+    c->Dr6 = 0;
+    return EXCEPTION_CONTINUE_EXECUTION;
+}
+
+/* called on the game thread (poll runs inside on_frame) */
+static int ww_apply(void)
+{
+    CONTEXT c;
+    int s;
+    HANDLE th = GetCurrentThread();
+    if (!g_veh) g_veh = AddVectoredExceptionHandler(1, ww_handler);
+    memset(&c, 0, sizeof c);
+    c.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+    if (!GetThreadContext(th, &c)) return 0;
+    c.Dr7 = 0;
+    for (s = 0; s < WW_SLOTS; ++s) {
+        u32 len = g_ww[s].len, enc = len == 4 ? 3 : len == 2 ? 1 : 0;
+        (&c.Dr0)[s] = g_ww[s].addr;
+        if (g_ww[s].addr) c.Dr7 |= (1u << (2 * s)) | (1u << (16 + 4 * s)) | (enc << (18 + 4 * s));
+    }
+    c.Dr6 = 0;
+    return SetThreadContext(th, &c) != 0;
+}
+
 /* ---------------------------------------------------------------- commands */
 static void reply(const struct sockaddr_in *to, const char *fmt, ...)
 {
@@ -746,6 +818,38 @@ static void command(char *buf, const struct sockaddr_in *from)
         sscanf(buf, "undetour %x", &a);
         b = (u32)undetour(a);
         reply(from, "undetour %x %u", a, b);
+    } else if (!strncmp(buf, "wwatch clear", 12)) {
+        memset(g_ww, 0, sizeof g_ww);
+        g_nwh = 0; g_ww_lost = 0; g_ww_since = g_tick;
+        reply(from, "wwatch clear %d", ww_apply());
+    } else if (sscanf(buf, "wwatch %x %i", &a, &v) >= 1) {
+        int s, free_s = -1;
+        if (sscanf(buf, "wwatch %x %i", &a, &v) < 2) v = 4;
+        if (v != 1 && v != 2) v = 4;
+        a &= ~(u32)(v - 1);                     /* the CPU needs len-aligned addresses */
+        for (s = 0; s < WW_SLOTS; ++s) {
+            if (g_ww[s].addr == a) { free_s = s; break; }
+            if (!g_ww[s].addr && free_s < 0) free_s = s;
+        }
+        if (free_s < 0) { reply(from, "wwatch %x %d -1 full", a, v); return; }
+        g_ww[free_s].addr = a; g_ww[free_s].len = (u32)v;
+        reply(from, "wwatch %x %d %d %s", a, v, free_s, ww_apply() ? "ok" : "failed");
+    } else if (!strncmp(buf, "writers", 7)) {
+        char head[96], line[96];
+        int i, s;
+        _snprintf(head, sizeof head, "writers %u %u %u", g_tick, g_tick - g_ww_since, g_ww_lost);
+        msg_begin(&g_msg, from, head);
+        for (s = 0; s < WW_SLOTS; ++s)
+            if (g_ww[s].addr) {
+                _snprintf(line, sizeof line, "w %d %x %u", s, g_ww[s].addr, g_ww[s].len);
+                msg_add(&g_msg, line);
+            }
+        for (i = 0; i < (int)g_nwh; ++i) {
+            _snprintf(line, sizeof line, "h %u %x %x %x %u", g_wh[i].slot, g_wh[i].eip, g_wh[i].r1, g_wh[i].r2, g_wh[i].n);
+            msg_add(&g_msg, line);
+        }
+        msg_flush(&g_msg);
+        if (g_msg.len == (int)strlen(g_msg.head)) send_to(from, g_msg.buf, g_msg.len);
     } else {
         reply(from, "error unknown command");
     }
