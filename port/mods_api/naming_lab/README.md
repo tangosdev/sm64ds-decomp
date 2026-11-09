@@ -1,0 +1,112 @@
+# Naming Lab
+
+Play the port and see, live, which functions each actor runs, how its fields
+change, which files it loads, and what its textures look like. Then name things
+and hot-patch functions to test what they do, while the game keeps running.
+
+**The port only proposes.** Everything the lab shows is how the *port* behaves.
+That is good evidence for a guess and is never proof of what the original game
+does. Every note the lab writes says `evidence_source: port (naming lab): a
+candidate until the ROM agrees`. A name lands in `src/` or `include/` only after
+the ROM agrees: a melonDS recording, or the ROM bytes and RTTI.
+
+## Run it
+
+```bat
+port\build-port-trace.cmd                       :: the /Gh traced build -> build\port-trace
+port\mods_api\naming_lab\build.cmd              :: the plugin -> build\port-trace\mods\naming-lab
+naming-lab.cmd                                  :: Bob-omb Battlefield; naming-lab.cmd <level id>
+```
+
+The server prints the dashboard address and writes it to
+`%USERPROFILE%\sm64ds-lab\naming-lab\dashboard-url.txt`. The address includes
+this run's access token. Open it in a browser next to the game window.
+
+`naming-lab.cmd` presses A three times just after boot (`SM64DS_HOST_PAD`) to
+close the level's star-name dialog, because no actor runs its `Behavior` while
+the dialog is open. When you play by hand, just press A yourself.
+
+## What you get
+
+| panel | what it shows | where it comes from |
+|---|---|---|
+| Actors | every live actor, its class and its distance from the player; **tp** teleports Mario next to it | the plugin walks the actor list; the class comes from the vtable (MSVC `??_7` symbols or the ROM `_ZTV`) |
+| Timeline | 300 frames of every function that ran with the focused actor as `this` (or as the first argument of the `extern "C"` shims), coloured by its own class, base classes, or other | `_penter` lab mode in `port/hal/fn_trace.cpp` (4 words per call: callee, call site, ecx, arg0) |
+| Function info | port signature, **ROM address and symbol**, port address, a link to the source file | `walk_window.symtab` and `config/**/symbols.txt`; a thiscall body inherits the ROM address of its `__ZN` shim |
+| Fields | the class layout from `include/` (`/* 0xNNN */` offsets, base chain, `unk_` gaps), live values, change counts, "changing only"; double-click a value to poke it | `peek`/`poke` through the plugin |
+| Hot | the game's busiest functions (port-only code is hidden) | `hot N` sampling |
+| Assets | every file loaded, the actor that asked for it, the calling function, and texture thumbnails for `.bmd` | loader hooks in the plugin. File ids resolve through ov0's handle table and the 13 NARC archive ranges (`data_0208ecf4`), both read from the running game. Textures are decoded locally from `extracted/` and never stored |
+| Names | proposals (field / function / class / asset) and a "queue for ROM verify" list | `~/sm64ds-lab/naming-lab/*.jsonl`, outside the repo |
+
+Pause, step 1 and step 10 freeze the game between frames so you can read a
+state.
+
+## Hot-patching a function (command line)
+
+```bat
+python port\mods_api\naming_lab\patch.py find daKrb_c::Be
+python port\mods_api\naming_lab\patch.py new daKrb_c::Behavior -o my_patch.c
+python port\mods_api\naming_lab\patch.py apply daKrb_c::Behavior my_patch.c
+python port\mods_api\naming_lab\patch.py undo daKrb_c::Behavior        :: or: undo all
+```
+
+`new` writes a C skeleton with the right calling convention: a thiscall member
+becomes `__fastcall(self, edx, ...)`, and an `extern "C"` shim becomes
+`__cdecl(self, ...)`. Each parameter is a one-word placeholder annotated with
+its real type, and the skeleton warns when a parameter is not one word.
+`apply` compiles the file with MSVC x86 into `build\naming_lab\patches\`. The
+plugin then replaces the function's `call _penter` (5 bytes) with a `jmp` to
+your `lab_patch`. It passes `orig` (entry + 5, the rest of the real body), so a
+patch can run code before or after the original, or replace it. The DLL is
+loaded from a temp copy, so you can edit, rebuild and apply again while the
+game runs.
+
+`examples/krb_freeze.c` skips every Goomba's `Behavior`. Measured on Bob-omb
+Battlefield with Mario teleported next to a Goomba, over 1.5 s windows:
+
+| | Goombas whose position moved | words changed per Goomba (first 0x400 bytes) |
+|---|---|---|
+| before | 2 of 15 | 28 and 39 for the two near Mario, 3–4 for the rest |
+| patched | 0 of 15 | 3 for every Goomba |
+| after undo | 2 of 15 | 45 and 23, then 3–4 |
+
+The 3 words that still change are written outside `Behavior`. Finding that
+split is what the patch is for.
+
+## Security
+
+The server is for one person on one machine.
+
+- It binds 127.0.0.1 only, and the plugin's UDP port is 127.0.0.1 only.
+- Every API call needs the per-run token, sent as a header or `?token=`.
+- The `Host` header must be `127.0.0.1:<port>` or `localhost:<port>`, and any
+  `Origin` must match (DNS-rebinding and CSRF guard). POST bodies must be JSON,
+  at most 1 MB.
+- The commands the dashboard may forward to the game are whitelisted.
+- **Compiling and loading code never goes through HTTP.** `patch.py` is a
+  separate command you run yourself. The dashboard reads, watches, pokes
+  fields and steps frames.
+- Notes are written under `~/sm64ds-lab/naming-lab/`, never into the repo.
+  Texture PNGs exist only in HTTP responses. Nothing from the ROM is copied
+  anywhere.
+
+## Pieces
+
+| file | role |
+|---|---|
+| `naming_lab.c` | the plugin (mod API): UDP command loop, actor list, watch/peek/poke, lab-mode trace drain, focus filter, hot counts, asset-loader hooks, tp/pause/step, detours |
+| `lab_server.py` | stdlib HTTP + SSE server. Symbols (MSVC undecoration via dbghelp, Itanium via `tools/demangle.py`), ROM symbols, header layouts, asset resolution, notes |
+| `lab.html` | the dashboard (one file, no build step) |
+| `patch.py` | the hot-patch CLI |
+| `bmd.py`, `narc.py` | BMD texture decoding (LZ77, all 7 NDS formats) and NARC member names and bytes |
+| `probe.py` | the smallest UDP client: `python probe.py status actors` |
+
+## Known limits
+
+- The trace buffer is 64 MB a frame. A level-load frame can overflow it and drop
+  records, so the files a level loads during its first frame may be missing
+  from Assets. `status` reports `dropped`.
+- A patch's parameters are placeholders. Doubles, 64-bit values and structs
+  passed by value need hand-written types, and `new` flags them.
+- `orig` is valid only on the traced build, where every function starts with
+  `call _penter`. `apply` warns when the first byte is not `e8`.
