@@ -106,7 +106,9 @@ enum daDemo_c_AssetId {
 #include "CP15.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "G2x.h"
-#include "GX.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "Memory.h"
 #include "nitro/fx/fx.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -3215,7 +3217,7 @@ void func_ov002_020f5fe4(char* c)
     SetSubBg1Offset(0, 0);
     SetSubBg2Offset(0, 0);
     SetSubBg3Offset(0, 0);
-    GXS::SetGraphicsMode(0);
+    GXS_SetGraphicsMode(0);
 
     gSubScreenLayers &= ~0x1f;
 
@@ -3224,7 +3226,7 @@ void func_ov002_020f5fe4(char* c)
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_END_EUR_NCL_BIN);
-    GX::LoadOBJPltt(f, 0, 0x200);
+    GX_LoadOBJPltt(f, 0, 0x200);
     Deallocate(f);
 
     *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & ~3);
@@ -3239,8 +3241,8 @@ void func_ov002_020f5fe4(char* c)
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCL_BIN);
-    GX::LoadBGPltt(f, 0, 2);
-    GXS::LoadBGPltt(f, 0, 0x200);
+    GX_LoadBGPltt(f, 0, 2);
+    GXS_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK1_NSC_BIN);
@@ -3267,11 +3269,11 @@ void func_ov002_020f5fe4(char* c)
 
     r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCL_BIN);
     CP15::FlushAndInvalidateDataCache((u32)r5, 0x200);
-    GX::SetBankForSubBGExtPltt(0x80);
-    GXS::BeginLoadBGExtPltt();
-    GXS::LoadBGExtPltt(r5, 0x4000, 0x200);
-    GXS::LoadBGExtPltt(r5, 0x6000, 0x200);
-    GXS::EndLoadBGExtPltt();
+    GX_SetBankForSubBGExtPltt(0x80);
+    GXS_BeginLoadBGExtPltt();
+    GXS_LoadBGExtPltt(r5, 0x4000, 0x200);
+    GXS_LoadBGExtPltt(r5, 0x6000, 0x200);
+    GXS_EndLoadBGExtPltt();
     Deallocate(r5);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_BRIGHT_NSC_BIN);
@@ -3291,7 +3293,7 @@ void func_ov002_020f5fe4(char* c)
         void *f6 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCG_BIN);
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCL_BIN);
         DecompressLZ16(f6, (void*)0x6600000);
-        GXS::LoadOBJPltt(r5, 0, 0x200);
+        GXS_LoadOBJPltt(r5, 0, 0x200);
         Deallocate(f6);
         Deallocate(r5);
     }
@@ -3673,7 +3675,6 @@ inline unsigned int inline_fn(unsigned int arg0)
 {
   return arg0;
 }
-
 
 }
 

@@ -71,7 +71,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "Sound.h"
 #include "Memory.h"
 #include "nitro/fx/fx.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "cstd.h"
 #include "Vector2Math.h"
 
@@ -1268,7 +1268,6 @@ void cMgSmartball_board_c::SaveSnapshot() {
     }
 }
 
-
 /* Slot 2. Unlike most of this family's slot 2s this is a real body, not a
  * tail-call veneer -- but it still OPENS with the qualified call to the base,
  * and the qualification is load-bearing exactly as it is in the veneers: an
@@ -1488,7 +1487,6 @@ void cMgSmartball_slot_c::UpdateSpin() {
     }
     mSpinCooldown = 0x3c;
 }
-
 
 /* Slot 1. First loop draws three copies of one sprite in a row (index i is
  * computed but never read -- only the running x offset matters). Second
@@ -1783,7 +1781,6 @@ void cMgSmartball_pakkun_c::SaveSnapshot() {
         mTriggered = 0;
 }
 
-
 /* Slot 2. A real override, not a tail-call veneer: it calls the base's
  * RestoreInitial() (qualified -- unqualified would dispatch through the
  * vtable and recurse) and then also zeroes mTriggered and this child's own
@@ -1881,7 +1878,6 @@ void cMgSmartball_dokan_c::SaveSnapshot() {
         Sound::PlayBank2_2D(0x16);
     }
 }
-
 
 /* Slot 2. The ROM is three words -- ldr ip, [pc]; bx ip; .word target -- which
  * is mwcc's interworking-safe TAIL CALL, not a linker veneer and not a
@@ -2425,7 +2421,6 @@ done:
     }
 }
 
-
 /* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial, qualified --
  * unqualified would dispatch virtually and recurse), then zeroes mWasHit and
  * mHitTimer. Does NOT touch mVariant -- read exhaustively, this function simply
@@ -2581,7 +2576,6 @@ int cMgSmartball_ball_c::HitWing(int *src) {
     return ((dScMgSmartball_c *)mpManager)->mpWing->HitTest((int *)&v);
 }
 
-
 int cMgSmartball_ball_c::HitSwitches(int *arg) {
     int buf[2];
     int i = 0;
@@ -2617,7 +2611,6 @@ int cMgSmartball_ball_c::HitPakkuns(int *arg) {
     }
     return 0;
 }
-
 
 int cMgSmartball_ball_c::HitDokans(int *arg) {
     int buf[2];
@@ -2706,7 +2699,6 @@ int cMgSmartball_ball_c::HitKinokos(int *pos) {
     return 0;
 }
 
-
 int cMgSmartball_ball_c::CheckExits(int *pos) {
     struct S *arg = (struct S *)pos;
     struct S p, q0, q1, q2;
@@ -2747,7 +2739,6 @@ int cMgSmartball_ball_c::CheckExits(int *pos) {
     }
     return 0;
 }
-
 
 int cMgSmartball_ball_c::AtSpring(int *b) {
     int local[2];
@@ -5909,7 +5900,7 @@ s32 dScMgSmartball_c::InitResources() {
     Ov004_Deallocate(f);
     f = Ov004_LoadFileByPath(&sSmartballResultNclPath);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x20);
-    GXS::LoadBGPltt(((char *)f) + 2, 2, 0x1e);
+    GXS_LoadBGPltt(((char *)f) + 2, 2, 0x1e);
     Ov004_Deallocate(f);
     *((volatile u16 *)0x400000c) = (((*((volatile u16 *)0x400000c)) & 0xFFFF) & 0x43) | 0x1410;
     *((volatile u16 *)0x400000c) &= ~0x40;
@@ -5957,20 +5948,20 @@ s32 dScMgSmartball_c::InitResources() {
     if (((u8)(*((s32 *)(c + 8)))) == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1NclPath);
         CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
-        GX::LoadBGPltt(f, 0x60, 0x1a0);
+        GX_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg2NclPath);
         CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
-        GXS::LoadBGPltt(f, 0x60, 0x1a0);
+        GXS_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
     } else {
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg1NclPath);
         CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
-        GX::LoadBGPltt(f, 0x60, 0x1a0);
+        GX_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg2NclPath);
         CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
-        GXS::LoadBGPltt(f, 0x60, 0x1a0);
+        GXS_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
     }
     gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
@@ -5978,8 +5969,8 @@ s32 dScMgSmartball_c::InitResources() {
     gSubScreenLayers[0] |= 0xd;
     f = Ov004_LoadFileByPath(&sSmartballNclPath);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
-    GX::LoadOBJPltt(f, 0, 0x100);
-    GXS::LoadOBJPltt(f, 0, 0x100);
+    GX_LoadOBJPltt(f, 0, 0x100);
+    GXS_LoadOBJPltt(f, 0, 0x100);
     Ov004_Deallocate(f);
     i = 0;
     do {

@@ -32,7 +32,7 @@
 #include "ParticleIds.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "G2x.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
@@ -144,7 +144,6 @@ dScMg3DEsp_c::~dScMg3DEsp_c()
 
 /* ---- dMg3DEspAnimSet_c ------------------------------------------------- */
 
-
 void dMg3DEspAnimSet_c::Render()
 {
     int i;
@@ -236,7 +235,6 @@ dMg3DEspAnimSet_c::~dMg3DEspAnimSet_c()
 }
 
 dMg3DEspAnimSet_c::dMg3DEspAnimSet_c() {}
-
 
 /* ---- dMg3DEspModel_c --------------------------------------------------- */
 
@@ -1316,7 +1314,7 @@ s32 dScMg3DEsp_c::InitResources()
     Deallocate(f);
 
     f = LoadFile(0x13);
-    GXS::LoadBGPltt(f, 0x1e0, 0x20);
+    GXS_LoadBGPltt(f, 0x1e0, 0x20);
     Deallocate(f);
 
     f = LoadFile(0x14);
@@ -1326,7 +1324,7 @@ s32 dScMg3DEsp_c::InitResources()
     r5v = LoadFile(8);
     r4v = LoadFile(9);
     DecompressLZ16(r5v, (void *)0x6600000);
-    GXS::LoadOBJPltt(r4v, 0, 0x100);
+    GXS_LoadOBJPltt(r4v, 0, 0x100);
     Deallocate(r5v);
     Deallocate(r4v);
 

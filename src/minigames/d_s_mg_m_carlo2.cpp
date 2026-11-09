@@ -12,7 +12,6 @@
  *   - the Dealer_* helpers are still free functions over mDealer.
  */
 
-
 #include "dScMgMCarlo2_c.h"
 #include "nitro/hw/registers.h"
 #include "dScMgCard_c.h"
@@ -22,6 +21,7 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/gx/gx_load.h"
 
 /* sMCarlo2Cards is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
@@ -74,9 +74,6 @@ int  Dealer_Load(void* t);
 
 }
 
-namespace GX { void LoadOBJPltt(const void*, unsigned int, unsigned int); }
-namespace GXS { void LoadOBJPltt(const void*, unsigned int, unsigned int); }
-
 /* C++ linkage: the reference parameters are part of the ROM names. */
 
 dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c()
@@ -104,8 +101,8 @@ s32 dScMgMCarlo2_c::InitResources()
     palette = LoadFile(0xbb);
     DecompressLZ16(tiles, (void *)0x6400000);
     DecompressLZ16(tiles, (void *)0x6600000);
-    GX::LoadOBJPltt(palette, 0, 0x100);
-    GXS::LoadOBJPltt(palette, 0, 0x100);
+    GX_LoadOBJPltt(palette, 0, 0x100);
+    GXS_LoadOBJPltt(palette, 0, 0x100);
     Deallocate(tiles);
     Deallocate(palette);
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;

@@ -94,6 +94,7 @@ enum dScMgHanachan_c_AssetId {
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 extern "C" void *dScMgHanachan_c_classInit();
 extern "C" BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
@@ -158,20 +159,11 @@ struct SelfV {
     int mCreditsShown;
 };
 
-
 /* ROM symbols this TU calls or reads. decl_common.h's declarations are not
    repeated. The C++ helpers must stay outside the extern "C" block so that
    they mangle. */
 namespace Sound {
 u32 PlayBank2_2D(u32 id);
-}
-namespace GX {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
-}
-namespace GXS {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
 }
 namespace cstd {
 s16 atan2(s32, s32);
@@ -2126,8 +2118,8 @@ s32 dScMgHanachan_c::InitResources() {
     ncl = LoadFile(ASSET_D_2D_MG_HANA_SAGASE_NCL_BIN);
     DecompressLZ16(ncg, (void *)0x6400000);
     DecompressLZ16(ncg, (void *)0x6600000);
-    GXS::LoadOBJPltt(ncl, 0, 0xc0);
-    GX::LoadOBJPltt(ncl, 0, 0xc0);
+    GXS_LoadOBJPltt(ncl, 0, 0xc0);
+    GX_LoadOBJPltt(ncl, 0, 0xc0);
     Deallocate(ncg);
     Deallocate(ncl);
     mCredits = data_ov006_0213c954;
@@ -2158,7 +2150,7 @@ void Hana_LoadBackground(void) {
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x614;
     DecompressLZ16(ncg, (void *)G2_GetBG3CharPtr());
     func_02056314(nsc, 0, 0x800);
-    GX::LoadBGPltt(ncl, 0x60, 0x1a0);
+    GX_LoadBGPltt(ncl, 0x60, 0x1a0);
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     Deallocate(ncg);
     Deallocate(nsc);
@@ -2171,7 +2163,7 @@ void Hana_LoadBackground(void) {
     REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x614;
     DecompressLZ16(ncg, G2S_GetBG3CharPtr());
     func_020562b4(nsc, 0, 0x800);
-    GXS::LoadBGPltt(ncl, 0x60, 0x1a0);
+    GXS_LoadBGPltt(ncl, 0x60, 0x1a0);
     gSubScreenLayers |= 8;
     Deallocate(ncg);
     Deallocate(nsc);

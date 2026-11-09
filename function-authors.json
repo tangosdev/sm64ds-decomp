@@ -8883,15 +8883,15 @@
     },
     "arm9:0x02053abc": {
       "author": "tangosdev",
-      "name": "_ZN3GXS15SetGraphicsModeEi"
+      "name": "GXS_SetGraphicsMode"
     },
     "arm9:0x02053ad8": {
       "author": "tangosdev",
-      "name": "_ZN2GX15SetGraphicsModeEiii"
+      "name": "GX_SetGraphicsMode"
     },
     "arm9:0x02053b4c": {
       "author": "tangosdev",
-      "name": "_ZN2GX6DispOnEv"
+      "name": "GX_DispOn"
     },
     "arm9:0x02053b98": {
       "author": "tangosdev",
@@ -8927,71 +8927,71 @@
     },
     "arm9:0x02053ea0": {
       "author": "tangosdev",
-      "name": "func_02053ea0"
+      "name": "GX_GetBankForSubOBJ"
     },
     "arm9:0x02053eb0": {
       "author": "tangosdev",
-      "name": "func_02053eb0"
+      "name": "GX_GetBankForSubBG"
     },
     "arm9:0x02053ec0": {
       "author": "tangosdev",
-      "name": "func_02053ec0"
+      "name": "GX_GetBankForTexPltt"
     },
     "arm9:0x02053ed0": {
       "author": "tangosdev",
-      "name": "func_02053ed0"
+      "name": "GX_GetBankForTex"
     },
     "arm9:0x02053ee0": {
       "author": "ruspecial",
-      "name": "func_02053ee0"
+      "name": "GX_DisableBankForSubOBJExtPltt"
     },
     "arm9:0x02053f08": {
       "author": "ruspecial",
-      "name": "func_02053f08"
+      "name": "GX_DisableBankForSubBGExtPltt"
     },
     "arm9:0x02053f30": {
       "author": "ruspecial",
-      "name": "func_02053f30"
+      "name": "GX_DisableBankForSubOBJ"
     },
     "arm9:0x02053f44": {
       "author": "ruspecial",
-      "name": "func_02053f44"
+      "name": "GX_DisableBankForSubBG"
     },
     "arm9:0x02053f58": {
       "author": "ruspecial",
-      "name": "func_02053f58"
+      "name": "GX_DisableBankForLCDC"
     },
     "arm9:0x02053f6c": {
       "author": "ruspecial",
-      "name": "func_02053f6c"
+      "name": "GX_DisableBankForARM7"
     },
     "arm9:0x02053f80": {
       "author": "ruspecial",
-      "name": "func_02053f80"
+      "name": "GX_DisableBankForClearImage"
     },
     "arm9:0x02053f94": {
       "author": "ruspecial",
-      "name": "func_02053f94"
+      "name": "GX_DisableBankForTexPltt"
     },
     "arm9:0x02053fa8": {
       "author": "ruspecial",
-      "name": "func_02053fa8"
+      "name": "GX_DisableBankForTex"
     },
     "arm9:0x02053fbc": {
       "author": "ruspecial",
-      "name": "func_02053fbc"
+      "name": "GX_DisableBankForOBJExtPltt"
     },
     "arm9:0x02053fe0": {
       "author": "ruspecial",
-      "name": "func_02053fe0"
+      "name": "GX_DisableBankForBGExtPltt"
     },
     "arm9:0x02054004": {
       "author": "ruspecial",
-      "name": "func_02054004"
+      "name": "GX_DisableBankForOBJ"
     },
     "arm9:0x02054018": {
       "author": "ruspecial",
-      "name": "func_02054018"
+      "name": "GX_DisableBankForBG"
     },
     "arm9:0x0205402c": {
       "author": "tangosdev",
@@ -8999,35 +8999,35 @@
     },
     "arm9:0x020540f0": {
       "author": "ruspecial",
-      "name": "func_020540f0"
+      "name": "GX_ResetBankForSubOBJExtPltt"
     },
     "arm9:0x02054118": {
       "author": "ruspecial",
-      "name": "func_02054118"
+      "name": "GX_ResetBankForSubBGExtPltt"
     },
     "arm9:0x02054140": {
       "author": "ruspecial",
-      "name": "func_02054140"
+      "name": "GX_ResetBankForSubOBJ"
     },
     "arm9:0x02054154": {
       "author": "ruspecial",
-      "name": "func_02054154"
+      "name": "GX_ResetBankForSubBG"
     },
     "arm9:0x02054168": {
       "author": "ruspecial",
-      "name": "func_02054168"
+      "name": "GX_ResetBankForTexPltt"
     },
     "arm9:0x0205417c": {
       "author": "ruspecial",
-      "name": "func_0205417c"
+      "name": "GX_ResetBankForTex"
     },
     "arm9:0x02054190": {
       "author": "ruspecial",
-      "name": "func_02054190"
+      "name": "GX_ResetBankForOBJ"
     },
     "arm9:0x020541a4": {
       "author": "ruspecial",
-      "name": "func_020541a4"
+      "name": "GX_ResetBankForBG"
     },
     "arm9:0x020541b8": {
       "author": "tangosdev",
@@ -9035,19 +9035,19 @@
     },
     "arm9:0x020541f0": {
       "author": "tangosdev",
-      "name": "_ZN2GX23SetBankForSubOBJExtPlttEt"
+      "name": "GX_SetBankForSubOBJExtPltt"
     },
     "arm9:0x0205427c": {
       "author": "tangosdev",
-      "name": "_ZN2GX22SetBankForSubBGExtPlttEt"
+      "name": "GX_SetBankForSubBGExtPltt"
     },
     "arm9:0x02054308": {
       "author": "tangosdev",
-      "name": "_ZN2GX16SetBankForSubOBJEt"
+      "name": "GX_SetBankForSubOBJ"
     },
     "arm9:0x02054384": {
       "author": "tangosdev",
-      "name": "_ZN2GX15SetBankForSubBGEt"
+      "name": "GX_SetBankForSubBG"
     },
     "arm9:0x02054430": {
       "author": "ruspecial",
@@ -9055,11 +9055,11 @@
     },
     "arm9:0x02054450": {
       "author": "tangosdev",
-      "name": "_ZN2GX17SetBankForTexPlttEt"
+      "name": "GX_SetBankForTexPltt"
     },
     "arm9:0x02054544": {
       "author": "ruspecial",
-      "name": "_ZN2GX13SetBankForTexEt"
+      "name": "GX_SetBankForTex"
     },
     "arm9:0x02054748": {
       "author": "tangosdev",
@@ -9067,11 +9067,11 @@
     },
     "arm9:0x0205485c": {
       "author": "tangosdev",
-      "name": "_ZN2GX13SetBankForOBJEt"
+      "name": "GX_SetBankForOBJ"
     },
     "arm9:0x020549c8": {
       "author": "tangosdev",
-      "name": "_ZN2GX12SetBankForBGEt"
+      "name": "GX_SetBankForBG"
     },
     "arm9:0x02054c80": {
       "author": "tangosdev",
@@ -9243,31 +9243,31 @@
     },
     "arm9:0x02055dec": {
       "author": "tangosdev",
-      "name": "_ZN3GXS17EndLoadOBJExtPlttEv"
+      "name": "GXS_EndLoadOBJExtPltt"
     },
     "arm9:0x02055e38": {
       "author": "tangosdev",
-      "name": "_ZN3GXS14LoadOBJExtPlttEPKvjj"
+      "name": "GXS_LoadOBJExtPltt"
     },
     "arm9:0x02055eac": {
       "author": "tangosdev",
-      "name": "_ZN3GXS19BeginLoadOBJExtPlttEv"
+      "name": "GXS_BeginLoadOBJExtPltt"
     },
     "arm9:0x02055ed0": {
       "author": "tangosdev",
-      "name": "_ZN3GXS16EndLoadBGExtPlttEv"
+      "name": "GXS_EndLoadBGExtPltt"
     },
     "arm9:0x02055f1c": {
       "author": "tangosdev",
-      "name": "_ZN3GXS13LoadBGExtPlttEPKvjj"
+      "name": "GXS_LoadBGExtPltt"
     },
     "arm9:0x02055f90": {
       "author": "tangosdev",
-      "name": "_ZN3GXS18BeginLoadBGExtPlttEv"
+      "name": "GXS_BeginLoadBGExtPltt"
     },
     "arm9:0x02055fb4": {
       "author": "tangosdev",
-      "name": "_ZN3GXS11LoadBG3CharEPKvjj"
+      "name": "GXS_LoadBG3Char"
     },
     "arm9:0x02056014": {
       "author": "tangosdev",
@@ -9275,27 +9275,27 @@
     },
     "arm9:0x02056074": {
       "author": "tangosdev",
-      "name": "_ZN3GXS11LoadBG2CharEPKvjj"
+      "name": "GXS_LoadBG2Char"
     },
     "arm9:0x020560d4": {
       "author": "tangosdev",
-      "name": "_ZN2GX11LoadBG2CharEPKvjj"
+      "name": "GX_LoadBG2Char"
     },
     "arm9:0x02056134": {
       "author": "tangosdev",
-      "name": "_ZN3GXS11LoadBG1CharEPKvjj"
+      "name": "GXS_LoadBG1Char"
     },
     "arm9:0x02056194": {
       "author": "tangosdev",
-      "name": "_ZN2GX11LoadBG1CharEPKvjj"
+      "name": "GX_LoadBG1Char"
     },
     "arm9:0x020561f4": {
       "author": "tangosdev",
-      "name": "_ZN3GXS11LoadBG0CharEPKvjj"
+      "name": "GXS_LoadBG0Char"
     },
     "arm9:0x02056254": {
       "author": "tangosdev",
-      "name": "_ZN2GX11LoadBG0CharEPKvjj"
+      "name": "GX_LoadBG0Char"
     },
     "arm9:0x020562b4": {
       "author": "tangosdev",
@@ -9319,7 +9319,7 @@
     },
     "arm9:0x02056494": {
       "author": "tangosdev",
-      "name": "_ZN2GX10LoadBG1ScrEPKvii"
+      "name": "GX_LoadBG1Scr"
     },
     "arm9:0x020564f4": {
       "author": "tangosdev",
@@ -9331,11 +9331,11 @@
     },
     "arm9:0x020565b4": {
       "author": "ruspecial",
-      "name": "_ZN3GXS7LoadOBJEPKvjj"
+      "name": "GXS_LoadOBJ"
     },
     "arm9:0x02056614": {
       "author": "tangosdev",
-      "name": "_ZN2GX7LoadOBJEPKvjj"
+      "name": "GX_LoadOBJ"
     },
     "arm9:0x02056674": {
       "author": "tangosdev",
@@ -9347,43 +9347,43 @@
     },
     "arm9:0x02056738": {
       "author": "tangosdev",
-      "name": "_ZN3GXS11LoadOBJPlttEPKvjj"
+      "name": "GXS_LoadOBJPltt"
     },
     "arm9:0x020567a0": {
       "author": "tangosdev",
-      "name": "_ZN2GX11LoadOBJPlttEPKvjj"
+      "name": "GX_LoadOBJPltt"
     },
     "arm9:0x02056808": {
       "author": "tangosdev",
-      "name": "_ZN3GXS10LoadBGPlttEPKvjj"
+      "name": "GXS_LoadBGPltt"
     },
     "arm9:0x02056870": {
       "author": "tangosdev",
-      "name": "_ZN2GX10LoadBGPlttEPKvjj"
+      "name": "GX_LoadBGPltt"
     },
     "arm9:0x020568cc": {
       "author": "tangosdev",
-      "name": "_ZN2GX14EndLoadTexPlttEv"
+      "name": "GX_EndLoadTexPltt"
     },
     "arm9:0x02056924": {
       "author": "tangosdev",
-      "name": "_ZN2GX11LoadTexPlttEPKvjj"
+      "name": "GX_LoadTexPltt"
     },
     "arm9:0x02056998": {
       "author": "tangosdev",
-      "name": "_ZN2GX16BeginLoadTexPlttEv"
+      "name": "GX_BeginLoadTexPltt"
     },
     "arm9:0x020569e0": {
       "author": "tangosdev",
-      "name": "_ZN2GX10EndLoadTexEv"
+      "name": "GX_EndLoadTex"
     },
     "arm9:0x02056a50": {
       "author": "tangosdev",
-      "name": "_ZN2GX7LoadTexEPKvjj"
+      "name": "GX_LoadTex"
     },
     "arm9:0x02056b9c": {
       "author": "tangosdev",
-      "name": "_ZN2GX12BeginLoadTexEv"
+      "name": "GX_BeginLoadTex"
     },
     "arm9:0x02056c1c": {
       "author": "tangosdev",

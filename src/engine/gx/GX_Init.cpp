@@ -9,7 +9,7 @@
  * GX_DispOff parks the display mode (DISPCNT bits 16-17) in data_020a6084
  * and clears it, which blanks engine A; GX_DispOn puts it back, or selects
  * "graphics" when no mode was parked. data_02099fcc is the display-on flag:
- * while it is clear, GX::SetGraphicsMode records the requested mode but
+ * while it is clear, GX_SetGraphicsMode records the requested mode but
  * writes mode 0, so a mode change cannot light a display that is off.
  *
  * data_02099fd0 is the GX DMA channel (-1: none), shared by the whole GX
@@ -19,12 +19,14 @@
  * the fixed-point library, not to this file.
  *
  * This TU owns .text only: the three variables above stay at their ROM
- * addresses. Callers reach the address-named members under C linkage; those
- * keep their ROM names here.
+ * addresses. Every function has C linkage. GX_DispOn, GX_SetGraphicsMode and
+ * GXS_SetGraphicsMode carry pret's names (nitro/gx/gx.h); the others keep
+ * their address names, which their callers use.
  */
 
 #include "types.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/gx.h"
 
 #define REG_DISPSTAT      (*(volatile u16 *)0x04000004)
 #define REG_MASTER_BRIGHT (*(volatile u16 *)0x0400006c)
@@ -131,11 +133,7 @@ void func_02053b98(void) {
     REG_DISPCNT = cnt & ~DISPCNT_MODE_MASK;
 }
 
-} // extern "C"
-
-namespace GX {
-
-void DispOn() {
+void GX_DispOn(void) {
     data_02099fcc = 1;
     if (data_020a6084 != 0)
         REG_DISPCNT =
@@ -144,7 +142,7 @@ void DispOn() {
         REG_DISPCNT |= DISPMODE_GRAPHICS << DISPCNT_MODE_SHIFT;
 }
 
-void SetGraphicsMode(int dispMode, int bgMode, int bg0As3d) {
+void GX_SetGraphicsMode(int dispMode, int bgMode, int bg0As3d) {
     u32 cnt = REG_DISPCNT;
     data_020a6084 = (u16)dispMode;
     if (data_02099fcc == 0)
@@ -156,17 +154,9 @@ void SetGraphicsMode(int dispMode, int bgMode, int bg0As3d) {
         data_02099fcc = 0;
 }
 
-} // namespace GX
-
-namespace GXS {
-
-void SetGraphicsMode(int bgMode) {
+void GXS_SetGraphicsMode(int bgMode) {
     REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~DISPCNT_BGMODE_MASK) | bgMode;
 }
-
-} // namespace GXS
-
-extern "C" {
 
 // GXx_SetMasterBrightness_: reg is either engine's MASTER_BRIGHT. Positive
 // levels fade up toward white, negative ones down toward black.

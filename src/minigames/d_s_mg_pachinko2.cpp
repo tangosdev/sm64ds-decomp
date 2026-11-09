@@ -47,7 +47,7 @@ enum dScMgPachinko2_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "LevelRng.h"
 
@@ -2244,7 +2244,7 @@ s32 dScMgPachinko2_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NCL_BIN);
-    GX::LoadBGPltt(f, 0x60, 0x1a0);
+    GX_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NSC_BIN);
@@ -2254,7 +2254,7 @@ s32 dScMgPachinko2_c::InitResources() {
     objChar = LoadFile(ASSET_D_2D_MG_PACHINKO_NCG_BIN);
     objPltt = LoadFile(ASSET_D_2D_MG_PACHINKO_NCL_BIN);
     DecompressLZ16(objChar, (void *)0x6400000);
-    GX::LoadOBJPltt(objPltt, 0, 0x100);
+    GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd; /* sub BG0, BG2 and BG3 on */
     REG_DB_BG2CNT &= ~3;
@@ -2288,7 +2288,7 @@ s32 dScMgPachinko2_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NCL_BIN);
-    GXS::LoadBGPltt(f, 0x60, 0x1a0);
+    GXS_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NSC_BIN);
@@ -2305,7 +2305,7 @@ s32 dScMgPachinko2_c::InitResources() {
     Deallocate(f);
 
     DecompressLZ16(objChar, (void *)0x6600000);
-    GXS::LoadOBJPltt(objPltt, 0, 0x100);
+    GXS_LoadOBJPltt(objPltt, 0, 0x100);
     Deallocate(objChar);
     Deallocate(objPltt);
 

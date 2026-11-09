@@ -62,7 +62,7 @@ enum dScMgSlots_AssetId {
 #include "dWipe_c.h"
 #include "G2x.h"
 #include "CP15.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "LevelRng.h"
 
 #pragma defer_codegen off
@@ -591,7 +591,6 @@ void dScMgSlot3_c::StartRound(int mode) {
     }
 }
 
-
 // Bracketed, not file-global: with #pragma defer_codegen off these bind to
 // the functions between them. Measured -- this member DIFFs without them and
 // the members outside them DIFF with them applied file-wide.
@@ -802,8 +801,8 @@ s32 dScMgSlot3_c::InitResources() {
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NCL_BIN);
-        GX::LoadBGPltt(h, 0x60, 0x1a0);
-        GXS::LoadBGPltt(h, 0x60, 0x1a0);
+        GX_LoadBGPltt(h, 0x60, 0x1a0);
+        GXS_LoadBGPltt(h, 0x60, 0x1a0);
         Deallocate(h);
     }
 
@@ -831,8 +830,8 @@ s32 dScMgSlot3_c::InitResources() {
     {
         void *h = LoadFile(ASSET_D_2D_MG_SLOT_FACE_NCL_BIN);
         CP15::FlushAndInvalidateDataCache((u32)h, 0xe0);
-        GX::LoadOBJPltt(h, 0, 0xe0);
-        GXS::LoadOBJPltt(h, 0, 0xe0);
+        GX_LoadOBJPltt(h, 0, 0xe0);
+        GXS_LoadOBJPltt(h, 0, 0xe0);
         Deallocate(h);
     }
 
@@ -1057,7 +1056,6 @@ void SlotBet_Place(char *icon) {
 }
 }
 
-
 int dScMgSlot1_c::CloseMenu() {
     dScMgBase_c::CloseMenu();
     SetSubBg1Offset(0x100, 0);
@@ -1187,7 +1185,6 @@ s32 dScMgSlot1_c::Render() {
     SlotBlink_Draw((unsigned char *)&mWildBlink);
     return 1;
 }
-
 
 /* Mario Slot's per-frame state machine (vtable slot 6). Byte-exact since
  * 2026-10-12; the 19-word residue banked as a compiler floor was a source
@@ -1425,7 +1422,7 @@ s32 dScMgSlot1_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN, (char *)G2_GetBG2CharPtr() + 0x7800);
     {
         void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_UP_NCL_BIN);
-        GX::LoadBGPltt(h, 0x60, 0x1a0);
+        GX_LoadBGPltt(h, 0x60, 0x1a0);
         Deallocate(h);
     }
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_SCORE_UP_NSC_BIN, G2_GetBG2ScrPtr());
@@ -1452,7 +1449,7 @@ s32 dScMgSlot1_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN, (char *)G2S_GetBG0CharPtr() + 0x7800);
     {
         void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_DOWN_NCL_BIN);
-        GXS::LoadBGPltt(h, 0x60, 0x1a0);
+        GXS_LoadBGPltt(h, 0x60, 0x1a0);
         Deallocate(h);
     }
     LoadCompressedFileAt(ASSET_D_2D_GRADE_NSC_BIN, G2S_GetBG0ScrPtr());
@@ -1470,8 +1467,8 @@ s32 dScMgSlot1_c::InitResources() {
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_SLOT_NCL_BIN);
-        GX::LoadOBJPltt(h, 0, 0x40);
-        GXS::LoadOBJPltt(h, 0, 0x40);
+        GX_LoadOBJPltt(h, 0, 0x40);
+        GXS_LoadOBJPltt(h, 0, 0x40);
         Deallocate(h);
     }
 

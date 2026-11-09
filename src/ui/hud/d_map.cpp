@@ -43,7 +43,7 @@
 #include "OAM.h"
 #include "G2x.h"
 #include "cstd.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/hw/registers.h"
 
@@ -538,7 +538,6 @@ int dMap_c::Render()
     return 1;
 }
 
-
 /* One frame of the minimap: pick the map for the focus object, scroll and
  * scale the BG, then project every icon onto the screen.
  *
@@ -939,10 +938,10 @@ int dMap_c::InitResources()
         int id2 = func_0202a96c();
         if (id2 != 0) {
             void *f2 = LoadFile(id2);
-            GXS::BeginLoadBGExtPltt();
-            GXS::LoadBGExtPltt(f2, 0x6000, 0x200);
-            GXS::EndLoadBGExtPltt();
-            GXS::LoadBGPltt(f2, 0, 2);
+            GXS_BeginLoadBGExtPltt();
+            GXS_LoadBGExtPltt(f2, 0x6000, 0x200);
+            GXS_EndLoadBGExtPltt();
+            GXS_LoadBGPltt(f2, 0, 2);
             Deallocate(f2);
         }
     }

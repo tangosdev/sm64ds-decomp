@@ -1,5 +1,5 @@
 //cpp
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "Ov007Display.h"
 
 extern "C" {
@@ -13,16 +13,16 @@ void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int sk
     unsigned int size = (unsigned int)((pal->colorCount - skip) << 1);
     switch (target) {
     case 0:
-        GX::LoadOBJPltt((const char *)pal->colors + skip, offset, size);
+        GX_LoadOBJPltt((const char *)pal->colors + skip, offset, size);
         break;
     case 1:
-        GX::LoadBGPltt((const char *)pal->colors + skip, offset, size);
+        GX_LoadBGPltt((const char *)pal->colors + skip, offset, size);
         break;
     case 2:
-        GXS::LoadOBJPltt((const char *)pal->colors + skip, offset, size);
+        GXS_LoadOBJPltt((const char *)pal->colors + skip, offset, size);
         break;
     case 3:
-        GXS::LoadBGPltt((const char *)pal->colors + skip, offset, size);
+        GXS_LoadBGPltt((const char *)pal->colors + skip, offset, size);
         break;
     }
 }

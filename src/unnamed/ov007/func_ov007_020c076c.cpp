@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "CP15.h"
 #include "Ov007BgLayer.h"
 
@@ -34,7 +34,7 @@ void func_ov007_020c076c(Ov007BgLayer *layer, int engines) {
                 func_02056554(layer->screen, layer->screenOffset, size);
                 break;
             case 1:
-                GX::LoadBG1Scr(layer->screen, layer->screenOffset, size);
+                GX_LoadBG1Scr(layer->screen, layer->screenOffset, size);
                 break;
             case 2:
                 func_020563d4(layer->screen, layer->screenOffset, size);

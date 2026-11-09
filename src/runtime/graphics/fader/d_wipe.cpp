@@ -26,7 +26,7 @@
 #include "decl_common.h"
 #include "cstd.h"
 #include "CP15.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "G2x.h"
 
 extern "C" {
@@ -97,12 +97,12 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
 
         if (type == 2) {
             CP15::FlushAndInvalidateDataCache((u32)data_0209f604, 2);
-            GX::LoadBGPltt(data_0209f604, 0, 2);
-            GXS::LoadBGPltt(data_0209f604, 0, 2);
+            GX_LoadBGPltt(data_0209f604, 0, 2);
+            GXS_LoadBGPltt(data_0209f604, 0, 2);
         } else {
             CP15::FlushAndInvalidateDataCache((u32)data_020926cc, 2);
-            GX::LoadBGPltt(data_020926cc, 0, 2);
-            GXS::LoadBGPltt(data_020926cc, 0, 2);
+            GX_LoadBGPltt(data_020926cc, 0, 2);
+            GXS_LoadBGPltt(data_020926cc, 0, 2);
         }
 
         wipeInterp = 0;
@@ -167,12 +167,12 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
 
         if (type == 2) {
             CP15::FlushAndInvalidateDataCache((u32)data_0209f600, 2);
-            GX::LoadBGPltt(data_0209f600, 0, 2);
-            GXS::LoadBGPltt(data_0209f600, 0, 2);
+            GX_LoadBGPltt(data_0209f600, 0, 2);
+            GXS_LoadBGPltt(data_0209f600, 0, 2);
         } else {
             CP15::FlushAndInvalidateDataCache((u32)data_020926c8, 2);
-            GX::LoadBGPltt(data_020926c8, 0, 2);
-            GXS::LoadBGPltt(data_020926c8, 0, 2);
+            GX_LoadBGPltt(data_020926c8, 0, 2);
+            GXS_LoadBGPltt(data_020926c8, 0, 2);
         }
 
         wipeInterp = 0x200000;

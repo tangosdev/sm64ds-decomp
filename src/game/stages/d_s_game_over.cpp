@@ -44,6 +44,9 @@ enum dScGameOver_c_AssetId {
 #include "dScGameOver_c.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "dScStage_c.h"
 #include "OamAttr.h"
@@ -147,19 +150,19 @@ s32 dScGameOver_c::InitResources() {
 
     Disable3dEngines();
     GX::DisableAllBanks();
-    GX::SetBankForBG(1);
-    GX::SetBankForOBJ(0x40);
-    GX::SetBankForSubBG(4);
-    GX::SetBankForSubOBJ(8);
+    GX_SetBankForBG(1);
+    GX_SetBankForOBJ(0x40);
+    GX_SetBankForSubBG(4);
+    GX_SetBankForSubOBJ(8);
 
     REG_DISPCNT &= 0xffcfffef;
     REG_DISPCNT_SUB &= 0xffcfffef;
-    GX::SetGraphicsMode(1, 0, 0);
-    GXS::SetGraphicsMode(3);
+    GX_SetGraphicsMode(1, 0, 0);
+    GXS_SetGraphicsMode(3);
 
     REG_DISPCNT = (REG_DISPCNT & ~0x38000000) | 0x8000000;
     REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
-    GX::DispOn();
+    GX_DispOn();
 
     REG_DISPCNT_SUB |= 0x10000;
 
@@ -195,7 +198,7 @@ s32 dScGameOver_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_BG_NCL_BIN);
-    GX::LoadBGPltt(f, 0, 0x1a0);
+    GX_LoadBGPltt(f, 0, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_BG_NSC_BIN);
@@ -216,7 +219,7 @@ s32 dScGameOver_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_NCL_BIN);
-    GX::LoadOBJPltt(f, 0, 0x200);
+    GX_LoadOBJPltt(f, 0, 0x200);
     Deallocate(f);
 
     gMainScreenLayers = DISPLAY_LAYER_BG2 | DISPLAY_LAYER_OBJ;
@@ -246,7 +249,7 @@ s32 dScGameOver_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(0x9807);
-    GXS::LoadBGPltt(f, 0, 0x200);
+    GXS_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
     f = LoadFile(0x9801);

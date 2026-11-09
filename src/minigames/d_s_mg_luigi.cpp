@@ -47,6 +47,7 @@ enum dScMgLuigi_c_AssetId {
 #include "OamAttr.h"
 #include "nitro/gx/g2_oam.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 /* A random integer in [0, n): the top 15 bits of the shared generator, scaled. */
 #define LUIGI_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
@@ -147,14 +148,6 @@ extern void Mg_SetSharedState(int c);
 extern void Luigi_PrepareScanlines(void);
 extern void Luigi_PushScanlineRecord(void);
 extern dScMgLuigi_c *dScMgLuigi_c_classInit(void);
-}
-namespace GXS {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
-}
-namespace GX {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
 }
 namespace CP15 {
 void FlushAndInvalidateDataCache(u32 addr, u32 size);
@@ -1512,7 +1505,6 @@ void dScMgLuigi_c::ResetBoard() {
     mFilled = 0;
 }
 
-
 void dScMgLuigi_c::StateCatch() {
     extern LuigiSlotHandler sLuigiSlotHandlers[];
     int flashingCount;
@@ -1691,7 +1683,7 @@ s32 dScMgLuigi_c::InitResources() {
     DecompressLZ16(arc, (void *)G2_GetBG3CharPtr());
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI1_NCL_BIN);
-    GX::LoadBGPltt(fileData, 0x60, 0x1a0);
+    GX_LoadBGPltt(fileData, 0x60, 0x1a0);
     Deallocate(fileData);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI1_NSC_BIN);
@@ -1709,7 +1701,7 @@ s32 dScMgLuigi_c::InitResources() {
     Deallocate(fileData);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCL_BIN);
-    GX::LoadBGPltt(fileData, 0x40, 0x20);
+    GX_LoadBGPltt(fileData, 0x40, 0x20);
     Deallocate(fileData);
 
     screenMap = (char *)G2_GetBG2ScrPtr();
@@ -1719,7 +1711,7 @@ s32 dScMgLuigi_c::InitResources() {
     objectTiles = LoadFile(ASSET_D_2D_MG_LUIGI_NCG_BIN);
     fileData = LoadFile(ASSET_D_2D_MG_LUIGI_NCL_BIN);
     DecompressLZ16(objectTiles, (void *)0x6400000);
-    GX::LoadOBJPltt(fileData, 0, 0x100);
+    GX_LoadOBJPltt(fileData, 0, 0x100);
 
     REG_DB_BG2CNT &= ~3;
     REG_DB_BG2CNT &= ~BG_CONTROL_MOSAIC;
@@ -1733,7 +1725,7 @@ s32 dScMgLuigi_c::InitResources() {
         Deallocate(subFileData);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCL_BIN);
-        GXS::LoadBGPltt(subFileData, 0x1e0, 0x20);
+        GXS_LoadBGPltt(subFileData, 0x1e0, 0x20);
         Deallocate(subFileData);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NSC_BIN);
@@ -1752,7 +1744,7 @@ s32 dScMgLuigi_c::InitResources() {
     }
 
     DecompressLZ16(objectTiles, (void *)0x6600000);
-    GXS::LoadOBJPltt(fileData, 0, 0x100);
+    GXS_LoadOBJPltt(fileData, 0, 0x100);
     Deallocate(objectTiles);
     Deallocate(fileData);
 

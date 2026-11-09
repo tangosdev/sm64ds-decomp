@@ -27,18 +27,13 @@ enum d_s_mg_single3_d_base_AssetId {
 #include "types.h"
 #include "decl_common.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "nitro/gx/gx_bgcnt.h"
 
 /* SDK calls this file makes. */
-namespace GX {
-void SetGraphicsMode(int, int, int);
-void LoadOBJPltt(const void*, u32, u32);
-}
-namespace GXS {
-void LoadBGPltt(const void*, u32, u32);
-void LoadOBJPltt(const void*, u32, u32);
-}
 namespace CP15 { void FlushAndInvalidateDataCache(u32 address, u32 length); }
 namespace G3X {
 void SetFog(int enable, int, int, int);
@@ -82,14 +77,14 @@ void dScMgSingle3DBase_c::InitEngines()
     gSubScreenLayers = 0x10;
     REG_DISPCNT &= ~0x7000000u;
     REG_DISPCNT &= ~0x38000000u;
-    GX::SetBankForBG(2);
-    GX::SetBankForOBJ(0x10);
-    GX::SetBankForTex(1);
-    GX::SetBankForTexPltt(0x20);
-    GX::SetGraphicsMode(1, 0, 1);
+    GX_SetBankForBG(2);
+    GX_SetBankForOBJ(0x10);
+    GX_SetBankForTex(1);
+    GX_SetBankForTexPltt(0x20);
+    GX_SetGraphicsMode(1, 0, 1);
     REG_DISPCNT &= ~0x300010u;
-    GX::SetBankForSubBG(4);
-    GX::SetBankForSubOBJ(8);
+    GX_SetBankForSubBG(4);
+    GX_SetBankForSubOBJ(8);
     fileData = Ov004_LoadFile(sSingle3DCommonNcgByLanguage[GetGameLanguage()]);
     /* Each split `dst += 0x4000` keeps the ROM's mov and add pair; a single
      * constant becomes a literal-pool load. */
@@ -104,8 +99,8 @@ void dScMgSingle3DBase_c::InitEngines()
     Ov004_Deallocate(fileData);
     fileData = Ov004_LoadFile(0xc3);
     CP15::FlushAndInvalidateDataCache((u32)fileData, 0x100u);
-    GX::LoadOBJPltt(fileData, 0x100u, 0x100u);
-    GXS::LoadOBJPltt(fileData, 0x100u, 0x100u);
+    GX_LoadOBJPltt(fileData, 0x100u, 0x100u);
+    GXS_LoadOBJPltt(fileData, 0x100u, 0x100u);
     Ov004_Deallocate(fileData);
     Mg_ResetOverlays();
     data_0208ee44 = 1;
@@ -172,7 +167,7 @@ extern "C" void LoadCard2SubBg3(void *) {
     DecompressLZ16(fileData, (void *)G2S_GetBG3CharPtr());
     Ov004_Deallocate(fileData);
     fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCL_BIN);
-    GXS::LoadBGPltt(fileData, 0xa0, 0x160);
+    GXS_LoadBGPltt(fileData, 0xa0, 0x160);
     Deallocate(fileData);
     fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NSC_BIN);
     func_020562b4(fileData, 0, 0x800);

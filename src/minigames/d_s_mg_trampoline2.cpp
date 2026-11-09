@@ -3,7 +3,7 @@
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "G2x.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
@@ -72,7 +72,6 @@ struct Trampoline2ModelFilePtr : SharedFilePtr {
 struct BMD_File;
 
 struct Vector3_16f;
-
 
 struct P2 {
     int words[2];
@@ -288,14 +287,14 @@ void dScMgTrampoline2_c::InitDisplay() {
     }
     DecompressLZ16(bgChar, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
     DecompressLZ16(bgScr, G2_GetBG2ScrPtr());
-    GX::LoadBGPltt(bgPltt, 0x1a0, 0x60);
+    GX_LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1318;
     *(volatile u16 *)0x400000e &= ~0x40;
 
     DecompressLZ16(objChar, (void *)0x6400000);
-    GX::LoadOBJPltt(objPltt, 0, 0x60);
+    GX_LoadOBJPltt(objPltt, 0, 0x60);
 
     Deallocate(bgChar);
     Deallocate(bgScr);
@@ -1000,7 +999,7 @@ void dScMgTrampoline2_c::InitBrush(int layer) {
 
     t1 = 0;
     MultiStore16(t1, charPtr, 0x6000);
-    GX::LoadBGPltt(sTrmp2BrushPltt, 0xe0, 0x20);
+    GX_LoadBGPltt(sTrmp2BrushPltt, 0xe0, 0x20);
 }
 
 /* Vtable slot 34 (name not evidenced): plot an n by n square of 4-bit pixels

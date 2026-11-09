@@ -49,16 +49,6 @@
 #include "dScMgPachinko_c.h"
 #include "LevelRng.h"
 
-namespace GX {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
-
-namespace GXS {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
-
 /* The five state tables are pointer-to-member tables on the scene. */
 typedef void (dScMgPachinko_c::*PMF)(int);
 
@@ -116,6 +106,7 @@ extern int  RandomIntInternal(int *seed);
 struct OamAttr;
 #include "OAM.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
 extern int  Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_SetSharedState(int a);
@@ -2180,7 +2171,7 @@ s32 dScMgPachinko_c::InitResources()
     Deallocate(f);
 
     f = LoadFile(0x60);
-    GX::LoadBGPltt(f, 0x60, 0x1a0);
+    GX_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(0x61);
@@ -2206,7 +2197,7 @@ s32 dScMgPachinko_c::InitResources()
     objChar = LoadFile(0xe0);
     objPltt = LoadFile(0xe1);
     DecompressLZ16(objChar, (void *)0x6400000);
-    GX::LoadOBJPltt(objPltt, 0, 0x100);
+    GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd;
     *(volatile u16 *)0x400100c &= ~3;
@@ -2240,7 +2231,7 @@ s32 dScMgPachinko_c::InitResources()
     Deallocate(f);
 
     f = LoadFile(0x5d);
-    GXS::LoadBGPltt(f, 0x60, 0x1a0);
+    GXS_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(0x5e);
@@ -2257,7 +2248,7 @@ s32 dScMgPachinko_c::InitResources()
     Deallocate(f);
 
     DecompressLZ16(objChar, (void *)0x6600000);
-    GXS::LoadOBJPltt(objPltt, 0, 0x100);
+    GXS_LoadOBJPltt(objPltt, 0, 0x100);
     Deallocate(objChar);
     Deallocate(objPltt);
 

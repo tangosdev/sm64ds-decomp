@@ -94,7 +94,7 @@ enum dScMgAmida_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "CP15.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "G2x.h"
 
 extern "C" {
@@ -2122,14 +2122,14 @@ s32 dScMgAmida_c::InitResources() {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCG_BIN, (void *)G2_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCL_BIN);
         CP15::FlushAndInvalidateDataCache((u32)file, 0x1a0);
-        GX::LoadBGPltt(file, 0x60, 0x1a0);
+        GX_LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NSC_BIN, G2_GetBG3ScrPtr());
     } else {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NCG_BIN, (void *)G2_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA1_NCL_BIN);
         CP15::FlushAndInvalidateDataCache((u32)file, 0x1a0);
-        GX::LoadBGPltt(file, 0x60, 0x1a0);
+        GX_LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NSC_BIN, G2_GetBG3ScrPtr());
     }
@@ -2146,7 +2146,7 @@ s32 dScMgAmida_c::InitResources() {
     if (IsVariant2() != 0) {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NCG_BIN, G2S_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NCL_BIN);
-        GXS::LoadBGPltt(file, 0x60, 0x1a0);
+        GXS_LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NSC_BIN, G2S_GetBG3ScrPtr());
         gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3;
@@ -2154,7 +2154,7 @@ s32 dScMgAmida_c::InitResources() {
     } else {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_NCG_BIN, G2S_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA2_NCL_BIN);
-        GXS::LoadBGPltt(file, 0x60, 0x1a0);
+        GXS_LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_2_NSC_BIN, G2S_GetBG2ScrPtr());
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_1_NSC_BIN, G2S_GetBG3ScrPtr());
@@ -2182,15 +2182,15 @@ s32 dScMgAmida_c::InitResources() {
             LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_NCG_BIN, (void *)0x6600000);
         }
         file = LoadFile(ASSET_D_2D_MG_AMIDA_FACE_NCL_BIN);
-        GX::LoadOBJPltt(file, 0, 0x100);
-        GXS::LoadOBJPltt(file, 0, 0x100);
+        GX_LoadOBJPltt(file, 0, 0x100);
+        GXS_LoadOBJPltt(file, 0, 0x100);
         Deallocate(file);
     } else {
         LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_NCG_BIN, (void *)0x6400000);
         LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_NCG_BIN, (void *)0x6600000);
         file = LoadFile(ASSET_D_2D_MG_AMIDA_NCL_BIN);
-        GX::LoadOBJPltt(file, 0, 0x100);
-        GXS::LoadOBJPltt(file, 0, 0x100);
+        GX_LoadOBJPltt(file, 0, 0x100);
+        GXS_LoadOBJPltt(file, 0, 0x100);
         Deallocate(file);
     }
 

@@ -3,7 +3,7 @@
 #include "Ov007Settings.h"
 #include "Ov007Display.h"
 #include "nitro/gx/gx_bgcnt.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 
 extern "C" {
 
@@ -37,17 +37,17 @@ void func_ov007_020bcba8(int idx) {
         int langFile;
         MenuText_Init(0, sheet, 0, mainBg1, subBg1, 0, messages);
 
-        GX::LoadOBJ(s->characters[1]->tiles, 0, 0x2000);
+        GX_LoadOBJ(s->characters[1]->tiles, 0, 0x2000);
         func_ov007_020c32e8(s->palettes[1], 0, 0, 0);
-        GX::LoadOBJ(func_ov007_020b3f20(0x2c), 0x2000, 0x2000);
+        GX_LoadOBJ(func_ov007_020b3f20(0x2c), 0x2000, 0x2000);
         /* file 0x2d is 16-colour rows; its row 6 becomes OBJ palette 15 */
-        GX::LoadOBJPltt(((const u16(*)[16])func_ov007_020b3f20(0x2d))[6], 0x1e0, 0x20);
+        GX_LoadOBJPltt(((const u16(*)[16])func_ov007_020b3f20(0x2d))[6], 0x1e0, 0x20);
         func_ov007_020b3edc(0x2c);
         func_ov007_020b3edc(0x2d);
 
         langFile = WORK->settings->language + 0x25;
         func_02056014(func_ov007_020b3f20(langFile), 0, 0x4000);
-        GX::LoadBGPltt(func_ov007_020b3f20(0x2b), 0, 0x200);
+        GX_LoadBGPltt(func_ov007_020b3f20(0x2b), 0, 0x200);
         func_ov007_020b3edc(langFile);
         func_ov007_020b3edc(0x2b);
 

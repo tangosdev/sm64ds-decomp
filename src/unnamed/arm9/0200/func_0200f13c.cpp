@@ -19,7 +19,7 @@
  */
 #include "types.h"
 #include "nitro/gx/gx_bgcnt.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 
 extern "C" {
 
@@ -77,13 +77,13 @@ void func_0200f13c(void) {
     a5 += 0x2000;
     LoadCompressedFileAt(data_0208a15c[GetLanguageIndex()], a5);
     void *p = LoadFile(0x980f);
-    GX::LoadOBJPltt(p, 0x120, 0xe0);
+    GX_LoadOBJPltt(p, 0x120, 0xe0);
     Deallocate(p);
     char *a6 = (char *)0x6600000;
     a6 += 0x800;
     LoadCompressedFileAt(data_0208a120[GetLanguageIndex()], a6);
     void *q = LoadFile(0x8400);
-    GXS::LoadOBJPltt(q, 0, 0x200);
+    GXS_LoadOBJPltt(q, 0, 0x200);
     Deallocate(q);
 }
 }

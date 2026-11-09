@@ -78,6 +78,8 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "Message.h"
 #include "Memory.h"
 #include "Heap.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "cstd.h"
 #include "daMugenBGM_c.h"
@@ -752,8 +754,8 @@ void dScStage_c::LC_Render() {
 
     {
         void *p = LoadFile(ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN);
-        GX::LoadOBJPltt((void *)((char *)p + (((unsigned int)sLevelClearPaletteTimer >> 2) << 5)),
-                        0x1c0, 0x10);
+        GX_LoadOBJPltt((void *)((char *)p + (((unsigned int)sLevelClearPaletteTimer >> 2) << 5)),
+                       0x1c0, 0x10);
         Deallocate(p);
     }
 
@@ -3874,7 +3876,6 @@ void dScStage_c::LoadModel() {
     data_0209f320 = (int)components;
 }
 
-
 void dScStage_c::RenderFog() {
     Fog *fog = 0;
     if (gCurrentSublevel == 5)
@@ -4685,11 +4686,11 @@ int dScStage_c::InitResources() {
         *p0 &= 0xFFCFFFEF;
         *p1 &= 0xFFCFFFEF;
         int one = 1;
-        GX::SetGraphicsMode(one, 0, one);
-        GXS::SetGraphicsMode(3);
+        GX_SetGraphicsMode(one, 0, one);
+        GXS_SetGraphicsMode(3);
         *p0 = (*p0 & ~0x38000000) | 0x08000000;
         REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
-        GX::DispOn();
+        GX_DispOn();
         *p1 |= 0x10000;
         InitialiseVramGlobals();
 

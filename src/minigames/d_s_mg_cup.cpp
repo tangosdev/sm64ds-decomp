@@ -66,16 +66,11 @@ struct AnimStep {
     int ticks;
 };
 
-
-namespace GXS {
-void LoadBGPltt(const void *data, unsigned int offset, unsigned int size);
-void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
-}
-
 struct OamAttr;
 #include "OAM.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 extern "C" {
 extern void CupFx_Move(char *p, int a, int b);
@@ -915,13 +910,13 @@ s32 dScMgCup_c::InitResources() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP_NCG_BIN,
                          (void *)((char *)G2S_GetBG2CharPtr() + 0x4000));
     file = LoadFile(ASSET_D_2D_MG_BG_CUP_NCL_BIN);
-    GXS::LoadBGPltt(file, 0x60, 0x1a0);
+    GXS_LoadBGPltt(file, 0x60, 0x1a0);
     Deallocate(file);
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_2_NSC_BIN, (void *)G2S_GetBG0ScrPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_1_NSC_BIN, (void *)G2S_GetBG2ScrPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_CUP_NCG_BIN, (void *)0x6600000);
     file = LoadFile(ASSET_D_2D_MG_CUP_NCL_BIN);
-    GXS::LoadOBJPltt(file, 0, 0xa0);
+    GXS_LoadOBJPltt(file, 0, 0xa0);
     Deallocate(file);
 
     data_0208ee44 = 1;

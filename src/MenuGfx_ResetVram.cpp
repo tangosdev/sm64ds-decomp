@@ -1,5 +1,5 @@
 //cpp
-#include "GX.h"
+#include "nitro/gx/gx_vramcnt.h"
 
 extern "C" {
 extern void func_02054430(int x);
@@ -11,18 +11,18 @@ void MenuGfx_ResetVram(void) {
     volatile int b;
     volatile int c;
 
-    GX::ResetBankForBG();
-    GX::ResetBankForOBJ();
-    GX::ResetBankForTex();
-    GX::ResetBankForTexPltt();
-    GX::ResetBankForSubBG();
-    GX::ResetBankForSubOBJ();
+    GX_ResetBankForBG();
+    GX_ResetBankForOBJ();
+    GX_ResetBankForTex();
+    GX_ResetBankForTexPltt();
+    GX_ResetBankForSubBG();
+    GX_ResetBankForSubOBJ();
     func_02054430(0x1ff);
 
     b = 0;
     MultiStore_Int(b, (int *)0x6800000, 0xa4000);
 
-    GX::DisableBankForLCDC();
+    GX_DisableBankForLCDC();
 
     a = 0xc0;
     MultiStore32Bytes(a, (int *)0x7000000, 0x400);

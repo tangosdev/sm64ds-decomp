@@ -21,6 +21,7 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/gx/gx_load.h"
 
 /* By-value five-card ordering table. */
 typedef struct 
@@ -99,8 +100,6 @@ extern "C" void* dScMgCard_c_classInit()
 /* Engine calls by their C++ names. The parameter types are read off the
    ROM's mangled names: `j` unsigned int, `t` unsigned short, `s` short,
    `Riii` int reference, `Rsss` short reference. */
-namespace GX { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
-namespace GXS { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
 namespace G2x {
 void SetBlendAlpha(volatile u16 *reg, int a, int b, int c, int d);
 }
@@ -128,9 +127,9 @@ s32 dScMgCard_c::InitResources()
     subTiles = LoadFile(sCardNcgByLanguage[GetGameLanguage()]);
     subPalette = LoadFile(0xbb);
     DecompressLZ16(mainTiles, (void *)0x6400000);
-    GX::LoadOBJPltt(mainPalette, 0, 0x20);
+    GX_LoadOBJPltt(mainPalette, 0, 0x20);
     DecompressLZ16(subTiles, (void *)0x6600000);
-    GXS::LoadOBJPltt(subPalette, 0, 0x100);
+    GXS_LoadOBJPltt(subPalette, 0, 0x100);
     Deallocate(mainTiles);
     Deallocate(mainPalette);
     Deallocate(subTiles);

@@ -21,6 +21,9 @@ enum dScBoot_c_AssetId { ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN = 0x022d };
 #include "dScBoot_c.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "AsyncJob.h"
 
@@ -86,19 +89,19 @@ enum BootMenuState {
  */
 s32 dScBoot_c::InitResources() {
     GX::DisableAllBanks();
-    GX::SetBankForBG(1);
-    GX::SetBankForOBJ(2);
-    GX::SetBankForSubBG(4);
-    GX::SetBankForSubOBJ(8);
+    GX_SetBankForBG(1);
+    GX_SetBankForOBJ(2);
+    GX_SetBankForSubBG(4);
+    GX_SetBankForSubOBJ(8);
 
     REG_DISPCNT &= 0xffcfffef;
     REG_DISPCNT_SUB &= 0xffcfffef;
-    GX::SetGraphicsMode(1, 0, 0);
-    GXS::SetGraphicsMode(0);
+    GX_SetGraphicsMode(1, 0, 0);
+    GXS_SetGraphicsMode(0);
 
     REG_DISPCNT = (REG_DISPCNT & ~0x38000000) | 0x8000000;
     REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
-    GX::DispOn();
+    GX_DispOn();
 
     REG_DISPCNT_SUB |= 0x10000;
     REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
@@ -107,7 +110,7 @@ s32 dScBoot_c::InitResources() {
     SetBg0Offset(0, 0);
 
     DecompressLZ16(&data_020918c4, G2_GetBG0CharPtr());
-    GX::LoadBGPltt(&data_020914e0, 0x1c0, 0x40);
+    GX_LoadBGPltt(&data_020914e0, 0x1c0, 0x40);
     DecompressLZ16(&data_020916d8, G2_GetBG0ScrPtr());
 
     REG_BG3CNT = REG_BG3CNT & ~3;
@@ -129,8 +132,8 @@ s32 dScBoot_c::InitResources() {
     SetSubBg2Offset(0, 0);
 
     DecompressLZ16(&data_020918c4, (void *)G2S_GetBG2CharPtr());
-    GXS::LoadBGPltt(&data_020914e0, 0, 2);
-    GXS::LoadBGPltt(&data_020914e0, 0x1c0, 0x40);
+    GXS_LoadBGPltt(&data_020914e0, 0, 2);
+    GXS_LoadBGPltt(&data_020914e0, 0x1c0, 0x40);
     DecompressLZ16(&data_02091570, (void *)G2S_GetBG2ScrPtr());
 
     gMainScreenLayers = DISPLAY_LAYER_BG0;
@@ -215,7 +218,7 @@ s32 dScBoot_c::Behavior() {
                     }
                     LoadCompressedFileAt(langFileID, (void *)G2S_GetBG1CharPtr());
                     palette = LoadFile(0x9807);
-                    GXS::LoadBGPltt(palette, 0, 0x1c0);
+                    GXS_LoadBGPltt(palette, 0, 0x1c0);
                     Deallocate(palette);
                     LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN,
                                          (void *)G2S_GetBG1ScrPtr());

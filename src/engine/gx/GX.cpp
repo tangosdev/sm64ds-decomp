@@ -1,6 +1,6 @@
 /* GX -- 3D VRAM uploads (the Nitro SDK's gx_load3d.c).
  * Owns .text 0x020568cc..0x02056c1c: the texture and texture-palette upload
- * family (EndLoadTexPltt .. BeginLoadTex). Below sits GX::LoadBGPltt at
+ * family (GX_EndLoadTexPltt .. GX_BeginLoadTex). Below sits GX_LoadBGPltt at
  * 0x02056870, the last function of gx_load2d.c (src/engine/gx/GXS.cpp);
  * above is Copy48BytesFixed at 0x02056c1c.
  */
@@ -10,7 +10,8 @@
 // channel, -1 if none.
 
 #include "types.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/gx/gx_vramcnt.h"
 
 extern int data_02099fd0;  // RENDER_DMA_CHANNEL: DMA channel number, -1 if none
 extern u32 data_020a60ac;  // texture upload window: base address
@@ -30,12 +31,9 @@ extern void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size,
                               void (*callback)(void *), void *arg);
 extern void DMASyncWordTransfer(unsigned int channel, const void *src, void *dest, unsigned int len);
 extern void MultiCopy_Int(int *src, int *dst, int len);
-}
 
-namespace GX {
-
-void BeginLoadTex() {
-    int r = GX::ResetBankForTex();
+void GX_BeginLoadTex() {
+    int r = GX_ResetBankForTex();
     int i = r * 6;
     data_020a60b8 = r;
     data_020a60ac = (int)*(u16 *)((char *)data_02086324 + i) << 12;
@@ -46,7 +44,7 @@ void BeginLoadTex() {
 // VRAM texture upload with banked destination: below-top goes to the base
 // window, above-top to the secondary bank, straddling splits into two DMA (or
 // CPU copy) halves.
-void LoadTex(const void *src, unsigned int offset, unsigned int size) {
+void GX_LoadTex(const void *src, unsigned int offset, unsigned int size) {
     unsigned int dst;
     int base = data_020a60bc;
     if (base == 0) {
@@ -80,27 +78,26 @@ void LoadTex(const void *src, unsigned int offset, unsigned int size) {
 
 // Ends a banked texture upload: waits on the upload DMA channel if one is
 // active, restores the texture bank, then clears the four upload-window globals.
-void EndLoadTex()
-{
+void GX_EndLoadTex() {
     if (data_02099fd0 != -1) {
         MI_WaitDma(data_02099fd0);
     }
-    SetBankForTex(data_020a60b8);
+    GX_SetBankForTex(data_020a60b8);
     data_020a60c0 = 0;
     data_020a60bc = 0;
     data_020a60ac = 0;
     data_020a60b8 = 0;
 }
 
-void BeginLoadTexPltt() {
-    int r = GX::ResetBankForTexPltt();
+void GX_BeginLoadTexPltt() {
+    int r = GX_ResetBankForTexPltt();
     data_020a60b4 = r;
     data_020a60b0 = (int)data_02086314[r >> 4] << 12;
 }
 
 // Loads a texture palette into VRAM: async DMA when a channel is configured
 // (data_02099fd0 != -1), otherwise MultiCopy_Int.
-void LoadTexPltt(const void *src, u32 destSlotAddr, u32 size){
+void GX_LoadTexPltt(const void *src, u32 destSlotAddr, u32 size) {
     void *dest = (void *)(data_020a60b0 + destSlotAddr);
     s32 dmaCh = data_02099fd0;
     if (dmaCh != -1) {
@@ -110,14 +107,14 @@ void LoadTexPltt(const void *src, u32 destSlotAddr, u32 size){
     }
 }
 
-void EndLoadTexPltt(){
+void GX_EndLoadTexPltt() {
     u32 dmaId = data_02099fd0;
     if (dmaId != (u32)-1) {
         MI_WaitDma(dmaId);
     }
-    SetBankForTexPltt(data_020a60b4);
+    GX_SetBankForTexPltt(data_020a60b4);
     data_020a60b4 = 0;
     data_020a60b0 = 0;
 }
 
-}
+} // extern "C"

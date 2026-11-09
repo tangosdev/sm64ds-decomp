@@ -32,7 +32,7 @@ SetFogTable and the 0x18 table loader after SetClearColor come in the other orde
 | OS_tcm.c, OS_protectionUnit.c | 1 and 2 exact | arm9/CP15_TCM, arm9/CP15_ProtectionUnit | yes |
 | OS_cache.c | 0x02058bdc.., 5 exact + 1 drift | arm9/CP15 | yes |
 | OS_irqTable.c + OS_interrupt.c | 0x02056c40..0x02056d64, then ..0x02057014 | arm9/OS_IrqTable + arm9/OS_Interrupt | fixed: arm9/IRQ held both files; split at 0x02056d64 (OS_InitIrqTable, at 0x02057000, is 0x14 here) |
-| GX_load2d.c + GX_load3d.c | 0x02055dec..0x020568cc, then ..0x02056c1c | arm9/GXS + arm9/GX | fixed: the edge was the namespace change at 0x02056870; GX::LoadBGPltt moved to GXS, edge now 0x020568cc |
+| GX_load2d.c + GX_load3d.c | 0x02055dec..0x020568cc, then ..0x02056c1c | arm9/GXS + arm9/GX | fixed: the edge was the namespace change at 0x02056870; GX_LoadBGPltt moved to GXS, edge now 0x020568cc |
 | GX_g2.c | func_020551f0 + the 3 G2x members | arm9/G2x | partial: G2x_ChangeBlendBrightness_ (func_020551f0) is outside it |
 | GX_g3x.c | 0x020553c0..0x02055998 | arm9/G3X (0x02055454..0x02055998, 13 functions) + GXi_NopClearFifo128_.c | fixed: G3X holds the whole file except GXi_NopClearFifo128_ (0x020553c0, asm), which stays its own source because port/tools/hostgen.py skips any file with an asm block and the port hostgens G3X.cpp |
 

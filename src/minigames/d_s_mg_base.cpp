@@ -42,6 +42,9 @@
 #include "PlayerInput.h"
 #include "CP15.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "Memory.h"
 #include "cstd.h"
@@ -1400,12 +1403,12 @@ void dScMgBase_c::RestoreScreenFromMenu() {
     *(u32*)0x4000000 = (*(u32*)0x4000000 & ~0xe000) | ((u32)data_0209d460 << 13);
     *(u32*)0x4001000 = (*(u32*)0x4001000 & ~0xe000) | ((u32)data_0209d458 << 13);
 
-    GX::LoadBGPltt(save->mainBgPltt, 0x20, 0x1e0);
+    GX_LoadBGPltt(save->mainBgPltt, 0x20, 0x1e0);
     {
         /* stepped from mainBgPltt: save->subBgPltt moves the literal pool */
         char *p = (char *)save->mainBgPltt;
         p += 0x200;
-        GXS::LoadBGPltt(p, 0, 0x80);
+        GXS_LoadBGPltt(p, 0, 0x80);
     }
 
     if (GetDisplayMode() != 2)
@@ -1528,8 +1531,8 @@ int dScMgBase_c::SaveScreenForMenu() {
     }
     CP15::FlushAndInvalidateDataCache((u32)save->mainBgPltt, 0x400);
 
-    GX::LoadBGPltt((const void *)sMgMenuBgPltt, 0x20, 0xa0);
-    GXS::LoadBGPltt((const void *)sMgMenuSubBgPltt, 0, 0x80);
+    GX_LoadBGPltt((const void *)sMgMenuBgPltt, 0x20, 0xa0);
+    GXS_LoadBGPltt((const void *)sMgMenuSubBgPltt, 0, 0x80);
 
     {
         volatile unsigned short tmp = 0;
@@ -1688,8 +1691,8 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
         return;
     }
 
-    GX::LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
-    GXS::LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
+    GX_LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
+    GXS_LoadBGPltt(&sMgBrushPalette, base << 5, 0x20);
 }
 }
 }
@@ -3384,19 +3387,19 @@ void dScMgBase_c::InitEngines() {
     mBrushOnMain = 0;
     mBrushLayer = -1;
     *(vu32 *)0x4001000u |= 0x10000u;
-    GX::SetGraphicsMode(1, 0, 0);
-    GXS::SetGraphicsMode(0);
+    GX_SetGraphicsMode(1, 0, 0);
+    GXS_SetGraphicsMode(0);
     *(vu32 *)0x4001000u &= 0xffcfffefu;
     REG_POWCNT1 |= 0x8000u;
     Mg_DisableAllBanks();
     Mg_ResetBgOffsets();
     *(vu32 *)0x4000000u &= ~0x7000000u;
     *(vu32 *)0x4000000u &= ~0x38000000u;
-    GX::SetBankForBG(3);
-    GX::SetBankForOBJ(0x10);
+    GX_SetBankForBG(3);
+    GX_SetBankForOBJ(0x10);
     gMainScreenLayers = DISPLAY_LAYER_OBJ;
-    GX::SetBankForSubBG(4);
-    GX::SetBankForSubOBJ(8);
+    GX_SetBankForSubBG(4);
+    GX_SetBankForSubOBJ(8);
     p = Ov004_LoadFile(sMgStockCounterFiles[GetGameLanguage()]);
     {
         char *dst = (char *)0x6400000; dst += 0x4000;
@@ -3409,8 +3412,8 @@ void dScMgBase_c::InitEngines() {
     Ov004_Deallocate(p);
     p = Ov004_LoadFile(0xc3);
     CP15::FlushAndInvalidateDataCache((u32)p, 0x100u);
-    GX::LoadOBJPltt(p, 0x100u, 0x100u);
-    GXS::LoadOBJPltt(p, 0x100u, 0x100u);
+    GX_LoadOBJPltt(p, 0x100u, 0x100u);
+    GXS_LoadOBJPltt(p, 0x100u, 0x100u);
     Ov004_Deallocate(p);
     gSubScreenLayers = 0x10;
     sMgGraphCallback.mScene = this;

@@ -18,16 +18,10 @@
 #include "dScStage_c.h"
 #include "dFdColor_c.h"
 #include "G2x.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
 #include "GX.h"
 #include "nitro/hw/registers.h"
-
-namespace GX {
-void SetGraphicsMode(int a, int b, int c);
-}
-
-namespace GXS {
-void SetGraphicsMode(int a);
-}
 
 #include "Matrix2x2.h"
 
@@ -115,7 +109,7 @@ void dScene_c::ResetHardwareRegisters()
     GX::DisableAllBanks();
     func_02053c10(0);
     func_02053be0(1);
-    GX::SetGraphicsMode(1, 0, 0);
+    GX_SetGraphicsMode(1, 0, 0);
 
     REG_DISPCNT &= ~0x1f00;
     REG_DISPCNT &= ~0xe000;
@@ -160,7 +154,7 @@ void dScene_c::ResetHardwareRegisters()
     REG_MOSAIC_OBJ = 0;
 
     func_02053a90((u16*)0x400006c, 0);
-    GXS::SetGraphicsMode(0);
+    GXS_SetGraphicsMode(0);
 
     REG_DISPCNT_SUB &= ~0x1f00;
     REG_DISPCNT_SUB &= ~0xe000;
@@ -207,38 +201,38 @@ void dScene_c::ResetHardwareRegisters()
 namespace GX {
 /* Hand every VRAM user's banks back to the LCDC, in the SDK's own order. */
 void DisableAllBanks() {
-    DisableBankForLCDC();
-    DisableBankForBG();
-    DisableBankForOBJ();
-    DisableBankForARM7();
-    DisableBankForTex();
-    DisableBankForTexPltt();
-    DisableBankForClearImage();
-    DisableBankForBGExtPltt();
-    DisableBankForOBJExtPltt();
-    DisableBankForSubBG();
-    DisableBankForSubOBJ();
-    DisableBankForSubBGExtPltt();
-    DisableBankForSubOBJExtPltt();
+    GX_DisableBankForLCDC();
+    GX_DisableBankForBG();
+    GX_DisableBankForOBJ();
+    GX_DisableBankForARM7();
+    GX_DisableBankForTex();
+    GX_DisableBankForTexPltt();
+    GX_DisableBankForClearImage();
+    GX_DisableBankForBGExtPltt();
+    GX_DisableBankForOBJExtPltt();
+    GX_DisableBankForSubBG();
+    GX_DisableBankForSubOBJ();
+    GX_DisableBankForSubBGExtPltt();
+    GX_DisableBankForSubOBJExtPltt();
 }
 }
 
 void dScStage_c::SetVramBanks() {
     GX::DisableAllBanks();
-    GX::SetBankForTex(3);
-    GX::SetBankForTexPltt(0x30);
-    GX::SetBankForBG(8);
-    GX::SetBankForOBJ(0x40);
-    GX::SetBankForSubBG(4);
-    GX::SetBankForSubBGExtPltt(0x80);
-    GX::SetBankForSubOBJ(0x100);
+    GX_SetBankForTex(3);
+    GX_SetBankForTexPltt(0x30);
+    GX_SetBankForBG(8);
+    GX_SetBankForOBJ(0x40);
+    GX_SetBankForSubBG(4);
+    GX_SetBankForSubBGExtPltt(0x80);
+    GX_SetBankForSubOBJ(0x100);
 }
 
 void dScene_c::Initialise3dGraphics()
 {
     ResetHardwareRegisters();
     func_0205583c();
-    GX::SetGraphicsMode(1, 0, 1);
+    GX_SetGraphicsMode(1, 0, 1);
     REG_LIGHT_VECTOR = 0x296a5800;
     REG_LIGHT_COLOR = 0x7fff;
     REG_DIF_AMB = 0x7fff;

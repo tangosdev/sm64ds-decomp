@@ -24,6 +24,7 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/gx/gx_load.h"
 
 /* Coined from the card transitions in DealIn and Update. The byte-sized
  * mState field retains its existing layout. */
@@ -38,9 +39,6 @@ enum CardState {
 
 /* Engine helpers; the parameter types are the ones the mangled names
  * encode. */
-namespace GXS {
-void LoadOBJPltt(void const *, unsigned int, unsigned int);
-}
 
 extern "C" {
 extern dMgMCarloCardObj_c *sMCarloFirstPick;  /* first pick */
@@ -109,7 +107,7 @@ s32 dScMgMCarlo_c::InitResources() {
     tileData = LoadFile(sMCarloCardNcgByLanguage[GetGameLanguage()]);
     paletteData = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
     DecompressLZ16(tileData, (void *)0x6600000);
-    GXS::LoadOBJPltt(paletteData, 0, 0x100);
+    GXS_LoadOBJPltt(paletteData, 0, 0x100);
     Deallocate(tileData);
     Deallocate(paletteData);
 

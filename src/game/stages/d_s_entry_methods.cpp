@@ -56,9 +56,6 @@
 /* The Nitro SDK's sub-engine palette loader. No header in the tree
  * declares the namespace yet; d_s_star_sel_methods.cpp spells it the
  * same way. */
-namespace GXS {
-void LoadBGPltt(const void *, unsigned int, unsigned int);
-}
 
 extern "C" {
 void func_020308b4(void);
@@ -107,6 +104,7 @@ extern "C" dFdBrightness_c *gSceneFader;
 #include "dBase_c.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "Message.h"
+#include "nitro/gx/gx_load.h"
 
 extern "C" {
 int func_0203d974(void);
@@ -242,15 +240,6 @@ void LoadLevelNoReturn(int levelID, u32 entranceID, u32 mode, u32 arg3);
 extern u8 data_02092778;
 u8 func_02020364(int player);
 u8 func_020201f0(int);
-}
-
-namespace GX {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
-
-namespace GXS {
-void LoadOBJPltt(const void *p, u32 a, u32 b);
 }
 
 extern dScEntry_c::StepSet data_ov075_0211d7e0;
@@ -399,7 +388,7 @@ s32 dScEntry_c::InitResultResources() {
 
     LoadCompressedFileAt(0x8413, G2_GetBG2CharPtr());
     tmp = LoadFile(0x8414);
-    GX::LoadBGPltt(tmp, 0, 0x1c0);
+    GX_LoadBGPltt(tmp, 0, 0x1c0);
     Deallocate(tmp);
 
     n = data_0209fc50;
@@ -427,7 +416,7 @@ s32 dScEntry_c::InitResultResources() {
 
     LoadCompressedFileAt(data_ov075_0211c990[GetLanguageIndex()], (void *)0x6400000);
     tmp = LoadFile(0x8415);
-    GX::LoadOBJPltt(tmp, 0, 0x140);
+    GX_LoadOBJPltt(tmp, 0, 0x140);
     Deallocate(tmp);
 
     REG_BG1CNT = (u16)((REG_BG1CNT & ~3) | 2);
@@ -436,7 +425,7 @@ s32 dScEntry_c::InitResultResources() {
     LoadCompressedFileAt(0x8402, sub);
     LoadCompressedFileAt(data_ov075_0211c97c[GetLanguageIndex()], sub + 0x6000);
     tmp = LoadFile(0x8403);
-    GXS::LoadOBJPltt(tmp, 0, 0x200);
+    GXS_LoadOBJPltt(tmp, 0, 0x200);
     Deallocate(tmp);
 
     TallyRoundWinners();
@@ -496,11 +485,11 @@ s32 dScEntry_c::InitEntryResources() {
     LoadCompressedFileAt(data_ov075_0211c9a4[GetLanguageIndex()], (void *)0x6400000);
 
     tmp = LoadFile(0x8412);
-    GX::LoadOBJPltt(tmp, 0, 0xc0);
+    GX_LoadOBJPltt(tmp, 0, 0xc0);
     Deallocate(tmp);
 
     tmp = LoadFile(0x980b);
-    GX::LoadBGPltt(tmp, 0, 0xc0);
+    GX_LoadBGPltt(tmp, 0, 0xc0);
     Deallocate(tmp);
 
     mStepDelay = 0;
@@ -2094,12 +2083,12 @@ s32 dScEntry_c::InitResources() {
 
     {
         void *paletteData = LoadFile(0x9807);
-        GXS::LoadBGPltt(paletteData, 0, 0xe0);
+        GXS_LoadBGPltt(paletteData, 0, 0xe0);
         Deallocate(paletteData);
     }
     {
         void *paletteData = LoadFile(0x8406);
-        GXS::LoadBGPltt(paletteData, 0xe0, 0x120);
+        GXS_LoadBGPltt(paletteData, 0xe0, 0x120);
         Deallocate(paletteData);
     }
 

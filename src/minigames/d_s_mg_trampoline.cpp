@@ -42,6 +42,7 @@ enum d_s_mg_trampoline_AssetId {
 #include "LevelRng.h"
 #include "decl_common.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 /* local: UpdateTouchInput only reproduces through a 4-byte-record view of
    each lane; the flat `gTouchHeld[slot * 4]` and TouchInfo forms DIFF there
    (measured 2026-11-08). */
@@ -49,10 +50,6 @@ enum d_s_mg_trampoline_AssetId {
 
 namespace cstd {
 int fdiv(int numerator, int denominator);
-}
-namespace GX {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
 }
 namespace G3X {
 void SetFog(int enable, int blend, int slope, int offset);
@@ -285,14 +282,14 @@ void dScMgTrampoline_c::InitDisplay() {
     }
     DecompressLZ16(bgChar, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
     DecompressLZ16(bgScr, (void *)G2_GetBG2ScrPtr());
-    GX::LoadBGPltt(bgPltt, 0x1a0, 0x60);
+    GX_LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
     REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1318;
     REG_BG3CNT &= ~0x40;
 
     DecompressLZ16(objChar, (void *)0x6400000);
-    GX::LoadOBJPltt(objPltt, 0, 0x60);
+    GX_LoadOBJPltt(objPltt, 0, 0x60);
 
     Deallocate(bgChar);
     Deallocate(bgScr);
@@ -866,7 +863,7 @@ void dScMgTrampoline_c::InitBrush(int layer) {
 
     t1 = 0;
     MultiStore16(t1, charPtr, 0x6000);
-    GX::LoadBGPltt(sTrmpBrushPltt, 0xe0, 0x20);
+    GX_LoadBGPltt(sTrmpBrushPltt, 0xe0, 0x20);
 }
 
 /* Kept for PaintSquare: see the file comment above for why it reaches the

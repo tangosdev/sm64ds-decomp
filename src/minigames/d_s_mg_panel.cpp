@@ -54,15 +54,7 @@ enum dScMgPanel_c_AssetId {
 #include "Sound.h"
 #include "OamAttr.h"
 #include "nitro/gx/gx_bgcnt.h"
-
-namespace GX {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
-}
-namespace GXS {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
-}
+#include "nitro/gx/gx_load.h"
 
 /* Callees of the member helpers. Declared here, not in the bodies: a
    declaration inside a member body gets C++ linkage and names a symbol the ROM
@@ -1629,7 +1621,7 @@ s32 dScMgPanel_c::InitResources() {
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCL_BIN);
-    GX::LoadBGPltt(file, 0x1a0, 0x60);
+    GX_LoadBGPltt(file, 0x1a0, 0x60);
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_UP_NSC_BIN);
@@ -1663,7 +1655,7 @@ s32 dScMgPanel_c::InitResources() {
 
     file = LoadFile(ASSET_D_2D_MG_PAZZLE_PANEL_NCL_BIN);
     DecompressLZ16(msgFile, (void *)0x6400000);
-    GX::LoadOBJPltt(file, 0, 0x100);
+    GX_LoadOBJPltt(file, 0, 0x100);
 
     gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
@@ -1678,7 +1670,7 @@ s32 dScMgPanel_c::InitResources() {
         Deallocate(subFile);
 
         subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCL_BIN);
-        GXS::LoadBGPltt(subFile, 0x1a0, 0x60);
+        GXS_LoadBGPltt(subFile, 0x1a0, 0x60);
         Deallocate(subFile);
 
         subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_DOWN_NSC_BIN);
@@ -1708,7 +1700,7 @@ s32 dScMgPanel_c::InitResources() {
     }
 
     DecompressLZ16(msgFile, (void *)0x6600000);
-    GXS::LoadOBJPltt(file, 0, 0x100);
+    GXS_LoadOBJPltt(file, 0, 0x100);
     Deallocate(msgFile);
     Deallocate(file);
 

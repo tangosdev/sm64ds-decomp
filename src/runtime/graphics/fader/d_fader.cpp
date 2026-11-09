@@ -26,6 +26,7 @@
 #include "G2x.h"
 #include "dExtModel_c.h"
 #include "math/MtxStack.h"
+#include "nitro/gx/gx_load.h"
 
 // These helpers have native definitions but no shared declaration yet.
 namespace cstd {
@@ -33,12 +34,6 @@ Fix12i fdiv(Fix12i a, Fix12i b);
 }
 namespace CP15 {
 void FlushAndInvalidateDataCache(u32 addr, u32 len);
-}
-namespace GX {
-void LoadBGPltt(const void *src, u32 offset, u32 len);
-}
-namespace GXS {
-void LoadBGPltt(const void *src, u32 offset, u32 len);
 }
 int ApproachLinear(Fix12i &value, Fix12i target, Fix12i step);
 
@@ -77,8 +72,8 @@ void dFdBrightness_c::AdvanceFade()
         return;
 
     CP15::FlushAndInvalidateDataCache((u32)data_0209d3ac, 2);
-    GX::LoadBGPltt(data_0209d3ac, 0, 2);
-    GXS::LoadBGPltt(data_0209d3ac, 0, 2);
+    GX_LoadBGPltt(data_0209d3ac, 0, 2);
+    GXS_LoadBGPltt(data_0209d3ac, 0, 2);
 }
 #endif
 

@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "GX.h"
+#include "nitro/gx/gx_vramcnt.h"
 #include "dGraph_c.h"
 #include "nitro/hw/registers.h"
 
@@ -37,7 +37,7 @@ void func_02019440(void) {
     func_02054430(0x1ff);
     a = 0;
     MultiStore32Bytes(a, (int *)0x6800000, 0xa4000);
-    GX::DisableBankForLCDC();
+    GX_DisableBankForLCDC();
     b = 0xc0;
     MultiStore32Bytes(b, (int *)0x7000000, 0x400);
     c = 0;

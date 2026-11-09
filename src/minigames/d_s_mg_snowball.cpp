@@ -52,7 +52,7 @@ enum dScMgSnowball_c_AssetId {
 #include "SpawnInfo.h"
 #include "types.h"
 #include "CP15.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "cstd.h"
 #include "decl_common.h"
 #include "LevelRng.h"
@@ -1798,8 +1798,8 @@ s32 dScMgSnowball_c::InitResources() {
 
     buf = Ov004_LoadFileByPath(&sSnowballBgNclPath);
     CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
-    GX::LoadBGPltt(buf, 0x100, 0x100);
-    GXS::LoadBGPltt(buf, 0x100, 0x100);
+    GX_LoadBGPltt(buf, 0x100, 0x100);
+    GXS_LoadBGPltt(buf, 0x100, 0x100);
     Ov004_Deallocate(buf);
 
     buf = Ov004_LoadFileByPath(&sSnowballNcgPath);
@@ -1809,8 +1809,8 @@ s32 dScMgSnowball_c::InitResources() {
 
     buf = Ov004_LoadFileByPath(&sSnowballNclPath);
     CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
-    GX::LoadOBJPltt(buf, 0, 0x100);
-    GXS::LoadOBJPltt(buf, 0, 0x100);
+    GX_LoadOBJPltt(buf, 0, 0x100);
+    GXS_LoadOBJPltt(buf, 0, 0x100);
     Ov004_Deallocate(buf);
 
     *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | 1;
@@ -2090,7 +2090,6 @@ void dScMgSnowball_c::BitB_StatePause(int idx) {
     mBits[idx].driftTimer = (u8)(((v * 0x30) >> 15) + 0x30);
 }
 
-
 typedef void (dScMgSnowball_c::*PMF_0212a224)(int);
 extern "C" PMF_0212a224 sSnowballBitBStateTable[];
 
@@ -2107,7 +2106,6 @@ void dScMgSnowball_c::Bit_PickKind(int idx) {
     mBits[idx].kind = data_ov006_0212f3b4[b];
     mBits[idx].driftState = 0;
 }
-
 
 typedef void (dScMgSnowball_c::*PMF_0212a2e0)(int);
 

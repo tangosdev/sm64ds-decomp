@@ -57,7 +57,7 @@ enum dScMgCoin_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 
 #pragma defer_codegen off /* ROM-ascending emission; dropping this inverts it */
 
@@ -1348,7 +1348,7 @@ int dScMgCoin_c::InitResources() {
     Deallocate(a);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);
-    GX::LoadBGPltt(a, 0x1e0, 0x20);
+    GX_LoadBGPltt(a, 0x1e0, 0x20);
     Deallocate(a);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_UP_NSC_BIN);
@@ -1358,7 +1358,7 @@ int dScMgCoin_c::InitResources() {
     b = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCG_BIN);
     a = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCL_BIN);
     DecompressLZ16(b, (void *)0x6400000);
-    GX::LoadOBJPltt(a, 0, 0x100);
+    GX_LoadOBJPltt(a, 0, 0x100);
 
     gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
@@ -1369,7 +1369,7 @@ int dScMgCoin_c::InitResources() {
     Deallocate(d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);
-    GXS::LoadBGPltt(d, 0x1e0, 0x20);
+    GXS_LoadBGPltt(d, 0x1e0, 0x20);
     Deallocate(d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_DOWN_NSC_BIN);
@@ -1377,7 +1377,7 @@ int dScMgCoin_c::InitResources() {
     Deallocate(d);
 
     DecompressLZ16(b, (void *)0x6600000);
-    GXS::LoadOBJPltt(a, 0, 0x100);
+    GXS_LoadOBJPltt(a, 0, 0x100);
     Deallocate(b);
     Deallocate(a);
 

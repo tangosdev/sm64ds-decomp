@@ -1,5 +1,5 @@
 //cpp
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "Ov007Display.h"
 
 extern "C" {
@@ -16,34 +16,34 @@ void func_ov007_020c33d0(Ov007CharRecord *rec, int target, unsigned int offset) 
     unsigned int size = (unsigned int)rec->width * rec->height * tileSize;
     switch (target) {
     case 0:
-        GX::LoadOBJ(rec->tiles, offset, size);
+        GX_LoadOBJ(rec->tiles, offset, size);
         break;
     case 1:
-        GX::LoadBG0Char(rec->tiles, offset, size);
+        GX_LoadBG0Char(rec->tiles, offset, size);
         break;
     case 2:
-        GX::LoadBG1Char(rec->tiles, offset, size);
+        GX_LoadBG1Char(rec->tiles, offset, size);
         break;
     case 3:
-        GX::LoadBG2Char(rec->tiles, offset, size);
+        GX_LoadBG2Char(rec->tiles, offset, size);
         break;
     case 4:
         func_02056014(rec->tiles, offset, size);
         break;
     case 5:
-        GXS::LoadOBJ(rec->tiles, offset, size);
+        GXS_LoadOBJ(rec->tiles, offset, size);
         break;
     case 6:
-        GXS::LoadBG0Char(rec->tiles, offset, size);
+        GXS_LoadBG0Char(rec->tiles, offset, size);
         break;
     case 7:
-        GXS::LoadBG1Char(rec->tiles, offset, size);
+        GXS_LoadBG1Char(rec->tiles, offset, size);
         break;
     case 8:
-        GXS::LoadBG2Char(rec->tiles, offset, size);
+        GXS_LoadBG2Char(rec->tiles, offset, size);
         break;
     case 9:
-        GXS::LoadBG3Char(rec->tiles, offset, size);
+        GXS_LoadBG3Char(rec->tiles, offset, size);
         break;
     }
 }

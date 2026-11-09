@@ -45,16 +45,7 @@ enum dScMgCurling_c_AssetId {
 #include "G2x.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_bgcnt.h"
-
-namespace GX {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
-
-namespace GXS {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
+#include "nitro/gx/gx_load.h"
 
 /* `C` is the receiver of the pointer-to-member state tables. It must stay
  * incomplete: mwccarm picks the pointer-to-member layout from whether the
@@ -1485,7 +1476,7 @@ s32 dScMgCurling_c::InitResources() {
     DecompressLZ16(a, G2_GetBG2CharPtr());
 
     f = LoadFile(ASSET_D_2D_MG_BG_CURLING1_NCL_BIN);
-    GX::LoadBGPltt(f, 0x60, 0x1a0);
+    GX_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_CURLING1_NSC_BIN);
@@ -1496,7 +1487,7 @@ s32 dScMgCurling_c::InitResources() {
         void *c7 = LoadFile(ASSET_D_2D_MG_CURLING_NCG_BIN);
         void *c8 = LoadFile(ASSET_D_2D_MG_CURLING_NCL_BIN);
         DecompressLZ16(c7, (void *)0x6400000);
-        GX::LoadOBJPltt(c8, 0, 0x100);
+        GX_LoadOBJPltt(c8, 0, 0x100);
 
         gSubScreenLayers |= 4;
         REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
@@ -1504,7 +1495,7 @@ s32 dScMgCurling_c::InitResources() {
         DecompressLZ16(b, (void *)G2S_GetBG2CharPtr());
 
         f = LoadFile(ASSET_D_2D_MG_BG_CURLING2_NCL_BIN);
-        GXS::LoadBGPltt(f, 0x60, 0x1a0);
+        GXS_LoadBGPltt(f, 0x60, 0x1a0);
         Deallocate(f);
 
         f = LoadFile(ASSET_D_2D_MG_BG_CURLING2_NSC_BIN);
@@ -1515,7 +1506,7 @@ s32 dScMgCurling_c::InitResources() {
         Ov004_Deallocate(b);
 
         DecompressLZ16(c7, (void *)0x6600000);
-        GXS::LoadOBJPltt(c8, 0, 0x100);
+        GXS_LoadOBJPltt(c8, 0, 0x100);
         Deallocate(c7);
         Deallocate(c8);
     }

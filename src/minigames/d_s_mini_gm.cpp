@@ -54,6 +54,9 @@
 #include "decl_Scene.h"
 #include "decl_common.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "CP15.h"
 #include "G3X.h"
@@ -216,26 +219,26 @@ s32 dScMiniGm_c::InitResources()
 
     GX::DisableAllBanks();
     *(volatile u16 *)0x4000304 |= 0x8000;
-    GX::SetBankForTex(1);
-    GX::SetBankForBG(2);
-    GX::SetBankForSubBG(4);
-    GX::SetBankForSubOBJ(8);
-    GX::SetBankForOBJ(0x10);
-    GX::SetBankForTexPltt(0x20);
+    GX_SetBankForTex(1);
+    GX_SetBankForBG(2);
+    GX_SetBankForSubBG(4);
+    GX_SetBankForSubOBJ(8);
+    GX_SetBankForOBJ(0x10);
+    GX_SetBankForTexPltt(0x20);
 
     gMainScreenLayers &= ~(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
                            DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
     gSubScreenLayers &= ~0x1f;
     *(volatile u32 *)0x4000000 &= ~0x1f00;
     *(volatile u32 *)0x4001000 &= ~0x1f00;
-    GX::SetGraphicsMode(1, 0, 1);
-    GXS::SetGraphicsMode(0);
+    GX_SetGraphicsMode(1, 0, 1);
+    GXS_SetGraphicsMode(0);
 
     *(volatile u32 *)0x4000000 &= 0xffcfffef;
     *(volatile u32 *)0x4001000 &= 0xffcfffef;
     *(volatile u32 *)0x4000000 &= ~0x7000000;
     *(volatile u32 *)0x4000000 &= ~0x38000000;
-    GX::DispOn();
+    GX_DispOn();
     *(volatile u32 *)0x4001000 |= 0x10000;
     G3X::SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
@@ -255,7 +258,7 @@ s32 dScMiniGm_c::InitResources()
 
     f = LoadFile(0x58);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
-    GX::LoadBGPltt(f, 0, 0x200);
+    GX_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
     f = LoadFile(0x59);
@@ -278,7 +281,7 @@ s32 dScMiniGm_c::InitResources()
 
     f = LoadFile(0xd9);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
-    GX::LoadOBJPltt(f, 0, 0x100);
+    GX_LoadOBJPltt(f, 0, 0x100);
     Deallocate(f);
 
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
@@ -299,7 +302,7 @@ s32 dScMiniGm_c::InitResources()
 
     f = LoadFile(0x5a);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
-    GXS::LoadBGPltt(f, 0, 0x200);
+    GXS_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 2;
@@ -333,7 +336,7 @@ s32 dScMiniGm_c::InitResources()
 
     f = LoadFile(0xd9);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
-    GXS::LoadOBJPltt(f, 0, 0x100);
+    GXS_LoadOBJPltt(f, 0, 0x100);
     Deallocate(f);
 
     mPageFlipped = 0;
@@ -473,7 +476,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
 
             f = LoadFile(sMiniGmIconPalettes[gMgGroupBase + j]);
             CP15::FlushAndInvalidateDataCache((u32)f, flushSize);
-            GXS::LoadBGPltt(f, scene->mGfxSlot << 5, plttSize);
+            GXS_LoadBGPltt(f, scene->mGfxSlot << 5, plttSize);
             Deallocate(f);
 
             scene->mGfxSlots[i] = scene->mGfxSlot;
@@ -518,7 +521,7 @@ void dScMiniGm_c::LoadIconPalette(int index) {
     void *file = LoadFile(sMiniGmIconPalettes[index]);
     CP15::FlushAndInvalidateDataCache((u32)file, 0x200);
     u32 slot = mGfxSlots[index / 4];
-    GXS::LoadBGPltt((u16 *)file + 16, slot << 5, 0x20);
+    GXS_LoadBGPltt((u16 *)file + 16, slot << 5, 0x20);
     Deallocate(file);
 }
 
@@ -1135,5 +1138,4 @@ extern "C" void MiniGm_SaveIfDirty(char *self)
     gMgSaveDirty = 0;
     gSoftResetDisabled = 0;
 }
-
 

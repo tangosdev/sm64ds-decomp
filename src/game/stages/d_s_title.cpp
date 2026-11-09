@@ -43,6 +43,9 @@
 #include "private/controller_input.h"
 #include "dFdBrightness_c.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "OAM.h"
 #include "nitro/hw/registers.h"
@@ -210,17 +213,17 @@ s32 dScTitle_c::InitResources() {
     UnloadArchives();
     Enable3dEngines();
     GX::DisableAllBanks();
-    GX::SetBankForBG(8);
-    GX::SetBankForOBJ(1);
+    GX_SetBankForBG(8);
+    GX_SetBankForOBJ(1);
     REG_DISPCNT &= 0xffcfffef;
-    GX::SetGraphicsMode(1, 0, 0);
+    GX_SetGraphicsMode(1, 0, 0);
     REG_DISPCNT_SUB |= 0x10000;
     func_020233f4();
     REG_BG0CNT &= ~3;
     REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x1f00;
     REG_BG0CNT &= ~0x40;
-    GX::LoadBG0Char(data_0208a178, 0, 0x2000);
-    GX::LoadBGPltt(data_0208c178, 0, 0x200);
+    GX_LoadBG0Char(data_0208a178, 0, 0x2000);
+    GX_LoadBGPltt(data_0208c178, 0, 0x200);
     {
         u16 *scr = (u16 *)G2_GetBG0ScrPtr();
         int i = 0;
@@ -229,8 +232,8 @@ s32 dScTitle_c::InitResources() {
             i++;
         } while (i < 0x1800);
     }
-    GX::LoadOBJ(data_0208c378, 0, 0x2000);
-    GX::LoadOBJPltt(data_0208c178, 0, 0x200);
+    GX_LoadOBJ(data_0208c378, 0, 0x2000);
+    GX_LoadOBJPltt(data_0208c178, 0, 0x200);
     gMainScreenLayers = 0x11;
     REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1100;
     data_0208ee44 = 2;
