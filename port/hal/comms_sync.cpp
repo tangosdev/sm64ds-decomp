@@ -3266,6 +3266,22 @@ extern "C" int port_adventure_ghost_fade(int slot) {
     return o < i ? o : i;
 }
 
+// PAUSEMARK2: 1 while hub seat `seat` is drawn on this screen as a player who
+// can answer: his own newest ghost frame puts him in my level and area (the
+// same frame his position comes from), it is fresh and at full strength, he
+// is not walking out through a door, not hidden (cannon, pipe, held), and his
+// game is not paused. The party invite (hal/world_party.cpp nearest_target)
+// offers only such a seat, so UP never reaches a player the screen does not
+// show, or one who cannot press anything.
+extern "C" int port_adventure_seat_invitable(int seat) {
+    if (!g_hub || seat < 0 || seat >= kHubMaxSeats) return 0;
+    GwSeat &z = g_gw[seat];
+    if (gw_here(z) != 1) return 0;
+    if (z.paused_now) return 0;
+    if (z.ring[z.n - 1].f.flags & ghostdoor::kFlagHidden) return 0;
+    return gw_fade_out(seat) >= 256 ? 1 : 0;
+}
+
 // PAINTTAG1: 1 while a hub ghost is through a painting (or a floor hole, or
 // any EXIT volume) on this screen: tests/nametag.h draws no tag and no
 // bubble over him. 0 for every other body, so VS, solo and the rest of the
