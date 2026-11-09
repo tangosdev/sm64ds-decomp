@@ -64,7 +64,7 @@
       "legacy_source": "src/_ZN18NestedHeapIterator4InitEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "_ZN18NestedHeapIteratorC1Ej",
+      "symbol": "NNS_FndInitList",
       "address": "0x0204df20",
       "size": "0x18",
       "ordinal": 7,
@@ -101,13 +101,7 @@
   ],
   "data": [],
   "bss": [],
-  "compiler_only_output": [
-    {
-      "symbol": "_ZN18NestedHeapIteratorC2Ej",
-      "disposition": "deadstrip",
-      "reason": "mwccarm emits the unused base-object constructor beside the licensed C1; the ROM has no configured C2 home and nothing references it."
-    }
-  ],
+  "compiler_only_output": [],
   "notes": "Folded from twelve legacy shards; source definitions run ROM-descending because mwccarm emits .text in reverse source order.",
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -118,15 +112,8 @@
     "functions_matched": 12,
     "functions_declared": 12,
     "compilerOnlyOutput": {
-      "requested": [
-        "_ZN18NestedHeapIteratorC2Ej"
-      ],
-      "deadstripped": [
-        "_ZN18NestedHeapIteratorC2Ej"
-      ],
-      "droppedSections": [
-        16
-      ],
+      "requested": [],
+      "deadstripped": [],
       "data": [],
       "dataExternalized": []
     },

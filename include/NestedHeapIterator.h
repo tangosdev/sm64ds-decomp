@@ -12,7 +12,6 @@ struct NestedHeapIterator {
     u16 mLinkOffset;            /* 0x00a */
 #ifdef __cplusplus
     NestedHeapIterator() {}
-    NestedHeapIterator(u32 linkOffset);
 
     int Next(HeapAllocator * h_);
     int Previous(HeapAllocator * h_);

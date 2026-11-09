@@ -5,7 +5,8 @@
  * the free region's own third word.
  * .text 0x0204e964..0x0204eda4, folded from fourteen legacy shards.
  * mwccarm emits .text in reverse source order, so the definitions below run
- * ROM-descending (C1 first, Reallocate last); the roster reads ROM-ascending.
+ * ROM-descending (SolidHeapAllocator_Construct first, Reallocate last); the
+ * roster reads ROM-ascending.
  *
  *   Reallocate         -- in-place resize of the most recent forward alloc.
  *   TryResizeToFit     -- shrink the heap to its used extent.
@@ -21,7 +22,7 @@
  *   AllocateForwards/AllocateBackwards -- the static region carvers; they
  *                          take the free region, not the allocator, which is
  *                          what makes them static (see the header).
- *   C1                 -- the constructor; seals the free region.
+ *   SolidHeapAllocator_Construct -- seals the free region.
  *
  * The free region is `mFreeRegion` (this + 0x24). Two views of it live here:
  * the header's SolidHeapFreeRegion {begin, end, flags}, and the TU-local
@@ -46,10 +47,6 @@
 #include "cstd.h"
 
 extern "C" void MultiStore_Int(s32 val, int *dst, s32 count);
-/* local extern: the factory runs the constructor over an already-aligned
-   address. Placement new measured this function 0x4c -> 0x5c. */
-extern "C" SolidHeapAllocator* _ZN18SolidHeapAllocatorC1EPvj(
-    SolidHeapAllocator* self, void* heapEnd, u32 flags);
 
 /* The chain view of mFreeRegion: `tail` is the most recent SaveState record. */
 struct FreeList {
@@ -80,15 +77,15 @@ inline struct FreeList *inline_fn(void *arg0)
     return (struct FreeList *)&((SolidHeapAllocator *)arg0)->mFreeRegion;
 }
 
-SolidHeapAllocator::SolidHeapAllocator(void* heapEnd, u32 flags)
-{
-    SolidHeapFreeRegion* freeRegion = &mFreeRegion;
+extern "C" SolidHeapAllocator *SolidHeapAllocator_Construct(SolidHeapAllocator *self, void *heapEnd,
+                                                            u32 flags) {
+    SolidHeapFreeRegion *freeRegion = &self->mFreeRegion;
 
-    func_0204df54(this, 0x46524d48, (char*)freeRegion + 0xc,
-                  heapEnd, flags);
-    freeRegion->begin = mStart;
-    freeRegion->end = mEnd;
+    func_0204df54(self, 0x46524d48, (char *)freeRegion + 0xc, heapEnd, flags);
+    freeRegion->begin = self->mStart;
+    freeRegion->end = self->mEnd;
     freeRegion->flags = 0;
+    return self;
 }
 /* Carves `size` bytes off the low end: round begin up to `align`, refuse if
  * that runs past end, then push begin past the block. `align` is already a
@@ -189,7 +186,7 @@ SolidHeapAllocator* Heap_t::CreateSolidHeapAllocator(void* address, u32 size, u3
     if (start > end || (end - start) < 0x30)
         return 0;
 
-    return _ZN18SolidHeapAllocatorC1EPvj((SolidHeapAllocator*)start, (void*)end, flags);
+    return SolidHeapAllocator_Construct((SolidHeapAllocator *)start, (void *)end, flags);
 }
 
 } /* namespace mHeap */

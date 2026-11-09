@@ -111,7 +111,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN18SolidHeapAllocatorC1EPvj",
+      "symbol": "SolidHeapAllocator_Construct",
       "address": "0x0204ed54",
       "size": "0x00000050",
       "legacy_source": "src/_ZN18SolidHeapAllocatorC1EPvj.cpp",
@@ -120,13 +120,7 @@
   ],
   "data": [],
   "bss": [],
-  "compiler_only_output": [
-    {
-      "symbol": "_ZN18SolidHeapAllocatorC2EPvj",
-      "disposition": "deadstrip",
-      "reason": "mwccarm emits the unused base-object constructor beside the licensed C1; the ROM has no configured C2 home and nothing references it (same shape as arm9/ActorBase_SceneNode's fBase_c C2)."
-    }
-  ],
+  "compiler_only_output": [],
   "notes": [
     "Hand-written manifest for the fold of the fourteen SolidHeapAllocator shards into one TU (same route as ov080/d_a_pic_gate: the fold produced the TU directly rather than through tubuild.py create's splitter). Same schema as generated entries."
   ],
@@ -139,16 +133,9 @@
     "functions_matched": 14,
     "functions_declared": 14,
     "compilerOnlyOutput": {
-      "requested": [
-        "_ZN18SolidHeapAllocatorC2EPvj"
-      ],
-      "deadstripped": [
-        "_ZN18SolidHeapAllocatorC2EPvj"
-      ],
-      "droppedSections": [
-        29,
-        30
-      ],
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [],
       "data": [],
       "dataExternalized": []
     },

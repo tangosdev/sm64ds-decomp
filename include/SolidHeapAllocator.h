@@ -48,8 +48,6 @@ typedef char SolidHeapFreeRegion_size_must_be_0xc[
 struct SolidHeapAllocator : HeapAllocator {
     SolidHeapFreeRegion mFreeRegion; /* 0x024 */
 #ifdef __cplusplus
-    SolidHeapAllocator(void* heapEnd, u32 flags);
-
     /* Instance methods. Parameter types are read off the mangled name: `Ej` is
        (unsigned int), `Ei` is (int), `EPvj` is (void*, unsigned int), `Eji` is
        (unsigned int, int), `Ev` is (). */

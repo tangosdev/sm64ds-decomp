@@ -9,7 +9,7 @@
  *   SizeofInternal..Allocate -- the public surface and the free-list walk.
  *   Destroy/CreateExpandingHeapAllocator -- the owning heap's entry points.
  *   FreeNode..UnlinkNode -- the node-list layer, all static.
- *   C1/CreateNode -- construction.
+ *   ExpandingHeapAllocator_Construct/CreateNode -- construction.
  *   MemoryNode::Target::Target -- the extent a node describes.
  *
  * The allocator's node bookkeeping is viewed through the overlay structs below
@@ -48,9 +48,6 @@
  * - The file-local `GetList` inline stays for the same reason it existed in
  *   the shard: spelling `this+0x24` as an accessor call is what mwccarm's
  *   register allocator keys on for Reallocate's r7/r8/sb assignment.
- * - Heap::CreateExpandingHeapAllocator calls the C1 by its mangled spelling:
- *   the factory runs the allocator constructor on an already-aligned address,
- *   an ABI seam a native `new` cannot spell.
  */
 
 #include "ExpandingHeapAllocator.h"
@@ -59,10 +56,6 @@
 #include "cstd.h"
 
 extern "C" void MultiStore_Int(int val, void *dst, int len);
-/* local extern: the factory runs this constructor over storage that already
-   exists. Placement new measured CreateExpandingHeapAllocator 0x4c -> 0x5c. */
-extern "C" ExpandingHeapAllocator *_ZN22ExpandingHeapAllocatorC1EPvj(
-    ExpandingHeapAllocator *self, void *heapEnd, u32 flags);
 
 /* The free list sentinel: a view of the allocator's node bookkeeping from
  * this+0x24, with the header's member names. mFlags2 bit 0 is the
@@ -150,24 +143,25 @@ void *ExpandingHeapAllocator::CreateNode(MemoryNode::Target *extent, u16 t)
     return n;
 }
 
-ExpandingHeapAllocator::ExpandingHeapAllocator(void *heapEnd, u32 flags)
-{
-    NodeList *nodeList = (NodeList *)&mFirstNode;
+extern "C" ExpandingHeapAllocator *ExpandingHeapAllocator_Construct(ExpandingHeapAllocator *self,
+                                                                    void *heapEnd, u32 flags) {
+    NodeList *nodeList = (NodeList *)&self->mFirstNode;
     MemoryNode::Target extent;
     MemoryNode *node;
 
-    func_0204df54(this, 0x45585048, nodeList + 1, heapEnd, flags);
+    func_0204df54(self, 0x45585048, nodeList + 1, heapEnd, flags);
     nodeList->mNodeID = 0;
     nodeList->mFlags2 = 0;
     nodeList->mFlags2 &= ~1;
 
-    extent.start = (char *)mStart;
-    extent.end = (char *)mEnd;
-    node = (MemoryNode *)CreateNode(&extent, 0x4652);
+    extent.start = (char *)self->mStart;
+    extent.end = (char *)self->mEnd;
+    node = (MemoryNode *)ExpandingHeapAllocator::CreateNode(&extent, 0x4652);
     nodeList->mFirstNode = node;
     nodeList->mLastNode = node;
     nodeList->mUsedFirstNode = 0;
     nodeList->mUsedLastNode = 0;
+    return self;
 }
 
 /* Carve one allocation out of a free block: unlink it, split into up to three
@@ -364,7 +358,7 @@ ExpandingHeapAllocator *Heap_t::CreateExpandingHeapAllocator(void *address, u32 
     if (start > end || (end - start) < 0x4c)
         return 0;
 
-    return _ZN22ExpandingHeapAllocatorC1EPvj((ExpandingHeapAllocator *)start, (void *)end, flags);
+    return ExpandingHeapAllocator_Construct((ExpandingHeapAllocator *)start, (void *)end, flags);
 }
 
 } /* namespace mHeap */

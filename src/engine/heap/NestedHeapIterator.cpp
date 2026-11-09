@@ -11,7 +11,7 @@
  *   Remove             -- unlink one node and fix head/tail.
  *   AddAt/AddFirst/AddLast/Init -- splice in at a position, either end, or an
  *                          empty list.
- *   C1                 -- linkOffset + empty list.
+ *   NNS_FndInitList    -- linkOffset + empty list.
  *   HeapAllocator::Remove -- remove self from whichever iterator owns it.
  *   func_0204df54      -- the shared initializer: stamps magic/range/flags,
  *                          constructs the child iterator, builds the global
@@ -29,10 +29,6 @@
  *   is formed twice, once into new_var and once inline); the u16 puns on
  *   mCount and mLinkOffset it used to carry measured byte-neutral as plain
  *   member spellings and are gone.
- * - func_0204df54 calls the ctor by its mangled spelling: the explicit
- *   NestedHeapIterator(u32) C1 call on &mChildren is the matched ABI seam --
- *   the body registers child lists on an already-built object, so the
- *   original could not have been an in-place `new'.
  */
 
 #include "HeapAllocator.h"
@@ -83,12 +79,10 @@ extern "C" void func_0204df54(HeapAllocator* self, u32 magic, void* start,
     self->mFlags &= ~0xffu;
     self->mFlags |= flags & 0xffu;
 
-    /* Placement new measured func_0204df54 0x94 -> 0xa0. The address is
-       storage that already exists, and mwcc null-tests it. */
-    _ZN18NestedHeapIteratorC1Ej(&self->mChildren, 4);
+    NNS_FndInitList(&self->mChildren, 4);
 
     if (data_020a4d34 == 0) {
-        _ZN18NestedHeapIteratorC1Ej(&data_020a4d38, 4);
+        NNS_FndInitList(&data_020a4d38, 4);
         data_020a4d34 = 1;
     }
 
@@ -102,9 +96,14 @@ void HeapAllocator::Remove()
     iter->Remove(this);
 }
 
-NestedHeapIterator::NestedHeapIterator(u32 linkOffset)
-    : mFirst(0), mLast(0), mCount(0), mLinkOffset(linkOffset)
-{
+/* NitroSDK's list initializer, run on the embedded child lists. */
+extern "C" void NNS_FndInitList(void *list_, u16 linkOffset) {
+    NestedHeapIterator *list = (NestedHeapIterator *)list_;
+
+    list->mFirst = 0;
+    list->mLast = 0;
+    list->mCount = 0;
+    list->mLinkOffset = linkOffset;
 }
 
 /* Empty list: link the node to itself and make it both ends. */

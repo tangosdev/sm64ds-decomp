@@ -110,46 +110,18 @@ void _ZN18NestedHeapIterator4InitEP13HeapAllocator(
 
 }
 
-// ---- CONSTRUCTOR bridges -------------------------------------------------
+// ---- HOST CONSTRUCTOR BRIDGE ---------------------------------------------
 //
-// Same seam as the forwarders above, on the one kind of member whose host name
-// cannot be spelled at all. A constructor has no name to declare: `C1' is an
-// Itanium ABI VARIANT tag, and MSVC has no syntax that emits or references one.
-// So a TU that says `extern "C" _ZN22ExpandingHeapAllocatorC1EPvj(...)' and calls
-// it -- which is what src/engine/heap/ExpandingHeapAllocator.cpp's factory and
-// src/engine/heap/NestedHeapIterator.cpp do, because on the NDS that string IS the symbol -- can
-// only be satisfied by a hand-written function of that name. Placement new is
-// the body: it runs the migrated constructor from src/ in place and, like the
-// ROM's C1, hands back the object.
-//
-// _ZN18NestedHeapIteratorC1Ej USED TO BE AN /alternatename HERE and the alias is
-// removed with this change. It pointed the MSVC-mangled reference at the C
-// spelling __ZN18NestedHeapIteratorC1Ej, which was a definition back when
-// the standalone C1 shard was C. The definition is C++ now and emits a
-// real __thiscall constructor, so the alias aimed at nothing: it named neither a
-// symbol anyone referenced nor one anything defined, and the target linked only
-// because no gate built it. This is the shape the file's own comment above warns
-// about -- an alias across a convention boundary -- landing on the migration
-// rather than on the original C.
-#include "ExpandingHeapAllocator.h"
+// The allocator and iterator initializers are C-linkage functions in their
+// source TUs, so the host links them directly. MemoryNode::Target is still a
+// real constructor: MSVC emits its own decorated symbol, while the port's
+// source references the flat C1 name, so this host definition runs the
+// constructor in place.
 #include <new>
 
-// Each signature is its CALLERS' declaration, not a tidier one: the iterator is
-// declared `void' in include/decl_NestedHeapIterator.h and its result is dropped,
-// while CreateExpandingHeapAllocator returns what the C1 handed back.
-extern "C" {
-void _ZN18NestedHeapIteratorC1Ej(void *self, u32 linkOffset)
-{ ::new (self) NestedHeapIterator(linkOffset); }
-
-ExpandingHeapAllocator *_ZN22ExpandingHeapAllocatorC1EPvj(
-    ExpandingHeapAllocator *self, void *heapEnd, u32 flags)
-{ return ::new ((void *)self) ExpandingHeapAllocator(heapEnd, flags); }
-}
-
-// MemoryNode::Target's constructor, same seam again. ExpandingHeapAllocator's
-// constructor and Reallocate both build one on the stack under the C1 spelling.
-// A `MemoryNode::Target *' return matches what the ROM's C1 hands back; both
-// callers drop it.
+// ExpandingHeapAllocator_Construct and Reallocate both build a Target on the
+// stack. A `MemoryNode::Target *' return matches the flat symbol the port
+// references; both callers drop it.
 #include "MemoryNode.h"
 
 extern "C" MemoryNode::Target *_ZN10MemoryNode6TargetC1EPS_(

@@ -14,8 +14,6 @@
  *   leaves in r0.
  * - ChangeMusicVolume is Sound::ChangeMusicVolume(unsigned int, int). The
  *   second value is a 0x1000-scaled volume, spelled Fix12i in the header.
- * - Sound_PlayIfNotActive calls func_0201186c through an int-arity pointer:
- *   the def takes short #4 and the site passes d untruncated.
  * - `int dd = (int)(((long long)d))' in func_02012468 is a no-op tower of
  *   unknown load-bearing status.
  * - func_02013078 reads the player object raw (+0x706 flag byte, +0x60 word);
@@ -105,7 +103,6 @@ extern int func_02011aa0(void *c);
 extern void func_02011a28(char *c);
 extern void func_020119c8(void *base);
 extern void *func_02011934(char *table, int id);
-extern int _ZN11SndRegTable13func_0201186cEiis(char *thiz, int a1, int a2, short a3);
 extern int func_020116c4(char *c, int a1, int a2, int a3, int s0, short s1);
 extern void func_02011698(char *table, char *n);
 extern int func_02011654(char *table, char *n);
@@ -236,7 +233,6 @@ typedef struct SndRegTable {
     SndRegEntry entries[0x40];   /* 0x08 */
     SndRegEntry *buckets[16];    /* 0x508 - chain heads by id&0xf */
 
-    int func_0201186c(int a1, int a2, short a3);
     int func_0201179c(int a1, int a2, int a3, short s1);
 
     SndRegTable() {
@@ -245,6 +241,8 @@ typedef struct SndRegTable {
 } SndRegTable;
 
 SndRegTable data_0209b53c;
+
+extern "C" int func_0201186c(SndRegTable *self, int a1, int a2, short a3);
 
 namespace Sound {
 
@@ -662,13 +660,7 @@ extern "C" int Sound_PlayIfNotActive(int a, int b, int c, int d)
         o->inUse = 1;
         return o->id;
     }
-    /* original TU declared func_0201186c's #4 as int (def is short):
-       the call site passes d untruncated -- cast through an int-arity
-       pointer to reproduce it without the narrowing sequence.
-       A method call narrows d; the member pointer will not cast to a
-       function pointer, so the cast names the mangled symbol. */
-    return ((int (*)(char *, int, int, int))_ZN11SndRegTable13func_0201186cEiis)(
-        (char *)&data_0209b53c, b, c, d);
+    return ((int (*)(SndRegTable *, int, int, int))func_0201186c)(&data_0209b53c, b, c, d);
 }
 
 extern "C" int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h)
@@ -1090,8 +1082,8 @@ extern "C" void *func_02011934(char *table, int id)
     return 0;
 }
 
-int SndRegTable::func_0201186c(int a1, int a2, short a3) {
-    SndRegTable *reg = this;
+extern "C" int func_0201186c(SndRegTable *self, int a1, int a2, short a3) {
+    SndRegTable *reg = self;
     int i = 0;
     do {
         if (reg->entries[reg->cursor].id == 0) {
@@ -1100,7 +1092,7 @@ int SndRegTable::func_0201186c(int a1, int a2, short a3) {
                 reg->counter += 1;
             }
             func_02011b38(&reg->entries[reg->cursor], reg->counter, a1, a2, a3);
-            func_02011698((char *)this, (char *)&reg->entries[reg->cursor]);
+            func_02011698((char *)self, (char *)&reg->entries[reg->cursor]);
             return reg->counter;
         }
         reg->cursor = (reg->cursor + 1) % 0x40;

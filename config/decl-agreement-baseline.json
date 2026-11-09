@@ -3899,13 +3899,6 @@
         "param:#2 char *"
       ]
     },
-    "_ZN18NestedHeapIteratorC1Ej": {
-      "include/decl_NestedHeapIterator.h": [
-        "param:#1 void *",
-        "param:#2 unsigned int",
-        "return:void"
-      ]
-    },
     "_ZN18SolidHeapAllocator10MemoryLeftEi": {
       "include/decl_SolidHeapAllocator.h": [
         "return:unsigned int"

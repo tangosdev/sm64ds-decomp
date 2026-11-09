@@ -116,11 +116,10 @@ struct KrbModelFilePtr : SharedFilePtr {
    daKrb_c::State. */
 typedef void (daKrb_c::*StateHandler)();
 
-/* Four state descriptors retain their flat-address initializer spelling.
-   The handlers are real methods; standalone StateHandler initializers grow
-   the runtime initializer from 0x1fc to 0x23c under 2004/b56. The first word
-   carries the code relocation; the second is zero, like every other
-   descriptor. */
+/* The four state handlers are free functions taking the actor pointer. A
+   standalone descriptor is two words wide: the first carries the code
+   relocation and the second is zero. Keeping the two-word union preserves
+   the runtime initializer at 0x1fc and feeds the pointer-to-member table. */
 union KrbFreeHandler {
     void (*fn)(daKrb_c *goomba);
     StateHandler pmf;
@@ -189,17 +188,9 @@ extern KrbAnimationFileHandle data_ov084_02130ce8;
 extern KrbAnimationFileHandle data_ov084_02130cf0;
 extern KrbModelFilePtr data_ov084_02130cf8;
 extern KrbModelFilePtr gKuriboLowModelModelFile;
-/* local extern: flat function addresses initialize the retained union descriptors below.
-   Real StateHandler globals add four runtime descriptor copies (initializer 0x23c
-   instead of retail 0x1fc under 2004/b56). */
-/* local extern: retained flat state descriptor initialization, measured above. */
-extern void _ZN7daKrb_c19func_ov084_0212a774Ev(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
-extern void _ZN7daKrb_c19func_ov084_0212ab48Ev(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
-extern void _ZN7daKrb_c19func_ov084_0212b2dcEv(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
-extern void _ZN7daKrb_c19func_ov084_0212a6f8Ev(daKrb_c *);
+/* local extern: flat function addresses initialize the retained union
+   descriptors below. Real StateHandler globals add four runtime descriptor
+   copies (initializer 0x23c instead of retail 0x1fc under 2004/b56). */
 extern StateHandler data_ov084_02130d74[];
 int func_02037e20(int* p);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
@@ -1074,8 +1065,7 @@ void daKrb_c::func_ov084_0212a580() {
 
 /* STATE_PAUSE: stand still (horizontal speed 0) until mWanderRerollTimer runs
  * out, then go back to STATE_WALK with the walk animation. */
-void daKrb_c::func_ov084_0212a6f8() {
-    daKrb_c *goomba = this;
+extern "C" void func_ov084_0212a6f8(daKrb_c *goomba) {
     goomba->mHorzSpeed = 0;
     /* Header spells this s16; the body loads it unsigned, and the two
        address forms stop mwcc from CSEing the halfword. */
@@ -1109,8 +1099,7 @@ void daKrb_c::func_ov084_0212a6f8() {
  * Last, mEatenByYoshi is 1 around a SpawnParticlesIfHitOtherObj call (which
  * reports hits differently while it is set, per dEnemyBase_c.h); a hit sets
  * DEATH_HIT_20000 and bit 0 of the dCcAc_c flags, as in func_ov084_02129a00. */
-void daKrb_c::func_ov084_0212a774() {
-    daKrb_c *goomba = this;
+extern "C" void func_ov084_0212a774(daKrb_c *goomba) {
     Vector3 v;
     u16 h = goomba->mBounceCountdown;
 
@@ -1230,8 +1219,7 @@ void daKrb_c::func_ov084_0212aab0()
  * STATE_AIRBORNE). A KURIBO_L then scales its vertical speed by
  * 0x1800 / 0x1000 = 1.5. The target heading becomes the spawn heading
  * (mInitAngleY), MOVE_AVOIDING is cleared, and mAngleY follows mPrevAngleY. */
-void daKrb_c::func_ov084_0212ab48() {
-    daKrb_c *goomba = this;
+extern "C" void func_ov084_0212ab48(daKrb_c *goomba) {
     int large;
     goomba->func_ov084_02129c9c();
     large = (int)(goomba->actorID == (unsigned short)ACTOR_KURIBO_L);
@@ -1478,8 +1466,7 @@ void daKrb_c::func_ov084_0212af74() {
 
 /* STATE_WALK handler: the king's minions follow the king, everything else
  * wanders / chases. mAngleY then follows mPrevAngleY. */
-void daKrb_c::func_ov084_0212b2dc() {
-    daKrb_c *goomba = this;
+extern "C" void func_ov084_0212b2dc(daKrb_c *goomba) {
     if (goomba->mGoombaType == daKrb_c::GOOMBA_KING_MINION)
         goomba->func_ov084_0212af74();
     else
@@ -1989,10 +1976,10 @@ KrbAnimationFileHandle data_ov084_02130cc8(ASSET_KURIBO_WAIT_BCA);
 KrbAnimationFileHandle data_ov084_02130cf0(ASSET_KURIBO_RUN_BCA);
 
 /* Pointer-to-member descriptors for the four state handlers stored separately in the ROM initializer data. */
-KrbFreeHandler krbStateDesc_Tumble = {_ZN7daKrb_c19func_ov084_0212a774Ev};
-KrbFreeHandler krbStateDesc_HopStart = {_ZN7daKrb_c19func_ov084_0212ab48Ev};
-KrbFreeHandler krbStateDesc_Walk = {_ZN7daKrb_c19func_ov084_0212b2dcEv};
-KrbFreeHandler krbStateDesc_Pause = {_ZN7daKrb_c19func_ov084_0212a6f8Ev};
+KrbFreeHandler krbStateDesc_Tumble = {func_ov084_0212a774};
+KrbFreeHandler krbStateDesc_HopStart = {func_ov084_0212ab48};
+KrbFreeHandler krbStateDesc_Walk = {func_ov084_0212b2dc};
+KrbFreeHandler krbStateDesc_Pause = {func_ov084_0212a6f8};
 
 /* One pointer-to-member per State, in state-index order. */
 StateHandler data_ov084_02130d74[5] = {

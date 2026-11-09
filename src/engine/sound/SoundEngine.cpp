@@ -20,6 +20,7 @@
 #include "Sound.h"
 #include "SoundPlayerRecord.h"
 #include "NestedHeapIterator.h"
+#include "decl_NestedHeapIterator.h"
 #include "HeapAllocator.h"
 #include "SolidHeapAllocator.h"
 #include "Heap.h"
@@ -204,7 +205,6 @@ struct T {
     /* 0x38 */ NNSSndFader fade; /* channel volume ramp, func_020508a0 */
     /* 0x48 */ int f48;          /* stop once fade finishes */
     /* 0x4c */ int f4c;          /* last volume sent with SND_SetChannelVolume */
-    void func_020500a4();
 };
 /* One message the alarm posts to data_020a5600 (the 8-slot ring
    data_020a5718): the stream, the block size, its offset, and the block
@@ -304,7 +304,6 @@ struct Elem_204f278 {
     /* 0x08 */ int *heap;               /* func_0205130c's heap, freed by func_020512f0 */
     /* 0x0c */ NNSSndSeqPlayer *player; /* claimant; its heap word points back here */
     /* 0x10 */ int playerIndex;         /* data_020a4d6c slot whose list holds this */
-    void func_0204f278();
 };
 typedef struct Node Node;
 
@@ -319,10 +318,6 @@ extern struct HeapAllocator;
 extern void MultiStore_Int(int val, int *dst, int len);
 extern struct NestedHeapIterator;
 extern struct ElemTable;
-/* local extern: these callers run the constructor over storage that already
-   exists (and func_02051064 returns its r0), which C++ cannot spell without a
-   placement new the tree does not have. */
-extern int _ZN18NestedHeapIteratorC1Ej(int a, int b);
 
 extern int __aeabi_idiv(int a, int b);
 extern unsigned int __aeabi_uidiv(unsigned int a, unsigned int b);
@@ -417,7 +412,7 @@ extern int func_0204f138(unsigned int mask);
 extern void func_0204f15c(void *node);
 extern int func_0204f194(unsigned int a);
 extern void func_0204f1e8(void);
-extern void _ZN12Elem_204f27813func_0204f278Ev(Elem_204f278 *); /* local extern: PMF -> int */
+extern void func_0204f278(Elem_204f278 *);
 extern void func_0204f2d4(NNSSndSeqPlayer *obj);
 extern char* func_0204f364(int key);
 extern void func_0204f3e0(unsigned char *c);
@@ -447,7 +442,7 @@ extern void func_0204ff9c(struct C *o);
 extern void func_0204ffcc(char *self);
 extern void func_02050008(struct C *o);
 extern void func_02050038(void *arg);
-extern void _ZN1T13func_020500a4Ev(struct T *); /* local extern: PMF -> int */
+extern void func_020500a4(struct T *);
 extern void func_020501b8(void);
 extern void func_02050258(void);
 extern void func_020502b8(void);
@@ -476,7 +471,7 @@ extern void func_02050f34(data_020a5bb8_t *self, int a1, int a2, int a3);
 extern void func_02050fb0(void);
 extern s32 func_02050fd4(struct Obj_2050fd4 *self);
 extern s32 func_02051024(struct SolidHeapWithIter* self, void* allocator);
-extern int func_02051064(int a);
+extern void func_02051064(int a);
 extern u32 func_02051074(SolidHeapAllocator **pHeap);
 extern s32 func_0205117c(struct SolidHeapWithIter* self);
 extern void *func_020511d4(HeapOwner *owner, u32 elemSize, u32 param2, u32 param3, u32 param4);
@@ -1214,14 +1209,13 @@ extern "C" u32 func_02051074(SolidHeapAllocator **pHeap)
     return mem;
 }
 
-extern "C" int func_02051064(int a)
-{
-    return _ZN18NestedHeapIteratorC1Ej(a, 0);
+extern "C" void func_02051064(int a) {
+    NNS_FndInitList((void *)a, 0);
 }
 
 extern "C" s32 func_02051024(struct SolidHeapWithIter* self, void* allocator)
 {
-    ((void(*)(void* self, u32 offset))_ZN18NestedHeapIteratorC1Ej)(&self->nhi_first, 0xc);
+    NNS_FndInitList(&self->nhi_first, 0xc);
     self->allocator = allocator;
     if (((s32(*)(struct SolidHeapWithIter* self))func_02050fd4)(self)) {
         return 1;
@@ -1589,7 +1583,7 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
         SND_SetupCapture(1, fmt2, (void *)c, qlen, pp8, p6, p7);
         if (handle >= 0) {
             ((void (*)(int a, int b, int c, int d, void *e))SND_SetupAlarm)(
-                handle, total + chunk, total, (int)_ZN1T13func_020500a4Ev, g);
+                handle, total + chunk, total, (int)func_020500a4, g);
         }
         if (a == 1) {
             SND_SetOutputSelector(3, 3, 1, 1);
@@ -1681,15 +1675,15 @@ extern "C" void func_020501b8(void)
     }
 }
 
-void T::func_020500a4() {
-    int quot = this->f14 / this->f2c;
-    int prod = quot * this->f18;
-    int e6 = this->fc + prod;
-    int e5 = this->f10 + prod;
+extern "C" void func_020500a4(struct T *self) {
+    int quot = self->f14 / self->f2c;
+    int prod = quot * self->f18;
+    int e6 = self->fc + prod;
+    int e5 = self->f10 + prod;
 
     if (data_020a55fc != 0) {
         struct Q *slot = &data_020a5718[data_020a55f8];
-        slot->f0 = this;
+        slot->f0 = self;
         slot->f4 = quot;
         slot->f8 = prod;
         slot->fc = e6;
@@ -1700,13 +1694,13 @@ void T::func_020500a4() {
     } else {
         CP15::InvalidateDataCache(e6, quot);
         CP15::InvalidateDataCache(e5, quot);
-        this->f30(e6, e5, quot, this->f8, this->f34);
+        self->f30(e6, e5, quot, self->f8, self->f34);
     }
     {
-        int *pf18 = (int *)((int)&this->f18);
+        int *pf18 = (int *)((int)&self->f18);
         *pf18 = *pf18 + 1;
-        if (this->f18 >= this->f2c)
-            this->f18 = 0;
+        if (self->f18 >= self->f2c)
+            self->f18 = 0;
     }
 }
 
@@ -1828,18 +1822,16 @@ void C::func_0204fce8(void *arg) {
 extern "C" void func_0204fc40(void)
 {
     int i;
-    ((void(*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(((char*)&data_020a4d60), 0x14);
-    ((void(*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(data_020a4d54, 0x14);
+    NNS_FndInitList(&data_020a4d60, 0x14);
+    NNS_FndInitList(data_020a4d54, 0x14);
     for (i = 0; i < 0x10; i++) {
         data_020a50ec[i].status = 0;
         data_020a50ec[i].playerNo = (unsigned char)i;
         ((NestedHeapIterator*)&data_020a4d54)->AddLast((HeapAllocator*)(&data_020a50ec[i]));
     }
     for (i = 0; i < 0x20; i++) {
-        ((void (*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(
-            &data_020a4d6c[i].mLists[0], 0xc);
-        ((void (*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(
-            &data_020a4d6c[i].mLists[1], 0);
+        NNS_FndInitList(&data_020a4d6c[i].mLists[0], 0xc);
+        NNS_FndInitList(&data_020a4d6c[i].mLists[1], 0);
         data_020a4d6c[i].mPlayableSeqCount = 1;
     }
 }
@@ -1901,7 +1893,7 @@ extern "C" int func_0204fa3c(int owner, void *b, u32 c)
     char *r4;
     void *res;
     r4 = (char *)((void *(*)(void *a, u32 elemSize, u32 p2, u32 p3, u32 p4))func_020511d4)(
-        b, c + sizeof(Elem_204f278), (u32)_ZN12Elem_204f27813func_0204f278Ev, 0, 0);
+        b, c + sizeof(Elem_204f278), (u32)func_0204f278, 0, 0);
     if (!r4) return 0;
     ((Elem_204f278 *)r4)->player = 0;
     ((Elem_204f278 *)r4)->playerIndex = owner;
@@ -2229,17 +2221,17 @@ extern "C" void func_0204f2d4(NNSSndSeqPlayer *obj) {
     obj->status = 0;
 }
 
-void Elem_204f278::func_0204f278() {
-    int *p = this->heap;
+extern "C" void func_0204f278(struct Elem_204f278 *self) {
+    int *p = self->heap;
     if (p == 0) return;
     func_020512f0(p);
-    NNSSndSeqPlayer *q = this->player;
+    NNSSndSeqPlayer *q = self->player;
     if (q != 0) {
         q->heap = 0;
         return;
     }
-    int idx = this->playerIndex;
-    data_020a4d6c[idx].mLists[1].Remove((HeapAllocator *)(this));
+    int idx = self->playerIndex;
+    data_020a4d6c[idx].mLists[1].Remove((HeapAllocator *)(self));
 }
 
 void HeapAllocator_204f460::func_0204f214(int b) {

@@ -120,7 +120,7 @@
       "legacy_source": "src/_ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocatorC1EPvj",
+      "symbol": "ExpandingHeapAllocator_Construct",
       "address": "0x0204e828",
       "size": "0x88",
       "ordinal": 15,
@@ -159,11 +159,6 @@
   "bss": [],
   "compiler_only_output": [
     {
-      "symbol": "_ZN22ExpandingHeapAllocatorC2EPvj",
-      "disposition": "deadstrip",
-      "reason": "mwccarm emits the unused base-object constructor beside the licensed C1; the ROM has no configured C2 home and nothing references it."
-    },
-    {
       "symbol": "_ZN10MemoryNode6TargetC2EPS_",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the unused base-object constructor beside the licensed C1; the ROM has no configured C2 home and nothing references it."
@@ -180,20 +175,17 @@
     "functions_declared": 20,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN22ExpandingHeapAllocatorC2EPvj",
         "_ZN10MemoryNode6TargetC2EPS_"
       ],
       "deadstripped": [
-        "_ZN10MemoryNode6TargetC2EPS_",
-        "_ZN22ExpandingHeapAllocatorC2EPvj"
+        "_ZN10MemoryNode6TargetC2EPS_"
       ],
       "droppedSections": [
-        32,
-        33,
-        38
+        36
       ],
       "data": [],
-      "dataExternalized": []
+      "dataExternalized": [],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",

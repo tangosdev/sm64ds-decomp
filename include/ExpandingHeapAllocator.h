@@ -31,8 +31,6 @@ struct ExpandingHeapAllocator : HeapAllocator {
     u16 mNodeID;                /* 0x034 */
     u16 mFlags2;                /* 0x036 */
 #ifdef __cplusplus
-    ExpandingHeapAllocator(void* heapEnd, u32 flags);
-
     /* methods. Parameter types are read off the mangled name: `Eji` is
        (unsigned int, int), `EPv` is (void*), `Ev` is (). */
     void* Allocate(u32 size, int align);

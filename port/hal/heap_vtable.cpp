@@ -122,28 +122,6 @@ extern "C" void *_ZTVN5mHeap9ExpHeap_tE[15] = {
     (void *)slot_trap14,       /* 14: VResizeToFit */
 };
 
-// ---- SolidHeapAllocator's constructor, under its Itanium spelling ----------
-//
-// src/engine/heap/SolidHeapAllocator.cpp's CreateSolidHeapAllocator factory
-// calls `_ZN18SolidHeapAllocatorC1EPvj' as an extern "C" function, for the
-// reason hal/heap_globals.cpp's constructor-bridge block gives: C1 is an
-// Itanium ABI variant tag and MSVC has no syntax that emits or references one,
-// so the only way to satisfy that string is to write a function with it. The
-// real constructor is compiled into smoke_roots with that same TU
-// (slice_gate3a.txt), so placement new resolves it there.
-//
-// IT IS HERE AND NOT IN heap_globals.cpp because heap_globals.cpp is also
-// linked by smoke_heap, whose slice is the allocator layer alone and does not
-// compile the constructor this body names.
-//
-// The heaps' own constructors needed the same bridge while Heap.cpp's
-// factories called them by their C1 names; they construct with placement new
-// now, which MSVC resolves to its own constructor symbol.
-#include <new>
-#include "SolidHeapAllocator.h"
-
-extern "C" SolidHeapAllocator *_ZN18SolidHeapAllocatorC1EPvj(
-    void *self, void *heapEnd, u32 flags)
-{
-    return ::new (self) SolidHeapAllocator(heapEnd, flags);
-}
+// SolidHeapAllocator's initializer is C linkage in its source TU
+// (src/engine/heap/SolidHeapAllocator.cpp, slice_gate3a.txt), so the host
+// links the same NNS-style free function the ROM calls and needs no bridge.

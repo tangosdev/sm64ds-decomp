@@ -20,11 +20,10 @@
 extern "C" {
 #endif
 
-/* Init, AddFirst and Next are NestedHeapIterator methods in
-   NestedHeapIterator.h. The constructor call in NestedHeapIterator.cpp
-   stays this symbol: placement new measured func_0204df54 0x94 -> 0xa0. */
-extern void _ZN18NestedHeapIteratorC1Ej(void*, u32);
-
+/* The intrinsic-list initializer: zero head/tail/count and store the link
+   offset. NestedHeapIterator is the game's layout-equivalent NNSFndList;
+   NitroSDK spells this function NNS_FndInitList. */
+extern void NNS_FndInitList(void *, u16);
 
 #ifdef __cplusplus
 }
