@@ -948,14 +948,14 @@
       "ordinal": 86
     },
     {
-      "symbol": "func_02016acc",
+      "symbol": "_ZN17dExtSimpleModel_c18ClearMaterialFlagsEj",
       "address": "0x02016acc",
       "size": "0x00000058",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
       "ordinal": 87
     },
     {
-      "symbol": "func_02016b24",
+      "symbol": "_ZN17dExtSimpleModel_c16SetMaterialFlagsEj",
       "address": "0x02016b24",
       "size": "0x00000054",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
