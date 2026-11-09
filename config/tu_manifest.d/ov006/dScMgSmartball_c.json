@@ -593,7 +593,7 @@
       "ordinal": 81
     },
     {
-      "symbol": "SmartballBall_UpdatePhysics",
+      "symbol": "_ZN19cMgSmartball_ball_c13UpdatePhysicsEv",
       "address": "0x02112ad8",
       "size": "0x0000113c",
       "legacy_source": "src/func_ov006_02112ad8.c",

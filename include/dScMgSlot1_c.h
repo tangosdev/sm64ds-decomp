@@ -165,6 +165,7 @@ struct dScMgSlot1_c : dScMgBase_c {
     virtual void StartRound(int arg); /* slot 18 */
     virtual void OpenMenu();          /* slot 27 */
     virtual int CloseMenu();          /* slot 28 */
+    int SlotReels_CheckStopped();
 
     betIcon_c mBetIcon;    /* 0x4660 -- RTTI-proven nested touch icon */
     SlotBlink mMatchBlink; /* 0x4684 -- placed from sSlotMatchBlinkX/Y[mMatchedSymbol] */
