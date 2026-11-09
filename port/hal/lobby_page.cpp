@@ -220,6 +220,7 @@ void fk_kick(int seat)
     --F.s.n_seats;
 }
 void fk_mute(int seat, int m) { if (seat >= 0 && seat < F.s.n_seats) F.s.seats[seat].muted = m; }
+void fk_ban(int seat) { fk_kick(seat); }
 
 int g_fake = !LP_CLIENT_REAL;      /* the stand-in answers (always without the real client; with it only when a proof knob asks) */
 
@@ -247,6 +248,7 @@ void C_name(const char *n) { C_CALL(lobby_set_server_name(n), fk_set_server_name
 void C_chat(const char *t) { C_CALL(lobby_send_chat(t), fk_send_chat(t)); }
 void C_kick(int s) { C_CALL(lobby_kick(s), fk_kick(s)); }
 void C_mute(int s, int m) { C_CALL(lobby_mute(s, m), fk_mute(s, m)); }
+void C_ban(int s) { C_CALL(lobby_ban(s), fk_ban(s)); }
 
 /* ================================================================ keyboard ====================================================== */
 /* typed text is read by polling the keys once a logic frame (hal/menu_online_profile.cpp does the same for the NAME popup): the window
@@ -310,8 +312,11 @@ enum Ctl {
     C_SEAT0 = 50,                         /* a seat's plate (C_SEAT0 + i) */
     C_MUTE0 = 70,                         /* a seat's mute button */
     C_KICK0 = 90,                         /* a seat's kick button (host) */
-    C_COUNT = 110
+    C_BAN0 = 110,                         /* a seat's ban button (host) */
+    C_COUNT = 130
 };
+/* the small buttons on a seat's plate: mute, kick, ban */
+inline bool seat_button(int c) { return c >= C_MUTE0 && c < C_BAN0 + 16; }
 
 struct Rect { int x, y, w, h; };
 inline bool in_rect(const Rect &r, int x, int y) { return r.w > 0 && x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h; }
@@ -338,7 +343,9 @@ struct Page {
     int pw, ph;            /* the picture the layout was made for */
     int env_at, env_done, env_frames;
     char env_what[32];
-    int seat_menu;         /* the seat whose mute / kick buttons are shown (hover or pad focus), -1 none */
+    int seat_menu;         /* the seat whose mute / kick / ban buttons are shown (hover or pad focus), -1 none */
+    int ban_arm;           /* BAN pressed once on this seat (-1 none): a second press bans; anything else lets it go */
+    int ban_arm_t;         /* frames the armed BAN stays armed */
     int joining;           /* the page was opened by a room code */
     int seen_phase;        /* the client has been out of LOBBY_NONE since the page opened */
     int keep_tick;         /* the page closed for the start: lobby_tick() goes on once a frame until the client is back to NONE or FAILED */
@@ -427,6 +434,7 @@ void make_geom(Geom *g, int w, int h, const LobbyState *s)
         const float b = sh > 60 ? 20 : 15;
         g->r[C_MUTE0 + i] = R(x + 3, y + 3, b, b);
         g->r[C_KICK0 + i] = R(x + 3 + b + 3, y + 3, b, b);
+        g->r[C_BAN0 + i] = R(x + 3 + 2 * (b + 3), y + 3, b, b);
     }
     if (P.panel) {
         const int n = s->n_settings;
@@ -474,6 +482,7 @@ bool live(const LobbyState *s, int c)
     if (c >= C_SEAT0 && c < C_SEAT0 + 16) return c - C_SEAT0 < seat_count(s);
     if (c >= C_MUTE0 && c < C_MUTE0 + 16) { const int i = c - C_MUTE0; return i < seat_count(s) && !s->seats[i].is_me && P.seat_menu == i; }
     if (c >= C_KICK0 && c < C_KICK0 + 16) { const int i = c - C_KICK0; return i < seat_count(s) && !s->seats[i].is_me && s->am_host && P.seat_menu == i; }
+    if (c >= C_BAN0 && c < C_BAN0 + 16) { const int i = c - C_BAN0; return i < seat_count(s) && !s->seats[i].is_me && s->am_host && P.seat_menu == i; }
     return false;
 }
 
@@ -620,6 +629,26 @@ void press(const LobbyState *s, int c)
         P.focus = C_READY;
         return;
     }
+    if (c >= C_BAN0 && c < C_BAN0 + 16) {
+        /* ONE-STEP CONFIRM: the first press arms the button (it turns red and asks "Ban? Press again"), the second press on the same
+           seat bans. Any other press, a move off the button or about three seconds let it go. A ban lasts until the room closes, so one
+           stray click or tap of A must not do it. */
+        const int i = c - C_BAN0;
+        if (P.ban_arm != i) {
+            P.ban_arm = i;
+            P.ban_arm_t = 180;
+            snprintf(b, sizeof b, "ban armed on seat %d (%s)", i, s->seats[i].name);
+            log_line(b);
+            return;
+        }
+        P.ban_arm = -1;
+        snprintf(b, sizeof b, "ban seat %d (%s)", i, s->seats[i].name);
+        log_line(b);
+        C_ban(i);
+        P.seat_menu = -1;
+        P.focus = C_READY;
+        return;
+    }
 }
 
 /* a setting row stepped left / right on the pad */
@@ -714,6 +743,7 @@ extern "C" void lobby_page_open_now(void)
     P.input_ready = 0;
     P.copied_t = 0;
     P.seat_menu = -1;
+    P.ban_arm = -1;
     P.chat_in[0] = 0;
     load_user32();
     sync_prev_vk();
@@ -816,7 +846,7 @@ void reach_report(const LobbyState *s)
                 if (n < 0 || n >= C_COUNT) continue;
                 int nm = m;
                 if (n >= C_SEAT0 && n < C_SEAT0 + 16) nm = n - C_SEAT0;
-                else if (!(n >= C_MUTE0 && n < C_KICK0 + 16)) nm = -1;
+                else if (!seat_button(n)) nm = -1;
                 if (seen[n][nm < 0 ? 16 : nm]) continue;
                 seen[n][nm < 0 ? 16 : nm] = 1;
                 qf[qt] = (short)n; qm[qt] = (short)nm; ++qt;
@@ -939,14 +969,14 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
     if (in && in->mouse_valid) {
         for (int c = 0; c < C_COUNT; ++c) {
             if (!live(s, c) || !in_rect(g.r[c], in->mouse_x, in->mouse_y)) continue;
-            if (hov < 0 || (c >= C_MUTE0 && c < C_KICK0 + 16)) hov = c;       /* the small seat buttons sit on the plate */
+            if (hov < 0 || seat_button(c)) hov = c;       /* the small seat buttons sit on the plate */
         }
         /* a hover on a seat shows its buttons */
         if (P.screen == SCR_ROOM && in_room(s) && !P.panel) {
             for (int i = 0; i < seat_count(s); ++i)
                 if (in_rect(g.r[C_SEAT0 + i], in->mouse_x, in->mouse_y) && !s->seats[i].is_me) {
                     P.seat_menu = i;
-                    for (int c : { C_MUTE0 + i, C_KICK0 + i })
+                    for (int c : { C_MUTE0 + i, C_KICK0 + i, C_BAN0 + i })
                         if (live(s, c) && in_rect(g.r[c], in->mouse_x, in->mouse_y)) hov = c;
                 }
         }
@@ -988,8 +1018,13 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
             host_menu_cursor_sound();
             { char b[48]; snprintf(b, sizeof b, "focus on control %d", n); log_line(b); }
             if (n >= C_SEAT0 && n < C_SEAT0 + 16) P.seat_menu = n - C_SEAT0;
-            else if (!(n >= C_MUTE0 && n < C_KICK0 + 16)) P.seat_menu = -1;
+            else if (!seat_button(n)) P.seat_menu = -1;
         }
+    }
+    /* an armed BAN lets go when the focus leaves it, the seat menu closes, or its time runs out */
+    if (P.ban_arm >= 0 && (P.focus != C_BAN0 + P.ban_arm || P.seat_menu != P.ban_arm || --P.ban_arm_t <= 0)) {
+        P.ban_arm = -1;
+        log_line("ban let go");
     }
     if ((edge & SPK_ACCEPT) && P.focus >= 0 && live(s, P.focus)) {
         char b[48];
@@ -1346,7 +1381,7 @@ void rim(const Surf &s, float u, const Rect &r)
 /* text colour on a box of that kind */
 uint32_t ink_on(bool hd, int kind) { return hd ? (kind == 0 ? 0x5A2A0Au : C_INK) : (kind == 0 ? C_WOODTXT : C_INK); }
 
-/* the little icons: the eye (open / shut), two squares (copy), a speaker (mute), a cross (kick), a star (host) */
+/* the little icons: the eye (open / shut), two squares (copy), a speaker (mute), a cross (kick), a ring with a bar (ban), a star (host) */
 void line(const Surf &s, float x0, float y0, float x1, float y1, float wdt, uint32_t rgb)
 {
     const int minx = (int)floorf((x0 < x1 ? x0 : x1) - wdt - 1), maxx = (int)ceilf((x0 > x1 ? x0 : x1) + wdt + 1);
@@ -1416,6 +1451,16 @@ void icon_cross(const Surf &s, const Rect &r, uint32_t rgb, float u)
     const float wd = 2.0f * u > 1.2f ? 2.0f * u : 1.2f, m = r.w * 0.28f;
     line(s, r.x + m, r.y + m, r.x + r.w - m, r.y + r.h - m, wd, rgb);
     line(s, r.x + r.w - m, r.y + m, r.x + m, r.y + r.h - m, wd, rgb);
+}
+/* the ban sign: a ring with one bar across it */
+void icon_ban(const Surf &s, const Rect &r, uint32_t rgb, float u)
+{
+    const float wd = 1.6f * u > 1.2f ? 1.6f * u : 1.2f, cx = r.x + r.w * 0.5f, cy = r.y + r.h * 0.5f, R = r.w * 0.30f;
+    for (int i = 0; i < 20; ++i) {
+        const float a0 = i * 0.31415927f, a1 = (i + 1) * 0.31415927f;
+        line(s, cx + R * cosf(a0), cy + R * sinf(a0), cx + R * cosf(a1), cy + R * sinf(a1), wd, rgb);
+    }
+    line(s, cx - R * 0.70710678f, cy - R * 0.70710678f, cx + R * 0.70710678f, cy + R * 0.70710678f, wd, rgb);
 }
 void icon_star(const Surf &s, float cx, float cy, float R, uint32_t rgb)
 {
@@ -1697,9 +1742,15 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
                 const Rect &k = g.r[C_KICK0 + i];
                 framed(s, k.x, k.y, k.w, k.h, 3 * u, (int)u > 1 ? (int)u : 1, lit(C_KICK0 + i) ? 0xFFF6D8u : 0x5A3010u, 0x1A0C02u);
                 icon_cross(s, k, lit(C_KICK0 + i) ? 0xB01010u : 0xFFF3CCu, u);
+                const Rect &bn = g.r[C_BAN0 + i];
+                const int armed = P.ban_arm == i;
+                framed(s, bn.x, bn.y, bn.w, bn.h, 3 * u, (int)u > 1 ? (int)u : 1, armed ? 0xB01010u : lit(C_BAN0 + i) ? 0xFFF6D8u : 0x5A3010u,
+                       0x1A0C02u);
+                icon_ban(s, bn, armed ? 0xFFF3CCu : lit(C_BAN0 + i) ? 0xB01010u : 0xFFF3CCu, u);
             }
-            const char *tip = lit(C_KICK0 + i) ? "Kick" : lit(C_MUTE0 + i) ? (t.muted ? "Unmute" : "Mute") : 0;
-            if (tip) f.draw(s, (float)(st->am_host ? g.r[C_KICK0 + i].x + g.r[C_KICK0 + i].w : m.x + m.w) + 4 * u, m.y + (m.h - f.cap(11.0f)) * 0.5f, tip, 11.0f, ink);
+            const char *tip = P.ban_arm == i ? "Ban? Press again" : lit(C_BAN0 + i) ? "Ban" : lit(C_KICK0 + i) ? "Kick" :
+                              lit(C_MUTE0 + i) ? (t.muted ? "Unmute" : "Mute") : 0;
+            if (tip) f.draw(s, (float)(st->am_host ? g.r[C_BAN0 + i].x + g.r[C_BAN0 + i].w : m.x + m.w) + 4 * u, m.y + (m.h - f.cap(11.0f)) * 0.5f, tip, 11.0f, ink);
         }
     }
     /* the settings panel over everything */

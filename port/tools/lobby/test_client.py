@@ -1130,8 +1130,8 @@ def selftest_rooms(c):
     expect("a v5 create of a coop room is bad_session_type",
            c.post("create", {"v": 5, "game": GAME, "nick": "h",
                              "session_type": "coop"}), 400, "bad_session_type")
-    expect("a v7 request is bad_version",
-           c.post("create", {"v": 7, "game": GAME, "nick": "h"}),
+    expect("a v8 request is bad_version",
+           c.post("create", {"v": 8, "game": GAME, "nick": "h"}),
            400, "bad_version")
     # A byte-exact oversize body is refused by the transport, like any verb.
     big = json.dumps({"v": 6, "game": GAME, "nick": "h",

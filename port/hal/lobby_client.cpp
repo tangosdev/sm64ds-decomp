@@ -240,6 +240,8 @@ const char *explain(int status, const std::string &code)
         {"room_full", "That room is full."},
         {"in_match", "That room is in the middle of a match."},
         {"kicked", "The host removed you from that room."},
+        {"banned", "You are banned from this room."},
+        {"too_many_bans", "This room cannot ban anyone else."},
         {"not_host", "Only the host can do that."},
         {"not_a_member", "You are not in that room any more."},
         {"not_in_lobby", "That cannot be changed while a match is running."},
@@ -376,6 +378,7 @@ struct Shared {
     std::string room, token;
     int cursor = 0;
     int gen = 0;                      /* bumped on every create / join / leave: a stale worker answer is dropped */
+    bool srv_ban = true;              /* the server took a v7 create / join (it has `ban`); false after the v6 fallback */
     LobbyPhase phase = LOBBY_NONE;
     std::string error;
     /* the view */
@@ -523,6 +526,69 @@ std::string save_stem(const std::string &display)
         (up.size() == 4 && (!up.compare(0, 3, "COM") || !up.compare(0, 3, "LPT")) && up[3] >= '0' && up[3] <= '9'))
         s = "coop_" + s;
     return s;
+}
+
+/* THE INSTALL ID (lobby v7, LOBBYBAN1): 32 random lower-case hex, made once and kept in <save folder>/lobby_install.txt beside the
+   save. It is never derived from the hardware or the user's name; deleting the file makes a new one on the next create or join. The
+   lobby server keeps it only so a host's ban covers a restarted game. Random bytes come from advapi32's RtlGenRandom (loaded by name,
+   KERNEL32 stays the only import); without it, the clock and process ids are mixed instead. */
+std::string install_id()
+{
+    static std::string id;
+    if (!id.empty()) return id;
+    std::string dir = ntr::backup::path();
+    const size_t cut = dir.find_last_of("/\\");
+    dir = cut == std::string::npos ? std::string(".") : dir.substr(0, cut);
+    const std::string file = dir + "/lobby_install.txt";
+    if (FILE *f = std::fopen(file.c_str(), "rb")) {
+        char b[40] = {0};
+        const size_t n = std::fread(b, 1, 32, f);
+        std::fclose(f);
+        bool ok = n == 32;
+        for (size_t i = 0; ok && i < 32; ++i) ok = (b[i] >= '0' && b[i] <= '9') || (b[i] >= 'a' && b[i] <= 'f');
+        if (ok) { id.assign(b, 32); return id; }
+    }
+    unsigned char r[16] = {0};
+    bool got = false;
+    if (HMODULE a = LoadLibraryA("advapi32.dll")) {
+        typedef BOOLEAN (WINAPI *GenRandom)(PVOID, ULONG);
+        if (GenRandom fn = (GenRandom)(void *)GetProcAddress(a, "SystemFunction036")) got = fn(r, sizeof r) != 0;
+    }
+    if (!got) {
+        LARGE_INTEGER q;
+        QueryPerformanceCounter(&q);
+        unsigned long long x = (unsigned long long)q.QuadPart ^ ((unsigned long long)GetCurrentProcessId() << 32) ^ GetTickCount64() ^
+                               (unsigned long long)(size_t)&q;
+        for (int i = 0; i < 16; ++i) {   /* splitmix64 */
+            x += 0x9E3779B97F4A7C15ull;
+            unsigned long long z = x;
+            z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9ull;
+            z = (z ^ (z >> 27)) * 0x94D049BB133111EBull;
+            r[i] = (unsigned char)(z ^ (z >> 31));
+        }
+    }
+    static const char hx[] = "0123456789abcdef";
+    std::string made;
+    for (unsigned char c : r) { made += hx[c >> 4]; made += hx[c & 15]; }
+    CreateDirectoryA(dir.c_str(), 0);
+    if (FILE *f = std::fopen(file.c_str(), "wb")) { std::fwrite(made.data(), 1, made.size(), f); std::fclose(f); }
+    else say("install id: could not write %s (the id lasts this run only)", file.c_str());
+    id = made;
+    return id;
+}
+
+/* the same request at v6 without `install`: the body a server older than v7 takes (a create / join it refused as bad_version) */
+std::string v6_body(const std::string &v7)
+{
+    std::string b = v7;
+    const size_t p = b.find("\"v\":7");
+    if (p != std::string::npos) b.replace(p, 5, "\"v\":6");
+    const size_t i = b.find(",\"install\":\"");
+    if (i != std::string::npos) {
+        const size_t e = b.find('"', i + 12);
+        if (e != std::string::npos) b.erase(i, e + 1 - i);
+    }
+    return b;
 }
 
 /* CoopSaves.Existing: newest first */
@@ -711,7 +777,10 @@ void fold(const Answer &a, int gen, bool from_poll)
     Lock l;
     if (gen != g.gen) return;   /* an answer for a room this console has left */
     if (!a.ok) {
-        if (a.error == "no_such_room" || a.error == "not_a_member" || a.error == "kicked") { leave_room_locked(a.message.c_str()); return; }
+        if (a.error == "no_such_room" || a.error == "not_a_member" || a.error == "kicked" || a.error == "banned") {
+            leave_room_locked(a.message.c_str());
+            return;
+        }
         g.error = a.message;
         return;
     }
@@ -790,6 +859,18 @@ DWORD WINAPI action_thread(void *)
             }
             Answer a = post(base, j.verb, j.body, 10);
             say("%s -> %d%s%s", j.verb.c_str(), a.status, a.error.empty() ? "" : " ", a.error.c_str());
+            bool v6 = false;
+            if ((j.kind == 1 || j.kind == 2) && !a.ok && a.error == "bad_version") {
+                /* a lobby server older than v7 (no ban yet): the same request at v6, without the install id */
+                a = post(base, j.verb, v6_body(j.body), 10);
+                v6 = true;
+                say("%s at v6 -> %d%s%s", j.verb.c_str(), a.status, a.error.empty() ? "" : " ", a.error.c_str());
+            }
+            if (j.verb == "ban" && !a.ok && (a.error == "unknown_verb" || a.error == "bad_version" || a.error == "bad_field")) {
+                a.message = "This lobby server cannot ban players yet. Kick still works.";
+                Lock l;
+                g.srv_ban = false;
+            }
             if (j.kind == 1 || j.kind == 2) {   /* create / join: a room or a sentence */
                 Lock l;
                 if (j.gen != g.gen) continue;
@@ -803,6 +884,7 @@ DWORD WINAPI action_thread(void *)
                 g.room = room;
                 g.token = token;
                 g.cursor = 0;
+                g.srv_ban = !v6;
                 g.phase = LOBBY_IN_ROOM;
                 g.error.clear();
                 if (j.kind == 1 && g.kind == LOBBY_VS) send_params_locked();   /* the host's room asks for Arena (1.0) */
@@ -1274,7 +1356,7 @@ bool launch_due(JV *plan, LobbyKind *kind, bool *host, std::string *match)
 
 #ifndef PORT_ROM_CLEAN
 /* SM64DS_LOBBY_TEST=<step>,<step>,... (dev only): create:coop | create:vs | join:<CODE> | join:@<file> | ready | start | chat:<text> |
-   kick:<seat> | set:<index>=<value> | save:<0|1> | leave | mute:<seat> | wait:<frames>. One step at a time, each once the previous
+   kick:<seat> | ban:<seat> | set:<index>=<value> | save:<0|1> | leave | mute:<seat> | wait:<frames>. One step at a time, each once the previous
    one has landed; SM64DS_LOBBY_TEST_CODEFILE=<file>: the room code is written there once the room is made (a second console's join:@).
    SM64DS_LOBBY_TEST_SEATS=<n> (default 2): "start" waits for n seats, all ready. Lines "[lobbytest] ..." say what happened. */
 void test_tick()
@@ -1350,6 +1432,7 @@ void test_tick()
         if (st->n_seats >= need && rd == st->n_seats) { lobby_start(); done = true; }
     } else if (!s.compare(0, 5, "chat:")) { lobby_send_chat(s.substr(5).c_str()); done = true; }
     else if (!s.compare(0, 5, "kick:")) { lobby_kick(std::atoi(s.c_str() + 5)); done = true; }
+    else if (!s.compare(0, 4, "ban:")) { lobby_ban(std::atoi(s.c_str() + 4)); done = true; }
     else if (!s.compare(0, 5, "mute:")) { lobby_mute(std::atoi(s.c_str() + 5), 1); done = true; }
     else if (!s.compare(0, 4, "set:")) {
         const size_t eq = s.find('=');
@@ -1540,7 +1623,8 @@ void lobby_create(LobbyKind kind)
     Lock l;
     if (!g.room.empty()) { g.error = "Leave this room first."; return; }
     begin_session_locked(kind);
-    std::string b = "{\"v\":6,\"nick\":" + jesc(g.nick) + ",\"pre_ok\":false,\"game\":" + jesc(g.game) + ",\"session_type\":" +
+    std::string b = "{\"v\":7,\"install\":" + jesc(install_id()) + ",\"nick\":" + jesc(g.nick) + ",\"pre_ok\":false,\"game\":" +
+                    jesc(g.game) + ",\"session_type\":" +
                     (kind == LOBBY_VS ? "\"vs\"" : "\"coop\"");
     if (kind == LOBBY_COOP) {
         g.coop_continue = coop_saves().empty() ? 0 : 1;
@@ -1572,8 +1656,8 @@ void lobby_join(const char *code)
         g.error = "That is not a valid room code.";
         return;
     }
-    std::string b = "{\"v\":6,\"room\":" + jesc(c) + ",\"nick\":" + jesc(g.nick) + ",\"pre_ok\":false,\"game\":" + jesc(g.game) +
-                    colours_json_locked() + "}";
+    std::string b = "{\"v\":7,\"install\":" + jesc(install_id()) + ",\"room\":" + jesc(c) + ",\"nick\":" + jesc(g.nick) +
+                    ",\"pre_ok\":false,\"game\":" + jesc(g.game) + colours_json_locked() + "}";
     say("join %s on %s as \"%s\" (game %s)", c.c_str(), g.base.c_str(), g.nick.c_str(), g.game.c_str());
     enqueue("join", b, 2);
 }
@@ -1667,6 +1751,19 @@ void lobby_kick(int seat)
     const int s = g.members[(size_t)seat].seat;
     if (s == g.you) return;
     enqueue("kick", head() + ",\"seat\":" + std::to_string(s) + "}");
+}
+
+void lobby_ban(int seat)
+{
+    if (!g_init) return;
+    Lock l;
+    if (g.room.empty() || seat < 0 || seat >= (int)g.members.size()) return;
+    if (g.you != g.host) { g.error = "Only the host can do that."; return; }
+    const int s = g.members[(size_t)seat].seat;
+    if (s == g.you) return;
+    if (!g.srv_ban) { g.error = "This lobby server cannot ban players yet. Kick still works."; return; }
+    say("ban seat %d", s);
+    enqueue("ban", "{\"v\":7,\"room\":" + jesc(g.room) + ",\"token\":" + jesc(g.token) + ",\"seat\":" + std::to_string(s) + "}");
 }
 
 void lobby_mute(int seat, int muted)
