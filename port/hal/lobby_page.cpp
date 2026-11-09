@@ -229,6 +229,7 @@ void fk_kick(int seat)
 void fk_mute(int seat, int m) { if (seat >= 0 && seat < F.s.n_seats) F.s.seats[seat].muted = m; }
 void fk_ban(int seat) { fk_kick(seat); }
 
+int g_auto_coop;                   /* SM64DS_LOBBY_SHOW realhost:coop (proof rows): press COOP on the choice */
 int g_fake = !LP_CLIENT_REAL;      /* the stand-in answers (always without the real client; with it only when a proof knob asks) */
 
 const LobbyState *C_state(void)
@@ -825,6 +826,7 @@ extern "C" int lobby_page_env_poll(void)
     if (!strncmp(P.env_what, "join:", 5)) { g_fake = 1; P.want = 2; snprintf(P.want_code, sizeof P.want_code, "%s", P.env_what + 5); return 1; }
     if (!strncmp(P.env_what, "realjoin:", 9)) { P.want = 2; snprintf(P.want_code, sizeof P.want_code, "%s", P.env_what + 9); return 1; }
     if (!strcmp(P.env_what, "realhost")) { P.want = 1; return 1; }
+    if (!strcmp(P.env_what, "realhost:coop")) { P.want = 1; g_auto_coop = 1; return 1; }   /* the choice answered COOP by itself */
     /* <coop|vs>:<scenario> on the stand-in */
     const char *colon = strchr(P.env_what, ':');
     const LobbyKind k = !strncmp(P.env_what, "vs", 2) ? LOBBY_VS : LOBBY_COOP;
@@ -903,6 +905,7 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
     C_tick();
     const LobbyState *s = C_state();
 #if LP_PROOF
+    if (g_auto_coop && P.screen == SCR_CHOOSE && P.frames > 30) { g_auto_coop = 0; log_line("realhost:coop presses COOP"); press(s, C_CHOOSE_COOP); }
     if (P.frames == 2) {      /* proof pictures: the hover buttons of a seat, the focus on a control, the settings panel */
         const char *e1 = getenv("SM64DS_LOBBY_SEATMENU"), *e2 = getenv("SM64DS_LOBBY_FOCUS"), *e3 = getenv("SM64DS_LOBBY_PANEL");
         if (e1 && *e1) P.seat_menu = atoi(e1);
