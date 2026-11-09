@@ -754,14 +754,6 @@
       "evidence": "The file's banner Leftover note and the comment on the declaration (#4326). Before #4326 the same calls spelled _ZN5Sound7PlaySubEjjj5Fix12IiEb, which the Fix12-by-value exemption covered."
     },
     {
-      "path": "src/game/actors/d_a_kpa3_bg.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN8dActor_c10EarthquakeERK7Vector3i",
-      "count": 2,
-      "reason": "func_ov060_02117db8 parses as C (cplusplus off; the same body as C++ DIFFs), so it cannot call dActor_c::Earthquake as a member and keeps the linker spelling, as its PoofDustAt and MarkForDestruction calls already do. Making Earthquake a scalar-Fix12i member respells the existing extern from _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE (exempt as Fix12-by-value) with its count unchanged. Follow-up: call the member once func_ov060_02117db8 matches as C++.",
-      "evidence": "origin/main:src/game/actors/d_a_kpa3_bg.cpp 2x _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE; head 2x _ZN8dActor_c10EarthquakeERK7Vector3i; file banner (func_ov060_02117db8 parses as C); tools/source_style.py --base origin/main"
-    },
-    {
       "path": "src/unnamed/arm9/0201/func_02018c00.c",
       "rule": "raw-offset",
       "match": "(int*)(self+0x20",
