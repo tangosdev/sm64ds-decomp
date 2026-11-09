@@ -1793,8 +1793,7 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
                        0x1A0C02u);
                 icon_ban(s, bn, armed ? 0xFFF3CCu : lit(C_BAN0 + i) ? 0xB01010u : 0xFFF3CCu, u);
             }
-            const char *tip = P.ban_arm == i ? (f.width("Press again to ban", 10.0f) <= r.w - 2 * edge - 6 * u ? "Press again to ban" : "Again to ban") :
-                              lit(C_BAN0 + i) ? "Ban" : lit(C_KICK0 + i) ? "Kick" : lit(C_MUTE0 + i) ? (t.muted ? "Unmute" : "Mute") : 0;
+            const char *tip = P.ban_arm == i ? "Press again to ban" : lit(C_BAN0 + i) ? "Ban" : lit(C_KICK0 + i) ? "Kick" : lit(C_MUTE0 + i) ? (t.muted ? "Unmute" : "Mute") : 0;
             if (tip) {
                 /* the tip sits right of the last button when it fits on the plate; otherwise (narrow plates, the armed BAN's question)
                    on a dark strip over the plate's Ready band */
@@ -1804,9 +1803,19 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
                 } else {
                     const int bh = (int)(r.h * 0.26f);      /* over the plate's status band, so the name stays in view */
                     const Rect band = { r.x + edge, r.y + r.h - edge - bh, r.w - 2 * edge, bh };
-                    rrect(s, band.x, band.y, band.w, band.h, 3 * u, 0x1A0C02u, 215);
-                    const std::string a = fit(f, tip, 10.0f, band.w - 6 * u);
-                    f.centred(s, band, a.c_str(), 10.0f, 0xFFF3CCu);
+                    rrect(s, band.x, band.y, band.w, band.h, 3 * u, 0x1A0C02u, 255);   /* opaque: the Ready under it must not show */
+                    /* the armed question is never cut: the longest wording that fits whole, then a smaller size for the shortest */
+                    const float room = band.w - 6 * u;
+                    float sz = 10.0f;
+                    if (P.ban_arm == i) {
+                        static const char *const kAsk[] = { "Press again to ban", "Press again", "Again?" };
+                        int k = 0;
+                        while (k < 2 && f.width(kAsk[k], sz) > room) ++k;
+                        tip = kAsk[k];
+                        while (sz > 6.0f && f.width(tip, sz) > room) sz -= 0.5f;
+                    }
+                    const std::string a = fit(f, tip, sz, room);
+                    f.centred(s, band, a.c_str(), sz, 0xFFF3CCu);
                 }
             }
         }
