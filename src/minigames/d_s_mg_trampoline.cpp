@@ -17,10 +17,6 @@
  * manifest; leave them.
  *
  * leftovers:
- * - The factory still builds the object by hand, so its offset stores
- *   stay raw.
- * - TrmpScorePopup::Render, TrmpScorePopup::Update and TrmpFx_Spawn keep raw offsets:
- *   the member-access form DIFFed there.
  * - The score pool (TrmpFx_Unlink..TrmpFx_InitPool) stays free:
  *   it works on the file-scope live-list globals, not one object, and
  *   TrmpFx_Spawn is the entry dMgTrmpln2Mario_c calls.
@@ -45,9 +41,9 @@ enum d_s_mg_trampoline_AssetId {
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
 #include "decl_common.h"
-/* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
-#define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
-/* local: these readers only reproduce through a 4-byte-record view of the lane. */
+/* local: UpdateTouchInput only reproduces through a 4-byte-record view of
+   each lane; the flat `gTouchHeld[slot * 4]` and TouchInfo forms DIFF there
+   (measured 2026-11-08). */
 #define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 
 namespace cstd {
@@ -67,22 +63,6 @@ void LoadOBJPltt(const void *src, u32 offset, u32 size);
 namespace G3X {
 void SetFog(int enable, int blend, int slope, int offset);
 }
-
-/* Local stand-ins for types no header declares yet. */
-typedef short s16;
-
-struct Node {
-    struct Node *next;
-};
-
-/* Shadow of the scene's +0x68/+0x6c, which sit in dScMgBase_c padding.
-   PaintSquare reads the layer; InitBrush writes both. */
-struct BrushLayerObj {
-    unsigned char pad0[0x68];
-    unsigned char brushOn;
-    unsigned char pad1[3];
-    int bgLayer;
-};
 
 typedef struct Vec2s {
     s16 x, y;
@@ -146,10 +126,10 @@ extern void Mg_RenderSpriteBoth(void *a, int b, int c, int d, int e);
 extern int sTrmpRowScreenY[];
 extern int sTrmpRowMarkerSprite;
 extern void Mg_DrawBigNumber(int, int, int, int, int, int, int);
-extern void TrmpFx_Link(int *self);
-extern struct Node *sTrmpFxList;
+extern void TrmpFx_Link(TrmpScorePopup *entry);
+extern TrmpScorePopup *sTrmpFxList;
 extern int sTrmpFxCount;
-extern int sTrmpFxPool;
+extern TrmpScorePopup *sTrmpFxPool;
 
 extern int sTrmpBrushWord[];
 extern void *func_02054efc(void);
@@ -302,7 +282,7 @@ extern "C" dScMgTrampoline_c *dScMgTrampoline_c_classInit(void) {
 
 void dScMgTrampoline_c::InitDisplay() {
     void *bgChar, *bgScr, *bgPltt, *objChar, *objPltt;
-    volatile u16 sp0;
+    volatile u16 fill;
 
     bgChar = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_NCG_BIN);
     bgScr = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_NSC_BIN);
@@ -310,22 +290,22 @@ void dScMgTrampoline_c::InitDisplay() {
     objChar = LoadFile(sTrmpNcgByLanguage[GetGameLanguage()]);
     objPltt = LoadFile(ASSET_D_2D_MG_TRAMPOLINE_NCL_BIN);
 
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 2;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x9110;
-    *(volatile u16 *)0x400000c &= ~0x40;
+    REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9110;
+    REG_BG2CNT &= ~0x40;
 
     {
         char *dst = (char *)G2::GetBG2CharPtr();
-        sp0 = 0;
-        MultiStore16(sp0, dst, 0x4000);
+        fill = 0;
+        MultiStore16(fill, dst, 0x4000);
     }
     DecompressLZ16(bgChar, (void *)((char *)G2::GetBG2CharPtr() + 0x4000));
     DecompressLZ16(bgScr, (void *)G2::GetBG2ScrPtr());
     GX::LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1318;
-    *(volatile u16 *)0x400000e &= ~0x40;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1318;
+    REG_BG3CNT &= ~0x40;
 
     DecompressLZ16(objChar, (void *)0x6400000);
     GX::LoadOBJPltt(objPltt, 0, 0x60);
@@ -342,7 +322,6 @@ void dScMgTrampoline_c::InitDisplay() {
 /* Slot 0. Sets up the two cameras and the fog, then ends with a virtual
  * call to StartRound(-1), the scene's reset hook. */
 s32 dScMgTrampoline_c::InitResources() {
-    char *base = (char *)this;
     s32 fov;
 
     this->mScrollY = 0x20;
@@ -351,9 +330,9 @@ s32 dScMgTrampoline_c::InitResources() {
     gMainScreenLayers =
         DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
     G3X::SetFog(false, 0, 2, 0x1000);
-    *(u16 *)0x4000060 = (*(u16 *)0x4000060 & ~0x3000) | 8;
+    REG_DISP3DCNT = (REG_DISP3DCNT & ~0x3000) | 8;
     InitialiseVramGlobals();
-    *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
+    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082414);
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
@@ -371,9 +350,9 @@ s32 dScMgTrampoline_c::InitResources() {
     this->mCameras[1].mPos.z = fov;
     this->mCameras[1].mFovAngle = 0x400;
     Camera_UpdateMatrices(&mCameras[1]);
-    if (Trmp3DMario_InitPool((unsigned char *)(base + 0x500c), 4) == 0)
+    if (Trmp3DMario_InitPool((unsigned char *)mMarios, 4) == 0)
         return 0;
-    TrmpFx_InitPool(base + 0x5cd0, 5);
+    TrmpFx_InitPool(mScorePopups, 5);
     TrmpLine_LoadTextures();
     Mg_SetTopScreenYOffset(0x10);
     StartRound(-1);
@@ -384,50 +363,47 @@ extern "C" void TrmpLine_ClearAll(u32);
 extern volatile s16 data_020a0dbc[];
 
 void dScMgTrampoline_c::StartRound(int /* arg */) {
-    char *o = (char *)this;
-
-    struct dScMgTrampoline_c *self = (struct dScMgTrampoline_c *)(void *)o;
     volatile unsigned short fill;
-    int q;
+    int heightMix;
 
-    G2x::SetBlendAlpha((volatile u16 *)0x4000050, 1, 0x3e, 0x10, 0x10);
+    G2x::SetBlendAlpha(&REG_BLDCNT, 1, 0x3e, 0x10, 0x10);
 
-    self->mTouchStartX = data_020a0dbc[0];
-    self->mTouchStartY = data_020a0dbc[1];
-    self->mTouchX = data_020a0dbc[0];
-    self->mTouchY = data_020a0dbc[1];
+    mTouchStartX = data_020a0dbc[0];
+    mTouchStartY = data_020a0dbc[1];
+    mTouchX = data_020a0dbc[0];
+    mTouchY = data_020a0dbc[1];
 
     sTrmpAnyOnLedge = 0;
-    self->mLevel = 0;
-    if ((unsigned int)self->mLevel > 0x270e)
-        self->mLevel = 0x270e;
+    mLevel = 0;
+    if (mLevel > 0x270e)
+        mLevel = 0x270e;
     /* mLevel is u32 on dScMgBase_c (dScMg3DEsp_c's evidence). This function
        divides and takes a remainder of it, where signedness IS codegen -- it
        reads the field SIGNED, which is what this header used to declare
        locally. Cast at the use site rather than retype the shared base. */
-    q = ((((s32)self->mLevel % 5) << 12)) / 4;
-    self->mScrollY = FX_MUL((0x1000 - q), 0x20) + FX_MUL(q, 0x50);
-    self->mScrollTargetY = self->mScrollY;
-    self->mScrollHoldTimer = 0;
-    Trmp3DMario_ResetAll(self->mLevel, self->mScrollY);
+    heightMix = (((s32)mLevel % 5) << 12) / 4;
+    mScrollY = FX_MUL(0x1000 - heightMix, 0x20) + FX_MUL(heightMix, 0x50);
+    mScrollTargetY = mScrollY;
+    mScrollHoldTimer = 0;
+    Trmp3DMario_ResetAll(mLevel, mScrollY);
 
-    TrmpLine_ClearAll(self->mLevel);
+    TrmpLine_ClearAll(mLevel);
     TrmpFx_ClearAll();
     Puff_ClearAll(0, sTrmpPuffXByLanguage[GetGameLanguage()]);
 
     mDoorMark.Hide();
 
-    self->mInputEnabled = 0;
-    self->mRoundOver = 0;
-    self->mDoorSwitchTimer =
+    mInputEnabled = 0;
+    mRoundOver = 0;
+    mDoorSwitchTimer =
         (((int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) *
           0x2d0) >>
          12) +
         0x2d0;
-    self->mDoorBlinkTimer = 0;
-    self->mDoorBlinkPhase = 1;
-    self->mArrow1X = 0;
-    self->mArrow2X = 0;
+    mDoorBlinkTimer = 0;
+    mDoorBlinkPhase = 1;
+    mArrow1X = 0;
+    mArrow2X = 0;
 
     SetDoorSide(0);
 
@@ -447,16 +423,16 @@ int dScMgTrampoline_c::CanEndState(int /* mode */) {
 }
 
 void dScMgTrampoline_c::BeginIntro() {
-    short a;
-    short b;
+    short startX;
+    short startY;
 
     mTimer = 0x5a;
-    a = sTrmpStartTouchX;
-    mTouchStartX = a;
-    b = sTrmpStartTouchY;
-    mTouchStartY = b;
-    mTouchX = a;
-    mTouchY = b;
+    startX = sTrmpStartTouchX;
+    mTouchStartX = startX;
+    startY = sTrmpStartTouchY;
+    mTouchStartY = startY;
+    mTouchX = startX;
+    mTouchY = startY;
     mDragSoundHandle = 0;
     *(P2Words *)mState = *(P2Words *)&pmf_dScMgTrampoline_c_StateIntro;
 }
@@ -489,11 +465,13 @@ void dScMgTrampoline_c::StateIntro() {
 
     {
         int t = cstd::fdiv(counter << 12, 0x5a000);
-        volatile s16 oldY = mTouchX;
-        volatile s16 oldZ = mTouchY;
-        int mixRaw = sTrmpStartTouchX * t + sTrmpIntroFromX * (0x1000 - t);
+        /* Kept volatile: the ROM spills the previous point to the stack
+           across the random draw; plain locals DIFF (measured 2026-11-08). */
+        volatile s16 prevX = mTouchX;
+        volatile s16 prevY = mTouchY;
+        int penX = sTrmpStartTouchX * t + sTrmpIntroFromX * (0x1000 - t);
 
-        mTouchX = (s16)(mixRaw >> 12);
+        mTouchX = (s16)(penX >> 12);
         mTouchY = sTrmpStartTouchY;
 
         mTouchY +=
@@ -502,10 +480,10 @@ void dScMgTrampoline_c::StateIntro() {
               << 2) >>
              12);
 
-        Mg_DrawLine(oldY, oldZ, mTouchX, mTouchY, 2, 0xc);
+        Mg_DrawLine(prevX, prevY, mTouchX, mTouchY, 2, 0xc);
 
         mDragSoundHandle =
-            func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mixRaw), 0, 0);
+            func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(penX), 0, 0);
     }
 }
 
@@ -519,12 +497,12 @@ void dScMgTrampoline_c::BeginPlay() {
 }
 
 void dScMgTrampoline_c::UpdateScroll() {
-    int q = sTrmpComboCount / 10;
-    int old = mLevel;
+    int level = sTrmpComboCount / 10;
+    int oldLevel = mLevel;
     Trmp3DMario_SetSpawnHeight(mScrollY);
-    Trmp3DMario_SetTuning((q << 8) + 0x1000);
-    if (old != q) {
-        mLevel = q;
+    Trmp3DMario_SetTuning((level << 8) + 0x1000);
+    if (oldLevel != level) {
+        mLevel = level;
         if (mLevel > 0x270e)
             mLevel = 0x270e;
         if (mScrollTargetY < 0x50) {
@@ -534,12 +512,12 @@ void dScMgTrampoline_c::UpdateScroll() {
     }
     if (ApproachLinear(mScrollHoldTimer, 0, 1) != 0) {
         if (mScrollY == mScrollTargetY) {
-            int t;
-            mScrollTargetY = (q << 3) + 0x20;
-            t = mScrollTargetY;
-            if (t > 0x50)
-                t = 0x50;
-            mScrollTargetY = t;
+            int target;
+            mScrollTargetY = (level << 3) + 0x20;
+            target = mScrollTargetY;
+            if (target > 0x50)
+                target = 0x50;
+            mScrollTargetY = target;
         }
         ApproachLinear(mScrollY, mScrollTargetY, 2);
         mScrollOffsetY = 0;
@@ -549,10 +527,10 @@ void dScMgTrampoline_c::UpdateScroll() {
 }
 
 void dScMgTrampoline_c::StatePlay() {
-    int old = sTrmpComboCount;
+    int oldCombo = sTrmpComboCount;
     TrmpLine_UpdateAll();
     Trmp3DMario_UpdateAll();
-    if (sTrmpComboCount > old) {
+    if (sTrmpComboCount > oldCombo) {
         if (sTrmpComboCount == 3)
             mPromptEnabled = 0;
     }
@@ -565,27 +543,25 @@ void dScMgTrampoline_c::StatePlay() {
         if (ApproachLinear(mTimer, 0, 1)) {
             if (sTrmpComboCount >= 5 || sTrmpMariosInPlay < 3) {
                 int i;
-                char *p = (char *)mMarios;
                 for (i = 0; i < 4; i++) {
-                    if (Trmp3DMario_IsOffstage((int *)p)) {
-                        Trmp3DMario_EnterWalkIn((char *)mMarios + i * 0xd0);
+                    if (Trmp3DMario_IsOffstage((int *)&mMarios[i])) {
+                        Trmp3DMario_EnterWalkIn((char *)&mMarios[i]);
                         break;
                     }
-                    p += 0xd0;
                 }
             }
             mTimer = 0x168;
             {
-                int amt = sTrmpComboCount * 2;
-                if (amt > 0xb4)
-                    amt = 0xb4;
-                mTimer -= amt;
+                int speedUp = sTrmpComboCount * 2;
+                if (speedUp > 0xb4)
+                    speedUp = 0xb4;
+                mTimer -= speedUp;
             }
         }
     }
 
     if (sTrmpAnyOnLedge == 0) {
-        if (ApproachLinear2(*(short *)&mDoorSwitchTimer, 0, 1)) {
+        if (ApproachLinear2(mDoorSwitchTimer, 0, 1)) {
             if (GetDoorSide()) {
                 SetDoorSide(0);
                 mDoorMark.Show(mDoorSide);
@@ -597,8 +573,8 @@ void dScMgTrampoline_c::StatePlay() {
             {
                 unsigned int rnd =
                     (unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
-                int prod = (rnd >> 19) * 0x2d0;
-                mDoorSwitchTimer = (s16)((prod >> 12) + 0x2d0);
+                int scaled = (rnd >> 19) * 0x2d0;
+                mDoorSwitchTimer = (s16)((scaled >> 12) + 0x2d0);
                 mDoorBlinkTimer = 0;
                 mDoorBlinkPhase = 1;
             }
@@ -606,7 +582,7 @@ void dScMgTrampoline_c::StatePlay() {
     }
 
     if (mDoorSwitchTimer <= 0x3c) {
-        if (ApproachLinear2(*(short *)&mDoorBlinkTimer, 0, 1)) {
+        if (ApproachLinear2(mDoorBlinkTimer, 0, 1)) {
             mDoorBlinkTimer = 0xa;
             if (mDoorBlinkPhase != 0)
                 mDoorBlinkPhase = 0;
@@ -643,22 +619,22 @@ void dScMgTrampoline_c::StateResults() {
 }
 
 void dScMgTrampoline_c::StateWaitExit() {
-    int idx, b;
+    int slot, tapped;
     mTimer -= 1;
     if (mTimer != 0) {
-        idx = ACTIVE_SLOT;
-        b = 0;
-        if (TOUCH_REC(gTouchHeld)[idx][0] != 0 && TOUCH_REC(gTouchEdge)[idx][0] != 0)
-            b = 1;
-        if (b == 0)
+        slot = gActivePlayerSlot;
+        tapped = 0;
+        if (gTouchHeld[slot * 4] != 0 && gTouchEdge[slot * 4] != 0)
+            tapped = 1;
+        if (tapped == 0)
             return;
     }
     {
-        int r;
-        volatile unsigned short h;
-        r = func_02054d88();
-        h = 0;
-        MultiStore16(h, (char *)r, 0x6000);
+        int dst;
+        volatile unsigned short fill;
+        dst = func_02054d88();
+        fill = 0;
+        MultiStore16(fill, (char *)dst, 0x6000);
     }
     mRoundOver = 1;
     *(P2Words *)mState = *(P2Words *)&pmf_dScMgTrampoline_c_StateDone;
@@ -676,20 +652,20 @@ void dScMgTrampoline_c::SetDoorSide(short value) {
 }
 
 void dScMgTrampoline_c::UpdateTouchInput() {
-    int i;
-    int b;
+    int slot;
+    int edge;
 
     if (mInputEnabled == 0) {
         mTouching = 0;
         return;
     }
 
-    i = ACTIVE_SLOT;
-    b = (TOUCH_REC(gTouchHeld)[i][0] != 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
-    if (b) {
-        mTouchX = TOUCH_REC(gTouchX)[i][0];
+    slot = gActivePlayerSlot;
+    edge = (TOUCH_REC(gTouchHeld)[slot][0] != 0 && TOUCH_REC(gTouchEdge)[slot][0] != 0);
+    if (edge) {
+        mTouchX = TOUCH_REC(gTouchX)[slot][0];
         mTouchStartX = mTouchX;
-        mTouchY = TOUCH_REC(gTouchY)[i][0];
+        mTouchY = TOUCH_REC(gTouchY)[slot][0];
         mTouchStartY = mTouchY;
         mTouching = 1;
         mDragSoundHandle = 0;
@@ -698,17 +674,18 @@ void dScMgTrampoline_c::UpdateTouchInput() {
     if (mTouching != 1)
         return;
 
-    i = ACTIVE_SLOT;
-    if (TOUCH_REC(gTouchHeld)[i][0] != 0) {
-        Mg_DrawLine(mTouchX, mTouchY, TOUCH_REC(gTouchX)[i][0], TOUCH_REC(gTouchY)[i][0], 2, 4);
-        i = ACTIVE_SLOT;
-        mTouchX = TOUCH_REC(gTouchX)[i][0];
-        mTouchY = TOUCH_REC(gTouchY)[i][0];
+    slot = gActivePlayerSlot;
+    if (TOUCH_REC(gTouchHeld)[slot][0] != 0) {
+        Mg_DrawLine(mTouchX, mTouchY, TOUCH_REC(gTouchX)[slot][0], TOUCH_REC(gTouchY)[slot][0], 2,
+                    4);
+        slot = gActivePlayerSlot;
+        mTouchX = TOUCH_REC(gTouchX)[slot][0];
+        mTouchY = TOUCH_REC(gTouchY)[slot][0];
         mDragSoundHandle =
             func_02012468(mDragSoundHandle, 2, 0x1b0, 2, 0, func_020126e8(mTouchX << 12), 0, 0);
     } else {
-        b = (int)(TOUCH_REC(gTouchHeld)[i][0] == 0 && TOUCH_REC(gTouchEdge)[i][0] != 0);
-        if (b != 0) {
+        edge = (TOUCH_REC(gTouchHeld)[slot][0] == 0 && TOUCH_REC(gTouchEdge)[slot][0] != 0);
+        if (edge != 0) {
             mTouchReleased = 1;
         }
     }
@@ -732,51 +709,51 @@ s32 dScMgTrampoline_c::Behavior() {
    The arrows slide in mArrow1X / mArrow2X; mDoorBlinkPhase picks the frame
    on the lit side. */
 s32 dScMgTrampoline_c::Render() {
-    int count;
-    int a1v;
+    int lives;
+    int iconX;
     int i;
-    int aa;
-    int r6, r5;
-    int t;
+    int side;
+    int door0Frame, door1Frame;
+    int rowY;
 
     mDoorMark.Render(mScrollY);
     TrmpFx_DrawAll();
 
     if (mDrawSubScreen == 1) {
-        count = sTrmp3DLives;
-        a1v = 0x6e;
+        lives = sTrmp3DLives;
+        iconX = 0x6e;
         for (i = 0; i < 3; i++) {
-            if (i >= count) {
-                int idx = GetGameLanguage();
-                DrawOamSprite(sTrmpTextSpritesByLanguage[idx][1], a1v, 0xc, 0);
+            if (i >= lives) {
+                int language = GetGameLanguage();
+                DrawOamSprite(sTrmpTextSpritesByLanguage[language][1], iconX, 0xc, 0);
             } else {
-                RenderOamMainScreen(sTrmpLifeIconSprite, a1v, 0xc, -1, -1);
+                RenderOamMainScreen(sTrmpLifeIconSprite, iconX, 0xc, -1, -1);
             }
-            a1v += 0x12;
+            iconX += 0x12;
         }
     }
 
     Mg_DrawTopRightCounter(sTrmpComboCount, 4);
 
-    aa = mDoorSide;
-    r6 = 1;
-    r5 = 1;
-    if (aa == 0) {
+    side = mDoorSide;
+    door0Frame = 1;
+    door1Frame = 1;
+    if (side == 0) {
         if (mDoorBlinkPhase != 0)
-            r6 = 0;
+            door0Frame = 0;
     }
-    if (aa != 0) {
+    if (side != 0) {
         if (mDoorBlinkPhase != 0)
-            r5 = 0;
+            door1Frame = 0;
     }
 
-    t = sTrmpRowScreenY[0] - (mScrollY + mScrollOffsetY);
-    Mg_RenderSpriteBoth(sTrmpArrowSprite, mArrow1X + 0xf0, t, -1, 2);
-    Mg_RenderSpriteBoth(sTrmpDoorSignSprites[r6], 0xf0, t - 0x20, -1, 2);
+    rowY = sTrmpRowScreenY[0] - (mScrollY + mScrollOffsetY);
+    Mg_RenderSpriteBoth(sTrmpArrowSprite, mArrow1X + 0xf0, rowY, -1, 2);
+    Mg_RenderSpriteBoth(sTrmpDoorSignSprites[door0Frame], 0xf0, rowY - 0x20, -1, 2);
 
-    t = sTrmpRowScreenY[1] - (mScrollY + mScrollOffsetY);
-    Mg_RenderSpriteBoth(sTrmpArrowSprite, mArrow2X + 0xf0, t, -1, 2);
-    Mg_RenderSpriteBoth(sTrmpDoorSignSprites[r5], 0xf0, t - 0x20, -1, 2);
+    rowY = sTrmpRowScreenY[1] - (mScrollY + mScrollOffsetY);
+    Mg_RenderSpriteBoth(sTrmpArrowSprite, mArrow2X + 0xf0, rowY, -1, 2);
+    Mg_RenderSpriteBoth(sTrmpDoorSignSprites[door1Frame], 0xf0, rowY - 0x20, -1, 2);
 
     if (mRoundOver == 0) {
         Trmp3DMario_DrawAll();
@@ -799,11 +776,11 @@ int dScMgTrampoline_c::OnGraphCallback2() {
         if (mDrawSubScreen == 0) {
             gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
             SetBg2Offset(0, mScrollY + mScrollOffsetY);
-            *(volatile int *)0x4000018 = (mScrollY + mScrollOffsetY) << 16 & 0x1ff0000;
+            REG_BG2OFS = (mScrollY + mScrollOffsetY) << 16 & 0x1ff0000;
         } else {
             gMainScreenLayers |= DISPLAY_LAYER_BG3;
             SetBg2Offset(0, mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset());
-            *(volatile int *)0x4000018 =
+            REG_BG2OFS =
                 (mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset()) << 16 & 0x1ff0000;
         }
     }
@@ -817,10 +794,10 @@ int dScMgTrampoline_c::OnGraphCallback3() {
 
 /* dScMgTrampoline_c::OnGraphCallback0, from its vtable slot. */
 int dScMgTrampoline_c::OnGraphCallback0() {
-    volatile u16 z;
-    Vec2s v1;
-    Vec2s v2;
-    s16 a;
+    volatile u16 fill;
+    Vec2s from;
+    Vec2s to;
+    s16 startX;
     int dst;
 
     if (!dScMgBase_c::OnGraphCallback0())
@@ -839,23 +816,25 @@ int dScMgTrampoline_c::OnGraphCallback0() {
         return 0;
 
     if (mTouchReleased != 0) {
-        a = mTouchStartX;
-        if ((a < 0x24 && mTouchX < 0x24) || (a > 0xd4 && mTouchX > 0xd4)) {
+        startX = mTouchStartX;
+        if ((startX < 0x24 && mTouchX < 0x24) || (startX > 0xd4 && mTouchX > 0xd4)) {
             func_02012790(0xe);
         } else {
-            v1.x = *(volatile s16 *)&mTouchStartX;
-            v1.y = mTouchStartY;
-            v2.x = mTouchX;
-            v2.y = mTouchY;
-            if (TrmpLine_Create(&v1.x, &v2.x)) {
+            /* Kept volatile: a plain read of mTouchStartX DIFFs here
+               (measured 2026-11-08). */
+            from.x = *(volatile s16 *)&mTouchStartX;
+            from.y = mTouchStartY;
+            to.x = mTouchX;
+            to.y = mTouchY;
+            if (TrmpLine_Create(&from.x, &to.x)) {
                 func_02012718(0x1af, (mTouchStartX + mTouchX) << 11);
             } else {
                 func_02012790(0xe);
             }
         }
         dst = func_02054d88();
-        z = 0;
-        MultiStore16(z, (char *)dst, 0x6000);
+        fill = 0;
+        MultiStore16(fill, (char *)dst, 0x6000);
         mTouching = 0;
         mTouchReleased = 0;
     }
@@ -863,7 +842,6 @@ int dScMgTrampoline_c::OnGraphCallback0() {
 }
 
 void dScMgTrampoline_c::InitBrush(int layer) {
-    BrushLayerObj *self = (BrushLayerObj *)this;
     volatile unsigned short t0;
     volatile unsigned short t1;
     int tile = 0x7000;
@@ -871,10 +849,10 @@ void dScMgTrampoline_c::InitBrush(int layer) {
     char *charPtr;
     int i;
 
-    self->brushOn = 1;
-    self->bgLayer = layer;
+    mBrushOnMain = 1;
+    mBrushLayer = layer;
 
-    switch (self->bgLayer) {
+    switch (mBrushLayer) {
     case 0:
         scrPtr = (char *)G2::GetBG0ScrPtr();
         charPtr = (char *)func_02054efc();
@@ -916,77 +894,73 @@ void dScMgTrampoline_c::InitBrush(int layer) {
    table (sTrmpBrushWord here, _02142f78 in dScMgTrampoline2_c).
    bgLayer (+0x6c, in the base padding) picks the character base. No
    wrapped-region branch: a 3D minigame owns the top screen. */
-void dScMgTrampoline_c::PaintSquare(int x_base, int y, int val, int n) {
-    char *raw = (char *)this;
-
+void dScMgTrampoline_c::PaintSquare(int cx, int cy, int colour, int size) {
     int half;
-    int x0;
+    int left;
     int j;
     int x;
     int *addr;
     int i;
-    int yy;
-    int mask = 0xf;
+    int y;
 
-    half = n / 2;
+    half = size / 2;
     j = 0;
-    if (j < n) {
-        yy = y - half;
-        x0 = x_base - half;
+    if (j < size) {
+        y = cy - half;
+        left = cx - half;
         do {
-            for (i = 0; i < n; i++) {
-                x = i + x0;
+            for (i = 0; i < size; i++) {
+                x = i + left;
                 if (x >= 0 && x < 0x100) {
-                    if (yy >= 0 && yy < 0xc0) {
-                        void *ret;
-                        int mode = ((BrushLayerObj *)raw)->bgLayer;
-
-                        switch (mode) {
+                    if (y >= 0 && y < 0xc0) {
+                        void *charBase;
+                        switch (mBrushLayer) {
                         case 0:
-                            ret = func_02054efc();
+                            charBase = func_02054efc();
                             break;
                         case 1:
-                            ret = func_02054ea8();
+                            charBase = func_02054ea8();
                             break;
                         case 2:
-                            ret = G2::GetBG2CharPtr();
+                            charBase = G2::GetBG2CharPtr();
                             break;
                         case 3:
-                            ret = (void *)func_02054d88();
+                            charBase = (void *)func_02054d88();
                             break;
                         default:
                             return;
                         }
 
-                        addr = (int *)((char *)ret + ((x / 8) + (yy / 8) * 32) * 32 + (yy & 7) * 4);
+                        addr =
+                            (int *)((char *)charBase + ((x / 8) + (y / 8) * 32) * 32 + (y & 7) * 4);
 
                         MultiCopy_Int(addr, sTrmpBrushWord, 4);
-                        sTrmpBrushWord[0] = (sTrmpBrushWord[0] & (-1 ^ (mask << ((x & 7) * 4)))) |
-                                            (val << ((x & 7) * 4));
+                        /* Kept as `-1 ^`: the `~` spelling DIFFs here (measured 2026-11-08). */
+                        sTrmpBrushWord[0] = (sTrmpBrushWord[0] & (-1 ^ (0xf << ((x & 7) * 4)))) |
+                                            (colour << ((x & 7) * 4));
                         MultiCopy_Int(sTrmpBrushWord, addr, 4);
                     }
                 }
             }
-            yy++;
+            y++;
             j++;
-        } while (j < n);
+        } while (j < size);
     }
 }
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void TrmpFx_InitPool(void *records, int count) {
-    sTrmpFxPool = (int)records;
+    sTrmpFxPool = (TrmpScorePopup *)records;
     sTrmpFxCount = count;
 }
 }
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
-/* TrmpScorePopup* index DIFFed (the scale folded the wrong register). */
 void TrmpFx_Spawn(int x, int y) {
     int i;
     for (i = sTrmpFxCount - 1; i >= 0; i--) {
-        if (*(short *)(sTrmpFxPool + i * 0x24 + 0x20) == 0) {
-            ((TrmpScorePopup *)(sTrmpFxPool + i * 0x24))->Spawn(x, y);
+        if (sTrmpFxPool[i].active == 0) {
+            sTrmpFxPool[i].Spawn(x, y);
             return;
         }
     }
@@ -997,7 +971,7 @@ extern "C" { /* .c-derived member: C linkage for the whole block */
 void TrmpFx_ClearAll(void) {
     int i;
     for (i = 0; i < sTrmpFxCount; i++) {
-        ((TrmpScorePopup *)(sTrmpFxPool + i * 0x24))->active = 0;
+        sTrmpFxPool[i].active = 0;
     }
     sTrmpFxList = 0;
 }
@@ -1005,54 +979,48 @@ void TrmpFx_ClearAll(void) {
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void TrmpFx_UpdateAll(void) {
-    int i = 0;
-    if (sTrmpFxCount > 0) {
-        int off = 0;
-        do {
-            ((TrmpScorePopup *)(sTrmpFxPool + off))->Update();
-            i++;
-            off += 0x24;
-        } while (i < sTrmpFxCount);
+    int i;
+    for (i = 0; i < sTrmpFxCount; i++) {
+        sTrmpFxPool[i].Update();
     }
 }
 }
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void TrmpFx_DrawAll(void) {
-    void *node = sTrmpFxList;
+    TrmpScorePopup *node = sTrmpFxList;
     if (node == 0)
         return;
     do {
-        ((TrmpScorePopup *)node)->Render();
-        node = *(void **)node;
+        node->Render();
+        node = node->next;
     } while (node != 0);
 }
 }
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
-void TrmpFx_Link(int *entryRaw) {
-    TrmpScorePopup *entry = (TrmpScorePopup *)entryRaw;
+void TrmpFx_Link(TrmpScorePopup *entry) {
     TrmpScorePopup *node;
     entry->next = sTrmpFxList;
-    sTrmpFxList = (Node *)entry;
-    node = (TrmpScorePopup *)entry->next;
-    int v = entry->y - 0x10000;
+    sTrmpFxList = entry;
+    node = entry->next;
+    int targetY = entry->y - 0x10000;
     while (node) {
-        node->targetY = v;
-        node = (TrmpScorePopup *)node->next;
-        v -= 0x10000;
+        node->targetY = targetY;
+        node = node->next;
+        targetY -= 0x10000;
     }
 }
 }
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
-void TrmpFx_Unlink(struct Node *node) {
-    struct Node *prev = sTrmpFxList;
+void TrmpFx_Unlink(TrmpScorePopup *node) {
+    TrmpScorePopup *prev = sTrmpFxList;
     if (prev == node) {
         sTrmpFxList = node->next;
         return;
     }
-    struct Node *cur = prev->next;
+    TrmpScorePopup *cur = prev->next;
     while (cur) {
         if (cur == node) {
             prev->next = node->next;
@@ -1075,35 +1043,27 @@ void TrmpScorePopup::Spawn(int y, int number) {
     life = 0x80;
     active = 1;
     this->number = number;
-    TrmpFx_Link((int *)this);
+    TrmpFx_Link(this);
 }
 
 extern "C" void func_0203d630(int *p, int m);
-/* Member form of x += speedX DIFFed. Offsets are TrmpScorePopup's. */
 void TrmpScorePopup::Update() {
-    char *self = (char *)this;
-    if ((*((short *)(self + 0x20))) == 0) {
+    if (active == 0) {
         return;
     }
-    if (ApproachLinear2(*((short *)(self + 0x1c)), 0, 1)) {
-        TrmpFx_Unlink((Node *)self);
-        *((short *)(self + 0x20)) = 0;
+    if (ApproachLinear2(life, 0, 1)) {
+        TrmpFx_Unlink(this);
+        active = 0;
     }
-    {
-        int *p = (int *)(((int)self + 4));
-        *p = *p + (*((int *)(self + 0x14)));
-    }
-    ApproachLinear(*((int *)(self + 8)), *((int *)(self + 0x10)), 0x1800);
-    func_0203d630((int *)(self + 0x14), 0xf00);
+    x += speedX;
+    ApproachLinear(y, targetY, 0x1800);
+    func_0203d630(&speedX, 0xf00);
 }
 
-/* Member form DIFFed (ldrsh of number). Offsets are TrmpScorePopup::active, x, y, number. */
 void TrmpScorePopup::Render() {
-    char *desc = (char *)this;
-    if (*(short *)(desc + 0x20) == 0)
+    if (active == 0)
         return;
-    Mg_DrawBigNumber(*(int *)(desc + 4) >> 12, *(int *)(desc + 8) >> 12, *(short *)(desc + 0x1e),
-                     -1, -1, 0, 0);
+    Mg_DrawBigNumber(x >> 12, y >> 12, number, -1, -1, 0, 0);
 }
 
 void dScMgTrampoline_DoorMark::Init() {

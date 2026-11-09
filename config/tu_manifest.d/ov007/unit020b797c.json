@@ -20,7 +20,7 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov007_020b797c",
+      "symbol": "MenuText_ClearMainPlane",
       "address": "0x020b797c",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b797c.c",
@@ -55,14 +55,14 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_ov007_020b7a44",
+      "symbol": "MessageWindow_Close",
       "address": "0x020b7a44",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b7a44.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov007_020b7a78",
+      "symbol": "MessageWindow_Update",
       "address": "0x020b7a78",
       "size": "0x0000031c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b7a78.c",
@@ -83,49 +83,49 @@
       "ordinal": 8
     },
     {
-      "symbol": "func_ov007_020b8070",
+      "symbol": "MenuText_ScrollRecordBoard",
       "address": "0x020b8070",
       "size": "0x00000118",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8070.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov007_020b8188",
+      "symbol": "MenuText_DrawRecordBoard",
       "address": "0x020b8188",
       "size": "0x00000360",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8188.c",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov007_020b84e8",
+      "symbol": "MenuText_GetSourceScreen",
       "address": "0x020b84e8",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b84e8.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov007_020b84f4",
+      "symbol": "MenuText_GetSubScreen",
       "address": "0x020b84f4",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b84f4.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "func_ov007_020b8500",
+      "symbol": "MenuText_GetMainScreen",
       "address": "0x020b8500",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8500.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov007_020b850c",
+      "symbol": "MenuText_LoadFontPalette",
       "address": "0x020b850c",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b850c.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov007_020b8548",
+      "symbol": "MenuText_Init",
       "address": "0x020b8548",
       "size": "0x00000148",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8548.cpp",
@@ -146,63 +146,63 @@
       "ordinal": 17
     },
     {
-      "symbol": "func_ov007_020b883c",
+      "symbol": "MessageWindow_SetClosed",
       "address": "0x020b883c",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b883c.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "func_ov007_020b8860",
+      "symbol": "MessageWindow_Start",
       "address": "0x020b8860",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8860.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "func_ov007_020b88c0",
+      "symbol": "MessageWindow_LayoutFrame",
       "address": "0x020b88c0",
       "size": "0x000001b8",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b88c0.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_ov007_020b8a78",
+      "symbol": "MenuText_DrawSlotHeading",
       "address": "0x020b8a78",
       "size": "0x00000088",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8a78.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "func_ov007_020b8b00",
+      "symbol": "MenuText_DrawNumber",
       "address": "0x020b8b00",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8b00.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "func_ov007_020b8b80",
+      "symbol": "MenuText_DrawString",
       "address": "0x020b8b80",
       "size": "0x0000017c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8b80.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "func_ov007_020b8cfc",
+      "symbol": "MenuText_RepeatGlyph",
       "address": "0x020b8cfc",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8cfc.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "func_ov007_020b8d48",
+      "symbol": "MenuText_DrawGlyph",
       "address": "0x020b8d48",
       "size": "0x00000178",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8d48.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov007_020b8ec0",
+      "symbol": "MenuText_MessageIDToIndex",
       "address": "0x020b8ec0",
       "size": "0x00000090",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b8ec0.cpp",

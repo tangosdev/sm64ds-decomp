@@ -6,7 +6,7 @@
 extern void func_ov007_020c3d1c(void *p);
 extern void func_ov007_020c105c(void *p);
 extern void func_ov007_020c05f8(void *p);
-extern void func_ov007_020c8b04(void *p);
+extern void Transition_Destroy(void *p);
 extern void func_ov007_020c3544(void *p);
 extern void func_ov007_020c338c(void *p);
 extern void func_ov007_020c121c(void *p);
@@ -31,7 +31,7 @@ void func_ov007_020b73b4(Ov007Display *d) {
         arr = (void **)d->transitions;
         for (i = 0; i < d->transitionCount; i++)
             if (arr[i])
-                func_ov007_020c8b04(arr[i]);
+                Transition_Destroy(arr[i]);
         func_ov007_020c3d1c(arr);
     }
 

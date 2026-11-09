@@ -62,25 +62,26 @@ struct daBakubaku_c : dEnemyBase_c {
     /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */
     virtual ~daBakubaku_c() {}
 
-    int func_ov032_02111ff4(void *state);
+    int SetState(void *state);
 
     /* The state hooks and helpers. The ROM records no English names; the
      * pointer-to-member constants at 0x0211377c..0x021137c4 prove ten of
-     * them are members, so they keep their address labels as method names. */
-    int  func_ov032_02111f9c(); /* wander enter */
-    int  func_ov032_02111e24(); /* wander main */
-    int  func_ov032_02111dd8(); /* pause enter */
-    int  func_ov032_02111d7c(); /* pause main */
-    int  func_ov032_02111d58(); /* chase enter */
-    int  func_ov032_02111b9c(); /* chase main */
-    int  func_ov032_02111814(); /* surface enter */
-    int  func_ov032_02111620(); /* surface main */
-    int  func_ov032_02111b50(); /* dive enter */
-    int  func_ov032_02111830(); /* dive main */
-    int  func_ov032_02111350(); /* abort test: player gone, wall, too far */
-    int  func_ov032_02111254(); /* chase-target test: stores player pos */
-    void func_ov032_021113fc(); /* cylinder collision: bite / mega-kill */
-    void func_ov032_02112044(); /* model + shadow matrices */
+     * them are members. The hooks take the EnterX/ExecuteX spelling of
+     * daBasabasa_c and daBbl_c, which use the same { enter, main } record. */
+    int EnterWander();        /* wander enter */
+    int ExecuteWander();      /* wander main */
+    int EnterPause();         /* pause enter */
+    int ExecutePause();       /* pause main */
+    int EnterChase();         /* chase enter */
+    int ExecuteChase();       /* chase main */
+    int EnterSurface();       /* surface enter */
+    int ExecuteSurface();     /* surface main */
+    int EnterDive();          /* dive enter */
+    int ExecuteDive();        /* dive main */
+    int ShouldReturnHome();   /* abort test: player gone, wall, too far */
+    int FindChaseTarget();    /* chase-target test: stores player pos */
+    void HandleCylinderHit(); /* cylinder collision: bite / mega-kill */
+    void UpdateModelMatrix(); /* model + shadow matrices */
 };
 
 #ifndef SM64DS_PLATFORM_PC

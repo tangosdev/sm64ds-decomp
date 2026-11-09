@@ -98,7 +98,11 @@ struct dBgCh_Actr : dBgCh {
                                    the largest y (dBgW_Kc's sphere query hands SetFloorNormal
                                    `&sn` when sn.y beats it); func_020371fc snaps only when .y
                                    is under 0xf20, i.e. on a slope. */
-    Fix12i mScale;              /* 0x1b8 - (?) Init sets 0x1000 */
+    Fix12i mMaxNormalY;         /* 0x1b8 - every Update* copies it into
+                                   mSphereClsn.mMaxNormalY, the face-normal Y
+                                   ceiling of the sphere query; Init sets
+                                   0x1000, the sphere's own accept-every-face
+                                   default. Named after that destination. */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* Defined out of line in src/engine/collision/d_bg_ch_actr.cpp. Nothing
@@ -130,6 +134,7 @@ struct dBgCh_Actr : dBgCh {
     void UpdateExtraContinous();  /* sic -- the ROM name is missing a 'u' */
     void UpdateDiscreteNoLava();
     void UpdateDiscreteNoLava_2();
+    void UpdateContinuousExceptSlot0(); /* 0x02036acc; coined */
     void CommitFloorHit(s32); /* floor-result commit (0x020371b0); coined */
     void Unk_0203589c(); /* mSphereClsn.ResetQuery() */
 

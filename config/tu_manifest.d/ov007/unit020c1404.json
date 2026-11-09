@@ -20,7 +20,7 @@
   ],
   "functions": [
     {
-      "symbol": "func_ov007_020c1404",
+      "symbol": "Texture_BindPalette",
       "address": "0x020c1404",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c1404.c",
@@ -41,14 +41,14 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov007_020c14d4",
+      "symbol": "Texture_LoadPalette",
       "address": "0x020c14d4",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c14b8.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_ov007_020c1560",
+      "symbol": "Texture_LoadTexels",
       "address": "0x020c1560",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c14b8.cpp",
@@ -69,14 +69,14 @@
       "ordinal": 6
     },
     {
-      "symbol": "func_ov007_020c162c",
+      "symbol": "Texture_Create",
       "address": "0x020c162c",
       "size": "0x000000b0",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c15ec.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov007_020c16dc",
+      "symbol": "Texture_GetSizes",
       "address": "0x020c16dc",
       "size": "0x00000118",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c16dc.cpp",
@@ -97,14 +97,14 @@
       "ordinal": 10
     },
     {
-      "symbol": "func_ov007_020c1814",
+      "symbol": "Texture_InitRegions",
       "address": "0x020c1814",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c1814.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "func_ov007_020c184c",
+      "symbol": "Texture_ResetRegions",
       "address": "0x020c184c",
       "size": "0x00000180",
       "legacy_source": "src/unnamed/ov007/func_ov007_020c1814.cpp",

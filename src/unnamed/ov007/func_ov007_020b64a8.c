@@ -6,7 +6,7 @@ extern void func_ov007_020b7eec(Ov007BootArgs *bootArgs);
 
 /* Steps the sound mode by `step`, wrapping over 0..2, and redraws the
  * header. Ids 1/2/3 are the owner's sound-mode commands: its dispatcher
- * func_ov007_020cc600 maps them to SetSoundMode(2/0/1). */
+ * DSMT_MenuCallback maps them to SetSoundMode(2/0/1). */
 void func_ov007_020b64a8(int step) {
     int idx = WORK->settings->bootArgs->soundModeItem + step;
     if (idx < 0)

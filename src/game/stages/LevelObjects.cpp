@@ -1,11 +1,8 @@
 //cpp
 /* leftovers:
  * - Source order stays highest address first. Reordering moves the run.
- * - data_ov002_0210cbb8 and the small loader tables stay data. This TU
+ * - sObjectLoaders and the small loader tables stay data. This TU
  *   claims .text only.
- * - DoorEntry and LVL_Overlay_Layout stay in this file. LVL_Overlay.h
- *   still has no data members, and adding a record type there reaches
- *   the other loaders.
  * - areaID is s8 down the whole chain: LoadClsnAndObjects counts areas in
  *   a signed char, LoadObjects and the fifteen category loaders take it as
  *   s8, and dActor_c::Spawn's s8 area tail receives it unconverted.
@@ -53,10 +50,16 @@ extern u8 data_0209fc5c[];
 extern unsigned int data_02092134;
 extern u8 data_02092128[];
 
-extern s8 data_ov002_0210cb5c[];
-extern u8 data_ov002_0210cb70[];
-extern u16 data_ov002_0210cb88[];
-extern u16 data_ov002_0210cbf4[];
+/* The loaders' lookup tables, all ov002 .data. sEntranceWipes is the
+ * fader wipe per entrance kind (negative: none). sDoorVariants and
+ * sDoorActorIds are indexed by door type: the variant daDoor_c and
+ * daStarGate_c read from param bits 16..23, and the actor id (CH_ROOM,
+ * DOOR or STAR_GATE). sObjToActorIdTable maps a level object id to its
+ * actor id. */
+extern s8 sEntranceWipes[];
+extern u8 sDoorVariants[];
+extern u16 sDoorActorIds[];
+extern u16 sObjToActorIdTable[];
 
 void func_0202af80(void *entries, s32 count);
 void func_0202b044(void *entries, s32 count);
@@ -68,47 +71,15 @@ void StartEntranceFaderWipe(int index);
 
 /* dScStage_c::LoadClsnAndObjects' own callees. LoadFile is not in decl_common.h. */
 struct KCL_File;
-struct CLPS_Block;
 void *LoadFile(int handle);
 
-/* LoadObjects dispatches through this table. Its entries are the
- * category loaders. This text-only TU does not define it. */
-extern void (*data_ov002_0210cbb8[])(void *, s8, unsigned int);
+/* LoadObjects dispatches through this table, indexed by object category.
+ * Its entries are the fifteen category loaders. This text-only TU does not
+ * define it. */
+typedef void (*ObjectLoader)(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param);
+extern ObjectLoader sObjectLoaders[];
 
 } /* extern "C" */
-
-/* Door records. LVL_Overlay.h does not carry this type, and adding it
- * there would recompile every loader that includes the header. */
-struct DoorEntry { /* 0xc bytes. LoadDoorObjects. */
-    s16 x;         /* 0x00 */
-    s16 y;         /* 0x02 */
-    s16 z;         /* 0x04 */
-    s16 angle;     /* 0x06 */
-    u16 param;     /* 0x08 - packed spawn parameter and rotation nibbles */
-    u16 type;      /* 0x0a - low five bits select the door tables */
-};
-
-/* The overlay object as LoadClsnAndObjects reads it. LVL_Overlay.h
- * declares the nested tables and no data members. d_s_stage_methods.cpp
- * reads the same record through data_0209f340 as its LevelInfo: the model
- * file at 0x08 (dScStage_c::LoadModel), the minimap files at 0x0c/0x0e
- * (func_0202a980/func_0202a96c) and each area's texture animation and
- * minimap. */
-struct LVL_Overlay_Layout {
-    CLPS_Block *clps;                /* 0x00 */
-    LVL_Overlay::ObjTable *objTable; /* 0x04 */
-    u16 modelFileId;                 /* 0x08 */
-    u16 kclFileId;                   /* 0x0a */
-    u16 minimapTilesFile;            /* 0x0c */
-    u16 minimapPaletteFile;          /* 0x0e */
-    struct SubTbl {
-        LVL_Overlay::ObjTable *table; /* 0x00 */
-        void *bta;                    /* 0x04 */
-        s8 minimapId;                 /* 0x08 */
-        char pad_009[3];
-    } *subTables; /* 0x10 */
-    u8 subCount;  /* 0x14 */
-};
 
 /* The loaders test the game mode as a 0/1 value. */
 static inline int IsGameMode(int mode) {
@@ -128,53 +99,31 @@ static inline int IntroAllowed() {
  * signature and unused here. */
 void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::SimpleEntry *entry = (LVL_Overlay::SimpleEntry *)table.entries;
-    int objectIndex;
-    for (objectIndex = 0; objectIndex < (int)table.count; objectIndex++, entry++) {
-        Vector3 position;
-        int raw;
-        int actorParam;
-        int actorIndex;
-        int z = entry->z << 12;
-        int y = entry->y << 12;
-        int x = entry->x << 12;
-        position.x = x;
-        position.y = y;
-        position.z = z;
-        raw = entry->raw;
-        actorIndex = (u16)(raw & 0x1ff);
-        actorParam = raw >> 9;
+    for (int objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
+        Vector3 position(entry->x << 12, entry->y << 12, entry->z << 12);
+        u16 actorIndex = entry->raw & 0x1ff;
+        int actorParam = entry->raw >> 9;
         if (actorIndex == 0x1ff) {
-            LoadMinimapChangeObject(areaID, y, actorParam & 0xf);
+            LoadMinimapChangeObject(areaID, position.y, actorParam & 0xf);
         } else {
-            s16 deathTableID = data_ov002_0211118c;
-            data_ov002_0211118c = (s16)(deathTableID + 1);
-            dActor_c::Spawn(data_ov002_0210cbf4[actorIndex], actorParam, position, 0, areaID,
-                            deathTableID);
+            dActor_c::Spawn(sObjToActorIdTable[actorIndex], actorParam, position, 0, areaID,
+                            data_ov002_0211118c++);
         }
     }
 }
 
 /* One actor per standard object entry. Each StandardEntry is 0x10 bytes: raw id
- * index into data_ov002_0210cbf4, s16 position (shifted left by 12 into Fix12),
+ * index into sObjToActorIdTable, s16 position (shifted left by 12 into Fix12),
  * Vector3s rotation, u16 param. data_ov002_0211118c is a running death-table /
  * spawn-order counter incremented per spawn. The third parameter is part of the
  * shared loader signature and unused here. */
 void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::StandardEntry *entry = (LVL_Overlay::StandardEntry *)table.entries;
-    int objectIndex;
-    for (objectIndex = 0; objectIndex < (int)table.count; objectIndex++, entry++) {
-        Vector3 position;
-        u32 actorID = data_ov002_0210cbf4[entry->raw];
-        int z = entry->z << 12;
-        int y = entry->y << 12;
-        int x = entry->x << 12;
-        position.x = x;
-        position.y = y;
-        position.z = z;
-        s16 deathTableID = data_ov002_0211118c;
-        data_ov002_0211118c = (s16)(deathTableID + 1);
+    for (int objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
+        u32 actorID = sObjToActorIdTable[entry->raw];
+        Vector3 position(entry->x << 12, entry->y << 12, entry->z << 12);
         dActor_c::Spawn(actorID, entry->param, position, (const Vector3_16 *)&entry->rot, areaID,
-                        deathTableID);
+                        data_ov002_0211118c++);
     }
 }
 
@@ -183,52 +132,39 @@ void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) 
  * entry index OFFSET into the table rather than a free parameter: the walk
  * starts at `entries + entranceIndex` and runs for gNumPlayers iterations, not table.count. */
 void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranceIndex) {
-    u32 entranceKind;
+    u32 entranceKind; /* declared first: at its first assignment it is 20 words off */
     LVL_Overlay::StandardEntry *entry = (LVL_Overlay::StandardEntry *)table.entries;
     func_0202b0e0(entry, table.count);
     entry += entranceIndex;
     entranceKind = 0;
-
     int entranceId = 0xf;
-    u8 playerIndex = 0;
 
-    while (playerIndex < gNumPlayers) {
-        {
-            Vector3 pos;
-            int vz = entry->z << 12;
-            int vy = entry->y << 12;
-            int vx = entry->x << 12;
-            pos.x = vx;
-            pos.y = vy;
-            pos.z = vz;
+    for (u8 playerIndex = 0; playerIndex < gNumPlayers; entry++, playerIndex++) {
+        Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
 
-            u16 param = entry->param;
-            entranceKind = (param >> 7) & 0xf;
+        u16 param = entry->param;
+        entranceKind = (param >> 7) & 0xf;
 
-            int savedCharacter = data_0209caa0.file.mCharacter;
-            int playerCharacter = data_02092128[playerIndex];
-            if (IsGameMode(1)) {
-                savedCharacter = 3;
-                playerCharacter = 3;
-            }
-            u32 spawnParam =
-                savedCharacter | (playerCharacter << 3) | (playerIndex << 6) | (entranceKind << 8);
-
-            daPly_c *player =
-                (daPly_c *)dActor_c::Spawn(data_ov002_0210cbf4[entry->raw], spawnParam, pos,
-                                           (const Vector3_16 *)&entry->rot, (s8)(param & 7), -1);
-
-            if (data_0209fc5c[playerIndex] == 0)
-                gPlayers[playerIndex] = 0;
-            else
-                gPlayers[playerIndex] = player;
-
-            if (playerIndex == gLocalPlayerId)
-                entranceId = (entry->param >> 3) & 0xf;
-
-            entry++;
-            playerIndex++;
+        int savedCharacter = data_0209caa0.file.mCharacter;
+        int playerCharacter = data_02092128[playerIndex];
+        if (IsGameMode(1)) {
+            savedCharacter = 3;
+            playerCharacter = 3;
         }
+        u32 spawnParam =
+            savedCharacter | (playerCharacter << 3) | (playerIndex << 6) | (entranceKind << 8);
+
+        daPly_c *player =
+            (daPly_c *)dActor_c::Spawn(sObjToActorIdTable[entry->raw], spawnParam, pos,
+                                       (const Vector3_16 *)&entry->rot, param & 7, -1);
+
+        if (data_0209fc5c[playerIndex] == 0)
+            gPlayers[playerIndex] = 0;
+        else
+            gPlayers[playerIndex] = player;
+
+        if (playerIndex == gLocalPlayerId)
+            entranceId = (entry->param >> 3) & 0xf;
     }
 
     gCamera = (dCamera_c *)dBase_c::Spawn(0x14c, gCurrentScene, entranceId, 0);
@@ -238,7 +174,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 entranc
 
     if (entranceKind >= 0x13)
         entranceKind = 0;
-    int wipeType = data_ov002_0210cb5c[entranceKind];
+    int wipeType = sEntranceWipes[entranceKind];
     if (wipeType < 0)
         return;
 
@@ -269,23 +205,17 @@ void LoadTeleportSourceObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 p
     LVL_Overlay::TeleportSourceEntry *entry = (LVL_Overlay::TeleportSourceEntry *)table.entries;
 
     s32 objectIndex = 0;
-    if ((int)table.count <= 0)
+    if ((int)table.count <= 0) /* signed ble; without the cast it is 3 words off */
         return;
 
     do {
-        Vector3 pos;
-        s32 vz = entry->z << 12;
-        s32 vy = entry->y << 12;
-        s32 vx = entry->x << 12;
-        pos.x = vx;
-        pos.y = vy;
-        pos.z = vz;
+        Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
 
-        dActor_c::Spawn(0x15b, entry->param, pos, (const Vector3_16 *)0, 0, -1);
+        dActor_c::Spawn(0x15b, entry->param, pos, 0, 0, -1);
 
         objectIndex++;
         entry++;
-    } while (objectIndex < (int)table.count);
+    } while (objectIndex < table.count);
 }
 
 void LoadTeleportDestObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
@@ -301,15 +231,11 @@ void LoadFogObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
  * last halfword; the rotation is unpacked from two nibbles of param plus the
  * stored angle. */
 void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
-    DoorEntry *entry = (DoorEntry *)table.entries;
-    for (int objectIndex = 0; objectIndex < table.count; objectIndex++) {
-        Vector3 pos;
-        int z = entry->z << 12;
-        int y = entry->y << 12;
-        int x = entry->x << 12;
-        pos.x = x;
-        pos.y = y;
-        pos.z = z;
+    LVL_Overlay::DoorEntry *entry = (LVL_Overlay::DoorEntry *)table.entries;
+    for (int objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
+        Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
+        /* All three angles are computed before any is stored: member stores or
+           an aggregate initializer are +4 bytes, a u16 param copy 11 words off. */
         Vector3_16 rot;
         s16 rx = (entry->param >> 8) & 0xf;
         s16 ry = entry->angle;
@@ -318,10 +244,9 @@ void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
         rot.y = ry;
         rot.z = rz;
         int doorType = entry->type & 0x1f;
-        u32 actorID = data_ov002_0210cb88[doorType];
-        u32 spawnParam = entry->param | (data_ov002_0210cb70[doorType] << 16);
+        u32 actorID = sDoorActorIds[doorType];
+        u32 spawnParam = entry->param | (sDoorVariants[doorType] << 16);
         dActor_c::Spawn(actorID, spawnParam, pos, &rot, -1, -1);
-        entry++;
     }
 }
 
@@ -336,14 +261,8 @@ void LoadDoorObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
 void LoadExitObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::ExitEntry *entry = (LVL_Overlay::ExitEntry *)table.entries;
 
-    for (int objectIndex = 0; objectIndex < (int)table.count; objectIndex++) {
-        Vector3 pos;
-        s32 pz = entry->z << 12;
-        s32 py = entry->y << 12;
-        s32 px = entry->x << 12;
-        pos.x = px;
-        pos.y = py;
-        pos.z = pz;
+    for (int objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
+        Vector3 pos(entry->x << 12, entry->y << 12, entry->z << 12);
 
         Vector3s rot;
         rot.x = -entry->rotX;
@@ -353,8 +272,6 @@ void LoadExitObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
                         ((u32)entry->param[0] << 24) | ((u32)entry->param[1] << 16) |
                             ((u32)entry->param[2] << 8) | (u32)entry->param[3],
                         pos, (const Vector3_16 *)&rot, -1, -1);
-
-        entry++;
     }
 }
 
@@ -381,7 +298,7 @@ void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param
 }
 
 /* Walk the outer object table and dispatch each sub-table to the category
- * loader table at data_ov002_0210cbb8 -- whose fifteen entries are exactly the
+ * loader table at sObjectLoaders -- whose fifteen entries are exactly the
  * fifteen functions above.
  *
  * Count is a u16 at offset 0 (unlike ObjSubTable's u8 at offset 1). Each entry
@@ -390,14 +307,13 @@ void LoadStarCameraObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param
  * unless the filter is 0 or equal to the selected star at gCurrentStarId. */
 void LoadObjects(LVL_Overlay::ObjTable &table, s8 areaID, u32 param) {
     LVL_Overlay::ObjSubTable *entry = (LVL_Overlay::ObjSubTable *)table.entries;
-    int tableIndex;
-    for (tableIndex = 0; tableIndex < (int)table.count; tableIndex++) {
+    for (int tableIndex = 0; tableIndex < table.count; tableIndex++) {
         u8 categoryAndStar = entry->categoryAndStar;
         int starFilter = (categoryAndStar >> 5) & 7;
         if (starFilter == 0 || starFilter == gCurrentStarId) {
-            void (*loader)(void *, s8, unsigned int) = data_ov002_0210cbb8[categoryAndStar & 0x1f];
+            ObjectLoader loader = sObjectLoaders[categoryAndStar & 0x1f];
             if (loader != 0)
-                loader(entry, areaID, param);
+                loader(*entry, areaID, param);
         }
         entry++;
     }
@@ -406,48 +322,37 @@ void LoadObjects(LVL_Overlay::ObjTable &table, s8 areaID, u32 param) {
 /* Loads the collision mesh, runs the object tables, then decides
  * whether the intro cutscene plays. LoadObjects is in this TU, so the
  * call is by name. */
-void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlayRef, u32 entranceIndex,
-                                    dBgW_Kc &meshColliderRef) {
-    LVL_Overlay_Layout *overlay = (LVL_Overlay_Layout *)&overlayRef;
-    dBgW_Kc *meshCollider = (dBgW_Kc *)&meshColliderRef;
-    KCL_File *collisionFile;
-    LVL_Overlay_Layout::SubTbl *subTable;
-    signed char areaIndex;
-    int continuedKuppaScript;
-    int playIntro;
-
+void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlay, u32 entranceIndex,
+                                    dBgW_Kc &meshCollider) {
     PathPtr::SetNodeTable(0);
     PathPtr::SetPathTable(0, 0);
 
-    if (overlay->kclFileId != 0) {
-        collisionFile = static_cast<KCL_File *>(LoadFile(overlay->kclFileId));
+    if (overlay.kclFileId != 0) {
+        KCL_File *collisionFile = static_cast<KCL_File *>(LoadFile(overlay.kclFileId));
         dBgW_Kc::UpdateFileOffsets(*collisionFile);
-        ((dBgW_Kc *)meshCollider)->SetFile(collisionFile, *overlay->clps);
-        func_0202a850(((dBgW_Kc *)meshCollider)->GetOctreeOriginY(),
-                      ((dBgW_Kc *)meshCollider)->GetUnkOctreeY());
-        ((dBgW *)(meshCollider))->Enable((dActor_c *)(0));
+        meshCollider.SetFile(collisionFile, *overlay.clps);
+        func_0202a850(meshCollider.GetOctreeOriginY(), meshCollider.GetUnkOctreeY());
+        meshCollider.Enable(0);
     }
 
     data_ov002_0211118c = 0;
-    LoadObjects(*overlay->objTable, -1, entranceIndex);
+    LoadObjects(*overlay.objTable, -1, entranceIndex);
 
-    subTable = overlay->subTables;
-    for (areaIndex = 0; areaIndex < overlay->subCount; areaIndex++) {
-        if (subTable->table != 0)
-            LoadObjects(*subTable->table, areaIndex, entranceIndex);
-        subTable++;
+    LVL_Overlay::Area *area = overlay.areas;
+    for (s8 areaIndex = 0; areaIndex < overlay.areaCount; areaIndex++, area++) {
+        if (area->objTable != 0)
+            LoadObjects(*area->objTable, areaIndex, entranceIndex);
     }
 
-    continuedKuppaScript = KuppaScript::ContinueIfNecessary();
-
-    playIntro = IntroAllowed() && continuedKuppaScript == 0;
+    int continuedKuppaScript = KuppaScript::ContinueIfNecessary();
+    bool playIntro = IntroAllowed() && continuedKuppaScript == 0;
 
     if (!IsGameMode(2)) {
         dBase_c::Spawn(0x14f, gCurrentScene, 0, 0);
-        if (playIntro == 0)
+        if (!playIntro)
             dBase_c::Spawn(0x14e, gCurrentScene, 0, 0);
     }
 
-    if (playIntro != 0)
+    if (playIntro)
         KuppaScript::StartIntroCutscene();
 }

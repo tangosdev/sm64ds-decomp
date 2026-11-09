@@ -44,24 +44,27 @@ struct dScMgCurling_popup {
 };
 
 /* One falling decoration ("bit"), 0x24 bytes; 0x32 of them at 0x478c.
- * state and state2 drive the two per-kind handler tables. */
+ * driftState and fallState drive the two per-kind handler tables. The
+ * field names follow dScMgSnowball_bit (include/dScMgSnowball_c.h), whose
+ * bit states are the same code at the same sizes; this record has two more
+ * bytes after fallTimer, so the two structs stay separate. */
 struct dScMgCurling_bit {
-    s32 x;     /* 0x00 */
-    s32 y;     /* 0x04 */
-    s32 vx;    /* 0x08 */
-    s32 vy;    /* 0x0c */
-    s32 vyCap; /* 0x10 */
-    u16 wait;  /* 0x14 */
-    u16 timer; /* 0x16 */
-    u16 wait2; /* 0x18 */
+    s32 x;          /* 0x00 */
+    s32 y;          /* 0x04 */
+    s32 vx;         /* 0x08 */
+    s32 vy;         /* 0x0c */
+    s32 fallSpeed;  /* 0x10, Bit_StateFallStart picks it (0x300 + random) */
+    u16 holdTimer;  /* 0x14, the drift states wait it out before steering */
+    u16 driftTimer; /* 0x16, at 0 the drift state goes to 3 (DriftStop) */
+    u16 fallTimer;  /* 0x18, counted down by the fall states */
     u16 pad1a;
-    u8 on;     /* 0x1c */
-    u8 kind;   /* 0x1d */
-    u8 state;  /* 0x1e */
-    u8 state2; /* 0x1f */
-    u8 shown;  /* 0x20 */
-    u8 texA;   /* 0x21 */
-    u8 texB;   /* 0x22 */
+    u8 active;     /* 0x1c, Bit_UpdateAll runs only active bits */
+    u8 kind;       /* 0x1d, sCurlingBitKindTable index */
+    u8 driftState; /* 0x1e, sCurlingBitAStateTable / sCurlingBitBStateTable index */
+    u8 fallState;  /* 0x1f, sCurlingBitStateTable index */
+    u8 visible;    /* 0x20, Bit_DrawAll draws only with it set */
+    u8 spriteA;    /* 0x21, sCurlingBitSprites index, Mg_RenderSubSpriteMtx */
+    u8 spriteB;    /* 0x22, sCurlingBitSprites index, DrawOamSprite */
     u8 pad23;
 };
 
@@ -149,11 +152,11 @@ struct dScMgCurling_c : dScMgBase_c {
     s32 mGrabX;           /* 0x4ec0 */
     s32 mGrabY;           /* 0x4ec4 */
     s32 mSwingSpeed;      /* 0x4ec8 */
-    s32 unk_4ecc;         /* 0x4ecc */
-    s32 unk_4ed0;         /* 0x4ed0 */
+    s32 unk_4ecc;         /* 0x4ecc, write-only: Aim_WaitTouch zeroes it */
+    s32 unk_4ed0;         /* 0x4ed0, write-only: Aim_WaitTouch zeroes it */
     s32 mLastSwingDeltaY; /* 0x4ed4 */
     s32 mTopRecord;       /* 0x4ed8, cached Mg_GetTopRecord result */
-    u16 unk_4edc;         /* 0x4edc */
+    u16 unk_4edc;         /* 0x4edc, write-only: ClearStones zeroes it */
     u16 mSwingAng;        /* 0x4ede */
     u16 mStoneDelay;      /* 0x4ee0, before the next stone comes out */
     u16 mStateDelay;      /* 0x4ee2 */

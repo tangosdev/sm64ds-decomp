@@ -10,9 +10,8 @@
  *   object over 0x02115ab8..0x0211a854 that must also own the
  *   unit's .bss step sets and its initializer __sinit_ov075_0211bb00,
  *   which is still a shard. That join is its own promotion.
- * - The step helpers func_ov075_02119640..02119c38 are still extern
- *   "C" functions that take dScEntry_c *self. Turning them into
- *   members is not done yet.
+ * - The host steps at 0x02119640..0x02119c38 are members with coined
+ *   names (recruit, solo confirm, solo start, session start).
  * - The transition helpers use native Step member-pointer copies.
  * - The destructor, the key function, is in d_s_entry.cpp. This file
  *   defines no virtual the class declares first, so it emits no
@@ -21,14 +20,12 @@
  *   after the RESULT factory. Both profile factories are
  *   `return new dScEntry_c`.
  * - The header names the entry object and shared step workspace. The
- *   extern "C" step callbacks take the scene as a dScEntry_c pointer and
- *   reach it through those members. The transition helpers use the
- *   typed pending StepSet pointer at 0x6c.
+ *   transition helpers use the typed pending StepSet pointer at 0x6c.
  * - InitResources keeps its `int isResult = (actorID == 7)' flag locals.
  *   Folding the first one into its condition rewrites the function
  *   (999 words, measured).
- * - The helpers it calls stay func_ov075_* and the arm9 globals keep
- *   their linker names. Naming belongs with recovered members.
+ * - The arm9 globals and the dEntObj_c helpers it calls keep their
+ *   linker names. Naming belongs with recovered members.
  *
  * dScEntry_c, the course-entry / results scene. ov075 .text
  * 0x021165b0..0x0211a854: the round tally, the two InitResources
@@ -87,7 +84,6 @@ void UnloadArchive(int i);
 void func_02030aa4(int arg);
 int func_0203da9c(void);
 void func_02020028(int player, unsigned char mode);
-void func_ov075_0211601c(dScEntry_c::graphCallback_c *, dScEntry_c *, int);
 }
 
 /* The scene's graph callback: the scene registers its own object here and
@@ -122,8 +118,6 @@ void func_02020124(void);
 int func_0203d890(void);
 u32 LoadCompressedFileAt(int, void *);
 int Sound_PlayIfNotActive(int, int, int, int);
-void func_ov075_02116030(dScEntry_c::graphCallback_c *, void *);
-void func_ov075_02116028(dScEntry_c::graphCallback_c *, int);
 }
 
 /* The entry scene's one global graph callback, ov075 .bss 0x0211d71c. The
@@ -134,7 +128,6 @@ void func_ov075_02116028(dScEntry_c::graphCallback_c *, int);
 extern "C" {
 void func_020338b0(int, int, short, int);
 void func_02033464(int, int, int);
-void func_ov075_02115e8c(char *, int, int, short, short);
 void func_02030a38(void);
 void func_02030a78(void);
 void func_02030a6c(void);
@@ -224,8 +217,6 @@ extern int OVERLAY_102_ID;
 
 int GetLanguageIndex(void);
 void SetBg1Offset(int a, int b);
-void func_ov075_02116128(dScEntry_c *scene, int slot, int dim);
-void func_ov075_0211621c(dScEntry_c *scene);
 void func_02033390(int a);
 void func_02032f9c(int a);
 int func_02030958(int val);
@@ -434,7 +425,7 @@ s32 dScEntry_c::InitResultResources() {
     if (n > 0) {
         z = i;
         do {
-            func_ov075_02116128(this, i, z);
+            SetSlotBorderPalette(i, z);
             i = i + 1;
         } while (i < n);
     }
@@ -629,7 +620,7 @@ void dScEntry_c::UpdateSettingsSync() {
 void dScEntry_c::EnterSettingsSync() {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     gSubScreenLayers &= ~1;
-    func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 6);
+    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(6);
     func_020338b0(0x145, 0xb0, 0x1d, -1);
     gSubScreenLayers |= 5;
     mIconCount = 0;
@@ -755,7 +746,7 @@ void dScEntry_c::UpdateSoundSettings() {
 #define SH(base, i) (*(short *)((char *)(base) + (i) * 4))
 
 void dScEntry_c::EnterSoundSettings() {
-    func_ov075_02116030(ENTRY_GRAPH_CALLBACK, LoadFile(data_ov075_0211ca08[GetLanguageIndex()]));
+    ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(data_ov075_0211ca08[GetLanguageIndex()]));
 
     Message::DisplayOptionsMenuTextVS((s16)(GetSoundMode() + 9));
 
@@ -764,26 +755,24 @@ void dScEntry_c::EnterSoundSettings() {
 
     mSelectedIcon = 0;
 
-    func_ov075_02115e8c((char *)&mIcons[6], 5, 0,
-                        (s16)(SH(data_ov075_0211d72c, GetLanguageIndex()) + 8), 0x38);
-    func_ov075_02115e8c((char *)&mIcons[7], 6, 0,
-                        (s16)(SH(data_ov075_0211d740, GetLanguageIndex()) + 8), 0x68);
-    func_ov075_02115e8c((char *)&mIcons[8], 0xc, 0, 0x56, 0xa8);
-    func_ov075_02115e8c((char *)&mIcons[2], 1, 0, 0xac, 0x38);
-    func_ov075_02115e8c((char *)&mIcons[0], 3, 0, 0x64, 0x38);
-    func_ov075_02115e8c((char *)&mIcons[1], 4, 0, 0xf4, 0x38);
+    mIcons[6].Place(5, 0, (s16)(SH(data_ov075_0211d72c, GetLanguageIndex()) + 8), 0x38);
+    mIcons[7].Place(6, 0, (s16)(SH(data_ov075_0211d740, GetLanguageIndex()) + 8), 0x68);
+    mIcons[8].Place(0xc, 0, 0x56, 0xa8);
+    mIcons[2].Place(1, 0, 0xac, 0x38);
+    mIcons[0].Place(3, 0, 0x64, 0x38);
+    mIcons[1].Place(4, 0, 0xf4, 0x38);
 
     mIcons[2].mOn = 1;
 
-    func_ov075_02115e8c((char *)&mIcons[3], 2, 0, 0x8c, 0x68);
-    func_ov075_02115e8c((char *)&mIcons[4], 2, 0, 0xcc, 0x68);
+    mIcons[3].Place(2, 0, 0x8c, 0x68);
+    mIcons[4].Place(2, 0, 0xcc, 0x68);
 
     if (data_0208ee3c != 0)
         mIcons[3].mOn = 1;
     else
         mIcons[4].mOn = 1;
 
-    func_ov075_02115e8c((char *)&mIcons[5], 0xb, 0, 0x80, 0xa8);
+    mIcons[5].Place(0xb, 0, 0x80, 0xa8);
 
     mIconCount = 9;
 
@@ -891,32 +880,32 @@ void dScEntry_c::UpdateControlSettings() {
 void dScEntry_c::EnterControlSettings() {
     int i;
     int r;
-    int v;
-    char *p;
+    int y;
+    icon_c *icon;
 
     i = 0;
-    p = (char *)mIcons;
-    v = 0x30;
+    icon = mIcons;
+    y = 0x30;
     mSelectedIcon = data_0209f498[gActivePlayerSlot].mode;
 
     for (; i <= 2; i++) {
-        func_ov075_02115e8c(p, 0, 0, 0x80, (s16)v);
-        v += 0x28;
-        p += 0x24;
+        icon->Place(0, 0, 0x80, (s16)y);
+        y += 0x28;
+        icon++;
     }
 
     mIcons[mSelectedIcon].mOn = 1;
 
-    func_ov075_02115e8c((char *)&mIcons[3], 0xb, 0, 0x80, 0xa8);
+    mIcons[3].Place(0xb, 0, 0x80, 0xa8);
 
     r = GetLanguageIndex();
-    func_ov075_02115e8c((char *)&mIcons[4], 0xc, 0, data_ov075_0211b5d4[r], 0xa8);
+    mIcons[4].Place(0xc, 0, data_ov075_0211b5d4[r], 0xa8);
 
     mIconCount = 5;
     gSubScreenLayers &= ~5;
 
     r = GetLanguageIndex();
-    func_ov075_02116030(ENTRY_GRAPH_CALLBACK, LoadFile(data_ov075_0211c9b8[r]));
+    ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(data_ov075_0211c9b8[r]));
 
     if (mSelectedIcon == 0)
         SetBg2Offset(0, 0);
@@ -938,7 +927,7 @@ void dScEntry_c::EnterQuitMessage() {
     gMainScreenLayers =
         gMainScreenLayers & ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
     gSubScreenLayers = gSubScreenLayers & (~1);
-    func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 6);
+    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(6);
     func_020338b0(0x145, 0xb0, 0x17, -1);
     gSubScreenLayers = gSubScreenLayers | 5;
     mIconCount = 0;
@@ -1021,7 +1010,7 @@ void dScEntry_c::EnterQuitConfirm() {
     } else {
         gSubScreenLayers = gSubScreenLayers & ~4;
         fh = LoadFile(0x9802);
-        func_ov075_02116030(ENTRY_GRAPH_CALLBACK, fh);
+        ENTRY_GRAPH_CALLBACK->QueueBg2Screen(fh);
         Message::DisplayDontSaveTextVS(0x16);
         gSubScreenLayers = gSubScreenLayers | 4;
         mRenderStep = data_ov075_0211d810.render;
@@ -1029,8 +1018,8 @@ void dScEntry_c::EnterQuitConfirm() {
     gSubScreenLayers = gSubScreenLayers | 1;
     mIconCount = 2;
     mSelectedIcon = 1;
-    func_ov075_02115e8c((char *)&mIcons[0], 8, 0, 0x50, 0xa8);
-    func_ov075_02115e8c((char *)&mIcons[1], 8, 0, 0xb0, 0xa8);
+    mIcons[0].Place(8, 0, 0x50, 0xa8);
+    mIcons[1].Place(8, 0, 0xb0, 0xa8);
 }
 
 void dScEntry_c::UpdateRematchSync() {
@@ -1060,7 +1049,7 @@ void dScEntry_c::UpdateRematchSync() {
 
 void dScEntry_c::EnterRematchSync() {
     gSubScreenLayers &= ~1;
-    func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 6);
+    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(6);
     func_020338b0(0x145, 0xb0, 0x1d, -1);
     gSubScreenLayers |= 5;
     mIconCount = 0;
@@ -1074,7 +1063,7 @@ void dScEntry_c::EnterRematchSync() {
 /* Renders each joined player's two-digit count (the shared base at
  * data_0209ee90+0x1d4 plus that player's data_0209b2ec, mod 100) as
  * tens/ones OAM digits, then every 3 calls toggles a blink flag and has
- * func_ov075_02116128 repaint each round winner's slot border bright or
+ * SetSlotBorderPalette repaint each round winner's slot border bright or
  * dim by it. mStepWork[0] counts frames and mStepWork[1] is the flag. */
 void dScEntry_c::RenderWinCounts() {
     int count = data_0209fc50;
@@ -1133,7 +1122,7 @@ void dScEntry_c::RenderWinCounts() {
         int j = 0;
         do {
             if (data_0209b2f0[func_02030958(j)] != 0)
-                func_ov075_02116128(this, j, mStepWork[1]);
+                SetSlotBorderPalette(j, mStepWork[1]);
             j++;
         } while (j < count);
     }
@@ -1171,16 +1160,16 @@ void dScEntry_c::UpdateRematchPrompt() {
  * ~mDisconnectHideMask, and UpdateRematchSync clears both on its own. */
 void dScEntry_c::EnterRematchPrompt() {
     gSubScreenLayers &= ~5;
-    func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 1);
-    func_ov075_02116030(ENTRY_GRAPH_CALLBACK, LoadFile(0x9801));
+    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(1);
+    ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(0x9801));
     LoadCompressedFileAt(0x8407, G2S::GetBG3ScrPtr());
     Message::DisplayVsExitText(0x1f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3;
     gSubScreenLayers |= 5;
     mSelectedIcon = 0;
-    func_ov075_02115e8c((char *)&mIcons[0], 0xa, 0, 0x80, 0x48);
-    func_ov075_02115e8c((char *)&mIcons[1], 0xa, 0, 0x80, 0x78);
+    mIcons[0].Place(0xa, 0, 0x80, 0x48);
+    mIcons[1].Place(0xa, 0, 0x80, 0x78);
     mIconCount = 2;
     G2x::SetBlendAlpha((volatile unsigned short *)0x4000050, 4, 0x11, 0xc, 4);
     mDisconnectHideMask = 0xe;
@@ -1196,7 +1185,7 @@ void dScEntry_c::EnterRematchPrompt() {
 void dScEntry_c::RenderResults() {
     int id = func_0203da9c();
     OAM::Render(false, &data_ov075_0211cb84, 0x80, 0x20, -1, -1, 0x1000, 0x1000, 0, -1);
-    func_ov075_0211621c(this);
+    RenderPlayerScores();
 
     u8 *p = data_0209b2f0 + id;
     OamAttr *sb;
@@ -1499,8 +1488,8 @@ void dScEntry_c::EnterCourseSelect() {
 
     gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     gSubScreenLayers &= ~5;
-    func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 1);
-    func_ov075_02116030(ENTRY_GRAPH_CALLBACK, LoadFile(0x8409));
+    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(1);
+    ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(0x8409));
     LoadCompressedFileAt(0x8407, G2S::GetBG3ScrPtr());
 
     if (func_0203d9b4() != 0)
@@ -1514,7 +1503,7 @@ void dScEntry_c::EnterCourseSelect() {
     index = 0;
     x = 0x20;
     for (; index < 4; index++) {
-        func_ov075_02115e8c((char *)icon, 7, index, (short)x, 0x48);
+        icon->Place(7, index, (short)x, 0x48);
         mIcons[index].mOn = 1;
         mIcons[index].mPressTime = 8;
         x += 0x40;
@@ -1522,7 +1511,7 @@ void dScEntry_c::EnterCourseSelect() {
     }
 
     data_0209b2e4 = 4;
-    func_ov075_02115e8c((char *)&mIcons[4], 0xd, 4, 0x80, -0x14);
+    mIcons[4].Place(0xd, 4, 0x80, -0x14);
     mIconCount = 5;
     func_02020334();
     func_020200e0();
@@ -1647,7 +1636,7 @@ void dScEntry_c::EnterPlayerSync() {
     if (func_0203d974()) {
         gSubScreenLayers &= ~5;
         void *screen = LoadFile(0x8409);
-        func_ov075_02116030(ENTRY_GRAPH_CALLBACK, screen);
+        ENTRY_GRAPH_CALLBACK->QueueBg2Screen(screen);
         func_020338b0(0x225, 0xb0, 0x1d, -1);
         gSubScreenLayers |= 5;
         mIconCount = 0;
@@ -1694,11 +1683,21 @@ void dScEntry_c::RenderWaitingText() {
     }
 }
 
-extern "C" void func_ov075_02119640(dScEntry_c *self) {
-    self->mSoundHandle = Sound_PlayIfNotActive(self->mSoundHandle, 2, 0x11d, 0);
-    if (self->mStepPhase == 0) {
-        self->mEntObj->func_ov075_02115134();
-        self->mStepPhase = (unsigned char)self->mEntObj->func_ov075_02115098(func_0203da9c());
+/* The wireless host's steps, every name coined from the bodies. On the host
+ * the scene starts in the recruit steps (data_ov075_0211d888) while link
+ * mode 3 gathers players. The host's start button then leads to the solo
+ * confirm steps (data_ov075_0211d8a0) when nobody joined, or closes
+ * recruiting (func_02030a6c) and takes the session start steps
+ * (data_ov075_0211d8d0). Both wait for the link mode to drop back to 0. The
+ * solo path goes on to course select through data_ov075_0211d900; the session
+ * path opens link mode 1 and goes on to player sync. */
+
+/* Behavior of the session start steps. */
+void dScEntry_c::UpdateSessionStart() {
+    mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 2, 0x11d, 0);
+    if (mStepPhase == 0) {
+        mEntObj->func_ov075_02115134();
+        mStepPhase = (unsigned char)mEntObj->func_ov075_02115098(func_0203da9c());
     }
     if (func_0203da3c() != 0)
         return;
@@ -1706,81 +1705,89 @@ extern "C" void func_ov075_02119640(dScEntry_c *self) {
     LoadArchive(0);
     LoadArchive(1);
     func_02030aa4(1);
-    self->SetSteps(&data_ov075_0211d918);
+    SetSteps(&data_ov075_0211d918);
 }
 
-extern "C" void func_ov075_021196d0(dScEntry_c *self) {
-    self->mEntObj->func_ov075_02115134();
+/* Enter step of the session start steps: the waiting screen InitResources
+   loaded (file 0x8409) goes to BG2. */
+void dScEntry_c::EnterSessionStart() {
+    mEntObj->func_ov075_02115134();
     gSubScreenLayers &= ~5;
-    func_ov075_02116030(ENTRY_GRAPH_CALLBACK, data_0209b2e8);
+    ENTRY_GRAPH_CALLBACK->QueueBg2Screen(data_0209b2e8);
     data_0209b2e8 = 0;
     func_020338b0(0x225, 0xb0, 0x1d, -1);
     gSubScreenLayers |= 5;
-    self->mIconCount = 0;
-    self->mWaiting.wavePhase = 0;
-    self->mWaiting.waveDelay = 0x78;
+    mIconCount = 0;
+    mWaiting.wavePhase = 0;
+    mWaiting.waveDelay = 0x78;
     func_02012790(0x11e);
-    self->mStepPhase = self->mEntObj->func_ov075_02115098(func_0203da9c());
+    mStepPhase = mEntObj->func_ov075_02115098(func_0203da9c());
 }
 
-extern "C" void func_ov075_0211977c(dScEntry_c *self) {
-    int r = func_0203da3c();
-    if (r != 0)
+/* Behavior of the solo start steps. */
+void dScEntry_c::UpdateSoloStart() {
+    int linkMode = func_0203da3c();
+    if (linkMode != 0)
         return;
     Deallocate(data_0209b2e8);
     data_0209b2e8 = 0;
     LoadTextNarcs();
     LoadArchive(0);
     LoadArchive(1);
-    self->SetSteps(&EntryCourseSelectSteps);
+    SetSteps(&EntryCourseSelectSteps);
 }
 
-extern "C" void func_ov075_021197dc(dScEntry_c *self) {
-    self->mIconCount = 0;
+/* Enter step of the solo start steps. */
+void dScEntry_c::EnterSoloStart() {
+    mIconCount = 0;
 }
 
-extern "C" void func_ov075_021197e8(dScEntry_c *self) {
-    if (self->mStepPhase == 0)
-        self->mStepPhase = self->mEntObj->func_ov075_02115098(func_0203da9c()) != 0;
-    if (self->mStepPhase == 0)
+/* Behavior of the solo confirm steps. Yes plays alone; no asks whether to
+   quit (data_ov075_0211d8b8). */
+void dScEntry_c::UpdateSoloConfirm() {
+    if (mStepPhase == 0)
+        mStepPhase = mEntObj->func_ov075_02115098(func_0203da9c()) != 0;
+    if (mStepPhase == 0)
         return;
-    if (TouchArea_Update((char *)&self->mIcons[0], -1) != 0 ||
-        (self->CheckMenuConfirm(-1) != 0 && self->mSelectedIcon == 0)) {
-        self->mIcons[1].mOn = 0;
-        self->mIcons[0].Select();
+    if (TouchArea_Update((char *)&mIcons[0], -1) != 0 ||
+        (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 0)) {
+        mIcons[1].mOn = 0;
+        mIcons[0].Select();
         SetNumPlayers(1);
-        self->ChangeStepsAfterDelay(&data_ov075_0211d900, 0x14);
+        ChangeStepsAfterDelay(&data_ov075_0211d900, 0x14);
         func_02012790(0x118);
         return;
     }
-    if (TouchArea_Update((char *)&self->mIcons[1], -1) == 0) {
-        if (self->CheckMenuConfirm(-1) == 0)
+    if (TouchArea_Update((char *)&mIcons[1], -1) == 0) {
+        if (CheckMenuConfirm(-1) == 0)
             return;
-        if (self->mSelectedIcon != 1)
+        if (mSelectedIcon != 1)
             return;
     }
-    self->mIcons[0].mOn = 0;
-    self->mIcons[1].Select();
-    self->ChangeStepsAfterDelay(&data_ov075_0211d8b8, 0x14);
-    self->mEntObj->func_ov075_0211505c();
+    mIcons[0].mOn = 0;
+    mIcons[1].Select();
+    ChangeStepsAfterDelay(&data_ov075_0211d8b8, 0x14);
+    mEntObj->func_ov075_0211505c();
     func_02012790(0x119);
 }
 
-extern "C" void func_ov075_02119918(dScEntry_c *self) {
+/* Enter step of the solo confirm steps: message 0x11 over a yes/no pair,
+   and the recruiting link step is asked to wind down (func_02030a38). */
+void dScEntry_c::EnterSoloConfirm() {
     gSubScreenLayers = gSubScreenLayers & ~1;
-    func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 2);
+    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(2);
     Message::DisplayDontSaveTextVS(0x11);
 
     gSubScreenLayers = gSubScreenLayers | 5;
-    self->mSelectedIcon = 1;
-    func_ov075_02115e8c((char *)&self->mIcons[0], 8, 0, 0x50, 0xa8);
-    func_ov075_02115e8c((char *)&self->mIcons[1], 8, 0, 0xb0, 0xa8);
+    mSelectedIcon = 1;
+    mIcons[0].Place(8, 0, 0x50, 0xa8);
+    mIcons[1].Place(8, 0, 0xb0, 0xa8);
 
-    self->mIconCount = 2;
+    mIconCount = 2;
     func_02030a38();
     {
-        int r = func_0203da9c();
-        self->mStepPhase = self->mEntObj->func_ov075_02115098(r) != 0;
+        int localPlayer = func_0203da9c();
+        mStepPhase = mEntObj->func_ov075_02115098(localPlayer) != 0;
     }
 }
 
@@ -1788,12 +1795,14 @@ struct SinePair {
     short a, b;
 };
 
-extern "C" void func_ov075_021199d8(dScEntry_c *self) {
+/* Render step of the recruit steps: RenderWaitingText's wave, drawn from
+   the language's glyph list data_ov075_0211c968 at y 0x1c. */
+void dScEntry_c::RenderRecruitText() {
     OamAttr *attr;
 
     attr = data_ov075_0211c968[GetLanguageIndex()];
 
-    if (self->mWaiting.waveDelay <= 0) {
+    if (mWaiting.waveDelay <= 0) {
         int ang;
         int flag;
         int fallback = 0x1c;
@@ -1803,7 +1812,7 @@ extern "C" void func_ov075_021199d8(dScEntry_c *self) {
         int fx = 0x1000;
         int x = 0x80;
 
-        ang = self->mWaiting.wavePhase;
+        ang = mWaiting.wavePhase;
         flag = 0;
 
         do {
@@ -1828,53 +1837,56 @@ extern "C" void func_ov075_021199d8(dScEntry_c *self) {
             ang -= 0x2000;
         } while (1);
 
-        self->mWaiting.wavePhase += 0x800;
+        mWaiting.wavePhase += 0x800;
 
         if (flag == zero)
-            self->mWaiting.waveDelay = 0x78;
+            mWaiting.waveDelay = 0x78;
     } else {
         OAM::RenderSub(attr, 0x80, 0x1c);
-        self->mWaiting.waveDelay -= data_0208ee44;
-        self->mWaiting.wavePhase = 0;
+        mWaiting.waveDelay -= data_0208ee44;
+        mWaiting.wavePhase = 0;
     }
 }
 
-extern "C" void func_ov075_02119b34(dScEntry_c *self) {
-    int r5 = func_0203da9c();
-    int r4 = data_0209fc50;
+/* Behavior of the recruit steps. The host's start button (icon 0) ends
+   recruiting; with four players it ends without waiting for it. */
+void dScEntry_c::UpdateRecruit() {
+    int localPlayer = func_0203da9c();
+    int playerCount = data_0209fc50;
     for (int i = 1; i < 4; i++) {
         func_02033464((unsigned char)i, (signed char)i, 0);
     }
-    self->mEntObj->func_ov075_02115134();
-    self->mSoundHandle = Sound_PlayIfNotActive(self->mSoundHandle, 2, 0x11c, 0);
-    if (data_0209fc5c[r5] == 0)
+    mEntObj->func_ov075_02115134();
+    mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 2, 0x11c, 0);
+    if (data_0209fc5c[localPlayer] == 0)
         return;
-    if (r4 < 4) {
-        if (TouchArea_Update((char *)&self->mIcons[0], 0) == 0) {
-            if (self->CheckMenuConfirm(0) == 0)
+    if (playerCount < 4) {
+        if (TouchArea_Update((char *)&mIcons[0], 0) == 0) {
+            if (CheckMenuConfirm(0) == 0)
                 return;
         }
     }
-    func_ov001_020ab3f0(&self->mIcons[0]);
-    if (r4 <= 1) {
-        self->ChangeStepsAfterDelay(&data_ov075_0211d8a0, 0x14);
+    func_ov001_020ab3f0(&mIcons[0]);
+    if (playerCount <= 1) {
+        ChangeStepsAfterDelay(&data_ov075_0211d8a0, 0x14);
     } else {
         func_02030a6c();
-        self->ChangeStepsAfterDelay(&data_ov075_0211d8d0, 0x14);
+        ChangeStepsAfterDelay(&data_ov075_0211d8d0, 0x14);
     }
     func_02012790(0x117);
 }
 
-extern "C" void func_ov075_02119c38(dScEntry_c *self) {
+/* Enter step of the recruit steps. */
+void dScEntry_c::EnterRecruit() {
     gSubScreenLayers &= ~1;
-    func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 1);
+    ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(1);
     func_020337ec();
     gSubScreenLayers |= 5;
-    func_ov075_02115e8c((char *)&self->mIcons[0], 0xa, 0, 0x80, 0xa8);
-    self->mIconCount = 1;
-    self->mStepPhase = 0;
-    self->mWaiting.wavePhase = 0;
-    self->mWaiting.waveDelay = 0x78;
+    mIcons[0].Place(0xa, 0, 0x80, 0xa8);
+    mIconCount = 1;
+    mStepPhase = 0;
+    mWaiting.wavePhase = 0;
+    mWaiting.waveDelay = 0x78;
 }
 
 void dScEntry_c::UpdateStepFadeOut() {
@@ -1925,7 +1937,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
     }
     disconnectFlags = data_0209fc58;
     if (HasConnectionError()) {
-        func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 5);
+        ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(5);
         func_02030a78();
         {
             if ((disconnectFlags & 0x30) != 0 || mBehaviorStep == data_ov075_0211d920) {
@@ -1947,7 +1959,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
         func_02012790(0x123);
         mEntObj->mSuspended = 1;
     } else {
-        func_ov075_02116028(ENTRY_GRAPH_CALLBACK, 6);
+        ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(6);
         if ((func_0203d974() && data_0209fc5c[0] == 0) ||
             (func_0203d9b4() && activePeerMask == 0)) {
             if (func_0203d974())
@@ -2143,7 +2155,7 @@ s32 dScEntry_c::InitResources() {
         }
     }
 
-    func_ov075_0211601c(ENTRY_GRAPH_CALLBACK, this, 1);
+    ENTRY_GRAPH_CALLBACK->Init(this, 1);
     gGraphCallback = ENTRY_GRAPH_CALLBACK;
     Sound::LoadInitialGroup(0x2b);
 

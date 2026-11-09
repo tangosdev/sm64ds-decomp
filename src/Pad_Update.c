@@ -4,7 +4,7 @@
 /* Reads the keys (KEYINPUT and the ARM7's X/Y, or *src when given) into the
  * pad, honours inputLock, sets the three axes and steps each button's held
  * and released frame counts. */
-void func_ov007_020c20b8(Ov007Pad *pad, u16 *src) {
+void Pad_Update(Ov007Pad *pad, u16 *src) {
     int flags[13];
     int i;
     u16 keys;

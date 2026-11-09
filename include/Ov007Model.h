@@ -90,10 +90,10 @@ typedef struct Ov007Model {
      * Set by func_ov007_020bc47c (when it binds the model's file),
      * func_ov007_020be980 (with the animation), func_ov007_020b2614,
      * func_ov007_020b0da0 (when states[1]'s stateTicks is 1) and
-     * func_ov007_020bf790 (show). Cleared by func_ov007_020b066c,
-     * func_ov007_020be9ac, the fade's constructor func_ov007_020bfcec,
-     * func_ov007_020bfbdc, func_ov007_020bf790 (hide) and
-     * func_ov007_020bf690 (at the end of the transition) */
+     * ScreenFade_Start (show). Cleared by func_ov007_020b066c,
+     * func_ov007_020be9ac, the fade's constructor ScreenFade_Create,
+     * func_ov007_020bfbdc, ScreenFade_Start (hide) and
+     * ScreenFade_Update (at the end of the transition) */
     s32 visible;
     /* 0x98: 1 on the frames that step the animations; with flags & 3 it
      * alternates, so they run at half rate (func_ov007_020bc47c seeds 1) */

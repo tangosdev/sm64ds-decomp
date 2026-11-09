@@ -54,7 +54,13 @@
 #define REG_BLDCNT    (*(volatile u16 *)0x04000050)
 #define REG_DB_BLDCNT (*(volatile u16 *)0x04001050)
 
+/* DISPSTAT bit 1 is the HBlank flag; VCOUNT is the line being drawn. */
+#define REG_DISPSTAT (*(volatile u16 *)0x04000004)
+#define DISPSTAT_HBLANK (1u << 1)
 #define REG_VCOUNT (*(volatile u16 *)0x04000006)
+
+/* The 3D engine's display control, DISP3DCNT (engine A only). */
+#define REG_DISP3DCNT (*(volatile u16 *)0x04000060)
 
 /* BG0HOFS is 0x04000010 and BG0VOFS 0x04000012; the ROM sets the pair with one
    32-bit store, so this is typed to match that access rather than split in two. */
@@ -103,6 +109,18 @@
 #define REG_LIGHT_VECTOR (*(volatile u32 *)0x040004c8)
 #define REG_LIGHT_COLOR  (*(volatile u32 *)0x040004cc)
 
+/* 3D geometry commands: matrix stack, polygon setup and the vertex list. The
+   texture-parameter pair (0x040004a8, 0x040004ac) is in nitro/gx/g3imm.h. */
+#define REG_MTX_MODE     (*(volatile u32 *)0x04000440)
+#define REG_MTX_IDENTITY (*(volatile u32 *)0x04000454)
+#define REG_MTX_SCALE    (*(volatile u32 *)0x0400046c)
+#define REG_NORMAL       (*(volatile u32 *)0x04000484)
+#define REG_TEXCOORD     (*(volatile u32 *)0x04000488)
+#define REG_VTX_16       (*(volatile u32 *)0x0400048c)
+#define REG_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
+#define REG_BEGIN_VTXS   (*(volatile u32 *)0x04000500)
+#define REG_END_VTXS     (*(volatile u32 *)0x04000504)
+
 /* Timer 0. The counter and the control word share an address: reads see the live
    count, writes set the reload value. */
 #define REG_TM0CNT_L (*(volatile u16 *)0x04000100)
@@ -134,7 +152,9 @@
 #define DMA_CONTROL_32_BIT    (1u << 26)
 #define DMA_CONTROL_ENABLE    (1u << 31)
 
-/* Interrupt controller */
+/* Interrupt controller. IME is the master enable; NitroSDK's OS_DisableIrq
+   and OS_EnableIrq read the previous value and store 0 or 1. */
+#define REG_IME (*(volatile u16 *)0x04000208)
 #define REG_IE (*(volatile u32 *)0x04000210)
 #define REG_IF (*(volatile u32 *)0x04000214)
 

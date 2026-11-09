@@ -7225,7 +7225,7 @@
         "return:W2"
       ],
       "src/minigames/unit020b2c84.cpp": [
-        "return:PairW"
+        "return:ElemFn"
       ]
     },
     "data_020874cc": {
@@ -17248,7 +17248,7 @@
         "return:signed char"
       ]
     },
-    "func_02008550": {
+    "RunCameraCommand": {
       "src/KuppaScript.cpp": [
         "param:#1 dCamera_c *"
       ]

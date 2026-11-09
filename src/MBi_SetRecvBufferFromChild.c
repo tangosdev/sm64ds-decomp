@@ -8,8 +8,12 @@ extern char *data_020a9db8;
  * block header. Type 7 (file request) carries a piece number and one piece
  * of the entry request (func_02065de4 assembles them); types 8 and 9 carry
  * a 16-bit request built from two bytes, and 9 also a piece of reserved
- * data. The header follows the SDK's MBCommChildBlockHeader. */
-u8 *func_02065c2c(u8 *src, u8 *dst) {
+ * data. The header follows the SDK's MBCommChildBlockHeader.
+ *
+ * This build's SDK revision takes no child id: ntrtwl's later
+ * MBi_SetRecvBufferFromChild(recvbuf, hdr, child_id) files the request
+ * piece itself, where this one leaves that to the caller's func_02065de4. */
+u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst) {
     MBCommChildBlockHeader *hd = (MBCommChildBlockHeader *)dst;
     u8 *r4;
     hd->type = src[0];

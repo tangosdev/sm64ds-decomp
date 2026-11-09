@@ -35,7 +35,8 @@ extern "C" {
 
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c3d1c(void *p);
-extern int func_ov007_020c30ac(Vector3 *arr, int count, Vector3 *target, int arg4, int *out);
+extern int func_ov007_020c30ac(Vector3 *points, int count, Vector3 *target, int maxDist,
+                               int *outDist);
 extern void func_ov007_020c7504(Ov007PointList *list, int damping, int shift);
 extern void func_ov007_020c7560(Ov007PointList *list, int stiffness, int damping);
 extern void func_ov007_020c7804(Ov007PointList *list);
@@ -83,7 +84,7 @@ struct SwingSideRows {
  * mesh. */
 Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params) {
     Ov007Swing *swing;
-    int n;
+    int chainLength;
     int i;
     int j;
     Ov007PointList *chain;
@@ -91,10 +92,10 @@ Ov007Swing *func_ov007_020ca010(Ov007SwingParams *params) {
     swing = (Ov007Swing *)func_ov007_020c3df4(0, sizeof(Ov007Swing));
     swing->mesh = 0;
     swing->params = params;
-    n = params->chainLength;
+    chainLength = params->chainLength;
     /* A temporary, not a named zero: the ROM gives it the frame's last slot. */
     (Vector3Bits &)swing->anchor = Vector3Bits();
-    swing->chainPositions = (Vector3 *)func_ov007_020c3df4(0, n * sizeof(Vector3));
+    swing->chainPositions = (Vector3 *)func_ov007_020c3df4(0, chainLength * sizeof(Vector3));
     swing->chain = func_ov007_020c798c(2, params->chainLength, params->chainPointMass, 1);
     chain = swing->chain;
     for (i = 0; i < params->chainLength; i++) {
@@ -204,8 +205,7 @@ void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
 void func_ov007_020c9c24(Ov007Swing *self, int shift) {
     int i;
     Vector3_16 *normal;
-    int nx, ny;
-    int bound;
+    s16 nx, ny;
 
     for (i = 0; i < 2; i++) {
         func_ov007_020c7a84(self->xLinks[i], self->params->sideStiffness,
@@ -217,18 +217,16 @@ void func_ov007_020c9c24(Ov007Swing *self, int shift) {
     }
 
     normal = &self->mesh->vertexNormals[self->meshPoint];
-    bound = self->params->maxNormalX;
     nx = normal->x;
     ny = normal->y;
-    if (nx > bound)
-        nx = bound;
-    else if (nx < -bound)
-        nx = (s16)(-bound);
-    bound = self->params->maxNormalY;
-    if (ny > bound)
-        ny = bound;
-    else if (ny < -bound)
-        ny = (s16)(-bound);
+    if (nx > self->params->maxNormalX)
+        nx = self->params->maxNormalX;
+    else if (nx < -self->params->maxNormalX)
+        nx = -self->params->maxNormalX;
+    if (ny > self->params->maxNormalY)
+        ny = self->params->maxNormalY;
+    else if (ny < -self->params->maxNormalY)
+        ny = -self->params->maxNormalY;
 
     self->chain->items[0]->target->x = FX_MUL(nx, self->params->normalScale);
     self->chain->items[0]->target->y = FX_MUL(ny, self->params->normalScale);
@@ -287,7 +285,7 @@ void func_ov007_020c9a84(Ov007Swing *self, Vector3 *offset, u16 *rotX, u16 *rotY
 
     easeX = MulFx(fracX, 0x2000 - fracX);
     easeY = MulFx(fracY, 0x2000 - fracY);
-    *rotX = (s16)((self->params->maxRotX * (easeX * Sign(tiltX))) >> 12);
-    *rotY = (s16)((self->params->maxRotY * (easeY * Sign(tiltY))) >> 12);
+    *rotX = (self->params->maxRotX * (easeX * Sign(tiltX))) >> 12;
+    *rotY = (self->params->maxRotY * (easeY * Sign(tiltY))) >> 12;
 }
 }

@@ -29,15 +29,15 @@
  * whichever state param1 names. These names describe what each state's handlers
  * do, not labels recovered from the cartridge.
  *
- *   0  enter func_ov002_020ed5b0, execute func_ov002_020ed0d4: sits on the
+ *   0  enter EnterFollowPlayer, execute ExecuteFollowPlayer: sits on the
  *      followed daPly_c (mPlayer) and eases toward a point offset from it.
- *   1  enter func_ov002_020ecfc8, execute func_ov002_020ecf94: picks the nearest
+ *   1  enter EnterSeek, execute ExecuteSeek: picks the nearest
  *      actor not yet targeted and flies at it, speed 100 units/frame.
- *   2  enter func_ov002_020ecad4, execute func_ov002_020ec9c4: speed zero; sets
+ *   2  enter EnterWobble, execute ExecuteWobble: speed zero; sets
  *      the X/Z tilt from a pair func_ov002_020d5f98 reads off the daPly_c, then
  *      damps it back to level, and destroys the egg once func_ov002_020d6048
  *      says no for the daPly_c.
- *   3  enter func_ov002_020ec978, execute func_ov002_020ec938: speed zero with
+ *   3  enter EnterDrop, execute ExecuteDrop: speed zero with
  *      gravity on; bursts as soon as it is on the ground.
  */
 enum daYegg_State {
@@ -50,7 +50,7 @@ enum daYegg_State {
 /* The egg's own bits in dActor_c::mFlags (+0x0b0). Nothing in this file sets
  * them; the names say what the egg does while each is set. */
 enum daYegg_Flag {
-    daYegg_FLAG_ATTACHED = 0x100, /* rides the daPly_c's matrix (func_ov002_020ed998) */
+    daYegg_FLAG_ATTACHED = 0x100, /* rides the daPly_c's matrix (UpdateModelMatrix) */
     daYegg_FLAG_FLYING = 0x400,   /* runs the flight logic in state 1 */
     daYegg_FLAG_DROPPED = 0x2000  /* state 1 gives way to state 3 */
 };
@@ -74,7 +74,7 @@ struct daYegg_c : dEnemyBase_c {
     s32 mSpawnPosX;                             /* 0x3c0 */
     s32 mSpawnPosY;                             /* 0x3c4 */
     s32 mSpawnPosZ;                             /* 0x3c8 */
-    /* Position sampled by func_ov002_020ed6cc each call, to measure how far the
+    /* Position sampled by IsStalled each call, to measure how far the
        egg moved horizontally since the last one. */
     s32 mLastPosX;                              /* 0x3cc */
     s32 mLastPosY;                              /* 0x3d0 */
@@ -84,10 +84,10 @@ struct daYegg_c : dEnemyBase_c {
     s32 mHoldTargetX;                           /* 0x3d8 */
     s32 mHoldTargetY;                           /* 0x3dc */
     s32 mHoldTargetZ;                           /* 0x3e0 */
-    /* TWO s16 triples. State 0 (func_ov002_020ed0d4) steps the second toward the
+    /* TWO s16 triples. State 0 (ExecuteFollowPlayer) steps the second toward the
        first with ApproachAngle and copies its Y into mAngleY; both are seeded
        from mAngleX/Y/Z in InitResources and from the daPly_c's angles in
-       func_ov002_020ed5b0. */
+       EnterFollowPlayer. */
     s16 mGoalAngleX;                            /* 0x3e4 */
     s16 mGoalAngleY;                            /* 0x3e6 */
     s16 mGoalAngleZ;                            /* 0x3e8 */
@@ -102,7 +102,7 @@ struct daYegg_c : dEnemyBase_c {
        rotated by mEasedAngle and added to the daPly_c's position. */
     s32 mHoldOffsetZ;                           /* 0x3f4 */
     u8  pad_3f8[0x4];
-    /* uniqueIDs of the actors func_ov002_020edb3c has already chosen as a target,
+    /* uniqueIDs of the actors FindTarget has already chosen as a target,
        in the order chosen; mTargetedCount of the five are filled. It skips any
        candidate whose uniqueID is listed. */
     s32 mTargetedIds[5];                        /* 0x3fc */
@@ -115,17 +115,17 @@ struct daYegg_c : dEnemyBase_c {
     u8  mTargetedCount;                         /* 0x41c */
     u8  mWobbling;                              /* 0x41d -- state 2: the tilt is being
                                                    damped back to level */
-    /* State 0 (func_ov002_020ed0d4) rebuilds the hold target and goal angles
+    /* State 0 (ExecuteFollowPlayer) rebuilds the hold target and goal angles
        only while DecIfAbove0_Byte finds this at 0, so a nonzero count holds
        them frozen; the rebuild clears it. Nothing in the tree loads it
        nonzero (medium confidence). Was unk_41e. */
     u8 mHoldFreezeTimer; /* 0x41e */
-    /* func_ov002_020ed6cc reloads this to 0xf whenever the egg moved 50 units or
+    /* IsStalled reloads this to 0xf whenever the egg moved 50 units or
        more since its last call, and counts it down otherwise. */
     u8  mStallTimer;                            /* 0x41f */
     /* Behavior indexes mPayoutDone with mPayoutIdx and stops at 5, which is what
        makes the array five wide and puts the byte at 0x426 outside it.
-       func_ov002_020ec728 pays out once per slot. */
+       PayOut pays out once per slot. */
     u8  mPayoutIdx;                             /* 0x420 */
     u8  mPayoutDone[5];                         /* 0x421 */
     u8  mBurstDone;                             /* 0x426 -- set at the end of
@@ -134,38 +134,41 @@ struct daYegg_c : dEnemyBase_c {
     u8  mStarSlot;                              /* 0x427 -- dActor_c::TrackStar's answer,
                                                    the same shape as daIDonketu_c's */
     /* param1 >> 4. Bits 0-1: the variant func_ov002_020ec654 tests. Bits 2-5:
-       how many coins func_ov002_020ec640 pays. Bit 6: pays a blue coin
-       (func_ov002_020ec628). Bit 7: pays the tracked star (func_ov002_020ec610). */
+       how many coins GetCoinPayoutCount pays. Bit 6: pays a blue coin
+       (HasBlueCoinPayout). Bit 7: pays the tracked star (HasStarPayout). */
     u8  mParamHigh;                             /* 0x428 */
     u8  pad_429[0x3];
 
     virtual ~daYegg_c();
 
-    /* methods */
-    int func_ov002_020ec610();
-    int func_ov002_020ec628();
-    unsigned char func_ov002_020ec640();
+    /* The ROM records no English name for any method. The hooks take the
+       daYegg_State names in the EnterX/ExecuteX spelling of daBasabasa_c and
+       daBbl_c; func_ov002_020ec654 keeps its address, because what its two
+       egg variants are is not recovered. */
+    int HasStarPayout();
+    int HasBlueCoinPayout();
+    unsigned char GetCoinPayoutCount();
     int func_ov002_020ec654();
-    void func_ov002_020ec670(int arg);
-    void func_ov002_020ec728();
-    void func_ov002_020ec80c(void *b, int count, int sl, short arg5);
-    void func_ov002_020ec938();
-    void func_ov002_020ec978();
-    void func_ov002_020ec9c4();
-    void func_ov002_020ecad4();
-    void func_ov002_020ecb0c();
-    void func_ov002_020ecd18();
-    void func_ov002_020ecf94();
-    void func_ov002_020ecfc8();
-    void func_ov002_020ed0d4();
-    void func_ov002_020ed5b0();
-    void func_ov002_020ed684();
-    int func_ov002_020ed6cc();
-    void func_ov002_020ed738();
-    void func_ov002_020ed7f8();
-    void func_ov002_020ed998();
-    int func_ov002_020edb3c(int a1, int best);
-    int func_ov002_020eddc4();
+    void HandleWallHit(int arg);
+    void PayOut();
+    void SpawnBlueCoins(void *b, int count, int sl, short arg5);
+    void ExecuteDrop();
+    void EnterDrop();
+    void ExecuteWobble();
+    void EnterWobble();
+    void SeekStraight();
+    void SeekHoming();
+    void ExecuteSeek();
+    void EnterSeek();
+    void ExecuteFollowPlayer();
+    void EnterFollowPlayer();
+    void RunState();
+    int IsStalled();
+    void UpdateTilt();
+    void UpdateShadow();
+    void UpdateModelMatrix();
+    int FindTarget(int a1, int best);
+    int HandleCylinderHit();
     int Behavior();
     int CleanupResources();
     int InitResources();

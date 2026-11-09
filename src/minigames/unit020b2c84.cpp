@@ -25,9 +25,9 @@
  * file's .data claim covers. Everything else it touches is reached by extern.
  *
  * Emission order. `#pragma defer_codegen off` is load-bearing here: with codegen
- * deferred the opt_* pragmas around Banner_DrawSqueeze, Banner_DrawZoomA
- * and Banner_DrawZoomB do not bind to the one function
- * they bracket. Source is therefore ROM-ascending.
+ * deferred mwccarm emits the functions' sections in reverse source order
+ * (measured: Mg_FreeBannerFiles comes out last), and the ROM has them
+ * ascending. Source is therefore ROM-ascending.
  *
  * The bodies were matched as one-function C or C++ sources and keep that
  * spelling under extern "C" and their ROM names.
@@ -35,19 +35,18 @@
  * Numbered names. mwccarm numbers its generated names from one counter that
  * every named parameter (prototypes included), local and temporary before a
  * definition advances. The array gMgBanners at the end of the file
- * gets __arraydtor$1099 (and @1100); symbols.txt names the thunk
+ * gets an __arraydtor$N thunk and an @N registration node (the manifest's
+ * defined_symbol_renames hold the current N); symbols.txt names the thunk
  * __arraydtor$954, and the manifest renames both onto their configured
  * names, so an edit here that moves the count re-keys those two rows. The
  * two function-local Vector2 statics (Banner_StartWaveBurst,
  * Banner_SetupZoomBurst) are renamed the same way, onto the ov004 .bss names
- * at 0x020bf3ec..0x020bf41c that this unit owns. The named
- * parameters on the __cxa_vec_cleanup prototype stand in for names
- * removed elsewhere, and the
- * six record copies in Banner_StartSpin, Banner_StartWaveBurst and
- * Banner_Press stay W2 (int[2]) copies: assigning the records as
- * ElemFn emits the same code but moves the counter by 8 (measured).
- * Banner_Init's `b ? a : a` copies are a code shape, not a count:
- * a plain record copy there changes 12 words of that function (measured).
+ * at 0x020bf3ec..0x020bf41c that this unit owns.
+ *
+ * Member-pointer records. The pmf_Banner_* words are the {function, 0}
+ * records mwccarm emits for each `&MgBanner::handler` use, and data_02086b58
+ * is __ptmf_null; they are declared here as ElemFn, so the handlers assign,
+ * compare and index the three per-style tables as member pointers.
  *
  * Retired one-function sources (ROM address order):
  *   0x020b2c84  Mg_FreeBannerFiles
@@ -105,18 +104,27 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "nitro/gx/gxcommon.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "MWCPlusLib.h"
 #include "dScMgBase_c.h"
 #include "LevelRng.h"
 #include "MgBanner.h"
 
 struct M { int _00, _01, _10, _11; };
-struct Pair { int a, b; };
-struct W2 { int w[2]; };
-struct PairW { int w0, w1; };
-struct S3 { int v[3]; };
-struct Entry { int id; int ptr; };
-struct EntryTable { Entry e[29]; };
+struct SlotCharNos {
+    int v[3];
+};
+/* The banner files: 29 graphics, loaded together. An MgBanner whose mFileIndex
+   is MG_BANNER_FILE_NUM shows nothing. */
+#define MG_BANNER_FILE_NUM 29
+
+struct Entry {
+    int file;
+    int *sprites;
+};
+struct EntryTable {
+    Entry e[MG_BANNER_FILE_NUM];
+};
 struct OamAttr;
 
 
@@ -133,10 +141,7 @@ int func_02053200(int x);
 void func_0203d704(int *o, int *a, int *b);
 void func_0203d388(int *p, int angle);
 int RandomIntInternal(int *seed);
-void Mg_SpawnFx(int c, short a1, int *a2, int *r3, int *sp0);
-/* local extern: only sibling minigame scene headers declare it, and its
-   named parameters hold the @NNN count noted above. */
-void __cxa_vec_cleanup(void *array, unsigned int count, unsigned int size, dtor_t dtor);
+void Mg_SpawnFx(int state, short timer, Vector2 *pos, Vector2 *vel, Vector2 *accel);
 void Mg_RenderSpriteOnMtx(void *a0, int a1, int a2, int a3, int a4, M *a5);
 void Mg_RenderSpriteOn(OamAttr *a, int b, int c, int d, int e);
 int Mg_GetLevel(void);
@@ -146,19 +151,25 @@ void Banner_StartSpin(MgBanner *e);
 void Banner_StartWaveBurst(MgBanner *e);
 }
 
-extern S3 data_ov004_020bc27c;
+/* The first OBJ character number of each graphics slot, {0x380, 0x300, 0x340}
+   (MG_BANNER_SLOTn_CHARS / 32). Banner_Init copies it whole to the stack and
+   indexes the copy: the code of a local `int charNo[3] = {...}`, whose
+   initializer template the ROM keeps here in .data. Written that way, mwccarm
+   emits the same Banner_Init but puts the template in an anonymous .rodata
+   object outside this unit's claimed .data (measured), so the copy stays. */
+extern SlotCharNos sMgBannerGfxSlotCharNo;
 extern int sMgMsgGiveUpSprites;
-static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, (int)&sMgMsgGiveUpSprites}}};
+static EntryTable sMgBannerFileTemplate = {{{0, 0}, {0x140, &sMgMsgGiveUpSprites}}};
 extern OamAttr *data_ov006_021346bc;
 extern int sMgTopScreenYOffset;
 extern int sMgBannerButtonsArmed;
-extern Pair pmf_Banner_UpdateWave;
-extern Pair pmf_Banner_DrawWave;
-extern Pair pmf_Banner_UpdatePressed;
-extern Pair pmf_Banner_DrawPressed;
-extern int pmf_Banner_DrawSpin[];
-extern int pmf_Banner_UpdateSpin[];
-extern int pmf_Banner_UpdatePressed_2[];
+extern ElemFn pmf_Banner_UpdateWave;
+extern ElemFn pmf_Banner_DrawWave;
+extern ElemFn pmf_Banner_UpdatePressed;
+extern ElemFn pmf_Banner_DrawPressed;
+extern ElemFn pmf_Banner_DrawSpin;
+extern ElemFn pmf_Banner_UpdateSpin;
+extern ElemFn pmf_Banner_UpdatePressed_2;
 extern unsigned char sMgBannerGfxSlotUsed[];
 /* Where Banner_Init decompresses a banner for each graphics slot: the byte
    offset into the OBJ character VRAM of each screen it draws on. */
@@ -167,72 +178,72 @@ enum MgBannerCharOffset {
     MG_BANNER_SLOT1_CHARS = 0x6000,
     MG_BANNER_SLOT2_CHARS = 0x6800
 };
-extern PairW sBannerUpdateTable[];
-extern PairW sBannerSetupTable[];
-extern PairW sBannerDrawTable[];
+extern ElemFn sBannerUpdateTable[];
+extern ElemFn sBannerSetupTable[];
+extern ElemFn sBannerDrawTable[];
 extern void *sMgBannerFiles[];
 extern int sMgBannerSprites[];
 
 extern int sMgMsgRetryNcgByLanguage[];
-extern int sMgMsgRetrySpritesByLanguage[];
+extern int *sMgMsgRetrySpritesByLanguage[];
 extern int sMgMsgQuitNcgByLanguage[];
-extern int sMgMsgQuitSpritesByLanguage[];
+extern int *sMgMsgQuitSpritesByLanguage[];
 extern int sMgMsgLevelClearNcgByLanguage[];
-extern int sMgMsgLevelClearSpritesByLanguage[];
+extern int *sMgMsgLevelClearSpritesByLanguage[];
 extern int sMgMsgGoalNcgByLanguage[];
-extern int sMgMsgGoalSpritesByLanguage[];
+extern int *sMgMsgGoalSpritesByLanguage[];
 extern int sMgMsgHiScoreNcgByLanguage[];
-extern int sMgMsgHiScoreSpritesByLanguage[];
+extern int *sMgMsgHiScoreSpritesByLanguage[];
 extern int sMgMsgPerfectNcgByLanguage[];
-extern int sMgMsgPerfectSpritesByLanguage[];
+extern int *sMgMsgPerfectSpritesByLanguage[];
 extern int sMgMsgResultHiScoreNcgByLanguage[];
-extern int sMgMsgResultHiScoreSpritesByLanguage[];
+extern int *sMgMsgResultHiScoreSpritesByLanguage[];
 extern int sMgMsgGameOverNcgByLanguage[];
-extern int sMgMsgGameOverSpritesByLanguage[];
+extern int *sMgMsgGameOverSpritesByLanguage[];
 extern int sMgMsgYouWinNcgByLanguage[];
-extern int sMgMsgYouWinSpritesByLanguage[];
+extern int *sMgMsgYouWinSpritesByLanguage[];
 extern int sMgMsgTooBadNcgByLanguage[];
-extern int sMgMsgTooBadSpritesByLanguage[];
+extern int *sMgMsgTooBadSpritesByLanguage[];
 extern int sMgMsgDrawNcgByLanguage[];
-extern int sMgMsgDrawSpritesByLanguage[];
+extern int *sMgMsgDrawSpritesByLanguage[];
 extern int sMgMsgStartNcgByLanguage[];
-extern int sMgMsgStartSpritesByLanguage[];
+extern int *sMgMsgStartSpritesByLanguage[];
 extern int sMgMsgLevelNcgByLanguage[];
-extern int sMgMsgLevelSpritesByLanguage[];
+extern int *sMgMsgLevelSpritesByLanguage[];
 extern int sMgMsgTimeOverNcgByLanguage[];
-extern int sMgMsgTimeOverSpritesByLanguage[];
+extern int *sMgMsgTimeOverSpritesByLanguage[];
 extern int sMgMsgWhereNcgByLanguage[];
-extern int sMgMsgWhereSpritesByLanguage[];
+extern int *sMgMsgWhereSpritesByLanguage[];
 extern int sMgMsgLikeNcgByLanguage[];
-extern int sMgMsgLikeSpritesByLanguage[];
+extern int *sMgMsgLikeSpritesByLanguage[];
 extern int sMgMsgHateNcgByLanguage[];
-extern int sMgMsgHateSpritesByLanguage[];
+extern int *sMgMsgHateSpritesByLanguage[];
 extern int sMgMsgLoveNcgByLanguage[];
-extern int sMgMsgLoveSpritesByLanguage[];
+extern int *sMgMsgLoveSpritesByLanguage[];
 extern int sMgMsgDislikeNcgByLanguage[];
-extern int sMgMsgDislikeSpritesByLanguage[];
+extern int *sMgMsgDislikeSpritesByLanguage[];
 extern int sMgMsgEsperNcgByLanguage[];
-extern int sMgMsgEsperSpritesByLanguage[];
+extern int *sMgMsgEsperSpritesByLanguage[];
 extern int sMgMsgSuperEsperNcgByLanguage[];
-extern int sMgMsgSuperEsperSpritesByLanguage[];
+extern int *sMgMsgSuperEsperSpritesByLanguage[];
 extern int sMgMsgNoPairNcgByLanguage[];
-extern int sMgMsgNoPairSpritesByLanguage[];
+extern int *sMgMsgNoPairSpritesByLanguage[];
 extern int sMgMsgOnePairNcgByLanguage[];
-extern int sMgMsgOnePairSpritesByLanguage[];
+extern int *sMgMsgOnePairSpritesByLanguage[];
 extern int sMgMsgTwoPairNcgByLanguage[];
-extern int sMgMsgTwoPairSpritesByLanguage[];
+extern int *sMgMsgTwoPairSpritesByLanguage[];
 extern int sMgMsgThreeCardNcgByLanguage[];
-extern int sMgMsgThreeCardSpritesByLanguage[];
+extern int *sMgMsgThreeCardSpritesByLanguage[];
 extern int sMgMsgFullHouseNcgByLanguage[];
-extern int sMgMsgFullHouseSpritesByLanguage[];
+extern int *sMgMsgFullHouseSpritesByLanguage[];
 extern int sMgMsgFourCardNcgByLanguage[];
-extern int sMgMsgFourCardSpritesByLanguage[];
+extern int *sMgMsgFourCardSpritesByLanguage[];
 extern int sMgMsgFiveCardNcgByLanguage[];
-extern int sMgMsgFiveCardSpritesByLanguage[];
+extern int *sMgMsgFiveCardSpritesByLanguage[];
 
 extern "C" void Mg_FreeBannerFiles(void) {
     int i;
-    for (i = 0; i < 0x1d; i++) {
+    for (i = 0; i < MG_BANNER_FILE_NUM; i++) {
         Deallocate(sMgBannerFiles[i]);
         sMgBannerFiles[i] = 0;
     }
@@ -253,77 +264,77 @@ extern "C" void Mg_LoadBannerFiles(void)
        banner with no per-language files. */
     EntryTable entries = sMgBannerFileTemplate;
 
-    entries.e[0].id = sMgMsgRetryNcgByLanguage[GetGameLanguage()];
-    entries.e[0].ptr = sMgMsgRetrySpritesByLanguage[GetGameLanguage()];
-    entries.e[2].id = sMgMsgQuitNcgByLanguage[GetGameLanguage()];
-    entries.e[2].ptr = sMgMsgQuitSpritesByLanguage[GetGameLanguage()];
-    entries.e[3].id = sMgMsgLevelClearNcgByLanguage[GetGameLanguage()];
-    entries.e[3].ptr = sMgMsgLevelClearSpritesByLanguage[GetGameLanguage()];
-    entries.e[4].id = sMgMsgGoalNcgByLanguage[GetGameLanguage()];
-    entries.e[4].ptr = sMgMsgGoalSpritesByLanguage[GetGameLanguage()];
-    entries.e[5].id = sMgMsgHiScoreNcgByLanguage[GetGameLanguage()];
-    entries.e[5].ptr = sMgMsgHiScoreSpritesByLanguage[GetGameLanguage()];
-    entries.e[6].id = sMgMsgPerfectNcgByLanguage[GetGameLanguage()];
-    entries.e[6].ptr = sMgMsgPerfectSpritesByLanguage[GetGameLanguage()];
-    entries.e[7].id = sMgMsgResultHiScoreNcgByLanguage[GetGameLanguage()];
-    entries.e[7].ptr = sMgMsgResultHiScoreSpritesByLanguage[GetGameLanguage()];
-    entries.e[8].id = sMgMsgGameOverNcgByLanguage[GetGameLanguage()];
-    entries.e[8].ptr = sMgMsgGameOverSpritesByLanguage[GetGameLanguage()];
-    entries.e[9].id = sMgMsgYouWinNcgByLanguage[GetGameLanguage()];
-    entries.e[9].ptr = sMgMsgYouWinSpritesByLanguage[GetGameLanguage()];
-    entries.e[10].id = sMgMsgTooBadNcgByLanguage[GetGameLanguage()];
-    entries.e[10].ptr = sMgMsgTooBadSpritesByLanguage[GetGameLanguage()];
-    entries.e[11].id = sMgMsgDrawNcgByLanguage[GetGameLanguage()];
-    entries.e[11].ptr = sMgMsgDrawSpritesByLanguage[GetGameLanguage()];
-    entries.e[12].id = sMgMsgStartNcgByLanguage[GetGameLanguage()];
-    entries.e[12].ptr = sMgMsgStartSpritesByLanguage[GetGameLanguage()];
-    entries.e[13].id = sMgMsgLevelNcgByLanguage[GetGameLanguage()];
-    entries.e[13].ptr = sMgMsgLevelSpritesByLanguage[GetGameLanguage()];
-    entries.e[14].id = sMgMsgTimeOverNcgByLanguage[GetGameLanguage()];
-    entries.e[14].ptr = sMgMsgTimeOverSpritesByLanguage[GetGameLanguage()];
-    entries.e[15].id = sMgMsgWhereNcgByLanguage[GetGameLanguage()];
-    entries.e[15].ptr = sMgMsgWhereSpritesByLanguage[GetGameLanguage()];
-    entries.e[16].id = sMgMsgLikeNcgByLanguage[GetGameLanguage()];
-    entries.e[16].ptr = sMgMsgLikeSpritesByLanguage[GetGameLanguage()];
-    entries.e[17].id = sMgMsgHateNcgByLanguage[GetGameLanguage()];
-    entries.e[17].ptr = sMgMsgHateSpritesByLanguage[GetGameLanguage()];
-    entries.e[18].id = sMgMsgLoveNcgByLanguage[GetGameLanguage()];
-    entries.e[18].ptr = sMgMsgLoveSpritesByLanguage[GetGameLanguage()];
-    entries.e[19].id = sMgMsgDislikeNcgByLanguage[GetGameLanguage()];
-    entries.e[19].ptr = sMgMsgDislikeSpritesByLanguage[GetGameLanguage()];
-    entries.e[20].id = sMgMsgEsperNcgByLanguage[GetGameLanguage()];
-    entries.e[20].ptr = sMgMsgEsperSpritesByLanguage[GetGameLanguage()];
-    entries.e[21].id = sMgMsgSuperEsperNcgByLanguage[GetGameLanguage()];
-    entries.e[21].ptr = sMgMsgSuperEsperSpritesByLanguage[GetGameLanguage()];
-    entries.e[22].id = sMgMsgNoPairNcgByLanguage[GetGameLanguage()];
-    entries.e[22].ptr = sMgMsgNoPairSpritesByLanguage[GetGameLanguage()];
-    entries.e[23].id = sMgMsgOnePairNcgByLanguage[GetGameLanguage()];
-    entries.e[23].ptr = sMgMsgOnePairSpritesByLanguage[GetGameLanguage()];
-    entries.e[24].id = sMgMsgTwoPairNcgByLanguage[GetGameLanguage()];
-    entries.e[24].ptr = sMgMsgTwoPairSpritesByLanguage[GetGameLanguage()];
-    entries.e[25].id = sMgMsgThreeCardNcgByLanguage[GetGameLanguage()];
-    entries.e[25].ptr = sMgMsgThreeCardSpritesByLanguage[GetGameLanguage()];
-    entries.e[26].id = sMgMsgFullHouseNcgByLanguage[GetGameLanguage()];
-    entries.e[26].ptr = sMgMsgFullHouseSpritesByLanguage[GetGameLanguage()];
-    entries.e[27].id = sMgMsgFourCardNcgByLanguage[GetGameLanguage()];
-    entries.e[27].ptr = sMgMsgFourCardSpritesByLanguage[GetGameLanguage()];
-    entries.e[28].id = sMgMsgFiveCardNcgByLanguage[GetGameLanguage()];
-    entries.e[28].ptr = sMgMsgFiveCardSpritesByLanguage[GetGameLanguage()];
+    entries.e[0].file = sMgMsgRetryNcgByLanguage[GetGameLanguage()];
+    entries.e[0].sprites = sMgMsgRetrySpritesByLanguage[GetGameLanguage()];
+    entries.e[2].file = sMgMsgQuitNcgByLanguage[GetGameLanguage()];
+    entries.e[2].sprites = sMgMsgQuitSpritesByLanguage[GetGameLanguage()];
+    entries.e[3].file = sMgMsgLevelClearNcgByLanguage[GetGameLanguage()];
+    entries.e[3].sprites = sMgMsgLevelClearSpritesByLanguage[GetGameLanguage()];
+    entries.e[4].file = sMgMsgGoalNcgByLanguage[GetGameLanguage()];
+    entries.e[4].sprites = sMgMsgGoalSpritesByLanguage[GetGameLanguage()];
+    entries.e[5].file = sMgMsgHiScoreNcgByLanguage[GetGameLanguage()];
+    entries.e[5].sprites = sMgMsgHiScoreSpritesByLanguage[GetGameLanguage()];
+    entries.e[6].file = sMgMsgPerfectNcgByLanguage[GetGameLanguage()];
+    entries.e[6].sprites = sMgMsgPerfectSpritesByLanguage[GetGameLanguage()];
+    entries.e[7].file = sMgMsgResultHiScoreNcgByLanguage[GetGameLanguage()];
+    entries.e[7].sprites = sMgMsgResultHiScoreSpritesByLanguage[GetGameLanguage()];
+    entries.e[8].file = sMgMsgGameOverNcgByLanguage[GetGameLanguage()];
+    entries.e[8].sprites = sMgMsgGameOverSpritesByLanguage[GetGameLanguage()];
+    entries.e[9].file = sMgMsgYouWinNcgByLanguage[GetGameLanguage()];
+    entries.e[9].sprites = sMgMsgYouWinSpritesByLanguage[GetGameLanguage()];
+    entries.e[10].file = sMgMsgTooBadNcgByLanguage[GetGameLanguage()];
+    entries.e[10].sprites = sMgMsgTooBadSpritesByLanguage[GetGameLanguage()];
+    entries.e[11].file = sMgMsgDrawNcgByLanguage[GetGameLanguage()];
+    entries.e[11].sprites = sMgMsgDrawSpritesByLanguage[GetGameLanguage()];
+    entries.e[12].file = sMgMsgStartNcgByLanguage[GetGameLanguage()];
+    entries.e[12].sprites = sMgMsgStartSpritesByLanguage[GetGameLanguage()];
+    entries.e[13].file = sMgMsgLevelNcgByLanguage[GetGameLanguage()];
+    entries.e[13].sprites = sMgMsgLevelSpritesByLanguage[GetGameLanguage()];
+    entries.e[14].file = sMgMsgTimeOverNcgByLanguage[GetGameLanguage()];
+    entries.e[14].sprites = sMgMsgTimeOverSpritesByLanguage[GetGameLanguage()];
+    entries.e[15].file = sMgMsgWhereNcgByLanguage[GetGameLanguage()];
+    entries.e[15].sprites = sMgMsgWhereSpritesByLanguage[GetGameLanguage()];
+    entries.e[16].file = sMgMsgLikeNcgByLanguage[GetGameLanguage()];
+    entries.e[16].sprites = sMgMsgLikeSpritesByLanguage[GetGameLanguage()];
+    entries.e[17].file = sMgMsgHateNcgByLanguage[GetGameLanguage()];
+    entries.e[17].sprites = sMgMsgHateSpritesByLanguage[GetGameLanguage()];
+    entries.e[18].file = sMgMsgLoveNcgByLanguage[GetGameLanguage()];
+    entries.e[18].sprites = sMgMsgLoveSpritesByLanguage[GetGameLanguage()];
+    entries.e[19].file = sMgMsgDislikeNcgByLanguage[GetGameLanguage()];
+    entries.e[19].sprites = sMgMsgDislikeSpritesByLanguage[GetGameLanguage()];
+    entries.e[20].file = sMgMsgEsperNcgByLanguage[GetGameLanguage()];
+    entries.e[20].sprites = sMgMsgEsperSpritesByLanguage[GetGameLanguage()];
+    entries.e[21].file = sMgMsgSuperEsperNcgByLanguage[GetGameLanguage()];
+    entries.e[21].sprites = sMgMsgSuperEsperSpritesByLanguage[GetGameLanguage()];
+    entries.e[22].file = sMgMsgNoPairNcgByLanguage[GetGameLanguage()];
+    entries.e[22].sprites = sMgMsgNoPairSpritesByLanguage[GetGameLanguage()];
+    entries.e[23].file = sMgMsgOnePairNcgByLanguage[GetGameLanguage()];
+    entries.e[23].sprites = sMgMsgOnePairSpritesByLanguage[GetGameLanguage()];
+    entries.e[24].file = sMgMsgTwoPairNcgByLanguage[GetGameLanguage()];
+    entries.e[24].sprites = sMgMsgTwoPairSpritesByLanguage[GetGameLanguage()];
+    entries.e[25].file = sMgMsgThreeCardNcgByLanguage[GetGameLanguage()];
+    entries.e[25].sprites = sMgMsgThreeCardSpritesByLanguage[GetGameLanguage()];
+    entries.e[26].file = sMgMsgFullHouseNcgByLanguage[GetGameLanguage()];
+    entries.e[26].sprites = sMgMsgFullHouseSpritesByLanguage[GetGameLanguage()];
+    entries.e[27].file = sMgMsgFourCardNcgByLanguage[GetGameLanguage()];
+    entries.e[27].sprites = sMgMsgFourCardSpritesByLanguage[GetGameLanguage()];
+    entries.e[28].file = sMgMsgFiveCardNcgByLanguage[GetGameLanguage()];
+    entries.e[28].sprites = sMgMsgFiveCardSpritesByLanguage[GetGameLanguage()];
 
-    for (i = 0; i < 29; i++) {
-        sMgBannerFiles[i] = LoadFile(entries.e[i].id);
-        sMgBannerSprites[i] = *(int *)entries.e[i].ptr;
+    for (i = 0; i < MG_BANNER_FILE_NUM; i++) {
+        sMgBannerFiles[i] = LoadFile(entries.e[i].file);
+        sMgBannerSprites[i] = *entries.e[i].sprites;
     }
 }
 
 extern "C" void Banner_Free(MgBanner *e) {
-    e->mFileIndex = 0x1d;
-    s16 idx = e->mGfxSlot;
-    sMgBannerGfxSlotUsed[idx] = 0;
+    e->mFileIndex = MG_BANNER_FILE_NUM;
+    sMgBannerGfxSlotUsed[e->mGfxSlot] = 0;
 }
 
 extern "C" void Banner_Draw(MgBanner *e) {
-    if (e->mFileIndex == 0x1d) return;
+    if (e->mFileIndex == MG_BANNER_FILE_NUM)
+        return;
     if (e->mRender != 0) {
         (e->*(e->mRender))();
         return;
@@ -332,21 +343,25 @@ extern "C" void Banner_Draw(MgBanner *e) {
 }
 
 extern "C" void Banner_Update(MgBanner *e) {
-    if (e->mFileIndex == 0x1d) return;
+    if (e->mFileIndex == MG_BANNER_FILE_NUM)
+        return;
     if (e->mBehavior == 0) return;
     (e->*(e->mBehavior))();
 }
 
 extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen, int priority,
                             short style) {
-    int a, b;
+    /* Where the graphic is decompressed: in display mode 2 into the main
+       engine's OBJ VRAM only, otherwise into the sub engine's with a copy in
+       the main engine's. */
+    u8 *chars, *mirrorChars;
 
     if (gMgScene->GetDisplayMode() == 2) {
-        a = 0x6400000;
-        b = 0;
+        chars = (u8 *)HW_OBJ_VRAM;
+        mirrorChars = 0;
     } else {
-        a = 0x6600000;
-        b = 0x6400000;
+        chars = (u8 *)HW_DB_OBJ_VRAM;
+        mirrorChars = (u8 *)HW_OBJ_VRAM;
     }
 
     switch (file) {
@@ -355,25 +370,25 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
     case 14: case 16: case 17: case 18: case 19: case 20: case 21:
         if (sMgBannerGfxSlotUsed[0] != 0)
             return;
-        DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT0_CHARS));
-        if (b != 0)
-            DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT0_CHARS));
+        DecompressLZ16(sMgBannerFiles[file], chars + MG_BANNER_SLOT0_CHARS);
+        if (mirrorChars != 0)
+            DecompressLZ16(sMgBannerFiles[file], mirrorChars + MG_BANNER_SLOT0_CHARS);
         e->mGfxSlot = 0;
         sMgBannerGfxSlotUsed[0] = 1;
         break;
     default:
         if (sMgBannerGfxSlotUsed[1] == 0) {
-            DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT1_CHARS));
-            if (b != 0)
-                DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT1_CHARS));
+            DecompressLZ16(sMgBannerFiles[file], chars + MG_BANNER_SLOT1_CHARS);
+            if (mirrorChars != 0)
+                DecompressLZ16(sMgBannerFiles[file], mirrorChars + MG_BANNER_SLOT1_CHARS);
             e->mGfxSlot = 1;
             sMgBannerGfxSlotUsed[1] = 1;
             break;
         }
         if (sMgBannerGfxSlotUsed[2] == 0) {
-            DecompressLZ16(sMgBannerFiles[file], (void *)(a + MG_BANNER_SLOT2_CHARS));
-            if (b != 0)
-                DecompressLZ16(sMgBannerFiles[file], (void *)(b + MG_BANNER_SLOT2_CHARS));
+            DecompressLZ16(sMgBannerFiles[file], chars + MG_BANNER_SLOT2_CHARS);
+            if (mirrorChars != 0)
+                DecompressLZ16(sMgBannerFiles[file], mirrorChars + MG_BANNER_SLOT2_CHARS);
             e->mGfxSlot = 2;
             sMgBannerGfxSlotUsed[2] = 1;
             break;
@@ -419,45 +434,24 @@ extern "C" void Banner_Init(MgBanner *e, int file, short x, short y, int screen,
     }
 
     {
-        S3 tmp = data_ov004_020bc27c;
-        e->mOamCount = (short)Mg_CopySpriteList(
-            sMgBannerSprites[e->mFileIndex],
-            e->mOam,
-            tmp.v[e->mGfxSlot],
-            e->mFileIndex);
+        SlotCharNos charNo = sMgBannerGfxSlotCharNo;
+        e->mOamCount = Mg_CopySpriteList(sMgBannerSprites[e->mFileIndex], e->mOam,
+                                         charNo.v[e->mGfxSlot], e->mFileIndex);
     }
 
-    {
-        int st = e->mStyle;
-        if (((ElemFn *)sBannerSetupTable)[st])
-            (e->*((ElemFn *)sBannerSetupTable)[st])();
-    }
+    if (sBannerSetupTable[e->mStyle])
+        (e->*sBannerSetupTable[e->mStyle])();
 
-    {
-        short st;
-        PairW *r;
-        st = e->mStyle;
-        r = &sBannerUpdateTable[st];
-        a = sBannerUpdateTable[st].w0;
-        b = r->w1;
-        ((int *)&e->mBehavior)[0] = b ? a : a;
-        ((int *)&e->mBehavior)[1] = b;
-        st = e->mStyle;
-        r = &sBannerDrawTable[st];
-        a = sBannerDrawTable[st].w0;
-        b = r->w1;
-        ((int *)&e->mRender)[0] = b ? a : a;
-        ((int *)&e->mRender)[1] = b;
-    }
+    e->mBehavior = sBannerUpdateTable[e->mStyle];
+    e->mRender = sBannerDrawTable[e->mStyle];
 }
 
 extern "C" void Banner_DrawLevelNumber(MgBanner *e) {
     int x;
     int originX = e->mX;
     int n;
-    s16 drawY;
     /* the first OAM record's 9-bit signed x, made positive */
-    int oamX = (int)(((unsigned int)(*(int *)e->mOam << 7)) >> 0x17);
+    int oamX = ((GXOamAttr *)e->mOam)->x;
     int w;
     unsigned long left;
     n = Mg_GetLevel() + 1;
@@ -467,7 +461,7 @@ extern "C" void Banner_DrawLevelNumber(MgBanner *e) {
     if (oamX < 0) {
         oamX = -oamX;
     }
-    x = (x = (e->mX + oamX) + 0x10);
+    x = e->mX + oamX + 0x10;
     w = 0x10;
     {
         int p = 1;
@@ -478,11 +472,13 @@ extern "C" void Banner_DrawLevelNumber(MgBanner *e) {
     }
     /* both draws shift left by w/2; w grows 0x10 per power of ten below n */
     x = x - (w >> 1);
+    /* The two-step `left` is load-bearing: `left = originX - (w >> 1)`, an int
+       `left` and a shared `half` all evaluate it after the OAM pointer, 4 words
+       off (measured). */
     left = w >> 1;
     left = originX - left;
     Mg_RenderSpriteOn((OamAttr *)e->mOam, left, e->mY, e->mScreen, e->mPriority);
-    drawY = e->mY;
-    Mg_DrawBigNumber(x, drawY, n, e->mScreen, e->mPriority, 2, 0);
+    Mg_DrawBigNumber(x, e->mY, n, e->mScreen, e->mPriority, 2, 0);
 }
 
 extern "C" void Banner_SetupNone(void)
@@ -490,7 +486,7 @@ extern "C" void Banner_SetupNone(void)
 }
 
 extern "C" void Banner_DrawSpin(MgBanner *e) {
-    u8* el = e->mOam;
+    GXOamAttr *oam = (GXOamAttr *)e->mOam;
     int angle = (u16)e->mTimer;
     M m;
     u16 flag;
@@ -504,11 +500,10 @@ extern "C" void Banner_DrawSpin(MgBanner *e) {
         m._11 = fc;
         m._01 = fs;
         m._10 = -fs;
-        Mg_RenderSpriteOnMtx(el, e->mX, e->mY,
-                            e->mScreen, e->mPriority, &m);
+        Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
         angle = (u16)(angle + 0x4000);
-        flag = *(u16*)(el + 6);
-        el += 8;
+        flag = oam->attr3;
+        oam++;
     } while (flag != 0xffff);
 }
 
@@ -521,13 +516,13 @@ extern "C" void Banner_UpdateSpin(MgBanner *e) {
 extern "C" void Banner_StartSpin(MgBanner *e) {
     e->mTimer = 0;
     e->mTimerEnd = 0x27000;
-    *(W2 *)&e->mBehavior = *(W2 *)pmf_Banner_UpdateSpin;
-    *(W2 *)&e->mRender = *(W2 *)pmf_Banner_DrawSpin;
+    e->mBehavior = pmf_Banner_UpdateSpin;
+    e->mRender = pmf_Banner_DrawSpin;
 }
 
 extern "C" void Banner_UpdateDrop(MgBanner *e) {
     if (e->mTimer < 0x30){
-        *(unsigned *)&e->mTimer += 1;
+        e->mTimer++;
         return;
     }
     if (ApproachLinear2(e->mY, e->mTargetY, 0x10)){
@@ -541,14 +536,12 @@ extern "C" void Banner_SetupDrop(MgBanner *e) {
 }
 
 extern "C" void Banner_DrawWave(MgBanner *e) {
-    u8* el = e->mOam;
+    GXOamAttr *oam = (GXOamAttr *)e->mOam;
     int x = e->mTimer >> 2;
     int t = 0x1000;
-    int base = t;
-
     u16 flag;
     do {
-        int v = base;
+        int v = 0x1000;
         int d = x - t;
         if (d < 0) d = -d;
         if (d < 0x1000)
@@ -558,12 +551,11 @@ extern "C" void Banner_DrawWave(MgBanner *e) {
             M m = {0};
             m._00 = v;
             m._11 = v;
-            Mg_RenderSpriteOnMtx(el, e->mX, e->mY,
-                                e->mScreen, e->mPriority, &m);
+            Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
         }
         t += 0x1000;
-        flag = *(u16*)(el + 6);
-        el += 8;
+        flag = oam->attr3;
+        oam++;
     } while (flag != 0xffff);
 }
 
@@ -573,58 +565,39 @@ extern "C" void Banner_UpdateWave(MgBanner *e) {
     }
 }
 
+/* A random int in [0, n) from the actors' random state, the top 12 bits of the
+   positive draw scaled by n (d_s_mg_pachinko.cpp's PACHINKO_RAND does the same
+   from the minigame state). */
+#define BANNER_RAND(n) ((int)((u32)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) * (n) >> 12)
+
 extern "C" void Banner_StartWaveBurst(MgBanner *e) {
     int i;
-    int angle;
-    int boxA[2], boxB[2], boxC[2];
-    int posA[2];
-    int outA[2], outB[2];
-
-    int shifted;
 
     e->mTimer = 0;
-    angle = e->mOamCount;
-    angle = angle + 1;
-    shifted = angle << 14;
-    e->mTimerEnd = shifted;
+    e->mTimerEnd = (e->mOamCount + 1) << 14;
 
-    *(W2*)&e->mBehavior = *(W2*)&pmf_Banner_UpdateWave;
-    *(W2*)&e->mRender   = *(W2*)&pmf_Banner_DrawWave;
+    e->mBehavior = pmf_Banner_UpdateWave;
+    e->mRender = pmf_Banner_DrawWave;
 
-    boxA[0] = 0; boxA[1] = -0x2000;
-    boxB[0] = 0; boxB[1] = -0x1800;
-    boxC[0] = 0; boxC[1] = -0x4000;
+    Vector2 burstVel(0, -0x2000);
+    Vector2 liftVel(0, -0x1800);
+    Vector2 ringOffset(0, -0x4000);
 
-    {
-        int y = e->mY;
-        int x = e->mX;
-        int fy = y << 12;
-        int fx = x << 12;
-        posA[0] = fx;
-        posA[1] = fy;
-    }
+    Vector2 center(e->mX << 12, e->mY << 12);
+    Vector2 spawnPos, spawnVel;
 
-    /* The burst's effect origin: built once, on the first burst, then
-       registered for destruction at exit. */
-    static Vector2 sBannerWaveFxPos(0, 0xc0);
+    /* The particles' acceleration, which MgFx::UpdateDrift adds to their
+       velocity every frame: built once, on the first burst, then registered
+       for destruction at exit. */
+    static Vector2 sBannerWaveFxGravity(0, 0xc0);
 
     for (i = 0; i < 0x20; i++) {
-        int r;
-        int ang;
-        s16 spawnAngle;
+        func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
+        func_0203d388((int *)&burstVel, 0x800);
+        func_0203d388((int *)&ringOffset, 0x800);
+        func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
-        func_0203d704(outA, posA, boxC);
-        func_0203d388(boxA, 0x800);
-        func_0203d388(boxC, 0x800);
-        func_0203d704(outB, boxB, boxA);
-
-        r = RandomIntInternal(&data_0209e650.value);
-        r &= 0x7fffffff;
-        ang = (int)((u32)r >> 0x13) * 0x3c >> 0xc;
-        ang = ang + 0x5a;
-        spawnAngle = (s16)ang;
-
-        Mg_SpawnFx(0, spawnAngle, outA, outB, (int *)&sBannerWaveFxPos);
+        Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerWaveFxGravity);
     }
 }
 
@@ -664,7 +637,7 @@ extern "C" void Banner_UpdateFall(MgBanner *e) {
 
 extern "C" void Banner_SetupFall(MgBanner *e) {
     e->mTimer = 0;
-    e->mTimerEnd = 81920;
+    e->mTimerEnd = 0x14000;
     e->mY = 96;
 }
 
@@ -672,7 +645,7 @@ extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
     u16 flag;
     if (e->mTimer == 0) return;
     {
-        u8* el = e->mOam;
+        GXOamAttr *oam = (GXOamAttr *)e->mOam;
         if (e->mTimer < 0x18000) {
             int v = 0x2000;
             if (e->mTimer >= 0x14000) {
@@ -687,10 +660,9 @@ extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
                 m._00 = v;
                 m._11 = v;
                 do {
-                    Mg_RenderSpriteOnMtx(el, e->mX, e->mY,
-                                        e->mScreen, e->mPriority, &m);
-                    flag = *(u16*)(el + 6);
-                    el += 8;
+                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
+                    flag = oam->attr3;
+                    oam++;
                 } while (flag != 0xffff);
             }
         } else {
@@ -706,11 +678,10 @@ extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
                 m2._11 = fc;
                 m2._01 = fs;
                 m2._10 = -fs;
-                Mg_RenderSpriteOnMtx(el, e->mX, e->mY,
-                                    e->mScreen, e->mPriority, &m2);
+                Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
                 angle = (u16)(angle + 0x4000);
-                flag = *(u16*)(el + 6);
-                el += 8;
+                flag = oam->attr3;
+                oam++;
             } while (flag != 0xffff);
         }
     }
@@ -720,7 +691,7 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
     u16 flag;
     if (e->mTimer == 0) return;
     {
-        u8* el = e->mOam;
+        GXOamAttr *oam = (GXOamAttr *)e->mOam;
         if (e->mTimer < 0x18000) {
             int v = 0x2000;
             if (e->mTimer >= 0x14000) {
@@ -735,10 +706,9 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
                 m._00 = v;
                 m._11 = v;
                 do {
-                    Mg_RenderSpriteOnMtx(el, e->mX, e->mY,
-                                        e->mScreen, e->mPriority, &m);
-                    flag = *(u16*)(el + 6);
-                    el += 8;
+                    Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
+                    flag = oam->attr3;
+                    oam++;
                 } while (flag != 0xffff);
             }
         } else {
@@ -754,11 +724,10 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
                 m2._11 = fc;
                 m2._01 = fs;
                 m2._10 = -fs;
-                Mg_RenderSpriteOnMtx(el, e->mX, e->mY,
-                                    e->mScreen, e->mPriority, &m2);
+                Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m2);
                 angle = (u16)(angle + 0x4000);
-                flag = *(u16*)(el + 6);
-                el += 8;
+                flag = oam->attr3;
+                oam++;
             } while (flag != 0xffff);
         }
     }
@@ -766,41 +735,36 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
 
 extern "C" void Banner_UpdatePopSpin(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
-        e->mTimer = 98304;
+        e->mTimer = 0x18000;
     }
 }
 
 extern "C" void Banner_SetupPopSpin(MgBanner *e) {
     e->mTimer = 0;
-    e->mTimerEnd = 159744;
+    e->mTimerEnd = 0x27000;
 }
 
 extern "C" int Banner_IsPressFinished(MgBanner *e) {
-    int *d = pmf_Banner_UpdatePressed_2;
-    int *o = (int *)&e->mBehavior;
-    if (o[0] == d[0] && (o[1] == d[1] || o[0] == 0) && e->mTimer == e->mTimerEnd)
+    if (e->mBehavior == pmf_Banner_UpdatePressed_2 && e->mTimer == e->mTimerEnd)
         return 1;
     return 0;
 }
 
 extern "C" void Banner_DrawPressed(MgBanner *e) {
-    u8* el = e->mOam;
+    GXOamAttr *oam = (GXOamAttr *)e->mOam;
     int x = e->mTimer;
     u16 ang = (unsigned int)x >> 1;
     fx16 s = FX_SinIdx(ang >> 4);
     int v = func_02053200(FX_MUL(s, 0x800) + 0x1000);
     M m = {0};
-    u16 lim = 0xffff;
     u16 flag;
     m._00 = v;
     m._11 = v;
     do {
-        Mg_RenderSpriteOnMtx(el,
-            e->mX, e->mY,
-            e->mScreen, e->mPriority, &m);
-        flag = *(u16*)(el + 6);
-        el += 8;
-    } while (flag != lim);
+        Mg_RenderSpriteOnMtx(oam, e->mX, e->mY, e->mScreen, e->mPriority, &m);
+        flag = oam->attr3;
+        oam++;
+    } while (flag != 0xffff);
 
     x = e->mFileIndex;
     if (x != 0 && x != 1 && x != 2)
@@ -827,8 +791,8 @@ extern "C" void Banner_Press(MgBanner *e) {
     }
     e->mTimer = 0;
     e->mTimerEnd = 0x10000;
-    *(W2 *)&e->mBehavior = *(W2 *)&pmf_Banner_UpdatePressed;
-    *(W2 *)&e->mRender = *(W2 *)&pmf_Banner_DrawPressed;
+    e->mBehavior = pmf_Banner_UpdatePressed;
+    e->mRender = pmf_Banner_DrawPressed;
 }
 
 extern "C" void Banner_DrawPlain(MgBanner *e) {
@@ -969,53 +933,32 @@ extern "C" void Banner_DrawZoomB(MgBanner *e) {
 
 extern "C" void Banner_UpdateZoom(MgBanner *e) {
     if (ApproachLinear(e->mTimer, e->mTimerEnd, 0x1000)) {
-        e->mTimer = 122880;
+        e->mTimer = 0x1e000;
     }
 }
 
 extern "C" void Banner_SetupZoomBurst(MgBanner *e) {
     int i;
-    int boxA[2], boxB[2], boxC[2];
-    int posA[2];
-    int outA[2], outB[2];
-    int r;
-    int ang;
-    s16 spawnAngle;
 
     e->mTimer = 0;
     e->mTimerEnd = (((e->mOamCount + 1) << 2) + 0x1e) << 0xc;
 
-    boxA[0] = 0;
-    boxA[1] = -0x2000;
-    boxB[0] = 0;
-    boxB[1] = -0x1800;
-    boxC[0] = 0;
-    boxC[1] = -0x4000;
+    Vector2 burstVel(0, -0x2000);
+    Vector2 liftVel(0, -0x1800);
+    Vector2 ringOffset(0, -0x4000);
 
-    {
-        int y = e->mY;
-        int x = e->mX;
-        int fy = y << 12;
-        int fx = x << 12;
-        posA[0] = fx;
-        posA[1] = fy;
-    }
+    Vector2 center(e->mX << 12, e->mY << 12);
+    Vector2 spawnPos, spawnVel;
 
-    static Vector2 sBannerZoomFxPos(0, 0xc0);
+    static Vector2 sBannerZoomFxGravity(0, 0xc0);
 
     for (i = 0; i < 0x20; i++) {
-        func_0203d704(outA, posA, boxC);
-        func_0203d388(boxA, 0x800);
-        func_0203d388(boxC, 0x800);
-        func_0203d704(outB, boxB, boxA);
+        func_0203d704((int *)&spawnPos, (int *)&center, (int *)&ringOffset);
+        func_0203d388((int *)&burstVel, 0x800);
+        func_0203d388((int *)&ringOffset, 0x800);
+        func_0203d704((int *)&spawnVel, (int *)&liftVel, (int *)&burstVel);
 
-        r = RandomIntInternal(&data_0209e650.value);
-        r &= 0x7fffffff;
-        ang = (int)((u32)r >> 0x13) * 0x3c >> 0xc;
-        ang = ang + 0x5a;
-        spawnAngle = (s16)ang;
-
-        Mg_SpawnFx(0, spawnAngle, outA, outB, (int *)&sBannerZoomFxPos);
+        Mg_SpawnFx(0, BANNER_RAND(60) + 90, &spawnPos, &spawnVel, &sBannerZoomFxGravity);
     }
 }
 
@@ -1054,7 +997,7 @@ extern "C" void Banner_SetupSlideFromTop(MgBanner *e) {
 }
 
 MgBanner::MgBanner() {
-    mFileIndex = 29;
+    mFileIndex = MG_BANNER_FILE_NUM;
 }
 
 /* __sinit_ov004_020b955c sources: the member-pointer records the three
@@ -1062,15 +1005,21 @@ MgBanner::MgBanner() {
    sBannerUpdateTable, render sBannerDrawTable), and the words the
    29-entry file-id table copies. */
 extern "C" {
-extern PairW data_02086b58;  /* __ptmf_null's address: the null member pointer */
-extern PairW pmf_Banner_SetupSlideFromTop, pmf_Banner_SetupSlideFromBottom, pmf_Banner_SetupSlideFromLeft, pmf_Banner_SetupSlideFromRight;
-extern PairW pmf_Banner_SetupZoomBurst, pmf_Banner_SetupPopSpin, pmf_Banner_SetupZoom, pmf_Banner_SetupZoomBurst_2;
-extern PairW pmf_Banner_SetupPopSpin_2, pmf_Banner_SetupFall, pmf_Banner_SetupDrop, pmf_Banner_SetupNone;
-extern PairW pmf_Banner_UpdateSlideFromTop, pmf_Banner_UpdateSlideFromBottom, pmf_Banner_UpdateSlideFromLeft, pmf_Banner_UpdateSlideFromRight;
-extern PairW pmf_Banner_UpdateZoom_2, pmf_Banner_UpdatePopSpin_2, pmf_Banner_UpdateZoom_3, pmf_Banner_UpdateZoom;
-extern PairW pmf_Banner_UpdatePopSpin, pmf_Banner_UpdateFall, pmf_Banner_UpdateDrop;
-extern PairW pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2, pmf_Banner_DrawZoomA;
-extern PairW pmf_Banner_DrawPopSpinA, pmf_Banner_DrawSqueeze, pmf_Banner_DrawLevelNumber;
+extern ElemFn data_02086b58; /* __ptmf_null's address: the null member pointer */
+extern ElemFn pmf_Banner_SetupSlideFromTop, pmf_Banner_SetupSlideFromBottom,
+    pmf_Banner_SetupSlideFromLeft, pmf_Banner_SetupSlideFromRight;
+extern ElemFn pmf_Banner_SetupZoomBurst, pmf_Banner_SetupPopSpin, pmf_Banner_SetupZoom,
+    pmf_Banner_SetupZoomBurst_2;
+extern ElemFn pmf_Banner_SetupPopSpin_2, pmf_Banner_SetupFall, pmf_Banner_SetupDrop,
+    pmf_Banner_SetupNone;
+extern ElemFn pmf_Banner_UpdateSlideFromTop, pmf_Banner_UpdateSlideFromBottom,
+    pmf_Banner_UpdateSlideFromLeft, pmf_Banner_UpdateSlideFromRight;
+extern ElemFn pmf_Banner_UpdateZoom_2, pmf_Banner_UpdatePopSpin_2, pmf_Banner_UpdateZoom_3,
+    pmf_Banner_UpdateZoom;
+extern ElemFn pmf_Banner_UpdatePopSpin, pmf_Banner_UpdateFall, pmf_Banner_UpdateDrop;
+extern ElemFn pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2,
+    pmf_Banner_DrawZoomA;
+extern ElemFn pmf_Banner_DrawPopSpinA, pmf_Banner_DrawSqueeze, pmf_Banner_DrawLevelNumber;
 extern int sMgMsgRetrySpritesEnglish, sMgMsgQuitSpritesEnglish, sMgMsgLevelClearSpritesEnglish;
 extern int sMgMsgGoalSpritesEnglish, sMgMsgHiScoreSpritesEnglish, sMgMsgPerfectSpritesEnglish,
     sMgMsgResultHiScoreSpritesEnglish;
@@ -1094,37 +1043,60 @@ MgBanner gMgBanners[3];
 }
 
 extern "C" {
-int sMgBannerSprites[29] = {sMgMsgRetrySpritesEnglish,     sMgMsgGiveUpSprites,
-                            sMgMsgQuitSpritesEnglish,      sMgMsgLevelClearSpritesEnglish,
-                            sMgMsgGoalSpritesEnglish,      sMgMsgHiScoreSpritesEnglish,
-                            sMgMsgPerfectSpritesEnglish,   sMgMsgResultHiScoreSpritesEnglish,
-                            sMgMsgGameOverSpritesEnglish,  sMgMsgYouWinSpritesEnglish,
-                            sMgMsgTooBadSpritesEnglish,    sMgMsgDrawSpritesEnglish,
-                            sMgMsgStartSpritesEnglish,     sMgMsgLevelSpritesEnglish,
-                            sMgMsgTimeOverSpritesEnglish,  sMgMsgWhereSpritesEnglish,
-                            sMgMsgLikeSpritesEnglish,      sMgMsgHateSpritesEnglish,
-                            sMgMsgLoveSpritesEnglish,      sMgMsgDislikeSpritesEnglish,
-                            sMgMsgEsperSpritesEnglish,     sMgMsgSuperEsperSpritesEnglish,
-                            sMgMsgNoPairSpritesEnglish,    sMgMsgOnePairSpritesEnglish,
-                            sMgMsgTwoPairSpritesEnglish,   sMgMsgThreeCardSpritesEnglish,
-                            sMgMsgFullHouseSpritesEnglish, sMgMsgFourCardSpritesEnglish,
-                            sMgMsgFiveCardSpritesEnglish};
-PairW sBannerSetupTable[13] = {
-    data_02086b58, pmf_Banner_SetupSlideFromTop, pmf_Banner_SetupSlideFromBottom, pmf_Banner_SetupSlideFromLeft,
-    pmf_Banner_SetupSlideFromRight, pmf_Banner_SetupZoomBurst, pmf_Banner_SetupPopSpin, pmf_Banner_SetupZoom,
-    pmf_Banner_SetupZoomBurst_2, pmf_Banner_SetupPopSpin_2, pmf_Banner_SetupFall, pmf_Banner_SetupDrop,
-    pmf_Banner_SetupNone
-};
-PairW sBannerUpdateTable[13] = {
-    data_02086b58, pmf_Banner_UpdateSlideFromTop, pmf_Banner_UpdateSlideFromBottom, pmf_Banner_UpdateSlideFromLeft,
-    pmf_Banner_UpdateSlideFromRight, pmf_Banner_UpdateZoom_2, pmf_Banner_UpdatePopSpin_2, pmf_Banner_UpdateZoom_3,
-    pmf_Banner_UpdateZoom, pmf_Banner_UpdatePopSpin, pmf_Banner_UpdateFall, pmf_Banner_UpdateDrop,
-    data_02086b58
-};
-PairW sBannerDrawTable[13] = {
-    data_02086b58, data_02086b58, data_02086b58, data_02086b58, data_02086b58,
-    pmf_Banner_DrawZoomB, pmf_Banner_DrawPopSpinB, pmf_Banner_DrawZoomB_2, pmf_Banner_DrawZoomA,
-    pmf_Banner_DrawPopSpinA, pmf_Banner_DrawSqueeze, data_02086b58, pmf_Banner_DrawLevelNumber
-};
-void *sMgBannerFiles[29];
+int sMgBannerSprites[MG_BANNER_FILE_NUM] = {
+    sMgMsgRetrySpritesEnglish,     sMgMsgGiveUpSprites,
+    sMgMsgQuitSpritesEnglish,      sMgMsgLevelClearSpritesEnglish,
+    sMgMsgGoalSpritesEnglish,      sMgMsgHiScoreSpritesEnglish,
+    sMgMsgPerfectSpritesEnglish,   sMgMsgResultHiScoreSpritesEnglish,
+    sMgMsgGameOverSpritesEnglish,  sMgMsgYouWinSpritesEnglish,
+    sMgMsgTooBadSpritesEnglish,    sMgMsgDrawSpritesEnglish,
+    sMgMsgStartSpritesEnglish,     sMgMsgLevelSpritesEnglish,
+    sMgMsgTimeOverSpritesEnglish,  sMgMsgWhereSpritesEnglish,
+    sMgMsgLikeSpritesEnglish,      sMgMsgHateSpritesEnglish,
+    sMgMsgLoveSpritesEnglish,      sMgMsgDislikeSpritesEnglish,
+    sMgMsgEsperSpritesEnglish,     sMgMsgSuperEsperSpritesEnglish,
+    sMgMsgNoPairSpritesEnglish,    sMgMsgOnePairSpritesEnglish,
+    sMgMsgTwoPairSpritesEnglish,   sMgMsgThreeCardSpritesEnglish,
+    sMgMsgFullHouseSpritesEnglish, sMgMsgFourCardSpritesEnglish,
+    sMgMsgFiveCardSpritesEnglish};
+ElemFn sBannerSetupTable[13] = {data_02086b58,
+                                pmf_Banner_SetupSlideFromTop,
+                                pmf_Banner_SetupSlideFromBottom,
+                                pmf_Banner_SetupSlideFromLeft,
+                                pmf_Banner_SetupSlideFromRight,
+                                pmf_Banner_SetupZoomBurst,
+                                pmf_Banner_SetupPopSpin,
+                                pmf_Banner_SetupZoom,
+                                pmf_Banner_SetupZoomBurst_2,
+                                pmf_Banner_SetupPopSpin_2,
+                                pmf_Banner_SetupFall,
+                                pmf_Banner_SetupDrop,
+                                pmf_Banner_SetupNone};
+ElemFn sBannerUpdateTable[13] = {data_02086b58,
+                                 pmf_Banner_UpdateSlideFromTop,
+                                 pmf_Banner_UpdateSlideFromBottom,
+                                 pmf_Banner_UpdateSlideFromLeft,
+                                 pmf_Banner_UpdateSlideFromRight,
+                                 pmf_Banner_UpdateZoom_2,
+                                 pmf_Banner_UpdatePopSpin_2,
+                                 pmf_Banner_UpdateZoom_3,
+                                 pmf_Banner_UpdateZoom,
+                                 pmf_Banner_UpdatePopSpin,
+                                 pmf_Banner_UpdateFall,
+                                 pmf_Banner_UpdateDrop,
+                                 data_02086b58};
+ElemFn sBannerDrawTable[13] = {data_02086b58,
+                               data_02086b58,
+                               data_02086b58,
+                               data_02086b58,
+                               data_02086b58,
+                               pmf_Banner_DrawZoomB,
+                               pmf_Banner_DrawPopSpinB,
+                               pmf_Banner_DrawZoomB_2,
+                               pmf_Banner_DrawZoomA,
+                               pmf_Banner_DrawPopSpinA,
+                               pmf_Banner_DrawSqueeze,
+                               data_02086b58,
+                               pmf_Banner_DrawLevelNumber};
+void *sMgBannerFiles[MG_BANNER_FILE_NUM];
 }

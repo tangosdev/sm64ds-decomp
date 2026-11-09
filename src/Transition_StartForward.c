@@ -2,9 +2,9 @@
 
 extern void func_ov007_020c86c4(Ov007Transition *tr);
 
-/* Starts the transition forwards on screens v (func_ov007_020c8688 is the
+/* Starts the transition forwards on screens v (Transition_StartBackward is the
  * backwards twin). */
-void func_ov007_020c86a8(Ov007Transition *tr, int v) {
+void Transition_StartForward(Ov007Transition *tr, int v) {
     tr->reversed = 0;
     tr->screens = v;
     tr->t = 0;

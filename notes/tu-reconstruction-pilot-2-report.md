@@ -169,7 +169,7 @@ all** and one identical parameter list,
 The decisive evidence is a `.data` table this TU owns:
 
 ```python
-data_ov002_0210cbb8   fifteen function pointers
+sObjectLoaders (0x0210cbb8)   fifteen function pointers
   [ 0] -> 0x020fe8ac  LoadStandardObjects        [ 8] -> 0x020fe5cc  LoadFogObjects
   [ 1] -> 0x020fe6c8  LoadEntranceObjects        [ 9] -> 0x020fe4f0  LoadDoorObjects
   [ 2] -> 0x020fe6b8  LoadPathNodeObjects        [10] -> 0x020fe420  LoadExitObjects
@@ -484,7 +484,7 @@ build; symbol-address checks. §12's layers 4 through 7 are untouched. A
 `text-verified` status means layers 2 and 3 only — plus, this round, the
 relocation-destination check that sits between them.
 
-**Not claimed:** that [data_ov002_0210cbb8](../config/arm9/overlays/ov002/symbols.txt) and the four small tables the loaders
+**Not claimed:** that [sObjectLoaders](../config/arm9/overlays/ov002/symbols.txt) and the four small tables the loaders
 index are byte-correct, or that they belong to this TU in the linker's sense.
 Their contents were *read* (§2.5) as boundary evidence; they were not
 reconstructed or compared.
@@ -555,7 +555,7 @@ So the whole-range link this pilot exists to unblock has exactly one open
 question against it, and that question is 8 bytes of `STB_LOPROC` `.text` that
 the current build already handles.
 
-The `.data` phase for [data_ov002_0210cbb8](../config/arm9/overlays/ov002/symbols.txt) remains, but it is a *later* phase
+The `.data` phase for [sObjectLoaders](../config/arm9/overlays/ov002/symbols.txt) remains, but it is a *later* phase
 (plan §11 difficulty 5), not a blocker for a text-only link.
 
 ---

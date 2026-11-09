@@ -2719,13 +2719,13 @@ src/unnamed/arm9/0206/func_02065bd0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02065be0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02065bf4.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02065c1c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0206/func_02065c2c.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0206/func_02065d5c.c	PURE-C	arm9				1		None		-
+src/MBi_SetRecvBufferFromChild.c	PURE-C	arm9				1		None		-
+src/MBi_MakeParentSendBuffer.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02065de4.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_020672d0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_0206736c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02067480.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0206/func_02067530.c	PURE-C	arm9				1		None		-
+src/MBi_get_blockinfo.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_02067604.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_020676e0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0206/func_020678a4.c	PURE-C	arm9				1		None		-

@@ -11,15 +11,15 @@ extern void func_ov007_020b7d94(int kind);
 extern int func_ov007_020b79e4(void);
 extern void func_ov007_020c1d8c(int i);
 extern void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
-extern void func_ov007_020b8188(int slot, void *records, int alt);
+extern void MenuText_DrawRecordBoard(int slot, void *records, int alt);
 extern void func_ov007_020c0638(struct Ov007BgLayer *layer, int x, int y, u16 tile);
-extern void func_ov007_020b8070(int n);
+extern void MenuText_ScrollRecordBoard(int n);
 
 /* states[1]'s save-file states 2..6 (func_ov007_020af390): 3 waits for a
  * slot to be picked (an unused one opens message 3), 4 draws the picked
- * file's record board (func_ov007_020b8188) and slides it in, 2 waits for
+ * file's record board (MenuText_DrawRecordBoard) and slides it in, 2 waits for
  * another slot, 5 slides over to it, 6 slides the board out. Tween 0 drives
- * the scroll of layers 6 and 7, tween 1 the board's (func_ov007_020b8070). */
+ * the scroll of layers 6 and 7, tween 1 the board's (MenuText_ScrollRecordBoard). */
 void func_ov007_020afc44(void) {
     Ov007MenuState *menu = WORK->states[1];
     unsigned char *fileUsed = WORK->settings->bootArgs->fileUsed;
@@ -65,7 +65,7 @@ void func_ov007_020afc44(void) {
             func_ov007_020c1d8c(0);
             RequestScreenFade(8, 0xa, 0);
             WORK->states[2]->requestedState = 0xb;
-            func_ov007_020b8188(WORK->selectedSlot, WORK->settings, WORK->recordBoardAlt);
+            MenuText_DrawRecordBoard(WORK->selectedSlot, WORK->settings, WORK->recordBoardAlt);
             tween0->state = 1;
             tween0->mode = 1;
             tween0->t = 0;
@@ -130,7 +130,8 @@ void func_ov007_020afc44(void) {
                             RequestScreenFade(8, 0xa, 0);
                             WORK->states[2]->requestedState = 0xb;
                         }
-                        func_ov007_020b8188(WORK->targetSlot, WORK->settings, WORK->recordBoardAlt);
+                        MenuText_DrawRecordBoard(WORK->targetSlot, WORK->settings,
+                                                 WORK->recordBoardAlt);
                         scrollLayers = 1;
                         tween0->state = 1;
                         tween0->mode = 1;
@@ -200,5 +201,5 @@ void func_ov007_020afc44(void) {
     }
     if (scrollBoard == 0)
         return;
-    func_ov007_020b8070(WORK->tweenOut[1] >> 0xc);
+    MenuText_ScrollRecordBoard(WORK->tweenOut[1] >> 0xc);
 }
