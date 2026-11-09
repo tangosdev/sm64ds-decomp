@@ -90,7 +90,17 @@ void put(uint32_t *dst, int stride, int w, int h, int x, int y, uint32_t rgb, in
     *p = a >= 255 ? (0xFF000000u | rgb) : mix(*p, rgb, a);
 }
 
-void text_lines(const UiSurface &sf, int kind, int X, int Y, int W, int H, int shift, int alpha, const OnlFacts *of = 0)
+/* LOBBYUI1: the ROOM CODE and HOST planks write at the NAME plank's size, with its side padding (name_h = the NAME plank's height) */
+float name_em(float name_h) { return 0.34f * name_h / 0.75f; }
+float name_pad(float name_h)
+{
+    const float em = name_em(name_h);
+    const float wn = (float)menu_online_plank_w(ONL_K_NAME, (int)name_h);
+    const float p = (wn - ui_text_width("NAME", em)) * 0.5f;
+    return p > 0.f ? p : 0.f;
+}
+
+void text_lines(const UiSurface &sf, int kind, int X, int Y, int W, int H, int shift, int alpha, const OnlFacts *of = 0, int name_h = 0)
 {
     const char *l1 = 0, *l2 = 0;
     char rcbuf[16];
@@ -117,12 +127,19 @@ void text_lines(const UiSurface &sf, int kind, int X, int Y, int W, int H, int s
     default: return;
     }
     if (!ui_text_ready()) return;
-    const int nl = l2 ? 2 : 1;
+    int nl = l2 ? 2 : 1;
     float cap = (nl == 2 ? 0.25f : (kind == ONL_K_HELP ? 0.52f : 0.34f)) * (float)H;
     float em = cap / 0.75f;
+    float maxw = 0.84f * (float)W;
+    if ((kind == ONL_K_ROOMCODE || kind == ONL_K_HOST) && name_h > 0) {
+        em = name_em((float)name_h);
+        cap = ui_text_cap_height(em);
+        maxw = (float)W - 2.f * name_pad((float)name_h);
+        /* a 4:3 window has no room for ROOM CODE on one line beside HOST and NAME: the plank is narrower and the label takes two lines */
+        if (!l2 && !strcmp(l1, "ROOM CODE") && ui_text_width(l1, em) > maxw) { l1 = "ROOM"; l2 = "CODE"; nl = 2; }
+    }
     const char *longest = l1;
     if (l2 && ui_text_width(l2, em) > ui_text_width(l1, em)) longest = l2;
-    const float maxw = 0.84f * (float)W;
     const float tw = ui_text_width(longest, em);
     if (tw > maxw) { em *= maxw / tw; cap = ui_text_cap_height(em); }
     const int clip[4] = { X + 2, Y + 2, X + W - 2, Y + H - 2 };
@@ -180,7 +197,7 @@ void plank_draw(const MenuLayout *L, int piece, uint32_t *dst, int w, int h, int
     }
     if (W >= H / 3) {
         const UiSurface sf = { dst, stride, w, h };
-        text_lines(sf, kind, X, Y, W, H, dy, alpha, onl_facts_of(L));
+        text_lines(sf, kind, X, Y, W, H, dy, alpha, onl_facts_of(L), 30 * L->unum / L->uden);
     }
 }
 
@@ -473,4 +490,14 @@ int menu_online_plank_w(int kind, int fh)
     int sn = 1, sd = 1;
     plank_shape(kind, &sn, &sd);
     return (int)((long long)fh * sn / sd);
+}
+
+int menu_online_lobby_plank_w(int kind, int fh, int name_h, int two_line)
+{
+    if (!ui_text_ready() || name_h <= 0) return menu_online_plank_w(kind, fh);
+    const char *word = kind == ONL_K_HOST ? "HOST" : two_line ? "ROOM" : "ROOM CODE";
+    const float em = name_em((float)name_h);
+    float tw = ui_text_width(word, em);
+    if (kind == ONL_K_ROOMCODE && !two_line) { const float cw = ui_text_width("______", em); if (cw > tw) tw = cw; }   /* the typed code fits too (on two lines it is drawn smaller) */
+    return (int)(tw + 2.f * name_pad((float)name_h)) + 1;
 }
