@@ -94,11 +94,11 @@ form.prop textarea{height:48px}
     <div class="scroll" style="flex:1"><table id="htab"><thead><tr><th class="num">/frame</th><th>function</th><th>ROM</th></tr></thead><tbody></tbody></table></div>
   </div>
   <div class="panel" id="p-assets">
-    <h2>Files the game loaded <span class="sp"></span><button id="bassets">refresh</button></h2>
+    <h2>Files the game loaded <span class="sp"></span><input id="afilter" placeholder="filter file / class" size="14"> <button id="bassets">refresh</button></h2>
     <div class="scroll" style="flex:1">
-      <table id="astab"><thead><tr><th>file</th><th>actor</th><th>asked for by</th></tr></thead><tbody></tbody></table>
-      <div id="texs"></div>
+      <table id="astab"><thead><tr><th>file</th><th>owner</th><th>asked for by</th></tr></thead><tbody></tbody></table>
     </div>
+    <div id="texs" class="scroll" style="max-height:45%"></div>
   </div>
   <div class="panel" id="p-names">
     <form class="prop" id="pform">
@@ -401,18 +401,25 @@ function drawHot(list) {
 }
 
 // ------------------------------------------------------------------ assets
+let assetRows = [];
 $('#bassets').onclick = async () => {
-  const rows = await api('/api/assets');
-  rows.sort((a, b) => a.path < b.path ? -1 : 1);
-  $('#astab tbody').innerHTML = rows.map(r => `<tr data-f="${r.file}" data-k="${esc(r.kind)}" title="${esc('caller ' + r.caller + (r.callerRom ? ' (ROM 0x' + hex(r.callerRom.addr, 8) + ')' : '') + '\ngame file id 0x' + hex(r.file, 4) + ' (' + r.how + '), ' + r.size + ' bytes, first at tick ' + r.tick + ', loaded ' + r.count + 'x')}">
-    <td>${esc(r.path)}</td><td class="${r.actorCls ? 'own' : 'dim'}">${esc(r.actorCls || r.cls)}</td><td class="dim small">${esc(r.caller)}${r.count > 1 ? ' ×' + r.count : ''}</td></tr>`).join('') ||
-    '<tr><td colspan=3 class="dim">nothing loaded since the lab started; change level or area</td></tr>';
+  assetRows = await api('/api/assets');
+  assetRows.sort((a, b) => a.path < b.path ? -1 : 1);
+  drawAssets();
 };
+$('#afilter').addEventListener('input', () => drawAssets());
+function drawAssets() {
+  const q = $('#afilter').value.toLowerCase();
+  const rows = q ? assetRows.filter(r => (r.path + ' ' + r.cls + ' ' + r.actorCls + ' ' + r.caller).toLowerCase().includes(q)) : assetRows;
+  $('#astab tbody').innerHTML = rows.map(r => `<tr data-f="${r.file}" data-k="${esc(r.kind)}" title="${esc('caller ' + r.caller + (r.callerRom ? ' (ROM 0x' + hex(r.callerRom.addr, 8) + ')' : '') + '\ngame file id 0x' + hex(r.file, 4) + ' (' + r.how + '), ' + r.size + ' bytes, first at tick ' + r.tick + ', loaded ' + r.count + 'x' + (r.actorCls && r.actorCls !== r.cls ? '\nactor running at the time: ' + r.actorCls + (r.cls ? ' (it spawned or set up ' + r.cls + ')' : '') : ''))}">
+    <td data-p="${esc(r.path)}">${esc(r.path.replace(/^data\//, ''))}</td><td class="${r.cls || r.actorCls ? 'own' : 'dim'}">${esc(r.cls || r.actorCls)}</td><td class="dim small">${esc(r.caller)}${r.count > 1 ? ' ×' + r.count : ''}</td></tr>`).join('') ||
+    `<tr><td colspan=3 class="dim">${assetRows.length ? 'no match' : 'nothing loaded since the lab started; change level or area'}</td></tr>`;
+}
 $('#astab tbody').addEventListener('click', async e => {
   const tr = e.target.closest('tr'); if (!tr || !tr.dataset.f) return;
   $('#texs').innerHTML = '<div class="note">decoding…</div>';
   const t = await api('/api/textures?file=' + tr.dataset.f);
-  $('#texs').innerHTML = t.length ? `<div class="note small">${esc(tr.children[0].textContent)}: ${t.length} texture(s). Texture names are strings the ROM carries.</div>` + t.map(x => `<div class="tex">${x.png ? `<img src="data:image/png;base64,${x.png}" width="${x.width * 2}" height="${x.height * 2}">` : '<div class="dim">(no pixels)</div>'}<div>${esc(x.name)}</div><div class="dim small">${x.width}×${x.height} ${esc(x.format)}${x.palette ? ' · ' + esc(x.palette) : ''}</div></div>`).join('')
+  $('#texs').innerHTML = t.length ? `<div class="note small">${esc(tr.children[0].dataset.p)}: ${t.length} texture(s). Texture names are strings the ROM carries.</div>` + t.map(x => `<div class="tex">${x.png ? `<img src="data:image/png;base64,${x.png}" width="${x.width * 2}" height="${x.height * 2}">` : '<div class="dim">(no pixels)</div>'}<div>${esc(x.name)}</div><div class="dim small">${x.width}×${x.height} ${esc(x.format)}${x.palette ? ' · ' + esc(x.palette) : ''}</div></div>`).join('')
     : '<div class="note">not a model file (or no textures)</div>';
 });
 

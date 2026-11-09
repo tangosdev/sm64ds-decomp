@@ -35,7 +35,7 @@ the dialog is open. When you play by hand, just press A yourself.
 | Function info | port signature, **ROM address and symbol**, port address, a link to the source file | `walk_window.symtab` and `config/**/symbols.txt`; a thiscall body inherits the ROM address of its `__ZN` shim |
 | Fields | the class layout from `include/` (`/* 0xNNN */` offsets, base chain, `unk_` gaps), live values, change counts, "changing only"; double-click a value to poke it | `peek`/`poke` through the plugin |
 | Hot | the game's busiest functions (port-only code is hidden) | `hot N` sampling |
-| Assets | every file loaded, the actor that asked for it, the calling function, and texture thumbnails for `.bmd` | loader hooks in the plugin. File ids resolve through ov0's handle table and the 13 NARC archive ranges (`data_0208ecf4`), both read from the running game. Textures are decoded locally from `extracted/` and never stored |
+| Assets | every file loaded, the class that owns it, the function that asked for it, and texture thumbnails for `.bmd`; a filter box | an entry hook on each `LoadFile` (Model, SharedFilePtr, TextureSequence, dBgW_Kc, dExtFrameCtrl_c), independent of the trace buffer, so a level load is complete (Bob-omb Battlefield: 184 files, 180 in the load frame, 0 unresolved). File ids resolve through ov0's handle table and the 13 NARC archive ranges (`data_0208ecf4`), both read from the running game. Textures are decoded locally from `extracted/` and never stored |
 | Names | proposals (field / function / class / asset) and a "queue for ROM verify" list | `~/sm64ds-lab/naming-lab/*.jsonl`, outside the repo |
 
 Pause, step 1 and step 10 freeze the game between frames so you can read a
@@ -103,9 +103,12 @@ The server is for one person on one machine.
 
 ## Known limits
 
-- The trace buffer is 64 MB a frame. A level-load frame can overflow it and drop
-  records, so the files a level loads during its first frame may be missing
-  from Assets. `status` reports `dropped`.
+- The trace buffer holds 4M calls a frame, and a level load exceeds that
+  (`status`: `maxcalls=4194304@1 dropframes=1`). The timeline, hot counts and
+  focus hits for that one frame are therefore cut short. Assets are not: the
+  loader hooks hand each call back to `_penter` and record it themselves.
+  During the load frame the instance column falls back to the caller's class,
+  because the trace that would name the running actor is full.
 - A patch's parameters are placeholders. Doubles, 64-bit values and structs
   passed by value need hand-written types, and `new` flags them.
 - `orig` is valid only on the traced build, where every function starts with

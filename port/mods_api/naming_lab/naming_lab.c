@@ -368,9 +368,11 @@ static void trace_set(int on)
 }
 
 static u32 g_last_calls, g_last_dropped;
+static u32 g_max_calls, g_max_tick, g_drop_frames, g_drop_tick;   /* since boot */
 static void asset_seen(int li, u32 *r, u32 actor);
 #define N_LOADER_SLOTS 10
 static u32 g_loader[N_LOADER_SLOTS];
+static int g_hooked[N_LOADER_SLOTS];   /* logged by a loader hook, not by trace_drain */
 
 static void trace_drain(void)
 {
@@ -383,6 +385,8 @@ static void trace_drain(void)
     n = *g_tr_head / 4;
     g_last_dropped = (*g_tr_head + 4 > *g_tr_cap);
     g_last_calls = n;
+    if (n > g_max_calls) { g_max_calls = n; g_max_tick = g_tick; }
+    if (g_last_dropped) { ++g_drop_frames; g_drop_tick = g_tick; }
     memset(g_acalls, 0, sizeof g_acalls);
     if (g_nfocus) {
         memset(g_fh_key, 0, sizeof g_fh_key);
@@ -397,7 +401,7 @@ static void trace_drain(void)
         int ai = actor_index(ecx), bi = actor_index(arg0), li;
         if (ai >= 0) { ++g_acalls[ai]; last_actor = ecx; }
         for (li = 0; li < N_LOADER_SLOTS; ++li)
-            if (callee == g_loader[li] && callee) { asset_seen(li, r, last_actor); break; }
+            if (callee == g_loader[li] && callee && !g_hooked[li]) { asset_seen(li, r, last_actor); break; }
         if (bi >= 0 && bi != ai) ++g_acalls[bi];
         if (g_hot_every) hot_add(callee);
         for (f = 0; f < g_nfocus; ++f) {
@@ -467,7 +471,7 @@ static const struct { const char *name; int in_ecx; } k_loaders[] = {
     { "__ZN15dExtFrameCtrl_c8LoadFileER13SharedFilePtr", 0 },
 };
 #define N_LOADERS (sizeof k_loaders / sizeof k_loaders[0])
-#define ASSET_LOG 4096
+#define ASSET_LOG 16384
 static struct { u32 tick, loader, caller, sfp, actor; unsigned short file; } g_alog[ASSET_LOG];
 static u32 g_nalog;
 
@@ -484,6 +488,75 @@ static void asset_seen(int li, u32 *r, u32 actor)
     g_alog[k].actor = actor;
     g_alog[k].file = id;
     ++g_nalog;
+}
+
+/* LOADER HOOKS. A level load is one frame of more than 4M calls, so the trace
+   buffer overflows (status: maxcalls=4194304@1 dropframes=1) and the loads late
+   in that frame -- most of the level's models -- never reach trace_drain. So each
+   loader whose entry is the traced build's `call _penter` gets its own hook: the
+   5 bytes become `jmp thunk`, and the thunk is
+       push li ; call loader_log ; push entry+5 ; jmp _penter
+   loader_log records the call; _penter then sees exactly the call it would
+   have (callee+5 = entry+5, the game's return address above it), so the trace
+   and the timeline are unchanged. */
+static unsigned char *g_thunks;
+
+static void loader_hit(u32 li, u32 caller, u32 ecx, u32 arg0)
+{
+    u32 r[4], actor = 0;
+    r[0] = g_loader[li]; r[1] = caller; r[2] = ecx; r[3] = arg0;
+    /* the actor: the last `this` that is a known actor among this frame's
+       newest calls, while the trace still has room (not during a level load) */
+    if (g_trace && g_tr_on && *g_tr_head + 4 <= *g_tr_cap) {
+        u32 h = *g_tr_head / 4, stop = h > 4096 ? h - 4096 : 0;
+        while (h-- > stop) if (actor_index(g_buf[4 * h + 2]) >= 0) { actor = g_buf[4 * h + 2]; break; }
+    }
+    asset_seen((int)li, r, actor);
+}
+
+static void __cdecl loader_log_c(u32 li, u32 caller, u32 ecx, u32 arg0)
+{
+    loader_hit(li, caller, ecx, arg0);
+}
+
+/* stack on entry: [esp] thunk return, [esp+4] li, [esp+8] the game's return
+   address, [esp+12] the first argument; ecx is the caller's ecx */
+static __declspec(naked) void loader_log(void)
+{
+    __asm {
+        pushad
+        push    dword ptr [esp+44]      // arg0
+        push    ecx
+        push    dword ptr [esp+48]      // the game's return address
+        push    dword ptr [esp+48]      // li
+        call    loader_log_c
+        add     esp, 16
+        popad
+        ret     4
+    }
+}
+
+static void hooks_install(void)
+{
+    int li, n = 0;
+    if (!g_tr_on) return;   /* a plain build has no _penter to hand back to */
+    g_thunks = (unsigned char *)VirtualAlloc(0, 4096, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    if (!g_thunks) return;
+    for (li = 0; li < (int)N_LOADERS && li < N_LOADER_SLOTS; ++li) {
+        u32 entry = g_loader[li] ? g_loader[li] - 5 : 0, penter;
+        unsigned char code[5], *t = g_thunks + 32 * li;
+        int rel;
+        if (!entry || !safe_copy(code, (void *)(size_t)entry, 5) || code[0] != 0xE8) continue;
+        memcpy(&rel, code + 1, 4);
+        penter = entry + 5 + (u32)rel;
+        t[0] = 0x6A; t[1] = (unsigned char)li;
+        t[2] = 0xE8; rel = (int)((u32)(size_t)loader_log - (u32)(size_t)(t + 7)); memcpy(t + 3, &rel, 4);
+        t[7] = 0x68; rel = (int)(entry + 5); memcpy(t + 8, &rel, 4);
+        t[12] = 0xE9; rel = (int)(penter - (u32)(size_t)(t + 17)); memcpy(t + 13, &rel, 4);
+        code[0] = 0xE9; rel = (int)((u32)(size_t)t - (entry + 5)); memcpy(code + 1, &rel, 4);
+        if (safe_write((void *)(size_t)entry, code, 5)) { g_hooked[li] = 1; ++n; }
+    }
+    g_api->log(g_api, "naming lab: %d loader hooks", n);
 }
 
 static void send_assets(const struct sockaddr_in *to)
@@ -579,11 +652,11 @@ static void status(const struct sockaddr_in *to)
     char b[400];
     int n = _snprintf(b, sizeof b - 1,
                       "status tick=%u level=%d area=%d actors=%d trace=%d trace_avail=%d calls=%u dropped=%u "
-                      "paused=%d focus=%d watch=%d player=%x",
+                      "paused=%d focus=%d watch=%d player=%x maxcalls=%u@%u dropframes=%u lastdrop=%u",
                       g_tick, g_level, g_cur_area ? *g_cur_area : -1, g_nactors, g_trace,
                       g_tr_on != 0, g_last_calls, g_last_dropped, g_paused, g_nfocus,
                       (g_watch[0].ptr != 0) + (g_watch[1].ptr != 0) + (g_watch[2].ptr != 0) + (g_watch[3].ptr != 0),
-                      player0());
+                      player0(), g_max_calls, g_max_tick, g_drop_frames, g_drop_tick);
     b[sizeof b - 1] = 0;
     if (to) send_to(to, b, n); else broadcast(b, n);
 }
@@ -778,6 +851,7 @@ SM64DS_MOD_EXPORT int __cdecl sm64ds_mod_main(const SM64DSModApi *api)
     }
     p = api->setting(api, "trace");
     if (p && g_tr_on && strcmp(p, "0") && strcmp(p, "false")) trace_set(1);
+    hooks_install();
     api->on_frame(api, on_frame, 0);
     api->on_level_load(api, on_level, 0);
     return 0;
