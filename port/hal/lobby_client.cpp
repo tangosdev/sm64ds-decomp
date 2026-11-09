@@ -841,9 +841,11 @@ void enqueue(const std::string &verb, const std::string &body, int kind)
 }
 
 /* the common head of a member's request (under the lock) */
+/* every verb after create / join speaks the version the room was entered at: v7 on a v7 server (so a ban reads `banned`; a v6 request
+   is answered `kicked`, the word the 1.0 game knows), v6 on an older one */
 std::string head()
 {
-    return "{\"v\":6,\"room\":" + jesc(g.room) + ",\"token\":" + jesc(g.token);
+    return std::string(g.srv_ban ? "{\"v\":7" : "{\"v\":6") + ",\"room\":" + jesc(g.room) + ",\"token\":" + jesc(g.token);
 }
 
 void enqueue_ready(const std::string &match) { enqueue("ready", head() + ",\"match\":" + jesc(match) + "}"); }
