@@ -41,6 +41,10 @@ extern unsigned char data_020a4b40[8];     // the record tag (ntr/backup.cpp sec
 int  _ZN8SaveData8SaveFileEjP12FileSaveData(unsigned fileID, void *data);
 int  _ZN8SaveData15SaveCurrentFileEv(void);
 void CollectStar(int course, int star);
+void *_ZN8dActor_c4NextEPKS_(const void *prev);   // KEYDOOR10 proof knob: walk the live actors
+extern void *data_0209f394[];                      // the players
+extern int   data_0209f250;                        // my player index
+extern signed char data_0209f2f8;                  // LEVEL_ID
 }
 
 namespace port {
@@ -408,6 +412,71 @@ void run_forge() {
     std::fprintf(stderr, "[coopsave] FORGE %s sent=%d len=%d\n", mode, ok, plen);
 }
 
+// KEYDOOR10 proof knobs (inert unless named):
+//   SM64DS_KEYDOOR_SAVE=<frame>          the host writes its live record to the coop file once at that frame (the
+//                                        session-one "save" of a save / quit / reload row)
+//   SM64DS_KEYDOOR_AT=<frame>:<variant>  from that frame, in the castle interior (level 2), list the doors (class 353)
+//                                        once, then stand my player on the door of that variant (param1, the
+//                                        door table index: 7 + key index for a key door) facing it for 20 frames
+//                                        (three times, 300 frames apart: an unrelated message on screen holds the door),
+//                                        the box daDoor_c::func_ov100_021452e4 tests; then log flags1, the door's
+//                                        state record (+0x140, as a step from the closed state's record) and my
+//                                        position every 30 frames for 900 frames.
+bool g_kd_save_done = false, g_kd_listed = false;
+unsigned g_kd_from = 0, g_kd_t = 0; int g_kd_var = -1; char *g_kd_door = nullptr; const void *g_kd_closed = nullptr;
+void run_keydoor() {
+    static bool read = false;
+    if (!read) {
+        read = true;
+        const char *e = std::getenv("SM64DS_KEYDOOR_AT");
+        if (!e || std::sscanf(e, "%u:%d", &g_kd_from, &g_kd_var) != 2) g_kd_var = -1;
+        if (!std::getenv("SM64DS_KEYDOOR_SAVE")) g_kd_save_done = true;
+    }
+    if (!g_kd_save_done && host() && live_valid() && (int)g_frame >= std::atoi(std::getenv("SM64DS_KEYDOOR_SAVE"))) {
+        g_kd_save_done = true;
+        unsigned f1 = 0; std::memcpy(&f1, data_0209caa0 + 4, 4);
+        std::fprintf(stderr, "[keydoor] host saves for the reload: flags1=%08x\n", f1);
+        save_live();
+    }
+    if (g_kd_var < 0 || g_frame < g_kd_from || data_0209f2f8 != 2) return;
+    const int me = data_0209f250;
+    char *pl = (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
+    if (!pl) return;
+    if (!g_kd_listed) {
+        g_kd_listed = true;
+        unsigned f1 = 0; std::memcpy(&f1, data_0209caa0 + 4, 4);
+        std::fprintf(stderr, "[keydoor] castle interior: my flags1=%08x (key 0 held %d, key 1 held %d, key 3 held %d, "
+                     "door 0 unlocked %d, door 1 unlocked %d)\n", f1, (f1 >> 1) & 1, (f1 >> 2) & 1, (f1 >> 4) & 1,
+                     (f1 >> 8) & 1, (f1 >> 9) & 1);
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            if (*(const unsigned short *)(a + 0x0c) != 353) continue;
+            const int v = *(const int *)(a + 8);
+            const int *q = (const int *)(a + 0x5c);
+            std::fprintf(stderr, "[keydoor] door variant %d at %d,%d,%d angle %04x\n", v, q[0] >> 12, q[1] >> 12, q[2] >> 12,
+                         (unsigned)(unsigned short)*(const short *)(a + 0x8e));
+            if (v == g_kd_var && !g_kd_door) { g_kd_door = a; g_kd_closed = *(void *const *)(a + 0x140); }
+        }
+        if (!g_kd_door) { std::fprintf(stderr, "[keydoor] no door of variant %d here\n", g_kd_var); g_kd_var = -1; return; }
+    }
+    char *d = g_kd_door;
+    ++g_kd_t;
+    if (g_kd_t % 300 <= 20 && g_kd_t % 300 >= 1) {   // three tries (t 1, 301, 601): a message on screen holds the door
+        for (int j = 0; j < 3; ++j) ((int *)(pl + 0x5c))[j] = ((const int *)(d + 0x5c))[j];
+        *(short *)(pl + 0x8e) = (short)(*(const short *)(d + 0x8e) + 0x8000);
+    }
+    if (g_kd_t % 300 <= 3 || g_kd_t % 300 == 21 || g_kd_t % 30 == 0) {
+        unsigned f1 = 0; std::memcpy(&f1, data_0209caa0 + 4, 4);
+        const long step = ((const char *)*(void *const *)(d + 0x140) - (const char *)g_kd_closed) / 16;
+        const int *q = (const int *)(pl + 0x5c);
+        std::fprintf(stderr, "[keydoor] t=%u door variant %d state step %ld (0 closed, 1 shut-message, 3 key talk, 4/5 going "
+                     "through) flags1=%08x me %d,%d,%d facing %04x, me in the door's frame %d,%d,%d (door facing %04x)\n", g_kd_t,
+                     g_kd_var, step, f1, q[0] >> 12, q[1] >> 12, q[2] >> 12, (unsigned)(unsigned short)*(const short *)(pl + 0x8e),
+                     ((const int *)(d + 0x80))[0] >> 12, ((const int *)(d + 0x80))[1] >> 12, ((const int *)(d + 0x80))[2] >> 12,
+                     (unsigned)(unsigned short)*(const short *)(d + 0x8e));
+    }
+    if (g_kd_t >= 900) g_kd_var = -1;
+}
+
 }  // namespace
 
 // ---- public ----------------------------------------------------------------
@@ -658,6 +727,7 @@ extern "C" void port_coop_save_frame(void) {
                      g_st.dropped_grant, live_valid() ? coop_record_stars(data_0209caa0 + 0) : -1);
     run_probe();
     run_forge();
+    run_keydoor();
     const ULONGLONG now = GetTickCount64();
     const bool live = comms_hub_state() == kHubLive;
     const bool others = live && comms_hub_seat_mask() != 0;

@@ -75,15 +75,26 @@ enum : int {
 //   +0x42 u8 controller mode                    per console
 //   +0x43 u8 unknown                            per console
 //
-// flags1 (+0x04) monotonic bits, OR-ed: bit 0 in-use, bit 1 and bits 3, 5..8,
-// 10..23 (key / switch / gate flags set once by their actors; star gate
-// 0x8000<<n, ov100 0x100<<n, ov089 2<<n) and bit 31 (the ? switch,
-// d_a_obj_hatena_switch). NOT merged: bits 2 and 9 (0x204: the Bowser-door
-// state, cleared by ContinueKuppaScriptIfNecessary), bit 4 (0x10 is tested but
-// also cleared in places we did not trace), bits 24..30 (cap lost / cap
-// available per character, set AND cleared by play, and 0x40000000 shares the
-// range). Bits 6 and 7 (0x40, 0x80, the Mip rabbit flags) are monotonic.
-// So the mask is: 0x80FFFDFB & ~0x10 = 0x80FFFDEB.
+// flags1 (+0x04) bits, OR-ed: bit 0 in-use, bits 1..23 (key / switch / gate
+// flags set by their actors; star gate 0x8000<<n, ov100 0x100<<n, ov089 2<<n)
+// and bit 31 (the ? switch, d_a_obj_hatena_switch). NOT merged: bits 24..30
+// (cap lost / cap available per character, set AND cleared by play, and
+// 0x40000000 shares the range). Bits 6 and 7 (0x40, 0x80, the Mip rabbit
+// flags) are monotonic.
+// KEYDOOR10: bits 2, 4 and 9 are merged too. They are key door bits
+// (d_a_door.cpp func_ov100_02144cf8; the door table data_ov100_02148204 gives
+// key door k the "key held" bit 2 << k and the "door unlocked" bit 0x100 << k):
+// 0x4 = key 1 held (the Fire Sea key, the upstairs Bowser door), 0x200 = that
+// door unlocked, 0x10 = key 3 held. Left out, a friend on a reloaded coop save
+// never had them and that door stayed shut for him. Every ROM write of 0x10
+// sets it (d_a_obj_key.cpp:727). 0x204 is set by the key pickup and the door
+// (d_a_obj_key.cpp:727, d_a_door.cpp:649) and cleared in one place, the
+// castle fall cutscene (FALL_IN_FRONT_OF_CASTLE_CUTSCENE,
+// ContinueKuppaScriptIfNecessary.c:20);
+// sharing it can at most keep that door open and that key held for someone,
+// the state the cartridge has before that cutscene, so it can never lock
+// anyone out.
+// So the mask is 0x80FFFFFF.
 //
 // flags2 (+0x08) monotonic bits: 0..3 (character intro / unlock, bit 3 is the
 // default), 7 (the opening was seen, LakituBro), 9 and 10..14 (Player's
@@ -95,7 +106,7 @@ inline const uint8_t *coop_mono_mask() {
     static bool built = false;
     if (!built) {
         memset(m, 0, sizeof m);
-        const uint32_t f1 = 0x80FFFDEBu;
+        const uint32_t f1 = 0x80FFFFFFu;   // KEYDOOR10: + 0x214 (key door bits)
         const uint32_t f2 = 0x0000000Fu | 0x80u | 0x200u | 0x400u | 0x800u |
                             0x1000u | 0x2000u | 0x4000u | 0x0FF00000u |
                             0x10000000u;
