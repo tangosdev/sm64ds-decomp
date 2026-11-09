@@ -358,7 +358,6 @@ extern void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 retu
 extern u8 NumStars(void);
 extern void Player_DisableInteraction(void *self);
 extern int Player_ReleaseHeldActor(void *self);
-extern Fix12i Player_ScaleByCharFactor(void *c, Fix12i a);
 extern void PlayerNewSimpleHold10(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
 extern void PlayerNewSimpleHold11(u32 id, Fix12i x, Fix12i y, Fix12i z);
 extern void PlayerNewSimpleHold15(unsigned int id, Fix12i a, Fix12i b, Fix12i d);
@@ -516,7 +515,7 @@ int daPly_c::func_ov002_020bccfc(unsigned char *params, int beginFrame, int endF
 }
 
 int daPly_c::func_ov002_020bcd18(unsigned char *params, int beginFrame, int endFrame) {
-    mHorzSpeed = Player_ScaleByCharFactor(this, 0xa000);
+    mHorzSpeed = ScaleByCharFactor(0xa000);
     return 1;
 }
 
@@ -1904,19 +1903,16 @@ void daPly_c::func_ov002_020bf13c() {
     }
 }
 
-/* func_ov002_020bf224 — scale b by an s16 factor from a 0x18-stride table
- * indexed by byte gActivePlayerSlot (fx12 rounded multiply), clamped below by c.
- * No callees; data: gActivePlayerSlot (u8 index), data_0209f4a0 (s16 table).
+/* Scale b by an s16 factor from a 0x18-stride table indexed by byte
+ * gActivePlayerSlot (fx12 rounded multiply), clamped below by c. Does not
+ * read the player.
  */
-extern "C" {
-int func_ov002_020bf224(int a, int b, int c)
-{
+int daPly_c::func_ov002_020bf224(int b, int c) {
     extern struct Entry18 data_0209f4a0[];
     b = FX_MUL(b, data_0209f4a0[gActivePlayerSlot].val);
     if (b < c)
         b = c;
     return b;
-}
 }
 
 int daPly_c::func_ov002_020bf27c(int r1) {
@@ -1938,21 +1934,23 @@ void daPly_c::func_ov002_020bf2d8(Fix12i a) {
     this->mVertSpeed = FX_MUL(a, (int)t);
 }
 
-extern "C" {
-Fix12i Player_ScaleByCharFactor(void*c, Fix12i a){
-    int idx = ((daPly_c *)c)->param1 & 0xff;
+Fix12i daPly_c::ScaleByCharFactor(Fix12i a) {
+    int idx = param1 & 0xff;
     unsigned int t = data_ov002_020ff170[idx];
     return FX_MUL(a, (int)t);
 }
-}
 
-extern "C" {
-void func_ov002_020bf340(int dummy, int*p, int delta, int limit){
-  int neg = -limit;
-  *p = *p + delta;
-  if(*p < neg){ *p = neg; return; }
-  if(*p > limit){ *p = limit; }
-}
+/* Add delta to *p and clamp it to [-limit, limit]. Does not read the player. */
+void daPly_c::func_ov002_020bf340(int *p, int delta, int limit) {
+    int neg = -limit;
+    *p = *p + delta;
+    if (*p < neg) {
+        *p = neg;
+        return;
+    }
+    if (*p > limit) {
+        *p = limit;
+    }
 }
 
 void daPly_c::func_ov002_020bf36c(void *arg) {
@@ -3075,7 +3073,7 @@ void daPly_c::func_ov002_020c18b0(int p1) {
     }
     if (p1 == 0) return;
     {
-        int r0v = Player_ScaleByCharFactor(this, 0x28000);
+        int r0v = ScaleByCharFactor(0x28000);
         int divr = (mHorzSpeed << 12) / r0v;
         mAngleX = (short)FX_MUL(mAngleX, divr);
         mAngleZ = (short)FX_MUL(mAngleZ, divr);
@@ -3537,7 +3535,7 @@ void daPly_c::func_ov002_020c29d4() {
     if (this->mIsMega != 0) return;
     unsigned char flags = mQuicksandRunFlags;
     if ((flags & 1) && !(flags & 0x80)) {
-        if (this->mHorzSpeed >= Player_ScaleByCharFactor(this, 0x28000)) {
+        if (this->mHorzSpeed >= ScaleByCharFactor(0x28000)) {
             if (this->IsState(data_ov002_0211013c)) {
                 mQuicksandRunTimer = 0x1e;
             } else if (this->IsState(data_ov002_021101b4) && this->mVertSpeed < 0 && (this->mPeakY - this->mPosY) < 0x64000) {
@@ -3576,7 +3574,7 @@ void daPly_c::func_ov002_020c2b08() {
         if (!SurfaceInfo_TestFlag0x20((int *)&mMeshClsn.GetFloorResult()->surface.clps))
             return;
 
-        limit = Player_ScaleByCharFactor(c, 0x20000);
+        limit = c->ScaleByCharFactor(0x20000);
         if (mHorzSpeed >= limit)
             mWaterRunTimer = 0x3c;
         else
@@ -3604,44 +3602,43 @@ void daPly_c::func_ov002_020c2b08() {
             mPosY = mGroundY;
         return;
 
-    big_block:
-        {
-            int limit2 = Player_ScaleByCharFactor(c, 0x28000);
+    big_block: {
+        int limit2 = c->ScaleByCharFactor(0x28000);
 
-            if (mHorzSpeed < limit2) {
-                if (mWaterRunTimer >= 0x1e)
-                    mWaterRunTimer = 0x1e;
-            }
-
-            mFloorNormalZ = 0;
-            {
-                int t = mFloorNormalZ;
-                mFloorNormalX = t;
-                mFloorNormalY = 0x1000;
-            }
-
-            {
-                int yy = mPosY;
-                int zz = mPosZ;
-                int xx = mPosX;
-                int yy2 = yy + 0x64000;
-                v[0] = xx;
-                v[1] = yy2;
-                v[2] = zz;
-            }
-
-            {
-                dBgCh_Gnd rg;
-                rg.SetObjAndPos(*(const Vector3 *)v, (dActor_c *)c);
-
-                if (rg.DetectClsn() != 0) {
-                    mGroundY = rg.clsnY;
-                    if (mPosY + mModelOffsetY < rg.clsnY)
-                        mWaterRunTimer = 0;
-                }
-            }
-            return;
+        if (mHorzSpeed < limit2) {
+            if (mWaterRunTimer >= 0x1e)
+                mWaterRunTimer = 0x1e;
         }
+
+        mFloorNormalZ = 0;
+        {
+            int t = mFloorNormalZ;
+            mFloorNormalX = t;
+            mFloorNormalY = 0x1000;
+        }
+
+        {
+            int yy = mPosY;
+            int zz = mPosZ;
+            int xx = mPosX;
+            int yy2 = yy + 0x64000;
+            v[0] = xx;
+            v[1] = yy2;
+            v[2] = zz;
+        }
+
+        {
+            dBgCh_Gnd rg;
+            rg.SetObjAndPos(*(const Vector3 *)v, (dActor_c *)c);
+
+            if (rg.DetectClsn() != 0) {
+                mGroundY = rg.clsnY;
+                if (mPosY + mModelOffsetY < rg.clsnY)
+                    mWaterRunTimer = 0;
+            }
+        }
+        return;
+    }
 
     clear_timer:
         mWaterRunTimer = 0;
@@ -7609,7 +7606,6 @@ int func_ov002_020ca78c(daPly_c *player) {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_DebugFly_Main() {
-    extern int func_ov002_020bf224(int a, int b, int c);
     extern char data_0209f4a0[];
     extern char data_0209f49c[];
     extern char data_020a0e5a[];
@@ -7622,7 +7618,7 @@ int daPly_c::St_DebugFly_Main() {
 
     if (*(s16 *)(data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
         mPrevAngleY = mDesiredAngleY;
-        mHorzSpeed = func_ov002_020bf224((int)((char *)this), 0x50000, 0);
+        mHorzSpeed = func_ov002_020bf224(0x50000, 0);
     }
 
     idx = gActivePlayerSlot;
@@ -8133,7 +8129,6 @@ extern "C" {
 int daPly_c::St_Climb_Main() {
     extern void Vec3_RotateYAndTranslate(void *, void *, s16 angle, void *);
     extern void ApproachAngle(void *, s16 target, s32 divisor, s32 band, s32 maxStep);
-    extern void func_ov002_020bf340(void *, void *, s32 delta, s32 limit);
     extern void func_ov002_020cb400(void *);
     extern void func_ov002_020cb474(void *);
     extern int func_ov002_020cbea8(void *);
@@ -8228,7 +8223,7 @@ int daPly_c::St_Climb_Main() {
                     if (av < 0)
                         av = -av;
                     s32 fx = FX_MUL(mag, av);
-                    func_ov002_020bf340(this, &this->mVertSpeed, 0x800, fx);
+                    func_ov002_020bf340(&this->mVertSpeed, 0x800, fx);
                     this->SetAnim(0x24, 0, 0x1000, 0);
                     s32 fx2 = FX_MUL(fx, 0x500);
                     if (fx2 >= 0x4000)
@@ -8253,7 +8248,7 @@ int daPly_c::St_Climb_Main() {
                     }
                     s16 val = *(s16 *)((char *)data_0209f4a4 + idx3);
                     s32 fx = FX_MUL(mag, val);
-                    func_ov002_020bf340(this, &this->mVertSpeed, -0x800, fx);
+                    func_ov002_020bf340(&this->mVertSpeed, -0x800, fx);
                 }
                 mAngleYSpeed -= 0x40;
                 {
@@ -8762,7 +8757,6 @@ int daPly_c::St_HurtWater_Init() {
 extern "C" {
 int daPly_c::St_MetalWaterWater_Main() {
     extern int func_ov002_020eeca8(void*, void*);
-    extern int func_ov002_020bf224(void*, int a, int b);
     extern void ApproachAngle(void*, int target, int a, int b, int d);
     extern struct S18b2 data_0209f4a0[];
     extern int data_0209f32c;
@@ -8783,7 +8777,7 @@ int daPly_c::St_MetalWaterWater_Main() {
     if (mStateWork == 0) {
         v = 0;
         if (data_0209f4a0[gActivePlayerSlot].a != 0) {
-            v = func_ov002_020bf224(this, 0x14000, 0x1000);
+            v = func_ov002_020bf224(0x14000, 0x1000);
             ApproachAngle(&mPrevAngleY, mDesiredAngleY, 0x20, 0x1000, 0x10);
         }
         mAngleY = mPrevAngleY;
@@ -8852,7 +8846,6 @@ int daPly_c::St_MetalWaterWater_Init() {
 extern "C" {
 int daPly_c::St_MetalWaterGround_Main() {
     extern void ApproachAngle(void*, short, int, int, int);
-    extern int func_ov002_020bf224(void*, int, int);
     extern void func_0201251c(int, int, void*, int);
     extern int data_0209f32c;
     extern unsigned char data_0209f49e;
@@ -8884,7 +8877,7 @@ int daPly_c::St_MetalWaterGround_Main() {
     int approach = 0;
     if(*(short*)((char*)&data_0209f4a0 + gActivePlayerSlot * 0x18) != 0){
         ApproachAngle((short*)((char*)&mPrevAngleY), mDesiredAngleY, 8, 0x1000, 0x80);
-        approach = func_ov002_020bf224(this, 0x14000, 0x1000);
+        approach = func_ov002_020bf224(0x14000, 0x1000);
     }
     ApproachLinear(*((int *)((char *)&mHorzSpeed)), approach, 0x1000);
     mAngleY = mPrevAngleY;
@@ -9903,12 +9896,11 @@ int func_ov002_020cf20c(char* c) {
 extern "C" {
 void func_ov002_020cf2f8(void *c) {
     extern int ApproachAngle(void *, int, int, int, int);
-    extern int func_ov002_020bf224(void *, int, int);
     extern short data_0209f4a0[];
     if (*(short *)((char *)data_0209f4a0 + gActivePlayerSlot * 0x18) == 0)
         return;
     daPly_c *p = (daPly_c *)c;
-    ApproachLinear(p->mHorzSpeed, func_ov002_020bf224(c, 0x8000, 0x2000), 0x1000);
+    ApproachLinear(p->mHorzSpeed, p->func_ov002_020bf224(0x8000, 0x2000), 0x1000);
     ApproachAngle(&p->mPrevAngleY, p->mDesiredAngleY, 0x10, 0x1000, 0x200);
     p->mAngleY = p->mPrevAngleY;
 }
@@ -10042,7 +10034,6 @@ int func_ov002_020cf700(daPly_c *player) {
 extern "C" {
 int daPly_c::St_OnWall_Main() {
     extern int func_ov002_020c5244();
-    extern int func_ov002_020bf224(void*, int a, int b);
     extern s16 data_0209f4a0[];
     extern void func_ov002_020eee3c(void*, void*);
     u16 f = mStateFlags;
@@ -10086,7 +10077,7 @@ int daPly_c::St_OnWall_Main() {
         }
         ApproachLinear(*(short *)((char*)&mAngleY), (s16)a, 0x800);
         mPrevAngleY = a;
-        mHorzSpeed = func_ov002_020bf224(this, 0xa000, 0x2000);
+        mHorzSpeed = func_ov002_020bf224(0xa000, 0x2000);
         func_ov002_020eee3c(&mMeshClsn, ((char *)this));
     } else {
         if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
@@ -10115,7 +10106,7 @@ int daPly_c::St_OnWall_Main() {
             if (spd < 0x400)
                 spd = 0x400;
             this->SetAnim(anim, 0, spd, 0);
-            func_ov002_020d4d88(func_ov002_020bf224(this, 0x6000, 0x1000), 0x1000);
+            func_ov002_020d4d88(func_ov002_020bf224(0x6000, 0x1000), 0x1000);
         } else {
             mHorzSpeed = 0;
             this->SetAnim(0x5e, 0, 0x1000, 0);
@@ -10543,7 +10534,7 @@ int daPly_c::func_ov002_020d06c0() {
     return 0;
 
 cont:
-    if (mHorzSpeed > Player_ScaleByCharFactor((void *)this, 0x14000))
+    if (mHorzSpeed > ScaleByCharFactor(0x14000))
         return 0;
 
     thresh = 0xa0;
@@ -10788,7 +10779,6 @@ int daPly_c::St_WallSlide_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Crawl_Main() {
-    extern int func_ov002_020bf224(void* c, int a, int b);
     extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
     extern s16 data_0209f4a0[];
     extern u16 data_0209f49c[];
@@ -10820,9 +10810,9 @@ int daPly_c::St_Crawl_Main() {
             anim3.speed = shifted;
             if (func_ov002_020d36d8(1))
                 return 1;
-            int r4v = Player_ScaleByCharFactor(this, 0x8000);
-            int r2v = Player_ScaleByCharFactor(this, 0x1000);
-            a = func_ov002_020bf224(this, r4v, r2v);
+            int r4v = ScaleByCharFactor(0x8000);
+            int r2v = ScaleByCharFactor(0x1000);
+            a = func_ov002_020bf224(r4v, r2v);
             b = 0x1000;
             ApproachAngle((s16*)((char*)&mPrevAngleY), mDesiredAngleY, 0x10, 0x2000, 0x100);
             mAngleY = mPrevAngleY;
@@ -10916,7 +10906,7 @@ int func_ov002_020d12b0(u8 *self)
         player->mPunchKickStep = 2;
         ((daPly_c *)self)->ChangeState(data_ov002_02110574);
     } else {
-        if (player->mHorzSpeed >= Player_ScaleByCharFactor(self, 0xa000)) {
+        if (player->mHorzSpeed >= player->ScaleByCharFactor(0xa000)) {
             ((daPly_c *)self)->ChangeState(data_ov002_02110634);
         } else {
             ((daPly_c *)self)->ChangeState(data_ov002_0211061c);
@@ -11026,7 +11016,6 @@ int daPly_c::St_Crouch_Init() {
 extern "C" {
 int daPly_c::St_HoldHeavy_Main() {
     extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
-    extern int func_ov002_020bf224(void* c, int a, int b);
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     extern u8 data_0209f4ac[];
@@ -11090,7 +11079,7 @@ int daPly_c::St_HoldHeavy_Main() {
                 var_r1 >>= 1;
             }
         } else {
-            var_r1 = func_ov002_020bf224(this, var_r1, 0);
+            var_r1 = func_ov002_020bf224(var_r1, 0);
         }
         func_ov002_020d4d88(var_r1, 0x1000);
     }
@@ -11144,7 +11133,6 @@ extern "C" {
 int daPly_c::St_HoldLight_Main() {
     extern int func_ov002_020c5244(void* c);
     extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
-    extern int func_ov002_020bf224(void* c, int a, int b);
     extern s16 data_0209f4a0[];
     extern u8 data_0209f4ac[];
     extern u16 data_0209f49c[];
@@ -11210,7 +11198,7 @@ int daPly_c::St_HoldLight_Main() {
             var_r4 = FX_MUL(var_r4, 0xa00);
         }
     } else {
-        var_r4 = func_ov002_020bf224(this, var_r4, 0);
+        var_r4 = func_ov002_020bf224(var_r4, 0);
     }
 
     mStateArg = 0;
@@ -11282,8 +11270,8 @@ end:
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::St_HoldLight_Init() {
 
-    if (mHorzSpeed >= Player_ScaleByCharFactor(this, 0x1c000)) {
-        mHorzSpeed = Player_ScaleByCharFactor(this, 0x1c000);
+    if (mHorzSpeed >= ScaleByCharFactor(0x1c000)) {
+        mHorzSpeed = ScaleByCharFactor(0x1c000);
     }
     if (mStateStep == 0) {
         char *o = *(char **)((char *)&mHeldObj);
@@ -12034,7 +12022,7 @@ int daPly_c::St_TurnAround_Main() {
         sel = (mHorzSpeed < 0) ? 0x1800 : 0x8000;
         r5v = func_ov002_020bf56c(sel);
         ApproachAngle((s16*)((char*)&mPrevAngleY), angle, 0x10, 0x1000, 0x200);
-        tmp = Player_ScaleByCharFactor(this, 0x28000);
+        tmp = ScaleByCharFactor(0x28000);
         ApproachLinear(*((int *)((char *)&mHorzSpeed)), -tmp, r5v);
     } else {
         this->ChangeState(data_ov002_0211013c);
@@ -12245,7 +12233,6 @@ static inline int StickScale(void) { return (GetMode() != 2) ? 0x24 : 0x30; }
 static inline int StickLoSpd(void) { return (GetMode() != 2) ? 0xa : 0x10; }
 static inline int StickHiSpd(void) { return (GetMode() != 2) ? 0x15 : 0x20; }
 int daPly_c::func_ov002_020d3b9c() {
-    extern int func_ov002_020bf224(int c, int a, int b);
     extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
     extern short data_0209f4a0[];
     extern char data_0209f49c[];
@@ -12261,14 +12248,14 @@ int daPly_c::func_ov002_020d3b9c() {
     if ((stick != 0) && (((u16)(mStateFlags & 0xc)) == 0)) {
         mStickGraceTimer = 4;
         if ((*((u8 *)(data_0209f4ac + (gActivePlayerSlot * 0x18)))) == 0) {
-            spd = Player_ScaleByCharFactor(this, 0x14000);
+            spd = ScaleByCharFactor(0x14000);
             acc = 0x1000;
             if (((*((u16 *)(data_0209f49c + (gActivePlayerSlot * 0x18)))) & 0x800) == 0) {
                 if (mStateTimer != 0) {
-                    spd = Player_ScaleByCharFactor(this, 0xa000);
+                    spd = ScaleByCharFactor(0xa000);
                 }
             } else {
-                spd = Player_ScaleByCharFactor(this, 0x28000);
+                spd = ScaleByCharFactor(0x28000);
             }
         } else {
             if (GetStick() <= StickLo()) {
@@ -12278,9 +12265,9 @@ int daPly_c::func_ov002_020d3b9c() {
                 spd = (t - StickLoSpd()) << 15;
                 spd = spd / (StickHiSpd() - StickLoSpd());
             } else {
-                int a = Player_ScaleByCharFactor(this, 0x28000);
-                int b = Player_ScaleByCharFactor(this, 0xa000);
-                spd = func_ov002_020bf224((int)this, a, b);
+                int a = ScaleByCharFactor(0x28000);
+                int b = ScaleByCharFactor(0xa000);
+                spd = func_ov002_020bf224(a, b);
             }
             acc = 0x1000;
             if ((*((s16 *)(((char *)data_0209f4a0) + (gActivePlayerSlot * 0x18)))) >= 0xf00) {
@@ -12309,7 +12296,7 @@ int daPly_c::func_ov002_020d3b9c() {
         if ((param1) == 1) {
             u16 h = mWaterRunTimer;
             if (((h != 0) && (mWaterRunLatch != 0)) && (h < 0x1e)) {
-                int a = Player_ScaleByCharFactor(this, 0x28000);
+                int a = ScaleByCharFactor(0x28000);
                 int prod = h * a;
                 {
                     int cap = prod / 30;
@@ -12334,7 +12321,7 @@ int daPly_c::func_ov002_020d3b9c() {
         }
         if (diff > 0x6000) {
             int cur = mHorzSpeed;
-            if ((cur >= Player_ScaleByCharFactor(this, 0x1c000)) && (mIsMega == 0)) {
+            if ((cur >= ScaleByCharFactor(0x1c000)) && (mIsMega == 0)) {
                 ChangeState(data_ov002_02110184);
                 Player_AdvanceAnims(this);
                 return 1;
@@ -12388,12 +12375,12 @@ int daPly_c::func_ov002_020d3b9c() {
                 mHorzSpeed = -0xa000;
             }
             if (mIsMega == 0) {
-                if (mHorzSpeed > Player_ScaleByCharFactor(this, 0x10000)) {
+                if (mHorzSpeed > ScaleByCharFactor(0x10000)) {
                     func_ov002_020d454c();
                 }
             }
         }
-        if (mHorzSpeed < Player_ScaleByCharFactor(this, 0xa000)) {
+        if (mHorzSpeed < ScaleByCharFactor(0xa000)) {
             mStateTimer = 0x3c;
         }
     }
@@ -12412,7 +12399,7 @@ void daPly_c::func_ov002_020d413c(int arg) {
     short s;
     if (mIsMega)
         return;
-    v = Player_ScaleByCharFactor(this, 0x1c000);
+    v = ScaleByCharFactor(0x1c000);
     diff = mHorzSpeed;
     if (diff < v) {
         mSpineRot[1] = 0;
@@ -12450,8 +12437,8 @@ int daPly_c::St_Walk_Init() {
         return 1;
     }
 
-    if (mHorzSpeed > Player_ScaleByCharFactor(this, 0x28000)) {
-        mHorzSpeed = Player_ScaleByCharFactor(this, 0x28000);
+    if (mHorzSpeed > ScaleByCharFactor(0x28000)) {
+        mHorzSpeed = ScaleByCharFactor(0x28000);
     }
     if (mHorzSpeed < -0xe000) {
         mHorzSpeed = -0xe000;
@@ -12485,7 +12472,7 @@ merge:
     mPeakY = mPosY;
     mStateWork = 0;
     mStateArg = 0;
-    if (mHorzSpeed > Player_ScaleByCharFactor(this, 0x24000)) {
+    if (mHorzSpeed > ScaleByCharFactor(0x24000)) {
         mStateArg = 1;
     }
     *(unsigned short *)((char *)&mStateFlags) &= ~0x100;
@@ -12533,8 +12520,8 @@ void daPly_c::func_ov002_020d4540() {
 void daPly_c::func_ov002_020d454c() {
     if (mIsAirborne != 0)
         return;
-    if (mHorzSpeed > Player_ScaleByCharFactor(this, 0x10000))
-        mHorzSpeed = Player_ScaleByCharFactor(this, 0x10000);
+    if (mHorzSpeed > ScaleByCharFactor(0x10000))
+        mHorzSpeed = ScaleByCharFactor(0x10000);
     mIsBraking = 1;
     SetAnim(0x36, 0x40000000, 0x1000, 0);
 }
@@ -12549,7 +12536,7 @@ void daPly_c::func_ov002_020d45c0() {
     if (gSubSoundID == 0x2e)
         return;
 
-    if (mHorzSpeed < Player_ScaleByCharFactor(this, 0x24000)) {
+    if (mHorzSpeed < ScaleByCharFactor(0x24000)) {
         if (*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) >= 0xe00) {
             if (*(u8*)((char*)data_0209f4ac + gActivePlayerSlot * 0x18) != 0
                 || (*(u16*)((char*)data_0209f49c + gActivePlayerSlot * 0x18) & 0x800)) {
@@ -12570,10 +12557,10 @@ void daPly_c::func_ov002_020d45c0() {
             else
                 Particle::RunningSlidingDustAt(mPosX, mPosY, mPosZ);
         }
-        if (mHorzSpeed < Player_ScaleByCharFactor(this, 0x1c000))
+        if (mHorzSpeed < ScaleByCharFactor(0x1c000))
             mStateArg = 0;
     } else {
-        if (mHorzSpeed > Player_ScaleByCharFactor(this, 0x26000)) {
+        if (mHorzSpeed > ScaleByCharFactor(0x26000)) {
             mStateWaitTimer = 0x10;
             mStateArg = 1;
         }
@@ -12595,7 +12582,6 @@ static inline u16 AnimSpeed(char *c) {
     return GetAnim(c)[2] >> 12;
 }
 void daPly_c::func_ov002_020d4748() {
-    int Player_ScaleByCharFactor(void*, int);
     extern unsigned char data_0209f4ac;
     extern unsigned short data_0209f49c;
     extern short data_0209f4a0;
@@ -12688,7 +12674,7 @@ void daPly_c::func_ov002_020d4748() {
             int t = 0x1000 - this->mFloorNormalY;
             int f = (int)((((long long)t << 10) + 0x800) >> 12);
             int v;
-            int diff = Player_ScaleByCharFactor(c, 0x1c000) - this->mHorzSpeed;
+            int diff = ScaleByCharFactor(0x1c000) - this->mHorzSpeed;
             v = FX_MUL(diff, f);
             if (v < 0)
                 v = 0;
@@ -17842,7 +17828,7 @@ int daPly_c::func_ov002_020dde74() {
     if ((*(u16 *)(data_0209f49c + (u8)gActivePlayerSlot * 0x18) & 2) || mIsMega != 0)
         goto change574;
 
-    if (mHorzSpeed < Player_ScaleByCharFactor(this, 0x20000)) {
+    if (mHorzSpeed < ScaleByCharFactor(0x20000)) {
         if (IsState(data_ov002_021101e4))
             goto change5bc;
         if (!IsState(data_ov002_0211019c))
@@ -17851,8 +17837,8 @@ int daPly_c::func_ov002_020dde74() {
             goto change574;
     }
 change5bc:
-    if (mHorzSpeed < Player_ScaleByCharFactor(this, 0x24000))
-        mHorzSpeed = Player_ScaleByCharFactor(this, 0x24000);
+    if (mHorzSpeed < ScaleByCharFactor(0x24000))
+        mHorzSpeed = ScaleByCharFactor(0x24000);
     return ChangeState(data_ov002_021105bc);
 
 change574:
@@ -18015,7 +18001,6 @@ extern "C" {
 s32 daPly_c::St_Balloon_Main() {
     extern void func_ov002_020de968(void *);
     extern void ApproachAngle(void *, s16, s16, s16, s32);
-    extern s32 func_ov002_020bf224(void *, s32, s32);
     extern void func_ov002_020de3d0(void *, s16 *, s16 *);
     extern s16 data_0209f49e[];
     extern s16 data_0209f4a0[];
@@ -18104,7 +18089,7 @@ s32 daPly_c::St_Balloon_Main() {
         r4 = 0x10000;
     }
     ApproachLinear2(mAngleY, mPrevAngleY, 0x200);
-    ApproachLinear(mHorzSpeed, func_ov002_020bf224(this, r4, 0), 0x100);
+    ApproachLinear(mHorzSpeed, func_ov002_020bf224(r4, 0), 0x100);
     func_ov002_020de3d0(this, &mAngleZ, &mAngleYSpeed);
     func_ov002_020de3d0(this, &mAngleX, &mAngleXSpeed);
     mPrevVertSpeed = mVertSpeed;
@@ -19004,7 +18989,6 @@ void daPly_c::func_ov002_020e04a4() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Land_Main() {
-    extern int func_ov002_020bf224(void* c, int a, int b);
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
     extern s16 data_0209f4a0[];
@@ -19048,7 +19032,7 @@ int daPly_c::St_Land_Main() {
     }
 
     ApproachLinear(*((int *)((char *)&mHorzSpeed)),
-                   func_ov002_020bf224(this, Player_ScaleByCharFactor(this, 0x20000), 0), 0x4000);
+                   func_ov002_020bf224(ScaleByCharFactor(0x20000), 0), 0x4000);
 
     if (func_ov002_020e3078(&data_ov002_0211052c) != 0) {
         mHorzSpeed = 0;
@@ -19078,7 +19062,7 @@ int daPly_c::St_Land_Main() {
         mPrevAngleY = mAngleY;
         this->ChangeState(data_ov002_0211013c);
         if (this->IsState(data_ov002_0211013c) != 0 && mStateStep != 0 &&
-            mHorzSpeed >= Player_ScaleByCharFactor(this, 0x1c000)) {
+            mHorzSpeed >= ScaleByCharFactor(0x1c000)) {
             mSpineRot[2] = 0x4000;
         }
         return 1;
@@ -19744,8 +19728,8 @@ int daPly_c::St_Fall_Main() {
         return 1;
     }
   Player_AdvanceAnims(((void*)this));
-  if (*(int*)((char*)&mHorzSpeed) >= Player_ScaleByCharFactor(((void*)this), 0x28000))
-    *(int*)((char*)&mHorzSpeed) = Player_ScaleByCharFactor(((void*)this), 0x28000);
+  if (*(int *)((char *)&mHorzSpeed) >= ScaleByCharFactor(0x28000))
+      *(int *)((char *)&mHorzSpeed) = ScaleByCharFactor(0x28000);
   return 1;
 }
 
@@ -19992,7 +19976,7 @@ skipclear:
         mJumpComboStage = 0;
 
     if (mJumpComboStage == 2 && mHasWings == 0) {
-        if (mHorzSpeed <= Player_ScaleByCharFactor(this, 0x14000))
+        if (mHorzSpeed <= ScaleByCharFactor(0x14000))
             mJumpComboStage = 0;
     }
 
@@ -20014,8 +19998,8 @@ skipclear:
         } else {
             this->SetAnim(0x9c, 0x40000000, 0x1000, 0);
         }
-        if (mHorzSpeed > Player_ScaleByCharFactor(this, 0x64000)) {
-            mHorzSpeed = Player_ScaleByCharFactor(this, 0x64000);
+        if (mHorzSpeed > ScaleByCharFactor(0x64000)) {
+            mHorzSpeed = ScaleByCharFactor(0x64000);
         }
     }
 
@@ -20146,7 +20130,6 @@ ret0:
 extern "C" {
 void daPly_c::func_ov002_020e28d4(int a, int b) {
     extern void ApproachAngle(s16* cur, s16 target, int divisor, int band, int maxStep);
-    extern int func_ov002_020bf224(void *p, int a, int b);
     extern s16 data_0209f4a0[];
     int r4;
 
@@ -20162,7 +20145,7 @@ void daPly_c::func_ov002_020e28d4(int a, int b) {
             }
         }
         if (IsState(data_ov002_0211055c)) {
-            r4 = Player_ScaleByCharFactor(this, 0x3c000);
+            r4 = ScaleByCharFactor(0x3c000);
             s16 e = AngleDiff(mDesiredAngleY, mAngleY);
             e = e + 0x4000;
             s16 tv = data_02082214[((u16)e >> 4) * 2];
@@ -20172,8 +20155,7 @@ void daPly_c::func_ov002_020e28d4(int a, int b) {
             if (r4 < 0xa000)
                 r4 = 0xa000;
         } else {
-            r4 = func_ov002_020bf224(this, Player_ScaleByCharFactor(this, 0x21000),
-                                     Player_ScaleByCharFactor(this, 0xa000));
+            r4 = func_ov002_020bf224(ScaleByCharFactor(0x21000), ScaleByCharFactor(0xa000));
         }
 
         s16 r7 = mDesiredAngleY;

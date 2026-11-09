@@ -1239,12 +1239,19 @@ struct daPly_c : dActor_c {
 
     /* Helpers that were free functions taking the player as their first
        argument. A melonDS `this` sweep saw only the player in r0, and each
-       body uses r0 as the player. Names not recovered; each keeps its
-       address. Parameters unnamed (see the Kuppa note above). */
+       body uses r0 as the player, except 020bf224 and 020bf340: every caller
+       passes the player, they sit inside the run of daPly_c members at
+       0x020bf13c..0x020bf36c, and they never read `this`. Names not
+       recovered; each keeps its address (ScaleByCharFactor was
+       Player_ScaleByCharFactor). Parameters unnamed (see the Kuppa note
+       above). */
     int func_ov002_020bd8ac();
     void func_ov002_020be008();
     void func_ov002_020bec9c(unsigned int, int, Fix12i, u16);
+    int func_ov002_020bf224(int, int);
     int func_ov002_020bf27c(int);
+    Fix12i ScaleByCharFactor(Fix12i);
+    void func_ov002_020bf340(int *, int, int);
     int func_ov002_020bf56c(int);
     int func_ov002_020c179c(int);
     void func_ov002_020c18b0(int);
