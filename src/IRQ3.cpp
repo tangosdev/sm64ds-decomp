@@ -8,9 +8,10 @@
  * (OS_EnableInterrupts .. OS_RestoreInterrupts_IrqAndFiq, declared in
  * nitro/os/system.h): each sets or clears CPSR bit 0x80 (IRQ) or 0xc0 (IRQ
  * and FIQ) and returns the previous state for restoration.
- * ARMProcessorMode returns the CPSR mode field. CP15::WaitForInterrupt halts
- * the core until an interrupt arrives (c7,c0,4); the value written is ignored
- * by the hardware.
+ * OS_GetProcMode (pret OS_system.c) returns the CPSR mode field. OS_Halt
+ * (pret OS_terminate_proc.c, which a later SDK split out of os_system.c)
+ * halts the core until an interrupt arrives (c7,c0,4); the value written is
+ * ignored by the hardware.
  * The preceding IRQ-state initializer has its own compiler input.
  */
 
@@ -63,20 +64,16 @@ asm OSIntrMode OS_RestoreInterrupts_IrqAndFiq(OSIntrMode state)
     bx lr
 }
 
-extern "C" asm int ARMProcessorMode(void)
+asm OSProcMode OS_GetProcMode(void)
 {
     mrs r0, cpsr
     and r0, r0, #0x1f
     bx lr
 }
 
-namespace CP15 {
-
-asm void WaitForInterrupt(void)
+asm void OS_Halt(void)
 {
     mov r0, #0
     mcr p15, 0, r0, c7, c0, 4
     bx lr
-}
-
 }

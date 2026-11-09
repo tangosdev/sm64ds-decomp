@@ -103,7 +103,7 @@ enum daDemo_c_AssetId {
 
 #include "KuppaScript.h"
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx.h"
 #include "nitro/gx/gx_vramcnt.h"
@@ -3268,7 +3268,7 @@ void func_ov002_020f5fe4(char* c)
     Deallocate(r5);
 
     r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCL_BIN);
-    CP15::FlushAndInvalidateDataCache((u32)r5, 0x200);
+    DC_FlushRange(r5, 0x200);
     GX_SetBankForSubBGExtPltt(0x80);
     GXS_BeginLoadBGExtPltt();
     GXS_LoadBGExtPltt(r5, 0x4000, 0x200);

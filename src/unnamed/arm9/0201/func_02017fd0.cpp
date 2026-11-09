@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/fs/overlay.h"
 
 extern "C" {
@@ -22,8 +22,8 @@ void func_02017fd0(FSOverlayInfo *info) {
     ptr = info->header.ram_address;
     len = ramSize + bssSize;
 
-    CP15::InvalidateInstructionCache((u32)ptr, len);
-    CP15::InvalidateDataCache((u32)ptr, len);
+    IC_InvalidateRange(ptr, len);
+    DC_InvalidateRange(ptr, len);
 
     fillVal = 0xe6000010;
     MIi_CpuClear32(fillVal, ptr, len);

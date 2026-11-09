@@ -5,7 +5,7 @@
  * 10 retries) and verify it, and advance until len is 0 or a request fails;
  * then end the task. */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/card/card_common.h"
 
 extern "C" {
@@ -18,8 +18,8 @@ void func_0206062c(CARDiCommon *p) {
         if (len > sizeof(p->backup_cache_page_buf))
             len = sizeof(p->backup_cache_page_buf);
         MI_CpuCopy8((const void *)p->src, p->backup_cache_page_buf, len);
-        CP15::FlushAndInvalidateDataCache((u32)p->backup_cache_page_buf, len);
-        CP15::DrainWriteBuffer();
+        DC_FlushRange(p->backup_cache_page_buf, len);
+        DC_WaitWriteBufferEmpty();
         p->cmd->src = (u32)p->backup_cache_page_buf;
         p->cmd->dest = p->dst;
         p->cmd->len = len;

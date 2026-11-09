@@ -2,7 +2,7 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/arm9_wbt.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/fs_views.h"
 
 /* The FSFile a child read is for (FileShareWork.mReadRequest, set by
@@ -62,8 +62,7 @@ void func_02040f30(void *arg) {
             return;
         }
         if ((data_020a1fc0.mState != 2) != 0) {
-            CP15::FlushAndInvalidateDataCache((u32)data_020a1fc0.mTable,
-                                              (u32)data_020a1fc0.mTableSize);
+            DC_FlushRange((void *)data_020a1fc0.mTable, (u32)data_020a1fc0.mTableSize);
             func_020423dc((int *)data_020a1fc0.mTable);
             {
                 data_020a1fc0.mState = 2;

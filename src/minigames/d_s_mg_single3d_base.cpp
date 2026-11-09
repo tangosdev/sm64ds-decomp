@@ -35,7 +35,7 @@ enum d_s_mg_single3_d_base_AssetId {
 #include "nitro/gx/g3x.h"
 
 /* SDK calls this file makes. */
-namespace CP15 { void FlushAndInvalidateDataCache(u32 address, u32 length); }
+#include "nitro/os/cache.h"
 
 extern "C" {
 void *LoadFile(int fileId);
@@ -96,7 +96,7 @@ void dScMgSingle3DBase_c::InitEngines()
     }
     Ov004_Deallocate(fileData);
     fileData = Ov004_LoadFile(0xc3);
-    CP15::FlushAndInvalidateDataCache((u32)fileData, 0x100u);
+    DC_FlushRange(fileData, 0x100u);
     GX_LoadOBJPltt(fileData, 0x100u, 0x100u);
     GXS_LoadOBJPltt(fileData, 0x100u, 0x100u);
     Ov004_Deallocate(fileData);

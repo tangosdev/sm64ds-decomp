@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "nitro/card/card_common.h"
 extern "C" int PXI_IsCallbackReady(int tag, int proc);
@@ -27,8 +27,8 @@ extern "C" int CARDi_Request(CARDiCommon *p, s32 req_type, s32 retry_count) {
         CARDi_Request(p, CARD_REQ_INIT, 1);
     }
 
-    CP15::FlushAndInvalidateDataCache((unsigned int)p->cmd, sizeof(*p->cmd));
-    CP15::DrainWriteBuffer();
+    DC_FlushRange(p->cmd, sizeof(*p->cmd));
+    DC_WaitWriteBufferEmpty();
 
     do {
         p->command = req_type;

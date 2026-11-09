@@ -1,6 +1,5 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
 #include "nitro/os/system.h"
 
 extern "C" {
@@ -21,7 +20,7 @@ void Crash(void) {
     }
     for (;;) {
         OS_DisableInterrupts();
-        CP15::WaitForInterrupt();
+        OS_Halt();
     }
 }
 }

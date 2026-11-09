@@ -42,7 +42,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gxcommon.h"
 #include "OamAnimation.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "cstd.h"
 
 #include "Matrix2x2.h"
@@ -697,8 +697,8 @@ void OAM::Flush()
     /* Flush the two 0x400-byte staging buffers out of the data cache so the
      * DMA that follows reads what the CPU just wrote. 0x400 is 128 entries
      * of 8 bytes, the full hardware OAM. */
-    CP15::FlushAndInvalidateDataCache((u32)data_0209e674, 0x400);
-    CP15::FlushAndInvalidateDataCache((u32)data_0209ea74, 0x400);
+    DC_FlushRange(data_0209e674, 0x400);
+    DC_FlushRange(data_0209ea74, 0x400);
 }
 
 /* -------------------------------------------------------------------------- */

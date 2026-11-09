@@ -34,7 +34,6 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
-#include "CP15.h"
 #include "nitro/spi/pm.h"
 #include "nitro/ctrdg/ctrdg_common.h"
 
@@ -343,7 +342,7 @@ void PM_GoSleepMode(u32 trigger, u32 logic, u32 keyPattern) {
     while (PMi_SendSleepStart(trigger, logic | keyPattern) != 0)
         ;
 
-    CP15::WaitForInterrupt();
+    OS_Halt();
     OS_SpinWait(0x332340);
     if (trigger & PM_TRIGGER_CARD) {
         if (REG_IF & 0x100000)

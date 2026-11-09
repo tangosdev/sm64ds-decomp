@@ -192,14 +192,15 @@ extern "C" void MIi_DmaSetParams_wait(unsigned char ch, unsigned src, unsigned d
 }
 
 // ---------------------------------------------------------------------------
-// CP15 cache maintenance. The host has coherent memory, so these are no-ops --
-// but they must still exist, because the decomp calls them around every DMA.
+// CP15 cache maintenance (the SDK's os_cache.c, include/nitro/os/cache.h).
+// The host has coherent memory, so these are no-ops -- but they must still
+// exist, because the decomp calls them around every DMA.
 // ---------------------------------------------------------------------------
 
-extern "C" void _ZN4CP1514FlushDataCacheEv(void) {}
-extern "C" void _ZN4CP1514FlushDataCacheEjj(unsigned int, unsigned int) {}
-extern "C" void _ZN4CP1516DrainWriteBufferEv(void) {}
-extern "C" void _ZN4CP1519InvalidateDataCacheEjj(unsigned int, unsigned int) {}
-extern "C" void _ZN4CP1526InvalidateInstructionCacheEjj(unsigned int, unsigned int) {}
-extern "C" void _ZN4CP1527FlushAndInvalidateDataCacheEv(void) {}
-extern "C" void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int, unsigned int) {}
+extern "C" void DC_StoreAll(void) {}
+extern "C" void DC_StoreRange(void *, unsigned int) {}
+extern "C" void DC_WaitWriteBufferEmpty(void) {}
+extern "C" void DC_InvalidateRange(void *, unsigned int) {}
+extern "C" void IC_InvalidateRange(void *, unsigned int) {}
+extern "C" void DC_FlushAll(void) {}
+extern "C" void DC_FlushRange(const void *, unsigned int) {}

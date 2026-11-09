@@ -48,7 +48,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 
 #include "dScMgSmartball_c.h"
 #include "nitro/hw/registers.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "cMgSmartball_wing_c.h"
 #include "OamAttr.h"
 #include "OAM.h"
@@ -5899,7 +5899,7 @@ s32 dScMgSmartball_c::InitResources() {
     DecompressLZ16(f, G2S_GetBG0ScrPtr());
     Ov004_Deallocate(f);
     f = Ov004_LoadFileByPath(&sSmartballResultNclPath);
-    CP15::FlushAndInvalidateDataCache((u32)f, 0x20);
+    DC_FlushRange(f, 0x20);
     GXS_LoadBGPltt(((char *)f) + 2, 2, 0x1e);
     Ov004_Deallocate(f);
     *((volatile u16 *)0x400000c) = (((*((volatile u16 *)0x400000c)) & 0xFFFF) & 0x43) | 0x1410;
@@ -5947,20 +5947,20 @@ s32 dScMgSmartball_c::InitResources() {
     }
     if (((u8)(*((s32 *)(c + 8)))) == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1NclPath);
-        CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
+        DC_FlushRange(f, 0x1a0);
         GX_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg2NclPath);
-        CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
+        DC_FlushRange(f, 0x1a0);
         GXS_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
     } else {
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg1NclPath);
-        CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
+        DC_FlushRange(f, 0x1a0);
         GX_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg2NclPath);
-        CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
+        DC_FlushRange(f, 0x1a0);
         GXS_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
     }
@@ -5968,7 +5968,7 @@ s32 dScMgSmartball_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3;
     gSubScreenLayers[0] |= 0xd;
     f = Ov004_LoadFileByPath(&sSmartballNclPath);
-    CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
+    DC_FlushRange(f, 0x100);
     GX_LoadOBJPltt(f, 0, 0x100);
     GXS_LoadOBJPltt(f, 0, 0x100);
     Ov004_Deallocate(f);

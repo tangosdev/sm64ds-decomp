@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -21,7 +21,7 @@ char *WM_ReadMPData(char *a, unsigned int idx) {
         return 0;
     if (idx < 1 || idx > 0xf)
         return 0;
-    CP15::InvalidateDataCache((u32)&sys->status->child_bitmap, 2);
+    DC_InvalidateRange(&sys->status->child_bitmap, 2);
     if ((sys->status->child_bitmap & (1u << idx)) == 0)
         return 0;
     n = *(u16*)(a + 4);

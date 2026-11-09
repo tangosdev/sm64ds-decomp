@@ -61,7 +61,7 @@ enum dScMgSlots_AssetId {
 #include "PlayerInput.h"
 #include "dWipe_c.h"
 #include "nitro/gx/g2.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 #include "LevelRng.h"
 
@@ -829,7 +829,7 @@ s32 dScMgSlot3_c::InitResources() {
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_SLOT_FACE_NCL_BIN);
-        CP15::FlushAndInvalidateDataCache((u32)h, 0xe0);
+        DC_FlushRange(h, 0xe0);
         GX_LoadOBJPltt(h, 0, 0xe0);
         GXS_LoadOBJPltt(h, 0, 0xe0);
         Deallocate(h);

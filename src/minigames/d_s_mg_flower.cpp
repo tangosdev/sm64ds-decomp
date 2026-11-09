@@ -39,7 +39,7 @@
 #include "Vector2.h"
 #include "Vector2Math.h"
 #include "nitro/gx/gx_bgcnt.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 
 #pragma defer_codegen off
@@ -510,12 +510,12 @@ s32 dScMgFlower_c::InitResources() {
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgUpNclPath);
-    CP15::FlushAndInvalidateDataCache((u32)fileData, 0x1a0);
+    DC_FlushRange(fileData, 0x1a0);
     GX_LoadBGPltt(fileData, 0x60, 0x1a0);
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgDownNclPath);
-    CP15::FlushAndInvalidateDataCache((u32)fileData, 0x1a0);
+    DC_FlushRange(fileData, 0x1a0);
     GXS_LoadBGPltt(fileData, 0x60, 0x1a0);
     Ov004_Deallocate(fileData);
 
@@ -531,7 +531,7 @@ s32 dScMgFlower_c::InitResources() {
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerNclPath);
-    CP15::FlushAndInvalidateDataCache((u32)fileData, 0x100);
+    DC_FlushRange(fileData, 0x100);
     GX_LoadOBJPltt(fileData, 0, 0x100);
     GXS_LoadOBJPltt(fileData, 0, 0x100);
     Ov004_Deallocate(fileData);

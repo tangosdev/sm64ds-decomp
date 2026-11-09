@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "nitro/gx/gx_load.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "Ov007BgLayer.h"
 
 extern "C" {
@@ -27,7 +27,7 @@ void func_ov007_020c076c(Ov007BgLayer *layer, int engines) {
 
     if (layer->dirty != 0) {
         size = layer->width * layer->height * 2;
-        CP15::FlushAndInvalidateDataCache((u32)layer->screen, size);
+        DC_FlushRange(layer->screen, size);
         if (engines & 1) {
             switch (layer->bg) {
             case 0:

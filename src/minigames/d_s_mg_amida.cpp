@@ -93,7 +93,7 @@ enum dScMgAmida_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "Sound.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
 
@@ -2121,14 +2121,14 @@ s32 dScMgAmida_c::InitResources() {
     if (IsVariant2() != 0) {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCG_BIN, (void *)G2_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCL_BIN);
-        CP15::FlushAndInvalidateDataCache((u32)file, 0x1a0);
+        DC_FlushRange(file, 0x1a0);
         GX_LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NSC_BIN, G2_GetBG3ScrPtr());
     } else {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NCG_BIN, (void *)G2_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA1_NCL_BIN);
-        CP15::FlushAndInvalidateDataCache((u32)file, 0x1a0);
+        DC_FlushRange(file, 0x1a0);
         GX_LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NSC_BIN, G2_GetBG3ScrPtr());

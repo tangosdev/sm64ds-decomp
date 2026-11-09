@@ -58,7 +58,7 @@
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "GX.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/gx/g3x.h"
 #include "dScene_c.h"
 #include "LevelRng.h"
@@ -257,7 +257,7 @@ s32 dScMiniGm_c::InitResources()
     Deallocate(f);
 
     f = LoadFile(0x58);
-    CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
+    DC_FlushRange(f, 0x200);
     GX_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
@@ -280,7 +280,7 @@ s32 dScMiniGm_c::InitResources()
     Deallocate(f);
 
     f = LoadFile(0xd9);
-    CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
+    DC_FlushRange(f, 0x100);
     GX_LoadOBJPltt(f, 0, 0x100);
     Deallocate(f);
 
@@ -301,7 +301,7 @@ s32 dScMiniGm_c::InitResources()
     Deallocate(f);
 
     f = LoadFile(0x5a);
-    CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
+    DC_FlushRange(f, 0x200);
     GXS_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
@@ -335,7 +335,7 @@ s32 dScMiniGm_c::InitResources()
     Deallocate(f);
 
     f = LoadFile(0xd9);
-    CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
+    DC_FlushRange(f, 0x100);
     GXS_LoadOBJPltt(f, 0, 0x100);
     Deallocate(f);
 
@@ -475,7 +475,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
             } while (++row < 9);
 
             f = LoadFile(sMiniGmIconPalettes[gMgGroupBase + j]);
-            CP15::FlushAndInvalidateDataCache((u32)f, flushSize);
+            DC_FlushRange(f, flushSize);
             GXS_LoadBGPltt(f, scene->mGfxSlot << 5, plttSize);
             Deallocate(f);
 
@@ -519,7 +519,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
 
 void dScMiniGm_c::LoadIconPalette(int index) {
     void *file = LoadFile(sMiniGmIconPalettes[index]);
-    CP15::FlushAndInvalidateDataCache((u32)file, 0x200);
+    DC_FlushRange(file, 0x200);
     u32 slot = mGfxSlots[index / 4];
     GXS_LoadBGPltt((u16 *)file + 16, slot << 5, 0x20);
     Deallocate(file);

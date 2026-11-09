@@ -70,9 +70,7 @@
 #include "math/MtxStack.h"
 #include "nitro/gx/g3imm.h"
 
-namespace CP15 {
-void FlushDataCache(void);
-}
+#include "nitro/os/cache.h"
 
 /* The four-pointer block at BMD_File::skin (UpdateFileOffsets rebases all
    four). */
@@ -306,7 +304,7 @@ void func_02044efc(BMD_File *self) {
         Matrix4x3 *mat = &((struct Sub *)self->skin)->blk[i];
         InvMat4x3(mat, mat);
     }
-    CP15::FlushDataCache();
+    DC_StoreAll();
 }
 }
 

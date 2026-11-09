@@ -32,9 +32,7 @@
 namespace cstd {
 Fix12i fdiv(Fix12i a, Fix12i b);
 }
-namespace CP15 {
-void FlushAndInvalidateDataCache(u32 addr, u32 len);
-}
+#include "nitro/os/cache.h"
 int ApproachLinear(Fix12i &value, Fix12i target, Fix12i step);
 
 extern "C" {
@@ -71,7 +69,7 @@ void dFdBrightness_c::AdvanceFade()
     if (level > -0x10)
         return;
 
-    CP15::FlushAndInvalidateDataCache((u32)data_0209d3ac, 2);
+    DC_FlushRange(data_0209d3ac, 2);
     GX_LoadBGPltt(data_0209d3ac, 0, 2);
     GXS_LoadBGPltt(data_0209d3ac, 0, 2);
 }

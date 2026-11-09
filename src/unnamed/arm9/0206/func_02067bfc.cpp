@@ -1,5 +1,5 @@
 //cpp
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/fs_views.h"
 
 typedef struct FSFile FSFile;
@@ -128,7 +128,7 @@ int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
         }
 
         if (result) {
-            CP15::FlushAndInvalidateDataCache((unsigned int)b, c);
+            DC_FlushRange(b, c);
         }
     }
 

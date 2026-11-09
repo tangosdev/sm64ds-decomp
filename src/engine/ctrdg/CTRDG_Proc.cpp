@@ -23,7 +23,7 @@
  * statement for statement. The other three are this SDK's older versions;
  * each comment says what differs, and they keep their address names.
  */
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/ctrdg/ctrdg_common.h"
 
@@ -115,7 +115,7 @@ void func_0206a6d0(void) {
         cip->gameCode = chd->gameCode;
     }
     MIi_CpuCopy32((int *)0xffff0020, &data_020a9e04, 0x9c);
-    CP15::FlushAndInvalidateDataCache();
+    DC_FlushAll();
     data = (((unsigned int)&data_020a9e00 + 0xfe000000) >> 5) << 6 | 1;
     CTRDGi_SendtoPxi(data);
     if (data_020a9de0.subpState != 1) {

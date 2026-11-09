@@ -24,7 +24,7 @@
 #include "nitro/os/interrupt.h"
 #include "decl_common.h"
 #include "cstd.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
 
@@ -95,11 +95,11 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
         }
 
         if (type == 2) {
-            CP15::FlushAndInvalidateDataCache((u32)data_0209f604, 2);
+            DC_FlushRange(data_0209f604, 2);
             GX_LoadBGPltt(data_0209f604, 0, 2);
             GXS_LoadBGPltt(data_0209f604, 0, 2);
         } else {
-            CP15::FlushAndInvalidateDataCache((u32)data_020926cc, 2);
+            DC_FlushRange(data_020926cc, 2);
             GX_LoadBGPltt(data_020926cc, 0, 2);
             GXS_LoadBGPltt(data_020926cc, 0, 2);
         }
@@ -165,11 +165,11 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
         }
 
         if (type == 2) {
-            CP15::FlushAndInvalidateDataCache((u32)data_0209f600, 2);
+            DC_FlushRange(data_0209f600, 2);
             GX_LoadBGPltt(data_0209f600, 0, 2);
             GXS_LoadBGPltt(data_0209f600, 0, 2);
         } else {
-            CP15::FlushAndInvalidateDataCache((u32)data_020926c8, 2);
+            DC_FlushRange(data_020926c8, 2);
             GX_LoadBGPltt(data_020926c8, 0, 2);
             GXS_LoadBGPltt(data_020926c8, 0, 2);
         }
@@ -432,7 +432,7 @@ void dWipe_c::BuildStarTable() {
         }
     }
 
-    CP15::FlushAndInvalidateDataCache((u32)data_0209f648, 0x600);
+    DC_FlushRange(data_0209f648, 0x600);
     data_0209f60c = idx;
 }
 
@@ -482,7 +482,7 @@ void dWipe_c::BuildCircleTable() {
         src--;
     }
 
-    CP15::FlushAndInvalidateDataCache((u32)data_0209f648, 0x600);
+    DC_FlushRange(data_0209f648, 0x600);
     data_0209f60c = idx;
 }
 

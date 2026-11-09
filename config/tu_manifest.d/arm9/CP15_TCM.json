@@ -27,7 +27,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "_ZN4CP1518GetDTCMBaseAddressEv",
+      "symbol": "OS_GetDTCMAddress",
       "address": "0x020593b8",
       "size": "0x00000014",
       "legacy_source": "src/_ZN4CP1518GetDTCMBaseAddressEv.cpp",

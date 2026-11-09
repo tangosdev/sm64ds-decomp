@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/os/spinLock.h"
 
 extern "C" {
@@ -71,7 +71,7 @@ void OSi_ReloadRomData(void) {
     u32 size = ROM_HEADER_ARM9_SIZE;
 
     OS_TryLockCard((u16)OS_GetLockID());
-    CP15::FlushAndInvalidateDataCache();
+    DC_FlushAll();
 
     if (romOffset < ROM_SECURE_AREA_END) {
         u32 skipped = ROM_SECURE_AREA_END - romOffset;

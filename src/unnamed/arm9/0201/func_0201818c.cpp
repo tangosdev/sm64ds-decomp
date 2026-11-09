@@ -1,5 +1,5 @@
 //cpp
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "Memory.h"
 #include "private/fs_views.h"
 
@@ -43,7 +43,7 @@ void *func_0201818c(unsigned int id, int flush) {
         }
         func_02018770();
         if (flush != 0)
-            CP15::FlushDataCache((unsigned int)mem, size);
+            DC_StoreRange(mem, size);
         return mem;
     }
     func_020185c0(&file, func_02018a24(id));

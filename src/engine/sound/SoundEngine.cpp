@@ -24,7 +24,7 @@
 #include "SolidHeapAllocator.h"
 #include "Heap.h"
 #include "cstd.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nnsys/snd/player.h"
 #include "nitro/os/message.h"
 #include "nitro/os/thread.h"
@@ -1003,7 +1003,7 @@ extern "C" void* func_02051634(unsigned int a0, unsigned int a1, unsigned int a2
     r4 = ((extern void*(*)(void *owner, unsigned int elemSize, unsigned int p2, unsigned int p3, unsigned int p4))func_020511d4)(owner, r5 + 0x20, a1, a2, a3);
     if (r4 == 0) return 0;
     if (r5 != ((extern int(*)(unsigned int a, void* b, int c, int d))func_020509d8)(a0, r4, r5, 0)) return 0;
-    CP15::FlushDataCache((unsigned int)r4, r5);
+    DC_StoreRange(r4, r5);
     return r4;
 }
 
@@ -1490,7 +1490,7 @@ extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, 
         return 0;
     z = 0;
     MIi_CpuClear32(z, (int *)a0, a1);
-    CP15::FlushAndInvalidateDataCache((unsigned int)a0, a1);
+    DC_FlushRange(a0, a1);
     return ((int (*)(int a0, int a1, int a2, int a3, int s0, int s1, int s2, int s3, int s4, int s5,
                      int s6, int s7, int s8, int s9, int s10))func_020503a4)(
         1, (int)a0, (int)a0 + (a1 >> 1), a1 >> 1, a2, 0, 0, 1, a3, 0x7f, 0, 0x7f, a4, (int)a5,
@@ -1542,8 +1542,8 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
 
     handle = -1;
     g = &data_020a5634;
-    CP15::FlushAndInvalidateDataCache(b, dd);
-    CP15::FlushAndInvalidateDataCache(c, dd);
+    DC_FlushRange((void *)b, dd);
+    DC_FlushRange((void *)c, dd);
     stereo = (p5 == 1) ? 1 : 0;
     align = 0xffb0ff / p9;
     if (p14 != 0) {
@@ -1661,10 +1661,8 @@ extern "C" void func_020501b8(void)
     ((extern void (*)(int val, int *dst, int len))MIi_CpuClear32)(a, (int *)g->fc, g->f14);
     b = 0;
     ((extern void (*)(int val, int *dst, int len))MIi_CpuClear32)(b, (int *)g->f10, g->f14);
-    ((extern void (*)(unsigned int a, unsigned int b))CP15::FlushAndInvalidateDataCache)(
-        (unsigned int)g->fc, g->f14);
-    ((extern void (*)(unsigned int a, unsigned int b))CP15::FlushAndInvalidateDataCache)(
-        (unsigned int)g->f10, g->f14);
+    DC_FlushRange((void *)g->fc, g->f14);
+    DC_FlushRange((void *)g->f10, g->f14);
     {
         int sh = g->f28;
         int mask = (sh >= 0) ? (1 << sh) : 0;
@@ -1690,8 +1688,8 @@ extern "C" void func_020500a4(void *arg) {
         data_020a55f8 = data_020a55f8 + 1;
         if (data_020a55f8 >= 8) data_020a55f8 = 0;
     } else {
-        CP15::InvalidateDataCache(e6, quot);
-        CP15::InvalidateDataCache(e5, quot);
+        DC_InvalidateRange((void *)e6, quot);
+        DC_InvalidateRange((void *)e5, quot);
         strm->f30(e6, e5, quot, strm->f8, strm->f34);
     }
     strm->f18++;
@@ -1705,10 +1703,8 @@ extern "C" void func_02050038(void *arg) {
     for (;;) {
         OS_ReceiveMessage(&data_020a5600, &out, 1);
         r = (struct Q *)out;
-        ((void (*)(unsigned int a, unsigned int b))CP15::InvalidateDataCache)((unsigned int)r->fc,
-                                                                              (unsigned int)r->f4);
-        ((void (*)(unsigned int a, unsigned int b))CP15::InvalidateDataCache)((unsigned int)r->f10,
-                                                                              (unsigned int)r->f4);
+        DC_InvalidateRange((void *)r->fc, r->f4);
+        DC_InvalidateRange((void *)r->f10, r->f4);
         r->f0->f30(r->fc, r->f10, r->f4, r->f0->f8, r->f0->f34);
     }
 }
