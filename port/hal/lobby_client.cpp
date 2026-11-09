@@ -380,7 +380,7 @@ struct Shared {
     std::string error;
     /* the view */
     std::string state = "lobby", session_type;
-    int host = 0, you = 0, max_seats = 4, dial_max = 0;
+    int host = 0, you = 0, max_seats = 4, dial_max = 0, arena_max = 4;
     std::vector<Member> members;
     int map = 0, match_players = 2, star_target = 0, luigi = 0;
     std::string win_mode = "time", netmode;
@@ -637,6 +637,7 @@ void fold_view(const JV &v)
     if (seats <= 0) seats = 4;
     g.max_seats = seats > 16 ? 16 : seats;
     g.dial_max = (int)v.i("dial_max");
+    { const int am = (int)v.i("arena_max", 4); g.arena_max = am < 2 ? 4 : am > 16 ? 16 : am; }   /* the server's largest Arena match */
     g.map = (int)v.i("map");
     g.match_players = (int)v.i("match_players", 2);
     g.win_mode = safe(v.str("win_mode"), 8);
@@ -1442,11 +1443,14 @@ void snapshot_locked()
     } else {
         s.n_settings = VS_N;
         LobbySetting *t = s.settings;
-        t[VS_MODE] = LobbySetting{"mode", "Game mode", g.luigi ? 2 : g.win_mode == "stars" ? 1 : 0, 0, 2, kVsModes, 3};
+        /* 1.0: Arena referees Clock and Stars only, so Luigi Infection is offered only to show a launcher room that already has it */
+        t[VS_MODE] = LobbySetting{"mode", "Game mode", g.luigi ? 2 : g.win_mode == "stars" ? 1 : 0, 0, g.luigi ? 2 : 1, kVsModes, g.luigi ? 3 : 2};
         t[VS_STARS] = LobbySetting{"stars", "Stars to win", g.star_target > 0 ? g.star_target : 3, 1, 5, 0, 0};
         t[VS_ARENA] = LobbySetting{"map", "Arena", g.map, 0, 3, kArenas, 4};
-        const int pmax = g.dial_max >= 2 ? g.dial_max : (g.max_seats >= 2 ? g.max_seats : 4);
-        t[VS_PLAYERS] = LobbySetting{"players", "Players", g.match_players >= 2 ? g.match_players : 2, 2, pmax, 0, 0};
+        int pmax = g.dial_max >= 2 ? g.dial_max : (g.max_seats >= 2 ? g.max_seats : 4);
+        if (pmax > g.arena_max) pmax = g.arena_max;   /* 1.0: Arena plays 2..arena_max players */
+        const int pval = g.match_players >= 2 ? g.match_players : 2;
+        t[VS_PLAYERS] = LobbySetting{"players", "Players", pval, 2, pval > pmax ? pval : pmax, 0, 0};
         /* 1.0: Classic (lockstep) needs the game to restart itself, a path no row has run yet, so the in-game lobby offers Arena only */
         t[VS_NETMODE] = LobbySetting{"netmode", "Netcode", 0, 0, 0, kNetmodes, 2};
     }
@@ -1619,10 +1623,10 @@ void lobby_set_setting(int index, int value)
         return;
     }
     switch (index) {
-    case VS_MODE: g.luigi = value == 2; g.win_mode = value == 1 ? "stars" : "time"; if (value == 1 && g.star_target <= 0) g.star_target = 3; break;
+    case VS_MODE: if (value < 0 || value > 1) return; g.luigi = 0; g.win_mode = value == 1 ? "stars" : "time"; if (value == 1 && g.star_target <= 0) g.star_target = 3; break;
     case VS_STARS: if (value < 1 || value > 5) return; g.star_target = value; break;
     case VS_ARENA: if (value < 0 || value > 3) return; g.map = value; break;
-    case VS_PLAYERS: if (value < 2 || value > 16) return; g.match_players = value; break;
+    case VS_PLAYERS: if (value < 2 || value > g.arena_max) return; g.match_players = value; break;
     case VS_NETMODE: g.netmode = "arena"; (void)value; break;   /* pinned to Arena in 1.0 (see the snapshot) */
     default: return;
     }
