@@ -738,6 +738,15 @@ extern "C" int lobby_page_env_poll(void)
         snprintf(P.env_what, sizeof P.env_what, "%.*s", at ? (int)(at - e) : (int)strlen(e), e);
     }
     if (++P.env_frames < P.env_at) return 0;
+    if (!strcmp(P.env_what, "realjoin:FILE")) {
+        /* joint rows: the code the host's page wrote (SM64DS_LOBBY_CODEFILE on the host) is read from SM64DS_LOBBY_JOINFILE; wait for it */
+        const char *jf = getenv("SM64DS_LOBBY_JOINFILE");
+        char code[16] = { 0 };
+        FILE *f = jf ? fopen(jf, "rb") : 0;
+        if (f) { const size_t n = fread(code, 1, 6, f); code[n] = 0; fclose(f); }
+        if (strlen(code) != 6) return 0;
+        snprintf(P.env_what, sizeof P.env_what, "realjoin:%s", code);
+    }
     P.env_done = 1;
     char b[96];
     snprintf(b, sizeof b, "SM64DS_LOBBY_SHOW %s at frame %d", P.env_what, P.env_frames);
@@ -845,6 +854,11 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
             static int room_frames;
             room_frames = in_room(s) ? room_frames + 1 : 0;
             if (room_frames == 60 && getenv("SM64DS_LOBBY_REACH")) reach_report(s);
+            static int code_written;
+            const char *cf = getenv("SM64DS_LOBBY_CODEFILE");      /* joint rows: the host's page hands its code to the joiner's */
+            if (cf && *cf && !code_written && in_room(s) && s->am_host && strlen(s->code) == 6) {
+                if (FILE *f = fopen(cf, "wb")) { fwrite(s->code, 1, 6, f); fclose(f); code_written = 1; log_line("room code written for the joint row"); }
+            }
         }
 #endif
         if (P.seat_menu >= seat_count(s)) P.seat_menu = -1;
