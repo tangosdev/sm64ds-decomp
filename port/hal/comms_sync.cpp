@@ -983,6 +983,7 @@ int      g_gw_frozen = 0;          // frames the local body has not moved at all
 int      g_gw_fz[6];               // x y z yaw anim cursor, last frame
 int      g_gw_still = 0;           // PAUSEMARK2: frames the body kept its place and facing
 int      g_gw_sp[4];               // x y z yaw, last frame
+bool     g_gw_hid = false;         // PAUSEMARK2: hidden state on the last tick the body moved
 bool     g_gw_prev_have = false;
 int      g_gw_prev[3];
 int      g_gw_prev_level = -1;
@@ -2390,7 +2391,16 @@ void gw_send(unsigned now) {
            vy is a velocity the follower never reads */
         f.area = (unsigned char)((dkind << ghostdoor::kDoorShift) |
                                  ghostdoor::pack_area(data_02092120));
-        if (ghostdoor::sender_hidden(a)) f.flags |= ghostdoor::kFlagHidden;
+        /* PAUSEMARK2: the pause menu takes the body off the screen (its
+           opacity reads 0, measured: P0 logged "hidden by his own state" for
+           the whole of P1's pause), so while the body stands frozen, the game
+           does not tick or the player is away, the frame keeps the hidden
+           state of the last tick his body moved on */
+        {
+            const bool hid = ghostdoor::sender_hidden(a);
+            if (!(no_tick || g_gw_frozen > 0 || paused)) g_gw_hid = hid;
+            if (g_gw_hid) f.flags |= ghostdoor::kFlagHidden;
+        }
 
         f.vy = dkind ? (short)ghostdoor::sender_frame(a) : (short)0;
         {
@@ -5077,6 +5087,7 @@ static void sync_globals_reset() {
     leave_zero(g_gw_fz);
     g_gw_still = 0;
     leave_zero(g_gw_sp);
+    g_gw_hid = false;
     g_gw_prev_have = false;
     leave_zero(g_gw_prev);
     g_gw_prev_level = -1;
