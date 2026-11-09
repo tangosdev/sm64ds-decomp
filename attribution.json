@@ -4230,7 +4230,7 @@
     "src/game/actors/d_a_krb.cpp#func_ov084_0212a580": "lunavyqo",
     "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_0212a580Ev": "lunavyqo",
     "src/game/actors/d_a_krb.cpp#func_ov084_0212aab0": "tangosdev",
-    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_0212aab0Ev": "tangosdev",
+    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c7ActJumpEv": "tangosdev",
     "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c16OnAimedAtWithEggEv": "andrewboudreau",
     "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c13OnTurnIntoEggER6Player": "lunavyqo",
     "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c16CleanupResourcesEv": "lunavyqo",
@@ -9592,14 +9592,14 @@
     "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_02129864Ev": "tangosdev",
     "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_021298d0Ev": "tangosdev",
     "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_02129a00Ev": "tangosdev",
-    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_02129c9cEv": "tangosdev",
+    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c9BeginJumpEv": "tangosdev",
     "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_02129cf4Ei": "andrewboudreau",
     "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_02129ed4Ev": "andrewboudreau",
-    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_0212a6f8Ev": "tangosdev",
-    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_0212a774Ev": "lunavyqo",
-    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_0212ab48Ev": "tangosdev",
+    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c8ActPauseEv": "tangosdev",
+    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c9ActTumbleEv": "lunavyqo",
+    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c16ActAttackedMarioEv": "tangosdev",
     "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_0212abd4Ev": "lunavyqo",
     "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_0212af74Ev": "lunavyqo",
-    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c19func_ov084_0212b2dcEv": "tangosdev"
+    "src/game/actors/d_a_krb.cpp#_ZN7daKrb_c7ActWalkEv": "tangosdev"
   }
 }
