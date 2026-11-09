@@ -155,6 +155,9 @@ int port_player_render_hidden(const void *player);   /* POSE9: the ROM Render ga
 // Stage::Behavior's own call counter (hal/stage_frame.cpp): it does not move on
 // a frame the game did not tick, which is what "paused" means here.
 unsigned port_stage_behavior_calls(void);
+// PAUSEMARK2: 1 while this window is the foreground (hal/sub_screen.cpp, the
+// focus gate every key and the pad read through).
+int hal_window_focused(void);
 // The save's star total, the number the HUD prints outside VS
 // (src/_ZN3HUD15RenderStarCountEv.cpp:69).
 unsigned char NumStars(void);
@@ -978,6 +981,8 @@ unsigned g_gw_beh_last = 0;
 bool     g_gw_beh_seeded = false;
 int      g_gw_frozen = 0;          // frames the local body has not moved at all
 int      g_gw_fz[6];               // x y z yaw anim cursor, last frame
+int      g_gw_still = 0;           // PAUSEMARK2: frames the body kept its place and facing
+int      g_gw_sp[4];               // x y z yaw, last frame
 bool     g_gw_prev_have = false;
 int      g_gw_prev[3];
 int      g_gw_prev_level = -1;
@@ -2185,6 +2190,22 @@ void gw_ident_tick(unsigned now) {
     }
 }
 
+// PAUSEMARK2: the away rule is on for a player. A test console asks for a
+// window that never takes the foreground (SM64DS_NO_FOCUS), so it is never
+// focused and every one of its players would read as away; the rule is off
+// there unless the row asks for it (SM64DS_AWAY_TEST=1), and then it reads
+// the same hal_window_focused() answer a real tab-out gives.
+enum { kGwAwayFrames = 30 };
+bool gw_away_rule() {
+    static int v = -1;
+    if (v < 0) {
+        const char *nf = std::getenv("SM64DS_NO_FOCUS");
+        const char *t = std::getenv("SM64DS_AWAY_TEST");
+        v = (nf && std::atoi(nf) != 0) ? ((t && std::atoi(t) != 0) ? 1 : 0) : 1;
+    }
+    return v != 0;
+}
+
 // THE SEND SIDE: my own body only, once per 15 Hz wall tick.
 void gw_send(unsigned now) {
     if (comms_hub_state() != kHubLive) return;
@@ -2221,7 +2242,22 @@ void gw_send(unsigned now) {
         g_gw_frozen = 0;
         std::memcpy(g_gw_fz, fz, sizeof fz);
     }
-    const bool paused = no_tick || g_gw_frozen >= 8;
+    /* PAUSEMARK2: AWAY. A player who tabbed out (the window is not the
+       foreground, so the focus gate reads every key and the pad as neutral)
+       and whose body has kept its place and facing for a second is away: his
+       frames say paused like the pause menu's, so the others see him stay
+       where he stopped with the pause mark, and the first tick he moves (he
+       came back) is an ordinary frame again. The idle animation keeps turning
+       over, which is why this cannot wait for g_gw_frozen. */
+    const int sp[4] = {cx, cy, cz, (int)*player::facing(a)};
+    if (std::memcmp(sp, g_gw_sp, sizeof sp) == 0) {
+        if (g_gw_still < 1000) ++g_gw_still;
+    } else {
+        g_gw_still = 0;
+        std::memcpy(g_gw_sp, sp, sizeof sp);
+    }
+    const bool away = g_gw_still >= kGwAwayFrames && gw_away_rule() && !hal_window_focused();
+    const bool paused = no_tick || g_gw_frozen >= 8 || away;
     const int level = (int)data_0209f2f8;
     if (!paused) {
         if (g_gw_prev_have && level == g_gw_prev_level) {
@@ -5027,6 +5063,8 @@ static void sync_globals_reset() {
     g_gw_beh_seeded = false;
     g_gw_frozen = 0;
     leave_zero(g_gw_fz);
+    g_gw_still = 0;
+    leave_zero(g_gw_sp);
     g_gw_prev_have = false;
     leave_zero(g_gw_prev);
     g_gw_prev_level = -1;
