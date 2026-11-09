@@ -159,7 +159,12 @@ void fk_tick(void)
             const LobbyKind k = F.s.kind;
             memset(&F.s, 0, sizeof F.s);
             F.s.phase = LOBBY_FAILED; F.s.kind = k;
+#if defined(PORT_ROM_CLEAN) && !LP_CLIENT_REAL
+            /* a shipped build without the lobby client never shows the stand-in's rooms */
+            snprintf(F.s.error, sizeof F.s.error, "Online rooms are not in this build.");
+#else
             snprintf(F.s.error, sizeof F.s.error, "No room has that code. Check the code and try again.");
+#endif
         } else {
             const char code[8] = { F.s.code[0], F.s.code[1], F.s.code[2], F.s.code[3], F.s.code[4], F.s.code[5], 0, 0 };
             const int host = F.s.am_host;
@@ -174,7 +179,13 @@ void fk_tick(void)
     }
     if (F.s.phase == LOBBY_STARTING && F.start_left > 0 && F.start_left < (1 << 30) && --F.start_left == 0) F.s.phase = LOBBY_NONE;
 }
-void fk_create(LobbyKind k) { memset(&F, 0, sizeof F); F.s.phase = LOBBY_BUSY; F.s.kind = k; F.s.am_host = 1; F.busy_left = 40; }
+void fk_create(LobbyKind k)
+{
+    memset(&F, 0, sizeof F); F.s.phase = LOBBY_BUSY; F.s.kind = k; F.s.am_host = 1; F.busy_left = 40;
+#if defined(PORT_ROM_CLEAN) && !LP_CLIENT_REAL
+    F.fail_join = 1;
+#endif
+}
 int code_char_ok(char c);
 void fk_join(const char *code)
 {
@@ -184,6 +195,9 @@ void fk_join(const char *code)
     int ok = strlen(code) == 6;
     for (int i = 0; code[i]; ++i) ok = ok && code_char_ok(code[i]);
     F.fail_join = !ok || (getenv("SM64DS_LOBBY_FAKE_JOINFAIL") != 0);
+#if defined(PORT_ROM_CLEAN) && !LP_CLIENT_REAL
+    F.fail_join = 1;
+#endif
 }
 void fk_leave(void) { memset(&F, 0, sizeof F); }
 void fk_set_ready(int r) { for (int i = 0; i < F.s.n_seats; ++i) if (F.s.seats[i].is_me) F.s.seats[i].ready = r; }
