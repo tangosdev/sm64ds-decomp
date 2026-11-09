@@ -24531,279 +24531,279 @@
     },
     "ov006:0x020fa7b8": {
       "author": "tangosdev",
-      "name": "PachinkoDeco_DrawAll"
+      "name": "_ZN15dScMgPachinko_c12Deco_DrawAllEv"
     },
     "ov006:0x020fa844": {
       "author": "ruspecial",
-      "name": "PachinkoDeco_UpdateAll"
+      "name": "_ZN15dScMgPachinko_c14Deco_UpdateAllEv"
     },
     "ov006:0x020fa924": {
       "author": "andrewboudreau",
-      "name": "PachinkoDeco_ShowAll"
+      "name": "_ZN15dScMgPachinko_c12Deco_ShowAllEv"
     },
     "ov006:0x020fa9a0": {
       "author": "tangosdev",
-      "name": "PachinkoDeco_HideAll"
+      "name": "_ZN15dScMgPachinko_c12Deco_HideAllEv"
     },
     "ov006:0x020fa9c8": {
       "author": "tangosdev",
-      "name": "PachinkoBg_StateSinkOut"
+      "name": "_ZN15dScMgPachinko_c15Bg_StateSinkOutEi"
     },
     "ov006:0x020faac8": {
       "author": "tangosdev",
-      "name": "PachinkoBg_StateScroll"
+      "name": "_ZN15dScMgPachinko_c14Bg_StateScrollEi"
     },
     "ov006:0x020fab70": {
       "author": "ruspecial",
-      "name": "PachinkoBg_StateRiseIn"
+      "name": "_ZN15dScMgPachinko_c14Bg_StateRiseInEi"
     },
     "ov006:0x020fac48": {
       "author": "lunavyqo",
-      "name": "PachinkoBg_StateWaiting"
+      "name": "_ZN15dScMgPachinko_c15Bg_StateWaitingEi"
     },
     "ov006:0x020fad34": {
       "author": "tangosdev",
-      "name": "PachinkoBg_Update"
+      "name": "_ZN15dScMgPachinko_c9Bg_UpdateEv"
     },
     "ov006:0x020fad90": {
       "author": "tangosdev",
-      "name": "PachinkoBg_Start"
+      "name": "_ZN15dScMgPachinko_c8Bg_StartEv"
     },
     "ov006:0x020fadfc": {
       "author": "tangosdev",
-      "name": "PachinkoBg_Stop"
+      "name": "_ZN15dScMgPachinko_c7Bg_StopEv"
     },
     "ov006:0x020fae20": {
       "author": "tangosdev",
-      "name": "PachinkoTarget_DrawAll"
+      "name": "_ZN15dScMgPachinko_c14Target_DrawAllEv"
     },
     "ov006:0x020fae90": {
       "author": "tangosdev",
-      "name": "PachinkoTarget_ShowAll"
+      "name": "_ZN15dScMgPachinko_c14Target_ShowAllEv"
     },
     "ov006:0x020faeec": {
       "author": "tangosdev",
-      "name": "PachinkoTarget_HideAll"
+      "name": "_ZN15dScMgPachinko_c14Target_HideAllEv"
     },
     "ov006:0x020faf14": {
       "author": "tangosdev",
-      "name": "PachinkoFlyer_Draw"
+      "name": "_ZN15dScMgPachinko_c10Flyer_DrawEv"
     },
     "ov006:0x020faf6c": {
       "author": "andrewboudreau",
-      "name": "PachinkoFlyer_CheckHits"
+      "name": "_ZN15dScMgPachinko_c15Flyer_CheckHitsEi"
     },
     "ov006:0x020fb0fc": {
       "author": "tangosdev",
-      "name": "PachinkoFlyer_StateLeave"
+      "name": "_ZN15dScMgPachinko_c16Flyer_StateLeaveEi"
     },
     "ov006:0x020fb1c4": {
       "author": "tangosdev",
-      "name": "PachinkoFlyer_StatePause"
+      "name": "_ZN15dScMgPachinko_c16Flyer_StatePauseEi"
     },
     "ov006:0x020fb230": {
       "author": "lunavyqo",
-      "name": "PachinkoFlyer_StateCross"
+      "name": "_ZN15dScMgPachinko_c16Flyer_StateCrossEi"
     },
     "ov006:0x020fb45c": {
       "author": "ruspecial",
-      "name": "PachinkoFlyer_StateDescend"
+      "name": "_ZN15dScMgPachinko_c18Flyer_StateDescendEi"
     },
     "ov006:0x020fb4e0": {
       "author": "andrewboudreau",
-      "name": "PachinkoFlyer_StateWaiting"
+      "name": "_ZN15dScMgPachinko_c18Flyer_StateWaitingEi"
     },
     "ov006:0x020fb60c": {
       "author": "tangosdev",
-      "name": "PachinkoFlyer_Update"
+      "name": "_ZN15dScMgPachinko_c12Flyer_UpdateEv"
     },
     "ov006:0x020fb670": {
       "author": "tangosdev",
-      "name": "PachinkoTarget_Choose"
+      "name": "_ZN15dScMgPachinko_c13Target_ChooseEv"
     },
     "ov006:0x020fb74c": {
       "author": "andrewboudreau",
-      "name": "PachinkoFx_DrawAll"
+      "name": "_ZN15dScMgPachinko_c10Fx_DrawAllEv"
     },
     "ov006:0x020fb7e0": {
       "author": "lunavyqo",
-      "name": "PachinkoFx_UpdateAll"
+      "name": "_ZN15dScMgPachinko_c12Fx_UpdateAllEv"
     },
     "ov006:0x020fb8fc": {
       "author": "tangosdev",
-      "name": "PachinkoFx_Spawn"
+      "name": "_ZN15dScMgPachinko_c8Fx_SpawnEiiiii"
     },
     "ov006:0x020fb97c": {
       "author": "tangosdev",
-      "name": "Pachinko_CheckTargetsLeft"
+      "name": "_ZN15dScMgPachinko_c16CheckTargetsLeftEv"
     },
     "ov006:0x020fba28": {
       "author": "tangosdev",
-      "name": "Pachinko_DrawScore"
+      "name": "_ZN15dScMgPachinko_c9DrawScoreEv"
     },
     "ov006:0x020fba48": {
       "author": "tangosdev",
-      "name": "Pachinko_DrawTopRecord"
+      "name": "_ZN15dScMgPachinko_c13DrawTopRecordEv"
     },
     "ov006:0x020fba64": {
       "author": "tangosdev",
-      "name": "PachinkoPopup_DrawAll"
+      "name": "_ZN15dScMgPachinko_c13Popup_DrawAllEv"
     },
     "ov006:0x020fbad4": {
       "author": "tangosdev",
-      "name": "PachinkoPopup_UpdateAll"
+      "name": "_ZN15dScMgPachinko_c15Popup_UpdateAllEv"
     },
     "ov006:0x020fbb2c": {
       "author": "tangosdev",
-      "name": "PachinkoPopup_SpawnScore"
+      "name": "_ZN15dScMgPachinko_c16Popup_SpawnScoreEit"
     },
     "ov006:0x020fbbe8": {
       "author": "ruspecial",
-      "name": "Pachinko_ClearAimLine"
+      "name": "_ZN15dScMgPachinko_c12ClearAimLineEv"
     },
     "ov006:0x020fbcb8": {
       "author": "andrewboudreau",
-      "name": "Pachinko_PlotSubBg2Pixels"
+      "name": "_ZN15dScMgPachinko_c16PlotSubBg2PixelsEiii"
     },
     "ov006:0x020fbd38": {
       "author": "andrewboudreau",
-      "name": "Pachinko_DrawAimLine"
+      "name": "_ZN15dScMgPachinko_c11DrawAimLineEv"
     },
     "ov006:0x020fc144": {
       "author": "tangosdev",
-      "name": "PachinkoPipe_DrawAll"
+      "name": "_ZN15dScMgPachinko_c12Pipe_DrawAllEv"
     },
     "ov006:0x020fc1b4": {
       "author": "tangosdev",
-      "name": "PachinkoPipe_SetAll"
+      "name": "_ZN15dScMgPachinko_c11Pipe_SetAllEi"
     },
     "ov006:0x020fc1f8": {
       "author": "tangosdev",
-      "name": "PachinkoPipe_StateIdle"
+      "name": "_ZN15dScMgPachinko_c14Pipe_StateIdleEi"
     },
     "ov006:0x020fc2ec": {
       "author": "tangosdev",
-      "name": "PachinkoPipe_StateSink"
+      "name": "_ZN15dScMgPachinko_c14Pipe_StateSinkEi"
     },
     "ov006:0x020fc500": {
       "author": "tangosdev",
-      "name": "PachinkoPipe_StateRise"
+      "name": "_ZN15dScMgPachinko_c14Pipe_StateRiseEi"
     },
     "ov006:0x020fc718": {
       "author": "github-actions[bot]",
-      "name": "PachinkoPipe_StatePick"
+      "name": "_ZN15dScMgPachinko_c14Pipe_StatePickEi"
     },
     "ov006:0x020fc7d0": {
       "author": "tangosdev",
-      "name": "PachinkoPipe_UpdateAll"
+      "name": "_ZN15dScMgPachinko_c14Pipe_UpdateAllEv"
     },
     "ov006:0x020fc844": {
       "author": "tangosdev",
-      "name": "PachinkoPipe_ResetAll"
+      "name": "_ZN15dScMgPachinko_c13Pipe_ResetAllEv"
     },
     "ov006:0x020fc8c0": {
       "author": "andrewboudreau",
-      "name": "PachinkoBall_DrawAll"
+      "name": "_ZN15dScMgPachinko_c12Ball_DrawAllEv"
     },
     "ov006:0x020fc9b0": {
       "author": "ruspecial",
-      "name": "PachinkoBall_CountNearby"
+      "name": "_ZN15dScMgPachinko_c16Ball_CountNearbyEi"
     },
     "ov006:0x020fca1c": {
       "author": "tangosdev",
-      "name": "PachinkoBall_CheckPipes"
+      "name": "_ZN15dScMgPachinko_c15Ball_CheckPipesEi"
     },
     "ov006:0x020fcb4c": {
       "author": "tangosdev",
-      "name": "PachinkoBall_AimAtTarget"
+      "name": "_ZN15dScMgPachinko_c16Ball_AimAtTargetEi"
     },
     "ov006:0x020fcd8c": {
       "author": "tangosdev",
-      "name": "PachinkoBall_CheckFall"
+      "name": "_ZN15dScMgPachinko_c14Ball_CheckFallEi"
     },
     "ov006:0x020fce04": {
       "author": "tangosdev",
-      "name": "PachinkoBall_StatePop"
+      "name": "_ZN15dScMgPachinko_c13Ball_StatePopEi"
     },
     "ov006:0x020fcec4": {
       "author": "andrewboudreau",
-      "name": "PachinkoBall_StateSpinAway"
+      "name": "_ZN15dScMgPachinko_c18Ball_StateSpinAwayEi"
     },
     "ov006:0x020fd088": {
       "author": "tangosdev",
-      "name": "PachinkoBall_StateGlide"
+      "name": "_ZN15dScMgPachinko_c15Ball_StateGlideEi"
     },
     "ov006:0x020fd17c": {
       "author": "andrewboudreau",
-      "name": "PachinkoBall_StateDive"
+      "name": "_ZN15dScMgPachinko_c14Ball_StateDiveEi"
     },
     "ov006:0x020fd2d8": {
       "author": "lunavyqo",
-      "name": "PachinkoBall_StateDrift"
+      "name": "_ZN15dScMgPachinko_c15Ball_StateDriftEi"
     },
     "ov006:0x020fd894": {
       "author": "tangosdev",
-      "name": "PachinkoBall_StateFall"
+      "name": "_ZN15dScMgPachinko_c14Ball_StateFallEi"
     },
     "ov006:0x020fd9cc": {
       "author": "tangosdev",
-      "name": "PachinkoBall_StateWaiting"
+      "name": "_ZN15dScMgPachinko_c17Ball_StateWaitingEi"
     },
     "ov006:0x020fda7c": {
       "author": "tangosdev",
-      "name": "PachinkoBall_UpdateAll"
+      "name": "_ZN15dScMgPachinko_c14Ball_UpdateAllEv"
     },
     "ov006:0x020fdaf0": {
       "author": "andrewboudreau",
-      "name": "PachinkoBall_CheckHitByBobOmb"
+      "name": "_ZN15dScMgPachinko_c21Ball_CheckHitByBobOmbEi"
     },
     "ov006:0x020fdd40": {
       "author": "tangosdev",
-      "name": "Pachinko_SpawnWave"
+      "name": "_ZN15dScMgPachinko_c9SpawnWaveEv"
     },
     "ov006:0x020fe1a8": {
       "author": "tangosdev",
-      "name": "PachinkoBobOmb_ClearAll"
+      "name": "_ZN15dScMgPachinko_c15BobOmb_ClearAllEv"
     },
     "ov006:0x020fe1d0": {
       "author": "tangosdev",
-      "name": "PachinkoBobOmb_DrawAll"
+      "name": "_ZN15dScMgPachinko_c14BobOmb_DrawAllEv"
     },
     "ov006:0x020fe248": {
       "author": "tangosdev",
-      "name": "PachinkoBobOmb_UpdateAll"
+      "name": "_ZN15dScMgPachinko_c16BobOmb_UpdateAllEv"
     },
     "ov006:0x020fe2bc": {
       "author": "ruspecial",
-      "name": "Pachinko_CountLaunch"
+      "name": "_ZN15dScMgPachinko_c11CountLaunchEv"
     },
     "ov006:0x020fe2e4": {
       "author": "tangosdev",
-      "name": "PachinkoBobOmb_StateWaitGrab"
+      "name": "_ZN15dScMgPachinko_c20BobOmb_StateWaitGrabEi"
     },
     "ov006:0x020fe394": {
       "author": "tangosdev",
-      "name": "PachinkoBobOmb_StateAim"
+      "name": "_ZN15dScMgPachinko_c15BobOmb_StateAimEi"
     },
     "ov006:0x020fe750": {
       "author": "andrewboudreau",
-      "name": "PachinkoBobOmb_StateFlying"
+      "name": "_ZN15dScMgPachinko_c18BobOmb_StateFlyingEi"
     },
     "ov006:0x020fe90c": {
       "author": "tangosdev",
-      "name": "PachinkoBobOmb_StateFallAway"
+      "name": "_ZN15dScMgPachinko_c20BobOmb_StateFallAwayEi"
     },
     "ov006:0x020fea54": {
       "author": "tangosdev",
-      "name": "PachinkoBobOmb_StateRemove"
+      "name": "_ZN15dScMgPachinko_c18BobOmb_StateRemoveEi"
     },
     "ov006:0x020fea70": {
       "author": "lunavyqo",
-      "name": "Pachinko_UpdateNextBall"
+      "name": "_ZN15dScMgPachinko_c14UpdateNextBallEv"
     },
     "ov006:0x020feba8": {
       "author": "andrewboudreau",
-      "name": "Pachinko_ResetRound"
+      "name": "_ZN15dScMgPachinko_c10ResetRoundEv"
     },
     "ov006:0x020fed58": {
       "author": "tangosdev",
