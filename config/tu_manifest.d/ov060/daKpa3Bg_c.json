@@ -528,7 +528,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -586,19 +586,19 @@
           {
             "section": ".init",
             "original": [
-              97
+              98
             ],
             "desired": [
-              97
+              98
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              95
+              96
             ],
             "desired": [
-              95
+              96
             ]
           },
           {
