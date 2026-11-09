@@ -26054,3 +26054,10 @@ endif()
 if(PORT_ROM_CLEAN)
     set_property(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/hal/lobby_page.cpp" APPEND PROPERTY COMPILE_DEFINITIONS PORT_ROM_CLEAN)
 endif()
+# run after093, lane HDSELICON1: the star select's icons (the star total's star, the coin record's coin, the course medal) as a mod's art
+# (hal/hd_selicon.h). The compositor reaches it through a hook, so the smoke targets (which do not link hal/mods.cpp) draw the DS icons. Own block.
+foreach(_thdselicon1 walk_window walk_window_hires)
+    if(TARGET ${_thdselicon1})
+        target_sources(${_thdselicon1} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/hd_selicon.cpp")
+    endif()
+endforeach()

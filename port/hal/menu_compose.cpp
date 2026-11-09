@@ -14,6 +14,7 @@
  */
 #include "menu_compose.h"
 #include "menu_hostimg.h"
+#include "hd_selicon.h"   /* HDSELICON1: the star select's lifted icons (hal/message_compositor.cpp finds them) */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1880,10 +1881,60 @@ static void piece_draw_pic(const MenuLayout *L, int i, const MenuSources *S, uin
     ntr::gx_parallel_rows(dh, 192, pic_rows_tramp<decltype(rows_job)>, &rows_job, pknob);
 }
 
+/* HDSELICON1 (run after093): A LIFTED STAR SELECT ICON'S HD ART. hal/message_compositor.cpp found the icon this frame and left its DS cells
+   out of the lifted plane (hal/hd_selicon.h); here the piece that carries that layer paints the art over the icon's DS rectangle, mapped the
+   way the piece maps its source (the same column / row pick), on the dest pixels whose source cell is empty (a cell still there is a
+   layer on top, the medal's number), through the engine-A brightness like the cells. Nothing is drawn with no lifted icon this frame. */
+static void top2d_hd_icons(const MenuLayout *L, int i, const MenuSources *S, uint32_t *dst, int w, int h)
+{
+    const HdSelJob *J = 0;
+    const int n = hd_selicon_lifted_jobs(&J);
+    if (!n || !S || !S->top2d || !dst || i < 0 || i >= L->np) return;
+    const MenuPiece &P = L->p[i];
+    if (P.src != SRC_TOP_2D || P.nodraw || P.xfill || P.s.w <= 0 || P.s.h <= 0) return;
+    const int *d = L->dest[i];
+    const int x0 = d[0], y0 = d[1], dw = d[2], dh = d[3];
+    if (dw <= 0 || dh <= 0) return;
+    const size_t stride = (size_t)stride_of(w);
+    for (int k = 0; k < n; ++k) {
+        const HdSelJob &j = J[k];
+        if (!((P.layers >> j.owner) & 1)) continue;
+        if (j.x + j.w <= P.s.x || j.x >= P.s.x + P.s.w || j.y + j.h <= P.s.y || j.y >= P.s.y + P.s.h) continue;
+        /* the icon's dest box: its DS edges through the piece's scale (dest pixels per DS pixel) */
+        const double kx = P.lden > 0 ? (double)(P.lnum > 0 ? P.lnum : 1) / P.lden : (double)dw / P.s.w;
+        const double ky = P.lden > 0 ? (double)(P.lnum > 0 ? P.lnum : 1) / P.lden : (double)dh / P.s.h;
+        const int IX0 = (int)floor((j.x - P.s.x) * kx + 0.5), IY0 = (int)floor((j.y - P.s.y) * ky + 0.5);
+        const int IW = (int)floor(j.w * kx + 0.5), IH = (int)floor(j.h * ky + 0.5);
+        const unsigned *art = hd_selicon_scaled(j.art, IW, IH);
+        if (!art) continue;
+        for (int yy = IY0 < 0 ? 0 : IY0; yy < IY0 + IH && yy < dh; ++yy) {
+            const int py = y0 + yy;
+            if (py < 0 || py >= h) continue;
+            int sy = P.lden > 0 ? P.s.y + (int)fdiv((long long)yy * P.lden, P.lnum > 0 ? P.lnum : 1) : P.s.y + (int)fdiv((long long)yy * P.s.h, dh);
+            if (P.lden > 0 && sy > P.s.y + P.s.h - 1) sy = P.s.y + P.s.h - 1;
+            if (sy < j.y || sy >= j.y + j.h || sy < 0 || sy >= 192) continue;
+            if (P.row_ok && !P.row_ok(sy)) continue;
+            uint32_t *row = dst + (size_t)py * stride + x0;
+            const unsigned *arow = art + (size_t)(yy - IY0) * IW;
+            for (int xx = IX0 < 0 ? 0 : IX0; xx < IX0 + IW && xx < dw; ++xx) {
+                if (x0 + xx < 0 || x0 + xx >= w) continue;
+                int sx = P.lden > 0 ? P.s.x + (int)fdiv((long long)xx * P.lden, P.lnum > 0 ? P.lnum : 1) : P.s.x + (int)fdiv((long long)xx * P.s.w, dw);
+                if (P.lden > 0 && sx > P.s.x + P.s.w - 1) sx = P.s.x + P.s.w - 1;
+                if (sx < j.x || sx >= j.x + j.w || sx < 0 || sx >= 256) continue;
+                if (S->top2d[sy * 256 + sx].argb >> 24) continue;
+                uint32_t c = arow[xx - IX0];
+                if (!(c >> 24)) continue;
+                if (S->bm_apply) c = S->bm_apply(c, 1);
+                row[xx] = c | 0xff000000u;
+            }
+        }
+    }
+}
+
 void menu_piece_draw(const MenuLayout *L, int i, const MenuSources *S, uint32_t *dst, int w, int h)
 {
     if (dst && i >= 0 && i < L->np && L->p[i].custom) { L->p[i].custom(L, i, dst, w, h, stride_of(w)); return; }   /* PAUSE3 */
-    if (!cost_fast()) { piece_draw_ref(L, i, S, dst, w, h); return; }
+    if (!cost_fast()) { piece_draw_ref(L, i, S, dst, w, h); top2d_hd_icons(L, i, S, dst, w, h); return; }
     if (!S || !dst || i < 0 || i >= L->np) return;
     const MenuPiece &P = L->p[i];
     if (P.nodraw) return;
@@ -1924,7 +1975,10 @@ void menu_piece_draw(const MenuLayout *L, int i, const MenuSources *S, uint32_t 
         }
         piece_draw_pic(L, i, S, dst, w, h);
     }
-    else piece_draw_2d(L, i, S, dst, w, h);
+    else {
+        piece_draw_2d(L, i, S, dst, w, h);
+        top2d_hd_icons(L, i, S, dst, w, h);   /* HDSELICON1 */
+    }
 }
 
 void menu_dim(uint32_t *dst, int w, int h, int evy)

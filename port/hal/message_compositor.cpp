@@ -119,6 +119,7 @@
 #include "hal/gpu_raster.h"
 #include "menu_compose.h"   /* run menu1 lane HOOK1: the lift plan (H1) */
 #include "hd_meter.h"       /* run hunt8 lane HDMETER1: the HD power meter art out of the enabled mods */
+#include "hd_selicon.h"     /* run after093 lane HDSELICON1: the star select's icons out of the enabled mods */
 #include <chrono>
 #include <vector>
 #include "hal/hitch_probe.h"   /* HITCH9C */
@@ -1348,6 +1349,49 @@ extern "C" const HdMeterArt *(*port_hd_meter_art_hook)(int health, int k) = null
 static int kHdMeterX0 = 108, kHdMeterDy = -24;   /* the DS sprite's top left (its 40 x 40 cells) against (0x80 - 20, mHealthMeterY): measured: cells x 108..147, rows y0 .. y0 + 39 with y0 = mHealthMeterY - 24 */
 struct HdMeterJob { bool on; int x0, y0, off, k; const HdMeterArt *art; };
 static HdMeterJob g_hdm;
+/* THE STAR SELECT'S ICONS (run after093, lane HDSELICON1; hal/hd_selicon.h). The same two steps as the meter: step 1 finds the star total's
+   star and the coin record's coin in engine A's OAM (their cmn_icon tiles) and the course medal as BG2's cells, and erases those DS cells
+   when a mod has the art; step 2 paints the art over the icon's own DS rectangle at host resolution when the layer goes to the picture.
+   When the one-screen recipe lifts the layer (lc_overlay_verdict 3) the erased cells are simply not lifted and hal/menu_compose.cpp paints
+   the art into the piece (hd_selicon_lifted_jobs). No hook (smoke targets), no mod, or any other scene: nothing here runs. */
+extern "C" const HdSelArt *(*port_hd_selicon_hook)(int id) = nullptr;   /* set by hal/hd_selicon.cpp */
+static HdSelJob g_hsj[HDSEL_N], g_hsj_lifted[HDSEL_N];
+static int g_hsj_n, g_hsj_lifted_n, g_hsj_off;
+int hd_selicon_lifted_jobs(const HdSelJob **out) { *out = g_hsj_lifted; return g_hsj_lifted_n; }
+const unsigned *hd_selicon_scaled(const HdSelArt *a, int W, int H)
+{
+    /* each output pixel averages the art pixels it covers (alpha weighted) and is drawn when at least half of them are opaque: the
+       meter's rule, so a hard edge stays a hard edge at every size. A few sizes are kept (a frame asks for the same ones every time). */
+    struct Ent { int gen, W, H; std::vector<unsigned> px; };
+    static Ent cache[8];
+    static int next;
+    if (!a || !a->rgba || W <= 0 || H <= 0 || W > 4096 || H > 4096) return nullptr;
+    for (Ent &e : cache)
+        if (e.gen == a->gen && e.W == W && e.H == H) return e.px.data();
+    Ent &e = cache[next];
+    next = (next + 1) % 8;
+    e.gen = a->gen; e.W = W; e.H = H;
+    e.px.assign((size_t)W * H, 0u);
+    for (int j = 0; j < H; ++j) {
+        const int ay0 = (int)((long long)j * a->h / H);
+        int ay1 = (int)(((long long)(j + 1) * a->h + H - 1) / H);
+        if (ay1 <= ay0) ay1 = ay0 + 1;
+        for (int i = 0; i < W; ++i) {
+            const int ax0 = (int)((long long)i * a->w / W);
+            int ax1 = (int)(((long long)(i + 1) * a->w + W - 1) / W);
+            if (ax1 <= ax0) ax1 = ax0 + 1;
+            unsigned sa = 0, sr = 0, sg = 0, sb = 0, cnt = 0;
+            for (int ay = ay0; ay < ay1 && ay < a->h; ++ay)
+                for (int ax = ax0; ax < ax1 && ax < a->w; ++ax) {
+                    const unsigned char *q = a->rgba + ((size_t)ay * a->w + ax) * 4;
+                    sa += q[3]; sr += q[0] * q[3]; sg += q[1] * q[3]; sb += q[2] * q[3]; ++cnt;
+                }
+            if (!cnt || !sa || sa * 2 < cnt * 255u) continue;
+            e.px[(size_t)j * W + i] = 0xFF000000u | ((sr / sa) << 16) | ((sg / sa) << 8) | (sb / sa);
+        }
+    }
+    return e.px.data();
+}
 static uint8_t g_hud_row[192][256];   /* 1 = a moved coin counter pixel (read only while g_hud_row_live) */
 static Cell g_hud_cells[192][256];    /* the moved coin counter's cells, a plane of their own so they never replace a cell of g_a (the POWER label) */
 static bool g_hud_row_live;
@@ -5034,6 +5078,82 @@ extern "C" void port_message_composite_engine_a(void *fbp)
             }
         }
     }
+    /* HDSELICON1, step 1: the star select's icons. Found every frame (a replay too, so it erases what the tick erased), only while the
+       star select is the live scene and a mod has the art. */
+    g_hsj_n = 0;
+    g_hsj_lifted_n = 0;
+    if (port_hd_selicon_hook && port_hd_selicon_hook(-1)) {
+#ifndef PORT_ROM_CLEAN
+        static const bool dbg = std::getenv("SM64DS_HD_SELICON_DBG") != nullptr;
+#else
+        static const bool dbg = false;
+#endif
+        int cand[HDSEL_N][4];
+        bool have[HDSEL_N] = { false, false, false };
+        /* the two sprites: 16 x 16 (shape 0 size 1), not affine, shown, by their cmn_icon tile and palette (d_s_star_sel_methods.cpp
+           draws the counters with OAM::Render from cmn_icon_<lang>.ncg; measured on the English, French and German files) */
+        for (int i = 0; i < 128; ++i) {
+            const uint16_t a0 = rd16(kOamBase + i * 8), a1 = rd16(kOamBase + i * 8 + 2), a2 = rd16(kOamBase + i * 8 + 4);
+            if (a0 & 0x100) continue;              /* affine: not these icons */
+            if (a0 & 0x200) continue;              /* hidden */
+            if ((a0 >> 14) != 0 || (a1 >> 14) != 1) continue;
+            const int tile = a2 & 0x3ff, pal = (a2 >> 12) & 15;
+            const int id = (tile == 158 && pal == 6) ? HDSEL_STAR : (tile == 154 && pal == 0) ? HDSEL_COIN : -1;
+            if (id < 0 || have[id]) continue;
+            int y = a0 & 0xff, x = a1 & 0x1ff;
+            if (y >= 192) y -= 256;
+            if (x >= 256) x -= 512;
+            cand[id][0] = x; cand[id][1] = y; cand[id][2] = 16; cand[id][3] = 16;
+            have[id] = true;
+        }
+        have[HDSEL_MEDAL] = true;
+        cand[HDSEL_MEDAL][0] = 0; cand[HDSEL_MEDAL][1] = 0; cand[HDSEL_MEDAL][2] = 256; cand[HDSEL_MEDAL][3] = 192;
+        for (int id = 0; id < HDSEL_N; ++id) {
+            if (!have[id]) continue;
+            const HdSelArt *art = port_hd_selicon_hook(id);
+            if (!art) continue;
+            const int owner = id == HDSEL_MEDAL ? 2 : kOwnerObj;
+            const int bx = cand[id][0], by = cand[id][1];
+            int n = 0, prio = -1, x0 = 999, x1 = -1, y0 = 999, y1 = -1;
+            for (int y = by < 0 ? 0 : by; y < by + cand[id][3] && y < 192; ++y)
+                for (int x = bx < 0 ? 0 : bx; x < bx + cand[id][2] && x < 256; ++x) {
+                    const Cell &c = g_a[y][x];
+                    if (!c.hit || c.owner != owner || c.msgcur) continue;
+                    if (n++ == 0) prio = c.prio;
+                    if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+                }
+            if (!n) continue;
+            /* the rectangle the art covers: the star's whole sprite; the coin's own pixels (14 x 16 of its 16 x 16 cell); the medal's box */
+            int rx = bx, ry = by, rw = cand[id][2], rh = cand[id][3];
+            if (id != HDSEL_STAR) { rx = x0; ry = y0; rw = x1 - x0 + 1; rh = y1 - y0 + 1; }
+            const int v = lc_overlay_verdict((unsigned)owner);
+            bool ok = v == 0 || v == 3;
+            if (id == HDSEL_MEDAL && (rw < 24 || rh < 24 || rw > 128 || rh > 128)) ok = false;   /* not a medal-sized BG2: leave it */
+            /* the art's shape against the DS shape: more than 12 percent off is refused, once per picture */
+            const double ra = (double)art->w / art->h, rd = (double)rw / rh;
+            if (ra > rd * 1.12 || ra < rd / 1.12) {
+                static int warned_gen[HDSEL_N];
+                if (warned_gen[id] != art->gen) {
+                    warned_gen[id] = art->gen;
+                    std::fprintf(stderr, "[hdselicon] icon %d: the picture is %dx%d, the DS icon %dx%d: shape too different, ignored\n", id, art->w, art->h, rw, rh);
+                }
+                ok = false;
+            }
+            if (v == 0 && ntr::widescreen && shown3d && !ntr::present_native()) ok = false;   /* only the pillarboxed placement is handled */
+            if (v == 0 && honour3d && layer_behind_3d((unsigned)owner, prio, p3d)) ok = false;
+            if (dbg) std::fprintf(stderr, "[hdselicon] icon %d owner %d cells %d bbox %d..%d x %d..%d rect %d,%d %dx%d art %dx%d verdict %d %s\n",
+                                  id, owner, n, x0, x1, y0, y1, rx, ry, rw, rh, art->w, art->h, v, ok ? "drawn" : "skipped");
+            if (!ok) continue;
+            for (int y = by < 0 ? 0 : by; y < by + cand[id][3] && y < 192; ++y)
+                for (int x = bx < 0 ? 0 : bx; x < bx + cand[id][2] && x < 256; ++x) {
+                    Cell &c = g_a[y][x];
+                    if (c.hit && c.owner == owner && !c.msgcur) c.hit = false;
+                }
+            HdSelJob &J = v == 3 ? g_hsj_lifted[g_hsj_lifted_n++] : g_hsj[g_hsj_n++];
+            J.id = id; J.x = rx; J.y = ry; J.w = rw; J.h = rh; J.owner = owner; J.lift = v == 3; J.art = art;
+        }
+        g_hsj_off = ntr::widescreen ? margin / 2 : 0;
+    }
     mghr_a_under(fb, pre, margin);   /* MGHIRES1: the picture under the 2D, over the sensitive box */
     g_cz.mark(4);
     /* MGINTERP1: a replay with the tick's finished picture to start from (port_message_engine_a_replay_dirty) redraws only the
@@ -5412,6 +5532,59 @@ extern "C" void port_message_composite_engine_a(void *fbp)
             }
         }
         g_hdm.on = false;
+    }
+    /* HDSELICON1, step 2: each icon's art over its DS rectangle at host resolution, on the DS cells no other layer holds (the medal's
+       number stays on top), through the same three routes as the meter (the card's rects, the card overlay words, the plain frame). */
+    for (int j = 0; j < g_hsj_n; ++j) {
+        const HdSelJob &J = g_hsj[j];
+        auto hcol = [&](int x) { return ntr::widescreen ? ds_col_x0(x) + g_hsj_off : x * sx; };
+        const int HX0 = hcol(J.x), HX1 = hcol(J.x + J.w), HY0 = ds_row_y0(J.y), HY1 = ds_row_y0(J.y + J.h);
+        const unsigned *art = hd_selicon_scaled(J.art, HX1 - HX0, HY1 - HY0);
+        if (!art) continue;
+        const int W = HX1 - HX0;
+        for (int y = J.y < 0 ? 0 : J.y; y < J.y + J.h && y < 192; ++y) {
+            const int hy0 = ds_row_y0(y), hy1 = ds_row_y0(y + 1);
+            for (int x = J.x < 0 ? 0 : J.x; x < J.x + J.w && x < 256; ++x) {
+                if (g_a[y][x].hit) continue;
+                const int hx0 = hcol(x), hx1 = hcol(x + 1);
+                const unsigned char bmv = bm_on ? bm_verdict((unsigned)J.owner, window_mask(win, x, y)) : 0;
+                for (int hy = hy0; hy < hy1; ++hy) {
+                    const unsigned *arow = art + (size_t)(hy - HY0) * W;
+                    for (int hx = hx0; hx < hx1;) {
+                        const unsigned c = arow[hx - HX0];
+                        if (!(c >> 24)) { ++hx; continue; }
+                        int rn = 1;
+                        while (hx + rn < hx1 && arow[hx + rn - HX0] == c) ++rn;
+                        if (gpu_blit && g_tw_n < 256 * 192) {
+                            uint32_t *r = g_tw_inst + (size_t)g_tw_n * 4;
+                            r[0] = (uint32_t)hx | ((uint32_t)hy << 16);
+                            r[1] = (uint32_t)rn | (1u << 16);
+                            r[2] = (c & 0x00FFFFFFu) | (GX_OV_FRONT << 24);
+                            r[3] = bmv ? 1u : 0u;
+                            ++g_tw_n;
+                        }
+                        if (!gpu_blit || tw_chk) {
+                            for (int d = 0; d < rn; ++d) {
+                                const int x2 = hx + d;
+                                if (ovl3d) {
+                                    fb.px[hy][x2] = (c & 0x00FFFFFFu) | (GX_OV_FRONT << 24);
+                                    if (bm_on) {
+                                        unsigned char &m = g_bm[(size_t)hy * ntr::SCREEN_W + x2];
+                                        m = (unsigned char)((m & 3u) | (bmv ? 4u : 0u) | 8u);
+                                    }
+                                    continue;
+                                }
+                                if (cover && cover[hy * ntr::SCREEN_W + x2]) ++buried;
+                                fb.px[hy][x2] = c & 0x00FFFFFFu;
+                                if (bm_on) g_bm[(size_t)hy * ntr::SCREEN_W + x2] = bmv;
+                                if (pre) pre[(size_t)hy * ntr::SCREEN_W + x2] = c & 0x00FFFFFFu;
+                            }
+                        }
+                        hx += rn;
+                    }
+                }
+            }
+        }
     }
     /* MGHIRES1: engine A's turned and sub-pixel sprites at render scale, on the plain path only (see mghr_a_end) */
     if (g_mghr_took) {
