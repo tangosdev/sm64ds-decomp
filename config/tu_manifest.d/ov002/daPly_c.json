@@ -343,14 +343,14 @@
       "ordinal": 42
     },
     {
-      "symbol": "func_ov002_020bebd4",
+      "symbol": "_ZN7daPly_c19func_ov002_020bebd4Ev",
       "address": "0x020bebd4",
       "size": "0x00000058",
       "legacy_source": "src/func_ov002_020bebd4.cpp",
       "ordinal": 43
     },
     {
-      "symbol": "func_ov002_020bec2c",
+      "symbol": "_ZN7daPly_c19func_ov002_020bec2cEv",
       "address": "0x020bec2c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov002_020bec2c.cpp",
@@ -392,7 +392,7 @@
       "ordinal": 49
     },
     {
-      "symbol": "Player_AdvanceAnims",
+      "symbol": "_ZN7daPly_c12AdvanceAnimsEv",
       "address": "0x020bedd4",
       "size": "0x000000f8",
       "legacy_source": "src/Player_AdvanceAnims.cpp",
@@ -497,7 +497,7 @@
       "ordinal": 64
     },
     {
-      "symbol": "func_ov002_020bf800",
+      "symbol": "_ZN7daPly_c19func_ov002_020bf800E11Vector3_16f",
       "address": "0x020bf800",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov002_020bf800.cpp",
@@ -707,7 +707,7 @@
       "ordinal": 94
     },
     {
-      "symbol": "func_ov002_020c2270",
+      "symbol": "_ZN7daPly_c19func_ov002_020c2270EPvS0_",
       "address": "0x020c2270",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov002_020c2270.cpp",
@@ -1001,7 +1001,7 @@
       "ordinal": 136
     },
     {
-      "symbol": "func_ov002_020c5244",
+      "symbol": "_ZN7daPly_c19func_ov002_020c5244Ev",
       "address": "0x020c5244",
       "size": "0x00000008",
       "legacy_source": "src/func_ov002_020c5244.c",
@@ -1204,7 +1204,7 @@
       "ordinal": 165
     },
     {
-      "symbol": "func_ov002_020c6e14",
+      "symbol": "_ZN7daPly_c19func_ov002_020c6e14Ev",
       "address": "0x020c6e14",
       "size": "0x00000120",
       "legacy_source": "src/func_ov002_020c6e14.c",
@@ -1610,7 +1610,7 @@
       "ordinal": 223
     },
     {
-      "symbol": "Player_DisableInteraction",
+      "symbol": "_ZN7daPly_c18DisableInteractionEv",
       "address": "0x020c9e40",
       "size": "0x0000001c",
       "legacy_source": "src/Player_DisableInteraction.c",
@@ -1799,7 +1799,7 @@
       "ordinal": 250
     },
     {
-      "symbol": "func_ov002_020cac60",
+      "symbol": "_ZN7daPly_c19func_ov002_020cac60Ev",
       "address": "0x020cac60",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov002_020cac60.c",
@@ -1813,7 +1813,7 @@
       "ordinal": 252
     },
     {
-      "symbol": "func_ov002_020cae10",
+      "symbol": "_ZN7daPly_c19func_ov002_020cae10Ev",
       "address": "0x020cae10",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov002_020cae10.c",
@@ -1855,21 +1855,21 @@
       "ordinal": 258
     },
     {
-      "symbol": "func_ov002_020cb354",
+      "symbol": "_ZN7daPly_c19func_ov002_020cb354Ev",
       "address": "0x020cb354",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov002_020cb354.cpp",
       "ordinal": 259
     },
     {
-      "symbol": "func_ov002_020cb400",
+      "symbol": "_ZN7daPly_c19func_ov002_020cb400Ev",
       "address": "0x020cb400",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020cb400.cpp",
       "ordinal": 260
     },
     {
-      "symbol": "func_ov002_020cb474",
+      "symbol": "_ZN7daPly_c19func_ov002_020cb474Ev",
       "address": "0x020cb474",
       "size": "0x000000f4",
       "legacy_source": "src/func_ov002_020cb474.cpp",
@@ -1897,21 +1897,21 @@
       "ordinal": 264
     },
     {
-      "symbol": "func_ov002_020cbea8",
+      "symbol": "_ZN7daPly_c19func_ov002_020cbea8Ev",
       "address": "0x020cbea8",
       "size": "0x00000174",
       "legacy_source": "src/func_ov002_020cbea8.c",
       "ordinal": 265
     },
     {
-      "symbol": "func_ov002_020cc01c",
+      "symbol": "_ZN7daPly_c19func_ov002_020cc01cEv",
       "address": "0x020cc01c",
       "size": "0x00000040",
       "legacy_source": "src/func_ov002_020cc01c.cpp",
       "ordinal": 266
     },
     {
-      "symbol": "func_ov002_020cc05c",
+      "symbol": "_ZN7daPly_c19func_ov002_020cc05cEt",
       "address": "0x020cc05c",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov002_020cc05c.c",
@@ -1953,7 +1953,7 @@
       "ordinal": 272
     },
     {
-      "symbol": "func_ov002_020cc660",
+      "symbol": "_ZN7daPly_c19func_ov002_020cc660Ei",
       "address": "0x020cc660",
       "size": "0x00000120",
       "legacy_source": "src/func_ov002_020cc660.c",
@@ -2191,21 +2191,21 @@
       "ordinal": 306
     },
     {
-      "symbol": "func_ov002_020cf20c",
+      "symbol": "_ZN7daPly_c19func_ov002_020cf20cEv",
       "address": "0x020cf20c",
       "size": "0x000000ec",
       "legacy_source": "src/func_ov002_020cf20c.cpp",
       "ordinal": 307
     },
     {
-      "symbol": "func_ov002_020cf2f8",
+      "symbol": "_ZN7daPly_c19func_ov002_020cf2f8Ev",
       "address": "0x020cf2f8",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov002_020cf2f8.c",
       "ordinal": 308
     },
     {
-      "symbol": "func_ov002_020cf384",
+      "symbol": "_ZN7daPly_c19func_ov002_020cf384Ev",
       "address": "0x020cf384",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020cf384.c",
@@ -2373,21 +2373,21 @@
       "ordinal": 332
     },
     {
-      "symbol": "func_ov002_020d1164",
+      "symbol": "_ZN7daPly_c19func_ov002_020d1164Ev",
       "address": "0x020d1164",
       "size": "0x000000a0",
       "legacy_source": "src/func_ov002_020d1164.cpp",
       "ordinal": 333
     },
     {
-      "symbol": "func_ov002_020d1204",
+      "symbol": "_ZN7daPly_c19func_ov002_020d1204Ev",
       "address": "0x020d1204",
       "size": "0x000000ac",
       "legacy_source": "src/func_ov002_020d1204.cpp",
       "ordinal": 334
     },
     {
-      "symbol": "func_ov002_020d12b0",
+      "symbol": "_ZN7daPly_c19func_ov002_020d12b0Ev",
       "address": "0x020d12b0",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov002_020d12b0.cpp",
@@ -2443,7 +2443,7 @@
       "ordinal": 342
     },
     {
-      "symbol": "func_ov002_020d1f78",
+      "symbol": "_ZN7daPly_c19func_ov002_020d1f78Ej",
       "address": "0x020d1f78",
       "size": "0x0000020c",
       "legacy_source": "src/func_ov002_020d1f78.c",
@@ -2471,7 +2471,7 @@
       "ordinal": 346
     },
     {
-      "symbol": "func_ov002_020d228c",
+      "symbol": "_ZN7daPly_c19func_ov002_020d228cEv",
       "address": "0x020d228c",
       "size": "0x00000060",
       "legacy_source": "src/func_ov002_020d228c.cpp",
@@ -2513,7 +2513,7 @@
       "ordinal": 352
     },
     {
-      "symbol": "func_ov002_020d2f24",
+      "symbol": "_ZN7daPly_c19func_ov002_020d2f24Ev",
       "address": "0x020d2f24",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov002_020d2f24.c",
@@ -2534,7 +2534,7 @@
       "ordinal": 355
     },
     {
-      "symbol": "func_ov002_020d3498",
+      "symbol": "_ZN7daPly_c19func_ov002_020d3498Ev",
       "address": "0x020d3498",
       "size": "0x00000024",
       "legacy_source": "src/func_ov002_020d3498.c",
@@ -2828,7 +2828,7 @@
       "ordinal": 397
     },
     {
-      "symbol": "func_ov002_020d674c",
+      "symbol": "_ZN7daPly_c19func_ov002_020d674cEv",
       "address": "0x020d674c",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d674c.c",
@@ -2849,7 +2849,7 @@
       "ordinal": 400
     },
     {
-      "symbol": "func_ov002_020d6c60",
+      "symbol": "_ZN7daPly_c19func_ov002_020d6c60EPS_",
       "address": "0x020d6c60",
       "size": "0x0000014c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d6c60.cpp",
@@ -2933,7 +2933,7 @@
       "ordinal": 412
     },
     {
-      "symbol": "func_ov002_020d8118",
+      "symbol": "_ZN7daPly_c19func_ov002_020d8118Ev",
       "address": "0x020d8118",
       "size": "0x00000040",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d8118.c",
@@ -2982,14 +2982,14 @@
       "ordinal": 419
     },
     {
-      "symbol": "func_ov002_020d8360",
+      "symbol": "_ZN7daPly_c19func_ov002_020d8360EPS_j",
       "address": "0x020d8360",
       "size": "0x000001dc",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d8360.c",
       "ordinal": 420
     },
     {
-      "symbol": "func_ov002_020d853c",
+      "symbol": "_ZN7daPly_c19func_ov002_020d853cEP8dActor_c",
       "address": "0x020d853c",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d853c.c",
@@ -3017,28 +3017,28 @@
       "ordinal": 424
     },
     {
-      "symbol": "func_ov002_020d8854",
+      "symbol": "_ZN7daPly_c19func_ov002_020d8854Ev",
       "address": "0x020d8854",
       "size": "0x000000f0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d8854.cpp",
       "ordinal": 425
     },
     {
-      "symbol": "func_ov002_020d8944",
+      "symbol": "_ZN7daPly_c19func_ov002_020d8944EPS_S0_",
       "address": "0x020d8944",
       "size": "0x0000010c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d8944.cpp",
       "ordinal": 426
     },
     {
-      "symbol": "func_ov002_020d8a50",
+      "symbol": "_ZN7daPly_c19func_ov002_020d8a50Ei",
       "address": "0x020d8a50",
       "size": "0x000002c0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d8a50.c",
       "ordinal": 427
     },
     {
-      "symbol": "func_ov002_020d8d10",
+      "symbol": "_ZN7daPly_c19func_ov002_020d8d10EP7Vector3",
       "address": "0x020d8d10",
       "size": "0x00000160",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d8d10.c",
@@ -3150,14 +3150,14 @@
       "ordinal": 443
     },
     {
-      "symbol": "func_ov002_020d9c70",
+      "symbol": "_ZN7daPly_c19func_ov002_020d9c70Ev",
       "address": "0x020d9c70",
       "size": "0x0000015c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d9c70.c",
       "ordinal": 444
     },
     {
-      "symbol": "func_ov002_020d9dcc",
+      "symbol": "_ZN7daPly_c19func_ov002_020d9dccEv",
       "address": "0x020d9dcc",
       "size": "0x000001f8",
       "legacy_source": "src/unnamed/ov002/func_ov002_020d9dcc.c",
@@ -3213,7 +3213,7 @@
       "ordinal": 452
     },
     {
-      "symbol": "func_ov002_020da95c",
+      "symbol": "_ZN7daPly_c19func_ov002_020da95cEv",
       "address": "0x020da95c",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/ov002/func_ov002_020da95c.c",
@@ -3234,7 +3234,7 @@
       "ordinal": 455
     },
     {
-      "symbol": "Player_ReleaseHeldActor",
+      "symbol": "_ZN7daPly_c16ReleaseHeldActorEv",
       "address": "0x020dab14",
       "size": "0x0000008c",
       "legacy_source": "src/Player_ReleaseHeldActor.c",
@@ -3248,7 +3248,7 @@
       "ordinal": 457
     },
     {
-      "symbol": "func_ov002_020dacb4",
+      "symbol": "_ZN7daPly_c19func_ov002_020dacb4EP8dActor_c",
       "address": "0x020dacb4",
       "size": "0x000001b8",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dacb4.c",
@@ -3360,35 +3360,35 @@
       "ordinal": 473
     },
     {
-      "symbol": "func_ov002_020dbaec",
+      "symbol": "_ZN7daPly_c19func_ov002_020dbaecEv",
       "address": "0x020dbaec",
       "size": "0x000000d4",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dbaec.c",
       "ordinal": 474
     },
     {
-      "symbol": "func_ov002_020dbbc0",
+      "symbol": "_ZN7daPly_c19func_ov002_020dbbc0Ev",
       "address": "0x020dbbc0",
       "size": "0x000000d4",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dbbc0.c",
       "ordinal": 475
     },
     {
-      "symbol": "func_ov002_020dbc94",
+      "symbol": "_ZN7daPly_c19func_ov002_020dbc94Ev",
       "address": "0x020dbc94",
       "size": "0x00000100",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dbc94.c",
       "ordinal": 476
     },
     {
-      "symbol": "func_ov002_020dbd94",
+      "symbol": "_ZN7daPly_c19func_ov002_020dbd94Ev",
       "address": "0x020dbd94",
       "size": "0x000000dc",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dbd94.c",
       "ordinal": 477
     },
     {
-      "symbol": "func_ov002_020dbe70",
+      "symbol": "_ZN7daPly_c19func_ov002_020dbe70Ev",
       "address": "0x020dbe70",
       "size": "0x000000dc",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dbe70.c",
@@ -3451,7 +3451,7 @@
       "ordinal": 486
     },
     {
-      "symbol": "func_ov002_020dc560",
+      "symbol": "_ZN7daPly_c19func_ov002_020dc560Ev",
       "address": "0x020dc560",
       "size": "0x000001e0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dc560.c",
@@ -3472,7 +3472,7 @@
       "ordinal": 489
     },
     {
-      "symbol": "func_ov002_020dcafc",
+      "symbol": "_ZN7daPly_c19func_ov002_020dcafcEv",
       "address": "0x020dcafc",
       "size": "0x0000012c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dcafc.c",
@@ -3535,7 +3535,7 @@
       "ordinal": 498
     },
     {
-      "symbol": "func_ov002_020dd5ec",
+      "symbol": "_ZN7daPly_c19func_ov002_020dd5ecEv",
       "address": "0x020dd5ec",
       "size": "0x000001b0",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dd5ec.c",
@@ -3563,14 +3563,14 @@
       "ordinal": 502
     },
     {
-      "symbol": "func_ov002_020dd8f4",
+      "symbol": "_ZN7daPly_c19func_ov002_020dd8f4Ev",
       "address": "0x020dd8f4",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dd8f4.c",
       "ordinal": 503
     },
     {
-      "symbol": "func_ov002_020dd908",
+      "symbol": "_ZN7daPly_c19func_ov002_020dd908Ev",
       "address": "0x020dd908",
       "size": "0x000000d8",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dd908.c",
@@ -3640,7 +3640,7 @@
       "ordinal": 513
     },
     {
-      "symbol": "func_ov002_020de3d0",
+      "symbol": "_ZN7daPly_c19func_ov002_020de3d0EPsS0_",
       "address": "0x020de3d0",
       "size": "0x00000058",
       "legacy_source": "src/unnamed/ov002/func_ov002_020de3d0.c",
@@ -3668,7 +3668,7 @@
       "ordinal": 517
     },
     {
-      "symbol": "func_ov002_020de968",
+      "symbol": "_ZN7daPly_c19func_ov002_020de968Ev",
       "address": "0x020de968",
       "size": "0x00000098",
       "legacy_source": "src/unnamed/ov002/func_ov002_020de968.cpp",
@@ -3696,7 +3696,7 @@
       "ordinal": 521
     },
     {
-      "symbol": "func_ov002_020dec70",
+      "symbol": "_ZN7daPly_c19func_ov002_020dec70Ev",
       "address": "0x020dec70",
       "size": "0x00000180",
       "legacy_source": "src/unnamed/ov002/func_ov002_020dec70.cpp",
@@ -3843,7 +3843,7 @@
       "ordinal": 542
     },
     {
-      "symbol": "func_ov002_020e0478",
+      "symbol": "_ZN7daPly_c19func_ov002_020e0478Ev",
       "address": "0x020e0478",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e0478.cpp",
@@ -3927,7 +3927,7 @@
       "ordinal": 554
     },
     {
-      "symbol": "func_ov002_020e0f38",
+      "symbol": "_ZN7daPly_c19func_ov002_020e0f38Ei",
       "address": "0x020e0f38",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e0f38.cpp",
@@ -4137,7 +4137,7 @@
       "ordinal": 584
     },
     {
-      "symbol": "func_ov002_020e2ba8",
+      "symbol": "_ZN7daPly_c19func_ov002_020e2ba8Ev",
       "address": "0x020e2ba8",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/ov002/func_ov002_020e2ba8.cpp",
@@ -12779,79 +12779,79 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLevelIntroOff$4448",
+      "from": "_ZGVsLevelIntroOff$4429",
       "to": "_ZGVsLevelIntroOff$4424",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from _ZGVsLevelIntroOff$4575 to _ZGVsLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from _ZGVsLevelIntroOff$4532 to _ZGVsLevelIntroOff$4516 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from _ZGVsLevelIntroOff$4516 to _ZGVsLevelIntroOff$4517 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = _ZGVsLevelIntroOff$4516. Re-keyed from _ZGVsLevelIntroOff$4516 to _ZGVsLevelIntroOff$4480 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from _ZGVsLevelIntroOff$4480 to _ZGVsLevelIntroOff$4477 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from _ZGVsLevelIntroOff$4575 to _ZGVsLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from _ZGVsLevelIntroOff$4532 to _ZGVsLevelIntroOff$4516 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from _ZGVsLevelIntroOff$4516 to _ZGVsLevelIntroOff$4517 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = _ZGVsLevelIntroOff$4516. Re-keyed from _ZGVsLevelIntroOff$4516 to _ZGVsLevelIntroOff$4480 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from _ZGVsLevelIntroOff$4480 to _ZGVsLevelIntroOff$4477 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "@4451",
+      "from": "@4432",
       "to": "@4427",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from @4578 to @4576 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from @4535 to @4519 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from @4519 to @4520 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = @4519. Re-keyed from @4519 to @4483 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from @4483 to @4480 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from @4578 to @4576 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from @4535 to @4519 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from @4519 to @4520 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = @4519. Re-keyed from @4519 to @4483 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from @4483 to @4480 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "sLevelIntroOff$4448",
+      "from": "sLevelIntroOff$4429",
       "to": "sLevelIntroOff$4424",
-      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from sLevelIntroOff$4575 to sLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from sLevelIntroOff$4532 to sLevelIntroOff$4516 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from sLevelIntroOff$4516 to sLevelIntroOff$4517 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = sLevelIntroOff$4516. Re-keyed from sLevelIntroOff$4516 to sLevelIntroOff$4480 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from sLevelIntroOff$4480 to sLevelIntroOff$4477 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; deslop/player-state-externs drops redundant per-method helper prototypes from d_a_ply_methods.cpp, lowering this uniquifier by 3 (measured against the composed TU). Re-keyed from sLevelIntroOff$4575 to sLevelIntroOff$4573 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from sLevelIntroOff$4532 to sLevelIntroOff$4516 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from sLevelIntroOff$4516 to sLevelIntroOff$4517 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = sLevelIntroOff$4516. Re-keyed from sLevelIntroOff$4516 to sLevelIntroOff$4480 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from sLevelIntroOff$4480 to sLevelIntroOff$4477 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "_ZGVsTalkOff$4666",
+      "from": "_ZGVsTalkOff$4647",
       "to": "_ZGVsTalkOff$4648",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from _ZGVsTalkOff$4793 to _ZGVsTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from _ZGVsTalkOff$4750 to _ZGVsTalkOff$4734 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from _ZGVsTalkOff$4734 to _ZGVsTalkOff$4735 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = _ZGVsTalkOff$4734. Re-keyed from _ZGVsTalkOff$4734 to _ZGVsTalkOff$4698 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from _ZGVsTalkOff$4698 to _ZGVsTalkOff$4695 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from _ZGVsTalkOff$4793 to _ZGVsTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from _ZGVsTalkOff$4750 to _ZGVsTalkOff$4734 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from _ZGVsTalkOff$4734 to _ZGVsTalkOff$4735 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = _ZGVsTalkOff$4734. Re-keyed from _ZGVsTalkOff$4734 to _ZGVsTalkOff$4698 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from _ZGVsTalkOff$4698 to _ZGVsTalkOff$4695 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "@4669",
+      "from": "@4650",
       "to": "@4651",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from @4796 to @4794 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from @4753 to @4737 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from @4737 to @4738 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = @4737. Re-keyed from @4737 to @4701 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from @4701 to @4698 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from @4796 to @4794 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from @4753 to @4737 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from @4737 to @4738 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = @4737. Re-keyed from @4737 to @4701 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from @4701 to @4698 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "sTalkOff$4666",
+      "from": "sTalkOff$4647",
       "to": "sTalkOff$4648",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from sTalkOff$4793 to sTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from sTalkOff$4750 to sTalkOff$4734 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from sTalkOff$4734 to sTalkOff$4735 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = sTalkOff$4734. Re-keyed from sTalkOff$4734 to sTalkOff$4698 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from sTalkOff$4698 to sTalkOff$4695 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 4 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0). Re-keyed from sTalkOff$4793 to sTalkOff$4791 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from sTalkOff$4750 to sTalkOff$4734 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from sTalkOff$4734 to sTalkOff$4735 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = sTalkOff$4734. Re-keyed from sTalkOff$4734 to sTalkOff$4698 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from sTalkOff$4698 to sTalkOff$4695 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "_ZGVsAnchorOff$6220",
+      "from": "_ZGVsAnchorOff$6202",
       "to": "_ZGVsAnchorOff$6223",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsAnchorOff$6356 to _ZGVsAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from _ZGVsAnchorOff$6304 to _ZGVsAnchorOff$6288 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from _ZGVsAnchorOff$6288 to _ZGVsAnchorOff$6289 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = _ZGVsAnchorOff$6288. Re-keyed from _ZGVsAnchorOff$6288 to _ZGVsAnchorOff$6252 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from _ZGVsAnchorOff$6252 to _ZGVsAnchorOff$6249 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsAnchorOff$6356 to _ZGVsAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from _ZGVsAnchorOff$6304 to _ZGVsAnchorOff$6288 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from _ZGVsAnchorOff$6288 to _ZGVsAnchorOff$6289 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = _ZGVsAnchorOff$6288. Re-keyed from _ZGVsAnchorOff$6288 to _ZGVsAnchorOff$6252 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from _ZGVsAnchorOff$6252 to _ZGVsAnchorOff$6249 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "@6223",
+      "from": "@6205",
       "to": "@6226",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6359 to @6357 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from @6307 to @6291 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from @6291 to @6292 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = @6291. Re-keyed from @6291 to @6255 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from @6255 to @6252 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6359 to @6357 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from @6307 to @6291 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from @6291 to @6292 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = @6291. Re-keyed from @6291 to @6255 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from @6255 to @6252 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "sAnchorOff$6220",
+      "from": "sAnchorOff$6202",
       "to": "sAnchorOff$6223",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sAnchorOff$6356 to sAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from sAnchorOff$6304 to sAnchorOff$6288 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from sAnchorOff$6288 to sAnchorOff$6289 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = sAnchorOff$6288. Re-keyed from sAnchorOff$6288 to sAnchorOff$6252 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from sAnchorOff$6252 to sAnchorOff$6249 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sAnchorOff$6356 to sAnchorOff$6354 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from sAnchorOff$6304 to sAnchorOff$6288 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from sAnchorOff$6288 to sAnchorOff$6289 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = sAnchorOff$6288. Re-keyed from sAnchorOff$6288 to sAnchorOff$6252 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from sAnchorOff$6252 to sAnchorOff$6249 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "_ZGVsDoorMsgOff$6248",
+      "from": "_ZGVsDoorMsgOff$6230",
       "to": "_ZGVsDoorMsgOff$6251",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsDoorMsgOff$6384 to _ZGVsDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from _ZGVsDoorMsgOff$6332 to _ZGVsDoorMsgOff$6316 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from _ZGVsDoorMsgOff$6316 to _ZGVsDoorMsgOff$6317 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = _ZGVsDoorMsgOff$6316. Re-keyed from _ZGVsDoorMsgOff$6316 to _ZGVsDoorMsgOff$6280 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from _ZGVsDoorMsgOff$6280 to _ZGVsDoorMsgOff$6277 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsDoorMsgOff$6384 to _ZGVsDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from _ZGVsDoorMsgOff$6332 to _ZGVsDoorMsgOff$6316 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from _ZGVsDoorMsgOff$6316 to _ZGVsDoorMsgOff$6317 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = _ZGVsDoorMsgOff$6316. Re-keyed from _ZGVsDoorMsgOff$6316 to _ZGVsDoorMsgOff$6280 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from _ZGVsDoorMsgOff$6280 to _ZGVsDoorMsgOff$6277 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "@6251",
+      "from": "@6233",
       "to": "@6254",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6387 to @6385 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from @6335 to @6319 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from @6319 to @6320 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = @6319. Re-keyed from @6319 to @6283 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from @6283 to @6280 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @6387 to @6385 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from @6335 to @6319 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from @6319 to @6320 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = @6319. Re-keyed from @6319 to @6283 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from @6283 to @6280 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "sDoorMsgOff$6248",
+      "from": "sDoorMsgOff$6230",
       "to": "sDoorMsgOff$6251",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sDoorMsgOff$6384 to sDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from sDoorMsgOff$6332 to sDoorMsgOff$6316 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from sDoorMsgOff$6316 to sDoorMsgOff$6317 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = sDoorMsgOff$6316. Re-keyed from sDoorMsgOff$6316 to sDoorMsgOff$6280 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from sDoorMsgOff$6280 to sDoorMsgOff$6277 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 5 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sDoorMsgOff$6384 to sDoorMsgOff$6382 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from sDoorMsgOff$6332 to sDoorMsgOff$6316 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from sDoorMsgOff$6316 to sDoorMsgOff$6317 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = sDoorMsgOff$6316. Re-keyed from sDoorMsgOff$6316 to sDoorMsgOff$6280 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from sDoorMsgOff$6280 to sDoorMsgOff$6277 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "_ZGVsStarDoorOff$6896",
+      "from": "_ZGVsStarDoorOff$6877",
       "to": "_ZGVsStarDoorOff$6917",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsStarDoorOff$7035 to _ZGVsStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from _ZGVsStarDoorOff$6983 to _ZGVsStarDoorOff$6965 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from _ZGVsStarDoorOff$6965 to _ZGVsStarDoorOff$6966 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = _ZGVsStarDoorOff$6964. Re-keyed from _ZGVsStarDoorOff$6964 to _ZGVsStarDoorOff$6928 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from _ZGVsStarDoorOff$6928 to _ZGVsStarDoorOff$6925 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from _ZGVsStarDoorOff$7035 to _ZGVsStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from _ZGVsStarDoorOff$6983 to _ZGVsStarDoorOff$6965 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from _ZGVsStarDoorOff$6965 to _ZGVsStarDoorOff$6966 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = _ZGVsStarDoorOff$6964. Re-keyed from _ZGVsStarDoorOff$6964 to _ZGVsStarDoorOff$6928 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from _ZGVsStarDoorOff$6928 to _ZGVsStarDoorOff$6925 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "@6899",
+      "from": "@6880",
       "to": "@6920",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @7038 to @7036 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from @6986 to @6968 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from @6968 to @6969 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = @6967. Re-keyed from @6967 to @6931 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from @6931 to @6928 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from @7038 to @7036 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from @6986 to @6968 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from @6968 to @6969 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = @6967. Re-keyed from @6967 to @6931 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from @6931 to @6928 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     },
     {
-      "from": "sStarDoorOff$6896",
+      "from": "sStarDoorOff$6877",
       "to": "sStarDoorOff$6917",
-      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sStarDoorOff$7035 to sStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from sStarDoorOff$6983 to sStarDoorOff$6965 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from sStarDoorOff$6965 to sStarDoorOff$6966 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = sStarDoorOff$6964. Re-keyed from sStarDoorOff$6964 to sStarDoorOff$6928 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from sStarDoorOff$6928 to sStarDoorOff$6925 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object). (merged with main: from = ours + main - base); daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base) (merged with main: from = ours + main - base)"
+      "evidence": "compiler temp; named-parameter dCamera_c externs deleted in d_a_ply_methods.cpp lowered this uniquifier by 6 plus 1 from the collision headers (measured; daBtn_c and daWanwan_c header delta 0) The raw-offset pass removed one unused local alias, lowering the emitted uniquifier by 1 more. Re-keyed from sStarDoorOff$7035 to sStarDoorOff$7033 when three function-local POD vector twins were retired for VecFx32 (#4570). Lowered again (by 1; the sStarDoorOff group by 2), measured from verify's EXTRA list, when the five player helpers other classes call became daPly_c members. Re-keyed from sStarDoorOff$6983 to sStarDoorOff$6965 when the body-model frame-controller reads became dExtFrameCtrl_c references (retiring their 64-bit launders and index locals), three explicit __aeabi_idiv calls became plain division (deleting the named-parameter extern), and SetAnim dropped its pointer aliases and opt_propagation bracket (#821). Re-keyed from sStarDoorOff$6965 to sStarDoorOff$6966 when func_ov002_020c0fb4's spawn position became a Vector3(x, y, z) construction, retiring its u64 identity mask and three locals (#821). Merged with main: from = ours + main - base = sStarDoorOff$6964. Re-keyed from sStarDoorOff$6964 to sStarDoorOff$6928 when four hand-expanded dBgPi copies became copy-constructed dBgPi locals and two dead Pair2i typedefs were dropped. Re-keyed from sStarDoorOff$6928 to sStarDoorOff$6925 when merging origin/main brought in the KuppaScript namespace move, whose re-key of these same objects (-3) conflicted with this branch's; the numbers are measured on the merged source. Lowered again by 3 when d_a_ply_methods.cpp dropped its named-parameter func_02022b04 extern for the Particle::MegaRunningSlidingDustAt header declaration (measured from the compiled object; merged with main: from = ours + main - base).; daPly_c::func_ov002_020bf224/ScaleByCharFactor/func_ov002_020bf340 becoming members dropped their named-parameter local externs, lowering it by 2 more (measured) (merged with main: from = ours + main - base); the daPly_c member-helper batch (44 free helpers becoming members) dropped their local externs, lowering it by 15 (first four) or 14 (rest) (measured); the second daPly_c member batch (13 more helpers) dropped their local externs, lowering it by 4 more (measured); merged with main again after main lowered it by 24 (the global renames dropped named-parameter externs): from = ours + main - base, confirmed by tubuild verify"
     }
   ],
   "relocations": [
