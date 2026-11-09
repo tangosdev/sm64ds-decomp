@@ -652,8 +652,7 @@ extern "C" void func_0201251c(int a, int b, int c, int d)
     func_02048af4(&data_0209b4a4, c, d);
 }
 
-extern "C" int Sound_PlayIfNotActive(int a, int b, int c, short d)
-{
+extern "C" int Sound_PlayIfNotActive(int a, int b, int c, short d) {
     SndRegEntry *o = (SndRegEntry *)func_02011934((char *)&data_0209b53c, a);
     if (o) {
         o->inUse = 1;
@@ -711,8 +710,7 @@ int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
 
 }
 
-extern "C" int func_02012310(int handle, int sound, short arg)
-{
+extern "C" int func_02012310(int handle, int sound, short arg) {
     return Sound_PlayIfNotActive(handle, 2, sound, arg);
 }
 
