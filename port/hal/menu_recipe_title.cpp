@@ -35,6 +35,7 @@
 #include "host_settings.h"
 #include "settings_page.h"
 #include "menu_hostimg.h"
+#include "menu_pause_art_ids.h"   /* HDSELICON1: MENU_IMG_ONL_WRENCH */
 #include "menu_online.h"
 #include "egg_audio.h"
 #include "ntr/gx.h"
@@ -358,6 +359,7 @@ bool file_arrow_up()
     return elem != 0 && variant_for(top, elem) == V_FILES && menu_hostimg_ready(MENU_IMG_ARROW_ORANGE);
 }
 
+bool wrench_hd_ready();      /* HDSELICON1: below, beside wrench_dx */
 int title_skip(char *o)
 {
     if (*(unsigned char *)(o + 0x4e) == 0x21 && file_arrow_up()) {
@@ -379,6 +381,9 @@ int title_skip(char *o)
     /* ASSET4: the three plate sprites (object id 0x1b at y >= 100; the wrench is the same id at y 20) are also left out of the
        submit when the host planks are drawn, so the 3D layer holds only the face, star, sparkles and wrench and the face piece can be
        the whole layer (the ROM's plate art no longer shows under the host planks, nothing below the chin is ever in it) */
+    /* HDSELICON1: the wrench (the same id at y 20) is left out when the HD wrench is drawn in its place (add_wrench_hd), on the pages that draw it */
+    if (*(unsigned char *)(o + 0x4e) == 0x1b && (((const int *)o)[2] >> 12) < 100 && (g_last == V_MAIN || g_last == V_INTRO || g_last == V_TOY) &&
+        wrench_hd_ready()) return 1;
     if (*(unsigned char *)(o + 0x4e) == 0x1b && (((const int *)o)[2] >> 12) >= 100 && wall_skip_active() && menu_hostimg_ready(MENU_IMG_BTN_MP) &&
         menu_hostimg_ready(MENU_IMG_BTN_ADV) && menu_hostimg_ready(MENU_IMG_BTN_REC)) return 1;
     /* NAME2: with the DS's own planks the cursor arrow is drawn from the code's art (build_main), so the ROM's own, which sits over the plate rows
@@ -489,6 +494,19 @@ int wrench_dx(const MenuLayout *L)
 {
     const OnlFacts *o = onl_facts_of(L);
     return (o && o->on) ? -35 : 0;      /* NAME2: the ? (30 units) and its gap from the window edge (5 units, the same as its gap from the top) */
+}
+
+/* HDSELICON1 (run after093): THE HD WRENCH. When the HD UI mod carries menu/online/btn_wrench.png (the ? button's plank, purple, with the
+   wrench) the ROM's wrench object is left out of the submit (title_skip) on the pages that draw it and this picture is drawn instead, over
+   the ROM plate's own box: DS (220, 4), 32 x 32, inside the 40 x 40 corner the wrench piece cuts (measured on the 1.0 title, scale 2: host
+   440..503 x 8..71), at the corner piece's own anchor, offsets and fade. No picture: the ROM's wrench, as before. */
+bool wrench_hd_ready() { return menu_hostimg_ready(MENU_IMG_ONL_WRENCH) != 0; }
+void add_wrench_hd(MenuLayout *L, int dx, int dy, int alpha)
+{
+    MenuPiece p = menu_piece_make(SRC_HOSTIMG, 220, 4, 32, 32, MENU_AX_R, MENU_AY_T, dx - 4, dy + 4, 1, 1);
+    p.hostimg = (uint8_t)MENU_IMG_ONL_WRENCH;
+    if (alpha > 0 && alpha < 255) p.alpha = (uint8_t)alpha;
+    menu_add_piece(L, p);
 }
 
 /* ARROWSLOW1 (Tango 10-28: "not jump so rapidly ... interpolate it and make it .25 speed"): THE MAIN MENU'S BLUE CURSOR ARROW BOBS AT A THIRD OF
@@ -811,7 +829,10 @@ void build_main(MenuLayout *L, bool intro)
     wr.keycover = 1; wr.touch = 1;
     if (ent_a < 255) wr.alpha = (uint8_t)ent_a;
     if (settings_page_press_look() == 2) { wr.dy = 1; wr.dx = (short)(wrench_dx(L) - 1); }   /* HUDMENU2 (H4): the wrench sinks while the press hold of a pad / key confirm runs */
+    const bool wr_hd = wrench_hd_ready();      /* HDSELICON1 */
+    if (wr_hd) wr.nodraw = 1;
     const int iwr = menu_add_piece(L, wr);
+    if (wr_hd) add_wrench_hd(L, wr.dx, wr.dy, ent_a);
     static const int kPlateId[3] = { 1, 0, 2 };                      /* the ROM's element ids: VS, ADVENTURE, REC ROOM */
     static const int kPlankImg[3] = { MENU_IMG_BTN_MP, MENU_IMG_BTN_ADV, MENU_IMG_BTN_REC };
     const int cur = t_f ? t_f->cur : -1, prs = t_f ? t_f->prs : 0;
@@ -1794,6 +1815,11 @@ void build_main_pc(MenuLayout *L, bool intro)
                 MenuPiece sc = scene_layer(L);
                 sc.alpha = (uint8_t)(fa >= 255 ? 0 : fa);
                 menu_add_piece(L, sc);
+                if (wrench_hd_ready()) {      /* HDSELICON1: the scene's wrench sprite is left out; lifted out of the top on the face press like it (scene_sprite_xf) */
+                    float up = 0.f;
+                    if (toy) { const float e = tv >= 10 ? 1.f : (float)tv / 10.f; up = e * e * 60.f; }
+                    add_wrench_hd(L, wrench_dx(L), -(int)(up + 0.5f), fa);
+                }
             }
             if (toy) {
                 if (tv <= 93) L->snap_save = 1;      /* FACE2: the held frame of the crossfade into the drawing page */
@@ -1821,7 +1847,8 @@ void build_main_pc(MenuLayout *L, bool intro)
             {
                 /* the wrench leaves with the planks */
                 const int wa = tv >= 10 ? 0 : 255 - 255 * tv / 10;
-                if (wa > 0) {
+                if (wa > 0 && wrench_hd_ready()) add_wrench_hd(L, wrench_dx(L), 0, wa);      /* HDSELICON1 */
+                else if (wa > 0) {
                     MenuPiece wr = menu_piece_make(SRC_TOP_PIC, 216, 0, 40, 40, MENU_AX_R, MENU_AY_T, wrench_dx(L), 0, 1, 1);
                     wr.keycover = 1; wr.alpha = (uint8_t)(wa >= 255 ? 0 : wa);
                     menu_add_piece(L, wr);
@@ -1840,11 +1867,14 @@ void build_main_pc(MenuLayout *L, bool intro)
         MenuPiece wr = menu_piece_make(SRC_TOP_PIC, 216, 0, 40, 40, MENU_AX_R, MENU_AY_T, wrench_dx(L), 0, 1, 1);
         wr.keycover = 1; wr.touch = 1; wr.alpha = (uint8_t)(fa >= 255 ? 0 : fa);
         wr.nodraw = fa <= 0;
+        const bool wr_hd = wrench_hd_ready();      /* HDSELICON1 */
+        if (wr_hd) wr.nodraw = 1;
         {
             const int iwr = menu_add_piece(L, wr);
             static const int wr_ids[1] = { 7 };
             hot(L, iwr, wr_ids, 1);
         }
+        if (wr_hd && fa > 0) add_wrench_hd(L, wrench_dx(L), 0, fa);
         }
         const int np_logo = L->np;
         add_logos();
