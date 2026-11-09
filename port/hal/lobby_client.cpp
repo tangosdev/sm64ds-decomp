@@ -1356,7 +1356,7 @@ bool launch_due(JV *plan, LobbyKind *kind, bool *host, std::string *match)
 
 #ifndef PORT_ROM_CLEAN
 /* SM64DS_LOBBY_TEST=<step>,<step>,... (dev only): create:coop | create:vs | join:<CODE> | join:@<file> | ready | start | chat:<text> |
-   kick:<seat> | ban:<seat> | set:<index>=<value> | save:<0|1> | leave | mute:<seat> | wait:<frames>. One step at a time, each once the previous
+   kick:<seat> | ban:<seat> | seats:<n> | set:<index>=<value> | save:<0|1> | leave | mute:<seat> | wait:<frames>. One step at a time, each once the previous
    one has landed; SM64DS_LOBBY_TEST_CODEFILE=<file>: the room code is written there once the room is made (a second console's join:@).
    SM64DS_LOBBY_TEST_SEATS=<n> (default 2): "start" waits for n seats, all ready. Lines "[lobbytest] ..." say what happened. */
 void test_tick()
@@ -1442,6 +1442,7 @@ void test_tick()
     else if (s == "leave") { lobby_leave(); done = true; }
     else if (s == "seats2") { if (st->n_seats >= 2) done = true; }
     else if (s == "seats1") { if (st->n_seats == 1) done = true; }
+    else if (!s.compare(0, 6, "seats:")) { if (st->n_seats >= std::atoi(s.c_str() + 6)) done = true; }
     else { std::fprintf(stderr, "[lobbytest] unknown step '%s', skipped\n", s.c_str()); done = true; }
     if (done) {
         std::fprintf(stderr, "[lobbytest] step %d '%s' done at title frame %u\n", (int)at, s.c_str(), g_title_frames);
@@ -1761,7 +1762,11 @@ void lobby_ban(int seat)
     if (g.you != g.host) { g.error = "Only the host can do that."; return; }
     const int s = g.members[(size_t)seat].seat;
     if (s == g.you) return;
-    if (!g.srv_ban) { g.error = "This lobby server cannot ban players yet. Kick still works."; return; }
+    if (!g.srv_ban) {
+        g.error = "This lobby server cannot ban players yet. Kick still works.";
+        say("ban not sent: %s", g.error.c_str());
+        return;
+    }
     say("ban seat %d", s);
     enqueue("ban", "{\"v\":7,\"room\":" + jesc(g.room) + ",\"token\":" + jesc(g.token) + ",\"seat\":" + std::to_string(s) + "}");
 }
