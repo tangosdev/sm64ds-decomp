@@ -626,7 +626,7 @@
       "ordinal": 40
     },
     {
-      "symbol": "_ZN17dExtCommonModel_c13Func_020160ACEj",
+      "symbol": "_ZN17dExtCommonModel_c16SetMaterialFlagsEj",
       "address": "0x020160ac",
       "size": "0x00000058",
       "legacy_source": "src/engine/model/d_ext_common_model.cpp",

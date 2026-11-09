@@ -8366,7 +8366,7 @@
     "src/_ZN17dExtCommonModel_cC1Ev.c": "tangosdev",
     "src/_ZN17dExtCommonModel_cC1Ev.cpp": "tangosdev",
     "src/engine/model/d_ext_common_model.cpp#_ZN17dExtCommonModel_c12SetPolygonIDEj": "tangosdev",
-    "src/engine/model/d_ext_common_model.cpp#_ZN17dExtCommonModel_c13Func_020160ACEj": "tangosdev",
+    "src/engine/model/d_ext_common_model.cpp#_ZN17dExtCommonModel_c16SetMaterialFlagsEj": "tangosdev",
     "src/engine/model/d_ext_common_model.cpp#_ZN17dExtCommonModel_c6RenderEPK7Vector3": "tangosdev",
     "src/engine/model/d_ext_common_model.cpp#_ZN17dExtCommonModel_c9DoSetFileEPcii": "tangosdev",
     "src/engine/model/d_ext_common_model.cpp#_ZN17dExtCommonModel_cD0Ev": "tangosdev",
