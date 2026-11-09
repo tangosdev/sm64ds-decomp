@@ -194,12 +194,57 @@ void text(const Surf &s, float x, float top, const char *str, float em, uint32_t
 }  // namespace
 
 namespace {
-void draw_plank(const Surf &s, float x0, float y0, float sc, const PkbView *v)
+/* where draw_plank left the caret (layer pixels): the blink is drawn over the cached plank each frame, so it never rebuilds the plank */
+struct CaretAt { int has; float x, top, em; int clip[4]; };
+
+/* one key, unlit or lit, at its own box */
+void draw_key(const Surf &s, float x0, float y0, float sc, const PkbView *v, int i, bool lit)
+{
+    const bool hd = skin().hd != 0;
+    auto X = [&](float dx) { return (int)floorf(x0 + dx * sc + 0.5f); };
+    auto Y = [&](float dy) { return (int)floorf(y0 + dy * sc + 0.5f); };
+    float kx, ky, kw, kh;
+    if (!pkb_key_box(v->kind, i, &kx, &ky, &kw, &kh)) return;
+    const int rx = X(kx), ry = Y(ky), rw = X(kx + kw) - rx, rh = Y(ky + kh) - ry;
+    char lb[4];
+    const char *label = pkb_key_label(v->kind, v->ok, i, v->caps, lb, sizeof lb);
+    const bool sunk = v->caps && v->kind == PKB_TEXT && !strcmp(label, "CAPS");
+    if (hd) blit(s, rx, ry, nine(A_PLANK, rw, rh, 18, 18, 18, 18, (float)rh / 150.0f * 2.2f));
+    else framed(s, rx, ry, rw, rh, 2.5f * sc, sc < 2 ? 1 : (int)(sc * 0.8f), C_BOX, C_BOXEDGE);
+    if (sunk) rrect(s, rx, ry, rw, rh, 2.5f * sc, 0x000000u, 90);
+    if (lit) {      /* a warm tint, a dark outer ring and a bright inner ring: readable at 1x on the light HD wood and on the plain orange */
+        rrect(s, rx, ry, rw, rh, 2.5f * sc, 0xFFE24Au, hd ? 150 : 170);
+        const int e = (int)(sc * 0.9f) > 1 ? (int)(sc * 0.9f) : 1;
+        auto ring = [&](int in, int th, uint32_t argb, int a) {
+            for (int q = 0; q < th; ++q) {
+                const int qx = rx + in + q, qy = ry + in + q, qw = rw - 2 * (in + q), qh = rh - 2 * (in + q);
+                if (qw < 2 || qh < 2) return;
+                for (int xx = qx; xx < qx + qw; ++xx) { blend(s, xx, qy, argb, a); blend(s, xx, qy + qh - 1, argb, a); }
+                for (int yy = qy + 1; yy < qy + qh - 1; ++yy) { blend(s, qx, yy, argb, a); blend(s, qx + qw - 1, yy, argb, a); }
+            }
+        };
+        ring(0, e, 0xFF3A1C06u, 255);
+        ring(e, e, 0xFFFFFFFFu, 240);
+    }
+    if (!ui_text_ready()) return;
+    const bool word = strlen(label) > 1;
+    float em = (word ? 6.5f : 8.5f) * sc;
+    const float maxw = rw - 4 * sc;
+    const float lw0 = ui_text_width(label, em);
+    if (lw0 > maxw && lw0 > 0) em *= maxw / lw0;
+    const uint32_t ink = hd ? C_HDKEYINK : lit ? C_INK : C_WOODTXT;
+    text(s, rx + (rw - ui_text_width(label, em)) * 0.5f, ry + (rh - ui_text_cap_height(em)) * 0.5f, label, em, ink);
+}
+
+/* the sheet and the text line (no caret blink); *sheet gets a copy of the layer before the keys go on (the ground a lit key is drawn on); then
+   every key unlit */
+void draw_plank(const Surf &s, float x0, float y0, float sc, const PkbView *v, CaretAt *ca, std::vector<uint32_t> *sheet)
 {
     const Skin &k = skin();
     const bool hd = k.hd != 0;
     auto X = [&](float dx) { return (int)floorf(x0 + dx * sc + 0.5f); };
     auto Y = [&](float dy) { return (int)floorf(y0 + dy * sc + 0.5f); };
+    ca->has = 0;
     /* the sheet */
     int bx, by, bw, bh;
     pkb_panel_box(v->kind, &bx, &by, &bw, &bh);
@@ -213,7 +258,8 @@ void draw_plank(const Surf &s, float x0, float y0, float sc, const PkbView *v)
     } else {
         framed(s, sx, sy, sw, sh, 3 * sc, edge, 0xE07020u, C_BOXEDGE);
     }
-    /* the text line: the field's text so far and the caret (the room code: its six places, as the plank shows them) */
+    /* the text line: the field's text so far (the room code: its six places, as the plank shows them). The caret's place is kept and its blink is
+       drawn per frame; the line is laid out as if the caret showed, so the blink never moves the text. */
     {
         float tx, ty, tw, th;
         pkb_text_box(v->kind, &tx, &ty, &tw, &th);
@@ -227,105 +273,56 @@ void draw_plank(const Surf &s, float x0, float y0, float sc, const PkbView *v)
         } else {
             framed(s, lx, ly, lw, lh, 3 * sc, edge > 2 ? edge - 1 : 2, 0xE87A1Cu, C_BOXEDGE);
         }
-        std::string t;
-        if (v->kind == PKB_CODE) {
-            const char *c = v->text ? v->text : "";
-            int n = 0;
-            for (; n < 6 && c[n]; ++n) t += c[n];
-            for (int i = n; i < 6; ++i) t += (i == n && !v->caret) ? ' ' : '_';
-        } else {
-            t = v->text ? v->text : "";
-            if (v->caret) t += "_";
-        }
         const float em = 8.0f * sc, pad = 4.f * sc;
         const float room = iw - 2 * pad;
         if (ui_text_ready()) {
-            while (t.size() > 1 && ui_text_width(t.c_str(), em) > room) t.erase(0, 1);      /* a long line shows its end */
+            std::string t;
+            size_t at = std::string::npos;      /* the caret's character in t */
+            if (v->kind == PKB_CODE) {
+                const char *c = v->text ? v->text : "";
+                int n = 0;
+                for (; n < 6 && c[n]; ++n) t += c[n];
+                for (int i = n; i < 6; ++i) t += '_';      /* laid out with the caret showing; its place is left empty below */
+                if (n < 6) at = (size_t)n;
+            } else {
+                t = v->text ? v->text : "";
+                t += "_";
+                while (t.size() > 1 && ui_text_width(t.c_str(), em) > room) t.erase(0, 1);      /* a long line shows its end */
+                at = t.size() - 1;
+            }
             const float cx = v->kind == PKB_CODE ? ix + (iw - ui_text_width(t.c_str(), em)) * 0.5f : ix + pad;
+            const float top = iy + (ih - ui_text_cap_height(em)) * 0.5f;
             const int clip[4] = { ix + (int)(pad * 0.5f), ly, ix + iw - (int)(pad * 0.5f), ly + lh };
-            text(s, cx, iy + (ih - ui_text_cap_height(em)) * 0.5f, t.c_str(), em, C_INK, clip);
+            if (at != std::string::npos) {
+                ca->has = 1;
+                ca->x = cx + ui_text_width(t.substr(0, at).c_str(), em);
+                ca->top = top;
+                ca->em = em;
+                memcpy(ca->clip, clip, sizeof clip);
+                const std::string after = t.substr(at + 1);      /* the room code's empty places after the caret's */
+                t.erase(at);
+                if (!after.empty()) text(s, ca->x + ui_text_width("_", em), top, after.c_str(), em, C_INK, clip);
+            }
+            text(s, cx, top, t.c_str(), em, C_INK, clip);
         }
     }
-    /* the keys */
+    sheet->assign(s.px, s.px + (size_t)s.stride * s.h);
+    /* the keys, all unlit; the lit one is drawn on its own small layer */
     const int n = pkb_key_count(v->kind);
-    for (int i = 0; i < n; ++i) {
-        float kx, ky, kw, kh;
-        if (!pkb_key_box(v->kind, i, &kx, &ky, &kw, &kh)) continue;
-        const int rx = X(kx), ry = Y(ky), rw = X(kx + kw) - rx, rh = Y(ky + kh) - ry;
-        char lb[4];
-        const char *label = pkb_key_label(v->kind, v->ok, i, v->caps, lb, sizeof lb);
-        const bool lit = i == v->key;
-        const bool sunk = v->caps && v->kind == PKB_TEXT && !strcmp(label, "CAPS");
-        if (hd) blit(s, rx, ry, nine(A_PLANK, rw, rh, 18, 18, 18, 18, (float)rh / 150.0f * 2.2f));
-        else framed(s, rx, ry, rw, rh, 2.5f * sc, sc < 2 ? 1 : (int)(sc * 0.8f), C_BOX, C_BOXEDGE);
-        if (sunk) rrect(s, rx, ry, rw, rh, 2.5f * sc, 0x000000u, 90);
-        if (lit) {      /* a warm tint, a dark outer ring and a bright inner ring: readable at 1x on the light HD wood and on the plain orange */
-            rrect(s, rx, ry, rw, rh, 2.5f * sc, 0xFFE24Au, hd ? 150 : 170);
-            const int e = (int)(sc * 0.9f) > 1 ? (int)(sc * 0.9f) : 1;
-            auto ring = [&](int in, int th, uint32_t argb, int a) {
-                for (int q = 0; q < th; ++q) {
-                    const int qx = rx + in + q, qy = ry + in + q, qw = rw - 2 * (in + q), qh = rh - 2 * (in + q);
-                    if (qw < 2 || qh < 2) return;
-                    for (int xx = qx; xx < qx + qw; ++xx) { blend(s, xx, qy, argb, a); blend(s, xx, qy + qh - 1, argb, a); }
-                    for (int yy = qy + 1; yy < qy + qh - 1; ++yy) { blend(s, qx, yy, argb, a); blend(s, qx + qw - 1, yy, argb, a); }
-                }
-            };
-            ring(0, e, 0xFF3A1C06u, 255);
-            ring(e, e, 0xFFFFFFFFu, 240);
-        }
-        if (!ui_text_ready()) continue;
-        const bool word = strlen(label) > 1;
-        float em = (word ? 6.5f : 8.5f) * sc;
-        const float maxw = rw - 4 * sc;
-        const float lw0 = ui_text_width(label, em);
-        if (lw0 > maxw && lw0 > 0) em *= maxw / lw0;
-        const uint32_t ink = hd ? C_HDKEYINK : lit ? C_INK : C_WOODTXT;
-        text(s, rx + (rw - ui_text_width(label, em)) * 0.5f, ry + (rh - ui_text_cap_height(em)) * 0.5f, label, em, ink);
-    }
+    for (int i = 0; i < n; ++i) draw_key(s, x0, y0, sc, v, i, false);
     (void)C_DIMINK;
 }
 
-/* THE CACHE. The plank is drawn once into a clear layer of its own box and kept; every frame only lays that layer over the page (opaque pixels copied,
-   the soft shadow and the round corners blended). It is drawn again only when what it shows changes: the field's text, the caret's blink, the
-   highlighted key, CAPS, or the picture's size. */
-struct Layer {
-    std::vector<uint32_t> px;
-    int x = 0, y = 0, w = 0, h = 0;
-    int fw = -1, fh = -1, kind = -1, ok = -1, key = -1, caps = -1, caret = -1, max_len = -1, hd = -1;
-    float x0 = 0, y0 = 0, sc = 0;
-    std::string text;
-};
-Layer g_layer;
-}  // namespace
-
-void pkb_draw(uint32_t *px, int stride, int w, int h, float x0, float y0, float sc, const PkbView *v)
+/* lay a premultiplied layer over the page (opaque pixels copied, the rest blended) */
+void lay(uint32_t *px, int stride, int w, int h, const uint32_t *src0, int lstride, int lx, int ly, int lw, int lh)
 {
-    if (!px || !v || w < 32 || h < 32 || sc <= 0.f) return;
-    Layer &L = g_layer;
-    const int hd = skin().hd != 0;
-    const char *t = v->text ? v->text : "";
-    if (L.fw != w || L.fh != h || L.x0 != x0 || L.y0 != y0 || L.sc != sc || L.kind != v->kind || L.ok != v->ok || L.key != v->key || L.caps != v->caps ||
-        L.caret != v->caret || L.max_len != v->max_len || L.hd != hd || L.text != t) {
-        int bx, by, bw, bh;
-        pkb_panel_box(v->kind, &bx, &by, &bw, &bh);
-        const int m = (int)(2 * sc) + 2;      /* the shadow's offset and the rounding, with room */
-        L.x = (int)floorf(x0 + bx * sc + 0.5f) - m;
-        L.y = (int)floorf(y0 + by * sc + 0.5f) - m;
-        L.w = (int)(bw * sc) + 2 * m + 2;
-        L.h = (int)(bh * sc) + 2 * m + 2;
-        L.px.assign((size_t)L.w * L.h, 0u);
-        const Surf ls = { L.px.data(), L.w, L.w, L.h };
-        draw_plank(ls, x0 - L.x, y0 - L.y, sc, v);      /* whole pixels moved, so every rounding lands where it did on the page */
-        L.fw = w; L.fh = h; L.x0 = x0; L.y0 = y0; L.sc = sc; L.kind = v->kind; L.ok = v->ok; L.key = v->key; L.caps = v->caps;
-        L.caret = v->caret; L.max_len = v->max_len; L.hd = hd; L.text = t;
-    }
-    for (int j = 0; j < L.h; ++j) {
-        const int yy = L.y + j;
+    for (int j = 0; j < lh; ++j) {
+        const int yy = ly + j;
         if (yy < 0 || yy >= h) continue;
-        const uint32_t *src = &L.px[(size_t)j * L.w];
+        const uint32_t *src = src0 + (size_t)j * lstride;
         uint32_t *dst = px + (size_t)yy * stride;
-        for (int i = 0; i < L.w; ++i) {
-            const int xx = L.x + i;
+        for (int i = 0; i < lw; ++i) {
+            const int xx = lx + i;
             if (xx < 0 || xx >= w) continue;
             const uint32_t c = src[i];
             const int a = (int)(c >> 24);
@@ -337,5 +334,71 @@ void pkb_draw(uint32_t *px, int stride, int w, int h, float x0, float y0, float 
                       b = (int)(c & 255) + ((d & 255) * ia + 127) / 255;
             dst[xx] = 0xFF000000u | (uint32_t)((r > 255 ? 255 : r) << 16) | (uint32_t)((g > 255 ? 255 : g) << 8) | (uint32_t)(b > 255 ? 255 : b);
         }
+    }
+}
+
+/* THE CACHE. The plank (sheet, text line, every key unlit) is drawn once into a clear layer of its own box and kept. It is drawn again only when
+   the field's text, CAPS, the field (kind, submit label, length), the picture's size or origin, the skin, or the font's readiness change (a plank
+   drawn before the font loaded has no labels). Every frame lays that layer over the page, then the lit key (its own small layer over the sheet's
+   ground, redrawn when the highlight moves) and the caret's blink (one glyph). */
+struct Layer {
+    std::vector<uint32_t> px, sheet;
+    int x = 0, y = 0, w = 0, h = 0;
+    int fw = -1, fh = -1, kind = -1, ok = -1, caps = -1, max_len = -1, hd = -1, font = -1;
+    float x0 = 0, y0 = 0, sc = 0;
+    std::string text;
+    CaretAt caret = {};
+    unsigned gen = 0;
+    std::vector<uint32_t> lit;
+    int lit_key = -1, lx = 0, ly = 0, lw = 0, lh = 0;
+    unsigned lit_gen = ~0u;
+};
+Layer g_layer;
+}  // namespace
+
+void pkb_draw(uint32_t *px, int stride, int w, int h, float x0, float y0, float sc, const PkbView *v)
+{
+    if (!px || !v || w < 32 || h < 32 || sc <= 0.f) return;
+    Layer &L = g_layer;
+    const int hd = skin().hd != 0, font = ui_text_ready() ? 1 : 0;
+    const char *t = v->text ? v->text : "";
+    if (L.fw != w || L.fh != h || L.x0 != x0 || L.y0 != y0 || L.sc != sc || L.kind != v->kind || L.ok != v->ok || L.caps != v->caps ||
+        L.max_len != v->max_len || L.hd != hd || L.font != font || L.text != t) {
+        int bx, by, bw, bh;
+        pkb_panel_box(v->kind, &bx, &by, &bw, &bh);
+        const int m = (int)(2 * sc) + 2;      /* the shadow's offset and the rounding, with room */
+        L.x = (int)floorf(x0 + bx * sc + 0.5f) - m;
+        L.y = (int)floorf(y0 + by * sc + 0.5f) - m;
+        L.w = (int)(bw * sc) + 2 * m + 2;
+        L.h = (int)(bh * sc) + 2 * m + 2;
+        L.px.assign((size_t)L.w * L.h, 0u);
+        const Surf ls = { L.px.data(), L.w, L.w, L.h };
+        draw_plank(ls, x0 - L.x, y0 - L.y, sc, v, &L.caret, &L.sheet);      /* whole pixels moved, so every rounding lands where it did on the page */
+        L.fw = w; L.fh = h; L.x0 = x0; L.y0 = y0; L.sc = sc; L.kind = v->kind; L.ok = v->ok; L.caps = v->caps;
+        L.max_len = v->max_len; L.hd = hd; L.font = font; L.text = t;
+        ++L.gen;
+    }
+    if (L.lit_gen != L.gen || L.lit_key != v->key) {
+        L.lit_gen = L.gen; L.lit_key = v->key; L.lw = 0;
+        float kx, ky, kw, kh;
+        if (v->key >= 0 && pkb_key_box(v->kind, v->key, &kx, &ky, &kw, &kh)) {
+            const float ox = x0 - L.x, oy = y0 - L.y;
+            const int rx = (int)floorf(ox + kx * sc + 0.5f), ry = (int)floorf(oy + ky * sc + 0.5f);
+            const int rw = (int)floorf(ox + (kx + kw) * sc + 0.5f) - rx, rh = (int)floorf(oy + (ky + kh) * sc + 0.5f) - ry;
+            if (rx >= 0 && ry >= 0 && rw > 0 && rh > 0 && rx + rw <= L.w && ry + rh <= L.h) {
+                L.lit.resize((size_t)rw * rh);
+                for (int j = 0; j < rh; ++j) memcpy(&L.lit[(size_t)j * rw], &L.sheet[(size_t)(ry + j) * L.w + rx], (size_t)rw * 4);
+                const Surf ks = { L.lit.data(), rw, rw, rh };
+                draw_key(ks, ox - rx, oy - ry, sc, v, v->key, true);      /* whole pixels moved again: the key lands on the same pixels */
+                L.lx = rx; L.ly = ry; L.lw = rw; L.lh = rh;
+            }
+        }
+    }
+    lay(px, stride, w, h, L.px.data(), L.w, L.x, L.y, L.w, L.h);
+    if (L.lw) lay(px, stride, w, h, L.lit.data(), L.lw, L.x + L.lx, L.y + L.ly, L.lw, L.lh);
+    if (v->caret && L.caret.has && ui_text_ready()) {
+        const Surf ps = { px, stride, w, h };
+        const int clip[4] = { L.caret.clip[0] + L.x, L.caret.clip[1] + L.y, L.caret.clip[2] + L.x, L.caret.clip[3] + L.y };
+        text(ps, L.caret.x + L.x, L.caret.top + L.y, "_", L.caret.em, C_INK, clip);
     }
 }
