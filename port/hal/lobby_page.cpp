@@ -17,13 +17,12 @@
 #include "ui_text.h"
 #include "../third_party/stb/stb_image.h"
 
-#if defined(__has_include)
-#  if __has_include("lobby_client.h")
-#    include "lobby_client.h"
-#    define LP_CLIENT_REAL 1
-#  endif
-#endif
-#ifndef LP_CLIENT_REAL
+/* the build defines LP_CLIENT_REAL=1 when the tree carries hal/lobby_client.h (port/CMakeLists.txt; MSVC's preprocessor here has no
+   __has_include to ask) */
+#if defined(LP_CLIENT_REAL) && LP_CLIENT_REAL
+#  include "lobby_client.h"
+#else
+#  undef LP_CLIENT_REAL
 #  define LP_CLIENT_REAL 0
 /* the contract of hal/lobby_client.h (lane LOBBYNET1), word for word: a tree without that file builds the page on the stand-in below */
 enum LobbyKind  { LOBBY_COOP = 0, LOBBY_VS = 1 };
