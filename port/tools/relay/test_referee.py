@@ -38,13 +38,14 @@ S_EVT = struct.Struct("<HBBBBHHHIiii")
 EV = dict(START=1, STAR_WAKE=2, MARKER_BROKEN=3, STAR_TAKEN=4, DENY=5, HIT=6,
           CLASH=7, SPILL=8, MATCH_OVER=9, LEAVE=10, JOIN=11, STAR_STATE=12,
           ACCEPTED=13, EATEN=14, RELEASED=15, GRABBED=16, THROWN=17, STOMPED=18,
-          CAP_TAKEN=19, CAP_DROPPED=20, CAP_STATE=21)
+          CAP_TAKEN=19, CAP_DROPPED=20, CAP_STATE=21, INFECTED=22,
+          TEAM_STATE=23)
 EVN = dict((v, k) for k, v in EV.items())
 CL = dict(READY=1, MARKER_BREAK=2, GRAB=3, HIT=4, HURT_SELF=5, PIT=6, QUIT=7,
           EAT=8, SPIT=9, SWALLOW=10, ESCAPE=11, CATCH=12, THROW=13, SWING=14,
-          BREAK=15, STOMP=16, CAP_TAKE=17, CAP_DROP=18)
+          BREAK=15, STOMP=16, CAP_TAKE=17, CAP_DROP=18, TAG=19)
 DENY = dict(STALE=1, GONE=2, LOST=3, RANGE=4, STATE=5, INVULN=6, MISMATCH=7,
-            UNSUPPORTED=8, BAD=9, TOO_OLD=10, SELF=11)
+            UNSUPPORTED=8, BAD=9, TOO_OLD=10, SELF=11, TEAM=12)
 
 # state indices (g_player_states order)
 ST_WALK, ST_WAIT, ST_PUNCH, ST_HURT, ST_DIVE = 14, 15, 59, 7, 62
@@ -301,7 +302,8 @@ class Console(object):
             if n in ("DENY", "STAR_TAKEN", "MARKER_BROKEN", "ACCEPTED",
                      "CAP_TAKEN", "CAP_DROPPED"):
                 who = (e["seat"],)
-            elif n in ("HIT", "CLASH", "EATEN", "GRABBED", "STOMPED"):
+            elif n in ("HIT", "CLASH", "EATEN", "GRABBED", "STOMPED",
+                       "INFECTED"):
                 who = (e["a"],)
             elif n in ("RELEASED", "THROWN"):
                 who = (e["seat"], e["a"])
@@ -386,6 +388,14 @@ def u_contract(mod):
         res.check(getattr(ref, "EV_" + n) == i, "event %s" % n)
     for i, n, d in ac.DENY_REASONS:
         res.check(getattr(ref, "D_" + n) == i, "deny %s" % n)
+    for i, n in ac.OVER_REASONS:
+        res.check(getattr(ref, "O_" + n) == i, "over %s" % n)
+    for i, n in ac.MODES:
+        res.check(getattr(ref, "MODE_" + n) == i, "mode %s" % n)
+    res.check(tuple(ac.MODES_ACCEPTED) == tuple(ref.MODES_ACCEPTED),
+              "accepted modes")
+    for i, n, d in ac.INFECT_CAUSES:
+        res.check(getattr(ref, "INF_" + n) == i, "infect cause %s" % n)
     for name, fields, size in (("SYNS", ac.SYNS_FIELDS, ref.S_SYNS.size),
                                ("SYNO", ac.SYNO_FIELDS, ref.S_SYNO.size),
                                ("SYNE", ac.SYNE_FIELDS, ref.S_SYNE.size),
@@ -2246,12 +2256,695 @@ def u_star_tie(mod):
     return res
 
 
+# ================================================================ LUIGI
+# Luigi Infection in arena mode (mode 2, lane REFLUIGI1). One test per rule
+# Tango set on 11-09 (in/REFLUIGI1.md of run after093); arena_contract.py
+# RULES has the rule text. The seed is SM64DS_REFEREE_SEED (12345 here), so
+# the first Luigi is sorted(roster)[12345 % n].
+
+LUIGI = 2
+INF = dict(PICK=1, HIT=2, STOMP=3, TAG=4, HANDOFF=5, LATE_JOIN=6)
+OVER = dict(TIME_UP=1, FIRST_TO_N=2, LAST_STANDING=3, EVERYONE_LEFT=4,
+            LUIGIS_WIN=5, SURVIVORS_WIN=6)
+
+
+def lmatch(n=2, time_s=120, first_to_n=0, code="LUIGI001", mod=None,
+           cap=None, env=None, run=True):
+    """A rig with n consoles in a mode 2 match; run=True streams past the
+    five-second countdown (the first Luigi is picked)."""
+    rig = Rig(mod, env=env)
+    cs = [Console(rig, code) for _ in range(n)]
+    streaming(rig, cs, 0.6)
+    for c in cs:
+        c.ready(cap=cap or n, time_s=time_s, first_to_n=first_to_n,
+                mode=LUIGI)
+    streaming(rig, cs, 5.3 if run else 0.2)
+    return rig, cs
+
+
+def luigi_of(cs):
+    """(the Luigi consoles, the survivor consoles) by the INFECTED stream
+    the first console applied."""
+    lu = set()
+    for e in cs[0].events:
+        if e["name"] == "INFECTED":
+            lu.add(e["seat"])
+        if e["name"] == "LEAVE":
+            lu.discard(e["seat"])
+    return ([c for c in cs if c.seat in lu],
+            [c for c in cs if c.seat not in lu])
+
+
+def _mask(seats):
+    m = 0
+    for s in seats:
+        m |= 1 << s
+    return m
+
+
+def u_luigi_pick(mod):
+    res = Result("luigi: mode 2 READY, 5 s countdown, first Luigi from the "
+                 "seed at T0, deterministic")
+    rig, cs = lmatch(3, run=False)
+    ref = rig.ref("LUIGI001")
+    a = cs[0]
+    acc = [c.verdict(c.cid) for c in cs]
+    res.check(all(v and v["name"] == "ACCEPTED" for v in acc),
+              "mode 2 READY accepted by every seat (%s)" % acc)
+    res.check(ref.state == 1, "countdown")
+    left = ref.t0 - ref.rt(rig.now)
+    res.check(4700 <= left <= 5000, "countdown is five seconds (%d ms left)"
+              % left)
+    st = a.find("START")
+    res.check(st and (st[0]["z"] >> 8) & 0xFF == LUIGI,
+              "START carries the rules word with mode 2")
+    # the countdown: nothing is decided, nobody is frozen by the referee
+    a.pos = [0, 0, 0]
+    cs[1].pos = [50, 0, 0]
+    a.state = ST_PUNCH
+    streaming(rig, cs, 0.5)
+    hit = a.claim(CL["HIT"], cs[1].seat, aux=2, ref_frame=cs[1].frame - 2)
+    grab = a.claim(CL["GRAB"], 1)
+    tag = a.claim(CL["TAG"], cs[1].seat, ref_frame=cs[1].frame - 2)
+    fr = cs[1].frame
+    cs[1].pos = [400, 0, 0]
+    streaming(rig, cs, 0.3)
+    for name, cid in (("HIT", hit), ("GRAB", grab), ("TAG", tag)):
+        v = a.verdict(cid)
+        res.check(v and v["name"] == "DENY" and v["b"] == DENY["STALE"],
+                  "%s in the countdown: DENY STALE (%s)" % (name, v))
+    moved = [s for s in ref.seats[cs[1].seat].hist if s.frame > fr]
+    res.check(moved and moved[-1].x == 400 * FIX,
+              "a body moving in the countdown is taken as it is (%s)"
+              % (moved[-1].x // FIX if moved else None))
+    res.check(not a.find("INFECTED"), "no Luigi before T0")
+    streaming(rig, cs, 4.6)
+    res.check(ref.state == 2, "running after five seconds")
+    inf = a.find("INFECTED")
+    want = sorted(c.seat for c in cs)[12345 % 3]
+    res.check(len(inf) == 1 and inf[0]["seat"] == want
+              and inf[0]["a"] == 0xFF and inf[0]["b"] == INF["PICK"]
+              and inf[0]["c"] == 0, "one INFECTED, the pick: seat %d (%s)"
+              % (want, inf))
+    res.check(inf and inf[0]["d"] == 1 << want and inf[0]["e"] == 2,
+              "mask and survivors left")
+    res.check(inf and inf[0]["t"] == ref.seat_wire(a.seat, ref.t0),
+              "the pick is stamped T0")
+    res.check(all([(e["seat"], e["b"]) for e in c.find("INFECTED")]
+                  == [(want, INF["PICK"])] for c in cs),
+              "every console hears the same pick")
+    # deterministic from the seed and the roster, every n and several seeds
+    for seed in (1, 2, 3, 7, 12345, 0xFFFFFFFF):
+        for n in (2, 3, 4):
+            m = load_relay({"SM64DS_REFEREE_SEED": str(seed)})
+            picks = []
+            for _ in range(2):
+                r2, c2 = lmatch(n, mod=m, code="PICK%04d" % n)
+                inf2 = c2[0].find("INFECTED")
+                picks.append(inf2[0]["seat"] if inf2 else None)
+            seats = sorted(c.seat for c in c2)
+            res.check(picks[0] == picks[1] == seats[seed % n],
+                      "seed %d, %d players: pick %s == seats[seed %% n] %d"
+                      % (seed, n, picks, seats[seed % n]))
+    return res
+
+
+def u_luigi_immune(mod):
+    res = Result("luigi: a Luigi is immune to hit, stomp, eat, grab, tag")
+    rig, cs = lmatch(3, code="LUIGI002")
+    ref = rig.ref("LUIGI002")
+    (lu,), surv = luigi_of(cs)
+    s1, s2 = surv
+    lu.pos, s1.pos, s2.pos = [0, 0, 0], [60, 0, 0], [3000, 0, 0]
+    s1.state = ST_PUNCH
+    s1.look = 2                     # a Wario, so CATCH is shaped right
+    streaming(rig, cs, 0.4)
+
+    def deny(c, kind, target, reason, what, **kw):
+        cid = c.claim(CL[kind], target, ref_frame=kw.get("rf", 0), aux=2)
+        streaming(rig, cs, 0.3)
+        v = c.verdict(cid)
+        res.check(v and v["name"] == "DENY" and v["b"] == DENY[reason],
+                  "%s: DENY %s (%s)" % (what, reason, v))
+
+    rf = lambda: lu.frame - 2
+    deny(s1, "HIT", lu.seat, "INVULN", "survivor HIT on the Luigi", rf=rf())
+    s1.state, s1.flags, s1.vy, s1.pos = 18, 0x01, -600, [20, 60, 0]
+    streaming(rig, cs, 0.3)
+    deny(s1, "STOMP", lu.seat, "INVULN", "survivor STOMP on the Luigi",
+         rf=rf())
+    s1.flags, s1.vy, s1.pos, s1.state = 0x03, 0, [60, 0, 0], 3
+    streaming(rig, cs, 0.3)
+    deny(s1, "EAT", lu.seat, "INVULN", "survivor EAT on the Luigi", rf=rf())
+    s1.state = ST_PUNCH
+    lu.state = ST_HURT
+    streaming(rig, cs, 0.3)
+    deny(s1, "CATCH", lu.seat, "INVULN", "survivor CATCH (Wario) on the "
+         "Luigi", rf=rf())
+    lu.state = ST_WAIT
+    deny(s1, "TAG", lu.seat, "INVULN", "survivor TAG on the Luigi", rf=rf())
+    res.check(ref.scores == [0] * 16 and not cs[0].find("HIT")
+              and not cs[0].find("STOMPED") and not cs[0].find("EATEN")
+              and not cs[0].find("GRABBED"), "nothing landed on the Luigi")
+    # the Luigi's own team moves: no eating, no catching
+    lu.state = 3
+    streaming(rig, cs, 0.3)
+    deny(lu, "EAT", s1.seat, "TEAM", "the Luigi's EAT", rf=s1.frame - 2)
+    lu.state, lu.look = ST_PUNCH, 2
+    s1.state = ST_HURT
+    streaming(rig, cs, 0.3)
+    deny(lu, "CATCH", s1.seat, "TEAM", "the Luigi's CATCH", rf=s1.frame - 2)
+    lu.look, s1.state = 1, ST_WAIT
+    # Luigi on Luigi: tag s1 first, then the two Luigis hit each other
+    streaming(rig, cs, 0.3)
+    cid = lu.claim(CL["TAG"], s1.seat, ref_frame=s1.frame - 2)
+    streaming(rig, cs, 0.3)
+    res.check(lu.verdict(cid)["name"] == "INFECTED", "s1 tagged")
+    streaming(rig, cs, 0.3)
+    deny(lu, "HIT", s1.seat, "INVULN", "Luigi HIT on a Luigi",
+         rf=s1.frame - 2)
+    deny(s1, "TAG", lu.seat, "INVULN", "Luigi TAG on a Luigi", rf=rf())
+    res.check(ref.invariants() == [], "invariants")
+    return res
+
+
+def u_luigi_infect(mod):
+    res = Result("luigi: a Luigi's hit / stomp / tag infects, no hurt, no "
+                 "star; survivor vs survivor unchanged")
+    rig, cs = lmatch(4, code="LUIGI003")
+    ref = rig.ref("LUIGI003")
+    (lu,), (s1, s2, s3) = luigi_of(cs)
+    a0 = cs[0]
+    # s1 gets a star (stars still spill between survivors)
+    inst = a0.find("STAR_WAKE")[-1]["a"]
+    s1.claim(CL["MARKER_BREAK"], inst)
+    streaming(rig, cs, 0.2)
+    s1.claim(CL["GRAB"], inst)
+    streaming(rig, cs, 2.0)                      # past the star-get pose
+    res.check(ref.scores[s1.seat] == 1, "s1 has a star")
+    # survivor vs survivor: the classic HIT and SPILL
+    s2.pos, s1.pos = [0, 0, 0], [100, 0, 0]
+    s2.state = ST_PUNCH
+    streaming(rig, cs, 0.3)
+    cid = s2.claim(CL["HIT"], s1.seat, aux=2, ref_frame=s1.frame - 2)
+    streaming(rig, cs, 0.3)
+    v = s2.verdict(cid)
+    res.check(v and v["name"] == "HIT" and a0.find("SPILL", seat=s1.seat),
+              "survivor HIT on a survivor: HIT + SPILL as classic (%s)" % v)
+    s2.state = ST_WAIT
+    # s3 gets a star, then the Luigi punches it: INFECTED, no spill
+    inst = [e for e in a0.find("STAR_WAKE")][-1]["a"]
+    s3.claim(CL["MARKER_BREAK"], inst)
+    streaming(rig, cs, 0.2)
+    s3.claim(CL["GRAB"], inst)
+    streaming(rig, cs, 0.3)
+    res.check(ref.scores[s3.seat] == 1, "s3 has a star")
+    lu.pos, s3.pos = [5000, 0, 0], [5100, 0, 0]
+    lu.state = ST_PUNCH
+    s3.invuln = 20                               # Classic's guard ignores it
+    streaming(rig, cs, 0.3)
+    n_spill = len(a0.find("SPILL"))
+    cid = lu.claim(CL["HIT"], s3.seat, aux=2, ref_frame=s3.frame - 2)
+    streaming(rig, cs, 0.3)
+    v = lu.verdict(cid)
+    res.check(v and v["name"] == "INFECTED" and v["seat"] == s3.seat
+              and v["a"] == lu.seat and v["b"] == INF["HIT"]
+              and v["c"] == cid, "Luigi HIT: INFECTED by the Luigi (%s)" % v)
+    res.check(v and v["d"] == _mask([lu.seat, s3.seat]) and v["e"] == 2,
+              "mask and survivors left")
+    res.check(v and abs(v["x"] - 5000 * FIX) < FIX, "carries the tagger pos")
+    res.check(len(a0.find("SPILL")) == n_spill and ref.scores[s3.seat] == 1,
+              "no star left s3 (stars stay, decide nothing)")
+    res.check(not a0.find("HIT", seat=s3.seat), "no HIT event: no hurt")
+    res.check(s3.seat in ref.luigis, "s3 is on the team")
+    s3.invuln = 0
+    # out of reach and wrong state are still refused
+    lu.pos, s2.pos = [0, 0, 8000], [900, 0, 8000]
+    streaming(rig, cs, 0.3)
+    cid = lu.claim(CL["HIT"], s2.seat, aux=2, ref_frame=s2.frame - 2)
+    streaming(rig, cs, 0.3)
+    res.check(lu.verdict(cid)["b"] == DENY["RANGE"], "Luigi HIT from 900 "
+              "units: DENY RANGE")
+    lu.state = ST_WAIT
+    s2.pos = [60, 0, 8000]
+    streaming(rig, cs, 0.6)
+    cid = lu.claim(CL["HIT"], s2.seat, aux=2, ref_frame=s2.frame - 2)
+    streaming(rig, cs, 0.3)
+    res.check(lu.verdict(cid)["b"] == DENY["STATE"], "Luigi HIT while not "
+              "attacking: DENY STATE (use TAG for a touch)")
+    # STOMP infects
+    lu.state, lu.flags, lu.vy = 18, 0x01, -600
+    lu.pos, s2.pos = [0, 60, 8000], [20, 0, 8000]
+    streaming(rig, cs, 0.3)
+    cid = lu.claim(CL["STOMP"], s2.seat, ref_frame=s2.frame - 2)
+    streaming(rig, cs, 0.3)
+    v = lu.verdict(cid)
+    res.check(v and v["name"] == "INFECTED" and v["b"] == INF["STOMP"]
+              and v["seat"] == s2.seat, "Luigi STOMP: INFECTED (%s)" % v)
+    res.check(not a0.find("STOMPED", seat=s2.seat), "no squash event")
+    # TAG infects (body contact), refused out of contact reach
+    lu.state, lu.flags, lu.vy = ST_WALK, 0x03, 0
+    lu.pos, s1.pos = [0, 0, -8000], [200, 0, -8000]
+    streaming(rig, cs, 0.3)
+    cid = lu.claim(CL["TAG"], s1.seat, ref_frame=s1.frame - 2)
+    streaming(rig, cs, 0.3)
+    res.check(lu.verdict(cid)["b"] == DENY["RANGE"], "TAG from 200 units: "
+              "DENY RANGE")
+    s1.pos = [70, 0, -8000]
+    streaming(rig, cs, 0.3)
+    cid = lu.claim(CL["TAG"], s1.seat, ref_frame=s1.frame - 2)
+    streaming(rig, cs, 0.3)
+    v = lu.verdict(cid)
+    res.check(v and v["name"] == "INFECTED" and v["b"] == INF["TAG"],
+              "Luigi TAG: INFECTED (%s)" % v)
+    res.check(ref.invariants() == [], "invariants")
+    return res
+
+
+def u_luigi_tag_rules(mod):
+    res = Result("luigi: TAG only from a Luigi, only in mode 2; a tag frees "
+                 "a mouthful first")
+    rig, cs = lmatch(3, code="LUIGI004")
+    (lu,), (s1, s2) = luigi_of(cs)
+    s1.pos, s2.pos = [0, 0, 0], [60, 0, 0]
+    streaming(rig, cs, 0.3)
+    cid = s1.claim(CL["TAG"], s2.seat, ref_frame=s2.frame - 2)
+    streaming(rig, cs, 0.3)
+    res.check(s1.verdict(cid)["b"] == DENY["TEAM"], "survivor TAG: DENY TEAM")
+    # s1 eats s2, then the Luigi tags the eater: RELEASED (forced) first
+    s1.state = 3                                  # St_YoshiPower
+    streaming(rig, cs, 0.3)
+    cid = s1.claim(CL["EAT"], s2.seat, ref_frame=s2.frame - 2)
+    streaming(rig, cs, 0.3)
+    res.check(s1.verdict(cid)["name"] == "EATEN", "s1 ate s2")
+    lu.pos = [0, 0, 70]
+    streaming(rig, cs, 0.3)
+    cid = lu.claim(CL["TAG"], s1.seat, ref_frame=s1.frame - 2)
+    streaming(rig, cs, 0.3)
+    v = lu.verdict(cid)
+    rel = cs[0].find("RELEASED", seat=s2.seat, a=s1.seat, b=4)
+    res.check(v and v["name"] == "INFECTED" and rel
+              and rel[0]["seq"] < v["seq"], "eater tagged: RELEASED b 4, "
+              "then INFECTED (%s / %s)" % (rel, v))
+    # a survivor in a mouth cannot be tagged
+    rig2, cs2 = lmatch(3, code="LUIGI005")
+    (l2,), (t1, t2) = luigi_of(cs2)
+    t1.pos, t2.pos, l2.pos = [0, 0, 0], [60, 0, 0], [60, 0, 60]
+    t1.state = 3
+    streaming(rig2, cs2, 0.3)
+    t1.claim(CL["EAT"], t2.seat, ref_frame=t2.frame - 2)
+    streaming(rig2, cs2, 0.3)
+    cid = l2.claim(CL["TAG"], t2.seat, ref_frame=t2.frame - 2)
+    streaming(rig2, cs2, 0.3)
+    res.check(l2.verdict(cid)["b"] == DENY["INVULN"], "TAG on a survivor in "
+              "a mouth: DENY INVULN")
+    # mode 0: TAG is not a claim there
+    rig3, (a, b) = match(2, code="LUIGI006")
+    cid = a.claim(CL["TAG"], b.seat, ref_frame=b.frame - 2)
+    streaming(rig3, [a, b], 0.3)
+    v = a.verdict(cid)
+    res.check(v and v["b"] == DENY["UNSUPPORTED"], "TAG in mode 0: DENY "
+              "UNSUPPORTED (%s)" % v)
+    res.check(not a.find("INFECTED"), "mode 0 never infects")
+    return res
+
+
+def u_luigi_caps(mod):
+    res = Result("luigi: no caps for Luigis, no Luigi cap for survivors")
+    rf = mod.referee
+    rig, cs = lmatch(2, code="LUIGI007")
+    ref = rig.ref("LUIGI007")
+    (lu,), (sv,) = luigi_of(cs)
+    caps = dict((slot, (x, y, z, (p >> 8) & 0xF))
+                for slot, x, y, z, p in rf.CAP_MAPS[0])
+
+    def take(c, slot):
+        x, y, z, look = caps[slot]
+        c.pos = [x, y, z]
+        streaming(rig, cs, 0.3)
+        cid = c.claim(CL["CAP_TAKE"], slot + 1,
+                      aux=rf.Referee.cap_hash(slot, x, z))
+        streaming(rig, cs, 0.3)
+        return c.verdict(cid)
+
+    mario = [k for k, v in caps.items() if v[3] == 0][0]
+    luigi = [k for k, v in caps.items() if v[3] == 1][0]
+    wario = [k for k, v in caps.items() if v[3] == 2][0]
+    v = take(lu, mario)
+    res.check(v and v["name"] == "DENY" and v["b"] == DENY["TEAM"],
+              "Luigi takes the Mario cap: DENY TEAM (%s)" % v)
+    v = take(lu, luigi)
+    res.check(v and v["name"] == "DENY" and v["b"] == DENY["TEAM"],
+              "Luigi takes the Luigi cap: DENY TEAM (%s)" % v)
+    v = take(sv, luigi)
+    res.check(v and v["name"] == "DENY" and v["b"] == DENY["TEAM"],
+              "survivor takes the Luigi cap: DENY TEAM (%s)" % v)
+    v = take(sv, wario)
+    res.check(v and v["name"] == "CAP_TAKEN", "survivor takes the Wario cap: "
+              "CAP_TAKEN (%s)" % v)
+    lu.state = ST_HURT
+    lu.look = 1
+    streaming(rig, cs, 0.3)
+    cid = lu.claim(CL["CAP_DROP"], 1, aux=0, ref_frame=0)
+    streaming(rig, cs, 0.3)
+    v = lu.verdict(cid)
+    res.check(v and v["name"] == "DENY" and v["b"] == DENY["TEAM"],
+              "Luigi CAP_DROP: DENY TEAM, no Luigi cap in the arena (%s)" % v)
+    res.check(ref.invariants() == [], "invariants")
+    return res
+
+
+def u_luigi_wins(mod):
+    res = Result("luigi: everyone infected = Luigis win; clock out with a "
+                 "survivor = survivors win; stars decide nothing")
+    rig, cs = lmatch(3, first_to_n=1, code="LUIGI008")
+    ref = rig.ref("LUIGI008")
+    (lu,), (s1, s2) = luigi_of(cs)
+    a0 = cs[0]
+    inst = a0.find("STAR_WAKE")[-1]["a"]
+    s1.claim(CL["MARKER_BREAK"], inst)
+    streaming(rig, cs, 0.2)
+    s1.claim(CL["GRAB"], inst)
+    streaming(rig, cs, 0.3)
+    res.check(ref.scores[s1.seat] == 1 and ref.state == 2,
+              "first_to_n 1 reached by a star: the match goes on")
+    for s in (s1, s2):
+        lu.pos, s.pos = [0, 0, 0], [60, 0, 0]
+        streaming(rig, cs, 0.3)
+        lu.claim(CL["TAG"], s.seat, ref_frame=s.frame - 2)
+        streaming(rig, cs, 0.3)
+        s.pos = [5000 + 1000 * s.seat, 0, 0]
+    ov = a0.find("MATCH_OVER")
+    res.check(ref.state == 3 and len(ov) == 1 and ov[0]["a"]
+              == OVER["LUIGIS_WIN"], "all infected: MATCH_OVER LUIGIS_WIN "
+              "(%s)" % ov)
+    res.check(ov and ov[0]["c"] == _mask(c.seat for c in cs)
+              and ov[0]["b"] == 3, "winners = every Luigi (the star "
+              "leader is not singled out)")
+    # time up with a survivor left
+    rig, cs = lmatch(3, time_s=8, code="LUIGI009")
+    ref = rig.ref("LUIGI009")
+    (lu,), (s1, s2) = luigi_of(cs)
+    lu.pos, s1.pos, s2.pos = [0, 0, 0], [60, 0, 0], [4000, 0, 0]
+    streaming(rig, cs, 0.3)
+    lu.claim(CL["TAG"], s1.seat, ref_frame=s1.frame - 2)
+    streaming(rig, cs, 4.0)
+    res.check(ref.state == 2, "still running at 4.6 s of 8")
+    streaming(rig, cs, 4.0)
+    ov = cs[0].find("MATCH_OVER")
+    res.check(len(ov) == 1 and ov[0]["a"] == OVER["SURVIVORS_WIN"]
+              and ov[0]["c"] == _mask([s2.seat]) and ov[0]["b"] == 1,
+              "clock out with s2 alive: SURVIVORS_WIN, winner s2 (%s)" % ov)
+    res.check(ov and ov[0]["t"] == ref.seat_wire(cs[0].seat, ref.t0 + 8000),
+              "the end is T0 + the clock (the countdown is not on it)")
+    return res
+
+
+def u_luigi_leave(mod):
+    res = Result("luigi: the only Luigi leaves = new random Luigi; the last "
+                 "survivor leaves = Luigis win")
+    rig, cs = lmatch(4, code="LUIGI010")
+    ref = rig.ref("LUIGI010")
+    (lu,), surv = luigi_of(cs)
+    lu.claim(CL["QUIT"], 0xFF)
+    rig.consoles.remove(lu)
+    left = [c for c in cs if c is not lu]
+    streaming(rig, left, 0.3)
+    a0 = left[0]
+    ho = a0.find("INFECTED", b=INF["HANDOFF"])
+    want = sorted(c.seat for c in left)[12345 % 3]
+    res.check(len(ho) == 1 and ho[0]["seat"] == want and ho[0]["a"] == 0xFF
+              and ho[0]["d"] == 1 << want, "the only Luigi quit: HANDOFF to "
+              "seat %d by the pick rule (%s)" % (want, ho))
+    lv = a0.find("LEAVE", seat=lu.seat)
+    res.check(lv and ho and lv[0]["seq"] < ho[0]["seq"], "LEAVE first, then "
+              "the new Luigi")
+    res.check(ref.state == 2 and ref.luigis == {want}, "the match goes on")
+    # a silent Luigi (no QUIT) is the same
+    rig, cs = lmatch(3, code="LUIGI011")
+    ref = rig.ref("LUIGI011")
+    (lu,), surv = luigi_of(cs)
+    streaming(rig, surv, 3.6)                    # lu goes quiet
+    ho = surv[0].find("INFECTED", b=INF["HANDOFF"])
+    res.check(len(ho) == 1 and ref.state == 2, "a Luigi gone silent: "
+              "HANDOFF (%s)" % ho)
+    # the last survivor leaves: Luigis win
+    rig, cs = lmatch(3, code="LUIGI012")
+    ref = rig.ref("LUIGI012")
+    (lu,), (s1, s2) = luigi_of(cs)
+    lu.pos, s1.pos = [0, 0, 0], [60, 0, 0]
+    streaming(rig, cs, 0.3)
+    lu.claim(CL["TAG"], s1.seat, ref_frame=s1.frame - 2)
+    streaming(rig, cs, 0.3)
+    s2.claim(CL["QUIT"], 0xFF)
+    rig.consoles.remove(s2)
+    streaming(rig, [lu, s1], 0.3)
+    ov = lu.find("MATCH_OVER")
+    res.check(len(ov) == 1 and ov[0]["a"] == OVER["LUIGIS_WIN"]
+              and ov[0]["c"] == _mask([lu.seat, s1.seat]),
+              "the last survivor quit: LUIGIS_WIN (%s)" % ov)
+    # two players, the Luigi leaves: the one left wins (no lone hand-off)
+    rig, cs = lmatch(2, code="LUIGI013")
+    (lu,), (sv,) = luigi_of(cs)
+    lu.claim(CL["QUIT"], 0xFF)
+    rig.consoles.remove(lu)
+    streaming(rig, [sv], 0.3)
+    ov = sv.find("MATCH_OVER")
+    res.check(len(ov) == 1 and ov[0]["a"] == OVER["SURVIVORS_WIN"]
+              and ov[0]["c"] == 1 << sv.seat
+              and not sv.find("INFECTED", b=INF["HANDOFF"]),
+              "2 players, the Luigi quit: SURVIVORS_WIN for the one left (%s)"
+              % ov)
+    # two players, the survivor leaves: Luigis win
+    rig, cs = lmatch(2, code="LUIGI014")
+    (lu,), (sv,) = luigi_of(cs)
+    sv.claim(CL["QUIT"], 0xFF)
+    rig.consoles.remove(sv)
+    streaming(rig, [lu], 0.3)
+    ov = lu.find("MATCH_OVER")
+    res.check(len(ov) == 1 and ov[0]["a"] == OVER["LUIGIS_WIN"]
+              and ov[0]["c"] == 1 << lu.seat, "2 players, the survivor quit: "
+              "LUIGIS_WIN (%s)" % ov)
+    # a leave in the countdown: nobody is a Luigi yet
+    rig, cs = lmatch(3, code="LUIGI015", run=False)
+    ref = rig.ref("LUIGI015")
+    cs[2].claim(CL["QUIT"], 0xFF)
+    rig.consoles.remove(cs[2])
+    streaming(rig, cs[:2], 5.2)
+    inf = cs[0].find("INFECTED")
+    want = sorted(c.seat for c in cs[:2])[12345 % 2]
+    res.check(len(inf) == 1 and inf[0]["seat"] == want and inf[0]["b"]
+              == INF["PICK"], "a quit in the countdown: the pick is over "
+              "the two left (%s)" % inf)
+    res.check(ref.invariants() == [], "invariants")
+    return res
+
+
+def u_luigi_join(mod):
+    res = Result("luigi: a late joiner is a Luigi; before the pick it is in "
+                 "the pick; the SNAPSHOT carries the team")
+    # a rejoin mid-match: QUIT then READY again
+    rig, cs = lmatch(3, code="LUIGI016")
+    ref = rig.ref("LUIGI016")
+    (lu,), (s1, s2) = luigi_of(cs)
+    s2.claim(CL["QUIT"], 0xFF)
+    streaming(rig, cs, 0.5)
+    res.check(ref.state == 2 and s2.seat not in ref.roster, "s2 left, two "
+              "play on")
+    s2.snap = []
+    s2.ready(cap=3, mode=LUIGI)
+    streaming(rig, cs, 0.5)
+    lj = cs[0].find("INFECTED", seat=s2.seat, b=INF["LATE_JOIN"])
+    res.check(len(lj) == 1 and lj[0]["a"] == 0xFF and s2.seat in ref.luigis,
+              "back mid-match: INFECTED LATE_JOIN (%s)" % lj)
+    js = cs[0].find("JOIN", seat=s2.seat, a=1)
+    res.check(js and lj and js[-1]["seq"] < lj[0]["seq"], "JOIN first")
+    ts = [e for e in s2.snap if e["name"] == "TEAM_STATE"]
+    res.check(ts and ts[0]["a"] == 1 and ts[0]["c"] == _mask([lu.seat,
+                                                              s2.seat])
+              and ts[0]["d"] == _mask(c.seat for c in cs),
+              "its SNAPSHOT: TEAM_STATE with the Luigi mask (%s)" % ts)
+    # a fresh console: capacity 3, two start after 20 s, the third comes
+    # in during the countdown (in the pick) or after it (a Luigi)
+    for late, code in ((False, "LUIGI017"), (True, "LUIGI018")):
+        rig = Rig(mod)
+        cs = [Console(rig, code) for _ in range(2)]
+        streaming(rig, cs, 0.6)
+        for c in cs:
+            c.ready(cap=3, mode=LUIGI)
+        streaming(rig, cs, 20.3)
+        ref = rig.ref(code)
+        res.check(ref.state == 1, "%s: two started, countdown" % code)
+        if late:
+            streaming(rig, cs, 5.2)
+        c3 = Console(rig, code)
+        cs.append(c3)
+        streaming(rig, cs, 0.6)
+        c3.ready(cap=3, mode=LUIGI)
+        streaming(rig, cs, 0.4 if late else 5.2)
+        inf = cs[0].find("INFECTED")
+        if late:
+            res.check([(e["seat"], e["b"]) for e in inf] ==
+                      [(sorted(c.seat for c in cs[:2])[12345 % 2],
+                        INF["PICK"]), (c3.seat, INF["LATE_JOIN"])],
+                      "joined after the pick: a Luigi (%s)" % inf)
+            ts = [e for e in c3.snap if e["name"] == "TEAM_STATE"]
+            res.check(ts and ts[-1]["c"] & (1 << c3.seat), "the new console's "
+                      "SNAPSHOT has itself on the team")
+        else:
+            res.check([(e["seat"], e["b"]) for e in inf] ==
+                      [(sorted(c.seat for c in cs)[12345 % 3], INF["PICK"])],
+                      "joined in the countdown: one pick over all three (%s)"
+                      % inf)
+        res.check(ref.invariants() == [], "invariants")
+    return res
+
+
+def u_luigi_16(mod):
+    res = Result("luigi: 16 players, one pick, fifteen tags, Luigis win")
+    rig, cs = lmatch(16, code="LUIGI019")
+    ref = rig.ref("LUIGI019")
+    res.check(len(ref.roster) == 16, "16 in the match")
+    (lu,), surv = luigi_of(cs)
+    res.check(lu.seat == sorted(c.seat for c in cs)[12345 % 16],
+              "the pick is seats[seed % 16]")
+    for i, c in enumerate(cs):
+        c.pos = [2000 * i, 0, 0]
+    streaming(rig, cs, 0.3)
+    n = 0
+    for s in surv:
+        lu.pos = [s.pos[0] + 60, 0, 0]
+        streaming(rig, cs, 0.2)
+        cid = lu.claim(CL["TAG"], s.seat, ref_frame=s.frame - 2)
+        streaming(rig, cs, 0.25)
+        v = lu.verdict(cid)
+        n += 1 if v and v["name"] == "INFECTED" else 0
+    res.check(n == 15, "fifteen tags, fifteen INFECTED (%d)" % n)
+    ov = cs[0].find("MATCH_OVER")
+    res.check(len(ov) == 1 and ov[0]["a"] == OVER["LUIGIS_WIN"]
+              and ov[0]["c"] == 0xFFFF and ov[0]["b"] == 16,
+              "LUIGIS_WIN, all sixteen (%s)" % ov)
+    last = cs[0].find("INFECTED")[-1]
+    res.check(last["d"] == 0xFFFF and last["e"] == 0, "the last INFECTED: "
+              "mask 0xffff, 0 survivors")
+    res.check(ref.invariants() == [], "invariants")
+    return res
+
+
+def u_luigi_mode0(mod):
+    res = Result("luigi: mode 0 untouched (3 s countdown, no team events, "
+                 "TIME_UP, mode 1 still refused)")
+    rig, (a, b) = match(2, time_s=5, code="LUIGI020")
+    ref = rig.ref("LUIGI020")
+    res.check(not ref.luigis and not a.find("INFECTED"), "no Luigi in mode 0")
+    st = a.find("START")[0]
+    res.check((st["z"] >> 8) & 0xFF == 0, "rules word mode 0")
+    a.snap = []
+    ref._snapshot(a.seat, ref.rt(rig.now))
+    rig.deliver()
+    res.check(a.snap and not [e for e in a.snap if e["name"] == "TEAM_STATE"],
+              "a mode 0 SNAPSHOT has no TEAM_STATE")
+    streaming(rig, [a, b], 5.0)
+    ov = a.find("MATCH_OVER")
+    res.check(ov and ov[0]["a"] == OVER["TIME_UP"], "clock out: TIME_UP (%s)"
+              % ov)
+    rig = Rig(mod)
+    c, c2 = Console(rig, "LUIGI021"), Console(rig, "LUIGI021")
+    streaming(rig, [c, c2], 0.6)
+    c.ready(cap=2)
+    c2.ready(cap=2)
+    streaming(rig, [c, c2], 0.2)
+    ref = rig.ref("LUIGI021")
+    left = ref.t0 - ref.rt(rig.now)
+    res.check(2700 <= left <= 3000, "mode 0 countdown still 3 s (%d)" % left)
+    rig3 = Rig(mod)
+    k = Console(rig3, "LUIGI022")
+    streaming(rig3, [k], 0.6)
+    cid = k.ready(cap=2, mode=1)
+    streaming(rig3, [k], 0.3)
+    v = k.verdict(cid)
+    res.check(v and v["b"] == DENY["UNSUPPORTED"], "mode 1 (King) still "
+              "UNSUPPORTED (%s)" % v)
+    cid = k.ready(cap=2, mode=3)
+    streaming(rig3, [k], 0.3)
+    res.check(k.verdict(cid)["b"] == DENY["UNSUPPORTED"], "mode 3: "
+              "UNSUPPORTED")
+    return res
+
+
+def luigi_race(mod, v):
+    """Two Luigis tag one survivor: exactly one INFECTED, credited to the
+    earlier stamp (the classic contention rule). Returns the winner index."""
+    rig, cs = lmatch(3, code="LRACE001", mod=mod)
+    ref = rig.ref("LRACE001")
+    (l0,), (s1, s2) = luigi_of(cs)
+    l0.pos, s1.pos, s2.pos = [0, 0, 0], [60, 0, 0], [0, 0, 60]
+    streaming(rig, cs, 0.3)
+    l0.claim(CL["TAG"], s1.seat, ref_frame=s1.frame - 2)
+    streaming(rig, cs, 0.4)
+    a, b, victim = l0, s1, s2
+    sa, sb = ref.seats[a.seat], ref.seats[b.seat]
+    rig.no_pings = True
+    sa.rtts.clear(); sa.rtts.append(v["rtt"][0]); sa.rtt_min = v["rtt"][0]
+    sb.rtts.clear(); sb.rtts.append(v["rtt"][1]); sb.rtt_min = v["rtt"][1]
+    ref.seats[victim.seat].rtts.clear()
+    ref.seats[victim.seat].rtts.append(40)
+    ref.seats[victim.seat].rtt_min = 40
+    t_base = ref.rt(rig.now) + 100
+    order = sorted([(v["arrive"][0], 0), (v["arrive"][1], 1)])
+    cids = {}
+    nxt = [rig.now]
+    for arr, who in order:
+        target = t_base + arr - 2000.0
+        while ref.rt(rig.now) < target:
+            rig.now += 0.001
+            if rig.now >= nxt[0]:           # bodies keep streaming (30 Hz)
+                nxt[0] += 1.0 / 30.0
+                for k in cs:
+                    k.syns()
+            rig.relay.tick(rig.now)
+            rig.deliver()
+        rf = victim.frame - 2
+        c = (a, b)[who]
+        cids[who] = c.claim(CL["TAG"], victim.seat, ref_frame=rf,
+                            stamp=ref.seat_wire(c.seat, t_base
+                                                + v["stamp"][who] - 2000))
+    streaming(rig, cs, 0.4)
+    va, vb = a.verdict(cids[0]), b.verdict(cids[1])
+    wins = [bool(va and va["name"] == "INFECTED"),
+            bool(vb and vb["name"] == "INFECTED")]
+    if sum(wins) != 1:
+        return -1
+    return 0 if wins[0] else 1
+
+
+def run_luigi_vectors(mod, res, vec_doc, write):
+    lvec = race_vectors(seed=13, races=8)
+    for v in lvec:
+        v["winner"] = luigi_race(mod, v)
+    two = sum(1 for v in lvec if v["winner"] < 0)
+    ok = sum(1 for v in lvec if v["winner"] == v["truth"])
+    res.note("luigi tags: %d/%d correct (%.1f%%)" % (ok, len(lvec),
+                                                     100.0 * ok / len(lvec)))
+    res.check(two == 0, "no tag race with two or zero INFECTED (%d)" % two)
+    res.check(ok >= 0.95 * len(lvec), "tag races >= 95%% correct")
+    if not write:
+        same = [(r["stamp"], r["arrive"], r["rtt"], r["winner"])
+                for r in (vec_doc or {}).get("luigi_races", [])] == [
+            (v["stamp"], v["arrive"], v["rtt"], v["winner"]) for v in lvec]
+        res.check(same, "arena_vectors.json luigi_races match this referee")
+    return lvec
+
+
 def run_unit():
     mod = load_relay()
     tests = (u_contract, u_handshake, u_routes, u_match, u_timeup,
              u_contention, u_hits, u_hit_nc, u_reliability, u_leave, u_ready,
              u_strikes, u_eat, u_grab, u_stomp, u_rematch, u_rejoin, u_hit_eat, u_star_flight,
-             u_eat_shield, u_land_speed, u_caps, u_star_tie)
+             u_eat_shield, u_land_speed, u_caps, u_star_tie,
+             u_luigi_pick, u_luigi_immune, u_luigi_infect, u_luigi_tag_rules,
+             u_luigi_caps, u_luigi_wins, u_luigi_leave, u_luigi_join,
+             u_luigi_16, u_luigi_mode0)
     results = []
     for t in tests:
         try:
@@ -2361,6 +3054,11 @@ def run_vectors(mod, write=False, races=200):
                  % races)
     vec = race_vectors(races=races)
     capvec = race_vectors(seed=11, races=40)
+    try:
+        vec_doc = json.load(open(VECTORS))
+    except (OSError, ValueError):
+        vec_doc = None
+    lvec = run_luigi_vectors(mod, res, vec_doc, write)
     for v in capvec:
         v["winner"] = decide_race(mod, v, caps=True)
     by = {}
@@ -2403,6 +3101,13 @@ def run_vectors(mod, write=False, races=200):
             fh.write(' "cap_races": [\n')
             fh.write(",\n".join("  " + json.dumps(r, sort_keys=True)
                                 for r in capvec))
+            fh.write("\n ],\n")
+            fh.write(' "luigi_races_about": "REFLUIGI1: the same model, two '
+                     'Luigis race to tag one survivor (TAG); winner = the one '
+                     'whose INFECTED it is",\n')
+            fh.write(' "luigi_races": [\n')
+            fh.write(",\n".join("  " + json.dumps(r, sort_keys=True)
+                                for r in lvec))
             fh.write("\n ]}\n")
         res.note("wrote %s (%d races)" % (os.path.basename(VECTORS),
                                           len(vec)))

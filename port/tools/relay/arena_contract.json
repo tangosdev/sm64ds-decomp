@@ -1,6 +1,6 @@
 {
  "contract": "sm64ds arena referee",
- "version": 1,
+ "version": 2,
  "session": {
   "hello": "HELLO v2 (relay.py) with role 3 = ARENA member; want_seat 0..15 or 0xFF (any); flags bit0 = this console sends voice",
   "role_arena": 3,
@@ -965,7 +965,7 @@
    "id": 1,
    "name": "READY",
    "target": "map (0..3)",
-   "fields": "aux = time limit s (0 none); stamp = rules: b0 first_to_n, b1 mode (0 classic; others refused in phase A), b2 capacity 2..16, b3 marker count 1..8; my_frame = the go plan digest (u32, same on every console); ref_frame 0. Every console sends it once booted; config must match the first READY"
+   "fields": "aux = time limit s (0 none); stamp = rules: b0 first_to_n, b1 mode (0 classic, 2 Luigi Infection; 1 is kept for King of the Star and refused, like every other value), b2 capacity 2..16, b3 marker count 1..8; my_frame = the go plan digest (u32, same on every console); ref_frame 0. Every console sends it once booted; config must match the first READY"
   },
   {
    "id": 2,
@@ -1068,6 +1068,12 @@
    "name": "CAP_DROP",
    "target": "the look (0 Mario, 1 Luigi, 2 Wario) of the cap that came off",
    "fields": "VSREF3: my body was hurt and the ROM popped my cap (St_Hurt_Init -> func_ov002_020d93ac); aux = my angle Y (u16); ref_frame = my angle X (low 16) | my angle Z (high 16); my_frame = the frame it popped; the pop position is the referee's own sample of me"
+  },
+  {
+   "id": 19,
+   "name": "TAG",
+   "target": "victim seat",
+   "fields": "LUIGI (mode 2 only): my Luigi body touched a survivor's body (Classic's team guard, unmatched/LuigiInfection_Hit.cpp, runs on any player contact, before the ROM's attack and stomp branches); stamp; my_frame; ref_frame = the victim frame I drew. A Luigi's HIT and STOMP infect too; TAG is for a touch that is neither"
   }
  ],
  "events": [
@@ -1175,6 +1181,16 @@
    "id": 21,
    "name": "CAP_STATE",
    "fields": "SNAPSHOT ONLY (seq 0): seat 0xFF; a cap id; b 1 a placed cap that is taken / 2 a knocked-off cap lying there; c ms until the placed cap is back / the knocked-off one expires; d look; xyz last position"
+  },
+  {
+   "id": 22,
+   "name": "INFECTED",
+   "fields": "LUIGI (mode 2): seat = the player who is a Luigi now; a by: the tagging Luigi's seat, 0xFF when the referee made it (pick, hand-off, late join); b cause (INF_*); c the tagger's claim id (HIT / STOMP / TAG), 0 when the referee made it; d the Luigi mask after (bit = seat); e survivors left in the match; t stamp (the first pick: T0); xyz the tagger's position (Fix12; 0 when the referee made it). No hurt, no star: swap the body to Luigi at once"
+  },
+  {
+   "id": 23,
+   "name": "TEAM_STATE",
+   "fields": "SNAPSHOT ONLY (seq 0), mode 2: seat 0xFF; a 1 = the first Luigi is picked, 0 = not yet; c the Luigi mask; d the roster mask; t the pick time (T0)"
   }
  ],
  "deny_reasons": [
@@ -1232,6 +1248,11 @@
    "id": 11,
    "name": "SELF",
    "note": "target is the claimant, or not a seat in the match"
+  },
+  {
+   "id": 12,
+   "name": "TEAM",
+   "note": "Luigi Infection team rule: a Luigi may not take a cap, drop one, eat or catch; a survivor may not take the Luigi cap or TAG"
   }
  ],
  "over_reasons": [
@@ -1250,6 +1271,63 @@
   {
    "id": 4,
    "name": "EVERYONE_LEFT"
+  },
+  {
+   "id": 5,
+   "name": "LUIGIS_WIN"
+  },
+  {
+   "id": 6,
+   "name": "SURVIVORS_WIN"
+  }
+ ],
+ "modes": [
+  {
+   "id": 0,
+   "name": "CLASSIC",
+   "accepted": true
+  },
+  {
+   "id": 1,
+   "name": "KING",
+   "accepted": false
+  },
+  {
+   "id": 2,
+   "name": "LUIGI",
+   "accepted": true
+  }
+ ],
+ "infect_causes": [
+  {
+   "id": 1,
+   "name": "PICK",
+   "note": "the first Luigi, picked at T0"
+  },
+  {
+   "id": 2,
+   "name": "HIT",
+   "note": "a Luigi's HIT claim"
+  },
+  {
+   "id": 3,
+   "name": "STOMP",
+   "note": "a Luigi's STOMP claim"
+  },
+  {
+   "id": 4,
+   "name": "TAG",
+   "note": "a Luigi's TAG claim (body contact)"
+  },
+  {
+   "id": 5,
+   "name": "HANDOFF",
+   "note": "every Luigi left: the referee picked a new one"
+  },
+  {
+   "id": 6,
+   "name": "LATE_JOIN",
+   "note": "joined after the first pick"
   }
  ],
  "numbers": {
@@ -1294,7 +1372,10 @@
   "CAP_WORN_MS": 3000,
   "CAP_HURT_EVIDENCE_MS": 1500,
   "CAP_DROP_WAIT_MS": 150,
-  "CAP_DROP_MIN_MS": 1000
+  "CAP_DROP_MIN_MS": 1000,
+  "LUIGI_COUNTDOWN_MS": 5000,
+  "TAG_REACH_H": 130,
+  "TAG_REACH_V": 200
  },
  "state_names": [
   "St_LedgeHang",
@@ -1557,6 +1638,7 @@
   "A seat the referee dropped from the match (LEAVE naming itself) must send READY again to come back (JOIN mid-match, score 0, SNAPSHOT).",
   "GRAB1 (the Wario hold): CATCH is a HIT-shaped claim from a Wario (SYNS character 2) in a punch or dive against a victim in the stun a Wario hit leaves (St_Hurt within GRAB_STUN_MAX_MS of that hit, or St_DizzyStars); verdict GRABBED (seat = victim, a = holder) or DENY. One hold per holder and per victim; a held seat cannot be hit or eaten. THROW and SWING (holder) and BREAK (victim) end a hold no sooner than GRAB_RELEASE_MIN_MS after the GRABBED, as THROWN (b 1 throw, 2 swing, 3 break, 4 forced: a leave, a quit, or the victim not in St_Grabbed for GRAB_STUCK_MS); the launch speed is capped at GRAB_SPEED_MAX. STOMP (GRAB1, F9-d): an airborne claimant falling onto a player in reach, STOMPED to everyone (the victim squashes, the stomper bounces); never a star, never a hurt; one per pair per STOMP_MIN_MS.",
   "VSREF3 (caps): a cap the arena places has an id 1..31 (its death-table slot + 1: the arena's cap table) and a cap a hit knocks off has one the referee issues (32..255). CAP_TAKE is a claim like GRAB: the earliest stamp wins (DENY LOST d = winner for the others, GONE once the cap is not there), the claimant must be able to act (STATE) and within CAP_R of the cap (RANGE; a knocked-off cap flies and slides for CAP_FLIGHT_MS and gets CAP_FLIGHT_SLACK more, measured from its pop point). A taken placed cap is back CAP_RESPAWN_MS after the stamp, on every console from the event time; a knocked-off cap lies CAP_LIFE_MS. CAP_DROP is the hurt wearer's report that the ROM popped its cap: granted only to a seat whose own SYNS showed that cap look within CAP_WORN_MS and showed a hurt within CAP_HURT_EVIDENCE_MS, once per wearing; the pop position is the referee's own sample of the seat, never the claim's.",
-  "Phase A: classic mode only (READY mode != 0 is DENY UNSUPPORTED); EAT / SPIT / SWALLOW / ESCAPE are provisional for A5; speed strikes are logged, not kicked."
+  "Modes: 0 classic and 2 Luigi Infection; any other READY mode (1 is kept for King of the Star) is DENY UNSUPPORTED, and TAG outside mode 2 is DENY UNSUPPORTED. EAT / SPIT / SWALLOW / ESCAPE are provisional for A5; speed strikes are logged, not kicked.",
+  "LUIGI INFECTION (mode 2; mode 0 never sees any of this). The start countdown is LUIGI_COUNTDOWN_MS instead of COUNTDOWN_MS; the referee freezes nobody during it (movement is the game's) and, as in every mode, decides no claim before T0 but QUIT (DENY STALE). At T0 the referee picks the first Luigi: sorted(roster)[seed % n], seed = START x, n = players in the match (Classic's port_luigi_seed rule), INFECTED b PICK. The team is the referee's alone (the Luigi mask). A Luigi is immune: a HIT, STOMP, EAT, CATCH or TAG on a Luigi is DENY INVULN, from anyone. A Luigi's HIT (attack state, reach, lag checks as a hit), STOMP (as a stomp) or TAG (body contact: TAG_REACH_H / TAG_REACH_V) on a survivor is INFECTED: no hurt, no star, and the victim's invincibility, power and hit-immunity do not stop it (Classic's guard runs before the ROM's resolution); a victim in a mouth or a hold is DENY INVULN. A Luigi's EAT, CATCH, CAP_TAKE and CAP_DROP are DENY TEAM; a survivor's CAP_TAKE of a Luigi cap (look 1) and a survivor's TAG are DENY TEAM. Survivor vs survivor is the classic rules. Infecting a player ends any hold or mouthful it is part of (THROWN b 4 / RELEASED b 4 first). Stars spill and score as in classic but decide nothing: first_to_n is ignored. The end: no survivor left in the match = LUIGIS_WIN (winners = the Luigis); the clock runs out with a survivor = SURVIVORS_WIN (winners = the survivors); one player left of a match that had two or more = that player's team wins (5 or 6); everyone left = EVERYONE_LEFT. Leavers: the last Luigi leaves with two or more players left = the referee picks a new Luigi by the same rule over the players left (INFECTED b HANDOFF); the last survivor leaves = LUIGIS_WIN. A player who joins after the pick (READY mid-match, a rejoin too) is a Luigi at once (INFECTED b LATE_JOIN, before its SNAPSHOT); one who joins before the pick is in the pick. A mode 2 SNAPSHOT carries a TEAM_STATE record after the START replay."
  ]
 }

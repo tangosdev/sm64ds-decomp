@@ -124,6 +124,10 @@ CAP_WORN_MS = 3000              # CAP_DROP: the seat's own SYNS showed that cap 
 CAP_HURT_EVIDENCE_MS = 1500     # ... and showed a hurt this recently
 CAP_DROP_WAIT_MS = 150          # a CAP_DROP whose evidence has not arrived yet waits this long
 CAP_DROP_MIN_MS = 1000          # one CAP_DROP per seat per this long
+# LUIGI INFECTION (mode 2, lane REFLUIGI1)
+LUIGI_COUNTDOWN_MS = 5000       # mode 2's start countdown: the first Luigi is picked at T0, five seconds on (Classic's)
+TAG_REACH_H = 130               # a TAG is body contact: radii 40 + 40, a margin for the drawn frame
+TAG_REACH_V = 200               # ... and a body's height with a margin
 
 FIX = 4096                      # Fix12
 POS_LIMIT = POS_LIMIT_UNITS * FIX
@@ -167,24 +171,33 @@ C_READY, C_MARKER_BREAK, C_GRAB, C_HIT, C_HURT_SELF, C_PIT, C_QUIT = range(1, 8)
 C_EAT, C_SPIT, C_SWALLOW, C_ESCAPE = 8, 9, 10, 11
 C_CATCH, C_THROW, C_SWING, C_BREAK, C_STOMP = 12, 13, 14, 15, 16
 C_CAP_TAKE, C_CAP_DROP = 17, 18
+C_TAG = 19
 CLAIM_NAMES = {1: "READY", 2: "MARKER_BREAK", 3: "GRAB", 4: "HIT",
                5: "HURT_SELF", 6: "PIT", 7: "QUIT", 8: "EAT", 9: "SPIT",
                10: "SWALLOW", 11: "ESCAPE", 12: "CATCH", 13: "THROW",
                14: "SWING", 15: "BREAK", 16: "STOMP", 17: "CAP_TAKE",
-               18: "CAP_DROP"}
+               18: "CAP_DROP", 19: "TAG"}
 # events
 (EV_START, EV_STAR_WAKE, EV_MARKER_BROKEN, EV_STAR_TAKEN, EV_DENY, EV_HIT,
  EV_CLASH, EV_SPILL, EV_MATCH_OVER, EV_LEAVE, EV_JOIN, EV_STAR_STATE,
  EV_ACCEPTED, EV_EATEN, EV_RELEASED, EV_GRABBED, EV_THROWN,
- EV_STOMPED, EV_CAP_TAKEN, EV_CAP_DROPPED, EV_CAP_STATE) = range(1, 22)
+ EV_STOMPED, EV_CAP_TAKEN, EV_CAP_DROPPED, EV_CAP_STATE,
+ EV_INFECTED, EV_TEAM_STATE) = range(1, 24)
 # deny reasons
 (D_STALE, D_GONE, D_LOST, D_RANGE, D_STATE, D_INVULN, D_MISMATCH,
- D_UNSUPPORTED, D_BAD, D_TOO_OLD, D_SELF) = range(1, 12)
+ D_UNSUPPORTED, D_BAD, D_TOO_OLD, D_SELF, D_TEAM) = range(1, 13)
 DENY_NAMES = {1: "STALE", 2: "GONE", 3: "LOST", 4: "RANGE", 5: "STATE",
               6: "INVULN", 7: "MISMATCH", 8: "UNSUPPORTED", 9: "BAD",
-              10: "TOO_OLD", 11: "SELF"}
+              10: "TOO_OLD", 11: "SELF", 12: "TEAM"}
 # match-over reasons
 O_TIME_UP, O_FIRST_TO_N, O_LAST_STANDING, O_EVERYONE_LEFT = 1, 2, 3, 4
+O_LUIGIS_WIN, O_SURVIVORS_WIN = 5, 6
+# READY modes (rules byte 1): 1 is kept for King of the Star and refused
+MODE_CLASSIC, MODE_KING, MODE_LUIGI = 0, 1, 2
+MODES_ACCEPTED = (MODE_CLASSIC, MODE_LUIGI)
+# INFECTED field b
+INF_PICK, INF_HIT, INF_STOMP, INF_TAG, INF_HANDOFF, INF_LATE_JOIN = range(1, 7)
+LOOK_LUIGI = 1
 # match states
 MS_WAITING, MS_COUNTDOWN, MS_RUNNING, MS_OVER = 0, 1, 2, 3
 # SYNR header flags
@@ -611,6 +624,8 @@ class Referee(object):
         self.unsent = 0
         self.over_at = None
         self.over_event = None
+        self.luigis = set()         # LUIGI: the team, the referee's alone
+        self.picked = False         # LUIGI: the first Luigi has been picked
         for s in self.seats.values():
             s.ready = None
             s.done.clear()
@@ -641,7 +656,8 @@ class Referee(object):
         self.roster = set(s.seat for s in self.seats.values()
                           if s.ready == cfg)
         self.had = len(self.roster)
-        self.t0 = int(rt) + COUNTDOWN_MS
+        self.t0 = int(rt) + (LUIGI_COUNTDOWN_MS if self._luigi()
+                             else COUNTDOWN_MS)
         self.match_ms = cfg[1] * 1000
         self.state = MS_COUNTDOWN
         for s in self.roster:
@@ -695,8 +711,14 @@ class Referee(object):
         self.pending = []
         self.state = MS_OVER
         self.over_at = rt
-        top = max([self.scores[s] for s in self.roster] or [0])
-        winners = [s for s in sorted(self.roster) if self.scores[s] == top]
+        if reason == O_LUIGIS_WIN:
+            winners = sorted(self.roster & self.luigis)
+        elif reason == O_SURVIVORS_WIN:
+            winners = sorted(self.roster - self.luigis)
+        else:
+            top = max([self.scores[s] for s in self.roster] or [0])
+            winners = [s for s in sorted(self.roster)
+                       if self.scores[s] == top]
         mask = self._mask(winners)
         end = int(rt) if t is None else int(t)
         self.over_event = self._emit(EV_MATCH_OVER, 0xFF, reason,
@@ -1021,6 +1043,8 @@ class Referee(object):
             self._maybe_start(rt)
         elif self.state == MS_COUNTDOWN and rt >= self.t0:
             self.state = MS_RUNNING
+            if self._luigi():
+                self._luigi_pick(rt, INF_PICK, self.t0)
         if self.pending:
             self._resolve(rt)
         if self.state == MS_RUNNING:
@@ -1032,7 +1056,8 @@ class Referee(object):
                 end = self.t0 + self.match_ms
                 if rt >= end + HOLD_MAX_MS:
                     self._resolve(rt)
-                    self._over(rt, O_TIME_UP, end)
+                    self._over(rt, O_SURVIVORS_WIN if self._luigi()
+                               else O_TIME_UP, end)
         self._flush(rt)
         self._catchup(rt)
         if rt - self.last_beat >= 1000.0 / HEARTBEAT_HZ:
@@ -1132,6 +1157,11 @@ class Referee(object):
                 EV_START, 0xFF, self.order_row, cfg[2], cfg[1],
                 self._mask(self.roster), cfg[5], self.t0, self.seed, cfg[0],
                 self._rules_word(cfg)))
+            if self._luigi():
+                recs.append(self._snap_record(
+                    EV_TEAM_STATE, 0xFF, 1 if self.picked else 0, 0,
+                    self._mask(self.luigis), self._mask(self.roster), 0,
+                    self.t0))
         for inst in sorted(self.stars):
             st = self.stars[inst]
             recs.append(self._snap_record(
@@ -1172,7 +1202,7 @@ class Referee(object):
                 1 <= capacity <= SEATS or not 1 <= markers <= 8):
             self._deny(c, D_BAD, rt)
             return
-        if mode != 0:
+        if mode not in MODES_ACCEPTED:
             self._deny(c, D_UNSUPPORTED, rt)
             return
         cfg = (target, aux, first_to_n, mode, capacity, markers, digest)
@@ -1202,6 +1232,9 @@ class Referee(object):
             self.had = max(self.had, len(self.roster))
             self.scores[s.seat] = 0
             self._emit(EV_JOIN, s.seat, 1, 0, 0, 0, 0, int(rt))
+            if self._luigi() and self.picked:
+                # Tango 11-09: a player who comes in mid-match is a Luigi
+                self._infect(s.seat, INF_LATE_JOIN, rt, int(rt))
             self._snapshot(s.seat, rt)
 
     # ---- verdicts
@@ -1276,6 +1309,8 @@ class Referee(object):
             # match_ms even though claims are still decided during the hold
             self._deny(c, D_STALE, rt)
             return
+        if self._luigi() and self._team_gate(c, rt):
+            return
         if k == C_GRAB:
             self._grab(c, rt)
         elif k == C_MARKER_BREAK:
@@ -1307,6 +1342,8 @@ class Referee(object):
             self._cap_take(c, rt)
         elif k == C_CAP_DROP:
             self._cap_drop(c, rt)
+        elif k == C_TAG and self._luigi():
+            self._tag(c, rt)
         else:
             self._deny(c, D_UNSUPPORTED, rt)
 
@@ -1428,7 +1465,7 @@ class Referee(object):
         self._record(c, ev)
         self._wake_next(rt)
         n = self.cfg[2] if self.cfg else 0
-        if n and self.scores[c.seat] >= n:
+        if n and self.scores[c.seat] >= n and not self._luigi():
             self._over(rt, O_FIRST_TO_N, c.stamp)
 
     def _taken(self, inst, seat, stamp):
@@ -1533,6 +1570,9 @@ class Referee(object):
         dh = math.hypot(att.x - vs.x, att.z - vs.z)
         if dh > REACH_H * FIX or abs(att.y - vs.y) > REACH_V * FIX:
             self._deny(c, D_RANGE, rt)
+            return
+        if not eat and self._luigi() and c.seat in self.luigis:
+            self._infect_claim(c, victim, INF_HIT, att, vs, rt)
             return
         if (vs.state in DISABLED_IDX or vs.flags & (F_IN_HURT | F_NO_CONTROL)
                 or vs.invuln > 0 or vs.power & (P_MEGA | P_VANISH | P_METAL)
@@ -1671,6 +1711,10 @@ class Referee(object):
         dy = att.y - vs.y
         if dh > STOMP_REACH_H * FIX or dy > REACH_V * FIX or                 dy < STOMP_ABOVE_MIN * FIX:
             self._deny(c, D_RANGE, rt)
+            return
+        if self._luigi() and c.seat in self.luigis:
+            a.last_stomp[victim] = rt
+            self._infect_claim(c, victim, INF_STOMP, att, vs, rt)
             return
         if vs.flags & F_NO_CONTROL or vs.eaten_by or vs.state in GRABBED_IDX:
             self._deny(c, D_INVULN, rt)
@@ -2014,6 +2058,132 @@ class Referee(object):
         self._emit(EV_SPILL, seat, inst, st.marker, cause, self.scores[seat],
                    0, int(rt), st.x, st.y, st.z)
 
+    # ---- LUIGI INFECTION (mode 2, lane REFLUIGI1)
+
+    def _luigi(self):
+        return self.cfg is not None and self.cfg[3] == MODE_LUIGI
+
+    def _survivors(self):
+        return self.roster - self.luigis
+
+    def _team_gate(self, c, rt):
+        """The team rules that refuse a claim before its kind is judged.
+        True = refused (the DENY is sent)."""
+        k = c.kind
+        me_luigi = c.seat in self.luigis
+        if k in (C_HIT, C_STOMP, C_EAT, C_CATCH, C_TAG):
+            if c.target in self.luigis and c.target != c.seat:
+                # a Luigi is immune to everything, from anyone
+                self._deny(c, D_INVULN, rt, why="the victim is a Luigi")
+                return True
+        if me_luigi and k in (C_EAT, C_CATCH, C_CAP_TAKE, C_CAP_DROP):
+            self._deny(c, D_TEAM, rt)
+            return True
+        if not me_luigi and k == C_TAG:
+            self._deny(c, D_TEAM, rt)
+            return True
+        if k == C_CAP_TAKE and not me_luigi:
+            cap = self.caps.get(c.target)
+            if cap is not None and cap.look == LOOK_LUIGI:
+                self._deny(c, D_TEAM, rt, why="the Luigi cap")
+                return True
+        return False
+
+    def _tag(self, c, rt):
+        """A Luigi's body touched a survivor's (Classic's guard runs on any
+        player contact): body-contact reach, the usual lag checks."""
+        victim = c.target
+        if victim == c.seat or victim not in self.roster or \
+                victim not in self.seats:
+            self._deny(c, D_SELF, rt)
+            return
+        a = self.seats[c.seat]
+        v = self.seats[victim]
+        att, why = self._usable(a, c.frame)
+        if why:
+            self._deny(c, why, rt, why=self._why_state(a, att)
+                       if why == D_STATE else None)
+            return
+        vs = v.sample_at(c.ref_frame)
+        if vs is None:
+            self._deny(c, D_STALE, rt)
+            return
+        if c.stamp - vs.rt > COMP_MAX_MS + FRAME_MS:
+            self._deny(c, D_TOO_OLD, rt)
+            return
+        dh = math.hypot(att.x - vs.x, att.z - vs.z)
+        if dh > TAG_REACH_H * FIX or abs(att.y - vs.y) > TAG_REACH_V * FIX:
+            self._deny(c, D_RANGE, rt)
+            return
+        self._infect_claim(c, victim, INF_TAG, att, vs, rt)
+
+    def _infect_claim(self, c, victim, cause, att, vs, rt):
+        """A Luigi's HIT / STOMP / TAG on a survivor that passed its checks.
+        Classic's guard (unmatched/LuigiInfection_Hit.cpp) runs before the
+        ROM's own resolution, so the survivor's invincibility, power and hit
+        immunity do not stop it; a survivor in a mouth or a hold is not in
+        the arena to touch."""
+        v = self.seats[victim]
+        if (v.eaten_by is not None or vs.eaten_by or v.grabbed_by is not None
+                or victim in self.luigis):
+            self._deny(c, D_INVULN, rt)
+            return
+        ev = self._infect(victim, cause, rt, c.stamp, by=c.seat, cid=c.cid,
+                          pos=(att.x, att.y, att.z))
+        self._record(c, ev)
+
+    def _infect(self, seat, cause, rt, t, by=0xFF, cid=0, pos=(0, 0, 0)):
+        """`seat` is a Luigi now: end any hold or mouthful it is part of,
+        tell everyone (INFECTED), then see whether the match is decided."""
+        s = self.seats.get(seat)
+        if s is not None:
+            if s.grabbed_by is not None:
+                self._end_hold(seat, rt)
+            if s.holding is not None:
+                self._end_hold(s.holding, rt)
+            if s.eaten_by is not None:
+                eater = s.eaten_by
+                s.eaten_by = None
+                self._emit(EV_RELEASED, seat, eater, 4, 0, 0, 0, int(rt))
+        for o in self.seats.values():
+            if o.eaten_by == seat:
+                o.eaten_by = None
+                self._emit(EV_RELEASED, o.seat, seat, 4, 0, 0, 0, int(rt))
+        self.luigis.add(seat)
+        self.picked = True
+        ev = self._emit(EV_INFECTED, seat, by, cause, cid,
+                        self._mask(self.luigis), len(self._survivors()), t,
+                        pos[0], pos[1], pos[2])
+        self.log("arena %s INFECTED seat %d by %s cause %d (luigis %s, "
+                 "survivors %s)" % (self.code, seat,
+                                     "ref" if by == 0xFF else by, cause,
+                                     sorted(self.luigis),
+                                     sorted(self._survivors())))
+        if self.state == MS_RUNNING and self.roster and \
+                not self._survivors():
+            self._over(rt, O_LUIGIS_WIN, t)
+        return ev
+
+    def _luigi_pick(self, rt, cause, t):
+        """Classic's rule (port_luigi_seed / li_hand_off): the (seed mod n)-th
+        player in the match, n = the players in the match, seat order."""
+        seats = sorted(self.roster)
+        if not seats:
+            return
+        self._infect(seats[self.seed % len(seats)], cause, rt, t)
+
+    def _luigi_after_leave(self, rt):
+        """The match after a leave, mode 2 (roster not empty)."""
+        if self.had >= 2 and len(self.roster) == 1:
+            last = next(iter(self.roster))
+            self._over(rt, O_LUIGIS_WIN if last in self.luigis
+                       else O_SURVIVORS_WIN)
+        elif self.picked and not self._survivors():
+            self._over(rt, O_LUIGIS_WIN)
+        elif self.picked and not (self.roster & self.luigis) and \
+                self.state == MS_RUNNING:
+            self._luigi_pick(rt, INF_HANDOFF, int(rt))
+
     # ---- leaving
 
     def _drop_from_match(self, seat, rt, why):
@@ -2030,6 +2200,7 @@ class Referee(object):
             if s.grabbed_by == seat or s.seat == seat:
                 self._end_hold(s.seat, rt)
         self.roster.discard(seat)
+        self.luigis.discard(seat)
         self._emit(EV_LEAVE, seat, why, 0, 0, n, 0, int(rt))
         for s in self.seats.values():
             if s.eaten_by == seat:
@@ -2048,6 +2219,8 @@ class Referee(object):
         if self.state == MS_RUNNING or self.state == MS_COUNTDOWN:
             if not self.roster:
                 self._over(rt, O_EVERYONE_LEFT)
+            elif self._luigi():
+                self._luigi_after_leave(rt)
             elif self.had >= 2 and len(self.roster) == 1:
                 self._over(rt, O_LAST_STANDING)
 
@@ -2110,6 +2283,8 @@ class Referee(object):
             bad.append("negative score")
         if not self.roster <= set(range(SEATS)):
             bad.append("roster")
+        if not self.luigis <= self.roster:
+            bad.append("luigis outside the roster")
         if len(self.stars) > 255:
             bad.append("stars")
         if len(self.events) > RETAIN_EVENTS:
