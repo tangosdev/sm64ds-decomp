@@ -96,6 +96,7 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char dScMgTrampoline2_c_State_size_must_be_0x8[sizeof(dScMgTrampoline2_c::State) == 0x8 ? 1 : -1];
 typedef char dScMgTrampoline2_c_size_must_be_0x7bac[sizeof(dScMgTrampoline2_c) == 0x7bac ? 1 : -1];
 #endif
 

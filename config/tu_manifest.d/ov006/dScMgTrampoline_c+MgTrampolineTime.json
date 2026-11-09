@@ -1023,9 +1023,9 @@
     "tubuild create warning: CONFLICT: extern declaration '_ZN2G213GetBG2CharPtrEv' differs between the legacy file that used to hold _ZN17dScMgTrampoline_c11PaintSquareEiiii and the one that held func_ov006_0212231c; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'MultiStore16' differs between the legacy file that used to hold func_ov006_02120f18 and the one that held func_ov006_0212231c; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_ZN2GX10LoadBGPlttEPKvjj' differs between the legacy file that used to hold func_ov006_02120f18 and the one that held func_ov006_0212231c; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: local declaration ('struct', 'P2') differs between the legacy file that used to hold func_ov006_02121848 and the one that held func_ov006_021218c4; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: local declaration ('struct', 'P2') differs between the legacy file that used to hold func_ov006_02121848 and the one that held func_ov006_02121cf4; kept the first, the other is commented out for review",
-    "tubuild create warning: CONFLICT: local declaration ('struct', 'P2') differs between the legacy file that used to hold func_ov006_02121848 and the one that held func_ov006_02121f04; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'P2') differs between the legacy file that used to hold func_ov006_02121848 and the one that held func_ov006_021218c4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'P2') differs between the legacy file that used to hold func_ov006_02121848 and the one that held func_ov006_02121cf4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'P2') differs between the legacy file that used to hold func_ov006_02121848 and the one that held func_ov006_02121f04; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov006_02120f18 and the one that held _ZN17dScMgTrampoline_c13InitResourcesEv; kept the first, the other is commented out for review"
   ],
   "verification": {
