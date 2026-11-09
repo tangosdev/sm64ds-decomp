@@ -461,13 +461,29 @@ bool apply_door_idx(int cls, int idx, int state) {
 // player. Shared as a field: 0 armed, 1 not armed. A friend's 1 sets an armed bomb off with Bowser's own step; a friend's 0
 // re-arms a spent one (one still going off is disarmed first). The re-arm choice belongs to the lowest seat in the room: a
 // higher seat's own re-arm is undone in scan_objects and never sent, and the lowest seat's choice arrives as a field.
+// BOWSER10: if the lowest seat's pick never arrives (never sent, or every send lost), a higher seat would wait for ever with no
+// bomb and the fight could not be won on its screen. After kKiraiWaitMs of its own re-arms being undone it keeps its own one
+// (the ROM's pick, nearest its player) and sends nothing; a pick that still arrives later wins: it is armed and the kept one
+// is disarmed quietly (no spent message for it, the friends never had it).
+const long long kKiraiWaitMs = 3000;
+long long g_kirai_wait0 = 0, g_kirai_wlast = 0;   // first / latest undo of the current wait
+char *g_kirai_kept = nullptr;                      // the bomb this console kept after the wait
+char *g_kirai_quiet = nullptr;                     // a kept bomb disarmed for a late pick: its change is not sent
+int g_kirai_keeps = 0;
 int r_kirai(const char *a) { return rd_i32(a, 0x170) == 0 ? 0 : 1; }
 bool ap_kirai(char *a, int, int value) {
     const int st = rd_i32(a, 0x170);
     if (value != 0) { if (st != 0) return false; coopsw_kirai_explode(a); return true; }
+    g_kirai_wait0 = 0;
+    char *kept = g_kirai_kept; g_kirai_kept = nullptr;
     if (st == 0) return false;
     if (st != 3) coopsw_kirai_disarm(a);
     coopsw_kirai_rearm(a);
+    if (kept && kept != a && rd_i32(kept, 0x170) == 0) {
+        coopsw_kirai_disarm(kept);
+        g_kirai_quiet = kept;
+        if (g_log) std::fprintf(stderr, "[coopsw] spike bomb: the late pick wins, the kept bomb is disarmed wall=%lld\n", wall_ms());
+    }
     return true;
 }
 bool ap_door(char *, int, int) { return false; }      // never reached: apply_entry takes door classes by index
@@ -805,7 +821,17 @@ void scan_objects(unsigned now) {
             continue;
         }
         if (cur == t.last) continue;
+        if (cls == 284 && a == g_kirai_quiet) { t.last = cur; g_kirai_quiet = nullptr; continue; }   // BOWSER10: never sent
         if (cls == 284 && cur == 0 && t.last != 0 && lowest_here() < g_my) {   // G40: a re-arm is the lowest seat's choice
+            const long long w = wall_ms();
+            if (g_kirai_wait0 == 0 || w - g_kirai_wlast > 1000) g_kirai_wait0 = w;   // a new wait
+            g_kirai_wlast = w;
+            if (w - g_kirai_wait0 >= kKiraiWaitMs) {      // BOWSER10: no pick arrived: keep the ROM's own re-arm, send nothing
+                t.last = cur; g_kirai_kept = a; g_kirai_wait0 = 0; ++g_kirai_keeps;
+                if (g_log) std::fprintf(stderr, "[coopsw] spike bomb slot=%d: no pick from seat %d in %lld ms, kept here wall=%lld\n", (int)slot,
+                                        lowest_here(), kKiraiWaitMs, w);
+                continue;
+            }
             coopsw_kirai_disarm(a);
             if (g_log && g_kirai_undo++ < 20)
                 std::fprintf(stderr, "[coopsw] spike bomb slot=%d re-armed here: undone, seat %d picks wall=%lld\n", (int)slot, lowest_here(), wall_ms());
@@ -1279,6 +1305,7 @@ void new_level() {
     std::memset(g_job, 0, sizeof g_job);
     std::memset(g_wtrk, 0, sizeof g_wtrk);
     g_counter = 0; g_frames = 0; g_armed = false; g_have_globals = false;
+    g_kirai_wait0 = 0; g_kirai_kept = nullptr; g_kirai_quiet = nullptr;
     g_shadow = (unsigned)data_0209f34c;
     g_word_t = 0;
     for (int i = 0; i < g_nknob; ++i) g_knob[i].done = false;

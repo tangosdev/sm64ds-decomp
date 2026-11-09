@@ -750,6 +750,65 @@ static int __fastcall bfire_init(void *s, void *)
 { return _ZN11daKpaFire_c13InitResourcesEv(s); }
 static int __fastcall bfire_clean(void *s, void *)
 { return _ZN11daKpaFire_c16CleanupResourcesEv(); }
+// BOWSER10: a burnt-out variant 6/7 fire (func_ov060_021172e0, inlined into func_ov060_02116f90) gives a Yoshi target a cap
+// of a character drawn at random among Mario / Luigi / Wario, redrawing until it hits one this save has unlocked. With none of
+// the three unlocked that draw never ends and the game loop stops (the ROM's own loop; solo never reaches it, coop does: a
+// fresh-save Yoshi in a friend's Bowser fight, or a friend's Yoshi as the shared target). For that save only, Bowser's
+// mCapActorAlive (0x42b) reads 1 while the variant 6/7 handler runs, so the ROM takes its coin branch; it is put back after.
+// Any save with a human unlocked runs the ROM untouched. The handler is reached through the PMF table data_ov060_0211afb4
+// (entries 0211a744 / 0211a784, hal/pmf_host_values.cpp); the two decl symbols below are defined here, so the generated
+// /alternatename fallback to func_ov060_02116f90 is not taken (the vtable slot is not on this path: the class's own MSVC
+// vftable dispatches Behavior).
+extern "C" int _ZN8SaveData19IsCharacterUnlockedEj(unsigned ch);
+extern "C" void func_ov060_02116f90(void *self);
+static unsigned char *bowser10_lift(void)
+{
+    if (_ZN8SaveData19IsCharacterUnlockedEj(0) || _ZN8SaveData19IsCharacterUnlockedEj(1) ||
+        _ZN8SaveData19IsCharacterUnlockedEj(2)) return nullptr;
+    unsigned char *kpa = (unsigned char *)dActor_c::FindWithActorID(0x117, nullptr);
+    if (!kpa || kpa[0x42b] != 0) return nullptr;
+    kpa[0x42b] = 1;
+    return kpa;
+}
+static void bowser10_fire_falls(void *self)
+{
+    unsigned char *kpa = bowser10_lift();
+    func_ov060_02116f90(self);
+    if (kpa) kpa[0x42b] = 0;
+}
+// The fire piranha ball (daFPknBall_c, Bowser's BitS fireballs among others) has the same draw in func_ov002_020f897c, inlined
+// into its Behavior, which runs from the class's own MSVC vftable. Its Behavior slot there is wrapped once at boot (from the
+// Bowser fire fill below) with the same guard.
+extern "C" void *bowser10_fpkn_vft[];
+extern "C" int bowser10_fpkn_behavior_sym(void);
+#pragma comment(linker, "/alternatename:_bowser10_fpkn_vft=??_7daFPknBall_c@@6B@")
+#pragma comment(linker, "/alternatename:_bowser10_fpkn_behavior_sym=?Behavior@daFPknBall_c@@UAEHXZ")
+extern "C" __declspec(dllimport) int __stdcall VirtualProtect(void *addr, unsigned long size, unsigned long prot, unsigned long *old);
+typedef int(__fastcall *Bowser10Beh)(void *, void *);
+static Bowser10Beh g_bowser10_fpkn_real = nullptr;
+static int __fastcall bowser10_fpkn_behavior(void *self, void *edx)
+{
+    unsigned char *kpa = bowser10_lift();
+    const int r = g_bowser10_fpkn_real(self, edx);
+    if (kpa) kpa[0x42b] = 0;
+    return r;
+}
+static void bowser10_wrap_fpkn(void)
+{
+    if (g_bowser10_fpkn_real) return;
+    for (int i = 0; i < 32; ++i) {
+        if (bowser10_fpkn_vft[i] != (void *)&bowser10_fpkn_behavior_sym) continue;
+        unsigned long old = 0;
+        if (!VirtualProtect(&bowser10_fpkn_vft[i], sizeof(void *), 0x04 /* PAGE_READWRITE */, &old)) return;
+        g_bowser10_fpkn_real = (Bowser10Beh)bowser10_fpkn_vft[i];
+        bowser10_fpkn_vft[i] = (void *)&bowser10_fpkn_behavior;
+        VirtualProtect(&bowser10_fpkn_vft[i], sizeof(void *), old, &old);
+        return;
+    }
+    std::fprintf(stderr, "[bowser10] fire piranha ball Behavior not found in its vftable: not wrapped\n");
+}
+extern "C" int port_pmff_decl_data_ov060_0211a744(void *self) { bowser10_fire_falls(self); return 0; }
+extern "C" int port_pmff_decl_data_ov060_0211a784(void *self) { bowser10_fire_falls(self); return 0; }
 static int __fastcall bfire_behavior(void *s, void *)
 { return _ZN11daKpaFire_c8BehaviorEv(s); }
 static int __fastcall bfire_render(void *s, void *)
@@ -761,6 +820,7 @@ static int __fastcall bfire_d0(void *s, void *)
 extern "C" void hal_fill_bowser_fire_vtable(void)
 {
     port_ov60_bringup();
+    bowser10_wrap_fpkn();
     void *volatile *vt = (void *volatile *)_ZTV11daKpaFire_c;
     ov60_fill_shared(vt);
     vt[0]  = (void *)bfire_init;
