@@ -34,7 +34,7 @@
  *   the header's mFirstNode..mFlags2 from this+0x24, but both searches
  *   also pass `c` onward to AllocateNode as the list sentinel -- one object
  *   serving both views. Splitting the access changed the emitted code.
- * - AllocateNode reads the allocator's mFlags through `c[-1]` -- the flag word
+ * - AllocateNode reads the allocator's attribute through `c[-1]` -- the flag word
  *   sits at this+0x20, one word before the node list at this+0x24, and `c` is
  *   the sentinel parameter, not `this`.
  * - CreateNode indexes its Target* through `int* c`: the body's `c[0]`/`c[1]`
@@ -55,14 +55,13 @@
 
 #include "ExpandingHeapAllocator.h"
 #include "Heap.h"
-#include "decl_HeapAllocator.h"
 #include "cstd.h"
 
 extern "C" void MultiStore_Int(int val, void *dst, int len);
 /* local extern: the factory runs this constructor over storage that already
    exists. Placement new measured CreateExpandingHeapAllocator 0x4c -> 0x5c. */
-extern "C" ExpandingHeapAllocator *_ZN22ExpandingHeapAllocatorC1EPvj(
-    ExpandingHeapAllocator *self, void *heapEnd, u32 flags);
+extern "C" ExpandingHeapAllocator *_ZN22ExpandingHeapAllocatorC1EPvt(ExpandingHeapAllocator *self,
+                                                                     void *endAddress, u16 optFlag);
 
 /* The free list sentinel: a view of the allocator's node bookkeeping from
  * this+0x24, with the header's member names. mFlags2 bit 0 is the
@@ -150,19 +149,18 @@ void *ExpandingHeapAllocator::CreateNode(MemoryNode::Target *extent, u16 t)
     return n;
 }
 
-ExpandingHeapAllocator::ExpandingHeapAllocator(void *heapEnd, u32 flags)
-{
+ExpandingHeapAllocator::ExpandingHeapAllocator(void *endAddress, u16 optFlag) {
     NodeList *nodeList = (NodeList *)&mFirstNode;
     MemoryNode::Target extent;
     MemoryNode *node;
 
-    func_0204df54(this, 0x45585048, nodeList + 1, heapEnd, flags);
+    NNSi_FndInitHeapHead(this, 0x45585048, nodeList + 1, endAddress, optFlag);
     nodeList->mNodeID = 0;
     nodeList->mFlags2 = 0;
     nodeList->mFlags2 &= ~1;
 
-    extent.start = (char *)mStart;
-    extent.end = (char *)mEnd;
+    extent.start = (char *)heapStart;
+    extent.end = (char *)heapEnd;
     node = (MemoryNode *)CreateNode(&extent, 0x4652);
     nodeList->mFirstNode = node;
     nodeList->mLastNode = node;
@@ -356,24 +354,22 @@ int ExpandingHeapAllocator::FreeNode(MemoryNode *list, MemoryNode::Target *exten
  * keeps a free-node list. */
 namespace mHeap {
 
-ExpandingHeapAllocator *Heap_t::CreateExpandingHeapAllocator(void *address, u32 size, u32 flags)
-{
+ExpandingHeapAllocator *Heap_t::CreateExpandingHeapAllocator(void *address, u32 size, u16 optFlag) {
     u32 end   = (size + (u32)address) & ~3u;
     u32 start = ((u32)address + 3u)   & ~3u;
 
     if (start > end || (end - start) < 0x4c)
         return 0;
 
-    return _ZN22ExpandingHeapAllocatorC1EPvj((ExpandingHeapAllocator *)start, (void *)end, flags);
+    return _ZN22ExpandingHeapAllocatorC1EPvt((ExpandingHeapAllocator *)start, (void *)end, optFlag);
 }
 
 } /* namespace mHeap */
 
-/* Detach this allocator from its containing heap -- a 12-byte tail veneer to
- * Remove(). */
-void HeapAllocator::Destroy()
-{
-    Remove();
+/* Detach the heap from whichever heap contains it -- a 12-byte tail veneer
+ * to NNSi_FndFinalizeHeap, NNS_FND_expheap.c's NNS_FndDestroyExpHeap. */
+extern "C" void NNS_FndDestroyExpHeap(NNSFndHeapHandle heap) {
+    NNSi_FndFinalizeHeap(heap);
 }
 
 /* The public entry point. A zero-byte request becomes one byte and the size
@@ -447,7 +443,7 @@ u32 ExpandingHeapAllocator::Reallocate(void *ptrRaw, u32 size)
             LinkNode((MemoryNode *)list, newNode, prev);
         }
         {
-            u16 opt = (u16)(mFlags & 0xff);
+            u16 opt = (u16)(attribute & 0xff);
             u32 len = (u32)(tgt.start - oldStart);
             if (opt & 1) {
                 FillZero(oldStart, len);

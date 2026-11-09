@@ -7975,51 +7975,51 @@
     },
     "arm9:0x0204dcfc": {
       "author": "tangosdev",
-      "name": "_ZN18NestedHeapIterator8PreviousEP13HeapAllocator"
+      "name": "NNS_FndGetPrevListObject"
     },
     "arm9:0x0204dd10": {
       "author": "tangosdev",
-      "name": "_ZN18NestedHeapIterator4NextEP13HeapAllocator"
+      "name": "NNS_FndGetNextListObject"
     },
     "arm9:0x0204dd28": {
       "author": "tangosdev",
-      "name": "_ZN18NestedHeapIterator6RemoveEP13HeapAllocator"
+      "name": "NNS_FndRemoveListObject"
     },
     "arm9:0x0204dd98": {
       "author": "lunavyqo",
-      "name": "_ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_"
+      "name": "NNS_FndInsertListObject"
     },
     "arm9:0x0204de0c": {
       "author": "ruspecial",
-      "name": "_ZN18NestedHeapIterator8AddFirstEP13HeapAllocator"
+      "name": "NNS_FndPrependListObject"
     },
     "arm9:0x0204de74": {
       "author": "andrewboudreau",
-      "name": "_ZN18NestedHeapIterator7AddLastEP13HeapAllocator"
+      "name": "NNS_FndAppendListObject"
     },
     "arm9:0x0204dee0": {
       "author": "ruspecial",
-      "name": "_ZN18NestedHeapIterator4InitEP13HeapAllocator"
+      "name": "SetFirstObject"
     },
     "arm9:0x0204df20": {
       "author": "tangosdev",
-      "name": "_ZN18NestedHeapIteratorC1Ej"
+      "name": "NNS_FndInitList"
     },
     "arm9:0x0204df38": {
       "author": "tangosdev",
-      "name": "_ZN13HeapAllocator6RemoveEv"
+      "name": "NNSi_FndFinalizeHeap"
     },
     "arm9:0x0204df54": {
       "author": "ruspecial",
-      "name": "func_0204df54"
+      "name": "NNSi_FndInitHeapHead"
     },
     "arm9:0x0204dfe8": {
       "author": "tangosdev",
-      "name": "_ZN18NestedHeapIterator10FindNestedEPv"
+      "name": "FindListContainHeap"
     },
     "arm9:0x0204e014": {
       "author": "tangosdev",
-      "name": "_ZN18NestedHeapIterator19RecursiveFindNestedEPv"
+      "name": "FindContainHeap"
     },
     "arm9:0x0204e084": {
       "author": "tangosdev",
@@ -8059,11 +8059,11 @@
     },
     "arm9:0x0204e3b4": {
       "author": "ruspecial",
-      "name": "_ZN13HeapAllocator7DestroyEv"
+      "name": "NNS_FndDestroyExpHeap"
     },
     "arm9:0x0204e3c0": {
       "author": "tangosdev",
-      "name": "_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj"
+      "name": "_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjt"
     },
     "arm9:0x0204e40c": {
       "author": "andrewboudreau",
@@ -8083,7 +8083,7 @@
     },
     "arm9:0x0204e828": {
       "author": "ruspecial",
-      "name": "_ZN22ExpandingHeapAllocatorC1EPvj"
+      "name": "_ZN22ExpandingHeapAllocatorC1EPvt"
     },
     "arm9:0x0204e8b0": {
       "author": "tangosdev",
@@ -8131,11 +8131,11 @@
     },
     "arm9:0x0204ebb8": {
       "author": "ruspecial",
-      "name": "func_0204ebb8"
+      "name": "NNS_FndDestroyFrmHeap"
     },
     "arm9:0x0204ebc4": {
       "author": "tangosdev",
-      "name": "_ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjj"
+      "name": "_ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjt"
     },
     "arm9:0x0204ec10": {
       "author": "tangosdev",
@@ -8155,7 +8155,7 @@
     },
     "arm9:0x0204ed54": {
       "author": "tangosdev",
-      "name": "_ZN18SolidHeapAllocatorC1EPvj"
+      "name": "_ZN18SolidHeapAllocatorC1EPvt"
     },
     "arm9:0x0204eda4": {
       "author": "tangosdev",

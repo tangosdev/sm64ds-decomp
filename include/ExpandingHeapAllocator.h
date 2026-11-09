@@ -15,13 +15,13 @@
 #ifndef EXPANDINGHEAPALLOCATOR_H
 #define EXPANDINGHEAPALLOCATOR_H
 #include "types.h"
-#include "HeapAllocator.h"
+#include "nnsys/fnd.h"
 #include "MemoryNode.h"   /* the five node methods below take it by pointer */
 
 /* The generator also emitted `struct align_; struct ptr; struct size_;` as forward
  * declarations -- parameter names mistaken for type names. No source ever referenced
  * them; dropped, as in SolidHeapAllocator.h. */
-struct ExpandingHeapAllocator : HeapAllocator {
+struct ExpandingHeapAllocator : NNSiFndHeapHead {
     MemoryNode *mFirstNode; /* 0x024 */
     MemoryNode *mLastNode;  /* 0x028 */
     /* The in-use list: Deallocate unlinks from it (the bookkeeping at 0x024 + 8),
@@ -31,7 +31,7 @@ struct ExpandingHeapAllocator : HeapAllocator {
     u16 mNodeID;                /* 0x034 */
     u16 mFlags2;                /* 0x036 */
 #ifdef __cplusplus
-    ExpandingHeapAllocator(void* heapEnd, u32 flags);
+    ExpandingHeapAllocator(void *endAddress, u16 optFlag);
 
     /* methods. Parameter types are read off the mangled name: `Eji` is
        (unsigned int, int), `EPv` is (void*), `Ev` is (). */

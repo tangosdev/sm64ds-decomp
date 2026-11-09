@@ -247,12 +247,15 @@ struct Heap_t {
                                              /* veneer -> SetupSolidHeapAsDefault */
     static void  RestoreFromTemporary();
 
-    /* The two allocator factories. `flags' is the node id the allocator stamps
-       on the blocks it hands out; every caller passes 3. Returns NULL when the
+    /* The two allocator factories. `optFlag' is the NitroSystem heap option
+       word NNSi_FndInitHeapHead keeps in the low byte of the heap's attribute;
+       mHeap passes 3, the sound heap 0. Returns NULL when the
        aligned span is too small to hold the allocator's own bookkeeping --
        0x30 bytes for the solid one, 0x4c for the expanding one. */
-    static struct SolidHeapAllocator*     CreateSolidHeapAllocator(void* address, u32 size, u32 flags);
-    static struct ExpandingHeapAllocator* CreateExpandingHeapAllocator(void* address, u32 size, u32 flags);
+    static struct SolidHeapAllocator *CreateSolidHeapAllocator(void *address, u32 size,
+                                                               u16 optFlag);
+    static struct ExpandingHeapAllocator *CreateExpandingHeapAllocator(void *address, u32 size,
+                                                                       u16 optFlag);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        Without it the compiler emits the global `_ZdlPv`, which exists nowhere

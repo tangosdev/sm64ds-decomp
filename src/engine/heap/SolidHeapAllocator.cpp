@@ -16,7 +16,7 @@
  *   MemoryLeft         -- bytes a forward allocation could still get.
  *   Reset/ResetStart/ResetEnd -- rewind begin, end, or both.
  *   Allocate           -- the sign of `align` picks the direction.
- *   func_0204ebb8      -- tail-call veneer to HeapAllocator::Remove.
+ *   NNS_FndDestroyFrmHeap -- tail-call veneer to NNSi_FndFinalizeHeap.
  *   Heap::CreateSolidHeapAllocator -- fit the allocator into the block.
  *   AllocateForwards/AllocateBackwards -- the static region carvers; they
  *                          take the free region, not the allocator, which is
@@ -37,19 +37,18 @@
  *   `this + 0x24` in that body.
  * - Reallocate keeps the hoisted `fl` pair pointer and TryResizeToFit the
  *   opaque `struct H*` view: spelling the fields as members changes the
- *   register allocation and kills the aliased re-read of mEnd the ROM emits.
+ *   register allocation and kills the aliased re-read of heapEnd the ROM emits.
  */
 
 #include "Heap.h"
 #include "SolidHeapAllocator.h"
-#include "decl_HeapAllocator.h"
 #include "cstd.h"
 
 extern "C" void MultiStore_Int(s32 val, int *dst, s32 count);
 /* local extern: the factory runs the constructor over an already-aligned
    address. Placement new measured this function 0x4c -> 0x5c. */
-extern "C" SolidHeapAllocator* _ZN18SolidHeapAllocatorC1EPvj(
-    SolidHeapAllocator* self, void* heapEnd, u32 flags);
+extern "C" SolidHeapAllocator *_ZN18SolidHeapAllocatorC1EPvt(SolidHeapAllocator *self,
+                                                             void *endAddress, u16 optFlag);
 
 /* The chain view of mFreeRegion: `tail` is the most recent SaveState record. */
 struct FreeList {
@@ -68,7 +67,7 @@ struct State {
 };
 
 /* TryResizeToFit's opaque pair view of mFreeRegion's first two words: kept
-   because member spelling lets the compiler prove mEnd cannot alias and it
+   because member spelling lets the compiler prove heapEnd cannot alias and it
    drops the re-read the ROM emits. */
 struct H {
     void *begin;
@@ -80,14 +79,12 @@ inline struct FreeList *inline_fn(void *arg0)
     return (struct FreeList *)&((SolidHeapAllocator *)arg0)->mFreeRegion;
 }
 
-SolidHeapAllocator::SolidHeapAllocator(void* heapEnd, u32 flags)
-{
+SolidHeapAllocator::SolidHeapAllocator(void *endAddress, u16 optFlag) {
     SolidHeapFreeRegion* freeRegion = &mFreeRegion;
 
-    func_0204df54(this, 0x46524d48, (char*)freeRegion + 0xc,
-                  heapEnd, flags);
-    freeRegion->begin = mStart;
-    freeRegion->end = mEnd;
+    NNSi_FndInitHeapHead(this, 0x46524d48, (char *)freeRegion + 0xc, endAddress, optFlag);
+    freeRegion->begin = heapStart;
+    freeRegion->end = heapEnd;
     freeRegion->flags = 0;
 }
 /* Carves `size` bytes off the low end: round begin up to `align`, refuse if
@@ -121,7 +118,7 @@ void *SolidHeapAllocator::AllocateForwards(void *freeBlockPair, u32 size, u32 al
  * is why `start` is both stored and returned, where the forward case stores
  * `end` and returns `start`.
  *
- * The flags word sits 4 bytes BEFORE the pair -- mFlags of the allocator.
+ * The flags word sits 4 bytes BEFORE the pair -- attribute of the allocator.
  * Bit 0 means fill-on-allocate, and the fill covers begin..end, including the
  * alignment gap, not just the returned block. */
 void *SolidHeapAllocator::AllocateBackwards(void *freeBlockPair, u32 size, u32 align)
@@ -151,7 +148,7 @@ void SolidHeapAllocator::ResetStart()
     void *begin;
     SolidHeapFreeRegion *fl;
 
-    begin = mStart;
+    begin = heapStart;
     fl = &mFreeRegion;
     *(void **)(fl) = begin;
     fl->flags = 0;
@@ -165,8 +162,8 @@ void SolidHeapAllocator::ResetEnd()
 {
     int *node, *p = (int *)&mFreeRegion;
     for (node = (int *)p[2]; node; node = (int *)node[3])
-        node[2] = (int)mEnd;
-    p[1] = (int)mEnd;
+        node[2] = (int)heapEnd;
+    p[1] = (int)heapEnd;
 }
 
 /* Fit a SolidHeapAllocator into [address, address + size), or refuse. Both ends
@@ -181,25 +178,23 @@ void SolidHeapAllocator::ResetEnd()
  * needs no separate size. */
 namespace mHeap {
 
-SolidHeapAllocator* Heap_t::CreateSolidHeapAllocator(void* address, u32 size, u32 flags)
-{
+SolidHeapAllocator *Heap_t::CreateSolidHeapAllocator(void *address, u32 size, u16 optFlag) {
     u32 end   = (size + (u32)address) & ~3u;
     u32 start = ((u32)address + 3u)   & ~3u;
 
     if (start > end || (end - start) < 0x30)
         return 0;
 
-    return _ZN18SolidHeapAllocatorC1EPvj((SolidHeapAllocator*)start, (void*)end, flags);
+    return _ZN18SolidHeapAllocatorC1EPvt((SolidHeapAllocator *)start, (void *)end, optFlag);
 }
 
 } /* namespace mHeap */
 
-/* Tail-call veneer to HeapAllocator::Remove -- a three-word thunk
+/* Tail-call veneer to NNSi_FndFinalizeHeap -- a three-word thunk
  * (ldr ip,[pc] / bx ip / .word), the same shape Heap.h's _-prefixed veneers
  * take. */
-extern "C" void func_0204ebb8(SolidHeapAllocator *allocator)
-{
-    allocator->Remove();
+extern "C" void NNS_FndDestroyFrmHeap(NNSFndHeapHandle heap) {
+    NNSi_FndFinalizeHeap(heap);
 }
 
 /* ALIGN'S SIGN IS THE DIRECTION, not part of the alignment: non-negative
@@ -323,18 +318,18 @@ s32 SolidHeapAllocator::LoadState(u32 id)
 }
 
 /* Shrinks the heap to exactly what has been allocated, but only when nothing
- * has been allocated backwards: the guard compares the hard end (mEnd) against
+ * has been allocated backwards: the guard compares the hard end (heapEnd) against
  * the free region's end and bails returning 0 if they differ. On success the
  * hard end is pulled down to the free region's begin and the used size is
  * returned -- a byte count measured from the object itself. */
 s32 SolidHeapAllocator::TryResizeToFit()
 {
     struct H *base = (struct H *)&mFreeRegion;
-    void *cur = mEnd;
+    void *cur = heapEnd;
     if ((s32)((char *)cur - (char *)base->end) != 0) return 0;
-    mEnd = base->begin;
-    base->end = mEnd;
-    return (s32)((char *)mEnd - (char *)this);
+    heapEnd = base->begin;
+    base->end = heapEnd;
+    return (s32)((char *)heapEnd - (char *)this);
 }
 
 /* Resizes IN PLACE, and only for the most recent forward allocation: `curSize`
@@ -360,7 +355,7 @@ u32 SolidHeapAllocator::Reallocate(void *ptr, u32 size)
         if ((s32)(newEnd - (u32)fl[1]) > 0) {
             return 0;
         }
-        u32 flags = mFlags;
+        u32 flags = attribute;
         if ((u16)(flags & 0xff) & 1) {
             volatile s32 zero = 0;
             MultiStore_Int(zero, (int *)begin, size - curSize);

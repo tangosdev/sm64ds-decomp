@@ -651,9 +651,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@632",
+      "from": "@635",
       "to": "@1260",
-      "evidence": "mwcc numbers the registration node @632, which ov065 already defines. @1260 is unused."
+      "evidence": "mwcc numbers the registration node @635 (@632 until the heap headers moved to nnsys/fnd.h: re-keyed +3). It is published as @1260 because ov065 defines an @632 of its own; @1260 is unused."
     }
   ],
   "symbol_binding_rewrites": [

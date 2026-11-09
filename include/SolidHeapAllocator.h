@@ -31,7 +31,7 @@
 #ifndef SOLIDHEAPALLOCATOR_H
 #define SOLIDHEAPALLOCATOR_H
 #include "types.h"
-#include "HeapAllocator.h"
+#include "nnsys/fnd.h"
 
 struct SolidHeapFreeRegion {
     void* begin;
@@ -45,10 +45,10 @@ typedef char SolidHeapFreeRegion_size_must_be_0xc[
     sizeof(struct SolidHeapFreeRegion) == 0xc ? 1 : -1];
 #endif
 
-struct SolidHeapAllocator : HeapAllocator {
+struct SolidHeapAllocator : NNSiFndHeapHead {
     SolidHeapFreeRegion mFreeRegion; /* 0x024 */
 #ifdef __cplusplus
-    SolidHeapAllocator(void* heapEnd, u32 flags);
+    SolidHeapAllocator(void *endAddress, u16 optFlag);
 
     /* Instance methods. Parameter types are read off the mangled name: `Ej` is
        (unsigned int), `Ei` is (int), `EPvj` is (void*, unsigned int), `Eji` is

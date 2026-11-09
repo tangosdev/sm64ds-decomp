@@ -436,13 +436,12 @@ void Heap_t::_Destroy()
  * allocator down and forget it; Heap::Destroy calls this before returning the
  * block to the parent heap.
  *
- * The call goes to HeapAllocator::Destroy(), not a derived override. The typed
- * ExpandingHeapAllocator inheritance records that base relationship directly;
- * SolidHeap::VDestroy's parallel but still-unnamed target remains raw. */
+ * The allocator is a NitroSystem expanded heap; NNS_FndDestroyExpHeap
+ * unlinks it from the heap that contains it. */
 
 void ExpHeap_t::VDestroy()
 {
-    allocator->Destroy();
+    NNS_FndDestroyExpHeap(allocator);
     allocator = 0;
 }
 
@@ -454,19 +453,14 @@ void ExpHeap_t::VDestroy()
  * being adapted: its comments named ExpandingHeap::VDestroy, quoted
  * ExpandingHeap's address 0x0203c72c instead of this one, and its local struct
  * was called `ExpandingHeap'. Only the symbol on the definition made it a
- * SolidHeap function at all. */
-
-/* 0x0204ebb8, twelve bytes and still unnamed. It is almost certainly
-   SolidHeapAllocator::Destroy -- HeapAllocator::Destroy() at 0x0204e3b4 is
-   the same size and shape -- but "almost certainly" is not evidence, and minting
-   a mangled symbol is a claim with its own gate (see the naming rule in
-   notes/plan-cpp-language-mode.md section 4). The call stays raw until then;
-   migration is per-reference, not only per-function. */
-extern "C" void func_0204ebb8(SolidHeapAllocator* allocator);
+ * SolidHeap function at all.
+ *
+ * The allocator is a NitroSystem frame heap; NNS_FndDestroyFrmHeap unlinks
+ * it from the heap that contains it. */
 
 void SolidHeap_t::VDestroy()
 {
-    func_0204ebb8(allocator);
+    NNS_FndDestroyFrmHeap(allocator);
     allocator = 0;
 }
 

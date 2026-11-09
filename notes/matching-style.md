@@ -179,7 +179,7 @@ corpus show exactly what makes mwccarm emit it instead of folding:
 - ARGUMENT MATERIALIZATION (func_02022b04, CutsceneGrandStarStart): passing `&obj->field` or `(T*)(base+OFF)`
   as a POINTER ARGUMENT to a call emits `add rX, base, #OFF`. Dereferencing the same expression
   (`*(T*)(base+OFF)`) stays folded `[base,#OFF]`. So `f(&this->sub)` materializes; `this->sub.x` folds.
-- LIVE-ACROSS-CALL (_ZN18SolidHeapAllocatorC1EPvj): a base pointer that is used both before and after
+- LIVE-ACROSS-CALL (_ZN18SolidHeapAllocatorC1EPvt): a base pointer that is used both before and after
   a `bl` is forced into a callee-saved register and kept materialized; all post-add accesses go via it.
 - CONSECUTIVE NON-ZERO indices on an OPAQUE base (func_020080b0-style `r=call(); r[0x17];r[0x18]`):
   materializes `add rX,r,#0x5c` then `[rX],[rX,#4],[rX,#8]`.

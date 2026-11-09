@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "contiguous linker run: 0x0204e964..0x0204eda4, 14 function(s), folded from the fourteen legacy single-function shards that filled the range. tu_map candidate main/SolidHeapAllocator (boundary confidence medium, left=high right=medium): the left boundary is MemoryNode::TargetC1 of the neighbouring allocator unit, the right boundary is the 148-function unattributed run that follows.",
     "class label: SolidHeapAllocator -- every member is written SolidHeapAllocator::name() and resolves against include/SolidHeapAllocator.h's hand-curated field layout (mFreeRegion at 0x24 over HeapAllocator's mStart/mEnd/mFlags).",
-    "Heap::CreateSolidHeapAllocator (0x0204ebc4) and the func_0204ebb8 tail-call veneer to HeapAllocator::Remove sit inside the member run and are admitted as members of the same original TU -- the linker keeps one TU's functions contiguous, so the run cannot be split at them.",
+    "Heap::CreateSolidHeapAllocator (0x0204ebc4) and the NNS_FndDestroyFrmHeap tail-call veneer to NNSi_FndFinalizeHeap sit inside the member run and are admitted as members of the same original TU -- the linker keeps one TU's functions contiguous, so the run cannot be split at them.",
     "no pragmas, no destructor variants, no _ZTV/_ZTI/_ZTS symbols in the run (tubuild inspect): SolidHeapAllocator has no vtable of its own."
   ],
   "sections": [
@@ -69,14 +69,14 @@
       "ordinal": 6
     },
     {
-      "symbol": "func_0204ebb8",
+      "symbol": "NNS_FndDestroyFrmHeap",
       "address": "0x0204ebb8",
       "size": "0x0000000c",
       "legacy_source": "src/func_0204ebb8.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjj",
+      "symbol": "_ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjt",
       "address": "0x0204ebc4",
       "size": "0x0000004c",
       "legacy_source": "src/_ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjj.cpp",
@@ -111,7 +111,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN18SolidHeapAllocatorC1EPvj",
+      "symbol": "_ZN18SolidHeapAllocatorC1EPvt",
       "address": "0x0204ed54",
       "size": "0x00000050",
       "legacy_source": "src/_ZN18SolidHeapAllocatorC1EPvj.cpp",
@@ -122,7 +122,7 @@
   "bss": [],
   "compiler_only_output": [
     {
-      "symbol": "_ZN18SolidHeapAllocatorC2EPvj",
+      "symbol": "_ZN18SolidHeapAllocatorC2EPvt",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the unused base-object constructor beside the licensed C1; the ROM has no configured C2 home and nothing references it (same shape as arm9/ActorBase_SceneNode's fBase_c C2)."
     }
@@ -140,17 +140,18 @@
     "functions_declared": 14,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN18SolidHeapAllocatorC2EPvj"
+        "_ZN18SolidHeapAllocatorC2EPvt"
       ],
       "deadstripped": [
-        "_ZN18SolidHeapAllocatorC2EPvj"
+        "_ZN18SolidHeapAllocatorC2EPvt"
       ],
       "droppedSections": [
         29,
         30
       ],
       "data": [],
-      "dataExternalized": []
+      "dataExternalized": [],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",

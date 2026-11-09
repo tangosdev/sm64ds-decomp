@@ -125,7 +125,7 @@ extern "C" void *_ZTVN5mHeap9ExpHeap_tE[15] = {
 // ---- SolidHeapAllocator's constructor, under its Itanium spelling ----------
 //
 // src/engine/heap/SolidHeapAllocator.cpp's CreateSolidHeapAllocator factory
-// calls `_ZN18SolidHeapAllocatorC1EPvj' as an extern "C" function, for the
+// calls `_ZN18SolidHeapAllocatorC1EPvt' as an extern "C" function, for the
 // reason hal/heap_globals.cpp's constructor-bridge block gives: C1 is an
 // Itanium ABI variant tag and MSVC has no syntax that emits or references one,
 // so the only way to satisfy that string is to write a function with it. The
@@ -142,8 +142,8 @@ extern "C" void *_ZTVN5mHeap9ExpHeap_tE[15] = {
 #include <new>
 #include "SolidHeapAllocator.h"
 
-extern "C" SolidHeapAllocator *_ZN18SolidHeapAllocatorC1EPvj(
-    void *self, void *heapEnd, u32 flags)
+extern "C" SolidHeapAllocator *_ZN18SolidHeapAllocatorC1EPvt(
+    void *self, void *endAddress, u16 optFlag)
 {
-    return ::new (self) SolidHeapAllocator(heapEnd, flags);
+    return ::new (self) SolidHeapAllocator(endAddress, optFlag);
 }
