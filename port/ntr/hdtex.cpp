@@ -257,6 +257,12 @@ struct AnimSlot {
     std::atomic<int> state{0};      // 0 waiting, 1 ready, 2 failed
 };
 std::unordered_map<uint64_t, std::shared_ptr<AnimSlot>> *g_anims;
+/* The store the last index built, kept only while hdtex_reindex builds the
+   next one: an animation whose name, file and form are unchanged keeps its
+   decoded frames instead of being decoded again. That is what keeps the F7
+   swap back to the mod's textures (which re-indexes) and a mod-list change
+   that keeps the mod from paying the decode a second time. */
+std::unordered_map<uint64_t, std::shared_ptr<AnimSlot>> *g_anims_prev;
 std::thread *g_anim_worker;
 std::atomic<int> g_anim_cancel{0};
 HdTexStats g_stats;
@@ -381,11 +387,22 @@ int index_dir(const std::string &dir, int dir_index, bool log_missing) {
         ++found;
         if (kv.second != kStill) {
             (*g_kinds)[kv.first] = kv.second;
-            auto slot = std::make_shared<AnimSlot>();
             char nm[24];
             std::snprintf(nm, sizeof nm, "%016llx",
                           static_cast<unsigned long long>(kv.first));
-            slot->path = dir + "/" + nm + (kv.second == kGif ? ".gif" : "");
+            const std::string path =
+                dir + "/" + nm + (kv.second == kGif ? ".gif" : "");
+            if (g_anims_prev) {
+                const auto old = g_anims_prev->find(kv.first);
+                if (old != g_anims_prev->end() && old->second->path == path &&
+                    old->second->kind == kv.second &&
+                    old->second->state.load() == 1) {
+                    (*g_anims)[kv.first] = old->second;   // already decoded
+                    continue;
+                }
+            }
+            auto slot = std::make_shared<AnimSlot>();
+            slot->path = path;
             slot->kind = kv.second;
             (*g_anims)[kv.first] = slot;
         }
@@ -616,7 +633,8 @@ void anim_worker() {
     SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
 #endif
     std::vector<uint64_t> names;
-    for (const auto &kv : *g_anims) names.push_back(kv.first);
+    for (const auto &kv : *g_anims)
+        if (kv.second->state.load() == 0) names.push_back(kv.first);
     std::sort(names.begin(), names.end());
     for (uint64_t n : names) {
         if (g_anim_cancel.load()) return;
@@ -626,6 +644,7 @@ void anim_worker() {
         const bool ok = slot.kind == kGif ? load_gif(slot.path, *a)
                                           : load_folder(slot.path, *a);
         const double dt = now_ms() - t0;
+        if (g_anim_cancel.load()) return;   // a re-index stopped it part way
         g_stats.anim_decode_ms += dt;
         if (ok) {
             const size_t bytes = a->frames.size() * static_cast<size_t>(a->pw) * a->ph * 4u;
@@ -662,8 +681,19 @@ void anim_start_worker() {
     g_stats.anim_frames = 0;
     g_stats.anim_loaded = 0;
     g_stats.anim_bytes = 0;
-    if (g_anims->empty()) return;   // a pack of stills starts nothing
-    g_anim_worker = new std::thread(anim_worker);
+    bool todo = false;
+    for (const auto &kv : *g_anims) {
+        const AnimSlot &slot = *kv.second;
+        if (slot.state.load() != 1 || !slot.anim) { todo = true; continue; }
+        // kept from the last index: it counts against the caps as before
+        g_anim_total_bytes += slot.anim->frames.size() *
+                              static_cast<size_t>(slot.anim->pw) * slot.anim->ph * 4u;
+        g_stats.anim_frames += static_cast<int>(slot.anim->frames.size());
+        ++g_stats.anim_loaded;
+    }
+    g_stats.anim_bytes = g_anim_total_bytes;
+    if (todo)   // a pack of stills, or nothing new, starts nothing
+        g_anim_worker = new std::thread(anim_worker);
 }
 
 // LIST THE DIRECTORIES ONCE, AT CONFIGURE. After this a bind of an unreplaced
@@ -778,12 +808,14 @@ int hdtex_reindex(void)
     delete g_names;
     delete g_dirs;
     delete g_kinds;
-    delete g_anims;
+    g_anims_prev = g_anims;   // decoded frames a new index may keep
     g_names = 0;
     g_dirs = 0;
     g_kinds = 0;
     g_anims = 0;
     index_pack();
+    delete g_anims_prev;
+    g_anims_prev = 0;
     return g_stats.pack_entries;
 }
 
