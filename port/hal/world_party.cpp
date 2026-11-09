@@ -25,6 +25,9 @@ extern unsigned char data_0209d660[];   // message window
 extern unsigned char data_0209f2c4[];   // pause menu
 extern signed char data_02092110[];     // < 0 while the level is not being left
 }
+/* hal/comms_sync.cpp (PAUSEMARK2): the seat is drawn here, fresh, in my level
+   and area by its own ghost frame, not leaving, hidden or paused */
+extern "C" int port_adventure_seat_invitable(int seat);
 
 namespace port {
 namespace {
@@ -229,14 +232,33 @@ int nearest_target(const Info info[kHubMaxSeats], int my_seat) {
         for (int s = 0; s < kHubMaxSeats; ++s) {
             if (s == my_seat || !info[s].present || !info[s].have_ghost) continue;
             if (info[s].ghost_age > 1500u) continue;
-            if (info[s].level != (int)(unsigned char)data_0209f2f8 ||
-                info[s].area != (int)data_02092120)
-                continue;
+            const bool place = info[s].level == (int)(unsigned char)data_0209f2f8 &&
+                               info[s].area == (int)data_02092120;
             const long long dx = info[s].x - mx, dz = info[s].z - mz;
             const long long dy = info[s].y - my;
-            if (dy > limy || -dy > limy) continue;
             const long long d2 = dx * dx + dz * dz;
-            if (d2 > lim * lim) continue;
+            const bool close_by = !(dy > limy || -dy > limy) && d2 <= lim * lim;
+            /* PAUSEMARK2: the place above is the seat's SYNL presence and the
+               position its ghost frame, two messages; the seat must also be
+               drawn here by its own frame, at full strength and not paused */
+            const bool drawn = port_adventure_seat_invitable(s) != 0;
+            if (logging() && close_by) {
+                static unsigned said[kHubMaxSeats];
+                const unsigned key = (place ? 1u : 0u) | (drawn ? 2u : 0u) | 4u |
+                                     ((unsigned)(info[s].level & 0xff) << 8) |
+                                     ((unsigned)(info[s].area & 0xff) << 16);
+                if (said[s] != key) {
+                    said[s] = key;
+                    std::fprintf(stderr, "[wparty] near seat %d (%s): presence level %d area %d "
+                                 "in_level %d (mine %d %d) ghost age %u at (%d,%d,%d) me (%d,%d,%d) "
+                                 "place %d drawn %d\n", s, info[s].name, info[s].level, info[s].area,
+                                 info[s].in_level ? 1 : 0, (int)(unsigned char)data_0209f2f8,
+                                 (int)data_02092120, info[s].ghost_age, info[s].x >> 12,
+                                 info[s].y >> 12, info[s].z >> 12, mx >> 12, my >> 12, mz >> 12,
+                                 place ? 1 : 0, drawn ? 1 : 0);
+                }
+            }
+            if (!place || !close_by || !drawn) continue;
             if (g.member[s]) continue;               // already with me
             if (best < 0 || d2 < best_d2) { best = s; best_d2 = d2; }
         }

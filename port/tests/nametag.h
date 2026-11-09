@@ -172,6 +172,7 @@ int port_adventure_peer_visible(int slot);
    (hal/comms_sync.cpp). seat -1 means "not a hub ghost": use the VS facts. */
 int port_adventure_ghost_seat(int slot);
 const char *port_adventure_ghost_name(int slot);
+int port_adventure_ghost_paused(int slot);
 int port_adventure_ghost_stars(int slot);
 unsigned port_adventure_ghost_rgb(int slot);
 int port_adventure_ghost_fade(int slot);
@@ -703,6 +704,7 @@ struct NtItem {
     char who[32];
     char sline[24];
     unsigned name_rgb;
+    int paused;      /* a hub ghost whose game is paused: the pause mark */
     int have;
     int rows;
     port::ChatBubble bub;
@@ -906,6 +908,7 @@ static int nt_collect(void)
         it.who[0] = 0;
         it.sline[0] = 0;
         it.name_rgb = 0xFFFFFFFFu;
+        it.paused = 0;
         if (it.tagged) {
             /* A HUB GHOST (run mp1 lane GHOSTWIRE1) is labelled from its own
                wire: the name its SYNI carries (already cut down to printable
@@ -933,6 +936,7 @@ static int nt_collect(void)
             if (gseat >= 0) {
                 const unsigned rgb = port_adventure_ghost_rgb(i);
                 if (rgb) it.name_rgb = rgb;
+                it.paused = port_adventure_ghost_paused(i);
             }
 
             if (nt_probe() && on_screen) {
@@ -1039,6 +1043,11 @@ static void nt_paint(const OvlSurface &fb, double blend)
             const int star_y = it.adventure ? y_bot : y_top;
             nt_text_centred(fb, cx, star_y, it.sline, scale, 0xFFFFE060u, it.alpha);
             nt_text_centred(fb, cx, name_y, it.who, scale, it.name_rgb, it.alpha);
+            /* THE PAUSE MARK (Tango 10-28): a paused player stays in the world
+               and gets two of the game font's own lower-case l's, one line over
+               his tag, the way a pause sign reads */
+            if (it.paused)
+                nt_text_centred(fb, cx, y_top - lh, "ll", scale, 0xFFFFFFFFu, it.alpha);
         }
         if (it.have) {
             const int bottom = y_top - 2 * scale;

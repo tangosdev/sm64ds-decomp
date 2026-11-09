@@ -155,6 +155,9 @@ int port_player_render_hidden(const void *player);   /* POSE9: the ROM Render ga
 // Stage::Behavior's own call counter (hal/stage_frame.cpp): it does not move on
 // a frame the game did not tick, which is what "paused" means here.
 unsigned port_stage_behavior_calls(void);
+// PAUSEMARK2: 1 while this window is the foreground (hal/sub_screen.cpp, the
+// focus gate every key and the pad read through).
+int hal_window_focused(void);
 // The save's star total, the number the HUD prints outside VS
 // (src/_ZN3HUD15RenderStarCountEv.cpp:69).
 unsigned char NumStars(void);
@@ -978,6 +981,9 @@ unsigned g_gw_beh_last = 0;
 bool     g_gw_beh_seeded = false;
 int      g_gw_frozen = 0;          // frames the local body has not moved at all
 int      g_gw_fz[6];               // x y z yaw anim cursor, last frame
+int      g_gw_still = 0;           // PAUSEMARK2: frames the body kept its place and facing
+int      g_gw_sp[4];               // x y z yaw, last frame
+bool     g_gw_hid = false;         // PAUSEMARK2: hidden state on the last tick the body moved
 bool     g_gw_prev_have = false;
 int      g_gw_prev[3];
 int      g_gw_prev_level = -1;
@@ -1523,12 +1529,9 @@ int gw_here(GwSeat &z) {
     }
     const HubGhostFrame &nw = z.ring[z.n - 1].f;
     if (nw.y < kDeathPlaneY) return 0;                      // fell out
-    /* a friend who has been in the pause menu / star select for 2 s fades
-       out and is gone, he does not stand frozen for as long as it lasts */
-    if (z.paused_now &&
-        (unsigned)(now - z.paused_ms) >=
-            (unsigned)(kGwPauseFadeMs + kGwPauseFadeLen))
-        return 0;
+    /* A PAUSED FRIEND STAYS (Tango 10-28): he stands where he paused and his
+       tag carries the pause mark (tests/nametag.h), instead of fading out
+       after kGwPauseFadeMs as he used to. */
     if ((int)nw.level_id != (int)data_0209f2f8) return 2;
     if (nw.flags & kGwFrameClock) {
         /* his area is not mine: HideArea hid that room's world for me, and a
@@ -2188,6 +2191,22 @@ void gw_ident_tick(unsigned now) {
     }
 }
 
+// PAUSEMARK2: the away rule is on for a player. A test console asks for a
+// window that never takes the foreground (SM64DS_NO_FOCUS), so it is never
+// focused and every one of its players would read as away; the rule is off
+// there unless the row asks for it (SM64DS_AWAY_TEST=1), and then it reads
+// the same hal_window_focused() answer a real tab-out gives.
+enum { kGwAwayFrames = 30, kGwAwaySlack = 2 };   // frames, world units
+bool gw_away_rule() {
+    static int v = -1;
+    if (v < 0) {
+        const char *nf = std::getenv("SM64DS_NO_FOCUS");
+        const char *t = std::getenv("SM64DS_AWAY_TEST");
+        v = (nf && std::atoi(nf) != 0) ? ((t && std::atoi(t) != 0) ? 1 : 0) : 1;
+    }
+    return v != 0;
+}
+
 // THE SEND SIDE: my own body only, once per 15 Hz wall tick.
 void gw_send(unsigned now) {
     if (comms_hub_state() != kHubLive) return;
@@ -2224,7 +2243,34 @@ void gw_send(unsigned now) {
         g_gw_frozen = 0;
         std::memcpy(g_gw_fz, fz, sizeof fz);
     }
-    const bool paused = no_tick || g_gw_frozen >= 8;
+    /* PAUSEMARK2: AWAY. A player who tabbed out (the window is not the
+       foreground, so the focus gate reads every key and the pad as neutral)
+       and whose body has kept its place and facing for a second is away: his
+       frames say paused like the pause menu's, so the others see him stay
+       where he stopped with the pause mark, and the first tick he moves (he
+       came back) is an ordinary frame again. The idle animation keeps turning
+       over, which is why this cannot wait for g_gw_frozen. */
+    /* "kept its place": within kGwAwaySlack of where it stopped (a body
+       standing on the ground settles by a fraction of a unit every frame,
+       measured -737088..-737408 in y on the castle lawn) and the same
+       facing */
+    const int sp[4] = {cx, cy, cz, (int)*player::facing(a)};
+    {
+        const int sl = units(kGwAwaySlack);
+        bool kept = sp[3] == g_gw_sp[3];
+        for (int k = 0; k < 3 && kept; ++k) {
+            const int d = sp[k] - g_gw_sp[k];
+            kept = d <= sl && d >= -sl;
+        }
+        if (kept && g_gw_still > 0) {
+            if (g_gw_still < 1000) ++g_gw_still;
+        } else {
+            g_gw_still = 1;
+            std::memcpy(g_gw_sp, sp, sizeof sp);
+        }
+    }
+    const bool away = g_gw_still > kGwAwayFrames && gw_away_rule() && !hal_window_focused();
+    const bool paused = no_tick || g_gw_frozen >= 8 || away;
     const int level = (int)data_0209f2f8;
     if (!paused) {
         if (g_gw_prev_have && level == g_gw_prev_level) {
@@ -2345,7 +2391,16 @@ void gw_send(unsigned now) {
            vy is a velocity the follower never reads */
         f.area = (unsigned char)((dkind << ghostdoor::kDoorShift) |
                                  ghostdoor::pack_area(data_02092120));
-        if (ghostdoor::sender_hidden(a)) f.flags |= ghostdoor::kFlagHidden;
+        /* PAUSEMARK2: the pause menu takes the body off the screen (its
+           opacity reads 0, measured: P0 logged "hidden by his own state" for
+           the whole of P1's pause), so while the body stands frozen, the game
+           does not tick or the player is away, the frame keeps the hidden
+           state of the last tick his body moved on */
+        {
+            const bool hid = ghostdoor::sender_hidden(a);
+            if (!(no_tick || g_gw_frozen > 0 || paused)) g_gw_hid = hid;
+            if (g_gw_hid) f.flags |= ghostdoor::kFlagHidden;
+        }
 
         f.vy = dkind ? (short)ghostdoor::sender_frame(a) : (short)0;
         {
@@ -3190,6 +3245,12 @@ extern "C" int port_adventure_ghost_seat(int slot) {
     if (!g_hub) return -1;
     return gw_seat_for_body(slot);
 }
+/* the seat's newest ghost frames say his game is paused (the pause menu, a star
+   select, a loading hold): his tag shows the pause mark */
+extern "C" int port_adventure_ghost_paused(int slot) {
+    const int s = port_adventure_ghost_seat(slot);
+    return s >= 0 && g_gw[s].paused_now ? 1 : 0;
+}
 extern "C" const char *port_adventure_ghost_name(int slot) {
     const int s = port_adventure_ghost_seat(slot);
     if (s < 0 || !g_gw[s].have_ident || !g_gw[s].name[0]) return 0;
@@ -3243,15 +3304,6 @@ int gw_fade_out(int s) {
             f = f * d / (int)(kGwDoorGoneTo - kGwDoorGoneFrom);
         }
     }
-    if (z.paused_now) {
-        const unsigned pe = now - z.paused_ms;
-        if (pe >= (unsigned)kGwPauseFadeMs) {
-            const unsigned into = pe - (unsigned)kGwPauseFadeMs;
-            if (into >= (unsigned)kGwPauseFadeLen) return 0;
-            f = (int)((unsigned)f * ((unsigned)kGwPauseFadeLen - into) /
-                      (unsigned)kGwPauseFadeLen);
-        }
-    }
     return f;
 }
 // GHOSTLOOK1: and UP from nothing over kGwAppearMs once it comes on show (a
@@ -3270,6 +3322,22 @@ extern "C" int port_adventure_ghost_fade(int slot) {
     if (s < 0 || g_gw[s].n == 0) return 256;
     const int o = gw_fade_out(s), i = gw_fade_in(s);
     return o < i ? o : i;
+}
+
+// PAUSEMARK2: 1 while hub seat `seat` is drawn on this screen as a player who
+// can answer: his own newest ghost frame puts him in my level and area (the
+// same frame his position comes from), it is fresh and at full strength, he
+// is not walking out through a door, not hidden (cannon, pipe, held), and his
+// game is not paused. The party invite (hal/world_party.cpp nearest_target)
+// offers only such a seat, so UP never reaches a player the screen does not
+// show, or one who cannot press anything.
+extern "C" int port_adventure_seat_invitable(int seat) {
+    if (!g_hub || seat < 0 || seat >= kHubMaxSeats) return 0;
+    GwSeat &z = g_gw[seat];
+    if (gw_here(z) != 1) return 0;
+    if (z.paused_now) return 0;
+    if (z.ring[z.n - 1].f.flags & ghostdoor::kFlagHidden) return 0;
+    return gw_fade_out(seat) >= 256 ? 1 : 0;
 }
 
 // PAINTTAG1: 1 while a hub ghost is through a painting (or a floor hole, or
@@ -3509,7 +3577,7 @@ void gw_follow() {
            in another level or area is drawn the way a ghost is (it fades out
            as it leaves) but is never solid (party::follow below) */
         const bool pseat = got && party::seat_is_party(s);
-        if (pseat && (party::gate(s) == party::kGateHide || g_gw[s].paused_now)) got = false;
+        if (pseat && party::gate(s) == party::kGateHide) got = false;   /* paused: stays, with the pause mark (Tango 10-28) */
         if (got) {
             if (g_gw[s].leaving) {         // GHOSTDOOR1: fading out in place
                 sm = g_gw_last[s];
@@ -5017,6 +5085,9 @@ static void sync_globals_reset() {
     g_gw_beh_seeded = false;
     g_gw_frozen = 0;
     leave_zero(g_gw_fz);
+    g_gw_still = 0;
+    leave_zero(g_gw_sp);
+    g_gw_hid = false;
     g_gw_prev_have = false;
     leave_zero(g_gw_prev);
     g_gw_prev_level = -1;
