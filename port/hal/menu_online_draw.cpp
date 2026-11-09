@@ -138,12 +138,19 @@ void text_lines(const UiSurface &sf, int kind, int X, int Y, int W, int H, int s
         /* a 4:3 window has no room for ROOM CODE on one line beside HOST and NAME: the plank is narrower and the label takes two lines */
         if (!l2 && !strcmp(l1, "ROOM CODE") && ui_text_width(l1, em) > maxw) { l1 = "ROOM"; l2 = "CODE"; nl = 2; }
     }
+    /* LOBBYPAD1: at the NAME plank's size two lines filled the plank to its edges (two caps of 0.34 H and the gap left 0.11 H above and
+       below). ROOM / CODE takes the two-line plank's own size instead, as ADVENTURE / ONLINE does: both lines at one size, 0.2 H clear above
+       and below, the side padding kept by the width check under it */
+    if (kind == ONL_K_ROOMCODE && name_h > 0 && nl == 2) {
+        const float cap2 = 0.25f * (float)H;
+        if (cap2 < cap) { em *= cap2 / cap; cap = ui_text_cap_height(em); }
+    }
     const char *longest = l1;
     if (l2 && ui_text_width(l2, em) > ui_text_width(l1, em)) longest = l2;
     const float tw = ui_text_width(longest, em);
     if (tw > maxw) { em *= maxw / tw; cap = ui_text_cap_height(em); }
-    const int clip[4] = { X + 2, Y + 2, X + W - 2, Y + H - 2 };
     const float gap = nl == 2 ? 0.10f * (float)H : 0.f;
+    const int clip[4] = { X + 2, Y + 2, X + W - 2, Y + H - 2 };
     const float total = nl * cap + (nl - 1) * gap;
     float by = (float)Y + ((float)H - total) * 0.5f + cap + (float)shift;
     const char *ls[2] = { l1, l2 };
