@@ -17779,7 +17779,7 @@
     },
     "ov002:0x020f2630": {
       "author": "tangosdev",
-      "name": "func_ov002_020f2630"
+      "name": "_ZN8daDemo_c19func_ov002_020f2630Ev"
     },
     "ov002:0x020f26c4": {
       "author": "tangosdev",
@@ -17787,7 +17787,7 @@
     },
     "ov002:0x020f26d4": {
       "author": "tangosdev",
-      "name": "func_ov002_020f26d4"
+      "name": "_ZN8daDemo_c19func_ov002_020f26d4Ev"
     },
     "ov002:0x020f26e0": {
       "author": "tangosdev",

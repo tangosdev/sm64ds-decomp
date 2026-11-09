@@ -68,9 +68,12 @@
  *   is spelled.
  *   daDemo_c::RunCommand, the dispatcher RunDemoCommand (src/KuppaScript.cpp)
  *   calls, is a member: it takes the actor in r0 like any other.
- *   func_ov002_020f26d4 is a ldr/bx veneer that tail-calls
- *   func_ov002_020f2630 through a raw void(*)(void); a member pointer
- *   cannot spell that cast, so both stay free.
+ *   RunCommand's command table is a function-local static of member
+ *   pointers, filled on first use behind its guard word; each handler is
+ *   cast to the table's (unsigned char *, int, int) signature.
+ *   func_ov002_020f26d4 is a member whose body is `return
+ *   func_ov002_020f2630();`; under -interworking mwccarm emits that tail
+ *   call as ldr ip, [pc]; bx ip; .word, the 12-byte shape in the ROM.
  *   The mStaffRoll heap block is daDemo_c::StaffRoll, a record recovered
  *   from its helpers (no RTTI names it). The helpers take it as char *
  *   and stay free, as do the C/PMF/PMF0 dispatch tables over it; C, C37
@@ -379,11 +382,22 @@ struct Obj {
 };
 */
 
-/* Lakitu's model-file handle, owned and constructed by d_a_c_jugem.cpp's
- * static init. Same TU-local wrapper spelling as the owning TU. */
+/* Lakitu's model, animation and texture-sequence file handles, owned and
+ * constructed by d_a_c_jugem.cpp's static init. Same TU-local wrapper
+ * spellings as the owning TU. */
 struct JugemModelFile : SharedFilePtr {
     JugemModelFile(u32 fileID);
     ~JugemModelFile();
+};
+
+struct JugemAnimationFilePtr : SharedFilePtr {
+    JugemAnimationFilePtr(u32 fileID);
+    ~JugemAnimationFilePtr();
+};
+
+struct JugemTexSequenceFilePtr : SharedFilePtr {
+    JugemTexSequenceFilePtr(u32 fileID);
+    ~JugemTexSequenceFilePtr();
 };
 
 extern "C" {
@@ -400,7 +414,6 @@ extern void SetSubBg1Offset(int a, int b);
 extern void *gSceneFader;
 extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
-extern int func_ov002_020f2630(daDemo_c *self);
 extern struct OamAttr *data_ov002_0210b6a8[];
 
 extern u32 d_a_demoNewHold(u32 slot, u32 unk, Fix12i x, Fix12i y, Fix12i z, void *rot,
@@ -488,7 +501,6 @@ extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern char *gCamera;
-extern int data_ov002_0210b614;
 extern int data_ov002_0210b958;
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
@@ -511,31 +523,6 @@ extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src
 extern int data_ov002_0210b964[3];
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i Vec3_HorzLen(const Vector3 *v);
-extern PMF3 data_ov002_0210b618;
-extern PMF3 data_ov002_0210b620;
-extern PMF3 data_ov002_0210b640;
-extern PMF3 data_ov002_0210b628;
-extern PMF3 data_ov002_0210b648;
-extern W data_ov002_0210b678;
-extern W data_ov002_0210b708;
-extern W data_ov002_0210b750;
-extern W data_ov002_0210b8c0;
-extern W data_ov002_0210b8c8;
-extern W data_ov002_0210b8d0;
-extern W data_ov002_0210b8d8;
-extern W data_ov002_0210b8e0;
-extern W data_ov002_0210b8e8;
-extern W data_ov002_0210b8f0;
-extern W data_ov002_0210b8f8;
-extern W data_ov002_0210b900;
-extern W data_ov002_0210b908;
-extern W data_ov002_0210b910;
-extern W data_ov002_0210b918;
-extern W data_ov002_0210b920;
-extern W data_ov002_0210b928;
-extern W data_ov002_0210b930;
-extern W data_ov002_0210b938;
-extern PMF3 data_ov002_0211104c[24];
 /* local extern: the Vector3 spelling math/CalcLib.h declares. The locals
    are the POD VecFx32, so the call casts. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
@@ -547,6 +534,14 @@ extern Matrix4x3 data_0209b41c;
 extern unsigned char gGameMode;
 extern char data_ov002_0211094c;
 extern JugemModelFile data_ov085_0213074c;
+extern SharedFilePtr *data_ov002_0210b600[1];
+extern SharedFilePtr *data_ov002_0210b604[1];
+extern SharedFilePtr *data_ov002_0210b608[1];
+extern SharedFilePtr *data_ov002_0210b60c[1];
+extern SharedFilePtr *data_ov002_0210b610[1];
+extern int data_ov002_0210b614;
+extern JugemTexSequenceFilePtr data_ov085_0213073c;
+extern JugemAnimationFilePtr data_ov085_02130744;
 /* TUBUILD CONFLICT -- alternate declaration of gSubScreenLayers, from the legacy file for func_ov002_020f23f0, NOT applied: extern u8 gSubScreenLayers; */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN3G2x13SetBlendAlphaEPVttttj, from the legacy file for func_ov002_020f2aec, NOT applied: extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *p, unsigned short a, unsigned short b, unsigned short c, int d); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN3G2x13SetBlendAlphaEPVttttj, from the legacy file for func_ov002_020f2bf4, NOT applied: extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *p, unsigned short a, unsigned short b, int c, unsigned short d); */
@@ -605,10 +600,9 @@ extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd5atan2E5Fix12IiES1_, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 _ZN4cstd5atan2E5Fix12IiES1_(Fix12i y, Fix12i x); */
 /* The file handles and their registration nodes are defined at the
-   bottom of this file; only the guard word and the 12-byte gap between
-   the two out-of-order nodes stay here so the function-local Vector3
-   statics keep their retail addresses. */
-int data_ov002_02110b00;
+   bottom of this file; only the 12-byte gap between the two out-of-order
+   nodes stays here so the function-local Vector3 statics keep their retail
+   addresses. */
 int data_ov002_02110ddc[3];
 /* TUBUILD CONFLICT -- alternate declaration of data_0209b41c, from the legacy file for _ZN8daDemo_c6RenderEv, NOT applied: extern M48 data_0209b41c; */
 }
@@ -856,20 +850,18 @@ int daDemo_c::func_ov002_020f23f0()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov002_020f2630, 0x020f2630, size 0x94 */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov002_020f2630(daDemo_c *self){
-    self->mScroll = (daDemo_c::ScrollState *)::operator new(0x36);
-    self->mScroll->bg0X = 0x30;
-    self->mScroll->bg0Y = 0x20;
-    self->mScroll->bg1X = 0;
-    self->mScroll->bg1Y = 0;
-    self->mScroll->centerSpriteY[0] = 0xfff8;
-    self->mScroll->centerSpriteY[1] = 0xc8;
-    self->mScroll->fadeLevel = 0x10;
-    SetSubBg0Offset(self->mScroll->bg0X, self->mScroll->bg0Y);
-    SetSubBg1Offset(self->mScroll->bg1X, self->mScroll->bg1Y);
+int daDemo_c::func_ov002_020f2630() {
+    this->mScroll = (daDemo_c::ScrollState *)::operator new(0x36);
+    this->mScroll->bg0X = 0x30;
+    this->mScroll->bg0Y = 0x20;
+    this->mScroll->bg1X = 0;
+    this->mScroll->bg1Y = 0;
+    this->mScroll->centerSpriteY[0] = 0xfff8;
+    this->mScroll->centerSpriteY[1] = 0xc8;
+    this->mScroll->fadeLevel = 0x10;
+    SetSubBg0Offset(this->mScroll->bg0X, this->mScroll->bg0Y);
+    SetSubBg1Offset(this->mScroll->bg1X, this->mScroll->bg1Y);
     return 1;
-}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -886,13 +878,11 @@ int daDemo_c::func_ov002_020f26c4(unsigned char *src)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov002_020f26d4, 0x020f26d4, size 0xc */
 /* -------------------------------------------------------------------------- */
-/* func_ov002_020f26d4 @ 0x20f26d4 (ov002) -- tail-call veneer to func_ov002_020f2630 (0x20f2630).
- * ldr ip, [pc]; bx ip; .word 0x20f2630
+/* func_ov002_020f26d4 @ 0x20f26d4 (ov002) -- tail call to func_ov002_020f2630 (0x20f2630),
+ * emitted as ldr ip, [pc]; bx ip; .word 0x20f2630. Command 22 in RunCommand's table.
  */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov002_020f26d4(void) {
-    ((void (*)(void))func_ov002_020f2630)();
-}
+int daDemo_c::func_ov002_020f26d4() {
+    return func_ov002_020f2630();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -4235,34 +4225,35 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 /* ROM ordinal 139 -- daDemo_c::RunCommand, 0x020f7d74, size 0x2b4 */
 /* -------------------------------------------------------------------------- */
 void daDemo_c::RunCommand(unsigned char *p, int a2, int a3) {
-    if ((data_ov002_02110b00 & 1) == 0) {
-        data_ov002_02110b00 |= 1;
-        data_ov002_0211104c[0] = *(PMF3 *)&data_ov002_0210b708;
-        data_ov002_0211104c[1] = *(PMF3 *)&data_ov002_0210b678;
-        data_ov002_0211104c[2] = data_ov002_0210b618;
-        data_ov002_0211104c[3] = data_ov002_0210b620;
-        data_ov002_0211104c[4] = data_ov002_0210b640;
-        data_ov002_0211104c[5] = data_ov002_0210b628;
-        data_ov002_0211104c[6] = data_ov002_0210b648;
-        data_ov002_0211104c[7] = *(PMF3 *)&data_ov002_0210b8c0;
-        data_ov002_0211104c[8] = *(PMF3 *)&data_ov002_0210b900;
-        data_ov002_0211104c[9] = *(PMF3 *)&data_ov002_0210b938;
-        data_ov002_0211104c[10] = *(PMF3 *)&data_ov002_0210b930;
-        data_ov002_0211104c[11] = *(PMF3 *)&data_ov002_0210b928;
-        data_ov002_0211104c[12] = *(PMF3 *)&data_ov002_0210b920;
-        data_ov002_0211104c[13] = *(PMF3 *)&data_ov002_0210b918;
-        data_ov002_0211104c[14] = *(PMF3 *)&data_ov002_0210b910;
-        data_ov002_0211104c[15] = *(PMF3 *)&data_ov002_0210b908;
-        data_ov002_0211104c[16] = *(PMF3 *)&data_ov002_0210b750;
-        data_ov002_0211104c[17] = *(PMF3 *)&data_ov002_0210b8f8;
-        data_ov002_0211104c[18] = *(PMF3 *)&data_ov002_0210b8f0;
-        data_ov002_0211104c[19] = *(PMF3 *)&data_ov002_0210b8e8;
-        data_ov002_0211104c[20] = *(PMF3 *)&data_ov002_0210b8e0;
-        data_ov002_0211104c[21] = *(PMF3 *)&data_ov002_0210b8d8;
-        data_ov002_0211104c[22] = *(PMF3 *)&data_ov002_0210b8d0;
-        data_ov002_0211104c[23] = *(PMF3 *)&data_ov002_0210b8c8;
-    }
-    (this->*data_ov002_0211104c[p[6]])(p + 7, a2, a3);
+    /* Indexed by the command byte p[6]. The handlers take what they read
+       from the command, so each is cast to the table's signature. */
+    static PMF3 sCommandTable[24] = {
+        (PMF3)&daDemo_c::func_ov002_020f7bb8, /* 0 */
+        (PMF3)&daDemo_c::func_ov002_020f79c0, /* 1 */
+        (PMF3)&daDemo_c::func_ov002_020f7780, /* 2 */
+        (PMF3)&daDemo_c::func_ov002_020f7538, /* 3 */
+        (PMF3)&daDemo_c::func_ov002_020f7410, /* 4 */
+        (PMF3)&daDemo_c::func_ov002_020f7384, /* 5 */
+        (PMF3)&daDemo_c::func_ov002_020f72bc, /* 6 */
+        (PMF3)&daDemo_c::func_ov002_020f71c4, /* 7 */
+        (PMF3)&daDemo_c::func_ov002_020f7038, /* 8 */
+        (PMF3)&daDemo_c::func_ov002_020f7020, /* 9 */
+        (PMF3)&daDemo_c::func_ov002_020f6e48, /* 10 */
+        (PMF3)&daDemo_c::func_ov002_020f6c60, /* 11 */
+        (PMF3)&daDemo_c::func_ov002_020f6c34, /* 12 */
+        (PMF3)&daDemo_c::func_ov002_020f6c24, /* 13 */
+        (PMF3)&daDemo_c::func_ov002_020f6bc0, /* 14 */
+        (PMF3)&daDemo_c::func_ov002_020f6b4c, /* 15 */
+        (PMF3)&daDemo_c::func_ov002_020f6b28, /* 16 */
+        (PMF3)&daDemo_c::func_ov002_020f6ae4, /* 17 */
+        (PMF3)&daDemo_c::func_ov002_020f6ab8, /* 18 */
+        (PMF3)&daDemo_c::func_ov002_020f6a9c, /* 19 */
+        (PMF3)&daDemo_c::func_ov002_020f6448, /* 20 */
+        (PMF3)&daDemo_c::func_ov002_020f63f8, /* 21 */
+        (PMF3)&daDemo_c::func_ov002_020f26d4, /* 22 */
+        (PMF3)&daDemo_c::func_ov002_020f26c4, /* 23 */
+    };
+    (this->*sCommandTable[p[6]])(p + 7, a2, a3);
 }
 
 int daDemo_c::CleanupResources()
@@ -4404,9 +4395,8 @@ int daDemo_c::InitResources()
         if (this->mAnmModel == 0)
             return 0;
         if (((anmModel_c *)this->mAnmModel)
-                ->func_ov002_020f6618((SharedFilePtr *)&data_ov085_0213074c, 1,
-                                      (SharedFilePtr **)&data_ov002_0210b60c, 1, 1,
-                                      (SharedFilePtr **)&data_ov002_0210b608, -1) == 0)
+                ->func_ov002_020f6618((SharedFilePtr *)&data_ov085_0213074c, 1, data_ov002_0210b60c,
+                                      1, 1, data_ov002_0210b608, -1) == 0)
             return 0;
     } else if (param1 == 0x13) {
         this->mAnmModel = new anmModel_c;
@@ -4416,8 +4406,8 @@ int daDemo_c::InitResources()
         if (t == 0) {
             if (((anmModel_c *)this->mAnmModel)
                     ->func_ov002_020f6618((SharedFilePtr *)&data_ov002_02110b98, 1,
-                                          (SharedFilePtr **)&data_ov002_0210b610, 1, 1,
-                                          (SharedFilePtr **)&data_ov002_0210b600, 0x16) == 0)
+                                          data_ov002_0210b610, 1, 1, data_ov002_0210b600,
+                                          0x16) == 0)
                 return 0;
         } else {
             if (((anmModel_c *)this->mAnmModel)
@@ -4447,8 +4437,8 @@ int daDemo_c::InitResources()
         if (this->mAnmModel == 0)
             return 0;
         if (((anmModel_c *)this->mAnmModel)
-                ->func_ov002_020f6618((SharedFilePtr *)data_ov009_02113c20, 1,
-                                      (SharedFilePtr **)&data_ov002_0210b604, 0, 0, 0, -1) == 0)
+                ->func_ov002_020f6618((SharedFilePtr *)data_ov009_02113c20, 1, data_ov002_0210b604,
+                                      0, 0, 0, -1) == 0)
             return 0;
     }
     mScaleX = 0x1000;
@@ -4496,57 +4486,9 @@ struct DemoTexSeqFile {
 };
 
 extern "C" {
-/* Flat {address, 0} words in .data. A pointer-to-member initializer is
-   copied out of .bss by __sinit (data_ov002_0210b678 left .data and @4347
-   disappeared). (int)&daDemo_c::func_ov002_... does not compile: these
-   handlers are non-static, and a pointer to member does not convert to int. */
-/* local extern: descriptor word is the function address as an int */
-extern int _ZN8daDemo_c19func_ov002_020f79c0EPvi(daDemo_c *, void *,
-                                                 int); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f7bb8EPht(daDemo_c *, unsigned char *,
-                                      unsigned short); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f6b28EPh(daDemo_c *,
-                                     unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f71c4Eii(daDemo_c *, int,
-                                                int); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f26c4EPh(daDemo_c *,
-                                     unsigned char *); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f63f8EPh(daDemo_c *,
-                                     unsigned char *); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f6448EPh(daDemo_c *,
-                                     unsigned char *);      /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6a9cEv(daDemo_c *); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f6ab8EPh(daDemo_c *,
-                                     unsigned char *); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f6ae4EPh(daDemo_c *,
-                                     unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f7038Eii(daDemo_c *, int,
-                                                int); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f6b4cEPh(daDemo_c *,
-                                     unsigned char *); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f6bc0EPh(daDemo_c *,
-                                     unsigned char *); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f6c24EPh(daDemo_c *,
-                                     unsigned char *); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f6c34EPh(daDemo_c *,
-                                     unsigned char *); /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f6c60EPvii(daDemo_c *, void *, int,
-                                                  int); /* local extern: descriptor address */
-extern int
-_ZN8daDemo_c19func_ov002_020f6e48EPh(daDemo_c *,
-                                     unsigned char *);      /* local extern: descriptor address */
-extern int _ZN8daDemo_c19func_ov002_020f7020Ev(daDemo_c *); /* local extern: descriptor address */
+/* Flat {address, 0} words in .data for the StaffRoll dispatch tables
+   __sinit fills. Their handlers are still free functions over the shadow
+   receivers C, C37 and C2dd4, so the words name them as ints. */
 /* StaffRoll::func_ov002_020f5b24 is a method on current main. The descriptor
    word still wants that function's address. Declaring its `this` parameter
    breaks the TU's intact-object proof, so the declaration stays (void). */
@@ -4564,7 +4506,6 @@ W data_ov002_0210b650 = {(int)func_ov002_020f5b8c, 0};
 W data_ov002_0210b660 = {(int)func_ov002_020f5e58, 0};
 W data_ov002_0210b668 = {(int)func_ov002_020f5894, 0};
 W data_ov002_0210b670 = {(int)func_ov002_020f5e58, 0};
-W data_ov002_0210b678 = {(int)_ZN8daDemo_c19func_ov002_020f79c0EPvi, 0};
 W data_ov002_0210b680 = {(int)func_ov002_020f5c40, 0};
 W data_ov002_0210b688 = {(int)func_ov002_020f5e98, 0};
 W data_ov002_0210b690 = {(int)func_ov002_020f5ef0, 0};
@@ -4580,7 +4521,6 @@ W data_ov002_0210b6e0 = {(int)func_ov002_020f2a78, 0};
 W data_ov002_0210b6f0 = {(int)func_ov002_020f2a88, 0};
 W data_ov002_0210b6f8 = {(int)func_ov002_020f2aec, 0};
 W data_ov002_0210b700 = {(int)func_ov002_020f3d98, 0};
-W data_ov002_0210b708 = {(int)_ZN8daDemo_c19func_ov002_020f7bb8EPht, 0};
 W data_ov002_0210b710 = {(int)func_ov002_020f5328, 0};
 W data_ov002_0210b718 = {(int)func_ov002_020f5efc, 0};
 W data_ov002_0210b720 = {(int)func_ov002_020f5bf4, 0};
@@ -4589,7 +4529,6 @@ W data_ov002_0210b730 = {(int)func_ov002_020f4710, 0};
 W data_ov002_0210b738 = {(int)func_ov002_020f4a2c, 0};
 W data_ov002_0210b740 = {(int)func_ov002_020f4d70, 0};
 W data_ov002_0210b748 = {(int)func_ov002_020f5010, 0};
-W data_ov002_0210b750 = {(int)_ZN8daDemo_c19func_ov002_020f6b28EPh, 0};
 W data_ov002_0210b758 = {(int)func_ov002_020f55b4, 0};
 W data_ov002_0210b760 = {(int)func_ov002_020f30f8, 0};
 W data_ov002_0210b770 = {(int)func_ov002_020f32e4, 0};
@@ -4632,22 +4571,6 @@ W data_ov002_0210b8a0 = {(int)func_ov002_020f5e78, 0};
 W data_ov002_0210b8a8 = {(int)func_ov002_020f5e38, 0};
 W data_ov002_0210b8b0 = {(int)func_ov002_020f43cc, 0};
 W data_ov002_0210b8b8 = {(int)func_ov002_020f5e58, 0};
-W data_ov002_0210b8c0 = {(int)_ZN8daDemo_c19func_ov002_020f71c4Eii, 0};
-W data_ov002_0210b8c8 = {(int)_ZN8daDemo_c19func_ov002_020f26c4EPh, 0};
-W data_ov002_0210b8d0 = {(int)func_ov002_020f26d4, 0};
-W data_ov002_0210b8d8 = {(int)_ZN8daDemo_c19func_ov002_020f63f8EPh, 0};
-W data_ov002_0210b8e0 = {(int)_ZN8daDemo_c19func_ov002_020f6448EPh, 0};
-W data_ov002_0210b8e8 = {(int)_ZN8daDemo_c19func_ov002_020f6a9cEv, 0};
-W data_ov002_0210b8f0 = {(int)_ZN8daDemo_c19func_ov002_020f6ab8EPh, 0};
-W data_ov002_0210b8f8 = {(int)_ZN8daDemo_c19func_ov002_020f6ae4EPh, 0};
-W data_ov002_0210b900 = {(int)_ZN8daDemo_c19func_ov002_020f7038Eii, 0};
-W data_ov002_0210b908 = {(int)_ZN8daDemo_c19func_ov002_020f6b4cEPh, 0};
-W data_ov002_0210b910 = {(int)_ZN8daDemo_c19func_ov002_020f6bc0EPh, 0};
-W data_ov002_0210b918 = {(int)_ZN8daDemo_c19func_ov002_020f6c24EPh, 0};
-W data_ov002_0210b920 = {(int)_ZN8daDemo_c19func_ov002_020f6c34EPh, 0};
-W data_ov002_0210b928 = {(int)_ZN8daDemo_c19func_ov002_020f6c60EPvii, 0};
-W data_ov002_0210b930 = {(int)_ZN8daDemo_c19func_ov002_020f6e48EPh, 0};
-W data_ov002_0210b938 = {(int)_ZN8daDemo_c19func_ov002_020f7020Ev, 0};
 
 DemoModelFile data_ov002_02110b50(0x49b);
 DemoModelFile data_ov002_02110b98(0x3ef);
@@ -4683,6 +4606,19 @@ DemoTexSeqFile data_ov002_02110bc8(0x3f8);
 DemoTexSeqFile data_ov002_02110b18(0x3fa);
 DemoModelFile data_ov002_02110b70(0x461);
 DemoModelFile data_ov002_02110b78(0x475);
+
+/* One-entry file lists InitResources hands to anmModel_c::func_ov002_020f6618:
+   the BCA list and the BTP list for param1 0x12 (0x0210b60c, 0x0210b608) and
+   0x13 (0x0210b610, 0x0210b600), and the BCA list for 0x1a..0x2d. */
+SharedFilePtr *data_ov002_0210b600[1] = {(SharedFilePtr *)&data_ov002_02110b10};
+SharedFilePtr *data_ov002_0210b604[1] = {(SharedFilePtr *)data_ov009_02113c28};
+SharedFilePtr *data_ov002_0210b608[1] = {&data_ov085_0213073c};
+SharedFilePtr *data_ov002_0210b60c[1] = {&data_ov085_02130744};
+SharedFilePtr *data_ov002_0210b610[1] = {(SharedFilePtr *)&data_ov002_02110bf8};
+/* The last cue time func_ov002_020f6c60 played sound 0x6a for. */
+int data_ov002_0210b614 = -1;
+int data_ov002_0210b630[2] = {(int)0x81f020f0, (int)0xffff0108};
+int data_ov002_0210b638[2] = {(int)0x81f020f0, (int)0xffff0110};
 
 PMF0 data_ov002_02110f9c[22] = {
     *(PMF0 *)&data_ov002_0210b718, *(PMF0 *)&data_ov002_0210b690, *(PMF0 *)&data_ov002_0210b6a0,

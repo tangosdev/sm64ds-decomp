@@ -311,7 +311,9 @@ struct daDemo_c : dActor_c {
     void func_ov002_020f237c();
     int func_ov002_020f23d0();
     int func_ov002_020f23f0();
+    int func_ov002_020f2630();
     int func_ov002_020f26c4(unsigned char *src);
+    int func_ov002_020f26d4();
     int func_ov002_020f63a0();
     int func_ov002_020f63d4();
     int func_ov002_020f63f8(unsigned char *src);
