@@ -44,6 +44,7 @@
 
 #include <stdint.h>
 
+#include <memory>
 #include <vector>
 
 namespace ntr {
@@ -112,6 +113,57 @@ int hdtex_lookup2(uint64_t name2, int have_words, uint32_t teximage,
                   uint32_t plttbase, int width, int height,
                   std::vector<uint32_t> &out);
 
+/* MOVING TEXTURES (run after093, lane ANIMTEX1). A pack or a mod's textures_hd
+   may hold, in place of the still <name>.png, either
+     <name>/        a folder of PNG frames played in file-name order
+                    (0000.png, 0001.png, ...), with an optional anim.txt
+                    holding "fps=24" (default 30, the game's own rate);
+     <name>.gif     an animated GIF, its own per-frame delays (256 colours).
+   In one directory the folder beats the GIF and the GIF beats the still, so a
+   pack can keep a still beside its animation for an older build. Between
+   directories the mod order decides, exactly as for stills.
+
+   The frames are decoded ONCE, on a worker thread started when the index is
+   built (boot, and every mod change), and held for the life of the index:
+   a level change does not decode them again. Each frame is its own buffer,
+   so binding a different frame is a pointer swap: nothing is copied, nothing
+   is converted per frame, and the card path uploads each frame the first
+   time it is shown and keeps it. The frame shown comes from the real-time
+   clock (hdtex_anim_frame), not the game's frame counter, so the loop runs at
+   its authored speed at 30, 60 or 144 fps and with Smooth Motion on or off.
+
+   Memory: at most kAnimCapBytes of decoded frames per animation and
+   kAnimTotalCapBytes across all of them. Over the per-animation cap every
+   second (third, ...) frame is dropped and its time given to the frame kept,
+   so the loop keeps its length and only gets choppier; over the total an
+   animation keeps only its first frame and logs why. */
+struct HdTexAnim {
+    int pw = 0, ph = 0;                         // file pixel size of every frame
+    std::vector<std::vector<uint32_t>> frames;  // 0xAARRGGBB, pw*ph each
+    std::vector<uint32_t> end_ms;               // cumulative end time of frame i
+    uint32_t total_ms = 0;                      // one loop
+    int stride = 1;                             // frames dropped for the cap
+};
+const unsigned kAnimCapBytes = 64u << 20;
+const unsigned kAnimTotalCapBytes = 256u << 20;
+
+/* hdtex_lookup2 for a texture that may be animated. A still hit fills `out`
+   and returns S exactly as hdtex_lookup2 does, with *anim left null. An
+   animated hit returns S and sets *anim to the decoded frames (waiting for
+   the worker if it has not reached them yet); `out` is then filled only when
+   the frames are not a whole multiple of the DS texture, with every frame
+   resampled to width*S x height*S and laid end to end. */
+int hdtex_lookup3(uint64_t name2, int have_words, uint32_t teximage,
+                  uint32_t plttbase, int width, int height,
+                  std::vector<uint32_t> &out,
+                  std::shared_ptr<const HdTexAnim> *anim);
+
+/* Which frame of `a` shows at `now_ms` (any monotonic millisecond clock). */
+int hdtex_anim_frame(const HdTexAnim &a, double now_ms);
+
+/* The real-time clock the animations run on, in milliseconds. */
+double hdtex_clock_ms(void);
+
 // What the run did. SM64DS_HD_TEXTURES_LOG=1 prints the per-texture lines and
 // the summary; these numbers are what run hd1's measurements are taken from.
 struct HdTexStats {
@@ -126,6 +178,12 @@ struct HdTexStats {
     int worst_load_w, worst_load_h;
     double total_load_ms;
     size_t replacement_bytes;  // texels held by replacements, in bytes
+    int anim_entries;          // animated names indexed (folders and GIFs)
+    int anim_loaded;           // animations the worker decoded
+    int anim_frames;           // frames held across them
+    size_t anim_bytes;         // decoded frame bytes held
+    double anim_decode_ms;     // worker time spent decoding
+    double anim_wait_ms;       // longest a bind waited for the worker
 };
 const HdTexStats *hdtex_stats(void);
 void hdtex_report(void);  // one summary line, when logging is on
