@@ -3065,6 +3065,89 @@ def u_luigi_tag_anytime(mod):
     return res
 
 
+def _detach(rig, c):
+    rig.consoles.remove(c)
+    rig.relay._detach(rig.relay.endpoints[c.addr], "idle", rig.now)
+
+
+def u_luigi_cable_dodge(mod):
+    res = Result("luigi: a tag decided after its survivor dropped still counts "
+                 "(cable dodge); a drop with no tag comes back a survivor")
+    rig, cs = lmatch(4, code="LUIGI040")
+    ref = rig.ref("LUIGI040")
+    (lu,), (s1, s2, s3) = luigi_of(cs)
+    for i, c in enumerate(cs):
+        c.pos = [3000 * i, 0, 0]
+    s1.pos = [lu.pos[0] + 60, 0, 0]
+    streaming(rig, cs, 0.4)
+    seat1 = s1.seat
+    cid = lu.claim(CL["TAG"], seat1, ref_frame=s1.frame - 1)
+    _detach(rig, s1)                            # the cable comes out now
+    streaming(rig, [lu, s2, s3], 0.4)
+    v = lu.verdict(cid)
+    res.check(v and v["name"] == "ACCEPTED", "the tag decided after the drop: "
+              "ACCEPTED for the tagger (%s)" % v)
+    res.check(not lu.find("INFECTED", seat=seat1), "no INFECTED while it is "
+              "away (it is not in the match)")
+    res.check(ref.state == 2 and seat1 in ref.gone
+              and ref.gone[seat1].tag is not None, "the match goes on, the "
+              "seat is marked tagged")
+    back = Console(rig, "LUIGI040", want=seat1)
+    streaming(rig, [lu, s2, s3, back], 0.3)
+    back.ready(cap=4, mode=LUIGI)
+    streaming(rig, [lu, s2, s3, back], 0.5)
+    inf = lu.find("INFECTED", seat=seat1)
+    res.check(back.seat == seat1 and len(inf) == 1
+              and inf[0]["b"] == INF["TAG"] and inf[0]["a"] == lu.seat,
+              "back on its seat: INFECTED b TAG by the tagger, not RETURN (%s)"
+              % inf)
+    res.check(seat1 in ref.luigis, "it is a Luigi")
+    # a survivor who drops with no tag pending comes back a survivor; a tag
+    # sent after it was last seen is too old
+    s2.pos = [lu.pos[0], 0, 60]
+    streaming(rig, [lu, s2, s3, back], 0.3)
+    seat2 = s2.seat
+    _detach(rig, s2)
+    streaming(rig, [lu, s3, back], 0.6)
+    late = lu.claim(CL["TAG"], seat2, ref_frame=s2.frame - 1)
+    streaming(rig, [lu, s3, back], 0.4)
+    v = lu.verdict(late)
+    res.check(v and v["name"] == "DENY" and v["b"] == DENY["TOO_OLD"],
+              "a touch 0.6 s after the survivor was last seen: DENY TOO_OLD "
+              "(%s)" % v)
+    back2 = Console(rig, "LUIGI040", want=seat2)
+    streaming(rig, [lu, s3, back, back2], 0.3)
+    back2.ready(cap=4, mode=LUIGI)
+    streaming(rig, [lu, s3, back, back2], 0.5)
+    res.check(back2.seat == seat2 and seat2 in ref.roster
+              and seat2 not in ref.luigis
+              and not lu.find("INFECTED", seat=seat2),
+              "the untagged survivor is back as a survivor")
+    res.check(ref.invariants() == [], "invariants")
+    return res
+
+
+def u_luigi_bell_quit(mod):
+    res = Result("luigi: the last survivor quits in the hold after the bell: "
+                 "the survivors at the bell win")
+    rig, cs = lmatch(3, time_s=8, code="LUIGI043")
+    ref = rig.ref("LUIGI043")
+    (lu,), (s1, s2) = luigi_of(cs)
+    s2.claim(CL["QUIT"], 0xFF)                  # leaves before the bell
+    streaming(rig, cs, 0.3)
+    live = [lu, s1, s2]
+    while ref.rt(rig.now) < ref.t0 + ref.match_ms + 20:
+        streaming(rig, live, 0.01)
+    res.check(ref.state == 2, "in the hold")
+    s1.claim(CL["QUIT"], 0xFF)                  # the last survivor quits
+    streaming(rig, [lu], 0.5)
+    ov = lu.find("MATCH_OVER")
+    res.check(len(ov) == 1 and ov[0]["a"] == OVER["SURVIVORS_WIN"]
+              and ov[0]["b"] == 1 and ov[0]["c"] == _mask([s1.seat]),
+              "SURVIVORS_WIN, winner = the survivor at the bell (%s)" % ov)
+    return res
+
+
 def luigi_race(mod, v):
     """Two Luigis tag one survivor: exactly one INFECTED, credited to the
     earlier stamp (the classic contention rule). Returns the winner index."""
@@ -3138,7 +3221,8 @@ def run_unit():
              u_luigi_pick, u_luigi_immune, u_luigi_infect, u_luigi_tag_rules,
              u_luigi_caps, u_luigi_wins, u_luigi_leave, u_luigi_join,
              u_luigi_16, u_luigi_mode0, u_luigi_clock_out, u_luigi_solo,
-             u_luigi_early_tag, u_luigi_reconnect, u_luigi_tag_anytime)
+             u_luigi_early_tag, u_luigi_reconnect, u_luigi_tag_anytime,
+             u_luigi_cable_dodge, u_luigi_bell_quit)
     results = []
     for t in tests:
         try:

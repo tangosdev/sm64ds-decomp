@@ -504,6 +504,19 @@ class Claim(object):
                  "ref_frame", "arrival", "resolve_at", "order")
 
 
+class Gone(object):
+    """LUIGI: a seat that dropped from the match without a QUIT. `tag` is set
+    when a Luigi's touch on it, stamped while it was still there, is decided
+    after it dropped (the cable dodge): (tagger seat, cause, tagger x y z)."""
+    __slots__ = ("luigi", "at", "seat", "tag")
+
+    def __init__(self, luigi, at, seat):
+        self.luigi = luigi
+        self.at = at
+        self.seat = seat
+        self.tag = None
+
+
 class Cap(object):
     """One cap the referee tracks: a cap the arena places (ids 1..31) or one a
     hit knocked off a player's head (32..255)."""
@@ -631,7 +644,8 @@ class Referee(object):
         self.luigis = set()         # LUIGI: the team, the referee's alone
         self.picked = False         # LUIGI: the first Luigi has been picked
         self.luigi_at = {}          # LUIGI: seat -> referee ms it became a Luigi
-        self.gone = {}              # LUIGI: seat -> (was a Luigi, referee ms) of a drop that was not a QUIT
+        self.gone = {}              # LUIGI: seat -> Gone, a drop that was not a QUIT
+        self.bell_left = set()      # LUIGI: survivors who left after the clock ran out
         for s in self.seats.values():
             s.ready = None
             s.done.clear()
@@ -720,7 +734,9 @@ class Referee(object):
         if reason == O_LUIGIS_WIN:
             winners = sorted(self.roster & self.luigis)
         elif reason == O_SURVIVORS_WIN:
-            winners = sorted(self.roster - self.luigis)
+            # the survivors when the clock ran out: Classic ends on the clock
+            # frame, so a survivor who leaves in the hold still won
+            winners = sorted((self.roster - self.luigis) | self.bell_left)
         else:
             top = max([self.scores[s] for s in self.roster] or [0])
             winners = [s for s in sorted(self.roster)
@@ -1248,11 +1264,18 @@ class Referee(object):
             self._emit(EV_JOIN, s.seat, 1, 0, 0, 0, 0, int(rt))
             if self._luigi() and self.picked:
                 back = self.gone.pop(s.seat, None)
-                if back is not None and rt - back[1] <= REJOIN_KEEP_MS:
+                if back is not None and rt - back.at <= REJOIN_KEEP_MS:
                     # Tango 11-09: a player whose connection dropped and came
                     # back on its own seat keeps its team; a survivor stays a
                     # survivor (its SNAPSHOT's TEAM_STATE leaves it out)
-                    if back[0]:
+                    if back.tag is not None:
+                        # tagged as it dropped (the cable dodge): a Luigi now,
+                        # by the tag that caught it
+                        by, cause, pos = back.tag
+                        self._infect(s.seat, cause, rt, int(rt),
+                                     by=by if by in self.roster else 0xFF,
+                                     pos=pos)
+                    elif back.luigi:
                         self._infect(s.seat, INF_RETURN, rt, int(rt))
                 else:
                     # Tango 11-09: a new player who comes in mid-match is a Luigi
@@ -1332,6 +1355,11 @@ class Referee(object):
             self._deny(c, D_STALE, rt)
             return
         if self._luigi() and self._team_gate(c, rt):
+            return
+        if (self._luigi() and k in (C_HIT, C_STOMP, C_TAG)
+                and c.seat in self.luigis and c.target in self.gone
+                and c.target not in self.roster):
+            self._tag_gone(c, rt)
             return
         if k == C_GRAB:
             self._grab(c, rt)
@@ -2139,6 +2167,53 @@ class Referee(object):
             return
         self._infect_claim(c, victim, INF_TAG, att, vs, rt)
 
+    def _tag_gone(self, c, rt):
+        """CABLE DODGE (Tango 11-09). A Luigi's HIT / STOMP / TAG on a survivor
+        who dropped (silent or relay detach, not a QUIT) before the claim was
+        decided. The touch counts when the referee would have taken it had the
+        survivor still been there: the tagger usable, the victim's drawn sample
+        at ref_frame on record and no more than COMP_MAX_MS + FRAME_MS older
+        than the touch (the lag window every TAG gets), body contact within
+        TAG_REACH. With the stamp clamp (a claim is stamped no earlier than
+        its arrival minus the tagger's cap, at most HOLD_MAX_MS) that is a
+        touch at most COMP_MAX_MS + FRAME_MS after the survivor was last seen.
+        The tagger gets ACCEPTED now; the survivor comes back a Luigi."""
+        g = self.gone[c.target]
+        if g.luigi or g.tag is not None:
+            self._deny(c, D_INVULN, rt, why="the victim is a Luigi")
+            return
+        if c.stamp < self.luigi_at.get(c.seat, float("inf")):
+            self._deny(c, D_STALE, rt, why="stamped before the tagger was a "
+                       "Luigi")
+            return
+        att, why = self._usable(self.seats[c.seat], c.frame)
+        if why:
+            self._deny(c, why, rt)
+            return
+        vs = g.seat.sample_at(c.ref_frame) if g.seat is not None else None
+        if vs is None:
+            self._deny(c, D_STALE, rt)
+            return
+        if c.stamp - vs.rt > COMP_MAX_MS + FRAME_MS:
+            self._deny(c, D_TOO_OLD, rt)
+            return
+        dh = math.hypot(att.x - vs.x, att.z - vs.z)
+        if dh > TAG_REACH_H * FIX or abs(att.y - vs.y) > TAG_REACH_V * FIX:
+            self._deny(c, D_RANGE, rt)
+            return
+        if vs.eaten_by:
+            self._deny(c, D_INVULN, rt)
+            return
+        cause = {C_HIT: INF_HIT, C_STOMP: INF_STOMP}.get(c.kind, INF_TAG)
+        g.tag = (c.seat, cause, (att.x, att.y, att.z))
+        self.bell_left.discard(c.target)
+        self._accept(c, rt)
+        self.log("arena %s seat %d tagged by %d as it dropped: back as a Luigi"
+                 % (self.code, c.target, c.seat))
+        if self.state == MS_RUNNING and self.roster and \
+                not self._survivors() and not self.bell_left:
+            self._over(rt, O_LUIGIS_WIN, c.stamp)
+
     def _infect_claim(self, c, victim, cause, att, vs, rt):
         """A Luigi's HIT / STOMP / TAG on a survivor that passed its checks.
         Classic's guard (unmatched/LuigiInfection_Hit.cpp) runs before the
@@ -2241,7 +2316,10 @@ class Referee(object):
             if why == L_QUIT:
                 self.gone.pop(seat, None)
             else:
-                self.gone[seat] = (seat in self.luigis, rt)
+                self.gone[seat] = Gone(seat in self.luigis, rt,
+                                       self.seats.get(seat))
+            if self._clock_out(rt) and seat not in self.luigis:
+                self.bell_left.add(seat)
         self.roster.discard(seat)
         self.luigis.discard(seat)
         self._emit(EV_LEAVE, seat, why, 0, 0, n, 0, int(rt))
