@@ -110,7 +110,7 @@
       "ordinal": 9
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f26c4EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f26c4EPS_Ph",
       "address": "0x020f26c4",
       "size": "0x00000010",
       "legacy_source": "src/func_ov002_020f26c4.c",
@@ -180,42 +180,42 @@
       "ordinal": 19
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a78Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a78EPS0_i",
       "address": "0x020f2a78",
       "size": "0x00000010",
       "legacy_source": "src/func_ov002_020f2a78.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a88Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a88EPS0_i",
       "address": "0x020f2a88",
       "size": "0x00000064",
       "legacy_source": "src/func_ov002_020f2a88.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2aecEi",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2aecEPS0_i",
       "address": "0x020f2aec",
       "size": "0x00000108",
       "legacy_source": "src/func_ov002_020f2aec.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2bf4Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2bf4EPS0_i",
       "address": "0x020f2bf4",
       "size": "0x00000118",
       "legacy_source": "src/func_ov002_020f2bf4.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2d0cEi",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2d0cEPS0_i",
       "address": "0x020f2d0c",
       "size": "0x00000064",
       "legacy_source": "src/func_ov002_020f2d0c.c",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2d70Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2d70EPS0_i",
       "address": "0x020f2d70",
       "size": "0x00000064",
       "legacy_source": "src/func_ov002_020f2d70.c",
@@ -278,63 +278,63 @@
       "ordinal": 33
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f30f8Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f30f8EPS0_i",
       "address": "0x020f30f8",
       "size": "0x000001ec",
       "legacy_source": "src/func_ov002_020f30f8.c",
       "ordinal": 34
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f32e4Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f32e4EPS0_i",
       "address": "0x020f32e4",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f32e4.c",
       "ordinal": 35
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3310Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3310EPS0_i",
       "address": "0x020f3310",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020f3310.cpp",
       "ordinal": 36
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f335cEi",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f335cEPS0_i",
       "address": "0x020f335c",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov002_020f335c.c",
       "ordinal": 37
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f340cEi",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f340cEPS0_i",
       "address": "0x020f340c",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov002_020f340c.c",
       "ordinal": 38
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f34bcEi",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f34bcEPS0_i",
       "address": "0x020f34bc",
       "size": "0x00000128",
       "legacy_source": "src/func_ov002_020f34bc.c",
       "ordinal": 39
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f35e4Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f35e4EPS0_i",
       "address": "0x020f35e4",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov002_020f35e4.c",
       "ordinal": 40
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3740Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3740EPS0_i",
       "address": "0x020f3740",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020f3740.cpp",
       "ordinal": 41
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f378cEi",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f378cEPS0_i",
       "address": "0x020f378c",
       "size": "0x00000014",
       "legacy_source": "src/func_ov002_020f378c.c",
@@ -390,133 +390,133 @@
       "ordinal": 49
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3ae8Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3ae8EPS0_i",
       "address": "0x020f3ae8",
       "size": "0x000000b8",
       "legacy_source": "src/func_ov002_020f3ae8.c",
       "ordinal": 50
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3ba0Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3ba0EPS0_i",
       "address": "0x020f3ba0",
       "size": "0x00000198",
       "legacy_source": "src/func_ov002_020f3ba0.c",
       "ordinal": 51
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3d38Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3d38EPS0_i",
       "address": "0x020f3d38",
       "size": "0x00000060",
       "legacy_source": "src/func_ov002_020f3d38.c",
       "ordinal": 52
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3d98Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3d98EPS0_i",
       "address": "0x020f3d98",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020f3d98.cpp",
       "ordinal": 53
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3de4Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3de4EPS0_i",
       "address": "0x020f3de4",
       "size": "0x00000318",
       "legacy_source": "src/func_ov002_020f3de4.c",
       "ordinal": 54
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f40fcEi",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f40fcEPS0_i",
       "address": "0x020f40fc",
       "size": "0x000002d0",
       "legacy_source": "src/func_ov002_020f40fc.c",
       "ordinal": 55
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f43ccEi",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f43ccEPS0_i",
       "address": "0x020f43cc",
       "size": "0x00000344",
       "legacy_source": "src/func_ov002_020f43cc.c",
       "ordinal": 56
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4710Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4710EPS0_i",
       "address": "0x020f4710",
       "size": "0x0000031c",
       "legacy_source": "src/func_ov002_020f4710.c",
       "ordinal": 57
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4a2cEi",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4a2cEPS0_i",
       "address": "0x020f4a2c",
       "size": "0x00000344",
       "legacy_source": "src/func_ov002_020f4a2c.c",
       "ordinal": 58
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4d70Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4d70EPS0_i",
       "address": "0x020f4d70",
       "size": "0x000002a0",
       "legacy_source": "src/func_ov002_020f4d70.c",
       "ordinal": 59
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5010Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5010EPS0_i",
       "address": "0x020f5010",
       "size": "0x00000318",
       "legacy_source": "src/func_ov002_020f5010.c",
       "ordinal": 60
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5328Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5328EPS0_i",
       "address": "0x020f5328",
       "size": "0x0000028c",
       "legacy_source": "src/func_ov002_020f5328.c",
       "ordinal": 61
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f55b4Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f55b4EPS0_i",
       "address": "0x020f55b4",
       "size": "0x00000078",
       "legacy_source": "src/func_ov002_020f55b4.c",
       "ordinal": 62
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f562cEi",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f562cEPS0_i",
       "address": "0x020f562c",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020f562c.cpp",
       "ordinal": 63
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5678Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5678EPS0_i",
       "address": "0x020f5678",
       "size": "0x00000024",
       "legacy_source": "src/func_ov002_020f5678.c",
       "ordinal": 64
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f569cEi",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f569cEPS0_i",
       "address": "0x020f569c",
       "size": "0x00000124",
       "legacy_source": "src/func_ov002_020f569c.c",
       "ordinal": 65
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f57c0Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f57c0EPS0_i",
       "address": "0x020f57c0",
       "size": "0x00000088",
       "legacy_source": "src/func_ov002_020f57c0.c",
       "ordinal": 66
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5848Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5848EPS0_i",
       "address": "0x020f5848",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020f5848.cpp",
       "ordinal": 67
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5894Ei",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5894EPS0_i",
       "address": "0x020f5894",
       "size": "0x000000fc",
       "legacy_source": "src/func_ov002_020f5894.c",
@@ -551,91 +551,91 @@
       "ordinal": 72
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b24Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b24EPS0_",
       "address": "0x020f5b24",
       "size": "0x00000058",
       "legacy_source": "src/func_ov002_020f5b24.c",
       "ordinal": 73
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b7cEv",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b7cEPS0_",
       "address": "0x020f5b7c",
       "size": "0x00000004",
       "legacy_source": "src/func_ov002_020f5b7c.c",
       "ordinal": 74
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b80Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b80EPS0_",
       "address": "0x020f5b80",
       "size": "0x00000004",
       "legacy_source": "src/func_ov002_020f5b80.c",
       "ordinal": 75
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b84Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b84EPS0_",
       "address": "0x020f5b84",
       "size": "0x00000004",
       "legacy_source": "src/func_ov002_020f5b84.c",
       "ordinal": 76
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b88Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b88EPS0_",
       "address": "0x020f5b88",
       "size": "0x00000004",
       "legacy_source": "src/func_ov002_020f5b88.c",
       "ordinal": 77
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b8cEv",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b8cEPS0_",
       "address": "0x020f5b8c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov002_020f5b8c.c",
       "ordinal": 78
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b98Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b98EPS0_",
       "address": "0x020f5b98",
       "size": "0x00000034",
       "legacy_source": "src/func_ov002_020f5b98.c",
       "ordinal": 79
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5bccEv",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5bccEPS0_",
       "address": "0x020f5bcc",
       "size": "0x00000028",
       "legacy_source": "src/func_ov002_020f5bcc.c",
       "ordinal": 80
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5bf4Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5bf4EPS0_",
       "address": "0x020f5bf4",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov002_020f5bf4.c",
       "ordinal": 81
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5c40Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5c40EPS0_",
       "address": "0x020f5c40",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020f5c40.c",
       "ordinal": 82
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5c88Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5c88EPS0_",
       "address": "0x020f5c88",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020f5c88.c",
       "ordinal": 83
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5cd0Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5cd0EPS0_",
       "address": "0x020f5cd0",
       "size": "0x00000064",
       "legacy_source": "src/func_ov002_020f5cd0.c",
       "ordinal": 84
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5d34Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5d34EPS0_",
       "address": "0x020f5d34",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov002_020f5d34.c",
@@ -649,70 +649,70 @@
       "ordinal": 86
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e18Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e18EPS0_",
       "address": "0x020f5e18",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020f5e18.c",
       "ordinal": 87
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38EPS0_",
       "address": "0x020f5e38",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020f5e38.c",
       "ordinal": 88
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58EPS0_",
       "address": "0x020f5e58",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020f5e58.c",
       "ordinal": 89
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78EPS0_",
       "address": "0x020f5e78",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020f5e78.c",
       "ordinal": 90
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98EPS0_",
       "address": "0x020f5e98",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020f5e98.c",
       "ordinal": 91
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5eb8Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5eb8EPS0_",
       "address": "0x020f5eb8",
       "size": "0x00000020",
       "legacy_source": "src/func_ov002_020f5eb8.c",
       "ordinal": 92
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ed8Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ed8EPS0_",
       "address": "0x020f5ed8",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov002_020f5ed8.c",
       "ordinal": 93
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ee4Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ee4EPS0_",
       "address": "0x020f5ee4",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov002_020f5ee4.c",
       "ordinal": 94
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ef0Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ef0EPS0_",
       "address": "0x020f5ef0",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov002_020f5ef0.c",
       "ordinal": 95
     },
     {
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5efcEv",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5efcEPS0_",
       "address": "0x020f5efc",
       "size": "0x00000010",
       "legacy_source": "src/func_ov002_020f5efc.c",
@@ -768,7 +768,7 @@
       "ordinal": 103
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f63f8EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f63f8EPS_Ph",
       "address": "0x020f63f8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f63f8.c",
@@ -782,7 +782,7 @@
       "ordinal": 105
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6448EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6448EPS_Ph",
       "address": "0x020f6448",
       "size": "0x00000064",
       "legacy_source": "src/func_ov002_020f6448.c",
@@ -866,70 +866,70 @@
       "ordinal": 117
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6a9cEv",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6a9cEPS_",
       "address": "0x020f6a9c",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov002_020f6a9c.c",
       "ordinal": 118
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6ab8EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6ab8EPS_Ph",
       "address": "0x020f6ab8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f6ab8.c",
       "ordinal": 119
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6ae4EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6ae4EPS_Ph",
       "address": "0x020f6ae4",
       "size": "0x00000044",
       "legacy_source": "src/func_ov002_020f6ae4.c",
       "ordinal": 120
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6b28EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6b28EPS_Ph",
       "address": "0x020f6b28",
       "size": "0x00000024",
       "legacy_source": "src/func_ov002_020f6b28.c",
       "ordinal": 121
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6b4cEPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6b4cEPS_Ph",
       "address": "0x020f6b4c",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020f6b4c.c",
       "ordinal": 122
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6bc0EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6bc0EPS_Ph",
       "address": "0x020f6bc0",
       "size": "0x00000064",
       "legacy_source": "src/func_ov002_020f6bc0.c",
       "ordinal": 123
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6c24EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c24EPS_Ph",
       "address": "0x020f6c24",
       "size": "0x00000010",
       "legacy_source": "src/func_ov002_020f6c24.c",
       "ordinal": 124
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6c34EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c34EPS_Ph",
       "address": "0x020f6c34",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov002_020f6c34.c",
       "ordinal": 125
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6c60EPvii",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c60EPS_Pvii",
       "address": "0x020f6c60",
       "size": "0x000001e8",
       "legacy_source": "src/func_ov002_020f6c60.c",
       "ordinal": 126
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6e48EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6e48EPS_Ph",
       "address": "0x020f6e48",
       "size": "0x00000100",
       "legacy_source": "src/func_ov002_020f6e48.c",
@@ -943,21 +943,21 @@
       "ordinal": 128
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f7020Ev",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7020EPS_",
       "address": "0x020f7020",
       "size": "0x00000018",
       "legacy_source": "src/func_ov002_020f7020.c",
       "ordinal": 129
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f7038Eii",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7038EPS_ii",
       "address": "0x020f7038",
       "size": "0x0000018c",
       "legacy_source": "src/func_ov002_020f7038.c",
       "ordinal": 130
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f71c4Eii",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f71c4EPS_ii",
       "address": "0x020f71c4",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov002_020f71c4.c",
@@ -999,14 +999,14 @@
       "ordinal": 136
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f79c0EPvi",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f79c0EPS_Pvi",
       "address": "0x020f79c0",
       "size": "0x000001f8",
       "legacy_source": "src/func_ov002_020f79c0.c",
       "ordinal": 137
     },
     {
-      "symbol": "_ZN8daDemo_c19func_ov002_020f7bb8EPht",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7bb8EPS_Pht",
       "address": "0x020f7bb8",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov002_020f7bb8.c",
@@ -2477,7 +2477,7 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 61 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 151 unlicensed section/symbol(s), 76 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -6543,7 +6543,7 @@
       "source": "0x0210b650",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5b8c",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b8cEPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b8c"
@@ -6553,7 +6553,7 @@
       "source": "0x0210b660",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e58",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e58"
@@ -6563,7 +6563,7 @@
       "source": "0x0210b668",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5894",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5894EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5894"
@@ -6573,7 +6573,7 @@
       "source": "0x0210b670",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e58",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e58"
@@ -6583,7 +6583,7 @@
       "source": "0x0210b678",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f79c0EPvi",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f79c0EPS_Pvi",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f79c0"
@@ -6593,7 +6593,7 @@
       "source": "0x0210b680",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5c40",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5c40EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5c40"
@@ -6603,7 +6603,7 @@
       "source": "0x0210b688",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e98",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e98"
@@ -6613,7 +6613,7 @@
       "source": "0x0210b690",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5ef0",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ef0EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5ef0"
@@ -6623,7 +6623,7 @@
       "source": "0x0210b698",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e98",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e98"
@@ -6633,7 +6633,7 @@
       "source": "0x0210b6a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5ee4",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ee4EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5ee4"
@@ -6643,7 +6643,7 @@
       "source": "0x0210b6b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f35e4",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f35e4EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f35e4"
@@ -6653,7 +6653,7 @@
       "source": "0x0210b6b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5cd0",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5cd0EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5cd0"
@@ -6663,7 +6663,7 @@
       "source": "0x0210b6c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f3310",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3310EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3310"
@@ -6673,7 +6673,7 @@
       "source": "0x0210b6c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5bcc",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5bccEPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5bcc"
@@ -6683,7 +6683,7 @@
       "source": "0x0210b6d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5b98",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b98EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b98"
@@ -6693,7 +6693,7 @@
       "source": "0x0210b6d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f3ba0",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3ba0EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3ba0"
@@ -6703,7 +6703,7 @@
       "source": "0x0210b6e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f2a78",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a78EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2a78"
@@ -6713,7 +6713,7 @@
       "source": "0x0210b6f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f2a88",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2a88EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2a88"
@@ -6723,7 +6723,7 @@
       "source": "0x0210b6f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f2aec",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2aecEPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2aec"
@@ -6733,7 +6733,7 @@
       "source": "0x0210b700",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f3d98",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3d98EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3d98"
@@ -6743,7 +6743,7 @@
       "source": "0x0210b708",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f7bb8EPht",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7bb8EPS_Pht",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f7bb8"
@@ -6753,7 +6753,7 @@
       "source": "0x0210b710",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5328",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5328EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5328"
@@ -6763,7 +6763,7 @@
       "source": "0x0210b718",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5efc",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5efcEPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5efc"
@@ -6773,7 +6773,7 @@
       "source": "0x0210b720",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5bf4",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5bf4EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5bf4"
@@ -6783,7 +6783,7 @@
       "source": "0x0210b728",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f40fc",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f40fcEPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f40fc"
@@ -6793,7 +6793,7 @@
       "source": "0x0210b730",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f4710",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4710EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f4710"
@@ -6803,7 +6803,7 @@
       "source": "0x0210b738",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f4a2c",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4a2cEPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f4a2c"
@@ -6813,7 +6813,7 @@
       "source": "0x0210b740",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f4d70",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f4d70EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f4d70"
@@ -6823,7 +6823,7 @@
       "source": "0x0210b748",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5010",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5010EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5010"
@@ -6833,7 +6833,7 @@
       "source": "0x0210b750",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6b28EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6b28EPS_Ph",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f6b28"
@@ -6843,7 +6843,7 @@
       "source": "0x0210b758",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f55b4",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f55b4EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f55b4"
@@ -6853,7 +6853,7 @@
       "source": "0x0210b760",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f30f8",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f30f8EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f30f8"
@@ -6863,7 +6863,7 @@
       "source": "0x0210b770",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f32e4",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f32e4EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f32e4"
@@ -6873,7 +6873,7 @@
       "source": "0x0210b778",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5678",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5678EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5678"
@@ -6883,7 +6883,7 @@
       "source": "0x0210b780",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f569c",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f569cEPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f569c"
@@ -6893,7 +6893,7 @@
       "source": "0x0210b788",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f57c0",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f57c0EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f57c0"
@@ -6903,7 +6903,7 @@
       "source": "0x0210b790",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f2d70",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2d70EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2d70"
@@ -6913,7 +6913,7 @@
       "source": "0x0210b798",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f335c",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f335cEPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f335c"
@@ -6923,7 +6923,7 @@
       "source": "0x0210b7a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f340c",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f340cEPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f340c"
@@ -6933,7 +6933,7 @@
       "source": "0x0210b7a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5848",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5848EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5848"
@@ -6943,7 +6943,7 @@
       "source": "0x0210b7b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f34bc",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f34bcEPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f34bc"
@@ -6953,7 +6953,7 @@
       "source": "0x0210b7b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b24Ev",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b24EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b24"
@@ -6963,7 +6963,7 @@
       "source": "0x0210b7c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5b7c",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b7cEPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b7c"
@@ -6973,7 +6973,7 @@
       "source": "0x0210b7c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5b88",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b88EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b88"
@@ -6983,7 +6983,7 @@
       "source": "0x0210b7d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f3740",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3740EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3740"
@@ -6993,7 +6993,7 @@
       "source": "0x0210b7d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f378c",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f378cEPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f378c"
@@ -7003,7 +7003,7 @@
       "source": "0x0210b7e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e38",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e38"
@@ -7013,7 +7013,7 @@
       "source": "0x0210b7e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5c88",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5c88EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5c88"
@@ -7023,7 +7023,7 @@
       "source": "0x0210b7f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5eb8",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5eb8EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5eb8"
@@ -7033,7 +7033,7 @@
       "source": "0x0210b7f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5d34",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5d34EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5d34"
@@ -7043,7 +7043,7 @@
       "source": "0x0210b800",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f3ae8",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3ae8EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3ae8"
@@ -7053,7 +7053,7 @@
       "source": "0x0210b808",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e38",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e38"
@@ -7063,7 +7063,7 @@
       "source": "0x0210b810",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f3d38",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3d38EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3d38"
@@ -7073,7 +7073,7 @@
       "source": "0x0210b818",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5b84",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b84EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b84"
@@ -7083,7 +7083,7 @@
       "source": "0x0210b820",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5b80",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b80EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5b80"
@@ -7093,7 +7093,7 @@
       "source": "0x0210b828",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e38",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e38"
@@ -7103,7 +7103,7 @@
       "source": "0x0210b830",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e98",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e98"
@@ -7113,7 +7113,7 @@
       "source": "0x0210b838",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e18",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e18EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e18"
@@ -7123,7 +7123,7 @@
       "source": "0x0210b840",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e78",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e78"
@@ -7133,7 +7133,7 @@
       "source": "0x0210b848",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f562c",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f562cEPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f562c"
@@ -7143,7 +7143,7 @@
       "source": "0x0210b850",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5ed8",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5ed8EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5ed8"
@@ -7153,7 +7153,7 @@
       "source": "0x0210b858",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e58",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e58"
@@ -7163,7 +7163,7 @@
       "source": "0x0210b860",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e78",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e78"
@@ -7173,7 +7173,7 @@
       "source": "0x0210b870",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f2bf4",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2bf4EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2bf4"
@@ -7183,7 +7183,7 @@
       "source": "0x0210b878",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f2d0c",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f2d0cEPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f2d0c"
@@ -7193,7 +7193,7 @@
       "source": "0x0210b880",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e78",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e78"
@@ -7203,7 +7203,7 @@
       "source": "0x0210b890",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f3de4",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f3de4EPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f3de4"
@@ -7213,7 +7213,7 @@
       "source": "0x0210b898",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e98",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e98EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e98"
@@ -7223,7 +7223,7 @@
       "source": "0x0210b8a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e78",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e78EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e78"
@@ -7233,7 +7233,7 @@
       "source": "0x0210b8a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e38",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e38EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e38"
@@ -7243,7 +7243,7 @@
       "source": "0x0210b8b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f43cc",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f43ccEPS0_i",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f43cc"
@@ -7253,7 +7253,7 @@
       "source": "0x0210b8b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020f5e58",
+      "symbol": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5e58EPS0_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f5e58"
@@ -7263,7 +7263,7 @@
       "source": "0x0210b8c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f71c4Eii",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f71c4EPS_ii",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f71c4"
@@ -7273,7 +7273,7 @@
       "source": "0x0210b8c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f26c4EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f26c4EPS_Ph",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f26c4"
@@ -7293,7 +7293,7 @@
       "source": "0x0210b8d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f63f8EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f63f8EPS_Ph",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f63f8"
@@ -7303,7 +7303,7 @@
       "source": "0x0210b8e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6448EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6448EPS_Ph",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f6448"
@@ -7313,7 +7313,7 @@
       "source": "0x0210b8e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6a9cEv",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6a9cEPS_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f6a9c"
@@ -7323,7 +7323,7 @@
       "source": "0x0210b8f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6ab8EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6ab8EPS_Ph",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f6ab8"
@@ -7333,7 +7333,7 @@
       "source": "0x0210b8f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6ae4EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6ae4EPS_Ph",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f6ae4"
@@ -7343,7 +7343,7 @@
       "source": "0x0210b900",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f7038Eii",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7038EPS_ii",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f7038"
@@ -7353,7 +7353,7 @@
       "source": "0x0210b908",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6b4cEPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6b4cEPS_Ph",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f6b4c"
@@ -7363,7 +7363,7 @@
       "source": "0x0210b910",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6bc0EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6bc0EPS_Ph",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f6bc0"
@@ -7373,7 +7373,7 @@
       "source": "0x0210b918",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6c24EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c24EPS_Ph",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f6c24"
@@ -7383,7 +7383,7 @@
       "source": "0x0210b920",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6c34EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c34EPS_Ph",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f6c34"
@@ -7393,7 +7393,7 @@
       "source": "0x0210b928",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6c60EPvii",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6c60EPS_Pvii",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f6c60"
@@ -7403,7 +7403,7 @@
       "source": "0x0210b930",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f6e48EPh",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f6e48EPS_Ph",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f6e48"
@@ -7413,7 +7413,7 @@
       "source": "0x0210b938",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daDemo_c19func_ov002_020f7020Ev",
+      "symbol": "_ZN8daDemo_c19func_ov002_020f7020EPS_",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020f7020"
@@ -7471,232 +7471,232 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLookTarget$3688",
+      "from": "_ZGVsLookTarget$3763",
       "to": "_ZGVsLookTarget$3570",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsLookTarget$3586 to _ZGVsLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from _ZGVsLookTarget$3584 to _ZGVsLookTarget$3663 when the opt pragma was removed (#821). Re-keyed from _ZGVsLookTarget$3663 to _ZGVsLookTarget$3665 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@3691",
+      "from": "@3766",
       "to": "@3573",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3589 to @3587 when the opt pragma was removed (#821). Re-keyed from @3587 to @3666 when the opt pragma was removed (#821). Re-keyed from @3666 to @3668 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "sLookTarget$3688",
+      "from": "sLookTarget$3763",
       "to": "sLookTarget$3570",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sLookTarget$3586 to sLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from sLookTarget$3584 to sLookTarget$3663 when the opt pragma was removed (#821). Re-keyed from sLookTarget$3663 to sLookTarget$3665 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "_ZGVsViewStart$3864",
+      "from": "_ZGVsViewStart$3939",
       "to": "_ZGVsViewStart$3746",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewStart$3762 to _ZGVsViewStart$3760 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewStart$3760 to _ZGVsViewStart$3839 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewStart$3839 to _ZGVsViewStart$3841 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@3867",
+      "from": "@3942",
       "to": "@3749",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3765 to @3763 when the opt pragma was removed (#821). Re-keyed from @3763 to @3842 when the opt pragma was removed (#821). Re-keyed from @3842 to @3844 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "sViewStart$3864",
+      "from": "sViewStart$3939",
       "to": "sViewStart$3746",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewStart$3762 to sViewStart$3760 when the opt pragma was removed (#821). Re-keyed from sViewStart$3760 to sViewStart$3839 when the opt pragma was removed (#821). Re-keyed from sViewStart$3839 to sViewStart$3841 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "_ZGVsViewEnd$3868",
+      "from": "_ZGVsViewEnd$3943",
       "to": "_ZGVsViewEnd$3750",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewEnd$3766 to _ZGVsViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewEnd$3764 to _ZGVsViewEnd$3843 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewEnd$3843 to _ZGVsViewEnd$3845 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@3871",
+      "from": "@3946",
       "to": "@3753",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3769 to @3767 when the opt pragma was removed (#821). Re-keyed from @3767 to @3846 when the opt pragma was removed (#821). Re-keyed from @3846 to @3848 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "sViewEnd$3868",
+      "from": "sViewEnd$3943",
       "to": "sViewEnd$3750",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewEnd$3766 to sViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from sViewEnd$3764 to sViewEnd$3843 when the opt pragma was removed (#821). Re-keyed from sViewEnd$3843 to sViewEnd$3845 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "_ZGVsViewIdle$3872",
+      "from": "_ZGVsViewIdle$3947",
       "to": "_ZGVsViewIdle$3754",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewIdle$3770 to _ZGVsViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewIdle$3768 to _ZGVsViewIdle$3847 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewIdle$3847 to _ZGVsViewIdle$3849 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@3875",
+      "from": "@3950",
       "to": "@3757",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3773 to @3771 when the opt pragma was removed (#821). Re-keyed from @3771 to @3850 when the opt pragma was removed (#821). Re-keyed from @3850 to @3852 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "sViewIdle$3872",
+      "from": "sViewIdle$3947",
       "to": "sViewIdle$3754",
       "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewIdle$3770 to sViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from sViewIdle$3768 to sViewIdle$3847 when the opt pragma was removed (#821). Re-keyed from sViewIdle$3847 to sViewIdle$3849 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4450",
+      "from": "@4525",
       "to": "@4355",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4373 to @4371 when the opt pragma was removed (#821). Re-keyed from @4371 to @4450 when the opt pragma was removed (#821). Re-keyed from @4450 to @4425 when the local M48 copy struct was retired (#4570). Re-keyed from @4425 to @4427 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4451",
+      "from": "@4526",
       "to": "@4356",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4374 to @4372 when the opt pragma was removed (#821). Re-keyed from @4372 to @4451 when the opt pragma was removed (#821). Re-keyed from @4451 to @4426 when the local M48 copy struct was retired (#4570). Re-keyed from @4426 to @4428 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4452",
+      "from": "@4527",
       "to": "@4357",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4375 to @4373 when the opt pragma was removed (#821). Re-keyed from @4373 to @4452 when the opt pragma was removed (#821). Re-keyed from @4452 to @4427 when the local M48 copy struct was retired (#4570). Re-keyed from @4427 to @4429 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4453",
+      "from": "@4528",
       "to": "@4358",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4376 to @4374 when the opt pragma was removed (#821). Re-keyed from @4374 to @4453 when the opt pragma was removed (#821). Re-keyed from @4453 to @4428 when the local M48 copy struct was retired (#4570). Re-keyed from @4428 to @4430 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4454",
+      "from": "@4529",
       "to": "@4359",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4377 to @4375 when the opt pragma was removed (#821). Re-keyed from @4375 to @4454 when the opt pragma was removed (#821). Re-keyed from @4454 to @4429 when the local M48 copy struct was retired (#4570). Re-keyed from @4429 to @4431 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4455",
+      "from": "@4530",
       "to": "@4360",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4378 to @4376 when the opt pragma was removed (#821). Re-keyed from @4376 to @4455 when the opt pragma was removed (#821). Re-keyed from @4455 to @4430 when the local M48 copy struct was retired (#4570). Re-keyed from @4430 to @4432 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4456",
+      "from": "@4531",
       "to": "@4361",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4379 to @4377 when the opt pragma was removed (#821). Re-keyed from @4377 to @4456 when the opt pragma was removed (#821). Re-keyed from @4456 to @4431 when the local M48 copy struct was retired (#4570). Re-keyed from @4431 to @4433 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4457",
+      "from": "@4532",
       "to": "@4362",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4380 to @4378 when the opt pragma was removed (#821). Re-keyed from @4378 to @4457 when the opt pragma was removed (#821). Re-keyed from @4457 to @4432 when the local M48 copy struct was retired (#4570). Re-keyed from @4432 to @4434 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4458",
+      "from": "@4533",
       "to": "@4363",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4381 to @4379 when the opt pragma was removed (#821). Re-keyed from @4379 to @4458 when the opt pragma was removed (#821). Re-keyed from @4458 to @4433 when the local M48 copy struct was retired (#4570). Re-keyed from @4433 to @4435 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4459",
+      "from": "@4534",
       "to": "@4364",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4382 to @4380 when the opt pragma was removed (#821). Re-keyed from @4380 to @4459 when the opt pragma was removed (#821). Re-keyed from @4459 to @4434 when the local M48 copy struct was retired (#4570). Re-keyed from @4434 to @4436 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4460",
+      "from": "@4535",
       "to": "@4365",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4383 to @4381 when the opt pragma was removed (#821). Re-keyed from @4381 to @4460 when the opt pragma was removed (#821). Re-keyed from @4460 to @4435 when the local M48 copy struct was retired (#4570). Re-keyed from @4435 to @4437 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4461",
+      "from": "@4536",
       "to": "@4366",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4384 to @4382 when the opt pragma was removed (#821). Re-keyed from @4382 to @4461 when the opt pragma was removed (#821). Re-keyed from @4461 to @4436 when the local M48 copy struct was retired (#4570). Re-keyed from @4436 to @4438 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4462",
+      "from": "@4537",
       "to": "@4367",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4385 to @4383 when the opt pragma was removed (#821). Re-keyed from @4383 to @4462 when the opt pragma was removed (#821). Re-keyed from @4462 to @4437 when the local M48 copy struct was retired (#4570). Re-keyed from @4437 to @4439 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4463",
+      "from": "@4538",
       "to": "@4368",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4386 to @4384 when the opt pragma was removed (#821). Re-keyed from @4384 to @4463 when the opt pragma was removed (#821). Re-keyed from @4463 to @4438 when the local M48 copy struct was retired (#4570). Re-keyed from @4438 to @4440 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4464",
+      "from": "@4539",
       "to": "@4369",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4387 to @4385 when the opt pragma was removed (#821). Re-keyed from @4385 to @4464 when the opt pragma was removed (#821). Re-keyed from @4464 to @4439 when the local M48 copy struct was retired (#4570). Re-keyed from @4439 to @4441 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4465",
+      "from": "@4540",
       "to": "@4370",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4388 to @4386 when the opt pragma was removed (#821). Re-keyed from @4386 to @4465 when the opt pragma was removed (#821). Re-keyed from @4465 to @4440 when the local M48 copy struct was retired (#4570). Re-keyed from @4440 to @4442 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4466",
+      "from": "@4541",
       "to": "@4371",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4389 to @4387 when the opt pragma was removed (#821). Re-keyed from @4387 to @4466 when the opt pragma was removed (#821). Re-keyed from @4466 to @4441 when the local M48 copy struct was retired (#4570). Re-keyed from @4441 to @4443 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4467",
+      "from": "@4542",
       "to": "@4372",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4390 to @4388 when the opt pragma was removed (#821). Re-keyed from @4388 to @4467 when the opt pragma was removed (#821). Re-keyed from @4467 to @4442 when the local M48 copy struct was retired (#4570). Re-keyed from @4442 to @4444 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4468",
+      "from": "@4543",
       "to": "@4373",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4391 to @4389 when the opt pragma was removed (#821). Re-keyed from @4389 to @4468 when the opt pragma was removed (#821). Re-keyed from @4468 to @4443 when the local M48 copy struct was retired (#4570). Re-keyed from @4443 to @4445 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4469",
+      "from": "@4544",
       "to": "@4374",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4392 to @4390 when the opt pragma was removed (#821). Re-keyed from @4390 to @4469 when the opt pragma was removed (#821). Re-keyed from @4469 to @4444 when the local M48 copy struct was retired (#4570). Re-keyed from @4444 to @4446 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4470",
+      "from": "@4545",
       "to": "@4375",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4393 to @4391 when the opt pragma was removed (#821). Re-keyed from @4391 to @4470 when the opt pragma was removed (#821). Re-keyed from @4470 to @4445 when the local M48 copy struct was retired (#4570). Re-keyed from @4445 to @4447 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4471",
+      "from": "@4546",
       "to": "@4376",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4394 to @4392 when the opt pragma was removed (#821). Re-keyed from @4392 to @4471 when the opt pragma was removed (#821). Re-keyed from @4471 to @4446 when the local M48 copy struct was retired (#4570). Re-keyed from @4446 to @4448 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4472",
+      "from": "@4547",
       "to": "@4377",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4395 to @4393 when the opt pragma was removed (#821). Re-keyed from @4393 to @4472 when the opt pragma was removed (#821). Re-keyed from @4472 to @4447 when the local M48 copy struct was retired (#4570). Re-keyed from @4447 to @4449 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4473",
+      "from": "@4548",
       "to": "@4378",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4396 to @4394 when the opt pragma was removed (#821). Re-keyed from @4394 to @4473 when the opt pragma was removed (#821). Re-keyed from @4473 to @4448 when the local M48 copy struct was retired (#4570). Re-keyed from @4448 to @4450 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4474",
+      "from": "@4549",
       "to": "@4379",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4397 to @4395 when the opt pragma was removed (#821). Re-keyed from @4395 to @4474 when the opt pragma was removed (#821). Re-keyed from @4474 to @4449 when the local M48 copy struct was retired (#4570). Re-keyed from @4449 to @4451 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4475",
+      "from": "@4550",
       "to": "@4380",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4398 to @4396 when the opt pragma was removed (#821). Re-keyed from @4396 to @4475 when the opt pragma was removed (#821). Re-keyed from @4475 to @4450 when the local M48 copy struct was retired (#4570). Re-keyed from @4450 to @4452 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4476",
+      "from": "@4551",
       "to": "@4381",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4399 to @4397 when the opt pragma was removed (#821). Re-keyed from @4397 to @4476 when the opt pragma was removed (#821). Re-keyed from @4476 to @4451 when the local M48 copy struct was retired (#4570). Re-keyed from @4451 to @4453 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4477",
+      "from": "@4552",
       "to": "@4382",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4400 to @4398 when the opt pragma was removed (#821). Re-keyed from @4398 to @4477 when the opt pragma was removed (#821). Re-keyed from @4477 to @4452 when the local M48 copy struct was retired (#4570). Re-keyed from @4452 to @4454 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4478",
+      "from": "@4553",
       "to": "@4383",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4401 to @4399 when the opt pragma was removed (#821). Re-keyed from @4399 to @4478 when the opt pragma was removed (#821). Re-keyed from @4478 to @4453 when the local M48 copy struct was retired (#4570). Re-keyed from @4453 to @4455 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4479",
+      "from": "@4554",
       "to": "@4384",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4402 to @4400 when the opt pragma was removed (#821). Re-keyed from @4400 to @4479 when the opt pragma was removed (#821). Re-keyed from @4479 to @4454 when the local M48 copy struct was retired (#4570). Re-keyed from @4454 to @4456 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4480",
+      "from": "@4555",
       "to": "@4385",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4403 to @4401 when the opt pragma was removed (#821). Re-keyed from @4401 to @4480 when the opt pragma was removed (#821). Re-keyed from @4480 to @4455 when the local M48 copy struct was retired (#4570). Re-keyed from @4455 to @4457 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4481",
+      "from": "@4556",
       "to": "@4386",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4404 to @4402 when the opt pragma was removed (#821). Re-keyed from @4402 to @4481 when the opt pragma was removed (#821). Re-keyed from @4481 to @4456 when the local M48 copy struct was retired (#4570). Re-keyed from @4456 to @4458 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4482",
+      "from": "@4557",
       "to": "@4387",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4405 to @4403 when the opt pragma was removed (#821). Re-keyed from @4403 to @4482 when the opt pragma was removed (#821). Re-keyed from @4482 to @4457 when the local M48 copy struct was retired (#4570). Re-keyed from @4457 to @4459 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     },
     {
-      "from": "@4483",
+      "from": "@4558",
       "to": "@4388",
       "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4406 to @4404 when the opt pragma was removed (#821). Re-keyed from @4404 to @4483 when the opt pragma was removed (#821). Re-keyed from @4483 to @4458 when the local M48 copy struct was retired (#4570). Re-keyed from @4458 to @4460 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991)."
     }

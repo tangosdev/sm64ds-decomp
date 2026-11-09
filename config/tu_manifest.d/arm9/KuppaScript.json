@@ -2295,9 +2295,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@645",
+      "from": "@764",
       "to": "@259",
-      "evidence": "the compiler emits @645 (was @633 before the dPa_c.h naming, which daDemo_c.h includes), which ov002 already defines as a global, so the pin is the unused @259"
+      "evidence": "the compiler emits @645 (was @633 before the dPa_c.h naming, which daDemo_c.h includes), which ov002 already defines as a global, so the pin is the unused @259 Re-keyed @645 -> @764 when the 75 StaffRoll descriptor handlers became static members with an explicit self parameter (daDemo_c.h declaration shift)."
     }
   ],
   "relocations": [

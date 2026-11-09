@@ -118,11 +118,10 @@ struct daDemo_c : dActor_c {
 
     /* The 0x518-byte block param1 0x2e allocates (func_ov002_020f6448),
        sets up (func_ov002_020f5fe4: the D_2D_STAFF_ROLL_* and D_2D_ED_STAR
-       assets), steps (5fb8) and draws (5f8c). Its helpers are free
-       functions taking the block as char *; the cue tables they dispatch
-       through are data_ov002_02110f34 and data_ov002_02110f9c. Names
-       describe what the code does with each field; the source type is not
-       recovered. */
+       assets), steps (5fb8) and draws (5f8c). Its state handlers are
+       members dispatched through data_ov002_02110f34 and
+       data_ov002_02110f9c; names describe what the code does with each
+       field; the source type is not recovered. */
     struct StaffRoll {
         /* One of the four main-screen stars, one per unlocked character
            (func_ov002_020f5a94 counts them). 3978 draws it, 39ec copies
@@ -252,7 +251,10 @@ struct daDemo_c : dActor_c {
         u8 pad_515[3]; /* 0x515 */
 
         void func_ov002_020f26e0();
-        void func_ov002_020f5b24();
+        /* Handlers whose address the .data descriptor tables hold are static
+           members taking the object explicitly: a pointer-to-member
+           initializer cannot stay in .data under this compiler. */
+        static void func_ov002_020f5b24(StaffRoll *self);
         /* Begin credit line n (1..0x14) in the first credit slot. */
         void StartCredit(int);
         void func_ov002_020f2790(int p1, int p2, int p3, s16 p4);
@@ -262,12 +264,12 @@ struct daDemo_c : dActor_c {
         int func_ov002_020f2990();
         void func_ov002_020f2a48();
         void func_ov002_020f2a68();
-        void func_ov002_020f2a78(int i);
-        void func_ov002_020f2a88(int i);
-        void func_ov002_020f2aec(int idx);
-        void func_ov002_020f2bf4(int idx);
-        void func_ov002_020f2d0c(int i);
-        void func_ov002_020f2d70(int i);
+        static void func_ov002_020f2a78(StaffRoll *self, int i);
+        static void func_ov002_020f2a88(StaffRoll *self, int i);
+        static void func_ov002_020f2aec(StaffRoll *self, int idx);
+        static void func_ov002_020f2bf4(StaffRoll *self, int idx);
+        static void func_ov002_020f2d0c(StaffRoll *self, int i);
+        static void func_ov002_020f2d70(StaffRoll *self, int i);
         void func_ov002_020f2dd4();
         void func_ov002_020f2ea0();
         void func_ov002_020f2eac();
@@ -275,15 +277,15 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f2f64();
         void func_ov002_020f2f9c(int count);
         void func_ov002_020f30d4();
-        void func_ov002_020f30f8(int i);
-        void func_ov002_020f32e4(int i);
-        void func_ov002_020f3310(int idx);
-        void func_ov002_020f335c(int i);
-        void func_ov002_020f340c(int i);
-        void func_ov002_020f34bc(int idx);
-        void func_ov002_020f35e4(int i);
-        void func_ov002_020f3740(int idx);
-        void func_ov002_020f378c(int idx);
+        static void func_ov002_020f30f8(StaffRoll *self, int i);
+        static void func_ov002_020f32e4(StaffRoll *self, int i);
+        static void func_ov002_020f3310(StaffRoll *self, int idx);
+        static void func_ov002_020f335c(StaffRoll *self, int i);
+        static void func_ov002_020f340c(StaffRoll *self, int i);
+        static void func_ov002_020f34bc(StaffRoll *self, int idx);
+        static void func_ov002_020f35e4(StaffRoll *self, int i);
+        static void func_ov002_020f3740(StaffRoll *self, int idx);
+        static void func_ov002_020f378c(StaffRoll *self, int idx);
         void func_ov002_020f37a0();
         void func_ov002_020f37fc();
         void func_ov002_020f3828();
@@ -291,52 +293,52 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f396c();
         void func_ov002_020f3978();
         void func_ov002_020f39ec(int idx);
-        void func_ov002_020f3ae8(int idx);
-        void func_ov002_020f3ba0(int i);
-        void func_ov002_020f3d38(int i);
-        void func_ov002_020f3d98(int idx);
-        void func_ov002_020f3de4(int i);
-        void func_ov002_020f40fc(int i);
-        void func_ov002_020f43cc(int i);
-        void func_ov002_020f4710(int i);
-        void func_ov002_020f4a2c(int i);
-        void func_ov002_020f4d70(int i);
-        void func_ov002_020f5010(int i);
-        void func_ov002_020f5328(int i);
-        void func_ov002_020f55b4(int i);
-        void func_ov002_020f562c(int idx);
-        void func_ov002_020f5678(int i);
-        void func_ov002_020f569c(int i);
-        void func_ov002_020f57c0(int idx);
-        void func_ov002_020f5848(int idx);
-        void func_ov002_020f5894(int i);
+        static void func_ov002_020f3ae8(StaffRoll *self, int idx);
+        static void func_ov002_020f3ba0(StaffRoll *self, int i);
+        static void func_ov002_020f3d38(StaffRoll *self, int i);
+        static void func_ov002_020f3d98(StaffRoll *self, int idx);
+        static void func_ov002_020f3de4(StaffRoll *self, int i);
+        static void func_ov002_020f40fc(StaffRoll *self, int i);
+        static void func_ov002_020f43cc(StaffRoll *self, int i);
+        static void func_ov002_020f4710(StaffRoll *self, int i);
+        static void func_ov002_020f4a2c(StaffRoll *self, int i);
+        static void func_ov002_020f4d70(StaffRoll *self, int i);
+        static void func_ov002_020f5010(StaffRoll *self, int i);
+        static void func_ov002_020f5328(StaffRoll *self, int i);
+        static void func_ov002_020f55b4(StaffRoll *self, int i);
+        static void func_ov002_020f562c(StaffRoll *self, int idx);
+        static void func_ov002_020f5678(StaffRoll *self, int i);
+        static void func_ov002_020f569c(StaffRoll *self, int i);
+        static void func_ov002_020f57c0(StaffRoll *self, int idx);
+        static void func_ov002_020f5848(StaffRoll *self, int idx);
+        static void func_ov002_020f5894(StaffRoll *self, int i);
         void func_ov002_020f5990();
         void func_ov002_020f5a6c();
         int func_ov002_020f5a94();
         void func_ov002_020f5ad4();
-        void func_ov002_020f5b7c();
-        void func_ov002_020f5b80();
-        void func_ov002_020f5b84();
-        void func_ov002_020f5b88();
-        void func_ov002_020f5b8c();
-        void func_ov002_020f5b98();
-        void func_ov002_020f5bcc();
-        void func_ov002_020f5bf4();
-        void func_ov002_020f5c40();
-        void func_ov002_020f5c88();
-        void func_ov002_020f5cd0();
-        void func_ov002_020f5d34();
+        static void func_ov002_020f5b7c(StaffRoll *self);
+        static void func_ov002_020f5b80(StaffRoll *self);
+        static void func_ov002_020f5b84(StaffRoll *self);
+        static void func_ov002_020f5b88(StaffRoll *self);
+        static void func_ov002_020f5b8c(StaffRoll *self);
+        static void func_ov002_020f5b98(StaffRoll *self);
+        static void func_ov002_020f5bcc(StaffRoll *self);
+        static void func_ov002_020f5bf4(StaffRoll *self);
+        static void func_ov002_020f5c40(StaffRoll *self);
+        static void func_ov002_020f5c88(StaffRoll *self);
+        static void func_ov002_020f5cd0(StaffRoll *self);
+        static void func_ov002_020f5d34(StaffRoll *self);
         void func_ov002_020f5dd8(int idx);
-        void func_ov002_020f5e18();
-        void func_ov002_020f5e38();
-        void func_ov002_020f5e58();
-        void func_ov002_020f5e78();
-        void func_ov002_020f5e98();
-        void func_ov002_020f5eb8();
-        void func_ov002_020f5ed8();
-        void func_ov002_020f5ee4();
-        void func_ov002_020f5ef0();
-        void func_ov002_020f5efc();
+        static void func_ov002_020f5e18(StaffRoll *self);
+        static void func_ov002_020f5e38(StaffRoll *self);
+        static void func_ov002_020f5e58(StaffRoll *self);
+        static void func_ov002_020f5e78(StaffRoll *self);
+        static void func_ov002_020f5e98(StaffRoll *self);
+        static void func_ov002_020f5eb8(StaffRoll *self);
+        static void func_ov002_020f5ed8(StaffRoll *self);
+        static void func_ov002_020f5ee4(StaffRoll *self);
+        static void func_ov002_020f5ef0(StaffRoll *self);
+        static void func_ov002_020f5efc(StaffRoll *self);
         void func_ov002_020f5f0c(int idx);
         void func_ov002_020f5f60();
         int func_ov002_020f5f8c();
@@ -396,33 +398,33 @@ struct daDemo_c : dActor_c {
     void func_ov002_020f237c();
     int func_ov002_020f23d0();
     int func_ov002_020f23f0();
-    int func_ov002_020f26c4(unsigned char *src);
+    static int func_ov002_020f26c4(daDemo_c *self, unsigned char *src);
     int func_ov002_020f63a0();
     int func_ov002_020f63d4();
-    int func_ov002_020f63f8(unsigned char *src);
+    static int func_ov002_020f63f8(daDemo_c *self, unsigned char *src);
     int func_ov002_020f6424();
-    int func_ov002_020f6448(unsigned char *arg1);
-    int func_ov002_020f6a9c();
-    int func_ov002_020f6ab8(unsigned char *p);
-    int func_ov002_020f6ae4(unsigned char *p);
-    int func_ov002_020f6b28(unsigned char *p);
-    int func_ov002_020f6b4c(unsigned char *p);
-    s32 func_ov002_020f6bc0(unsigned char *data);
-    int func_ov002_020f6c24(unsigned char *src);
-    int func_ov002_020f6c34(unsigned char *src);
-    int func_ov002_020f6c60(void *arg1, int arg2, int arg3);
-    int func_ov002_020f6e48(unsigned char *p);
+    static int func_ov002_020f6448(daDemo_c *self, unsigned char *arg1);
+    static int func_ov002_020f6a9c(daDemo_c *self);
+    static int func_ov002_020f6ab8(daDemo_c *self, unsigned char *p);
+    static int func_ov002_020f6ae4(daDemo_c *self, unsigned char *p);
+    static int func_ov002_020f6b28(daDemo_c *self, unsigned char *p);
+    static int func_ov002_020f6b4c(daDemo_c *self, unsigned char *p);
+    static s32 func_ov002_020f6bc0(daDemo_c *self, unsigned char *data);
+    static int func_ov002_020f6c24(daDemo_c *self, unsigned char *src);
+    static int func_ov002_020f6c34(daDemo_c *self, unsigned char *src);
+    static int func_ov002_020f6c60(daDemo_c *self, void *arg1, int arg2, int arg3);
+    static int func_ov002_020f6e48(daDemo_c *self, unsigned char *p);
     void func_ov002_020f6f48(Vector3 *v, int amt);
-    int func_ov002_020f7020();
-    int func_ov002_020f7038(int a, int arg);
-    int func_ov002_020f71c4(int a, int arg);
+    static int func_ov002_020f7020(daDemo_c *self);
+    static int func_ov002_020f7038(daDemo_c *self, int a, int arg);
+    static int func_ov002_020f71c4(daDemo_c *self, int a, int arg);
     int func_ov002_020f72bc();
     int func_ov002_020f7384(unsigned char *flag, int val);
     int func_ov002_020f7410(unsigned char *in, int sel);
     int func_ov002_020f7538(unsigned char *arg1, int arg2);
     int func_ov002_020f7780(void *unused, int mode);
-    int func_ov002_020f79c0(void *unused, int mode);
-    int func_ov002_020f7bb8(unsigned char *p, u16 id);
+    static int func_ov002_020f79c0(daDemo_c *self, void *unused, int mode);
+    static int func_ov002_020f7bb8(daDemo_c *self, unsigned char *p, u16 id);
 };
 
 #ifndef SM64DS_PLATFORM_PC
