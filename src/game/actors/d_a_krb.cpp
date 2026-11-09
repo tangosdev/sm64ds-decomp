@@ -116,16 +116,6 @@ struct KrbModelFilePtr : SharedFilePtr {
    daKrb_c::State. */
 typedef void (daKrb_c::*StateHandler)();
 
-/* Four state descriptors retain their flat-address initializer spelling.
-   The handlers are real methods; standalone StateHandler initializers grow
-   the runtime initializer from 0x1fc to 0x23c under 2004/b56. The first word
-   carries the code relocation; the second is zero, like every other
-   descriptor. */
-union KrbFreeHandler {
-    void (*fn)(daKrb_c *goomba);
-    StateHandler pmf;
-};
-
 /* Actor ids (symbols/actor_debug_names.tsv). */
 enum {
     ACTOR_SILVER_STAR = 179,
@@ -189,17 +179,6 @@ extern KrbAnimationFileHandle data_ov084_02130ce8;
 extern KrbAnimationFileHandle data_ov084_02130cf0;
 extern KrbModelFilePtr data_ov084_02130cf8;
 extern KrbModelFilePtr gKuriboLowModelModelFile;
-/* local extern: flat function addresses initialize the retained union descriptors below.
-   Real StateHandler globals add four runtime descriptor copies (initializer 0x23c
-   instead of retail 0x1fc under 2004/b56). */
-/* local extern: retained flat state descriptor initialization, measured above. */
-extern void _ZN7daKrb_c19func_ov084_0212a774Ev(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
-extern void _ZN7daKrb_c19func_ov084_0212ab48Ev(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
-extern void _ZN7daKrb_c19func_ov084_0212b2dcEv(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
-extern void _ZN7daKrb_c19func_ov084_0212a6f8Ev(daKrb_c *);
 extern StateHandler data_ov084_02130d74[];
 int func_02037e20(int* p);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
@@ -1988,19 +1967,15 @@ KrbAnimationFileHandle gKuriboRecoverAnimationFile(ASSET_KURIBO_RECOVER_BCA);
 KrbAnimationFileHandle data_ov084_02130cc8(ASSET_KURIBO_WAIT_BCA);
 KrbAnimationFileHandle data_ov084_02130cf0(ASSET_KURIBO_RUN_BCA);
 
-/* Pointer-to-member descriptors for the four state handlers stored separately in the ROM initializer data. */
-KrbFreeHandler krbStateDesc_Tumble = {_ZN7daKrb_c19func_ov084_0212a774Ev};
-KrbFreeHandler krbStateDesc_HopStart = {_ZN7daKrb_c19func_ov084_0212ab48Ev};
-KrbFreeHandler krbStateDesc_Walk = {_ZN7daKrb_c19func_ov084_0212b2dcEv};
-KrbFreeHandler krbStateDesc_Pause = {_ZN7daKrb_c19func_ov084_0212a6f8Ev};
-
-/* One pointer-to-member per State, in state-index order. */
+/* One pointer-to-member per State, in state-index order. Each &daKrb_c::
+   expression is an 8-byte {code address, 0} constant in .data, and
+   __sinit_d_a_krb.cpp copies the five into this .bss table. */
 StateHandler data_ov084_02130d74[5] = {
-    krbStateDesc_Walk.pmf,            /* STATE_WALK */
-    krbStateDesc_HopStart.pmf,        /* STATE_HOP_START */
-    &daKrb_c::func_ov084_0212aab0,    /* STATE_AIRBORNE */
-    krbStateDesc_Tumble.pmf,          /* STATE_TUMBLE */
-    krbStateDesc_Pause.pmf,           /* STATE_PAUSE */
+    &daKrb_c::func_ov084_0212b2dc, /* STATE_WALK */
+    &daKrb_c::func_ov084_0212ab48, /* STATE_HOP_START */
+    &daKrb_c::func_ov084_0212aab0, /* STATE_AIRBORNE */
+    &daKrb_c::func_ov084_0212a774, /* STATE_TUMBLE */
+    &daKrb_c::func_ov084_0212a6f8, /* STATE_PAUSE */
 };
 
 extern "C" {
