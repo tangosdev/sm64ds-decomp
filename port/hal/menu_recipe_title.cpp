@@ -625,7 +625,9 @@ void online_overlays(MenuLayout *L, bool main_page, bool show_help)
         menu_online_add_help(L, L->w - 5 * un / ud, 5 * un / ud, 30 * un / ud);      /* NAME2: 5 units in from the window's right edge, as it is from the top */
         if (!main_page) menu_online_add_name_plank(L, L->w - 40 * un / ud, 5 * un / ud, 30 * un / ud);      /* PROFILE1: the NAME plank beside the ? on the online file select (5 units gap) */
         if (!main_page) online_lobby_planks(L, of);       /* LOBBYUI1: ROOM CODE (top left) and HOST */
-        if (of->padfocus) {      /* PADNAV1: the pad focus is on the ? or NAME plank: the cursor arrow points up at it from below (the plank is lit too) */
+        /* PADNAV1: the pad focus is on the ? or NAME plank: the cursor arrow points up at it from below (the plank is lit too). LOBBYTAB1: only those two;
+           ROOM CODE and HOST draw their own arrow (online_lobby_planks), and this one used to stay under NAME beside it */
+        if (of->padfocus == ONL_PF_HELP || of->padfocus == ONL_PF_NAME) {
             const int hpx = 30 * un / ud;
             const int right = of->padfocus == ONL_PF_HELP ? L->w - 5 * un / ud : L->w - 40 * un / ud;
             const int pw = of->padfocus == ONL_PF_HELP ? hpx : menu_online_plank_w(ONL_K_NAME, hpx);
