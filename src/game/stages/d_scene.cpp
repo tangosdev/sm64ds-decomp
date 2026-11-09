@@ -17,7 +17,8 @@
 #include "dScene_c.h"
 #include "dScStage_c.h"
 #include "dFdColor_c.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/g3x.h"
 #include "GX.h"
 #include "nitro/hw/registers.h"
 
@@ -52,8 +53,6 @@ extern int  func_02053be0(int enable);
 extern void func_02053a90(u16* out, int v);
 
 extern Matrix2x2 data_02092668;
-
-extern void func_0205583c(void);
 
 extern void Initialise3dGraphics(int arg);
 
@@ -144,8 +143,8 @@ void dScene_c::ResetHardwareRegisters()
     REG_BG2OFS = 0;
     REG_BG3OFS = 0;
 
-    G2x::SetBGyAffine(&REG_BG2PA, &m, 0, 0, 0, 0);
-    G2x::SetBGyAffine(&REG_BG3PA, &m, 0, 0, 0, 0);
+    G2x_SetBGyAffine_(&REG_BG2PA, &m, 0, 0, 0, 0);
+    G2x_SetBGyAffine_(&REG_BG3PA, &m, 0, 0, 0, 0);
 
     REG_WININ &= ~0x3f;
     REG_WININ &= ~0x3f00;
@@ -186,8 +185,8 @@ void dScene_c::ResetHardwareRegisters()
     REG_DB_BG2OFS = 0;
     REG_DB_BG3OFS = 0;
 
-    G2x::SetBGyAffine(&REG_DB_BG2PA, &m, 0, 0, 0, 0);
-    G2x::SetBGyAffine(&REG_DB_BG3PA, &m, 0, 0, 0, 0);
+    G2x_SetBGyAffine_(&REG_DB_BG2PA, &m, 0, 0, 0, 0);
+    G2x_SetBGyAffine_(&REG_DB_BG3PA, &m, 0, 0, 0, 0);
 
     REG_DB_WININ &= ~0x3f;
     REG_DB_WININ &= ~0x3f00;
@@ -237,7 +236,7 @@ void dScStage_c::SetVramBanks() {
 void dScene_c::Initialise3dGraphics()
 {
     ResetHardwareRegisters();
-    func_0205583c();
+    G3X_Init();
     GX::SetGraphicsMode(1, 0, 1);
     REG_LIGHT_VECTOR = 0x296a5800;
     REG_LIGHT_COLOR = 0x7fff;

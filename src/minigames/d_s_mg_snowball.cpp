@@ -67,6 +67,7 @@ enum dScMgSnowball_c_AssetId {
 #include "private/mtx43.h"
 #include "OamAttr.h"
 #include "Vector2Math.h"
+#include "nitro/gx/g3x.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -80,9 +81,6 @@ typedef struct Pair {
    `pointer + constant` arithmetic because every member spelling moved bytes. */
 #define SNOW_OFF(m) ((int)&((dScMgSnowball_c *)0)->m)
 
-namespace G3X {
-void SetFog(int enable, int blend, int slope, int offset);
-}
 
 extern "C" {
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
@@ -1814,7 +1812,7 @@ s32 dScMgSnowball_c::InitResources() {
     Ov004_Deallocate(buf);
 
     *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | 1;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     *(vu16 *)0x4000060 = (*(vu16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
 

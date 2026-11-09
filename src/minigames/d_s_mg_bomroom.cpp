@@ -40,7 +40,7 @@
 #include "decl_common.h"
 #include "LevelRng.h"
 #include "Sound.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "G2.h"
@@ -1836,7 +1836,7 @@ void dScMgBomroom_c::StartRound(int /* arg */) {
     ResetRound();
     mTallyCount = 0;
     mSceneState = 0;
-    G2x::SetBlendAlpha(&REG_BLDCNT, 1, 0x1c, 4, 3);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 1, 0x1c, 4, 3);
     SetBg0Offset(0, 0);
 }
 
@@ -1922,7 +1922,7 @@ s32 dScMgBomroom_c::InitResources() {
     func_02056554(f, 0x800, 0x800);
     Deallocate(f);
 
-    G2x::SetBlendAlpha(&REG_BLDCNT, 1, 0x1c, 4, 3);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 1, 0x1c, 4, 3);
 
     arc = LoadFile(ASSET_D_2D_MG_BOMROOM_NCG_BIN);
     f = LoadFile(ASSET_D_2D_MG_BOMROOM_NCL_BIN);

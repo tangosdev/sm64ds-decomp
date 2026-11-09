@@ -87,7 +87,8 @@
 #include "daStar_c.h"
 #include "dScene_c.h"
 #include "nitro/fx/fx.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/g3x.h"
 #include "Memory.h"
 #include "cstd.h"
 #include "math/Approach.h"
@@ -661,7 +662,7 @@ AnimScriptStep data_ov002_0210a740[4] = {
 };
 /* The 32-colour RGB555 toon table: func_ov002_020e69c0 rotates it two
  * entries per call and func_ov002_020e6a78 blends the player ramp toward it
- * before passing it to func_020555a4, the toon-table load. */
+ * before passing it to G3X_SetToonTable. */
 u16 data_ov002_0210a760[32] = {
     0x3e1f, 0x3e1f, 0x3e1f, 0x3e1f, 0x3f1f, 0x3f1f, 0x3f1f, 0x3f1f, 0x43ff, 0x43ff, 0x43ff,
     0x43ff, 0x4bef, 0x4bef, 0x4bef, 0x4bef, 0x7fef, 0x7fef, 0x7fef, 0x7fef, 0x7df0, 0x7df0,
@@ -5662,7 +5663,7 @@ int daPly_c::St_Teleport_Main() {
         }
         break;
     }
-    G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x3f, mStateWork);
+    G2x_SetBlendBrightness_((volatile u16 *)0x4000050, 0x3f, mStateWork);
     AdvanceAnims();
     return 1;
 }
@@ -22046,8 +22047,6 @@ int Color_Interp(int unused, int from, int to, int t) {
     return out >> 0x10;
 }
 
-extern void func_020555a4(void *table);
-
 /* A 32-entry RGB555 ramp and the blended copy func_ov002_020e6a78 builds
  * behind it. */
 struct ColorRamp {
@@ -22057,7 +22056,7 @@ struct ColorRamp {
 
 /* Blends the 32-entry ramp toward data_ov002_0210a760 (which
  * func_ov002_020e69c0 rotates) by blend, into the ramp's second half,
- * and hands that half to func_020555a4. */
+ * and hands that half to G3X_SetToonTable. */
 void func_ov002_020e6a78(void *ramp, int blend) {
     unsigned short *src = ((ColorRamp *)ramp)->base;
     unsigned short *target = data_ov002_0210a760;
@@ -22066,7 +22065,7 @@ void func_ov002_020e6a78(void *ramp, int blend) {
     for (i = 0; i < 0x20; i++) {
         *dst++ = Color_Interp((int)ramp, *src++, *target++, blend);
     }
-    func_020555a4(((ColorRamp *)ramp)->blended);
+    G3X_SetToonTable(((ColorRamp *)ramp)->blended);
 }
 
 /* Fills both halves of the ramp with the grey ramp (i, i, i) and clears

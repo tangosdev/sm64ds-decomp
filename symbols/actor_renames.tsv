@@ -9342,3 +9342,21 @@ ov078	0x2125c98	_ZN12daBombking_c19func_ov078_02125c98Ev	_ZN12daBombking_c12Upda
 ov078	0x2125de0	_ZN12daBombking_c19func_ov078_02125de0Ev	_ZN12daBombking_c16UpdateHandMatrixEv	daBombking_c member: behaviour: composes the hand bone (transforms[10]) with the model matrix into mHoldMtx, mThrowPos = hand world pos, points mCarryMatrix at it and re-attaches spawned bob-ombs to the hand
 ov078	0x2125f8c	_ZN12daBombking_c19func_ov078_02125f8cEv	_ZN12daBombking_c16AttachHeldPlayerEv	daBombking_c member: behaviour: Render calls it while holding; picks the carry offset (data_ov078_0212711c[param1 == 2]) and copies the UpdateCarry matrix onto the model matrix to attach the held player
 ov078	0x02123eb8	_ZN12daBombking_c19func_ov078_02123eb8Ev	_ZN12daBombking_c16EnterCarryPlayerEv	daBombking_c member: N64 king_bobomb_act_3 sub-action 1 entry: Walk2 animation, 50-frame timer, forward speed 0xa000
+arm9	0x02055238	_ZN3G2x18SetBlendBrightnessEPVtii	G2x_SetBlendBrightness_	NitroSDK G2x_SetBlendBrightness_ (ntrtwl/NitroSDK libraries/gx/src/g2.c), C linkage; replaces the coined static
+arm9	0x0205525c	_ZN3G2x13SetBlendAlphaEPVtiiii	G2x_SetBlendAlpha_	NitroSDK G2x_SetBlendAlpha_ (ntrtwl/NitroSDK libraries/gx/src/g2.c), C linkage; replaces the coined static
+arm9	0x02055278	_ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii	G2x_SetBGyAffine_	NitroSDK G2x_SetBGyAffine_ (ntrtwl/NitroSDK libraries/gx/src/g2.c), C linkage; replaces the coined static
+arm9	0x02055454	_ZN3G3X10SetHOffsetEi	G3X_SetHOffset	NitroSDK G3X_SetHOffset (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces the coined static
+arm9	0x02055464	_ZN3G3X18GetMtxStackLevelPJEPi	G3X_GetMtxStackLevelPJ	NitroSDK G3X_GetMtxStackLevelPJ (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces the coined static
+arm9	0x02055490	_ZN3G3X18GetMtxStackLevelPVEPi	G3X_GetMtxStackLevelPV	NitroSDK G3X_GetMtxStackLevelPV (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces the coined static
+arm9	0x020554bc	_ZN3G3X9InitTableEv	G3X_InitTable	NitroSDK G3X_InitTable (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces the coined static
+arm9	0x02055574	_ZN3G3X13SetClearColorEtiiib	G3X_SetClearColor	NitroSDK G3X_SetClearColor (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces the coined static
+arm9	0x020555a4	func_020555a4	G3X_SetToonTable	NitroSDK G3X_SetToonTable (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces its address name
+arm9	0x020555bc	_ZN3G3X11SetFogTableEPv	G3X_SetFogTable	NitroSDK G3X_SetFogTable (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces the coined static
+arm9	0x020555d0	_ZN3G3X6SetFogEiiii	G3X_SetFog	NitroSDK G3X_SetFog (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces the coined static
+arm9	0x02055624	_ZN3G3X13ResetMtxStackEv	G3X_ResetMtxStack	NitroSDK G3X_ResetMtxStack (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces the coined static
+arm9	0x020556d0	_ZN3G3X12InitMtxStackEv	G3X_InitMtxStack	NitroSDK G3X_InitMtxStack (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces the coined static
+arm9	0x02055780	_ZN3G3X9ClearFifoEv	G3X_ClearFifo	NitroSDK G3X_ClearFifo (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces the coined static
+arm9	0x020557b4	_ZN3G3X5ResetEv	G3X_Reset	NitroSDK G3X_Reset (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces the coined static
+arm9	0x0205583c	func_0205583c	G3X_Init	NitroSDK G3X_Init (ntrtwl/NitroSDK libraries/gx/src/g3x.c), C linkage; replaces its address name
+arm9	0x02055a64	_ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3	G3i_LookAt_	NitroSDK G3i_LookAt_ (ntrtwl/NitroSDK libraries/gx/src/g3_util.c), C linkage; replaces the coined static
+arm9	0x02055bfc	_ZN3G3i13PerspectiveW_EiiiiiiiP9Matrix4x3	G3i_PerspectiveW_	NitroSDK G3i_PerspectiveW_ (ntrtwl/NitroSDK libraries/gx/src/g3_util.c), C linkage; replaces the coined static

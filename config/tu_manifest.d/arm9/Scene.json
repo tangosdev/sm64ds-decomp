@@ -679,14 +679,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@322",
+      "from": "@348",
       "to": "@331",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @322 to @348 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object)."
     },
     {
-      "from": "@323",
+      "from": "@349",
       "to": "@332",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @323 to @349 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object)."
     }
   ]
 }

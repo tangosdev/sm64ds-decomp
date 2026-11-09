@@ -62,7 +62,6 @@ void LoadBGPltt(const void *, unsigned int, unsigned int);
 
 extern "C" {
 void func_020308b4(void);
-void G2x_ChangeBlendBrightness_(volatile unsigned short *reg, int brightness);
 extern int data_0209fc68;
 
 void Enable3dEngines(void);
@@ -103,7 +102,7 @@ extern "C" dFdBrightness_c *gSceneFader;
 #include "dEntObj_c.h"
 #include "OAM.h"
 #include "OamAttr.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "dBase_c.h"
 #include "G2.h"
 #include "Message.h"
@@ -751,7 +750,7 @@ void dScEntry_c::EnterSoundSettings() {
     Message::DisplayOptionsMenuTextVS((s16)(GetSoundMode() + 9));
 
     gSubScreenLayers |= 5;
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0xb, ~5);
+    G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, 0xb, ~5);
 
     mSelectedIcon = 0;
 
@@ -917,7 +916,7 @@ void dScEntry_c::EnterControlSettings() {
     func_02033bb8(5);
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 5;
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0xb, ~5);
+    G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, 0xb, ~5);
 
     mStepWork[0] = mSelectedIcon;
     func_02020304();
@@ -931,7 +930,7 @@ void dScEntry_c::EnterQuitMessage() {
     func_020338b0(0x145, 0xb0, 0x17, -1);
     gSubScreenLayers = gSubScreenLayers | 5;
     mIconCount = 0;
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x1f, ~5);
+    G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, 0x1f, ~5);
     mStepDelay = 2;
 }
 
@@ -1171,7 +1170,7 @@ void dScEntry_c::EnterRematchPrompt() {
     mIcons[0].Place(0xa, 0, 0x80, 0x48);
     mIcons[1].Place(0xa, 0, 0x80, 0x78);
     mIconCount = 2;
-    G2x::SetBlendAlpha((volatile unsigned short *)0x4000050, 4, 0x11, 0xc, 4);
+    G2x_SetBlendAlpha_((volatile unsigned short *)0x4000050, 4, 0x11, 0xc, 4);
     mDisconnectHideMask = 0xe;
     if (data_0209fc68 != 0)
         data_0209fc68 = 5;
@@ -1903,7 +1902,7 @@ void dScEntry_c::UpdateStepFadeOut() {
 
 void dScEntry_c::EnterStepFadeOut() {
     REG_BLDCNT = 0;
-    G2x::SetBlendBrightness((volatile u16 *)0x4001050, 0x1d, 0);
+    G2x_SetBlendBrightness_((volatile u16 *)0x4001050, 0x1d, 0);
     mFadeBrightness = 0;
     mFadeTick = 0;
 }
@@ -1953,7 +1952,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
         gMainScreenLayers = gMainScreenLayers & ~mDisconnectHideMask;
         if (mDisconnectHideMask)
             mRenderStep = 0;
-        G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x1f, -6);
+        G2x_SetBlendBrightness_((volatile u16 *)0x4000050, 0x1f, -6);
         REG_DB_BLDCNT = 0;
         Sound::StopLoadedMusic_Layer1(4);
         func_02012790(0x123);
@@ -1971,7 +1970,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
             gMainScreenLayers = gMainScreenLayers & ~mDisconnectHideMask;
             if (mDisconnectHideMask)
                 mRenderStep = 0;
-            G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x1f, -6);
+            G2x_SetBlendBrightness_((volatile u16 *)0x4000050, 0x1f, -6);
             func_02012790(0x12a);
         } else {
             for (player = 0; player < 4; player++) {

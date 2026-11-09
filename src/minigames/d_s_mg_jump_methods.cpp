@@ -27,6 +27,7 @@
 #include "types.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "nitro/gx/g3x.h"
 
 /* `C` stands in for the receiver of the state pointer-to-member at 0x5004.
  * It must stay non-polymorphic: mwccarm lays out a pointer-to-member of a
@@ -97,9 +98,6 @@ extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Play;
 }
 
 namespace GX   { void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size); }
-namespace G3X {
-void SetFog(int enable, int mode, int slope, int offset);
-}
 namespace cstd {
 s32 fdiv(s32 a, s32 b);
 }
@@ -205,7 +203,7 @@ s32 dScMgJump_c::InitResources()
     Deallocate(buf2);
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082614);

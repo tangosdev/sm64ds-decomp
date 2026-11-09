@@ -5812,7 +5812,7 @@ s32 dScMgSmartball_c::Behavior() {
 
 #pragma pop
 
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "types.h"
 #include "dScMgSmartball_c.h"
 /* vtable slot 18 -- an override of
@@ -5820,8 +5820,8 @@ s32 dScMgSmartball_c::Behavior() {
    declaration exactly, or mwcc appends a slot instead of overriding. */
 void dScMgSmartball_c::StartRound(int /* arg */) {
     SpawnObjects();
-    G2x::SetBlendAlpha((volatile unsigned short *)0x4000050, 0, 0x18, 4, 0xa);
-    G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 0x18, 4, 0xa);
+    G2x_SetBlendAlpha_((volatile unsigned short *)0x4000050, 0, 0x18, 4, 0xa);
+    G2x_SetBlendAlpha_((volatile unsigned short *)0x4001050, 0, 0x18, 4, 0xa);
 }
 
 /* dScMgSmartball_c::InitSubScreenBg - slot 31, this class's own override.
@@ -6032,8 +6032,8 @@ s32 dScMgSmartball_c::InitResources() {
     mpSlot = 0;
     mpBoard = 0;
     mpWing = 0;
-    G2x::SetBlendAlpha((volatile u16 *)0x4000050, 0, 0x18, 4, 0xa);
-    G2x::SetBlendAlpha((volatile u16 *)0x4001050, 0, 0x18, 4, 0xa);
+    G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 0, 0x18, 4, 0xa);
+    G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 0, 0x18, 4, 0xa);
     G2_SetOBJMode(sSmartballBallSprites[1], GX_OAM_MODE_XLU,
                   G2_GetOBJColorParam(sSmartballBallSprites[1]));
     G2_SetOBJMode(sSmartballBallSpritesAlt[1], GX_OAM_MODE_XLU,

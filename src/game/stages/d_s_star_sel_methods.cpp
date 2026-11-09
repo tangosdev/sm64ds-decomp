@@ -30,8 +30,8 @@
 #include "SaveData.h"
 #include "Message.h"
 #include "Sound.h"
-#include "G3X.h"
-#include "G3i.h"
+#include "nitro/gx/g3x.h"
+#include "nitro/gx/g3_util.h"
 #include "G2.h"
 #include "GX.h"
 #include "private/controller_input.h"
@@ -391,9 +391,9 @@ s32 dScStarSel_c::Render() {
     }
 
     if (SublevelToLevel(gNextSublevel) <= 0xe) {
-        G3i::PerspectiveW_(FX_SinIdx(0xb), FX_CosIdx(0xb), 0x1555, 0x1000, 0x1388000, 0x1000, 1, 0);
-        G3i::LookAt_((const Vector3 *)&data_ov003_020b132c, (const Vector3 *)&data_ov003_020b1338,
-                     (const Vector3 *)&data_ov003_020b1344, true, &mtx);
+        G3i_PerspectiveW_(FX_SinIdx(0xb), FX_CosIdx(0xb), 0x1555, 0x1000, 0x1388000, 0x1000, 1, 0);
+        G3i_LookAt_((const Vector3 *)&data_ov003_020b132c, (const Vector3 *)&data_ov003_020b1338,
+                    (const Vector3 *)&data_ov003_020b1344, true, &mtx);
         CopyToViewMat(&mtx);
 
         /* The plates are 0x18000 apart, centred on x = 0, and sit at y = 0x28000. */
@@ -902,7 +902,7 @@ s32 dScStarSel_c::InitResources() {
     }
     REG_POWCNT1 |= 0x8000;
     ::Initialise3dGraphics(0);
-    G3X::SetClearColor(0x7FFF, 0x1F, 0x7FFF, 0x3F, false);
+    G3X_SetClearColor(0x7FFF, 0x1F, 0x7FFF, 0x3F, false);
     GX::DisableAllBanks();
     GX::SetBankForTex(3);
     GX::SetBankForTexPltt(0x30);
@@ -919,7 +919,7 @@ s32 dScStarSel_c::InitResources() {
     REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
     GX::DispOn();
     REG_DISPCNT_SUB |= 0x10000;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     models[0].LoadAndSetFile(0x8015, 1, -1);
     models[1].LoadAndSetFile(0x8017, 1, -1);

@@ -29,7 +29,7 @@
 #include "common.h"
 #include "SharedFilePtr.h"
 #include "PlayerInput.h"
-#include "G3i.h"
+#include "nitro/gx/g3_util.h"
 #include "dClipper.h"
 #include "MascotWalker.h"
 #include "Presenter.h"
@@ -2328,11 +2328,11 @@ void Camera_UpdateMatrices(MgCamera *camera) {
         }
     }
 
-    G3i::PerspectiveW_(FX_SinIdx(camera->mFovAngle >> 4), FX_CosIdx(camera->mFovAngle >> 4), 0x1555,
-                       0x1000, 0x1388000, 0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
+    G3i_PerspectiveW_(FX_SinIdx(camera->mFovAngle >> 4), FX_CosIdx(camera->mFovAngle >> 4), 0x1555,
+                      0x1000, 0x1388000, 0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
 
-    G3i::LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
-                 (Matrix4x3 *)&camera->mViewMtx);
+    G3i_LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
+                (Matrix4x3 *)&camera->mViewMtx);
 
     CopyToViewMat((Matrix4x3 *)&camera->mViewMtx);
 

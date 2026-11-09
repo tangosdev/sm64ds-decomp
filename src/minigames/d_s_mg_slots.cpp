@@ -60,7 +60,7 @@ enum dScMgSlots_AssetId {
 #include "types.h"
 #include "PlayerInput.h"
 #include "dWipe_c.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "CP15.h"
 #include "GX.h"
 #include "LevelRng.h"
@@ -838,7 +838,7 @@ s32 dScMgSlot3_c::InitResources() {
     }
 
     gSubScreenLayers = 0x14;
-    G2x::SetBlendAlpha((volatile u16 *)0x4000050, 0, 0xc, 0xc, 4);
+    G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 0, 0xc, 0xc, 4);
 
     Mascot_Load((char *)&mMascot);
     Camera_InitSlotsView((char *)&mCamera);
@@ -1479,7 +1479,7 @@ s32 dScMgSlot1_c::InitResources() {
 
     gSubScreenLayers = 0x1d;
     *(volatile u16 *)0x4000050 = 0;
-    G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x1c, 7, 9);
+    G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 1, 0x1c, 7, 9);
 
     sMgWinBannerX = 0x80;
     sMgWinBannerY = 0x40;

@@ -21,6 +21,7 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/gx/g2.h"
 
 /* By-value five-card ordering table. */
 typedef struct 
@@ -101,9 +102,6 @@ extern "C" void* dScMgCard_c_classInit()
    `Riii` int reference, `Rsss` short reference. */
 namespace GX { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
 namespace GXS { void LoadOBJPltt(const void *plt, u32 base, u32 size); }
-namespace G2x {
-void SetBlendAlpha(volatile u16 *reg, int a, int b, int c, int d);
-}
 
 /* Slot 0. Loads and decompresses the OBJ tiles and palettes for both
  * engines, sets blending, patches the OAM template list, spawns the two rows
@@ -135,7 +133,7 @@ s32 dScMgCard_c::InitResources()
     Deallocate(mainPalette);
     Deallocate(subTiles);
     Deallocate(subPalette);
-    G2x::SetBlendAlpha((volatile u16 *)0x04000050, 0, 1, 0x10, 8);
+    G2x_SetBlendAlpha_((volatile u16 *)0x04000050, 0, 1, 0x10, 8);
     *(volatile u16 *)0x04001050 = 0;
 
     {

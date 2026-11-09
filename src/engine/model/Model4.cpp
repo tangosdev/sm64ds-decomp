@@ -11,7 +11,7 @@
  */
 
 #include "dExtSimpleModel_c.h"
-#include "G3X.h"
+#include "nitro/gx/g3x.h"
 #include "cstd.h"
 #include "GX.h"
 
@@ -425,7 +425,7 @@ extern "C" void func_02045d9c(void)
     u16 ip = *(volatile u16 *)0x4000060;
     ip = (ip & ~0x3000u) | 8;
     *(volatile u16 *)0x4000060 = ip;
-    G3X::SetClearColor(0, 0, r2, 0, false);
+    G3X_SetClearColor(0, 0, r2, 0, false);
     if (GX::GetBankForTex() == 0) {
         Crash();
     }

@@ -43,7 +43,7 @@ enum dScMgCurling2_c_AssetId {
 #include "dScMgCurling2_c.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "LevelRng.h"
 
 namespace G2 {
@@ -1627,8 +1627,8 @@ void dScMgCurling2_c::StartRound(int /* arg */) {
     mState = 0;
     ResetGame();
     Scroll();
-    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xd, 2, 0x10);
-    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xd, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
 }
 
@@ -1741,8 +1741,8 @@ s32 dScMgCurling2_c::InitResources() {
     Mg_SetTopScreenYOffset(0x20);
     mStateTimer = 0x40;
     mRunDuringFade = 1;
-    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xd, 2, 0x10);
-    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xd, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
     return 1;
 }

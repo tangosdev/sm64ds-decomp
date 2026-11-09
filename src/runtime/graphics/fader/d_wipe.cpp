@@ -27,7 +27,7 @@
 #include "cstd.h"
 #include "CP15.h"
 #include "GX.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 
 extern "C" {
 void MultiStore_Int(int val, int *dst, int len);
@@ -280,8 +280,8 @@ void dWipe_c::AdvanceFade()
             wipeInterp = 0;
             needsCleanup = 0;
             b = (type == 0) ? 0x10 : -0x10;
-            G2x::SetBlendBrightness((u16 *)0x4000050, 0x3f, b);
-            G2x::SetBlendBrightness((u16 *)0x4001050, 0x3f, b);
+            G2x_SetBlendBrightness_((u16 *)0x4000050, 0x3f, b);
+            G2x_SetBlendBrightness_((u16 *)0x4001050, 0x3f, b);
             DisableWindows();
             state = 4;
         }

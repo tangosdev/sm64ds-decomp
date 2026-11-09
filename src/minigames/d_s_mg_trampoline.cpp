@@ -2,6 +2,7 @@
 #include "dFdBrightness_c.h"
 #include "nitro/hw/registers.h"
 #include "math/Approach.h"
+#include "nitro/gx/g3x.h"
 /* dScMgTrampoline_c -- Trampoline Time. Draw a line on the touch screen
  * (up to three at once) and bounce Mario to the lit door. Three misses
  * end the round.
@@ -35,7 +36,7 @@ enum d_s_mg_trampoline_AssetId {
 #include "TrmpScorePopup.h"
 #include "SpawnInfo.h"
 #include "types.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "Sound.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
@@ -59,9 +60,6 @@ void *GetBG2CharPtr();
 namespace GX {
 void LoadBGPltt(const void *src, u32 offset, u32 size);
 void LoadOBJPltt(const void *src, u32 offset, u32 size);
-}
-namespace G3X {
-void SetFog(int enable, int blend, int slope, int offset);
 }
 
 typedef struct Vec2s {
@@ -329,7 +327,7 @@ s32 dScMgTrampoline_c::InitResources() {
     InitDisplay();
     gMainScreenLayers =
         DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     REG_DISP3DCNT = (REG_DISP3DCNT & ~0x3000) | 8;
     InitialiseVramGlobals();
     REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
@@ -366,7 +364,7 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
     volatile unsigned short fill;
     int heightMix;
 
-    G2x::SetBlendAlpha(&REG_BLDCNT, 1, 0x3e, 0x10, 0x10);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 1, 0x3e, 0x10, 0x10);
 
     mTouchStartX = data_020a0dbc[0];
     mTouchStartY = data_020a0dbc[1];

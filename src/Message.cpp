@@ -34,7 +34,7 @@
 #include "types.h"
 #include "nitro/hw/registers.h"
 #include "Message.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "SaveData.h"
 #include "dScStage_c.h"
 #include "Sound.h"
@@ -1200,7 +1200,7 @@ void Message::DisplaySaving(unsigned short n)
     {
         int b = gMainScreenLayers | 0x20;
         gNextActorUpdateMask |= 0x80000000u;
-        G2x::SetBlendBrightness((volatile u16 *)0x4000050, b, -8);
+        G2x_SetBlendBrightness_((volatile u16 *)0x4000050, b, -8);
     }
 
     {
@@ -1516,7 +1516,7 @@ extern "C" void func_0201f32c(int arg0)
         return;
     }
     if (disp2 == 1) {
-        G2x::SetBlendBrightness((volatile u16 *)0x04001050, gSubScreenLayers | 0x20, -7);
+        G2x_SetBlendBrightness_((volatile u16 *)0x04001050, gSubScreenLayers | 0x20, -7);
         *(volatile u16 *)0x04001048 =
             (*(volatile u16 *)0x04001048 & ~0x3f) | (gSubScreenLayers | 2) | 0x20;
         *(volatile u16 *)0x0400104a = (*(volatile u16 *)0x0400104a & ~0x3f) | 0x1d;
@@ -1532,9 +1532,9 @@ extern "C" void func_0201f32c(int arg0)
     }
 
     if (data_0209d6d4 >= 0x2a && data_0209d6d4 < 0x83) {
-        G2x::SetBlendBrightness((volatile u16 *)0x04000050, gMainScreenLayers & ~0x38, 7);
+        G2x_SetBlendBrightness_((volatile u16 *)0x04000050, gMainScreenLayers & ~0x38, 7);
     } else {
-        G2x::SetBlendBrightness((volatile u16 *)0x04000050, gMainScreenLayers & ~0x38, -8);
+        G2x_SetBlendBrightness_((volatile u16 *)0x04000050, gMainScreenLayers & ~0x38, -8);
     }
     *(volatile u16 *)0x04000048 =
         (*(volatile u16 *)0x04000048 & ~0x3f) | (gMainScreenLayers | 8) | 0x20;

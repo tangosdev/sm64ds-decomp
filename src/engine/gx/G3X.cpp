@@ -3,27 +3,27 @@
  * SDK's gx_g3x.c), arm9 .text 0x02055454..0x02055998.
  *
  * mwccarm emits .text in reverse source order, so the file reads top-down
- * from G3X_Init (func_0205583c) at the top of the run. G3X_Init and
- * G3X_SetToonTable keep their address names, with the SDK name in each
- * comment: their callers name them that way. The file's
- * last function, the asm FIFO flush GXi_NopClearFifo128_ (0x020553c0),
- * stays its own source: port/tools/hostgen.py skips any file that holds an
- * asm block, and the port hostgens this one.
- * G3X_GetBoxTestResult, G3X_GetVectorMtx, G3X_GetClipMtx and
- * G3X_SetEdgeColorTable are not in this ROM; func_020555a4 (the toon table)
- * is not in pret's file.
+ * from G3X_Init at the top of the run. Every function is the SDK's, under
+ * its SDK name with C linkage (include/nitro/gx/g3x.h; ntrtwl/NitroSDK
+ * libraries/gx/src/g3x.c). The file's last function, the asm FIFO flush
+ * GXi_NopClearFifo128_ (0x020553c0), stays its own source:
+ * port/tools/hostgen.py skips any file that holds an asm block, and the port
+ * hostgens this one.
+ * G3X_GetBoxTestResult, G3X_GetVectorMtx, G3X_GetClipMtx,
+ * G3X_SetEdgeColorTable, G3X_SetDisp1DotDepth and the position/vector test
+ * getters are not in this ROM. pret/pokediamond's GX_g3x.c has no
+ * G3X_SetToonTable and calls G3X_Reset and G3X_ResetMtxStack
+ * "G3X_ResetMtxStack" and "G3X_ResetMtxStack_2".
  *
- * SetClearColor reads the bool slot as an int (byte-proven widening; the
- * header's bool spelling emits a narrower compare at the call).
  * InitTable's split volatile zeroing (init for a, store for b) is as
  * built: merging b into an init reschedules the body. data_02099fd0 is the
  * shared render DMA channel (named at its GX.cpp use).
  *
- * PC port: smoke_gx builds G3X::ClearFifo from this file through
+ * PC port: smoke_gx builds G3X_ClearFifo from this file through
  * port/tools/hostgen.py, which emits the whole file. The rest calls SDK
  * code the host build doesn't link, so it sits under #ifndef _MSC_VER.
  */
-#include "G3X.h"
+#include "nitro/gx/g3x.h"
 #include "nitro/hw/registers.h"
 
 extern "C" {
@@ -36,15 +36,12 @@ void DMASyncFillTransfer(unsigned int channel, void *dst, unsigned int data,
                          unsigned int size);
 void MultiStore_Int(int val, int *dst, int len);
 void GXi_NopClearFifo128_(unsigned addr);
-void func_020555a4(void *dst);
-void func_0205583c(void);
 }
 
 #ifndef _MSC_VER
 
-// G3X_Init
-extern "C" void func_0205583c(void) {
-    G3X::ClearFifo();
+void G3X_Init(void) {
+    G3X_ClearFifo();
     *(volatile unsigned int *)0x4000504 = 0;
     while (*(volatile unsigned int *)0x4000600 & 0x8000000)
         ;
@@ -60,26 +57,26 @@ extern "C" void func_0205583c(void) {
     *(volatile unsigned int *)0x4000600 |= 0x8000;
     *(volatile unsigned int *)0x4000600 =
         (*(volatile unsigned int *)0x4000600 & ~0xc0000000) | 0x80000000;
-    G3X::InitMtxStack();
+    G3X_InitMtxStack();
     *(volatile unsigned int *)0x4000350 = 0;
     *(volatile unsigned short *)0x4000354 = 0x7fff;
     *(volatile unsigned short *)0x4000356 = 0;
     *(volatile unsigned int *)0x4000358 = 0;
     *(volatile unsigned short *)0x400035c = 0;
     *(volatile unsigned short *)0x4000008 &= ~3;
-    G3X::InitTable();
+    G3X_InitTable();
     *(volatile unsigned int *)0x40004a4 = 0x1f0080;
     *(volatile unsigned int *)0x40004a8 = 0;
     *(volatile unsigned int *)0x40004ac = 0;
 }
 
-void G3X::Reset(void) {
+void G3X_Reset(void) {
     while (*(volatile unsigned int *)0x4000600 & 0x8000000)
         ;
     *(volatile unsigned int *)0x4000600 |= 0x8000;
     *(volatile unsigned short *)0x4000060 |= 0x2000;
     *(volatile unsigned short *)0x4000060 |= 0x1000;
-    ResetMtxStack();
+    G3X_ResetMtxStack();
     *(volatile unsigned int *)0x40004a4 = 0x1f0080;
     *(volatile unsigned int *)0x40004a8 = 0;
     *(volatile unsigned int *)0x40004ac = 0;
@@ -88,7 +85,7 @@ void G3X::Reset(void) {
 #endif
 
 // Flushes the geometry FIFO, then waits until the engine is idle.
-void G3X::ClearFifo(void) {
+void G3X_ClearFifo(void) {
     GXi_NopClearFifo128_(0x4000400);
     while (*(volatile unsigned *)0x4000600 & 0x8000000)
         ;
@@ -96,12 +93,12 @@ void G3X::ClearFifo(void) {
 
 #ifndef _MSC_VER
 
-void G3X::InitMtxStack(void) {
+void G3X_InitMtxStack(void) {
     int a, b;
     *(volatile u32 *)0x4000600 |= 0x8000;
-    while (GetMtxStackLevelPV(&a))
+    while (G3X_GetMtxStackLevelPV(&a))
         ;
-    while (GetMtxStackLevelPJ(&b))
+    while (G3X_GetMtxStackLevelPJ(&b))
         ;
     *(volatile u32 *)0x4000440 = 3;
     *(volatile u32 *)0x4000454 = 0;
@@ -114,13 +111,13 @@ void G3X::InitMtxStack(void) {
     *(volatile u32 *)0x4000454 = 0;
 }
 
-void G3X::ResetMtxStack(void) {
+void G3X_ResetMtxStack(void) {
     int a;
     int b;
     *(volatile unsigned int *)0x4000600 |= 0x8000;
-    while (GetMtxStackLevelPV(&a))
+    while (G3X_GetMtxStackLevelPV(&a))
         ;
-    while (GetMtxStackLevelPJ(&b))
+    while (G3X_GetMtxStackLevelPJ(&b))
         ;
     *(volatile unsigned int *)0x4000440 = 3;
     *(volatile unsigned int *)0x4000454 = 0;
@@ -136,7 +133,7 @@ void G3X::ResetMtxStack(void) {
    flag is an int. The body tests it the same either way, and dScStage_c's
    RenderFog passes the stage's fog byte with no 0/1 conversion, which a bool
    parameter would insert. */
-void G3X::SetFog(int enable, int a, int b, int c) {
+void G3X_SetFog(int enable, int a, int b, int c) {
     if (enable) {
         *(volatile unsigned short *)0x400035c = (unsigned short)c;
         *(volatile unsigned short *)0x4000060 =
@@ -147,24 +144,24 @@ void G3X::SetFog(int enable, int a, int b, int c) {
 }
 
 // FOG_TABLE (0x4000360) takes the whole 32-byte table from the caller buffer.
-void G3X::SetFogTable(void *table) {
+void G3X_SetFogTable(void *table) {
     Copy32Bytes(table, (void *)0x4000360);
 }
 
-// G3X_SetToonTable: the 32-entry toon table to TOON_TABLE (0x4000380).
-extern "C" void func_020555a4(void *dst) {
+// The 32-entry toon table to TOON_TABLE (0x4000380).
+void G3X_SetToonTable(void *dst) {
     MultiCopyHalf(dst, (void *)0x04000380, 0x40);
 }
 
-void G3X::SetClearColor(unsigned short a, int b, int c, int d, bool e) {
+void G3X_SetClearColor(unsigned short a, int b, int c, int d, int fog) {
     unsigned int v = (a | (b << 16)) | (d << 24);
-    if (*(int *)&e)
-        v |= 0x8000; // bool slot reads whole-word (see the banner)
+    if (fog)
+        v |= 0x8000;
     *(volatile unsigned int *)0x4000350 = v;
     *(volatile unsigned short *)0x4000354 = (unsigned short)c;
 }
 
-void G3X::InitTable(void) {
+void G3X_InitTable(void) {
     int i;
     if (data_02099fd0 != -1) {
         MI_DmaFill32Async(data_02099fd0, (void *)0x4000330, 0, 0x10, 0, 0);
@@ -181,7 +178,7 @@ void G3X::InitTable(void) {
 }
 
 // The position/vector stack level from GXSTAT.
-int G3X::GetMtxStackLevelPV(int *out) {
+int G3X_GetMtxStackLevelPV(int *out) {
     if (*(volatile unsigned int *)0x4000600 & 0x4000)
         return -1;
     *out = (*(volatile unsigned int *)0x4000600 & 0x1f00) >> 8;
@@ -189,15 +186,15 @@ int G3X::GetMtxStackLevelPV(int *out) {
 }
 
 // The projection stack level from GXSTAT.
-int G3X::GetMtxStackLevelPJ(int *out) {
+int G3X_GetMtxStackLevelPJ(int *out) {
     if (*(volatile unsigned int *)0x4000600 & 0x4000)
         return -1;
     *out = (*(volatile unsigned int *)0x4000600 & 0x2000) >> 13;
     return 0;
 }
 
-// G3X_SetHOffset: the 3D layer's horizontal offset (BG0HOFS).
-void G3X::SetHOffset(int v) {
+// The 3D layer's horizontal offset (BG0HOFS).
+void G3X_SetHOffset(int v) {
     REG_BG0OFS = v;
 }
 

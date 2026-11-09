@@ -37,7 +37,7 @@
 #include "SaveData.h"
 #include "Message.h"
 #include "MessageBank.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "G2.h"
 #include "private/mb_views.h"
 
@@ -1832,7 +1832,7 @@ extern "C" void func_020345b0(int arg0) {
     }
     data_0209fcb4 = t;
 
-    G2x::SetBlendBrightness((volatile u16 *)0x4000050, (gMainScreenLayers ^ 0x10) | 0x20, -8);
+    G2x_SetBlendBrightness_((volatile u16 *)0x4000050, (gMainScreenLayers ^ 0x10) | 0x20, -8);
 
     *(volatile u16 *)0x4000048 =
         (*(volatile u16 *)0x4000048 & ~0x3f) | (gMainScreenLayers | 8) | 0x20;

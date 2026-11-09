@@ -105,7 +105,7 @@ enum daDemo_c_AssetId {
 #include "types.h"
 #include "CP15.h"
 #include "G2.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "GX.h"
 #include "Memory.h"
 #include "nitro/fx/fx.h"
@@ -626,7 +626,7 @@ daDemo_c::~daDemo_c()
 /* -------------------------------------------------------------------------- */
 /* Sub-screen fade step (param1 0x2f, states 2 and 3). While fadeLevel is
  * non-zero it counts fadeTimer to 0x18, then drops fadeLevel by one and calls
- * G2x::SetBlendAlpha on 0x4001050 with (4, 0x28, fadeLevel, 0x10 - fadeLevel).
+ * G2x_SetBlendAlpha_ on 0x4001050 with (4, 0x28, fadeLevel, 0x10 - fadeLevel).
  * When fadeLevel reaches zero it clears bit 2 of gSubScreenLayers, writes that
  * mask into bits 8..12 of 0x4001000, sets the blend to (0, 0x28, 0xc, 4),
  * advances the state and gives the three sprite slots delays 0x10/0x20/0x30. */
@@ -643,13 +643,13 @@ void daDemo_c::func_ov002_020f1fcc()
     mScroll->fadeLevel--;
     v = mScroll->fadeLevel;
     if (v != 0) {
-        G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 0x28, v, 0x10 - v);
+        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 4, 0x28, v, 0x10 - v);
         return;
     }
     gSubScreenLayers &= ~4;
     *(volatile unsigned int *)0x4001000 =
         (*(volatile unsigned int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
-    G2x::SetBlendAlpha((volatile u16 *)0x4001050, 0, 0x28, 0xc, 4);
+    G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 0, 0x28, 0xc, 4);
     mScroll->state++;
     for (i = 0; i < 3; i++) {
         mScroll->spriteDelay[i] = (i + 1) << 4;
@@ -1096,7 +1096,7 @@ void func_ov002_020f2aec(char *c, int idx)
         s->credit[idx].blendTimer = 0;
         s->credit[idx].blend++;
         unsigned char cnt = s->credit[idx].blend;
-        G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x36, cnt, 0x10 - cnt);
+        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 1, 0x36, cnt, 0x10 - cnt);
     }
 
     if (s->credit[idx].timer < 30) {
@@ -1123,7 +1123,7 @@ void func_ov002_020f2bf4(char *c, int idx)
         s->credit[idx].blendTimer = 0;
         s->credit[idx].blend++;
         unsigned char cnt = s->credit[idx].blend;
-        G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x36, 0x10 - cnt, cnt);
+        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 1, 0x36, 0x10 - cnt, cnt);
     }
 
     if (s->credit[idx].timer < 30) {
@@ -3954,7 +3954,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         if (r != 0 || a != 0) {
             t = (r * 0xa00) >> 12;
             if (t > 0x10) t = 0x10;
-            G2x::SetBlendAlpha((volatile u16 *)0x4000050, 8, 1, t, 0x10 - t);
+            G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 8, 1, t, 0x10 - t);
         }
     }
     return 1;
