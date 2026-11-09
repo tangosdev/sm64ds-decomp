@@ -759,6 +759,64 @@ extern "C" int lobby_page_env_poll(void)
 #endif
 }
 
+#if LP_PROOF
+/* SM64DS_LOBBY_REACH=1 (proof rows): once the room has stood for 60 frames, walk the pad's own step (step_focus, the seat menu rule of
+   lobby_page_frame) breadth first from the first focus, with the settings panel shut and open, and log which live controls no chain of
+   D-pad steps reaches. A press of SETTINGS opens the panel and a seat's focus shows its buttons, as in play. */
+void reach_report(const LobbyState *s)
+{
+    const int saved_menu = P.seat_menu, saved_panel = P.panel;
+    for (int panel = 0; panel < 2; ++panel) {
+        P.panel = panel;
+        P.seat_menu = -1;
+        Geom g;
+        make_geom(&g, P.pw > 0 ? P.pw : 512, P.ph > 0 ? P.ph : 384, s);
+        static unsigned char seen[C_COUNT][17];
+        static short qf[C_COUNT * 17], qm[C_COUNT * 17];
+        memset(seen, 0, sizeof seen);
+        int qh = 0, qt = 0;
+        const int start = first_focus(s);
+        if (start < 0 || start >= C_COUNT) continue;
+        seen[start][16] = 1; qf[qt] = (short)start; qm[qt] = -1; ++qt;
+        while (qh < qt) {
+            const int f = qf[qh], m = qm[qh]; ++qh;
+            for (int d = 0; d < 4; ++d) {
+                const int dx = d == 0 ? 1 : d == 1 ? -1 : 0, dy = d == 2 ? 1 : d == 3 ? -1 : 0;
+                P.seat_menu = m;
+                const int n = step_focus(g, s, f, dx, dy);
+                if (n < 0 || n >= C_COUNT) continue;
+                int nm = m;
+                if (n >= C_SEAT0 && n < C_SEAT0 + 16) nm = n - C_SEAT0;
+                else if (!(n >= C_MUTE0 && n < C_KICK0 + 16)) nm = -1;
+                if (seen[n][nm < 0 ? 16 : nm]) continue;
+                seen[n][nm < 0 ? 16 : nm] = 1;
+                qf[qt] = (short)n; qm[qt] = (short)nm; ++qt;
+            }
+        }
+        char b[400];
+        int nl_ = 0, nr = 0, len = 0;
+        char miss[256]; miss[0] = 0;
+        for (int c = 0; c < C_COUNT; ++c) {
+            int lv = 0, rc = 0;
+            for (int m = -1; m < 16; ++m) {
+                P.seat_menu = m;
+                if (live(s, c)) lv = 1;
+                if (seen[c][m < 0 ? 16 : m]) rc = 1;
+            }
+            if (!lv) continue;
+            ++nl_;
+            if (rc) ++nr;
+            else if (len < 240) len += snprintf(miss + len, sizeof miss - (size_t)len, " %d", c);
+        }
+        snprintf(b, sizeof b, "pad reach (%s, %s, panel %s): %d live controls, %d reached from the first focus, missing:%s",
+                 s->kind == LOBBY_VS ? "vs" : "coop", s->am_host ? "host" : "guest", panel ? "open" : "shut", nl_, nr, nr == nl_ ? " none" : miss);
+        log_line(b);
+    }
+    P.seat_menu = saved_menu;
+    P.panel = saved_panel;
+}
+#endif
+
 extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
 {
     if (P.screen == SCR_CLOSED) return 0;
@@ -782,6 +840,13 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
             if (P.start_t > 45) { P.keep_tick = 1; close_page("the game starts"); return 0; }
         }
         if (!in_room(s)) { P.panel = 0; P.field = 0; }
+#if LP_PROOF
+        {
+            static int room_frames;
+            room_frames = in_room(s) ? room_frames + 1 : 0;
+            if (room_frames == 60 && getenv("SM64DS_LOBBY_REACH")) reach_report(s);
+        }
+#endif
         if (P.seat_menu >= seat_count(s)) P.seat_menu = -1;
     }
     make_geom(&g_geom, P.pw > 0 ? P.pw : 512, P.ph > 0 ? P.ph : 384, s);

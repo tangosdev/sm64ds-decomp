@@ -315,6 +315,7 @@ static int pad_focus_press(int kind, int edge)
 
 int menu_online_press_main(int elem, int edge)
 {
+    if (lobby_page_open()) return 1;      /* LOBBYUI1: the lobby page is up over the title: no press reaches the menu under it */
     if (!menu_online_enabled()) return elem == 1 ? 1 : 0;       /* the classic title: the MP / VS plate takes no press, as before */
     if (pad_focus_press(1, edge)) return 1;
     if (g.scr != ONL_SCR_NONE) {
@@ -340,6 +341,7 @@ int menu_online_press_main(int elem, int edge)
 
 int menu_online_press_file(int elem, int edge)
 {
+    if (lobby_page_open()) return 1;      /* LOBBYUI1: as above (a click on the page landed on file A under it and opened the name popup) */
     if (!g.flow) return 0;
     if (g.scr == ONL_SCR_ROOMCODE) {
         /* LOBBYUI1: a confirm bit while the plank has the keyboard. The typing's own keys (letters, Enter, Space, Escape) are read by rc_tick, so only a
@@ -383,6 +385,7 @@ static int in_box(int sx, int sy, int x, int y, int w, int h) { return sx >= x &
 
 int menu_online_touch(int kind, int down, int sx, int sy)
 {
+    if (lobby_page_open()) { g.last_down = down; return 1; }      /* LOBBYUI1 */
     const int edge = down && !g.last_down;
     g.last_down = down;
     if (edge) g.padfocus = 0;       /* PADNAV1: a mouse press is not the pad focus */
@@ -485,6 +488,7 @@ static void rom_cursor_to(int id)
    Nothing opens a screen by a step: A on the focused ? / NAME does (pad_focus_press). The first step with the ROM's cursor hidden shows it on file A. */
 int menu_online_dir(int kind, int cursor, unsigned dirs)
 {
+    if (lobby_page_open()) return dirs ? 1 : 0;      /* LOBBYUI1 */
     if (!menu_online_enabled() || g.scr != ONL_SCR_NONE || !dirs) return 0;
     const int d = (dirs & 0x10) ? 0x10 : (dirs & 0x20) ? 0x20 : (dirs & 0x40) ? 0x40 : (dirs & 0x80) ? 0x80 : 0;
     if (!d) return 0;
@@ -526,6 +530,7 @@ int menu_online_dir(int kind, int cursor, unsigned dirs)
 
 int menu_online_help_pad(int kind)
 {
+    if (lobby_page_open()) return 1;      /* LOBBYUI1 */
     if (!menu_online_enabled() || g.scr != ONL_SCR_NONE) return 0;
     if (kind == 1 && g.on) { g.help_files = 0; set_screen(ONL_SCR_HELP); return 1; }
     if (kind == 2 && g.flow) { g.help_files = 1; set_screen(ONL_SCR_HELP); return 1; }
@@ -536,6 +541,7 @@ int menu_online_padfocus(void) { return menu_online_enabled() && g.scr == ONL_SC
 
 void menu_online_hover_focus(int kind, int pf, int cursor)
 {
+    if (lobby_page_open()) return;      /* LOBBYUI1 */
     if (!menu_online_enabled() || g.scr != ONL_SCR_NONE) return;
     if (pf == ONL_PF_HELP && !((kind == 1 && g.on) || (kind == 2 && g.flow))) return;      /* the ? is up on the online title and the online file select only */
     if (pf == ONL_PF_NAME && !(kind == 2 && g.flow)) return;                                /* NAME only on the online file select */
@@ -562,6 +568,7 @@ int menu_online_flow_now(void) { return g.flow && menu_online_enabled(); }
 
 int menu_online_back(int kind)
 {
+    if (lobby_page_open()) return 1;      /* LOBBYUI1 */
     if (!menu_online_enabled()) return 0;
     if (g.scr == ONL_SCR_PROFILE) { profile_back(); return 1; }
     if (g.scr != ONL_SCR_NONE) { close_screen(); return 1; }
