@@ -15823,6 +15823,8 @@ static int scene_host_input_frame(HWND hwnd, int frame, XPad *pad,
        loop it was started in. */
     if (!port_join_plate_up())      /* JOINFLOW1: no debug menu behind the Joining plate (Esc is the plate's cancel) */
         menu_input(pad_live, pad);
+    else if (lobby_page_open())     /* LOBBYUI1: the lobby's START raises the Joining plate; the page must still see the start and let the pause go */
+        lp_frame(pad_live, pad);
     menu_b_swallow_spend(pad_live, pad);
 
     /* THE DS KEYPAD, written every frame so a release is a release. The
