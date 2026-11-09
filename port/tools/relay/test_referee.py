@@ -3148,6 +3148,38 @@ def u_luigi_bell_quit(mod):
     return res
 
 
+def u_luigi_bell_c4(mod):
+    res = Result("luigi: a survivor quits just after the bell, the last one "
+                 "in the match is tagged by a touch from before it: survivors "
+                 "win (review probe C4)")
+    rig, cs = lmatch(3, time_s=8, code="LUIGI044")
+    ref = rig.ref("LUIGI044")
+    (lu,), (a, b) = luigi_of(cs)
+    a.pos = [3000, 0, 0]
+    b.pos = [lu.pos[0] + 60, lu.pos[1], lu.pos[2]]
+    end = ref.t0 + ref.match_ms
+    # one streaming call (each call sends a frame at once: many short calls
+    # would flood the relay's per-sender rate cap)
+    streaming(rig, cs, (end - 20 - ref.rt(rig.now)) / 1000.0)
+    sa = ref.seats[a.seat]
+    sa.rtts.clear(); sa.rtts.append(200); sa.rtt_min = 200   # hold H 125 ms
+    cid = lu.claim(CL["TAG"], b.seat, ref_frame=b.frame - 1)
+    pend = [c for c in ref.pending if c.cid == cid and c.seat == lu.seat]
+    res.check(pend and pend[0].stamp < end and pend[0].resolve_at > end + 10,
+              "the TAG is stamped before the bell and settles in the hold")
+    streaming(rig, cs, (end + 10 - ref.rt(rig.now)) / 1000.0)
+    a.claim(CL["QUIT"], 0xFF)                   # A quits after the bell
+    streaming(rig, [lu, b], 0.5)
+    v = lu.verdict(cid)
+    res.check(v and v["name"] == "INFECTED" and v["seat"] == b.seat,
+              "B is tagged (%s)" % v)
+    ov = lu.find("MATCH_OVER")
+    res.check(len(ov) == 1 and ov[0]["a"] == OVER["SURVIVORS_WIN"]
+              and ov[0]["b"] == 1 and ov[0]["c"] == _mask([a.seat]),
+              "SURVIVORS_WIN with A named, not LUIGIS_WIN (%s)" % ov)
+    return res
+
+
 def luigi_race(mod, v):
     """Two Luigis tag one survivor: exactly one INFECTED, credited to the
     earlier stamp (the classic contention rule). Returns the winner index."""
@@ -3222,7 +3254,7 @@ def run_unit():
              u_luigi_caps, u_luigi_wins, u_luigi_leave, u_luigi_join,
              u_luigi_16, u_luigi_mode0, u_luigi_clock_out, u_luigi_solo,
              u_luigi_early_tag, u_luigi_reconnect, u_luigi_tag_anytime,
-             u_luigi_cable_dodge, u_luigi_bell_quit)
+             u_luigi_cable_dodge, u_luigi_bell_quit, u_luigi_bell_c4)
     results = []
     for t in tests:
         try:

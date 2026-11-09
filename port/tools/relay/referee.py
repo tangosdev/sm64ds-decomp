@@ -2264,7 +2264,7 @@ class Referee(object):
                                      sorted(self.luigis),
                                      sorted(self._survivors())))
         if self.state == MS_RUNNING and self.roster and \
-                not self._survivors():
+                not self._survivors() and not self.bell_left:
             self._over(rt, O_LUIGIS_WIN, t)
         return ev
 
