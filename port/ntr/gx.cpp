@@ -3151,6 +3151,9 @@ struct TexEntry {
     std::shared_ptr<const HdTexAnim> anim;
     std::vector<const uint32_t *> fptr;
     std::vector<TexEntry> fmip;
+    /* the frame buffer this entry last handed the card path, whose id is
+       retired when the frame changes (anim_card_note) */
+    mutable const uint32_t *card_last = nullptr;
 };
 std::map<TexKey, TexEntry> g_vram_tex_cache;
 
@@ -3161,6 +3164,17 @@ std::map<TexKey, TexEntry> g_vram_tex_cache;
 std::map<const uint32_t *, const TexEntry *> g_anim_by_px;
 int g_anim_live = 0;
 double g_anim_now = 0.0;   // the clock, read once per frame (gx_reset, gx_interp_begin)
+/* THE CARD HOLDS ONE OR TWO FRAMES OF AN ANIMATION, NOT ALL OF THEM. Each
+   frame buffer gets its own id (so a changed frame is never served stale),
+   and an id the card uploaded stays until the next texture generation; left
+   alone a 480-frame loop would end up wholly on the card (measured: 117 MB
+   for the 128x128 Tango Star under TextureFilter 2). So when an animated
+   entry moves on to another frame, the id of the frame it showed before is
+   dropped from the registry and queued here, and the backend releases the
+   queue at the start of its next frame (gx_take_retired_textures). A
+   triangle still holding a retired id (a ghost figure's stored triangles)
+   only costs a fresh upload of the same buffer, which is still alive. */
+std::vector<uint32_t> g_tex_retired;
 
 /* THE BOUND BUFFER BACK TO ITS CACHE ENTRY. The raster is handed a plain
    `const uint32_t *` on GxTriangle::tex and the mip chain hangs off the entry,
@@ -3259,6 +3273,21 @@ int tex_log() {
     static int on = -1;
     if (on < 0) on = getenv("SM64DS_TEX_LOG") ? 1 : 0;
     return on;
+}
+
+/* ANIMTEX1: an animated entry is about to hand `now` to the card path. If it
+   last handed it another frame, that frame's id leaves the registry and goes
+   on the retire queue (see g_tex_retired). Nothing without a backend. */
+void anim_card_note(const TexEntry &e, const uint32_t *now) {
+    if (!g_gpu_opaque) return;
+    if (e.card_last && e.card_last != now) {
+        const auto f = g_tex_ids.find(e.card_last);
+        if (f != g_tex_ids.end()) {
+            g_tex_retired.push_back(f->second.id);
+            g_tex_ids.erase(f);
+        }
+    }
+    e.card_last = now;
 }
 
 void bind_from_vram() {
@@ -3420,8 +3449,10 @@ void bind_from_vram() {
        pack replaced it; the scale beside them is what lets the sampler put the
        DS's own texel grid back over a bigger picture. */
     const uint32_t *bound = it->second.px.data();
-    if (it->second.anim)   /* ANIMTEX1: this frame's buffer, by the clock */
+    if (it->second.anim) {   /* ANIMTEX1: this frame's buffer, by the clock */
         bound = it->second.fptr[hdtex_anim_frame(*it->second.anim, g_anim_now)];
+        anim_card_note(it->second, bound);
+    }
     gx_bind_texture(bound, it->second.w, it->second.h);
     g.tex_scale = it->second.scale;
     /* THE WRAP MODE IS PART OF THE BIND. TEXIMAGE_PARAM bits 16/17 select
@@ -3555,6 +3586,7 @@ void gx_invalidate_textures() {
     g_tex_by_px.clear();
     g_anim_by_px.clear();   /* ANIMTEX1: it points into the entries below */
     g_anim_live = 0;
+    g_tex_retired.clear();  /* the generation bump below drops them all anyway */
     g_vram_tex_cache.clear();
     /* AND SO DOES THE ID REGISTRY, for a stronger version of the same reason:
        the buffers it names are about to be freed and the allocator will hand
@@ -3568,6 +3600,15 @@ void gx_invalidate_textures() {
 }
 
 uint32_t gx_texture_generation() { return g_tex_generation; }
+
+int gx_take_retired_textures(uint32_t *out, int cap) {
+    int n = 0;
+    while (n < cap && !g_tex_retired.empty()) {
+        out[n++] = g_tex_retired.back();
+        g_tex_retired.pop_back();
+    }
+    return n;
+}
 
 /* THE A/B'S EXIT SUMMARY IS ARMED HERE, at boot, rather than on the first
    frame the opaque pass draws. A scene that never reaches gx_render would
@@ -10576,6 +10617,7 @@ int gx_interp_begin(float alpha) {
                 if (af != g_anim_by_px.end()) {
                     const TexEntry &ae = *af->second;
                     const uint32_t *now = ae.fptr[hdtex_anim_frame(*ae.anim, g_anim_now)];
+                    anim_card_note(ae, now);
                     if (now != bd.rgba) {
                         g.tex_rgba = now;
                         g.tw = bd.w;

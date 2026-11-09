@@ -4873,6 +4873,24 @@ int draw_frame(const ntr::GxGpuFrame *f)
         g_tex_gen_seen = f->tex_generation;
         release_textures();
     }
+    {   /* ANIMTEX1: the frames of a moving texture that are no longer
+           showing (ntr::gx_take_retired_textures), so a long loop does not
+           pile up on the card. A retired id asked for again just uploads
+           again. */
+        uint32_t ids[64];
+        int n;
+        while ((n = ntr::gx_take_retired_textures(ids, 64)) > 0)
+            for (int i = 0; i < n; ++i) {
+                std::map<uint32_t, GTex>::iterator it = g_tex.find(ids[i]);
+                if (it == g_tex.end()) continue;
+                const size_t px = (size_t)it->second.w * (size_t)it->second.h;
+                const size_t b = px * (f->tex_filter >= 1 ? 8u : 4u) * (f->tex_filter >= 2 ? 2u : 1u);
+                g_tex_bytes = g_tex_bytes > b ? g_tex_bytes - b : 0;
+                if (it->second.srv) it->second.srv->Release();
+                if (it->second.tex) it->second.tex->Release();
+                g_tex.erase(it);
+            }
+    }
 
     /* THE WHOLE FRAME, when it is on and has not given up (run cardfull). A -1
        means it could not start and touched nothing: this frame is then drawn
