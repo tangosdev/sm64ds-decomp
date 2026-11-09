@@ -2543,6 +2543,16 @@ inline unsigned char bm_verdict(unsigned layer, unsigned wmask) {
     return ((wmask & 0x20) && (first & (1u << layer))) ? 1 : 0;
 }
 
+/* run after093, lane TEXTSLOW1: the host-resolution loops of this unit (the brightness mask's default pass, the fades) run in bands of
+   rows on the raster pool (ntr::gx_parallel_rows). Each row is its own: the same arithmetic per pixel, so the picture is the same to
+   the bit. SM64DS_TEXTSLOW_PAR=0 keeps one thread (the before arm on one binary). */
+inline int textslow_par_knob()
+{
+    static int v = -2;
+    if (v == -2) v = ntr::gx_menu_knob_value("SM64DS_TEXTSLOW_PAR");
+    return v;
+}
+
 // The default pass: every host pixel, as if no 2D layer covered it. The host
 // column maps to its DS column the way the message layer is placed (x * scale
 // at 4:3; centred at the uniform scale in 16:9), so the box's window lines up
@@ -2636,29 +2646,37 @@ void bm_fill_default(uint32_t dispcnt, const Windows &w) {
     // verdict bits for a window mask: bm_verdict(layer, wm) = ((wm & 0x20) && (first & (1 << layer))) ? 1 : 0
     const unsigned char v0 = ((first & 1u) != 0) ? 1 : 0;       // layer 0 (the 3D layer) when the mask bit is set
     const unsigned char v5 = ((first & (1u << 5)) != 0) ? 1 : 0; // layer 5 (the backdrop)
-    unsigned char wmrow[256];
-    int wm_y = -1;
-    for (int hy = 0; hy < ah; ++hy) {
-        const int y = hy * 192 / ph;                            // ds_row_of(hy)
-        unsigned char *row = g_bm + (size_t)hy * ntr::SCREEN_W;
-        if (y != wm_y) {
-            wm_y = y;
-            if (y < 192)
-                for (int x = 0; x < 256; ++x) wmrow[x] = (unsigned char)(window_mask(w, x, y) & 0xFF);
-        }
-        const uint8_t *crow = cover ? cover + (size_t)hy * ntr::SCREEN_W : nullptr;
-        for (int hx = 0; hx < aw; ++hx) {
-            const int x = xmap[(size_t)hx];
-            const unsigned wm = (x >= 0 && x < 256 && y < 192) ? (unsigned)wmrow[x] : out_mask;
-            const unsigned char hit = (wm & 0x20) ? 1 : 0;      // bm_verdict's window half
-            if (card) {
-                row[hx] = (unsigned char)((hit & v0) | ((hit & v5) << 1));
-                continue;
+    /* TEXTSLOW1: the host rows in bands on the raster pool (each band keeps its own DS-row window cache); the same verdict per pixel */
+    struct BmJob {
+        const Windows *w; const int *xmap; const uint8_t *cover; int aw, ph; unsigned out_mask;
+        unsigned char v0, v5; bool card, shown3d, clear_opaque;
+    } job = { &w, xmap.data(), cover, aw, ph, out_mask, v0, v5, card, shown3d, clear_opaque };
+    ntr::gx_parallel_rows(ah, 64, [](void *c, int hy0, int hy1) {
+        const BmJob &j = *(const BmJob *)c;
+        unsigned char wmrow[256];
+        int wm_y = -1;
+        for (int hy = hy0; hy < hy1; ++hy) {
+            const int y = hy * 192 / j.ph;                      // ds_row_of(hy)
+            unsigned char *row = g_bm + (size_t)hy * ntr::SCREEN_W;
+            if (y != wm_y) {
+                wm_y = y;
+                if (y < 192)
+                    for (int x = 0; x < 256; ++x) wmrow[x] = (unsigned char)(window_mask(*j.w, x, y) & 0xFF);
             }
-            const bool is3d = shown3d && (clear_opaque || crow[hx]);
-            row[hx] = is3d ? (unsigned char)(hit & v0) : (unsigned char)(hit & v5);
+            const uint8_t *crow = j.cover ? j.cover + (size_t)hy * ntr::SCREEN_W : nullptr;
+            for (int hx = 0; hx < j.aw; ++hx) {
+                const int x = j.xmap[(size_t)hx];
+                const unsigned wm = (x >= 0 && x < 256 && y < 192) ? (unsigned)wmrow[x] : j.out_mask;
+                const unsigned char hit = (wm & 0x20) ? 1 : 0;  // bm_verdict's window half
+                if (j.card) {
+                    row[hx] = (unsigned char)((hit & j.v0) | ((hit & j.v5) << 1));
+                    continue;
+                }
+                const bool is3d = j.shown3d && (j.clear_opaque || crow[hx]);
+                row[hx] = is3d ? (unsigned char)(hit & j.v0) : (unsigned char)(hit & j.v5);
+            }
         }
-    }
+    }, &job, textslow_par_knob());
     g_bm_live = true;
 }
 
@@ -3000,10 +3018,10 @@ static int inset_b_fade_off(void)
 /* brightness mode 2 / 3 at coefficient `evy` over px, inside (inside != 0) or
    outside (inside == 0) the half-open host rectangle rc; `bm` is the per-pixel
    mask or null */
-static void fade_pass(unsigned int *px, int w, int h, int evy, int toWhite,
-                      const unsigned char *bm, const int *rc, int inside)
+static void fade_pass_rows(unsigned int *px, int w, int y0, int y1, int evy, int toWhite,
+                           const unsigned char *bm, const int *rc, int inside)
 {
-    for (int y = 0; y < h; ++y) {
+    for (int y = y0; y < y1; ++y) {
         uint32_t *row = px + (size_t)y * ntr::SCREEN_W;
         const unsigned char *brow =
             bm ? bm + (size_t)y * ntr::SCREEN_W : nullptr;
@@ -3031,11 +3049,23 @@ static void fade_pass(unsigned int *px, int w, int h, int evy, int toWhite,
     }
 }
 
+/* TEXTSLOW1: fade_pass over bands of rows (see textslow_par_knob) */
+struct FadeJob { unsigned int *px; int w, evy, toWhite; const unsigned char *bm; const int *rc; int inside; };
+static void fade_pass(unsigned int *px, int w, int h, int evy, int toWhite,
+                      const unsigned char *bm, const int *rc, int inside)
+{
+    FadeJob j = { px, w, evy, toWhite, bm, rc, inside };
+    ntr::gx_parallel_rows(h, 64, [](void *c, int y0, int y1) {
+        const FadeJob &f = *(const FadeJob *)c;
+        fade_pass_rows(f.px, f.w, y0, y1, f.evy, f.toWhite, f.bm, f.rc, f.inside);
+    }, &j, textslow_par_knob());
+}
+
 /* run after093, lane PAINTFADE1: the whole-picture fade (no mask, no rectangle) with the coefficient in 1/256 steps; e256 = evy * 256
    gives fade_pass exactly */
-static void fade_pass256(unsigned int *px, int w, int h, int e256, int toWhite)
+static void fade_pass256_rows(unsigned int *px, int w, int y0, int y1, int e256, int toWhite)
 {
-    for (int y = 0; y < h; ++y) {
+    for (int y = y0; y < y1; ++y) {
         uint32_t *row = px + (size_t)y * ntr::SCREEN_W;
         for (int x = 0; x < w; ++x) {
             uint32_t p = row[x];
@@ -3052,6 +3082,15 @@ static void fade_pass256(unsigned int *px, int w, int h, int e256, int toWhite)
             row[x] = 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
         }
     }
+}
+
+static void fade_pass256(unsigned int *px, int w, int h, int e256, int toWhite)
+{
+    FadeJob j = { px, w, e256, toWhite, nullptr, nullptr, 0 };
+    ntr::gx_parallel_rows(h, 64, [](void *c, int y0, int y1) {
+        const FadeJob &f = *(const FadeJob *)c;
+        fade_pass256_rows(f.px, f.w, y0, y1, f.evy, f.toWhite);
+    }, &j, textslow_par_knob());
 }
 
 /* the overlay words the processor wrote itself (alpha FF) inside the host
