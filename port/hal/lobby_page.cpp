@@ -431,7 +431,9 @@ void make_geom(Geom *g, int w, int h, const LobbyState *s)
         const float pad = sw > 60 ? 8 : 3;
         const float x = mx + 8 + col * sw + pad * 0.5f, y = 268 + row * (sh + 4);
         g->r[C_SEAT0 + i] = R(x, y, sw - pad, sh);
-        const float b = sh > 60 ? 20 : 15;
+        /* three small buttons (mute, kick, ban) in a row on the plate: smaller on a narrow plate so the row stays on it */
+        float b = sh > 60 ? 20 : 15;
+        if (3 + 3 * (b + 3) > sw - pad) b = (sw - pad - 3) / 3 - 3;
         g->r[C_MUTE0 + i] = R(x + 3, y + 3, b, b);
         g->r[C_KICK0 + i] = R(x + 3 + b + 3, y + 3, b, b);
         g->r[C_BAN0 + i] = R(x + 3 + 2 * (b + 3), y + 3, b, b);
@@ -630,7 +632,7 @@ void press(const LobbyState *s, int c)
         return;
     }
     if (c >= C_BAN0 && c < C_BAN0 + 16) {
-        /* ONE-STEP CONFIRM: the first press arms the button (it turns red and asks "Ban? Press again"), the second press on the same
+        /* ONE-STEP CONFIRM: the first press arms the button (it turns red and asks "Press again to ban"), the second press on the same
            seat bans. Any other press, a move off the button or about three seconds let it go. A ban lasts until the room closes, so one
            stray click or tap of A must not do it. */
         const int i = c - C_BAN0;
@@ -1748,9 +1750,22 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
                        0x1A0C02u);
                 icon_ban(s, bn, armed ? 0xFFF3CCu : lit(C_BAN0 + i) ? 0xB01010u : 0xFFF3CCu, u);
             }
-            const char *tip = P.ban_arm == i ? "Ban? Press again" : lit(C_BAN0 + i) ? "Ban" : lit(C_KICK0 + i) ? "Kick" :
-                              lit(C_MUTE0 + i) ? (t.muted ? "Unmute" : "Mute") : 0;
-            if (tip) f.draw(s, (float)(st->am_host ? g.r[C_BAN0 + i].x + g.r[C_BAN0 + i].w : m.x + m.w) + 4 * u, m.y + (m.h - f.cap(11.0f)) * 0.5f, tip, 11.0f, ink);
+            const char *tip = P.ban_arm == i ? (f.width("Press again to ban", 10.0f) <= r.w - 2 * edge - 6 * u ? "Press again to ban" : "Again to ban") :
+                              lit(C_BAN0 + i) ? "Ban" : lit(C_KICK0 + i) ? "Kick" : lit(C_MUTE0 + i) ? (t.muted ? "Unmute" : "Mute") : 0;
+            if (tip) {
+                /* the tip sits right of the last button when it fits on the plate; otherwise (narrow plates, the armed BAN's question)
+                   on a dark strip over the plate's Ready band */
+                const float tx = (float)(st->am_host ? g.r[C_BAN0 + i].x + g.r[C_BAN0 + i].w : m.x + m.w) + 4 * u;
+                if (P.ban_arm != i && tx + f.width(tip, 11.0f) <= r.x + r.w - 2 * u) {
+                    f.draw(s, tx, m.y + (m.h - f.cap(11.0f)) * 0.5f, tip, 11.0f, ink);
+                } else {
+                    const int bh = (int)(r.h * 0.26f);      /* over the plate's status band, so the name stays in view */
+                    const Rect band = { r.x + edge, r.y + r.h - edge - bh, r.w - 2 * edge, bh };
+                    rrect(s, band.x, band.y, band.w, band.h, 3 * u, 0x1A0C02u, 215);
+                    const std::string a = fit(f, tip, 10.0f, band.w - 6 * u);
+                    f.centred(s, band, a.c_str(), 10.0f, 0xFFF3CCu);
+                }
+            }
         }
     }
     /* the settings panel over everything */
