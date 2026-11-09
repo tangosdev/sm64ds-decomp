@@ -123,7 +123,7 @@ struct dScMgPachinko_row {
     s32 x;              /* 0x00 */
     s32 y;              /* 0x04 */
     u8  pad08[0x8];
-    s16 angle;          /* 0x10 */
+    u16 angle;          /* 0x10 -- swings +-0x1000; compared signed */
     s16 unk12;          /* 0x12 */
     u8  active;         /* 0x14 */
     u8  visible;        /* 0x15 */
@@ -138,7 +138,9 @@ struct dScMgPachinko_pipe {
                            by vel between the sPachinkoPipe*Stops columns */
     s32 y;              /* 0x04 PachinkoPipe_ResetAll seeds 0x68000 */
     s32 vel;            /* 0x08 */
-    u8  pad0c[0x4];
+    s32 velY;           /* 0x0c the y twin of vel, as in the flyer and bg
+                           records; pipes only slide in x, so _ResetAll and
+                           Pachinko_ResetRound zero it and nothing reads it */
     u16 timer;          /* 0x10 */
     u8  pad12;
     u8 state;           /* 0x13 PachinkoPipe_UpdateAll's index into
@@ -212,7 +214,7 @@ struct dScMgPachinko_bg {
     s32 y;          /* 0x04 -- 20.12 */
     s32 vx;         /* 0x08 */
     s32 vy;         /* 0x0c */
-    s16 timer;      /* 0x10 */
+    u16 timer;      /* 0x10 */
     u8  active;     /* 0x12 */
     u8  state;      /* 0x13 */
 };

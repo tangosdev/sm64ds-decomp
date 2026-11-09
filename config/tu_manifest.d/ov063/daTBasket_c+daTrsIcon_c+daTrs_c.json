@@ -372,7 +372,7 @@
       "ordinal": 47
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_021192d4Ev",
+      "symbol": "_ZN7daTrs_c9UpdateBooEv",
       "address": "0x021192d4",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/ov063/func_ov063_021192d4.c",
@@ -386,14 +386,14 @@
       "ordinal": 49
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211975cEv",
+      "symbol": "_ZN7daTrs_c11UpdateDyingEv",
       "address": "0x0211975c",
       "size": "0x00000114",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211975c.cpp",
       "ordinal": 50
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02119870Ev",
+      "symbol": "_ZN7daTrs_c15UpdateBouncedOnEv",
       "address": "0x02119870",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/ov063/func_ov063_02119870.c",
@@ -407,35 +407,35 @@
       "ordinal": 52
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02119960Ev",
+      "symbol": "_ZN7daTrs_c11UpdateChaseEv",
       "address": "0x02119960",
       "size": "0x000000cc",
       "legacy_source": "src/unnamed/ov063/func_ov063_02119960.c",
       "ordinal": 53
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02119a2cEv",
+      "symbol": "_ZN7daTrs_c18UpdateNonlethalHitEv",
       "address": "0x02119a2c",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/ov063/func_ov063_02119a2c.c",
       "ordinal": 54
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02119a50Ev",
+      "symbol": "_ZN7daTrs_c12UpdateEmergeEv",
       "address": "0x02119a50",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/ov063/func_ov063_02119a50.c",
       "ordinal": 55
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02119ab0Ev",
+      "symbol": "_ZN7daTrs_c20UpdateCarriedItemPosEv",
       "address": "0x02119ab0",
       "size": "0x0000006c",
       "legacy_source": "src/unnamed/ov063/func_ov063_02119ab0.c",
       "ordinal": 56
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02119b1cEv",
+      "symbol": "_ZN7daTrs_c18HandleAttackStatusEv",
       "address": "0x02119b1c",
       "size": "0x00000068",
       "legacy_source": "src/unnamed/ov063/func_ov063_02119b1c.c",
@@ -449,7 +449,7 @@
       "ordinal": 58
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02119bb0Ev",
+      "symbol": "_ZN7daTrs_c14UpdateInactiveEv",
       "address": "0x02119bb0",
       "size": "0x00000068",
       "legacy_source": "src/unnamed/ov063/func_ov063_02119bb0.c",
@@ -463,7 +463,7 @@
       "ordinal": 60
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02119c58Ev",
+      "symbol": "_ZN7daTrs_c16FindParentBigBooEv",
       "address": "0x02119c58",
       "size": "0x00000068",
       "legacy_source": "src/unnamed/ov063/func_ov063_02119c58.cpp",
@@ -477,14 +477,14 @@
       "ordinal": 62
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_02119e38Eisi",
+      "symbol": "_ZN7daTrs_c10ChaseMarioEisi",
       "address": "0x02119e38",
       "size": "0x000001f8",
       "legacy_source": "src/unnamed/ov063/func_ov063_02119e38.c",
       "ordinal": 63
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a030Eii",
+      "symbol": "_ZN7daTrs_c19SetVelFromPlayerVelEii",
       "address": "0x0211a030",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a030.c",
@@ -498,63 +498,63 @@
       "ordinal": 65
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a0dcEv",
+      "symbol": "_ZN7daTrs_c15GetAttackStatusEv",
       "address": "0x0211a0dc",
       "size": "0x000002f4",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a0dc.cpp",
       "ordinal": 66
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a3d0Ev",
+      "symbol": "_ZN7daTrs_c17UpdateDuringDeathEv",
       "address": "0x0211a3d0",
       "size": "0x00000194",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a3d0.cpp",
       "ordinal": 67
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a564Ei",
+      "symbol": "_ZN7daTrs_c24UpdateDuringNonlethalHitEi",
       "address": "0x0211a564",
       "size": "0x000000d0",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a564.c",
       "ordinal": 68
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a634Ei",
+      "symbol": "_ZN7daTrs_c20UpdateAfterBouncedOnEi",
       "address": "0x0211a634",
       "size": "0x000000bc",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a634.c",
       "ordinal": 69
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a6f0Ev",
+      "symbol": "_ZN7daTrs_c13ResetAfterHitEv",
       "address": "0x0211a6f0",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a6f0.c",
       "ordinal": 70
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a718Ev",
+      "symbol": "_ZN7daTrs_c13ShakeAfterHitEv",
       "address": "0x0211a718",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a718.c",
       "ordinal": 71
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a76cEii",
+      "symbol": "_ZN7daTrs_c13MoveDuringHitEii",
       "address": "0x0211a76c",
       "size": "0x000000a4",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a76c.c",
       "ordinal": 72
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a810Ei",
+      "symbol": "_ZN7daTrs_c22SetMoveYawForDuringHitEi",
       "address": "0x0211a810",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a810.c",
       "ordinal": 73
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a8a4Ev",
+      "symbol": "_ZN7daTrs_c14VanishOrAppearEv",
       "address": "0x0211a8a4",
       "size": "0x000000bc",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a8a4.cpp",
@@ -568,42 +568,42 @@
       "ordinal": 75
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211a964Ei",
+      "symbol": "_ZN7daTrs_c9OscillateEi",
       "address": "0x0211a964",
       "size": "0x000000d0",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211a964.c",
       "ordinal": 76
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211aa34Ev",
+      "symbol": "_ZN7daTrs_c35ApproachTargetOpacityAndUpdateScaleEv",
       "address": "0x0211aa34",
       "size": "0x00000134",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211aa34.c",
       "ordinal": 77
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211ab68Ev",
+      "symbol": "_ZN7daTrs_c24SpawnCourtyardBooTripletEv",
       "address": "0x0211ab68",
       "size": "0x00000198",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211ab68.c",
       "ordinal": 78
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211ad00Ev",
+      "symbol": "_ZN7daTrs_c14ShouldBeActiveEv",
       "address": "0x0211ad00",
       "size": "0x000000b4",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211ad00.c",
       "ordinal": 79
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211adb4Ev",
+      "symbol": "_ZN7daTrs_c15ShouldBeStoppedEv",
       "address": "0x0211adb4",
       "size": "0x00000048",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211adb4.c",
       "ordinal": 80
     },
     {
-      "symbol": "_ZN7daTrs_c19func_ov063_0211adfcEv",
+      "symbol": "_ZN7daTrs_c4StopEv",
       "address": "0x0211adfc",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/ov063/func_ov063_0211adfc.c",
@@ -1788,64 +1788,64 @@
   "production_mode": "intact-object",
   "defined_symbol_renames": [
     {
-      "from": "@3100",
+      "from": "@3127",
       "to": "@3087",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3104 to @3102 when the opt pragma was removed (#821)."
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3104 to @3102 when the opt pragma was removed (#821). Re-keyed from @3100 to @3127 when the two particle-position launders became Vector3 locals (#821)."
     },
     {
-      "from": "@3101",
+      "from": "@3128",
       "to": "@3088",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3105 to @3103 when the opt pragma was removed (#821)."
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3105 to @3103 when the opt pragma was removed (#821). Re-keyed from @3101 to @3128 when the two particle-position launders became Vector3 locals (#821)."
     },
     {
-      "from": "@3102",
+      "from": "@3129",
       "to": "@3089",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3106 to @3104 when the opt pragma was removed (#821)."
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3106 to @3104 when the opt pragma was removed (#821). Re-keyed from @3102 to @3129 when the two particle-position launders became Vector3 locals (#821)."
     },
     {
-      "from": "@3103",
+      "from": "@3130",
       "to": "@3090",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3107 to @3105 when the opt pragma was removed (#821)."
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3107 to @3105 when the opt pragma was removed (#821). Re-keyed from @3103 to @3130 when the two particle-position launders became Vector3 locals (#821)."
     },
     {
-      "from": "@3104",
+      "from": "@3131",
       "to": "@3091",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3108 to @3106 when the opt pragma was removed (#821)."
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3108 to @3106 when the opt pragma was removed (#821). Re-keyed from @3104 to @3131 when the two particle-position launders became Vector3 locals (#821)."
     },
     {
-      "from": "@3105",
+      "from": "@3132",
       "to": "@3092",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3109 to @3107 when the opt pragma was removed (#821)."
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3109 to @3107 when the opt pragma was removed (#821). Re-keyed from @3105 to @3132 when the two particle-position launders became Vector3 locals (#821)."
     },
     {
-      "from": "@3106",
+      "from": "@3133",
       "to": "@3093",
-      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3110 to @3108 when the opt pragma was removed (#821)."
+      "evidence": "Input compiler temporary remeasured after native cap/icon interfaces and typed resource handles: full initializer instruction bytes and typed ABS32 edges identify the same 12-byte aligned NOBITS registration record; canonical destination and owned storage unchanged. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az). func_ov063_0211ab68's static Vector3 sSpawnOff[3] takes three registration nodes ahead of these handles, moving each emitted @NNN up by 13. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @3110 to @3108 when the opt pragma was removed (#821). Re-keyed from @3106 to @3133 when the two particle-position launders became Vector3 locals (#821)."
     },
     {
-      "from": "_ZGVsSpawnOff$2399",
+      "from": "_ZGVsSpawnOff$2426",
       "to": "_ZGVsSpawnOff$2361",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from _ZGVsSpawnOff$2403 to _ZGVsSpawnOff$2401 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from _ZGVsSpawnOff$2403 to _ZGVsSpawnOff$2401 when the opt pragma was removed (#821). Re-keyed from _ZGVsSpawnOff$2399 to _ZGVsSpawnOff$2426 when the two particle-position launders became Vector3 locals (#821)."
     },
     {
-      "from": "@2405",
+      "from": "@2432",
       "to": "@2367",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @2409 to @2407 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @2409 to @2407 when the opt pragma was removed (#821). Re-keyed from @2405 to @2432 when the two particle-position launders became Vector3 locals (#821)."
     },
     {
-      "from": "@2407",
+      "from": "@2434",
       "to": "@2369",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @2411 to @2409 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @2411 to @2409 when the opt pragma was removed (#821). Re-keyed from @2407 to @2434 when the two particle-position launders became Vector3 locals (#821)."
     },
     {
-      "from": "@2409",
+      "from": "@2436",
       "to": "@2371",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @2413 to @2411 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from @2413 to @2411 when the opt pragma was removed (#821). Re-keyed from @2409 to @2436 when the two particle-position launders became Vector3 locals (#821)."
     },
     {
-      "from": "sSpawnOff$2399",
+      "from": "sSpawnOff$2426",
       "to": "sSpawnOff$2361",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from sSpawnOff$2403 to sSpawnOff$2401 when the opt pragma was removed (#821)."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md.. Current stock gate after CalcLib header consolidation: compiler output remeasured as @3104..@3110, _ZGVsSpawnOff$2403, @2409/@2411/@2413 and sSpawnOff$2403; rombuild.py --no-rom confirms aliases retain the existing ROM destinations and storage, 106/106 modules exact, no source-owned data differs. Re-keyed from sSpawnOff$2403 to sSpawnOff$2401 when the opt pragma was removed (#821). Re-keyed from sSpawnOff$2399 to sSpawnOff$2426 when the two particle-position launders became Vector3 locals (#821)."
     }
   ]
 }

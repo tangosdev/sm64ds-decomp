@@ -42,17 +42,14 @@ typedef char FallBlockClsnFileHandle_size_must_be_8[sizeof(FallBlockClsnFileHand
 
 extern ResourceDescriptor data_ov015_02114880;
 
-// @symbol daObjBk_Fall_Block_c_classInit
 extern "C" daObjBk_Fall_Block_c *daObjBk_Fall_Block_c_classInit() {
     return new daObjBk_Fall_Block_c();
 }
 
-// @symbol _ZN20daObjBk_Fall_Block_c13InitResourcesEv
 s32 daObjBk_Fall_Block_c::InitResources() {
     return InitResourcesFrom(&data_ov015_02114880);
 }
 
-// @symbol _ZN20daObjBk_Fall_Block_c16CleanupResourcesEv
 s32 daObjBk_Fall_Block_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov015_02114880);
 }

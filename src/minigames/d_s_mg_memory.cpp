@@ -33,6 +33,7 @@ enum d_s_mg_memory_AssetId {
 #include "Sound.h"
 #include "SpawnInfo.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -72,14 +73,12 @@ extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
 extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 /* Unused. Deleting this named prototype renumbers @NNN later in the file. */
 extern short atan2_hold_d_s_mg_memory_1(int y, int x);
-extern short data_02082214[];
 void MgCoins_StartLoseOneMore(void);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemoryCardFrameSprites[];
 extern void *sMemoryCardSprites[];
 extern unsigned short sMemoryFlipFrameTimes[];
 extern void Mg_SaveRecordPair(int a, int b);
-extern s16 data_02082214[];
 extern u16 *sMemoryCardPositionsPerDifficulty[];
 extern void MgCoins_StartPayout(int);
 extern short gMgCoinsStatus;
@@ -94,7 +93,7 @@ void Mg_DrawCredits(char *c, int a, int b, int d);
 void Dealer_Draw(char *p);
 void MgCoins_Update(void);
 void Dealer_Update(Dealer *p);
-void LoadCard2SubBg3(void);
+void LoadCard2SubBg3(void *);
 s32 GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
@@ -115,8 +114,6 @@ extern u8 gSubScreenLayers;
  * whole file; defer_codegen off lets push/pop scope them to one function. */
 #pragma defer_codegen off
 
-// @symbol _ZN13dScMgMemory_cD1Ev
-// @symbol _ZN13dScMgMemory_cD0Ev
 /* Both D1 and D0 come from this one definition. */
 dScMgMemory_c::~dScMgMemory_c() {
     /* mDealer is destroyed automatically before the inherited scene. */
@@ -170,7 +167,7 @@ void dScMgMemory_c::PlayerWait(int /* player */) {}
 
 void dScMgMemory_c::PlayerMove(int player) {
     int targetX = player * 16 + 12;
-    int dx, dy, angleIndex;
+    int dx, dy;
 
     dx = targetX - (mPlayers[player].x >> 12);
     dy = -44 - (mPlayers[player].y >> 12);
@@ -179,18 +176,13 @@ void dScMgMemory_c::PlayerMove(int player) {
 
     mPlayers[player].speed += 0x200;
 
-    angleIndex = (u16)mPlayers[player].angle >> 4;
     {
-        short trigValue = data_02082214[angleIndex * 2 + 1];
-        int speed = mPlayers[player].speed;
-        mPlayers[player].x += FX_MUL(trigValue, speed);
+        fx16 c = FX_CosIdx((u16)mPlayers[player].angle >> 4);
+        mPlayers[player].x += FX_MUL(c, mPlayers[player].speed);
     }
-
-    angleIndex = (u16)mPlayers[player].angle >> 4;
     {
-        short trigValue = data_02082214[angleIndex * 2];
-        int speed = mPlayers[player].speed;
-        mPlayers[player].y += FX_MUL(trigValue, speed);
+        fx16 s = FX_SinIdx((u16)mPlayers[player].angle >> 4);
+        mPlayers[player].y += FX_MUL(s, mPlayers[player].speed);
     }
 
     dx = targetX - (mPlayers[player].x >> 12);
@@ -479,12 +471,12 @@ void dScMgMemory_c::CardMove(int card) {
     mCards[card].angle = (u16)cstd::atan2(dy, dx);
 
     {
-        s16 trigValue = data_02082214[(((u16)mCards[card].angle >> 4) << 1) + 1];
-        mCards[card].x += (int)(((s64)trigValue * mCards[card].speed + 0x800) >> 0xc);
+        fx16 c = FX_CosIdx((u16)mCards[card].angle >> 4);
+        mCards[card].x += FX_MUL(c, mCards[card].speed);
     }
     {
-        s16 trigValue = data_02082214[((u16)mCards[card].angle >> 4) << 1];
-        mCards[card].y += (int)(((s64)trigValue * mCards[card].speed + 0x800) >> 0xc);
+        fx16 s = FX_SinIdx((u16)mCards[card].angle >> 4);
+        mCards[card].y += FX_MUL(s, mCards[card].speed);
     }
 
     if (dx < -6)
@@ -957,12 +949,10 @@ void dScMgMemory_c::SetupDifficulty() {
     }
 }
 
-// @symbol _ZN13dScMgMemory_c10OnDealDoneEv
 void dScMgMemory_c::OnDealDone() {
     MgCoins_PlaceBet(mMaxMisses);
 }
 
-// @symbol _ZN13dScMgMemory_c11CanEndStateEi
 int dScMgMemory_c::CanEndState(int /* mode */) {
     if (mState == STATE_RESULT && mSubstate == RESULT_WAIT) {
         if (Dealer_IsIdle(&mDealer) == 0)
@@ -973,7 +963,6 @@ int dScMgMemory_c::CanEndState(int /* mode */) {
     return mState == STATE_EXIT;
 }
 
-// @symbol _ZN13dScMgMemory_c10StartRoundEi
 /* Slot 18: restarts the game, with up to three misses allowed from the meter. */
 
 void dScMgMemory_c::StartRound(int /* arg */) {
@@ -992,7 +981,6 @@ void dScMgMemory_c::StartRound(int /* arg */) {
     mMaxMisses = (unsigned char)missLimit;
 }
 
-// @symbol _ZN13dScMgMemory_c6RenderEv
 /* Slot 9. */
 s32 dScMgMemory_c::Render() {
     Camera_InitDealerView(&mCamera);
@@ -1005,7 +993,6 @@ s32 dScMgMemory_c::Render() {
     return 1;
 }
 
-// @symbol _ZN13dScMgMemory_c8BehaviorEv
 /* Slot 6: runs the current state from the table, indexed by mState. */
 s32 dScMgMemory_c::Behavior() {
     (this->*sMemoryStateTable[mState])();
@@ -1014,14 +1001,13 @@ s32 dScMgMemory_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13dScMgMemory_c13InitResourcesEv
 /* Slot 0. */
 s32 dScMgMemory_c::InitResources() {
     void *tiles;
     void *palette;
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
-    LoadCard2SubBg3();
+    LoadCard2SubBg3(this);
     tiles = LoadFile(sMemoryCardNcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
     DecompressLZ16(tiles, (void *)0x6400000);
@@ -1046,7 +1032,6 @@ s32 dScMgMemory_c::InitResources() {
     return 1;
 }
 
-// @symbol dScMgMemory_c_classInit
 /* `new` inlines the implicit constructor: the base chain, this class's
    vptr, then mDealer. */
 extern "C" dScMgMemory_c *dScMgMemory_c_classInit() {

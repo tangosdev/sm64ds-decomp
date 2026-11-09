@@ -8,8 +8,8 @@
   "boundary_evidence": [
     "CONTIGUOUS AND EXHAUSTIVE: 0x01ffb07c..0x01ffd97c is covered by exactly 14 config/arm9/itcm/symbols.txt function symbols with no gap and no overlap. 13 were already `complete` in config/arm9/itcm/delinks.txt; the 0x01ffb0fc..0x01ffb830 span (DetectClsn(dBgCh_Lin&), size 0x734) was the run's one un-enrolled piece and is now matched and folded in with the rest.",
     "CLASS IDENTITY FROM ROM RTTI: these are the six ITCM-resident vtable slots _ZTV7dBgW_Kc (arm9:0x020993dc) points at -- GetSurfaceInfo (slot 3), GetNormal (4), GetTriangleOrigin (5), DetectClsn(Gnd/Lin/SphCrr) (6..8) -- plus the two const octree accessors and six flag/field helpers the derived classes' own code calls by raw address. The arm9 half of the same class lives in src/engine/collision/d_bg_w_kc.cpp.",
-    "EMISSION ORDER: mwccarm 2004/b56 emits a TU's plain members in reverse source order, so the file defines GetSurfaceInfo (0x01ffd920) first and func_01ffb07c (0x01ffb07c) last -- no lifecycle group exists in ITCM.",
-    "HELPERS ARE THIS TU'S OWN: func_01ffb07c copies a Vector3 into the collider's 0x38 axis; func_01ffb098..0x01ffb0bc are the 0x34/0x35 flag pair accessors; func_01ffb0c8 returns kclFile. All six are dBgW_Kc workers called by raw address -- func_01ffb07c by the derived colliders' own TUs, the flag pairs likewise -- not vtable slots.",
+    "EMISSION ORDER: mwccarm 2004/b56 emits a TU's plain members in reverse source order, so the file defines GetSurfaceInfo (0x01ffd920) first and SetDepthDir (0x01ffb07c) last -- no lifecycle group exists in ITCM.",
+    "HELPERS ARE THIS TU'S OWN: SetDepthDir (0x01ffb07c) copies a Vector3 into the collider's 0x38 axis; ClearDepthByDir/SetDepthByDir/ClearShallowOnly/SetShallowOnly (0x01ffb098..0x01ffb0bc) are the 0x35/0x34 flag pair accessors; GetFile (0x01ffb0c8) returns kclFile. All six are dBgW_Kc members called from the derived colliders' and actors' own TUs -- not vtable slots.",
     "NEIGHBOURS ARE OTHER SUBJECTS: below, __fp_status (0x01ffb030..0x01ffb07c) is hand-written runtime support code, a different TU. Above, _ZN3IRQ20UserInterruptHandlerEv (0x01ffd97c..0x01ffd9d4) is the IRQ module's own function -- the ROM literally names it."
   ],
   "sections": [
@@ -21,42 +21,42 @@
   ],
   "functions": [
     {
-      "symbol": "func_01ffb07c",
+      "symbol": "_ZN7dBgW_Kc11SetDepthDirEPK7Vector3",
       "address": "0x01ffb07c",
       "size": "0x0000001c",
       "legacy_source": "src/func_01ffb07c.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "func_01ffb098",
+      "symbol": "_ZN7dBgW_Kc15ClearDepthByDirEv",
       "address": "0x01ffb098",
       "size": "0x0000000c",
       "legacy_source": "src/func_01ffb098.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "func_01ffb0a4",
+      "symbol": "_ZN7dBgW_Kc13SetDepthByDirEv",
       "address": "0x01ffb0a4",
       "size": "0x0000000c",
       "legacy_source": "src/func_01ffb0a4.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "func_01ffb0b0",
+      "symbol": "_ZN7dBgW_Kc16ClearShallowOnlyEv",
       "address": "0x01ffb0b0",
       "size": "0x0000000c",
       "legacy_source": "src/func_01ffb0b0.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "func_01ffb0bc",
+      "symbol": "_ZN7dBgW_Kc14SetShallowOnlyEv",
       "address": "0x01ffb0bc",
       "size": "0x0000000c",
       "legacy_source": "src/func_01ffb0bc.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_01ffb0c8",
+      "symbol": "_ZNK7dBgW_Kc7GetFileEv",
       "address": "0x01ffb0c8",
       "size": "0x00000008",
       "legacy_source": "src/func_01ffb0c8.cpp",
@@ -123,7 +123,7 @@
   "bss": [],
   "notes": [
     "Cartridge RTTI names the class dBgW_Kc and this is its ITCM half (_ZTV7dBgW_Kc's six ITCM-resident slots). The licensed run is .text 0x01ffb07c..0x01ffd97c (14 functions): the field/flag helpers, the two octree accessors, the DetectClsn triple and the three geometry/surface slots -- one TU the way the original engine file was almost certainly shaped.",
-    "Plain members emit in reverse source order: the file defines GetSurfaceInfo first and walks the ROM run backwards to func_01ffb07c. No lifecycle group exists in ITCM -- it lives in the arm9 TU.",
+    "Plain members emit in reverse source order: the file defines GetSurfaceInfo first and walks the ROM run backwards to SetDepthDir. No lifecycle group exists in ITCM -- it lives in the arm9 TU.",
     "#pragma exceptions off wraps the whole file: it is load-bearing for DetectClsn(dBgCh_SphCrr&) (the verify tools' exceptions-ON regime otherwise shifts a literal-pool word and four stores) and byte-neutral for the rest.",
     "DetectClsn(dBgCh_Lin&) keeps the compiler-proven shape the port preserves (port/slice_gate9.txt): function-scope SurfaceInfo with explicit dBgPc ctor/dtor calls, the x-body-scoped u16 *leaf walked by *++leaf, and the edge-normal dots spelled inline -- that declaration and scope arrangement is what assigns this to r7, &info to r8 and leaf to fp."
   ],

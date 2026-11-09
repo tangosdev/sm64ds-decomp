@@ -40,7 +40,7 @@ struct BMD_Bone {
     void *unk_04;          /* 0x04 - file-relative, fixed up on load */
     u8 pad_08[0x1c];
     /* 0x24 - rest-pose translation: func_020462d0 copies it into the runtime
-       ModelBone (dExtModel_c.h), and func_ov075_02114b60 and
+       ModelBone (dExtModel_c.h), and RestoreBoneTranslations and
        func_ov002_020e640c copy it again to put animated bones back at rest */
     s32 transX;
     s32 transY;
@@ -95,7 +95,10 @@ struct BMD_Texture {
     char *name;            /* 0x00 - file-relative, fixed up on load */
     char *data;            /* 0x04 */
     u32 size;              /* 0x08 */
-    u32 unk_0c;
+    /* 0x0c/0x0e - texels; func_02044b30 builds the texture matrix's
+       aspect correction from width / height */
+    u16 width;
+    u16 height;
     u32 flags;             /* 0x10 - format in bits 26..28; VRAM offset >> 3
                                      packed into the low 16 bits on load */
 };

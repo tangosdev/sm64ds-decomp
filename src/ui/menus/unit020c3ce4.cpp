@@ -8,16 +8,18 @@
  *
  * What the code does. The menu does not call a heap directly: the init
  * dispatcher, func_ov007_020b7138, installs three hooks through
- * func_ov007_020c3e1c, 020c3e2c and 020c3e3c, and every module allocates
- * through func_ov007_020c3df4 (the alloc hook, data_ov007_02103258), frees
- * through func_ov007_020c3d1c (the free hook, data_ov007_02103254) and asks
- * func_ov007_020c3ce4 for the third hook's answer (data_ov007_02104c14,
- * 0 while it is unset). func_ov007_020c3d40 allocates and zero-fills,
- * picking the store routine by the size's low bits. func_ov007_020c3df4's
+ * MenuMem_SetMaxAllocSizeHook, MenuMem_SetFreeHook and
+ * MenuMem_SetAllocHook, and every module allocates through
+ * func_ov007_020c3df4 (the alloc hook, data_ov007_02103258), frees through
+ * func_ov007_020c3d1c (the free hook, data_ov007_02103254) and asks
+ * MenuMem_GetMaxAllocSize for the largest block the caller's heap can give
+ * (the third hook, data_ov007_02104c14; 0 while it is unset).
+ * MenuMem_AllocClear allocates and zero-fills, picking the store routine by
+ * the size's low bits. func_ov007_020c3df4's
  * first argument (the callers pass a heap-name string) is not forwarded.
  * The two .data hook words start out pointing at this unit's own defaults,
- * func_ov007_020c3e4c (free) and func_ov007_020c3e64 (alloc), which go to
- * the OS heap: arena 0, the current heap.
+ * MenuMem_DefaultFree and MenuMem_DefaultAlloc, which go to the OS heap:
+ * arena 0, the current heap.
  *
  * Edges: the two .data hook words 0x02103254 / 0x02103258 and the bss word
  * 0x02104c14 are referenced only by these functions, and the two defaults
@@ -32,7 +34,13 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
+ * The MenuMem_* names are coined from the bodies and their callers; ov007
+ * records no names. All keep C linkage. func_ov007_020c3df4 (alloc) and
+ * func_ov007_020c3d1c (free) keep address names while files another
+ * branch holds call them. The third hook is word 2 of dScDSMT_c's hook
+ * table data_ov007_02103290 (0x020cca80 in the ROM image), whose body is
+ * Heap::MaxAllocationUnitSize on the game heap; that names
+ * MenuMem_SetMaxAllocSizeHook and MenuMem_GetMaxAllocSize.
  */
 
 extern "C" {
@@ -54,34 +62,28 @@ extern void func_0205a588(void *dst, unsigned char value, unsigned int size);
 extern void *OS_AllocFromHeap(int id, int heap, unsigned int size);
 extern void OS_FreeToHeap(int id, int heap, void *ptr);
 
-// @symbol func_ov007_020c3e64
 /* The alloc hook's default (data_ov007_02103258's initial value). */
-void *func_ov007_020c3e64(unsigned int size) {
+void *MenuMem_DefaultAlloc(unsigned int size) {
     return OS_AllocFromHeap(0, -1, size);
 }
 
-// @symbol func_ov007_020c3e4c
 /* The free hook's default (data_ov007_02103254's initial value). */
-void func_ov007_020c3e4c(void *ptr) {
+void MenuMem_DefaultFree(void *ptr) {
     OS_FreeToHeap(0, -1, ptr);
 }
 
-// @symbol func_ov007_020c3e3c
-void func_ov007_020c3e3c(int v) {
+void MenuMem_SetAllocHook(int v) {
     data_ov007_02103258 = reinterpret_cast<Ov007AllocHook>(v);
 }
 
-// @symbol func_ov007_020c3e2c
-void func_ov007_020c3e2c(int v) {
+void MenuMem_SetFreeHook(int v) {
     data_ov007_02103254 = reinterpret_cast<Ov007FreeHook>(v);
 }
 
-// @symbol func_ov007_020c3e1c
-void func_ov007_020c3e1c(int v) {
+void MenuMem_SetMaxAllocSizeHook(int v) {
     data_ov007_02104c14 = reinterpret_cast<Ov007QueryHook>(v);
 }
 
-// @symbol func_ov007_020c3df4
 /* The menu's allocator: forwards the size to the alloc hook and returns
  * the block. name tags the allocation ("global data", "pad",
  * "touch_panel", ...; most callers pass 0) and is dropped. */
@@ -89,8 +91,7 @@ void *func_ov007_020c3df4(const char *name, int size) {
     return data_ov007_02103258(size);
 }
 
-// @symbol func_ov007_020c3d40
-void *func_ov007_020c3d40(const char *name, int n) {
+void *MenuMem_AllocClear(const char *name, int n) {
     int *r = (int *)func_ov007_020c3df4(name, n);
     volatile unsigned short v16;
     volatile unsigned v32;
@@ -117,14 +118,12 @@ void *func_ov007_020c3d40(const char *name, int n) {
     return r;
 }
 
-// @symbol func_ov007_020c3d1c
 /* NOT a daPly_c method: it reads no fields, it only calls the free hook. */
 void func_ov007_020c3d1c(void *self) {
     data_ov007_02103254(self);
 }
 
-// @symbol func_ov007_020c3ce4
-int func_ov007_020c3ce4(void) {
+int MenuMem_GetMaxAllocSize(void) {
     if (data_ov007_02104c14 == 0)
         return 0;
     return data_ov007_02104c14();

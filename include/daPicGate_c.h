@@ -35,12 +35,12 @@ struct daPicGate_c : dActor_c {
     };
 
     /* One row of data_ov080_021277a8, 0x14 bytes. RippleHeight
-       (func_ov080_02125bb0) reads every field. */
+       (RippleHeight) reads every field. */
     struct WaveParams {
-        s32 amplitude;           /* 0x00 -- peak height; func_ov080_02125cd4 decays it
+        s32 amplitude;           /* 0x00 -- peak height; WaveAmplitude decays it
                                     linearly to 0 over duration */
         s32 phaseStep;           /* 0x04 -- added to mWavePhase every frame */
-        s32 wavelength;          /* 0x08 -- distance per cycle: func_ov080_02125d08
+        s32 wavelength;          /* 0x08 -- distance per cycle: WavePhase
                                     turns distance into phase by 0xffff / wavelength */
         s32 radius;              /* 0x0c -- the height falls off linearly with distance,
                                     reaching 0 here */
@@ -59,11 +59,11 @@ struct daPicGate_c : dActor_c {
     Matrix4x3 mMtx;              /* 0x0d4 -- model-to-world */
     Matrix4x3 mInvMtx;           /* 0x104 -- its inverse */
     s32 mWaveOrigin[3];          /* 0x134 -- x, y, 0 in cell space: BeginWave sets it,
-                                    func_ov080_02125d64 measures each cell's dist from it */
+                                    UpdateCellDistances measures each cell's dist from it */
     Vertex mCorners[4];          /* 0x140 */
     Vertex *mCells;              /* 0x1a0 -- mNumCells, Memory::operator_new2'd */
     State *mState;               /* 0x1a4 */
-    s32 mTexRecord;              /* 0x1a8 -- from func_ov080_02125630 */
+    s32 mTexRecord;              /* 0x1a8 -- from LoadTexture */
     const WaveParams *mWaveParams; /* 0x1ac */
     s32 mClosedPosX;             /* 0x1b0 -- mPosX as spawned */
     s16 mWavePhase;              /* 0x1b4 */
@@ -81,31 +81,33 @@ struct daPicGate_c : dActor_c {
     virtual void  OnPendingDestroy();      /* slot 12 */
 
     /* Helpers: the picture-mesh machinery under InitResources' run, folded
-       into src/game/actors/d_a_pic_gate.cpp. The ROM address is the method
-       name. */
-    void  func_ov080_02125460();                      /* LoadMaterial */
-    void  func_ov080_0212555c();                      /* BuildGateMatrix */
-    u8   *func_ov080_02125630(s32 picture);           /* LoadTexture */
-    void  func_ov080_021256f8();                      /* HitTest */
-    void  func_ov080_02125940();                      /* BuildNormals */
-    void  func_ov080_02125af0();                      /* FlattenFrame */
-    s32   func_ov080_02125bb0(s32 dist);              /* RippleHeight */
-    s32   func_ov080_02125cd4(s32 n);
-    s32   func_ov080_02125d08(s32 frames);
-    void  func_ov080_02125de0(s32 x, s32 y, s32 front); /* BeginWave */
-    void  func_ov080_02125f00();
-    void  func_ov080_02125fd0();                      /* DrawFlat */
-    void  func_ov080_02126120();
-    void  func_ov080_02126124();                      /* PlaceCorners */
-    void  func_ov080_021261f4();                      /* wave-mesh render */
+       into src/game/actors/d_a_pic_gate.cpp. The N64 paintings.c function
+       each one stands in for is noted where there is one. */
+    void LoadMaterial();
+    void BuildGateMatrix();
+    u8 *LoadTexture(s32 picture);
+    void HitTest();             /* wall_painting_proximity_idle */
+    void BuildNormals();        /* painting_*_normals */
+    void FlattenFrame();        /* ripple_if_movable */
+    s32 RippleHeight(s32 dist); /* calculate_ripple_at_point */
+    s32 WaveAmplitude(s32 n);
+    s32 WavePhase(s32 frames);
+    void UpdateCellDistances();
+    void BeginWave(s32 x, s32 y, s32 front); /* painting_state */
+    void PlaceCornersMirrored();             /* state row 3 init */
+    void DrawFlat();                         /* display_painting_not_rippling */
+    void UpdateFlat();                       /* state rows 2/3 behavior */
+    void PlaceCorners();                     /* state row 2 init */
+    void DrawRippleEnvMapped();              /* painting_ripple_env_mapped */
 
-    /* The five state handlers, bound through the State rows in
-       data_ov080_02128628. Same address-label naming as the helpers. */
-    void  func_ov080_021264ec();                      /* state 1 behavior */
-    void  func_ov080_021265ec();                      /* state 1 init */
-    void  func_ov080_0212677c();                      /* state 0 render */
-    void  func_ov080_021269b8();                      /* state 0 behavior */
-    void  func_ov080_02126a54();                      /* state 0 init */
+    /* The rippling state handlers, bound through the State rows in
+       data_ov080_02128628. Row 0 is N64's proximity-triggered image
+       painting, row 1 its continuous, environment-mapped one. */
+    void UpdateContinuousRipple(); /* wall_painting_continuous_rippling */
+    void InitContinuousRipple();
+    void DrawRippleImage();       /* painting_ripple_image */
+    void UpdateProximityRipple(); /* wall_painting_proximity_rippling */
+    void InitProximityRipple();
 };
 
 #ifndef SM64DS_PLATFORM_PC

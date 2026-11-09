@@ -150,7 +150,6 @@ static inline u32 FS_GetArchiveOffset(const FSArchive *p_arc, u32 pos) {
     return p_arc->base + pos;
 }
 
-// @symbol FSi_GetPackedName
 /* Pack an archive name of at most three characters into a word, 8 bits per
  * character, folding 'A'..'Z' to lower case and stopping at a NUL. The byte
  * is read unsigned, as the SDK's MI_ReadByte reads it: the build uses
@@ -180,21 +179,18 @@ u32 FSi_GetPackedName(const char *name, int name_len) {
     return ret;
 }
 
-// @symbol FSi_ReadMemCallback
 /* FS_LoadArchive's default read_func: copy from base + pos. */
 int FSi_ReadMemCallback(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
     CpuCopy8((const void *)FS_GetArchiveOffset(p_arc, pos), dst, size);
     return FS_RESULT_SUCCESS;
 }
 
-// @symbol FSi_WriteMemCallback
 /* FS_LoadArchive's default write_func: copy to base + pos. */
 int FSi_WriteMemCallback(FSArchive *p_arc, const void *src, u32 pos, u32 size) {
     CpuCopy8(src, (void *)FS_GetArchiveOffset(p_arc, pos), size);
     return FS_RESULT_SUCCESS;
 }
 
-// @symbol FSi_ReadMemoryCore
 /* The table_func of an archive whose tables are loaded: pos is already an
  * address. */
 int FSi_ReadMemoryCore(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
@@ -202,7 +198,6 @@ int FSi_ReadMemoryCore(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
     return FS_RESULT_SUCCESS;
 }
 
-// @symbol FS_FindArchive
 /* The registered archive whose packed name matches name, walking the
  * archive list with interrupts off; NULL if there is none. */
 FSArchive *FS_FindArchive(const char *name, int name_len) {
@@ -216,7 +211,6 @@ FSArchive *FS_FindArchive(const char *name, int name_len) {
     return p_arc;
 }
 
-// @symbol FSi_NextCommand
 /* With interrupts off: if the archive is canceling, release every queued
  * file marked for cancel as FS_RESULT_CANCELED. Unless the archive is
  * suspended, mark it running (proc gets FS_COMMAND_ACTIVATE when proc_flag
@@ -276,7 +270,6 @@ FSFile *FSi_NextCommand(FSArchive *p_arc) {
     return 0;
 }
 
-// @symbol FSi_ExecuteAsyncCommand
 /* Run the archive's queued commands one after another. A synchronous file
  * is woken to run itself; otherwise the file is marked asynchronous and its
  * command translated, stopping when the archive answers
@@ -298,7 +291,6 @@ void FSi_ExecuteAsyncCommand(FSFile *p_file) {
     }
 }
 
-// @symbol FSi_ExecuteSyncCommand
 /* Run the file's command and release it with the result, start the
  * archive's next queued command, and report whether the file's error is
  * FS_RESULT_SUCCESS. */
@@ -312,7 +304,6 @@ int FSi_ExecuteSyncCommand(FSFile *p_file) {
     return FS_IsSucceeded(p_file);
 }
 
-// @symbol FSi_SendCommand
 /* Record the command, FS_RESULT_BUSY and FS_FILE_STATUS_BUSY. An unloading
  * archive releases the file as FS_RESULT_CANCELED. Otherwise a synchronous
  * command gets FS_FILE_STATUS_SYNC, the file is appended to the archive's
@@ -358,7 +349,6 @@ int FSi_SendCommand(FSFile *p_file, int command) {
     return FSi_ExecuteSyncCommand(p_file);
 }
 
-// @symbol FS_NotifyArchiveAsyncEnd
 /* The archive's procedure finished the command at the head of its list. An
  * asynchronous one is released with ret and the next command started; a
  * synchronous one gets ret as its error, and the caller waiting on sync_q
@@ -381,7 +371,6 @@ void FS_NotifyArchiveAsyncEnd(FSArchive *p_arc, int ret) {
     }
 }
 
-// @symbol FS_InitArchive
 /* Clear the archive, then empty its two thread queues. A thread queue here
  * is a 16-bit mask of thread ids, so emptying one is a store of 0 where
  * pret's calls OS_InitThreadQueue. func_0205a588 is MI_CpuFill8. */
@@ -391,7 +380,6 @@ void FS_InitArchive(FSArchive *p_arc) {
     p_arc->stat_q = 0;
 }
 
-// @symbol FS_RegisterArchiveName
 /* With interrupts off, unless an archive called name is already registered,
  * append p_arc to the archive list (the first one also becomes the current
  * directory) and store its packed name. TRUE if it was registered. */
@@ -419,7 +407,6 @@ int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len) {
     return ret;
 }
 
-// @symbol FS_ReleaseArchiveName
 /* Undo FS_RegisterArchiveName: with interrupts off, unlink a named archive
  * from the archive list and clear its packed name, links and
  * FS_ARCHIVE_FLAG_REGISTER. If it was the current directory's archive, the
@@ -444,7 +431,6 @@ void FS_ReleaseArchiveName(FSArchive *p_arc) {
     }
 }
 
-// @symbol FS_LoadArchive
 /* Point a registered archive at its data: base and the two tables (each
  * also kept in a _bak copy), and the media callbacks, defaulting to the
  * memory ones. Table reads go through read_func until the tables are
@@ -464,7 +450,6 @@ int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32 fnt, u
     return 1;
 }
 
-// @symbol FS_UnloadArchive
 /* With interrupts off: suspend a loaded archive, mark it unloading, cancel
  * every queued command, then clear its base and tables. */
 int FS_UnloadArchive(FSArchive *p_arc) {
@@ -497,7 +482,6 @@ int FS_UnloadArchive(FSArchive *p_arc) {
     return 1;
 }
 
-// @symbol FS_LoadArchiveTables
 /* If the FAT and FNT fit in max_size (their size rounded up to 32 bytes,
  * plus 32 for alignment), read each into the 32-byte-aligned buffer through
  * a direct file, point fat and fnt at the copies and switch table reads to
@@ -524,7 +508,6 @@ u32 FS_LoadArchiveTables(FSArchive *p_arc, void *p_mem, u32 max_size) {
     return total_size;
 }
 
-// @symbol FS_UnloadArchiveTables
 /* Undo FS_LoadArchiveTables on a loaded archive, suspended meanwhile:
  * return the table memory and read the tables through read_func again. */
 void *FS_UnloadArchiveTables(FSArchive *p_arc) {
@@ -545,7 +528,6 @@ void *FS_UnloadArchiveTables(FSArchive *p_arc) {
     return ret;
 }
 
-// @symbol FS_SuspendArchive
 /* With interrupts off, unless the archive is already suspended: a running
  * archive is asked to suspend and the caller sleeps on stat_q until it has;
  * an idle one is suspended at once. Returns whether it was not suspended
@@ -567,7 +549,6 @@ int FS_SuspendArchive(FSArchive *p_arc) {
     return bak_stat;
 }
 
-// @symbol FS_ResumeArchive
 /* If the archive is suspended, clear the flag and pick up its next command
  * with interrupts off; once they are restored, run a command that came
  * back. Returns whether the archive was not suspended. */
@@ -585,7 +566,6 @@ int FS_ResumeArchive(FSArchive *p_arc) {
     return bak_stat;
 }
 
-// @symbol FS_SetArchiveProc
 /* Install proc as the archive's user procedure for the commands flags
  * selects. No flags clears proc and no proc clears flags, so the two are
  * set or unset together. */

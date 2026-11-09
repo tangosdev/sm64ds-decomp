@@ -218,7 +218,7 @@ slot, `Disable()` (0x02039140, 154 sites) frees it, `dScStage_c::ResetMeshCollid
 CLPS bits against the query's `detectMask` at `dBgCh+0x04` — water, toxic, ordinary, and
 surface types 0x11 and 0x14.
 
-The floor/wall/underside classifier is `func_02039794`: `y > 0x600` floor, `y > -0xccc`
+The floor/wall/underside classifier is `dBgW_Kc::ClassifyNormalY` (0x02039794): `y > 0x600` floor, `y > -0xccc`
 wall, else underside. **[P]**
 
 ### 3.5 The shape side

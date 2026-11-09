@@ -33,7 +33,6 @@ int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int reply);
 
 extern "C" {
 
-// @symbol func_02061138
 // Install the pull-out handler on the card interrupt.
 void func_02061138(void) {
     u32 saved = IRQ::Disable();
@@ -42,13 +41,11 @@ void func_02061138(void) {
     IRQ::Restore(saved);
 }
 
-// @symbol func_02061128
 // Register the game's pull-out callback.
 void func_02061128(CardCallback callback) {
     data_020a89a4 = callback;
 }
 
-// @symbol func_020610fc
 // Tell the ARM7 the card is gone, then stop for good.
 void func_020610fc(void) {
     int tag = 0xd; /* PXI channel */
@@ -63,7 +60,6 @@ void func_020610fc(void) {
 
 namespace IRQ {
 
-// @symbol _ZN3IRQ21GameCardIREQMCHandlerEv
 // The card interrupt: flag it, then terminate unless the callback says no.
 void GameCardIREQMCHandler() {
     CardCallback callback = data_020a89a4;

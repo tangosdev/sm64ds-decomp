@@ -13,6 +13,7 @@ enum daObjTtFuta_c_AssetId { ASSET_TT_OBJ_FUTA_BMD = 0x06c5, ASSET_TT_OBJ_FUTA_K
 #include "Sound.h"
 #include "Event.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
@@ -38,25 +39,21 @@ extern int data_ov033_02111bfc[];
  * Do not reorder. */
 #pragma defer_codegen off
 
-// @symbol _ZN13daObjTtFuta_cD1Ev
-// @symbol _ZN13daObjTtFuta_cD0Ev
 /* One out-of-line definition; mwccarm emits D1 and D0 from it, in that
  * order: its own vptr, then dBgActor_c's inlined, then dBgActor_c's
  * dExtSimpleModel_c and dBgW_KcMbg, then dActor_c. */
 daObjTtFuta_c::~daObjTtFuta_c() {}
 
-// @symbol _ZN13daObjTtFuta_c15OnGroundPoundedER8dActor_c
 /* Bursts particles at the pounder, plays the bank sound, sets the drain
  * event bit and destroys the lid. */
 void daObjTtFuta_c::OnGroundPounded(dActor_c &other) {
     Vector3 *v = &other.mPos;
-    Particle::System::NewSimple(0x28, v->x, v->y, v->z);
+    Particle::System::NewSimple(kPtclDrainLidPounded, v->x, v->y, v->z);
     Sound::PlayBank3(0xf, mCamSpacePos);
     Event::SetBit(0xe);
     MarkForDestruction();
 }
 
-// @symbol _ZN13daObjTtFuta_c16CleanupResourcesEv
 s32 daObjTtFuta_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -66,19 +63,16 @@ s32 daObjTtFuta_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daObjTtFuta_c6RenderEv
 s32 daObjTtFuta_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN13daObjTtFuta_c8BehaviorEv
 s32 daObjTtFuta_c::Behavior() {
     IsClsnInRange(0, 0);
     return 1;
 }
 
-// @symbol _ZN13daObjTtFuta_c13InitResourcesEv
 s32 daObjTtFuta_c::InitResources() {
     void *f = dExtSimpleModel_c::LoadFile(data_ov033_021124c8);
     mModel.SetFile((BMD_File *)f, 1, -1);
@@ -91,7 +85,6 @@ s32 daObjTtFuta_c::InitResources() {
 }
 
 /* TT_FUTA factory. */
-// @symbol daObjTtFuta_c_classInit
 extern "C" daObjTtFuta_c *daObjTtFuta_c_classInit() {
     return new daObjTtFuta_c();
 }
@@ -99,6 +92,5 @@ extern "C" daObjTtFuta_c *daObjTtFuta_c_classInit() {
 /* Source order is construction order: model file 1733, collision file 1734.
  * __sinit_d_a_obj_tt_futa.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-// @symbol __sinit_d_a_obj_tt_futa.cpp
 TtFutaModelFilePtr data_ov033_021124c8(ASSET_TT_OBJ_FUTA_BMD);
 TtFutaCollisionFilePtr data_ov033_021124c0(ASSET_TT_OBJ_FUTA_KCL);

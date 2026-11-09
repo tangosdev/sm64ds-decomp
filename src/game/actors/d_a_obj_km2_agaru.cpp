@@ -1,7 +1,5 @@
 //cpp
 /* What stays:
- * - func_020393d4 and func_020393c4 install dBgW's two callback words.
- *   dBgW has no setter for them.
  * - data_ov045_02113180 and 02113188 are this TU's KCL and BMD handles.
  *   data_ov045_021125d0, the CLPS block, stays overlay data.
  *
@@ -43,12 +41,6 @@ CLPS_Block data_ov045_021125d0 = {
     0x53504c43, 0x00020008, 0x00000fc0, 0x000000ff, 0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff,
 };
 
-/* local extern: no shared header declares these. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-}
-
 enum {
     kPlayerActorID = 0xbf,
     kWaitFrames = 20,
@@ -56,25 +48,21 @@ enum {
     kRideHeight = 0x5dc000, /* 1500.0 */
 };
 
-// @symbol daObjKm2_Agaru_c_classInit
 extern "C" daObjKm2_Agaru_c *daObjKm2_Agaru_c_classInit() {
     return new daObjKm2_Agaru_c();
 }
 
-// @symbol _ZN16daObjKm2_Agaru_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* The collider's second callback word: drop the collider, forward the pair. */
 void daObjKm2_Agaru_c::StoodOnCallback(dBgW *collider, dActor_c *self, dActor_c *other) {
     static_cast<daObjKm2_Agaru_c *>(self)->OnStoodOn(other);
 }
 
-// @symbol _ZN16daObjKm2_Agaru_c9OnStoodOnEP8dActor_c
 void daObjKm2_Agaru_c::OnStoodOn(dActor_c *other) {
     int isPlayer = other->actorID == kPlayerActorID;
     if (isPlayer)
         mStoodOn = true;
 }
 
-// @symbol _ZN16daObjKm2_Agaru_c13InitResourcesEv
 s32 daObjKm2_Agaru_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov045_02113188), 1, -1);
     UpdateModelPosAndRotY();
@@ -82,8 +70,8 @@ s32 daObjKm2_Agaru_c::InitResources() {
 
     KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov045_02113180);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, data_ov045_021125d0);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
     mWaitTimer = 0;
     mState = 0;
@@ -91,7 +79,6 @@ s32 daObjKm2_Agaru_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjKm2_Agaru_c8BehaviorEv
 s32 daObjKm2_Agaru_c::Behavior() {
     switch (mState) {
     case 0:
@@ -132,13 +119,11 @@ s32 daObjKm2_Agaru_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN16daObjKm2_Agaru_c6RenderEv
 s32 daObjKm2_Agaru_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN16daObjKm2_Agaru_c16CleanupResourcesEv
 s32 daObjKm2_Agaru_c::CleanupResources() {
     mMeshCollider.Disable();
     data_ov045_02113188.Release();
@@ -146,8 +131,6 @@ s32 daObjKm2_Agaru_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjKm2_Agaru_cD1Ev
-// @symbol _ZN16daObjKm2_Agaru_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */
 

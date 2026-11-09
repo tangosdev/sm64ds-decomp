@@ -71,7 +71,7 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
     s32 mMotionAngPtr;     /* 0x10c - dBgCh_Actr::Init stores its fourth
                                argument, a Vector3_16 *, at Actr +0x12c = this
                                +0x10c, and the Update* bodies forward it and
-                               Actr +0x130 to func_02038324, which hands them
+                               Actr +0x130 to dBgS_MoveBgCrrPos, which hands them
                                to dBgW::BeforeClsn as `motionAng` and `ang` */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
@@ -138,8 +138,9 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
     void SetQueryFlags(u8 flags_);
     /* Inferred: clear flags, hit records, displacement and floor normal. */
     void ResetQuery();
-    int  func_02038824();
-    int  func_02038a38();
+    /* Inferred names: DetectClsn split at collider slot 0, the stage mesh. */
+    int DetectClsnExceptSlot0();
+    int DetectClsnSlot0();
 };
 
 /* SIZE PINNED AT 0x110 by dBgW_KcMbg::DetectClsn(dBgCh_SphCrr&): the ROM gives

@@ -113,7 +113,16 @@ def rename_symbols(raw, aliases, defined):
         if (sym["st_shndx"] == "SHN_UNDEF") == defined:
             return None, {"renamed": rows, "error":
                           f"{kind} {old} is {'undefined' if defined else 'a definition'}"}
-        if new in names and new not in requested:
+        # An undefined alias may land on a name the object already imports: both
+        # entries stay undefined and the link resolves them by name to the one
+        # definition. Compiler-only deadstripping makes this happen whenever a TU
+        # both emits a duplicate vague-linkage body (externalised to an import of
+        # its canonical name) and references that body under a coined spelling.
+        # A destination the object DEFINES is still refused either way.
+        joins_import = (not defined and all(
+            other["st_shndx"] in ("SHN_UNDEF", 0)
+            for other in syms if other.name == new))
+        if new in names and new not in requested and not joins_import:
             return None, {"renamed": rows, "error":
                           f"{'rename' if defined else 'canonical alias'} destination "
                           f"{new} already exists in object"}

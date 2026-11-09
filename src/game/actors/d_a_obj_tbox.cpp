@@ -53,13 +53,11 @@ extern TboxAnimationFileHandle data_ov064_0211c964;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern SharedFilePtr data_ov002_0210da38;
 
-// @symbol daObjTbox_c_classInit
 /* TREASURE_BOX factory. */
 extern "C" daObjTbox_c *daObjTbox_c_classInit() {
     return new daObjTbox_c();
 }
 
-// @symbol _ZN11daObjTbox_c13InitResourcesEv
 int daObjTbox_c::InitResources() {
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9a8);
     dExtSimpleModel_c::LoadFile(data_ov002_0210da38);
@@ -76,7 +74,6 @@ int daObjTbox_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN11daObjTbox_c8BehaviorEv
 int daObjTbox_c::Behavior() {
     CallStateBehavior();
     mCylinder.Clear();
@@ -84,14 +81,12 @@ int daObjTbox_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN11daObjTbox_c6RenderEv
 int daObjTbox_c::Render() {
     dExtSimpleModel_c *model = &mAnmModel;
     model->Render(0);
     return 1;
 }
 
-// @symbol _ZN11daObjTbox_c16CleanupResourcesEv
 /* Four releases: two handles live in this
  * overlay and two in ov002, borrowed from the always-resident module. The
  * ROM's order is own-first, borrowed-after. */
@@ -103,25 +98,21 @@ int daObjTbox_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN11daObjTbox_c17CallStateBehaviorEv
 void daObjTbox_c::CallStateBehavior() {
     s32 index = mState;
     (this->*data_ov064_0211c98c[index][1])();
 }
 
-// @symbol _ZN11daObjTbox_c8SetStateEi
 void daObjTbox_c::SetState(s32 state) {
     mState = state;
     s32 index = mState;
     (this->*data_ov064_0211c98c[index][0])();
 }
 
-// @symbol _ZN11daObjTbox_c10InitState0Ev
 void daObjTbox_c::InitState0() {
     mAnmModel.currFrame = 0;
 }
 
-// @symbol _ZN11daObjTbox_c6State0Ev
 void daObjTbox_c::State0() {
     DecIfAbove0_Short(&mStateTimer);
 
@@ -196,7 +187,6 @@ void daObjTbox_c::State0() {
     }
 }
 
-// @symbol _ZN11daObjTbox_c10InitState1Ev
 void daObjTbox_c::InitState1() {
     if (mIsLastChest != 0)
         mStateTimer = 0x2d;
@@ -204,7 +194,6 @@ void daObjTbox_c::InitState1() {
     mFlags &= ~1;
 }
 
-// @symbol _ZN11daObjTbox_c6State1Ev
 void daObjTbox_c::State1() {
     mAnmModel.Advance();
     if (((u32)(mAnmModel.currFrame << 4) >> 0x10) == 0x14) {
@@ -236,13 +225,11 @@ void daObjTbox_c::State1() {
         SetState(2);
 }
 
-// @symbol _ZN11daObjTbox_c10InitState2Ev
 void daObjTbox_c::InitState2() {
     if (mIsLastChest == 0)
         mFlags |= 1;
 }
 
-// @symbol _ZN11daObjTbox_c6State2Ev
 void daObjTbox_c::State2() {
     if (mIsLastChest == 0)
         return;
@@ -263,7 +250,6 @@ void daObjTbox_c::State2() {
     mFlags |= 1;
 }
 
-// @symbol _ZN11daObjTbox_c20UpdateModelTransformEv
 void daObjTbox_c::UpdateModelTransform() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
     mAnmModel.mat4x3.t.x = mPosX >> 3;
@@ -271,8 +257,6 @@ void daObjTbox_c::UpdateModelTransform() {
     mAnmModel.mat4x3.t.z = mPosZ >> 3;
 }
 
-// @symbol _ZN11daObjTbox_cD1Ev
-// @symbol _ZN11daObjTbox_cD0Ev
 /* D1 and D0 come from the inline destructor in daObjTbox_c.h. */
 
 /* The two file-scope resource handles, in retail initializer order: the

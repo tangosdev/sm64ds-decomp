@@ -33,10 +33,12 @@ enum daTor_c_AssetId {
 #include "Sound.h"
 #include "SurfaceInfo.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "cstd.h"
 
 /* The texture animation InitResources hands to mTextureTransformer lives in
@@ -44,7 +46,6 @@ enum daTor_c_AssetId {
  * as ambiguous between ten level overlays; tools/overlay_residency.py settles
  * it to ov024, the only level whose tables load ov096. */
 extern int data_ov024_02112968[];
-extern s16 data_02082214[]; /* shared sin/cos lookup table */
 
 /* The tornado's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
@@ -68,22 +69,18 @@ struct TorAnimationFileHandle : SharedFilePtr {
  * InitResources feeds the model to dExtSimpleModel_c::LoadFile and the animation to
  * dExtFrameCtrl_c::LoadFile.
  * ------------------------------------------------------------------------ */
-// @symbol __sinit_d_a_tor.cpp
 TorModelFilePtr   gSandTornadoModelFile(ASSET_SAND_TORNADO_BMD);   /* model */
 TorAnimationFileHandle gSandTornadoAnimationFile(ASSET_SAND_TORNADO_BCA);   /* anim  */
 
 
-// @symbol _ZN7daTor_cD1Ev
-// @symbol _ZN7daTor_cD0Ev
 daTor_c::~daTor_c()
 {
 }
 
-// @symbol _ZN7daTor_c10UpdateSpinEi
 void daTor_c::UpdateSpin(s32 scale)
 {
     u16 idx = (u16)mSpinPhase;
-    s16 wave = data_02082214[(idx >> 4) * 2 + 1];
+    s16 wave = FX_CosIdx(idx >> 4);
     s32 radiusScale = (wave + 0x1000) >> 1;
     s32 frameScale = FX_MUL(scale, 0x666);
     s32 radius = FX_MUL(radiusScale, 0x4cc);
@@ -91,7 +88,7 @@ void daTor_c::UpdateSpin(s32 scale)
     mScaleX = FX_MUL(radius, frameScale);
 
     u16 idx2 = (u16)mSpinPhase;
-    s16 wave2 = data_02082214[(idx2 >> 4) * 2 + 1];
+    s16 wave2 = FX_CosIdx(idx2 >> 4);
     s32 heightScale = ((0x1000 - wave2) >> 2) + 0x800;
     mScaleY = FX_MUL(heightScale, frameScale);
 
@@ -106,7 +103,6 @@ void daTor_c::UpdateSpin(s32 scale)
     mScaleZ <<= 1;
 }
 
-// @symbol _ZN7daTor_c6State2Ev
 void daTor_c::State2()
 {
     s32 scale = (0x3c - mStateTimer) << 12;
@@ -129,7 +125,6 @@ void daTor_c::State2()
     mState = 0;
 }
 
-// @symbol _ZN7daTor_c6State1Ev
 void daTor_c::State1()
 {
     Vector3 playerPos;
@@ -188,11 +183,12 @@ cont:
 
     UpdateSpin(0x1000);
 
-    mParticleHandle0 = Particle::System::New(mParticleHandle0, 0x11f, mPosX, mPosY, mPosZ, 0, 0);
-    mParticleHandle1 = Particle::System::New(mParticleHandle1, 0x120, mPosX, mPosY, mPosZ, 0, 0);
+    mParticleHandle0 =
+        Particle::System::New(mParticleHandle0, kPtclTornadoA, mPosX, mPosY, mPosZ, 0, 0);
+    mParticleHandle1 =
+        Particle::System::New(mParticleHandle1, kPtclTornadoB, mPosX, mPosY, mPosZ, 0, 0);
 }
 
-// @symbol _ZN7daTor_c6State0Ev
 void daTor_c::State0()
 {
     if (mChaseTimer >= 0x384) {
@@ -221,7 +217,6 @@ void daTor_c::State0()
     }
 }
 
-// @symbol _ZN7daTor_c16CleanupResourcesEv
 int daTor_c::CleanupResources()
 {
     gSandTornadoModelFile.Release();
@@ -229,7 +224,6 @@ int daTor_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daTor_c6RenderEv
 int daTor_c::Render()
 {
     mTextureTransformer.Update(mAnmModel.data);
@@ -237,7 +231,6 @@ int daTor_c::Render()
     return 1;
 }
 
-// @symbol _ZN7daTor_c8BehaviorEv
 int daTor_c::Behavior()
 {
     int s = mState;
@@ -259,7 +252,7 @@ int daTor_c::Behavior()
             if (closest == 0 || Vec3_Dist(&o->mPos, &closest->mPos) > 0x118000) {
                 /* ov002 player-state helper: stores `this` into the player's
                    tornado slot and switches it into the tornado state. */
-                if (func_ov002_020de33c((daPly_c *)o, (int)this) != 0)
+                if (func_ov002_020de33c((daPly_c *)o, this) != 0)
                     mCaughtActor = o;
             }
         }
@@ -272,7 +265,6 @@ int daTor_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN7daTor_c13InitResourcesEv
 int daTor_c::InitResources()
 {
     mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gSandTornadoModelFile), 1, 0x15);
@@ -305,7 +297,6 @@ int daTor_c::InitResources()
     return 1;
 }
 
-// @symbol daTor_c_classInit
 extern "C" daTor_c *daTor_c_classInit()
 {
     return new daTor_c();

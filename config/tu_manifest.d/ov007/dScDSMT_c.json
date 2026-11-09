@@ -50,14 +50,14 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov007_020cc0cc",
+      "symbol": "DSMT_GetFileBuffer",
       "address": "0x020cc0cc",
       "size": "0x00000018",
       "legacy_source": "src/func_ov007_020cc0cc.c",
       "ordinal": 2
     },
     {
-      "symbol": "func_ov007_020cc0e4",
+      "symbol": "DSMT_SetFileBuffers",
       "address": "0x020cc0e4",
       "size": "0x00000010",
       "legacy_source": "src/func_ov007_020cc0e4.c",
@@ -78,14 +78,14 @@
       "ordinal": 5
     },
     {
-      "symbol": "func_ov007_020cc118",
+      "symbol": "DSMT_SetPendingMusic",
       "address": "0x020cc118",
       "size": "0x00000050",
       "legacy_source": "src/func_ov007_020cc118.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov007_020cc168",
+      "symbol": "DSMT_UpdateBootArgs",
       "address": "0x020cc168",
       "size": "0x00000144",
       "legacy_source": "src/func_ov007_020cc168.c",
@@ -127,42 +127,42 @@
       "ordinal": 12
     },
     {
-      "symbol": "func_ov007_020cc600",
+      "symbol": "DSMT_MenuCallback",
       "address": "0x020cc600",
       "size": "0x00000468",
       "legacy_source": "src/func_ov007_020cc600.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_ov007_020cca68",
+      "symbol": "DSMT_MenuReleaseFile",
       "address": "0x020cca68",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov007_020cca68.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_ov007_020cca74",
+      "symbol": "DSMT_MenuLoadFile",
       "address": "0x020cca74",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov007_020cca74.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_ov007_020cca80",
+      "symbol": "DSMT_MenuMaxAllocSize",
       "address": "0x020cca80",
       "size": "0x00000018",
       "legacy_source": "src/func_ov007_020cca80.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_ov007_020cca98",
+      "symbol": "DSMT_MenuFree",
       "address": "0x020cca98",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov007_020cca98.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_ov007_020ccab4",
+      "symbol": "DSMT_MenuAlloc",
       "address": "0x020ccab4",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov007_020ccab4.c",

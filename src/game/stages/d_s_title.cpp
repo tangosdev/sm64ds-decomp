@@ -1,14 +1,15 @@
 //cpp
 /* dScTitle_c -- the title / level-select screen, ov003.
  *
- * A 0x36-cell level-select grid with a cursor the
- * D-pad walks by row (+0x35) or column (+1), a confirm that either fades to
- * the picked level or hands off to one of the two special entries, and a
- * scrolling window that keeps the cursor on screen. Its startup use is not
+ * A 0x36-entry level list (sTitleLevelEntries) with a cursor, gTitleCursor,
+ * that D-pad up and down move one entry at a time, wrapping (up adds 0x35,
+ * which is -1 modulo 0x36), a confirm that either fades to the picked level
+ * or hands off to one of the two special entries, and a scrolling window,
+ * gTitleListTop, that keeps the cursor on screen. Its startup use is not
  * established by these consumers. 11 functions,
  * .text 0x020ad660..0x020addfc: the seven dScene_c slots every direct child
  * overrides (0, 3, 6, 9, 12, 16, 17 -- the class adds no new virtual), the
- * free scroll helper func_ov003_020ad6ec, the factory dScTitle_c_classInit,
+ * free scroll helper TitleScrollLevelList, the factory dScTitle_c_classInit,
  * which abuts InitResources at 0x020adc10, and above it the two BG0 text
  * writers only the scroll helper calls. D1/D0 are not written here: the
  * header's inline destructor plus the key function (InitResources) emits
@@ -18,10 +19,11 @@
  * reverse source order. Do not reorder.
  *
  * deslop leftovers:
- * - func_ov003_020ad6ec is written free here, and that is a reconstruction
+ * - TitleScrollLevelList is written free here, and that is a reconstruction
  *   choice, not a deduction. The image preserves no original linker symbol
- *   table, so `func_ov003_*` is an address-derived analysis label, and RTTI
- *   supplies class identities, not function spellings
+ *   table, so its name, like those of the two BG0 text writers
+ *   (TitlePrintLevelRow, TitlePrintString), is coined from what the body
+ *   does, and RTTI supplies class identities, not function spellings
  *   (notes/tu-promotion-conventions.md section 1 and
  *   notes/symbol-name-provenance.md). Both call sites hand it this object
  *   and every call to it is inside this class's region: that is evidence to
@@ -43,6 +45,7 @@
 #include "G2.h"
 #include "GX.h"
 #include "OAM.h"
+#include "nitro/hw/registers.h"
 
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
 
@@ -54,28 +57,26 @@ struct OamTmp {
 
 /* ROM symbols this TU references that no header in the tree declares yet,
  * spelt by their exact final names under C linkage the way decl_common.h
- * spells its own. Kept above the first `// @symbol` marker so none of these
- * mangled spellings is charged to a member
- * (notes/tu-promotion-conventions.md section 6). Everything else these
+ * spells its own. Everything else these
  * functions call comes from decl_common.h or Sound.h and is deliberately
  * NOT repeated here. */
 extern "C" {
-/* The level-grid cursor index. RECONCILED: the three legacy sources spelt
+/* The level-list cursor index. RECONCILED: the three legacy sources spelt
  * it `int[]`, `int` and `u32`. `u32` is the one the bytes need, because
  * Behavior's `% 0x36` is an unsigned reduction; the array spelling was only
  * ever read at [0]. */
-extern u32 data_0209b2f4;
+extern u32 gTitleCursor;
 extern char data_0209e674[];
-extern dFdBrightness_c *data_0209f5bc;
+extern dFdBrightness_c *gSceneFader;
 extern PadData data_020a0e58[];
-extern u8 data_0209f2d8;
+extern u8 gGameMode;
 /* The scene-wide colour fader, dScene_c's dFdColor_c in
    src/game/stages/d_scene.cpp. Element 6 is its u16 `color` at offset 0xc.
    local extern: spelled as a u16 array because including dFdColor_c.h adds
    named parameters that renumber this TU's compiler-numbered string pool
    (sTitleLevelEntries' 54 rodata relocations move with it). */
-extern u16 data_0209f5e8[];
-#define SCENE_FADE_COLOR data_0209f5e8[6]
+extern u16 gSceneColorFader[];
+#define SCENE_FADE_COLOR gSceneColorFader[6]
 extern char data_020a0d90[];
 extern u8 gMainScreenLayers;
 extern int data_0208ee44;
@@ -124,7 +125,7 @@ extern const TitleLevelEntry sTitleLevelEntries[] = {
 /* RECONCILED: the two legacy call sites spelt the parameter `int` and
  * `char *`; the body ignores it. `void *` is the spelling neither call site
  * has to cast away from. */
-extern void func_ov003_020ad6ec(void *self);
+extern void TitleScrollLevelList(void *self);
 }
 
 /* The stylus went down this frame: held, with the held state just changed
@@ -138,14 +139,13 @@ static inline int IsTouchStarted() {
     return started;
 }
 
-/* [10] 0x020adcbc -- prints one row of the level grid into the BG0 screen
+/* [10] 0x020adcbc -- prints one row of the level list into the BG0 screen
  * map at (row, col): the level number in two digits (a blank for a leading
  * zero), a blank, the level's name from sTitleLevelEntries, then blanks out
- * to column 0x1d. Called only from func_ov003_020ad6ec. Each tile goes
- * through MultiStore16 from a volatile temporary, five of them; that is the
- * spelling the bytes need. */
-// @symbol func_ov003_020adcbc
-extern "C" void func_ov003_020adcbc(int level, int row, int col) {
+ * to column 0x1d. Coined name. Called only from TitleScrollLevelList. Each
+ * tile goes through MultiStore16 from a volatile temporary, five of them;
+ * that is the spelling the bytes need. */
+extern "C" void TitlePrintLevelRow(int level, int row, int col) {
     volatile u16 t0, t1, t2, t3, t4;
     int tens = level / 10;
     int ones = level % 10;
@@ -178,9 +178,8 @@ extern "C" void func_ov003_020adcbc(int level, int row, int col) {
 
 /* [9] 0x020adc74 -- copies a NUL-terminated string into the BG0 screen map
  * at (row, col), one tile per character. Called only from
- * func_ov003_020ad6ec, for the caption. */
-// @symbol func_ov003_020adc74
-extern "C" void func_ov003_020adc74(signed char *s, int row, int col) {
+ * TitleScrollLevelList, for the caption. Coined name. */
+extern "C" void TitlePrintString(signed char *s, int row, int col) {
     short *p = (short *)G2::GetBG0ScrPtr() + (col + (row << 5));
     if (*s == 0)
         return;
@@ -199,7 +198,6 @@ extern "C" void func_ov003_020adc74(signed char *s, int row, int col) {
  * new; the inlined ctor runs fBase_c's C2, stores dBase_c then dScene_c's
  * vptrs, ORs pauseFlags 1 and 4 (dScene_c::dScene_c), then stores this
  * class's vptr. The null check is the one `new` itself emits. */
-// @symbol dScTitle_c_classInit
 extern "C" dScTitle_c *dScTitle_c_classInit(void) {
     return new dScTitle_c();
 }
@@ -208,20 +206,19 @@ extern "C" dScTitle_c *dScTitle_c_classInit(void) {
  * for the title screen: banks, graphics mode, BG0 char/palette and the OBJ
  * set, blanks the BG0 screen map, then seeds the scroll window from the
  * cursor and starts the title music. */
-// @symbol _ZN10dScTitle_c13InitResourcesEv
 s32 dScTitle_c::InitResources() {
     UnloadArchives();
     Enable3dEngines();
     GX::DisableAllBanks();
     GX::SetBankForBG(8);
     GX::SetBankForOBJ(1);
-    *(volatile u32 *)0x4000000 &= 0xffcfffef;
+    REG_DISPCNT &= 0xffcfffef;
     GX::SetGraphicsMode(1, 0, 0);
-    *(volatile u32 *)0x4001000 |= 0x10000;
+    REG_DISPCNT_SUB |= 0x10000;
     func_020233f4();
-    *(volatile u16 *)0x4000008 &= ~3;
-    *(volatile u16 *)0x4000008 = (*(volatile u16 *)0x4000008 & 0x43) | 0x1f00;
-    *(volatile u16 *)0x4000008 &= ~0x40;
+    REG_BG0CNT &= ~3;
+    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x1f00;
+    REG_BG0CNT &= ~0x40;
     GX::LoadBG0Char(data_0208a178, 0, 0x2000);
     GX::LoadBGPltt(data_0208c178, 0, 0x200);
     {
@@ -235,10 +232,10 @@ s32 dScTitle_c::InitResources() {
     GX::LoadOBJ(data_0208c378, 0, 0x2000);
     GX::LoadOBJPltt(data_0208c178, 0, 0x200);
     gMainScreenLayers = 0x11;
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x1100;
+    REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1100;
     data_0208ee44 = 2;
-    func_ov003_020ad6ec(this);
-    *(volatile u32 *)0x4000010 = 0;
+    TitleScrollLevelList(this);
+    REG_BG0OFS = 0;
     data_0209ee90[0x340] = 0;
     data_0209ee90[0x341] = 0;
     Sound::LoadInitialGroup(2);
@@ -248,24 +245,22 @@ s32 dScTitle_c::InitResources() {
 
 /* [6] 0x020ada80 -- vtable slot 3. The title scene owns only its voice
  * group; releasing that is the whole teardown. */
-// @symbol _ZN10dScTitle_c16CleanupResourcesEv
 s32 dScTitle_c::CleanupResources() {
     Sound::UnsetPlayerVoiceGroup();
     return 1;
 }
 
 /* [5] 0x020ad814 -- vtable slot 6. Level-select cursor update: on confirm
- * (or minigame-active flag) starts the scene fade / loads the picked level
- * from sTitleLevelEntries; otherwise moves the
- * cursor by row (+0x35) or column (+1) with repeat delay at mRepeatDelay,
+ * (A or START, or a new stylus touch) starts the scene fade / loads the
+ * picked level from sTitleLevelEntries; otherwise D-pad up or down moves the
+ * cursor one entry (up adds 0x35) with the repeat delay at mRepeatDelay,
  * wrapping the index modulo 0x36. */
-// @symbol _ZN10dScTitle_c8BehaviorEv
 s32 dScTitle_c::Behavior() {
-    if (data_0209f5bc->IsAtStart() && ((data_020a0e58[0].pressed & 9) | IsTouchStarted()) != 0) {
+    if (gSceneFader->IsAtStart() && ((data_020a0e58[0].pressed & 9) | IsTouchStarted()) != 0) {
         u32 i;
         s8 t;
         func_02012790(1);
-        i = data_0209b2f4;
+        i = gTitleCursor;
         t = sTitleLevelEntries[i].levelID;
         if (t == -1 || IsTouchStarted()) {
             dScene_c::StartSceneFade(5, 0, 0);
@@ -274,7 +269,7 @@ s32 dScTitle_c::Behavior() {
             dScene_c::StartSceneFade(6, 0, 0);
             Sound::StopLoadedMusic_Layer1(0x3c);
         } else {
-            data_0209f2d8 = 0;
+            gGameMode = 0;
             LoadLevelNoReturn(t, sTitleLevelEntries[i].entranceID, 1, 0);
             SetPlayerGlobals();
             SetNumPlayers(1);
@@ -287,34 +282,33 @@ s32 dScTitle_c::Behavior() {
             int h = data_020a0e58[0].pressed & 0x40;
             if (h != 0 || mRepeatDelay == 0) {
                 mRepeatDelay = h ? 8 : 2;
-                data_0209b2f4 += 0x35;
+                gTitleCursor += 0x35;
                 func_02012790(0);
             }
         } else if (v & 0x80) {
             int h = data_020a0e58[0].pressed & 0x80;
             if (h != 0 || mRepeatDelay == 0) {
                 mRepeatDelay = h ? 8 : 2;
-                data_0209b2f4 += 1;
+                gTitleCursor += 1;
                 func_02012790(0);
             }
         }
     }
 
-    data_0209b2f4 = data_0209b2f4 % 0x36;
+    gTitleCursor = gTitleCursor % 0x36;
     DecIfAbove0_Short(&mRepeatDelay);
-    func_ov003_020ad6ec(this);
+    TitleScrollLevelList(this);
     return 1;
 }
 
 /* [4] 0x020ad7a4 -- vtable slot 9. Real C++ method over the shared header;
  * this body never touches its own fields. */
-// @symbol _ZN10dScTitle_c6RenderEv
 s32 dScTitle_c::Render() {
     OamTmp tmp;
     OAM::EnableSubOAM(&tmp);
     {
         int idx = data_0209e664;
-        unsigned int v = ((data_0209b2f4 - data_0209b2f8 + 2) << 3) & 0xff;
+        unsigned int v = ((gTitleCursor - gTitleListTop + 2) << 3) & 0xff;
         char *p = data_0209e674 + (idx << 3);
         *(int *)p = v | 0x80000;
         *(short *)(p + 4) = 0;
@@ -324,31 +318,29 @@ s32 dScTitle_c::Render() {
 
 /* [3] 0x020ad7a0 -- vtable slot 12. Nothing to unwind; the slot exists only
  * so dScene_c's teardown has something to call. */
-// @symbol _ZN10dScTitle_c16OnPendingDestroyEv
 void dScTitle_c::OnPendingDestroy() {}
 
-/* [2] 0x020ad6ec -- scrolls the level-grid window so the cursor stays on
- * screen: clamps the origin at data_0209b2f8, redraws the visible rows
- * through func_ov003_020adcbc, then repaints the caption. Written free here
- * as a reconstruction choice; see the file header. The parameter is unused
+/* [2] 0x020ad6ec -- scrolls the level-list window so the cursor stays on
+ * screen: clamps the first shown entry, gTitleListTop, redraws the visible rows
+ * through TitlePrintLevelRow, then repaints the caption. Coined name, written
+ * free here as a reconstruction choice; see the file header. The parameter is unused
  * by the body, but both call sites load the receiver into r0.
  *
- * RECONCILED: decl_common.h already declares data_0209b2f8 `extern int`, so
+ * RECONCILED: decl_common.h already declares gTitleListTop `extern int`, so
  * the legacy `int[]` spelling is dropped in favour of the header's scalar
  * and the `[0]` subscripts became scalar accesses. */
-// @symbol func_ov003_020ad6ec
 extern "C" { /* .c-derived member: C linkage for the whole block */
-void func_ov003_020ad6ec(void *) {
-    int v = data_0209b2f4;
+void TitleScrollLevelList(void *) {
+    int v = gTitleCursor;
     int nv = v - 0xa;
-    data_0209b2f8 = nv;
+    gTitleListTop = nv;
     unsigned int t = (unsigned int)(v + 0xb);
     if (t > 0x36) {
-        data_0209b2f8 = nv - (t - 0x36);
+        gTitleListTop = nv - (t - 0x36);
     }
-    if (data_0209b2f8 < 0)
-        data_0209b2f8 = 0;
-    int s = data_0209b2f8;
+    if (gTitleListTop < 0)
+        gTitleListTop = 0;
+    int s = gTitleListTop;
     int cnt = 0x36 - s;
     int end = cnt + 2;
     if (end > 0x17)
@@ -356,10 +348,10 @@ void func_ov003_020ad6ec(void *) {
     int i;
     int j = s;
     for (i = 2; i < end; i++) {
-        func_ov003_020adcbc(j, i, 3);
+        TitlePrintLevelRow(j, i, 3);
         j++;
     }
-    func_ov003_020adc74((signed char *)data_020a0d90, 0, 0);
+    TitlePrintString((signed char *)data_020a0d90, 0, 0);
 }
 }
 

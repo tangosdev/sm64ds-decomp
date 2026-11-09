@@ -6,20 +6,20 @@
  * or vtable, so no class name is claimed and the file keeps the unit<addr>
  * name.
  *
- * What the code does. func_ov007_020b9880 builds the scene: the 0x4c-byte
+ * What the code does. PickerScene_Create builds the scene: the 0x4c-byte
  * scene record data_ov007_02104ba0, the 0x14-byte sprite record
  * data_ov007_02104b9c, the 0xd0-byte touch picker (func_ov007_020c690c),
- * four menu states and two tweens; func_ov007_020b9770 frees all of it.
- * func_ov007_020b9640 runs the states[0] machine: the intro
- * (func_ov007_020ba368), the drawing phase (func_ov007_020ba2e0 restarts it,
- * func_ov007_020ba05c turns stylus input into strokes and
- * func_ov007_020bb09c handles keys: zoom, undo and redo) and the edit phase
- * (func_ov007_020b9ca8 picks and drags points, func_ov007_020bb4b0 turns
- * held buttons into squash, wobble and spin). func_ov007_020ba9bc runs the
- * states[2] and states[3] animations (func_ov007_020bad8c,
- * func_ov007_020baa10) and binds the picker's spring constants.
+ * four menu states and two tweens; PickerScene_Destroy frees all of it.
+ * PickerScene_Update runs the states[0] machine: the intro
+ * (PickerScene_UpdateIntro), the drawing phase (PickerScene_StartDrawing restarts it,
+ * PickerScene_UpdateDrawing turns stylus input into strokes and
+ * PickerScene_HandleDrawingKeys handles keys: zoom, undo and redo) and the edit phase
+ * (PickerScene_UpdateEdit picks and drags points, PickerScene_HandleEditKeys turns
+ * held buttons into squash, wobble and spin). PickerScene_UpdatePicker runs the
+ * states[2] and states[3] animations (PickerScene_UpdateScaleAnim,
+ * PickerScene_UpdateMoveAnim) and binds the picker's spring constants.
  * func_ov007_020b91b4 runs the states[1] display machine and draws the
- * picker; func_ov007_020bbd24 replays a drawing; func_ov007_020b8fd4 places
+ * picker; PickerScene_UpdateReplay replays a drawing; func_ov007_020b8fd4 places
  * and draws the scene's sprites and the point-budget bar. The five getters
  * at the bottom hand the menu states, the awaiting-tap flag and the idle
  * timeout to the rest of the menu.
@@ -34,17 +34,19 @@
  * ones unit020b797c and func_ov007_020bd1c0 read, in text order, while
  * the stroke counts at 0x020cdb34 lie inside the portrait coordinate
  * block that follows the .rodata unit020b2764's functions read. The
- * previous function, func_ov007_020b8ec0, touches no data and is called
+ * previous function, MenuText_MessageIDToIndex, touches no data and is called
  * only by the module whose bss block ends at 0x02104b98.
  *
  * Emission order: mwccarm 2004/b56 emits one .text section per function in
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
+ * The functions keep C linkage. The PickerScene_ names are coined from the
+ * bodies, after the in-tree Ov007PickerScene.
  */
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "cstd.h"
 #include "Ov007Work.h"
 #include "Ov007Sprite.h"
@@ -64,27 +66,26 @@ extern "C" {
 typedef struct Ov007PickerSprites {
     /* 0x00, medium confidence: Q12; while it is <= 0x1000,
      * func_ov007_020b8fd4 slides sprites[1] in along the intro's axis;
-     * func_ov007_020ba368 eases it up */
+     * PickerScene_UpdateIntro eases it up */
     s32 slideProgress;
     /* 0x04: func_ov007_020c44e4; [0] and [1] the board, [2] and [3] the
      * point-budget bar */
     Ov007Sprite *sprites[4];
 } Ov007PickerSprites;
 
-/* func_ov007_020baa10 copies pos as three words. */
+/* PickerScene_UpdateMoveAnim copies pos as three words. */
 typedef struct Vec3Words {
     Fix12i w[3];
 } Vec3Words;
 
 extern char *data_ov007_02104ba0;
 extern Ov007PickerSprites *data_ov007_02104b9c;
-/* func_ov007_020ba368's settle counter, -1 until the drawing is complete */
+/* PickerScene_UpdateIntro's settle counter, -1 until the drawing is complete */
 extern s16 data_ov007_02104b98[];
 
 #define SCENE ((Ov007PickerScene *)data_ov007_02104ba0)
 #define SPRITES data_ov007_02104b9c
 
-extern s16 data_02082214[];
 extern u16 data_ov007_020d7b54[];
 extern int data_ov007_020d7b60;
 extern char data_ov007_020d7b80[];
@@ -104,13 +105,13 @@ extern void func_ov007_020c3d1c(void *);
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c4f50(void *c, int a1, int a2, int a3, int a4);
 extern int func_ov007_020c5014(void *, int);
-extern void func_ov007_020c510c(char *c);
+extern void func_ov007_020c510c(void *c);
 extern void func_ov007_020c4e98(Ov007Picker *c, int a1, int a2, int a3, int a4, unsigned short a5,
                                 int a6);
 extern void func_ov007_020c5188(void *, int);
-extern void func_ov007_020c5490(char *obj, int *m);
+extern void func_ov007_020c5490(void *obj, int *m);
 extern void func_ov007_020c55bc(Ov007Picker *self, int m1, int m2);
-extern void func_ov007_020c56bc(char *c, int a, int b, int d, int e, int f);
+extern void func_ov007_020c56bc(void *c, int a, int b, int d, int e, int f);
 extern void func_ov007_020c5a6c(void *, int *, int);
 extern void func_ov007_020c5c14(void *o, void *p);
 extern int func_ov007_020c5d5c(void *o);
@@ -131,8 +132,7 @@ extern void *func_ov007_020c9388(int a);
  * the next stroke). For param 0, sprites[0] also fades in up to alpha
  * 0x1f000. Returns 1 once the replay has passed the last stroke (for
  * param 0, only once sprites[0] is fully opaque). */
-// @symbol func_ov007_020bbd24
-int func_ov007_020bbd24(int param) {
+int PickerScene_UpdateReplay(int param) {
     int r4;
     int r5;
 
@@ -180,8 +180,10 @@ int func_ov007_020bbd24(int param) {
     return 0;
 }
 
-// @symbol func_ov007_020bbc08
-void func_ov007_020bbc08(int mode, int a1, int a2) {
+/* Modes 0 and 1 put every link back on its rest shape at unit scale (1
+ * re-anchors pos first); modes 2 and 3 jitter `percent` percent of the
+ * links by up to `range` (func_ov007_020c56bc). */
+void PickerScene_SetDeform(int mode, int percent, int range) {
     Ov007Picker *p;
 
     switch (mode) {
@@ -199,11 +201,11 @@ void func_ov007_020bbc08(int mode, int a1, int a2) {
         break;
 
     case 2:
-        func_ov007_020c56bc((char *)SCENE->picker, 1, a1, a2 / 2, a2 / 2, 8);
+        func_ov007_020c56bc(SCENE->picker, 1, percent, range / 2, range / 2, 8);
         break;
 
     case 3:
-        func_ov007_020c56bc((char *)SCENE->picker, 2, a1, a2, a2, 6);
+        func_ov007_020c56bc(SCENE->picker, 2, percent, range, range, 6);
         break;
     }
 }
@@ -232,8 +234,7 @@ static inline int pressed(Ov007Pad *pad, u16 h, int m1, int m2) {
     return ok;
 }
 
-// @symbol func_ov007_020bb4b0
-void func_ov007_020bb4b0(void) {
+void PickerScene_HandleEditKeys(void) {
     int t1;
     Ov007Picker *s;
     Ov007Pad *pad;
@@ -250,12 +251,12 @@ void func_ov007_020bb4b0(void) {
             v = w;
         }
         if (cstd::mod(v, 5) == 1) {
-            func_ov007_020bbc08(2, 0xa, 0x1000);
+            PickerScene_SetDeform(2, 0xa, 0x1000);
             SCENE->springSet = 0;
         } else {
             h = pad->keys;
             if (pressed(pad, h, 0x200, 0x100)) {
-                func_ov007_020bbc08(1, 0, 0);
+                PickerScene_SetDeform(1, 0, 0);
                 SCENE->springSet = 3;
                 func_ov007_020bdeb0(0x24);
             }
@@ -307,7 +308,6 @@ void func_ov007_020bb4b0(void) {
             if (t1 >= 0xa0) {
                 int m = cstd::mod(t1 - 0xa0, 5);
                 int mc, v3, v3sq;
-                u32 u;
                 s16 tbl;
                 if (m <= 0) {
                     mc = 0;
@@ -324,10 +324,7 @@ void func_ov007_020bb4b0(void) {
                     v3 = cstd::div((t1 - 0xa0) << 0xc, 0x28);
                 }
                 v3sq = (int)(((s64)v3 * v3) >> 0xc);
-                u = (u32)(mc * 0xffff);
-                u = u << 4;
-                u = u >> 0x10;
-                tbl = data_02082214[((int)u >> 4) * 2];
+                tbl = FX_SinIdx((u16)((mc * 0xffff) >> 12) >> 4);
                 extra = FX_MUL(v3sq, (tbl * (s16)0xa));
             }
             if (dir > 0) {
@@ -342,7 +339,7 @@ void func_ov007_020bb4b0(void) {
         } else {
             h = pad->keys;
             if (pressed(pad, h, 0x40, 0x400) || pressed(pad, h, 0x80, 2)) {
-                func_ov007_020bbc08(0, 0, 0);
+                PickerScene_SetDeform(0, 0, 0);
                 SCENE->springSet = 3;
                 func_ov007_020bdeb0(0x24);
             }
@@ -393,7 +390,6 @@ void func_ov007_020bb4b0(void) {
                 if (c1 >= 0x12c) {
                     int m2 = cstd::mod(c1, 0x64);
                     int mc2;
-                    u32 u2;
                     int t2v;
                     if (m2 <= 0) {
                         mc2 = 0;
@@ -402,10 +398,7 @@ void func_ov007_020bb4b0(void) {
                     } else {
                         mc2 = cstd::div(m2 << 0xc, 0x64);
                     }
-                    u2 = (u32)(mc2 * 0xffff);
-                    u2 = u2 << 4;
-                    u2 = u2 >> 0x10;
-                    t2v = data_02082214[((int)u2 >> 4) * 2];
+                    t2v = FX_SinIdx((u16)((mc2 * 0xffff) >> 12) >> 4);
                     if (t2v < 0) {
                         t2v = -t2v;
                     }
@@ -413,13 +406,9 @@ void func_ov007_020bb4b0(void) {
                 }
             }
             if (md == 0) {
-                u32 uu = (u32)((dir2 * amp) * 0x3555);
-                int idx;
-                uu = uu << 4;
-                uu = uu >> 0x10;
-                idx = (int)uu >> 4;
-                MTX_Rot22_(mat, data_02082214[idx * 2], data_02082214[idx * 2 + 1]);
-                func_ov007_020c5490((char *)s, mat);
+                int idx = (u16)(((dir2 * amp) * 0x3555) >> 12) >> 4;
+                MTX_Rot22_(mat, FX_SinIdx(idx), FX_CosIdx(idx));
+                func_ov007_020c5490(s, mat);
             } else {
                 int n = cstd::div(s->groupCount, 4) + 1;
                 if (n == 1) {
@@ -440,7 +429,7 @@ void func_ov007_020bb4b0(void) {
         } else {
             h = pad->keys;
             if (pressed(pad, h, 0x10, 1) || pressed(pad, h, 0x20, 0x800)) {
-                func_ov007_020bbc08(0, 0, 0);
+                PickerScene_SetDeform(0, 0, 0);
                 SCENE->springSet = 0;
             }
         }
@@ -451,8 +440,7 @@ void func_ov007_020bb4b0(void) {
  * B/down step tweens[0] between its three stops, R/L request menu state 3 or
  * 4 by sprites[1]'s alpha, and Y/left and A/right undo or redo the last
  * committed stroke. */
-// @symbol func_ov007_020bb09c
-int func_ov007_020bb09c(void) {
+int PickerScene_HandleDrawingKeys(void) {
     Ov007Picker *r5 = SCENE->picker;
     Ov007Pad *r4 = WORK->pad;
     unsigned short r2 = r4->keys;
@@ -618,14 +606,13 @@ int func_ov007_020bb09c(void) {
     }
 }
 
-// @symbol func_ov007_020bad8c
-void func_ov007_020bad8c(void) {
+void PickerScene_UpdateScaleAnim(void) {
     Ov007PickerScene *mgr;
     Ov007MenuState *obj;
     Ov007Picker *r6;
     int r5;
     u16 period;
-    int var_r4;
+    int phase;
     int t;
     s16 sw;
 
@@ -638,11 +625,11 @@ void func_ov007_020bad8c(void) {
     period = data_ov007_020d7b54[obj->currentState];
     t = cstd::mod(r5, period);
     if (t <= 0) {
-        var_r4 = 0;
+        phase = 0;
     } else if (t >= period) {
-        var_r4 = 0x1000;
+        phase = 0x1000;
     } else {
-        var_r4 = cstd::div(t << 0xc, period);
+        phase = cstd::div(t << 0xc, period);
     }
 
     mgr = SCENE;
@@ -654,7 +641,7 @@ void func_ov007_020bad8c(void) {
         if (r5 != 0) {
             return;
         }
-        func_ov007_020bbc08(1, 0, 0);
+        PickerScene_SetDeform(1, 0, 0);
         return;
     case 1:
         mgr->springSet = 0;
@@ -663,21 +650,21 @@ void func_ov007_020bad8c(void) {
         }
         {
             int v;
-            if (var_r4 >= 0x800) {
-                v = 0x1000 - ((var_r4 - 0x800) * 2);
+            if (phase >= 0x800) {
+                v = 0x1000 - ((phase - 0x800) * 2);
             } else {
-                v = var_r4 * 2;
+                v = phase * 2;
             }
-            func_ov007_020bbc08(3, 0xa, (int)(((long long)v * (0x2000 - v)) >> 0xc));
+            PickerScene_SetDeform(3, 0xa, (int)(((long long)v * (0x2000 - v)) >> 0xc));
         }
         return;
     case 2: {
         int v;
         int amt;
-        if (var_r4 >= 0x800) {
-            v = 0x1000 - ((var_r4 - 0x800) * 2);
+        if (phase >= 0x800) {
+            v = 0x1000 - ((phase - 0x800) * 2);
         } else {
-            v = var_r4 * 2;
+            v = phase * 2;
         }
         amt = (int)(((long long)v * (0x2000 - v)) >> 0xc) + 0x1000;
         func_ov007_020c55bc(r6, amt, amt);
@@ -685,7 +672,7 @@ void func_ov007_020bad8c(void) {
         if (r5 >= data_ov007_020d7b54[obj->currentState]) {
             obj->requestedState = 0;
         }
-        if (var_r4 <= 0x800) {
+        if (phase <= 0x800) {
             SCENE->springSet = 4;
         } else {
             SCENE->springSet = 0;
@@ -696,7 +683,7 @@ void func_ov007_020bad8c(void) {
         int d;
         u16 p3;
         int m;
-        int var_r0;
+        int wobble;
 
         d = r5 - 0x14;
         if (d < 0) {
@@ -708,21 +695,17 @@ void func_ov007_020bad8c(void) {
         p3 = data_ov007_020d7b54[3];
         m = cstd::mod(d, p3);
         if (m <= 0) {
-            var_r0 = 0;
+            wobble = 0;
         } else if (m >= p3) {
-            var_r0 = 0x1000;
+            wobble = 0x1000;
         } else {
-            var_r0 = cstd::div(m << 0xc, p3);
+            wobble = cstd::div(m << 0xc, p3);
         }
         {
-            u32 u = (u32)(var_r0 * 0xffff);
-            int idx;
+            int idx = (u16)((wobble * 0xffff) >> 12) >> 4;
             short tblval;
             int amt;
-            u = u << 4;
-            u = u >> 0x10;
-            idx = (int)u >> 4;
-            tblval = data_02082214[idx * 2];
+            tblval = FX_SinIdx(idx);
             amt = FX_MUL(tblval, 0x258);
             func_ov007_020c55bc(r6, amt + 0x1000, 0x1000 - amt);
         }
@@ -733,13 +716,13 @@ void func_ov007_020bad8c(void) {
         int m = cstd::mod(r5, 0x3c);
         SCENE->springSet = 2;
         if (m == 0) {
-            func_ov007_020bbc08(1, 0, 0);
+            PickerScene_SetDeform(1, 0, 0);
             return;
         }
         if (m != 0x1e) {
             return;
         }
-        func_ov007_020bbc08(3, 0x1e, FX_MUL(var_r4, 0x7d0) + 0xc8);
+        PickerScene_SetDeform(3, 0x1e, FX_MUL(phase, 0x7d0) + 0xc8);
         return;
     }
     case 5:
@@ -750,8 +733,7 @@ void func_ov007_020bad8c(void) {
 
 /* Each menu state drives the picker's per-step offset across the clamp
  * rectangle; state 5 puts pos back at its rest position. */
-// @symbol func_ov007_020baa10
-void func_ov007_020baa10(void) {
+void PickerScene_UpdateMoveAnim(void) {
     Ov007Picker *a;
     s16 state;
     int dx;
@@ -786,7 +768,7 @@ void func_ov007_020baa10(void) {
             v = 0x1000;
         else
             v = cstd::div(m << 12, 0x3c);
-        s = data_02082214[((u16)((v * 0xffff) >> 12) >> 4) * 2];
+        s = FX_SinIdx((u16)((v * 0xffff) >> 12) >> 4);
         if (state == 2) {
             a->posOffset.x = -dx / 48 + func_ov007_020c3ba8(dx / 48 - -dx / 48);
             a->posOffset.y = FX_MUL(s, (dy / 2 - dy / 8));
@@ -809,9 +791,9 @@ void func_ov007_020baa10(void) {
             v = cstd::div(m << 12, 0x3c);
         if (SCENE->states[3]->currentState == 4)
             v = 0x1000 - v;
-        idx = ((u16)((v * 0xffff) >> 12) >> 4) * 2;
-        a->posOffset.x = FX_MUL((dx / 4), data_02082214[idx + 1]);
-        a->posOffset.y = FX_MUL((dy / 4), data_02082214[idx]);
+        idx = (u16)((v * 0xffff) >> 12) >> 4;
+        a->posOffset.x = FX_MUL((dx / 4), FX_CosIdx(idx));
+        a->posOffset.y = FX_MUL((dy / 4), FX_SinIdx(idx));
         return;
     }
     case 5:
@@ -835,16 +817,14 @@ void func_ov007_020baa10(void) {
     }
 }
 
-// @symbol func_ov007_020ba9bc
-void func_ov007_020ba9bc(void) {
-    func_ov007_020bad8c();
-    func_ov007_020baa10();
+void PickerScene_UpdatePicker(void) {
+    PickerScene_UpdateScaleAnim();
+    PickerScene_UpdateMoveAnim();
     SCENE->picker->springConstants = (int *)(data_ov007_020d7b80 + SCENE->springSet * 0x18);
     func_ov007_020c5188(SCENE->picker, 0);
 }
 
-// @symbol func_ov007_020ba368
-int func_ov007_020ba368(int t) {
+int PickerScene_UpdateIntro(int t) {
     Ov007Picker *s;
     int done = 0;
     int state;
@@ -904,7 +884,7 @@ int func_ov007_020ba368(int t) {
         }
         *p2 = d / 2 - FX_MUL(ease, d);
         *p1 = *p2 - d * 2;
-        func_ov007_020ba9bc();
+        PickerScene_UpdatePicker();
         *p1 = v1;
         *p2 = v2;
         SPRITES->slideProgress = ease;
@@ -934,7 +914,7 @@ int func_ov007_020ba368(int t) {
             Ov007Camera *o = WORK->cameras[0];
             func_ov007_020bfe4c(o, 0xe8000, 0xa8000, -o->distance, local);
         }
-        func_ov007_020ba9bc();
+        PickerScene_UpdatePicker();
         if (t <= 0xc8) {
             v = 0;
         } else if (t >= 0x258) {
@@ -988,7 +968,6 @@ int func_ov007_020ba368(int t) {
         }
         if (t <= 0x50) {
             int ratio, m, mc, r2c, ease1, ease2, term, sinval;
-            u32 u;
             int idx;
             short tblval;
             if (t <= 0) {
@@ -1015,11 +994,8 @@ int func_ov007_020ba368(int t) {
                 r2c = cstd::div((t - 0x14) << 0xc, 0x28);
             }
             ease2 = (int)(((s64)r2c * (0x2000 - r2c)) >> 0xc);
-            u = (u32)(mc * 0xffff);
-            u = u << 4;
-            u = u >> 0x10;
-            idx = (int)u >> 4;
-            tblval = data_02082214[idx * 2];
+            idx = (u16)((mc * 0xffff) >> 12) >> 4;
+            tblval = FX_SinIdx(idx);
             term = FX_MUL(ease2, 0x3e8);
             sinval = FX_MUL(tblval, term);
             if (t <= 0x4d) {
@@ -1052,15 +1028,14 @@ int func_ov007_020ba368(int t) {
             }
         }
         func_ov007_020c55bc(s, a, b);
-        func_ov007_020ba9bc();
+        PickerScene_UpdatePicker();
         break;
     }
     }
     return done;
 }
 
-// @symbol func_ov007_020ba2e0
-void func_ov007_020ba2e0(void) {
+void PickerScene_StartDrawing(void) {
     func_ov007_020c5dec(SCENE->picker);
     SCENE->awaitingTap = 1;
     SCENE->tweenOut[1] = 0x1000;
@@ -1070,8 +1045,7 @@ void func_ov007_020ba2e0(void) {
     SCENE->states[1]->requestedState = 5;
 }
 
-// @symbol func_ov007_020ba05c
-int func_ov007_020ba05c(void) {
+int PickerScene_UpdateDrawing(void) {
     Ov007PickerScene *mgr = SCENE;
     int r6 = 0;
     int r5;
@@ -1153,12 +1127,11 @@ int func_ov007_020ba05c(void) {
             }
         }
     }
-    func_ov007_020bb09c();
+    PickerScene_HandleDrawingKeys();
     return r6;
 }
 
-// @symbol func_ov007_020b9fc0
-int func_ov007_020b9fc0(void) {
+int PickerScene_FadeToEdit(void) {
     Ov007PickerSprites *base = SPRITES;
     Ov007Sprite *p1 = base->sprites[0];
     Ov007Sprite *p2 = base->sprites[1];
@@ -1184,14 +1157,13 @@ int func_ov007_020b9fc0(void) {
 
 /* Commits a stroke still being drawn, settles the picker, clears the
  * requests on states[2] and [3] and presets idleFrames to its 0xf0 limit. */
-// @symbol func_ov007_020b9f0c
-void func_ov007_020b9f0c(void) {
+void PickerScene_BeginEdit(void) {
     if (SCENE->picker->path->pointCount != 0) {
         func_ov007_020c6550(SCENE->picker);
     }
     func_ov007_020c5c14(SCENE->picker, &SCENE->picker->pos);
     func_ov007_020c5ef0(SCENE->picker);
-    func_ov007_020c510c((char *)SCENE->picker);
+    func_ov007_020c510c(SCENE->picker);
 
     SCENE->idleFrames = 0;
     SCENE->states[2]->requestedState = 0;
@@ -1200,13 +1172,12 @@ void func_ov007_020b9f0c(void) {
     SPRITES->slideProgress = 0x1000;
 }
 
-// @symbol func_ov007_020b9ca8
-void func_ov007_020b9ca8(void) {
+void PickerScene_UpdateEdit(void) {
     Ov007Picker *r5 = SCENE->picker;
     Ov007Touch *r4 = WORK->touch;
     int v[3];
 
-    func_ov007_020bb4b0();
+    PickerScene_HandleEditKeys();
 
     if (r4->cur.touch != 0 && r4->heldFrames >= 1 && func_ov007_020c1da0(0) == 0) {
         Ov007Camera *camera;
@@ -1235,7 +1206,7 @@ void func_ov007_020b9ca8(void) {
     } else if (r4->releasedFrames == 0) {
         u32 t = r4->heldFrames;
         if (t <= 5) {
-            func_ov007_020bbc08(0, 0, 0);
+            PickerScene_SetDeform(0, 0, 0);
         } else if (SCENE->picker->hitGroup != -1) {
             int f;
             Ov007Picker *picker;
@@ -1266,13 +1237,12 @@ void func_ov007_020b9ca8(void) {
     }
 }
 
-// @symbol func_ov007_020b9880
-void func_ov007_020b9880(int a0, int a1) {
-    int sp14, sp18, sp10, sp1c;
-    int var_sl;
+void PickerScene_Create(int mode, int drawingIndex) {
+    int centerY, size, spriteMode, startAlpha;
+    int i;
     Ov007Sprite *sprite;
     Ov007Sprite *itemSprite;
-    Ov007Sprite *temp_r5;
+    Ov007Sprite *bar;
 
     if (data_ov007_02104ba0 != 0)
         return;
@@ -1298,16 +1268,16 @@ void func_ov007_020b9880(int a0, int a1) {
     SCENE->tweens[0] = func_ov007_020c908c(&SCENE->tweenOut[0]);
     SCENE->tweens[1] = func_ov007_020c908c(&SCENE->tweenOut[1]);
 
-    sp1c = 0;
-    sp14 = 0x60000;
-    sp18 = 0x100;
-    sp10 = 1;
+    startAlpha = 0;
+    centerY = 0x60000;
+    size = 0x100;
+    spriteMode = 1;
 
-    for (var_sl = 0; var_sl < 2; var_sl++) {
-        SPRITES->sprites[var_sl] = func_ov007_020c44e4(sp10);
-        sprite = SPRITES->sprites[var_sl];
+    for (i = 0; i < 2; i++) {
+        SPRITES->sprites[i] = func_ov007_020c44e4(spriteMode);
+        sprite = SPRITES->sprites[i];
 
-        if (var_sl == 0) {
+        if (i == 0) {
             sprite->frames[0] = WORK->textures[3];
             sprite->depth = 0xfffcdf01;
             sprite->polygonId = 0x18;
@@ -1320,34 +1290,34 @@ void func_ov007_020b9880(int a0, int a1) {
         sprite->repeatV = 8;
         sprite->repeatU = sprite->repeatV;
         sprite->screenX = 0x80000;
-        sprite->screenY = sp14;
-        sprite->width = (s16)sp18;
-        sprite->height = (s16)sp18;
-        sprite->alpha = sp1c;
+        sprite->screenY = centerY;
+        sprite->width = (s16)size;
+        sprite->height = (s16)size;
+        sprite->alpha = startAlpha;
 
         func_ov007_020c43bc(sprite, WORK->cameras[1]);
         func_ov007_020c4388(sprite, WORK->cameras[1]);
     }
 
     SPRITES->sprites[2] = func_ov007_020c44e4(1);
-    temp_r5 = SPRITES->sprites[2];
-    temp_r5->width = 0x48;
-    temp_r5->height = 8;
-    temp_r5->cornerColors[3] = 0x7f8a;
-    temp_r5->cornerColors[0] = temp_r5->cornerColors[3];
-    temp_r5->cornerColors[2] = 0x6e02;
-    temp_r5->cornerColors[1] = temp_r5->cornerColors[2];
-    temp_r5->drawFlags = temp_r5->drawFlags | 2;
-    temp_r5->polygonId = 0x19;
+    bar = SPRITES->sprites[2];
+    bar->width = 0x48;
+    bar->height = 8;
+    bar->cornerColors[3] = 0x7f8a;
+    bar->cornerColors[0] = bar->cornerColors[3];
+    bar->cornerColors[2] = 0x6e02;
+    bar->cornerColors[1] = bar->cornerColors[2];
+    bar->drawFlags = bar->drawFlags | 2;
+    bar->polygonId = 0x19;
 
     SPRITES->sprites[3] = func_ov007_020c44e4(1);
-    temp_r5 = SPRITES->sprites[3];
-    temp_r5->width = 0x48;
-    temp_r5->height = 8;
-    temp_r5->color = 0x294a;
-    temp_r5->alpha = 0x5000;
-    temp_r5->drawFlags = temp_r5->drawFlags | 1;
-    temp_r5->polygonId = 0x1a;
+    bar = SPRITES->sprites[3];
+    bar->width = 0x48;
+    bar->height = 8;
+    bar->color = 0x294a;
+    bar->alpha = 0x5000;
+    bar->drawFlags = bar->drawFlags | 1;
+    bar->polygonId = 0x1a;
 
     itemSprite = WORK->itemViews[5]->sprite;
     SPRITES->sprites[2]->depth = itemSprite->depth - 0x10;
@@ -1360,8 +1330,8 @@ void func_ov007_020b9880(int a0, int a1) {
     SCENE->tweens[0]->to = 0x800;
     SCENE->tweenOut[0] = SCENE->tweens[0]->to;
 
-    if (a0 != 0) {
-        if (a0 == 1) {
+    if (mode != 0) {
+        if (mode == 1) {
             SCENE->awaitingTap = 0;
             SCENE->tweenOut[1] = 0;
             SCENE->states[1]->requestedState = 0;
@@ -1372,14 +1342,13 @@ void func_ov007_020b9880(int a0, int a1) {
         SCENE->states[1]->requestedState = 2;
     }
 
-    if (a0 != 1)
+    if (mode != 1)
         return;
 
-    func_ov007_020bbe60(a1);
+    func_ov007_020bbe60(drawingIndex);
 }
 
-// @symbol func_ov007_020b9770
-void func_ov007_020b9770(void) {
+void PickerScene_Destroy(void) {
     int i;
 
     if (SCENE == 0)
@@ -1404,8 +1373,7 @@ void func_ov007_020b9770(void) {
     data_ov007_02104b9c = 0;
 }
 
-// @symbol func_ov007_020b9640
-void func_ov007_020b9640(void) {
+void PickerScene_Update(void) {
     Ov007MenuState *p;
     short st;
     int ticks;
@@ -1416,37 +1384,36 @@ void func_ov007_020b9640(void) {
     ticks = p->stateTicks;
     switch (st) {
     case 1:
-        if (func_ov007_020ba368(ticks)) {
+        if (PickerScene_UpdateIntro(ticks)) {
             SCENE->states[0]->requestedState = 2;
         }
         break;
 
     case 2:
         if (ticks == 0) {
-            func_ov007_020ba2e0();
+            PickerScene_StartDrawing();
         }
-        if (func_ov007_020ba05c()) {
+        if (PickerScene_UpdateDrawing()) {
             SCENE->states[0]->requestedState = 3;
         }
         break;
 
     case 5:
         if (ticks == 0) {
-            func_ov007_020b9f0c();
+            PickerScene_BeginEdit();
             SCENE->states[1]->requestedState = 4;
-        } else if (func_ov007_020b9fc0() != 0) {
+        } else if (PickerScene_FadeToEdit() != 0) {
             SCENE->states[0]->requestedState = 4;
             SCENE->states[1]->requestedState = 8;
         }
 
     case 4:
-        func_ov007_020b9ca8();
-        func_ov007_020ba9bc();
+        PickerScene_UpdateEdit();
+        PickerScene_UpdatePicker();
         break;
     }
 }
 
-// @symbol func_ov007_020b91b4
 void func_ov007_020b91b4(void) {
     int r7;
     Ov007Picker *r6;
@@ -1485,7 +1452,7 @@ void func_ov007_020b91b4(void) {
                 SPRITES->slideProgress = 0;
             }
             {
-                int b = func_ov007_020bbd24(
+                int b = PickerScene_UpdateReplay(
                     (int)(((SCENE->states[1]->currentState) == 0) ? ((char *)0) : ((char *)1)));
                 func_ov007_020c4dfc(r6, r7, r5, 0x1f);
                 if (b == 0) {
@@ -1592,7 +1559,6 @@ void func_ov007_020b91b4(void) {
     }
 }
 
-// @symbol func_ov007_020b8fd4
 void func_ov007_020b8fd4(Ov007Camera *camera) {
     int v;
     int mode;
@@ -1673,35 +1639,29 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
     func_ov007_020c421c(p_10);
 }
 
-// @symbol func_ov007_020b8fb4
-int func_ov007_020b8fb4(void) {
+int PickerScene_IsIdle(void) {
     Ov007PickerScene *p = SCENE;
     return p->idleFrames >= 0xf0;
 }
 
 /* Getters for the rest of the menu. */
-// @symbol func_ov007_020b8fa0
-int func_ov007_020b8fa0(void) {
+int PickerScene_IsAwaitingTap(void) {
     return SCENE->awaitingTap;
 }
 
-// @symbol func_ov007_020b8f8c
-Ov007MenuState *func_ov007_020b8f8c(void) {
+Ov007MenuState *PickerScene_GetMainState(void) {
     return SCENE->states[0];
 }
 
-// @symbol func_ov007_020b8f78
-Ov007MenuState *func_ov007_020b8f78(void) {
+Ov007MenuState *PickerScene_GetDisplayState(void) {
     return SCENE->states[1];
 }
 
-// @symbol func_ov007_020b8f64
-Ov007MenuState *func_ov007_020b8f64(void) {
+Ov007MenuState *PickerScene_GetScaleAnimState(void) {
     return SCENE->states[2];
 }
 
-// @symbol func_ov007_020b8f50
-Ov007MenuState *func_ov007_020b8f50(void) {
+Ov007MenuState *PickerScene_GetMoveAnimState(void) {
     return SCENE->states[3];
 }
 }

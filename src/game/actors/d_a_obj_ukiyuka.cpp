@@ -11,7 +11,8 @@
  *   s16 member step differs by one word.
  * - The (s64) cast on mBobPhase before the u16 table index is load-bearing;
  *   the plain (u16) read is two instructions shorter.
- * - The sine table keeps its arm9 linker name, data_02082214.
+ * - FX_SinIdx reads the sine table, which keeps its arm9 linker name,
+ *   data_02082214.
  * - Abstract class: no factory, no g_profile row.
  */
 
@@ -19,13 +20,10 @@
 
 #include "daObjUkiyuka_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "SharedFilePtr.h"
 #include "math/CalcLib.h"
 
-extern s16 data_02082214[];
-
-// @symbol _ZN14daObjUkiyuka_cD0Ev
-// @symbol _ZN14daObjUkiyuka_cD1Ev
 /* ROM ordinals 0 and 1 -- ov002 0x020b6388 (D0, 0x58) and 0x020b63e0 (D1,
  * 0x44). No source here: both destructor variants come from the ONE
  * inline body in include/daObjUkiyuka_c.h, which the class's descendants need
@@ -51,7 +49,6 @@ void daObjUkiyuka_c_EmitDestructor(daObjUkiyuka_c *p) {
 
 /* ROM ordinal 2 -- ov002 0x020b6424, size 0x48.
  * Teardown half both leaves call. */
-// @symbol _ZN14daObjUkiyuka_c20CleanupResourcesFromEPNS_9ResourcesE
 int daObjUkiyuka_c::CleanupResourcesFrom(Resources *resources) {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -61,7 +58,6 @@ int daObjUkiyuka_c::CleanupResourcesFrom(Resources *resources) {
 }
 
 /* ROM ordinal 3 -- vtable slot 9, ov002 0x020b646c. */
-// @symbol _ZN14daObjUkiyuka_c6RenderEv
 s32 daObjUkiyuka_c::Render() {
     mModel.Render(0);
     return 1;
@@ -70,7 +66,6 @@ s32 daObjUkiyuka_c::Render() {
 /* ROM ordinal 4 -- vtable slot 6, ov002 0x020b6494.
  * mBobPhase is declared s16 but stepped as u16; mRestTimer is passed to
  * DecIfAbove0_Short by address. */
-// @symbol _ZN14daObjUkiyuka_c8BehaviorEv
 s32 daObjUkiyuka_c::Behavior() {
     if (DecIfAbove0_Short(&mRestTimer) != 0) {
         IsClsnInRange(0, 0);
@@ -79,7 +74,7 @@ s32 daObjUkiyuka_c::Behavior() {
     *(u16 *)&mBobPhase += 0x100;
     {
         u16 h = (u16)((s64)mBobPhase);
-        mPosY -= FX_MUL(mBobAmplitude, data_02082214[(h >> 4) * 2]);
+        mPosY -= FX_MUL(mBobAmplitude, FX_SinIdx(h >> 4));
     }
     {
         int d = mPosY - mRestY;
@@ -98,7 +93,6 @@ s32 daObjUkiyuka_c::Behavior() {
  * Shared resource setup both leaves call. Slot 0 is dExtSimpleModel_c::LoadFile, slot 1
  * is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile; then mRestY = mPosY
  * and mBobAmplitude = bobAmplitude. */
-// @symbol _ZN14daObjUkiyuka_c17InitResourcesFromEPNS_9ResourcesEi
 int daObjUkiyuka_c::InitResourcesFrom(Resources *resources, int bobAmplitude) {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*resources->model), 1, -1);
     UpdateModelPosAndRotY();

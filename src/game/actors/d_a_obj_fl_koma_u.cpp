@@ -27,6 +27,7 @@ enum daObjFl_KomaU_c_AssetId { ASSET_FL_KOMA_U_BMD = 0x05f7, ASSET_FL_KOMA_U_KCL
 #include "dBgW.h"
 #include "daPly_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "math/MtxStack.h"
 
 /* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (func_02017acc /
@@ -61,14 +62,10 @@ extern FileTable data_ov064_0211adbc;
 extern "C" {
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-// @symbol _ZN15daObjFl_KomaU_cD1Ev
-// @symbol _ZN15daObjFl_KomaU_cD0Ev
 daObjFl_KomaU_c::~daObjFl_KomaU_c() {}
 
-// @symbol _ZN15daObjFl_KomaU_c16CleanupResourcesEv
 s32 daObjFl_KomaU_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -77,13 +74,11 @@ s32 daObjFl_KomaU_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN15daObjFl_KomaU_c6RenderEv
 s32 daObjFl_KomaU_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN15daObjFl_KomaU_c8BehaviorEv
 s32 daObjFl_KomaU_c::Behavior() {
     int i;
     char *w;
@@ -148,9 +143,9 @@ s32 daObjFl_KomaU_c::Behavior() {
 
         out.y = out.y + 0x64000;
         mParticleID[0][i] =
-            Particle::System::New(mParticleID[0][i], 0x4b, out.x, out.y, out.z, 0, 0);
+            Particle::System::New(mParticleID[0][i], kPtclFireBarA, out.x, out.y, out.z, 0, 0);
         mParticleID[1][i] =
-            Particle::System::New(mParticleID[1][i], 0x4c, out.x, out.y, out.z, 0, 0);
+            Particle::System::New(mParticleID[1][i], kPtclFireBarB, out.x, out.y, out.z, 0, 0);
 
         cyl->Clear();
         cyl->Update();
@@ -165,7 +160,6 @@ s32 daObjFl_KomaU_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN15daObjFl_KomaU_c13InitResourcesEv
 s32 daObjFl_KomaU_c::InitResources() {
     int i;
 
@@ -176,7 +170,7 @@ s32 daObjFl_KomaU_c::InitResources() {
     UpdateClsnPosAndRot();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov064_0211adbc.collision), mClsnMat,
                           0x199, mAngleY, *data_ov064_0211adbc.clps);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     return 1;
 }
 
@@ -184,7 +178,6 @@ s32 daObjFl_KomaU_c::InitResources() {
  * RTTI, allocation size, vtable identity, and the FL_KOMA_U registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: RotatingFirebar_Spawn. */
-// @symbol daObjFl_KomaU_c_classInit
 extern "C" daObjFl_KomaU_c *daObjFl_KomaU_c_classInit() {
     return new daObjFl_KomaU_c();
 }

@@ -1,7 +1,7 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
 
-extern int func_020659a0(int a, int b);
+extern int WBT_SetPacketSize(int a, int b);
 extern int func_020656d4(u16 arg0, const void *arg1, int arg2, u32 arg3);
 extern void func_02042160();
 
@@ -30,7 +30,7 @@ void func_02041e14(void)
 
         s->mResizePending = 0;
         data_020a1fc0.mParentPacketSize = v;
-        func_020659a0(v, childSize);
+        WBT_SetPacketSize(v, childSize);
 
         snd = s->mResizeChildren;
         if (snd == 0) {

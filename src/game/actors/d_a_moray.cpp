@@ -1,9 +1,10 @@
 //cpp
 /* daMoray_c -- Jolly Roger Bay eel (MORAY).
  *
- * Five states installed by func_ov016_02111bf0 (retreat init is the
- * BookSwitch_Spawn name from the spawn-table pass). InitResources keeps the
- * variant picked by data_0209f220 and stars 1/2 of sublevel 8: variant 2
+ * Five states installed by SetState. The member names are coined from the
+ * bodies (StateXxxInit / StateXxxMain as in the other state-table actors);
+ * the N64 unagi.inc.c has only numbered actions. InitResources keeps the
+ * variant picked by gCurrentStarId and stars 1/2 of sublevel 8: variant 2
  * waits in the den, variant 1 carries a STAR (178), variant 0 swims the path.
  *
  * Text 0x021111a0..0x0211260c. Key function ~daMoray_c (out-of-line; D1/D0
@@ -77,7 +78,7 @@ extern MorayAnimResFileHandle data_ov016_02114d30; /* path-swim anim, file 0x3b7
 extern MorayAnimResFileHandle data_ov016_02114d28; /* den / swim-out anim, file 0x3b8 */
 
 /* State tables filled by __sinit_d_a_moray.cpp from the PMFs at 0x02114878.
- * 02114d7c retreat (daMoray_c::BookSwitch_Spawn, then daMoray_c::func_ov016_02111534),
+ * 02114d7c retreat (daMoray_c::StateRetreatInit, then daMoray_c::StateRetreatMain),
  * 02114d8c den wait, 02114d9c lunge, 02114dac swim out, 02114dbc path swim. */
 extern daMoray_c::State data_ov016_02114d7c;
 extern daMoray_c::State data_ov016_02114d8c;
@@ -91,7 +92,7 @@ extern daMoray_c::State data_ov016_02114dbc;
 extern "C" {
 extern VecFx32 data_ov016_02114d4c; /* cylinder offset, bss */
 
-extern unsigned char data_0209f220; /* entrance filter */
+extern unsigned char gCurrentStarId;        /* the selected star */
 extern Matrix4x3 data_020a0e68;             /* the shared scratch matrix */
 
 int AngleDiff(int a, int b);
@@ -99,7 +100,7 @@ int SublevelToLevel(int sub);
 int IsStarCollected(int level, int star);
 u16 DecIfAbove0_Short(u16 *p);
 /* Sound::Play(3, id, pos). Calling Play directly is one word larger
-   (func_ov016_02111860 0x54 -> 0x58). */
+   (StateLungeInit 0x54 -> 0x58). */
 void func_02012694(unsigned int id, const Vector3 *pos);
 /* UpdateBones(model.data, model.file, frame). Inlining that grows Render
    0x8c -> 0x9c. */
@@ -113,7 +114,7 @@ int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-int LenVec3(void *v);
+int LenVec3(const Vector3 *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 
@@ -152,8 +153,6 @@ int fdiv(int a, int b);
  * sizeof(Vector3). D0 then hands the object back through dActor_c's inline
  * operator delete. mwcc also emits D2, which the ROM does not have; the
  * manifest licenses it as deadstrip. */
-// @symbol _ZN9daMoray_cD1Ev
-// @symbol _ZN9daMoray_cD0Ev
 daMoray_c::~daMoray_c()
 {
 }
@@ -171,9 +170,7 @@ daMoray_c::~daMoray_c()
    Hurts the actor recorded in the first cylinder's otherOwner (set by the
    hit test since the previous Clear) when that actor is the PLAYER (actor
    191). Called from Behavior. */
-// @symbol _ZN9daMoray_c19func_ov016_02111284Ev
-void daMoray_c::func_ov016_02111284()
-{
+void daMoray_c::UpdateHitCylinders() {
     Vector3 va;
     Vector3 vb;
     Vector3 out;
@@ -200,7 +197,7 @@ void daMoray_c::func_ov016_02111284()
 
     r4 = 0x52000;
 
-    if (data_0209f220 == 1 && this->mState != &data_ov016_02114dbc) {
+    if (gCurrentStarId == 1 && this->mState != &data_ov016_02114dbc) {
         r6 = 0x128000;
         r6 = -r6;
         vb.y = r6;
@@ -283,9 +280,7 @@ void daMoray_c::func_ov016_02111284()
 
 /* Retreat execute. When the timer set by the retreat init runs out, stops,
    turns back to the spawn angles and returns to den wait. */
-// @symbol _ZN9daMoray_c19func_ov016_02111534Ev
-int daMoray_c::func_ov016_02111534()
-{
+int daMoray_c::StateRetreatMain() {
     if (*(u16 *)&this->mStateTimer == 0) {
         this->mHorzSpeed = 0;
         this->mPrevAngleX = this->mInitAngleX;
@@ -294,17 +289,15 @@ int daMoray_c::func_ov016_02111534()
         this->mAngleX = this->mPrevAngleX;
         this->mAngleY = this->mPrevAngleY;
         this->mAngleZ = this->mPrevAngleZ;
-        func_ov016_02111bf0(&data_ov016_02114d8c);
+        SetState(&data_ov016_02114d8c);
     }
     return 1;
 }
 
 /* Retreat init: mStateTimer = 100 frames, mHorzSpeed = 0x14000 (20 units).
-   Behavior counts the timer down each frame; daMoray_c::func_ov016_02111534 is the only
+   Behavior counts the timer down each frame; daMoray_c::StateRetreatMain is the only
    state in this file that tests it for 0. */
-// @symbol _ZN9daMoray_c16BookSwitch_SpawnEv
-int daMoray_c::BookSwitch_Spawn()
-{
+int daMoray_c::StateRetreatInit() {
     this->mStateTimer = 100;
     this->mHorzSpeed = 0x14000;
     return 1;
@@ -318,9 +311,7 @@ int daMoray_c::BookSwitch_Spawn()
    node it plays sound 0xfa and steps to the next node, wrapping to 0 past
    mPathNodeCount. Variant 1 arriving at node 0 instead steps to node 1 and
    enters the retreat state, without the sound. */
-// @symbol _ZN9daMoray_c19func_ov016_021115c0Ev
-int daMoray_c::func_ov016_021115c0()
-{
+int daMoray_c::StatePathSwimMain() {
     PathPtr path;
     Vector3 node;
     Vector3 diff;
@@ -345,7 +336,7 @@ int daMoray_c::func_ov016_021115c0()
     if (len == 0 || len <= 0xa000) {
         if (this->mVariant == 1 && this->mPathNodeIndex == 0) {
             this->mPathNodeIndex = 1;
-            func_ov016_02111bf0(&data_ov016_02114d7c);
+            SetState(&data_ov016_02114d7c);
             return 1;
         }
         this->mPathNodeIndex++;
@@ -360,9 +351,7 @@ int daMoray_c::func_ov016_021115c0()
 }
 
 /* Path-swim init: the looping swim animation. */
-// @symbol _ZN9daMoray_c19func_ov016_02111718Ev
-int daMoray_c::func_ov016_02111718()
-{
+int daMoray_c::StatePathSwimInit() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d30.filePtr, 8, 0, 0x1000, 0);
     return 1;
 }
@@ -372,16 +361,14 @@ int daMoray_c::func_ov016_02111718()
    units) out, or 0x2bc000 (700 units) when the entrance filter is 1,
    at up to 0x14000 (20 units) per frame. When the animation finishes it
    stops and enters swim-out. */
-// @symbol _ZN9daMoray_c19func_ov016_02111758Ev
-int daMoray_c::func_ov016_02111758()
-{
+int daMoray_c::StateLungeMain() {
     Vector3 localOffset;
     Vector3 worldTarget;
     localOffset.x = 0; localOffset.y = 0; localOffset.z = 0;
     worldTarget.x = 0; worldTarget.y = 0; worldTarget.z = 0;
     unsigned int frame = (unsigned int)this->mBlendAnmModel.currFrame << 4 >> 0x10;
     if (frame >= 0x15 && frame <= 0x3c) {
-        if (data_0209f220 == 1) {
+        if (gCurrentStarId == 1) {
             localOffset.z = 0x2bc000;
         } else {
             localOffset.z = 0x1f4000;
@@ -396,15 +383,13 @@ int daMoray_c::func_ov016_02111758()
     }
     if (this->mBlendAnmModel.Finished()) {
         this->mHorzSpeed = 0;
-        func_ov016_02111bf0(&data_ov016_02114dac);
+        SetState(&data_ov016_02114dac);
     }
     return 1;
 }
 
 /* Lunge init: bite animation with flag bit 30, and the lunge sound. */
-// @symbol _ZN9daMoray_c19func_ov016_02111860Ev
-int daMoray_c::func_ov016_02111860()
-{
+int daMoray_c::StateLungeInit() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d20.filePtr, 8, 0x40000000, 0x1000,
                                  0);
     func_02012694(0xfa, &this->mCamSpacePos);
@@ -414,9 +399,7 @@ int daMoray_c::func_ov016_02111860()
 /* Swim-out execute. Moves toward a point 0x76c000 (1900 units) from the home
    point along its facing at up to 0x14000 (20 units) per frame, and enters
    path-swim, with the sound, once within 20 units of it. */
-// @symbol _ZN9daMoray_c19func_ov016_021118b4Ev
-int daMoray_c::func_ov016_021118b4()
-{
+int daMoray_c::StateSwimOutMain() {
     Vector3 localOffset;
     Vector3 worldTarget;
     localOffset.x = 0; localOffset.y = 0; localOffset.z = 0;
@@ -431,15 +414,13 @@ int daMoray_c::func_ov016_021118b4()
     ApproachLinear(this->mPos, worldTarget, 0x14000);
     if (Vec3_Dist(&this->mPos, &worldTarget) < 0x14000) {
         func_02012694(0xfa, &this->mCamSpacePos);
-        func_ov016_02111bf0(&data_ov016_02114dbc);
+        SetState(&data_ov016_02114dbc);
     }
     return 1;
 }
 
 /* Swim-out init: idle animation and the same sound. */
-// @symbol _ZN9daMoray_c19func_ov016_02111994Ev
-int daMoray_c::func_ov016_02111994()
-{
+int daMoray_c::StateSwimOutInit() {
     this->unk_400 = 0;
     func_02012694(0xfa, &this->mCamSpacePos);
     this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d28.filePtr, 8, 0, 0x1000, 0);
@@ -463,9 +444,7 @@ int daMoray_c::func_ov016_02111994()
    after the respellings below, not inherited. */
 #pragma push
 #pragma opt_propagation off
-// @symbol _ZN9daMoray_c19func_ov016_021119ecEv
-int daMoray_c::func_ov016_021119ec()
-{
+int daMoray_c::StateDenWaitMain() {
     daPly_c *player;
     Vector3 playerPos;
     Vector3 local;
@@ -493,7 +472,7 @@ int daMoray_c::func_ov016_021119ec()
         playerPos.x = pos->x;
         playerPos.y = pos->y;
         playerPos.z = pos->z;
-        entrance = data_0209f220;
+        entrance = gCurrentStarId;
 
         thrHorz = 0x3e8000;
         thrAng = 0x3300;
@@ -518,7 +497,7 @@ int daMoray_c::func_ov016_021119ec()
             world.y += this->mHomePosY;
             world.z += this->mHomePosZ;
             if (Vec3_Dist(&playerPos, &world) < 0x224000)
-                func_ov016_02111bf0(&data_ov016_02114d9c);
+                SetState(&data_ov016_02114d9c);
         }
 
         if (AngleDiff(this->HorzAngleToCPlayer(), this->mAngleY) < thrAng) {
@@ -527,7 +506,7 @@ int daMoray_c::func_ov016_021119ec()
                 if (dy < 0)
                     dy = -dy;
                 if (dy < thrVert)
-                    func_ov016_02111bf0(&data_ov016_02114d9c);
+                    SetState(&data_ov016_02114d9c);
             }
         }
     }
@@ -536,18 +515,14 @@ int daMoray_c::func_ov016_021119ec()
 #pragma pop
 
 /* Den-wait init: the idle animation. */
-// @symbol _ZN9daMoray_c19func_ov016_02111bacEv
-int daMoray_c::func_ov016_02111bac()
-{
+int daMoray_c::StateDenWaitInit() {
     this->unk_400 = 0;
     this->mBlendAnmModel.SetAnim(*(BCA_File *)data_ov016_02114d28.filePtr, 8, 0, 0x1000, 0);
     return 1;
 }
 
 /* Installs a state and runs its init. */
-// @symbol _ZN9daMoray_c19func_ov016_02111bf0EPNS_5StateE
-int daMoray_c::func_ov016_02111bf0(State *state)
-{
+int daMoray_c::SetState(State *state) {
     this->mState = state;
     const daMoray_c::State *installed = this->mState;
     if (installed->init == 0)
@@ -558,9 +533,7 @@ int daMoray_c::func_ov016_02111bf0(State *state)
 /* Poses the body: the model matrix from position and angles, then each
    segment's world position out of its bone transform, and the carried
    star's matrix off the jaw bone. */
-// @symbol _ZN9daMoray_c19func_ov016_02111c40Ev
-void daMoray_c::func_ov016_02111c40()
-{
+void daMoray_c::UpdatePose() {
     Vector3 localOffset;
     Vector3 worldTarget;
     Vector3 asr;
@@ -593,7 +566,7 @@ void daMoray_c::func_ov016_02111c40()
     modelMtx = &this->mBlendAnmModel.mat4x3;
     this->mSegmentAngle[5] = this->mSegmentAngle[6];
     /* mSegmentPos[i] / transforms[i] is 0x10 smaller than this walk
-       (func_ov016_02111c40 0x2f8 -> 0x2e8). row steps one Vector3 at a time
+       (UpdatePose 0x2f8 -> 0x2e8). row steps one Vector3 at a time
        so the clear and the << 3 hit mSegmentPos[i] through the actor base;
        pos receives the bone translation before that shift. */
     row = this;
@@ -645,7 +618,6 @@ void daMoray_c::func_ov016_02111c40()
     star->mCarryMatrix = &this->mStarMtx;
 }
 
-// @symbol _ZN9daMoray_c16CleanupResourcesEv
 s32 daMoray_c::CleanupResources()
 {
     data_ov016_02114d38.Release();
@@ -655,12 +627,10 @@ s32 daMoray_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN9daMoray_c16OnPendingDestroyEv
 void daMoray_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN9daMoray_c6RenderEv
 s32 daMoray_c::Render()
 {
     int i;
@@ -682,7 +652,6 @@ s32 daMoray_c::Render()
     return 1;
 }
 
-// @symbol _ZN9daMoray_c8BehaviorEv
 s32 daMoray_c::Behavior()
 {
     dActor_c *star;
@@ -695,7 +664,7 @@ s32 daMoray_c::Behavior()
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
-    func_ov016_02111c40();
+    UpdatePose();
 
     starUniqueID = mStarUniqueID;
     if (starUniqueID != 0) {
@@ -721,10 +690,10 @@ s32 daMoray_c::Behavior()
         }
     }
 
-    func_ov016_02111284();
+    UpdateHitCylinders();
     mdCcAcPos_c1.Clear();
     mdCcAcPos_c1.Update();
-    if (data_0209f220 == 1 && mState != &data_ov016_02114dbc) {
+    if (gCurrentStarId == 1 && mState != &data_ov016_02114dbc) {
         mdCcAcPos_c2.Clear();
         mdCcAcPos_c2.Update();
     }
@@ -732,7 +701,6 @@ s32 daMoray_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN9daMoray_c13InitResourcesEv
 s32 daMoray_c::InitResources()
 {
     Vector3 node;
@@ -785,7 +753,7 @@ s32 daMoray_c::InitResources()
     mStarUniqueID = 0;
     mBlendAnmModel.speed = 0x1000;
 
-    if (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0) {
+    if (gCurrentStarId == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0) {
         /* Entrance 1, or star 1 still uncollected: only variant 2. */
         if (mVariant == 2) {
             mHomePosY -= 0x80000;
@@ -793,11 +761,11 @@ s32 daMoray_c::InitResources()
             if (mPathNodeIndex >= mPathNodeCount)
                 mPathNodeIndex = 4;
             mPosY = mHomePosY;
-            func_ov016_02111bf0(&data_ov016_02114d8c);
+            SetState(&data_ov016_02114d8c);
         } else {
             return 0;
         }
-    } else if (data_0209f220 == 2 || IsStarCollected(SublevelToLevel(8), 2) == 0) {
+    } else if (gCurrentStarId == 2 || IsStarCollected(SublevelToLevel(8), 2) == 0) {
         /* Entrance 2, or star 2 still uncollected: only variant 1. */
         if (mVariant == 1) {
             /* Held (| 0x50). Behavior releases it with | 0x40. */
@@ -807,7 +775,7 @@ s32 daMoray_c::InitResources()
                 spawned->mFlags = 0;
                 spawned->SetRanges(0, 0x3e8000, 0x1f40000, 0x1f40000);
             }
-            func_ov016_02111bf0(&data_ov016_02114d8c);
+            SetState(&data_ov016_02114d8c);
         } else {
             return 0;
         }
@@ -823,7 +791,7 @@ s32 daMoray_c::InitResources()
             path.GetNode(mPos, 1);
             mPrevAngleY = Vec3_HorzAngle(&mPos, &node);
             mAngleY = mPrevAngleY;
-            func_ov016_02111bf0(&data_ov016_02114dbc);
+            SetState(&data_ov016_02114dbc);
         } else {
             return 0;
         }
@@ -851,7 +819,6 @@ s32 daMoray_c::InitResources()
  * The implicit constructor builds the base, collision cylinders, background
  * checker, model animation, and seven segment positions in declaration order.
  * Vector3's empty default constructor is the array callback at 0x0203d384. */
-// @symbol daMoray_c_classInit
 extern "C" daMoray_c *daMoray_c_classInit()
 {
     return new daMoray_c;
@@ -865,15 +832,11 @@ MorayAnimResFileHandle data_ov016_02114d20(ASSET_MORAY_SEARCH_BCA);
 MorayAnimResFileHandle data_ov016_02114d30(ASSET_MORAY_SWIM_BCA);
 MorayAnimResFileHandle data_ov016_02114d28(ASSET_MORAY_SWIM_START_BCA);
 
-daMoray_c::State data_ov016_02114d8c = { &daMoray_c::func_ov016_02111bac,
-                                       &daMoray_c::func_ov016_021119ec };
-daMoray_c::State data_ov016_02114d9c = { &daMoray_c::func_ov016_02111860,
-                                       &daMoray_c::func_ov016_02111758 };
-daMoray_c::State data_ov016_02114dac = { &daMoray_c::func_ov016_02111994,
-                                       &daMoray_c::func_ov016_021118b4 };
-daMoray_c::State data_ov016_02114dbc = { &daMoray_c::func_ov016_02111718,
-                                       &daMoray_c::func_ov016_021115c0 };
-daMoray_c::State data_ov016_02114d7c = { &daMoray_c::BookSwitch_Spawn,
-                                       &daMoray_c::func_ov016_02111534 };
+daMoray_c::State data_ov016_02114d8c = {&daMoray_c::StateDenWaitInit, &daMoray_c::StateDenWaitMain};
+daMoray_c::State data_ov016_02114d9c = {&daMoray_c::StateLungeInit, &daMoray_c::StateLungeMain};
+daMoray_c::State data_ov016_02114dac = {&daMoray_c::StateSwimOutInit, &daMoray_c::StateSwimOutMain};
+daMoray_c::State data_ov016_02114dbc = {&daMoray_c::StatePathSwimInit,
+                                        &daMoray_c::StatePathSwimMain};
+daMoray_c::State data_ov016_02114d7c = {&daMoray_c::StateRetreatInit, &daMoray_c::StateRetreatMain};
 
 VecFx32 data_ov016_02114d4c;

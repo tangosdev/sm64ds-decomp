@@ -4,10 +4,9 @@
 #include "Ov007Work.h"
 #include "cstd.h"
 #include "Ov007Item.h"
+#include "nitro/fx/fx_trig.h"
 
 extern "C" {
-
-extern short data_02082214[];
 
 typedef char
     Ov007Work_itemViews_must_be_at_0x114[(int)&((Ov007Work *)0)->itemViews == 0x114 ? 1 : -1];
@@ -45,8 +44,8 @@ void func_ov007_020ae2d0(Ov007ItemNode *self) {
     }
     case 0: {
         int n = cstd::mod(v, 0x32);
-        int m, arrIdx;
-        short idx, base;
+        int m;
+        short sine, base;
         Ov007Item *q;
         if (n <= 0)
             n = 0;
@@ -56,11 +55,10 @@ void func_ov007_020ae2d0(Ov007ItemNode *self) {
             n = cstd::div(n << 0xc, 0x32);
         m = (-n) * 0xffff;
         m = (int)(((unsigned)(m << 4)) >> 0x10);
-        arrIdx = m >> 4;
-        idx = data_02082214[arrIdx * 2];
+        sine = FX_SinIdx(m >> 4);
         q = self->item;
         base = q->layout->homeY;
-        q->posY = idx * 3 + (base << 12);
+        q->posY = sine * 3 + (base << 12);
         return;
     }
     case 7: {

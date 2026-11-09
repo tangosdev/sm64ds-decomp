@@ -20,14 +20,14 @@ struct daObjHatenaBlock_c : dBgActor_c {
     dExtAnmModel_c mAnmModel;               /* 0x320 -- only HATENA_BLOCK (20) loads and draws it */
     dExtShadowModel_c mShadowModel;         /* 0x384 */
     /* Seeded from mModel.mat4x3 by InitResources, then rebuilt every frame
-       by func_ov102_02149ea4. DropShadowScaleXYZ takes this pairing. 0x3ac + 0x30 = 0x3dc. */
+       by UpdateDropShadow. DropShadowScaleXYZ takes this pairing. 0x3ac + 0x30 = 0x3dc. */
     Matrix4x3 mShadowMat;             /* 0x3ac */
     /* Bounce squash Y added onto mPosY when writing the model/collider
-       translation (func_ov102_02149ff0 / 02149e38 / 021498e0). Fix12:
+       translation (UpdateModelMatrix / 02149e38 / 021498e0). Fix12:
        0x1000 = 1 unit. */
     s32 mBounceYOffs;                 /* 0x3dc */
     s32 mHomePosY;                    /* 0x3e0 -- mPosY at InitResources; Behavior clamps mPosY up to it after UpdatePos (not while POPPED) */
-    /* Floor Y from the ground raycast (func_ov102_02149610); shadow height. */
+    /* Floor Y from the ground raycast (GetFloorY); shadow height. */
     s32 mFloorY;                      /* 0x3e4 */
     s32 mState;                       /* 0x3e8 -- State */
     /* Bounce phase: starts at 0x4000 (a quarter turn) when the bounce begins
@@ -35,20 +35,20 @@ struct daObjHatenaBlock_c : dBgActor_c {
        data_02082214, drives the squash scale and mBounceYOffs. */
     u16 mBounceAng;                   /* 0x3ec */
     /* Frame countdown, ticked by DecIfAbove0_Short: 7 when the bounce begins
-       (func_ov102_02149c78); 300 (0x12c) when the block pops
-       (func_ov102_021498c4), where it is the delay before the block can come
+       (EnterBouncing); 300 (0x12c) when the block pops
+       (EnterPopped), where it is the delay before the block can come
        back. */
     u16 mBounceTimer;                 /* 0x3ee */
     u8 mStarTracked;                  /* 0x3f0 -- TrackStar's result (CONTENT_STAR only); passed back to UntrackStar */
     u8 mStarId;                       /* 0x3f1 -- param1 bits 8..15 (CONTENT_STAR only) */
     /* Truncated from the hitter's param1 by every combat callback, then
-       func_ov102_02149da8(this, STATE_BOUNCING). A prize column is picked
+       ChangeState(this, STATE_BOUNCING). A prize column is picked
        with it, clamped to 0..3. */
     u8 mHitterParam;                  /* 0x3f2 */
     u8 mContentType;                  /* 0x3f3 -- Content */
     /* A SECRET_COIN that registered itself with this block: daSCoin_c::
        LinkToBlock stores itself here when it is within 200 units of
-       an actor 20 / 21 block. Bounce-end (func_ov102_021498e0) collects it
+       an actor 20 / 21 block. Bounce-end (UpdateBouncing) collects it
        (actorID 0x149, SECRET_COIN) and clears this. Not written by this
        class. */
     dActor_c *mHeldActor;             /* 0x3f4 */
@@ -67,36 +67,36 @@ struct daObjHatenaBlock_c : dBgActor_c {
     void OnHitByMegaChar(daPly_c &player);     /* slot 27 */
     int OnHitFromUnderneath(dActor_c &other);  /* slot 28 */
 
-    /* func_ov102_* helpers keep linker names -- no semantic names are known.
+    /* Helpers named from what they do (symbols/actor_renames.tsv gives the evidence tier).
        All are ordinary members; func_ov102_02149684 is the one exception,
        staying free (the block is its second argument). */
-    int func_ov102_02149078();
-    void func_ov102_02149100(Vector3 *pos, int n, unsigned int speed, short baseAngle);
-    void func_ov102_02149220();
-    void func_ov102_02149288();
-    void func_ov102_021492d4();
-    void func_ov102_02149384();
-    void func_ov102_021493dc();
-    void func_ov102_02149428();
-    void func_ov102_02149478();
-    void func_ov102_021494cc();
-    void func_ov102_0214953c(int p1, int p2);
-    int func_ov102_02149610();
-    void func_ov102_02149878();
-    void func_ov102_021498c4();
-    void func_ov102_021498e0();
-    void func_ov102_02149c78();
-    void func_ov102_02149ccc();
-    void func_ov102_02149d80();
-    void func_ov102_02149da8(int i);
-    void func_ov102_02149df0();
-    void func_ov102_02149e38();
-    void func_ov102_02149ea4();
-    void func_ov102_02149ff0();
+    int IsHitBlocked();
+    void SpawnCoinSpray(Vector3 *pos, int n, unsigned int speed, short baseAngle);
+    void SpawnPrizeBobOmb();
+    void SpawnPrizePowerUpItem();
+    void SpawnPrizeFeather();
+    void SpawnPrizeShell();
+    void SpawnPrizeScaleUpKinoko();
+    void SpawnPrize1Up();
+    void SpawnPrizeStar();
+    void SpawnPrizeCoins();
+    void SpawnPrizeMarioCap(int p1, int p2);
+    int GetFloorY();
+    void UpdatePopped();
+    void EnterPopped();
+    void UpdateBouncing();
+    void EnterBouncing();
+    void UpdateIdle();
+    void EnterIdle();
+    void ChangeState(int i);
+    void CallStateUpdate();
+    void UpdateMeshCollider();
+    void UpdateDropShadow();
+    void UpdateModelMatrix();
 
     /* mState: an index into the {enter, update} pair table at
-       data_ov102_0214e890. func_ov102_02149da8 stores the index and runs the
-       row's enter routine; func_ov102_02149df0 (the top of Behavior) runs its
+       data_ov102_0214e890. ChangeState stores the index and runs the
+       row's enter routine; CallStateUpdate (the top of Behavior) runs its
        update routine. Rows, read from the ROM:
          IDLE     enter 02149d80  update 02149ccc
          BOUNCING enter 02149c78  update 021498e0
@@ -119,14 +119,14 @@ struct daObjHatenaBlock_c : dBgActor_c {
        0). The names say which actor the row spawns; the loaders in
        InitResources / CleanupResources key off the same numbers. */
     enum Content {
-        CONTENT_COINS = 0,         /* a spray of COIN actors; count is param1 bits 8..15 (0xff = 1) */
-        CONTENT_STAR = 1,          /* STAR; star id is param1 bits 8..15 (0xff = 0) */
-        CONTENT_ONEUP = 2,         /* ONEUPKINOKO */
-        CONTENT_SHELL = 3,         /* SHELL */
+        CONTENT_COINS = 0, /* a spray of COIN actors; count is param1 bits 8..15 (0xff = 1) */
+        CONTENT_STAR = 1,  /* STAR; star id is param1 bits 8..15 (0xff = 0) */
+        CONTENT_ONEUP = 2, /* ONEUPKINOKO */
+        CONTENT_SHELL = 3, /* SHELL */
         CONTENT_SCALEUP_KINOKO = 4, /* SCALEUP_KINOKO */
-        CONTENT_POWER_UP_5 = 5,    /* column 0 FEATHER, columns 1..3 POWER_UP_ITEM */
-        CONTENT_POWER_UP_6 = 6,    /* POWER_UP_ITEM in every column */
-        CONTENT_POWER_UP_7 = 7     /* column 0 BOMBHEI (func_ov102_02149220), 1..3 POWER_UP_ITEM */
+        CONTENT_POWER_UP_5 = 5,     /* column 0 FEATHER, columns 1..3 POWER_UP_ITEM */
+        CONTENT_POWER_UP_6 = 6,     /* POWER_UP_ITEM in every column */
+        CONTENT_POWER_UP_7 = 7      /* column 0 BOMBHEI (SpawnPrizeBobOmb), 1..3 POWER_UP_ITEM */
     };
 };
 

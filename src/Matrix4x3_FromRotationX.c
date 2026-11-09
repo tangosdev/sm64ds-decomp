@@ -1,9 +1,9 @@
 #include "common.h"
+#include "nitro/fx/fx_trig.h"
 
 extern void func_02052800(Matrix4x3 *m, int s, int c);
-extern short data_02082214[];
 
 void Matrix4x3_FromRotationX(Matrix4x3 *m, int angle) {
     int a = (unsigned short)angle >> 4;
-    func_02052800(m, data_02082214[a*2], data_02082214[a*2+1]);
+    func_02052800(m, FX_SinIdx(a), FX_CosIdx(a));
 }

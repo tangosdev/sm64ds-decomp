@@ -2,7 +2,7 @@
 #include "Ov007Work.h"
 
 extern void func_ov007_020c1d8c(int i);
-extern void func_ov007_020b2764(int n);
+extern void FigureScene_SetScreenBlend(int n);
 extern void RequestScreenFade(int kind, int flags, void (*onEnd)(void));
 extern void func_ov007_020b16f0(void);
 
@@ -15,7 +15,7 @@ void func_ov007_020b166c(void) {
     if (w->states[1]->stateTicks != 0)
         return;
     func_ov007_020c1d8c(0);
-    func_ov007_020b2764(0x1000);
+    FigureScene_SetScreenBlend(0x1000);
     if (fromState6)
         RequestScreenFade(1, 2, func_ov007_020b16f0);
     else

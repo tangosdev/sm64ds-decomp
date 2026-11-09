@@ -23,8 +23,10 @@
  */
 #include "types.h"
 #include "Sound.h"
+#include "private/watchdog_alarm.h"
 #include "Memory.h"
 #include "math/Approach.h"
+#include "nnsys/snd/player.h"
 
 struct HeapOwner {
     void func_020510a4(int);
@@ -45,19 +47,12 @@ extern int func_02048a18(int x, int y);
 extern void func_02048af4(void *p, int b, int c);
 extern void func_02048d80(void *obj, int *p);
 extern void func_02048c30(void *a, int b, int c);
-/* The NNS_SndPlayer setters are nnsys/snd/player.h's, which take an
-   NNSSndHandle *. This file holds its handles untyped, so it keeps local
-   copies rather than cast at every call. */
-extern void NNS_SndPlayerSetTrackPitch(void *c, int a, int b);  // local extern: untyped handle
-extern void NNS_SndPlayerSetTrackVolume(void *a, int b, int c); // local extern: untyped handle
-extern void NNS_SndPlayerSetTrackPan(void *a, int b, int c);    // local extern: untyped handle
 extern void func_020485f0(int a0, int a1);
 extern void func_02048528(int a0, int a1);
 extern void func_0204f9c4(int a, int b);
 extern void func_0204f958(int a, int b);
 extern int func_0204fa2c(int *g, int z);
 extern void func_0204f94c(void *p);
-extern void NNS_SndPlayerMoveVolume(int a, int b, int c); // local extern: untyped handle
 extern void func_0204f070(void);
 extern void *func_0205130c(u32 addr, u32 size);
 extern void func_0201a9fc(char *c);
@@ -68,7 +63,7 @@ extern void func_02049cd8(void *a, int b, int mode);
 extern void func_02048f34(void *owner);
 extern int func_0201a9ec(int *c);
 extern int func_02051918(unsigned int id, int arg);
-extern unsigned char func_0201a96c(int *c, int s);
+extern unsigned char func_0201a96c(struct WatchdogAlarm *context, int suspended);
 extern int func_02051fb4(void *g, unsigned int x);
 extern void func_02049764(void);
 extern void func_0204921c(int *g, int v);
@@ -198,11 +193,11 @@ extern int data_0209baa0;
    sPlayerSeqLimits). It stays extern because it ends 2 bytes short of the
    next 4-aligned object, and that tail fill cannot be claimed yet. */
 extern char data_0208e498[];
-extern char data_0209d574[];
-extern unsigned char data_0209f250;
+extern struct WatchdogAlarm data_0209d574;
+extern unsigned char gLocalPlayerId;
 extern signed char gCurrentSublevel;
-extern void *data_0209f394[];
-extern signed char data_02092120;
+extern void *gPlayers[];
+extern signed char gCurrentAreaId;
 extern const unsigned char data_02075250[8];
 extern unsigned char data_02075258[];
 
@@ -253,7 +248,6 @@ SndRegTable data_0209b53c;
 
 namespace Sound {
 
-// @symbol _ZN5Sound22LoadAndSetMusic_Layer1Ei
 void LoadAndSetMusic_Layer1(int j)
 {
     sMusicTrackMode = -1;
@@ -274,10 +268,9 @@ void LoadAndSetMusic_Layer1(int j)
 
 }
 
-// @symbol func_02013078
 extern "C" int func_02013078(void)
 {
-    char *obj = (char *)data_0209f394[data_0209f250];
+    char *obj = (char *)gPlayers[gLocalPlayerId];
     int state;
     int flag;
     int result;
@@ -298,14 +291,14 @@ extern "C" int func_02013078(void)
     } else if (state == 9) {
         result = flag ? 1 : 2;
     } else if (state == 0x12) {
-        if (data_02092120 == 0)
+        if (gCurrentAreaId == 0)
             result = 1;
         else
             result = flag ? 0 : 2;
     } else if (state == 0xc) {
-        if (data_02092120 == 0)
+        if (gCurrentAreaId == 0)
             data_0209b48c = Sound_PlayIfNotActive(data_0209b48c, 3, 0x18d, 0);
-        result = (data_02092120 == 0) ? 4 : 3;
+        result = (gCurrentAreaId == 0) ? 4 : 3;
     } else if (state == 0xd) {
         result = (*(int *)(obj + 0x60) < (int)0xffe3e000) ? 5 : 6;
     } else if (state == 0x15) {
@@ -320,14 +313,12 @@ extern "C" int func_02013078(void)
 
 namespace Sound {
 
-// @symbol _ZN5Sound22StopLoadedMusic_Layer1Ej
 void StopLoadedMusic_Layer1(unsigned int arg)
 {
     gCurrentMusicID = ~0u;
     func_0204fa2c(sMusicHandle, arg);
 }
 
-// @symbol _ZN5Sound10PauseMusicEv
 void PauseMusic(void)
 {
     int state = gCurrentSublevel;
@@ -347,7 +338,6 @@ void PauseMusic(void)
     func_0204f9c4(0xd, 1);
 }
 
-// @symbol _ZN5Sound12UnpauseMusicEv
 void UnpauseMusic(void)
 {
     signed char s = gCurrentSublevel;
@@ -366,7 +356,6 @@ void UnpauseMusic(void)
 
 }
 
-// @symbol func_02012e78
 extern "C" void func_02012e78(void)
 {
     if (sSavedMusicVolume >= 0)
@@ -378,7 +367,6 @@ extern "C" void func_02012e78(void)
     sVolumeRampStep = 0xc999;
 }
 
-// @symbol func_02012e1c
 extern "C" void func_02012e1c(void)
 {
     signed char v = sSavedMusicVolume;
@@ -388,7 +376,6 @@ extern "C" void func_02012e1c(void)
     sSavedMusicVolume = -1;
 }
 
-// @symbol func_02012dd0
 extern "C" void func_02012dd0(void *c)
 {
     func_0204f9c4(0, (int)c);
@@ -398,20 +385,17 @@ extern "C" void func_02012dd0(void *c)
     func_0204f9c4(0x1f, (int)c);
 }
 
-// @symbol func_02012dbc
 extern "C" void func_02012dbc(int a)
 {
     func_0204f9c4(0xe, a);
 }
 
-// @symbol func_02012d64
 extern "C" void func_02012d64(void)
 {
     ApproachLinear(gMusicVolume, (s32)sMusicVolumeTarget << 12, sVolumeRampStep);
     func_02013524((int)sMusicHandle, gMusicVolume >> 12, 0);
 }
 
-// @symbol _ZN5Sound17ChangeMusicVolumeEji
 namespace Sound {
 int ChangeMusicVolume(unsigned int a, int b) {
     sMusicVolumeTarget = a;
@@ -420,7 +404,6 @@ int ChangeMusicVolume(unsigned int a, int b) {
 }
 }
 
-// @symbol _ZN5Sound7PlaySubEjjjib
 namespace Sound {
 bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, bool e) {
     int x;
@@ -456,14 +439,12 @@ bool PlaySub(unsigned int a, unsigned int b, unsigned int c, int d, bool e) {
 
 namespace Sound {
 
-// @symbol _ZN5Sound22LoadAndSetMusic_Layer3Ej
 void LoadAndSetMusic_Layer3(unsigned int musicId)
 {
     sLayer3Music = musicId;
     func_02011dcc(sMusicHandle, musicId);
 }
 
-// @symbol _ZN5Sound22StopLoadedMusic_Layer3Ev
 void StopLoadedMusic_Layer3(void)
 {
     int a = gCurrentMusicID;
@@ -486,10 +467,10 @@ void StopLoadedMusic_Layer3(void)
         func_02011dcc(sMusicHandle, a);
 }
 
-// @symbol _ZN5Sound8SetMusicEjj
 void SetMusic(unsigned int j1, unsigned int j2)
 {
-    if (j1 != data_0209f250) return;
+    if (j1 != gLocalPlayerId)
+        return;
     if (gCurrentMusicID < 0) {
         if (sLayer1Music >= 0)
             return;
@@ -506,11 +487,10 @@ void SetMusic(unsigned int j1, unsigned int j2)
    unspellable from C++: a truthful declaration mangled to ...Ej and matched
    nothing, so callers had to hand-spell the two-parameter name and pass one
    argument. The symbol is now ...Ej and include/Sound.h declares it. */
-// @symbol _ZN5Sound8EndMusicEj
 void EndMusic(unsigned int playerNo) {
     if (gCurrentMusicID < 0)
         return;
-    if (playerNo != data_0209f250)
+    if (playerNo != gLocalPlayerId)
         return;
     int e43c = sLayer1Music;
     int e444 = sLayer3Music;
@@ -528,7 +508,6 @@ void EndMusic(unsigned int playerNo) {
     func_0204fa2c(sMusicHandle, 0);
 }
 
-// @symbol _ZN5Sound22LoadAndSetMusic_Layer2Ej
 void LoadAndSetMusic_Layer2(unsigned int j)
 {
     int a = gCurrentMusicID;
@@ -538,7 +517,6 @@ void LoadAndSetMusic_Layer2(unsigned int j)
     func_02011dcc(sMusicHandle, j);
 }
 
-// @symbol _ZN5Sound22StopLoadedMusic_Layer2Ev
 void StopLoadedMusic_Layer2(void)
 {
     int a = gCurrentMusicID;
@@ -556,46 +534,40 @@ void StopLoadedMusic_Layer2(void)
 
 }
 
-// @symbol func_02012860
 extern "C" void func_02012860(void *a, int flags, int c, int d, int e)
 {
     if (flags & 1)
-        NNS_SndPlayerSetTrackVolume(a, 0xffff, c);
+        NNS_SndPlayerSetTrackVolume((NNSSndHandle *)a, 0xffff, c);
     if (flags & 2)
-        NNS_SndPlayerSetTrackPitch(a, 0xffff, d);
+        NNS_SndPlayerSetTrackPitch((NNSSndHandle *)a, 0xffff, d);
     if (flags & 4)
-        NNS_SndPlayerSetTrackPan(a, 0xffff, e - 0x40);
+        NNS_SndPlayerSetTrackPan((NNSSndHandle *)a, 0xffff, e - 0x40);
 }
 
 namespace Sound {
 
-// @symbol _ZN5Sound6Play2DEjj
 unsigned int Play2D(unsigned int j1, unsigned int j2) {
     return Player_PlaySoundEffect((int)data_0209b4a4, j1, j2);
 }
 }
 
-// @symbol func_020127ec
 extern "C" void func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5)
 {
     Player_PlaySoundEffect((int)data_0209b4a4, a0, a1);
     func_02012860(data_0209b4a4, a2, a3, a4, a5);
 }
 
-// @symbol func_020127a4
 extern "C" void func_020127a4(int r0, int r1, int r2, int r3)
 {
     Player_PlaySoundEffect((int)data_0209b4a4, r0, r1);
-    NNS_SndPlayerSetTrackPan(data_0209b4a4, r2, r3);
+    NNS_SndPlayerSetTrackPan((NNSSndHandle *)data_0209b4a4, r2, r3);
 }
 
-// @symbol func_02012790
 extern "C" unsigned int func_02012790(unsigned int a)
 {
     return Sound::Play2D(2, a);
 }
 
-// @symbol func_0201277c
 extern "C" unsigned int func_0201277c(unsigned int a)
 {
     return Sound::Play2D(3, a);
@@ -603,13 +575,11 @@ extern "C" unsigned int func_0201277c(unsigned int a)
 
 namespace Sound {
 
-// @symbol _ZN5Sound12PlayBank3_2DEj
 unsigned int PlayBank3_2D(unsigned int a)
 {
     return Play2D(3, a);
 }
 
-// @symbol _ZN5Sound12PlayBank2_2DEj
 unsigned int PlayBank2_2D(unsigned int a)
 {
     return Play2D(2, a);
@@ -617,13 +587,11 @@ unsigned int PlayBank2_2D(unsigned int a)
 
 }
 
-// @symbol func_02012718
 extern "C" void func_02012718(int a, int b)
 {
     func_020127ec(2, a, 4, 0, 0, func_020126e8(b));
 }
 
-// @symbol func_020126e8
 extern "C" int func_020126e8(int a)
 {
     int r = a * 0x4c / 0x100000 + 0x1a;
@@ -632,19 +600,16 @@ extern "C" int func_020126e8(int a)
     return r;
 }
 
-// @symbol func_020126ac
 extern "C" void func_020126ac(int a0, int a1, int a2, int a3, int s0)
 {
     func_020127ec(2, a0, a1, a2, a3, s0);
 }
 
-// @symbol func_02012694
 extern "C" void func_02012694(unsigned int id, const Vector3 *v)
 {
     Sound::Play(3, id, *v);
 }
 
-// @symbol func_0201267c
 extern "C" void func_0201267c(unsigned int id, const Vector3 *v)
 {
     Sound::Play(3, id, *v);
@@ -652,19 +617,16 @@ extern "C" void func_0201267c(unsigned int id, const Vector3 *v)
 
 namespace Sound {
 
-// @symbol _ZN5Sound9PlayBank3EjRK7Vector3
 void PlayBank3(u32 id, const Vector3 &pos)
 {
     Play(3, id, pos);
 }
 
-// @symbol _ZN5Sound9PlayBank0EjRK7Vector3
 void PlayBank0(u32 id, const Vector3 &pos)
 {
     Play(0, id, pos);
 }
 
-// @symbol _ZN5Sound4PlayEjjRK7Vector3
 void Play(unsigned int j1, unsigned int j2, const Vector3 &v)
 {
     char *s = (char *)func_02050cdc(j1, j2);
@@ -685,7 +647,6 @@ void Play(unsigned int j1, unsigned int j2, const Vector3 &v)
 
 }
 
-// @symbol func_0201251c
 extern "C" void func_0201251c(int a, int b, int c, int d)
 {
     int r4 = func_02048a18(b, d);
@@ -694,7 +655,6 @@ extern "C" void func_0201251c(int a, int b, int c, int d)
     func_02048af4(&data_0209b4a4, c, d);
 }
 
-// @symbol Sound_PlayIfNotActive
 extern "C" int Sound_PlayIfNotActive(int a, int b, int c, int d)
 {
     SndRegEntry *o = (SndRegEntry *)func_02011934((char *)&data_0209b53c, a);
@@ -711,7 +671,6 @@ extern "C" int Sound_PlayIfNotActive(int a, int b, int c, int d)
         (char *)&data_0209b53c, b, c, d);
 }
 
-// @symbol func_02012468
 extern "C" int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h)
 {
     int dd = (int)(((long long)d));
@@ -725,7 +684,6 @@ extern "C" int func_02012468(int a, int b, int c, int d, int e, int f, int g, sh
     return x;
 }
 
-// @symbol func_020123c8
 extern "C" void func_020123c8(int a0, int type, int code, int arg)
 {
     if (type == 3 && code >= 0x100 && code <= 0x103) {
@@ -745,7 +703,6 @@ extern "C" void func_020123c8(int a0, int type, int code, int arg)
 
 namespace Sound {
 
-// @symbol _ZN5Sound8PlayLongEjjjRK7Vector3s
 int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
 {
     if (func_02048a1c((int *)&pos, a, b) == 0)
@@ -763,13 +720,11 @@ int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
 
 }
 
-// @symbol func_02012310
 extern "C" int func_02012310(int handle, int sound, int arg)
 {
     return Sound_PlayIfNotActive(handle, 2, sound, arg);
 }
 
-// @symbol func_0201226c
 extern "C" int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5)
 {
     SndRegEntry *p;
@@ -783,7 +738,6 @@ extern "C" int func_0201226c(int a0, int a1, int a2, int a3, int a4, short a5)
     return func_020116c4((char *)&data_0209b53c, a1, a2, a3, a4, a5);
 }
 
-// @symbol func_02012194
 extern "C" int func_02012194(char *c, int a1, int a2, int a3, int s0, int s1, short s2)
 {
     SndRegEntry *e;
@@ -793,18 +747,17 @@ extern "C" int func_02012194(char *c, int a1, int a2, int a3, int s0, int s1, sh
         int *slot = &e->handle;
         e->inUse = 1;
         func_02048d80(slot, (int *)s1);
-        NNS_SndPlayerSetTrackPitch(slot, a3, s0);
+        NNS_SndPlayerSetTrackPitch((NNSSndHandle *)slot, a3, s0);
         return e->id;
     } else {
         char *n = (char *)data_0209b53c.func_0201179c(a1, a2, s1, s2);
         SndRegEntry *e2 = (SndRegEntry *)func_02011934((char *)&data_0209b53c, (int)n);
         if (e2 != 0)
-            NNS_SndPlayerSetTrackPitch(&e2->handle, a3, s0);
+            NNS_SndPlayerSetTrackPitch((NNSSndHandle *)&e2->handle, a3, s0);
         return (int)n;
     }
 }
 
-// @symbol func_02012174
 extern "C" unsigned int func_02012174(unsigned int a, unsigned int b)
 {
     return Sound::Play2D(1, b + data_02075250[a]);
@@ -812,7 +765,6 @@ extern "C" unsigned int func_02012174(unsigned int a, unsigned int b)
 
 namespace Sound {
 
-// @symbol _ZN5Sound13PlayCharVoiceEjjRK7Vector3
 unsigned int PlayCharVoice(unsigned int a, unsigned int b, const Vector3 &v)
 {
     return ((unsigned int (*)(unsigned int, unsigned int, const Vector3 &))Play)(
@@ -821,7 +773,6 @@ unsigned int PlayCharVoice(unsigned int a, unsigned int b, const Vector3 &v)
 
 }
 
-// @symbol func_02012120
 extern "C" int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, const Vector3 *p3,
                              short p4) {
     p2 += data_02075250[p1];
@@ -830,7 +781,6 @@ extern "C" int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, 
 
 namespace Sound {
 
-// @symbol _ZN5Sound19LoadGroupAndSetBankEii
 void LoadGroupAndSetBank(int a, int b)
 {
     if (func_0203d974() != 0) {
@@ -853,13 +803,11 @@ void LoadGroupAndSetBank(int a, int b)
     sPlayerVoiceGroup = 0;
 }
 
-// @symbol _ZN5Sound16LoadInitialGroupEi
 void LoadInitialGroup(int group)
 {
     LoadGroupAndSetBank(group, 0x20);
 }
 
-// @symbol _ZN5Sound21UnsetPlayerVoiceGroupEv
 void UnsetPlayerVoiceGroup(void)
 {
     sPlayerVoiceGroup = 0;
@@ -867,7 +815,6 @@ void UnsetPlayerVoiceGroup(void)
 
 }
 
-// @symbol func_02011f7c
 extern "C" void func_02011f7c(void *self)
 {
     if (!func_0203d974()) {
@@ -880,7 +827,6 @@ extern "C" void func_02011f7c(void *self)
 
 namespace Sound {
 
-// @symbol _ZN5Sound21ResetPlayerVoiceGroupEv
 void ResetPlayerVoiceGroup(void)
 {
     if (func_0203d974() == 0) {
@@ -891,7 +837,6 @@ void ResetPlayerVoiceGroup(void)
 
 }
 
-// @symbol func_02011ee4
 extern "C" int func_02011ee4(void *c)
 {
     int x = func_0203d974();
@@ -900,7 +845,6 @@ extern "C" int func_02011ee4(void *c)
     return func_020134d8(c, (void *)sSndHeap);
 }
 
-// @symbol func_02011e94
 extern "C" void *func_02011e94(int *out) {
     int r = func_02051074(sSndHeap);
     void *block = (void *)func_020511d4(sSndHeap, r, 0, 0, 0);
@@ -909,7 +853,6 @@ extern "C" void *func_02011e94(int *out) {
     return block;
 }
 
-// @symbol Player_PlaySoundEffect
 extern "C" int Player_PlaySoundEffect(int arg0, int arg1, int arg2)
 {
     if (gSoundInitialized == 0)
@@ -919,7 +862,6 @@ extern "C" int Player_PlaySoundEffect(int arg0, int arg1, int arg2)
     return func_02051e60(arg0, -1, sCurrentBank, -1, arg1, arg2);
 }
 
-// @symbol func_02011dcc
 extern "C" int func_02011dcc(int *g, int x)
 {
     int r4 = func_02051fb4(g, x);
@@ -933,19 +875,16 @@ extern "C" int func_02011dcc(int *g, int x)
     return r4;
 }
 
-// @symbol func_02011dc0
 extern "C" void func_02011dc0(void)
 {
     func_0204effc();
 }
 
-// @symbol func_02011db4
 extern "C" void func_02011db4(void)
 {
     func_0204efe0();
 }
 
-// @symbol func_02011d5c
 extern "C" void func_02011d5c(int self)
 {
     if (gSoundInitialized == 0)
@@ -958,55 +897,46 @@ extern "C" void func_02011d5c(int self)
     func_02049c48(self);
 }
 
-// @symbol func_02011d50
 extern "C" void func_02011d50(void)
 {
     func_02048f24();
 }
 
-// @symbol func_02011d44
 extern "C" void func_02011d44(void)
 {
     func_02048f14();
 }
 
-// @symbol func_02011d38
 extern "C" void func_02011d38(void)
 {
     func_02048f04();
 }
 
-// @symbol func_02011d2c
 extern "C" void func_02011d2c(void)
 {
     func_02048ef4();
 }
 
-// @symbol func_02011d20
 extern "C" void func_02011d20(void)
 {
     Sound::Func_02048ee4();
 }
 
-// @symbol func_02011d14
 extern "C" void func_02011d14(void)
 {
     func_02048ed4();
 }
 
-// @symbol func_02011d08
 extern "C" void func_02011d08(void)
 {
     Sound::Func_02048ec4();
 }
 
-// @symbol func_02011cfc
 extern "C" void func_02011cfc(void)
 {
     Sound::Func_02048eb4();
 }
 
-// @symbol DisableSoundPlayersForCredits
 extern "C" void DisableSoundPlayersForCredits(void)
 {
     u32 i;
@@ -1016,7 +946,6 @@ extern "C" void DisableSoundPlayersForCredits(void)
         Sound::Player::SetPlayableSeqCount(sPlayerSeqLimits[i].playerID, zero);
 }
 
-// @symbol func_02011c8c
 extern "C" void func_02011c8c(void)
 {
     u32 i;
@@ -1025,7 +954,6 @@ extern "C" void func_02011c8c(void)
                                            sPlayerSeqLimits[i].maxSeq);
 }
 
-// @symbol func_02011c54
 extern "C" void func_02011c54(void)
 {
     unsigned int i;
@@ -1036,7 +964,6 @@ extern "C" void func_02011c54(void)
     }
 }
 
-// @symbol func_02011c24
 extern "C" void func_02011c24(void)
 {
     func_0204f958(0, 1);
@@ -1044,7 +971,6 @@ extern "C" void func_02011c24(void)
     func_02011c54();
 }
 
-// @symbol func_02011b7c
 extern "C" void func_02011b7c(void)
 {
     int v = gSubSoundID;
@@ -1062,7 +988,6 @@ extern "C" void func_02011b7c(void)
     sSavedMusicVolume = -1;
 }
 
-// @symbol func_02011b38
 extern "C" void func_02011b38(void *c, int a1, int a2, int a3, short a5)
 {
     SndRegEntry *e = (SndRegEntry *)c;
@@ -1074,21 +999,18 @@ extern "C" void func_02011b38(void *c, int a1, int a2, int a3, short a5)
     Player_PlaySoundEffect((int)&e->handle, a2, a3);
 }
 
-// @symbol func_02011af8
 extern "C" void func_02011af8(void *c, int a1, int a2, int a3, int s0, short s1)
 {
     func_02011b38(c, a1, a2, a3, s1);
     func_020123c8((int)&((SndRegEntry *)c)->handle, a2, a3, s0);
 }
 
-// @symbol func_02011ac4
 extern "C" void func_02011ac4(void *c, int a1, int a2, int a3, int s0, int s1, short s2)
 {
     func_02011b38(c, a1, a2, a3, s2);
     func_02048c30(&((SndRegEntry *)c)->handle, s0, s1);
 }
 
-// @symbol func_02011aa0
 extern "C" int func_02011aa0(void *c)
 {
     SndRegEntry *e = (SndRegEntry *)c;
@@ -1097,7 +1019,6 @@ extern "C" int func_02011aa0(void *c)
     return 0;
 }
 
-// @symbol func_02011a5c
 extern "C" void func_02011a5c(void *vc)
 {
     SndRegTable *c = (SndRegTable *)vc;
@@ -1112,7 +1033,6 @@ extern "C" void func_02011a5c(void *vc)
     for (i = 0; i < 16; i++) c->buckets[i] = 0;
 }
 
-// @symbol func_02011a28
 extern "C" void func_02011a28(char *c)
 {
     SndRegEntry *p = ((SndRegTable *)c)->entries;
@@ -1123,7 +1043,6 @@ extern "C" void func_02011a28(char *c)
     }
 }
 
-// @symbol func_020119c8
 extern "C" void func_020119c8(void *vbase)
 {
     SndRegTable *base = (SndRegTable *)vbase;
@@ -1142,7 +1061,6 @@ extern "C" void func_020119c8(void *vbase)
     }
 }
 
-// @symbol func_02011974
 extern "C" void func_02011974(void *vbase)
 {
     SndRegTable *base = (SndRegTable *)vbase;
@@ -1158,7 +1076,6 @@ extern "C" void func_02011974(void *vbase)
     }
 }
 
-// @symbol func_02011934
 extern "C" void *func_02011934(char *table, int id)
 {
     if (id == 0) return 0;
@@ -1173,7 +1090,6 @@ extern "C" void *func_02011934(char *table, int id)
     return 0;
 }
 
-// @symbol _ZN11SndRegTable13func_0201186cEiis
 int SndRegTable::func_0201186c(int a1, int a2, short a3) {
     SndRegTable *reg = this;
     int i = 0;
@@ -1192,7 +1108,6 @@ int SndRegTable::func_0201186c(int a1, int a2, short a3) {
     return 0;
 }
 
-// @symbol _ZN11SndRegTable13func_0201179cEiiis
 int SndRegTable::func_0201179c(int a1, int a2, int a3, short s1) {
     SndRegTable *reg = this;
     int i;
@@ -1210,7 +1125,6 @@ int SndRegTable::func_0201179c(int a1, int a2, int a3, short s1) {
     return 0;
 }
 
-// @symbol func_020116c4
 extern "C" int func_020116c4(char *c, int a1, int a2, int a3, int s0, short s1)
 {
     SndRegTable *reg = (SndRegTable *)c;
@@ -1229,7 +1143,6 @@ extern "C" int func_020116c4(char *c, int a1, int a2, int a3, int s0, short s1)
     return 0;
 }
 
-// @symbol func_02011698
 extern "C" void func_02011698(char *table, char *n)
 {
     SndRegTable *reg = (SndRegTable *)table;
@@ -1245,7 +1158,6 @@ extern "C" void func_02011698(char *table, char *n)
     }
 }
 
-// @symbol func_02011654
 extern "C" int func_02011654(char *table, char *n)
 {
     SndRegTable *reg = (SndRegTable *)table;
@@ -1266,7 +1178,6 @@ extern "C" int func_02011654(char *table, char *n)
 
 #pragma defer_codegen off
 
-// @symbol func_020132d8
 extern "C" void func_020132d8(void)
 {
     if (gSoundInitialized == 0)
@@ -1289,7 +1200,6 @@ extern "C" void func_020132d8(void)
     func_020119c8(&data_0209b53c);
 }
 
-// @symbol func_020133bc
 #pragma opt_propagation off
 extern "C" void func_020133bc(void)
 {
@@ -1297,14 +1207,14 @@ extern "C" void func_020133bc(void)
     func_0204f070();
     sSndHeap = (int)func_0205130c((u32)Memory::Allocate(0x100000), 0x100000);
     anim = data_0208e498;
-    func_0201a9fc(data_0209d574);
+    func_0201a9fc((char *)&data_0209d574);
     func_02050f34(&sSndArc, (int)anim, sSndHeap, 0);
-    func_0201a9fc(data_0209d574);
+    func_0201a9fc((char *)&data_0209d574);
     func_02052008(func_0203d974() == 0 ? sSndHeap : 0);
     if (func_0203d974() == 0) {
-        func_0201a9fc(data_0209d574);
+        func_0201a9fc((char *)&data_0209d574);
         func_020134d8((void *)1, (void *)sSndHeap);
-        func_0201a9fc(data_0209d574);
+        func_0201a9fc((char *)&data_0209d574);
     }
     func_0204f94c(&sMusicHandle);
     func_0204f94c(&sSubHandle);
@@ -1323,26 +1233,23 @@ extern "C" void func_020133bc(void)
 #pragma opt_propagation on
 #pragma defer_codegen on
 
-// @symbol func_02013524
 extern "C" void func_02013524(int a, int b, int c)
 {
     if (gSoundMuted != 0) {
         c = b = 0;
     }
-    NNS_SndPlayerMoveVolume(a, b, c);
+    NNS_SndPlayerMoveVolume((NNSSndHandle *)a, b, c);
 }
 
-// @symbol func_020134d8
 extern "C" int func_020134d8(void *a, void *b)
 {
-    int s = func_0201a9ec((int *)data_0209d574);
+    int s = func_0201a9ec((int *)&data_0209d574);
     int r = func_02051918((u32)a, (int)b);
-    func_0201a9fc(data_0209d574);
-    func_0201a96c((int *)data_0209d574, s);
+    func_0201a9fc((char *)&data_0209d574);
+    func_0201a96c(&data_0209d574, s);
     return r;
 }
 
-// @symbol func_020134c8
 extern "C" void func_020134c8(void)
 {
     /* arity split (banked): caller passes 0, def is (void) */

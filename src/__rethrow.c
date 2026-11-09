@@ -1,4 +1,3 @@
-// @symbol __rethrow
 // MSL C++ runtime rethrow entry. mwccarm emits `bl __rethrow` itself for a bare `throw;`
 // inside a catch block, same proof as __end__catch above: the probe object's undefined
 // symbol table carries __rethrow and the source never names it. The ROM's own rethrow

@@ -21,6 +21,15 @@ typedef struct {
     u32 d1c;     /* 0x1c */
 } BufT;
 
+/* NitroSDK WMPortSendCallback, the field read here: at 0x14 the callback
+ * WM_SetMPDataToPortEx was given, which ARM7 hands back with the result. */
+typedef struct WMPortSendCallback {
+    u16 apiid;        /* 0x00 */
+    u16 errcode;      /* 0x02 */
+    char _04[0x10];   /* 0x04 */
+    Handler callback; /* 0x14 */
+} WMPortSendCallback;
+
 extern void Crash(void);
 extern void MultiCopyHalf(const void *src, void *dst, s32 count);
 extern int WM_Finish(void);
@@ -52,15 +61,18 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
             if ((Handler)data_020a89ac->indCallback != 0)
                 ((Handler)data_020a89ac->indCallback)(msg);
         } else if (op == 0x82) {
-            if (data_020a89ac->portCallbackTable[msg[3]] != 0) {
-                *(void **)((char *)msg + 0x1c) = data_020a89ac->portCallbackArgument[msg[3]];
-                CP15::InvalidateDataCache(*(u32 *)(msg + 4), data_020a89ac->status->mp_recvBufSize);
-                ((Handler)data_020a89ac->portCallbackTable[msg[3]])(msg);
+            WMPortRecvCallback *recv = (WMPortRecvCallback *)msg;
+            if (data_020a89ac->portCallbackTable[recv->port] != 0) {
+                recv->arg = data_020a89ac->portCallbackArgument[recv->port];
+                CP15::InvalidateDataCache((u32)recv->recvBuf,
+                                          data_020a89ac->status->mp_recvBufSize);
+                ((Handler)data_020a89ac->portCallbackTable[recv->port])(msg);
             }
         } else if (op == 0x81) {
             msg[0] = 0xf;
-            if (*(Handler *)((char *)msg + 0x14) != 0)
-                (*(Handler *)((char *)msg + 0x14))(msg);
+            WMPortSendCallback *send = (WMPortSendCallback *)msg;
+            if (send->callback != 0)
+                send->callback(msg);
         }
     } else {
         if (op == 0xe) {

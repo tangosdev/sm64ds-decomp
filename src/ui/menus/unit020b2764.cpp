@@ -16,7 +16,7 @@
  * cache (func_ov007_020b3f20), builds the 0xa0-byte model record
  * (func_ov007_020bc6d4) and binds the animation sets to it.
  * func_ov007_020b283c releases those files and frees everything
- * func_ov007_020b2998 built. func_ov007_020b2764 sets the corner colours
+ * func_ov007_020b2998 built. FigureScene_SetScreenBlend sets the corner colours
  * of screenSprites[0] and [1] for a Q12 blend and fades [1]'s alpha with
  * it; the transition functions (func_ov007_020b10dc, func_ov007_020b166c,
  * func_ov007_020b1718) call it.
@@ -30,7 +30,7 @@
  * Edges: the .rodata tables of the four functions are interleaved, and one
  * unit's .rodata is contiguous: data_ov007_020ccc48 (func_ov007_020b283c,
  * func_ov007_020b2bd4) lies before data_ov007_020ccc50 and
- * data_ov007_020ccc5c (func_ov007_020b2764), and those before
+ * data_ov007_020ccc5c (FigureScene_SetScreenBlend), and those before
  * data_ov007_020ccc68 and data_ov007_020ccc80 (func_ov007_020b283c,
  * func_ov007_020b2bd4). func_ov007_020b2998 references no ov007 data; it is
  * the one caller of func_ov007_020b2bd4 and builds what func_ov007_020b283c
@@ -46,8 +46,10 @@
  *
  * The callees' declarations keep their definitions' spellings (most are
  * still one-function files taking ints and char *), so the typed values
- * are cast where they are handed over. The functions keep their ROM names
- * under C linkage.
+ * are cast where they are handed over. The functions keep C linkage.
+ * FigureScene_SetScreenBlend's name is coined from its body (the file has
+ * no struct of its own; FigureScene_ is coined from this banner); the
+ * other three keep their address names for now.
  */
 #include "types.h"
 #include "Ov007Sprite.h"
@@ -91,7 +93,6 @@ extern unsigned short func_ov007_020c3be0(int t, int a, int b);
 
 void func_ov007_020b283c(void);
 
-// @symbol func_ov007_020b2bd4
 /* Loads figure figureIndex's model at the given stroke stage and returns
  * its model record: the model file, the two sets of three animation files
  * bound with func_ov007_020bc6b4 and func_ov007_020bc5fc, and the overlay's
@@ -126,7 +127,6 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
     return model;
 }
 
-// @symbol func_ov007_020b2998
 /* Builds the scene for the work block's figureIndex (see the banner) and
  * sets modelReady. The three quads cover the screen at 256 x 256 pixels on
  * camera 1, each a little nearer than the last: [0] a corner-colour fill,
@@ -181,7 +181,6 @@ void func_ov007_020b2998(void) {
     WORK->modelReady = 1;
 }
 
-// @symbol func_ov007_020b283c
 /* Tears down what func_ov007_020b2998 built, if modelReady is set: releases
  * the files func_ov007_020b2bd4 loaded and frees the model, both figures
  * and the three quads. It indexes both animation tables by set; for set 2
@@ -189,19 +188,15 @@ void func_ov007_020b2998(void) {
  * the load used data_ov007_020ccc68[0]. */
 void func_ov007_020b283c(void) {
     int figureIndex;
-    /* 64-bit only for the register allocation: the ROM keeps set in its
-     * own register as a copy of figureIndex, and every int spelling tried
-     * (if/else, ?:, re-reading the work block, a work-block local) merges
-     * the two. */
-    long long set;
+    int set;
     int stage;
     int i;
 
     if (WORK->modelReady == 0)
         return;
     figureIndex = WORK->figureIndex;
-    set = figureIndex;
     stage = WORK->strokeStage[figureIndex];
+    set = figureIndex;
     if (figureIndex == 0 && stage == 0)
         set = 2;
     func_ov007_020b3edc(data_ov007_020ccc48[figureIndex]);
@@ -237,12 +232,11 @@ static inline int MulFx(int a, int b) {
     return (int)(((s64)a * b) >> 12);
 }
 
-// @symbol func_ov007_020b2764
 /* Blends the corner colours of screenSprites[0] and [1] from
  * data_ov007_020ccc50 (t = 0) to data_ov007_020ccc5c (t = 0x1000), and
  * fades [1]'s alpha along a curve: 31 (of 31) at either end, 16 at
  * t = 0x800. */
-void func_ov007_020b2764(int t) {
+void FigureScene_SetScreenBlend(int t) {
     int i;
     Ov007Sprite *sprite;
     int falling = 0x1000 - (t - 0x800) * 2;

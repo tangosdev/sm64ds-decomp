@@ -30,8 +30,8 @@
  *   spawn-height add.
  * - Actor 0xde is the bill, daKlr_c (g_profile_KILLER's id half reads
  *   0xde); Behavior hands it this launcher through daKlr_c::mLauncher.
- * - gCurrentSublevel (level id), data_0209caa0 (per-level flags) and
- *   data_0209f220 (star flag) keep linker names; IsStarCollectedInCurLevel
+ * - data_0209caa0 (per-level flags) keeps its linker name;
+ *   IsStarCollectedInCurLevel
  *   is a shared coined helper, naming belongs at its definition.
  * - Vec3_HorzDist / Vec3_HorzAngle stay local externs: their header copies
  *   live in unrelated leaf headers, not a shared home.
@@ -44,6 +44,7 @@
 #include "Sound.h"
 #include "daPly_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "SaveBlock.h"
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
@@ -80,7 +81,7 @@ extern void *data_ov079_02127f64[];
 
 extern s8 gCurrentSublevel;
 extern SaveBlock data_0209caa0;
-extern u8 data_0209f220;
+extern u8 gCurrentStarId;
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
@@ -91,11 +92,8 @@ extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
 #pragma defer_codegen off
 
-// @symbol _ZN18daObjBkKillerdai_cD1Ev
-// @symbol _ZN18daObjBkKillerdai_cD0Ev
 daObjBkKillerdai_c::~daObjBkKillerdai_c() {}
 
-// @symbol _ZN18daObjBkKillerdai_c4KillEv
 /* dustPos is stored memberwise; a Vector3 assignment does not match. */
 void daObjBkKillerdai_c::Kill() {
     Vector3 pos;
@@ -106,7 +104,7 @@ void daObjBkKillerdai_c::Kill() {
     pos.x = x;
     pos.y = y;
     pos.z = z;
-    Particle::System::NewSimple(0x8d, pos.x, pos.y, pos.z);
+    Particle::System::NewSimple(kPtclKillerDaiBreak, pos.x, pos.y, pos.z);
     dustPos.x = pos.x;
     dustPos.y = pos.y;
     dustPos.z = pos.z;
@@ -115,14 +113,12 @@ void daObjBkKillerdai_c::Kill() {
     MarkForDestruction();
 }
 
-// @symbol _ZN18daObjBkKillerdai_c15OnHitByMegaCharER7daPly_c
 void daObjBkKillerdai_c::OnHitByMegaChar(daPly_c &player) {
     player.IncMegaKillCount();
     KillByMegaChar(player);
     mAngleY = mPrevAngleY;
 }
 
-// @symbol _ZN18daObjBkKillerdai_c16CleanupResourcesEv
 s32 daObjBkKillerdai_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -133,13 +129,11 @@ s32 daObjBkKillerdai_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN18daObjBkKillerdai_c6RenderEv
 s32 daObjBkKillerdai_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN18daObjBkKillerdai_c8BehaviorEv
 /* mPosY is widened through a long long before the spawn-height add; a
  * plain add misses. */
 s32 daObjBkKillerdai_c::Behavior() {
@@ -167,7 +161,6 @@ s32 daObjBkKillerdai_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN18daObjBkKillerdai_c13InitResourcesEv
 s32 daObjBkKillerdai_c::InitResources() {
     void *file;
     s8 course;
@@ -191,7 +184,7 @@ s32 daObjBkKillerdai_c::InitResources() {
             return 0;
     }
     if (course == 7) {
-        if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
+        if (gCurrentStarId == 1 || IsStarCollectedInCurLevel(1) == 0) {
             if (mPosY >= 0xdac000)
                 return 0;
         }
@@ -199,7 +192,6 @@ s32 daObjBkKillerdai_c::InitResources() {
     return 1;
 }
 
-// @symbol daObjBkKillerdai_c_classInit
 extern "C" daObjBkKillerdai_c *daObjBkKillerdai_c_classInit() {
     return new daObjBkKillerdai_c();
 }

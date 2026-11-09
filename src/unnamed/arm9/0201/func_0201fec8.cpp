@@ -1,10 +1,12 @@
 //cpp
+#include "private/watchdog_alarm.h"
+
 /* Link start. This is the only writer of data_0209e64c. The actor RNG
    data_0209e650 is the next bss word, so the seed lives here. Actors only
    read it. */
 extern "C" {
 extern unsigned char data_0209e64c;
-extern char data_0209d574[];
+extern struct WatchdogAlarm data_0209d574;
 extern unsigned char data_0208f274;
 extern char data_02075358[];
 extern const char data_020752cc[28];
@@ -17,14 +19,14 @@ extern void OS_GetOwnerInfo(unsigned char *dst);
 extern void func_0203db64(char *a, char *b);
 extern int func_0203daac(void);
 extern void func_0201a9fc(char *c);
-extern unsigned char func_0201a96c(char *self, unsigned char newVal);
+extern unsigned char func_0201a96c(struct WatchdogAlarm *context, int suspended);
 
 void func_0201fec8(void)
 {
     unsigned char buf[0x50];
     unsigned char saved;
     if (data_0209e64c != 0) return;
-    saved = func_0201a9ec(data_0209d574);
+    saved = func_0201a9ec((char *)&data_0209d574);
     OS_GetOwnerInfo(buf);
     switch (buf[0]) {
     case 2:
@@ -44,8 +46,8 @@ void func_0201fec8(void)
         break;
     }
     data_0208f274 = func_0203daac();
-    func_0201a9fc(data_0209d574);
-    func_0201a96c(data_0209d574, saved);
+    func_0201a9fc((char *)&data_0209d574);
+    func_0201a96c(&data_0209d574, saved);
     data_0209e64c = 1;
 }
 }

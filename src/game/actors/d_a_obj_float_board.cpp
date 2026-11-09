@@ -14,7 +14,6 @@
  * names them.
  *
  * Clip bounds use the out-of-line dBgW::SetClipRadius member.
- * What stays: sine table data_02082214 (arm9).
  * What stays: Behavior bumps mBobPhase through ctr, then reads it back as
  *   *(unsigned short *)&mBobPhase -- the reload the ROM does after the
  *   store.
@@ -33,23 +32,19 @@
 #include "math/CalcLib.h"
 #include "cstd.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* local extern: no shared header declares these. */
 extern "C" {
 extern s8 gCurrentSublevel;   /* current stage id */
 extern int data_0209f32c;     /* the stage water's global height (written by d_a_obj_wc_mizu) */
-extern short data_02082214[]; /* sin/cos table */
 
 int SurfaceInfo_TestFlag0x20(int *p);
 
 /* Stores into the mesh collider's two callback slots (+0x1c / +0x18 of the
    embedded dBgW; the +0x0c store is dBgW::SetClipRadius). */
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
-// @symbol _ZN17daObjFloatBoard_cD0Ev
-// @symbol _ZN17daObjFloatBoard_cD1Ev
 /* ROM ordinals 0 and 1 -- ov002 0x020b5a18 (D0, 0x58) and 0x020b5a70 (D1,
  * 0x44). No source here: both destructor variants come from the ONE
  * inline body in include/daObjFloatBoard_c.h, which the class's descendants need
@@ -77,7 +72,6 @@ void daObjFloatBoard_c_EmitDestructor(daObjFloatBoard_c *p) {
  * writes the surface height to mWaterY: on stage 0x15 from the class's own
  * fallback level, otherwise from a downward water raycast. Reached only from
  * this TU's Behavior. */
-// @symbol _ZN17daObjFloatBoard_c12UpdateWaterYEv
 int daObjFloatBoard_c::UpdateWaterY() {
     if (gCurrentSublevel == 0x15) {
         s32 fallback = mFallbackWaterY;
@@ -113,7 +107,6 @@ int daObjFloatBoard_c::UpdateWaterY() {
 /* ROM ordinal 3 -- ov002 0x020b5b98. Writes the model matrix from the actor's
  * Euler angles and its translation row from the position >> 3. Also called
  * from InitResourcesFrom below. */
-// @symbol _ZN17daObjFloatBoard_c17UpdateModelMatrixEv
 void daObjFloatBoard_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationZXYExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.m[9] = mPosX >> 3;
@@ -128,7 +121,6 @@ void daObjFloatBoard_c::UpdateModelMatrix() {
  * mFileTable is reloaded between the two Release() calls because the ROM
  * reloads it -- Release() can move it, so the second index must come from a
  * fresh read. */
-// @symbol _ZN17daObjFloatBoard_c16CleanupResourcesEv
 int daObjFloatBoard_c::CleanupResources() {
     daObjFloatBoard_c_Resources *files;
 
@@ -144,7 +136,6 @@ int daObjFloatBoard_c::CleanupResources() {
 
 /* ROM ordinal 5 -- vtable slot 9, ov002 0x020b5c24. Dispatches through
  * dBgActor_c's own mModel (0xd4), as every sibling in this series does. */
-// @symbol _ZN17daObjFloatBoard_c6RenderEv
 s32 daObjFloatBoard_c::Render() {
     mModel.Render(0);
     return 1;
@@ -156,14 +147,12 @@ s32 daObjFloatBoard_c::Render() {
  * reload two lines later goes through a separate `char *` base. Collapsing
  * them to one member access lets mwcc reuse the loaded value instead of
  * reloading it, which the ROM does not. */
-// @symbol _ZN17daObjFloatBoard_c8BehaviorEv
 int daObjFloatBoard_c::Behavior() {
     Vector3 tpos;
     int dist;
     short atanRes;
     short angleDiff;
-    int j;
-    short s, co, tv;
+    short s, co;
     short val1, val2;
 
     mMeshCollider.SetClipRadius(0x300000);
@@ -173,9 +162,7 @@ int daObjFloatBoard_c::Behavior() {
             short *ctr = &mBobPhase;
             short cval = *ctr;
             *ctr = (short)(cval + 0xa00);
-            j = (*(unsigned short *)&mBobPhase >> 4) * 2;
-            tv = data_02082214[j];
-            mBobOffset = 10 * tv;
+            mBobOffset = 10 * FX_SinIdx(*(unsigned short *)&mBobPhase >> 4);
         }
 
         if (mRider == 0) {
@@ -192,9 +179,8 @@ int daObjFloatBoard_c::Behavior() {
             dist = Vec3_HorzDist(&mPos, &tpos) >> 0xc;
             atanRes = cstd::atan2(mPosX - tpos.x, mPosZ - tpos.z);
             angleDiff = atanRes - mAngleY;
-            j = ((u16)angleDiff >> 4) * 2;
-            s = data_02082214[j];
-            co = data_02082214[j + 1];
+            s = FX_SinIdx((u16)angleDiff >> 4);
+            co = FX_CosIdx((u16)angleDiff >> 4);
             val1 = (short)((-dist * co) / 2200);
             val2 = (short)((dist * s) / 1500);
         }
@@ -224,7 +210,6 @@ int daObjFloatBoard_c::Behavior() {
  * Loads the model, wires the mesh collider (StoodOnCallback below plus the
  * stock dBgW position updater), and seeds the rest pose, water level and
  * rider state. */
-// @symbol _ZN17daObjFloatBoard_c17InitResourcesFromEP27daObjFloatBoard_c_Resources
 int daObjFloatBoard_c::InitResourcesFrom(daObjFloatBoard_c_Resources *fp) {
     Vector3 v;
     BMD_File *bmd;
@@ -238,8 +223,8 @@ int daObjFloatBoard_c::InitResourcesFrom(daObjFloatBoard_c_Resources *fp) {
     UpdateClsnPosAndRot();
     kcl = (KCL_File *)dBgW_Kc::LoadFile(*fp->collision);
     mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *fp->clps);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosAndAngs);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
 
     mSinkOffset = 0;
     mBobOffset = 0;
@@ -274,7 +259,6 @@ int daObjFloatBoard_c::InitResourcesFrom(daObjFloatBoard_c_Resources *fp) {
  * touching actor is the daPly_c (actorID 0xbf) it becomes mRider and the
  * timeout reloads to 5. The `eq` staging is load-bearing: `if (actorID ==
  * 0xbf)` folds to a 0x1c body; the ROM's 0x28 keeps the widened bool. */
-// @symbol _ZN17daObjFloatBoard_c9OnStoodOnEP8dActor_c
 void daObjFloatBoard_c::OnStoodOn(dActor_c *rider) {
     enum Bool { FALSE, TRUE };
     unsigned short t = rider->actorID;
@@ -290,7 +274,6 @@ void daObjFloatBoard_c::OnStoodOn(dActor_c *rider) {
  * argument, which the real callback does not take. A static member: its
  * address is stored as a raw callback word, which a static member's address
  * is. */
-// @symbol _ZN17daObjFloatBoard_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 void daObjFloatBoard_c::StoodOnCallback(dBgW *collider, dActor_c *board, dActor_c *other) {
     static_cast<daObjFloatBoard_c *>(board)->OnStoodOn(other);
 }

@@ -30,9 +30,11 @@ enum dScMgCup_c_AssetId {
 #include "types.h"
 #include "decl_common.h"
 #include "OamAttr.h"
+#include "nitro/gx/gxcommon.h"
 #include "SpawnInfo.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 
 /* sCupRoundTable: swap count, then two speed-row nibbles.
@@ -112,7 +114,6 @@ extern void FreeGfxSlotsById(int arg);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void CupFx_MoveForCup(char *p, int key, int a, int b);
 extern int CupFx_Spawn(char *c, int a, int b, int d, signed char e);
-extern short data_02082214[];
 struct CupShuffleOffset {
     s8 x, y;
 };
@@ -131,7 +132,7 @@ extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern int data_0208ee44;
 extern int Presenter_Load(char *);
-extern unsigned int LoadCompressedFileAt(int, int);
+extern unsigned int LoadCompressedFileAt(int, void *);
 extern void *LoadFile(int);
 void __cxa_vec_ctor(void *base, unsigned int count, unsigned int stride, void *ctor, void *dtor);
 void Cup_Nothing(void);
@@ -141,13 +142,12 @@ void func_0203d738(void);
 #pragma defer_codegen off
 /* Emit each function as it is read, so D1 lands ahead of D0. */
 
-// @symbol _ZN10dScMgCup_cD1Ev
 /* Reverse of the factory: cups, effects, then the model, which the
    compiler destroys as a member. The tracker and the base chain are the
    inlined dScMgSingle3DBase_c destructor. */
 dScMgCup_c::~dScMgCup_c() {
-    __cxa_vec_cleanup(mCup, 3, 8, (void *)NullDestructor_0203d47c);
-    __cxa_vec_cleanup(mFx, 0x20, 0x18, (void *)CupFx_ElemDtor);
+    __cxa_vec_cleanup(mCup, 3, 8, (dtor_t)(void *)NullDestructor_0203d47c);
+    __cxa_vec_cleanup(mFx, 0x20, 0x18, (dtor_t)(void *)CupFx_ElemDtor);
 }
 
 extern "C" void CupFx_ElemDtor(void) {}
@@ -287,25 +287,24 @@ extern "C" void Cup_PlayAnimSound(char *raw, int anim, int frame, int cup) {
 }
 
 extern "C" void Cup_DrawOamList(int scene, void *list, int x, int y, int scale, int cupContent) {
-    OamAttr *entry;
+    GXOamAttr *entry;
     int content;
     int screenX;
     int screenY;
 
-    entry = (OamAttr *)list;
+    entry = (GXOamAttr *)list;
     screenX = x >> 12;
     screenY = y >> 12;
     content = cupContent;
     scale = func_02053200(scale);
 
     for (;;) {
-        int spriteEntry = Mg_RenderSubSpriteScaled((int)entry, screenX, screenY, -1, -1, scale, 0);
-        if (spriteEntry != 0) {
+        GXOamAttr *oam =
+            (GXOamAttr *)Mg_RenderSubSpriteScaled((int)entry, screenX, screenY, -1, -1, scale, 0);
+        if (oam != 0) {
             if (content == 2) {
-                /* Loaded as one word; the shifts keep attr2 bits 12..15, the palette. */
-                if ((unsigned)(*(int *)((char *)entry + 4) << 0x10) >> 0x1c == 3) {
-                    int *attributes = (int *)(spriteEntry + 4);
-                    *attributes = (*attributes & ~0xf000) | 0x4000;
+                if (entry->cParam == 3) {
+                    oam->cParam = 4;
                 }
             }
         }
@@ -426,10 +425,8 @@ extern "C" void Cup_PickShuffleSpeed(char *raw) {
     }
 }
 
-// @symbol _ZN10dScMgCup_c9StateIdleEv
 void dScMgCup_c::StateIdle() {}
 
-// @symbol _ZN10dScMgCup_c11StateFinishEv
 void dScMgCup_c::StateFinish() {
     mTimer -= 1;
     if (mTimer > 0)
@@ -451,7 +448,6 @@ void dScMgCup_c::StateFinish() {
     }
 }
 
-// @symbol _ZN10dScMgCup_c11StateResultEv
 void dScMgCup_c::StateResult() {
     int score;
     int i;
@@ -486,7 +482,6 @@ void dScMgCup_c::StateResult() {
     mPromptEnabled = 0;
 }
 
-// @symbol _ZN10dScMgCup_c11StateSelectEv
 void dScMgCup_c::StateSelect() {
     char *raw = (char *)this;
     int touchPressed = 0;
@@ -536,7 +531,6 @@ void dScMgCup_c::StateSelect() {
     }
 }
 
-// @symbol _ZN10dScMgCup_c17StateWaitForInputEv
 void dScMgCup_c::StateWaitForInput() {
     mTimer -= 1;
     if (mTimer > 0)
@@ -545,7 +539,6 @@ void dScMgCup_c::StateWaitForInput() {
     mState = 4;
 }
 
-// @symbol _ZN10dScMgCup_c12StateShuffleEv
 void dScMgCup_c::StateShuffle() {
     char *raw = (char *)this;
     int oldX, oldY;
@@ -572,15 +565,14 @@ void dScMgCup_c::StateShuffle() {
 
     {
         int slot = mCupAtSlot[mSwapSlotA];
-        int cosine = data_02082214[(mShuffleAngle >> 4) * 2 + 1];
+        int cosine = FX_CosIdx(mShuffleAngle >> 4);
         oldX = mCup[slot].x;
         oldY = mCup[slot].y;
         mCup[slot].x = mMidX - FX_MUL(cosine, mHalfX);
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
-        mCup[slot].y =
-            mMidY - (int)((data_02082214[(mShuffleAngle >> 4) * 2] * 0x14000LL + 0x800) >> 12);
+        mCup[slot].y = mMidY - FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
     }
     {
         int slot = mCupAtSlot[mSwapSlotA];
@@ -593,15 +585,14 @@ void dScMgCup_c::StateShuffle() {
 
     {
         int slot = mCupAtSlot[mSwapSlotB];
-        int cosine = data_02082214[(mShuffleAngle >> 4) * 2 + 1];
+        int cosine = FX_CosIdx(mShuffleAngle >> 4);
         oldX = mCup[slot].x;
         oldY = mCup[slot].y;
         mCup[slot].x = mMidX + FX_MUL(cosine, mHalfX);
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
-        mCup[slot].y =
-            mMidY + (int)((data_02082214[(mShuffleAngle >> 4) * 2] * 0x14000LL + 0x800) >> 12);
+        mCup[slot].y = mMidY + FX_MUL(FX_SinIdx(mShuffleAngle >> 4), 0x14000);
     }
     {
         int slot = mCupAtSlot[mSwapSlotB];
@@ -698,7 +689,6 @@ void dScMgCup_c::StateShuffle() {
     mTimer += 1;
 }
 
-// @symbol _ZN10dScMgCup_c19StatePrepareShuffleEv
 void dScMgCup_c::StatePrepareShuffle() {
     char *raw = (char *)this;
     int *countdown = &mTimer;
@@ -713,7 +703,6 @@ void dScMgCup_c::StatePrepareShuffle() {
     mState = 2;
 }
 
-// @symbol _ZN10dScMgCup_c10StateSetupEv
 void dScMgCup_c::StateSetup() {
     int cupIndex;
     int score;
@@ -774,7 +763,6 @@ void dScMgCup_c::StateSetup() {
     }
 }
 
-// @symbol _ZN10dScMgCup_c11OnNewRecordEv
 /* Slot 20: the win animation on mModel. */
 void dScMgCup_c::OnNewRecord() {
     Presenter_PlayCheer(&mModel);
@@ -832,7 +820,6 @@ void dScMgCup_c::StartRound(int msg) {
     Mg_ShowBanner(0xd, 0x80, 0xa0, 1, -1, 0xd);
 }
 
-// @symbol _ZN10dScMgCup_c6RenderEv
 /* Slot 9: submits cups in descending screen-y order. The animation frame
  * index follows draw order, while position/content follow the cup index. */
 s32 dScMgCup_c::Render() {
@@ -878,7 +865,6 @@ s32 dScMgCup_c::Render() {
     return 1;
 }
 
-// @symbol _ZN10dScMgCup_c8BehaviorEv
 /* Slot 6: runs the current state, then advances each cup's animation
    according to the duration stored in its current frame. */
 s32 dScMgCup_c::Behavior() {
@@ -902,7 +888,6 @@ s32 dScMgCup_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN10dScMgCup_c13InitResourcesEv
 /* Slot 0: sets up the sub-screen backgrounds, loads the board graphics,
    places the three cups and starts a game through StartRound(3). */
 s32 dScMgCup_c::InitResources() {
@@ -932,13 +917,14 @@ s32 dScMgCup_c::InitResources() {
 
     gSubScreenLayers |= 4;
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP_NCG_BIN, G2S::GetBG2CharPtr() + 0x4000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP_NCG_BIN,
+                         (void *)((char *)G2S::GetBG2CharPtr() + 0x4000));
     file = LoadFile(ASSET_D_2D_MG_BG_CUP_NCL_BIN);
     GXS::LoadBGPltt(file, 0x60, 0x1a0);
     Deallocate(file);
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_2_NSC_BIN, G2S::GetBG0ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_1_NSC_BIN, G2S::GetBG2ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_CUP_NCG_BIN, 0x6600000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_2_NSC_BIN, (void *)G2S::GetBG0ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_1_NSC_BIN, (void *)G2S::GetBG2ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_CUP_NCG_BIN, (void *)0x6600000);
     file = LoadFile(ASSET_D_2D_MG_CUP_NCL_BIN);
     GXS::LoadOBJPltt(file, 0, 0xa0);
     Deallocate(file);
@@ -968,19 +954,17 @@ s32 dScMgCup_c::InitResources() {
     return 1;
 }
 /* The constructor is inline, so the factory below holds it: the base
-   constructors, mSysTracker and mModel are the compiler's, then the two
+   constructors, mParticle and mModel are the compiler's, then the two
    arrays of element records. */
 inline dScMgCup_c::dScMgCup_c() {
     __cxa_vec_ctor(mFx, 0x20, 0x18, (void *)Cup_Nothing, (void *)CupFx_ElemDtor);
     __cxa_vec_ctor(mCup, 3, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
 }
 
-// @symbol dScMgCup_c_classInit
 extern "C" void *dScMgCup_c_classInit() {
     return new dScMgCup_c;
 }
 
-// @symbol Cup_Nothing
 extern "C" void Cup_Nothing() {}
 
 /* Static-init globals (was the handwritten __sinit_ov006_021303d0 shard).

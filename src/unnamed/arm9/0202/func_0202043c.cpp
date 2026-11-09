@@ -5,10 +5,10 @@
  * d_s_stage_methods.cpp. The object is deadstripped: the initializer never
  * references it, and a .bss byte after Timer.cpp would shift every later symbol.
  */
-extern "C" int func_0202044c(int a, int b);
+extern "C" int func_0202044c(char *a, int b);
 
-extern "C" int func_0202043c(int a) {
-    return func_0202044c(a, 0);
+extern "C" int func_0202043c(void *a) {
+    return func_0202044c((char *)a, 0);
 }
 
 struct OamRestartInit {

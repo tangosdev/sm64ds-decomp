@@ -29,13 +29,11 @@ extern void *func_02043fdc(void *list);
 }
 
 /* If this node is the one currently executing, clear that pointer. */
-// @symbol _ZN11fLiNdBaPr_cD1Ev
 fLiNdBaPr_c::~fLiNdBaPr_c() {
     if (data_020a4b68 == this)
         data_020a4b68 = 0;
 }
 
-// @symbol _ZN9fLiNdBa_cD1Ev
 fLiNdBa_c::~fLiNdBa_c() {
     if (data_020a4b68 == this)
         data_020a4b68 = 0;
@@ -99,7 +97,6 @@ ProcessList data_020a4ba8(data_02099f50);
 
 /* One frame: walk each process list, recording the phase number in
  * data_02099f24 while it runs. */
-// @symbol func_02044120
 extern "C" void func_02044120(void) {
     data_02099f24 = 4;
     func_02043fdc(&data_020a4ba8);
@@ -116,7 +113,6 @@ extern "C" void func_02044120(void) {
 
 /* Table entry for frame-loop phase i (data_02099f24). The crash screen
  * prints it. */
-// @symbol func_020441bc
 extern "C" int func_020441bc(int i) {
     return data_02082178[i];
 }
@@ -128,7 +124,6 @@ extern "C" fBase_c::SceneNode *func_0203b394(fBase_c::SceneNode *node);
 
 /* Walk a tree list, calling the descriptor's callback on each owner.
  * Unlike func_02043fdc, it does not set data_020a4b68. */
-// @symbol _ZN11ProcessTree5Thing13func_020441ccEv
 void *Thing::func_020441cc() {
     Node *node;
     if (this->callback == 0)
@@ -168,7 +163,6 @@ struct LifecycleSequence {
 extern "C" int func_02044284(LifecycleSequence *self, int flag);
 
 /* Step a pending sequence once. Returns 0 while it is still pending. */
-// @symbol func_0204424c
 extern "C" int func_0204424c(char *c) {
     LifecycleSequence *self = (LifecycleSequence *)c;
     if (self->state == 1)
@@ -180,7 +174,6 @@ extern "C" int func_0204424c(char *c) {
 
 /* Run table entries from idx while each returns state 2. With flag == 0,
  * run at most one. */
-// @symbol func_02044284
 extern "C" int func_02044284(LifecycleSequence *self, int flag) {
     void **arr = self->arr;
     s16 i;
@@ -205,7 +198,6 @@ extern "C" int func_02044284(LifecycleSequence *self, int flag) {
 
 /* Drain a started sequence: call slot 3 on each entry already run, newest
  * first. */
-// @symbol func_02044334
 extern "C" void func_02044334(LifecycleSequence *self) {
     if (self->arr == 0)
         return;

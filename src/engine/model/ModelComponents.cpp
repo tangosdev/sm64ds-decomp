@@ -45,22 +45,30 @@
  *   Vector3 argument is Render's scale (data_02099f88, {1.0, 1.0, 1.0}, when
  *   null), read through a VecFx32 view.
  * - func_02045074 and func_020453c0 take the BMD file bone (BMD_Bone) and
- *   read it through the local Node / short views; BMD_Bone does not name the
- *   id and the parent/child/sibling offsets yet.
- * - func_02044b30's buf[] is block-copied from data_02099f94 (the ROM's
- *   +0x284 load relocates against the table, so an init-list's anonymous
- *   .rodata would be a WRONG-DEST); the void*+int site takes the char* cast
- *   C++ requires.
+ *   read it through the local Node view (0x40 bytes, BMD_Bone's stride, so
+ *   the child/sibling slots fa/fc step it as `n + n->fa`); BMD_Bone does not
+ *   name the id and the parent/child/sibling offsets yet.
+ * - func_020453c0 passes func_0204547c the bone's BCA_File track record; the
+ *   int casts at that call fit the local extern's spelling, which is a banked
+ *   declaration disagreement with the Ctx/Src definition.
+ * - func_02044b30's halfSizes[] is block-copied from data_02099f94 (the
+ *   ROM's +0x284 load relocates against the table, so an init-list's
+ *   anonymous .rodata would be a WRONG-DEST), and it reads materials through
+ *   the local MaterialState: dExtModel_c.h types the pointer as the file's
+ *   BMD_Material, whose layout the runtime record does not share.
  * - Render passes func_02044b30 the material index it already holds in r1,
  *   so the call emits no argument move.
  * - func_02044534's z-prefixed zero temps and the two/three constants keep the
  *   ROM's register schedule; the compact human form does not emit them.
  */
+#include "BCA_File.h"
 #include "dExtModel_c.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
+#include "nitro/gx/g3imm.h"
 
 namespace CP15 {
 void FlushDataCache(void);
@@ -73,7 +81,7 @@ struct Sub {
     unsigned short *halfs;
     unsigned short *ranges; /* +8: {count, first} pairs, one per BMD_File::numWeightedMatrices
                                matrix (func_02044dc4) */
-    char *blk;
+    Matrix4x3 *blk;
 };
 
 struct Node {
@@ -82,6 +90,7 @@ struct Node {
     int f10, f14, f18;
     u16 f1c, f1e, f20; s16 f22;
     int f24, f28, f2c;
+    u8 pad_30[0x10];
 };
 
 
@@ -99,15 +108,45 @@ struct MeshEntry {
 };
 struct Matrix3x3_Vecs { struct Vector3 v0, v1, v2; };
 
+/* The 0x30-byte runtime material ModelComponents::materials points at.
+   func_020462d0 (Model4.cpp) builds one from each file BMD_Material, so the
+   layout is not BMD_Material's: dExtModel_c.h types the pointer as the file
+   record, and func_02046bbc reads the same record as its MaterialState. The
+   texture SRT words at 0x08..0x18 are the ones func_020469e8 (BTA) animates. */
+struct MaterialState {
+    u32 textureId;     /* 0x00 - index into BMD_File::textures */
+    u32 paletteId;     /* 0x04 - index into BMD_File::palettes */
+    fx32 texScaleS;    /* 0x08 */
+    fx32 texScaleT;    /* 0x0c */
+    u16 texRotation;   /* 0x10 - 4096 to the turn */
+    u16 pad_12;        /* 0x12 */
+    fx32 texTransS;    /* 0x14 */
+    fx32 texTransT;    /* 0x18 */
+    u32 texImageParam; /* 0x1c - the file's word ORed with the texture's flags */
+    u32 texPlttBase;   /* 0x20 */
+    u32 polygonAttr;   /* 0x24 - bit 31 hides the material (Render) */
+    u32 difAmb;        /* 0x28 */
+    u32 speEmi;        /* 0x2c */
+};
+
+/* NitroSDK's geometry-engine ports (ioreg_G3.h) and the matrix mode
+   func_02044b30 selects. */
+#define reg_G3_MTX_MODE (*(volatile u32 *)0x04000440)
+#define reg_G3_TEXCOORD (*(volatile u32 *)0x04000488)
+#define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
+#define reg_G3_DIF_AMB (*(volatile u32 *)0x040004c0)
+#define reg_G3_SPE_EMI (*(volatile u32 *)0x040004c4)
+#define GX_MTXMODE_TEXTURE 3
+
 extern "C" {
 void Matrix4x3_LoadIdentity(Matrix4x3 *mat);
 int InvMat4x3(const Matrix4x3 *a, Matrix4x3 *b);
 
-void func_02048234(int *out, int sa, int sb, int sc, int ax, int ay, int az, int tx, int ty, int tz);
+void func_02048234(int *out, int sa, int sb, int sc, u16 ax, u16 ay, u16 az, int tx, int ty,
+                   int tz);
 void func_02047218(void *a, void *b, void *out, fx32 c);
 void func_02047910(int *m0, int *m1, int *dst, int t);
 void func_0204547c(int *a, int b, int c, void *elem);
-extern s16 data_02082214[];
 void func_020527e8(Mtx43 *m, int x, int y, int z);
 void NormalizeVec3(const Vector3 *a, Vector3 *b);
 void func_020458a8(void *src, void *dst);
@@ -132,30 +171,27 @@ void func_02055998(int *n);
 void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength);
 }
 
-// @symbol _ZN15ModelComponents13func_020453c0EP8BMD_BoneP8BCA_Filei
 /* Bone-tree walk at 0x020453c0. UpdateBones forwards here. Samples each
  * bone's pose with func_0204547c (which stays out) from the model's
  * animation, or from the bone's own override once one is met, ORs in the
  * parent's scaled flag, and recurses on the node's child and sibling slots. */
 void ModelComponents::func_020453c0(BMD_Bone *fileBone, BCA_File *file, int frame) {
-    short *node = (short *)fileBone;
-    int idx = node[0];
+    struct Node *node = (struct Node *)fileBone;
+    int idx = node->f0;
     ModelBone *bone = &bones[idx];
-    int *anim = (int *)file;
+    BCA_File *anim = file;
     if (bone->anim != 0) {
-        anim = (int *)bone->anim;
+        anim = bone->anim;
         frame = bone->animFrame;
     }
-    int mla = idx * 0x24 + anim[5];
-    func_0204547c(anim, mla, frame, bone);
-    bone->scaled |= bone[node[4]].scaled;
-    if (node[5] != 0)
-        func_020453c0((BMD_Bone *)((char *)node + (node[5] << 6)), (BCA_File *)anim, frame);
-    if (node[6] != 0)
-        func_020453c0((BMD_Bone *)((char *)node + (node[6] << 6)), (BCA_File *)anim, frame);
+    func_0204547c((int *)anim, (int)&anim->boneTracks[idx], frame, bone);
+    bone->scaled |= bone[node->f8].scaled;
+    if (node->fa != 0)
+        func_020453c0(fileBone + node->fa, anim, frame);
+    if (node->fc != 0)
+        func_020453c0(fileBone + node->fc, anim, frame);
 }
 
-// @symbol _ZN15ModelComponents11UpdateBonesEP8BCA_Filei
 /* ModelComponents::UpdateBones(BCA_File*, int) at 0x02045394 -- apply a bone
  * animation frame. Forwards to func_020453c0 with this, the BMD bone table
  * (modelFile->bones), the BCA file, and the frame index. */
@@ -164,47 +200,31 @@ void ModelComponents::UpdateBones(BCA_File *file, int frame)
     func_020453c0(modelFile->bones, file, frame);
 }
 
-// @symbol func_0204531c
 extern "C" {
 void func_0204531c(char *self, int arg)
 {
+    ModelComponents *mc = (ModelComponents *)self;
     unsigned int i;
-    int a;
-    int off;
-    int save = *(int *)(self + 0xc);
-    a = *(int *)(self + 0x10);
+    Matrix4x3 *save = mc->transforms;
+    Matrix4x3 *blend = mc->blendTransforms;
 
-    *(int *)(self + 0xc) = a;
-    ((ModelComponents *)self)->UpdateVertsUsingBones();
-    *(int *)(self + 0xc) = save;
+    mc->transforms = blend;
+    mc->UpdateVertsUsingBones();
+    mc->transforms = save;
 
-    i = 0;
-    if (i >= *(unsigned int *)(*(int *)self + 4))
-        return;
-
-    off = i;
-    do {
-        func_02047910((int *)(*(int *)(self + 0xc) + off), (int *)a, (int *)(*(int *)(self + 0xc) + off), arg);
-        i++;
-        off += 0x30;
-        a += 0x30;
-    } while (i < *(unsigned int *)(*(int *)self + 4));
+    for (i = 0; i < mc->modelFile->numBones; i++)
+        func_02047910((int *)&mc->transforms[i], (int *)&blend[i], (int *)&mc->transforms[i], arg);
 }
 }
 
-// @symbol func_02045178
 extern "C" {
 void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
-    s16 *t = data_02082214;
-    int ia = ax >> 4;
-    int ib = ay >> 4;
-    int ic = az >> 4;
-    int a0 = t[ia * 2];
-    int a1 = t[ia * 2 + 1];
-    int b0 = t[ib * 2];
-    int b1 = t[ib * 2 + 1];
-    int c0 = t[ic * 2];
-    int c1 = t[ic * 2 + 1];
+    int a0 = FX_SinIdx(ax >> 4);
+    int a1 = FX_CosIdx(ax >> 4);
+    int b0 = FX_SinIdx(ay >> 4);
+    int b1 = FX_CosIdx(ay >> 4);
+    int c0 = FX_SinIdx(az >> 4);
+    int c1 = FX_CosIdx(az >> 4);
     int p00 = (int)(((s64)a0 * c0) >> 12);
     int p11 = (int)(((s64)a1 * c1) >> 12);
     int p01 = (int)(((s64)a0 * c1) >> 12);
@@ -225,7 +245,6 @@ void func_02045178(int *out, int ax, int ay, int az, int tx, int ty, int tz) {
 }
 }
 
-// @symbol _ZN15ModelComponents13func_02045074EP8BMD_Bone
 void ModelComponents::func_02045074(BMD_Bone *fileBone) {
     struct Node *n = (struct Node *)fileBone;
     int m[12];
@@ -240,12 +259,11 @@ void ModelComponents::func_02045074(BMD_Bone *fileBone) {
     }
     MulMat4x3Mat4x3((Matrix4x3 *)m, &transforms[a + n->f8], &transforms[a]);
     if (n->fa != 0)
-        func_02045074((BMD_Bone *)((char *)n + n->fa * 0x40));
+        func_02045074((BMD_Bone *)(n + n->fa));
     if (n->fc != 0)
-        func_02045074((BMD_Bone *)((char *)n + n->fc * 0x40));
+        func_02045074((BMD_Bone *)(n + n->fc));
 }
 
-// @symbol _ZN15ModelComponents21UpdateVertsUsingBonesEv
 /* ModelComponents::UpdateVertsUsingBones() at 0x0204504c -- reset the per-bone
  * transform array to identity, then rebuild vertex positions from the BMD
  * bone list via func_02045074. The bones pointer passed to the helper is
@@ -256,55 +274,42 @@ void ModelComponents::UpdateVertsUsingBones()
     func_02045074(modelFile->bones);
 }
 
-// @symbol func_02044f74
 extern "C" {
 void func_02044f74(void *g, struct Node *n)
 {
     int m[12];
     int a = n->f0;
-    func_02048234(m,
-        n->f10, n->f14, n->f18,
-        ((unsigned)n->f1c << 20) >> 16,
-        ((unsigned)n->f1e << 20) >> 16,
-        ((unsigned)n->f20 << 20) >> 16,
-        n->f24, n->f28, n->f2c);
+    func_02048234(m, n->f10, n->f14, n->f18, (u16)((unsigned)n->f1c << 4),
+                  (u16)((unsigned)n->f1e << 4), (u16)((unsigned)n->f20 << 4), n->f24, n->f28,
+                  n->f2c);
     {
         int *base = *(int **)((char *)g + 0x34);
         int t = base[3];
         MulMat4x3Mat4x3((Matrix4x3 *)m, (const Matrix4x3 *)((a + n->f8) * 0x30 + t),
                         (Matrix4x3 *)((s16)a * 0x30 + t));
     }
-    if (n->fa != 0) func_02044f74(g, (struct Node *)((char *)n + n->fa * 0x40));
-    if (n->fc != 0) func_02044f74(g, (struct Node *)((char *)n + n->fc * 0x40));
+    if (n->fa != 0)
+        func_02044f74(g, n + n->fa);
+    if (n->fc != 0)
+        func_02044f74(g, n + n->fc);
 }
 }
 
-// @symbol func_02044efc
 extern "C" {
 void func_02044efc(BMD_File *self) {
     if (!self->numWeightedMatrices)
         return;
-    Matrix4x3 *matrices = (Matrix4x3 *)((struct Sub *)self->skin)->blk;
+    Matrix4x3 *matrices = ((struct Sub *)self->skin)->blk;
     Matrix4x3_LoadIdentity(matrices);
     func_02044f74((void *)self, (struct Node *)self->bones);
-    u32 count = self->numBones;
-    u32 i = 0;
-    if (i < count) {
-        u32 byteOff = 0;
-        do {
-            Matrix4x3 *mat =
-                (Matrix4x3 *)((char *)((Matrix4x3 *)((struct Sub *)self->skin)->blk) + byteOff);
-            InvMat4x3(mat, mat);
-            count = self->numBones;
-            i++;
-            byteOff += 0x30;
-        } while (i < count);
+    for (u32 i = 0; i < self->numBones; i++) {
+        Matrix4x3 *mat = &((struct Sub *)self->skin)->blk[i];
+        InvMat4x3(mat, mat);
     }
     CP15::FlushDataCache();
 }
 }
 
-// @symbol func_02044e50
 extern "C" {
 void func_02044e50(ModelComponents *self, int count, int base, int *out) {
     int i;
@@ -317,117 +322,104 @@ void func_02044e50(ModelComponents *self, int count, int base, int *out) {
         int idx = base + i;
         unsigned short lh = sub->halfs[idx];
         unsigned char b = sub->bytes[idx];
-        func_02047218((char *)self->transforms + lh * 0x30, sub->blk + lh * 0x30, out, b << 4);
+        func_02047218(&self->transforms[lh], &sub->blk[lh], out, b << 4);
     }
 }
 }
 
-// @symbol func_02044dc4
 extern "C" {
 void func_02044dc4(ModelComponents *self) {
     unsigned int i;
-    int dst;
+    Matrix4x3 *dst;
     BMD_File *tbl;
     tbl = self->modelFile;
-    dst = tbl->numBones * 0x30 + (int)self->transforms;
+    dst = &self->transforms[tbl->numBones];
     for (i = 0; i < tbl->numWeightedMatrices; i++) {
         unsigned short *arr = ((struct Sub *)tbl->skin)->ranges;
         func_02044e50(self, arr[2 * i], arr[2 * i + 1], (int *)dst);
-        dst += 0x30;
+        dst++;
     }
 }
 }
 
-// @symbol _ZN15ModelComponents13func_02044b30Ei
+/* Material bind at 0x02044b30, called by Render before each display list:
+ * sends material idx's polygon attributes, colours and texture parameters to
+ * the geometry engine, keeps the texture-coordinate generation mode in
+ * data_020a4bbc, and sets up that mode's texture transform. */
 void ModelComponents::func_02044b30(int idx) {
-    char *m = (char *)materials + idx * 0x30;
-    int mtx3;
-    int texParam;
-    *((int *)0x40004a4) = *((int *)(m + 0x24));
-    *((int *)0x40004c0) = *((int *)(m + 0x28));
-    *((int *)0x40004c4) = *((int *)(m + 0x2c));
-    *((int *)0x40004ac) = *((int *)(m + 0x20));
-    texParam = *((int *)(m + 0x1c));
-    *((int *)0x40004a8) = texParam;
-    data_020a4bbc = (u8)(((u32)texParam) >> 0x1e);
+    const MaterialState &mat = ((const MaterialState *)materials)[idx];
+
+    reg_G3_POLYGON_ATTR = mat.polygonAttr;
+    reg_G3_DIF_AMB = mat.difAmb;
+    reg_G3_SPE_EMI = mat.speEmi;
+    reg_G3_TEXPLTT_BASE = mat.texPlttBase;
+    u32 texImageParam = mat.texImageParam;
+    reg_G3_TEXIMAGE_PARAM = texImageParam;
+
+    data_020a4bbc = texImageParam >> 30;
     switch (data_020a4bbc) {
-    case 1:
-    {
-      int mtx[12];
-      int A;
-      int B;
-      int C;
-      int D;
-      u16 elemFieldE;
-      u16 elemFieldC;
-      char *elem;
-      int m0;
-      u16 rawAngle;
-      int angle;
-      int k;
-      s16 sinVal;
-      s16 cosVal;
-      int D0;
-      int D1;
-      *((int *) 0x4000440) = 3;
-      rawAngle = *((u16 *) (m + 0x10));
-      m0 = *((volatile int *) m);
-      elem = (char *)modelFile->textures + m0 * 0x14;
-      angle = ((u16) (rawAngle << 4)) >> 4;
-      k = angle << 1;
-      sinVal = data_02082214[k];
-      cosVal = data_02082214[k + 1];
-      C = (int) ((((long long) (*((int *) (m + 0x8)))) * sinVal) >> 12);
-      B = (int) ((((long long) (*((int *) (m + 0x8)))) * cosVal) >> 12);
-      A = (int) ((((long long) (*((int *) (m + 0xc)))) * sinVal) >> 12);
-      D = (int) ((((long long) (*((int *) (m + 0xc)))) * cosVal) >> 12);
-      elemFieldE = *((u16 *) (elem + 0xe));
-      elemFieldC = *((u16 *) (elem + 0xc));
-      D0 = (A * (-((int) elemFieldE))) / elemFieldC;
-      mtx3 = (C * elemFieldC) / elemFieldE;
-      mtx[0] = B;
-      mtx[1] = D0;
-      mtx[2] = 0;
-      D1 = mtx3;
-      mtx[3] = D1;
-      mtx[4] = D;
-      mtx[5] = 0;
-      mtx[6] = 0;
-      mtx[7] = 0;
-      mtx[8] = 0;
-      mtx[9] = ((elemFieldC * ((*((int *) (m + 0x8))) - (C + B))) * 8) - (elemFieldC * ((int) ((((long long) (*((int *) (m + 0x8)))) * (*((int *) (m + 0x14)))) >> 8)));
-      mtx[10] = ((elemFieldE * (((A - D) - (*((int *) (m + 0xc)))) + 0x2000)) * 8) + (elemFieldE * ((int) ((((long long) (*((int *) (m + 0xc)))) * (*((int *) (m + 0x18)))) >> 8)));
-      mtx[11] = 0;
-      func_020553a4(mtx);
-    }
-      break;
+    case GX_TEXGEN_TEXCOORD: {
+        /* Load the texture SRT as the texture matrix: the rotation is
+           corrected for the texture's aspect ratio and the translation is
+           scaled by its size. */
+        reg_G3_MTX_MODE = GX_MTXMODE_TEXTURE;
 
-    case 2:
-    {
-      /* The texture-size template {4,8,16,32,64,128,256,512} (4 << i) is
-         block-copied from data_02099f94: the ROM's load at +0x284 relocates
-         against the table itself, so an init-list (anonymous .rodata) would be
-         a WRONG-DEST. The struct assignment keeps the ROM's block-copy shape. */
-      s16 buf[8];
-      *(struct Buf8 *)buf = *(const struct Buf8 *)data_02099f94;
-      int idx1;
-      int idx2;
-      s16 sa;
-      s16 sb;
-      idx1 = (((u32) texParam) >> 0x17) & 7;
-      idx2 = (((u32) texParam) >> 0x14) & 7;
-      data_020a4bc0 = ((s16 *) buf)[idx2];
-      data_020a4bc4 = (s16) (-((s16 *) buf)[idx1]);
-      sa = (s16) ((*((int *) (m + 0x14))) >> 8);
-      sb = (s16) ((*((int *) (m + 0x18))) >> 8);
-      *((int *) 0x4000488) = ((u16) sa) | (((u16) sb) << 16);
-    }
-      break;
+        /* The volatile read keeps textureId's load ahead of the textures
+           pointer's. Read plainly -- in the subscript, through a named
+           local, beside a named textures/file local, through an inline
+           accessor, or at any statement position tried -- the ROM's
+           `ldr r5,[r7]; ldr r4,[r4,#0x18]; mla r6,r5,r0,r4` at +0xa8 comes
+           out with the two loads and their registers swapped (3 words). */
+        u32 textureId = *(volatile const u32 *)&mat.textureId;
+        const BMD_Texture &tex = modelFile->textures[textureId];
+        int angle = (u16)(mat.texRotation << 4) >> 4;
+        s16 sin = FX_SinIdx(angle);
+        s16 cos = FX_CosIdx(angle);
+        int sSin = (int)(((s64)mat.texScaleS * sin) >> 12);
+        int sCos = (int)(((s64)mat.texScaleS * cos) >> 12);
+        int tSin = (int)(((s64)mat.texScaleT * sin) >> 12);
+        int tCos = (int)(((s64)mat.texScaleT * cos) >> 12);
+        int width = tex.width;
+        int height = tex.height;
 
-  }
+        Mtx43 mtx;
+        mtx.r[0].x = sCos;
+        mtx.r[0].y = tSin * -height / width;
+        mtx.r[0].z = 0;
+        mtx.r[1].x = sSin * width / height;
+        mtx.r[1].y = tCos;
+        mtx.r[1].z = 0;
+        mtx.r[2].x = 0;
+        mtx.r[2].y = 0;
+        mtx.r[2].z = 0;
+        mtx.r[3].x = width * (mat.texScaleS - (sSin + sCos)) * 8 -
+                     width * (int)(((s64)mat.texScaleS * mat.texTransS) >> 8);
+        mtx.r[3].y = height * (tSin - tCos - mat.texScaleT + 0x2000) * 8 +
+                     height * (int)(((s64)mat.texScaleT * mat.texTransT) >> 8);
+        mtx.r[3].z = 0;
+        func_020553a4(&mtx);
+        break;
+    }
+
+    case GX_TEXGEN_NORMAL: {
+        /* Half the texture's S and T sizes, {4, 8, ..., 512}: block-copied
+           from data_02099f94, since the ROM's load at +0x284 relocates
+           against the table itself (an init-list's anonymous .rodata would
+           be a WRONG-DEST). */
+        s16 halfSizes[8];
+        *(struct Buf8 *)halfSizes = *(const struct Buf8 *)data_02099f94;
+        int sizeS = (texImageParam >> 20) & 7;
+        int sizeT = (texImageParam >> 23) & 7;
+        data_020a4bc0 = halfSizes[sizeS];
+        data_020a4bc4 = -halfSizes[sizeT];
+        s16 s = mat.texTransS >> 8;
+        s16 t = mat.texTransT >> 8;
+        reg_G3_TEXCOORD = (u16)s | ((u16)t << 16);
+        break;
+    }
+    }
 }
 
-// @symbol _ZN15ModelComponents13func_0204488cEiP7Vector3
 
 struct Part {
     int count;
@@ -524,7 +516,6 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
     }
 }
 
-// @symbol _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
 void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
     int i;
     struct MeshEntry* e;
@@ -657,7 +648,6 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
     } while (i < cnt);
 }
 
-// @symbol _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3
 void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec) {
     data_020a4bd4 = 1u << (modelFile->scaleShift + 12);
     if (!mat) {
@@ -681,10 +671,8 @@ void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec) {
                 }
             } else {
                 for (int j = 0; j < node->numMaterials; j++) {
-                    u8 idx = *(volatile u8 *)&node->materialIds[j];
-                    BMD_Material *m = materials;
-                    m += idx;
-                    if (!(m->flags & 0x80000000)) {
+                    u8 idx = node->materialIds[j];
+                    if (!(materials[idx].flags & 0x80000000)) {
                         func_02044b30(idx);
                         func_0204488c(node->displayListIds[j], vec);
                     }

@@ -1,5 +1,4 @@
 //cpp
-// @symbol _ZN4cstd4sqrtEy
 //
 // Language-mode flip only: the compiler mangles the name, it is no longer
 // spelled by hand. Signature and body preserved exactly; no codegen intent.

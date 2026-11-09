@@ -9,12 +9,10 @@
 
 #include "dScMgRoulette_c.h"
 
-// @symbol _ZN13RouletteRacerC1Ev
 /* The racers need no setup; the constructor is out of line only because
    __cxa_vec_ctor takes its address. */
 RouletteRacer::RouletteRacer() {}
 
-// @symbol dScMgRoulette_c_classInit
 /* The name is reconstructed; the ROM proves the class, not the spelling.
  * `new` inlines the implicit constructor: the base chain, this class's
  * vptr, then mDealer, mRacers and mBoard's two models in declaration order.

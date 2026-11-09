@@ -22,8 +22,6 @@
  */
 
 // Notes:
-// - func_020393d4 / func_020393c4 install dBgW's two callback words;
-//   dBgW carries no setter for them.
 // - &mTargetPosX / &mSpeedX: this class and dActor_c store those triples
 //   as scalars, so the vector helpers take the first word's address.
 // - Vec3_Sub is defined on a file-local struct Vec3, so no shared header
@@ -74,8 +72,6 @@ extern s16 data_02082214[];                       /* sin/cos pairs */
 extern "C" {
 void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 enum {
@@ -88,17 +84,14 @@ enum {
 static const int cSinkDepth = 0x1e000;
 static const int cSinkRate = 0x5000;
 
-// @symbol daLinelift2_c_classInit_KM3_LIFT
 extern "C" daLinelift2_c *daLinelift2_c_classInit_KM3_LIFT() {
     return new daLinelift2_c();
 }
 
-// @symbol daLinelift2_c_classInit_KM2_SUSUMU
 extern "C" daLinelift2_c *daLinelift2_c_classInit_KM2_SUSUMU() {
     return new daLinelift2_c();
 }
 
-// @symbol _ZN13daLinelift2_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* The collider's stood-on callback word: drop the collider, forward the
    rider to the lift. long_calls emits the pooled `ldr ip,[pc,#8]; bx ip`
    absolute tail-call; bracketed closed immediately because it is
@@ -109,14 +102,12 @@ void daLinelift2_c::StoodOnCallback(dBgW *collider, dActor_c *lift, dActor_c *ri
 }
 #pragma long_calls off
 
-// @symbol _ZN13daLinelift2_c9OnStoodOnEP8dActor_c
 void daLinelift2_c::OnStoodOn(dActor_c *rider) {
     unsigned char isPlayer = rider->actorID == kPlayerActorID;
     if (isPlayer)
         mIsPressed = 1;
 }
 
-// @symbol _ZN13daLinelift2_c13InitResourcesEv
 int daLinelift2_c::InitResources() {
     mVariant = param1 >> 8;
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*gLinelift2ModelFiles[mVariant]), 1, -1);
@@ -125,8 +116,8 @@ int daLinelift2_c::InitResources() {
                           mClsnMat, 0x199, mAngleY, *gLinelift2ClpsBlocks[mVariant]);
 
     UpdateClsnPosAndRot();
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
     mPathPtr.FromID(param1 & 0xf);
     mNodeCount = mPathPtr.NumNodes();
@@ -148,7 +139,6 @@ int daLinelift2_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN13daLinelift2_c8BehaviorEv
 int daLinelift2_c::Behavior() {
     int old = mState;
     (this->*gLinelift2StateFuncs[old])();
@@ -157,9 +147,9 @@ int daLinelift2_c::Behavior() {
        velocity while the state is switching over. */
     if (old != mState) {
         mStateTimer = 0;
-        func_020393d4(&mMeshCollider, 0);
+        mMeshCollider.SetBeforeClsnCallback(0);
     } else {
-        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+        mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     }
     if (mVariant == 0) {
         int saved = mPosY;
@@ -174,13 +164,11 @@ int daLinelift2_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN13daLinelift2_c6RenderEv
 int daLinelift2_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN13daLinelift2_c16CleanupResourcesEv
 int daLinelift2_c::CleanupResources() {
     gLinelift2ModelFiles[mVariant]->Release();
     gLinelift2CollisionFiles[mVariant]->Release();
@@ -188,7 +176,6 @@ int daLinelift2_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN13daLinelift2_c9StateWaitEv
 /* State 0: wait at the first node until something has stood on the lift
    for 20 frames, then set off along the path at 10.0 a frame. */
 void daLinelift2_c::StateWait() {
@@ -210,7 +197,6 @@ void daLinelift2_c::StateWait() {
     mStateTimer = 0;
 }
 
-// @symbol _ZN13daLinelift2_c12StateForwardEv
 /* State 1: run forward; at the path's end, turn round (state 2). */
 void daLinelift2_c::StateForward() {
     if (StepAlongPath() == -1) {
@@ -219,22 +205,21 @@ void daLinelift2_c::StateForward() {
     s16 old = mAngleY;
     mAngleY = mBaseAngleY;
     if (old != mAngleY) {
-        func_020393d4(&mMeshCollider, 0);
+        mMeshCollider.SetBeforeClsnCallback(0);
     } else {
-        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+        mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     }
 }
 
-// @symbol _ZN13daLinelift2_c11StateReturnEv
 /* State 2: run back facing the other way. Resource set 0 pauses 20 frames
    first and settles in state 0 at the start; the other set loops. */
 void daLinelift2_c::StateReturn() {
     s16 old = mAngleY;
     mAngleY = mBaseAngleY + 0x8000;
     if (old != mAngleY) {
-        func_020393d4(&mMeshCollider, 0);
+        mMeshCollider.SetBeforeClsnCallback(0);
     } else {
-        func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
+        mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
     }
     if (mVariant == 0 && mStateTimer < kWaitFrames)
         return;
@@ -248,7 +233,6 @@ void daLinelift2_c::StateReturn() {
     mAngleY = mBaseAngleY;
 }
 
-// @symbol _ZN13daLinelift2_c13StepAlongPathEv
 /* One step along the path. Moves by the velocity; within half a step of the
    target node, snaps onto it, picks the next node in the direction of travel
    (mState 1 forward, otherwise back) and re-aims. Returns -1 when that runs
@@ -294,7 +278,6 @@ int daLinelift2_c::StepAlongPath() {
     return 0;
 }
 
-// @symbol _ZN13daLinelift2_c17SetVelocityTowardEPK7Vector3S2_
 /* Aim the velocity from `from` toward `to` at mHorzSpeed: pitch into
    mPrevAngleX, heading into mPrevAngleY, components into mSpeedX /
    mVertSpeed / mSpeedZ. */
@@ -309,8 +292,6 @@ void daLinelift2_c::SetVelocityToward(const Vector3 *to, const Vector3 *from) {
     mSpeedZ = FX_MUL(horz, data_02082214[((u16)mPrevAngleY >> 4) * 2 + 1]);
 }
 
-// @symbol _ZN13daLinelift2_cD1Ev
-// @symbol _ZN13daLinelift2_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header
    emits D1 then D0 -- the cartridge's order -- and no D2. */
 
@@ -319,7 +300,6 @@ void daLinelift2_c::SetVelocityToward(const Vector3 *to, const Vector3 *from) {
  * the constructions, registers the destructors -- the registration nodes
  * are compiler temporaries -- and copies the three pointer-to-member
  * constants (compiler temporaries in .data) into the table. */
-// @symbol __sinit_d_a_linelift2.cpp
 Linelift2ModelFilePtr gKm3RiftModelFile(ASSET_KM3_RIFT_BMD);
 Linelift2ModelFilePtr gKm2SusumuModelFile(ASSET_KM2_SUSUMU_BMD);
 Linelift2CollisionFilePtr gKm3RiftCollisionFile(ASSET_KM3_RIFT_KCL);

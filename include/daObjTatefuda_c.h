@@ -169,9 +169,9 @@ struct daObjTatefuda_c : dBgActor_c {
        current state's update routine through data_ov002_0210e084. The rest
        are the five enter/update pairs plus the two helpers IDLE's update
        calls, the respawn reset and the shadow-matrix rebuild.
-       AttachToHolder and RebuildModelMatrix are declared in the .cpp and
-       retain free C-linkage entry points. Both compile as C++ and use an
-       array-backed matrix view for their block copies. */
+       RebuildModelMatrix rebuilds the model matrix from the sign's own
+       position and angles; AttachToHolder puts the sign on its holder. Both
+       use an array-backed matrix view for their block copies. */
     void SetState(int state);
     void UpdateState();
     void InitIdle();  void Idle();
@@ -183,6 +183,8 @@ struct daObjTatefuda_c : dBgActor_c {
     void CheckGrabOrBreak();
     void Reset();
     void UpdateShadowMatrix();
+    void RebuildModelMatrix();
+    void AttachToHolder();
 
     /* mState values, as the rows of data_ov002_0210e084 read. Each row is
        {enter, update}. */

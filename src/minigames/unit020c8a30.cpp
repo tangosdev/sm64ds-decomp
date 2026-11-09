@@ -14,6 +14,7 @@
  * come after __arraydtor as on the cartridge (D1 0x020c8dcc, C1 0x020c8dd0).
  */
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 
 /* One puff sprite: position, velocity, a swaying spread that shrinks by
@@ -40,7 +41,6 @@ int GetGameLanguage(void);
 void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 }
 
-extern short data_02082214[];
 extern void **sPuffSprites[];
 
 int sPuffNextIndex;
@@ -49,7 +49,6 @@ Puff sPuffs[3];
 
 extern "C" {
 
-// @symbol Puff_Spawn
 void Puff_Spawn(int x, int y) {
     int i;
     int v;
@@ -83,14 +82,11 @@ void Puff_Spawn(int x, int y) {
     }
 }
 
-// @symbol Puff_Clear
-void Puff_Clear(short *p) {
-    ((Puff *)p)->mActive = 0;
+void Puff_Clear(Puff *p) {
+    p->mActive = 0;
 }
 
-// @symbol Puff_Update
-void Puff_Update(char *c) {
-    Puff *entry = (Puff *)c;
+void Puff_Update(Puff *entry) {
     if (entry->mActive == 0)
         return;
     entry->mAngle += 0x200;
@@ -106,9 +102,7 @@ void Puff_Update(char *c) {
     }
 }
 
-// @symbol Puff_Draw
-void Puff_Draw(char *c) {
-    Puff *entry = (Puff *)c;
+void Puff_Draw(Puff *entry) {
     void *sprite;
     int sine;
     int offsetX;
@@ -121,50 +115,36 @@ void Puff_Draw(char *c) {
         int language = GetGameLanguage();
         sprite = sPuffSprites[language][entry->mIndex];
     }
-    sine = data_02082214[((unsigned short)entry->mAngle >> 4) * 2];
+    sine = FX_SinIdx((unsigned short)entry->mAngle >> 4);
     offsetX = FX_MUL(entry->mSpread, sine);
     drawX = entry->x + offsetX;
     Hud_RenderSprite(sprite, drawX >> 12, entry->y >> 12, -1, -1);
 }
 
-// @symbol Puff_ClearAll
 void Puff_ClearAll(int a0, int a1) {
     int i;
-    short *p = (short *)sPuffs;
     for (i = 0; i < 3; i++) {
-        Puff_Clear(p);
-        p = (short *)((char *)p + 0x20);
+        Puff_Clear(&sPuffs[i]);
     }
     sPuffNextIndex = a0;
     sPuffXTable = (void **)a1;
 }
 
-// @symbol Puff_UpdateAll
 void Puff_UpdateAll(void) {
-    int i = 0;
-    char *p = (char *)sPuffs;
-    for (;;) {
-        Puff_Update(p);
-        i++;
-        p += 0x20;
-        if (i >= 3)
-            break;
+    int i;
+    for (i = 0; i < 3; i++) {
+        Puff_Update(&sPuffs[i]);
     }
 }
 
-// @symbol Puff_DrawAll
 void Puff_DrawAll(void) {
     int i;
-    char *p = (char *)&sPuffs[2];
     for (i = 2; i >= 0; i--) {
-        Puff_Draw(p);
-        p -= 0x20;
+        Puff_Draw(&sPuffs[i]);
     }
 }
 }
 
-// @symbol _ZN4PuffD1Ev
 inline Puff::~Puff() {}
 
-// @symbol _ZN4PuffC1Ev
 inline Puff::Puff() {}

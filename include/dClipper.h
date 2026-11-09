@@ -24,14 +24,14 @@ struct dClipper {
        Vtable _ZTV8dClipper lives at 0x0208e730 (named in symbols.txt). The lone
        instance, data_0209f43c in bss, is a file-scope object of
        d_s_stage_methods.cpp; this header stays POD-planed and adds no method. */
-    /* The four clip-plane normals, written as a run by Func_0201559C: it builds
+    /* The four clip-plane normals, written as a run by UpdateFrustumPlanes: it builds
        the frustum's four corner vectors on the stack, cross-multiplies adjacent
        pairs into 0x004/0x010/0x01c/0x028 and normalises each in place. Four
        consecutive 0xc coordinate records are the only shape those calls can
        be; the lifecycle evidence above decides their POD spelling. */
     ClipperPlane mPlaneNormals[4];   /* 0x004 */
     u8  pad_034[0x18];
-    /* SIGNED. Func_0201559C sign-extends it into a 64-bit multiply, which a u32
+    /* SIGNED. UpdateFrustumPlanes sign-extends it into a 64-bit multiply, which a u32
        cannot do; the only other user just stores to it, so nothing disagrees. */
     s32 mAspectRatio;            /* 0x04c */
     s32 mNearZ;            /* 0x050 */
@@ -48,7 +48,9 @@ struct dClipper {
     /* Defined in src/engine/collision/d_clipper.cpp. */
     dClipper();
 
-    void Func_0201559C();
+    /* Name inferred from the body: rebuild mPlaneNormals from mFovAngle,
+       mNearZ and mAspectRatio. No original name is known. */
+    void UpdateFrustumPlanes();
     /* All five callers pass these four scalar arguments, and the body reads
        them from r1/r2/r3/[sp]. The old address-derived `...Ev` symbol was
        therefore impossible; this declaration lets CodeWarrior generate the

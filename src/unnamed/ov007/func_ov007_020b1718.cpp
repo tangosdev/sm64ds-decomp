@@ -17,14 +17,13 @@ extern "C" {
 typedef struct Vec3Words {
     Fix12i w[3];
 } Vec3Words;
-// @symbol func_ov007_020b1718
 /* recovered: per-frame update of a two-mode screen transition driven by the
  * manager at data_ov007_0210342c. Mode 1 eases a scale toward 0x1000 over
  * 12 frames and flags completion when the slot reaches its end; mode 0 copies
  * the start positions on frame 0, then lerps the camera's target x/y and
  * distance along a smoothstep-squared curve and flags completion at frame 0x28.
  * Both modes leave a (remaining, total) pair for the shared tail, which
- * advances the counter and fades the target through func_ov007_020b2764.
+ * advances the counter and fades the target through FigureScene_SetScreenBlend.
  *
  * Left raw: the manager's +0xec (0 or 1; picks the sound and, in
  * func_ov007_020b1fa4, the camera preset), with no role to name.
@@ -40,7 +39,7 @@ extern void func_ov007_020b257c(void);
 extern void func_ov007_020b2454(void *a, void *b);
 extern void func_ov007_020bce70(short n, int frames);
 extern unsigned short func_ov007_020c3be0(int t, int a, int b);
-extern void func_ov007_020b2764(int a);
+extern void FigureScene_SetScreenBlend(int a);
 
 void func_ov007_020b1718(void) {
     Ov007Model *F = WORK->model;
@@ -184,7 +183,7 @@ void func_ov007_020b1718(void) {
             qq2 = 0x1000;
         else
             qq2 = cstd::div(v << 0xc, divisor);
-        func_ov007_020b2764(0x1000 - qq2);
+        FigureScene_SetScreenBlend(0x1000 - qq2);
     }
 }
 }

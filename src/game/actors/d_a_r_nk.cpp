@@ -41,6 +41,7 @@ enum daRNk_c_AssetId {
 #include "Timer.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -81,8 +82,7 @@ enum {
     /* Played at the race start (two positional calls) and, in 2D, when the
      * post-race talk begins; the sound itself is unidentified. */
     kSfx4D = 0x4d,
-    kMusicRace = 0x41,       /* loaded on layer 2 when the race starts, stopped when it ends */
-    kPtclFootstepDust = 0xf9 /* puff beside a foot */
+    kMusicRace = 0x41 /* loaded on layer 2 when the race starts, stopped when it ends */
 };
 
 /* Distances, in fix12 units (0x1000 = 1.0; the numbers here are the whole-unit
@@ -169,7 +169,6 @@ extern "C" s16 atan2_hold_d_a_r_nk_1(int y, int x);
 
 extern "C" {
 /* Positional sound at the actor's camera-space position (Sound::Play(3, id, pos)). */
-extern short data_02082214[];   /* SINE_TABLE: {sin, cos} pairs in fix12, indexed by angle >> 4 */
 /* This scalar entry follows its C definition, including u16 startFrame.
    dExtAnmModel_c.h instead declares u32; that shared contract is still unresolved. */
 /* Play2D(3, id): a sound with no position. */
@@ -195,7 +194,6 @@ extern RNkAnimationFileHandle data_ov062_0211e02c;  /* ANIM_JUMP */
 extern RNkAnimationFileHandle data_ov062_0211e004;  /* ANIM_LAND */
 }
 
-// @symbol daRNk_c_classInit
 extern "C" {
 int *daRNk_c_classInit(void)
 {
@@ -203,7 +201,6 @@ int *daRNk_c_classInit(void)
 }
 }
 
-// @symbol _ZN7daRNk_c13InitResourcesEv
 /* Load the model and animations, set up the collision, read the actor's
    parameters (see the banner) and start at the first path node. Returns 0 if
    the model or shadow cannot be set up. */
@@ -267,7 +264,6 @@ int daRNk_c::InitResources()
     return 1;
 }
 
-// @symbol _ZN7daRNk_c16CleanupResourcesEv
 /* Release the eight shared files, and stop the race music if it is playing. */
 int daRNk_c::CleanupResources()
 {
@@ -284,7 +280,6 @@ int daRNk_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN7daRNk_c8BehaviorEv
 /* Per frame: run the handler for mState, advance the animation, put the
    steered heading (mPrevAngleY) into mAngleY, move and collide, refresh the
    body cylinder and draw the drop shadow. */
@@ -302,7 +297,6 @@ int daRNk_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN7daRNk_c6RenderEv
 /* dExtSimpleModel_c is the real class now, through daRNk_c.h: HideMaterial is its own
    non-virtual and the slot-5 virtual is Render, which dExtAnmModel_c overrides. */
 int daRNk_c::Render()
@@ -312,7 +306,6 @@ int daRNk_c::Render()
     return 1;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211aac0Ev
 /* Drop shadow: build a matrix from the position (divided by 8, as the shadow
    matrix expects) and heading in the scratch matrix, copy it into the model's matrix,
    and give DropShadowRadHeight a radius and height of 160 units. */
@@ -326,7 +319,6 @@ void daRNk_c::func_ov062_0211aac0(){
     DropShadowRadHeight(this->mShadowModel, this->mAnmModel.mat4x3, 0xa0000, 0xa0000, 0xf);
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211a9c4Ev
 /* STATE_WAIT_FOR_PLAYER. Count mStateTimer down first (a declined offer sets
    it to 60 frames). Then look for the closest player; if there is one within
    200 units and daPly_c::StartTalk accepts, find
@@ -372,7 +364,6 @@ void daRNk_c::func_ov062_0211a9c4()
     this->mStep = 0;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211a740Ev
 /* STATE_OFFER_RACE. Offer the race after the player finishes talking.
  *   step 0  turn toward the player (0x800 a frame, mAngleY following); once
  *           facing, switch to the talk animation, play the cue, and for Mario
@@ -460,7 +451,6 @@ void daRNk_c::func_ov062_0211a740()
     }
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211a1f4Ev
 /* STATE_RACE.
  *   step 0  wait for daPly_c::Unk_020c4f40(0x5a) to report non-zero
  *   step 1  two PlaySub calls (arguments unidentified) bracket a wait for the
@@ -483,7 +473,6 @@ void daRNk_c::func_ov062_0211a1f4()
     int speedMul;
     int status;
     int speedScale;
-    volatile int tmp[3];
 
     switch (this->mStep) {
     case 0:
@@ -605,19 +594,17 @@ void daRNk_c::func_ov062_0211a1f4()
         this->mVertAccel = -0x2000;     /* InitResources' gravity again */
         SET_ANIM(this, ANIM_LAND, kAnimPlayOnce);
         this->mAnmModel.currFrame = 0;
-        tmp[0] = this->mPosX;
-        tmp[1] = this->mPosY;
-        tmp[2] = this->mPosZ;
-        tmp[1] = this->mPosY + kDustHeight;
-        Particle::System::NewSimple(kPtclLandingDust, this->mPosX, this->mPosY + kDustHeight,
-                                    this->mPosZ);
+        {
+            Vector3 dustPos = this->mPos;
+            dustPos.y += kDustHeight;
+            Particle::System::NewSimple(kPtclLandingDust, dustPos.x, dustPos.y, dustPos.z);
+        }
         return;
     default:
         return;
     }
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211a168Ev
 /* STATE_PULL_UP: ease the speed toward 3 units a frame (1 unit a frame
    step); when the current animation is about to hit its last frame, fix the
    speed at 3 units, play ANIM_BRAKE once and go to STATE_STOP. */
@@ -631,7 +618,6 @@ void daRNk_c::func_ov062_0211a168(){
     SET_ANIM(this, ANIM_BRAKE, kAnimPlayOnce);
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_0211a0f0Ev
 /* STATE_STOP: brake to a standstill (4 units a frame step); when the brake
    animation finishes, go back to the idle animation and on to
    STATE_POST_RACE_TALK. */
@@ -646,7 +632,6 @@ void daRNk_c::func_ov062_0211a0f0()
     this->mStateTimer = 0;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_02119be0Ev
 /* STATE_POST_RACE_TALK: the result talk, and then chatter forever. mStateTimer
  * counts down every frame and holds back step 0.
  *   step 0  once the timer is 0 and the player is within 400 units and agrees
@@ -810,7 +795,6 @@ void daRNk_c::func_ov062_02119be0() {
     }
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_02119af0Ev
 /* The path follower. Aims mTargetAngleY at mPathTarget (x and z only). Koopa
    has reached the node when he has run past it (the dot product of the vector
    from the previous node to the target with the vector from him to the target
@@ -861,7 +845,6 @@ int daRNk_c::func_ov062_02119af0() {
     return PATH_TRAVELLING;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_021199acEv
 /* React to the closest rolling iron ball, if it is kind 2 (a path follower;
    daIbl_c.h says kinds 2 and 4 follow paths, Koopa reacts to kind 2 only). With the angle from Koopa's heading to the ball (r) and
    the ball's speed along Koopa's heading (fixed1 = ball speed times the cosine
@@ -926,7 +909,6 @@ ret0:
     return BALL_NONE;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_02119954Ev
 /* Start a jump: ANIM_JUMP, 45 units a frame up, gravity 4 units a frame
    squared (InitResources' is 2), and the in-the-air step of STATE_RACE. */
 void daRNk_c::func_ov062_02119954()
@@ -937,7 +919,6 @@ void daRNk_c::func_ov062_02119954()
     this->mStep = 3;
 }
 
-// @symbol _ZN7daRNk_c19func_ov062_02119800Ev
 /* Footsteps. The run animation's whole-frame number (currFrame >> 12) says
    which foot is down: on frames 2..8 and 19..25 play the footstep sound and
    a dust puff 30 units to one side (opposite sides in the two ranges) and 30
@@ -945,69 +926,27 @@ void daRNk_c::func_ov062_02119954()
    animation leaves both ranges. */
 void daRNk_c::func_ov062_02119800()
 {
-    volatile int stack[3];
     unsigned int kind = ((unsigned int)(this->mAnmModel.currFrame << 4)) >> 16;
-    short ang;
-    int x, y, z;
 
-    if (kind < 2)
-        goto check_hi;
-    if (kind <= 8)
-        goto body;
-check_hi:
-    if (kind < 0x13)
-        goto reset;
-    if (kind > 0x19)
-        goto reset;
-
-body:
-    if (this->mFootstepDone != 0)
-        return;
-    func_0201267c(kSfxFootstep, &this->mCamSpacePos);
-    this->mFootstepDone = 1;
-
-    ang = this->mAngleY;
-    x = this->mPosX;
-    /* Keep the comparison at this load boundary: the direct assignment
-       moves six instructions under 2004/b56 (see the pinned experiment). */
-    stack[0] = (kind > 8) ? x : x;
-    y = this->mPosY;
-    ang = (short)(ang + 0x4000);    /* a quarter turn: the sideways direction */
-    stack[1] = y;
-    z = this->mPosZ;
-    stack[2] = z;
-    stack[1] = y + 0x1e000;
-
-    if (kind > 8)
-        goto add_path;
-
-    {
-        unsigned short u = (unsigned short)ang;
-        int n = (int)(u >> 4);
-        short sinA = data_02082214[n * 2];
-        short cosA = data_02082214[n * 2 + 1];
-        short k = 0x1e;
-        stack[0] = x - (int)(sinA * k);
-        stack[2] = z - (int)(cosA * k);
+    if ((kind >= 2 && kind <= 8) || (kind >= 0x13 && kind <= 0x19)) {
+        if (this->mFootstepDone != 0)
+            return;
+        func_0201267c(kSfxFootstep, &this->mCamSpacePos);
+        this->mFootstepDone = 1;
+        s16 ang = this->mAngleY + 0x4000; /* a quarter turn: the sideways direction */
+        Vector3 pos = this->mPos;
+        pos.y += 0x1e000;
+        if (kind <= 8) {
+            pos.x -= FX_SinIdx((u16)ang >> 4) * 0x1e;
+            pos.z -= FX_CosIdx((u16)ang >> 4) * 0x1e;
+        } else {
+            pos.x += FX_SinIdx((u16)ang >> 4) * 0x1e;
+            pos.z += FX_CosIdx((u16)ang >> 4) * 0x1e;
+        }
+        Particle::System::NewSimple(kPtclFootstepDust, pos.x, pos.y, pos.z);
+    } else {
+        this->mFootstepDone = 0;
     }
-    goto do_new;
-
-add_path:
-    {
-        unsigned short u = (unsigned short)ang;
-        int n = (int)(u >> 4);
-        short sinA = data_02082214[n * 2];
-        short cosA = data_02082214[n * 2 + 1];
-        short k = 0x1e;
-        stack[0] = (int)(sinA * k) + x;
-        stack[2] = (int)(cosA * k) + z;
-    }
-do_new:
-    Particle::System::NewSimple(kPtclFootstepDust, (int)stack[0], (int)stack[1], (int)stack[2]);
-    return;
-
-reset:
-    this->mFootstepDone = 0;
 }
 
 /* D0 is the DELETING destructor: destroy through this class (dEnemyBase_c

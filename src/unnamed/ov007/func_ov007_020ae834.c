@@ -1,5 +1,4 @@
 #include "types.h"
-// @symbol func_ov007_020ae834
 #include "Ov007MenuState.h"
 #include "Ov007Item.h"
 /* Per-frame state step for a menu item. Before ticking the item's state

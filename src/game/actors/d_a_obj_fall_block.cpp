@@ -17,9 +17,9 @@
 // - InitResourcesFrom and CleanupResourcesFrom are the shared bodies of
 //   the four leaves' InitResources and CleanupResources. Each leaf passes
 //   its own ResourceDescriptor; the virtual slots stay pure here.
-// - func_020393c4 is `p[7] = v`, the store of StoodOnCallback into
+// - dBgW::SetStoodOnCallback is `p[7] = v`, the store of StoodOnCallback into
 //   dBgW::stoodOnCallback. The ROM calls it; an inlined store would drop
-//   the bl. d_bg_w.cpp defines it and no header declares it.
+//   the bl.
 // - StoodOnCallback keeps long_calls. The ROM tail is the pooled absolute
 //   veneer (size 0x14); a near branch to RequestShake is 0xc.
 // - RequestShake keeps the unused second parameter. The veneer forwards
@@ -51,16 +51,11 @@ enum { ACTOR_FL_KUZURE = 0x53, ACTOR_KM2_KUZURE = 0x8b, ACTOR_STAR = 0xb2 };
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int AngleDiff(int a, int b);
-
-/* local extern: d_bg_w.cpp defines it and no header declares it. */
-void func_020393c4(dBgW *collider, StoodOnCallback callback);
 }
 
 extern s16 data_02082214[];       /* sine table */
 extern signed char gCurrentSublevel; /* current level id */
 
-// @symbol _ZN16daObjFallBlock_cD0Ev
-// @symbol _ZN16daObjFallBlock_cD1Ev
 /* ROM ordinals 0 and 1 -- ov098 0x02139f70 (D0, 0x58) and 0x02139fc8 (D1,
  * 0x44). No source here: both destructor variants come from the ONE
  * inline body in include/daObjFallBlock_c.h, which the class's descendants need
@@ -84,7 +79,6 @@ void daObjFallBlock_c_EmitDestructor(daObjFallBlock_c *p) {
     p->~daObjFallBlock_c();
 }
 
-// @symbol _ZN16daObjFallBlock_c9LinkGroupEv
 /* Once (mGroupLinked). Same-id neighbours closer than 0x96000 become
    mNextInGroup when they sit within a quarter-turn of mAngleY, and
    mPrevInGroup otherwise. Vec3_HorzAngle / Vec3_Dist / AngleDiff. */
@@ -109,9 +103,8 @@ void daObjFallBlock_c::LinkGroup() {
     mGroupLinked = 1;
 }
 
-// @symbol _ZN16daObjFallBlock_c14PollLinkedStarEv
 /* unk_440 is daStar_c's state index into data_ov002_021109d8.
-   Slot 4 is func_ov002_020ea420. Reaching it clears mSuppressed so
+   Slot 4 is StateIdle. Reaching it clears mSuppressed so
    this FL_KUZURE block renders and runs. A missing star destroys it. */
 void daObjFallBlock_c::PollLinkedStar() {
     dActor_c *a = dActor_c::FindWithID((unsigned int)mLinkedStarID);
@@ -123,7 +116,6 @@ void daObjFallBlock_c::PollLinkedStar() {
         mSuppressed = 0;
 }
 
-// @symbol _ZN16daObjFallBlock_c14FindLinkedStarEv
 /* STAR whose unk_49d equals param1's low nibble. AddStarMarker passes
    that byte to IsStarCollectedInCurLevel, so it is the star index. */
 void daObjFallBlock_c::FindLinkedStar() {
@@ -137,7 +129,6 @@ void daObjFallBlock_c::FindLinkedStar() {
     }
 }
 
-// @symbol _ZN16daObjFallBlock_c11ResetMotionEv
 /* Group re-arm. Clears the shake and the fall, and gives case 0 four
    frames before it will accept another stand. */
 void daObjFallBlock_c::ResetMotion() {
@@ -152,7 +143,6 @@ void daObjFallBlock_c::ResetMotion() {
     mStateTimer = 4;
 }
 
-// @symbol _ZN16daObjFallBlock_c4KillEv
 /* daObjFallBlock_c::Kill() at ov098 0x0213a17c, 0xc0 bytes -- vtable slot 31.
  *
  * The block plays its poof where it stands, 0x32000 -- fifty 20.12 units --
@@ -194,7 +184,6 @@ void daObjFallBlock_c::Kill() {
     mReady = 0;
 }
 
-// @symbol _ZN16daObjFallBlock_c13ApplyModelXyzEv
 /* Full XYZ model matrix. Translation is model space, position >> 3,
    same row UpdateModelPosAndRotY writes for yaw alone. */
 void daObjFallBlock_c::ApplyModelXyz() {
@@ -204,7 +193,6 @@ void daObjFallBlock_c::ApplyModelXyz() {
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN16daObjFallBlock_c15OnHitByMegaCharER7daPly_c
 /* `player` is never read, matching the ROM body, which only ever takes the
    one (`this`) argument. */
 void daObjFallBlock_c::OnHitByMegaChar(daPly_c &player) {
@@ -216,7 +204,6 @@ void daObjFallBlock_c::OnHitByMegaChar(daPly_c &player) {
     mStateTimer = 0x3c;
 }
 
-// @symbol _ZN16daObjFallBlock_c20CleanupResourcesFromEP18ResourceDescriptor
 /* Shared CleanupResources for the four leaves. Slot 0 is the model
    SharedFilePtr, slot 1 the collision file. */
 s32 daObjFallBlock_c::CleanupResourcesFrom(ResourceDescriptor *files) {
@@ -227,7 +214,6 @@ s32 daObjFallBlock_c::CleanupResourcesFrom(ResourceDescriptor *files) {
     return 1;
 }
 
-// @symbol _ZN16daObjFallBlock_c6RenderEv
 s32 daObjFallBlock_c::Render() {
     if (mSuppressed)
         return 1;
@@ -237,7 +223,6 @@ s32 daObjFallBlock_c::Render() {
     return 1;
 }
 
-// @symbol _ZN16daObjFallBlock_c8BehaviorEv
 /* daObjFallBlock_c::Behavior - the whole fall-block state machine; see the
    class header for the field-by-field account. Kill() is this class's own
    named virtual (key function). UpdatePos is dActor_c's. dBgW calls go
@@ -404,7 +389,6 @@ s32 daObjFallBlock_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN16daObjFallBlock_c17InitResourcesFromEP18ResourceDescriptor
 /* Shared InitResources body for the four leaves. Slot 0 is dExtSimpleModel_c::LoadFile,
    slot 1 is dBgW_Kc::LoadFile, slot 2 is CLPS into SetFile. Ground-raycasts
    mKillY, copies mRestPos, and arms the StoodOnCallback mesh callback. */
@@ -419,7 +403,7 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
     ((dBgW_KcMbg *)(&mMeshCollider))
         ->dBgW_KcMbg::SetFile((KCL_File *)(dBgW_Kc::LoadFile(*fp->collision)), mClsnMat, 0x199,
                               mAngleY, *fp->clps);
-    func_020393c4(&mMeshCollider, &StoodOnCallback);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     v.x = mPosX;
     y = mPosY;
     v.y = y;
@@ -448,7 +432,6 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
     return 1;
 }
 
-// @symbol _ZN16daObjFallBlock_c12RequestShakeEP8dActor_c
 /* Sets mShakeRequested so Behavior case 0 starts the shake. The actor
    parameter is the veneer's extra forwarded register -- a 1-arg callee
    drops mov r1,r2. */
@@ -456,7 +439,6 @@ int daObjFallBlock_c::RequestShake(dActor_c *other) {
     mShakeRequested = 1;
 }
 
-// @symbol _ZN16daObjFallBlock_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 /* dBgW+0x1c callback veneer. Drops the collider and forwards the actor into
    RequestShake. long_calls is the ROM's pooled absolute tail-call. */
 #pragma long_calls on

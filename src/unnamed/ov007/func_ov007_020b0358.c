@@ -7,7 +7,7 @@ extern void func_ov007_020bcba8(int i);
 extern void func_ov007_020b283c(void);
 extern void func_ov007_020b76a0(void);
 extern void func_ov007_020bd1c0(int i);
-extern Ov007MenuState *func_ov007_020b8f78(void);
+extern Ov007MenuState *PickerScene_GetDisplayState(void);
 
 typedef char Ov007Work_transitionMode_must_be_at_0x20[(int)&((Ov007Work *)0)->transitionMode == 0x20
                                                           ? 1
@@ -58,13 +58,13 @@ void func_ov007_020b0358(void)
         st2 = WORK->transitionMode;
         switch (st2) {
         case 1:
-            if (func_ov007_020b8f78()->currentState == 8) {
+            if (PickerScene_GetDisplayState()->currentState == 8) {
                 WORK->states[0]->requestedState = 2;
                 hit = 1;
             }
             break;
         case 0:
-            if (func_ov007_020b8f78()->currentState == 5) {
+            if (PickerScene_GetDisplayState()->currentState == 5) {
                 WORK->states[0]->requestedState = 3;
                 hit = 1;
             }

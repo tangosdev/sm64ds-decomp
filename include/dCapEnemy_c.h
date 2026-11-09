@@ -41,7 +41,7 @@ struct dCapEnemy_c : dEnemyBase_c {
        returns 1. daKrb_c::Render draws nothing while it is set. */
     u8  mIsDormant;               /* 0x111 */
     /* Latched to 1 the first time a bank-1 cap is added, and never cleared;
-       passed straight through to func_ov001_020ab228. */
+       passed straight through to dCapIcon_c::Link. */
     u8  mHadBank1Cap;             /* 0x112 */
     /* The cap, packed. Low 3 bits index the six-entry model table and 6 means
        "no cap" -- AddCap writes param % 3 and falls back to 6 on any failure,

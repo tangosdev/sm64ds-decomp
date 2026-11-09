@@ -73,12 +73,18 @@ struct daTrsTrap_c : dActor_c {
     virtual void OnPendingDestroy(); /* slot 12 -- ov063:0x0211ce30 */
 
     /* The four per-variant state bodies, indexed by mIndex through the .bss
-       dispatch table data_ov063_0211ef38. Nothing in the ROM names them, so
-       they keep their func_ov063_* addresses as names. */
-    void func_ov063_0211cc18(); /* 0 KAIDAN    -- staircase rise, 0x0211cc18 */
-    void func_ov063_0211cb54(); /* 1 TERESAPIT -- trapdoor tilt,  0x0211cb54 */
-    void func_ov063_0211c89c(); /* 2 BOOKSHELF -- shelf slide,   0x0211c89c */
-    void func_ov063_0211c7b0(); /* 3 MERRYGOROUND -- spin,       0x0211c7b0 */
+       dispatch table data_ov063_0211ef38. Nothing in the ROM names them; three
+       follow N64's bhv_*_loop names for the same objects, the staircase's is
+       coined to match. */
+    void UpdateStaircase();    /* 0 KAIDAN    -- staircase rise, 0x0211cc18 */
+    void UpdateTiltingTrap();  /* 1 TERESAPIT -- trapdoor tilt,  0x0211cb54 */
+    void UpdateBookshelf();    /* 2 BOOKSHELF -- shelf slide,   0x0211c89c */
+    void UpdateMerryGoRound(); /* 3 MERRYGOROUND -- spin,       0x0211c7b0 */
+
+    /* Called from Behavior and the merry-go-round state: the model matrix
+       refresh and the merry-go-round occupancy test. */
+    void UpdateModelTransform();
+    void UpdateOccupiedFlag();
 
     /* Mesh-collision rider hook, defined in d_a_trs_trap_classinits.cpp.
        InitResources stores OnMeshClsnTouch as mMovingMeshCollider's

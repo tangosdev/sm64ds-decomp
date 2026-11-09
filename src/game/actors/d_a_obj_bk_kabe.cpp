@@ -104,11 +104,8 @@ enum {
 /* Source order is the ROM order. */
 #pragma defer_codegen off
 
-// @symbol _ZN14daObjBk_Kabe_cD1Ev
-// @symbol _ZN14daObjBk_Kabe_cD0Ev
 daObjBk_Kabe_c::~daObjBk_Kabe_c() {}
 
-// @symbol _ZN14daObjBk_Kabe_c4KillEv
 void daObjBk_Kabe_c::Kill() {
     Sound::PlayBank3(kBreakSound, mCamSpacePos);
     Particle::System::NewSimple(kBreakParticle, mPosX, mPosY, mPosZ);
@@ -120,12 +117,10 @@ void daObjBk_Kabe_c::Kill() {
     MarkForDestruction();
 }
 
-// @symbol _ZN14daObjBk_Kabe_c24OnHitByCannonBlastedCharER8dActor_c
 int daObjBk_Kabe_c::OnHitByCannonBlastedChar(dActor_c &other) {
     Kill();
 }
 
-// @symbol _ZN14daObjBk_Kabe_c16CleanupResourcesEv
 int daObjBk_Kabe_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -134,7 +129,6 @@ int daObjBk_Kabe_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN14daObjBk_Kabe_c6RenderEv
 int daObjBk_Kabe_c::Render() {
     if (mBroken)
         return 1;
@@ -142,7 +136,6 @@ int daObjBk_Kabe_c::Render() {
     return 1;
 }
 
-// @symbol _ZN14daObjBk_Kabe_c8BehaviorEv
 int daObjBk_Kabe_c::Behavior() {
     int isBreakable = (actorID == kBreakableActor);
     if (isBreakable && mBroken) {
@@ -165,7 +158,6 @@ int daObjBk_Kabe_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN14daObjBk_Kabe_c13InitResourcesEv
 int daObjBk_Kabe_c::InitResources() {
     int isBreakable = actorID == kBreakableActor;
     if (isBreakable) {
@@ -189,12 +181,10 @@ int daObjBk_Kabe_c::InitResources() {
     return 1;
 }
 
-// @symbol daObjBk_Kabe_c_classInit_BK_KABE01
 extern "C" daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE01() {
     return new daObjBk_Kabe_c();
 }
 
-// @symbol daObjBk_Kabe_c_classInit_BK_KABE00
 extern "C" daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE00() {
     return new daObjBk_Kabe_c();
 }

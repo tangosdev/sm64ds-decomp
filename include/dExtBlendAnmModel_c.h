@@ -20,7 +20,7 @@
  * 0 -> 0x1000 (1.0) by blendStep per Advance; below 1.0 UpdateVerts and
  * Virtual10 route through the blending func_0204531c instead of
  * UpdateVertsUsingBones. mBlendBuffer is a buffer the destructor frees and
- * func_020165c4 (DoSetFile's tail) sets up.
+ * InitBlendBuffer (DoSetFile's tail) sets up.
  *
  * SetAnim IS A REAL METHOD, and its symbol is
  * _ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileiiit. It used to be a mangled
@@ -69,6 +69,7 @@ struct dExtBlendAnmModel_c : dExtAnmModel_c {
     dExtBlendAnmModel_c();
     void Advance();
     void SetAnim(BCA_File &animFile, int numBlendFrames, int flags, Fix12i speed, u16 startFrame);
+    int InitBlendBuffer(char *); /* DoSetFile's tail (0x020165c4); coined */
 
     /* ITS OWN, TO RESOLVE AN AMBIGUITY MULTIPLE INHERITANCE CREATES. dExtAnmModel_c
        derives from dExtSimpleModel_c (so dExtModel_c) and from dExtFrameCtrl_c, and both bases

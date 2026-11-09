@@ -61,7 +61,6 @@ void CTRDGi_CallbackForInitModuleInfo(int tag, int data);
 void func_0206a634(int tag, int data);
 void func_0206a600(void);
 
-// @symbol CTRDG_Init
 void CTRDG_Init(void) {
     if (data_020a9de8)
         return;
@@ -77,7 +76,6 @@ void CTRDG_Init(void) {
     data_020a9dec = 0;
 }
 
-// @symbol func_0206a6d0
 /* pret's CTRDGi_InitModuleInfo, older: copy the cartridge's module ID, the
  * three extended LSI IDs, the maker and game codes into the shared module
  * information at 0x027ffc30 and hand the header copy to the ARM7. It reads
@@ -130,7 +128,6 @@ void func_0206a6d0(void) {
     IRQ::SetIRQs(irq);
 }
 
-// @symbol CTRDGi_CallbackForInitModuleInfo
 void CTRDGi_CallbackForInitModuleInfo(int a0, int a1) {
     if ((a1 & 0x3f) == 1) {
         data_020a9de0.subpState = 1;
@@ -139,7 +136,6 @@ void CTRDGi_CallbackForInitModuleInfo(int a0, int a1) {
     Crash();
 }
 
-// @symbol func_0206a634
 /* pret's CTRDGi_PulledOutCallback, older: on the ARM7's pulled-out message
  * (command 0x11) ask the hook data_020a9dec, and stop if it returns nonzero.
  * It has no isOnTerminate flag, so it does not remember having asked. */
@@ -156,7 +152,6 @@ void func_0206a634(int unused, int arg) {
     }
 }
 
-// @symbol func_0206a600
 /* pret's CTRDG_TerminateForPulledOut, older: send command 2 on the CTRDG
  * FIFO and stop. The send is inlined here (retried until it succeeds)
  * where pret's calls CTRDGi_SendtoPxi. */

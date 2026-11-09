@@ -54,6 +54,7 @@ enum d_a_obj_wc_mizu_AssetId { ASSET_WC_MIZU_BMD = 0x06ca, ASSET_WC_MIZU_KCL = 0
 #include "daObjWc_Mizu_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
+#include "nitro/fx/fx_trig.h"
 
 struct BMD_File;
 struct BTA_File;
@@ -82,11 +83,9 @@ extern BTA_File data_ov029_02112fb8;
 extern CLPS_Block data_ov029_02112fec;
 extern u8 data_0209f2c0;
 extern int data_0209f32c;
-extern s16 data_02082214[];
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjWc_Mizu_c_classInit
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: WDW_Water_Spawn. */
 extern "C" daObjWc_Mizu_c *daObjWc_Mizu_c_classInit() {
@@ -95,7 +94,6 @@ extern "C" daObjWc_Mizu_c *daObjWc_Mizu_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjWc_Mizu_c13InitResourcesEv
 int daObjWc_Mizu_c::InitResources() {
     void *m;
     void *k;
@@ -131,10 +129,8 @@ int daObjWc_Mizu_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjWc_Mizu_c8BehaviorEv
 int daObjWc_Mizu_c::Behavior() {
     int t;
-    int i;
 
     mAreaId = -1;
 
@@ -167,8 +163,7 @@ int daObjWc_Mizu_c::Behavior() {
     }
 
     mPhaseAngle += 0x200;
-    i = (u16)mPhaseAngle >> 4;
-    mWaterHeight = (int)data_02082214[i * 2] * 0xf + mPosY;
+    mWaterHeight = FX_SinIdx((u16)mPhaseAngle >> 4) * 0xf + mPosY;
     data_0209f32c = mWaterHeight;
     UpdateModelTransform();
     UpdateClsnTransform();
@@ -179,7 +174,6 @@ int daObjWc_Mizu_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjWc_Mizu_c6RenderEv
 int daObjWc_Mizu_c::Render() {
     mTextureTransformer.Update(mModel.data);
     mModel.Render(0);
@@ -188,7 +182,6 @@ int daObjWc_Mizu_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjWc_Mizu_c16CleanupResourcesEv
 int daObjWc_Mizu_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -200,7 +193,6 @@ int daObjWc_Mizu_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjWc_Mizu_c20UpdateModelTransformEv
 /* The water model sits at the bobbing surface height, in model eighths. */
 void daObjWc_Mizu_c::UpdateModelTransform() {
     Matrix4x3_FromTranslation(&mModel.mat4x3, mPosX >> 3, mWaterHeight >> 3, mPosZ >> 3);
@@ -208,7 +200,6 @@ void daObjWc_Mizu_c::UpdateModelTransform() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjWc_Mizu_c19UpdateClsnTransformEv
 /* The collision mesh takes the model's rotation with a full-scale translation. */
 void daObjWc_Mizu_c::UpdateClsnTransform() {
     mClsnMat = mModel.mat4x3;
@@ -220,8 +211,6 @@ void daObjWc_Mizu_c::UpdateClsnTransform() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjWc_Mizu_cD1Ev
-// @symbol _ZN14daObjWc_Mizu_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjWc_Mizu_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
    D1 and then D0 -- the cartridge's own order -- and no leaf D2. Writing the

@@ -1,50 +1,85 @@
 #include "types.h"
 #include "Ov007Sprite.h"
 #include "Ov007Texture.h"
+#include "nitro/fx/fx.h"
 extern void func_ov007_020c1448(Ov007Texture *self, u32 texGen, u32 repeat, u32 flip, u32 color0);
-extern void func_ov007_020c1404(Ov007Texture *tex);
+extern void Texture_BindPalette(Ov007Texture *tex);
 extern void func_ov007_020c49bc(int a0, int a1, int a2, int a3, int a4, int a5, u16 *a6, int a7);
 extern int data_ov007_0210325c;
+#define reg_G3_COLOR        (*(volatile u32 *)0x04000480)
+#define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
+#define reg_G3_MTX_PUSH     (*(volatile u32 *)0x04000444)
+#define reg_G3_MTX_POP      (*(volatile u32 *)0x04000448)
+#define reg_G3_MTX_SCALE    (*(volatile u32 *)0x0400046c)
+#define reg_G3_MTX_TRANS    (*(volatile u32 *)0x04000470)
+#define reg_G3_TEXCOORD     (*(volatile u32 *)0x04000488)
+#define reg_G3_VTX_16       (*(volatile u32 *)0x0400048c)
+#define reg_G3_VTX_XZ       (*(volatile u32 *)0x04000498)
+#define reg_G3_VTX_YZ       (*(volatile u32 *)0x0400049c)
+#define reg_G3_BEGIN_VTXS   (*(volatile u32 *)0x04000500)
+#define reg_G3_END_VTXS     (*(volatile u32 *)0x04000504)
+
+/* NitroSDK G3 immediate-mode commands (g3imm.h). Their arguments are
+ * evaluated right to left, which is the load order the ROM shows for the
+ * texcoord and translate operands. File-local because adding them to
+ * include/nitro/gx/g3imm.h renumbers ov075/d_s_entry_entry's pinned @NNN. */
+static inline void G3_Color(u16 rgb) {
+    reg_G3_COLOR = rgb;
+}
+static inline void G3_PushMtx(void) {
+    reg_G3_MTX_PUSH = 0;
+}
+static inline void G3_PopMtx(int num) {
+    reg_G3_MTX_POP = num;
+}
+static inline void G3_Translate(fx32 x, fx32 y, fx32 z) {
+    reg_G3_MTX_TRANS = x;
+    reg_G3_MTX_TRANS = y;
+    reg_G3_MTX_TRANS = z;
+}
+static inline void G3_Scale(fx32 x, fx32 y, fx32 z) {
+    reg_G3_MTX_SCALE = x;
+    reg_G3_MTX_SCALE = y;
+    reg_G3_MTX_SCALE = z;
+}
+static inline void G3_Begin(int primitive) {
+    reg_G3_BEGIN_VTXS = primitive;
+}
+static inline void G3_End(void) {
+    reg_G3_END_VTXS = 0;
+}
+static inline void G3_TexCoord(fx32 s, fx32 t) {
+    reg_G3_TEXCOORD = (u16)(fx16)(s >> 8) | ((u16)(fx16)(t >> 8) << 16);
+}
+static inline void G3_Vtx(fx16 x, fx16 y, fx16 z) {
+    reg_G3_VTX_16 = (u16)x | ((u16)y << 16);
+    reg_G3_VTX_16 = (u16)z;
+}
+static inline void G3_VtxXZ(fx16 x, fx16 z) {
+    reg_G3_VTX_XZ = (u16)x | ((u16)z << 16);
+}
+static inline void G3_VtxYZ(fx16 y, fx16 z) {
+    reg_G3_VTX_YZ = (u16)y | ((u16)z << 16);
+}
+
 /* Draws the sprite's textured quad in `color` at `alpha` (0-31) with
  * polygon id `polygonId`, offset by `vec`; `flags` is the sprite's
  * drawFlags for the plain pass (func_ov007_020c421c passes 0 for its
  * shadow pass). */
-void func_ov007_020c4684(Ov007Sprite *s, int color, int alpha, int polygonId, int flags, s16 *vec) {
-    s16 sx;
-    s16 *v;
-    int new_var2;
-    int tw;
+void func_ov007_020c4684(Ov007Sprite *s, u16 color, int alpha, int polygonId, int flags, s16 *vec) {
+    int tw = 0;
     u16 *tilemap;
-    s16 sy;
-    u16 us;
-    u16 ut;
-    int xl;
-    int th;
-    volatile int *new_var;
-    int yl;
+    u16 repeatU = s->repeatU;
+    u16 repeatV = s->repeatV;
+    int s0 = s->texS << 12;
+    int th = 0;
+    int t0 = s->texT << 12;
     Ov007Texture *tex;
-    int orig_tw;
+    int texW;
     int w;
     int h;
-    s16 vz;
-    s16 vy;
-    int scale;
-    s64 mul_w;
-    s64 mul_h;
-    int use_col;
-    u16 y0;
-    u16 x0;
-    u16 y1;
-    u16 x1;
-    sx = s->texS;
-    sy = s->texT;
-    v = vec;
-    tw = 0;
-    us = s->repeatU;
-    ut = s->repeatV;
-    th = tw;
-    xl = sx << 12;
-    yl = sy << 12;
+    int useColors;
+
     if (flags & 8) {
         tilemap = s->tilemap;
     } else {
@@ -54,78 +89,54 @@ void func_ov007_020c4684(Ov007Sprite *s, int color, int alpha, int polygonId, in
         return;
     }
     tex = s->frames[s->frame];
-    *((volatile int *)0x04000480) = color;
+    G3_Color(color);
     if (tex != 0) {
         tw = 8 << tex->sizeS;
         th = 8 << tex->sizeT;
     }
     func_ov007_020c1448(tex, 1, s->texRepeat, s->texFlip, s->texColor0);
-    func_ov007_020c1404(tex);
-    orig_tw = tw;
-    new_var2 = flags;
-    *((volatile int *)0x040004A4) = ((s->polygonAttr | 0x80) | (polygonId << 24)) | (alpha << 16);
+    Texture_BindPalette(tex);
+    texW = tw;
+    reg_G3_POLYGON_ATTR = s->polygonAttr | 0x80 | (polygonId << 24) | (alpha << 16);
     if (tex != 0) {
-        if (us == 1) {
+        if (repeatU == 1) {
             tw = s->width;
         }
-        if (ut == 1) {
+        if (repeatV == 1) {
             th = s->height;
         }
     }
-    *((volatile int *)0x04000444) = 0;
+    G3_PushMtx();
     w = s->worldWidth;
     h = s->worldHeight;
-    {
-        int t2 = (int)v[2];
-        int t1 = ((int)v[1]) + ((-h) / 2);
-        int t0 = ((int)v[0]) + ((-w) / 2);
-        *((volatile unsigned int *)0x4000470) = t0;
-        *((volatile unsigned int *)0x4000470) = t1;
-        *((volatile unsigned int *)0x4000470) = t2;
-    }
-    scale = data_ov007_0210325c;
-    mul_w = (((s64)w) * scale) + 0x800;
-    mul_h = (((s64)h) * scale) + 0x800;
-    *((volatile int *)0x0400046C) = (int)(mul_w >> 12);
-    *((volatile int *)0x0400046C) = (int)(mul_h >> 12);
-    *((volatile int *)0x0400046C) = 0x1000;
-    if (((flags & 1) == 0) && ((new_var2 & 2) == 0)) {
-        func_ov007_020c49bc(tw, th, xl, yl, us, ut, tilemap, orig_tw);
+    G3_Translate(vec[0] + -w / 2, vec[1] + -h / 2, vec[2]);
+    G3_Scale(FX_MUL(w, data_ov007_0210325c), FX_MUL(h, data_ov007_0210325c), 0x1000);
+    if (((flags & 1) == 0) && ((flags & 2) == 0)) {
+        func_ov007_020c49bc(tw, th, s0, t0, repeatU, repeatV, tilemap, texW);
     } else {
-        use_col = s->drawFlags & 2;
-        *((volatile int *)0x04000500) = 1;
-        if (use_col != 0) {
-            *((volatile int *)0x04000480) = s->cornerColors[0];
+        useColors = s->drawFlags & 2;
+        G3_Begin(1);
+        if (useColors) {
+            G3_Color(s->cornerColors[0]);
         }
-
-        h = yl << 8;
-        w = h ? (xl << 8) : (xl << 8);
-        y0 = (u16)(((s32)h) >> 16);
-        x0 = (u16)(((s32)w) >> 16);
-        *((volatile int *)0x04000488) = (y0, x0 | (y0 << 16));
-
-        *((volatile int *)0x0400048C) = 0x10000000;
-        *((volatile int *)0x0400048C) = 0;
-        if (use_col != (0x54 * 0)) {
-            *((volatile int *)0x04000480) = s->cornerColors[1];
+        G3_TexCoord(s0, t0);
+        G3_Vtx(0, 0x1000, 0);
+        if (useColors) {
+            G3_Color(s->cornerColors[1]);
         }
-        y1 = (u16)(((s32)((((th << 12) * ut) + yl) << 8)) >> 16);
-        x0 = (u16)(((s32)(xl << 8)) >> 16);
-        *((volatile int *)0x04000488) = x0 | (y1 << 16);
-        *((volatile int *)0x0400049C) = 0;
-        if (use_col != 0) {
-            *((volatile int *)0x04000480) = s->cornerColors[2];
+        G3_TexCoord(s0, (th << 12) * repeatV + t0);
+        G3_VtxYZ(0, 0);
+        if (useColors) {
+            G3_Color(s->cornerColors[2]);
         }
-        new_var = (volatile int *)0x04000488;
-        x1 = (u16)(((s32)((((tw << 12) * us) + xl) << 8)) >> 16);
-        *new_var = x1 | (y1 << 16);
-        *((volatile int *)0x04000498) = 0x1000;
-        if (use_col) {
-            *((volatile int *)0x04000480) = s->cornerColors[3];
+        G3_TexCoord((tw << 12) * repeatU + s0, (th << 12) * repeatV + t0);
+        G3_VtxXZ(0x1000, 0);
+        if (useColors) {
+            G3_Color(s->cornerColors[3]);
         }
-        *((volatile int *)0x04000488) = x1 | (y0 << 16);
-        *((volatile int *)0x0400049C) = 0x1000;
-        *((volatile int *)0x04000504) = 0;
+        G3_TexCoord((tw << 12) * repeatU + s0, t0);
+        G3_VtxYZ(0x1000, 0);
+        G3_End();
     }
-    *((volatile int *)0x04000448) = 1;
+    G3_PopMtx(1);
 }

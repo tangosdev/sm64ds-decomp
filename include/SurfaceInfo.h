@@ -37,6 +37,7 @@ struct SurfaceInfo {
     struct Vector3 normal;      /* 0x08 - the face normal */
 
     void CopyNormalTo(struct Vector3 &out) const;
+    void CopyFrom(const SurfaceInfo &); /* 0x02037de8; coined */
 };
 
 #ifndef SM64DS_PLATFORM_PC

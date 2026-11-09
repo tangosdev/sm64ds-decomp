@@ -13,7 +13,7 @@
 struct Ov007Camera;
 
 /* The 0x20-byte picker parameters, data_ov007_020d7b60
- * (func_ov007_020b9880 passes it to func_ov007_020c690c). */
+ * (PickerScene_Create passes it to func_ov007_020c690c). */
 typedef struct Ov007PickerParams {
     int pointMass; /* 0x00: Q12, each group's points (func_ov007_020c798c) */
     int damping;   /* 0x04: func_ov007_020c81a0's damping for every point */
@@ -54,7 +54,7 @@ typedef struct Ov007Picker {
      * to the spring steps: [0..1] func_ov007_020c7560 per point list, [2..3]
      * func_ov007_020c7b2c per groupLinks entry, [4..5] the same for
      * headLinks/tailLinks. One six-int row of data_ov007_020d7b80
-     * (func_ov007_020ba9bc) */
+     * (PickerScene_UpdatePicker) */
     int *springConstants;
     Ov007PickerParams *params; /* 0x1c */
     Ov007StrokePath *path;     /* 0x20: the stroke being drawn (func_ov007_020c2c68) */
@@ -87,7 +87,7 @@ typedef struct Ov007Picker {
      * copies it back, func_ov007_020c6314 measures rest link lengths from it */
     Vector3 restPos;
     /* 0x88: func_ov007_020c5188 adds it to pos for one simulation step and
-     * then restores pos; func_ov007_020baa10 sweeps it per menu state */
+     * then restores pos; PickerScene_UpdateMoveAnim sweeps it per menu state */
     Vector3 posOffset;
     /* 0x94: func_ov007_020c844c's follower over anchorPos; `link`'s from end */
     Ov007Follower *anchorPoint;

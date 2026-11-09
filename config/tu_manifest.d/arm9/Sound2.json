@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x02048528..0x020490b0, 23 functions, gapless in config/arm9/delinks.txt; one source.",
-    "One module by its data: every volume/pan function reads the near/far range words data_02099fa8/data_02099fac that func_02048fd4 loads, and the pan channel data_02099fa4; func_02048720 and func_02048f34 own the voice-slot tables data_020a4bf0..data_020a4c18 and the slot-9 count data_02099fb0 that func_02048e54/e74/e94 set. Seven of them call func_02049018, the listener-distance helper, and nothing outside this run calls it.",
+    "One module by its data: every volume/pan function reads the near/far range words data_02099fa8/data_02099fac that SetSoundRange loads, and the pan channel data_02099fa4; func_02048720 and func_02048f34 own the voice-slot tables data_020a4bf0..data_020a4c18 and the slot-9 count data_02099fb0 that func_02048e54/e74/e94 set. Seven of them call func_02049018, the listener-distance helper, and nothing outside this run calls it.",
     "Sound.cpp (0x02011654..0x02013548) is the only caller of every function here outside the run itself.",
     "BOTTOM EDGE: func_02048234 (0x02048234..0x02048528) is a rotation-matrix builder whose only caller is ModelComponents.cpp; it shares no data with this run.",
     "TOP EDGE: func_020490b0 (0x020490b0) starts the CP15/IRQ code that runs up to Particle_Manager.cpp."
@@ -168,7 +168,7 @@
       "ordinal": 20
     },
     {
-      "symbol": "func_02048fd4",
+      "symbol": "SetSoundRange",
       "address": "0x02048fd4",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0204/func_02048f34.c",
@@ -188,7 +188,7 @@
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the main module is unsegmentable, so there is no create candidate id.",
     "Sound2 is the tree class name plus the numeric suffix for the second Sound run (E01). The Func_02048eb4/ec4/ee4 names are the existing address-style Sound spellings; every other function keeps its address name under extern C.",
-    "Folded 2026-10-28: the fourteen sources around the eight thunks (func_02048528..func_02048e94, func_02048f34.c with func_02048fd4, and the root src/func_02049018.c) join the thunks, so the file now covers 0x02048528..0x020490b0.",
+    "Folded 2026-10-28: the fourteen sources around the eight thunks (func_02048528..func_02048e94, func_02048f34.c with func_02048fd4, now SetSoundRange, and the root src/func_02049018.c) join the thunks, so the file now covers 0x02048528..0x020490b0.",
     "The shards disagreed on the range words' types (int, u32, volatile u32). One u32 declaration matches every body; volatile does not (it reorders func_02048908's and func_02048d80's loads).",
     "mwccarm emits .text in reverse source order, so the file runs ROM-descending. No pragma: the shards carried none.",
     "Text-only. The range words, voice slots and the range table data_020821c0 stay ROM-owned and are reached by extern."

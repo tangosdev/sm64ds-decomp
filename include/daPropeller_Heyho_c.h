@@ -77,7 +77,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
         in src/game/actors/d_a_propeller_heyho.cpp] */
     u16                          mCooldown;             /* 0x3cc */
     u8  pad_3ce[0x2];
-    /* Particle uniqueIDs: System::New 0x13a and NewUnkCallback818 0x13b in
+    /* Particle uniqueIDs: System::New 0x13a and NewCleanParticle 0x13b in
        the defeated-state helper, only while mStateStep is set.
        [func_ov070_0211f368, in src/game/actors/d_a_propeller_heyho.cpp] */
     u32                          mParticle0;            /* 0x3d0 */
@@ -128,6 +128,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     int func_ov070_0211f48c();
     int func_ov070_0211f62c();
     int func_ov070_0211f6e0();
+    void func_ov070_02120070();
 };
 
 /* Inline destructor is not the key function; OnYoshiTryEat is the first

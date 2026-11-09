@@ -25,8 +25,6 @@
  *   id). This TU's Behavior and tap handlers (UpdateGameSelect /
  *   MiniGm_UpdatePageArrows / MiniGm_UpdateExitButton / MiniGm_UpdateGroupTabs)
  *   call it. Naming belongs in arm9.
- * Leftover: _ZN7dWipe_c13func_0202ec9cEi is the wipe start helper. This
- *   TU's UpdateGameSelect hands it data_0209f61c.
  * Leftover: Disable3dEngines / func_020233f4 are arm9 graphics-setup
  *   tails. This TU's InitResources calls them.
  * Leftover: sMiniGmGroupBases group-base table,
@@ -87,7 +85,7 @@ extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern short gSubBg3HOffset;
 extern short gSubBg0HOffset;
-extern dFdBrightness_c *data_0209f5bc; /* the installed screen fader */
+extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
 extern u8 data_0209f5f8;
 extern dWipe_c data_0209f61c;
 extern int data_0208ee44;
@@ -149,13 +147,11 @@ extern void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pa
 
 }
 
-// @symbol dScMiniGm_c_classInit
 extern "C" dScMiniGm_c *dScMiniGm_c_classInit()
 {
     return new dScMiniGm_c();
 }
 
-// @symbol _ZN11dScMiniGm_c13InitResourcesEv
 s32 dScMiniGm_c::InitResources()
 {
     int i, j;
@@ -375,7 +371,6 @@ s32 dScMiniGm_c::InitResources()
     return 1;
 }
 
-// @symbol MiniGm_LoadGroupIcons
 extern "C" {
 void MiniGm_LoadGroupIcons(void *selfv)
 {
@@ -520,7 +515,6 @@ void MiniGm_LoadGroupIcons(void *selfv)
 }
 }
 
-// @symbol MiniGm_LoadIconPalette
 extern "C" {
 void MiniGm_LoadIconPalette(char *self, int index)
 {
@@ -532,7 +526,6 @@ void MiniGm_LoadIconPalette(char *self, int index)
 }
 }
 
-// @symbol _ZN11dScMiniGm_c16CleanupResourcesEv
 s32 dScMiniGm_c::CleanupResources()
 {
     if (gMgLastSelected[0] >= 0) {
@@ -542,7 +535,6 @@ s32 dScMiniGm_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN11dScMiniGm_c8BehaviorEv
 s32 dScMiniGm_c::Behavior()
 {
     if ((data_020a0e5a[gActivePlayerSlot << 1] & 0xfff) != 0) {
@@ -590,7 +582,6 @@ s32 dScMiniGm_c::Behavior()
     return 1;
 }
 
-// @symbol MiniGm_DrawRecords
 extern "C" {
 void MiniGm_DrawRecords(void *selfv)
 {
@@ -681,7 +672,6 @@ void MiniGm_DrawRecords(void *selfv)
 }
 }
 
-// @symbol MiniGm_DrawNumber
 extern "C" {
 
 void MiniGm_DrawNumber(void *a0, int x, int y, int val){
@@ -708,7 +698,6 @@ void MiniGm_DrawNumber(void *a0, int x, int y, int val){
 }
 }
 
-// @symbol MiniGm_DrawNewBadges
 extern "C" {
 void MiniGm_DrawNewBadges(void *selfv)
 {
@@ -737,7 +726,6 @@ void MiniGm_DrawNewBadges(void *selfv)
 }
 }
 
-// @symbol _ZN11dScMiniGm_c6RenderEv
 s32 dScMiniGm_c::Render()
 {
     int i;
@@ -821,18 +809,16 @@ s32 dScMiniGm_c::Render()
     return 1;
 }
 
-// @symbol _ZN11dScMiniGm_c16OnPendingDestroyEv
 void dScMiniGm_c::OnPendingDestroy()
 {
 }
 
-// @symbol MiniGm_UpdateGroupTabs
 extern "C" {
 
 void MiniGm_UpdateGroupTabs(char *self)
 {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0)
         return;
@@ -922,12 +908,11 @@ void MiniGm_UpdateGroupTabs(char *self)
 }
 }
 
-// @symbol MiniGm_UpdatePageArrows
 extern "C" {
 void MiniGm_UpdatePageArrows(char *self)
 {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0) return;
     if (scene->mPageFlipped == 1) return;
@@ -967,14 +952,13 @@ void MiniGm_UpdatePageArrows(char *self)
 }
 }
 
-// @symbol _ZN11dScMiniGm_c16UpdateGameSelectEv
 void dScMiniGm_c::UpdateGameSelect()
 {
     int sel;
     int ok;
     int row;
 
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (mExiting != 0) return;
     if (mPageFlipped == 1) return;
@@ -1024,7 +1008,7 @@ void dScMiniGm_c::UpdateGameSelect()
     MiniGm_LoadIconPalette((char *)this, sel);
     func_02012790(0x1e);
     dScene_c::SetFaders(&data_0209f61c);
-    data_0209f61c.func_0202ec9c(0);
+    data_0209f61c.SetType(0);
     gMgMenuRow.level = mStartLevel;
     dScene_c::StartSceneFade(sMiniGmRows[gMgLastSelected[0]].id,
                              sMiniGmRows[gMgLastSelected[0]].sceneParam, 0);
@@ -1033,12 +1017,11 @@ void dScMiniGm_c::UpdateGameSelect()
     data_0209b2fc = 1;
 }
 
-// @symbol MiniGm_UpdateExitButton
 extern "C" {
 
 void MiniGm_UpdateExitButton(char *self) {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0) return;
     if (scene->mPageFlipped == 1) return;
@@ -1062,12 +1045,11 @@ void MiniGm_UpdateExitButton(char *self) {
 }
 }
 
-// @symbol MiniGm_UpdatePageScroll
 extern "C" {
 
 void MiniGm_UpdatePageScroll(char *self) {
     dScMiniGm_c *scene = (dScMiniGm_c *)self;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     if (scene->mExiting != 0) return;
     if (scene->mPrevPageTimer > 0) return;
@@ -1095,7 +1077,6 @@ void MiniGm_UpdatePageScroll(char *self) {
 }
 }
 
-// @symbol MiniGm_HasSecondPage
 extern "C" {
 int MiniGm_HasSecondPage(void *self){
   int i, j;
@@ -1110,7 +1091,6 @@ int MiniGm_HasSecondPage(void *self){
 }
 }
 
-// @symbol MiniGm_IsUnlocked
 extern "C" {
 int MiniGm_IsUnlocked(void *self, int n) {
     if (n < 8) {
@@ -1120,7 +1100,6 @@ int MiniGm_IsUnlocked(void *self, int n) {
 }
 }
 
-// @symbol MiniGm_IsNew
 extern "C" {
 int MiniGm_IsNew(void *self, int n) {
     if (n < 8) {
@@ -1131,7 +1110,6 @@ int MiniGm_IsNew(void *self, int n) {
 }
 }
 
-// @symbol MiniGm_ClearNew
 extern "C" {
 void MiniGm_ClearNew(void *self, int n)
 {
@@ -1146,7 +1124,6 @@ void MiniGm_ClearNew(void *self, int n)
 }
 }
 
-// @symbol MiniGm_GetSaveTable
 extern "C" {
 int MiniGm_GetSaveTable(void *a, int i) {
     int offset = i * 0x34;
@@ -1154,7 +1131,6 @@ int MiniGm_GetSaveTable(void *a, int i) {
 }
 }
 
-// @symbol MiniGm_GetRecord
 extern "C" {
 int MiniGm_GetRecord(void *a, int b, int c) {
     int res = MiniGm_GetSaveTable(a, b);
@@ -1162,7 +1138,6 @@ int MiniGm_GetRecord(void *a, int b, int c) {
 }
 }
 
-// @symbol MiniGm_SetRecord
 extern "C" {
 void MiniGm_SetRecord(void *a0, int a1, int r2, int r3) {
     int r5 = r2;
@@ -1172,11 +1147,10 @@ void MiniGm_SetRecord(void *a0, int a1, int r2, int r3) {
 }
 }
 
-// @symbol MiniGm_SaveIfDirty
 extern "C" void MiniGm_SaveIfDirty(char *self)
 {
     if (gMgSaveDirty != 1) return;
-    if (data_0209f5bc->IsAtStart() == 0)
+    if (gSceneFader->IsAtStart() == 0)
         return;
     SaveData::SaveMinigames(&data_0209cae4);
     gMgSaveDirty = 0;

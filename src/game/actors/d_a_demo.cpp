@@ -126,6 +126,7 @@ enum daDemo_c_AssetId {
 #include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 struct OamAttr;
 
@@ -386,7 +387,7 @@ extern void SetSubBg1Offset(int a, int b);
 /* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. Kept
    as the void * this file has always declared (the tree's declarations
    disagree); 23f0 casts at the one use. */
-extern void *data_0209f5bc;
+extern void *gSceneFader;
 extern u8 data_ov002_02111144;
 extern u32 data_020a0db0;
 extern int func_ov002_020f2630(daDemo_c *self);
@@ -447,7 +448,7 @@ extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern int *Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
-extern char *data_0209f318;
+extern char *gCamera;
 extern int data_ov002_0210b614;
 extern int data_ov002_0210b958;
 /* local extern dropped: decl_common.h declares data_0209b41c */
@@ -458,13 +459,13 @@ extern void func_0201ef38(void);
 extern void Math_Function_0203b0fc(int *p, int target, int scale, int max);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(VecFx32 *out, const VecFx32 *in, int scale);
-extern void Vec3_Add(VecFx32 *out, VecFx32 *a, VecFx32 *b);
+extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 
 /* local extern dropped: decl_common.h declares data_0209b41c */
 extern int data_0208ee44;
 extern int data_ov002_0210b970[3];
-extern unsigned char data_0209f250;
-extern void *data_0209f394[];
+extern unsigned char gLocalPlayerId;
+extern void *gPlayers[];
 /* void *: every caller passes &mPosX and POD int[3] scratch; retyping that
    scratch as Vector3 renumbers this TU's @NNN literals. */
 extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
@@ -651,7 +652,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z)
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, s32 x, s32 y, s32 z);
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 data_0209b41c;
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern char data_ov002_0211094c;
 extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of gSubScreenLayers, from the legacy file for func_ov002_020f23f0, NOT applied: extern u8 gSubScreenLayers; */
@@ -700,13 +701,13 @@ extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7538, NOT applied: extern int _Z14ApproachLinearRiii(int* dst, int target, int step); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7538, NOT applied: extern unsigned short gKuppaScriptFrame; */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7780, NOT applied: extern unsigned short gKuppaScriptFrame; */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov002_020f7780, NOT applied: extern void *data_0209f318; */
+/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7780, NOT applied: extern void *gCamera; */
 /* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f7780, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7780, NOT applied: extern short Vec3_HorzAngle(const int *v0, const int *v1); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f79c0, NOT applied: extern unsigned short gKuppaScriptFrame; */
 /* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f79c0, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
 /* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov002_020f79c0, NOT applied: extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void *data_0209f318; */
+/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void *gCamera; */
 /* TUBUILD CONFLICT -- alternate declaration of AddVec3, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_VertAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1); */
@@ -720,10 +721,8 @@ int data_ov002_02110ddc[3];
 /* TUBUILD CONFLICT -- alternate declaration of data_0209b41c, from the legacy file for _ZN8daDemo_c6RenderEv, NOT applied: extern M48 data_0209b41c; */
 }
 
-// @symbol _ZN8daDemo_cD1Ev
 daDemo_c::~daDemo_c() {}
 
-// @symbol _ZN8daDemo_cD0Ev
 /* the D0 deleting destructor this file is enrolled for emits from the
    ~daDemo_c definition at ordinal 0 below; objisolate keeps the
    variant this file's delinks entry names. */
@@ -731,7 +730,6 @@ daDemo_c::~daDemo_c() {}
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov002_020f1fcc, 0x020f1fcc, size 0x128 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f1fccEv
 /* Sub-screen fade step (param1 0x2f, states 2 and 3). While fadeLevel is
  * non-zero it counts fadeTimer to 0x18, then drops fadeLevel by one and calls
  * G2x::SetBlendAlpha on 0x4001050 with (4, 0x28, fadeLevel, 0x10 - fadeLevel).
@@ -766,7 +764,6 @@ void daDemo_c::func_ov002_020f1fcc() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov002_020f20f4, 0x020f20f4, size 0x11c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f20f4Ev
 /* Moving-sprite step. For each active slot, on frames where FRAME_TIMER bit 0
  * is clear, spriteX += spriteVelX and the RNG is stepped (result unused); a
  * slot that reaches x 0x140 moving right or x -0x40 moving left goes idle with
@@ -797,7 +794,6 @@ void daDemo_c::func_ov002_020f20f4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov002_020f2210, 0x020f2210, size 0x130 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f2210Ev
 /* Sprite respawn. Counts each slot's non-zero spriteDelay down; when it hits
  * zero on an idle slot, RNG bit 0 picks x -0x40 moving right or x 0x140 moving
  * left, and y is (rng >> 16) % 48 + 0x30 * slot. Does nothing in state 6. */
@@ -838,7 +834,6 @@ void daDemo_c::func_ov002_020f2210() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov002_020f2340, 0x020f2340, size 0x3c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f2340Ev
 /* Draw the two centre sprites at x 0x80. */
 
 void daDemo_c::func_ov002_020f2340() {
@@ -849,7 +844,6 @@ void daDemo_c::func_ov002_020f2340() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- func_ov002_020f237c, 0x020f237c, size 0x54 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f237cEv
 /* Scroll the two sub-screen BG layers in opposite directions (bg1 x down
  * one, bg0 x up one) and write both offsets to the hardware. */
 
@@ -863,7 +857,6 @@ void daDemo_c::func_ov002_020f237c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov002_020f23d0, 0x020f23d0, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f23d0Ev
 /* CleanupResources for param1 0x2f: free the scroll block. */
 
 int daDemo_c::func_ov002_020f23d0() {
@@ -874,9 +867,8 @@ int daDemo_c::func_ov002_020f23d0() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov002_020f23f0, 0x020f23f0, size 0x240 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f23f0Ev
 /* Behavior for param1 0x2f: the scroll block's seven states.
- *   0  each frame the scene fader (data_0209f5bc) reports IsAtStart,
+ *   0  each frame the scene fader (gSceneFader) reports IsAtStart,
  *      centerSpriteY[0]++ and centerSpriteY[1]--; next state when
  *      centerSpriteY[0] reaches 8 (it starts at -8)
  *   1  wait for mCue == 3 (written by script handler 26c4), then set
@@ -896,7 +888,7 @@ int daDemo_c::func_ov002_020f23d0() {
 int daDemo_c::func_ov002_020f23f0() {
     switch (mScroll->state) {
     case 0:
-        if (((dFdBrightness_c *)data_0209f5bc)->IsAtStart() != 0) {
+        if (((dFdBrightness_c *)gSceneFader)->IsAtStart() != 0) {
             mScroll->centerSpriteY[0]++;
             mScroll->centerSpriteY[1]--;
             if (mScroll->centerSpriteY[0] == 8) {
@@ -965,7 +957,6 @@ int daDemo_c::func_ov002_020f23f0() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov002_020f2630, 0x020f2630, size 0x94 */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020f2630
 extern "C" { /* stays free: func_ov002_020f26d4 tail-calls it through a raw void(*)(void) */
 int func_ov002_020f2630(daDemo_c *self) {
     self->mScroll = (daDemo_c::ScrollState *)::operator new(0x36);
@@ -985,7 +976,6 @@ int func_ov002_020f2630(daDemo_c *self) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov002_020f26c4, 0x020f26c4, size 0x10 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f26c4EPh
 /* Script handler (table entry 23): mCue = p[0], the value 23f0 waits on. */
 
 int daDemo_c::func_ov002_020f26c4(unsigned char *src) {
@@ -996,7 +986,6 @@ int daDemo_c::func_ov002_020f26c4(unsigned char *src) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov002_020f26d4, 0x020f26d4, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol func_ov002_020f26d4
 /* func_ov002_020f26d4 @ 0x20f26d4 (ov002) -- tail-call veneer to func_ov002_020f2630 (0x20f2630).
  * ldr ip, [pc]; bx ip; .word 0x20f2630
  */
@@ -1009,7 +998,6 @@ void func_ov002_020f26d4(void) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov002_020f26e0, 0x020f26e0, size 0xb0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f26e0Ev
 void StaffRoll::func_ov002_020f26e0() {
     /* The kira callback's tracking records: dPa_c.h keeps them as opaque
        words, so OamEnt views each one as the sparkle sprite it draws. */
@@ -1035,19 +1023,17 @@ void StaffRoll::func_ov002_020f26e0() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov002_020f2790, 0x020f2790, size 0x58 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2790Eiiis
 void StaffRoll::func_ov002_020f2790(int p1, int p2, int p3, s16 p4) {
     this->kira.unk308 = p3;
     this->kira.unk30c = p4;
     this->kiraParticle =
-        Particle::System::New(this->kiraParticle, 0x3e, p1 << 12, p2 << 12, 0, 0,
-                              (Particle::Callback *)((struct ParticleCallback *)&this->kira));
+        Particle::System::New(this->kiraParticle, kPtclEndingStarSparkle, p1 << 12, p2 << 12, 0, 0,
+                              (dPa_c::level_c::callback_c *)((struct ParticleCallback *)&this->kira));
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov002_020f27e8, 0x020f27e8, size 0x170 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f27e8Ev
 int StaffRoll::func_ov002_020f27e8() {
     if (this->burstActive == 0)
         return this->burstActive;
@@ -1087,7 +1073,6 @@ int StaffRoll::func_ov002_020f27e8() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov002_020f2958, 0x020f2958, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2958Ev
 void StaffRoll::func_ov002_020f2958() {
     this->burstActive = 1;
     this->burstDefParam = 0x199;
@@ -1099,7 +1084,6 @@ void StaffRoll::func_ov002_020f2958() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- func_ov002_020f2984, 0x020f2984, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2984Ev
 int StaffRoll::func_ov002_020f2984() {
     this->burstActive = 0;
     return (int)this;
@@ -1108,7 +1092,6 @@ int StaffRoll::func_ov002_020f2984() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov002_020f2990, 0x020f2990, size 0xb8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2990Ev
 int StaffRoll::func_ov002_020f2990() {
     int x, y;
     int idx;
@@ -1132,7 +1115,6 @@ int StaffRoll::func_ov002_020f2990() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov002_020f2a48, 0x020f2a48, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2a48Ev
 void StaffRoll::func_ov002_020f2a48() {
     /* 0x1d8/0x1d9 and the position: see func_ov002_020f2990. */
     this->endActive = 1;
@@ -1144,7 +1126,6 @@ void StaffRoll::func_ov002_020f2a48() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- func_ov002_020f2a68, 0x020f2a68, size 0x10 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2a68Ev
 void StaffRoll::func_ov002_020f2a68() {
     /* 0x1d8/0x1d9: see func_ov002_020f2990. */
     this->endActive = 0;
@@ -1154,7 +1135,6 @@ void StaffRoll::func_ov002_020f2a68() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- func_ov002_020f2a78, 0x020f2a78, size 0x10 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2a78Ei
 void StaffRoll::func_ov002_020f2a78(int i) {
     this->credit[i].active = 0;
 }
@@ -1162,7 +1142,6 @@ void StaffRoll::func_ov002_020f2a78(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov002_020f2a88, 0x020f2a88, size 0x64 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2a88Ei
 void StaffRoll::func_ov002_020f2a88(int i) {
     unsigned long new_var;
     *((short *)(((char *)this + CREDIT_OFF(timer)) + (i * 8))) =
@@ -1179,7 +1158,6 @@ void StaffRoll::func_ov002_020f2a88(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- func_ov002_020f2aec, 0x020f2aec, size 0x108 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2aecEi
 void StaffRoll::func_ov002_020f2aec(int idx) {
     StaffRoll *s = this;
 
@@ -1207,7 +1185,6 @@ void StaffRoll::func_ov002_020f2aec(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- func_ov002_020f2bf4, 0x020f2bf4, size 0x118 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2bf4Ei
 void StaffRoll::func_ov002_020f2bf4(int idx) {
     StaffRoll *s = this;
 
@@ -1236,7 +1213,6 @@ void StaffRoll::func_ov002_020f2bf4(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- func_ov002_020f2d0c, 0x020f2d0c, size 0x64 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2d0cEi
 void StaffRoll::func_ov002_020f2d0c(int i) {
     long new_var;
     *((short *)(((char *)this + CREDIT_OFF(timer)) + (i * 8))) =
@@ -1254,7 +1230,6 @@ void StaffRoll::func_ov002_020f2d0c(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- func_ov002_020f2d70, 0x020f2d70, size 0x64 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2d70Ei
 void StaffRoll::func_ov002_020f2d70(int i) {
     StaffRoll *p;
     p = (StaffRoll *)((char *)this + CREDIT_OFF(timer));
@@ -1271,7 +1246,6 @@ void StaffRoll::func_ov002_020f2d70(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 26 -- func_ov002_020f2dd4, 0x020f2dd4, size 0x5c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2dd4Ev
 extern Entry2dd4 data_ov002_02110ebc[];
 void StaffRoll::func_ov002_020f2dd4() {
     if (this->credit[0].active == 0)
@@ -1282,7 +1256,6 @@ void StaffRoll::func_ov002_020f2dd4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- StartCredit, 0x020f2e30, size 0x70 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll11StartCreditEi
 /* StartCredit at 0x020f2e30
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
@@ -1307,7 +1280,6 @@ void StaffRoll::StartCredit(int n) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 28 -- func_ov002_020f2ea0, 0x020f2ea0, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2ea0Ev
 void StaffRoll::func_ov002_020f2ea0() {
     this->credit[0].active = 0;
 }
@@ -1315,7 +1287,6 @@ void StaffRoll::func_ov002_020f2ea0() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 29 -- func_ov002_020f2eac, 0x020f2eac, size 0x6c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2eacEv
 void StaffRoll::func_ov002_020f2eac() {
     int i;
     StaffRoll *p = this;
@@ -1331,7 +1302,6 @@ void StaffRoll::func_ov002_020f2eac() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 30 -- func_ov002_020f2f18, 0x020f2f18, size 0x4c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2f18Eii
 void StaffRoll::func_ov002_020f2f18(int a, int b) {
     StaffRoll *c = this;
     int i = 0;
@@ -1348,7 +1318,6 @@ void StaffRoll::func_ov002_020f2f18(int a, int b) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 31 -- func_ov002_020f2f64, 0x020f2f64, size 0x38 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2f64Ev
 void StaffRoll::func_ov002_020f2f64() {
     StaffRoll *self = this;
     int i;
@@ -1363,7 +1332,6 @@ void StaffRoll::func_ov002_020f2f64() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 32 -- func_ov002_020f2f9c, 0x020f2f9c, size 0x138 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f2f9cEi
 void StaffRoll::func_ov002_020f2f9c(int count) {
     StaffRoll *sl = this;
     int i;
@@ -1398,7 +1366,6 @@ void StaffRoll::func_ov002_020f2f9c(int count) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 33 -- func_ov002_020f30d4, 0x020f30d4, size 0x24 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f30d4Ev
 void StaffRoll::func_ov002_020f30d4() {
     StaffRoll *p = this;
     int i;
@@ -1412,7 +1379,6 @@ void StaffRoll::func_ov002_020f30d4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 34 -- func_ov002_020f30f8, 0x020f30f8, size 0x1ec */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f30f8Ei
 void StaffRoll::func_ov002_020f30f8(int i) {
     int idx = i * 0x30;
     unsigned short t;
@@ -1476,7 +1442,6 @@ void StaffRoll::func_ov002_020f30f8(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 35 -- func_ov002_020f32e4, 0x020f32e4, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f32e4Ei
 void StaffRoll::func_ov002_020f32e4(int i) {
     this->window[i].delay = 0x10;
     this->window[i].stepX = 0x1800;
@@ -1487,7 +1452,6 @@ void StaffRoll::func_ov002_020f32e4(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 36 -- func_ov002_020f3310, 0x020f3310, size 0x4c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3310Ei
 void StaffRoll::func_ov002_020f3310(int idx) {
     unsigned char sel = this->window[idx].step;
     (this->*data_ov002_02110e24[sel])(idx);
@@ -1496,7 +1460,6 @@ void StaffRoll::func_ov002_020f3310(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 37 -- func_ov002_020f335c, 0x020f335c, size 0xb0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f335cEi
 void StaffRoll::func_ov002_020f335c(int i) {
     StaffRoll *s = this;
     s->window[i].top += 0x1800;
@@ -1518,7 +1481,6 @@ void StaffRoll::func_ov002_020f335c(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 38 -- func_ov002_020f340c, 0x020f340c, size 0xb0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f340cEi
 void StaffRoll::func_ov002_020f340c(int i) {
     StaffRoll *s = this;
     s->window[i].top += 0x1800;
@@ -1540,7 +1502,6 @@ void StaffRoll::func_ov002_020f340c(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 39 -- func_ov002_020f34bc, 0x020f34bc, size 0x128 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f34bcEi
 void StaffRoll::func_ov002_020f34bc(int idx) {
     int k = idx * 0x30;
     int flag;
@@ -1578,7 +1539,6 @@ void StaffRoll::func_ov002_020f34bc(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 40 -- func_ov002_020f35e4, 0x020f35e4, size 0x15c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f35e4Ei
 void StaffRoll::func_ov002_020f35e4(int i) {
     int off = i * 0x30;
     *(int *)((char *)this + WINDOW_OFF(left) + off) = 0xe0000;
@@ -1619,7 +1579,6 @@ void StaffRoll::func_ov002_020f35e4(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 41 -- func_ov002_020f3740, 0x020f3740, size 0x4c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3740Ei
 void StaffRoll::func_ov002_020f3740(int idx) {
     unsigned char sel = this->window[idx].step;
     (this->*data_ov002_02110e9c[sel])(idx);
@@ -1628,7 +1587,6 @@ void StaffRoll::func_ov002_020f3740(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 42 -- func_ov002_020f378c, 0x020f378c, size 0x14 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f378cEi
 void StaffRoll::func_ov002_020f378c(int idx) {
     this->window[idx].step = 0;
 }
@@ -1636,7 +1594,6 @@ void StaffRoll::func_ov002_020f378c(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 43 -- func_ov002_020f37a0, 0x020f37a0, size 0x5c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f37a0Ev
 extern Entry37 data_ov002_02110e4c[];
 void StaffRoll::func_ov002_020f37a0() {
     if (this->window[0].active == 0)
@@ -1647,7 +1604,6 @@ void StaffRoll::func_ov002_020f37a0() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 44 -- func_ov002_020f37fc, 0x020f37fc, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f37fcEv
 void StaffRoll::func_ov002_020f37fc() {
     func_ov002_020f3828();
     this->window[0].active = 1;
@@ -1658,7 +1614,6 @@ void StaffRoll::func_ov002_020f37fc() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 45 -- func_ov002_020f3828, 0x020f3828, size 0x12c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3828Ev
 void StaffRoll::func_ov002_020f3828() {
     this->window[0].left = 0x80000;
     this->window[0].top = 0x66000;
@@ -1694,7 +1649,6 @@ void StaffRoll::func_ov002_020f3828() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 46 -- func_ov002_020f3954, 0x020f3954, size 0x18 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3954Ev
 void StaffRoll::func_ov002_020f3954() {
     this->window[0].active = 1;
     this->window[0].kind = 1;
@@ -1704,7 +1658,6 @@ void StaffRoll::func_ov002_020f3954() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 47 -- func_ov002_020f396c, 0x020f396c, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f396cEv
 void StaffRoll::func_ov002_020f396c() {
     this->window[0].active = 0;
 }
@@ -1712,7 +1665,6 @@ void StaffRoll::func_ov002_020f396c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 48 -- func_ov002_020f3978, 0x020f3978, size 0x74 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3978Ev
 extern void *data_ov002_0210b998[];
 void StaffRoll::func_ov002_020f3978() {
     Star *c = this->stars;
@@ -1729,7 +1681,6 @@ void StaffRoll::func_ov002_020f3978() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 49 -- func_ov002_020f39ec, 0x020f39ec, size 0xfc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f39ecEi
 void StaffRoll::func_ov002_020f39ec(int idx) {
     StaffRoll *s = this;
     s->stars[idx].frameTimer++;
@@ -1757,7 +1708,6 @@ void StaffRoll::func_ov002_020f39ec(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 50 -- func_ov002_020f3ae8, 0x020f3ae8, size 0xb8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3ae8Ei
 void StaffRoll::func_ov002_020f3ae8(int idx) {
     Star *arr = this->stars;
     int a;
@@ -1777,7 +1727,6 @@ void StaffRoll::func_ov002_020f3ae8(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 51 -- func_ov002_020f3ba0, 0x020f3ba0, size 0x198 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3ba0Ei
 void StaffRoll::func_ov002_020f3ba0(int i) {
     int off = i * 0x4c;
     int idx, dx, dy;
@@ -1831,7 +1780,6 @@ void StaffRoll::func_ov002_020f3ba0(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 52 -- func_ov002_020f3d38, 0x020f3d38, size 0x60 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3d38Ei
 void StaffRoll::func_ov002_020f3d38(int i) {
     int off = i * 0x4c;
     if (*(u16 *)((char *)this + STAR_OFF(delay) + off) != 0) {
@@ -1850,7 +1798,6 @@ void StaffRoll::func_ov002_020f3d38(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 53 -- func_ov002_020f3d98, 0x020f3d98, size 0x4c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3d98Ei
 void StaffRoll::func_ov002_020f3d98(int idx) {
     unsigned char sel = this->stars[idx].step;
     (this->*data_ov002_02110e34[sel])(idx);
@@ -1859,7 +1806,6 @@ void StaffRoll::func_ov002_020f3d98(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 54 -- func_ov002_020f3de4, 0x020f3de4, size 0x318 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f3de4Ei
 /* Per-slot update of one 0x4c-byte cutscene record. func_ov002_020f5a94
  * takes c so r0 stays live through the orbit path to the call. */
 void StaffRoll::func_ov002_020f3de4(int i) {
@@ -1960,7 +1906,6 @@ void StaffRoll::func_ov002_020f3de4(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 55 -- func_ov002_020f40fc, 0x020f40fc, size 0x2d0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f40fcEi
 void StaffRoll::func_ov002_020f40fc(int i) {
     int off = i * 0x4c;
 
@@ -2047,7 +1992,6 @@ void StaffRoll::func_ov002_020f40fc(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 56 -- func_ov002_020f43cc, 0x020f43cc, size 0x344 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f43ccEi
 /* recovered: per-slot update of a 4-entry cursor/target table (0x4c-byte
  * records at c). Slot i first burns its hold timer (+0x30); while its arrival
  * flag (+0x48) is clear it steps position (+0/+4) along heading (+0x2e) at
@@ -2181,7 +2125,6 @@ void StaffRoll::func_ov002_020f43cc(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 57 -- func_ov002_020f4710, 0x020f4710, size 0x31c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f4710Ei
 void StaffRoll::func_ov002_020f4710(int i) {
     int off = i * 0x4c;
 
@@ -2279,7 +2222,6 @@ void StaffRoll::func_ov002_020f4710(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 58 -- func_ov002_020f4a2c, 0x020f4a2c, size 0x344 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f4a2cEi
 void StaffRoll::func_ov002_020f4a2c(int i) {
     int off = i * 0x4c;
     int idx, dx, dy;
@@ -2398,7 +2340,6 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 59 -- func_ov002_020f4d70, 0x020f4d70, size 0x2a0 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f4d70Ei
 void StaffRoll::func_ov002_020f4d70(int i) {
     int off = i * 0x4c;
 
@@ -2485,7 +2426,6 @@ void StaffRoll::func_ov002_020f4d70(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 60 -- func_ov002_020f5010, 0x020f5010, size 0x318 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5010Ei
 /* recovered: the third of the three per-slot cursor/target updaters in this
  * family (func_ov002_020f43cc, func_ov002_020f4a2c, this one), same 0x4c-byte
  * record layout: hold timer +0x30, arrival flag +0x48, position +0/+4,
@@ -2612,7 +2552,6 @@ void StaffRoll::func_ov002_020f5010(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 61 -- func_ov002_020f5328, 0x020f5328, size 0x28c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5328Ei
 void StaffRoll::func_ov002_020f5328(int i) {
     int off = i * 0x4c;
 
@@ -2693,7 +2632,6 @@ void StaffRoll::func_ov002_020f5328(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 62 -- func_ov002_020f55b4, 0x020f55b4, size 0x78 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f55b4Ei
 void StaffRoll::func_ov002_020f55b4(int i) {
     Star *e = (Star *)((char *)this + i * 0x4c);
     if (e->frame != 0x10)
@@ -2712,7 +2650,6 @@ void StaffRoll::func_ov002_020f55b4(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 63 -- func_ov002_020f562c, 0x020f562c, size 0x4c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f562cEi
 void StaffRoll::func_ov002_020f562c(int idx) {
     unsigned char sel = this->stars[idx].step;
     (this->*data_ov002_02110eec[sel])(idx);
@@ -2721,7 +2658,6 @@ void StaffRoll::func_ov002_020f562c(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 64 -- func_ov002_020f5678, 0x020f5678, size 0x24 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5678Ei
 void StaffRoll::func_ov002_020f5678(int i) {
     Star *e = &this->stars[i];
     e->kiraDefParam = 0xccc;
@@ -2731,7 +2667,6 @@ void StaffRoll::func_ov002_020f5678(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 65 -- func_ov002_020f569c, 0x020f569c, size 0x124 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f569cEi
 void StaffRoll::func_ov002_020f569c(int i) {
     char *p = (char *)this;
     int ax;
@@ -2789,7 +2724,6 @@ void StaffRoll::func_ov002_020f569c(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 66 -- func_ov002_020f57c0, 0x020f57c0, size 0x88 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f57c0Ei
 void StaffRoll::func_ov002_020f57c0(int idx) {
     if (stars[idx].frame != 0)
         return;
@@ -2809,7 +2743,6 @@ void StaffRoll::func_ov002_020f57c0(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 67 -- func_ov002_020f5848, 0x020f5848, size 0x4c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5848Ei
 void StaffRoll::func_ov002_020f5848(int idx) {
     unsigned char sel = this->stars[idx].step;
     (this->*data_ov002_02110e64[sel])(idx);
@@ -2818,7 +2751,6 @@ void StaffRoll::func_ov002_020f5848(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 68 -- func_ov002_020f5894, 0x020f5894, size 0xfc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5894Ei
 void StaffRoll::func_ov002_020f5894(int i) {
     int off;
     unsigned short *p34;
@@ -2862,7 +2794,6 @@ void StaffRoll::func_ov002_020f5894(int i) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 69 -- func_ov002_020f5990, 0x020f5990, size 0xdc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5990Ev
 void StaffRoll::func_ov002_020f5990() {
     int i;
     StaffRoll::Star *s = this->stars;
@@ -2887,7 +2818,6 @@ void StaffRoll::func_ov002_020f5990() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 70 -- func_ov002_020f5a6c, 0x020f5a6c, size 0x28 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5a6cEv
 void StaffRoll::func_ov002_020f5a6c() {
     Star *p = this->stars;
     int i;
@@ -2902,7 +2832,6 @@ void StaffRoll::func_ov002_020f5a6c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 71 -- func_ov002_020f5a94, 0x020f5a94, size 0x40 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5a94Ev
 int StaffRoll::func_ov002_020f5a94() {
     unsigned char count = 0;
     int i;
@@ -2916,7 +2845,6 @@ int StaffRoll::func_ov002_020f5a94() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 72 -- func_ov002_020f5ad4, 0x020f5ad4, size 0x50 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5ad4Ev
 void StaffRoll::func_ov002_020f5ad4() {
     /* StaffRoll::pad_1f0: two words cleared here and read nowhere. */
     this->pad_1f0[0] = 0;
@@ -2934,7 +2862,6 @@ void StaffRoll::func_ov002_020f5ad4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 73 -- func_ov002_020f5b24, 0x020f5b24, size 0x58 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5b24Ev
 void StaffRoll::func_ov002_020f5b24() {
     gSubScreenLayers &= ~6;
     gSubScreenLayers |= 8;
@@ -2947,31 +2874,26 @@ void StaffRoll::func_ov002_020f5b24() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 74 -- func_ov002_020f5b7c, 0x020f5b7c, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5b7cEv
 void StaffRoll::func_ov002_020f5b7c() {}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 75 -- func_ov002_020f5b80, 0x020f5b80, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5b80Ev
 void StaffRoll::func_ov002_020f5b80() {}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 76 -- func_ov002_020f5b84, 0x020f5b84, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5b84Ev
 void StaffRoll::func_ov002_020f5b84() {}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 77 -- func_ov002_020f5b88, 0x020f5b88, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5b88Ev
 void StaffRoll::func_ov002_020f5b88() {}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 78 -- func_ov002_020f5b8c, 0x020f5b8c, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5b8cEv
 void StaffRoll::func_ov002_020f5b8c() {
     this->holdOrbit = 1;
 }
@@ -2979,7 +2901,6 @@ void StaffRoll::func_ov002_020f5b8c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 79 -- func_ov002_020f5b98, 0x020f5b98, size 0x34 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5b98Ev
 void StaffRoll::func_ov002_020f5b98() {
     StaffRoll::Star *e = stars;
     int i;
@@ -2996,7 +2917,6 @@ void StaffRoll::func_ov002_020f5b98() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 80 -- func_ov002_020f5bcc, 0x020f5bcc, size 0x28 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5bccEv
 void StaffRoll::func_ov002_020f5bcc() {
     Star *p = this->stars;
     int i;
@@ -3010,7 +2930,6 @@ void StaffRoll::func_ov002_020f5bcc() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 81 -- func_ov002_020f5bf4, 0x020f5bf4, size 0x4c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5bf4Ev
 void StaffRoll::func_ov002_020f5bf4() {
     if (this->stars[3].active == 0)
         return;
@@ -3025,7 +2944,6 @@ void StaffRoll::func_ov002_020f5bf4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 82 -- func_ov002_020f5c40, 0x020f5c40, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5c40Ev
 void StaffRoll::func_ov002_020f5c40() {
     if (!this->stars[2].active)
         return;
@@ -3040,7 +2958,6 @@ void StaffRoll::func_ov002_020f5c40() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 83 -- func_ov002_020f5c88, 0x020f5c88, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5c88Ev
 void StaffRoll::func_ov002_020f5c88() {
     if (this->stars[1].active == 0)
         return;
@@ -3055,7 +2972,6 @@ void StaffRoll::func_ov002_020f5c88() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 84 -- func_ov002_020f5cd0, 0x020f5cd0, size 0x64 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5cd0Ev
 void StaffRoll::func_ov002_020f5cd0() {
     StaffRoll::Star *c = stars;
     int i;
@@ -3077,7 +2993,6 @@ void StaffRoll::func_ov002_020f5cd0() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 85 -- func_ov002_020f5d34, 0x020f5d34, size 0xa4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5d34Ev
 void StaffRoll::func_ov002_020f5d34() {
     int n = func_ov002_020f5a94();
     int i = 0;
@@ -3116,7 +3031,6 @@ done:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 86 -- func_ov002_020f5dd8, 0x020f5dd8, size 0x40 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5dd8Ei
 extern PMF0 data_ov002_02110f34[];
 void StaffRoll::func_ov002_020f5dd8(int idx) {
     (this->*data_ov002_02110f34[idx])();
@@ -3125,7 +3039,6 @@ void StaffRoll::func_ov002_020f5dd8(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 87 -- func_ov002_020f5e18, 0x020f5e18, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5e18Ev
 void StaffRoll::func_ov002_020f5e18() {
     func_ov002_020f37fc();
     func_ov002_020f2f9c(4);
@@ -3134,7 +3047,6 @@ void StaffRoll::func_ov002_020f5e18() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 88 -- func_ov002_020f5e38, 0x020f5e38, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5e38Ev
 void StaffRoll::func_ov002_020f5e38() {
     func_ov002_020f3828();
     func_ov002_020f2f9c(4);
@@ -3143,7 +3055,6 @@ void StaffRoll::func_ov002_020f5e38() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 89 -- func_ov002_020f5e58, 0x020f5e58, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5e58Ev
 void StaffRoll::func_ov002_020f5e58() {
     func_ov002_020f3828();
     func_ov002_020f2f9c(3);
@@ -3152,7 +3063,6 @@ void StaffRoll::func_ov002_020f5e58() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 90 -- func_ov002_020f5e78, 0x020f5e78, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5e78Ev
 void StaffRoll::func_ov002_020f5e78() {
     func_ov002_020f3828();
     func_ov002_020f2f9c(2);
@@ -3161,7 +3071,6 @@ void StaffRoll::func_ov002_020f5e78() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 91 -- func_ov002_020f5e98, 0x020f5e98, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5e98Ev
 void StaffRoll::func_ov002_020f5e98() {
     func_ov002_020f3828();
     func_ov002_020f2f9c(1);
@@ -3170,7 +3079,6 @@ void StaffRoll::func_ov002_020f5e98() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 92 -- func_ov002_020f5eb8, 0x020f5eb8, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5eb8Ev
 void StaffRoll::func_ov002_020f5eb8() {
     func_ov002_020f3828();
     func_ov002_020f2f9c(0);
@@ -3179,7 +3087,6 @@ void StaffRoll::func_ov002_020f5eb8() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 93 -- func_ov002_020f5ed8, 0x020f5ed8, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5ed8Ev
 void StaffRoll::func_ov002_020f5ed8() {
     func_ov002_020f3828();
 }
@@ -3187,7 +3094,6 @@ void StaffRoll::func_ov002_020f5ed8() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 94 -- func_ov002_020f5ee4, 0x020f5ee4, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5ee4Ev
 void StaffRoll::func_ov002_020f5ee4() {
     func_ov002_020f3828();
 }
@@ -3195,7 +3101,6 @@ void StaffRoll::func_ov002_020f5ee4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 95 -- func_ov002_020f5ef0, 0x020f5ef0, size 0xc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5ef0Ev
 void StaffRoll::func_ov002_020f5ef0() {
     func_ov002_020f3954();
 }
@@ -3203,7 +3108,6 @@ void StaffRoll::func_ov002_020f5ef0() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 96 -- func_ov002_020f5efc, 0x020f5efc, size 0x10 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5efcEv
 /* func_ov002_020f5efc @ 0x20f5efc (ov002) -- tail-call veneer to LoadFont (0x201fcd4) with r0=0.
  */
 void StaffRoll::func_ov002_020f5efc() {
@@ -3213,7 +3117,6 @@ void StaffRoll::func_ov002_020f5efc() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 97 -- func_ov002_020f5f0c, 0x020f5f0c, size 0x54 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5f0cEi
 void StaffRoll::func_ov002_020f5f0c(int idx) {
     (this->*data_ov002_02110f9c[idx])();
     this->StartCredit(idx);
@@ -3222,7 +3125,6 @@ void StaffRoll::func_ov002_020f5f0c(int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 98 -- func_ov002_020f5f60, 0x020f5f60, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5f60Ev
 void StaffRoll::func_ov002_020f5f60() {
     void *p = this->starChars;
     if (p == 0)
@@ -3234,7 +3136,6 @@ void StaffRoll::func_ov002_020f5f60() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 99 -- func_ov002_020f5f8c, 0x020f5f8c, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5f8cEv
 int StaffRoll::func_ov002_020f5f8c() {
     this->func_ov002_020f26e0();
     func_ov002_020f3978();
@@ -3245,7 +3146,6 @@ int StaffRoll::func_ov002_020f5f8c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 100 -- func_ov002_020f5fb8, 0x020f5fb8, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5fb8Ev
 int StaffRoll::func_ov002_020f5fb8() {
     func_ov002_020f5990();
     func_ov002_020f37a0();
@@ -3256,7 +3156,6 @@ int StaffRoll::func_ov002_020f5fb8() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 101 -- func_ov002_020f5fe4, 0x020f5fe4, size 0x3bc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c9StaffRoll19func_ov002_020f5fe4Ev
 void StaffRoll::func_ov002_020f5fe4() {
     void *f;
     void *r5;
@@ -3360,7 +3259,6 @@ void StaffRoll::func_ov002_020f5fe4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 102 -- func_ov002_020f63a0, 0x020f63a0, size 0x34 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f63a0Ev
 
 int daDemo_c::func_ov002_020f63a0() {
     this->mStaffRoll->func_ov002_020f5f60();
@@ -3374,7 +3272,6 @@ int daDemo_c::func_ov002_020f63a0() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 103 -- func_ov002_020f63d4, 0x020f63d4, size 0x24 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f63d4Ev
 
 int daDemo_c::func_ov002_020f63d4() {
     this->mStaffRoll->func_ov002_020f5fb8();
@@ -3385,7 +3282,6 @@ int daDemo_c::func_ov002_020f63d4() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 104 -- func_ov002_020f63f8, 0x020f63f8, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f63f8EPh
 
 int daDemo_c::func_ov002_020f63f8(unsigned char *src) {
     this->mCue = *src;
@@ -3396,7 +3292,6 @@ int daDemo_c::func_ov002_020f63f8(unsigned char *src) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 105 -- func_ov002_020f6424, 0x020f6424, size 0x24 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6424Ev
 
 int daDemo_c::func_ov002_020f6424() {
     this->mStaffRoll->func_ov002_020f5f0c((int)this->mCue);
@@ -3406,7 +3301,6 @@ int daDemo_c::func_ov002_020f6424() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 106 -- func_ov002_020f6448, 0x020f6448, size 0x64 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6448EPh
 
 int daDemo_c::func_ov002_020f6448(unsigned char *arg1) {
     StaffRoll *p;
@@ -3422,7 +3316,6 @@ int daDemo_c::func_ov002_020f6448(unsigned char *arg1) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 107 -- func_ov002_020f64ac, 0x020f64ac, size 0x68 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c10anmModel_c19func_ov002_020f64acEPc
 
 void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4) {
     Advance();
@@ -3437,7 +3330,6 @@ void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 108 -- func_ov002_020f6514, 0x020f6514, size 0xa4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c10anmModel_c19func_ov002_020f6514EPvh
 
 void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg) {
     u8 *e;
@@ -3461,7 +3353,6 @@ void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 109 -- func_ov002_020f65b8, 0x020f65b8, size 0x34 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c10anmModel_c19func_ov002_020f65b8Ev
 
 void daDemo_c::anmModel_c::func_ov002_020f65b8() {
     if (mTexSeq == 0)
@@ -3472,7 +3363,6 @@ void daDemo_c::anmModel_c::func_ov002_020f65b8() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 110 -- func_ov002_020f65ec, 0x020f65ec, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c10anmModel_c19func_ov002_020f65ecEv
 
 void daDemo_c::anmModel_c::func_ov002_020f65ec() {
     if (mTexSeq != 0)
@@ -3482,7 +3372,6 @@ void daDemo_c::anmModel_c::func_ov002_020f65ec() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 111 -- func_ov002_020f6618, 0x020f6618, size 0x160 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c10anmModel_c19func_ov002_020f6618EP13SharedFilePtriPS2_ihS3_i
 int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, SharedFilePtr **anims,
                                               int arg5, unsigned char texByte, SharedFilePtr **texs,
                                               int tsData) {
@@ -3515,7 +3404,6 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
     return 1;
 }
 
-// @symbol _ZN8daDemo_c10anmModel_cD0Ev
 /* D0, the deleting destructor. Same class shape as the D1 file beside this one;
  * one destructor definition emits D0/D1/D2 and objisolate keeps the variant this
  * file's delinks entry names. The class operator delete is what routes the tail
@@ -3523,7 +3411,6 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
  * without it the bytes still match and only the relocation destination differs.
  * The D0 variant here emits from the ~anmModel_c definition at ordinal 113. */
 
-// @symbol _ZN8daDemo_c10anmModel_cD1Ev
 /* D1, the complete-object destructor.
  *
  * The shape here is the whole finding. The cartridge destroys the dExtAnmModel_c /
@@ -3563,7 +3450,6 @@ daDemo_c::anmModel_c::~anmModel_c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 114 -- func_ov002_020f6960, 0x020f6960, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c13simpleModel_c19func_ov002_020f6960EP13SharedFilePtri
 
 int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n) {
     mFile = fp;
@@ -3571,7 +3457,6 @@ int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n) {
     return ((dExtModel_c *)this)->SetFile(f, 1, n) != 0 ? 1 : 0;
 }
 
-// @symbol _ZN8daDemo_c13simpleModel_cD0Ev
 /* D0, the deleting destructor. Same class shape as the D1 file beside this one;
  * one destructor definition emits D0/D1/D2 and objisolate keeps the variant this
  * file's delinks entry names. The class operator delete is what routes the tail
@@ -3579,7 +3464,6 @@ int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n) {
  * without it the bytes still match and only the relocation destination differs.
  * The D0 variant here emits from the ~simpleModel_c definition at ordinal 116. */
 
-// @symbol _ZN8daDemo_c13simpleModel_cD1Ev
 /* D1, the complete-object destructor.
  *
  * The shape here is the whole finding. The cartridge destroys the dExtAnmModel_c /
@@ -3608,7 +3492,6 @@ daDemo_c::simpleModel_c::~simpleModel_c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 117 -- func_ov002_020f6a50, 0x020f6a50, size 0x4c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c7param_cC2Ev
 
 daDemo_c::param_c::param_c() {
     mScale[0].x = 0;
@@ -3619,7 +3502,6 @@ daDemo_c::param_c::param_c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 118 -- func_ov002_020f6a9c, 0x020f6a9c, size 0x1c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6a9cEv
 
 int daDemo_c::func_ov002_020f6a9c() {
     MarkForDestruction();
@@ -3629,7 +3511,6 @@ int daDemo_c::func_ov002_020f6a9c() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 119 -- func_ov002_020f6ab8, 0x020f6ab8, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6ab8EPh
 
 int daDemo_c::func_ov002_020f6ab8(unsigned char *p) {
     unsigned int id = ReadUnalignedInt(p);
@@ -3640,7 +3521,6 @@ int daDemo_c::func_ov002_020f6ab8(unsigned char *p) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 120 -- func_ov002_020f6ae4, 0x020f6ae4, size 0x44 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6ae4EPh
 
 int daDemo_c::func_ov002_020f6ae4(unsigned char *p) {
     unsigned int id = ReadUnalignedInt(p);
@@ -3651,7 +3531,6 @@ int daDemo_c::func_ov002_020f6ae4(unsigned char *p) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 121 -- func_ov002_020f6b28, 0x020f6b28, size 0x24 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6b28EPh
 
 int daDemo_c::func_ov002_020f6b28(unsigned char *p) {
     unsigned int v = ReadUnalignedInt(p);
@@ -3662,7 +3541,6 @@ int daDemo_c::func_ov002_020f6b28(unsigned char *p) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 122 -- func_ov002_020f6b4c, 0x020f6b4c, size 0x74 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6b4cEPh
 /* Script handler 15: turn to face the point whose whole-unit coordinates
  * are the unaligned shorts at p+0/+2/+4, and take the short at p+6 as the
  * horizontal speed. The legacy per-function file recorded its match under
@@ -3685,7 +3563,6 @@ int daDemo_c::func_ov002_020f6b4c(unsigned char *p) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 123 -- func_ov002_020f6bc0, 0x020f6bc0, size 0x64 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6bc0EPh
 
 s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data) {
     s32 x, y, z;
@@ -3703,7 +3580,6 @@ s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 124 -- func_ov002_020f6c24, 0x020f6c24, size 0x10 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6c24EPh
 
 int daDemo_c::func_ov002_020f6c24(unsigned char *src) {
     this->mOpacity = src[0];
@@ -3713,7 +3589,6 @@ int daDemo_c::func_ov002_020f6c24(unsigned char *src) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 125 -- func_ov002_020f6c34, 0x020f6c34, size 0x2c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6c34EPh
 
 int daDemo_c::func_ov002_020f6c34(unsigned char *src) {
     unsigned char v = *src;
@@ -3728,7 +3603,6 @@ inline unsigned int inline_fn(unsigned int arg0) {
     return arg0;
 }
 
-// @symbol _ZN8daDemo_c19func_ov002_020f6c60EPvii
 int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3) {
     u8 *flag = (u8 *)arg1;
     VecFx32 v;
@@ -3738,7 +3612,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3) {
             int m = FX_MUL(r, 0xa000);
             this->mMagnitude = m + 0x19000;
         }
-        AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)data_0209f318)->pos,
+        AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)gCamera)->pos,
                 (Vector3 *)&this->mPosX);
         if (arg2 > 0x2bc) {
             this->mPosY -= 0x96000;
@@ -3771,7 +3645,6 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 127 -- func_ov002_020f6e48, 0x020f6e48, size 0x100 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6e48EPh
 /* Script handler 10: position (p[0..5], whole units shifted into 20.12) and
  * angles (p[6..11]) from the record, mMagnitude = p[12] << 12, scale 0xb33, and
  * the animation's currFrame set from a random draw scaled by
@@ -3816,7 +3689,6 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 128 -- func_ov002_020f6f48, 0x020f6f48, size 0xd8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f6f48EP7Vector3i
 /* Turn mAngleX/mAngleY toward v by 1/amt of the remaining difference per
  * call (step capped at 0x4000, 90 degrees), then set mSpeedX, mVertSpeed and
  * mSpeedZ to mMagnitude times rotation elements 6..8 of the animated model's
@@ -3835,7 +3707,6 @@ void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 129 -- func_ov002_020f7020, 0x020f7020, size 0x18 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f7020Ev
 /* Script handler 9: clear mFlags bit 0x2. */
 
 int daDemo_c::func_ov002_020f7020() {
@@ -3846,7 +3717,6 @@ int daDemo_c::func_ov002_020f7020() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 130 -- func_ov002_020f7038, 0x020f7038, size 0x18c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f7038Eii
 
 int daDemo_c::func_ov002_020f7038(int a, int arg) {
     if (arg == gKuppaScriptFrame) {
@@ -3878,9 +3748,12 @@ int daDemo_c::func_ov002_020f7038(int a, int arg) {
         pos.x = x;
         pos.y = y;
         pos.z = z;
-        mParticleID[0] = Particle::System::New(mParticleID[0], 0x3b, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[1] = Particle::System::New(mParticleID[1], 0x3c, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[2] = Particle::System::New(mParticleID[2], 0x3d, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[0] =
+            Particle::System::New(mParticleID[0], kPtclDemoDescendA, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[1] =
+            Particle::System::New(mParticleID[1], kPtclDemoDescendB, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[2] =
+            Particle::System::New(mParticleID[2], kPtclDemoDescendC, pos.x, pos.y, pos.z, 0, 0);
     }
     return 1;
 }
@@ -3888,7 +3761,6 @@ int daDemo_c::func_ov002_020f7038(int a, int arg) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 131 -- func_ov002_020f71c4, 0x020f71c4, size 0xf8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f71c4Eii
 
 int daDemo_c::func_ov002_020f71c4(int a, int arg) {
     if (arg == 0) {
@@ -3906,9 +3778,12 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg) {
         pos.x = x;
         pos.y = y;
         pos.z = z;
-        mParticleID[0] = Particle::System::New(mParticleID[0], 0x38, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[1] = Particle::System::New(mParticleID[1], 0x39, pos.x, pos.y, pos.z, 0, 0);
-        mParticleID[2] = Particle::System::New(mParticleID[2], 0x3a, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[0] =
+            Particle::System::New(mParticleID[0], kPtclDemoFadeInA, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[1] =
+            Particle::System::New(mParticleID[1], kPtclDemoFadeInB, pos.x, pos.y, pos.z, 0, 0);
+        mParticleID[2] =
+            Particle::System::New(mParticleID[2], kPtclDemoFadeInC, pos.x, pos.y, pos.z, 0, 0);
     }
     return 1;
 }
@@ -3916,7 +3791,6 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 132 -- func_ov002_020f72bc, 0x020f72bc, size 0xc8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f72bcEv
 
 int daDemo_c::func_ov002_020f72bc() {
     *((u32 *)&this->mScaleX) = 0x3000;
@@ -3929,13 +3803,13 @@ int daDemo_c::func_ov002_020f72bc() {
     this->mOpacity = 0x1f;
 
     mParticleID[0] =
-        Particle::System::New(mParticleID[0], 0x31, *((Fix12i *)&this->mPosX),
+        Particle::System::New(mParticleID[0], kPtclDemoSpinA, *((Fix12i *)&this->mPosX),
                               *((Fix12i *)&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
     mParticleID[1] =
-        Particle::System::New(mParticleID[1], 0x32, *(Fix12i *)(&this->mPosX),
+        Particle::System::New(mParticleID[1], kPtclDemoSpinB, *(Fix12i *)(&this->mPosX),
                               *(Fix12i *)(&this->mPosY), *(Fix12i *)(&this->mPosZ), 0, 0);
     mParticleID[2] =
-        Particle::System::New(mParticleID[2], 0x33, *(Fix12i *)(&this->mPosX),
+        Particle::System::New(mParticleID[2], kPtclDemoSpinC, *(Fix12i *)(&this->mPosX),
                               *(Fix12i *)(&this->mPosY), *((Fix12i *)&this->mPosZ), 0, 0);
     return 1;
 }
@@ -3943,7 +3817,6 @@ int daDemo_c::func_ov002_020f72bc() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 133 -- func_ov002_020f7384, 0x020f7384, size 0x8c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f7384EPhi
 
 int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val) {
     if (*flag != 0) {
@@ -3963,7 +3836,6 @@ int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 134 -- func_ov002_020f7410, 0x020f7410, size 0x128 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f7410EPhi
 /* Script handler 4. On the record's start frame, when in[0] is non-zero, it
  * stores a fixed vector at mModel + 0x50 (the param_c tail base), sets fixed
  * angles and calls func_0201f138. Every frame mPos = that vector times
@@ -3977,7 +3849,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel) {
     int b = in[1] << 8;
     int t;
     if (a != 0 && sel == gKuppaScriptFrame) {
-        register Vector3 *p = ((param_c &)*(simpleModel_c *)this->mModel).mScale;
+        Vector3 *p = ((param_c &)*(simpleModel_c *)this->mModel).mScale;
         p->x = -0x5d00;
         p->y = 0x1800;
         p->z = -0x16000;
@@ -4007,7 +3879,6 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 135 -- func_ov002_020f7538, 0x020f7538, size 0x248 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f7538EPhi
 /* Script handler 3. On the start frame, when arg1[0] is non-zero, it sets
  * fixed angles and clears mRate. Every frame Math_Function_0203b0fc moves
  * mRate toward 1.0 (arg1[0] non-zero) or 0, and the vector at mAnmModel +
@@ -4051,7 +3922,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2) {
     tmp.y = diff.y;
     tmp.z = diff.z;
     Vec3_MulScalar(&scaled, &tmp, this->mRate);
-    Vec3_Add(&sum, (VecFx32 *)base, &scaled);
+    Vec3_Add((Vector3 *)&sum, (const Vector3 *)base, (const Vector3 *)&scaled);
 
     {
         Vector3 *dp = ((param_c &)*(anmModel_c *)this->mAnmModel).mScale;
@@ -4070,10 +3941,9 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 136 -- func_ov002_020f7780, 0x020f7780, size 0x240 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f7780EPvi
 
 int daDemo_c::func_ov002_020f7780(void *unused, int mode) {
-    dCamera_c *cam = (dCamera_c *)data_0209f318;
+    dCamera_c *cam = (dCamera_c *)gCamera;
 
     if (mode == gKuppaScriptFrame) {
         if (mode == 0) {
@@ -4088,9 +3958,9 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode) {
             v[1] = *(int *)((char *)data_ov002_0210b970 + 4);
             v[2] = *(int *)((char *)data_ov002_0210b970 + 8);
 
-            idx = *(volatile unsigned char *)&data_0209f250;
+            idx = *(volatile unsigned char *)&gLocalPlayerId;
             {
-                short ang = ((dActor_c *)data_0209f394[idx])->mAngleY;
+                short ang = ((dActor_c *)gPlayers[idx])->mAngleY;
 
                 Vec3_RotateYAndTranslate(&this->mPosX, (int *)&cam->pos, (short)(ang + 0x8000), v);
             }
@@ -4156,7 +4026,6 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 137 -- func_ov002_020f79c0, 0x020f79c0, size 0x1f8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f79c0EPvi
 
 int daDemo_c::func_ov002_020f79c0(void *unused, int mode) {
 
@@ -4219,7 +4088,6 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 138 -- func_ov002_020f7bb8, 0x020f7bb8, size 0x1bc */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c19func_ov002_020f7bb8EPht
 
 int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id) {
     Vector3 v0, v1;
@@ -4247,7 +4115,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id) {
     }
 
     this->mOpacity = 0x1f;
-    cam = (dCamera_c *)data_0209f318;
+    cam = (dCamera_c *)gCamera;
 
     AddVec3((Vector3 *)&v0, &cam->pos, (Vector3 *)&v0);
     dist = Vec3_Dist(&v0, &cam->pos);
@@ -4278,39 +4146,37 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 139 -- daDemo_c::RunCommand, 0x020f7d74, size 0x2b4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN8daDemo_c10RunCommandEPhii
 void daDemo_c::RunCommand(unsigned char *p, int a2, int a3) {
     if ((data_ov002_02110b00 & 1) == 0) {
         data_ov002_02110b00 |= 1;
-        data_ov002_0211104c[0] = data_ov002_0210b708.pmf3;
-        data_ov002_0211104c[1] = data_ov002_0210b678.pmf3;
+        data_ov002_0211104c[0] = *(PMF3 *)&data_ov002_0210b708;
+        data_ov002_0211104c[1] = *(PMF3 *)&data_ov002_0210b678;
         data_ov002_0211104c[2] = data_ov002_0210b618;
         data_ov002_0211104c[3] = data_ov002_0210b620;
         data_ov002_0211104c[4] = data_ov002_0210b640;
         data_ov002_0211104c[5] = data_ov002_0210b628;
         data_ov002_0211104c[6] = data_ov002_0210b648;
-        data_ov002_0211104c[7] = data_ov002_0210b8c0.pmf3;
-        data_ov002_0211104c[8] = data_ov002_0210b900.pmf3;
-        data_ov002_0211104c[9] = data_ov002_0210b938.pmf3;
-        data_ov002_0211104c[10] = data_ov002_0210b930.pmf3;
-        data_ov002_0211104c[11] = data_ov002_0210b928.pmf3;
-        data_ov002_0211104c[12] = data_ov002_0210b920.pmf3;
-        data_ov002_0211104c[13] = data_ov002_0210b918.pmf3;
-        data_ov002_0211104c[14] = data_ov002_0210b910.pmf3;
-        data_ov002_0211104c[15] = data_ov002_0210b908.pmf3;
-        data_ov002_0211104c[16] = data_ov002_0210b750.pmf3;
-        data_ov002_0211104c[17] = data_ov002_0210b8f8.pmf3;
-        data_ov002_0211104c[18] = data_ov002_0210b8f0.pmf3;
-        data_ov002_0211104c[19] = data_ov002_0210b8e8.pmf3;
-        data_ov002_0211104c[20] = data_ov002_0210b8e0.pmf3;
-        data_ov002_0211104c[21] = data_ov002_0210b8d8.pmf3;
-        data_ov002_0211104c[22] = data_ov002_0210b8d0.pmf3;
-        data_ov002_0211104c[23] = data_ov002_0210b8c8.pmf3;
+        data_ov002_0211104c[7] = *(PMF3 *)&data_ov002_0210b8c0;
+        data_ov002_0211104c[8] = *(PMF3 *)&data_ov002_0210b900;
+        data_ov002_0211104c[9] = *(PMF3 *)&data_ov002_0210b938;
+        data_ov002_0211104c[10] = *(PMF3 *)&data_ov002_0210b930;
+        data_ov002_0211104c[11] = *(PMF3 *)&data_ov002_0210b928;
+        data_ov002_0211104c[12] = *(PMF3 *)&data_ov002_0210b920;
+        data_ov002_0211104c[13] = *(PMF3 *)&data_ov002_0210b918;
+        data_ov002_0211104c[14] = *(PMF3 *)&data_ov002_0210b910;
+        data_ov002_0211104c[15] = *(PMF3 *)&data_ov002_0210b908;
+        data_ov002_0211104c[16] = *(PMF3 *)&data_ov002_0210b750;
+        data_ov002_0211104c[17] = *(PMF3 *)&data_ov002_0210b8f8;
+        data_ov002_0211104c[18] = *(PMF3 *)&data_ov002_0210b8f0;
+        data_ov002_0211104c[19] = *(PMF3 *)&data_ov002_0210b8e8;
+        data_ov002_0211104c[20] = *(PMF3 *)&data_ov002_0210b8e0;
+        data_ov002_0211104c[21] = *(PMF3 *)&data_ov002_0210b8d8;
+        data_ov002_0211104c[22] = *(PMF3 *)&data_ov002_0210b8d0;
+        data_ov002_0211104c[23] = *(PMF3 *)&data_ov002_0210b8c8;
     }
     (this->*data_ov002_0211104c[p[6]])(p + 7, a2, a3);
 }
 
-// @symbol _ZN8daDemo_c16CleanupResourcesEv
 int daDemo_c::CleanupResources() {
     int r1 = param1;
     if (r1 == 0x2e)
@@ -4325,12 +4191,10 @@ int daDemo_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN8daDemo_c16OnPendingDestroyEv
 /* daDemo_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
 void daDemo_c::OnPendingDestroy() {}
 
-// @symbol _ZN8daDemo_c6RenderEv
 int daDemo_c::Render() {
     if (param1 == 0x19) {
         /* Draw the model three times: copy INV_VIEW_MATRIX_ASR_3 into its
@@ -4373,7 +4237,6 @@ int daDemo_c::Render() {
     return 1;
 }
 
-// @symbol _ZN8daDemo_c8BehaviorEv
 int daDemo_c::Behavior() {
     Vector3 v;
     VecFx32 asr;
@@ -4452,7 +4315,6 @@ struct DemoTexSeqFile : SharedFilePtr {
     ~DemoTexSeqFile();
 };
 
-// @symbol _ZN8daDemo_c13InitResourcesEv
 /* Each new-expression inlines the nested class's implicit construction:
  * param_c's constructor on the tail base, the model base's C2, then the
  * class vptr and, for anmModel_c, the dExtFrameCtrl_c base's secondary vptr
@@ -4474,7 +4336,7 @@ int daDemo_c::InitResources() {
         this->mAnmModel = new anmModel_c;
         if (this->mAnmModel == 0)
             return 0;
-        t = (*(volatile unsigned char *)&data_0209f2d8 == 2);
+        t = (*(volatile unsigned char *)&gGameMode == 2);
         if (t == 0) {
             if (((anmModel_c *)this->mAnmModel)
                     ->func_ov002_020f6618(&data_ov002_02110b98, 1,
@@ -4528,7 +4390,6 @@ int daDemo_c::InitResources() {
     return 1;
 }
 
-// @symbol daDemo_c_classInit
 /* Reconstructed source-style name: SM64DS proves daDemo_c through RTTI,
  * allocation size, vtable identity, and the DEMO registry profile; later EAD
  * lineage supplies classInit. Exact original spelling is not preserved.
@@ -4551,12 +4412,12 @@ extern "C" daDemo_c *daDemo_c_classInit(void) {
    pointer-to-member copies. The 8-byte sources are POD aggregates so the
    copy stays a whole-struct move. */
 extern "C" {
-/* Flat {address, 0} words in .data. The handler addresses below belong to
-   non-static members: a pointer to member does not convert to the int word
-   a descriptor holds, and a pointer-to-member initializer leaves .data for
-   a __sinit copy (data_ov002_0210b678 left .data and @4347 disappeared).
-   The mangled spellings name the members' symbols so the word carries the
-   address. */
+/* Each record is the 8-byte {address, 0} pointer-to-member value the ROM
+   stores in .data: a non-virtual member of a class with no base offset
+   encodes as its function address plus a zero this-adjustment. The
+   definitions name the member directly, so the word carries the address
+   without a mangled spelling. */
+
 extern int _ZN8daDemo_c19func_ov002_020f79c0EPvi(daDemo_c *, void *,
                                                  int); /* local extern: descriptor address */
 extern int

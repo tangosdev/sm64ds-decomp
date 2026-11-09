@@ -13,10 +13,11 @@
  * user holds. Every bank not held by a user stays mapped to the LCDC, so a
  * setter first gives its old banks back to lcdc, takes its new ones out,
  * then remaps whatever lcdc now holds. The block itself and its clearing
- * (func_02053d9c) live in the file below this one.
+ * (src/GX_InitGXState.c) live in the file below this one.
  *
- * Callers reach the address-named members under C linkage; those keep their
- * ROM names here.
+ * GX_SetBankForBGExtPltt (func_02054748) and GX_SetBankForLCDC
+ * (func_02054430) keep their address names under C linkage: their callers
+ * name them that way.
  */
 
 #include "types.h"
@@ -37,7 +38,6 @@
 
 extern "C" {
 
-// @symbol Vram__Map
 void Vram__Map(int mask) {
     if (mask & 0x001)
         REG_VRAMCNT_A = 0x80;
@@ -63,7 +63,6 @@ void Vram__Map(int mask) {
 
 namespace GX {
 
-// @symbol _ZN2GX12SetBankForBGEi
 void SetBankForBG(int bg) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.bg) & ~bg);
     data_020a6088.bg = bg;
@@ -146,7 +145,6 @@ void SetBankForBG(int bg) {
     Vram__Map(data_020a6088.lcdc);
 }
 
-// @symbol _ZN2GX13SetBankForOBJEi
 void SetBankForOBJ(int obj) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.obj) & ~obj);
     data_020a6088.obj = obj;
@@ -194,7 +192,6 @@ extern "C" {
 
 /* GX_SetBankForBGExtPltt: the main BG extended palettes, slots 0-3 on E or
  * F/G; DISPCNT bit 30 turns the extended palettes on with them. */
-// @symbol func_02054748
 void func_02054748(int bgExtPltt) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.bgExtPltt) & ~bgExtPltt);
     data_020a6088.bgExtPltt = (u16)bgExtPltt;
@@ -226,7 +223,6 @@ void func_02054748(int bgExtPltt) {
 namespace GX {
 
 /* No texture banks also switches texturing off in DISP3DCNT. */
-// @symbol _ZN2GX13SetBankForTexEi
 void SetBankForTex(int tex) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.tex) & ~tex);
     data_020a6088.tex = tex;
@@ -294,7 +290,6 @@ void SetBankForTex(int tex) {
     Vram__Map(data_020a6088.lcdc);
 }
 
-// @symbol _ZN2GX17SetBankForTexPlttEi
 void SetBankForTexPltt(int texPltt) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.texPltt) & ~texPltt);
     data_020a6088.texPltt = texPltt;
@@ -328,7 +323,6 @@ void SetBankForTexPltt(int texPltt) {
 extern "C" {
 
 /* GX_SetBankForLCDC: hand banks straight to the LCDC. */
-// @symbol func_02054430
 void func_02054430(int lcdc) {
     data_020a6088.lcdc |= lcdc;
     Vram__Map(lcdc);
@@ -338,7 +332,6 @@ void func_02054430(int lcdc) {
 
 namespace GX {
 
-// @symbol _ZN2GX15SetBankForSubBGEi
 void SetBankForSubBG(int subBg) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.sub_bg) & ~subBg);
     data_020a6088.sub_bg = subBg;
@@ -358,7 +351,6 @@ void SetBankForSubBG(int subBg) {
     Vram__Map(data_020a6088.lcdc);
 }
 
-// @symbol _ZN2GX16SetBankForSubOBJEi
 void SetBankForSubOBJ(int subObj) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.sub_obj) & ~subObj);
     data_020a6088.sub_obj = subObj;
@@ -375,7 +367,6 @@ void SetBankForSubOBJ(int subObj) {
     Vram__Map(data_020a6088.lcdc);
 }
 
-// @symbol _ZN2GX22SetBankForSubBGExtPlttEi
 void SetBankForSubBGExtPltt(int subBgExtPltt) {
     data_020a6088.lcdc = (u16)((data_020a6088.lcdc | data_020a6088.sub_bgExtPltt) & ~subBgExtPltt);
     data_020a6088.sub_bgExtPltt = subBgExtPltt;
@@ -390,7 +381,6 @@ void SetBankForSubBGExtPltt(int subBgExtPltt) {
     Vram__Map(data_020a6088.lcdc);
 }
 
-// @symbol _ZN2GX23SetBankForSubOBJExtPlttEi
 void SetBankForSubOBJExtPltt(int subObjExtPltt) {
     data_020a6088.lcdc =
         (u16)((data_020a6088.lcdc | data_020a6088.sub_objExtPltt) & ~subObjExtPltt);
@@ -413,7 +403,6 @@ extern "C" {
 /* Give a user's banks back to the LCDC. Returns the banks it held. Named to
  * match its sibling DisableVramBanks below; the ResetBankFor* wrappers that
  * call it follow, BG first. */
-// @symbol ResetVramBanks
 u16 ResetVramBanks(u16 *bank) {
     u16 mask = *bank;
     *bank = 0;
@@ -429,43 +418,35 @@ u16 ResetVramBanks(u16 *bank) {
  * so the Sub forms stay in GX rather than moving to GXS. */
 namespace GX {
 
-// @symbol _ZN2GX14ResetBankForBGEv
 u16 ResetBankForBG(void) {
     return ResetVramBanks(&data_020a6088.bg);
 }
 
-// @symbol _ZN2GX15ResetBankForOBJEv
 u16 ResetBankForOBJ(void) {
     return ResetVramBanks(&data_020a6088.obj);
 }
 
-// @symbol _ZN2GX15ResetBankForTexEv
 u16 ResetBankForTex(void) {
     return ResetVramBanks(&data_020a6088.tex);
 }
 
-// @symbol _ZN2GX19ResetBankForTexPlttEv
 u16 ResetBankForTexPltt(void) {
     return ResetVramBanks(&data_020a6088.texPltt);
 }
 
-// @symbol _ZN2GX17ResetBankForSubBGEv
 u16 ResetBankForSubBG(void) {
     return ResetVramBanks(&data_020a6088.sub_bg);
 }
 
-// @symbol _ZN2GX18ResetBankForSubOBJEv
 u16 ResetBankForSubOBJ(void) {
     return ResetVramBanks(&data_020a6088.sub_obj);
 }
 
-// @symbol _ZN2GX24ResetBankForSubBGExtPlttEv
 u16 ResetBankForSubBGExtPltt(void) {
     REG_DISPCNT_SUB &= ~DISPLAY_CONTROL_BG_EXT_PALETTE;
     return ResetVramBanks(&data_020a6088.sub_bgExtPltt);
 }
 
-// @symbol _ZN2GX25ResetBankForSubOBJExtPlttEv
 u16 ResetBankForSubOBJExtPltt(void) {
     REG_DISPCNT_SUB &= ~DISPLAY_CONTROL_OBJ_EXT_PALETTE;
     return ResetVramBanks(&data_020a6088.sub_objExtPltt);
@@ -477,7 +458,6 @@ extern "C" {
 
 /* Switch a user's banks off altogether. Returns the banks it held. The
  * DisableBankFor* wrappers that call it follow, BG first. */
-// @symbol DisableVramBanks
 u16 DisableVramBanks(u16 *bank) {
     u16 mask = *bank;
     *bank = 0;
@@ -510,92 +490,75 @@ u16 DisableVramBanks(u16 *bank) {
  * the gGXState field each one releases. */
 namespace GX {
 
-// @symbol _ZN2GX16DisableBankForBGEv
 u16 DisableBankForBG(void) {
     return DisableVramBanks(&data_020a6088.bg);
 }
 
-// @symbol _ZN2GX17DisableBankForOBJEv
 u16 DisableBankForOBJ(void) {
     return DisableVramBanks(&data_020a6088.obj);
 }
 
-// @symbol _ZN2GX23DisableBankForBGExtPlttEv
 u16 DisableBankForBGExtPltt(void) {
     REG_DISPCNT &= ~DISPLAY_CONTROL_BG_EXT_PALETTE;
     return DisableVramBanks(&data_020a6088.bgExtPltt);
 }
 
-// @symbol _ZN2GX24DisableBankForOBJExtPlttEv
 u16 DisableBankForOBJExtPltt(void) {
     REG_DISPCNT &= ~DISPLAY_CONTROL_OBJ_EXT_PALETTE;
     return DisableVramBanks(&data_020a6088.objExtPltt);
 }
 
-// @symbol _ZN2GX17DisableBankForTexEv
 u16 DisableBankForTex(void) {
     return DisableVramBanks(&data_020a6088.tex);
 }
 
-// @symbol _ZN2GX21DisableBankForTexPlttEv
 u16 DisableBankForTexPltt(void) {
     return DisableVramBanks(&data_020a6088.texPltt);
 }
 
-// @symbol _ZN2GX24DisableBankForClearImageEv
 u16 DisableBankForClearImage(void) {
     return DisableVramBanks(&data_020a6088.clrImg);
 }
 
-// @symbol _ZN2GX18DisableBankForARM7Ev
 u16 DisableBankForARM7(void) {
     return DisableVramBanks(&data_020a6088.arm7);
 }
 
-// @symbol _ZN2GX18DisableBankForLCDCEv
 u16 DisableBankForLCDC(void) {
     return DisableVramBanks(&data_020a6088.lcdc);
 }
 
-// @symbol _ZN2GX19DisableBankForSubBGEv
 u16 DisableBankForSubBG(void) {
     return DisableVramBanks(&data_020a6088.sub_bg);
 }
 
-// @symbol _ZN2GX20DisableBankForSubOBJEv
 u16 DisableBankForSubOBJ(void) {
     return DisableVramBanks(&data_020a6088.sub_obj);
 }
 
-// @symbol _ZN2GX26DisableBankForSubBGExtPlttEv
 u16 DisableBankForSubBGExtPltt(void) {
     REG_DISPCNT_SUB &= ~DISPLAY_CONTROL_BG_EXT_PALETTE;
     return DisableVramBanks(&data_020a6088.sub_bgExtPltt);
 }
 
-// @symbol _ZN2GX27DisableBankForSubOBJExtPlttEv
 u16 DisableBankForSubOBJExtPltt(void) {
     REG_DISPCNT_SUB &= ~DISPLAY_CONTROL_OBJ_EXT_PALETTE;
     return DisableVramBanks(&data_020a6088.sub_objExtPltt);
 }
 
 /* GX_GetBankFor*: the banks a user currently holds. */
-// @symbol _ZN2GX13GetBankForTexEv
 int GetBankForTex(void) {
     return data_020a6088.tex;
 }
 
-// @symbol _ZN2GX17GetBankForTexPlttEv
 int GetBankForTexPltt(void) {
     return data_020a6088.texPltt;
 }
 
-// @symbol _ZN2GX15GetBankForSubBGEv
 int GetBankForSubBG(void) {
     return data_020a6088.sub_bg;
 }
 
-// @symbol _ZN2GX16GetBankForSubOBJEv
 int GetBankForSubOBJ(void) {
     return data_020a6088.sub_obj;
 }
@@ -605,10 +568,9 @@ int GetBankForSubOBJ(void) {
 extern "C" {
 
 /* The size in bytes of a set of banks: A-D are 128 KiB, E 64 KiB, F, G
- * and I 16 KiB, H 32 KiB. The SDK's static GX_GetSizeOfX_; of its
- * GX_GetSizeOf* wrappers this game links only Tex and TexPltt (below). */
-// @symbol func_02053e4c
-int func_02053e4c(int mask) {
+ * and I 16 KiB, H 32 KiB. Of the SDK's GX_GetSizeOf* wrappers this game
+ * links only Tex and TexPltt (below). */
+int GX_GetSizeOfX_(int mask) {
     int size = 0;
     if (mask & 0x001)
         size += 0x20000;
@@ -631,16 +593,16 @@ int func_02053e4c(int mask) {
     return size;
 }
 
-// GX_GetSizeOfTex
-// @symbol func_02053e34
-int func_02053e34(void) {
-    return func_02053e4c(data_020a6088.tex);
-}
-
-// GX_GetSizeOfTexPltt
-// @symbol func_02053e1c
-int func_02053e1c(void) {
-    return func_02053e4c(data_020a6088.texPltt);
-}
-
 } // extern "C"
+
+namespace GX {
+
+int GetSizeOfTex(void) {
+    return GX_GetSizeOfX_(data_020a6088.tex);
+}
+
+int GetSizeOfTexPltt(void) {
+    return GX_GetSizeOfX_(data_020a6088.texPltt);
+}
+
+} // namespace GX

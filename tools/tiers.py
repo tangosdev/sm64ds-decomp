@@ -53,21 +53,36 @@ FUNCTION_AUTHORS = REPO / "function-authors.json"
 
 # ------------------------------------------------------------------ markers
 #
-# The `@symbol` marker names a member's linker symbol where present; otherwise
-# the filename stem is the same name by construction. The slicer below is kept
+# Members are located structurally by tools/def_locate.py (owned linker
+# symbols demangle-matched to parsed definitions); the filename stem is the
+# same name by construction where a member has none. The slicer below is kept
 # here because tools/tubuild.py reuses it to slice a promoted TU's member
-# source at marker boundaries. It is not a readability metric.
+# source. It is not a readability metric.
 
-SYMBOL = re.compile(r"//\s*@symbol\s+(\S+)")
+SYMBOL = re.compile(r"//\s*@symbol\s+(\S+)")  # legacy marker fallback only
 
 
-def _marked_member_fragment(text, symbol):
-    """Return one explicitly marked member's source, or None if ambiguous.
+def _marked_member_fragment(text, symbol, path=None):
+    """Return one member's source, or None when it cannot be located.
 
-    Production TUs put ``// @symbol <linker-name>`` immediately before each
-    hand-written member. Slicing at the next marker keeps an unrelated member's
-    text from being attributed to this member.
+    Members are found structurally by ``tools/def_locate.py``: the file's
+    owned linker symbols (per delinks/symbols.txt, ``srcpath.symbols_for``)
+    demangle to signatures that are matched against parsed definitions. The
+    fragment is that member plus the namespace or extern "C" block it was
+    parsed in, so a slice compiled on its own still emits the same symbol.
+
+    ``path`` is required for symbol lookup; a caller that only has text can
+    keep the markers-era helper by passing it via ``srcpath.path_for``.
     """
+    if path is None:
+        return None
+    import def_locate as DL
+    bound, _defs = DL.bind(path, text)
+    frag = DL.member_fragment(text, symbol, bound)
+    if frag is not None:
+        return frag
+    # an unenrolled file (shadow TU, scaffold) owns no symbols to bind;
+    # literal markers still present in one keep the old slicing working
     markers = list(SYMBOL.finditer(text))
     matches = [i for i, marker in enumerate(markers)
                if marker.group(1) == symbol]

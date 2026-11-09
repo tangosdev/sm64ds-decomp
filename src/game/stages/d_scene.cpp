@@ -12,13 +12,14 @@
 // - dScStage_c::SetVramBanks and GX::DisableAllBanks sit between the scene
 //   graphics methods in this span; co-residence is inferred from the
 //   contiguous run, not from an object map.
-// - func_02053c10/02053be0/02053a90/02053fxx and data_02092660/64/68 keep
+// - func_02053c10/02053be0/02053a90/02053fxx and data_02092660/68 keep
 //   linker names: no header home proven for them yet.
 #include "dScene_c.h"
 #include "dScStage_c.h"
 #include "dFdColor_c.h"
 #include "G2x.h"
 #include "GX.h"
+#include "nitro/hw/registers.h"
 
 namespace GX {
 void SetGraphicsMode(int a, int b, int c);
@@ -56,7 +57,9 @@ extern void func_0205583c(void);
 
 extern void Initialise3dGraphics(int arg);
 
-extern fBase_c *data_0209f5c0;
+/* The running scene: ResetFadersAndSound stores `this`, and dActor_c::Spawn,
+   LevelObjects and dScEntry_c spawn their children under it. */
+extern fBase_c *gCurrentScene;
 
 extern dFader_c *gSoftResetFader;
 extern void func_02011b7c(void);
@@ -71,12 +74,17 @@ extern u8 data_02092660;
 
 extern u8 gSoftResetPending;
 
-extern dFdBrightness_c *data_0209f5bc;
-extern u16  data_02092664;
+/* The fader the scene change runs, installed by SetFaders. */
+extern dFdBrightness_c *gSceneFader;
+/* The scene SetSceneToSpawn queued, with gNextSceneParam its spawn
+   parameter. 0x187 means none: SpawnIfNecessary stores it once it has
+   spawned the queued scene, and BeforeBehavior fades the running scene out
+   while any other value is pending. */
+extern u16 gNextSceneId;
 
 extern void func_02023544(void);
 
-extern u32 data_0209f5b8;
+extern u32 gNextSceneParam;
 
 extern int func_0203d9b4(void);
 
@@ -87,119 +95,116 @@ extern dFdBrightness_c *data_0209d4ac;
 
 /* The scene's two global faders: the colour fade every scene change runs
    (SetAndStopColorFader, StartSceneFade) and the plain brightness fade
-   BeforeBehavior falls back to. Namespace-scope objects with inline
+   BeforeBehavior runs for a soft reset. Namespace-scope objects with inline
    constructors and real destructors, so mwcc emits __sinit_d_scene.cpp to
    build them in this order and register their destructors (was the
-   handwritten __sinit_02074edc). Other TUs reach them by these address
-   names. */
-dFdColor_c data_0209f5e8;
-dFdBrightness_c data_0209f5d0;
+   handwritten __sinit_02074edc). Other TUs reach them by these names. */
+dFdColor_c gSceneColorFader;
+dFdBrightness_c gSoftResetBrightnessFader;
 
-// @symbol _ZN8dScene_c22ResetHardwareRegistersEv
 void dScene_c::ResetHardwareRegisters()
 {
     Matrix2x2 m;
 
     *(Matrix2x2Words *)&m = *(Matrix2x2Words *)&data_02092668;
 
-    *(volatile u16*)0x4000304 |= 0x8000;
-    *(volatile u16*)0x4000304 = (*(volatile u16*)0x4000304 & 0xfffffdf1) | 0x20e;
-    *(volatile u16*)0x4000304 |= 1;
+    REG_POWCNT1 |= 0x8000;
+    REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
+    REG_POWCNT1 |= 1;
 
     GX::DisableAllBanks();
     func_02053c10(0);
     func_02053be0(1);
     GX::SetGraphicsMode(1, 0, 0);
 
-    *(volatile u32*)0x4000000 &= ~0x1f00;
-    *(volatile u32*)0x4000000 &= ~0xe000;
-    *(volatile u32*)0x4000000 &= ~0x38000000;
-    *(volatile u32*)0x4000000 &= ~0x7000000;
-    *(volatile u32*)0x4000000 &= 0xffcfffef;
-    *(volatile u32*)0x4000000 &= 0xffbfff9f;
-    *(volatile u32*)0x4000000 &= ~0x800000;
-    *(volatile u32*)0x4000064 = 0x80000000;
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT &= ~0xe000;
+    REG_DISPCNT &= ~0x38000000;
+    REG_DISPCNT &= ~0x7000000;
+    REG_DISPCNT &= 0xffcfffef;
+    REG_DISPCNT &= 0xffbfff9f;
+    REG_DISPCNT &= ~0x800000;
+    REG_DISPCAPCNT = 0x80000000;
 
-    *(volatile u16*)0x4000008 &= 0x43;
-    *(volatile u16*)0x400000a &= 0x43;
-    *(volatile u16*)0x400000c &= 0x43;
-    *(volatile u16*)0x400000e &= 0x43;
-    *(volatile u16*)0x4000008 &= ~0x40;
-    *(volatile u16*)0x400000a &= ~0x40;
-    *(volatile u16*)0x400000c &= ~0x40;
-    *(volatile u16*)0x400000e &= ~0x40;
-    *(volatile u16*)0x4000008 &= ~3;
-    *(volatile u16*)0x400000a &= ~3;
-    *(volatile u16*)0x400000c &= ~3;
-    *(volatile u16*)0x400000e &= ~3;
+    REG_BG0CNT &= 0x43;
+    REG_BG1CNT &= 0x43;
+    REG_BG2CNT &= 0x43;
+    REG_BG3CNT &= 0x43;
+    REG_BG0CNT &= ~0x40;
+    REG_BG1CNT &= ~0x40;
+    REG_BG2CNT &= ~0x40;
+    REG_BG3CNT &= ~0x40;
+    REG_BG0CNT &= ~3;
+    REG_BG1CNT &= ~3;
+    REG_BG2CNT &= ~3;
+    REG_BG3CNT &= ~3;
 
-    *(volatile u32*)0x4000010 = 0;
-    *(volatile u32*)0x4000014 = 0;
-    *(volatile u32*)0x4000018 = 0;
-    *(volatile u32*)0x400001c = 0;
+    REG_BG0OFS = 0;
+    REG_BG1OFS = 0;
+    REG_BG2OFS = 0;
+    REG_BG3OFS = 0;
 
-    G2x::SetBGyAffine((volatile u16 *)0x4000020, &m, 0, 0, 0, 0);
-    G2x::SetBGyAffine((volatile u16 *)0x4000030, &m, 0, 0, 0, 0);
+    G2x::SetBGyAffine(&REG_BG2PA, &m, 0, 0, 0, 0);
+    G2x::SetBGyAffine(&REG_BG3PA, &m, 0, 0, 0, 0);
 
-    *(volatile u16*)0x4000048 &= ~0x3f;
-    *(volatile u16*)0x4000048 &= ~0x3f00;
-    *(volatile u16*)0x400004a &= ~0x3f;
-    *(volatile u16*)0x400004a &= ~0x3f00;
+    REG_WININ &= ~0x3f;
+    REG_WININ &= ~0x3f00;
+    REG_WINOUT &= ~0x3f;
+    REG_WINOUT &= ~0x3f00;
 
-    *(volatile u16*)0x4000040 = 0;
-    *(volatile u16*)0x4000044 = 0;
-    *(volatile u16*)0x4000042 = 0;
-    *(volatile u16*)0x4000046 = 0;
-    *(volatile u8*)0x400004c = 0;
-    *(volatile u8*)0x400004d = 0;
+    REG_WIN0H = 0;
+    REG_WIN0V = 0;
+    REG_WIN1H = 0;
+    REG_WIN1V = 0;
+    REG_MOSAIC_BG = 0;
+    REG_MOSAIC_OBJ = 0;
 
     func_02053a90((u16*)0x400006c, 0);
     GXS::SetGraphicsMode(0);
 
-    *(volatile u32*)0x4001000 &= ~0x1f00;
-    *(volatile u32*)0x4001000 &= ~0xe000;
-    *(volatile u32*)0x4001000 &= 0xffcfffef;
-    *(volatile u32*)0x4001000 &= 0xffbfff9f;
-    *(volatile u32*)0x4001000 &= ~0x800000;
+    REG_DISPCNT_SUB &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0xe000;
+    REG_DISPCNT_SUB &= 0xffcfffef;
+    REG_DISPCNT_SUB &= 0xffbfff9f;
+    REG_DISPCNT_SUB &= ~0x800000;
 
-    *(volatile u16*)0x4001008 &= 0x43;
-    *(volatile u16*)0x400100a &= 0x43;
-    *(volatile u16*)0x400100c &= 0x43;
-    *(volatile u16*)0x400100e &= 0x43;
-    *(volatile u16*)0x4001008 &= ~0x40;
-    *(volatile u16*)0x400100a &= ~0x40;
-    *(volatile u16*)0x400100c &= ~0x40;
-    *(volatile u16*)0x400100e &= ~0x40;
-    *(volatile u16*)0x4001008 &= ~3;
-    *(volatile u16*)0x400100a &= ~3;
-    *(volatile u16*)0x400100c &= ~3;
-    *(volatile u16*)0x400100e &= ~3;
+    REG_DB_BG0CNT &= 0x43;
+    REG_DB_BG1CNT &= 0x43;
+    REG_DB_BG2CNT &= 0x43;
+    REG_DB_BG3CNT &= 0x43;
+    REG_DB_BG0CNT &= ~0x40;
+    REG_DB_BG1CNT &= ~0x40;
+    REG_DB_BG2CNT &= ~0x40;
+    REG_DB_BG3CNT &= ~0x40;
+    REG_DB_BG0CNT &= ~3;
+    REG_DB_BG1CNT &= ~3;
+    REG_DB_BG2CNT &= ~3;
+    REG_DB_BG3CNT &= ~3;
 
-    *(volatile u32*)0x4001010 = 0;
-    *(volatile u32*)0x4001014 = 0;
-    *(volatile u32*)0x4001018 = 0;
-    *(volatile u32*)0x400101c = 0;
+    REG_DB_BG0OFS = 0;
+    REG_DB_BG1OFS = 0;
+    REG_DB_BG2OFS = 0;
+    REG_DB_BG3OFS = 0;
 
-    G2x::SetBGyAffine((volatile u16 *)0x4001020, &m, 0, 0, 0, 0);
-    G2x::SetBGyAffine((volatile u16 *)0x4001030, &m, 0, 0, 0, 0);
+    G2x::SetBGyAffine(&REG_DB_BG2PA, &m, 0, 0, 0, 0);
+    G2x::SetBGyAffine(&REG_DB_BG3PA, &m, 0, 0, 0, 0);
 
-    *(volatile u16*)0x4001048 &= ~0x3f;
-    *(volatile u16*)0x4001048 &= ~0x3f00;
-    *(volatile u16*)0x400104a &= ~0x3f;
-    *(volatile u16*)0x400104a &= ~0x3f00;
+    REG_DB_WININ &= ~0x3f;
+    REG_DB_WININ &= ~0x3f00;
+    REG_DB_WINOUT &= ~0x3f;
+    REG_DB_WINOUT &= ~0x3f00;
 
-    *(volatile u16*)0x4001040 = 0;
-    *(volatile u16*)0x4001044 = 0;
-    *(volatile u16*)0x4001042 = 0;
-    *(volatile u16*)0x4001046 = 0;
-    *(volatile u8*)0x400104c = 0;
-    *(volatile u8*)0x400104d = 0;
+    REG_DB_WIN0H = 0;
+    REG_DB_WIN0V = 0;
+    REG_DB_WIN1H = 0;
+    REG_DB_WIN1V = 0;
+    REG_DB_MOSAIC_BG = 0;
+    REG_DB_MOSAIC_OBJ = 0;
 
     func_02053a90((u16*)0x400106c, 0);
 }
 
 namespace GX {
-// @symbol _ZN2GX15DisableAllBanksEv
 /* Hand every VRAM user's banks back to the LCDC, in the SDK's own order. */
 void DisableAllBanks() {
     DisableBankForLCDC();
@@ -218,7 +223,6 @@ void DisableAllBanks() {
 }
 }
 
-// @symbol _ZN10dScStage_c12SetVramBanksEv
 void dScStage_c::SetVramBanks() {
     GX::DisableAllBanks();
     GX::SetBankForTex(3);
@@ -230,32 +234,29 @@ void dScStage_c::SetVramBanks() {
     GX::SetBankForSubOBJ(0x100);
 }
 
-// @symbol _ZN8dScene_c20Initialise3dGraphicsEv
 void dScene_c::Initialise3dGraphics()
 {
     ResetHardwareRegisters();
     func_0205583c();
     GX::SetGraphicsMode(1, 0, 1);
-    *(volatile u32 *)0x40004c8 = 0x296a5800;
-    *(volatile u32 *)0x40004cc = 0x7fff;
-    *(volatile u32 *)0x40004c0 = 0x7fff;
-    *(volatile u32 *)0x40004c4 = 0;
+    REG_LIGHT_VECTOR = 0x296a5800;
+    REG_LIGHT_COLOR = 0x7fff;
+    REG_DIF_AMB = 0x7fff;
+    REG_SPE_EMI = 0;
     ::Initialise3dGraphics(0);
 }
 
-// @symbol _ZN8dScene_c19ResetFadersAndSoundEv
 bool dScene_c::ResetFadersAndSound()
 {
-    data_0209f5c0 = this;
+    gCurrentScene = this;
     if (!fBase_c::BeforeInitResources())
         return 0;
-    SetFaders(&data_0209f5e8);
+    SetFaders(&gSceneColorFader);
     gSoftResetFader = 0;
     func_02011b7c();
     return 1;
 }
 
-// @symbol _ZN8dScene_c19BeforeInitResourcesEv
 bool dScene_c::BeforeInitResources()
 {
     if (!ResetFadersAndSound())
@@ -264,13 +265,11 @@ bool dScene_c::BeforeInitResources()
     return true;
 }
 
-// @symbol _ZN8dScene_c18AfterInitResourcesEj
 void dScene_c::AfterInitResources(u32 vfSuccess)
 {
     dBase_c::AfterInitResources(vfSuccess);
 }
 
-// @symbol _ZN8dScene_c22BeforeCleanupResourcesEv
 int dScene_c::BeforeCleanupResources()
 {
     if (!fBase_c::BeforeCleanupResources())
@@ -279,7 +278,6 @@ int dScene_c::BeforeCleanupResources()
     return 1;
 }
 
-// @symbol _ZN8dScene_c21AfterCleanupResourcesEj
 void dScene_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess == 2)
@@ -287,132 +285,122 @@ void dScene_c::AfterCleanupResources(u32 vfSuccess)
     fBase_c::AfterCleanupResources(vfSuccess);
 }
 
-// @symbol _ZN8dScene_c14BeforeBehaviorEv
 int dScene_c::BeforeBehavior()
 {
     if (!fBase_c::BeforeBehavior())
         return 0;
 
     if (gSoftResetPending != 0) {
-        int noActor = (data_0209f5c0->actorID == 0);
+        int noActor = (gCurrentScene->actorID == 0);
         if (noActor != 0) {
             func_02023544();
         } else {
             if (gSoftResetFader == 0) {
-                data_0209f5d0.currInterp = 0;
-                data_0209f5d0.dFdBrightness_c::SetForwardTime(0x10, 0);
-                gSoftResetFader = &data_0209f5d0;
-            } else if (data_0209f5d0.dFdBrightness_c::IsAtEnd()) {
+                gSoftResetBrightnessFader.currInterp = 0;
+                gSoftResetBrightnessFader.dFdBrightness_c::SetForwardTime(0x10, 0);
+                gSoftResetFader = &gSoftResetBrightnessFader;
+            } else if (gSoftResetBrightnessFader.dFdBrightness_c::IsAtEnd()) {
                 StartSceneFade(1, 0, 0);
-                data_0209f5e8.SetForwardTime(0, 0);
+                gSceneColorFader.SetForwardTime(0, 0);
                 MarkForDestruction();
             }
             return 0;
         }
     }
 
-    if (data_02092664 != 0x187) {
-        if (data_0209f5bc->IsAtStart() != 0) {
-            data_0209f5bc->SetForwardTime(0x1e, 0);
-        } else if (data_0209f5bc->IsAtEnd() != 0) {
+    if (gNextSceneId != 0x187) {
+        if (gSceneFader->IsAtStart() != 0) {
+            gSceneFader->SetForwardTime(0x1e, 0);
+        } else if (gSceneFader->IsAtEnd() != 0) {
             MarkForDestruction();
         }
         return 1;
     }
 
     if ((pauseFlags & 1) != 0) {
-        if (func_020431c4() == 0) {
+        if (checkChildProcessCreateState() == 0) {
             pauseFlags &= ~1;
             pauseFlags &= ~4;
         }
         return 0;
     } else {
-        if (data_0209f5bc->IsAtEnd() != 0) {
-            data_0209f5bc->SetBackwardTime(0x1e, 0);
+        if (gSceneFader->IsAtEnd() != 0) {
+            gSceneFader->SetBackwardTime(0x1e, 0);
         }
         return 1;
     }
 }
 
-// @symbol _ZN8dScene_c13AfterBehaviorEj
 void dScene_c::AfterBehavior(u32 vfSuccess)
 {
     fBase_c::AfterBehavior(vfSuccess);
 }
 
-// @symbol _ZN8dScene_c12BeforeRenderEv
 int dScene_c::BeforeRender()
 {
     return fBase_c::BeforeRender() != 0;
 }
 
-// @symbol _ZN8dScene_c11AfterRenderEj
 void dScene_c::AfterRender(u32 vfSuccess)
 {
     fBase_c::AfterRender(vfSuccess);
 }
 
-// @symbol _ZN8dScene_c15SetSceneToSpawnEjj
 int dScene_c::SetSceneToSpawn(u32 sceneID, u32 param)
 {
-    if (sceneID != data_02092664) {
-        data_02092664 = sceneID;
-        data_0209f5b8 = param;
+    if (sceneID != gNextSceneId) {
+        gNextSceneId = sceneID;
+        gNextSceneParam = param;
         return 1;
     }
     return 0;
 }
 
-// @symbol _ZN8dScene_c14StartSceneFadeEjjt
 void dScene_c::StartSceneFade(u32 sceneID, u32 param, u16 fadeColor)
 {
     if (SetSceneToSpawn(sceneID, param))
-        data_0209f5e8.color = fadeColor;
+        gSceneColorFader.color = fadeColor;
 }
 
-// @symbol _ZN8dScene_c18PrepareToSpawnBootEv
 void dScene_c::PrepareToSpawnBoot()
 {
     if (func_0203d9b4())
-        data_02092664 = 0;
+        gNextSceneId = 0;
     else
-        data_02092664 = 0x168;
+        gNextSceneId = 0x168;
     data_02092660 = 0;
 }
 
-// @symbol _ZN8dScene_c16SpawnIfNecessaryEv
 int dScene_c::SpawnIfNecessary()
 {
     u16 sceneID;
-    if (data_02092660 != 0 || (sceneID = data_02092664) == 0x187)
+    if (data_02092660 != 0 || (sceneID = gNextSceneId) == 0x187)
         return 0;
     {
-        int spawned = func_02013edc(sceneID, data_0209f5b8, 1);
+        int spawned = func_02013edc(sceneID, gNextSceneParam, 1);
         if (spawned == 0)
             return 0;
-        data_02092664 = 0x187;
+        gNextSceneId = 0x187;
         data_02092660 = 1;
         return spawned;
     }
 }
 
-// @symbol _ZN8dScene_c9SetFadersEP15dFdBrightness_c
 void dScene_c::SetFaders(dFdBrightness_c *fader)
 {
-    if (data_0209f5bc) {
-        if (data_0209f5bc->IsAtStart()) {
+    if (gSceneFader) {
+        if (gSceneFader->IsAtStart()) {
             fader->SetToStart();
-        } else if (data_0209f5bc->IsAtEnd()) {
+        } else if (gSceneFader->IsAtEnd()) {
             fader->SetToEnd();
         }
     }
-    data_0209f5bc = fader;
+    gSceneFader = fader;
     data_0209d4ac = fader;
 }
 
-// @symbol _ZN8dScene_c20SetAndStopColorFaderEv
 void dScene_c::SetAndStopColorFader()
 {
-    SetFaders(&data_0209f5e8);
-    data_0209f5e8.speed = 0;
+    SetFaders(&gSceneColorFader);
+    gSceneColorFader.speed = 0;
 }

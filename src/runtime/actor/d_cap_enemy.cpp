@@ -50,7 +50,6 @@
    qualified self->dEnemyBase_c::~dEnemyBase_c() emits D1 (see leftovers). */
 extern "C" void _ZN12dEnemyBase_cD2Ev(void *);
 
-// @symbol _ZN11dCapEnemy_cD0Ev
 /* The deleting destructor: store this vtable, destroy the members in reverse
  * declaration order (CapIcon at 0x164, dExtSimpleModel_c at 0x114), chain to
  * dEnemyBase_c's base-object destructor, then hand the object back to the
@@ -65,7 +64,6 @@ extern "C" dCapEnemy_c *_ZN11dCapEnemy_cD0Ev(dCapEnemy_c *self)
     return self;
 }
 
-// @symbol _ZN11dCapEnemy_cD2Ev
 /* The base-object variant, the one every derived cap enemy chains to. It is
  * byte-identical to D1 at arm9 0x0200651c modulo the three relocated `bl`
  * words -- dCapEnemy_c has no virtual bases, so D1 and D2 share one body. */

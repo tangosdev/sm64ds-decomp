@@ -19,18 +19,12 @@
  * copy of the 4 x u16 layout share it, and the `OamAttri` misspelling is retired. See
  * that header for the field evidence and for why it is deliberately dependency-free.
  *
- * THIS HEADER STILL FORWARD-DECLARES IT RATHER THAN INCLUDING IT, and that is load
- * bearing, not leftover. Two files need bit-level access to the same eight bytes and
- * keep their own local decompositions:
- *
- *   _ZN3OAM6Render*P9Matrix2x2                bitfields (yb, objMode, mode, mosaic,
- *                                             shape, xc, aff, size / tile, prio, pal)
- *   _ZN3OAM6Render*5Fix12IiES3_ii             `u32 a01; u16 a2; u16 a3;`
- *
- * The first of those includes THIS header, so if OAM.h pulled in OamAttr.h it would
- * collide with that file's own definition. A pointer parameter needs only the forward
- * declaration, so every method below can be declared without forcing a view on anyone;
- * the 68 files that merely pass an OamAttr* around never need the definition at all. */
+ * THIS HEADER STILL FORWARD-DECLARES IT RATHER THAN INCLUDING IT. A pointer
+ * parameter needs only the forward declaration, so every method below can be declared
+ * without forcing a definition on anyone; the 68 files that merely pass an OamAttr*
+ * around never need it. Bit-level access to the eight bytes goes through NitroSDK's
+ * GXOamAttr (include/nitro/gx/gxcommon.h), which src/engine/oam/OAM.cpp binds in each
+ * body. */
 #ifndef OAM_H
 #define OAM_H
 #include "types.h"
@@ -86,12 +80,28 @@ struct OAM {
     static OamAttr *MM_VS_PLAYER_ICONS_S[];
     static OamAttr *MM_STAR_MARKERS[];
     static OamAttr *MM_STAR_KEYS[];
+    /* HEALTH_METER_0..8, indexed by the health shown. */
+    static OamAttr *HEALTH_METERS[];
+    /* The minimap cap icons, indexed by the cap's character (0 M, 1 L,
+       2 W); dMap_c::Render picks the VS set when gGameMode is 1. */
+    static OamAttr *MM_CAP_ICONS[];
+    static OamAttr *MM_VS_CAP_ICONS[];
     static OamAttr TIMES;
     static OamAttr COIN;
     static OamAttr POWER_STAR;
     static OamAttr SMALL_STAR_EMPTY;
     static OamAttr TINY_STAR;
     static OamAttr BOUNCING_ARROW;
+    /* The star-select screen's sub-screen sprites (dScStarSel_c::Render). The
+       PLAYER_SELECT_ faces draw the d_2d_player_select_<name>_8bit graphics that
+       InitResources loads for the same character; the pointers mark the
+       highlighted star (down) and the character strip or face (right). */
+    static OamAttr PLAYER_SELECT_MARIO;
+    static OamAttr PLAYER_SELECT_LUIGI;
+    static OamAttr PLAYER_SELECT_WARIO;
+    static OamAttr PLAYER_SELECT_YOSHI;
+    static OamAttr POINTER_DOWN;
+    static OamAttr POINTER_RIGHT;
     static OamAttr ARROW_POINTING_LEFT;
     static OamAttr ARROW_POINTING_RIGHT;
     static OamAttr SMALL_ARROW_POINTING_LEFT;
@@ -101,8 +111,34 @@ struct OAM {
     static OamAttr VS_NEW_STAR_APPEARED;
     static OamAttr VS_TIME;
     static OamAttr VS_TIME_UP;
+    /* dMeter_c::RenderVsTimer's translations of VS_TIME and VS_TIME_UP,
+       picked by GetOwnerLanguage(): 2 French, 3 German, 4 Italian,
+       5 Spanish (NitroSDK OS_LANGUAGE_* order). */
+    static OamAttr VS_TIME_FR;
+    static OamAttr VS_TIME_DE;
+    static OamAttr VS_TIME_IT;
+    static OamAttr VS_TIME_ES;
+    static OamAttr VS_TIME_UP_FR;
+    static OamAttr VS_TIME_UP_DE;
+    static OamAttr VS_TIME_UP_IT;
+    static OamAttr VS_TIME_UP_ES;
     static OamAttr TIME;
+    /* dMeter_c::RenderTimeTimer's "TIME" caption for French, Italian and
+       Spanish (GetOwnerLanguage() 2, 4, 5). */
+    static OamAttr TIME_FR_IT_ES;
     static OamAttr MINUTES;
+    /* The seconds mark after the race timer's seconds digits. */
+    static OamAttr SECONDS;
+    /* One collected red coin in the top-screen HUD row. */
+    static OamAttr RED_COIN;
+    /* The health meter's background, drawn with HEALTH_METERS[n]. */
+    static OamAttr HEALTH_METER_BG;
+    /* dMeter_c::RenderHealthMeter's Spanish (GetOwnerLanguage() 5) and
+       French/Italian (2, 4) health meters and backgrounds. */
+    static OamAttr *HEALTH_METERS_ES[];
+    static OamAttr *HEALTH_METERS_FR_IT[];
+    static OamAttr HEALTH_METER_BG_ES;
+    static OamAttr HEALTH_METER_BG_FR_IT;
     static OamAttr MM_SMALL_STAR;
     static OamAttr MM_ARROW;
     static OamAttr MM_RED_COIN;

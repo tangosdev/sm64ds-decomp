@@ -1,9 +1,7 @@
+#include "nitro/os/thread.h"
+
 extern char data_020a11e4[];
 extern void func_02042254(void);
-/* local extern: the thread is untyped storage here (void *) */
-extern void OS_CreateThread(void *a, void *fn, void *c, void *d, unsigned int e, unsigned int f);
-/* local extern: as above */
-extern void OS_WakeupThreadDirect(void *a);
 
 /* Start the file-share parent's loader thread (func_02042254).
    data_020a11e4 is its 0x400-byte stack, and the OSThread follows at +0x400
@@ -14,10 +12,13 @@ extern void OS_WakeupThreadDirect(void *a);
    OS_Thread.cpp asserts it), still inside the block that ends at
    data_020a1680. It is cleared here before OS_CreateThread runs, and nothing
    else in src/ reads it. The (int) launder keeps the one base register the
-   ROM uses for every address. */
+   ROM uses for every address: `char *base = data_020a11e4` and direct
+   data_020a11e4[0x400] addressing both fold base + 0x400 into a second
+   literal-pool constant (15 of 21 words differ). */
 void func_02042200(void) {
     char *base = (char *)(int)data_020a11e4;
     *(short *)(base + 0x494) = 0;
-    OS_CreateThread(base + 0x400, (void *)func_02042254, base, base + 0x400, 0x400, 0xf);
-    OS_WakeupThreadDirect(base + 0x400);
+    OS_CreateThread((OSThread *)&base[0x400], (void (*)(void *))func_02042254, base, &base[0x400],
+                    0x400, 0xf);
+    OS_WakeupThreadDirect((OSThread *)&base[0x400]);
 }

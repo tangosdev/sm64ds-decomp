@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x2112588, 20 function(s) -- the whole tools/tu_map.py unit. D1 at 0x021111a0 is the first word of ov016 .text, so nothing sits below it. daMoray_c_classInit at 0x02112588 is directly above; the 0930c classInit tail pass folded it in (see notes).",
-    "class label(s): daMoray_c. tools/tu_map.py also lists BookSwitch, from the configured symbol name BookSwitch_Spawn (0x021115a4). That function's only reference is the retreat state's init word at 0x02114898, which __sinit_ov016_021136ec copies into daMoray_c's state table 0x02114d7c, and it writes daMoray_c's mStateTimer and mHorzSpeed: it is a daMoray_c state function, not a second class.",
+    "class label(s): daMoray_c. tools/tu_map.py used to list BookSwitch as well, from BookSwitch_Spawn, the old configured name of 0x021115a4 (now daMoray_c::StateRetreatInit). That function's only reference is the retreat state's init word at 0x02114898, which __sinit_ov016_021136ec copies into daMoray_c's state table 0x02114d7c, and it writes daMoray_c's mStateTimer and mHorzSpeed: it is a daMoray_c state function, not a second class.",
     "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "classInit tail fold (0930c): daMoray_c_classInit (0x02112588..0x0211260c) abuts this TU's range with no gap and is now inside it; tu_map cuts on symbol name and left it out. The unit is 0x021111a0..0x0211260c, bounded above by src/game/actors/d_a_obj_ki_fune.cpp, which starts exactly at 0x0211260c."
   ],
@@ -54,91 +54,91 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_02111284Ev",
+      "symbol": "_ZN9daMoray_c18UpdateHitCylindersEv",
       "address": "0x02111284",
       "size": "0x000002b0",
       "legacy_source": "src/func_ov016_02111284.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_02111534Ev",
+      "symbol": "_ZN9daMoray_c16StateRetreatMainEv",
       "address": "0x02111534",
       "size": "0x00000070",
       "legacy_source": "src/func_ov016_02111534.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN9daMoray_c16BookSwitch_SpawnEv",
+      "symbol": "_ZN9daMoray_c16StateRetreatInitEv",
       "address": "0x021115a4",
       "size": "0x0000001c",
       "legacy_source": "src/BookSwitch_Spawn.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_021115c0Ev",
+      "symbol": "_ZN9daMoray_c17StatePathSwimMainEv",
       "address": "0x021115c0",
       "size": "0x00000158",
       "legacy_source": "src/func_ov016_021115c0.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_02111718Ev",
+      "symbol": "_ZN9daMoray_c17StatePathSwimInitEv",
       "address": "0x02111718",
       "size": "0x00000040",
       "legacy_source": "src/func_ov016_02111718.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_02111758Ev",
+      "symbol": "_ZN9daMoray_c14StateLungeMainEv",
       "address": "0x02111758",
       "size": "0x00000108",
       "legacy_source": "src/func_ov016_02111758.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_02111860Ev",
+      "symbol": "_ZN9daMoray_c14StateLungeInitEv",
       "address": "0x02111860",
       "size": "0x00000054",
       "legacy_source": "src/func_ov016_02111860.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_021118b4Ev",
+      "symbol": "_ZN9daMoray_c16StateSwimOutMainEv",
       "address": "0x021118b4",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov016_021118b4.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_02111994Ev",
+      "symbol": "_ZN9daMoray_c16StateSwimOutInitEv",
       "address": "0x02111994",
       "size": "0x00000058",
       "legacy_source": "src/func_ov016_02111994.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_021119ecEv",
+      "symbol": "_ZN9daMoray_c16StateDenWaitMainEv",
       "address": "0x021119ec",
       "size": "0x000001c0",
       "legacy_source": "src/func_ov016_021119ec.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_02111bacEv",
+      "symbol": "_ZN9daMoray_c16StateDenWaitInitEv",
       "address": "0x02111bac",
       "size": "0x00000044",
       "legacy_source": "src/func_ov016_02111bac.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_02111bf0EPNS_5StateE",
+      "symbol": "_ZN9daMoray_c8SetStateEPNS_5StateE",
       "address": "0x02111bf0",
       "size": "0x00000050",
       "legacy_source": "src/func_ov016_02111bf0.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN9daMoray_c19func_ov016_02111c40Ev",
+      "symbol": "_ZN9daMoray_c10UpdatePoseEv",
       "address": "0x02111c40",
       "size": "0x000002f8",
       "legacy_source": "src/func_ov016_02111c40.c",
@@ -193,70 +193,70 @@
       "address": "0x02114878",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF record for daMoray_c::func_ov016_02111534"
+      "evidence": "compiler PMF record for daMoray_c::StateRetreatMain"
     },
     {
       "symbol": "@1105",
       "address": "0x02114880",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF record for daMoray_c::func_ov016_021118b4"
+      "evidence": "compiler PMF record for daMoray_c::StateSwimOutMain"
     },
     {
       "symbol": "@1103",
       "address": "0x02114888",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF record for daMoray_c::func_ov016_02111994"
+      "evidence": "compiler PMF record for daMoray_c::StateSwimOutInit"
     },
     {
       "symbol": "@1109",
       "address": "0x02114890",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF record for daMoray_c::func_ov016_021115c0"
+      "evidence": "compiler PMF record for daMoray_c::StatePathSwimMain"
     },
     {
       "symbol": "@1111",
       "address": "0x02114898",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF record for daMoray_c::BookSwitch_Spawn"
+      "evidence": "compiler PMF record for daMoray_c::StateRetreatInit"
     },
     {
       "symbol": "@1095",
       "address": "0x021148a0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF record for daMoray_c::func_ov016_02111bac"
+      "evidence": "compiler PMF record for daMoray_c::StateDenWaitInit"
     },
     {
       "symbol": "@1097",
       "address": "0x021148a8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF record for daMoray_c::func_ov016_021119ec"
+      "evidence": "compiler PMF record for daMoray_c::StateDenWaitMain"
     },
     {
       "symbol": "@1107",
       "address": "0x021148b0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF record for daMoray_c::func_ov016_02111718"
+      "evidence": "compiler PMF record for daMoray_c::StatePathSwimInit"
     },
     {
       "symbol": "@1099",
       "address": "0x021148b8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF record for daMoray_c::func_ov016_02111860"
+      "evidence": "compiler PMF record for daMoray_c::StateLungeInit"
     },
     {
       "symbol": "@1101",
       "address": "0x021148c0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF record for daMoray_c::func_ov016_02111758"
+      "evidence": "compiler PMF record for daMoray_c::StateLungeMain"
     }
   ],
   "bss": [
@@ -328,39 +328,39 @@
       "address": "0x02114d7c",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "retreat state: init BookSwitch_Spawn, execute func_ov016_02111534"
+      "evidence": "retreat state: init StateRetreatInit, execute StateRetreatMain"
     },
     {
       "symbol": "data_ov016_02114d8c",
       "address": "0x02114d8c",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "den-wait state: init func_ov016_02111bac, execute func_ov016_021119ec"
+      "evidence": "den-wait state: init StateDenWaitInit, execute StateDenWaitMain"
     },
     {
       "symbol": "data_ov016_02114d9c",
       "address": "0x02114d9c",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "lunge state: init func_ov016_02111860, execute func_ov016_02111758"
+      "evidence": "lunge state: init StateLungeInit, execute StateLungeMain"
     },
     {
       "symbol": "data_ov016_02114dac",
       "address": "0x02114dac",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "swim-out state: init func_ov016_02111994, execute func_ov016_021118b4"
+      "evidence": "swim-out state: init StateSwimOutInit, execute StateSwimOutMain"
     },
     {
       "symbol": "data_ov016_02114dbc",
       "address": "0x02114dbc",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "path-swim state: init func_ov016_02111718, execute func_ov016_021115c0"
+      "evidence": "path-swim state: init StatePathSwimInit, execute StatePathSwimMain"
     }
   ],
   "notes": [
-    "Twenty-one-function unit 0x021111a0..0x0211260c: D1 and D0 from the out-of-line destructor, daMoray_c::func_ov016_02111284 (the hit cylinders), the retreat pair daMoray_c::func_ov016_02111534 / daMoray_c::BookSwitch_Spawn, then the fifteen functions from daMoray_c::func_ov016_021115c0 to InitResources, then the registry factory daMoray_c_classInit.",
+    "Twenty-one-function unit 0x021111a0..0x0211260c: D1 and D0 from the out-of-line destructor, daMoray_c::UpdateHitCylinders (the hit cylinders), the retreat pair daMoray_c::StateRetreatMain / daMoray_c::StateRetreatInit, then the fifteen functions from daMoray_c::StatePathSwimMain to InitResources, then the registry factory daMoray_c_classInit.",
     "daMoray_c_classInit uses the real new daMoray_c factory. The existing compiler-only constructor policy verifies the empty Vector3 constructor against the canonical func_0203d384 callback used by the mSegmentPos array. This supersedes the earlier hand-built factory and no-user-constructor explanation.",
     "Historical classInit tail fold (0930c) absorbed daMoray_c_classInit and widened the complete text claim through 0x0211260c. The current native factory constructs the real members and segment array; the former hand-built sequence is historical. The text, storage and canonical callback ownership remain unchanged.",
     "Static-initializer fold (re-recorded on top of #3707's methodized daMoray_c): src/unnamed/ov016/__sinit_ov016_021136ec.c is retired; its four file handles (model file 0x3b5, animations 0x3b6..0x3b8), four registration nodes, ten PMF descriptors, five State rows and the shared cylinder-offset storage are now defined in this TU, whose delinks claim widens to .init/.ctor/.data/.bss. The handwritten source's credit (tangosdev) carries in attribution.json as a path#symbol override on __sinit_d_a_moray.cpp. The cylinder offset uses a local POD MorayCylinderOffset with three signed components and explicit member copies into the collision API's Vector3 locals. It retains the retail zero BSS storage with no constructor or destructor registration. The 14 existing defined_symbol_renames source keys are refreshed by full raw-object/reference identity; canonical targets and policies remain unchanged.",
@@ -863,7 +863,7 @@
       "source": "0x02114878",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daMoray_c19func_ov016_02111534Ev",
+      "symbol": "_ZN9daMoray_c16StateRetreatMainEv",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02111534"
@@ -873,7 +873,7 @@
       "source": "0x02114880",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daMoray_c19func_ov016_021118b4Ev",
+      "symbol": "_ZN9daMoray_c16StateSwimOutMainEv",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x021118b4"
@@ -883,7 +883,7 @@
       "source": "0x02114888",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daMoray_c19func_ov016_02111994Ev",
+      "symbol": "_ZN9daMoray_c16StateSwimOutInitEv",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02111994"
@@ -893,7 +893,7 @@
       "source": "0x02114890",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daMoray_c19func_ov016_021115c0Ev",
+      "symbol": "_ZN9daMoray_c17StatePathSwimMainEv",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x021115c0"
@@ -903,7 +903,7 @@
       "source": "0x02114898",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daMoray_c16BookSwitch_SpawnEv",
+      "symbol": "_ZN9daMoray_c16StateRetreatInitEv",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x021115a4"
@@ -913,7 +913,7 @@
       "source": "0x021148a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daMoray_c19func_ov016_02111bacEv",
+      "symbol": "_ZN9daMoray_c16StateDenWaitInitEv",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02111bac"
@@ -923,7 +923,7 @@
       "source": "0x021148a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daMoray_c19func_ov016_021119ecEv",
+      "symbol": "_ZN9daMoray_c16StateDenWaitMainEv",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x021119ec"
@@ -933,7 +933,7 @@
       "source": "0x021148b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daMoray_c19func_ov016_02111718Ev",
+      "symbol": "_ZN9daMoray_c17StatePathSwimInitEv",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02111718"
@@ -943,7 +943,7 @@
       "source": "0x021148b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daMoray_c19func_ov016_02111860Ev",
+      "symbol": "_ZN9daMoray_c14StateLungeInitEv",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02111860"
@@ -953,7 +953,7 @@
       "source": "0x021148c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daMoray_c19func_ov016_02111758Ev",
+      "symbol": "_ZN9daMoray_c14StateLungeMainEv",
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02111758"

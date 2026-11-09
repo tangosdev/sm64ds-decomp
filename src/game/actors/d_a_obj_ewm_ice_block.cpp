@@ -14,8 +14,6 @@
 // - dBgW_KcMbg::SetFile and dBgActor_c::IsClsnInRange take Fix12<int> by
 //   value, so they stay mangled; a member call homes the argument and
 //   changes the ROM ABI.
-// - func_020393d4 is the 4-byte store of the collision callback into
-//   dBgW's slot; naming belongs with dBgW in arm9.
 // - This TU emits its own __sinit for the file handles below, which the
 //   manifest does not license. The handles stay: nothing else defines
 //   their BSS or .init range.
@@ -44,18 +42,14 @@ extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void hold_d_a_obj_ewm_ice_block(dBgW_KcMbg *self, void *kcl, const Matrix4x3 *mtx, int scale,
                                        short angle, void *clps);
-extern void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
 }
 
 #pragma defer_codegen off
 
-// @symbol _ZN18daObjEwmIceBlock_cD1Ev
-// @symbol _ZN18daObjEwmIceBlock_cD0Ev
 daObjEwmIceBlock_c::~daObjEwmIceBlock_c()
 {
 }
 
-// @symbol _ZN18daObjEwmIceBlock_c16CleanupResourcesEv
 int daObjEwmIceBlock_c::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
@@ -65,14 +59,12 @@ int daObjEwmIceBlock_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN18daObjEwmIceBlock_c6RenderEv
 int daObjEwmIceBlock_c::Render()
 {
     mModel.Render((const Vector3 *)0);
     return 1;
 }
 
-// @symbol _ZN18daObjEwmIceBlock_c8BehaviorEv
 int daObjEwmIceBlock_c::Behavior()
 {
     Vector3 prev;
@@ -147,7 +139,6 @@ int daObjEwmIceBlock_c::Behavior()
     return 1;
 }
 
-// @symbol _ZN18daObjEwmIceBlock_c13InitResourcesEv
 int daObjEwmIceBlock_c::InitResources()
 {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(*data_ov056_02113314[0]), 1, -1);
@@ -157,14 +148,13 @@ int daObjEwmIceBlock_c::InitResources()
         ->dBgW_KcMbg::SetFile((KCL_File *)(dBgW_Kc::LoadFile(*data_ov056_02113314[1])),
                               *(&mClsnMat), 0x199, mAngleY,
                               *(CLPS_Block *)(data_ov056_02113314[2]));
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mPath.FromID(param1 & 0xff);
     mPathDir = 1;
     mHorzSpeed = 0xa000;
     return 1;
 }
 
-// @symbol daObjEwmIceBlock_c_classInit
 extern "C" daObjEwmIceBlock_c *daObjEwmIceBlock_c_classInit()
 {
     return new daObjEwmIceBlock_c();
@@ -182,6 +172,5 @@ struct EwmIceBlockCollisionFilePtr : SharedFilePtr {
     ~EwmIceBlockCollisionFilePtr();
 };
 
-// @symbol __sinit_d_a_obj_ewm_ice_block.cpp
 EwmIceBlockModelFilePtr gEwmIceBrockModelFile(ASSET_EWM_ICE_BROCK_BMD);      /* model */
 EwmIceBlockCollisionFilePtr gEwmIceBrockCollisionFile(ASSET_EWM_ICE_BROCK_KCL);  /* collision */

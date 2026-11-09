@@ -27,7 +27,6 @@ typedef void (*sig_func)(int);
 extern sig_func signal_funcs[];
 }
 
-// @symbol _ZN4cstd6strlenEPKc
 //
 // Language-mode flip only: the compiler mangles the name, it is no longer
 // spelled by hand. Signature and body preserved exactly; no codegen intent.
@@ -47,7 +46,6 @@ unsigned int strlen(const char *s)
 
 }
 
-// @symbol func_020706b0
 extern "C" {
 char *func_020706b0(char *dst, const char *src) {
     u8 *s = (u8 *)src;
@@ -92,7 +90,6 @@ char *func_020706b0(char *dst, const char *src) {
 }
 }
 
-// @symbol _ZN4cstd7strncpyEPcPKcj
 //
 // Language-mode flip only: the compiler mangles the name, it is no longer
 // spelled by hand. Signature and body preserved exactly; no codegen intent.
@@ -118,7 +115,6 @@ char *strncpy(char *dst, const char *src, unsigned int n)
 
 }
 
-// @symbol _ZN4cstd6strcmpEPKcS1_
 namespace cstd {
 int strcmp(const char *a, const char *b) {
     unsigned int wb, wa, t;
@@ -189,7 +185,6 @@ int strcmp(const char *a, const char *b) {
 }
 }
 
-// @symbol _ZN4cstd6strchrEPKcc
 namespace cstd {
 char *strchr(const char *s, char ch_in) {
     unsigned char ch = (unsigned char)ch_in;
@@ -212,7 +207,6 @@ char *strchr(const char *s, char ch_in) {
    signal_funcs_access critical region; SIG_IGN, or SIG_DFL for SIGABRT
    (1), returns 0, any other SIG_DFL calls exit(0). abort raises 1 and the
    floating-point dispatcher in cstd4 raises 2, SIGFPE. */
-// @symbol raise
 extern "C" {
 int raise(int sig) {
     sig_func signal_func;
@@ -243,7 +237,6 @@ int raise(int sig) {
 }
 }
 
-// @symbol func_02070348
 extern "C" {
 unsigned int func_02070348(void)
 {

@@ -45,17 +45,14 @@ extern s16 data_ov015_02114794;
 extern ResourceDescriptor data_ov015_021147a4;
 extern struct CLPS_Block data_ov015_02113614;
 
-// @symbol daObjBk_Ukisima_c_classInit
 extern "C" daObjBk_Ukisima_c *daObjBk_Ukisima_c_classInit() {
     return new daObjBk_Ukisima_c();
 }
 
-// @symbol _ZN17daObjBk_Ukisima_c13InitResourcesEv
 s32 daObjBk_Ukisima_c::InitResources() {
     return InitResourcesFrom(&data_ov015_021147a4, data_ov015_02114794);
 }
 
-// @symbol _ZN17daObjBk_Ukisima_c16CleanupResourcesEv
 s32 daObjBk_Ukisima_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov015_021147a4);
 }

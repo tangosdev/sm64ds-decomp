@@ -657,7 +657,7 @@ _ZN15dScMgCurling2_c9DragBeginEv kind:function(arm,size=0x114) addr:0x020e4ed4
 _ZN15dScMgCurling2_c11DrawCounterEv kind:function(arm,size=0x94) addr:0x020e4fe8
 _ZN15dScMgCurling2_c10DrawStonesEv kind:function(arm,size=0xc0) addr:0x020e507c
 _ZN15dScMgCurling2_c14SeparateStonesEi kind:function(arm,size=0x314) addr:0x020e513c
-Curling2_ResolveStoneCollision kind:function(arm,size=0x560) addr:0x020e5450
+_ZN15dScMgCurling2_c21ResolveStoneCollisionEi kind:function(arm,size=0x560) addr:0x020e5450
 _ZN15dScMgCurling2_c9StoneSpinEi kind:function(arm,size=0x5c) addr:0x020e59b0
 _ZN15dScMgCurling2_c10StoneSteerEi kind:function(arm,size=0x164) addr:0x020e5a0c
 _ZN15dScMgCurling2_c9StoneRestEi kind:function(arm,size=0xc) addr:0x020e5b70
@@ -1865,7 +1865,7 @@ _ZN13dScMgFlower_c13InitResourcesEv kind:function(arm,size=0x378) addr:0x0212b48
 dScMgFlower_c_classInit kind:function(arm,size=0x94) addr:0x0212b7f8
 _ZN13dScMgFlower_c5PetalC1Ev kind:function(arm,size=0x4) addr:0x0212b88c
 sMascotWalkerOffset kind:data(any) addr:0x0212b890
-data_ov006_0212b89c kind:data(any) addr:0x0212b89c
+sDealerLampTimes kind:data(any) addr:0x0212b89c
 data_ov006_0212b8ac kind:data(any) addr:0x0212b8ac
 data_ov006_0212b8b0 kind:data(any) addr:0x0212b8b0
 data_ov006_0212b8b4 kind:data(any) addr:0x0212b8b4
@@ -1933,7 +1933,7 @@ sTrmpItemPatrolLimits kind:data(any) addr:0x0212e07c
 sTrmpItemPatrolSpeed kind:data(any) addr:0x0212e088
 data_ov006_0212e094 kind:data(any) addr:0x0212e094
 sTrmpLineTexCoords kind:data(any) addr:0x0212e0b0
-data_ov006_0212e0f0 kind:data(any) addr:0x0212e0f0
+sTrmpLineFlexWeights kind:data(any) addr:0x0212e0f0
 data_ov006_0212e130 kind:data(any) addr:0x0212e130
 sAmidaPatterns kind:data(any) addr:0x0212e1a8
 sAmidaPatternGoalShuffle kind:data(any) addr:0x0212e1ac
@@ -2074,15 +2074,15 @@ sPachinko2CupLeftStops kind:data(any) addr:0x0212ecd4
 sPanelShakeOffsets kind:data(any) addr:0x0212ecec
 data_ov006_0212ed00 kind:data(any) addr:0x0212ed00
 sRoulettePayoutMultipliers kind:data(any) addr:0x0212ed14
-data_ov006_0212ed24 kind:data(any) addr:0x0212ed24
-data_ov006_0212ed34 kind:data(any) addr:0x0212ed34
+sRouletteStripSpriteBase kind:data(any) addr:0x0212ed24
+sRouletteStopTiles kind:data(any) addr:0x0212ed34
 sRouletteTileBounds kind:data(any) addr:0x0212ed4c
 sRouletteRowEdgesY kind:data(any) addr:0x0212ed68
-data_ov006_0212ed88 kind:data(any) addr:0x0212ed88
+sRouletteQuadNumbers kind:data(any) addr:0x0212ed88
 data_ov006_0212ed8a kind:data(any) addr:0x0212ed8a
 data_ov006_0212ed8c kind:data(any) addr:0x0212ed8c
 data_ov006_0212ed8e kind:data(any) addr:0x0212ed8e
-data_ov006_0212edb8 kind:data(any) addr:0x0212edb8
+sRoulettePairNumbers kind:data(any) addr:0x0212edb8
 data_ov006_0212edba kind:data(any) addr:0x0212edba
 sSmartballCellScores kind:data(any) addr:0x0212edfc
 sSoundPop00Dirs kind:data(any) addr:0x0212ee0c
@@ -3108,9 +3108,9 @@ data_ov006_0213a274 kind:data(any) addr:0x0213a274
 data_ov006_0213a284 kind:data(any) addr:0x0213a284 ambiguous
 data_ov006_0213a2cc kind:data(any) addr:0x0213a2cc ambiguous
 data_ov006_0213a314 kind:data(any) addr:0x0213a314 ambiguous
-data_ov006_0213a32c kind:data(any) addr:0x0213a32c
+sAmidaWalkerSprite kind:data(any) addr:0x0213a32c
 data_ov006_0213a330 kind:data(any) addr:0x0213a330
-data_ov006_0213a338 kind:data(any) addr:0x0213a338
+sAmidaHurryButtonSprite kind:data(any) addr:0x0213a338
 data_ov006_0213a33c kind:data(any) addr:0x0213a33c
 sAmidaSideSprite kind:data(any) addr:0x0213a35c
 data_ov006_0213a360 kind:data(any) addr:0x0213a360
@@ -3139,7 +3139,7 @@ data_ov006_0213a490 kind:data(any) addr:0x0213a490
 data_ov006_0213a498 kind:data(any) addr:0x0213a498
 data_ov006_0213a4a0 kind:data(any) addr:0x0213a4a0
 data_ov006_0213a4a8 kind:data(any) addr:0x0213a4a8
-sAmidaWalkerSprites kind:data(any) addr:0x0213a4b0
+sAmidaPieceSprites kind:data(any) addr:0x0213a4b0
 sAmidaLaneResultSprites kind:data(any) addr:0x0213a4c0
 data_ov006_0213a4d0 kind:data(any) addr:0x0213a4d0
 data_ov006_0213a4e8 kind:data(any) addr:0x0213a4e8
@@ -3756,7 +3756,7 @@ _ZTS12dScMgLuigi_c kind:data(any) addr:0x0213ce60
 sLuigiTextSpritesByLanguage kind:data(any) addr:0x0213ce70
 sLuigiBoardFlags kind:data(any) addr:0x0213ce84
 sLuigiBoardModes kind:data(any) addr:0x0213ce98
-data_ov006_0213ceac kind:data(any) addr:0x0213ceac
+sLuigiBoardMovers kind:data(any) addr:0x0213ceac
 sLuigiWantedPicks kind:data(any) addr:0x0213cec0
 sLuigiPlaceLimits kind:data(any) addr:0x0213cee0
 data_ov006_0213cf10 kind:data(any) addr:0x0213cf10
@@ -4112,19 +4112,31 @@ _ZTI21cMgSmartball_spring_c kind:data(any) addr:0x0213ec64
 _ZTI19cMgSmartball_slot_c kind:data(any) addr:0x0213ec70
 _ZTS16dScMgSmartball_c kind:data(any) addr:0x0213ec7c
 _ZTV19cMgSmartball_ball_c kind:data(any) addr:0x0213ec98
+cMgSmartball_ball_c_vtbl kind:data(any) addr:0x0213ec98
 _ZTV20cMgSmartball_dokan_c kind:data(any) addr:0x0213ecac
+cMgSmartball_dokan_c_vtbl kind:data(any) addr:0x0213ecac
 sSmartballTextSpritesByLanguage kind:data(any) addr:0x0213ecb8
 sSmartballOptionNcgByLanguage kind:data(any) addr:0x0213eccc
 _ZTV24cMgSmartball_propeller_c kind:data(any) addr:0x0213ece8
+cMgSmartball_propeller_c_vtbl kind:data(any) addr:0x0213ece8
 _ZTV21cMgSmartball_spring_c kind:data(any) addr:0x0213ecfc
+cMgSmartball_spring_c_vtbl kind:data(any) addr:0x0213ecfc
 _ZTV21cMgSmartball_object_c kind:data(any) addr:0x0213ed10
+cMgSmartball_object_c_vtbl kind:data(any) addr:0x0213ed10
 _ZTV19cMgSmartball_wing_c kind:data(any) addr:0x0213ed24
+cMgSmartball_wing_c_vtbl kind:data(any) addr:0x0213ed24
 _ZTV25cMgSmartball_pushswitch_c kind:data(any) addr:0x0213ed38
+cMgSmartball_pushswitch_c_vtbl kind:data(any) addr:0x0213ed38
 _ZTV18cMgSmartball_ana_c kind:data(any) addr:0x0213ed4c
+cMgSmartball_ana_c_vtbl kind:data(any) addr:0x0213ed4c
 _ZTV20cMgSmartball_board_c kind:data(any) addr:0x0213ed60
+cMgSmartball_board_c_vtbl kind:data(any) addr:0x0213ed60
 _ZTV19cMgSmartball_slot_c kind:data(any) addr:0x0213ed74
+cMgSmartball_slot_c_vtbl kind:data(any) addr:0x0213ed74
 _ZTV21cMgSmartball_kinoko_c kind:data(any) addr:0x0213ed88
+cMgSmartball_kinoko_c_vtbl kind:data(any) addr:0x0213ed88
 _ZTV21cMgSmartball_pakkun_c kind:data(any) addr:0x0213ed9c
+cMgSmartball_pakkun_c_vtbl kind:data(any) addr:0x0213ed9c
 _ZTS18cMgSmartball_ana_c kind:data(any) addr:0x0213eda8
 _ZTS19cMgSmartball_ball_c kind:data(any) addr:0x0213edc0
 _ZTS19cMgSmartball_wing_c kind:data(any) addr:0x0213edd8

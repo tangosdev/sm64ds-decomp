@@ -13,7 +13,8 @@
  * destructor's variants in that order before the constructor is written.
  *
  * leftovers:
- * - ClipSphere and TransformAndClip are names inferred from their operations.
+ * - ClipSphere, TransformAndClip and UpdateFrustumPlanes are names inferred
+ *   from their operations.
  * - ClipSphere's opt_propagation off pair, its materialized 0/1
  *   outside/insidePlane locals and its unsigned re-reads of viewPos.y/z are
  *   the matched form; dClipper_EmitDeletingDestructor/EmitDestructor
@@ -44,7 +45,6 @@ static inline int PlaneDistance(const ClipperPlane &n, long long x, long long y,
     return FX_MUL(z, n.z) + (FX_MUL(x, n.x) + FX_MUL(y, n.y));
 }
 
-// @symbol _ZN8dClipper10ClipSphereER7Vector3iPh
 int dClipper::ClipSphere(Vector3 &viewPos, Fix12i radius, u8 *cachedPlane) {
     if (cachedPlane != 0) {
         unsigned int firstPlane;
@@ -119,14 +119,12 @@ int dClipper::ClipSphere(Vector3 &viewPos, Fix12i radius, u8 *cachedPlane) {
     }
 }
 
-// @symbol _ZN8dClipper16TransformAndClipER9Matrix4x3R7Vector3iS3_
 int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i radius,
                                Vector3 &viewPos) {
     MulVec3Mat4x3(&worldPos, &worldToView, &viewPos);
     return ClipSphere(viewPos, radius, (u8 *)0);
 }
 
-// @symbol _ZN8dClipper13Func_0201559CEv
 /* Rebuild the four view-frustum side planes from the current field of view
  * and near-plane distance.
  *
@@ -137,7 +135,7 @@ int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i
  * follow, and each adjacent pair crossed and normalised is one side plane's
  * normal.
  */
-void dClipper::Func_0201559C() {
+void dClipper::UpdateFrustumPlanes() {
     int angleIndex = (int)mFovAngle >> 4;
     int tanHalfFov = cstd::fdiv(data_02082214[2 * angleIndex], data_02082214[2 * angleIndex + 1]);
     Fix12i halfHeight = FX_MUL(mNearZ, tanHalfFov);
@@ -165,7 +163,6 @@ void dClipper::Func_0201559C() {
     NormalizeVec3((Vector3 *)&mPlaneNormals[3], (Vector3 *)&mPlaneNormals[3]);
 }
 
-// @symbol _ZN8dClipper13Func_020156DCEisii
 /* The former `Ev` spelling claimed this method took no arguments, contradicting
    every call site and the register/stack reads in the ROM. Scalar parameter
    types reproduce both the observed ABI and the complete function bytes. The
@@ -177,7 +174,7 @@ void dClipper::Func_020156DC(Fix12i aspectRatio, s16 fovAngle, Fix12i nearZ, Fix
     mFovAngle = fovAngle;
     mNearZ = nearZ;
     mFarZ = farZ;
-    Func_0201559C();
+    UpdateFrustumPlanes();
 }
 
 /* Not called. Forces the out-of-line copy of the deleting destructor. */
@@ -190,9 +187,8 @@ void dClipper_EmitDestructor(dClipper *p) {
     p->~dClipper();
 }
 
-// @symbol _ZN8dClipperC1Ev
 /* The default projection: aspect 4:3 (0x1555), angle 0xe38 (20 degrees,
- * the half-angle Func_0201559C takes the tangent of), near plane 1.0 and
+ * the half-angle UpdateFrustumPlanes takes the tangent of), near plane 1.0 and
  * far plane 5000.0. */
 dClipper::dClipper() {
     Func_020156DC(0x1555, 0xe38, 0x1000, 0x1388000);

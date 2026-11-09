@@ -14,25 +14,21 @@
  */
 #include "dGraph_c.h"
 
-// @symbol _ZN8dGraph_c10callback_c14GraphCallback0Ev
 int dGraph_c::callback_c::GraphCallback0()
 {
     return 1;
 }
 
-// @symbol _ZN8dGraph_c10callback_c14GraphCallback1Ev
 int dGraph_c::callback_c::GraphCallback1()
 {
     return 1;
 }
 
-// @symbol _ZN8dGraph_c10callback_c14GraphCallback2Ev
 int dGraph_c::callback_c::GraphCallback2()
 {
     return 1;
 }
 
-// @symbol _ZN8dGraph_c10callback_c14GraphCallback3Ev
 int dGraph_c::callback_c::GraphCallback3()
 {
     return 1;

@@ -1,6 +1,7 @@
 //cpp
 #include "G3i.h"
 #include "Ov007Camera.h"
+#include "nitro/fx/fx_trig.h"
 
 extern "C" {
 
@@ -13,16 +14,14 @@ extern "C" {
  *
  * Matched byte-for-byte with mwccarm 2004/b56.
  */
-extern short data_02082214[];
-
 void func_ov007_020c0078(Ov007Camera *cam) {
     int a;
     *(int *)0x4000580 = cam->viewportMinX | (cam->viewportMinY << 8) | (cam->viewportMaxX << 16) |
                         (cam->viewportMaxY << 24);
 
     a = (int)cam->fovy >> 4;
-    G3i::PerspectiveW_(data_02082214[a * 2], data_02082214[a * 2 + 1], (int)(cam->aspect >> 0x14),
-                       cam->nearZ, cam->farZ, 0x1000, 1, (Matrix4x3 *)cam->projMatrix);
+    G3i::PerspectiveW_(FX_SinIdx(a), FX_CosIdx(a), (int)(cam->aspect >> 0x14), cam->nearZ,
+                       cam->farZ, 0x1000, 1, (Matrix4x3 *)cam->projMatrix);
 
     *(int *)0x400044c = 0;
 }

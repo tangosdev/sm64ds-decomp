@@ -11,21 +11,21 @@
  * sprite, and func_ov007_020b3050 (called from func_ov007_020b6f4c, which
  * tears every menu module down) frees. func_ov007_020b2e64 (called from
  * func_ov007_020b7090) runs it: it reads the d-pad with key repeat into dirPressed and a fresh A or
- * START into confirm, ticks the cursor state, and runs func_ov007_020b3360,
+ * START into confirm, ticks the cursor state, and runs Cursor_UpdateState,
  * which picks the next cursor state from the menu's own states[0] /
- * states[1] and the cursor's func_ov007_020b3708 (the per-state move
- * table), or func_ov007_020b3190 while the cursor is parked in state 0xff.
- * func_ov007_020b3c54 maps the cursor state to one of six sprite modes and
- * re-dresses the sprite through func_ov007_020b3d30;
+ * states[1] and the cursor's Cursor_NextState (the per-state move
+ * table), or Cursor_UpdateParked while the cursor is parked in state 0xff.
+ * Cursor_UpdateMode maps the cursor state to one of six sprite modes and
+ * re-dresses the sprite through Cursor_SetSpriteMode;
  * func_ov007_020b2cf0 places the sprite over the current item with the
- * per-mode offset func_ov007_020b3e04 and eases it back from the last
- * move's nudge; func_ov007_020b3e84 turns a confirm into a stylus touch on
+ * per-mode offset Cursor_GetModeOffset and eases it back from the last
+ * move's nudge; Cursor_TouchItem turns a confirm into a stylus touch on
  * the current item.
  *
  * Edges: the bss words 0x02103360 (the cursor) and 0x02103364 (a confirm
  * toggle) are referenced only by these functions, and every function here
  * touches the cursor or is called only from one that does
- * (func_ov007_020b3e04, func_ov007_020b3d30). The previous function,
+ * (Cursor_GetModeOffset, Cursor_SetSpriteMode). The previous function,
  * func_ov007_020b2bd4 (bss 0x02103348 / 0x02103354), and the next one,
  * func_ov007_020b3edc (the file loader's release, bss 0x0210336c /
  * 0x02103370), touch none of it.
@@ -34,7 +34,10 @@
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
+ * The functions keep C linkage. The Cursor_ names are coined from the
+ * bodies, after this file's Ov007Cursor; the five functions other units
+ * call (func_ov007_020b2cdc, 020b2cf0, 020b2e64, 020b3050 and 020b30b0)
+ * keep their address names for now.
  */
 #include "types.h"
 #include "cstd.h"
@@ -52,21 +55,21 @@ extern "C" {
 typedef struct Ov007Cursor {
     Ov007MenuState *state; /* 0x00: func_ov007_020c9388(0xff); func_ov007_020b2e64 ticks it */
     Ov007Sprite *sprite;   /* 0x04: func_ov007_020c44e4(1) */
-    /* 0x08: func_ov007_020b3c54's sprite mode, 0..5; 2 picks the second
-     * move sound in func_ov007_020b3708 */
+    /* 0x08: Cursor_UpdateMode's sprite mode, 0..5; 2 picks the second
+     * move sound in Cursor_NextState */
     int mode;
     /* 0x0c/0x0e: the last move's direction, -1/0/1 per axis;
      * func_ov007_020b2cf0 eases the sprite back from it */
     s16 nudgeX;
     s16 nudgeY;
     /* 0x10, medium confidence: func_ov007_020b2e64 sets it on a fresh A or
-     * START press; states 9 and 0xc/0xd in func_ov007_020b3708 take it as a
+     * START press; states 9 and 0xc/0xd in Cursor_NextState take it as a
      * step and clear it */
     int confirm;
     /* 0x14: func_ov007_020b2e64's key-repeat direction this frame: -1 none,
      * 0 up, 1 down, 2 right, 3 left */
     int dirPressed;
-    /* 0x18: the state func_ov007_020b3360 returns to when the cursor leaves
+    /* 0x18: the state Cursor_UpdateState returns to when the cursor leaves
      * states 0x16/0x17; -1 none */
     int returnState;
 } Ov007Cursor;
@@ -98,10 +101,9 @@ extern void *func_ov007_020c9388(int initialState);
 /* The menu cursor (data_ov007_02103360). */
 #define CURSOR data_ov007_02103360
 
-// @symbol func_ov007_020b3e84
 /* Writes a stylus touch at the current item's position, in pixels: touch
  * down, both axes valid. */
-void func_ov007_020b3e84(Ov007TouchSample *sample) {
+void Cursor_TouchItem(Ov007TouchSample *sample) {
     Ov007Item *item = WORK->itemViews[CURSOR->state->currentState]->item;
     int x = item->posX;
     int y = item->posY;
@@ -111,39 +113,37 @@ void func_ov007_020b3e84(Ov007TouchSample *sample) {
     sample->validity = 0;
 }
 
-// @symbol func_ov007_020b3e04
-/* The sprite offset, in pixels, for each of func_ov007_020b3c54's modes. */
-void func_ov007_020b3e04(int sel, s16 *p1, s16 *p2) {
-    *p2 = 0;
-    *p1 = *p2;
-    switch (sel) {
+/* The sprite offset, in pixels, for each of Cursor_UpdateMode's modes. */
+void Cursor_GetModeOffset(int mode, s16 *dx, s16 *dy) {
+    *dy = 0;
+    *dx = *dy;
+    switch (mode) {
     case 0:
-        *p2 = *p2 - 0x16;
+        *dy = *dy - 0x16;
         break;
     case 1:
-        *p2 = 0x10;
+        *dy = 0x10;
         break;
     case 2:
-        *p1 = 0x20;
+        *dx = 0x20;
         break;
     case 3:
-        *p2 = -0x16;
+        *dy = -0x16;
         break;
     case 4:
-        *p2 = -0x10;
+        *dy = -0x10;
         break;
     case 5:
-        *p1 = -0x19;
+        *dx = -0x19;
         break;
     }
 }
 
-// @symbol func_ov007_020b3d30
 /* Sets up `sprite` as entry idx of the data_ov007_020d7dc0..
  * data_ov007_020d7dea tables: its texture, texel origin, pixel size, shadow
  * polygon id and shadow offset, and its depth; then sizes it in world space
  * through camera 1 (func_ov007_020c43bc). */
-void func_ov007_020b3d30(Ov007Sprite *sprite, int idx) {
+void Cursor_SetSpriteMode(Ov007Sprite *sprite, int idx) {
     sprite->frames[0] = WORK->textures[data_ov007_020d7dc8[idx]];
     sprite->texS = data_ov007_020d7dd0[idx * 2];
     sprite->texT = data_ov007_020d7dd1[idx * 2];
@@ -159,10 +159,9 @@ void func_ov007_020b3d30(Ov007Sprite *sprite, int idx) {
     func_ov007_020c43bc(sprite, WORK->cameras[1]);
 }
 
-// @symbol func_ov007_020b3c54
 /* Maps the cursor state to a sprite mode (0..5) and re-dresses the sprite;
  * states 8..0xd also record the state as the chosen item. */
-void func_ov007_020b3c54(void) {
+void Cursor_UpdateMode(void) {
     int mode;
     short st = CURSOR->state->currentState;
     switch (st) {
@@ -203,246 +202,255 @@ void func_ov007_020b3c54(void) {
         break;
     }
     CURSOR->mode = mode;
-    func_ov007_020b3d30(CURSOR->sprite, mode);
+    Cursor_SetSpriteMode(CURSOR->sprite, mode);
 }
 
-// @symbol func_ov007_020b3708
-int func_ov007_020b3708(void) {
-    int ip;
-    int r3 = 1;
-    int r2;
+/* The per-state move table: returns the state dirPressed (or a confirm, in
+ * states 9 and 0xc/0xd) moves the cursor to. 0xfd resolves by the boot
+ * args' backlight flag (0xc on, 0xd off) and 0xfe by states[1]. A move
+ * records its nudge and plays sound 4 (5 in mode 2) unless it came from a
+ * confirm. */
+int Cursor_NextState(void) {
+    int cur;
+    int playSound = 1;
+    int dir;
     Ov007MenuState *p;
-    int r4;
+    int next;
 
     p = CURSOR->state;
-    r2 = CURSOR->dirPressed;
-    ip = p->currentState;
-    r4 = p->requestedState;
+    dir = CURSOR->dirPressed;
+    cur = p->currentState;
+    next = p->requestedState;
 
-    switch (ip) {
+    switch (cur) {
     case 0xff:
-        r3 = 0;
+        playSound = 0;
         break;
     case 0:
-        if (r2 == 2)
-            r4 = 2;
-        else if (r2 == 3)
-            r4 = r3;
-        else if (r2 == 0)
-            r4 = 7;
+        if (dir == 2)
+            next = 2;
+        else if (dir == 3)
+            next = 1;
+        else if (dir == 0)
+            next = 7;
         break;
     case 1:
-        if (r2 == 2)
-            r4 = 0;
-        else if (r2 == 3)
-            r4 = 2;
-        else if (r2 == 0)
-            r4 = 7;
+        if (dir == 2)
+            next = 0;
+        else if (dir == 3)
+            next = 2;
+        else if (dir == 0)
+            next = 7;
         break;
     case 2:
-        if (r2 == 2)
-            r4 = r3;
-        else if (r2 == 3)
-            r4 = 0;
-        else if (r2 == 0)
-            r4 = 7;
+        if (dir == 2)
+            next = 1;
+        else if (dir == 3)
+            next = 0;
+        else if (dir == 0)
+            next = 7;
         break;
     case 7:
-        if (r2 == 1) {
-            r4 = p->previousState;
+        if (dir == 1) {
+            next = p->previousState;
         }
         break;
     case 8:
-        if (r2 == 0) {
-            r4 = 0xfd;
+        if (dir == 0) {
+            next = 0xfd;
         }
         break;
     case 9:
-        if (r2 == 1) {
-            r4 = 0xfd;
-        } else if (r2 == 2 || CURSOR->confirm != 0) {
-            r3 = 0;
+        if (dir == 1) {
+            next = 0xfd;
+        } else if (dir == 2 || CURSOR->confirm != 0) {
+            playSound = 0;
             CURSOR->confirm = 0;
-            r4 = 0xb;
-        } else if (r2 == 3) {
-            r3 = 0;
+            next = 0xb;
+        } else if (dir == 3) {
+            playSound = 0;
             CURSOR->confirm = 0;
-            r4 = 0xa;
+            next = 0xa;
         }
         break;
     case 0xa:
     case 0xb:
         if (p->stateTicks == 0) {
             CURSOR->confirm = 1;
-            r4 = 9;
+            next = 9;
         }
         break;
     case 0xc:
     case 0xd:
-        if (r2 == 0) {
-            r4 = 9;
-        } else if (r2 == 1) {
-            r4 = 8;
+        if (dir == 0) {
+            next = 9;
+        } else if (dir == 1) {
+            next = 8;
         } else if (p->stateTicks == 0 && (u16)(s16)(p->previousState - 0xc) <= 1) {
             CURSOR->confirm = 1;
         } else {
             int t;
-            if (r2 == 2 || ((t = CURSOR->confirm) != 0 && ip == 0xc)) {
+            if (dir == 2 || ((t = CURSOR->confirm) != 0 && cur == 0xc)) {
                 p->currentState = 0xc;
-                r3 = 0;
+                playSound = 0;
                 CURSOR->confirm = 0;
-                r4 = 0xd;
-            } else if (r2 == 3 || (t != 0 && ip == 0xd)) {
+                next = 0xd;
+            } else if (dir == 3 || (t != 0 && cur == 0xd)) {
                 p->currentState = 0xd;
-                r3 = 0;
+                playSound = 0;
                 CURSOR->confirm = 0;
-                r4 = 0xc;
+                next = 0xc;
             }
         }
         break;
     case 0xe:
-        if (r2 == 2)
-            r4 = 0xf;
-        else if (r2 == 3)
-            r4 = 0x10;
-        else if (r2 == 1)
-            r4 = 0xfe;
+        if (dir == 2)
+            next = 0xf;
+        else if (dir == 3)
+            next = 0x10;
+        else if (dir == 1)
+            next = 0xfe;
         break;
     case 0xf:
-        if (r2 == 2)
-            r4 = 0x10;
-        else if (r2 == 3)
-            r4 = 0xe;
-        else if (r2 == 1)
-            r4 = 0xfe;
+        if (dir == 2)
+            next = 0x10;
+        else if (dir == 3)
+            next = 0xe;
+        else if (dir == 1)
+            next = 0xfe;
         break;
     case 0x10:
-        if (r2 == 2)
-            r4 = 0xe;
-        else if (r2 == 3)
-            r4 = 0xf;
-        else if (r2 == 1)
-            r4 = 0xfe;
+        if (dir == 2)
+            next = 0xe;
+        else if (dir == 3)
+            next = 0xf;
+        else if (dir == 1)
+            next = 0xfe;
         break;
     case 0x11:
-        if (r2 == 2)
-            r4 = 0x12;
-        else if (r2 == 3)
-            r4 = 0x13;
-        else if (r2 == 0)
-            r4 = 0xe;
-        else if (r2 == 1)
-            r4 = 0x14;
+        if (dir == 2)
+            next = 0x12;
+        else if (dir == 3)
+            next = 0x13;
+        else if (dir == 0)
+            next = 0xe;
+        else if (dir == 1)
+            next = 0x14;
         break;
     case 0x12:
-        if (r2 == 2)
-            r4 = 0x13;
-        else if (r2 == 3)
-            r4 = 0x11;
-        else if (r2 == 0)
-            r4 = 0xf;
-        else if (r2 == 1)
-            r4 = 0x14;
+        if (dir == 2)
+            next = 0x13;
+        else if (dir == 3)
+            next = 0x11;
+        else if (dir == 0)
+            next = 0xf;
+        else if (dir == 1)
+            next = 0x14;
         break;
     case 0x13:
-        if (r2 == 2)
-            r4 = 0x11;
-        else if (r2 == 3)
-            r4 = 0x12;
-        else if (r2 == 0)
-            r4 = 0x10;
-        else if (r2 == 1)
-            r4 = 0x14;
+        if (dir == 2)
+            next = 0x11;
+        else if (dir == 3)
+            next = 0x12;
+        else if (dir == 0)
+            next = 0x10;
+        else if (dir == 1)
+            next = 0x14;
         break;
     case 0x14:
-        if (r2 == 3 && WORK->states[1]->currentState == 0) {
-            r4 = 0x15;
-        } else if (r2 == 0) {
+        if (dir == 3 && WORK->states[1]->currentState == 0) {
+            next = 0x15;
+        } else if (dir == 0) {
             if (WORK->states[1]->currentState == 1) {
-                r4 = 0x13;
+                next = 0x13;
             } else {
-                r4 = p->previousState;
-                if ((u16)(s16)(r4 - 0xe) > 2) {
-                    r4 = 0x10;
+                next = p->previousState;
+                if ((u16)(s16)(next - 0xe) > 2) {
+                    next = 0x10;
                 }
             }
         }
         break;
     case 0x15:
-        if (r2 == 0) {
-            r4 = p->previousState;
-            if ((u16)(s16)(r4 - 0xe) > 2) {
-                r4 = 0xf;
+        if (dir == 0) {
+            next = p->previousState;
+            if ((u16)(s16)(next - 0xe) > 2) {
+                next = 0xf;
             }
-        } else if (r2 == 2) {
-            r4 = 0x14;
+        } else if (dir == 2) {
+            next = 0x14;
         }
         break;
     case 0x16:
-        if (r2 == 2) {
-            r4 = 0x17;
+        if (dir == 2) {
+            next = 0x17;
         }
         break;
     case 0x17:
-        if (r2 == 3) {
-            r4 = 0x16;
+        if (dir == 3) {
+            next = 0x16;
         }
         break;
     }
 
-    if (r4 != 0xfd) {
-        if (r4 == 0xfe) {
+    if (next != 0xfd) {
+        if (next == 0xfe) {
             int st = WORK->states[1]->currentState;
             switch (st) {
             case 0:
-                r4 = (ip == 0x10) ? 0x14 : 0x15;
+                next = (cur == 0x10) ? 0x14 : 0x15;
                 break;
             case 1:
-                switch (ip) {
+                switch (cur) {
                 case 0xe:
-                    r4 = 0x11;
+                    next = 0x11;
                     break;
                 case 0xf:
-                    r4 = 0x12;
+                    next = 0x12;
                     break;
                 case 0x10:
-                    r4 = 0x13;
+                    next = 0x13;
                     break;
                 }
                 break;
             default:
-                r4 = 0x14;
+                next = 0x14;
                 break;
             }
         }
     } else {
         u8 b = WORK->settings->bootArgs->backlightOn;
-        r4 = (b != 0) ? 0xc : 0xd;
+        next = (b != 0) ? 0xc : 0xd;
     }
 
-    if (CURSOR->state->requestedState != r4) {
-        if (r2 == 2) {
+    if (CURSOR->state->requestedState != next) {
+        if (dir == 2) {
             CURSOR->nudgeX = 1;
             CURSOR->nudgeY = 0;
-        } else if (r2 == 3) {
+        } else if (dir == 3) {
             CURSOR->nudgeX = -1;
             CURSOR->nudgeY = 0;
-        } else if (r2 == 0) {
+        } else if (dir == 0) {
             CURSOR->nudgeX = 0;
             CURSOR->nudgeY = -1;
-        } else if (r2 == 1) {
+        } else if (dir == 1) {
             CURSOR->nudgeX = 0;
             CURSOR->nudgeY = 1;
         }
-        if (r3 != 0) {
+        if (playSound != 0) {
             func_ov007_020bdeb0((CURSOR->mode != 2) ? 4 : 5);
         }
     }
-    return r4;
+    return next;
 }
 
-// @symbol func_ov007_020b3360
-void func_ov007_020b3360(void) {
+/* Runs the cursor outside state 0xff: re-dresses the sprite on entering a
+ * state, then requests Cursor_NextState while the menu (states[0] 0 or 5)
+ * lets the cursor move and parks it in 0xff otherwise. Under states[0] 5
+ * it also jumps to state 0x17 while item view 0x16 is in state 0 and back
+ * to returnState after; it keeps the last of states 0xe..0x10 as
+ * returnState. */
+void Cursor_UpdateState(void) {
     Ov007MenuState *p0 = CURSOR->state;
 
     if (p0->stateTicks == 0) {
@@ -450,7 +458,7 @@ void func_ov007_020b3360(void) {
             CURSOR->nudgeX = 0;
             CURSOR->nudgeY = 1;
         }
-        func_ov007_020b3c54();
+        Cursor_UpdateMode();
     }
 
     {
@@ -463,7 +471,7 @@ void func_ov007_020b3360(void) {
             switch (state2) {
             case 0:
                 if (s2->requestedState == -1)
-                    CURSOR->state->requestedState = func_ov007_020b3708();
+                    CURSOR->state->requestedState = Cursor_NextState();
                 else
                     CURSOR->state->requestedState = 0xff;
                 break;
@@ -477,7 +485,7 @@ void func_ov007_020b3360(void) {
                     func_ov007_020c2090(WORK->pad);
                 }
                 if (WORK->states[1]->requestedState == -1)
-                    CURSOR->state->requestedState = func_ov007_020b3708();
+                    CURSOR->state->requestedState = Cursor_NextState();
                 else
                     CURSOR->state->requestedState = 0xff;
                 break;
@@ -528,7 +536,7 @@ void func_ov007_020b3360(void) {
                 int b;
                 Ov007MenuState *p;
                 int cur;
-                CURSOR->state->requestedState = func_ov007_020b3708();
+                CURSOR->state->requestedState = Cursor_NextState();
                 p = CURSOR->state;
                 cur = p->currentState;
                 a = 1;
@@ -566,12 +574,11 @@ void func_ov007_020b3360(void) {
     }
 }
 
-// @symbol func_ov007_020b3190
 /* On a fresh key press with B not held (and no touch, func_ov007_020c1da0):
  * from states[0] 0 / states[1] 0 it requests cursor state 0 and plays sound
  * 3; from states[0] 5 (unless states[1] is 0xb or 0xc) cursor state 0xe and
  * sound 3. states[1] 8 requests cursor state 9 at once. */
-void func_ov007_020b3190(void) {
+void Cursor_UpdateParked(void) {
     Ov007Work *g = WORK;
     int state1 = g->states[0]->currentState;
 
@@ -580,19 +587,19 @@ void func_ov007_020b3190(void) {
         int state2 = g->states[1]->currentState;
         switch (state2) {
         case 0: {
-            int r5 = 0;
-            int r4 = 0;
+            int accept = 0;
+            int pressed = 0;
             if (func_ov007_020c1da0(0) == 0) {
                 Ov007Pad *p = WORK->pad;
                 if (p->keys & ~p->prevKeys)
-                    r4 = 1;
+                    pressed = 1;
             }
-            if (r4) {
+            if (pressed) {
                 Ov007Pad *p2 = WORK->pad;
                 if ((p2->keys & 2) == 0)
-                    r5 = 1;
+                    accept = 1;
             }
-            if (r5 == 0)
+            if (accept == 0)
                 return;
             CURSOR->state->requestedState = 0;
             func_ov007_020bdeb0(3);
@@ -605,20 +612,20 @@ void func_ov007_020b3190(void) {
         return;
     }
     case 5: {
-        int r5 = 0;
-        int r4 = 0;
+        int accept = 0;
+        int pressed = 0;
         int st;
         if (func_ov007_020c1da0(0) == 0) {
             Ov007Pad *p = WORK->pad;
             if (p->keys & ~p->prevKeys)
-                r4 = 1;
+                pressed = 1;
         }
-        if (r4) {
+        if (pressed) {
             Ov007Pad *p2 = WORK->pad;
             if ((p2->keys & 2) == 0)
-                r5 = 1;
+                accept = 1;
         }
-        if (r5 == 0)
+        if (accept == 0)
             return;
         st = WORK->states[1]->currentState;
         if (st == 0xc)
@@ -632,7 +639,6 @@ void func_ov007_020b3190(void) {
     }
 }
 
-// @symbol func_ov007_020b30b0
 /* Allocates the cursor: state machine in state 0xff, a one-frame sprite
  * with a drop shadow, mode 1, no direction and no return state. */
 void func_ov007_020b30b0(void) {
@@ -656,7 +662,6 @@ void func_ov007_020b30b0(void) {
     sprite->depth = (int)0xffffef01;
 }
 
-// @symbol func_ov007_020b3050
 /* Frees the cursor's state machine, its sprite and the cursor. */
 void func_ov007_020b3050(void) {
     if (data_ov007_02103360 == 0)
@@ -667,78 +672,76 @@ void func_ov007_020b3050(void) {
     data_ov007_02103360 = 0;
 }
 
-// @symbol func_ov007_020b2e64
 /* Reads the d-pad into dirPressed with key repeat (the press frame, then
  * every 10 frames from frame 20) and a fresh A or START press into confirm,
- * ticks the cursor state, and runs the cursor (func_ov007_020b3360) unless
+ * ticks the cursor state, and runs the cursor (Cursor_UpdateState) unless
  * it is in state 0xff; a confirm also flips data_ov007_02103364 and
  * replaces this frame's touch sample with a touch on the current item
- * (func_ov007_020b3e84). */
+ * (Cursor_TouchItem). */
 void func_ov007_020b2e64(Ov007TouchSample *sample) {
-    unsigned int *r4;
-    int r2;
-    int r4v;
+    unsigned int *held;
+    int dir;
+    int accept;
 
     CURSOR->confirm = 0;
-    r4 = WORK->pad->heldFrames;
+    held = WORK->pad->heldFrames;
 
     if (func_ov007_020c1da0(0) != 0) {
-        r2 = -1;
-    } else if (r4[0] == 1 || (r4[0] >= 0x14 && cstd::mod(r4[0] - 0x14, 0xa) == 0)) {
-        r2 = 0;
-    } else if (r4[1] == 1 || (r4[1] >= 0x14 && cstd::mod(r4[1] - 0x14, 0xa) == 0)) {
-        r2 = 1;
-    } else if (r4[2] == 1 || (r4[2] >= 0x14 && cstd::mod(r4[2] - 0x14, 0xa) == 0)) {
-        r2 = 2;
-    } else if (r4[3] == 1 || (r4[3] >= 0x14 && cstd::mod(r4[3] - 0x14, 0xa) == 0)) {
-        r2 = 3;
+        dir = -1;
+    } else if (held[0] == 1 || (held[0] >= 0x14 && cstd::mod(held[0] - 0x14, 0xa) == 0)) {
+        dir = 0;
+    } else if (held[1] == 1 || (held[1] >= 0x14 && cstd::mod(held[1] - 0x14, 0xa) == 0)) {
+        dir = 1;
+    } else if (held[2] == 1 || (held[2] >= 0x14 && cstd::mod(held[2] - 0x14, 0xa) == 0)) {
+        dir = 2;
+    } else if (held[3] == 1 || (held[3] >= 0x14 && cstd::mod(held[3] - 0x14, 0xa) == 0)) {
+        dir = 3;
     } else {
-        r2 = -1;
+        dir = -1;
     }
 
-    CURSOR->dirPressed = r2;
+    CURSOR->dirPressed = dir;
 
-    r4v = 0;
+    accept = 0;
     if (func_ov007_020c1da0(0) == 0) {
         Ov007Pad *p = WORK->pad;
         int flag = 1;
         if (p->heldFrames[4] != 1) {
             if (p->heldFrames[10] != 1)
-                flag = r4v;
+                flag = accept;
         }
         if (flag != 0)
-            r4v = 1;
+            accept = 1;
     }
-    CURSOR->confirm = r4v;
+    CURSOR->confirm = accept;
     func_ov007_020c92d0(CURSOR->state);
 
     if (CURSOR->state->currentState != 0xff) {
-        func_ov007_020b3360();
+        Cursor_UpdateState();
         if (CURSOR->confirm == 0) {
             return;
         }
         data_ov007_02103364 = (data_ov007_02103364 == 0) ? 1 : 0;
-        func_ov007_020b3e84(sample);
+        Cursor_TouchItem(sample);
         return;
     }
 
-    func_ov007_020b3190();
+    Cursor_UpdateParked();
 }
 
-// @symbol func_ov007_020b2cf0
 /* Places the cursor sprite over the current item at the mode's offset
- * (func_ov007_020b3e04), easing it back from the last move's nudge over the
+ * (Cursor_GetModeOffset), easing it back from the last move's nudge over the
  * first four frames of the state. Not in state 0xff or mode 2, and outside
  * mode 5 only while func_ov007_020b79e4 allows it. */
 void func_ov007_020b2cf0(void) {
-    int sel;
+    int ticks;
     int factor;
-    int prod_c;
-    int prod_e;
+    int easeX;
+    int easeY;
     int x;
     int y;
-    s16 loc0;
-    s16 loc2;
+    s16 dx;
+    s16 dy;
 
     if (data_ov007_02103360->state->currentState == 0xff)
         return;
@@ -748,35 +751,34 @@ void func_ov007_020b2cf0(void) {
         if (func_ov007_020b79e4() != 0)
             return;
     }
-    prod_c = 0;
-    prod_e = 0;
-    sel = data_ov007_02103360->state->stateTicks;
-    func_ov007_020b3e04(data_ov007_02103360->mode, &loc0, &loc2);
+    easeX = 0;
+    easeY = 0;
+    ticks = data_ov007_02103360->state->stateTicks;
+    Cursor_GetModeOffset(data_ov007_02103360->mode, &dx, &dy);
 
     {
         Ov007Sprite *q = WORK->itemViews[data_ov007_02103360->state->currentState]->sprite;
-        x = loc0 + (q->screenX >> 12);
-        y = loc2 + (q->screenY >> 12);
+        x = dx + (q->screenX >> 12);
+        y = dy + (q->screenY >> 12);
     }
-    if (sel <= 4) {
-        if (sel <= 0) {
+    if (ticks <= 4) {
+        if (ticks <= 0) {
             factor = 0;
-        } else if (sel >= 4) {
+        } else if (ticks >= 4) {
             factor = 0x1000;
         } else {
-            factor = cstd::div(sel << 12, 4);
+            factor = cstd::div(ticks << 12, 4);
         }
         factor = 0x1000 - factor;
-        prod_c = -data_ov007_02103360->nudgeX * factor * 6;
-        prod_e = -data_ov007_02103360->nudgeY * factor * 6;
+        easeX = -data_ov007_02103360->nudgeX * factor * 6;
+        easeY = -data_ov007_02103360->nudgeY * factor * 6;
     }
-    data_ov007_02103360->sprite->screenX = prod_c + (x << 12);
-    data_ov007_02103360->sprite->screenY = prod_e + (y << 12);
+    data_ov007_02103360->sprite->screenX = easeX + (x << 12);
+    data_ov007_02103360->sprite->screenY = easeY + (y << 12);
     func_ov007_020c4388(data_ov007_02103360->sprite, WORK->cameras[1]);
     func_ov007_020c421c(data_ov007_02103360->sprite);
 }
 
-// @symbol func_ov007_020b2cdc
 /* The cursor's state machine. */
 Ov007MenuState *func_ov007_020b2cdc(void) {
     return data_ov007_02103360->state;

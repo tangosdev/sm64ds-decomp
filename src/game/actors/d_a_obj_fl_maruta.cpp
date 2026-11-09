@@ -32,8 +32,6 @@ extern int _ZTV15daObjFlMaruta_c[];
 
 #pragma defer_codegen off
 
-// @symbol _ZN15daObjFlMaruta_cD1Ev
-// @symbol _ZN15daObjFlMaruta_cD0Ev
 /* One out-of-line definition; D1 and D0 in cartridge order. THREE vptr
  * stores: its own, daObjMaruta_c's inlined, then dBgActor_c's, then
  * dBgActor_c's dBgW_KcMbg and dExtSimpleModel_c, then dActor_c. */
@@ -41,26 +39,22 @@ daObjFlMaruta_c::~daObjFlMaruta_c()
 {
 }
 
-// @symbol _ZN15daObjFlMaruta_c16CleanupResourcesEv
 int daObjFlMaruta_c::CleanupResources()
 {
     return func_ov080_021270dc(((void *)this), data_ov022_02112c9c);
 }
 
-// @symbol _ZN15daObjFlMaruta_c8BehaviorEv
 int daObjFlMaruta_c::Behavior()
 {
     mMeshCollider.SetClipRadius(0x500000);
     return func_ov080_0212714c(((char *)this), data_ov022_02112c98) & 0xff;
 }
 
-// @symbol _ZN15daObjFlMaruta_c13InitResourcesEv
 int daObjFlMaruta_c::InitResources()
 {
     return func_ov080_021274ac(((void *)this), data_ov022_02112c9c);
 }
 
-// @symbol daObjFlMaruta_c_classInit
 extern "C" int *daObjFlMaruta_c_classInit(void)
 {
     return (int *)new daObjFlMaruta_c;

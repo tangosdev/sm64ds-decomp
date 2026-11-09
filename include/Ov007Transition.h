@@ -4,15 +4,15 @@
 #include "types.h"
 
 /* Reconstructed layout and name, not recovered class identity. The 0x34-byte
- * screen transition func_ov007_020c8b10 allocates and func_ov007_020c8ac0
- * clears. func_ov007_020c8498 runs it once a frame: it eases t along
+ * screen transition Transition_Create allocates and func_ov007_020c8ac0
+ * clears. Transition_Update runs it once a frame: it eases t along
  * `curve` and hands the eased value to the effect's applier, which writes
  * the 2D engines' registers for each screen in `screens`:
  *   1 mosaic          func_ov007_020c8c88
  *   2/3 blend alpha   func_ov007_020c8bc8
  *   4 brightness      func_ov007_020c8b34
  * func_ov007_020c86c4 starts it (request 1) and func_ov007_020c897c stops it
- * (request 2). func_ov007_020c8688 and func_ov007_020c86a8 restart it
+ * (request 2). Transition_StartBackward and Transition_StartForward restart it
  * backwards and forwards. */
 typedef struct Ov007Transition {
     s32 effect;          /* 0x00: 1 mosaic, 2/3 blend alpha, 4 brightness */

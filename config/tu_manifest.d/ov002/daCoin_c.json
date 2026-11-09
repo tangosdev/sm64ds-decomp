@@ -54,77 +54,77 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1008Ev",
+      "symbol": "_ZN8daCoin_c11LinkToBlockEv",
       "address": "0x020b1008",
       "size": "0x00000098",
       "legacy_source": "src/func_ov002_020b1008.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b10a0Ev",
+      "symbol": "_ZN8daCoin_c15KillIfCollectedEv",
       "address": "0x020b10a0",
       "size": "0x00000044",
       "legacy_source": "src/func_ov002_020b10a0.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b10e4Ev",
+      "symbol": "_ZN8daCoin_c10ProbeFloorEv",
       "address": "0x020b10e4",
       "size": "0x00000208",
       "legacy_source": "src/func_ov002_020b10e4.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b12ecEv",
+      "symbol": "_ZN8daCoin_c17CheckInYoshiMouthEv",
       "address": "0x020b12ec",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov002_020b12ec.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1328Ev",
+      "symbol": "_ZN8daCoin_c14FindStarMarkerEv",
       "address": "0x020b1328",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov002_020b1328.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1384Ev",
+      "symbol": "_ZN8daCoin_c13BounceOffWallEv",
       "address": "0x020b1384",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov002_020b1384.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b13e0Ev",
+      "symbol": "_ZN8daCoin_c4StepEv",
       "address": "0x020b13e0",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov002_020b13e0.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b14d8Ev",
+      "symbol": "_ZN8daCoin_c17UpdateModelMatrixEv",
       "address": "0x020b14d8",
       "size": "0x0000019c",
       "legacy_source": "src/func_ov002_020b14d8.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1674EP7daPly_c",
+      "symbol": "_ZN8daCoin_c15CollectBlueCoinEP7daPly_c",
       "address": "0x020b1674",
       "size": "0x00000050",
       "legacy_source": "src/func_ov002_020b1674.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b16c4EP7daPly_c",
+      "symbol": "_ZN8daCoin_c14CollectRedCoinEP7daPly_c",
       "address": "0x020b16c4",
       "size": "0x000001c0",
       "legacy_source": "src/func_ov002_020b16c4.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1884EP7daPly_c",
+      "symbol": "_ZN8daCoin_c17CollectYellowCoinEP7daPly_c",
       "address": "0x020b1884",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov002_020b1884.c",
@@ -138,56 +138,56 @@
       "ordinal": 13
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b19dcEv",
+      "symbol": "_ZN8daCoin_c14CheckPlayerHitEv",
       "address": "0x020b19dc",
       "size": "0x00000084",
       "legacy_source": "src/func_ov002_020b19dc.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1a60Ev",
+      "symbol": "_ZN8daCoin_c17StateFollowTargetEv",
       "address": "0x020b1a60",
       "size": "0x00000074",
       "legacy_source": "src/func_ov002_020b1a60.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1ad4Ev",
+      "symbol": "_ZN8daCoin_c21StateLaunchNearPlayerEv",
       "address": "0x020b1ad4",
       "size": "0x00000128",
       "legacy_source": "src/func_ov002_020b1ad4.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1bfcEv",
+      "symbol": "_ZN8daCoin_c23StateSlideAwayFromMarioEv",
       "address": "0x020b1bfc",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov002_020b1bfc.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1cc0Ev",
+      "symbol": "_ZN8daCoin_c11StateBounceEv",
       "address": "0x020b1cc0",
       "size": "0x000003b0",
       "legacy_source": "src/func_ov002_020b1cc0.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b2070Ev",
+      "symbol": "_ZN8daCoin_c9StateRestEv",
       "address": "0x020b2070",
       "size": "0x00000044",
       "legacy_source": "src/func_ov002_020b2070.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b20b4Ev",
+      "symbol": "_ZN8daCoin_c9StateIdleEv",
       "address": "0x020b20b4",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov002_020b20b4.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN8daCoin_c19func_ov002_020b2150Ev",
+      "symbol": "_ZN8daCoin_c9StateDropEv",
       "address": "0x020b2150",
       "size": "0x00000048",
       "legacy_source": "src/func_ov002_020b2150.cpp",
@@ -389,7 +389,8 @@
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov002_020b1008 and the one that held func_ov002_020b1ad4; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
     "tubuild create warning (RESOLVED): CONFLICT: local declaration ('enum', '<anonymous enum in this file>') differs between the legacy file that used to hold func_ov002_020b14d8 and the one that held func_ov002_020b1cc0; kept the first, the other is commented out for review -- RESOLVED: each function kept the declaration it was matched with, at block scope inside its own extern \"C\" function or in the C++ member own extern \"C\" block. The two spellings are not collapsed at file scope.",
     "classInit tail fold (0930c): folded the three per-profile registry factories daCoin_c_classInit_BLUE_COIN (0x020b2a98), _RED_COIN (0x020b2af0) and _COIN (0x020b2b48), each 0x58 bytes, into this promoted TU and widened the complete delinks.txt claim to 0x020b0f54..0x020b2ba0. Each loose source hand-called fBase_c::operator new(948), dActor_c's base constructor, stored _ZTV8daCoin_c, then constructed the two dExtCommonModel_c members, the dExtShadowModel_c, the dCcAc_c and the dBgCh_Actr. daCoin_c declares no constructor, so the implicit one emits exactly that sequence and each factory is `return new daCoin_c();`. Under `#pragma defer_codegen off` the factories are written at the end of the file in ROM order.",
-    "Collision property member calls replace local helper declarations. Reconciled 9 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (57 sections, 292 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Collision property member calls replace local helper declarations. Reconciled 9 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (57 sections, 292 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "#821 batch 37: the nineteen members are named. Step (020b13e0) and StateSlideAwayFromMario (020b1bfc) follow N64 coin_step and blue_coin_sliding_away_from_mario; LinkToBlock (daSCoin_c), UpdateModelMatrix and CheckPlayerHit are in-tree spellings; the other handlers of the mBehaviorType table take StateX names and the rest are coined from the bodies, with N64 analogs recorded in symbols/actor_renames.tsv. func_ov002_020b18f0 stays a free extern \"C\" (GiveCoins in another TU calls it). Member renames only: no @NNN moved."
   ],
   "compiler_only_output": [
     {
@@ -453,7 +454,7 @@
       "source": "0x02108730",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daCoin_c19func_ov002_020b2150Ev",
+      "symbol": "_ZN8daCoin_c9StateDropEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x20b2150"
@@ -463,7 +464,7 @@
       "source": "0x02108738",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1a60Ev",
+      "symbol": "_ZN8daCoin_c17StateFollowTargetEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x20b1a60"
@@ -473,7 +474,7 @@
       "source": "0x02108740",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daCoin_c19func_ov002_020b2070Ev",
+      "symbol": "_ZN8daCoin_c9StateRestEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x20b2070"
@@ -483,7 +484,7 @@
       "source": "0x02108748",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1cc0Ev",
+      "symbol": "_ZN8daCoin_c11StateBounceEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x20b1cc0"
@@ -493,7 +494,7 @@
       "source": "0x02108750",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1cc0Ev",
+      "symbol": "_ZN8daCoin_c11StateBounceEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x20b1cc0"
@@ -503,7 +504,7 @@
       "source": "0x02108758",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1ad4Ev",
+      "symbol": "_ZN8daCoin_c21StateLaunchNearPlayerEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x20b1ad4"
@@ -513,7 +514,7 @@
       "source": "0x02108760",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daCoin_c19func_ov002_020b1bfcEv",
+      "symbol": "_ZN8daCoin_c23StateSlideAwayFromMarioEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x20b1bfc"
@@ -523,7 +524,7 @@
       "source": "0x02108768",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daCoin_c19func_ov002_020b20b4Ev",
+      "symbol": "_ZN8daCoin_c9StateIdleEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x20b20b4"
@@ -533,7 +534,7 @@
       "source": "0x02108770",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN8daCoin_c19func_ov002_020b20b4Ev",
+      "symbol": "_ZN8daCoin_c9StateIdleEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x20b20b4"
@@ -1380,49 +1381,49 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1595",
+      "from": "@1609",
       "to": "@1543",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1565 to @1562. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1543. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1565 to @1562. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1543. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now Re-keyed from @1595 to @1609 when the red-coin handler's volatile position and LAUNDER casts were retired (#821)."
+    },
+    {
+      "from": "@1625",
+      "to": "@1559",
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1581 to @1578. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1559. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now Re-keyed from @1611 to @1625 when the red-coin handler's volatile position and LAUNDER casts were retired (#821)."
+    },
+    {
+      "from": "@1617",
+      "to": "@1551",
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1573 to @1570. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1551. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now Re-keyed from @1603 to @1617 when the red-coin handler's volatile position and LAUNDER casts were retired (#821)."
+    },
+    {
+      "from": "@1613",
+      "to": "@1547",
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1569 to @1566. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1547. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now Re-keyed from @1599 to @1613 when the red-coin handler's volatile position and LAUNDER casts were retired (#821)."
+    },
+    {
+      "from": "@1621",
+      "to": "@1555",
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1577 to @1574. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1555. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now Re-keyed from @1607 to @1621 when the red-coin handler's volatile position and LAUNDER casts were retired (#821)."
+    },
+    {
+      "from": "@1619",
+      "to": "@1553",
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1575 to @1572. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1553. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now Re-keyed from @1605 to @1619 when the red-coin handler's volatile position and LAUNDER casts were retired (#821)."
+    },
+    {
+      "from": "@1615",
+      "to": "@1549",
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1571 to @1568. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1549. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now Re-keyed from @1601 to @1615 when the red-coin handler's volatile position and LAUNDER casts were retired (#821)."
+    },
+    {
+      "from": "@1623",
+      "to": "@1557",
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1579 to @1576. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1557. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now Re-keyed from @1609 to @1623 when the red-coin handler's volatile position and LAUNDER casts were retired (#821)."
     },
     {
       "from": "@1611",
-      "to": "@1559",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1581 to @1578. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1559. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now"
-    },
-    {
-      "from": "@1603",
-      "to": "@1551",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1573 to @1570. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1551. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now"
-    },
-    {
-      "from": "@1599",
-      "to": "@1547",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1569 to @1566. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1547. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now"
-    },
-    {
-      "from": "@1607",
-      "to": "@1555",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1577 to @1574. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1555. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now"
-    },
-    {
-      "from": "@1605",
-      "to": "@1553",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1575 to @1572. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1553. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now"
-    },
-    {
-      "from": "@1601",
-      "to": "@1549",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1571 to @1568. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1549. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now"
-    },
-    {
-      "from": "@1609",
-      "to": "@1557",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1579 to @1576. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1557. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now"
-    },
-    {
-      "from": "@1597",
       "to": "@1545",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1567 to @1564. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1545. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now"
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @1567 to @1564. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @1545. 2026-10-22: #include \"Sound.h\" shifted file-local numbering; from-names re-pointed by symbol-index order (indices identical pre/post); re-verify linkcheck. | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; removing this TU's opt_* pragma override (#821) moves the per-TU @NNN uniquifier, so mwcc emits it under this name now (from re-keyed by address) | compiler temp; cutting this TU's (int) launder casts (#821) lowers the per-TU @NNN uniquifier by 2, so mwcc emits it under this name now Re-keyed from @1597 to @1611 when the red-coin handler's volatile position and LAUNDER casts were retired (#821)."
     }
   ]
 }

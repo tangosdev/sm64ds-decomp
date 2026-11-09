@@ -24,7 +24,6 @@ static inline void G3_Tex(s32 s, s32 t) {
     REG_NRM = ((((q)->x) >> 3) & 0x3FF) | (((((q)->y) >> 3) & 0x3FF) << 10) | (((((q)->z) >> 3) & 0x3FF) << 20)
 #define SEND_TEX(s, t) G3_Tex(((s) << 8) >> 16, ((t) << 8) >> 16)
 
-// @symbol func_ov007_020caeac
 /* Texture-mapped triangle-strip emitter for the ov007 water/cloth grid: one
  * strip per grid row, alternating direction each row. The per-column texcoord
  * offsets tu/tv are refreshed from the next row's normals as the row is walked,

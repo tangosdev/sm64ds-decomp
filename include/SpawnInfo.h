@@ -6,7 +6,7 @@
 /* SpawnInfo, the 0x1c actor profile: the registry descriptor an actor's
  * g_profile_<ID> global holds. Every field name follows the code that reads it.
  *
- *   +0x00 classInit   func_02043098 (the framework create entry) calls
+ *   +0x00 classInit   fBase_c::fBase_make (the framework create entry) calls
  *                     (*data_020a4bb8[idx])(), the first word of the
  *                     registry entry: the allocating factory.
  *   +0x04/+0x06       fBase_c::fBase_c reads data_020a4bb8[actorID] and
@@ -45,7 +45,7 @@ typedef char SpawnInfo_size_must_be_0x1c[sizeof(SpawnInfo<void>) == 0x1c ? 1 : -
 
 /* BaseSpawnInfo, the 0x08 base profile: the descriptor a scene or other
  * non-actor process registers. It is SpawnInfo's first three fields, the ones
- * func_02043098 and fBase_c::fBase_c read; the actor tail (flags and the four
+ * fBase_c::fBase_make and fBase_c::fBase_c read; the actor tail (flags and the four
  * clip ranges) is read by dActor_c::dActor_c alone. The pilot's six
  * 0x08 rows are this form (notes/actor-profile-pilot.md, answer 1).
  * BaseSpawnInfo is a decomp name like SpawnInfo, chosen to read as its base

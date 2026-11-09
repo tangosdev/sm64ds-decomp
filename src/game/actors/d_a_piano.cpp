@@ -10,15 +10,12 @@
  * The inline destructor preserves the retail D1/D0 order.
  *
  * What stays:
- * - common.h supplies the flat Matrix4x3 representation. Existing views
- *   across dActor_c scalar position fields remain; real local Vector3
- *   objects do not reconstruct those shared fields as aggregates.
+ * - common.h supplies the flat Matrix4x3 representation.
  * - The radius/height store veneers (func_0203568c / func_02035684) and
  *   the vector helpers (Vec3_Sub, LenVec3, MulVec3Mat4x3, AddVec3) stay
  *   local externs: no shared header declares them.
- * - Volatile position/angle reads and sine-table accesses retain their
- *   measured order. The CLPS payload and external g_profile_PIANO are not
- *   reconstructed here.
+ * - The CLPS payload and external g_profile_PIANO are not reconstructed
+ *   here.
  * - func_0201267c is an enrolled Sound.cpp forwarder to Sound::Play;
  *   this TU retains its existing free-function call.
  */
@@ -27,6 +24,7 @@
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
@@ -67,14 +65,12 @@ extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 /* Reconstructed registry name; the class identity is backed by retail RTTI.
  * Historical alias: daPiano_c_Spawn. The inherited allocator and native
  * construction establish the base, vtable and member lifetimes. */
-// @symbol daPiano_c_classInit
 extern "C" daPiano_c *daPiano_c_classInit() {
     return new daPiano_c();
 }
 
 /* Load the piano's three shared assets, initialize its typed render/collision
  * members, and snapshot its home position. */
-// @symbol _ZN9daPiano_c13InitResourcesEv
 int daPiano_c::InitResources() {
     int i;
     dCcAcPos_c *cylinder;
@@ -111,7 +107,6 @@ int daPiano_c::InitResources() {
 
 /* Advance the piano and its collision, constrain it to its home area, and
  * disable the inherited moving mesh while the nearest player is vanished. */
-// @symbol _ZN9daPiano_c8BehaviorEv
 int daPiano_c::Behavior() {
     CallStateBehavior();
     UpdatePos(0);
@@ -138,7 +133,6 @@ int daPiano_c::Behavior() {
 }
 
 /* dExtAnmModel_c's real virtual API expresses the same slot-5 dispatch as the ROM. */
-// @symbol _ZN9daPiano_c6RenderEv
 int daPiano_c::Render() {
     mAnmModel.Render(0);
     return 1;
@@ -146,7 +140,6 @@ int daPiano_c::Render() {
 
 /* Release the three shared assets after removing the inherited moving mesh
  * collider from the collision world. */
-// @symbol _ZN9daPiano_c16CleanupResourcesEv
 int daPiano_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
@@ -174,14 +167,12 @@ extern PianoStateEntry data_ov063_0211efbc[2];
  * with what and which routine runs per-frame. */
 enum PianoState { kStateSearch = 0, kStateAttack = 1 };
 
-// @symbol _ZN9daPiano_c17CallStateBehaviorEv
 /* Run the current state's body routine (pmf[1]) every frame. */
 void daPiano_c::CallStateBehavior() {
     int cur = mStateIdx;
     (this->*data_ov063_0211efbc[cur].pmf[1])();
 }
 
-// @symbol _ZN9daPiano_c8SetStateEi
 /* Switch to `state` and run its entry routine (pmf[0]) once. The idx
  * re-read after the store is ROM-true. */
 void daPiano_c::SetState(int state) {
@@ -190,7 +181,6 @@ void daPiano_c::SetState(int state) {
     (this->*data_ov063_0211efbc[cur].pmf[0])();
 }
 
-// @symbol _ZN9daPiano_c14IsTargetMovingEP8dActor_c
 /* True when the candidate target is moving (either speed above 20.0). The
  * piano itself is not read. */
 int daPiano_c::IsTargetMoving(dActor_c *cand) {
@@ -199,34 +189,33 @@ int daPiano_c::IsTargetMoving(dActor_c *cand) {
     return 0;
 }
 
-// @symbol _ZN9daPiano_c15InitStateSearchEv
 /* State-0 entry, reached via the PMF table: stop dead. */
 void daPiano_c::InitStateSearch() {
     this->mHorzSpeed = 0;
 }
 
-// @symbol _ZN9daPiano_c11StateSearchEv
 /* State-0 body, run every frame: scan the player slots for a moving target
  * within 500.0 and attack it; otherwise refresh the idle cylinder sweep
  * (current position plus a 36.0 lookahead along the facing). */
 void daPiano_c::StateSearch() {
-    extern unsigned char data_0209f21c;
-    extern daPly_c *data_0209f394[];
-    extern short data_02082214[]; /* sine table: (angle >> 4) * 2 taps sin/cos */
+    extern unsigned char gNumPlayers;
+    extern daPly_c *gPlayers[];
 
-    volatile Vector3 tmp;
+    Vector3 tip;
     Vector3 v;
     int bestDist;
     int i;
     daPly_c *cand;
     int dist;
+    int j;
+    dCcAcPos_c *cc;
 
     bestDist = 0x7fffffff;
-    for (i = 0; i < data_0209f21c; i++) {
-        cand = data_0209f394[i];
+    for (i = 0; i < gNumPlayers; i++) {
+        cand = gPlayers[i];
         if (cand == 0)
             continue;
-        Vec3_Sub((Vector3 *)&v, (const Vector3 *)&this->mPosX, (const Vector3 *)&cand->mPosX);
+        Vec3_Sub(&v, &this->mPos, &cand->mPos);
         dist = LenVec3(&v);
         if (IsTargetMoving(cand) != 0 && dist < 0x1f4000 && dist < bestDist) {
             this->mTarget = cand;
@@ -235,39 +224,21 @@ void daPiano_c::StateSearch() {
         }
     }
 
-    {
-        int x = this->mPosX;
-        int z;
-        int j;
-        dCcAcPos_c *cc;
+    tip = this->mPos;
+    tip.x += FX_MUL(FX_SinIdx((u16)this->mAngleY >> 4), 0x24000);
+    tip.z += FX_MUL(FX_CosIdx((u16)this->mAngleY >> 4), 0x24000);
 
-        tmp.x = x;
-        tmp.y = this->mPosY;
-        z = this->mPosZ;
-        tmp.z = z;
-        {
-            int sinVal = data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2];
-            tmp.x = x + FX_MUL(sinVal, 0x24000);
-        }
-        tmp.z = z + FX_MUL(data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2 + 1], 0x24000);
+    this->mCylinderClsn[0].pos = this->mPos;
+    this->mCylinderClsn[1].pos = tip;
 
-        this->mCylinderClsn[0].pos.x = this->mPosX;
-        this->mCylinderClsn[0].pos.y = this->mPosY;
-        this->mCylinderClsn[0].pos.z = this->mPosZ;
-        this->mCylinderClsn[1].pos.x = tmp.x;
-        this->mCylinderClsn[1].pos.y = tmp.y;
-        this->mCylinderClsn[1].pos.z = tmp.z;
-
-        cc = this->mCylinderClsn;
-        for (j = 0; j < 2; j++) {
-            this->mCylinderClsn[j].radius = 0x9b000;
-            cc->Clear();
-            cc++;
-        }
+    cc = this->mCylinderClsn;
+    for (j = 0; j < 2; j++) {
+        this->mCylinderClsn[j].radius = 0x9b000;
+        cc->Clear();
+        cc++;
     }
 }
 
-// @symbol _ZN9daPiano_c15InitStateAttackEv
 /* State-1 entry, reached via the PMF table: full-speed animation and a
  * 30-frame windup before the bite. */
 void daPiano_c::InitStateAttack() {
@@ -275,41 +246,26 @@ void daPiano_c::InitStateAttack() {
     this->mAttackTimer = 30;
 }
 
-// @symbol _ZN9daPiano_c11StateAttackEv
 /* State-1 body, run every frame: lunge at the target and bite any player
  * caught by the cylinders. Gives up (back to state 0) when the target is
  * gone or farther than 939.0 at a frame boundary. */
 void daPiano_c::StateAttack() {
-    extern s16 data_02082214[]; /* sine table: (angle >> 4) * 2 taps sin/cos */
-
     daPly_c *victim;
     int i;
-    volatile Vector3 proj;
+    Vector3 tip;
     Vector3 hurtPos;
     Vector3 tmp;
-    int zero;
-    int one;
-    int three;
-    int knock;
     int dist;
     dActor_c *target;
     int k;
     dCcAcPos_c *cc;
-    int x;
-    int z;
 
     if (DecIfAbove0_Byte(&this->mAttackTimer) != 0)
         return;
 
     this->mHorzSpeed = 0x5000;
     victim = 0;
-    i = 0;
-    zero = 0;
-    one = 1;
-    three = 3;
-    knock = 0xc000;
-
-    for (; i < 2; i++) {
+    for (i = 0; i < 2; i++) {
         int id = this->mCylinderClsn[i].otherOwner;
         if (id != 0) {
             victim = static_cast<daPly_c *>(dActor_c::FindWithID((unsigned int)id));
@@ -317,10 +273,8 @@ void daPiano_c::StateAttack() {
                 /* The actor profile is PLAYER before the daPly_c-specific call. */
                 int isPlayer = (victim->actorID == 0xbf);
                 if (isPlayer) {
-                    hurtPos.x = this->mPosX;
-                    hurtPos.y = this->mPosY;
-                    hurtPos.z = this->mPosZ;
-                    victim->Hurt(hurtPos, three, knock, one, zero, one);
+                    hurtPos = this->mPos;
+                    victim->Hurt(hurtPos, 3, 0xc000, 1, 0, 1);
                 }
             }
         }
@@ -333,7 +287,7 @@ void daPiano_c::StateAttack() {
 
     target = this->mTarget;
     if (target != 0) {
-        Vec3_Sub((Vector3 *)&tmp, (const Vector3 *)&this->mPosX, (const Vector3 *)&target->mPosX);
+        Vec3_Sub(&tmp, &this->mPos, &target->mPos);
         dist = LenVec3(&tmp);
         ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &this->mTarget->mPos), 0x200);
         this->mAngleY = this->mPrevAngleY;
@@ -352,23 +306,12 @@ void daPiano_c::StateAttack() {
 
     this->mAnmModel.Advance();
 
-    x = this->mPosX;
-    proj.x = x;
-    proj.y = this->mPosY;
-    z = this->mPosZ;
-    proj.z = z;
-    {
-        int sinVal = data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2];
-        proj.x = x + FX_MUL(sinVal, 0x24000);
-    }
-    proj.z = z + FX_MUL(data_02082214[(*(volatile u16 *)&this->mAngleY >> 4) * 2 + 1], 0x24000);
+    tip = this->mPos;
+    tip.x += FX_MUL(FX_SinIdx((u16)this->mAngleY >> 4), 0x24000);
+    tip.z += FX_MUL(FX_CosIdx((u16)this->mAngleY >> 4), 0x24000);
 
-    this->mCylinderClsn[0].pos.x = this->mPosX;
-    this->mCylinderClsn[0].pos.y = this->mPosY;
-    this->mCylinderClsn[0].pos.z = this->mPosZ;
-    this->mCylinderClsn[1].pos.x = proj.x;
-    this->mCylinderClsn[1].pos.y = proj.y;
-    this->mCylinderClsn[1].pos.z = proj.z;
+    this->mCylinderClsn[0].pos = this->mPos;
+    this->mCylinderClsn[1].pos = tip;
 
     cc = this->mCylinderClsn;
     for (k = 0; k < 2; k++) {
@@ -380,7 +323,6 @@ void daPiano_c::StateAttack() {
     }
 }
 
-// @symbol _ZN9daPiano_c17UpdateModelMatrixEv
 /* Sync the model matrix from the facing and position (eighths). */
 void daPiano_c::UpdateModelMatrix() {
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
@@ -389,7 +331,6 @@ void daPiano_c::UpdateModelMatrix() {
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN9daPiano_c16UpdateClsnMatrixEv
 /* Refresh the collision matrix from the model matrix and position, then
  * refit the mesh collider to it. */
 void daPiano_c::UpdateClsnMatrix() {
@@ -400,7 +341,6 @@ void daPiano_c::UpdateClsnMatrix() {
     mMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
-// @symbol _ZN9daPiano_c13UpdateShadowsEv
 /* Pose the three drop shadows: rotate a body-frame offset by the facing,
  * add the actor position, and drop one shadow per dExtShadowModel_c.
  * data_020a0e68 is the shared scratch matrix. */
@@ -455,7 +395,7 @@ void daPiano_c::UpdateShadows() {
 }
 
 /* _ZN9daPiano_cD1Ev (0x0211d4b8) and _ZN9daPiano_cD0Ev (0x0211d54c) are NOT
- * written here on purpose, and carry no @symbol marker: the inline destructor
+ * written here on purpose: the inline destructor
  * in include/daPiano_c.h emits D1 then D0 -- the cartridge's order -- and no
  * D2, ahead of every function written below. tools/tiers.py scores both
  * through that inline definition. Their pre-promotion one-line sources lived

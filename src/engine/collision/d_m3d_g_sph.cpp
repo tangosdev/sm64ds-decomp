@@ -1,13 +1,4 @@
 //cpp
-// @symbol _ZNK8dM3dGSph9GetCentreER7Vector3
-// @symbol _ZN8dM3dGSph9SetRadiusEi
-// @symbol _ZN8dM3dGSph3SetERK7Vector3i
-// @symbol _ZN8dM3dGSph9SetCentreERK7Vector3
-// @symbol _ZN8dM3dGSphD2Ev
-// @symbol _ZN8dM3dGSphD0Ev
-// @symbol _ZN8dM3dGSphD1Ev
-// @symbol _ZN8dM3dGSphC1Ev
-// @symbol _ZN8dM3dGSphC2Ev
 /* dM3dGSph -- the cartridge's sphere primitive: a centre, a radius and a
  * vtable, 0x14 bytes. ROM's own RTTI name (_ZTS8dM3dGSph @ 0x020992ec).
  * Lives as a base of dBgCh_SphCrr at 0x38 (the query sphere) and as

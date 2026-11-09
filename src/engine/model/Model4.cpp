@@ -29,11 +29,8 @@ extern u32 data_020a4be4;
 extern u32 data_020a4be8;
 void Crash();
 
-int func_02053e34(void);
-int func_02053e1c(void);
 }
 
-// @symbol _ZN17dExtSimpleModel_c17UpdateFileOffsetsER8BMD_File
 #define REBASE(p) ((char *)(p) + base)
 void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
     u32 i;
@@ -97,7 +94,6 @@ void dExtSimpleModel_c::UpdateFileOffsets(BMD_File &file) {
 }
 #undef REBASE
 
-// @symbol func_02046590
 extern "C" int func_02046590(const void *tbl, const char *name)
 {
     const BMD_File *t = (const BMD_File *)tbl;
@@ -110,7 +106,7 @@ extern "C" int func_02046590(const void *tbl, const char *name)
             if (cstd::strcmp(entry->name, name) == 0)
                 return (int)i;
             i++;
-            entry = (BMD_Material *)((char *)entry + 0x30);
+            entry++;
             if (i >= t->numMaterials)
                 break;
         }
@@ -119,7 +115,6 @@ extern "C" int func_02046590(const void *tbl, const char *name)
     return -1;
 }
 
-// @symbol func_02046564
 extern "C" int func_02046564(void *p)
 {
     BMD_File *s = (BMD_File *)p;
@@ -132,7 +127,6 @@ extern "C" int func_02046564(void *p)
     return t;
 }
 
-// @symbol func_020462d0
 extern "C" {
 typedef struct SrcA {
     int f0, f4, f8, fc, f10;
@@ -195,12 +189,8 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
 {
     u32 i;
     ElemA *p;
-    int t14;
     SrcB *s2;
     ElemB *e2;
-    u32 o40;
-    u32 o34;
-    u32 j;
 
     p = arr;
     d->f0 = h;
@@ -209,7 +199,6 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
     p += h->f4 + h->f30;
     d->f4 = p;
     p += h->f24;
-    t14 = 0x14;
     for (i = 0; i < h->f24; i++) {
         SrcA *s;
         ElemA *e;
@@ -223,9 +212,9 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
         c1 = h->f28[i].f4;
         e->f1c = s->f20;
         if (c1 != -1) {
-            u32 v = *(int *)((int)h->f18 + c1 * t14 + 0x10);
+            u32 v = h->f18[c1].f10;
             shift = (v >> 0x1a) & 7;
-            *(int *)(((int)e + 0x1c)) |= v;
+            e->f1c |= v;
         }
         idx2 = h->f28[i].f8;
         if (idx2 != -1) {
@@ -248,190 +237,155 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
         e->f18 = s->f1c;
     }
     d->f8 = (ElemB *)p;
-    j = 0;
-    if (j < h->f4) {
-        o40 = 0;
-        o34 = 0;
-        do {
-            s2 = (SrcB *)((int)h->f8 + o40);
-            e2 = (ElemB *)((int)d->f8 + o34);
-            e2->f18 = 0;
-            if (s2->f10 != 0x1000)
-                *(u16 *)(((int)e2 + 0x18)) |= 1;
-            if (s2->f14 != 0x1000)
-                *(u16 *)(((int)e2 + 0x18)) |= 1;
-            if (s2->f18 != 0x1000)
-                *(u16 *)(((int)e2 + 0x18)) |= 1;
-            *(u16 *)(((int)e2 + 0x18)) |= e2[s2->f8].f18;
-            e2->fc = s2->f10;
-            e2->f10 = s2->f14;
-            e2->f14 = s2->f18;
-            e2->f1a = s2->f1c << 4;
-            e2->f1c = s2->f1e << 4;
-            e2->f1e = s2->f20 << 4;
-            e2->f20 = s2->f24;
-            e2->f24 = s2->f28;
-            e2->f28 = s2->f2c;
-            e2->f2c = 0;
-            e2->f30 = 0;
-            o40 += 0x40;
-            o34 += 0x34;
-            j++;
-        } while (j < h->f4);
+    for (i = 0; i < h->f4; i++) {
+        s2 = &h->f8[i];
+        e2 = &d->f8[i];
+        e2->f18 = 0;
+        if (s2->f10 != 0x1000)
+            e2->f18 |= 1;
+        if (s2->f14 != 0x1000)
+            e2->f18 |= 1;
+        if (s2->f18 != 0x1000)
+            e2->f18 |= 1;
+        e2->f18 |= e2[s2->f8].f18;
+        e2->fc = s2->f10;
+        e2->f10 = s2->f14;
+        e2->f14 = s2->f18;
+        e2->f1a = s2->f1c << 4;
+        e2->f1c = s2->f1e << 4;
+        e2->f1e = s2->f20 << 4;
+        e2->f20 = s2->f24;
+        e2->f24 = s2->f28;
+        e2->f28 = s2->f2c;
+        e2->f2c = 0;
+        e2->f30 = 0;
     }
 }
 }
 
-// @symbol func_020462bc
 extern "C" void *func_020462bc(int *p)
 {
     return &((Matrix4x3 *)0)[p[1]];
 }
 
-// @symbol func_020462b4
 extern "C" void func_020462b4(int *p, int v)
 {
     p[4] = v;
 }
 
-// @symbol func_02046288
 extern "C" void func_02046288(void *self, void *value, int index)
 {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
-    unsigned int bits = (unsigned int)value;
-    unsigned int *flags = (unsigned int *)(&e->flags);
-    *flags &= ~0x30;
-    *flags |= bits << 4;
+    e->flags &= ~0x30;
+    e->flags |= (unsigned int)value << 4;
 }
 
-// @symbol func_02046234
 extern "C" void func_02046234(void *a, void *b)
 {
     int i;
-    int count = (*(int **)a)[9];
+    int count = ((ModelComponents *)a)->modelFile->numMaterials;
     for (i = 0; i < count; i++)
         func_02046288(a, b, i);
 }
 
-// @symbol func_02046208
 extern "C" void func_02046208(void *self, unsigned int value, int index)
 {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
-    unsigned int *flags = (unsigned int *)(&e->flags);
-    *flags &= ~0x1f0000;
-    *flags |= value << 16;
+    e->flags &= ~0x1f0000;
+    e->flags |= value << 16;
 }
 
-// @symbol func_020461b4
 extern "C" void func_020461b4(void *a, unsigned int b)
 {
     int i;
-    int count = (*(int **)a)[9];
+    int count = ((ModelComponents *)a)->modelFile->numMaterials;
     for (i = 0; i < count; i++)
         func_02046208(a, b, i);
 }
 
-// @symbol func_02046120
 extern "C" void func_02046120(void *self, int a)
 {
     ModelComponents *obj = (ModelComponents *)self;
     int i;
     int n = obj->modelFile->numMaterials;
     for (i = 0; i < n; i++) {
-        volatile u32 *p = (volatile u32 *)&obj->materials[i].flags;
-        *p &= 0xc0ffff0f;
-        *p |= 0x40;
-        *p |= 0x30;
-        *p &= ~0x1f0000;
-        *p |= a << 16;
+        BMD_Material *e = &obj->materials[i];
+        e->flags &= 0xc0ffff0f;
+        e->flags |= 0x40;
+        e->flags |= 0x30;
+        e->flags &= ~0x1f0000;
+        e->flags |= a << 16;
     }
 }
 
-// @symbol func_02046088
 extern "C" void func_02046088(void *self, int a, int b)
 {
     ModelComponents *obj = (ModelComponents *)self;
     int i;
     int n = obj->modelFile->numMaterials;
     for (i = 0; i < n; i++) {
-        volatile u32 *p = (volatile u32 *)&obj->materials[i].flags;
-        *p &= 0xc0ffff0f;
-        *p |= b << 24;
-        *p |= 0x80;
-        *p |= 0x30;
-        *p &= ~0x1f0000;
-        *p |= a << 16;
+        BMD_Material *e = &obj->materials[i];
+        e->flags &= 0xc0ffff0f;
+        e->flags |= b << 24;
+        e->flags |= 0x80;
+        e->flags |= 0x30;
+        e->flags &= ~0x1f0000;
+        e->flags |= a << 16;
     }
 }
 
-// @symbol func_0204605c
 extern "C" void func_0204605c(void *self, int value, int index) {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
-    unsigned int bits = value;
-    unsigned int *flags = (unsigned int *)(&e->flags);
-    *flags &= ~0x3f000000;
-    *flags |= bits << 24;
+    e->flags &= ~0x3f000000;
+    e->flags |= (unsigned int)value << 24;
 }
 
-// @symbol func_02046008
 extern "C" void func_02046008(void *a, int b) {
     int i;
-    int count = (*(int **)a)[9];
+    int count = ((ModelComponents *)a)->modelFile->numMaterials;
     for (i = 0; i < count; i++)
         func_0204605c(a, b, i);
 }
 
-// @symbol func_02045fd4
 extern "C" void func_02045fd4(void *self, unsigned int value, int index) {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
-    unsigned int bits = value;
-    unsigned int *color = (unsigned int *)(&e->diffuseAmbient);
-    *color &= 0xffff8000;
-    *color |= bits;
+    e->diffuseAmbient &= 0xffff8000;
+    e->diffuseAmbient |= value;
 }
 
-// @symbol func_02045f80
 extern "C" void func_02045f80(void *a, unsigned int b) {
     int i;
-    int count = (*(int **)a)[9];
+    int count = ((ModelComponents *)a)->modelFile->numMaterials;
     for (i = 0; i < count; i++)
         func_02045fd4(a, b, i);
 }
 
-// @symbol func_02045f4c
 extern "C" void func_02045f4c(void *self, unsigned int value, int index) {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
-    unsigned int bits = value;
-    unsigned int *color = (unsigned int *)(&e->diffuseAmbient);
-    *color &= 0xffff;
-    *color |= bits << 16;
+    e->diffuseAmbient &= 0xffff;
+    e->diffuseAmbient |= value << 16;
 }
 
-// @symbol func_02045ef8
 extern "C" void func_02045ef8(void *a, unsigned int b) {
     int i;
-    int count = (*(int **)a)[9];
+    int count = ((ModelComponents *)a)->modelFile->numMaterials;
     for (i = 0; i < count; i++)
         func_02045f4c(a, b, i);
 }
 
-// @symbol func_02045ec4
 extern "C" void func_02045ec4(char *self, unsigned int value, int index)
 {
     ModelComponents *obj = (ModelComponents *)self;
     BMD_Material *e = &obj->materials[index];
-    unsigned int bits = value;
-    unsigned int *color = (unsigned int *)(&e->specularEmission);
-    *color &= 0xffff;
-    *color |= bits << 16;
+    e->specularEmission &= 0xffff;
+    e->specularEmission |= value << 16;
 }
 
-// @symbol func_02045e70
 extern "C" void func_02045e70(char *self, unsigned int arg1) {
     ModelComponents *obj = (ModelComponents *)self;
     int i;
@@ -440,7 +394,6 @@ extern "C" void func_02045e70(char *self, unsigned int arg1) {
         func_02045ec4(self, arg1, i);
 }
 
-// @symbol func_02045e44
 extern "C" void func_02045e44(void *self, unsigned int value, int index)
 {
     struct Element { char pad[0x1c]; unsigned int flags; char pad2[0x30 - 0x1c - 4]; };
@@ -452,16 +405,14 @@ extern "C" void func_02045e44(void *self, unsigned int value, int index)
     *flags |= value << 30;
 }
 
-// @symbol func_02045e2c
 extern "C" void func_02045e2c(int obj, int i, int a, short b)
 {
-    ElemB *e = (ElemB *)(*(int *)(obj + 8) + i * 0x34);
-    e->f2c = a;
-    e->f30 = b;
+    ModelBone *e = &((ModelComponents *)obj)->bones[i];
+    e->anim = (BCA_File *)a;
+    e->animFrame = b;
 }
 
 
-// @symbol func_02045d9c
 extern "C" void func_02045d9c(void)
 {
     CP15::EnableDTCM();
@@ -484,32 +435,26 @@ extern "C" void func_02045d9c(void)
     Crash();
 }
 
-// @symbol InitialiseVramGlobals
 extern "C" void InitialiseVramGlobals(void)
 {
-    int r = func_02053e34();
+    int r = GX::GetSizeOfTex();
     data_020a4be4 = 0;
     data_020a4bc8 = 0;
     data_020a4be0 = 0x20000;
     data_020a4be8 = 0x20000;
     data_020a4bdc = r;
-    data_020a4bd8 = func_02053e1c();
+    data_020a4bd8 = GX::GetSizeOfTexPltt();
     data_020a4bcc = 0;
 }
 
-// @symbol func_02045d10
 extern "C" int func_02045d10(void) { return data_020a4bc8; }
 
-// @symbol func_02045d00
 extern "C" int func_02045d00(void) { return data_020a4bdc; }
 
-// @symbol func_02045cf0
 extern "C" int func_02045cf0(void) { return data_020a4bcc; }
 
-// @symbol func_02045ce0
 extern "C" int func_02045ce0(void) { return data_020a4bd8; }
 
-// @symbol _ZN17dExtSimpleModel_c13GetVramOffsetEj
 u32 dExtSimpleModel_c::GetVramOffset(u32 size) {
     u32 *p;
     u32 b = data_020a4be8 - data_020a4bc8;
@@ -525,7 +470,6 @@ u32 dExtSimpleModel_c::GetVramOffset(u32 size) {
     return *p;
 }
 
-// @symbol _ZN17dExtSimpleModel_c17LoadTextureToVramEPcj
 u32 dExtSimpleModel_c::LoadTextureToVram(char *texData, u32 size) {
     u32 vramOffset = GetVramOffset(size);
     GX::BeginLoadTex();
@@ -535,7 +479,6 @@ u32 dExtSimpleModel_c::LoadTextureToVram(char *texData, u32 size) {
     return vramOffset;
 }
 
-// @symbol _ZN17dExtSimpleModel_c27LoadCompressedTextureToVramEPcjS0_
 u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *dst) {
     u32 vramOffset;
 
@@ -554,7 +497,6 @@ u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *ds
 }
 
 // 0x02045ad8 (0x80)
-// @symbol func_02045ad8
 extern "C" u32 func_02045ad8(const void *src, u32 size)
 {
     u32 slot;
@@ -577,7 +519,6 @@ extern "C" u32 func_02045ad8(const void *src, u32 size)
 }
 
 // 0x02045a50 (0x88)
-// @symbol func_02045a50
 extern "C" u32 func_02045a50(const void *src, u32 size)
 {
     u32 slot;
@@ -599,55 +540,40 @@ extern "C" u32 func_02045a50(const void *src, u32 size)
 }
 
 // 0x020458e0 (0x170)
-// @symbol _ZN17dExtSimpleModel_c13LoadTexAndPalER8BMD_File
 void dExtSimpleModel_c::LoadTexAndPal(BMD_File &file) {
     u32 i;
     u32 ret;
     u32 sz;
     BMD_Palette *p;
-    u32 poff;
-    u32 j;
     BMD_Texture *t;
-    u32 off;
 
-    i = 0;
-    if (i < file.numTextures) {
-        off = i;
-        do {
-            t = (BMD_Texture *)((char *)file.textures + off);
-            sz = t->size;
-            if (((t->flags >> 26) & 7) == 5) {
-                ret = LoadCompressedTextureToVram(t->data, sz, t->data + sz);
-            } else {
-                ret = LoadTextureToVram(t->data, sz);
-            }
-            t->flags = (t->flags & ~0xffff) | ((ret >> 3) & 0xffff);
-            i++;
-            off += sizeof(BMD_Texture);
-        } while (i < file.numTextures);
+    for (i = 0; i < file.numTextures; i++) {
+        t = &file.textures[i];
+        sz = t->size;
+        if (((t->flags >> 26) & 7) == 5) {
+            ret = LoadCompressedTextureToVram(t->data, sz, t->data + sz);
+        } else {
+            ret = LoadTextureToVram(t->data, sz);
+        }
+        t->flags = (t->flags & ~0xffff) | ((ret >> 3) & 0xffff);
     }
 
     GX::BeginLoadTexPltt();
 
-    j = 0;
-    if (j < file.numPalettes) {
-        poff = j;
-        do {
-            p = (BMD_Palette *)((char *)file.palettes + poff);
-            sz = p->size;
-            if (data_020a4bcc + sz > data_020a4bd8) Crash();
-            if (sz <= 8) {
-                GX::LoadTexPltt(p->data, data_020a4bcc, sz);
-                p->vramOffset = data_020a4bcc;
-                data_020a4bcc = data_020a4bcc + ((sz + 7) & 0xfff8);
-            } else {
-                data_020a4bd8 = data_020a4bd8 - ((sz + 0xf) & 0xfff0);
-                GX::LoadTexPltt(p->data, data_020a4bd8, sz);
-                p->vramOffset = data_020a4bd8;
-            }
-            j++;
-            poff += sizeof(BMD_Palette);
-        } while (j < file.numPalettes);
+    for (i = 0; i < file.numPalettes; i++) {
+        p = &file.palettes[i];
+        sz = p->size;
+        if (data_020a4bcc + sz > data_020a4bd8)
+            Crash();
+        if (sz <= 8) {
+            GX::LoadTexPltt(p->data, data_020a4bcc, sz);
+            p->vramOffset = data_020a4bcc;
+            data_020a4bcc = data_020a4bcc + ((sz + 7) & 0xfff8);
+        } else {
+            data_020a4bd8 = data_020a4bd8 - ((sz + 0xf) & 0xfff0);
+            GX::LoadTexPltt(p->data, data_020a4bd8, sz);
+            p->vramOffset = data_020a4bd8;
+        }
     }
 
     GX::EndLoadTexPltt();

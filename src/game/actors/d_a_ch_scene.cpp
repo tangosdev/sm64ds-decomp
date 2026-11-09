@@ -37,17 +37,16 @@ int IsStarCollectedInLevel(signed char levelID, int starID);
 }
 
 extern u8 data_0209f2c0;
-extern unsigned char data_0209f250;
-extern daPly_c *data_0209f394[];
-extern signed char data_02092110;
+extern unsigned char gLocalPlayerId;
+extern daPly_c *gPlayers[];
+extern signed char gNextSublevel;
 extern signed char gCurrentSublevel;
-extern unsigned char data_0209f220;
-extern dCamera_c *data_0209f318;
-extern dFdColor_c data_0209f5e8;
+extern unsigned char gCurrentStarId;
+extern dCamera_c *gCamera;
+extern dFdColor_c gSceneColorFader;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daChScene_c_classInit
 /* Reconstructed source-style name: SM64DS proves daChScene_c through RTTI,
  * allocation size, vtable identity, and the CH_SCENE registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -60,9 +59,8 @@ extern "C" daChScene_c *daChScene_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c13InitResourcesEv
 s32 daChScene_c::InitResources() {
-    if (gCurrentSublevel == 8 && data_0209f220 != 1) {
+    if (gCurrentSublevel == 8 && gCurrentStarId != 1) {
         if (IsStarCollectedInLevel(8, 1) != 0)
             return 0;
     }
@@ -101,11 +99,10 @@ s32 daChScene_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c8BehaviorEv
 s32 daChScene_c::Behavior() {
     Vector3 out1;
     Vector3 out2;
-    daPly_c *player = data_0209f394[data_0209f250];
+    daPly_c *player = gPlayers[gLocalPlayerId];
     if (mHorzSpeed != 0) {
         MulVec3Mat4x3(&player->mPos, &mInvMat, &out1);
         if (out1.z > mHorzSpeed || out1.z < -0x300000) {
@@ -117,14 +114,14 @@ s32 daChScene_c::Behavior() {
         mHorzSpeed -= 0x20000;
         if (mHorzSpeed < -0x300000) {
             mHorzSpeed = -0x300000;
-            if (data_02092110 < 0) {
+            if (gNextSublevel < 0) {
                 LoadDestinationLevel();
                 dScene_c::SetAndStopColorFader();
-                data_0209f5e8.color = 0x7fff;
+                gSceneColorFader.color = 0x7fff;
             }
         }
     } else {
-        if (data_02092110 < 0) {
+        if (gNextSublevel < 0) {
             if (player->IsStateEnteringLevel() == 0) {
                 MulVec3Mat4x3(&player->mPos, &mInvMat, &out2);
                 {
@@ -141,7 +138,7 @@ s32 daChScene_c::Behavior() {
                                 } else if (out2.y > 0x60000) {
                                     mAngleZ = 1;
                                 }
-                                cam = data_0209f318;
+                                cam = gCamera;
                                 if (player->Unk_020c9e5c(7)) {
                                     LoadDestinationLevel();
                                     StartExitFaderWipe(6);
@@ -161,7 +158,7 @@ s32 daChScene_c::Behavior() {
                                         }
                                         if (o != 0) {
                                             func_02012790(0x16);
-                                        } else if (data_02092110 == 0xd) {
+                                        } else if (gNextSublevel == 0xd) {
                                             func_02012790(0x1e);
                                         } else {
                                             func_02012790(0x19);
@@ -171,7 +168,7 @@ s32 daChScene_c::Behavior() {
                                         if (t == 0x1b || t == 0x12) {
                                             LoadDestinationLevel();
                                             dScene_c::SetAndStopColorFader();
-                                            data_0209f5e8.color = 0x7fff;
+                                            gSceneColorFader.color = 0x7fff;
                                         }
                                         mHorzSpeed = out2.z;
                                         cam->LookAtExit(*this);
@@ -191,26 +188,22 @@ s32 daChScene_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c6RenderEv
 s32 daChScene_c::Render() {
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c16OnPendingDestroyEv
 void daChScene_c::OnPendingDestroy() {}
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c16CleanupResourcesEv
 s32 daChScene_c::CleanupResources() {
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN11daChScene_c20LoadDestinationLevelEv
 /* Hand the exit band to the next level and load the destination param1
    names: level in the top byte, entrance in the next, and LoadLevel's last
    argument in the third (0xff passes as -1). */
@@ -226,7 +219,6 @@ void daChScene_c::LoadDestinationLevel() {
     }
 }
 
-// @symbol _ZN11daChScene_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
  * D0 destroys through this class and its bases, then returns the object to its
@@ -242,7 +234,6 @@ void daChScene_c::LoadDestinationLevel() {
  * exactly D1 then D0 and no D2 -- the ROM's shape -- so both variants are
  * licensed functions of this TU and neither needs a deadstrip policy row. */
 
-// @symbol _ZN11daChScene_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * One vptr store and the base chain's own destruction, every bit of it a

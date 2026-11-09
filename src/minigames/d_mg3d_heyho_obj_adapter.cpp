@@ -36,9 +36,11 @@
      through its vtable, with mAnchor/mCommand as anchor/command. */
 #include "common.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "decl_common.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "SharedFilePtr.h"
 #include "dMgJump3DMario_c.h"
 #include "Heyho.h"
@@ -65,13 +67,11 @@ extern HeyhoAdapterModelFilePtr gMgPHeyhoMiniModelFile;
 extern HeyhoAdapterAnimationFileHandle gMgPHeyhoWaitAnimFile;
 
 /* ---- Heyho::Heyho ---- */
-// @symbol _ZN5HeyhoC1Ev
 Heyho::Heyho() {}
 
 /* ---- Heyho::~Heyho ---- */
 /* Each Heyho releases both shared resource handles; mAnmModel's destructor
    runs after the body. */
-// @symbol _ZN5HeyhoD1Ev
 Heyho::~Heyho() {
     gMgPHeyhoMiniModelFile.Release();
     gMgPHeyhoWaitAnimFile.Release();
@@ -81,10 +81,10 @@ Heyho::~Heyho() {
 struct BMD_File; struct BCA_File;
 extern HeyhoAdapterModelFilePtr gMgPHeyhoMiniModelFile;
 extern HeyhoAdapterAnimationFileHandle gMgPHeyhoWaitAnimFile;
-/* data_0209f5c0 is the current scene. This TU does not include
+/* gCurrentScene is the running scene. This TU does not include
  * include/fBase_c.h, so fBaseView reads it up to actorID. */
 struct fBase_c;
-extern fBase_c *data_0209f5c0;
+extern fBase_c *gCurrentScene;
 struct fBaseView {
     u8 pad_00[0xc];
     u16 actorID; /* 0x0c */
@@ -106,7 +106,7 @@ extern "C" int Heyho_LoadResources(char *c) {
     HEYHO(c)->mAnmModel.SetAnim(a, 0, 0x800, 0);
     func_02016acc(&HEYHO(c)->mAnmModel, 1u);
     func_02016b24(&HEYHO(c)->mAnmModel, 2);
-    int b = (((fBaseView *)data_0209f5c0)->actorID == 0x175);
+    int b = (((fBaseView *)gCurrentScene)->actorID == 0x175);
     if (b != 0) {
         func_02016a14((char *)&HEYHO(c)->mAnmModel, 0x7fff);
         func_02016a04((char *)&HEYHO(c)->mAnmModel, 0x7d40);
@@ -170,7 +170,6 @@ void Heyho_StartMotionFlyIn(char *dst, char *src) {
 /* ---- Heyho_MotionFlyIn ---- */
 namespace n020c6a9c {
 extern "C" {
-// @symbol Heyho_MotionFlyIn
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 
 void Heyho_MotionFlyIn(char *c) {
@@ -492,7 +491,6 @@ void Heyho_StartMotionHover(char *p) {
 /* ---- Heyho_MotionHover ---- */
 namespace n020c6378 {
 extern "C" {
-extern s16 data_02082214[];
 extern void Heyho_CheckHitB(void* this_);
 
 void Heyho_MotionHover(int this_) {
@@ -501,12 +499,12 @@ void Heyho_MotionHover(int this_) {
        +0xac field addresses (the cartridge re-issues ldrh r2,[r0,#0xea] /
        ldr r1,[r0,#0xac]). With typed member reads it no longer changes the
        code (reading through HEYHO(this_) with `ro` still declared is
-       byte-identical), but dropping the `ro` local renumbers the TU's @NNN
-       labels (@1351 -> @1349), so it stays. */
+       byte-identical), but dropping the `ro` local shifts the TU's two
+       trailing .bss compiler labels down by one, so it stays. */
     const Heyho *ro = (const Heyho *)this_;
     HEYHO(this_)->mPhase += 0x200;
     HEYHO(this_)->mVel.x = 0;
-    HEYHO(this_)->mVel.y = data_02082214[((u16)ro->mPhase >> 4) * 2] >> 3;
+    HEYHO(this_)->mVel.y = FX_SinIdx((u16)ro->mPhase >> 4) >> 3;
     HEYHO(this_)->mPos.y += ro->mVel.y;
     Heyho_CheckHitB((void*)this_);
 }
@@ -535,14 +533,13 @@ extern "C" {
 /* local extern: helper namespaces in this TU retain differing legacy spellings. */
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void Heyho_CheckHitB(void* c);
-extern short data_02082214[];
 
 void Heyho_MotionPatrolBob(char *c) {
     int v, w;
     HEYHO(c)->mPhase += 0x200;
     {
         int a = (unsigned short)HEYHO(c)->mPhase >> 4;
-        HEYHO(c)->mVel.y = data_02082214[a * 2] >> 3;
+        HEYHO(c)->mVel.y = FX_SinIdx(a) >> 3;
     }
     AddVec3(&HEYHO(c)->mPos, &HEYHO(c)->mVel, &HEYHO(c)->mPos);
     v = HEYHO(c)->mVel.x;
@@ -587,7 +584,6 @@ void Heyho_StartMotionBobVertical(int *c) {
 /* ---- Heyho_MotionBobVertical ---- */
 namespace n020c61c4 {
 extern "C" {
-// @symbol Heyho_MotionBobVertical
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *out);
 void Heyho_MotionBobVertical(int this_) {
     int f24 = HEYHO(this_)->mGoal.y;
@@ -623,7 +619,6 @@ void Heyho_StartMotionBounceNear(void *c) {
 /* ---- Heyho_MotionBounceNear ---- */
 namespace n020c6088 {
 extern "C" {
-// @symbol Heyho_MotionBounceNear
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 
 void Heyho_MotionBounceNear(char *c) {
@@ -831,7 +826,6 @@ void Heyho_StartMotionBounceInRange(int *c) {
 /* ---- Heyho_MotionBounceInRange ---- */
 namespace n020c5bf8 {
 extern "C" {
-// @symbol Heyho_MotionBounceInRange
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 
 void Heyho_MotionBounceInRange(char *c) {
@@ -1089,7 +1083,6 @@ void Heyho_StartMotionCircleUpper(void *c) {
 /* ---- Heyho_MotionCircleUpper ---- */
 namespace n020c5530 {
 extern "C" {
-// @symbol Heyho_MotionCircleUpper
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 
 void Heyho_MotionCircleUpper(char *c) {
@@ -1137,7 +1130,6 @@ void Heyho_StartMotionCircleLower(void *c) {
 /* ---- Heyho_MotionCircleLower ---- */
 namespace n020c53f8 {
 extern "C" {
-// @symbol Heyho_MotionCircleLower
 extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 
 void Heyho_MotionCircleLower(char *c) {
@@ -1204,7 +1196,7 @@ extern void Vec3_Sub(Vector3 *d, const Vector3 *a, const Vector3 *b);
 extern void Vec3_Add(Vector3 *d, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(const Vector3 *v);
 extern int DotVec3(const Vector3 *a, const Vector3 *b);
-extern void Heyho_CheckHitB(char *c);
+extern void Heyho_CheckHitB(Heyho *c);
 extern char *sJumpAdapters[];
 }
 
@@ -1321,7 +1313,7 @@ extern "C" void Heyho_MotionChase(char *c) {
         else if (df < 0)
             ApproachLinear(HEYHO(c)->mLean, -0x3000, 0x200);
     }
-    Heyho_CheckHitB(c);
+    Heyho_CheckHitB(HEYHO(c));
 }
 }
 
@@ -1344,20 +1336,16 @@ namespace n020c4e8c {
 extern "C" {
 int D3D_PlaySeAtX(int a, int b);
 void Heyho_Settle(char* c);
-extern short data_02082214[];
 
 void Heyho_MotionHitSpin(char *c) {
     if (HEYHO(c)->mPhase < 0x4000) {
         short *p = &HEYHO(c)->mPhase;
-        short* tbl = data_02082214;
-        int ang, idx, idx1, r0;
+        int ang, r0;
         *p = *p + 0x400;
         ang = (unsigned short)HEYHO(c)->mPhase >> 4;
-        idx = ang * 2;
-        idx1 = idx + 1;
-        r0 = FX_MUL((tbl[idx] >> 1) + 0x1000, 0x1400);
+        r0 = FX_MUL((FX_SinIdx(ang) >> 1) + 0x1000, 0x1400);
         HEYHO(c)->mScale.x = r0;
-        HEYHO(c)->mScale.y = FX_MUL((tbl[idx1] >> 1) + 0x800, 0x1400);
+        HEYHO(c)->mScale.y = FX_MUL((FX_CosIdx(ang) >> 1) + 0x800, 0x1400);
         HEYHO(c)->mScale.z = r0;
         return;
     }
@@ -1398,9 +1386,9 @@ void Heyho_Settle(char* c)
     int v0, v1;
     int t;
 
-    a = Particle::System::NewSimple(0x122, HEYHO(c)->mPos.x << 3, HEYHO(c)->mPos.y << 3,
+    a = Particle::System::NewSimple(kPtclPoofDustA, HEYHO(c)->mPos.x << 3, HEYHO(c)->mPos.y << 3,
                                     HEYHO(c)->mPos.z << 3);
-    b = Particle::System::NewSimple(0x123, HEYHO(c)->mPos.x << 3, HEYHO(c)->mPos.y << 3,
+    b = Particle::System::NewSimple(kPtclPoofDustB, HEYHO(c)->mPos.x << 3, HEYHO(c)->mPos.y << 3,
                                     HEYHO(c)->mPos.z << 3);
     t = (int)(HEYHO(c)->mSize << 0x1c) >> 0x10;
     /* Both stores go through a; the cartridge never sets b's scale. */
@@ -1470,7 +1458,6 @@ extern "C" void Heyho_Update(Heyho *c) {
 
 /* ---- Heyho_Draw ---- */
 namespace n020c4c54 {
-// @symbol Heyho_Draw
 
 extern "C" void Vec3_MulScalar(Vector3 *res, const Vector3 *v, int scalar);
 extern "C" void Heyho_Draw(int this_) {
@@ -1492,7 +1479,6 @@ extern "C" void Heyho_Draw(int this_) {
 /* ---- Heyho_UpdateMatrix ---- */
 namespace n020c4c00 {
 extern "C" {
-// @symbol Heyho_UpdateMatrix
 extern struct Matrix4x3 data_020a0e68;
 extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3* m, short angY);
@@ -2005,7 +1991,6 @@ int Heyho_AllIdle(void) {
 }
 }
 
-// @symbol _ZN22dMg3DHeyhoObjAdapter_cC2Ev
 dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() : mCommand(0)
 {
 }

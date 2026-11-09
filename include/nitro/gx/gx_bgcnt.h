@@ -7,6 +7,8 @@
  * `mov #0x6600000 / add #0x2000` (func_ov002_020f39ec) where a literal
  * address would load it from the pool. */
 
+/* The two engines' OBJ character VRAM, under the SDK's memory-map names. */
+#define HW_OBJ_VRAM 0x06400000
 #define HW_DB_OBJ_VRAM 0x06600000
 
 static inline void *G2S_GetOBJCharPtr(void) {

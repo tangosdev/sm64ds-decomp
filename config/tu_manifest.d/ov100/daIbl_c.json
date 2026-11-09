@@ -61,56 +61,56 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN7daIbl_c19func_ov100_02141fb0Ev",
+      "symbol": "_ZN7daIbl_c12CheckContactEv",
       "address": "0x02141fb0",
       "size": "0x00000180",
       "legacy_source": "src/func_ov100_02141fb0.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN7daIbl_c19func_ov100_02142130Ev",
+      "symbol": "_ZN7daIbl_c18UpdateWallAndFloorEv",
       "address": "0x02142130",
       "size": "0x00000134",
       "legacy_source": "src/func_ov100_02142130.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN7daIbl_c19func_ov100_02142264Ev",
+      "symbol": "_ZN7daIbl_c17UpdateModelMatrixEv",
       "address": "0x02142264",
       "size": "0x000000d8",
       "legacy_source": "src/func_ov100_02142264.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN7daIbl_c19func_ov100_0214233cEv",
+      "symbol": "_ZN7daIbl_c11AdvancePathEv",
       "address": "0x0214233c",
       "size": "0x00000184",
       "legacy_source": "src/func_ov100_0214233c.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN7daIbl_c19func_ov100_021424c0Ev",
+      "symbol": "_ZN7daIbl_c12PathBehaviorEv",
       "address": "0x021424c0",
       "size": "0x0000026c",
       "legacy_source": "src/func_ov100_021424c0.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN7daIbl_c19func_ov100_0214272cEv",
+      "symbol": "_ZN7daIbl_c15RollOffBehaviorEv",
       "address": "0x0214272c",
       "size": "0x000001ec",
       "legacy_source": "src/func_ov100_0214272c.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN7daIbl_c19func_ov100_02142918Ev",
+      "symbol": "_ZN7daIbl_c16FreeRollBehaviorEv",
       "address": "0x02142918",
       "size": "0x00000278",
       "legacy_source": "src/func_ov100_02142918.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN7daIbl_c19func_ov100_02142b90Ev",
+      "symbol": "_ZN7daIbl_c15SpawnerBehaviorEv",
       "address": "0x02142b90",
       "size": "0x0000018c",
       "legacy_source": "src/func_ov100_02142b90.c",
@@ -538,34 +538,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@564",
-      "to": "data_ov100_02148670",
-      "evidence": "compiler temp mapped to 0x02148670 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@566",
-      "to": "data_ov100_02147f38",
-      "evidence": "compiler temp mapped to 0x02147f38 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@568",
-      "to": "data_ov100_02147f18",
-      "evidence": "compiler temp mapped to 0x02147f18 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@570",
-      "to": "data_ov100_02147f20",
-      "evidence": "compiler temp mapped to 0x02147f20 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
       "from": "@572",
-      "to": "data_ov100_02147f30",
-      "evidence": "compiler temp mapped to 0x02147f30 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov100_02148670",
+      "evidence": "compiler temp mapped to 0x02148670 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @564 to @572 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
     },
     {
       "from": "@574",
+      "to": "data_ov100_02147f38",
+      "evidence": "compiler temp mapped to 0x02147f38 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @566 to @574 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
+    },
+    {
+      "from": "@576",
+      "to": "data_ov100_02147f18",
+      "evidence": "compiler temp mapped to 0x02147f18 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @568 to @576 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
+    },
+    {
+      "from": "@578",
+      "to": "data_ov100_02147f20",
+      "evidence": "compiler temp mapped to 0x02147f20 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @570 to @578 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
+    },
+    {
+      "from": "@580",
+      "to": "data_ov100_02147f30",
+      "evidence": "compiler temp mapped to 0x02147f30 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @572 to @580 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
+    },
+    {
+      "from": "@582",
       "to": "data_ov100_02147f28",
-      "evidence": "compiler temp mapped to 0x02147f28 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02147f28 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @574 to @582 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
     }
   ],
   "symbol_binding_rewrites": [
@@ -760,7 +760,7 @@
       "source": "0x02147f18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daIbl_c19func_ov100_02142918Ev",
+      "symbol": "_ZN7daIbl_c16FreeRollBehaviorEv",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02142918"
@@ -770,7 +770,7 @@
       "source": "0x02147f20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daIbl_c19func_ov100_021424c0Ev",
+      "symbol": "_ZN7daIbl_c12PathBehaviorEv",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021424c0"
@@ -780,7 +780,7 @@
       "source": "0x02147f28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daIbl_c19func_ov100_021424c0Ev",
+      "symbol": "_ZN7daIbl_c12PathBehaviorEv",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x021424c0"
@@ -790,7 +790,7 @@
       "source": "0x02147f30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daIbl_c19func_ov100_0214272cEv",
+      "symbol": "_ZN7daIbl_c15RollOffBehaviorEv",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x0214272c"
@@ -800,7 +800,7 @@
       "source": "0x02147f38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daIbl_c19func_ov100_02142b90Ev",
+      "symbol": "_ZN7daIbl_c15SpawnerBehaviorEv",
       "addend": 0,
       "target_module": "ov100",
       "target_address": "0x02142b90"

@@ -45,7 +45,7 @@ struct CLPS_Block;
 
 extern BTA_File data_ov009_02112bc4;
 extern CLPS_Block data_ov009_02112c38;
-extern unsigned char data_0209f2d8;
+extern unsigned char gGameMode;
 extern SaveBlock data_0209caa0;
 extern int data_0209f32c;
 
@@ -87,7 +87,7 @@ Vector3 data_ov009_02113e34[7] = {
     Vector3(-0x1298000, -0x320000, -0xe56000),
 };
 
-/* ... and when data_0209f2d8 is 1: */
+/* ... and when gGameMode is 1: */
 Vector3 data_ov009_02113de0[7] = {
     Vector3(-0x14d2000, -0x42e000, -0x960000), Vector3(-0x140a000, -0x42e000, -0xa32000),
     Vector3(-0x136a000, -0x42e000, -0xb18000), Vector3(-0x12f2000, -0x42e000, -0xc12000),
@@ -97,7 +97,6 @@ Vector3 data_ov009_02113de0[7] = {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjMcWater_c_classInit
 /* Reconstructed source-style name; exact original SM64DS spelling is not
  * preserved. Historical alias: CastleWater_Spawn. */
 extern "C" daObjMcWater_c *daObjMcWater_c_classInit() {
@@ -106,9 +105,8 @@ extern "C" daObjMcWater_c *daObjMcWater_c_classInit() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjMcWater_c13InitResourcesEv
 int daObjMcWater_c::InitResources() {
-    int b = (int)(data_0209f2d8 == 1);
+    int b = (int)(gGameMode == 1);
     if (b == 0) {
         if (data_0209caa0.file.flags2 & 0x80000) {
             mPosY = -0x2bc000;
@@ -138,7 +136,6 @@ int daObjMcWater_c::InitResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjMcWater_c8BehaviorEv
 int daObjMcWater_c::Behavior() {
     mTexTransformer.speed = 0x1000;
     mTexTransformer.Advance();
@@ -147,7 +144,6 @@ int daObjMcWater_c::Behavior() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjMcWater_c6RenderEv
 int daObjMcWater_c::Render() {
     mTexTransformer.Update(mModel.data);
     mModel.Render(0);
@@ -156,7 +152,6 @@ int daObjMcWater_c::Render() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjMcWater_c16CleanupResourcesEv
 int daObjMcWater_c::CleanupResources() {
     gMcWaterModelFile.Release();
     gMcWaterCollisionFile.Release();
@@ -167,11 +162,10 @@ int daObjMcWater_c::CleanupResources() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjMcWater_c15SpawnWaterfallsEv
 void daObjMcWater_c::SpawnWaterfalls() {
     Vector3 *vec;
     int i;
-    int b = (int)(data_0209f2d8 == 1);
+    int b = (int)(gGameMode == 1);
     if (b != 0) {
         if (mPosX > 0)
             return;
@@ -186,8 +180,6 @@ void daObjMcWater_c::SpawnWaterfalls() {
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14daObjMcWater_cD1Ev
-// @symbol _ZN14daObjMcWater_cD0Ev
 /* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjMcWater_c() {}` in the
    header is the whole source of both variants: from an inline body mwcc emits
    D1 and then D0 -- the cartridge's own order -- and no leaf D2. Writing the

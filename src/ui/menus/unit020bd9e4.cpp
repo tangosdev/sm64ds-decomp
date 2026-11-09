@@ -9,15 +9,15 @@
  * What the code does. The module owns 0x39 sound handles,
  * data_ov007_02104bbc[0..0x38], one per entry of the sound-id table
  * data_ov007_02103134, and four request flags, data_ov007_02104bb8[0..3],
- * for the looping sounds on handles 0x35..0x38. func_ov007_020be00c (called
+ * for the looping sounds on handles 0x35..0x38. MenuSound_Create (called
  * from the init dispatcher, func_ov007_020b7138) takes the handles from the
  * "sound" heap and the flags from the "sound request" heap;
- * func_ov007_020bdf60 (called from func_ov007_020b6f4c, which tears every
+ * MenuSound_Destroy (called from func_ov007_020b6f4c, which tears every
  * menu module down) stops and releases them. func_ov007_020be098 plays one
  * sound on its own handle and func_ov007_020bdeb0 is the out-of-module
  * entry to it: a tail-call veneer the rest of the menu calls. A looping
  * sound is kept alive by func_ov007_020bde2c, which starts it if it is not
- * playing and sets its request flag; func_ov007_020bdebc (called from
+ * playing and sets its request flag; MenuSound_UpdateLoops (called from
  * func_ov007_020b7090) stops every loop that was not requested since its
  * last run and clears the flags. func_ov007_020bdbcc, 020bda8c and
  * 020bda38 keep loops 0x35, 0x36 and 0x37 alive and set their parameters
@@ -26,7 +26,7 @@
  *
  * Edges: every function here touches this module's bss block
  * 0x02104ba4..0x02104bc0 or calls one that does, and nothing outside the
- * range touches it. The previous function, func_ov007_020bd960, is one of
+ * range touches it. The previous function, MenuGfx_ResetVram, is one of
  * the init dispatcher's own helpers and touches none of it; the next one,
  * func_ov007_020be0dc, belongs to the module whose bss block starts at
  * 0x02104bc0.
@@ -63,14 +63,12 @@ extern int data_ov007_02104bb4;
 extern int *data_ov007_02104bb8;
 extern int *data_ov007_02104bbc;
 
-// @symbol func_ov007_020be098
 int func_ov007_020be098(int idx) {
     func_0204f94c(&data_ov007_02104bbc[idx]);
     return func_02051f1c(&data_ov007_02104bbc[idx], 2, data_ov007_02103134[idx]);
 }
 
-// @symbol func_ov007_020be00c
-void func_ov007_020be00c(void) {
+void MenuSound_Create(void) {
     int i;
     int j;
 
@@ -84,8 +82,7 @@ void func_ov007_020be00c(void) {
         data_ov007_02104bb8[j] = 0;
 }
 
-// @symbol func_ov007_020bdf60
-void func_ov007_020bdf60(void) {
+void MenuSound_Destroy(void) {
     int i;
     for (i = 0; i < 0x39; i++) {
         if (data_ov007_02104bbc[i] != 0) {
@@ -103,8 +100,7 @@ void func_ov007_020bdf60(void) {
     }
 }
 
-// @symbol func_ov007_020bdebc
-int *func_ov007_020bdebc(void) {
+int *MenuSound_UpdateLoops(void) {
     int *arr;
     int i;
     int sound;
@@ -130,20 +126,17 @@ int *func_ov007_020bdebc(void) {
     return arr;
 }
 
-// @symbol func_ov007_020bdeb0
 /* Tail-call veneer: ldr ip, [pc]; bx ip; .word func_ov007_020be098. */
 int func_ov007_020bdeb0(int idx) {
     return func_ov007_020be098(idx);
 }
 
-// @symbol func_ov007_020bde70
 void func_ov007_020bde70(int idx, int arg) {
     if (data_ov007_02104bbc[idx] == 0)
         return;
     func_0204fa2c(&data_ov007_02104bbc[idx], arg);
 }
 
-// @symbol func_ov007_020bde2c
 void func_ov007_020bde2c(int idx) {
     if (data_ov007_02104bbc[idx] == 0) {
         func_ov007_020be098(idx);
@@ -156,7 +149,6 @@ static inline int BlendFx(int from, int to, int t) {
     return (int)(((s64)(0x1000 - t) * from + (s64)t * to) >> 12);
 }
 
-// @symbol func_ov007_020bdbcc
 void func_ov007_020bdbcc(int dx, int dy) {
     int x = BlendFx(data_ov007_02104bb4, dx << 12, 0x3e8);
     int y = BlendFx(data_ov007_02104bb0, dy << 12, 0x3e8);
@@ -234,7 +226,6 @@ static inline int scale_div(int v, int range, int scale) {
     return (q * scale) >> 12;
 }
 
-// @symbol func_ov007_020bda8c
 void func_ov007_020bda8c(int frames, int fadingOut) {
     NNSSndHandle *handle = (NNSSndHandle *)&data_ov007_02104bbc[0x36];
     int depth, speed;
@@ -255,7 +246,6 @@ void func_ov007_020bda8c(int frames, int fadingOut) {
     NNS_SndPlayerSetTrackModSpeed(handle, 0xf, speed);
 }
 
-// @symbol func_ov007_020bda38
 void func_ov007_020bda38(int v) {
     NNSSndHandle *handle = (NNSSndHandle *)&data_ov007_02104bbc[0x37];
     func_ov007_020bde2c(0x37);
@@ -264,7 +254,6 @@ void func_ov007_020bda38(int v) {
     NNS_SndPlayerSetTrackPitch(handle, 0xf, shift);
 }
 
-// @symbol func_ov007_020bd9e4
 void func_ov007_020bd9e4(int arg) {
     int i;
     for (i = 0; i < 0x39; i++) {

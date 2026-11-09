@@ -10,11 +10,11 @@
  * failure. */
 #include "types.h"
 #include "private/fs_views.h"
+#include "nitro/os/thread.h"
 
 typedef struct FSFile FSFile;
 
 extern int func_0203d7d4(int);
-extern void OS_SleepThread(int);
 extern void *data_0209d3c0;
 extern int func_0205d644(void *out_file_id, const char *path);
 extern void Crash(void);
@@ -29,7 +29,7 @@ int func_0205d568(FSFile *p_file, FSFileID id);
 extern int func_0205d518(void *file, const char *path);
 extern int data_0208eb8c[];
 extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
-extern int func_0205d4a0(FSFile *p_file, char *buf, u32 len);
+extern int FS_GetPathName(FSFile *p_file, char *buf, u32 len);
 extern char data_0208eb9c;
 
 void func_02018e68(void *c) {
@@ -88,7 +88,7 @@ int myFS_ReadFile(FSFile *p_file, void *dst, int len) {
     int r = FS_ReadFile(p_file, dst, len);
     if (r != len) {
         func_02018e68(&data_0208eb9c);
-        func_0205d4a0(p_file, buf, 0x100);
+        FS_GetPathName(p_file, buf, 0x100);
         Crash();
     }
     return r;

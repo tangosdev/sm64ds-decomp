@@ -21,6 +21,9 @@
 #define REG_DISPCNT      (*(volatile u32 *)0x04000000)
 #define REG_DISPCNT_SUB  (*(volatile u32 *)0x04001000)
 
+/* Display capture control (engine A only). */
+#define REG_DISPCAPCNT (*(volatile u32 *)0x04000064)
+
 #define DISPLAY_CONTROL_BG_EXT_PALETTE  (1u << 30)
 #define DISPLAY_CONTROL_OBJ_EXT_PALETTE (1u << 31)
 
@@ -36,6 +39,7 @@
 
 /* BG control: engine A's BG0CNT..BG3CNT are 0x04000008..0x0400000e, engine B's
    0x04001008..0x0400100e. Bits 0-1 are the priority and bit 6 the mosaic enable. */
+#define REG_BG0CNT    (*(volatile u16 *)0x04000008)
 #define REG_BG1CNT    (*(volatile u16 *)0x0400000a)
 #define REG_BG2CNT    (*(volatile u16 *)0x0400000c)
 #define REG_BG3CNT    (*(volatile u16 *)0x0400000e)
@@ -44,19 +48,78 @@
 #define REG_DB_BG2CNT (*(volatile u16 *)0x0400100c)
 #define REG_DB_BG3CNT (*(volatile u16 *)0x0400100e)
 
+#define BG_CONTROL_MOSAIC (1u << 6)
+
 /* Colour special effects (alpha blending and brightness), one per engine. */
 #define REG_BLDCNT    (*(volatile u16 *)0x04000050)
 #define REG_DB_BLDCNT (*(volatile u16 *)0x04001050)
 
+/* DISPSTAT bit 1 is the HBlank flag; VCOUNT is the line being drawn. */
+#define REG_DISPSTAT (*(volatile u16 *)0x04000004)
+#define DISPSTAT_HBLANK (1u << 1)
 #define REG_VCOUNT (*(volatile u16 *)0x04000006)
+
+/* The 3D engine's display control, DISP3DCNT (engine A only). */
+#define REG_DISP3DCNT (*(volatile u16 *)0x04000060)
 
 /* BG0HOFS is 0x04000010 and BG0VOFS 0x04000012; the ROM sets the pair with one
    32-bit store, so this is typed to match that access rather than split in two. */
 #define REG_BG0OFS (*(volatile u32 *)0x04000010)
+#define REG_BG1OFS (*(volatile u32 *)0x04000014)
+#define REG_BG2OFS (*(volatile u32 *)0x04000018)
+#define REG_BG3OFS (*(volatile u32 *)0x0400001c)
+#define REG_DB_BG0OFS (*(volatile u32 *)0x04001010)
+#define REG_DB_BG1OFS (*(volatile u32 *)0x04001014)
+#define REG_DB_BG2OFS (*(volatile u32 *)0x04001018)
+#define REG_DB_BG3OFS (*(volatile u32 *)0x0400101c)
 
-/* Engine B's BG3 affine parameters. Taken by address, not assigned: G2x_SetBGyAffine
-   walks PA/PB/PC/PD from the pointer it is handed. */
-#define REG_DB_BG3PA ((volatile u16 *)0x04001030)
+/* The BG2 and BG3 affine parameters' first word, PA. G2x_SetBGyAffine walks
+   PA/PB/PC/PD from the address it is handed. */
+#define REG_BG2PA    (*(volatile u16 *)0x04000020)
+#define REG_BG3PA    (*(volatile u16 *)0x04000030)
+#define REG_DB_BG2PA (*(volatile u16 *)0x04001020)
+#define REG_DB_BG3PA (*(volatile u16 *)0x04001030)
+
+/* Windows: WIN0H/WIN1H are the x ranges, WIN0V/WIN1V the y ranges, WININ and
+   WINOUT the layers shown inside and outside them. */
+#define REG_WIN0H     (*(volatile u16 *)0x04000040)
+#define REG_WIN1H     (*(volatile u16 *)0x04000042)
+#define REG_WIN0V     (*(volatile u16 *)0x04000044)
+#define REG_WIN1V     (*(volatile u16 *)0x04000046)
+#define REG_WININ     (*(volatile u16 *)0x04000048)
+#define REG_WINOUT    (*(volatile u16 *)0x0400004a)
+#define REG_DB_WIN0H  (*(volatile u16 *)0x04001040)
+#define REG_DB_WIN1H  (*(volatile u16 *)0x04001042)
+#define REG_DB_WIN0V  (*(volatile u16 *)0x04001044)
+#define REG_DB_WIN1V  (*(volatile u16 *)0x04001046)
+#define REG_DB_WININ  (*(volatile u16 *)0x04001048)
+#define REG_DB_WINOUT (*(volatile u16 *)0x0400104a)
+
+/* MOSAIC's two bytes, written one at a time: the BG mosaic size, then the OBJ
+   mosaic size. */
+#define REG_MOSAIC_BG     (*(volatile u8 *)0x0400004c)
+#define REG_MOSAIC_OBJ    (*(volatile u8 *)0x0400004d)
+#define REG_DB_MOSAIC_BG  (*(volatile u8 *)0x0400104c)
+#define REG_DB_MOSAIC_OBJ (*(volatile u8 *)0x0400104d)
+
+/* 3D geometry commands: the material colours, and a light's vector and colour
+   (bits 30-31 of each pick the light). */
+#define REG_DIF_AMB      (*(volatile u32 *)0x040004c0)
+#define REG_SPE_EMI      (*(volatile u32 *)0x040004c4)
+#define REG_LIGHT_VECTOR (*(volatile u32 *)0x040004c8)
+#define REG_LIGHT_COLOR  (*(volatile u32 *)0x040004cc)
+
+/* 3D geometry commands: matrix stack, polygon setup and the vertex list. The
+   texture-parameter pair (0x040004a8, 0x040004ac) is in nitro/gx/g3imm.h. */
+#define REG_MTX_MODE     (*(volatile u32 *)0x04000440)
+#define REG_MTX_IDENTITY (*(volatile u32 *)0x04000454)
+#define REG_MTX_SCALE    (*(volatile u32 *)0x0400046c)
+#define REG_NORMAL       (*(volatile u32 *)0x04000484)
+#define REG_TEXCOORD     (*(volatile u32 *)0x04000488)
+#define REG_VTX_16       (*(volatile u32 *)0x0400048c)
+#define REG_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
+#define REG_BEGIN_VTXS   (*(volatile u32 *)0x04000500)
+#define REG_END_VTXS     (*(volatile u32 *)0x04000504)
 
 /* Timer 0. The counter and the control word share an address: reads see the live
    count, writes set the reload value. */
@@ -89,7 +152,9 @@
 #define DMA_CONTROL_32_BIT    (1u << 26)
 #define DMA_CONTROL_ENABLE    (1u << 31)
 
-/* Interrupt controller */
+/* Interrupt controller. IME is the master enable; NitroSDK's OS_DisableIrq
+   and OS_EnableIrq read the previous value and store 0 or 1. */
+#define REG_IME (*(volatile u16 *)0x04000208)
 #define REG_IE (*(volatile u32 *)0x04000210)
 #define REG_IF (*(volatile u32 *)0x04000214)
 

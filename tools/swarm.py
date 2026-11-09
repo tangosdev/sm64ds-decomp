@@ -1334,7 +1334,7 @@ def native_deleting_dtor(name):
     virtual_dtor = re.search(r"\bvirtual\s+~" + re.escape(cls) + r"\s*\(\s*\)\s*;", text)
     if not (real_class and virtual_dtor):
         return None
-    return (f"//cpp\n// @symbol {name}\n#include \"{cls}.h\"\n\n"
+    return (f"//cpp\n#include \"{cls}.h\"\n\n"
             f"{cls}::~{cls}()\n{{\n}}\n")
 
 

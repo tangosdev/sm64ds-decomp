@@ -30,13 +30,10 @@
  *   translation stays m[9]/m[10]/m[11].
  *
  * Known limits:
- *   func_020393d4: InitResources stores dBgW::UpdatePosWithTransform on
- *   mMeshCollider; dBgW.h has no setter.
  *   func_0200fa04 is Behavior's impact dust; no named method in this TU.
  *   AddVec3: no shared header declares it.
  *   data_ov023_02112088 / 02112080 are resource handles this TU's sinit
- *   owns; data_ov064_0211ba4c (CLPS) is overlay .data; data_02082214 is the
- *   sine table.
+ *   owns; data_ov064_0211ba4c (CLPS) is overlay .data.
  *   No daPly_c.h / dCamera_c.h.
  */
 
@@ -48,18 +45,16 @@ enum d_a_obj_fm_battan_AssetId { ASSET_FM_BATTAN_BMD = 0x0616, ASSET_FM_BATTAN_K
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/MtxStack.h"
 
 /* local extern: no shared header declares these. */
 extern CLPS_Block data_ov064_0211ba4c;
 extern "C" {
-extern s16 data_02082214[];
-
 extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
-extern void *func_0200fa04(dActor_c *, VecFx32 *, int);
+extern void *func_0200fa04(dActor_c *, Vector3 *, int);
 
 /* The 8-byte store into the mesh collider's +0x18 callback slot. */
-extern void func_020393d4(dBgW *, BeforeClsnCallback);
 }
 
 /* The retail static initializer constructs these two 8-byte resource handles
@@ -82,7 +77,6 @@ struct BattanCollisionFilePtr : SharedFilePtr {
 BattanModelFilePtr data_ov023_02112088(ASSET_FM_BATTAN_BMD);
 BattanCollisionFilePtr data_ov023_02112080(ASSET_FM_BATTAN_KCL);
 
-// @symbol daObjFm_Battan_c_classInit
 /* Every instruction the cartridge has here falls out of the one `new`.
  * sizeof(daObjFm_Battan_c) is 0x37c, passed to the inherited
  * fBase_c::operator new; the implicit constructor calls dBgActor_c's C2,
@@ -95,7 +89,6 @@ extern "C" daObjFm_Battan_c *daObjFm_Battan_c_classInit() {
 extern "C" SpawnInfo<daObjFm_Battan_c> g_profile_FM_BATTAN = {
     daObjFm_Battan_c_classInit, 0x0054, 0x0124, 0x02000000, 0, 0x00500000, 0x01000000, 0x01000000};
 
-// @symbol _ZN16daObjFm_Battan_c13InitResourcesEv
 int daObjFm_Battan_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov023_02112088), 1, -1);
     mShadowModel.InitCuboid();
@@ -104,9 +97,7 @@ int daObjFm_Battan_c::InitResources() {
 
     KCL_File *file = (KCL_File *)dBgW_Kc::LoadFile(data_ov023_02112080);
     mMeshCollider.SetFile(file, mClsnMat, 0x1000, mAngleY, data_ov064_0211ba4c);
-    /* Stores dBgW::UpdatePosWithTransform at mMeshCollider+0x18; dBgW.h has
-       no setter, so this stays the 8-byte store helper. */
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithTransform);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.Enable(this);
 
     mAngVelX = 0;
@@ -115,7 +106,6 @@ int daObjFm_Battan_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjFm_Battan_c8BehaviorEv
 int daObjFm_Battan_c::Behavior() {
     switch (mState) {
     case 0:
@@ -134,8 +124,6 @@ int daObjFm_Battan_c::Behavior() {
             VecFx32 offset;
             VecFx32 pos;
             VecFx32 dustPos;
-            int sinY;
-            int cosY;
 
             mAngleX = -0x4000;
             mAngVelX = 0;
@@ -147,16 +135,14 @@ int daObjFm_Battan_c::Behavior() {
             Earthquake(*(const Vector3 *)&pos, 0x04000000);
             Sound::PlayBank3(0x44, mCamSpacePos);
 
-            sinY = data_02082214[((u16)mAngleY >> 4) * 2];
-            offset.x = FX_MUL(sinY, -0x190000);
-            cosY = data_02082214[((u16)mAngleY >> 4) * 2 + 1];
-            offset.z = FX_MUL(cosY, -0x190000);
+            offset.x = FX_MUL(FX_SinIdx((u16)mAngleY >> 4), -0x190000);
+            offset.z = FX_MUL(FX_CosIdx((u16)mAngleY >> 4), -0x190000);
             AddVec3((Vector3 *)&offset, (Vector3 *)&mPosX, (Vector3 *)&offset);
 
             dustPos.x = offset.x;
             dustPos.y = offset.y;
             dustPos.z = offset.z;
-            func_0200fa04(this, &dustPos, 1);
+            func_0200fa04(this, (Vector3 *)&dustPos, 1);
             mState++;
         }
         break;
@@ -195,13 +181,11 @@ int daObjFm_Battan_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN16daObjFm_Battan_c6RenderEv
 int daObjFm_Battan_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN16daObjFm_Battan_c16CleanupResourcesEv
 int daObjFm_Battan_c::CleanupResources() {
     mMeshCollider.Disable();
     data_ov023_02112088.Release();
@@ -209,7 +193,6 @@ int daObjFm_Battan_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjFm_Battan_c20UpdateModelTransformEv
 void daObjFm_Battan_c::UpdateModelTransform() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
     mModel.mat4x3.m[9] = mPosX >> 3;
@@ -217,10 +200,9 @@ void daObjFm_Battan_c::UpdateModelTransform() {
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-// @symbol _ZN16daObjFm_Battan_c12UpdateShadowEv
 void daObjFm_Battan_c::UpdateShadow() {
     int tableIndex = (u16)mAngleX >> 4;
-    int sinX = data_02082214[tableIndex * 2];
+    int sinX = FX_SinIdx(tableIndex);
     int depth = FX_MUL(sinX, 0x49c000);
 
     Matrix4x3_FromRotationY(&mShadowMat, mAngleY);

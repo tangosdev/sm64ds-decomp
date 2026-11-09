@@ -164,12 +164,12 @@ typedef struct {
     PtclList freeParticles; /* 0x14 -- expired particles go back here */
 } PtclManager;
 
-extern void func_0204d440(void *, void *, int);
-extern void func_0204d294(void *, void *, int);
-extern void func_0204d1b4(void *, void *, int);
-extern void func_0204d150(void *, void *, int);
-extern void func_0204d104(void *, void *, int);
-extern void func_0204d0b8(void *, void *, int);
+extern void SPLAnim_Scale(void *, void *, int);
+extern void SPLAnim_Color(void *, void *, int);
+extern void SPLAnim_Alpha(void *, void *, int);
+extern void SPLAnim_Texture(void *, void *, int);
+extern void SPLAnim_ChildScale(void *, void *, int);
+extern void SPLAnim_ChildAlpha(void *, void *, int);
 
 void func_0204a730(void *arg0, void *self) {
     UpdateDef *sb;
@@ -213,24 +213,24 @@ void func_0204a730(void *arg0, void *self) {
     }
 
     if (flags.hasScaleAnim) {
-        table1[n].func = func_0204d440;
+        table1[n].func = SPLAnim_Scale;
         table1[n++].data = sb->scaleAnim->loop;
     }
     if (flags.hasColorAnim) {
         UpdateColorAnim *anim = sb->colorAnim;
         if (!anim->randomStartColor) {
-            table1[n].func = func_0204d294;
+            table1[n].func = SPLAnim_Color;
             table1[n++].data = anim->loop;
         }
     }
     if (flags.hasAlphaAnim) {
-        table1[n].func = func_0204d1b4;
+        table1[n].func = SPLAnim_Alpha;
         table1[n++].data = sb->alphaAnim->loop;
     }
     if (flags.hasTexAnim) {
         UpdateTexAnim *anim = sb->texAnim;
         if (!anim->randomizeInit) {
-            table1[n].func = func_0204d150;
+            table1[n].func = SPLAnim_Texture;
             table1[n].data = anim->loop;
             n += 1;
         }
@@ -312,12 +312,12 @@ void func_0204a730(void *arg0, void *self) {
         s32 k;
 
         if (cfg->flags.hasScaleAnim) {
-            tableB[0].func = func_0204d104;
+            tableB[0].func = SPLAnim_ChildScale;
             tableB[0].data = 0;
             n2 += 1;
         }
         if (cfg->flags.hasAlphaAnim) {
-            tableB[n2].func = func_0204d0b8;
+            tableB[n2].func = SPLAnim_ChildAlpha;
             tableB[n2].data = 0;
             n2 += 1;
         }

@@ -8,9 +8,9 @@
 /* Notes: the state tables at 0x0211c7b8 and 0x0211c7c8 are filled from
  * this file's static initializer, which copies the four pointer-to-member
  * constants at 0x0211be90..0x0211beb0; those .data words are not claimed by
- * this TU, so the tables stay {ptr, adj} pairs. ExecuteFountain stores the
- * spawn words y, z, x through a volatile array; a plain Vector3 lets the
- * compiler reorder those stores.
+ * this TU, so the tables stay {ptr, adj} pairs. ExecuteFountain's spawn
+ * point is a constructed Vector3: the constructor's arguments are what put
+ * the stores in y, z, x order.
  */
 
 #include "daBbl_c.h"
@@ -18,6 +18,7 @@
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 
 /* Eight-byte pointer-to-member records. The cartridge stores the four
  * constants in .data and copies them into the two .bss tables below. */
@@ -32,7 +33,6 @@ extern BblPmfPair data_ov064_0211be98;
 extern BblPmfPair data_ov064_0211c7b8[2];
 extern BblPmfPair data_ov064_0211c7c8[2];
 
-// @symbol daBbl_c_classInit
 /* The BUBBLE profile's factory. `new` alone reproduces the body: the 0x31c
  * fBase_c::operator new call, the base C2, the vptr store and the two member
  * constructors inline -- a declared constructor would emit a `bl` the
@@ -41,13 +41,11 @@ extern "C" daBbl_c *daBbl_c_classInit() {
     return new daBbl_c();
 }
 
-// @symbol _ZN7daBbl_c13OnYoshiTryEatEv
 /* Yoshi is told 5 -- the reply a thing made of fire gives. */
 s32 daBbl_c::OnYoshiTryEat() {
     return 5;
 }
 
-// @symbol _ZN7daBbl_c13InitResourcesEv
 /* The spawn parameter's low bit picks the variant, inverted: bit set means
  * the fixed flame, bit clear means the jumping bubble.
  *
@@ -82,7 +80,6 @@ int daBbl_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN7daBbl_c8BehaviorEv
 /* Two early outs come first, on the two dEnemyBase_c flags that mean the
  * enemy is being held or is already dying: 0x20000 still runs the state hook
  * but skips everything else, 0x40000 skips the frame outright.
@@ -146,26 +143,22 @@ int daBbl_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN7daBbl_c6RenderEv
 /* A lava bubble has no model of its own; its two particle systems draw it,
  * and the render slot only reports success. */
 int daBbl_c::Render() {
     return 1;
 }
 
-// @symbol _ZN7daBbl_c16OnPendingDestroyEv
 /* Empty on purpose -- the override suppresses what the base does on pending
  * destroy. */
 void daBbl_c::OnPendingDestroy() {}
 
-// @symbol _ZN7daBbl_c16CleanupResourcesEv
 /* `return 1` with no release calls: daBbl_c loads no file at all, so it has
  * nothing to give back. */
 int daBbl_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN7daBbl_c8SetStateEPNS_5StateE
 /* The state transition: adopt a table and run its enter hook once. Behavior
  * runs the execute hook of whatever table is current. */
 int daBbl_c::SetState(State *state) {
@@ -177,7 +170,6 @@ int daBbl_c::SetState(State *state) {
     return (this->*(entered->mEnter))();
 }
 
-// @symbol _ZN7daBbl_c13EnterFountainEv
 /* Enter hook of the fountain's waiting state: stop dead and wait 180 frames. */
 int daBbl_c::EnterFountain() {
     mHorzSpeed = 0;
@@ -185,33 +177,18 @@ int daBbl_c::EnterFountain() {
     return 1;
 }
 
-// @symbol _ZN7daBbl_c15ExecuteFountainEv
 /* Execute hook of the waiting state: once the 180 frames are up, spawn actor
  * 0xd6 -- the bubble that actually jumps -- 120.0 above this one, and start
  * the wait over. This is what makes the fixed flame a flame fountain. */
 int daBbl_c::ExecuteFountain() {
-    int spawnY;
-    int spawnZ;
-
     if ((u16)mStateTimer == 0) {
-        volatile int spawnPos[3];
-
         mStateTimer = 0xb4;
-        int y = mPosY;
-        int z = mPosZ;
-        spawnY = 0x78000;
-        spawnY = y + spawnY;
-        spawnZ = z;
-        int x = mPosX;
-        spawnPos[1] = spawnY;
-        spawnPos[2] = spawnZ;
-        spawnPos[0] = x;
-        dActor_c::Spawn(0xd6, 0, *(const Vector3 *)spawnPos, &mPrevAngle, mAreaId, -1);
+        Vector3 spawnPos(mPosX, mPosY + 0x78000, mPosZ);
+        dActor_c::Spawn(0xd6, 0, spawnPos, &mPrevAngle, mAreaId, -1);
     }
     return 1;
 }
 
-// @symbol _ZN7daBbl_c9EnterJumpEv
 /* Enter hook of the jumping state: no horizontal drift, 20.0 straight up,
  * and a 135-frame fuse. */
 int daBbl_c::EnterJump() {
@@ -221,7 +198,6 @@ int daBbl_c::EnterJump() {
     return 1;
 }
 
-// @symbol _ZN7daBbl_c11ExecuteJumpEv
 /* Execute hook of the jumping state. Every landing bounces: the first gives
  * the bubble a little forward drift and a fixed hop, and each one after that
  * ramps the drift toward 8.0 and inverts seven tenths of the vertical speed,
@@ -238,9 +214,10 @@ int daBbl_c::ExecuteJump() {
             mVertSpeed = mVertSpeed * -7 / 10;
         }
     }
-    mFireParticle = Particle::System::New(mFireParticle, 0x4d, mPosX, mPosY + 0x37000, mPosZ, 0, 0);
-    mSmokeParticle =
-        Particle::System::New(mSmokeParticle, 0x4e, mPosX, mPosY + 0x37000, mPosZ, 0, 0);
+    mFireParticle = Particle::System::New(mFireParticle, kPtclLavaBubbleFlame, mPosX,
+                                          mPosY + 0x37000, mPosZ, 0, 0);
+    mSmokeParticle = Particle::System::New(mSmokeParticle, kPtclLavaBubbleSmoke, mPosX,
+                                           mPosY + 0x37000, mPosZ, 0, 0);
     if ((u16)mStateTimer == 0)
         MarkForDestruction();
     return 1;

@@ -9,7 +9,7 @@
  * - Actor position and scale triples are scalar members in dActor_c;
  *   vector views retain their established layout and load grouping.
  * - SharedFilePtr has no shared field layout; LOADED reads its file word.
- * - Helpers keep their address names, and so does the state table.
+ * - The state table keeps its address name.
  *   The file handles, the state table, both volumes and
  *   g_profile_PENGUIN_RACER are this TU's statics; mwcc emits their
  *   initializer, __sinit_d_a_pg_rcer.cpp (0x021127a4).
@@ -17,6 +17,7 @@
 
 #include "daPgRcer_c.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "SurfaceInfo.h"
@@ -43,10 +44,6 @@ extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 
 extern void d_a_pg_rcerPlaySubHold(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 extern void *d_a_pg_rcerNewHold(u32 handle, u32 effect, int x, int y, int z, void *dir, void *cb);
-
-int func_ov019_02111254(void *unused, int playerLead);
-int func_ov019_0211140c(daPgRcer_c *self, dBgCh_Actr *clsn);
-void func_ov019_021114ec(daPgRcer_c *self);
 
 }
 
@@ -97,20 +94,19 @@ PgRcerTexSeqFile gOV019PenguinAngryTextureSequenceFile(ASSET_PENGUIN_ANGRY_BTP);
 PgRcerTexSeqFile gPenguinSliderTextureSequenceFile(ASSET_PENGUIN_SLIDER_BTP);    /* race */
 PgRcerTexSeqFile gOV019PenguinWait1TextureSequenceFile(ASSET_PENGUIN_WAIT1_BTP); /* neutral */
 
-/* The six states, {init, behavior}; func_ov019_021122dc installs one. */
+/* The six states, {init, behavior}; SetState installs one. */
 daPgRcerState data_ov019_0211356c[6] = {
-    {&daPgRcer_c::func_ov019_021121f8, &daPgRcer_c::func_ov019_02112168},
-    {&daPgRcer_c::func_ov019_0211213c, &daPgRcer_c::func_ov019_02111fec},
-    {&daPgRcer_c::func_ov019_02111f54, &daPgRcer_c::func_ov019_02111dec},
-    {&daPgRcer_c::func_ov019_02111d58, &daPgRcer_c::func_ov019_0211197c},
-    {&daPgRcer_c::func_ov019_02111904, &daPgRcer_c::func_ov019_021117a8},
-    {&daPgRcer_c::func_ov019_02111754, &daPgRcer_c::func_ov019_02111558}};
+    {&daPgRcer_c::InitStateWaitForMario, &daPgRcer_c::StateWaitForMario},
+    {&daPgRcer_c::InitStateShowInitText, &daPgRcer_c::StateShowInitText},
+    {&daPgRcer_c::InitStatePrepareForRace, &daPgRcer_c::StatePrepareForRace},
+    {&daPgRcer_c::InitStateRace, &daPgRcer_c::StateRace},
+    {&daPgRcer_c::InitStateFinishRace, &daPgRcer_c::StateFinishRace},
+    {&daPgRcer_c::InitStateShowFinalText, &daPgRcer_c::StateShowFinalText}};
 
 /* The finish volume and the cheat volume. */
 Vector3 data_ov019_021134e8(-0x18c28a1, -0x164c644, -0x18f1a11);
 Vector3 data_ov019_0211353c(-0x1290000, 0x600000, 0);
 
-// @symbol daPgRcer_c_classInit
 extern "C" daPgRcer_c *daPgRcer_c_classInit()
 {
     return new daPgRcer_c();
@@ -124,7 +120,6 @@ extern "C" daPgRcer_c *daPgRcer_c_classInit()
 SpawnInfo<daPgRcer_c> g_profile_PENGUIN_RACER = {
     daPgRcer_c_classInit, 0x0103, 0x0075, 2, 0x96000, 0x96000, 0x02648000, 0x02648000};
 
-// @symbol _ZN10daPgRcer_c13InitResourcesEv
 int daPgRcer_c::InitResources()
 {
     int i;
@@ -160,28 +155,26 @@ int daPgRcer_c::InitResources()
     }
 
     mStarSlot = (u8)TrackStar((u8)((param1 >> 8) & 0xf), 2);
-    func_ov019_021122dc(0);
+    SetState(0);
     mPath.FromID(param1 & 0xff);
     mPathNodeIndex = 0;
     mPath.GetNode(mPos, mPathNodeIndex);
-    func_ov019_021113b0();
-    func_ov019_021114ec(this);
+    AdvancePathNode();
+    UpdateModelMatrix();
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c8BehaviorEv
 int daPgRcer_c::Behavior()
 {
-    func_ov019_02112268();
+    CallStateBehavior();
     mAnmModel.dExtFrameCtrl_c::Advance();
     mTextureSequence.Advance();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
-    func_ov019_021114ec(this);
+    UpdateModelMatrix();
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c6RenderEv
 int daPgRcer_c::Render()
 {
     mTextureSequence.Update(mAnmModel.data);
@@ -189,12 +182,10 @@ int daPgRcer_c::Render()
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c16OnPendingDestroyEv
 void daPgRcer_c::OnPendingDestroy()
 {
 }
 
-// @symbol _ZN10daPgRcer_c16CleanupResourcesEv
 int daPgRcer_c::CleanupResources()
 {
     gOV019PenguinModelFile.Release();
@@ -205,30 +196,23 @@ int daPgRcer_c::CleanupResources()
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_021122dcEi
-void daPgRcer_c::func_ov019_021122dc(int state)
-{
+void daPgRcer_c::SetState(int state) {
     mStateDesc = &data_ov019_0211356c[state];
-    func_ov019_021122a4();
+    CallStateInit();
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_021122a4Ev
-void daPgRcer_c::func_ov019_021122a4()
-{
+void daPgRcer_c::CallStateInit() {
     daPgRcerStateMethod *p = &mStateDesc->init;
     (this->**p)();
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_02112268Ev
-void daPgRcer_c::func_ov019_02112268()
-{
+void daPgRcer_c::CallStateBehavior() {
     daPgRcerStateMethod *p = &mStateDesc->behavior;
     (this->**p)();
 }
 
 /* State 0: idle. */
-// @symbol _ZN10daPgRcer_c19func_ov019_021121f8Ev
-int daPgRcer_c::func_ov019_021121f8() {
+int daPgRcer_c::InitStateWaitForMario() {
     mVertAccel = 0;
     mTerminalVelocity = 0;
     mAnmModel.SetAnim((BCA_File *)gOV019PenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
@@ -239,9 +223,7 @@ int daPgRcer_c::func_ov019_021121f8() {
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_02112168Ev
-int daPgRcer_c::func_ov019_02112168()
-{
+int daPgRcer_c::StateWaitForMario() {
     if (DecIfAbove0_Byte(&mTalkWaitTimer))
         return 1;
     daPly_c *pl = ClosestPlayer();
@@ -251,23 +233,21 @@ int daPgRcer_c::func_ov019_02112168()
     if (Vec3_Dist(&mPos, &pl->mPos) < radius + 0x78000) {
         if (pl->StartTalk(*this, 1)) {
             mTalkPlayer = pl;
-            func_ov019_021122dc(1);
+            SetState(1);
         }
     }
     return 1;
 }
 
 /* State 1: invite. */
-// @symbol _ZN10daPgRcer_c19func_ov019_0211213cEv
-int daPgRcer_c::func_ov019_0211213c() {
+int daPgRcer_c::InitStateShowInitText() {
     mActionStep = 0;
     func_0201267c(0xdf, &mCamSpacePos);
     mAction = 1;
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_02111fecEv
-int daPgRcer_c::func_ov019_02111fec() {
+int daPgRcer_c::StateShowInitText() {
     switch (mActionStep) {
     case 0: {
         short ang = Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos);
@@ -299,12 +279,12 @@ int daPgRcer_c::func_ov019_02111fec() {
             unsigned char choice = data_0209d684;
             if (choice == 1) {
                 func_02012790(0x98);
-                func_ov019_021122dc(2);
+                SetState(2);
             } else if (choice == 2) {
                 func_02012790(0x63);
                 mTalkWaitTimer = 0x5a;
                 mTalkPlayer->HasFinishedTalking();
-                func_ov019_021122dc(0);
+                SetState(0);
             }
         }
         break;
@@ -313,8 +293,7 @@ int daPgRcer_c::func_ov019_02111fec() {
 }
 
 /* State 2: jump into the countdown. */
-// @symbol _ZN10daPgRcer_c19func_ov019_02111f54Ev
-int daPgRcer_c::func_ov019_02111f54() {
+int daPgRcer_c::InitStatePrepareForRace() {
     mAnmModel.SetAnim((BCA_File *)gPenguinJumpStAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
@@ -326,8 +305,7 @@ int daPgRcer_c::func_ov019_02111f54() {
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_02111decEv
-int daPgRcer_c::func_ov019_02111dec() {
+int daPgRcer_c::StatePrepareForRace() {
     switch (mActionStep) {
     case 0:
         if (mTalkPlayer->Unk_020c4f40(0x5a) != 0) {
@@ -338,7 +316,7 @@ int daPgRcer_c::func_ov019_02111dec() {
         UpdateAngle(mPrevAngleY, mTargetAngY, 2, 0x800);
         mAngleY = mPrevAngleY;
         UpdatePos(&mdCcAc_c);
-        func_ov019_0211140c(this, &mWithMeshClsn);
+        UpdateFloorAndWalls(&mWithMeshClsn);
         if (mWithMeshClsn.JustHitGround() != 0) {
             mAnmModel.SetAnim((BCA_File *)gPenguinJumpEdAnimationFile.filePtr, 0x40000000, 0x1000,
                               0);
@@ -352,7 +330,7 @@ int daPgRcer_c::func_ov019_02111dec() {
         if (mTalkPlayer->GetTalkState() == -1) {
             Sound::PlaySub(0x1f, 0x7f, 0, 0x15666, 0);
             func_0201267c(0x4d, &mCamSpacePos);
-            func_ov019_021122dc(3);
+            SetState(3);
         }
         break;
     }
@@ -360,8 +338,7 @@ int daPgRcer_c::func_ov019_02111dec() {
 }
 
 /* State 3: the race. */
-// @symbol _ZN10daPgRcer_c19func_ov019_02111d58Ev
-int daPgRcer_c::func_ov019_02111d58() {
+int daPgRcer_c::InitStateRace() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mAnmModel.SetAnim((BCA_File *)gPenguinDiveAnimationFile.filePtr, 0x40000000, 0x1000, 0);
@@ -373,12 +350,11 @@ int daPgRcer_c::func_ov019_02111d58() {
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_0211197cEv
-int daPgRcer_c::func_ov019_0211197c() {
+int daPgRcer_c::StateRace() {
     switch (mActionStep) {
     case 0:
-        if (func_ov019_0211131c()) {
-            func_ov019_021113b0();
+        if (FollowPath()) {
+            AdvancePathNode();
         }
         if (mAnmModel.dExtFrameCtrl_c::Finished()) {
             mAnmModel.SetAnim((BCA_File *)gPenguinSliderAnimationFile.filePtr, 0, 0x1000, 0);
@@ -386,14 +362,14 @@ int daPgRcer_c::func_ov019_0211197c() {
             mActionStep++;
         }
         UpdatePos(&mdCcAc_c);
-        func_ov019_0211140c(this, &mWithMeshClsn);
+        UpdateFloorAndWalls(&mWithMeshClsn);
         if (mPlayerCheated == 0 && mPlayerFinished == 0) {
             {
                 Vector3 v;
                 v.x = mPosX;
                 v.y = mPosY;
                 v.z = mPosZ;
-                if (func_ov019_0211127c(&v, mPenguinCheckpoints)) {
+                if (IsNearPathNode(&v, mPenguinCheckpoints)) {
                     mPenguinCheckpoints++;
                 }
             }
@@ -404,7 +380,7 @@ int daPgRcer_c::func_ov019_0211197c() {
                 v.x = p->x;
                 v.y = p->y;
                 v.z = p->z;
-                if (func_ov019_0211127c(&v, mPlayerCheckpoints)) {
+                if (IsNearPathNode(&v, mPlayerCheckpoints)) {
                     mPlayerCheckpoints++;
                 }
             }
@@ -412,17 +388,17 @@ int daPgRcer_c::func_ov019_0211197c() {
         break;
 
     case 1:
-        if (func_ov019_0211131c()) {
+        if (FollowPath()) {
             if (mPathNodeIndex >= (int)mPath.NumNodes() - 2) {
                 mAnmModel.SetAnim((BCA_File *)gPenguinStandUpAnimationFile.filePtr, 0x40000000,
                                   0x1000, 0);
                 mActionStep++;
             } else {
-                func_ov019_021113b0();
+                AdvancePathNode();
             }
         }
         UpdatePos(&mdCcAc_c);
-        func_ov019_0211140c(this, &mWithMeshClsn);
+        UpdateFloorAndWalls(&mWithMeshClsn);
         if (mPlayerCheated == 0 && mPlayerFinished == 0 &&
             mPathNodeIndex < (int)mPath.NumNodes() - 2) {
             {
@@ -430,7 +406,7 @@ int daPgRcer_c::func_ov019_0211197c() {
                 v.x = mPosX;
                 v.y = mPosY;
                 v.z = mPosZ;
-                if (func_ov019_0211127c(&v, mPenguinCheckpoints)) {
+                if (IsNearPathNode(&v, mPenguinCheckpoints)) {
                     mPenguinCheckpoints++;
                 }
             }
@@ -441,13 +417,13 @@ int daPgRcer_c::func_ov019_0211197c() {
                 v.x = p->x;
                 v.y = p->y;
                 v.z = p->z;
-                if (func_ov019_0211127c(&v, mPlayerCheckpoints)) {
+                if (IsNearPathNode(&v, mPlayerCheckpoints)) {
                     mPlayerCheckpoints++;
                 }
             }
         }
         if (mPlayerCheckpoints > 1) {
-            int val = func_ov019_02111254(this, mPlayerCheckpoints - mPenguinCheckpoints);
+            int val = GetTargetSpeed(mPlayerCheckpoints - mPenguinCheckpoints);
             if (mPlayerCheated != 0 || mPlayerFinished != 0) {
                 val = 0x65000;
             }
@@ -462,18 +438,18 @@ int daPgRcer_c::func_ov019_0211197c() {
             mPenguinFinished = 1;
         }
         mSlideSound = Sound::PlayLong(mSlideSound, 3, 0x185, mCamSpacePos, 0);
-        mDustParticle =
-            (u32)Particle::System::New(mDustParticle, 0x101, mPosX, mPosY + 0x32000, mPosZ, 0, 0);
+        mDustParticle = (u32)Particle::System::New(mDustParticle, kPtclSlideDust, mPosX,
+                                                   mPosY + 0x32000, mPosZ, 0, 0);
         break;
 
     case 2:
         if (mAnmModel.dExtFrameCtrl_c::Finished()) {
-            func_ov019_021122dc(4);
+            SetState(4);
         }
         break;
     }
 
-    func_ov019_021112b8();
+    CheckFallCheat();
     if (Vec3_Dist(&data_ov019_0211353c, &mTalkPlayer->mPos) < 0x280000) {
         mPlayerCheated = 1;
     }
@@ -484,8 +460,7 @@ int daPgRcer_c::func_ov019_0211197c() {
 }
 
 /* State 4: walk up to the player. */
-// @symbol _ZN10daPgRcer_c19func_ov019_02111904Ev
-int daPgRcer_c::func_ov019_02111904() {
+int daPgRcer_c::InitStateFinishRace() {
     mAnmModel.SetAnim((BCA_File *)gOV019PenguinWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
     mTextureSequence.SetFile(*(BTP_File *)gOV019PenguinWait1TextureSequenceFile.filePtr, 0, 0x1000,
@@ -496,8 +471,7 @@ int daPgRcer_c::func_ov019_02111904() {
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_021117a8Ev
-int daPgRcer_c::func_ov019_021117a8() {
+int daPgRcer_c::StateFinishRace() {
     Vector3 node;
     switch (mActionStep) {
     case 0: {
@@ -512,7 +486,7 @@ int daPgRcer_c::func_ov019_021117a8() {
             ++mActionStep;
         }
         UpdatePos(&mdCcAc_c);
-        func_ov019_0211140c(this, &mWithMeshClsn);
+        UpdateFloorAndWalls(&mWithMeshClsn);
         {
             unsigned int frame = ((unsigned int)mAnmModel.currFrame << 4) >> 0x10;
             if (frame == 9 || frame == 0x15) {
@@ -524,7 +498,7 @@ int daPgRcer_c::func_ov019_021117a8() {
     case 1: {
         short ang = Vec3_HorzAngle(&mPos, &mTalkPlayer->mPos);
         if (ApproachLinear(mAngleY, ang, 0x514) != 0) {
-            func_ov019_021122dc(5);
+            SetState(5);
         }
         break;
     }
@@ -539,8 +513,7 @@ int daPgRcer_c::func_ov019_021117a8() {
 }
 
 /* State 5: result, and the star if the penguin did not win. */
-// @symbol _ZN10daPgRcer_c19func_ov019_02111754Ev
-int daPgRcer_c::func_ov019_02111754() {
+int daPgRcer_c::InitStateShowFinalText() {
     mAnmModel.SetAnim((BCA_File *)gOV019PenguinWait1AnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
     mActionStep = 0;
@@ -548,8 +521,7 @@ int daPgRcer_c::func_ov019_02111754() {
     return 1;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_02111558Ev
-int daPgRcer_c::func_ov019_02111558() {
+int daPgRcer_c::StateShowFinalText() {
     switch (mActionStep) {
     case 0: {
         int radius = mdCcAc_c.radius;
@@ -606,43 +578,34 @@ int daPgRcer_c::func_ov019_02111558() {
     return 1;
 }
 
-extern "C" {
-
-// @symbol func_ov019_021114ec
-void func_ov019_021114ec(daPgRcer_c *self)
-{
-    Matrix4x3_FromRotationY(&self->mAnmModel.mat4x3, self->mAngleY);
-    self->mAnmModel.mat4x3.t.x = self->mPosX >> 3;
-    self->mAnmModel.mat4x3.t.y = self->mPosY >> 3;
-    self->mAnmModel.mat4x3.t.z = self->mPosZ >> 3;
-    self->DropShadowRadHeight(self->mShadowModel, self->mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
+void daPgRcer_c::UpdateModelMatrix() {
+    Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
+    mAnmModel.mat4x3.t.x = mPosX >> 3;
+    mAnmModel.mat4x3.t.y = mPosY >> 3;
+    mAnmModel.mat4x3.t.z = mPosZ >> 3;
+    DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
 }
 
-// @symbol func_ov019_0211140c
-int func_ov019_0211140c(daPgRcer_c *self, dBgCh_Actr *clsn)
-{
+int daPgRcer_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     Vector3 floorNormal;
     Vector3 wallNormal;
     func_02038414(clsn);
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {
-            int x = FX_MUL(floorNormal.x, self->mSpeedX);
-            int y = FX_MUL(floorNormal.z, self->mSpeedZ);
-            self->mVertSpeed = -(cstd::fdiv(x + y, floorNormal.y) + 0x8000);
-            if (self->mVertSpeed > 0)
-                self->mVertSpeed = 0;
+            int x = FX_MUL(floorNormal.x, mSpeedX);
+            int y = FX_MUL(floorNormal.z, mSpeedZ);
+            mVertSpeed = -(cstd::fdiv(x + y, floorNormal.y) + 0x8000);
+            if (mVertSpeed > 0)
+                mVertSpeed = 0;
         }
     }
     if (clsn->IsOnWall()) {
         clsn->GetWallResult()->surface.CopyNormalTo(wallNormal);
     }
 }
-}
 
-// @symbol _ZN10daPgRcer_c19func_ov019_021113b0Ev
-void daPgRcer_c::func_ov019_021113b0()
-{
+void daPgRcer_c::AdvancePathNode() {
     Vector3 node;
     mPathNodeIndex = mPathNodeIndex + 1;
     mPath.GetNode(node, mPathNodeIndex);
@@ -650,9 +613,7 @@ void daPgRcer_c::func_ov019_021113b0()
     mTargetAngY = Vec3_HorzAngle(&mPos, &node);
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_0211131cEv
-int daPgRcer_c::func_ov019_0211131c()
-{
+int daPgRcer_c::FollowPath() {
     UpdateAngle(mPrevAngleY, mTargetAngY, 2, 0x600);
     int n = mPathNodeIndex;
     if (n >= (int)mPath.NumNodes() - 2) {
@@ -666,9 +627,7 @@ int daPgRcer_c::func_ov019_0211131c()
     return mPathDist < 0;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_021112b8Ev
-void daPgRcer_c::func_ov019_021112b8()
-{
+void daPgRcer_c::CheckFallCheat() {
     if (mPlayerCheated != 0)
         return;
     daPly_c *t = mTalkPlayer;
@@ -690,22 +649,16 @@ void daPgRcer_c::func_ov019_021112b8()
     mFallAccum = 0;
 }
 
-// @symbol _ZN10daPgRcer_c19func_ov019_0211127cEP7Vector3j
-int daPgRcer_c::func_ov019_0211127c(Vector3 *pos, unsigned int nodeIndex)
-{
+int daPgRcer_c::IsNearPathNode(Vector3 *pos, unsigned int nodeIndex) {
     Vector3 node;
     mPath.GetNode(node, nodeIndex);
     Fix12i dist = Vec3_HorzDist(&node, pos);
     return dist <= 0x320000;
 }
 
-extern "C" {
-
-// @symbol func_ov019_02111254
 /* The further ahead the player is, in path nodes, the faster the penguin
  * runs. Clamped to 0x30000..0x65000. */
-int func_ov019_02111254(void *unused, int playerLead)
-{
+int daPgRcer_c::GetTargetSpeed(int playerLead) {
     int speed = playerLead * 0x54cc + 0x4a800;
 
     if (speed > 0x65000) {
@@ -716,6 +669,4 @@ int func_ov019_02111254(void *unused, int playerLead)
     }
 
     return speed;
-}
-
 }

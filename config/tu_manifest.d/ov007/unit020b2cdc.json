@@ -55,49 +55,49 @@
       "ordinal": 4
     },
     {
-      "symbol": "func_ov007_020b3190",
+      "symbol": "Cursor_UpdateParked",
       "address": "0x020b3190",
       "size": "0x000001d0",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3190.c",
       "ordinal": 5
     },
     {
-      "symbol": "func_ov007_020b3360",
+      "symbol": "Cursor_UpdateState",
       "address": "0x020b3360",
       "size": "0x000003a8",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3360.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov007_020b3708",
+      "symbol": "Cursor_NextState",
       "address": "0x020b3708",
       "size": "0x0000054c",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3708.c",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov007_020b3c54",
+      "symbol": "Cursor_UpdateMode",
       "address": "0x020b3c54",
       "size": "0x000000dc",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3c54.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_ov007_020b3d30",
+      "symbol": "Cursor_SetSpriteMode",
       "address": "0x020b3d30",
       "size": "0x000000d4",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3d30.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "func_ov007_020b3e04",
+      "symbol": "Cursor_GetModeOffset",
       "address": "0x020b3e04",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3e04.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "func_ov007_020b3e84",
+      "symbol": "Cursor_TouchItem",
       "address": "0x020b3e84",
       "size": "0x00000058",
       "legacy_source": "src/unnamed/ov007/func_ov007_020b3e84.c",

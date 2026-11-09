@@ -8,34 +8,34 @@ the file that proves it rather than a single owning source.
 
 Every name here is byte-neutral: it renames a field, it does not change a type
 that the compiler can see a width for. Where the evidence proves only a *kind*
-and not a *role*, the field keeps its offset in the name (`mCallback_7d4`) so
+and not a *role*, the field keeps its offset in the name (`mFlamethrowerBlueACallback`) so
 the name does not overclaim.
 
 ---
 
-## Particle::SysTracker — `include/Particle__SysTracker.h`
+## dPa_c (was `Particle::SysTracker`) — `include/dPa_c.h`
 
-> `Particle.h`, the flat C header spelling this section was written against,
-> lost its last includer and has been retired (#4570). Every field below is a
-> member of `Particle::SysTracker` in `include/Particle__SysTracker.h` under the
-> same name and offset; there the callback bank is typed with the real
-> `dPa_c::level_c::*Callback_c` classes, not a byte and padding.
+> The tree called this class `Particle::SysTracker` (header
+> `Particle__SysTracker.h` (since folded into `include/dPa_c.h`), and before that a flat C `struct Particle`
+> in `Particle.h`). Neither name was the ROM's: the mangled names were coined
+> here. It is `dPa_c` because it owns the `dPa_c::level_c` at +0x8 and the bank
+> of `level_c` callbacks at +0x750, and its methods share one translation unit
+> with them; see `notes/particle-dpa-naming.md`. Every field below keeps its
+> name and offset.
 
-The struct is spelled `Particle` in `Particle.h` for historical
-reasons; the ROM's mangled names call it `Particle::SysTracker`. There is one
-instance and its address lives in the global `data_0209ee74`:
-`_ZN8Particle10SysTrackerC1Ev` writes it, `_ZN8Particle10SysTrackerD1Ev`
-clears it, and every free function in the namespace reaches the object through
-it. That is what makes this a system class: the evidence is spread over eleven
-files, none of which is a method of the class.
+There is one current instance and its address lives in the global
+`gParticleControl` (0x0209ee74, was `data_0209ee74`; named after TP's
+`dPa_control_c`): `_ZN5dPa_cC1Ev` writes it, `_ZN5dPa_cD1Ev` clears it, and
+every particle helper reaches the object through it. The evidence is spread
+over eleven files, none of which is a method of the class.
 
 ### The head of the object
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x000 | `mResourceFile` | `_ZN8Particle10SysTracker10InitialiseEv` stores either `data_02075f14` (the file, used in place) or a heap buffer it fills with `DecompressLZ16`, then hands it to the manager via `func_0204a17c`. `_ZN8Particle10SysTrackerD1Ev` frees it through `Memory::Deallocate` *only* when it is not `data_02075f14` — i.e. only when the tracker owns the decompressed copy. Was `pad_000[0x4]`. |
-| 0x004 | `mManager` | The `Particle::Manager`. `Initialise` allocates it with `func_0204a4c8(...)` and pokes `0x8000` into its `+0x30`; `_ZN8Particle9RenderAllEv` and `_ZN8Particle10SysTracker6UpdateEv` pass it straight to the render/update entry points; `_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_` and `src/engine/particle/Particle_SysTracker_Contents.cpp` (`Entry::Initialise`) call `Particle::Manager::AddSystem` on it. Was `unk_004` typed `s32`, now `void *`. |
-| 0x008 | `mContents` | A real nested class, not a guess: `_ZN8Particle6System12FromUniqueIDEj` calls `_ZNK8Particle10SysTracker8Contents8FindDataEj(this + 8, uniqueID)` — the mangled callee names `Particle::SysTracker::Contents` and puts it at `+8`. The constructor and destructor run `func_02021c90` / `func_02021b98` on the same address, and `SysTracker::Update` runs `func_02021bec`. Was `unk_008`. |
+| 0x000 | `mResourceFile` | `_ZN5dPa_c10InitialiseEv` stores either `data_02075f14` (the file, used in place) or a heap buffer it fills with `DecompressLZ16`, then hands it to the manager via `func_0204a17c`. `_ZN5dPa_cD1Ev` frees it through `Memory::Deallocate` *only* when it is not `data_02075f14` — i.e. only when the tracker owns the decompressed copy. Was `pad_000[0x4]`. |
+| 0x004 | `mManager` | The `Particle::Manager`. `Initialise` allocates it with `func_0204a4c8(...)` and pokes `0x8000` into its `+0x30`; `_ZN8Particle9RenderAllEv` and `_ZN5dPa_c6UpdateEv` pass it straight to the render/update entry points; `_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_` and `src/engine/particle/Particle_SysTracker_Contents.cpp` (`dPa_c::level_c::emitter_c::entry`) call `Particle::Manager::AddSystem` on it. Was `unk_004` typed `s32`, now `void *`. |
+| 0x008 | `mLevel` | `dPa_c::level_c`, the level-emitter registry. `System::FromUniqueID` calls `level_c::get(this + 8, uniqueID)`; the constructor and destructor run `level_c::level_c` (0x02021c90) / `level_c::cleanup` (0x02021b98) on the same address, and `dPa_c::Update` runs `level_c::execute` (0x02021bec). Was `mContents` of a coined `Particle::SysTracker::Contents`: that mangled name was ours, not the ROM's. The ROM proves `dPa_c::level_c` (the callback RTTI is nested in it and every slot stores a `level_c::callback_c`), and the routines are Twilight Princess's real `dPa_control_c::level_c` algorithm, whose method names the class now uses (include/dPa_c.h). |
 
 ### The callback bank, 0x750 upward
 
@@ -46,8 +46,8 @@ throughout the tree in one shape:
 *(u32*)(base + N) = System::New(*(u32*)(base + N), effect, x, y, z, dir, base + N + 4);
 ```
 
-so slot `N` is a *last system unique ID* and `N + 4` is a `Particle::Callback`
-subobject. Three call sites give both halves a role:
+so slot `N` is a *last system unique ID* and `N + 4` is a
+`dPa_c::level_c::callback_c` subobject. Three call sites give both halves a role:
 
 | ID slot | Callback | Effect | Proving file |
 | --- | --- | --- | --- |
@@ -60,9 +60,9 @@ takes the unique ID from the caller instead:
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x810 | `mWeatherCallback` | `_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj` builds `data_0209ee74 + 0x810` and passes it as the callback. |
+| 0x810 | `mWeatherCallback` | `_ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj` builds `gParticleControl + 0x810` and passes it as the callback. |
 | 0x814 | `mWeatherCallbackCount` | The same function writes its `numWeatherEffectsNow` argument to `callback + 4`, which is this byte; the constructor seeds it `1`. It is a member of the 0x810 object, not an independent field. |
-| 0x818 | `mCallback_818` | `_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f` passes it. Nothing names the effect, so the field does not claim one. |
+| 0x818 | `mCleanParticleCallback` | `System::NewCleanParticle` (was `NewUnkCallback818`) passes it. Nothing names the effect; the member and the wrapper take the name of the ROM-RTTI class constructed there, `cleanParticleCallback_c`. |
 
 The remaining slots are named only as far as the evidence goes. Two structural
 facts carry them:
@@ -70,11 +70,10 @@ facts carry them:
 * **The constructor zeroes exactly ten `s32`s in the tail** — 0x750, 0x75c,
   0x768, 0x774, 0x780, 0x78c, 0x798, 0x7a4, 0x7b0, 0x7c0 — and no others. That
   is precisely the set of words sitting four bytes below a callback subobject,
-  and it includes all three ID slots proven above. Those ten are the
-  `mSystemID_*` fields. `0x7fc` and `0x804` are *not* in that set: the
-  constructor seeds them `0x3000` and (finally) `0x4b000`, Fix12 3.0 and 75.0,
-  so they are parameters of the callbacks at 0x7f8 and 0x800, and they are
-  named `mCallbackParam_*`.
+  and it includes all three ID slots proven above. `0x7fc` and `0x804` are
+  *not* in that set: the constructor seeds them `0x3000` and (finally)
+  `0x4b000`, Fix12 3.0 and 75.0. They are `fitWaterCallback_c::waterOffset`
+  of the callbacks at 0x7f8 and 0x800.
 * **Every callback subobject is constructed by storing the base
   `dPa_c::level_c::callback_c` vtable at 0x0208f3b4 and then overwriting it with a
   derived vtable**, which is exactly what the real
@@ -90,7 +89,32 @@ Constructed by helper, so the class is known but not the role:
 subobjects at 0x76c, 0x778, 0x784, 0x790, 0x808; the RTTI-backed
 `dPa_c::level_c::scaleCallback_c` C1 builds 0x7b4, 0x7c4, 0x7d4, 0x7e4.
 
-Outside `SysTracker`, ROM RTTI and the vtable slots identify the constructor at
+Every slot is now named by the one `Particle.cpp` wrapper that passes it:
+the id/callback pairs for the effect the wrapper hard-wires, the shared
+callbacks (no id slot) for their ROM-RTTI class.
+
+| Slot | Members | Wrapper (was) | Effect |
+| --- | --- | --- | --- |
+| 0x75c/0x760 | `mMegaRunningSlidingDust{SystemID,Callback}` | `Particle::MegaRunningSlidingDustAt` (`func_02022b04`) | 0x61 |
+| 0x774/0x778 | `mSplash{SystemID,Callback}` | `System::NewSplash` (`func_02022a4c`) | 0xdf |
+| 0x780/0x784 | `mBubble{SystemID,Callback}` | `System::NewBubble` (`func_020229f0`) | 0xc4 |
+| 0x798/0x79c | `mRedFlame{SystemID,Callback}` | `System::NewRedFlame` (`func_0202293c`) | 0x118 |
+| 0x7a4/0x7a8 | `mBlueFlame{SystemID,Callback}` | `System::NewBlueFlame` (`func_020228dc`) | 0x117 |
+| 0x7b0/0x7b4 | `mFlamethrowerRedA{SystemID,Callback}` | `System::NewFlamethrowerRedA` (`func_02022864`) | 0x51 |
+| 0x7c0/0x7c4 | `mFlamethrowerRedB{SystemID,Callback}` | `System::NewFlamethrowerRedB` (`func_020227ec`) | 0x52 |
+| 0x7d0/0x7d4 | `mFlamethrowerBlueA{SystemID,Callback}` | `System::NewFlamethrowerBlueA` (`func_02022774`) | 0x4f |
+| 0x7e0/0x7e4 | `mFlamethrowerBlueB{SystemID,Callback}` | `System::NewFlamethrowerBlueB` (`func_020226fc`) | 0x50 |
+| 0x7f0 | `mCheckWaterCallback` | `System::NewCheckWater` (`func_02022d44`) | caller's |
+| 0x7f4 | `mCheckWaterRippleCallback` | `System::NewCheckWaterRipple` (`func_02022d00`) | caller's |
+| 0x7f8 | `mFitWaterCallback` | `System::NewFitWater` (`func_02022cbc`) | caller's |
+| 0x800 | `mFitWaterRaisedCallback` | `System::NewFitWaterRaised` (`func_02022c80`) | caller's |
+| 0x808 | `mCheckYoganCallback` | `System::NewCheckYogan` (`func_02022c3c`) | caller's |
+
+`NewSplash` passes `&mBigSplashCallback` (0x76c), not 0x778, so
+`mSplashCallback` is constructed but never handed to `New`; the byte match
+pins the offset.
+
+Outside `dPa_c`, ROM RTTI and the vtable slots identify the constructor at
 0x02022298 as `dPa_c::level_c::edStarKiraCallback_c` C1. Its 64 tracking
 records begin at 0x8: compiling byte-aligned storage instead places them in the
 base class's 0x6 tail padding, so the ROM's address proves the original record
@@ -99,7 +123,7 @@ until separate evidence supports its historical type name.
 
 ### Shadow structs collapsed onto the header
 
-`data_0209ee74` was declared six different ways across the tree — `char*`,
+`gParticleControl` (then `data_0209ee74`) was declared six different ways across the tree — `char*`,
 `void*`, and three private one-off structs (`ParticleSysTracker` twice, with
 different fields, and `SomeGlobal`). All but one now declare it
 `struct Particle *` and reach members by name; every one was re-verified
@@ -109,7 +133,7 @@ byte-identical. The one-time exception was the simple callback's
 kept a local shadow. That no longer holds: the function is now
 `src/engine/particle/d_pa.cpp`,
 a real `dPa_c::level_c::simpleCallback_c` method that opens no namespace,
-includes `Particle__System.h`, and reaches `data_0209ee74->mManager` by name.
+includes `Particle__System.h`, and reaches `gParticleControl->mManager` by name.
 
 The old hand-written constructor was typed `struct Particle *self`
 and reached the callback's own `s16` as `&self->unk_004`. That was never a
@@ -119,7 +143,7 @@ constructor variants are now generated from the real nested C++ class.
 
 ### The third shadow — collapsed onto the real names
 
-`include/Particle__SysTracker.h` is a *third* declaration of this class, and it
+`Particle__SysTracker.h` is a *third* declaration of this class, and it
 is what `src/engine/particle/Particle.cpp` and
 `src/engine/particle/Particle.cpp` include. A later pass that owned the
 file finished it: its three fields now read `mResourceFile` / `mManager` /
@@ -294,9 +318,9 @@ conservative name stands.
 
 `dScStage_c` is the playable level scene, and it had no `unk_` fields of its own:
 the thirty this pass was pointed at all belonged to the `Particle::SysTracker`
-embedded at 0x50, which is `Particle::SysTracker` (`include/Particle__SysTracker.h`) and is
+embedded at 0x50, which is `Particle::SysTracker` (`Particle__SysTracker.h`) and is
 covered by the table at the top of this file. The two copies are kept identical
-by hand. (`include/Particle__SysTracker.h` is a third copy; it spelled `unk_`
+by hand. (`Particle__SysTracker.h` is a third copy; it spelled `unk_`
 until a later pass that owned it collapsed its three fields onto these same
 names -- see "The third shadow" above.)
 

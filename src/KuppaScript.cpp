@@ -82,7 +82,7 @@ enum KuppaScriptCommand {
 
 extern "C" {
 /* The camera's command dispatcher. */
-int func_02008550(dCamera_c *camera, u8 *command, int first, int last);
+int RunCameraCommand(dCamera_c *camera, u8 *command, int first, int last);
 void func_0201f32c(int messageID);
 void LoadLevelNoReturn(int levelID, u32 entrance, u32 arg2, u32 arg3);
 void func_02011c8c();
@@ -101,20 +101,20 @@ u8 gKuppaScriptNumPlayers;
 u32 gKuppaScriptPlayerIDs[4];
 u32 gDemoActorIDs[16];
 
-extern u8 data_0209f21c;               /* NUM_PLAYERS */
+extern u8 gNumPlayers;                 /* NUM_PLAYERS */
 extern s8 data_0209f224;               /* STAR_OBTAINED_COPY */
-extern u8 data_0209f250;               /* CURR_PLAYER_ID */
-extern u8 data_0209f2d8;               /* CURRENT_GAMEMODE */
-extern daPly_c *data_0209f394[];       /* PLAYER_ARR */
+extern u8 gLocalPlayerId;              /* CURR_PLAYER_ID */
+extern u8 gGameMode;                   /* CURRENT_GAMEMODE */
+extern daPly_c *gPlayers[];            /* PLAYER_ARR */
 extern u32 gNextActorUpdateMask;       /* NEXT_ACTOR_UPDATE_FLAGS */
 extern SaveBlock data_0209caa0;        /* the live save block */
 extern dFdBrightness_c *data_0209d4b0; /* KS_FADER */
-extern dFdBrightness_c *data_0209f5bc; /* SCENE_FADER */
+extern dFdBrightness_c *gSceneFader;   /* SCENE_FADER */
 extern u8 gMainScreenLayers;           /* TOP_SCREEN_RELATED */
 extern u8 data_0209d66c;               /* set to close the open message */
-extern s8 data_02092110;               /* NEXT_LEVEL_ID */
+extern s8 gNextSublevel;               /* NEXT_LEVEL_ID */
 extern PadData data_020a0e58[];        /* BUTTON_INPUT_ARR, one per player */
-extern dCamera_c *data_0209f318;       /* CAMERA */
+extern dCamera_c *gCamera;             /* CAMERA */
 extern int data_ov002_02110aec;        /* WATERFALL_SOUNDS_DISABLED */
 
 /* Record fields are unaligned little-endian, so a script spells them byte by
@@ -4467,7 +4467,7 @@ dFdColor_c gKuppaScriptFader;
  * sCutsceneEndingMarioFall, and End clears it once no
  * script is left to resume. */
 static inline int IsCastleFallCutsceneRunning() {
-    return data_0209f2d8 == 2;
+    return gGameMode == 2;
 }
 
 /* Stylus down this frame with its edge bit set: the touch just began. */
@@ -4555,7 +4555,7 @@ dActor_c *KuppaScript::SpawnScriptPlayer(u32 character) {
 /* The active player if it is that character, else the one the script
  * spawned. */
 dActor_c *KuppaScript::FindScriptPlayer(u32 character) {
-    dActor_c *player = data_0209f394[data_0209f250];
+    dActor_c *player = gPlayers[gLocalPlayerId];
     if (character == player->param1)
         return player;
     return dActor_c::FindWithID(gKuppaScriptPlayerIDs[character]);
@@ -4605,7 +4605,7 @@ void KuppaScript::End() {
         id++;
     }
 
-    gKuppaScriptNumPlayers = data_0209f21c;
+    gKuppaScriptNumPlayers = gNumPlayers;
 
     id = gDemoActorIDs;
     for (i = 0; i < 16; i++) {
@@ -4620,7 +4620,7 @@ void KuppaScript::End() {
     gRunningKuppaScript = 0;
     gNextActorUpdateMask &= ~0x20000000;
     if (IsCastleFallCutsceneRunning() && gSavedKuppaScript == 0)
-        data_0209f2d8 = 0;
+        gGameMode = 0;
 }
 
 void KuppaScript::Process() {
@@ -4640,7 +4640,7 @@ void KuppaScript::Process() {
         } else if (last < 0 || last >= frame) {
             u8 command = s[1];
             if (command == KS_SKIP_ON_INPUT) {
-                if (data_0209f5bc->IsBetweenStartAndEnd() == 0) {
+                if (gSceneFader->IsBetweenStartAndEnd() == 0) {
                     u32 i = gActivePlayerSlot;
                     if (data_020a0e58[i].pressed != 0 || IsTouchJustBegun(i)) {
                         dScene_c::StartSceneFade(1, 0, 0);
@@ -4709,7 +4709,7 @@ void KuppaScript::Process() {
             } else if (command == KS_WATERFALL_SOUNDS) {
                 data_ov002_02110aec = 0;
             } else if (command == KS_CAMERA) {
-                func_02008550(data_0209f318, s, first, last);
+                RunCameraCommand(gCamera, s, first, last);
             } else if (command <= KS_PLAYER_LAST) {
                 KuppaScript::RunPlayerCommand(s, first, last);
             } else if (command >= KS_DEMO_FIRST) {
@@ -4725,7 +4725,7 @@ void KuppaScript::Process() {
         gKuppaScriptFrame = 0;
         return;
     }
-    if (finished != 0 && data_02092110 < 0) {
+    if (finished != 0 && gNextSublevel < 0) {
         KuppaScript::End();
         return;
     }
@@ -4778,7 +4778,7 @@ int KuppaScript::ContinueIfNecessary() {
     if (saved == 0)
         return 0;
     if (saved == sCutsceneEndingMarioFall) {
-        data_0209f2d8 = 2;
+        gGameMode = 2;
         Sound::LoadInitialGroup(0x26);
         data_0209caa0.file.flags1 &= ~0x204;
         CollectStarInLevel(7, 1);
@@ -4797,7 +4797,7 @@ void KuppaScript::Reset() {
 
     for (i = 0; i < 4; i++)
         gKuppaScriptPlayerIDs[i] = 0;
-    gKuppaScriptNumPlayers = data_0209f21c;
+    gKuppaScriptNumPlayers = gNumPlayers;
     for (i = 0; i < 16; i++)
         gDemoActorIDs[i] = 0;
     gRunningKuppaScript = gSavedKuppaScript;

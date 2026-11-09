@@ -53,154 +53,154 @@
       "ordinal": 1
     },
     {
-      "symbol": "func_ov019_02111254",
+      "symbol": "_ZN10daPgRcer_c14GetTargetSpeedEi",
       "address": "0x02111254",
       "size": "0x00000028",
       "legacy_source": "src/func_ov019_02111254.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_0211127cEP7Vector3j",
+      "symbol": "_ZN10daPgRcer_c14IsNearPathNodeEP7Vector3j",
       "address": "0x0211127c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov019_0211127c.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_021112b8Ev",
+      "symbol": "_ZN10daPgRcer_c14CheckFallCheatEv",
       "address": "0x021112b8",
       "size": "0x00000064",
       "legacy_source": "src/func_ov019_021112b8.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_0211131cEv",
+      "symbol": "_ZN10daPgRcer_c10FollowPathEv",
       "address": "0x0211131c",
       "size": "0x00000094",
       "legacy_source": "src/func_ov019_0211131c.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_021113b0Ev",
+      "symbol": "_ZN10daPgRcer_c15AdvancePathNodeEv",
       "address": "0x021113b0",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov019_021113b0.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_ov019_0211140c",
+      "symbol": "_ZN10daPgRcer_c19UpdateFloorAndWallsEP10dBgCh_Actr",
       "address": "0x0211140c",
       "size": "0x000000e0",
       "legacy_source": "src/func_ov019_0211140c.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "func_ov019_021114ec",
+      "symbol": "_ZN10daPgRcer_c17UpdateModelMatrixEv",
       "address": "0x021114ec",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov019_021114ec.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111558Ev",
+      "symbol": "_ZN10daPgRcer_c18StateShowFinalTextEv",
       "address": "0x02111558",
       "size": "0x000001fc",
       "legacy_source": "src/func_ov019_02111558.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111754Ev",
+      "symbol": "_ZN10daPgRcer_c22InitStateShowFinalTextEv",
       "address": "0x02111754",
       "size": "0x00000054",
       "legacy_source": "src/func_ov019_02111754.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_021117a8Ev",
+      "symbol": "_ZN10daPgRcer_c15StateFinishRaceEv",
       "address": "0x021117a8",
       "size": "0x0000015c",
       "legacy_source": "src/func_ov019_021117a8.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111904Ev",
+      "symbol": "_ZN10daPgRcer_c19InitStateFinishRaceEv",
       "address": "0x02111904",
       "size": "0x00000078",
       "legacy_source": "src/func_ov019_02111904.c",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_0211197cEv",
+      "symbol": "_ZN10daPgRcer_c9StateRaceEv",
       "address": "0x0211197c",
       "size": "0x000003dc",
       "legacy_source": "src/func_ov019_0211197c.c",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111d58Ev",
+      "symbol": "_ZN10daPgRcer_c13InitStateRaceEv",
       "address": "0x02111d58",
       "size": "0x00000094",
       "legacy_source": "src/func_ov019_02111d58.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111decEv",
+      "symbol": "_ZN10daPgRcer_c19StatePrepareForRaceEv",
       "address": "0x02111dec",
       "size": "0x00000168",
       "legacy_source": "src/func_ov019_02111dec.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111f54Ev",
+      "symbol": "_ZN10daPgRcer_c23InitStatePrepareForRaceEv",
       "address": "0x02111f54",
       "size": "0x00000098",
       "legacy_source": "src/func_ov019_02111f54.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111fecEv",
+      "symbol": "_ZN10daPgRcer_c17StateShowInitTextEv",
       "address": "0x02111fec",
       "size": "0x00000150",
       "legacy_source": "src/func_ov019_02111fec.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_0211213cEv",
+      "symbol": "_ZN10daPgRcer_c21InitStateShowInitTextEv",
       "address": "0x0211213c",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov019_0211213c.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02112168Ev",
+      "symbol": "_ZN10daPgRcer_c17StateWaitForMarioEv",
       "address": "0x02112168",
       "size": "0x00000090",
       "legacy_source": "src/func_ov019_02112168.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_021121f8Ev",
+      "symbol": "_ZN10daPgRcer_c21InitStateWaitForMarioEv",
       "address": "0x021121f8",
       "size": "0x00000070",
       "legacy_source": "src/func_ov019_021121f8.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02112268Ev",
+      "symbol": "_ZN10daPgRcer_c17CallStateBehaviorEv",
       "address": "0x02112268",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov019_02112268.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_021122a4Ev",
+      "symbol": "_ZN10daPgRcer_c13CallStateInitEv",
       "address": "0x021122a4",
       "size": "0x00000038",
       "legacy_source": "src/func_ov019_021122a4.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN10daPgRcer_c19func_ov019_021122dcEi",
+      "symbol": "_ZN10daPgRcer_c8SetStateEi",
       "address": "0x021122dc",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov019_021122dc.c",
@@ -605,7 +605,8 @@
     "tubuild reconcile note: the conflict markers the warnings above were frozen against are no longer present in the promoted source src/game/actors/d_a_pg_rcer.cpp. They were reconciled in place and the notes were not updated at the time, so the entry claimed open conflicts that no longer existed. Marked (RESOLVED) rather than deleted, so the record that two legacy files disagreed about these names survive. Checked by tools/check_tubuild_conflicts.py.",
     "daPgRcer_c_classInit is a reconstructed C spelling (historical alias RacingPenguin_Spawn). Class ownership, factory shape, allocation size 0x398, vtable identity and the PENGUIN_RACER registry profile are proven; the exact original English name is not. No coined member mangling encodes a parameter type.",
     "Static initializer folded: the model, seven animation and three texture-sequence handles gain declared constructors and destructors, and the six-row state table and both Vector3 volumes are real definitions in d_a_pg_rcer.cpp, replacing the handwritten src/unnamed/ov019/__sinit_ov019_021127a4.cpp. mwcc emits __sinit_d_a_pg_rcer.cpp (0x370), its .ctor word, the twelve PMF literals and the thirteen registration nodes itself; all are byte- and relocation-identical to retail. Ownership: the ov019 .ctor words run in .text TU order (0x02112b64 pg_rcer, 0x02112b68 d_a_sld_mng), and this initializer constructs asset 0x3fb (the penguin model) and fills the table only this TU's func_ov019_021122dc reads. Naming a handler in the table needs a member, so the eleven extern \"C\" state handlers that took daPgRcer_c *self are now daPgRcer_c members; each reproduces its retail body byte for byte (tubuild verify), and their symbols.txt rows and attribution overrides take the mangled names. daPgRcerStateMethod becomes int-returning, as every handler is. The same change licenses the TU's .data run 0x02113270..0x0211338c (PMF literals, _ZTI/_ZTS, the new typed g_profile_PENGUIN_RACER and the vtable, whose storage starts at 0x02113308) and makes it intact-object; the module's earlier .data (0x02112b80..0x02113270) and the .rodata handle tables stay ROM gap bytes. The state table data_ov019_0211356c is the TU's last .bss object, so symbols.txt gives it an explicit size (0x60).",
-    "Collision property member calls replace local helper declarations. Reconciled 25 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (82 sections, 309 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+    "Collision property member calls replace local helper declarations. Reconciled 25 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (82 sections, 309 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
+    "#821 batch 37: the six states are InitStateX/StateX members named after N64 racing_penguin_act_* (WaitForMario, ShowInitText, PrepareForRace, Race, FinishRace, ShowFinalText), driven by SetState (021122dc), CallStateInit (021122a4) and CallStateBehavior (02112268) as in daPgDfdr_c; the helpers are GetTargetSpeed, IsNearPathNode, CheckFallCheat, FollowPath, AdvancePathNode, UpdateFloorAndWalls and UpdateModelMatrix. Byte-identical; @NNN re-keyed by -2."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -1043,129 +1044,129 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@555",
+      "from": "@552",
       "to": "data_ov019_021134dc",
-      "evidence": "compiler temp mapped to 0x021134dc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021134dc by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
+    },
+    {
+      "from": "@553",
+      "to": "data_ov019_021134f4",
+      "evidence": "compiler temp mapped to 0x021134f4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
+    },
+    {
+      "from": "@554",
+      "to": "data_ov019_02113500",
+      "evidence": "compiler temp mapped to 0x02113500 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
+    },
+    {
+      "from": "@555",
+      "to": "data_ov019_0211350c",
+      "evidence": "compiler temp mapped to 0x0211350c by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
       "from": "@556",
-      "to": "data_ov019_021134f4",
-      "evidence": "compiler temp mapped to 0x021134f4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_02113524",
+      "evidence": "compiler temp mapped to 0x02113524 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
       "from": "@557",
-      "to": "data_ov019_02113500",
-      "evidence": "compiler temp mapped to 0x02113500 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_02113530",
+      "evidence": "compiler temp mapped to 0x02113530 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
       "from": "@558",
-      "to": "data_ov019_0211350c",
-      "evidence": "compiler temp mapped to 0x0211350c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_02113548",
+      "evidence": "compiler temp mapped to 0x02113548 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
       "from": "@559",
-      "to": "data_ov019_02113524",
-      "evidence": "compiler temp mapped to 0x02113524 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_02113554",
+      "evidence": "compiler temp mapped to 0x02113554 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
       "from": "@560",
-      "to": "data_ov019_02113530",
-      "evidence": "compiler temp mapped to 0x02113530 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_02113560",
+      "evidence": "compiler temp mapped to 0x02113560 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
       "from": "@561",
-      "to": "data_ov019_02113548",
-      "evidence": "compiler temp mapped to 0x02113548 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_021134b8",
+      "evidence": "compiler temp mapped to 0x021134b8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
       "from": "@562",
-      "to": "data_ov019_02113554",
-      "evidence": "compiler temp mapped to 0x02113554 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@563",
-      "to": "data_ov019_02113560",
-      "evidence": "compiler temp mapped to 0x02113560 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov019_021134c4",
+      "evidence": "compiler temp mapped to 0x021134c4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
       "from": "@564",
-      "to": "data_ov019_021134b8",
-      "evidence": "compiler temp mapped to 0x021134b8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@565",
-      "to": "data_ov019_021134c4",
-      "evidence": "compiler temp mapped to 0x021134c4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@567",
       "to": "data_ov019_021132b8",
-      "evidence": "compiler temp mapped to 0x021132b8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021132b8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
-      "from": "@569",
+      "from": "@566",
       "to": "data_ov019_02113280",
-      "evidence": "compiler temp mapped to 0x02113280 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113280 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
-      "from": "@571",
+      "from": "@568",
       "to": "data_ov019_021132a8",
-      "evidence": "compiler temp mapped to 0x021132a8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021132a8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
-      "from": "@573",
+      "from": "@570",
       "to": "data_ov019_021132b0",
-      "evidence": "compiler temp mapped to 0x021132b0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021132b0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
-      "from": "@575",
+      "from": "@572",
       "to": "data_ov019_02113278",
-      "evidence": "compiler temp mapped to 0x02113278 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113278 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
-      "from": "@577",
+      "from": "@574",
       "to": "data_ov019_02113290",
-      "evidence": "compiler temp mapped to 0x02113290 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113290 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
-      "from": "@579",
+      "from": "@576",
       "to": "data_ov019_021132c0",
-      "evidence": "compiler temp mapped to 0x021132c0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021132c0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
-      "from": "@581",
+      "from": "@578",
       "to": "data_ov019_021132a0",
-      "evidence": "compiler temp mapped to 0x021132a0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021132a0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
-      "from": "@583",
+      "from": "@580",
       "to": "data_ov019_02113288",
-      "evidence": "compiler temp mapped to 0x02113288 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113288 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
-      "from": "@585",
+      "from": "@582",
       "to": "data_ov019_02113298",
-      "evidence": "compiler temp mapped to 0x02113298 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113298 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
+    },
+    {
+      "from": "@584",
+      "to": "data_ov019_02113270",
+      "evidence": "compiler temp mapped to 0x02113270 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
+    },
+    {
+      "from": "@586",
+      "to": "data_ov019_021132c8",
+      "evidence": "compiler temp mapped to 0x021132c8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
       "from": "@587",
-      "to": "data_ov019_02113270",
-      "evidence": "compiler temp mapped to 0x02113270 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@589",
-      "to": "data_ov019_021132c8",
-      "evidence": "compiler temp mapped to 0x021132c8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@590",
       "to": "data_ov019_021134d0",
-      "evidence": "compiler temp mapped to 0x021134d0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021134d0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     },
     {
-      "from": "@591",
+      "from": "@588",
       "to": "data_ov019_02113518",
-      "evidence": "compiler temp mapped to 0x02113518 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02113518 by the retail initializer relocation at the same pool offset; no bytes or relocations change | re-keyed when func_ov019_021114ec became a daPgRcer_c member: every raw @N moved to @N-1 (measured: all 25 compiler-numbered objects keep their size, relocation targets and .init use site, +0x298..+0x36c, between the old and new objects) | re-keyed when #821 batch 37 turned func_ov019_02111254 and func_ov019_0211140c (extern \"C\" helpers declared with named parameters) into daPgRcer_c members, lowering the per-TU @NNN uniquifier by 2 (measured: verify reported @552..@562 and @587/@588 as EXTRA and @563 as a 0-symbol rename source)"
     }
   ],
   "symbol_binding_rewrites": [
@@ -2062,7 +2063,7 @@
       "source": "0x02113270",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111754Ev",
+      "symbol": "_ZN10daPgRcer_c22InitStateShowFinalTextEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x02111754"
@@ -2072,7 +2073,7 @@
       "source": "0x02113278",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111f54Ev",
+      "symbol": "_ZN10daPgRcer_c23InitStatePrepareForRaceEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x02111f54"
@@ -2082,7 +2083,7 @@
       "source": "0x02113280",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02112168Ev",
+      "symbol": "_ZN10daPgRcer_c17StateWaitForMarioEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x02112168"
@@ -2092,7 +2093,7 @@
       "source": "0x02113288",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111904Ev",
+      "symbol": "_ZN10daPgRcer_c19InitStateFinishRaceEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x02111904"
@@ -2102,7 +2103,7 @@
       "source": "0x02113290",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111decEv",
+      "symbol": "_ZN10daPgRcer_c19StatePrepareForRaceEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x02111dec"
@@ -2112,7 +2113,7 @@
       "source": "0x02113298",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_021117a8Ev",
+      "symbol": "_ZN10daPgRcer_c15StateFinishRaceEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x021117a8"
@@ -2122,7 +2123,7 @@
       "source": "0x021132a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_0211197cEv",
+      "symbol": "_ZN10daPgRcer_c9StateRaceEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x0211197c"
@@ -2132,7 +2133,7 @@
       "source": "0x021132a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_0211213cEv",
+      "symbol": "_ZN10daPgRcer_c21InitStateShowInitTextEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x0211213c"
@@ -2142,7 +2143,7 @@
       "source": "0x021132b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111fecEv",
+      "symbol": "_ZN10daPgRcer_c17StateShowInitTextEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x02111fec"
@@ -2152,7 +2153,7 @@
       "source": "0x021132b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_021121f8Ev",
+      "symbol": "_ZN10daPgRcer_c21InitStateWaitForMarioEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x021121f8"
@@ -2162,7 +2163,7 @@
       "source": "0x021132c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111d58Ev",
+      "symbol": "_ZN10daPgRcer_c13InitStateRaceEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x02111d58"
@@ -2172,7 +2173,7 @@
       "source": "0x021132c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN10daPgRcer_c19func_ov019_02111558Ev",
+      "symbol": "_ZN10daPgRcer_c18StateShowFinalTextEv",
       "addend": 0,
       "target_module": "ov019",
       "target_address": "0x02111558"

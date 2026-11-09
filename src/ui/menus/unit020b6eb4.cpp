@@ -15,21 +15,26 @@
  * frame's display work (the screen fade, a queued display capture or
  * background mode) under a saved ARM math state; func_ov007_020b6f4c fades
  * out, tears every module down and returns the flags to hand back.
- * data_ov007_02103430 is clear while one of the first four is running and
- * set once it is done; func_ov007_020b6eb4 does nothing until it is set.
+ * sFrameReady is cleared as the bring-up, the frame's logic and the
+ * teardown start, and set once the bring-up or the frame's drawing is done;
+ * func_ov007_020b6eb4 does nothing until it is set.
  *
  * Edges: the bss word 0x02103430 is referenced by these five functions and
  * nothing else in the overlay, and the range is the one build/tu_map.json
  * cuts between its unattributed ov007 units 0x020ad660..0x020b6eb4 and
  * 0x020b72a0..0x020cc028. The previous function, func_ov007_020b6d40, is one
- * of the init dispatcher's builders; the next, func_ov007_020b72a0, is the
+ * of the init dispatcher's builders; the next, Display_Upload, is the
  * display hook func_ov007_020b6eb4 calls.
  *
  * Emission order: mwccarm 2004/b56 emits one .text section per function in
  * the reverse of source order, so the highest-address function is written
  * first here and the functions come out in ROM order.
  *
- * The functions keep their ROM names under C linkage.
+ * The five entry points keep their address names under C linkage: their
+ * callers in dScDSMT_c and include/decl_common.h are held by other branches.
+ * The callee names (Work_Create, MenuGfx_*, MenuSound_*, ScreenFade_*,
+ * Display_*, Pad_Update) are coined from their bodies; ov007 records no
+ * names.
  */
 #include "types.h"
 #include "G2x.h"
@@ -38,22 +43,24 @@
 #include "Ov007Settings.h"
 #include "Ov007Touch.h"
 #include "private/arm_math_state.h"
+#include "nitro/hw/registers.h"
 
 extern "C" {
 
 /* func_ov007_020b7138's first argument: the hooks dScDSMT_c hands the menu
  * (data_ov007_02103290). */
 typedef struct Ov007MenuHooks {
-    int alloc;               /* 0x00: installed by func_ov007_020c3e3c */
-    int free;                /* 0x04: func_ov007_020c3e2c */
-    int query;               /* 0x08: func_ov007_020c3e1c */
+    int alloc;               /* 0x00: installed by MenuMem_SetAllocHook */
+    int free;                /* 0x04: MenuMem_SetFreeHook */
+    int query;               /* 0x08: MenuMem_SetMaxAllocSizeHook */
     int fileLoad;            /* 0x0c: func_ov007_020b4100 */
     int fileRelease;         /* 0x10: func_ov007_020b4100 */
     int (*callback)(int id); /* 0x14: becomes the work block's callback */
 } Ov007MenuHooks;
 
-/* set while no entry point is running */
-extern int data_ov007_02103430;
+/* set once the bring-up or a frame's drawing is done; cleared as the
+ * bring-up, the frame's logic and the teardown start */
+extern int sFrameReady;
 
 extern void func_02045d9c(void);
 extern void func_ov007_020aed98(void);
@@ -64,154 +71,142 @@ extern void func_ov007_020b40c0(void);
 extern void func_ov007_020b4100(int a, int b);
 extern void func_ov007_020b6544(void);
 extern void func_ov007_020b65e0(void);
-extern void func_ov007_020b68e8(void);
+extern void Work_Create(void);
 extern void func_ov007_020b6c54(void);
-extern void func_ov007_020b72a0(void);
+extern void Display_Upload(void);
 extern void func_ov007_020b7764(void);
 extern void func_ov007_020b782c(void);
 extern void func_ov007_020b8690(void);
 extern void func_ov007_020b8714(int a0, int a1, int a2);
-extern void func_ov007_020bc9c8(Ov007Display *d);
+extern void Display_DrawOam(Ov007Display *d);
 extern void func_ov007_020bcf90(void);
-extern void func_ov007_020bd4e8(void);
-extern void func_ov007_020bd500(void);
-extern void func_ov007_020bd5a8(void);
-extern void func_ov007_020bd648(int mode);
-extern void func_ov007_020bd960(void);
-extern int *func_ov007_020bdebc(void);
-extern void func_ov007_020bdf60(void);
-extern void func_ov007_020be00c(void);
+extern void MenuGfx_StartCapture(void);
+extern void MenuGfx_InitSubEngine(void);
+extern void MenuGfx_InitMainEngine(void);
+extern void MenuGfx_SetBgMode(int mode);
+extern void MenuGfx_ResetVram(void);
+extern int *MenuSound_UpdateLoops(void);
+extern void MenuSound_Destroy(void);
+extern void MenuSound_Create(void);
 extern void func_ov007_020be47c(void);
 extern void func_ov007_020be50c(void);
-extern void func_ov007_020bf690(void);
-extern void func_ov007_020bfc54(void);
-extern void func_ov007_020bfcec(void);
+extern void ScreenFade_Update(void);
+extern void ScreenFade_Destroy(void);
+extern void ScreenFade_Create(void);
 extern void func_ov007_020c1db0(Ov007Touch *touch, Ov007TouchSample *sample);
-extern void func_ov007_020c20b8(struct Ov007Pad *pad, void *src);
+extern void Pad_Update(struct Ov007Pad *pad, void *src);
 extern void func_ov007_020c3bc8(void);
-extern void func_ov007_020c3e1c(int v);
-extern void func_ov007_020c3e2c(int v);
-extern void func_ov007_020c3e3c(int v);
+extern void MenuMem_SetMaxAllocSizeHook(int v);
+extern void MenuMem_SetFreeHook(int v);
+extern void MenuMem_SetAllocHook(int v);
 
-// @symbol func_ov007_020b7138
 int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
-    Ov007Work *p;
     int flags;
 
-    data_ov007_02103430 = 0;
+    sFrameReady = 0;
     func_ov007_020b6c54();
-    func_ov007_020c3e3c(hooks->alloc);
-    func_ov007_020c3e2c(hooks->free);
-    func_ov007_020c3e1c(hooks->query);
+    MenuMem_SetAllocHook(hooks->alloc);
+    MenuMem_SetFreeHook(hooks->free);
+    MenuMem_SetMaxAllocSizeHook(hooks->query);
     func_ov007_020c3bc8();
     func_ov007_020b4100(hooks->fileLoad, hooks->fileRelease);
-    func_ov007_020bd960();
-    func_ov007_020bd5a8();
-    func_ov007_020bd500();
-    func_ov007_020bd648(1);
+    MenuGfx_ResetVram();
+    MenuGfx_InitMainEngine();
+    MenuGfx_InitSubEngine();
+    MenuGfx_SetBgMode(1);
     func_02045d9c();
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3f, -0x10);
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, 0x3f, -0x10);
-    *(unsigned int *)0x4000000 &= ~0x1f00;
-    *(unsigned int *)0x4001000 &= ~0x1f00;
-    *(unsigned short *)0x4000304 &= ~0x8000;
-    func_ov007_020b68e8();
+    G2x::SetBlendBrightness(&REG_BLDCNT, 0x3f, -0x10);
+    G2x::SetBlendBrightness(&REG_DB_BLDCNT, 0x3f, -0x10);
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0x1f00;
+    REG_POWCNT1 &= ~0x8000;
+    Work_Create();
     WORK->settings->bootArgs = bootArgs;
     WORK->callback = hooks->callback;
     func_ov007_020b30b0();
-    func_ov007_020be00c();
-    p = WORK;
-    func_ov007_020b8714((int)p->cameras[1], (int)p->textures[10], p->settings->language);
+    MenuSound_Create();
+    func_ov007_020b8714((int)WORK->cameras[1], (int)WORK->textures[10], WORK->settings->language);
     func_ov007_020b782c();
-    func_ov007_020bfcec();
+    ScreenFade_Create();
     func_ov007_020be50c();
     func_ov007_020b6544();
     flags = bootArgs->bootFlags;
     WORK->nextFigureIndex = flags & 1;
     WORK->strokeStage[0] = (flags & 6) >> 1;
     WORK->strokeStage[1] = (flags & 0x18) >> 3;
-    data_ov007_02103430 = 1;
+    sFrameReady = 1;
     return 1;
 }
 
-// @symbol func_ov007_020b7090
-int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4) {
+int func_ov007_020b7090(u16 x, u16 y, u16 touch, u16 validity, int keys) {
     Ov007TouchSample sample;
-    int ret = 0;
+    int choice = 0;
 
-    data_ov007_02103430 = 0;
-    func_ov007_020c20b8(WORK->pad, &arg4);
-    sample.x = a0;
-    sample.y = a1;
-    sample.touch = a2;
-    sample.validity = a3;
+    sFrameReady = 0;
+    Pad_Update(WORK->pad, &keys);
+    sample.x = x;
+    sample.y = y;
+    sample.touch = touch;
+    sample.validity = validity;
     func_ov007_020b2e64(&sample);
     func_ov007_020c1db0(WORK->touch, &sample);
-    func_ov007_020bdebc();
+    MenuSound_UpdateLoops();
     func_ov007_020aed98();
-    {
-        Ov007Work *ip = WORK;
-        if (ip->choiceReady != 0 || ip->pendingChoice == 1)
-            ret = ip->pendingChoice;
-    }
-    return ret;
+    if (WORK->choiceReady != 0 || WORK->pendingChoice == 1)
+        choice = WORK->pendingChoice;
+    return choice;
 }
 
-// @symbol func_ov007_020b7040
 int func_ov007_020b7040(void) {
     func_ov007_020bcf90();
-    func_ov007_020bc9c8(WORK->display);
+    Display_DrawOam(WORK->display);
     WORK->frameCount++;
-    data_ov007_02103430 = 1;
+    sFrameReady = 1;
     return 1;
 }
 
-// @symbol func_ov007_020b6f4c
 int func_ov007_020b6f4c(void) {
-    Ov007Work *p = WORK;
-    int r;
-    r = p->nextFigureIndex;
-    {
-        unsigned int t = (p->strokeStage[0] << 1) | (p->strokeStage[1] << 3);
-        data_ov007_02103430 = 0;
-        r |= t;
-    }
-    if (p->pendingChoice != 0xa && p->pendingChoice != 0xb && p->choiceReady != 0) {
-        G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3f, 0x10);
-        G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, 0x3f, 0x10);
-        *(unsigned int *)0x4000000 &= ~0x1f00;
-        *(unsigned int *)0x4001000 &= ~0x1f00;
+    Ov007Work *work = WORK;
+    int flags = work->nextFigureIndex;
+    unsigned int strokeBits = (work->strokeStage[0] << 1) | (work->strokeStage[1] << 3);
+
+    sFrameReady = 0;
+    flags |= strokeBits;
+    if (work->pendingChoice != 0xa && work->pendingChoice != 0xb && work->choiceReady != 0) {
+        G2x::SetBlendBrightness(&REG_BLDCNT, 0x3f, 0x10);
+        G2x::SetBlendBrightness(&REG_DB_BLDCNT, 0x3f, 0x10);
+        REG_DISPCNT &= ~0x1f00;
+        REG_DISPCNT_SUB &= ~0x1f00;
     } else {
-        G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x20, -0x10);
-        G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, 0x20, -0x10);
+        G2x::SetBlendBrightness(&REG_BLDCNT, 0x20, -0x10);
+        G2x::SetBlendBrightness(&REG_DB_BLDCNT, 0x20, -0x10);
     }
     func_ov007_020b65e0();
     func_ov007_020b3050();
     func_ov007_020b7764();
-    func_ov007_020bdf60();
+    MenuSound_Destroy();
     func_ov007_020b8690();
-    func_ov007_020bfc54();
+    ScreenFade_Destroy();
     func_ov007_020be47c();
     func_ov007_020b40c0();
-    return r;
+    return flags;
 }
 
-// @symbol func_ov007_020b6eb4
 int func_ov007_020b6eb4(void) {
-    ARMMathState s;
-    if (data_ov007_02103430 != 0) {
-        ARMMathSaveState(&s);
-        func_ov007_020bf690();
+    ARMMathState mathState;
+    if (sFrameReady != 0) {
+        ARMMathSaveState(&mathState);
+        ScreenFade_Update();
         if (WORK->pendingCapture != 0) {
-            func_ov007_020bd4e8();
+            MenuGfx_StartCapture();
             WORK->pendingCapture = 0;
         }
         if (WORK->pendingBgMode != 0) {
-            func_ov007_020bd648(WORK->pendingBgMode);
+            MenuGfx_SetBgMode(WORK->pendingBgMode);
             WORK->pendingBgMode = 0;
         }
-        func_ov007_020b72a0();
-        ARMMathLoadState(&s);
+        Display_Upload();
+        ARMMathLoadState(&mathState);
     }
     return 1;
 }

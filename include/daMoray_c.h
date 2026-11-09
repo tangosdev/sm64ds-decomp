@@ -33,7 +33,7 @@
 
 struct daMoray_c : dEnemyBase_c {
     /* One state is two member-function pointers: init runs once, when
-       func_ov016_02111bf0 installs the state, and execute runs every frame
+       SetState installs the state, and execute runs every frame
        from Behavior. The five tables (0x02114d7c..0x02114dbc, 0x10 each) are
        filled in by __sinit_ov016_021136ec. */
     struct State {
@@ -53,7 +53,7 @@ struct daMoray_c : dEnemyBase_c {
     s32 mHomePosY;                                          /* 0x3f4 */
     s32 mHomePosZ;                                          /* 0x3f8 */
     /* Which mSegmentPos entry the first hit cylinder sits on: +1 per call of
-       func_ov016_02111284, wrapping to 0 after 6. */
+       UpdateHitCylinders, wrapping to 0 after 6. */
     s32 mCylSegment;                                        /* 0x3fc */
     s32 unk_400;                                            /* 0x400 -- zeroed by two state inits */
     s32 mPathID;                                            /* 0x404 */
@@ -83,19 +83,21 @@ struct daMoray_c : dEnemyBase_c {
     virtual s32 Render();
     void OnPendingDestroy();
 
-    void func_ov016_02111284();
-    int func_ov016_02111534();
-    int BookSwitch_Spawn();
-    int func_ov016_021115c0();
-    int func_ov016_02111718();
-    int func_ov016_02111758();
-    int func_ov016_02111860();
-    int func_ov016_021118b4();
-    int func_ov016_02111994();
-    int func_ov016_021119ec();
-    int func_ov016_02111bac();
-    int func_ov016_02111bf0(State *state);
-    void func_ov016_02111c40();
+    /* Coined from the bodies. The den wait, path swim and retreat are the
+       N64 unagi's actions 3, 1/4 and 2 (unagi.inc.c), which carry no names. */
+    void UpdateHitCylinders();
+    int StateRetreatMain();
+    int StateRetreatInit();
+    int StatePathSwimMain();
+    int StatePathSwimInit();
+    int StateLungeMain();
+    int StateLungeInit();
+    int StateSwimOutMain();
+    int StateSwimOutInit();
+    int StateDenWaitMain();
+    int StateDenWaitInit();
+    int SetState(State *state);
+    void UpdatePose();
 };
 
 #ifndef SM64DS_PLATFORM_PC

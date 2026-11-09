@@ -4,8 +4,6 @@
  * defer_codegen off: D1 then D0, no D2. Source follows the ROM.
  */
 // NOTES:
-// - Offsets 0xa4 and 0xac are dActor_c's mSpeedX and mSpeedZ. Offset 0xe8
-//   sits inside the model's ModelComponents and is still read through words[].
 // - Vec3_VertAngle and AngleDiff have no header declaration, so they stay
 //   local.
 #include "common.h"
@@ -26,16 +24,6 @@
 
 struct BMD_File;
 struct Vector3_16;
-
-/* dExtAnmModel_c's fourth virtual slot, reached through a four-slot stand-in.
- * Behavior calls it on the dExtAnmModel_c at +0xd4; the real declaration lives
- * with that class, and this file only needs the dispatch. */
-struct PeachAnimSlots {
-    virtual int g0();
-    virtual int g1();
-    virtual int g2();
-    virtual int g3();
-};
 
 /* local extern: no header declares these two. */
 extern "C" {
@@ -94,8 +82,6 @@ daPeach_c::StateEntry data_ov085_0213055c[5] = {
 
 #pragma defer_codegen off
 
-// @symbol _ZN9daPeach_cD1Ev
-// @symbol _ZN9daPeach_cD0Ev
 /* ONE declaration, TWO ROM functions. mwccarm emits the complete variant D1
  * and the deleting variant D0 from the single destructor this class declares,
  * so D0 has no source of its own; with deferred code generation off they land
@@ -120,7 +106,6 @@ void PeachDemandDeletingDtor(daPeach_c *peach) {
     delete peach;
 }
 
-// @symbol _ZN9daPeach_c12UpdateLookAtEv
 /* Peach turns her head toward the nearest player, but only when he is close
  * enough (0x15e000) and roughly in front of her (within 0x3000 of her
  * facing). Otherwise both target angles fall back to zero and she looks
@@ -147,29 +132,26 @@ void daPeach_c::UpdateLookAt() {
     ApproachLinear(mLookVertAngle, mTargetLookVertAngle, 0x100);
 }
 
-// @symbol _ZN9daPeach_c21UpdateGroundCollisionEP10dBgCh_Actr
 /* The floor normal becomes a pitch at +0xa8 so Peach stands square on a
  * slope. The wall branch reads its normal and drops it -- the ROM computes
  * the copy and uses nothing of it. */
 void daPeach_c::UpdateGroundCollision(dBgCh_Actr *clsn) {
-    int *words = (int *)this; /* 0xa4 and 0xac are dActor_c's mSpeedX / mSpeedZ */
-    int floorN[3];
-    int wallN[3];
+    Vector3 floorN;
+    Vector3 wallN;
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
-        ((SurfaceInfo *)((char *)clsn->GetFloorResult() + 4))->CopyNormalTo(*(Vector3 *)floorN);
-        if (floorN[1] != 0) {
-            int x = FX_MUL(floorN[0], words[0xa4 / 4]);
-            int z = FX_MUL(floorN[2], words[0xac / 4]);
-            mVertSpeed = -(cstd::fdiv(x + z, floorN[1]) + 0x8000);
+        clsn->GetFloorResult()->surface.CopyNormalTo(floorN);
+        if (floorN.y != 0) {
+            int x = FX_MUL(floorN.x, mSpeedX);
+            int z = FX_MUL(floorN.z, mSpeedZ);
+            mVertSpeed = -(cstd::fdiv(x + z, floorN.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {
-        ((SurfaceInfo *)((char *)clsn->GetWallResult() + 4))->CopyNormalTo(*(Vector3 *)wallN);
+        clsn->GetWallResult()->surface.CopyNormalTo(wallN);
     }
 }
 
-// @symbol _ZN9daPeach_c16IsTouchingPlayerEv
 /* Whether the actor whose id sits in mCylinder.otherOwner still exists and
  * is a player (actorID 0xbf). InitState0 and InitState4 call it and ignore
  * the answer. */
@@ -197,7 +179,6 @@ done:
     return alive;
 }
 
-// @symbol _ZN9daPeach_c11UpdateModelEv
 /* The model matrix is rebuilt from the body angle and the position, then
  * the head joint's own matrix (bone 18 of the animated model) is rotated by
  * the two look angles through the scratch matrix at data_020a0e68. */
@@ -213,15 +194,13 @@ void daPeach_c::UpdateModel() {
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x8c000, 0x32000, 0xf);
 }
 
-// @symbol _ZN9daPeach_c10InitState0Ev
 int daPeach_c::InitState0() {
-    UpdatePos((dCc_c *)&mCylinder);
+    UpdatePos(&mCylinder);
     UpdateGroundCollision(&mWithMeshClsn);
     IsTouchingPlayer();
     return 1;
 }
 
-// @symbol _ZN9daPeach_c6State0Ev
 int daPeach_c::State0() {
     mAnmModel.SetAnim((BCA_File *)gPeachJumpAnimationFile.filePtr, 0, 0x1000, 0);
     ((dExtFrameCtrl_c *)&mAnmModel)->SetFlags(0x40000000);
@@ -231,12 +210,10 @@ int daPeach_c::State0() {
     return 1;
 }
 
-// @symbol _ZN9daPeach_c6State2Ev
 int daPeach_c::State2() {
     return 1;
 }
 
-// @symbol _ZN9daPeach_c10InitState2Ev
 int daPeach_c::InitState2() {
     mAnmModel.SetAnim((BCA_File *)gPeachRunAnimationFile.filePtr, 0, 0x1000, 0);
     mHorzSpeed = 0x4000;
@@ -244,17 +221,15 @@ int daPeach_c::InitState2() {
     return 1;
 }
 
-// @symbol _ZN9daPeach_c10InitState4Ev
 int daPeach_c::InitState4() {
     short angY = mAngleY;
     mPrevAngleY = angY;
-    UpdatePos((dCc_c *)&mCylinder);
+    UpdatePos(&mCylinder);
     UpdateGroundCollision(&mWithMeshClsn);
     IsTouchingPlayer();
     return 1;
 }
 
-// @symbol _ZN9daPeach_c6State1Ev
 int daPeach_c::State1() {
     mAnmModel.SetAnim((BCA_File *)gPeachWalkAnimationFile.filePtr, 0, 0x1000, 0);
     mHorzSpeed = 0x1800;
@@ -262,7 +237,6 @@ int daPeach_c::State1() {
     return 1;
 }
 
-// @symbol _ZN9daPeach_c6State3Ev
 /* The conversation, in three steps held in mTalkState: start the talk, turn
  * to face the player and put the message up, then wait for the player's talk
  * state to go back to -1. */
@@ -291,7 +265,6 @@ int daPeach_c::State3() {
     return 1;
 }
 
-// @symbol _ZN9daPeach_c10InitState1Ev
 int daPeach_c::InitState1() {
     mAnmModel.SetAnim((BCA_File *)gPeachWaitAnimationFile.filePtr, 0, 0x1000, 0);
     ((dExtFrameCtrl_c *)&mAnmModel)->currFrame = 0;
@@ -301,14 +274,13 @@ int daPeach_c::InitState1() {
     return 1;
 }
 
-// @symbol _ZN9daPeach_c10InitState3Ev
 /* The same liveness question IsTouchingPlayer asks, written out here
  * instead of called -- the ROM inlines it at this one site. */
 int daPeach_c::InitState3() {
     if (mCylinder.hitFlags & 0x8000000) {
-        char *a = (char *)dActor_c::FindWithID(mCylinder.otherOwner);
+        dActor_c *a = dActor_c::FindWithID(mCylinder.otherOwner);
         if (a) {
-            int match = (((dActor_c *)a)->actorID == 0xbf) ? 1 : 0;
+            int match = (a->actorID == 0xbf) ? 1 : 0;
             if (match != 0) {
                 mTalkPlayer = (daPly_c *)a;
                 if (mTalkPlayer->StartTalk(*this, false)) {
@@ -320,32 +292,27 @@ int daPeach_c::InitState3() {
     return 1;
 }
 
-// @symbol _ZN9daPeach_c6State4Ev
 int daPeach_c::State4() {
     mAnmModel.SetAnim((BCA_File *)gPeachOpWaitAnimationFile.filePtr, 0, 0x1000, 0);
     mStateValue = 0;
     return 1;
 }
 
-// @symbol _ZN9daPeach_c17CallStateBehaviorEv
 /* The behavior half of the selected row. The table rows are pairs of
  * pointers-to-member copied out of the ten ROM constants at 0x0212ff34. */
 void daPeach_c::CallStateBehavior() {
     (this->*mState->behavior)();
 }
 
-// @symbol _ZN9daPeach_c13CallStateInitEv
 void daPeach_c::CallStateInit() {
     (this->*mState->init)();
 }
 
-// @symbol _ZN9daPeach_c8SetStateEi
 void daPeach_c::SetState(int state) {
     mState = &data_ov085_0213055c[state];
     CallStateInit();
 }
 
-// @symbol _ZN9daPeach_c16CleanupResourcesEv
 /* One direct release, then a LOOP over a seven-entry table of pointers.
  * Unlike every sibling in this overlay, which writes its releases out one per
  * line, Peach's animation files are reached through data_ov085_0212f280 and
@@ -360,37 +327,33 @@ int daPeach_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN9daPeach_c16OnPendingDestroyEv
 /* Empty -- the ROM body is a single `bx lr`. The override exists to suppress
  * whatever the base does on pending destroy, not to do anything itself. */
 void daPeach_c::OnPendingDestroy() {}
 
-// @symbol _ZN9daPeach_c6RenderEv
 /* Qualified dExtSimpleModel_c::Render. dExtAnmModel_c overrides the slot. */
 int daPeach_c::Render() {
     mAnmModel.dExtSimpleModel_c::Render(0);
     return 1;
 }
 
-// @symbol _ZN9daPeach_c8BehaviorEv
 int daPeach_c::Behavior() {
     CallStateBehavior();
     UpdateLookAt();
     if (mStateValue != 1)
-        ((dExtFrameCtrl_c *)((dExtFrameCtrl_c *)&mAnmModel))->Advance();
-    ((PeachAnimSlots *)((char *)&mAnmModel))->g3();
-    ((dCc_c *)&mCylinder)->Clear();
-    ((dCc_c *)&mCylinder)->Update();
+        mAnmModel.Advance();
+    mAnmModel.UpdateVerts();
+    mCylinder.Clear();
+    mCylinder.Update();
     UpdateModel();
     return 1;
 }
 
-// @symbol _ZN9daPeach_c13InitResourcesEv
 /* dBgCh_Actr::Init's last parameter is a Vector3_16* as well -- the S5_ in
  * ...P10Vector3_16S5_ back-references the pointer type, it is not an int. */
 int daPeach_c::InitResources() {
     void *f = dExtSimpleModel_c::LoadFile(gPeachModelFile);
-    ((dExtModel_c *)&mAnmModel)->SetFile((BMD_File *)f, 1, -1);
+    mAnmModel.SetFile((BMD_File *)f, 1, -1);
     for (int i = 0; i < 7; i++)
         dExtFrameCtrl_c::LoadFile(*(SharedFilePtr *)data_ov085_0212f280[i]);
     if (mShadowModel.InitCylinder() == 0)
@@ -407,7 +370,6 @@ int daPeach_c::InitResources() {
     return 1;
 }
 
-// @symbol daPeach_c_classInit
 /* PEACH_PRINCESS factory. */
 extern "C" daPeach_c *daPeach_c_classInit(void) {
     return new daPeach_c();

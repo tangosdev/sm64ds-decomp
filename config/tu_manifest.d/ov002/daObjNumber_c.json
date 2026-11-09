@@ -100,8 +100,12 @@
       "relocation_destinations_verified": "PASS"
     },
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
       "droppedSections": [
         5,
         6,
@@ -116,7 +120,8 @@
         15,
         16,
         17,
-        18
+        18,
+        30
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -139,7 +144,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV13daObjNumber_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     }
   },
   "partial_isolation": {
@@ -196,6 +202,13 @@
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
   },
   "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h defines Vector3::~Vector3() inline and empty. Behavior keeps its translation in a Vector3 local, so this TU emits that four-byte body once as vague linkage. The cartridge's copy is arm9:0x020072c0 (src/_ZN7Vector3D1Ev.cpp); this object is not its home."
+    },
     {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",

@@ -16,7 +16,6 @@
 
 #include "Matrix2x2.h"
 
-// @symbol _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii
 /* Loads a background's affine transform into the hardware registers behind `p`.
  *
  * The four matrix terms go out as TWO 32-bit writes, packed in pairs, each term
@@ -46,7 +45,6 @@ void G2x::SetBGyAffine(volatile unsigned short *p, Matrix2x2 *m, int a, int b, i
     *(volatile int *)(p + 6) = y >> 4;
 }
 
-// @symbol _ZN3G2x13SetBlendAlphaEPVtiiii
 /* The Nitro SDK's G2x_SetBlendAlpha_(vu16 *, int, int, int, int). The final
    argument is 32-bit: the ROM loads its stack slot with `ldr`, not `ldrh`. */
 void G2x::SetBlendAlpha(volatile u16 *reg, int firstTarget, int secondTarget, int firstAlpha,
@@ -56,7 +54,6 @@ void G2x::SetBlendAlpha(volatile u16 *reg, int firstTarget, int secondTarget, in
         ((firstAlpha | (secondAlpha << 8)) << 16);
 }
 
-// @symbol _ZN3G2x18SetBlendBrightnessEPVtii
 /* Writes the hardware brightness registers behind `p`. The SIGN of `amt`
  * selects the mode rather than a separate flag: negative sets bits 0xc0
  * (fade to black) and writes the magnitude, positive sets 0x80 (fade to
@@ -77,9 +74,9 @@ void G2x::SetBlendBrightness(volatile unsigned short *p, int val, int amt) {
  * is already set up: the magnitude always goes to p[2], but the direction
  * bits in p[0] are rewritten only when the sign of `amt` reverses an existing
  * fade (0x80 to white, 0xc0 to black). A register with no fade selected keeps
- * its mode. It stays a free C-linkage function under its linker name, which
- * is how its callers declare it. */
-extern "C" void func_020551f0(volatile unsigned short *p, int amt) {
+ * its mode. It stays a free C-linkage function under the SDK name: one of
+ * its callers is a C file. */
+extern "C" void G2x_ChangeBlendBrightness_(volatile unsigned short *p, int amt) {
     unsigned short h = p[0];
     if (amt < 0) {
         if ((h & 0xc0) == 0x80) {

@@ -26,6 +26,7 @@
 
 #include "common.h"
 #include "Particle__System.h"
+#include "ParticleIds.h"
 #include "daPkn_c.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
@@ -34,6 +35,7 @@
 #include "SpawnInfo.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daPkn_c_AssetId {
@@ -94,7 +96,6 @@ void  func_020105cc(void *thiz, u32 flags);
 
 
 /* -- shared tables -- */
-extern s16 data_02082214[];              /* the sin/cos table, two shorts a step */
 extern int data_ov084_0213030c[];        /* per-frame particle X/Z offset (0212f460, 0xfb) */
 extern int data_ov084_02130334[];        /* per-frame particle Y offset */
 extern u8  data_ov084_021302ec[];        /* five indices {0,3,4,5,6}; 0212ec60 sums s16 at [i]*0x34+0x1c into ang[1] (dead -- later y-adjust reads ang[0]==0, so the offset is constant 0x32000). 0x34 is not BMD_Bone (0x40). */
@@ -116,7 +117,6 @@ int d_a_pknPlaySubHold(u32 a, u32 b, u32 c, int t, int flag);
  * six member C1s in declaration order.
  * ======================================================================== */
 
-// @symbol daPkn_c_classInit
 extern "C" daPkn_c *daPkn_c_classInit()
 {
     return new daPkn_c();
@@ -136,13 +136,12 @@ SpawnInfo<daPkn_c> g_profile_PAKUN = {
 };
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c13InitResourcesEv
 /*
  * Unlike daFPkn_c's, this one checks its loads: a failed SetFile on either
  * model returns 0.
  *
- * The tail seeds the sleep-bubble position: 0xe0 along the facing angle out
- * of the shared sin and cos table at data_02082214, and 0x37800 above mPosY.
+ * The tail seeds the sleep-bubble position: 0xe0 along the facing angle
+ * (FX_SinIdx / FX_CosIdx), and 0x37800 above mPosY.
  * UpdatePose rewrites mBubblePos every frame.
  */
 int daPkn_c::InitResources()
@@ -179,7 +178,6 @@ int daPkn_c::InitResources()
     mHeadClsnOffset.y = mPosY;
     mHeadClsnOffset.z = mPosZ;
     {
-        s16 *tbl = data_02082214;
         /* Copied through a pointer: `mHomePos = mHeadClsnOffset` emits a
            different copy. */
         Vector3 *home = &mHeadClsnOffset;
@@ -190,8 +188,8 @@ int daPkn_c::InitResources()
         /* Temporaries in the ROM's load order; folding them reorders it. */
         int y0 = mPosY;
         int z0 = mPosZ;
-        int cosv = tbl[(ang << 1) + 1];
-        int sinv = tbl[ang << 1];
+        int cosv = FX_CosIdx(ang);
+        int sinv = FX_SinIdx(ang);
         int z = cosv * 0xe0 + z0;
         int y = y0 + 0x37800;
         int x = sinv * 0xe0 + mPosX;
@@ -207,7 +205,6 @@ int daPkn_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c8BehaviorEv
 int daPkn_c::Behavior()
 {
     int r;
@@ -261,7 +258,6 @@ int daPkn_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c6RenderEv
 /*
  * The bubble is drawn only while the idle animation (data_ov084_02130df4)
  * is playing.
@@ -277,7 +273,6 @@ int daPkn_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c16OnPendingDestroyEv
 /*
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
@@ -286,7 +281,6 @@ void daPkn_c::OnPendingDestroy()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c16CleanupResourcesEv
 int daPkn_c::CleanupResources()
 {
     int i;
@@ -299,7 +293,6 @@ int daPkn_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9StateWaitEv
 void daPkn_c::StateWait()
 {
     mScaleX = 0x1000;
@@ -314,7 +307,6 @@ void daPkn_c::StateWait()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c10StateSleepEv
 void daPkn_c::StateSleep()
 {
     mClsnEnabled = 1;
@@ -325,8 +317,8 @@ void daPkn_c::StateSleep()
         mAnmModel.SetAnim((BCA_File *)data_ov084_02130e0c.filePtr, 0x40000000, 0x1000, 0);
         mState = 3;
         func_02012694(0x175, &mCamSpacePosX);
-        Particle::System::NewSimple(0xfe, mBubblePos.x, mBubblePos.y, mBubblePos.z);
-        Particle::System::NewSimple(0xff, mBubblePos.x, mBubblePos.y, mBubblePos.z);
+        Particle::System::NewSimple(kPtclPiranhaWakeA, mBubblePos.x, mBubblePos.y, mBubblePos.z);
+        Particle::System::NewSimple(kPtclPiranhaWakeB, mBubblePos.x, mBubblePos.y, mBubblePos.z);
         return;
     }
     mLoopSoundHandle = Sound::PlayLong(mLoopSoundHandle, 3, 0x174, mCamSpacePos, 0);
@@ -341,7 +333,6 @@ void daPkn_c::StateSleep()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9StateBiteEv
 void daPkn_c::StateBite()
 {
     dActor_c *actor;
@@ -474,7 +465,6 @@ void daPkn_c::StateBite()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9StateWakeEv
 void daPkn_c::StateWake()
 {
     Sound::PlaySub(0x36, 0x7f, 0, 0xcb33, 0);
@@ -488,7 +478,6 @@ void daPkn_c::StateWake()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9StateDozeEv
 void daPkn_c::StateDoze()
 {
     mClsnEnabled = 1;
@@ -507,7 +496,6 @@ void daPkn_c::StateDoze()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c8StateDieEv
 void daPkn_c::StateDie()
 {
     Vector3 pos;
@@ -518,11 +506,11 @@ void daPkn_c::StateDie()
         pos.x = mPosX;
         pos.y = mPosY;
         pos.z = mPosZ;
-        pos.x += data_ov084_0213030c[(u16)mStateTimer] * data_02082214[((u16)mAngleY >> 4) * 2];
-        pos.z += data_ov084_0213030c[(u16)mStateTimer] * data_02082214[((u16)mAngleY >> 4) * 2 + 1];
+        pos.x += data_ov084_0213030c[(u16)mStateTimer] * FX_SinIdx((u16)mAngleY >> 4);
+        pos.z += data_ov084_0213030c[(u16)mStateTimer] * FX_CosIdx((u16)mAngleY >> 4);
         pos.y += data_ov084_02130334[(u16)mStateTimer] << 12;
-        mParticleHandle =
-            (s32)Particle::System::New(mParticleHandle, 0xfb, pos.x, pos.y, pos.z, 0, 0);
+        mParticleHandle = (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathBurst, pos.x,
+                                                     pos.y, pos.z, 0, 0);
     }
     if (mAnmModel.Finished() == 0)
         return;
@@ -532,7 +520,6 @@ void daPkn_c::StateDie()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c11StateShrinkEv
 void daPkn_c::StateShrink()
 {
     int scale;
@@ -544,10 +531,10 @@ void daPkn_c::StateShrink()
         scale = 0x1000;
     }
 
-    mParticleHandle =
-        (s32)Particle::System::New(mParticleHandle, 0xfc, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
-    mParticleHandle2 =
-        (s32)Particle::System::New(mParticleHandle2, 0xfd, mPosX, mPosY + 0x1e000, mPosZ, 0, 0);
+    mParticleHandle = (s32)Particle::System::New(mParticleHandle, kPtclPiranhaDeathSmokeA, mPosX,
+                                                 mPosY + 0x1e000, mPosZ, 0, 0);
+    mParticleHandle2 = (s32)Particle::System::New(mParticleHandle2, kPtclPiranhaDeathSmokeB, mPosX,
+                                                  mPosY + 0x1e000, mPosZ, 0, 0);
 
     if (scale > 0) {
         scale = scale - 0xa3;
@@ -566,7 +553,6 @@ void daPkn_c::StateShrink()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9StateGoneEv
 void daPkn_c::StateGone()
 {
     mClsnEnabled = 0;
@@ -578,7 +564,6 @@ void daPkn_c::StateGone()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c11StateRegrowEv
 void daPkn_c::StateRegrow()
 {
     int v;
@@ -598,7 +583,6 @@ void daPkn_c::StateRegrow()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c18TrackClosestPlayerEv
 /* Tracks the closest player: its distance, the yaw toward it and whether it
    is airborne. */
 void daPkn_c::TrackClosestPlayer()
@@ -622,7 +606,6 @@ void daPkn_c::TrackClosestPlayer()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c16PlayerMovingFastEv
 /* Is the closest player moving fast enough to wake the plant? */
 int daPkn_c::PlayerMovingFast()
 {
@@ -633,7 +616,6 @@ int daPkn_c::PlayerMovingFast()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c9CheckHitsEv
 /* The collision check the idle states share: returns 1 when a hit killed
    the plant. t and u hold the actor-type compares as ints; testing
    `type == 0xbf` directly changes the code. */
@@ -725,7 +707,6 @@ int daPkn_c::CheckHits()
     return 0;
 }
 
-// @symbol _ZN7daPkn_c10UpdatePoseEv
 /* Poses both models and places the head cylinder and the sleep bubble. The
    bone sum into ang[1] is never read. */
 void daPkn_c::UpdatePose()
@@ -766,6 +747,9 @@ void daPkn_c::UpdatePose()
     Vec3_LslInPlace((int *)&mHeadClsnOffset, 3);
     SubVec3((Vector3 *)&mHeadClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mHeadClsnOffset);
 
+    /* Still a hand-indexed FX_SinIdx: through the inline the table base loads
+       before mHeadClsnOffset.y and ang[0], and no spelling tried (local, index
+       local, y read first, split subtraction) gets the ROM's order back. */
     mHeadClsnOffset.y -= data_02082214[((u16)ang[0] >> 4) << 1] * (s16)0x14 + 0x32000;
     mHeadClsnOffset.z += 0x32000;
 
@@ -786,9 +770,9 @@ void daPkn_c::UpdatePose()
         mBubbleScale.z = scale;
     }
 
-    L.tv.x = data_02082214[((u16)mAngleY >> 4) << 1] * (s16)0xe0 + L.tv.x;
+    L.tv.x = FX_SinIdx((u16)mAngleY >> 4) * (s16)0xe0 + L.tv.x;
     scale = scale - 0xc00;
-    L.tv.z = data_02082214[(((u16)mAngleY >> 4) << 1) + 1] * (s16)0xe0 + L.tv.z;
+    L.tv.z = FX_CosIdx((u16)mAngleY >> 4) * (s16)0xe0 + L.tv.z;
     L.tv.y = L.tv.y + (scale * 0x18 + 0x38000);
 
     mBubblePos.x = L.tv.x;
@@ -799,7 +783,6 @@ void daPkn_c::UpdatePose()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c16OnAimedAtWithEggEv
 /* Vtable slot 29. */
 s32 daPkn_c::OnAimedAtWithEgg()
 {
@@ -807,7 +790,6 @@ s32 daPkn_c::OnAimedAtWithEgg()
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c10EnterLungeEi
 /* Enters state 2 with the lunge animation at `frame`. */
 void daPkn_c::EnterLunge(int frame)
 {
@@ -817,7 +799,6 @@ void daPkn_c::EnterLunge(int frame)
 }
 
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN7daPkn_c3DieEv
 /* Kills the plant: death animation and state 5. */
 void daPkn_c::Die()
 {

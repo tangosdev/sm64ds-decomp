@@ -20,8 +20,6 @@
  * into dBgW's slot.
  *
  * What stays:
- * - func_020393d4 / func_020393c4 are 4-byte stores into dBgW's
- *   callback slots; naming belongs with dBgW in arm9.
  * - The named local in OnStoodOn is load-bearing -- folded
  *   into the `if`, mwcc emits 0x14 and the cartridge's is 0x20.
  */
@@ -61,17 +59,8 @@ typedef char TikuwaCollisionFilePtr_size_must_be_8[sizeof(TikuwaCollisionFilePtr
 extern TikuwaModelFilePtr gRcTikuwaModelFile;
 extern TikuwaCollisionFilePtr gRcTikuwaCollisionFile;
 
-/* local extern: no shared header declares these. */
-extern "C" {
-void func_020393d4(dBgW *collider, BeforeClsnCallback callback);
-void func_020393c4(dBgW *bgw, void *fn);
-}
-
-// @symbol _ZN16daObjRc_Tikuwa_cD1Ev
-// @symbol _ZN16daObjRc_Tikuwa_cD0Ev
 daObjRc_Tikuwa_c::~daObjRc_Tikuwa_c() {}
 
-// @symbol _ZN16daObjRc_Tikuwa_c16CleanupResourcesEv
 s32 daObjRc_Tikuwa_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
@@ -80,17 +69,14 @@ s32 daObjRc_Tikuwa_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN16daObjRc_Tikuwa_c16OnPendingDestroyEv
 void daObjRc_Tikuwa_c::OnPendingDestroy() {}
 
-// @symbol _ZN16daObjRc_Tikuwa_c6RenderEv
 s32 daObjRc_Tikuwa_c::Render() {
     if (mState != 2)
         mModel.Render(0);
     return 1;
 }
 
-// @symbol _ZN16daObjRc_Tikuwa_c8BehaviorEv
 s32 daObjRc_Tikuwa_c::Behavior() {
     switch (mState) {
     case 0:
@@ -139,7 +125,6 @@ s32 daObjRc_Tikuwa_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN16daObjRc_Tikuwa_c13InitResourcesEv
 s32 daObjRc_Tikuwa_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(gRcTikuwaModelFile), 1, -1);
     UpdateModelPosAndRotY();
@@ -147,8 +132,8 @@ s32 daObjRc_Tikuwa_c::InitResources() {
     void *kcl = dBgW_Kc::LoadFile(gRcTikuwaCollisionFile);
     mMeshCollider.SetFile((KCL_File *)kcl, mClsnMat, 0x1000, mAngleY,
                           *(CLPS_Block *)data_ov036_02112b48);
-    func_020393d4(&mMeshCollider, &dBgW::UpdatePosWithVelocity);
-    func_020393c4(&mMeshCollider, (void *)&StoodOnCallback);
+    mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
+    mMeshCollider.SetStoodOnCallback((::StoodOnCallback)&StoodOnCallback);
     mWithMeshClsn.Init(this, 0x32000, 0x64000, 0, 0);
     mTerminalVelocity = -0x1e000;
     mVertAccel = ~0x198;
@@ -162,7 +147,6 @@ s32 daObjRc_Tikuwa_c::InitResources() {
 /* dBgW's collision callback body (ov036 0x02111ca4): an actor with actor ID
  * 0xbf (the daPly_c) on the block sets mHadClsn. */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjRc_Tikuwa_c9OnStoodOnEP8dActor_c
 void daObjRc_Tikuwa_c::OnStoodOn(dActor_c *other) {
     /* The named local is load-bearing: folded into the `if`, mwcc drops the
      * store/reload pair and the function comes out 0x14. The cartridge's is
@@ -176,7 +160,6 @@ void daObjRc_Tikuwa_c::OnStoodOn(dActor_c *other) {
 /* The callback InitResources installs into dBgW's slot (ov036 0x02111cc4). It
  * drops the receiver dBgW passes first and hands the pair to the body above. */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjRc_Tikuwa_c15StoodOnCallbackEPvPS_P8dActor_c
 void daObjRc_Tikuwa_c::StoodOnCallback(void *collider, daObjRc_Tikuwa_c *self, dActor_c *other) {
     self->OnStoodOn(other);
 }
@@ -185,7 +168,6 @@ void daObjRc_Tikuwa_c::StoodOnCallback(void *collider, daObjRc_Tikuwa_c *self, d
 /* Factory: `return new` calls the inherited fBase_c::operator new -- the
  * 0x4ec allocation the cartridge's own factory makes. */
 /* -------------------------------------------------------------------------- */
-// @symbol daObjRc_Tikuwa_c_classInit
 extern "C" daObjRc_Tikuwa_c *daObjRc_Tikuwa_c_classInit() {
     return new daObjRc_Tikuwa_c;
 }

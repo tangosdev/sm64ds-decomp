@@ -26,12 +26,10 @@ enum d_a_obj_fl_gura_AssetId { ASSET_FL_GURA_BMD = 0x05f3, ASSET_FL_GURA_KCL = 0
 
 extern ResourceDescriptor data_ov064_0211adb0;
 
-// @symbol daObjFl_Gura_c_classInit
 extern "C" daObjFl_Gura_c *daObjFl_Gura_c_classInit() {
     return new daObjFl_Gura_c();
 }
 
-// @symbol g_profile_FL_GURA
 extern "C" SpawnInfo<daObjFl_Gura_c> g_profile_FL_GURA = {
     daObjFl_Gura_c_classInit,
     0x0048, /* FL_GURA registry id 72 */
@@ -43,12 +41,10 @@ extern "C" SpawnInfo<daObjFl_Gura_c> g_profile_FL_GURA = {
     0,
 };
 
-// @symbol _ZN14daObjFl_Gura_c13InitResourcesEv
 s32 daObjFl_Gura_c::InitResources() {
     return InitResourcesFrom(&data_ov064_0211adb0);
 }
 
-// @symbol _ZN14daObjFl_Gura_c16CleanupResourcesEv
 s32 daObjFl_Gura_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov064_0211adb0);
 }
@@ -67,7 +63,6 @@ struct FlGuraCollisionFilePtr : SharedFilePtr {
     ~FlGuraCollisionFilePtr();
 };
 
-// @symbol __sinit_d_a_obj_fl_gura.cpp
 /* The retail initializer constructs the model first, then the collision
  * file. */
 FlGuraModelFilePtr gFlGuraModelFile(ASSET_FL_GURA_BMD);         /* model */

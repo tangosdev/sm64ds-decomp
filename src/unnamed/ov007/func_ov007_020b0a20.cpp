@@ -21,7 +21,7 @@ extern void func_ov007_020b0da0(Ov007Figure *figure);
 extern void func_ov007_020be980(Ov007Figure *fig, int anim, int a2);
 extern int func_ov007_020be964(Ov007Figure *fig);
 extern void func_ov007_020c0638(void *layer, int x, int y, unsigned short tile);
-extern void func_ov007_020b797c(void);
+extern void MenuText_ClearMainPlane(void);
 extern int func_ov007_020bdeb0(int idx);
 extern void func_ov007_020bde70(int idx, int arg);
 extern void func_ov007_020b131c(void);
@@ -55,7 +55,7 @@ void func_ov007_020b0a20(void) {
         func_ov007_020be980(WORK->figure, 1, 0);
         func_ov007_020be964(WORK->figure);
         func_ov007_020c0638(WORK->layerSlots[6]->layer, 0, 0, 0);
-        func_ov007_020b797c();
+        MenuText_ClearMainPlane();
         model->scale.z = (func_ov007_020aebac() == 0) ? 0xDAC : 0x1770;
         model->scale.y = model->scale.z;
         model->scale.x = model->scale.y;

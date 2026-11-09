@@ -51,7 +51,7 @@
 /* InitResources' local is a VecFx32. Vector3's declared destructor (see
    include/types.h) costs this TU a numbered .data local if an object of it
    is declared here, so the local stays POD and casts at the call. */
-#define CurrentPlayer() data_0209f394[data_0209f250]
+#define CurrentPlayer() gPlayers[gLocalPlayerId]
 
 /* Material bits func_02016acc clears and func_02016b24 sets. The reflected
  * player render applies the same pair around its draw. */
@@ -90,10 +90,10 @@ extern SharedFilePtr data_ov002_0210eaa0;
 extern SharedFilePtr data_ov002_0210e8d0;
 extern SharedFilePtr data_ov002_0210ebd8;
 
-extern unsigned char data_0209f250;
-extern daPly_c *data_0209f394[];
+extern unsigned char gLocalPlayerId;
+extern daPly_c *gPlayers[];
 extern SaveBlock data_0209caa0;
-extern dCamera_c *data_0209f318;
+extern dCamera_c *gCamera;
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. */
 extern "C" {
@@ -118,12 +118,10 @@ void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
  * allocation size, vtable identity, and the LUIGI registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: MirrorLuigi_Spawn. */
-// @symbol daLuigi_c_classInit
 extern "C" daLuigi_c *daLuigi_c_classInit() {
     return new daLuigi_c();
 }
 
-// @symbol _ZN9daLuigi_c13InitResourcesEv
 int daLuigi_c::InitResources() {
     VecFx32 t;
 
@@ -161,7 +159,6 @@ int daLuigi_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c8BehaviorEv
 int daLuigi_c::Behavior() {
     int depth, radius;
     daPly_c *player;
@@ -181,11 +178,10 @@ int daLuigi_c::Behavior() {
     player->func_ov002_020e4374(&depth, &radius);
     DropShadowRadHeight(mShadowModel, mShadowMatrix, radius, depth, kShadowOpacity);
     /* dCamera_c::mFramedActor; this file does not include dCamera_c.h. */
-    data_0209f318->mFramedActor = this;
+    gCamera->mFramedActor = this;
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c6RenderEv
 int daLuigi_c::Render() {
     daPly_c *player;
     dExtSimpleModel_c *body;
@@ -234,10 +230,8 @@ int daLuigi_c::Render() {
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c16OnPendingDestroyEv
 void daLuigi_c::OnPendingDestroy() {}
 
-// @symbol _ZN9daLuigi_c16CleanupResourcesEv
 int daLuigi_c::CleanupResources() {
     data_ov002_0210ebb8.Release();
     data_ov002_0210eb20.Release();
@@ -245,7 +239,6 @@ int daLuigi_c::CleanupResources() {
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c8SetStateEP12daLuigiStateP7daPly_c
 int daLuigi_c::SetState(daLuigiState *state, daPly_c *player) {
     mState = state;
     if (mState->enter == 0)
@@ -253,12 +246,10 @@ int daLuigi_c::SetState(daLuigiState *state, daPly_c *player) {
     return (this->*mState->enter)(player);
 }
 
-// @symbol _ZN9daLuigi_c11EnterMirrorEP7daPly_c
 int daLuigi_c::EnterMirror(daPly_c *player) {
     return 1;
 }
 
-// @symbol _ZN9daLuigi_c13ExecuteMirrorEP7daPly_c
 int daLuigi_c::ExecuteMirror(daPly_c *player) {
     /* One base, read x then z then y. Direct mPosX / mPosZ / mPosY
      * differ (same size). */
@@ -274,7 +265,6 @@ int daLuigi_c::ExecuteMirror(daPly_c *player) {
     return 1;
 }
 
-// @symbol func_ov055_02111264
 /* One candidate caller, ov063 0x02118004, relocates to ov027 or ov055, so
  * the owner is unknown. */
 extern "C" void func_ov055_02111264(void) {

@@ -759,7 +759,7 @@
       "ordinal": 59
     },
     {
-      "symbol": "func_020165c4",
+      "symbol": "_ZN19dExtBlendAnmModel_c15InitBlendBufferEPc",
       "address": "0x020165c4",
       "size": "0x00000040",
       "legacy_source": "src/engine/model/d_ext_blend_anm_model.cpp",
@@ -1032,7 +1032,7 @@
       "ordinal": 98
     },
     {
-      "symbol": "func_02016e70",
+      "symbol": "GetCommonModelComponents",
       "address": "0x02016e70",
       "size": "0x00000098",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
@@ -1060,14 +1060,14 @@
       "ordinal": 102
     },
     {
-      "symbol": "func_02016ff4",
+      "symbol": "_ZN11dExtModel_c13SetLoadedFileEP8BMD_Fileii",
       "address": "0x02016ff4",
       "size": "0x0000006c",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
       "ordinal": 103
     },
     {
-      "symbol": "func_02017060",
+      "symbol": "TrimModelFile",
       "address": "0x02017060",
       "size": "0x00000058",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",

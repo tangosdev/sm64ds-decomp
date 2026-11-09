@@ -31,7 +31,7 @@
  *   0x50 -> 0x44. The compare has to land in an int (`int b = ((mFlags &
  *   0x40000) != 0); if (b)`). mAnmModel.Render(0) itself matches.
  * - StatePause and StateSwim: `mStateTimer == 0` is ldrsh. The ROM is ldrh,
- *   so the test is `*(unsigned short *)&mStateTimer`. One word in
+ *   so the test is `(unsigned short)mStateTimer == 0`. One word in
  *   StatePause.
  * - SetState calls through PukuStateC, the incomplete class the state PMF
  *   type is declared against.
@@ -94,14 +94,12 @@ extern Vector3 data_ov090_021342d8;
    dropping the declaration renumbers this TU's @NNN locals. */
 extern "C" void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 
-// @symbol daPukupuku_c_classInit
 extern "C" {
 int *daPukupuku_c_classInit(void) {
     return (int *)new daPukupuku_c;
 }
 }
 
-// @symbol _ZN12daPukupuku_c13InitResourcesEv
 int daPukupuku_c::InitResources() {
     struct BMD_File *bmd;
     struct Vector3 v;
@@ -126,7 +124,6 @@ int daPukupuku_c::InitResources() {
     return 1;
 }
 
-// @symbol _ZN12daPukupuku_c8BehaviorEv
 int daPukupuku_c::Behavior() {
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         mdCcAcPos_c.Clear();
@@ -161,7 +158,6 @@ int daPukupuku_c::Behavior() {
     return 1;
 }
 
-// @symbol _ZN12daPukupuku_c6RenderEv
 int daPukupuku_c::Render() {
     int b = ((mFlags & 0x40000) != 0);
     if (b)
@@ -170,17 +166,14 @@ int daPukupuku_c::Render() {
     return 1;
 }
 
-// @symbol _ZN12daPukupuku_c16OnPendingDestroyEv
 void daPukupuku_c::OnPendingDestroy() {}
 
-// @symbol _ZN12daPukupuku_c16CleanupResourcesEv
 int daPukupuku_c::CleanupResources() {
     data_ov090_02134564.Release();
     data_ov090_0213455c.Release();
     return 1;
 }
 
-// @symbol _ZN12daPukupuku_c17UpdateModelMatrixEv
 /* Model matrix: position (>> 3, Vec3_Asr) and the X/Y/Z angles, built in the
  * scratch matrix and copied out. */
 void daPukupuku_c::UpdateModelMatrix() {
@@ -191,7 +184,6 @@ void daPukupuku_c::UpdateModelMatrix() {
     mAnmModel.mat4x3 = data_020a0e68;
 }
 
-// @symbol _ZN12daPukupuku_c8SetStateEPM10PukuStateCFivE
 /* Install a state record and run its enter routine, if it has one. */
 struct PukuStateC {};
 int daPukupuku_c::SetState(PukuStatePMF *p) {
@@ -202,7 +194,6 @@ int daPukupuku_c::SetState(PukuStatePMF *p) {
     return (((PukuStateC *)this)->**q)();
 }
 
-// @symbol _ZN12daPukupuku_c13InitStateSwimEv
 /* Swim enter: a random heading (one of sixteen), 50..113 frames, speed 5.0. */
 int daPukupuku_c::InitStateSwim() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
@@ -213,21 +204,19 @@ int daPukupuku_c::InitStateSwim() {
     return 1;
 }
 
-// @symbol _ZN12daPukupuku_c9StateSwimEv
 /* Swim main: past 1000.0 from home, head back home for 50 frames; turn toward
  * mTargetAngleY; pause when the timer runs out. */
 int daPukupuku_c::StateSwim() {
     if (Vec3_Dist(&mPos, &mHomePos) > 0x3e8000) {
-        *(unsigned short *)&mStateTimer = 0x32;
+        mStateTimer = 0x32;
         mTargetAngleY = Vec3_HorzAngle(&mPos, &mHomePos);
     }
     ApproachAngle(&mPrevAngleY, mTargetAngleY, 1, 0x100, 0x200);
-    if (*(unsigned short *)&mStateTimer == 0)
+    if ((unsigned short)mStateTimer == 0)
         SetState((PukuStatePMF *)&data_ov090_02134584);
     return 1;
 }
 
-// @symbol _ZN12daPukupuku_c14InitStatePauseEv
 /* Pause enter: stop for 50..113 frames. */
 int daPukupuku_c::InitStatePause() {
     unsigned int r = RandomIntInternal(&data_0209e650.value);
@@ -236,16 +225,14 @@ int daPukupuku_c::InitStatePause() {
     return 1;
 }
 
-// @symbol _ZN12daPukupuku_c10StatePauseEv
 /* Pause main: swim again when the timer runs out. */
 int daPukupuku_c::StatePause() {
-    if (*(unsigned short *)&mStateTimer == 0) {
+    if ((unsigned short)mStateTimer == 0) {
         SetState((PukuStatePMF *)&data_ov090_02134594);
     }
     return 1;
 }
 
-// @symbol _ZN12daPukupuku_c14CheckPlayerHitEv
 /* Move the hit cylinder to its body offset, then hurt the player touching
  * it unless the player is vanished. */
 void daPukupuku_c::CheckPlayerHit() {
@@ -276,10 +263,8 @@ void daPukupuku_c::CheckPlayerHit() {
     }
 }
 
-// @symbol _ZN12daPukupuku_cD0Ev
 /* D0 is emitted from ~daPukupuku_c() in the header. */
 
-// @symbol _ZN12daPukupuku_cD1Ev
 /* D1 is emitted from the same inline destructor. */
 
 /* Static-init globals (was the handwritten __sinit_ov090_02133f4c shard).

@@ -43,7 +43,6 @@ struct TimerInit {
 };
 static TimerInit sTimerInit;
 
-// @symbol _ZN5Timer7GetTimeEv
 s64 Timer::GetTime()
 {
     if (!mIsRunning)
@@ -51,7 +50,6 @@ s64 Timer::GetTime()
     return OS_GetTick() - mTime;
 }
 
-// @symbol _ZN5Timer9StopTimerEv
 void Timer::StopTimer()
 {
     if (!mIsRunning)
@@ -60,14 +58,12 @@ void Timer::StopTimer()
     mTime = OS_GetTick() - mTime;
 }
 
-// @symbol _ZN5Timer10StartTimerEv
 void Timer::StartTimer()
 {
     mIsRunning = 1;
     mTime = OS_GetTick() - mTime;
 }
 
-// @symbol _ZN5Timer10ResetTimerEv
 void Timer::ResetTimer()
 {
     mIsRunning = 0;
@@ -77,7 +73,6 @@ void Timer::ResetTimer()
 /* The C1 constructor (ResetTimer, then return this) stays an extern "C"
    helper under its address name; the Timer::Timer() spelling would rename
    the symbol. */
-// @symbol func_0201964c
 extern "C" Timer *func_0201964c(Timer *__this)
 {
     __this->ResetTimer();

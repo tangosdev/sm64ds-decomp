@@ -1,12 +1,12 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "private/spl_particle_views.h"
 #include "math/MtxStack.h"
 
 #define reg_G3_COLOR        (*(volatile u32 *)0x04000480)
 #define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
 
-extern s16 data_02082214[];                       /* the sin/cos table */
 extern void (*data_02099fbc[])(int, int, void *); /* func_0204c0a8, func_0204c0e8 */
 extern void (*data_02099fb4[])(u8, u8);           /* func_0204c24c, func_0204c194 */
 
@@ -48,8 +48,7 @@ void func_0204b028(ManagerView *mgr, ParticleElement *ptcl) {
     {
         PtclChild *child = mgr->mCurrentSystem->mDefinition->child;
         int idx = ptcl->angle >> 4;
-        data_02099fbc[child->flags.polygonRotAxis](data_02082214[idx * 2],
-                                                   data_02082214[idx * 2 + 1], &rot);
+        data_02099fbc[child->flags.polygonRotAxis](FX_SinIdx(idx), FX_CosIdx(idx), &rot);
     }
 
     {

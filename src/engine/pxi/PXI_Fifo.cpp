@@ -61,7 +61,6 @@ void PXIi_HandlerRecvFifoNotEmpty(void);
 
 /* PXI_InitFifo: clear the callback table, hook the receive IRQ, enable the
  * FIFO, then handshake with the ARM7 through the SUBPINTF nibble. */
-// @symbol PXI_InitFifo
 void PXI_InitFifo(void) {
     u32 state;
     int i;
@@ -112,7 +111,6 @@ void PXI_InitFifo(void) {
 }
 
 /* PXI_SetFifoRecvCallback. Every caller passes the callback as a void *. */
-// @symbol PXI_SetFifoRecvCallback
 void PXI_SetFifoRecvCallback(int tag, void *callback) {
     u32 saved = IRQ::Disable();
     SystemWork *work = SYSTEM_WORK;
@@ -126,14 +124,12 @@ void PXI_SetFifoRecvCallback(int tag, void *callback) {
 }
 
 /* PXI_IsCallbackReady: is `tag` registered on processor `proc`? */
-// @symbol PXI_IsCallbackReady
 int PXI_IsCallbackReady(int tag, int proc) {
     SystemWork *work = SYSTEM_WORK;
     return (((1 << tag) & work->pxiHandleChecker[proc]) != 0);
 }
 
 /* PXI_SendWordByFifo: 0 on success, -1 on a FIFO error, -2 if full. */
-// @symbol PXI_SendWordByFifo
 int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int reply) {
     PxiFifoWord word;
     u32 saved;
@@ -162,7 +158,6 @@ int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int reply) 
 /* PXIi_HandlerRecvFifoNotEmpty: drain the receive FIFO, dispatching each
  * word to its channel callback. An unhandled command (not a reply) is
  * echoed back to the ARM7 with bit 5 set. */
-// @symbol PXIi_HandlerRecvFifoNotEmpty
 void PXIi_HandlerRecvFifoNotEmpty(void) {
     PxiFifoWord word;
     int code;

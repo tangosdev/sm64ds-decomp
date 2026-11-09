@@ -1,6 +1,7 @@
 //cpp
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Ov007MenuState.h"
 #include "Ov007Sprite.h"
 #include "Ov007Work.h"
@@ -9,8 +10,6 @@
 #include "Ov007Item.h"
 
 extern "C" {
-
-extern short data_02082214[];
 
 extern unsigned short func_ov007_020c3be0(int t, int a, int b);
 extern void func_ov007_020b5f64(Ov007ItemView *view);
@@ -48,8 +47,7 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
             {
                 int degrees = (progress * (item->wiggleFrames * 0x48)) >> 0xc;
                 int angle = cstd::div(degrees << 0x10, 0x168);
-                int sinIndex;
-                short sine;
+                fx16 sine;
                 int decay;
                 u16 id;
                 int wave;
@@ -57,8 +55,7 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
                 int tilt;
 
                 angle = (u16)angle;
-                sinIndex = (angle >> 4) * 2;
-                sine = data_02082214[sinIndex];
+                sine = FX_SinIdx(angle >> 4);
                 decay = 0x1000 - progress;
                 id = item->id;
                 wave = FX_MUL(sine, decay);
