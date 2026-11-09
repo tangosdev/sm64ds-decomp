@@ -40,7 +40,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "MiniGm_SetRecord",
+      "symbol": "_ZN11dScMiniGm_c9SetRecordEiii",
       "address": "0x020bffc8",
       "size": "0x0000002c",
       "legacy_source": "src/func_ov005_020bffc8.c",
@@ -61,7 +61,7 @@
       "ordinal": 5
     },
     {
-      "symbol": "MiniGm_ClearNew",
+      "symbol": "_ZN11dScMiniGm_c8ClearNewEi",
       "address": "0x020c0030",
       "size": "0x0000004c",
       "legacy_source": "src/func_ov005_020c0030.c",
@@ -89,14 +89,14 @@
       "ordinal": 9
     },
     {
-      "symbol": "MiniGm_UpdatePageScroll",
+      "symbol": "_ZN11dScMiniGm_c16UpdatePageScrollEv",
       "address": "0x020c0140",
       "size": "0x00000110",
       "legacy_source": "src/func_ov005_020c0140.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "MiniGm_UpdateExitButton",
+      "symbol": "_ZN11dScMiniGm_c16UpdateExitButtonEv",
       "address": "0x020c0250",
       "size": "0x00000128",
       "legacy_source": "src/func_ov005_020c0250.cpp",
@@ -110,14 +110,14 @@
       "ordinal": 12
     },
     {
-      "symbol": "MiniGm_UpdatePageArrows",
+      "symbol": "_ZN11dScMiniGm_c16UpdatePageArrowsEv",
       "address": "0x020c06cc",
       "size": "0x000001ac",
       "legacy_source": "src/func_ov005_020c06cc.c",
       "ordinal": 13
     },
     {
-      "symbol": "MiniGm_UpdateGroupTabs",
+      "symbol": "_ZN11dScMiniGm_c15UpdateGroupTabsEv",
       "address": "0x020c0878",
       "size": "0x00000288",
       "legacy_source": "src/func_ov005_020c0878.cpp",
@@ -138,7 +138,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "MiniGm_DrawNewBadges",
+      "symbol": "_ZN11dScMiniGm_c13DrawNewBadgesEv",
       "address": "0x020c0f38",
       "size": "0x000000f8",
       "legacy_source": "src/func_ov005_020c0f38.c",
@@ -152,7 +152,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "MiniGm_DrawRecords",
+      "symbol": "_ZN11dScMiniGm_c11DrawRecordsEv",
       "address": "0x020c1130",
       "size": "0x00000370",
       "legacy_source": "src/func_ov005_020c1130.c",
@@ -173,7 +173,7 @@
       "ordinal": 21
     },
     {
-      "symbol": "MiniGm_LoadIconPalette",
+      "symbol": "_ZN11dScMiniGm_c15LoadIconPaletteEi",
       "address": "0x020c1688",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov005_020c1688.c",

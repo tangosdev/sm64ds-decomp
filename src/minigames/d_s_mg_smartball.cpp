@@ -20,11 +20,10 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 // leftovers:
 // - OAM::Render uses the shared static declaration from OAM.h; this TU's
 //   ten-argument overload takes no OAM object.
-// - SmartballBall_UpdatePhysics (the ball per-frame physics) stays a free extern "C"
-//   function. Compiled as C++ -- as a cMgSmartball_ball_c member or a plain
-//   free function -- mwccarm folds `angle / 0x20` into a `+= 0x800` induction
-//   accumulator in the two fan-response loops (53 words differ); the C front
-//   end keeps the divide sequence. Its callers call it by name.
+// - cMgSmartball_ball_c::UpdatePhysics (the ball per-frame physics) is defined
+//   inside an extern "C" block. Outside one, mwccarm folds `angle / 0x20` into
+//   a `+= 0x800` induction accumulator in the two fan-response loops (53 words
+//   differ, measured as a member); inside it the divide sequence stays.
 // - cMgSmartball_object_c_Construct fills the object it is given. Each derived
 //   helper then calls that class's empty destructor, which stores its vtable
 //   word. SmartballObj_ElemDtor and SmartballObj_ElemCtor are the manager
@@ -136,7 +135,7 @@ struct TVec2 {
 /* A first-vtable-slot call, as Behavior's per-object dispatch spells it. */
 typedef void (*VFunc)(void *);
 
-/* SmartballBall_UpdatePhysics's search state. */
+/* cMgSmartball_ball_c::UpdatePhysics's search state. */
 typedef struct State2 {
     int flags[7];
     int iteration;
@@ -339,7 +338,6 @@ cMgSmartball_ana_c *cMgSmartball_ana_c_Construct(cMgSmartball_ana_c *c, char *b,
 cMgSmartball_ball_c *cMgSmartball_ball_c_Construct(cMgSmartball_ball_c *c, char *b, int d, V2 *s);
 void CopyObjectVel(int *a, int *b);
 void CopyObjectPos(int *a, int *b);
-void SmartballBall_UpdatePhysics(cMgSmartball_ball_c *self);
 cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, char *a1, int a2,
                                                    V2 *src);
 }
@@ -2896,7 +2894,7 @@ void cMgSmartball_ball_c::QueueBehind() {
 
     if (val == cur) {
         if (mInPlay != 0) {
-            SmartballBall_UpdatePhysics(this);
+            UpdatePhysics();
             return;
         }
     }
@@ -2951,7 +2949,7 @@ block2:
 /* The equal-arm owner selection below preserves mwccarm's address rematerialization. */
 extern "C" { /* .c-derived member: C linkage for the whole block */
 
-void SmartballBall_UpdatePhysics(cMgSmartball_ball_c *self) {
+void cMgSmartball_ball_c::UpdatePhysics() {
     State2 state;
     V2xz work;
     /* Kept volatile (measured 2026-11-07): the ROM keeps the entry velocity in
@@ -3014,10 +3012,10 @@ void SmartballBall_UpdatePhysics(cMgSmartball_ball_c *self) {
     int *velXPtr;
     int *velZPtr;
 
-    savedVel.x = self->mVel0;
+    savedVel.x = mVel0;
     state.flags[0] = 0;
-    savedVel.z = self->mVel1;
-    self->targetIndex = -1;
+    savedVel.z = mVel1;
+    targetIndex = -1;
     state.flags[1] = 0;
     state.flags[2] = 0;
     state.flags[3] = 0;
@@ -3028,36 +3026,36 @@ void SmartballBall_UpdatePhysics(cMgSmartball_ball_c *self) {
     i = 0;
     state.iteration = 0;
     do {
-        self->hitA[i] = (u8)state.iteration;
-        self->hitC[i] = (u8)state.iteration;
-        self->hitB[i] = (u8)state.iteration;
+        hitA[i] = (u8)state.iteration;
+        hitC[i] = (u8)state.iteration;
+        hitB[i] = (u8)state.iteration;
         i++;
     } while (i < 0x20);
-    self->anyHit = (u8)state.iteration;
-    self->specialHit = (u8)state.iteration;
+    anyHit = (u8)state.iteration;
+    specialHit = (u8)state.iteration;
     state.iteration = 0;
 
-    if (self->mCurrent1 >= 0x77000) {
+    if (mCurrent1 >= 0x77000) {
         int clearIndex = state.iteration;
         do {
-            self->nearby[clearIndex] = 0;
+            nearby[clearIndex] = 0;
             clearIndex++;
         } while (clearIndex < 0x19);
     } else {
         int probeIndex = state.iteration;
         do {
-            self->nearby[probeIndex] = 0;
-            if (probeIndex < ((dScMgSmartball_c *)self->mpManager)->mKinokoCount) {
-                dist.x = self->mCurrent0;
-                dist.z = self->mCurrent1;
-                mgr = ((dScMgSmartball_c *)self->mpManager);
+            nearby[probeIndex] = 0;
+            if (probeIndex < ((dScMgSmartball_c *)mpManager)->mKinokoCount) {
+                dist.x = mCurrent0;
+                dist.z = mCurrent1;
+                mgr = ((dScMgSmartball_c *)mpManager);
                 CopyObjectPos((int *)&pos0, (int *)(probeIndex >= mgr->mKinokoCount
                                                         ? (void *)0
                                                         : mgr->mpKinokos[probeIndex]));
                 dist.x -= pos0.x;
                 dist.z -= pos0.z;
                 if (func_0203d5bc((int *)&dist) <= 0x900000LL) {
-                    self->nearby[probeIndex] = 1;
+                    nearby[probeIndex] = 1;
                     state.iteration = 1;
                 }
             }
@@ -3082,38 +3080,38 @@ outer_loop:
     blocked = angle;
     i = angle;
     do {
-        self->hit[i] = (u8)state.zero;
+        hit[i] = (u8)state.zero;
         work.x = state.zero;
         work.z = state.zero;
-        work.z += self->mRadius;
+        work.z += mRadius;
         func_0203d388((V2 *)&work, angle);
-        dot = func_0203d570((V2 *)&work, (V2 *)(V2xz *)&self->mVel0);
+        dot = func_0203d570((V2 *)&work, (V2 *)(V2xz *)&mVel0);
         if (dot >= 0) {
-            work.x += self->mCurrent0;
-            work.z += self->mCurrent1;
-            if ((u8)((dScMgSmartball_c *)self->mpManager)->param1 == 0) {
+            work.x += mCurrent0;
+            work.z += mCurrent1;
+            if ((u8)((dScMgSmartball_c *)mpManager)->param1 == 0) {
                 pos1 = work;
-                if (((cMgSmartball_ball_c *)self)->NeedsRespawn((int *)&pos1) != 0) {
-                    self->hit[i] = 1;
-                    self->hitA[i] = 1;
-                    self->anyHit = 1;
+                if (NeedsRespawn((int *)&pos1) != 0) {
+                    hit[i] = 1;
+                    hitA[i] = 1;
+                    anyHit = 1;
                     blocked = 1;
                     goto final_checks;
                 } else {
                     pos2 = work;
-                    if (((cMgSmartball_ball_c *)self)->OnSlope((int *)&pos2) != 0) {
-                        self->hit[i] = 1;
-                        self->hitA[i] = 1;
-                        self->anyHit = 1;
+                    if (OnSlope((int *)&pos2) != 0) {
+                        hit[i] = 1;
+                        hitA[i] = 1;
+                        anyHit = 1;
                         state.flags[0] = 1;
                         blocked = 1;
                     } else {
                         pos3 = work;
-                        if (((cMgSmartball_ball_c *)self)->CheckExits((int *)&pos3) != 0) {
-                            self->hit[i] = 1;
-                            self->hitA[i] = 1;
-                            self->anyHit = 1;
-                            self->hitB[i] = 1;
+                        if (CheckExits((int *)&pos3) != 0) {
+                            hit[i] = 1;
+                            hitA[i] = 1;
+                            anyHit = 1;
+                            hitB[i] = 1;
                             state.flags[2] = 1;
                             blocked = 1;
                         }
@@ -3121,61 +3119,60 @@ outer_loop:
                 }
             } else {
                 pos4 = work;
-                if (((cMgSmartball_ball_c *)self)->NeedsRespawn((int *)&pos4) != 0) {
-                    self->hit[i] = 1;
-                    self->hitA[i] = 1;
-                    self->anyHit = 1;
+                if (NeedsRespawn((int *)&pos4) != 0) {
+                    hit[i] = 1;
+                    hitA[i] = 1;
+                    anyHit = 1;
                     blocked = 1;
                 } else {
                     pos5 = work;
-                    if (((cMgSmartball_ball_c *)self)->CheckExits((int *)&pos5) != 0) {
-                        self->hit[i] = 1;
-                        self->hitA[i] = 1;
-                        self->anyHit = 1;
-                        self->hitB[i] = 1;
+                    if (CheckExits((int *)&pos5) != 0) {
+                        hit[i] = 1;
+                        hitA[i] = 1;
+                        anyHit = 1;
+                        hitB[i] = 1;
                         state.flags[2] = 1;
                         blocked = 1;
                         goto final_checks;
                     } else {
                         if (state.iteration == 1) {
                             pos6 = work;
-                            if (((cMgSmartball_ball_c *)self)->HitKinokos((int *)&pos6) != 0) {
-                                self->hit[i] = 1;
-                                self->hitA[i] = 1;
-                                self->anyHit = 1;
-                                self->specialHit = 1;
+                            if (HitKinokos((int *)&pos6) != 0) {
+                                hit[i] = 1;
+                                hitA[i] = 1;
+                                anyHit = 1;
+                                specialHit = 1;
                                 state.flags[3] = 1;
                                 blocked = 1;
                                 goto final_checks;
                             }
                         }
                         pos7 = work;
-                        if (((cMgSmartball_ball_c *)self)->HitDokans((int *)&pos7) != 0) {
-                            self->hit[i] = 1;
-                            self->hitA[i] = 1;
-                            self->anyHit = 1;
+                        if (HitDokans((int *)&pos7) != 0) {
+                            hit[i] = 1;
+                            hitA[i] = 1;
+                            anyHit = 1;
                             blocked = 1;
                         } else {
                             pos8 = work;
-                            if (((cMgSmartball_ball_c *)self)->HitPakkuns((int *)&pos8) != 0) {
-                                self->hit[i] = 1;
-                                self->hitA[i] = 1;
-                                self->anyHit = 1;
+                            if (HitPakkuns((int *)&pos8) != 0) {
+                                hit[i] = 1;
+                                hitA[i] = 1;
+                                anyHit = 1;
                                 blocked = 1;
                             } else {
                                 pos9 = work;
-                                if (((cMgSmartball_ball_c *)self)->HitSwitches((int *)&pos9) != 0) {
-                                    self->hit[i] = 1;
-                                    self->hitA[i] = 1;
-                                    self->anyHit = 1;
+                                if (HitSwitches((int *)&pos9) != 0) {
+                                    hit[i] = 1;
+                                    hitA[i] = 1;
+                                    anyHit = 1;
                                     blocked = 1;
                                 } else {
                                     pos10 = work;
-                                    if (((cMgSmartball_ball_c *)self)->HitWing((int *)&pos10) !=
-                                        0) {
-                                        self->hit[i] = 1;
-                                        self->hitA[i] = 1;
-                                        self->anyHit = 1;
+                                    if (HitWing((int *)&pos10) != 0) {
+                                        hit[i] = 1;
+                                        hitA[i] = 1;
+                                        anyHit = 1;
                                         blocked = 1;
                                         state.flags[4] = 1;
                                     }
@@ -3186,26 +3183,26 @@ outer_loop:
                 }
             }
         } else {
-            work.x += self->mCurrent0;
-            work.z += self->mCurrent1;
+            work.x += mCurrent0;
+            work.z += mCurrent1;
         }
 
     final_checks:
         if (blocked == 0) {
             pos11 = work;
-            if (((cMgSmartball_ball_c *)self)->AtSpring((int *)&pos11) != 0) {
-                self->hit[i] = 1;
-                self->hitA[i] = 1;
-                self->anyHit = 1;
+            if (AtSpring((int *)&pos11) != 0) {
+                hit[i] = 1;
+                hitA[i] = 1;
+                anyHit = 1;
                 blocked = 1;
                 if (angle == 0)
                     state.flags[5] = 1;
             } else {
                 pos12 = work;
-                if (((cMgSmartball_ball_c *)self)->HitPropellers((int *)&pos12) != 0) {
-                    self->hit[i] = 1;
-                    self->hitA[i] = 1;
-                    self->anyHit = 1;
+                if (HitPropellers((int *)&pos12) != 0) {
+                    hit[i] = 1;
+                    hitA[i] = 1;
+                    anyHit = 1;
                     blocked = 1;
                     state.flags[1] = 1;
                 }
@@ -3215,50 +3212,49 @@ outer_loop:
         i++;
     } while (i < 0x20);
 
-    if (state.flags[6] < 0x11 && self->state3a == 0) {
+    if (state.flags[6] < 0x11 && state3a == 0) {
         entityLoopIndex = 0;
-        if (((dScMgSmartball_c *)self->mpManager)->mBallCount > 0) {
+        if (((dScMgSmartball_c *)mpManager)->mBallCount > 0) {
             do {
-                if (entityLoopIndex != self->mIndex) {
+                if (entityLoopIndex != mIndex) {
                     other = entityLoopIndex >= 0xd
                                 ? state.null34
-                                : ((dScMgSmartball_c *)self->mpManager)->mpBalls[entityLoopIndex];
+                                : ((dScMgSmartball_c *)mpManager)->mpBalls[entityLoopIndex];
                     if (((cMgSmartball_ball_c *)other)->state3a == 0) {
-                        other =
-                            entityLoopIndex >= 0xd
-                                ? state.null38
-                                : ((dScMgSmartball_c *)self->mpManager)->mpBalls[entityLoopIndex];
+                        other = entityLoopIndex >= 0xd
+                                    ? state.null38
+                                    : ((dScMgSmartball_c *)mpManager)->mpBalls[entityLoopIndex];
                         if (((cMgSmartball_object_c *)other)->mIsActive != 0) {
-                            other = entityLoopIndex >= 0xd ? (void *)state.null3c
-                                                           : ((dScMgSmartball_c *)self->mpManager)
-                                                                 ->mpBalls[entityLoopIndex];
+                            other = entityLoopIndex >= 0xd
+                                        ? (void *)state.null3c
+                                        : ((dScMgSmartball_c *)mpManager)->mpBalls[entityLoopIndex];
                             CopyObjectPos((int *)&entityPos, (int *)other);
-                            Vec2_Sub((int *)&entityDelta, (int *)(V2xz *)&self->mCurrent0,
+                            Vec2_Sub((int *)&entityDelta, (int *)(V2xz *)&mCurrent0,
                                      (int *)&entityPos);
                             delta = entityDelta;
                             if (func_0203d5bc((int *)&delta) <= 0x100000LL) {
                                 angle = state.angle40;
-                                mgr = ((dScMgSmartball_c *)self->mpManager);
+                                mgr = ((dScMgSmartball_c *)mpManager);
                                 other = entityLoopIndex >= 0xd ? (void *)angle
                                                                : mgr->mpBalls[entityLoopIndex];
                                 CopyObjectPos((int *)&entityPos2, (int *)other);
                                 otherPos = entityPos2;
-                                if (self->mCurrent1 < 0x90000 || self->mCurrent0 <= otherPos.x) {
+                                if (mCurrent1 < 0x90000 || mCurrent0 <= otherPos.x) {
                                     i = state.index44;
                                     do {
-                                        work.z = self->mRadius;
+                                        work.z = mRadius;
                                         work.x = 0;
                                         func_0203d388((V2 *)&work, angle);
-                                        work.x += self->mCurrent0;
-                                        work.z += self->mCurrent1;
+                                        work.x += mCurrent0;
+                                        work.z += mCurrent1;
                                         Vec2_Sub((int *)&radialDelta, (int *)&work,
                                                  (int *)&otherPos);
                                         delta = radialDelta;
                                         if (func_0203d5bc((int *)&delta) < 0x40000LL) {
-                                            self->targetIndex = entityLoopIndex;
-                                            self->hit[i] = 1;
-                                            self->hitA[i] = 1;
-                                            self->hitC[i] = 1;
+                                            targetIndex = entityLoopIndex;
+                                            hit[i] = 1;
+                                            hitA[i] = 1;
+                                            hitC[i] = 1;
                                             blocked = 1;
                                         }
                                         angle = (s16)(angle + 0x800);
@@ -3270,7 +3266,7 @@ outer_loop:
                     }
                 }
                 entityLoopIndex++;
-            } while (entityLoopIndex < ((dScMgSmartball_c *)self->mpManager)->mBallCount);
+            } while (entityLoopIndex < ((dScMgSmartball_c *)mpManager)->mBallCount);
         }
     }
 
@@ -3279,7 +3275,7 @@ outer_loop:
     angle = state.zero48;
     i = state.zero48;
     do {
-        if (self->hit[i] == 1) {
+        if (hit[i] == 1) {
             unit.x = state.zero4c;
             unit.z = state.baseZ;
             func_0203d388((V2 *)&unit, angle);
@@ -3292,12 +3288,12 @@ outer_loop:
     func_0203d434((V2 *)&normal);
     func_0203d630((V2 *)&normal, state.baseZ);
     {
-        V2xz *position = (V2xz *)&self->mCurrent0;
-        cMgSmartball_ball_c *owner = position ? self : self;
+        V2xz *position = (V2xz *)&mCurrent0;
+        cMgSmartball_ball_c *owner = position ? this : this;
         int *pz = &owner->mCurrent1;
         *(int *)((int)position) -= normal.x;
         *pz -= normal.z;
-        Vec2_Sub((int *)&moveDelta, (int *)position, (int *)(V2xz *)&self->mSnapshot0);
+        Vec2_Sub((int *)&moveDelta, (int *)position, (int *)(V2xz *)&mSnapshot0);
     }
     dot = Vec2_Len((const Vector2 *)&moveDelta);
     state.depth += 0x80;
@@ -3311,7 +3307,7 @@ outer_loop:
     if (state.flags[2] == 1) {
         angle = 0;
         do {
-            if (self->hitB[i] == 1) {
+            if (hitB[i] == 1) {
                 radial.x = 0;
                 radial.z = 0x1000;
                 func_0203d388((V2 *)&radial, (s16)(angle / 0x20));
@@ -3324,7 +3320,7 @@ outer_loop:
     } else {
         angle = 0;
         do {
-            if (self->hitA[i] == 1 && self->hitC[i] == 0) {
+            if (hitA[i] == 1 && hitC[i] == 0) {
                 radial.x = 0;
                 radial.z = 0x1000;
                 func_0203d388((V2 *)&radial, (s16)(angle / 0x20));
@@ -3338,7 +3334,7 @@ outer_loop:
 
     if (response.x != 0 || response.z != 0) {
         func_0203d480((V2 *)&normalized, (V2 *)&response);
-        dot = FX_MUL(self->mVel0, response.x) + FX_MUL(self->mVel1, response.z);
+        dot = FX_MUL(mVel0, response.x) + FX_MUL(mVel1, response.z);
         if (state.flags[5] == 1) {
             responseScale = FX_MUL(dot, 0x1800);
         } else if (state.flags[0] == 1) {
@@ -3354,8 +3350,8 @@ outer_loop:
         } else if (state.flags[3] == 1) {
             u32 randomScale;
             u32 randomAngle;
-            self->mVel0 = 0;
-            self->mVel1 = 0;
+            mVel0 = 0;
+            mVel1 = 0;
             responseScale = -0x2000;
             randomScale =
                 ((((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0x10) >> 15) << 12);
@@ -3369,121 +3365,118 @@ outer_loop:
             randomScale =
                 ((((((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) * 0x10) >> 15) << 12);
             responseScale += FIX_MUL_SU(responseScale, randomScale >> 6);
-            if (self->mCurrent0 < 0x18000 && response.z > 0) {
+            if (mCurrent0 < 0x18000 && response.z > 0) {
                 response.x = 0;
                 response.z = 0x1000;
             }
         } else {
             responseScale = FX_MUL(dot, 0x1200);
         }
-        velXPtr = (int *)(int)(&self->mVel0);
+        velXPtr = (int *)(int)(&mVel0);
         *velXPtr -= FX_MUL(responseScale, response.x);
-        velZPtr = (int *)(int)(&self->mVel1);
+        velZPtr = (int *)(int)(&mVel1);
         *velZPtr -= FX_MUL(responseScale, response.z);
     }
 
     if (state.flags[5] == 1) {
-        if (self->mCurrent0 < 0xd0000)
+        if (mCurrent0 < 0xd0000)
             return;
-        if (self->mCurrent0 < 0xd8000) {
-            self->mCurrent0 = 0xd8000;
+        if (mCurrent0 < 0xd8000) {
+            mCurrent0 = 0xd8000;
             return;
         }
-        if (self->mCurrent0 < 0xe8000)
-            self->mCurrent0 = 0xe8000;
-        CopyObjectPos((int *)&specialPos, (int *)((dScMgSmartball_c *)self->mpManager)->mpSpring);
-        self->mCurrent1 = specialPos.z - 0x20001 - self->mRadius;
-        GetObjectDelta((void *)&specialDelta0,
-                       (char *)((dScMgSmartball_c *)self->mpManager)->mpSpring);
+        if (mCurrent0 < 0xe8000)
+            mCurrent0 = 0xe8000;
+        CopyObjectPos((int *)&specialPos, (int *)((dScMgSmartball_c *)mpManager)->mpSpring);
+        mCurrent1 = specialPos.z - 0x20001 - mRadius;
+        GetObjectDelta((void *)&specialDelta0, (char *)((dScMgSmartball_c *)mpManager)->mpSpring);
         if (specialDelta0.z >= -0x1000)
             return;
-        GetObjectDelta((void *)&specialDelta1,
-                       (char *)((dScMgSmartball_c *)self->mpManager)->mpSpring);
-        if (self->mVel1 < specialDelta1.z)
+        GetObjectDelta((void *)&specialDelta1, (char *)((dScMgSmartball_c *)mpManager)->mpSpring);
+        if (mVel1 < specialDelta1.z)
             return;
-        self->mVel0 = 0;
-        GetObjectDelta((void *)&specialDelta2,
-                       (char *)((dScMgSmartball_c *)self->mpManager)->mpSpring);
-        self->mVel1 = specialDelta2.z;
-        if (self->mVel1 < -0x6000)
-            self->mVel1 = (self->mVel1 + 0x6000) / 4 - 0x6000;
+        mVel0 = 0;
+        GetObjectDelta((void *)&specialDelta2, (char *)((dScMgSmartball_c *)mpManager)->mpSpring);
+        mVel1 = specialDelta2.z;
+        if (mVel1 < -0x6000)
+            mVel1 = (mVel1 + 0x6000) / 4 - 0x6000;
 
-        if (self->soundTimer == 0) {
-            if (self->mVel1 < -0x6000) {
-                func_02012718(0x16d, self->mCurrent0);
-                func_02012718(0x16e, self->mCurrent0);
+        if (soundTimer == 0) {
+            if (mVel1 < -0x6000) {
+                func_02012718(0x16d, mCurrent0);
+                func_02012718(0x16e, mCurrent0);
             } else {
-                volume = (-self->mVel1 << 7) / 0x6000;
+                volume = (-mVel1 << 7) / 0x6000;
                 if (volume > 0x7f)
                     volume = 0x7f;
                 if (volume < 0)
                     volume = 0;
-                func_020126ac(0x16d, 5, volume, 0, func_020126e8(self->mCurrent0));
+                func_020126ac(0x16d, 5, volume, 0, func_020126e8(mCurrent0));
                 if (volume >= 0x40)
-                    func_020126ac(0x16e, 5, volume, 0, func_020126e8(self->mCurrent0));
+                    func_020126ac(0x16e, 5, volume, 0, func_020126e8(mCurrent0));
             }
-            self->soundTimer = 5;
+            soundTimer = 5;
         }
-        if (self->soundPlayed != 0)
+        if (soundPlayed != 0)
             return;
-        if (self->mVel1 < -0x6000)
-            func_02012718(0x16e, self->mCurrent0);
-        self->soundPlayed = 1;
+        if (mVel1 < -0x6000)
+            func_02012718(0x16e, mCurrent0);
+        soundPlayed = 1;
         return;
     }
 
     if (state.flags[0] == 1) {
         event0.x = savedVel.x;
         event0.z = savedVel.z;
-        ((cMgSmartball_ball_c *)self)->PlayHitSound(0x171, (int *)&event0);
+        PlayHitSound(0x171, (int *)&event0);
     } else if (state.flags[1] == 1) {
         event1.x = savedVel.x;
         event1.z = savedVel.z;
-        ((cMgSmartball_ball_c *)self)->PlayHitSound(0x172, (int *)&event1);
+        PlayHitSound(0x172, (int *)&event1);
     } else if (state.flags[2] == 1) {
         event2.x = savedVel.x;
         event2.z = savedVel.z;
-        ((cMgSmartball_ball_c *)self)->PlayHitSound(0x16f, (int *)&event2);
+        PlayHitSound(0x16f, (int *)&event2);
     } else if (state.flags[4] == 1) {
         event3.x = savedVel.x;
         event3.z = savedVel.z;
-        ((cMgSmartball_ball_c *)self)->PlayHitSound(0x1a3, (int *)&event3);
+        PlayHitSound(0x1a3, (int *)&event3);
     }
 
-    dot = self->mRadius + 0x10000;
+    dot = mRadius + 0x10000;
     square = FX_MUL(dot, dot);
     i = 0;
-    if (((dScMgSmartball_c *)self->mpManager)->mAnaCount <= 0)
+    if (((dScMgSmartball_c *)mpManager)->mAnaCount <= 0)
         return;
     do {
-        other = i >= ((dScMgSmartball_c *)self->mpManager)->mAnaCount
+        other = i >= ((dScMgSmartball_c *)mpManager)->mAnaCount
                     ? (void *)0
-                    : ((dScMgSmartball_c *)self->mpManager)->mpAnas[i];
+                    : ((dScMgSmartball_c *)mpManager)->mpAnas[i];
         if (((cMgSmartball_ana_c *)other)->HasBall() == 0) {
-            hazardDelta.x = self->mCurrent0;
-            hazardDelta.z = self->mCurrent1;
-            other = i >= ((dScMgSmartball_c *)self->mpManager)->mAnaCount
+            hazardDelta.x = mCurrent0;
+            hazardDelta.z = mCurrent1;
+            other = i >= ((dScMgSmartball_c *)mpManager)->mAnaCount
                         ? (void *)0
-                        : ((dScMgSmartball_c *)self->mpManager)->mpAnas[i];
+                        : ((dScMgSmartball_c *)mpManager)->mpAnas[i];
             CopyObjectPos((int *)&hazardPos, (int *)other);
             hazardDelta.x -= hazardPos.x;
             hazardDelta.z -= hazardPos.z;
             hazardDelta.z *= 2;
             if (func_0203d5bc((int *)&hazardDelta) < square) {
-                dot = self->mRadius + 0x10000 - Vec2_Len((const Vector2 *)&hazardDelta);
-                if (self->mRadius < dot) {
-                    other = i >= ((dScMgSmartball_c *)self->mpManager)->mAnaCount
+                dot = mRadius + 0x10000 - Vec2_Len((const Vector2 *)&hazardDelta);
+                if (mRadius < dot) {
+                    other = i >= ((dScMgSmartball_c *)mpManager)->mAnaCount
                                 ? (void *)0
-                                : ((dScMgSmartball_c *)self->mpManager)->mpAnas[i];
+                                : ((dScMgSmartball_c *)mpManager)->mpAnas[i];
                     CopyObjectPos((int *)&hazardPos2, (int *)other);
-                    self->mSwallowX = hazardPos2.x;
-                    self->mSwallowZ = hazardPos2.z;
-                    other = i >= ((dScMgSmartball_c *)self->mpManager)->mAnaCount
+                    mSwallowX = hazardPos2.x;
+                    mSwallowZ = hazardPos2.z;
+                    other = i >= ((dScMgSmartball_c *)mpManager)->mAnaCount
                                 ? (void *)0
-                                : ((dScMgSmartball_c *)self->mpManager)->mpAnas[i];
+                                : ((dScMgSmartball_c *)mpManager)->mpAnas[i];
                     ((cMgSmartball_ana_c *)other)->Swallow();
-                    ((cMgSmartball_ball_c *)self)->ArmExpire(0x80);
-                    self->state3a = 1;
+                    ArmExpire(0x80);
+                    state3a = 1;
                     return;
                 }
                 correction = hazardDelta;
@@ -3494,15 +3487,15 @@ outer_loop:
                 correction.z /= 64;
                 correctionX = correction.x;
                 correctionZ = correction.z;
-                velXPtr = (int *)(int)(&self->mVel0);
+                velXPtr = (int *)(int)(&mVel0);
                 *velXPtr -= correctionX;
-                velZPtr = (int *)(int)(&self->mVel1);
+                velZPtr = (int *)(int)(&mVel1);
                 *velZPtr -= correction.z;
                 return;
             }
         }
         i++;
-    } while (i < ((dScMgSmartball_c *)self->mpManager)->mAnaCount);
+    } while (i < ((dScMgSmartball_c *)mpManager)->mAnaCount);
 }
 }
 
@@ -3719,7 +3712,7 @@ after2:
     if (mIsWaiting == 1) {
         QueueBehind();
     } else {
-        SmartballBall_UpdatePhysics(this);
+        UpdatePhysics();
         if (mExitGateOpen == 0) {
             vc.x = 0x20000;
             vc.z = -0x8000;

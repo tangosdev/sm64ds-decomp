@@ -24,9 +24,6 @@
  */
 
 // leftovers:
-// - Snowball_UpdateCamera stays a free function with its char* parameter and
-//   C linkage (decl_common.h declares it that way; callers are ResetScene and
-//   Behavior in this TU).
 // - dScMgSnowball_c::Vec2, the collision ring's hit pair, stays its own nested
 //   type with a destructor and no constructor (see the header); it was not
 //   swapped for Vector2 in the pass that typed mArray1/mArray2.
@@ -627,42 +624,39 @@ void dScMgSnowball_c::UpdateSnowball() {
     }
 }
 
-extern "C" {
-void Snowball_UpdateCamera(char *scene) {
-    dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
+void dScMgSnowball_c::UpdateCamera() {
     int t = cstd::fdiv(0xc0000, data_02082314);
     Vector3 v;
     int x, y;
-    if (self->mScreensSwapped == 0) {
-        self->mCamera.mLookAt.x = 0;
-        self->mCamera.mLookAt.y = 0xd0000;
-        self->mCamera.mLookAt.z = 0;
-        self->mCamera.mPos.x = 0;
-        self->mCamera.mPos.y = 0;
-        self->mCamera.mPos.z = t;
-        self->mCamera.mFovAngle = 0x200;
-        Camera_UpdateMatrices(&self->mCamera);
+    if (mScreensSwapped == 0) {
+        mCamera.mLookAt.x = 0;
+        mCamera.mLookAt.y = 0xd0000;
+        mCamera.mLookAt.z = 0;
+        mCamera.mPos.x = 0;
+        mCamera.mPos.y = 0;
+        mCamera.mPos.z = t;
+        mCamera.mFovAngle = 0x200;
+        Camera_UpdateMatrices(&mCamera);
     } else {
-        self->mCamera.mLookAt.x = 0;
-        self->mCamera.mLookAt.y = -0x60000;
-        self->mCamera.mLookAt.z = 0;
-        self->mCamera.mPos.x = 0;
-        self->mCamera.mPos.y = 0;
-        self->mCamera.mPos.z = t;
-        self->mCamera.mFovAngle = 0x200;
-        Camera_UpdateMatrices(&self->mCamera);
+        mCamera.mLookAt.x = 0;
+        mCamera.mLookAt.y = -0x60000;
+        mCamera.mLookAt.z = 0;
+        mCamera.mPos.x = 0;
+        mCamera.mPos.y = 0;
+        mCamera.mPos.z = t;
+        mCamera.mFovAngle = 0x200;
+        Camera_UpdateMatrices(&mCamera);
     }
-    y = self->mScrollY - self->mPosY + 0x110000;
-    x = self->mPosX - 0x80000;
+    y = mScrollY - mPosY + 0x110000;
+    x = mPosX - 0x80000;
     v.x = x;
     v.y = y;
     v.z = 0;
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, self->mHeadingAngle);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mRollAngle);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
-    *(Mtx43 *)&self->mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
-}
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mHeadingAngle);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mRollAngle);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
 void dScMgSnowball_c::RedrawCourse() {
@@ -1252,7 +1246,7 @@ void dScMgSnowball_c::ResetScene() {
     Quaternion_FromVector3(mSpinQuat, &sUnitY, (struct Vector3 *)mSpinAxis);
     Quaternion_Normalize(mSpinQuat);
 
-    Snowball_UpdateCamera((char *)this);
+    UpdateCamera();
     for (i = 0; i < 0x20; i++) {
         mProbeHit[i] = 0;
         mProbePush[i] = 0;
@@ -1705,7 +1699,7 @@ s32 dScMgSnowball_c::Behavior() {
 
     Bit_UpdateAll();
     SnowSpray_UpdateAll();
-    Snowball_UpdateCamera((char *)this);
+    UpdateCamera();
     return 1;
 }
 

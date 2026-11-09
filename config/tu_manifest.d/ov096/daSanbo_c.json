@@ -71,171 +71,171 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_021357b4Ev",
+      "symbol": "_ZN9daSanbo_c7GetHeadEv",
       "address": "0x021357b4",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov096_021357b4.c",
+      "legacy_source": "src/GetHead.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02135800Ev",
+      "symbol": "_ZN9daSanbo_c13UnlinkSegmentEv",
       "address": "0x02135800",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov096_02135800.cpp",
+      "legacy_source": "src/UnlinkSegment.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02135838Ev",
+      "symbol": "_ZN9daSanbo_c15GetSegmentIndexEv",
       "address": "0x02135838",
       "size": "0x00000024",
-      "legacy_source": "src/func_ov096_02135838.c",
+      "legacy_source": "src/GetSegmentIndex.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_0213585cEv",
+      "symbol": "_ZN9daSanbo_c14PoofAndDestroyEv",
       "address": "0x0213585c",
       "size": "0x0000001c",
-      "legacy_source": "src/func_ov096_0213585c.c",
+      "legacy_source": "src/PoofAndDestroy.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02135878Ei",
+      "symbol": "_ZN9daSanbo_c16CalcShyAwayAngleEi",
       "address": "0x02135878",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov096_02135878.cpp",
+      "legacy_source": "src/CalcShyAwayAngle.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_021358c8Ev",
+      "symbol": "_ZN9daSanbo_c15UpdateWanderYawEv",
       "address": "0x021358c8",
       "size": "0x00000080",
-      "legacy_source": "src/func_ov096_021358c8.cpp",
+      "legacy_source": "src/UpdateWanderYaw.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02135948Ev",
+      "symbol": "_ZN9daSanbo_c13HandleAttacksEv",
       "address": "0x02135948",
       "size": "0x000004e4",
-      "legacy_source": "src/func_ov096_02135948.cpp",
+      "legacy_source": "src/HandleAttacks.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02135e2cEP10dBgCh_Actr",
+      "symbol": "_ZN9daSanbo_c19UpdateFloorAndWallsEP10dBgCh_Actr",
       "address": "0x02135e2c",
       "size": "0x000000d0",
-      "legacy_source": "src/func_ov096_02135e2c.cpp",
+      "legacy_source": "src/UpdateFloorAndWalls.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02135efcEv",
+      "symbol": "_ZN9daSanbo_c20UpdateModelAndShadowEv",
       "address": "0x02135efc",
       "size": "0x000001c8",
-      "legacy_source": "src/func_ov096_02135efc.cpp",
+      "legacy_source": "src/UpdateModelAndShadow.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_021360c4Ev",
+      "symbol": "_ZN9daSanbo_c14UpdateMegaKillEv",
       "address": "0x021360c4",
       "size": "0x00000070",
-      "legacy_source": "src/func_ov096_021360c4.cpp",
+      "legacy_source": "src/UpdateMegaKill.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02136134Ev",
+      "symbol": "_ZN9daSanbo_c13EnterMegaKillEv",
       "address": "0x02136134",
       "size": "0x00000130",
-      "legacy_source": "src/func_ov096_02136134.cpp",
+      "legacy_source": "src/EnterMegaKill.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02136264Ev",
+      "symbol": "_ZN9daSanbo_c26UpdateStackedOnGrowingBodyEv",
       "address": "0x02136264",
       "size": "0x00000150",
-      "legacy_source": "src/func_ov096_02136264.c",
+      "legacy_source": "src/UpdateStackedOnGrowingBody.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_021363b4Ev",
+      "symbol": "_ZN9daSanbo_c19EnterStackedGrowingEv",
       "address": "0x021363b4",
       "size": "0x00000010",
-      "legacy_source": "src/func_ov096_021363b4.c",
+      "legacy_source": "src/EnterStackedGrowing.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_021363c4Ev",
+      "symbol": "_ZN9daSanbo_c13UpdateInMouthEv",
       "address": "0x021363c4",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov096_021363c4.c",
+      "legacy_source": "src/UpdateInMouth.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_0213640cEv",
+      "symbol": "_ZN9daSanbo_c12EnterInMouthEv",
       "address": "0x0213640c",
       "size": "0x00000028",
-      "legacy_source": "src/func_ov096_0213640c.c",
+      "legacy_source": "src/EnterInMouth.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02136434Ev",
+      "symbol": "_ZN9daSanbo_c15UpdateKnockbackEv",
       "address": "0x02136434",
       "size": "0x00000100",
-      "legacy_source": "src/func_ov096_02136434.cpp",
+      "legacy_source": "src/UpdateKnockback.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02136534Ev",
+      "symbol": "_ZN9daSanbo_c14EnterKnockbackEv",
       "address": "0x02136534",
       "size": "0x000000a0",
-      "legacy_source": "src/func_ov096_02136534.cpp",
+      "legacy_source": "src/EnterKnockback.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_021365d4Ev",
+      "symbol": "_ZN9daSanbo_c12UpdateLeaderEv",
       "address": "0x021365d4",
       "size": "0x00000138",
-      "legacy_source": "src/func_ov096_021365d4.c",
+      "legacy_source": "src/UpdateLeader.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_0213670cEv",
+      "symbol": "_ZN9daSanbo_c11EnterLeaderEv",
       "address": "0x0213670c",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov096_0213670c.c",
+      "legacy_source": "src/EnterLeader.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02136754Ev",
+      "symbol": "_ZN9daSanbo_c17UpdateStackedBodyEv",
       "address": "0x02136754",
       "size": "0x00000150",
-      "legacy_source": "src/func_ov096_02136754.c",
+      "legacy_source": "src/UpdateStackedBody.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_021368a4Ev",
+      "symbol": "_ZN9daSanbo_c12EnterStackedEv",
       "address": "0x021368a4",
       "size": "0x00000010",
-      "legacy_source": "src/func_ov096_021368a4.c",
+      "legacy_source": "src/EnterStacked.c",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_021368b4Ev",
+      "symbol": "_ZN9daSanbo_c15CallStateUpdateEv",
       "address": "0x021368b4",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov096_021368b4.cpp",
+      "legacy_source": "src/CallStateUpdate.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_021368f0Ev",
+      "symbol": "_ZN9daSanbo_c14CallStateEnterEv",
       "address": "0x021368f0",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov096_021368f0.cpp",
+      "legacy_source": "src/CallStateEnter.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN9daSanbo_c19func_ov096_02136928Ei",
+      "symbol": "_ZN9daSanbo_c11ChangeStateEi",
       "address": "0x02136928",
       "size": "0x0000001c",
-      "legacy_source": "src/func_ov096_02136928.c",
+      "legacy_source": "src/ChangeState.c",
       "ordinal": 27
     },
     {
@@ -457,16 +457,16 @@
   ],
   "notes": [
     "Historical tubuild-create reconciliation notes follow. They describe the imported fragments, not current source acceptance. The source-review checkpoint below records later corrections and remaining work; notes/translation-unit-reconstruction-plan.md section 7.3 describes the generator's limits.",
-    "tubuild create warning: RAW: src/func_ov096_021358c8.cpp (func_ov096_021358c8) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov096_02135948.cpp (func_ov096_02135948) did not split (the definition is inside the extern \"C\" block opened on line 14, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov096_02135e2c.cpp (func_ov096_02135e2c) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov096_021360c4.cpp (func_ov096_021360c4) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov096_02136434.cpp (func_ov096_02136434) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov096_02135800' differs between the legacy file that used to hold func_ov096_02136134 and the one that held func_ov096_0213640c; kept the first, corrected to `extern void func_ov096_02135800(char *c)`. The kept declaration returned `int` and the loser was `extern void func_ov096_02135800(void *)`; the definition in this TU returns void and takes char *, so the live spelling takes the return type from the loser and the parameter type from the winner. One declaration survives, at file scope.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov096_02135800' differs between the legacy file that used to hold func_ov096_02136134 and the one that held func_ov096_02136534; kept the first, same single file-scope declaration as the record above. This loser was `extern \"C\" void func_ov096_02135800(char *c)`, which differed only in linkage; the whole TU is compiled with the definition under extern \"C\", so nothing was lost.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov096_02136134 and the one that held func_ov096_02136534; kept the first, widened to `extern short Vec3_HorzAngle(const void *a, const void *b)`. The kept declaration was `short (void *, void *)` and the loser was `extern \"C\" short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1)`; the live spelling takes const from the loser and keeps void * as the retained legacy bridge spelling; Vector3 is available and narrowing that bridge remains reconstruction work. One declaration survives.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov096_02136928' differs between the legacy file that used to hold func_ov096_02136264 and the one that held _ZN9daSanbo_c13InitResourcesEv; kept the first, then dropped entirely. func_ov096_02136928 is a MEMBER of this fold, defined at ROM ordinal 27 (0x02136928), so the TU needs no declaration of it at all and the disagreement between the two legacy externs is moot. Its one live signature is the definition, `void func_ov096_02136928(void *cc, int a)`, which conforms to the void * receiver include/decl_common.h already declares.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov096_02136134 and the one that held _ZN9daSanbo_c6RenderEv; kept the first during the initial import, which separated the two observations as Obj and RenderView/RenderModel. The later source repair removed all of these shadows: the helper uses daSanbo_c::OnAimedAtWithEgg, and Render uses mFlags, mModel and the existing virtual dExtSimpleModel_c::Render interface. This record preserves the historical conflict; none of those local shadow types remains.",
+    "tubuild create warning: RAW: src/UpdateWanderYaw.cpp (UpdateWanderYaw) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/HandleAttacks.cpp (HandleAttacks) did not split (the definition is inside the extern \"C\" block opened on line 14, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/UpdateFloorAndWalls.cpp (UpdateFloorAndWalls) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/UpdateMegaKill.cpp (UpdateMegaKill) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/UpdateKnockback.cpp (UpdateKnockback) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'UnlinkSegment' differs between the legacy file that used to hold EnterMegaKill and the one that held EnterInMouth; kept the first, corrected to `extern void UnlinkSegment(char *c)`. The kept declaration returned `int` and the loser was `extern void UnlinkSegment(void *)`; the definition in this TU returns void and takes char *, so the live spelling takes the return type from the loser and the parameter type from the winner. One declaration survives, at file scope.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'UnlinkSegment' differs between the legacy file that used to hold EnterMegaKill and the one that held EnterKnockback; kept the first, same single file-scope declaration as the record above. This loser was `extern \"C\" void UnlinkSegment(char *c)`, which differed only in linkage; the whole TU is compiled with the definition under extern \"C\", so nothing was lost.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold EnterMegaKill and the one that held EnterKnockback; kept the first, widened to `extern short Vec3_HorzAngle(const void *a, const void *b)`. The kept declaration was `short (void *, void *)` and the loser was `extern \"C\" short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1)`; the live spelling takes const from the loser and keeps void * as the retained legacy bridge spelling; Vector3 is available and narrowing that bridge remains reconstruction work. One declaration survives.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ChangeState' differs between the legacy file that used to hold UpdateStackedOnGrowingBody and the one that held _ZN9daSanbo_c13InitResourcesEv; kept the first, then dropped entirely. ChangeState is a MEMBER of this fold, defined at ROM ordinal 27 (0x02136928), so the TU needs no declaration of it at all and the disagreement between the two legacy externs is moot. Its one live signature is the definition, `void ChangeState(void *cc, int a)`, which conforms to the void * receiver include/decl_common.h already declares.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold EnterMegaKill and the one that held _ZN9daSanbo_c6RenderEv; kept the first during the initial import, which separated the two observations as Obj and RenderView/RenderModel. The later source repair removed all of these shadows: the helper uses daSanbo_c::OnAimedAtWithEgg, and Render uses mFlags, mModel and the existing virtual dExtSimpleModel_c::Render interface. This record preserves the historical conflict; none of those local shadow types remains.",
     "Historical earlier worker packaging observation (not the current run): LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
     "Collision property member calls replace local helper declarations. Reconciled 14 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (67 sections, 244 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],
@@ -478,7 +478,7 @@
       "Render now uses mFlags and virtual dExtSimpleModel_c::Render through a dExtSimpleModel_c pointer; RenderView, RenderModel and RenderArg are removed.",
       "mMatrix is a real Matrix4x3; previous/next segment links and state dispatch use the real daSanbo_c type. N and C shadow layouts are removed.",
       "Previous-link and unk_3a8 reader descriptions now agree with the helpers. Existing dExtShadowModel_c and actor methods replace four mangled-call declarations.",
-      "func_ov096_02135e2c and its local declaration return void; the sole source call discards the result and all 36 TU functions remain exact.",
+      "UpdateFloorAndWalls and its local declaration return void; the sole source call discards the result and all 36 TU functions remain exact.",
       "OnTurnIntoEgg follows the composed main void contract; the retired Pokey shard remains removed.",
       "Three dExtSimpleModel_c::LoadFile calls and two mModel.SetFile calls replace the corresponding raw ABI spellings; complete TU proof remains required.",
       "The current provenance note, dated scout correction and handoffs identify previous-segment links, live flag reads, existing matrix/model interfaces, exact RTTI string length and partial reconstruction."
@@ -1141,7 +1141,7 @@
       "source": "0x02137920",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_02136434Ev",
+      "symbol": "_ZN9daSanbo_c15UpdateKnockbackEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x02136434"
@@ -1151,7 +1151,7 @@
       "source": "0x02137928",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_021365d4Ev",
+      "symbol": "_ZN9daSanbo_c12UpdateLeaderEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x021365d4"
@@ -1161,7 +1161,7 @@
       "source": "0x02137930",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_02136534Ev",
+      "symbol": "_ZN9daSanbo_c14EnterKnockbackEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x02136534"
@@ -1171,7 +1171,7 @@
       "source": "0x02137938",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_021363b4Ev",
+      "symbol": "_ZN9daSanbo_c19EnterStackedGrowingEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x021363b4"
@@ -1181,7 +1181,7 @@
       "source": "0x02137940",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_02136754Ev",
+      "symbol": "_ZN9daSanbo_c17UpdateStackedBodyEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x02136754"
@@ -1191,7 +1191,7 @@
       "source": "0x02137948",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_021368a4Ev",
+      "symbol": "_ZN9daSanbo_c12EnterStackedEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x021368a4"
@@ -1201,7 +1201,7 @@
       "source": "0x02137950",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_0213670cEv",
+      "symbol": "_ZN9daSanbo_c11EnterLeaderEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x0213670c"
@@ -1211,7 +1211,7 @@
       "source": "0x02137958",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_021360c4Ev",
+      "symbol": "_ZN9daSanbo_c14UpdateMegaKillEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x021360c4"
@@ -1221,7 +1221,7 @@
       "source": "0x02137960",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_02136134Ev",
+      "symbol": "_ZN9daSanbo_c13EnterMegaKillEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x02136134"
@@ -1231,7 +1231,7 @@
       "source": "0x02137968",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_02136264Ev",
+      "symbol": "_ZN9daSanbo_c26UpdateStackedOnGrowingBodyEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x02136264"
@@ -1241,7 +1241,7 @@
       "source": "0x02137970",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_021363c4Ev",
+      "symbol": "_ZN9daSanbo_c13UpdateInMouthEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x021363c4"
@@ -1251,7 +1251,7 @@
       "source": "0x02137978",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daSanbo_c19func_ov096_0213640cEv",
+      "symbol": "_ZN9daSanbo_c12EnterInMouthEv",
       "addend": 0,
       "target_module": "ov096",
       "target_address": "0x0213640c"
