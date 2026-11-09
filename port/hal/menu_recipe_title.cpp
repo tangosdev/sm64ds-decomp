@@ -350,13 +350,14 @@ bool main_page_skip_active()
    is ready the sprite is not submitted; its place (DS pixels, the object's own x / y: the arrow's top left is (x - 11, y - 8), the tip
    is the bottom centre) and the title frame it was seen on are kept, and the file page draws the HD arrow there. */
 int g_oa_frame = -1, g_oa_x = 0, g_oa_y = 0;
-bool file_arrow_up()
+static bool file_page_up()
 {
     if (!data_ov007_0210342c || g_up_stamp != data_ov007_0210342c[0]) return false;
     int top, elem, req;
     if (!port_title_page_state(&top, &elem, &req)) return false;
-    return elem != 0 && variant_for(top, elem) == V_FILES && menu_hostimg_ready(MENU_IMG_ARROW_ORANGE);
+    return elem != 0 && variant_for(top, elem) == V_FILES;
 }
+bool file_arrow_up() { return file_page_up() && menu_hostimg_ready(MENU_IMG_ARROW_ORANGE); }
 
 int title_skip(char *o)
 {
@@ -366,6 +367,9 @@ int title_skip(char *o)
         g_oa_y = ((const int *)o)[2] >> 12;
         return 1;
     }
+    /* LOBBYTAB2: without the HD arrow the ROM's own file pointer is the sprite itself. While the pad focus is on a host plank (?, NAME,
+       ROOM CODE, HOST) that plank's arrow is the selection, so the pointer is left out, as the HD path leaves its own arrow out. */
+    if (*(unsigned char *)(o + 0x4e) == 0x21 && menu_online_padfocus() && file_page_up()) return 1;
     if (data_ov007_0210342c) {
         const char *g = (const char *)data_ov007_0210342c;
         for (int i = 0; i < 3; ++i)
