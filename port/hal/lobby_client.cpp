@@ -627,6 +627,9 @@ void fold_view(const JV &v)
 {
     g.state = safe(v.str("state"), 16);
     g.session_type = safe(v.str("session_type"), 12);
+    /* a joiner learns the room's kind here (it asked to join a code, not a kind) */
+    if (g.session_type == "vs") g.kind = LOBBY_VS;
+    else if (g.session_type == "coop") g.kind = LOBBY_COOP;
     g.host = (int)v.i("host");
     g.you = (int)v.i("you");
     int seats = (int)v.i("room_seats");
@@ -662,6 +665,8 @@ void fold_view(const JV &v)
 }
 
 void enqueue_ready(const std::string &match);
+void enqueue(const std::string &verb, const std::string &body, int kind = 0);
+std::string head();
 
 void fold_events(const JV &evs, bool resync)
 {
@@ -712,6 +717,12 @@ void fold(const Answer &a, int gen, bool from_poll)
        poll has not delivered yet (a guest's own `ready` is what moves the room to `go`, so its answer already points past the `go`). */
     if (from_poll && a.body.has_num("cursor")) g.cursor = (int)a.body.i("cursor");
     if (const JV *v = a.body.get("view")) fold_view(*v);
+    if (!g.session_type.empty() && g.session_type != "vs" && g.session_type != "coop") {
+        /* a party or adventure room joined by its code: phase 1 plays coop and VS rooms only */
+        enqueue("leave", head() + "}", 3);
+        leave_room_locked("That room is not a coop or VS room. Join it from the launcher.");
+        return;
+    }
     if (const JV *ev = a.body.get("events")) fold_events(*ev, a.body.flag("resync"));
     if (const JV *p = a.body.get("plan")) { g.plan = *p; g.plan_set = true; }
     if (g.state == "closed") leave_room_locked("The room closed.");
@@ -741,7 +752,7 @@ std::vector<Job> g_jobs;
 HANDLE g_job_event = 0, g_poll_event = 0;
 bool g_threads = false;
 
-void enqueue(const std::string &verb, const std::string &body, int kind = 0)
+void enqueue(const std::string &verb, const std::string &body, int kind)
 {
     g_jobs.push_back(Job{verb, body, g.gen, kind});
     SetEvent(g_job_event);
