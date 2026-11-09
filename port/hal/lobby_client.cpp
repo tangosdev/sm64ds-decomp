@@ -667,6 +667,7 @@ void fold_view(const JV &v)
 void enqueue_ready(const std::string &match);
 void enqueue(const std::string &verb, const std::string &body, int kind = 0);
 std::string head();
+void send_params_locked();
 
 void fold_events(const JV &evs, bool resync)
 {
@@ -717,6 +718,12 @@ void fold(const Answer &a, int gen, bool from_poll)
        poll has not delivered yet (a guest's own `ready` is what moves the room to `go`, so its answer already points past the `go`). */
     if (from_poll && a.body.has_num("cursor")) g.cursor = (int)a.body.i("cursor");
     if (const JV *v = a.body.get("view")) fold_view(*v);
+    if (g.session_type == "vs" && g.you != g.host && g.state == "lobby" && g.netmode == "lockstep") {
+        /* a launcher-made room set to Classic: the game does not run the restart that needs in 1.0 */
+        enqueue("leave", head() + "}", 3);
+        leave_room_locked("Classic netcode rooms open from the launcher for now.");
+        return;
+    }
     if (!g.session_type.empty() && g.session_type != "vs" && g.session_type != "coop") {
         /* a party or adventure room joined by its code: phase 1 plays coop and VS rooms only */
         enqueue("leave", head() + "}", 3);
@@ -797,6 +804,7 @@ DWORD WINAPI action_thread(void *)
                 g.cursor = 0;
                 g.phase = LOBBY_IN_ROOM;
                 g.error.clear();
+                if (j.kind == 1 && g.kind == LOBBY_VS) send_params_locked();   /* the host's room asks for Arena (1.0) */
                 say("%s: room %s, seat %d", j.verb == "create" ? "created" : "joined", room.c_str(), (int)a.body.i("member"));
                 SetEvent(g_poll_event);
                 continue;
@@ -1022,6 +1030,7 @@ void launch(const JV &plan, LobbyKind kind, bool host, const std::string &match)
     } else if (why.empty()) {
         /* LobbyLaunch.BuildChildEnv */
         const std::string role = plan.str("role");
+        if (plan.str("netmode") != "arena") why = "Classic netcode rooms open from the launcher for now";
         const long long map = plan.i("map", -1), players = plan.i("players"), slot = plan.i("slot");
         if ((role != "parent" && role != "child") || map < 0 || map > 3 || players < 1 || players > 16 || slot < 0 || slot >= 16)
             why = "the lobby's VS plan looked wrong";
@@ -1081,6 +1090,17 @@ void launch(const JV &plan, LobbyKind kind, bool host, const std::string &match)
         g.phase = LOBBY_IN_ROOM;
         g.start_wanted = false;
         say("the running game took the %s start", hkind);
+        return;
+    }
+    if (kind == LOBBY_VS) {
+        /* 1.0: a VS match the running game cannot take is not restarted into (the restart path has not been proven) */
+        Lock l;
+        g.error = "The match could not start in this game. Try again.";
+        g.phase = g.room.empty() ? LOBBY_FAILED : LOBBY_IN_ROOM;
+        g.start_wanted = false;
+        if (!match.empty() && !g.room.empty())
+            enqueue("failed", head() + ",\"match\":" + jesc(match) + ",\"reason\":\"spawn_failed\"}");
+        say("in place refused: %s; VS is not restarted into in 1.0, the match is reported failed", refusal);
         return;
     }
     say("in place refused: %s; restarting with the launcher's names", refusal);
@@ -1427,7 +1447,8 @@ void snapshot_locked()
         t[VS_ARENA] = LobbySetting{"map", "Arena", g.map, 0, 3, kArenas, 4};
         const int pmax = g.dial_max >= 2 ? g.dial_max : (g.max_seats >= 2 ? g.max_seats : 4);
         t[VS_PLAYERS] = LobbySetting{"players", "Players", g.match_players >= 2 ? g.match_players : 2, 2, pmax, 0, 0};
-        t[VS_NETMODE] = LobbySetting{"netmode", "Netcode", g.netmode == "lockstep" ? 1 : 0, 0, g.arena_ok ? 1 : 0, kNetmodes, 2};
+        /* 1.0: Classic (lockstep) needs the game to restart itself, a path no row has run yet, so the in-game lobby offers Arena only */
+        t[VS_NETMODE] = LobbySetting{"netmode", "Netcode", 0, 0, 0, kNetmodes, 2};
     }
     (void)frozen;
     s.coop_save_continue = g.coop_continue;
@@ -1525,6 +1546,7 @@ void lobby_create(LobbyKind kind)
         b += "}";
     }
     b += colours_json_locked() + "}";
+    if (kind == LOBBY_VS) g.netmode = "arena";
     say("create %s room on %s as \"%s\" (game %s)", kind == LOBBY_VS ? "vs" : "coop", g.base.c_str(), g.nick.c_str(), g.game.c_str());
     enqueue("create", b, 1);
 }
@@ -1601,7 +1623,7 @@ void lobby_set_setting(int index, int value)
     case VS_STARS: if (value < 1 || value > 5) return; g.star_target = value; break;
     case VS_ARENA: if (value < 0 || value > 3) return; g.map = value; break;
     case VS_PLAYERS: if (value < 2 || value > 16) return; g.match_players = value; break;
-    case VS_NETMODE: g.netmode = value ? "lockstep" : "arena"; break;
+    case VS_NETMODE: g.netmode = "arena"; (void)value; break;   /* pinned to Arena in 1.0 (see the snapshot) */
     default: return;
     }
     send_params_locked();
