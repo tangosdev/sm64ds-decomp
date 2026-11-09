@@ -100,6 +100,7 @@ int  menu_online_plank_phase(const OnlFacts *f, int k, int *a, int *half, int *f
    ROM touch box (bx, by, bw, bh) is what a click maps to. lit / pressed: the selection look. alpha 0 = opaque. Returns the piece index or -1. */
 int  menu_online_add_plank(MenuLayout *L, int kind, int fx, int fy, int fw, int fh, int bx, int by, int bw, int bh, int lit, int pressed, int alpha,
                            int touch, int frame);
+int  menu_online_lobby_plank_w(int kind, int fh, int name_h, int two_line);   /* LOBBYUI1: ROOM CODE / HOST, wide enough for their word at the NAME plank's size and padding */
 int  menu_online_plank_w(int kind, int fh);              /* the full width of a plank of this kind at height fh (the picture's shape, else a fixed one) */
 int  menu_online_plank_art_ready(int kind);              /* 1 when the mod's picture for this kind decoded */
 /* the modal screen over the page (veil, panel, text, its button) and the ? button; both add pieces to the layout. */

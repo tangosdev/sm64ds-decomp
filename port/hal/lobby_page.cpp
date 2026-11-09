@@ -390,6 +390,10 @@ void make_geom(Geom *g, int w, int h, const LobbyState *s)
     g->r[C_CODE] = R(mx, 10, cw, 34);
     g->r[C_EYE] = R(mx + cw + 4, 10, 34, 34);
     g->r[C_COPY] = R(mx + cw + 42, 10, 34, 34);
+    {   /* a narrow window: LOBBY moves right, centred between the copy button and the back arrow, so the code group never covers it */
+        const float copy_end = mx + cw + 76 + 8, back_x = W - mx - 58 - 8;
+        if (W * 0.5f - 90 < copy_end) g->title = R((copy_end + back_x) * 0.5f - 90, 6, 180, 44);
+    }
     const float top = 58, bot = 252;
     const float inner = W - 2 * mx;
     const float chat_w = inner * 0.46f;
@@ -1282,6 +1286,18 @@ void draw_cork(const Surf &s, bool hd)
     }
 }
 
+/* the inner panel of the cream plaque (kind 1): on the HD art (menu/settings/key.png, 300 x 171) the cream face runs from x 54 to 246 and
+   y 44 to 129, scaled as draw_box scales the nine-slice; the plain skin's box has a 3 unit edge */
+Rect key_inner(const Rect &r, float u, bool hd)
+{
+    if (!hd) { const int e = (int)(3 * u) + 1; const Rect q = { r.x + e, r.y + e, r.w - 2 * e, r.h - 2 * e }; return q; }
+    const int kh = (int)(46 * u);
+    const float k = (float)(r.h < kh ? r.h : kh) / 171.0f;
+    const int l = (int)(54 * k + 0.5f), t = (int)(44 * k + 0.5f), b = (int)(42 * k + 0.5f);
+    const Rect q = { r.x + l, r.y + t, r.w - 2 * l, r.h - t - b };
+    return q;
+}
+
 void rim(const Surf &s, float u, const Rect &r);
 /* a box: kind 0 = a wooden plank (a button), 1 = the cream plaque (a field to type in / read), 2 = the parchment sheet (a panel) */
 void draw_box(const Surf &s, const Font &f, bool hd, const Rect &r, int kind, int lit, int dim = 0)
@@ -1469,7 +1485,7 @@ void draw_title(const Surf &s, const Font &f, const Geom &g, const char *word)
 {
     const float em = g.W >= 600 ? 46.0f : 38.0f;
     const float tw = f.width(word, em);
-    const float x = s.w * 0.5f - tw * 0.5f, y = 12 * g.u;
+    const float x = g.title.x + g.title.w * 0.5f - tw * 0.5f, y = 12 * g.u;      /* g.title: the middle, or right of the code group on a narrow window */
     f.draw(s, x + 2 * g.u, y + 2 * g.u, word, em, 0x7A4614u, 150);
     f.draw(s, x, y, word, em, 0x2A1404u);
 }
@@ -1492,10 +1508,14 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
         const Rect &r = g.r[C_CODE];
         draw_box(s, f, hd, r, 1, 0);
         const char *shown = P.code_hidden ? "******" : st->code;
-        const float em = 17.0f;
-        const float lw = f.width("CODE", 11.0f);
-        f.draw(s, r.x + 12 * u, r.y + (r.h - f.cap(11.0f)) * 0.5f, "CODE", 11.0f, C_DIMINK);
-        f.draw(s, r.x + 12 * u + lw + 8 * u, r.y + (r.h - f.cap(em)) * 0.5f, shown, em, C_INK);
+        const Rect in = key_inner(r, u, hd);
+        float em = 17.0f, lem = 11.0f;
+        const float gap = 6 * u, pad = 4 * u;
+        float tw = f.width("CODE", lem) + gap + f.width(shown, em);
+        if (tw > in.w - 2 * pad) { const float k = (in.w - 2 * pad) / tw; em *= k; lem *= k; tw = f.width("CODE", lem) + gap + f.width(shown, em); }
+        const float x0 = in.x + (in.w - tw) * 0.5f, cy = in.y + in.h * 0.5f;
+        f.draw(s, x0, cy - f.cap(lem) * 0.5f, "CODE", lem, C_DIMINK);
+        f.draw(s, x0 + f.width("CODE", lem) + gap, cy - f.cap(em) * 0.5f, shown, em, C_INK);
         draw_box(s, f, hd, g.r[C_EYE], 0, lit(C_EYE));
         icon_eye(s, g.r[C_EYE], P.code_hidden, hd ? 0x5A2A0Au : C_WOODTXT, u);
         draw_box(s, f, hd, g.r[C_COPY], 0, lit(C_COPY));
@@ -1509,8 +1529,11 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
     {
         const Rect &r = g.r[C_CHAT];
         draw_box(s, f, hd, r, 1, lit(C_CHAT) || P.field == C_CHAT);
-        const Rect &L = g.chat_lines;
+        const Rect in = key_inner(r, u, hd);
+        const int pad = (int)(6 * u);
         const float em = 14.0f, lh = 18.0f * u;
+        const int input_h = (int)(lh + 6 * u);      /* the input line and the divider over it */
+        const Rect L = { in.x + pad, in.y + pad, in.w - 2 * pad, in.h - 2 * pad - input_h };
         std::vector<std::string> lines;
         for (int i = 0; i < st->n_chat && i < 32; ++i) {
             if (chat_muted(st, st->chat[i])) continue;
@@ -1523,16 +1546,16 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
         const int clip[4] = { L.x, L.y, L.x + L.w, L.y + L.h };
         for (int i = first; i < (int)lines.size(); ++i)
             f.draw(s, (float)L.x, L.y + (i - first) * lh, lines[i].c_str(), em, C_INK, 255, clip);
-        /* the line being typed, or "type to chat" */
-        const float iy = r.y + r.h - 36 * u;
+        /* the line being typed, or "type to chat": the last line of the inner panel, under a divider as wide as the text */
+        const float iy = (float)(in.y + in.h - pad) - f.cap(em) - 2 * u;
         for (int x = L.x; x < L.x + L.w; ++x) put_pm(s, x, (int)(iy - 4 * u), 0xFF000000u | C_DIMINK, 120);
         if (P.field == C_CHAT) {
             std::string t = P.chat_in;
             while (t.size() > 1 && f.width(t.c_str(), em) > L.w - 10 * u) t.erase(0, 1);
             if ((P.frames / 20) & 1) t += "_";
-            f.draw(s, (float)L.x, iy + 4 * u, t.c_str(), em, C_INK);
+            f.draw(s, (float)L.x, iy, t.c_str(), em, C_INK);
         } else {
-            f.draw(s, (float)L.x, iy + 4 * u, "type to chat", em, C_DIMINK);
+            f.draw(s, (float)L.x, iy, "type to chat", em, C_DIMINK);
         }
     }
     /* the right column */
@@ -1550,8 +1573,10 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
         const Rect &r = g.r[c];
         if (r.w <= 0) return;
         draw_box(s, f, hd, r, kind, lit(c), dim);
-        const std::string t = fit(f, text, 14.0f, r.w - 16 * u);
-        f.centred(s, r, t.c_str(), 14.0f, ink_on(hd, kind), dim ? 150 : 255);
+        float em = 14.0f;
+        while (em > 10.0f && f.width(text, em) > r.w - 16 * u) em -= 0.5f;      /* smaller first, cut only below 10 */
+        const std::string t = fit(f, text, em, r.w - 16 * u);
+        f.centred(s, r, t.c_str(), em, ink_on(hd, kind), dim ? 150 : 255);
     };
     label_box(C_SETTINGS, st->kind == LOBBY_COOP ? "Room rules" : "Game settings", 0, 0);
     if (st->kind == LOBBY_COOP) {
@@ -1586,17 +1611,26 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
         draw_box(s, f, hd, r, 0, lit(C_READY));
         if (ready && !can_start && st->phase != LOBBY_STARTING) rrect(s, r.x + (int)(6 * u), r.y + (int)(6 * u), r.w - (int)(12 * u), r.h - (int)(12 * u), 8 * u, 0x40C040u, 70);
         if (can_start && st->phase != LOBBY_STARTING) rrect(s, r.x + (int)(6 * u), r.y + (int)(6 * u), r.w - (int)(12 * u), r.h - (int)(12 * u), 8 * u, 0xFFE040u, 80);
-        const float em = 30.0f;
-        f.centred(s, r, word, em, ink_on(hd, 0));
-        if (ready && !can_start && st->phase != LOBBY_STARTING) icon_check(s, r.x + r.w * 0.5f + f.width(word, em) * 0.5f + 10 * u, r.y + r.h * 0.5f - 9 * u, 18 * u, 0x1E7A1Eu, u);
-        /* under it, what it is waiting for */
+        const float em = 30.0f, sem = 12.0f;
         int nr = 0;
         for (int i = 0; i < seat_count(st); ++i) nr += st->seats[i].ready != 0;
-        if (st->phase == LOBBY_IN_ROOM) {
+        buf[0] = 0;
+        if (st->phase == LOBBY_IN_ROOM) {      /* under the word, what it is waiting for */
             if (can_start) snprintf(buf, sizeof buf, "Everyone is ready");
             else if (st->am_host) snprintf(buf, sizeof buf, "%d of %d ready", nr, seat_count(st));
             else snprintf(buf, sizeof buf, "%d of %d ready, the host starts", nr, seat_count(st));
-            f.draw(s, r.x + (r.w - f.width(buf, 12.0f)) * 0.5f, r.y + r.h - 18 * u, buf, 12.0f, ink_on(hd, 0), 200);
+        }
+        /* the face: inside the plank's bevel (the HD plank's 18 px border at r.h / 150, the plain box's 3 unit edge) */
+        const int bev = hd ? (int)(18.0f * r.h / 150.0f) : (int)(3 * u);
+        const Rect face = { r.x + bev, r.y + bev, r.w - 2 * bev, r.h - 2 * bev };
+        const float gap = 6 * u;
+        const float total = f.cap(em) + (buf[0] ? gap + f.cap(sem) : 0.f);
+        const float y0 = face.y + (face.h - total) * 0.5f;
+        f.draw(s, face.x + (face.w - f.width(word, em)) * 0.5f, y0, word, em, ink_on(hd, 0));
+        if (ready && !can_start && st->phase != LOBBY_STARTING) icon_check(s, r.x + r.w * 0.5f + f.width(word, em) * 0.5f + 10 * u, y0 + f.cap(em) * 0.5f - 9 * u, 18 * u, 0x1E7A1Eu, u);
+        if (buf[0]) {
+            const std::string t = fit(f, buf, sem, face.w - 8 * u);
+            f.draw(s, face.x + (face.w - f.width(t.c_str(), sem)) * 0.5f, y0 + f.cap(em) + gap, t.c_str(), sem, ink_on(hd, 0), 200);
         }
     }
     /* the seats */
@@ -1616,12 +1650,15 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
         rrect(s, r.x + edge, r.y + r.h - edge - (int)(r.h * 0.26f), r.w - 2 * edge, (int)(r.h * 0.26f), 4 * u, t.shoe_rgb & 0xFFFFFF, 255);
         if (sel) rim(s, u, r);
         const uint32_t ink = contrast_ink(t.body_rgb);
-        const float em = r.h > 60 * u ? 15.0f : 11.0f;
-        std::string nm = fit(f, t.name, em, r.w - 10 * u);
+        float em = r.h > 60 * u ? 15.0f : 11.0f;
+        const float name_w = r.w - 12 * u;
+        while (em > 8.0f && f.width(t.name, em) > name_w) em -= 0.5f;      /* smaller first, down to a readable 8; cut only below that */
+        std::string nm = fit(f, t.name, em, name_w);
         const float ny = r.y + r.h * 0.42f - f.cap(em) * 0.5f;
         f.draw(s, r.x + (r.w - f.width(nm.c_str(), em)) * 0.5f, ny, nm.c_str(), em, ink);
-        const char *status = t.ready ? "READY" : "not ready";
-        const float sem = em * 0.75f;
+        const char *status = t.ready ? "Ready" : "Not ready";
+        float sem = r.h > 60 * u ? 11.0f : 8.5f;
+        while (sem > 7.0f && f.width(status, sem) > r.w - 2 * edge - 12 * u) sem -= 0.5f;
         const uint32_t sink = contrast_ink(t.shoe_rgb);
         const Rect band = { r.x, r.y + r.h - edge - (int)(r.h * 0.26f), r.w, (int)(r.h * 0.26f) };
         f.centred(s, band, status, sem, sink, t.ready ? 255 : 190);

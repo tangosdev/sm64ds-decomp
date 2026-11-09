@@ -578,7 +578,7 @@ static void online_lobby_planks(MenuLayout *L, const OnlFacts *of)
     const int un = L->unum, ud = L->uden;
     const bool wide = L->w * ud / un > 256;
     const int th = 30 * un / ud;
-    const int rcw = menu_online_plank_w(ONL_K_ROOMCODE, th);
+    const int rcw = menu_online_lobby_plank_w(ONL_K_ROOMCODE, th, th, wide ? 0 : 1);      /* 4:3: ROOM / CODE on two lines, so HOST and NAME fit beside it */
     const int rx = 5 * un / ud, ry = 5 * un / ud;
     const int rc_on = of->scr == ONL_SCR_ROOMCODE;
     int ip = menu_online_add_plank(L, ONL_K_ROOMCODE, rx, ry, rcw, th, ONL_RC_X, ONL_RC_Y, ONL_RC_W, ONL_RC_H, (of->padfocus == ONL_PF_ROOMCODE || rc_on) ? 1 : 0, 0, 0, 1,
@@ -587,12 +587,12 @@ static void online_lobby_planks(MenuLayout *L, const OnlFacts *of)
     int hx, hy, hw, hh;
     if (wide) {
         hh = 35 * un / ud;
-        hw = menu_online_plank_w(ONL_K_HOST, hh);
+        hw = menu_online_lobby_plank_w(ONL_K_HOST, hh, th, 0);
         hx = 4 * un / ud;
         hy = (L->h - 192 * un / ud) / 2 + 140 * un / ud;
     } else {
         hh = th;
-        hw = menu_online_plank_w(ONL_K_HOST, hh);
+        hw = menu_online_lobby_plank_w(ONL_K_HOST, hh, th, 0);
         hx = rx + rcw + 5 * un / ud;
         hy = ry;
     }
