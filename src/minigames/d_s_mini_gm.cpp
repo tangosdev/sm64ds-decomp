@@ -53,7 +53,7 @@
 #include "OAM.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "GX.h"
 #include "CP15.h"
 #include "G3X.h"
@@ -250,7 +250,7 @@ s32 dScMiniGm_c::InitResources()
     SetBg2Offset(0, 0);
 
     f = LoadFile(0x4e);
-    DecompressLZ16(f, G2::GetBG2CharPtr());
+    DecompressLZ16(f, G2_GetBG2CharPtr());
     Deallocate(f);
 
     f = LoadFile(0x58);
@@ -259,7 +259,7 @@ s32 dScMiniGm_c::InitResources()
     Deallocate(f);
 
     f = LoadFile(0x59);
-    DecompressLZ16(f, G2::GetBG2ScrPtr());
+    DecompressLZ16(f, G2_GetBG2ScrPtr());
     Deallocate(f);
 
     if (GetOwnerLanguage() == 5) {
@@ -294,7 +294,7 @@ s32 dScMiniGm_c::InitResources()
     SetSubBg3Offset(mSubBgScrollX, 0);
 
     f = LoadFile(0x53);
-    DecompressLZ16(f, G2S::GetBG2CharPtr());
+    DecompressLZ16(f, G2S_GetBG2CharPtr());
     Deallocate(f);
 
     f = LoadFile(0x5a);
@@ -308,10 +308,10 @@ s32 dScMiniGm_c::InitResources()
     *(volatile u32 *)0x4001010 = mSubBgScrollX & 0x1ff;
     SetSubBg0Offset(mSubBgScrollX, 0);
 
-    dst = (char *)G2S::GetBG0CharPtr();
+    dst = (char *)G2S_GetBG0CharPtr();
     sp0 = 0;
     MultiStore16(sp0, dst, 0x8000);
-    dst = (char *)G2S::GetBG0ScrPtr();
+    dst = (char *)G2S_GetBG0ScrPtr();
     sp2 = 0x1f;
     MultiStore16(sp2, dst, 0x1000);
 
@@ -396,11 +396,11 @@ void MiniGm_LoadGroupIcons(void *selfv)
     int t;
 
     f = LoadFile(sMiniGmBgFiles[gMgGroupBase]);
-    DecompressLZ16(f, G2S::GetBG2ScrPtr());
+    DecompressLZ16(f, G2S_GetBG2ScrPtr());
     Deallocate(f);
 
     f = LoadFile(sMiniGmBgFiles[gMgGroupBase + 4]);
-    DecompressLZ16(f, G2S::GetBG3ScrPtr());
+    DecompressLZ16(f, G2S_GetBG3ScrPtr());
     Deallocate(f);
 
     i = 0;
@@ -434,7 +434,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                 destOff = off << 1;
                 do {
                     char *dstp;
-                    scr = (char *)G2S::GetBG0ScrPtr();
+                    scr = (char *)G2S_GetBG0ScrPtr();
                     dstp = scr + destOff;
                     dstp = destOff ? dstp : dstp; /* register-dest pin; arms identical */
                     valA = (u16)fill;
@@ -457,16 +457,16 @@ void MiniGm_LoadGroupIcons(void *selfv)
             int p;
 
             f = LoadFile(sMiniGmIconChars[gMgGroupBase + j]);
-            DecompressLZ16(f, (char *)G2S::GetBG0CharPtr() + 0x8000);
+            DecompressLZ16(f, (char *)G2S_GetBG0CharPtr() + 0x8000);
             Deallocate(f);
 
             row = m;
             destOff = row;
             do {
                 idx = scene->mGfxSlot;
-                ch = (char *)G2S::GetBG0CharPtr();
+                ch = (char *)G2S_GetBG0CharPtr();
                 scr = ch + (idx / 4) * 0x2400 + (idx % 4) * 0xc0 + destOff;
-                ch = (char *)G2S::GetBG0CharPtr();
+                ch = (char *)G2S_GetBG0CharPtr();
                 MultiCopy_Int((int *)(ch + 0x8000 + destOff), (int *)scr, copyLen);
                 destOff += 0x400;
             } while (++row < 9);
@@ -487,7 +487,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                 do {
                     char *dstp;
                     idx = scene->mGfxSlot;
-                    scr = (char *)G2S::GetBG0ScrPtr();
+                    scr = (char *)G2S_GetBG0ScrPtr();
                     dstp = scr + destOff;
                     dstp = idx ? dstp : dstp; /* register-dest pin; arms identical */
                     valB = (u16)(q + (p + ((idx % 4) * 6 + ((idx / 4) * 0x120 + (idx << 12)))));

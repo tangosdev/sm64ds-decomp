@@ -9079,67 +9079,67 @@
     },
     "arm9:0x02054d38": {
       "author": "tangosdev",
-      "name": "_ZN3G2S13GetBG3CharPtrEv"
+      "name": "G2S_GetBG3CharPtr"
     },
     "arm9:0x02054d88": {
       "author": "tangosdev",
-      "name": "func_02054d88"
+      "name": "G2_GetBG3CharPtr"
     },
     "arm9:0x02054de8": {
       "author": "tangosdev",
-      "name": "_ZN3G2S13GetBG2CharPtrEv"
+      "name": "G2S_GetBG2CharPtr"
     },
     "arm9:0x02054e30": {
       "author": "tangosdev",
-      "name": "_ZN2G213GetBG2CharPtrEv"
+      "name": "G2_GetBG2CharPtr"
     },
     "arm9:0x02054e88": {
       "author": "tangosdev",
-      "name": "_ZN3G2S13GetBG1CharPtrEv"
+      "name": "G2S_GetBG1CharPtr"
     },
     "arm9:0x02054ea8": {
       "author": "tangosdev",
-      "name": "func_02054ea8"
+      "name": "G2_GetBG1CharPtr"
     },
     "arm9:0x02054edc": {
       "author": "tangosdev",
-      "name": "_ZN3G2S13GetBG0CharPtrEv"
+      "name": "G2S_GetBG0CharPtr"
     },
     "arm9:0x02054efc": {
       "author": "tangosdev",
-      "name": "func_02054efc"
+      "name": "G2_GetBG0CharPtr"
     },
     "arm9:0x02054f30": {
       "author": "tangosdev",
-      "name": "_ZN3G2S12GetBG3ScrPtrEv"
+      "name": "G2S_GetBG3ScrPtr"
     },
     "arm9:0x02054fb0": {
       "author": "andrewboudreau",
-      "name": "_ZN2G212GetBG3ScrPtrEv"
+      "name": "G2_GetBG3ScrPtr"
     },
     "arm9:0x0205503c": {
       "author": "tangosdev",
-      "name": "_ZN3G2S12GetBG2ScrPtrEv"
+      "name": "G2S_GetBG2ScrPtr"
     },
     "arm9:0x020550bc": {
       "author": "tangosdev",
-      "name": "_ZN2G212GetBG2ScrPtrEv"
+      "name": "G2_GetBG2ScrPtr"
     },
     "arm9:0x02055148": {
       "author": "tangosdev",
-      "name": "_ZN3G2S12GetBG1ScrPtrEv"
+      "name": "G2S_GetBG1ScrPtr"
     },
     "arm9:0x02055168": {
       "author": "tangosdev",
-      "name": "_ZN2G212GetBG1ScrPtrEv"
+      "name": "G2_GetBG1ScrPtr"
     },
     "arm9:0x0205519c": {
       "author": "tangosdev",
-      "name": "_ZN3G2S12GetBG0ScrPtrEv"
+      "name": "G2S_GetBG0ScrPtr"
     },
     "arm9:0x020551bc": {
       "author": "tangosdev",
-      "name": "_ZN2G212GetBG0ScrPtrEv"
+      "name": "G2_GetBG0ScrPtr"
     },
     "arm9:0x020551f0": {
       "author": "tangosdev",

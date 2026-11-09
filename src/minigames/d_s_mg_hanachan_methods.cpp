@@ -93,6 +93,7 @@ enum dScMgHanachan_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 extern "C" void *dScMgHanachan_c_classInit();
 extern "C" BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
@@ -163,9 +164,6 @@ struct SelfV {
    they mangle. */
 namespace Sound {
 u32 PlayBank2_2D(u32 id);
-}
-namespace G2S {
-char *GetBG3CharPtr();
 }
 namespace GX {
 void LoadBGPltt(const void *src, u32 offset, u32 size);
@@ -2158,7 +2156,7 @@ void Hana_LoadBackground(void) {
     void *ncl = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NCL_BIN);
     REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x614;
-    DecompressLZ16(ncg, (void *)func_02054d88());
+    DecompressLZ16(ncg, (void *)G2_GetBG3CharPtr());
     func_02056314(nsc, 0, 0x800);
     GX::LoadBGPltt(ncl, 0x60, 0x1a0);
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
@@ -2171,7 +2169,7 @@ void Hana_LoadBackground(void) {
     ncl = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE2_NCL_BIN);
     REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 2;
     REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x614;
-    DecompressLZ16(ncg, G2S::GetBG3CharPtr());
+    DecompressLZ16(ncg, G2S_GetBG3CharPtr());
     func_020562b4(nsc, 0, 0x800);
     GXS::LoadBGPltt(ncl, 0x60, 0x1a0);
     gSubScreenLayers |= 8;

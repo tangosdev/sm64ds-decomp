@@ -47,7 +47,7 @@ enum dScMgRoulette_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* Local views of the records the helpers walk. */
 
@@ -226,9 +226,9 @@ s32 dScMgRoulette_c::InitResources() {
     bgMap = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NSC_BIN);
     file = LoadFile(ASSET_D_2D_YAKU_NSC_BIN);
     pltt = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NCL_BIN);
-    DecompressLZ16(bgChars, G2S::GetBG2CharPtr());
-    DecompressLZ16(bgMap, G2S::GetBG2ScrPtr());
-    DecompressLZ16(file, G2S::GetBG0ScrPtr());
+    DecompressLZ16(bgChars, G2S_GetBG2CharPtr());
+    DecompressLZ16(bgMap, G2S_GetBG2ScrPtr());
+    DecompressLZ16(file, G2S_GetBG0ScrPtr());
     GXS::LoadBGPltt(pltt, 0x1a0, 0x60);
     Deallocate(bgChars);
     Deallocate(bgMap);

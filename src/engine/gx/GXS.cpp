@@ -12,36 +12,14 @@
 
 #include "types.h"
 #include "GX.h"
-
-namespace G2 {
-void *GetBG0ScrPtr(void);
-void *GetBG1ScrPtr(void);
-void *GetBG2CharPtr(void);
-void *GetBG2ScrPtr(void);
-void *GetBG3ScrPtr(void);
+#include "nitro/gx/gx_bgcnt.h"
 
 /* OBJ character VRAM has a fixed base, so the SDK's getter is an inline, not a
  * call. LoadOBJ reads the base through it, which keeps the base in a register
- * where a literal would fold into each copy's address add. */
-inline void *GetOBJCharPtr(void) {
-    return (void *)0x6400000;
-}
-}
-
-namespace G2S {
-unsigned int GetBG0CharPtr(void);
-unsigned int GetBG0ScrPtr(void);
-unsigned int GetBG1CharPtr(void);
-unsigned int GetBG1ScrPtr(void);
-unsigned int GetBG2CharPtr(void);
-unsigned int GetBG2ScrPtr(void);
-unsigned int GetBG3CharPtr(void);
-unsigned int GetBG3ScrPtr(void);
-
-/* See G2::GetOBJCharPtr. */
-inline void *GetOBJCharPtr(void) {
-    return (void *)0x6600000;
-}
+ * where a literal would fold into each copy's address add. The sub engine's
+ * twin, G2S_GetOBJCharPtr, is in nitro/gx/gx_bgcnt.h. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
 }
 
 /* GX sub-screen extended palette VRAM bases */
@@ -61,9 +39,6 @@ extern void DMASyncHalfTransfer(u32 ch, const void *src, volatile void *dst, u32
 extern void MultiCopyHalf(const void *src, volatile void *dst, int count);
 extern void MultiCopy_Int(int *src, int *dst, int len);
 
-extern int func_02054d88(void);
-extern void *func_02054ea8(void);
-extern void *func_02054efc(void);
 }
 
 namespace GX {
@@ -154,7 +129,7 @@ namespace GX {
 // OBJ VRAM.
 void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
-    unsigned int base = (unsigned int)G2::GetOBJCharPtr();
+    unsigned int base = (unsigned int)G2_GetOBJCharPtr();
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (void *)(base + offset), count);
     } else {
@@ -170,7 +145,7 @@ namespace GXS {
 // OBJ VRAM. GX::LoadOBJ's sub-engine twin.
 void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
-    unsigned int base = (unsigned int)G2S::GetOBJCharPtr();
+    unsigned int base = (unsigned int)G2S_GetOBJCharPtr();
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (void *)(base + offset), count);
     } else {
@@ -182,9 +157,9 @@ void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
 
 extern "C" {
 
-// Loads BG0 screen data to the main-engine plane (G2::GetBG0ScrPtr).
+// Loads BG0 screen data to the main-engine plane (G2_GetBG0ScrPtr).
 void func_02056554(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2::GetBG0ScrPtr();
+    volatile unsigned char *ptr = (volatile unsigned char *)G2_GetBG0ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
@@ -193,9 +168,9 @@ void func_02056554(const void *src, int offset, int count) {
     }
 }
 
-// Loads BG0 screen data to the sub-engine plane (G2S::GetBG0ScrPtr).
+// Loads BG0 screen data to the sub-engine plane (G2S_GetBG0ScrPtr).
 void func_020564f4(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2S::GetBG0ScrPtr();
+    volatile unsigned char *ptr = (volatile unsigned char *)G2S_GetBG0ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
@@ -207,9 +182,9 @@ void func_020564f4(const void *src, int offset, int count) {
 
 namespace GX {
 
-// Loads BG1 screen data to the main-engine plane (G2::GetBG1ScrPtr).
+// Loads BG1 screen data to the main-engine plane (G2_GetBG1ScrPtr).
 void LoadBG1Scr(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2::GetBG1ScrPtr();
+    volatile unsigned char *ptr = (volatile unsigned char *)G2_GetBG1ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
@@ -222,9 +197,9 @@ void LoadBG1Scr(const void *src, int offset, int count) {
 
 extern "C" {
 
-// Loads BG1 screen data to the sub-engine plane (G2S::GetBG1ScrPtr).
+// Loads BG1 screen data to the sub-engine plane (G2S_GetBG1ScrPtr).
 void func_02056434(const void *src, int offset, int count) {
-    volatile unsigned char *ptr = (volatile unsigned char *)G2S::GetBG1ScrPtr();
+    volatile unsigned char *ptr = (volatile unsigned char *)G2S_GetBG1ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
@@ -233,12 +208,12 @@ void func_02056434(const void *src, int offset, int count) {
     }
 }
 
-// Loads BG2 screen data to the main-engine plane (G2::GetBG2ScrPtr).
+// Loads BG2 screen data to the main-engine plane (G2_GetBG2ScrPtr).
 void func_020563d4(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
 
-    bgPtr = G2::GetBG2ScrPtr();
+    bgPtr = G2_GetBG2ScrPtr();
     ch = data_02099fd0;
     if (ch != (u32)-1)
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
@@ -246,12 +221,12 @@ void func_020563d4(const void *src, u32 offset, u32 count) {
         MultiCopyHalf(src, (char *)bgPtr + offset, count);
 }
 
-// Loads BG2 screen data to the sub-engine plane (G2S::GetBG2ScrPtr).
+// Loads BG2 screen data to the sub-engine plane (G2S_GetBG2ScrPtr).
 void func_02056374(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
 
-    bgPtr = (void *)G2S::GetBG2ScrPtr();
+    bgPtr = (void *)G2S_GetBG2ScrPtr();
     ch = data_02099fd0;
     if (ch != (u32)-1)
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
@@ -259,9 +234,9 @@ void func_02056374(const void *src, u32 offset, u32 count) {
         MultiCopyHalf(src, (char *)bgPtr + offset, count);
 }
 
-// Loads BG3 screen data to the main-engine plane (G2::GetBG3ScrPtr).
+// Loads BG3 screen data to the main-engine plane (G2_GetBG3ScrPtr).
 void func_02056314(const void *src, u32 offset, u32 count) {
-    void *bgPtr = G2::GetBG3ScrPtr();
+    void *bgPtr = G2_GetBG3ScrPtr();
     s32 ch = data_02099fd0;
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
@@ -270,12 +245,12 @@ void func_02056314(const void *src, u32 offset, u32 count) {
     }
 }
 
-// Loads BG3 screen data to the sub-engine plane (G2S::GetBG3ScrPtr).
+// Loads BG3 screen data to the sub-engine plane (G2S_GetBG3ScrPtr).
 void func_020562b4(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
 
-    bgPtr = (void *)G2S::GetBG3ScrPtr();
+    bgPtr = (void *)G2S_GetBG3ScrPtr();
     ch = data_02099fd0;
     if (ch != (u32)-1)
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
@@ -287,9 +262,9 @@ void func_020562b4(const void *src, u32 offset, u32 count) {
 
 namespace GX {
 
-// Loads character data into MAIN BG0 VRAM (G2::GetBG0CharPtr, 0x2054efc).
+// Loads character data into MAIN BG0 VRAM (G2_GetBG0CharPtr, 0x2054efc).
 void LoadBG0Char(const void *src, unsigned int offset, unsigned int count) {
-    void *base = func_02054efc();
+    void *base = G2_GetBG0CharPtr();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
@@ -302,9 +277,9 @@ void LoadBG0Char(const void *src, unsigned int offset, unsigned int count) {
 
 namespace GXS {
 
-// Loads BG0 character data into SUB BG0 VRAM (G2S::GetBG0CharPtr).
+// Loads BG0 character data into SUB BG0 VRAM (G2S_GetBG0CharPtr).
 void LoadBG0Char(const void *src, u32 offset, u32 size) {
-    void *charPtr = (void *)G2S::GetBG0CharPtr();
+    void *charPtr = (void *)G2S_GetBG0CharPtr();
     if (data_02099fd0 != (u32)-1)
         DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
     else
@@ -315,9 +290,9 @@ void LoadBG0Char(const void *src, u32 offset, u32 size) {
 
 namespace GX {
 
-// Loads character data into MAIN BG1 VRAM (G2::GetBG1CharPtr, 0x2054ea8).
+// Loads character data into MAIN BG1 VRAM (G2_GetBG1CharPtr, 0x2054ea8).
 void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
-    void *base = func_02054ea8();
+    void *base = G2_GetBG1CharPtr();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
@@ -330,9 +305,9 @@ void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
 
 namespace GXS {
 
-// Loads BG1 character data into SUB BG1 VRAM (G2S::GetBG1CharPtr).
+// Loads BG1 character data into SUB BG1 VRAM (G2S_GetBG1CharPtr).
 void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
-    void *base = (void *)G2S::GetBG1CharPtr();
+    void *base = (void *)G2S_GetBG1CharPtr();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
@@ -345,9 +320,9 @@ void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
 
 namespace GX {
 
-// Loads BG2 char data into MAIN BG2 VRAM (G2::GetBG2CharPtr).
+// Loads BG2 char data into MAIN BG2 VRAM (G2_GetBG2CharPtr).
 void LoadBG2Char(const void *src, u32 offset, u32 size) {
-    void *charPtr = G2::GetBG2CharPtr();
+    void *charPtr = G2_GetBG2CharPtr();
     if (data_02099fd0 != (u32)-1)
         DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
     else
@@ -358,9 +333,9 @@ void LoadBG2Char(const void *src, u32 offset, u32 size) {
 
 namespace GXS {
 
-// Loads BG2 char data into SUB BG2 VRAM (G2S::GetBG2CharPtr).
+// Loads BG2 char data into SUB BG2 VRAM (G2S_GetBG2CharPtr).
 void LoadBG2Char(const void *src, unsigned int offset, unsigned int count) {
-    void *base = (void *)G2S::GetBG2CharPtr();
+    void *base = (void *)G2S_GetBG2CharPtr();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
@@ -375,7 +350,7 @@ extern "C" {
 
 // Loads BG3 char data into MAIN BG3 VRAM (0x2054d88 getter).
 void func_02056014(const void *src, unsigned int offset, unsigned int count) {
-    void *base = (void *)func_02054d88();
+    void *base = (void *)G2_GetBG3CharPtr();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
@@ -387,9 +362,9 @@ void func_02056014(const void *src, unsigned int offset, unsigned int count) {
 
 namespace GXS {
 
-// Loads BG3 char data into SUB BG3 VRAM (G2S::GetBG3CharPtr).
+// Loads BG3 char data into SUB BG3 VRAM (G2S_GetBG3CharPtr).
 void LoadBG3Char(const void *src, u32 offset, u32 size) {
-    void *charPtr = (void *)G2S::GetBG3CharPtr();
+    void *charPtr = (void *)G2S_GetBG3CharPtr();
     if (data_02099fd0 != (u32)-1)
         DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
     else

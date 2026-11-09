@@ -56,7 +56,7 @@
 #include "LevelRng.h"
 #include "G2x.h"
 #include "PlayerInput.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "cstd.h"
 #include "GX.h"
 
@@ -1014,7 +1014,7 @@ void dScMgTeresa_c::TouchTestBoo(int idx)
     for (i = 0; i < 5; i++) {
         x = (mBoos[idx].mX >> 12) - sTeresaBooTouchOffsets[i * 2];
         y = (mBoos[idx].mY >> 12) - sTeresaBooTouchOffsets[i * 2 + 1];
-        r = ((int(*)[8])(char *)G2S::GetBG0CharPtr())[(x >> 3) + ((y >> 3) << 5)];
+        r = ((int(*)[8])(char *)G2S_GetBG0CharPtr())[(x >> 3) + ((y >> 3) << 5)];
         word = r[y & 7];
         if (((word >> ((x & 7) << 2)) & 0xf) == 0) {
             count++;
@@ -1055,7 +1055,7 @@ void dScMgTeresa_c::CountRubbedTiles(int idx)
         for (x = 0; x < 8; x++) {
             gx = x + ((mBoos[idx].mX >> 12) - 4);
             gy = y + ((mBoos[idx].mY >> 12) - 4);
-            row = (int *)((char *)G2S::GetBG0CharPtr() + ((gx >> 3) + ((gy >> 3) << 5)) * 32);
+            row = (int *)((char *)G2S_GetBG0CharPtr() + ((gx >> 3) + ((gy >> 3) << 5)) * 32);
             if (((row[gy & 7] >> ((gx & 7) << 2)) & 0xf) == 0)
                 cnt++;
         }
@@ -1662,7 +1662,8 @@ void dScMgTeresa_c::PaintSquare(int cx, int cy, int val, int n)
                     x = i + x0;
                     if (x >= 0 && x < 0x100) {
                         if (y >= -0xc0 - sMgTopScreenYOffset && y >= 0 && y < 0xc0) {
-                            addr = (int *)((char *)G2S::GetBG0CharPtr() + ((x / 8) + (y / 8) * 32) * 32 + (y & 7) * 4);
+                            addr = (int *)((char *)G2S_GetBG0CharPtr() +
+                                           ((x / 8) + (y / 8) * 32) * 32 + (y & 7) * 4);
                             MultiCopy_Int(addr, &buf, 4);
                             buf = (buf & (-1 ^ (0xf << ((x & 7) * 4)))) | (val << ((x & 7) * 4));
                             MultiCopy_Int(&buf, addr, 4);
@@ -1712,7 +1713,7 @@ void dScMgTeresa_c::StartRound(int reset) {
     Reveal_Start();
     Marker_Show();
     SpawnBoos();
-    char* dst = (char *)G2S::GetBG0CharPtr();
+    char *dst = (char *)G2S_GetBG0CharPtr();
     val = 0x1111;
     MultiStore16(val, dst, 0x6000);
     mSceneState = 0;
@@ -1766,7 +1767,7 @@ s32 dScMgTeresa_c::InitResources()
     *((volatile u32 *) 0x4000018) = 0;
     REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1210;
     {
-        void *p = G2::GetBG2ScrPtr();
+        void *p = G2_GetBG2ScrPtr();
         fa = 0x5300;
         MultiStore16(fa, p, 0x800);
     }
@@ -1776,7 +1777,7 @@ s32 dScMgTeresa_c::InitResources()
     *((volatile u32 *) 0x400001c) = 0;
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x9310;
     t = LoadFile(0x9b);
-    DecompressLZ16(t, G2::GetBG2CharPtr());
+    DecompressLZ16(t, G2_GetBG2CharPtr());
     Deallocate(t);
     t = LoadFile(0x9c);
     GX::LoadBGPltt(t, 0x60, 0x1a0);
@@ -1796,13 +1797,13 @@ s32 dScMgTeresa_c::InitResources()
     *((volatile u32 *) 0x4001010) = 0;
     REG_DB_BG0CNT &= ~3;
     {
-        void *p = G2S::GetBG0ScrPtr();
+        void *p = G2S_GetBG0ScrPtr();
         fb = 0;
         MultiStore16(fb, p, 0x800);
     }
     Mg_InitBrush((char *)this, 0, 0, 0);
     {
-        void *p = (char *)G2S::GetBG0CharPtr();
+        void *p = (char *)G2S_GetBG0CharPtr();
         fc = 0x1111;
         MultiStore16(fc, p, 0x6000);
     }
@@ -1812,7 +1813,7 @@ s32 dScMgTeresa_c::InitResources()
     *((volatile u32 *) 0x4001018) = 0;
     REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x408;
     t = LoadFile(0x9f);
-    DecompressLZ16(t, G2S::GetBG2CharPtr());
+    DecompressLZ16(t, G2S_GetBG2CharPtr());
     Deallocate(t);
     t = LoadFile(0xa0);
     GXS::LoadBGPltt(t, 0x60, 0x1a0);

@@ -105,7 +105,7 @@ extern "C" dFdBrightness_c *gSceneFader;
 #include "OamAttr.h"
 #include "G2x.h"
 #include "dBase_c.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "Message.h"
 
 extern "C" {
@@ -242,11 +242,6 @@ void LoadLevelNoReturn(int levelID, u32 entranceID, u32 mode, u32 arg3);
 extern u8 data_02092778;
 u8 func_02020364(int player);
 u8 func_020201f0(int);
-}
-
-namespace G2 {
-void *GetBG1ScrPtr(void);
-void *GetBG2CharPtr(void);
 }
 
 namespace GX {
@@ -402,7 +397,7 @@ s32 dScEntry_c::InitResultResources() {
     REG_BG1CNT = (u16)((REG_BG1CNT & 0x43) | 0x208);
     REG_BG1CNT = (u16)(REG_BG1CNT & ~0x40);
 
-    LoadCompressedFileAt(0x8413, G2::GetBG2CharPtr());
+    LoadCompressedFileAt(0x8413, G2_GetBG2CharPtr());
     tmp = LoadFile(0x8414);
     GX::LoadBGPltt(tmp, 0, 0x1c0);
     Deallocate(tmp);
@@ -418,8 +413,8 @@ s32 dScEntry_c::InitResultResources() {
         id0 = 0x8410;
         id1 = 0x8411;
     }
-    LoadCompressedFileAt(id0, G2::GetBG1ScrPtr());
-    LoadCompressedFileAt(id1, (void *)G2::GetBG2ScrPtr());
+    LoadCompressedFileAt(id0, G2_GetBG1ScrPtr());
+    LoadCompressedFileAt(id1, (void *)G2_GetBG2ScrPtr());
 
     i = 0;
     if (n > 0) {
@@ -494,7 +489,7 @@ s32 dScEntry_c::InitEntryResources() {
         func_0200f13c();
         if (func_0203d9b4() != 0) {
             LoadCompressedFileAt(ASSET_D_2D_BATTLE_FRAMEWORK_GAMESTART_P_NSC_BIN,
-                                 G2S::GetBG2ScrPtr());
+                                 G2S_GetBG2ScrPtr());
         }
         DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6600000);
     }
@@ -732,7 +727,7 @@ void dScEntry_c::UpdateSoundSettings() {
     {
         int i;
         for (i = 0; i < 2; i++) {
-            u16 *p = static_cast<u16 *>(G2S::GetBG2ScrPtr()) + 6 * 32 + 2 + i * 6 * 32;
+            u16 *p = static_cast<u16 *>(G2S_GetBG2ScrPtr()) + 6 * 32 + 2 + i * 6 * 32;
             int pal = (i == mSelectedIcon) ? 0x4000 : 0x3000;
             int j;
             for (j = 0; j < 11; j++, p++) {
@@ -1162,7 +1157,7 @@ void dScEntry_c::EnterRematchPrompt() {
     gSubScreenLayers &= ~5;
     ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(1);
     ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(0x9801));
-    LoadCompressedFileAt(0x8407, G2S::GetBG3ScrPtr());
+    LoadCompressedFileAt(0x8407, G2S_GetBG3ScrPtr());
     Message::DisplayVsExitText(0x1f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3;
@@ -1304,12 +1299,12 @@ void dScEntry_c::EnterResults() {
     mStepWork[1] = 0;
 
     if (data_0209b2f0[id] != 0) {
-        LoadCompressedFileAt(0x8404, G2S::GetBG3ScrPtr());
+        LoadCompressedFileAt(0x8404, G2S_GetBG3ScrPtr());
         func_02020820(&mOamAnimations[0], &data_ov075_0211ca64, 1, 1, 1, 1);
         func_02020820(&mOamAnimations[1], &data_ov075_0211ca6c, 1, 0, 0, 0);
         func_02020820(&mOamAnimations[2], &data_ov075_0211ca74, 1, 1, 1, 1);
     } else {
-        LoadCompressedFileAt(0x8401, G2S::GetBG3ScrPtr());
+        LoadCompressedFileAt(0x8401, G2S_GetBG3ScrPtr());
         func_02020820(&mOamAnimations[0], &data_ov075_0211cc44, 1, 1, 1, 1);
         func_02020820(&mOamAnimations[1], &data_ov075_0211cc4c, 1, 0, 0, 0);
         func_02020820(&mOamAnimations[2], &data_ov075_0211cc54, 1, 0, 0, 0);
@@ -1320,7 +1315,7 @@ void dScEntry_c::EnterResults() {
     mOamAnimations[1].palette = id + 0xa;
 
     {
-        void *bg0 = G2S::GetBG0ScrPtr();
+        void *bg0 = G2S_GetBG0ScrPtr();
         volatile int zero = 0;
         MultiStore_Int(zero, bg0, 0x800);
     }
@@ -1490,7 +1485,7 @@ void dScEntry_c::EnterCourseSelect() {
     gSubScreenLayers &= ~5;
     ENTRY_GRAPH_CALLBACK->SetBg2ScreenBase(1);
     ENTRY_GRAPH_CALLBACK->QueueBg2Screen(LoadFile(0x8409));
-    LoadCompressedFileAt(0x8407, G2S::GetBG3ScrPtr());
+    LoadCompressedFileAt(0x8407, G2S_GetBG3ScrPtr());
 
     if (func_0203d9b4() != 0)
         func_020338b0(0x205, 0xb0, 0x21, -1);
@@ -1556,13 +1551,13 @@ void dScEntry_c::EnterPlayerSelectIntro() {
     u32 palette;
     gSubScreenLayers &= ~5;
     if (GetLanguageIndex() == 0)
-        LoadCompressedFileAt(0x840a, G2S::GetBG2ScrPtr());
+        LoadCompressedFileAt(0x840a, G2S_GetBG2ScrPtr());
     else
-        LoadCompressedFileAt(0x980c, G2S::GetBG2ScrPtr());
-    LoadCompressedFileAt(0x840b, G2S::GetBG3ScrPtr());
+        LoadCompressedFileAt(0x980c, G2S_GetBG2ScrPtr());
+    LoadCompressedFileAt(0x840b, G2S_GetBG3ScrPtr());
 
     // Color the 9-by-10 tile panel for this player's wireless station.
-    tiles = static_cast<u16 *>(G2S::GetBG2ScrPtr()) + 11 * 32 + 11;
+    tiles = static_cast<u16 *>(G2S_GetBG2ScrPtr()) + 11 * 32 + 11;
     palette = (static_cast<u32>(func_0203da9c() + 10) << 28) >> 16;
     for (row = 0; row < 10; ++row) {
         for (col = 0; col < 9; ++col)

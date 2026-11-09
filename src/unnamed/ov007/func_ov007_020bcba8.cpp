@@ -2,14 +2,12 @@
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
 #include "Ov007Display.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "GX.h"
 
 extern "C" {
 
 extern void *func_ov007_020b3f20(int n);
-extern void *func_02054ea8(void);
-extern int func_02054d88(void);
 extern void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *plane1,
                           int plane2, void *bank);
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
@@ -33,8 +31,8 @@ void func_ov007_020bcba8(int idx) {
         return;
     case 1: {
         void *sheet = func_ov007_020b3f20(0x25);
-        void *mainBg1 = func_02054ea8();
-        void *subBg1 = G2S::GetBG1CharPtr();
+        void *mainBg1 = G2_GetBG1CharPtr();
+        void *subBg1 = G2S_GetBG1CharPtr();
         void *messages = g->settings->bootArgs->messages;
         int langFile;
         MenuText_Init(0, sheet, 0, mainBg1, subBg1, 0, messages);
@@ -60,9 +58,9 @@ void func_ov007_020bcba8(int idx) {
     } break;
     case 3: {
         void *sheet = func_ov007_020b3f20(0x25);
-        void *mainBg1 = func_02054ea8();
-        void *subBg1 = G2S::GetBG1CharPtr();
-        int mainBg3 = func_02054d88();
+        void *mainBg1 = G2_GetBG1CharPtr();
+        void *subBg1 = G2S_GetBG1CharPtr();
+        int mainBg3 = (int)G2_GetBG3CharPtr();
         void *messages = g->settings->bootArgs->messages;
         MenuText_Init(0, sheet, 0, mainBg1, subBg1, mainBg3, messages);
 

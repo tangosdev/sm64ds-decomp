@@ -1,9 +1,7 @@
 //cpp
 /* Runtime asset handles resolved through the overlay 0 file table. */
+#include "nitro/gx/gx_bgcnt.h"
 
-namespace G2S {
-unsigned int GetBG1CharPtr(void);
-}
 enum LoadFont_AssetId {
     ASSET_D_2D_MARIO_3DFONT_NCL_BIN = 0x0237
 };
@@ -13,7 +11,6 @@ extern "C" int Mg_GetWorkBuffer(void);
 extern "C" int LoadFileAt(int handle, int dest);
 extern "C" void Deallocate(void *ptr);
 
-extern "C" int func_02054d88(void);
 extern "C" void MultiCopy_Int(int *src, int *dst, int len);
 extern "C" void DecompressLZ16(void *dst, void *src);
 
@@ -39,14 +36,14 @@ extern "C" void LoadFont(unsigned char arg)
         GX::LoadBGPltt((char *)file + 2, 2, 0x20);
         Deallocate(file);
     } else if (data_0209d698 == 1) {
-        MultiCopy_Int((int *)r4, (int *)G2S::GetBG1CharPtr(), 0x4000);
+        MultiCopy_Int((int *)r4, (int *)G2S_GetBG1CharPtr(), 0x4000);
         file = LoadFile(ASSET_D_2D_MARIO_3DFONT_NCL_BIN);
         GXS::LoadBGPltt(file, 0x40, 0x20);
         Deallocate(file);
     } else {
-        MultiCopy_Int((int *)r4, (int *)func_02054d88(), 0x4000);
+        MultiCopy_Int((int *)r4, (int *)G2_GetBG3CharPtr(), 0x4000);
         file = LoadFile(0x980d);
-        DecompressLZ16(file, (void *)(func_02054d88() + 0x8000));
+        DecompressLZ16(file, (void *)((int)G2_GetBG3CharPtr() + 0x8000));
         Deallocate(file);
     }
     Deallocate(r4);

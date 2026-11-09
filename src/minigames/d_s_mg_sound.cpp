@@ -30,6 +30,7 @@ enum dScMgSound_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* A cursor keeps the add-#0x5000 split on a walk that advances the scene
    pointer. Pointing the record itself at the slot pools the base instead. */
@@ -49,10 +50,6 @@ struct PmfEntry {
     Pmf pmf;
 };
 
-
-namespace G2S {
-unsigned GetBG2CharPtr();
-}
 
 namespace GX {
 void LoadOBJPltt(const void *data, u32 offset, u32 size);
@@ -319,7 +316,7 @@ s32 dScMgSound_c::InitResources() {
     gSubScreenLayers |= 4;
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCG_BIN);
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x214;
-    DecompressLZ16(file, (void *)G2S::GetBG2CharPtr());
+    DecompressLZ16(file, (void *)G2S_GetBG2CharPtr());
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCL_BIN);

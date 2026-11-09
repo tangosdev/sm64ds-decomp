@@ -84,7 +84,7 @@ enum dScMgAmida_c_AssetId {
 #include "PlayerInput.h"
 #include "types.h"
 #include "nitro/hw/registers.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "decl_common.h"
 #include "LevelRng.h"
 #include "dScMgAmida_c.h"
@@ -231,9 +231,9 @@ int dScMgAmida_c::InitSubScreenBg() {
     SetSubBg1Offset(0, 0);
     gSubScreenLayers &= ~2;
     language = GetGameLanguage();
-    chars = G2S::GetBG1CharPtr();
+    chars = G2S_GetBG1CharPtr();
     LoadCompressedFileAt(sAmidaOptionNcgByLanguage[language], chars);
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S::GetBG1ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S_GetBG1ScrPtr());
 }
 
 /* Refills and shuffles mLaneResult. When IsVariant2() holds, the entries
@@ -1281,18 +1281,18 @@ void dScMgAmida_c::StepWalkers() {
 #pragma pop
 
 extern "C" void Amida_RestoreBgChars(void *) {
-    char *mainChars = (char *)func_02054efc();
-    MultiCopyHalf((char *)func_02054efc() + 0xc000, mainChars, 0x6000);
-    char *subChars = (char *)G2S::GetBG0CharPtr();
-    MultiCopyHalf((char *)G2S::GetBG0CharPtr() + 0x6000, subChars, 0x6000);
+    char *mainChars = (char *)G2_GetBG0CharPtr();
+    MultiCopyHalf((char *)G2_GetBG0CharPtr() + 0xc000, mainChars, 0x6000);
+    char *subChars = (char *)G2S_GetBG0CharPtr();
+    MultiCopyHalf((char *)G2S_GetBG0CharPtr() + 0x6000, subChars, 0x6000);
 }
 
 /* The scene pointer its caller passes is never read. */
 extern "C" void Amida_SaveBgChars(void *) {
-    char *mainChars = (char *)func_02054efc() + 0xc000;
-    MultiCopyHalf((char *)func_02054efc(), mainChars, 0x6000);
-    char *subChars = (char *)G2S::GetBG0CharPtr() + 0x6000;
-    MultiCopyHalf(G2S::GetBG0CharPtr(), subChars, 0x6000);
+    char *mainChars = (char *)G2_GetBG0CharPtr() + 0xc000;
+    MultiCopyHalf((char *)G2_GetBG0CharPtr(), mainChars, 0x6000);
+    char *subChars = (char *)G2S_GetBG0CharPtr() + 0x6000;
+    MultiCopyHalf(G2S_GetBG0CharPtr(), subChars, 0x6000);
 }
 
 void dScMgAmida_c::InitWalkers() {
@@ -1486,10 +1486,10 @@ void dScMgAmida_c::SetupRound() {
         void *chars;
         volatile u16 fillMain;
         volatile u16 fillSub;
-        chars = func_02054efc();
+        chars = G2_GetBG0CharPtr();
         fillMain = 0;
         MultiStore16(fillMain, chars, 0x6000);
-        chars = G2S::GetBG0CharPtr();
+        chars = G2S_GetBG0CharPtr();
         fillSub = 0;
         MultiStore16(fillSub, chars, 0x6000);
     }
@@ -2098,7 +2098,7 @@ s32 dScMgAmida_c::InitResources() {
     REG_BG0OFS = 0;
     REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
 
-    file = func_02054efc();
+    file = G2_GetBG0CharPtr();
     fillMain = 0;
     MultiStore16(fillMain, file, 0x6000);
 
@@ -2107,7 +2107,7 @@ s32 dScMgAmida_c::InitResources() {
     REG_DB_BG0OFS = 0;
     REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 1;
 
-    file = G2S::GetBG0CharPtr();
+    file = G2S_GetBG0CharPtr();
     fillSub = 0;
     MultiStore16(fillSub, file, 0x6000);
 
@@ -2119,19 +2119,19 @@ s32 dScMgAmida_c::InitResources() {
     REG_BG3CNT = (REG_BG3CNT & ~3) | 3;
 
     if (IsVariant2() != 0) {
-        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCG_BIN, (void *)func_02054d88());
+        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCG_BIN, (void *)G2_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCL_BIN);
         CP15::FlushAndInvalidateDataCache((u32)file, 0x1a0);
         GX::LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
-        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NSC_BIN, G2::GetBG3ScrPtr());
+        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NSC_BIN, G2_GetBG3ScrPtr());
     } else {
-        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NCG_BIN, (void *)func_02054d88());
+        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NCG_BIN, (void *)G2_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA1_NCL_BIN);
         CP15::FlushAndInvalidateDataCache((u32)file, 0x1a0);
         GX::LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
-        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NSC_BIN, G2::GetBG3ScrPtr());
+        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NSC_BIN, G2_GetBG3ScrPtr());
     }
 
     REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x40c;
@@ -2144,20 +2144,20 @@ s32 dScMgAmida_c::InitResources() {
     REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 3;
 
     if (IsVariant2() != 0) {
-        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NCG_BIN, G2S::GetBG3CharPtr());
+        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NCG_BIN, G2S_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NCL_BIN);
         GXS::LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
-        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NSC_BIN, G2S::GetBG3ScrPtr());
+        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NSC_BIN, G2S_GetBG3ScrPtr());
         gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3;
         gSubScreenLayers |= 9;
     } else {
-        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_NCG_BIN, G2S::GetBG3CharPtr());
+        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_NCG_BIN, G2S_GetBG3CharPtr());
         file = LoadFile(ASSET_D_2D_MG_BG_AMIDA2_NCL_BIN);
         GXS::LoadBGPltt(file, 0x60, 0x1a0);
         Deallocate(file);
-        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_2_NSC_BIN, G2S::GetBG2ScrPtr());
-        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_1_NSC_BIN, G2S::GetBG3ScrPtr());
+        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_2_NSC_BIN, G2S_GetBG2ScrPtr());
+        LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_1_NSC_BIN, G2S_GetBG3ScrPtr());
         REG_BLDCNT = 0;
         G2x::SetBlendAlpha(&REG_DB_BLDCNT, 4, 8, 6, 0x10);
         gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3;

@@ -32,7 +32,7 @@
 #include "Sound.h"
 #include "G3X.h"
 #include "G3i.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "GX.h"
 #include "private/controller_input.h"
 #include "math/MtxStack.h"
@@ -934,14 +934,14 @@ s32 dScStarSel_c::InitResources() {
         REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
         REG_BG2CNT &= ~0x40;
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NCG_BIN);
-        DecompressLZ16(file, G2::GetBG2CharPtr());
+        DecompressLZ16(file, G2_GetBG2CharPtr());
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NCL_BIN);
         GX::LoadBGPltt(file, 0, 0x1A0);
         GXS::LoadBGPltt(file, 0, 2);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NSC_BIN);
-        DecompressLZ16(file, G2::GetBG2ScrPtr());
+        DecompressLZ16(file, G2_GetBG2ScrPtr());
         Deallocate(file);
         SetBg2Offset(0, 0);
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
@@ -961,13 +961,13 @@ s32 dScStarSel_c::InitResources() {
         } else {
             file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_NCG_BIN);
         }
-        DecompressLZ16(file, G2::GetBG2CharPtr());
+        DecompressLZ16(file, G2_GetBG2CharPtr());
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_NCL_BIN);
         GX::LoadBGPltt(file, 0, 0x1A0);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_NSC_BIN);
-        DecompressLZ16(file, G2::GetBG2ScrPtr());
+        DecompressLZ16(file, G2_GetBG2ScrPtr());
         Deallocate(file);
         SetBg2Offset(0, -4);
         gMainScreenLayers |= DISPLAY_LAYER_BG2;

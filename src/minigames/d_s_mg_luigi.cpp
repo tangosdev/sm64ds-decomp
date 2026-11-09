@@ -46,6 +46,7 @@ enum dScMgLuigi_c_AssetId {
 #include "SpawnInfo.h"
 #include "OamAttr.h"
 #include "nitro/gx/g2_oam.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* A random integer in [0, n): the top 15 bits of the shared generator, scaled. */
 #define LUIGI_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
@@ -154,15 +155,6 @@ void LoadOBJPltt(const void *src, u32 offset, u32 size);
 namespace GX {
 void LoadBGPltt(const void *src, u32 offset, u32 size);
 void LoadOBJPltt(const void *src, u32 offset, u32 size);
-}
-namespace G2S {
-unsigned GetBG2CharPtr();
-char *GetBG3ScrPtr();
-}
-namespace G2 {
-char *GetBG2CharPtr();
-char *GetBG2ScrPtr();
-char *GetBG3ScrPtr();
 }
 namespace CP15 {
 void FlushAndInvalidateDataCache(u32 addr, u32 size);
@@ -1434,10 +1426,10 @@ void dScMgLuigi_c::ChooseTarget() {
     }
 
     for (tileRow = 0; tileRow < 8; tileRow++) {
-        dst = (u16 *)(G2::GetBG3ScrPtr() + 0x1d8) + tileRow * 0x20;
+        dst = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x1d8) + tileRow * 0x20;
         sourceTile = sLuigiWantedPosterTiles[mWanted] + tileRow * 0x20;
         for (tileColumn = 0; tileColumn < 8; tileColumn++) {
-            tile = ((u16 *)G2::GetBG3ScrPtr())[sourceTile];
+            tile = ((u16 *)G2_GetBG3ScrPtr())[sourceTile];
             MultiStore16(tile, (char *)dst, 2);
             sourceTile++;
             dst++;
@@ -1621,7 +1613,6 @@ extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void Ov004_Deallocate(void *ptr);
-extern int func_02054d88(void);
 extern void func_02056314(void *, u32, u32);
 extern void func_02056374(const void *, u32, u32);
 extern void Deallocate(void *);
@@ -1697,7 +1688,7 @@ s32 dScMgLuigi_c::InitResources() {
     REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1218;
 
-    DecompressLZ16(arc, (void *)func_02054d88());
+    DecompressLZ16(arc, (void *)G2_GetBG3CharPtr());
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI1_NCL_BIN);
     GX::LoadBGPltt(fileData, 0x60, 0x1a0);
@@ -1714,14 +1705,14 @@ s32 dScMgLuigi_c::InitResources() {
     REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1410;
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
-    DecompressLZ16(fileData, (void *)(G2::GetBG2CharPtr() + 0x4000));
+    DecompressLZ16(fileData, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
     Deallocate(fileData);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCL_BIN);
     GX::LoadBGPltt(fileData, 0x40, 0x20);
     Deallocate(fileData);
 
-    screenMap = G2::GetBG2ScrPtr();
+    screenMap = (char *)G2_GetBG2ScrPtr();
     fillMain = 0x23e1;
     MultiStore16(fillMain, screenMap, 0x800);
 
@@ -1738,7 +1729,7 @@ s32 dScMgLuigi_c::InitResources() {
     {
         void *subFileData;
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
-        DecompressLZ16(subFileData, (void *)(G2S::GetBG2CharPtr() + 0x4000));
+        DecompressLZ16(subFileData, (void *)((u32)G2S_GetBG2CharPtr() + 0x4000));
         Deallocate(subFileData);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCL_BIN);
@@ -1754,7 +1745,7 @@ s32 dScMgLuigi_c::InitResources() {
         REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x1410;
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_BLACK_NSC_BIN);
-        screenMap = G2S::GetBG3ScrPtr();
+        screenMap = (char *)G2S_GetBG3ScrPtr();
         fillSub = 0xf3e1;
         MultiStore16(fillSub, screenMap, 0x800);
         Deallocate(subFileData);

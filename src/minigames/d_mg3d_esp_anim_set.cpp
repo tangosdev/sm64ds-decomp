@@ -30,7 +30,7 @@
 #include "nitro/hw/registers.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "G2x.h"
 #include "GX.h"
 #include "types.h"
@@ -1312,7 +1312,7 @@ s32 dScMg3DEsp_c::InitResources()
     *(volatile unsigned short*)0x400100c = (*(volatile unsigned short*)0x400100c & 0x43) | 0x210;
 
     f = LoadFile(0x12);
-    DecompressLZ16(f, (void *)((unsigned)G2S::GetBG2CharPtr() + 0x4000));
+    DecompressLZ16(f, (void *)((unsigned)G2S_GetBG2CharPtr() + 0x4000));
     Deallocate(f);
 
     f = LoadFile(0x13);

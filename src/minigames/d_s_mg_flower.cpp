@@ -38,7 +38,7 @@
 #include "PlayerInput.h"
 #include "Vector2.h"
 #include "Vector2Math.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "CP15.h"
 #include "GX.h"
 
@@ -493,20 +493,20 @@ s32 dScMgFlower_c::InitResources() {
     REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 3;
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgUpNcgPath);
-    DecompressLZ16(fileData, G2::GetBG2CharPtr());
+    DecompressLZ16(fileData, G2_GetBG2CharPtr());
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgDownNcgPath);
-    DecompressLZ16(fileData, G2S::GetBG2CharPtr());
+    DecompressLZ16(fileData, G2S_GetBG2CharPtr());
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgUpNscPath);
-    DecompressLZ16(fileData, G2::GetBG2ScrPtr());
+    DecompressLZ16(fileData, G2_GetBG2ScrPtr());
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgDownNscPath);
-    DecompressLZ16(fileData, G2S::GetBG2ScrPtr());
-    DecompressLZ16(fileData, G2S::GetBG3ScrPtr());
+    DecompressLZ16(fileData, G2S_GetBG2ScrPtr());
+    DecompressLZ16(fileData, G2S_GetBG3ScrPtr());
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgUpNclPath);

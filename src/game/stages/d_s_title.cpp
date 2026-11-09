@@ -42,7 +42,7 @@
 #include "PlayerInput.h"
 #include "private/controller_input.h"
 #include "dFdBrightness_c.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "GX.h"
 #include "OAM.h"
 #include "nitro/hw/registers.h"
@@ -149,7 +149,7 @@ extern "C" void TitlePrintLevelRow(int level, int row, int col) {
     volatile u16 t0, t1, t2, t3, t4;
     int tens = level / 10;
     int ones = level % 10;
-    short *scr = (short *)G2::GetBG0ScrPtr();
+    short *scr = (short *)G2_GetBG0ScrPtr();
     short *d = scr + (col + (row << 5));
     t0 = tens == 0 ? 0xff : tens + 0x30;
     MultiStore16(t0, (char *)d, 2);
@@ -180,7 +180,7 @@ extern "C" void TitlePrintLevelRow(int level, int row, int col) {
  * at (row, col), one tile per character. Called only from
  * TitleScrollLevelList, for the caption. Coined name. */
 extern "C" void TitlePrintString(signed char *s, int row, int col) {
-    short *p = (short *)G2::GetBG0ScrPtr() + (col + (row << 5));
+    short *p = (short *)G2_GetBG0ScrPtr() + (col + (row << 5));
     if (*s == 0)
         return;
     do {
@@ -222,7 +222,7 @@ s32 dScTitle_c::InitResources() {
     GX::LoadBG0Char(data_0208a178, 0, 0x2000);
     GX::LoadBGPltt(data_0208c178, 0, 0x200);
     {
-        u16 *scr = (u16 *)G2::GetBG0ScrPtr();
+        u16 *scr = (u16 *)G2_GetBG0ScrPtr();
         int i = 0;
         do {
             *scr++ = 0xff;

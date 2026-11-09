@@ -44,14 +44,7 @@ enum dScMgCurling_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "G2x.h"
 #include "LevelRng.h"
-
-namespace G2 {
-void *GetBG2CharPtr(void);
-}
-
-namespace G2S {
-unsigned GetBG2CharPtr(void);
-}
+#include "nitro/gx/gx_bgcnt.h"
 
 namespace GX {
 void LoadBGPltt(const void *p, u32 a, u32 b);
@@ -1489,7 +1482,7 @@ s32 dScMgCurling_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
     REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1220;
-    DecompressLZ16(a, G2::GetBG2CharPtr());
+    DecompressLZ16(a, G2_GetBG2CharPtr());
 
     f = LoadFile(ASSET_D_2D_MG_BG_CURLING1_NCL_BIN);
     GX::LoadBGPltt(f, 0x60, 0x1a0);
@@ -1508,7 +1501,7 @@ s32 dScMgCurling_c::InitResources() {
         gSubScreenLayers |= 4;
         REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
         REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x814;
-        DecompressLZ16(b, (void *)G2S::GetBG2CharPtr());
+        DecompressLZ16(b, (void *)G2S_GetBG2CharPtr());
 
         f = LoadFile(ASSET_D_2D_MG_BG_CURLING2_NCL_BIN);
         GXS::LoadBGPltt(f, 0x60, 0x1a0);

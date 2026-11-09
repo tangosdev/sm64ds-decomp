@@ -1,7 +1,7 @@
 //cpp
 #include "dFdBrightness_c.h"
 #include "nitro/hw/registers.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "G2x.h"
 #include "GX.h"
 #include "cstd.h"
@@ -119,9 +119,6 @@ extern void Trmp2Spinner_Update(char *obj);
 extern void Trmp2Spinner_Init(void *obj, int hitCount);
 extern void Trmp2Spinner_SetModel(void *self);
 extern int sTrmp2BrushWord[];
-extern void *func_02054efc(void);
-extern void *func_02054ea8(void);
-extern int func_02054d88(void);
 extern void MultiCopy_Int(int *src, int *dst, int len);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern const u16 sTrmp2BrushPltt[];
@@ -195,11 +192,6 @@ extern OamAttr *sMgTextSpritesItalian[];
 /* TUBUILD CONFLICT -- alternate declaration of sTrmp2Spinners, from the legacy file for Trmp2Spinner_InitAll, NOT applied: extern unsigned char *sTrmp2Spinners; */
 /* TUBUILD CONFLICT -- alternate declaration of sTrmp2Spinners, from the legacy file for Trmp2Spinner_LoadAll, NOT applied: extern int sTrmp2Spinners; */
 /* TUBUILD CONFLICT -- alternate declaration of sTrmp2StarModelFile, from the legacy file for Trmp2Spinner_Destruct, NOT applied: extern SharedFilePtr sTrmp2StarModelFile; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN2G213GetBG2CharPtrEv, from the legacy file for func_ov006_02122e20, NOT applied: extern char *_ZN2G213GetBG2CharPtrEv(void); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02054efc, from the legacy file for func_ov006_02122e20, NOT applied: extern char *func_02054efc(void); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02054ea8, from the legacy file for func_ov006_02122e20, NOT applied: extern char *func_02054ea8(void); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02054d88, from the legacy file for func_ov006_02122e20, NOT applied: extern char *func_02054d88(void); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02054d88, from the legacy file for _ZN18dScMgTrampoline2_c16OnGraphCallback0Ev, NOT applied: int func_02054d88(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for _ZN18dScMgTrampoline2_c16OnGraphCallback0Ev, NOT applied: void MultiStore16(u16 val, char* dst, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for Trmp2_PickFaceA, NOT applied: extern int RandomIntInternal(void* seed); */
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for func_ov006_02123b24, NOT applied: extern void MultiStore16(unsigned short a, int b, int c); */
@@ -218,7 +210,6 @@ extern OamAttr *sMgTextSpritesItalian[];
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for _ZN18dScMgTrampoline2_c10StartRoundEi, NOT applied: extern "C" void MultiStore16(u16 val, char *dst, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd4fdivEii, from the legacy file for _ZN18dScMgTrampoline2_c13InitResourcesEv, NOT applied: extern s32 _ZN4cstd4fdivEii(s32 a, s32 b); */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov006_021245a8, NOT applied: extern s32 GetGameLanguage(void); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN2G213GetBG2CharPtrEv, from the legacy file for func_ov006_021245a8, NOT applied: extern char *_ZN2G213GetBG2CharPtrEv(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for func_ov006_021245a8, NOT applied: extern void MultiStore16(u16 val, char *dst, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2GX10LoadBGPlttEPKvjj, from the legacy file for func_ov006_021245a8, NOT applied: extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b); */
 
@@ -291,12 +282,12 @@ void dScMgTrampoline2_c::InitDisplay() {
     *(volatile u16 *)0x400000c &= ~0x40;
 
     {
-        char *dst = (char *)G2::GetBG2CharPtr();
+        char *dst = (char *)G2_GetBG2CharPtr();
         sp0 = 0;
         MultiStore16(sp0, dst, 0x4000);
     }
-    DecompressLZ16(bgChar, (void *)((char *)G2::GetBG2CharPtr() + 0x4000));
-    DecompressLZ16(bgScr, G2::GetBG2ScrPtr());
+    DecompressLZ16(bgChar, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
+    DecompressLZ16(bgScr, G2_GetBG2ScrPtr());
     GX::LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
@@ -389,7 +380,7 @@ void dScMgTrampoline2_c::StartRound(int /* arg */) {
 
     {
         volatile u16 z;
-        char *dst = (char *)func_02054d88();
+        char *dst = (char *)G2_GetBG3CharPtr();
         z = 0;
         MultiStore16(z, dst, 0x6000);
     }
@@ -432,7 +423,7 @@ void dScMgTrampoline2_c::StateIntro() {
         }
 
         {
-            int dst = func_02054d88();
+            int dst = (int)G2_GetBG3CharPtr();
             volatile u16 tmp = 0;
             MultiStore16(tmp, (char *)dst, 0x6000);
         }
@@ -584,7 +575,7 @@ void dScMgTrampoline2_c::StateWaitExit() {
     {
         int r;
         volatile unsigned short h;
-        r = func_02054d88();
+        r = (int)G2_GetBG3CharPtr();
         h = 0;
         MultiStore16(h, (char *)r, 0x6000);
     }
@@ -957,7 +948,7 @@ int dScMgTrampoline2_c::OnGraphCallback0() {
             }
         }
         {
-            char *dst = (char *)func_02054d88();
+            char *dst = (char *)G2_GetBG3CharPtr();
             buf[0] = 0;
             MultiStore16(buf[0], dst, 0x6000);
         }
@@ -981,20 +972,20 @@ void dScMgTrampoline2_c::InitBrush(int layer) {
 
     switch (self->mBrushLayer) {
     case 0:
-        scrPtr = (char *)G2::GetBG0ScrPtr();
-        charPtr = (char *)func_02054efc();
+        scrPtr = (char *)G2_GetBG0ScrPtr();
+        charPtr = (char *)G2_GetBG0CharPtr();
         break;
     case 1:
-        scrPtr = (char *)G2::GetBG1ScrPtr();
-        charPtr = (char *)func_02054ea8();
+        scrPtr = (char *)G2_GetBG1ScrPtr();
+        charPtr = (char *)G2_GetBG1CharPtr();
         break;
     case 2:
-        scrPtr = (char *)G2::GetBG2ScrPtr();
-        charPtr = (char *)G2::GetBG2CharPtr();
+        scrPtr = (char *)G2_GetBG2ScrPtr();
+        charPtr = (char *)G2_GetBG2CharPtr();
         break;
     case 3:
-        scrPtr = (char *)G2::GetBG3ScrPtr();
-        charPtr = (char *)func_02054d88();
+        scrPtr = (char *)G2_GetBG3ScrPtr();
+        charPtr = (char *)G2_GetBG3CharPtr();
         break;
     default:
         return;
@@ -1042,16 +1033,16 @@ void dScMgTrampoline2_c::PaintSquare(int x_base, int y, int val, int n) {
 
                         switch (mode) {
                         case 0:
-                            ret = func_02054efc();
+                            ret = G2_GetBG0CharPtr();
                             break;
                         case 1:
-                            ret = func_02054ea8();
+                            ret = G2_GetBG1CharPtr();
                             break;
                         case 2:
-                            ret = (char *)G2::GetBG2CharPtr();
+                            ret = (char *)G2_GetBG2CharPtr();
                             break;
                         case 3:
-                            ret = (void *)func_02054d88();
+                            ret = (void *)G2_GetBG3CharPtr();
                             break;
                         default:
                             return;

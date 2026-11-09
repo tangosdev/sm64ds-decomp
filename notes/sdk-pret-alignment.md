@@ -26,7 +26,7 @@ SetFogTable and the 0x18 table loader after SetClearColor come in the other orde
 | pret file | aligned run | promoted TU | agrees? |
 |---|---|---|---|
 | GX.c | 0x02053a90.. (7 exact, GX_Init drifts 0x184 to 0x15c) | arm9/GX_Init | yes, both edges |
-| GX_bgcnt.c | 0x02054d38..0x020551f0, 16/16 exact | arm9/G2 | yes, both edges |
+| GX_bgcnt.c | 0x02054d38..0x020551f0, 16/16 exact | arm9/GX_BgCnt | yes, both edges |
 | GX_vramcnt.c | 0x02053ea0..0x02054d38, 37 exact + 1 drift | arm9/GX_VramCnt | yes, both edges: the 3 functions below (0x02053e1c..0x02053ea0) are gx_vramcnt.c's GX_GetSizeOfX_, GetSizeOfTex and GetSizeOfTexPltt, which pret's file leaves out (Pokemon doesn't link them); RushRE's NitroSDK gx_vramctrl.c ends with them |
 | OS_system.c | 0x02059d08..0x02059d98, 8/8 | arm9/IRQ3 | yes; IRQ3 leaves out OS_SpinWait (src/OS_SpinWait.c, the asm hatch) on purpose |
 | OS_tcm.c, OS_protectionUnit.c | 1 and 2 exact | arm9/CP15_TCM, arm9/CP15_ProtectionUnit | yes |

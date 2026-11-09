@@ -20,7 +20,7 @@ enum dScBoot_c_AssetId { ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN = 0x022d };
 
 #include "dScBoot_c.h"
 #include "nitro/hw/registers.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "GX.h"
 #include "AsyncJob.h"
 
@@ -106,9 +106,9 @@ s32 dScBoot_c::InitResources() {
     REG_BG0CNT = REG_BG0CNT & ~0x40;
     SetBg0Offset(0, 0);
 
-    DecompressLZ16(&data_020918c4, func_02054efc());
+    DecompressLZ16(&data_020918c4, G2_GetBG0CharPtr());
     GX::LoadBGPltt(&data_020914e0, 0x1c0, 0x40);
-    DecompressLZ16(&data_020916d8, G2::GetBG0ScrPtr());
+    DecompressLZ16(&data_020916d8, G2_GetBG0ScrPtr());
 
     REG_BG3CNT = REG_BG3CNT & ~3;
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1100;
@@ -128,10 +128,10 @@ s32 dScBoot_c::InitResources() {
     REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x310;
     SetSubBg2Offset(0, 0);
 
-    DecompressLZ16(&data_020918c4, (void *)G2S::GetBG2CharPtr());
+    DecompressLZ16(&data_020918c4, (void *)G2S_GetBG2CharPtr());
     GXS::LoadBGPltt(&data_020914e0, 0, 2);
     GXS::LoadBGPltt(&data_020914e0, 0x1c0, 0x40);
-    DecompressLZ16(&data_02091570, (void *)G2S::GetBG2ScrPtr());
+    DecompressLZ16(&data_02091570, (void *)G2S_GetBG2ScrPtr());
 
     gMainScreenLayers = DISPLAY_LAYER_BG0;
     gSubScreenLayers = 4;
@@ -213,13 +213,13 @@ s32 dScBoot_c::Behavior() {
                     } else {
                         langFileID = 0xa00d;
                     }
-                    LoadCompressedFileAt(langFileID, (void *)G2S::GetBG1CharPtr());
+                    LoadCompressedFileAt(langFileID, (void *)G2S_GetBG1CharPtr());
                     palette = LoadFile(0x9807);
                     GXS::LoadBGPltt(palette, 0, 0x1c0);
                     Deallocate(palette);
                     LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_INITIALIZE_NSC_BIN,
-                                         (void *)G2S::GetBG1ScrPtr());
-                    LoadCompressedFileAt(0x9803, (char *)G2S::GetBG1ScrPtr() + 0x800);
+                                         (void *)G2S_GetBG1ScrPtr());
+                    LoadCompressedFileAt(0x9803, (char *)G2S_GetBG1ScrPtr() + 0x800);
                     func_0201cd08(0x29a);
                     mSelectedButton = 1;
                     UpdateButtonPalettes();
@@ -369,7 +369,7 @@ void dScBoot_c::UpdateButtonPalettes() {
         u16(*rows)[0x20];
         int column;
         u16 paletteBits = (button == mSelectedButton && mButtonFlashTimer == 0) ? 0x2000 : 0x1000;
-        rows = (u16(*)[0x20])((u16 *)G2S::GetBG1ScrPtr() + 19 * 0x20 + button * 0x10);
+        rows = (u16(*)[0x20])((u16 *)G2S_GetBG1ScrPtr() + 19 * 0x20 + button * 0x10);
         for (column = 0; column < 0x10; column++) {
             rows[0][column] = paletteBits + (rows[0][column] & 0x3ff);
             rows[1][column] = paletteBits + (rows[1][column] & 0x3ff);

@@ -43,7 +43,7 @@
 #include "G2x.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "PlayerInput.h"
 
 extern "C" {
@@ -1888,7 +1888,7 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
 
     f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN);
-    DecompressLZ16(f, (void *)(func_02054d88() + 0x4000));
+    DecompressLZ16(f, (void *)((int)G2_GetBG3CharPtr() + 0x4000));
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCL_BIN);
@@ -1904,7 +1904,7 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9410;
 
     f = LoadFile(ASSET_D_2D_ELEVATOR_NSC_BIN);
-    b = (char *)G2::GetBG2ScrPtr();
+    b = (char *)G2_GetBG2ScrPtr();
     fill = 0xf23f;
     MultiStore16(fill, b, 0x1000);
     func_020563d4(f, 0, 0x800);
@@ -1935,7 +1935,7 @@ s32 dScMgBomroom_c::InitResources() {
 
     {
         void *f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN);
-        DecompressLZ16(f7, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
+        DecompressLZ16(f7, (void *)((char *)G2S_GetBG3CharPtr() + 0x4000));
         Deallocate(f7);
 
         f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCL_BIN);

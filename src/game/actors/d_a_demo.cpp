@@ -104,7 +104,7 @@ enum daDemo_c_AssetId {
 #include "KuppaScript.h"
 #include "types.h"
 #include "CP15.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "G2x.h"
 #include "GX.h"
 #include "Memory.h"
@@ -3235,7 +3235,7 @@ void func_ov002_020f5fe4(char* c)
     *(volatile u16*)0x400100a = (*(volatile u16*)0x400100a & 0x43) | 0x800;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCG_BIN);
-    DecompressLZ16(f, (void *)G2S::GetBG1CharPtr());
+    DecompressLZ16(f, (void *)G2S_GetBG1CharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCL_BIN);
@@ -3262,7 +3262,7 @@ void func_ov002_020f5fe4(char* c)
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCG_BIN);
     }
 
-    DecompressLZ16(r5, (void *)G2S::GetBG3CharPtr());
+    DecompressLZ16(r5, (void *)G2S_GetBG3CharPtr());
     Deallocate(r5);
 
     r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCL_BIN);

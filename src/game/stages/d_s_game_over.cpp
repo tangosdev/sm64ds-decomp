@@ -19,8 +19,8 @@
  *   non-virtual methods under coined names.
  * - OAM::Render's Fix12 overload stays mangled: OAM.h excludes the by-value
  *   Fix12<int> overloads (codegen wall, pinned in
- *   notes/experiments/gameover-2711-oam-render-fix12.md). G2S::GetBG1ScrPtr
- *   comes from G2.h as `void *` and UpdateButtonPalettes casts it to u16* for its pointer
+ *   notes/experiments/gameover-2711-oam-render-fix12.md). G2S_GetBG1ScrPtr
+ *   comes from nitro/gx/gx_bgcnt.h as `void *` and UpdateButtonPalettes casts it to u16* for its pointer
  *   arithmetic (typing ergonomics, not a codegen wall -- see
  *   notes/experiments/gameover-2711-bg1scrptr-u16.md).
  * - gSceneFader, the dFdBrightness_c dScene_c::SetFaders installed, gates
@@ -43,7 +43,7 @@ enum dScGameOver_c_AssetId {
 
 #include "dScGameOver_c.h"
 #include "nitro/hw/registers.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "GX.h"
 #include "dScStage_c.h"
 #include "OamAttr.h"
@@ -191,7 +191,7 @@ s32 dScGameOver_c::InitResources() {
     } else {
         f = LoadFile(0xa00c);
     }
-    DecompressLZ16(f, G2::GetBG2CharPtr());
+    DecompressLZ16(f, G2_GetBG2CharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_BG_NCL_BIN);
@@ -199,11 +199,11 @@ s32 dScGameOver_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_BG_NSC_BIN);
-    DecompressLZ16(f, G2::GetBG2ScrPtr());
+    DecompressLZ16(f, G2_GetBG2ScrPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN);
-    DecompressLZ16(f, G2::GetBG0ScrPtr());
+    DecompressLZ16(f, G2_GetBG0ScrPtr());
     Deallocate(f);
 
     REG_BG3CNT &= ~3;
@@ -242,7 +242,7 @@ s32 dScGameOver_c::InitResources() {
     } else {
         f = LoadFile(0xa00d);
     }
-    DecompressLZ16(f, (void *)G2S::GetBG1CharPtr());
+    DecompressLZ16(f, (void *)G2S_GetBG1CharPtr());
     Deallocate(f);
 
     f = LoadFile(0x9807);
@@ -250,7 +250,7 @@ s32 dScGameOver_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(0x9801);
-    DecompressLZ16(f, G2S::GetBG1ScrPtr());
+    DecompressLZ16(f, G2S_GetBG1ScrPtr());
     Deallocate(f);
 
     REG_DB_BG2CNT &= ~3;
@@ -259,7 +259,7 @@ s32 dScGameOver_c::InitResources() {
     SetSubBg2Offset(0, 0);
 
     f = LoadFile(ASSET_D_2D_BTM_GAME_OVER_BG_NSC_BIN);
-    DecompressLZ16(f, G2S::GetBG2ScrPtr());
+    DecompressLZ16(f, G2S_GetBG2ScrPtr());
     Deallocate(f);
 
     func_0201cebc(0x27d);
@@ -387,7 +387,7 @@ void dScGameOver_c::UpdateButtonPalettes(int unselectAll) {
     for (i = 0; i < 2; i++) {
         unsigned int v;
         int j;
-        unsigned short *p = (unsigned short *)G2S::GetBG1ScrPtr();
+        unsigned short *p = (unsigned short *)G2S_GetBG1ScrPtr();
         p += sGameOverPromptTileOffsets[i];
         if (unselectAll) {
             v = 0x1000;

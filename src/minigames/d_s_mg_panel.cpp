@@ -53,14 +53,8 @@ enum dScMgPanel_c_AssetId {
 
 #include "Sound.h"
 #include "OamAttr.h"
+#include "nitro/gx/gx_bgcnt.h"
 
-namespace G2 {
-char *GetBG2ScrPtr();
-}
-namespace G2S {
-char *GetBG2ScrPtr();
-char *GetBG3CharPtr();
-}
 namespace GX {
 void LoadBGPltt(const void *src, u32 offset, u32 size);
 void LoadOBJPltt(const void *src, u32 offset, u32 size);
@@ -1541,7 +1535,6 @@ extern void DecompressLZ16(void *src, void *dst);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void FreeGfxSlotsById(int arg);
 extern void SetSubBg0Offset(int, int);
-extern int func_02054d88(void);
 extern void func_020562b4(const void *, u32, u32);
 extern void func_02056314(void *, u32, u32);
 extern void func_02056374(const void *, u32, u32);
@@ -1632,7 +1625,7 @@ s32 dScMgPanel_c::InitResources() {
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
-    DecompressLZ16(file, (void *)(func_02054d88() + 0x4000));
+    DecompressLZ16(file, (void *)((int)G2_GetBG3CharPtr() + 0x4000));
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCL_BIN);
@@ -1649,7 +1642,7 @@ s32 dScMgPanel_c::InitResources() {
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x9410;
 
-    b = G2::GetBG2ScrPtr();
+    b = (char *)G2_GetBG2ScrPtr();
     mainFill = 0xf361;
     MultiStore16(mainFill, b, 0x1000);
 
@@ -1681,7 +1674,7 @@ s32 dScMgPanel_c::InitResources() {
 
     {
         void *subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
-        DecompressLZ16(subFile, (void *)(G2S::GetBG3CharPtr() + 0x4000));
+        DecompressLZ16(subFile, (void *)((char *)G2S_GetBG3CharPtr() + 0x4000));
         Deallocate(subFile);
 
         subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCL_BIN);
@@ -1698,7 +1691,7 @@ s32 dScMgPanel_c::InitResources() {
         *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
         *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x8410;
 
-        b = G2S::GetBG2ScrPtr();
+        b = (char *)G2S_GetBG2ScrPtr();
         subFill = 0xf361;
         MultiStore16(subFill, b, 0x1000);
 

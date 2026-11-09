@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "GX.h"
 #include "nitro/hw/registers.h"
 
@@ -8,7 +8,6 @@ extern "C" {
 
 extern void Disable3dEngines(void);
 extern s32 GetLanguageIndexVS(void);
-extern void *func_02054ea8(void);
 extern void DecompressLZ16(const void *src, void *dst);
 extern void SetBg1Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
@@ -67,8 +66,8 @@ void func_02030500(void) {
     REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 8;
     REG_DB_BG1CNT &= ~0x40;
 
-    DecompressLZ16(data_020927b0[GetLanguageIndexVS()], func_02054ea8());
-    DecompressLZ16(data_020927b0[GetLanguageIndexVS()], G2S::GetBG1CharPtr());
+    DecompressLZ16(data_020927b0[GetLanguageIndexVS()], G2_GetBG1CharPtr());
+    DecompressLZ16(data_020927b0[GetLanguageIndexVS()], G2S_GetBG1CharPtr());
 
     GX::LoadBGPltt(&data_0209440c, 0, 0x40);
     GXS::LoadBGPltt(&data_0209440c, 0, 0x40);
@@ -78,8 +77,8 @@ void func_02030500(void) {
     } else {
         p = data_020927c4[GetLanguageIndexVS()];
     }
-    DecompressLZ16(p, G2::GetBG1ScrPtr());
-    DecompressLZ16(p, G2S::GetBG1ScrPtr());
+    DecompressLZ16(p, G2_GetBG1ScrPtr());
+    DecompressLZ16(p, G2S_GetBG1ScrPtr());
 
     REG_BG1CNT &= ~3; /* priority 0 */
     REG_DB_BG1CNT &= ~3;

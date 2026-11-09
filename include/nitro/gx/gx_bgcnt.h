@@ -11,6 +11,34 @@
 #define HW_OBJ_VRAM 0x06400000
 #define HW_DB_OBJ_VRAM 0x06600000
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* The BG base-address getters, defined in src/engine/gx/GX_BgCnt.c. Each
+ * returns the layer's VRAM address, or null where the current mode gives the
+ * layer no such base. */
+void *G2_GetBG0ScrPtr(void);
+void *G2S_GetBG0ScrPtr(void);
+void *G2_GetBG1ScrPtr(void);
+void *G2S_GetBG1ScrPtr(void);
+void *G2_GetBG2ScrPtr(void);
+void *G2S_GetBG2ScrPtr(void);
+void *G2_GetBG3ScrPtr(void);
+void *G2S_GetBG3ScrPtr(void);
+void *G2_GetBG0CharPtr(void);
+void *G2S_GetBG0CharPtr(void);
+void *G2_GetBG1CharPtr(void);
+void *G2S_GetBG1CharPtr(void);
+void *G2_GetBG2CharPtr(void);
+void *G2S_GetBG2CharPtr(void);
+void *G2_GetBG3CharPtr(void);
+void *G2S_GetBG3CharPtr(void);
+
+#ifdef __cplusplus
+}
+#endif
+
 static inline void *G2S_GetOBJCharPtr(void) {
     return (void *)HW_DB_OBJ_VRAM;
 }

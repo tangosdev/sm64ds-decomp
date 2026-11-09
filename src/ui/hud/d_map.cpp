@@ -44,7 +44,7 @@
 #include "G2x.h"
 #include "cstd.h"
 #include "GX.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "nitro/hw/registers.h"
 
 #pragma defer_codegen off
@@ -201,7 +201,7 @@ void dMap_c::UpdateLevelSpecific()
         if (!IsStarCollected(SublevelToLevel(sublevel), 1)) return;
         if (gCurrentStarId < 2)
             return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x734);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x734);
         tile = 0x39c;
         for (i = 0; i < 4; i++) {
             p[0] = tile;
@@ -220,7 +220,7 @@ void dMap_c::UpdateLevelSpecific()
         if (!IsStarCollected(SublevelToLevel(sublevel), 1)) return;
         if (gCurrentStarId < 2)
             return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x6ea);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x6ea);
         tile = 0x35c;
         for (i = 0; i < 6; i++) {
             p[0] = tile;
@@ -238,7 +238,7 @@ void dMap_c::UpdateLevelSpecific()
         u16* p;
         if (!(data_0209caa0.file.flags1 & 0x204))
             return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x748);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x748);
         tile = 0x35d;
         for (i = 0; i < 6; i++) {
             p[0] = tile;
@@ -255,7 +255,7 @@ void dMap_c::UpdateLevelSpecific()
         u16* p;
         if (!(data_0209caa0.file.flags2 & 0x80000))
             return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x73a);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x73a);
         tile = 0x396;
         for (i = 0; i < 4; i++) {
             p[0] = tile;
@@ -279,7 +279,7 @@ void dMap_c::UpdateLevelSpecific()
         u16* p;
         if (!(data_0209caa0.file.flags2 & 0x80000))
             return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x1ca4);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x1ca4);
         tile = 0x38e;
         for (i = 0; i < 4; i++) {
             p[0] = tile;
@@ -310,7 +310,7 @@ void dMap_c::UpdateLevelSpecific()
         int i;
         u16* p;
         if (!Event::GetBit(0xe)) return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x736);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x736);
         tile = 0x3de;
         for (i = 0; i < 2; i++) {
             p[0] = tile;
@@ -325,7 +325,7 @@ void dMap_c::UpdateLevelSpecific()
         int i;
         u16* p;
         if (!Event::GetBit(0xe)) return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x752);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x752);
         tile = 0x3be;
         for (i = 0; i < 3; i++) {
             p[0] = tile;
@@ -338,7 +338,7 @@ void dMap_c::UpdateLevelSpecific()
     case 0x19: {
         u16* p;
         if (!Event::GetBit(0xe)) return;
-        p = (u16*)((int)G2S::GetBG3CharPtr() - 0x712);
+        p = (u16 *)((int)G2S_GetBG3CharPtr() - 0x712);
         p[0] = 0x3fe;
         p[1] = 0x3ff;
         break;
@@ -930,7 +930,7 @@ int dMap_c::InitResources()
         int id1 = func_0202a980();
         if (id1 != 0) {
             void *f1 = LoadFile(id1);
-            DecompressLZ16(f1, G2S::GetBG3CharPtr());
+            DecompressLZ16(f1, G2S_GetBG3CharPtr());
             Deallocate(f1);
         }
     }
@@ -951,7 +951,7 @@ int dMap_c::InitResources()
     for (i = 0; i < gNumMinimapTileObjs; i++) {
         if (*p != 0) {
             void *f3 = LoadFile(*p);
-            DecompressLZ16(f3, (char *)G2S::GetBG3ScrPtr() - (i << 11));
+            DecompressLZ16(f3, (char *)G2S_GetBG3ScrPtr() - (i << 11));
             Deallocate(f3);
         }
         p++;

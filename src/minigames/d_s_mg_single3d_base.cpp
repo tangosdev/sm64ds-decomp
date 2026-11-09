@@ -28,6 +28,7 @@ enum d_s_mg_single3_d_base_AssetId {
 #include "decl_common.h"
 #include "nitro/hw/registers.h"
 #include "GX.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* SDK calls this file makes. */
 namespace GX {
@@ -38,7 +39,6 @@ namespace GXS {
 void LoadBGPltt(const void*, u32, u32);
 void LoadOBJPltt(const void*, u32, u32);
 }
-namespace G2S { u32 GetBG3CharPtr(); }
 namespace CP15 { void FlushAndInvalidateDataCache(u32 address, u32 length); }
 namespace G3X {
 void SetFog(int enable, int, int, int);
@@ -169,7 +169,7 @@ extern "C" void LoadCard2SubBg3(void *) {
     void *fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCG_BIN);
     gSubScreenLayers |= 8;
     *(vu16 *)0x400100eu = (*(vu16 *)0x400100eu & 0x43) | 0x214;
-    DecompressLZ16(fileData, (void *)G2S::GetBG3CharPtr());
+    DecompressLZ16(fileData, (void *)G2S_GetBG3CharPtr());
     Ov004_Deallocate(fileData);
     fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCL_BIN);
     GXS::LoadBGPltt(fileData, 0xa0, 0x160);

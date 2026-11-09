@@ -49,7 +49,7 @@ enum dScMgCoin_c_AssetId {
 
 #include "types.h"
 #include "nitro/hw/registers.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "decl_common.h"
 #include "LevelRng.h"
 #include "Sound.h"
@@ -1344,7 +1344,7 @@ int dScMgCoin_c::InitResources() {
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
-    DecompressLZ16(a, (void *)(func_02054d88() + 0x4000));
+    DecompressLZ16(a, (void *)((int)G2_GetBG3CharPtr() + 0x4000));
     Deallocate(a);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);
@@ -1365,7 +1365,7 @@ int dScMgCoin_c::InitResources() {
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x1210;
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCG_BIN);
-    DecompressLZ16(d, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
+    DecompressLZ16(d, (void *)((char *)G2S_GetBG3CharPtr() + 0x4000));
     Deallocate(d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_NCL_BIN);

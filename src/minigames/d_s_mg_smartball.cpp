@@ -79,7 +79,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 typedef struct {
     int x, y;
 } Vec2;
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* Local value types carried over from the legacy files. None of these is a
  * view of a class any more: the object-side views (Obj, Obj2, SBoard, Owl,
@@ -352,7 +352,6 @@ extern "C" {
 extern int sMgResultsBannerY;
 extern int sMgResultsBannerX;
 extern int sSmartballOptionNcgByLanguage[];
-extern int func_02054d88(void);
 extern void SetSubBg1Offset(int, int);
 extern void Mg_RestoreMusic(void);
 extern void Mg_SetSharedState(int);
@@ -920,7 +919,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
             } else {
                 tile = (u16)(jj + b1);
             }
-            p = (char *)G2S::GetBG3ScrPtr();
+            p = (char *)G2S_GetBG3ScrPtr();
             t1 = tile | 0xf000;
             MultiStore16(t1, p + row + cx * 2 + kk, layer);
             kk += 2;
@@ -941,7 +940,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         int i2;
         int bas2 = base;
         for (i2 = -1; i2 <= 1; i2++) {
-            p = (char *)G2S::GetBG3ScrPtr() + ((cy + i2) << 6);
+            p = (char *)G2S_GetBG3ScrPtr() + ((cy + i2) << 6);
             t2 = (bas2 + 0x20 * i2) | 0xf000;
             MultiStore16(t2, p + cx * 2 - 4, lay2);
         }
@@ -952,7 +951,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         int i3;
         int bas3 = 0x336;
         for (i3 = -1; i3 <= 0; i3++) {
-            p = (char *)G2S::GetBG3ScrPtr() + ((cy + i3) << 6);
+            p = (char *)G2S_GetBG3ScrPtr() + ((cy + i3) << 6);
             t3 = (bas3 + 0x20 * i3) | 0xf000;
             MultiStore16(t3, p + cx * 2 + 2, lay3);
         }
@@ -964,7 +963,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         int i4;
         int bas4 = 0x33f;
         for (i4 = -1; i4 <= 1; i4++) {
-            p = (char *)G2S::GetBG3ScrPtr() + ((cy + i4) << 6);
+            p = (char *)G2S_GetBG3ScrPtr() + ((cy + i4) << 6);
             t4 = (bas4 + 0x20 * i4) | 0xf000;
             MultiStore16(t4, p + cx * 2 + 2, lay4);
         }
@@ -976,7 +975,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         int i5;
         int bas5 = 0x33e;
         for (i5 = -1; i5 <= 1; i5++) {
-            p = (char *)G2S::GetBG3ScrPtr() + ((cy + i5) << 6);
+            p = (char *)G2S_GetBG3ScrPtr() + ((cy + i5) << 6);
             t5 = (bas5 + 0x20 * i5) | 0xf000;
             MultiStore16(t5, p + cx * 2 + 2, lay5);
         }
@@ -4669,29 +4668,29 @@ void dScMgSmartball_c::SpawnObjects() {
     }
     if (((int)param1 & 0xff) == 0) {
         void *d = Ov004_LoadFileByPath(sSmartballLay0Bg1FrameNscPath);
-        DecompressLZ16(d, G2::GetBG2ScrPtr());
+        DecompressLZ16(d, G2_GetBG2ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay0Bg2FrameNscPath);
-        DecompressLZ16(d, G2S::GetBG2ScrPtr());
+        DecompressLZ16(d, G2S_GetBG2ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay0Bg1NscPath);
-        DecompressLZ16(d, G2::GetBG3ScrPtr());
+        DecompressLZ16(d, G2_GetBG3ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay0Bg2NscPath);
-        DecompressLZ16(d, G2S::GetBG3ScrPtr());
+        DecompressLZ16(d, G2S_GetBG3ScrPtr());
         Ov004_Deallocate(d);
     } else {
         void *d = Ov004_LoadFileByPath(sSmartballLay1Bg1FrameNscPath);
-        DecompressLZ16(d, G2::GetBG2ScrPtr());
+        DecompressLZ16(d, G2_GetBG2ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay1Bg2FrameNscPath);
-        DecompressLZ16(d, G2S::GetBG2ScrPtr());
+        DecompressLZ16(d, G2S_GetBG2ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay1Bg1NscPath);
-        DecompressLZ16(d, G2::GetBG3ScrPtr());
+        DecompressLZ16(d, G2_GetBG3ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay1Bg2NscPath);
-        DecompressLZ16(d, G2S::GetBG3ScrPtr());
+        DecompressLZ16(d, G2S_GetBG3ScrPtr());
         Ov004_Deallocate(d);
     }
 
@@ -5837,8 +5836,8 @@ int dScMgSmartball_c::InitSubScreenBg() {
     SetSubBg1Offset(0, 0);
     gSubScreenLayers[0] &= ~2;
     f = GetGameLanguage();
-    LoadCompressedFileAt(sSmartballOptionNcgByLanguage[f], (void *)G2S::GetBG1CharPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S::GetBG1ScrPtr());
+    LoadCompressedFileAt(sSmartballOptionNcgByLanguage[f], (void *)G2S_GetBG1CharPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S_GetBG1ScrPtr());
 }
 
 /* NitroSDK's G2_SetOBJMode and G2_GetOBJColorParam, on OamAttr: the mode
@@ -5896,17 +5895,17 @@ s32 dScMgSmartball_c::InitResources() {
     *((volatile s32 *)0x4001010) = 0x100;
     *((volatile u16 *)0x4001008) &= ~3;
     f = Ov004_LoadFileByPath(&sSmartballResultBgNcgPath);
-    DecompressLZ16(f, G2S::GetBG0CharPtr());
+    DecompressLZ16(f, G2S_GetBG0CharPtr());
     Ov004_Deallocate(f);
     {
         /* Kept volatile (measured 2026-11-07): the same stack round trip of
            the fill value as PaintCell. A literal 0, u16 v = 0, a separate
            v = 0 and a u16[1] all give 52 words, 8 bytes short. */
         volatile u16 v;
-        MultiStore16((u16)(v = 0), G2S::GetBG0ScrPtr(), 0x1000);
+        MultiStore16((u16)(v = 0), G2S_GetBG0ScrPtr(), 0x1000);
     }
     f = Ov004_LoadFileByPath(&sSmartballResultBgNscPath);
-    DecompressLZ16(f, G2S::GetBG0ScrPtr());
+    DecompressLZ16(f, G2S_GetBG0ScrPtr());
     Ov004_Deallocate(f);
     f = Ov004_LoadFileByPath(&sSmartballResultNclPath);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x20);
@@ -5930,29 +5929,29 @@ s32 dScMgSmartball_c::InitResources() {
     *((volatile u16 *)0x400100e) = ((*((volatile u16 *)0x400100e)) & (~3)) | 2;
     if (((u8)(*((s32 *)(c + 8)))) == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1FrameNcgPath);
-        DecompressLZ16(f, G2::GetBG2CharPtr());
+        DecompressLZ16(f, G2_GetBG2CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg2FrameNcgPath);
-        DecompressLZ16(f, G2S::GetBG2CharPtr());
+        DecompressLZ16(f, G2S_GetBG2CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1NcgPath);
-        DecompressLZ16(f, (void *)func_02054d88());
+        DecompressLZ16(f, (void *)G2_GetBG3CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg2NcgPath);
-        DecompressLZ16(f, G2S::GetBG3CharPtr());
+        DecompressLZ16(f, G2S_GetBG3CharPtr());
         Ov004_Deallocate(f);
     } else {
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg1FrameNcgPath);
-        DecompressLZ16(f, G2::GetBG2CharPtr());
+        DecompressLZ16(f, G2_GetBG2CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg2FrameNcgPath);
-        DecompressLZ16(f, G2S::GetBG2CharPtr());
+        DecompressLZ16(f, G2S_GetBG2CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg1NcgPath);
-        DecompressLZ16(f, (void *)func_02054d88());
+        DecompressLZ16(f, (void *)G2_GetBG3CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg2NcgPath);
-        DecompressLZ16(f, G2S::GetBG3CharPtr());
+        DecompressLZ16(f, G2S_GetBG3CharPtr());
         Ov004_Deallocate(f);
     }
     if (((u8)(*((s32 *)(c + 8)))) == 0) {

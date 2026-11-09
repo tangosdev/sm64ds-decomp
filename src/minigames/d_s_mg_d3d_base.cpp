@@ -17,7 +17,7 @@
 #include "decl_common.h"
 #include "types.h"
 #include "GX.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "CP15.h"
 
 /* An OAM entry, with attributes 0 and 1 stored as one word the way this
@@ -190,9 +190,9 @@ int dScMgD3DBase_c::InitSubScreenBg()
     gSubScreenLayers &= ~2;
     {
         s32 language = GetGameLanguage();
-        LoadCompressedFileAt(sD3DOptionNcgByLanguage[language], (void *)G2S::GetBG1CharPtr());
+        LoadCompressedFileAt(sD3DOptionNcgByLanguage[language], (void *)G2S_GetBG1CharPtr());
     }
-    LoadCompressedFileAt(0x5b, (void*)G2S::GetBG1ScrPtr());
+    LoadCompressedFileAt(0x5b, (void *)G2S_GetBG1ScrPtr());
     GX::SetBankForSubBG(mSubBgBank);
 }
 

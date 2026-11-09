@@ -2448,9 +2448,9 @@ src/unnamed/arm9/0205/func_020541a4.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_020541b8.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02054430.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02054748.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0205/func_02054d88.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0205/func_02054ea8.c	PURE-C	arm9				1		None		-
-src/unnamed/arm9/0205/func_02054efc.c	PURE-C	arm9				1		None		-
+src/unnamed/arm9/0205/G2_GetBG3CharPtr.c	PURE-C	arm9				1		None		-
+src/unnamed/arm9/0205/G2_GetBG1CharPtr.c	PURE-C	arm9				1		None		-
+src/unnamed/arm9/0205/G2_GetBG0CharPtr.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_020551f0.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_0205532c.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02055388.c	PURE-C	arm9				1		None		-
