@@ -2069,7 +2069,18 @@ int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
             if (!g_ip_replaying) smooth_count(SMOOTH_COUNT_DEMAND, 1);
             smooth_topo_count(ov.cls == SMOOTH_CLASS_FAN ? SMOOTH_TOPO_FAN : SMOOTH_TOPO_BOX);
             uint32_t okeyx = 0;
-            if (weld) {
+            /* run after093, lane EYEOVAL1: A FAN IS NEVER WELDED. A fan mesh (the
+               Power Star's eyes) shares no edge with any other mesh: the book only
+               calls it a fan when its triangles are joined to each other and to
+               nothing else, so its rim edges are one-sided and its spokes are
+               straight on both sides. There is nothing for the weld to join. What
+               the weld did do was flatten the rim back into the DS's hexagon: the
+               fan is drawn flat for the frames before the book has judged it
+               (kTopoSettle), those flat pictures enter a STRAIGHT side on every
+               rim edge, and a straight side makes the edge straight on every side
+               for as long as the book keeps it (a level). The oval
+               topo_finalize_fan built was thrown away on every picture after. */
+            if (weld && ov.cls != SMOOTH_CLASS_FAN) {
                 const int wr1 = weld_call(wp, wn, SMOOTH_WELD_CURVED, ov.en, wo, &wid);
                 if (weld == 1) weld_view_pair(s);
                 if (wr1 && weld == 1 && !smooth_weld_guarded()) {
