@@ -563,7 +563,9 @@ typedef struct {
 int data_ov002_02109fe4[2] = {0xad, 0xad};
 AnimScriptStep data_ov002_02109ff4[1] = {{0xb3, 0}};
 u32 data_ov002_0210a07c[2] = {4, 3};
-struct P2 { void *w[2]; };
+struct P2 {
+    void *w[2];
+};
 extern SharedFilePtr data_ov002_0210e6c0;
 extern SharedFilePtr data_ov002_0210eb98;
 struct P2 data_ov002_0210a084 = {{&data_ov002_0210e6c0, &data_ov002_0210eb98}};
@@ -597,16 +599,16 @@ union PlayerStateFn {
     void (*freePlayer)(daPly_c *);
     void (*freeVoid)(void *);
 };
-PlayerFreeCharPmf data_ov002_02109dfc = { func_ov002_020c9de4 };
-PlayerFreePlayerPmf data_ov002_02109e2c = { func_ov002_020c9b7c };
-PlayerFreeCharPmf data_ov002_02109f0c = { func_ov002_020e200c };
-PlayerFreePlayerPmf data_ov002_02109f44 = { func_ov002_020c990c };
-PlayerFreeCharPmf data_ov002_0210a10c = { func_ov002_020e200c };
-PlayerFreePlayerPmf data_ov002_0210a174 = { func_ov002_020c9998 };
-PlayerFreeCharPmf data_ov002_0210a23c = { func_ov002_020c9de4 };
-PlayerFreeCharPmf data_ov002_0210a244 = { func_ov002_020c9de4 };
-PlayerFreeCharPmf data_ov002_0210a264 = { func_ov002_020c9de4 };
-PlayerFreeVoidPmf data_ov002_0210a334 = { func_ov002_020c72a4 };
+PlayerFreeCharPmf data_ov002_02109dfc = {func_ov002_020c9de4};
+PlayerFreePlayerPmf data_ov002_02109e2c = {func_ov002_020c9b7c};
+PlayerFreeCharPmf data_ov002_02109f0c = {func_ov002_020e200c};
+PlayerFreePlayerPmf data_ov002_02109f44 = {func_ov002_020c990c};
+PlayerFreeCharPmf data_ov002_0210a10c = {func_ov002_020e200c};
+PlayerFreePlayerPmf data_ov002_0210a174 = {func_ov002_020c9998};
+PlayerFreeCharPmf data_ov002_0210a23c = {func_ov002_020c9de4};
+PlayerFreeCharPmf data_ov002_0210a244 = {func_ov002_020c9de4};
+PlayerFreeCharPmf data_ov002_0210a264 = {func_ov002_020c9de4};
+PlayerFreeVoidPmf data_ov002_0210a334 = {func_ov002_020c72a4};
 /* func_ov002_020e1e70 stays a free C-linkage body; the table slot is a PMF. */
 union PlayerFreeCleanupTarget {
     void (*code)(char *);
@@ -23581,7 +23583,6 @@ extern void (daPly_c::*data_ov002_0210a29c)();
 extern void (daPly_c::*data_ov002_0210a30c)();
 extern PlayerFreeVoidPmf data_ov002_0210a334;
 
-
 /* daPly_c handler tables; the second is indexed by mNoCtrlKind, the third by mStateWork. */
 extern void (daPly_c::*data_ov002_0211073c[4])();
 extern PlayerStateFn data_ov002_02110884[20];
@@ -23834,26 +23835,26 @@ static inline void PlayerInitStates() {
     data_ov002_0211073c[1] = data_ov002_0210a47c.pmf;
     data_ov002_0211073c[2] = data_ov002_0210a10c.pmf;
     data_ov002_0211073c[3] = &daPly_c::func_ov002_020e1c20;
-data_ov002_02110884[0].voidPmf = data_ov002_02109dfc.pmf;
-data_ov002_02110884[1].voidPmf = data_ov002_0210a264.pmf;
-data_ov002_02110884[2].voidPmf = data_ov002_0210a244.pmf;
-data_ov002_02110884[3].voidPmf = data_ov002_0210a23c.pmf;
-data_ov002_02110884[4].voidPmf = &daPly_c::func_ov002_020c9d68;
-data_ov002_02110884[5].intPmf = &daPly_c::func_ov002_020c9d1c;
-data_ov002_02110884[6].voidPmf = &daPly_c::func_ov002_020c9cc0;
-data_ov002_02110884[7].voidPmf = &daPly_c::func_ov002_020c9c4c;
-data_ov002_02110884[8].intPmf = &daPly_c::func_ov002_020c9c00;
-data_ov002_02110884[9].voidPmf = data_ov002_02109e2c.pmf;
-data_ov002_02110884[10].voidPmf = &daPly_c::func_ov002_020c9b5c;
-data_ov002_02110884[11].voidPmf = &daPly_c::func_ov002_020c9ac0;
-data_ov002_02110884[12].intPmf = &daPly_c::func_ov002_020c9b10;
-data_ov002_02110884[13].voidPmf = &daPly_c::func_ov002_020c9a04;
-data_ov002_02110884[14].voidPmf = data_ov002_0210a174.pmf;
-data_ov002_02110884[15].voidPmf = data_ov002_02109f44.pmf;
-data_ov002_02110884[16].voidPmf = &daPly_c::func_ov002_020c98a4;
-data_ov002_02110884[17].voidPmf = &daPly_c::func_ov002_020c9840;
-data_ov002_02110884[18].voidPmf = &daPly_c::func_ov002_020c97f8;
-data_ov002_02110884[19].voidPmf = &daPly_c::func_ov002_020c97e0;
+    data_ov002_02110884[0].voidPmf = data_ov002_02109dfc.pmf;
+    data_ov002_02110884[1].voidPmf = data_ov002_0210a264.pmf;
+    data_ov002_02110884[2].voidPmf = data_ov002_0210a244.pmf;
+    data_ov002_02110884[3].voidPmf = data_ov002_0210a23c.pmf;
+    data_ov002_02110884[4].voidPmf = &daPly_c::func_ov002_020c9d68;
+    data_ov002_02110884[5].intPmf = &daPly_c::func_ov002_020c9d1c;
+    data_ov002_02110884[6].voidPmf = &daPly_c::func_ov002_020c9cc0;
+    data_ov002_02110884[7].voidPmf = &daPly_c::func_ov002_020c9c4c;
+    data_ov002_02110884[8].intPmf = &daPly_c::func_ov002_020c9c00;
+    data_ov002_02110884[9].voidPmf = data_ov002_02109e2c.pmf;
+    data_ov002_02110884[10].voidPmf = &daPly_c::func_ov002_020c9b5c;
+    data_ov002_02110884[11].voidPmf = &daPly_c::func_ov002_020c9ac0;
+    data_ov002_02110884[12].intPmf = &daPly_c::func_ov002_020c9b10;
+    data_ov002_02110884[13].voidPmf = &daPly_c::func_ov002_020c9a04;
+    data_ov002_02110884[14].voidPmf = data_ov002_0210a174.pmf;
+    data_ov002_02110884[15].voidPmf = data_ov002_02109f44.pmf;
+    data_ov002_02110884[16].voidPmf = &daPly_c::func_ov002_020c98a4;
+    data_ov002_02110884[17].voidPmf = &daPly_c::func_ov002_020c9840;
+    data_ov002_02110884[18].voidPmf = &daPly_c::func_ov002_020c97f8;
+    data_ov002_02110884[19].voidPmf = &daPly_c::func_ov002_020c97e0;
     data_ov002_0211075c[0] = &daPly_c::func_ov002_020c75f0;
     data_ov002_0211075c[1] = &daPly_c::func_ov002_020c7350;
     data_ov002_0211075c[2] = &daPly_c::func_ov002_020c71e0;
