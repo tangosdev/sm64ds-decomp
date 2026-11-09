@@ -588,8 +588,9 @@ RULES = [
     "wearing; the pop position is the referee's own sample of the seat, never "
     "the claim's.",
     "Modes: 0 classic and 2 Luigi Infection; any other READY mode (1 is kept "
-    "for King of the Star) is DENY UNSUPPORTED, and TAG outside mode 2 is DENY "
-    "UNSUPPORTED. EAT / SPIT / SWALLOW / ESCAPE are provisional for A5; speed "
+    "for King of the Star) is DENY UNSUPPORTED. TAG outside a mode 2 match is "
+    "an unknown kind, as before mode 2 existed: no verdict, a strike. EAT / "
+    "SPIT / SWALLOW / ESCAPE are provisional for A5; speed "
     "strikes are logged, not kicked.",
     "LUIGI INFECTION (mode 2; mode 0 never sees any of this). The start "
     "countdown is LUIGI_COUNTDOWN_MS instead of COUNTDOWN_MS; the referee "

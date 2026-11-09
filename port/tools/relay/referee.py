@@ -981,7 +981,10 @@ class Referee(object):
             # nothing it claims counts. A real console verifies within one
             # ping interval and keeps resending its claim until named.
             return
-        if kind not in CLAIM_NAMES or cid == 0:
+        if kind not in CLAIM_NAMES or cid == 0 or (
+                kind == C_TAG and not self._luigi()):
+            # TAG exists only in a Luigi match: anywhere else it is an
+            # unknown kind exactly as it was before mode 2 (mode 0 unchanged)
             self._strike(seat, "bad claim", rt)
             return
         s.last_heard = rt

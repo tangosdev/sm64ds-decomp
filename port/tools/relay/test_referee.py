@@ -2563,8 +2563,10 @@ def u_luigi_tag_rules(mod):
     cid = a.claim(CL["TAG"], b.seat, ref_frame=b.frame - 2)
     streaming(rig3, [a, b], 0.3)
     v = a.verdict(cid)
-    res.check(v and v["b"] == DENY["UNSUPPORTED"], "TAG in mode 0: DENY "
-              "UNSUPPORTED (%s)" % v)
+    ra = rig3.ref("LUIGI006").seats[a.seat]
+    res.check(v is None and ra.strikes_total == 1, "TAG in mode 0: an unknown "
+              "kind as before mode 2 (no verdict, one strike) (%s, %d)"
+              % (v, ra.strikes_total))
     res.check(not a.find("INFECTED"), "mode 0 never infects")
     return res
 
