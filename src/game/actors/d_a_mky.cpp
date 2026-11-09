@@ -132,8 +132,7 @@ s32 daMky_c::OnYoshiTryEat()
     return 7;
 }
 
-void daMky_c::func_ov030_02111734()
-{
+void daMky_c::ReturnToPerch() {
 
     extern dClipper data_0209f43c;
     extern Matrix4x3 data_0209b3ec;
@@ -167,13 +166,12 @@ void daMky_c::func_ov030_02111734()
             this->mPrevPosX = this->mPerchPosX;
             this->mPrevPosY = this->mPerchPosY;
             this->mPrevPosZ = this->mPerchPosZ;
-            func_ov030_02112094();
+            UpdateModelAndCap();
             this->mResetTimer = 0x96;
         }
     }
 }
-void daMky_c::func_ov030_02111890()
-{
+void daMky_c::PlayRunFootstepSound() {
     extern int gMonkeyRunAnimationFile[];
     if (!IsPlayingAnim(this, gMonkeyRunAnimationFile))
         return;
@@ -181,8 +179,7 @@ void daMky_c::func_ov030_02111890()
     if (v == 0xa || v == 0xc)
         func_0201267c(0xea, &this->mCamSpacePos);
 }
-void daMky_c::func_ov030_02111908()
-{
+void daMky_c::PlayIdleSounds() {
     extern int data_ov030_02115cf0[];
     extern int gMonkeyWait2AnimationFile[];
     extern int gMonkeyWait3AnimationFile[];
@@ -202,14 +199,13 @@ void daMky_c::func_ov030_02111908()
             func_0201267c(0xe9, &this->mCamSpacePos);
     }
 }
-int daMky_c::func_ov030_02111a00()
-{
+int daMky_c::CycleIdleAnimation() {
     extern int data_ov030_02115cf0[];
     extern int gMonkeyWait2AnimationFile[];
     extern int gMonkeyWait3AnimationFile[];
     extern int gMonkeyWait4AnimationFile[];
     extern void** data_ov030_02115bc8[];
-    func_ov030_02111908();
+    PlayIdleSounds();
     if (static_cast<dExtFrameCtrl_c &>(this->mAnmModel).WillHitFrame(0) != 0 ||
         (!IsPlayingAnim(this, data_ov030_02115cf0) &&
          !IsPlayingAnim(this, gMonkeyWait2AnimationFile) &&
@@ -227,8 +223,7 @@ int daMky_c::func_ov030_02111a00()
     }
     return 0;
 }
-int daMky_c::func_ov030_02111b20()
-{
+int daMky_c::FollowPath() {
     typedef short s16;
 
   struct Vector3 v;
@@ -251,16 +246,15 @@ int daMky_c::func_ov030_02111b20()
   }
   return 0;
 }
-int daMky_c::func_ov030_02111bc4()
-{
+int daMky_c::HandleContact() {
     daPly_c *player;
 
     if (IsBeingEaten(this) && this->mState != 2) {
         this->mPlayer = mEatingPlayer;
         if (IsUkikiThief(this))
-            func_ov030_021141a8(5);
+            ChangeState(5);
         else if (IsUkikiStar(this))
-            func_ov030_021141a8(6);
+            ChangeState(6);
         return 1;
     }
 
@@ -270,7 +264,7 @@ int daMky_c::func_ov030_02111bc4()
     if ((this->mdCcAc_c.hitFlags & 0x40000) && this->mState != 2) {
         this->mPlayer = this->ClosestPlayer();
         this->mPrevState = this->mState;
-        func_ov030_021141a8(2);
+        ChangeState(2);
         return 1;
     }
 
@@ -291,15 +285,14 @@ int daMky_c::func_ov030_02111bc4()
         if (player->TryGrab(*(dActor_c *)this)) {
             this->mPlayer = player;
             if (IsUkikiThief(this))
-                func_ov030_021141a8(3);
+                ChangeState(3);
             else if (IsUkikiStar(this))
-                func_ov030_021141a8(4);
+                ChangeState(4);
         }
     }
     return 1;
 }
-int daMky_c::func_ov030_02111dd0()
-{
+int daMky_c::UpdateSafePos() {
     if (this->mWithMeshClsn.IsOnGround() != 0) {
         dBgCh_Gnd rg;
         Vector3 v;
@@ -324,11 +317,9 @@ int daMky_c::func_ov030_02111dd0()
     }
     return 0;
 }
-int daMky_c::func_ov030_02111ea4()
-{
+int daMky_c::RevertOffLedge() {
 
-
-    #define ABS(x) ((x) < 0 ? -(x) : (x))
+#define ABS(x) ((x) < 0 ? -(x) : (x))
     if (this->mWithMeshClsn.IsOnGround() != 0) {
         dBgCh_Gnd rg;
         Vector3 pos;
@@ -353,7 +344,7 @@ int daMky_c::func_ov030_02111ea4()
     }
     return 0;
 }
-void daMky_c::func_ov030_02111f6c(dBgCh_Actr *w) {
+void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
     if (IsFlagSet(this, 0x4000))
         return;
     if (IsUkikiThief(this) && this->mState != 9)
@@ -373,8 +364,7 @@ void daMky_c::func_ov030_02111f6c(dBgCh_Actr *w) {
         static_cast<const dBgPi *>(w->GetWallResult())->surface.CopyNormalTo(wn);
     }
 }
-void daMky_c::func_ov030_02112094()
-{
+void daMky_c::UpdateModelAndCap() {
     /* from include/decl_common.h:255, which this TU does not include. */
     extern char data_ov030_02115ddc[];
 
@@ -437,22 +427,22 @@ int daMky_c::func_ov030_021122b0()
     ApproachLinear(this->mAngleY, ang, 0xa28);
     this->mPrevAngleY = this->mAngleY;
     if (DecIfAbove0_Byte(&this->mActionTimer) == 0)
-        func_ov030_021141a8(0);
+        ChangeState(0);
     static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
     if (IsUkikiThief(this)) {
         this->UpdatePos((dCc_c*)(&this->mdCcAc_c));
-        func_ov030_02111dd0();
-        func_ov030_02111f6c(&this->mWithMeshClsn);
-        func_ov030_02111bc4();
+        UpdateSafePos();
+        UpdateFloorAndWalls(&this->mWithMeshClsn);
+        HandleContact();
     } else {
         this->UpdatePos((dCc_c*)(&this->mdCcAc_c));
-        func_ov030_02111f6c(&this->mWithMeshClsn);
-        func_ov030_02111bc4();
-        func_ov030_02111ea4();
+        UpdateFloorAndWalls(&this->mWithMeshClsn);
+        HandleContact();
+        RevertOffLedge();
     }
     this->mdCcAc_c.Clear();
     this->mdCcAc_c.Update();
-    func_ov030_02111890();
+    PlayRunFootstepSound();
     return 1;
 }
 int daMky_c::EnterState10(){
@@ -468,25 +458,25 @@ int daMky_c::EnterState10(){
 
 int daMky_c::func_ov030_02112400()
 {
-    func_ov030_02111a00();
+    CycleIdleAnimation();
     static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
     this->UpdatePos(&this->mdCcAc_c);
-    func_ov030_02111f6c((dBgCh_Actr*)(&this->mWithMeshClsn));
-    func_ov030_02111bc4();
+    UpdateFloorAndWalls((dBgCh_Actr *)(&this->mWithMeshClsn));
+    HandleContact();
     this->mdCcAc_c.Clear();
     this->mdCcAc_c.Update();
 
     if (IsUkikiStar(this)) {
         if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000) {
             if (this->mPosY > this->mPerchPosY - 0x12c000) {
-                func_ov030_021141a8(1);
+                ChangeState(1);
             }
         }
     } else {
         if (this->mWithMeshClsn.IsOnGround()) {
             dBgPi res = *mWithMeshClsn.GetSphereResult();
             if (res.GetClsnID() == -1 || func_02037f44(&res) == 0) {
-                func_ov030_021141a8(0);
+                ChangeState(0);
             }
         }
     }
@@ -516,7 +506,7 @@ int daMky_c::func_ov030_02112578()
 
     switch (this->mSubState) {
     case 0:
-        if (func_ov030_02111b20() != 0) {
+        if (FollowPath() != 0) {
             this->mAnmModel.SetAnim((BCA_File *)gMonkeyWait2AnimationFile[1], 0, 0x1000, 0);
             this->mAnmModel.speed = 0x1000;
             this->mHorzSpeed = 0;
@@ -525,7 +515,7 @@ int daMky_c::func_ov030_02112578()
                 *p = *p + 1;
             }
         }
-        func_ov030_02111890();
+        PlayRunFootstepSound();
         break;
     case 1:
         ApproachLinear(this->mAngleY, Vec3_HorzAngle(&this->mPos, &player->mPos), 0x300);
@@ -537,7 +527,7 @@ int daMky_c::func_ov030_02112578()
                 }
             }
         }
-        func_ov030_02111908();
+        PlayIdleSounds();
         break;
     case 2: {
         s32 sp[3];
@@ -644,7 +634,7 @@ int daMky_c::func_ov030_02112578()
 
     static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
     UpdatePos(&this->mdCcAc_c);
-    func_ov030_02111f6c(&this->mWithMeshClsn);
+    UpdateFloorAndWalls(&this->mWithMeshClsn);
     this->mdCcAc_c.Clear();
     return 1;
 }
@@ -669,22 +659,22 @@ int daMky_c::func_ov030_02112a84()
         if (IsUkikiThief(this)) {
             dBgPi res = *mWithMeshClsn.GetSphereResult();
             if (res.GetClsnID() != 0xffffffff)
-                func_ov030_021141a8(9);
+                ChangeState(9);
             else
-                func_ov030_021141a8(this->mPrevState);
+                ChangeState(this->mPrevState);
         } else if (IsUkikiStar(this)) {
             if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
                 this->mPosY > this->mPerchPosY - 0x12c000) {
-                func_ov030_021141a8(this->mPrevState);
+                ChangeState(this->mPrevState);
             } else {
-                func_ov030_021141a8(9);
+                ChangeState(9);
             }
         }
     }
 
     static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
     this->UpdatePos(&this->mdCcAc_c);
-    func_ov030_02111bc4();
+    HandleContact();
     this->mdCcAc_c.Clear();
     return 1;
 }
@@ -761,7 +751,7 @@ int daMky_c::func_ov030_02112da0()
 
     if (IsFlagSet(this, 0x80000)) {
         this->mPrevState = 1;
-        func_ov030_021141a8(7);
+        ChangeState(7);
         return 1;
     }
 
@@ -779,7 +769,7 @@ int daMky_c::func_ov030_02112da0()
         } else if (!IsBeingEaten(this) && !IsInYoshiMouth(this)) {
             /* Out of Yoshi altogether; the ROM re-tests the mouth bit. */
             mEatingPlayer = 0;
-            func_ov030_021141a8(this->mPrevState);
+            ChangeState(this->mPrevState);
         }
         break;
     }
@@ -807,7 +797,7 @@ int daMky_c::func_ov030_02112da0()
             if (g == 1) {
                 this->mPlayer->DropActor();
                 this->mPrevState = 8;
-                func_ov030_021141a8(7);
+                ChangeState(7);
             } else if (g == 2) {
                 this->mSubState++;
             }
@@ -860,7 +850,7 @@ int daMky_c::func_ov030_02113094()
         } else if (!IsBeingEaten(this) && !IsInYoshiMouth(this)) {
             /* Out of Yoshi altogether; the ROM re-tests the mouth bit. */
             mEatingPlayer = 0;
-            func_ov030_021141a8(this->mPrevState);
+            ChangeState(this->mPrevState);
         }
         break;
     }
@@ -871,7 +861,7 @@ int daMky_c::func_ov030_02113094()
             this->mSubState++;
         }
         if (IsFlagSet(this, 0x80000))
-            func_ov030_021141a8(7);
+            ChangeState(7);
         break;
     }
     case 2:
@@ -893,7 +883,7 @@ int daMky_c::func_ov030_02113094()
                     this->mPrevState = 0xa;
                 }
             }
-            func_ov030_021141a8(7);
+            ChangeState(7);
         }
         break;
     }
@@ -934,9 +924,9 @@ int daMky_c::func_ov030_02113324()
 
         if (Vec3_Dist((Vector3 *)&this->mPerchPosX, &this->mPos) < 0x514000 &&
             this->mPosY > this->mPerchPosY - 0x12c000) {
-            func_ov030_021141a8(1);
+            ChangeState(1);
         } else {
-            func_ov030_021141a8(9);
+            ChangeState(9);
         }
         this->mPlayer = 0;
         return 1;
@@ -984,7 +974,7 @@ int daMky_c::func_ov030_02113324()
             unsigned char g = data_0209d684;
             if (g == 1) {
                 this->mPlayer->DropActor();
-                func_ov030_021141a8(8);
+                ChangeState(8);
             } else if (g == 2) {
                 unsigned char *p = &this->mSubState;
                 (*p)++;
@@ -1128,7 +1118,7 @@ int daMky_c::func_ov030_021136b0()
                     p->SetNewHatCharacter(p->mCharacter, 0, 0);
                 }
                 this->mPrevState = 1;
-                func_ov030_021141a8(2);
+                ChangeState(2);
             } else {
                 dActor_c *act = dActor_c::FindWithID(this->mCapUniqueID);
                 act->mCarryMatrix = 0;
@@ -1139,7 +1129,7 @@ int daMky_c::func_ov030_021136b0()
                     act->mPosZ = src[2];
                 }
                 this->mCapUniqueID = 0;
-                func_ov030_021141a8(0xa);
+                ChangeState(0xa);
             }
             this->mPlayer = 0;
         }
@@ -1161,7 +1151,7 @@ int daMky_c::func_ov030_021136b0()
     }
     case 5:
         if (!IsFlagSet(this, 0x100) || IsFlagSet(this, 0x2000)) {
-            func_ov030_021141a8(0xa);
+            ChangeState(0xa);
             this->mPlayer = 0;
         }
         break;
@@ -1207,7 +1197,7 @@ int daMky_c::func_ov030_02113b38()
     extern int gMonkeyRunAnimationFile[];
     static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
     this->UpdatePos(&this->mdCcAc_c);
-    func_ov030_02111f6c(&this->mWithMeshClsn);
+    UpdateFloorAndWalls(&this->mWithMeshClsn);
     if (this->mWithMeshClsn.JustHitGround() != 0) {
         this->mWithMeshClsn.ClearLimMovFlag();
         this->mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyRunAnimationFile[1]), 0, 0x1000, 0);
@@ -1215,10 +1205,10 @@ int daMky_c::func_ov030_02113b38()
         this->mSpawnPosX = this->mPosX;
         this->mSpawnPosY = this->mPosY;
         this->mSpawnPosZ = this->mPosZ;
-        func_ov030_021141a8(this->mPrevState);
+        ChangeState(this->mPrevState);
     }
     this->mdCcAc_c.Clear();
-    func_ov030_02111bc4();
+    HandleContact();
     return 1;
 }
 int daMky_c::EnterState2() {
@@ -1306,33 +1296,33 @@ int daMky_c::func_ov030_02113d20()
     if (this->mHorzSpeed != 0)
         this->mAnmModel.SetAnim((BCA_File *)(((void **)&gMonkeyRunAnimationFile)[1]), 0, 0x1000, 0);
     else
-        func_ov030_02111a00();
+        CycleIdleAnimation();
 
     static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
 
     if (IsUkikiThief(this)) {
         UpdatePos(&this->mdCcAc_c);
-        onWall = (func_ov030_02111dd0() | this->mWithMeshClsn.IsOnWall()) != 0;
-        func_ov030_02111f6c(&this->mWithMeshClsn);
-        func_ov030_02111bc4();
+        onWall = (UpdateSafePos() | this->mWithMeshClsn.IsOnWall()) != 0;
+        UpdateFloorAndWalls(&this->mWithMeshClsn);
+        HandleContact();
     } else {
         UpdatePos(&this->mdCcAc_c);
-        func_ov030_02111f6c(&this->mWithMeshClsn);
-        func_ov030_02111bc4();
-        onWall = (func_ov030_02111ea4() | this->mWithMeshClsn.IsOnWall()) != 0;
+        UpdateFloorAndWalls(&this->mWithMeshClsn);
+        HandleContact();
+        onWall = (RevertOffLedge() | this->mWithMeshClsn.IsOnWall()) != 0;
     }
 
     if (this->mState == 1 && onWall && dist < 0x12c000) {
         if (p->mHorzSpeed > 0x9000 || p->IsInAir() != 0) {
             this->mPrevState = 1;
-            func_ov030_021141a8(2);
+            ChangeState(2);
         }
     }
 
     this->mdCcAc_c.Clear();
     if (this->mState == 1)
         this->mdCcAc_c.Update();
-    func_ov030_02111890();
+    PlayRunFootstepSound();
     return 1;
 }
 int daMky_c::EnterState1(){
@@ -1352,7 +1342,7 @@ int daMky_c::func_ov030_02113ff0()
         this->mAnmModel.SetAnim((BCA_File *)((void *)gMonkeyRunAnimationFile[1]), 0, 0x1000, 0);
     } else if (dist <= 0xfa000) {
         this->mHorzSpeed = 0;
-        func_ov030_02111a00();
+        CycleIdleAnimation();
     }
     ApproachLinear(this->mAngleY, this->HorzAngleToCPlayer(), 0x514);
     this->mPrevAngleY = this->mAngleY;
@@ -1360,18 +1350,18 @@ int daMky_c::func_ov030_02113ff0()
     static_cast<dExtFrameCtrl_c &>(this->mAnmModel).Advance();
     if (IsUkikiThief(this)) {
         this->UpdatePos(&this->mdCcAc_c);
-        func_ov030_02111dd0();
-        func_ov030_02111f6c(&this->mWithMeshClsn);
-        func_ov030_02111bc4();
+        UpdateSafePos();
+        UpdateFloorAndWalls(&this->mWithMeshClsn);
+        HandleContact();
     } else {
         this->UpdatePos(&this->mdCcAc_c);
-        func_ov030_02111f6c(&this->mWithMeshClsn);
-        func_ov030_02111bc4();
-        func_ov030_02111ea4();
+        UpdateFloorAndWalls(&this->mWithMeshClsn);
+        HandleContact();
+        RevertOffLedge();
     }
     this->mdCcAc_c.Clear();
     this->mdCcAc_c.Update();
-    func_ov030_02111890();
+    PlayRunFootstepSound();
     return 1;
 }
 int daMky_c::EnterState0()
@@ -1380,20 +1370,17 @@ int daMky_c::EnterState0()
     return 1;
 }
 
-void daMky_c::func_ov030_02114134()
-{
+void daMky_c::CallStateUpdate() {
     (this->*mStateDesc->update)();
 }
-void daMky_c::func_ov030_02114170()
-{
+void daMky_c::CallStateEnter() {
     (this->*mStateDesc->enter)();
 }
-void daMky_c::func_ov030_021141a8(int idx)
-{
+void daMky_c::ChangeState(int idx) {
     extern StateFunctions data_ov030_02115e0c[];
 
     this->mStateDesc = &data_ov030_02115e0c[idx];
-    func_ov030_02114170();
+    CallStateEnter();
 }
 /* The model handle constructs through func_02017acc and the animation
  * handles through SharedFilePtr::Construct. Declared here, ahead of the
@@ -1465,14 +1452,14 @@ s32 daMky_c::Behavior()
                 spawned = Spawn(0x10d, (mCapPlayerNo << 8) | 2, mPos, 0, mAreaId, -1);
                 mCapUniqueID = spawned->uniqueID;
                 mHasSpawnedCap = 1;
-                func_ov030_021141a8(1);
+                ChangeState(1);
             }
         }
-        func_ov030_02111734();
+        ReturnToPerch();
     } else {
-        func_ov030_02114134();
+        CallStateUpdate();
         mAnmModel.UpdateVerts();
-        func_ov030_02112094();
+        UpdateModelAndCap();
     }
     return 1;
 }
@@ -1518,17 +1505,17 @@ s32 daMky_c::InitResources()
                 spawned = Spawn(0x10d, (mCapPlayerNo << 8) | 2, mPos, 0, mAreaId, -1);
                 mCapUniqueID = spawned->uniqueID;
                 mHasSpawnedCap = 1;
-                func_ov030_021141a8(1);
+                ChangeState(1);
             } else {
-                func_ov030_021141a8(0);
+                ChangeState(0);
             }
         } else {
-            func_ov030_021141a8(0);
+            ChangeState(0);
         }
     } else if (IsUkikiStar(this)) {
-        func_ov030_021141a8(1);
+        ChangeState(1);
     }
-    func_ov030_02112094();
+    UpdateModelAndCap();
     return 1;
 }
 

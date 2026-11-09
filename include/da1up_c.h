@@ -57,7 +57,7 @@
      5 / 7      stay hidden until mUnlockCount reaches 0, then pop out;
      6 / 8      invisible and stationary (mShown stays 0); touching them
                 decrements a waiting 5 / 7
-                (func_ov002_020af684);
+                (UnlockTargetAndRemove);
      11 / 12    spinning variants of 6 / 8 that also give a coin and a heal;
      9          spawns one type 5 and two type 11 around its spawn point. */
 enum da1up_MushroomType {
@@ -95,22 +95,22 @@ struct da1up_c : dEnemyBase_c {
     s32                          mState;                /* 0x388 */
     /* 0x38c is live and distinct from dEnemyBase_c::mStateTimer at 0x100.
        Naming it mStateTimer shadowed the base field. Behavior advances it and
-       clears it exactly as it does mStateTimer, and func_ov002_020af7cc sets
-       both to 0xffff; it is the counter func_ov002_020af248 reads for the
+       clears it exactly as it does mStateTimer, and UpdateRiseThenPopOut sets
+       both to 0xffff; it is the counter UpdateExpiryCountdown reads for the
        blink-then-vanish countdown. */
     u16                          mStateFrames;          /* 0x38c */
-    /* 0x38e: nonzero lets Render and the drop shadow run. func_ov002_020af218
+    /* 0x38e: nonzero lets Render and the drop shadow run. UpdateShown
        stores IsPlayerInRange there each frame; types 5 and 7 hold it at 0 while
        hidden; type 10 forces it to 1. 0x38f: the blink phase, written by
-       func_ov002_020af248 during the final 40 frames and otherwise left at 1
+       UpdateExpiryCountdown during the final 40 frames and otherwise left at 1
        (InitResources sets it). Render needs both. */
     u8                           mShown;                /* 0x38e */
     u8                           mBlinkOn;              /* 0x38f */
     /* param1 >> 4 & 0xf. Types 5 and 7 stay hidden in state 0 while it is
-       nonzero; func_ov002_020af684 decrements it. Type 9 spawns a type 5 with
+       nonzero; UnlockTargetAndRemove decrements it. Type 9 spawns a type 5 with
        it set to 2 (spawn param 0x25) next to two type 11. */
     s32                          mUnlockCount;          /* 0x390 */
-    /* The handle func_ov002_020aeee4 hands Particle::System::New and stores
+    /* The handle UpdateTrailEffect hands Particle::System::New and stores
        its result back into, so one effect is carried from frame to frame. */
     u32                          mParticleID;           /* 0x394 */
 
@@ -141,33 +141,33 @@ struct da1up_c : dEnemyBase_c {
     /* The fourteen mMushroomType handlers Behavior dispatches through the
        pointer-to-member table data_ov002_0210dc00 (indices in comments) plus
        the shared helpers they call. */
-    void func_ov002_020aeee4();
+    void UpdateTrailEffect();
     void func_ov002_020aefa4();
-    void func_ov002_020aefb8();
-    void func_ov002_020af0c0();
-    daPly_c *func_ov002_020af1dc();
-    void func_ov002_020af218(int range);
-    int  func_ov002_020af248(int n);
-    void func_ov002_020af3a8();
-    void func_ov002_020af474();
-    void func_ov002_020af4ec();
-    void func_ov002_020af684(int target, daPly_c *player);
-    void func_ov002_020af724();   /* dispatch 13 */
-    void func_ov002_020af7cc();   /* dispatch 10 */
-    void func_ov002_020af838();   /* dispatch  9 */
-    void func_ov002_020af908();   /* dispatch 12 */
-    void func_ov002_020af924();   /* dispatch  8 */
-    void func_ov002_020af950();   /* dispatch  7 */
-    void func_ov002_020afa50();   /* dispatch 11 */
-    void func_ov002_020afa6c();   /* dispatch  6 */
-    void func_ov002_020afa98();   /* dispatch  5 */
-    void func_ov002_020afbb4();   /* dispatch  4 */
-    void func_ov002_020afc44();   /* dispatch  3 */
-    void func_ov002_020afc68();
-    void func_ov002_020afd10();   /* dispatch  2 */
-    void func_ov002_020afde4();
-    void func_ov002_020afe4c();   /* dispatch  1 */
-    void func_ov002_020aff10();   /* dispatch  0 */
+    void UpdatePhysics();
+    void SteerTowardPlayer();
+    daPly_c *GetTouchingPlayer();
+    void UpdateShown(int range);
+    int UpdateExpiryCountdown(int n);
+    void CollectOnTouch();
+    void UpdateLaunchArc();
+    void UpdateModelAndShadow();
+    void UnlockTargetAndRemove(int target, daPly_c *player);
+    void UpdateFallThenWait();     /* dispatch 13 */
+    void UpdateRiseThenPopOut();   /* dispatch 10 */
+    void UpdateSpawner();          /* dispatch  9 */
+    void UpdateSpinTriggerFor7();  /* dispatch 12 */
+    void UpdateTriggerFor7();      /* dispatch  8 */
+    void UpdateHiddenChase();      /* dispatch  7 */
+    void UpdateSpinTriggerFor5();  /* dispatch 11 */
+    void UpdateTriggerFor5();      /* dispatch  6 */
+    void UpdateHiddenFlee();       /* dispatch  5 */
+    void UpdateWaitThenFaceAway(); /* dispatch  4 */
+    void UpdateStationary();       /* dispatch  3 */
+    void AccelerateOnGround();
+    void UpdateWaitThenAccelerate(); /* dispatch  2 */
+    void WalkAwayFromPlayer();
+    void UpdatePopOutFlee();  /* dispatch  1 */
+    void UpdatePopOutDrift(); /* dispatch  0 */
 };
 
 #ifndef SM64DS_PLATFORM_PC

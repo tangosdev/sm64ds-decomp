@@ -179,7 +179,6 @@ namespace KuppaScript {
 void End(void);
 }
 extern "C" {
-extern int func_ov002_020c6e14(void*);
 extern u8 data_0209d660;
 extern s8 gNumStageStars[];
 extern signed char gNumStageStars[];
@@ -1406,7 +1405,7 @@ void daStar_c::StateSaveMessage() {
         }
         break;
     case 4:
-        if (func_ov002_020c6e14(mPlayer) != 0) {
+        if (mPlayer->func_ov002_020c6e14() != 0) {
             mTalkStep++;
         } else {
             mTalkStep += 2;
