@@ -93,6 +93,7 @@ enum dScMgHanachan_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" void *dScMgHanachan_c_classInit();
 extern "C" BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
@@ -177,7 +178,6 @@ void LoadOBJPltt(const void *src, u32 offset, u32 size);
 }
 namespace cstd {
 s16 atan2(s32, s32);
-int fdiv(int numerator, int denominator);
 }
 
 extern "C" {
@@ -606,8 +606,7 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
                     vb.x = vb.x + pos.x;
                     vb.y = vb.y + pos.y;
                     OAM::Render(0, (OamAttr *)sHanaWigglerTargetSprites[0], vb.x >> 12, vb.y >> 12,
-                                -1, -1, func_02053200((FX_SinIdx((u16)ang >> 4) >> 2) + 0xc00),
-                                (u16)rot);
+                                -1, -1, FX_Inv((FX_SinIdx((u16)ang >> 4) >> 2) + 0xc00), (u16)rot);
                 }
             }
         }
@@ -689,7 +688,7 @@ void Wiggler_DrawField(void *arg) {
                 if (fp2 != 0)
                     scale = 0x1000;
                 else
-                    scale = func_02053200((FX_SinIdx((unsigned short)ang >> 4) >> 2) + 0xc00);
+                    scale = FX_Inv((FX_SinIdx((unsigned short)ang >> 4) >> 2) + 0xc00);
                 OAM::Render(1, (OamAttr *)sHanaWigglerTargetSprites[fp2], s.vb.x >> 12,
                             s.vb.y >> 12, -1, -1, scale, t.urot);
             } else if (((Wiggler *)raw)->state == &Wiggler::StateWait) {
@@ -1405,10 +1404,10 @@ void Wiggler_StartPathA(Obj *self, int n) {
     self->speedTarget = 0xa00;
     g1 = sHanaFieldWigglerCount / 3 - 1;
 
-    rA = cstd::fdiv(a << 12, g1 << 12);
-    rB = cstd::fdiv((g1 - a) << 12, g1 << 12);
-    rC = cstd::fdiv(b << 12, 0x2000);
-    rD = cstd::fdiv((2 - b) << 12, 0x2000);
+    rA = FX_Div(a << 12, g1 << 12);
+    rB = FX_Div((g1 - a) << 12, g1 << 12);
+    rC = FX_Div(b << 12, 0x2000);
+    rD = FX_Div((2 - b) << 12, 0x2000);
 
     if (a & 1) {
         self->aim = -0x4000;
@@ -1567,8 +1566,8 @@ void Wiggler_StartPathB(char *raw, int idx) {
     ((Wiggler *)raw)->speedTarget = 0xa00;
 
     n1 = sHanaFieldWigglerCount - 1;
-    A = cstd::fdiv(idx << 12, n1 << 12);
-    B = cstd::fdiv((n1 - idx) << 12, n1 << 12);
+    A = FX_Div(idx << 12, n1 << 12);
+    B = FX_Div((n1 - idx) << 12, n1 << 12);
 
     p = (n1 - 2) << 3;
     valY = FX_MUL(((0x28 - p) << 12), A) + FX_MUL(((p + 0x98) << 12), B);
@@ -1628,8 +1627,8 @@ void Wiggler_StartPathC(Wiggler *wiggler, int wigglerIndex) {
     wiggler->speedTarget = 0;
 
     lastIndex = sHanaFieldWigglerCount - 1;
-    indexWeight = cstd::fdiv(wigglerIndex << 12, lastIndex << 12);
-    reverseWeight = cstd::fdiv((lastIndex - wigglerIndex) << 12, lastIndex << 12);
+    indexWeight = FX_Div(wigglerIndex << 12, lastIndex << 12);
+    reverseWeight = FX_Div((lastIndex - wigglerIndex) << 12, lastIndex << 12);
     spacingOffset = (lastIndex - 2) * 8;
 
     initialHead.y = 0;

@@ -43,9 +43,9 @@
 #include "nitro/gx/gxcommon.h"
 #include "OamAnimation.h"
 #include "CP15.h"
-#include "cstd.h"
 
 #include "Matrix2x2.h"
+#include "nitro/fx/fx_cp.h"
 
 extern u8  data_0209e660;    /* sub-OAM suppress flag / single-buffer select */
 extern int data_0209e664;    /* main-buffer fill counter */
@@ -236,9 +236,9 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
                     halfW = w >> 1;
                     halfH = h >> 1;
                     if (scaleX != 0x1000)
-                        x = cstd::fdiv(x, scaleX);
+                        x = FX_Div(x, scaleX);
                     if (scaleY != 0x1000)
-                        y = cstd::fdiv(y, scaleY);
+                        y = FX_Div(y, scaleY);
                     if (rotation != 0) {
                         s16 s, c;
                         s = data_02082214[sinIdx];

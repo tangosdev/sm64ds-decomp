@@ -7,9 +7,9 @@
 #include "Memory.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
-#include "cstd.h"
 #include "nitro/fx/fx.h"
 #include "nitro/gx/g3imm.h"
+#include "nitro/fx/fx_cp.h"
 
 /* ROM order: the ENTRY factory, then EntryMesh (0x0211a948..0x0211b524). */
 #pragma defer_codegen off
@@ -220,7 +220,7 @@ int EntryMesh::RippleHeight(int dist) {
         return 0;
     phase = RipplePhase(dist);
     amp = RippleAmplitude(0x64 - mRippleTimer);
-    slope = cstd::fdiv(amp, 0x384000);
+    slope = FX_Div(amp, 0x384000);
     v = FX_MUL((-slope), dist);
     r2 = amp + v;
     if (r2 < 0)
@@ -237,7 +237,7 @@ int EntryMesh::RippleAmplitude(int age) {
 
 /* The sine phase at distance dist, behind the advancing mRipplePhase. */
 short EntryMesh::RipplePhase(int dist) {
-    int t = cstd::fdiv(0xffff, 0x16c000);
+    int t = FX_Div(0xffff, 0x16c000);
     int v = FX_MUL(dist, t);
     return (short)(v - mRipplePhase);
 }

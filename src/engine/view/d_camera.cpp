@@ -18,7 +18,7 @@
  *   addresses. Those that work on the camera they are passed are dCamera_c
  *   members; the rest keep C linkage. The three line-query handlers use C++
  *   for native collision-result initialization, and the state-change, shake
- *   and FOV handlers use C++ so they can call ChangeState and cstd::fdiv
+ *   and FOV handlers use C++ so they can call ChangeState and FX_Div
  *   directly; other handlers remain in cplusplus-off regions.
  * - Vec3 remains the POD scratch triple in the older handlers. Native
  *   collision results use Vector3 and its empty destructor.
@@ -50,6 +50,7 @@
 #include "OAM.h"
 #include "G2x.h"
 #include "G3i.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Defined at the bottom of this file; every use here only takes the address. */
 extern dCamera_c::State data_0209b008;
@@ -515,8 +516,8 @@ extern "C" {
 void dCamera_c::SetFovAngle(short arg) {
     int i = (int)(unsigned short)arg >> 4;
     int j = i * 2;
-    mInvSinFov = func_02053200(data_02082214[j]);
-    mInvCosFov = func_02053200(data_02082214[j + 1]);
+    mInvSinFov = FX_Inv(data_02082214[j]);
+    mInvCosFov = FX_Inv(data_02082214[j + 1]);
     data_0209f43c.Func_020156DC(mAspect, arg, mNear, mFar);
 }
 }
@@ -538,7 +539,7 @@ void dCamera_c::func_0200d8c8(const Vector3 *v, int strength) {
     if (strength <= dist)
         return;
 
-    offset = FX_MUL(cstd::fdiv(strength, dist), 0x9000);
+    offset = FX_MUL(FX_Div(strength, dist), 0x9000);
 
     if (offset <= mShakeY)
         return;
@@ -1273,7 +1274,7 @@ body:
                     mFocusDist = FX_MUL(mFocusDist, 0x1800);
                 }
                 if (g == 0x2f && mFocusDist > 0xc0000) {
-                    int s = cstd::fdiv(0xc0000, mFocusDist << 1);
+                    int s = FX_Div(0xc0000, mFocusDist << 1);
                     Vec3_MulScalarInPlace(&local, s);
                     Vec3_Add((Vector3 *)&local2, (const Vector3 *)a3, (const Vector3 *)&local);
                     mLookTargetPos.x = local2.x;
@@ -1396,7 +1397,7 @@ int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
             int fd;
             if (sl != 0) {
                 Math_Function_0203b14c(&f, 0, 0x100, FX_MUL(r5, 0x600), 0x1000);
-                fd = cstd::fdiv(f, sl);
+                fd = FX_Div(f, sl);
                 mLookAtOffset.x = sp8.x - FX_MUL(sp38.x, fd);
                 mLookAtOffset.z = sp8.z - FX_MUL(sp38.z, fd);
             }
@@ -1776,7 +1777,7 @@ void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int arg2) {
         limit = e->b;
 
     if (len > limit) {
-        scale = cstd::fdiv(limit, len);
+        scale = FX_Div(limit, len);
         Vec3_MulScalarInPlace(&v1, scale);
         Vec3_Add(&v4, &lookAt, &v1);
         v2.x = v4.x;
@@ -1960,7 +1961,7 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
     if (idx + 1 < (int)path.NumNodes()) {
         path.GetNode(node2, idx + 1);
         Vec3_Sub(&tmp, &node2, &node1);
-        Vec3_MulScalarInPlace(&tmp, cstd::fdiv(0x190000, LenVec3(&tmp)));
+        Vec3_MulScalarInPlace(&tmp, FX_Div(0x190000, LenVec3(&tmp)));
         Vec3_Add(&farPoint, &node1, &tmp);
         Vec3_Sub(&diffFar, &farPoint, &lookAt);
         tmp.x = diffFar.x;
@@ -1988,7 +1989,7 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
 
         path.GetNode(prevNode, mPathNode - 1);
         Vec3_Sub(&diffPrev, &prevNode, &node0);
-        Vec3_MulScalarInPlace(&diffPrev, cstd::fdiv(0x190000, LenVec3(&diffPrev)));
+        Vec3_MulScalarInPlace(&diffPrev, FX_Div(0x190000, LenVec3(&diffPrev)));
         Vec3_Add(&farPrev, &node0, &diffPrev);
         Vec3_Sub(&diffFarPrev, &farPrev, &lookAt);
         diffPrev.x = diffFarPrev.x;
@@ -2439,12 +2440,12 @@ s32 dCamera_c::func_02009e70() {
                                     ApproachAngle((s16 *)&sp18, sb, 0x20, 0x800, 0);
                                     t0 = (sp18 >> 4) * 2;
                                     sp40.y = FX_MUL(sp28, -data_02082214[t0]);
-                                    t0 = cstd::fdiv(FX_MUL(sp28, data_02082214[t0 + 1]), fp);
+                                    t0 = FX_Div(FX_MUL(sp28, data_02082214[t0 + 1]), fp);
                                     sp40.x = FX_MUL(sp40.x, t0);
                                     sp40.z = FX_MUL(sp40.z, t0);
                                 }
                                 Math_Function_0203b14c(&sp28, r4, 0x400, r7 + 0x20000, 0x100);
-                                Vec3_MulScalarInPlace(&sp40, cstd::fdiv(sp28, sp14));
+                                Vec3_MulScalarInPlace(&sp40, FX_Div(sp28, sp14));
                             } else if (sp28 < fp) {
                                 Math_Function_0203b14c(&sp28, fp, 0x400, r7 + 0x20000, 0x100);
                                 {
@@ -2453,7 +2454,7 @@ s32 dCamera_c::func_02009e70() {
                                     distanceSq -= (s64)sp40.y * sp40.y;
                                     r7 = cstd::sqrt((u64)distanceSq);
                                 }
-                                t0 = cstd::fdiv(r7, Vec3_HorzLen(&sp40));
+                                t0 = FX_Div(r7, Vec3_HorzLen(&sp40));
                                 sp40.x = FX_MUL(sp40.x, t0);
                                 sp40.z = FX_MUL(sp40.z, t0);
                                 mInputYawLag -= mAngleY - sb;
@@ -2467,7 +2468,7 @@ s32 dCamera_c::func_02009e70() {
                         } else {
                             if (sb > r4) {
                                 Math_Function_0203b14c(&sp28, r4, 0x400, r7 + 0x20000, 0x100);
-                                Vec3_MulScalarInPlace(&sp40, cstd::fdiv(sp28, sb));
+                                Vec3_MulScalarInPlace(&sp40, FX_Div(sp28, sb));
                                 MoveCameraPosition(this, sp40);
                             }
                         }
@@ -3004,7 +3005,7 @@ int func_020092c4(void *cam, Vector3 *out, const Vector3 *target) {
         return 1;
     scratch = len;
     r5 = Math_Function_0203b14c(&scratch, 0, 0x200, 0x40000, 0x8000);
-    Vec3_MulScalarInPlace(&d, cstd::fdiv(scratch, len));
+    Vec3_MulScalarInPlace(&d, FX_Div(scratch, len));
     {
         struct Vector3 res;
         Vec3_Add(&res, target, &d);
@@ -3097,7 +3098,7 @@ int dCamera_c::KeepPosOutOfWalls() {
         Vec3_Sub(&dir1, &pos, &v0);
         len = LenVec3(&dir1);
         if (len != 0) {
-            Vec3_MulScalarInPlace(&dir1, cstd::fdiv(0x100000, len));
+            Vec3_MulScalarInPlace(&dir1, FX_Div(0x100000, len));
             Vec3_Add(&end1, &pos, &dir1);
             dBgCh_Lin rc1;
             PrepareBgCh(rc1);
@@ -3151,7 +3152,7 @@ int dCamera_c::KeepPosOutOfWalls() {
         mFlags &= ~0x80000;
         return 0;
     }
-    Vec3_MulScalarInPlace(&dir2, cstd::fdiv(0x60000, len));
+    Vec3_MulScalarInPlace(&dir2, FX_Div(0x60000, len));
     Vec3_Add(&end2, &pos, &dir2);
     dBgCh_Lin rc2;
     PrepareBgCh(rc2);
@@ -3180,7 +3181,7 @@ int dCamera_c::KeepPosOutOfWalls() {
     pos.z = np.z;
     Vec3_Sub(&diff, &pos, &lookAt);
     if (LenVec3(&diff) >= d) {
-        Vec3_MulScalarInPlace(&diff, cstd::fdiv(d, LenVec3(&diff)));
+        Vec3_MulScalarInPlace(&diff, FX_Div(d, LenVec3(&diff)));
         Vector3 cl;
         Vec3_Add(&cl, &lookAt, &diff);
         pos.x = cl.x;
@@ -3233,10 +3234,10 @@ int MovePointAlongSpline(Vector3 *pos, s16 *segment, s32 *progress, CutsceneSpli
     lo = 0;
     hi = 0;
     if (elem[1].speed != 0) {
-        lo = func_02053200(elem[1].speed << 12);
+        lo = FX_Inv(elem[1].speed << 12);
     }
     if (elem[2].speed != 0) {
-        hi = func_02053200(elem[2].speed << 12);
+        hi = FX_Inv(elem[2].speed << 12);
     }
 
     {
@@ -3410,13 +3411,13 @@ int func_0200840c(dCamera_c *cam, u8 *data) {
 /* Script op: grow the viewport from the given rectangle to the full screen
    over frames lo..hi, keeping mAspect in step. */
 int func_020082f8(dCamera_c *cam, u8 *src, int lo, int hi) {
-    Fix12i slope = cstd::fdiv((gKuppaScriptFrame - lo) << 12, (hi - lo) << 12);
+    Fix12i slope = FX_Div((gKuppaScriptFrame - lo) << 12, (hi - lo) << 12);
     cam->mViewport[0] = (u8)(FX_MUL(((int)src[0] << 12), slope) >> 12);
     cam->mViewport[1] = (u8)(FX_MUL(((int)src[1] << 12), slope) >> 12);
     cam->mViewport[2] = (u8)((FX_MUL((((int)src[2] - 0xff) << 12), slope) >> 12) + 0xff);
     cam->mViewport[3] = (u8)((FX_MUL((((int)src[3] - 0xbf) << 12), slope) >> 12) + 0xbf);
-    cam->mAspect = cstd::fdiv((((u8)cam->mViewport[2] - (u8)cam->mViewport[0]) + 1) << 12,
-                              (((u8)cam->mViewport[3] - (u8)cam->mViewport[1]) + 1) << 12);
+    cam->mAspect = FX_Div((((u8)cam->mViewport[2] - (u8)cam->mViewport[0]) + 1) << 12,
+                          (((u8)cam->mViewport[3] - (u8)cam->mViewport[1]) + 1) << 12);
     return 1;
 }
 

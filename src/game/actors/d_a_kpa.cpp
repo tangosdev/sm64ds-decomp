@@ -132,11 +132,11 @@ enum daKpa_c_AssetId {
 #include "Message.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 /* -------------------------------------------------------------------------- */
 /* Names for the numbers this file uses. The values are the ROM's; the names are
@@ -2966,9 +2966,9 @@ void daKpa_c::FreeUpdate() {
             if (this->mVertSpeed >= 0x14000)
                 this->mVertSpeed = 0x14000;
         } else if (this->mGroundNormalY != 0) {
-            this->mVertSpeed = -(cstd::fdiv(FX_MUL(this->mGroundNormalX, this->mSpeedX) +
-                                                FX_MUL(this->mGroundNormalZ, this->mSpeedZ),
-                                            this->mGroundNormalY) +
+            this->mVertSpeed = -(FX_Div(FX_MUL(this->mGroundNormalX, this->mSpeedX) +
+                                            FX_MUL(this->mGroundNormalZ, this->mSpeedZ),
+                                        this->mGroundNormalY) +
                                  0x8000);
         }
     }

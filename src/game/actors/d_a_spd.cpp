@@ -40,8 +40,8 @@ enum Scuttlebug_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "Particle__System.h"
-#include "cstd.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx_cp.h"
 
 /* ------------------------------------------------------------------------
  * Local value shapes carried from the legacy one-function files.
@@ -700,7 +700,7 @@ void daSpd_c::func_ov071_0211f148(dBgCh_Actr *w) {
             ((SurfaceInfo *)((char *)fr + 4))->CopyNormalTo(normal);
             if (normal.y != 0) {
                 mVertSpeed =
-                    -(cstd::fdiv(FX_MUL(normal.x, mSpeedX) + FX_MUL(normal.z, mSpeedZ), normal.y) +
+                    -(FX_Div(FX_MUL(normal.x, mSpeedX) + FX_MUL(normal.z, mSpeedZ), normal.y) +
                       0x8000);
             }
         }

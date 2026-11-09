@@ -48,12 +48,12 @@
 #include "dBgCh_Gnd.h"
 #include "decl_Particle.h"
 #include "dBgCh_Actr.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "SpawnInfo.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 #pragma defer_codegen off
 
@@ -217,8 +217,8 @@ extern "C" void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
             }
             if (normal.y != 0) {
                 self->mVertSpeed =
-                    -(cstd::fdiv(FX_MUL(normal.x, self->mSpeedX) + FX_MUL(normal.z, self->mSpeedZ),
-                                 normal.y) +
+                    -(FX_Div(FX_MUL(normal.x, self->mSpeedX) + FX_MUL(normal.z, self->mSpeedZ),
+                             normal.y) +
                       0x8000);
             }
             self->mAngleX = func_02010844(self, &normal, self->mAngleY);

@@ -68,6 +68,7 @@
 #include "cstd.h"
 #include "private/mtx43.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Written as the real constructor, which is the form the legacy shard recovered
    and byte-matched. Two steps, and neither is spelled below: the dActor_c
@@ -140,7 +141,7 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
                 int a = FX_MUL(nx, vx);
                 int b = FX_MUL(nz, vz);
                 int num = a + b;
-                int q = cstd::fdiv(num, dz);
+                int q = FX_Div(num, dz);
                 mVertSpeed = -(q + 0x8000);
             }
         }
@@ -628,7 +629,7 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr &clsn) {
                 mEatenByYoshi = 0;
             } else {
                 fr->surface.CopyNormalTo(*(Vector3 *)&mFloorNormalX);
-                mVertSpeed = cstd::fdiv((mVertSpeed * -50) / 100, mFloorNormalY);
+                mVertSpeed = FX_Div((mVertSpeed * -50) / 100, mFloorNormalY);
             }
             mSpeedX += mFloorNormalX << 3;
             mSpeedZ += mFloorNormalZ << 3;

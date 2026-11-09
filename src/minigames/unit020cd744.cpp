@@ -41,6 +41,7 @@
 #include "dExtSimpleModel_c.h"
 #include "dExtAnmTexSRT_c.h"
 #include "SharedFilePtr.h"
+#include "nitro/fx/fx_cp.h"
 
 /* This unit's globals. The per-function namespaces below still re-declare
    several of them in the spelling each one-function source used. */
@@ -73,9 +74,6 @@ extern TrmpLine sTrmpLines[4];
 // Partial callback interface only. ROM vtables at 0x0213b2c4/0x0213b2e0
 // implement these five slots through dMgTrmpObjAdapter_c and its children.
 // No destructor slots or complete actor layout are implied by this view.
-namespace cstd {
-int fdiv(s32, s32);
-}
 namespace {
 struct TrampolineObjectCallbacks {
     virtual Vector3 *GetPos();
@@ -276,7 +274,7 @@ extern "C" void TrmpItem_MotionSway(char *self) {
     distanceFromCenterY = TRMPITEM(self)->mPos.y - 0x74000;
     if (distanceFromCenterY < 0)
         distanceFromCenterY = -distanceFromCenterY;
-    xSpeed += cstd::fdiv(distanceFromCenterY, 0x4c000) >> 3;
+    xSpeed += FX_Div(distanceFromCenterY, 0x4c000) >> 3;
 
     if (TRMPITEM(self)->mPhase & 0x4000)
         TRMPITEM(self)->mVel.x = xSpeed;
@@ -1138,7 +1136,7 @@ extern "C" void TrmpLine_PointDistance(char *sl, void *referencePoint,
                one function of this TU; the per-function gate reports NO-REPRO. */
             int halfLength = (long long)(TRMPLINE(sl)->mHalfWidth);
             int distance = LenVec3(&delta);
-            int distanceWeight = cstd::fdiv(halfLength, halfLength + distance);
+            int distanceWeight = FX_Div(halfLength, halfLength + distance);
             int weightedProjection = FX_MUL(negatedProjection, *gridWeight);
             weightedAmplitude = FX_MUL(weightedProjection, distanceWeight);
             *amplitude = weightedAmplitude;
@@ -1672,8 +1670,8 @@ extern "C" int TrmpLine_PushJumper(char *c) {
             TRMPLINE(c)->mContactMotion.y = movementDelta.y;
             TRMPLINE(c)->mContactMotion.z = movementDelta.z;
 
-            edgeRatio = cstd::fdiv((currentAlong < 0) ? -currentAlong : currentAlong,
-                                   TRMPLINE(c)->mHalfWidth);
+            edgeRatio =
+                FX_Div((currentAlong < 0) ? -currentAlong : currentAlong, TRMPLINE(c)->mHalfWidth);
             {
                 int halfLength = TRMPLINE(c)->mHalfWidth;
                 int absoluteAlong = (currentAlong < 0) ? -currentAlong : currentAlong;
@@ -2010,7 +2008,7 @@ extern "C" void TrmpLine_Build(char *c, short *startPoint, short *endPoint) {
         TRMPLINE(c)->mContactMotion.z = selectedVelocity.z;
 
         absoluteAlong = (selectedAlong < 0) ? (0 - selectedAlong) : selectedAlong;
-        edgeRatio = cstd::fdiv(absoluteAlong, TRMPLINE(c)->mHalfWidth);
+        edgeRatio = FX_Div(absoluteAlong, TRMPLINE(c)->mHalfWidth);
         halfLength = TRMPLINE(c)->mHalfWidth;
         absoluteAlong = (selectedAlong < 0) ? (0 - selectedAlong) : selectedAlong;
         offsetTimesHalfLength = FX_MUL(absoluteAlong, halfLength);
@@ -2245,7 +2243,7 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
         scaledDirection[1] = direction[1];
         scaledDirection[1] = weightedY;
         scaledDirectionLength = Vec2_Len((const Vector2 *)scaledDirection);
-        func_0203d630(direction, cstd::fdiv(0x18000, scaledDirectionLength));
+        func_0203d630(direction, FX_Div(0x18000, scaledDirectionLength));
 
         func_0203d704(adjustedStart, midpoint, direction);
         Vec2_Sub(adjustedEnd, midpoint, direction);

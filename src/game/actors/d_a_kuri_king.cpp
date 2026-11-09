@@ -103,6 +103,7 @@ enum daKuriKing_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
  * spellings are reconstructed; constructor and destructor addresses, file
@@ -886,7 +887,7 @@ int daKuriKing_c::AdvanceMaterialChanger() {
  * The float arithmetic goes through the ITCM soft-float block by hand, the
  * way the rest of this tree calls it: func_01ffa594 (single add/sub),
  * func_01ffa344 (float to int), func_01ffa4bc (int to float) and
- * func_01ff9378, with cstd::fdiv doing the Fix12 divide in between.
+ * func_01ff9378, with FX_Div doing the Fix12 divide in between.
  *
  * Shape notes: the particle position temp must stay MEMORY-HOMED -- reading
  * its words back through the address (the ((int *)&v)[n] form) is what keeps
@@ -904,10 +905,10 @@ int daKuriKing_c::StepScaleTransition() {
 
     this->mTargetScale = func_01ffa344(func_01ff9378(
         (int)data_ov074_02122e4c[this->mSizeIndex + 1],
-        func_01ffa4bc(cstd::fdiv(
-            func_01ffa344(func_01ffa594((int)data_ov074_02122e4c[this->mSizeIndex],
-                                        (int)data_ov074_02122e4c[this->mSizeIndex + 1])),
-            this->mScaleSteps << 12))));
+        func_01ffa4bc(
+            FX_Div(func_01ffa344(func_01ffa594((int)data_ov074_02122e4c[this->mSizeIndex],
+                                               (int)data_ov074_02122e4c[this->mSizeIndex + 1])),
+                   this->mScaleSteps << 12))));
 
     if (Math_Function_0203b14c(&this->mCurrentScale, this->mTargetScale, 0x78, 0x100, 0x20) == 0) {
         if (this->mScalePhase == 0) {
@@ -1072,7 +1073,7 @@ int daKuriKing_c::CalcWalkAnimSpeed() {
     int r;
     if (num < 0) num = -num;
     den = data_ov074_0212291c[this->mSizeIndex] + (data_ov074_02122dfc[3] << 12) + 1;
-    r = cstd::fdiv(num, den);
+    r = FX_Div(num, den);
     if (r < 0x1000) return 0x1000;
     if (r > 0x3000) return 0x3000;
     return r;

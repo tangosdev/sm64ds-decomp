@@ -67,6 +67,7 @@ enum dScMgSnowball_c_AssetId {
 #include "private/mtx43.h"
 #include "OamAttr.h"
 #include "Vector2Math.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -625,7 +626,7 @@ void dScMgSnowball_c::UpdateSnowball() {
 }
 
 void dScMgSnowball_c::UpdateCamera() {
-    int t = cstd::fdiv(0xc0000, data_02082314);
+    int t = FX_Div(0xc0000, data_02082314);
     Vector3 v;
     int x, y;
     if (mScreensSwapped == 0) {

@@ -27,9 +27,9 @@
  */
 #include "types.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "math/CalcLib.h"
 #include "Ov007Swing.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -180,8 +180,8 @@ void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
         nearestY = func_ov007_020c30ac(mesh->verts, count, &self->yPointPos[i], -1, 0);
 
         grid = mesh->grid;
-        column = cstd::mod(nearestX, grid->columns);
-        row = cstd::div(nearestX, grid->rows);
+        column = FX_ModS32(nearestX, grid->columns);
+        row = FX_DivS32(nearestX, grid->rows);
         point = grid->rowLists[row]->items[column];
         oldZ = point->target->z;
         point->target->z = mesh->params.restZ;
@@ -189,8 +189,8 @@ void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
         point->target->z = oldZ;
 
         grid = mesh->grid;
-        column = cstd::mod(nearestY, grid->columns);
-        row = cstd::div(nearestY, grid->rows);
+        column = FX_ModS32(nearestY, grid->columns);
+        row = FX_DivS32(nearestY, grid->rows);
         point = grid->rowLists[row]->items[column];
         oldZ = point->target->z;
         point->target->z = mesh->params.restZ;
@@ -250,7 +250,7 @@ static inline int CapFraction(int size, u16 cap) {
         return 0;
     if (size >= cap)
         return 0x1000;
-    return cstd::div(size << 12, cap);
+    return FX_DivS32(size << 12, cap);
 }
 
 /* Turns the swing into the item sprite's pose (func_ov007_020beeb0 passes

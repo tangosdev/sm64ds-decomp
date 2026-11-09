@@ -55,7 +55,7 @@ BG_TRAP(void dBgW::BeforeClsn(dBgPi &, dActor_c *, Vector3 &,
 // The destructors are still flat extern "C" Itanium functions in src/; the
 // bridge runs the other way here, so MSVC's slot 0 reaches the ROM body.
 /* The ROM destructor releases resources through the collision layer, and
-   slicing it pulls that whole tree in (DotVec3, data_020a0cec, cstd::fdiv,
+   slicing it pulls that whole tree in (DotVec3, data_020a0cec, FX_Div,
    a dozen func_0203xxxx). MSVC still needs the destructor defined to emit
    the vtable, so it takes hal/clsn_vtable.cpp's shape: present for the
    vtable's sake, loud if anything ever dispatches through it. A gate that

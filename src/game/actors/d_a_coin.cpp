@@ -44,6 +44,7 @@
 #include "cstd.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Views of daObjBC_Switch_c.h and daObjFl_Coin_c.h, same member names and
    offsets: including either header renumbers this TU's @NNN labels. */
@@ -646,7 +647,7 @@ void daCoin_c::StateBounce() {
     if (normal.y != 0) {
         int dotX = FX_MUL(normal.x, mSpeedX);
         int dotZ = FX_MUL(normal.z, mSpeedZ);
-        mVertSpeed = -(cstd::fdiv(dotX + dotZ, normal.y) + 0x8000);
+        mVertSpeed = -(FX_Div(dotX + dotZ, normal.y) + 0x8000);
     }
 
     if ((unsigned)(floorClass - 1) <= 1) {

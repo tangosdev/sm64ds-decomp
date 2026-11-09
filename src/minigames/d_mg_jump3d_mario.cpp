@@ -53,6 +53,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 static const int kWallX = 0x6c000;   /* mPos.x clamp: the arena walls */
 static const int kScreenYMax = 0xbc; /* past this mScreenY the Mario damps out */
@@ -73,7 +74,6 @@ void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 int NormalizeVec3IfNonZero(VecFx32 *v);
 int  RandomIntInternal(int *seed);
 void func_02012718(int a, int b);
-int  func_02053200(int x);
 void func_02016a14(void *self, int a);
 void func_02016a04(void *self, int a);
 int func_020179b4(SharedFilePtr *f, dExtModel_c *m, int extra);
@@ -82,7 +82,6 @@ int D3D_PlaySeAtX(int a, int b);
 void Puff_Spawn(int a, int b);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void *m, short angY);
-int  func_020531a4(int a);
 void Puff_DrawAll(void);
 void Puff_UpdateAll(void);
 void Puff_ClearAll(int a, int b);
@@ -176,7 +175,7 @@ extern "C" void Jump3D_SetTuning(int a)
 {
     int b;
     if (a > 0x3000) a = 0x3000;
-    b = func_020531a4(a);
+    b = FX_Sqrt(a);
     sJump3DFallSpeed = FX_MUL(b, -0x2400);
     sJump3DGravityStep = FX_MUL(a, 0xe0);
     sJump3DRiseVy = FX_MUL(b, 0x4c00);
@@ -410,9 +409,9 @@ void dMgJump3DMario_c::Draw()
 
         wave = FX_SinIdx(sJump3DSpinAngle >> 4);
         screen[1] = screen[1] - (((wave << 2) + 0x30000) >> 12);
-        scaleX = func_02053200((wave >> 2) + 0x1000);
+        scaleX = FX_Inv((wave >> 2) + 0x1000);
 
-        scaleY = -func_02053200((FX_CosIdx(sJump3DSpinAngle >> 4) >> 2) + 0x1000);
+        scaleY = -FX_Inv((FX_CosIdx(sJump3DSpinAngle >> 4) >> 2) + 0x1000);
 
         /* Zero it through `int *`: writing mtx.a..mtx.d instead costs 11 words
            (notes/experiments/jump3d-2711-mtx-intptr-zeroing.md). */

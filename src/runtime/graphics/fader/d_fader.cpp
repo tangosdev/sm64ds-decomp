@@ -26,11 +26,9 @@
 #include "G2x.h"
 #include "dExtModel_c.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 // These helpers have native definitions but no shared declaration yet.
-namespace cstd {
-Fix12i fdiv(Fix12i a, Fix12i b);
-}
 namespace CP15 {
 void FlushAndInvalidateDataCache(u32 addr, u32 len);
 }
@@ -88,7 +86,7 @@ int dFdBrightness_c::SetBackwardTime(u32 frames, u32 extra) {
     if (frames == 0) {
         speed = -(Fix12i)0x1000;
     } else {
-        speed = cstd::fdiv(-(Fix12i)0x1000, (Fix12i)(frames << 12));
+        speed = FX_Div(-(Fix12i)0x1000, (Fix12i)(frames << 12));
     }
     return IsAtStart();
 }
@@ -98,7 +96,7 @@ int dFdBrightness_c::SetForwardTime(u32 frames, u32 extra) {
     if (frames == 0) {
         speed = (Fix12i)0x1000;
     } else {
-        speed = cstd::fdiv(0x1000, (Fix12i)(frames << 12));
+        speed = FX_Div(0x1000, (Fix12i)(frames << 12));
     }
     return IsAtEnd();
 }

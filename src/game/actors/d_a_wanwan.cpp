@@ -27,6 +27,7 @@
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 enum {
     kYoshiEggId = 9,
@@ -96,7 +97,6 @@ s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
 
 namespace cstd {
 s16 atan2(s32, s32);
-int fdiv(int a, int b);
 }
 
 #define SetChompAnim(self, bca) \
@@ -568,9 +568,9 @@ void daWanwan_c::RestrictToChain() {
     lim = mChainExtension * 7 + kRestLift;
     if (len <= lim)
         return;
-    v.x = FX_MUL(v.x, cstd::fdiv(lim, len));
-    v.y = FX_MUL(v.y, cstd::fdiv(lim, len));
-    v.z = FX_MUL(v.z, cstd::fdiv(lim, len));
+    v.x = FX_MUL(v.x, FX_Div(lim, len));
+    v.y = FX_MUL(v.y, FX_Div(lim, len));
+    v.z = FX_MUL(v.z, FX_Div(lim, len));
     Vec3_Add(&out, (Vector3 *)&mSpawnPosX, &v);
     mPosX = out.x;
     mPosY = out.y;

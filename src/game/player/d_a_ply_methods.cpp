@@ -91,6 +91,7 @@
 #include "Memory.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" daPly_c *daPly_c_classInit();
 
@@ -3438,7 +3439,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         if (mIsUnderwater == 0 && ret != 1) {
             fr->surface.CopyNormalTo(v);
             if (v.y != 0) {
-                int t = cstd::fdiv(FX_MUL(v.x, mSpeedX) + FX_MUL(v.z, mSpeedZ), v.y);
+                int t = FX_Div(FX_MUL(v.x, mSpeedX) + FX_MUL(v.z, mSpeedZ), v.y);
                 t = -(t + 0x8000);
                 if (t < 0)
                     mVertSpeed = t;

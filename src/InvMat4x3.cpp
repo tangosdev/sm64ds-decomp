@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
-#include "cstd.h"
 #include "common.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -25,7 +25,7 @@ int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst) {
         return -1;
     }
 
-    cstd::reciprocal_async(det);
+    FX_InvAsync(det);
 
     {
         int x1 = (int)(((s64)src->m[1] * src->m[8] - (s64)src->m[7] * src->m[2]) >> 12);
@@ -33,7 +33,7 @@ int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst) {
         int x3 = (int)(((s64)src->m[0] * src->m[8] - (s64)src->m[6] * src->m[2]) >> 12);
         int x4 = (int)(((s64)src->m[0] * src->m[5] - (s64)src->m[3] * src->m[2]) >> 12);
 
-        recip = cstd::fdiv_result();
+        recip = FX_GetDivResult();
 
         out->m[0] = (int)(((s64)recip * p) >> 12);
         out->m[1] = -(int)(((s64)recip * x1) >> 12);

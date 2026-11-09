@@ -44,9 +44,9 @@
 #include "G2.h"
 #include "GX.h"
 #include "Memory.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/hw/registers.h"
+#include "nitro/fx/fx_cp.h"
 
 #pragma defer_codegen off
 
@@ -599,10 +599,10 @@ void MgFx::UpdateFlyTo() {
         }
         int a = mTimer;
         int b = mDuration;
-        int s = cstd::fdiv(a << 0xc, b << 0xc);
+        int s = FX_Div(a << 0xc, b << 0xc);
         int c3 = mDuration;
         int c2 = mTimer;
-        int t = cstd::fdiv((c3 - c2) << 0xc, c3 << 0xc);
+        int t = FX_Div((c3 - c2) << 0xc, c3 << 0xc);
         int v8 = mVecA[0];
         int v10 = mVecB[0];
         long long m1 = inline_fn(v8) * inline_fn(s);
@@ -1122,7 +1122,7 @@ extern OamAttr *data_ov006_021346bc;
 /* Draws the three-item overlay menu: each item's per-language sprite list
    at its mMenuItemNX/Y, followed by data_ov006_021346bc at the same spot.
    The highlighted item (mMenuCursor) goes through a matrix whose diagonal
-   is func_02053200 of a pulse that mMenuCursorPhase drives through
+   is FX_Inv of a pulse that mMenuCursorPhase drives through
    FX_SinIdx. Nothing is drawn while mTouchOptions.Draw() returns
    nonzero. */
 extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
@@ -1150,7 +1150,7 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
             s16 *pos;
             u16 v;
             int *pbuf = buf;
-            int scale = func_02053200(FX_MUL(FX_SinIdx(idx), 0x800) + 0x1000);
+            int scale = FX_Inv(FX_MUL(FX_SinIdx(idx), 0x800) + 0x1000);
 
             {
                 volatile int *vp = pbuf;

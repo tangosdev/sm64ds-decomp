@@ -50,6 +50,7 @@
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "nitro/fx/fx_cp.h"
 
 /* One row of the state table: enter action (pmf[0]), per-frame update
  * (pmf[1]) and a name literal. */
@@ -85,10 +86,6 @@ enum {
     CHARACTER_WARIO = 2,
     CHARACTER_YOSHI = 3
 };
-
-namespace cstd {
-int fdiv(int, int);
-}
 
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8* p);
@@ -155,7 +152,7 @@ void daObjPowerUpItem_c::StateOpening()
 {
     if (DecIfAbove0_Byte(&mWobbleTimer)) {
         int a = (int)mWobbleTimer << 12;
-        int fdivResult = cstd::fdiv(a, 0x1c000);
+        int fdivResult = FX_Div(a, 0x1c000);
         unsigned short hw = mWobbleAngle;
         int idx = hw >> 4;
         signed short odd = data_02082214[idx * 2 + 1];

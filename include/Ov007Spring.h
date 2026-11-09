@@ -20,7 +20,7 @@ typedef struct Ov007Follower {
     Vector3 *target;
     Vector3 velocity; /* 0x04: added to *target every step, >> shift */
     Vector3 force;    /* 0x10: accumulated per frame, cleared at the end of each step */
-    /* 0x1c: Q12. func_ov007_020c844c stores the reciprocal (func_02053200)
+    /* 0x1c: Q12. func_ov007_020c844c stores the reciprocal (FX_Inv)
      * of its mass, 0x1000 for a mass of 1.0. The steppers take a direct path
      * at 0x1000 and otherwise scale force by it into velocity. Signed, as
      * func_ov007_020c80c8 reads it (asr) */

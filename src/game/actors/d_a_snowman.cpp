@@ -58,10 +58,10 @@ enum daSnowman_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 namespace cstd {
 s16 atan2(s32, s32);
-int fdiv(int numerator, int denominator);
 }
 
 /* Registry ids this file spawns or compares. */
@@ -673,7 +673,7 @@ int daSnowman_c::StateHopExecute() {
     if (len == 0 || len <= this->mHopStep)
         return 1;
     {
-        int q = cstd::fdiv(this->mHopStep, len);
+        int q = FX_Div(this->mHopStep, len);
         Vec3_MulScalar(&scaled, &diff, q);
         SubVec3(&this->mPos, &scaled, &this->mPos);
     }

@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "cstd.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -84,8 +84,8 @@ int func_020538b8(int x, int y) {
     if (denom == 0)
         return 0;
     if (add)
-        return (u16)(off + data_02086214[cstd::fdiv(num, denom) >> 5]);
+        return (u16)(off + data_02086214[FX_Div(num, denom) >> 5]);
     else
-        return (u16)(off - data_02086214[cstd::fdiv(num, denom) >> 5]);
+        return (u16)(off - data_02086214[FX_Div(num, denom) >> 5]);
 }
 }

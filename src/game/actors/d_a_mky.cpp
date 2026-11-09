@@ -61,7 +61,7 @@
 #include "Sound.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
-#include "cstd.h"
+#include "nitro/fx/fx_cp.h"
 
 /* The callees of this TU's members, spelled by their mangled or ROM names.
  * They cannot be declared inside a method body: a block-scope extern in a
@@ -356,7 +356,7 @@ void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
         static_cast<const dBgPi *>(w->GetFloorResult())->surface.CopyNormalTo(n);
         if (n.y != 0) {
             int s = FX_MUL(n.x, this->mSpeedX) + FX_MUL(n.z, this->mSpeedZ);
-            this->mVertSpeed = -(cstd::fdiv(s, n.y) + 0x8000);
+            this->mVertSpeed = -(FX_Div(s, n.y) + 0x8000);
         }
     }
     if (w->IsOnWall() != 0) {

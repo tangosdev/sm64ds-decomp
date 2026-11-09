@@ -39,7 +39,6 @@
 #include "BMD_File.h"
 #include "dExtAnmTexPat_c.h"
 #include "dExtAnmTexSRT_c.h"
-#include "cstd.h"
 #include "G2.h"
 #include "math/Approach.h"
 #include "dScMgBase_c.h"
@@ -47,6 +46,7 @@
 #include "LevelRng.h"
 #include "MgCamera.h"
 #include "math/Quaternion.h"
+#include "nitro/fx/fx_cp.h"
 /* Typed access to a MascotWalker record from the char* helpers below. */
 #define WALKER(p) ((MascotWalker *)(p))
 /* Typed access to a Presenter record from the char* helpers below. */
@@ -2348,13 +2348,13 @@ void Camera_ProjectToScreen(MgCamera *camera, void *pos, int *screenX, int *scre
     int view[3];
     MulVec3Mat4x3((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
     int fovIdx = camera->mFovAngle >> 4;
-    int tanFov = cstd::fdiv(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
+    int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
     int height = FX_MUL(tanFov, -view[2]);
-    int fracY = cstd::fdiv(view[1], height);
+    int fracY = FX_Div(view[1], height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screenY[0] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = cstd::fdiv(view[0], width);
+    int fracX = FX_Div(view[0], width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screenX[0] = (pixelX + 0x7f800) >> 0xc;
 }
@@ -2368,13 +2368,13 @@ void Camera_ProjectToScreen16(MgCamera *camera, void *pos, short *screen) {
     int view[3];
     MulVec3Mat4x3((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
     int fovIdx = camera->mFovAngle >> 4;
-    int tanFov = cstd::fdiv(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
+    int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
     int height = FX_MUL(tanFov, -view[2]);
-    int fracY = cstd::fdiv(view[1], height);
+    int fracY = FX_Div(view[1], height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screen[1] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = cstd::fdiv(view[0], width);
+    int fracX = FX_Div(view[0], width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screen[0] = (pixelX + 0x7f800) >> 0xc;
 }

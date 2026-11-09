@@ -59,6 +59,7 @@ enum daObjRotateUpdownLift_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Plain 12-byte point. Vector3's destructor is empty but the type is not
    POD, and the copies below are three-word ldm/stm with no cleanup. */
@@ -124,10 +125,6 @@ extern UpdownFileSlot data_ov091_02134c34[];
 extern UpdownClpsSlot data_ov091_02134c38[];
 extern s16 data_02082214[];
 extern s8 gCurrentSublevel;
-
-namespace cstd {
-int fdiv(int numerator, int denominator);
-}
 
 extern "C" {
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
@@ -389,7 +386,7 @@ int daObjRotateUpdownLift_c::Behavior()
     Vec3_Sub(&edge, &cur, &prev);
     span = LenVec3(&edge);
     dist = LenVec3(&remain);
-    along = cstd::fdiv(span - dist, span);
+    along = FX_Div(span - dist, span);
     mAngleX = (s16)(mPitchBase + (s16)FX_MUL(mPitchStep, along));
 
     if (dist == 0 || dist <= stepLen) {
@@ -407,7 +404,7 @@ int daObjRotateUpdownLift_c::Behavior()
             *pitch = (s16)(*pitch + *(s16 *)((char *)stepAt + 0xa4));
         }
     } else {
-        Vec3_MulScalar(&stepVec, &remain, cstd::fdiv(stepLen, dist));
+        Vec3_MulScalar(&stepVec, &remain, FX_Div(stepLen, dist));
         SubVec3(&mPosX, &stepVec, &mPosX);
     }
 

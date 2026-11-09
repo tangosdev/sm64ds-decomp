@@ -48,6 +48,7 @@
 #include "SurfaceInfo.h"
 #include "Vector3s.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -74,11 +75,6 @@ Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
    ShouldPassThroughImpl and the hit record read straight back.
    local extern: no header in include/ declares it. */
 extern dBgPc data_020a0cec;
-
-namespace cstd {
-/* local extern: no header in include/ declares it. */
-int fdiv(int a, int b);
-}
 
 /* The ROM inlines a RAW hardware sqrt at four sites -- NOT cstd::sqrt(u64)
    (0x0203d744), which pre-shifts `x << 2` and rounds its result `(r + 1) >> 1`.
@@ -138,7 +134,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    `pos + cross(fn, ea) * (length / dot(cross(fn, ea), en3))`. The cross goes
    through a 6-byte s16 scratch (sp+0x16c, reused by both rounds), so it really
    does truncate to 16 bits. The quotient's `>> 2` and the product's `>> 14` are
-   fdiv's Fix12 result reconciled with the 0x400 normal scale.
+   FX_Div's Fix12 result reconciled with the 0x400 normal scale.
 
    `cr` being a Vector3s rather than an `s16[3]` is load-bearing and is why nothing
    here needs a cast -- see its declaration. */
@@ -148,7 +144,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     cr.z = (s16)(MUL10(fn[0], (ea)[1]) - MUL10(fn[1], (ea)[0]));             \
     t = MUL10(cr.x, en3[0]) + MUL10(cr.y, en3[1]) + MUL10(cr.z, en3[2]);   \
     if (IsNearZeroDivisor(t)) continue;                                           \
-    u = cstd::fdiv(tri->length, t) >> 2;                                \
+    u = FX_Div(tri->length, t) >> 2;                                \
     (out)[0] = (o0) + (s32)(((s64)cr.x * u) >> 14);                         \
     (out)[1] = (o1) + (s32)(((s64)cr.y * u) >> 14);                         \
     (out)[2] = (o2) + (s32)(((s64)cr.z * u) >> 14);
@@ -168,12 +164,12 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
 
    `IsNearZeroDivisor(den)` is the divisor guard: |den| <= 8 means the two edge
    normals are within a hair of parallel and the 2x2 is singular. The `>> 2` on
-   the quotient is cstd::fdiv's Fix12 result brought back to the 0x400 scale. */
+   the quotient is FX_Div's Fix12 result brought back to the 0x400 scale. */
 #define VERTEX_BLOCK(nn, nnh, den, ea, eb, dotI, dotJ)                        \
     den = MUL10(nn, nn) - 0x400;                                              \
     den += (nnh) - (nnh);                                                     \
     if (IsNearZeroDivisor(den)) continue;                                         \
-    t = cstd::fdiv(MUL10(nn, dotJ) - (dotI), den) >> 2;                  \
+    t = FX_Div(MUL10(nn, dotJ) - (dotI), den) >> 2;                  \
     u = (dotJ) - MUL10(t, nn);                                                \
     vx = MUL10(t, (ea)[0]) + MUL10(u, (eb)[0]);                               \
     vy = MUL10(t, (ea)[1]) + MUL10(u, (eb)[1]);                               \
@@ -186,7 +182,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    distance outside this edge more than faceDot >> edgeToleranceShift", i.e. a
    slope tolerance expressed as a fraction of the penetration. Only a floor
    (cls 0) that fails it gets the expensive path -- a real hypotenuse through
-   the hardware sqrt, then the contact angle through cstd::fdiv, compared
+   the hardware sqrt, then the contact angle through FX_Div, compared
    against upAxis. IsNearZeroDivisor guards the divisor: |x| <= 8 means near-zero,
    so bail. */
 #define EDGE_FILTER(d, zval, hypv)                                                 \
@@ -217,7 +213,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
             hypv = SQRT_RESULT;                                                    \
             if (IsNearZeroDivisor(hypv))                                               \
                 continue;                                                          \
-            if (axisDot > cstd::fdiv(fh, hypv))                                    \
+            if (axisDot > FX_Div(fh, hypv))                                    \
                 continue;                                                          \
         }                                                                          \
     } else if (cls == 1) {                                                         \
@@ -337,9 +333,9 @@ int dBgW_Kc::DetectClsn(dBgCh_Gnd &ray)
                 continue; /* too steep to solve */
 
             /* Height of the plane under the probe, relative to vertex 0. */
-            dy = -(cstd::fdiv((s32)(((s64)dx * normal[0]) >> 10)
-                                  + (s32)(((s64)dz * normal[2]) >> 10),
-                                    normal[1]) >> 2);
+            dy = -(FX_Div((s32)(((s64)dx * normal[0]) >> 10) + (s32)(((s64)dz * normal[2]) >> 10),
+                          normal[1]) >>
+                   2);
 
             en = file->normals[tri->edgeNormal1Idx];
             if (dx * en[0] + dy * en[1] + dz * en[2] > 0x20000) continue;
@@ -1159,7 +1155,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
                             continue;
                         if (IsNearZeroDivisor(denom))
                             continue;
-                        t = cstd::fdiv(dotS >> 4, denom) << 4;
+                        t = FX_Div(dotS >> 4, denom) << 4;
 
                         delta.x = d1.x - d0.x;
                         scaled.x = (s32)(((s64)delta.x * t) >> 16);

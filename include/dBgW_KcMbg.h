@@ -42,7 +42,7 @@ struct dBgW_KcMbg : dBgW_Kc {
     bool filterByMoveDir; /* 0x130 */
     u8 pad_131[3];
     Matrix4x3 newScaledMat;    /* 0x134 */
-    s32 invScale;               /* 0x164 - func_02053200(scale) */
+    s32 invScale;              /* 0x164 - FX_Inv(scale) */
     Matrix4x3 invScaledMat;    /* 0x168 */
     Matrix4x3 prevInvScaledMat;/* 0x198 */
 

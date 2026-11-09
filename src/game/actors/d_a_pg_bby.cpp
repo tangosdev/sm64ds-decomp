@@ -18,9 +18,9 @@
 #include "dClipper.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx_cp.h"
 
 /* The carry matrix is copied through the flat Mtx43: assigning Matrix4x3
    grows .text by 0x1c bytes. */
@@ -575,7 +575,7 @@ void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
         if (floorNormal.y != 0) {
             int x = FX_MUL(floorNormal.x, mSpeedX);
             int y = FX_MUL(floorNormal.z, mSpeedZ);
-            mVertSpeed = -(cstd::fdiv(x + y, floorNormal.y) + 0x8000);
+            mVertSpeed = -(FX_Div(x + y, floorNormal.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {

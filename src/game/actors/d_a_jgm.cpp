@@ -25,7 +25,7 @@
  *   UpdateDiscreteNoLava method is WRONG-DEST (ROM 0x02038420).
  * - daPly_c::Bounce / Hurt stay mangled: each takes Fix12<int> by value
  *   (6az).
- * - dActor_c::IsTooFarAwayFromPlayer and cstd::fdiv have no header decl,
+ * - dActor_c::IsTooFarAwayFromPlayer and FX_Div have no header decl,
  *   so they are declared locally.
  * - Sound::PlayLong is the Sound.h call. d_a_jgmPlayLongHold keeps the five
  *   named parameters that hold the @NNN count. Unnaming them gives -5.
@@ -36,7 +36,7 @@
  *   that also hold that count: bodyFile /
  *   heldFile and the loop counters in InitResources / CleanupResources,
  *   `frame` in UpdateThrowState, the `offset` references in the hover and
- *   throw collision updates, and the parameter names on the cstd::fdiv and
+ *   throw collision updates, and the parameter names on the FX_Div and
  *   IsTooFarAwayFromPlayer prototypes.
  * - OnTurnIntoEgg's R6Player and UpdateWallAndWater's R10dBgCh_Actr take
  *   reference spelling; a pointer emits identical ARM. SetState's `int`
@@ -72,9 +72,9 @@ enum d_a_jgm_AssetId {
 #include "Sound.h"
 #include "SurfaceInfo.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Vector stack values are NitroSDK VecFx32. Vector3 has a genuine non-trivial
  * destructor and must not instantiate its otherwise unrelated vague-linkage D1
@@ -690,7 +690,7 @@ int daJgm_c::TurnOffsetFromDist(int dist)
 {
     if (dist > 0x190000)
         return 0;
-    int q = cstd::fdiv(0x4000, 0xc8000);
+    int q = FX_Div(0x4000, 0xc8000);
     long long m = (long long)q * dist;
     m += 0x800;
     int r = (int)(m >> 12);

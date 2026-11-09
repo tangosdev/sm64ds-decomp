@@ -259,8 +259,10 @@ if(MSVC)
 endif()
 
 # Gate 8: collision -- the octree walk over real KCL data. cstd::sqrt
-# drives the hardware sqrt unit through literal MMIO -> hostgen.
-set(GATE8_SYMS _ZN4cstd4sqrtEy _ZN4cstd11fdiv_resultEv _ZN4cstd16reciprocal_asyncEi
+# drives the hardware sqrt unit through literal MMIO -> hostgen. The hostgen
+# copy of src/cstd.cpp also defines FX_Div, so these targets drop
+# hal/cstd_div.c.
+set(GATE8_SYMS _ZN4cstd4sqrtEy FX_GetDivResult FX_InvAsync
     Matrix4x3_ApplyInPlaceToScale)
 sm64ds_hostgen_symbols(GATE8_GEN ${GATE8_SYMS})
 
@@ -277,7 +279,7 @@ sm64ds_honor_cpp_markers(SLICE8_SOURCES)
 
 add_executable(smoke_clsn tests/smoke_clsn.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     hal/clsn_vtable.cpp hal/bg_ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE8_SOURCES} ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} "${ROMDATA_C}")
@@ -417,7 +419,7 @@ sm64ds_honor_cpp_markers(SLICE9_SOURCES)
 
 add_executable(smoke_actor tests/smoke_actor.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     hal/clsn_vtable.cpp hal/bg_ctor_bridge.cpp hal/actor_vtables.cpp hal/actor_ctor_bridge.cpp hal/host_d0_demo.cpp hal/anim_bridge.cpp hal/anim_ctor_bridge.cpp hal/host_d0.cpp
     hal/cxxname_bridge.cpp hal/megachar_stub.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}

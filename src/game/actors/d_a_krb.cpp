@@ -83,6 +83,7 @@ enum daKrb_c_AssetId {
 #include "daStarBase_c.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx_cp.h"
 
 /* daStar_c::mMarkerID (daStar_c.h, 0x434), seen through a local view:
    including daStar_c.h renumbers this TU's @NNN labels. */
@@ -91,10 +92,6 @@ struct SilverStarView {
     u32 mMarkerID;
 };
 typedef char SilverStarView_size_must_be_0x438[sizeof(SilverStarView) == 0x438 ? 1 : -1];
-
-namespace cstd {
-int fdiv(int a, int b);
-}
 
 typedef struct {
     unsigned char b0 : 1;
@@ -306,7 +303,7 @@ void daKrb_c::func_ov084_021290d4() {
 void daKrb_c::func_ov084_02129168(dActor_c *actor) {
     daKrb_c *goomba = this;
     goomba->mBounceCountdown = 0x3c;
-    goomba->mVertSpeed = cstd::fdiv(0xd000 - goomba->mVertAccel, goomba->mFloorNormalY);
+    goomba->mVertSpeed = FX_Div(0xd000 - goomba->mVertAccel, goomba->mFloorNormalY);
     goomba->mHorzSpeed = Vec3_HorzLen((const Vector3 *)&goomba->mSpeedX) * -1;
     if (actor != 0)
         goomba->mPrevAngleY = Vec3_HorzAngle(&goomba->mPos, &actor->mPos);
@@ -1161,7 +1158,7 @@ void daKrb_c::func_ov084_0212a774() {
             if (aa <= cnt * 0x500) {
                 goomba->mVertSpeed = (cnt << 0xa) - goomba->mVertAccel;
             } else {
-                goomba->mVertSpeed = cstd::fdiv((a8 * -0x50) / 100, goomba->mFloorNormalY);
+                goomba->mVertSpeed = FX_Div((a8 * -0x50) / 100, goomba->mFloorNormalY);
             }
         }
         {
@@ -1689,7 +1686,7 @@ int daKrb_c::Behavior()
                                    (int)mAnmModel.file == (int)data_ov084_02130cc8.filePtr)) {
         mAnmModel.speed = 0x1000;
     } else {
-        int v = cstd::fdiv(mHorzSpeed, mScaleX * 2);
+        int v = FX_Div(mHorzSpeed, mScaleX * 2);
         if (v > 0x3000)
             v = 0x3000;
         mAnmModel.speed = v;

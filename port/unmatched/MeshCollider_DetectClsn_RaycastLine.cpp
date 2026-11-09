@@ -187,7 +187,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
                     denom = (dotS - dotE) >> 4;
                     if (denom <= 0) { ++g_walk_dbg[9]; continue; }
                     if (func_020397dc(denom)) { ++g_walk_dbg[10]; continue; }
-                    t = cstd::fdiv(dotS >> 4, denom) << 4;
+                    t = FX_Div(dotS >> 4, denom) << 4;
 
                     delta.x = d1.x - d0.x;
                     scaled.x = (s32)(((s64)delta.x * t) >> 16);

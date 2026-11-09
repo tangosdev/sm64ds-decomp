@@ -38,9 +38,9 @@
 #include "decl_PathPtr.h"
 #include "decl_common.h"
 #include "common.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
 
 typedef void (dPathLiftActor_c::*PathLiftStateFn)();
 
@@ -250,7 +250,7 @@ void dPathLiftActor_c::StatePath()
     destDist = LenVec3(&fromDest);
     Vec3_Sub(&segment, &srcNode, &destNode);
     segLen = LenVec3(&segment);
-    segFrames = cstd::fdiv(segLen, mHorzSpeed) / 0x1000;
+    segFrames = FX_Div(segLen, mHorzSpeed) / 0x1000;
 
     horzDist = Vec3_HorzDist(&srcNode, &destNode);
     if (horzDist != 0) {
@@ -275,11 +275,11 @@ void dPathLiftActor_c::StatePath()
     }
 
     if (destDist == 0 || destDist <= mHorzSpeed) {
-        Vec3_MulScalar(&stepA, &fromDest, cstd::fdiv(mHorzSpeed, destDist));
+        Vec3_MulScalar(&stepA, &fromDest, FX_Div(mHorzSpeed, destDist));
         SubVec3(&mPos, &stepA, &mPos);
         arrived = 1;
     } else {
-        Vec3_MulScalar(&stepB, &fromDest, cstd::fdiv(mHorzSpeed, destDist));
+        Vec3_MulScalar(&stepB, &fromDest, FX_Div(mHorzSpeed, destDist));
         SubVec3(&mPos, &stepB, &mPos);
     }
 

@@ -27,6 +27,7 @@
 #include "types.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx_cp.h"
 
 /* `C` stands in for the receiver of the state pointer-to-member at 0x5004.
  * It must stay non-polymorphic: mwccarm lays out a pointer-to-member of a
@@ -99,9 +100,6 @@ extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Play;
 namespace GX   { void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size); }
 namespace G3X {
 void SetFog(int enable, int mode, int slope, int offset);
-}
-namespace cstd {
-s32 fdiv(s32 a, s32 b);
 }
 
 /* Slot 18. 0 is an eat (one more egg, capped like the HUD score), 0x12 a
@@ -208,7 +206,7 @@ s32 dScMgJump_c::InitResources()
     G3X::SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
-    fov = cstd::fdiv(0xc0000, (s32)data_02082614);
+    fov = FX_Div(0xc0000, (s32)data_02082614);
 
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;

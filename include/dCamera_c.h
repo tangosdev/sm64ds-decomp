@@ -61,7 +61,7 @@ struct dCamera_c : dView_c {
     s32 mAspect; /* 0x0f8 */
     s32 mNear;   /* 0x0fc */
     s32 mFar;    /* 0x100 */
-    /* SetFovAngle stores func_02053200 (the fixed-point reciprocal) of the
+    /* SetFovAngle stores FX_Inv (the fixed-point reciprocal) of the
        sine and cosine table entries for the field-of-view angle it is given,
        beside the aspect/near/far it hands dClipper. Nothing in d_camera.cpp
        reads them back; the names follow the writer (medium confidence). */

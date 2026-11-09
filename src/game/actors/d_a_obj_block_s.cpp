@@ -90,6 +90,7 @@ enum daObjBlockS_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Actor profile IDs this file compares against (symbols/actor_debug_names.tsv). */
 enum {
@@ -967,7 +968,7 @@ int daObjBlockS_c::UpdateFloorContact() {
     {
         s32 m0 = FX_MUL(mFloorNormalX, mSpeedX);
         s32 m1 = FX_MUL(mFloorNormalZ, mSpeedZ);
-        mVertSpeed = -(cstd::fdiv(m0 + m1, mFloorNormalY) + 0x8000);
+        mVertSpeed = -(FX_Div(m0 + m1, mFloorNormalY) + 0x8000);
     }
 
     if (func_ov002_020f035c(n, mFloorNormalY) != 0 && mHorzSpeed > 0x5000) {
@@ -979,7 +980,7 @@ int daObjBlockS_c::UpdateFloorContact() {
             q1 = mAngleZ;
             if (q1 < 0) q1 = ((-q1) << 16) >> 16;
             if (q1 < 0x10) {
-                sd = cstd::fdiv(FX_MUL(mHorzSpeed, 8), 0xa);
+                sd = FX_Div(FX_MUL(mHorzSpeed, 8), 0xa);
                 if (sd < 0) sd = -sd;
                 if (mVertSpeed > 0xa000)
                     Sound::PlayBank3(0x51, mCamSpacePos);

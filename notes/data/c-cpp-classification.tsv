@@ -2403,8 +2403,8 @@ src/MTX_Identity44_.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/func_02052fdc.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053008.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053130.c	WEAK-refs-only	arm9				1		None		-
-src/unnamed/arm9/0205/func_020531a4.c	PURE-C	arm9				1		None		-
-src/func_02053200.c	WEAK-refs-only	arm9				1		None		-
+src/unnamed/arm9/0205/FX_Sqrt.c	PURE-C	arm9				1		None		-
+src/FX_Inv.c	WEAK-refs-only	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053274.c	PURE-C	arm9				1		None		-
 src/unnamed/arm9/0205/func_02053320.c	PURE-C	arm9				1		None		-
 src/func_02053380.c	PURE-C	arm9				1		None		-

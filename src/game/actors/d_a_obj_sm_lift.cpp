@@ -31,11 +31,11 @@ enum daObjSm_Lift_c_AssetId { ASSET_SM_LIFT_BMD = 0x06b3, ASSET_SM_LIFT_KCL = 0x
 #include "SharedFilePtr.h"
 #include "PathPtr.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "Sound.h"
+#include "nitro/fx/fx_cp.h"
 
 extern s16 data_02082214[];
 /* Two CLPS blocks the lift hands to its colliders, back to back. */
@@ -173,7 +173,7 @@ int daObjSm_Lift_c::Behavior() {
                 mPosY = nodeA.y;
                 mPosZ = nodeA.z;
             } else {
-                int scale = cstd::fdiv(mHorzSpeed, len);
+                int scale = FX_Div(mHorzSpeed, len);
                 Vec3_MulScalar(&scaled, &diff, scale);
                 SubVec3((Vector3 *)&mPosX, (Vector3 *)&scaled, (Vector3 *)&mPosX);
             }

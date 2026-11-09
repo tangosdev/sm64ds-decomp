@@ -138,6 +138,7 @@ enum daObjMarioCap_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx_cp.h"
 
 /* --------------------------------------------------------------------------
  * Local shapes the merged members need.
@@ -1029,9 +1030,9 @@ int daObjMarioCap_c::Slide()
     if (mHorzSpeed > 0xf000)
         mHorzSpeed = 0xf000;
     mPrevAngleY = ang;
-    mVertSpeed = -(
-        cstd::fdiv(FX_MUL(mFloorNormalX, mSpeedX) + FX_MUL(mFloorNormalZ, mSpeedZ), mFloorNormalY) +
-        0x8000);
+    mVertSpeed =
+        -(FX_Div(FX_MUL(mFloorNormalX, mSpeedX) + FX_MUL(mFloorNormalZ, mSpeedZ), mFloorNormalY) +
+          0x8000);
     pitch = func_02010844(this, &mFloorNormalX, mAngleY);
     roll = func_02010844(this, &mFloorNormalX, mAngleY - 0x4000);
     UpdateAngle(mAngleX, pitch, 4, 0x1000);

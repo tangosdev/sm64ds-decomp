@@ -59,6 +59,7 @@
 #include "dMgTrmpln3DMario_c.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 /* Typed access to the Mario records from the char* helpers below. */
 #define MARIO2(p) ((dMgTrmpln2Mario_c *)(p))
 #define MARIO3D(p) ((dMgTrmpln3DMario_c *)(p))
@@ -118,9 +119,6 @@ extern Trmpln2MarioAnimFilePtr sTrmpMarioSdownAnimFile;
 struct W2 {
     int w[2];
 };
-namespace cstd {
-int fdiv(s32, s32);
-}
 
 // ---- dMgTrmpln2Mario_c::GetVelocity
 Vector3 *dMgTrmpln2Mario_c::GetVelocity() {
@@ -486,7 +484,7 @@ extern "C" void Trmp2Mario_BounceOffLineA(char *c) {
     Vec3_MulScalar(&tmp2, &tmp, scale);
     SubVec3(&MARIO2(c)->mVel, &tmp2, &MARIO2(c)->mVel);
 
-    fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
+    fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     scale = FX_MUL(sTrmp2RiseSpeedMax, fdivr);
     Vec3_MulScalar(&tmp3, &tmp, scale);
     AddVec3(&MARIO2(c)->mVel, &tmp3, &MARIO2(c)->mVel);
@@ -708,7 +706,7 @@ extern "C" void Trmp2Mario_BounceOffLineB(char *c) {
     Vec3_MulScalar(&tmp2, &tmp, scale);
     SubVec3(&MARIO2(c)->mVel, &tmp2, &MARIO2(c)->mVel);
 
-    fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
+    fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     scale = FX_MUL(sTrmpSpeedScale, fdivr);
     Vec3_MulScalar(&tmp3, &tmp, scale);
     AddVec3(&MARIO2(c)->mVel, &tmp3, &MARIO2(c)->mVel);
@@ -1424,7 +1422,6 @@ void Trmp2Mario_ResetAll(u32) {
 // ---- Trmp2Mario_SetTuning
 namespace ns_020cad3c {
 extern "C" {
-extern int func_020531a4(int a);
 extern int sTrmp2FallSpeed;
 extern int sTrmp2GravityStep;
 extern int data_ov006_0214053c;
@@ -1436,7 +1433,7 @@ void Trmp2Mario_SetTuning(int a) {
     int v;
     if (a > 0x2800)
         a = 0x2800;
-    v = func_020531a4(a);
+    v = FX_Sqrt(a);
     sTrmp2FallSpeed = FX_MUL(v, -0x1c00);
     sTrmp2GravityStep = FX_MUL(a, 0xc0);
     data_ov006_0214053c = FX_MUL(v, 0xe00);
@@ -2050,7 +2047,7 @@ extern "C" void Trmp3DMario_BounceOffLineA(char *c) {
     Vec3_MulScalar(&tmp2, &tmp, scale);
     SubVec3(&MARIO3D(c)->mVel, &tmp2, &MARIO3D(c)->mVel);
 
-    fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
+    fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
 
     MARIO3D(c)->mGravityStep = sTrmp3DGravityStep;
 
@@ -2270,7 +2267,7 @@ extern "C" void Trmp3DMario_BounceOffLineB(char *c) {
     Vec3_MulScalar(&tmp2, &tmp, scale);
     SubVec3(&MARIO3D(c)->mVel, &tmp2, &MARIO3D(c)->mVel);
 
-    fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
+    fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     MARIO3D(c)->mGravityStep = sTrmp3DGravityStep;
 
     scale = FX_MUL(sTrmp3DBounceScale, fdivr);
@@ -3055,7 +3052,6 @@ void Trmp3DMario_ResetAll(unsigned int n, int arg1) {
 // ---- Trmp3DMario_SetTuning
 namespace ns_020cd510 {
 extern "C" {
-extern int func_020531a4(int a);
 extern int sTrmp3DFallSpeed;
 extern int sTrmp3DGravityStep;
 extern int sTrmp3DJumpOffSpeed;
@@ -3066,7 +3062,7 @@ void Trmp3DMario_SetTuning(int a) {
     int v;
     if (a > 0x2800)
         a = 0x2800;
-    v = func_020531a4(a);
+    v = FX_Sqrt(a);
     sTrmp3DFallSpeed = FX_MUL(v, -0x2400);
     sTrmp3DGravityStep = FX_MUL(a, 0xe0);
     sTrmp3DJumpOffSpeed = FX_MUL(v, 0xc00);

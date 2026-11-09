@@ -4,9 +4,9 @@
 #include "G2.h"
 #include "G2x.h"
 #include "GX.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_s_mg_trampoline2_AssetId {
     ASSET_D_2D_MG_BG_TRAMPOLINE_HARD_NCG_BIN = 0x00a2,
@@ -216,7 +216,6 @@ extern OamAttr *sMgTextSpritesItalian[];
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for _ZN18dScMgTrampoline2_c11CanEndStateEi, NOT applied: extern int GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for _ZN18dScMgTrampoline2_c10StartRoundEi, NOT applied: extern "C" s32 GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for _ZN18dScMgTrampoline2_c10StartRoundEi, NOT applied: extern "C" void MultiStore16(u16 val, char *dst, int nbytes); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd4fdivEii, from the legacy file for _ZN18dScMgTrampoline2_c13InitResourcesEv, NOT applied: extern s32 _ZN4cstd4fdivEii(s32 a, s32 b); */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov006_021245a8, NOT applied: extern s32 GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2G213GetBG2CharPtrEv, from the legacy file for func_ov006_021245a8, NOT applied: extern char *_ZN2G213GetBG2CharPtrEv(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for func_ov006_021245a8, NOT applied: extern void MultiStore16(u16 val, char *dst, int nbytes); */
@@ -327,7 +326,7 @@ s32 dScMgTrampoline2_c::InitResources() {
     *(u16 *)0x4000060 = (*(u16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
-    fov = cstd::fdiv(0xc0000, (s32)data_02082414);
+    fov = FX_Div(0xc0000, (s32)data_02082414);
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
     this->mCameras[0].mLookAt.z = 0;
@@ -444,7 +443,7 @@ void dScMgTrampoline2_c::StateIntro() {
     }
 
     {
-        int t = cstd::fdiv(counter << 12, 0x5a000);
+        int t = FX_Div(counter << 12, 0x5a000);
         volatile s16 old9c = mTouchX;
         volatile s16 old9e = mTouchY;
         int mixRaw = sTrmp2IntroToX * t + sTrmp2IntroFromX * (0x1000 - t);

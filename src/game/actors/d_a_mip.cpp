@@ -49,13 +49,13 @@ enum daMip_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "daObj_Mip_Key_c.h"
 #include "Sound.h"
-#include "cstd.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
 
 namespace Sound {
 bool PlaySub(u32, u32, u32, int, bool);
@@ -811,7 +811,7 @@ int daMip_c::StateFleeMain() {
         if (AngleDiff(ang, mPrevAngleY) < 0x2000) {
             ysave = mPosY;
             {
-                int s = cstd::fdiv(lim, len);
+                int s = FX_Div(lim, len);
                 Vec3_MulScalar(&scaled, &delta, s);
                 SubVec3((::Vector3 *)&mPos, (::Vector3 *)&scaled, (::Vector3 *)&mPos);
             }

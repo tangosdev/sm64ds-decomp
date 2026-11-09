@@ -53,7 +53,7 @@
  *
  * FIXED POINT. currInterp runs 0..0x1000 -- 0.0..1.0 in 20.12. SetToEnd writes
  * 0x1000 and SetToStart writes 0; SetForwardTime derives speed as 1.0/frames
- * via cstd::fdiv and SetBackwardTime the same with the sign flipped, which is
+ * via FX_Div and SetBackwardTime the same with the sign flipped, which is
  * why AdvanceInterp picks its target from the sign of speed.
  *
  * Field NAMES are inferred from behaviour and cannot change codegen, so they are
