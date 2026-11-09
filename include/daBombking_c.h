@@ -50,8 +50,8 @@ struct daBombking_c : dEnemyBase_c {
        establish the original signatures of all state handlers. */
     typedef int (daBombking_c::*StateFunction)();
     StateFunction *mState;            /* 0x420 */
-    /* Unique ids of the two spawned bob-ombs. Init zeros both; func_ov078_02125350
-       writes dActor_c::Spawn's uniqueID into a free slot; func_ov078_02123864
+    /* Unique ids of the two spawned bob-ombs. Init zeros both; EnterThrowBomb
+       writes dActor_c::Spawn's uniqueID into a free slot; DetonateSpawnedBombs
        walks them with FindWithID. */
     s32 mSpawnedId[2];                /* 0x424 */
     /* 1 after the throw anim has launched that slot's bob-omb. */
@@ -80,7 +80,7 @@ struct daBombking_c : dEnemyBase_c {
     s32 mHomePosY;                    /* 0x4e4 */
     s32 mHomePosZ;                    /* 0x4e8 */
     /* Hand world pos, LSL'd from mHoldMtx translation. Copied onto a spawned
-       bob-omb in func_ov078_021250f8. */
+       bob-omb in TickThrowBomb. */
     s32 mThrowPosX;                   /* 0x4ec */
     s32 mThrowPosY;                   /* 0x4f0 */
     s32 mThrowPosZ;                   /* 0x4f4 */
@@ -89,8 +89,8 @@ struct daBombking_c : dEnemyBase_c {
     s32 mAnimSpeed;                   /* 0x4fc */
     s32 mHealth;                      /* 0x500 */
     /* Frames before the next bob-omb throw. Behavior counts it down with
-       DecIfAbove0_Byte; the throw update (func_ov078_021250f8) arms it to
-       0x64 when its animation ends, and func_ov078_02125448 only goes to
+       DecIfAbove0_Byte; the throw update (TickThrowBomb) arms it to
+       0x64 when its animation ends, and TickChase only goes to
        the throw state while it is 0. */
     u8 mThrowCooldown; /* 0x504 */
     /* Repeat gap for the walking sounds: Behavior counts it down with
@@ -117,49 +117,49 @@ struct daBombking_c : dEnemyBase_c {
 
     /* State-record {enter, tick} handlers and their helpers, in ROM order. The
        static initializer copies PMF pairs into the data_ov078_* records. */
-    int func_ov078_02123804();
-    void func_ov078_02123864();
-    int func_ov078_021238ac();
-    int func_ov078_02123a3c();
-    int func_ov078_02123aa0();
-    int func_ov078_02123bc4();
-    int func_ov078_02123c20();
-    int func_ov078_02123cf0();
-    int func_ov078_02123d3c();
-    int func_ov078_02123eb8();
-    int func_ov078_02123f1c();
-    int func_ov078_02123fb4();
-    int func_ov078_02124000();
-    int func_ov078_02124060();
-    int func_ov078_021240a0();
-    int func_ov078_021243c0();
-    int func_ov078_02124470();
-    int func_ov078_021244d0();
-    int func_ov078_02124520();
-    int func_ov078_02124778();
-    int func_ov078_021247bc();
-    int func_ov078_02124b40();
-    int func_ov078_02124bc4();
-    int func_ov078_02124c94();
-    int func_ov078_02124cf4();
-    int func_ov078_02124e9c();
-    int func_ov078_02124f28();
-    int func_ov078_021250d0();
-    int func_ov078_021250f8();
-    int func_ov078_02125350();
-    int func_ov078_02125448();
-    int func_ov078_02125734();
-    int func_ov078_02125790();
-    int func_ov078_021258e4();
-    int func_ov078_02125950();
-    int func_ov078_021259e4();
-    int func_ov078_021259ec();
-    int func_ov078_02125bc8();
-    void func_ov078_02125c98();
-    void func_ov078_02125c24(int strength);
+    int CheckKnockbackHit();
+    void DetonateSpawnedBombs();
+    int TickDefeated();
+    int EnterDefeated();
+    int TickWalkHome();
+    int EnterWalkHome();
+    int TickThrowPlayer();
+    int EnterThrowPlayer();
+    int TickCarryPlayer();
+    int EnterCarryPlayer();
+    int TickGrabPlayer();
+    int EnterGrabPlayer();
+    int TickGetUp();
+    int EnterGetUp();
+    int TickKnockback();
+    int EnterKnockback();
+    int TickDamaged();
+    int EnterDamaged();
+    int TickHomeTalk();
+    int EnterHomeTalk();
+    int TickReturnHome();
+    int EnterReturnHome();
+    int TickBounceOffHill();
+    int EnterBounceOffHill();
+    int TickThrown();
+    int EnterThrown();
+    int TickHeldByPlayer();
+    int EnterHeldByPlayer();
+    int TickThrowBomb();
+    int EnterThrowBomb();
+    int TickChase();
+    int EnterChase();
+    int TickActivate();
+    int EnterActivate();
+    int TickIntroTalk();
+    int EnterIntroTalk();
+    int TickInactive();
+    int EnterInactive();
+    void UpdateShadow();
+    void ShakeScreen(int strength);
     int KingBobOmb_SetState(void *rec);
-    void func_ov078_02125de0();
-    void func_ov078_02125f8c();
+    void UpdateHandMatrix();
+    void AttachHeldPlayer();
 };
 
 /* ~daBombking_c, the key function, owns the compiler-emitted definition of this
