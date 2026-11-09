@@ -60,7 +60,11 @@
 
 extern "C" void MultiStore_Int(int val, void *dst, int len);
 /* local extern: the factory runs this constructor over storage that already
-   exists. Placement new measured CreateExpandingHeapAllocator 0x4c -> 0x5c. */
+   exists. Placement new measured CreateExpandingHeapAllocator 0x4c -> 0x5c:
+   mwcc null-tests the placement result (cmp/addeq/ldmeq/bxeq) whether the
+   operator is declared plain, `throw()' or `throw(int)', and under
+   `#pragma exceptions on' too. The ROM tail-calls the constructor with no
+   test. */
 extern "C" ExpandingHeapAllocator *_ZN22ExpandingHeapAllocatorC1EPvj(
     ExpandingHeapAllocator *self, void *heapEnd, u32 flags);
 

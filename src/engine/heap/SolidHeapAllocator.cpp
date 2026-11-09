@@ -47,7 +47,9 @@
 
 extern "C" void MultiStore_Int(s32 val, int *dst, s32 count);
 /* local extern: the factory runs the constructor over an already-aligned
-   address. Placement new measured this function 0x4c -> 0x5c. */
+   address. Placement new measured this function 0x4c -> 0x5c: mwcc
+   null-tests the placement result, `throw()' on the operator or not (see
+   ExpandingHeapAllocator.cpp's factory for the other spellings tried). */
 extern "C" SolidHeapAllocator* _ZN18SolidHeapAllocatorC1EPvj(
     SolidHeapAllocator* self, void* heapEnd, u32 flags);
 

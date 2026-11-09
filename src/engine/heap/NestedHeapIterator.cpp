@@ -84,7 +84,13 @@ extern "C" void func_0204df54(HeapAllocator* self, u32 magic, void* start,
     self->mFlags |= flags & 0xffu;
 
     /* Placement new measured func_0204df54 0x94 -> 0xa0. The address is
-       storage that already exists, and mwcc null-tests it. */
+       storage that already exists, and mwcc null-tests it -- both calls,
+       even the global's address. Re-measured with the placement operator
+       declared plain, `throw()' and `throw(int)', and under `#pragma
+       exceptions on': the test stays every time. Assigning a temporary
+       (`mChildren = NestedHeapIterator(4)') builds it on the stack and
+       copies, 0x94 -> 0xe0, and the explicit `X::X(4)' call is rejected
+       ("illegal use of type-name"). */
     _ZN18NestedHeapIteratorC1Ej(&self->mChildren, 4);
 
     if (data_020a4d34 == 0) {
