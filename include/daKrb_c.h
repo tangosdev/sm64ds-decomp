@@ -143,8 +143,12 @@ struct daKrb_c : dCapEnemy_c {
     void func_ov084_02129c9c();
     void func_ov084_02129cf4(Fix12i distThresh);
     void func_ov084_02129ed4();
+    void func_ov084_0212a6f8();
+    void func_ov084_0212a774();
+    void func_ov084_0212ab48();
     void func_ov084_0212abd4();
     void func_ov084_0212af74();
+    void func_ov084_0212b2dc();
     void func_ov084_0212a580();
     void func_ov084_0212aab0();
 

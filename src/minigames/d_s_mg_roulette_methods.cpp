@@ -122,7 +122,7 @@ void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 void Vec2_Sub(int *out, int *a, int *b);
 void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, int x, int y, int z);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-int Sound_PlayIfNotActive(int a, int b, int c, int d);
+int Sound_PlayIfNotActive(int a, int b, int c, short d);
 int RandomIntInternal(int *seed);
 void *LoadFile(int id);
 void DecompressLZ16(void *src, void *dst);

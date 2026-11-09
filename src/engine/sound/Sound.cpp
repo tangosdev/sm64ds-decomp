@@ -107,7 +107,7 @@ extern int func_020116c4(char *c, int a1, int a2, int a3, int s0, short s1);
 extern void func_02011698(char *table, char *n);
 extern int func_02011654(char *table, char *n);
 extern int Player_PlaySoundEffect(int arg0, int arg1, int arg2);
-extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 
 /* Module state. Volumes are 0..0x7f; the current ones are 20.12 fixed point
    and ramp toward their targets by one shared step (func_02012d64,
@@ -234,6 +234,7 @@ typedef struct SndRegTable {
     SndRegEntry *buckets[16];    /* 0x508 - chain heads by id&0xf */
 
     int func_0201179c(int a1, int a2, int a3, short s1);
+    int func_0201186c(int a1, int a2, short a3);
 
     SndRegTable() {
         func_02011a5c(this);
@@ -241,8 +242,6 @@ typedef struct SndRegTable {
 } SndRegTable;
 
 SndRegTable data_0209b53c;
-
-extern "C" int func_0201186c(SndRegTable *self, int a1, int a2, short a3);
 
 namespace Sound {
 
@@ -653,14 +652,13 @@ extern "C" void func_0201251c(int a, int b, int c, int d)
     func_02048af4(&data_0209b4a4, c, d);
 }
 
-extern "C" int Sound_PlayIfNotActive(int a, int b, int c, int d)
-{
+extern "C" int Sound_PlayIfNotActive(int a, int b, int c, short d) {
     SndRegEntry *o = (SndRegEntry *)func_02011934((char *)&data_0209b53c, a);
     if (o) {
         o->inUse = 1;
         return o->id;
     }
-    return ((int (*)(SndRegTable *, int, int, int))func_0201186c)(&data_0209b53c, b, c, d);
+    return data_0209b53c.func_0201186c(b, c, d);
 }
 
 extern "C" int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h)
@@ -712,8 +710,7 @@ int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
 
 }
 
-extern "C" int func_02012310(int handle, int sound, int arg)
-{
+extern "C" int func_02012310(int handle, int sound, short arg) {
     return Sound_PlayIfNotActive(handle, 2, sound, arg);
 }
 
@@ -1082,8 +1079,8 @@ extern "C" void *func_02011934(char *table, int id)
     return 0;
 }
 
-extern "C" int func_0201186c(SndRegTable *self, int a1, int a2, short a3) {
-    SndRegTable *reg = self;
+int SndRegTable::func_0201186c(int a1, int a2, short a3) {
+    SndRegTable *reg = this;
     int i = 0;
     do {
         if (reg->entries[reg->cursor].id == 0) {
@@ -1092,7 +1089,7 @@ extern "C" int func_0201186c(SndRegTable *self, int a1, int a2, short a3) {
                 reg->counter += 1;
             }
             func_02011b38(&reg->entries[reg->cursor], reg->counter, a1, a2, a3);
-            func_02011698((char *)self, (char *)&reg->entries[reg->cursor]);
+            func_02011698((char *)this, (char *)&reg->entries[reg->cursor]);
             return reg->counter;
         }
         reg->cursor = (reg->cursor + 1) % 0x40;
