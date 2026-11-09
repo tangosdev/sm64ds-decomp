@@ -85,7 +85,7 @@ extern void Mg_SetTopScreenYOffset(int);
 extern void Mg_SetSharedState(int);
 extern void FreeGfxSlotsById(int n);
 extern int RandomIntInternal(int *seed);
-extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void func_02012718(int, int);
