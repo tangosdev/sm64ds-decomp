@@ -2195,7 +2195,7 @@ void gw_ident_tick(unsigned now) {
 // focused and every one of its players would read as away; the rule is off
 // there unless the row asks for it (SM64DS_AWAY_TEST=1), and then it reads
 // the same hal_window_focused() answer a real tab-out gives.
-enum { kGwAwayFrames = 30 };
+enum { kGwAwayFrames = 30, kGwAwaySlack = 2 };   // frames, world units
 bool gw_away_rule() {
     static int v = -1;
     if (v < 0) {
@@ -2249,14 +2249,26 @@ void gw_send(unsigned now) {
        where he stopped with the pause mark, and the first tick he moves (he
        came back) is an ordinary frame again. The idle animation keeps turning
        over, which is why this cannot wait for g_gw_frozen. */
+    /* "kept its place": within kGwAwaySlack of where it stopped (a body
+       standing on the ground settles by a fraction of a unit every frame,
+       measured -737088..-737408 in y on the castle lawn) and the same
+       facing */
     const int sp[4] = {cx, cy, cz, (int)*player::facing(a)};
-    if (std::memcmp(sp, g_gw_sp, sizeof sp) == 0) {
-        if (g_gw_still < 1000) ++g_gw_still;
-    } else {
-        g_gw_still = 0;
-        std::memcpy(g_gw_sp, sp, sizeof sp);
+    {
+        const int sl = units(kGwAwaySlack);
+        bool kept = sp[3] == g_gw_sp[3];
+        for (int k = 0; k < 3 && kept; ++k) {
+            const int d = sp[k] - g_gw_sp[k];
+            kept = d <= sl && d >= -sl;
+        }
+        if (kept && g_gw_still > 0) {
+            if (g_gw_still < 1000) ++g_gw_still;
+        } else {
+            g_gw_still = 1;
+            std::memcpy(g_gw_sp, sp, sizeof sp);
+        }
     }
-    const bool away = g_gw_still >= kGwAwayFrames && gw_away_rule() && !hal_window_focused();
+    const bool away = g_gw_still > kGwAwayFrames && gw_away_rule() && !hal_window_focused();
     const bool paused = no_tick || g_gw_frozen >= 8 || away;
     const int level = (int)data_0209f2f8;
     if (!paused) {
