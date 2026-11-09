@@ -3771,14 +3771,16 @@ void cp_unmap(CpMaps &m)
    one (else the plain one); `pre`, when not null, gets the same overlay over
    the plain picture, no fade (the frame before the smoothing); `cover`, when
    not null, gets 1 where the 3D engine drew. dst may be the overlay itself. */
-void cp_resolve(const uint32_t *ov, int ov_stride, uint32_t *dst, int dst_stride,
-                uint8_t *cover, uint32_t *pre, int aux_stride, bool fade,
-                bool final_sm, const CpMaps &m)
+/* run after093, lane TEXTSLOW1: the rule over rows y_lo..y_hi-1 only. Every row reads its own overlay, map and mask rows and writes its
+   own picture, coverage and copy rows, so bands of rows can run side by side and the picture is the same to the bit. */
+void cp_resolve_rows(const uint32_t *ov, int ov_stride, uint32_t *dst, int dst_stride,
+                     uint8_t *cover, uint32_t *pre, int aux_stride, bool fade,
+                     bool final_sm, const CpMaps &m, int y_lo, int y_hi)
 {
-    const int cw = g_cp_cw, ch = g_cp_ch;
+    const int cw = g_cp_cw;
     const int rx0 = g_cp_px0, ry0 = g_cp_py0;
     const int rx1 = g_cp_px0 + g_cp_pw, ry1 = g_cp_py0 + g_cp_ph;
-    for (int y = 0; y < ch; ++y) {
+    for (int y = y_lo; y < y_hi; ++y) {
         const uint32_t *orow = ov + (size_t)y * ov_stride;
         uint32_t *drow = dst + (size_t)y * dst_stride;
         const bool in_y = y >= m.y0 && y < m.y1;
@@ -3836,6 +3838,30 @@ void cp_resolve(const uint32_t *ov, int ov_stride, uint32_t *dst, int dst_stride
             drow[x] = p;
         }
     }
+}
+
+/* TEXTSLOW1: a settle used to run the rule on one thread over every pixel of the picture: 2048 x 1152 at RenderScale 6 cost the pause,
+   a fade or a text box drawn on the processor 10 to 20 ms a tick (Thunder's 1.0 report). The rows go to the raster pool in bands
+   (ntr::gx_parallel_rows; it runs them itself on a machine with fewer than four cores or from any thread but the main one).
+   SM64DS_TEXTSLOW_PAR=0 keeps one thread (the before arm on one binary). */
+struct CpResolveJob {
+    const uint32_t *ov; int ov_stride; uint32_t *dst; int dst_stride;
+    uint8_t *cover; uint32_t *pre; int aux_stride; bool fade; bool final_sm; const CpMaps *m;
+};
+void cp_resolve_band(void *c, int y0, int y1)
+{
+    const CpResolveJob *j = (const CpResolveJob *)c;
+    cp_resolve_rows(j->ov, j->ov_stride, j->dst, j->dst_stride, j->cover, j->pre, j->aux_stride, j->fade, j->final_sm, *j->m, y0, y1);
+}
+void cp_resolve(const uint32_t *ov, int ov_stride, uint32_t *dst, int dst_stride,
+                uint8_t *cover, uint32_t *pre, int aux_stride, bool fade,
+                bool final_sm, const CpMaps &m)
+{
+    static int knob = -2;
+    if (knob == -2) knob = ntr::gx_menu_knob_value("SM64DS_TEXTSLOW_PAR");
+    /* a zero overlay stride is one row read for every row (the sink settle): still row-local */
+    CpResolveJob j = { ov, ov_stride, dst, dst_stride, cover, pre, aux_stride, fade, final_sm, &m };
+    ntr::gx_parallel_rows(g_cp_ch, 64, cp_resolve_band, &j, knob);
 }
 
 /* SETTLE 1 and 2 (ntr/gx.h, GxGpuFrame::settle). 1 turns the framebuffer into
