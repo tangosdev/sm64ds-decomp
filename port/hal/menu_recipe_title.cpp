@@ -383,6 +383,7 @@ int title_skip(char *o)
        the whole layer (the ROM's plate art no longer shows under the host planks, nothing below the chin is ever in it) */
     /* HDSELICON1: the wrench (the same id at y 20) is left out when the HD wrench is drawn in its place (add_wrench_hd), on the pages that draw it */
     if (*(unsigned char *)(o + 0x4e) == 0x1b && (((const int *)o)[2] >> 12) < 100 && (g_last == V_MAIN || g_last == V_INTRO || g_last == V_TOY) &&
+        data_ov007_0210342c && g_up_stamp == data_ov007_0210342c[0] &&   /* the recipe drew this page (two-screen sets g_last too, but draws no HD wrench) */
         wrench_hd_ready()) return 1;
     if (*(unsigned char *)(o + 0x4e) == 0x1b && (((const int *)o)[2] >> 12) >= 100 && wall_skip_active() && menu_hostimg_ready(MENU_IMG_BTN_MP) &&
         menu_hostimg_ready(MENU_IMG_BTN_ADV) && menu_hostimg_ready(MENU_IMG_BTN_REC)) return 1;
