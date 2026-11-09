@@ -21379,7 +21379,12 @@ s32 daPly_c::InitResources() {
     int StartWithFarCamera(void);
     /* local extern: `new Vector3[50]` elides both structor args to 0 because
        types.h's ctor/dtor are inline-empty; the ROM passes them, so the
-       __cxa_vec_new call is spelled by hand. The two callees cannot be renamed
+       __cxa_vec_new call is spelled by hand. Measured under the pin: mwccarm
+       elides each pointer independently when that structor's empty inline
+       body is visible where the new-expression is parsed; a body defined
+       after it is passed (and locals still inline it). types.h defines both
+       in the class, so only a shared-header change could pass them here, and
+       __cxa_vec_ctor (member arrays) never elides. The two callees cannot be renamed
        to readable aliases: enroll.candidates() enrolls the defining file for
        every symbols.txt row at its address, so a second name at a compiled
        function's address fails its isolate (one emitted def only), and
