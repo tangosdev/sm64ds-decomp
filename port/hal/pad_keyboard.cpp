@@ -8,7 +8,7 @@ namespace {
 /* the text grid: four rows of ten characters (CAPS gives the second table: capitals, and the symbols Shift gives on a keyboard's digit row), then a
    row of five wide keys */
 const char kTextLo[4][11] = { "1234567890", "abcdefghij", "klmnopqrst", "uvwxyz.,'?" };
-const char kTextHi[4][11] = { "!@#$%^&*()", "ABCDEFGHIJ", "KLMNOPQRST", "UVWXYZ!:-/" };
+const char kTextHi[4][11] = { "!@#$%^&*()", "ABCDEFGHIJ", "KLMNOPQRST", "UVWXYZ_:-/" };
 enum { T_COLS = 10, T_CHARS = 40, T_CAPS = 40, T_SPACE = 41, T_DEL = 42, T_BACK = 43, T_OK = 44, T_COUNT = 45 };
 /* the room code grid: the lobby server's code alphabet (port/tools/lobby/app/server.py: no I, L, O, 0 or 1) in rows of eight, DEL in the last cell,
    then BACK and JOIN */

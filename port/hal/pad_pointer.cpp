@@ -186,8 +186,12 @@ void publish(void)
 
 }  // namespace
 
+static int s_pad_confirm;      /* LOBBYKEYS1: the controller's own confirm is down this frame (not a key or mouse binding) */
+extern "C" int hal_padptr_pad_confirm(void) { return s_pad_confirm; }
+
 extern "C" void hal_padptr_frame(const PadPtrIn *in, PadPtrOut *out)
 {
+    s_pad_confirm = in->pad_live && in->confirm;
     out->eat_confirm = 0;
     out->eat_dpad = 0;
     int scene = port_scene_live_id();

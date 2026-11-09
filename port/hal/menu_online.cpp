@@ -13,6 +13,7 @@
 #include "menu_online.h"
 #include "lobby_page.h"
 #include "pad_keyboard.h"
+#include "pad_pointer.h"
 #include <chrono>
 #include <stdio.h>
 #include <stdlib.h>
@@ -345,7 +346,7 @@ static int pad_focus_press(int kind, int edge)
         if (hal_menu_trace_on()) fprintf(stderr, "[padnav] confirm on the focused plank %d\n", g.padfocus);
         if (g.padfocus == ONL_PF_HELP) { g.help_files = kind == 2; set_screen(ONL_SCR_HELP); }
         else if (g.padfocus == ONL_PF_NAME && kind == 2) { fprintf(stderr, "[online] NAME plank: the name popup (pad)\n"); open_profile(-1); }
-        else if (g.padfocus == ONL_PF_ROOMCODE && kind == 2) rc_open(!typing_key_held());      /* LOBBYKEYS1: the pad's A brings the letter grid */
+        else if (g.padfocus == ONL_PF_ROOMCODE && kind == 2) rc_open(hal_padptr_pad_confirm() && !typing_key_held());   /* LOBBYKEYS1: the controller's own A brings the letter grid (a key or mouse Jump does not) */
         else if (g.padfocus == ONL_PF_HOST && kind == 2) host_press("pad");
     }
     return 1;

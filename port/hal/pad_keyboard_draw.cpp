@@ -2,7 +2,7 @@
 
    The lobby page's family: with the HD UI Textures mod the sheet is the settings page's parchment in a brown rim, the keys its wooden plank and the text
    line its cream key plaque (menu/settings/*.png, the files the lobby page reads); without it the lobby page's plain skin (orange boxes, dark brown
-   edges). The highlight is the lobby page's bright rim with a light wash over the key; CAPS on draws its key pressed in (darker). */
+   edges). The highlight is a warm tint with a dark outer and a bright inner ring (dark ink on the plain skin); CAPS on draws its key pressed in (darker). */
 #include "pad_keyboard.h"
 #include "mods.h"
 #include "ui_text.h"
@@ -75,7 +75,8 @@ inline void blend(const Surf &s, int x, int y, uint32_t pm, int a)
     uint32_t &d = s.px[(size_t)y * s.stride + x];
     const int ia = 255 - sa;
     const int r = sr + (((d >> 16) & 255) * ia + 127) / 255, g = sg + (((d >> 8) & 255) * ia + 127) / 255, b = sb + ((d & 255) * ia + 127) / 255;
-    d = 0xFF000000u | (uint32_t)((r > 255 ? 255 : r) << 16) | (uint32_t)((g > 255 ? 255 : g) << 8) | (uint32_t)(b > 255 ? 255 : b);
+    const int na = sa + ((int)(d >> 24) * ia + 127) / 255;      /* an opaque page stays opaque; the cached layer gathers its coverage */
+    d = ((uint32_t)(na > 255 ? 255 : na) << 24) | (uint32_t)((r > 255 ? 255 : r) << 16) | (uint32_t)((g > 255 ? 255 : g) << 8) | (uint32_t)(b > 255 ? 255 : b);
 }
 inline uint32_t pm_of(uint32_t rgb, int a) { return ((uint32_t)a << 24) | ((((rgb >> 16) & 255) * a / 255) << 16) | ((((rgb >> 8) & 255) * a / 255) << 8) | ((rgb & 255) * a / 255); }
 
@@ -192,10 +193,9 @@ void text(const Surf &s, float x, float top, const char *str, float em, uint32_t
 
 }  // namespace
 
-void pkb_draw(uint32_t *px, int stride, int w, int h, float x0, float y0, float sc, const PkbView *v)
+namespace {
+void draw_plank(const Surf &s, float x0, float y0, float sc, const PkbView *v)
 {
-    if (!px || !v || w < 32 || h < 32 || sc <= 0.f) return;
-    const Surf s = { px, stride, w, h };
     const Skin &k = skin();
     const bool hd = k.hd != 0;
     auto X = [&](float dx) { return (int)floorf(x0 + dx * sc + 0.5f); };
@@ -259,14 +259,19 @@ void pkb_draw(uint32_t *px, int stride, int w, int h, float x0, float y0, float 
         if (hd) blit(s, rx, ry, nine(A_PLANK, rw, rh, 18, 18, 18, 18, (float)rh / 150.0f * 2.2f));
         else framed(s, rx, ry, rw, rh, 2.5f * sc, sc < 2 ? 1 : (int)(sc * 0.8f), C_BOX, C_BOXEDGE);
         if (sunk) rrect(s, rx, ry, rw, rh, 2.5f * sc, 0x000000u, 90);
-        if (lit) {
-            rrect(s, rx, ry, rw, rh, 2.5f * sc, 0xFFFFFFu, 100);
-            const int e = (int)(sc * 0.9f) > 1 ? (int)(sc * 0.9f) : 1, in = (int)(sc * 1.2f);
-            for (int q = 0; q < e; ++q) {
-                const int qx = rx + in + q, qy = ry + in + q, qw = rw - 2 * (in + q), qh = rh - 2 * (in + q);
-                for (int xx = qx; xx < qx + qw; ++xx) { blend(s, xx, qy, 0xFFFFFFFFu, 230); blend(s, xx, qy + qh - 1, 0xFFFFFFFFu, 230); }
-                for (int yy = qy + 1; yy < qy + qh - 1; ++yy) { blend(s, qx, yy, 0xFFFFFFFFu, 230); blend(s, qx + qw - 1, yy, 0xFFFFFFFFu, 230); }
-            }
+        if (lit) {      /* a warm tint, a dark outer ring and a bright inner ring: readable at 1x on the light HD wood and on the plain orange */
+            rrect(s, rx, ry, rw, rh, 2.5f * sc, 0xFFE24Au, hd ? 150 : 170);
+            const int e = (int)(sc * 0.9f) > 1 ? (int)(sc * 0.9f) : 1;
+            auto ring = [&](int in, int th, uint32_t argb, int a) {
+                for (int q = 0; q < th; ++q) {
+                    const int qx = rx + in + q, qy = ry + in + q, qw = rw - 2 * (in + q), qh = rh - 2 * (in + q);
+                    if (qw < 2 || qh < 2) return;
+                    for (int xx = qx; xx < qx + qw; ++xx) { blend(s, xx, qy, argb, a); blend(s, xx, qy + qh - 1, argb, a); }
+                    for (int yy = qy + 1; yy < qy + qh - 1; ++yy) { blend(s, qx, yy, argb, a); blend(s, qx + qw - 1, yy, argb, a); }
+                }
+            };
+            ring(0, e, 0xFF3A1C06u, 255);
+            ring(e, e, 0xFFFFFFFFu, 240);
         }
         if (!ui_text_ready()) continue;
         const bool word = strlen(label) > 1;
@@ -274,8 +279,63 @@ void pkb_draw(uint32_t *px, int stride, int w, int h, float x0, float y0, float 
         const float maxw = rw - 4 * sc;
         const float lw0 = ui_text_width(label, em);
         if (lw0 > maxw && lw0 > 0) em *= maxw / lw0;
-        const uint32_t ink = hd ? C_HDKEYINK : C_WOODTXT;
+        const uint32_t ink = hd ? C_HDKEYINK : lit ? C_INK : C_WOODTXT;
         text(s, rx + (rw - ui_text_width(label, em)) * 0.5f, ry + (rh - ui_text_cap_height(em)) * 0.5f, label, em, ink);
     }
     (void)C_DIMINK;
+}
+
+/* THE CACHE. The plank is drawn once into a clear layer of its own box and kept; every frame only lays that layer over the page (opaque pixels copied,
+   the soft shadow and the round corners blended). It is drawn again only when what it shows changes: the field's text, the caret's blink, the
+   highlighted key, CAPS, or the picture's size. */
+struct Layer {
+    std::vector<uint32_t> px;
+    int x = 0, y = 0, w = 0, h = 0;
+    int fw = -1, fh = -1, kind = -1, ok = -1, key = -1, caps = -1, caret = -1, max_len = -1, hd = -1;
+    float x0 = 0, y0 = 0, sc = 0;
+    std::string text;
+};
+Layer g_layer;
+}  // namespace
+
+void pkb_draw(uint32_t *px, int stride, int w, int h, float x0, float y0, float sc, const PkbView *v)
+{
+    if (!px || !v || w < 32 || h < 32 || sc <= 0.f) return;
+    Layer &L = g_layer;
+    const int hd = skin().hd != 0;
+    const char *t = v->text ? v->text : "";
+    if (L.fw != w || L.fh != h || L.x0 != x0 || L.y0 != y0 || L.sc != sc || L.kind != v->kind || L.ok != v->ok || L.key != v->key || L.caps != v->caps ||
+        L.caret != v->caret || L.max_len != v->max_len || L.hd != hd || L.text != t) {
+        int bx, by, bw, bh;
+        pkb_panel_box(v->kind, &bx, &by, &bw, &bh);
+        const int m = (int)(2 * sc) + 2;      /* the shadow's offset and the rounding, with room */
+        L.x = (int)floorf(x0 + bx * sc + 0.5f) - m;
+        L.y = (int)floorf(y0 + by * sc + 0.5f) - m;
+        L.w = (int)(bw * sc) + 2 * m + 2;
+        L.h = (int)(bh * sc) + 2 * m + 2;
+        L.px.assign((size_t)L.w * L.h, 0u);
+        const Surf ls = { L.px.data(), L.w, L.w, L.h };
+        draw_plank(ls, x0 - L.x, y0 - L.y, sc, v);      /* whole pixels moved, so every rounding lands where it did on the page */
+        L.fw = w; L.fh = h; L.x0 = x0; L.y0 = y0; L.sc = sc; L.kind = v->kind; L.ok = v->ok; L.key = v->key; L.caps = v->caps;
+        L.caret = v->caret; L.max_len = v->max_len; L.hd = hd; L.text = t;
+    }
+    for (int j = 0; j < L.h; ++j) {
+        const int yy = L.y + j;
+        if (yy < 0 || yy >= h) continue;
+        const uint32_t *src = &L.px[(size_t)j * L.w];
+        uint32_t *dst = px + (size_t)yy * stride;
+        for (int i = 0; i < L.w; ++i) {
+            const int xx = L.x + i;
+            if (xx < 0 || xx >= w) continue;
+            const uint32_t c = src[i];
+            const int a = (int)(c >> 24);
+            if (a == 255) { dst[xx] = c; continue; }
+            if (!a) continue;
+            const uint32_t d = dst[xx];
+            const int ia = 255 - a;
+            const int r = (int)((c >> 16) & 255) + (((d >> 16) & 255) * ia + 127) / 255, g = (int)((c >> 8) & 255) + (((d >> 8) & 255) * ia + 127) / 255,
+                      b = (int)(c & 255) + ((d & 255) * ia + 127) / 255;
+            dst[xx] = 0xFF000000u | (uint32_t)((r > 255 ? 255 : r) << 16) | (uint32_t)((g > 255 ? 255 : g) << 8) | (uint32_t)(b > 255 ? 255 : b);
+        }
+    }
 }
