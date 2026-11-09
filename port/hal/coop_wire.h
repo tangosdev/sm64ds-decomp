@@ -61,6 +61,8 @@ enum : uint8_t {
     // 0x03 is coop_world.cpp's swallow message (kWorldSwallowGone)
     kWorldCoinCount  = 0x04,  // COOPCOUNT1: my level coin count + "100-coin star is out" (an old build drops it as unknown)
     kWorldSecret     = 0x05,  // COOPCOUNT1: I took this secret coin (class 329); an old build drops it as unknown
+    // 0x06 is spoken for (the shared race, not on this branch)
+    kWorldCoinLoose  = 0x07,  // COINS10: my running total of coins with no slot this visit; an old build drops it as unknown
     kWorldLast       = 0x7f,
 };
 
@@ -166,7 +168,19 @@ static_assert(sizeof(CoopAckWire) == 12, "ack is 12 bytes");
 static_assert(sizeof(CoopOwnerWire) == 8, "owner change is 8 bytes");
 static_assert(sizeof(CoopDeltaWire) == 8, "delta head is 8 bytes");
 static_assert(sizeof(CoopFullWire) == 68, "full is 68 bytes");
+// LOOSE payload, 12 B (COINS10). The coin value the sender's own player took this level visit from coins with no slot
+// (enemy drops, runtime coins, the bonus coin of a Bob-omb or a mushroom). A running total: a receiver credits only the
+// part above the last total it saw from that seat in that visit, so a lost or repeated message never counts twice.
+struct CoopLooseWire {
+    CoopKeyWire key;
+    uint32_t visit;          // the sender's visit id: new each time it joins a level group, never 0
+    uint16_t total;          // 0..0xffff
+    uint8_t  flags;          // 0
+    uint8_t  reserved;       // 0
+};
+
 static_assert(sizeof(CoopCoinWire) == 8, "coin count is 8 bytes");
+static_assert(sizeof(CoopLooseWire) == 12, "loose coins is 12 bytes");
 static_assert(sizeof(CoopSecretWire) == 8, "secret is 8 bytes");
 
 // ---------------------------------------------------------------------------
@@ -233,6 +247,11 @@ inline bool coop_coin_validate(const void *p, int len) {
     if (!p || len != (int)sizeof(CoopCoinWire)) return false;
     CoopCoinWire w; std::memcpy(&w, p, sizeof w);
     return coop_key_ok(w.key) && w.count <= 0xff && w.flags <= 1 && w.reserved == 0;
+}
+inline bool coop_loose_validate(const void *p, int len) {
+    if (!p || len != (int)sizeof(CoopLooseWire)) return false;
+    CoopLooseWire w; std::memcpy(&w, p, sizeof w);
+    return coop_key_ok(w.key) && w.visit != 0 && w.flags == 0 && w.reserved == 0;
 }
 inline bool coop_secret_validate(const void *p, int len) {
     if (!p || len != (int)sizeof(CoopSecretWire)) return false;

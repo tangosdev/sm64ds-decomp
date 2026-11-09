@@ -161,6 +161,10 @@ int g_goto_max = 6;   // COOPCOUNT1: SM64DS_COOP_GOTO's optional 4th field, how 
 // COOPCOUNT2 proof knob SM64DS_COOP_GOTO_AFTER=N: the goto waits until this console's secret leader count is at least N, so a row
 // can place a take right after a friend's take arrives (est frames start well before a joiner is in the group). Inert unless set.
 int g_goto_after = 0;
+// COINS10 proof knob SM64DS_COOP_LOOSE=F:n[:every]: from est frame F, n times every `every` frames (default 45), spawn a coin with
+// no slot the way an enemy drops one (class 0x120, param 2, the Bob-omb's drop, d_a_bmb.cpp:1214) at my player and keep my player
+// on it until the ROM's own touch collects it. Inert unless set.
+unsigned g_loose_frame = 0, g_loose_every = 45, g_loose_uid = 0; int g_loose_left = 0, g_loose_done = 0, g_loose_hold = 0;
 unsigned g_place_frame = 0; int g_place_xyz[3] = {0, 0, 0}; bool g_place_on = false;   // SM64DS_COOP_PLACE (run after093, lane SEESAW1)
 int g_place_level = -1;   // SM64DS_COOP_PLACE ...:L, only in level L (run after093, lane WHOMPBACK1)
 int g_trace_id = -1; unsigned g_trace_every = 5; int g_trace_off = -1;   // SM64DS_COOP_TRACE (run after093, lane SEESAW1)
@@ -222,6 +226,12 @@ void read_env() {
         if (std::sscanf(st, "%u", &f) == 1 && f > 0) { g_star_frame = f; g_star_done = false; }
     }
     if (const char *g = std::getenv("SM64DS_COOP_GOTO_AFTER")) g_goto_after = std::atoi(g);
+    if (const char *g = std::getenv("SM64DS_COOP_LOOSE")) {   // COINS10
+        unsigned f = 0, every = 45; int n = 0;
+        if (std::sscanf(g, "%u:%i:%u", &f, &n, &every) >= 2 && n > 0 && n <= 64) {
+            g_loose_frame = f; g_loose_left = n; g_loose_every = every >= 20 && every <= 600 ? every : 45;
+        }
+    }
     if (const char *g = std::getenv("SM64DS_COOP_GOTO")) {
         unsigned f = 0; int id = 0;
         int dy = 0, tries = 6;   // F:class[:dy[:tries]]  dy units above the actor: the player drops onto it (a stomp)
@@ -383,16 +393,62 @@ unsigned long long g_coin_credits = 0, g_coin_total = 0;
 // COOPCOUNT2: coins a raise to the group's count already gave me, not yet matched by a friend's death bit (see coin_tick).
 int g_coin_unpaid = 0;
 unsigned long long g_coin_paid = 0;
+// COINS10 (audit G17, G26). Coins with no slot (enemy drops, runtime coins, the coin a Bob-omb or a mushroom gives) never
+// leave a death bit. Each console keeps the coin value ITS player took from them this visit (g_loose_mine) and tells the
+// group the running total (kWorldCoinLoose); a receiver credits the part above the last total it saw from that seat. My
+// counter is then: placed coins (mine, and friends' by their death bits or a raise) + every member's loose total. My own
+// gains are read off the counter: whatever it rose by that my own credits did not write (g_coin_last), less the value of
+// the placed coins whose death bit I set myself that frame (g_slot_val, read off the coins while they stand).
+int g_coin_last = -1;            // my counter after my last look or write; -1: take the next value as is
+int g_own_pend = 0, g_placed_pend = 0;
+unsigned g_loose_mine = 0, g_loose_in = 0, g_loose_visit = 0, g_loose_visits = 0;
+struct LooseSeen { unsigned visit; unsigned total; };
+LooseSeen g_loose_seen[CoopGroups::kSeats];
+unsigned char g_slot_val[kCoopSlots];          // a placed coin's value (1, 2, 5) as last seen standing here, else 0
+unsigned short g_slot_tmr[kCoopSlots];         // its disappear timer then (+0x3a8): 1..3 means it ran out, nobody took it
+unsigned long long g_loose_sends = 0, g_loose_recvs = 0, g_loose_credits = 0, g_blue_skips = 0;
+void coin_observe() {
+    const int me = (int)data_0209f250;
+    if (me < 0 || me > 3) return;
+    const int cur = (int)data_0209f358[me];
+    if (g_coin_last >= 0 && cur > g_coin_last) g_own_pend += cur - g_coin_last;
+    g_coin_last = cur;
+}
+void coin_wrote() {
+    const int me = (int)data_0209f250;
+    if (me >= 0 && me <= 3) g_coin_last = (int)data_0209f358[me];
+}
+// A switch's blue coin (class 290, spawn filter under 8: it waits for the switch's event bit, d_a_coin.cpp:744-764)
+// whose disappear timer is about to run out. Every console runs its own timer and its run-out sets the death bit
+// (d_a_coin.cpp:736-742), so a friend's run-out reaching me first is not a coin he took.
+bool blue_running_out(const char *a) {
+    if (*(const unsigned short *)(a + 0x0c) != 290 || *(const unsigned char *)(a + 0x3ab) >= 8) return false;
+    const unsigned t = *(const unsigned short *)(a + 0x3a8);
+    return t > 0 && t <= 60;
+}
+// A death bit I set this frame (tick_est): a placed coin my player took, unless it ran out.
+void coin_local_bit(int slot) {
+    if (slot < 0 || slot >= kCoopSlots || !g_slot_val[slot]) return;
+    if (g_slot_tmr[slot] >= 1 && g_slot_tmr[slot] <= 3) return;
+    g_placed_pend += g_slot_val[slot];
+}
 void credit_remote_coins(int w, unsigned fresh) {
     if (coins_off() || !g_sync) return;
     const int me = (int)data_0209f250;
     if (me < 0 || me > 3) return;
+    coin_observe();   // COINS10: my own pickups since the last look stay mine
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
         const unsigned cls = *(const unsigned short *)(a + 0x0c);
         if (cls < 288 || cls > 290) continue;
         const short slot = *(const short *)(a + 0xce);
         if (slot < 0 || slot >= kCoopSlots || (slot >> 5) != w || !((fresh >> (slot & 31)) & 1u)) continue;
         if (*(const unsigned char *)(a + 0x0f) || *(const unsigned char *)(a + 0x0e) == 2) continue;      // already going
+        if (!coins_native() && blue_running_out(a)) {   // COINS10: a friend's blue coin ran out before mine did
+            ++g_blue_skips;
+            if (g_log) std::fprintf(stderr, "[coop] coin credit skipped: switch blue coin slot=%d ran out (timer %d here) wall=%lld\n", (int)slot,
+                                    (int)*(const unsigned short *)(a + 0x3a8), wall_ms());
+            continue;
+        }
         const int ty = *(const int *)(a + 0x3a0);
         const int v = ty == 1 ? 2 : ty == 2 ? 5 : 1;
         // COOPCOUNT2: a raise that came first already counted this coin (its count message beat its death bit, or the death bit was
@@ -409,6 +465,7 @@ void credit_remote_coins(int w, unsigned fresh) {
         if (n > 0xff) n = 0xff;
         if (coins_native()) { GiveCoins(me, v); n = (int)data_0209f358[me]; }
         else data_0209f358[me] = (short)n;
+        coin_wrote();
         ++g_coin_credits; g_coin_total += (unsigned)v;
         if (g_log)
             std::fprintf(stderr, "[coop] coin credit cls=%u slot=%d type=%d +%d count=%d wall=%lld\n", cls, (int)slot, ty, v - paid, n, wall_ms());
@@ -1251,34 +1308,102 @@ int g_coin_group = 0;            // the highest count a member of my group told 
 bool g_coin_star = false;        // a member's 100-coin star is out
 unsigned g_coin_sent_t = 0; int g_coin_sent_v = -1, g_coin_seen_v = -1;
 unsigned long long g_coin_sends = 0, g_coin_recvs = 0, g_coin_raises = 0;
-void coin_reset() { g_coin_group = 0; g_coin_unpaid = 0; g_coin_star = false; g_coin_sent_t = 0; g_coin_sent_v = -1; g_coin_seen_v = -1; }
+void coin_reset() {
+    g_coin_group = 0; g_coin_unpaid = 0; g_coin_star = false; g_coin_sent_t = 0; g_coin_sent_v = -1; g_coin_seen_v = -1;
+    // COINS10: a new visit: my loose total starts again under a new id, and so does what I saw from the others
+    g_coin_last = -1; g_own_pend = 0; g_placed_pend = 0; g_loose_mine = 0; g_loose_in = 0;
+    g_loose_visit = ((comms_hub_now_ms() << 8) ^ ((unsigned)g_my << 4) ^ ++g_loose_visits) | 1u;
+    std::memset(g_loose_seen, 0, sizeof g_loose_seen);
+    std::memset(g_slot_val, 0, sizeof g_slot_val);
+    std::memset(g_slot_tmr, 0, sizeof g_slot_tmr);
+}
 int my_coin_count() {
     const int me = (int)data_0209f250;
     return (me >= 0 && me < 4) ? (int)data_0209f358[me] : 0;
 }
+// COINS10: my counter without the loose coins in it (mine and the ones the group told me): the part the count message
+// carries and the group's max() works on, so a raise never holds someone's loose coins.
+int my_placed_part() {
+    const int p = my_coin_count() - (int)(g_loose_mine + g_loose_in);
+    return p < 0 ? 0 : p;
+}
+// COINS10: split what my counter rose by since the last look into placed coins (their death bits went out this frame)
+// and loose ones, and remember each standing placed coin's value for the next frame.
+void coin_classify() {
+    coin_observe();
+    const int loose = g_own_pend - g_placed_pend;
+    if (loose > 0) {
+        g_loose_mine += (unsigned)loose;
+        if (g_log) std::fprintf(stderr, "[coop] loose coins: I took %d (my total %u, placed %d) wall=%lld\n", loose, g_loose_mine,
+                                g_placed_pend, wall_ms());
+    }
+    g_own_pend = 0; g_placed_pend = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        const unsigned cls = *(const unsigned short *)(a + 0x0c);
+        if (cls < 288 || cls > 290) continue;
+        const short slot = *(const short *)(a + 0xce);
+        if (slot < 0 || slot >= kCoopSlots) continue;
+        const int ty = *(const int *)(a + 0x3a0);
+        g_slot_val[slot] = (unsigned char)(ty == 1 ? 2 : ty == 2 ? 5 : 1);
+        g_slot_tmr[slot] = *(const unsigned short *)(a + 0x3a8);
+    }
+}
+void send_loose() {
+    if (!g_loose_visit) return;
+    CoopLooseWire w; std::memset(&w, 0, sizeof w);
+    w.key = wire_key(g_key); w.visit = g_loose_visit;
+    w.total = (uint16_t)(g_loose_mine > 0xffffu ? 0xffffu : g_loose_mine);
+    if (send_kind(kHubTagCoopWorld, kWorldCoinLoose, &w, (int)sizeof w)) ++g_loose_sends;
+}
 void send_coin_count(unsigned now) {
     if (coins_off() || coin_count_off() || !g_key.valid()) return;
+    send_loose();   // COINS10: first, so a receiver has my loose total before my placed part
     CoopCoinWire w; std::memset(&w, 0, sizeof w);
     w.key = wire_key(g_key);
-    int c = my_coin_count(); if (c < 0) c = 0; if (c > 0xff) c = 0xff;
+    int c = my_placed_part(); if (c > 0xff) c = 0xff;   // COINS10: the placed part (it was the whole counter)
     w.count = (uint16_t)c;
     w.flags = _ZN5Event6GetBitEj(0x1f) ? 1 : 0;
-    if (send_kind(kHubTagCoopWorld, kWorldCoinCount, &w, (int)sizeof w)) { g_coin_sent_t = now; g_coin_sent_v = c; ++g_coin_sends; }
+    if (send_kind(kHubTagCoopWorld, kWorldCoinCount, &w, (int)sizeof w)) { g_coin_sent_t = now; g_coin_sent_v = my_coin_count(); ++g_coin_sends; }
+}
+// COINS10: a member's loose total. Quiet like the other credits (no GiveCoins, so no 100-coin check) and never paid
+// into the owed balance: the owed balance only holds raises of the placed part.
+void apply_loose(int seat, const CoopLooseWire &w) {
+    if (seat < 0 || seat >= CoopGroups::kSeats) return;
+    LooseSeen &s = g_loose_seen[seat];
+    if (s.visit != w.visit) { s.visit = w.visit; s.total = 0; }
+    if ((unsigned)w.total <= s.total) return;
+    const unsigned d = (unsigned)w.total - s.total;
+    s.total = w.total;
+    const int me = (int)data_0209f250;
+    if (me < 0 || me > 3) return;
+    coin_observe();
+    int n = (int)data_0209f358[me] + (int)d;
+    if (n > 0xff) n = 0xff;
+    data_0209f358[me] = (short)n;
+    coin_wrote();
+    g_loose_in += d; ++g_loose_credits;
+    if (g_log) std::fprintf(stderr, "[coop] loose coins from seat %d: +%u (its total %u) count=%d wall=%lld\n", seat, d, s.total, n, wall_ms());
 }
 // After the death delta of this frame went out (so a friend credits the placed coin before he hears the new count).
 void coin_tick(unsigned now) {
     if (coins_off() || coin_count_off() || !g_sync) return;
     const int me = (int)data_0209f250;
     if (me < 0 || me > 3) return;
+    coin_classify();   // COINS10
     if (g_coin_star && !_ZN5Event6GetBitEj(0x1f)) {
         _ZN5Event6SetBitEj(0x1f);
         std::fprintf(stderr, "[coop] coin count: a friend's 100-coin star is out: event bit 0x1f set here wall=%lld\n", wall_ms());
     }
-    if (g_coin_group > (int)data_0209f358[me]) {
-        std::fprintf(stderr, "[coop] coin count: the group has %d, mine was %d: took %d wall=%lld\n", g_coin_group,
-                     (int)data_0209f358[me], g_coin_group, wall_ms());
-        g_coin_unpaid += g_coin_group - (int)data_0209f358[me];   // COOPCOUNT2: owed to the death bits still on their way
-        data_0209f358[me] = (short)g_coin_group;
+    // COINS10: the max() works on the placed part; the loose coins sit on top of it
+    const int placed = my_placed_part();
+    if (g_coin_group > placed && (int)data_0209f358[me] < 0xff) {
+        int n = (int)data_0209f358[me] + (g_coin_group - placed);
+        if (n > 0xff) n = 0xff;
+        std::fprintf(stderr, "[coop] coin count: the group has %d, mine was %d: took %d (placed part %d, loose %u) wall=%lld\n", g_coin_group,
+                     (int)data_0209f358[me], n, placed, g_loose_mine + g_loose_in, wall_ms());
+        g_coin_unpaid += n - (int)data_0209f358[me];   // COOPCOUNT2: owed to the death bits still on their way
+        data_0209f358[me] = (short)n;
+        coin_wrote();
         ++g_coin_raises;
     }
     const int c = my_coin_count();
@@ -1705,6 +1830,18 @@ void on_world(int seat, const unsigned char *d, int len, void *) {
         if (w.flags & 1) g_coin_star = true;
         return;
     }
+    if (sub == kWorldCoinLoose) {   // COINS10
+        if (!coop_loose_validate(p, pl)) { ++g_st.drop_bad; return; }
+        CoopLooseWire w; std::memcpy(&w, p, sizeof w);
+        key_from_wire(w.key, &k);
+        if (!for_me(k)) { ++g_st.drop_group; return; }
+        g_heard[seat] = comms_hub_now_ms() | 1u;
+        if (!g_leg_trust && !g_grp.is_member(seat)) { ++g_st.drop_trust; return; }
+        ++g_loose_recvs;
+        if (coins_off() || coin_count_off()) return;
+        apply_loose(seat, w);
+        return;
+    }
     if (sub == kWorldSecret) {      // COOPCOUNT1
         if (!coop_secret_validate(p, pl)) { ++g_st.drop_bad; return; }
         CoopSecretWire w; std::memcpy(&w, p, sizeof w);
@@ -2018,6 +2155,29 @@ void knob_goto(int id, int tries) {
                  *(const int *)(a + 0x60) >> 12, *(const int *)(a + 0x64) >> 12);
 }
 
+void knob_loose() {
+    char *pl = (char *)data_0209f394[data_0209f250 & 15];
+    if (!pl) return;
+    if (g_loose_uid) {   // keep my player on the coin until it is collected (or 60 frames went by)
+        char *a = (char *)_ZN8dActor_c10FindWithIDEj(g_loose_uid);
+        if (a && *(const unsigned short *)(a + 0x0c) == 0x120 && !*(const unsigned char *)(a + 0x0f) && ++g_loose_hold < 60) {
+            std::memcpy(pl + 0x5c, a + 0x5c, 12);
+            return;
+        }
+        std::fprintf(stderr, "[coop-knob] loose coin %d %s after %d frames (count %d) est %u\n", g_loose_done,
+                     a && *(const unsigned char *)(a + 0x0f) ? "going" : a ? "still standing" : "gone", g_loose_hold,
+                     (int)data_0209f358[data_0209f250 & 3], g_est_frames);
+        g_loose_uid = 0;
+    }
+    if (g_loose_left <= 0 || g_est_frames < g_loose_frame + g_loose_every * (unsigned)g_loose_done) return;
+    int pos[3]; std::memcpy(pos, pl + 0x5c, 12);
+    char *a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x120, 2, pos, nullptr, -1, -1);
+    --g_loose_left; ++g_loose_done; g_loose_hold = 0;
+    g_loose_uid = a ? *(const unsigned *)(a + 0x04) : 0;
+    std::fprintf(stderr, "[coop-knob] loose coin %d spawned %s slot=%d at %d,%d,%d est %u\n", g_loose_done, a ? "yes" : "no",
+                 a ? (int)*(const short *)(a + 0xce) : -99, pos[0] >> 12, pos[1] >> 12, pos[2] >> 12, g_est_frames);
+}
+
 void knob_forge(const char *name) {
     unsigned char b[64]; std::memset(b, 0, sizeof b);
     CoopKeyWire k = wire_key(g_key);
@@ -2167,6 +2327,7 @@ void tick_est(unsigned now) {
                     ++g_out_n;
                 }
                 ++g_st.local_bits;
+                coin_local_bit(w * 32 + b);   // COINS10
                 if (g_log) std::fprintf(stderr, "[coop] local bit slot=%d\n", w * 32 + b);
             }
             g_prev[w] = t[w];
@@ -2243,6 +2404,7 @@ void tick_est(unsigned now) {
     if (g_goto_id >= 0 && g_goto_tries < g_goto_max && g_est_frames >= g_goto_frame + 90u * (unsigned)g_goto_tries &&
         g_sec_count >= g_goto_after) knob_goto(g_goto_id, g_goto_tries++);
     if (knobs_on && !g_star_done && g_est_frames >= g_star_frame) knob_star();
+    if (knobs_on && (g_loose_left > 0 || g_loose_uid)) knob_loose();   // COINS10
     if (knobs_on && g_place_on && g_est_frames >= g_place_frame && (g_place_level < 0 || (int)data_0209f2f8 == g_place_level)) {
         g_place_on = false;
         if (char *me = (char *)data_0209f394[data_0209f250 & 15]) {
