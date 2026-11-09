@@ -17254,6 +17254,11 @@
         "param:#5 int",
         "param:#6 int"
       ]
+    },
+    "NNS_FndVisitAllocatedForExpHeap": {
+      "include/nnsys/fnd.h": [
+        "param:#2 void (*)(void *, NNSFndHeapHandle, unsigned int)"
+      ]
     }
   },
   "_comment": "Declaration/definition disagreements present when this gate was built. tools/check_decl_agreement.py fails on any disagreement NOT listed here. Keyed symbol -> declaring file -> \"<kind>:<what differs>\". These are NOT text edits: changing a declaration can change instruction selection at every call site, so each one is matching work that needs a rebuild and byte proof (tools/match.py) before it moves. Regenerate with --update only from a clean checkout, and read the diff: a new entry is usually an extern copied from the wrong sibling."

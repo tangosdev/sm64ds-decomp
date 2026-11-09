@@ -17,7 +17,7 @@
  *   - The vtable at 0x02099dd8 is a full sixteen slots shadowing Heap's sixteen
  *     one for one: D1, D0, then the fourteen V* in Heap's slot order. Heap's own
  *     2..15 are null, so Heap is abstract and these are its implementations.
- *   - The constructor _ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP22ExpandingHeapAllocator
+ *   - The constructor _ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP15NNSiFndHeapHead
  *     calls Heap's constructor first and only then writes 0x14.
  *
  * ==== WHAT AN EXPANDING HEAP IS, NEXT TO A SOLID ONE ====
@@ -42,30 +42,21 @@
 #define EXPANDINGHEAP_H
 #include "types.h"
 #include "Heap.h"
-
-/* ExpandingHeapAllocator is only ever pointed at from here, so a declaration is
- * enough -- no definition is pulled in. The guard is common.h's idiom for the
- * same job. */
-#ifndef EXPANDINGHEAPALLOCATOR_FWD_DECLARED
-#define EXPANDINGHEAPALLOCATOR_FWD_DECLARED
-struct ExpandingHeapAllocator;
-typedef struct ExpandingHeapAllocator ExpandingHeapAllocator;
-#endif
+#include "nnsys/fnd.h"
 
 namespace mHeap {
 
 struct ExpHeap_t : Heap_t {
     /* The one field of its own. Everything below 0x14 belongs to the base. */
-    ExpandingHeapAllocator* allocator;  /* 0x14 -- node-list allocator; it lives
-                                           inside the arena it manages, which is
-                                           why Heap::CreateExpandingHeapAllocator
-                                           constructs it at the arena's start. */
+    NNSFndHeapHandle allocator; /* 0x14 -- the NitroSystem expanded heap that
+                                   hands out this heap's blocks. Its header
+                                   lives inside the arena it manages, at the
+                                   arena's start (NNS_FndCreateExpHeapEx). */
 
     /* The constructor's initializer list is the ROM body: construct Heap, then
        store the allocator pointer. No explicit vtable write belongs in source;
        CodeWarrior installs this class's vptr between those two steps. */
-    ExpHeap_t(void* start, u32 size, Heap_t* root,
-              ExpandingHeapAllocator* allocator);
+    ExpHeap_t(void *start, u32 size, Heap_t *root, NNSFndHeapHandle allocator);
 
     /* Defined as an empty real destructor in the independently enrolled D1 and
        D0 files. CodeWarrior supplies both this vptr transition and Heap's

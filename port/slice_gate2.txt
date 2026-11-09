@@ -1,4 +1,4 @@
-# Gate-2 slice: the ExpandingHeapAllocator family -- the allocator LAYER
+# Gate-2 slice: the NitroSystem expanded heap (NNS_FND_expheap.c) -- the allocator LAYER
 # only. The Heap class layer above it (CreateRootHeap, SetupRootHeap) reads
 # OS arena globals and waits for the OS seam in a later gate.
 #
@@ -9,21 +9,20 @@
 
 src/engine/heap/ExpandingHeapAllocator.cpp
 
-# NestedHeapIterator: the shared HeapAllocator initializer registers every allocator
-# in the global nesting registry, so the iterator family rides along. The fold put
-# all of it in one TU, which now also supplies func_0204df54 (that initializer)
-# and HeapAllocator::Remove.
+# NitroSystem NNS_FND list + heapcommon: NNSi_FndInitHeapHead registers every
+# heap in the root heap list, so the list functions ride along. One TU supplies
+# both, including NNSi_FndFinalizeHeap.
 src/engine/heap/NestedHeapIterator.cpp
 
 # The allocator entry points the ExpandingHeap overrides forward to (the
-# seventh, HeapAllocator::Remove, now arrives with the NestedHeapIterator TU
-# above). The overrides themselves -- including InvokeDeallocate, which used
-# to be listed here as its own shard -- now live in src/engine/heap/Heap.cpp
+# seventh, NNSi_FndFinalizeHeap, arrives with the heapcommon TU above). The
+# overrides themselves -- including FreeVisitedBlock, which used to be listed
+# here as its own shard -- now live in src/engine/heap/Heap.cpp
 # (slice_gate3a.txt), which smoke_roots links alongside this slice; each V*
 # method is a one-line call into this layer, so a host link that has the
 # override and not its target has half of a pair.
 
-# cstd::abs, which ExpandingHeapAllocator::MaxAllocatableSize calls, is not
+# cstd::abs, which NNS_FndGetAllocatableSizeForExpHeapEx calls, is not
 # sliced: it lives in src/cstd4.cpp, the runtime-library TU, whose hand-asm
 # primitives no host compiler accepts. hal/heap_globals.cpp defines it for the
 # host instead, the way hal/cstd_div.c defines FX_Div.
