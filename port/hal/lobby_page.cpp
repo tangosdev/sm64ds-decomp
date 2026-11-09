@@ -546,18 +546,18 @@ void leave_room(const char *why)
     close_page(why);
 }
 
-void open_panel(int on)
-{
-    P.panel = on;
-    P.focus = -1;
-    log_line(on ? "settings panel open" : "settings panel closed");
-}
-
 /* the armed BAN still points at the player it was armed on (same row, same server seat number, same name) */
 int ban_arm_holds(const LobbyState *s)
 {
     const int i = P.ban_arm;
     return i >= 0 && i < s->n_seats && s->seats[i].member == P.ban_arm_member && !strcmp(s->seats[i].name, P.ban_arm_name);
+}
+
+void open_panel(int on)
+{
+    P.panel = on;
+    P.focus = -1;
+    log_line(on ? "settings panel open" : "settings panel closed");
 }
 
 void press(const LobbyState *s, int c)
