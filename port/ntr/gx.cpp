@@ -10618,26 +10618,30 @@ int gx_interp_begin(float alpha) {
                     const TexEntry &ae = *af->second;
                     const uint32_t *now = ae.fptr[hdtex_anim_frame(*ae.anim, g_anim_now)];
                     anim_card_note(ae, now);
-                    if (now != bd.rgba) {
-                        g.tex_rgba = now;
-                        g.tw = bd.w;
-                        g.th = bd.h;
-                        g.tex_wrap = bd.wrap;
-                        g.tex_scale = bd.scale;
-                        g.tex_id = bd.id;
-                        if (g_gpu_opaque) {   /* gx_bind_texture's id rule */
-                            TexIdent &ti = g_tex_ids[now];
-                            if (!ti.id || ti.w != bd.w || ti.h != bd.h) {
-                                ti.w = bd.w;
-                                ti.h = bd.h;
-                                ti.id = g_tex_next_id++;
-                            }
-                            g.tex_id = ti.id;
+                    /* THE ID COMES FROM THE REGISTRY EVEN WHEN THE FRAME IS
+                       THE ONE THE TICK RECORDED: an earlier picture of this
+                       tick may have shown another frame and retired the
+                       recorded id, and binding it again would have the card
+                       upload under an id nothing releases (review
+                       REVANIMTEX1: 2 MB a second with a loop under a tick). */
+                    g.tex_rgba = now;
+                    g.tw = bd.w;
+                    g.th = bd.h;
+                    g.tex_wrap = bd.wrap;
+                    g.tex_scale = bd.scale;
+                    g.tex_id = bd.id;
+                    if (g_gpu_opaque) {   /* gx_bind_texture's id rule */
+                        TexIdent &ti = g_tex_ids[now];
+                        if (!ti.id || ti.w != bd.w || ti.h != bd.h) {
+                            ti.w = bd.w;
+                            ti.h = bd.h;
+                            ti.id = g_tex_next_id++;
                         }
-                        g_teximage = bd.teximage;
-                        g_plttbase = bd.plttbase;
-                        break;
+                        g.tex_id = ti.id;
                     }
+                    g_teximage = bd.teximage;
+                    g_plttbase = bd.plttbase;
+                    break;
                 }
             }
             g.tw = bd.w;
