@@ -79,8 +79,7 @@ inline struct FreeList *inline_fn(void *arg0)
     return (struct FreeList *)&((SolidHeapAllocator *)arg0)->mFreeRegion;
 }
 
-extern "C" SolidHeapAllocator *func_0204ed54(SolidHeapAllocator *self, void *heapEnd,
-                                             u32 flags) {
+extern "C" SolidHeapAllocator *func_0204ed54(SolidHeapAllocator *self, void *heapEnd, u32 flags) {
     SolidHeapFreeRegion *freeRegion = &self->mFreeRegion;
 
     func_0204df54(self, 0x46524d48, (char *)freeRegion + 0xc, heapEnd, flags);

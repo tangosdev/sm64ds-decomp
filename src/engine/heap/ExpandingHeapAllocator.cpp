@@ -146,8 +146,8 @@ void *ExpandingHeapAllocator::CreateNode(MemoryNode::Target *extent, u16 t)
     return n;
 }
 
-extern "C" ExpandingHeapAllocator *func_0204e828(ExpandingHeapAllocator *self,
-                                                 void *heapEnd, u32 flags) {
+extern "C" ExpandingHeapAllocator *func_0204e828(ExpandingHeapAllocator *self, void *heapEnd,
+                                                 u32 flags) {
     NodeList *nodeList = (NodeList *)&self->mFirstNode;
     MemoryNode::Target extent;
     MemoryNode *node;
