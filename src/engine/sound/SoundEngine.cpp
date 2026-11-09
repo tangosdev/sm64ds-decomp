@@ -20,7 +20,6 @@
 #include "Sound.h"
 #include "SoundPlayerRecord.h"
 #include "nnsys/fnd.h"
-#include "SolidHeapAllocator.h"
 #include "Heap.h"
 #include "cstd.h"
 #include "CP15.h"
@@ -124,7 +123,7 @@ struct Node {
     char body;   
 };
 struct SolidHeapWithIter {
-    void *allocator;
+    NNSFndHeapHandle allocator;
     NNSFndList sections;
 };
 struct TwoInt { int a, b; };
@@ -286,7 +285,7 @@ struct Obj_205212c : C {
     /* 0x124 */ char pad5[0x12c - 0x124];
 };
 struct Obj_2050fd4 {
-    struct SolidHeapAllocator *heapAlloc;
+    NNSFndHeapHandle heapAlloc;
     NNSFndList iter;
 };
 struct HeapAllocator_204f460 : NNSSndSeqPlayer {
@@ -464,9 +463,9 @@ extern int func_02050d54(data_020a5bb8_t *obj, void *owner, int flag);
 extern void func_02050f34(data_020a5bb8_t *self, int a1, int a2, int a3);
 extern void func_02050fb0(void);
 extern s32 func_02050fd4(struct Obj_2050fd4 *self);
-extern s32 func_02051024(struct SolidHeapWithIter* self, void* allocator);
+extern s32 func_02051024(struct SolidHeapWithIter *self, NNSFndHeapHandle allocator);
 extern void func_02051064(NNSFndList *list);
-extern u32 func_02051074(SolidHeapAllocator **pHeap);
+extern u32 func_02051074(NNSFndHeapHandle *pHeap);
 extern s32 func_0205117c(struct SolidHeapWithIter* self);
 extern void *func_020511d4(HeapOwner *owner, u32 elemSize, u32 param2, u32 param3, u32 param4);
 extern void func_020512f0(int *p);
@@ -1087,16 +1086,15 @@ extern "C" void *func_0205130c(unsigned int addr, unsigned int size)
 {
     unsigned int end = addr + size;
     unsigned int aligned = (addr + 3) & ~3u;
-    SolidHeapAllocator *alloc;
+    NNSFndHeapHandle alloc;
     if (aligned > end)
         return 0;
     /* The SolidHeapWithIter header func_02051024 fills sits at aligned; the
        solid heap takes the rest. */
     if (end - aligned < sizeof(struct SolidHeapWithIter))
         return 0;
-    alloc = mHeap::Heap_t::CreateSolidHeapAllocator(
-        (void *)(aligned + sizeof(struct SolidHeapWithIter)),
-        (end - aligned) - sizeof(struct SolidHeapWithIter), 0);
+    alloc = NNS_FndCreateFrmHeapEx((void *)(aligned + sizeof(struct SolidHeapWithIter)),
+                                   (end - aligned) - sizeof(struct SolidHeapWithIter), 0);
     if (alloc == 0)
         return 0;
     if (((int(*)(void *self, void *alloc))func_02051024)((void *)aligned, alloc) != 0)
@@ -1127,7 +1125,7 @@ void HeapOwner::func_02051244() {
         r7 = (struct Node *)(NNS_FndGetPrevListObject(&this->iter, 0));
     } while (r7 != 0);
 end:
-    ((SolidHeapAllocator *)(this->heap))->Reset(3);
+    NNS_FndFreeToFrmHeap(this->heap, NNS_FND_FRMHEAP_FREE_ALL);
     func_02050fb0();
     ((void (*)(void *thiz))func_02050fd4)(this);
 }
@@ -1137,7 +1135,8 @@ extern "C" void *func_020511d4(HeapOwner *owner, u32 elemSize, u32 param2, u32 p
     AllocNode *node;
     NNSFndList *iter;
 
-    node = (AllocNode *)((SolidHeapAllocator*)(owner->heap))->Allocate(((elemSize + 0x1f) & ~0x1fu) + 0x20, 0x20);
+    node = (AllocNode *)NNS_FndAllocFromFrmHeapEx(owner->heap, ((elemSize + 0x1f) & ~0x1fu) + 0x20,
+                                                  0x20);
     if (node == 0)
         return 0;
 
@@ -1154,14 +1153,14 @@ extern "C" void *func_020511d4(HeapOwner *owner, u32 elemSize, u32 param2, u32 p
 extern "C" s32 func_0205117c(struct SolidHeapWithIter* self)
 {
     u16 id = self->sections.numObjects;
-    void* alloc = self->allocator;
-    if (!((SolidHeapAllocator*)(alloc))->SaveState((u32)id)) {
+    NNSFndHeapHandle alloc = self->allocator;
+    if (!NNS_FndRecordStateForFrmHeap(alloc, id)) {
         return ~0;
     }
     if (((s32(*)(struct SolidHeapWithIter* self))func_02050fd4)(self)) {
         return (s32)((u32)self->sections.numObjects - 1);
     }
-    ((SolidHeapAllocator*)(self->allocator))->LoadState(0);
+    NNS_FndFreeByStateToFrmHeap(self->allocator, 0);
     return ~0;
 }
 
@@ -1187,16 +1186,15 @@ void HeapOwner::func_020510a4(int n) {
             NNS_FndRemoveListObject(&this->iter, first);
         } while (n < this->iter.numObjects);
     }
-    ((SolidHeapAllocator *)(this->heap))->LoadState(n);
+    NNS_FndFreeByStateToFrmHeap(this->heap, n);
     func_02050fb0();
-    ((SolidHeapAllocator *)(this->heap))->SaveState(this->iter.numObjects);
+    NNS_FndRecordStateForFrmHeap(this->heap, this->iter.numObjects);
     ((void (*)(void *thiz))func_02050fd4)(this);
 }
 
-extern "C" u32 func_02051074(SolidHeapAllocator **pHeap)
-{
+extern "C" u32 func_02051074(NNSFndHeapHandle *pHeap) {
     u32 mem;
-    mem = ((SolidHeapAllocator*)(*pHeap))->MemoryLeft(0x20);
+    mem = NNS_FndGetAllocatableSizeForFrmHeapEx(*pHeap, 0x20);
     if (mem < 0x20)
         return 0;
     mem -= 0x20;
@@ -1208,8 +1206,7 @@ extern "C" void func_02051064(NNSFndList *list) {
     NNS_FndInitList(list, 0);
 }
 
-extern "C" s32 func_02051024(struct SolidHeapWithIter* self, void* allocator)
-{
+extern "C" s32 func_02051024(struct SolidHeapWithIter *self, NNSFndHeapHandle allocator) {
     NNS_FndInitList(&self->sections, 0xc);
     self->allocator = allocator;
     if (((s32(*)(struct SolidHeapWithIter* self))func_02050fd4)(self)) {
@@ -1219,7 +1216,7 @@ extern "C" s32 func_02051024(struct SolidHeapWithIter* self, void* allocator)
 }
 
 extern "C" s32 func_02050fd4(struct Obj_2050fd4 *self) {
-    void *r4 = ((SolidHeapAllocator *)(self->heapAlloc))->Allocate(0x14, 4);
+    void *r4 = NNS_FndAllocFromFrmHeapEx(self->heapAlloc, 0x14, 4);
     if (!r4) {
         return 0;
     }

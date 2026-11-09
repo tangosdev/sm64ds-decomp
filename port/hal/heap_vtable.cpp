@@ -21,7 +21,6 @@
 #include <windows.h>
 #include "Heap.h"
 #include "ExpandingHeap.h"
-#include "ExpandingHeapAllocator.h"
 
 namespace Memory {
 void *Allocate(u32 size, int align, Heap *heap);
@@ -30,11 +29,6 @@ void *Allocate(u32 size, int align, Heap *heap);
    class decoration split this used to bridge cannot arise. */
 
 extern "C" {
-u32 _ZN22ExpandingHeapAllocator14SizeofInternalEPv(void *ptr)
-{ return ExpandingHeapAllocator::SizeofInternal(ptr); }
-u32 _ZN22ExpandingHeapAllocator10MemoryLeftEv(
-    ExpandingHeapAllocator *self)
-{ return self->MemoryLeft(); }
 Heap *_ZN5mHeap6Heap_t13SetupRootHeapEv()
 { return Heap::SetupRootHeap(); }
 void *_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE(u32 size, int align, Heap *heap)
@@ -121,29 +115,3 @@ extern "C" void *_ZTVN5mHeap9ExpHeap_tE[15] = {
     (void *)slot_trap13,       /* 13: VGetNodeID */
     (void *)slot_trap14,       /* 14: VResizeToFit */
 };
-
-// ---- SolidHeapAllocator's constructor, under its Itanium spelling ----------
-//
-// src/engine/heap/SolidHeapAllocator.cpp's CreateSolidHeapAllocator factory
-// calls `_ZN18SolidHeapAllocatorC1EPvt' as an extern "C" function, for the
-// reason hal/heap_globals.cpp's constructor-bridge block gives: C1 is an
-// Itanium ABI variant tag and MSVC has no syntax that emits or references one,
-// so the only way to satisfy that string is to write a function with it. The
-// real constructor is compiled into smoke_roots with that same TU
-// (slice_gate3a.txt), so placement new resolves it there.
-//
-// IT IS HERE AND NOT IN heap_globals.cpp because heap_globals.cpp is also
-// linked by smoke_heap, whose slice is the allocator layer alone and does not
-// compile the constructor this body names.
-//
-// The heaps' own constructors needed the same bridge while Heap.cpp's
-// factories called them by their C1 names; they construct with placement new
-// now, which MSVC resolves to its own constructor symbol.
-#include <new>
-#include "SolidHeapAllocator.h"
-
-extern "C" SolidHeapAllocator *_ZN18SolidHeapAllocatorC1EPvt(
-    void *self, void *endAddress, u16 optFlag)
-{
-    return ::new (self) SolidHeapAllocator(endAddress, optFlag);
-}

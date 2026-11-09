@@ -5,7 +5,7 @@
  * class Heap: 21 matched functions, 5 fields, 16 vtable slots.
  *
  * THE __cplusplus BLOCK BELOW HAD NEVER BEEN COMPILED, and carried the same
- * generator defect as ExpandingHeapAllocator.h and SolidHeapAllocator.h: it
+ * generator defect as the retired allocator class headers: it
  * emitted `struct a; struct a_; struct b;' as forward declarations -- parameter
  * names mistaken for type names. No source file ever referenced them; dropped.
  *
@@ -71,9 +71,9 @@
  * slot 3 is spelled `VAllocate(u32, int)': _ZN5mHeap9ExpHeap_t9VAllocateEji.
  * _ZN9SolidHeap9VAllocateEjj used to claim (u32, u32) for the SAME SLOT, so one
  * of the two imported names was wrong -- and every sibling in the family
- * (Heap::Allocate, SolidHeapAllocator::Allocate,
- * ExpandingHeapAllocator::Allocate) spells `Eji'. The ROM settles it directly:
- * SolidHeapAllocator::Allocate (0x0204eb70) does `cmp r2,#0' then `blt', a
+ * (Heap::Allocate, NNS_FndAllocFromFrmHeapEx, NNS_FndAllocFromExpHeapEx)
+ * takes an int alignment. The ROM settles it directly:
+ * NNS_FndAllocFromFrmHeapEx (0x0204eb70) does `cmp r2,#0' then `blt', a
  * SIGNED branch, and negates with `rsb' to allocate backwards -- a u32 would
  * compile to bcc/blo and make that path unreachable. Both VAllocates are
  * four-instruction thunks that forward r1/r2 untouched into it. The SolidHeap
@@ -94,7 +94,7 @@
  *            `void f(u32 id){id=0;}' loses the store to dead-code elimination
  *            at -O4,p and emits `bx lr' alone). `bool' and `int' produce the
  *            same eight bytes, so the bytes do not pick u32 over them; the
- *            width comes from ExpandingHeapAllocator::SetNodeID (0x0204e0e8),
+ *            width comes from NNS_FndSetGroupIDForExpHeap (0x0204e0e8),
  *            which loads and returns the old id with `ldrh' -- zero-extended,
  *            hence unsigned. ExpandingHeap's override is a pure forward and
  *            matches under any of them.
@@ -135,11 +135,6 @@
 namespace Memory {
 void operator_delete2(void *);
 }
-
-/* Global, so the elaborated `struct SolidHeapAllocator*' below names the
-   allocator classes and does not declare new ones inside mHeap. */
-struct SolidHeapAllocator;
-struct ExpandingHeapAllocator;
 
 namespace mHeap {
 
@@ -232,9 +227,8 @@ struct Heap_t {
     /* STATIC -- and that is read off the argument count, not off the mangled
        name. The Itanium ABI does not encode `this' in the parameter list, so a
        static and a non-static member with the same declared parameters mangle
-       identically; include/SolidHeapAllocator.h states the same rule. Each of
-       these declares exactly as many parameters as its ROM body takes
-       arguments, leaving no room for a leading `this'. The one instance method
+       identically. Each of these declares exactly as many parameters as its
+       ROM body takes arguments, leaving no room for a leading `this'. The one instance method
        among them, ResizeToFit, is declared above and does use `this'. */
     static Heap_t* SetupRootHeap();
     static void    InitializeRootHeap();
@@ -246,16 +240,6 @@ struct Heap_t {
     static void*   InitializeSolidHeapAsDefault(u32 size, Heap_t* root, int align);
                                              /* veneer -> SetupSolidHeapAsDefault */
     static void  RestoreFromTemporary();
-
-    /* The two allocator factories. `optFlag' is the NitroSystem heap option
-       word NNSi_FndInitHeapHead keeps in the low byte of the heap's attribute;
-       mHeap passes 3, the sound heap 0. Returns NULL when the
-       aligned span is too small to hold the allocator's own bookkeeping --
-       0x30 bytes for the solid one, 0x4c for the expanding one. */
-    static struct SolidHeapAllocator *CreateSolidHeapAllocator(void *address, u32 size,
-                                                               u16 optFlag);
-    static struct ExpandingHeapAllocator *CreateExpandingHeapAllocator(void *address, u32 size,
-                                                                       u16 optFlag);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        Without it the compiler emits the global `_ZdlPv`, which exists nowhere

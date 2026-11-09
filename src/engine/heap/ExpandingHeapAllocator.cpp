@@ -1,562 +1,599 @@
 //cpp
-/* arm9/ExpandingHeapAllocator -- the free-list allocator behind ExpandingHeap,
- * folded from nineteen legacy shards at .text 0x0204e084..0x0204e964. The span
- * also carries three adjacent heap-family functions: HeapAllocator::Destroy,
- * Heap::CreateExpandingHeapAllocator and MemoryNode::Target's constructor.
- * mwccarm emits .text in reverse source order, so the definitions below run
- * ROM-descending; the roster reads ROM-ascending.
+/* arm9/ExpandingHeapAllocator -- NitroSystem's expanding heap
+ * (NNS_FND_expheap.c), .text 0x0204e084..0x0204e964.
  *
- *   SizeofInternal..Allocate -- the public surface and the free-list walk.
- *   Destroy/CreateExpandingHeapAllocator -- the owning heap's entry points.
- *   FreeNode..UnlinkNode -- the node-list layer, all static.
- *   C1/CreateNode -- construction.
- *   MemoryNode::Target::Target -- the extent a node describes.
+ * The bodies follow pret/pokediamond's arm9/lib/libnns NNS_FND_expheap.c,
+ * which carries twelve of these twenty functions, and the Sonic Rush
+ * Adventure decomp's NitroSystem expheap.c for the rest.
+ * mwccarm emits a file's functions in reverse order, and the ROM runs
+ * NNS_FndGetSizeForMBlockExpHeap up to GetRegionOfMBlock: the source order
+ * below reversed. The calls the game never makes (the allocation-mode and
+ * per-block group/direction getters) are not in the cartridge.
  *
- * The allocator's node bookkeeping is viewed through the overlay structs below
- * rather than the header's mFirstNode/mLastNode/mNodeID/mFlags2: the same words
- * play two roles (list sentinel fields and the node-list flag word), and the
- * recovered forms that reach them through this+0x24 are the ones the ROM
- * compiled. Where a named member measured byte-neutral the source uses it; the
- * leftover section lists what stayed raw and why.
+ * An expanding heap keeps two address-ordered lists of 0x10-byte block
+ * headers right after its NNSiFndHeapHead: the free blocks and the used
+ * ones. Allocation splits a free block into up to three pieces; freeing
+ * merges the block back with its free neighbours (RecycleRegion).
  *
- * deslop leftovers:
- * - SetNodeID keeps its documented two-step addressing: `Inner* p = this+0x24`
- *   then `p->id` is load-bearing -- flattening to this+0x34 diffs by three
- *   words (the shard's own measurement; re-measured: `mNodeID` read and
- *   written directly still diffs by three).
- * - The constructor writes mNodeID/mFlags2 and the two list pairs through
- *   its `nodeList` NodeList view of this+0x24: spelling those stores as
- *   members of `this` re-bases them and diffs (re-measured). It passes the
- *   heap's first byte as `nodeList + 1` (this+0x38); `this + 1` also diffs.
- *   Deallocate likewise reaches the in-use list through its NodeList view;
- *   `&mUsedFirstNode` diffs.
- * - The AllocateForwards/AllocateBackwards NodeList overlay stays: it spells
- *   the header's mFirstNode..mFlags2 from this+0x24, but both searches
- *   also pass `c` onward to AllocateNode as the list sentinel -- one object
- *   serving both views. Splitting the access changed the emitted code.
- * - AllocateNode reads the allocator's attribute through `c[-1]` -- the flag word
- *   sits at this+0x20, one word before the node list at this+0x24, and `c` is
- *   the sentinel parameter, not `this`.
- * - CreateNode indexes its Target* through `int* c`: the body's `c[0]`/`c[1]`
- *   arithmetic is verbatim -- retyping as extent->start/end is the kind of
- *   tidy that already produced a three-word divergence on this class.
- * - Reallocate's two Targets are block-scope locals, each declared in the
- *   branch that uses it, and the zero fill goes through the FillZero inline.
- *   mwccarm gives function-scope locals their frame slots first and an
- *   inlined helper's locals last, so the volatile zero must live in the
- *   helper to land below both Targets.
- * - The file-local `GetList` inline stays for the same reason it existed in
- *   the shard: spelling `this+0x24` as an accessor call is what mwccarm's
- *   register allocator keys on for Reallocate's r7/r8/sb assignment.
- * - Heap::CreateExpandingHeapAllocator calls the C1 by its mangled spelling:
- *   the factory runs the allocator constructor on an already-aligned address,
- *   an ABI seam a native `new` cannot spell.
+ * Divergences from those sources, each forced by this build:
+ * - GetRegionOfMBlock, RemoveMBlock, InsertMBlock, InitMBlock, InitExpHeap,
+ *   AllocUsedBlockFromFreeBlock, AllocFromHead, AllocFromTail and
+ *   RecycleRegion are static there and have external linkage here, as
+ *   pret's own copy and the NNS_FND_list TU's helpers do: the baseline link
+ *   does not apply symbol_binding_rewrites to a .text-only TU.
+ * - FillAllocMemory's zero goes through a volatile: the ROM passes
+ *   MI_CpuFill32's value through a stack slot (OS_CreateThread's fill does
+ *   the same). MIi_CpuClear32 is still MultiStore_Int in this tree.
+ * - abs() is cstd::abs, the name this tree gives 0x0206df84.
+ * - NNS_FndSetGroupIDForExpHeap takes a u32 groupID, not the SDK's u16: its
+ *   one caller passes a u32 through un-narrowed (see include/nnsys/fnd.h).
  */
-
-#include "ExpandingHeapAllocator.h"
-#include "Heap.h"
+#include "nnsys/fnd.h"
 #include "cstd.h"
 
-extern "C" void MultiStore_Int(int val, void *dst, int len);
-/* local extern: the factory runs this constructor over storage that already
-   exists. Placement new measured CreateExpandingHeapAllocator 0x4c -> 0x5c. */
-extern "C" ExpandingHeapAllocator *_ZN22ExpandingHeapAllocatorC1EPvt(ExpandingHeapAllocator *self,
-                                                                     void *endAddress, u16 optFlag);
+extern "C" void MultiStore_Int(int val, int *dst, int len); /* MIi_CpuClear32 */
 
-/* The free list sentinel: a view of the allocator's node bookkeeping from
- * this+0x24, with the header's member names. mFlags2 bit 0 is the
- * search-policy bit the two fit searches read. */
-struct NodeList {
-    MemoryNode *mFirstNode;     /* this+0x24 */
-    MemoryNode *mLastNode;      /* this+0x28 */
-    MemoryNode *mUsedFirstNode; /* this+0x2c */
-    MemoryNode *mUsedLastNode;  /* this+0x30 */
-    unsigned short mNodeID;     /* this+0x34 */
-    unsigned short mFlags2;     /* this+0x36 */
-};
+extern "C" {
 
-/* UnlinkNode's recovered node view -- field order only, names are offsets. */
-struct N { int p0, p1, prev, next; };
+#define MBLOCK_FREE_SIGNATURE 0x4652 /* 'FR' */
+#define MBLOCK_USED_SIGNATURE 0x5544 /* 'UD' */
+#define MIN_ALIGNMENT 4
 
-/* SetNodeID's receiver view -- see the leftover note above. */
-struct Inner { char pad[0x10]; unsigned short id; };
+#define NNSi_FndRoundUp(value, alignment) (((value) + (alignment - 1)) & ~(alignment - 1))
+#define NNSi_FndRoundUpPtr(ptr, alignment) ((void *)NNSi_FndRoundUp(NNSiGetUIntPtr(ptr), alignment))
+#define NNSi_FndRoundDown(value, alignment) ((value) & ~(alignment - 1))
+#define NNSi_FndRoundDownPtr(ptr, alignment) ((void *)NNSi_FndRoundDown(NNSiGetUIntPtr(ptr), alignment))
 
-/* The free-list head, viewed as a sentinel object at this+0x24. The shard
- * spelled it as an inline accessor, and the spelling is load-bearing for
- * Reallocate's register allocation. */
-static inline MemoryNode **GetList(void *t) {
-    return &((ExpandingHeapAllocator *)t)->mFirstNode;
+#define NNSi_FndGetBitValue(data, st, bits) (((data) >> (st)) & ((1 << (bits)) - 1))
+#define NNSi_FndSetBitValue(data, st, bits, val)                                                   \
+    do {                                                                                           \
+        u32 maskBits = (u32)((1 << (bits)) - 1);                                                   \
+        u32 newVal = (val) & maskBits;                                                             \
+        (void)(maskBits <<= st);                                                                   \
+        (data) &= ~maskBits;                                                                       \
+        (data) |= newVal << (st);                                                                  \
+    } while (0)
+
+static inline u32 NNSiGetUIntPtr(const void *ptr) {
+    return (u32)ptr;
 }
 
-MemoryNode::Target::Target(MemoryNode *node)
-    : start((char *)node - (u16)((node->flags >> 8) & 0x7f)),
-      end((char *)(node->size + (u32)(node + 1))) {}
-
-/* Doubly-linked-list removal writing head/tail (c[0], c[1]) directly when the
- * node was at either end. Returns the former predecessor, which FreeNode needs
- * to decide whether the freed block merges backwards. `list` mangles
- * MemoryNode* but callers pass the embedded sentinel. */
-void *ExpandingHeapAllocator::UnlinkNode(MemoryNode *list, MemoryNode *node_)
-{
-    int *c = (int *)list;
-    N *node = (N *)node_;
-    N *r2 = (N *)node->prev;
-    N *r1 = (N *)node->next;
-    if (r2) r2->next = (int)r1;
-    else c[0] = (int)r1;
-    if (r1) r1->prev = (int)r2;
-    else c[1] = (int)r2;
-    return r2;
+static inline u32 GetOffsetFromPtr(const void *start, const void *end) {
+    return NNSiGetUIntPtr(end) - NNSiGetUIntPtr(start);
 }
 
-/* Insert `node` immediately after `prev`, or at the head when `prev` is null,
- * fixing both neighbours and the list's head/tail. The inverse of UnlinkNode,
- * and the reason UnlinkNode returns the predecessor. */
-void *ExpandingHeapAllocator::LinkNode(MemoryNode *list, MemoryNode *node, MemoryNode *prev) {
-    MemoryNode **c = (MemoryNode **)list;
-    MemoryNode *next;
-    node->prev = prev;
-    if (prev) {
-        next = prev->next;
-        prev->next = node;
+static inline void *AddU32ToPtr(void *ptr, u32 val) {
+    return (void *)(NNSiGetUIntPtr(ptr) + val);
+}
+
+static inline void *SubU32ToPtr(void *ptr, u32 val) {
+    return (void *)(NNSiGetUIntPtr(ptr) - val);
+}
+
+static inline int ComparePtr(const void *a, const void *b) {
+    return (const u8 *)a - (const u8 *)b;
+}
+
+static inline u16 GetOptForHeap(const NNSiFndHeapHead *pHeapHd) {
+    return (u16)NNSi_FndGetBitValue(pHeapHd->attribute, 0, 8);
+}
+
+static inline void FillAllocMemory(NNSiFndHeapHead *pHeapHd, void *address, u32 size) {
+    if (GetOptForHeap(pHeapHd) & 1) {
+        volatile int fill = 0;
+        MultiStore_Int(fill, (int *)address, size);
+    }
+}
+
+static inline NNSiFndExpHeapHead *GetExpHeapHeadPtrFromHeapHead(NNSiFndHeapHead *pHHead) {
+    return (NNSiFndExpHeapHead *)AddU32ToPtr(pHHead, sizeof(NNSiFndHeapHead));
+}
+
+static inline NNSiFndHeapHead *GetHeapHeadPtrFromExpHeapHead(NNSiFndExpHeapHead *pEHHead) {
+    return (NNSiFndHeapHead *)SubU32ToPtr(pEHHead, sizeof(NNSiFndHeapHead));
+}
+
+static inline NNSiFndExpHeapHead *GetExpHeapHeadPtrFromHandle(NNSFndHeapHandle heap) {
+    return GetExpHeapHeadPtrFromHeapHead(heap);
+}
+
+static inline void *GetMemPtrForMBlock(NNSiFndExpHeapMBlockHead *pMBlkHd) {
+    return AddU32ToPtr(pMBlkHd, sizeof(NNSiFndExpHeapMBlockHead));
+}
+
+static inline NNSiFndExpHeapMBlockHead *GetMBlockHeadPtr(void *memBlock) {
+    return (NNSiFndExpHeapMBlockHead *)SubU32ToPtr(memBlock, sizeof(NNSiFndExpHeapMBlockHead));
+}
+
+static inline const NNSiFndExpHeapMBlockHead *GetMBlockHeadCPtr(const void *memBlock) {
+    return (const NNSiFndExpHeapMBlockHead *)(NNSiGetUIntPtr(memBlock) -
+                                              sizeof(NNSiFndExpHeapMBlockHead));
+}
+
+static inline void *GetMBlockEndAddr(NNSiFndExpHeapMBlockHead *pMBHead) {
+    return AddU32ToPtr(GetMemPtrForMBlock(pMBHead), pMBHead->blockSize);
+}
+
+static inline u16 GetAlignmentForMBlock(const NNSiFndExpHeapMBlockHead *pMBlkHd) {
+    return (u16)NNSi_FndGetBitValue(pMBlkHd->attribute, 8, 7);
+}
+
+static inline void SetAlignmentForMBlock(NNSiFndExpHeapMBlockHead *pMBlkHd, u16 alignment) {
+    NNSi_FndSetBitValue(pMBlkHd->attribute, 8, 7, alignment);
+}
+
+static inline void SetGroupIDForMBlock(NNSiFndExpHeapMBlockHead *pMBHead, u16 id) {
+    NNSi_FndSetBitValue(pMBHead->attribute, 0, 8, id);
+}
+
+static inline void SetAllocDirForMBlock(NNSiFndExpHeapMBlockHead *pMBHead, u16 mode) {
+    NNSi_FndSetBitValue(pMBHead->attribute, 15, 1, mode);
+}
+
+static inline u16 GetAllocMode(NNSiFndExpHeapHead *pEHHead) {
+    return (u16)NNSi_FndGetBitValue(pEHHead->feature, 0, 1);
+}
+
+static inline void SetAllocMode(NNSiFndExpHeapHead *pEHHead, u16 mode) {
+    NNSi_FndSetBitValue(pEHHead->feature, 0, 1, mode);
+}
+
+/* The span a block really occupies: its header, plus the alignment padding
+   in front of it. */
+void GetRegionOfMBlock(NNSiMemRegion *region, NNSiFndExpHeapMBlockHead *block) {
+    region->start = SubU32ToPtr(block, GetAlignmentForMBlock(block));
+    region->end = GetMBlockEndAddr(block);
+}
+
+/* Unlinks block and returns its predecessor, which is where a merged
+   replacement goes back in. */
+NNSiFndExpHeapMBlockHead *RemoveMBlock(NNSiFndExpMBlockList *list,
+                                       NNSiFndExpHeapMBlockHead *block) {
+    NNSiFndExpHeapMBlockHead *const prev = block->pMBHeadPrev;
+    NNSiFndExpHeapMBlockHead *const next = block->pMBHeadNext;
+
+    if (prev != 0) {
+        prev->pMBHeadNext = next;
     } else {
-        next = c[0];
-        c[0] = node;
+        list->head = next;
     }
-    node->next = next;
-    if (next) {
-        next->prev = node;
+
+    if (next != 0) {
+        next->pMBHeadPrev = prev;
     } else {
-        c[1] = node;
+        list->tail = prev;
     }
-    return node;
+
+    return prev;
 }
 
-/* Stamp a fresh header at the start of an extent and return it. The recorded
- * size is `end - (node + 0x10)` -- user bytes from just past the header, the
- * definition Target's constructor inverts. The flags word is zeroed here; the
- * alignment padding its bits 8..14 carry is written by whoever placed the
- * node. */
-void *ExpandingHeapAllocator::CreateNode(MemoryNode::Target *extent, u16 t)
-{
-    int *c = (int *)extent;
-    MemoryNode *n = (MemoryNode *)c[0];
-    n->tag = t;
-    n->flags = 0;
-    n->size = ((int)c[1]) - (int)(n + 1);
-    n->prev = 0;
-    n->next = 0;
-    return n;
-}
+/* Links target in after prev, or at the head when prev is 0. */
+NNSiFndExpHeapMBlockHead *InsertMBlock(NNSiFndExpMBlockList *list, NNSiFndExpHeapMBlockHead *target,
+                                       NNSiFndExpHeapMBlockHead *prev) {
+    NNSiFndExpHeapMBlockHead *next;
 
-ExpandingHeapAllocator::ExpandingHeapAllocator(void *endAddress, u16 optFlag) {
-    NodeList *nodeList = (NodeList *)&mFirstNode;
-    MemoryNode::Target extent;
-    MemoryNode *node;
-
-    NNSi_FndInitHeapHead(this, 0x45585048, nodeList + 1, endAddress, optFlag);
-    nodeList->mNodeID = 0;
-    nodeList->mFlags2 = 0;
-    nodeList->mFlags2 &= ~1;
-
-    extent.start = (char *)heapStart;
-    extent.end = (char *)heapEnd;
-    node = (MemoryNode *)CreateNode(&extent, 0x4652);
-    nodeList->mFirstNode = node;
-    nodeList->mLastNode = node;
-    nodeList->mUsedFirstNode = 0;
-    nodeList->mUsedLastNode = 0;
-}
-
-/* Carve one allocation out of a free block: unlink it, split into up to three
- * pieces -- leading gap, the allocation, trailing gap -- and stamp a fresh
- * header on each survivor. A gap smaller than a header (0x10) collapses into
- * the allocation. 'FR' (0x4652) tags the free remnants, 'UD' (0x5544) the
- * allocated one. The last parameter is u16 -- `Pvjt`, not the imported `Pvjj`:
- * the ROM reads the stack-passed argument with ldrh, the width mwccarm picks
- * from the declared type. */
-void *ExpandingHeapAllocator::AllocateNode(MemoryNode *c, MemoryNode *node,
-                                           void *target, u32 size, u16 z)
-{
-    MemoryNode::Target t0(node);
-    MemoryNode::Target t1;
-    MemoryNode::Target t2;
-    void *link;
-    int header;
-
-    int oldLimit = (int)t0.end;
-    header = (int)target - 0x10;
-    int backStart = (int)size + (int)target;
-    t0.end = (char *)header;
-    t1.end = (char *)oldLimit;
-    t1.start = (char *)backStart;
-
-    link = UnlinkNode(c, node);
-
-    unsigned int frontGap = (unsigned int)(t0.end - t0.start);
-    if (frontGap < 0x10) {
-        t0.end = t0.start;
+    target->pMBHeadPrev = prev;
+    if (prev != 0) {
+        next = prev->pMBHeadNext;
+        prev->pMBHeadNext = target;
     } else {
-        void *newFront = CreateNode(&t0, 0x4652);
-        link = LinkNode(c, (MemoryNode *)newFront, (MemoryNode *)link);
+        next = list->head;
+        list->head = target;
     }
 
-    unsigned int backGap = (unsigned int)(t1.end - t1.start);
-    if (backGap < 0x10) {
-        t1.start = t1.end;
+    target->pMBHeadNext = next;
+    if (next != 0) {
+        next->pMBHeadPrev = target;
     } else {
-        void *newBack = CreateNode(&t1, 0x4652);
-        link = LinkNode(c, (MemoryNode *)newBack, (MemoryNode *)link);
+        list->tail = target;
     }
-
-    int flagsWord = *(int *)((char *)c - 4);
-    int *dst = (int *)t0.end;
-    int len = t1.start - t0.end;
-    if (((unsigned short)(flagsWord & 0xff)) & 1) {
-        volatile int zero = 0;
-        MultiStore_Int(zero, dst, len);
-    }
-
-    t2.start = (char *)header;
-    t2.end = t1.start;
-    void *allocNode = CreateNode(&t2, 0x5544);
-
-    unsigned short *flagsPtr = &((MemoryNode *)allocNode)->flags;
-    void *usedList = &((NodeList *)c)->mUsedFirstNode;
-    *flagsPtr &= ~0x8000;
-    *flagsPtr |= (z & 1) << 15;
-    int t0e = (int)t0.end;
-    *flagsPtr &= ~0x7f00;
-    *flagsPtr |= (((unsigned short)((int)allocNode - t0e)) & 0x7f) << 8;
-    unsigned int cRaw = ((NodeList *)c)->mNodeID;
-    unsigned int cValue = cRaw & 0xff;
-    *flagsPtr &= ~0xff;
-    *flagsPtr |= cValue;
-
-    void *usedTail = ((NodeList *)c)->mUsedLastNode;
-    LinkNode((MemoryNode *)usedList, (MemoryNode *)allocNode, (MemoryNode *)usedTail);
 
     return target;
 }
 
-/* Walk the free list forward from the head, aligning each node's data start
- * upward. Bit 0 of the list's flag word selects the search: clear is first
- * fit, set is best fit; the `nsize == size` break is an exact-fit shortcut for
- * both. */
-void *ExpandingHeapAllocator::AllocateForwards(u32 size, u32 align)
-{
-    NodeList *c = (NodeList *)&mFirstNode;
-    unsigned short flag = c->mFlags2;
-    int firstFit = ((unsigned short)(flag & 1) == 0);
-    MemoryNode *best = 0;
-    MemoryNode *node = c->mFirstNode;
-    unsigned int bestSize = 0xFFFFFFFF;
-    void *bestTarget = 0;
-    if (node != 0) {
-        unsigned int mask = align - 1;
-        do {
-            char *data = (char *)(node + 1);
-            char *aligned = (char *)((mask + (unsigned int)data) & ~mask);
-            unsigned int pad = (unsigned int)(aligned - data);
-            unsigned int nsize = node->size;
-            if (nsize >= size + pad && bestSize > nsize) {
-                best = node;
-                bestSize = nsize;
-                bestTarget = aligned;
-                if (firstFit) break;
-                if (nsize == size) break;
-            }
-            node = node->next;
-        } while (node != 0);
-    }
-    if (best == 0) return 0;
-    return AllocateNode((MemoryNode *)c, best, bestTarget, size, 0);
+static inline void AppendMBlock(NNSiFndExpMBlockList *list, NNSiFndExpHeapMBlockHead *block) {
+    (void)InsertMBlock(list, block, list->tail);
 }
 
-/* The mirror of AllocateForwards: walk from the tail and align downward so the
- * padding lands below the block rather than above it. The fit test is
- * `aligned - data >= 0` -- did it stay inside the node. */
-void *ExpandingHeapAllocator::AllocateBackwards(u32 size, u32 align)
-{
-    NodeList *c = (NodeList *)&mFirstNode;
-    unsigned short flag = c->mFlags2;
-    int firstFit = ((unsigned short)(flag & 1) == 0);
-    MemoryNode *best = 0;
-    MemoryNode *node = c->mLastNode;
-    unsigned int bestSize = 0xFFFFFFFF;
-    void *bestTarget = 0;
-    if (node != 0) {
-        unsigned int mask = align - 1;
-        do {
-            char *data = (char *)(node + 1);
-            unsigned int nsize = node->size;
-            unsigned int t = nsize + (unsigned int)data - size;
-            char *aligned = (char *)(~mask & t);
-            if ((int)(aligned - data) >= 0 && bestSize > nsize) {
-                best = node;
-                bestSize = nsize;
-                bestTarget = aligned;
-                if (firstFit) break;
-                if (nsize == size) break;
-            }
-            node = node->prev;
-        } while (node != 0);
-    }
-    if (best == 0) return 0;
-    return AllocateNode((MemoryNode *)c, best, bestTarget, size, 1);
+/* Stamps a block header at the start of a region. */
+NNSiFndExpHeapMBlockHead *InitMBlock(const NNSiMemRegion *pRegion, u16 signature) {
+    NNSiFndExpHeapMBlockHead *block = (NNSiFndExpHeapMBlockHead *)pRegion->start;
+
+    block->signature = signature;
+    block->attribute = 0;
+    block->blockSize = GetOffsetFromPtr(GetMemPtrForMBlock(block), pRegion->end);
+    block->pMBHeadPrev = 0;
+    block->pMBHeadNext = 0;
+
+    return block;
 }
 
-/* Merge a released extent into the address-ordered free list: absorb a free
- * node directly above it, coalesce with the free node directly below, then
- * link the merged extent back where the lower neighbour sat. The first
- * parameter is the embedded sentinel -- both callers pass this+0x24. */
-int ExpandingHeapAllocator::FreeNode(MemoryNode *list, MemoryNode::Target *extent)
-{
-    struct TargetWords { u32 words[2]; };
-    MemoryNode::Target merged;
+static inline NNSiFndExpHeapMBlockHead *InitFreeMBlock(const NNSiMemRegion *pRegion) {
+    return InitMBlock(pRegion, MBLOCK_FREE_SIGNATURE);
+}
 
-    *(TargetWords *)&merged = *(TargetWords *)extent;
+/* The whole heap starts as one free block. */
+NNSiFndHeapHead *InitExpHeap(void *startAddress, void *endAddress, u16 optFlag) {
+    NNSiFndHeapHead *pHeapHd = (NNSiFndHeapHead *)startAddress;
+    NNSiFndExpHeapHead *pExpHeapHd = GetExpHeapHeadPtrFromHeapHead(pHeapHd);
 
-    MemoryNode *below = 0;
-    MemoryNode *node = *(MemoryNode **)list;
+    NNSi_FndInitHeapHead(pHeapHd, 0x45585048, /* 'EXPH' */
+                         AddU32ToPtr(pExpHeapHd, sizeof(NNSiFndExpHeapHead)), endAddress, optFlag);
 
-    while (node != 0) {
-        if ((u32)node < (u32)extent->start) {
-            below = node;
-        } else {
-            if ((u32)node == (u32)extent->end) {
-                merged.end = (char *)(node->size + ((u32)node + 0x10));
-                UnlinkNode(list, node);
+    pExpHeapHd->groupID = 0;
+    pExpHeapHd->feature = 0;
+    SetAllocMode(pExpHeapHd, 0);
+
+    {
+        NNSiFndExpHeapMBlockHead *pMBHead;
+        NNSiMemRegion region;
+
+        region.start = pHeapHd->heapStart;
+        region.end = pHeapHd->heapEnd;
+        pMBHead = InitFreeMBlock(&region);
+
+        pExpHeapHd->mbFreeList.head = pMBHead;
+        pExpHeapHd->mbFreeList.tail = pMBHead;
+        pExpHeapHd->mbUsedList.head = 0;
+        pExpHeapHd->mbUsedList.tail = 0;
+    }
+
+    return pHeapHd;
+}
+
+/* Carves mblock (size bytes) out of a free block: the free space left in
+   front of it and behind it each become a free block again unless too small
+   to hold a header, in which case it is absorbed into the allocation. */
+void *AllocUsedBlockFromFreeBlock(NNSiFndExpHeapHead *pEHHead,
+                                  NNSiFndExpHeapMBlockHead *pMBHeadFree, void *mblock, u32 size,
+                                  u16 direction) {
+    NNSiMemRegion freeRgnT;
+    NNSiMemRegion freeRgnB;
+    NNSiFndExpHeapMBlockHead *pMBHeadFreePrev;
+
+    GetRegionOfMBlock(&freeRgnT, pMBHeadFree);
+    freeRgnB.end = freeRgnT.end;
+    freeRgnB.start = AddU32ToPtr(mblock, size);
+    freeRgnT.end = SubU32ToPtr(mblock, sizeof(NNSiFndExpHeapMBlockHead));
+
+    pMBHeadFreePrev = RemoveMBlock(&pEHHead->mbFreeList, pMBHeadFree);
+
+    if (GetOffsetFromPtr(freeRgnT.start, freeRgnT.end) < sizeof(NNSiFndExpHeapMBlockHead)) {
+        freeRgnT.end = freeRgnT.start;
+    } else {
+        pMBHeadFreePrev =
+            InsertMBlock(&pEHHead->mbFreeList, InitFreeMBlock(&freeRgnT), pMBHeadFreePrev);
+    }
+
+    if (GetOffsetFromPtr(freeRgnB.start, freeRgnB.end) < sizeof(NNSiFndExpHeapMBlockHead)) {
+        freeRgnB.start = freeRgnB.end;
+    } else {
+        (void)InsertMBlock(&pEHHead->mbFreeList, InitFreeMBlock(&freeRgnB), pMBHeadFreePrev);
+    }
+
+    FillAllocMemory(GetHeapHeadPtrFromExpHeapHead(pEHHead), freeRgnT.end,
+                    GetOffsetFromPtr(freeRgnT.end, freeRgnB.start));
+
+    {
+        NNSiFndExpHeapMBlockHead *pMBHeadNewUsed;
+        NNSiMemRegion region;
+
+        region.start = SubU32ToPtr(mblock, sizeof(NNSiFndExpHeapMBlockHead));
+        region.end = freeRgnB.start;
+
+        pMBHeadNewUsed = InitMBlock(&region, MBLOCK_USED_SIGNATURE);
+        SetAllocDirForMBlock(pMBHeadNewUsed, direction);
+        SetAlignmentForMBlock(pMBHeadNewUsed, (u16)GetOffsetFromPtr(freeRgnT.end, pMBHeadNewUsed));
+        SetGroupIDForMBlock(pMBHeadNewUsed, pEHHead->groupID);
+        AppendMBlock(&pEHHead->mbUsedList, pMBHeadNewUsed);
+    }
+
+    return mblock;
+}
+
+/* Searches the free list from the low end, aligning upward. */
+void *AllocFromHead(NNSiFndHeapHead *pHeapHd, u32 size, int alignment) {
+    NNSiFndExpHeapHead *pExpHeapHd = GetExpHeapHeadPtrFromHeapHead(pHeapHd);
+    const int bAllocFirst = GetAllocMode(pExpHeapHd) == 0;
+
+    NNSiFndExpHeapMBlockHead *pMBlkHd = 0;
+    NNSiFndExpHeapMBlockHead *pMBlkHdFound = 0;
+    u32 foundSize = 0xffffffff;
+    void *foundMBlock = 0;
+
+    for (pMBlkHd = pExpHeapHd->mbFreeList.head; pMBlkHd; pMBlkHd = pMBlkHd->pMBHeadNext) {
+        void *const mblock = GetMemPtrForMBlock(pMBlkHd);
+        void *const reqMBlock = NNSi_FndRoundUpPtr(mblock, alignment);
+        const u32 offset = GetOffsetFromPtr(mblock, reqMBlock);
+
+        if (pMBlkHd->blockSize >= size + offset && foundSize > pMBlkHd->blockSize) {
+            pMBlkHdFound = pMBlkHd;
+            foundSize = pMBlkHd->blockSize;
+            foundMBlock = reqMBlock;
+
+            if (bAllocFirst || foundSize == size) {
+                break;
+            }
+        }
+    }
+
+    if (!pMBlkHdFound) {
+        return 0;
+    }
+
+    return AllocUsedBlockFromFreeBlock(pExpHeapHd, pMBlkHdFound, foundMBlock, size, 0);
+}
+
+/* Searches the free list from the high end, aligning downward. */
+void *AllocFromTail(NNSiFndHeapHead *pHeapHd, u32 size, int alignment) {
+    NNSiFndExpHeapHead *pExpHeapHd = GetExpHeapHeadPtrFromHeapHead(pHeapHd);
+    const int bAllocFirst = GetAllocMode(pExpHeapHd) == 0;
+
+    NNSiFndExpHeapMBlockHead *pMBlkHd = 0;
+    NNSiFndExpHeapMBlockHead *pMBlkHdFound = 0;
+    u32 foundSize = 0xffffffff;
+    void *foundMBlock = 0;
+
+    for (pMBlkHd = pExpHeapHd->mbFreeList.tail; pMBlkHd; pMBlkHd = pMBlkHd->pMBHeadPrev) {
+        void *const mblock = GetMemPtrForMBlock(pMBlkHd);
+        void *const mblockEnd = AddU32ToPtr(mblock, pMBlkHd->blockSize);
+        void *const reqMBlock = NNSi_FndRoundDownPtr(SubU32ToPtr(mblockEnd, size), alignment);
+
+        if (ComparePtr(reqMBlock, mblock) >= 0 && foundSize > pMBlkHd->blockSize) {
+            pMBlkHdFound = pMBlkHd;
+            foundSize = pMBlkHd->blockSize;
+            foundMBlock = reqMBlock;
+
+            if (bAllocFirst || foundSize == size) {
+                break;
+            }
+        }
+    }
+
+    if (!pMBlkHdFound) {
+        return 0;
+    }
+
+    return AllocUsedBlockFromFreeBlock(pExpHeapHd, pMBlkHdFound, foundMBlock, size, 1);
+}
+
+/* Returns a region to the free list, merging it with the free blocks
+   directly after and before it. */
+int RecycleRegion(NNSiFndExpHeapHead *pEHHead, const NNSiMemRegion *pRegion) {
+    NNSiFndExpHeapMBlockHead *pBlkPrFree = 0;
+    NNSiMemRegion freeRgn = *pRegion;
+
+    {
+        NNSiFndExpHeapMBlockHead *pBlk;
+
+        for (pBlk = pEHHead->mbFreeList.head; pBlk; pBlk = pBlk->pMBHeadNext) {
+            if (pBlk < pRegion->start) {
+                pBlkPrFree = pBlk;
+                continue;
+            }
+
+            if (pBlk == pRegion->end) {
+                freeRgn.end = GetMBlockEndAddr(pBlk);
+                (void)RemoveMBlock(&pEHHead->mbFreeList, pBlk);
             }
             break;
         }
-        node = node->next;
     }
 
-    if (below != 0) {
-        u32 belowEnd = below->size + ((u32)below + 0x10);
-        if ((char *)belowEnd == extent->start) {
-            merged.start = (char *)below;
-            below = (MemoryNode *)UnlinkNode(list, below);
-        }
+    if (pBlkPrFree && GetMBlockEndAddr(pBlkPrFree) == pRegion->start) {
+        freeRgn.start = pBlkPrFree;
+        pBlkPrFree = RemoveMBlock(&pEHHead->mbFreeList, pBlkPrFree);
     }
 
-    if ((u32)(merged.end - merged.start) < 0x10)
+    if (GetOffsetFromPtr(freeRgn.start, freeRgn.end) < sizeof(NNSiFndExpHeapMBlockHead)) {
         return 0;
+    }
 
-    MemoryNode *node_ = (MemoryNode *)CreateNode(&merged, 0x4652);
-    LinkNode(list, node_, below);
+    (void)InsertMBlock(&pEHHead->mbFreeList, InitFreeMBlock(&freeRgn), pBlkPrFree);
+
     return 1;
 }
 
-/* The expanding twin of Heap::CreateSolidHeapAllocator, identical bar the
- * minimum: 0x4c against the solid allocator's 0x30, because an expanding heap
- * keeps a free-node list. */
-namespace mHeap {
+/* Builds an expanding heap in [startAddress, startAddress + size), or
+   returns 0 when the 4-aligned span cannot hold the two heap headers, a
+   block header and one word. */
+NNSFndHeapHandle NNS_FndCreateExpHeapEx(void *startAddress, u32 size, u16 optFlag) {
+    void *endAddress;
 
-ExpandingHeapAllocator *Heap_t::CreateExpandingHeapAllocator(void *address, u32 size, u16 optFlag) {
-    u32 end   = (size + (u32)address) & ~3u;
-    u32 start = ((u32)address + 3u)   & ~3u;
+    endAddress = NNSi_FndRoundDownPtr(AddU32ToPtr(startAddress, size), MIN_ALIGNMENT);
+    startAddress = NNSi_FndRoundUpPtr(startAddress, MIN_ALIGNMENT);
 
-    if (start > end || (end - start) < 0x4c)
+    if (NNSiGetUIntPtr(startAddress) > NNSiGetUIntPtr(endAddress) ||
+        GetOffsetFromPtr(startAddress, endAddress) <
+            sizeof(NNSiFndHeapHead) + sizeof(NNSiFndExpHeapHead) +
+                sizeof(NNSiFndExpHeapMBlockHead) + MIN_ALIGNMENT) {
         return 0;
+    }
 
-    return _ZN22ExpandingHeapAllocatorC1EPvt((ExpandingHeapAllocator *)start, (void *)end, optFlag);
+    {
+        NNSiFndHeapHead *pHeapHd = InitExpHeap(startAddress, endAddress, optFlag);
+        return pHeapHd;
+    }
 }
 
-} /* namespace mHeap */
-
-/* Detach the heap from whichever heap contains it -- a 12-byte tail veneer
- * to NNSi_FndFinalizeHeap, NNS_FND_expheap.c's NNS_FndDestroyExpHeap. */
-extern "C" void NNS_FndDestroyExpHeap(NNSFndHeapHandle heap) {
+void NNS_FndDestroyExpHeap(NNSFndHeapHandle heap) {
     NNSi_FndFinalizeHeap(heap);
 }
 
-/* The public entry point. A zero-byte request becomes one byte and the size
- * rounds up to a multiple of 4. THE SIGN OF `align` IS THE DIRECTION, not part
- * of the alignment: non-negative allocates from the low end, negative from the
- * high end, the magnitude used either way -- hence `-align` on the backwards
- * call, and hence `int` where a u32 would delete the branch. */
-void *ExpandingHeapAllocator::Allocate(u32 size, int align)
-{
-    if (size == 0) size = 1;
-    size = (size + 3) & ~3u;
-    if (align >= 0) {
-        return this->AllocateForwards(size, (u32)align);
+/* A non-negative alignment allocates from the low end, a negative one from
+   the high end. */
+void *NNS_FndAllocFromExpHeapEx(NNSFndHeapHandle heap, u32 size, int alignment) {
+    void *memory = 0;
+
+    if (size == 0) {
+        size = 1;
     }
-    return this->AllocateBackwards(size, (u32)-align);
+
+    size = NNSi_FndRoundUp(size, MIN_ALIGNMENT);
+
+    if (alignment >= 0) {
+        memory = AllocFromHead(heap, size, alignment);
+    } else {
+        memory = AllocFromTail(heap, size, -alignment);
+    }
+
+    return memory;
 }
 
-/* Zero len bytes at p through a volatile zero, so the store loop takes its
- * value from a stack slot. */
-static inline void FillZero(void *p, u32 len) {
-    volatile int zero;
-    zero = 0;
-    MultiStore_Int(zero, p, len);
-}
+/* Grows a block in place into the free block right after it, or shrinks it
+   and returns the tail to the free list. Returns the new size, or 0. */
+u32 NNS_FndResizeForMBlockExpHeap(NNSFndHeapHandle heap, void *memBlock, u32 size) {
+    NNSiFndExpHeapHead *pEHHead;
+    NNSiFndExpHeapMBlockHead *pMBHead;
 
-/* Grow a block in place by swallowing the free node directly after it, or
- * shrink it and hand the tail back to the free list. The allocator's low flag
- * bit asks for freshly-gained bytes to be zero filled. */
-u32 ExpandingHeapAllocator::Reallocate(void *ptrRaw, u32 size)
-{
-    MemoryNode *block;
-    u32 blockSize;
-    MemoryNode *node;
-    MemoryNode **list;
-    char *ptr = (char *)ptrRaw;
+    pEHHead = GetExpHeapHeadPtrFromHandle(heap);
+    pMBHead = GetMBlockHeadPtr(memBlock);
 
-    node = (MemoryNode *)ptr;
-    node = (MemoryNode *)((char *)node - 0x10);
-    list = GetList(this);
-    blockSize = node->size;
-    size = (size + 3) & ~3u;
-
-    if (size == blockSize) {
+    size = NNSi_FndRoundUp(size, MIN_ALIGNMENT);
+    if (size == pMBHead->blockSize) {
         return size;
     }
 
-    if (size > blockSize) {
-        char *end = (char *)(blockSize + ((u32)node + 0x10));
-        char *oldStart;
-        MemoryNode *prev;
+    if (size > pMBHead->blockSize) {
+        void *crUsedEnd = GetMBlockEndAddr(pMBHead);
+        NNSiFndExpHeapMBlockHead *block;
 
-        block = *list;
-        while (block != 0) {
-            if (block == (MemoryNode *)end) break;
-            block = block->next;
+        for (block = pEHHead->mbFreeList.head; block; block = block->pMBHeadNext) {
+            if (block == crUsedEnd) {
+                break;
+            }
         }
-        if (block == 0 || size > blockSize + 0x10 + block->size) {
+
+        if (!block ||
+            size > pMBHead->blockSize + sizeof(NNSiFndExpHeapMBlockHead) + block->blockSize) {
             return 0;
         }
 
-        MemoryNode::Target tgt(block);
-        prev = (MemoryNode *)UnlinkNode((MemoryNode *)list, block);
-        oldStart = tgt.start;
-        tgt.start = (char *)(size + (u32)ptr);
-        if ((u32)(tgt.end - tgt.start) < 0x10) {
-            tgt.start = tgt.end;
-        }
-        node->size = tgt.start - ptr;
-        if ((u32)(tgt.end - tgt.start) >= 0x10) {
-            MemoryNode *newNode = (MemoryNode *)CreateNode(&tgt, 0x4652);
-            LinkNode((MemoryNode *)list, newNode, prev);
-        }
         {
-            u16 opt = (u16)(attribute & 0xff);
-            u32 len = (u32)(tgt.start - oldStart);
-            if (opt & 1) {
-                FillZero(oldStart, len);
+            NNSiMemRegion rgnNewFree;
+            void *oldFreeStart;
+            NNSiFndExpHeapMBlockHead *nextBlockPrev;
+
+            GetRegionOfMBlock(&rgnNewFree, block);
+            nextBlockPrev = RemoveMBlock(&pEHHead->mbFreeList, block);
+
+            oldFreeStart = rgnNewFree.start;
+            rgnNewFree.start = AddU32ToPtr(memBlock, size);
+
+            if (GetOffsetFromPtr(rgnNewFree.start, rgnNewFree.end) <
+                sizeof(NNSiFndExpHeapMBlockHead)) {
+                rgnNewFree.start = rgnNewFree.end;
             }
+
+            pMBHead->blockSize = GetOffsetFromPtr(memBlock, rgnNewFree.start);
+
+            if (GetOffsetFromPtr(rgnNewFree.start, rgnNewFree.end) >=
+                sizeof(NNSiFndExpHeapMBlockHead)) {
+                (void)InsertMBlock(&pEHHead->mbFreeList, InitFreeMBlock(&rgnNewFree),
+                                   nextBlockPrev);
+            }
+
+            FillAllocMemory(heap, oldFreeStart, GetOffsetFromPtr(oldFreeStart, rgnNewFree.start));
         }
     } else {
-        MemoryNode::Target tgt2;
-        tgt2.start = (char *)(size + (u32)ptr);
-        tgt2.end = (char *)(node->size + ((u32)node + 0x10));
-        node->size = size;
-        if (!FreeNode((MemoryNode *)list, &tgt2)) {
-            node->size = blockSize;
+        NNSiMemRegion rgnNewFree;
+        const u32 oldBlockSize = pMBHead->blockSize;
+
+        rgnNewFree.start = AddU32ToPtr(memBlock, size);
+        rgnNewFree.end = GetMBlockEndAddr(pMBHead);
+
+        pMBHead->blockSize = size;
+
+        if (!RecycleRegion(pEHHead, &rgnNewFree)) {
+            pMBHead->blockSize = oldBlockSize;
         }
     }
 
-    return node->size;
+    return pMBHead->blockSize;
 }
 
-/* Free one block: build a Target describing the node, unlink it from the
- * in-use list, and hand it to FreeNode to merge back into the free list. The
- * MemoryNode header sits 0x10 before the user pointer; the in-use list head is
- * 8 past the embedded bookkeeping at this+0x24. */
-int ExpandingHeapAllocator::Deallocate(void *ptr)
-{
-    NodeList *inner;
-    MemoryNode *node;
+void NNS_FndFreeToExpHeap(NNSFndHeapHandle heap, void *memBlock) {
+    NNSiFndHeapHead *pHeapHd = heap;
+    NNSiFndExpHeapHead *pExpHeapHd = GetExpHeapHeadPtrFromHandle(pHeapHd);
+    NNSiFndExpHeapMBlockHead *pMBHead = GetMBlockHeadPtr(memBlock);
+    NNSiMemRegion region;
 
-    node = (MemoryNode *)((char *)ptr - 0x10);
-    inner = (NodeList *)&mFirstNode;
-    MemoryNode::Target target(node);
-    UnlinkNode((MemoryNode *)&inner->mUsedFirstNode, node);
-    return FreeNode((MemoryNode *)inner, &target);
+    GetRegionOfMBlock(&region, pMBHead);
+    (void)RemoveMBlock(&pExpHeapHd->mbUsedList, pMBHead);
+    (void)RecycleRegion(pExpHeapHd, &region);
 }
 
-/* Total free bytes: walk the free-node list and sum each node's size. NOT the
- * largest allocatable block -- MaxAllocatableSize answers that, and the two
- * differ by fragmentation. */
-u32 ExpandingHeapAllocator::MemoryLeft()
-{
-    MemoryNode *n = mFirstNode;
-    unsigned int total = 0;
-    while (n) {
-        total += n->size;
-        n = n->next;
+/* The sum of every free block; fragmentation can keep any single
+   allocation from getting this much. */
+u32 NNS_FndGetTotalFreeSizeForExpHeap(NNSFndHeapHandle heap) {
+    u32 sumSize = 0;
+    NNSiFndExpHeapHead *pEHHead = GetExpHeapHeadPtrFromHandle(heap);
+    NNSiFndExpHeapMBlockHead *pMBHead;
+
+    for (pMBHead = pEHHead->mbFreeList.head; pMBHead; pMBHead = pMBHead->pMBHeadNext) {
+        sumSize += pMBHead->blockSize;
     }
-    return total;
+
+    return sumSize;
 }
 
-/* The largest single block still obtainable at this alignment: align each
- * free node's data start upward and keep the largest usable remainder, with
- * ties broken toward the node wasting least on alignment padding. `align` goes
- * through cstd::abs -- the sign is Allocate's direction convention, accepted
- * and ignored here. */
-int ExpandingHeapAllocator::MaxAllocatableSize(int arg)
-{
-    int align = cstd::abs(arg);
-    unsigned int bestSize = 0;
-    unsigned int bestOffset = -1;
-    MemoryNode *n = mFirstNode;
-    while (n) {
-        unsigned int base = (unsigned int)n + 0x10;
-        unsigned int aligned = ((align - 1) + base) & ~(align - 1);
-        unsigned int end = n->size + base;
-        if (aligned < end) {
-            unsigned int usable = end - aligned;
-            unsigned int offset = aligned - base;
-            if (bestSize < usable || (bestSize == usable && bestOffset > offset)) {
-                bestSize = usable;
-                bestOffset = offset;
+/* The largest single block obtainable at this alignment; ties go to the
+   block that wastes least on padding. */
+u32 NNS_FndGetAllocatableSizeForExpHeapEx(NNSFndHeapHandle heap, int alignment) {
+    alignment = cstd::abs(alignment);
+
+    {
+        NNSiFndExpHeapHead *pEHHead = GetExpHeapHeadPtrFromHandle(heap);
+        u32 maxSize = 0;
+        u32 offsetMin = 0xffffffff;
+        NNSiFndExpHeapMBlockHead *pMBlkHd;
+
+        for (pMBlkHd = pEHHead->mbFreeList.head; pMBlkHd; pMBlkHd = pMBlkHd->pMBHeadNext) {
+            void *baseAddress = NNSi_FndRoundUpPtr(GetMemPtrForMBlock(pMBlkHd), alignment);
+
+            if (NNSiGetUIntPtr(baseAddress) < NNSiGetUIntPtr(GetMBlockEndAddr(pMBlkHd))) {
+                const u32 blockSize = GetOffsetFromPtr(baseAddress, GetMBlockEndAddr(pMBlkHd));
+                const u32 offset = GetOffsetFromPtr(GetMemPtrForMBlock(pMBlkHd), baseAddress);
+
+                if (maxSize < blockSize || (maxSize == blockSize && offsetMin > offset)) {
+                    maxSize = blockSize;
+                    offsetMin = offset;
+                }
             }
         }
-        n = n->next;
+
+        return maxSize;
     }
-    return bestSize;
 }
 
-/* Stamp the ID subsequently allocated nodes carry and return the previous one.
- * The field is the header's mNodeID (u16 at +0x34); the incoming u32 truncates
- * on the way in and the u16 widens to int on the way out. */
-int ExpandingHeapAllocator::SetNodeID(u32 id)
-{
-    Inner *p = (Inner *)&mFirstNode;
-    unsigned short old = p->id;
-    p->id = (unsigned short)id;
-    return old;
+/* The group ID every block allocated from now on is stamped with. */
+u16 NNS_FndSetGroupIDForExpHeap(NNSFndHeapHandle heap, u32 groupID) {
+    NNSiFndExpHeapHead *pEHHead = GetExpHeapHeadPtrFromHandle(heap);
+    u16 oldGroupID = pEHHead->groupID;
+    pEHHead->groupID = groupID;
+
+    return oldGroupID;
 }
 
-u32 ExpandingHeapAllocator::GetNodeID()
-{
-    return this->mNodeID;
+u16 NNS_FndGetGroupIDForExpHeap(NNSFndHeapHandle heap) {
+    return GetExpHeapHeadPtrFromHandle(heap)->groupID;
 }
 
-/* Walk the in-use list and hand each block's user pointer (node + 0x10) to the
- * callback, along with the allocator and the caller's opaque argument. `next`
- * is read BEFORE the call, because the callback frees the node it is given.
- * InvokeDeallocate is exactly this callback's shape: the trampoline that turns
- * each block back into an allocator->Deallocate(ptr) call. */
-void *ExpandingHeapAllocator::DeallocateAll(DeallocationFunction fn, u32 ctx)
-{
-    MemoryNode *node = mUsedFirstNode;
-    if (!node) return node;
-    do {
-        MemoryNode *next = node->next;
-        fn((char *)(node + 1), this, ctx);
-        node = next;
-    } while (node);
-    return node;
+/* Calls visitor on every allocated block. The next block is read first, so
+   the visitor may free the one it is given. */
+void NNS_FndVisitAllocatedForExpHeap(NNSFndHeapHandle heap, NNSFndHeapVisitor visitor,
+                                     u32 userParam) {
+    NNSiFndExpHeapMBlockHead *pMBHead = GetExpHeapHeadPtrFromHandle(heap)->mbUsedList.head;
+
+    while (pMBHead) {
+        NNSiFndExpHeapMBlockHead *pMBHeadNext = pMBHead->pMBHeadNext;
+        (*visitor)(GetMemPtrForMBlock(pMBHead), heap, userParam);
+        pMBHead = pMBHeadNext;
+    }
 }
 
-/* The allocated size of a block from a user pointer alone: every block carries
- * a MemoryNode header immediately before its user data, and `size` sits three
- * words (0xc) back. */
-u32 ExpandingHeapAllocator::SizeofInternal(void *userPtr)
-{
-    return ((s32 *)userPtr)[-3];
+u32 NNS_FndGetSizeForMBlockExpHeap(const void *memBlock) {
+    return GetMBlockHeadCPtr(memBlock)->blockSize;
 }
+
+} /* extern "C" */

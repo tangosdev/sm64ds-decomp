@@ -6,10 +6,10 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x0204e964..0x0204eda4, 14 function(s), folded from the fourteen legacy single-function shards that filled the range. tu_map candidate main/SolidHeapAllocator (boundary confidence medium, left=high right=medium): the left boundary is MemoryNode::TargetC1 of the neighbouring allocator unit, the right boundary is the 148-function unattributed run that follows.",
-    "class label: SolidHeapAllocator -- every member is written SolidHeapAllocator::name() and resolves against include/SolidHeapAllocator.h's hand-curated field layout (mFreeRegion at 0x24 over HeapAllocator's mStart/mEnd/mFlags).",
-    "Heap::CreateSolidHeapAllocator (0x0204ebc4) and the NNS_FndDestroyFrmHeap tail-call veneer to NNSi_FndFinalizeHeap sit inside the member run and are admitted as members of the same original TU -- the linker keeps one TU's functions contiguous, so the run cannot be split at them.",
-    "no pragmas, no destructor variants, no _ZTV/_ZTI/_ZTS symbols in the run (tubuild inspect): SolidHeapAllocator has no vtable of its own."
+    "contiguous linker run: 0x0204e964..0x0204eda4, 14 function(s), folded from the fourteen legacy single-function shards that filled the range. tu_map candidate main/SolidHeapAllocator (boundary confidence medium, left=high right=medium): the left boundary is GetRegionOfMBlock, the last function of the expanded heap's TU, the right boundary is the 148-function unattributed run that follows.",
+    "NitroSystem's NNS_FND_frameheap.c: the run is NNS_FndResizeForMBlockFrmHeap down to NNS_FndCreateFrmHeapEx, then FreeTail, FreeHead, AllocFromTail, AllocFromHead and InitFrameHeap -- the Sonic Rush Adventure decomp's lib/NitroSystem/src/fnd/frameheap.c in reverse, with NNSi_FndGetFreeStart/EndForFrmHeap deadstripped. It replaces the coined SolidHeapAllocator class.",
+    "NNS_FndCreateFrmHeapEx (0x0204ebc4) and NNS_FndDestroyFrmHeap sit at their places in that file order; the factory was once spelled Heap::CreateSolidHeapAllocator.",
+    "no pragmas, no destructor variants, no _ZTV/_ZTI/_ZTS symbols in the run (tubuild inspect): the frame heap is C and has no vtable."
   ],
   "sections": [
     {
@@ -20,49 +20,49 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN18SolidHeapAllocator10ReallocateEPvj",
+      "symbol": "NNS_FndResizeForMBlockFrmHeap",
       "address": "0x0204e964",
       "size": "0x000000a4",
       "legacy_source": "src/_ZN18SolidHeapAllocator10ReallocateEPvj.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "_ZN18SolidHeapAllocator14TryResizeToFitEv",
+      "symbol": "NNS_FndAdjustFrmHeap",
       "address": "0x0204ea08",
       "size": "0x00000034",
       "legacy_source": "src/_ZN18SolidHeapAllocator14TryResizeToFitEv.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_ZN18SolidHeapAllocator9LoadStateEj",
+      "symbol": "NNS_FndFreeByStateToFrmHeap",
       "address": "0x0204ea3c",
       "size": "0x0000005c",
       "legacy_source": "src/_ZN18SolidHeapAllocator9LoadStateEj.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN18SolidHeapAllocator9SaveStateEj",
+      "symbol": "NNS_FndRecordStateForFrmHeap",
       "address": "0x0204ea98",
       "size": "0x00000058",
       "legacy_source": "src/_ZN18SolidHeapAllocator9SaveStateEj.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN18SolidHeapAllocator10MemoryLeftEi",
+      "symbol": "NNS_FndGetAllocatableSizeForFrmHeapEx",
       "address": "0x0204eaf0",
       "size": "0x00000040",
       "legacy_source": "src/_ZN18SolidHeapAllocator10MemoryLeftEi.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN18SolidHeapAllocator5ResetEj",
+      "symbol": "NNS_FndFreeToFrmHeap",
       "address": "0x0204eb30",
       "size": "0x00000040",
       "legacy_source": "src/_ZN18SolidHeapAllocator5ResetEj.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN18SolidHeapAllocator8AllocateEji",
+      "symbol": "NNS_FndAllocFromFrmHeapEx",
       "address": "0x0204eb70",
       "size": "0x00000048",
       "legacy_source": "src/_ZN18SolidHeapAllocator8AllocateEji.cpp",
@@ -76,42 +76,42 @@
       "ordinal": 7
     },
     {
-      "symbol": "_ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjt",
+      "symbol": "NNS_FndCreateFrmHeapEx",
       "address": "0x0204ebc4",
       "size": "0x0000004c",
       "legacy_source": "src/_ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjj.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN18SolidHeapAllocator8ResetEndEv",
+      "symbol": "FreeTail",
       "address": "0x0204ec10",
       "size": "0x00000030",
       "legacy_source": "src/_ZN18SolidHeapAllocator8ResetEndEv.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN18SolidHeapAllocator10ResetStartEv",
+      "symbol": "FreeHead",
       "address": "0x0204ec40",
       "size": "0x00000018",
       "legacy_source": "src/_ZN18SolidHeapAllocator10ResetStartEv.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN18SolidHeapAllocator17AllocateBackwardsEPvjj",
+      "symbol": "_Z13AllocFromTailP18NNSiFndFrmHeapHeadji",
       "address": "0x0204ec58",
       "size": "0x0000007c",
       "legacy_source": "src/_ZN18SolidHeapAllocator17AllocateBackwardsEPvjj.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN18SolidHeapAllocator16AllocateForwardsEPvjj",
+      "symbol": "_Z13AllocFromHeadP18NNSiFndFrmHeapHeadji",
       "address": "0x0204ecd4",
       "size": "0x00000080",
       "legacy_source": "src/_ZN18SolidHeapAllocator16AllocateForwardsEPvjj.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN18SolidHeapAllocatorC1EPvt",
+      "symbol": "InitFrameHeap",
       "address": "0x0204ed54",
       "size": "0x00000050",
       "legacy_source": "src/_ZN18SolidHeapAllocatorC1EPvj.cpp",
@@ -120,15 +120,9 @@
   ],
   "data": [],
   "bss": [],
-  "compiler_only_output": [
-    {
-      "symbol": "_ZN18SolidHeapAllocatorC2EPvt",
-      "disposition": "deadstrip",
-      "reason": "mwccarm emits the unused base-object constructor beside the licensed C1; the ROM has no configured C2 home and nothing references it (same shape as arm9/ActorBase_SceneNode's fBase_c C2)."
-    }
-  ],
+  "compiler_only_output": [],
   "notes": [
-    "Hand-written manifest for the fold of the fourteen SolidHeapAllocator shards into one TU (same route as ov080/d_a_pic_gate: the fold produced the TU directly rather than through tubuild.py create's splitter). Same schema as generated entries."
+    "Hand-written manifest for the fold of the fourteen frame-heap shards into one TU (same route as ov080/d_a_pic_gate: the fold produced the TU directly rather than through tubuild.py create's splitter). Same schema as generated entries."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -139,19 +133,10 @@
     "functions_matched": 14,
     "functions_declared": 14,
     "compilerOnlyOutput": {
-      "requested": [
-        "_ZN18SolidHeapAllocatorC2EPvt"
-      ],
-      "deadstripped": [
-        "_ZN18SolidHeapAllocatorC2EPvt"
-      ],
-      "droppedSections": [
-        29,
-        30
-      ],
+      "requested": [],
+      "deadstripped": [],
       "data": [],
-      "dataExternalized": [],
-      "canonicalDuplicates": []
+      "dataExternalized": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",

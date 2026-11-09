@@ -1,28 +1,20 @@
-// Gate-2 smoke: the game's ExpandingHeapAllocator running on a host arena.
+// Gate-2 smoke: the game's NitroSystem expanded heap (NNS_FND_expheap.c,
+// src/engine/heap/ExpandingHeapAllocator.cpp) running on a host arena.
 //
-// Everything here goes through the exact entry points the game uses, by
-// mangled name, the way the src/ TUs call each other. A fill-pattern torture
-// test is the point: the LP64 bug class corrupted allocator node headers
-// silently, and an allocator that survives thousands of randomized
-// alloc/free cycles with per-block patterns intact is strong evidence the
-// recovered layouts are byte-faithful on the host.
+// Everything here goes through the entry points the game uses, the NNS_Fnd
+// functions the src/ TUs call. A fill-pattern torture test is the point: the
+// LP64 bug class corrupted block headers silently, and a heap that survives
+// thousands of randomized alloc/free cycles with per-block patterns intact is
+// strong evidence the recovered layouts are byte-faithful on the host.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "nnsys/fnd.h"
 
-typedef unsigned int u32;
-typedef unsigned short u16;
+extern "C" int sRootListInitialized;
 
-struct ExpandingHeapAllocator;
-extern "C" {
-ExpandingHeapAllocator *_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjt(void *address, u32 size, u16 optFlag);
-void *_ZN22ExpandingHeapAllocator8AllocateEji(ExpandingHeapAllocator *self, u32 size, int align);
-int _ZN22ExpandingHeapAllocator10DeallocateEPv(ExpandingHeapAllocator *self, void *ptr);
-extern int sRootListInitialized;
-}
-#define CreateAllocator _ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjt
-#define Alloc(a, n)     _ZN22ExpandingHeapAllocator8AllocateEji((a), (n), 4)
-#define Free(a, p)      _ZN22ExpandingHeapAllocator10DeallocateEPv((a), (p))
+#define Alloc(h, n) NNS_FndAllocFromExpHeapEx((h), (n), 4)
+#define Free(h, p)  NNS_FndFreeToExpHeap((h), (p))
 
 static int g_failures;
 #define CHECK(cond) \
@@ -38,7 +30,7 @@ int main(void)
 {
     void *arena = malloc(ARENA);
     CHECK(arena != NULL);
-    ExpandingHeapAllocator *heap = CreateAllocator(arena, ARENA, 0);
+    NNSFndHeapHandle heap = NNS_FndCreateExpHeapEx(arena, ARENA, 0);
     CHECK(heap != NULL);
     /* creating a heap initializes the NNS root heap list on first use */
     CHECK(sRootListInitialized == 1);
@@ -49,7 +41,9 @@ int main(void)
     CHECK(((size_t)a % 4) == 0 && ((size_t)b % 4) == 0);
     memset(a, 0xAA, 64); memset(b, 0xBB, 64); memset(c, 0xCC, 64);
     CHECK(((unsigned char *)a)[63] == 0xAA && ((unsigned char *)b)[0] == 0xBB);
-    CHECK(Free(heap, b) != 0);
+    u32 freeBefore = NNS_FndGetTotalFreeSizeForExpHeap(heap);
+    Free(heap, b);
+    CHECK(NNS_FndGetTotalFreeSizeForExpHeap(heap) > freeBefore);
     void *b2 = Alloc(heap, 64);
     CHECK(b2 != NULL);              /* freed space is allocatable again */
     Free(heap, a); Free(heap, b2); Free(heap, c);
@@ -72,7 +66,8 @@ int main(void)
             for (u32 k = 0; k < slot[i].n; ++k)
                 if (p[k] != slot[i].tag) { intact = 0; break; }
             CHECK(intact);          /* neighbours never scribbled on us */
-            CHECK(Free(heap, slot[i].p) != 0);
+            CHECK(NNS_FndGetSizeForMBlockExpHeap(slot[i].p) >= slot[i].n);
+            Free(heap, slot[i].p);
             slot[i].p = NULL; ++frees; --live;
         }
     }
@@ -83,7 +78,8 @@ int main(void)
             for (u32 k = 0; k < slot[i].n; ++k)
                 if (p[k] != slot[i].tag) { intact = 0; break; }
             CHECK(intact);
-            CHECK(Free(heap, slot[i].p) != 0);
+            CHECK(NNS_FndGetSizeForMBlockExpHeap(slot[i].p) >= slot[i].n);
+            Free(heap, slot[i].p);
         }
 
     /* coalescing: after full drain one near-arena-sized block must fit */

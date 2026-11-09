@@ -5,7 +5,7 @@
   "promoted_source": "src/engine/heap/Heap.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
-  "boundary_evidence": "Contiguous .text span 0x0203c1b4..0x0203cbc0. Memory::Allocate/Deallocate occupy 0x0203c1b4..0x0203c24c and abut Heap::InitializeGameHeap. Left edge begins where Matrix4x3_ApplyInPlaceToTranslation ends. Nine Heap members tile 0x0203c24c..0x0203c33c, 43 family leftovers (SolidHeap/ExpandingHeap virtual overrides, Heap guards/statics, ExpandingHeapAllocator::InvokeDeallocate) tile 0x0203c33c..0x0203c970, and the three classes' structors plus the root-heap bootstrap tile 0x0203c970..0x0203cbc0 (config/arm9/delinks.txt, config/arm9/symbols.txt). The structor run is the plain out-of-line deferred-codegen signature of three empty destructors and three constructors in one TU: SolidHeap_t D0 D1, ExpHeap_t D0 D1, Heap_t D2 D0 D1, then SolidHeap_t C1, ExpHeap_t C1, Heap_t C2, with every homeless variant stripped. Right edge ends at func_0203cbc0, the first of the global operator new/delete veneers (not examined for membership here). .data: ~Heap_t is the family's key function, so this TU emits all three vtables and their type_info. Claimed: 0x02099d28..0x02099e18, the SolidHeap_t type-name string and the three vtables. The five records below it, 0x02099ce4..0x02099d28, are deadstrip-data against the ROM: the cartridge word-aligns each type-name string and mwccarm emits them align-1, so the 0x02099d27 pad byte cannot be reproduced.",
+  "boundary_evidence": "Contiguous .text span 0x0203c1b4..0x0203cbc0. Memory::Allocate/Deallocate occupy 0x0203c1b4..0x0203c24c and abut Heap::InitializeGameHeap. Left edge begins where Matrix4x3_ApplyInPlaceToTranslation ends. Nine Heap members tile 0x0203c24c..0x0203c33c, 43 family leftovers (SolidHeap/ExpandingHeap virtual overrides, Heap guards/statics, FreeVisitedBlock) tile 0x0203c33c..0x0203c970, and the three classes' structors plus the root-heap bootstrap tile 0x0203c970..0x0203cbc0 (config/arm9/delinks.txt, config/arm9/symbols.txt). The structor run is the plain out-of-line deferred-codegen signature of three empty destructors and three constructors in one TU: SolidHeap_t D0 D1, ExpHeap_t D0 D1, Heap_t D2 D0 D1, then SolidHeap_t C1, ExpHeap_t C1, Heap_t C2, with every homeless variant stripped. Right edge ends at func_0203cbc0, the first of the global operator new/delete veneers (not examined for membership here). .data: ~Heap_t is the family's key function, so this TU emits all three vtables and their type_info. Claimed: 0x02099d28..0x02099e18, the SolidHeap_t type-name string and the three vtables. The five records below it, 0x02099ce4..0x02099d28, are deadstrip-data against the ROM: the cartridge word-aligns each type-name string and mwccarm emits them align-1, so the 0x02099d27 pad byte cannot be reproduced.",
   "sections": [
     {
       "name": ".text",
@@ -224,7 +224,7 @@
       "legacy_source": "src/_ZN5mHeap9ExpHeap_t14VDeallocateAllEv.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator16InvokeDeallocateEPvPS_j",
+      "symbol": "_Z16FreeVisitedBlockPvP15NNSiFndHeapHeadj",
       "address": "0x0203c4cc",
       "size": "0x18",
       "ordinal": 27,
@@ -483,14 +483,14 @@
       "legacy_source": "src/_ZN5mHeap6Heap_tD1Ev.cpp"
     },
     {
-      "symbol": "_ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP18SolidHeapAllocator",
+      "symbol": "_ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP15NNSiFndHeapHead",
       "address": "0x0203ca54",
       "size": "0x2c",
       "ordinal": 64,
       "legacy_source": "src/_ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP18SolidHeapAllocator.cpp"
     },
     {
-      "symbol": "_ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP22ExpandingHeapAllocator",
+      "symbol": "_ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP15NNSiFndHeapHead",
       "address": "0x0203ca80",
       "size": "0x2c",
       "ordinal": 65,
@@ -651,9 +651,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@635",
+      "from": "@617",
       "to": "@1260",
-      "evidence": "mwcc numbers the registration node @635 (@632 until the heap headers moved to nnsys/fnd.h: re-keyed +3). It is published as @1260 because ov065 defines an @632 of its own; @1260 is unused."
+      "evidence": "mwcc numbers the registration node @617 (@632 until the heap headers moved to nnsys/fnd.h, re-keyed +3; @635 until the coined allocator headers were retired, re-keyed -18). It is published as @1260 because ov065 defines an @632 of its own; @1260 is unused."
     }
   ],
   "symbol_binding_rewrites": [
@@ -688,14 +688,14 @@
       "reason": "Base-object variant of _ZN5mHeap9ExpHeap_tD1Ev (0x0203c9ec): one out-of-line ~ExpHeap_t() emits D0, D1 and D2; nothing derives from ExpHeap_t, so the cartridge keeps only D1/D0 and this copy is homeless."
     },
     {
-      "symbol": "_ZN5mHeap11SolidHeap_tC2EPvjPNS_6Heap_tEP18SolidHeapAllocator",
+      "symbol": "_ZN5mHeap11SolidHeap_tC2EPvjPNS_6Heap_tEP15NNSiFndHeapHead",
       "disposition": "deadstrip",
-      "reason": "Base-object variant of the complete-object ctor _ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP18SolidHeapAllocator (0x0203ca54): mwcc emits both from one out-of-line ctor, the retail link kept only C1 and no configured symbol names this copy."
+      "reason": "Base-object variant of the complete-object ctor _ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP15NNSiFndHeapHead (0x0203ca54): mwcc emits both from one out-of-line ctor, the retail link kept only C1 and no configured symbol names this copy."
     },
     {
-      "symbol": "_ZN5mHeap9ExpHeap_tC2EPvjPNS_6Heap_tEP22ExpandingHeapAllocator",
+      "symbol": "_ZN5mHeap9ExpHeap_tC2EPvjPNS_6Heap_tEP15NNSiFndHeapHead",
       "disposition": "deadstrip",
-      "reason": "Base-object variant of the complete-object ctor _ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP22ExpandingHeapAllocator (0x0203ca80): mwcc emits both from one out-of-line ctor, the retail link kept only C1 and no configured symbol names this copy."
+      "reason": "Base-object variant of the complete-object ctor _ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP15NNSiFndHeapHead (0x0203ca80): mwcc emits both from one out-of-line ctor, the retail link kept only C1 and no configured symbol names this copy."
     },
     {
       "symbol": "_ZN5mHeap6Heap_tC1EPvjPS0_",
@@ -1186,15 +1186,15 @@
       "requested": [
         "_ZN5mHeap11SolidHeap_tD2Ev",
         "_ZN5mHeap9ExpHeap_tD2Ev",
-        "_ZN5mHeap11SolidHeap_tC2EPvjPNS_6Heap_tEP18SolidHeapAllocator",
-        "_ZN5mHeap9ExpHeap_tC2EPvjPNS_6Heap_tEP22ExpandingHeapAllocator",
+        "_ZN5mHeap11SolidHeap_tC2EPvjPNS_6Heap_tEP15NNSiFndHeapHead",
+        "_ZN5mHeap9ExpHeap_tC2EPvjPNS_6Heap_tEP15NNSiFndHeapHead",
         "_ZN5mHeap6Heap_tC1EPvjPS0_"
       ],
       "deadstripped": [
-        "_ZN5mHeap11SolidHeap_tC2EPvjPNS_6Heap_tEP18SolidHeapAllocator",
+        "_ZN5mHeap11SolidHeap_tC2EPvjPNS_6Heap_tEP15NNSiFndHeapHead",
         "_ZN5mHeap11SolidHeap_tD2Ev",
         "_ZN5mHeap6Heap_tC1EPvjPS0_",
-        "_ZN5mHeap9ExpHeap_tC2EPvjPNS_6Heap_tEP22ExpandingHeapAllocator",
+        "_ZN5mHeap9ExpHeap_tC2EPvjPNS_6Heap_tEP15NNSiFndHeapHead",
         "_ZN5mHeap9ExpHeap_tD2Ev"
       ],
       "droppedSections": [

@@ -1,367 +1,336 @@
 //cpp
-/* arm9/SolidHeapAllocator -- the solid-heap allocator TU: the allocator that
- * carves one free region from both ends, the Heap factory that embeds the
- * allocator inside the block it manages, and the saved-state chain kept in
- * the free region's own third word.
- * .text 0x0204e964..0x0204eda4, folded from fourteen legacy shards.
- * mwccarm emits .text in reverse source order, so the definitions below run
- * ROM-descending (C1 first, Reallocate last); the roster reads ROM-ascending.
+/* arm9/SolidHeapAllocator -- NitroSystem's frame heap (NNS_FND_frameheap.c),
+ * .text 0x0204e964..0x0204eda4.
  *
- *   Reallocate         -- in-place resize of the most recent forward alloc.
- *   TryResizeToFit     -- shrink the heap to its used extent.
- *   LoadState/SaveState -- restore points on a chain that lives inside the
- *                          heap it records: the 0x10-byte record is allocated
- *                          out of the very region it captures, and LoadState
- *                          reclaims it by rewinding past it.
- *   MemoryLeft         -- bytes a forward allocation could still get.
- *   Reset/ResetStart/ResetEnd -- rewind begin, end, or both.
- *   Allocate           -- the sign of `align` picks the direction.
- *   NNS_FndDestroyFrmHeap -- tail-call veneer to NNSi_FndFinalizeHeap.
- *   Heap::CreateSolidHeapAllocator -- fit the allocator into the block.
- *   AllocateForwards/AllocateBackwards -- the static region carvers; they
- *                          take the free region, not the allocator, which is
- *                          what makes them static (see the header).
- *   C1                 -- the constructor; seals the free region.
+ * The bodies follow the Sonic Rush Adventure decomp's
+ * NitroSystem frameheap.c; pret has no copy of this file.
+ * mwccarm emits a file's functions in reverse order, and the ROM runs
+ * NNS_FndResizeForMBlockFrmHeap up to InitFrameHeap: the source order below
+ * reversed. NNSi_FndGetFreeStartForFrmHeap and NNSi_FndGetFreeEndForFrmHeap
+ * are not in the cartridge.
  *
- * The free region is `mFreeRegion` (this + 0x24). Two views of it live here:
- * the header's SolidHeapFreeRegion {begin, end, flags}, and the TU-local
- * FreeList {begin, end, tail} for the state-chain head the flags word
- * carries at runtime.
+ * A frame heap hands memory out from both ends of one free region
+ * [headAllocator, tailAllocator) and never frees a single block: it rewinds
+ * an end (NNS_FndFreeToFrmHeap) or returns to a restore point
+ * (NNS_FndRecordStateForFrmHeap / NNS_FndFreeByStateToFrmHeap), whose
+ * record is itself allocated from the heap it describes.
  *
- * deslop leftovers:
- * - MemoryLeft keeps its recovered register-pressure scaffolding verbatim
- *   (new_var*, the empty `if (!(a - 1u)) {}`, the (long long)(int)
- *   round-trips): each is load-bearing under -O4,p; tidying any changes the
- *   bytes.
- * - SaveState keeps inline_fn, the recorded load-bearing spelling of
- *   `this + 0x24` in that body.
- * - Reallocate keeps the hoisted `fl` pair pointer and TryResizeToFit the
- *   opaque `struct H*` view: spelling the fields as members changes the
- *   register allocation and kills the aliased re-read of heapEnd the ROM emits.
+ * Divergences from that source, each forced by this build:
+ * - InitFrameHeap, AllocFromHead, AllocFromTail, FreeHead and FreeTail are
+ *   static there and have external linkage here, as the expanding heap's
+ *   helpers do: the baseline link does not apply symbol_binding_rewrites to
+ *   a .text-only TU. AllocFromHead and AllocFromTail would then collide
+ *   with the expanding heap's helpers of the same names, so these two keep
+ *   C++ linkage, which tells them apart by their NNSiFndFrmHeapHead
+ *   parameter.
+ * - FillAllocMemory's zero goes through a volatile, as in the expanding
+ *   heap. FillFreeMemory is empty in a release build and is left out.
+ * - abs() is cstd::abs, the name this tree gives 0x0206df84.
  */
-
-#include "Heap.h"
-#include "SolidHeapAllocator.h"
+#include "nnsys/fnd.h"
 #include "cstd.h"
 
-extern "C" void MultiStore_Int(s32 val, int *dst, s32 count);
-/* local extern: the factory runs the constructor over an already-aligned
-   address. Placement new measured this function 0x4c -> 0x5c. */
-extern "C" SolidHeapAllocator *_ZN18SolidHeapAllocatorC1EPvt(SolidHeapAllocator *self,
-                                                             void *endAddress, u16 optFlag);
+extern "C" void MultiStore_Int(int val, int *dst, int len); /* MIi_CpuClear32 */
 
-/* The chain view of mFreeRegion: `tail` is the most recent SaveState record. */
-struct FreeList {
-    void *begin;
-    void *end;
-    void *tail;
-};
+#define MIN_ALIGNMENT 4
 
-/* A SaveState record, allocated inside the heap it describes:
-   {id, saved begin, saved end, previous record}. */
-struct State {
-    u32 id;
-    void *head;
-    void *tail;
-    struct State *prev;
-};
+#define NNSi_FndRoundUp(value, alignment) (((value) + (alignment - 1)) & ~(alignment - 1))
+#define NNSi_FndRoundUpPtr(ptr, alignment) ((void *)NNSi_FndRoundUp(NNSiGetUIntPtr(ptr), alignment))
+#define NNSi_FndRoundDown(value, alignment) ((value) & ~(alignment - 1))
+#define NNSi_FndRoundDownPtr(ptr, alignment) ((void *)NNSi_FndRoundDown(NNSiGetUIntPtr(ptr), alignment))
 
-/* TryResizeToFit's opaque pair view of mFreeRegion's first two words: kept
-   because member spelling lets the compiler prove heapEnd cannot alias and it
-   drops the re-read the ROM emits. */
-struct H {
-    void *begin;
-    void *end;
-};
+#define NNSi_FndGetBitValue(data, st, bits) (((data) >> (st)) & ((1 << (bits)) - 1))
 
-inline struct FreeList *inline_fn(void *arg0)
-{
-    return (struct FreeList *)&((SolidHeapAllocator *)arg0)->mFreeRegion;
+static inline u32 NNSiGetUIntPtr(const void *ptr) {
+    return (u32)ptr;
 }
 
-SolidHeapAllocator::SolidHeapAllocator(void *endAddress, u16 optFlag) {
-    SolidHeapFreeRegion* freeRegion = &mFreeRegion;
-
-    NNSi_FndInitHeapHead(this, 0x46524d48, (char *)freeRegion + 0xc, endAddress, optFlag);
-    freeRegion->begin = heapStart;
-    freeRegion->end = heapEnd;
-    freeRegion->flags = 0;
+static inline u32 GetOffsetFromPtr(const void *start, const void *end) {
+    return NNSiGetUIntPtr(end) - NNSiGetUIntPtr(start);
 }
-/* Carves `size` bytes off the low end: round begin up to `align`, refuse if
- * that runs past end, then push begin past the block. `align` is already a
- * positive power of two here; Allocate took the absolute value and picked the
- * direction. */
-void *SolidHeapAllocator::AllocateForwards(void *freeBlockPair, u32 size, u32 align)
-{
-    void **pair = (void **)freeBlockPair;
-    void *freeBlockBegin = pair[0];
-    void *start = (void *)(((align - 1) + (u32)freeBlockBegin) & ~(align - 1));
-    void *freeBlockEnd = pair[1];
-    void *end = (void *)((u32)size + (u32)start);
-    if (end > freeBlockEnd) {
-        return (void *)0;
+
+static inline void *AddU32ToPtr(void *ptr, u32 val) {
+    return (void *)(NNSiGetUIntPtr(ptr) + val);
+}
+
+static inline void *SubU32ToPtr(void *ptr, u32 val) {
+    return (void *)(NNSiGetUIntPtr(ptr) - val);
+}
+
+static inline int ComparePtr(const void *a, const void *b) {
+    return (const u8 *)a - (const u8 *)b;
+}
+
+static inline u16 GetOptForHeap(const NNSiFndHeapHead *pHeapHd) {
+    return (u16)NNSi_FndGetBitValue(pHeapHd->attribute, 0, 8);
+}
+
+static inline void FillAllocMemory(NNSiFndHeapHead *pHeapHd, void *address, u32 size) {
+    if (GetOptForHeap(pHeapHd) & 1) {
+        volatile int fill = 0;
+        MultiStore_Int(fill, (int *)address, size);
     }
-    u32 flags = *(u32 *)((char *)freeBlockPair - 4);
-    u32 fillSize = (u32)end - (u32)freeBlockBegin;
-    if ((u16)(flags & 0xff) & 1) {
-        volatile s32 zero = 0;
-        MultiStore_Int(zero, (int *)freeBlockBegin, fillSize);
-    }
-    pair[0] = end;
-    return start;
 }
 
-/* Carves `size` bytes off the HIGH end: subtract from end, round the result
- * DOWN to `align`, refuse if that runs below begin, then pull end down.
- * Because the rounding is downward the alignment gap lands above the block
- * rather than below it, so the returned pointer is also the new end -- which
- * is why `start` is both stored and returned, where the forward case stores
- * `end` and returns `start`.
- *
- * The flags word sits 4 bytes BEFORE the pair -- attribute of the allocator.
- * Bit 0 means fill-on-allocate, and the fill covers begin..end, including the
- * alignment gap, not just the returned block. */
-void *SolidHeapAllocator::AllocateBackwards(void *freeBlockPair, u32 size, u32 align)
-{
-    void **pair = (void **)freeBlockPair;
-    void *freeBlockEnd = pair[1];
-    void *freeBlockBegin = pair[0];
-    void *start = (void *)(((u32)freeBlockEnd - size) & ~(align - 1));
-    if (start < freeBlockBegin) {
-        return (void *)0;
-    }
-    u32 flags = *(u32 *)((char *)freeBlockPair - 4);
-    u32 fillSize = (u32)freeBlockEnd - (u32)start;
-    if ((u16)(flags & 0xff) & 1) {
-        volatile s32 zero = 0;
-        MultiStore_Int(zero, (int *)start, fillSize);
-    }
-    pair[1] = start;
-    return start;
+static inline NNSiFndFrmHeapHead *GetFrmHeapHeadPtrFromHeapHead(NNSiFndHeapHead *pHHead) {
+    return (NNSiFndFrmHeapHead *)AddU32ToPtr(pHHead, sizeof(NNSiFndHeapHead));
 }
 
-/* Rewinds the free region's begin pointer back to the heap's start and clears
- * its flags, discarding every forward allocation at once. ResetEnd is the
- * mirror. */
-void SolidHeapAllocator::ResetStart()
-{
-    void *begin;
-    SolidHeapFreeRegion *fl;
-
-    begin = heapStart;
-    fl = &mFreeRegion;
-    *(void **)(fl) = begin;
-    fl->flags = 0;
+static inline NNSiFndHeapHead *GetHeapHeadPtrFromFrmHeapHead(NNSiFndFrmHeapHead *pFrmHeapHd) {
+    return (NNSiFndHeapHead *)SubU32ToPtr(pFrmHeapHd, sizeof(NNSiFndHeapHead));
 }
 
-/* Walks the saved-state chain and rewinds every entry's end pointer to the
- * heap's hard end, then rewinds the live free region's end too. LoadState can
- * then restore any of them without them still pointing into space that has
- * been reclaimed. */
-void SolidHeapAllocator::ResetEnd()
-{
-    int *node, *p = (int *)&mFreeRegion;
-    for (node = (int *)p[2]; node; node = (int *)node[3])
-        node[2] = (int)heapEnd;
-    p[1] = (int)heapEnd;
+extern "C" NNSiFndHeapHead *InitFrameHeap(void *startAddress, void *endAddress, u16 optFlag) {
+    NNSiFndHeapHead *pHeapHd = (NNSiFndHeapHead *)startAddress;
+    NNSiFndFrmHeapHead *pFrmHeapHd = GetFrmHeapHeadPtrFromHeapHead(pHeapHd);
+
+    NNSi_FndInitHeapHead(pHeapHd, 0x46524d48, /* 'FRMH' */
+                         AddU32ToPtr(pFrmHeapHd, sizeof(NNSiFndFrmHeapHead)), endAddress, optFlag);
+
+    pFrmHeapHd->headAllocator = pHeapHd->heapStart;
+    pFrmHeapHd->tailAllocator = pHeapHd->heapEnd;
+
+    pFrmHeapHd->pState = 0;
+
+    return pHeapHd;
 }
 
-/* Fit a SolidHeapAllocator into [address, address + size), or refuse. Both ends
- * are brought to a 4-byte boundary, inwards, so the aligned span is never
- * larger than asked for. The refusal has two halves: `start > end` catches
- * rounding crossing the ends on a tiny or misaligned block, and 0x30 is the
- * allocator's own bookkeeping, below which there would be nothing left to
- * hand out.
- *
- * The allocator is constructed AT start_u: the object lives inside the block
- * it manages. That is why the constructor takes the end as its argument and
- * needs no separate size. */
-namespace mHeap {
+/* Rounds the head up to the alignment and bumps it past the block. */
+void *AllocFromHead(NNSiFndFrmHeapHead *pFrmHeapHd, u32 size, int alignment) {
+    void *newBlock = NNSi_FndRoundUpPtr(pFrmHeapHd->headAllocator, alignment);
+    void *endAddress = AddU32ToPtr(newBlock, size);
 
-SolidHeapAllocator *Heap_t::CreateSolidHeapAllocator(void *address, u32 size, u16 optFlag) {
-    u32 end   = (size + (u32)address) & ~3u;
-    u32 start = ((u32)address + 3u)   & ~3u;
-
-    if (start > end || (end - start) < 0x30)
+    if (NNSiGetUIntPtr(endAddress) > NNSiGetUIntPtr(pFrmHeapHd->tailAllocator)) {
         return 0;
+    }
 
-    return _ZN18SolidHeapAllocatorC1EPvt((SolidHeapAllocator *)start, (void *)end, optFlag);
+    FillAllocMemory(GetHeapHeadPtrFromFrmHeapHead(pFrmHeapHd), pFrmHeapHd->headAllocator,
+                    GetOffsetFromPtr(pFrmHeapHd->headAllocator, endAddress));
+
+    pFrmHeapHd->headAllocator = endAddress;
+
+    return newBlock;
 }
 
-} /* namespace mHeap */
+/* Pulls the tail down by the size and rounds it down to the alignment, so
+   the padding lands above the block. */
+void *AllocFromTail(NNSiFndFrmHeapHead *pFrmHeapHd, u32 size, int alignment) {
+    void *newBlock = NNSi_FndRoundDownPtr(SubU32ToPtr(pFrmHeapHd->tailAllocator, size), alignment);
 
-/* Tail-call veneer to NNSi_FndFinalizeHeap -- a three-word thunk
- * (ldr ip,[pc] / bx ip / .word), the same shape Heap.h's _-prefixed veneers
- * take. */
-extern "C" void NNS_FndDestroyFrmHeap(NNSFndHeapHandle heap) {
+    if (NNSiGetUIntPtr(newBlock) < NNSiGetUIntPtr(pFrmHeapHd->headAllocator)) {
+        return 0;
+    }
+
+    FillAllocMemory(GetHeapHeadPtrFromFrmHeapHead(pFrmHeapHd), newBlock,
+                    GetOffsetFromPtr(newBlock, pFrmHeapHd->tailAllocator));
+
+    pFrmHeapHd->tailAllocator = newBlock;
+
+    return newBlock;
+}
+
+extern "C" {
+
+/* Frees every block allocated from the head, and every restore point with
+   them: the records live in that space. */
+void FreeHead(NNSiFndHeapHead *pHeapHd) {
+    NNSiFndFrmHeapHead *pFrmHeapHd = GetFrmHeapHeadPtrFromHeapHead(pHeapHd);
+
+    pFrmHeapHd->headAllocator = pHeapHd->heapStart;
+    pFrmHeapHd->pState = 0;
+}
+
+/* Frees every block allocated from the tail, and moves each restore
+   point's tail to match so none restores freed space. */
+void FreeTail(NNSiFndHeapHead *pHeapHd) {
+    NNSiFndFrmHeapHead *pFrmHeapHd = GetFrmHeapHeadPtrFromHeapHead(pHeapHd);
+
+    {
+        NNSiFndFrmHeapState *pState;
+        for (pState = pFrmHeapHd->pState; pState; pState = pState->pPrevState) {
+            pState->tailAllocator = pHeapHd->heapEnd;
+        }
+    }
+
+    pFrmHeapHd->tailAllocator = pHeapHd->heapEnd;
+}
+
+/* Builds a frame heap in [startAddress, startAddress + size), or returns
+   NULL when the 4-aligned span cannot hold the two heap headers. */
+NNSFndHeapHandle NNS_FndCreateFrmHeapEx(void *startAddress, u32 size, u16 optFlag) {
+    void *endAddress;
+
+    endAddress = NNSi_FndRoundDownPtr(AddU32ToPtr(startAddress, size), MIN_ALIGNMENT);
+    startAddress = NNSi_FndRoundUpPtr(startAddress, MIN_ALIGNMENT);
+
+    if (NNSiGetUIntPtr(startAddress) > NNSiGetUIntPtr(endAddress) ||
+        GetOffsetFromPtr(startAddress, endAddress) <
+            sizeof(NNSiFndHeapHead) + sizeof(NNSiFndFrmHeapHead)) {
+        return 0;
+    }
+
+    {
+        NNSiFndHeapHead *pHHead = InitFrameHeap(startAddress, endAddress, optFlag);
+        return pHHead;
+    }
+}
+
+void NNS_FndDestroyFrmHeap(NNSFndHeapHandle heap) {
     NNSi_FndFinalizeHeap(heap);
 }
 
-/* ALIGN'S SIGN IS THE DIRECTION, not part of the alignment: non-negative
- * allocates from the low end of the free region, negative from the high end.
- * A zero size is rounded up to 1 so every allocation has a distinct address,
- * then the size is rounded up to a multiple of 4.
- *
- * The helpers take the free region rather than `this`, which is what makes
- * them static -- see the header. */
-void *SolidHeapAllocator::Allocate(u32 size, int align)
-{
-    void *fb = &mFreeRegion;
-    if (size == 0) size = 1;
-    size = (size + 3) & ~3;
-    if (align >= 0) {
-        return AllocateForwards(fb, size, (u32)align);
+/* A non-negative alignment allocates from the head, a negative one from
+   the tail. */
+void *NNS_FndAllocFromFrmHeapEx(NNSFndHeapHandle heap, u32 size, int alignment) {
+    void *memory = 0;
+    NNSiFndFrmHeapHead *pFrmHeapHd;
+
+    pFrmHeapHd = GetFrmHeapHeadPtrFromHeapHead(heap);
+
+    if (size == 0) {
+        size = 1;
     }
-    return AllocateBackwards(fb, size, (u32)(-align));
+
+    size = NNSi_FndRoundUp(size, MIN_ALIGNMENT);
+
+    if (alignment >= 0) {
+        memory = AllocFromHead(pFrmHeapHd, size, alignment);
+    } else {
+        memory = AllocFromTail(pFrmHeapHd, size, -alignment);
+    }
+
+    return memory;
 }
 
-/* bit 0: rewind the free region's begin; bit 1: rewind its end. Passing 3
- * empties the heap in both directions; passing 0 is a no-op the ROM still
- * emits. */
-void SolidHeapAllocator::Reset(u32 params)
-{
-    if (params & 1) {
-        ResetStart();
+void NNS_FndFreeToFrmHeap(NNSFndHeapHandle heap, int mode) {
+    if (mode & NNS_FND_FRMHEAP_FREE_HEAD) {
+        FreeHead(heap);
     }
-    if (params & 2) {
-        ResetEnd();
+
+    if (mode & NNS_FND_FRMHEAP_FREE_TAIL) {
+        FreeTail(heap);
     }
 }
 
-/* How many bytes a forward allocation at this alignment could still get: round
- * the free region's begin up to `align`, subtract from its end, and clamp at 0.
- * `align` goes through cstd::abs, so the direction convention Allocate uses
- * (negative means backwards) is accepted here and ignored.
- *
- * THE SCAFFOLDING IS LOAD-BEARING AND STAYS VERBATIM. `new_var`/`new_var2`/
- * `new_var3`, the empty `if (!(a - 1u)) {}`, the re-read of begin in the return
- * expression instead of reusing `aligned`, and the `(long long)(int)`
- * round-trips are all register-pressure steering: they are how this recovered
- * source reproduces the ROM's scheduling under -O4,p. Tidying any of them
- * changes the bytes. That includes reading begin as `mFreeRegion.begin`,
- * plainly or through the launder as `&mFreeRegion.begin`: both change it. */
-int SolidHeapAllocator::MemoryLeft(int align)
-{
-    u32 a;
-    char *new_var2;
-    u32 mask;
-    u32 new_var;
-    int **new_var3;
-    int *fb;
-    u32 aligned;
-    u32 end;
+/* What a head allocation at this alignment could still get. */
+u32 NNS_FndGetAllocatableSizeForFrmHeapEx(NNSFndHeapHandle heap, int alignment) {
+    alignment = cstd::abs(alignment);
 
-    a = (u32)cstd::abs(align);
-    mask = a - 1u;
-    fb = (int *)&mFreeRegion;
-    aligned = (mask + (u32)*(int *)((long long)(int)((char *)this + 0x24))) & ~(a - 1u);
-    end = (u32)fb[1];
-    if (!(a - 1u)) {
-    }
-    new_var = end;
-    if (aligned > new_var) {
-        return 0;
-    }
-    new_var2 = (char *)this;
-    new_var3 = &fb;
-    fb = *new_var3;
-    return (int)(end - ((mask + (u32)*(int *)((long long)(int)(new_var2 + 0x24))) & ~(a - 1u)));
-}
+    {
+        const NNSiFndFrmHeapHead *pFrmHeapHd = GetFrmHeapHeadPtrFromHeapHead(heap);
+        const void *block = NNSi_FndRoundUpPtr(pFrmHeapHd->headAllocator, alignment);
 
-/* Pushes a restore point onto the chain: `saved` is read before the
- * allocation, so the restore point is the state BEFORE the record was carved
- * out. Returns 0 if the allocation fails, 1 otherwise. */
-int SolidHeapAllocator::SaveState(u32 arg)
-{
-    struct FreeList *fb;
-    void *saved;
-    int *p;
-
-    fb = inline_fn(this);
-    saved = *(void **)(fb);
-    p = (int *)AllocateForwards(fb, 0x10, 4);
-    if (!p)
-        return 0;
-    p[0] = (int)arg;
-    p[1] = (int)saved;
-    p[2] = (int)fb->end;
-    p[3] = (int)fb->tail;
-    fb->tail = p;
-    return 1;
-}
-
-/* Pops back to a restore point pushed by SaveState. `id == 0` means "the most
- * recent one" and skips the search entirely -- note the search loop is inside
- * `if (id != 0)`, so a zero id never compares against a record's id even if
- * some record carries 0. Returns 0 when the chain is empty or no record
- * matches, 1 on success.
- *
- * Restoring rewinds begin, end and the chain head together, which reclaims the
- * record itself along with everything allocated after it -- the records live
- * in the heap they describe (see SaveState). */
-s32 SolidHeapAllocator::LoadState(u32 id)
-{
-    struct State *st;
-    struct FreeList *fb = (struct FreeList *)&mFreeRegion;
-    st = (struct State *)fb->tail;
-    if (id != 0) {
-        while (st != 0) {
-            if (st->id == id) break;
-            st = st->prev;
-        }
-    }
-    if (st == 0) return 0;
-    fb->begin = st->head;
-    fb->end = st->tail;
-    fb->tail = st->prev;
-    return 1;
-}
-
-/* Shrinks the heap to exactly what has been allocated, but only when nothing
- * has been allocated backwards: the guard compares the hard end (heapEnd) against
- * the free region's end and bails returning 0 if they differ. On success the
- * hard end is pulled down to the free region's begin and the used size is
- * returned -- a byte count measured from the object itself. */
-s32 SolidHeapAllocator::TryResizeToFit()
-{
-    struct H *base = (struct H *)&mFreeRegion;
-    void *cur = heapEnd;
-    if ((s32)((char *)cur - (char *)base->end) != 0) return 0;
-    heapEnd = base->begin;
-    base->end = heapEnd;
-    return (s32)((char *)heapEnd - (char *)this);
-}
-
-/* Resizes IN PLACE, and only for the most recent forward allocation: `curSize`
- * is measured as `freeRegion.begin - ptr`, so the block being resized is assumed
- * to end exactly where the free region starts. Returns the new size, or 0 if
- * growing would overrun the free region's end.
- *
- * Shrinking cannot fail and skips the fill entirely -- the guard is
- * `size > curSize`, so the flags word only matters when growing, and then only
- * the newly exposed bytes are cleared. */
-u32 SolidHeapAllocator::Reallocate(void *ptr, u32 size)
-{
-    void **fl = (void **)&mFreeRegion;
-    if (size == 0) size = 1;
-    size = (size + 3) & ~3;
-    void *begin = fl[0];
-    u32 newEnd = size + (u32)ptr;
-    u32 curSize = (u32)begin - (u32)ptr;
-    if (size == curSize) {
-        return size;
-    }
-    if (size > curSize) {
-        if ((s32)(newEnd - (u32)fl[1]) > 0) {
+        if (NNSiGetUIntPtr(block) > NNSiGetUIntPtr(pFrmHeapHd->tailAllocator)) {
             return 0;
         }
-        u32 flags = attribute;
-        if ((u16)(flags & 0xff) & 1) {
-            volatile s32 zero = 0;
-            MultiStore_Int(zero, (int *)begin, size - curSize);
-        }
+
+        return GetOffsetFromPtr(block, pFrmHeapHd->tailAllocator);
     }
-    fl[0] = (void *)newEnd;
-    return size;
 }
 
+/* Pushes a restore point tagged tagName. Its record is allocated from the
+   head, after the head it records, so restoring it frees the record too. */
+int NNS_FndRecordStateForFrmHeap(NNSFndHeapHandle heap, u32 tagName) {
+    {
+        NNSiFndFrmHeapHead *pFrmHeapHd = GetFrmHeapHeadPtrFromHeapHead(heap);
+        void *oldHeadAllocator = pFrmHeapHd->headAllocator;
+
+        NNSiFndFrmHeapState *pState = (NNSiFndFrmHeapState *)AllocFromHead(
+            pFrmHeapHd, sizeof(NNSiFndFrmHeapState), MIN_ALIGNMENT);
+        if (!pState) {
+            return 0;
+        }
+
+        pState->tagName = tagName;
+        pState->headAllocator = oldHeadAllocator;
+        pState->tailAllocator = pFrmHeapHd->tailAllocator;
+        pState->pPrevState = pFrmHeapHd->pState;
+
+        pFrmHeapHd->pState = pState;
+
+        return 1;
+    }
+}
+
+/* Returns to the restore point tagged tagName, or to the most recent one
+   when tagName is 0. */
+int NNS_FndFreeByStateToFrmHeap(NNSFndHeapHandle heap, u32 tagName) {
+    {
+        NNSiFndFrmHeapHead *pFrmHeapHd = GetFrmHeapHeadPtrFromHeapHead(heap);
+        NNSiFndFrmHeapState *pState = pFrmHeapHd->pState;
+
+        if (tagName != 0) {
+            for (; pState; pState = pState->pPrevState) {
+                if (pState->tagName == tagName)
+                    break;
+            }
+        }
+
+        if (!pState) {
+            return 0;
+        }
+
+        pFrmHeapHd->headAllocator = pState->headAllocator;
+        pFrmHeapHd->tailAllocator = pState->tailAllocator;
+
+        pFrmHeapHd->pState = pState->pPrevState;
+
+        return 1;
+    }
+}
+
+/* Shrinks the heap to its head allocations, giving the rest back to the
+   heap that contains it. Refused (0) while anything is allocated from the
+   tail; otherwise returns the heap's new size. */
+u32 NNS_FndAdjustFrmHeap(NNSFndHeapHandle heap) {
+    {
+        NNSiFndHeapHead *pHeapHd = heap;
+        NNSiFndFrmHeapHead *pFrmHeapHd = GetFrmHeapHeadPtrFromHeapHead(pHeapHd);
+
+        if (0 < GetOffsetFromPtr(pFrmHeapHd->tailAllocator, pHeapHd->heapEnd)) {
+            return 0;
+        }
+
+        pFrmHeapHd->tailAllocator = pHeapHd->heapEnd = pFrmHeapHd->headAllocator;
+        return GetOffsetFromPtr(heap, pHeapHd->heapEnd);
+    }
+}
+
+/* Resizes a block in place, which works only for the most recent head
+   allocation: its end is taken to be the head. Returns the new size, or 0
+   when growing would run into the tail. */
+u32 NNS_FndResizeForMBlockFrmHeap(NNSFndHeapHandle heap, void *memBlock, u32 newSize) {
+    NNSiFndHeapHead *pHeapHd = 0;
+    NNSiFndFrmHeapHead *pFrmHeapHd = 0;
+
+    pHeapHd = heap;
+    pFrmHeapHd = GetFrmHeapHeadPtrFromHeapHead(pHeapHd);
+
+    if (newSize == 0) {
+        newSize = 1;
+    }
+
+    newSize = NNSi_FndRoundUp(newSize, MIN_ALIGNMENT);
+
+    {
+        const u32 oldSize = GetOffsetFromPtr(memBlock, pFrmHeapHd->headAllocator);
+        void *endAddress = AddU32ToPtr(memBlock, newSize);
+
+        if (newSize == oldSize) {
+            return newSize;
+        }
+
+        if (newSize > oldSize) {
+            if (ComparePtr(endAddress, pFrmHeapHd->tailAllocator) > 0) {
+                return 0;
+            }
+
+            FillAllocMemory(heap, pFrmHeapHd->headAllocator, newSize - oldSize);
+        }
+
+        pFrmHeapHd->headAllocator = endAddress;
+        return newSize;
+    }
+}
+
+} /* extern "C" */
