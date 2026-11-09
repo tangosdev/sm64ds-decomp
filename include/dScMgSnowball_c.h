@@ -179,6 +179,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     int  HitsBreakable(int *point); /* point vs pickup row */
     int  HitsWall(int *point); /* point vs solid tile ring */
     void UpdateSnowball();           /* collision ring probes + push-out */
+    void UpdateCamera();
     void RedrawCourse();           /* per-tick flag/sound bookkeeping */
     void DrawCourseColumn(int col, int flag); /* tile flag at (x,z) */
     void BuildCourse();           /* generate the course tilemap */
@@ -234,7 +235,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32   mTouchX;          /* 0xab70 -- last stylus sample */
     s32   mTouchY;          /* 0xab74 */
     s16 mRollAngle;         /* 0xab78 -- += speed * 0x2710 / mBallSize */
-    s16 mAngleY;            /* 0xab7a -- Snowball_UpdateCamera's Y rotation of
+    s16 mAngleY;            /* 0xab7a -- UpdateCamera's Y rotation of
                                 the ball, after Z (mHeadingAngle) and X
                                 (mRollAngle); ResetScene zeroes it */
     s16 mHeadingAngle;      /* 0xab7c -- atan2 of the velocity */

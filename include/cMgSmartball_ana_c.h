@@ -7,7 +7,7 @@
  * this class adds exactly one field: a 4-byte countdown at 0x34.
  *
  * WHAT THE ONE FIELD IS. mRespawnTimer is armed with 0x3c -- one second --
- * by Swallow, which SmartballBall_UpdatePhysics (the ball physics)
+ * by Swallow, which cMgSmartball_ball_c::UpdatePhysics (the ball physics)
  * calls on this hole the frame a ball falls into it; the same call raises the
  * base's mTriggered, awards the drop and plays the effect. SaveSnapshot opens
  * with the base's own SaveSnapshot body written out inline (same pattern as

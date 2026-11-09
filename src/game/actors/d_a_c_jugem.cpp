@@ -131,7 +131,6 @@ int d_a_c_jugemPlaySubHold(u32 a, u32 b, u32 c, Fix12i d, bool loop);
 void  func_ov002_020c3e8c(void *player);
 void  func_ov002_020c3f18(void *p);
 void  func_ov002_020c3f2c(void *p);
-void  func_ov002_020d228c(void *p);
 void  func_0201f32c(int a);
 
 /* globals */
@@ -512,7 +511,7 @@ int daC_Jugem_c::StateArriveInit()
     player = ClosestPlayer();
     if (player) {
         mSavedAngleY = player->mAngleY;
-        func_ov002_020d228c(player);
+        player->func_ov002_020d228c();
     }
     cam = gCamera;
     cam->SetFlag_3();

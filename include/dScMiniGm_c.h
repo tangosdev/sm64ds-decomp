@@ -40,7 +40,16 @@ struct dScMiniGm_c : dScene_c {
     virtual s32  Render();                                /* slot  9 */
     virtual void OnPendingDestroy();                      /* slot 12 */
 
+    void SetRecord(int, int, int);
+    void ClearNew(int);
+    void UpdatePageScroll();
+    void UpdateExitButton();
     void UpdateGameSelect();
+    void UpdatePageArrows();
+    void UpdateGroupTabs();
+    void DrawNewBadges();
+    void DrawRecords();
+    void LoadIconPalette(int);
 };
 
 #ifndef SM64DS_PLATFORM_PC

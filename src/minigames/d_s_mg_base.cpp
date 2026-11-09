@@ -24,10 +24,9 @@
  * file emits both classes' vtables and RTTI.
  *
  * Still unnamed: the header's unk_ fields, and the bytes it leaves as
- * padding that this file reaches by offset (+0xb0; the menu pick delay
- * and save buffers go through the file-local MgMenuPickView and
- * MgMenuSaveArea); the func_ov004 and data_ov004 helpers are unnamed in
- * symbols.txt.
+ * padding that this file reaches by offset (+0xb0; the menu save buffers
+ * go through the file-local MgMenuSaveArea); the func_ov004 and data_ov004
+ * helpers are unnamed in symbols.txt.
  */
 
 #include "dScMgBase_c.h"
@@ -94,7 +93,6 @@ OamAttr *sMgSparkleSprites[16];
 extern "C" {
 extern void *sMgWorkBuffer;
 extern dGraph_c::callback_c *gGraphCallback;
-void Mg_UpdateMenu(char *c);
 void Banner_Update(MgBanner *e);
 void Mg_UpdateFx(MgFx *c);
 extern dFdBrightness_c *gSceneFader; /* the installed screen fader */
@@ -1227,21 +1225,10 @@ extern "C" void Mg_DrawSpriteListEntry(S* self, int a1, int a2, struct M* a3)
 }
 }
 
-/* The header's pad_4644 as Mg_UpdateMenu uses it: the pick delay a touched
-   item counts down (ApproachLinear2) before the pick acts. A file-local
-   view, like MgMenuSaveArea below; this function is its only user. */
-struct MgMenuPickView {
-    u8 pad_000[0x4644]; /* 0x000 -- the dScMgBase_c members before it */
-    s16 pickDelay;      /* 0x4644 */
-};
-
-namespace s20aeb24 {
 extern "C" {
 extern void func_0203b958(short* o, short* a, short* b);
 extern void func_02012dd0(int a);
-
-extern unsigned short data_020a0e5a[];
-extern dWipe_c data_0209f61c;
+}
 
 /* The overlay menu's frame while it is open: slides the items in and, on
    a new touch with nothing highlighted, highlights the touched item in
@@ -1251,9 +1238,7 @@ extern dWipe_c data_0209f61c;
    reaches 0, item 0 (and any other value) calls CloseMenu
    (slot 28), item 1 starts a scene fade, and item 2 calls
    mTouchOptions.Open() and clears the highlight. */
-void Mg_UpdateMenu(char* c)
-{
-    dScMgBase_c *self = (dScMgBase_c *)c;
+void dScMgBase_c::UpdateMenu() {
     unsigned char idx = gActivePlayerSlot;
     unsigned short flags = data_020a0e5a[idx * 2];
     int unlocked;
@@ -1266,11 +1251,12 @@ void Mg_UpdateMenu(char* c)
     if ((flags & 0x40) || (flags & 0x80) || (flags & 0x20) || (flags & 0x10)) {
         func_02012790(0xe);
     }
-    if (self->mTouchOptions.Update() != 0) return;
+    if (mTouchOptions.Update() != 0)
+        return;
 
-    ApproachLinear2(self->mMenuItem0X, 0x80, 0x10);
-    ApproachLinear2(self->mMenuItem1X, 0x80, 0x10);
-    ApproachLinear2(self->mMenuItem2Y, 0x90, 5);
+    ApproachLinear2(mMenuItem0X, 0x80, 0x10);
+    ApproachLinear2(mMenuItem1X, 0x80, 0x10);
+    ApproachLinear2(mMenuItem2Y, 0x90, 5);
 
     idx = gActivePlayerSlot;
     unlocked = 0;
@@ -1278,20 +1264,21 @@ void Mg_UpdateMenu(char* c)
         unlocked = (gTouchEdge[idx * 4] != 0);
     }
     if (unlocked == 0) goto after;
-    if (self->mMenuCursor >= 0) goto after;
+    if (mMenuCursor >= 0)
+        goto after;
     tmp[0] = gTouchX[idx * 4];
     tmp[1] = gTouchY[idx * 4];
-    func_0203b958(d0, tmp, &self->mMenuItem0X);
-    func_0203b958(d1, tmp, &self->mMenuItem1X);
-    func_0203b958(d2, tmp, &self->mMenuItem2X);
+    func_0203b958(d0, tmp, &mMenuItem0X);
+    func_0203b958(d1, tmp, &mMenuItem1X);
+    func_0203b958(d2, tmp, &mMenuItem2X);
     a = d0[0]; if (a < 0) a = -a;
     if (a < 0x60) {
         b = d0[1]; if (b < 0) b = -b;
         if (b < 0x18) {
             func_02012790(0x62);
-            self->mMenuCursor = 0;
+            mMenuCursor = 0;
             /* 0x10 for item 0 and 0 for the others */
-            ((MgMenuPickView *)c)->pickDelay = 0x10;
+            mMenuPickDelay = 0x10;
             goto after;
         }
     }
@@ -1300,8 +1287,8 @@ void Mg_UpdateMenu(char* c)
         b = d1[1]; if (b < 0) b = -b;
         if (b < 0x13) {
             func_02012790(0x63);
-            self->mMenuCursor = 1;
-            ((MgMenuPickView *)c)->pickDelay = 0;
+            mMenuCursor = 1;
+            mMenuPickDelay = 0;
             goto after;
         }
     }
@@ -1310,40 +1297,41 @@ void Mg_UpdateMenu(char* c)
         b = d2[1]; if (b < 0) b = -b;
         if (b < 0x13) {
             func_02012790(0x62);
-            self->mMenuCursor = 2;
-            ((MgMenuPickView *)c)->pickDelay = 0;
+            mMenuCursor = 2;
+            mMenuPickDelay = 0;
         }
     }
 
 after:
-    if (self->mMenuCursor < 0) return;
-    if (ApproachLinear(self->mMenuCursorPhase, 0x10000, 0x1000) == 0) return;
-    if (ApproachLinear2(((MgMenuPickView *)c)->pickDelay, 0, 1) == 0)
+    if (mMenuCursor < 0)
+        return;
+    if (ApproachLinear(mMenuCursorPhase, 0x10000, 0x1000) == 0)
+        return;
+    if (ApproachLinear2(mMenuPickDelay, 0, 1) == 0)
         return;
 
-    switch (self->mMenuCursor) {
+    switch (mMenuCursor) {
     case 0:
-        self->CloseMenu();
+        CloseMenu();
         return;
     case 1:
         dScene_c::SetFaders(&data_0209f61c);
         data_0209f61c.SetType(1);
         dScene_c::StartSceneFade(5, 0, 0);
-        if (self->mQuitFadeStarted != 0) return;
+        if (mQuitFadeStarted != 0)
+            return;
         func_02012dd0(0x3c);
-        self->mQuitFadeStarted = 1;
+        mQuitFadeStarted = 1;
         return;
     case 2:
-        self->mTouchOptions.Open();
-        self->mMenuCursor = -1;
-        self->mMenuCursorPhase = 0;
+        mTouchOptions.Open();
+        mMenuCursor = -1;
+        mMenuCursorPhase = 0;
         return;
     default:
-        self->CloseMenu();
+        CloseMenu();
         return;
     }
-}
-}
 }
 
 /* What SaveScreenForMenu and RestoreScreenFromMenu keep in the header's
@@ -2167,7 +2155,7 @@ int dScMgBase_c::BeforeRender()
             Mg_DrawFx(fx);
     }
 
-    Mg_DrawPrompt(this);
+    DrawPrompt();
     return 1;
 }
 
@@ -2204,7 +2192,7 @@ int dScMgBase_c::BeforeBehavior()
     }
 
     if (mMenuOpen != 0) {
-        Mg_UpdateMenu((char *)this);
+        UpdateMenu();
         return 0;
     }
     if (mMenuScreenSaved != 0)
@@ -2519,30 +2507,29 @@ namespace s20b0de0 {
 extern "C" {
 s32 GetGameLanguage(void);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
+}
+}
 
 /* Draws the per-language prompt sprite at (0xc0, 0xb0) while mPromptEnabled
    is set: blinking (shown for the first 0x18 frames of each 0x30-frame
    mPromptBlinkTimer cycle) for four cycles, then every frame. */
-void Mg_DrawPrompt(char* c)
-{
-    dScMgBase_c *self = (dScMgBase_c *)c;
-    if (self->mPromptEnabled == 0)
+void dScMgBase_c::DrawPrompt() {
+    using namespace s20b0de0;
+    if (mPromptEnabled == 0)
         return;
-    if ((unsigned int)self->mPromptBlinkCount < 4U) {
-        self->mPromptBlinkTimer++;
-        if ((unsigned int)self->mPromptBlinkTimer >= 0x30U) {
-            self->mPromptBlinkTimer = 0U;
-            self->mPromptBlinkCount++;
+    if ((unsigned int)mPromptBlinkCount < 4U) {
+        mPromptBlinkTimer++;
+        if ((unsigned int)mPromptBlinkTimer >= 0x30U) {
+            mPromptBlinkTimer = 0U;
+            mPromptBlinkCount++;
         }
-        if ((unsigned int)self->mPromptBlinkTimer >= 0x18U)
+        if ((unsigned int)mPromptBlinkTimer >= 0x18U)
             return;
     }
     {
         int i = GetGameLanguage();
         RenderOamMainScreen(sMgSpriteTables[i][10], 0xc0, 0xb0, -1, -1);
     }
-}
-}
 }
 
 namespace s20b0e84 {

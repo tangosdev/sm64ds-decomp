@@ -283,7 +283,7 @@
       "ordinal": 34
     },
     {
-      "symbol": "SlotReels_CheckStopped",
+      "symbol": "_ZN12dScMgSlot1_c22SlotReels_CheckStoppedEv",
       "address": "0x0210c500",
       "size": "0x00000138",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",

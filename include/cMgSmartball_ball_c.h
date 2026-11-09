@@ -29,7 +29,7 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
     ~cMgSmartball_ball_c() {}
 
     /* Recovered helpers. The state/query set gates the physics step: HasHit
-       reads anyHit (0xcc -- SmartballBall_UpdatePhysics raises it when a
+       reads anyHit (0xcc -- UpdatePhysics raises it when a
        probe on the ball's rim hits a wall, exit or obstacle this frame;
        dScMgSmartball_c::ResolveBallPair
        zeroes such a ball's velocity instead of exchanging it), IsOut the
@@ -56,6 +56,7 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
     int  OnSlope(int *pos);        /* board incline under this ball */
     int  NeedsRespawn(int *pos);   /* fell off the table */
     void QueueBehind();
+    void UpdatePhysics();
     void DrawMarker();
 
     s32 mZoneCooldown;   /* 0x034 -- countdown; SaveSnapshot decrements it while
@@ -73,7 +74,7 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
                           RestoreInitial; NOTHING IN THE TREE READS IT. No
                           evidence, so no name. */
     u8 state3a;       /* 0x03a -- name carried over from the Obj view that
-                          SmartballBall_UpdatePhysics used to cast this class
+                          UpdatePhysics used to cast this class
                           to; gates most of that function's per-frame
                           collision work */
     u8 state3b;       /* 0x03b -- ditto; set once mZoneDwell maxes out, and by Freeze */
@@ -87,7 +88,7 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
                              base's mIsActive -- after which every SaveSnapshot
                              and Update returns immediately. */
 
-    /* Where the ball was swallowed: SmartballBall_UpdatePhysics (whose old Obj
+    /* Where the ball was swallowed: UpdatePhysics (whose old Obj
        view called them hitX/hitZ) copies the position of the ana it falls into,
        right before that ana's Swallow(). While state3a is 1, NeedsRespawn
        measures the ball's distance from this point. */
@@ -123,7 +124,7 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
                              the ball up behind its predecessor in the
                              manager's 13-entry mpBalls table; once clear
                              it runs the live physics path
-                             SmartballBall_UpdatePhysics instead. */
+                             UpdatePhysics instead. */
     u8  pad_101[0x3]; /* 0x101-0x103 -- alignment */
     s32 mQueueGap;       /* 0x104 -- (this ball's slot index - the manager's
                              current index) * 0xf, written twice by
