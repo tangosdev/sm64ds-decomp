@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/os/thread.h"
 #include "nitro/spi/pm.h"
 
@@ -16,7 +16,7 @@ extern const s16 data_02086214[];
 
 void func_0201a028(void) {
     for (;;) {
-        IRQ::Disable();
+        OS_DisableInterrupts();
         CP15::WaitForInterrupt();
     }
 }

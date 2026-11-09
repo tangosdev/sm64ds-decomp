@@ -21,7 +21,7 @@
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/arm9_wbt.h"
 #include "private/wbt_block_info_list.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -132,7 +132,7 @@ void func_020412f0(char *thiz)
             break;
         }
         case 2: {
-            u32 saved = IRQ::Disable();
+            OSIntrMode saved = OS_DisableInterrupts();
             FileShareNode *p;
 
             area->mReplyPending |= (1 << sb);
@@ -148,7 +148,7 @@ void func_020412f0(char *thiz)
                 }
             }
 
-            IRQ::Restore(saved);
+            OS_RestoreInterrupts(saved);
             break;
         }
         }

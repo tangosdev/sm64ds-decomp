@@ -47,7 +47,7 @@
   "compiler_only_output": [],
   "notes": [
     "Hand-assembled, following arm9/MI_Dma: tu_map cannot segment arm9/main.",
-    "C++ for IRQ:: (Disable, Restore, GetIRQHandler, SetIRQHandler, EnableIRQs, DisableIRQs, ClearInterrupts); every function keeps C linkage.",
+    "Every function keeps C linkage.",
     "func_0205a21c, func_0205a290 and func_0205a358 were renamed MIi_DMACallback, MIi_FIFOCallback and MI_SendGXCommandAsync from their bodies in this change, and the bss block data_020a6460 MIi_GXDmaParams. symbols/actor_renames.tsv records the evidence.",
     "Text-only: MIi_GXDmaParams is .bss and stays in the bss link."
   ],

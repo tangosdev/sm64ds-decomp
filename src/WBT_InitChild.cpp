@@ -2,7 +2,7 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
 #include "private/wbt_block_info_list.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -20,13 +20,13 @@ extern void func_02065bb0(int v);
  * callback becomes the system command's callback; func_02040c34
  * passes func_02040f30, the file-share child's. */
 void WBT_InitChild(void (*callback)(void *)) {
-    unsigned int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     int i;
     WBTWork *work;
     WBTCommand cmd;
 
     if (data_020a94c0 == 1) {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return;
     }
     data_020a94c0 = 1;
@@ -49,6 +49,6 @@ void WBT_InitChild(void (*callback)(void *)) {
     func_02065be0();
     func_02065ba0(0);
     func_02065bb0(0);
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 }

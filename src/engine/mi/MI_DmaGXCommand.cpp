@@ -17,7 +17,8 @@
  * ROM.
  */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
+#include "nitro/os/interrupt.h"
 
 typedef void (*MIDmaCallback)(void *);
 
@@ -38,7 +39,7 @@ typedef struct MIiGXDmaParams {
     MIDmaCallback callback;
     void *arg;
     u32 fifoCond;
-    IRQ::Handler fifoFunc;
+    OSIrqFunction fifoFunc;
 } MIiGXDmaParams;
 
 static inline void MIi_CallCallback(MIDmaCallback callback, void *arg) {
@@ -81,19 +82,19 @@ void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, MIDmaC
 
     MI_WaitDma(dmaNo);
     {
-        u32 lastIntrMode = IRQ::Disable();
+        OSIntrMode lastIntrMode = OS_DisableInterrupts();
 
         MIi_GXDmaParams.fifoCond = (REG_G3X_GXSTAT & 0xc0000000) >> 30;
-        MIi_GXDmaParams.fifoFunc = IRQ::GetIRQHandler(OS_IE_GXFIFO);
+        MIi_GXDmaParams.fifoFunc = OS_GetIrqFunction(OS_IE_GXFIFO);
 
         /* G3X_SetFifoIntrCond(GX_FIFOINTR_COND_UNDERHALF) */
         REG_G3X_GXSTAT = (REG_G3X_GXSTAT & ~0xc0000000) | 0x40000000;
-        IRQ::SetIRQHandler(OS_IE_GXFIFO, MIi_FIFOCallback);
-        IRQ::EnableIRQs(OS_IE_GXFIFO);
+        OS_SetIrqFunction(OS_IE_GXFIFO, MIi_FIFOCallback);
+        OS_EnableIrqMask(OS_IE_GXFIFO);
 
         MIi_FIFOCallback();
 
-        IRQ::Restore(lastIntrMode);
+        OS_RestoreInterrupts(lastIntrMode);
     }
 }
 
@@ -111,19 +112,19 @@ void MIi_FIFOCallback(void) {
     if (!MIi_GXDmaParams.length) {
         OSi_EnterDmaCallback(MIi_GXDmaParams.dmaNo, (u32)MIi_DMACallback, 0);
         DMAStartTransfer(MIi_GXDmaParams.dmaNo, src, REG_GXFIFO_ADDR, MI_CNT_SEND32_IF(length));
-        IRQ::ClearInterrupts(OS_IE_GXFIFO);
+        OS_ResetRequestIrqMask(OS_IE_GXFIFO);
     } else {
         DMAStartTransfer(MIi_GXDmaParams.dmaNo, src, REG_GXFIFO_ADDR, MI_CNT_SEND32(length));
-        IRQ::ClearInterrupts(OS_IE_GXFIFO);
+        OS_ResetRequestIrqMask(OS_IE_GXFIFO);
     }
 }
 
 void MIi_DMACallback(void *arg) {
-    IRQ::DisableIRQs(OS_IE_GXFIFO);
+    OS_DisableIrqMask(OS_IE_GXFIFO);
 
     /* G3X_SetFifoIntrCond(MIi_GXDmaParams.fifoCond) */
     REG_G3X_GXSTAT = (MIi_GXDmaParams.fifoCond << 30) | (REG_G3X_GXSTAT & ~0xc0000000);
-    IRQ::SetIRQHandler(OS_IE_GXFIFO, MIi_GXDmaParams.fifoFunc);
+    OS_SetIrqFunction(OS_IE_GXFIFO, MIi_GXDmaParams.fifoFunc);
 
     MIi_GXDmaParams.isBusy = 0;
 

@@ -2,7 +2,7 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
 #include "private/wbt_block_info_list.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -24,13 +24,13 @@ extern void func_02065bb0(int v);
  * header (func_02065ba0, func_02065bb0). func_02040c34 passes the file-share
  * packet sizes and func_020412f0, the file-share parent's callback. */
 void WBT_InitParent(int send_packet_size, int recv_packet_size, void (*callback)(char *)) {
-    unsigned int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     int i;
     WBTWork *work;
     WBTCommand cmd;
 
     if (data_020a94c0 == 1) {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return;
     }
     data_020a94c0 = 1;
@@ -55,6 +55,6 @@ void WBT_InitParent(int send_packet_size, int recv_packet_size, void (*callback)
     func_02065be0();
     func_02065ba0(send_packet_size - 0xe);
     func_02065bb0(recv_packet_size - 0xe);
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 }

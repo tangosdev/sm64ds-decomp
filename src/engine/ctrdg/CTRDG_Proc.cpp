@@ -24,7 +24,7 @@
  * each comment says what differs, and they keep their address names.
  */
 #include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/interrupt.h"
 #include "nitro/ctrdg/ctrdg_common.h"
 
 #define PXI_FIFO_TAG_CTRDG 13
@@ -94,7 +94,7 @@ void func_0206a6d0(void) {
     data_020a9de4 = 1;
     if ((*(volatile u16 *)0x4000300 & 1) == 0)
         return;
-    irq = IRQ::SetIRQs(0x40000);
+    irq = OS_SetIrqMask(0x40000);
     save208 = *(volatile u16 *)0x4000208;
     *(volatile u16 *)0x4000208 = 1;
     CTRDGi_LockByProcessor(data_020a9de0.lockID, sp);
@@ -125,7 +125,7 @@ void func_0206a6d0(void) {
     }
     (void)*(volatile u16 *)0x4000208;
     *(volatile u16 *)0x4000208 = save208;
-    IRQ::SetIRQs(irq);
+    OS_SetIrqMask(irq);
 }
 
 void CTRDGi_CallbackForInitModuleInfo(int a0, int a1) {

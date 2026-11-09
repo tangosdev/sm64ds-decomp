@@ -1,7 +1,8 @@
 //cpp
 #include "types.h"
 #include "Heap.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
+#include "nitro/os/interrupt.h"
 #include "dScene_c.h"
 #include "private/watchdog_alarm.h"
 
@@ -59,14 +60,14 @@ void func_0201a054(void) {
     func_0203d740();
     ClearSaveBlock();
     func_0201a4e4();
-    IRQ::EnableIRQs(1);
+    OS_EnableIrqMask(1);
     {
         /* REG_IME = 1, NitroSDK's OS_EnableIrq inlined */
         volatile u16 *p = (volatile u16 *)0x4000208;
         u16 old = *p;
         *p = 1;
     }
-    IRQ::Enable();
+    OS_EnableInterrupts();
     func_02053be0(1);
     func_0203bbc0();
     func_0203bb5c();
@@ -76,7 +77,7 @@ void func_0201a054(void) {
     if (!isChild)
         func_02018aa4();
     if (isChild)
-        IRQ::DisableIRQs(0x100000);
+        OS_DisableIrqMask(0x100000);
     if (!isChild)
         func_0203ad84();
     func_0201a9fc((char *)&data_0209d574);

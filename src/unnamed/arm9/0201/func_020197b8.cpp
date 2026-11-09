@@ -1,7 +1,7 @@
 //cpp
 #include "PlayerInput.h"
 #include "G2x.h"
-#include "IRQ.h"
+#include "nitro/os/interrupt.h"
 #include "dScene_c.h"
 #include "nitro/hw/registers.h"
 #include "private/controller_input.h"
@@ -66,10 +66,10 @@ void func_020197b8(void) {
         data_0209d50c = 5; func_02019404();
         data_0209d50c = 6;
         data_020a0db0 = data_020a0db0 + 1;
-        IRQ::DisableIRQs(1);
+        OS_DisableIrqMask(1);
         func_020190b8();
         data_0209d4f0 = 1;
-        IRQ::EnableIRQs(1);
+        OS_EnableIrqMask(1);
         data_0209d50c = 7; func_0201a4bc();
         data_0209d4f0 = 0;
         data_0209d50c = 0x15; func_0201ffcc();

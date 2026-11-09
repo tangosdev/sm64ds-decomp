@@ -22,7 +22,7 @@
  */
 #include "types.h"
 #include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
 #include "private/fs_views.h"
@@ -208,7 +208,7 @@ void FS_EndOverlay(FSOverlayInfo *p_ovi) {
     struct MWiDestructorChain *head;
     struct MWiDestructorChain *tail;
     u32 region_top, image_bottom, region_bottom;
-    u32 saved;
+    OSIntrMode saved;
     struct MWiDestructorChain *base;
     struct MWiDestructorChain *p;
     struct MWiDestructorChain *next;
@@ -223,7 +223,7 @@ void FS_EndOverlay(FSOverlayInfo *p_ovi) {
             image_bottom +
             (u32)((int)(p_ovi->header.ram_size + p_ovi->header.bss_size) - p_ovi->header.ram_size);
         tail = 0;
-        saved = IRQ::Disable();
+        saved = OS_DisableInterrupts();
         prev = 0;
         base = *chain;
         p = base;
@@ -251,7 +251,7 @@ void FS_EndOverlay(FSOverlayInfo *p_ovi) {
             }
             p = next;
         }
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         if (head == 0)
             break;
         do {
@@ -305,9 +305,9 @@ void FS_AttachOverlayTable(int target, void *ptr, u32 size) {
         }
         func_0205e904(r4);
     }
-    u32 irqState = IRQ::Disable();
+    OSIntrMode irqState = OS_DisableInterrupts();
     pr->offset = (u32)ptr;
     pr->length = size;
-    IRQ::Restore(irqState);
+    OS_RestoreInterrupts(irqState);
 }
 }

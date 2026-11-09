@@ -39,8 +39,9 @@ void rt_vblank_wait();
 
 uint64_t rt_frame();
 
-// CPSR I-bit equivalent. Mirrors IRQ::Disable / Enable / Restore, which return
-// the *previous* masked state (0x80 when interrupts were disabled).
+// CPSR I-bit equivalent. Mirrors OS_DisableInterrupts / OS_EnableInterrupts /
+// OS_RestoreInterrupts, which return the *previous* masked state (0x80 when
+// interrupts were disabled).
 uint32_t rt_irq_disable();
 uint32_t rt_irq_enable();
 uint32_t rt_irq_restore(uint32_t prev);

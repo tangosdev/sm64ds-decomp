@@ -8,7 +8,8 @@
  * whether the read went by DMA. */
 #include "types.h"
 #include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
+#include "nitro/os/interrupt.h"
 #include "nitro/card/card_rom.h"
 
 extern "C" {
@@ -32,7 +33,7 @@ int CARDi_TryReadCardDma(CARDRomStat *p) {
     int not_in_tcm;
     u32 dst;
     int dma_ok;
-    int saved;
+    OSIntrMode saved;
 
     stat = p;
     c = &cardi_common;
@@ -67,14 +68,14 @@ int CARDi_TryReadCardDma(CARDRomStat *p) {
     stat->ctrl = (*(u32 *)0x027ffe60 & ~0x7000000) | 0xa1000000;
 
     if (is_async != 0) {
-        saved = IRQ::Disable();
+        saved = OS_DisableInterrupts();
         CP15::FlushAndInvalidateDataCache(c->dst, c->len);
         CP15::InvalidateInstructionCache(c->dst, c->len);
-        IRQ::SetIRQHandler(0x80000, CARDi_OnReadCard);
-        IRQ::ClearInterrupts(0x80000);
-        IRQ::EnableIRQs(0x80000);
+        OS_SetIrqFunction(0x80000, CARDi_OnReadCard);
+        OS_ResetRequestIrqMask(0x80000);
+        OS_EnableIrqMask(0x80000);
         CP15::DrainWriteBuffer();
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         CARDi_SetCardDma();
     }
 

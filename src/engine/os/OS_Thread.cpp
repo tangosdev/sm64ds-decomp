@@ -26,7 +26,7 @@
  * static OSi_RescheduleThread are a later split.
  */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "CP15.h"
 #include "nitro/os/thread.h"
 
@@ -186,10 +186,10 @@ void OS_InitThread(void) {
 
 void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *stack, u32 stackSize,
                      u32 prio) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     s32 index = OSi_GetUnusedThreadId();
     if (index < 0) {
-        IRQ::Restore(enabled);
+        OS_RestoreInterrupts(enabled);
         return;
     }
 
@@ -220,13 +220,13 @@ void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *st
     thread->mutex = 0;
     thread->mutexQueue.head = 0;
     thread->mutexQueue.tail = 0;
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 void OS_ExitThread(void) {
     OSThread *currentThread;
 
-    IRQ::Disable();
+    OS_DisableInterrupts();
     currentThread = *data_020a612c;
     OSi_UnlockAllMutex(currentThread);
     OSi_RemoveThreadFromList(currentThread);
@@ -237,11 +237,11 @@ void OS_ExitThread(void) {
 }
 
 void OS_JoinThread(OSThread *thread) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     if (thread->state != OS_THREAD_STATE_TERMINATED) {
         OS_SleepThread(&thread->joinQueue);
     }
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 BOOL OS_IsThreadTerminated(const OSThread *thread) {
@@ -249,18 +249,18 @@ BOOL OS_IsThreadTerminated(const OSThread *thread) {
 }
 
 void OS_SleepThread(u16 *queue) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     OSThread *currentThread = *data_020a612c;
     if (queue != 0) {
         *queue = *queue | (u16)(1 << currentThread->id);
     }
     currentThread->state = OS_THREAD_STATE_WAITING;
     OS_RescheduleThread();
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 void OS_WakeupThread(u16 *queue) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     u32 mask = *queue;
     if (mask != 0) {
         OSThread *thread;
@@ -272,14 +272,14 @@ void OS_WakeupThread(u16 *queue) {
         *queue = 0;
         OS_RescheduleThread();
     }
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 void OS_WakeupThreadDirect(OSThread *thread) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     thread->state = OS_THREAD_STATE_READY;
     OS_RescheduleThread();
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 OSThread *OS_SelectThread(void) {
@@ -326,7 +326,7 @@ void OS_SetThreadStackWarningOffset(OSThread *thread, u32 offset) {
 BOOL OS_SetThreadPriority(OSThread *thread, u32 prio) {
     OSThread *t = data_020a6134.list;
     OSThread *pre = 0;
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
 
     while (t != 0 && t != thread) {
         pre = t;
@@ -334,7 +334,7 @@ BOOL OS_SetThreadPriority(OSThread *thread, u32 prio) {
     }
 
     if (t == 0 || t == &data_020a6188) {
-        IRQ::Restore(enabled);
+        OS_RestoreInterrupts(enabled);
         return FALSE;
     }
 
@@ -349,7 +349,7 @@ BOOL OS_SetThreadPriority(OSThread *thread, u32 prio) {
         OS_RescheduleThread();
     }
 
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
     return TRUE;
 }
 
@@ -358,16 +358,16 @@ u32 OS_GetThreadPriority(const OSThread *thread) {
 }
 
 OSSwitchThreadCallback OS_SetSwitchThreadCallback(OSSwitchThreadCallback callback) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     OSSwitchThreadCallback prev = data_020a6134.switchCallback;
     data_020a6134.switchCallback = callback;
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
     return prev;
 }
 
 void OSi_IdleThreadProc(void *unused) {
 #pragma unused(unused)
-    IRQ::Enable();
+    OS_EnableInterrupts();
     for (;;) {
         CP15::WaitForInterrupt();
     }

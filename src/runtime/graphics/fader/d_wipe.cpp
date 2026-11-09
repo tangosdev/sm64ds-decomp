@@ -22,7 +22,7 @@
  */
 #include "types.h"
 #include "dWipe_c.h"
-#include "IRQ.h"
+#include "nitro/os/interrupt.h"
 #include "decl_common.h"
 #include "cstd.h"
 #include "CP15.h"
@@ -60,9 +60,9 @@ dWipe_c::~dWipe_c()
 void dWipe_c::DisableWindows() {
     u16 ime = *(volatile u16 *)0x4000208;
     *(volatile u16 *)0x4000208 = 0;
-    IRQ::DisableIRQs(2);
+    OS_DisableIrqMask(2);
     func_02053c10(0);
-    IRQ::SetIRQHandler(2, 0);
+    OS_SetIrqFunction(2, 0);
     if (ime != 0) {
         u16 dead = *(volatile u16 *)0x4000208;
         *(volatile u16 *)0x4000208 = 1;
@@ -122,8 +122,8 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
         {
             u16 ime = *(volatile u16 *)0x4000208;
             *(volatile u16 *)0x4000208 = 0;
-            IRQ::SetIRQHandler(2, Wipe_HBlankHandler);
-            IRQ::EnableIRQs(2);
+            OS_SetIrqFunction(2, Wipe_HBlankHandler);
+            OS_EnableIrqMask(2);
             func_02053c10(1);
             if (ime != 0) {
                 u16 dead = *(volatile u16 *)0x4000208;
@@ -190,8 +190,8 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
 
         saved = *(volatile u16 *)0x4000208;
         *(volatile u16 *)0x4000208 = 0;
-        IRQ::SetIRQHandler(2, Wipe_HBlankHandler);
-        IRQ::EnableIRQs(2);
+        OS_SetIrqFunction(2, Wipe_HBlankHandler);
+        OS_EnableIrqMask(2);
         func_02053c10(1);
         if (saved != 0) {
             u16 dead = *(volatile u16 *)0x4000208;

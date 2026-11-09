@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "private/wbt_block_info_list.h"
 
 extern "C" {
@@ -11,7 +11,7 @@ extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
 int func_020658c0(struct WBTBlockInfoList *node, int blockId, void *userId, int dataPtr,
                   int dataSize, u16 permissionBmp) {
-    u32 irq = IRQ::Disable();
+    OSIntrMode irq = OS_DisableInterrupts();
     if (func_02065ae0() == 0) {
         func_02065ad0(node);
     } else {
@@ -36,7 +36,7 @@ int func_020658c0(struct WBTBlockInfoList *node, int blockId, void *userId, int 
     node->block_size = dataSize;
     node->permission_bmp = permissionBmp;
     CpuCopy8(userId, node->user_id, 0x20);
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
     return 1;
 }
 }

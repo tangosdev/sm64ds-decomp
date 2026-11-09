@@ -10,7 +10,7 @@
  *   nnsys/snd types (NNSSndSeqPlayer, NNSSndHandle, NNSSndFader); the
  *   heap records (HeapOwner, AllocNode, Node, SolidHeapWithIter,
  *   Obj_2050fd4, HeapAllocator_205212c) keep their own local layouts.
- * - IRQ::Disable and IRQ::Restore stay namespace-scope externs so
+ * - OS_DisableInterrupts and OS_RestoreInterrupts stay namespace-scope externs so
  *   they mangle as the IRQ TU defines them.
  * - Channel and heap records stay address arithmetic. A guessed
  *   sequencer member is not what these bodies share.
@@ -29,13 +29,7 @@
 #include "nitro/os/message.h"
 #include "nitro/os/thread.h"
 #include "nitro/snd/alarm.h"
-
-namespace IRQ {
-    /* Defined at 0x02059d1c/0x02059d30 (the IRQ TU); namespace-scope externs
-       mangle exactly like the ROM's IRQ::Disable/IRQ::Restore. */
-    u32 Disable(void);
-    u32 Restore(u32 state);
-}
+#include "nitro/os/system.h"
 
 struct Elem_204f278;
 struct HeapAllocator_204f460;
@@ -646,7 +640,7 @@ extern "C" void func_0205212c(Obj_205212c *self) {
     if (b != 0) {
         ((void (*)(void *p))FS_CloseFile)(self->file);
     }
-    u32 irq = IRQ::Disable();
+    OSIntrMode irq = OS_DisableInterrupts();
     HeapAllocator_205212c *node = (HeapAllocator_205212c*)((HeapAllocator_205212c*)(data_020a5bc8.Next(0)));
     while (node != 0) {
         HeapAllocator_205212c *next = (HeapAllocator_205212c*)((HeapAllocator_205212c*)(data_020a5bc8.Next((HeapAllocator*)(node))));
@@ -656,7 +650,7 @@ extern "C" void func_0205212c(Obj_205212c *self) {
         }
         node = next;
     }
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
     u32 *p = &self->uf0;
     *p &= ~1u;
     *p &= ~4u;
@@ -677,11 +671,11 @@ extern "C" void func_020520dc(Obj_205212c *self) {
 
 extern "C" void func_020520a4(HeapAllocator *node)
 {
-    u32 state;
+    OSIntrMode state;
 
-    state = IRQ::Disable();
+    state = OS_DisableInterrupts();
     ((NestedHeapIterator*)(&data_020a5bbc))->AddLast((HeapAllocator*)(node));
-    IRQ::Restore(state);
+    OS_RestoreInterrupts(state);
 }
 
 extern "C" int func_02052008(int arg)
@@ -1065,14 +1059,14 @@ extern "C" int func_020514b4(int a, int b)
 
 extern "C" void func_02051454(int a, int b, unsigned int c) {
     int t;
-    unsigned int irq;
-    irq = IRQ::Disable();
+    OSIntrMode irq;
+    irq = OS_DisableInterrupts();
     t = func_02050d3c(b);
     if (a == func_020509b0(c)) {
         func_02050994(c, 0);
     }
     func_02050d3c(t);
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
 }
 
 extern "C" void func_02051420(char *a, int b, int c, int d)
@@ -1758,9 +1752,9 @@ extern "C" void func_0204ff48(struct C *p) {
 extern "C" void func_0204fed0(struct C *c) {
     if (((c->fc << 30) >> 31) == 0) return;
     while (c->f20 != 0) {
-        unsigned int saved = IRQ::Disable();
+        OSIntrMode saved = OS_DisableInterrupts();
         c->func_0204fce8((void *)1);
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
     }
     SND_StartTimer(c->f2c, 0, 1 << c->f28, 0);
 }

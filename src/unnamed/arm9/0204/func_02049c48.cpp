@@ -1,5 +1,5 @@
 //cpp
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "CaptureEffect.h"
 
 extern "C" {
@@ -15,17 +15,17 @@ extern void SNDi_SetSurroundDecay(int val);
 void func_02049c48(int kind) {
     int current = data_020a4c64.kind;
     volatile unsigned short tmp;
-    unsigned int savedIRQ;
+    OSIntrMode savedIRQ;
     if (kind == current)
         return;
     if (current == 1) {
         SNDi_SetSurroundDecay(0);
     }
-    savedIRQ = IRQ::Disable();
+    savedIRQ = OS_DisableInterrupts();
     tmp = 0;
     MultiStore16(tmp, &data_020a4c70, sizeof(data_020a4c70));
     data_020a4c64.kind = kind;
-    IRQ::Restore(savedIRQ);
+    OS_RestoreInterrupts(savedIRQ);
     if (kind == 1) {
         SNDi_SetSurroundDecay(0x3000);
     }
