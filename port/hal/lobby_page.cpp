@@ -1569,12 +1569,26 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
         v = fit(f, v.c_str(), em, r.x + r.w - 12 * u - x);
         f.draw(s, x, r.y + (r.h - f.cap(em)) * 0.5f, v.c_str(), em, C_INK);
     }
+    /* the right column's planks share ONE text size: the largest (14 down to 10) at which every label of the group fits its plank */
+    char save_txt[32];
+    snprintf(save_txt, sizeof save_txt, "Save file: %s", st->coop_save_continue ? "Continue" : "New");
+    float plank_em = 14.0f;
+    {
+        const struct { int c; const char *t; } grp[4] = { { C_SETTINGS, st->kind == LOBBY_COOP ? "Room rules" : "Game settings" },
+                                                          { C_SAVE, st->kind == LOBBY_COOP ? save_txt : 0 },
+                                                          { C_MODS, st->kind == LOBBY_COOP ? "Mods: Soon" : 0 },
+                                                          { C_PRIVACY, "Privacy: Code" } };
+        for (const auto &e : grp) {
+            if (!e.t || g.r[e.c].w <= 0) continue;
+            while (plank_em > 10.0f && f.width(e.t, plank_em) > g.r[e.c].w - 16 * u) plank_em -= 0.5f;
+        }
+    }
     auto label_box = [&](int c, const char *text, int dim, int kind) {
         const Rect &r = g.r[c];
         if (r.w <= 0) return;
         draw_box(s, f, hd, r, kind, lit(c), dim);
-        float em = 14.0f;
-        while (em > 10.0f && f.width(text, em) > r.w - 16 * u) em -= 0.5f;      /* smaller first, cut only below 10 */
+        float em = plank_em;
+        if (kind != 0) { em = 14.0f; while (em > 10.0f && f.width(text, em) > r.w - 16 * u) em -= 0.5f; }   /* the VS match line is its own plaque */
         const std::string t = fit(f, text, em, r.w - 16 * u);
         f.centred(s, r, t.c_str(), em, ink_on(hd, kind), dim ? 150 : 255);
     };
@@ -1635,6 +1649,18 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
     }
     /* the seats */
     draw_box(s, f, hd, g.seats_box, 2, 0);
+    /* ONE name size and ONE status size for the whole row: the largest that fits every name (down to a readable 8, cut only below that)
+       and "Not ready", the wider status, in every card */
+    float row_em = 15.0f, row_sem = 11.0f;
+    if (seat_count(st) > 0) {
+        const Rect &r0 = g.r[C_SEAT0];
+        const int edge0 = (int)(3 * u) > 2 ? (int)(3 * u) : 2;
+        row_em = r0.h > 60 * u ? 15.0f : 11.0f;
+        row_sem = r0.h > 60 * u ? 11.0f : 8.5f;
+        for (int i = 0; i < seat_count(st); ++i)
+            while (row_em > 8.0f && f.width(st->seats[i].name, row_em) > g.r[C_SEAT0 + i].w - 12 * u) row_em -= 0.5f;
+        while (row_sem > 7.0f && f.width("Not ready", row_sem) > r0.w - 2 * edge0 - 12 * u) row_sem -= 0.5f;
+    }
     for (int i = 0; i < g.n_seat_slots; ++i) {
         const Rect &r = g.r[C_SEAT0 + i];
         if (i >= seat_count(st)) {
@@ -1650,15 +1676,13 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
         rrect(s, r.x + edge, r.y + r.h - edge - (int)(r.h * 0.26f), r.w - 2 * edge, (int)(r.h * 0.26f), 4 * u, t.shoe_rgb & 0xFFFFFF, 255);
         if (sel) rim(s, u, r);
         const uint32_t ink = contrast_ink(t.body_rgb);
-        float em = r.h > 60 * u ? 15.0f : 11.0f;
+        const float em = row_em;
         const float name_w = r.w - 12 * u;
-        while (em > 8.0f && f.width(t.name, em) > name_w) em -= 0.5f;      /* smaller first, down to a readable 8; cut only below that */
         std::string nm = fit(f, t.name, em, name_w);
         const float ny = r.y + r.h * 0.42f - f.cap(em) * 0.5f;
         f.draw(s, r.x + (r.w - f.width(nm.c_str(), em)) * 0.5f, ny, nm.c_str(), em, ink);
         const char *status = t.ready ? "Ready" : "Not ready";
-        float sem = r.h > 60 * u ? 11.0f : 8.5f;
-        while (sem > 7.0f && f.width(status, sem) > r.w - 2 * edge - 12 * u) sem -= 0.5f;
+        const float sem = row_sem;
         const uint32_t sink = contrast_ink(t.shoe_rgb);
         const Rect band = { r.x, r.y + r.h - edge - (int)(r.h * 0.26f), r.w, (int)(r.h * 0.26f) };
         f.centred(s, band, status, sem, sink, t.ready ? 255 : 190);
