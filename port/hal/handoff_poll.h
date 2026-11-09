@@ -46,6 +46,15 @@ int port_handoff_apply_env(const PortHandoffRequest *req);
 /* A handler that refuses after port_handoff_apply_env: every name of the set list out of both copies again. */
 void port_handoff_unset_env(const PortHandoffRequest *req);
 
+/* LOBBYNET1: the in-game lobby's start (hal/lobby_client.cpp) hands its own request to the handler of its kind, in this process, the way a
+   picked-up request.json is handed: only when a request could be picked up now (the title live, no session up). Returns 0 when the
+   running game took it; else why not ("busy: ..." when the title cannot take one now, or the handler's refusal; nothing is left
+   applied). No response file is written and nothing quits: the caller decides what a refusal means. */
+const char *port_handoff_dispatch(const PortHandoffRequest *req);
+
+/* 0 = a request may be handed over now; else why not (the title poll's own test). */
+const char *port_handoff_busy(void);
+
 #ifdef __cplusplus
 }
 #endif
