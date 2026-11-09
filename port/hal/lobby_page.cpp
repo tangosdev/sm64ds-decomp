@@ -844,8 +844,11 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
         if (s->phase != LOBBY_NONE) P.seen_phase = 1;
         if (s->phase == LOBBY_NONE && (P.seen_phase || P.frames > 300)) { close_page("the client has no room"); return 0; }
         if (s->phase == LOBBY_STARTING) {
-            if (++P.start_t == 1) log_line("starting: the page closes in 45 frames");
-            if (P.start_t > 45) { P.keep_tick = 1; close_page("the game starts"); return 0; }
+            /* the pause is let go the frame the start is known: the coop hand-off walks the title to the room in place on the next frames,
+               and a title held still under the page never got there (joint row r4: both consoles stopped at "pressed file A") */
+            P.keep_tick = 1;
+            close_page("the game starts");
+            return 0;
         }
         if (!in_room(s)) { P.panel = 0; P.field = 0; }
 #if LP_PROOF
