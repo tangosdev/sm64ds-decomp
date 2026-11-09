@@ -18,10 +18,6 @@ typedef unsigned short u16;
 #pragma comment(linker, "/alternatename:__ZN2GX11LoadTexPlttEPKvjj=?LoadTexPltt@GX@@YAXPBXII@Z")
 #pragma comment(linker, "/alternatename:?data_020a60b0@@3IA=_data_020a60b0")
 
-// cstd::abs's C-spelling forwarder moved to hal/heap_globals.cpp, next to the
-// other Itanium-spelling bridges; every target that links this file links that
-// one, and the allocator layer needs the same symbol.
-
 extern "C" {
 void _ZN2GX12BeginLoadTexEv(void);
 void _ZN2GX10EndLoadTexEv(void);

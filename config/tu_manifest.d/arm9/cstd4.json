@@ -103,7 +103,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "_ZN4cstd3absEi",
+      "symbol": "abs",
       "address": "0x0206df84",
       "size": "0x0000000c",
       "legacy_source": "src/_ZN4cstd3absEi.cpp",

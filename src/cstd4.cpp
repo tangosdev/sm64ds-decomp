@@ -13,7 +13,8 @@
  * emitted in source order; compiled bodies are too, under a
  * per-function defer_codegen off. */
 #include "types.h"
-#include "cstd.h"
+#include "msl/string.h"
+#include "msl/stdlib.h"
 #include "nitro/os/thread.h"
 
 extern "C" {
@@ -293,7 +294,7 @@ int __flush_all(void) {
 
 #pragma push
 #pragma defer_codegen off
-namespace cstd {
+extern "C" {
 
 int abs(int x)
 {
@@ -451,7 +452,7 @@ u32 func_0206e184(char *dst, u16 *src, u32 max)
         len = func_0206e218((int)bp, code);
         if (total + len > max)
             break;
-        cstd::strncpy(dst + total, bp, len);
+        strncpy(dst + total, bp, len);
         total += len;
         if (total > max)
             break;
@@ -718,10 +719,10 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
     num_chars = 0;
 
     while (*format_str) {
-        curr_format = (unsigned char *)cstd::strchr((const char *)format_str, '%');
+        curr_format = (unsigned char *)strchr((const char *)format_str, '%');
 
         if (curr_format == 0) {
-            num_chars += (n = cstd::strlen((const char *)format_str));
+            num_chars += (n = strlen((const char *)format_str));
             if (n && !(*WriteProc)(WriteProcArg, (const char *)format_str, n))
                 return -1;
             break;
@@ -845,7 +846,7 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
                 if ((e = (unsigned char *)func_0206e2cc((u8 *)buff_ptr, 0, n)) != 0)
                     n = e - buff_ptr;
             } else {
-                n = cstd::strlen((const char *)buff_ptr);
+                n = strlen((const char *)buff_ptr);
             }
             break;
 
@@ -885,7 +886,7 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
         /* invalid_conversion gotos kept, as in MSL's __pformatter: a failed-conversion
            test after the switch instead grows it (0x848) */
         invalid_conversion:
-            num_chars += (n = cstd::strlen((const char *)curr_format));
+            num_chars += (n = strlen((const char *)curr_format));
             if (n && !(*WriteProc)(WriteProcArg, (const char *)curr_format, n))
                 return -1;
             return num_chars;

@@ -1102,11 +1102,11 @@
 0x0206daa4	_ZN4CP1517MPUGetDataRegion7Ev	function
 0x0206daac	_ZN4CP1514MPUDataRegion7Ej	function
 0x0206dabc	_ZN4cstd14__builtin_trapEv	function
-0x0206df84	_ZN4cstd3absEi	function
-0x020704cc	_ZN4cstd6strchrEPKcc	function
-0x02070508	_ZN4cstd6strcmpEPKcS1_	function
-0x0207063c	_ZN4cstd7strncpyEPcPKcj	function
-0x02070788	_ZN4cstd6strlenEPKc	function
+0x0206df84	abs	function
+0x020704cc	strchr	function
+0x02070508	strcmp	function
+0x0207063c	strncpy	function
+0x02070788	strlen	function
 0x02075264	LEVEL_PART_TABLE	data
 0x02075298	SUBLEVEL_LEVEL_TABLE	data
 0x020755a0	_ZN3OAM8objWidthE	data

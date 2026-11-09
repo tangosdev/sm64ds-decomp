@@ -21,7 +21,7 @@
 #include "SoundPlayerRecord.h"
 #include "nnsys/fnd.h"
 #include "Heap.h"
-#include "cstd.h"
+#include "msl/string.h"
 #include "CP15.h"
 #include "nnsys/snd/player.h"
 #include "nitro/os/message.h"
@@ -2380,7 +2380,7 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
     fimg_off = fimg + 8;
     self->f58 = (unsigned char *)fimg_off;
 
-    if (FS_RegisterArchiveName(&self->arc, name, cstd::strlen(name)) == 0)
+    if (FS_RegisterArchiveName(&self->arc, name, strlen(name)) == 0)
         return 0;
 
     if (FS_LoadArchive(&self->arc, (u32)fimg_off, (u32)(fatb + 0xc) - (u32)fimg_off,

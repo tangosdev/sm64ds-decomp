@@ -12,7 +12,7 @@
 
 #include "dExtSimpleModel_c.h"
 #include "G3X.h"
-#include "cstd.h"
+#include "msl/string.h"
 #include "GX.h"
 
 namespace CP15 {
@@ -103,7 +103,7 @@ extern "C" int func_02046590(const void *tbl, const char *name)
         BMD_Material *entry = t->materials;
         while (1)
         {
-            if (cstd::strcmp(entry->name, name) == 0)
+            if (strcmp(entry->name, name) == 0)
                 return (int)i;
             i++;
             entry++;

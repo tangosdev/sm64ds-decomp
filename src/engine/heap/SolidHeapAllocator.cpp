@@ -25,10 +25,9 @@
  *   parameter.
  * - FillAllocMemory's zero goes through a volatile, as in the expanding
  *   heap. FillFreeMemory is empty in a release build and is left out.
- * - abs() is cstd::abs, the name this tree gives 0x0206df84.
  */
 #include "nnsys/fnd.h"
-#include "cstd.h"
+#include "msl/stdlib.h"
 
 extern "C" void MultiStore_Int(int val, int *dst, int len); /* MIi_CpuClear32 */
 
@@ -214,7 +213,7 @@ void NNS_FndFreeToFrmHeap(NNSFndHeapHandle heap, int mode) {
 
 /* What a head allocation at this alignment could still get. */
 u32 NNS_FndGetAllocatableSizeForFrmHeapEx(NNSFndHeapHandle heap, int alignment) {
-    alignment = cstd::abs(alignment);
+    alignment = abs(alignment);
 
     {
         const NNSiFndFrmHeapHead *pFrmHeapHd = GetFrmHeapHeadPtrFromHeapHead(heap);

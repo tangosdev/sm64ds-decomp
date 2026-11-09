@@ -24,12 +24,11 @@
  * - FillAllocMemory's zero goes through a volatile: the ROM passes
  *   MI_CpuFill32's value through a stack slot (OS_CreateThread's fill does
  *   the same). MIi_CpuClear32 is still MultiStore_Int in this tree.
- * - abs() is cstd::abs, the name this tree gives 0x0206df84.
  * - NNS_FndSetGroupIDForExpHeap takes a u32 groupID, not the SDK's u16: its
  *   one caller passes a u32 through un-narrowed (see include/nnsys/fnd.h).
  */
 #include "nnsys/fnd.h"
-#include "cstd.h"
+#include "msl/stdlib.h"
 
 extern "C" void MultiStore_Int(int val, int *dst, int len); /* MIi_CpuClear32 */
 
@@ -540,7 +539,7 @@ u32 NNS_FndGetTotalFreeSizeForExpHeap(NNSFndHeapHandle heap) {
 /* The largest single block obtainable at this alignment; ties go to the
    block that wastes least on padding. */
 u32 NNS_FndGetAllocatableSizeForExpHeapEx(NNSFndHeapHandle heap, int alignment) {
-    alignment = cstd::abs(alignment);
+    alignment = abs(alignment);
 
     {
         NNSiFndExpHeapHead *pEHHead = GetExpHeapHeadPtrFromHandle(heap);

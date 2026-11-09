@@ -39,9 +39,8 @@ src/MulMat3x3Mat3x3.c
 # gate 4c additions: the animation path (UpdateBones recursion).
 # func_020453c0 lives in the ModelComponents TU listed above.
 src/func_0204547c.cpp
-# cstd::abs is defined host-side in hal/heap_globals.cpp: its src/ home,
-# src/cstd4.cpp, carries hand-asm the host cannot compile, and every target that
-# links this slice links heap_globals.cpp as well.
+# abs is MSL's C abs: its src/ home, src/cstd4.cpp, carries hand-asm the host
+# cannot compile, so the host C library's abs links in its place.
 # dExtFrameCtrl_c::LoadFile lives in src/SharedFilePtr.cpp (slice 3b),
 # compiled under SM64DS_PORT_GATE4B.
 src/engine/animation/dExtFrameCtrl_c_UpdateFileOffsets.cpp

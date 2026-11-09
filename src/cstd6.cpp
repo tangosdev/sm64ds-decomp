@@ -1,17 +1,22 @@
 //cpp
-/* cstd6 -- second cstd string/printf-band TU, arm9 0x02070348..0x020707a4,
- * 7 functions: cstd::strchr, cstd::strcmp, cstd::strncpy, cstd::strlen +
- * 3 C functions (a rand-style LCG, MSL raise, a strcpy-like copy). Below the run,
- * parse_format stays a one-function source: mwccarm keeps its
- * local print_format struct in registers under -lang c++ while the ROM spills
- * it to the stack. Above, copysign begins exactly where the run ends.
+/* cstd6 -- the MSL C string band plus rand and raise, arm9
+ * 0x02070348..0x020707a4, 7 functions: rand (MSL rand.c), raise (MSL
+ * signal.c), then MSL_Common string.c's strchr, strcmp, strncpy, strcpy and
+ * strlen -- that file's order reversed, its unreferenced strcat, strncat and
+ * strncmp dead-stripped, as pret pokediamond's arm9/asm/MSL_Common_string.s
+ * lists the same run. Below the run, parse_format stays a one-function source:
+ * mwccarm keeps its local print_format struct in registers under -lang c++
+ * while the ROM spills it to the stack. Above, copysign begins exactly where
+ * the run ends.
  */
-// leftovers: the LCG and the copy keep address names (no ROM method evidence).
-// func_020706b0's alignment preamble and word-at-a-time copy stay as built
+// leftovers: rand's seed stays data_0209a624 (MSL's static random_next).
+// strcpy's alignment preamble and word-at-a-time copy stay as built
 // (even the no-op u64 mask colours two words). strcmp keeps MSL's two
 // scalar_reload gotos. Callers of raise sit in the same 0x0206 band,
 // so nothing here belongs to a neighbour's file.
 #include "types.h"
+#include "msl/string.h"
+#include "msl/stdlib.h"
 #include "nitro/os/thread.h"
 
 extern "C" {
@@ -27,11 +32,7 @@ typedef void (*sig_func)(int);
 extern sig_func signal_funcs[];
 }
 
-//
-// Language-mode flip only: the compiler mangles the name, it is no longer
-// spelled by hand. Signature and body preserved exactly; no codegen intent.
-// See notes/plan-cpp-language-mode.md phase 1 (layout-free SDK namespaces).
-namespace cstd {
+extern "C" {
 
 unsigned int strlen(const char *s)
 {
@@ -47,7 +48,7 @@ unsigned int strlen(const char *s)
 }
 
 extern "C" {
-char *func_020706b0(char *dst, const char *src) {
+char *strcpy(char *dst, const char *src) {
     u8 *s = (u8 *)src;
     u8 *d = (u8 *)dst;
     u8 *d2 = (u8 *)dst;
@@ -90,11 +91,7 @@ char *func_020706b0(char *dst, const char *src) {
 }
 }
 
-//
-// Language-mode flip only: the compiler mangles the name, it is no longer
-// spelled by hand. Signature and body preserved exactly; no codegen intent.
-// See notes/plan-cpp-language-mode.md phase 1 (layout-free SDK namespaces).
-namespace cstd {
+extern "C" {
 
 char *strncpy(char *dst, const char *src, unsigned int n)
 {
@@ -115,7 +112,7 @@ char *strncpy(char *dst, const char *src, unsigned int n)
 
 }
 
-namespace cstd {
+extern "C" {
 int strcmp(const char *a, const char *b) {
     unsigned int wb, wa, t;
     unsigned int cnt;
@@ -185,8 +182,8 @@ int strcmp(const char *a, const char *b) {
 }
 }
 
-namespace cstd {
-char *strchr(const char *s, char ch_in) {
+extern "C" {
+char *strchr(const char *s, int ch_in) {
     unsigned char ch = (unsigned char)ch_in;
     unsigned char c = *(const unsigned char *)s;
     const char *p = s + 1;
@@ -238,8 +235,7 @@ int raise(int sig) {
 }
 
 extern "C" {
-unsigned int func_02070348(void)
-{
+int rand(void) {
     unsigned int s = data_0209a624 * 0x41c64e6d + 0x3039;
     data_0209a624 = s;
     return (s >> 16) & 0x7fff;
