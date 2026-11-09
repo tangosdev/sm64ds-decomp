@@ -568,16 +568,63 @@ bool online_plank(MenuLayout *L, int k, const Box &bx, int rise_px, int alpha, b
     return true;
 }
 
+/* LOBBYUI1: THE ROOM CODE AND HOST PLANKS of the online file select (Tango 11-02, in/LOBBY_COMMON.md). ROOM CODE: top left, 5 units in, the NAME plank's
+   height. HOST: on a wide window the bottom row's left edge, 4 units in, as tall as the ROM's FILE OPTIONS plank (DS y 140..175; FILE OPTIONS moves to the
+   middle, fileopt_online_dx); at 4:3 the bottom row has no room (FILE OPTIONS and the back arrow are part of the ROM's own picture there) and HOST sits in the
+   top row right of ROOM CODE. The pad focus on either: the plank is lit and the file pages' orange arrow points at it (from below in the top row, from
+   above in the bottom row). Their DS boxes (ONL_RC_*, ONL_HOST_*) name the clicks for hal/menu_online.cpp. */
+static void online_lobby_planks(MenuLayout *L, const OnlFacts *of)
+{
+    const int un = L->unum, ud = L->uden;
+    const bool wide = L->w * ud / un > 256;
+    const int th = 30 * un / ud;
+    const int rcw = menu_online_plank_w(ONL_K_ROOMCODE, th);
+    const int rx = 5 * un / ud, ry = 5 * un / ud;
+    const int rc_on = of->scr == ONL_SCR_ROOMCODE;
+    int ip = menu_online_add_plank(L, ONL_K_ROOMCODE, rx, ry, rcw, th, ONL_RC_X, ONL_RC_Y, ONL_RC_W, ONL_RC_H, (of->padfocus == ONL_PF_ROOMCODE || rc_on) ? 1 : 0, 0, 0, 1,
+                                   t_f ? t_f->frame : 0);
+    if (ip >= 0) menu_add_hotspot(L, ip, ONL_RC_X, ONL_RC_Y, ONL_RC_W, ONL_RC_H, -1);
+    int hx, hy, hw, hh;
+    if (wide) {
+        hh = 35 * un / ud;
+        hw = menu_online_plank_w(ONL_K_HOST, hh);
+        hx = 4 * un / ud;
+        hy = (L->h - 192 * un / ud) / 2 + 140 * un / ud;
+    } else {
+        hh = th;
+        hw = menu_online_plank_w(ONL_K_HOST, hh);
+        hx = rx + rcw + 5 * un / ud;
+        hy = ry;
+    }
+    ip = menu_online_add_plank(L, ONL_K_HOST, hx, hy, hw, hh, ONL_HOST_X, ONL_HOST_Y, ONL_HOST_W, ONL_HOST_H, of->padfocus == ONL_PF_HOST ? 1 : 0, 0, 0, 1, t_f ? t_f->frame : 0);
+    if (ip >= 0) menu_add_hotspot(L, ip, ONL_HOST_X, ONL_HOST_Y, ONL_HOST_W, ONL_HOST_H, -1);
+    if (of->padfocus == ONL_PF_ROOMCODE || of->padfocus == ONL_PF_HOST) {
+        static const int kBob[8] = { 0, 1, 2, 3, 4, 3, 2, 1 };
+        const int bob2 = kBob[(t_f ? t_f->frame : 0) & 7];
+        const int aw = 22 * un / ud, ah = 15 * un / ud;
+        if (of->padfocus == ONL_PF_ROOMCODE) menu_online_add_arrow(L, 3, rx + rcw / 2 - aw / 2, ry + th + ((2 + bob2) * un) / (2 * ud), aw, ah);
+        else if (!wide) menu_online_add_arrow(L, 3, hx + hw / 2 - aw / 2, hy + hh + ((2 + bob2) * un) / (2 * ud), aw, ah);
+        else menu_online_add_arrow(L, 2, hx + hw / 2 - aw / 2, hy - ah - ((2 + bob2) * un) / (2 * ud), aw, ah);
+    }
+}
+
 /* the ? button of the online screens and the modal screen over the page (both after the page's own pieces, so they are topmost) */
 void online_overlays(MenuLayout *L, bool main_page, bool show_help)
 {
     const OnlFacts *of = onl_facts_of(L);
     if (!of) return;
     const int un = L->unum, ud = L->uden;
+    if (show_help && of->scr == ONL_SCR_ROOMCODE && !main_page) {      /* LOBBYUI1: typing into the ROOM CODE plank: the page's planks stay, no panel */
+        menu_online_add_help(L, L->w - 5 * un / ud, 5 * un / ud, 30 * un / ud);
+        menu_online_add_name_plank(L, L->w - 40 * un / ud, 5 * un / ud, 30 * un / ud);
+        online_lobby_planks(L, of);
+        return;
+    }
     if (show_help && of->scr == ONL_SCR_NONE) {
         (void)main_page;      /* 5 units in from the WINDOW's right edge on every page; on the title the wrench stands beside it (wrench_dx) */
         menu_online_add_help(L, L->w - 5 * un / ud, 5 * un / ud, 30 * un / ud);      /* NAME2: 5 units in from the window's right edge, as it is from the top */
         if (!main_page) menu_online_add_name_plank(L, L->w - 40 * un / ud, 5 * un / ud, 30 * un / ud);      /* PROFILE1: the NAME plank beside the ? on the online file select (5 units gap) */
+        if (!main_page) online_lobby_planks(L, of);       /* LOBBYUI1: ROOM CODE (top left) and HOST */
         if (of->padfocus) {      /* PADNAV1: the pad focus is on the ? or NAME plank: the cursor arrow points up at it from below (the plank is lit too) */
             const int hpx = 30 * un / ud;
             const int right = of->padfocus == ONL_PF_HELP ? L->w - 5 * un / ud : L->w - 40 * un / ud;
@@ -2329,6 +2376,26 @@ static bool fileopt_edge_on()
     return v != 0;
 }
 static bool fileopt_obj(int x, int y) { return x >= 28 && x <= 156 && y >= 136; }       /* the plank's object (id 1c) and its cursor sit inside its DS box */
+/* LOBBYUI1: THE ONLINE FILE SELECT'S BOTTOM ROW (Tango 11-02: HOST far left, FILE OPTIONS in the middle, the back arrow stays right). On a wide window
+   the FILE OPTIONS plank moves from its DS place (x 28..156) to the middle of the window, kept 6 units clear of HOST (4..56) and of the back arrow on
+   narrow wide windows; the solo file select keeps FILEOPT2's left edge. In DS units from its own place; 0 = it stays (4:3, where nothing moves and
+   HOST sits in the top row). */
+static bool fileopt_online_row()
+{
+    if (!menu_online_flow_now()) return false;
+    int top, elem, req;      /* the select page itself (HOST is drawn there only), not FILE OPTIONS' own pages */
+    return port_title_page_state(&top, &elem, &req) && top == 0 && elem == 5;
+}
+static float fileopt_online_dx(float cw)
+{
+    if (cw <= 256.5f) return 0.f;
+    const float side = (cw - 256.f) * 0.5f;
+    const float lo = 62.f - side - 28.f, hi = cw - 82.f - side - 156.f;
+    float d = 36.f;
+    if (d > hi) d = hi;
+    if (d < lo) d = lo;
+    return d;
+}
 static bool file_wide_page_now()
 {
     if (!ntr::widescreen || ntr::active_h <= 0 || !hal_menu_live()) return false;
@@ -2346,6 +2413,7 @@ static void file_back_xf(char *o)
     if (cw <= 256.5f) return;
     const int x = ((const int *)o)[1] >> 12, y = ((const int *)o)[2] >> 12;
     if (file_back_obj(x, y)) ntr::gx_menu_sprite_xf(1.f, (cw - 256.f) / cw, 1.f, 0.f);       /* 2 * ((cw - 256) / 2) / cw */
+    else if (fileopt_online_row() && fileopt_obj(x, y)) ntr::gx_menu_sprite_xf(1.f, 2.f * fileopt_online_dx(cw) / cw, 1.f, 0.f);   /* LOBBYUI1: the middle of the online bottom row */
     else if (fileopt_edge_on() && fileopt_obj(x, y)) ntr::gx_menu_sprite_xf(1.f, -((cw - 256.f) + 48.f) / cw, 1.f, 0.f);   /* its box's left edge (DS x 28) to 4 units from the window's left edge */
 }
 int file_skip(char *o)
@@ -2381,13 +2449,13 @@ int file_skip_inner(char *o)
    touch (the host already hands the ROM the water point for one). */
 extern "C" void port_title_ripple_xf(int *x, int *y)
 {
-    const bool bk = file_back_obj(*x, *y), op = !bk && fileopt_edge_on() && fileopt_obj(*x, *y);
+    const bool bk = file_back_obj(*x, *y), op = !bk && (fileopt_edge_on() || fileopt_online_row()) && fileopt_obj(*x, *y);
     if ((!bk && !op) || !file_wide_page_now()) return;
     float cw, ch;
     scene_canvas_units(&cw, &ch);
     if (cw <= 256.5f || g_file_wz <= 1000) return;
     const float zoom = (float)g_file_wz / 1000.0f;
-    const float shift = bk ? (cw - 256.0f) * 0.5f : -((cw - 256.0f) * 0.5f + 24.0f);
+    const float shift = bk ? (cw - 256.0f) * 0.5f : fileopt_online_row() ? fileopt_online_dx(cw) : -((cw - 256.0f) * 0.5f + 24.0f);
     int nx = 128 + (int)(((float)(*x - 128) + shift) / zoom);
     int ny = 96 + (int)((float)(*y - 96) / zoom);
     if (nx < 0) nx = 0;
@@ -2562,7 +2630,8 @@ int title_cursor_snd()
             /* TITLEUI1: the online planks the pad focus can sit on (the ?, NAME): the arrow is already under the one the mouse landed on, nothing to announce.
                A hover back on the ROM element the cursor holds while the focus is on such a plank does move the arrow (title_cursor_assist hands the focus back). */
             const int pf = menu_online_padfocus();
-            const int hpf = (hx == ONL_HELP_X && hy == ONL_HELP_Y) ? ONL_PF_HELP : (hx == ONL_NAME_X && hy == ONL_NAME_Y) ? ONL_PF_NAME : 0;
+            const int hpf = (hx == ONL_HELP_X && hy == ONL_HELP_Y) ? ONL_PF_HELP : (hx == ONL_NAME_X && hy == ONL_NAME_Y) ? ONL_PF_NAME
+                          : (hx == ONL_RC_X && hy == ONL_RC_Y) ? ONL_PF_ROOMCODE : (hx == ONL_HOST_X && hy == ONL_HOST_Y) ? ONL_PF_HOST : 0;      /* LOBBYUI1 */
             if (hpf && hpf == pf) {
                 if (hal_menu_trace_on()) fprintf(stderr, "[menu] hover on plank %d: the pad focus is already there, no sound\n", hpf);
                 return 1;
@@ -2653,7 +2722,20 @@ void file_pages_build(int variant, MenuLayout *L)
     const int ip = menu_add_piece(L, pg);
     if (variant == V_FILES) menu_online_add_tint(L, onl_facts_of(L));      /* NAME1: the online file select keeps the green over its water */
     int ip_fo = -1;
-    if (split && fileopt_edge_on()) {
+    const bool onl_row = split && variant == V_FILES && fileopt_online_row();      /* LOBBYUI1 */
+    if (onl_row) {
+        /* LOBBYUI1: FILE OPTIONS in the middle of the online bottom row: the lower left keeps its centred pieces left of the plank and between the plank and
+           the arrow's corner (the old place maps to nothing), the plank's own piece rides with the plank */
+        const int cwi = L->w * L->uden / L->unum;
+        const int fdx = (int)(fileopt_online_dx((float)cwi) + (fileopt_online_dx((float)cwi) >= 0.f ? 0.5f : -0.5f));
+        MenuPiece a = pg; a.s.x = 0; a.s.y = 133; a.s.w = 24; a.s.h = 59; a.ax = MENU_AX_C; a.ay = MENU_AY_T; a.dx = (short)(0 + 12 - 128); a.dy = 133;
+        ip_lo = menu_add_piece(L, a);
+        MenuPiece b = pg; b.s.x = 160; b.s.y = 133; b.s.w = 20; b.s.h = 59; b.ax = MENU_AX_C; b.ay = MENU_AY_T; b.dx = (short)(160 + 10 - 128); b.dy = 133;
+        menu_add_piece(L, b);
+        MenuPiece f = pg; f.s.x = 24; f.s.y = 133; f.s.w = 136; f.s.h = 59; f.ax = MENU_AX_C; f.ay = MENU_AY_T; f.dx = (short)(24 + 68 - 128 + fdx); f.dy = 133;
+        ip_fo = menu_add_piece(L, f);
+    }
+    if (split && !onl_row && fileopt_edge_on()) {
         /* FILE OPTIONS on the left edge: the lower left is cut into the part left of the plank, the part between the plank and the arrow's corner (both centred, so the
            old plank place maps to nothing), and the plank's own piece on the window's left edge (DS x 24 .. 160, its left edge 4 units in) */
         MenuPiece a = pg; a.s.x = 0; a.s.y = 133; a.s.w = 24; a.s.h = 59; a.ax = MENU_AX_C; a.ay = MENU_AY_T; a.dx = (short)(0 + 12 - 128); a.dy = 133;
@@ -2713,6 +2795,7 @@ void file_pages_build(int variant, MenuLayout *L)
         ar.bg = 1; ar.hostimg = MENU_IMG_ARROW_ORANGE; ar.lden = 1; ar.lnum = 1; ar.fw = (short)dw; ar.fh = (short)dh;
         ar.fx = (short)(L->w / 2 + (g_oa_x - 11 - 128) * un / ud);
         if (ip_bk >= 0 && file_back_obj(g_oa_x, g_oa_y + 8)) ar.fx = (short)(ar.fx + (L->w - 256 * un / ud) / 2);      /* ANCHOR1: the cursor arrow points at the back arrow where it is now */
+        else if (ip_bk >= 0 && fileopt_online_row() && fileopt_obj(g_oa_x, g_oa_y + 8)) ar.fx = (short)(ar.fx + (int)(fileopt_online_dx((float)(L->w * ud / un)) * un / ud));   /* LOBBYUI1: ... in the middle of the online row */
         else if (ip_bk >= 0 && fileopt_edge_on() && fileopt_obj(g_oa_x, g_oa_y + 8)) ar.fx = (short)(ar.fx - ((L->w - 256 * un / ud) / 2 + 24 * un / ud));      /* ... and at the FILE OPTIONS plank on the left edge */
         ar.fy = (short)((g_oa_y - 8) * un / ud + (L->h - 192 * un / ud) / 2);
         menu_add_piece(L, ar);
@@ -2849,6 +2932,8 @@ static void title_cursor_assist()
             /* TITLEUI1: a hover on the online file select's ? or NAME plank lands the pad focus there (the arrow follows it, as the D-pad's step would) */
             if (hx == ONL_HELP_X && hy == ONL_HELP_Y) { menu_online_hover_focus(2, ONL_PF_HELP, q0[0]); return; }
             if (hx == ONL_NAME_X && hy == ONL_NAME_Y) { menu_online_hover_focus(2, ONL_PF_NAME, q0[0]); return; }
+            if (hx == ONL_RC_X && hy == ONL_RC_Y) { menu_online_hover_focus(2, ONL_PF_ROOMCODE, q0[0]); return; }      /* LOBBYUI1 */
+            if (hx == ONL_HOST_X && hy == ONL_HOST_Y) { menu_online_hover_focus(2, ONL_PF_HOST, q0[0]); return; }      /* LOBBYUI1 */
             int slot[24], ids[24], x0[24], y0[24], x1[24], y1[24];
             const int n = port_title_elem_boxes(slot, ids, x0, y0, x1, y1, 24);
             for (int k = 0; k < n; ++k) {
@@ -2983,6 +3068,7 @@ void menu_title_pad_map(uint16_t *pressed, int host_back)
             unsigned short *hh = (unsigned short *)((char *)data_020a0e58 + data_020a0e40 * 4);
             const int punch = kind == 2 && (*pressed & 0x0001);
             if (host_back && profile_backspace()) host_back = 0;      /* PROFILE1: Backspace edits the name field first (and is BACK on the popup's other rows) */
+            if (host_back && menu_online_rc_backspace()) host_back = 0;      /* LOBBYUI1: Backspace edits the ROOM CODE plank first */
             if ((host_back || punch) && menu_online_back(kind)) {
                 host_back = 0;
                 if (punch) { *pressed = (uint16_t)(*pressed & ~0x0001u); *hh = (unsigned short)(*hh & ~0x0001u); port_host_keys_clear(0x0001); }
