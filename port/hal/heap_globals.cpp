@@ -119,7 +119,7 @@ void _ZN18NestedHeapIterator4InitEP13HeapAllocator(
 // constructor in place.
 #include <new>
 
-// ExpandingHeapAllocator_Construct and Reallocate both build a Target on the
+// func_0204e828 and Reallocate both build a Target on the
 // stack. A `MemoryNode::Target *' return matches the flat symbol the port
 // references; both callers drop it.
 #include "MemoryNode.h"

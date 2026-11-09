@@ -111,7 +111,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "SolidHeapAllocator_Construct",
+      "symbol": "func_0204ed54",
       "address": "0x0204ed54",
       "size": "0x00000050",
       "legacy_source": "src/_ZN18SolidHeapAllocatorC1EPvj.cpp",

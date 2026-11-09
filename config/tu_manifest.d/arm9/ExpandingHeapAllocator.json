@@ -120,7 +120,7 @@
       "legacy_source": "src/_ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt.cpp"
     },
     {
-      "symbol": "ExpandingHeapAllocator_Construct",
+      "symbol": "func_0204e828",
       "address": "0x0204e828",
       "size": "0x88",
       "ordinal": 15,

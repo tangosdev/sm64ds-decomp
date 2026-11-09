@@ -2019,7 +2019,7 @@ _ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE kind:function(ar
 _ZN22ExpandingHeapAllocator17AllocateBackwardsEjj kind:function(arm,size=0xc4) addr:0x0204e504
 _ZN22ExpandingHeapAllocator16AllocateForwardsEjj kind:function(arm,size=0xc8) addr:0x0204e5c8
 _ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt kind:function(arm,size=0x198) addr:0x0204e690
-ExpandingHeapAllocator_Construct kind:function(arm,size=0x88) addr:0x0204e828
+func_0204e828 kind:function(arm,size=0x88) addr:0x0204e828
 _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt kind:function(arm,size=0x30) addr:0x0204e8b0
 _ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_ kind:function(arm,size=0x30) addr:0x0204e8e0
 _ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_ kind:function(arm,size=0x28) addr:0x0204e910
@@ -2037,7 +2037,7 @@ _ZN18SolidHeapAllocator8ResetEndEv kind:function(arm,size=0x30) addr:0x0204ec10
 _ZN18SolidHeapAllocator10ResetStartEv kind:function(arm,size=0x18) addr:0x0204ec40
 _ZN18SolidHeapAllocator17AllocateBackwardsEPvjj kind:function(arm,size=0x7c) addr:0x0204ec58
 _ZN18SolidHeapAllocator16AllocateForwardsEPvjj kind:function(arm,size=0x80) addr:0x0204ecd4
-SolidHeapAllocator_Construct kind:function(arm,size=0x50) addr:0x0204ed54
+func_0204ed54 kind:function(arm,size=0x50) addr:0x0204ed54
 func_0204eda4 kind:function(arm,size=0x44) addr:0x0204eda4
 func_0204ede8 kind:function(arm,size=0x28) addr:0x0204ede8
 func_0204ee10 kind:function(arm,size=0x30) addr:0x0204ee10

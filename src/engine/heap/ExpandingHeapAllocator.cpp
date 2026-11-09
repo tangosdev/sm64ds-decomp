@@ -9,7 +9,10 @@
  *   SizeofInternal..Allocate -- the public surface and the free-list walk.
  *   Destroy/CreateExpandingHeapAllocator -- the owning heap's entry points.
  *   FreeNode..UnlinkNode -- the node-list layer, all static.
- *   ExpandingHeapAllocator_Construct/CreateNode -- construction.
+ *   func_0204e828 -- NNS expanding-heap initializer (EXPH): stamps the heap
+ *                    head and builds the first free node. This is a C static
+ *                    (fnd/expheap.c InitExpHeap), not a C++ ctor.
+ *   CreateNode -- construction of a node.
  *   MemoryNode::Target::Target -- the extent a node describes.
  *
  * The allocator's node bookkeeping is viewed through the overlay structs below
@@ -143,8 +146,8 @@ void *ExpandingHeapAllocator::CreateNode(MemoryNode::Target *extent, u16 t)
     return n;
 }
 
-extern "C" ExpandingHeapAllocator *ExpandingHeapAllocator_Construct(ExpandingHeapAllocator *self,
-                                                                    void *heapEnd, u32 flags) {
+extern "C" ExpandingHeapAllocator *func_0204e828(ExpandingHeapAllocator *self,
+                                                 void *heapEnd, u32 flags) {
     NodeList *nodeList = (NodeList *)&self->mFirstNode;
     MemoryNode::Target extent;
     MemoryNode *node;
@@ -358,7 +361,7 @@ ExpandingHeapAllocator *Heap_t::CreateExpandingHeapAllocator(void *address, u32 
     if (start > end || (end - start) < 0x4c)
         return 0;
 
-    return ExpandingHeapAllocator_Construct((ExpandingHeapAllocator *)start, (void *)end, flags);
+    return func_0204e828((ExpandingHeapAllocator *)start, (void *)end, flags);
 }
 
 } /* namespace mHeap */

@@ -5,8 +5,8 @@
  * the free region's own third word.
  * .text 0x0204e964..0x0204eda4, folded from fourteen legacy shards.
  * mwccarm emits .text in reverse source order, so the definitions below run
- * ROM-descending (SolidHeapAllocator_Construct first, Reallocate last); the
- * roster reads ROM-ascending.
+ * ROM-descending (func_0204ed54 first, Reallocate last); the roster reads
+ * ROM-ascending.
  *
  *   Reallocate         -- in-place resize of the most recent forward alloc.
  *   TryResizeToFit     -- shrink the heap to its used extent.
@@ -22,7 +22,9 @@
  *   AllocateForwards/AllocateBackwards -- the static region carvers; they
  *                          take the free region, not the allocator, which is
  *                          what makes them static (see the header).
- *   SolidHeapAllocator_Construct -- seals the free region.
+ *   func_0204ed54      -- NNS frame-heap initializer: stamps the FRMH heap
+ *                          head and seals the free region. This is a C static
+ *                          (fnd/frameheap.c InitFrmHeap), not a C++ ctor.
  *
  * The free region is `mFreeRegion` (this + 0x24). Two views of it live here:
  * the header's SolidHeapFreeRegion {begin, end, flags}, and the TU-local
@@ -77,8 +79,8 @@ inline struct FreeList *inline_fn(void *arg0)
     return (struct FreeList *)&((SolidHeapAllocator *)arg0)->mFreeRegion;
 }
 
-extern "C" SolidHeapAllocator *SolidHeapAllocator_Construct(SolidHeapAllocator *self, void *heapEnd,
-                                                            u32 flags) {
+extern "C" SolidHeapAllocator *func_0204ed54(SolidHeapAllocator *self, void *heapEnd,
+                                             u32 flags) {
     SolidHeapFreeRegion *freeRegion = &self->mFreeRegion;
 
     func_0204df54(self, 0x46524d48, (char *)freeRegion + 0xc, heapEnd, flags);
@@ -186,7 +188,7 @@ SolidHeapAllocator* Heap_t::CreateSolidHeapAllocator(void* address, u32 size, u3
     if (start > end || (end - start) < 0x30)
         return 0;
 
-    return SolidHeapAllocator_Construct((SolidHeapAllocator *)start, (void *)end, flags);
+    return func_0204ed54((SolidHeapAllocator *)start, (void *)end, flags);
 }
 
 } /* namespace mHeap */
