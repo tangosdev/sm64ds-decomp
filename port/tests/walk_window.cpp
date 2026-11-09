@@ -7826,6 +7826,11 @@ static int cd_frame(int pad_live, const XPad *pad)
    title stands still under it, and the devices are read here behind the gates every other reader uses. */
 static int lp_frame(int pad_live, const XPad *pad)
 {
+    {   /* the page's seat in the log: open / pause each time either changes */
+        static int was = -1;
+        const int now = (lobby_page_open() ? 1 : 0) | (menu_on ? 2 : 0);
+        if (now != was) { fprintf(stderr, "[lobbypage] seat: page %s, pause %s\n", (now & 1) ? "open" : "closed", (now & 2) ? "held" : "free"); was = now; }
+    }
     if (lobby_page_open() && !menu_on) lobby_page_cancel();               /* something else took the pause away */
     if (!lobby_page_open()) {
         if (!lobby_page_pending() && !lobby_page_env_poll()) return 0;

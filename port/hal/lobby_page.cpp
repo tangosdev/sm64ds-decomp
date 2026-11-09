@@ -21,6 +21,7 @@
    __has_include to ask) */
 #if defined(LP_CLIENT_REAL) && LP_CLIENT_REAL
 #  include "lobby_client.h"
+#  include "handoff_poll.h"
 #else
 #  undef LP_CLIENT_REAL
 #  define LP_CLIENT_REAL 0
@@ -313,6 +314,7 @@ struct Page {
     int copied_t;          /* frames left of the "Copied" note */
     int panel;             /* the settings panel is up */
     int start_t;           /* frames the STARTING state has shown */
+    int handoff_busy;      /* port_handoff_busy() was non-zero last frame */
     int frames;
     int input_ready;       /* every device was let go once since the page opened */
     unsigned prev_keys, prev_pad;
@@ -689,6 +691,7 @@ extern "C" void lobby_page_open_now(void)
     P.field = 0;
     P.panel = 0;
     P.start_t = 0;
+    P.handoff_busy = 1;      /* the first frame takes the baseline */
     P.frames = 0;
     P.input_ready = 0;
     P.copied_t = 0;
@@ -839,10 +842,32 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
         if (e3 && *e3 == '1') P.panel = 1;
     }
 #endif
+    {   /* every phase change of the client, in the log */
+        static int last_phase = -1;
+        if ((int)s->phase != last_phase) {
+            char b[64];
+            snprintf(b, sizeof b, "client phase %d -> %d (page frame %d)", last_phase, (int)s->phase, P.frames);
+            log_line(b);
+            last_phase = (int)s->phase;
+        }
+    }
     /* the client's state moves the page */
     if (P.screen == SCR_ROOM) {
         if (s->phase != LOBBY_NONE) P.seen_phase = 1;
         if (s->phase == LOBBY_NONE && (P.seen_phase || P.frames > 300)) { close_page("the client has no room"); return 0; }
+#if LP_CLIENT_REAL
+        /* a coop start taken IN PLACE goes back to IN_ROOM inside the same lobby_tick (lobby_client.cpp: the room lives on after the game), so
+           the page never sees STARTING: what it sees is the hand-off taken, a session up where none was (port_handoff_busy turns non-zero) */
+        {
+            const int busy_now = !g_fake && port_handoff_busy() != 0;
+            if (busy_now && !P.handoff_busy && in_room(s)) {
+                P.keep_tick = 1;
+                close_page("the game starts (the hand-off was taken)");
+                return 0;
+            }
+            P.handoff_busy = busy_now;
+        }
+#endif
         if (s->phase == LOBBY_STARTING) {
             /* the pause is let go the frame the start is known: the coop hand-off walks the title to the room in place on the next frames,
                and a title held still under the page never got there (joint row r4: both consoles stopped at "pressed file A") */
