@@ -1002,14 +1002,6 @@
       "evidence": "include/dScMgTeresa_c.h line 113 (`u8 unk_1b; /* 0x1b */`); objsnap of d_s_mg_teresa.cpp IDENTICAL to main; ov006 teresa TU tubuild verify"
     },
     {
-      "path": "src/game/actors/d_a_demo.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN8daDemo_c9StaffRoll19func_ov002_020f5b24Ev",
-      "count": 2,
-      "reason": "Main turned func_ov002_020f5b24 into StaffRoll::func_ov002_020f5b24. The static descriptor still stores that function's address. A pointer-to-member is not that address, so the initializer names the mangled symbol.",
-      "evidence": "include/daDemo_c.h declares StaffRoll::func_ov002_020f5b24. The descriptor data_ov002_0210b7b8 stored func_ov002_020f5b24 before that rename. mwccarm compiled the mangled spelling."
-    },
-    {
       "path": "src/engine/mb/MB_WmBase.cpp",
       "rule": "raw-offset",
       "match": "(int*)(data_020a9db4+0x1428",
