@@ -5165,6 +5165,30 @@ ov096	0x021368a4	func_ov096_021368a4	_ZN9daSanbo_c19func_ov096_021368a4Ev	daSanb
 ov096	0x021368b4	func_ov096_021368b4	_ZN9daSanbo_c19func_ov096_021368b4Ev	daSanbo_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov096	0x021368f0	func_ov096_021368f0	_ZN9daSanbo_c19func_ov096_021368f0Ev	daSanbo_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov096	0x02136928	func_ov096_02136928	_ZN9daSanbo_c19func_ov096_02136928Ei	daSanbo_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
+ov096	0x02136928	_ZN9daSanbo_c19func_ov096_02136928Ei	_ZN9daSanbo_c11ChangeStateEi	B: stores the new state index in mState, then calls the enter step; every state switch (call sites pass 0..5) goes through it
+ov096	0x021368f0	_ZN9daSanbo_c19func_ov096_021368f0Ev	_ZN9daSanbo_c14CallStateEnterEv	B: invokes entry (pair index 0) of the current mStateFunctions pair
+ov096	0x021368b4	_ZN9daSanbo_c19func_ov096_021368b4Ev	_ZN9daSanbo_c15CallStateUpdateEv	B: invokes update (pair index 1) of the current mStateFunctions pair; called from Behavior
+ov096	0x02135800	_ZN9daSanbo_c19func_ov096_02135800Ev	_ZN9daSanbo_c13UnlinkSegmentEv	B: relinks mPrevSegment/mNextSegment around this segment (header: 'unlinking a body segment')
+ov096	0x021357b4	_ZN9daSanbo_c19func_ov096_021357b4Ev	_ZN9daSanbo_c7GetHeadEv	B: follows mPrevSegment to the segment with none and returns it (header: 'finding the head requires following mPrevSegment')
+ov096	0x02135838	_ZN9daSanbo_c19func_ov096_02135838Ev	_ZN9daSanbo_c15GetSegmentIndexEv	B: counts the mPrevSegment chain back to the head and returns the count
+ov096	0x0213585c	_ZN9daSanbo_c19func_ov096_0213585cEv	_ZN9daSanbo_c14PoofAndDestroyEv	B: spawns a dust poof then marks the actor for destruction; used by all death paths
+ov096	0x02135878	_ZN9daSanbo_c19func_ov096_02135878Ei	_ZN9daSanbo_c16CalcShyAwayAngleEi	B: maps player distance to a clamped turn offset used by the wander target; same job as the shy-away offset in pokey_act_wander but different constants, so named by function, not by N64 name
+ov096	0x021358c8	_ZN9daSanbo_c19func_ov096_021358c8Ev	_ZN9daSanbo_c15UpdateWanderYawEv	A: pokey.inc.c pokey_act_wander target selection: approach the player, shy away when close, rotate toward the target yaw with a capped step
+ov096	0x02135948	_ZN9daSanbo_c19func_ov096_02135948Ev	_ZN9daSanbo_c13HandleAttacksEv	A: pokey.inc.c obj_handle_attacks as used in bhv_pokey_body_part_update: dispatches per hit kind (knockback vs squish) and decrements the alive-part count
+ov096	0x02135e2c	_ZN9daSanbo_c19func_ov096_02135e2cEP10dBgCh_Actr	_ZN9daSanbo_c19UpdateFloorAndWallsEP10dBgCh_Actr	A: pokey.inc.c cur_obj_update_floor_and_walls in the body-part update: collision update, copies floor/wall normals
+ov096	0x02135efc	_ZN9daSanbo_c19func_ov096_02135efcEv	_ZN9daSanbo_c20UpdateModelAndShadowEv	B: builds the model matrix from pos + mOffset* and drives the drop shadow
+ov096	0x02136754	_ZN9daSanbo_c19func_ov096_02136754Ev	_ZN9daSanbo_c17UpdateStackedBodyEv	A: pokey.inc.c body-part baseHeight rule: if posY < next-part posY + one segment height, clamp up and zero vertical speed
+ov096	0x02136264	_ZN9daSanbo_c19func_ov096_02136264Ev	_ZN9daSanbo_c26UpdateStackedOnGrowingBodyEv	A: same baseHeight rule where the part below is growing: segment height scaled (N64 120*oPokeyBottomBodyPartSize)
+ov096	0x021365d4	_ZN9daSanbo_c19func_ov096_021365d4Ev	_ZN9daSanbo_c12UpdateLeaderEv	A: pokey.inc.c pokey_act_wander replenish: after a timer spawns the next part (N64 100 frames, DS 90 = 0x5a)
+ov096	0x0213670c	_ZN9daSanbo_c19func_ov096_0213670cEv	_ZN9daSanbo_c11EnterLeaderEv	B: entry of state 1; pair partner of UpdateLeader; stores mTimer 0 or 0x5a depending on mInstantSprout
+ov096	0x02136534	_ZN9daSanbo_c19func_ov096_02136534Ev	_ZN9daSanbo_c14EnterKnockbackEv	A: pokey.inc.c ATTACK_HANDLER_KNOCKBACK for body parts: state entered from HandleAttacks on a knockback hit; unlinks the segment
+ov096	0x02136434	_ZN9daSanbo_c19func_ov096_02136434Ev	_ZN9daSanbo_c15UpdateKnockbackEv	A: update half of the knockback state (pair partner); ends in PoofAndDestroy
+ov096	0x0213640c	_ZN9daSanbo_c19func_ov096_0213640cEv	_ZN9daSanbo_c12EnterInMouthEv	B: state 3 entry; sets mFlags 0x20000 (dActor_c.h: yoshi-mouth state bit) and unlinks
+ov096	0x021363c4	_ZN9daSanbo_c19func_ov096_021363c4Ev	_ZN9daSanbo_c13UpdateInMouthEv	B: state 3 update; pair partner; ends in PoofAndDestroy
+ov096	0x02136134	_ZN9daSanbo_c19func_ov096_02136134Ev	_ZN9daSanbo_c13EnterMegaKillEv	B: state 5 entry; only reached from the hitFlags&0x10 branch of HandleAttacks that calls IncMegaKillCount
+ov096	0x021360c4	_ZN9daSanbo_c19func_ov096_021360c4Ev	_ZN9daSanbo_c14UpdateMegaKillEv	B: state 5 update; pair partner of EnterMegaKill
+ov096	0x021368a4	_ZN9daSanbo_c19func_ov096_021368a4Ev	_ZN9daSanbo_c12EnterStackedEv	B: state 0 entry (slot 0 of the pair table; partner UpdateStackedBody)
+ov096	0x021363b4	_ZN9daSanbo_c19func_ov096_021363b4Ev	_ZN9daSanbo_c19EnterStackedGrowingEv	B: state 4 entry (partner UpdateStackedOnGrowingBody)
 ov014	0x02111ebc	func_ov014_02111ebc	_ZN10daWanwan_c19func_ov014_02111ebcEi	daWanwan_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov014	0x02111f08	func_ov014_02111f08	_ZN10daWanwan_c19func_ov014_02111f08Ev	daWanwan_c method. The first argument is the object, so the function is a member and the parameter is this. The address is kept as the method name.
 ov014	0x02111ebc	_ZN10daWanwan_c19func_ov014_02111ebcEi	_ZN10daWanwan_c8SetStateEi	stores mState and runs the row enter PMF of data_ov014_0211476c; SetState is the dominant in-tree name for this driver (daBttBk_c::SetState)
@@ -7213,6 +7237,23 @@ ov091	0x02132000	_ZN13daLinelift2_c19func_ov091_02132000Ev	_ZN13daLinelift2_c9St
 ov091	0x02132360	_ZN13daLinelift2_c19func_ov091_02132360EP8dActor_c	_ZN13daLinelift2_c9OnStoodOnEP8dActor_c	lift-side half of the dBgW stood-on callback: sets mIsPressed when the rider is the player; byte-identical
 ov091	0x02132380	func_ov091_02132380	_ZN13daLinelift2_c15StoodOnCallbackEP4dBgWP8dActor_cS3_	dBgW stood-on callback word (collider, owner, actor) as a static member; it forwards the rider to OnStoodOn; byte-identical
 ov072	0x021208d8	_ZN11daBgSnwmn_c19func_ov072_021208d8Ev	_ZN11daBgSnwmn_c20UpdateModelTransformEv	named by behavior: builds both model matrices from mAngleY and the position and drops the body shadow; byte-identical (same address, same body)
+ov072	0x02121d50	_ZN9daPgBby_c19func_ov072_02121d50Ei	_ZN9daPgBby_c11ChangeStateEi	B: stores the state index, runs the enter step
+ov072	0x02121d18	_ZN9daPgBby_c19func_ov072_02121d18Ev	_ZN9daPgBby_c14CallStateEnterEv	B: header comment: 'run the enter step'
+ov072	0x02121cdc	_ZN9daPgBby_c19func_ov072_02121cdcEv	_ZN9daPgBby_c15CallStateUpdateEv	B: header comment: 'run the update step'
+ov072	0x02121c94	_ZN9daPgBby_c19func_ov072_02121c94Ev	_ZN9daPgBby_c22StateKeepDistanceEnterEv	A: tuxie.inc.c small_penguin_act_0/1/2 (flee when close, approach when far, otherwise stand); state 0
+ov072	0x02121a84	_ZN9daPgBby_c19func_ov072_02121a84Ev	_ZN9daPgBby_c23StateKeepDistanceUpdateEv	A: same: flee <350, approach 550..900 (N64 rand+300 / rand+600, <1000), else stand
+ov072	0x02121a28	_ZN9daPgBby_c19func_ov072_02121a28Ev	_ZN9daPgBby_c14StateDiveEnterEv	A: tuxie.inc.c small_penguin_dive_with_mario / act 3 dive then act 4 slide; state 1 uses the DIVE/SLIDER/STAND_UP BCAs
+ov072	0x021218dc	_ZN9daPgBby_c19func_ov072_021218dcEv	_ZN9daPgBby_c15StateDiveUpdateEv	A: same
+ov072	0x02121890	_ZN9daPgBby_c19func_ov072_02121890Ev	_ZN9daPgBby_c14StateHeldEnterEv	A: tuxie.inc.c HELD_HELD handling (carried by the player); state 2
+ov072	0x021217ac	_ZN9daPgBby_c19func_ov072_021217acEv	_ZN9daPgBby_c15StateHeldUpdateEv	A: same
+ov072	0x02121758	_ZN9daPgBby_c19func_ov072_02121758Ev	_ZN9daPgBby_c22StateWalkToMotherEnterEv	A: tuxie.inc.c small_penguin_act_5: turn toward the mother when dist>200, away when <200 (DS 0xdc000/0xc8000 = 220/200); state 3
+ov072	0x02121670	_ZN9daPgBby_c19func_ov072_02121670Ev	_ZN9daPgBby_c23StateWalkToMotherUpdateEv	A: same
+ov072	0x02120ddc	_ZN9daPgBby_c19func_ov072_02120ddcEv	_ZN9daPgBby_c15CheckNearMotherEv	A: tuxie.inc.c act_0: a tuxies_mother within 1000 switches to act 5; DS enters state 3
+ov072	0x02120e20	_ZN9daPgBby_c19func_ov072_02120e20Ev	_ZN9daPgBby_c9CheckDiveEv	A: tuxie.inc.c dive trigger; DS enters state 1
+ov072	0x02120d04	_ZN9daPgBby_c19func_ov072_02120d04Ev	_ZN9daPgBby_c12CheckRespawnEv	A: tuxie.inc.c act_0 cur_obj_set_pos_to_home when Mario is far
+ov072	0x02120f14	_ZN9daPgBby_c19func_ov072_02120f14Ev	_ZN9daPgBby_c15GuardStepHeightEv	B: header comment 'step-height guard'
+ov072	0x02120fd4	_ZN9daPgBby_c19func_ov072_02120fd4EP10dBgCh_Actr	_ZN9daPgBby_c19UpdateFloorAndWallsEP10dBgCh_Actr	A: tuxie.inc.c cur_obj_update_floor_and_walls: slope/wall collision pass
+ov072	0x021210c4	_ZN9daPgBby_c19func_ov072_021210c4Ev	_ZN9daPgBby_c20UpdateModelAndShadowEv	B: header comment: 'place the model, size the shadow'
 ov080	0x02124acc	_ZN9daBttBk_c19func_ov080_02124accEv	_ZN9daBttBk_c15HandleCollisionEv	named by behavior: the state-0 collision reaction (rides a carrier, enters the Yoshi-mouth state, or breaks into dust and five coins on a mega hit); byte-identical (same address, same body)
 ov080	0x02124c3c	_ZN9daBttBk_c19func_ov080_02124c3cEv	_ZN9daBttBk_c20UpdateModelTransformEv	named by behavior: follows the carrier's matrix, then rebuilds the model matrix and the drop-shadow matrix; byte-identical (same address, same body)
 ov080	0x02124e60	_ZN9daBttBk_c19func_ov080_02124e60Ev	_ZN9daBttBk_c19StateYoshiMouthMainEv	named by behavior: state-table row 2 update, returns to state 0 once neither Yoshi-mouth flag (mFlags 0x20000/0x40000) is set; byte-identical (same address, same body)
@@ -8249,6 +8290,59 @@ ov066	0x021197a4	_ZN6Eyerok6RenderEv	_ZN10daIwante_c6RenderEv	class renamed from
 ov066	0x02119838	_ZN6Eyerok8BehaviorEv	_ZN10daIwante_c8BehaviorEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
 ov066	0x02119ce8	_ZN6Eyerok13InitResourcesEv	_ZN10daIwante_c13InitResourcesEv	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
 ov066	0x0211ad64	_ZTV6Eyerok	_ZTV10daIwante_c	class renamed from the coined Eyerok to daIwante_c; earlier rows left untouched
+ov066	0x0211603c	_ZN10daIwante_c19func_ov066_0211603cEv	_ZN10daIwante_c13CheckAttackedEv	A: eyerok.inc.c eyerok_hand_check_attacked: received attack + facing-angle test, decrement health, survive (hurt anim + hit sound) vs die (hand count--, defeat state); thresholds differ (DS 0x4000, N64 0x3000)
+ov066	0x02116ac4	_ZN10daIwante_c19func_ov066_02116ac4Ei	_ZN10daIwante_c11PoundGroundEi	A: eyerok.inc.c eyerok_hand_pound_ground: landing sound + camera shake + dust
+ov066	0x021162e8	_ZN10daIwante_c19func_ov066_021162e8Ev	_ZN10daIwante_c16SetRestHitVolumeEv	B: sets mdCcAcPos_c radius/height 100.0 (source comment: 'Hit volume for a hand at rest')
+ov066	0x0211632c	_ZN10daIwante_c19func_ov066_0211632cEv	_ZN10daIwante_c17SetPoundHitVolumeEv	B: counterpart: radius 156.0, height 356.0; run every frame by the pattern 4 hand handler
+ov066	0x02116390	_ZN10daIwante_c19func_ov066_02116390Ev	_ZN10daIwante_c20UpdateTexturePatternEv	B: countdown swaps the hand BTP between two files with a random 50..80 frame timer
+ov066	0x021164ec	_ZN10daIwante_c19func_ov066_021164ecEv	_ZN10daIwante_c15BeginVulnerableEv	B: ORs HIT_HAND_VULNERABLE|HIT_MEGA into vulnFlags once, starts the animation, sets mStateWork1
+ov066	0x021165cc	_ZN10daIwante_c19func_ov066_021165ccEv	_ZN10daIwante_c13EndVulnerableEv	B: clears HIT_HAND_VULNERABLE|HIT_MEGA from vulnFlags and zeroes mFlags (exact inverse of BeginVulnerable)
+ov066	0x021166c8	_ZN10daIwante_c19func_ov066_021166c8Ev	_ZN10daIwante_c14SetLoweredPoseEv	B: plays the animation reversed from its last frame and reloads the lowered-hand collision
+ov066	0x021168b0	_ZN10daIwante_c19func_ov066_021168b0Ev	_ZN10daIwante_c17WaitForHandsReadyEv	B: body sub-state 0 waits until data_ov066_0211ae0c == HANDS_BOTH
+ov066	0x021168ec	_ZN10daIwante_c19func_ov066_021168ecEv	_ZN10daIwante_c11FollowPhaseEv	B: reads the shared phase byte; enters the waiting state on PHASE_REST or the matching pattern state
+ov066	0x02116a68	_ZN10daIwante_c19func_ov066_02116a68Ev	_ZN10daIwante_c18GetPlayerDepthBandEv	B: classifies the closest player's mPosZ into bands and returns the band edge or 0
+ov066	0x02116b78	_ZN10daIwante_c19func_ov066_02116b78Ev	_ZN10daIwante_c12ClampToArenaEv	B: clamps mPosX/mPosZ to arena bounds, zeroes mHorzSpeed, returns 1 when clamped
+ov066	0x02119454	_ZN10daIwante_c19func_ov066_02119454EPv	_ZN10daIwante_c8SetStateEPv	B: stores the descriptor pointer and runs its enter function
+ov066	0x021194a4	_ZN10daIwante_c19func_ov066_021194a4Ev	_ZN10daIwante_c21UpdateCollisionMatrixEv	B: header comment: 'refresh the collision matrix'
+ov066	0x021194fc	_ZN10daIwante_c19func_ov066_021194fcEv	_ZN10daIwante_c19UpdateModelMatricesEv	B: header comment: 'refresh the model matrices'
+ov066	0x02116d14	_ZN10daIwante_c19func_ov066_02116d14Ev	_ZN10daIwante_c15HandDefeatEnterEv	A: eyerok.inc.c eyerok_hand_act_die: hand defeat state (descriptor b07c)
+ov066	0x02116c6c	_ZN10daIwante_c19func_ov066_02116c6cEv	_ZN10daIwante_c17HandDefeatExecuteEv	A: update half of the same state
+ov066	0x02118658	_ZN10daIwante_c19func_ov066_02118658Ev	_ZN10daIwante_c16HandWaitingEnterEv	B: hand waiting state (descriptor b06c), named by the source's own descriptor-table comment
+ov066	0x02118604	_ZN10daIwante_c19func_ov066_02118604Ev	_ZN10daIwante_c18HandWaitingExecuteEv	B: descriptor b06c update
+ov066	0x021187c8	_ZN10daIwante_c19func_ov066_021187c8Ev	_ZN10daIwante_c13HandRiseEnterEv	B: hand rise state (descriptor b05c), per descriptor-table comment
+ov066	0x02118678	_ZN10daIwante_c19func_ov066_02118678Ev	_ZN10daIwante_c15HandRiseExecuteEv	B: descriptor b05c update
+ov066	0x021185e4	_ZN10daIwante_c19func_ov066_021185e4Ev	_ZN10daIwante_c17HandPattern4EnterEv	B: descriptor b08c, entered by FollowPhase for PATTERN_4
+ov066	0x021184e0	_ZN10daIwante_c19func_ov066_021184e0Ev	_ZN10daIwante_c19HandPattern4ExecuteEv	B: descriptor b08c update
+ov066	0x021184c0	_ZN10daIwante_c19func_ov066_021184c0Ev	_ZN10daIwante_c17HandPattern5EnterEv	B: descriptor b0bc, PATTERN_5 in FollowPhase
+ov066	0x02118188	_ZN10daIwante_c19func_ov066_02118188Ev	_ZN10daIwante_c19HandPattern5ExecuteEv	B: descriptor b0bc update
+ov066	0x02118168	_ZN10daIwante_c19func_ov066_02118168Ev	_ZN10daIwante_c17HandPattern6EnterEv	B: descriptor b0ec, PATTERN_6 in FollowPhase
+ov066	0x02117bf0	_ZN10daIwante_c19func_ov066_02117bf0Ev	_ZN10daIwante_c19HandPattern6ExecuteEv	B: descriptor b0ec update
+ov066	0x02117bd0	_ZN10daIwante_c19func_ov066_02117bd0Ev	_ZN10daIwante_c17HandPattern7EnterEv	B: descriptor afec, PATTERN_7 in FollowPhase
+ov066	0x021175e8	_ZN10daIwante_c19func_ov066_021175e8Ev	_ZN10daIwante_c19HandPattern7ExecuteEv	B: descriptor afec update
+ov066	0x021175bc	_ZN10daIwante_c19func_ov066_021175bcEv	_ZN10daIwante_c17HandPattern8EnterEv	B: descriptor b01c, PATTERN_8 in FollowPhase
+ov066	0x021171b0	_ZN10daIwante_c19func_ov066_021171b0Ev	_ZN10daIwante_c19HandPattern8ExecuteEv	B: descriptor b01c update
+ov066	0x02117190	_ZN10daIwante_c19func_ov066_02117190Ev	_ZN10daIwante_c17HandPattern9EnterEv	B: descriptor b04c, PATTERN_9 in FollowPhase
+ov066	0x02116db0	_ZN10daIwante_c19func_ov066_02116db0Ev	_ZN10daIwante_c19HandPattern9ExecuteEv	B: descriptor b04c update
+ov066	0x02119348	_ZN10daIwante_c19func_ov066_02119348Ev	_ZN10daIwante_c13BodyTalkEnterEv	B: body talk state (descriptor b0ac), per descriptor-table comment
+ov066	0x0211903c	_ZN10daIwante_c19func_ov066_0211903cEv	_ZN10daIwante_c15BodyTalkExecuteEv	B: descriptor b0ac update; locks the player for dialogue (header comment)
+ov066	0x0211901c	_ZN10daIwante_c19func_ov066_0211901cEv	_ZN10daIwante_c17BodyDecisionEnterEv	B: body decision state (descriptor b0cc), per descriptor-table comment
+ov066	0x02118e04	_ZN10daIwante_c19func_ov066_02118e04Ev	_ZN10daIwante_c19BodyDecisionExecuteEv	B: descriptor b0cc update; tests GetPlayerDepthBand values (header comment: 'The decision state tests for the first two values')
+ov066	0x0211944c	_ZN10daIwante_c19func_ov066_0211944cEv	_ZN10daIwante_c16BodyDormantEnterEv	B: body dormant state (descriptor b09c); enter does nothing
+ov066	0x02119398	_ZN10daIwante_c19func_ov066_02119398Ev	_ZN10daIwante_c18BodyDormantExecuteEv	B: descriptor b09c update
+ov066	0x02118934	_ZN10daIwante_c19func_ov066_02118934Ev	_ZN10daIwante_c23BodyPatternRunningEnterEv	B: body pattern-running state (descriptor b03c)
+ov066	0x021188b0	_ZN10daIwante_c19func_ov066_021188b0Ev	_ZN10daIwante_c25BodyPatternRunningExecuteEv	B: descriptor b03c update
+ov066	0x02118de0	_ZN10daIwante_c19func_ov066_02118de0Ev	_ZN10daIwante_c17BodyPattern4EnterEv	B: body pattern 4 (descriptor b0dc)
+ov066	0x02118cdc	_ZN10daIwante_c19func_ov066_02118cdcEv	_ZN10daIwante_c19BodyPattern4ExecuteEv	B: descriptor b0dc update
+ov066	0x02118cb8	_ZN10daIwante_c19func_ov066_02118cb8Ev	_ZN10daIwante_c17BodyPattern5EnterEv	B: body pattern 5 (descriptor afcc)
+ov066	0x02118c00	_ZN10daIwante_c19func_ov066_02118c00Ev	_ZN10daIwante_c19BodyPattern5ExecuteEv	B: descriptor afcc update
+ov066	0x02118be0	_ZN10daIwante_c19func_ov066_02118be0Ev	_ZN10daIwante_c17BodyPattern6EnterEv	B: body pattern 6 (descriptor afdc)
+ov066	0x02118b28	_ZN10daIwante_c19func_ov066_02118b28Ev	_ZN10daIwante_c19BodyPattern6ExecuteEv	B: descriptor afdc update
+ov066	0x02118b08	_ZN10daIwante_c19func_ov066_02118b08Ev	_ZN10daIwante_c17BodyPattern7EnterEv	B: body pattern 7 (descriptor affc)
+ov066	0x02118a50	_ZN10daIwante_c19func_ov066_02118a50Ev	_ZN10daIwante_c19BodyPattern7ExecuteEv	B: descriptor affc update
+ov066	0x02118a30	_ZN10daIwante_c19func_ov066_02118a30Ev	_ZN10daIwante_c17BodyPattern8EnterEv	B: body pattern 8 (descriptor b00c)
+ov066	0x021189c0	_ZN10daIwante_c19func_ov066_021189c0Ev	_ZN10daIwante_c19BodyPattern8ExecuteEv	B: descriptor b00c update
+ov066	0x021189a0	_ZN10daIwante_c19func_ov066_021189a0Ev	_ZN10daIwante_c17BodyPattern9EnterEv	B: body pattern 9 (descriptor b02c)
+ov066	0x02118954	_ZN10daIwante_c19func_ov066_02118954Ev	_ZN10daIwante_c19BodyPattern9ExecuteEv	B: descriptor b02c update
 ov071	0x0211f000	_ZN10ScuttlebugD1Ev	_ZN7daSpd_cD1Ev	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
 ov071	0x0211f048	_ZN10ScuttlebugD0Ev	_ZN7daSpd_cD0Ev	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
 ov071	0x02120308	_ZN10Scuttlebug16CleanupResourcesEv	_ZN7daSpd_c16CleanupResourcesEv	class renamed from the coined Scuttlebug to daSpd_c; earlier rows left untouched
@@ -8297,6 +8391,19 @@ ov102	0x02149e38	_ZN18daObjHatenaBlock_c19func_ov102_02149e38Ev	_ZN18daObjHatena
 ov102	0x02149ea4	_ZN18daObjHatenaBlock_c19func_ov102_02149ea4Ev	_ZN18daObjHatenaBlock_c16UpdateDropShadowEv	B: refreshes mFloorY then builds mShadowMat and calls DropShadowScaleXYZ; also sizes the clip volume from the floor drop
 ov102	0x02149ff0	_ZN18daObjHatenaBlock_c19func_ov102_02149ff0Ev	_ZN18daObjHatenaBlock_c17UpdateModelMatrixEv	B: Y-rotation model matrix with translation (mPosX, mPosY + mBounceYOffs, mPosZ) >> 3; copies it into mAnmModel for HATENA_BLOCK
 ov030	0x021145d4	_ZN7daMky_c13OnTurnIntoEggER6Player	_ZN7daMky_c13OnTurnIntoEggER7daPly_c	class renamed from the coined Player to daPly_c; earlier rows left untouched
+ov030	0x02114170	_ZN7daMky_c19func_ov030_02114170Ev	_ZN7daMky_c14CallStateEnterEv	B: calls mStateDesc->enter
+ov030	0x02114134	_ZN7daMky_c19func_ov030_02114134Ev	_ZN7daMky_c15CallStateUpdateEv	B: calls mStateDesc->update
+ov030	0x021141a8	_ZN7daMky_c19func_ov030_021141a8Ei	_ZN7daMky_c11ChangeStateEi	B: sets mStateDesc from table entry idx, then calls the enter step
+ov030	0x02111734	_ZN7daMky_c19func_ov030_02111734Ev	_ZN7daMky_c13ReturnToPerchEv	B: when far from the perch and outside the camera clip, copies mPerchPos into pos/spawn/prev pos and rearms mResetTimer
+ov030	0x02111890	_ZN7daMky_c19func_ov030_02111890Ev	_ZN7daMky_c20PlayRunFootstepSoundEv	B: while the run animation plays, plays sound 0xea on frames 10 and 12
+ov030	0x02111908	_ZN7daMky_c19func_ov030_02111908Ev	_ZN7daMky_c14PlayIdleSoundsEv	B: frame-triggered sounds per idle animation (0xeb, 0xf1/0xe8, 0xe9)
+ov030	0x02111a00	_ZN7daMky_c19func_ov030_02111a00Ev	_ZN7daMky_c18CycleIdleAnimationEv	B: when the idle animation ends, starts the next from the table, wrapping at 11
+ov030	0x02111b20	_ZN7daMky_c19func_ov030_02111b20Ev	_ZN7daMky_c10FollowPathEv	B: turns toward the current path node, advances mPathNode, returns 1 at the last node
+ov030	0x02111bc4	_ZN7daMky_c19func_ov030_02111bc4Ev	_ZN7daMky_c13HandleContactEv	B: branches on eaten / hit / grabbed by the player and switches state accordingly
+ov030	0x02111dd0	_ZN7daMky_c19func_ov030_02111dd0Ev	_ZN7daMky_c13UpdateSafePosEv	B: on ground records mSpawnPos; restores it (returns 1) when no ground below (header comment)
+ov030	0x02111ea4	_ZN7daMky_c19func_ov030_02111ea4Ev	_ZN7daMky_c14RevertOffLedgeEv	B: on ground with no floor below, restores mPrevPos, zeroes mHorzSpeed, returns 1
+ov030	0x02111f6c	_ZN7daMky_c19func_ov030_02111f6cEP10dBgCh_Actr	_ZN7daMky_c19UpdateFloorAndWallsEP10dBgCh_Actr	B: continuous collision update plus floor/wall normal slope-speed correction
+ov030	0x02112094	_ZN7daMky_c19func_ov030_02112094Ev	_ZN7daMky_c17UpdateModelAndCapEv	B: sets the model matrix (carried or own), drop shadow, and attaches the cap actor to joint 5
 ov002	0x020b599c	_ZN11daObjFire_c13OnTurnIntoEggER6Player	_ZN11daObjFire_c13OnTurnIntoEggER7daPly_c	class renamed from the coined Player to daPly_c; earlier rows left untouched
 ov065	0x02116f14	_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player	_ZN15daYurei_Mucho_c13OnTurnIntoEggER7daPly_c	class renamed from the coined Player to daPly_c; earlier rows left untouched
 ov015	0x021123a0	_ZN14daObjBk_Lift_c15OnHitByMegaCharER6Player	_ZN14daObjBk_Lift_c15OnHitByMegaCharER7daPly_c	class renamed from the coined Player to daPly_c; earlier rows left untouched
@@ -8768,6 +8875,32 @@ ov002	0x020ea7ac	_ZN8daStar_c19func_ov002_020ea7acEv	_ZN8daStar_c9StateLandEv	da
 ov002	0x020ea824	_ZN8daStar_c19func_ov002_020ea824Ev	_ZN8daStar_c16StateFlyToMarkerEv	daStar_c member: State handler of the data_ov002_021109d8 pointer-to-member table (daStar_c::State); N64 bhv_star_spawn_loop action 1 (arc to the home position, ends within one frame of travel)
 ov002	0x020ea90c	_ZN8daStar_c19func_ov002_020ea90cEv	_ZN8daStar_c9StateRiseEv	daStar_c member: State handler of the data_ov002_021109d8 pointer-to-member table (daStar_c::State); N64 bhv_star_spawn_loop action 0 (rise while spinning); leaves when the fall speed reaches the limit and aims the arc
 ov002	0x020ea9d0	_ZN8daStar_c19func_ov002_020ea9d0Ev	_ZN8daStar_c11StateLaunchEv	daStar_c member: State handler of the data_ov002_021109d8 pointer-to-member table (daStar_c::State); N64 bhv_star_spawn_init analogue: starts the time-stop (CUTSCENE_FLAG) and cutscene, jumps, and aims the 400.0-arc hop of spawn_star (arc value 0x190000)
+ov002	0x020aff10	_ZN7da1up_c19func_ov002_020aff10Ev	_ZN7da1up_c17UpdatePopOutDriftEv	B: dispatch table data_ov002_0210dc00 slot 0 = MUSHROOM_POP_OUT_DRIFT (d_a_1up.cpp table comments)
+ov002	0x020afe4c	_ZN7da1up_c19func_ov002_020afe4cEv	_ZN7da1up_c16UpdatePopOutFleeEv	B: slot 1 = MUSHROOM_POP_OUT_FLEE
+ov002	0x020afd10	_ZN7da1up_c19func_ov002_020afd10Ev	_ZN7da1up_c24UpdateWaitThenAccelerateEv	B: slot 2 = MUSHROOM_WAIT_THEN_ACCELERATE
+ov002	0x020afc44	_ZN7da1up_c19func_ov002_020afc44Ev	_ZN7da1up_c16UpdateStationaryEv	B: slot 3 = MUSHROOM_STATIONARY
+ov002	0x020afbb4	_ZN7da1up_c19func_ov002_020afbb4Ev	_ZN7da1up_c22UpdateWaitThenFaceAwayEv	B: slot 4 = MUSHROOM_WAIT_THEN_FACE_AWAY
+ov002	0x020afa98	_ZN7da1up_c19func_ov002_020afa98Ev	_ZN7da1up_c16UpdateHiddenFleeEv	B: slot 5 = MUSHROOM_HIDDEN_FLEE
+ov002	0x020afa6c	_ZN7da1up_c19func_ov002_020afa6cEv	_ZN7da1up_c17UpdateTriggerFor5Ev	B: slot 6 = MUSHROOM_TRIGGER_FOR_5
+ov002	0x020af950	_ZN7da1up_c19func_ov002_020af950Ev	_ZN7da1up_c17UpdateHiddenChaseEv	B: slot 7 = MUSHROOM_HIDDEN_CHASE
+ov002	0x020af924	_ZN7da1up_c19func_ov002_020af924Ev	_ZN7da1up_c17UpdateTriggerFor7Ev	B: slot 8 = MUSHROOM_TRIGGER_FOR_7
+ov002	0x020af838	_ZN7da1up_c19func_ov002_020af838Ev	_ZN7da1up_c13UpdateSpawnerEv	B: slot 9 = MUSHROOM_SPAWNER
+ov002	0x020af7cc	_ZN7da1up_c19func_ov002_020af7ccEv	_ZN7da1up_c20UpdateRiseThenPopOutEv	B: slot 10 = MUSHROOM_RISE_THEN_POP_OUT
+ov002	0x020afa50	_ZN7da1up_c19func_ov002_020afa50Ev	_ZN7da1up_c21UpdateSpinTriggerFor5Ev	B: slot 11 = MUSHROOM_SPIN_TRIGGER_FOR_5
+ov002	0x020af908	_ZN7da1up_c19func_ov002_020af908Ev	_ZN7da1up_c21UpdateSpinTriggerFor7Ev	B: slot 12 = MUSHROOM_SPIN_TRIGGER_FOR_7
+ov002	0x020af724	_ZN7da1up_c19func_ov002_020af724Ev	_ZN7da1up_c18UpdateFallThenWaitEv	B: slot 13 = MUSHROOM_FALL_THEN_WAIT
+ov002	0x020aeee4	_ZN7da1up_c19func_ov002_020aeee4Ev	_ZN7da1up_c17UpdateTrailEffectEv	B: source comment 'Trail effect': asks Particle::System::New for one effect each call
+ov002	0x020aefb8	_ZN7da1up_c19func_ov002_020aefb8Ev	_ZN7da1up_c13UpdatePhysicsEv	B: source comment 'The shared per-frame physics step'
+ov002	0x020af0c0	_ZN7da1up_c19func_ov002_020af0c0Ev	_ZN7da1up_c17SteerTowardPlayerEv	B: source comment 'Steering toward the player'
+ov002	0x020af1dc	_ZN7da1up_c19func_ov002_020af1dcEv	_ZN7da1up_c17GetTouchingPlayerEv	B: source comment 'The player touching the mushroom, or 0'
+ov002	0x020af218	_ZN7da1up_c19func_ov002_020af218Ei	_ZN7da1up_c11UpdateShownEi	B: source comment: stores in mShown whether the player is within `range`, opens the mushroom to Yoshi
+ov002	0x020af248	_ZN7da1up_c19func_ov002_020af248Ei	_ZN7da1up_c21UpdateExpiryCountdownEi	B: source comment 'The expiry countdown': blink 40 frames then KillAndTrackInDeathTable
+ov002	0x020af3a8	_ZN7da1up_c19func_ov002_020af3a8Ev	_ZN7da1up_c14CollectOnTouchEv	B: source comment 'The touch-collection step'
+ov002	0x020af474	_ZN7da1up_c19func_ov002_020af474Ev	_ZN7da1up_c15UpdateLaunchArcEv	B: source comment 'The launch arc of the types that pop out'
+ov002	0x020af4ec	_ZN7da1up_c19func_ov002_020af4ecEv	_ZN7da1up_c20UpdateModelAndShadowEv	B: source comment: model translation then DropShadowRadHeight sizing; called from Render
+ov002	0x020af684	_ZN7da1up_c19func_ov002_020af684EiP7daPly_c	_ZN7da1up_c21UnlockTargetAndRemoveEiP7daPly_c	B: source comment: decrements mUnlockCount of the first mushroom of type `target`, coin+heal for types 11/12, always removes itself
+ov002	0x020afc68	_ZN7da1up_c19func_ov002_020afc68Ev	_ZN7da1up_c18AccelerateOnGroundEv	B: source comment: state 1 of type 2, adds 25 units to mHorzSpeed on ground, drag in air
+ov002	0x020afde4	_ZN7da1up_c19func_ov002_020afde4Ev	_ZN7da1up_c18WalkAwayFromPlayerEv	B: source comment 'Walking away from the player'
 arm9	0x02037e48	_ZNK4CLPS13func_02037e48Ev	_ZNK4CLPS17GetCameraBehaviorEv	CLPS (w0 >> 15) & 0xf: dCamera_c::func_0200c394 picks its framing by it (0 = none) and daPly_c hands it to the camera from its floor
 arm9	0x02037e68	_ZNK4CLPS13func_02037e68Ev	_ZNK4CLPS9GetViewIDEv	CLPS (w0 >> 6) & 0x3f: dCamera_c passes it to GetViewObj, with 0x3f as no view
 arm9	0x02037e84	_ZNK4CLPS13func_02037e84Ev	_ZNK4CLPS12GetSoundTypeEv	CLPS w0 & 0x1f: a sound-table offset (daPly_c plays 0xe2 + it, daShl_c 0xf2 + it)
