@@ -33,7 +33,7 @@ the dialog is open. When you play by hand, just press A yourself.
 | Actors | every live actor, its class and its distance from the player; **tp** teleports Mario next to it | the plugin walks the actor list; the class comes from the vtable (MSVC `??_7` symbols or the ROM `_ZTV`) |
 | Timeline | 300 frames of every function that ran with the focused actor as `this` (or as the first argument of the `extern "C"` shims), coloured by its own class, base classes, or other | `_penter` lab mode in `port/hal/fn_trace.cpp` (4 words per call: callee, call site, ecx, arg0) |
 | Function info | port signature, **ROM address and symbol**, port address, a link to the source file | `walk_window.symtab` and `config/**/symbols.txt`; a thiscall body inherits the ROM address of its `__ZN` shim |
-| Fields | the class layout from `include/` (`/* 0xNNN */` offsets, base chain, `unk_` gaps), live values, change counts, "changing only"; double-click a value to poke it | `peek`/`poke` through the plugin |
+| Fields | the class layout from `include/` (`/* 0xNNN */` offsets, base chain, `unk_` gaps), live values, change counts, "changing only"; double-click a value to poke it. A field this tree still calls `unk_` but `origin/main` has named since is shown under main's name, in green italics | `peek`/`poke` through the plugin; main's names come from `git show origin/main:include/...` (`--names-from <rev>`, `""` to turn it off), matched by class and offset |
 | Fields → **who?** | every function that wrote that field during one second of play, with the two callers above it, and the ROM address of each | a CPU data breakpoint (DR0–DR3, set by the plugin on the game thread) and a vectored exception handler that records the writing instruction and walks the frame-pointer chain. Only the game's own writes stop it, so the game runs at full speed |
 | Hot | the game's busiest functions (port-only code is hidden) | `hot N` sampling |
 | Assets | every file loaded, the class that owns it, the function that asked for it, and texture thumbnails for `.bmd`; a filter box | an entry hook on each `LoadFile` (Model, SharedFilePtr, TextureSequence, dBgW_Kc, dExtFrameCtrl_c), independent of the trace buffer, so a level load is complete (Bob-omb Battlefield: 184 files, 180 in the load frame, 0 unresolved). File ids resolve through ov0's handle table and the 13 NARC archive ranges (`data_0208ecf4`), both read from the running game. Textures are decoded locally from `extracted/` and never stored |
@@ -58,6 +58,12 @@ a Goomba, one second each:
 A gap that only `UpdatePos` writes is probably part of a motion vector. A gap
 that `RecordHit` writes is collision state. These are leads for the ROM to
 settle, not names.
+
+The first lead was checked against the ROM. `origin/main` already names 0x0a4
+and 0x0ac `mSpeedX` and `mSpeedZ`. The byte-matched
+`dActor_c::UpdatePosWithHorzSpeedAndAng` (ROM 0x02010c5c), which
+`UpdatePos` (0x02010c30) calls, stores both. The lab branch was cut before that
+naming landed, which is why the dashboard now overlays main's names.
 
 Four fields can be watched at once (the CPU has four debug registers), and each
 must be 1, 2 or 4 bytes, aligned. The server arms the breakpoint, waits, reads

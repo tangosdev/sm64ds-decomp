@@ -42,6 +42,7 @@ form.prop{display:grid;grid-template-columns:90px 1fr;gap:3px 6px;padding:6px 8p
 form.prop textarea{height:48px}
 .note{padding:6px 8px;color:var(--dim)}
 .small{font-size:11px}
+.named{color:#8fd18f;font-style:italic}
 .pill{border:1px solid #3a4152;border-radius:8px;padding:0 5px;margin-left:4px;color:var(--dim)}
 </style>
 </head>
@@ -345,7 +346,9 @@ function drawFields() {
     if (only && !hist.length) continue;
     const doc = (f.doc || '') + (f.note ? '\n' + f.note : '');
     html.push(`<tr class="${changed ? 'chg' : 'fade'}" data-o="${k}"><td class="dim">0x${hex(k, 3)}</td><td class="${f.owner === S.focus.cls ? 'own' : 'base'} small">${esc(f.owner || '')}</td>
-      <td class="dim">${esc(f.type)}${esc(f.array || '')}</td><td class="${f.gap ? 'unk' : ''}" title="${esc(doc)}">${esc(f.name)}</td>
+      <td class="dim">${esc(f.type)}${esc(f.array || '')}</td>${f.named
+        ? `<td class="named" title="${esc(`named on ${f.named.rev} as ${f.named.owner}::${f.named.name} (${f.named.type}); this build still calls it ${f.name}` + (f.named.doc ? '\n' + f.named.doc : ''))}">${esc(f.named.name)}</td>`
+        : `<td class="${f.gap ? 'unk' : ''}" title="${esc(doc)}">${esc(f.name)}</td>`}
       <td class="val" data-e="${d.edit || ''}" title="double-click to write a new value into the running game">${esc(d.txt)}</td><td class="num dim">${hist.length || ''}</td><td><button class="small ww" title="who writes this field? (hardware data breakpoint, 1 s of game time)">who?</button></td></tr>`);
   }
   $('#ftab tbody').innerHTML = html.join('');
@@ -392,7 +395,7 @@ $('#ftab tbody').addEventListener('click', e => {
 // function and the two callers above it.
 async function whoWrites(o) {
   const f = fieldRows().find(x => x.offset === o); if (!f) return;
-  const len = f.size >= 4 ? 4 : f.size >= 2 ? 2 : 1; const where = `${S.focus.cls}+0x${hex(o)} (${f.name})`;
+  const len = f.size >= 4 ? 4 : f.size >= 2 ? 2 : 1; const where = `${S.focus.cls}+0x${hex(o)} (${f.named ? f.named.name : f.name})`;
   $('#fninfo').textContent = `watching writes to ${where} for 1 s...`;
   let r; try { r = await api('/api/whowrites', {addr: S.focus.ptr + o, len, secs: 1.0}); } catch (err) { r = {error: String(err)}; }
   if (r.error) { $('#fninfo').textContent = r.error; return; }

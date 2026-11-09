@@ -322,27 +322,62 @@ FIELD_RX = re.compile(r'^\s*((?:const\s+|unsigned\s+|signed\s+|struct\s+)*[\w:<>
                       r'((?:\[[^\]]*\])*)\s*;\s*/\*\s*(0x[0-9a-fA-F]+)\b\s*(?:--\s*)?(.*?)\s*(?:\*/)?\s*$')
 
 
+class GitInclude:
+    """include/ as it is at a git revision (no checkout needed)"""
+    def __init__(self, rev):
+        import subprocess
+        self.rev, self.sp = rev, subprocess
+        r = subprocess.run(['git', '-C', REPO, 'ls-tree', '--name-only', rev, 'include/'],
+                           capture_output=True, text=True)
+        self.names = {n.split('/', 1)[1] for n in r.stdout.split()} if r.returncode == 0 else set()
+        self.texts = {}
+
+    def exists(self, f):
+        return f in self.names
+
+    def list(self):
+        return sorted(self.names)
+
+    def read(self, f):
+        if f not in self.texts:
+            r = self.sp.run(['git', '-C', REPO, 'show', f'{self.rev}:include/{f}'], capture_output=True)
+            self.texts[f] = r.stdout.decode('utf-8', 'replace') if r.returncode == 0 else ''
+        return self.texts[f]
+
+
 class Headers:
-    def __init__(self):
+    """Class layouts from include/. With `names_from` (another Headers, e.g. read
+    from origin/main), a field this tree still calls unk_ takes the other tree's
+    name for the same class and offset as `named`, so the lab never asks you to
+    name what the repo has already named since this branch was cut."""
+    def __init__(self, git_rev=None, names_from=None):
         self.cache = {}
         self.inc = os.path.join(REPO, 'include')
+        self.git = GitInclude(git_rev) if git_rev else None
+        self.names_from = names_from
         self.index = None
 
+    def _exists(self, f):
+        return self.git.exists(f) if self.git else os.path.exists(os.path.join(self.inc, f))
+
+    def _read(self, f):
+        if self.git:
+            return self.git.read(f)
+        try:
+            return open(os.path.join(self.inc, f), encoding='utf-8', errors='replace').read()
+        except OSError:
+            return ''
+
     def _find(self, cls):
-        p = os.path.join(self.inc, cls + '.h')
-        if os.path.exists(p):
-            return p
+        if self._exists(cls + '.h'):
+            return cls + '.h'
         if self.index is None:
             self.index = {}
             rx = re.compile(r'^\s*(?:struct|class)\s+(\w+)\s*(?::[^{;]*)?\{', re.M)
-            for f in os.listdir(self.inc):
+            for f in (self.git.list() if self.git else os.listdir(self.inc)):
                 if f.endswith('.h'):
-                    try:
-                        txt = open(os.path.join(self.inc, f), encoding='utf-8', errors='replace').read()
-                    except OSError:
-                        continue
-                    for m in rx.finditer(txt):
-                        self.index.setdefault(m.group(1), os.path.join(self.inc, f))
+                    for m in rx.finditer(self._read(f)):
+                        self.index.setdefault(m.group(1), f)
         return self.index.get(cls)
 
     def layout(self, cls, depth=0):
@@ -354,9 +389,9 @@ class Headers:
         if not path or depth > 8:
             self.cache[cls] = out
             return out
-        text = open(path, encoding='utf-8', errors='replace').read()
+        text = self._read(path)
         m = re.search(r'^\s*(?:struct|class)\s+%s\s*(?::\s*(?:public\s+)?([\w:]+))?\s*\{' % re.escape(cls), text, re.M)
-        out['header'] = os.path.relpath(path, REPO).replace('\\', '/')
+        out['header'] = 'include/' + path
         sz = re.search(r'allocates?\s+(0x[0-9a-fA-F]+)\s+bytes', text)
         if sz:
             out['size'] = int(sz.group(1), 16)
@@ -404,11 +439,24 @@ class Headers:
             nxt = fields[k + 1]['offset'] if k + 1 < len(fields) else None
             f['size'] = self._size(f, nxt)
         out['fields'] = fields
+        if self.names_from and depth == 0:
+            self._overlay(cls, fields)
         if out['size'] is None and fields:
             last = fields[-1]
             out['size_guess'] = last['offset'] + max(last['size'], 4)
         self.cache[cls] = out
         return out
+
+    def _overlay(self, cls, fields):
+        try:
+            other = {f['offset']: f for f in self.names_from.layout(cls)['fields']}
+        except Exception:  # a header the regexes cannot read is just no overlay
+            return
+        for f in fields:
+            o = other.get(f['offset'])
+            if f['name'].startswith('unk') and o and not o['name'].startswith(('unk', '__')):
+                f['named'] = {'name': o['name'], 'type': o['type'] + o['array'], 'owner': o['owner'],
+                              'doc': o['doc'], 'rev': self.names_from.git.rev if self.names_from.git else ''}
 
     @staticmethod
     def _size(f, nxt):
@@ -1042,13 +1090,19 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--exe', default=os.path.join(REPO, 'build', 'port-trace', 'walk_window.exe'))
     ap.add_argument('--http', type=int, default=47620)
+    ap.add_argument('--names-from', default='origin/main',
+                    help='a git revision whose include/ names fields this tree still calls unk_ ("" = off)')
     a = ap.parse_args()
     PORT = a.http
     t0 = time.time()
     syms = SymDB(a.exe)
     print(f'lab: {len(syms.fn)} functions, {len(syms.vt_class)} vtables, {len(syms.rom.by_name)} ROM names '
           f'({time.time() - t0:.1f}s)', flush=True)
-    LAB = Lab(syms, Headers(), Assets())
+    names_from = Headers(git_rev=a.names_from) if a.names_from else None
+    if names_from and not names_from.git.names:
+        print(f'lab: no include/ at {a.names_from}; field names come from this tree only')
+        names_from = None
+    LAB = Lab(syms, Headers(names_from=names_from), Assets())
     threading.Thread(target=LAB.run, daemon=True).start()
     srv = ThreadingHTTPServer(('127.0.0.1', PORT), H)
     srv.daemon_threads = True
