@@ -3154,6 +3154,9 @@ struct TexEntry {
     /* the frame buffer this entry last handed the card path, whose id is
        retired when the frame changes (anim_card_note) */
     mutable const uint32_t *card_last = nullptr;
+    /* the texture is an animation the loader has not finished: the DS
+       picture for now, dropped and asked again once it settles */
+    bool pending = false;
 };
 std::map<TexKey, TexEntry> g_vram_tex_cache;
 
@@ -3175,6 +3178,16 @@ double g_anim_now = 0.0;   // the clock, read once per frame (gx_reset, gx_inter
    triangle still holding a retired id (a ghost figure's stored triangles)
    only costs a fresh upload of the same buffer, which is still alive. */
 std::vector<uint32_t> g_tex_retired;
+/* A BIND NEVER WAITS LONG FOR THE LOADER (hdtex_lookup3's limit). A texture
+   whose animation is still decoding binds the DS picture and is marked
+   pending; once hdtex says another animation settled, gx_reset drops the
+   pending entries so their next bind asks again. A dropped entry's pixels
+   move here rather than being freed, since a Smooth Motion replay of the
+   current tick may still point at them; they go with the next texture
+   generation like everything else. */
+int g_anim_pending = 0;
+int g_anim_settled_seen = 0;
+std::vector<std::vector<uint32_t>> g_tex_grave;
 
 /* THE BOUND BUFFER BACK TO ITS CACHE ENTRY. The raster is handed a plain
    `const uint32_t *` on GxTriangle::tex and the mip chain hangs off the entry,
@@ -3290,6 +3303,23 @@ void anim_card_note(const TexEntry &e, const uint32_t *now) {
     e.card_last = now;
 }
 
+/* ANIMTEX1: drop the pending entries (see g_anim_pending). */
+void anim_drop_pending() {
+    for (auto it = g_vram_tex_cache.begin(); it != g_vram_tex_cache.end();) {
+        if (!it->second.pending) { ++it; continue; }
+        const uint32_t *p = it->second.px.data();
+        g_tex_by_px.erase(p);
+        const auto f = g_tex_ids.find(p);
+        if (f != g_tex_ids.end()) {
+            if (g_gpu_opaque) g_tex_retired.push_back(f->second.id);
+            g_tex_ids.erase(f);
+        }
+        g_tex_grave.push_back(std::move(it->second.px));
+        it = g_vram_tex_cache.erase(it);
+    }
+    g_anim_pending = 0;
+}
+
 void bind_from_vram() {
     const uint32_t fmt = (g_teximage >> 26) & 7;
     if (fmt == 0) {
@@ -3395,7 +3425,9 @@ void bind_from_vram() {
             std::shared_ptr<const HdTexAnim> anim;
             const int s = hdtex_lookup3(name, 1, g_teximage, g_plttbase,
                                         d.width, d.height, hd, &anim);
-            if (s >= 1 && anim) {
+            if (s < 0) {
+                entry.pending = true;   /* the DS picture until it settles */
+            } else if (s >= 1 && anim) {
                 /* ANIMTEX1: the frames, by pointer. px keeps the resampled
                    frames end to end when there are any, else the DS decode
                    (below), which nothing binds but which gives the entry the
@@ -3414,6 +3446,7 @@ void bind_from_vram() {
         }
         if (entry.px.empty()) entry.px = std::move(rgba);
         it = g_vram_tex_cache.emplace(key, std::move(entry)).first;
+        if (it->second.pending) ++g_anim_pending;
         if (it->second.anim) {
             TexEntry &e = it->second;
             const size_t nf = e.anim->frames.size();
@@ -3587,6 +3620,8 @@ void gx_invalidate_textures() {
     g_anim_by_px.clear();   /* ANIMTEX1: it points into the entries below */
     g_anim_live = 0;
     g_tex_retired.clear();  /* the generation bump below drops them all anyway */
+    g_anim_pending = 0;
+    g_tex_grave.clear();
     g_vram_tex_cache.clear();
     /* AND SO DOES THE ID REGISTRY, for a stronger version of the same reason:
        the buffers it names are about to be freed and the allocator will hand
@@ -3766,6 +3801,13 @@ void gx_reset() {
        the frame shows the same frame of an animation. One compare when no
        animation is cached. */
     if (g_anim_live) g_anim_now = hdtex_clock_ms();
+    if (g_anim_pending) {
+        const int settled = hdtex_anim_settled();
+        if (settled != g_anim_settled_seen) {
+            g_anim_settled_seen = settled;
+            anim_drop_pending();
+        }
+    }
     /* KEEP THE TWO BUFFERS ACROSS THE RESET. `g = State{}` destroys the
        triangle list and the vertex strip and grows them back from nothing on
        the next frame -- a couple of thousand triangles at 116 bytes each, so a

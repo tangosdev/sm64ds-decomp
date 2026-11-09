@@ -136,7 +136,11 @@ int hdtex_lookup2(uint64_t name2, int have_words, uint32_t teximage,
    kAnimTotalCapBytes across all of them. Over the per-animation cap every
    second (third, ...) frame is dropped and its time given to the frame kept,
    so the loop keeps its length and only gets choppier; over the total an
-   animation keeps only its first frame and logs why. */
+   animation keeps only its first frame and logs why. A single frame over
+   kAnimCapBytes is refused (the still or the DS texture shows). The caps are
+   known before anything is decoded: a GIF is scanned for its frame count
+   and size first and then decoded one frame at a time, keeping only the
+   frames it will hold. */
 struct HdTexAnim {
     int pw = 0, ph = 0;                         // file pixel size of every frame
     std::vector<std::vector<uint32_t>> frames;  // 0xAARRGGBB, pw*ph each
@@ -149,14 +153,22 @@ const unsigned kAnimTotalCapBytes = 256u << 20;
 
 /* hdtex_lookup2 for a texture that may be animated. A still hit fills `out`
    and returns S exactly as hdtex_lookup2 does, with *anim left null. An
-   animated hit returns S and sets *anim to the decoded frames (waiting for
-   the worker if it has not reached them yet); `out` is then filled only when
-   the frames are not a whole multiple of the DS texture, with every frame
-   resampled to width*S x height*S and laid end to end. */
+   animated hit returns S and sets *anim to the decoded frames; `out` is then
+   filled only when the frames are not a whole multiple of the DS texture,
+   with every frame resampled to width*S x height*S and laid end to end.
+   When the worker has not finished that animation the call waits at most
+   kAnimWaitMs (SM64DS_HD_ANIM_WAIT_MS overrides it for tests) and then
+   returns -1: bind the DS picture for now and ask again once
+   hdtex_anim_settled() has moved. */
 int hdtex_lookup3(uint64_t name2, int have_words, uint32_t teximage,
                   uint32_t plttbase, int width, int height,
                   std::vector<uint32_t> &out,
                   std::shared_ptr<const HdTexAnim> *anim);
+
+const int kAnimWaitMs = 50;
+
+/* Counts the animations the worker has finished (loaded or failed). */
+int hdtex_anim_settled(void);
 
 /* Which frame of `a` shows at `now_ms` (any monotonic millisecond clock). */
 int hdtex_anim_frame(const HdTexAnim &a, double now_ms);

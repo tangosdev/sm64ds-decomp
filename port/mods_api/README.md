@@ -45,7 +45,12 @@ or the mod list changes), not every level. A moving texture may hold at most
 64 MB of frames (width x height x 4 bytes x frames) and all of them together
 256 MB. Over 64 MB, every second (or third, ...) frame is skipped and the
 loop keeps its length; over 256 MB, the texture shows its first frame only.
-The game log says when either happens.
+A single frame over 64 MB (bigger than 4096 x 4096) is not loaded at all.
+The game log says when any of these happens. A moving texture that is still
+being read when the game first draws it shows the DS texture until it is
+ready, so a big animation never freezes the game. Under TextureFilter 2 the
+game also keeps smaller copies of each frame (about a third more memory),
+which the limits above do not count.
 
 ## Settings that switch a folder on or off
 

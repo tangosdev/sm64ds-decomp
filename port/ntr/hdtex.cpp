@@ -265,6 +265,7 @@ std::unordered_map<uint64_t, std::shared_ptr<AnimSlot>> *g_anims;
 std::unordered_map<uint64_t, std::shared_ptr<AnimSlot>> *g_anims_prev;
 std::thread *g_anim_worker;
 std::atomic<int> g_anim_cancel{0};
+std::atomic<int> g_anim_settled{0};   // slots the worker finished, see hdtex.h
 HdTexStats g_stats;
 
 /* THE DUMP'S INDEX, and the lane's instrument.
@@ -463,6 +464,11 @@ void put_frame(std::vector<uint32_t> &dst, const unsigned char *img, int pw,
    kept. */
 int anim_stride(size_t n, int fw, int fh, const char *path) {
     const size_t fb = static_cast<size_t>(fw) * fh * 4u;
+    if (fw <= 0 || fh <= 0 || fb > kAnimCapBytes) {
+        std::fprintf(stderr, "[hdtex] %s: one %dx%d frame is over the %u MB "
+                     "cap: not loaded\n", path, fw, fh, kAnimCapBytes >> 20);
+        return -1;
+    }
     int stride = 1;
     while ((n + stride - 1) / stride * fb > kAnimCapBytes && stride < 1 << 20)
         ++stride;
@@ -487,6 +493,7 @@ int anim_stride(size_t n, int fw, int fh, const char *path) {
 double folder_fps(const std::string &dir) {
     double fps = 30.0;
     if (FILE *f = std::fopen((dir + "/anim.txt").c_str(), "rb")) {
+        bool read = false;
         char line[256];
         while (std::fgets(line, sizeof line, f)) {
             const char *q = line;
@@ -497,9 +504,12 @@ double folder_fps(const std::string &dir) {
                 while (*q == ' ' || *q == '\t' || *q == '=' || *q == ':') ++q;
             }
             const double v = std::atof(q);
-            if (v > 0.0) { fps = v; break; }
+            if (v > 0.0) { fps = v; read = true; break; }
         }
         std::fclose(f);
+        if (!read)
+            std::fprintf(stderr, "[hdtex] %s/anim.txt: no fps in it (write "
+                         "fps=24): playing at 30\n", dir.c_str());
     }
     if (fps < 0.1) fps = 0.1;
     if (fps > 240.0) fps = 240.0;
@@ -548,8 +558,16 @@ bool load_folder(const std::string &dir, HdTexAnim &a) {
         if (g_anim_cancel.load()) return false;
         if (a.pw && (i % static_cast<size_t>(stride)) != 0) continue;
         int pw = 0, ph = 0, comp = 0;
-        unsigned char *img =
-            stbi_load((dir + "/" + files[i]).c_str(), &pw, &ph, &comp, 4);
+        const std::string fp = dir + "/" + files[i];
+        /* THE SIZE BEFORE THE PIXELS: a frame over the cap is never decoded */
+        if (stbi_info(fp.c_str(), &pw, &ph, &comp) &&
+            static_cast<size_t>(pw) * ph * 4u > kAnimCapBytes) {
+            if (!a.pw) { anim_stride(n, pw, ph, dir.c_str()); return false; }
+            std::fprintf(stderr, "[hdtex] %s: frame over the cap, skipped\n",
+                         fp.c_str());
+            continue;
+        }
+        unsigned char *img = stbi_load(fp.c_str(), &pw, &ph, &comp, 4);
         if (!img || pw <= 0 || ph <= 0) {
             if (img) stbi_image_free(img);
             std::fprintf(stderr, "[hdtex] %s/%s: frame would not load\n",
@@ -561,6 +579,7 @@ bool load_folder(const std::string &dir, HdTexAnim &a) {
             a.pw = pw;
             a.ph = ph;
             stride = anim_stride(n, pw, ph, dir.c_str());
+            if (stride < 0) { stbi_image_free(img); return false; }
             a.stride = stride ? stride : 1;
         }
         a.frames.emplace_back();
@@ -580,6 +599,51 @@ bool load_folder(const std::string &dir, HdTexAnim &a) {
     return true;
 }
 
+/* A GIF'S FRAME COUNT AND SIZE WITHOUT DECODING IT: the blocks are walked
+   and the compressed data skipped, so the caps are known before one pixel is
+   decoded. A file cut short counts the frames it has. */
+int gif_scan(const unsigned char *p, size_t n, int *w, int *h) {
+    if (n < 13 || std::memcmp(p, "GIF8", 4) != 0) return 0;
+    *w = p[6] | (p[7] << 8);
+    *h = p[8] | (p[9] << 8);
+    size_t i = 13;
+    if (p[10] & 0x80) i += 3u << ((p[10] & 7) + 1);
+    int frames = 0;
+    const auto skip_blocks = [&]() {
+        while (i < n) {
+            const unsigned len = p[i++];
+            if (!len) return true;
+            i += len;
+        }
+        return false;
+    };
+    while (i < n) {
+        const unsigned c = p[i++];
+        if (c == 0x3B) break;
+        if (c == 0x21) {
+            ++i;   // the label
+            if (!skip_blocks()) break;
+        } else if (c == 0x2C) {
+            if (i + 9 > n) break;
+            const unsigned flags = p[i + 8];
+            i += 9;
+            if (flags & 0x80) i += 3u << ((flags & 7) + 1);
+            ++i;   // LZW minimum code size
+            ++frames;
+            if (!skip_blocks()) break;
+        } else {
+            break;
+        }
+    }
+    return frames;
+}
+
+/* ONE FRAME AT A TIME (review REVANIMTEX1: stb's whole-file call holds every
+   frame at once, and 400 frames of 512x512 ran a 32-bit game out of memory
+   before the caps were applied). stb's per-frame decoder is called directly
+   (its implementation lives in this file), with the frame two back kept here
+   for the GIF "restore to previous" rule, and only every stride-th frame is
+   converted and kept. */
 bool load_gif(const std::string &path, HdTexAnim &a) {
     FILE *f = std::fopen(path.c_str(), "rb");
     if (!f) return false;
@@ -590,39 +654,50 @@ bool load_gif(const std::string &path, HdTexAnim &a) {
         buf.insert(buf.end(), chunk, chunk + got);
     std::fclose(f);
     if (buf.empty() || buf.size() > (1u << 30)) return false;
-    int *delays = 0, w = 0, h = 0, z = 0, comp = 0;
-    unsigned char *img = stbi_load_gif_from_memory(
-        buf.data(), static_cast<int>(buf.size()), &delays, &w, &h, &z, &comp, 4);
-    if (!img || w <= 0 || h <= 0 || z <= 0) {
-        if (img) stbi_image_free(img);
-        if (delays) stbi_image_free(delays);
-        return false;
-    }
+    int w = 0, h = 0;
+    const int z = gif_scan(buf.data(), buf.size(), &w, &h);
+    if (z <= 0 || w <= 0 || h <= 0) return false;
+    const int stride = anim_stride(static_cast<size_t>(z), w, h, path.c_str());
+    if (stride < 0) return false;
     a.pw = w;
     a.ph = h;
-    int stride = anim_stride(static_cast<size_t>(z), w, h, path.c_str());
     a.stride = stride ? stride : 1;
     const size_t fb = static_cast<size_t>(w) * h * 4u;
+    stbi__context ctx;
+    stbi__start_mem(&ctx, buf.data(), static_cast<int>(buf.size()));
+    stbi__gif g;
+    std::memset(&g, 0, sizeof g);
+    std::vector<unsigned char> back1, back2;   // the last two frames
     uint32_t t = 0;
+    int comp = 0;
     for (int i = 0; i < z; ++i) {
+        if (g_anim_cancel.load()) break;
+        stbi_uc *u = stbi__gif_load_next(&ctx, &g, &comp, 4,
+                                         back2.empty() ? 0 : back2.data());
+        if (u == reinterpret_cast<stbi_uc *>(&ctx)) u = 0;   // end of the file
+        if (!u || g.w != w || g.h != h) break;
         /* A GIF delay of 10 ms or less is played as 100 ms, which is what
            every browser does with it (authoring tools write 0 for "default"). */
-        int dl = delays ? delays[i] : 100;
+        int dl = g.delay;
         if (dl <= 10) dl = 100;
         t += static_cast<uint32_t>(dl);
         if (stride && (i % stride) == 0) {
             a.frames.emplace_back();
-            put_frame(a.frames.back(), img + fb * i, w, h, w, h);
+            put_frame(a.frames.back(), u, w, h, w, h);
             a.end_ms.push_back(0);
         }
         if (!a.end_ms.empty()) a.end_ms.back() = t;   // through the frames it stands for
         if (!stride) break;
+        back2.swap(back1);
+        back1.assign(u, u + fb);
     }
-    stbi_image_free(img);
-    if (delays) stbi_image_free(delays);
+    STBI_FREE(g.out);
+    STBI_FREE(g.history);
+    STBI_FREE(g.background);
+    if (a.frames.empty()) return false;
     if (!stride) { a.end_ms.assign(1, 0); a.total_ms = 0; return true; }
     a.total_ms = a.end_ms.back();
-    return !a.frames.empty();
+    return true;
 }
 
 /* THE WORKER: every slot in the store, in name order, one at a time, at
@@ -664,6 +739,7 @@ void anim_worker() {
                          slot.path.c_str());
         }
         slot.state.store(ok ? 1 : 2);
+        g_anim_settled.fetch_add(1);
     }
 }
 
@@ -1217,19 +1293,55 @@ int hdtex_lookup3(uint64_t name, int have_words, uint32_t teximage,
                    or at the mod change, so by the time a level binds the
                    texture this is normally already done; the longest wait is
                    in the summary line so a hitch here cannot hide. */
+                static int limit = -2;
+                if (limit == -2) {
+                    const char *e = std::getenv("SM64DS_HD_ANIM_WAIT_MS");
+                    limit = e && *e ? std::atoi(e) : kAnimWaitMs;
+                }
                 const double w0 = now_ms();
                 while (slot.state.load() == 0) {
+                    if (limit >= 0 && now_ms() - w0 >= limit) break;
 #if defined(_WIN32)
                     Sleep(1);
 #endif
                 }
                 const double waited = now_ms() - w0;
                 if (waited > g_stats.anim_wait_ms) g_stats.anim_wait_ms = waited;
+                if (slot.state.load() == 0) {
+                    /* NOT YET: the DS picture now, this texture asked again
+                       when the worker settles a slot (gx.cpp) */
+                    if (g_log)
+                        std::printf("[hdtex] %016llx: animation still loading, "
+                                    "DS texture for now\n",
+                                    static_cast<unsigned long long>(name));
+                    return -1;
+                }
             }
             if (slot.state.load() == 1 && slot.anim && !slot.anim->frames.empty()) {
                 const HdTexAnim &a = *slot.anim;
                 const int s = scale_for(a.pw, a.ph, width, height);
                 const int ow = width * s, oh = height * s;
+                const size_t rs = static_cast<size_t>(ow) * oh * 4u * a.frames.size();
+                if ((a.pw != ow || a.ph != oh) && rs > kAnimCapBytes) {
+                    /* resampled, every frame would pass the cap: the first
+                       frame as a still instead */
+                    std::fprintf(stderr, "[hdtex] %016llx: %dx%d frames are not a "
+                                 "whole multiple of %dx%d and resampled would pass "
+                                 "the cap: first frame only\n",
+                                 static_cast<unsigned long long>(name), a.pw, a.ph,
+                                 width, height);
+                    out.assign(static_cast<size_t>(ow) * oh, 0);
+                    for (int y = 0; y < oh; ++y) {
+                        const int sy = static_cast<int>(static_cast<int64_t>(y) * a.ph / oh);
+                        for (int x = 0; x < ow; ++x) {
+                            const int sx = static_cast<int>(static_cast<int64_t>(x) * a.pw / ow);
+                            out[static_cast<size_t>(y) * ow + x] =
+                                a.frames[0][static_cast<size_t>(sy) * a.pw + sx];
+                        }
+                    }
+                    ++g_stats.replaced;
+                    return s;
+                }
                 if (a.pw != ow || a.ph != oh) {
                     /* Not a whole multiple: every frame resampled once, here,
                        laid end to end in `out`. The normal case skips this
@@ -1325,6 +1437,8 @@ int hdtex_lookup3(uint64_t name, int have_words, uint32_t teximage,
                     ph, s, dt);
     return s;
 }
+
+int hdtex_anim_settled(void) { return g_anim_settled.load(); }
 
 int hdtex_anim_frame(const HdTexAnim &a, double now)
 {
