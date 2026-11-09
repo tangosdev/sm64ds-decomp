@@ -1357,6 +1357,7 @@ static HdMeterJob g_hdm;
 extern "C" const HdSelArt *(*port_hd_selicon_hook)(int id) = nullptr;   /* set by hal/hd_selicon.cpp */
 static HdSelJob g_hsj[HDSEL_N], g_hsj_lifted[HDSEL_N];
 static int g_hsj_n, g_hsj_lifted_n, g_hsj_off;
+}  // namespace (HDSELICON1: the two below are the ones hal/menu_compose.cpp calls, so they are not file-local)
 int hd_selicon_lifted_jobs(const HdSelJob **out) { *out = g_hsj_lifted; return g_hsj_lifted_n; }
 const unsigned *hd_selicon_scaled(const HdSelArt *a, int W, int H)
 {
@@ -1392,6 +1393,7 @@ const unsigned *hd_selicon_scaled(const HdSelArt *a, int W, int H)
     }
     return e.px.data();
 }
+namespace {
 static uint8_t g_hud_row[192][256];   /* 1 = a moved coin counter pixel (read only while g_hud_row_live) */
 static Cell g_hud_cells[192][256];    /* the moved coin counter's cells, a plane of their own so they never replace a cell of g_a (the POWER label) */
 static bool g_hud_row_live;
