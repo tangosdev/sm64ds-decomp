@@ -19,9 +19,8 @@
  * the fixed-point library, not to this file.
  *
  * This TU owns .text only: the three variables above stay at their ROM
- * addresses. Every function has C linkage. GX_DispOn, GX_SetGraphicsMode and
- * GXS_SetGraphicsMode carry pret's names (nitro/gx/gx.h); the others keep
- * their address names, which their callers use.
+ * addresses. Every function has C linkage and pret's GX.c name, and
+ * nitro/gx/gx.h declares them all.
  */
 
 #include "types.h"
@@ -69,10 +68,10 @@ void GX_InitGXState(void);
 void DMASyncFillTransfer(u32 channel, void *dst, u32 data, u32 size);
 void MultiStore_Int(int val, int *dst, int len);
 
-// GX_Init: power the display engines, reset the VRAM state, and clear both
+// Power the display engines, reset the VRAM state, and clear both
 // engines' 2D registers. The ROM spills each zero of the CPU path to its own
 // stack slot and reloads it for the call; the volatile locals reproduce that.
-void func_02053c40(void) {
+void GX_Init(void) {
     REG_POWCNT1 |= POWCNT_DISPLAY_SWAP;
     REG_POWCNT1 = (u16)((REG_POWCNT1 & ~POWCNT_ALL_ENGINES) | POWCNT_ALL_ENGINES);
     REG_POWCNT1 |= POWER_CONTROL_ENABLE;
@@ -105,8 +104,8 @@ void func_02053c40(void) {
     REG_DB_BG3PD = 0x100;
 }
 
-// GX_HBlankIntr: returns the previous enable bit.
-int func_02053c10(int enable) {
+// Returns the previous H-blank IRQ enable bit.
+int GX_HBlankIntr(int enable) {
     int old = REG_DISPSTAT & DISPSTAT_HBLANK_IRQ;
     if (enable)
         REG_DISPSTAT |= DISPSTAT_HBLANK_IRQ;
@@ -115,8 +114,8 @@ int func_02053c10(int enable) {
     return old;
 }
 
-// GX_VBlankIntr: returns the previous enable bit.
-int func_02053be0(int enable) {
+// Returns the previous V-blank IRQ enable bit.
+int GX_VBlankIntr(int enable) {
     int old = REG_DISPSTAT & DISPSTAT_VBLANK_IRQ;
     if (enable)
         REG_DISPSTAT |= DISPSTAT_VBLANK_IRQ;
@@ -125,8 +124,7 @@ int func_02053be0(int enable) {
     return old;
 }
 
-// GX_DispOff
-void func_02053b98(void) {
+void GX_DispOff(void) {
     u32 cnt = REG_DISPCNT;
     data_02099fcc = 0;
     data_020a6084 = (u16)((cnt & DISPCNT_MODE_MASK) >> DISPCNT_MODE_SHIFT);
@@ -158,9 +156,9 @@ void GXS_SetGraphicsMode(int bgMode) {
     REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~DISPCNT_BGMODE_MASK) | bgMode;
 }
 
-// GXx_SetMasterBrightness_: reg is either engine's MASTER_BRIGHT. Positive
+// reg is either engine's MASTER_BRIGHT. Positive
 // levels fade up toward white, negative ones down toward black.
-void func_02053a90(u16 *reg, int brightness) {
+void GXx_SetMasterBrightness_(u16 *reg, int brightness) {
     if (brightness == 0)
         *reg = 0;
     else if (brightness > 0)

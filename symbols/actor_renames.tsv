@@ -9427,3 +9427,8 @@ arm9	0x020541b8	ResetVramBanks	resetBankForX_	NitroSDK gx_vramcnt.c static reset
 arm9	0x0205402c	DisableVramBanks	disableBankForX_	NitroSDK gx_vramcnt.c static disableBankForX_ (pret and ntrtwl/NitroSDK): the GX_DisableBankFor* helper; kept at external C linkage
 arm9	0x02054430	func_02054430	GX_SetBankForLCDC	NitroSDK gx_vramcnt.h GX_SetBankForLCDC by body and position (pret pokediamond arm9/lib/NitroSDK/src/GX_vramcnt.c)
 arm9	0x02054748	func_02054748	GX_SetBankForBGExtPltt	NitroSDK gx_vramcnt.h GX_SetBankForBGExtPltt by body and position (pret pokediamond arm9/lib/NitroSDK/src/GX_vramcnt.c)
+arm9	0x02053a90	func_02053a90	GXx_SetMasterBrightness_	NitroSDK gx.c (pret pokediamond GX.c): GX_Init, GX_HBlankIntr, GX_VBlankIntr, GX_DispOff, GXx_SetMasterBrightness_ in the file's reverse-emitted order
+arm9	0x02053b98	func_02053b98	GX_DispOff	NitroSDK gx.c (pret pokediamond GX.c): GX_Init, GX_HBlankIntr, GX_VBlankIntr, GX_DispOff, GXx_SetMasterBrightness_ in the file's reverse-emitted order
+arm9	0x02053be0	func_02053be0	GX_VBlankIntr	NitroSDK gx.c (pret pokediamond GX.c): GX_Init, GX_HBlankIntr, GX_VBlankIntr, GX_DispOff, GXx_SetMasterBrightness_ in the file's reverse-emitted order
+arm9	0x02053c10	func_02053c10	GX_HBlankIntr	NitroSDK gx.c (pret pokediamond GX.c): GX_Init, GX_HBlankIntr, GX_VBlankIntr, GX_DispOff, GXx_SetMasterBrightness_ in the file's reverse-emitted order
+arm9	0x02053c40	func_02053c40	GX_Init	NitroSDK gx.c (pret pokediamond GX.c): GX_Init, GX_HBlankIntr, GX_VBlankIntr, GX_DispOff, GXx_SetMasterBrightness_ in the file's reverse-emitted order

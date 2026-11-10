@@ -12,8 +12,8 @@
 // - dScStage_c::SetVramBanks and GX::DisableAllBanks sit between the scene
 //   graphics methods in this span; co-residence is inferred from the
 //   contiguous run, not from an object map.
-// - func_02053c10/02053be0/02053a90/02053fxx and data_02092660/68 keep
-//   linker names: no header home proven for them yet.
+// - func_02053fxx and data_02092660/68 keep linker names: no header home
+//   proven for them yet.
 #include "dScene_c.h"
 #include "dScStage_c.h"
 #include "dFdColor_c.h"
@@ -37,13 +37,12 @@ struct Matrix2x2Words {
 namespace GX { void DisableAllBanks(); }
 
 extern "C" {
-/* src/engine/gx/GX_Init.cpp names these three in comments but they keep their
-   address symbols: the H-blank and V-blank interrupt enables (each returns the
-   previous bit) and the MASTER_BRIGHT writer (negative darkens). */
-extern int  func_02053c10(int enable);
-extern int  func_02053be0(int enable);
+/* local extern: nitro/gx/gx.h declares these three; the parameter names here
+   hold this TU's @NNN numbers. */
+extern int GX_HBlankIntr(int enable);
+extern int GX_VBlankIntr(int enable);
 
-extern void func_02053a90(u16* out, int v);
+extern void GXx_SetMasterBrightness_(u16 *out, int v);
 
 extern Matrix2x2 data_02092668;
 
@@ -107,8 +106,8 @@ void dScene_c::ResetHardwareRegisters()
     REG_POWCNT1 |= 1;
 
     GX::DisableAllBanks();
-    func_02053c10(0);
-    func_02053be0(1);
+    GX_HBlankIntr(0);
+    GX_VBlankIntr(1);
     GX_SetGraphicsMode(1, 0, 0);
 
     REG_DISPCNT &= ~0x1f00;
@@ -153,7 +152,7 @@ void dScene_c::ResetHardwareRegisters()
     REG_MOSAIC_BG = 0;
     REG_MOSAIC_OBJ = 0;
 
-    func_02053a90((u16*)0x400006c, 0);
+    GXx_SetMasterBrightness_((u16 *)0x400006c, 0);
     GXS_SetGraphicsMode(0);
 
     REG_DISPCNT_SUB &= ~0x1f00;
@@ -195,7 +194,7 @@ void dScene_c::ResetHardwareRegisters()
     REG_DB_MOSAIC_BG = 0;
     REG_DB_MOSAIC_OBJ = 0;
 
-    func_02053a90((u16*)0x400106c, 0);
+    GXx_SetMasterBrightness_((u16 *)0x400106c, 0);
 }
 
 namespace GX {

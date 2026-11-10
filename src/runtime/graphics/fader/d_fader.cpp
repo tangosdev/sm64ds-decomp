@@ -38,7 +38,7 @@ void FlushAndInvalidateDataCache(u32 addr, u32 len);
 int ApproachLinear(Fix12i &value, Fix12i target, Fix12i step);
 
 extern "C" {
-void func_02053a90(u16 *reg, int value);
+void GXx_SetMasterBrightness_(u16 *reg, int value);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
 }
 
@@ -66,8 +66,8 @@ void dFdBrightness_c::AdvanceFade()
         return;
 
     level = -(currInterp << 4) >> 0xc;
-    func_02053a90((u16*)0x400006c, level);
-    func_02053a90((u16*)0x400106c, level);
+    GXx_SetMasterBrightness_((u16 *)0x400006c, level);
+    GXx_SetMasterBrightness_((u16 *)0x400106c, level);
     if (level > -0x10)
         return;
 

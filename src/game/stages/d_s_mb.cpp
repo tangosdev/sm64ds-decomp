@@ -261,7 +261,7 @@ s32 dScMB_c::InitResources() {
     volatile u16 fillMain;
     volatile u16 fillSub;
 
-    func_02053b98();
+    GX_DispOff();
     REG_DISPCNT_SUB &= ~0x10000;
     func_02030aa4(2);
 

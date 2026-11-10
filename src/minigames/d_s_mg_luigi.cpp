@@ -127,7 +127,7 @@ struct IrisScanline {
 
 /* C-linkage engine calls and the remaining local helpers. */
 extern "C" {
-extern int func_02053c10(int);
+extern int GX_HBlankIntr(int);
 /* Functions the members call need C linkage at file scope. Data names do
    not mangle, so the data_* declarations stay next to their users. */
 extern int RandomIntInternal(int *seed);
@@ -169,7 +169,7 @@ void dScMgLuigi_c::AfterCleanupResources(u32 vfSuccess) {
         while (OS_DisableIrq() != 0) {
         }
         IRQ::DisableIRQs(OS_IE_H_BLANK);
-        func_02053c10(0); /* GX_HBlankIntr(FALSE) */
+        GX_HBlankIntr(0);
         IRQ::SetIRQHandler(OS_IE_H_BLANK, 0);
         OS_EnableIrq();
     }
@@ -268,7 +268,7 @@ void dScMgLuigi_c::IrisStop(int idx) {
     mIris[idx].active = 0;
     enabled = OS_DisableIrq();
     IRQ::DisableIRQs(OS_IE_H_BLANK);
-    func_02053c10(0);
+    GX_HBlankIntr(0);
     IRQ::SetIRQHandler(OS_IE_H_BLANK, 0);
     if (enabled != 0)
         OS_EnableIrq();
@@ -328,7 +328,7 @@ void dScMgLuigi_c::StartIris() {
     G2_SetWndOutsidePlane(GX_WND_PLANEMASK_BG2 | GX_WND_PLANEMASK_OBJ, 0);
     G2_SetWnd0Position(0, 0, 0, 0xc0);
     IRQ::EnableIRQs(OS_IE_H_BLANK);
-    func_02053c10(1);
+    GX_HBlankIntr(1);
     if (enabled != 0)
         OS_EnableIrq();
 }

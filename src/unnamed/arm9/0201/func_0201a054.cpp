@@ -10,12 +10,12 @@ extern "C" {
 extern void func_020427f8(void);
 extern u64 func_02042784(void);
 extern void func_02053a8c(void);
-extern void func_02053c40(void);
+extern void GX_Init(void);
 extern void PXI_Init(void);
 extern void func_0203d740(void);
 extern void ClearSaveBlock(void);
 extern void func_0201a4e4(void);
-extern int func_02053be0(int enable);
+extern int GX_VBlankIntr(int enable);
 extern void func_0203bbc0(void);
 extern void func_0203bb5c(void);
 extern void func_0201fec8(void);
@@ -54,7 +54,7 @@ void func_0201a054(void) {
     func_020427f8();
     func_02042784();
     func_02053a8c();
-    func_02053c40();
+    GX_Init();
     PXI_Init();
     func_0203d740();
     ClearSaveBlock();
@@ -67,7 +67,7 @@ void func_0201a054(void) {
         *p = 1;
     }
     IRQ::Enable();
-    func_02053be0(1);
+    GX_VBlankIntr(1);
     func_0203bbc0();
     func_0203bb5c();
     if (!isChild)

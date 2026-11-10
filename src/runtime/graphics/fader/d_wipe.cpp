@@ -15,10 +15,9 @@
  * the vtable/RTTI records land in .data at 0x020926d0..0x02092718.
  *
  * leftovers:
- * - func_02053c10 (GX_HBlankIntr per GX_Init.cpp), the data_023c0000 wake
- *   word, the data_0209f5f8..data_0209f648 table state (shared with the
- *   Luigi minigame's iris, d_s_mg_luigi.cpp) and the 0x400xxxx registers
- *   stay address-named.
+ * - the data_023c0000 wake word, the data_0209f5f8..data_0209f648 table
+ *   state (shared with the Luigi minigame's iris, d_s_mg_luigi.cpp) and the
+ *   0x400xxxx registers stay address-named.
  */
 #include "types.h"
 #include "dWipe_c.h"
@@ -61,7 +60,7 @@ void dWipe_c::DisableWindows() {
     u16 ime = *(volatile u16 *)0x4000208;
     *(volatile u16 *)0x4000208 = 0;
     IRQ::DisableIRQs(2);
-    func_02053c10(0);
+    GX_HBlankIntr(0);
     IRQ::SetIRQHandler(2, 0);
     if (ime != 0) {
         u16 dead = *(volatile u16 *)0x4000208;
@@ -124,7 +123,7 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
             *(volatile u16 *)0x4000208 = 0;
             IRQ::SetIRQHandler(2, Wipe_HBlankHandler);
             IRQ::EnableIRQs(2);
-            func_02053c10(1);
+            GX_HBlankIntr(1);
             if (ime != 0) {
                 u16 dead = *(volatile u16 *)0x4000208;
                 *(volatile u16 *)0x4000208 = 1;
@@ -192,7 +191,7 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
         *(volatile u16 *)0x4000208 = 0;
         IRQ::SetIRQHandler(2, Wipe_HBlankHandler);
         IRQ::EnableIRQs(2);
-        func_02053c10(1);
+        GX_HBlankIntr(1);
         if (saved != 0) {
             u16 dead = *(volatile u16 *)0x4000208;
             *(volatile u16 *)0x4000208 = 1;
