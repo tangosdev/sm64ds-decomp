@@ -92,8 +92,6 @@ extern u8 DecIfAbove0_Byte(u8* p);
 extern signed short FX_SinCosTable_[];
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern dCamera_c *gCamera;
-extern void func_0203568c(int *p, int v);
-extern void func_02035684(int *p, int v);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void *gPFlowerCloseModelFile[];
 extern void *gPFlowerOpenModelFile[];
@@ -230,8 +228,8 @@ void daObjPowerUpItem_c::StateLaunched()
     else
         mAngleY -= delta;
 
-    func_0203568c((int*)&mWithMeshClsn, 0x3c000);
-    func_02035684((int*)&mWithMeshClsn, 0x3c000);
+    mWithMeshClsn.SetRadius(0x3c000);
+    mWithMeshClsn.SetHeight(0x3c000);
     UpdatePos((dCc_c*)&mdCcAc_c);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 

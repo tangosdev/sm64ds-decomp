@@ -9731,3 +9731,5 @@ ov102	0x0214baa0	func_ov102_0214baa0	_ZN7daBmb_c19func_ov102_0214baa0Ev	daBmb_c 
 ov102	0x0214b384	func_ov102_0214b384	_ZN7daBmb_c19func_ov102_0214b384Ej	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
 ov102	0x0214ae1c	func_ov102_0214ae1c	_ZN7daBmb_c19func_ov102_0214ae1cEv	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
 ov102	0x0214ad14	func_ov102_0214ad14	_ZN7daBmb_c19func_ov102_0214ad14Ev	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
+arm9	0x0203568c	func_0203568c	_ZN10dBgCh_Actr9SetRadiusEi	dBgCh_Actr's mRadius / mHeight setters: every caller passed &mWithMeshClsn as an int *
+arm9	0x02035684	func_02035684	_ZN10dBgCh_Actr9SetHeightEi	dBgCh_Actr's mRadius / mHeight setters: every caller passed &mWithMeshClsn as an int *

@@ -22,8 +22,8 @@
  *   too, as members on a Bob-omb the caller holds or spawned.
  * - data_ov102_* are the file handles; SharedFilePtr has no fields, so the
  *   loaded BCA is still the word at +4.
- * - func_0203568c / func_02035684 are the out-of-line stores of
- *   mWithMeshClsn.mRadius / mHeight. Inlining them drops the call.
+ * - mWithMeshClsn.SetRadius / SetHeight are out of line. Storing mRadius /
+ *   mHeight directly drops the call.
  * - func_ov102_0214b53c keeps the volatile stack pins and reads the eating
  *   player (mEatingPlayer, not the carrier): mPos, mAngleX/Y/Z, mHeadMatrix
  *   and mHeadBoneRot, which d_a_ply_methods.cpp fills from bone 15's
@@ -93,8 +93,6 @@ int   SurfaceInfo_TestFlag0x20(int *si);
 /* 0x0203b0e8. Not declared in math/CalcLib.h (a shared header); callers spell it int, int. */
 int AngleDiff(int, int);
 /* The out-of-line stores of mWithMeshClsn's radius and height. */
-void func_0203568c(int *value, int target);
-void func_02035684(int *value, int target);
 /* local extern: no header declares these; each is spelled as its
    definition is (d_bg_actor.cpp, d_a_ply_methods.cpp, src/). */
 int func_ov002_020ef228(dBgCh_Actr *clsn, dActor_c *other);
@@ -651,8 +649,8 @@ void daBmb_c::func_ov102_0214baa0() {
     mdCc_c.radius = 0x3c000;
     mdCc_c.height = 0x50000;
 
-    func_0203568c((int *)&mWithMeshClsn, 0x32000);
-    func_02035684((int *)&mWithMeshClsn, 0x32000);
+    mWithMeshClsn.SetRadius(0x32000);
+    mWithMeshClsn.SetHeight(0x32000);
     param1 = 0;
 }
 
@@ -926,8 +924,8 @@ int daBmb_c::UpdateFuse() {
                 mScaleX = mScaleY;
                 mdCc_c.radius = v * 0x3c;
                 mdCc_c.height = v * 0x50;
-                func_0203568c((int *)&mWithMeshClsn, v * 0x3c);
-                func_02035684((int *)&mWithMeshClsn, v * 0x3c);
+                mWithMeshClsn.SetRadius(v * 0x3c);
+                mWithMeshClsn.SetHeight(v * 0x3c);
                 func_ov002_020ef228(&mWithMeshClsn, this);
             }
             {
