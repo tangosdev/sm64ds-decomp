@@ -1492,4 +1492,8 @@ typedef char Player_State_size_must_be_0x18[sizeof(daPly_c::State) == 0x18 ? 1 :
  * first.
  */
 
+/* Actor-table factory. C linkage keeps the bare `daPly_c_classInit` symbol
+   that the PLAYER registry profile refers to. */
+extern "C" daPly_c *daPly_c_classInit();
+
 #endif
