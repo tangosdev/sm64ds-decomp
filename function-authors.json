@@ -9807,7 +9807,7 @@
     },
     "arm9:0x020593a8": {
       "author": "tangosdev",
-      "name": "_ZN4CP1510EnableDTCMEv"
+      "name": "OS_EnableDTCM"
     },
     "arm9:0x020593b8": {
       "author": "tangosdev",

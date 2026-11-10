@@ -20,7 +20,7 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN4CP1510EnableDTCMEv",
+      "symbol": "OS_EnableDTCM",
       "address": "0x020593a8",
       "size": "0x00000010",
       "legacy_source": "src/_ZN4CP1510EnableDTCMEv.cpp",

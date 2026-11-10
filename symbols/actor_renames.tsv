@@ -9538,3 +9538,4 @@ arm9	0x020593dc	_ZN4CP1510DisableMPUEv	OS_DisableProtectionUnit	NitroSDK os_prot
 arm9	0x020593ec	_ZN4CP1514MPUDataRegion1Ej	OS_SetProtectionRegion1	NitroSDK os_protectionRegion.c: pret OS_protectionRegion.c OS_SetProtectionRegion1, same 0x8 size and instructions (mcr p15 c6,c1,0; bx lr); same address, same body
 arm9	0x02059d74	ARMProcessorMode	OS_GetProcMode	NitroSDK os_system.c: pret OS_system.c OS_GetProcMode, same 0xc size and instructions (mrs cpsr; and #0x1f, HW_PSR_CPU_MODE_MASK); same address, same body
 arm9	0x02059d80	_ZN4CP1516WaitForInterruptEv	OS_Halt	NitroSDK: pret OS_terminate_proc.c OS_Halt, same 0xc size and instructions (mov r0,#0; mcr p15 c7,c0,4 wait for interrupt); this ROM links it inside the os_system.c run between OS_GetProcMode and OS_SpinWait; same address, same body
+arm9	0x020593a8	_ZN4CP1510EnableDTCMEv	OS_EnableDTCM	NitroSDK os_tcm.c OS_EnableDTCM (ntrtwl/NitroSDK libraries/os/src/os_tcm.c, identical asm)

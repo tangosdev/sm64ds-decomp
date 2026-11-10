@@ -1135,7 +1135,7 @@
 0x02058c5c	DC_WaitWriteBufferEmpty	function
 0x02058c68	IC_InvalidateRange	function
 0x02058d80	OS_GetInitArenaLo	function
-0x020593a8	_ZN4CP1510EnableDTCMEv	function
+0x020593a8	OS_EnableDTCM	function
 0x020593b8	OS_GetDTCMAddress	function
 0x020593cc	OS_EnableProtectionUnit	function
 0x020593dc	OS_DisableProtectionUnit	function

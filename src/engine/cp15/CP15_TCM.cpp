@@ -4,26 +4,22 @@
  * region registers, which no C construct compiles to, so the asm blocks are
  * the faithful source.
  *
- * CP15::EnableDTCM sets the DTCM enable bit (0x10000) in the control
- * register c1; pret's os_tcm.c has no counterpart, so it keeps its coined
- * name. OS_GetDTCMAddress (pret/pokediamond OS_tcm.c, declared in
+ * OS_EnableDTCM (ntrtwl/NitroSDK libraries/os/src/os_tcm.c, the same three
+ * instructions) sets the DTCM enable bit (0x10000) in the control register
+ * c1. OS_GetDTCMAddress (pret/pokediamond OS_tcm.c, declared in
  * nitro/os/tcm.h) reads the DTCM region register (c9,c1,0) and masks off the
  * size field, leaving the 4 KiB-aligned base.
  */
 
 #include "nitro/os/tcm.h"
 
-namespace CP15 {
-
-asm void EnableDTCM(void)
+asm void OS_EnableDTCM(void)
 {
     mrc p15, 0, r0, c1, c0, 0
     orr r0, r0, #0x10000
     mcr p15, 0, r0, c1, c0, 0
     bx lr
 }
-
-} // namespace CP15
 
 asm u32 OS_GetDTCMAddress(void)
 {
