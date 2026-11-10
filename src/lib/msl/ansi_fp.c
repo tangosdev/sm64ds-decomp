@@ -12,7 +12,7 @@
  * exactly, has none of them.
  *
  * BOTTOM EDGE: ldexp (0x020708b4..0x02070b98) is MSL's s_ldexp.c, its own
- * file. TOP EDGE: func_02071784 begins where the run ends.
+ * file. TOP EDGE: _ExitProcess begins where the run ends.
  *
  * The digit tables __two_exp reads (data_0209a628..data_0209a6f8) stay
  * extern: this fold claims .text only. */

@@ -16036,7 +16036,7 @@
         "return:int"
       ]
     },
-    "func_02071988": {
+    "sys_readc": {
       "src/__read_console.c": [
         "return:unsigned char"
       ]

@@ -18,6 +18,7 @@
 #include "msl/string.h"
 #include "msl/stdlib.h"
 #include "nitro/os/thread.h"
+#include "msl/critical_regions.h"
 
 extern "C" {
 extern unsigned int data_0209a624;
@@ -25,9 +26,6 @@ extern int OS_TryLockMutex(void *p);
 extern void OS_LockMutex(void *p);
 extern void OS_UnlockMutex(void *p);
 extern void exit(int status);
-extern int data_020aa0ac;
-extern struct G { char p[0x1c]; int v; } data_020a9fd8;
-extern struct G data_020a9ffc;
 typedef void (*sig_func)(int);
 extern sig_func signal_funcs[];
 }
@@ -209,22 +207,22 @@ int raise(int sig) {
     sig_func signal_func;
     if (sig < 1 || sig > 7)
         return -1;
-    if (OS_TryLockMutex(&data_020aa0ac) == 0) {
-        data_020a9fd8.v = data_020a6134.current->id;
-        data_020a9ffc.v = 1;
-    } else if (data_020a9fd8.v == data_020a6134.current->id) {
-        data_020a9ffc.v += 1;
+    if (OS_TryLockMutex(&__cs[signal_funcs_access]) == 0) {
+        __cs_id[signal_funcs_access] = data_020a6134.current->id;
+        __cs_ref[signal_funcs_access] = 1;
+    } else if (__cs_id[signal_funcs_access] == data_020a6134.current->id) {
+        __cs_ref[signal_funcs_access] += 1;
     } else {
-        OS_LockMutex(&data_020aa0ac);
-        data_020a9fd8.v = data_020a6134.current->id;
-        data_020a9ffc.v = 1;
+        OS_LockMutex(&__cs[signal_funcs_access]);
+        __cs_id[signal_funcs_access] = data_020a6134.current->id;
+        __cs_ref[signal_funcs_access] = 1;
     }
     signal_func = signal_funcs[sig - 1];
     if ((unsigned int)signal_func != 1)
         signal_funcs[sig - 1] = 0;
-    data_020a9ffc.v -= 1;
-    if (data_020a9ffc.v == 0)
-        OS_UnlockMutex(&data_020aa0ac);
+    __cs_ref[signal_funcs_access] -= 1;
+    if (__cs_ref[signal_funcs_access] == 0)
+        OS_UnlockMutex(&__cs[signal_funcs_access]);
     if ((unsigned int)signal_func == 1 || (signal_func == 0 && sig == 1))
         return 0;
     if (signal_func == 0)

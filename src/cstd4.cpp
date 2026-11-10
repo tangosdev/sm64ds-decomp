@@ -14,6 +14,7 @@
  * per-function defer_codegen off. */
 #include "types.h"
 #include "msl/string.h"
+#include "msl/critical_regions.h"
 #include "msl/stdlib.h"
 #include "nitro/os/thread.h"
 
@@ -45,11 +46,8 @@ extern void OS_LockMutex(void *p);
 extern void OS_UnlockMutex(void *p);
 typedef struct S6e06c S6e06c;
 int fflush(S6e06c *p);
-extern void func_02071784(void);
+extern void _ExitProcess(void);
 
-extern int data_020aa020;
-extern int data_020a9fd8;
-extern int data_020a9ffc;
 extern volatile int __atexit_curr_func;
 extern void (*volatile __atexit_funcs[])(void);
 extern void (*__console_exit)(void);
@@ -57,22 +55,21 @@ extern void (*__console_exit)(void);
 /* MSL __exit, statement for statement with Spirit Tracks' copy of
    abort_exit_arm_eabi.c: run __atexit_funcs newest first inside the
    inlined atexit_funcs_access critical region, call __console_exit once,
-   fflush(NULL), then leave through func_02071784, which has
-   the place and shape of MSL's _ExitProcess (a tail call to the SYS_EXIT
-   semihosting call func_0207199c). That file's five globals sit in .bss at
+   fflush(NULL), then leave through _ExitProcess (the runtime's tail call
+   to the SYS_EXIT semihosting call sys_exit). That file's five globals sit in .bss at
    0x020a9ec8..0x020a9fd8 in reverse declaration order: __console_exit,
    __stdio_exit, __atexit_curr_func, __aborting, then __atexit_funcs[64]. */
 void __exit(int status)
 {
-    if (OS_TryLockMutex(&data_020aa020) == 0) {
-        data_020a9fd8 = data_020a6134.current->id;
-        data_020a9ffc = 1;
-    } else if (data_020a9fd8 == data_020a6134.current->id) {
-        data_020a9ffc++;
+    if (OS_TryLockMutex(&__cs[atexit_funcs_access]) == 0) {
+        __cs_id[atexit_funcs_access] = data_020a6134.current->id;
+        __cs_ref[atexit_funcs_access] = 1;
+    } else if (__cs_id[atexit_funcs_access] == data_020a6134.current->id) {
+        __cs_ref[atexit_funcs_access]++;
     } else {
-        OS_LockMutex(&data_020aa020);
-        data_020a9fd8 = data_020a6134.current->id;
-        data_020a9ffc = 1;
+        OS_LockMutex(&__cs[atexit_funcs_access]);
+        __cs_id[atexit_funcs_access] = data_020a6134.current->id;
+        __cs_ref[atexit_funcs_access] = 1;
     }
 
     while (__atexit_curr_func > 0) {
@@ -81,16 +78,16 @@ void __exit(int status)
         __atexit_funcs[n]();
     }
 
-    data_020a9ffc--;
-    if (data_020a9ffc == 0) {
-        OS_UnlockMutex(&data_020aa020);
+    __cs_ref[atexit_funcs_access]--;
+    if (__cs_ref[atexit_funcs_access] == 0) {
+        OS_UnlockMutex(&__cs[atexit_funcs_access]);
     }
     if (__console_exit != 0) {
         __console_exit();
         __console_exit = 0;
     }
     fflush(0);
-    func_02071784();
+    _ExitProcess();
 }
 #pragma pop
 
