@@ -151,8 +151,8 @@ That grep proves nothing in a tree that names unknowns `func_XXXX`. Re-examined:
   is a flat count/offset header, and name lookup is linear `strcmp`
   (`src/func_020471ac.cpp`) where NNS G3d uses radix dictionaries. Hand-rolled EAD readers.
 - **FND heaps: NNS under EAD names.** The signatures are literal NNS FND tags —
-  `0x46524d48` = `'FRMH'` (`src/engine/heap/SolidHeapAllocator.cpp:86`) and `0x45585048` =
-  `'EXPH'` (`src/engine/heap/ExpandingHeapAllocator.cpp`, the `C1`).
+  `0x46524d48` = `'FRMH'` (`InitFrameHeap`, `src/engine/heap/SolidHeapAllocator.cpp`) and
+  `0x45585048` = `'EXPH'` (`InitExpHeap`, `src/engine/heap/ExpandingHeapAllocator.cpp`).
 
 Correct statement: *SM64DS does not use NNS G2d/G3d; its heap and sound layers are
 NNS/SDK-shaped under EAD names.* And write "BMD/BTP/BCA," not "BMD0/BTP0/BCA0" — the
@@ -301,7 +301,8 @@ the same four levers apply to us today, years before any `.exe`:
    on roughly NitroSDK 1.x–2.x. Expect names and structure to transfer and byte-identity
    often not. Worth checking whether the `ntrtwl` repos carry older tags.
 2. **Free naming and type recovery.** We rediscovered NNS FND by hand — `'EXPH'`/`'FRMH'`
-   under our own `ExpandingHeapAllocator` / `SolidHeapAllocator` names. The real headers
+   under our own `ExpandingHeapAllocator` / `SolidHeapAllocator` names (since retired for
+   the NNS names). The real headers
    would have handed that over immediately, and the same holds across `OS_`, `MI_`,
    `FS_`, `CARD_`, `SPI_`. This is exactly the "import knowledge" lane `CREDITS.md`
    already sanctions.
