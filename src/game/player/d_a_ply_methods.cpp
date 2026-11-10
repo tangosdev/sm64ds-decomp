@@ -206,8 +206,6 @@ extern void func_0201fc88(s16);
 extern void func_02020388(int playerNo);
 extern int func_02035638(void *);
 extern int func_0203564c(int);
-extern void func_02035684(void *p, s32 v);
-extern void func_0203568c(void *p, s32 v);
 extern void func_02035798(void *, int);
 extern void func_020371fc(void *);
 extern void func_02037318(void *);
@@ -21131,8 +21129,8 @@ int daPly_c::Behavior() {
         r2 = 0x2000;
     }
     temp = FX_MUL(r2, 0x32000);
-    func_0203568c(&mMeshClsn, temp);
-    func_02035684(&mMeshClsn, temp);
+    mMeshClsn.SetRadius(temp);
+    mMeshClsn.SetHeight(temp);
     mdCcAcPos_c.radius = scale * 0x28;
     mul = 0x96;
     if (IsState(data_ov002_021104e4)

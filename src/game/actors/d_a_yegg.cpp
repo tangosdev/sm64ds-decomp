@@ -167,7 +167,6 @@ extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-extern void func_0203568c(void *p, int v);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int radius, int height, void *a, void *b);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
@@ -632,8 +631,8 @@ void daYegg_c::ExecuteSeek() {
 /* State 1 (SEEK), enter. Clears the target, plays the moving animation (file
  * 0x0210e6b0) at normal speed and sets the horizontal speed to 0x64000 (100
  * units). For the variant func_ov002_020ec654 calls zero: no gravity, a
- * target search within 0x7d0000 (2000 units) and func_0203568c on the ground
- * collision with 0x2a000 (42 units; what that sets is not recovered). For the other variant: gravity -0xa000
+ * target search within 0x7d0000 (2000 units) and the ground
+ * collision's radius set to 0x2a000 (42 units). For the other variant: gravity -0xa000
  * (-10 units per frame squared) and a search within 0xfa0000 (4000 units). If
  * a target is found the egg turns to face it; if not, and it has already
  * targeted at least one actor, the zero variant bursts at once. Finally the
@@ -648,7 +647,7 @@ void daYegg_c::EnterSeek() {
     if (!func_ov002_020ec654()) {
         mVertAccel = 0;
         r5 = (dActor_c *)FindTarget(0, 0x7d0000);
-        func_0203568c(&mWithMeshClsn, 0x2a000);
+        mWithMeshClsn.SetRadius(0x2a000);
     } else {
         mVertAccel = -0xa000;
         r5 = (dActor_c *)FindTarget(0, 0xfa0000);

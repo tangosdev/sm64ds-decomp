@@ -119,7 +119,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern s16 data_02082214[];
-void func_02035684(int *p, int v);
 int RandomIntInternal(int *seed);
 unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);
@@ -630,14 +629,13 @@ int daTgz_c::func_ov077_02125a54() {
     return 1;
 }
 
-/* State 1 entry. func_02035684 stores its second argument at int offset 7,
- * which is dBgCh_Actr::mHeight. */
+/* State 1 entry. */
 void daTgz_c::func_ov077_02125b1c() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mAnmModel.SetAnim((BCA_File *)TGZ_BCA, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
-    func_02035684((int *)&mWithMeshClsn, 0x28000);
+    mWithMeshClsn.SetHeight(0x28000);
     mHorzSpeed = 0x1b33;
     mTurnTarget = RandomIntInternal(&data_0209e650.value);
     mActionTimer = RandomIntInternal(&data_0209e650.value);

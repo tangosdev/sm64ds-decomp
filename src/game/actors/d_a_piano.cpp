@@ -11,8 +11,7 @@
  *
  * What stays:
  * - common.h supplies the flat Matrix4x3 representation.
- * - The radius/height store veneers (func_0203568c / func_02035684) and
- *   the vector helpers (Vec3_Sub, LenVec3, MulVec3Mat4x3, AddVec3) stay
+ * - The vector helpers (Vec3_Sub, LenVec3, MulVec3Mat4x3, AddVec3) stay
  *   local externs: no shared header declares them.
  * - The CLPS payload and external g_profile_PIANO are not reconstructed
  *   here.
@@ -56,8 +55,6 @@ extern char data_ov063_0211ecb8;
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int LenVec3(const Vector3 *v);
-void func_0203568c(int *clsn, int radius);
-void func_02035684(int *clsn, int height);
 extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 }
@@ -118,8 +115,8 @@ int daPiano_c::Behavior() {
     if (mPosY <= mMinPosY)
         mPosY = mMinPosY;
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
-    func_0203568c((int *)&mWithMeshClsn, 0x159000);
-    func_02035684((int *)&mWithMeshClsn, 0x159000);
+    mWithMeshClsn.SetRadius(0x159000);
+    mWithMeshClsn.SetHeight(0x159000);
     if (ClosestPlayer()->mIsVanish != 0) {
         if (mMeshCollider.IsEnabled())
             mMeshCollider.Disable();

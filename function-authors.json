@@ -5023,11 +5023,11 @@
     },
     "arm9:0x02035684": {
       "author": "tangosdev",
-      "name": "func_02035684"
+      "name": "_ZN10dBgCh_Actr9SetHeightEi"
     },
     "arm9:0x0203568c": {
       "author": "tangosdev",
-      "name": "func_0203568c"
+      "name": "_ZN10dBgCh_Actr9SetRadiusEi"
     },
     "arm9:0x02035694": {
       "author": "tangosdev",

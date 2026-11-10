@@ -102,7 +102,6 @@ int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3, int a4, i
 typedef void BgchInitAt_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
 int   SurfaceInfo_TestFlag0x20(const SurfaceInfo *p);
 int   func_02035638(u8 *p);
-void  func_02035684(int *p, int v);
 
 void  func_ov002_020aea30(void *self, void *actor, void *collision);
 
@@ -679,7 +678,7 @@ int daMenbo_c::Behavior()
         return 1;
 
     if (mDeathState != 0) {
-        func_02035684((int *)(&mWithMeshClsn), 0xd2000);
+        mWithMeshClsn.SetHeight(0xd2000);
         UpdateWMClsn(mWithMeshClsn, 0);
         if (UpdateDeath(mWithMeshClsn))
             return 1;
