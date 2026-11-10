@@ -81,21 +81,21 @@ namespace cstd {
 
 void __builtin_trap();
 
-// Assertion failure path for the game's cstd helpers: with a nonzero `line`
-// print through the data_020868a0 format and trap forever; with zero, print
-// through data_020868d4 and return.
-void __assert(const char* file, const char* expr, const char* func, int line)
-{
-    if (line) {
-        func_0206ccd8((int)&data_020868a0, file, expr, func);
+// The IS-NITRO debugger library's assert, the twin of the IS-AGB library's
+// AGBAssert (pret/pokeemerald src/libisagbprn.c) down to its two format
+// strings: with stop set, print "ASSERTION FAILED  FILE=[%s] LINE=[%d]
+// EXP=[%s]" (data_020868a0) and trap forever; otherwise print the "WARING"
+// line (data_020868d4) and return. isdoverlay.c is its only caller.
+void __assert(const char *file, int line, const char *exp, int stop) {
+    if (stop) {
+        func_0206ccd8((int)&data_020868a0, file, line, exp);
         __builtin_trap();
         for (;;) {
         }
     } else {
-        func_0206ccd8((int)&data_020868d4, file, expr, func);
+        func_0206ccd8((int)&data_020868d4, file, line, exp);
     }
 }
-
 }
 
 /* The print helper __assert calls: card-wait gate, then formats the varargs
