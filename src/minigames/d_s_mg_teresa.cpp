@@ -1636,7 +1636,8 @@ void dScMgTeresa_c::PaintSquare(int cx, int cy, int val, int n)
                     x = i + x0;
                     if (x >= 0 && x < 0x100) {
                         if (y >= -0xc0 - sMgTopScreenYOffset && y >= 0 && y < 0xc0) {
-                            addr = (int *)((char *)G2S_GetBG0CharPtr() + ((x / 8) + (y / 8) * 32) * 32 + (y & 7) * 4);
+                            addr = (int *)((char *)G2S_GetBG0CharPtr() +
+                                           ((x / 8) + (y / 8) * 32) * 32 + (y & 7) * 4);
                             MIi_CpuCopy32(addr, &buf, 4);
                             buf = (buf & (-1 ^ (0xf << ((x & 7) * 4)))) | (val << ((x & 7) * 4));
                             MIi_CpuCopy32(&buf, addr, 4);
