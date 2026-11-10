@@ -431,9 +431,9 @@ int fflush(S6e06c *p)
 
 #pragma push
 #pragma defer_codegen off
-int func_0206e218(int a, int b);
+int wctomb(int a, int b);
 
-u32 func_0206e184(char *dst, u16 *src, u32 max)
+u32 wcstombs(char *dst, u16 *src, u32 max)
 {
     u32 total = 0;
     char buf[4];
@@ -449,7 +449,7 @@ u32 func_0206e184(char *dst, u16 *src, u32 max)
             break;
         }
         src++;
-        len = func_0206e218((int)bp, code);
+        len = wctomb((int)bp, code);
         if (total + len > max)
             break;
         strncpy(dst + total, bp, len);
@@ -465,7 +465,7 @@ u32 func_0206e184(char *dst, u16 *src, u32 max)
 #pragma defer_codegen off
 extern void *data_0209a438[];
 
-int func_0206e218(int a, int b) {
+int wctomb(int a, int b) {
     void **p = (void **)data_0209a438[2];
     ((void (*)(int, int))p[1])(a, b);
 }
@@ -473,7 +473,7 @@ int func_0206e218(int a, int b) {
 
 #pragma push
 #pragma defer_codegen off
-int func_0206e240(unsigned char *p, unsigned char v) {
+int __wctomb_noconv(unsigned char *p, unsigned char v) {
     if (p == 0) return 0;
     *p = v;
     return 1;
@@ -482,7 +482,7 @@ int func_0206e240(unsigned char *p, unsigned char v) {
 
 #pragma push
 #pragma defer_codegen off
-int func_0206e254(unsigned short *dst, unsigned char *src, int flag) {
+int __mbtowc_noconv(unsigned short *dst, unsigned char *src, int flag) {
     if (src == 0) return 0;
     if (flag == 0) return -1;
     if (dst != 0) *dst = *src;
@@ -493,7 +493,9 @@ int func_0206e254(unsigned short *dst, unsigned char *src, int flag) {
 
 #pragma push
 #pragma defer_codegen off
-int func_0206e28c(const u8* a, const u8* b, u32 n) {
+int memcmp(const void *src1, const void *src2, unsigned int n) {
+    const u8 *a = (const u8 *)src1;
+    const u8 *b = (const u8 *)src2;
     while (n != 0) {
         u8 ca = *a++;
         u8 cb = *b++;
@@ -509,12 +511,13 @@ int func_0206e28c(const u8* a, const u8* b, u32 n) {
 
 #pragma push
 #pragma defer_codegen off
-u8 *func_0206e2cc(u8 *p, int c, unsigned int n)
+void *memchr(const void *src, int c, unsigned int n)
 {
+    const u8 *p = (const u8 *)src;
     u8 ch = (u8)c;
     if (n != 0) {
         do {
-            if (*p++ == ch) return p - 1;
+            if (*p++ == ch) return (void *)(p - 1);
         } while (--n != 0);
     }
     return 0;
@@ -523,16 +526,15 @@ u8 *func_0206e2cc(u8 *p, int c, unsigned int n)
 
 #pragma push
 #pragma defer_codegen off
-/* MSL memset: forwards all three args to __fill_mem (func_0206e330) and
- * returns the destination. The return is void *, the pointer the body hands
- * back in r0. */
-extern void func_0206e330(void *dst, int val, unsigned int n);
-void *func_0206e2f8(void *dst, int val, unsigned int n) { func_0206e330(dst, val, n); return dst; }
+/* MSL memset: forwards all three args to __fill_mem and returns the
+ * destination. */
+extern void __fill_mem(void *dst, int val, unsigned int n);
+void *memset(void *dst, int val, unsigned int n) { __fill_mem(dst, val, n); return dst; }
 #pragma pop
 
 #pragma push
 #pragma defer_codegen off
-void *func_0206e310(void *dst, const void *src, unsigned int n)
+void *memcpy(void *dst, const void *src, unsigned int n)
 {
     unsigned char *d = (unsigned char *)dst;
     const unsigned char *s = (const unsigned char *)src;
@@ -578,7 +580,7 @@ enum {
 
 extern unsigned char *parse_format(unsigned char *format_string, char **arg, print_format *format);
 
-extern int func_0206e450(char *obj, const void *src, unsigned int n);
+extern int __StringWrite(char *obj, const void *src, unsigned int n);
 extern int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProcArg,
                         const unsigned char *format_str, char *arg);
 extern char *float2str(double x, char *buff_end, print_format format);
@@ -594,7 +596,7 @@ extern char data_0209a5e8[];
 /* recovered: MSL memset/__fill_mem -- byte head, 32-byte unrolled block,
  * word tail, byte tail. As in MSL, one counter serves every loop and the
  * word loops run on their own `u32 *` cursor. */
-void func_0206e330(void *dst, int val, u32 n)
+void __fill_mem(void *dst, int val, u32 n)
 {
     u8 *p = (u8 *)dst;
     u32 c = (u32)val & 0xff;
@@ -652,14 +654,14 @@ void func_0206e330(void *dst, int val, u32 n)
 #pragma push
 #pragma defer_codegen off
 struct Ctx { char *buf; unsigned int len; int z; };
-unsigned int func_0206e3dc(char *buf, unsigned int len,
+unsigned int vsnprintf(char *buf, unsigned int len,
                            unsigned int fmtAddr, unsigned int val) {
     struct Ctx ctx;
     unsigned int r;
     ctx.buf = buf;
     ctx.len = len;
     ctx.z = 0;
-    r = __pformatter((int (*)(void *, const char *, size_t))func_0206e450, &ctx,
+    r = __pformatter((int (*)(void *, const char *, size_t))__StringWrite, &ctx,
                      (const unsigned char *)fmtAddr, (char *)val);
     if (buf == 0) return r;
     if (r < len) {
@@ -676,13 +678,13 @@ unsigned int func_0206e3dc(char *buf, unsigned int len,
 
 #pragma push
 #pragma defer_codegen off
-int func_0206e450(char *obj, const void *src, unsigned int n)
+int __StringWrite(char *obj, const void *src, unsigned int n)
 {
     unsigned int off = *(unsigned int*)(obj + 8);
     unsigned int len = *(unsigned int*)(obj + 4);
     if (off + n > len)
         n = len - off;
-    func_0206e310(*(char**)(obj) + off, src, n);
+    memcpy(*(char**)(obj) + off, src, n);
     {
         int *p = (int*)(obj + 8);
         *p = *p + n;
@@ -828,7 +830,7 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
                 unsigned short *ws = *(unsigned short **)((arg += sizeof(void *)) - sizeof(void *));
                 if (ws == 0)
                     ws = data_0209a5e4;
-                if ((int)func_0206e184(conv_buff, ws, MAX_BUFF) < 0)
+                if ((int)wcstombs(conv_buff, ws, MAX_BUFF) < 0)
                     goto invalid_conversion;
                 buff_ptr = (unsigned char *)conv_buff;
             } else {
@@ -843,7 +845,7 @@ int __pformatter(int (*WriteProc)(void *, const char *, size_t), void *WriteProc
             } else if (format.precision_specified) {
                 unsigned char *e;
                 n = format.precision;
-                if ((e = (unsigned char *)func_0206e2cc((u8 *)buff_ptr, 0, n)) != 0)
+                if ((e = (unsigned char *)memchr(buff_ptr, 0, n)) != 0)
                     n = e - buff_ptr;
             } else {
                 n = strlen((const char *)buff_ptr);

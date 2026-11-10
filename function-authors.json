@@ -11895,47 +11895,47 @@
     },
     "arm9:0x0206e184": {
       "author": "tangosdev",
-      "name": "func_0206e184"
+      "name": "wcstombs"
     },
     "arm9:0x0206e218": {
       "author": "tangosdev",
-      "name": "func_0206e218"
+      "name": "wctomb"
     },
     "arm9:0x0206e240": {
       "author": "tangosdev",
-      "name": "func_0206e240"
+      "name": "__wctomb_noconv"
     },
     "arm9:0x0206e254": {
       "author": "tangosdev",
-      "name": "func_0206e254"
+      "name": "__mbtowc_noconv"
     },
     "arm9:0x0206e28c": {
       "author": "tangosdev",
-      "name": "func_0206e28c"
+      "name": "memcmp"
     },
     "arm9:0x0206e2cc": {
       "author": "tangosdev",
-      "name": "func_0206e2cc"
+      "name": "memchr"
     },
     "arm9:0x0206e2f8": {
       "author": "tangosdev",
-      "name": "func_0206e2f8"
+      "name": "memset"
     },
     "arm9:0x0206e310": {
       "author": "tangosdev",
-      "name": "func_0206e310"
+      "name": "memcpy"
     },
     "arm9:0x0206e330": {
       "author": "tangosdev",
-      "name": "func_0206e330"
+      "name": "__fill_mem"
     },
     "arm9:0x0206e3dc": {
       "author": "aitddlabs",
-      "name": "func_0206e3dc"
+      "name": "vsnprintf"
     },
     "arm9:0x0206e450": {
       "author": "tangosdev",
-      "name": "func_0206e450"
+      "name": "__StringWrite"
     },
     "arm9:0x0206e4a4": {
       "author": "tangosdev",

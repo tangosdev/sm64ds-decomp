@@ -478,7 +478,6 @@ extern int func_0204fa2c(int*, int);
 extern int func_02053274(const Vector3*, const Vector3*);
 extern int func_02053c10(int);
 extern int func_02054d88(void);
-extern int func_0206e28c(const u8*, const u8*, u32);
 extern int gMgCoinsShowDelta;
 extern int sMgWinBannerY;
 extern int sMgResultsBannerY;
@@ -881,7 +880,6 @@ extern void func_02056374(const void*, u32, u32);
 extern void func_020563d4(const void*, u32, u32);
 extern void func_020564f4(const void*, int, int);
 extern void func_0205a588(void *, u8, u32);
-extern void* func_0206e2f8(void*, int, unsigned int);
 extern void __cxa_vec_delete(void *, int, int, void (*)(void *));
 extern void data_ov001_020ad494(void);
 
