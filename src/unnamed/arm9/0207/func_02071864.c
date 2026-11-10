@@ -14,22 +14,22 @@ void func_02071864(ThrowContext *t, ActionIterator *it) {
     int f40 = flags & 0x40;
     int f80;
     u8 *p;
-    t->mHasFP = (f40 != 0);
-    t->mArgsPushed = ((flags & 0x20) != 0);
+    t->mFrame.mHasFP = (f40 != 0);
+    t->mFrame.mArgsPushed = ((flags & 0x20) != 0);
     f80 = flags & 0x80;
-    t->mFPIsR7 = (f80 != 0);
-    t->mSavedRegMask = data[1] << 4;
+    t->mFrame.mFPIsR7 = (f80 != 0);
+    t->mFrame.mSavedRegMask = data[1] << 4;
     p = data + 2;
-    t->mSavedRegMask |= 0x4000;
-    p = func_02071a50(p, &t->mFrameSize);
+    t->mFrame.mSavedRegMask |= 0x4000;
+    p = func_02071a50(p, &t->mFrame.mFrameSize);
     if (f40) {
-        p = func_02071a50(p, &t->mFPInfo);
+        p = func_02071a50(p, &t->mFrame.mFPInfo);
     }
     if (f40) {
         if (f80) {
-            t->mFP = (char *)t->mGPR[7];
+            t->mFP = (char *)t->mFrame.mGPR[7];
         } else {
-            t->mFP = (char *)t->mGPR[11];
+            t->mFP = (char *)t->mFrame.mGPR[11];
         }
         return;
     }
