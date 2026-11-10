@@ -47,7 +47,7 @@ extern void MultiStore16(unsigned short val, char *dst, int nbytes);
 extern void MultiCopyHalf(const void *src, void *dst, s32 size);
 extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 extern void FS_InitFile(FSFile *p_file);
-extern int func_0205d518(void *file, const char *path);
+extern int FS_OpenFile(void *file, const char *path);
 extern int FS_CloseFile(void *p_file);
 extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
 extern u16 func_02067ee4(u16 *p, int len);
@@ -175,7 +175,7 @@ void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent) {
  * failed open, or a file whose length (bottom - top, words 9 and 8 of the
  * FSFile) is not exactly that size. Newer SDKs open with
  * FS_OpenFileEx(file, path, FS_FILEMODE_R); this one takes the
- * two-argument open func_0205d518. */
+ * two-argument open FS_OpenFile. */
 int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
     FSFile file;
     int sz;
@@ -190,7 +190,7 @@ int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
 
     FS_InitFile(&file);
 
-    if (func_0205d518(&file, filePathp) == 0)
+    if (FS_OpenFile(&file, filePathp) == 0)
         return 0;
 
     param = file.prop.file.bottom - file.prop.file.top;

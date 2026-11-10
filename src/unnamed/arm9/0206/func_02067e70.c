@@ -3,7 +3,7 @@
 typedef struct FSFile FSFile;
 
 extern int FS_ReadFile(FSFile *obj, void *buf, int size);
-extern int func_0205d368(void *obj, int len, int sel);
+extern int FS_SeekFile(FSFile *p_file, int offset, FSSeekFileMode origin);
 
 struct G {
     char pad[0x2c];
@@ -20,7 +20,7 @@ int func_02067e70(struct FSFile *obj) {
         len = obj->prop.file.pos - obj->prop.file.top; /* FS_GetPosition */
         if ((unsigned int)FS_ReadFile(obj, buf, 0x60) >= 0x60)
             g = (struct G*)buf;
-        func_0205d368(obj, len, 0);
+        FS_SeekFile(obj, len, FS_SEEK_SET);
     } else {
         g = (struct G*)0x27ffe00;
     }

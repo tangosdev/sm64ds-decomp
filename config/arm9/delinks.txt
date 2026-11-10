@@ -2516,7 +2516,7 @@ src/engine/fs/FS_Archive.cpp:
     complete
     .text start:0x0205c7c4 end:0x0205d368
 
-src/unnamed/arm9/0205/func_0205d368.c:
+src/FS_SeekFile.c:
     complete
     .text start:0x0205d368 end:0x0205d3d4
 
@@ -2524,18 +2524,18 @@ src/FS_ReadFile.c:
     complete
     .text start:0x0205d3d4 end:0x0205d3e4
 
-src/unnamed/arm9/0205/func_0205d3e4.cpp:
+src/FS_ReadFileAsync.cpp:
     complete
     .text start:0x0205d3e4 end:0x0205d4cc
 src/FS_CloseFile.c:
     complete
     .text start:0x0205d4cc end:0x0205d518
 
-src/unnamed/arm9/0205/func_0205d518.c:
+src/FS_OpenFile.c:
     complete
     .text start:0x0205d518 end:0x0205d568
 
-src/unnamed/arm9/0205/func_0205d568.c:
+src/FS_OpenFileFast.c:
     complete
     .text start:0x0205d568 end:0x0205d5e8
 
@@ -2543,11 +2543,11 @@ src/FS_OpenFileDirect.c:
     complete
     .text start:0x0205d5e8 end:0x0205d644
 
-src/unnamed/arm9/0205/func_0205d644.c:
+src/FS_ConvertPathToFileID.c:
     complete
     .text start:0x0205d644 end:0x0205d688
 
-src/unnamed/arm9/0205/func_0205d688.c:
+src/FSi_ReadFileCore.c:
     complete
     .text start:0x0205d688 end:0x0205d714
 
@@ -2603,7 +2603,7 @@ src/unnamed/arm9/0205/func_0205e89c.c:
     complete
     .text start:0x0205e89c end:0x0205e904
 
-src/unnamed/arm9/0205/func_0205e904.c:
+src/DGT_SetOverlayTableMode.c:
     complete
     .text start:0x0205e904 end:0x0205e91c
 

@@ -9374,3 +9374,11 @@ arm9	0x02056c60	_ZN3IRQ19Tim1OverflowHandlerEv	OSi_IrqTimer1	NitroSDK os_irqTabl
 arm9	0x02056c50	_ZN3IRQ19Tim2OverflowHandlerEv	OSi_IrqTimer2	NitroSDK os_irqTable.c: pret OS_irqTable.c OSi_IrqTimer2, OSi_IrqCallback(6); a C function in the SDK, so the coined IRQ:: method spelling goes; same address, same body
 arm9	0x02056c40	_ZN3IRQ19Tim3OverflowHandlerEv	OSi_IrqTimer3	NitroSDK os_irqTable.c: pret OS_irqTable.c OSi_IrqTimer3, OSi_IrqCallback(7); a C function in the SDK, so the coined IRQ:: method spelling goes; same address, same body
 itcm	0x01ffd97c	_ZN3IRQ20UserInterruptHandlerEv	OS_IrqHandler	NitroSDK os_irqHandler.c: pret OS_irqHandler.c OS_IrqHandler (ITCM), instruction-for-instruction the same asm body (IE & IF, clz to the lowest set bit, acknowledge it in IF, jump through OS_IRQTable with lr = OS_IrqHandler_ThreadSwitch); a C-linkage asm function in the SDK, so the coined IRQ:: method spelling goes; same address, same body
+arm9	0x0205d368	func_0205d368	FS_SeekFile	NitroSDK fs_file.c (pret FS_file.c): reverse source order fills the gaps between the named FS_file functions
+arm9	0x0205d3e4	func_0205d3e4	FS_ReadFileAsync	NitroSDK fs_file.c (pret FS_file.c): reverse source order fills the gaps between the named FS_file functions
+arm9	0x0205d3f4	func_0205d3f4	FS_WaitAsync	NitroSDK fs_file.c (pret FS_file.c): reverse source order fills the gaps between the named FS_file functions
+arm9	0x0205d518	func_0205d518	FS_OpenFile	NitroSDK fs_file.c (pret FS_file.c): reverse source order fills the gaps between the named FS_file functions
+arm9	0x0205d568	func_0205d568	FS_OpenFileFast	NitroSDK fs_file.c (pret FS_file.c): reverse source order fills the gaps between the named FS_file functions
+arm9	0x0205d644	func_0205d644	FS_ConvertPathToFileID	NitroSDK fs_file.c (pret FS_file.c): reverse source order fills the gaps between the named FS_file functions
+arm9	0x0205d688	func_0205d688	FSi_ReadFileCore	NitroSDK fs_file.c (pret FS_file.c): reverse source order fills the gaps between the named FS_file functions
+arm9	0x0205e904	func_0205e904	DGT_SetOverlayTableMode	NitroSDK dgt DGT_SetOverlayTableMode (ntrtwl NitroSDK include/nitro/dgt/dgt.h): swaps the overlay-table flag the SHA-1 block function reads; FS_AttachOverlayTable sets it around the overlay digest
