@@ -1,6 +1,12 @@
 //cpp
 /* cstd::atan2(int, int) at 0x0203b4dc.
  *
+ * N64 SM64's atan2s (src/engine/math_util.c) in fixed point with its two
+ * arguments swapped: atan2(a, b) here is atan2s(b, a) there. Each octant
+ * indexes gArctanTable, the N64 table of 0x401 angles
+ * (include/trig_tables.inc.c) copied byte for byte, at fdiv(small, large) >> 2,
+ * the same ratio * 1024 atan2_lookup takes.
+ *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
 typedef int s32;
@@ -13,7 +19,7 @@ s32 fdiv(s32, s32);
 extern "C" {
 s32 func_01ffa4bc(s32 a);
 s32 func_01ff98f4(s32 a, s32 b);
-extern unsigned short data_020994e0[];
+extern unsigned short gArctanTable[];
 }
 
 namespace cstd {
@@ -33,25 +39,25 @@ s16 atan2(s32 y, s32 x) {
     } else if (y >= 0) {
         if (x >= 0) {
             if (x >= y)
-                r = data_020994e0[fdiv(y, x) >> 2];
+                r = gArctanTable[fdiv(y, x) >> 2];
             else
-                r = 0x4000 - data_020994e0[fdiv(x, y) >> 2];
+                r = 0x4000 - gArctanTable[fdiv(x, y) >> 2];
         } else {
             if (-x < y)
-                r = data_020994e0[fdiv(-x, y) >> 2] + 0x4000;
+                r = gArctanTable[fdiv(-x, y) >> 2] + 0x4000;
             else
-                r = 0x8000 - data_020994e0[fdiv(y, -x) >> 2];
+                r = 0x8000 - gArctanTable[fdiv(y, -x) >> 2];
         }
     } else if (func_01ff98f4(func_01ffa4bc(x), 0)) {
         if (x <= y)
-            r = data_020994e0[fdiv(-y, -x) >> 2] + 0x8000;
+            r = gArctanTable[fdiv(-y, -x) >> 2] + 0x8000;
         else
-            r = 0xc000 - data_020994e0[fdiv(-x, -y) >> 2];
+            r = 0xc000 - gArctanTable[fdiv(-x, -y) >> 2];
     } else {
         if (x < -y)
-            r = data_020994e0[fdiv(x, -y) >> 2] + 0xc000;
+            r = gArctanTable[fdiv(x, -y) >> 2] + 0xc000;
         else
-            r = -data_020994e0[fdiv(-y, x) >> 2];
+            r = -gArctanTable[fdiv(-y, x) >> 2];
     }
     return (s16)r;
 }
