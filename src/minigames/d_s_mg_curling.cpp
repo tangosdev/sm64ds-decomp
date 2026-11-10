@@ -42,7 +42,7 @@ enum dScMgCurling_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
@@ -1434,8 +1434,8 @@ void dScMgCurling_c::StartRound(int /* arg */) {
     mState = 0;
     ClearStones();
     PickHouse();
-    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xd, 2, 0x10);
-    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xd, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
 }
 
@@ -1522,8 +1522,8 @@ s32 dScMgCurling_c::InitResources() {
     Mg_SetTopScreenYOffset(0x20);
     mStateDelay = 0x40;
     mRunDuringFade = 1;
-    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xd, 2, 0x10);
-    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xd, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
     return 1;
 }

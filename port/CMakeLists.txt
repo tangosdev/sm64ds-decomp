@@ -170,7 +170,7 @@ endfunction()
 # These src/ files touch MMIO textually, so they build from hostgen-emitted
 # copies under the build tree -- src/ itself is never edited.
 set(GATE4A_SYMS
-    G3_MultTransMtx33 G3_MultMtx43 G3_LoadMtx43 _ZN3G3X9ClearFifoEv
+    G3_MultTransMtx33 G3_MultMtx43 G3_LoadMtx43 G3X_ClearFifo
     MI_SendGXCommandAsync MIi_FIFOCallback MIi_DMACallback OSi_EnterDmaCallback MI_WaitDma)
 sm64ds_hostgen_symbols(GATE4A_GEN ${GATE4A_SYMS})
 

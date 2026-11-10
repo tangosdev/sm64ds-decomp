@@ -9147,15 +9147,15 @@
     },
     "arm9:0x02055238": {
       "author": "tangosdev",
-      "name": "_ZN3G2x18SetBlendBrightnessEPVtts"
+      "name": "G2x_SetBlendBrightness_"
     },
     "arm9:0x0205525c": {
       "author": "andrewboudreau",
-      "name": "_ZN3G2x13SetBlendAlphaEPVttttj"
+      "name": "G2x_SetBlendAlpha_"
     },
     "arm9:0x02055278": {
       "author": "andrewboudreau",
-      "name": "_ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii"
+      "name": "G2x_SetBGyAffine_"
     },
     "arm9:0x0205532c": {
       "author": "andrewboudreau",
@@ -9179,55 +9179,55 @@
     },
     "arm9:0x02055454": {
       "author": "tangosdev",
-      "name": "_ZN3G3X10SetHOffsetEi"
+      "name": "G3X_SetHOffset"
     },
     "arm9:0x02055464": {
       "author": "tangosdev",
-      "name": "_ZN3G3X18GetMtxStackLevelPJEPi"
+      "name": "G3X_GetMtxStackLevelPJ"
     },
     "arm9:0x02055490": {
       "author": "tangosdev",
-      "name": "_ZN3G3X18GetMtxStackLevelPVEPi"
+      "name": "G3X_GetMtxStackLevelPV"
     },
     "arm9:0x020554bc": {
       "author": "tangosdev",
-      "name": "_ZN3G3X9InitTableEv"
+      "name": "G3X_InitTable"
     },
     "arm9:0x02055574": {
       "author": "tangosdev",
-      "name": "_ZN3G3X13SetClearColorEtiiib"
+      "name": "G3X_SetClearColor"
     },
     "arm9:0x020555a4": {
       "author": "tangosdev",
-      "name": "func_020555a4"
+      "name": "G3X_SetToonTable"
     },
     "arm9:0x020555bc": {
       "author": "ruspecial",
-      "name": "_ZN3G3X11SetFogTableEPv"
+      "name": "G3X_SetFogTable"
     },
     "arm9:0x020555d0": {
       "author": "tangosdev",
-      "name": "_ZN3G3X6SetFogEbiii"
+      "name": "G3X_SetFog"
     },
     "arm9:0x02055624": {
       "author": "tangosdev",
-      "name": "_ZN3G3X13ResetMtxStackEv"
+      "name": "G3X_ResetMtxStack"
     },
     "arm9:0x020556d0": {
       "author": "tangosdev",
-      "name": "_ZN3G3X12InitMtxStackEv"
+      "name": "G3X_InitMtxStack"
     },
     "arm9:0x02055780": {
       "author": "tangosdev",
-      "name": "_ZN3G3X9ClearFifoEv"
+      "name": "G3X_ClearFifo"
     },
     "arm9:0x020557b4": {
       "author": "tangosdev",
-      "name": "_ZN3G3X5ResetEv"
+      "name": "G3X_Reset"
     },
     "arm9:0x0205583c": {
       "author": "andrewboudreau",
-      "name": "func_0205583c"
+      "name": "G3X_Init"
     },
     "arm9:0x02055998": {
       "author": "tangosdev",
@@ -9235,11 +9235,11 @@
     },
     "arm9:0x02055a64": {
       "author": "tangosdev",
-      "name": "_ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3"
+      "name": "G3i_LookAt_"
     },
     "arm9:0x02055bfc": {
       "author": "tangosdev",
-      "name": "_ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3"
+      "name": "G3i_PerspectiveW_"
     },
     "arm9:0x02055dec": {
       "author": "tangosdev",

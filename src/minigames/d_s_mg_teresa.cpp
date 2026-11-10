@@ -54,7 +54,7 @@
 #include "dScMgTeresa_c.h"
 #include "decl_common.h"
 #include "LevelRng.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "PlayerInput.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "cstd.h"
@@ -436,7 +436,7 @@ void dScMgTeresa_c::BigBoo_Start()
     mBigBoo[0].frame = 8;
     mBigBoo[0].moveRight = 0;
     mBigBoo[0].done = 0;
-    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xc, 0xc, 0x10);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xc, 0xc, 0x10);
 }
 
 void dScMgTeresa_c::BigBoo_Hide()
@@ -1096,7 +1096,7 @@ void dScMgTeresa_c::Boo_StateFadeAway(int i) {
     mBoos[i].mFade++;
     mBoos[i].mTimer = 0;
     if (i == mLastSettledBoo) {
-        G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 0x10 - mBoos[i].mFade, 0x10);
+        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 0x10 - mBoos[i].mFade, 0x10);
     }
     if (mBoos[i].mFade >= 0x10) {
         mBoos[i].mInPlay = 0;
@@ -1142,7 +1142,7 @@ void dScMgTeresa_c::Boo_StateFadeIn(int i) {
     mBoos[i].mTimer = 0;
 
     if (i == mLastSettledBoo) {
-        G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 1, mBoos[i].mFade, 0x10);
+        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 1, mBoos[i].mFade, 0x10);
     }
 
     if (mBoos[i].mFade < 0x10)
@@ -1210,7 +1210,7 @@ void dScMgTeresa_c::Boo_StateFadeOut(int i) {
     mBoos[i].mFade++;
     mBoos[i].mTimer = 0;
     if (i == 0)
-        G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 1, 0x10 - mBoos[i].mFade, 0x10);
+        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 1, 0x10 - mBoos[i].mFade, 0x10);
     if (mBoos[i].mFade < 0x10)
         return;
     mBoos[i].mFade = 0;

@@ -23,7 +23,7 @@
 #include "dFdWipe_c.h"
 #include "dFdDummy_c.h"
 #include "decl_common.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "dExtModel_c.h"
 #include "math/MtxStack.h"
 #include "nitro/gx/gx_load.h"
@@ -156,8 +156,8 @@ void dFdColor_c::AdvanceFade()
         int m = color ? 0x10 : -0x10;
         int r = (currInterp * m) >> 12;
         if (r != 0) {
-            G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3f, r);
-            G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, 0x3f, r);
+            G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, 0x3f, r);
+            G2x_SetBlendBrightness_((volatile unsigned short *)0x4001050, 0x3f, r);
         } else {
             *(unsigned short*)0x4000050 = 0;
             *(unsigned short*)0x4001050 = 0;
@@ -189,7 +189,7 @@ void dFdWipe_c::AdvanceFade()
     cur = currInterp;
     if (cur == 0 && cur == old) return;
     if (cur == 0x1000) {
-        G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x3f, -0x10);
+        G2x_SetBlendBrightness_((volatile u16 *)0x4000050, 0x3f, -0x10);
     } else {
         if (speed != 0) {
             if (old != 0x1000) *(u16*)0x4000050 = 0;
@@ -210,7 +210,7 @@ void dFdWipe_c::AdvanceFade()
         int prod = currInterp * m;
         int r = prod >> 12;
         if (r != 0) {
-            G2x::SetBlendBrightness((volatile u16 *)0x4001050, 0x3f, r);
+            G2x_SetBlendBrightness_((volatile u16 *)0x4001050, 0x3f, r);
         } else {
             *(u16*)0x4000050 = 0;
             *(u16*)0x4001050 = 0;

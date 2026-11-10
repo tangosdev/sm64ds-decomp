@@ -7,10 +7,10 @@
  * 0x466c. dScMgD3DBase_c's array strides by 0xbc, and 0x4660 + 0xbc is where
  * dScMgSingle3DBase_c::mParticle starts.
  *
- * Camera_UpdateMatrices fixes the layout. It hands mPos to G3i::LookAt_ as the
+ * Camera_UpdateMatrices fixes the layout. It hands mPos to G3i_LookAt_ as the
  * camera position and mLookAt as the point looked at, with mViewMtx as the
  * output. It looks mFovAngle up in the sine/cosine table for
- * G3i::PerspectiveW_ and passes it to dClipper::Func_020156DC as the fov
+ * G3i_PerspectiveW_ and passes it to dClipper::Func_020156DC as the fov
  * angle. These are the same pair dCamera_c keeps as lookAt and pos. */
 #ifndef MGCAMERA_H
 #define MGCAMERA_H
@@ -26,11 +26,11 @@
 struct MgCamera {
     MgCamera() {}
 
-    /* G3i::LookAt_ writes it, CopyToViewMat loads it, and
+    /* G3i_LookAt_ writes it, CopyToViewMat loads it, and
        Camera_ProjectToScreen transforms a world point by it. */
     MtxFx43 mViewMtx; /* 0x00 */
     u8 pad_30[0x30];  /* 0x30 */
-    /* G3i::PerspectiveW_ writes all sixteen words. */
+    /* G3i_PerspectiveW_ writes all sixteen words. */
     fx32 mProjMtx[4][4]; /* 0x60 */
     VecFx32 mLookAt;     /* 0xa0 */
     VecFx32 mPos;        /* 0xac */

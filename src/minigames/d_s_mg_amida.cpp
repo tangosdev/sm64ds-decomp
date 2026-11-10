@@ -95,7 +95,7 @@ enum dScMgAmida_c_AssetId {
 #include "Sound.h"
 #include "CP15.h"
 #include "nitro/gx/gx_load.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 
 extern "C" {
 /* --- shared ov004 and main helpers --- */
@@ -1683,7 +1683,7 @@ void dScMgAmida_c::SetupRound() {
        evidence for a name yet. */
     *(s32 *)(raw + 0x5370) = 1;
     REG_BLDCNT = 0;
-    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 4, 8, 6, 0x10);
+    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 4, 8, 6, 0x10);
     Mg_ShowBanner(0xd, 0x80, 0x60, 1, -1, 0xd);
 
     mStartBannerTimer = 0x3c;
@@ -2159,7 +2159,7 @@ s32 dScMgAmida_c::InitResources() {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_2_NSC_BIN, G2S_GetBG2ScrPtr());
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_1_NSC_BIN, G2S_GetBG3ScrPtr());
         REG_BLDCNT = 0;
-        G2x::SetBlendAlpha(&REG_DB_BLDCNT, 4, 8, 6, 0x10);
+        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 4, 8, 6, 0x10);
         gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3;
         gSubScreenLayers |= 0xd;
     }

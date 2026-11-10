@@ -59,7 +59,7 @@
 #include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "CP15.h"
-#include "G3X.h"
+#include "nitro/gx/g3x.h"
 #include "dScene_c.h"
 #include "LevelRng.h"
 #include "SaveData.h"
@@ -240,7 +240,7 @@ s32 dScMiniGm_c::InitResources()
     *(volatile u32 *)0x4000000 &= ~0x38000000;
     GX_DispOn();
     *(volatile u32 *)0x4001000 |= 0x10000;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     *(volatile u32 *)0x40004cc = 0x7fff;
     *(volatile u32 *)0x40004cc = 0x40007fff;

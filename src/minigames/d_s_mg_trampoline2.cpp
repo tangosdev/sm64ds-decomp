@@ -2,11 +2,12 @@
 #include "dFdBrightness_c.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 #include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
+#include "nitro/gx/g3x.h"
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_s_mg_trampoline2_AssetId {
     ASSET_D_2D_MG_BG_TRAMPOLINE_HARD_NCG_BIN = 0x00a2,
@@ -214,11 +215,6 @@ OamAttr **sTrmp2TextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSprites
                                            sMgTextSpritesItalian};
 }
 
-/* This overload is C++, unlike the address-spelled C ABI declarations above. */
-namespace G3X {
-void SetFog(int enable, int mode, int slope, int offset);
-}
-
 /* The three models, mTexAnim and mUnusedVec are all built before the
    empty body, in declaration order. */
 TrmpItem::TrmpItem() {}
@@ -278,7 +274,7 @@ s32 dScMgTrampoline2_c::InitResources() {
     InitDisplay();
     gMainScreenLayers =
         DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     *(u16 *)0x4000060 = (*(u16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
@@ -314,7 +310,7 @@ s32 dScMgTrampoline2_c::InitResources() {
 
 /* Vtable slot 18: reset the round. */
 void dScMgTrampoline2_c::StartRound(int /* arg */) {
-    G2x::SetBlendAlpha((volatile u16 *)0x4000050, 1, 0x2e, 0x10, 0x10);
+    G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 1, 0x2e, 0x10, 0x10);
 
     mTouchStartX = data_020a0dbc[0];
     mTouchStartY = data_020a0dbc[1];

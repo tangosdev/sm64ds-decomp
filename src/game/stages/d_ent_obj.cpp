@@ -22,7 +22,7 @@
  *  - The Fix12-by-value dExtShadowModel_c::InitModel call keeps its measured
  *    scalar-extern spelling: spelled as
  *    the real member types, mwccarm homes the register arguments and the
- *    callers grow. G3i::PerspectiveW_ is the Fix12i method.
+ *    callers grow. G3i_PerspectiveW_ is the Fix12i method.
  *  - LAUNDER((char*)) stays on the mModel.data / mAnimation.data /
  *    mModel.mat4x3 alias reads in Render -- the plain member
  *    read changes which value-numbering class mwcc folds them into.
@@ -45,11 +45,12 @@
 #include "nitro/fx/fx_trig.h"
 #include "SpawnInfo.h"
 #include "Sound.h"
-#include "G3X.h"
+#include "nitro/gx/g3x.h"
 #include "math/Approach.h"
 #include "BMD_File.h"
 #include "private/mtx43.h"
 #include "LevelRng.h"
+#include "nitro/gx/g3_util.h"
 
 struct BTP_File;
 
@@ -58,12 +59,6 @@ int fdiv(int a, int b);
 }
 namespace Particle {
 void RenderAll();
-}
-namespace G3i {
-void LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target, bool draw,
-             Matrix4x3 *m);
-void PerspectiveW_(Fix12i sinFov, Fix12i cosFov, Fix12i aspect, Fix12i nearZ, Fix12i farZ,
-                   Fix12i scaleW, int load, Matrix4x3 *m);
 }
 void CopyToViewMat(const Matrix4x3 *m);
 
@@ -759,10 +754,10 @@ int dEntObj_c::GetStandingX(int playerNo) {
 /* Rebuild the projection and the view from the camera eye and target. */
 void dEntObj_c::SetCamera() {
     Matrix4x3 view;
-    G3i::PerspectiveW_(data_02082614[0xa], data_02082614[0xb], 0x1555, 0x1000, 0x1388000, 0x1000,
-                       true, (Matrix4x3 *)0);
-    G3i::LookAt_((Vector3 *)&mCamPosX, (Vector3 *)&data_ov075_0211c660, (Vector3 *)&mCamTargetX,
-                 true, &view);
+    G3i_PerspectiveW_(data_02082614[0xa], data_02082614[0xb], 0x1555, 0x1000, 0x1388000, 0x1000,
+                      true, (Matrix4x3 *)0);
+    G3i_LookAt_((Vector3 *)&mCamPosX, (Vector3 *)&data_ov075_0211c660, (Vector3 *)&mCamTargetX,
+                true, &view);
     CopyToViewMat(&view);
     data_0209f43c.Func_020156DC(0x1555, 0x105b, 0x1000, 0x1388000);
 }
@@ -910,7 +905,7 @@ int dEntObj_c::InitResources() {
 
     dExtAnmTexPat_c::LoadFile(data_ov075_0211d40c);
 
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     dExtShadowModel_c::CleanAll();
 
     mModel.SetFile((BMD_File *)data_ov075_0211d3fc.filePtr, 1, -1);

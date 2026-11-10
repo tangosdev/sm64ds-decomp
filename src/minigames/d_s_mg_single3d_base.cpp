@@ -8,7 +8,7 @@
  * are different functions; each call site keeps the one the ROM calls.
  *
  * leftovers:
- * - The GX/GXS/G2S/CP15/G3X engine calls stay file-local namespace
+ * - The GX/GXS/G2S/CP15 engine calls stay file-local namespace
  *   declarations: no shared header declares them.
  * - Ov004_LoadFile keeps its local declaration: its own definition
  *   is still declared without the argument and result.
@@ -32,12 +32,10 @@ enum d_s_mg_single3_d_base_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g3x.h"
 
 /* SDK calls this file makes. */
 namespace CP15 { void FlushAndInvalidateDataCache(u32 address, u32 length); }
-namespace G3X {
-void SetFog(int enable, int, int, int);
-}
 
 extern "C" {
 void *LoadFile(int fileId);
@@ -104,7 +102,7 @@ void dScMgSingle3DBase_c::InitEngines()
     Ov004_Deallocate(fileData);
     Mg_ResetOverlays();
     data_0208ee44 = 1;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     FreeGfxSlotsById(0x1d);
     sMgGraphCallback.mScene = this;

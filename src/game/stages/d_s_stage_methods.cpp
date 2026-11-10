@@ -57,7 +57,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "daPly_c.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "nitro/hw/registers.h"
 #include "dScene_c.h"
 #include "Event.h"
@@ -69,7 +69,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "dBgW.h"
 #include "dFdWipe_c.h"
 #include "SaveData.h"
-#include "G3X.h"
+#include "nitro/gx/g3x.h"
 #include "dExtAnmTexSRT_c.h"
 #include "dExtFrameCtrl_c.h"
 #include "dExtShadowModel_c.h"
@@ -722,8 +722,8 @@ void dScStage_c::VE_Init() {
     gActorUpdateMask = gNextActorUpdateMask;
     gVsExitScreenActive = 1;
     data_0209f290 = 0;
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, a | 0x20, -7);
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, b | 0x20, -7);
+    G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, a | 0x20, -7);
+    G2x_SetBlendBrightness_((volatile unsigned short *)0x4001050, b | 0x20, -7);
 }
 void dScStage_c::RenderBouncingArrows() {
     int r4;
@@ -912,8 +912,8 @@ void dScStage_c::LC_Update() {
         SetSubBg1Offset(0, 0);
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
         gSubScreenLayers |= 3;
-        G2x::SetBlendBrightness((volatile u16 *)0x4000050, t6 | 0x20, -7);
-        G2x::SetBlendBrightness((volatile u16 *)0x4001050, t5 | 0x20, -7);
+        G2x_SetBlendBrightness_((volatile u16 *)0x4000050, t6 | 0x20, -7);
+        G2x_SetBlendBrightness_((volatile u16 *)0x4001050, t5 | 0x20, -7);
         gLevelClearStep = 3;
         return;
     }
@@ -2772,8 +2772,8 @@ void dScStage_c::PS_Init() {
     }
 
     Sound::PauseMusic();
-    G2x::SetBlendBrightness((volatile u16 *)0x04000050, mainBlendTargets | 0x20, -7);
-    G2x::SetBlendBrightness((volatile u16 *)0x04001050, subBlendTargets | 0x20, -7);
+    G2x_SetBlendBrightness_((volatile u16 *)0x04000050, mainBlendTargets | 0x20, -7);
+    G2x_SetBlendBrightness_((volatile u16 *)0x04001050, subBlendTargets | 0x20, -7);
 }
 
 extern "C" {
@@ -2835,7 +2835,7 @@ int IsButtonInputValid(void) {
    blx r1` with r0 = the callback object. The matrix at +0x4 stays zero until
    UpdateMinimap; the static initializer does not seed it. */
 int dScStage_c::graphCallback_c::GraphCallback2() {
-    G2x::SetBGyAffine(&REG_DB_BG3PA, &matrix, originX, originY, targetX, targetY);
+    G2x_SetBGyAffine_(&REG_DB_BG3PA, &matrix, originX, originY, targetX, targetY);
     return 1;
 }
 
@@ -3886,9 +3886,9 @@ void dScStage_c::RenderFog() {
         if (camera->IsUnderwater())
             fog++;
     }
-    G3X::SetFog(fog->mEnabled, 0, fog->mShift, fog->mOffset);
+    G3X_SetFog(fog->mEnabled, 0, fog->mShift, fog->mOffset);
     *(volatile unsigned int *)0x4000358 = fog->mColor | 0x1f0000;
-    G3X::SetFogTable(fog);
+    G3X_SetFogTable(fog);
 }
 
 /* dScStage_c::LoadFog. Lays down two default ramps -- a shallow one in mFog[0] and

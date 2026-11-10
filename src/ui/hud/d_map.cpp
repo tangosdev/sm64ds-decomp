@@ -25,7 +25,7 @@
  *   local, so `&focus->mPos` needs no launder.
  * - GetPosFromMinimapPos and GetPosOnMinimap are static Fix12i methods;
  *   the third parameter is the scalar, not Fix12<int>.
- * - The OAM, G2x and Vec3 helpers stay on C-linkage or hand-mangled
+ * - The OAM and Vec3 helpers stay on C-linkage or hand-mangled
  *   externs for the same reason.
  */
 #include "dMap_c.h"
@@ -41,7 +41,7 @@
 #include "dFdBrightness_c.h"
 #include "SaveData.h"
 #include "OAM.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "cstd.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -589,7 +589,7 @@ s32 dMap_c::Behavior()
             SetSubBg2Offset(0x100 - data_0209f498[gActivePlayerSlot].tx,
                             0x80 - data_0209f498[gActivePlayerSlot].ty);
         }
-        G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
+        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
         if (data_0209f498[gActivePlayerSlot].mode != 2)
             *(volatile u16 *)0x400100c = (u16)((*(volatile u16 *)0x400100c & 0x43) | 0x5300);
         else

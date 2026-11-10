@@ -34,7 +34,7 @@
 #include "decl_common.h"
 #include "LevelRng.h"
 #include "Sound.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "PlayerInput.h"
 #include "Vector2.h"
 #include "Vector2Math.h"
@@ -199,7 +199,7 @@ void dScMgFlower_c::DealPetals() {
     self->mPetalsSettled = 0;
     self->mBgScrollPhase = 0;
     REG_BLDCNT = 0;
-    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 4, 8, 6, 0xa);
+    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 4, 8, 6, 0xa);
 }
 
 /* Slot 18: bump mHoldTimer (reset once it passes 0x14), reset the face
@@ -520,7 +520,7 @@ s32 dScMgFlower_c::InitResources() {
     Ov004_Deallocate(fileData);
 
     REG_BLDCNT = 0;
-    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 4, 8, 6, 0xa);
+    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 4, 8, 6, 0xa);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 0xc;
