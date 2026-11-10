@@ -1,13 +1,13 @@
 //cpp
 /* NitroSDK's coprocessor divide and square-root routines, FX_cp.c (pret
  * pokediamond arm9/lib/NitroSDK/src/FX_cp.c), arm9 .text 0x02052ef4..
- * 0x02053274, plus func_02053274 at the top of the run. That one is the
- * shape of fx_vec.c's VEC_Distance (a squared distance through the sqrt
- * unit, then (result + 1) >> 1), so this TU's upper boundary is still the
- * shard fold's and not the SDK's.
+ * 0x02053274, plus VEC_Distance at the top of the run. VEC_Distance is the
+ * last live function of fx_vec.c (NitroSDK libraries/fx/src/fx_vec.c; its
+ * VEC_Fx16Distance is dead-stripped), so this TU's upper boundary is still
+ * the shard fold's and not the SDK's.
  *
  * mwccarm emits .text in reverse source order here, so definitions run from
- * the highest address (func_02053274) down to the lowest (FX_ModS32), the
+ * the highest address (VEC_Distance) down to the lowest (FX_ModS32), the
  * order pret's FX_cp.c writes them in. FX_DivFx64c, FX_InvSqrt and
  * FX_SqrtAsync are the later SDK's additions to the same file.
  *
@@ -19,11 +19,10 @@
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
 
-/* Squared distance |a-b|^2 through the hardware sqrt unit; returns the
-   20.12 result. */
+/* |a - b|: the squared distance through the hardware sqrt unit, rounded
+   back to 20.12. */
 extern "C" {
-int func_02053274(int *a, int *b)
-{
+int VEC_Distance(int *a, int *b) {
     volatile unsigned short *imeReg = (volatile unsigned short *)0x4000208;
     volatile unsigned short *sqrtcnt = (volatile unsigned short *)0x40002b0;
     volatile unsigned int *sqrtParam = (volatile unsigned int *)0x40002b8;

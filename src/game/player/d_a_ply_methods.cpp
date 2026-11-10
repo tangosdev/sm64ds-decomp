@@ -6616,13 +6616,13 @@ extern "C" {
 int daPly_c::func_ov002_020c8a4c() {
     extern short Vec3_HorzAngle(const Vector3*, const Vector3*);
     extern void Vec3_RotateYAndTranslate(void*, const Vector3*, int, const Vector3*);
-    extern int func_02053274(const Vector3*, const Vector3*);
+    extern int VEC_Distance(const Vector3 *, const Vector3 *);
     int spd = this->mHorzSpeed >> 3;
     if (spd < 0x400) spd = 0x400;
     this->SetAnim(0x48, 0, spd, 0);
     this->mPrevAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mStateTargetX);
     this->mAngleY = this->mPrevAngleY;
-    if (func_02053274(&mPos, (Vector3 *)&mStateTargetX) < 0xa000) {
+    if (VEC_Distance(&mPos, (Vector3 *)&mStateTargetX) < 0xa000) {
         if (mStateArg == 0) {
             mStateArg = 1;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
@@ -13794,7 +13794,7 @@ int daPly_c::TongueWallProbe() {
     daPly_c *player = (daPly_c *)this;
     extern void MulVec3Mat4x3(void *v, void *m, void *dst);
     extern void Vec3_MulScalarInPlace(int *v, int s);
-    extern int func_02053274(int *a, int *b);
+    extern int VEC_Distance(int *a, int *b);
     extern u32 PlayerNewHold11(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
     Vector3_16f dir;
@@ -13841,7 +13841,7 @@ int daPly_c::TongueWallProbe() {
     }
 
     ::Vector3 clsnPos = rl.GetClsnPos();
-    player->mTongueHitDist = func_02053274((int *)&p1, (int *)&clsnPos);
+    player->mTongueHitDist = VEC_Distance((int *)&p1, (int *)&clsnPos);
     Vector3 normal;
     rl.surface.CopyNormalTo(normal);
     ang = cstd::atan2(normal.x, normal.z);

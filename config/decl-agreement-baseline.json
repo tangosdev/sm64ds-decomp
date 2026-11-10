@@ -15540,7 +15540,7 @@
         "param:#1 Mtx43 *"
       ]
     },
-    "func_02053274": {
+    "VEC_Distance": {
       "include/decl_common.h": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *"

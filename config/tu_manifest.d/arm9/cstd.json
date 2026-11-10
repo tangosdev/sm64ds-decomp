@@ -110,7 +110,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "func_02053274",
+      "symbol": "VEC_Distance",
       "address": "0x02053274",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0205/func_02053274.c",
@@ -123,7 +123,7 @@
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
     "cstd is the tree's C++ namespace of math wrappers; the file takes the class name already used in the tree, per Juan 2026-10-11. No vtable, RTTI, or emitted data.",
-    "mwccarm emits .text in reverse source order here, so the file runs from the highest address (func_02053274) down to the lowest (mod); each earlier definition is the declaration its callers need, with the remaining callees forward-declared at the top.",
+    "mwccarm emits .text in reverse source order here, so the file runs from the highest address (VEC_Distance) down to the lowest (mod); each earlier definition is the declaration its callers need, with the remaining callees forward-declared at the top.",
     "The two Fix12-taking routines (fdiv_async, reciprocal_async) keep the shards' extern \"C\" spelling under their identical identifiers: in C they define the mangled identifier verbatim, and the mangled symbol comes out identical in the C++ TU."
   ],
   "verification": {

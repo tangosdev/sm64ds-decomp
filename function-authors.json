@@ -8831,7 +8831,7 @@
     },
     "arm9:0x02053274": {
       "author": "tangosdev",
-      "name": "func_02053274"
+      "name": "VEC_Distance"
     },
     "arm9:0x02053320": {
       "author": "tangosdev",

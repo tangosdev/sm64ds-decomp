@@ -475,7 +475,7 @@ extern void func_02049f58(void *);
 extern int func_0204a028(void*, unsigned int (*cb)(unsigned int, unsigned int));
 extern int func_0204a0dc(void*, u32 (*cb)(const void*, u32));
 extern int func_0204fa2c(int*, int);
-extern int func_02053274(const Vector3*, const Vector3*);
+extern int VEC_Distance(const Vector3 *, const Vector3 *);
 extern int func_02053c10(int);
 extern int func_02054d88(void);
 extern int func_0206e28c(const u8*, const u8*, u32);
