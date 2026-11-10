@@ -80,10 +80,15 @@
 
 #include "ntr/hdtex.h"
 
+#include <algorithm>
+#include <atomic>
+#include <cctype>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include <thread>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -105,6 +110,7 @@
 // grows a PNG codec. The include is relative rather than through a CMake
 // include directory because port/CMakeLists.txt belongs to another lane.
 #define STBI_ONLY_PNG
+#define STBI_ONLY_GIF   /* ANIMTEX1: an animated <name>.gif, see hdtex.h */
 #define STBI_NO_LINEAR
 #define STBI_NO_HDR
 #define STB_IMAGE_IMPLEMENTATION
@@ -234,6 +240,32 @@ std::string *g_dump_dir;
 std::unordered_map<uint64_t, int> *g_names;
 std::vector<std::string> *g_dirs;
 std::unordered_set<uint64_t> *g_dumped;  // names already written this run
+
+/* MOVING TEXTURES (lane ANIMTEX1, see hdtex.h). g_kinds holds only the names
+   whose winning directory answers with an animation (a folder of frames or a
+   GIF); a name absent from it is a still, so a pack of stills never touches
+   it. g_anims is the decoded store, one slot per animated name, filled by one
+   worker thread started at index time. A slot's frames are written by the
+   worker before it publishes state 1, and only read after a reader has seen
+   state 1, so the atomic is the whole hand-over. */
+enum { kStill = 1, kGif = 2, kFolder = 3 };
+std::unordered_map<uint64_t, uint8_t> *g_kinds;
+struct AnimSlot {
+    std::string path;               // the folder or the .gif
+    int kind = 0;
+    std::shared_ptr<HdTexAnim> anim;
+    std::atomic<int> state{0};      // 0 waiting, 1 ready, 2 failed
+};
+std::unordered_map<uint64_t, std::shared_ptr<AnimSlot>> *g_anims;
+/* The store the last index built, kept only while hdtex_reindex builds the
+   next one: an animation whose name, file and form are unchanged keeps its
+   decoded frames instead of being decoded again. That is what keeps the F7
+   swap back to the mod's textures (which re-indexes) and a mod-list change
+   that keeps the mod from paying the decode a second time. */
+std::unordered_map<uint64_t, std::shared_ptr<AnimSlot>> *g_anims_prev;
+std::thread *g_anim_worker;
+std::atomic<int> g_anim_cancel{0};
+std::atomic<int> g_anim_settled{0};   // slots the worker finished, see hdtex.h
 HdTexStats g_stats;
 
 /* THE DUMP'S INDEX, and the lane's instrument.
@@ -282,6 +314,29 @@ bool parse_name(const char *fn, uint64_t *out) {
     return true;
 }
 
+/* The same 16 hex digits, then what kind of entry the name is: ".png" a
+   still, ".gif" an animation, nothing at all (a folder) an animation of PNG
+   frames. 0 for anything else. `is_dir` says which the directory listing
+   found, so a FILE called <16 hex> with no extension is not a folder. */
+int parse_entry(const char *fn, bool is_dir, uint64_t *out) {
+    const size_t n = std::strlen(fn);
+    if (n == 16 && is_dir) {
+        char buf[24];
+        std::memcpy(buf, fn, 16);
+        std::memcpy(buf + 16, ".png", 5);
+        return parse_name(buf, out) ? kFolder : 0;
+    }
+    if (n != 20 || is_dir) return 0;
+    if (parse_name(fn, out)) return kStill;
+    if (std::strcmp(fn + 16, ".gif") == 0 || std::strcmp(fn + 16, ".GIF") == 0) {
+        char buf[24];
+        std::memcpy(buf, fn, 16);
+        std::memcpy(buf + 16, ".png", 5);
+        return parse_name(buf, out) ? kGif : 0;
+    }
+    return 0;
+}
+
 // LIST THE DIRECTORY ONCE, AT CONFIGURE. After this a bind of an unreplaced
 // texture costs one hash-set lookup and touches no file at all, which is what
 // keeps the pack off the per-bind path for the large majority of this game's
@@ -291,11 +346,16 @@ bool parse_name(const char *fn, uint64_t *out) {
 int index_dir(const std::string &dir, int dir_index, bool log_missing) {
     int found = 0;
     const char *dirc = dir.c_str();
-    auto add = [&](uint64_t n) {
-        if (g_names->emplace(n, dir_index).second) ++found;
+    /* ONE DIRECTORY'S NAMES, EACH AT ITS BEST KIND: a folder of frames beats
+       a GIF beats a still (hdtex.h says why). Collected first and merged
+       after, so the order the listing happens to return does not decide. */
+    std::unordered_map<uint64_t, uint8_t> here;
+    auto add = [&](uint64_t n, int kind) {
+        uint8_t &k = here[n];
+        if (kind > k) k = static_cast<uint8_t>(kind);
     };
 #if defined(_WIN32)
-    std::string pat = dir + "\\*.png";
+    std::string pat = dir + "\\*";
     WIN32_FIND_DATAA fd;
     HANDLE h = FindFirstFileA(pat.c_str(), &fd);
     if (h == INVALID_HANDLE_VALUE) {
@@ -304,8 +364,8 @@ int index_dir(const std::string &dir, int dir_index, bool log_missing) {
     }
     do {
         uint64_t n;
-        if (std::strlen(fd.cFileName) == 20 && parse_name(fd.cFileName, &n))
-            add(n);
+        const bool is_dir = (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+        if (const int kind = parse_entry(fd.cFileName, is_dir, &n)) add(n, kind);
     } while (FindNextFileA(h, &fd));
     FindClose(h);
 #else
@@ -316,55 +376,39 @@ int index_dir(const std::string &dir, int dir_index, bool log_missing) {
     }
     for (struct dirent *e = readdir(d); e; e = readdir(d)) {
         uint64_t n;
-        if (std::strlen(e->d_name) == 20 && parse_name(e->d_name, &n))
-            add(n);
+        struct stat st;
+        const std::string full = dir + "/" + e->d_name;
+        const bool is_dir = stat(full.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
+        if (const int kind = parse_entry(e->d_name, is_dir, &n)) add(n, kind);
     }
     closedir(d);
 #endif
-    return found;
-}
-
-// LIST THE DIRECTORIES ONCE, AT CONFIGURE. After this a bind of an unreplaced
-// texture costs one hash-map lookup and touches no file at all, which is what
-// keeps the pack off the per-bind path for the large majority of this game's
-// textures that a pack will never replace.
-//
-// Mods first, highest priority first, so a name a later mod has is claimed
-// before an earlier mod's or the main pack's.
-//
-// MOD TEXTURES DO NOT WAIT FOR THE HdTextures SETTING (run mods1, MODFILES1).
-// HdTextures says "show the optional HD pack"; a mod's textures_hd is the mod
-// author's picture and a player who switched the mod on expects to see it
-// whether or not they also run the big pack. So the mod directories are
-// indexed whenever the mods list has any, and the main pack only when the
-// setting is on (g_enabled). Tango's call later if he wants it gated.
-void index_pack() {
-    g_names = new std::unordered_map<uint64_t, int>();
-    g_dirs = new std::vector<std::string>();
-    if (hdtex_mod_dir_hook) {
-        char d[1024];
-        for (int i = 0; hdtex_mod_dir_hook(i, d, sizeof d); ++i) {
-            g_dirs->push_back(d);
-            const int n = index_dir(g_dirs->back(),
-                                    static_cast<int>(g_dirs->size()) - 1, false);
-            if (n > 0)
-                std::fprintf(stderr, "[mods] textures_hd: %s: %d texture(s)\n", d, n);
+    for (const auto &kv : here) {
+        if (!g_names->emplace(kv.first, dir_index).second) continue;
+        ++found;
+        if (kv.second != kStill) {
+            (*g_kinds)[kv.first] = kv.second;
+            char nm[24];
+            std::snprintf(nm, sizeof nm, "%016llx",
+                          static_cast<unsigned long long>(kv.first));
+            const std::string path =
+                dir + "/" + nm + (kv.second == kGif ? ".gif" : "");
+            if (g_anims_prev) {
+                const auto old = g_anims_prev->find(kv.first);
+                if (old != g_anims_prev->end() && old->second->path == path &&
+                    old->second->kind == kv.second &&
+                    old->second->state.load() == 1) {
+                    (*g_anims)[kv.first] = old->second;   // already decoded
+                    continue;
+                }
+            }
+            auto slot = std::make_shared<AnimSlot>();
+            slot->path = path;
+            slot->kind = kv.second;
+            (*g_anims)[kv.first] = slot;
         }
     }
-    if (g_enabled) {
-        g_dirs->push_back(g_pack_dir);
-        index_dir(g_dirs->back(), static_cast<int>(g_dirs->size()) - 1, true);
-    }
-    g_stats.pack_entries = static_cast<int>(g_names->size());
-    // An empty directory is not a pack: leaving g_pack_indexed at 0 keeps the
-    // whole feature off the bind path rather than asking an empty set about
-    // every texture in the game.
-    g_pack_indexed = g_stats.pack_entries > 0 ? 1 : 0;
-    if (g_log)
-        std::printf("[hdtex] pack %s: %d texture(s) indexed (%d director%s)\n",
-                    g_pack_dir, g_stats.pack_entries,
-                    static_cast<int>(g_dirs->size()),
-                    g_dirs->size() == 1 ? "y" : "ies");
+    return found;
 }
 
 // RGBA8 in file order -> the port's 0xAARRGGBB.
@@ -387,6 +431,394 @@ double now_ms() {
     return ts.tv_sec * 1000.0 + ts.tv_nsec / 1e6;
 #endif
 }
+
+/* ------------------------------------------------------- MOVING TEXTURES
+   The decoders run on the worker thread only. Each fills one HdTexAnim and
+   touches no shared state but the byte total below, which only the worker
+   writes. */
+size_t g_anim_total_bytes;   // decoded frame bytes, all animations (worker only)
+
+/* One RGBA8 picture into a frame at (fw, fh): copied straight when the sizes
+   agree (every frame of a normal animation), nearest-resampled when a frame
+   came out a different size from the first one. */
+void put_frame(std::vector<uint32_t> &dst, const unsigned char *img, int pw,
+               int ph, int fw, int fh) {
+    dst.resize(static_cast<size_t>(fw) * fh);
+    if (pw == fw && ph == fh) {
+        for (size_t i = 0; i < dst.size(); ++i) dst[i] = rgba_to_argb(img + i * 4);
+        return;
+    }
+    for (int y = 0; y < fh; ++y) {
+        const int sy = static_cast<int>(static_cast<int64_t>(y) * ph / fh);
+        for (int x = 0; x < fw; ++x) {
+            const int sx = static_cast<int>(static_cast<int64_t>(x) * pw / fw);
+            dst[static_cast<size_t>(y) * fw + x] =
+                rgba_to_argb(img + (static_cast<size_t>(sy) * pw + sx) * 4);
+        }
+    }
+}
+
+/* THE CAPS (hdtex.h). `n` frames of fw x fh: how many to skip between kept
+   frames so this animation fits kAnimCapBytes, or 0 when even the first frame
+   would not fit what is left of kAnimTotalCapBytes and only a still can be
+   kept. */
+int anim_stride(size_t n, int fw, int fh, const char *path) {
+    const size_t fb = static_cast<size_t>(fw) * fh * 4u;
+    if (fw <= 0 || fh <= 0 || fb > kAnimCapBytes) {
+        std::fprintf(stderr, "[hdtex] %s: one %dx%d frame is over the %u MB "
+                     "cap: not loaded\n", path, fw, fh, kAnimCapBytes >> 20);
+        return -1;
+    }
+    int stride = 1;
+    while ((n + stride - 1) / stride * fb > kAnimCapBytes && stride < 1 << 20)
+        ++stride;
+    const size_t need = (n + stride - 1) / stride * fb;
+    if (g_anim_total_bytes + need > kAnimTotalCapBytes) {
+        std::fprintf(stderr, "[hdtex] %s: animations already hold %u MB, the "
+                     "total cap is %u MB: first frame only\n", path,
+                     static_cast<unsigned>(g_anim_total_bytes >> 20),
+                     kAnimTotalCapBytes >> 20);
+        return 0;
+    }
+    if (stride > 1)
+        std::fprintf(stderr, "[hdtex] %s: %u frames of %dx%d are over the %u MB "
+                     "cap: keeping every %d%s frame, same loop length\n", path,
+                     static_cast<unsigned>(n), fw, fh, kAnimCapBytes >> 20,
+                     stride, stride == 2 ? "nd" : stride == 3 ? "rd" : "th");
+    return stride;
+}
+
+/* "fps=24" (or "fps 24", or a bare number) from a folder's anim.txt; the
+   default is 30 frames a second, the game's own rate. */
+double folder_fps(const std::string &dir) {
+    double fps = 30.0;
+    if (FILE *f = std::fopen((dir + "/anim.txt").c_str(), "rb")) {
+        bool read = false;
+        char line[256];
+        while (std::fgets(line, sizeof line, f)) {
+            const char *q = line;
+            while (*q == ' ' || *q == '\t') ++q;
+            if ((q[0] == 'f' || q[0] == 'F') && (q[1] == 'p' || q[1] == 'P') &&
+                (q[2] == 's' || q[2] == 'S')) {
+                q += 3;
+                while (*q == ' ' || *q == '\t' || *q == '=' || *q == ':') ++q;
+            }
+            const double v = std::atof(q);
+            if (v > 0.0) { fps = v; read = true; break; }
+        }
+        std::fclose(f);
+        if (!read)
+            std::fprintf(stderr, "[hdtex] %s/anim.txt: no fps in it (write "
+                         "fps=24): playing at 30\n", dir.c_str());
+    }
+    if (fps < 0.1) fps = 0.1;
+    if (fps > 240.0) fps = 240.0;
+    return fps;
+}
+
+bool load_folder(const std::string &dir, HdTexAnim &a) {
+    std::vector<std::string> files;
+#if defined(_WIN32)
+    WIN32_FIND_DATAA fd;
+    HANDLE h = FindFirstFileA((dir + "\\*.png").c_str(), &fd);
+    if (h == INVALID_HANDLE_VALUE) return false;
+    do {
+        if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+            files.push_back(fd.cFileName);
+    } while (FindNextFileA(h, &fd));
+    FindClose(h);
+#else
+    DIR *d = opendir(dir.c_str());
+    if (!d) return false;
+    for (struct dirent *e = readdir(d); e; e = readdir(d)) {
+        const size_t n = std::strlen(e->d_name);
+        if (n > 4 && (std::strcmp(e->d_name + n - 4, ".png") == 0 ||
+                      std::strcmp(e->d_name + n - 4, ".PNG") == 0))
+            files.push_back(e->d_name);
+    }
+    closedir(d);
+#endif
+    if (files.empty()) return false;
+    /* FILE-NAME ORDER, ignoring case: 0000.png, 0001.png ... or f000.png,
+       f001.png ... both play in the order an author numbered them. */
+    std::sort(files.begin(), files.end(),
+              [](const std::string &x, const std::string &y) {
+                  const size_t n = x.size() < y.size() ? x.size() : y.size();
+                  for (size_t i = 0; i < n; ++i) {
+                      const int cx = std::tolower(static_cast<unsigned char>(x[i]));
+                      const int cy = std::tolower(static_cast<unsigned char>(y[i]));
+                      if (cx != cy) return cx < cy;
+                  }
+                  return x.size() < y.size();
+              });
+    const double fps = folder_fps(dir);
+    const size_t n = files.size();
+    int stride = 1;
+    for (size_t i = 0; i < n; ++i) {
+        if (g_anim_cancel.load()) return false;
+        if (a.pw && (i % static_cast<size_t>(stride)) != 0) continue;
+        int pw = 0, ph = 0, comp = 0;
+        const std::string fp = dir + "/" + files[i];
+        /* THE SIZE BEFORE THE PIXELS: a frame over the cap is never decoded */
+        if (stbi_info(fp.c_str(), &pw, &ph, &comp) &&
+            static_cast<size_t>(pw) * ph * 4u > kAnimCapBytes) {
+            if (!a.pw) { anim_stride(n, pw, ph, dir.c_str()); return false; }
+            std::fprintf(stderr, "[hdtex] %s: frame over the cap, skipped\n",
+                         fp.c_str());
+            continue;
+        }
+        unsigned char *img = stbi_load(fp.c_str(), &pw, &ph, &comp, 4);
+        if (!img || pw <= 0 || ph <= 0) {
+            if (img) stbi_image_free(img);
+            std::fprintf(stderr, "[hdtex] %s/%s: frame would not load\n",
+                         dir.c_str(), files[i].c_str());
+            if (!a.pw) return false;   // no first frame, no animation
+            continue;                  // keep the frame before on screen
+        }
+        if (!a.pw) {
+            a.pw = pw;
+            a.ph = ph;
+            stride = anim_stride(n, pw, ph, dir.c_str());
+            if (stride < 0) { stbi_image_free(img); return false; }
+            a.stride = stride ? stride : 1;
+        }
+        a.frames.emplace_back();
+        put_frame(a.frames.back(), img, pw, ph, a.pw, a.ph);
+        stbi_image_free(img);
+        if (!stride) break;
+        /* THE KEPT FRAME HOLDS THE TIME OF EVERY FRAME IT STANDS FOR, and the
+           ends are computed from the frame number, not summed, so the loop is
+           exactly n / fps long whatever the stride. */
+        size_t upto = i + static_cast<size_t>(stride);
+        if (upto > n) upto = n;
+        a.end_ms.push_back(static_cast<uint32_t>(upto * 1000.0 / fps + 0.5));
+    }
+    if (a.frames.empty()) return false;
+    if (!stride) { a.end_ms.assign(1, 0); a.total_ms = 0; return true; }
+    a.total_ms = a.end_ms.back();
+    return true;
+}
+
+/* A GIF'S FRAME COUNT AND SIZE WITHOUT DECODING IT: the blocks are walked
+   and the compressed data skipped, so the caps are known before one pixel is
+   decoded. A file cut short counts the frames it has. */
+int gif_scan(const unsigned char *p, size_t n, int *w, int *h) {
+    if (n < 13 || std::memcmp(p, "GIF8", 4) != 0) return 0;
+    *w = p[6] | (p[7] << 8);
+    *h = p[8] | (p[9] << 8);
+    size_t i = 13;
+    if (p[10] & 0x80) i += 3u << ((p[10] & 7) + 1);
+    int frames = 0;
+    const auto skip_blocks = [&]() {
+        while (i < n) {
+            const unsigned len = p[i++];
+            if (!len) return true;
+            i += len;
+        }
+        return false;
+    };
+    while (i < n) {
+        const unsigned c = p[i++];
+        if (c == 0x3B) break;
+        if (c == 0x21) {
+            ++i;   // the label
+            if (!skip_blocks()) break;
+        } else if (c == 0x2C) {
+            if (i + 9 > n) break;
+            const unsigned flags = p[i + 8];
+            i += 9;
+            if (flags & 0x80) i += 3u << ((flags & 7) + 1);
+            ++i;   // LZW minimum code size
+            ++frames;
+            if (!skip_blocks()) break;
+        } else {
+            break;
+        }
+    }
+    return frames;
+}
+
+/* ONE FRAME AT A TIME (review REVANIMTEX1: stb's whole-file call holds every
+   frame at once, and 400 frames of 512x512 ran a 32-bit game out of memory
+   before the caps were applied). stb's per-frame decoder is called directly
+   (its implementation lives in this file), with the frame two back kept here
+   for the GIF "restore to previous" rule, and only every stride-th frame is
+   converted and kept. */
+bool load_gif(const std::string &path, HdTexAnim &a) {
+    FILE *f = std::fopen(path.c_str(), "rb");
+    if (!f) return false;
+    std::vector<unsigned char> buf;
+    unsigned char chunk[65536];
+    size_t got;
+    while ((got = std::fread(chunk, 1, sizeof chunk, f)) > 0)
+        buf.insert(buf.end(), chunk, chunk + got);
+    std::fclose(f);
+    if (buf.empty() || buf.size() > (1u << 30)) return false;
+    int w = 0, h = 0;
+    const int z = gif_scan(buf.data(), buf.size(), &w, &h);
+    if (z <= 0 || w <= 0 || h <= 0) return false;
+    const int stride = anim_stride(static_cast<size_t>(z), w, h, path.c_str());
+    if (stride < 0) return false;
+    a.pw = w;
+    a.ph = h;
+    a.stride = stride ? stride : 1;
+    const size_t fb = static_cast<size_t>(w) * h * 4u;
+    stbi__context ctx;
+    stbi__start_mem(&ctx, buf.data(), static_cast<int>(buf.size()));
+    stbi__gif g;
+    std::memset(&g, 0, sizeof g);
+    std::vector<unsigned char> back1, back2;   // the last two frames
+    uint32_t t = 0;
+    int comp = 0;
+    for (int i = 0; i < z; ++i) {
+        if (g_anim_cancel.load()) break;
+        stbi_uc *u = stbi__gif_load_next(&ctx, &g, &comp, 4,
+                                         back2.empty() ? 0 : back2.data());
+        if (u == reinterpret_cast<stbi_uc *>(&ctx)) u = 0;   // end of the file
+        if (!u || g.w != w || g.h != h) break;
+        /* A GIF delay of 10 ms or less is played as 100 ms, which is what
+           every browser does with it (authoring tools write 0 for "default"). */
+        int dl = g.delay;
+        if (dl <= 10) dl = 100;
+        t += static_cast<uint32_t>(dl);
+        if (stride && (i % stride) == 0) {
+            a.frames.emplace_back();
+            put_frame(a.frames.back(), u, w, h, w, h);
+            a.end_ms.push_back(0);
+        }
+        if (!a.end_ms.empty()) a.end_ms.back() = t;   // through the frames it stands for
+        if (!stride) break;
+        back2.swap(back1);
+        back1.assign(u, u + fb);
+    }
+    STBI_FREE(g.out);
+    STBI_FREE(g.history);
+    STBI_FREE(g.background);
+    if (a.frames.empty()) return false;
+    if (!stride) { a.end_ms.assign(1, 0); a.total_ms = 0; return true; }
+    a.total_ms = a.end_ms.back();
+    return true;
+}
+
+/* THE WORKER: every slot in the store, in name order, one at a time, at
+   below-normal priority so a boot or a mod change does not fight the game for
+   a core. A bind that needs a slot first waits for it (hdtex_lookup3). */
+void anim_worker() {
+#if defined(_WIN32)
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+#endif
+    std::vector<uint64_t> names;
+    for (const auto &kv : *g_anims)
+        if (kv.second->state.load() == 0) names.push_back(kv.first);
+    std::sort(names.begin(), names.end());
+    for (uint64_t n : names) {
+        if (g_anim_cancel.load()) return;
+        AnimSlot &slot = *g_anims->find(n)->second;
+        auto a = std::make_shared<HdTexAnim>();
+        const double t0 = now_ms();
+        const bool ok = slot.kind == kGif ? load_gif(slot.path, *a)
+                                          : load_folder(slot.path, *a);
+        const double dt = now_ms() - t0;
+        if (g_anim_cancel.load()) return;   // a re-index stopped it part way
+        g_stats.anim_decode_ms += dt;
+        if (ok) {
+            const size_t bytes = a->frames.size() * static_cast<size_t>(a->pw) * a->ph * 4u;
+            g_anim_total_bytes += bytes;
+            g_stats.anim_bytes = g_anim_total_bytes;
+            g_stats.anim_frames += static_cast<int>(a->frames.size());
+            ++g_stats.anim_loaded;
+            slot.anim = a;
+            if (g_log)
+                std::printf("[hdtex] anim %016llx: %d frame(s) %dx%d, loop %u ms, "
+                            "stride %d, %.1f ms to decode (%s)\n",
+                            static_cast<unsigned long long>(n),
+                            static_cast<int>(a->frames.size()), a->pw, a->ph,
+                            a->total_ms, a->stride, dt, slot.path.c_str());
+        } else {
+            std::fprintf(stderr, "[hdtex] %s: animation would not load\n",
+                         slot.path.c_str());
+        }
+        slot.state.store(ok ? 1 : 2);
+        g_anim_settled.fetch_add(1);
+    }
+}
+
+void anim_stop_worker() {
+    if (!g_anim_worker) return;
+    g_anim_cancel.store(1);
+    g_anim_worker->join();
+    delete g_anim_worker;
+    g_anim_worker = 0;
+    g_anim_cancel.store(0);
+}
+
+void anim_start_worker() {
+    g_anim_total_bytes = 0;
+    g_stats.anim_frames = 0;
+    g_stats.anim_loaded = 0;
+    g_stats.anim_bytes = 0;
+    bool todo = false;
+    for (const auto &kv : *g_anims) {
+        const AnimSlot &slot = *kv.second;
+        if (slot.state.load() != 1 || !slot.anim) { todo = true; continue; }
+        // kept from the last index: it counts against the caps as before
+        g_anim_total_bytes += slot.anim->frames.size() *
+                              static_cast<size_t>(slot.anim->pw) * slot.anim->ph * 4u;
+        g_stats.anim_frames += static_cast<int>(slot.anim->frames.size());
+        ++g_stats.anim_loaded;
+    }
+    g_stats.anim_bytes = g_anim_total_bytes;
+    if (todo)   // a pack of stills, or nothing new, starts nothing
+        g_anim_worker = new std::thread(anim_worker);
+}
+
+// LIST THE DIRECTORIES ONCE, AT CONFIGURE. After this a bind of an unreplaced
+// texture costs one hash-map lookup and touches no file at all, which is what
+// keeps the pack off the per-bind path for the large majority of this game's
+// textures that a pack will never replace.
+//
+// Mods first, highest priority first, so a name a later mod has is claimed
+// before an earlier mod's or the main pack's.
+//
+// MOD TEXTURES DO NOT WAIT FOR THE HdTextures SETTING (run mods1, MODFILES1).
+// HdTextures says "show the optional HD pack"; a mod's textures_hd is the mod
+// author's picture and a player who switched the mod on expects to see it
+// whether or not they also run the big pack. So the mod directories are
+// indexed whenever the mods list has any, and the main pack only when the
+// setting is on (g_enabled). Tango's call later if he wants it gated.
+void index_pack() {
+    g_names = new std::unordered_map<uint64_t, int>();
+    g_dirs = new std::vector<std::string>();
+    g_kinds = new std::unordered_map<uint64_t, uint8_t>();
+    g_anims = new std::unordered_map<uint64_t, std::shared_ptr<AnimSlot>>();
+    if (hdtex_mod_dir_hook) {
+        char d[1024];
+        for (int i = 0; hdtex_mod_dir_hook(i, d, sizeof d); ++i) {
+            g_dirs->push_back(d);
+            const int n = index_dir(g_dirs->back(),
+                                    static_cast<int>(g_dirs->size()) - 1, false);
+            if (n > 0)
+                std::fprintf(stderr, "[mods] textures_hd: %s: %d texture(s)\n", d, n);
+        }
+    }
+    if (g_enabled) {
+        g_dirs->push_back(g_pack_dir);
+        index_dir(g_dirs->back(), static_cast<int>(g_dirs->size()) - 1, true);
+    }
+    g_stats.pack_entries = static_cast<int>(g_names->size());
+    // An empty directory is not a pack: leaving g_pack_indexed at 0 keeps the
+    // whole feature off the bind path rather than asking an empty set about
+    // every texture in the game.
+    g_pack_indexed = g_stats.pack_entries > 0 ? 1 : 0;
+    g_stats.anim_entries = static_cast<int>(g_anims->size());
+    anim_start_worker();
+    if (g_log)
+        std::printf("[hdtex] pack %s: %d texture(s) indexed (%d director%s)\n",
+                    g_pack_dir, g_stats.pack_entries,
+                    static_cast<int>(g_dirs->size()),
+                    g_dirs->size() == 1 ? "y" : "ies");
+}
+
 
 }  // namespace
 
@@ -448,11 +880,18 @@ void hdtex_configure(int enabled, const char *pack_dir)
    Returns the number of names indexed. */
 int hdtex_reindex(void)
 {
+    anim_stop_worker();   /* ANIMTEX1: it reads the store deleted below */
     delete g_names;
     delete g_dirs;
+    delete g_kinds;
+    g_anims_prev = g_anims;   // decoded frames a new index may keep
     g_names = 0;
     g_dirs = 0;
+    g_kinds = 0;
+    g_anims = 0;
     index_pack();
+    delete g_anims_prev;
+    g_anims_prev = 0;
     return g_stats.pack_entries;
 }
 
@@ -792,6 +1231,28 @@ int hdtex_lookup2(uint64_t name, int have_words, uint32_t teximage,
                   uint32_t plttbase, int width, int height,
                   std::vector<uint32_t> &out)
 {
+    return hdtex_lookup3(name, have_words, teximage, plttbase, width, height,
+                         out, 0);
+}
+
+/* One integer scale for a pw x ph picture over a width x height texture: the
+   rule hdtex_lookup2 always used, shared with the animations. */
+static int scale_for(int pw, int ph, int width, int height)
+{
+    int su = pw / width, sv = ph / height;
+    if (su < 1) su = 1;
+    if (sv < 1) sv = 1;
+    int s = su < sv ? su : sv;
+    if (s > 8) s = 8;
+    return s;
+}
+
+int hdtex_lookup3(uint64_t name, int have_words, uint32_t teximage,
+                  uint32_t plttbase, int width, int height,
+                  std::vector<uint32_t> &out,
+                  std::shared_ptr<const HdTexAnim> *anim)
+{
+    if (anim) anim->reset();
     if (!g_pack_indexed || g_paused || width <= 0 || height <= 0) return 0;
     auto found = g_names->find(name);
     if (have_words && (found == g_names->end() || found->second > 0)) {
@@ -821,6 +1282,98 @@ int hdtex_lookup2(uint64_t name, int have_words, uint32_t teximage,
         return 0;
     }
 
+    /* AN ANIMATION (lane ANIMTEX1). Only a name in g_kinds can be one, so a
+       pack of stills pays one empty-map lookup here and nothing else. */
+    if (anim && !g_kinds->empty()) {
+        const auto k = g_anims->find(name);
+        if (k != g_anims->end()) {
+            AnimSlot &slot = *k->second;
+            if (slot.state.load() == 0) {
+                /* THE WORKER HAS NOT REACHED IT YET: wait. It started at boot
+                   or at the mod change, so by the time a level binds the
+                   texture this is normally already done; the longest wait is
+                   in the summary line so a hitch here cannot hide. */
+                static int limit = -2;
+                if (limit == -2) {
+                    const char *e = std::getenv("SM64DS_HD_ANIM_WAIT_MS");
+                    limit = e && *e ? std::atoi(e) : kAnimWaitMs;
+                }
+                const double w0 = now_ms();
+                while (slot.state.load() == 0) {
+                    if (limit >= 0 && now_ms() - w0 >= limit) break;
+#if defined(_WIN32)
+                    Sleep(1);
+#endif
+                }
+                const double waited = now_ms() - w0;
+                if (waited > g_stats.anim_wait_ms) g_stats.anim_wait_ms = waited;
+                if (slot.state.load() == 0) {
+                    /* NOT YET: the DS picture now, this texture asked again
+                       when the worker settles a slot (gx.cpp) */
+                    if (g_log)
+                        std::printf("[hdtex] %016llx: animation still loading, "
+                                    "DS texture for now\n",
+                                    static_cast<unsigned long long>(name));
+                    return -1;
+                }
+            }
+            if (slot.state.load() == 1 && slot.anim && !slot.anim->frames.empty()) {
+                const HdTexAnim &a = *slot.anim;
+                const int s = scale_for(a.pw, a.ph, width, height);
+                const int ow = width * s, oh = height * s;
+                const size_t rs = static_cast<size_t>(ow) * oh * 4u * a.frames.size();
+                if ((a.pw != ow || a.ph != oh) && rs > kAnimCapBytes) {
+                    /* resampled, every frame would pass the cap: the first
+                       frame as a still instead */
+                    std::fprintf(stderr, "[hdtex] %016llx: %dx%d frames are not a "
+                                 "whole multiple of %dx%d and resampled would pass "
+                                 "the cap: first frame only\n",
+                                 static_cast<unsigned long long>(name), a.pw, a.ph,
+                                 width, height);
+                    out.assign(static_cast<size_t>(ow) * oh, 0);
+                    for (int y = 0; y < oh; ++y) {
+                        const int sy = static_cast<int>(static_cast<int64_t>(y) * a.ph / oh);
+                        for (int x = 0; x < ow; ++x) {
+                            const int sx = static_cast<int>(static_cast<int64_t>(x) * a.pw / ow);
+                            out[static_cast<size_t>(y) * ow + x] =
+                                a.frames[0][static_cast<size_t>(sy) * a.pw + sx];
+                        }
+                    }
+                    ++g_stats.replaced;
+                    return s;
+                }
+                if (a.pw != ow || a.ph != oh) {
+                    /* Not a whole multiple: every frame resampled once, here,
+                       laid end to end in `out`. The normal case skips this
+                       and binds the decoded frames themselves. */
+                    const size_t fn = static_cast<size_t>(ow) * oh;
+                    out.assign(fn * a.frames.size(), 0);
+                    for (size_t f = 0; f < a.frames.size(); ++f)
+                        for (int y = 0; y < oh; ++y) {
+                            const int sy = static_cast<int>(static_cast<int64_t>(y) * a.ph / oh);
+                            for (int x = 0; x < ow; ++x) {
+                                const int sx = static_cast<int>(static_cast<int64_t>(x) * a.pw / ow);
+                                out[f * fn + static_cast<size_t>(y) * ow + x] =
+                                    a.frames[f][static_cast<size_t>(sy) * a.pw + sx];
+                            }
+                        }
+                } else {
+                    out.clear();
+                }
+                *anim = slot.anim;
+                ++g_stats.replaced;
+                if (g_log)
+                    std::printf("[hdtex] %016llx %dx%d -> anim %d frame(s) %dx%d "
+                                "scale %d\n", static_cast<unsigned long long>(name),
+                                width, height, static_cast<int>(a.frames.size()),
+                                a.pw, a.ph, s);
+                return s;
+            }
+            /* A broken animation falls back to a still of the same name in
+               the same directory, if there is one, and otherwise to the DS. */
+        }
+    }
+
     char path[1200];
     std::snprintf(path, sizeof path, "%s/%016llx.png",
                   (*g_dirs)[found->second].c_str(),
@@ -846,11 +1399,7 @@ int hdtex_lookup2(uint64_t name, int have_words, uint32_t teximage,
     // integer scale instead, the same rule the parked edition used. The
     // smaller of the two axes wins, so a replacement never claims more texels
     // than it actually has.
-    int su = pw / width, sv = ph / height;
-    if (su < 1) su = 1;
-    if (sv < 1) sv = 1;
-    int s = su < sv ? su : sv;
-    if (s > 8) s = 8;  // the largest array a pack may ask for
+    const int s = scale_for(pw, ph, width, height);  // at most 8
 
     const int ow = width * s, oh = height * s;
     out.assign(static_cast<size_t>(ow) * oh, 0);
@@ -889,6 +1438,35 @@ int hdtex_lookup2(uint64_t name, int have_words, uint32_t teximage,
     return s;
 }
 
+int hdtex_anim_settled(void) { return g_anim_settled.load(); }
+
+int hdtex_anim_frame(const HdTexAnim &a, double now)
+{
+    const size_t n = a.frames.size();
+    if (n <= 1 || a.total_ms == 0) return 0;
+    const double t = std::fmod(now, static_cast<double>(a.total_ms));
+    const uint32_t ti = t < 0.0 ? 0u : static_cast<uint32_t>(t);
+    const auto it = std::upper_bound(a.end_ms.begin(), a.end_ms.end(), ti);
+    const size_t i = static_cast<size_t>(it - a.end_ms.begin());
+    return static_cast<int>(i < n ? i : n - 1);
+}
+
+/* SM64DS_HD_ANIM_STEP_MS=<ms> (test knob): every read of the clock advances
+   it by exactly that much instead of reading real time, so a headless row
+   shows the same frames on every run however fast it goes. gx.cpp reads the
+   clock once per game tick (gx_reset) and once per Smooth Motion picture. */
+double hdtex_clock_ms(void)
+{
+    static double step = -1.0, t = 0.0;
+    if (step < 0.0) {
+        const char *e = getenv("SM64DS_HD_ANIM_STEP_MS");
+        step = (e && *e) ? std::atof(e) : 0.0;
+        if (step < 0.0) step = 0.0;
+    }
+    if (step > 0.0) return t += step;
+    return now_ms();
+}
+
 const HdTexStats *hdtex_stats(void) { return &g_stats; }
 
 void hdtex_report(void)
@@ -901,12 +1479,16 @@ void hdtex_report(void)
     std::fprintf(stderr,
         "[hdtex] SUMMARY pack=%d hashed=%d replaced=%d missing=%d "
         "load_failed=%d dumped=%d worst_load=%.2fms (%016llx %dx%d) "
-        "total_load=%.2fms held=%llu bytes\n",
+        "total_load=%.2fms held=%llu bytes anim=%d/%d frames=%d "
+        "anim_bytes=%llu anim_decode=%.1fms anim_wait=%.2fms\n",
         g_stats.pack_entries, g_stats.hashed, g_stats.replaced, g_stats.missing,
         g_stats.load_failed, g_stats.dumped, g_stats.worst_load_ms,
         static_cast<unsigned long long>(g_stats.worst_load_name),
         g_stats.worst_load_w, g_stats.worst_load_h, g_stats.total_load_ms,
-        static_cast<unsigned long long>(g_stats.replacement_bytes));
+        static_cast<unsigned long long>(g_stats.replacement_bytes),
+        g_stats.anim_loaded, g_stats.anim_entries, g_stats.anim_frames,
+        static_cast<unsigned long long>(g_stats.anim_bytes),
+        g_stats.anim_decode_ms, g_stats.anim_wait_ms);
     std::fflush(stderr);
 }
 

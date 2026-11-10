@@ -275,6 +275,10 @@ size_t gx_polygon_count();
 // Bumped every time gx_invalidate_textures throws the decode cache away, so a
 // backend holding copies of those textures knows to drop them.
 uint32_t gx_texture_generation();
+// Card texture ids gx.cpp no longer hands out (an animated texture's frame
+// that is no longer showing, lane ANIMTEX1): up to `cap` of them into `out`,
+// each returned once. A backend releases what it holds under them.
+int gx_take_retired_textures(uint32_t *out, int cap);
 
 // What a whole-frame backend reports back. aa_done: the smoothing ran (the
 // picture in fb is the smoothed one and aa_changed counts the pixels it moved);

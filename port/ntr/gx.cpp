@@ -3140,8 +3140,54 @@ struct TexEntry {
        never per triangle. Empty at every other filter mode, so a default run
        holds not one extra byte. */
     std::vector<std::vector<uint32_t>> mip;
+    /* A MOVING TEXTURE (lane ANIMTEX1, ntr/hdtex.h). `anim` holds the
+       decoded frames (shared with hdtex's store, so nothing is copied) and
+       fptr each frame's buffer at w x h: either anim's own frames or, when
+       they were not a whole multiple, slices of px. A bind picks one by the
+       clock; each is its own buffer, so a different frame is a different
+       pointer and the card path's id registry gives it its own upload.
+       fmip is each frame's mip chain, under TextureFilter 2 only. Empty on
+       every still texture. */
+    std::shared_ptr<const HdTexAnim> anim;
+    std::vector<const uint32_t *> fptr;
+    std::vector<TexEntry> fmip;
+    /* the frame buffer this entry last handed the card path, whose id is
+       retired when the frame changes (anim_card_note) */
+    mutable const uint32_t *card_last = nullptr;
+    /* the texture is an animation the loader has not finished: the DS
+       picture for now, dropped and asked again once it settles */
+    bool pending = false;
 };
 std::map<TexKey, TexEntry> g_vram_tex_cache;
+
+/* EVERY FRAME BUFFER OF EVERY ANIMATED ENTRY, back to its entry, so a Smooth
+   Motion replay that recorded one frame's pointer can bind the frame that is
+   showing now. g_anim_live counts animated entries in the cache: 0 on every
+   run without a moving texture, and then nothing below is consulted. */
+std::map<const uint32_t *, const TexEntry *> g_anim_by_px;
+int g_anim_live = 0;
+double g_anim_now = 0.0;   // the clock, read once per frame (gx_reset, gx_interp_begin)
+/* THE CARD HOLDS ONE OR TWO FRAMES OF AN ANIMATION, NOT ALL OF THEM. Each
+   frame buffer gets its own id (so a changed frame is never served stale),
+   and an id the card uploaded stays until the next texture generation; left
+   alone a 480-frame loop would end up wholly on the card (measured: 117 MB
+   for the 128x128 Tango Star under TextureFilter 2). So when an animated
+   entry moves on to another frame, the id of the frame it showed before is
+   dropped from the registry and queued here, and the backend releases the
+   queue at the start of its next frame (gx_take_retired_textures). A
+   triangle still holding a retired id (a ghost figure's stored triangles)
+   only costs a fresh upload of the same buffer, which is still alive. */
+std::vector<uint32_t> g_tex_retired;
+/* A BIND NEVER WAITS LONG FOR THE LOADER (hdtex_lookup3's limit). A texture
+   whose animation is still decoding binds the DS picture and is marked
+   pending; once hdtex says another animation settled, gx_reset drops the
+   pending entries so their next bind asks again. A dropped entry's pixels
+   move here rather than being freed, since a Smooth Motion replay of the
+   current tick may still point at them; they go with the next texture
+   generation like everything else. */
+int g_anim_pending = 0;
+int g_anim_settled_seen = 0;
+std::vector<std::vector<uint32_t>> g_tex_grave;
 
 /* THE BOUND BUFFER BACK TO ITS CACHE ENTRY. The raster is handed a plain
    `const uint32_t *` on GxTriangle::tex and the mip chain hangs off the entry,
@@ -3190,9 +3236,9 @@ uint32_t box4(uint32_t p0, uint32_t p1, uint32_t p2, uint32_t p3) {
    THE CHAIN IS BUILT FROM WHATEVER IS BOUND, so with an HD pack it is built
    from the REPLACEMENT at the replacement's own size, which is the only
    reading that makes the level-of-detail arithmetic mean anything. */
-void build_mip_chain(TexEntry &e) {
+void build_mip_chain(TexEntry &e, const uint32_t *from = nullptr) {
     if (!e.mip.empty() || e.w <= 0 || e.h <= 0) return;
-    const uint32_t *src = e.px.data();
+    const uint32_t *src = from ? from : e.px.data();
     int sw = e.w, sh = e.h;
     while (sw > 1 || sh > 1) {
         const int dw = sw > 1 ? sw / 2 : 1;
@@ -3240,6 +3286,38 @@ int tex_log() {
     static int on = -1;
     if (on < 0) on = getenv("SM64DS_TEX_LOG") ? 1 : 0;
     return on;
+}
+
+/* ANIMTEX1: an animated entry is about to hand `now` to the card path. If it
+   last handed it another frame, that frame's id leaves the registry and goes
+   on the retire queue (see g_tex_retired). Nothing without a backend. */
+void anim_card_note(const TexEntry &e, const uint32_t *now) {
+    if (!g_gpu_opaque) return;
+    if (e.card_last && e.card_last != now) {
+        const auto f = g_tex_ids.find(e.card_last);
+        if (f != g_tex_ids.end()) {
+            g_tex_retired.push_back(f->second.id);
+            g_tex_ids.erase(f);
+        }
+    }
+    e.card_last = now;
+}
+
+/* ANIMTEX1: drop the pending entries (see g_anim_pending). */
+void anim_drop_pending() {
+    for (auto it = g_vram_tex_cache.begin(); it != g_vram_tex_cache.end();) {
+        if (!it->second.pending) { ++it; continue; }
+        const uint32_t *p = it->second.px.data();
+        g_tex_by_px.erase(p);
+        const auto f = g_tex_ids.find(p);
+        if (f != g_tex_ids.end()) {
+            if (g_gpu_opaque) g_tex_retired.push_back(f->second.id);
+            g_tex_ids.erase(f);
+        }
+        g_tex_grave.push_back(std::move(it->second.px));
+        it = g_vram_tex_cache.erase(it);
+    }
+    g_anim_pending = 0;
 }
 
 void bind_from_vram() {
@@ -3344,9 +3422,22 @@ void bind_from_vram() {
             const uint64_t name = hdtex_name2(g_teximage, g_plttbase);
             hdtex_dump(name, d.width, d.height, rgba.data());
             std::vector<uint32_t> hd;
-            const int s = hdtex_lookup2(name, 1, g_teximage, g_plttbase,
-                                        d.width, d.height, hd);
-            if (s >= 1) {
+            std::shared_ptr<const HdTexAnim> anim;
+            const int s = hdtex_lookup3(name, 1, g_teximage, g_plttbase,
+                                        d.width, d.height, hd, &anim);
+            if (s < 0) {
+                entry.pending = true;   /* the DS picture until it settles */
+            } else if (s >= 1 && anim) {
+                /* ANIMTEX1: the frames, by pointer. px keeps the resampled
+                   frames end to end when there are any, else the DS decode
+                   (below), which nothing binds but which gives the entry the
+                   same shape as every other. */
+                entry.w = d.width * s;
+                entry.h = d.height * s;
+                entry.scale = static_cast<uint8_t>(s);
+                entry.anim = anim;
+                if (!hd.empty()) entry.px = std::move(hd);
+            } else if (s >= 1) {
                 entry.px = std::move(hd);
                 entry.w = d.width * s;
                 entry.h = d.height * s;
@@ -3355,6 +3446,28 @@ void bind_from_vram() {
         }
         if (entry.px.empty()) entry.px = std::move(rgba);
         it = g_vram_tex_cache.emplace(key, std::move(entry)).first;
+        if (it->second.pending) ++g_anim_pending;
+        if (it->second.anim) {
+            TexEntry &e = it->second;
+            const size_t nf = e.anim->frames.size();
+            const size_t fn = static_cast<size_t>(e.w) * e.h;
+            const bool own = e.px.size() == fn * nf;   // resampled into px
+            e.fptr.resize(nf);
+            for (size_t k = 0; k < nf; ++k)
+                e.fptr[k] = own ? e.px.data() + fn * k : e.anim->frames[k].data();
+            if (g_tex_filter >= 2) {
+                e.fmip.resize(nf);
+                for (size_t k = 0; k < nf; ++k) {
+                    e.fmip[k].w = e.w;
+                    e.fmip[k].h = e.h;
+                    e.fmip[k].scale = e.scale;
+                    build_mip_chain(e.fmip[k], e.fptr[k]);
+                    g_tex_by_px[e.fptr[k]] = &e.fmip[k];
+                }
+            }
+            for (size_t k = 0; k < nf; ++k) g_anim_by_px[e.fptr[k]] = &e;
+            if (!g_anim_live++) g_anim_now = hdtex_clock_ms();
+        }
         /* THE CHAIN AND THE WAY BACK TO IT, ON THE MISS AND NOWHERE ELSE
            (run hd2). Both hang off the cache miss for hdtex's reason one
            block up: the cost is then proportional to the number of DISTINCT
@@ -3368,7 +3481,12 @@ void bind_from_vram() {
     /* The bound buffer's REAL dimensions, which are the DS texture's unless a
        pack replaced it; the scale beside them is what lets the sampler put the
        DS's own texel grid back over a bigger picture. */
-    gx_bind_texture(it->second.px.data(), it->second.w, it->second.h);
+    const uint32_t *bound = it->second.px.data();
+    if (it->second.anim) {   /* ANIMTEX1: this frame's buffer, by the clock */
+        bound = it->second.fptr[hdtex_anim_frame(*it->second.anim, g_anim_now)];
+        anim_card_note(it->second, bound);
+    }
+    gx_bind_texture(bound, it->second.w, it->second.h);
     g.tex_scale = it->second.scale;
     /* THE WRAP MODE IS PART OF THE BIND. TEXIMAGE_PARAM bits 16/17 select
        repeat vs CLAMP, bits 18/19 add mirroring on top of repeat (GBATEK).
@@ -3499,6 +3617,11 @@ void gx_invalidate_textures() {
        raster a mip chain that no longer exists. Cleared first for the same
        reason. */
     g_tex_by_px.clear();
+    g_anim_by_px.clear();   /* ANIMTEX1: it points into the entries below */
+    g_anim_live = 0;
+    g_tex_retired.clear();  /* the generation bump below drops them all anyway */
+    g_anim_pending = 0;
+    g_tex_grave.clear();
     g_vram_tex_cache.clear();
     /* AND SO DOES THE ID REGISTRY, for a stronger version of the same reason:
        the buffers it names are about to be freed and the allocator will hand
@@ -3512,6 +3635,15 @@ void gx_invalidate_textures() {
 }
 
 uint32_t gx_texture_generation() { return g_tex_generation; }
+
+int gx_take_retired_textures(uint32_t *out, int cap) {
+    int n = 0;
+    while (n < cap && !g_tex_retired.empty()) {
+        out[n++] = g_tex_retired.back();
+        g_tex_retired.pop_back();
+    }
+    return n;
+}
 
 /* THE A/B'S EXIT SUMMARY IS ARMED HERE, at boot, rather than on the first
    frame the opaque pass draws. A scene that never reaches gx_render would
@@ -3661,7 +3793,21 @@ void gx_reset() {
     if (g_swap_pending) { g_swap_pending = 0; ++g_swaps_retired; }
     static int nocache = -1;
     if (nocache < 0) nocache = getenv("SM64DS_TEX_NOCACHE") ? 1 : 0;
-    if (nocache) g_vram_tex_cache.clear();
+    if (nocache) {
+        if (g_anim_live) { g_anim_by_px.clear(); g_anim_live = 0; }
+        g_vram_tex_cache.clear();
+    }
+    /* ANIMTEX1: the moving textures' clock, once per frame so every bind in
+       the frame shows the same frame of an animation. One compare when no
+       animation is cached. */
+    if (g_anim_live) g_anim_now = hdtex_clock_ms();
+    if (g_anim_pending) {
+        const int settled = hdtex_anim_settled();
+        if (settled != g_anim_settled_seen) {
+            g_anim_settled_seen = settled;
+            anim_drop_pending();
+        }
+    }
     /* KEEP THE TWO BUFFERS ACROSS THE RESET. `g = State{}` destroys the
        triangle list and the vertex strip and grows them back from nothing on
        the next frame -- a couple of thousand triangles at 116 bytes each, so a
@@ -10312,6 +10458,7 @@ int gx_interp_begin(float alpha) {
     if (g_ip_open || !gx_interp_ready()) return 0;
     if (alpha < 0) alpha = 0;
     if (alpha > 1) alpha = 1;
+    if (g_anim_live) g_anim_now = hdtex_clock_ms();   /* ANIMTEX1: this picture's frame */
     const IpRec &C = g_ipr[g_ip_c];
     const IpRec &P = g_ipr[g_ip_p];
     IpSaved &s = g_ip_saved;
@@ -10504,6 +10651,41 @@ int gx_interp_begin(float alpha) {
         case IPK_BIND: {
             const IpBind &bd = C.binds[e.off];
             g.tex_rgba = bd.rgba;
+            /* ANIMTEX1: a recorded frame of a moving texture becomes the frame
+               showing now, so the animation runs at the display's rate and
+               not at the game's. The card path's id goes with the pointer. */
+            if (g_anim_live && bd.rgba) {
+                const auto af = g_anim_by_px.find(bd.rgba);
+                if (af != g_anim_by_px.end()) {
+                    const TexEntry &ae = *af->second;
+                    const uint32_t *now = ae.fptr[hdtex_anim_frame(*ae.anim, g_anim_now)];
+                    anim_card_note(ae, now);
+                    /* THE ID COMES FROM THE REGISTRY EVEN WHEN THE FRAME IS
+                       THE ONE THE TICK RECORDED: an earlier picture of this
+                       tick may have shown another frame and retired the
+                       recorded id, and binding it again would have the card
+                       upload under an id nothing releases (review
+                       REVANIMTEX1: 2 MB a second with a loop under a tick). */
+                    g.tex_rgba = now;
+                    g.tw = bd.w;
+                    g.th = bd.h;
+                    g.tex_wrap = bd.wrap;
+                    g.tex_scale = bd.scale;
+                    g.tex_id = bd.id;
+                    if (g_gpu_opaque) {   /* gx_bind_texture's id rule */
+                        TexIdent &ti = g_tex_ids[now];
+                        if (!ti.id || ti.w != bd.w || ti.h != bd.h) {
+                            ti.w = bd.w;
+                            ti.h = bd.h;
+                            ti.id = g_tex_next_id++;
+                        }
+                        g.tex_id = ti.id;
+                    }
+                    g_teximage = bd.teximage;
+                    g_plttbase = bd.plttbase;
+                    break;
+                }
+            }
             g.tw = bd.w;
             g.th = bd.h;
             g.tex_wrap = bd.wrap;

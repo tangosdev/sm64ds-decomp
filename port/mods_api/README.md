@@ -17,6 +17,41 @@ every build by `port/tools/mk_symtab.py`). Without it, a kit has no symbols for
 plugins: the loader falls back to `walk_window.map`, which the kit does not ship,
 and logs that no table was found. Generate it from the exe being shipped.
 
+## Textures (`textures_hd/`)
+
+A texture is named by 16 hex digits, the same name the game gives it when
+`SM64DS_HD_TEXTURES_DUMP=<folder>` dumps every texture it draws. In a mod's
+`textures_hd/` (or the HD texture pack folder) a name can be:
+
+* `<name>.png`: a still picture, the DS size or a whole multiple of it.
+* `<name>/`: a moving texture. A folder of PNG frames played in file-name
+  order (`0000.png`, `0001.png`, ...), looping. An optional `anim.txt` in the
+  folder sets the speed: `fps=24`. Without it the speed is 30 frames a
+  second. Every frame should be the same size (a whole multiple of the DS
+  texture, like a still).
+* `<name>.gif`: a moving texture from an animated GIF, with the GIF's own
+  frame delays (a delay of 10 ms or less plays as 100 ms, as in a browser).
+  A GIF has at most 256 colours per frame, so smooth gradients band; use a
+  frame folder for those.
+
+If one folder holds more than one form of the same name, the frame folder is
+used first, then the GIF, then the still. Between mods the later mod in the
+list wins, whatever the form.
+
+Moving textures run on real time: the loop plays at its own speed at any
+frame rate, with Smooth Motion on or off, and keeps moving while the game is
+paused. The frames are read once (in the background, when the game starts
+or the mod list changes), not every level. A moving texture may hold at most
+64 MB of frames (width x height x 4 bytes x frames) and all of them together
+256 MB. Over 64 MB, every second (or third, ...) frame is skipped and the
+loop keeps its length; over 256 MB, the texture shows its first frame only.
+A single frame over 64 MB (bigger than 4096 x 4096) is not loaded at all.
+The game log says when any of these happens. A moving texture that is still
+being read when the game first draws it shows the DS texture until it is
+ready, so a big animation never freezes the game. Under TextureFilter 2 the
+game also keeps smaller copies of each frame (about a third more memory),
+which the limits above do not count.
+
 ## Settings that switch a folder on or off
 
 A files mod may declare settings in its `settings.json` (the launcher draws them
