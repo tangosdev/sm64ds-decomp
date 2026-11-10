@@ -713,7 +713,7 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
 
     if (flag == 1) {
         masked = col & 0xf;
-        tile = *(u16 *)((char *)sSnowballCourseTiles + 6);
+        tile = sSnowballCourseTiles[3];
         row = scene;
         i = 0;
         j = i;
