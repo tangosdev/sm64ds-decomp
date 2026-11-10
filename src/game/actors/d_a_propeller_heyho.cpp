@@ -270,10 +270,7 @@ int daPropeller_Heyho_c::Behavior()
 
     {
         State *q = mCurrentState;
-        /* Reads the handler's pointer word directly rather than as `&q->mMain`:
-           taking the ADDRESS of a pointer-to-member makes mwcc materialise the
-           whole 8-byte pmf. Reading one to CALL it is free. */
-        if (*(int *)((char *)q + 8) != 0) {
+        if (q->mMain != 0) {
             (this->*(q->mMain))();
         }
     }
