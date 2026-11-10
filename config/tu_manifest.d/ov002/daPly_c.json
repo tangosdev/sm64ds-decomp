@@ -1512,14 +1512,14 @@
       "ordinal": 209
     },
     {
-      "symbol": "func_ov002_020c990c",
+      "symbol": "_ZN7daPly_c19func_ov002_020c990cEv",
       "address": "0x020c990c",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov002_020c990c.c",
       "ordinal": 210
     },
     {
-      "symbol": "func_ov002_020c9998",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9998Ev",
       "address": "0x020c9998",
       "size": "0x0000006c",
       "legacy_source": "src/func_ov002_020c9998.c",
@@ -1554,7 +1554,7 @@
       "ordinal": 215
     },
     {
-      "symbol": "func_ov002_020c9b7c",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9b7cEv",
       "address": "0x020c9b7c",
       "size": "0x00000084",
       "legacy_source": "src/func_ov002_020c9b7c.c",
