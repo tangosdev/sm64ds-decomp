@@ -9432,3 +9432,13 @@ arm9	0x02053b98	func_02053b98	GX_DispOff	NitroSDK gx.c (pret pokediamond GX.c): 
 arm9	0x02053be0	func_02053be0	GX_VBlankIntr	NitroSDK gx.c (pret pokediamond GX.c): GX_Init, GX_HBlankIntr, GX_VBlankIntr, GX_DispOff, GXx_SetMasterBrightness_ in the file's reverse-emitted order
 arm9	0x02053c10	func_02053c10	GX_HBlankIntr	NitroSDK gx.c (pret pokediamond GX.c): GX_Init, GX_HBlankIntr, GX_VBlankIntr, GX_DispOff, GXx_SetMasterBrightness_ in the file's reverse-emitted order
 arm9	0x02053c40	func_02053c40	GX_Init	NitroSDK gx.c (pret pokediamond GX.c): GX_Init, GX_HBlankIntr, GX_VBlankIntr, GX_DispOff, GXx_SetMasterBrightness_ in the file's reverse-emitted order
+arm9	0x02056014	func_02056014	GX_LoadBG3Char	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
+arm9	0x020562b4	func_020562b4	GXS_LoadBG3Scr	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
+arm9	0x02056314	func_02056314	GX_LoadBG3Scr	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
+arm9	0x02056374	func_02056374	GXS_LoadBG2Scr	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
+arm9	0x020563d4	func_020563d4	GX_LoadBG2Scr	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
+arm9	0x02056434	func_02056434	GXS_LoadBG1Scr	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
+arm9	0x020564f4	func_020564f4	GXS_LoadBG0Scr	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
+arm9	0x02056554	func_02056554	GX_LoadBG0Scr	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
+arm9	0x02056674	func_02056674	GXS_LoadOAM	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
+arm9	0x020566dc	func_020566dc	GX_LoadOAM	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin

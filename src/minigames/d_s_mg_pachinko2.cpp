@@ -93,9 +93,9 @@ extern void *LoadFile(int handle);
 extern void Deallocate(void *);
 extern void DecompressLZ16(void *src, void *dst);
 extern void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern void func_02056314(void *, u32, u32);
-extern void func_020562b4(const void *, u32, u32);
-extern void func_020564f4(const void *, int, int);
+extern void GX_LoadBG3Scr(void *, u32, u32);
+extern void GXS_LoadBG3Scr(const void *, u32, u32);
+extern void GXS_LoadBG0Scr(const void *, int, int);
 
 /* --- ROM data this TU reads --- */
 extern u8 gMainScreenLayers;
@@ -2248,7 +2248,7 @@ s32 dScMgPachinko2_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NSC_BIN);
-    func_02056314(f, 0, 0x800);
+    GX_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     objChar = LoadFile(ASSET_D_2D_MG_PACHINKO_NCG_BIN);
@@ -2292,7 +2292,7 @@ s32 dScMgPachinko2_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NSC_BIN);
-    func_020562b4(f, 0, 0x800);
+    GXS_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 1;
@@ -2301,7 +2301,7 @@ s32 dScMgPachinko2_c::InitResources() {
     REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x608;
 
     f = LoadFile(ASSET_D_2D_HEI_TOP_DOWN_NSC_BIN);
-    func_020564f4(f, 0, 0x800);
+    GXS_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);
 
     DecompressLZ16(objChar, (void *)0x6600000);

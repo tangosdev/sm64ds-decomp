@@ -7,10 +7,6 @@
  * its source order. The 3D uploads above 0x020568cc are gx_load3d.c
  * (src/engine/gx/GX.cpp).
  */
-// The func_ loads still go by address. They hold the other gx_load2d.c loads in
-// the SDK's order (GX/GXS_LoadOAM, GX/GXS_LoadBG0..3Scr, GX_LoadBG3Char), and
-// their callers name them that way.
-
 #include "types.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_vramcnt.h"
@@ -83,7 +79,7 @@ void GXS_LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
 
 // Copies count words from src to VRAM address (0x07000000 + offset) -- the
 // main-engine OAM block (ARM9 view). DMA channel if assigned, else CPU copy.
-void func_020566dc(const void *src, unsigned int offset, unsigned int count) {
+void GX_LoadOAM(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (void *)(0x7000000 + offset), count);
@@ -94,7 +90,7 @@ void func_020566dc(const void *src, unsigned int offset, unsigned int count) {
 
 // Copies count words from src to VRAM address (0x07000400 + offset) -- the
 // sub-engine OAM block (ARM9 view). DMA channel if assigned, else CPU copy.
-void func_02056674(const void *src, unsigned int offset, unsigned int count) {
+void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (void *)(0x07000400 + offset), count);
@@ -128,7 +124,7 @@ void GXS_LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
 }
 
 // Loads BG0 screen data to the main-engine plane (G2_GetBG0ScrPtr).
-void func_02056554(const void *src, int offset, int count) {
+void GX_LoadBG0Scr(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2_GetBG0ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
@@ -139,7 +135,7 @@ void func_02056554(const void *src, int offset, int count) {
 }
 
 // Loads BG0 screen data to the sub-engine plane (G2S_GetBG0ScrPtr).
-void func_020564f4(const void *src, int offset, int count) {
+void GXS_LoadBG0Scr(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2S_GetBG0ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
@@ -161,7 +157,7 @@ void GX_LoadBG1Scr(const void *src, int offset, int count) {
 }
 
 // Loads BG1 screen data to the sub-engine plane (G2S_GetBG1ScrPtr).
-void func_02056434(const void *src, int offset, int count) {
+void GXS_LoadBG1Scr(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2S_GetBG1ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
@@ -172,7 +168,7 @@ void func_02056434(const void *src, int offset, int count) {
 }
 
 // Loads BG2 screen data to the main-engine plane (G2_GetBG2ScrPtr).
-void func_020563d4(const void *src, u32 offset, u32 count) {
+void GX_LoadBG2Scr(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
 
@@ -185,7 +181,7 @@ void func_020563d4(const void *src, u32 offset, u32 count) {
 }
 
 // Loads BG2 screen data to the sub-engine plane (G2S_GetBG2ScrPtr).
-void func_02056374(const void *src, u32 offset, u32 count) {
+void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
 
@@ -198,7 +194,7 @@ void func_02056374(const void *src, u32 offset, u32 count) {
 }
 
 // Loads BG3 screen data to the main-engine plane (G2_GetBG3ScrPtr).
-void func_02056314(const void *src, u32 offset, u32 count) {
+void GX_LoadBG3Scr(const void *src, u32 offset, u32 count) {
     void *bgPtr = G2_GetBG3ScrPtr();
     s32 ch = data_02099fd0;
     if (ch != -1) {
@@ -209,7 +205,7 @@ void func_02056314(const void *src, u32 offset, u32 count) {
 }
 
 // Loads BG3 screen data to the sub-engine plane (G2S_GetBG3ScrPtr).
-void func_020562b4(const void *src, u32 offset, u32 count) {
+void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count) {
     void *bgPtr;
     u32 ch;
 
@@ -284,7 +280,7 @@ void GXS_LoadBG2Char(const void *src, unsigned int offset, unsigned int count) {
 }
 
 // Loads BG3 char data into MAIN BG3 VRAM (0x2054d88 getter).
-void func_02056014(const void *src, unsigned int offset, unsigned int count) {
+void GX_LoadBG3Char(const void *src, unsigned int offset, unsigned int count) {
     void *base = (void *)G2_GetBG3CharPtr();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {

@@ -109,7 +109,7 @@ void InitialiseVramGlobals(void);
 void Deallocate(void*);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
-void func_02056374(const void*, u32, u32);
+void GXS_LoadBG2Scr(const void *, u32, u32);
 
 extern int sEsp3DMaterialAnim;
 extern int pmf_dMg3DEspModel_c_Idle_2[];
@@ -1318,7 +1318,7 @@ s32 dScMg3DEsp_c::InitResources()
     Deallocate(f);
 
     f = LoadFile(0x14);
-    func_02056374(f, 0, 0x800);
+    GXS_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     r5v = LoadFile(8);

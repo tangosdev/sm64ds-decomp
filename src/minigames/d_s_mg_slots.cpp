@@ -811,7 +811,7 @@ s32 dScMgSlot3_c::InitResources() {
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NSC_BIN);
-        func_02056314(h, 0, 0x800);
+        GX_LoadBG3Scr(h, 0, 0x800);
         Deallocate(h);
     }
 

@@ -1352,7 +1352,7 @@ int dScMgCoin_c::InitResources() {
     Deallocate(a);
 
     a = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_UP_NSC_BIN);
-    func_02056314(a, 0, 0x800);
+    GX_LoadBG3Scr(a, 0, 0x800);
     Deallocate(a);
 
     b = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCG_BIN);
@@ -1373,7 +1373,7 @@ int dScMgCoin_c::InitResources() {
     Deallocate(d);
 
     d = LoadFile(ASSET_D_2D_MG_BG_WRECKING_CREW_DOWN_NSC_BIN);
-    func_020562b4(d, 0, 0x800);
+    GXS_LoadBG3Scr(d, 0, 0x800);
     Deallocate(d);
 
     DecompressLZ16(b, (void *)0x6600000);

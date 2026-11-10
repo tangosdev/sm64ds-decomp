@@ -105,8 +105,8 @@ extern void DecompressLZ16(const void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *ptr);
 extern void Ov004_Deallocate(void *p);
-extern void func_020563d4(const void *src, u32 offset, u32 count);
-extern void func_02056374(const void *src, u32 offset, u32 count);
+extern void GX_LoadBG2Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
 
 extern unsigned char sCurlingBitAStates[];
 extern unsigned char sCurlingBitBStates[];
@@ -1370,7 +1370,7 @@ void dScMgCurling_c::PickHouse() {
     } else if (mHouse == 2) {
         file = LoadFile(ASSET_D_2D_MG_BG_CURLING1_RIGHT_NSC_BIN);
     }
-    func_020563d4(file, 0, 0x800);
+    GX_LoadBG2Scr(file, 0, 0x800);
     Deallocate(file);
 }
 
@@ -1480,7 +1480,7 @@ s32 dScMgCurling_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_CURLING1_NSC_BIN);
-    func_020563d4(f, 0, 0x800);
+    GX_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     {
@@ -1499,7 +1499,7 @@ s32 dScMgCurling_c::InitResources() {
         Deallocate(f);
 
         f = LoadFile(ASSET_D_2D_MG_BG_CURLING2_NSC_BIN);
-        func_02056374(f, 0, 0x800);
+        GXS_LoadBG2Scr(f, 0, 0x800);
         Deallocate(f);
 
         Ov004_Deallocate(a);

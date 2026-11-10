@@ -4,10 +4,6 @@
 
 extern "C" {
 
-/* GX_LoadBG3Char in src/engine/gx/GXS.cpp, which keeps its func_ name
- * there. */
-void func_02056014(const void *src, unsigned int offset, unsigned int count);
-
 /* Copies a character record's tiles to `offset` in one VRAM target: 0..4
  * the main engine's OBJ, BG0, BG1, BG2 and BG3 characters, 5..9 the sub
  * engine's. */
@@ -28,7 +24,7 @@ void func_ov007_020c33d0(Ov007CharRecord *rec, int target, unsigned int offset) 
         GX_LoadBG2Char(rec->tiles, offset, size);
         break;
     case 4:
-        func_02056014(rec->tiles, offset, size);
+        GX_LoadBG3Char(rec->tiles, offset, size);
         break;
     case 5:
         GXS_LoadOBJ(rec->tiles, offset, size);

@@ -170,7 +170,7 @@ extern "C" void LoadCard2SubBg3(void *) {
     GXS_LoadBGPltt(fileData, 0xa0, 0x160);
     Deallocate(fileData);
     fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NSC_BIN);
-    func_020562b4(fileData, 0, 0x800);
+    GXS_LoadBG3Scr(fileData, 0, 0x800);
     Deallocate(fileData);
     *(vu16 *)0x400100eu &= ~0x40;
     *(vu32 *)0x400101cu = 0;

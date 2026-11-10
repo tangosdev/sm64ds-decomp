@@ -2149,7 +2149,7 @@ void Hana_LoadBackground(void) {
     REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x614;
     DecompressLZ16(ncg, (void *)G2_GetBG3CharPtr());
-    func_02056314(nsc, 0, 0x800);
+    GX_LoadBG3Scr(nsc, 0, 0x800);
     GX_LoadBGPltt(ncl, 0x60, 0x1a0);
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     Deallocate(ncg);
@@ -2162,7 +2162,7 @@ void Hana_LoadBackground(void) {
     REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 2;
     REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x614;
     DecompressLZ16(ncg, G2S_GetBG3CharPtr());
-    func_020562b4(nsc, 0, 0x800);
+    GXS_LoadBG3Scr(nsc, 0, 0x800);
     GXS_LoadBGPltt(ncl, 0x60, 0x1a0);
     gSubScreenLayers |= 8;
     Deallocate(ncg);

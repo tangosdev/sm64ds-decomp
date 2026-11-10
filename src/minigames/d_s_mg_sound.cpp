@@ -315,7 +315,7 @@ s32 dScMgSound_c::InitResources() {
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NSC_BIN);
-    func_02056374(file, 0, 0x800);
+    GXS_LoadBG2Scr(file, 0, 0x800);
     Deallocate(file);
 
     *(volatile u16 *)0x400100c &= ~0x40;

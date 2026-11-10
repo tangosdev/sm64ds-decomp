@@ -1753,10 +1753,10 @@ s32 dScMgTeresa_c::InitResources()
     GX_LoadBGPltt(t, 0x60, 0x1a0);
     Deallocate(t);
     t = LoadFile(0x9e);
-    func_02056314(t, 0, 0x800);
+    GX_LoadBG3Scr(t, 0, 0x800);
     Deallocate(t);
     t = LoadFile(0x9d);
-    func_02056314(t, 0x800, 0x800);
+    GX_LoadBG3Scr(t, 0x800, 0x800);
     Deallocate(t);
     f1 = LoadFile(0x101);
     f2 = LoadFile(0x102);
@@ -1789,7 +1789,7 @@ s32 dScMgTeresa_c::InitResources()
     GXS_LoadBGPltt(t, 0x60, 0x1a0);
     Deallocate(t);
     t = LoadFile(0xa1);
-    func_02056374(t, 0, 0x800);
+    GXS_LoadBG2Scr(t, 0, 0x800);
     Deallocate(t);
     DecompressLZ16(f1, (void *) 0x6600000);
     GXS_LoadOBJPltt(f2, 0, 0x100);

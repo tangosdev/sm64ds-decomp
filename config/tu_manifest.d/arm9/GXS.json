@@ -70,7 +70,7 @@
       "ordinal": 6
     },
     {
-      "symbol": "func_02056014",
+      "symbol": "GX_LoadBG3Char",
       "address": "0x02056014",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056014.c",
@@ -119,35 +119,35 @@
       "ordinal": 13
     },
     {
-      "symbol": "func_020562b4",
+      "symbol": "GXS_LoadBG3Scr",
       "address": "0x020562b4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_020562b4.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_02056314",
+      "symbol": "GX_LoadBG3Scr",
       "address": "0x02056314",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056314.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_02056374",
+      "symbol": "GXS_LoadBG2Scr",
       "address": "0x02056374",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056374.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_020563d4",
+      "symbol": "GX_LoadBG2Scr",
       "address": "0x020563d4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_020563d4.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_02056434",
+      "symbol": "GXS_LoadBG1Scr",
       "address": "0x02056434",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056434.c",
@@ -161,14 +161,14 @@
       "ordinal": 19
     },
     {
-      "symbol": "func_020564f4",
+      "symbol": "GXS_LoadBG0Scr",
       "address": "0x020564f4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_020564f4.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_02056554",
+      "symbol": "GX_LoadBG0Scr",
       "address": "0x02056554",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056554.c",
@@ -189,14 +189,14 @@
       "ordinal": 23
     },
     {
-      "symbol": "func_02056674",
+      "symbol": "GXS_LoadOAM",
       "address": "0x02056674",
       "size": "0x00000068",
       "legacy_source": "src/func_02056674.c",
       "ordinal": 24
     },
     {
-      "symbol": "func_020566dc",
+      "symbol": "GX_LoadOAM",
       "address": "0x020566dc",
       "size": "0x0000005c",
       "legacy_source": "src/func_020566dc.c",

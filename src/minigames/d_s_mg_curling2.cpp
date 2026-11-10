@@ -91,10 +91,10 @@ extern void *LoadFile(int handle);
 extern void Deallocate(void *p);
 extern void Ov004_Deallocate(void *p);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
-extern void func_02056554(const void *src, int offset, int count);
-extern void func_02056314(void *a, u32 b, u32 c);
-extern void func_020563d4(const void *a, u32 b, u32 c);
-extern void func_02056374(const void *a, u32 b, u32 c);
+extern void GX_LoadBG0Scr(const void *src, int offset, int count);
+extern void GX_LoadBG3Scr(void *a, u32 b, u32 c);
+extern void GX_LoadBG2Scr(const void *a, u32 b, u32 c);
+extern void GXS_LoadBG2Scr(const void *a, u32 b, u32 c);
 
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
@@ -1661,7 +1661,7 @@ s32 dScMgCurling2_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING1_NSC_BIN);
-    func_02056314(f, 0, 0x800);
+    GX_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
@@ -1674,7 +1674,7 @@ s32 dScMgCurling2_c::InitResources() {
         sp4 = 0x4300;
         MultiStore16(sp4, b, 0x1000);
     }
-    func_020563d4(f, 0, 0x800);
+    GX_LoadBG2Scr(f, 0, 0x800);
 
     REG_BG0CNT = (REG_BG0CNT & ~3) | 2;
     REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x5620;
@@ -1683,7 +1683,7 @@ s32 dScMgCurling2_c::InitResources() {
         sp6 = 0x4300;
         MultiStore16(sp6, b, 0x1000);
     }
-    func_02056554(f, 0, 0x800);
+    GX_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);
 
     c7 = LoadFile(ASSET_D_2D_MG_CURLING_NCG_BIN);
@@ -1701,7 +1701,7 @@ s32 dScMgCurling2_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING2_NSC_BIN);
-    func_02056374(f, 0, 0x800);
+    GXS_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     Ov004_Deallocate(r6);

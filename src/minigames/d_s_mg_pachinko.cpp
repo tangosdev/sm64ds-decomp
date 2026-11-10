@@ -120,10 +120,10 @@ extern void FreeGfxSlotsById(int arg);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void *p);
-extern void func_02056314(void *dst, u32 offset, u32 len);
-extern void func_020563d4(const void *src, u32 offset, u32 count);
-extern void func_020562b4(const void *src, u32 offset, u32 count);
-extern void func_020564f4(const void *src, int offset, int count);
+extern void GX_LoadBG3Scr(void *dst, u32 offset, u32 len);
+extern void GX_LoadBG2Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG0Scr(const void *src, int offset, int count);
 
 /* --- ROM data this TU reads --- */
 extern unsigned char gMainScreenLayers;
@@ -2175,7 +2175,7 @@ s32 dScMgPachinko_c::InitResources()
     Deallocate(f);
 
     f = LoadFile(0x61);
-    func_02056314(f, 0, 0x800);
+    GX_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
@@ -2191,7 +2191,7 @@ s32 dScMgPachinko_c::InitResources()
     MultiStore16(fillScr, b, 0x1000);
 
     f = LoadFile(6);
-    func_020563d4(f, 0, 0x800);
+    GX_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     objChar = LoadFile(0xe0);
@@ -2235,7 +2235,7 @@ s32 dScMgPachinko_c::InitResources()
     Deallocate(f);
 
     f = LoadFile(0x5e);
-    func_020562b4(f, 0, 0x800);
+    GXS_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
@@ -2244,7 +2244,7 @@ s32 dScMgPachinko_c::InitResources()
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x608;
 
     f = LoadFile(5);
-    func_020564f4(f, 0, 0x800);
+    GXS_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);
 
     DecompressLZ16(objChar, (void *)0x6600000);

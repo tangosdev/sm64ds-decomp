@@ -465,9 +465,9 @@ extern void SetSubBg3Offset(int a, int b);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void* p);
-extern void func_02056434(const void* src, int offset, int count);
-extern void func_020562b4(const void* src, u32 offset, u32 count);
-extern void func_02056374(const void* src, u32 offset, u32 count);
+extern void GXS_LoadBG1Scr(const void *src, int offset, int count);
+extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
 extern void func_ov002_020f5ad4(char* c);
 extern void func_ov002_020f5f60(char *c);
 extern int func_ov002_020f5fb8(void* c);
@@ -3246,7 +3246,7 @@ void func_ov002_020f5fe4(char* c)
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK1_NSC_BIN);
-    func_02056434(f, 0, 0x800);
+    GXS_LoadBG1Scr(f, 0, 0x800);
     Deallocate(f);
 
     *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 2;
@@ -3277,14 +3277,14 @@ void func_ov002_020f5fe4(char* c)
     Deallocate(r5);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_BRIGHT_NSC_BIN);
-    func_020562b4(f, 0, 0x800);
+    GXS_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & ~3) | 2;
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0xa90;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK2_NSC_BIN);
-    func_02056374(f, 0, 0x800);
+    GXS_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     gSubScreenLayers |= 0x10;

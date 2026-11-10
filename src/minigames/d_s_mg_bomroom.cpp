@@ -76,7 +76,7 @@ extern void DecompressLZ16(void *src, void *dst);
 
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 
-extern void func_02056554(const void *src, int offset, int count);
+extern void GX_LoadBG0Scr(const void *src, int offset, int count);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
@@ -1819,7 +1819,7 @@ s32 dScMgBomroom_c::InitResources() {
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_UP_NSC_BIN);
-    func_02056314(f, 0, 0x800);
+    GX_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
@@ -1830,7 +1830,7 @@ s32 dScMgBomroom_c::InitResources() {
     b = (char *)G2_GetBG2ScrPtr();
     fill = 0xf23f;
     MultiStore16(fill, b, 0x1000);
-    func_020563d4(f, 0, 0x800);
+    GX_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
@@ -1838,11 +1838,11 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x5610;
 
     f = LoadFile(ASSET_D_2D_BLUE_SHADOW_NSC_BIN);
-    func_02056554(f, 0, 0x800);
+    GX_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_LIGHT_UP_NSC_BIN);
-    func_02056554(f, 0x800, 0x800);
+    GX_LoadBG0Scr(f, 0x800, 0x800);
     Deallocate(f);
 
     G2x::SetBlendAlpha(&REG_BLDCNT, 1, 0x1c, 4, 3);
@@ -1866,7 +1866,7 @@ s32 dScMgBomroom_c::InitResources() {
         Deallocate(f7);
 
         f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_DOWN_NSC_BIN);
-        func_020562b4(f7, 0, 0x800);
+        GXS_LoadBG3Scr(f7, 0, 0x800);
         Deallocate(f7);
 
         DecompressLZ16(arc, (void *)0x6600000);

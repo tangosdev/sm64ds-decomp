@@ -55,7 +55,7 @@ extern int data_0208ee44;
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 
 /* arm9 / ov004 helpers with no project header. */
-void  func_02056674(const void *src, unsigned int offset, unsigned int count);
+void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 int   func_020126e8(int a);
 void  func_020126ac(int a0, int a1, int a2, int a3, int s0);
 void  func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5);
@@ -149,12 +149,12 @@ extern "C" void D3D_DrawSpriteTable(void)
     }
 
     CP15::FlushAndInvalidateDataCache((u32)sD3DOamShadow, 0x400);
-    func_02056674(sD3DOamShadow, 0, 0x400);
+    GXS_LoadOAM(sD3DOamShadow, 0, 0x400);
 }
 
 extern "C" void D3D_ClearCaptureTable(void)
 {
-    func_02056674(sD3DOamShadow, 0, 0x400u);
+    GXS_LoadOAM(sD3DOamShadow, 0, 0x400u);
 }
 
 extern "C" void D3D_InitDualScreen(void)

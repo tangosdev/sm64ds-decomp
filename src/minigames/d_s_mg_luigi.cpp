@@ -1605,8 +1605,8 @@ extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void Ov004_Deallocate(void *ptr);
-extern void func_02056314(void *, u32, u32);
-extern void func_02056374(const void *, u32, u32);
+extern void GX_LoadBG3Scr(void *, u32, u32);
+extern void GXS_LoadBG2Scr(const void *, u32, u32);
 extern void Deallocate(void *);
 extern void Mg_SetTopScreenYOffset(int);
 extern int sMgResultsBannerX;
@@ -1687,7 +1687,7 @@ s32 dScMgLuigi_c::InitResources() {
     Deallocate(fileData);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI1_NSC_BIN);
-    func_02056314(fileData, 0, 0x800);
+    GX_LoadBG3Scr(fileData, 0, 0x800);
     Deallocate(fileData);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
@@ -1729,7 +1729,7 @@ s32 dScMgLuigi_c::InitResources() {
         Deallocate(subFileData);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NSC_BIN);
-        func_02056374(subFileData, 0, 0x800);
+        GXS_LoadBG2Scr(subFileData, 0, 0x800);
         Deallocate(subFileData);
 
         gSubScreenLayers |= DISPLAY_LAYER_BG3;

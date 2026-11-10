@@ -9271,7 +9271,7 @@
     },
     "arm9:0x02056014": {
       "author": "tangosdev",
-      "name": "func_02056014"
+      "name": "GX_LoadBG3Char"
     },
     "arm9:0x02056074": {
       "author": "tangosdev",
@@ -9299,23 +9299,23 @@
     },
     "arm9:0x020562b4": {
       "author": "tangosdev",
-      "name": "func_020562b4"
+      "name": "GXS_LoadBG3Scr"
     },
     "arm9:0x02056314": {
       "author": "tangosdev",
-      "name": "func_02056314"
+      "name": "GX_LoadBG3Scr"
     },
     "arm9:0x02056374": {
       "author": "tangosdev",
-      "name": "func_02056374"
+      "name": "GXS_LoadBG2Scr"
     },
     "arm9:0x020563d4": {
       "author": "tangosdev",
-      "name": "func_020563d4"
+      "name": "GX_LoadBG2Scr"
     },
     "arm9:0x02056434": {
       "author": "tangosdev",
-      "name": "func_02056434"
+      "name": "GXS_LoadBG1Scr"
     },
     "arm9:0x02056494": {
       "author": "tangosdev",
@@ -9323,11 +9323,11 @@
     },
     "arm9:0x020564f4": {
       "author": "tangosdev",
-      "name": "func_020564f4"
+      "name": "GXS_LoadBG0Scr"
     },
     "arm9:0x02056554": {
       "author": "tangosdev",
-      "name": "func_02056554"
+      "name": "GX_LoadBG0Scr"
     },
     "arm9:0x020565b4": {
       "author": "ruspecial",
@@ -9339,11 +9339,11 @@
     },
     "arm9:0x02056674": {
       "author": "tangosdev",
-      "name": "func_02056674"
+      "name": "GXS_LoadOAM"
     },
     "arm9:0x020566dc": {
       "author": "tangosdev",
-      "name": "func_020566dc"
+      "name": "GX_LoadOAM"
     },
     "arm9:0x02056738": {
       "author": "tangosdev",
