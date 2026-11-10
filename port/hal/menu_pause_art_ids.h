@@ -23,5 +23,6 @@ enum {
     MENU_IMG_ONL_BACK = 50,
     MENU_IMG_ONL_CANCEL = 51,
     MENU_IMG_ONL_SOLO = 52,        /* the ONLINE plank while the planks are online: it says SOLO and turns them back */
-    MENU_IMG_P_END = 53 };
+    MENU_IMG_ONL_WRENCH = 53,      /* run after093, HDSELICON1: the title's wrench plate (menu/online/btn_wrench.png, drawn over the ROM's own when the mod has it) */
+    MENU_IMG_P_END = 54 };
 #endif

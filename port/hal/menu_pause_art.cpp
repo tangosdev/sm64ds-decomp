@@ -9,6 +9,7 @@ static const char *const k_pause_art[] = {
     "pause3/pk_yesquit.png", "pause3/pk_nokeep.png", "pause3/title_blank.png", "pause3/tab_l.png", "pause3/tab_r.png",
     "pause3/star_got.png", "pause3/star_off.png", "pause3/coin_gold.png", "pause3/coin_red.png",
     "online/btn_online.png", "online/btn_adventure_online.png", "online/btn_vs.png", "online/btn_help.png", "online/btn_back.png", "online/btn_cancel.png", "online/btn_solo.png",
+    "online/btn_wrench.png",
 };
 
 extern "C" int menu_ext_art_src(int id, const char **file)
