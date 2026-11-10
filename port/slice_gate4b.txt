@@ -32,7 +32,7 @@ src/MulMat4x3Mat4x3.c
 src/func_020458a8.c
 src/func_02048234.c
 src/MulMat3x3Mat3x3.c
-# func_02016b24 and dExtModel_c::C2 live in src/engine/model/d_ext_model.cpp above.
+# dExtSimpleModel_c::SetMaterialFlags and dExtModel_c::C2 live in src/engine/model/d_ext_model.cpp above.
 # DMASyncWordTransfer and MI_DmaCopy32Async live in src/engine/mi/MI_Dma.cpp,
 # which the gate 4a hostgen set already emits for MI_WaitDma.
 

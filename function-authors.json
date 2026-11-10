@@ -2395,11 +2395,11 @@
     },
     "arm9:0x02016acc": {
       "author": "lplaat",
-      "name": "func_02016acc"
+      "name": "_ZN17dExtSimpleModel_c18ClearMaterialFlagsEj"
     },
     "arm9:0x02016b24": {
       "author": "tangosdev",
-      "name": "func_02016b24"
+      "name": "_ZN17dExtSimpleModel_c16SetMaterialFlagsEj"
     },
     "arm9:0x02016b78": {
       "author": "tangosdev",

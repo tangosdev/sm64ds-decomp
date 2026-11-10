@@ -90,8 +90,6 @@ struct fBaseView {
     u16 actorID; /* 0x0c */
 };
 namespace n020c6e4c {
-extern "C" void func_02016acc(dExtSimpleModel_c *m, unsigned int a);
-extern "C" void func_02016b24(dExtSimpleModel_c *m, unsigned int a);
 extern "C" void func_02016a14(char *m, int a);
 extern "C" void func_02016a04(char *m, int a);
 extern "C" void Heyho_UpdateMatrix(char *c);
@@ -104,8 +102,8 @@ extern "C" int Heyho_LoadResources(char *c) {
         return 0;
     }
     HEYHO(c)->mAnmModel.SetAnim(a, 0, 0x800, 0);
-    func_02016acc(&HEYHO(c)->mAnmModel, 1u);
-    func_02016b24(&HEYHO(c)->mAnmModel, 2);
+    HEYHO(c)->mAnmModel.ClearMaterialFlags(1);
+    HEYHO(c)->mAnmModel.SetMaterialFlags(2);
     int b = (((fBaseView *)gCurrentScene)->actorID == 0x175);
     if (b != 0) {
         func_02016a14((char *)&HEYHO(c)->mAnmModel, 0x7fff);

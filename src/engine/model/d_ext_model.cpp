@@ -66,8 +66,6 @@ extern Matrix4x3 data_0209b3ec; /* local extern: the camera-space matrix the Ren
 int func_02046564(BMD_File *file);
 /* local extern: no header declares it; initializes ModelComponents over the file */
 void func_020462d0(ModelComponents *data, BMD_File *file, void *buffer);
-/* defined below; DoSetFile calls it */
-void func_02016b24(dExtSimpleModel_c *model, u32 mask);
 /* defined below; dExtCommonModel_c and dExtShadowModel_c take their pooled
    components from it */
 ModelComponents *GetCommonModelComponents(BMD_File *file);
@@ -323,7 +321,7 @@ int dExtSimpleModel_c::DoSetFile(char *file_, int a, int b) {
     func_020462d0(&data, file, buffer);
     data.UpdateVertsUsingBones();
     if (a != 0)
-        func_02016b24(this, 0x8000);
+        SetMaterialFlags(0x8000);
     if (b < 0)
         return 1;
     SetPolygonID(b & 0xff);
@@ -341,9 +339,9 @@ void dExtSimpleModel_c::Render(const Vector3 *scale) {
     data.Render(&temp, (Vector3 *)scale);
 }
 
-extern "C" void func_02016b24(dExtSimpleModel_c *model, u32 mask) {
-    u32 count = model->data.modelFile->numMaterials;
-    BMD_Material *p = model->data.materials;
+void dExtSimpleModel_c::SetMaterialFlags(u32 mask) {
+    u32 count = data.modelFile->numMaterials;
+    BMD_Material *p = data.materials;
     u32 i;
     for (i = 0; i < count; i++) {
         p->flags |= mask;
@@ -351,10 +349,10 @@ extern "C" void func_02016b24(dExtSimpleModel_c *model, u32 mask) {
     }
 }
 
-extern "C" void func_02016acc(dExtSimpleModel_c *model, unsigned int mask) {
-    BMD_File *file = model->data.modelFile;
+void dExtSimpleModel_c::ClearMaterialFlags(u32 mask) {
+    BMD_File *file = data.modelFile;
     unsigned int n = file->numMaterials;
-    BMD_Material *q = model->data.materials;
+    BMD_Material *q = data.materials;
 
     for (unsigned int i = 0; i < n; i++) {
         unsigned int nmask = ~mask;

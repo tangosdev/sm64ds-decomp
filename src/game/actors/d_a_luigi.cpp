@@ -53,7 +53,7 @@
    is declared here, so the local stays POD and casts at the call. */
 #define CurrentPlayer() gPlayers[gLocalPlayerId]
 
-/* Material bits func_02016acc clears and func_02016b24 sets. The reflected
+/* Material bits ClearMaterialFlags clears and SetMaterialFlags sets. The reflected
  * player render applies the same pair around its draw. */
 #define kMatClear 0x80
 #define kMatSet 0x40
@@ -107,8 +107,6 @@ int func_ov002_020e496c(daPly_c *player);
 
 void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
 void MulMat3x3Mat3x3(const int *a, const int *b, int *dst);
-void func_02016acc(dExtSimpleModel_c *model, unsigned int mask);
-void func_02016b24(dExtSimpleModel_c *model, u32 mask);
 /* local extern: math/CalcLib.h's spelling is the one below, but including
    that header renumbers this TU's @NNN .data locals. */
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
@@ -126,12 +124,12 @@ int daLuigi_c::InitResources() {
     VecFx32 t;
 
     mAnmModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210ebb8), 1, -1);
-    func_02016acc(&mAnmModel, kMatClear);
-    func_02016b24(&mAnmModel, kMatSet);
+    mAnmModel.ClearMaterialFlags(kMatClear);
+    mAnmModel.SetMaterialFlags(kMatSet);
 
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210eb20), 1, -1);
-    func_02016acc(&mModel, kMatClear);
-    func_02016b24(&mModel, kMatSet);
+    mModel.ClearMaterialFlags(kMatClear);
+    mModel.SetMaterialFlags(kMatSet);
 
     dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov002_0210ebb8.filePtr,
                              *(BTP_File *)data_ov002_0210e8d0.filePtr);

@@ -105,7 +105,6 @@ void __cxa_vec_ctor(void *, unsigned int, unsigned int, ctor_t, dtor_t);
 unsigned int func_02012174(unsigned int, unsigned int);
 void func_02016a04(void *, int);
 void func_02016a14(void *, int);
-void func_02016b24(void *, unsigned int);
 int func_02017ab4(void *);
 void *func_02017acc(void *, unsigned int);
 void Quaternion_Multiply(void *, void *, void *);
@@ -742,7 +741,7 @@ int Presenter_Load(char *c) {
     if (!PRESENTER(c)->mFace.SetFile((BMD_File *)faceFile, 1, -1))
         return 0;
 
-    func_02016b24(&PRESENTER(c)->mFace, 2);
+    PRESENTER(c)->mFace.SetMaterialFlags(2);
 
     dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile, *(BTP_File *)PRESENTER(c)->mWaitTexSeq.filePtr);
     dExtAnmTexPat_c::Prepare(*(BMD_File *)faceFile,
