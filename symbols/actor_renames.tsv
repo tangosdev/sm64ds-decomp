@@ -9724,3 +9724,4 @@ arm9	0x020aa020	data_020aa020	__cs	MSL/Metrowerks runtime for NITRO, body and la
 arm9	0x0209a330	data_0209a330	__files	MSL ansi_files.c __files (3 console FILEs, 0x4c each) and rand.c random_next (seed, initialised 1)
 arm9	0x0209a624	data_0209a624	random_next	MSL ansi_files.c __files (3 console FILEs, 0x4c each) and rand.c random_next (seed, initialised 1)
 arm9	0x020994e0	data_020994e0	gArctanTable	N64 SM64 gArctanTable (include/trig_tables.inc.c): all 0x401 s16 entries byte-identical
+ov074	0x02121a4c	func_ov074_02121a4c	_ZN12daKuriKing_c8PlayAnimEi	daKuriKing_c::PlayAnim: the (char *self, int idx) helper is a member; the (char*,int,int) cast call's r2 was mSubState's zero, not an argument
