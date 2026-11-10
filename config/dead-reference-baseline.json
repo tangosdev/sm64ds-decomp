@@ -167,6 +167,10 @@
   },
   {
    "file": "notes/archive/plan-scalar-markers.md",
+   "ref": "include/G2x.h"
+  },
+  {
+   "file": "notes/archive/plan-scalar-markers.md",
    "ref": "src/_ZN20SwitchActivatedPlank8BehaviorEv.cpp"
   },
   {
@@ -527,27 +531,23 @@
   },
   {
    "file": "port/docs/mmio-inventory.md",
-   "ref": "src/FX_GetDivResult.c"
+   "ref": "src/_ZN4cstd11fdiv_resultEv.c"
   },
   {
    "file": "port/docs/mmio-inventory.md",
-   "ref": "src/FX_GetDivResultFx64c.c"
+   "ref": "src/_ZN4cstd11ldiv_resultEv.c"
   },
   {
    "file": "port/docs/mmio-inventory.md",
-   "ref": "src/FX_DivS32.c"
+   "ref": "src/_ZN4cstd3divEii.c"
   },
   {
    "file": "port/docs/mmio-inventory.md",
-   "ref": "src/FX_ModS32.c"
+   "ref": "src/_ZN4cstd3modEii.c"
   },
   {
    "file": "port/docs/mmio-inventory.md",
-   "ref": "src/FX_DivFx64c.c"
-  },
-  {
-   "file": "port/docs/opie-assessment.md",
-   "ref": "include/nitro/gx/g3imm.h"
+   "ref": "src/_ZN4cstd4ldivEii.c"
   },
   {
    "file": "port/docs/opie-assessment.md",

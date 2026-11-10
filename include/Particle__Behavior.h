@@ -10,8 +10,8 @@
  * in the definition's SPLBehavior table; the particle update calls each entry
  * once per particle per frame.
  *
- * The record, field and function names are pret's SPL coinages (pokeplatinum
- * lib/spl/include/spl_behavior.h), not ROM or SDK symbols, kept so the two can
+ * The record, field and function names are pret's SPL coinages (in
+ * pokeplatinum/lib/spl/include/spl_behavior.h), not ROM or SDK symbols, kept so the two can
  * be read side by side. The record layouts are field for field the same. This
  * cartridge carries an older SPL: the apply functions take no emitter, so the
  * collision plane has no per-emitter height override. */
