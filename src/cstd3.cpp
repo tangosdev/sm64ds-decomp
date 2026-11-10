@@ -82,7 +82,7 @@ namespace cstd {
 void __builtin_trap();
 
 // The IS-NITRO debugger library's assert, the twin of the IS-AGB library's
-// AGBAssert (pret/pokeemerald src/libisagbprn.c) down to its two format
+// AGBAssert (pret's pokeemerald/src/libisagbprn.c) down to its two format
 // strings: with stop set, print "ASSERTION FAILED  FILE=[%s] LINE=[%d]
 // EXP=[%s]" (data_020868a0) and trap forever; otherwise print the "WARING"
 // line (data_020868d4) and return. isdoverlay.c is its only caller.
