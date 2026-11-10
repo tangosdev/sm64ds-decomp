@@ -2249,13 +2249,18 @@ src/AddVec3.c:
     complete
     .text start:0x02053884 end:0x020538b8
 
-src/data/arm9/data_02086214.c:
+src/FX_AtanTable_.c:
     complete
     .rodata start:0x02086214 end:0x02086314
 
-src/unnamed/arm9/0205/func_020538b8.cpp:
+src/FX_Atan2.c:
     complete
-    .text start:0x020538b8 end:0x02053a90
+    .text start:0x020538b8 end:0x02053a8c
+
+src/FX_Init.c:
+    complete
+    .text start:0x02053a8c end:0x02053a90
+
 src/engine/gx/GX_Init.cpp:
     complete
     .text start:0x02053a90 end:0x02053d9c

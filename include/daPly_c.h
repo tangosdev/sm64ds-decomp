@@ -338,7 +338,7 @@ struct daPly_c : dActor_c {
     s32 mToxicSurfaceY; /* 0x650 */
     /* Yoshi's tongue against walls. TongueWallProbe, run by the tongue
        grab func_ov002_020d6998 (mHatCharacter 3), casts a dBgCh_Lin between
-       two bones of mHeadModels[3] and stores func_02053274's distance from
+       two bones of mHeadModels[3] and stores VEC_Distance's distance from
        the first to the hit point here; Behavior scales that model's bone by
        |dist| >> 3 while it is nonzero, and ChangeState zeroes it. */
     s32 mTongueHitDist; /* 0x654 */

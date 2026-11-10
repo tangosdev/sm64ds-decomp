@@ -84,7 +84,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        rely on it zero it; ..3360 zeroes it from its update instead): a 0/1 latch in several, a frame count that
        runs up to 0x82 in the state at data_ov073_02123340, and in the state
        at data_ov073_021233d0 a phase angle that advances 0x500 a frame and
-       indexes the data_02082214 sine table. */
+       indexes the FX_SinCosTable_ sine table. */
     s32 mStateScratch;                                     /* 0x4b4 */
     /* Hops counted by the waypoint-hop states: the update handler of the
        state at data_ov073_02123320 adds one per landing and switches to

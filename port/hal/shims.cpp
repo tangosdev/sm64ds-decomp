@@ -4,16 +4,6 @@
 #include "dFdBrightness_c.h"
 #include "LevelRng.h"
 
-// Native fader callers use the namespace interface. Keep the existing C
-// divider as the host implementation shared with older callers.
-extern "C" Fix12i _ZN4cstd4fdivEii(Fix12i numerator, Fix12i denominator);
-namespace cstd {
-Fix12i fdiv(Fix12i numerator, Fix12i denominator)
-{
-    return _ZN4cstd4fdivEii(numerator, denominator);
-}
-}
-
 // The *D0Ev/*D1Ev translation units define Itanium-mangled destructor names
 // as C functions -- that satisfies the NDS link, where the filename IS the
 // symbol, but MSVC mangles destructors its own way, so the host needs real

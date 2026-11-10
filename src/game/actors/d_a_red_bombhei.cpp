@@ -38,10 +38,10 @@
 #include "SaveData.h"
 #include "daObjCannonShutter_c.h"
 #include "Sound.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx_cp.h"
 
 struct BCA_File;
 
@@ -272,7 +272,7 @@ int daRedBombhei_c::StepCameraPoint(Vector3 *cur, Vector3 *target) {
     if (len == 0) return 1;
     newLen = len;
     remaining = Math_Function_0203b14c(&newLen, 0, 0x400, 0x100000, 0x1000);
-    Vec3_MulScalarInPlace(&delta, cstd::fdiv(newLen, len));
+    Vec3_MulScalarInPlace(&delta, FX_Div(newLen, len));
     {
         Vector3 next;
         Vec3_Add(&next, target, &delta);

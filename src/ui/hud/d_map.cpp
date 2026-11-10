@@ -42,10 +42,10 @@
 #include "SaveData.h"
 #include "OAM.h"
 #include "nitro/gx/g2.h"
-#include "cstd.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/hw/registers.h"
+#include "nitro/fx/fx_cp.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which makes its
@@ -176,7 +176,7 @@ void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
     if (v->z <= p0.z) {
         int factor;
         Vec3_Sub(&out, v, &p0);
-        factor = 0xc00 - (cstd::fdiv(out.z, (int)0xffffd1a0) >> 12);
+        factor = 0xc00 - (FX_Div(out.z, (int)0xffffd1a0) >> 12);
         v->x = p0.x + FX_MUL(out.x, factor);
         v->z = p0.z + FX_MUL(out.z, 0x200);
     } else {
@@ -704,7 +704,7 @@ L4b0:
         this->mInvScale = this->mTargetInvScale;
 
 L4d8:
-    this->mCurrentScale = cstd::fdiv(this->mScale, this->mInvScale);
+    this->mCurrentScale = FX_Div(this->mScale, this->mInvScale);
     {
         fx32 cs = FX_CosIdx(this->mAngle >> 4);
         this->mBgMatrixA = FX_MUL(cs, this->mInvScale);

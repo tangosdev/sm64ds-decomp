@@ -59,6 +59,7 @@ enum daObjRotateUpdownLift_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Plain 12-byte point. Vector3's destructor is empty but the type is not
    POD, and the copies below are three-word ldm/stm with no cleanup. */
@@ -122,12 +123,8 @@ extern VariantWords data_ov091_02134bd0;
 extern UpdownFileSlot data_ov091_02134c30[];
 extern UpdownFileSlot data_ov091_02134c34[];
 extern UpdownClpsSlot data_ov091_02134c38[];
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern s8 gCurrentSublevel;
-
-namespace cstd {
-int fdiv(int numerator, int denominator);
-}
 
 extern "C" {
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
@@ -220,7 +217,7 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     ((Matrix4x3 *)mShadowMat)->t.x = mPosX >> 3;
 
     int sinIdx = (u16)mAngleX >> 4;
-    int sine = data_02082214[sinIdx << 1];
+    int sine = FX_SinCosTable_[sinIdx << 1];
     int sineAbs = sine < 0 ? -sine : sine;
     int scaled = FX_MUL(sineAbs, 0xa0000);
     int variantA = mVariant;
@@ -244,7 +241,7 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     int cosIdx = (u16)mAngleX >> 4;
     int variantC = mVariant;
     int sx = shadowSizeX.v[variantC] - shr;
-    int cosine = data_02082214[(cosIdx << 1) + 1];
+    int cosine = FX_SinCosTable_[(cosIdx << 1) + 1];
     int fac = 0xa0000 - shr;
     if (cosine < 0)
         cosine = -cosine;
@@ -389,7 +386,7 @@ int daObjRotateUpdownLift_c::Behavior()
     Vec3_Sub(&edge, &cur, &prev);
     span = LenVec3(&edge);
     dist = LenVec3(&remain);
-    along = cstd::fdiv(span - dist, span);
+    along = FX_Div(span - dist, span);
     mAngleX = (s16)(mPitchBase + (s16)FX_MUL(mPitchStep, along));
 
     if (dist == 0 || dist <= stepLen) {
@@ -407,7 +404,7 @@ int daObjRotateUpdownLift_c::Behavior()
             *pitch = (s16)(*pitch + *(s16 *)((char *)stepAt + 0xa4));
         }
     } else {
-        Vec3_MulScalar(&stepVec, &remain, cstd::fdiv(stepLen, dist));
+        Vec3_MulScalar(&stepVec, &remain, FX_Div(stepLen, dist));
         SubVec3(&mPosX, &stepVec, &mPosX);
     }
 

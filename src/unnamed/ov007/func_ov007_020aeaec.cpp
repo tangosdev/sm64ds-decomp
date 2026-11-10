@@ -1,6 +1,6 @@
 //cpp
-#include "cstd.h"
 #include "Ov007Item.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -14,7 +14,7 @@ int func_ov007_020aeaec(Ov007Item *item, int flag, int lo, int hi) {
     else if (ticks >= hi)
         r = 0x1000;
     else
-        r = cstd::div((ticks - lo) << 0xc, hi - lo);
+        r = FX_DivS32((ticks - lo) << 0xc, hi - lo);
     if (flag)
         r = 0x1000 - r;
     return r;

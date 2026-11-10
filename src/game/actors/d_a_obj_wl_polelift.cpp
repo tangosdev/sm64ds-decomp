@@ -34,6 +34,7 @@ enum d_a_obj_wl_polelift_AssetId {
 #include "dBgCh_Gnd.h"
 #include "math/MtxStack.h"
 #include "SaveBlock.h"
+#include "nitro/fx/fx_cp.h"
 
 /* The file-scope object at the end of this file constructs the resource
  * handle (model file 0x6db). mwcc emits __sinit_d_a_obj_wl_polelift.cpp
@@ -44,10 +45,6 @@ struct PoleliftModelFile : SharedFilePtr {
     PoleliftModelFile(u32 fileID);
     ~PoleliftModelFile();
 };
-
-namespace cstd {
-int fdiv(int a, int b);
-}
 
 extern "C" {
 u16 DecIfAbove0_Short(u16 *timer);
@@ -131,7 +128,7 @@ s32 daObjWlPolelift_c::Behavior()
             mPosY = node.y;
             mPosZ = node.z;
         } else {
-            scale = cstd::fdiv(0xa000, length);
+            scale = FX_Div(0xa000, length);
             Vec3_MulScalar(&step, &delta, scale);
             SubVec3(&mPos, &step, &mPos);
         }

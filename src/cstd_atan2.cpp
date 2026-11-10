@@ -6,9 +6,7 @@
 typedef int s32;
 typedef short s16;
 
-namespace cstd {
-s32 fdiv(s32, s32);
-}
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 s32 func_01ffa4bc(s32 a);
@@ -33,25 +31,25 @@ s16 atan2(s32 y, s32 x) {
     } else if (y >= 0) {
         if (x >= 0) {
             if (x >= y)
-                r = data_020994e0[fdiv(y, x) >> 2];
+                r = data_020994e0[FX_Div(y, x) >> 2];
             else
-                r = 0x4000 - data_020994e0[fdiv(x, y) >> 2];
+                r = 0x4000 - data_020994e0[FX_Div(x, y) >> 2];
         } else {
             if (-x < y)
-                r = data_020994e0[fdiv(-x, y) >> 2] + 0x4000;
+                r = data_020994e0[FX_Div(-x, y) >> 2] + 0x4000;
             else
-                r = 0x8000 - data_020994e0[fdiv(y, -x) >> 2];
+                r = 0x8000 - data_020994e0[FX_Div(y, -x) >> 2];
         }
     } else if (func_01ff98f4(func_01ffa4bc(x), 0)) {
         if (x <= y)
-            r = data_020994e0[fdiv(-y, -x) >> 2] + 0x8000;
+            r = data_020994e0[FX_Div(-y, -x) >> 2] + 0x8000;
         else
-            r = 0xc000 - data_020994e0[fdiv(-x, -y) >> 2];
+            r = 0xc000 - data_020994e0[FX_Div(-x, -y) >> 2];
     } else {
         if (x < -y)
-            r = data_020994e0[fdiv(x, -y) >> 2] + 0xc000;
+            r = data_020994e0[FX_Div(x, -y) >> 2] + 0xc000;
         else
-            r = -data_020994e0[fdiv(-y, x) >> 2];
+            r = -data_020994e0[FX_Div(-y, x) >> 2];
     }
     return (s16)r;
 }

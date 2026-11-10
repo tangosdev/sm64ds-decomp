@@ -1,8 +1,9 @@
-/* Host implementation of the cstd fixed-point divide.
+/* Host implementation of NitroSDK's FX_Div fixed-point divide.
  *
- * On the DS, cstd::fdiv feeds the hardware divider (fdiv_async writes the
- * DIV registers, fdiv_result spins on DIV_BUSY) -- src/_ZN4cstd4fdivEii.c is
- * a thin wrapper over MMIO and cannot run on a host. The operation itself is
+ * On the DS, FX_Div feeds the hardware divider (FX_DivAsync writes the
+ * DIV registers, FX_GetDivResult spins on DIV_BUSY) -- src/cstd.cpp's FX_Div
+ * is a thin wrapper over MMIO and cannot run on a host. Targets that hostgen
+ * src/cstd.cpp (gate 8 and up) get FX_Div from it and do not link this file. The operation itself is
  * just a 20.12 divide: (a / b) in Fix12 is (a << 12) / b.
  *
  * DS divider edge cases, preserved deliberately:
@@ -13,7 +14,7 @@
  */
 typedef int s32;
 
-s32 _ZN4cstd4fdivEii(s32 a, s32 b)
+s32 FX_Div(s32 a, s32 b)
 {
     if (b == 0)
         return a < 0 ? -1 : 1;

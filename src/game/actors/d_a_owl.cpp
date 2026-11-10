@@ -152,7 +152,7 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 extern "C" {
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
                          unsigned int d);
@@ -383,7 +383,7 @@ int daOwl_c::UpdateHover() {
     *p3e8 += 0x200;
     ang = unk_3e8;
     idx = ((u16)(short)ang >> 4) * 2;
-    tbl = data_02082214[idx];
+    tbl = FX_SinCosTable_[idx];
     result = FX_MUL(tbl, 0x64000);
     ApproachLinear(mPosY, mAnchor.y + result, 0x3000);
 

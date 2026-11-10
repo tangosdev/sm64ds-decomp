@@ -1,7 +1,8 @@
-/* Arctangent table, 128 signed halfwords. */
-#include "types.h"
+/* NitroSDK fx_atan.c's FX_AtanTable_: entry i is atan(i / 128) as a 16-bit
+ * game angle (0x10000 per turn), the first octant FX_Atan2 indexes. */
+#include "nitro/fx/fx_trig.h"
 
-extern const s16 data_02086214[128] = {
+const fx16 FX_AtanTable_[128] = {
     0,    81,   163,  244,  326,  407,  489,  570,  651,  732,  813,  894,  975,  1056, 1136, 1217,
     1297, 1377, 1457, 1537, 1617, 1696, 1775, 1854, 1933, 2012, 2090, 2168, 2246, 2324, 2401, 2478,
     2555, 2632, 2708, 2784, 2860, 2935, 3010, 3085, 3159, 3233, 3307, 3380, 3453, 3526, 3599, 3670,

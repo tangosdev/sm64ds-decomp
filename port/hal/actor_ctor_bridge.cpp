@@ -7,7 +7,7 @@
 // The traps here are the same bargain hal/clsn_vtable.cpp struck and
 // hal/bg_ctor_bridge.cpp repeats: a migrated constructor makes MSVC emit the
 // class vtable, which needs every virtual defined, and the real bodies drag in
-// the collision tree (dBgCh_SphCrr, dBgPi, DotVec3, cstd::fdiv and a dozen
+// the collision tree (dBgCh_SphCrr, dBgPi, DotVec3, FX_Div and a dozen
 // func_0203xxxx). Defining them loudly keeps the gate honest -- the day one
 // dispatches, it says so by name instead of returning a plausible zero.
 #include "common.h"

@@ -1,5 +1,5 @@
 //cpp
-#include "cstd.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 /* opt_strength_reduction stays off: with it on the row walks become induction
@@ -63,8 +63,8 @@ void func_ov007_020c49bc(int arg0, int arg1, int arg2, int arg3, int arg4, int a
     sp8 = arg1 >> 3;
     sp0 = arg2;
     sp4 = arg3;
-    temp_sb = cstd::div(0x1000, temp_sl);
-    spC = cstd::div(0x1000, sp8);
+    temp_sb = FX_DivS32(0x1000, temp_sl);
+    spC = FX_DivS32(0x1000, sp8);
     if (arg6 == 0) {
         sp10 = 0;
         if (sp8 > 0) {
@@ -132,8 +132,8 @@ void func_ov007_020c49bc(int arg0, int arg1, int arg2, int arg3, int arg4, int a
                     do {
                         temp_r4_2 = arg6[var_r8_2 + sp18];
                         if (temp_r4_2 != 0xFFFF && arg7 > 0) {
-                            temp_r6 = cstd::mod(temp_r4_2, temp_r7_2) << 0xF;
-                            temp_r1_6 = cstd::div(temp_r4_2, temp_r7_2) << 0xF;
+                            temp_r6 = FX_ModS32(temp_r4_2, temp_r7_2) << 0xF;
+                            temp_r1_6 = FX_DivS32(temp_r4_2, temp_r7_2) << 0xF;
                             temp_r3_2 = (u16)((temp_r1_6 << 8) >> 0x10);
                             temp_r1_7 = (u16)((temp_r6 << 8) >> 0x10);
                             temp_r4_3 = (u16)(((temp_r6 + 0x8000) << 8) >> 0x10);

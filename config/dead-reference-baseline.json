@@ -527,23 +527,23 @@
   },
   {
    "file": "port/docs/mmio-inventory.md",
-   "ref": "src/_ZN4cstd11fdiv_resultEv.c"
+   "ref": "src/FX_GetDivResult.c"
   },
   {
    "file": "port/docs/mmio-inventory.md",
-   "ref": "src/_ZN4cstd11ldiv_resultEv.c"
+   "ref": "src/FX_GetDivResultFx64c.c"
   },
   {
    "file": "port/docs/mmio-inventory.md",
-   "ref": "src/_ZN4cstd3divEii.c"
+   "ref": "src/FX_DivS32.c"
   },
   {
    "file": "port/docs/mmio-inventory.md",
-   "ref": "src/_ZN4cstd3modEii.c"
+   "ref": "src/FX_ModS32.c"
   },
   {
    "file": "port/docs/mmio-inventory.md",
-   "ref": "src/_ZN4cstd4ldivEii.c"
+   "ref": "src/FX_DivFx64c.c"
   },
   {
    "file": "port/docs/opie-assessment.md",

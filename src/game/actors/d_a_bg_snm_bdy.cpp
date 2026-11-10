@@ -62,13 +62,10 @@
 #include "dClipper.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Real C++ names. Declared here, not via decl_common.h: that header's
  * other spellings of these symbols collide with this TU. */
-
-namespace cstd {
-int fdiv(int numerator, int denominator);
-}
 
 /* Shared ABI seams. Each is the most complete of the spellings the retired
  * one-function shards carried. */
@@ -507,7 +504,7 @@ void daBgSnmBdy_c::UpdateGroundCollision(dBgCh_Actr *mc)
     {
         int alongX = FX_Mul(normal.x, mSpeedX);
         int alongZ = FX_Mul(normal.z, mSpeedZ);
-        mVertSpeed = -(cstd::fdiv(alongX + alongZ, normal.y) + 0x8000);
+        mVertSpeed = -(FX_Div(alongX + alongZ, normal.y) + 0x8000);
     }
 }
 
@@ -551,7 +548,7 @@ int daBgSnmBdy_c::AdvancePath()
 void daBgSnmBdy_c::UpdateRollAngle()
 {
     int circumference = FX_Mul32x64c(mRadius << 1, FX64C_PI);
-    Fix12i turns = cstd::fdiv(mHorzSpeed, circumference);
+    Fix12i turns = FX_Div(mHorzSpeed, circumference);
     mAngleX = (short)(mAngleX + FX_Mul(turns, ANGLE_FULL_TURN));
 }
 

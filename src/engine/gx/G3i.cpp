@@ -15,7 +15,7 @@
 #include "nitro/gx/g3_util.h"
 #include "math/Matrix.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 void NormalizeVec3(const Vector3 *v, Vector3 *out);
@@ -36,7 +36,7 @@ void G3i_PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i
     int v;
     int wz;
 
-    tmp = cstd::fdiv(cosF, sinF);
+    tmp = FX_Div(cosF, sinF);
     if (scaleW != 0x1000)
         tmp = tmp * scaleW / 0x1000;
 
@@ -60,7 +60,7 @@ void G3i_PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i
         mtx[13] = 0;
         mtx[15] = 0;
     }
-    xx = cstd::fdiv_result();
+    xx = FX_GetDivResult();
     *(volatile u64 *)0x4000290 = (u64)0x1000 << 32;
     *(volatile u64 *)0x4000298 = (unsigned)(n - f);
     if (flag) {
@@ -79,7 +79,7 @@ void G3i_PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i
         mtx[0] = xx;
         mtx[5] = tmp;
     }
-    q = cstd::ldiv_result();
+    q = FX_GetDivResultFx64c();
     if (scaleW != 0x1000)
         q = q * scaleW / 0x1000;
     zz = (int)(((f + n) * q + 0x80000000LL) >> 32);

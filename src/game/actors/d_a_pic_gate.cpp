@@ -50,6 +50,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g3imm.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 #pragma defer_codegen off
 
@@ -76,10 +77,6 @@
 /* Stack vectors are NitroSDK VecFx32: types.h Vector3 declares an empty
    destructor under C++, and a stack object would emit ~Vector3. CrossVec3 and
    NormalizeVec3 take Vector3 views, so calls cast this POD storage explicitly. */
-
-namespace cstd {
-Fix12i fdiv(s32, s32);
-}
 
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
@@ -339,7 +336,7 @@ s32 daPicGate_c::RippleHeight(s32 r6) {
     r5res = WavePhase(r6);
     r4res = WaveAmplitude(mWaveParams->duration - mWaveTimer);
 
-    f = cstd::fdiv(r4res, mWaveParams->radius);
+    f = FX_Div(r4res, mWaveParams->radius);
     sum = r4res + FX_MUL(-f, r6);
     if (sum < 0)
         sum = 0;
@@ -361,7 +358,7 @@ s32 daPicGate_c::WaveAmplitude(s32 n) {
 /* The wave's phase at distance dist from the origin: dist * 0xffff /
  * wavelength, 4.12 fixed-point, minus the running phase mWavePhase. */
 s32 daPicGate_c::WavePhase(s32 dist) {
-    Fix12i speed = cstd::fdiv(0xffff, mWaveParams->wavelength);
+    Fix12i speed = FX_Div(0xffff, mWaveParams->wavelength);
     int result = FX_MUL(dist, speed);
     s16 cur = mWavePhase;
     return (s16)(result - cur);

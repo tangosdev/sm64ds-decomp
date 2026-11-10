@@ -50,6 +50,7 @@ enum daMoray_c_AssetId {
 #include "daPly_c.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
 
 #pragma defer_codegen off
 
@@ -138,10 +139,6 @@ struct MorayRenderStep {
 
 
 extern "C" MorayRenderStep data_ov016_02114908[];
-
-namespace cstd {
-int fdiv(int a, int b);
-}
 
 /* Out of line, and FIRST in this ROM-ascending file: that puts D1 and D0 at
  * 0x021111a0 / 0x02111208, the two lowest addresses in the unit.
@@ -344,7 +341,7 @@ int daMoray_c::StatePathSwimMain() {
             this->mPathNodeIndex = 0;
         func_02012694(0xfa, &this->mCamSpacePos);
     } else {
-        Vec3_MulScalar(&scaled, &diff, cstd::fdiv(0xa000, len));
+        Vec3_MulScalar(&scaled, &diff, FX_Div(0xa000, len));
         SubVec3(&this->mPos, &scaled, &this->mPos);
     }
     return 1;

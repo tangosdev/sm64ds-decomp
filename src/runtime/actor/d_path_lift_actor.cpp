@@ -38,9 +38,9 @@
 #include "decl_PathPtr.h"
 #include "decl_common.h"
 #include "common.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
 
 typedef void (dPathLiftActor_c::*PathLiftStateFn)();
 
@@ -66,7 +66,7 @@ extern PathStuff data_ov002_0210d9f0;
 
 /* ROM symbols with no header of their own. */
 extern "C" {
-extern s16 data_02082214[]; /* sine/cosine pairs, indexed by angle >> 4 */
+extern s16 FX_SinCosTable_[]; /* sine/cosine pairs, indexed by angle >> 4 */
 extern u16 DecIfAbove0_Short(u16 *p);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
@@ -155,7 +155,7 @@ void dPathLiftActor_c::StateFall()
         /* Retain the mixed signed/unsigned access tree: collapsing both views
            into mFallAngle makes mwcc reuse the signed load and drops 12 bytes. */
         raw = mFallAngle;
-        v = data_02082214[((u16)(int)(long long)raw >> 4) * 2];
+        v = FX_SinCosTable_[((u16)(int)(long long)raw >> 4) * 2];
         mPosY = mFallStartY + (s32)(u32)((((long long)v << 15) + 0x800) >> 12);
         *(u16 *)((int)&mFallAngle) = (u16)(*(u16 *)((int)&mFallAngle) + 0x3000);
         return;
@@ -250,7 +250,7 @@ void dPathLiftActor_c::StatePath()
     destDist = LenVec3(&fromDest);
     Vec3_Sub(&segment, &srcNode, &destNode);
     segLen = LenVec3(&segment);
-    segFrames = cstd::fdiv(segLen, mHorzSpeed) / 0x1000;
+    segFrames = FX_Div(segLen, mHorzSpeed) / 0x1000;
 
     horzDist = Vec3_HorzDist(&srcNode, &destNode);
     if (horzDist != 0) {
@@ -275,11 +275,11 @@ void dPathLiftActor_c::StatePath()
     }
 
     if (destDist == 0 || destDist <= mHorzSpeed) {
-        Vec3_MulScalar(&stepA, &fromDest, cstd::fdiv(mHorzSpeed, destDist));
+        Vec3_MulScalar(&stepA, &fromDest, FX_Div(mHorzSpeed, destDist));
         SubVec3(&mPos, &stepA, &mPos);
         arrived = 1;
     } else {
-        Vec3_MulScalar(&stepB, &fromDest, cstd::fdiv(mHorzSpeed, destDist));
+        Vec3_MulScalar(&stepB, &fromDest, FX_Div(mHorzSpeed, destDist));
         SubVec3(&mPos, &stepB, &mPos);
     }
 

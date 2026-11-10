@@ -88,6 +88,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "dGraph_c.h"
 #include "dClipper.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 struct OamAttr;
 
@@ -4304,7 +4305,7 @@ void dScStage_c::CheckInput() {
                 else
                     maxDistance = 0x24;
                 if (distance > maxDistance) {
-                    int scale = cstd::fdiv(maxDistance, distance);
+                    int scale = FX_Div(maxDistance, distance);
                     deltaX = FX_MUL(deltaX, scale);
                     control->tx = touchX - deltaX;
                     deltaY = FX_MUL(deltaY, scale);

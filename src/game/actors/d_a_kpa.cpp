@@ -132,11 +132,11 @@ enum daKpa_c_AssetId {
 #include "Message.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 /* -------------------------------------------------------------------------- */
 /* Names for the numbers this file uses. The values are the ROM's; the names are
@@ -1169,7 +1169,7 @@ void daKpa_c::RunIntroTalk() {
                  * before use; dropping those first three stores builds 12 bytes
                  * shorter (measured). */
                 x = this->mPosX;
-                tbl = data_02082214;
+                tbl = FX_SinCosTable_;
                 pos[0] = x;
                 y = this->mPosY;
                 scale = 0xc8;
@@ -2019,7 +2019,7 @@ void daKpa_c::ActSpitFireOntoFloor() {
             u16* dp;
 
             pos.x = this->mPosX;
-            tbl = data_02082214;
+            tbl = FX_SinCosTable_;
             pos.y = this->mPosY;
             scale = 0xe8;
             pos.z = this->mPosZ;
@@ -2309,8 +2309,8 @@ void daKpa_c::SetGoalInvisible() {
         zero.y = 0;
         zero.z = 0;
         a = (int)(unsigned short)Vec3_HorzAngle(&zero, &mPos) >> 4;
-        this->mPosX = (short)data_02082214[a * 2] * (short)0xed8;
-        this->mPosZ = (short)data_02082214[a * 2 + 1] * (short)0xed8;
+        this->mPosX = (short)FX_SinCosTable_[a * 2] * (short)0xed8;
+        this->mPosZ = (short)FX_SinCosTable_[a * 2 + 1] * (short)0xed8;
     }
 }
 
@@ -2822,8 +2822,8 @@ void daKpa_c::TiltPlatform(int tiltSpeed) {
     short angle = this->mAngleToCenter;
     unsigned int idx = (unsigned short)(short)(angle + 0x8000) >> 4;
     int k = idx * 2;
-    arena->mAngleXSpeed = (short)((tiltSpeed * data_02082214[k + 1]) >> 12);
-    arena->mAngleZSpeed = (short)((tiltSpeed * -data_02082214[k]) >> 12);
+    arena->mAngleXSpeed = (short)((tiltSpeed * FX_SinCosTable_[k + 1]) >> 12);
+    arena->mAngleZSpeed = (short)((tiltSpeed * -FX_SinCosTable_[k]) >> 12);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2966,9 +2966,9 @@ void daKpa_c::FreeUpdate() {
             if (this->mVertSpeed >= 0x14000)
                 this->mVertSpeed = 0x14000;
         } else if (this->mGroundNormalY != 0) {
-            this->mVertSpeed = -(cstd::fdiv(FX_MUL(this->mGroundNormalX, this->mSpeedX) +
-                                                FX_MUL(this->mGroundNormalZ, this->mSpeedZ),
-                                            this->mGroundNormalY) +
+            this->mVertSpeed = -(FX_Div(FX_MUL(this->mGroundNormalX, this->mSpeedX) +
+                                            FX_MUL(this->mGroundNormalZ, this->mSpeedZ),
+                                        this->mGroundNormalY) +
                                  0x8000);
         }
     }
@@ -2977,7 +2977,7 @@ void daKpa_c::FreeUpdate() {
         if (!this->mWithMeshClsn.IsOnGround()) {
             s32* px = &this->mPosX;
             s32* pz = &this->mPosZ;
-            s16* tab = data_02082214;
+            s16 *tab = FX_SinCosTable_;
             this->mPosX = this->mLastGroundPosX;
             this->mPosY = this->mLastGroundPosY;
             this->mPosZ = this->mLastGroundPosZ;
@@ -3060,10 +3060,10 @@ void daKpa_c::HeldUpdate() {
 
     i = ((unsigned short)a >> 4) * 2;
 
-    this->mPosX += data_02082214[i] * 0xa0;
+    this->mPosX += FX_SinCosTable_[i] * 0xa0;
     j = ((unsigned short)this->mAngleX >> 4) * 2;
-    this->mPosY += 0x18000 - data_02082214[j] * 0xa0;
-    this->mPosZ += data_02082214[i + 1] * 0xa0;
+    this->mPosY += 0x18000 - FX_SinCosTable_[j] * 0xa0;
+    this->mPosZ += FX_SinCosTable_[i + 1] * 0xa0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3098,8 +3098,8 @@ void daKpa_c::ThrownDroppedUpdate() {
     if (v > 0x2d)
         v = v * 0x19 / 10;
     nv = -v;
-    this->mHorzSpeed = v * data_02082214[((unsigned short)this->mAngleX >> 4 << 1) + 1];
-    this->mVertSpeed = nv * data_02082214[(unsigned short)this->mAngleX >> 4 << 1];
+    this->mHorzSpeed = v * FX_SinCosTable_[((unsigned short)this->mAngleX >> 4 << 1) + 1];
+    this->mVertSpeed = nv * FX_SinCosTable_[(unsigned short)this->mAngleX >> 4 << 1];
     tail = (daKpaTail_c *)dActor_c::FindWithID(this->mTailUniqueID);
     if (tail != 0) {
         tail->mState = BOWSER_TAIL_COOLDOWN;
@@ -3278,9 +3278,9 @@ int daKpa_c::UpdateIntroCamera() {
         dist = Vec3_HorzDist(&mPos, &sp);
         k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x2000) >> 4;
         v = FX_MUL(dist, 0xA00);
-        this->mCamPosX = this->mPosX + FX_MUL(v, data_02082214[k * 2]);
+        this->mCamPosX = this->mPosX + FX_MUL(v, FX_SinCosTable_[k * 2]);
         this->mCamPosY = this->mPosY + 0xc8000;
-        this->mCamPosZ = this->mPosZ + FX_MUL(v, data_02082214[k * 2 + 1]);
+        this->mCamPosZ = this->mPosZ + FX_MUL(v, FX_SinCosTable_[k * 2 + 1]);
         cam->SetPos(*(const Vector3 *)(&this->mCamPosX));
         this->mCutsceneStep++;
         break;
@@ -3303,8 +3303,8 @@ int daKpa_c::UpdateIntroCamera() {
         if (d < 0x1f4000)
             d = 0x1f4000;
         k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x1000) >> 4;
-        sp.x = this->mPosX + FX_MUL(d, data_02082214[k * 2]);
-        sp.z = this->mPosZ + FX_MUL(d, data_02082214[k * 2 + 1]);
+        sp.x = this->mPosX + FX_MUL(d, FX_SinCosTable_[k * 2]);
+        sp.z = this->mPosZ + FX_MUL(d, FX_SinCosTable_[k * 2 + 1]);
         ApproachLinear(this->mCamPosX, sp.x, 0x4000);
         ApproachLinear(this->mCamPosZ, sp.z, 0x4000);
         ApproachLinear(this->mCamLookAtX, this->mPosX, 0x1e000);
@@ -3316,9 +3316,9 @@ int daKpa_c::UpdateIntroCamera() {
     case 3: {
         int ty, tz, tx;
         k = (int)((unsigned short)this->mAngleY) >> 4;
-        tz = data_02082214[k * 2 + 1] * 0xc0 + this->mPosZ;
+        tz = FX_SinCosTable_[k * 2 + 1] * 0xc0 + this->mPosZ;
         ty = this->mPosY + 0xfa000;
-        tx = data_02082214[k * 2] * 0xc0 + this->mPosX;
+        tx = FX_SinCosTable_[k * 2] * 0xc0 + this->mPosX;
         sp.x = tx;
         sp.y = ty;
         sp.z = tz;

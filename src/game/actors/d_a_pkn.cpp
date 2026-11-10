@@ -750,7 +750,7 @@ void daPkn_c::UpdatePose()
     /* Still a hand-indexed FX_SinIdx: through the inline the table base loads
        before mHeadClsnOffset.y and ang[0], and no spelling tried (local, index
        local, y read first, split subtraction) gets the ROM's order back. */
-    mHeadClsnOffset.y -= data_02082214[((u16)ang[0] >> 4) << 1] * (s16)0x14 + 0x32000;
+    mHeadClsnOffset.y -= FX_SinCosTable_[((u16)ang[0] >> 4) << 1] * (s16)0x14 + 0x32000;
     mHeadClsnOffset.z += 0x32000;
 
     L.tv.x = mPosX;

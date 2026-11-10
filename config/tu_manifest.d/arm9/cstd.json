@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "contiguous linker run: 0x02052ef4..0x02053320, 14 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
     "BOTTOM EDGE: InvMat4x3.c (0x02052b34..0x02052ec8) ends exactly where the run begins -- an unrelated matrix helper. TOP EDGE: func_02053320.c (0x02053320..0x02053380) begins exactly where the run ends and stays a one-function source.",
-    "NAMESPACE-LOCAL COMPLETE: the run is every cstd division/square-root-unit wrapper in this span (mod/div/fdiv/ldiv, the fdiv_async/fdiv_result and reciprocal_async/ldiv_result async pairs, and the FX_GetSqrtResult/FX_SqrtAsync/FX_InvSqrt/func_020531a4/func_02053200 helpers that drive the same DIV/SQRT registers). No other cstd run belongs to this job."
+    "NAMESPACE-LOCAL COMPLETE: the run is every cstd division/square-root-unit wrapper in this span (mod/div/fdiv/ldiv, the fdiv_async/fdiv_result and reciprocal_async/ldiv_result async pairs, and the FX_GetSqrtResult/FX_SqrtAsync/FX_InvSqrt/FX_Sqrt/FX_Inv helpers that drive the same DIV/SQRT registers). No other cstd run belongs to this job."
   ],
   "sections": [
     {
@@ -19,21 +19,21 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN4cstd3modEii",
+      "symbol": "FX_ModS32",
       "address": "0x02052ef4",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN4cstd3modEii.cpp",
+      "legacy_source": "src/FX_ModS32.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "_ZN4cstd3divEii",
+      "symbol": "FX_DivS32",
       "address": "0x02052f4c",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN4cstd3divEii.cpp",
+      "legacy_source": "src/FX_DivS32.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_ZN4cstd10fdiv_asyncEii",
+      "symbol": "FX_DivAsync",
       "address": "0x02052fa4",
       "size": "0x00000038",
       "legacy_source": "src/_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE.c",
@@ -54,24 +54,24 @@
       "ordinal": 4
     },
     {
-      "symbol": "_ZN4cstd16reciprocal_asyncEi",
+      "symbol": "FX_InvAsync",
       "address": "0x02053090",
       "size": "0x0000003c",
       "legacy_source": "src/_ZN4cstd16reciprocal_asyncE5Fix12IiE.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN4cstd11fdiv_resultEv",
+      "symbol": "FX_GetDivResult",
       "address": "0x020530cc",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN4cstd11fdiv_resultEv.cpp",
+      "legacy_source": "src/FX_GetDivResult.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN4cstd11ldiv_resultEv",
+      "symbol": "FX_GetDivResultFx64c",
       "address": "0x02053108",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN4cstd11ldiv_resultEv.cpp",
+      "legacy_source": "src/FX_GetDivResultFx64c.cpp",
       "ordinal": 7
     },
     {
@@ -82,35 +82,35 @@
       "ordinal": 8
     },
     {
-      "symbol": "func_020531a4",
+      "symbol": "FX_Sqrt",
       "address": "0x020531a4",
       "size": "0x0000005c",
-      "legacy_source": "src/unnamed/arm9/0205/func_020531a4.c",
+      "legacy_source": "src/unnamed/arm9/0205/FX_Sqrt.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_02053200",
+      "symbol": "FX_Inv",
       "address": "0x02053200",
       "size": "0x0000001c",
-      "legacy_source": "src/func_02053200.c",
+      "legacy_source": "src/FX_Inv.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN4cstd4ldivEii",
+      "symbol": "FX_DivFx64c",
       "address": "0x0205321c",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN4cstd4ldivEii.cpp",
+      "legacy_source": "src/FX_DivFx64c.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN4cstd4fdivEii",
+      "symbol": "FX_Div",
       "address": "0x02053258",
       "size": "0x0000001c",
-      "legacy_source": "src/_ZN4cstd4fdivEii.cpp",
+      "legacy_source": "src/FX_Div.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "func_02053274",
+      "symbol": "VEC_Distance",
       "address": "0x02053274",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0205/func_02053274.c",
@@ -123,7 +123,7 @@
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
     "cstd is the tree's C++ namespace of math wrappers; the file takes the class name already used in the tree, per Juan 2026-10-11. No vtable, RTTI, or emitted data.",
-    "mwccarm emits .text in reverse source order here, so the file runs from the highest address (func_02053274) down to the lowest (mod); each earlier definition is the declaration its callers need, with the remaining callees forward-declared at the top.",
+    "mwccarm emits .text in reverse source order here, so the file runs from the highest address (VEC_Distance) down to the lowest (mod); each earlier definition is the declaration its callers need, with the remaining callees forward-declared at the top.",
     "The two Fix12-taking routines (fdiv_async, reciprocal_async) keep the shards' extern \"C\" spelling under their identical identifiers: in C they define the mangled identifier verbatim, and the mangled symbol comes out identical in the C++ TU."
   ],
   "verification": {

@@ -51,12 +51,10 @@
 #include "private/mtx43.h"
 #include "LevelRng.h"
 #include "nitro/gx/g3_util.h"
+#include "nitro/fx/fx_cp.h"
 
 struct BTP_File;
 
-namespace cstd {
-int fdiv(int a, int b);
-}
 namespace Particle {
 void RenderAll();
 }
@@ -200,7 +198,7 @@ void UnknownVsPlayer::AnimFastGait() {
         mModel.SetAnim(*(BCA_File *)data_ov075_0211d424.filePtr, 4, 0, 0x1000, 0);
         mAnimState = ANIM_SLOW_GAIT;
     }
-    mModel.speed = cstd::fdiv(mSpeed, mMaxSpeed) + 0x1000;
+    mModel.speed = FX_Div(mSpeed, mMaxSpeed) + 0x1000;
     if (!mModel.WillHitFrame(4)) {
         if (mModel.WillHitFrame(0x22) == 0)
             return;
@@ -217,7 +215,7 @@ void UnknownVsPlayer::AnimSlowGait() {
         mModel.SetAnim(*(BCA_File *)data_ov075_0211d42c.filePtr, 4, 0, 0x1000, 0);
         mAnimState = ANIM_FAST_GAIT;
     }
-    mModel.speed = cstd::fdiv(mSpeed, mMaxSpeed) + 0x1000;
+    mModel.speed = FX_Div(mSpeed, mMaxSpeed) + 0x1000;
     if (!mModel.WillHitFrame(4)) {
         if (mModel.WillHitFrame(0x22) == 0)
             return;
@@ -486,7 +484,7 @@ int UnknownVsPlayer::StartIdle() {
 int UnknownVsPlayer::UpdateCamera(Vector3 *at, Vector3 *pos) {
     int state = mMoveState;
     if (state == MOVE_RUN_OFF_STAGE) {
-        int back = cstd::fdiv(mPosition.z, 0x19000);
+        int back = FX_Div(mPosition.z, 0x19000);
         pos->z = back + 0x50000;
         return 1;
     }

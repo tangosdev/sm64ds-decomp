@@ -68,6 +68,7 @@ enum dScMgSnowball_c_AssetId {
 #include "OamAttr.h"
 #include "Vector2Math.h"
 #include "nitro/gx/g3x.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -93,7 +94,7 @@ extern u32 d_s_mg_snowballNewHold(u32 uniqueID, u32 effectID, int x, int y, int 
                                   void *callback);
 extern void func_02012718(int a, int b);
 extern int atan2_hold_d_s_mg_snowball_1(int y, int x);
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
@@ -610,7 +611,7 @@ void dScMgSnowball_c::UpdateSnowball() {
         normalVelocity = FX_MUL(normalVelocity, 0x1800);
         mVelX -= FX_MUL(normalVelocity, push[0]);
         mVelY -= FX_MUL(normalVelocity, push[1]);
-        headingComponent = data_02082214[((unsigned short)cstd::atan2(mVelY, mVelX) >> 4) * 2];
+        headingComponent = FX_SinCosTable_[((unsigned short)cstd::atan2(mVelY, mVelX) >> 4) * 2];
         vx = mVelX;
         mVelX = vx / 8 + FX_MUL(vx, headingComponent) / 4;
         vy = mVelY;
@@ -623,7 +624,7 @@ void dScMgSnowball_c::UpdateSnowball() {
 }
 
 void dScMgSnowball_c::UpdateCamera() {
-    int t = cstd::fdiv(0xc0000, data_02082314);
+    int t = FX_Div(0xc0000, data_02082314);
     Vector3 v;
     int x, y;
     if (mScreensSwapped == 0) {

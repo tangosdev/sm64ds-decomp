@@ -12,8 +12,8 @@
 #       they define Itanium-mangled symbols as C functions, which satisfies
 #       the NDS link but not MSVC's mangling; the host gets real C++ dtors
 #       from port/hal/shims.cpp instead
-#   src/_ZN4cstd4fdivEii.c
-#       chains to the DS hardware divider (fdiv_async/fdiv_result MMIO);
+#   FX_Div (src/cstd.cpp)
+#       chains to the DS hardware divider (FX_DivAsync/FX_GetDivResult MMIO);
 #       port/hal/cstd_div.c is the host divider
 
 # fixed-point math and vectors (self-contained C)

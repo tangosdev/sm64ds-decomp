@@ -7168,7 +7168,7 @@
         "param:#1 struct dBgCh_Actr *"
       ]
     },
-    "data_02082214": {
+    "FX_SinCosTable_": {
       "src/unnamed/ov075/func_ov075_021194e4.cpp": [
         "return:S4 []"
       ],
@@ -7181,8 +7181,8 @@
         "return:short []"
       ]
     },
-    "data_02086214": {
-      "src/unnamed/arm9/0205/func_020538b8.cpp": [
+    "FX_AtanTable_": {
+      "src/FX_Atan2.c": [
         "return:short []"
       ]
     },
@@ -15545,7 +15545,7 @@
         "param:#1 Mtx43 *"
       ]
     },
-    "func_02053274": {
+    "VEC_Distance": {
       "include/decl_common.h": [
         "param:#1 const Vector3 *",
         "param:#2 const Vector3 *"

@@ -18,13 +18,13 @@
 #include "dBgCh_SphCrr.h"
 #include "dBgPi.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 /* Shared math workers.
    local extern: no header in include/ declares them. */
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 void NormalizeVec3(const Vector3 *src, Vector3 *dst);
-int func_02053200(int v);
 
 /* local extern: no header in include/ declares these three. */
 extern dBgCh_Lin data_020a0d0c; /* the scratch line, in collider space */
@@ -47,7 +47,7 @@ void dBgW_KcMbgSclY::SetScaleY(Fix12i newScaleY) {
     scaleY = newScaleY;
     if (scaleY == 0)
         return;
-    invScaleY = func_02053200(scaleY);
+    invScaleY = FX_Inv(scaleY);
 }
 
 s32 dBgW_KcMbgSclY::GetScaleY() {

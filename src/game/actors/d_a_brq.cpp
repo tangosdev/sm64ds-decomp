@@ -48,7 +48,7 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 }
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 extern signed char gCurrentSublevel;
 
 /* Inferred eight-byte resource-family ABI views, not recovered original
@@ -256,17 +256,17 @@ s32 daBrq_c::UpdateActiveState() {
 
     {
         int idx = ((unsigned short)mPrevAngleY) >> 4;
-        int sinv = data_02082214[idx * 2];
+        int sinv = FX_SinCosTable_[idx * 2];
         mCylinderOffset.x = FX_MUL(orbitRadius, sinv);
     }
     {
         int idx = ((unsigned short)mOrbitAngle) >> 4;
-        int sinv = data_02082214[idx * 2];
+        int sinv = FX_SinCosTable_[idx * 2];
         mCylinderOffset.y = FX_MUL(0x14000, sinv);
     }
     {
         int idx = ((unsigned short)mPrevAngleY) >> 4;
-        int cosv = data_02082214[idx * 2 + 1];
+        int cosv = FX_SinCosTable_[idx * 2 + 1];
         mCylinderOffset.z = FX_MUL(orbitRadius, cosv);
     }
 
@@ -276,7 +276,7 @@ s32 daBrq_c::UpdateActiveState() {
 
     {
         int idx = ((unsigned short)mSpinAngle) >> 4;
-        int sinv = data_02082214[idx * 2];
+        int sinv = FX_SinCosTable_[idx * 2];
         int scale = FX_MUL(0x555, sinv) + 0x800;
         mScaleX = scale;
         mScaleY = scale;

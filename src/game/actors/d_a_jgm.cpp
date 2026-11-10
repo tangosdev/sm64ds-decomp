@@ -25,7 +25,7 @@
  *   UpdateDiscreteNoLava method is WRONG-DEST (ROM 0x02038420).
  * - daPly_c::Bounce / Hurt stay mangled: each takes Fix12<int> by value
  *   (6az).
- * - dActor_c::IsTooFarAwayFromPlayer and cstd::fdiv have no header decl,
+ * - dActor_c::IsTooFarAwayFromPlayer and FX_Div have no header decl,
  *   so they are declared locally.
  * - Sound::PlayLong is the Sound.h call. d_a_jgmPlayLongHold keeps the five
  *   named parameters that hold the @NNN count. Unnaming them gives -5.
@@ -36,13 +36,13 @@
  *   that also hold that count: bodyFile /
  *   heldFile and the loop counters in InitResources / CleanupResources,
  *   `frame` in UpdateThrowState, the `offset` references in the hover and
- *   throw collision updates, and the parameter names on the cstd::fdiv and
+ *   throw collision updates, and the parameter names on the FX_Div and
  *   IsTooFarAwayFromPlayer prototypes.
  * - OnTurnIntoEgg's R6Player and UpdateWallAndWater's R10dBgCh_Actr take
  *   reference spelling; a pointer emits identical ARM. SetState's `int`
  *   signedness is indistinguishable.
  * - func_0201267c (throw SFX 0xd2 at +0x74, mCamSpacePosX),
- *   data_02082214 (sin/cos pairs) and data_020a0e68 (arm9 scratch
+ *   FX_SinCosTable_ (sin/cos pairs) and data_020a0e68 (arm9 scratch
  *   matrix) keep linker names.
  * - This TU claims .text only: the SharedFilePtr handles, the BCA/BTP
  *   pointer tables, the PMF state table data_ov077_02127bc4 and the
@@ -72,9 +72,9 @@ enum d_a_jgm_AssetId {
 #include "Sound.h"
 #include "SurfaceInfo.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Vector stack values are NitroSDK VecFx32. Vector3 has a genuine non-trivial
  * destructor and must not instantiate its otherwise unrelated vague-linkage D1
@@ -142,7 +142,7 @@ extern DaJgmStateHandler data_ov077_021277f0;
 extern DaJgmStateHandler data_ov077_02127808;
 extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
@@ -430,11 +430,11 @@ s32 daJgm_c::EnterSpitState()
     mPosZ = src[2];
 
     idx = ((int)(u16)mPrevAngleY) >> 4;
-    sinv = data_02082214[idx * 2];
+    sinv = FX_SinCosTable_[idx * 2];
     *pPosX = *pPosX + FX_MUL(sinv, 0x50000);
     *pPosY = *pPosY + 0x50000;
     idx = ((int)(u16)mPrevAngleY) >> 4;
-    cosv = data_02082214[idx * 2 + 1];
+    cosv = FX_SinCosTable_[idx * 2 + 1];
     *pPosZ = *pPosZ + FX_MUL(cosv, 0x50000);
 
     mAngVelY = 0x7000;
@@ -690,7 +690,7 @@ int daJgm_c::TurnOffsetFromDist(int dist)
 {
     if (dist > 0x190000)
         return 0;
-    int q = cstd::fdiv(0x4000, 0xc8000);
+    int q = FX_Div(0x4000, 0xc8000);
     long long m = (long long)q * dist;
     m += 0x800;
     int r = (int)(m >> 12);
@@ -713,7 +713,7 @@ int daJgm_c::CountSpinies()
 void daJgm_c::UpdateHoverBob()
 {
     unsigned short v = (unsigned short)mBobAngle;
-    short s = data_02082214[(v >> 4) * 2];
+    short s = FX_SinCosTable_[(v >> 4) * 2];
     long long prod = (long long)s * 0x27000;
     mBobOffsetY = (int)((prod + 0x800) >> 12);
     mBobAngle = (short)(mBobAngle + 0x700);

@@ -27,6 +27,7 @@
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 enum {
     kYoshiEggId = 9,
@@ -66,7 +67,7 @@ extern WanwanAnimationFileHandle data_ov014_02114980;
 extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
-extern s16 data_02082214[]; /* SINE_TABLE: sin, cos pairs */
+extern s16 FX_SinCosTable_[]; /* SINE_TABLE: sin, cos pairs */
 extern dCamera_c *gCamera;  /* CAMERA */
 
 void func_ov102_0214ae1c(void *bomb);
@@ -96,7 +97,6 @@ s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
 
 namespace cstd {
 s16 atan2(s32, s32);
-int fdiv(int a, int b);
 }
 
 #define SetChompAnim(self, bca) \
@@ -568,9 +568,9 @@ void daWanwan_c::RestrictToChain() {
     lim = mChainExtension * 7 + kRestLift;
     if (len <= lim)
         return;
-    v.x = FX_MUL(v.x, cstd::fdiv(lim, len));
-    v.y = FX_MUL(v.y, cstd::fdiv(lim, len));
-    v.z = FX_MUL(v.z, cstd::fdiv(lim, len));
+    v.x = FX_MUL(v.x, FX_Div(lim, len));
+    v.y = FX_MUL(v.y, FX_Div(lim, len));
+    v.z = FX_MUL(v.z, FX_Div(lim, len));
     Vec3_Add(&out, (Vector3 *)&mSpawnPosX, &v);
     mPosX = out.x;
     mPosY = out.y;
@@ -740,14 +740,14 @@ void daWanwan_c::StateAttackInit() {
 
     a = (unsigned short)Vec3_VertAngle(&mPos, &tgt);
     i = (a >> 4) << 1;
-    mVertSpeed = -FX_MUL(data_02082214[i], 0x8c000);
+    mVertSpeed = -FX_MUL(FX_SinCosTable_[i], 0x8c000);
     v = mVertSpeed;
     if (v < 0x5000)
         v = 0x5000;
     else if (v > 0x2d000)
         v = 0x2d000;
     mVertSpeed = v;
-    mHorzSpeed = FX_MUL(data_02082214[i + 1], 0x8c000);
+    mHorzSpeed = FX_MUL(FX_SinCosTable_[i + 1], 0x8c000);
     mActionTimer = 0x3c;
 }
 
@@ -861,14 +861,14 @@ void daWanwan_c::StateEscapeDemoMain() {
             s32 y = partnerPos.y;
             target.y = y;
             {
-                s16 *tbl = data_02082214;
+                s16 *tbl = FX_SinCosTable_;
                 u16 ang = fence->mAngleY;
                 s32 s = tbl[(ang >> 4) << 1];
                 s32 add = FX_MUL(s, 0x96000);
                 target.x = x + add;
             }
             {
-                s16 *tbl = data_02082214;
+                s16 *tbl = FX_SinCosTable_;
                 u16 ang = fence->mAngleY;
                 s32 s = tbl[(((ang >> 4) << 1) + 1)];
                 s32 add = FX_MUL(s, 0x96000);

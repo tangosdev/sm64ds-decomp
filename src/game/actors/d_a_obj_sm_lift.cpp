@@ -31,13 +31,13 @@ enum daObjSm_Lift_c_AssetId { ASSET_SM_LIFT_BMD = 0x06b3, ASSET_SM_LIFT_KCL = 0x
 #include "SharedFilePtr.h"
 #include "PathPtr.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "Sound.h"
+#include "nitro/fx/fx_cp.h"
 
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 /* Two CLPS blocks the lift hands to its colliders, back to back. */
 int data_ov018_02112f48[4] = {0x53504c43, 0x00020008, 0x00000fc5, 0x000000ff};
 int data_ov018_02112f58[4] = {0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff};
@@ -120,12 +120,13 @@ int daObjSm_Lift_c::Behavior() {
     if (other != 0) {
         Vector3 *otherPos = &other->mPos;
         int dist = Vec3_HorzDist(&mPos, otherPos);
-        target = (s16)(FX_MUL(dist, data_02082214[((u16)(s16)AngleDiff(
-                                                       Vec3_HorzAngle(&mPos, otherPos), mAngleY) >>
-                                                   4) *
-                                                      2 +
-                                                  1]) /
-                       256);
+        target =
+            (s16)(FX_MUL(dist, FX_SinCosTable_[((u16)(s16)AngleDiff(Vec3_HorzAngle(&mPos, otherPos),
+                                                                    mAngleY) >>
+                                                4) *
+                                                   2 +
+                                               1]) /
+                  256);
     } else {
         if (mNodeStep > 0 && mNodeIndex == 1) {
             if (Vec3_HorzDist(&mPos, (Vector3 *)&mBasePosX) < 0x10000) {
@@ -173,7 +174,7 @@ int daObjSm_Lift_c::Behavior() {
                 mPosY = nodeA.y;
                 mPosZ = nodeA.z;
             } else {
-                int scale = cstd::fdiv(mHorzSpeed, len);
+                int scale = FX_Div(mHorzSpeed, len);
                 Vec3_MulScalar(&scaled, &diff, scale);
                 SubVec3((Vector3 *)&mPosX, (Vector3 *)&scaled, (Vector3 *)&mPosX);
             }

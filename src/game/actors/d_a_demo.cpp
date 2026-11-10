@@ -426,9 +426,9 @@ extern PMF data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
 extern void MIi_CpuCopy16(void *src, void *dst, int count);
 extern int data_ov002_021002a0[];
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern short atan2_hold_d_a_demo_1(int y, int x);
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 extern PMF data_ov002_02110e34[];
 extern unsigned short data_ov002_021000c0[];
 extern int data_ov002_02100120[];
@@ -1675,10 +1675,10 @@ void func_ov002_020f3ae8(char *base, int idx)
     StaffRoll::Star *arr = (StaffRoll::Star *)base;
     int a;
     int b;
-    a = data_02082214[((arr[idx].heading >> 4) * 2) + 1];
+    a = FX_SinCosTable_[((arr[idx].heading >> 4) * 2) + 1];
     b = arr[idx].radius;
     arr[idx].x = FX_MUL(a, b) + 0xe0000;
-    a = data_02082214[(arr[idx].heading >> 4) * 2];
+    a = FX_SinCosTable_[(arr[idx].heading >> 4) * 2];
     b = arr[idx].radius;
     arr[idx].y = FX_MUL(a, b) + 0x66000;
     if (arr[idx].radius > 0x18000) {
@@ -1701,14 +1701,14 @@ void func_ov002_020f3ba0(char *c, int i)
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2 + 1];
+        short tv = FX_SinCosTable_[idx * 2 + 1];
         int spd = *(int *)(c + STAR_OFF(speed) + off);
         *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
     }
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2];
+        short tv = FX_SinCosTable_[idx * 2];
         int spd = *(int *)(c + STAR_OFF(speed) + off);
         *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
     }
@@ -1796,14 +1796,14 @@ void func_ov002_020f3de4(char *c, int i)
     if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
         }
 
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
         }
@@ -1839,13 +1839,13 @@ void func_ov002_020f3de4(char *c, int i)
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2 + 1];
+        short tv = FX_SinCosTable_[idx * 2 + 1];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
     }
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2];
+        short tv = FX_SinCosTable_[idx * 2];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
     }
@@ -1891,13 +1891,13 @@ void func_ov002_020f40fc(char *c, int i)
         int idx;
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
         }
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
@@ -2003,13 +2003,13 @@ void func_ov002_020f43cc(char *c, int i) {
         int spd;
         idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            tv = data_02082214[idxa * 2 + 1];
+            tv = FX_SinCosTable_[idxa * 2 + 1];
             spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
         }
         idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            tv = data_02082214[idxa * 2];
+            tv = FX_SinCosTable_[idxa * 2];
             spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
         }
@@ -2055,13 +2055,13 @@ void func_ov002_020f43cc(char *c, int i) {
         int spd;
         idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            tv = data_02082214[idxa * 2 + 1];
+            tv = FX_SinCosTable_[idxa * 2 + 1];
             spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
         }
         idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            tv = data_02082214[idxa * 2];
+            tv = FX_SinCosTable_[idxa * 2];
             spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
@@ -2109,14 +2109,14 @@ void func_ov002_020f4710(char *c, int i)
 
         idx = *(u16 *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(s32 *)(c + STAR_OFF(radius) + off);
             *(s32 *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
         }
 
         idx = *(u16 *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(s32 *)(c + STAR_OFF(radius) + off);
             *(s32 *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
@@ -2214,14 +2214,14 @@ void func_ov002_020f4a2c(char *c, int i)
     if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
         }
 
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
         }
@@ -2265,14 +2265,14 @@ void func_ov002_020f4a2c(char *c, int i)
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2 + 1];
+        short tv = FX_SinCosTable_[idx * 2 + 1];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
     }
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2];
+        short tv = FX_SinCosTable_[idx * 2];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
     }
@@ -2326,14 +2326,14 @@ void func_ov002_020f4d70(char *c, int i)
 
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
         }
 
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
@@ -2427,14 +2427,14 @@ void func_ov002_020f5010(char *c, int i)
     if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
         }
 
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
         }
@@ -2478,14 +2478,14 @@ void func_ov002_020f5010(char *c, int i)
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2 + 1];
+        short tv = FX_SinCosTable_[idx * 2 + 1];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
     }
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2];
+        short tv = FX_SinCosTable_[idx * 2];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
     }
@@ -2529,13 +2529,13 @@ void func_ov002_020f5328(char *c, int i)
         int idx;
         {
             idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
         }
         {
             idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
@@ -4092,13 +4092,13 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
     {
         unsigned short a = *((unsigned short *)&this->mPrevAngleX);
         int t = this->mMagnitude;
-        short s0 = data_02082214[((a >> 4) << 1) + 1];
+        short s0 = FX_SinCosTable_[((a >> 4) << 1) + 1];
         this->mHorzSpeed = FX_MUL(t, s0);
     }
     {
         unsigned short a = *(unsigned short *)(&this->mPrevAngleX);
         int t = this->mMagnitude;
-        int s1 = -data_02082214[(a >> 4) << 1];
+        int s1 = -FX_SinCosTable_[(a >> 4) << 1];
         this->mVertSpeed = FX_MUL(t, s1);
     }
 
@@ -4152,7 +4152,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         Vec3_RotateYAndTranslate(&this->mPosX, v, this->mPrevAngleY, w);
 
         h = (unsigned short)this->mPhase;
-        t = data_02082214[(h >> 4) * 2 + 1];
+        t = FX_SinCosTable_[(h >> 4) * 2 + 1];
         {
             int *p60 = (int *)(&this->mPosY);
             *p60 = *p60 + FX_MUL(t, 0x96000);
@@ -4221,8 +4221,8 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     }
 
     src[0] = 0;
-    src[1] = FX_MUL(dist, data_02082214[(((u16)vertAngle) >> 4) * 2]);
-    src[2] = FX_MUL(dist, data_02082214[(((u16)vertAngle) >> 4) * 2 + 1]);
+    src[1] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2]);
+    src[2] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2 + 1]);
 
     Vec3_RotateYAndTranslate((int *)(&this->mPosX), (int *)&cam->pos, heading, src);
 

@@ -97,7 +97,7 @@ struct cMgSmartball_board_c : cMgSmartball_object_c {
     s32 mCellFlipAngle[9]; /* 0x03c -- per-cell flip angle. SaveSnapshot advances a
                         claimed cell's angle by 0x400 a frame and clamps at
                         0x8000 (a half turn); Update feeds it to the shared
-                        sine table data_02082214 to shear the sprite, and
+                        sine table FX_SinCosTable_ to shear the sprite, and
                         picks a flipped-face sprite once it passes 0x4000. */
     u8  mCellHighlight[9]; /* 0x060 -- per-cell: this cell is part of a line that
                         is currently scoring. Update sets it for each of a

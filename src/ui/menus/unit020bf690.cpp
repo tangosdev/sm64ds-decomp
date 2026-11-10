@@ -38,7 +38,6 @@
  */
 #include "types.h"
 #include "common.h"
-#include "cstd.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g2.h"
@@ -47,6 +46,7 @@
 #include "Ov007Model.h"
 #include "dExtModel_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -128,7 +128,7 @@ void func_ov007_020bfbdc(void *self) {
     Matrix4x3 mat;
 
     func_ov007_020bc47c(model);
-    model->rotX = (short)cstd::div(0x5a0000, 0x168);
+    model->rotX = (short)FX_DivS32(0x5a0000, 0x168);
     model->visible = 0;
 
     vec.y = 0;
@@ -150,8 +150,8 @@ void ScreenFade_Draw(Ov007Camera *cam) {
     Fix12i size = model->scale.x * 0xd800 + 0x12c000;
     Fix12i scaled = FX_MUL(size, sinDist);
     int cosScaled = FX_CosIdx(fovyIdx) * 0x60;
-    Fix12i extent = cstd::fdiv(scaled, cosScaled);
-    model->scale.z = cstd::fdiv(extent, 0x5000);
+    Fix12i extent = FX_Div(scaled, cosScaled);
+    model->scale.z = FX_Div(extent, 0x5000);
     model->scale.x = model->scale.z;
     func_ov007_020bc02c(model, &cam->viewMatrix);
     func_ov007_020bbff0(model);

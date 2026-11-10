@@ -10,16 +10,13 @@
  *   public Vector3 declaration without adding a Vector3 lifetime here.
  */
 #include "math/Approach.h"
+#include "nitro/fx/fx_cp.h"
 
 struct Vec3 { int x, y, z; };
 /* Not types.h's: its inline ~Vector3 adds a _ZN7Vector3D1Ev copy and renumbers @60/@61 (measured). */
 struct Vector3 { int x, y, z; };
 /* Unused, but deleting it renumbers the @60/@61 destructor-registration nodes (measured). */
 typedef struct { int x, y, z; } Vec3_Fix12;
-
-namespace cstd {
-int fdiv(int, int);
-}
 
 extern "C" {
 extern void Vec3_Sub(struct Vector3 *out, const struct Vector3 *a, const struct Vector3 *b);
@@ -40,7 +37,7 @@ int ApproachLinear(Vector3 &dst, const Vector3 &target, int step) {
             dst = target;
             return 1;
         }
-        Vec3_MulScalar(&scaled, &diff, cstd::fdiv(step, len));
+        Vec3_MulScalar(&scaled, &diff, FX_Div(step, len));
         SubVec3(&dst, &scaled, &dst);
     } else if (Vec3_Equal(&dst, &target)) {
         return 1;
@@ -62,7 +59,7 @@ extern "C" int Vec3_ApproachHorz(struct Vector3 *out, struct Vector3 *a, int max
             return 1;
         }
         {
-            int s = cstd::fdiv(maxStep, len);
+            int s = FX_Div(maxStep, len);
             Vec3_MulScalar(&scaled, &diff, s);
             SubVec3(out, &scaled, out);
         }

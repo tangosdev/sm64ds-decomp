@@ -59,11 +59,11 @@ enum daJango_c_AssetId {
 #include "daJango_c.h"
 #include "types.h"
 #include "common.h"
-#include "cstd.h"
 #include "math/CalcLib.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 /* decl_common.h deliberately NOT included; AngleDiff is declared locally. */
 extern "C" int AngleDiff(int a, int b);
 #include "PathPtr.h"
@@ -697,7 +697,7 @@ int daJango_c::UpdateFlyPathState() {
     if (AngleDiff(Vec3_HorzAngle(&mPos, &node), mAngleY) < 0x2000) {
         int s;
         zero[1] = mPosY;
-        s = cstd::fdiv(0x14000, len);
+        s = FX_Div(0x14000, len);
         Vec3_MulScalar(&scaled, &diff, s);
         SubVec3(&mPos, &scaled, &mPos);
         if (mRiseToFarNode == 1) {

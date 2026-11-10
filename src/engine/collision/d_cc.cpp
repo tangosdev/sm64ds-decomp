@@ -19,9 +19,9 @@
 #include "dCc_c.h"
 #include "dActor_c.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "math/CalcLib.h"
 #include "daPly_c.h"
+#include "nitro/fx/fx_cp.h"
 
 /* C2, the base-subobject constructor. The vptr store is the compiler's; the
  * body is only what the ROM's constructor actually writes -- both intrusive
@@ -191,10 +191,10 @@ void dCc_c::Process() {
                             if (adjustedOverlap < 0)
                                 overlap = 0;
                             else
-                                overlap = cstd::fdiv(adjustedOverlap, horizontalDistance);
+                                overlap = FX_Div(adjustedOverlap, horizontalDistance);
                             func_02014f44(listHead->otherOwner, listHead);
                         } else
-                            overlap = cstd::fdiv(overlap, horizontalDistance);
+                            overlap = FX_Div(overlap, horizontalDistance);
                         other->pushback.x = FX_MUL(separation.x, overlap);
                         other->pushback.z = FX_MUL(separation.z, overlap);
                     }
@@ -212,10 +212,10 @@ void dCc_c::Process() {
                         if (adjustedOverlap < 0)
                             overlap = 0;
                         else
-                            overlap = cstd::fdiv(adjustedOverlap, horizontalDistance);
+                            overlap = FX_Div(adjustedOverlap, horizontalDistance);
                         func_02014f44(other->otherOwner, other);
                     } else
-                        overlap = cstd::fdiv(overlap, horizontalDistance);
+                        overlap = FX_Div(overlap, horizontalDistance);
                     listHead->pushback.x = -FX_MUL(separation.x, overlap);
                     listHead->pushback.z = -FX_MUL(separation.z, overlap);
                     other->pushback.x = 0;
@@ -230,7 +230,7 @@ void dCc_c::Process() {
                         listHead->pushback.y = -halfVerticalOverlap;
                         other->pushback.y = halfVerticalOverlap;
                     }
-                    Fix12i ratio = cstd::fdiv(overlap, horizontalDistance) >> 1;
+                    Fix12i ratio = FX_Div(overlap, horizontalDistance) >> 1;
                     listHead->pushback.x = -FX_MUL(separation.x, ratio);
                     listHead->pushback.z = -FX_MUL(separation.z, ratio);
                     other->pushback.x = FX_MUL(separation.x, ratio);

@@ -53,6 +53,7 @@
 #include "Memory.h"
 #include "Heap.h"
 #include "BCA_File.h"
+#include "nitro/fx/fx_cp.h"
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -154,10 +155,6 @@ void func_02046b64(BMD_File *model, BTA_File *file);
 void func_020469e8(ModelComponents *model, BTA_File *file, int frame);
 void func_020470e8(BMD_File *model, BMA_File *file);
 void func_02046e28(struct Model *model, struct MatAnimData *file, unsigned short frame);
-}
-
-namespace cstd {
-int fdiv(int a, int b);
 }
 
 /* 0xc-byte records in the common model data array at data_0209cefc, counted
@@ -562,7 +559,7 @@ void dExtBlendAnmModel_c::SetAnim(BCA_File &animFile, int numBlendFrames, int fl
             blendWeight = 0x1000;
         } else {
             blendWeight = 0;
-            blendStep = cstd::fdiv(0x1000, (numBlendFrames + 1) << 12);
+            blendStep = FX_Div(0x1000, (numBlendFrames + 1) << 12);
         }
     }
 }

@@ -34,7 +34,7 @@ src/engine/collision/d_bg_w.cpp
 # already compiles; smoke_actor links that slice, so listing it again
 # would define the class twice.
 src/InvMat4x3.cpp
-# cstd is one production translation unit; the func_02053200 helper this slice
+# cstd is one production translation unit; the FX_Inv helper this slice
 # used to name separately lives in it with the rest of the namespace.
 src/cstd.cpp
 # dBgW_Kc is two production translation units, one per module; the C2

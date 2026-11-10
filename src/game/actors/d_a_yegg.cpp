@@ -90,12 +90,12 @@
 #include "dBgCh_Actr.h"
 #include "dCc_c.h"
 #include "Sound.h"
-#include "cstd.h"
 #include "daStar_c.h"
 #include "daBtn_c.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 struct dBgPi;
 
@@ -769,7 +769,7 @@ void daYegg_c::ExecuteFollowPlayer() {
 
     {
         /* 0x1000 / 0x3000 as Fix12: a third. */
-        int fd = cstd::fdiv(0x1000, 0x3000);
+        int fd = FX_Div(0x1000, 0x3000);
         Math_Function_0203b14c(&mPosX, mHoldTargetX, fd, 0x3e8000, 4);
         Math_Function_0203b14c(&mPosY, mHoldTargetY, fd, 0x3e8000, 4);
         Math_Function_0203b14c(&mPosZ, mHoldTargetZ, fd, 0x3e8000, 4);
@@ -812,7 +812,7 @@ void daYegg_c::ExecuteFollowPlayer() {
         }
         a4 = mSpeedX;
         {
-            int fd1 = cstd::fdiv(a4, 0x20000);
+            int fd1 = FX_Div(a4, 0x20000);
             int r1 = FX_MUL(fd1, 0xe39);
             short a4ang = (short)(-r1);
             ac = mSpeedZ;
@@ -822,7 +822,7 @@ void daYegg_c::ExecuteFollowPlayer() {
             }
             ac = mSpeedZ;
             {
-                int fd2 = cstd::fdiv(ac, 0x20000);
+                int fd2 = FX_Div(ac, 0x20000);
                 int r2 = FX_MUL(fd2, 0xe39);
                 mAngleX = a4ang;
                 mAngleZ = (short)r2;

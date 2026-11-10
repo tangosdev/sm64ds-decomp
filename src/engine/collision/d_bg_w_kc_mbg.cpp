@@ -17,6 +17,7 @@
 #include "nitro/fx/fx.h"
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 /* This TU's own free helpers, defined below the members that call them. */
@@ -29,7 +30,6 @@ int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, s32 x, s32 y, s32 z);
 int LenVec3(const Vector3 *v);
 void NormalizeVec3(const Vector3 *src, Vector3 *dst);
-int func_02053200(int v);
 
 /* The scratch line's lineEnd and dBgPi base (both inside data_020a0d0c,
    below), and the scratch scaled matrix.
@@ -84,7 +84,7 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, Fix12i scale, s16
     scratch.rotation.r[3].z = 0;
     *(Mtx43 *)&self->invRotMat = scratch.rotation;
     InvMat4x3(&self->invRotMat, &self->invRotMat);
-    self->invScale = func_02053200(scale);
+    self->invScale = FX_Inv(scale);
     *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mtx;
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, self->scale, self->scale, self->scale);
     scratch.scaled = *(Mtx43 *)&data_020a0e68;

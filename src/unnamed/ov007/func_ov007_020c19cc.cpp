@@ -3,7 +3,6 @@
 #include "nitro/fx/fx_trig.h"
 
 extern "C" {
-extern int func_020538b8(int y, int x);
 extern void Matrix3x3_SetRotationZ(int *m, int s, int c);
 extern void G3_MultTransMtx33(int *a, int *v);
 
@@ -75,7 +74,7 @@ void func_ov007_020c19cc(int count, Vector3 *pts, int half, int t) {
             if (i < count - 1) {
                 int nx = pts[i + 1].x;
                 int ny = pts[i + 1].y;
-                ang = func_020538b8(ny - prev->y, nx - prev->x);
+                ang = FX_Atan2(ny - prev->y, nx - prev->x);
                 if (i == 0) {
                     prevAng = ang;
                 }

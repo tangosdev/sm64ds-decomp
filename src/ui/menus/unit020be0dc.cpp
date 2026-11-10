@@ -51,15 +51,16 @@
 #include "Ov007Work.h"
 #include "Ov007Display.h"
 #include "Ov007SpriteGroup.h"
-#include "cstd.h"
 #include "Vector3s.h"
 #include "dExtModel_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gxcommon.h"
 #include "types.h"
 #include "Ov007Model.h"
 #include "Ov007Figure.h"
 #include "Particle__System.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -132,8 +133,6 @@ extern char data_ov007_02103234[]; /* "2DEffect" */
 extern int data_ov007_020d7c6c;
 extern u16 data_ov007_020d7c58[];
 
-extern int func_02053200(int x);
-extern int func_020538b8(int x, int y);
 extern void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask, void *cb);
 extern void func_0204dc84(char *self);
 extern void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev, int frame);
@@ -178,7 +177,7 @@ void func_ov007_020beb80(Ov007Figure *fig) {
     int vel;
     int speed;
     Vector3 *pos = &bone0->t;
-    yaw = func_020538b8(row[0], row[2]);
+    yaw = FX_Atan2(row[0], row[2]);
     motion.x = (short)(pos->x - fig->prevPos.x);
     motion.y = (short)(pos->y - fig->prevPos.y);
     motion.z = (short)(pos->z - fig->prevPos.z);
@@ -200,13 +199,13 @@ void func_ov007_020beb80(Ov007Figure *fig) {
                 else if (mag >= 0xfa0)
                     speed = 0x1000;
                 else
-                    speed = cstd::fdiv(mag, 0xfa0);
+                    speed = FX_Div(mag, 0xfa0);
                 if (mag <= 0x1f4)
                     t = 0;
                 else if (mag >= 0x3e8)
                     t = 0x1000;
                 else
-                    t = cstd::fdiv(mag - 0x1f4, 0x1f4);
+                    t = FX_Div(mag - 0x1f4, 0x1f4);
                 frames -= t;
                 func_02053380((s16 *)&motion, (s16 *)&motion);
                 *(Vec3sWords *)&sys->direction = *(Vec3sWords *)&motion;
@@ -328,8 +327,8 @@ void func_ov007_020be8b8(void) {
     int i;
     for (i = 0; i < 16; i++) {
         int *m = SPRITES->affine[i];
-        int t = cstd::div(i * 0x1000, 15);
-        int scale = func_02053200(BlendFx(0x12c, 0x1000, t));
+        int t = FX_DivS32(i * 0x1000, 15);
+        int scale = FX_Inv(BlendFx(0x12c, 0x1000, t));
         m[0] = scale;
         m[1] = 0;
         m[2] = 0;
@@ -543,8 +542,8 @@ int func_ov007_020be0dc(void) {
 
         {
             int *row = &Bone0(fig)->r.m[6];
-            int yaw = func_020538b8(row[0], row[2]);
-            int turn = cstd::div(yaw << 0xc, 0xffff);
+            int yaw = FX_Atan2(row[0], row[2]);
+            int turn = FX_DivS32(yaw << 0xc, 0xffff);
             unsigned int scale = ((turn * 0x12) >> 0xc) & 0xff;
             if (scale >= 0x12)
                 scale = 0x11;
