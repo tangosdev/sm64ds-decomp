@@ -646,7 +646,7 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
         return 0;
     data->UpdateVertsUsingBones();
     if (a != 0)
-        Func_020160AC(0x8000);
+        SetMaterialFlags(0x8000);
     if (b < 0)
         return 1;
     SetPolygonID((u32)b & 0xff);
@@ -660,7 +660,7 @@ void dExtCommonModel_c::Render(const Vector3 *scale) {
 }
 
 /* ORs flags into every material. */
-void dExtCommonModel_c::Func_020160AC(u32 flags) {
+void dExtCommonModel_c::SetMaterialFlags(u32 flags) {
     BMD_File *file = data->modelFile;
     u32 n = file->numMaterials;
     BMD_Material *p = data->materials;

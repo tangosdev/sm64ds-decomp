@@ -2211,7 +2211,7 @@
     },
     "arm9:0x020160ac": {
       "author": "tangosdev",
-      "name": "_ZN17dExtCommonModel_c13Func_020160ACEj"
+      "name": "_ZN17dExtCommonModel_c16SetMaterialFlagsEj"
     },
     "arm9:0x02016104": {
       "author": "tangosdev",

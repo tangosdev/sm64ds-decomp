@@ -7,6 +7,7 @@ addr	state	modules	config_names	config_kinds	verified_name	verified_kind	verdict
 0x02008c34	NO-SLOT	-	-	-	_ZN4cstd4finvEi	data	no-slot		
 0x0200e444	DIVERGED	arm9	Camera_Spawn	function	_ZN9dCamera_cC1Ev	function	plain		
 0x0201609c	DIVERGED	arm9	_ZN17dExtCommonModel_c12SetPolygonIDEj	function	_ZN17dExtCommonModel_c13Func_0201609CEj	function	identity
+0x020160ac	DIVERGED	arm9	_ZN17dExtCommonModel_c16SetMaterialFlagsEj	function	_ZN17dExtCommonModel_c13Func_020160ACEj	function	identity
 0x02017168	DIVERGED	arm9	_ZThn80_N14dExtAnmModel_cD0Ev	function	_ZThn80_N15dExtFrameCtrl_cD0Ev	function	identity
 0x02017178	DIVERGED	arm9	_ZThn80_N14dExtAnmModel_cD1Ev	function	_ZThn80_N15dExtFrameCtrl_cD1Ev	function	identity
 0x02017188	DIVERGED	arm9	_ZThn80_N19dExtBlendAnmModel_cD0Ev	function	_ZThn80_N15dExtFrameCtrl_cD0Ev	function	identity
