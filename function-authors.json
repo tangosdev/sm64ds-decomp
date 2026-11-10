@@ -5435,7 +5435,7 @@
     },
     "arm9:0x02037f44": {
       "author": "tangosdev",
-      "name": "func_02037f44"
+      "name": "_ZNK5dBgPi8GetOwnerEv"
     },
     "arm9:0x02037f4c": {
       "author": "tangosdev",
@@ -5795,7 +5795,7 @@
     },
     "arm9:0x020398fc": {
       "author": "tangosdev",
-      "name": "func_020398fc"
+      "name": "_ZN10dBgW_KcMbg18SetFilterByMoveDirEv"
     },
     "arm9:0x02039908": {
       "author": "tangosdev",

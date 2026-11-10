@@ -20,9 +20,6 @@
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
-/* This TU's own free helpers, defined below the members that call them. */
-void func_020398fc(dBgW_KcMbg *self);
-
 /* Shared math workers.
    local extern: no header in include/ declares them. */
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
@@ -340,8 +337,7 @@ void dBgW_KcMbg::GetVelocity(Vector3 &res) {
 
 /* Sets filterByMoveDir, which makes Transform aim dBgW_Kc's depth policy
  * along the collider's horizontal motion. Called by actor code (daIwante_c) once
- * the collider starts moving. Its address name and C linkage do not establish
- * whether the original source declared a free helper or a member. */
-extern "C" void func_020398fc(dBgW_KcMbg *self) {
-    self->filterByMoveDir = true;
+ * the collider starts moving. */
+void dBgW_KcMbg::SetFilterByMoveDir() {
+    filterByMoveDir = true;
 }

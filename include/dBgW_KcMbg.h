@@ -32,7 +32,7 @@ struct dBgW_KcMbg : dBgW_Kc {
     s16 angVelY;               /* 0x116 */
     Vector3 pos;               /* 0x118 */
     Vector3 velocity;          /* 0x124 */
-    /* Set by func_020398fc. While set, Transform points dBgW_Kc's
+    /* Set by SetFilterByMoveDir. While set, Transform points dBgW_Kc's
        depth policy (shallowOnly/depthByDir/depthDir/depthDirMinDot) along the
        collider's horizontal velocity every frame. SetFile clears it. */
     bool filterByMoveDir; /* 0x130 */
@@ -73,6 +73,9 @@ struct dBgW_KcMbg : dBgW_Kc {
     /* Inferred name: the mirror of WorldToLocalDirection, rotating by `mat`
        with its translation dropped. Both GetNormal overrides use it. */
     void LocalToWorldDirection(const Vector3 &, Vector3 &);
+
+    /* Sets filterByMoveDir (0x130); the actor calls it once the mesh moves. */
+    void SetFilterByMoveDir(); /* 0x020398fc */
 };
 
 #ifndef SM64DS_PLATFORM_PC
