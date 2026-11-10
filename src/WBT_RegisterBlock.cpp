@@ -10,7 +10,7 @@ extern void func_02065ad0(struct WBTBlockInfoList *list);
 extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 
 int WBT_RegisterBlock(struct WBTBlockInfoList *node, int blockId, void *userId, int dataPtr,
-                  int dataSize, u16 permissionBmp) {
+                      int dataSize, u16 permissionBmp) {
     OSIntrMode irq = OS_DisableInterrupts();
     if (func_02065ae0() == 0) {
         func_02065ad0(node);
