@@ -3035,7 +3035,7 @@
     },
     "arm9:0x0201964c": {
       "author": "tangosdev",
-      "name": "_Z13func_0201964cP5Timer"
+      "name": "_ZN5TimerC1Ev"
     },
     "arm9:0x02019664": {
       "author": "tangosdev",
