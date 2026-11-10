@@ -171,15 +171,6 @@ unsigned short data_02099f94[8];
 #pragma comment(linker, "/alternatename:?GXi_DmaId@@3HA=_GXi_DmaId")
 
 // ---- upload-chain bridges -------------------------------------------------
-// operator_new2 on the DS is a register-passthrough tail-call veneer to
-// func_0203cc0c; that shape breaks on cdecl (the callee would read the
-// wrong stack slot), so the host bridge passes the argument explicitly.
-extern "C" void *func_0203cc0c(unsigned size);
-extern "C" void *_ZN6Memory13operator_new2Ej(unsigned size)
-{
-    return func_0203cc0c(size);
-}
-
 // OAM::Reset declares its globals at C++ linkage; alias them onto the
 // C-named storage above (same mechanism as the LoadTex globals).
 #pragma comment(linker, "/alternatename:?data_0209e660@@3EA=_data_0209e660")

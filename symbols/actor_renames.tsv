@@ -9626,3 +9626,7 @@ arm9	0x02069994	func_02069994	MBi_ParentCallback	NitroSDK MB/WBT name: ntrtwl li
 arm9	0x0208685c	data_0208685c	MBi_defaultLoadSegList	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
 arm9	0x02086868	data_02086868	mbi_seg_header_default	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
 arm9	0x0209a07c	data_0209a07c	mbi_seg_header	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x0203cbf0	_ZdlPv	func_0203cbf0	reached only by two loads, from the veneers at 0x0203cbc0 and 0x0203cbcc (config/arm9/relocs.txt): the body of operator delete and operator delete[], not the operator; address name, like its allocation twin func_0203cc0c
+arm9	0x0203cbcc	_ZN6Memory16operator_delete2EPv	_ZdlPv	operator delete(void*): 72 call sites, every deleting destructor among them; the coined Memory::operator_delete2 only existed because _ZdlPv had been put on the body at 0x0203cbf0
+arm9	0x0203cbd8	_ZN6Memory13operator_new2Ej	_Znam	operator new[](size_t): __cxa_vec_new allocates its array block with it, and new[] buffers it returns are released through operator delete[] at 0x0203cbc0
+arm9	0x0203cbc0	func_0203cbc0	_ZdaPv	operator delete[](void*): __cxa_vec_delete and __cxa_vec_new's cleanup release array blocks through it, and it frees the buffers operator new[] hands out

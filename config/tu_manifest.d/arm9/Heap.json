@@ -518,21 +518,21 @@
       "legacy_source": "src/_ZN5mHeap6Heap_t13SetupRootHeapEv.cpp"
     },
     {
-      "symbol": "func_0203cbc0",
+      "symbol": "_ZdaPv",
       "address": "0x0203cbc0",
       "size": "0x0000000c",
       "legacy_source": "src/func_0203cbc0.c",
       "ordinal": 69
     },
     {
-      "symbol": "_ZN6Memory16operator_delete2EPv",
+      "symbol": "_ZdlPv",
       "address": "0x0203cbcc",
       "size": "0x0000000c",
       "legacy_source": "src/_ZN6Memory16operator_delete2EPv.cpp",
       "ordinal": 70
     },
     {
-      "symbol": "_ZN6Memory13operator_new2Ej",
+      "symbol": "_Znam",
       "address": "0x0203cbd8",
       "size": "0x0000000c",
       "legacy_source": "src/_ZN6Memory13operator_new2Ej.cpp",
@@ -546,7 +546,7 @@
       "ordinal": 72
     },
     {
-      "symbol": "_ZdlPv",
+      "symbol": "func_0203cbf0",
       "address": "0x0203cbf0",
       "size": "0x0000001c",
       "legacy_source": "src/_ZdlPv.cpp",
@@ -651,9 +651,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@617",
+      "from": "@610",
       "to": "@1260",
-      "evidence": "mwcc numbers the registration node @617 (@632 until the heap headers moved to nnsys/fnd.h, re-keyed +3; @635 until the coined allocator headers were retired, re-keyed -18). It is published as @1260 because ov065 defines an @632 of its own; @1260 is unused."
+      "evidence": "mwcc numbers the registration node @610 (@632 until the heap headers moved to nnsys/fnd.h, re-keyed +3; @635 until the coined allocator headers were retired, re-keyed -18; @617 until the class-scope operator delete forwarders gave way to the global operator delete, re-keyed -7). It is published as @1260 because ov065 defines an @632 of its own; @1260 is unused."
     }
   ],
   "symbol_binding_rewrites": [
@@ -749,6 +749,7 @@
     "absorb/structors: folded the twelve shards at 0x0203c970..0x0203cbc0 -- SolidHeap_t D0/D1, ExpHeap_t D0/D1, Heap_t D2/D0/D1, SolidHeap_t C1, ExpHeap_t C1, Heap_t C2, InitializeRootHeap and SetupRootHeap -- as three empty destructors, three constructors and the two root-heap functions, written at the top of the file so deferred codegen emits them last and ascending. They were separate files because each D0/D1/D2 shard defined the same ~X(){}; one definition per class emits every variant, and the manifest deadstrips the five the cartridge never kept.",
     "The factories' `if (heap != 0)' before each constructor call is placement new's own null test: CreateSolidHeap, CreateExpandingHeap and CreateRootHeap now write `new (heap) X(...)' against a TU-local `operator new(size_t, void*)' and drop the explicit test, which had to be spelled out while the constructors lived in other files. Keeping both costs eight bytes per factory.",
     "absorb/global-allocation: folded the six functions at 0x0203cbc0..0x0203cc28 -- the delete veneer func_0203cbc0, Memory::operator_delete2 and operator_new2, the global operator new (_Znwm, formerly spelled _Znwj) and operator delete (_ZdlPv), and the default-heap allocator func_0203cc0c -- written at the very top of the file so deferred codegen emits them last and ascending. The run ends there: func_0203cc28 is a vector rotate over the sine table, not heap code. On the host the global operators stay the CRT's; Heap.cpp gives the port only the two unnamed veneers, and port/slice_gate4b.txt drops the two shard paths.",
+    "global operators re-identified from the ROM's relocations: 0x0203cbf0, spelled _ZdlPv, is reached by exactly two loads -- the veneers at 0x0203cbc0 and 0x0203cbcc -- and 0x0203cc0c by the two at 0x0203cbd8 and 0x0203cbe4, so both are bodies, not operators. 0x0203cbcc, spelled Memory::operator_delete2, is called by 72 sites, every deleting destructor among them: it is operator delete(void*) (_ZdlPv). 0x0203cbc0 (func_0203cbc0) is where __cxa_vec_delete and __cxa_vec_new's cleanup release an array block, and 0x0203cbd8 (Memory::operator_new2) is what __cxa_vec_new allocates it with: operator delete[](void*) (_ZdaPv) and operator new[](size_t) (_Znam). The two bodies keep their address names, func_0203cbf0 and func_0203cc0c. With operator delete at its real address, the class-scope operator delete members that forwarded to Memory::operator_delete2 in twenty-two headers were only steering each D0 away from the mislabelled body, and are gone.",
     "Static initializer folded: data_020a0ebc, the zero Vector3 after GAME_HEAP_PTR, is defined here (it was the handwritten src/unnamed/arm9/0207/__sinit_020750b8.c). Heap's other bss words stay extern, so this claim is only the registration node and the object. mwcc emits __sinit_Heap.cpp. VecOff is not Vector3 and not derived from it: Vector3(x, y, z) scalarizes, and a derived type would emit ~Vector3 into this object. ~VecOff is aliased to ~Vector3. The node is renamed from @632 to @1260 because ov065 already defines @632.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree's stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b."
   ],

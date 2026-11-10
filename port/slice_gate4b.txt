@@ -51,6 +51,5 @@ src/engine/animation/dExtFrameCtrl_c_UpdateFileOffsets.cpp
 # vtable there -- which needs EVERY virtual defined, not the subset a gate
 # happens to exercise. A migrated class can no longer be sliced method by
 # method; it comes across whole. src/engine/model/d_ext_model.cpp (above) is that
-# TU for this class. Its destructor calls the delete veneer func_0203cbc0,
-# which src/engine/heap/Heap.cpp (slice 3a) now defines for the host, along
-# with the allocator func_0203cc0c this slice used to list as well.
+# TU for this class. Its destructor releases its buffer with operator
+# delete[], which on the host is the CRT's.

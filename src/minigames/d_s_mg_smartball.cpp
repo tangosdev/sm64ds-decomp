@@ -4447,7 +4447,7 @@ void dScMgSmartball_c::CollideBalls() {
 #pragma push
 #pragma opt_strength_reduction off
 /* SpawnObjects: minigame-board teardown+rebuild. 7 inlined-destructor loops
- * over object slot arrays (double vtable store + Memory::operator_delete2 +
+ * over object slot arrays (double vtable store + operator delete +
  * slot=0), 3 single-slot deletes, language-selected asset loads
  * (OS_SPrintf + DecompressLZ16 to VRAM/tilemaps), per-tile-type scan
  * loops over the two 0x300-entry tilemaps mBg1Map/mBg2Map collecting
@@ -4511,7 +4511,7 @@ void dScMgSmartball_c::SpawnObjects() {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_ball_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -4523,7 +4523,7 @@ void dScMgSmartball_c::SpawnObjects() {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_ana_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -4535,7 +4535,7 @@ void dScMgSmartball_c::SpawnObjects() {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_kinoko_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -4547,7 +4547,7 @@ void dScMgSmartball_c::SpawnObjects() {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_propeller_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -4559,7 +4559,7 @@ void dScMgSmartball_c::SpawnObjects() {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_dokan_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -4571,7 +4571,7 @@ void dScMgSmartball_c::SpawnObjects() {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_pakkun_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -4583,7 +4583,7 @@ void dScMgSmartball_c::SpawnObjects() {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_pushswitch_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -4597,7 +4597,7 @@ void dScMgSmartball_c::SpawnObjects() {
                 __cxa_vec_cleanup(p->mReelVel, 3, 8, (dtor_t)NullDestructor_0203d47c);
                 __cxa_vec_cleanup(p->mReelOffset, 3, 8, (dtor_t)NullDestructor_0203d47c);
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             mpSlot = 0;
         }
@@ -4608,7 +4608,7 @@ void dScMgSmartball_c::SpawnObjects() {
             if (p != 0) {
                 *(int *)p = (int)&cMgSmartball_board_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             mpBoard = 0;
         }
@@ -4619,7 +4619,7 @@ void dScMgSmartball_c::SpawnObjects() {
             if (p != 0) {
                 *(int *)p = (int)&cMgSmartball_wing_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             mpWing = 0;
         }
@@ -6092,7 +6092,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_ball_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -6106,7 +6106,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_kinoko_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -6120,7 +6120,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_ana_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -6133,7 +6133,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_spring_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             mpSpring = 0;
         }
@@ -6146,7 +6146,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_propeller_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -6159,7 +6159,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_dokan_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -6173,7 +6173,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_pakkun_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -6187,7 +6187,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *(int volatile *)p = (int)&cMgSmartball_pushswitch_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             *slot = 0;
         }
@@ -6204,7 +6204,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
                 __cxa_vec_cleanup(((cMgSmartball_slot_c *)p)->mReelOffset, 3, 8,
                                   (dtor_t)NullDestructor_0203d47c);
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             mpSlot = 0;
         }
@@ -6215,7 +6215,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *p = (int)&cMgSmartball_board_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             mpBoard = 0;
         }
@@ -6226,7 +6226,7 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
             if (p != 0) {
                 *p = (int)&cMgSmartball_wing_c_vtbl[0];
                 *(int volatile *)p = (int)&cMgSmartball_object_c_vtbl[0];
-                Memory::operator_delete2(p);
+                ::operator delete(p);
             }
             mpWing = 0;
         }

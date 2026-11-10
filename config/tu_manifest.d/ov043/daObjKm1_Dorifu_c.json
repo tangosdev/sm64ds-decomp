@@ -2801,54 +2801,54 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@364",
+      "from": "@342",
       "to": "@346",
-      "evidence": "compiler-local __register_global_object node; @360 is taken on main by ov023 bss, renamed to an unused fleet temp of equal length"
+      "evidence": "compiler-local __register_global_object node; @360 is taken on main by ov023 bss, renamed to an unused fleet temp of equal length Re-keyed from @364 to @342 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@365",
+      "from": "@343",
       "to": "@347",
-      "evidence": "compiler-local __register_global_object node; @361 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
+      "evidence": "compiler-local __register_global_object node; @361 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length Re-keyed from @365 to @343 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@366",
+      "from": "@344",
       "to": "@348",
-      "evidence": "compiler-local __register_global_object node; @362 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
+      "evidence": "compiler-local __register_global_object node; @362 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length Re-keyed from @366 to @344 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@367",
+      "from": "@345",
       "to": "@349",
-      "evidence": "compiler-local __register_global_object node; @363 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
+      "evidence": "compiler-local __register_global_object node; @363 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length Re-keyed from @367 to @345 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@368",
+      "from": "@346",
       "to": "@350",
-      "evidence": "compiler-local __register_global_object node; @364 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
+      "evidence": "compiler-local __register_global_object node; @364 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length Re-keyed from @368 to @346 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@369",
+      "from": "@347",
       "to": "@351",
-      "evidence": "compiler-local __register_global_object node; @365 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
+      "evidence": "compiler-local __register_global_object node; @365 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length Re-keyed from @369 to @347 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@370",
+      "from": "@348",
       "to": "@352",
-      "evidence": "compiler-local __register_global_object node; @366 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
+      "evidence": "compiler-local __register_global_object node; @366 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length Re-keyed from @370 to @348 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@371",
+      "from": "@349",
       "to": "@353",
-      "evidence": "compiler-local __register_global_object node; @367 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
+      "evidence": "compiler-local __register_global_object node; @367 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length Re-keyed from @371 to @349 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@372",
+      "from": "@350",
       "to": "@354",
-      "evidence": "compiler-local __register_global_object node; @368 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
+      "evidence": "compiler-local __register_global_object node; @368 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length Re-keyed from @372 to @350 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@373",
+      "from": "@351",
       "to": "@355",
-      "evidence": "compiler-local __register_global_object node; @369 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length"
+      "evidence": "compiler-local __register_global_object node; @369 is taken on main by ov036 bss, renamed to an unused fleet temp of equal length Re-keyed from @373 to @351 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

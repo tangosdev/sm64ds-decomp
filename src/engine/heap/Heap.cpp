@@ -13,9 +13,8 @@
    CreateSolidHeap, CreateExpandingHeap and CreateRootHeap; then the three
    classes' destructors and constructors; then the root-heap bootstrap,
    InitializeRootHeap and SetupRootHeap; and last the global allocation
-   entry points over the default heap -- Memory's operator_new2 and
-   operator_delete2, the global operator new and operator delete, and the
-   two unnamed veneers beside them. Written back-to-front: mwccarm emits
+   entry points over the default heap -- the global operator new, new[],
+   delete and delete[], and the two unnamed bodies they forward to. Written back-to-front: mwccarm emits
    .text in reverse source order under default deferred codegen.
  *
  * leftovers:
@@ -73,82 +72,64 @@ extern "C" {
     void *OS_AllocFromArenaLo(s32 arena, unsigned int size, unsigned int align);
 }
 
-/* The global allocation entry points, highest addresses first. Every class
-   that routes its own operator new or delete through Memory lands here, and
-   all of it bottoms out in the default heap.
+/* The global allocation entry points, highest addresses first: two bodies
+   over the default heap, then the four global operators as three-word
+   tail-call veneers to them (`ldr ip,[pc] / bx ip / .word'). The ROM's call
+   sites settle which operator is which: every deleting destructor calls
+   0x0203cbcc, so that is operator delete; new[] buffers are released through
+   0x0203cbc0, which __cxa_vec_delete and __cxa_vec_new's cleanup call as the
+   array deallocator; 0x0203cbd8 is what __cxa_vec_new allocates the array
+   with. The two bodies are reached only through the veneers (two loads each)
+   and keep their address names.
 
-   THE HOST KEEPS ITS OWN GLOBAL OPERATORS. Defining operator delete here would
-   replace the CRT's for the whole PC port, and port/hal already answers the
-   DS spellings the headers reference (_ZdlPv and Memory's two operators).
-   Only the two unnamed veneers have no host bridge, so the host gets them
-   over the same default heap. Nothing here reaches mwccarm. */
-#ifdef _MSC_VER
-extern "C" void *func_0203cc0c(u32 size) {
-    return Memory::defaultHeapPtr->Allocate(size);
-}
-extern "C" void func_0203cbc0(void *ptr) {
-    Memory::defaultHeapPtr->_Deallocate(ptr);
-}
-#else
+   mwccarm's size_t is unsigned long, so the two allocators mangle to _Znwm
+   and _Znam. An explicit call is spelled `::operator new': inside a member
+   of an fBase_c-derived class, plain `operator new' finds fBase_c's class
+   allocator first. The library declarations of the deallocators carry
+   `throw()', so the definitions do as well.
+
+   THE HOST KEEPS ITS OWN GLOBAL OPERATORS. Defining them here would replace
+   the CRT's for the whole PC port, so on the host every new and delete,
+   array or not, is the CRT's. Nothing here reaches MSVC. */
+#ifndef _MSC_VER
 
 extern "C" {
 
 /* func_0203cc0c at 0x0203cc0c -- allocate from the default heap with the
- * default alignment. The body of the global operator new and of
- * Memory::operator_new2; both are veneers to it. It keeps its address name. */
+ * default alignment. The body of operator new and operator new[]. */
 void *func_0203cc0c(u32 size) {
     return Memory::defaultHeapPtr->Allocate(size);
 }
-}
 
-/* operator delete(void*) at 0x0203cbf0 -- the global deallocator. Hands the
- * block to the default heap's _Deallocate veneer. The library declaration
- * carries `throw()', so the definition has to as well. */
-void operator delete(void *ptr) throw() {
+/* func_0203cbf0 at 0x0203cbf0 -- hand a block back to the default heap
+ * through its _Deallocate veneer. The body of operator delete and
+ * operator delete[]. */
+void func_0203cbf0(void *ptr) {
     Memory::defaultHeapPtr->_Deallocate(ptr);
 }
+}
 
-/* operator new(size_t) at 0x0203cbe4 -- a three-word tail-call veneer to
- * func_0203cc0c (`ldr ip,[pc] / bx ip / .word 0x0203cc0c').
- *
- * mwccarm's size_t is unsigned long, so the global allocator mangles to
- * _Znwm. The tree used to carry it as the GCC spelling _Znwj, defined
- * hand-spelled under extern "C" because `operator new(unsigned int)' is an
- * illegal 'operator' declaration here; the cartridge carries no mangled
- * names, so the name was ours to correct. Every new-expression in src/ now
- * resolves to this definition. An explicit call is spelled `::operator new':
- * inside a member of an fBase_c-derived class, plain `operator new' finds
- * fBase_c's class allocator first. */
+/* operator new(size_t) at 0x0203cbe4. Every new-expression in src/ resolves
+ * here. */
 void *operator new(size_t size) {
     return func_0203cc0c(size);
 }
 
-namespace Memory {
-
-/* Memory::operator_new2(u32) at 0x0203cbd8 -- a three-word tail-call veneer
- * to func_0203cc0c. The veneer is emitted for the call, not for the argument
- * list, so the real signature costs nothing. */
-void *operator_new2(u32 size) {
+/* operator new[](size_t) at 0x0203cbd8. */
+void *operator new[](size_t size) {
     return func_0203cc0c(size);
 }
 
-/* Memory::operator_delete2(void*) at 0x0203cbcc -- a three-word tail-call
- * veneer to the global operator delete at 0x0203cbf0. */
-void operator_delete2(void *ptr) {
-    ::operator delete(ptr);
+/* operator delete(void*) at 0x0203cbcc. */
+void operator delete(void *ptr) throw() {
+    func_0203cbf0(ptr);
 }
 
+/* operator delete[](void*) at 0x0203cbc0. */
+void operator delete[](void *ptr) throw() {
+    func_0203cbf0(ptr);
 }
-
-extern "C" {
-
-/* func_0203cbc0 at 0x0203cbc0 -- a second three-word tail-call veneer to the
- * global operator delete, just below Memory's own. It keeps its address name. */
-void func_0203cbc0(void *ptr) {
-    ::operator delete(ptr);
-}
-}
-#endif /* _MSC_VER */
+#endif /* !_MSC_VER */
 
 namespace mHeap {
 

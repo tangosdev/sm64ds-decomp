@@ -32,10 +32,6 @@
  * section 6az, MEASURED 2026-10-22.
  */
 
-namespace Memory {
-void operator_delete2(void *);
-}
-
 struct dExtBlendAnmModel_c : dExtAnmModel_c {
     Fix12i blendWeight;        /* 0x64 - 0x1000 is 1.0 */
     Fix12i blendStep;          /* 0x68 - per-frame increment */
@@ -70,17 +66,6 @@ struct dExtBlendAnmModel_c : dExtAnmModel_c {
     void Advance();
     void SetAnim(BCA_File &animFile, int numBlendFrames, int flags, Fix12i speed, u16 startFrame);
     int InitBlendBuffer(char *); /* DoSetFile's tail (0x020165c4); coined */
-
-    /* ITS OWN, TO RESOLVE AN AMBIGUITY MULTIPLE INHERITANCE CREATES. dExtAnmModel_c
-       derives from dExtSimpleModel_c (so dExtModel_c) and from dExtFrameCtrl_c, and both bases
-       declare operator delete, so an inherited one is "ambiguous access to
-       name found: dExtModel_c::operator delete and dExtFrameCtrl_c::operator delete".
-       Declaring it here picks the same deallocator both bases name, and also
-       satisfies the rule in include/dActor_c.h that mwcc only inlines the member
-       when it is in the class or its immediate base. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

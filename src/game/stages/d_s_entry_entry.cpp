@@ -42,7 +42,6 @@ unsigned int func_02045a50(const void *, unsigned int);
 void G3_LoadMtx43(void *);
 void *func_0201787c(SharedFilePtr *);
 /* local extern: the veneer to operator delete (src/engine/heap/Heap.cpp). */
-void func_0203cbc0(void *);
 }
 /* local extern: the camera matrix and the interleaved sine/cosine table,
    declared per consumer (d_ext_model.cpp, d_ent_obj.cpp). */
@@ -436,7 +435,7 @@ void EntryMesh::InitGrid() {
 
 /* Free the vertex array. */
 int EntryMesh::Destroy() {
-    func_0203cbc0(mVertices);
+    ::operator delete[](mVertices);
     return 1;
 }
 
@@ -458,7 +457,7 @@ int EntryMesh::Init(const Vector3 *pos, int angleY) {
     mGridDim[0] = 0x14;
     mGridDim[1] = 0x14;
     mNumVertices = mGridDim[0] * mGridDim[1];
-    mVertices = (EntryMeshVertex *)Memory::operator_new2(mNumVertices * sizeof(EntryMeshVertex));
+    mVertices = (EntryMeshVertex *)::operator new[](mNumVertices * sizeof(EntryMeshVertex));
     LoadTexture((BMD_File *)func_0201787c(&EntryMeshTextureFile));
     EntryMeshTextureFile.Release();
     mState = EntryMeshHandlers;

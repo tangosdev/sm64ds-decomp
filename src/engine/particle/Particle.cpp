@@ -24,7 +24,6 @@
 #include "private/particle_resource_header.h"
 
 extern "C" {
-void func_0203cbc0(void *p);
 void func_02049ee8(void* manager, void* renderState);
 void DecompressLZ16(const void* src, void* dst);
 }
@@ -53,7 +52,7 @@ dPa_c::dPa_c() {
 dPa_c::~dPa_c() {
     if (sParticleHeapBase != 0) {
         mLevel.cleanup();
-        func_0203cbc0(sParticleHeapBase);
+        ::operator delete[](sParticleHeapBase);
         sParticleHeapBase = 0;
     }
     if (mResourceFile != data_02075f14) {
@@ -114,7 +113,7 @@ void dPa_c::Initialise() {
     }
 
     {
-        char *base = (char *)Memory::operator_new2(allocSize);
+        char *base = (char *)::operator new[](allocSize);
         char* end = base + allocSize;
         sParticleHeapBase = base;
         sParticleHeapCursor = base;

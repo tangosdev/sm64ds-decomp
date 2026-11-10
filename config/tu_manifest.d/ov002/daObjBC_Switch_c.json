@@ -530,14 +530,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@458",
+      "from": "@436",
       "to": "@86",
-      "evidence": "emitted model registration-node temp collides with an existing configured @453; @86 is unused in every module's symbols.txt on origin/main and shorter than the emitted spelling | compiler temp; the stood-on pair becoming members, Sound.h in place of the local declaration and the dead named-parameter extern going move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "emitted model registration-node temp collides with an existing configured @453; @86 is unused in every module's symbols.txt on origin/main and shorter than the emitted spelling | compiler temp; the stood-on pair becoming members, Sound.h in place of the local declaration and the dead named-parameter extern going move the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @458 to @436 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@459",
+      "from": "@437",
       "to": "@87",
-      "evidence": "emitted collision registration-node temp collides with an existing configured @454; @87 is unused in every module's symbols.txt on origin/main and shorter than the emitted spelling | compiler temp; the stood-on pair becoming members, Sound.h in place of the local declaration and the dead named-parameter extern going move the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "emitted collision registration-node temp collides with an existing configured @454; @87 is unused in every module's symbols.txt on origin/main and shorter than the emitted spelling | compiler temp; the stood-on pair becoming members, Sound.h in place of the local declaration and the dead named-parameter extern going move the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @459 to @437 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "relocations": [

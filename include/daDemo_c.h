@@ -7,10 +7,6 @@
 #include "dExtAnmModel_c.h"
 #include "dPa_c.h"
 
-namespace Memory {
-void operator_delete2(void *);
-}
-
 struct dExtAnmTexPat_c;
 
 /* The nested model helpers below derive from the real model classes, which
@@ -80,9 +76,6 @@ struct daDemo_c : dActor_c {
                                 unsigned char texByte, SharedFilePtr **texs,
                                 int tsData);
         virtual ~anmModel_c();
-        void operator delete(void *ptr) {
-            Memory::operator_delete2(ptr);
-        }
     };
 
     struct simpleModel_c : param_c, dExtSimpleModel_c {
@@ -91,9 +84,6 @@ struct daDemo_c : dActor_c {
 
         int func_ov002_020f6960(SharedFilePtr *fp, int n);
         virtual ~simpleModel_c();
-        void operator delete(void *ptr) {
-            Memory::operator_delete2(ptr);
-        }
     };
 
     /* The 0x36-byte block param1 0x2f allocates (func_ov002_020f2630) and

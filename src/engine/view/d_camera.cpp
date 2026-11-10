@@ -507,7 +507,7 @@ int dCamera_c::CleanupResources()
     void *p = mFixedViewPos;
     if (p) {
         if (p)
-            Memory::operator_delete2(p);
+            ::operator delete(p);
     }
     return 1;
 }

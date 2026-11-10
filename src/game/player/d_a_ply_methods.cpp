@@ -20326,7 +20326,6 @@ extern "C" {
 int daPly_c::CleanupResources() {
     enum { false_, true_ };
     struct VB { virtual void v0(); virtual void v1(); };
-    void func_0203cbc0(void *p);
     void UnloadSilverStarAndNumber(void);
     void UnloadKeyModels(int n);
     extern u8 gGameMode;
@@ -20362,13 +20361,13 @@ int daPly_c::CleanupResources() {
         {
             int q = mModels.mBodyTexParams[i];
             if (q != 0)
-                func_0203cbc0((void *)q);
+                ::operator delete[]((void *)q);
             q = mModels.mHeadTexParams[i];
             if (q != 0)
-                func_0203cbc0((void *)q);
+                ::operator delete[]((void *)q);
             q = mModels.mHeadTexParams[j];
             if (q != 0)
-                func_0203cbc0((void *)q);
+                ::operator delete[]((void *)q);
         }
     }
     {
@@ -20387,9 +20386,9 @@ int daPly_c::CleanupResources() {
         if (mTrailPos != 0)
             delete[] mTrailPos;
         if (mTrailFlags != 0)
-            func_0203cbc0(mTrailFlags);
+            ::operator delete[](mTrailFlags);
         if (mHeldObjQueue != 0)
-            func_0203cbc0((void *)mHeldObjQueue);
+            ::operator delete[]((void *)mHeldObjQueue);
     }
     ((SharedFilePtr *)(data_ov002_020ff480[mCharFileBase + (param1 & 3)]))->Release();
     b = gGameMode;
@@ -21453,8 +21452,8 @@ Ld0:
         ((daPly_c *)(c))->func_ov002_020beabc();
     mTrailPos =
         (Vector3 *)__cxa_vec_new(0x32, 0xc, 8, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
-    mTrailFlags = (u8 *)Memory::operator_new2(0x32);
-    *(void **)(&mHeldObjQueue) = Memory::operator_new2(0x14);
+    mTrailFlags = (u8 *)::operator new[](0x32);
+    *(void **)(&mHeldObjQueue) = ::operator new[](0x14);
     __builtin__clear((void*)mHeldObjQueue, 0x14);
     mScaleX = 0x1000;
     mScaleY = 0x1000;
@@ -22132,7 +22131,7 @@ int *func_ov002_020e6bb0(void *model) {
     pp = (void **)((long long)(int)((char *)model + 8));
     res = (ModelMaterialRes *)pp[0];
     count = res->numMaterials;
-    out = (int *)Memory::operator_new2(count << 2);
+    out = (int *)::operator new[](count << 2);
 
     p = out;
     src = (ModelMaterial *)pp[1];
