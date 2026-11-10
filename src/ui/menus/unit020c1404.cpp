@@ -40,7 +40,8 @@
  * other six keep their address names for now.
  */
 #include "types.h"
-#include "GX.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "Ov007Texture.h"
 #include "nitro/gx/g3imm.h"
 
@@ -59,12 +60,12 @@ void func_ov007_020c15ec(Ov007Texture *tex);
 void Texture_GetSizes(int fmt, int width, int height, int colorCount, u32 *texSize, u32 *plttSize);
 
 /* Resets both regions to start at 0: the texture region's end from the
- * texture VRAM banks GX::GetBankForTex reports (one 0x20000-byte bank per
- * bit), the palette region's end from the palette banks GX::GetBankForTexPltt
+ * texture VRAM banks GX_GetBankForTex reports (one 0x20000-byte bank per
+ * bit), the palette region's end from the palette banks GX_GetBankForTexPltt
  * reports. */
 void Texture_ResetRegions(void) {
-    int texBanks = GX::GetBankForTex();
-    int plttBanks = GX::GetBankForTexPltt();
+    int texBanks = GX_GetBankForTex();
+    int plttBanks = GX_GetBankForTexPltt();
 
     data_ov007_02104bdc = 0;
     data_ov007_02104be4 = 0;
@@ -232,9 +233,9 @@ void Texture_LoadTexels(Ov007Texture *tex) {
         return;
 
     if (data_ov007_02104bdc + tex->texSize <= data_ov007_02104be4) {
-        GX::BeginLoadTex();
-        GX::LoadTex(tex->texSrc, data_ov007_02104bdc, tex->texSize);
-        GX::EndLoadTex();
+        GX_BeginLoadTex();
+        GX_LoadTex(tex->texSrc, data_ov007_02104bdc, tex->texSize);
+        GX_EndLoadTex();
 
         tex->texAddr = data_ov007_02104bdc;
         data_ov007_02104bdc += tex->texSize;
@@ -250,9 +251,9 @@ void Texture_LoadPalette(Ov007Texture *tex) {
         return;
 
     if (data_ov007_02104be8 + tex->plttSize <= data_ov007_02104be0) {
-        GX::BeginLoadTexPltt();
-        GX::LoadTexPltt(tex->plttSrc, data_ov007_02104be8, tex->plttSize);
-        GX::EndLoadTexPltt();
+        GX_BeginLoadTexPltt();
+        GX_LoadTexPltt(tex->plttSrc, data_ov007_02104be8, tex->plttSize);
+        GX_EndLoadTexPltt();
 
         tex->plttAddr = data_ov007_02104be8;
         data_ov007_02104be8 += tex->plttSize;

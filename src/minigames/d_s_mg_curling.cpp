@@ -44,24 +44,8 @@ enum dScMgCurling_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "G2x.h"
 #include "LevelRng.h"
-
-namespace G2 {
-void *GetBG2CharPtr(void);
-}
-
-namespace G2S {
-unsigned GetBG2CharPtr(void);
-}
-
-namespace GX {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
-
-namespace GXS {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 /* `C` is the receiver of the pointer-to-member state tables. It must stay
  * incomplete: mwccarm picks the pointer-to-member layout from whether the
@@ -121,8 +105,8 @@ extern void DecompressLZ16(const void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *ptr);
 extern void Ov004_Deallocate(void *p);
-extern void func_020563d4(const void *src, u32 offset, u32 count);
-extern void func_02056374(const void *src, u32 offset, u32 count);
+extern void GX_LoadBG2Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
 
 extern unsigned char sCurlingBitAStates[];
 extern unsigned char sCurlingBitBStates[];
@@ -1386,7 +1370,7 @@ void dScMgCurling_c::PickHouse() {
     } else if (mHouse == 2) {
         file = LoadFile(ASSET_D_2D_MG_BG_CURLING1_RIGHT_NSC_BIN);
     }
-    func_020563d4(file, 0, 0x800);
+    GX_LoadBG2Scr(file, 0, 0x800);
     Deallocate(file);
 }
 
@@ -1489,40 +1473,40 @@ s32 dScMgCurling_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
     REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1220;
-    DecompressLZ16(a, G2::GetBG2CharPtr());
+    DecompressLZ16(a, G2_GetBG2CharPtr());
 
     f = LoadFile(ASSET_D_2D_MG_BG_CURLING1_NCL_BIN);
-    GX::LoadBGPltt(f, 0x60, 0x1a0);
+    GX_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_CURLING1_NSC_BIN);
-    func_020563d4(f, 0, 0x800);
+    GX_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     {
         void *c7 = LoadFile(ASSET_D_2D_MG_CURLING_NCG_BIN);
         void *c8 = LoadFile(ASSET_D_2D_MG_CURLING_NCL_BIN);
         DecompressLZ16(c7, (void *)0x6400000);
-        GX::LoadOBJPltt(c8, 0, 0x100);
+        GX_LoadOBJPltt(c8, 0, 0x100);
 
         gSubScreenLayers |= 4;
         REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
         REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x814;
-        DecompressLZ16(b, (void *)G2S::GetBG2CharPtr());
+        DecompressLZ16(b, (void *)G2S_GetBG2CharPtr());
 
         f = LoadFile(ASSET_D_2D_MG_BG_CURLING2_NCL_BIN);
-        GXS::LoadBGPltt(f, 0x60, 0x1a0);
+        GXS_LoadBGPltt(f, 0x60, 0x1a0);
         Deallocate(f);
 
         f = LoadFile(ASSET_D_2D_MG_BG_CURLING2_NSC_BIN);
-        func_02056374(f, 0, 0x800);
+        GXS_LoadBG2Scr(f, 0, 0x800);
         Deallocate(f);
 
         Ov004_Deallocate(a);
         Ov004_Deallocate(b);
 
         DecompressLZ16(c7, (void *)0x6600000);
-        GXS::LoadOBJPltt(c8, 0, 0x100);
+        GXS_LoadOBJPltt(c8, 0, 0x100);
         Deallocate(c7);
         Deallocate(c8);
     }

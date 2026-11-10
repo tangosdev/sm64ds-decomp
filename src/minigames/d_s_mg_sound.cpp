@@ -30,6 +30,8 @@ enum dScMgSound_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 /* A cursor keeps the add-#0x5000 split on a walk that advances the scene
    pointer. Pointing the record itself at the slot pools the base instead. */
@@ -48,20 +50,6 @@ typedef void (dScMgSound_c::*Pmf)(int);
 struct PmfEntry {
     Pmf pmf;
 };
-
-
-namespace G2S {
-unsigned GetBG2CharPtr();
-}
-
-namespace GX {
-void LoadOBJPltt(const void *data, u32 offset, u32 size);
-}
-
-namespace GXS {
-void LoadBGPltt(const void *data, u32 offset, u32 size);
-void LoadOBJPltt(const void *data, u32 offset, u32 size);
-}
 
 #define RND (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
 #define LAUNDER(p) ((int)(p))
@@ -314,27 +302,27 @@ s32 dScMgSound_c::InitResources() {
     objChars = LoadFile(ASSET_D_2D_MG_SOUND_NCG_BIN);
     objPltt = LoadFile(ASSET_D_2D_MG_SOUND_NCL_BIN);
     DecompressLZ16(objChars, (void *)0x6400000);
-    GX::LoadOBJPltt(objPltt, 0, 0x100);
+    GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 4;
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCG_BIN);
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x214;
-    DecompressLZ16(file, (void *)G2S::GetBG2CharPtr());
+    DecompressLZ16(file, (void *)G2S_GetBG2CharPtr());
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCL_BIN);
-    GXS::LoadBGPltt(file, 0x60, 0x1a0);
+    GXS_LoadBGPltt(file, 0x60, 0x1a0);
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NSC_BIN);
-    func_02056374(file, 0, 0x800);
+    GXS_LoadBG2Scr(file, 0, 0x800);
     Deallocate(file);
 
     *(volatile u16 *)0x400100c &= ~0x40;
     *(volatile u32 *)0x4001018 = 0;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
     DecompressLZ16(objChars, (void *)0x6600000);
-    GXS::LoadOBJPltt(objPltt, 0, 0x100);
+    GXS_LoadOBJPltt(objPltt, 0, 0x100);
     Deallocate(objChars);
     Deallocate(objPltt);
 

@@ -16,8 +16,11 @@
 #include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "types.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "CP15.h"
 
 /* An OAM entry, with attributes 0 and 1 stored as one word the way this
@@ -52,9 +55,7 @@ extern int data_0208ee44;
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 
 /* arm9 / ov004 helpers with no project header. */
-void  func_02054430(int);
-void  func_02054748(int);
-void  func_02056674(const void *src, unsigned int offset, unsigned int count);
+void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 int   func_020126e8(int a);
 void  func_020126ac(int a0, int a1, int a2, int a3, int s0);
 void  func_020127ec(int a0, int a1, int a2, int a3, int a4, int a5);
@@ -84,9 +85,9 @@ namespace Particle { void RenderAll(); }
 
 extern "C" void D3D_CaptureToMain(void) {
     *(volatile unsigned short *)0x4000304 |= 0x8000;
-    GX::ResetBankForSubOBJ();
-    GX::SetBankForSubBG(4);
-    func_02054430(8);
+    GX_ResetBankForSubOBJ();
+    GX_SetBankForSubBG(4);
+    GX_SetBankForLCDC(8);
     *(volatile unsigned int *)0x4000064 = 0x80330010;
     gSubScreenLayers &= ~0x10;
     gSubScreenLayers |= 4;
@@ -101,11 +102,11 @@ extern "C" void D3D_CaptureToMain(void) {
 extern "C" void D3D_CaptureToSub(void)
 {
     *(volatile unsigned short *)0x4000304 &= ~0x8000;
-    GX::ResetBankForSubBG();
-    GX::SetBankForSubOBJ(8);
-    func_02054430(4);
+    GX_ResetBankForSubBG();
+    GX_SetBankForSubOBJ(8);
+    GX_SetBankForLCDC(4);
     *(volatile int *)0x4000064 = 0x80360010;
-    GXS::SetGraphicsMode(5);
+    GXS_SetGraphicsMode(5);
     gSubScreenLayers |= 0x10;
     gSubScreenLayers &= ~4;
     *(volatile int *)0x4001000 = (*(volatile int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
@@ -148,20 +149,20 @@ extern "C" void D3D_DrawSpriteTable(void)
     }
 
     CP15::FlushAndInvalidateDataCache((u32)sD3DOamShadow, 0x400);
-    func_02056674(sD3DOamShadow, 0, 0x400);
+    GXS_LoadOAM(sD3DOamShadow, 0, 0x400);
 }
 
 extern "C" void D3D_ClearCaptureTable(void)
 {
-    func_02056674(sD3DOamShadow, 0, 0x400u);
+    GXS_LoadOAM(sD3DOamShadow, 0, 0x400u);
 }
 
 extern "C" void D3D_InitDualScreen(void)
 {
-    GX::ResetBankForSubBG();
-    GX::ResetBankForSubOBJ();
-    GX::SetBankForSubOBJ(8);
-    GX::SetBankForSubBG(4);
+    GX_ResetBankForSubBG();
+    GX_ResetBankForSubOBJ();
+    GX_SetBankForSubOBJ(8);
+    GX_SetBankForSubBG(4);
     *(unsigned int *)0x4001000 &= ~0x300010;
 }
 
@@ -170,16 +171,16 @@ extern "C" void D3D_InitDualScreen(void)
  * constant changes the code. */
 int dScMgD3DBase_c::InitSubScreenBg()
 {
-    mSavedSubObjBank = GX::GetBankForSubOBJ();
-    GX::SetBankForSubOBJ(0x100);
+    mSavedSubObjBank = GX_GetBankForSubOBJ();
+    GX_SetBankForSubOBJ(0x100);
     LoadCompressedFileAt(sD3DCommonNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
     {
         char *dst = (char*)0x6600000; dst += 0x2000;
         DecompressLZ16((void *)sD3DSubScreenBgByLanguage[GetGameLanguage()], dst);
     }
-    GX::SetBankForSubOBJ(mSavedSubObjBank);
-    mSubBgBank = GX::GetBankForSubBG();
-    GX::SetBankForSubBG(0x80);
+    GX_SetBankForSubOBJ(mSavedSubObjBank);
+    mSubBgBank = GX_GetBankForSubBG();
+    GX_SetBankForSubBG(0x80);
     {
         volatile u16 *p = (volatile u16*)0x400100a;
         *p = (*p & 0x43) | 0x800;
@@ -190,10 +191,10 @@ int dScMgD3DBase_c::InitSubScreenBg()
     gSubScreenLayers &= ~2;
     {
         s32 language = GetGameLanguage();
-        LoadCompressedFileAt(sD3DOptionNcgByLanguage[language], (void *)G2S::GetBG1CharPtr());
+        LoadCompressedFileAt(sD3DOptionNcgByLanguage[language], (void *)G2S_GetBG1CharPtr());
     }
-    LoadCompressedFileAt(0x5b, (void*)G2S::GetBG1ScrPtr());
-    GX::SetBankForSubBG(mSubBgBank);
+    LoadCompressedFileAt(0x5b, (void *)G2S_GetBG1ScrPtr());
+    GX_SetBankForSubBG(mSubBgBank);
 }
 
 /* Slot 33: sets up the 3D display and VRAM banks, keeps the loaded
@@ -210,13 +211,13 @@ void dScMgD3DBase_c::InitEngines()
     Mg_DisableAllBanks();
     data_0209e660 = 1;
     GX::DisableAllBanks();
-    GX::SetBankForTex(1);
-    GX::SetBankForTexPltt(0x40);
+    GX_SetBankForTex(1);
+    GX_SetBankForTexPltt(0x40);
     *(vu32 *)0x4000000u &= ~0x7000000u;
     *(vu32 *)0x4000000u &= ~0x38000000u;
-    func_02054748(0);
-    GX::SetBankForOBJ(0x10);
-    GX::SetBankForBG(2);
+    GX_SetBankForBGExtPltt(0);
+    GX_SetBankForOBJ(0x10);
+    GX_SetBankForBG(2);
     file = Ov004_LoadFile(sD3DCommonNcgByLanguage[GetGameLanguage()]);
     sD3DLanguageFile = file;
     {
@@ -226,14 +227,14 @@ void dScMgD3DBase_c::InitEngines()
     }
     file = Ov004_LoadFile(0xc3);
     sD3DSubObjPalette = file;
-    GX::LoadOBJPltt(file, 0x100u, 0x100u);
-    GXS::LoadOBJPltt(sD3DSubObjPalette, 0x100u, 0x100u);
+    GX_LoadOBJPltt(file, 0x100u, 0x100u);
+    GXS_LoadOBJPltt(sD3DSubObjPalette, 0x100u, 0x100u);
     InitialiseVramGlobals();
     Mg_ResetOverlays();
     D3D_DrawSpriteTable();
     data_0208ee44 = 1;
-    GX::SetGraphicsMode(1, 0, 1);
-    GXS::SetGraphicsMode(5);
+    GX_SetGraphicsMode(1, 0, 1);
+    GXS_SetGraphicsMode(5);
     *(vu32 *)0x4000000u &= 0xffcfffefu;
     sMgCurCamera = (int)&mCameras[0];
     sMgMainCamera = &mCameras[0];
@@ -388,20 +389,20 @@ int dScMgD3DBase_c::CloseMenu()
 int dScMgD3DBase_c::SaveScreenForMenu()
 {
     D3D_InitDualScreen();
-    GXS::LoadOBJPltt(sD3DSubObjPalette, 0x100, 0x100);
+    GXS_LoadOBJPltt(sD3DSubObjPalette, 0x100, 0x100);
     data_0209e660 = 0;
-    mSubBgBank = GX::GetBankForSubBG();
-    GX::SetBankForSubBG(0x80);
-    mSavedSubObjBank = GX::GetBankForSubOBJ();
-    GX::SetBankForSubOBJ(0x100);
+    mSubBgBank = GX_GetBankForSubBG();
+    GX_SetBankForSubBG(0x80);
+    mSavedSubObjBank = GX_GetBankForSubOBJ();
+    GX_SetBankForSubOBJ(0x100);
     return dScMgBase_c::SaveScreenForMenu();
 }
 
 /* Slot 30: gives the banks back around the base's menu teardown. */
 void dScMgD3DBase_c::RestoreScreenFromMenu()
 {
-    GX::SetBankForSubBG(mSubBgBank);
-    GX::SetBankForSubOBJ(mSavedSubObjBank);
+    GX_SetBankForSubBG(mSubBgBank);
+    GX_SetBankForSubOBJ(mSavedSubObjBank);
     data_0209e660 = 1;
     D3D_ClearCaptureTable();
     dScMgBase_c::RestoreScreenFromMenu();

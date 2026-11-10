@@ -679,14 +679,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@322",
+      "from": "@318",
       "to": "@331",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name. Re-keyed from @322 to @318 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object)."
     },
     {
-      "from": "@323",
+      "from": "@319",
       "to": "@332",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name"
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name. Re-keyed from @323 to @319 when the TU's coined GX/GXS namespace declarations gave way to the NitroSDK prototypes in nitro/gx/gx.h, gx_vramcnt.h and gx_load.h (measured from the compiled object)."
     }
   ]
 }

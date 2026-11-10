@@ -1,18 +1,18 @@
 //cpp
 #include "types.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "CP15.h"
 #include "Ov007BgLayer.h"
 
 extern "C" {
 
-extern void func_02056554(const void *src, int offset, int count);
-extern void func_020563d4(const void *src, u32 offset, u32 count);
-extern void func_02056314(void *dst, u32 offset, u32 len);
-extern void func_020564f4(const void *src, int offset, int count);
-extern void func_02056434(const void *src, int offset, int count);
-extern void func_02056374(const void *src, u32 offset, u32 count);
-extern void func_020562b4(const void *src, u32 offset, u32 count);
+extern void GX_LoadBG0Scr(const void *src, int offset, int count);
+extern void GX_LoadBG2Scr(const void *src, u32 offset, u32 count);
+extern void GX_LoadBG3Scr(void *dst, u32 offset, u32 len);
+extern void GXS_LoadBG0Scr(const void *src, int offset, int count);
+extern void GXS_LoadBG1Scr(const void *src, int offset, int count);
+extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
 
 /* Shows a BG layer on the engines in `engines` (&1 main, &2 sub): re-uploads
  * screen to its BG while it is dirty, then writes the scroll (fine + coarse,
@@ -31,32 +31,32 @@ void func_ov007_020c076c(Ov007BgLayer *layer, int engines) {
         if (engines & 1) {
             switch (layer->bg) {
             case 0:
-                func_02056554(layer->screen, layer->screenOffset, size);
+                GX_LoadBG0Scr(layer->screen, layer->screenOffset, size);
                 break;
             case 1:
-                GX::LoadBG1Scr(layer->screen, layer->screenOffset, size);
+                GX_LoadBG1Scr(layer->screen, layer->screenOffset, size);
                 break;
             case 2:
-                func_020563d4(layer->screen, layer->screenOffset, size);
+                GX_LoadBG2Scr(layer->screen, layer->screenOffset, size);
                 break;
             case 3:
-                func_02056314(layer->screen, layer->screenOffset, size);
+                GX_LoadBG3Scr(layer->screen, layer->screenOffset, size);
                 break;
             }
         }
         if (engines & 2) {
             switch (layer->bg) {
             case 0:
-                func_020564f4(layer->screen, layer->screenOffset, size);
+                GXS_LoadBG0Scr(layer->screen, layer->screenOffset, size);
                 break;
             case 1:
-                func_02056434(layer->screen, layer->screenOffset, size);
+                GXS_LoadBG1Scr(layer->screen, layer->screenOffset, size);
                 break;
             case 2:
-                func_02056374(layer->screen, layer->screenOffset, size);
+                GXS_LoadBG2Scr(layer->screen, layer->screenOffset, size);
                 break;
             case 3:
-                func_020562b4(layer->screen, layer->screenOffset, size);
+                GXS_LoadBG3Scr(layer->screen, layer->screenOffset, size);
                 break;
             }
         }

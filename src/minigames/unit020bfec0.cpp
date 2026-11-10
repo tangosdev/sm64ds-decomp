@@ -40,7 +40,7 @@
 #include "dExtAnmTexPat_c.h"
 #include "dExtAnmTexSRT_c.h"
 #include "cstd.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "math/Approach.h"
 #include "dScMgBase_c.h"
 #include "MWCPlusLib.h"

@@ -14,7 +14,7 @@
  */
 #include "common.h"
 #include "G3X.h"
-#include "GX.h"
+#include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/g3x.h"
 #include "nitro/hw/registers.h"
 
@@ -87,8 +87,8 @@ void Initialise3dGraphics(int arg) {
 // Full 3D setup: engine state, texture banks, an identity view.
 void func_0200f4f4(void) {
     Initialise3dGraphics(0);
-    GX::SetBankForTex(3);
-    GX::SetBankForTexPltt(0x30);
+    GX_SetBankForTex(3);
+    GX_SetBankForTexPltt(0x30);
     func_02045d9c();
     data_0209b3ec = IDENTITY_MATRIX4X3;
     InvMat4x3(&data_0209b3ec, &data_0209b41c);

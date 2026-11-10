@@ -44,7 +44,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 
 #include "KuppaScript.h"
 #include "types.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "private/controller_input.h"
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
@@ -78,6 +78,8 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "Message.h"
 #include "Memory.h"
 #include "Heap.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "cstd.h"
 #include "daMugenBGM_c.h"
@@ -752,8 +754,8 @@ void dScStage_c::LC_Render() {
 
     {
         void *p = LoadFile(ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN);
-        GX::LoadOBJPltt((void *)((char *)p + (((unsigned int)sLevelClearPaletteTimer >> 2) << 5)),
-                        0x1c0, 0x10);
+        GX_LoadOBJPltt((void *)((char *)p + (((unsigned int)sLevelClearPaletteTimer >> 2) << 5)),
+                       0x1c0, 0x10);
         Deallocate(p);
     }
 
@@ -1373,7 +1375,7 @@ void dScStage_c::PS_UpdateOkAndBackButtons(bool b) {
         }
 
         idx = i + base;
-        u16 *scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755cc[idx];
+        u16 *scr = (u16 *)G2S_GetBG1ScrPtr() + data_020755cc[idx];
         for (j = 0; j < data_02075610[idx]; j++) {
             scr[0] = (scr[0] & 0x3ff) | sl;
             scr[0x20] = (scr[0x20] & 0x3ff) | sl;
@@ -1399,7 +1401,7 @@ void dScStage_c::PS_UpdateSaveMenu(bool b) {
                 t = 0x1000;
             v = (u16)t;
         }
-        p = (u16 *)G2S::GetBG1ScrPtr() + data_020755c8[i];
+        p = (u16 *)G2S_GetBG1ScrPtr() + data_020755c8[i];
         for (j = 0; j < 10; j++) {
             p[0] = (p[0] & 0x3ff) | v;
             p[0x20] = (p[0x20] & 0x3ff) | v;
@@ -1418,7 +1420,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
     u16 v;
 
     sel = (sSoundBoxFlashTimer != 0) ? 0x5000 : 0x6000;
-    scr = (u16 *)G2S::GetBG1ScrPtr() + 0xae;
+    scr = (u16 *)G2S_GetBG1ScrPtr() + 0xae;
     for (j = 0; j < 0xf; j++) {
         scr[0] = (scr[0] & 0x3ff) | sel;
         scr[0x20] = (scr[0x20] & 0x3ff) | sel;
@@ -1428,7 +1430,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
     }
 
     for (j = 0; j < 2; j++) {
-        scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755c0[j];
+        scr = (u16 *)G2S_GetBG1ScrPtr() + data_020755c0[j];
         v = (sSelectedMenuButton == j) ? 0x4000 : 0x3000;
         counter = 0;
         for (; counter < 0xa; counter++) {
@@ -1439,7 +1441,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
     }
 
     for (i = 0; i < 2; i++) {
-        scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755c4[i];
+        scr = (u16 *)G2S_GetBG1ScrPtr() + data_020755c4[i];
         v = (sSelectedBacklightButton == i && sBacklightFlashTimer == 0) ? 0x6000 : 0x5000;
         counter = 0;
         for (; counter < 7; counter++) {
@@ -1457,7 +1459,7 @@ void dScStage_c::UpdateMenuButtons(bool b) {
         unsigned int v;
         int j;
         u16 *p;
-        p = (u16 *)G2S::GetBG1ScrPtr() + sMenuButtonTileOffsets[i];
+        p = (u16 *)G2S_GetBG1ScrPtr() + sMenuButtonTileOffsets[i];
         if (b == 0) {
             if (sSelectedMenuButton == i && sMenuHighlightDelay == 0) {
                 v = 0x2000;
@@ -1979,27 +1981,27 @@ void dScStage_c::PS_Update() {
         REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xf00;
         if (sPausedWithSelect != 0) {
             if (GetOwnerLanguage() == 5) {
-                LoadCompressedFileAt(0xb001, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xb001, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 4) {
-                LoadCompressedFileAt(0xac01, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xac01, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 3) {
-                LoadCompressedFileAt(0xa801, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa801, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 2) {
-                LoadCompressedFileAt(0xa401, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa401, G2S_GetBG1ScrPtr());
             } else {
-                LoadCompressedFileAt(0xa001, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa001, G2S_GetBG1ScrPtr());
             }
         } else {
             if (GetOwnerLanguage() == 5) {
-                LoadCompressedFileAt(0xb009, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xb009, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 4) {
-                LoadCompressedFileAt(0xac09, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xac09, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 3) {
-                LoadCompressedFileAt(0xa809, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa809, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 2) {
-                LoadCompressedFileAt(0xa409, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa409, G2S_GetBG1ScrPtr());
             } else {
-                LoadCompressedFileAt(0xa009, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa009, G2S_GetBG1ScrPtr());
             }
         }
         sMenuButtonTileOffsets[0] = 0x80;
@@ -3874,7 +3876,6 @@ void dScStage_c::LoadModel() {
     data_0209f320 = (int)components;
 }
 
-
 void dScStage_c::RenderFog() {
     Fog *fog = 0;
     if (gCurrentSublevel == 5)
@@ -4685,11 +4686,11 @@ int dScStage_c::InitResources() {
         *p0 &= 0xFFCFFFEF;
         *p1 &= 0xFFCFFFEF;
         int one = 1;
-        GX::SetGraphicsMode(one, 0, one);
-        GXS::SetGraphicsMode(3);
+        GX_SetGraphicsMode(one, 0, one);
+        GXS_SetGraphicsMode(3);
         *p0 = (*p0 & ~0x38000000) | 0x08000000;
         REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
-        GX::DispOn();
+        GX_DispOn();
         *p1 |= 0x10000;
         InitialiseVramGlobals();
 
@@ -4914,18 +4915,18 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
     if (vsMode == 0) {
         LoadFont(0);
         if (GetOwnerLanguage() == 5) {
-            LoadCompressedFileAt(0xb00f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xb00f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 4) {
-            LoadCompressedFileAt(0xac0f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xac0f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 3) {
-            LoadCompressedFileAt(0xa80f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa80f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 2) {
-            LoadCompressedFileAt(0xa40f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa40f, G2_GetBG2CharPtr());
         } else {
-            LoadCompressedFileAt(0xa00f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa00f, G2_GetBG2CharPtr());
         }
         LoadFileAt(0x980b, 0x5000000);
-        screenMap = (char *)G2::GetBG2ScrPtr();
+        screenMap = (char *)G2_GetBG2ScrPtr();
         LoadCompressedFileAt(0x9808, screenMap);
         LoadCompressedFileAt(0x9809, screenMap + 0x800);
         LoadCompressedFileAt(0x980a, screenMap + 0x1000);
@@ -4946,14 +4947,14 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         REG_DB_BG1CNT &= ~0x40;
         REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1800;
 
-        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NCG_BIN, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NCG_BIN, G2S_GetBG0CharPtr());
         LoadFileAt(ASSET_D_2D_OP_BG_CL_NCL_BIN, 0x5000400);
-        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL02_NSC_BIN, G2S::GetBG0ScrPtr());
-        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NSC_BIN, (char *)G2S::GetBG1ScrPtr());
+        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL02_NSC_BIN, G2S_GetBG0ScrPtr());
+        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NSC_BIN, (char *)G2S_GetBG1ScrPtr());
         LoadCompressedFileAt(ASSET_D_2D_OP_OBJ_CL_NCG_BIN, (void *)0x6600000);
         LoadFileAt(ASSET_D_2D_OP_OBJ_CL_NCL_BIN, 0x5000600);
         {
-            char *clearScreenMap = (char *)G2S::GetBG2ScrPtr();
+            char *clearScreenMap = (char *)G2S_GetBG2ScrPtr();
             volatile u16 fillTile = 0x10d0;
             MIi_CpuClear16(fillTile, clearScreenMap, 0x800);
         }
@@ -4975,19 +4976,19 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
     REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1300;
 
     if (GetOwnerLanguage() == 5) {
-        LoadCompressedFileAt(0xb00d, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(0xb00d, G2S_GetBG0CharPtr());
     } else if (GetOwnerLanguage() == 4) {
-        LoadCompressedFileAt(0xac0d, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(0xac0d, G2S_GetBG0CharPtr());
     } else if (GetOwnerLanguage() == 3) {
-        LoadCompressedFileAt(0xa80d, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(0xa80d, G2S_GetBG0CharPtr());
     } else if (GetOwnerLanguage() == 2) {
-        LoadCompressedFileAt(0xa40d, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(0xa40d, G2S_GetBG0CharPtr());
     } else {
-        LoadCompressedFileAt(0xa00d, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(0xa00d, G2S_GetBG0CharPtr());
     }
 
     LoadFileAt(0x9807, 0x5000400);
-    screenMap = (char *)G2S::GetBG1ScrPtr();
+    screenMap = (char *)G2S_GetBG1ScrPtr();
     LoadCompressedFileAt(0x9804, screenMap + 0x800);
     LoadCompressedFileAt(0x9803, screenMap + 0x1000);
 
@@ -5008,7 +5009,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadCompressedFileAt(0xa00b, screenMap + 0x2000);
     }
 
-    subBg2Screen = (char *)G2S::GetBG2ScrPtr();
+    subBg2Screen = (char *)G2S_GetBG2ScrPtr();
     LoadCompressedFileAt(0x9805, subBg2Screen);
     LoadCompressedFileAt(0x9806, subBg2Screen + 0x1000);
 
@@ -5017,19 +5018,19 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
             return;
         }
         if (GetOwnerLanguage() == 5) {
-            LoadCompressedFileAt(0xb00f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xb00f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 4) {
-            LoadCompressedFileAt(0xac0f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xac0f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 3) {
-            LoadCompressedFileAt(0xa80f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa80f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 2) {
-            LoadCompressedFileAt(0xa40f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa40f, G2_GetBG2CharPtr());
         } else {
-            LoadCompressedFileAt(0xa00f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa00f, G2_GetBG2CharPtr());
         }
         LoadFileAt(0x980b, 0x5000000);
         LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,
-                             (char *)G2::GetBG2ScrPtr() + 0x1800);
+                             (char *)G2_GetBG2ScrPtr() + 0x1800);
         LoadCompressedFileAt(0x9801, screenMap + 0x2800);
         return;
     }
@@ -5038,16 +5039,15 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         volatile u16 blankTile = 0;
         MIi_CpuClear16(blankTile, screenMap, 0x40);
         LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_SELECT_PAUSE_NSC_BIN, screenMap + 0x40);
-        LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_PAGE_NSC_BIN,
-                             (char *)G2::GetBG2ScrPtr() + 0x1800);
+        LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_PAGE_NSC_BIN, (char *)G2_GetBG2ScrPtr() + 0x1800);
         LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,
-                             (char *)G2::GetBG2ScrPtr() + 0x2800);
+                             (char *)G2_GetBG2ScrPtr() + 0x2800);
         LoadCompressedFileAt(0x9802, screenMap + 0x2800);
         return;
     }
 
     LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,
-                         (char *)G2::GetBG2ScrPtr() + 0x1800);
+                         (char *)G2_GetBG2ScrPtr() + 0x1800);
     LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_SELECT_PAUSE_NSC_BIN, screenMap);
 }
 

@@ -56,7 +56,7 @@
  * their ROM names.
  */
 #include "types.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "Ov007Sprite.h"
 #include "Ov007Settings.h"
 
@@ -521,8 +521,8 @@ void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *
 
 /* Loads the font palette into both engines' BG palettes. */
 void MenuText_LoadFontPalette(void) {
-    GX::LoadBGPltt(data_ov007_020d7a44, 0x1f6, 0xa);
-    GXS::LoadBGPltt(data_ov007_020d7a44, 0x1f6, 0xa);
+    GX_LoadBGPltt(data_ov007_020d7a44, 0x1f6, 0xa);
+    GXS_LoadBGPltt(data_ov007_020d7a44, 0x1f6, 0xa);
 }
 
 void *MenuText_GetMainScreen(void) {

@@ -1,9 +1,8 @@
 //cpp
 /* Runtime asset handles resolved through the overlay 0 file table. */
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
-namespace G2S {
-unsigned int GetBG1CharPtr(void);
-}
 enum LoadFont_AssetId {
     ASSET_D_2D_MARIO_3DFONT_NCL_BIN = 0x0237
 };
@@ -13,12 +12,8 @@ extern "C" int Mg_GetWorkBuffer(void);
 extern "C" int LoadFileAt(int handle, int dest);
 extern "C" void Deallocate(void *ptr);
 
-extern "C" int func_02054d88(void);
 extern "C" void MIi_CpuCopy32(int *src, int *dst, int len);
 extern "C" void DecompressLZ16(void *dst, void *src);
-
-struct GX  { static void LoadBGPltt(void const *p, unsigned a, unsigned b); };
-struct GXS { static void LoadBGPltt(void const *p, unsigned a, unsigned b); };
 
 extern unsigned char data_0209d698;
 extern int data_0209d6f8;
@@ -36,17 +31,17 @@ extern "C" void LoadFont(unsigned char arg)
         LoadFileAt(0x980e, Mg_GetWorkBuffer());
         data_0209d6f8 = Mg_GetWorkBuffer();
         file = LoadFile(ASSET_D_2D_MARIO_3DFONT_NCL_BIN);
-        GX::LoadBGPltt((char *)file + 2, 2, 0x20);
+        GX_LoadBGPltt((char *)file + 2, 2, 0x20);
         Deallocate(file);
     } else if (data_0209d698 == 1) {
-        MIi_CpuCopy32((int *)r4, (int *)G2S::GetBG1CharPtr(), 0x4000);
+        MIi_CpuCopy32((int *)r4, (int *)G2S_GetBG1CharPtr(), 0x4000);
         file = LoadFile(ASSET_D_2D_MARIO_3DFONT_NCL_BIN);
-        GXS::LoadBGPltt(file, 0x40, 0x20);
+        GXS_LoadBGPltt(file, 0x40, 0x20);
         Deallocate(file);
     } else {
-        MIi_CpuCopy32((int *)r4, (int *)func_02054d88(), 0x4000);
+        MIi_CpuCopy32((int *)r4, (int *)G2_GetBG3CharPtr(), 0x4000);
         file = LoadFile(0x980d);
-        DecompressLZ16(file, (void *)(func_02054d88() + 0x8000));
+        DecompressLZ16(file, (void *)((int)G2_GetBG3CharPtr() + 0x8000));
         Deallocate(file);
     }
     Deallocate(r4);

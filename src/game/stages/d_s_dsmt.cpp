@@ -46,6 +46,7 @@
 #include "decl_common.h"
 #include "nitro/spi/tp.h"
 #include "Memory.h"
+#include "nitro/gx/gx.h"
 #include "GX.h"
 #include "nitro/hw/registers.h"
 #include "math/CalcLib.h"
@@ -226,7 +227,7 @@ s32 dScDSMT_c::InitResources() {
 
     sBootArgs.messages = (void *)data_0209d6fc;
     REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
-    GX::DispOn();
+    GX_DispOn();
     REG_DISPCNT_SUB |= 0x10000;
     Enable3dEngines();
     ::Initialise3dGraphics(0);

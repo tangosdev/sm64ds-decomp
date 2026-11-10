@@ -611,8 +611,8 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            SetSubBg1Offset(0, 0) resets the layer's scroll, `gSubScreenLayers &= ~2`
            clears BG1's bit in the sub BG-enable shadow that slot 30 restores
            the sub DISPCNT from, and two LoadCompressedFileAt calls install a
-           language-indexed character file at G2S::GetBG1CharPtr() and the
-           shared screen map, file 0x5b, at G2S::GetBG1ScrPtr().  Each class
+           language-indexed character file at G2S_GetBG1CharPtr() and the
+           shared screen map, file 0x5b, at G2S_GetBG1ScrPtr().  Each class
            differs only in X and in its own language table.  It installs this
            minigame's touch-screen background; it destroys nothing.
          WHEN IT RUNS.  BeforeInitResources (ov004:0x020b0930) calls slot 33 at
@@ -655,9 +655,9 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            BG-enable shadow that slot 30 restores the main DISPCNT from, and two
            LoadCompressedFileAt calls install a language-indexed character file
            and the shared screen map -- file 0x67 here, 0x5b there.  Slot 31
-           went through G2S::GetBG1CharPtr and G2S::GetBG1ScrPtr; this one goes
-           through func_02054ea8 and _ZN2G212GetBG1ScrPtrEv (ov004:0x020b2848
-           and 0x020b285c).  So the ROM itself names the pair G2S/G2.  It builds
+           went through G2S_GetBG1CharPtr and G2S_GetBG1ScrPtr; this one goes
+           through G2_GetBG1CharPtr and G2_GetBG1ScrPtr (ov004:0x020b2848
+           and 0x020b285c): the main engine where slot 31 used the sub.  It builds
            this minigame's TOP-screen background; it has nothing to do with
            collision.
          WHEN IT RUNS, and this is the other half of the symmetry.  Slot 31 is
@@ -777,10 +777,10 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
          (InitEngines, engine bring-up) sets mBrushOnMain (+0x68) to 0 and
          mBrushLayer (+0x6c) to -1.
          Here mBrushLayer selects WHICH background layer to draw into -- 0..3
-         index G2S::GetBG0CharPtr through GetBG3CharPtr, anything else returns
+         index G2S_GetBG0CharPtr through G2S_GetBG3CharPtr, anything else returns
          without drawing, which is what -1 buys -- and mBrushOnMain gates the
          wrapped region above the touch screen, where the main engine's
-         G2::GetBG*CharPtr are used instead and y is folded by
+         G2_GetBG*CharPtr are used instead and y is folded by
          `+ sMgTopScreenYOffset + 0xc0`.  So slot 33 leaves the brush disabled
          and a minigame arms it by picking a layer.  Two slots, one mechanism.
        WHO CALLS IT: ov004:0x020ae5c4, a line rasteriser sitting immediately

@@ -30,9 +30,9 @@
 #include "nitro/hw/registers.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "G2x.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
@@ -109,7 +109,7 @@ void InitialiseVramGlobals(void);
 void Deallocate(void*);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
-void func_02056374(const void*, u32, u32);
+void GXS_LoadBG2Scr(const void *, u32, u32);
 
 extern int sEsp3DMaterialAnim;
 extern int pmf_dMg3DEspModel_c_Idle_2[];
@@ -143,7 +143,6 @@ dScMg3DEsp_c::~dScMg3DEsp_c()
 }
 
 /* ---- dMg3DEspAnimSet_c ------------------------------------------------- */
-
 
 void dMg3DEspAnimSet_c::Render()
 {
@@ -236,7 +235,6 @@ dMg3DEspAnimSet_c::~dMg3DEspAnimSet_c()
 }
 
 dMg3DEspAnimSet_c::dMg3DEspAnimSet_c() {}
-
 
 /* ---- dMg3DEspModel_c --------------------------------------------------- */
 
@@ -1312,21 +1310,21 @@ s32 dScMg3DEsp_c::InitResources()
     *(volatile unsigned short*)0x400100c = (*(volatile unsigned short*)0x400100c & 0x43) | 0x210;
 
     f = LoadFile(0x12);
-    DecompressLZ16(f, (void *)((unsigned)G2S::GetBG2CharPtr() + 0x4000));
+    DecompressLZ16(f, (void *)((unsigned)G2S_GetBG2CharPtr() + 0x4000));
     Deallocate(f);
 
     f = LoadFile(0x13);
-    GXS::LoadBGPltt(f, 0x1e0, 0x20);
+    GXS_LoadBGPltt(f, 0x1e0, 0x20);
     Deallocate(f);
 
     f = LoadFile(0x14);
-    func_02056374(f, 0, 0x800);
+    GXS_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     r5v = LoadFile(8);
     r4v = LoadFile(9);
     DecompressLZ16(r5v, (void *)0x6600000);
-    GXS::LoadOBJPltt(r4v, 0, 0x100);
+    GXS_LoadOBJPltt(r4v, 0, 0x100);
     Deallocate(r5v);
     Deallocate(r4v);
 

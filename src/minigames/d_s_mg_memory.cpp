@@ -34,6 +34,7 @@ enum d_s_mg_memory_AssetId {
 #include "SpawnInfo.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
+#include "nitro/gx/gx_load.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -59,14 +60,6 @@ extern dScMgMemory_cState sMemoryRoundTable[];
 extern dScMgMemory_cCardState sMemoryCardTable[];
 /* daPly_c markers use the int-argument handlers, like the card handlers. */
 extern "C" dScMgMemory_cPlayerState sMemoryPlayerTable[];
-
-namespace GX {
-void LoadOBJPltt(void const *, unsigned int, unsigned int);
-}
-
-namespace GXS {
-void LoadOBJPltt(void const *, unsigned int, unsigned int);
-}
 
 extern "C" {
 extern void Mg_DrawScoreTally(void *c, int a, int b, int d);
@@ -1011,9 +1004,9 @@ s32 dScMgMemory_c::InitResources() {
     tiles = LoadFile(sMemoryCardNcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
     DecompressLZ16(tiles, (void *)0x6400000);
-    GX::LoadOBJPltt(palette, 0, 0x100);
+    GX_LoadOBJPltt(palette, 0, 0x100);
     DecompressLZ16(tiles, (void *)0x6600000);
-    GXS::LoadOBJPltt(palette, 0, 0x100);
+    GXS_LoadOBJPltt(palette, 0, 0x100);
     Deallocate(tiles);
     Deallocate(palette);
     gSubScreenLayers = 0x18;

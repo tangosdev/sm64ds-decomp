@@ -47,7 +47,8 @@ enum dScMgRoulette_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 /* Local views of the records the helpers walk. */
 
@@ -81,18 +82,8 @@ typedef char RouletteStrip_size_must_be_0x18[sizeof(RouletteStrip) == 0x18 ? 1 :
 #define SCENE_BONUS ((gMgScene != 0) \
                         ? gMgScene->mCredits : 0)
 
-
 namespace cstd {
 int fdiv(int a, int b);
-}
-
-namespace GX {
-void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
-}
-
-namespace GXS {
-void LoadBGPltt(const void *data, unsigned int offset, unsigned int size);
-void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
 }
 
 /* Thirty-seven tile centres. mwcc emits __sinit_d_s_mg_roulette_methods.cpp
@@ -226,10 +217,10 @@ s32 dScMgRoulette_c::InitResources() {
     bgMap = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NSC_BIN);
     file = LoadFile(ASSET_D_2D_YAKU_NSC_BIN);
     pltt = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NCL_BIN);
-    DecompressLZ16(bgChars, G2S::GetBG2CharPtr());
-    DecompressLZ16(bgMap, G2S::GetBG2ScrPtr());
-    DecompressLZ16(file, G2S::GetBG0ScrPtr());
-    GXS::LoadBGPltt(pltt, 0x1a0, 0x60);
+    DecompressLZ16(bgChars, G2S_GetBG2CharPtr());
+    DecompressLZ16(bgMap, G2S_GetBG2ScrPtr());
+    DecompressLZ16(file, G2S_GetBG0ScrPtr());
+    GXS_LoadBGPltt(pltt, 0x1a0, 0x60);
     Deallocate(bgChars);
     Deallocate(bgMap);
     Deallocate(file);
@@ -246,8 +237,8 @@ s32 dScMgRoulette_c::InitResources() {
     pltt = LoadFile(ASSET_D_2D_MG_ROULETTE_NCL_BIN);
     DecompressLZ16(file, (void *)0x6400000);
     DecompressLZ16(file, (void *)0x6600000);
-    GX::LoadOBJPltt(pltt, 0, 0x100);
-    GXS::LoadOBJPltt(pltt, 0, 0x100);
+    GX_LoadOBJPltt(pltt, 0, 0x100);
+    GXS_LoadOBJPltt(pltt, 0, 0x100);
     Deallocate(file);
     Deallocate(pltt);
 

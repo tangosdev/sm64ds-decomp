@@ -47,8 +47,8 @@ enum dScMgPachinko2_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "GX.h"
-#include "G2.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "LevelRng.h"
 
 namespace Sound {
@@ -93,10 +93,9 @@ extern void *LoadFile(int handle);
 extern void Deallocate(void *);
 extern void DecompressLZ16(void *src, void *dst);
 extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
-extern int func_02054d88(void);
-extern void func_02056314(void *, u32, u32);
-extern void func_020562b4(const void *, u32, u32);
-extern void func_020564f4(const void *, int, int);
+extern void GX_LoadBG3Scr(void *, u32, u32);
+extern void GXS_LoadBG3Scr(const void *, u32, u32);
+extern void GXS_LoadBG0Scr(const void *, int, int);
 
 /* --- ROM data this TU reads --- */
 extern u8 gMainScreenLayers;
@@ -618,7 +617,7 @@ void dScMgPachinko2_c::StartRoundEnd(int a) {
     volatile unsigned short v;
     mPhase = 3;
     mEndTimer = 0x40;
-    dst = (char *)G2S::GetBG2CharPtr();
+    dst = (char *)G2S_GetBG2CharPtr();
     v = 0;
     MIi_CpuClear16(v, dst, 0x6000);
     mResult = a;
@@ -1438,7 +1437,7 @@ void dScMgPachinko2_c::CheckCountdownEnd() {
     Paddle_Stop(2);
     mPhase = 2;
     mEndTimer = 0x40;
-    dst = (char *)G2S::GetBG2CharPtr();
+    dst = (char *)G2S_GetBG2CharPtr();
     v = 0;
     MIi_CpuClear16(v, dst, 0x6000);
     mResult = 0;
@@ -1495,7 +1494,7 @@ void dScMgPachinko2_c::ClearAimLine() {
 
     mHeldBall = 0;
     {
-        char *dst = (char *)G2S::GetBG2CharPtr();
+        char *dst = (char *)G2S_GetBG2CharPtr();
         tmp = 0;
         MIi_CpuClear16(tmp, dst, 0x6000);
     }
@@ -1518,7 +1517,7 @@ void dScMgPachinko2_c::PlotSubBg2Pixels(int a1, int a2, int a3) {
             row = hi * 32;
             yb = s - 1;
             a1 = yb + j;
-            bp = (u32 *)G2S::GetBG2CharPtr();
+            bp = (u32 *)G2S_GetBG2CharPtr();
             *(u32 *)((char *)(bp + (row + (a1 >> 3)) * 8) + col) |= a3 << ((a1 & 7) * 4);
         }
     }
@@ -1549,7 +1548,7 @@ void dScMgPachinko2_c::DrawAimLine() {
         return;
     idx = mHeldBall - 1;
     if (mBalls[idx].x != mBalls[idx].prevX || mBalls[idx].y != mBalls[idx].prevY) {
-        char *dst = (char *)G2S::GetBG2CharPtr();
+        char *dst = (char *)G2S_GetBG2CharPtr();
         tmp = 0;
         MIi_CpuClear16(tmp, dst, 0x6000);
 
@@ -2241,21 +2240,21 @@ s32 dScMgPachinko2_c::InitResources() {
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NCG_BIN);
-    DecompressLZ16(f, (void *)func_02054d88());
+    DecompressLZ16(f, (void *)G2_GetBG3CharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NCL_BIN);
-    GX::LoadBGPltt(f, 0x60, 0x1a0);
+    GX_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NSC_BIN);
-    func_02056314(f, 0, 0x800);
+    GX_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     objChar = LoadFile(ASSET_D_2D_MG_PACHINKO_NCG_BIN);
     objPltt = LoadFile(ASSET_D_2D_MG_PACHINKO_NCL_BIN);
     DecompressLZ16(objChar, (void *)0x6400000);
-    GX::LoadOBJPltt(objPltt, 0, 0x100);
+    GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd; /* sub BG0, BG2 and BG3 on */
     REG_DB_BG2CNT &= ~3;
@@ -2263,14 +2262,14 @@ s32 dScMgPachinko2_c::InitResources() {
     REG_DB_BG2OFS = 0;
     REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x418;
 
-    b = (char *)G2S::GetBG2CharPtr();
+    b = (char *)G2S_GetBG2CharPtr();
     spC = 0;
     MIi_CpuClear16(spC, b, 0x6000);
 
     n = 0;
     for (y = 0; y < 0x18; y++) {
         for (x = 0; x < 0x20; x++) {
-            dst = (char *)((u16 *)G2S::GetBG2ScrPtr() + x + y * 0x20);
+            dst = (char *)((u16 *)G2S_GetBG2ScrPtr() + x + y * 0x20);
             spE = n;
             MIi_CpuClear16(spE, dst, 2);
             n++;
@@ -2285,15 +2284,15 @@ s32 dScMgPachinko2_c::InitResources() {
     REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x208;
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NCG_BIN);
-    DecompressLZ16(f, (void *)G2S::GetBG3CharPtr());
+    DecompressLZ16(f, (void *)G2S_GetBG3CharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NCL_BIN);
-    GXS::LoadBGPltt(f, 0x60, 0x1a0);
+    GXS_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NSC_BIN);
-    func_020562b4(f, 0, 0x800);
+    GXS_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 1;
@@ -2302,11 +2301,11 @@ s32 dScMgPachinko2_c::InitResources() {
     REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x608;
 
     f = LoadFile(ASSET_D_2D_HEI_TOP_DOWN_NSC_BIN);
-    func_020564f4(f, 0, 0x800);
+    GXS_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);
 
     DecompressLZ16(objChar, (void *)0x6600000);
-    GXS::LoadOBJPltt(objPltt, 0, 0x100);
+    GXS_LoadOBJPltt(objPltt, 0, 0x100);
     Deallocate(objChar);
     Deallocate(objPltt);
 

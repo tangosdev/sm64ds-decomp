@@ -41,6 +41,8 @@ enum d_s_mg_trampoline_AssetId {
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
 #include "decl_common.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 /* local: UpdateTouchInput only reproduces through a 4-byte-record view of
    each lane; the flat `gTouchHeld[slot * 4]` and TouchInfo forms DIFF there
    (measured 2026-11-08). */
@@ -48,17 +50,6 @@ enum d_s_mg_trampoline_AssetId {
 
 namespace cstd {
 int fdiv(int numerator, int denominator);
-}
-namespace G2 {
-void *GetBG0ScrPtr();
-void *GetBG1ScrPtr();
-void *GetBG2ScrPtr();
-void *GetBG3ScrPtr();
-void *GetBG2CharPtr();
-}
-namespace GX {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
 }
 namespace G3X {
 void SetFog(int enable, int blend, int slope, int offset);
@@ -103,9 +94,6 @@ extern int sTrmpFxCount;
 extern TrmpScorePopup *sTrmpFxPool;
 
 extern int sTrmpBrushWord[];
-extern void *func_02054efc(void);
-extern void *func_02054ea8(void);
-extern int func_02054d88(void);
 extern void MIi_CpuCopy32(int *dst, int *src, int len);
 extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern const unsigned char sTrmpBrushPltt[];
@@ -196,11 +184,6 @@ int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int
 /* TUBUILD CONFLICT -- alternate declaration of sTrmpFxList, from the legacy file for TrmpFx_DrawAll, NOT applied: extern void *sTrmpFxList; */
 /* TUBUILD CONFLICT -- alternate declaration of sTrmpFxPool, from the legacy file for TrmpFx_ClearAll, NOT applied: extern char* sTrmpFxPool; */
 /* TUBUILD CONFLICT -- alternate declaration of sTrmpFxList, from the legacy file for TrmpFx_ClearAll, NOT applied: extern int sTrmpFxList; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN2G213GetBG2CharPtrEv, from the legacy file for func_ov006_02120f18, NOT applied: extern char *_ZN2G213GetBG2CharPtrEv(void); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02054efc, from the legacy file for func_ov006_02120f18, NOT applied: extern char *func_02054efc(void); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02054ea8, from the legacy file for func_ov006_02120f18, NOT applied: extern char *func_02054ea8(void); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02054d88, from the legacy file for func_ov006_02120f18, NOT applied: extern char *func_02054d88(void); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02054d88, from the legacy file for _ZN17dScMgTrampoline_c16OnGraphCallback0Ev, NOT applied: int func_02054d88(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for _ZN17dScMgTrampoline_c16OnGraphCallback0Ev, NOT applied: void MIi_CpuClear16(u16 val, void* dst, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of Mg_RenderSpriteBoth, from the legacy file for _ZN17dScMgTrampoline_c6RenderEv, NOT applied: void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4); */
 /* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_02121778, NOT applied: extern void MIi_CpuClear16(unsigned short a, int b, int c); */
@@ -212,7 +195,6 @@ int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_02120a18, from the legacy file for func_ov006_02121cf4, NOT applied: extern void func_ov006_02120a18(char* p, int v); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN5Sound12PlayBank2_2DEj, from the legacy file for func_ov006_02121cf4, NOT applied: extern void _ZN5Sound12PlayBank2_2DEj(unsigned int n); */
 /* TUBUILD CONFLICT -- alternate declaration of TrmpLine_UpdateAll, from the legacy file for func_ov006_02121d64, NOT applied: void TrmpLine_UpdateAll(void); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02054d88, from the legacy file for func_ov006_02121d64, NOT applied: int func_02054d88(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_02121d64, NOT applied: void MIi_CpuClear16(u16 val, char *dst, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of func_02012718, from the legacy file for func_ov006_02121d64, NOT applied: void func_02012718(void *a, int b); */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov006_02121d64, NOT applied: int RandomIntInternal(int *seed); */
@@ -224,7 +206,6 @@ int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int
 /* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd4fdivEii, from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied: extern s32 _ZN4cstd4fdivEii(s32 a, s32 b); */
 /* TUBUILD CONFLICT -- alternate declaration of gMainScreenLayers, from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied: extern u8 gMainScreenLayers; */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov006_0212231c, NOT applied: extern s32 GetGameLanguage(void); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN2G213GetBG2CharPtrEv, from the legacy file for func_ov006_0212231c, NOT applied: extern char *_ZN2G213GetBG2CharPtrEv(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_0212231c, NOT applied: extern void MIi_CpuClear16(u16 val, char *dst, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2GX10LoadBGPlttEPKvjj, from the legacy file for func_ov006_0212231c, NOT applied: extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b); */
 }
@@ -253,20 +234,20 @@ void dScMgTrampoline_c::InitDisplay() {
     REG_BG2CNT &= ~0x40;
 
     {
-        char *dst = (char *)G2::GetBG2CharPtr();
+        char *dst = (char *)G2_GetBG2CharPtr();
         fill = 0;
         MIi_CpuClear16(fill, dst, 0x4000);
     }
-    DecompressLZ16(bgChar, (void *)((char *)G2::GetBG2CharPtr() + 0x4000));
-    DecompressLZ16(bgScr, (void *)G2::GetBG2ScrPtr());
-    GX::LoadBGPltt(bgPltt, 0x1a0, 0x60);
+    DecompressLZ16(bgChar, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
+    DecompressLZ16(bgScr, (void *)G2_GetBG2ScrPtr());
+    GX_LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
     REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1318;
     REG_BG3CNT &= ~0x40;
 
     DecompressLZ16(objChar, (void *)0x6400000);
-    GX::LoadOBJPltt(objPltt, 0, 0x60);
+    GX_LoadOBJPltt(objPltt, 0, 0x60);
 
     Deallocate(bgChar);
     Deallocate(bgScr);
@@ -366,7 +347,7 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
     SetDoorSide(0);
 
     {
-        char *dst = (char *)func_02054d88();
+        char *dst = (char *)G2_GetBG3CharPtr();
         fill = 0;
         MIi_CpuClear16(fill, dst, 0x6000);
     }
@@ -410,7 +391,7 @@ void dScMgTrampoline_c::StateIntro() {
         }
 
         {
-            int dst = func_02054d88();
+            int dst = (int)G2_GetBG3CharPtr();
             volatile u16 tmp = 0;
             MIi_CpuClear16(tmp, (char *)dst, 0x6000);
         }
@@ -590,7 +571,7 @@ void dScMgTrampoline_c::StateWaitExit() {
     {
         int dst;
         volatile unsigned short fill;
-        dst = func_02054d88();
+        dst = (int)G2_GetBG3CharPtr();
         fill = 0;
         MIi_CpuClear16(fill, (char *)dst, 0x6000);
     }
@@ -790,7 +771,7 @@ int dScMgTrampoline_c::OnGraphCallback0() {
                 func_02012790(0xe);
             }
         }
-        dst = func_02054d88();
+        dst = (int)G2_GetBG3CharPtr();
         fill = 0;
         MIi_CpuClear16(fill, (char *)dst, 0x6000);
         mTouching = 0;
@@ -812,20 +793,20 @@ void dScMgTrampoline_c::InitBrush(int layer) {
 
     switch (mBrushLayer) {
     case 0:
-        scrPtr = (char *)G2::GetBG0ScrPtr();
-        charPtr = (char *)func_02054efc();
+        scrPtr = (char *)G2_GetBG0ScrPtr();
+        charPtr = (char *)G2_GetBG0CharPtr();
         break;
     case 1:
-        scrPtr = (char *)G2::GetBG1ScrPtr();
-        charPtr = (char *)func_02054ea8();
+        scrPtr = (char *)G2_GetBG1ScrPtr();
+        charPtr = (char *)G2_GetBG1CharPtr();
         break;
     case 2:
-        scrPtr = (char *)G2::GetBG2ScrPtr();
-        charPtr = (char *)G2::GetBG2CharPtr();
+        scrPtr = (char *)G2_GetBG2ScrPtr();
+        charPtr = (char *)G2_GetBG2CharPtr();
         break;
     case 3:
-        scrPtr = (char *)G2::GetBG3ScrPtr();
-        charPtr = (char *)func_02054d88();
+        scrPtr = (char *)G2_GetBG3ScrPtr();
+        charPtr = (char *)G2_GetBG3CharPtr();
         break;
     default:
         return;
@@ -840,7 +821,7 @@ void dScMgTrampoline_c::InitBrush(int layer) {
 
     t1 = 0;
     MIi_CpuClear16(t1, charPtr, 0x6000);
-    GX::LoadBGPltt(sTrmpBrushPltt, 0xe0, 0x20);
+    GX_LoadBGPltt(sTrmpBrushPltt, 0xe0, 0x20);
 }
 
 /* Kept for PaintSquare: see the file comment above for why it reaches the
@@ -874,16 +855,16 @@ void dScMgTrampoline_c::PaintSquare(int cx, int cy, int colour, int size) {
                         void *charBase;
                         switch (mBrushLayer) {
                         case 0:
-                            charBase = func_02054efc();
+                            charBase = G2_GetBG0CharPtr();
                             break;
                         case 1:
-                            charBase = func_02054ea8();
+                            charBase = G2_GetBG1CharPtr();
                             break;
                         case 2:
-                            charBase = G2::GetBG2CharPtr();
+                            charBase = G2_GetBG2CharPtr();
                             break;
                         case 3:
-                            charBase = (void *)func_02054d88();
+                            charBase = (void *)G2_GetBG3CharPtr();
                             break;
                         default:
                             return;

@@ -31,6 +31,7 @@ enum dScMgMemory2_c_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "decl_common.h"
 #include "LevelRng.h"
 #include "PlayerInput.h"
+#include "nitro/gx/gx_load.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -90,14 +91,6 @@ typedef struct {
 extern "C" dScMgMemory2_cState sMemory2ResultTable[];
 extern "C" dScMgMemory2_cState sMemory2StateTable[];
 extern "C" dScMgMemory2_cState sMemory2RoundTable[];
-
-namespace GX {
-void LoadOBJPltt(void const *, unsigned int, unsigned int);
-}
-
-namespace GXS {
-void LoadOBJPltt(void const *, unsigned int, unsigned int);
-}
 
 extern "C" {
 extern void Mg_DrawScoreTally(void *thiz, int a, int b, int c);
@@ -1151,9 +1144,9 @@ s32 dScMgMemory2_c::InitResources() {
     art = LoadFile(sMemory2CardNcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
     DecompressLZ16(art, (void *)0x6400000);
-    GX::LoadOBJPltt(palette, 0, 0x100);
+    GX_LoadOBJPltt(palette, 0, 0x100);
     DecompressLZ16(art, (void *)0x6600000);
-    GXS::LoadOBJPltt(palette, 0, 0x100);
+    GXS_LoadOBJPltt(palette, 0, 0x100);
     Deallocate(art);
     Deallocate(palette);
     gSubScreenLayers = 0x18;

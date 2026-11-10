@@ -49,16 +49,6 @@
 #include "dScMgPachinko_c.h"
 #include "LevelRng.h"
 
-namespace GX {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
-
-namespace GXS {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
-
 /* The five state tables are pointer-to-member tables on the scene. */
 typedef void (dScMgPachinko_c::*PMF)(int);
 
@@ -89,17 +79,6 @@ struct OamAttr;
 /* A random integer in [0, n): the top 15 bits of the shared generator, scaled. */
 #define PACHINKO_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
 
-namespace G2 {
-    void *GetBG2CharPtr();
-    void *GetBG2ScrPtr();
-}
-
-namespace G2S {
-    unsigned GetBG2CharPtr();
-    unsigned GetBG2ScrPtr();
-    unsigned GetBG3CharPtr();
-}
-
 namespace cstd {
 s16 atan2(s32, s32);
 int sqrt(unsigned long long val);
@@ -126,6 +105,8 @@ extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern int  RandomIntInternal(int *seed);
 struct OamAttr;
 #include "OAM.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
 extern int  Mg_RenderSpriteBothScaled(OamAttr *a, int b, int c, int d, int e, int f, int g);
 extern void Mg_SetSharedState(int a);
@@ -139,11 +120,10 @@ extern void FreeGfxSlotsById(int arg);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void *p);
-extern int  func_02054d88(void);
-extern void func_02056314(void *dst, u32 offset, u32 len);
-extern void func_020563d4(const void *src, u32 offset, u32 count);
-extern void func_020562b4(const void *src, u32 offset, u32 count);
-extern void func_020564f4(const void *src, int offset, int count);
+extern void GX_LoadBG3Scr(void *dst, u32 offset, u32 len);
+extern void GX_LoadBG2Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG0Scr(const void *src, int offset, int count);
 
 /* --- ROM data this TU reads --- */
 extern unsigned char gMainScreenLayers;
@@ -670,7 +650,7 @@ void dScMgPachinko_c::CheckTargetsLeft() {
     mPhase = 2;
     mEndTimer = 0x40;
     {
-        unsigned chars = G2S::GetBG2CharPtr();
+        unsigned chars = (unsigned)G2S_GetBG2CharPtr();
         zero = 0;
         MIi_CpuClear16(zero, (char *)chars, 0x6000);
     }
@@ -746,7 +726,7 @@ void dScMgPachinko_c::ClearAimLine() {
 
     mAimShot = 0;
     {
-        char *dst = (char *)G2S::GetBG2CharPtr();
+        char *dst = (char *)G2S_GetBG2CharPtr();
         zero = 0;
         MIi_CpuClear16(zero, dst, 0x6000);
     }
@@ -774,7 +754,7 @@ void dScMgPachinko_c::PlotSubBg2Pixels(int x, int y, int colour) {
             rowTile = tileY * 32;
             xb = x0 - 1;
             x = xb + j;
-            bp = (u32 *)G2S::GetBG2CharPtr();
+            bp = (u32 *)G2S_GetBG2CharPtr();
             *(u32 *)((char *)(bp + (rowTile + (x >> 3)) * 8) + lineOfs) |= colour << ((x & 7) * 4);
         }
     }
@@ -798,7 +778,7 @@ void dScMgPachinko_c::DrawAimLine() {
         return;
     idx = mAimShot - 1;
     if (mShot[idx].x != mShot[idx].prevX || mShot[idx].y != mShot[idx].prevY) {
-        char *buf = (char *)G2S::GetBG2CharPtr();
+        char *buf = (char *)G2S_GetBG2CharPtr();
         fill = 0;
         MIi_CpuClear16(fill, buf, 0x6000);
         for (i = 0; i < 2; i++) {
@@ -2187,15 +2167,15 @@ s32 dScMgPachinko_c::InitResources()
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
 
     f = LoadFile(0x5f);
-    DecompressLZ16(f, (void *)func_02054d88());
+    DecompressLZ16(f, (void *)G2_GetBG3CharPtr());
     Deallocate(f);
 
     f = LoadFile(0x60);
-    GX::LoadBGPltt(f, 0x60, 0x1a0);
+    GX_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(0x61);
-    func_02056314(f, 0, 0x800);
+    GX_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
@@ -2203,21 +2183,21 @@ s32 dScMgPachinko_c::InitResources()
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x5418;
 
     f = LoadFile(0x46);
-    DecompressLZ16(f, G2::GetBG2CharPtr());
+    DecompressLZ16(f, G2_GetBG2CharPtr());
     Deallocate(f);
 
-    b = (char *)G2::GetBG2ScrPtr();
+    b = (char *)G2_GetBG2ScrPtr();
     fillScr = 0x3073;
     MIi_CpuClear16(fillScr, b, 0x1000);
 
     f = LoadFile(6);
-    func_020563d4(f, 0, 0x800);
+    GX_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     objChar = LoadFile(0xe0);
     objPltt = LoadFile(0xe1);
     DecompressLZ16(objChar, (void *)0x6400000);
-    GX::LoadOBJPltt(objPltt, 0, 0x100);
+    GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd;
     *(volatile u16 *)0x400100c &= ~3;
@@ -2227,14 +2207,14 @@ s32 dScMgPachinko_c::InitResources()
 
     Mg_InitBrush(c, 0, 2, 0);
 
-    b = (char *)G2S::GetBG2CharPtr();
+    b = (char *)G2S_GetBG2CharPtr();
     fillZero = 0;
     MIi_CpuClear16(fillZero, b, 0x6000);
 
     n = 0;
     for (y = 0; y < 0x18; y++) {
         for (x = 0; x < 0x20; x++) {
-            dst = (char *)((u16 *)G2S::GetBG2ScrPtr() + x + y * 0x20);
+            dst = (char *)((u16 *)G2S_GetBG2ScrPtr() + x + y * 0x20);
             fillIdx = n;
             MIi_CpuClear16(fillIdx, dst, 2);
             n++;
@@ -2247,15 +2227,15 @@ s32 dScMgPachinko_c::InitResources()
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x208;
 
     f = LoadFile(0x5c);
-    DecompressLZ16(f, (void *)G2S::GetBG3CharPtr());
+    DecompressLZ16(f, (void *)G2S_GetBG3CharPtr());
     Deallocate(f);
 
     f = LoadFile(0x5d);
-    GXS::LoadBGPltt(f, 0x60, 0x1a0);
+    GXS_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(0x5e);
-    func_020562b4(f, 0, 0x800);
+    GXS_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
@@ -2264,11 +2244,11 @@ s32 dScMgPachinko_c::InitResources()
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x608;
 
     f = LoadFile(5);
-    func_020564f4(f, 0, 0x800);
+    GXS_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);
 
     DecompressLZ16(objChar, (void *)0x6600000);
-    GXS::LoadOBJPltt(objPltt, 0, 0x100);
+    GXS_LoadOBJPltt(objPltt, 0, 0x100);
     Deallocate(objChar);
     Deallocate(objPltt);
 

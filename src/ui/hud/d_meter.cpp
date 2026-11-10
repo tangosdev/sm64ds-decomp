@@ -68,7 +68,7 @@ enum dMeter_c_AssetId {
 
 #include "dMeter_c.h"
 #include "OAM.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "Timer.h"
 #include "decl_common.h"
 #include "dFdBrightness_c.h"
@@ -224,14 +224,14 @@ int dMeter_c::InitResources() {
         DecompressLZ16(h, objVramSub + 0x2000);
         Deallocate(h);
         h = LoadFile(0x8002);
-        GX::LoadOBJPltt(h, 0, 0x120);
-        GXS::LoadOBJPltt(h, 0, 0x120);
+        GX_LoadOBJPltt(h, 0, 0x120);
+        GXS_LoadOBJPltt(h, 0, 0x120);
         Deallocate(h);
         h = LoadFile(0x8003);
-        GX::LoadOBJPltt(h, 0x120, 0xE0);
+        GX_LoadOBJPltt(h, 0x120, 0xE0);
         Deallocate(h);
         h = LoadFile(0x8001);
-        GXS::LoadOBJPltt(h, 0x120, 0xE0);
+        GXS_LoadOBJPltt(h, 0x120, 0xE0);
         Deallocate(h);
     } else {
         void *h;
@@ -273,14 +273,14 @@ int dMeter_c::InitResources() {
             h = LoadFile(0xA40A);
         else
             h = LoadFile(0xA00A);
-        GX::LoadOBJPltt(h, 0, 0x120);
-        GXS::LoadOBJPltt(h, 0, 0x120);
+        GX_LoadOBJPltt(h, 0, 0x120);
+        GXS_LoadOBJPltt(h, 0, 0x120);
         Deallocate(h);
         h = LoadFile(0x980F);
-        GX::LoadOBJPltt(h, 0x120, 0xE0);
+        GX_LoadOBJPltt(h, 0x120, 0xE0);
         Deallocate(h);
         h = LoadFile(ASSET_D_2D_BTM_ICON_NCL_BIN);
-        GXS::LoadOBJPltt(h, 0x120, 0xE0);
+        GXS_LoadOBJPltt(h, 0x120, 0xE0);
         Deallocate(h);
     }
 
@@ -653,7 +653,7 @@ void dMeter_c::RenderHealthMeter() {
         OAM::Render(0, &OAM::HEALTH_METER_BG, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     }
 
-    GX::LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[gMeterShownHealth[0]]], 0x60, 0x20);
+    GX_LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[gMeterShownHealth[0]]], 0x60, 0x20);
 }
 
 /* ROM ordinal 11 -- dMeter_c::UpdateVsTimer(), 0x020fce9c, size 0x150 */

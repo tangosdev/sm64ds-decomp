@@ -9,7 +9,7 @@
     "One contiguous run of the Nitro SDK's GX_g2.c, 0x020551f0..0x0205532c. pret/pokediamond's arm9/lib/NitroSDK/src/GX_g2.c, compiled with its own pinned mwccarm 1.2/sp2p3, emits five functions: ChangeBlendBrightness_ 0x48, SetBlendBrightnessExt_ 0x58, SetBlendBrightness_ 0x24, SetBlendAlpha_ 0x1c, SetBGyAffine_ 0xb4. Four land here in the same order with identical sizes: G2x_ChangeBlendBrightness_ 0x48, SetBlendBrightness 0x24, SetBlendAlpha 0x1c, SetBGyAffine 0xb4. SetBlendBrightnessExt_ is absent because nothing in this game calls it, so the linker dropped it. No function in the run is unexplained.",
     "G2x_ChangeBlendBrightness_ (0x020551f0, named for the SDK function its body is): it rewrites the 0xc0 direction bits of BLDCNT only when an existing fade (0x80 or 0xc0) has the opposite sign, and always stores the magnitude to BLDY at +4.",
     "TOP EDGE: func_0205532c (0x40, above SetBGyAffine) has no counterpart in GX_g2.c and stays its own source.",
-    "BOTTOM EDGE: G2x_ChangeBlendBrightness_ (0x020551f0) is GX_g2.c's first function, so the file starts there. The run below it, ending with G2::GetBG0ScrPtr at 0x020551bc, is arm9/G2, which is GX_bgcnt.c (16 of 16 functions align with pret).",
+    "BOTTOM EDGE: G2x_ChangeBlendBrightness_ (0x020551f0) is GX_g2.c's first function, so the file starts there. The run below it, ending with G2_GetBG0ScrPtr at 0x020551bc, is arm9/GX_BgCnt, which is GX_bgcnt.c (16 of 16 functions align with pret).",
     "No lifecycle or RTTI: G2x has no instance state and no virtuals (include/G2x.h documents the all-static shape)."
   ],
   "sections": [

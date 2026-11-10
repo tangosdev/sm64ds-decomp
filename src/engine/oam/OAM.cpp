@@ -60,8 +60,8 @@ extern const unsigned char data_020755a0[12]; /* OBJ width, stride 4 */
 extern const unsigned char data_020755ac[12]; /* OBJ height, stride 4 */
 
 extern "C" {
-void func_020566dc(const void *src, unsigned int offset, unsigned int count);
-void func_02056674(const void *src, unsigned int offset, unsigned int count);
+void GX_LoadOAM(const void *src, unsigned int offset, unsigned int count);
+void GXS_LoadOAM(const void *src, unsigned int offset, unsigned int count);
 void MIi_CpuCopy32(int *dst, int *src, int len);
 void MIi_CpuCopyFast(const void *src, void *dst, int len);
 
@@ -712,15 +712,15 @@ void OAM::Load()
      * DISPCAPCNT at 0x04000304, so the one being displayed is never the one
      * being written. */
     if (data_0209e660) {
-        func_020566dc(data_0209e674, 0, 0x400);
+        GX_LoadOAM(data_0209e674, 0, 0x400);
         return;
     }
     if (((*(unsigned short *)0x4000304 & 0x8000) >> 15) == 1) {
-        func_020566dc(data_0209e674, 0, 0x400);
-        func_02056674(data_0209ea74, 0, 0x400);
+        GX_LoadOAM(data_0209e674, 0, 0x400);
+        GXS_LoadOAM(data_0209ea74, 0, 0x400);
     } else {
-        func_020566dc(data_0209ea74, 0, 0x400);
-        func_02056674(data_0209e674, 0, 0x400);
+        GX_LoadOAM(data_0209ea74, 0, 0x400);
+        GXS_LoadOAM(data_0209e674, 0, 0x400);
     }
 }
 

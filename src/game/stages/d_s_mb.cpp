@@ -32,7 +32,8 @@
 #include "OAM.h"
 #include "OamAttr.h"
 #include "Sound.h"
-#include "GX.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_trig.h"
 
 extern "C" {
@@ -260,7 +261,7 @@ s32 dScMB_c::InitResources() {
     volatile u16 fillMain;
     volatile u16 fillSub;
 
-    func_02053b98();
+    GX_DispOff();
     REG_DISPCNT_SUB &= ~0x10000;
     func_02030aa4(2);
 
@@ -279,9 +280,9 @@ s32 dScMB_c::InitResources() {
 
     /* From OBJ tile 0x94 onwards; a 4bpp tile is 0x20 bytes. */
     DecompressLZ16(&data_0209446c, (u8 *)G2_GetOBJCharPtr() + 0x94 * 0x20);
-    GX::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
-    GX::LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
-    GXS::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
+    GX_LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
+    GX_LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
+    GXS_LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
 
     REG_BG1CNT &= ~3;
     REG_DB_BG1CNT &= ~3;
@@ -292,7 +293,7 @@ s32 dScMB_c::InitResources() {
     gSubScreenLayers = 0;
     REG_DISPCNT &= ~0x1f00;
     REG_DISPCNT_SUB &= ~0x1f00;
-    GX::DispOn();
+    GX_DispOn();
 
     REG_DISPCNT_SUB |= 0x10000;
     func_02034b1c(&sMBGraphCallback, this);

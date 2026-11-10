@@ -104,9 +104,11 @@ enum daDemo_c_AssetId {
 #include "KuppaScript.h"
 #include "types.h"
 #include "CP15.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "G2x.h"
-#include "GX.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "Memory.h"
 #include "nitro/fx/fx.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -463,9 +465,9 @@ extern void SetSubBg3Offset(int a, int b);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void* p);
-extern void func_02056434(const void* src, int offset, int count);
-extern void func_020562b4(const void* src, u32 offset, u32 count);
-extern void func_02056374(const void* src, u32 offset, u32 count);
+extern void GXS_LoadBG1Scr(const void *src, int offset, int count);
+extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
 extern void func_ov002_020f5ad4(char* c);
 extern void func_ov002_020f5f60(char *c);
 extern int func_ov002_020f5fb8(void* c);
@@ -3215,7 +3217,7 @@ void func_ov002_020f5fe4(char* c)
     SetSubBg1Offset(0, 0);
     SetSubBg2Offset(0, 0);
     SetSubBg3Offset(0, 0);
-    GXS::SetGraphicsMode(0);
+    GXS_SetGraphicsMode(0);
 
     gSubScreenLayers &= ~0x1f;
 
@@ -3224,7 +3226,7 @@ void func_ov002_020f5fe4(char* c)
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_END_EUR_NCL_BIN);
-    GX::LoadOBJPltt(f, 0, 0x200);
+    GX_LoadOBJPltt(f, 0, 0x200);
     Deallocate(f);
 
     *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & ~3);
@@ -3235,16 +3237,16 @@ void func_ov002_020f5fe4(char* c)
     *(volatile u16*)0x400100a = (*(volatile u16*)0x400100a & 0x43) | 0x800;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCG_BIN);
-    DecompressLZ16(f, (void *)G2S::GetBG1CharPtr());
+    DecompressLZ16(f, (void *)G2S_GetBG1CharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCL_BIN);
-    GX::LoadBGPltt(f, 0, 2);
-    GXS::LoadBGPltt(f, 0, 0x200);
+    GX_LoadBGPltt(f, 0, 2);
+    GXS_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK1_NSC_BIN);
-    func_02056434(f, 0, 0x800);
+    GXS_LoadBG1Scr(f, 0, 0x800);
     Deallocate(f);
 
     *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 2;
@@ -3262,27 +3264,27 @@ void func_ov002_020f5fe4(char* c)
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCG_BIN);
     }
 
-    DecompressLZ16(r5, (void *)G2S::GetBG3CharPtr());
+    DecompressLZ16(r5, (void *)G2S_GetBG3CharPtr());
     Deallocate(r5);
 
     r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCL_BIN);
     CP15::FlushAndInvalidateDataCache((u32)r5, 0x200);
-    GX::SetBankForSubBGExtPltt(0x80);
-    GXS::BeginLoadBGExtPltt();
-    GXS::LoadBGExtPltt(r5, 0x4000, 0x200);
-    GXS::LoadBGExtPltt(r5, 0x6000, 0x200);
-    GXS::EndLoadBGExtPltt();
+    GX_SetBankForSubBGExtPltt(0x80);
+    GXS_BeginLoadBGExtPltt();
+    GXS_LoadBGExtPltt(r5, 0x4000, 0x200);
+    GXS_LoadBGExtPltt(r5, 0x6000, 0x200);
+    GXS_EndLoadBGExtPltt();
     Deallocate(r5);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_BRIGHT_NSC_BIN);
-    func_020562b4(f, 0, 0x800);
+    GXS_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & ~3) | 2;
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0xa90;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK2_NSC_BIN);
-    func_02056374(f, 0, 0x800);
+    GXS_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     gSubScreenLayers |= 0x10;
@@ -3291,7 +3293,7 @@ void func_ov002_020f5fe4(char* c)
         void *f6 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCG_BIN);
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCL_BIN);
         DecompressLZ16(f6, (void*)0x6600000);
-        GXS::LoadOBJPltt(r5, 0, 0x200);
+        GXS_LoadOBJPltt(r5, 0, 0x200);
         Deallocate(f6);
         Deallocate(r5);
     }
@@ -3673,7 +3675,6 @@ inline unsigned int inline_fn(unsigned int arg0)
 {
   return arg0;
 }
-
 
 }
 

@@ -38,9 +38,9 @@
 #include "PlayerInput.h"
 #include "Vector2.h"
 #include "Vector2Math.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "CP15.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 
 #pragma defer_codegen off
 
@@ -493,30 +493,30 @@ s32 dScMgFlower_c::InitResources() {
     REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 3;
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgUpNcgPath);
-    DecompressLZ16(fileData, G2::GetBG2CharPtr());
+    DecompressLZ16(fileData, G2_GetBG2CharPtr());
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgDownNcgPath);
-    DecompressLZ16(fileData, G2S::GetBG2CharPtr());
+    DecompressLZ16(fileData, G2S_GetBG2CharPtr());
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgUpNscPath);
-    DecompressLZ16(fileData, G2::GetBG2ScrPtr());
+    DecompressLZ16(fileData, G2_GetBG2ScrPtr());
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgDownNscPath);
-    DecompressLZ16(fileData, G2S::GetBG2ScrPtr());
-    DecompressLZ16(fileData, G2S::GetBG3ScrPtr());
+    DecompressLZ16(fileData, G2S_GetBG2ScrPtr());
+    DecompressLZ16(fileData, G2S_GetBG3ScrPtr());
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgUpNclPath);
     CP15::FlushAndInvalidateDataCache((u32)fileData, 0x1a0);
-    GX::LoadBGPltt(fileData, 0x60, 0x1a0);
+    GX_LoadBGPltt(fileData, 0x60, 0x1a0);
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerBgDownNclPath);
     CP15::FlushAndInvalidateDataCache((u32)fileData, 0x1a0);
-    GXS::LoadBGPltt(fileData, 0x60, 0x1a0);
+    GXS_LoadBGPltt(fileData, 0x60, 0x1a0);
     Ov004_Deallocate(fileData);
 
     REG_BLDCNT = 0;
@@ -532,8 +532,8 @@ s32 dScMgFlower_c::InitResources() {
 
     fileData = Ov004_LoadFileByPath(&sFlowerNclPath);
     CP15::FlushAndInvalidateDataCache((u32)fileData, 0x100);
-    GX::LoadOBJPltt(fileData, 0, 0x100);
-    GXS::LoadOBJPltt(fileData, 0, 0x100);
+    GX_LoadOBJPltt(fileData, 0, 0x100);
+    GXS_LoadOBJPltt(fileData, 0, 0x100);
     Ov004_Deallocate(fileData);
 
     sMgPlayAgainX = 0x40;
