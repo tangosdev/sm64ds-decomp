@@ -107,6 +107,15 @@ services:
       # before. Written at the relay redeploy that brings the referee;
       # emptying it again is the rollback. Never "*" here (dev boxes only).
       ARENA_GAME_IDS: ""
+      # The builds whose Luigi Infection matches play arena (the referee's
+      # Luigi rules; a build must be on ARENA_GAME_IDS too). EMPTY = every
+      # Luigi match plays lockstep, as before. EXACT build ids only, never
+      # "*" here: "*" would put every older listed build's Luigi rooms on
+      # arena, and a build without the referee's Luigi rules freezes on the
+      # countdown. Each release adds its own id in the same restart that adds
+      # it to GAME_IDS / ARENA_GAME_IDS; the restart drops open rooms, so do
+      # it when none are open.
+      # ARENA_LUIGI_GAME_IDS: ""
       # The largest arena match (phase A: 4); bigger matches play lockstep.
       ARENA_MAX_PLAYERS: "4"
       # A new room's netmode pick; the host can switch it to lockstep.
