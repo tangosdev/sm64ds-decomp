@@ -9,8 +9,8 @@ extern struct WBTBlockInfoList *func_02065ae0(void);
 extern void func_02065ad0(struct WBTBlockInfoList *list);
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 
-int func_020658c0(struct WBTBlockInfoList *node, int blockId, void *userId, int dataPtr,
-                  int dataSize, u16 permissionBmp) {
+int WBT_RegisterBlock(struct WBTBlockInfoList *node, int blockId, void *userId, int dataPtr,
+                      int dataSize, u16 permissionBmp) {
     u32 irq = IRQ::Disable();
     if (func_02065ae0() == 0) {
         func_02065ad0(node);

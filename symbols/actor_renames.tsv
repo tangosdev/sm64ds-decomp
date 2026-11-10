@@ -9348,3 +9348,39 @@ ov078	0x2125c98	_ZN12daBombking_c19func_ov078_02125c98Ev	_ZN12daBombking_c12Upda
 ov078	0x2125de0	_ZN12daBombking_c19func_ov078_02125de0Ev	_ZN12daBombking_c16UpdateHandMatrixEv	daBombking_c member: behaviour: composes the hand bone (transforms[10]) with the model matrix into mHoldMtx, mThrowPos = hand world pos, points mCarryMatrix at it and re-attaches spawned bob-ombs to the hand
 ov078	0x2125f8c	_ZN12daBombking_c19func_ov078_02125f8cEv	_ZN12daBombking_c16AttachHeldPlayerEv	daBombking_c member: behaviour: Render calls it while holding; picks the carry offset (data_ov078_0212711c[param1 == 2]) and copies the UpdateCarry matrix onto the model matrix to attach the held player
 ov078	0x02123eb8	_ZN12daBombking_c19func_ov078_02123eb8Ev	_ZN12daBombking_c16EnterCarryPlayerEv	daBombking_c member: N64 king_bobomb_act_3 sub-action 1 entry: Walk2 animation, 50-frame timer, forward speed 0xa000
+arm9	0x020656d4	func_020656d4	WBT_PutUserData	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02065730	func_02065730	WBT_GetBlock	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02065788	func_02065788	WBT_GetBlockInfo	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x020657d0	func_020657d0	WBT_RequestSync	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x020658c0	func_020658c0	WBT_RegisterBlock	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02065970	func_02065970	WBT_NumOfRegisteredBlock	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02065a74	func_02065a74	WBT_GetOwnAid	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02065a84	func_02065a84	WBT_SetOwnAid	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02065de4	func_02065de4	MBi_ReceiveRequestDataPiece	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x020672d0	func_020672d0	MB_ReadMultiBootParentBssDesc	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x0206736c	func_0206736c	IsAbleToLoad	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02067480	func_02067480	MBi_IsAbleToRecv	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02067604	func_02067604	MBi_MakeBlockInfoTable	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x020676e0	func_020676e0	MBi_SetSegmentInfo	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x020678a4	func_020678a4	MBi_MakeDownloadFileInfo	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02067928	func_02067928	MB_RegisterFile	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02067b68	func_02067b68	MBi_ReadSegmentHeader	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02067bfc	func_02067bfc	MB_ReadSegment	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02067e70	func_02067e70	MB_GetSegmentLength	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02067ee4	func_02067ee4	MBi_calc_cksum	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02067f2c	func_02067f2c	MBi_BlockHeaderEnd	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x020688fc	func_020688fc	MBi_SendMP	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02068a28	func_02068a28	MBi_SetMPData	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02068a54	func_02068a54	MB_End	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02068a74	func_02068a74	MBi_CommEnd	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02068ae8	func_02068ae8	MB_StartParent	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02068d08	func_02068d08	MBi_StartCommon	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02068dc8	func_02068dc8	MB_SetParentCommParam	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02068e44	func_02068e44	MBi_IsCommSizeValid	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02068e4c	func_02068e4c	MB_Init	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x020690b0	func_020690b0	MBi_ChildCallback	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02069918	func_02069918	MBi_ChildPortCallback	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02069994	func_02069994	MBi_ParentCallback	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x0208685c	data_0208685c	MBi_defaultLoadSegList	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x02086868	data_02086868	mbi_seg_header_default	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name
+arm9	0x0209a07c	data_0209a07c	mbi_seg_header	NitroSDK MB/WBT name: ntrtwl libraries/mb and include/nitro/wbt.h; body agrees, an older SDK's version keeps its name

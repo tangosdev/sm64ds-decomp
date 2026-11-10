@@ -12,13 +12,13 @@ typedef struct FSFile FSFile;
 extern "C" {
 
 extern int WBT_AidbitmapToAid(int x);
-extern void func_02065788(u16 type, u32 arg1, const void *src, u32 arg3);
+extern void WBT_GetBlockInfo(u16 type, u32 arg1, const void *src, u32 arg3);
 extern void func_02041a00(FSFile *file);
-extern void func_02065730(u16 type, u32 arg1, const void *src1, u32 arg3, const void *src2,
-                          u32 extra);
+extern void WBT_GetBlock(u16 type, u32 arg1, const void *src1, u32 arg3, const void *src2,
+                         u32 extra);
 extern int func_020423dc(int *table);
-extern int func_020656d4(u16 arg0, const void *arg1, int arg2, u32 arg3);
-extern void func_020657d0(u16 id, void *obj);
+extern int WBT_PutUserData(u16 arg0, const void *arg1, int arg2, u32 arg3);
+extern void WBT_RequestSync(u16 id, void *obj);
 extern void FS_NotifyArchiveAsyncEnd(void *self, int arg);
 extern void func_02042160(void);
 extern void func_02040f30(void *arg);
@@ -39,7 +39,7 @@ void func_02040f30(void *arg) {
         data_020a1fc0.mParentPacketSize = cmdp->u.sync.peer_packet_size + 0xe;
         data_020a1fc0.mChildPacketSize = cmdp->u.sync.my_packet_size + 0xe;
         if (data_020a1fc0.mState != 2) {
-            func_02065788((u16)1, 0, (const void *)child->mBlockInfoTable, (u32)func_02040f30);
+            WBT_GetBlockInfo((u16)1, 0, (const void *)child->mBlockInfoTable, (u32)func_02040f30);
             return;
         }
         {
@@ -52,9 +52,9 @@ void func_02040f30(void *arg) {
 
     case 6:
         child->mRecvBufTable[idx] = data_020a1fc0.mTable;
-        func_02065730((u16)1, 0x20000, (const void *)child->mRecvBufTable,
-                      (u32)data_020a1fc0.mTableSize, (const void *)child->mPacketBitmapTable,
-                      (u32)func_02040f30);
+        WBT_GetBlock((u16)1, 0x20000, (const void *)child->mRecvBufTable,
+                     (u32)data_020a1fc0.mTableSize, (const void *)child->mPacketBitmapTable,
+                     (u32)func_02040f30);
         return;
 
     case 4:
@@ -87,7 +87,7 @@ void func_02040f30(void *arg) {
             cmd.mFileId = w4;
             cmd.mPacketSizeHigh = (u8)(c >> 8);
             cmd.mPacketSizeLow = (u8)c;
-            func_020656d4((u16)1, &cmd, 9, (u32)func_02042160);
+            WBT_PutUserData((u16)1, &cmd, 9, (u32)func_02042160);
         }
         return;
 
@@ -100,15 +100,15 @@ void func_02040f30(void *arg) {
         switch (m->mKind) {
         case 1:
             if (m->mFlag == 0) {
-                func_020657d0((u16)1, (void *)func_02040f30);
+                WBT_RequestSync((u16)1, (void *)func_02040f30);
                 return;
             }
             child->mReadRegion = m->mFileId;
             child->mRecvBufTable[idx] =
                 (int)((FSFile *)data_020a1fc0.mReadRequest)->arg.readfile.dst;
-            func_02065730((u16)1, child->mReadRegion, (const void *)child->mRecvBufTable,
-                          ((FSFile *)data_020a1fc0.mReadRequest)->arg.readfile.len,
-                          (const void *)child->mPacketBitmapTable, (u32)func_02040f30);
+            WBT_GetBlock((u16)1, child->mReadRegion, (const void *)child->mRecvBufTable,
+                         ((FSFile *)data_020a1fc0.mReadRequest)->arg.readfile.len,
+                         (const void *)child->mPacketBitmapTable, (u32)func_02040f30);
             return;
 
         case 3: {

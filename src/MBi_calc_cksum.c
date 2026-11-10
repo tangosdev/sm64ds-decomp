@@ -1,5 +1,4 @@
-unsigned short func_02067ee4(unsigned short *p, int len)
-{
+unsigned short MBi_calc_cksum(unsigned short *p, int len) {
     int sum;
     int count;
     int r;

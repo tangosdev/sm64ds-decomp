@@ -7,7 +7,7 @@
 extern "C" {
 
 extern int data_020a94c0;
-extern void func_02065a84(int x);
+extern void WBT_SetOwnAid(int x);
 extern void func_02065ad0(struct WBTBlockInfoList *list);
 extern WBTWork *func_02065b94(void);
 extern int func_02065af0(int *thiz);
@@ -16,7 +16,7 @@ extern void func_02065ba0(int v);
 extern void func_02065bb0(int v);
 
 /* NitroSDK WBT_InitParent(send_packet_size, recv_packet_size, callback): once
- * (data_020a94c0), store 0 through func_02065a84 (a child stores -1), reset
+ * (data_020a94c0), store 0 through WBT_SetOwnAid (a child stores -1), reset
  * the running and system commands of the WBTWork that func_02065b94 returns,
  * make callback the system command's callback, forget each peer's last
  * command counter, queue an empty command (func_02065af0 copies its 0x9c
@@ -34,7 +34,7 @@ void WBT_InitParent(int send_packet_size, int recv_packet_size, void (*callback)
         return;
     }
     data_020a94c0 = 1;
-    func_02065a84(0);
+    WBT_SetOwnAid(0);
     func_02065ad0(0);
     work = func_02065b94();
     work->cmd.command = 0;

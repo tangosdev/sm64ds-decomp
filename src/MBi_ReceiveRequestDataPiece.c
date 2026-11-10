@@ -9,10 +9,11 @@ extern void CpuCopy8(const void *src, void *dst, unsigned int size);
  * piece is copied to its place in the child's mChildRequest row, its bit
  * is set in mChildRequestPieces, and the result is whether every piece is
  * now in. MBi_CommParentRecvDataPerChild calls it for each request message.
- * pret's pmd-sky's MBi_ReceiveRequestDataPiece is a lead, not a match: it
- * files pieces the same way but returns the completed request rather than
- * a 0/1, so the address name stays. */
-int func_02065de4(u8 *a0, int idx) {
+ * ntrtwl's NitroSDK (libraries/mb/src/mb_block.c) and pret's pmd-sky have
+ * MBi_ReceiveRequestDataPiece filing pieces the same way; theirs returns
+ * the completed request rather than a 0/1. This is an older SDK's version
+ * of that function, and an SDK function keeps its name across versions. */
+int MBi_ReceiveRequestDataPiece(u8 *a0, int idx) {
     int new_var;
     int new_var2;
     char *g = data_020a9db8;

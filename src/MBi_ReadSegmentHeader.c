@@ -1,11 +1,11 @@
-/* func_02067b68 at 0x02067b68
+/* MBi_ReadSegmentHeader at 0x02067b68
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
 extern void func_0205a588(void *dst, unsigned char val, unsigned int size);
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 struct S { unsigned int f0; unsigned char *f4; unsigned char *f8; unsigned int fc; };
-void func_02067b68(struct S *s, unsigned int start, unsigned int end, int flag) {
+void MBi_ReadSegmentHeader(struct S *s, unsigned int start, unsigned int end, int flag) {
     unsigned int f0 = s->f0;
     unsigned int fc = s->fc;
     unsigned int top;

@@ -7,7 +7,7 @@ extern "C" {
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern void func_0205a588(void *dst, unsigned char v, unsigned int size);
 
-/* NitroSDK WM_StartConnect(callback, pInfo, ssid): func_020690b0 passes it
+/* NitroSDK WM_StartConnect(callback, pInfo, ssid): MBi_ChildCallback passes it
  * its connectBssDesc (a 0xc0-byte WMBssDesc, flushed here) and no ssid. The
  * request goes to WM_GetSystemWork's fifo9to7 (word 3), as in WM_StartScan.
  * Only the request fields written here are spelled out. */

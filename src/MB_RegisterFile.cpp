@@ -24,19 +24,17 @@ extern u8 data_020a9d28;
  * the two static modules. */
 
 extern int MBi_IsStarted(void);
-extern void func_020678a4(void *out, void *in, void *dst);
-extern int func_02067604(void *a, void *b);
+extern void MBi_MakeDownloadFileInfo(void *out, void *in, void *dst);
+extern int MBi_MakeBlockInfoTable(void *a, void *b);
 extern void MBi_MakeGameInfo(void *dst, void *src, void *extra);
 extern void MB_AddGameInfo(void *n);
-
 
 /* NitroSDK MB_RegisterFile(game_reg, buf): file a game registry and its ROM
  * image in the first free mFiles slot (refusing a 17th file or the same
  * registry twice), build its download header, block table and game record,
  * add the record to the beacon list (MB_AddGameInfo) and mark the slot
  * active with only the parent entered. */
-int func_02067928(void *a, void *b)
-{
+int MB_RegisterFile(void *a, void *b) {
     void *dst2;
     int idx;
     char *end;
@@ -77,9 +75,9 @@ int func_02067928(void *a, void *b)
     MB_WORK->mFiles[idx].mGameRegistry = (u8 *)a;
 
     dst2 = MB_WORK->mFiles[idx].mHeader;
-    func_020678a4(dst2, b, end);
+    MBi_MakeDownloadFileInfo(dst2, b, end);
 
-    if (!func_02067604(MB_WORK->mFiles[idx].mBlockTable, dst2)) {
+    if (!MBi_MakeBlockInfoTable(MB_WORK->mFiles[idx].mBlockTable, dst2)) {
         IRQ::Restore(state);
         return 0;
     }

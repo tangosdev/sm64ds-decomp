@@ -286,10 +286,10 @@
         "param:#2 int",
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0206/func_020658c0.cpp": [
+      "src/WBT_RegisterBlock.cpp": [
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0206/func_02067bfc.cpp": [
+      "src/MB_ReadSegment.cpp": [
         "param:#3 int"
       ]
     },
@@ -1004,10 +1004,10 @@
       ]
     },
     "MultiCopy_Int": {
-      "src/unnamed/arm9/0206/func_02065730.c": [
+      "src/WBT_GetBlock.c": [
         "param:#1 const void *"
       ],
-      "src/unnamed/arm9/0206/func_02065788.c": [
+      "src/WBT_GetBlockInfo.c": [
         "param:#1 const void *"
       ]
     },
@@ -4157,13 +4157,13 @@
       "src/WBT_UnregisterBlock.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_020658c0.cpp": [
+      "src/WBT_RegisterBlock.cpp": [
         "return:void"
       ],
       "src/unnamed/arm9/0206/func_02065af0.cpp": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_02067928.cpp": [
+      "src/MB_RegisterFile.cpp": [
         "return:void"
       ],
       "src/CARDi_EndTask.cpp": [
@@ -8415,7 +8415,7 @@
       ]
     },
     "data_020a9db8": {
-      "src/unnamed/arm9/0206/func_02067928.cpp": [
+      "src/MB_RegisterFile.cpp": [
         "return:void *"
       ]
     },
@@ -15663,7 +15663,7 @@
         "param:#2 int",
         "param:#3 int"
       ],
-      "src/unnamed/arm9/0206/func_02067b68.c": [
+      "src/MBi_ReadSegmentHeader.c": [
         "param:#2 int"
       ]
     },
@@ -15855,13 +15855,13 @@
       ]
     },
     "func_02065af0": {
-      "src/unnamed/arm9/0206/func_02065730.c": [
+      "src/WBT_GetBlock.c": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_02065788.c": [
+      "src/WBT_GetBlockInfo.c": [
         "return:void"
       ],
-      "src/unnamed/arm9/0206/func_020657d0.c": [
+      "src/WBT_RequestSync.c": [
         "param:#1 S657 *",
         "return:void"
       ]
@@ -15875,16 +15875,16 @@
       ]
     },
     "MBi_MakeGameInfo": {
-      "src/unnamed/arm9/0206/func_02067928.cpp": [
+      "src/MB_RegisterFile.cpp": [
         "param:#3 void *"
       ]
     },
-    "func_02068dc8": {
+    "MB_SetParentCommParam": {
       "src/unnamed/arm9/0203/func_0203e20c.cpp": [
         "return:void"
       ]
     },
-    "func_02068e4c": {
+    "MB_Init": {
       "src/unnamed/arm9/0203/func_0203e20c.cpp": [
         "param:#1 void *",
         "param:#3 unsigned short",
@@ -17190,7 +17190,7 @@
         "arity:0"
       ]
     },
-    "func_02067f2c": {
+    "MBi_BlockHeaderEnd": {
       "src/engine/mb/MB_Parent.cpp": [
         "return:int"
       ]

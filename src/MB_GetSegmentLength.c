@@ -12,7 +12,7 @@ struct G {
     int f3c;    /* 0x3c */
 };
 
-int func_02067e70(struct FSFile *obj) {
+int MB_GetSegmentLength(struct FSFile *obj) {
     char buf[0x60];
     struct G *g = 0;
     int len;

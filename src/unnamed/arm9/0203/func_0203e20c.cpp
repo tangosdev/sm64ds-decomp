@@ -38,15 +38,14 @@ extern u8 MB_CommGetChildrenNumber(void);
 extern void func_0203f9d4(int a0, int a1);
 extern void func_0203e978(struct ChannelReply *reply);
 extern int OS_GetTickLo(void);
-extern int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid,
-                         int dma);
-extern int func_02068dc8(int a, int b, int c);
+extern int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma);
+extern int MB_SetParentCommParam(int a, int b, int c);
 extern void MB_CommSetParentStateCallback(u32 val);
 extern void func_0203e9a8(u32 a0, int sel, int a2);
-extern int func_02068ae8(int param0);
-extern int func_02067e70(void *obj);
-extern int func_02067bfc(FSFile *file, void *b, unsigned int c);
-extern int func_02067928(void *a, void *b);
+extern int MB_StartParent(int param0);
+extern int MB_GetSegmentLength(void *obj);
+extern int MB_ReadSegment(FSFile *file, void *b, unsigned int c);
+extern int MB_RegisterFile(void *a, void *b);
 extern void func_0205a588(void *dst, unsigned char val, unsigned int size);
 extern int WM_ReadStatus(int *arg);
 extern void *MB_CommGetChildUser(u16 idx);
@@ -54,7 +53,7 @@ extern int MB_CommGetParentState(u16 a);
 extern int MB_CommResponseRequest(u16 arg0, int sel);
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int MB_CommIsBootable(u16 idx);
-extern void func_02068a54(void);
+extern void MB_End(void);
 
 #define H(base, off) (*(u16 *)((char *)(base) + (off)))
 
@@ -110,15 +109,16 @@ void func_0203e20c(void)
         void *p;
         int size;
         data_020a0f20 = (u16)OS_GetTickLo();
-        func_02068e4c(data_020a0f3c, data_020a10fc, H(data_020a1064, 6), H(data_020a1064, 8), data_020a0f20, 1);
-        func_02068dc8(0x1fe, 8, 3);
+        MB_Init(data_020a0f3c, data_020a10fc, H(data_020a1064, 6), H(data_020a1064, 8),
+                data_020a0f20, 1);
+        MB_SetParentCommParam(0x1fe, 8, 3);
         MB_CommSetParentStateCallback((u32)func_0203e9a8);
-        func_02068ae8(data_020a0f28);
-        size = func_02067e70(0);
+        MB_StartParent(data_020a0f28);
+        size = MB_GetSegmentLength(0);
         p = Memory::Allocate(size, 0x20);
         data_020a0f7c = p;
-        if (func_02067bfc(0, p, size) != 0) {
-            func_02067928(data_020a0fec, data_020a0f7c);
+        if (MB_ReadSegment(0, p, size) != 0) {
+            MB_RegisterFile(data_020a0fec, data_020a0f7c);
         }
         data_020a0f70 = 0;
         data_020a0f50 += 1;
@@ -242,7 +242,7 @@ void func_0203e20c(void)
     case 6:
         data_020a0f70 = 0;
         data_020a0f1c &= 0x6FFF;
-        func_02068a54();
+        MB_End();
         data_020a0f50 += 1;
         break;
 
