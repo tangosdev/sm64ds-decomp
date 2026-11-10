@@ -27,6 +27,7 @@
  */
 #include "types.h"
 #include "GX.h"
+#include "nitro/gx/g3x.h"
 #include "Particle__Behavior.h"
 #include "Particle__Manager.h"
 #include "Particle__System.h"
@@ -44,8 +45,6 @@ void func_0204a5bc(void *system, void *list);
 void func_0204a5c8(void *manager);
 void func_0204a730(void *manager, void *system);
 }
-
-#define REG_DISP3DCNT (*(volatile u16 *)0x04000060)
 
 typedef Particle::Manager::TextureEntry TextureEntry;
 
@@ -295,8 +294,7 @@ void func_02049f58(Particle::Manager *manager) {
 
 void func_02049ee8(Particle::Manager *manager, Matrix4x3 *matrix) {
     Particle::System *system;
-    u16 control = REG_DISP3DCNT;
-    REG_DISP3DCNT = (control & ~0x3000) | 8;
+    G3X_AlphaBlend(true);
     manager->mDrawMatrix = matrix;
     system = manager->mActiveSystems.head;
     if (system == 0)

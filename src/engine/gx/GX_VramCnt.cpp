@@ -34,8 +34,6 @@
 #define REG_VRAMCNT_H (*(volatile u8 *)0x04000248)
 #define REG_VRAMCNT_I (*(volatile u8 *)0x04000249)
 
-#define REG_DISP3DCNT (*(volatile u16 *)0x04000060)
-
 extern "C" {
 
 void Vram__Map(int mask) {
