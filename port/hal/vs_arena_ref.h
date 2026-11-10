@@ -67,6 +67,11 @@ struct VsRefOver {
     signed char scores[16];  // the final ledger
     unsigned seq;            // the MATCH_OVER event's seq (identical everywhere)
     bool local_timeout;      // no verdict came: the console gave up (3 s)
+    // LUIGI INFECTION only (0 everywhere else):
+    int luigi_cancel;        // the match never started: 1 the relay does not run
+                             // Luigi Infection, 2 the room's games disagree, 3 no
+                             // START came in kLuigiStartGiveUpMs
+    int luigi_left;          // reason 5 came because the last survivor left
 };
 bool vs_ref_match_over(VsRefOver *out);
 

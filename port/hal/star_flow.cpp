@@ -1433,6 +1433,11 @@ static int g_arena_results;
    arena Luigi end (the banner reads the local team, as on Classic). */
 static int g_arena_li_surv = -1;
 static int g_arena_li_np = -1;
+/* arena Luigi only: the match never started (1 the relay does not run Luigi
+   Infection, 2 the room's games disagree, 3 no START came), and a Luigis' win
+   that came because the last survivor left rather than being caught. */
+static int g_arena_li_cancel;
+static int g_arena_li_left;
 /* lane DROPOUT1: the slots that have been in play this match, and those of
    them that have left it (vs_track_seats, below, keeps both). A slot that left
    has no place in the result: the winner, the draw test and the scores run
@@ -2046,7 +2051,15 @@ extern "C" int port_vs_match_end_banner(char *out, int n)
                                             : port_luigi_survivors_alive();
         const int np_li = g_arena_li_np >= 0 ? g_arena_li_np
                                              : port_luigi_match_slots();
-        if (g_end_by_luigi == 1)
+        if (g_end_by_luigi == 3)
+            std::snprintf(out, (size_t)n, "%s",
+                    g_arena_li_cancel == 1 ? "NO MATCH  -  THIS SERVER NEEDS AN UPDATE"
+                    : g_arena_li_cancel == 2 ? "NO MATCH  -  THIS ROOM NEEDS A NEWER GAME"
+                    : "NO MATCH  -  THE MATCH NEVER STARTED");
+        else if (g_end_by_luigi == 1 && g_arena_li_left)
+            std::snprintf(out, (size_t)n,
+                    "MATCH OVER  -  THE LUIGIS WIN  (the survivors left)");
+        else if (g_end_by_luigi == 1)
             std::snprintf(out, (size_t)n,
                     "MATCH OVER  -  THE LUIGIS WIN  (all %d infected)", np_li);
         else
@@ -2535,6 +2548,8 @@ static void vs_latches_reset(void)
     g_arena_results = 0;
     g_arena_li_surv = -1;
     g_arena_li_np = -1;
+    g_arena_li_cancel = 0;
+    g_arena_li_left = 0;
     g_king_armed = 0;
     g_king_tick = 0;
     g_king_holder = -1;
@@ -2686,6 +2701,8 @@ extern "C" int port_vs_match_end_poll(int frame)
         g_arena_results = 0;
         g_arena_li_surv = -1;
         g_arena_li_np = -1;
+        g_arena_li_cancel = 0;
+        g_arena_li_left = 0;
         /* Outside VS the king match is disarmed, so the next VS entry re-zeroes
            the points. This is the only reset point, so a king match always
            starts from zero however it was reached. */
@@ -2840,10 +2857,19 @@ extern "C" int port_vs_match_end_poll(int frame)
            nothing here checks it against the live roster. Survivors win on the
            clock, so that end answers the ROM's results ask like a time-up. */
         g_end_by_luigi = ov.reason == arena_wire::OVER_LUIGIS_WIN ? 1
-                       : ov.reason == arena_wire::OVER_SURVIVORS_WIN ? 2 : 0;
+                       : ov.reason == arena_wire::OVER_SURVIVORS_WIN ? 2
+                       : ov.luigi_cancel != 0 ? 3 : 0;
         g_arena_li_surv = -1;
         g_arena_li_np = -1;
-        if (g_end_by_luigi != 0) {
+        g_arena_li_cancel = ov.luigi_cancel;
+        g_arena_li_left = ov.luigi_left;
+        if (g_end_by_luigi == 3) {
+            /* the match never started (a relay or a room that cannot run it):
+               the banner says why, then the same grace window and the same
+               way out as a lost verdict */
+            fprintf(stderr, "[vs] f%d LUIGI INFECTION CANCELLED before the start (cause %d)\n",
+                    frame, g_arena_li_cancel);
+        } else if (g_end_by_luigi != 0) {
             const unsigned in_play = (unsigned)(ov.roster_mask | ov.winners_mask);
             g_arena_li_np = vs_popcount(in_play);
             g_arena_li_surv = g_end_by_luigi == 2 ? vs_popcount((unsigned)ov.winners_mask) : 0;
@@ -2853,6 +2879,11 @@ extern "C" int port_vs_match_end_poll(int frame)
                                         : "the survivors win (time up)",
                     (unsigned)ov.winners_mask, vs_popcount((unsigned)ov.winners_mask),
                     g_arena_li_np);
+        }
+        if (g_end_by_luigi != 0) {
+            char bn[96];
+            if (port_vs_match_end_banner(bn, (int)sizeof bn))
+                fprintf(stderr, "[vs] f%d Luigi banner: %s\n", frame, bn);
         }
         g_end_by_king = 0;
         g_end_by_last = 0;
@@ -3138,6 +3169,7 @@ extern "C" int port_vs_match_end_poll(int frame)
             "pending_scene=%u results_screen=%s winner=%d%s%s\n", frame,
             g_end_by_luigi == 1 ? "luigi-all-infected"
               : g_end_by_luigi == 2 ? "survivor-timeout"
+              : g_end_by_luigi == 3 ? "luigi-no-start"
               : g_end_by_king ? "king-target"
                           : (g_end_by_target ? "star-target" : "time-up"),
             scores_field, np_marker,

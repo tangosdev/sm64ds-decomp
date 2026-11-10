@@ -153,6 +153,10 @@ enum : int {
     kHitRetryFrames = 8,
     kLocalTimeupGraceMs = 3000,
     kReportMs = 10000,
+    // LUIGI INFECTION: no START this long after my first READY = the match is given up. The
+    // referee itself starts a short room START_WAIT_MS (20 s) after the first READY, so 30 s
+    // never cuts a room that was going to start.
+    kLuigiStartGiveUpMs = 30000,
 };
 
 struct PClaim {
@@ -339,6 +343,9 @@ struct Ref {
     int rig_cd_phase = 0;
     int rig_lclose = 0;              // luigipunch: frames until the swing is carried onto the victim
     int rig_lclose_n = 0;
+    int ready_deny = 0;              // the referee's reason on my READY (Luigi start watch)
+    unsigned ready_first_ms = 0;     // when my first READY went (Luigi start watch)
+    int li_last = 0;                 // the last team change: 1 an INFECTED, 2 a survivor left
 };
 Ref g;
 
@@ -1694,6 +1701,7 @@ void on_deny(const RefEvent &e) {
         if (kind == CLAIM_HIT) ++g.st.hits_denied;
     }
     finish_claim((unsigned short)cid, -1, reason, winner);
+    if (kind == CLAIM_READY && g.luigi && !g.started) g.ready_deny = reason;
     if (kind == CLAIM_CAP_TAKE) cap_on_deny((unsigned short)cid, reason, winner);
     // a refused CAP_DROP names no cap (no CAP_DROPPED will come for it): let my next pop be seen
     if (kind == CLAIM_CAP_DROP && (unsigned)cid == g.drop_cid) g.drop_uid = 0;
@@ -1765,6 +1773,7 @@ void on_match_over(const RefEvent &e) {
     std::memcpy(g.over_v.scores, g.ledger, 16);
     g.over_v.seq = e.seq;
     g.over_v.local_timeout = false;
+    g.over_v.luigi_left = (g.luigi && e.a == OVER_LUIGIS_WIN && g.li_last == 2) ? 1 : 0;
     std::fprintf(stderr, "[vsarena] MATCH OVER ref reason=%d winners=0x%04x "
                  "count=%d scores=%d,%d,%d,%d seq=%u\n", e.a, e.c, e.b,
                  g.ledger[0], g.ledger[1], g.ledger[2], g.ledger[3], e.seq);
@@ -1781,6 +1790,7 @@ const char *infect_name(int b) {
 
 void on_infected(const RefEvent &e) {
     ++g.infected_seen;
+    g.li_last = 1;
     g.lmask |= (unsigned)e.d | (1u << e.seat);
     g.picked = true;
     if (e.a == g.seat && e.c) finish_claim(e.c, 1, 0, 0xFF);
@@ -1876,6 +1886,10 @@ void apply_frame(const RefFrame &f) {
     g.hdr_t0 = f.t0;
     g.hdr_match_ms = f.match_ms;
     if (!g.started || !g.roster) g.roster = f.roster;
+    // LUIGI INFECTION: a survivor's seat left the match (the banner tells a last survivor who
+    // left from one who was caught)
+    if (g.luigi && g.started && ((unsigned)g.roster_now & ~(unsigned)f.roster & ~g.lmask) != 0)
+        g.li_last = 2;
     g.roster_now = f.roster;
     g.ever_roster |= f.roster;
     // the ledger: the newest header wins
@@ -2009,6 +2023,7 @@ void maybe_send_ready() {
         g.ready_sent = true;
         g.ready_cid = c->cid;
         g.ready_last = now;
+        if (!g.ready_first_ms) g.ready_first_ms = now ? now : 1;
         std::fprintf(stderr, "[vsarena] READY sent: map=%d time=%ds first_to=%d "
                      "capacity=%d markers=%d digest=%u%s\n", map, time_s, first_to,
                      cap, markers, digest, g.luigi ? " mode=2 (Luigi Infection)" : "");
@@ -2022,6 +2037,30 @@ void maybe_send_ready() {
         c->first_ms = now;
         send_claim(*c);
     }
+}
+
+// LUIGI INFECTION: a match that can never start (a relay that does not run mode 2 answers
+// UNSUPPORTED; a room whose games disagree answers MISMATCH; or START just never comes) used to
+// sit on the countdown's "3" for good. It is given up the way a lost verdict is (a local
+// MATCH OVER), with the cause for the banner. Classic READY keeps its endless retry.
+void luigi_start_watch() {
+    if (!g.luigi || g.started || g.over || !g.ready_sent) return;
+    int cancel = 0;
+    if (g.ready_deny == DENY_UNSUPPORTED) cancel = 1;
+    else if (g.ready_deny == DENY_MISMATCH) cancel = 2;
+    else if (now_ms() - g.ready_first_ms >= (unsigned)kLuigiStartGiveUpMs) cancel = 3;
+    if (!cancel) return;
+    g.over = true;
+    g.over_v = VsRefOver();
+    g.over_v.reason = 0;
+    g.over_v.roster_mask = g.roster_now;
+    g.over_v.seen_mask = (int)(g.ever_roster | g.roster_now);
+    g.over_v.local_timeout = true;
+    g.over_v.luigi_cancel = cancel;
+    std::fprintf(stderr, "[vsarena] LUIGI START GIVEN UP (cancel=%d): %s\n", cancel,
+                 cancel == 1 ? "the relay refused Luigi Infection (UNSUPPORTED): it needs an update"
+                 : cancel == 2 ? "the room refused my READY (MISMATCH): the games in it disagree"
+                 : "no START from the referee 30 s after my READY");
 }
 
 // ---------------------------------------------------------------------------
@@ -2724,6 +2763,7 @@ void rig_parse() {
     else if (std::strncmp(e, "luigitouch", 10) == 0) g.rig = 11;
     else if (std::strncmp(e, "luigipunch", 10) == 0) g.rig = 12;
     else if (std::strncmp(e, "luigiwait", 9) == 0) g.rig = 13;
+    else if (std::strncmp(e, "luigistomp", 10) == 0) g.rig = 14;
     else if (std::strncmp(e, "cap", 3) == 0) g.rig = 6;
     if (g.rig == 2 || g.rig == 3) g.rig_real = e[g.rig == 2 ? 3 : 5] == 'r';   // hitr / chainr
     else if (std::strncmp(e, "fuzz", 4) == 0) g.rig = 4;
@@ -2735,7 +2775,7 @@ void rig_parse() {
                      g.rig == 6 ? "cap pickup" : g.rig == 7 ? "cap race" : g.rig == 8 ? "cap drop" :
                      g.rig == 9 ? "cap forgery" : g.rig == 10 ? "cap tongue" :
                      g.rig == 11 ? "Luigi touch" : g.rig == 12 ? "Luigi punch" :
-                     g.rig == 13 ? "Luigi countdown" : "chain",
+                     g.rig == 13 ? "Luigi countdown" : g.rig == 14 ? "Luigi stomp" : "chain",
                      g.rig_seed);
 }
 
@@ -3497,7 +3537,10 @@ void rig_capforge() {
 //   button) or punches it (punch: the Luigi's own A button), and the referee's
 //   INFECTED makes the survivor a Luigi on both screens.
 // luigiwait does the countdown walk only (the time-up and the leave rows).
+// luigistomp: the lowest survivor drops once onto the Luigi's head from 260 units (the grab
+// rig's stomp drop); no scripted touch or punch follows. A stomp on a Luigi must do nothing.
 extern "C" unsigned char data_0209f2bc;   // the VS start countdown (3, 2, 1, 0)
+extern "C" unsigned char data_ov002_021101b4[];   // St_Fall
 int rig_luigi_victim() {
     for (int k = 0; k < g.bodies && k < 16; ++k)
         if (k != g.seat && (g.roster_now >> k & 1u) && !is_luigi(k) && body_of(k)) return k;
@@ -3576,6 +3619,26 @@ void rig_luigi() {
     // the punch rig leaves the immunity step to the touch rig: a survivor next to the Luigi is
     // touched (a TAG) before the Luigi throws its own punch
     if (g.rig == 12 && g.rig_lphase < 3) g.rig_lphase = 3;
+    if (g.rig == 14) {
+        if (g.rig_lphase != 0) return;
+        g.rig_lphase = 1;
+        const int lu = rig_luigi_any();
+        bool lowest = true;
+        for (int k = 0; k < g.seat; ++k)
+            if ((g.roster_now >> k & 1u) && !is_luigi(k)) lowest = false;
+        char *lb = lu >= 0 ? body_of(lu) : nullptr;
+        if (me_luigi() || !lowest || !lb) return;
+        int *p = (int *)(me + 0x5c);
+        p[0] = s32r(lb, 0x5c);
+        p[1] = s32r(lb, 0x60) + (260 << 12);
+        p[2] = s32r(lb, 0x64);
+        s32r(me, 0x98) = 0;
+        s32r(me, 0xa8) = -0x8000;
+        _ZN6Player11ChangeStateERNS_5StateE(me, data_ov002_021101b4);
+        std::fprintf(stderr, "[rig] luigi stomp: survivor seat %d drops onto Luigi seat %d from 260 units "
+                     "(ref %u)\n", g.seat, lu, r);
+        return;
+    }
     if (g.rig_lphase <= 2) {
         // the immunity step, three tries: the lowest survivor punches the lowest Luigi
         const int lu = rig_luigi_any();
@@ -3636,7 +3699,7 @@ void rig_step() {
     else if (g.rig == 6 || g.rig == 7) rig_cap();
     else if (g.rig == 8 || g.rig == 10) rig_capdrop();
     else if (g.rig == 9) rig_capforge();
-    else if (g.rig >= 11 && g.rig <= 13) rig_luigi();
+    else if (g.rig >= 11 && g.rig <= 14) rig_luigi();
 }
 
 // ---------------------------------------------------------------------------
@@ -3764,6 +3827,7 @@ void vs_ref_pre_walk(int frame) {
     syno_recv();
     pump_claims();
     maybe_send_ready();
+    luigi_start_watch();
     if (g.over) return;
     // the ledger and the progress byte are the referee's
     if (g.ledger_live) {
