@@ -52,7 +52,7 @@ extern u32 data_ov007_02104be0; /* end of the palette region */
 extern u32 data_ov007_02104be4; /* end of the texture region */
 extern u32 data_ov007_02104be8; /* next free palette slot */
 
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c3d1c(void *self);
 
@@ -240,7 +240,7 @@ void Texture_LoadTexels(Ov007Texture *tex) {
         tex->texAddr = data_ov007_02104bdc;
         data_ov007_02104bdc += tex->texSize;
     } else {
-        Crash();
+        OS_Terminate();
     }
 }
 
@@ -258,7 +258,7 @@ void Texture_LoadPalette(Ov007Texture *tex) {
         tex->plttAddr = data_ov007_02104be8;
         data_ov007_02104be8 += tex->plttSize;
     } else {
-        Crash();
+        OS_Terminate();
     }
 }
 

@@ -108,5 +108,5 @@ void CopyToViewMat(const Matrix4x3 *src) {
     MTX_Inverse43(&data_0209b3ec, &data_0209b41c);
 }
 
-/* Crash-screen and title font. 0x2000 bytes; the tail is zero. */
+/* OS_Terminate-screen and title font. 0x2000 bytes; the tail is zero. */
 extern u8 data_0208a178[0x2000];

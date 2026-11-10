@@ -3,7 +3,7 @@
 // switch, etc.), so there is no C to decompile it to -- the asm block is the
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
 #pragma thumb on
-asm void IntrWait(void) {
-    swi 0x04
+asm void SVC_SoftReset(void) {
+    swi 0x00
     bx lr
 }

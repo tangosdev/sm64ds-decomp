@@ -411,7 +411,7 @@
 0x02019638	_ZN5Timer10ResetTimerEv	function
 0x02019664	TurnBacklightOff	function
 0x02019698	TurnBacklightOn	function
-0x02019740	Crash	function
+0x02019740	OS_Terminate	function
 0x0201a534	_ZN3IRQ13VBlankHandlerEv	function
 0x0201a7dc	GetSceneOverlayID	function
 0x0201a888	IsMinigameActorID	function

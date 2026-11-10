@@ -4103,7 +4103,7 @@
       ]
     },
     "_ZN3IRQ7DisableEv": {
-      "src/Crash.cpp": [
+      "src/OS_Terminate.cpp": [
         "return:void"
       ],
       "src/WM_SetIndCallback.cpp": [

@@ -11,7 +11,7 @@ extern int func_ov007_020b4438(void);
 extern void func_ov007_020c1d8c(int i);
 extern int func_ov007_020b79c8(void);
 extern void func_ov007_020aec00(void);
-extern void Crash(void);
+extern void OS_Terminate(void);
 
 /* states[1]'s erase states (func_ov007_020af390): 9 waits for a slot to
  * be picked (an unused one opens message 3, a used one opens the two-way
@@ -87,7 +87,7 @@ void func_ov007_020af59c(void) {
                 menu->stateWork = 2;
                 return;
             case 2:
-                Crash();
+                OS_Terminate();
                 return;
             }
             return;

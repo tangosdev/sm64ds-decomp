@@ -64,11 +64,11 @@ void _ZN5mHeap6Heap_t10DeallocateEPv(void *self, void *p)
 // follows the class: `Heap' is a typedef for mHeap::Heap_t (include/Heap.h).
 #pragma comment(linker, "/alternatename:?defaultHeapPtr@Memory@@3PAUHeap_t@mHeap@@A=_data_020a0ea0")
 
-// Crash(): the game's fatal stop. Loud on host. C linkage for the .c TUs;
+// OS_Terminate(): the game's fatal stop. Loud on host. C linkage for the .c TUs;
 // the C++-linkage references alias onto the same definition.
-extern "C" void Crash(void)
+extern "C" void OS_Terminate(void)
 {
-    fprintf(stderr, "FATAL: game Crash() reached\n");
+    fprintf(stderr, "FATAL: game OS_Terminate() reached\n");
     void *frames[12];
     unsigned n = CaptureStackBackTrace(0, 12, frames, 0);
     char *base = (char *)GetModuleHandleA(0);
@@ -77,7 +77,7 @@ extern "C" void Crash(void)
                 (unsigned)((char *)frames[i] - base));
     abort();
 }
-#pragma comment(linker, "/alternatename:?Crash@@YAXXZ=_Crash")
+#pragma comment(linker, "/alternatename:?OS_Terminate@@YAXXZ=_OS_Terminate")
 
 // Heap::Allocate(u32): the one-argument overload the allocator veneer path
 // uses (func_0203cc0c). Align 4, same as Memory::Allocate(u32)'s default.

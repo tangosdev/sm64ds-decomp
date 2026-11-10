@@ -69,12 +69,12 @@ int32_t lz77_unpack(const uint8_t *src, int32_t src_len, uint8_t *dst,
 // swi 0x11/0x12. Both are ARM asm in the decomp; these stand in for them.
 // The BIOS takes only src/dst -- the length lives in the stream header.
 
-void LZ77UnCompReadNormalWrite8bit(const void *src, void *dst) {
+void SVC_UncompressLZ8(const void *src, void *dst) {
     const uint8_t *s = static_cast<const uint8_t *>(src);
     const int32_t size = ntr::lz77_size(s, 1 << 30);
     if (size > 0) ntr::lz77_unpack(s, 1 << 30, static_cast<uint8_t *>(dst), size);
 }
 
-void LZ77UnCompReadByCallbackWrite16bit(const void *src, void *dst) {
-    LZ77UnCompReadNormalWrite8bit(src, dst);
+void SVC_UncompressLZ16FromDevice(const void *src, void *dst) {
+    SVC_UncompressLZ8(src, dst);
 }

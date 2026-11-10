@@ -374,8 +374,8 @@ them. Enrollment is still worth closing; it is just not the port's ceiling.
 - **2c.** Build the display-list decoder for the 3D command stream, including the
   DMA-to-`0x04000400` path.
 - **2d.** Port the SWI/BIOS wrappers already named in `config/arm9/symbols.txt`
-  (`Div`, `CpuSet`, `CpuFastSet`, `Sqrt`, `LZ77UnComp*`, `HuffUnComp*`, `BitUnPack`,
-  `VBlankIntrWait`) — small, self-contained, portable near-verbatim.
+  (`SVC_Div`, `SVC_CpuSet`, `SVC_CpuSetFast`, `SVC_Sqrt`, `LZ77UnComp*`, `HuffUnComp*`, `SVC_UnpackBits`,
+  `SVC_WaitVBlankIntr`) — small, self-contained, portable near-verbatim.
 - **2e.** Neutralise every spin-wait (§2a) — otherwise the boot path deadlocks.
 
 ### Phase 3 — Host build

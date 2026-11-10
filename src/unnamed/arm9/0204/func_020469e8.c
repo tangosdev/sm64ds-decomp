@@ -42,7 +42,7 @@ struct Dst {
     char pad2[0x30 - 0x1c];
 };
 
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern void func_02045e44(struct Ctx *self, unsigned int value, int index);
 
 void func_020469e8(struct Ctx *ctx, struct Desc *desc, int sb) {
@@ -50,7 +50,8 @@ void func_020469e8(struct Ctx *ctx, struct Desc *desc, int sb) {
     for (i = 0; i < desc->count; i++) {
         struct Entry *e = &desc->entries[i];
         struct Dst *dst;
-        if (e->id == 0xffff) Crash();
+        if (e->id == 0xffff)
+            OS_Terminate();
         dst = (struct Dst *)(ctx->base + e->id * 0x30);
         func_02045e44(ctx, 1, e->id);
         if (e->flag1 == 1) dst->f8 = desc->tableA[e->idx1];

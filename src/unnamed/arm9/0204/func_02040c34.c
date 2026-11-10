@@ -14,7 +14,7 @@ static inline void FlushFileShareArea(char *base, unsigned int size) {
  * The other callees are C. */
 extern "C" {
 extern int WM_SetPortCallback(int port, void *callback, void *arg);
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern void FS_Init(int x);
 extern void FS_InitFile(void *s);
 extern void WBT_InitParent(int a, int b, void (*c)(char *));
@@ -65,7 +65,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
         G->mChildPacketSize = 0xe;
         data_020a0f88 = 0;
         if (WM_SetPortCallback((u16)port, (void *)func_020417d0, 0) != 0)
-            Crash();
+            OS_Terminate();
         FS_Init(-1);
 
         if (G->mIsParent != 0) {

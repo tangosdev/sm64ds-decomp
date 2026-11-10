@@ -736,7 +736,7 @@ extern unsigned short data_ov007_02104c28;
 extern void ChangeArea(int);
 extern void CleanCommonModelDataArr(void);
 extern int CopyTexPalFromLevelModel(void *);
-extern void Crash();
+extern void OS_Terminate();
 extern void Deallocate(void*);
 extern void DeathTable_ClearBit(int);
 extern void ExitMinigameMenu(void);
