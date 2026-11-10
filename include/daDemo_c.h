@@ -108,11 +108,12 @@ struct daDemo_c : dActor_c {
 
     /* The 0x518-byte block param1 0x2e allocates (func_ov002_020f6448),
        sets up (func_ov002_020f5fe4: the D_2D_STAFF_ROLL_* and D_2D_ED_STAR
-       assets), steps (5fb8) and draws (5f8c). Its helpers are free
-       functions taking the block as char *; the cue tables they dispatch
-       through are data_ov002_02110f34 and data_ov002_02110f9c. Names
-       describe what the code does with each field; the source type is not
-       recovered. */
+       assets), steps (5fb8) and draws (5f8c). The step handlers and the
+       cue handlers are its members, dispatched through member-pointer
+       tables (the cue tables are data_ov002_02110f34 and
+       data_ov002_02110f9c); the remaining helpers are still free functions
+       taking the block as char *. Names describe what the code does with
+       each field; the source type is not recovered. */
     struct StaffRoll {
         /* One of the four main-screen stars, one per unlocked character
            (func_ov002_020f5a94 counts them). 3978 draws it, 39ec copies
@@ -243,8 +244,69 @@ struct daDemo_c : dActor_c {
 
         void func_ov002_020f26e0();
         void func_ov002_020f2a48();
+        void func_ov002_020f2a78(int);
+        void func_ov002_020f2a88(int);
+        void func_ov002_020f2aec(int);
+        void func_ov002_020f2bf4(int);
+        void func_ov002_020f2d0c(int);
+        void func_ov002_020f2d70(int);
+        void func_ov002_020f2dd4();
         void func_ov002_020f2f64();
+        void func_ov002_020f30f8(int);
+        void func_ov002_020f32e4(int);
+        void func_ov002_020f3310(int);
+        void func_ov002_020f335c(int);
+        void func_ov002_020f340c(int);
+        void func_ov002_020f34bc(int);
+        void func_ov002_020f35e4(int);
+        void func_ov002_020f3740(int);
+        void func_ov002_020f378c(int);
+        void func_ov002_020f37a0();
+        void func_ov002_020f3ae8(int);
+        void func_ov002_020f3ba0(int);
+        void func_ov002_020f3d38(int);
+        void func_ov002_020f3d98(int);
+        void func_ov002_020f3de4(int);
+        void func_ov002_020f40fc(int);
+        void func_ov002_020f43cc(int);
+        void func_ov002_020f4710(int);
+        void func_ov002_020f4a2c(int);
+        void func_ov002_020f4d70(int);
+        void func_ov002_020f5010(int);
+        void func_ov002_020f5328(int);
+        void func_ov002_020f55b4(int);
+        void func_ov002_020f562c(int);
+        void func_ov002_020f5678(int);
+        void func_ov002_020f569c(int);
+        void func_ov002_020f57c0(int);
+        void func_ov002_020f5848(int);
+        void func_ov002_020f5894(int);
+        void func_ov002_020f5990();
         void func_ov002_020f5b24();
+        void func_ov002_020f5b7c();
+        void func_ov002_020f5b80();
+        void func_ov002_020f5b84();
+        void func_ov002_020f5b88();
+        void func_ov002_020f5b8c();
+        void func_ov002_020f5b98();
+        void func_ov002_020f5bcc();
+        void func_ov002_020f5bf4();
+        void func_ov002_020f5c40();
+        void func_ov002_020f5c88();
+        void func_ov002_020f5cd0();
+        void func_ov002_020f5d34();
+        void func_ov002_020f5dd8(int);
+        void func_ov002_020f5e18();
+        void func_ov002_020f5e38();
+        void func_ov002_020f5e58();
+        void func_ov002_020f5e78();
+        void func_ov002_020f5e98();
+        void func_ov002_020f5eb8();
+        void func_ov002_020f5ed8();
+        void func_ov002_020f5ee4();
+        void func_ov002_020f5ef0();
+        void func_ov002_020f5efc();
+        void func_ov002_020f5f0c(int);
         /* Begin credit line n (1..0x14) in the first credit slot. */
         void StartCredit(int);
     };
@@ -301,7 +363,9 @@ struct daDemo_c : dActor_c {
     void func_ov002_020f237c();
     int func_ov002_020f23d0();
     int func_ov002_020f23f0();
+    int func_ov002_020f2630();
     int func_ov002_020f26c4(unsigned char *src);
+    int func_ov002_020f26d4();
     int func_ov002_020f63a0();
     int func_ov002_020f63d4();
     int func_ov002_020f63f8(unsigned char *src);
