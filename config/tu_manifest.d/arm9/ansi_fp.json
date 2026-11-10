@@ -9,7 +9,7 @@
     "contiguous linker run: 0x02070b98..0x02071784, 10 functions, gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all marked `complete`).",
     "SOURCE ORDER: mwccarm emits C .text in reverse source order. Reversed, the run is the trailing-zero count, __must_round, __dorounddecup, __rounddec, __ull2dec, __timesdec, __str2dec, __two_exp, __num2dec_internal, __num2dec: the order of MSL's ansi_fp.c as the Petari decomp has it, which also opens with the trailing-zero count (an inline over a compiler builtin there). Each named member matches that file statement for statement. MSL's __equals_dec, __less_dec, __minus_dec and __dec2num are absent: nothing in this game calls them, so the linker dropped them.",
     "BOTTOM EDGE: ldexp (0x020708b4..0x02070b98) is MSL's s_ldexp.c, a file of its own, as are frexp, fabs and copysign under it.",
-    "TOP EDGE: func_02071784 (0x02071784..0x02071790) is a linker veneer (ldr ip, [pc]; bx ip) to func_0207199c, not compiler output of this file."
+    "TOP EDGE: _ExitProcess (0x02071784..0x02071790) is a linker veneer (ldr ip, [pc]; bx ip) to sys_exit, not compiler output of this file."
   ],
   "sections": [
     {
