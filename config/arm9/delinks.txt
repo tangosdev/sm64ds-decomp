@@ -1030,7 +1030,7 @@ src/game/stages/d_s_mb.cpp:
     .text start:0x02034a78 end:0x02035354
     .init start:0x02074fb8 end:0x02074fe4
     .ctor start:0x02086b94 end:0x02086b98
-    .bss start:0x020a0c68 end:0x020a0c78
+    .bss start:0x020a0c5c end:0x020a0c78
 
 src/engine/collision/d_bg_ch.cpp:
     complete
