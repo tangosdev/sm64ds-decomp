@@ -21427,7 +21427,7 @@ s32 daPly_c::InitResources() {
             if (sub != cur) {
                 data_02092114 = -1;
                 sub = cur;
-                data_02092128[mPlayerNo] = *(volatile u8*)(&mCharacter);
+                data_02092128[mPlayerNo] = mCharacter;
                 changed = 1;
             }
         }

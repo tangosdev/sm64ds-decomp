@@ -1038,9 +1038,9 @@ void dCamera_c::SetMode(int index) {
 int dCamera_c::EnterState() {
     CamPmfHost *c = (CamPmfHost *)this;
     if (c->flags & 0x4000) {
-        volatile unsigned int *flags = (volatile unsigned int *)&c->flags;
-        *flags &= ~0x4000u;
-        *flags |= 0x8000u;
+        unsigned int &flags = c->flags;
+        flags &= ~0x4000u;
+        flags |= 0x8000u;
     }
     CamPmf *p = c->pp;
     if (*(int *)p == 0)
