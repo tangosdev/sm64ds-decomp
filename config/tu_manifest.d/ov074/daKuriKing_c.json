@@ -373,7 +373,7 @@
       "ordinal": 44
     },
     {
-      "symbol": "func_ov074_02121a4c",
+      "symbol": "_ZN12daKuriKing_c8PlayAnimEi",
       "address": "0x02121a4c",
       "size": "0x00000070",
       "legacy_source": "src/func_ov074_02121a4c.cpp",
@@ -854,149 +854,149 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@695",
+      "from": "@693",
       "to": "@661",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @695 to @693 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
+    },
+    {
+      "from": "@694",
+      "to": "@662",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @696 to @694 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
+    },
+    {
+      "from": "@695",
+      "to": "@663",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @697 to @695 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@696",
-      "to": "@662",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@664",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @698 to @696 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@697",
-      "to": "@663",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@665",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @699 to @697 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@698",
-      "to": "@664",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@666",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @700 to @698 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@699",
-      "to": "@665",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@667",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @701 to @699 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@700",
-      "to": "@666",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@668",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @702 to @700 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@701",
-      "to": "@667",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@669",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @703 to @701 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@702",
-      "to": "@668",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@703",
-      "to": "@669",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@704",
       "to": "@670",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@707",
-      "to": "@673",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@708",
-      "to": "@674",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
-    },
-    {
-      "from": "@709",
-      "to": "@79",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @704 to @702 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@705",
-      "to": "@988",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "to": "@673",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @707 to @705 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@706",
+      "to": "@674",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @708 to @706 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
+    },
+    {
+      "from": "@707",
+      "to": "@79",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @709 to @707 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
+    },
+    {
+      "from": "@703",
+      "to": "@988",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @705 to @703 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
+    },
+    {
+      "from": "@704",
       "to": "@989",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged."
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @706 to @704 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
+    },
+    {
+      "from": "@2139",
+      "to": "@2061",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2133 to @2141 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2141 to @2139 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
+    },
+    {
+      "from": "@2140",
+      "to": "@2062",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2134 to @2142 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2142 to @2140 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2141",
-      "to": "@2061",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2133 to @2141 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "to": "@2063",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2135 to @2143 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2143 to @2141 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2142",
-      "to": "@2062",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2134 to @2142 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "to": "@2064",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2136 to @2144 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2144 to @2142 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2143",
-      "to": "@2063",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2135 to @2143 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "to": "@2065",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2137 to @2145 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2145 to @2143 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2144",
-      "to": "@2064",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2136 to @2144 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "to": "@2066",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2138 to @2146 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2146 to @2144 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2145",
-      "to": "@2065",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2137 to @2145 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "to": "@2067",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2139 to @2147 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2147 to @2145 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2146",
-      "to": "@2066",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2138 to @2146 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "to": "@2068",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2140 to @2148 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2148 to @2146 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2147",
-      "to": "@2067",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2139 to @2147 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "to": "@2069",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2141 to @2149 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2149 to @2147 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2148",
-      "to": "@2068",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2140 to @2148 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "to": "@2070",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2142 to @2150 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2150 to @2148 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2149",
-      "to": "@2069",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2141 to @2149 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "to": "@2071",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2143 to @2151 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2151 to @2149 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2150",
-      "to": "@2070",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2142 to @2150 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "to": "@2072",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2144 to @2152 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2152 to @2150 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2151",
-      "to": "@2071",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2143 to @2151 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "to": "@2073",
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2145 to @2153 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2153 to @2151 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     },
     {
       "from": "@2152",
-      "to": "@2072",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2144 to @2152 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
-    },
-    {
-      "from": "@2153",
-      "to": "@2073",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2145 to @2153 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
-    },
-    {
-      "from": "@2154",
       "to": "@2074",
-      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2146 to @2154 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical)."
+      "evidence": "Shared actual Krb animation-handle declaration shifts this compiler temporary. Mapping from the unchanged initializer relocation sites is bijective and preserves every existing object payload, type, binding, size, section and canonical relocation; canonical destination unchanged. Re-keyed from @2146 to @2154 when typing data_0209f318 as dCamera_c * dropped this TU's (dCamera_c *) reader casts and shifted this local number (decl/defs-1106k) (symtab index match, every non-strtab section byte-identical). Re-keyed from @2154 to @2152 when the free func_ov074_02121a4c(char *c, int idx) became the member daKuriKing_c::PlayAnim(int): its local extern held two named parameters and the class declaration names none (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [
