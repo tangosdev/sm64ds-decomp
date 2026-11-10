@@ -389,6 +389,7 @@ struct Shared {
     int map = 0, match_players = 2, star_target = 0, luigi = 0;
     std::string win_mode = "time", netmode;
     bool arena_ok = false;
+    bool arena_luigi = false;   /* the server puts this room's Luigi Infection matches on the Arena referee */
     bool started = false;
     int launch_no = 0;
     std::string save_name;
@@ -712,6 +713,7 @@ void fold_view(const JV &v)
     g.luigi = (int)v.i("luigi", 0);
     g.netmode = safe(v.str("netmode"), 10);
     g.arena_ok = v.flag("arena_ok");
+    g.arena_luigi = v.flag("arena_luigi");   /* absent on an older server = false: Luigi is not offered */
     g.started = v.flag("started");
     g.launch_no = (int)v.i("launch");
     g.save_name = safe(v.str("save_name"), 24);
@@ -1120,7 +1122,9 @@ void launch(const JV &plan, LobbyKind kind, bool host, const std::string &match)
     } else if (why.empty()) {
         /* LobbyLaunch.BuildChildEnv */
         const std::string role = plan.str("role");
-        if (plan.str("netmode") != "arena") why = "Classic netcode rooms open from the launcher for now";
+        if (plan.str("netmode") != "arena")
+            why = plan.i("luigi") == 1 ? "this lobby server plays Luigi Infection on Classic netcode, which opens from the launcher for now"
+                                       : "Classic netcode rooms open from the launcher for now";
         const long long map = plan.i("map", -1), players = plan.i("players"), slot = plan.i("slot");
         if ((role != "parent" && role != "child") || map < 0 || map > 3 || players < 1 || players > 16 || slot < 0 || slot >= 16)
             why = "the lobby's VS plan looked wrong";
@@ -1536,8 +1540,10 @@ void snapshot_locked()
     } else {
         s.n_settings = VS_N;
         LobbySetting *t = s.settings;
-        /* 1.0: Arena referees Clock and Stars only, so Luigi Infection is offered only to show a launcher room that already has it */
-        t[VS_MODE] = LobbySetting{"mode", "Game mode", g.luigi ? 2 : g.win_mode == "stars" ? 1 : 0, 0, g.luigi ? 2 : 1, kVsModes, g.luigi ? 3 : 2};
+        /* Luigi Infection is offered when the server says this room's Luigi matches play on the Arena referee (view arena_luigi);
+           otherwise only to show a launcher room that already has it */
+        const bool luigi_shown = g.arena_luigi || g.luigi;
+        t[VS_MODE] = LobbySetting{"mode", "Game mode", g.luigi ? 2 : g.win_mode == "stars" ? 1 : 0, 0, luigi_shown ? 2 : 1, kVsModes, luigi_shown ? 3 : 2};
         t[VS_STARS] = LobbySetting{"stars", "Stars to win", g.star_target > 0 ? g.star_target : 3, 1, 5, 0, 0};
         t[VS_ARENA] = LobbySetting{"map", "Arena", g.map, 0, 3, kArenas, 4};
         int pmax = g.dial_max >= 2 ? g.dial_max : (g.max_seats >= 2 ? g.max_seats : 4);
@@ -1718,7 +1724,13 @@ void lobby_set_setting(int index, int value)
         return;
     }
     switch (index) {
-    case VS_MODE: if (value < 0 || value > 1) return; g.luigi = 0; g.win_mode = value == 1 ? "stars" : "time"; if (value == 1 && g.star_target <= 0) g.star_target = 3; break;
+    case VS_MODE:
+        if (value < 0 || value > 2) return;
+        if (value == 2 && !g.arena_luigi) { g.error = "This lobby server does not run Luigi Infection in Arena rooms yet."; return; }
+        g.luigi = value == 2 ? 1 : 0;
+        g.win_mode = value == 1 ? "stars" : "time";
+        if (value == 1 && g.star_target <= 0) g.star_target = 3;
+        break;
     case VS_STARS: if (value < 1 || value > 5) return; g.star_target = value; break;
     case VS_ARENA: if (value < 0 || value > 3) return; g.map = value; break;
     case VS_PLAYERS: if (value < 2 || value > g.arena_max) return; g.match_players = value; break;

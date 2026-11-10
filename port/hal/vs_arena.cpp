@@ -125,6 +125,7 @@ void func_ov002_020e4768(char *self);
 int func_ov002_020e4990(char *c);       // the carry arm layer: off, then on while +0x358 holds something and the anim is a carry anim
 // the in-place character change (hal/player_bridges.cpp, the door path)
 void port_player_set_character(void *player, unsigned ch);
+int port_luigi_is_infected_slot(int slot);    // hal/luigi_infection.cpp (ARENALUIGI1)
 int _ZN6Player8HasNoCapEv(void *self);
 int _ZN6Player6IsAnimEj(void *self, unsigned id);
 char *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned cls, char *prev);
@@ -1166,7 +1167,13 @@ void pup_drive(int seat, char *a, const PupDraw &d0, Pup &pp) {
     // THE LOOK: the character the owner's body wears (param1, +0x08), through
     // the game's own in-place swap, once the body has been driven a moment and
     // no more often than every 2 s. Cap morphs on the owner come through here.
-    const unsigned want_look = d.look <= 3 ? d.look : 0u;
+    unsigned want_look = d.look <= 3 ? d.look : 0u;
+    // ARENALUIGI1: a seat the referee infected wears the Luigi body from the
+    // INFECTED event on (hal/luigi_infection.cpp swaps it at once). The owner's
+    // stream says Luigi a trip later; until then it still carries the old look,
+    // and following it would swap the puppet back and lock it there for the
+    // 2 s swap spacing. Nobody is cured, so the look is held at Luigi.
+    if (port_luigi_is_infected_slot(seat)) want_look = 1u;
     const unsigned have_look = (unsigned)(*(int *)(a + 8) & 0xff);
     if (have_look != want_look && pp.n_driven >= (unsigned)kPupSwapAfter &&
         g.frame >= pp.swap_at) {

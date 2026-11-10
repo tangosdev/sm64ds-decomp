@@ -3982,27 +3982,36 @@ def Member_fields(m):
 class arena(object):
     """Run a block with the arena knobs set, the way a compose edit plus a
     restart would: ARENA_GAME_IDS ("*" or a tuple of builds), the size limit,
-    RELAY_V and a new room's pick. Restores all of them after."""
+    RELAY_V, a new room's pick and ARENA_LUIGI_GAME_IDS (luigi_ids, "*" or a
+    tuple; the default () is the file default, Luigi on lockstep). Restores
+    all of them after."""
 
-    def __init__(self, ids="*", max_players=4, relay_v=2, default="arena"):
+    def __init__(self, ids="*", max_players=4, relay_v=2, default="arena",
+                 luigi_ids=()):
         self.ids = ids
         self.max_players = max_players
         self.relay_v = relay_v
         self.default = default
+        self.luigi_ids = luigi_ids
 
     def __enter__(self):
         self.was = (S.ARENA_ANY, S.ARENA_GAME_IDS, S.ARENA_MAX_PLAYERS,
-                    S.RELAY_V, S.NETMODE_DEFAULT)
+                    S.RELAY_V, S.NETMODE_DEFAULT, S.ARENA_LUIGI_ANY,
+                    S.ARENA_LUIGI_GAME_IDS)
         S.ARENA_ANY = self.ids == "*"
         S.ARENA_GAME_IDS = () if self.ids == "*" else tuple(self.ids)
         S.ARENA_MAX_PLAYERS = self.max_players
         S.RELAY_V = self.relay_v
         S.NETMODE_DEFAULT = self.default
+        S.ARENA_LUIGI_ANY = self.luigi_ids == "*"
+        S.ARENA_LUIGI_GAME_IDS = (() if self.luigi_ids == "*"
+                                  else tuple(self.luigi_ids))
         return self
 
     def __exit__(self, *exc):
         (S.ARENA_ANY, S.ARENA_GAME_IDS, S.ARENA_MAX_PLAYERS, S.RELAY_V,
-         S.NETMODE_DEFAULT) = self.was
+         S.NETMODE_DEFAULT, S.ARENA_LUIGI_ANY,
+         S.ARENA_LUIGI_GAME_IDS) = self.was
         return False
 
 
@@ -4185,6 +4194,215 @@ def test_arena_when():
               0, 2, "time", None, None, 0, plan["seed"]), (nm, now))
     nm, now, plan = resolved(2, pick="arena")
     check("and picking arena again: arena", nm == "arena")
+
+
+OLD_GAME = "t-0.9"   # an older build: on ARENA_GAME_IDS, not on the Luigi list
+
+
+def test_arena_luigi():
+    """LOBBYLUIGI1: Luigi Infection on the arena referee for the builds on
+    ARENA_LUIGI_GAME_IDS only; every other build and every other mode exactly
+    as before."""
+    print("\n-- arena Luigi: ARENA_LUIGI_GAME_IDS puts a new build's Luigi "
+          "room on the referee")
+    check("the file default: no arena Luigi builds, not '*' (every Luigi "
+          "match lockstep, as before)",
+          S.ARENA_LUIGI_GAME_IDS == () and S.ARENA_LUIGI_ANY is False,
+          (S.ARENA_LUIGI_GAME_IDS, S.ARENA_LUIGI_ANY))
+
+    def room_of(game, n=2, luigi=1, win="time", star=None, king=None,
+                pick=None):
+        st, h = S.do_create({"v": 5, "game": game, "nick": "h",
+                             "pre_ok": True}, "10.0.0.1", 1000.0)
+        assert st == 200, (st, h)
+        code = h["room"]
+        toks = [h["token"]]
+        for k in range(2, n + 1):
+            st, out = S.do_join({"v": 5, "game": game, "room": code,
+                                 "nick": "g%d" % k, "pre_ok": True},
+                                "10.0.1.%d" % k, 1000.0)
+            assert st == 200, (st, out)
+            toks.append(out["token"])
+        extra = {}
+        if star is not None:
+            extra["star_target"] = star
+        if king is not None:
+            extra["king_target"] = king
+        if pick is not None:
+            extra["netmode"] = pick
+        st, out = _params(code, toks[0], win_mode=win, match_players=n,
+                          luigi=luigi, **extra)
+        assert st == 200, (st, out)
+        return code, S.ROOMS[code], toks
+
+    def resolve(game, ids, luigi_ids, n=2, luigi=1, relay_v=2,
+                max_players=4, **kw):
+        reset()
+        with game_max(16, seats=16), arena(ids=ids, luigi_ids=luigi_ids,
+                                           relay_v=relay_v,
+                                           max_players=max_players):
+            code, room, toks = room_of(game, n=n, luigi=luigi, **kw)
+            v = room.view(1)
+            st, p = start(code, toks[0])
+            assert st == 200, (st, p)
+            plans = [S.member_plan(room, m) for m in sorted(room.members)]
+            return room.match_netmode, v, plans
+
+    # 1. a new build (on both lists) creating a Luigi room: arena
+    for ids, lids in (((GAME, OLD_GAME), (GAME,)), ("*", "*"),
+                      ("*", (GAME,)), ((GAME,), "*")):
+        nm, v, plans = resolve(GAME, ids, lids)
+        check("[%s / %s] a new build's Luigi room: the view says arena_luigi "
+              "and arena_now arena" % (ids, lids),
+              v["arena_luigi"] is True and v["arena_now"] == "arena"
+              and v["luigi"] == 1, v)
+        check("[%s / %s] start resolves arena; both plans arena, luigi 1, "
+              "one seed, one digest" % (ids, lids),
+              nm == "arena" and all(p["netmode"] == "arena"
+                                    and p["luigi"] == 1 for p in plans)
+              and plans[0]["seed"] == plans[1]["seed"]
+              and plans[0]["digest"] == plans[1]["digest"], (nm, plans))
+        p0 = plans[0]
+        check("[%s / %s] the digest is the arena digest with the Luigi seed "
+              "(map|players|time|0|0|1|seed|arena|2)" % (ids, lids),
+              p0["digest"] == S.session_digest(
+                  0, 2, "time", None, None, 1, p0["seed"], netmode="arena"),
+              p0)
+    # 2. an older build creating a Luigi room: lockstep exactly as today
+    for ids, lids in (((GAME, OLD_GAME), (GAME,)), ((OLD_GAME,), ()),
+                      ((OLD_GAME, GAME), ())):
+        nm, v, plans = resolve(OLD_GAME, ids, lids)
+        check("[%s / %s] an older build's Luigi room: arena_luigi false, "
+              "arena_now lockstep" % (ids, lids),
+              v["arena_luigi"] is False and v["arena_now"] == "lockstep", v)
+        check("[%s / %s] start resolves lockstep with the lockstep digest"
+              % (ids, lids),
+              nm == "lockstep" and all(p["netmode"] == "lockstep"
+                                       and p["luigi"] == 1 for p in plans)
+              and plans[0]["digest"] == S.session_digest(
+                  0, 2, "time", None, None, 1, plans[0]["seed"]), plans)
+    # 3. the Luigi list alone is not enough, and the other arena rules hold
+    nm, v, plans = resolve(GAME, (OLD_GAME,), (GAME,))
+    check("a build on ARENA_LUIGI_GAME_IDS but not on ARENA_GAME_IDS: "
+          "lockstep (it must be on both)",
+          nm == "lockstep" and v["arena_luigi"] is False
+          and v["arena_ok"] is False, (nm, v))
+    nm, v, plans = resolve(GAME, "*", "*", relay_v=1)
+    check("RELAY_V 1: a Luigi room plays lockstep", nm == "lockstep"
+          and v["arena_luigi"] is False, (nm, v))
+    nm, v, plans = resolve(GAME, "*", "*", n=5)
+    check("5 Luigi players with the arena limit 4: lockstep", nm == "lockstep")
+    nm, v, plans = resolve(GAME, "*", "*", n=6, max_players=16)
+    check("6 Luigi players once the limit is 16: arena", nm == "arena")
+    nm, v, plans = resolve(GAME, "*", "*", pick="lockstep")
+    check("the host picked lockstep: a Luigi room plays lockstep",
+          nm == "lockstep" and v["arena_now"] == "lockstep")
+    nm, v, plans = resolve(GAME, "*", "*", luigi=1, win="king", king=30)
+    check("Luigi with a King win mode (the launcher can send it): lockstep "
+          "(the referee has no King rules)", nm == "lockstep")
+
+    # 4. every other mode: the Luigi list changes nothing
+    def strip(ps):
+        return [dict((k, x) for k, x in p.items()
+                     if k not in ("code", "seed", "digest", "match"))
+                for p in ps]
+
+    same = True
+    rows = []
+    for n in (2, 3, 4, 5):
+        for win, star, king in (("time", None, None), ("stars", 3, None),
+                                ("king", None, 30)):
+            for pick in (None, "lockstep"):
+                for game in (GAME, OLD_GAME):
+                    a = resolve(game, (GAME, OLD_GAME), (), n=n, luigi=0,
+                                win=win, star=star, king=king, pick=pick)
+                    b = resolve(game, (GAME, OLD_GAME), (GAME,), n=n,
+                                luigi=0, win=win, star=star, king=king,
+                                pick=pick)
+                    ok = (a[0] == b[0]
+                          and a[1]["arena_now"] == b[1]["arena_now"]
+                          and strip(a[2]) == strip(b[2]))
+                    rows.append((n, win, pick, game, a[0]))
+                    same = same and ok
+    check("Clock, Stars and King at 2..5 players, both picks, both builds "
+          "(%d rooms): the same netmode, arena_now and plans with and without "
+          "ARENA_LUIGI_GAME_IDS" % len(rows), same, rows)
+    check("and that matrix holds arena and lockstep rooms both",
+          {r[4] for r in rows} == {"arena", "lockstep"}, rows)
+
+    # 5. the door: an older build cannot join a new build's arena Luigi room
+    reset()
+    with arena(ids=(GAME, OLD_GAME), luigi_ids=(GAME,)):
+        code, room, toks = room_of(GAME)
+        before = sorted(room.members)
+        st, out = S.do_join({"v": 5, "game": OLD_GAME, "room": code,
+                             "nick": "old", "pre_ok": True},
+                            "10.0.2.9", 1000.0)
+        check("an older build joining a new build's arena Luigi room: 409 "
+              "game_mismatch at the door",
+              st == 409 and out == {"error": "game_mismatch"}, (st, out))
+        check("and it took no seat (it never sees a plan or a countdown)",
+              sorted(room.members) == before, sorted(room.members))
+        st, out = S.do_join({"v": 6, "game": OLD_GAME, "room": code,
+                             "nick": "old6", "pre_ok": True},
+                            "10.0.2.10", 1000.0)
+        check("a v6 older build too", st == 409
+              and out == {"error": "game_mismatch"}, (st, out))
+        st, p = start(code, toks[0])
+        check("the new build's match still starts on arena",
+              st == 200 and room.match_netmode == "arena", (st, p))
+    # and the other way round: a new build cannot join an older build's
+    # Luigi room (the one-build rule, unchanged); that room plays lockstep
+    reset()
+    with arena(ids=(GAME, OLD_GAME), luigi_ids=(GAME,)):
+        code, room, toks = room_of(OLD_GAME, n=2)
+        st, out = S.do_join({"v": 5, "game": GAME, "room": code,
+                             "nick": "new", "pre_ok": True},
+                            "10.0.2.11", 1000.0)
+        check("a new build joining an older build's Luigi room: 409 "
+              "game_mismatch, as before",
+              st == 409 and out == {"error": "game_mismatch"}, (st, out))
+        st, p = start(code, toks[0])
+        check("the older build's Luigi match plays lockstep",
+              st == 200 and room.match_netmode == "lockstep"
+              and all(S.member_plan(room, m)["netmode"] == "lockstep"
+                      for m in room.members), room.match_netmode)
+
+    # 6. the host toggles Luigi in a new build's room: arena_now follows
+    reset()
+    with arena(ids=(GAME,), luigi_ids=(GAME,)):
+        code, room, toks = room_of(GAME, luigi=0)
+        a = room.view(1)["arena_now"]
+        _params(code, toks[0], win_mode="time", match_players=2, luigi=1)
+        b = room.view(1)["arena_now"]
+        _params(code, toks[0], win_mode="stars", star_target=3,
+                match_players=2, luigi=0)
+        c = room.view(1)["arena_now"]
+        check("Clock -> Luigi -> Stars: arena_now arena all the way and the "
+              "view's arena_luigi stays true",
+              (a, b, c) == ("arena", "arena", "arena")
+              and room.view(1)["arena_luigi"] is True, (a, b, c))
+    reset()
+    with arena(ids=(GAME,), luigi_ids=()):
+        code, room, toks = room_of(GAME, luigi=0)
+        a = room.view(1)["arena_now"]
+        _params(code, toks[0], win_mode="time", match_players=2, luigi=1)
+        b = room.view(1)["arena_now"]
+        check("with the Luigi list empty: Clock arena, Luigi lockstep, "
+              "arena_luigi false", (a, b) == ("arena", "lockstep")
+              and room.view(1)["arena_luigi"] is False, (a, b))
+    # 7. an adventure room's view still has no netmode keys
+    reset()
+    with arena(luigi_ids="*"):
+        st, a = create(nick="a", session_type="adventure")
+        v = S.ROOMS[a["room"]].view(1)
+        check("an adventure room's view has no arena_luigi key",
+              "arena_luigi" not in v, v)
+    # 8. the knob's grammar is ARENA_GAME_IDS's
+    ids, dropped = S.parse_game_ids("1.0.0-abcdef12, bad id!,t-1.0")
+    check("ARENA_LUIGI_GAME_IDS parses like GAME_IDS (a bad entry dropped)",
+          tuple(ids) == ("1.0.0-abcdef12", "t-1.0")
+          and list(dropped) == ["bad id!"], (ids, dropped))
 
 
 def test_arena_params():
@@ -5092,6 +5310,7 @@ def main():
     test_arena_off_by_default()
     test_arena_plan()
     test_arena_when()
+    test_arena_luigi()
     test_arena_params()
     test_arena_has_no_host_in_the_match()
     test_party_and_coop_rooms()

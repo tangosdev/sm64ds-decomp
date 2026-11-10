@@ -15,7 +15,7 @@
 namespace arena_wire {
 
 enum : int {
-    kContractVersion = 1,
+    kContractVersion = 2,
     kRoleArena       = 3,      // HELLO v2 role byte
     kRefereeMark     = 0xFE,   // byte 5 of SYNR / SYNQ(20), byte 6 of SYNP(20)
     kSynsBytes       = 48,
@@ -54,6 +54,7 @@ enum Claim : unsigned char {
     CLAIM_STOMP = 16,
     CLAIM_CAP_TAKE = 17,
     CLAIM_CAP_DROP = 18,
+    CLAIM_TAG = 19,
 };
 
 enum Event : unsigned char {
@@ -78,6 +79,8 @@ enum Event : unsigned char {
     EV_CAP_TAKEN = 19,
     EV_CAP_DROPPED = 20,
     EV_CAP_STATE = 21,
+    EV_INFECTED = 22,
+    EV_TEAM_STATE = 23,
 };
 
 enum Deny : unsigned char {
@@ -92,6 +95,7 @@ enum Deny : unsigned char {
     DENY_BAD = 9,   // a field out of range
     DENY_TOO_OLD = 10,   // lag compensation past COMP_MAX_MS
     DENY_SELF = 11,   // target is the claimant, or not a seat in the match
+    DENY_TEAM = 12,   // Luigi Infection team rule: a Luigi may not take a cap, drop one, eat or catch; a survivor may not take the Luigi cap or TAG
 };
 
 enum Over : unsigned char {
@@ -99,6 +103,24 @@ enum Over : unsigned char {
     OVER_FIRST_TO_N = 2,
     OVER_LAST_STANDING = 3,
     OVER_EVERYONE_LEFT = 4,
+    OVER_LUIGIS_WIN = 5,
+    OVER_SURVIVORS_WIN = 6,
+};
+
+enum Mode : unsigned char {   // READY rules byte 1
+    MODE_CLASSIC = 0,
+    MODE_KING = 1,   // refused (DENY_UNSUPPORTED)
+    MODE_LUIGI = 2,
+};
+
+enum Infect : unsigned char {   // EV_INFECTED field b
+    INF_PICK = 1,   // the first Luigi, picked at T0
+    INF_HIT = 2,   // a Luigi's HIT claim
+    INF_STOMP = 3,   // a Luigi's STOMP claim
+    INF_TAG = 4,   // a Luigi's TAG claim (body contact)
+    INF_HANDOFF = 5,   // every Luigi left: the referee picked a new one
+    INF_LATE_JOIN = 6,   // a new player joined after the first pick
+    INF_RETURN = 7,   // a Luigi whose connection dropped came back on its seat within REJOIN_KEEP_MS
 };
 
 enum MatchState : unsigned char {
@@ -171,6 +193,10 @@ constexpr int kCapWornMs = 3000;
 constexpr int kCapHurtEvidenceMs = 1500;
 constexpr int kCapDropWaitMs = 150;
 constexpr int kCapDropMinMs = 1000;
+constexpr int kLuigiCountdownMs = 5000;
+constexpr int kTagReachH = 130;
+constexpr int kTagReachV = 200;
+constexpr int kRejoinKeepMs = 60000;
 
 #pragma pack(push, 1)
 struct RefClaim {

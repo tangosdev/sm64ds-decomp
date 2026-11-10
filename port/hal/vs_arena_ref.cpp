@@ -115,6 +115,12 @@ extern unsigned char data_ov002_021100ac[];   // St_HurtWater (Init calls the st
 extern unsigned char data_ov002_0211010c[];   // St_DeadHit (Main calls the star drop)
 extern unsigned char data_ov002_0211013c[];
 extern unsigned char data_ov002_0211022c[];
+// LUIGI INFECTION (hal/luigi_infection.cpp; lane ARENALUIGI1): the mode switch and the team the
+// referee's INFECTED / TEAM_STATE events set there
+int port_luigi_enabled(void);
+int port_luigi_is_infected_slot(int slot);
+void port_luigi_arena_infect(int seat, int cause, int by);
+void port_luigi_arena_team(unsigned mask);
 }  // extern "C"
 
 namespace port {
@@ -147,6 +153,11 @@ enum : int {
     kHitRetryFrames = 8,
     kLocalTimeupGraceMs = 3000,
     kReportMs = 10000,
+    // LUIGI INFECTION: no START this long after my first READY = the match is given up. Longer
+    // than the launcher's own 60 s connect window: the referee's 20 s part-ready start
+    // (START_WAIT_MS) needs two READY seats, so it never starts a 2-player room whose second
+    // game is slow to load, and only the second READY does.
+    kLuigiStartGiveUpMs = 90000,
 };
 
 struct PClaim {
@@ -318,6 +329,24 @@ struct Ref {
     unsigned chain_hit_at = 0;   // referee ms (my base)
     int rig_home[3] = {0, 0, 0}; // seat 1's spawn point: where seat 0's (unmoved) copy of it stands
     bool rig_home_set = false;
+    // LUIGI INFECTION (mode 2, lane ARENALUIGI1). The referee's team is the only truth: lmask
+    // is the Luigi mask its INFECTED / TEAM_STATE events carry; the game's team bits and the
+    // Luigi bodies follow it (hal/luigi_infection.cpp).
+    bool luigi = false;          // this match is Luigi Infection (READY mode byte 2)
+    unsigned lmask = 0;          // bit = seat, the referee's Luigis
+    bool picked = false;         // the first Luigi has been picked (T0)
+    unsigned long long tags_claimed = 0, infected_seen = 0, luigi_gated = 0, luigi_cap_blocks = 0;
+    unsigned last_tag_claim_frame[16];
+    int rig_lphase = 0;          // the luigi lab rig's step
+    unsigned rig_lnext = 0;
+    int rig_lvictim = -1;
+    int rig_cd_pos[3] = {0, 0, 0};   // luigi rigs: my position when the countdown walk began
+    int rig_cd_phase = 0;
+    int rig_lclose = 0;              // luigipunch: frames until the swing is carried onto the victim
+    int rig_lclose_n = 0;
+    int ready_deny = 0;              // the referee's reason on my READY (Luigi start watch)
+    unsigned ready_first_ms = 0;     // when my first READY went (Luigi start watch)
+    int li_last = 0;                 // the last team change: 1 an INFECTED, 2 a survivor left
 };
 Ref g;
 
@@ -377,7 +406,11 @@ bool state_disabled(int st) {
 // referee runs on my SYNS sample (_usable): a disabled state (hurt, burning, a
 // mouth, the star-get pose ...), mIsTakingDamage, mIsNoControl or a body that
 // is inside somebody's mouth.
+bool luigi_before_t0();
 bool my_body_may_act() {
+    // LUIGI INFECTION: everyone runs during the five-second countdown (Tango 11-09), and the
+    // referee takes no claim before T0 (DENY_STALE): a star or marker touch then is not made
+    if (luigi_before_t0()) return false;
     char *me = my_body();
     if (!me) return true;
     const int st = vs_arena_state_index(me);
@@ -443,6 +476,15 @@ int popcount16(unsigned m) {
     return n;
 }
 
+// LUIGI INFECTION helpers: whose team a seat is on (the referee's mask), and the countdown
+bool is_luigi(int seat) { return g.luigi && seat >= 0 && seat < 32 && (g.lmask >> seat & 1u) != 0; }
+bool me_luigi() { return is_luigi(g.seat); }
+bool luigi_before_t0() {
+    if (!g.luigi) return false;
+    unsigned r;
+    return !g.started || !ref_now(&r) || (int)(r - g.t0) < 0;
+}
+
 unsigned short seq_next(unsigned short s) { return s == 0xFFFF ? 1 : (unsigned short)(s + 1); }
 unsigned short seq_prev(unsigned short s) { return s <= 1 ? 0xFFFF : (unsigned short)(s - 1); }
 bool seq_old(unsigned short applied, unsigned short s) {
@@ -496,8 +538,8 @@ const char *claim_name(int k) {
     static const char *n[] = {"?", "READY", "MARKER_BREAK", "GRAB", "HIT",
                               "HURT_SELF", "PIT", "QUIT", "EAT", "SPIT",
                               "SWALLOW", "ESCAPE", "CATCH", "THROW", "SWING",
-                              "BREAK", "STOMP"};
-    return k >= 1 && k <= 16 ? n[k] : "?";
+                              "BREAK", "STOMP", "CAP_TAKE", "CAP_DROP", "TAG"};
+    return k >= 1 && k <= 19 ? n[k] : "?";
 }
 
 PClaim *make_claim(unsigned char kind, unsigned char target, unsigned short aux,
@@ -695,8 +737,8 @@ char *spawn_spill_star(int marker_id, const int *origin, int victim_seat) {
 const char *reason_name(int r) {
     static const char *n[] = {"?", "STALE", "GONE", "LOST", "RANGE", "STATE",
                               "INVULN", "MISMATCH", "UNSUPPORTED", "BAD",
-                              "TOO_OLD", "SELF"};
-    return r >= 1 && r <= 11 ? n[r] : "?";
+                              "TOO_OLD", "SELF", "TEAM"};
+    return r >= 1 && r <= 12 ? n[r] : "?";
 }
 
 
@@ -733,8 +775,8 @@ bool ref_event_valid(const RefEvent &e) {
     case EV_STAR_TAKEN:
         return seat_ok(e.seat) && e.a != 0 && score_ok(e.b) &&
                e.e < 256 && pos_ok(e.x) && pos_ok(e.y) && pos_ok(e.z);
-    case EV_DENY:
-        return seat_ok(e.seat) && e.a >= 1 && e.a <= 18 && e.b >= 1 && e.b <= 11 &&
+    case EV_DENY:   // (contract 2: claim kinds up to TAG 19, reasons up to DENY_TEAM 12)
+        return seat_ok(e.seat) && e.a >= 1 && e.a <= CLAIM_TAG && e.b >= 1 && e.b <= DENY_TEAM &&
                (e.d == 0xFF || e.d < 16);
     case EV_HIT:
         return seat_ok(e.seat) && seat_ok(e.a) && e.b <= 1 && e.d <= 0x2000 &&
@@ -746,8 +788,12 @@ bool ref_event_valid(const RefEvent &e) {
         return seat_or_none(e.seat) && e.a != 0 && e.b < 8 && e.c >= 1 && e.c <= 4 &&
                score_ok(e.d) && pos_ok(e.x) && pos_ok(e.y) && pos_ok(e.z);
     case EV_MATCH_OVER:
-        return e.seat == 0xFF && e.a >= 1 && e.a <= 4 && e.b <= (unsigned)seat_lim() &&
-               (e.c & ~rmask) == 0;
+        // reasons 5 / 6 (LUIGIS_WIN / SURVIVORS_WIN) only in a Luigi match. The winners mask
+        // is bounded by the arena's bodies, never by the live roster: SURVIVORS_WIN names
+        // the survivors at the bell, and one who left inside the hold is still a winner
+        return e.seat == 0xFF && e.a >= 1 &&
+               e.a <= (g.luigi ? OVER_SURVIVORS_WIN : OVER_EVERYONE_LEFT) &&
+               e.b <= (unsigned)seat_lim() && (e.c & ~rmask) == 0;
     case EV_LEAVE:
         return seat_ok(e.seat) && e.a >= 1 && e.a <= 3 && e.d < 256;
     case EV_JOIN:
@@ -756,7 +802,7 @@ bool ref_event_valid(const RefEvent &e) {
         return seat_or_none(e.seat) && e.a != 0 && e.b >= 1 && e.b <= 2 &&
                e.c < 8 && e.d < 256 && pos_ok(e.x) && pos_ok(e.y) && pos_ok(e.z);
     case EV_ACCEPTED:
-        return seat_ok(e.seat) && e.a >= 1 && e.a <= 18 && e.d < 256;
+        return seat_ok(e.seat) && e.a >= 1 && e.a <= CLAIM_TAG && e.d < 256;
     case EV_CAP_TAKEN:
         return seat_ok(e.seat) && e.a != 0 && (e.b <= 2 || e.b == 0xFF) &&
                e.d <= 10000 && pos_ok(e.x) && pos_ok(e.y) && pos_ok(e.z);
@@ -781,6 +827,17 @@ bool ref_event_valid(const RefEvent &e) {
     case EV_STOMPED:
         return seat_ok(e.seat) && seat_ok(e.a) && e.seat != e.a && pos_ok(e.x) &&
                pos_ok(e.y) && pos_ok(e.z);
+    case EV_INFECTED:
+        // only in a Luigi match; seat = the new Luigi, a = the tagger or 0xFF, b = INF_PICK..
+        // INF_RETURN, d = the whole Luigi mask (it holds the new Luigi), e = survivors left
+        return g.luigi && seat_ok(e.seat) && seat_or_none(e.a) && e.a != e.seat &&
+               e.b >= INF_PICK && e.b <= INF_RETURN && (e.d & ~rmask) == 0 &&
+               (e.d >> e.seat & 1u) != 0 && e.e <= (unsigned)seat_lim() &&
+               pos_ok(e.x) && pos_ok(e.y) && pos_ok(e.z);
+    case EV_TEAM_STATE:
+        // a snapshot record of a Luigi match: a = picked yet, c = the Luigi mask, d = the roster
+        return g.luigi && e.seat == 0xFF && e.a <= 1 && (e.c & ~rmask) == 0 &&
+               (e.d & ~rmask) == 0;
     default:
         return false;
     }
@@ -1394,7 +1451,22 @@ void caps_pass() {
     each_class(kClassCap, [&](char *a) {
         if (!u32r(a, 0x130) || !u32r(a, 0x134)) return;
         char *o = _ZN8dActor_c10FindWithIDEj(u32r(a, 0x134));
-        if (!o || actor_class(o) != (unsigned)kClassPlayer || o == me) return;
+        if (!o || actor_class(o) != (unsigned)kClassPlayer) return;
+        if (o == me) {
+            // LUIGI INFECTION (contract 2, DENY_TEAM): a Luigi takes no cap (it stays Luigi) and a
+            // survivor never takes the Luigi cap (nobody fakes a team). The ROM's pickup starts from
+            // this contact, so it is cleared before the cap's own Behavior reads it: no put-on, no
+            // morph, no claim the referee would refuse.
+            if (!g.luigi || (!me_luigi() && (s32r(a, 0x3f4) & 0xff) != 1)) return;
+            u32r(a, 0x130) = 0;
+            u32r(a, 0x134) = 0;
+            if ((g.luigi_cap_blocks++ & 63) == 0)
+                std::fprintf(stderr, "[vsarena-ref] cap uid %u (look %d) not taken: %s (frame %u)\n",
+                             actor_uid(a), s32r(a, 0x3f4) & 0xff,
+                             me_luigi() ? "a Luigi takes no cap" : "a survivor never takes the Luigi cap",
+                             my_frame_now());
+            return;
+        }
         u32r(a, 0x130) = 0;
         u32r(a, 0x134) = 0;
         ++g.st.cap_puppet_touches;
@@ -1436,6 +1508,14 @@ void caps_detect() {
         const bool knocked = s32r(a, 0x3f0) == 5;
         CapRec *r = knocked ? cap_rec_by_uid(actor_uid(a)) : cap_rec_of_actor(a);
         if (!r || r->mine || r->gone) return;
+        if (g.luigi && (me_luigi() || (s32r(a, 0x3f4) & 0xff) == 1)) {
+            // LUIGI INFECTION: a pickup the team rule forbids (a tongue can still pull one in):
+            // undone here, no CAP_TAKE (the referee would answer DENY_TEAM)
+            r->uid = actor_uid(a);
+            r->mine = true;
+            cap_revert(*r, "Luigi Infection team rule");
+            return;
+        }
         unsigned stamp;
         if (!stamp_for(g.last_post_ms ? g.last_post_ms : now_ms(), &stamp)) return;
         const unsigned id = (unsigned)(r - g.caps);
@@ -1454,6 +1534,21 @@ void caps_detect() {
     // my own cap popping off: a new cap of my look appears over my head while I am hurt
     const int st = vs_arena_state_index(me);
     const int look = s32r(me, 8) & 0xff;
+    if (me_luigi() && (st == kStHurt || st == kStHurtWater || st == 12)) {
+        // LUIGI INFECTION: a Luigi's cap never comes off (no Luigi cap on the field for a survivor
+        // to wear; the referee refuses a Luigi's CAP_DROP): the cap a hazard hurt popped goes
+        each_class(kClassCap, [&](char *a) {
+            if (s32r(a, 0x3f0) != 5 || (s32r(a, 0x3f4) & 0xff) != 1 || cap_rec_by_uid(actor_uid(a))) return;
+            const long long dx = (long long)(s32r(a, 0x5c) - s32r(me, 0x5c)) >> 12;
+            const long long dy = (long long)(s32r(a, 0x60) - s32r(me, 0x60)) >> 12;
+            const long long dz = (long long)(s32r(a, 0x64) - s32r(me, 0x64)) >> 12;
+            if (dx * dx + dz * dz > 60 * 60 || dy < 60 || dy > 220) return;
+            std::fprintf(stderr, "[vsarena-ref] my Luigi cap popped (state %d): removed, no CAP_DROP "
+                         "(frame %u)\n", st, my_frame_now());
+            _ZN7fBase_c18MarkForDestructionEv(a);
+        });
+        return;
+    }
     if (look <= 2 && (st == kStHurt || st == kStHurtWater || st == 12)) {
         each_class(kClassCap, [&](char *a) {
             if (g.drop_uid) return;
@@ -1607,7 +1702,10 @@ void on_deny(const RefEvent &e) {
         if (kind == CLAIM_HIT) ++g.st.hits_denied;
     }
     finish_claim((unsigned short)cid, -1, reason, winner);
+    if (kind == CLAIM_READY && g.luigi && !g.started) g.ready_deny = reason;
     if (kind == CLAIM_CAP_TAKE) cap_on_deny((unsigned short)cid, reason, winner);
+    // a refused CAP_DROP names no cap (no CAP_DROPPED will come for it): let my next pop be seen
+    if (kind == CLAIM_CAP_DROP && (unsigned)cid == g.drop_cid) g.drop_uid = 0;
     if (kind == CLAIM_GRAB)
         for (auto &i : g.inst)
             if (i.used && i.holding && i.grab_cid == cid) {
@@ -1676,9 +1774,40 @@ void on_match_over(const RefEvent &e) {
     std::memcpy(g.over_v.scores, g.ledger, 16);
     g.over_v.seq = e.seq;
     g.over_v.local_timeout = false;
+    g.over_v.luigi_left = (g.luigi && e.a == OVER_LUIGIS_WIN && g.li_last == 2) ? 1 : 0;
     std::fprintf(stderr, "[vsarena] MATCH OVER ref reason=%d winners=0x%04x "
                  "count=%d scores=%d,%d,%d,%d seq=%u\n", e.a, e.c, e.b,
                  g.ledger[0], g.ledger[1], g.ledger[2], g.ledger[3], e.seq);
+}
+
+// LUIGI INFECTION: the referee made e.seat a Luigi. The team bit and the Luigi body at once, on
+// every console (mine and the puppets alike); the whole mask the event carries is applied too,
+// so a console that missed an event catches up on the next one. The tagger's claim ends here
+// (INFECTED is its terminal verdict: no HIT, no SPILL, no STOMPED with it).
+const char *infect_name(int b) {
+    static const char *n[] = {"?", "PICK", "HIT", "STOMP", "TAG", "HANDOFF", "LATE_JOIN", "RETURN"};
+    return b >= 1 && b <= 7 ? n[b] : "?";
+}
+
+void on_infected(const RefEvent &e) {
+    ++g.infected_seen;
+    g.li_last = 1;
+    g.lmask |= (unsigned)e.d | (1u << e.seat);
+    g.picked = true;
+    if (e.a == g.seat && e.c) finish_claim(e.c, 1, 0, 0xFF);
+    std::fprintf(stderr, "[vsarena-ref] INFECTED seat=%d by=%d cause=%s(%d) claim=%d luigis=0x%04x "
+                 "survivors=%d stamp=%u%s\n", e.seat, e.a == 0xFF ? -1 : (int)e.a, infect_name(e.b), e.b,
+                 e.c, (unsigned)e.d, e.e, e.t, e.seat == g.seat ? " (me)" : "");
+    port_luigi_arena_infect(e.seat, e.b, e.a == 0xFF ? -1 : (int)e.a);
+    port_luigi_arena_team(g.lmask);
+}
+
+void on_team_state(const RefEvent &e) {
+    g.lmask |= (unsigned)e.c;
+    if (e.a) g.picked = true;
+    std::fprintf(stderr, "[vsarena-ref] TEAM_STATE picked=%d luigis=0x%04x roster=0x%04x t0=%u\n",
+                 e.a, e.c, e.d, e.t);
+    port_luigi_arena_team(g.lmask);
 }
 
 void on_star_state(const RefEvent &e) {
@@ -1742,6 +1871,8 @@ void apply_event(const RefEvent &e, bool directed) {
         if (((e.b == 1 || e.b == 2) && e.a == g.seat) || (e.b == 3 && e.seat == g.seat))
             finish_claim(e.c, 1, 0, 0xFF);
         break;
+    case EV_INFECTED:       on_infected(e); break;
+    case EV_TEAM_STATE:     on_team_state(e); break;
     default: break;
     }
     ++g.st.events_applied;
@@ -1756,6 +1887,10 @@ void apply_frame(const RefFrame &f) {
     g.hdr_t0 = f.t0;
     g.hdr_match_ms = f.match_ms;
     if (!g.started || !g.roster) g.roster = f.roster;
+    // LUIGI INFECTION: a survivor's seat left the match (the banner tells a last survivor who
+    // left from one who was caught)
+    if (g.luigi && g.started && ((unsigned)g.roster_now & ~(unsigned)f.roster & ~g.lmask) != 0)
+        g.li_last = 2;
     g.roster_now = f.roster;
     g.ever_roster |= f.roster;
     // the ledger: the newest header wins
@@ -1855,7 +1990,12 @@ void read_hud_clock() {
 }
 
 void maybe_send_ready() {
-    if (g.ready_ok || g.started || g.over) return;
+    // LUIGI INFECTION: a console that comes back (or in) after START learns the match from the
+    // snapshot, so g.started is already true; the referee only puts a seat back in the match on
+    // its READY (contract 2: a returner keeps its team, a newcomer is a Luigi), so READY still
+    // goes while my seat is not in the roster. Classic keeps the old rule.
+    const bool rejoining = g.luigi && g.started && !(g.roster_now >> g.seat & 1u);
+    if (g.ready_ok || (g.started && !rejoining) || g.over) return;
     if (g.vs_frames < 8) return;
     char *me = my_body();
     if (!me) return;
@@ -1867,12 +2007,15 @@ void maybe_send_ready() {
         if (markers <= 0) return;
         const int map = env_int("SM64DS_VS_MAP", 0, 0, 15);
         const int cap = env_int("SM64DS_VS_PLAYERS", g.bodies, 1, 16);
-        const int first_to = env_int("SM64DS_VS_STAR_TARGET", 0, 0, 99);
+        // LUIGI INFECTION: rules byte 1 = MODE_LUIGI (2); stars decide nothing there, so the
+        // first-to-N byte is 0 (the referee ignores it in mode 2 anyway)
+        const unsigned mode = g.luigi ? (unsigned)MODE_LUIGI : (unsigned)MODE_CLASSIC;
+        const int first_to = g.luigi ? 0 : env_int("SM64DS_VS_STAR_TARGET", 0, 0, 99);
         const int time_s = g.hud_units ? g.hud_units * 3 : 0;
         const unsigned digest = (unsigned)std::strtoul(
             std::getenv("SM64DS_SESSION_DIGEST") ? std::getenv("SM64DS_SESSION_DIGEST") : "0",
             nullptr, 10);
-        const unsigned rules = (unsigned)first_to | (0u << 8) | ((unsigned)cap << 16) |
+        const unsigned rules = (unsigned)first_to | (mode << 8) | ((unsigned)cap << 16) |
                                ((unsigned)(markers > 8 ? 8 : markers) << 24);
         PClaim *c = make_claim(CLAIM_READY, (unsigned char)map,
                               (unsigned short)(time_s > 3600 ? 3600 : time_s),
@@ -1881,9 +2024,10 @@ void maybe_send_ready() {
         g.ready_sent = true;
         g.ready_cid = c->cid;
         g.ready_last = now;
+        if (!g.ready_first_ms) g.ready_first_ms = now ? now : 1;
         std::fprintf(stderr, "[vsarena] READY sent: map=%d time=%ds first_to=%d "
-                     "capacity=%d markers=%d digest=%u\n", map, time_s, first_to,
-                     cap, markers, digest);
+                     "capacity=%d markers=%d digest=%u%s\n", map, time_s, first_to,
+                     cap, markers, digest, g.luigi ? " mode=2 (Luigi Infection)" : "");
         return;
     }
     PClaim *c = claim_by_id(g.ready_cid);
@@ -1894,6 +2038,30 @@ void maybe_send_ready() {
         c->first_ms = now;
         send_claim(*c);
     }
+}
+
+// LUIGI INFECTION: a match that can never start (a relay that does not run mode 2 answers
+// UNSUPPORTED; a room whose games disagree answers MISMATCH; or START just never comes) used to
+// sit on the countdown's "3" for good. It is given up the way a lost verdict is (a local
+// MATCH OVER), with the cause for the banner. Classic READY keeps its endless retry.
+void luigi_start_watch() {
+    if (!g.luigi || g.started || g.over || !g.ready_sent) return;
+    int cancel = 0;
+    if (g.ready_deny == DENY_UNSUPPORTED) cancel = 1;
+    else if (g.ready_deny == DENY_MISMATCH) cancel = 2;
+    else if (now_ms() - g.ready_first_ms >= (unsigned)kLuigiStartGiveUpMs) cancel = 3;
+    if (!cancel) return;
+    g.over = true;
+    g.over_v = VsRefOver();
+    g.over_v.reason = 0;
+    g.over_v.roster_mask = g.roster_now;
+    g.over_v.seen_mask = (int)(g.ever_roster | g.roster_now);
+    g.over_v.local_timeout = true;
+    g.over_v.luigi_cancel = cancel;
+    std::fprintf(stderr, "[vsarena] LUIGI START GIVEN UP (cancel=%d): %s\n", cancel,
+                 cancel == 1 ? "the relay refused Luigi Infection (UNSUPPORTED): it needs an update"
+                 : cancel == 2 ? "the room refused my READY (MISMATCH): the games in it disagree"
+                 : "no START from the referee 90 s after my READY");
 }
 
 // ---------------------------------------------------------------------------
@@ -2325,6 +2493,60 @@ unsigned drawn_frame(int seat) {
 // rigs' injected words were wiped the same way). The post-walk half runs after the
 // pair pass and before the next frame's hold, so that is where the contact is read;
 // the pre-walk call is kept for bodies the hold does not own.
+// LUIGI INFECTION: my body's contact with the puppet of seat k (the pair pass wrote my uid on
+// its body cylinder, with or without attack flags). Classic's guard (port/unmatched/
+// LuigiInfection_Hit.cpp) runs on ANY player contact, before the attack and stomp branches:
+//   a Luigi touching a survivor tags it: an attack goes to the referee as HIT (as today), a
+//     plain body touch as TAG (contract 2, CLAIM_TAG 19); neither waits on the survivor's
+//     blink, power or state (Tango 11-09, "tag anytime": the referee infects a downed,
+//     respawning or squished survivor too, so nothing is held back here);
+//   anything touching a Luigi does nothing (immune), and Luigi on Luigi does nothing.
+// Before T0 the referee takes no claim, so none is made. Returns true when it handled the pair.
+bool luigi_contact(int k, char *b, unsigned flags, unsigned fr, const char *where) {
+    char *me = my_body();
+    const bool attack = (flags & ~0x1000u) != 0;
+    auto clear = [&]() { if (flags) { u32r(b, 0x2f4) = 0; u32r(b, 0x2f8) = 0; } };
+    if (luigi_before_t0()) { clear(); return true; }
+    if (!me_luigi()) {
+        if (!is_luigi(k)) return false;                  // survivor on survivor: the usual rules
+        clear();
+        if (attack) {
+            ++g.luigi_gated;
+            if (g.log)
+                std::fprintf(stderr, "[vsarena-ref] contact on seat %d not claimed: it is a Luigi "
+                             "(immune), read in %s\n", k, where);
+        }
+        return true;
+    }
+    clear();
+    if (is_luigi(k)) return true;                        // Luigi on Luigi: nothing
+    unsigned stamp;
+    if (!stamp_for(g.last_post_ms ? g.last_post_ms : now_ms(), &stamp)) return true;
+    if (attack) {
+        if (fr - g.last_hit_claim_frame[k] < (unsigned)kHitRetryFrames && g.last_hit_claim_frame[k])
+            return true;
+        PClaim *c = make_claim(CLAIM_HIT, (unsigned char)k, (unsigned short)((flags >> 5) & 0xFFFF),
+                               stamp, fr, drawn_frame(k));
+        if (c) {
+            g.last_hit_claim_frame[k] = fr ? fr : 1;
+            ++g.st.hits_claimed;
+            std::fprintf(stderr, "[vsarena-ref] LUIGI hit on seat %d: HIT claim %u (flags 0x%x, %s)\n",
+                         k, (unsigned)c->cid, flags, where);
+        }
+        return true;
+    }
+    if (fr - g.last_tag_claim_frame[k] < (unsigned)kHitRetryFrames && g.last_tag_claim_frame[k])
+        return true;
+    PClaim *c = make_claim(CLAIM_TAG, (unsigned char)k, 0, stamp, fr, drawn_frame(k));
+    if (c) {
+        g.last_tag_claim_frame[k] = fr ? fr : 1;
+        ++g.tags_claimed;
+        std::fprintf(stderr, "[vsarena-ref] LUIGI touch on seat %d: TAG claim %u (%s, frame %u)\n",
+                     k, (unsigned)c->cid, where, fr);
+    }
+    return true;
+}
+
 void hit_detect(const char *where) {
     char *me = my_body();
     if (!me) return;
@@ -2335,6 +2557,9 @@ void hit_detect(const char *where) {
         if (!b) continue;
         const unsigned flags = u32r(b, 0x2f4) & kAttackMask;
         const unsigned other = u32r(b, 0x2f8);
+        if (g.luigi && other && _ZN8dActor_c10FindWithIDEj(other) == me &&
+            luigi_contact(k, b, flags, fr, where))
+            continue;
         if (!other || !flags) continue;
         // never let the ROM resolve a hit on a puppet by itself
         u32r(b, 0x2f4) = 0;
@@ -2536,6 +2761,10 @@ void rig_parse() {
     else if (std::strncmp(e, "capdrop", 7) == 0) g.rig = 8;
     else if (std::strncmp(e, "capforge", 8) == 0) g.rig = 9;
     else if (std::strncmp(e, "captongue", 9) == 0) g.rig = 10;
+    else if (std::strncmp(e, "luigitouch", 10) == 0) g.rig = 11;
+    else if (std::strncmp(e, "luigipunch", 10) == 0) g.rig = 12;
+    else if (std::strncmp(e, "luigiwait", 9) == 0) g.rig = 13;
+    else if (std::strncmp(e, "luigistomp", 10) == 0) g.rig = 14;
     else if (std::strncmp(e, "cap", 3) == 0) g.rig = 6;
     if (g.rig == 2 || g.rig == 3) g.rig_real = e[g.rig == 2 ? 3 : 5] == 'r';   // hitr / chainr
     else if (std::strncmp(e, "fuzz", 4) == 0) g.rig = 4;
@@ -2545,7 +2774,9 @@ void rig_parse() {
         std::fprintf(stderr, "[rig] SM64DS_ARENA_RIG=%s: scripted %s rig, seed %u\n",
                      e, g.rig == 1 ? "contention" : g.rig == 2 ? "hit" : g.rig == 5 ? "hurtgrab" :
                      g.rig == 6 ? "cap pickup" : g.rig == 7 ? "cap race" : g.rig == 8 ? "cap drop" :
-                     g.rig == 9 ? "cap forgery" : g.rig == 10 ? "cap tongue" : "chain",
+                     g.rig == 9 ? "cap forgery" : g.rig == 10 ? "cap tongue" :
+                     g.rig == 11 ? "Luigi touch" : g.rig == 12 ? "Luigi punch" :
+                     g.rig == 13 ? "Luigi countdown" : g.rig == 14 ? "Luigi stomp" : "chain",
                      g.rig_seed);
 }
 
@@ -2926,7 +3157,8 @@ void rig_fuzz() {
     BADEV("TAKEN score 128", e.type = EV_STAR_TAKEN; e.a = 1; e.b = 128);
     BADEV("TAKEN score 200", e.type = EV_STAR_TAKEN; e.a = 1; e.b = 200);
     BADEV("TAKEN progress 300", e.type = EV_STAR_TAKEN; e.a = 1; e.e = 300);
-    BADEV("DENY kind 12", e.type = EV_DENY; e.a = 12; e.b = 1; e.d = 0xFF);
+    BADEV("DENY kind 20", e.type = EV_DENY; e.a = 20; e.b = 1; e.d = 0xFF);
+    BADEV("DENY reason 13", e.type = EV_DENY; e.a = 3; e.b = 13; e.d = 0xFF);
     BADEV("DENY reason 0", e.type = EV_DENY; e.a = 3; e.b = 0; e.d = 0xFF);
     BADEV("DENY winner 40", e.type = EV_DENY; e.a = 3; e.b = 3; e.d = 40);
     BADEV("HIT victim 0xFF", e.type = EV_HIT; e.seat = 0xFF; e.a = 0);
@@ -2956,8 +3188,11 @@ void rig_fuzz() {
     BADEV("EATEN b 5", e.type = EV_EATEN; e.a = 1; e.b = 5);
     BADEV("RELEASED eater 99", e.type = EV_RELEASED; e.a = 99);
     BADEV("unknown type 0", e.type = 0);
-    BADEV("unknown type 16", e.type = 16);
+    BADEV("unknown type 24", e.type = 24);
     BADEV("unknown type 255", e.type = 255);
+    // Luigi Infection events in a match that is not one (this rig's match is Classic)
+    BADEV("INFECTED outside a Luigi match", e.type = EV_INFECTED; e.a = 0xFF; e.b = 1; e.d = 1);
+    BADEV("TEAM_STATE outside a Luigi match", e.type = EV_TEAM_STATE; e.seat = 0xFF);
     BADEV("seat 16", e.type = EV_JOIN; e.seat = 16);
 #undef BADEV
 #undef BADFRAME
@@ -3292,6 +3527,170 @@ void rig_capforge() {
     ++g.rig_n;
 }
 
+// LUIGI RIGS (SM64DS_ARENA_RIG=luigitouch | luigipunch | luigiwait, lane ARENALUIGI1).
+// Every console: walks right on the D-pad for the middle of the 5 s countdown and
+// prints how far it got (Tango's rule: everyone can run during the countdown; the
+// ROM's entry step holds the body without the lift). After T0 the referee has
+// picked the Luigi:
+//   a survivor's console punches the Luigi first (wears Mario's cap for a real
+//   punch, the hitr way): the Luigi is immune, so no claim may leave;
+//   then the Luigi's console steps onto the survivor (touch: bodies overlap, no
+//   button) or punches it (punch: the Luigi's own A button), and the referee's
+//   INFECTED makes the survivor a Luigi on both screens.
+// luigiwait does the countdown walk only (the time-up and the leave rows).
+// luigistomp: the lowest survivor drops once onto the Luigi's head from 260 units (the grab
+// rig's stomp drop); no scripted touch or punch follows. A stomp on a Luigi must do nothing.
+extern "C" unsigned char data_0209f2bc;   // the VS start countdown (3, 2, 1, 0)
+extern "C" unsigned char data_ov002_021101b4[];   // St_Fall
+int rig_luigi_victim() {
+    for (int k = 0; k < g.bodies && k < 16; ++k)
+        if (k != g.seat && (g.roster_now >> k & 1u) && !is_luigi(k) && body_of(k)) return k;
+    return -1;
+}
+int rig_luigi_any() {
+    for (int k = 0; k < g.bodies && k < 16; ++k)
+        if (k != g.seat && (g.roster_now >> k & 1u) && is_luigi(k) && body_of(k)) return k;
+    return -1;
+}
+void rig_luigi_stand_by(int seat, int dist_units) {
+    char *me = my_body();
+    char *vb = body_of(seat);
+    if (!me || !vb) return;
+    const int to[3] = { s32r(vb, 0x5c), s32r(vb, 0x60), s32r(vb, 0x64) - (dist_units << 12) };
+    rig_teleport(me, to);
+    s16r(me, 0x8e) = 0;
+    s16r(me, 0x94) = 0;
+}
+// a survivor's punch needs a fist: Yoshi's attack button is the tongue (and a tongue on a
+// Luigi bounces off, vs_arena_eat.cpp). Mario's look through the door swap, as rig_wear_cap.
+void rig_wear_cap_luigi() {
+    char *me = my_body();
+    if (!me || me_luigi() || (s32r(me, 8) & 0xff) == 0) return;
+    const unsigned fr = my_frame_now();
+    if (fr - g.rig_cap_frame < 30u) return;
+    g.rig_cap_frame = fr ? fr : 1;
+    port_player_set_character(me, 0);
+    std::fprintf(stderr, "[rig] survivor seat %d puts on Mario's cap (param1 now %d)\n", g.seat, s32r(me, 8));
+}
+void rig_luigi() {
+    if (!g.started || g.over) return;
+    unsigned r;
+    if (!ref_now(&r)) return;
+    char *me = my_body();
+    if (!me) return;
+    // the countdown walk: D-pad right from T0-4000 to T0-1000
+    if (g.rig_cd_phase == 0 && (int)(r - (g.t0 - 4000u)) >= 0 && (int)(r - g.t0) < 0) {
+        for (int a = 0; a < 3; ++a) g.rig_cd_pos[a] = s32r(me, 0x5c + 4 * a);
+        g.rig_cd_phase = 1;
+        std::fprintf(stderr, "[rig] luigi countdown walk starts (ref %u, T0-%d ms, state idx %d)\n",
+                     r, (int)(g.t0 - r), vs_arena_state_index(me));
+    }
+    if (g.rig_cd_phase == 1) {
+        if ((int)(r - (g.t0 - 1000u)) < 0) {
+            rig_press(g.seat, 0x0010, false);
+        } else {
+            long long d2 = 0;
+            for (int a = 0; a < 3; ++a) {
+                const long long d = (long long)((s32r(me, 0x5c + 4 * a) - g.rig_cd_pos[a]) >> 12);
+                d2 += d * d;
+            }
+            int dist = 0;
+            while ((long long)(dist + 1) * (dist + 1) <= d2) ++dist;
+            std::fprintf(stderr, "[rig] luigi countdown walk: moved %d units in the countdown "
+                         "(state idx %d, count %d) %s\n", dist, vs_arena_state_index(me),
+                         (int)data_0209f2bc, dist >= 50 ? "MOVED" : "HELD");
+            g.rig_cd_phase = 2;
+        }
+    }
+    if (g.rig == 13 || !g.picked || (int)(r - g.t0) < 0) return;
+    // SM64DS_RIG_LUIGI_DELAY_MS: hold the scripted punches and tags back (the late-joiner row)
+    if (g.rig_lnext == 0)
+        g.rig_lnext = g.t0 + 2500u + (unsigned)env_int("SM64DS_RIG_LUIGI_DELAY_MS", 0, 0, 120000);
+    rig_wear_cap_luigi();
+    rig_punch_tick(false);
+    if (g.rig_lclose > 0 && --g.rig_lclose == 0 && g.rig_lvictim >= 0) {
+        rig_luigi_stand_by(g.rig_lvictim, 60);
+        std::fprintf(stderr, "[rig] luigi punch: stepped in to 60 units of seat %d (state idx %d)\n",
+                     g.rig_lvictim, vs_arena_state_index(me));
+    }
+    if ((int)(r - g.rig_lnext) < 0) return;
+    // a punch is thrown from beyond body contact (a body touch is a TAG by the Luigi's
+    // console, on purpose: Tango's rule): the first distances that land decide
+    static const int kPunchDist[5] = { 85, 95, 75, 105, 70 };
+    // the punch rig leaves the immunity step to the touch rig: a survivor next to the Luigi is
+    // touched (a TAG) before the Luigi throws its own punch
+    if (g.rig == 12 && g.rig_lphase < 3) g.rig_lphase = 3;
+    if (g.rig == 14) {
+        if (g.rig_lphase != 0) return;
+        g.rig_lphase = 1;
+        const int lu = rig_luigi_any();
+        bool lowest = true;
+        for (int k = 0; k < g.seat; ++k)
+            if ((g.roster_now >> k & 1u) && !is_luigi(k)) lowest = false;
+        char *lb = lu >= 0 ? body_of(lu) : nullptr;
+        if (me_luigi() || !lowest || !lb) return;
+        int *p = (int *)(me + 0x5c);
+        p[0] = s32r(lb, 0x5c);
+        p[1] = s32r(lb, 0x60) + (260 << 12);
+        p[2] = s32r(lb, 0x64);
+        s32r(me, 0x98) = 0;
+        s32r(me, 0xa8) = -0x8000;
+        _ZN6Player11ChangeStateERNS_5StateE(me, data_ov002_021101b4);
+        std::fprintf(stderr, "[rig] luigi stomp: survivor seat %d drops onto Luigi seat %d from 260 units "
+                     "(ref %u)\n", g.seat, lu, r);
+        return;
+    }
+    if (g.rig_lphase <= 2) {
+        // the immunity step, three tries: the lowest survivor punches the lowest Luigi
+        const int lu = rig_luigi_any();
+        if (!me_luigi() && lu >= 0) {
+            bool lowest = true;
+            for (int k = 0; k < g.seat; ++k)
+                if ((g.roster_now >> k & 1u) && !is_luigi(k)) lowest = false;
+            if (lowest) {
+                const int d = kPunchDist[g.rig_lphase % 5];
+                std::fprintf(stderr, "[rig] luigi immunity: survivor seat %d punches Luigi seat %d "
+                             "from %d units (ref %u)\n", g.seat, lu, d, r);
+                rig_luigi_stand_by(lu, d);
+                g.rig_press_total = 1;
+                g.rig_press_frames = 1;
+            }
+        }
+        ++g.rig_lphase;
+        g.rig_lnext = r + (g.rig_lphase == 3 ? 2000u : 900u);
+    } else if (g.rig_lphase == 3) {
+        if (me_luigi()) {
+            const int v = rig_luigi_victim();
+            if (v >= 0) {
+                g.rig_lvictim = v;
+                if (g.rig == 11) {
+                    std::fprintf(stderr, "[rig] luigi touch: Luigi seat %d steps onto survivor seat %d "
+                                 "(ref %u)\n", g.seat, v, r);
+                    rig_luigi_stand_by(v, 20);
+                    g.rig_follow = 0;
+                } else {
+                    // bodies touch from ~85 units (a TAG, first): the swing starts out of reach
+                    // and is carried in while the fist is out, so the first contact is the attack
+                    static const int kClose[5] = { 3, 5, 2, 7, 4 };
+                    const int fr = kClose[g.rig_lclose_n++ % 5];
+                    std::fprintf(stderr, "[rig] luigi punch: Luigi seat %d swings at survivor seat %d "
+                                 "from 300 units, stepping in after %d frames (ref %u)\n", g.seat, v, fr, r);
+                    rig_luigi_stand_by(v, 300);
+                    g.rig_press_total = 1;
+                    g.rig_press_frames = 1;
+                    g.rig_lclose = fr;
+                }
+            }
+        }
+        g.rig_lphase = 4;
+        g.rig_lnext = r + (g.rig == 11 ? 3000u : 1200u);
+    } else {
+        // again, for the next survivor (or the same one if the punch missed)
+        g.rig_lphase = 3;
+        g.rig_lnext = r + 500u;
+    }
+}
+
 void rig_step() {
     if (g.rig == 1) rig_race();
     else if (g.rig == 2) rig_hit();
@@ -3301,6 +3700,7 @@ void rig_step() {
     else if (g.rig == 6 || g.rig == 7) rig_cap();
     else if (g.rig == 8 || g.rig == 10) rig_capdrop();
     else if (g.rig == 9) rig_capforge();
+    else if (g.rig >= 11 && g.rig <= 14) rig_luigi();
 }
 
 // ---------------------------------------------------------------------------
@@ -3402,11 +3802,16 @@ bool vs_ref_active() {
     g.active = h.mode == 1;           // relay mode only: the mesh has no referee
     g.log = env_on("SM64DS_ARENA_REFLOG");
     g.caps_off = env_on("SM64DS_ARENA_NOCAPS");
+    // LUIGI INFECTION rides the same switch Classic reads (the lobby's plan exports it)
+    g.luigi = g.active && port_luigi_enabled() != 0;
     for (int k = 0; k < 16; ++k) g.ledger[k] = 0;
     std::fprintf(stderr, "[vsarena] referee client %s (hub mode %d)\n",
                  g.active ? "ACTIVE: the referee in the relay decides stars, hits, "
                             "the clock and the winner"
                           : "inert: no relay, no referee (loopback mesh)", h.mode);
+    if (g.luigi)
+        std::fprintf(stderr, "[vsarena] Luigi Infection on the referee: READY asks for mode 2; the "
+                     "referee picks the Luigis, the game swaps the bodies on its INFECTED events\n");
     return g.active;
 }
 
@@ -3423,6 +3828,7 @@ void vs_ref_pre_walk(int frame) {
     syno_recv();
     pump_claims();
     maybe_send_ready();
+    luigi_start_watch();
     if (g.over) return;
     // the ledger and the progress byte are the referee's
     if (g.ledger_live) {
@@ -3534,6 +3940,14 @@ bool vs_ref_countdown(int *count, int *f304, int *beep, int *music) {
     *beep = 0;
     *music = 0;
     if (!vs_ref_active() || data_0209f2d8 != 1 || !g.inited) return false;
+    // LUIGI INFECTION, a match given up before START (luigi_start_watch): the count stays on
+    // the 3 it was held at until the game leaves (the ROM's own countdown would run on to 1
+    // and start the clock under the NO MATCH banner)
+    if (g.over && g.luigi && !g.started && g.over_v.luigi_cancel) {
+        *count = 3;
+        *f304 = 0x2a;
+        return true;
+    }
     if (g.over) return false;
     if (!g.started) {
         *count = 3;

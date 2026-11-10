@@ -1793,18 +1793,20 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
     } else {
         /* the match line: mode, arena, players (from the settings by their keys) */
         const char *mode = "?";
-        int arena = 0, players = 0, stars = 0;
-        char tmp[16];
+        int players = 0, stars = 0;
+        char tmp[16], arena[24] = "Arena ?";
         for (int i = 0; i < st->n_settings; ++i) {
             const LobbySetting &t = st->settings[i];
             if (!t.key) continue;
             if (!strcmp(t.key, "mode")) mode = setting_value(t, tmp, sizeof tmp);
-            else if (!strcmp(t.key, "arena")) arena = t.value;
+            /* the real client names the arena setting "map" (its choices are "Arena 1".."Arena 4"); the stand-in names it "arena" */
+            else if (!strcmp(t.key, "map")) { char v[16]; snprintf(arena, sizeof arena, "%s", setting_value(t, v, sizeof v)); }
+            else if (!strcmp(t.key, "arena")) snprintf(arena, sizeof arena, "Arena %d", t.value);
             else if (!strcmp(t.key, "players")) players = t.value;
             else if (!strcmp(t.key, "stars")) stars = t.value;
         }
-        if (!strcmp(mode, "First to stars")) snprintf(buf, sizeof buf, "First to %d stars  |  Arena %d  |  %d players", stars, arena, players);
-        else snprintf(buf, sizeof buf, "%s  |  Arena %d  |  %d players", mode, arena, players);
+        if (!strcmp(mode, "First to stars")) snprintf(buf, sizeof buf, "First to %d stars  |  %s  |  %d players", stars, arena, players);
+        else snprintf(buf, sizeof buf, "%s  |  %s  |  %d players", mode, arena, players);
         label_box(C_MODS, buf, 0, 1);
     }
     label_box(C_PRIVACY, "Privacy: Code", 0, 0);

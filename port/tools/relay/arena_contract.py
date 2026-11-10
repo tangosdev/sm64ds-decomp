@@ -29,7 +29,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(HERE, "arena_contract.json")
 H_PATH = os.path.join(HERE, "arena_wire.h")
 
-CONTRACT_VERSION = 1
+CONTRACT_VERSION = 2   # 2: Luigi Infection (mode 2), lane REFLUIGI1
 
 # ------------------------------------------------------------- the session
 
@@ -223,7 +223,8 @@ CLAIMS = [
     # id name           target              aux / stamp / frames
     (1, "READY", "map (0..3)",
      "aux = time limit s (0 none); stamp = rules: b0 first_to_n, b1 mode (0 "
-     "classic; others refused in phase A), b2 capacity 2..16, b3 marker count "
+     "classic, 2 Luigi Infection; 1 is kept for King of the Star and refused, "
+     "like every other value), b2 capacity 2..16, b3 marker count "
      "1..8; my_frame = the go plan digest (u32, same on every console); "
      "ref_frame 0. Every console sends it once booted; config must match the "
      "first READY"),
@@ -271,6 +272,12 @@ CLAIMS = [
      "func_ov002_020d93ac); aux = my angle Y (u16); ref_frame = my angle X "
      "(low 16) | my angle Z (high 16); my_frame = the frame it popped; the "
      "pop position is the referee's own sample of me"),
+    (19, "TAG", "victim seat",
+     "LUIGI (mode 2 only): my Luigi body touched a survivor's body (Classic's "
+     "team guard, unmatched/LuigiInfection_Hit.cpp, runs on any player "
+     "contact, before the ROM's attack and stomp branches); stamp; my_frame; "
+     "ref_frame = the victim frame I drew. A Luigi's HIT and STOMP infect "
+     "too; TAG is for a touch that is neither"),
 ]
 
 EVENTS = [
@@ -339,6 +346,18 @@ EVENTS = [
                       "placed cap that is taken / 2 a knocked-off cap lying "
                       "there; c ms until the placed cap is back / the "
                       "knocked-off one expires; d look; xyz last position"),
+    (22, "INFECTED", "LUIGI (mode 2): seat = the player who is a Luigi now; a "
+                     "by: the tagging Luigi's seat, 0xFF when the referee "
+                     "made it (pick, hand-off, late join); b cause (INF_*); "
+                     "c the tagger's claim id (HIT / STOMP / TAG), 0 when the "
+                     "referee made it; d the Luigi mask after (bit = seat); e "
+                     "survivors left in the match; t stamp (the first pick: "
+                     "T0); xyz the tagger's position (Fix12; 0 when the "
+                     "referee made it). No hurt, no star: swap the body to "
+                     "Luigi at once"),
+    (23, "TEAM_STATE", "SNAPSHOT ONLY (seq 0), mode 2: seat 0xFF; a 1 = the "
+                       "first Luigi is picked, 0 = not yet; c the Luigi mask; "
+                       "d the roster mask; t the pick time (T0)"),
 ]
 
 DENY_REASONS = [
@@ -353,10 +372,27 @@ DENY_REASONS = [
     (9, "BAD", "a field out of range"),
     (10, "TOO_OLD", "lag compensation past COMP_MAX_MS"),
     (11, "SELF", "target is the claimant, or not a seat in the match"),
+    (12, "TEAM", "Luigi Infection team rule: a Luigi may not take a cap, drop "
+                 "one, eat or catch; a survivor may not take the Luigi cap or "
+                 "TAG"),
 ]
 
 OVER_REASONS = [(1, "TIME_UP"), (2, "FIRST_TO_N"), (3, "LAST_STANDING"),
-                (4, "EVERYONE_LEFT")]
+                (4, "EVERYONE_LEFT"), (5, "LUIGIS_WIN"), (6, "SURVIVORS_WIN")]
+
+# READY rules byte 1. King of the Star keeps 1 and stays refused (shelved).
+MODES = [(0, "CLASSIC"), (1, "KING"), (2, "LUIGI")]
+MODES_ACCEPTED = [0, 2]
+
+# INFECTED field b: why this player is a Luigi now.
+INFECT_CAUSES = [(1, "PICK", "the first Luigi, picked at T0"),
+                 (2, "HIT", "a Luigi's HIT claim"),
+                 (3, "STOMP", "a Luigi's STOMP claim"),
+                 (4, "TAG", "a Luigi's TAG claim (body contact)"),
+                 (5, "HANDOFF", "every Luigi left: the referee picked a new one"),
+                 (6, "LATE_JOIN", "a new player joined after the first pick"),
+                 (7, "RETURN", "a Luigi whose connection dropped came back "
+                               "on its seat within REJOIN_KEEP_MS")]
 
 NUMBERS = {
     "FRAME_MS": 1000.0 / 30.0,
@@ -401,6 +437,15 @@ NUMBERS = {
     "CAP_HURT_EVIDENCE_MS": 1500,
     "CAP_DROP_WAIT_MS": 150,
     "CAP_DROP_MIN_MS": 1000,
+    "LUIGI_COUNTDOWN_MS": 5000,
+    # TAG reach: the player's body cylinder is radius 0x28000 (40 units),
+    # height 0x96000 (150 units) (src/game/player/Player.cpp:27563,
+    # func_ov002_020e63a4 -> dCcAcPos_c::Init): two bodies touch under 80
+    # apart horizontally and 150 vertically; +50 units for the drawn frame,
+    # the margin the stomp reach (130) already uses.
+    "TAG_REACH_H": 130,
+    "TAG_REACH_V": 200,
+    "REJOIN_KEEP_MS": 60000,
 }
 
 # The 78 Player::State records in g_player_states order
@@ -550,9 +595,61 @@ RULES = [
     "CAP_WORN_MS and showed a hurt within CAP_HURT_EVIDENCE_MS, once per "
     "wearing; the pop position is the referee's own sample of the seat, never "
     "the claim's.",
-    "Phase A: classic mode only (READY mode != 0 is DENY UNSUPPORTED); EAT / "
-    "SPIT / SWALLOW / ESCAPE are provisional for A5; speed strikes are logged, "
-    "not kicked.",
+    "Modes: 0 classic and 2 Luigi Infection; any other READY mode (1 is kept "
+    "for King of the Star) is DENY UNSUPPORTED. TAG outside a mode 2 match is "
+    "an unknown kind, as before mode 2 existed: no verdict, a strike. EAT / "
+    "SPIT / SWALLOW / ESCAPE are provisional for A5; speed "
+    "strikes are logged, not kicked.",
+    "LUIGI INFECTION (mode 2; mode 0 never sees any of this). The start "
+    "countdown is LUIGI_COUNTDOWN_MS instead of COUNTDOWN_MS; the referee "
+    "freezes nobody during it (movement is the game's) and, as in every mode, "
+    "decides no claim before T0 but QUIT (DENY STALE). At T0 the referee "
+    "picks the first Luigi: sorted(roster)[seed % n], seed = START x, n = "
+    "players in the match (Classic's port_luigi_seed rule), INFECTED b PICK. "
+    "The team is the referee's alone (the Luigi mask). A Luigi is immune: a "
+    "HIT, STOMP, EAT, CATCH or TAG on a Luigi is DENY INVULN, from anyone. A "
+    "Luigi's HIT (attack state, reach, lag checks as a hit), STOMP (as a "
+    "stomp) or TAG (body contact: TAG_REACH_H / TAG_REACH_V) on a survivor "
+    "is INFECTED: no hurt, no star, and the victim's invincibility, power and "
+    "hit-immunity do not stop it (Classic's guard runs before the ROM's "
+    "resolution); so do its state: a survivor who is hurt, dead, "
+    "respawning or squished is tagged too (Tango 11-09, 'tag anytime', a "
+    "deliberate difference from Classic, whose resolver needs the victim's "
+    "body collision on). A tag stamped before its tagger became a Luigi "
+    "(before the pick at T0, or before its own INFECTED) is DENY STALE. "
+    "A victim in a mouth or a hold is DENY INVULN. A Luigi's "
+    "EAT, CATCH, CAP_TAKE and CAP_DROP are DENY TEAM; a survivor's CAP_TAKE of "
+    "a Luigi cap (look 1) and a survivor's TAG are DENY TEAM. Survivor vs "
+    "survivor is the classic rules. Infecting a player ends any hold or "
+    "mouthful it is part of (THROWN b 4 / RELEASED b 4 first). Stars spill and "
+    "score as in classic but decide nothing: first_to_n is ignored. The end: "
+    "no survivor left in the match = LUIGIS_WIN (winners = the Luigis); the "
+    "clock runs out with a survivor = SURVIVORS_WIN (winners = the "
+    "survivors when the clock ran out, a survivor who left in the hold "
+    "after it included, so the mask may name a seat no longer in the "
+    "match); one player left of a match that had two or more = that "
+    "player's team wins (5 or 6); everyone left = EVERYONE_LEFT. A mode 2 "
+    "READY with capacity below 2 is DENY BAD. Leavers: the last Luigi leaves "
+    "with two or more players left = the referee picks a new Luigi by the "
+    "same rule over the players left (INFECTED b HANDOFF); the last survivor "
+    "leaves = LUIGIS_WIN. Once the clock has run out (the hold before "
+    "SURVIVORS_WIN) a leave changes nothing and nobody joins (Classic's "
+    "hand-off stands down on the frozen end). Joiners: a seat that dropped "
+    "WITHOUT a QUIT (silent PRESENCE_MS or relay detach) and sends READY "
+    "again on the same seat number (the relay's seat reclaim) within "
+    "REJOIN_KEEP_MS keeps its team: a survivor comes back a survivor (no "
+    "INFECTED; its SNAPSHOT's TEAM_STATE leaves it out), a Luigi comes back "
+    "a Luigi (INFECTED b RETURN). Cable dodge: a Luigi's HIT, STOMP or TAG "
+    "on a survivor who dropped before it was decided counts when it would "
+    "have counted with the survivor still there (the survivor's drawn "
+    "sample no more than COMP_MAX_MS + one frame older than the touch, body "
+    "contact reach): the tagger gets ACCEPTED, and the survivor, back on its "
+    "seat within REJOIN_KEEP_MS, is a Luigi by that touch (INFECTED b TAG, "
+    "HIT or STOMP, a = the tagger while it is still in the match). Any "
+    "other player who joins after the pick "
+    "is a Luigi at once (INFECTED b LATE_JOIN, before its SNAPSHOT); one who "
+    "joins before the pick is in the pick. A mode 2 SNAPSHOT carries a "
+    "TEAM_STATE record after the START replay.",
 ]
 
 
@@ -581,6 +678,10 @@ def contract():
         "deny_reasons": [{"id": i, "name": n, "note": d}
                          for i, n, d in DENY_REASONS],
         "over_reasons": [{"id": i, "name": n} for i, n in OVER_REASONS],
+        "modes": [{"id": i, "name": n, "accepted": i in MODES_ACCEPTED}
+                  for i, n in MODES],
+        "infect_causes": [{"id": i, "name": n, "note": d}
+                          for i, n, d in INFECT_CAUSES],
         "numbers": NUMBERS,
         "state_names": STATE_NAMES,
         "attack_states": ATTACK_STATES,
@@ -686,6 +787,17 @@ def render_h():
     w("enum Over : unsigned char {")
     for i, n in OVER_REASONS:
         w("    OVER_%s = %d," % (n, i))
+    w("};")
+    w("")
+    w("enum Mode : unsigned char {   // READY rules byte 1")
+    for i, n in MODES:
+        w("    MODE_%s = %d,%s" % (n, i, "" if i in MODES_ACCEPTED
+                                    else "   // refused (DENY_UNSUPPORTED)"))
+    w("};")
+    w("")
+    w("enum Infect : unsigned char {   // EV_INFECTED field b")
+    for i, n, d in INFECT_CAUSES:
+        w("    INF_%s = %d,   // %s" % (n, i, d))
     w("};")
     w("")
     w("enum MatchState : unsigned char {")
