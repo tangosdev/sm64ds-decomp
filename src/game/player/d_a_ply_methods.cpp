@@ -21517,8 +21517,6 @@ Ld0:
 }
 
 /* defined in src/game/actors/d_a_obj1up_logo.cpp */
-#pragma push
-#pragma opt_propagation off
 extern "C" {
 void daPly_c::func_ov002_020e5948() {
     extern s8 gNumStageStars[];
@@ -21532,8 +21530,6 @@ void daPly_c::func_ov002_020e5948() {
     s32 j;
     s32 bodyId;
     void* ma;
-    void* t;
-    s32 t2;
     void* p;
     s32 n;
     s32 k;
@@ -21755,12 +21751,8 @@ void daPly_c::func_ov002_020e5948() {
 
     bodyId = GetBodyModelID(3, 0);
     ma = player->mModels.mBodyModels[bodyId];
-    {
-        u8 pid = player->mPlayerNo;
-        t = ((dExtAnmModel_c *)ma)->data.materials;
-        t2 = *(s32*)((char*)t + 0x20);
-        player->mVsYoshiMaterialParam = t2 + (pid << 1);
-    }
+    player->mVsYoshiMaterialParam =
+        (player->mPlayerNo << 1) + ((dExtAnmModel_c *)ma)->data.materials->texImageParam;
 
     n = 0;
     {
@@ -21801,7 +21793,6 @@ void daPly_c::func_ov002_020e5948() {
                                              0);
 }
 }
-#pragma pop
 
 extern "C" {
 void daPly_c::PlayCharacterSound() {

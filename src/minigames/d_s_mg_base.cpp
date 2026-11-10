@@ -1114,9 +1114,6 @@ void dScMgBase_c::Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int si
     }
 }
 
-// Kept: the cartridge reloads tbl[i] after the cursor-item loop; with CSE on it is reused.
-#pragma push
-#pragma opt_common_subs off
 namespace s20ae858 {
 extern "C" {
 extern "C" {
@@ -1190,7 +1187,6 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
 }
 }
 }
-#pragma pop
 
 namespace s20aea30 {
 extern "C" {
