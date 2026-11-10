@@ -1704,10 +1704,15 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
 
 namespace s20af5e0 {
 extern "C" {
+/* One OAM record: GXOamAttr's attr0/attr1 word, then attr2's fields and
+   attr3. Spelled locally because including nitro/gx/gxcommon.h renumbers
+   this TU's @NNN symbols. */
 typedef struct Item {
-    u32 w0;
-    u32 val : 10;
-    u32 rest : 22;
+    u32 attr01;
+    u32 charNo : 10;
+    u32 priority : 2;
+    u32 cParam : 4;
+    u32 attr3 : 16;
 } Item;
 
 /* Copies an OAM sprite list (8-byte entries, ending at the one whose
@@ -1720,11 +1725,11 @@ int Mg_CopySpriteList(Item* src, Item* dst, int add)
     int i;
     for (i = 0; i < 0x20; i++) {
         dst[i] = *src;
-        dst[i].val = (add + src->val) & 0x3ff;
-        if (*(u16*)((char*)src + 6) == 0xffff)
+        dst[i].charNo = (add + src->charNo) & 0x3ff;
+        if (src->attr3 == 0xffff)
             break;
         if (i == 0x1f) {
-            *(u16*)((char*)&dst[i] + 6) = 0xffff;
+            dst[i].attr3 = 0xffff;
             break;
         }
         src++;

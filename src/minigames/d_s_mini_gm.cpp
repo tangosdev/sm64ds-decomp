@@ -1073,16 +1073,15 @@ void dScMiniGm_c::UpdatePageScroll() {
 }
 
 extern "C" {
-int MiniGm_HasSecondPage(void *self){
-  int i, j;
-  for(i=0;i<4;i++){
-    char *p = (char*)i + 0x18;
-    for(j=6;j<9;j++){
-      if(MiniGm_IsUnlocked(self, (int)p)) return 1;
-      p += 4;
+int MiniGm_HasSecondPage(void *self) {
+    int i, j;
+    for (i = 0; i < 4; i++) {
+        for (j = 6; j < 9; j++) {
+            if (MiniGm_IsUnlocked(self, j * 4 + i))
+                return 1;
+        }
     }
-  }
-  return 0;
+    return 0;
 }
 }
 
