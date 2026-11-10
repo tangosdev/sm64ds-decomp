@@ -134,13 +134,14 @@ unsigned g_sil_pit_frame = 0; bool g_sil_pit_done = true;     // SM64DS_SILVER_P
 bool g_sil_pit_nomarker = false;   // ...and first forget its marker, so the ROM destroys even the dropper's own star
 long long g_sil_goto_wall = 0;     // SM64DS_SILVER_GOTO_WALL=<wall ms>: at that machine time put my player on the lowest-slot silver star once (proof knob: two consoles on one star at one moment)
 bool g_sil_off = false;            // SM64DS_SPAWN_OFF=silver: must-fail control, no silver sharing at all
-struct SilStats { unsigned long long credit_take, credit_ann, credit_snap, capped, drop_sent, drop_applied, drop_local, ghost_take, sent_snap, recv_snap; } g_sst = {};
+struct SilStats { unsigned long long credit_take, credit_ann, credit_snap, capped, drop_sent, drop_applied, drop_local, ghost_take, sent_snap, recv_snap, fell, fell_take; } g_sst = {};
 
 // announced actors
 struct Net {
     bool used, remote, gone;
     uint8_t origin, kind; uint16_t counter, cls; uint32_t param; int32_t pos[3]; int8_t area;
     char *a; unsigned uid; bool seen;
+    bool sil_took, sil_fell;      // SILVERCOOP1: a player took this silver star here / my copy fell off the level (the others keep theirs)
     bool alias; uint8_t alias_o; uint16_t alias_c;      // bossfix1: the other console's id for the SAME boss reward (each console keeps its own native key)
     int sends; unsigned next; int gsends; unsigned gnext;
 };
@@ -755,7 +756,12 @@ void scan(unsigned now) {
                              pl ? (int)(((long long)*(const int *)(pl + 0x5c) - *(const int *)(a + 0x5c)) >> 12) : -1, g_frames, wall_ms());
             }
             for (Net &n : g_net)
-                if (n.used && !n.gone && n.a == a && n.uid == uid) { n.seen = !dead && !taken_now; }
+                if (n.used && !n.gone && n.a == a && n.uid == uid) {
+                    n.seen = !dead && !taken_now;
+                    if (cls == 179 && !dead && (taken_now || (is_player_ptr(*(void *const *)(a + 0x438)) && *(const unsigned *)(a + 0x440) >= 5u &&
+                                                              *(const unsigned *)(a + 0x440) != 8u && *(const unsigned *)(a + 0x440) != 9u)))
+                        n.sil_took = true;          // SILVERCOOP1: a player has it here
+                }
             for (Lnk &l : g_lnk)
                 if (l.used && !l.taken && l.a == a && l.uid == uid) { l.seen = !dead && !taken_now; }
         }
@@ -807,7 +813,17 @@ void scan(unsigned now) {
     const char *me_pl = my_player();
     const int my_area = me_pl ? a_area(me_pl) : -1;
     for (Net &n : g_net) {
-        if (!n.used || n.gone || n.seen) continue;
+        if (!n.used || n.gone || n.seen || n.sil_fell) continue;
+        if (n.cls == 179 && !n.sil_took && !g_sil_off && !(n.area >= 0 && my_area >= 0 && n.area != my_area)) {
+            // SILVERCOOP1: a silver star whose copy here vanished with no take fell off the level: on a death floor or out of bounds
+            // daStar_c::func_ov002_020e8abc sends a star back to its marker, and destroys one whose marker it can not find (a
+            // dropped star finds none when no marker here is free). Nobody took it, so no GONE goes out: the others keep their
+            // copy, and a later take of it there still counts here.
+            n.sil_fell = true; n.a = nullptr;
+            ++g_sst.fell;
+            if (g_log) std::fprintf(stderr, "[coopsilver] my copy fell id=%d/%d (no take seen): not a take, nothing sent frame=%u wall=%lld\n", (int)n.origin, (int)n.counter, g_frames, wall_ms());
+            continue;
+        }
         n.gone = true; n.gsends = 0; n.gnext = now;
         if (n.area >= 0 && my_area >= 0 && n.area != my_area) {
             n.gsends = 3;
@@ -1015,6 +1031,10 @@ void apply_gone(int seat, const SpGoneWire &w, unsigned now) {
         if (!n) { ++g_st.gone_unknown; return; }
         if (n->gone) return;
         if (n->a && n->seen && n->cls == 179) sil_on_remote_gone(n->a);      // SILVERCOOP1: a friend's take counts here too
+        else if (n->sil_fell && !g_sil_off && g_sil_last >= 0) {     // ...also when my copy of it had fallen
+            ++g_sst.fell_take;
+            sil_credit(1, "announced take (my copy had fallen)");
+        }
         if (n->a && n->seen) kill_quiet(n->a);
         n->gone = true; n->gsends = 3;               // heard, not re-sent: the claimer already told everyone
         ++g_st.gone_applied;
@@ -1542,9 +1562,10 @@ void on_frame(unsigned now) {
     if (g_log && (g_frames % 120u) == 0) {
         stats_line();
         const int me = sil_me();
-        std::fprintf(stderr, "[coopsilver] stat mine=%d sum=%d tracked=%d credit take=%llu ann=%llu snap=%llu capped=%llu drops sent=%llu applied=%llu local=%llu ghost=%llu snap sent=%llu recv=%llu frame=%u\n",
+        std::fprintf(stderr, "[coopsilver] stat mine=%d sum=%d tracked=%d credit take=%llu ann=%llu snap=%llu capped=%llu drops sent=%llu applied=%llu local=%llu ghost=%llu snap sent=%llu recv=%llu fell=%llu fell take=%llu frame=%u\n",
                      me >= 0 ? (int)data_0209f310[me] : -1, sil_total(), g_nsil, g_sst.credit_take, g_sst.credit_ann, g_sst.credit_snap, g_sst.capped,
-                     g_sst.drop_sent, g_sst.drop_applied, g_sst.drop_local, g_sst.ghost_take, g_sst.sent_snap, g_sst.recv_snap, g_frames);
+                     g_sst.drop_sent, g_sst.drop_applied, g_sst.drop_local, g_sst.ghost_take, g_sst.sent_snap, g_sst.recv_snap,
+                     g_sst.fell, g_sst.fell_take, g_frames);
     }
 }
 
