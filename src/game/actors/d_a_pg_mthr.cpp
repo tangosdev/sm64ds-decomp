@@ -160,9 +160,7 @@ int daPgMthr_c::InitResources()
         mPosY = ground.clsnY;
     else
         mPosY = pos.y;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos = mPos;
     mPlayer = 0;
     UpdateModelAndShadow();
     return 1;
@@ -352,7 +350,7 @@ int daPgMthr_c::StateFollowUpdate() {
         holding = (mPlayer->mObjInMouth != 0);
     else
         holding = (mPlayer->mHeldObj != 0);
-    if (holding == 0 || Vec3_Dist((Vector3 *)&mHomePosX, &mPlayer->mPos) > HOME_RANGE) {
+    if (holding == 0 || Vec3_Dist(&mHomePos, &mPlayer->mPos) > HOME_RANGE) {
         mPlayer = 0;
         ChangeState(0);
     }
@@ -402,7 +400,7 @@ void daPgMthr_c::CheckFollow() {
 
     if (p == 0)
         return;
-    if (Vec3_Dist((Vector3 *)&mHomePosX, &p->mPos) > HOME_RANGE)
+    if (Vec3_Dist(&mHomePos, &p->mPos) > HOME_RANGE)
         return;
     if (p->param1 == CHAR_YOSHI)
         held = (dActor_c *)p->mObjInMouth;
