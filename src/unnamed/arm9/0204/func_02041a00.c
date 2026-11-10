@@ -3,7 +3,7 @@
 #include "private/fs_views.h"
 extern char data_020a2400[];
 extern void func_02041224(char *thiz, int n);
-extern int func_020656d4(u16 arg0, const void *arg1, s32 arg2, u32 arg3);
+extern int WBT_PutUserData(u16 arg0, const void *arg1, s32 arg2, u32 arg3);
 extern void func_02042160(void);
 
 typedef struct FSFile FSFile;
@@ -39,5 +39,5 @@ void func_02041a00(FSFile *file) {
     m.offset = pos;
     m.packetSizeHigh = (packetSize >> 8) & 0xff;
     m.packetSizeLow = (u8)packetSize;
-    func_020656d4(1, &m, 9, (u32)func_02042160);
+    WBT_PutUserData(1, &m, 9, (u32)func_02042160);
 }

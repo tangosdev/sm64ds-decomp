@@ -3,75 +3,75 @@
   "functions": {
     "arm9:0x0200406a": {
       "author": "ruspecial",
-      "name": "Div"
+      "name": "SVC_Div"
     },
     "arm9:0x020040f4": {
       "author": "ruspecial",
-      "name": "IntrWait"
+      "name": "SVC_WaitIntr"
     },
     "arm9:0x0200414c": {
       "author": "ruspecial",
-      "name": "SoftReset"
+      "name": "SVC_SoftReset"
     },
     "arm9:0x020041d2": {
       "author": "ruspecial",
-      "name": "GetCRC16"
+      "name": "SVC_GetCRC16"
     },
     "arm9:0x02004244": {
       "author": "ruspecial",
-      "name": "RLUnCompReadByCallbackWrite16bit"
+      "name": "SVC_UncompressRL16FromDevice"
     },
     "arm9:0x020042b6": {
       "author": "ruspecial",
-      "name": "Halt"
+      "name": "SVC_Halt"
     },
     "arm9:0x0200432c": {
       "author": "ruspecial",
-      "name": "BitUnPack"
+      "name": "SVC_UnpackBits"
     },
     "arm9:0x0200438a": {
       "author": "ruspecial",
-      "name": "CpuSet"
+      "name": "SVC_CpuSet"
     },
     "arm9:0x020043d0": {
       "author": "ruspecial",
-      "name": "Sqrt"
+      "name": "SVC_Sqrt"
     },
     "arm9:0x02004438": {
       "author": "ruspecial",
-      "name": "LZ77UnCompReadNormalWrite8bit"
+      "name": "SVC_UncompressLZ8"
     },
     "arm9:0x020044ae": {
       "author": "ruspecial",
-      "name": "IsDebugger"
+      "name": "SVC_IsMmemExpanded"
     },
     "arm9:0x0200451e": {
       "author": "ruspecial",
-      "name": "CpuFastSet"
+      "name": "SVC_CpuSetFast"
     },
     "arm9:0x0200456e": {
       "author": "ruspecial",
-      "name": "RLUnCompReadNormalWrite8bit"
+      "name": "SVC_UncompressRL8"
     },
     "arm9:0x020045e6": {
       "author": "ruspecial",
-      "name": "HuffUnCompReadByCallback"
+      "name": "SVC_UncompressHuffmanFromDevice"
     },
     "arm9:0x02004656": {
       "author": "andrewboudreau",
-      "name": "LZ77UnCompReadByCallbackWrite16bit"
+      "name": "SVC_UncompressLZ16FromDevice"
     },
     "arm9:0x020046c2": {
       "author": "andrewboudreau",
-      "name": "VBlankIntrWait"
+      "name": "SVC_WaitVBlankIntr"
     },
     "arm9:0x0200472a": {
       "author": "andrewboudreau",
-      "name": "WaitByLoop"
+      "name": "SVC_WaitByLoop"
     },
     "arm9:0x02004782": {
       "author": "ruspecial",
-      "name": "Mod"
+      "name": "SVC_DivRem"
     },
     "arm9:0x02004800": {
       "author": "ruspecial",
@@ -3055,7 +3055,7 @@
     },
     "arm9:0x02019740": {
       "author": "tangosdev",
-      "name": "Crash"
+      "name": "OS_Terminate"
     },
     "arm9:0x02019780": {
       "author": "tangosdev",
@@ -11259,19 +11259,19 @@
     },
     "arm9:0x020656d4": {
       "author": "tangosdev",
-      "name": "func_020656d4"
+      "name": "WBT_PutUserData"
     },
     "arm9:0x02065730": {
       "author": "tangosdev",
-      "name": "func_02065730"
+      "name": "WBT_GetBlock"
     },
     "arm9:0x02065788": {
       "author": "tangosdev",
-      "name": "func_02065788"
+      "name": "WBT_GetBlockInfo"
     },
     "arm9:0x020657d0": {
       "author": "tangosdev",
-      "name": "func_020657d0"
+      "name": "WBT_RequestSync"
     },
     "arm9:0x020657fc": {
       "author": "tangosdev",
@@ -11279,11 +11279,11 @@
     },
     "arm9:0x020658c0": {
       "author": "tangosdev",
-      "name": "func_020658c0"
+      "name": "WBT_RegisterBlock"
     },
     "arm9:0x02065970": {
       "author": "tangosdev",
-      "name": "func_02065970"
+      "name": "WBT_NumOfRegisteredBlock"
     },
     "arm9:0x020659a0": {
       "author": "tangosdev",
@@ -11299,11 +11299,11 @@
     },
     "arm9:0x02065a74": {
       "author": "tangosdev",
-      "name": "func_02065a74"
+      "name": "WBT_GetOwnAid"
     },
     "arm9:0x02065a84": {
       "author": "tangosdev",
-      "name": "func_02065a84"
+      "name": "WBT_SetOwnAid"
     },
     "arm9:0x02065a94": {
       "author": "tangosdev",
@@ -11367,7 +11367,7 @@
     },
     "arm9:0x02065de4": {
       "author": "lunavyqo",
-      "name": "func_02065de4"
+      "name": "MBi_ReceiveRequestDataPiece"
     },
     "arm9:0x02065eb8": {
       "author": "tangosdev",
@@ -11447,15 +11447,15 @@
     },
     "arm9:0x020672d0": {
       "author": "tangosdev",
-      "name": "func_020672d0"
+      "name": "MB_ReadMultiBootParentBssDesc"
     },
     "arm9:0x0206736c": {
       "author": "andrewboudreau",
-      "name": "func_0206736c"
+      "name": "IsAbleToLoad"
     },
     "arm9:0x02067480": {
       "author": "tangosdev",
-      "name": "func_02067480"
+      "name": "MBi_IsAbleToRecv"
     },
     "arm9:0x02067530": {
       "author": "tangosdev",
@@ -11463,39 +11463,39 @@
     },
     "arm9:0x02067604": {
       "author": "andrewboudreau",
-      "name": "func_02067604"
+      "name": "MBi_MakeBlockInfoTable"
     },
     "arm9:0x020676e0": {
       "author": "tangosdev",
-      "name": "func_020676e0"
+      "name": "MBi_SetSegmentInfo"
     },
     "arm9:0x020678a4": {
       "author": "tangosdev",
-      "name": "func_020678a4"
+      "name": "MBi_MakeDownloadFileInfo"
     },
     "arm9:0x02067928": {
       "author": "tangosdev",
-      "name": "func_02067928"
+      "name": "MB_RegisterFile"
     },
     "arm9:0x02067b68": {
       "author": "andrewboudreau",
-      "name": "func_02067b68"
+      "name": "MBi_ReadSegmentHeader"
     },
     "arm9:0x02067bfc": {
       "author": "tangosdev",
-      "name": "func_02067bfc"
+      "name": "MB_ReadSegment"
     },
     "arm9:0x02067e70": {
       "author": "tangosdev",
-      "name": "func_02067e70"
+      "name": "MB_GetSegmentLength"
     },
     "arm9:0x02067ee4": {
       "author": "tangosdev",
-      "name": "func_02067ee4"
+      "name": "MBi_calc_cksum"
     },
     "arm9:0x02067f2c": {
       "author": "tangosdev",
-      "name": "func_02067f2c"
+      "name": "MBi_BlockHeaderEnd"
     },
     "arm9:0x02067f68": {
       "author": "tangosdev",
@@ -11583,39 +11583,39 @@
     },
     "arm9:0x020688fc": {
       "author": "lunavyqo",
-      "name": "func_020688fc"
+      "name": "MBi_SendMP"
     },
     "arm9:0x02068a28": {
       "author": "tangosdev",
-      "name": "func_02068a28"
+      "name": "MBi_SetMPData"
     },
     "arm9:0x02068a54": {
       "author": "tangosdev",
-      "name": "func_02068a54"
+      "name": "MB_End"
     },
     "arm9:0x02068a74": {
       "author": "tangosdev",
-      "name": "func_02068a74"
+      "name": "MBi_CommEnd"
     },
     "arm9:0x02068ae8": {
       "author": "tangosdev",
-      "name": "func_02068ae8"
+      "name": "MB_StartParent"
     },
     "arm9:0x02068d08": {
       "author": "tangosdev",
-      "name": "func_02068d08"
+      "name": "MBi_StartCommon"
     },
     "arm9:0x02068dc8": {
       "author": "andrewboudreau",
-      "name": "func_02068dc8"
+      "name": "MB_SetParentCommParam"
     },
     "arm9:0x02068e44": {
       "author": "tangosdev",
-      "name": "func_02068e44"
+      "name": "MBi_IsCommSizeValid"
     },
     "arm9:0x02068e4c": {
       "author": "andrewboudreau",
-      "name": "func_02068e4c"
+      "name": "MB_Init"
     },
     "arm9:0x02069038": {
       "author": "tangosdev",
@@ -11623,15 +11623,15 @@
     },
     "arm9:0x020690b0": {
       "author": "tangosdev",
-      "name": "func_020690b0"
+      "name": "MBi_ChildCallback"
     },
     "arm9:0x02069918": {
       "author": "andrewboudreau",
-      "name": "func_02069918"
+      "name": "MBi_ChildPortCallback"
     },
     "arm9:0x02069994": {
       "author": "andrewboudreau",
-      "name": "func_02069994"
+      "name": "MBi_ParentCallback"
     },
     "arm9:0x0206a230": {
       "author": "tangosdev",
@@ -11671,11 +11671,11 @@
     },
     "arm9:0x0206a600": {
       "author": "tangosdev",
-      "name": "func_0206a600"
+      "name": "CTRDG_TerminateForPulledOut"
     },
     "arm9:0x0206a634": {
       "author": "tangosdev",
-      "name": "func_0206a634"
+      "name": "CTRDGi_PulledOutCallback"
     },
     "arm9:0x0206a694": {
       "author": "tangosdev",
@@ -11683,7 +11683,7 @@
     },
     "arm9:0x0206a6d0": {
       "author": "tangosdev",
-      "name": "func_0206a6d0"
+      "name": "CTRDGi_InitModuleInfo"
     },
     "arm9:0x0206a88c": {
       "author": "tangosdev",

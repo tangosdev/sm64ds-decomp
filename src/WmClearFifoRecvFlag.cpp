@@ -30,7 +30,7 @@ typedef struct WMPortSendCallback {
     Handler callback; /* 0x14 */
 } WMPortSendCallback;
 
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern void MIi_CpuCopy16(const void *src, void *dst, s32 count);
 extern int WM_Finish(void);
 extern void WmClearFifoRecvFlag(void);
@@ -57,7 +57,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
     if (op >= 0x25) {
         if (op == 0x80) {
             if (msg[1] == 0x13)
-                Crash();
+                OS_Terminate();
             if ((Handler)data_020a89ac->indCallback != 0)
                 ((Handler)data_020a89ac->indCallback)(msg);
         } else if (op == 0x82) {

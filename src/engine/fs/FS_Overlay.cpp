@@ -64,7 +64,7 @@ int FS_ReadFile(FSFile *file, void *dst, int len);
 int FS_CloseFile(void *self);
 int func_0206cf98(int a, u32 b, u32 c);
 int DGT_SetOverlayTableMode(s32 newVal);
-void Crash(void);
+void OS_Terminate(void);
 
 /* Invalidate the I- and D-cache over the overlay's whole region (image and
  * bss), then zero the bss after the image. */
@@ -179,7 +179,7 @@ void FS_StartOverlay(FSOverlayInfo *p_ovi) {
         }
         if (ret == 0) {
             MI_CpuFill8(p_ovi->header.ram_address, 0, rare_size);
-            Crash();
+            OS_Terminate();
             return;
         }
     }
@@ -300,7 +300,7 @@ void FS_AttachOverlayTable(int target, void *ptr, u32 size) {
     if (ptr != 0 && target == 0) {
         u32 r4 = DGT_SetOverlayTableMode(1);
         if (!FSi_CompareDigest(data_0209a7d8, ptr, size)) {
-            Crash();
+            OS_Terminate();
         }
         DGT_SetOverlayTableMode(r4);
     }

@@ -5,7 +5,7 @@ extern void TP_SetCalibrateParam(void *p);
 extern void TP_RequestSetStabilityAsync(int a, int b);
 extern void TP_WaitBusy(int mask);
 extern int TP_CheckError(int mask);
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern void TP_RequestAutoSamplingStartAsync(unsigned int vcount, unsigned int frequency,
                                              TPData *samplingBufs, unsigned int bufSize);
 extern TPCalibrateParam data_020a0de0;
@@ -25,9 +25,9 @@ void func_0203bbc0(void)
     TP_RequestSetStabilityAsync(3, 0x1e);
     TP_WaitBusy(8);
     if (TP_CheckError(8) != 0)
-        Crash();
+        OS_Terminate();
     TP_RequestAutoSamplingStartAsync(0, 4, (TPData *)data_020a0df8, 9);
     TP_WaitBusy(2);
     if (TP_CheckError(2) != 0)
-        Crash();
+        OS_Terminate();
 }
