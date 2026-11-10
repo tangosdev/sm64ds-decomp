@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "MWCPlusLib.h"
+#include "private/throw_context.h"
 
 /* Walk buffer shared with func_02072d90. The exception-table cursor fills
  * 0x00..0x13; the word at 0x14 remains unknown. The throw context
@@ -10,7 +11,7 @@
 struct ActionWalk {
     ActionIterator iterator; /* 0x00..0x13 */
     char unknown_14[4];
-    char mThrow;
+    ThrowContext mThrow; /* 0x18 */
 };
 
 #ifndef SM64DS_PLATFORM_PC
