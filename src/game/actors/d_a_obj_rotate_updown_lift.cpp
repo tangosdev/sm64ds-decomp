@@ -56,6 +56,7 @@ enum daObjRotateUpdownLift_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "decl_Platform.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
@@ -123,7 +124,6 @@ extern VariantWords data_ov091_02134bd0;
 extern UpdownFileSlot data_ov091_02134c30[];
 extern UpdownFileSlot data_ov091_02134c34[];
 extern UpdownClpsSlot data_ov091_02134c38[];
-extern s16 FX_SinCosTable_[];
 extern s8 gCurrentSublevel;
 
 extern "C" {
@@ -216,8 +216,7 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     Matrix4x3_FromRotationY((Matrix4x3 *)mShadowMat, mAngleY);
     ((Matrix4x3 *)mShadowMat)->t.x = mPosX >> 3;
 
-    int sinIdx = (u16)mAngleX >> 4;
-    int sine = FX_SinCosTable_[sinIdx << 1];
+    int sine = FX_SinIdx((u16)mAngleX >> 4);
     int sineAbs = sine < 0 ? -sine : sine;
     int scaled = FX_MUL(sineAbs, 0xa0000);
     int variantA = mVariant;
@@ -238,10 +237,9 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     mClipRadius = (int)(cap + ((unsigned)cap >> 31)) >> 4;
 
     int shr = FX_MUL(h, 32);
-    int cosIdx = (u16)mAngleX >> 4;
     int variantC = mVariant;
     int sx = shadowSizeX.v[variantC] - shr;
-    int cosine = FX_SinCosTable_[(cosIdx << 1) + 1];
+    int cosine = FX_CosIdx((u16)mAngleX >> 4);
     int fac = 0xa0000 - shr;
     if (cosine < 0)
         cosine = -cosine;
