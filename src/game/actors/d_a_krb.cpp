@@ -116,16 +116,6 @@ struct KrbModelFilePtr : SharedFilePtr {
    daKrb_c::State. */
 typedef void (daKrb_c::*StateHandler)();
 
-/* Four state descriptors retain their flat-address initializer spelling.
-   The handlers are real methods; standalone StateHandler initializers grow
-   the runtime initializer from 0x1fc to 0x23c under 2004/b56. The first word
-   carries the code relocation; the second is zero, like every other
-   descriptor. */
-union KrbFreeHandler {
-    void (*fn)(daKrb_c *goomba);
-    StateHandler pmf;
-};
-
 /* Actor ids (symbols/actor_debug_names.tsv). */
 enum {
     ACTOR_SILVER_STAR = 179,
@@ -189,17 +179,6 @@ extern KrbAnimationFileHandle data_ov084_02130ce8;
 extern KrbAnimationFileHandle data_ov084_02130cf0;
 extern KrbModelFilePtr data_ov084_02130cf8;
 extern KrbModelFilePtr gKuriboLowModelModelFile;
-/* local extern: flat function addresses initialize the retained union descriptors below.
-   Real StateHandler globals add four runtime descriptor copies (initializer 0x23c
-   instead of retail 0x1fc under 2004/b56). */
-/* local extern: retained flat state descriptor initialization, measured above. */
-extern void _ZN7daKrb_c19func_ov084_0212a774Ev(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
-extern void _ZN7daKrb_c19func_ov084_0212ab48Ev(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
-extern void _ZN7daKrb_c19func_ov084_0212b2dcEv(daKrb_c *);
-/* local extern: scalar state descriptor initialization; see the 0x23c/0x1fc experiment above. */
-extern void _ZN7daKrb_c19func_ov084_0212a6f8Ev(daKrb_c *);
 extern StateHandler data_ov084_02130d74[];
 int func_02037e20(int* p);
 extern void func_02012694(unsigned int id, const Vector3 *pos);
@@ -237,7 +216,7 @@ daKrb_c::~daKrb_c()
  * noticed) and of mUnstickTimer.
  *
  * While mUnstickTimer is running it counts down one a frame (or is cleared
- * outright in STATE_HOP_START) and the radius is left alone. Otherwise the
+ * outright in STATE_ATTACKED_MARIO) and the radius is left alone. Otherwise the
  * radius is 500 units, except that a Goomba with mCapId >= 6 that has been
  * stuck for more than 10 frames loses 20 units per extra frame, down to a
  * floor of 10 units (0xa000).
@@ -261,12 +240,9 @@ void daKrb_c::func_ov084_021290d4() {
         /* Comparison stays in the `if`: assigning `== 1` to an int is a bool
            in C++ and materialises moveq/movne. */
         state = c->mState;
-        if (state == daKrb_c::STATE_HOP_START)
-        {
+        if (state == daKrb_c::STATE_ATTACKED_MARIO) {
             c->mUnstickTimer = 0;
-        }
-        else
-        {
+        } else {
             /* timerOff is the offset of mUnstickTimer (0x458). The plain
                `c->mUnstickTimer--` builds the same .text but drops nine
                @NNN numbers that daKrb_c.json pins, so this stays raw. */
@@ -698,13 +674,16 @@ ret0:
     return 0;
 }
 
-/* Start a hop: play SND_HOP, enter STATE_AIRBORNE with no horizontal speed and
+/* Start a hop: play SND_HOP, enter STATE_JUMP with no horizontal speed and
  * the per-type launch speed data_ov084_02130248[type] as vertical speed, and
- * set the 0x4 bit of the dCcAc_c flags (meaning not recovered). */
-void daKrb_c::func_ov084_02129c9c() {
+ * set the 0x4 bit of the dCcAc_c flags (meaning not recovered).
+ * N64: goomba_begin_jump -- the same sound, action JUMP, forward speed 0 and
+ * a size-scaled upward speed (50/3 * oGoombaScale there, a per-type table
+ * here). */
+void daKrb_c::BeginJump() {
     daKrb_c *goomba = this;
     func_02012694(SND_HOP, &goomba->mCamSpacePos);
-    goomba->mState = daKrb_c::STATE_AIRBORNE;
+    goomba->mState = daKrb_c::STATE_JUMP;
     goomba->mHorzSpeed = 0;
     goomba->mVertSpeed = data_ov084_02130248[goomba->mGoombaType];
     goomba->mWithMeshClsn.ClearGroundFlag();
@@ -804,10 +783,10 @@ void daKrb_c::func_ov084_02129cf4(Fix12i distThresh) {
  *   daPly_c bounces (40.0) and DEATH_STOMPED; if it is vanished (mIsVanish)
  *   nothing happens; otherwise, in STATE_WALK, the daPly_c is hurt (knockback
  *   12.0, or 5.0 for a king minion) and the Goomba either removes itself
- *   (KURIBO_S) or, when the hit carries HIT_PLAYER, goes to STATE_HOP_START
+ *   (KURIBO_S) or, when the hit carries HIT_PLAYER, goes to STATE_ATTACKED_MARIO
  *   (the others).
  *   KURIBO_L's own daPly_c test: JumpedOnByPlayer gives DEATH_STOMPED; a
- *   vanished daPly_c does nothing; in STATE_WALK it goes to STATE_HOP_START
+ *   vanished daPly_c does nothing; in STATE_WALK it goes to STATE_ATTACKED_MARIO
  *   first and then hurts the daPly_c only if the hit carries HIT_PLAYER.
  * If a death state was chosen the cap is released. In every case the hit is
  * handed to func_ov002_020aea30, and the Goomba is turned half a turn when the
@@ -968,7 +947,7 @@ void daKrb_c::func_ov084_02129ed4() {
                     hurtOriginRepeat = goomba->mPos;
                     other->Hurt(hurtOriginRepeat, data_ov084_02130204[goomba->mGoombaType],
                                 hurtKnockback, 1, 0, 1);
-                    goomba->mState = daKrb_c::STATE_HOP_START;
+                    goomba->mState = daKrb_c::STATE_ATTACKED_MARIO;
                     return;
                 }
                 goto block_68;
@@ -996,7 +975,7 @@ void daKrb_c::func_ov084_02129ed4() {
         if (other->mIsVanish != 0)
             return;
         if (goomba->mState == daKrb_c::STATE_WALK) {
-            goomba->mState = daKrb_c::STATE_HOP_START;
+            goomba->mState = daKrb_c::STATE_ATTACKED_MARIO;
             if ((goomba->mdCcAc_c.hitFlags & HIT_PLAYER) == 0) return;
             hurtOriginJumped = goomba->mPos;
             other->Hurt(hurtOriginJumped, data_ov084_02130204[goomba->mGoombaType], hurtKnockback,
@@ -1074,7 +1053,7 @@ void daKrb_c::func_ov084_0212a580() {
 
 /* STATE_PAUSE: stand still (horizontal speed 0) until mWanderRerollTimer runs
  * out, then go back to STATE_WALK with the walk animation. */
-void daKrb_c::func_ov084_0212a6f8() {
+void daKrb_c::ActPause() {
     daKrb_c *goomba = this;
     goomba->mHorzSpeed = 0;
     /* Header spells this s16; the body loads it unsigned, and the two
@@ -1109,7 +1088,7 @@ void daKrb_c::func_ov084_0212a6f8() {
  * Last, mEatenByYoshi is 1 around a SpawnParticlesIfHitOtherObj call (which
  * reports hits differently while it is set, per dEnemyBase_c.h); a hit sets
  * DEATH_HIT_20000 and bit 0 of the dCcAc_c flags, as in func_ov084_02129a00. */
-void daKrb_c::func_ov084_0212a774() {
+void daKrb_c::ActTumble() {
     daKrb_c *goomba = this;
     Vector3 v;
     u16 h = goomba->mBounceCountdown;
@@ -1204,13 +1183,15 @@ void daKrb_c::func_ov084_0212a774() {
     goomba->mEatenByYoshi = 0;
 }
 
-/* STATE_AIRBORNE: after a hop begins. On the frame it touches down a large
+/* STATE_JUMP: after a hop begins. On the frame it touches down a large
  * Goomba kicks up HugeLandingDust and a normal one LandingDust. Once on the
  * ground it returns to STATE_WALK and clears dCcAc_c flag bit 0x4 (set by
- * func_ov084_02129c9c); in the air it turns mPrevAngleY toward mTargetAngleY
- * by at most 0x800 (11.25 degrees) a frame. */
-void daKrb_c::func_ov084_0212aab0()
-{
+ * BeginJump); in the air it turns mPrevAngleY toward mTargetAngleY
+ * by at most 0x800 (11.25 degrees) a frame.
+ * N64: goomba_act_jump -- back to GOOMBA_ACT_WALK on the ground, otherwise
+ * cur_obj_rotate_yaw_toward(oGoombaTargetYaw, 0x800). The landing dust is
+ * DS-only. */
+void daKrb_c::ActJump() {
     if (mWithMeshClsn.JustHitGround()) {
         switch (mGoombaType) {
         case GOOMBA_LARGE: HugeLandingDust(true); break;
@@ -1226,14 +1207,19 @@ void daKrb_c::func_ov084_0212aab0()
     mAngleY = mPrevAngleY;
 }
 
-/* STATE_HOP_START: begin a hop (func_ov084_02129c9c, which enters
- * STATE_AIRBORNE). A KURIBO_L then scales its vertical speed by
+/* STATE_ATTACKED_MARIO: begin a hop (BeginJump, which enters
+ * STATE_JUMP). A KURIBO_L then scales its vertical speed by
  * 0x1800 / 0x1000 = 1.5. The target heading becomes the spawn heading
- * (mInitAngleY), MOVE_AVOIDING is cleared, and mAngleY follows mPrevAngleY. */
-void daKrb_c::func_ov084_0212ab48() {
+ * (mInitAngleY), MOVE_AVOIDING is cleared, and mAngleY follows mPrevAngleY.
+ * N64: goomba_act_attacked_mario's non-tiny branch -- goomba_begin_jump, a new
+ * oGoombaTargetYaw, oGoombaTurningAwayFromWall = FALSE. Its tiny branch (the
+ * Goomba dies) is in func_ov084_02129ed4 here, where KURIBO_S removes itself
+ * instead of entering this state; KURIBO_L entering it from a player hit is
+ * N64 huge_goomba_weakly_attacked. */
+void daKrb_c::ActAttackedMario() {
     daKrb_c *goomba = this;
     int large;
-    goomba->func_ov084_02129c9c();
+    goomba->BeginJump();
     large = (int)(goomba->actorID == (unsigned short)ACTOR_KURIBO_L);
     if (large != 0) {
         goomba->mVertSpeed = FX_MUL(goomba->mVertSpeed, 0x1800);
@@ -1286,7 +1272,7 @@ void daKrb_c::func_ov084_0212abd4() {
     if (goomba->mUnstickTimer != 0) {
         if (goomba->mCapId < 6) {
             if (goomba->mTargetHorzSpeed <= data_ov084_02130228[goomba->mGoombaType]) {
-                goomba->func_ov084_02129c9c();
+                goomba->BeginJump();
             } else {
                 goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cf0.filePtr, 0, 0x1000, 0);
             }
@@ -1317,7 +1303,7 @@ void daKrb_c::func_ov084_0212abd4() {
             (goomba->mCapId < 6 &&
              Vec3_Dist(&goomba->mPos, (Vector3 *)&goomba->mHomePos) > 0x3e8000)) {
             if (goomba->mTargetHorzSpeed <= data_ov084_02130228[goomba->mGoombaType]) {
-                goomba->func_ov084_02129c9c();
+                goomba->BeginJump();
             } else {
                 goomba->mAnmModel.SetAnim((BCA_File *)data_ov084_02130cf0.filePtr, 0, 0x1000, 0);
             }
@@ -1343,7 +1329,7 @@ void daKrb_c::func_ov084_0212abd4() {
             } else {
                 goomba->mTargetAngleY =
                     (s16)((unsigned)RandomIntInternal(&data_0209e650.value) >> 16);
-                goomba->func_ov084_02129c9c();
+                goomba->BeginJump();
             }
         }
     }
@@ -1477,8 +1463,11 @@ void daKrb_c::func_ov084_0212af74() {
 }
 
 /* STATE_WALK handler: the king's minions follow the king, everything else
- * wanders / chases. mAngleY then follows mPrevAngleY. */
-void daKrb_c::func_ov084_0212b2dc() {
+ * wanders / chases. mAngleY then follows mPrevAngleY.
+ * N64: goomba_act_walk (func_ov084_0212abd4 holds its body; its target picker
+ * func_ov084_02129cf4 takes treat_far_home_as_mario's 1000.0). The minion
+ * branch is DS-only. */
+void daKrb_c::ActWalk() {
     daKrb_c *goomba = this;
     if (goomba->mGoombaType == daKrb_c::GOOMBA_KING_MINION)
         goomba->func_ov084_0212af74();
@@ -1697,7 +1686,7 @@ int daKrb_c::Behavior()
 
     MakeVanishLuigiWork(*(dCc_c *)&mdCcAc_c);
 
-    if (mState != STATE_AIRBORNE) {
+    if (mState != STATE_JUMP) {
         func_ov084_0212934c();
         ((dExtFrameCtrl_c *)&mAnmModel)->Advance();
     }
@@ -1719,7 +1708,7 @@ int daKrb_c::Behavior()
     else
         UpdatePos((dCc_c *)&mdCcAc_c);
 
-    if (mDeathState == DEATH_NONE && mState != STATE_AIRBORNE && mState != STATE_TUMBLE) {
+    if (mDeathState == DEATH_NONE && mState != STATE_JUMP && mState != STATE_TUMBLE) {
         /* Args: 50.0 reach, angle limit 0x1f49 (about 44 degrees), 0, 1, 50.0. */
         if (IsGoingOffCliff(mWithMeshClsn, 0x32000, 0x1f49, 0, 1, 0x32000) != 0) {
             mPosX = mSafePos.x;
@@ -1759,7 +1748,7 @@ int daKrb_c::Behavior()
             if (Vec3_Dist(&mPos, &mStuckCheckPos) < 0xa000) { /* moved less than 10.0 */
                 *(u16*)((char*)&mStuckTimer) += 1;
                 if (mCapId < 6 && mStuckTimer == 0x1e) {
-                    func_ov084_02129c9c();
+                    BeginJump();
                     mUnstickTimer = 0x5a;
                 }
                 if (mStuckTimer >= 0x12c && mUnstickTimer == 0) {
@@ -1988,19 +1977,15 @@ KrbAnimationFileHandle gKuriboRecoverAnimationFile(ASSET_KURIBO_RECOVER_BCA);
 KrbAnimationFileHandle data_ov084_02130cc8(ASSET_KURIBO_WAIT_BCA);
 KrbAnimationFileHandle data_ov084_02130cf0(ASSET_KURIBO_RUN_BCA);
 
-/* Pointer-to-member descriptors for the four state handlers stored separately in the ROM initializer data. */
-KrbFreeHandler krbStateDesc_Tumble = {_ZN7daKrb_c19func_ov084_0212a774Ev};
-KrbFreeHandler krbStateDesc_HopStart = {_ZN7daKrb_c19func_ov084_0212ab48Ev};
-KrbFreeHandler krbStateDesc_Walk = {_ZN7daKrb_c19func_ov084_0212b2dcEv};
-KrbFreeHandler krbStateDesc_Pause = {_ZN7daKrb_c19func_ov084_0212a6f8Ev};
-
-/* One pointer-to-member per State, in state-index order. */
+/* One pointer-to-member per State, in state-index order. Each &daKrb_c::
+   expression is an 8-byte {code address, 0} constant in .data, and
+   __sinit_d_a_krb.cpp copies the five into this .bss table. */
 StateHandler data_ov084_02130d74[5] = {
-    krbStateDesc_Walk.pmf,            /* STATE_WALK */
-    krbStateDesc_HopStart.pmf,        /* STATE_HOP_START */
-    &daKrb_c::func_ov084_0212aab0,    /* STATE_AIRBORNE */
-    krbStateDesc_Tumble.pmf,          /* STATE_TUMBLE */
-    krbStateDesc_Pause.pmf,           /* STATE_PAUSE */
+    &daKrb_c::ActWalk,          /* STATE_WALK */
+    &daKrb_c::ActAttackedMario, /* STATE_ATTACKED_MARIO */
+    &daKrb_c::ActJump,          /* STATE_JUMP */
+    &daKrb_c::ActTumble,        /* STATE_TUMBLE */
+    &daKrb_c::ActPause,         /* STATE_PAUSE */
 };
 
 extern "C" {
