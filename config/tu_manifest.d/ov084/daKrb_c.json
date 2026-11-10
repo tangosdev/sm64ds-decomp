@@ -2209,24 +2209,24 @@
       "evidence": "Compiler PMF literal: data_ov084_02130d74's initializer spells &daKrb_c::<handler> for every State, so mwcc emits one 8-byte {code address, 0} @N constant per entry in table order and __sinit_d_a_krb.cpp copies them into the .bss table. Paired by section, size and relocation target with the canonical ROM symbol at the same descriptor address."
     },
     {
-      "from": "@1970",
+      "from": "@1968",
       "to": "krbStateDesc_HopStart",
-      "evidence": "Compiler PMF literal: data_ov084_02130d74's initializer spells &daKrb_c::<handler> for every State, so mwcc emits one 8-byte {code address, 0} @N constant per entry in table order and __sinit_d_a_krb.cpp copies them into the .bss table. Paired by section, size and relocation target with the canonical ROM symbol at the same descriptor address."
+      "evidence": "Compiler PMF literal: data_ov084_02130d74's initializer spells &daKrb_c::<handler> for every State, so mwcc emits one 8-byte {code address, 0} @N constant per entry in table order and __sinit_d_a_krb.cpp copies them into the .bss table. Paired by section, size and relocation target with the canonical ROM symbol at the same descriptor address. Re-keyed from @1970 to @1968 when the NitroSDK FX renames merged with the PMF-literal state descriptors (measured from the compiled object)."
+    },
+    {
+      "from": "@1970",
+      "to": "@1954",
+      "evidence": "Compiler PMF literal: data_ov084_02130d74's initializer spells &daKrb_c::<handler> for every State, so mwcc emits one 8-byte {code address, 0} @N constant per entry in table order and __sinit_d_a_krb.cpp copies them into the .bss table. Paired by section, size and relocation target with the canonical ROM symbol at the same descriptor address. Re-keyed from @1972 to @1970 when the NitroSDK FX renames merged with the PMF-literal state descriptors (measured from the compiled object)."
     },
     {
       "from": "@1972",
-      "to": "@1954",
-      "evidence": "Compiler PMF literal: data_ov084_02130d74's initializer spells &daKrb_c::<handler> for every State, so mwcc emits one 8-byte {code address, 0} @N constant per entry in table order and __sinit_d_a_krb.cpp copies them into the .bss table. Paired by section, size and relocation target with the canonical ROM symbol at the same descriptor address."
+      "to": "krbStateDesc_Tumble",
+      "evidence": "Compiler PMF literal: data_ov084_02130d74's initializer spells &daKrb_c::<handler> for every State, so mwcc emits one 8-byte {code address, 0} @N constant per entry in table order and __sinit_d_a_krb.cpp copies them into the .bss table. Paired by section, size and relocation target with the canonical ROM symbol at the same descriptor address. Re-keyed from @1974 to @1972 when the NitroSDK FX renames merged with the PMF-literal state descriptors (measured from the compiled object)."
     },
     {
       "from": "@1974",
-      "to": "krbStateDesc_Tumble",
-      "evidence": "Compiler PMF literal: data_ov084_02130d74's initializer spells &daKrb_c::<handler> for every State, so mwcc emits one 8-byte {code address, 0} @N constant per entry in table order and __sinit_d_a_krb.cpp copies them into the .bss table. Paired by section, size and relocation target with the canonical ROM symbol at the same descriptor address."
-    },
-    {
-      "from": "@1976",
       "to": "krbStateDesc_Pause",
-      "evidence": "Compiler PMF literal: data_ov084_02130d74's initializer spells &daKrb_c::<handler> for every State, so mwcc emits one 8-byte {code address, 0} @N constant per entry in table order and __sinit_d_a_krb.cpp copies them into the .bss table. Paired by section, size and relocation target with the canonical ROM symbol at the same descriptor address."
+      "evidence": "Compiler PMF literal: data_ov084_02130d74's initializer spells &daKrb_c::<handler> for every State, so mwcc emits one 8-byte {code address, 0} @N constant per entry in table order and __sinit_d_a_krb.cpp copies them into the .bss table. Paired by section, size and relocation target with the canonical ROM symbol at the same descriptor address. Re-keyed from @1976 to @1974 when the NitroSDK FX renames merged with the PMF-literal state descriptors (measured from the compiled object)."
     }
   ],
   "rodata": [
