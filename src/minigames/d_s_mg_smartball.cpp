@@ -82,6 +82,14 @@ typedef struct {
 } Vec2;
 #include "nitro/gx/gx_bgcnt.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 /* Local value types carried over from the legacy files. None of these is a
  * view of a class any more: the object-side views (Obj, Obj2, SBoard, Owl,
  * C2, V2ab, A, S28, S24) were each a cast of `this` or of a table entry, and
@@ -4642,8 +4650,8 @@ void dScMgSmartball_c::SpawnObjects() {
     }
     {
         void *d = Ov004_LoadFileByPath(sSmartballPathBuf);
-        DecompressLZ16(d, (void *)0x6400000);
-        DecompressLZ16(d, (void *)0x6600000);
+        DecompressLZ16(d, G2_GetOBJCharPtr());
+        DecompressLZ16(d, G2S_GetOBJCharPtr());
         Ov004_Deallocate(d);
     }
     OS_SPrintf(sSmartballPathBuf, sSmartballBg1NscFmt, (int)mLevel & 1);

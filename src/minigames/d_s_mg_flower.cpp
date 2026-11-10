@@ -42,6 +42,14 @@
 #include "CP15.h"
 #include "nitro/gx/gx_load.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 #pragma defer_codegen off
 
 /* The first two OAM attribute words, copied whole from the petal template. */
@@ -526,8 +534,8 @@ s32 dScMgFlower_c::InitResources() {
     gSubScreenLayers |= 0xc;
 
     fileData = Ov004_LoadFileByPath(&sFlowerNcgPath);
-    DecompressLZ16(fileData, (void *)0x6400000);
-    DecompressLZ16(fileData, (void *)0x6600000);
+    DecompressLZ16(fileData, G2_GetOBJCharPtr());
+    DecompressLZ16(fileData, G2S_GetOBJCharPtr());
     Ov004_Deallocate(fileData);
 
     fileData = Ov004_LoadFileByPath(&sFlowerNclPath);

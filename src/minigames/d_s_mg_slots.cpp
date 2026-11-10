@@ -65,6 +65,14 @@ enum dScMgSlots_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "LevelRng.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
  * optimisation pragmas are otherwise file-global last-wins. With it off, the
@@ -815,7 +823,7 @@ s32 dScMgSlot3_c::InitResources() {
         Deallocate(h);
     }
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, (void *)0x6400000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, G2_GetOBJCharPtr());
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
                         DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
@@ -825,7 +833,7 @@ s32 dScMgSlot3_c::InitResources() {
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NCG_BIN, G2S_GetBG2CharPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_DOWN_NSC_BIN, G2S_GetBG2ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, (void *)0x6600000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, G2S_GetOBJCharPtr());
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_SLOT_FACE_NCL_BIN);
@@ -1462,8 +1470,8 @@ s32 dScMgSlot1_c::InitResources() {
         MIi_CpuClear16(fill, d3, 0x800);
     }
 
-    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], (void *)0x6400000);
-    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
+    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], G2_GetOBJCharPtr());
+    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], G2S_GetOBJCharPtr());
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_SLOT_NCL_BIN);

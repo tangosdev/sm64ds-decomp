@@ -25,6 +25,7 @@ enum d_s_mg_m_carlo_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* Coined from the card transitions in DealIn and Update. The byte-sized
  * mState field retains its existing layout. */
@@ -106,7 +107,7 @@ s32 dScMgMCarlo_c::InitResources() {
     LoadCard2SubBg3(this);
     tileData = LoadFile(sMCarloCardNcgByLanguage[GetGameLanguage()]);
     paletteData = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
-    DecompressLZ16(tileData, (void *)0x6600000);
+    DecompressLZ16(tileData, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(paletteData, 0, 0x100);
     Deallocate(tileData);
     Deallocate(paletteData);

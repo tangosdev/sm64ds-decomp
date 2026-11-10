@@ -70,6 +70,14 @@ enum dScMgSnowball_c_AssetId {
 #include "nitro/gx/g3x.h"
 #include "nitro/fx/fx_cp.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
 
@@ -1802,8 +1810,8 @@ s32 dScMgSnowball_c::InitResources() {
     Ov004_Deallocate(buf);
 
     buf = Ov004_LoadFileByPath(&sSnowballNcgPath);
-    DecompressLZ16(buf, (void *)0x6400000);
-    DecompressLZ16(buf, (void *)0x6600000);
+    DecompressLZ16(buf, G2_GetOBJCharPtr());
+    DecompressLZ16(buf, G2S_GetOBJCharPtr());
     Ov004_Deallocate(buf);
 
     buf = Ov004_LoadFileByPath(&sSnowballNclPath);

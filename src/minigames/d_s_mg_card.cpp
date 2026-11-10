@@ -23,6 +23,15 @@
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
+#include "nitro/gx/gx_bgcnt.h"
+
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
 
 /* By-value five-card ordering table. */
 typedef struct 
@@ -124,9 +133,9 @@ s32 dScMgCard_c::InitResources()
     mainPalette = LoadFile(0xbe);
     subTiles = LoadFile(sCardNcgByLanguage[GetGameLanguage()]);
     subPalette = LoadFile(0xbb);
-    DecompressLZ16(mainTiles, (void *)0x6400000);
+    DecompressLZ16(mainTiles, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(mainPalette, 0, 0x20);
-    DecompressLZ16(subTiles, (void *)0x6600000);
+    DecompressLZ16(subTiles, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(subPalette, 0, 0x100);
     Deallocate(mainTiles);
     Deallocate(mainPalette);

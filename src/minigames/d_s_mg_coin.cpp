@@ -59,6 +59,14 @@ enum dScMgCoin_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gx_load.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 #pragma defer_codegen off /* ROM-ascending emission; dropping this inverts it */
 
 enum {
@@ -1357,7 +1365,7 @@ int dScMgCoin_c::InitResources() {
 
     b = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCG_BIN);
     a = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCL_BIN);
-    DecompressLZ16(b, (void *)0x6400000);
+    DecompressLZ16(b, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(a, 0, 0x100);
 
     gSubScreenLayers |= 8;
@@ -1376,7 +1384,7 @@ int dScMgCoin_c::InitResources() {
     GXS_LoadBG3Scr(d, 0, 0x800);
     Deallocate(d);
 
-    DecompressLZ16(b, (void *)0x6600000);
+    DecompressLZ16(b, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(a, 0, 0x100);
     Deallocate(b);
     Deallocate(a);

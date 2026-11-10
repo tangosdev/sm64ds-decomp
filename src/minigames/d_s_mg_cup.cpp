@@ -914,7 +914,7 @@ s32 dScMgCup_c::InitResources() {
     Deallocate(file);
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_2_NSC_BIN, (void *)G2S_GetBG0ScrPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_1_NSC_BIN, (void *)G2S_GetBG2ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_CUP_NCG_BIN, (void *)0x6600000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_CUP_NCG_BIN, G2S_GetOBJCharPtr());
     file = LoadFile(ASSET_D_2D_MG_CUP_NCL_BIN);
     GXS_LoadOBJPltt(file, 0, 0xa0);
     Deallocate(file);

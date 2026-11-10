@@ -51,6 +51,14 @@ enum dScMgRoulette_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_cp.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 /* Local views of the records the helpers walk. */
 
 /* One row of the 12-entry angle table at sRouletteSlowStops, copied whole. */
@@ -232,8 +240,8 @@ s32 dScMgRoulette_c::InitResources() {
 
     file = LoadFile(ASSET_D_2D_MG_ROULETTE_NCG_BIN);
     pltt = LoadFile(ASSET_D_2D_MG_ROULETTE_NCL_BIN);
-    DecompressLZ16(file, (void *)0x6400000);
-    DecompressLZ16(file, (void *)0x6600000);
+    DecompressLZ16(file, G2_GetOBJCharPtr());
+    DecompressLZ16(file, G2S_GetOBJCharPtr());
     GX_LoadOBJPltt(pltt, 0, 0x100);
     GXS_LoadOBJPltt(pltt, 0, 0x100);
     Deallocate(file);

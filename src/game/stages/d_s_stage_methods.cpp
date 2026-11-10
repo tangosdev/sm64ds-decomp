@@ -4953,7 +4953,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadFileAt(ASSET_D_2D_OP_BG_CL_NCL_BIN, 0x5000400);
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL02_NSC_BIN, G2S_GetBG0ScrPtr());
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NSC_BIN, (char *)G2S_GetBG1ScrPtr());
-        LoadCompressedFileAt(ASSET_D_2D_OP_OBJ_CL_NCG_BIN, (void *)0x6600000);
+        LoadCompressedFileAt(ASSET_D_2D_OP_OBJ_CL_NCG_BIN, G2S_GetOBJCharPtr());
         LoadFileAt(ASSET_D_2D_OP_OBJ_CL_NCL_BIN, 0x5000600);
         {
             char *clearScreenMap = (char *)G2S_GetBG2ScrPtr();

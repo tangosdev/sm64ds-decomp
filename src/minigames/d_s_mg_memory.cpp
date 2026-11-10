@@ -35,6 +35,16 @@ enum d_s_mg_memory_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/gx/gx_bgcnt.h"
+
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -1003,9 +1013,9 @@ s32 dScMgMemory_c::InitResources() {
     LoadCard2SubBg3(this);
     tiles = LoadFile(sMemoryCardNcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
-    DecompressLZ16(tiles, (void *)0x6400000);
+    DecompressLZ16(tiles, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(palette, 0, 0x100);
-    DecompressLZ16(tiles, (void *)0x6600000);
+    DecompressLZ16(tiles, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(palette, 0, 0x100);
     Deallocate(tiles);
     Deallocate(palette);

@@ -55,6 +55,15 @@ enum d_s_mg_trampoline2_AssetId {
 #include "Sound.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
@@ -253,7 +262,7 @@ void dScMgTrampoline2_c::InitDisplay() {
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1318;
     *(volatile u16 *)0x400000e &= ~0x40;
 
-    DecompressLZ16(objChar, (void *)0x6400000);
+    DecompressLZ16(objChar, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x60);
 
     Deallocate(bgChar);

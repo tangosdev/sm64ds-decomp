@@ -22,6 +22,15 @@
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/gx/gx_bgcnt.h"
+
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
 
 /* sMCarlo2Cards is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
@@ -99,8 +108,8 @@ s32 dScMgMCarlo2_c::InitResources()
     lang = GetGameLanguage();
     tiles = LoadFile(sMCarlo2CardNcgByLanguage[lang]);
     palette = LoadFile(0xbb);
-    DecompressLZ16(tiles, (void *)0x6400000);
-    DecompressLZ16(tiles, (void *)0x6600000);
+    DecompressLZ16(tiles, G2_GetOBJCharPtr());
+    DecompressLZ16(tiles, G2S_GetOBJCharPtr());
     GX_LoadOBJPltt(palette, 0, 0x100);
     GXS_LoadOBJPltt(palette, 0, 0x100);
     Deallocate(tiles);

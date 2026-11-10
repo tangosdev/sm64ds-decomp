@@ -51,6 +51,14 @@
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 #pragma defer_codegen off
 
 /* The 0x40 records at sMgFxPool are 0x20 bytes each. Mg_InitFx
@@ -1410,10 +1418,9 @@ void dScMgBase_c::RestoreScreenFromMenu() {
         GXS_LoadBGPltt(p, 0, 0x80);
     }
 
-    if (GetDisplayMode() != 2)
-    {
-        char *src = (char*)0x6600000; src += 0x6000;
-        MIi_CpuCopy32((int *)save->subObjChars, (int *)src, 0x2000);
+    if (GetDisplayMode() != 2) {
+        MIi_CpuCopy32((int *)save->subObjChars, (int *)((u8 *)G2S_GetOBJCharPtr() + 0x6000),
+                      0x2000);
     }
 
     gMainScreenLayers = (u8)mSavedMainBgBits;
@@ -1548,8 +1555,7 @@ int dScMgBase_c::SaveScreenForMenu() {
     gSubScreenLayers = 0x10;
 
     if (GetDisplayMode() != 2) {
-        int *vbase = (int *)0x6600000;
-        int *vram = vbase + 0x1800;
+        int *vram = (int *)((u8 *)G2S_GetOBJCharPtr() + 0x6000);
         MIi_CpuCopy32(vram, (int *)save->subObjChars, 0x2000);
         int idx = GetGameLanguage();
         DecompressLZ16(sMgMenuScreenByLanguage[idx], vram);
@@ -3400,14 +3406,8 @@ void dScMgBase_c::InitEngines() {
     GX_SetBankForSubBG(4);
     GX_SetBankForSubOBJ(8);
     p = Ov004_LoadFile(sMgStockCounterFiles[GetGameLanguage()]);
-    {
-        char *dst = (char *)0x6400000; dst += 0x4000;
-        DecompressLZ16(p, dst);
-    }
-    {
-        char *dst = (char *)0x6600000; dst += 0x4000;
-        DecompressLZ16(p, dst);
-    }
+    DecompressLZ16(p, (u8 *)G2_GetOBJCharPtr() + 0x4000);
+    DecompressLZ16(p, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
     Ov004_Deallocate(p);
     p = Ov004_LoadFile(0xc3);
     CP15::FlushAndInvalidateDataCache((u32)p, 0x100u);

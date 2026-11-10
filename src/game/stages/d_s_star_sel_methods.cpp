@@ -41,6 +41,14 @@
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 extern "C" {
 extern unsigned char sStarSelectCharacterOrder[];
 extern unsigned short sStarSelectDecimalDivisors[];
@@ -987,14 +995,10 @@ s32 dScStarSel_c::InitResources() {
     } else {
         file = LoadFile(ASSET_D_2D_CMN_ICON_E_NCG_BIN);
     }
-    DecompressLZ16(file, (void *)0x06400000);
+    DecompressLZ16(file, G2_GetOBJCharPtr());
     Deallocate(file);
     file = LoadFile(ASSET_D_2D_BTM_ICON_NCG_BIN);
-    {
-        char *dst = (char *)0x06400000;
-        dst += 0x2000;
-        DecompressLZ16(file, dst);
-    }
+    DecompressLZ16(file, (u8 *)G2_GetOBJCharPtr() + 0x2000);
     Deallocate(file);
     if (GetOwnerLanguage() == 5) {
         file = LoadFile(0xB00A);
@@ -1023,7 +1027,7 @@ s32 dScStarSel_c::InitResources() {
     } else {
         file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_NCG_BIN);
     }
-    DecompressLZ16(file, (void *)0x06600000);
+    DecompressLZ16(file, G2S_GetOBJCharPtr());
     Deallocate(file);
     file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_NCL_BIN);
     GXS_LoadOBJPltt(file, 0, 0x200);
@@ -1032,11 +1036,7 @@ s32 dScStarSel_c::InitResources() {
     switch (data_0209caa0.file.mCharacter) {
     case 0:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_MARIO_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)0x06600000;
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_MARIO_8BIT_NCL_BIN);
         GXS_BeginLoadOBJExtPltt();
@@ -1046,11 +1046,7 @@ s32 dScStarSel_c::InitResources() {
         break;
     case 1:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_LUIGI_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)0x06600000;
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_LUIGI_8BIT_NCL_BIN);
         GXS_BeginLoadOBJExtPltt();
@@ -1060,11 +1056,7 @@ s32 dScStarSel_c::InitResources() {
         break;
     case 2:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_WARIO_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)0x06600000;
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_WARIO_8BIT_NCL_BIN);
         GXS_BeginLoadOBJExtPltt();
@@ -1074,11 +1066,7 @@ s32 dScStarSel_c::InitResources() {
         break;
     case 3:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_YOSHI_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)0x06600000;
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_YOSHI_8BIT_NCL_BIN);
         GXS_BeginLoadOBJExtPltt();

@@ -97,6 +97,14 @@ enum dScMgHanachan_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_cp.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 extern "C" void *dScMgHanachan_c_classInit();
 extern "C" BaseSpawnInfo<void> g_profile_MG_HANACHAN = {dScMgHanachan_c_classInit, 0x182, 0x182};
 
@@ -2115,8 +2123,8 @@ s32 dScMgHanachan_c::InitResources() {
     Hana_LoadBackground();
     ncg = LoadFile(ASSET_D_2D_MG_HANA_SAGASE_NCG_BIN);
     ncl = LoadFile(ASSET_D_2D_MG_HANA_SAGASE_NCL_BIN);
-    DecompressLZ16(ncg, (void *)0x6400000);
-    DecompressLZ16(ncg, (void *)0x6600000);
+    DecompressLZ16(ncg, G2_GetOBJCharPtr());
+    DecompressLZ16(ncg, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(ncl, 0, 0xc0);
     GX_LoadOBJPltt(ncl, 0, 0xc0);
     Deallocate(ncg);

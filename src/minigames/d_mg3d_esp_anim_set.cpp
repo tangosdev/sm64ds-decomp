@@ -1323,7 +1323,7 @@ s32 dScMg3DEsp_c::InitResources()
 
     r5v = LoadFile(8);
     r4v = LoadFile(9);
-    DecompressLZ16(r5v, (void *)0x6600000);
+    DecompressLZ16(r5v, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(r4v, 0, 0x100);
     Deallocate(r5v);
     Deallocate(r4v);

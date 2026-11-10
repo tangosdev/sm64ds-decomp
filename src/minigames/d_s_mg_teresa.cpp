@@ -152,6 +152,14 @@ extern Pmf pmf_dScMgTeresa_c_BigBoo_StateResult;
 
 }  /* extern "C" */
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 namespace Sound { void PlayBank2_2D(unsigned int id); }
 
 /* One out-of-line definition; with codegen not deferred it emits D1, then
@@ -240,7 +248,7 @@ void dScMgTeresa_c::BigBoo_StateRemove(int index) {
     mBigBoo[index].yVel = 0;
     mBigBoo[index].shown = 0;
     data = LoadFile(0x103);
-    DecompressLZ16(data, (void *)0x6400000);
+    DecompressLZ16(data, G2_GetOBJCharPtr());
     mBigBoo[index].state = 7;
     Deallocate(data);
 }
@@ -1693,7 +1701,7 @@ void dScMgTeresa_c::StartRound(int reset) {
     mBannerTimer = 0x20;
     Mg_ShowBanner(0xd, 0x80, 0xa8, 1, -1, 0xd);
     void *h = LoadFile(0x101);
-    DecompressLZ16(h, (void *)0x6400000);
+    DecompressLZ16(h, G2_GetOBJCharPtr());
     Deallocate(h);
 }
 
@@ -1760,7 +1768,7 @@ s32 dScMgTeresa_c::InitResources()
     Deallocate(t);
     f1 = LoadFile(0x101);
     f2 = LoadFile(0x102);
-    DecompressLZ16(f1, (void *) 0x6400000);
+    DecompressLZ16(f1, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(f2, 0, 0x100);
     REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x218;
     REG_DB_BG0CNT &= ~0x40;
@@ -1791,7 +1799,7 @@ s32 dScMgTeresa_c::InitResources()
     t = LoadFile(0xa1);
     GXS_LoadBG2Scr(t, 0, 0x800);
     Deallocate(t);
-    DecompressLZ16(f1, (void *) 0x6600000);
+    DecompressLZ16(f1, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(f2, 0, 0x100);
     Deallocate(f1);
     Deallocate(f2);

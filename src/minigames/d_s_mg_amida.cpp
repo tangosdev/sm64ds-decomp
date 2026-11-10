@@ -97,6 +97,14 @@ enum dScMgAmida_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 extern "C" {
 /* --- shared ov004 and main helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
@@ -2166,28 +2174,28 @@ s32 dScMgAmida_c::InitResources() {
 
     if (IsVariant2() != 0) {
         if (GetOwnerLanguage() == 5) {
-            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_S_NCG_BIN, (void *)0x6400000);
-            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_S_NCG_BIN, (void *)0x6600000);
+            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_S_NCG_BIN, G2_GetOBJCharPtr());
+            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_S_NCG_BIN, G2S_GetOBJCharPtr());
         } else if (GetOwnerLanguage() == 4) {
-            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_I_NCG_BIN, (void *)0x6400000);
-            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_I_NCG_BIN, (void *)0x6600000);
+            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_I_NCG_BIN, G2_GetOBJCharPtr());
+            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_I_NCG_BIN, G2S_GetOBJCharPtr());
         } else if (GetOwnerLanguage() == 3) {
-            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_G_NCG_BIN, (void *)0x6400000);
-            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_G_NCG_BIN, (void *)0x6600000);
+            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_G_NCG_BIN, G2_GetOBJCharPtr());
+            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_G_NCG_BIN, G2S_GetOBJCharPtr());
         } else if (GetOwnerLanguage() == 2) {
-            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_F_NCG_BIN, (void *)0x6400000);
-            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_F_NCG_BIN, (void *)0x6600000);
+            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_F_NCG_BIN, G2_GetOBJCharPtr());
+            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_F_NCG_BIN, G2S_GetOBJCharPtr());
         } else {
-            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_NCG_BIN, (void *)0x6400000);
-            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_NCG_BIN, (void *)0x6600000);
+            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_NCG_BIN, G2_GetOBJCharPtr());
+            LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_FACE_NCG_BIN, G2S_GetOBJCharPtr());
         }
         file = LoadFile(ASSET_D_2D_MG_AMIDA_FACE_NCL_BIN);
         GX_LoadOBJPltt(file, 0, 0x100);
         GXS_LoadOBJPltt(file, 0, 0x100);
         Deallocate(file);
     } else {
-        LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_NCG_BIN, (void *)0x6400000);
-        LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_NCG_BIN, (void *)0x6600000);
+        LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_NCG_BIN, G2_GetOBJCharPtr());
+        LoadCompressedFileAt(ASSET_D_2D_MG_AMIDA_NCG_BIN, G2S_GetOBJCharPtr());
         file = LoadFile(ASSET_D_2D_MG_AMIDA_NCL_BIN);
         GX_LoadOBJPltt(file, 0, 0x100);
         GXS_LoadOBJPltt(file, 0, 0x100);

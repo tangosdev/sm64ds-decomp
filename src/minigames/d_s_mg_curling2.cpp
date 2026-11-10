@@ -48,6 +48,14 @@ enum dScMgCurling2_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 /* The receiver for the pointer-to-member tables. It must stay incomplete:
  * mwccarm picks the pointer-to-member layout from whether the class is
  * complete. */
@@ -1688,7 +1696,7 @@ s32 dScMgCurling2_c::InitResources() {
 
     c7 = LoadFile(ASSET_D_2D_MG_CURLING_NCG_BIN);
     c8 = LoadFile(ASSET_D_2D_MG_CURLING_NCL_BIN);
-    DecompressLZ16(c7, (void *)0x6400000);
+    DecompressLZ16(c7, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(c8, 0, 0x100);
 
     gSubScreenLayers |= 4;
@@ -1706,7 +1714,7 @@ s32 dScMgCurling2_c::InitResources() {
 
     Ov004_Deallocate(r6);
 
-    DecompressLZ16(c7, (void *)0x6600000);
+    DecompressLZ16(c7, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(c8, 0, 0x100);
     Deallocate(c7);
     Deallocate(c8);
