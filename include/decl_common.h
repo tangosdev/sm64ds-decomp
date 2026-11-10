@@ -1096,10 +1096,6 @@ extern void func_ov100_02143b68(char*);
 extern void func_ov100_02145070(int);
 /* Returns int -- the tree's own definition (in src/game/actors/d_a_door.cpp)
    defines it `extern "C" int`, and its early-out is `return 1`. */
-extern void func_ov102_0214ad14(void*);
-extern void func_ov102_0214ae1c(void*);
-extern void func_ov102_0214b03c(void*);
-extern void func_ov102_0214baa0(void*);
 extern void*FindWithActorID(unsigned int, void*);
 extern void*HEAP;
 extern void*data_0208a0e4[];

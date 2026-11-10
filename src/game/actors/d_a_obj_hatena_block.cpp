@@ -133,6 +133,7 @@ enum daObjHatenaBlock_c_AssetId {
 #include "daSCoin_c.h"
 #include "dCamera_c.h"
 #include "daShl_c.h"
+#include "daBmb_c.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
@@ -211,7 +212,6 @@ extern void Matrix4x3_FromRotationY(void *m, int angle);
 void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
 extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
                                       void *clps);
-extern void func_ov102_0214ad14(void *actor);
 
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
@@ -1099,17 +1099,16 @@ void daObjHatenaBlock_c::SpawnPrizePowerUpItem() {
 
 /* Bob-omb prize: spawns a BOMBHEI (param 4) at the prize point; if it
    spawned, func_ov102_0214ad14 (daBmb_c: stores ClosestPlayer as its chase
-   target) and func_ov102_0214b384(a, 0x3c) (daBmb_c.h: only shortens the
+   target) and func_ov102_0214b384(0x3c) (daBmb_c.h: only shortens the
    fuse). Callers discard the result of that helper. */
-extern "C" void func_ov102_0214b384(void *, unsigned int);
 void daObjHatenaBlock_c::SpawnPrizeBobOmb() {
     Vector3 v;
     func_ov102_02149684((int *)&v, this);
-    void *a = dActor_c::Spawn(ACTOR_BOMBHEI, 4, v, 0, mAreaId, -1);
+    daBmb_c *a = (daBmb_c *)dActor_c::Spawn(ACTOR_BOMBHEI, 4, v, 0, mAreaId, -1);
     if (a == 0)
         return;
-    func_ov102_0214ad14(a);
-    func_ov102_0214b384(a, 0x3c);
+    a->func_ov102_0214ad14();
+    a->func_ov102_0214b384(0x3c);
 }
 
 /* Spawns n COINs (param 2) at *pos. Each coin gets a heading baseAngle + dir

@@ -16,6 +16,7 @@
 
 #include "common.h"
 #include "daWanwan_c.h"
+#include "daBmb_c.h"
 #include "daObjPile_c.h"
 #include "daObjWanwanShutter_c.h"
 #include "SharedFilePtr.h"
@@ -68,8 +69,6 @@ extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
 extern s16 data_02082214[]; /* SINE_TABLE: sin, cos pairs */
 extern dCamera_c *gCamera;  /* CAMERA */
-
-void func_ov102_0214ae1c(void *bomb);
 
 short atan2_hold_d_a_wanwan_1(int y, int x);
 
@@ -551,7 +550,7 @@ void daWanwan_c::HandleCylinderHit() {
     if (mState == 4)
         return;
     if ((int)(other->actorID == kBobOmbActorId) != 0) {
-        func_ov102_0214ae1c(other);
+        ((daBmb_c *)other)->func_ov102_0214ae1c();
         SetState(4);
     }
 }

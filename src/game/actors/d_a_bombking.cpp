@@ -166,7 +166,6 @@ extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
 extern void func_0200fa8c(void *c, int a);
-extern void func_ov102_0214b384(void *a, unsigned int b);
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -948,7 +947,7 @@ int daBombking_c::EnterHeldByPlayer() {
 
 int daBombking_c::TickThrowBomb() {
     struct Vector3 in, out, v[2];
-    dActor_c *target;
+    daBmb_c *target;
     daPly_c *player;
 
     if (CheckKnockbackHit() == 1) {
@@ -957,7 +956,7 @@ int daBombking_c::TickThrowBomb() {
     }
 
     if (this->mSpawnedThrown[this->mSpawnSlot] == 0) {
-        target = dActor_c::FindWithID(this->mSpawnedId[this->mSpawnSlot]);
+        target = (daBmb_c *)dActor_c::FindWithID(this->mSpawnedId[this->mSpawnSlot]);
         if (target != 0) {
             target->mPosX = this->mThrowPosX;
             target->mPosY = this->mThrowPosY;
@@ -968,7 +967,7 @@ int daBombking_c::TickThrowBomb() {
             target->mAngleX = this->mAngleX;
             target->mAngleY = this->mAngleY;
             target->mAngleZ = this->mAngleZ;
-            func_ov102_0214b384(target, 0x78);
+            target->func_ov102_0214b384(0x78);
             if (((dExtFrameCtrl_c *)&this->mBlendAnmModel)->WillHitFrame(0x13) != 0 ||
                 CheckKnockbackHit() == 1) {
                 in.x = 0; in.y = 0; in.z = 0x28000;
@@ -987,7 +986,7 @@ int daBombking_c::TickThrowBomb() {
                     Matrix4x3_ApplyInPlaceToRotationX(
                         &data_020a0e68, (short)(-cstd::atan2(v[0].y, Vec3_HorzLen(&v[0]))));
                     out.y += 0x14000;
-                    func_ov102_0214ad14(target);
+                    target->func_ov102_0214ad14();
                     target->mSpeedX = out.x;
                     target->mVertSpeed = out.y;
                     target->mSpeedZ = out.z;

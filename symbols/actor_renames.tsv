@@ -9352,3 +9352,9 @@ ov078	0x2125c98	_ZN12daBombking_c19func_ov078_02125c98Ev	_ZN12daBombking_c12Upda
 ov078	0x2125de0	_ZN12daBombking_c19func_ov078_02125de0Ev	_ZN12daBombking_c16UpdateHandMatrixEv	daBombking_c member: behaviour: composes the hand bone (transforms[10]) with the model matrix into mHoldMtx, mThrowPos = hand world pos, points mCarryMatrix at it and re-attaches spawned bob-ombs to the hand
 ov078	0x2125f8c	_ZN12daBombking_c19func_ov078_02125f8cEv	_ZN12daBombking_c16AttachHeldPlayerEv	daBombking_c member: behaviour: Render calls it while holding; picks the carry offset (data_ov078_0212711c[param1 == 2]) and copies the UpdateCarry matrix onto the model matrix to attach the held player
 ov078	0x02123eb8	_ZN12daBombking_c19func_ov078_02123eb8Ev	_ZN12daBombking_c16EnterCarryPlayerEv	daBombking_c member: N64 king_bobomb_act_3 sub-action 1 entry: Walk2 animation, 50-frame timer, forward speed 0xa000
+ov102	0x0214bd20	func_ov102_0214bd20	_ZN7daBmb_c19func_ov102_0214bd20Ev	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
+ov102	0x0214bc20	func_ov102_0214bc20	_ZN7daBmb_c19func_ov102_0214bc20Ev	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
+ov102	0x0214baa0	func_ov102_0214baa0	_ZN7daBmb_c19func_ov102_0214baa0Ev	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
+ov102	0x0214b384	func_ov102_0214b384	_ZN7daBmb_c19func_ov102_0214b384Ej	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
+ov102	0x0214ae1c	func_ov102_0214ae1c	_ZN7daBmb_c19func_ov102_0214ae1cEv	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
+ov102	0x0214ad14	func_ov102_0214ad14	_ZN7daBmb_c19func_ov102_0214ad14Ev	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
