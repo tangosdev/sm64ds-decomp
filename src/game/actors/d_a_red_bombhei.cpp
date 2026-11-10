@@ -117,7 +117,6 @@ extern s8 gCurrentSublevel;                /* current level */
 extern u8 gCurrentStarId;
 extern u8 gShowTouchScreenArrows;
 extern u8 gShowRedCoinMarkers;
-extern SaveBlock data_0209caa0;         /* the live save block */
 extern u8  data_0209d660;               /* nonzero while a message box is open */
 extern u8  data_0209d6bc;               /* message box page state */
 extern u16 data_0209d6d4;               /* message on screen */

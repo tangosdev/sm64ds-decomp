@@ -92,7 +92,6 @@ extern SharedFilePtr data_ov002_0210ebd8;
 
 extern unsigned char gLocalPlayerId;
 extern daPly_c *gPlayers[];
-extern SaveBlock data_0209caa0;
 extern dCamera_c *gCamera;
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. */

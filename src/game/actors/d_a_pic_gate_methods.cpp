@@ -110,7 +110,6 @@ enum {
 
 extern "C" {
 extern int IsStarCollectedInLevel(signed char levelID, int starID);
-extern SaveBlock data_0209caa0;
 extern Matrix4x3 data_0209b3ec;
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u8 data_ov080_02127714[];

@@ -135,7 +135,6 @@ void  func_0201f32c(int a);
 
 /* globals */
 extern dCamera_c *gCamera;                  /* the camera object */
-extern SaveBlock data_0209caa0;             /* the live save block */
 extern u8             data_0209d66c;
 extern u8             data_0209d6bc;
 extern u8 gShowTouchScreenArrows;

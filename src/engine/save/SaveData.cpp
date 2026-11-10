@@ -49,7 +49,6 @@
 #include "SaveData.h"
 
 extern "C" {
-extern SaveBlock data_0209caa0;       /* the live save block; local extern: see SaveBlock.h */
 extern int data_0209caf4[][5];        /* the minigame record tables, at block + 0x54 */
 extern u8 gGameMode;                  /* gate byte read by CanPlayerHaveCap */
 extern u8 data_0209cad2[];            /* coin records; local extern: no field on the byte array */

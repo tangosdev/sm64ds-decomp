@@ -135,7 +135,6 @@ extern unsigned char data_0209f2bc;
 extern unsigned short data_ov002_02111188;
 extern unsigned char gSubScreenLayers;
 extern unsigned char gMeterShownHealth[];
-extern SaveBlock data_0209caa0;
 extern unsigned char gShowTouchScreenArrows;
 extern dFdBrightness_c *gSceneFader;
 void *LoadFile(int handle);

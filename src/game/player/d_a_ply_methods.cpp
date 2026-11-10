@@ -1395,7 +1395,6 @@ void daPly_c::SetNewHatCharacter(unsigned int p1, unsigned int p2, bool p3) {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 void daPly_c::SetRealCharacter(unsigned int chr_) {
-    extern u8 data_0209caa0[];
     u32 chr = (u32)chr_;
 
     u32 cur = param1;
@@ -1407,7 +1406,7 @@ void daPly_c::SetRealCharacter(unsigned int chr_) {
     param1 = chr;
     mCharacter = (u8)chr;
     data_02092128[mPlayerNo] = (u8)param1;
-    data_0209caa0[0x41] = (u8)param1;
+    data_0209caa0.file.mCharacter = (u8)param1;
     dExtFrameCtrl_c::LoadFile(*data_ov002_020ff480[mCharFileBase + (param1 & 3)]);
     PlayCharacterSound();
     this->Heal(0x880);
@@ -4264,33 +4263,38 @@ int daPly_c::func_ov002_020c4188() {
 extern "C" {
 void daPly_c::func_ov002_020c43c4(unsigned int idx) {
     extern unsigned char gGameMode;
-    extern int data_0209caa0;
     int b = (int)(gGameMode == 1);
     if (b != 0) return;
     switch (idx) {
     case 1:
-        if ((&data_0209caa0)[2] & 0x400) return;
-        (&data_0209caa0)[2] |= 0x400;
+        if (data_0209caa0.file.flags2 & 0x400)
+            return;
+        data_0209caa0.file.flags2 |= 0x400;
         break;
     case 2:
-        if ((&data_0209caa0)[2] & 0x800) return;
-        (&data_0209caa0)[2] |= 0x800;
+        if (data_0209caa0.file.flags2 & 0x800)
+            return;
+        data_0209caa0.file.flags2 |= 0x800;
         break;
     case 3:
-        if ((&data_0209caa0)[2] & 0x1000) return;
-        (&data_0209caa0)[2] |= 0x1000;
+        if (data_0209caa0.file.flags2 & 0x1000)
+            return;
+        data_0209caa0.file.flags2 |= 0x1000;
         break;
     case 4:
-        if ((&data_0209caa0)[2] & 0x2000) return;
-        (&data_0209caa0)[2] |= 0x2000;
+        if (data_0209caa0.file.flags2 & 0x2000)
+            return;
+        data_0209caa0.file.flags2 |= 0x2000;
         break;
     case 5:
-        if ((&data_0209caa0)[2] & 0x4000) return;
-        (&data_0209caa0)[2] |= 0x4000;
+        if (data_0209caa0.file.flags2 & 0x4000)
+            return;
+        data_0209caa0.file.flags2 |= 0x4000;
         break;
     case 6:
-        if ((&data_0209caa0)[2] & 0x10000000) return;
-        (&data_0209caa0)[2] |= 0x10000000;
+        if (data_0209caa0.file.flags2 & 0x10000000)
+            return;
+        data_0209caa0.file.flags2 |= 0x10000000;
         break;
     case 0:
         break;
@@ -4305,7 +4309,6 @@ void daPly_c::func_ov002_020c43c4(unsigned int idx) {
 extern "C" {
 int daPly_c::func_ov002_020c44c4() {
     extern u8 gGameMode;
-    extern int data_0209caa0[];
     extern void Vec3_RotateYAndTranslate(void*, void*, short angle, void*);
     extern void func_02012694(unsigned int id, const Vector3 *v);
     Vector3 pos;
@@ -4320,7 +4323,7 @@ int daPly_c::func_ov002_020c44c4() {
     if (b0 != 0) {
         goto cont;
     }
-    if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0) {
+    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0) {
         goto ret0;
     }
     b1 = (int)(f2d8 == 2);
@@ -4339,8 +4342,8 @@ cont:
 
     switch (state) {
     case 2:
-        if ((data_0209caa0[2] & 0x200) == 0) {
-            data_0209caa0[2] |= 0x200;
+        if ((data_0209caa0.file.flags2 & 0x200) == 0) {
+            data_0209caa0.file.flags2 |= 0x200;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
             static Vector3 sLevelIntroOff(0, 0x96000, 0x64000);
             Vec3_RotateYAndTranslate((int *)&pos, &this->mPosX, this->mAngleY, &sLevelIntroOff);
@@ -4375,7 +4378,7 @@ cont:
         }
         break;
     case 31:
-        if (data_0209caa0[1] & 0x80000000) {
+        if (data_0209caa0.file.flags1 & 0x80000000) {
             return 0;
         }
         r4val = 12;
@@ -5889,7 +5892,6 @@ void daPly_c::func_ov002_020c7350() {
     typedef unsigned int u32;
     typedef signed char s8;
     extern u8 gGameMode;
-    extern char data_0209caa0[];
     int id;
 
     if (mIsAirborne != 0)
@@ -5951,7 +5953,7 @@ void daPly_c::func_ov002_020c7350() {
         int isOne = (v == 1);
         if (isOne != false)
             goto setanim2;
-        if (!(*(int *)(data_0209caa0 + 8) & FILE_FLAGS2_INTRO_DONE))
+        if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
             goto skip_setanim2;
         {
             int isTwo = (v == 2);
@@ -6873,7 +6875,6 @@ extern "C" {
 int daPly_c::func_ov002_020c92fc() {
     extern int gNextActorUpdateMask;
     extern unsigned char gGameMode;
-    extern int data_0209caa0[];
     extern void *gCamera;
     int flag = 0;
     this->mVertSpeed = 0;
@@ -6900,8 +6901,9 @@ int daPly_c::func_ov002_020c92fc() {
     if (this->FinishedAnim()) {
         if (mStateStep == 9) {
             if ((int)(gGameMode == 1) == 0) {
-                if ((data_0209caa0[2] & 0x10000000) == 0 && SaveData::IsCharacterUnlocked(0) == 0 &&
-                    mHatCharacter == 0 && mPrevCharacter == 3) {
+                if ((data_0209caa0.file.flags2 & 0x10000000) == 0 &&
+                    SaveData::IsCharacterUnlocked(0) == 0 && mHatCharacter == 0 &&
+                    mPrevCharacter == 3) {
                     mStateStep = 0xa;
                     mStatePhase = 0;
                     ((::dCamera_c *)gCamera)->func_0200d3f8(mPlayerNo, 0);
@@ -7620,7 +7622,6 @@ int daPly_c::Unk_020ca8f8() {
 extern "C" {
 void daPly_c::func_ov002_020ca940() {
     extern u8 gGameMode;
-    extern int data_0209caa0[];
     extern u8 data_0209f49e[];
     extern dCamera_c *gCamera;
     u8 old;
@@ -7633,7 +7634,7 @@ void daPly_c::func_ov002_020ca940() {
     b = gGameMode;
     b = b == 1;
     if (b == false) {
-        if (!(data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE))
+        if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
             return;
     }
 
@@ -11346,7 +11347,6 @@ extern "C" {
 int daPly_c::St_Wait_Cleanup() {
     extern unsigned char gGameMode;
     extern void *gCamera;
-    extern int data_0209caa0[];
 
     void *r4 = gCamera;
     ((dCamera_c *)r4)->mFlags &= ~0x2000;
@@ -11355,7 +11355,7 @@ int daPly_c::St_Wait_Cleanup() {
         unsigned char v = gGameMode;
         int b0 = (v == 1);
         if (b0 == 0) {
-            if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) != 0) {
+            if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0) {
                 int b1 = (v == 2);
                 if (b1 == 0)
                     break;
@@ -11381,7 +11381,6 @@ int daPly_c::St_Wait_Main() {
     extern unsigned char data_0209f49c[];
     extern char data_0209f4a0[];
     extern unsigned char gGameMode;
-    extern int data_0209caa0[];
     extern unsigned char data_0209f49e[];
     if ((unsigned short)(mStateFlags & 1)) {
         func_ov002_020c0364(3);
@@ -11415,7 +11414,7 @@ int daPly_c::St_Wait_Main() {
             unsigned char f2d8_0 = gGameMode;
             int b0 = (f2d8_0 == 1);
             if (b0 == 0) {
-                if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) {
+                if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) {
                     int b1 = (f2d8_0 == 2);
                     if (b1)
                         goto blk0_34;
@@ -11546,7 +11545,7 @@ int daPly_c::St_Wait_Main() {
                 unsigned char f2d8_2 = gGameMode;
                 int b2a = (f2d8_2 == 1);
                 if (b2a == 0) {
-                    if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+                    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
                         break;
                     int b2b = (f2d8_2 == 2);
                     if (b2b != false)
@@ -11611,7 +11610,7 @@ int daPly_c::St_Wait_Main() {
                 unsigned char f2d8_4 = gGameMode;
                 int b4a = (f2d8_4 == 1);
                 if (b4a == 0) {
-                    if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+                    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
                         break;
                     int b4b = (f2d8_4 == 2);
                     if (b4b != false)
@@ -11831,7 +11830,6 @@ int daPly_c::func_ov002_020d2fdc() {
 extern "C" {
 int daPly_c::St_Wait_Init() {
     extern unsigned char gGameMode;
-    extern int data_0209caa0[];
 
     unsigned char f2d8;
     int b0;
@@ -11840,7 +11838,7 @@ int daPly_c::St_Wait_Init() {
     f2d8 = gGameMode;
     b0 = (f2d8 == 1);
     if (b0 != 0) goto L80;
-    if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
         goto L50;
     {
         int b1 = (f2d8 == 2);
@@ -11854,7 +11852,7 @@ L50:
 L80:
     if (mIsMega == 0) goto Ld8;
     if (b0 != 0) goto Lbc;
-    if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE)
+    if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)
         goto Lbc;
     this->SetAnim(0xa0, 0, 0x1000, 0);
 Lbc:
@@ -12319,7 +12317,6 @@ int daPly_c::St_Walk_Init() {
     extern int RandomIntInternal(int *seed);
     extern short data_0209f4a0;
     extern unsigned char gGameMode;
-    extern int data_0209caa0[3];
     extern unsigned char data_0209f4ac;
     extern int data_ov002_0210e160[];
     if (this->GetHealth() == 0) {
@@ -12339,7 +12336,7 @@ int daPly_c::St_Walk_Init() {
         int byte1 = gGameMode;
         int cond = (byte1 == 1);
         if (cond) goto do_anim;
-        if ((data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
             goto merge;
         cond = (byte1 == 2);
         if (cond) goto merge;
@@ -12477,7 +12474,6 @@ void daPly_c::func_ov002_020d4748() {
     extern unsigned short data_0209f49c;
     extern short data_0209f4a0;
     extern unsigned char gGameMode;
-    extern int data_0209caa0[];
     char* c = (char*)this;
     int i = gActivePlayerSlot * 0x18;
     int flag = 0;
@@ -12534,7 +12530,7 @@ void daPly_c::func_ov002_020d4748() {
             d = gGameMode;
             b = (d == 1);
             if (b == false) {
-                if (data_0209caa0[2] & FILE_FLAGS2_INTRO_DONE) {
+                if (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) {
                     int b2 = (d == 2);
                     if (b2 == false) goto after6e3;
                 }
@@ -18747,14 +18743,13 @@ int daPly_c::St_Fly_Init() {
 extern "C" {
 void daPly_c::func_ov002_020e032c() {
     extern unsigned char gGameMode;
-    extern int data_0209caa0;
     unsigned char st;
     if (mHasWings == 0)
         return;
     mHasWings = 0;
     st = gGameMode;
     if ((int)(st == 1) == 0) {
-        if (((&data_0209caa0)[2] & FILE_FLAGS2_INTRO_DONE) == 0)
+        if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0)
             return;
         if ((int)(st == 2) != 0) return;
     }
@@ -21368,7 +21363,6 @@ after_player_slot:
 // decl order td,tx,tz + load order for dBgCh_Gnd pos regs.
 extern "C" {
 s32 daPly_c::InitResources() {
-    struct CAA0 { char pad[8]; int unk8; };
     int SublevelToLevel(int s);
     void *__cxa_vec_new(int a, int b, int c, void *d, void *e);
     void func_02035644(void* p, int a);
@@ -21386,7 +21380,6 @@ s32 daPly_c::InitResources() {
     void func_0203d384(void);
     extern u8 gGameMode;
     extern s8 data_02092114;
-    extern CAA0 data_0209caa0;
     extern u8 gPrevReturnState;
     extern u8 gReturnSublevel;
     /* The helpers below take void or char pointers, and this file's match
@@ -21436,7 +21429,7 @@ s32 daPly_c::InitResources() {
         t = (unsigned int)(d == 1);
     }
     if (t != 0) goto Lac;
-    if ((data_0209caa0.unk8 & FILE_FLAGS2_INTRO_DONE) != 0)
+    if ((data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) != 0)
         goto Lac;
     t = (unsigned int)(gRunningKuppaScript != 0);
     if (t == 0) goto Ld0;

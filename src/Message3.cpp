@@ -93,7 +93,6 @@ extern void (*data_02092830[])(void);
 extern u8 data_0208f074[];
 extern u8 data_0208f174[];
 extern s32 data_0208ee44;
-extern SaveBlock data_0209caa0;
 extern u32 gNextActorUpdateMask;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
