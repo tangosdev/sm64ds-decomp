@@ -645,24 +645,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1136",
+      "from": "@1154",
       "to": "@776",
-      "evidence": "mwcc numbers this registration node @1006 per TU and the fleet already defines a global @1006, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "mwcc numbers this registration node @1006 per TU and the fleet already defines a global @1006, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1136 to @1154 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
-      "from": "@1137",
+      "from": "@1155",
       "to": "@659",
-      "evidence": "mwcc numbers this registration node @1007 per TU and the fleet already defines a global @1007, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "mwcc numbers this registration node @1007 per TU and the fleet already defines a global @1007, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1137 to @1155 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
-      "from": "@1138",
+      "from": "@1156",
       "to": "@656",
-      "evidence": "mwcc numbers this registration node @1008 per TU and the fleet already defines a global @1008, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "mwcc numbers this registration node @1008 per TU and the fleet already defines a global @1008, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1138 to @1156 when the TU included nitro/fx/fx_trig.h (#821)."
     },
     {
-      "from": "@1139",
+      "from": "@1157",
       "to": "@639",
-      "evidence": "mwcc numbers this registration node @1009 per TU and the fleet already defines a global @1009, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "mwcc numbers this registration node @1009 per TU and the fleet already defines a global @1009, so the scratch link would multiply-define it | compiler temp; wave 3 of the mangled-call cleanup deletes this TU's local _ZN externs ahead of it, lowering the per-TU @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @1139 to @1157 when the TU included nitro/fx/fx_trig.h (#821)."
     }
   ],
   "symbol_binding_rewrites": [
