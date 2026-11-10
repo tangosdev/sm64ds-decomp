@@ -728,9 +728,7 @@ int daC_Jugem_c::StateHoverMain()
     }
     mPosZ += out.z;
     mPrevAngleY = 0x8000 - cam->mAngleY;
-    /* The halfword after dCamera_c::mAngleY at 0x17e (dCamera_c.h has no member for
-       it). Possibly the pitch, but only this one negated use suggests so. */
-    mPrevAngleX = -*(short *)((char *)&cam->mAngleY + 2);
+    mPrevAngleX = -cam->mAngleX;
     return 1;
 }
 
@@ -884,10 +882,10 @@ int daC_Jugem_c::InitResources()
     dExtAnmTexPat_c::LoadFile(data_ov085_0213073c);
     mShadowModel1.InitCylinder();
     mShadowModel2.InitCylinder();
-    dExtAnmTexPat_c::Prepare(**(BMD_File **)((char *)&data_ov085_0213074c + 4),
-                             **(BTP_File **)((char *)&data_ov085_0213073c + 4));
-    mAnmModel1.SetAnim(*(BCA_File **)((char *)&data_ov085_02130744 + 4), 0, 0x1000, 0);
-    mTextureSequence.SetFile(**(BTP_File **)((char *)&data_ov085_0213073c + 4), 0, 0x1000, 0);
+    dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov085_0213074c.filePtr,
+                             *(BTP_File *)data_ov085_0213073c.filePtr);
+    mAnmModel1.SetAnim((BCA_File *)data_ov085_02130744.filePtr, 0, 0x1000, 0);
+    mTextureSequence.SetFile(*(BTP_File *)data_ov085_0213073c.filePtr, 0, 0x1000, 0);
     mAnmModel1.speed = 0x1000;
     mVariant = param1 & 0xff;
     if (mVariant == 0xff)
