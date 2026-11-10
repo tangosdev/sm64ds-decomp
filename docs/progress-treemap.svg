@@ -41669,7 +41669,7 @@ matched: yes</title></rect><rect x="1204.25" y="870.81" width="39.45" height="8.
 module: ov084
 addr: 0x02129a00
 size: 668 bytes
-matched: yes</title></rect><rect x="1243.70" y="870.81" width="5.20" height="8.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c19func_ov084_02129c9cEv
+matched: yes</title></rect><rect x="1243.70" y="870.81" width="5.20" height="8.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c9BeginJumpEv
 module: ov084
 addr: 0x02129c9c
 size: 88 bytes
@@ -41685,19 +41685,19 @@ matched: yes</title></rect><rect x="1155.83" y="938.90" width="15.23" height="13
 module: ov084
 addr: 0x0212a580
 size: 376 bytes
-matched: yes</title></rect><rect x="1155.83" y="951.92" width="15.23" height="4.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c19func_ov084_0212a6f8Ev
+matched: yes</title></rect><rect x="1155.83" y="951.92" width="15.23" height="4.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c8ActPauseEv
 module: ov084
 addr: 0x0212a6f8
 size: 124 bytes
-matched: yes</title></rect><rect x="1155.83" y="956.21" width="15.23" height="28.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c19func_ov084_0212a774Ev
+matched: yes</title></rect><rect x="1155.83" y="956.21" width="15.23" height="28.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c9ActTumbleEv
 module: ov084
 addr: 0x0212a774
 size: 828 bytes
-matched: yes</title></rect><rect x="1155.83" y="984.89" width="15.23" height="5.26" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c19func_ov084_0212aab0Ev
+matched: yes</title></rect><rect x="1155.83" y="984.89" width="15.23" height="5.26" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c7ActJumpEv
 module: ov084
 addr: 0x0212aab0
 size: 152 bytes
-matched: yes</title></rect><rect x="1155.83" y="990.15" width="15.23" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c19func_ov084_0212ab48Ev
+matched: yes</title></rect><rect x="1155.83" y="990.15" width="15.23" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c16ActAttackedMarioEv
 module: ov084
 addr: 0x0212ab48
 size: 140 bytes
@@ -41709,7 +41709,7 @@ matched: yes</title></rect><rect x="1212.74" y="879.74" width="39.17" height="11
 module: ov084
 addr: 0x0212af74
 size: 872 bytes
-matched: yes</title></rect><rect x="1251.91" y="879.74" width="2.16" height="11.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c19func_ov084_0212b2dcEv
+matched: yes</title></rect><rect x="1251.91" y="879.74" width="2.16" height="11.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daKrb_c7ActWalkEv
 module: ov084
 addr: 0x0212b2dc
 size: 48 bytes
