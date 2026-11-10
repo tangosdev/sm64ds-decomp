@@ -632,7 +632,7 @@ struct daPly_c : dActor_c {
        down one per call while the hazard persists, cleared when it ends. */
     u8 mDamageTickTimer; /* 0x71d */
     /* A one-shot event sequence. func_ov002_020c43c4(id) latches the id
-       (once per save, via a bit in data_0209caa0[2]) and zeroes the step;
+       (once per save, via a bit in data_0209caa0.file.flags2) and zeroes the step;
        func_ov002_020c4188 then walks mEventStep 0..4, holding mEventWait
        ticks before handing data_ov002_020ff26c[mEventId - 1] to
        func_0201f32c. */

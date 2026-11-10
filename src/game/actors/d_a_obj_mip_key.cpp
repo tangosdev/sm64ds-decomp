@@ -32,7 +32,6 @@ void StartMinigameMenu(u8 a);
 }
 
 extern dCamera_c *gCamera;
-extern SaveBlock data_0209caa0;
 extern u8 data_0209d660;
 extern u8 data_0209d684;
 /* MIPS's model-file handle, owned and constructed by d_a_mip.cpp's static

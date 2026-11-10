@@ -73,7 +73,6 @@ struct C0SwitchCollisionFilePtr : SharedFilePtr {
 extern C0SwitchModelFilePtr data_ov012_021124a8;
 extern C0SwitchCollisionFilePtr data_ov012_021124a0;
 extern CLPS_Block data_ov012_02111cd0;
-extern SaveBlock data_0209caa0;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

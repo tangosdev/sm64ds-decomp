@@ -188,7 +188,6 @@ extern int data_0209f32c;
 extern unsigned char gGameMode;
 extern dCamera_c *gCamera;
 extern char data_020a0edc[];
-extern SaveBlock data_0209caa0;
 extern s16 FX_SinCosTable_[];
 
 extern SharedFilePtr data_ov002_0210d9a0;

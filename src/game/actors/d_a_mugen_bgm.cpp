@@ -39,7 +39,6 @@ extern void *data_ov002_02110af8;
 extern u8 gLocalPlayerId;
 extern daPly_c *gPlayers[];
 extern Vector3 data_020a0ebc;
-extern SaveBlock data_0209caa0;
 extern dCamera_c *gCamera;
 
 /* arm9 / ov100 C helpers with no shared header. */

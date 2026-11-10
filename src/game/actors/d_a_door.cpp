@@ -248,7 +248,6 @@ extern daDoor_StatePmf data_ov100_02148134;
 extern daDoor_StatePmf data_ov100_0214813c;
 extern daDoor_StatePmf data_ov100_02148144;
 
-extern SaveBlock data_0209caa0; /* the live save block (include/SaveBlock.h) */
 /* The camera, and the player array indexed by the current player id. */
 extern dCamera_c *gCamera;
 extern unsigned char gLocalPlayerId;
