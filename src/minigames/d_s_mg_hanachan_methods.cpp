@@ -9,22 +9,20 @@
  * its own file (src/minigames/d_s_mg_hanachan.cpp).
  *
  * The destructor pair and the ten functions from Wiggler's destructor to
- * Wiggler_DrawTarget came from one-function files. Their bodies are kept
+ * Wiggler::DrawTarget came from one-function files. Their bodies are kept
  * as they matched there. The two popup arrays are declared once; where a
  * function spelled a record differently, its tag is renamed per function
  * and the access casts. The wiggler array's element destructor
  * (formerly Wiggler_Destroy) is Wiggler's own inline destructor.
  *
- * The nine helpers that take the scene as their first argument
- * (Phase_WaitTouch .. Phase_SetupRound, the phase and tap handlers) are
- * dScMgHanachan_c members, declared in dScMgHanachan_c.h; their descriptive
- * names are reconstructed. Each body opens by re-viewing
- * `this` as the char * it used to take. The other func_ov006 helpers stay
- * free: the ones from Wiggler_DrawTarget to Hana_SpawnWigglers take one
- * 0x98-byte wiggler record (an element of mWiggler) or no object at all, the
- * popup helpers before them and Hana_LoadBackground take no object.
- * The nine callback targets on Wiggler and two empty scene phases are real
- * methods; the other Wiggler helpers retain their existing free-function ABI.
+ * The phase and tap handlers (Phase_WaitTouch .. Phase_SetupRound) are
+ * dScMgHanachan_c members. Everything that takes one 0x98-byte wiggler
+ * record, an element of mWiggler, is a dScMgHanachan_c::Wiggler member:
+ * the nine callback targets, the two draws, the segment and path steps,
+ * Spawn and the small queries the scene asks of one wiggler. All of them
+ * are declared in dScMgHanachan_c.h, and their descriptive names are
+ * reconstructed. The popup helpers, the three Hana_ pickers and
+ * Hana_LoadBackground take no object and stay free.
  * Native member-pointer literals and the typed spawn profile now provide the
  * complete 0x0213c95c..0x0213ca7c data range. This reconstruction assignment
  * does not establish the original translation-unit boundary.
@@ -36,30 +34,19 @@
  * - the popup at sHanaStarPopup is read through the file-local
  *   HanaStarPopup view, and StarPopup_Update reaches its timer byte
  *   through a separate symbol, sHanaStarPopups.
- * - Wiggler_DrawTarget repeats Wiggler_DrawField's segment
+ * - Wiggler::DrawTarget repeats Wiggler::DrawField's segment
  *   walk with its own point type, Vec2_ea914, whose trivial destructor
  *   is part of the match.
- * - dScMgHanachan_c::Render, `Thing *base; &base[i]` and `slot++`
- *   on the 0x98 array, DIFF, 6 words. `char *arr += 0x98` stays.
- *   Behavior's `&base[i]` matches.
- * - BeginResult, `Wiggler *p = (Wiggler *)mWiggler; p->alive = 0; p++`,
- *   DIFF. The loop steps a char * by 0x98 and clears mWiggler[0].alive
- *   through it.
- * - Wiggler_StateMoveA, Wiggler_StateWait, Wiggler_StateMoveB read their
- *   fields through a `Wiggler *w = this` local; dropping the old char *
- *   local instead renumbers the pinned @NNN labels. Wiggler_UpdateSway takes
- *   one Wiggler * and reads state through it; that moved this TU's pinned
- *   @NNN rows, which are re-keyed to the names mwcc emits.
- * - Wiggler_StepSegmentsA, Wiggler_StepSegmentsB, Wiggler_StepSegmentsC,
- *   Wiggler_MoveBounce, cstd::atan2(Fix12<int>, Fix12<int>), does not link.
+ * - Wiggler::StepSegmentsA, StepSegmentsB, StepSegmentsC and MoveBounce:
+ *   cstd::atan2(Fix12<int>, Fix12<int>) does not link.
  *   cstd::atan2(int, int) mangles Eii, not E5Fix12IiES1_.
- * - Wiggler_GetFlag reads the four 2-bit colours in color (+0x74) through
+ * - Wiggler::GetFlag reads the four 2-bit colours in color (+0x74) through
  *   the B72 bitfield view.
- * - Wiggler_DrawField, OAM::Render(int, OamAttr*, int, int, int,
- *   int, int, int), does not typecheck (the sprite table is void*). The
+ * - Wiggler::DrawField: OAM::Render(int, OamAttr*, int, int, int,
+ *   int, int, int) does not typecheck (the sprite table is void*). The
  *   ROM symbol's scale parameter is Fix12<int>, which this tree cannot spell.
- * - Wiggler_StartPathA still uses the private Obj view for its scalar fields.
- *   Its callback assignments now use the real Wiggler member-pointer fields.
+ *   One sprite offset is still read back through a volatile stack word.
+ * - Wiggler::StartPathA reads base.y through a volatile; a plain read DIFFs.
  */
 
 /* .text in source order (ROM-ascending; do not reorder) and per-function
@@ -83,7 +70,6 @@ enum dScMgHanachan_c_AssetId {
 #include "Vector2.h"
 #include "OAM.h"
 #include "nitro/hw/registers.h"
-#include "private/ov006_ec4dc_obj.h"
 #include "dScMgHanachan_c.h"
 #include "decl_common.h"
 #include "PlayerInput.h"
@@ -101,14 +87,6 @@ typedef dScMgHanachan_c::Point V2;
 typedef struct {
     int x, y;
 } Vec2;
-/* Thing is never whole-struct-assigned, so it keeps named ints. */
-typedef struct Thing {
-    int a;           /* 0x00 */
-    int b;           /* 0x04 */
-    char pad0[0x10]; /* 0x08 */
-    V2 pos;          /* 0x18 */
-    char pad1[0x78]; /* 0x20 */
-} Thing;             /* 0x98 */
 
 struct B72 {
     unsigned short f0 : 2;
@@ -182,29 +160,9 @@ int fdiv(int numerator, int denominator);
 
 extern "C" {
 /* This TU's own functions. */
-extern void Wiggler_DrawField(void *o_);
-extern void Wiggler_UpdateSway(Wiggler *w);
-extern void Wiggler_Move(char *c);
-extern int Wiggler_HitTest(char *a, const V2 *b);
-extern int Wiggler_IsStarVisible(char *p);
-extern void Wiggler_StopIfIdle(char *c);
-extern void Wiggler_OnTouched(char *c);
-extern void Wiggler_SetCruiseSpeed(char *p);
-extern void Wiggler_Retarget(Wiggler *c, int v);
-extern int Wiggler_GetFrame(char *o, int);
-extern int Wiggler_GetFlag(char *c, int n);
 extern int Hana_PickUnused(int n, int mask);
 extern void Hana_ChooseStarWiggler(int count);
 extern int Hana_PickMoveKind(void);
-extern int Wiggler_ClampToScreen(char *c);
-extern void Wiggler_StepSegmentsA(Wiggler *c);
-extern void Wiggler_StepSegmentsB(Wiggler *c);
-extern void Wiggler_StepSegmentsC(Wiggler *c);
-extern void Wiggler_StartPathA(Obj *self, int n);
-extern void Wiggler_StartBounce(char *c, int);
-extern void Wiggler_StartPathB(char *self, int idx);
-extern void Wiggler_StartPathC(Wiggler *c, int param);
-extern void Hana_SpawnWigglers(char *self, int arg1, int arg2);
 extern void Hana_LoadBackground(void);
 
 extern void *sWigglerSprites[];
@@ -534,7 +492,7 @@ extern "C" void HanaPopup_ClearAll(void) {
 }
 
 /* Draws a wiggler's five segments from the tail forward, then one more
-   sprite by the head when bloom is set and Wiggler_IsStarVisible agrees. The
+   sprite by the head when bloom is set and IsStarVisible agrees. The
    trivial ~Vec2_ea914 and the strength-reduction bracket are both part of
    the match. */
 struct Vec2_ea914 {
@@ -543,8 +501,7 @@ struct Vec2_ea914 {
     ~Vec2_ea914() {}
 };
 
-extern "C" void Wiggler_DrawTarget(void *self_) {
-    Wiggler *self = (Wiggler *)self_;
+void dScMgHanachan_c::Wiggler::DrawTarget() {
     s32 i;
     s16 rot;
     s16 ang;
@@ -567,11 +524,11 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
     for (j = 3; j >= 1; j--) {
         pts[j].x = pts[j + 1].x;
         pts[j].y = pts[j + 1].y;
-        pts[j].x = pts[j].x - (self->stretch[j] + ((j + 1) << 13));
+        pts[j].x = pts[j].x - (stretch[j] + ((j + 1) << 13));
     }
     pts[0].x = pts[1].x;
     pts[0].y = pts[1].y;
-    pts[0].x = pts[0].x - (self->stretch[0] + 0x2000);
+    pts[0].x = pts[0].x - (stretch[0] + 0x2000);
 
     for (i = 0, A = 0, B = 0; i < 5; i++) {
         rot = -0x4000;
@@ -579,9 +536,9 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
         va.x = 0;
         pos.x = pts[i].x;
         pos.y = pts[i].y;
-        ang = (s16)(self->bob - A);
+        ang = (s16)(bob - A);
         func_0203d388((int *)&va, -0x4000);
-        if (self->bloom == 0) {
+        if (bloom == 0) {
             if (i == 0) {
                 rot += FX_SinIdx((u16)ang >> 4) >> 1;
             } else {
@@ -592,14 +549,14 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
         func_0203d680((Vector2 *)&vout, (const Vector2 *)&va, FX_SinIdx((u16)(ang * 2) >> 4));
         pos.x = pos.x + vout.x;
         pos.y = pos.y + vout.y;
-        res = Wiggler_GetFrame((char *)self, i);
+        res = GetFrame(i);
         px = pos.y >> 12;
         py = pos.x >> 12;
-        a2i = Wiggler_GetFlag((char *)self, i);
+        a2i = GetFlag(i);
         OAM::Render(0, (OamAttr *)sWigglerSprites[a2i], py, px, res, -1, 0x1000, (u16)rot);
         if (i == 0) {
-            if (self->bloom != 0) {
-                if (Wiggler_IsStarVisible((char *)self) != 0) {
+            if (bloom != 0) {
+                if (IsStarVisible() != 0) {
                     vb.x = 0x2000;
                     vb.y = -0x18000;
                     func_0203d388((int *)&vb, rot);
@@ -616,9 +573,7 @@ extern "C" void Wiggler_DrawTarget(void *self_) {
     }
 }
 
-extern "C" {
-void Wiggler_DrawField(void *arg) {
-    char *raw = (char *)arg;
+void dScMgHanachan_c::Wiggler::DrawField() {
     struct {
         int A, B, urot, va0x, res;
     } t;
@@ -632,7 +587,7 @@ void Wiggler_DrawField(void *arg) {
     int px, py;
     int a2i;
     int i;
-    short rot, ang;
+    short rot, sway;
 
     i = 0;
     vb0.y = -0x18000;
@@ -643,19 +598,19 @@ void Wiggler_DrawField(void *arg) {
     s3.vc0.x = 0;
     t.va0x = 0;
     for (; i < 5; i++) {
-        rot = ((Wiggler *)raw)->ang[i];
-        s.pos.x = ((Wiggler *)raw)->seg[i].x;
-        s.pos.y = ((Wiggler *)raw)->seg[i].y;
+        rot = ang[i];
+        s.pos.x = seg[i].x;
+        s.pos.y = seg[i].y;
         s.va.x = t.va0x;
         s.va.y = 0x1000;
-        ang = (short)(((Wiggler *)raw)->bob - t.A);
+        sway = (short)(bob - t.A);
         func_0203d388(&s.va.x, rot);
 
-        if (((Wiggler *)raw)->bloom == 0) {
+        if (bloom == 0) {
             if (i == 0) {
-                rot = (short)(rot + (FX_SinIdx((unsigned short)ang >> 4) >> 1));
+                rot = (short)(rot + (FX_SinIdx((unsigned short)sway >> 4) >> 1));
             } else {
-                int sinv = FX_SinIdx((unsigned short)ang >> 4);
+                int sinv = FX_SinIdx((unsigned short)sway >> 4);
                 rot = (short)(rot + (short)FX_MUL(sinv, 0x1800 - t.B));
             }
         }
@@ -664,23 +619,22 @@ void Wiggler_DrawField(void *arg) {
             rot = (short)(rot & 0xfc00);
         }
         func_0203d680((Vector2 *)&s.vout, (const Vector2 *)&s.va,
-                      FX_SinIdx((unsigned short)(ang << 1) >> 4));
+                      FX_SinIdx((unsigned short)(sway << 1) >> 4));
         s.pos.x += s.vout.x;
         s.pos.y += s.vout.y;
 
-        t.res = Wiggler_GetFrame(raw, i);
+        t.res = GetFrame(i);
         px = s.pos.y >> 12;
         py = s.pos.x >> 12;
-        OAM::Render(1,
-                    (OamAttr *)sWigglerSprites[(a2i = Wiggler_GetFlag(raw, i),
-                                                (t.urot = (unsigned short)rot), a2i)],
-                    py, px, t.res, -1, 0x1000, t.urot);
+        OAM::Render(
+            1, (OamAttr *)sWigglerSprites[(a2i = GetFlag(i), (t.urot = (unsigned short)rot), a2i)],
+            py, px, t.res, -1, 0x1000, t.urot);
 
         if (i == 0) {
-            if (((Wiggler *)raw)->bloom != 0 && ((Wiggler *)raw)->flower > 0) {
+            if (bloom != 0 && flower > 0) {
                 int fp2;
                 int scale;
-                fp2 = (0x3000 - ((Wiggler *)raw)->flower) >> 12;
+                fp2 = (0x3000 - flower) >> 12;
                 s.vb.x = vb0.x;
                 s.vb.y = vb0.y;
                 func_0203d388(&s.vb.x, rot);
@@ -689,16 +643,16 @@ void Wiggler_DrawField(void *arg) {
                 if (fp2 != 0)
                     scale = 0x1000;
                 else
-                    scale = func_02053200((FX_SinIdx((unsigned short)ang >> 4) >> 2) + 0xc00);
+                    scale = func_02053200((FX_SinIdx((unsigned short)sway >> 4) >> 2) + 0xc00);
                 OAM::Render(1, (OamAttr *)sHanaWigglerTargetSprites[fp2], s.vb.x >> 12,
                             s.vb.y >> 12, -1, -1, scale, t.urot);
-            } else if (((Wiggler *)raw)->state == &Wiggler::StateWait) {
-                if (((Wiggler *)raw)->hold > 0x1a && ((Wiggler *)raw)->hold < 0x30) {
+            } else if (state == &Wiggler::StateWait) {
+                if (hold > 0x1a && hold < 0x30) {
                     int idx = s3.vc0.x;
                     s.vc.x = s3.vc0.x;
                     s.vc.y = s3.vc0.y;
-                    if (((Wiggler *)raw)->hold < 0x26) {
-                        int d = (0x30 - ((Wiggler *)raw)->hold) * 0x600;
+                    if (hold < 0x26) {
+                        int d = (0x30 - hold) * 0x600;
                         int vy;
                         s.vc.y = (vy = *(volatile int *)((char *)&s - 4), (idx = 1) ? vy : vy) - d;
                     }
@@ -716,58 +670,55 @@ void Wiggler_DrawField(void *arg) {
         t.B += 0x200;
     }
 }
-}
 
 #pragma push
 #pragma O3 /* the default schedule misses */
 void dScMgHanachan_c::Wiggler::Update() {
-    Wiggler *w = this;
     (this->*sub)();
-    if (w->face != 5)
+    if (face != 5)
         return;
-    w->popCount += 1;
+    popCount += 1;
     {
         int i = 0;
         int max = 0x200;
-        int *p = w->stretch;
+        int *p = stretch;
         do {
-            if (w->popCount > (5 - i) * 3)
+            if (popCount > (5 - i) * 3)
                 Math_Function_0203b0fc(p, 0x9800, 0x400, max);
             i++;
             max += 0x140;
             p++;
         } while (i < 5);
     }
-    Wiggler_StepSegmentsB(w);
+    StepSegmentsB();
 }
 #pragma pop
 void dScMgHanachan_c::Wiggler::StateHold() {
-    Wiggler *w = this;
-    if (ApproachLinear2(w->hold, 0, 1)) {
-        w->bloom = 0;
-        w->busy = 1;
-        w->flash = 0x21;
-        w->speedTarget = 0x1000;
-        w->bobRate = 0x900;
-        w->face = 6;
+    if (ApproachLinear2(hold, 0, 1)) {
+        bloom = 0;
+        busy = 1;
+        flash = 0x21;
+        speedTarget = 0x1000;
+        bobRate = 0x900;
+        face = 6;
     } else {
         (this->*sub)();
-        if (w->hold == 0x30) {
-            if (w->face != 4)
-                w->face = 3;
+        if (hold == 0x30) {
+            if (face != 4)
+                face = 3;
         }
     }
 
-    if (w->face != 6)
+    if (face != 6)
         return;
 
-    w->popCount += 1;
+    popCount += 1;
 
     int i = 0;
     int scale = 0x200;
-    int *q = w->stretch;
+    int *q = stretch;
     do {
-        if (w->popCount > (5 - i) * 3) {
+        if (popCount > (5 - i) * 3) {
             Math_Function_0203b0fc(q, 0x9800, 0x400, scale);
         }
         scale += 0x140;
@@ -775,22 +726,21 @@ void dScMgHanachan_c::Wiggler::StateHold() {
         i++;
     } while (i < 5);
 
-    Wiggler_StepSegmentsB(w);
+    StepSegmentsB();
 }
 
 void dScMgHanachan_c::Wiggler::StateMoveA() {
-    Wiggler *w = this;
     int va[2];
     int vb[2];
     short tgt;
 
-    ApproachLinear(w->flower, 0, 0x200);
-    if (ApproachLinear2(w->timer, 0, 1) != 0) {
+    ApproachLinear(flower, 0, 0x200);
+    if (ApproachLinear2(timer, 0, 1) != 0) {
         if (sub == &Wiggler::TurnTowardAim) {
-            w->bloom = 1;
-            w->flower = 0x3000;
-            w->busy = 0;
-            w->face = 0;
+            bloom = 1;
+            flower = 0x3000;
+            busy = 0;
+            face = 0;
         }
         return;
     }
@@ -801,69 +751,67 @@ void dScMgHanachan_c::Wiggler::StateMoveA() {
         va[0] = z;
         va[1] = n;
     }
-    tgt = w->aim - 0x1000;
-    ApproachLinear(w->ang[0], tgt, 0x400);
-    func_0203d388(va, w->ang[0]);
-    func_0203d704((int *)vb, (int *)&w->seg[1], (int *)va);
-    w->seg[0].x = vb[0];
-    w->seg[0].y = vb[1];
+    tgt = aim - 0x1000;
+    ApproachLinear(ang[0], tgt, 0x400);
+    func_0203d388(va, ang[0]);
+    func_0203d704((int *)vb, (int *)&seg[1], (int *)va);
+    seg[0].x = vb[0];
+    seg[0].y = vb[1];
     {
-        short cnt = w->timer;
+        short cnt = timer;
         if ((cnt & 0x10) == 0 || cnt < 0x38)
-            w->face = 1;
+            face = 1;
         else
-            w->face = 0;
+            face = 0;
     }
 }
 
 void dScMgHanachan_c::Wiggler::StateWait() {
-    Wiggler *w = this;
-    short *t = &w->hold;
+    short *t = &hold;
     short v = (short)(*t - 1);
     *t = v;
-    if (w->hold == 0) {
-        w->bloom = 0;
-        w->busy = 1;
-        w->speedTarget = 0x1000;
-        w->bobRate = 0x900;
-        w->face = 4;
-        w->flash = 0x78;
+    if (hold == 0) {
+        bloom = 0;
+        busy = 1;
+        speedTarget = 0x1000;
+        bobRate = 0x900;
+        face = 4;
+        flash = 0x78;
         {
             state = sub;
         }
         return;
     }
     (this->*sub)();
-    if (w->hold != 0x30)
+    if (hold != 0x30)
         return;
-    if (w->decoy == 0)
+    if (decoy == 0)
         Sound::PlayBank2_2D(0x1ea);
-    w->face = 3;
+    face = 3;
 }
 
 void dScMgHanachan_c::Wiggler::StateMoveB() {
-    Wiggler *w = this;
     int va[2];
     int vb[2];
     short tgt;
     short cnt;
 
-    ApproachLinear(w->flower, 0, 0x200);
-    w->timer -= 1;
-    if (w->timer == 0) {
+    ApproachLinear(flower, 0, 0x200);
+    timer -= 1;
+    if (timer == 0) {
         if (sub == &Wiggler::TurnTowardAim) {
-            w->bloom = 1;
-            w->flower = 0x3000;
-            w->busy = 0;
-            w->face = 0;
+            bloom = 1;
+            flower = 0x3000;
+            busy = 0;
+            face = 0;
         } else {
-            w->bloom = 0;
-            w->busy = 0;
-            w->speedTarget = 0xa00;
-            w->bobRate = 0x600;
-            w->face = 2;
-            w->voice = 0;
-            w->voiceId = 0x1ec;
+            bloom = 0;
+            busy = 0;
+            speedTarget = 0xa00;
+            bobRate = 0x600;
+            face = 2;
+            voice = 0;
+            voiceId = 0x1ec;
         }
         state = sub;
         return;
@@ -875,184 +823,164 @@ void dScMgHanachan_c::Wiggler::StateMoveB() {
         va[0] = z;
         va[1] = n;
     }
-    tgt = w->aim - 0x1000;
-    ApproachLinear(w->ang[0], tgt, 0x400);
-    func_0203d388(va, w->ang[0]);
-    func_0203d704((int *)vb, (int *)&w->seg[1], (int *)va);
-    w->seg[0].x = vb[0];
-    w->seg[0].y = vb[1];
-    cnt = w->timer;
+    tgt = aim - 0x1000;
+    ApproachLinear(ang[0], tgt, 0x400);
+    func_0203d388(va, ang[0]);
+    func_0203d704((int *)vb, (int *)&seg[1], (int *)va);
+    seg[0].x = vb[0];
+    seg[0].y = vb[1];
+    cnt = timer;
     if ((cnt & 0x10) == 0 || cnt < 0x38)
-        w->face = 1;
+        face = 1;
     else
-        w->face = 0;
+        face = 0;
 }
 
-extern "C" void Wiggler_UpdateSway(Wiggler *w) {
-    if (w->state == &Wiggler::TurnTowardAim && w->decoy == 0) {
-        short h = w->bob;
-        if (h < 0 && (short)(h + w->bobRate) > 0) {
+void dScMgHanachan_c::Wiggler::UpdateSway() {
+    if (state == &Wiggler::TurnTowardAim && decoy == 0) {
+        short h = bob;
+        if (h < 0 && (short)(h + bobRate) > 0) {
             Sound::PlayBank2_2D(0x1e8);
-        } else if (h > 0 && (short)(h + w->bobRate) < 0) {
+        } else if (h > 0 && (short)(h + bobRate) < 0) {
             Sound::PlayBank2_2D(0x1e7);
         }
     }
-    w->bob += w->bobRate;
+    bob += bobRate;
 }
 
-extern "C" void Wiggler_Move(char *c) {
-    Wiggler *w = (Wiggler *)c;
+void dScMgHanachan_c::Wiggler::Move() {
     int v[2];
     int step;
     int v93;
 
-    if (w->alive != 0) {
+    if (alive != 0) {
         step = 0x1000;
-        if (w->speed < 0xa00)
+        if (speed < 0xa00)
             step = step >> 2;
-        ApproachLinear(w->speed, w->speedTarget, step);
-        v[1] = -w->speed;
+        ApproachLinear(speed, speedTarget, step);
+        v[1] = -speed;
         v[0] = 0;
-        func_0203d388(v, w->ang[1]);
-        w->seg[1].x += v[0];
-        w->seg[1].y += v[1];
-        if (w->busy != 0) {
-            w->flash--;
-            if (w->flash == 0) {
-                Wiggler_SetCruiseSpeed(c);
+        func_0203d388(v, ang[1]);
+        seg[1].x += v[0];
+        seg[1].y += v[1];
+        if (busy != 0) {
+            flash--;
+            if (flash == 0) {
+                SetCruiseSpeed();
             }
         }
     }
-    if (w->voiceId != 0 && w->decoy == 0) {
+    if (voiceId != 0 && decoy == 0) {
         v93 = 0;
-        if (w->busy != 0)
+        if (busy != 0)
             v93 = 0x1f4;
-        w->voice = func_02012468(w->voice, 2, w->voiceId, 2, 0, v93, 0, 0);
+        voice = func_02012468(voice, 2, voiceId, 2, 0, v93, 0, 0);
     } else {
-        w->voice = 0;
+        voice = 0;
     }
-    if (w->state)
-        (w->*w->state)();
-    if (w->alive == 0)
+    if (state)
+        (this->*state)();
+    if (alive == 0)
         return;
-    Wiggler_StepSegmentsA(w);
+    StepSegmentsA();
 }
 
-extern "C" {
-int Wiggler_HitTest(char *raw, const V2 *touchPoint) {
-    Wiggler *wiggler = (Wiggler *)raw;
+int dScMgHanachan_c::Wiggler::HitTest(const Point *touchPoint) {
     int segmentIndex;
     for (segmentIndex = 0; segmentIndex < 5; segmentIndex++) {
-        if (func_0203d5dc((const int *)(&wiggler->seg[segmentIndex]), (const int *)touchPoint) <
-            0x14000)
+        if (func_0203d5dc((const int *)(&seg[segmentIndex]), (const int *)touchPoint) < 0x14000)
             return 1;
     }
     return 0;
 }
-}
 
-extern "C" {
-int Wiggler_IsStarVisible(char *raw) {
-    if (((Wiggler *)raw)->busy == 0) {
-        Wiggler *w = (Wiggler *)raw;
-        if (w->state == w->saved)
+int dScMgHanachan_c::Wiggler::IsStarVisible() {
+    if (busy == 0) {
+        if (state == saved)
             return 1;
     }
     return 0;
 }
-}
 
-extern "C" {
-void Wiggler_StopIfIdle(char *c) {
-    Wiggler *w = (Wiggler *)c;
-    if (w->state == &Wiggler::TurnTowardAim) {
-        w->busy = 0;
-        w->timer = 0x60;
-        if (w->decoy == 0) {
+void dScMgHanachan_c::Wiggler::StopIfIdle() {
+    if (state == &Wiggler::TurnTowardAim) {
+        busy = 0;
+        timer = 0x60;
+        if (decoy == 0) {
             Sound::PlayBank2_2D(0x1e9);
         }
-        w->state = &Wiggler::StateMoveA;
+        state = &Wiggler::StateMoveA;
     } else {
-        if (w->state != &Wiggler::StateWait) {
-            w->hold = 0x31;
-            w->sub = w->saved;
+        if (state != &Wiggler::StateWait) {
+            hold = 0x31;
+            sub = saved;
             Sound::PlayBank2_2D(0x1ed);
         }
-        w->popCount = 0;
-        w->state = &Wiggler::StateHold;
+        popCount = 0;
+        state = &Wiggler::StateHold;
     }
 }
-}
 
-extern "C" void Wiggler_OnTouched(char *c) {
-    Wiggler *w = (Wiggler *)c;
-    if (w->state == &Wiggler::TurnTowardAim) {
-        w->busy = 0;
-        w->timer = 0x60;
-        if (w->decoy == 0)
+void dScMgHanachan_c::Wiggler::OnTouched() {
+    if (state == &Wiggler::TurnTowardAim) {
+        busy = 0;
+        timer = 0x60;
+        if (decoy == 0)
             Sound::PlayBank2_2D(0x1e9);
-        w->state = &Wiggler::StateMoveA;
+        state = &Wiggler::StateMoveA;
     } else {
-        w->face = 5;
-        w->popCount = 0;
-        w->sub = w->saved;
-        w->state = &Wiggler::Update;
+        face = 5;
+        popCount = 0;
+        sub = saved;
+        state = &Wiggler::Update;
     }
 }
 
-extern "C" {
-void Wiggler_SetCruiseSpeed(char *raw) {
-    Wiggler *w = (Wiggler *)raw;
-    w->speedTarget = 0xa00;
-    w->bobRate = 0x600;
-    w->flash = 0;
-    w->busy = 0;
-    w->bloom = 0;
-    w->face = 2;
-}
+void dScMgHanachan_c::Wiggler::SetCruiseSpeed() {
+    speedTarget = 0xa00;
+    bobRate = 0x600;
+    flash = 0;
+    busy = 0;
+    bloom = 0;
+    face = 2;
 }
 
-extern "C" {
-void Wiggler_Retarget(Wiggler *c, int v) {
-    short *h = (short *)(int)(&c->tries);
-
-    (*h)++;
-    if (c->saved == &Wiggler::TurnTowardAim && c->tries < 3) {
-        c->busy = 0;
-        c->timer = (RandomIntInternal(&data_0209e650.value) & 0x20) + 0x60;
-        if (c->tries == 1) {
-            c->sub = &Wiggler::TurnTowardAim;
-            c->saved = c->sub;
+void dScMgHanachan_c::Wiggler::Retarget(int v) {
+    tries++;
+    if (saved == &Wiggler::TurnTowardAim && tries < 3) {
+        busy = 0;
+        timer = (RandomIntInternal(&data_0209e650.value) & 0x20) + 0x60;
+        if (tries == 1) {
+            sub = &Wiggler::TurnTowardAim;
+            saved = sub;
         } else {
-            c->sub = &Wiggler::MoveBounce;
-            c->saved = c->sub;
+            sub = &Wiggler::MoveBounce;
+            saved = sub;
         }
-        if (c->decoy == 0) {
+        if (decoy == 0) {
             Sound::PlayBank2_2D(0x1e9);
         }
-        c->state = &Wiggler::StateMoveB;
+        state = &Wiggler::StateMoveB;
     } else {
-        c->speed = 0;
-        c->hold = (v >> 12) / 4 + 0x31;
-        c->sub = c->saved;
-        c->state = &Wiggler::StateWait;
+        speed = 0;
+        hold = (v >> 12) / 4 + 0x31;
+        sub = saved;
+        state = &Wiggler::StateWait;
     }
 }
-}
 
-extern "C" {
-/* Second parameter unused by the body -- Wiggler_DrawField passes an index
+/* Second parameter unused by the body -- DrawField passes an index
    this callee ignores; declaring it keeps the caller's argument setup. */
-int Wiggler_GetFrame(char *raw, int) {
+int dScMgHanachan_c::Wiggler::GetFrame(int) {
     int r2 = 0;
-    if (((Wiggler *)raw)->busy != 0) {
-        int r1 = ((Wiggler *)raw)->flash;
+    if (busy != 0) {
+        int r1 = flash;
         if (r1 > 0x20) {
             r2 = 1;
             goto end;
         }
         if (r1 > 0x10) {
-            ((Wiggler *)raw)->face = 3;
+            face = 3;
             r2 = 5;
             goto end;
         }
@@ -1060,15 +988,12 @@ int Wiggler_GetFrame(char *raw, int) {
             r2 = 4;
         goto end;
     }
-    {
-        Wiggler *w = (Wiggler *)raw;
-        if (w->state == &Wiggler::StateWait)
-            goto C;
-        if (w->state != &Wiggler::StateHold)
-            goto end0;
-    }
+    if (state == &Wiggler::StateWait)
+        goto C;
+    if (state != &Wiggler::StateHold)
+        goto end0;
 C: {
-    int v = ((Wiggler *)raw)->hold;
+    int v = hold;
     if (v < 0x10) {
         r2 = 5;
         goto end;
@@ -1084,23 +1009,20 @@ end0:
 end:
     return r2;
 }
-}
 
-extern "C" {
-int Wiggler_GetFlag(char *raw, int n) {
+int dScMgHanachan_c::Wiggler::GetFlag(int n) {
     switch (n) {
     case 0:
-        return ((Wiggler *)raw)->face;
+        return face;
     case 1:
-        return ((struct B72 *)&((Wiggler *)raw)->color)->f0 + 7;
+        return ((struct B72 *)&color)->f0 + 7;
     case 2:
-        return ((struct B72 *)&((Wiggler *)raw)->color)->f1 + 7;
+        return ((struct B72 *)&color)->f1 + 7;
     case 3:
-        return ((struct B72 *)&((Wiggler *)raw)->color)->f2 + 7;
+        return ((struct B72 *)&color)->f2 + 7;
     default:
-        return ((struct B72 *)&((Wiggler *)raw)->color)->f3 + 7;
+        return ((struct B72 *)&color)->f3 + 7;
     }
-}
 }
 
 extern "C" {
@@ -1175,40 +1097,36 @@ int Hana_PickMoveKind(void) {
 }
 }
 
-extern "C" {
-int Wiggler_ClampToScreen(char *raw) {
-    Wiggler *wiggler = (Wiggler *)raw;
+int dScMgHanachan_c::Wiggler::ClampToScreen() {
     int boundaryMask = 0;
-    int coordinate = wiggler->seg[1].x;
+    int coordinate = seg[1].x;
     if (coordinate >= 0xe8000) {
         boundaryMask |= 1;
         coordinate = 0xe8000;
-        wiggler->seg[1].x = coordinate;
+        seg[1].x = coordinate;
         boundaryMask &= 0xff;
     } else if (coordinate <= 0x18000) {
         boundaryMask |= 2;
         coordinate = 0x18000;
-        wiggler->seg[1].x = coordinate;
+        seg[1].x = coordinate;
         boundaryMask &= 0xff;
     }
-    coordinate = wiggler->seg[1].y;
+    coordinate = seg[1].y;
     if (coordinate >= 0xa8000) {
         boundaryMask |= 8;
         coordinate = 0xa8000;
-        wiggler->seg[1].y = coordinate;
+        seg[1].y = coordinate;
         boundaryMask &= 0xff;
     } else if (coordinate <= 0x18000) {
         boundaryMask |= 4;
         coordinate = 0x18000;
-        wiggler->seg[1].y = coordinate;
+        seg[1].y = coordinate;
         boundaryMask &= 0xff;
     }
     return boundaryMask;
 }
-}
 
-extern "C" {
-void Wiggler_StepSegmentsA(Wiggler *wiggler) {
+void dScMgHanachan_c::Wiggler::StepSegmentsA() {
     V2 segmentOffset;
     V2 headOffset;
     V2 segmentPosition;
@@ -1224,10 +1142,10 @@ void Wiggler_StepSegmentsA(Wiggler *wiggler) {
     int angleStep;
     Vector2 *segments;
 
-    if (wiggler->bloom != 0)
+    if (bloom != 0)
         return;
 
-    UpdateAngle(wiggler->ang[1], wiggler->aim, 8, 0x100);
+    UpdateAngle(ang[1], aim, 8, 0x100);
 
     segmentIndex = 2;
     step = 2;
@@ -1236,15 +1154,13 @@ void Wiggler_StepSegmentsA(Wiggler *wiggler) {
 
     for (; segmentIndex < 5; segmentIndex++) {
         previousIndex = segmentIndex - 1;
-        previousSegment = &wiggler->seg[previousIndex];
-        Vec2_Sub((int *)&segmentOffset, (int *)(&wiggler->seg[segmentIndex]),
-                 (int *)previousSegment);
+        previousSegment = &seg[previousIndex];
+        Vec2_Sub((int *)&segmentOffset, (int *)(&seg[segmentIndex]), (int *)previousSegment);
         if (func_0203d434((int *)&segmentOffset) != 0) {
             s16 offsetAngle, previousAngle, angleDifference;
-            func_0203d630((int *)&segmentOffset,
-                          wiggler->stretch[segmentIndex] + segmentIndex * 0x2000);
+            func_0203d630((int *)&segmentOffset, stretch[segmentIndex] + segmentIndex * 0x2000);
             offsetAngle = cstd::atan2(segmentOffset.x, segmentOffset.y);
-            previousAngle = wiggler->ang[previousIndex];
+            previousAngle = ang[previousIndex];
             bendExcess = zero;
             targetAngle = (s16)(-offsetAngle);
             angleDifference = (s16)(previousAngle - (s16)(-offsetAngle));
@@ -1255,53 +1171,51 @@ void Wiggler_StepSegmentsA(Wiggler *wiggler) {
                 bendExcess = (s16)(angleDifference + 0x2000);
                 targetAngle = (s16)(previousAngle + 0x2000);
             }
-            UpdateAngle(wiggler->ang[segmentIndex], targetAngle, step, angleStep);
-            angleCorrection = wiggler->ang[segmentIndex];
+            UpdateAngle(ang[segmentIndex], targetAngle, step, angleStep);
+            angleCorrection = ang[segmentIndex];
             angleCorrection = targetAngle - angleCorrection;
             func_0203d388((int *)&segmentOffset, (s16)(bendExcess - angleCorrection));
         }
         func_0203d704((int *)&segmentPosition, (int *)previousSegment, (int *)&segmentOffset);
-        wiggler->seg[segmentIndex].x = segmentPosition.x;
-        wiggler->seg[segmentIndex].y = segmentPosition.y;
+        seg[segmentIndex].x = segmentPosition.x;
+        seg[segmentIndex].y = segmentPosition.y;
     }
 
     {
-        s16 dd = (s16)(wiggler->aim - wiggler->ang[1]);
+        s16 dd = (s16)(aim - ang[1]);
         headOffset.x = 0;
         headOffset.y = -0x10000;
-        UpdateAngle(wiggler->ang[0], (s16)(wiggler->ang[1] + dd), 8, 0x100);
+        UpdateAngle(ang[0], (s16)(ang[1] + dd), 8, 0x100);
     }
-    func_0203d388((int *)&headOffset, wiggler->ang[0]);
-    segments = wiggler->seg;
+    func_0203d388((int *)&headOffset, ang[0]);
+    segments = seg;
     func_0203d704((int *)&headPosition, (int *)(segments + 1), (int *)&headOffset);
-    wiggler->seg[0].x = headPosition.x;
-    wiggler->seg[0].y = headPosition.y;
-}
+    seg[0].x = headPosition.x;
+    seg[0].y = headPosition.y;
 }
 
-extern "C" {
-void Wiggler_StepSegmentsB(Wiggler *wiggler) {
+void dScMgHanachan_c::Wiggler::StepSegmentsB() {
     V2 segmentOffset;
     V2 headOffset;
     V2 segmentPosition;
     V2 headPosition;
     int segmentIndex = 4;
-    Vector2 *segment = &wiggler->seg[segmentIndex];
+    Vector2 *segment = &seg[segmentIndex];
     int baseSpacing = 0x8000;
     s16 zero = 0;
     int previousIndex;
 
     for (; segmentIndex >= 1; segmentIndex--) {
         previousIndex = segmentIndex - 1;
-        Vec2_Sub((int *)&segmentOffset, (int *)segment, (int *)(&wiggler->seg[previousIndex]));
+        Vec2_Sub((int *)&segmentOffset, (int *)segment, (int *)(&seg[previousIndex]));
         if (func_0203d434((int *)&segmentOffset) != 0) {
             s16 offsetAngle, previousAngle, targetAngle, bendExcess, angleDifference, currentAngle;
             {
-                int extraSpacing = wiggler->stretch[segmentIndex];
+                int extraSpacing = stretch[segmentIndex];
                 func_0203d630((int *)&segmentOffset, extraSpacing + baseSpacing);
             }
             offsetAngle = cstd::atan2(segmentOffset.x, segmentOffset.y);
-            previousAngle = wiggler->ang[previousIndex];
+            previousAngle = ang[previousIndex];
             bendExcess = zero;
             targetAngle = (s16)(-offsetAngle);
             angleDifference = (s16)(previousAngle - (s16)(-offsetAngle));
@@ -1312,42 +1226,40 @@ void Wiggler_StepSegmentsB(Wiggler *wiggler) {
                 bendExcess = (s16)(angleDifference + 0x2000);
                 targetAngle = (s16)(previousAngle + 0x2000);
             }
-            currentAngle = wiggler->ang[segmentIndex];
+            currentAngle = ang[segmentIndex];
             func_0203d388((int *)&segmentOffset, (s16)(bendExcess - (targetAngle - currentAngle)));
         }
         Vec2_Sub((int *)&segmentPosition, (int *)segment, (int *)&segmentOffset);
-        wiggler->seg[previousIndex].x = segmentPosition.x;
-        wiggler->seg[previousIndex].y = segmentPosition.y;
+        seg[previousIndex].x = segmentPosition.x;
+        seg[previousIndex].y = segmentPosition.y;
         segment--;
         baseSpacing -= 0x2000;
     }
     headOffset.x = 0;
     headOffset.y = -0x10000;
-    func_0203d388((int *)&headOffset, wiggler->ang[0]);
-    func_0203d704((int *)&headPosition, (int *)((Vector2 *)(wiggler->seg) + 1), (int *)&headOffset);
-    wiggler->seg[0].x = headPosition.x;
-    wiggler->seg[0].y = headPosition.y;
-}
+    func_0203d388((int *)&headOffset, ang[0]);
+    func_0203d704((int *)&headPosition, (int *)((Vector2 *)(seg) + 1), (int *)&headOffset);
+    seg[0].x = headPosition.x;
+    seg[0].y = headPosition.y;
 }
 
-extern "C" {
-void Wiggler_StepSegmentsC(Wiggler *wiggler) {
+void dScMgHanachan_c::Wiggler::StepSegmentsC() {
     V2 segmentOffset;
     V2 headOffset;
     V2 segmentPosition;
     V2 headPosition;
     int segmentIndex = 2;
-    Vector2 *segment = &wiggler->seg[segmentIndex];
+    Vector2 *segment = &seg[segmentIndex];
     int previousIndex;
 
     for (; segmentIndex < 5; segmentIndex++) {
         previousIndex = segmentIndex - 1;
-        Vec2_Sub((int *)&segmentOffset, (int *)segment, (int *)(&wiggler->seg[previousIndex]));
+        Vec2_Sub((int *)&segmentOffset, (int *)segment, (int *)(&seg[previousIndex]));
         if (func_0203d434((int *)&segmentOffset) != 0) {
             s16 offsetAngle, previousAngle, targetAngle, bendExcess, angleDifference, currentAngle;
             func_0203d630((int *)&segmentOffset, (segmentIndex * 2 + 0x10) << 12);
             offsetAngle = cstd::atan2(segmentOffset.x, segmentOffset.y);
-            previousAngle = wiggler->ang[previousIndex];
+            previousAngle = ang[previousIndex];
             bendExcess = 0;
             targetAngle = (s16)(-offsetAngle);
             angleDifference = (s16)(previousAngle - (s16)(-offsetAngle));
@@ -1358,51 +1270,47 @@ void Wiggler_StepSegmentsC(Wiggler *wiggler) {
                 bendExcess = (s16)(angleDifference + 0x2000);
                 targetAngle = (s16)(previousAngle + 0x2000);
             }
-            wiggler->ang[segmentIndex] = targetAngle;
-            currentAngle = wiggler->ang[segmentIndex];
+            ang[segmentIndex] = targetAngle;
+            currentAngle = ang[segmentIndex];
             func_0203d388((int *)&segmentOffset, (s16)(bendExcess - (targetAngle - currentAngle)));
         }
-        func_0203d704((int *)&segmentPosition, (int *)(&wiggler->seg[previousIndex]),
-                      (int *)&segmentOffset);
-        wiggler->seg[segmentIndex].x = segmentPosition.x;
-        wiggler->seg[segmentIndex].y = segmentPosition.y;
+        func_0203d704((int *)&segmentPosition, (int *)(&seg[previousIndex]), (int *)&segmentOffset);
+        seg[segmentIndex].x = segmentPosition.x;
+        seg[segmentIndex].y = segmentPosition.y;
         segment++;
     }
     headOffset.x = 0;
     headOffset.y = -0x10000;
-    wiggler->ang[0] = (s16)(wiggler->ang[1] + (((wiggler->ang[1] - wiggler->ang[2]) << 14) >> 16));
-    func_0203d388((int *)&headOffset, wiggler->ang[0]);
-    func_0203d704((int *)&headPosition, (int *)((Vector2 *)(wiggler->seg) + 1), (int *)&headOffset);
-    wiggler->seg[0].x = headPosition.x;
-    wiggler->seg[0].y = headPosition.y;
-}
+    ang[0] = (s16)(ang[1] + (((ang[1] - ang[2]) << 14) >> 16));
+    func_0203d388((int *)&headOffset, ang[0]);
+    func_0203d704((int *)&headPosition, (int *)((Vector2 *)(seg) + 1), (int *)&headOffset);
+    seg[0].x = headPosition.x;
+    seg[0].y = headPosition.y;
 }
 
 void dScMgHanachan_c::Wiggler::CheckOffLeftA() {
-    Wiggler *self = (Wiggler *)this;
     int i;
-    s16 v = self->aim;
-    if (v < 0 && self->seg[0].x < -0x60000) {
+    s16 v = aim;
+    if (v < 0 && seg[0].x < -0x60000) {
         for (i = 0; i < 5; i++)
-            self->seg[i].x += 0x170000;
+            seg[i].x += 0x170000;
         return;
     }
-    if (v > 0 && self->seg[0].x > 0x160000) {
+    if (v > 0 && seg[0].x > 0x160000) {
         for (i = 0; i < 5; i++)
-            self->seg[i].x -= 0x170000;
+            seg[i].x -= 0x170000;
     }
 }
 
-extern "C" {
-void Wiggler_StartPathA(Obj *self, int n) {
+void dScMgHanachan_c::Wiggler::StartPathA(int n) {
     int b = n % 3;
     int a = n / 3;
     int rA, rB, rC, rD;
     int g1;
     int cm, dm;
 
-    self->speed = 0xa00;
-    self->speedTarget = 0xa00;
+    speed = 0xa00;
+    speedTarget = 0xa00;
     g1 = sHanaFieldWigglerCount / 3 - 1;
 
     rA = cstd::fdiv(a << 12, g1 << 12);
@@ -1411,19 +1319,19 @@ void Wiggler_StartPathA(Obj *self, int n) {
     rD = cstd::fdiv((2 - b) << 12, 0x2000);
 
     if (a & 1) {
-        self->aim = -0x4000;
-        self->bob = -0x8000;
+        aim = -0x4000;
+        bob = -0x8000;
         cm = 0x8000;
         dm = 0xfe000;
     } else {
-        self->aim = 0x4000;
-        self->bob = 0;
+        aim = 0x4000;
+        bob = 0;
         cm = 0x100000;
         dm = 0xa000;
     }
 
     {
-        Vec2i base;
+        Point base;
         int i = 0;
         int delta;
 
@@ -1435,30 +1343,28 @@ void Wiggler_StartPathA(Obj *self, int n) {
 
         for (; i < 5; i++) {
             int bx = base.x;
-            self->seg[i].x = bx;
-            /* Kept volatile: a plain base.y read DIFFs Wiggler_StartPathA
+            seg[i].x = bx;
+            /* Kept volatile: a plain base.y read DIFFs StartPathA
                (measured 2026-11-08). */
-            self->seg[i].y = *(volatile int *)&base.y;
-            if (self->aim < 0)
-                self->seg[i].x += delta;
+            seg[i].y = *(volatile int *)&base.y;
+            if (aim < 0)
+                seg[i].x += delta;
             else
-                self->seg[i].x -= delta;
-            self->ang[i] = self->aim;
+                seg[i].x -= delta;
+            ang[i] = aim;
             delta += 0x20000;
         }
     }
 
-    Wiggler_StepSegmentsC((Wiggler *)self);
-    self->voice = 0;
-    self->voiceId = 0x1ec;
-    ((Wiggler *)self)->state = &Wiggler::CheckOffLeftA;
-    ((Wiggler *)self)->saved = ((Wiggler *)self)->state;
-}
+    StepSegmentsC();
+    voice = 0;
+    voiceId = 0x1ec;
+    state = &Wiggler::CheckOffLeftA;
+    saved = state;
 }
 
 void dScMgHanachan_c::Wiggler::MoveBounce() {
-    char *raw = (char *)this;
-    int boundaryMask = Wiggler_ClampToScreen(raw);
+    int boundaryMask = ClampToScreen();
     if (boundaryMask != 0) {
         int targetX;
         int targetY;
@@ -1512,49 +1418,44 @@ void dScMgHanachan_c::Wiggler::MoveBounce() {
     }
 }
 
-extern "C" {
-void Wiggler_StartBounce(char *raw, int) {
+void dScMgHanachan_c::Wiggler::StartBounce(int) {
     int i;
-    ((Wiggler *)raw)->speed = 0xa00;
-    ((Wiggler *)raw)->speedTarget = 0xa00;
+    speed = 0xa00;
+    speedTarget = 0xa00;
     for (i = 0; i < 5; i++) {
-        ((Wiggler *)raw)->seg[i].x =
+        seg[i].x =
             (int)(((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13)
                   << 8);
-        ((Wiggler *)raw)->seg[i].y =
+        seg[i].y =
             (int)(((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 0x13) *
                   0xc0);
-        ((Wiggler *)raw)->ang[i] =
-            (short)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
+        ang[i] = (short)((unsigned int)RandomIntInternal(&data_0209e650.value) >> 0x10);
     }
-    ((Wiggler *)raw)->aim = (short)((((Wiggler *)raw)->ang[0] + ((Wiggler *)raw)->ang[1]) >> 1);
-    Wiggler_ClampToScreen(raw);
-    Wiggler_StepSegmentsC((Wiggler *)raw);
-    ((Wiggler *)raw)->timer = 0x1e;
-    ((Wiggler *)raw)->voice = 0;
-    ((Wiggler *)raw)->voiceId = 0x1ec;
-    ((Wiggler *)raw)->state = &Wiggler::MoveBounce;
-    ((Wiggler *)raw)->saved = ((Wiggler *)raw)->state;
-}
+    aim = (short)((ang[0] + ang[1]) >> 1);
+    ClampToScreen();
+    StepSegmentsC();
+    timer = 0x1e;
+    voice = 0;
+    voiceId = 0x1ec;
+    state = &Wiggler::MoveBounce;
+    saved = state;
 }
 
 void dScMgHanachan_c::Wiggler::CheckOffLeftB() {
-    Wiggler *self = (Wiggler *)this;
     int i;
-    s16 v = self->aim;
-    if (v < 0 && self->seg[0].x < -0x60000) {
+    s16 v = aim;
+    if (v < 0 && seg[0].x < -0x60000) {
         for (i = 0; i < 5; i++)
-            self->seg[i].x += 0x170000;
+            seg[i].x += 0x170000;
         return;
     }
-    if (v > 0 && self->seg[0].x > 0x160000) {
+    if (v > 0 && seg[0].x > 0x160000) {
         for (i = 0; i < 5; i++)
-            self->seg[i].x -= 0x170000;
+            seg[i].x -= 0x170000;
     }
 }
 
-extern "C" {
-void Wiggler_StartPathB(char *raw, int idx) {
+void dScMgHanachan_c::Wiggler::StartPathB(int idx) {
     int n1;
     int A, B;
     int p;
@@ -1563,8 +1464,8 @@ void Wiggler_StartPathB(char *raw, int idx) {
     int i;
     int off;
 
-    ((Wiggler *)raw)->speed = 0xa00;
-    ((Wiggler *)raw)->speedTarget = 0xa00;
+    speed = 0xa00;
+    speedTarget = 0xa00;
 
     n1 = sHanaFieldWigglerCount - 1;
     A = cstd::fdiv(idx << 12, n1 << 12);
@@ -1578,41 +1479,38 @@ void Wiggler_StartPathB(char *raw, int idx) {
     *(int *)((char *)pos + 4) = valY;
 
     if (RandomIntInternal(&data_0209e650.value) & 0x8000000) {
-        ((Wiggler *)raw)->aim = -0x4000;
+        aim = -0x4000;
         pos[0] = 0x80000;
         pos[0] += ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
     } else {
-        ((Wiggler *)raw)->aim = 0x4000;
+        aim = 0x4000;
         pos[0] = 0x80000;
         pos[0] -= ((unsigned int)(RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19) << 7;
     }
 
     for (i = 0, off = 0; i < 5; i++) {
-        ((Wiggler *)raw)->seg[i].x = pos[0];
-        ((Wiggler *)raw)->seg[i].y = pos[1];
-        if (((Wiggler *)raw)->aim < 0)
-            ((Wiggler *)raw)->seg[i].x += off;
+        seg[i].x = pos[0];
+        seg[i].y = pos[1];
+        if (aim < 0)
+            seg[i].x += off;
         else
-            ((Wiggler *)raw)->seg[i].x -= off;
-        ((Wiggler *)raw)->ang[i] = ((Wiggler *)raw)->aim;
+            seg[i].x -= off;
+        ang[i] = aim;
         off += 0x20000;
     }
 
-    Wiggler_StepSegmentsC((Wiggler *)raw);
-    ((Wiggler *)raw)->voice = 0;
-    ((Wiggler *)raw)->voiceId = 0x1ec;
-    ((Wiggler *)raw)->state = &Wiggler::CheckOffLeftB;
-    ((Wiggler *)raw)->saved = ((Wiggler *)raw)->state;
-}
+    StepSegmentsC();
+    voice = 0;
+    voiceId = 0x1ec;
+    state = &Wiggler::CheckOffLeftB;
+    saved = state;
 }
 
 void dScMgHanachan_c::Wiggler::TurnTowardAim() {
-    Wiggler *w = this;
-    ApproachLinear(w->ang[0], (short)(w->aim - 0x2000), 0x100);
+    ApproachLinear(ang[0], (short)(aim - 0x2000), 0x100);
 }
 
-extern "C" {
-void Wiggler_StartPathC(Wiggler *wiggler, int wigglerIndex) {
+void dScMgHanachan_c::Wiggler::StartPathC(int wigglerIndex) {
     V2 initialHead;
     V2 segmentOffset;
     V2 headOffset;
@@ -1620,12 +1518,12 @@ void Wiggler_StartPathC(Wiggler *wiggler, int wigglerIndex) {
     V2 headPosition;
     int lastIndex, indexWeight, reverseWeight, spacingOffset, segmentIndex, previousIndex;
 
-    wiggler->bloom = 1;
-    wiggler->flower = 0x3000;
-    wiggler->face = 0;
-    wiggler->bobRate = 0x200;
-    wiggler->speed = 0;
-    wiggler->speedTarget = 0;
+    bloom = 1;
+    flower = 0x3000;
+    face = 0;
+    bobRate = 0x200;
+    speed = 0;
+    speedTarget = 0;
 
     lastIndex = sHanaFieldWigglerCount - 1;
     indexWeight = cstd::fdiv(wigglerIndex << 12, lastIndex << 12);
@@ -1642,77 +1540,72 @@ void Wiggler_StartPathC(Wiggler *wiggler, int wigglerIndex) {
     else
         initialHead.x = 0x38000;
 
-    wiggler->aim = -0x8000;
-    wiggler->seg[0].x = *(int *)&initialHead;
-    wiggler->seg[0].y = *((int *)&initialHead + 1);
-    wiggler->ang[0] = wiggler->aim - 0x2000;
+    aim = -0x8000;
+    seg[0].x = *(int *)&initialHead;
+    seg[0].y = *((int *)&initialHead + 1);
+    ang[0] = aim - 0x2000;
 
     for (segmentIndex = 1; segmentIndex < 5; segmentIndex++) {
         previousIndex = segmentIndex - 1;
         segmentOffset.x = 0;
         segmentOffset.y = (segmentIndex * 2 + 0x10) << 12;
-        func_0203d388((int *)&segmentOffset, (s16)(wiggler->ang[previousIndex] + 0x2000));
-        wiggler->ang[segmentIndex] = wiggler->ang[previousIndex] + 0x2000;
-        func_0203d704((int *)&segmentPosition, (int *)(&wiggler->seg[previousIndex]),
-                      (int *)&segmentOffset);
-        wiggler->seg[segmentIndex].x = segmentPosition.x;
-        wiggler->seg[segmentIndex].y = segmentPosition.y;
+        func_0203d388((int *)&segmentOffset, (s16)(ang[previousIndex] + 0x2000));
+        ang[segmentIndex] = ang[previousIndex] + 0x2000;
+        func_0203d704((int *)&segmentPosition, (int *)(&seg[previousIndex]), (int *)&segmentOffset);
+        seg[segmentIndex].x = segmentPosition.x;
+        seg[segmentIndex].y = segmentPosition.y;
     }
 
-    Wiggler_StepSegmentsC(wiggler);
+    StepSegmentsC();
 
     headOffset.x = 0;
     headOffset.y = -0x10000;
-    wiggler->ang[0] = wiggler->aim - 0x2000;
-    func_0203d388((int *)&headOffset, wiggler->ang[0]);
-    func_0203d704((int *)&headPosition, (int *)(&wiggler->seg[1]), (int *)&headOffset);
-    wiggler->seg[0].x = headPosition.x;
-    wiggler->seg[0].y = headPosition.y;
+    ang[0] = aim - 0x2000;
+    func_0203d388((int *)&headOffset, ang[0]);
+    func_0203d704((int *)&headPosition, (int *)(&seg[1]), (int *)&headOffset);
+    seg[0].x = headPosition.x;
+    seg[0].y = headPosition.y;
 
-    wiggler->state = &Wiggler::TurnTowardAim;
-    wiggler->saved = wiggler->state;
-}
+    state = &Wiggler::TurnTowardAim;
+    saved = state;
 }
 
-extern "C" {
-void Hana_SpawnWigglers(char *raw, int arg1, int arg2) {
+void dScMgHanachan_c::Wiggler::Spawn(int arg1, int arg2) {
     int i;
-    Wiggler *o = (Wiggler *)raw;
 
-    o->voice = 0;
-    o->voiceId = 0;
-    o->decoy = 1;
-    o->index = arg1;
-    o->tries = 0;
-    o->bob = (short)(RandomIntInternal(&data_0209e650.value) & 0xfff0);
-    o->bobRate = 0x600;
-    o->busy = 0;
-    o->bloom = 0;
-    o->face = 2;
-    o->round = arg2;
-    o->alive = 1;
+    voice = 0;
+    voiceId = 0;
+    decoy = 1;
+    index = arg1;
+    tries = 0;
+    bob = (short)(RandomIntInternal(&data_0209e650.value) & 0xfff0);
+    bobRate = 0x600;
+    busy = 0;
+    bloom = 0;
+    face = 2;
+    round = arg2;
+    alive = 1;
 
     for (i = 0; i < 5; i++)
-        o->stretch[i] = 0x10000;
+        stretch[i] = 0x10000;
 
-    o->color = (short)Hana_PickUnused(arg1, 0xff);
+    color = (short)Hana_PickUnused(arg1, 0xff);
 
     switch (sHanaRoundPattern) {
     case 0:
-        Wiggler_StartPathC((Wiggler *)raw, arg1);
+        StartPathC(arg1);
         return;
     case 1:
-        Wiggler_StartPathB(raw, arg1);
+        StartPathB(arg1);
         return;
     case 2:
-        Wiggler_StartBounce(raw, arg1);
+        StartBounce(arg1);
         return;
     case 3:
     default:
-        Wiggler_StartPathA((Obj *)raw, arg1);
+        StartPathA(arg1);
         return;
     }
-}
 }
 
 s32 dScMgHanachan_c::CleanupResources() {
@@ -1721,11 +1614,10 @@ s32 dScMgHanachan_c::CleanupResources() {
 }
 
 s32 dScMgHanachan_c::Render() {
-    char *raw = (char *)this;
     int i;
-    char *arr;
+    Wiggler *arr;
 
-    Mg_DrawScoreTally(raw, 0xe0, 0x14, 1);
+    Mg_DrawScoreTally(this, 0xe0, 0x14, 1);
     HanaPopup_DrawAll();
     StarPopup_Draw();
 
@@ -1734,11 +1626,11 @@ s32 dScMgHanachan_c::Render() {
             if (mPhase == &dScMgHanachan_c::Phase_Play) {
                 i = 0;
                 if (sHanaFieldWigglerCount > 0) {
-                    arr = (char *)mWiggler;
+                    arr = mWiggler;
                     do {
-                        Wiggler_DrawField(arr);
+                        arr->DrawField();
                         i++;
-                        arr += 0x98;
+                        arr++;
                     } while (i < sHanaFieldWigglerCount);
                 }
                 goto tail;
@@ -1760,16 +1652,16 @@ s32 dScMgHanachan_c::Render() {
                     goto do_eac;
                 goto count_loop;
             do_eac:
-                Wiggler_DrawField(mTarget);
+                mTarget->DrawField();
                 goto tail;
             count_loop:
                 i = 0;
                 if (sHanaFieldWigglerCount > 0) {
-                    arr = (char *)mWiggler;
+                    arr = mWiggler;
                     do {
-                        Wiggler_DrawField(arr);
+                        arr->DrawField();
                         i++;
-                        arr += 0x98;
+                        arr++;
                     } while (i < sHanaFieldWigglerCount);
                 }
                 goto tail;
@@ -1780,12 +1672,12 @@ s32 dScMgHanachan_c::Render() {
     {
         if (mPhase == &dScMgHanachan_c::Phase_NoneB ||
             mPhase == &dScMgHanachan_c::Phase_WaitTouch) {
-            Wiggler_DrawField(mTarget);
+            mTarget->DrawField();
         }
     }
 
 tail:
-    Wiggler_DrawTarget(mTarget);
+    mTarget->DrawTarget();
 
     {
         if (mPhase != &dScMgHanachan_c::Phase_WaitIntro) {
@@ -1806,17 +1698,15 @@ s32 dScMgHanachan_c::Behavior() {
     (this->*mPhase)();
     int i = 0;
     if (sHanaFieldWigglerCount > 0) {
-        Thing *base = (Thing *)mWiggler;
         do {
-            Wiggler_Move((char *)&base[i]);
+            mWiggler[i].Move();
             i++;
         } while (i < sHanaFieldWigglerCount);
     }
     int j = 0;
     if (sHanaFieldWigglerCount > 0) {
-        Thing *base = (Thing *)mWiggler;
         do {
-            Wiggler_UpdateSway((Wiggler *)&base[j]);
+            mWiggler[j].UpdateSway();
             j++;
         } while (j < sHanaFieldWigglerCount);
     }
@@ -1828,12 +1718,10 @@ s32 dScMgHanachan_c::Behavior() {
 void dScMgHanachan_c::Phase_NoneA() {}
 
 void dScMgHanachan_c::Phase_WaitTouch() {
-    char *raw = (char *)this;
-    dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
     int idx;
     int b;
-    s->mPhaseTimer -= 1;
-    if (s->mPhaseTimer != 0) {
+    mPhaseTimer -= 1;
+    if (mPhaseTimer != 0) {
         idx = gActivePlayerSlot;
         b = 0;
         if (gTouchHeld[idx * 4] != 0 && gTouchEdge[idx * 4] != 0)
@@ -1841,14 +1729,12 @@ void dScMgHanachan_c::Phase_WaitTouch() {
         if (b == 0)
             return;
     }
-    s->mPhase = &dScMgHanachan_c::Phase_NoneA;
+    mPhase = &dScMgHanachan_c::Phase_NoneA;
 }
 
 void dScMgHanachan_c::BeginResultWait() {
-    char *raw = (char *)this;
-    dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
-    s->mPhaseTimer = 0xb4;
-    s->mPhase = &dScMgHanachan_c::Phase_WaitTouch;
+    mPhaseTimer = 0xb4;
+    mPhase = &dScMgHanachan_c::Phase_WaitTouch;
 }
 
 void dScMgHanachan_c::Phase_NoneB() {}
@@ -1858,41 +1744,36 @@ void dScMgHanachan_c::SetPhaseIdle() {
 }
 
 void dScMgHanachan_c::Phase_Result() {
-    char *raw = (char *)this;
-    dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
     int v;
-    s->mPhaseTimer -= 1;
-    v = s->mPhaseTimer;
+    mPhaseTimer -= 1;
+    v = mPhaseTimer;
     if (v == 0) {
-        if (s->mHit != 0) {
+        if (mHit != 0) {
             Mg_SetSharedState(MG_STATE_NEXT_ROUND);
             SetPhaseIdle();
         } else {
-            ((Wiggler *)s->mTarget)->decoy = 1;
+            mTarget->decoy = 1;
             Mg_SetSharedState(MG_STATE_GAME_OVER);
             BeginResultWait();
         }
-        s->mPromptEnabled = 0;
-    } else if (s->mHit != 0) {
+        mPromptEnabled = 0;
+    } else if (mHit != 0) {
         if (v == 0x5a) {
-            Wiggler_OnTouched((char *)s->mTarget);
+            mTarget->OnTouched();
         }
     } else {
         if (v == 0x8a) {
-            Wiggler_StopIfIdle((char *)s->mTarget);
+            mTarget->StopIfIdle();
         }
     }
 }
 
 void dScMgHanachan_c::BeginResult() {
-    char *raw = (char *)this;
     int i = 0;
     if (i < sHanaFieldWigglerCount) {
-        char *p = raw;
         do {
-            ((dScMgHanachan_c *)p)->mWiggler[0].alive = 0;
+            mWiggler[i].alive = 0;
             i++;
-            p += 0x98;
         } while (i < sHanaFieldWigglerCount);
     }
     if (mHit != 0)
@@ -1903,8 +1784,6 @@ void dScMgHanachan_c::BeginResult() {
 }
 
 void dScMgHanachan_c::Phase_Play() {
-    char *raw = (char *)this;
-    dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
     V2 a;
     int vec[4];
     int b = 0;
@@ -1914,22 +1793,21 @@ void dScMgHanachan_c::Phase_Play() {
         b = 1;
 
     if (b != 0) {
-        Thing *p;
+        Wiggler *p;
         Vector2 *src;
         a.x = gTouchX[(unsigned int)idx * 4] << 12;
         a.y = gTouchY[(unsigned int)idx * 4] << 12;
-        p = (Thing *)s->mTarget;
-        src = ((Wiggler *)p)->seg;
+        p = mTarget;
+        src = p->seg;
         vec[0] = src->x;
         vec[1] = src->y;
 
-        if (Wiggler_IsStarVisible((char *)s->mTarget) != 0 &&
-            Wiggler_HitTest((char *)s->mTarget, &a) != 0) {
-            s->mHit = 1;
+        if (mTarget->IsStarVisible() != 0 && mTarget->HitTest(&a) != 0) {
+            mHit = 1;
             func_02012790(0x26);
-            p = (Thing *)s->mTarget;
+            p = mTarget;
             {
-                if (((Wiggler *)p)->state == &Wiggler::TurnTowardAim)
+                if (p->state == &Wiggler::TurnTowardAim)
                     Sound::PlayBank2_2D(0x1ef);
                 else
                     Sound::PlayBank2_2D(0x1ee);
@@ -1944,13 +1822,12 @@ void dScMgHanachan_c::Phase_Play() {
         {
             int found = -1;
             int i = 0;
-            Thing *ptr;
+            Wiggler *ptr;
 
             if (sHanaFieldWigglerCount > 0) {
-                ptr = (Thing *)s->mWiggler;
+                ptr = mWiggler;
                 do {
-                    if (Wiggler_IsStarVisible((char *)ptr) != 0 &&
-                        Wiggler_HitTest((char *)ptr, &a) != 0) {
+                    if (ptr->IsStarVisible() != 0 && ptr->HitTest(&a) != 0) {
                         found = i;
                         break;
                     }
@@ -1961,10 +1838,10 @@ void dScMgHanachan_c::Phase_Play() {
 
             if (found != -1) {
                 int j;
-                Thing *ptr2;
-                Thing *sel = (Thing *)s->mWiggler + found;
+                Wiggler *ptr2;
+                Wiggler *sel = mWiggler + found;
                 {
-                    if (((Wiggler *)sel)->state == &Wiggler::TurnTowardAim)
+                    if (sel->state == &Wiggler::TurnTowardAim)
                         Sound::PlayBank2_2D(0x1eb);
                     else
                         Sound::PlayBank2_2D(0x1ed);
@@ -1973,14 +1850,12 @@ void dScMgHanachan_c::Phase_Play() {
                 {
                     j = 0;
                     if (sHanaFieldWigglerCount > 0) {
-                        ptr2 = (Thing *)s->mWiggler;
+                        ptr2 = mWiggler;
                         do {
-                            V2 *s2 = (V2 *)(int)&ptr2->pos;
+                            Vector2 *s2 = ptr2->seg;
                             vec[0] = s2->x;
                             vec[1] = s2->y;
-                            Wiggler_Retarget(
-                                (Wiggler *)ptr2,
-                                func_0203d5dc((const int *)((const V2 *)vec), (const int *)&a));
+                            ptr2->Retarget(func_0203d5dc((const int *)vec, (const int *)&a));
                             j++;
                             ptr2++;
                         } while (j < sHanaFieldWigglerCount);
@@ -1989,7 +1864,7 @@ void dScMgHanachan_c::Phase_Play() {
 
                 func_02012790(0xe);
                 {
-                    Vector2 *s3 = ((Wiggler *)sel)->seg;
+                    Vector2 *s3 = sel->seg;
                     vec[2] = s3->x;
                     vec[3] = s3->y;
                 }
@@ -1998,56 +1873,50 @@ void dScMgHanachan_c::Phase_Play() {
                 HanaPopup_Spawn(vec[2], vec[3]);
 
                 {
-                    int t = s->mTimeLeft - 10;
+                    int t = mTimeLeft - 10;
                     if (t < 0)
                         t = 0;
-                    s->mTimeLeft = t;
+                    mTimeLeft = t;
                 }
             }
         }
     }
 
-    if (ApproachLinear(s->mTimeTick, 0, 1) == 0)
+    if (ApproachLinear(mTimeTick, 0, 1) == 0)
         return;
 
-    s->mTimeTick = 0x3c;
-    if (ApproachLinear(s->mTimeLeft, 0, 1) != 0) {
+    mTimeTick = 0x3c;
+    if (ApproachLinear(mTimeLeft, 0, 1) != 0) {
         func_02012790(0xe);
         BeginResult();
     }
 
-    if (s->mTimeLeft > 2)
+    if (mTimeLeft > 2)
         Sound::PlayBank2_2D(0xa7);
     else
         Sound::PlayBank2_2D(0xa6);
 }
 
 void dScMgHanachan_c::BeginPlay() {
-    char *raw = (char *)this;
-    dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
-    s->mPhaseTimer = 0x4b0;
-    s->mPhase = &dScMgHanachan_c::Phase_Play;
+    mPhaseTimer = 0x4b0;
+    mPhase = &dScMgHanachan_c::Phase_Play;
 }
 
 void dScMgHanachan_c::Phase_WaitIntro() {
-    char *raw = (char *)this;
-    dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
-    if (ApproachLinear(s->mDelay, 0, 1) == 0)
+    if (ApproachLinear(mDelay, 0, 1) == 0)
         return;
     FreeGfxSlotsById(0x1d);
-    if (s->mPromptBlinkCount == 0) {
-        s->mPromptEnabled = 1;
-        s->mPromptBlinkCount = 1;
-        s->mPromptBlinkTimer = 0;
+    if (mPromptBlinkCount == 0) {
+        mPromptEnabled = 1;
+        mPromptBlinkCount = 1;
+        mPromptBlinkTimer = 0;
     }
     BeginPlay();
 }
 
 void dScMgHanachan_c::Phase_SetupRound() {
-    dScMgHanachan_c *self = this;
-    char *raw = (char *)this;
-    if ((s32)self->mLevel < 0xa) {
-        int bc = (s32)self->mLevel;
+    if ((s32)mLevel < 0xa) {
+        int bc = (s32)mLevel;
         sHanaRoundPattern = sHanaRoundPatterns[bc];
         sHanaFieldWigglerCount = sHanaFieldWigglerCounts[bc];
     } else {
@@ -2061,7 +1930,7 @@ void dScMgHanachan_c::Phase_SetupRound() {
         }
     }
 
-    if (self->mLevel < 0xa)
+    if (mLevel < 0xa)
         Hana_ChooseStarWiggler(2);
     else
         Hana_ChooseStarWiggler(3);
@@ -2069,9 +1938,9 @@ void dScMgHanachan_c::Phase_SetupRound() {
     {
         int i = 0;
         if (sHanaFieldWigglerCount > 0) {
-            Thing *p = (Thing *)((dScMgHanachan_c *)raw)->mWiggler;
+            Wiggler *p = mWiggler;
             do {
-                Hana_SpawnWigglers((char *)p, i, (s32)self->mLevel);
+                p->Spawn(i, (s32)mLevel);
                 i++;
                 p++;
             } while (i < sHanaFieldWigglerCount);
@@ -2081,14 +1950,13 @@ void dScMgHanachan_c::Phase_SetupRound() {
     {
         unsigned int rnd = RandomIntInternal(&data_0209e650.value) & 0x7fffffff;
         int k = (int)(rnd >> 19) * sHanaFieldWigglerCount >> 12;
-        dScMgHanachan_c *s = (dScMgHanachan_c *)raw;
-        s->mTarget = (Wiggler *)((Thing *)s->mWiggler + k);
-        ((Wiggler *)s->mTarget)->decoy = 0;
-        s->mDelay = 0x3c;
+        mTarget = mWiggler + k;
+        mTarget->decoy = 0;
+        mDelay = 0x3c;
         Mg_ShowBanner(0xd, 0x80, 0x50, 1, -1, 0xd);
-        s->mTimeTick = 0x3c;
-        s->mHit = 0;
-        s->mPhase = &dScMgHanachan_c::Phase_WaitIntro;
+        mTimeTick = 0x3c;
+        mHit = 0;
+        mPhase = &dScMgHanachan_c::Phase_WaitIntro;
     }
 }
 
