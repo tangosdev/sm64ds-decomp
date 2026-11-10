@@ -1,7 +1,7 @@
 #include "types.h"
 #include "private/arm9_a9db8_mb_parent.h"
 extern char *data_020a9db8;
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 
 /* File one piece of child idx's entry request into the multiboot parent
  * work (data_020a9db8): a0[2] is the piece number and the data starts at
@@ -31,7 +31,7 @@ int func_02065de4(u8 *a0, int idx) {
     new_var = (int)g;
     {
         int stride = ((MbParentWork *)g)->mReqPieceSize;
-        CpuCopy8(a0 + 3, row + (r5 * stride), stride);
+        MI_CpuCopy8(a0 + 3, row + (r5 * stride), stride);
     }
     {
         /* Indexed through the decayed pointer: ->mChildRequestPieces[i] |= ...

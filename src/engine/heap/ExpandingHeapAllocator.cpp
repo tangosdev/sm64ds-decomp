@@ -58,7 +58,7 @@
 #include "decl_HeapAllocator.h"
 #include "cstd.h"
 
-extern "C" void MultiStore_Int(int val, void *dst, int len);
+extern "C" void MIi_CpuClear32(int val, void *dst, int len);
 /* local extern: the factory runs this constructor over storage that already
    exists. Placement new measured CreateExpandingHeapAllocator 0x4c -> 0x5c. */
 extern "C" ExpandingHeapAllocator *_ZN22ExpandingHeapAllocatorC1EPvj(
@@ -216,7 +216,7 @@ void *ExpandingHeapAllocator::AllocateNode(MemoryNode *c, MemoryNode *node,
     int len = t1.start - t0.end;
     if (((unsigned short)(flagsWord & 0xff)) & 1) {
         volatile int zero = 0;
-        MultiStore_Int(zero, dst, len);
+        MIi_CpuClear32(zero, dst, len);
     }
 
     t2.start = (char *)header;
@@ -396,7 +396,7 @@ void *ExpandingHeapAllocator::Allocate(u32 size, int align)
 static inline void FillZero(void *p, u32 len) {
     volatile int zero;
     zero = 0;
-    MultiStore_Int(zero, p, len);
+    MIi_CpuClear32(zero, p, len);
 }
 
 /* Grow a block in place by swallowing the free node directly after it, or

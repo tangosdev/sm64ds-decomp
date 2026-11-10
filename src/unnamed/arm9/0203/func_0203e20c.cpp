@@ -47,12 +47,12 @@ extern int func_02068ae8(int param0);
 extern int func_02067e70(void *obj);
 extern int func_02067bfc(FSFile *file, void *b, unsigned int c);
 extern int func_02067928(void *a, void *b);
-extern void func_0205a588(void *dst, unsigned char val, unsigned int size);
+extern void MI_CpuFill8(void *dst, unsigned char val, unsigned int size);
 extern int WM_ReadStatus(int *arg);
 extern void *MB_CommGetChildUser(u16 idx);
 extern int MB_CommGetParentState(u16 a);
 extern int MB_CommResponseRequest(u16 arg0, int sel);
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int MB_CommIsBootable(u16 idx);
 extern void func_02068a54(void);
 
@@ -146,7 +146,7 @@ void func_0203e20c(void)
         data_020a0f08 = cnt2;
         do {
             *p9 = 0;
-            func_0205a588(p11, 0, 0x16);
+            MI_CpuFill8(p11, 0, 0x16);
             i2 += 1;
             p9 += 1;
             p11 += 0x16;
@@ -169,7 +169,7 @@ void func_0203e20c(void)
                         cnt2 += 1;
                     }
                     *pIdx = oneVal;
-                    CpuCopy8(found, base1112, 0x16);
+                    MI_CpuCopy8(found, base1112, 0x16);
                     data_020a0f08 += 1;
                 } else if (MB_CommGetParentState(idx) == 0xA) {
                     MB_CommResponseRequest(idx, 0);
@@ -267,8 +267,8 @@ void func_0203e20c(void)
             sl = 1;
             do {
                 *p9d = 0;
-                func_0205a588(p1112, 0, 0x16);
-                func_0205a588(pbe, 0, 6);
+                MI_CpuFill8(p1112, 0, 0x16);
+                MI_CpuFill8(pbe, 0, 6);
                 sl += 1;
                 p9d += 1;
                 p1112 += 0x16;

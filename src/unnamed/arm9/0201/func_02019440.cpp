@@ -15,7 +15,7 @@ extern int data_0209d4b0;
 extern void func_0203bd24(void);
 extern int func_02053be0(int enable);
 extern void func_02054430(int a);
-extern void MultiStore32Bytes(unsigned val, void *dst, int len);
+extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 extern void func_0200f4f4(void);
 extern void func_0200f46c(void);
 
@@ -36,12 +36,12 @@ void func_02019440(void) {
     func_02053be0(1);
     func_02054430(0x1ff);
     a = 0;
-    MultiStore32Bytes(a, (int *)0x6800000, 0xa4000);
+    MIi_CpuClearFast(a, (int *)0x6800000, 0xa4000);
     GX::DisableBankForLCDC();
     b = 0xc0;
-    MultiStore32Bytes(b, (int *)0x7000000, 0x400);
+    MIi_CpuClearFast(b, (int *)0x7000000, 0x400);
     c = 0;
-    MultiStore32Bytes(c, (int *)0x5000000, 0x400);
+    MIi_CpuClearFast(c, (int *)0x5000000, 0x400);
     gGraphCallback = 0;
     data_0209d4ac = 0;
     data_0209d4b0 = 0;

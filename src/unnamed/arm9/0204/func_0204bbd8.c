@@ -8,7 +8,7 @@
 #define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
 
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-extern void func_02055388(int *m);             /* multiply by the 4x3 matrix */
+extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
 extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
 
 /* Draw one child particle as a camera-facing quad (child draw type 0,
@@ -74,7 +74,7 @@ void func_0204bbd8(ManagerView *mgr, ParticleElement *ptcl) {
         mat[2] = 0;
         mat[5] = 0;
         reg_G3_IDENTITY = 0;
-        func_02055388(mat);
+        G3_MultMtx43(mat);
     }
 
     reg_G3_COLOR = ptcl->color;

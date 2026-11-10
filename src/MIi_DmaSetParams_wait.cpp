@@ -1,14 +1,14 @@
 //cpp
-/* DMAStartTransferFB at 0x01ffde00 (ITCM)
+/* MIi_DmaSetParams_wait at 0x01ffde00 (ITCM)
  *
  * Arms one DMA channel -- source, destination, control -- with interrupts
  * masked, then issues two dummy reads of DMA0SAD.
  *
- * It is a twin of DMAStartTransfer at 0x01ffde50: the two are
+ * It is a twin of MIi_DmaSetParams at 0x01ffde50: the two are
  * instruction-for-instruction identical except for those two reads. The reads
  * cover the DS's two-cycle DMA start delay, which is why exactly the three
- * synchronous helpers call this variant (DMASyncHalfTransfer 0x0205a144,
- * DMASyncWordTransfer 0x0205a198, DMASyncFillTransfer 0x0205a1fc): each polls
+ * synchronous helpers call this variant (MI_DmaCopy16 0x0205a144,
+ * MI_DmaCopy32 0x0205a198, MI_DmaFill32 0x0205a1fc): each polls
  * DMAxCNT's enable bit on the very next instruction, so the channel has to
  * have taken the bus before the poll. The callback/asynchronous paths
  * (MI_DmaCopy32Async, MI_DmaFill32Async, MIi_FIFOCallback) call the plain twin instead.
@@ -30,8 +30,7 @@ typedef struct DMAChannelRegs {
     u32 cnt;
 } DMAChannelRegs;
 
-void DMAStartTransferFB(u32 channel, u32 src, u32 dst, u32 cnt)
-{
+void MIi_DmaSetParams_wait(u32 channel, u32 src, u32 dst, u32 cnt) {
     volatile DMAChannelRegs *reg;
     OSIntrMode savedState;
 

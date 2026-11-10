@@ -138,7 +138,7 @@ extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
 extern void func_020127a4(int a0, int a1, int a2, int a3);
 extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
 extern void FreeGfxSlotsById(int arg);
 extern void Mg_SetSharedState(int c);
@@ -206,7 +206,7 @@ extern "C" {
 void Luigi_PrepareScanlines(void) {
     extern int data_0209f608;
     extern int data_0209f648[][192];
-    extern void MultiCopy_Int(int *src, int *dst, int byteCount);
+    extern void MIi_CpuCopy32(int *src, int *dst, int byteCount);
     int nextLine;
     OS_SetIrqCheckFlag(OS_IE_H_BLANK);
     nextLine = REG_VCOUNT + 1;
@@ -214,7 +214,7 @@ void Luigi_PrepareScanlines(void) {
         Luigi_PushScanlineRecord();
     } else if (nextLine <= 0xc0) {
         if (REG_DISPSTAT & DISPSTAT_HBLANK) {
-            MultiCopy_Int(&data_0209f648[data_0209f608][nextLine], (int *)0x04000040, 4);
+            MIi_CpuCopy32(&data_0209f648[data_0209f608][nextLine], (int *)0x04000040, 4);
         }
     }
 }
@@ -227,9 +227,9 @@ void Luigi_PushScanlineRecord(void) {
     extern u32 data_0209f60c;
     extern volatile u32 data_0209f608;
     extern struct IrisScanlineTable data_0209f648[];
-    extern void MultiCopy_Int(int *src, int *dst, int byteCount);
+    extern void MIi_CpuCopy32(int *src, int *dst, int byteCount);
     data_0209f608 = data_0209f60c;
-    MultiCopy_Int((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
+    MIi_CpuCopy32((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
 }
 }
 
@@ -1438,7 +1438,7 @@ void dScMgLuigi_c::ChooseTarget() {
         sourceTile = sLuigiWantedPosterTiles[mWanted] + tileRow * 0x20;
         for (tileColumn = 0; tileColumn < 8; tileColumn++) {
             tile = ((u16 *)G2::GetBG3ScrPtr())[sourceTile];
-            MultiStore16(tile, (char *)dst, 2);
+            MIi_CpuClear16(tile, (char *)dst, 2);
             sourceTile++;
             dst++;
         }
@@ -1619,7 +1619,7 @@ extern void *sLuigiBg1NcgPath;
 extern void *Ov004_LoadFileByPath(const char *path);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void Ov004_Deallocate(void *ptr);
 extern int func_02054d88(void);
 extern void func_02056314(void *, u32, u32);
@@ -1723,7 +1723,7 @@ s32 dScMgLuigi_c::InitResources() {
 
     screenMap = G2::GetBG2ScrPtr();
     fillMain = 0x23e1;
-    MultiStore16(fillMain, screenMap, 0x800);
+    MIi_CpuClear16(fillMain, screenMap, 0x800);
 
     objectTiles = LoadFile(ASSET_D_2D_MG_LUIGI_NCG_BIN);
     fileData = LoadFile(ASSET_D_2D_MG_LUIGI_NCL_BIN);
@@ -1756,7 +1756,7 @@ s32 dScMgLuigi_c::InitResources() {
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_BLACK_NSC_BIN);
         screenMap = G2S::GetBG3ScrPtr();
         fillSub = 0xf3e1;
-        MultiStore16(fillSub, screenMap, 0x800);
+        MIi_CpuClear16(fillSub, screenMap, 0x800);
         Deallocate(subFileData);
     }
 

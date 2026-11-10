@@ -15,7 +15,7 @@ extern "C" {
    the `buf` alias. */
 #pragma opt_loop_invariants off
 /* MI_CpuCopy8 */
-extern void CpuCopy8(const void *src, void *dst, unsigned int len);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int len);
 
 void func_0206071c(CARDiCommon *p) {
     u32 len;
@@ -33,7 +33,7 @@ void func_0206071c(CARDiCommon *p) {
         p->cmd->len = len;
         if (!CARDi_Request(p, CARD_REQ_READ_BACKUP, 1))
             break;
-        CpuCopy8(buf, (void *)p->dst, len);
+        MI_CpuCopy8(buf, (void *)p->dst, len);
         p->src += len;
         p->dst += len;
         p->len -= len;

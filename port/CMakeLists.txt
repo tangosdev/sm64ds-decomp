@@ -170,7 +170,7 @@ endfunction()
 # These src/ files touch MMIO textually, so they build from hostgen-emitted
 # copies under the build tree -- src/ itself is never edited.
 set(GATE4A_SYMS
-    func_0205532c func_02055388 func_020553a4 _ZN3G3X9ClearFifoEv
+    G3_MultTransMtx33 G3_MultMtx43 G3_LoadMtx43 _ZN3G3X9ClearFifoEv
     MI_SendGXCommandAsync MIi_FIFOCallback MIi_DMACallback OSi_EnterDmaCallback MI_WaitDma)
 sm64ds_hostgen_symbols(GATE4A_GEN ${GATE4A_SYMS})
 
@@ -187,8 +187,8 @@ endif()
 
 # Gate 4b: the whole dExtSimpleModel_c pipeline. Adds the material-bind and matrix
 # feeders to the hostgen set and the dExtSimpleModel_c/render slice on top of everything.
-set(GATE4B_SYMS _ZN15ModelComponents13func_02044b30Ei Geometry_MatrixMultiply3x3
-    func_02055998 _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
+set(GATE4B_SYMS _ZN15ModelComponents13func_02044b30Ei G3_MultMtx33
+    G3_LoadTexMtxEnv _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
     _ZN15ModelComponents13func_0204488cEiP7Vector3 NormalizeVec3)
 sm64ds_hostgen_symbols(GATE4B_GEN ${GATE4B_SYMS})
 

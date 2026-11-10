@@ -150,7 +150,7 @@ void func_0204547c(int *a, int b, int c, void *elem);
 void func_020527e8(Mtx43 *m, int x, int y, int z);
 void NormalizeVec3(const Vector3 *a, Vector3 *b);
 void func_020458a8(void *src, void *dst);
-void Geometry_MatrixMultiply3x3(void *m);
+void G3_MultMtx33(void *m);
 void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, void (*callback)(void *),
                            void *arg);
 void MI_WaitDma(u32 dmaNo);
@@ -163,11 +163,11 @@ extern u8 data_020a4bbc;
 extern u16 data_02099f94[8];
 extern s16 data_020a4bc0;
 extern s16 data_020a4bc4;
-void func_020553a4(void *m);
-void func_02055388(void *m);
+void G3_LoadMtx43(void *m);
+void G3_MultMtx43(void *m);
 void MulMat3x3Mat3x3(void *a, void *b, void *dst);
 void func_02052514(void *a, void *b);
-void func_02055998(int *n);
+void G3_LoadTexMtxEnv(int *n);
 void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength);
 }
 
@@ -397,7 +397,7 @@ void ModelComponents::func_02044b30(int idx) {
         mtx.r[3].y = height * (tSin - tCos - mat.texScaleT + 0x2000) * 8 +
                      height * (int)(((s64)mat.texScaleT * mat.texTransT) >> 8);
         mtx.r[3].z = 0;
-        func_020553a4(&mtx);
+        G3_LoadMtx43(&mtx);
         break;
     }
 
@@ -463,20 +463,20 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
 
             *(volatile int*)0x4000440 = 2;
             *(volatile int*)0x4000454 = 0;
-            Geometry_MatrixMultiply3x3(data_020a4bd0);
+            G3_MultMtx33(data_020a4bd0);
 
             check = bones[fp_index].scaled;
             if (check) {
                 func_020458a8((struct Matrix3x3_Vecs*)partMtx, (struct Matrix3x3_Vecs*)M);
-                Geometry_MatrixMultiply3x3(M);
+                G3_MultMtx33(M);
                 lastMat = M;
             } else {
-                Geometry_MatrixMultiply3x3(partMtx);
+                G3_MultMtx33(partMtx);
                 lastMat = partMtx;
             }
 
             *(volatile int*)0x4000440 = 1;
-            func_020553a4(data_020a4bd0);
+            G3_LoadMtx43(data_020a4bd0);
             if (scale) {
                 int c2 = scale->z;
                 int c1 = scale->y;
@@ -485,7 +485,7 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
                 *mtxScale = c1;
                 *mtxScale = c2;
             }
-            func_02055388(partMtx);
+            G3_MultMtx43(partMtx);
             {
                 int white = data_020a4bd4;
                 *mtxScale = white;
@@ -508,7 +508,7 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
             N[1] = M[1] * sy;
             N[5] = M[4] * sy;
             N[9] = M[7] * sy;
-            func_02055998(N);
+            G3_LoadTexMtxEnv(N);
             *(volatile int*)0x400044c = 0;
         }
 
@@ -628,9 +628,9 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                 func_020458a8(&m, out);
                 *(int*)0x4000440 = two;
                 *(int*)0x4000454 = z2c;
-                Geometry_MatrixMultiply3x3(out);
+                G3_MultMtx33(out);
                 *(int*)0x4000440 = 1;
-                func_020553a4(&m);
+                G3_LoadMtx43(&m);
                 {
                     int v = 1 << (modelFile->scaleShift + 12);
                     *(int*)0x400046c = v;

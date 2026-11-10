@@ -2,7 +2,7 @@
  * Owns .text 0x020568cc..0x02056c1c: the texture and texture-palette upload
  * family (EndLoadTexPltt .. BeginLoadTex). Below sits GX::LoadBGPltt at
  * 0x02056870, the last function of gx_load2d.c (src/engine/gx/GXS.cpp);
- * above is Copy48BytesFixed at 0x02056c1c.
+ * above is GX_SendFifo48B at 0x02056c1c.
  */
 // leftovers: LoadTex's base/top stay plain int (the register web the bytes
 // were built against). BeginLoadTex's byte-offset table reads stay a char *
@@ -28,8 +28,8 @@ extern "C" {
 extern void MI_WaitDma(u32 dmaNo);
 extern void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size,
                               void (*callback)(void *), void *arg);
-extern void DMASyncWordTransfer(unsigned int channel, const void *src, void *dest, unsigned int len);
-extern void MultiCopy_Int(int *src, int *dst, int len);
+extern void MI_DmaCopy32(unsigned int channel, const void *src, void *dest, unsigned int len);
+extern void MIi_CpuCopy32(int *src, int *dst, int len);
 }
 
 namespace GX {
@@ -62,12 +62,12 @@ void LoadTex(const void *src, unsigned int offset, unsigned int size) {
             unsigned int d0 = data_020a60ac + offset;
             int ch = data_02099fd0;
             if (ch != -1) {
-                DMASyncWordTransfer(ch, src, (void*)d0, top);
+                MI_DmaCopy32(ch, src, (void *)d0, top);
                 MI_DmaCopy32Async(data_02099fd0, (char *)src + top, (void *)base, size - top, 0, 0);
                 return;
             }
-            MultiCopy_Int((int*)src, (int*)d0, top);
-            MultiCopy_Int((int*)((char*)src + top), (int*)base, size - top);
+            MIi_CpuCopy32((int *)src, (int *)d0, top);
+            MIi_CpuCopy32((int *)((char *)src + top), (int *)base, size - top);
             return;
         }
     }
@@ -75,7 +75,7 @@ void LoadTex(const void *src, unsigned int offset, unsigned int size) {
         MI_DmaCopy32Async(data_02099fd0, src, (void *)dst, size, 0, 0);
         return;
     }
-    MultiCopy_Int((int*)src, (int*)dst, size);
+    MIi_CpuCopy32((int *)src, (int *)dst, size);
 }
 
 // Ends a banked texture upload: waits on the upload DMA channel if one is
@@ -99,14 +99,14 @@ void BeginLoadTexPltt() {
 }
 
 // Loads a texture palette into VRAM: async DMA when a channel is configured
-// (data_02099fd0 != -1), otherwise MultiCopy_Int.
+// (data_02099fd0 != -1), otherwise MIi_CpuCopy32.
 void LoadTexPltt(const void *src, u32 destSlotAddr, u32 size){
     void *dest = (void *)(data_020a60b0 + destSlotAddr);
     s32 dmaCh = data_02099fd0;
     if (dmaCh != -1) {
         MI_DmaCopy32Async(dmaCh, src, dest, size, 0, 0);
     } else {
-        MultiCopy_Int((int*)src, (int*)dest, size);
+        MIi_CpuCopy32((int *)src, (int *)dest, size);
     }
 }
 

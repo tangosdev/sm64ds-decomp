@@ -89,7 +89,7 @@ void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
 void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 void NormalizeVec3(const Vector3 *v, Vector3 *out);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-void  func_020553a4(void *m);
+void G3_LoadMtx43(void *m);
 void  func_02012694(u32 id, void *pos);
 void *func_0201787c(SharedFilePtr *sfp);
 u32   func_02045ad8(const void *src, u32 size);
@@ -452,7 +452,7 @@ void daPicGate_c::DrawFlat() {
     G3_MTX_PUSH = 0;
     MulMat4x3Mat4x3(&mMtx, &data_0209b3ec, &tmp);
     G3_MTX_MODE = 2;
-    func_020553a4(&tmp);
+    G3_LoadMtx43(&tmp);
     G3_LIGHT_VECTOR = 0xe0000000;
     G3_LIGHT_COLOR = 0xc0007fff;
     LoadMaterial();
@@ -518,8 +518,8 @@ void daPicGate_c::PlaceCorners() {
 #define G3_SPE_EMI         (*(int *)0x040004c4)
 enum { kMtxPosVec = 2, kMtxPos = 1, kScale = 0x20000, kTriStrip = 2 };
 extern "C" {
-extern void func_02055388(void *m);
-extern void func_02055998(void *m);
+extern void G3_MultMtx43(void *m);
+extern void G3_LoadTexMtxEnv(void *m);
 extern int data_ov080_0212771c[];
 }
 /* texgen=NORMAL variant: no per-vertex TEXCOORD, positions at >>7. */
@@ -544,10 +544,10 @@ void daPicGate_c::DrawRippleEnvMapped() {
 
     MulMat4x3Mat4x3(&mMtx, &data_0209b3ec, &tmp);
     G3_MTX_PUSH = 0;
-    func_02055998(data_ov080_0212771c);
-    func_02055388(&tmp);
+    G3_LoadTexMtxEnv(data_ov080_0212771c);
+    G3_MultMtx43(&tmp);
     G3_MTX_MODE = kMtxPosVec;
-    func_020553a4(&tmp);
+    G3_LoadMtx43(&tmp);
     G3_TEXCOORD = 0x04000400;
     G3_LIGHT_VECTOR = 0xe0000000;
     G3_LIGHT_COLOR = 0xc0007fff;

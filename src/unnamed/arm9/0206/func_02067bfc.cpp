@@ -30,8 +30,8 @@ extern void FS_InitFile(FSFile *p_file);
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, unsigned int image_top,
                              unsigned int image_bottom, unsigned int file_index);
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
-extern int FS_SeekFile(FSFile *p_file, int offset, FSSeekFileMode origin);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+extern int func_0205d368(int *o, int r1, int sel);
 extern int FS_CloseFile(char *self);
 extern void func_02067b68(void *s, unsigned int start, unsigned int end, int flag);
 
@@ -43,7 +43,7 @@ typedef struct {
 extern char data_0209a080[];
 extern Region *data_0209a07c;
 
-/* Copies one listed range through func_02067b68 (flag 0: CpuCopy8). Taking
+/* Copies one listed range through func_02067b68 (flag 0: MI_CpuCopy8). Taking
  * the entry by pointer makes the body reload size after the loop test, as the
  * ROM does. */
 static inline void CopyRegion(Args *args, const Region *r) {
@@ -86,7 +86,7 @@ int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
             FS_OpenFileDirect((char *)&file, node, 0, ctx->f80 + 0x88, -1);
             a = &file;
             base = file.prop.file.pos - file.prop.file.top;
-            CpuCopy8(ctx, cur, 0x160);
+            MI_CpuCopy8(ctx, cur, 0x160);
             *(unsigned int *)(cur + 0x60) |= 0x406000;
         }
 

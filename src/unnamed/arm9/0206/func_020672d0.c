@@ -1,6 +1,6 @@
 #include "types.h"
 #include "private/wm_views.h"
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 
 /* On a download-play child, rebuild the parent's WMBssDesc from the copy
  * the boot loader left at 0x027ffc42. The copy is valid when the halfword at
@@ -21,7 +21,7 @@ void func_020672d0(char *thiz, int parentMaxSize, int childMaxSize, int ksFlag, 
         src = base + 2;
     else
         src = 0;
-    CpuCopy8(src, thiz, 0x3c);
+    MI_CpuCopy8(src, thiz, 0x3c);
     desc->gameInfoLength = 0x10;
     desc->gameInfo.ggid[0] = desc->ssid[0];
     desc->gameInfo.ggid[1] = desc->ssid[1];

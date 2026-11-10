@@ -1538,7 +1538,7 @@ extern void Deallocate(void *);
 extern int GetOwnerLanguage(void);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void FreeGfxSlotsById(int arg);
 extern void SetSubBg0Offset(int, int);
 extern int func_02054d88(void);
@@ -1651,7 +1651,7 @@ s32 dScMgPanel_c::InitResources() {
 
     b = G2::GetBG2ScrPtr();
     mainFill = 0xf361;
-    MultiStore16(mainFill, b, 0x1000);
+    MIi_CpuClear16(mainFill, b, 0x1000);
 
     file = LoadFile(ASSET_D_2D_YOSIFINX_NORMAL_NSC_BIN);
     func_020563d4(file, 0x800, 0x800);
@@ -1700,7 +1700,7 @@ s32 dScMgPanel_c::InitResources() {
 
         b = G2S::GetBG2ScrPtr();
         subFill = 0xf361;
-        MultiStore16(subFill, b, 0x1000);
+        MIi_CpuClear16(subFill, b, 0x1000);
 
         subFile = LoadFile(ASSET_D_2D_YOSIFINX_NORMAL_NSC_BIN);
         func_02056374(subFile, 0, 0x800);

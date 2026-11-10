@@ -7,7 +7,7 @@ extern "C" {
 
 extern struct WBTBlockInfoList *func_02065ae0(void);
 extern void func_02065ad0(struct WBTBlockInfoList *list);
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 
 int func_020658c0(struct WBTBlockInfoList *node, int blockId, void *userId, int dataPtr,
                   int dataSize, u16 permissionBmp) {
@@ -35,7 +35,7 @@ int func_020658c0(struct WBTBlockInfoList *node, int blockId, void *userId, int 
     node->block_id = blockId;
     node->block_size = dataSize;
     node->permission_bmp = permissionBmp;
-    CpuCopy8(userId, node->user_id, 0x20);
+    MI_CpuCopy8(userId, node->user_id, 0x20);
     OS_RestoreInterrupts(irq);
     return 1;
 }

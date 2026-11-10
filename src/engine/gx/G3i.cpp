@@ -7,7 +7,9 @@
  * projection and streams it to the projection port. Both are static (no this)
  * and both optionally mirror the matrix into a caller's Matrix4x3.
  */
-// leftovers: func_02055998 keeps its address name (no recovered name exists).
+// G3_LoadTexMtxEnv, the TU's first function, is the Nitro SDK's g3_util.c
+// function of that name: it selects the texture matrix mode and loads a 4x4
+// matrix, the first twelve words shifted left by 4.
 #include "G3i.h"
 #include "math/Matrix.h"
 #include "nitro/fx/fx.h"
@@ -159,8 +161,7 @@ void G3i::LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *targe
     mat->t.z = tz;
 }
 
-extern "C" void func_02055998(int *m)
-{
+extern "C" void G3_LoadTexMtxEnv(int *m) {
     *(volatile int *)0x4000440 = 3;
     *(volatile int *)0x4000458 = m[0] << 4;
     *(volatile int *)0x4000458 = m[1] << 4;

@@ -122,7 +122,7 @@ extern void Mg_SubmitScore(int self);
 extern int  func_020126e8(int a);
 extern int  func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern void SetBg2Offset(int a, int b);
-extern void MultiStore16(unsigned short val, char *dst, int nbytes);
+extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern int  RandomIntInternal(int *seed);
 struct OamAttr;
 #include "OAM.h"
@@ -672,7 +672,7 @@ void dScMgPachinko_c::CheckTargetsLeft() {
     {
         unsigned chars = G2S::GetBG2CharPtr();
         zero = 0;
-        MultiStore16(zero, (char *)chars, 0x6000);
+        MIi_CpuClear16(zero, (char *)chars, 0x6000);
     }
     mUnused5c30 = 0;
     BobOmb_ClearAll();
@@ -748,7 +748,7 @@ void dScMgPachinko_c::ClearAimLine() {
     {
         char *dst = (char *)G2S::GetBG2CharPtr();
         zero = 0;
-        MultiStore16(zero, dst, 0x6000);
+        MIi_CpuClear16(zero, dst, 0x6000);
     }
 }
 
@@ -800,7 +800,7 @@ void dScMgPachinko_c::DrawAimLine() {
     if (mShot[idx].x != mShot[idx].prevX || mShot[idx].y != mShot[idx].prevY) {
         char *buf = (char *)G2S::GetBG2CharPtr();
         fill = 0;
-        MultiStore16(fill, buf, 0x6000);
+        MIi_CpuClear16(fill, buf, 0x6000);
         for (i = 0; i < 2; i++) {
             if (i == 0) {
                 cx = 0x6c;
@@ -2208,7 +2208,7 @@ s32 dScMgPachinko_c::InitResources()
 
     b = (char *)G2::GetBG2ScrPtr();
     fillScr = 0x3073;
-    MultiStore16(fillScr, b, 0x1000);
+    MIi_CpuClear16(fillScr, b, 0x1000);
 
     f = LoadFile(6);
     func_020563d4(f, 0, 0x800);
@@ -2229,14 +2229,14 @@ s32 dScMgPachinko_c::InitResources()
 
     b = (char *)G2S::GetBG2CharPtr();
     fillZero = 0;
-    MultiStore16(fillZero, b, 0x6000);
+    MIi_CpuClear16(fillZero, b, 0x6000);
 
     n = 0;
     for (y = 0; y < 0x18; y++) {
         for (x = 0; x < 0x20; x++) {
             dst = (char *)((u16 *)G2S::GetBG2ScrPtr() + x + y * 0x20);
             fillIdx = n;
-            MultiStore16(fillIdx, dst, 2);
+            MIi_CpuClear16(fillIdx, dst, 2);
             n++;
         }
     }

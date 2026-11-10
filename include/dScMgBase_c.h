@@ -401,7 +401,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            two exits and neither sets a result: the early one is
            `cmp r0,#2; addeq sp,sp,#8; popeq {r4-r8,lr}; bxeq lr`, returning
            the 2 it has just compared against slot 26's result, and the
-           fall-through returns whatever MultiCopy_Int last left in r0.
+           fall-through returns whatever MIi_CpuCopy32 last left in r0.
            No caller settles it either, and here that is MEASURED rather than
            assumed.  Scanning arm9 and all 103 overlays for the dispatch
            pattern -- `ldr rN,[rM,#0x74]` immediately followed by `blx rN`,

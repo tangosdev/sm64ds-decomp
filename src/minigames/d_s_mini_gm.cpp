@@ -139,7 +139,7 @@ int  func_02013638(int n);
 int  RandomIntInternal(int *seed);
 extern void *LoadFile(int id);
 extern void DecompressLZ16(void *src, void *dst);
-extern void MultiStore16(u16 val, void *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 
 extern void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pal, int prio, int sx,
                                     int sy, int c, int d);
@@ -310,10 +310,10 @@ s32 dScMiniGm_c::InitResources()
 
     dst = (char *)G2S::GetBG0CharPtr();
     sp0 = 0;
-    MultiStore16(sp0, dst, 0x8000);
+    MIi_CpuClear16(sp0, dst, 0x8000);
     dst = (char *)G2S::GetBG0ScrPtr();
     sp2 = 0x1f;
-    MultiStore16(sp2, dst, 0x1000);
+    MIi_CpuClear16(sp2, dst, 0x1000);
 
     MiniGm_LoadGroupIcons((char *)this);
 
@@ -387,8 +387,8 @@ void MiniGm_LoadGroupIcons(void *selfv)
     int pInit;
     int qInit;
     int resetVal;
-    volatile u16 valA; /* pin MultiStore16 src */
-    volatile u16 valB; /* pin MultiStore16 src */
+    volatile u16 valA; /* pin MIi_CpuClear16 src */
+    volatile u16 valB; /* pin MIi_CpuClear16 src */
     struct Off9 tbl;
     void *f;
     int fill;
@@ -438,7 +438,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                     dstp = scr + destOff;
                     dstp = destOff ? dstp : dstp; /* register-dest pin; arms identical */
                     valA = (u16)fill;
-                    MultiStore16(valA, dstp, nbytes);
+                    MIi_CpuClear16(valA, dstp, nbytes);
                     destOff += 2;
                     off += 1;
                     col += 1;
@@ -467,7 +467,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                 ch = (char *)G2S::GetBG0CharPtr();
                 scr = ch + (idx / 4) * 0x2400 + (idx % 4) * 0xc0 + destOff;
                 ch = (char *)G2S::GetBG0CharPtr();
-                MultiCopy_Int((int *)(ch + 0x8000 + destOff), (int *)scr, copyLen);
+                MIi_CpuCopy32((int *)(ch + 0x8000 + destOff), (int *)scr, copyLen);
                 destOff += 0x400;
             } while (++row < 9);
 
@@ -491,7 +491,7 @@ void MiniGm_LoadGroupIcons(void *selfv)
                     dstp = scr + destOff;
                     dstp = idx ? dstp : dstp; /* register-dest pin; arms identical */
                     valB = (u16)(q + (p + ((idx % 4) * 6 + ((idx / 4) * 0x120 + (idx << 12)))));
-                    MultiStore16(valB, dstp, nbytes);
+                    MIi_CpuClear16(valB, dstp, nbytes);
                     destOff += 2;
                     off += 1;
                     q += 1;

@@ -9159,19 +9159,19 @@
     },
     "arm9:0x0205532c": {
       "author": "andrewboudreau",
-      "name": "func_0205532c"
+      "name": "G3_MultTransMtx33"
     },
     "arm9:0x0205536c": {
       "author": "ruspecial",
-      "name": "Geometry_MatrixMultiply3x3"
+      "name": "G3_MultMtx33"
     },
     "arm9:0x02055388": {
       "author": "ruspecial",
-      "name": "func_02055388"
+      "name": "G3_MultMtx43"
     },
     "arm9:0x020553a4": {
       "author": "ruspecial",
-      "name": "func_020553a4"
+      "name": "G3_LoadMtx43"
     },
     "arm9:0x020553c0": {
       "author": "tangosdev",
@@ -9231,7 +9231,7 @@
     },
     "arm9:0x02055998": {
       "author": "tangosdev",
-      "name": "func_02055998"
+      "name": "G3_LoadTexMtxEnv"
     },
     "arm9:0x02055a64": {
       "author": "tangosdev",
@@ -9387,7 +9387,7 @@
     },
     "arm9:0x02056c1c": {
       "author": "tangosdev",
-      "name": "Copy48BytesFixed"
+      "name": "GX_SendFifo48B"
     },
     "arm9:0x02056c40": {
       "author": "ruspecial",
@@ -9987,15 +9987,15 @@
     },
     "arm9:0x0205a10c": {
       "author": "tangosdev",
-      "name": "DMASyncHalfTransfer"
+      "name": "MI_DmaCopy16"
     },
     "arm9:0x0205a160": {
       "author": "tangosdev",
-      "name": "DMASyncWordTransfer"
+      "name": "MI_DmaCopy32"
     },
     "arm9:0x0205a1b4": {
       "author": "aitddlabs",
-      "name": "DMASyncFillTransfer"
+      "name": "MI_DmaFill32"
     },
     "arm9:0x0205a21c": {
       "author": "tangosdev",
@@ -10011,47 +10011,47 @@
     },
     "arm9:0x0205a448": {
       "author": "tangosdev",
-      "name": "MultiStore16"
+      "name": "MIi_CpuClear16"
     },
     "arm9:0x0205a460": {
       "author": "tangosdev",
-      "name": "MultiCopyHalf"
+      "name": "MIi_CpuCopy16"
     },
     "arm9:0x0205a47c": {
       "author": "tangosdev",
-      "name": "MultiStore_Int"
+      "name": "MIi_CpuClear32"
     },
     "arm9:0x0205a490": {
       "author": "tangosdev",
-      "name": "MultiCopy_Int"
+      "name": "MIi_CpuCopy32"
     },
     "arm9:0x0205a4a8": {
       "author": "tangosdev",
-      "name": "MultiStore32Bytes"
+      "name": "MIi_CpuClearFast"
     },
     "arm9:0x0205a4f4": {
       "author": "tangosdev",
-      "name": "MultiCopy32Bytes"
+      "name": "MIi_CpuCopyFast"
     },
     "arm9:0x0205a52c": {
       "author": "tangosdev",
-      "name": "Copy32Bytes"
+      "name": "MI_Copy32B"
     },
     "arm9:0x0205a548": {
       "author": "tangosdev",
-      "name": "Copy36Bytes"
+      "name": "MI_Copy36B"
     },
     "arm9:0x0205a564": {
       "author": "tangosdev",
-      "name": "Copy48Bytes"
+      "name": "MI_Copy48B"
     },
     "arm9:0x0205a588": {
       "author": "tangosdev",
-      "name": "func_0205a588"
+      "name": "MI_CpuFill8"
     },
     "arm9:0x0205a61c": {
       "author": "tangosdev",
-      "name": "CpuCopy8"
+      "name": "MI_CpuCopy8"
     },
     "arm9:0x0205a74c": {
       "author": "tangosdev",
@@ -12515,11 +12515,11 @@
     },
     "itcm:0x01ffde00": {
       "author": "andrewboudreau",
-      "name": "DMAStartTransferFB"
+      "name": "MIi_DmaSetParams_wait"
     },
     "itcm:0x01ffde50": {
       "author": "andrewboudreau",
-      "name": "DMAStartTransfer"
+      "name": "MIi_DmaSetParams"
     },
     "itcm:0x01ffde98": {
       "author": "andrewboudreau",

@@ -101,7 +101,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern struct Matrix4x3 data_020a0e68;
-extern void MultiStore16(unsigned short value, void *dst, int count);
+extern void MIi_CpuClear16(unsigned short value, void *dst, int count);
 extern u16 sSnowballCourseTiles[];
 extern int RandomIntInternal(int *seed);
 extern unsigned char data_ov006_0212f3b0[];
@@ -684,7 +684,7 @@ void dScMgSnowball_c::RedrawCourse() {
  * Copies one 16-row column of 2x2 BG tiles into the BG2 screen of both the
  * main and the sub engine. Each cell index comes from the u16 grid at
  * self+0x4f38 (row stride 0x5c0, column `col`); its four tiles are the four
- * u16 words of sSnowballCourseTiles[idx], written with MultiStore16 (two
+ * u16 words of sSnowballCourseTiles[idx], written with MIi_CpuClear16 (two
  * halfwords each) at screen offset ((col & 0xf) << 7) + 2*j, +2, +0x40,
  * +0x42. flag == 1 targets the first half of the screen block, anything else
  * the half at +0x800.
@@ -726,42 +726,42 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
             scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + off);
-            MultiStore16(v0 = tile, (char *)(scr + j), n);
+            MIi_CpuClear16(v0 = tile, (char *)(scr + j), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
             scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + off);
-            MultiStore16(v1 = tile, (char *)(scr + j + 1), n);
+            MIi_CpuClear16(v1 = tile, (char *)(scr + j + 1), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
             scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + off);
-            MultiStore16(v2 = tile, (char *)(scr + j + 0x20), n);
+            MIi_CpuClear16(v2 = tile, (char *)(scr + j + 0x20), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
             scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + off);
-            MultiStore16(v3 = tile, (char *)(scr + j + 0x21), n);
+            MIi_CpuClear16(v3 = tile, (char *)(scr + j + 0x21), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
             scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + off);
-            MultiStore16(v4 = tile, (char *)(scr + j), n);
+            MIi_CpuClear16(v4 = tile, (char *)(scr + j), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
             scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + off);
-            MultiStore16(v5 = tile, (char *)(scr + j + 1), n);
+            MIi_CpuClear16(v5 = tile, (char *)(scr + j + 1), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
             scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + off);
-            MultiStore16(v6 = tile, (char *)(scr + j + 0x20), n);
+            MIi_CpuClear16(v6 = tile, (char *)(scr + j + 0x20), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
             scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + off);
-            MultiStore16(v7 = tile, (char *)(scr + j + 0x21), n);
+            MIi_CpuClear16(v7 = tile, (char *)(scr + j + 0x21), n);
 
             row += 0x5c0;
             j += 2;
@@ -781,42 +781,42 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
         scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + 0x800 + off);
-        MultiStore16(w0 = tile, (char *)(scr + j), n);
+        MIi_CpuClear16(w0 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
         scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + 0x802 + off);
-        MultiStore16(w1 = tile, (char *)(scr + j), n);
+        MIi_CpuClear16(w1 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
         scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + 0x840 + off);
-        MultiStore16(w2 = tile, (char *)(scr + j), n);
+        MIi_CpuClear16(w2 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
         scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + k842 + off);
-        MultiStore16(w3 = tile, (char *)(scr + j), n);
+        MIi_CpuClear16(w3 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
         scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + 0x800 + off);
-        MultiStore16(w4 = tile, (char *)(scr + j), n);
+        MIi_CpuClear16(w4 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
         scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + 0x802 + off);
-        MultiStore16(w5 = tile, (char *)(scr + j), n);
+        MIi_CpuClear16(w5 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
         scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + 0x840 + off);
-        MultiStore16(w6 = tile, (char *)(scr + j), n);
+        MIi_CpuClear16(w6 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
         scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + k842 + off);
-        MultiStore16(w7 = tile, (char *)(scr + j), n);
+        MIi_CpuClear16(w7 = tile, (char *)(scr + j), n);
 
         row += 0x5c0;
         j += 2;

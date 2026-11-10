@@ -45,7 +45,7 @@
 #include "decl_HeapAllocator.h"
 #include "cstd.h"
 
-extern "C" void MultiStore_Int(s32 val, int *dst, s32 count);
+extern "C" void MIi_CpuClear32(s32 val, int *dst, s32 count);
 /* local extern: the factory runs the constructor over an already-aligned
    address. Placement new measured this function 0x4c -> 0x5c. */
 extern "C" SolidHeapAllocator* _ZN18SolidHeapAllocatorC1EPvj(
@@ -108,7 +108,7 @@ void *SolidHeapAllocator::AllocateForwards(void *freeBlockPair, u32 size, u32 al
     u32 fillSize = (u32)end - (u32)freeBlockBegin;
     if ((u16)(flags & 0xff) & 1) {
         volatile s32 zero = 0;
-        MultiStore_Int(zero, (int *)freeBlockBegin, fillSize);
+        MIi_CpuClear32(zero, (int *)freeBlockBegin, fillSize);
     }
     pair[0] = end;
     return start;
@@ -137,7 +137,7 @@ void *SolidHeapAllocator::AllocateBackwards(void *freeBlockPair, u32 size, u32 a
     u32 fillSize = (u32)freeBlockEnd - (u32)start;
     if ((u16)(flags & 0xff) & 1) {
         volatile s32 zero = 0;
-        MultiStore_Int(zero, (int *)start, fillSize);
+        MIi_CpuClear32(zero, (int *)start, fillSize);
     }
     pair[1] = start;
     return start;
@@ -363,7 +363,7 @@ u32 SolidHeapAllocator::Reallocate(void *ptr, u32 size)
         u32 flags = mFlags;
         if ((u16)(flags & 0xff) & 1) {
             volatile s32 zero = 0;
-            MultiStore_Int(zero, (int *)begin, size - curSize);
+            MIi_CpuClear32(zero, (int *)begin, size - curSize);
         }
     }
     fl[0] = (void *)newEnd;

@@ -33,7 +33,7 @@ src/func_020458a8.c
 src/func_02048234.c
 src/MulMat3x3Mat3x3.c
 # dExtSimpleModel_c::SetMaterialFlags and dExtModel_c::C2 live in src/engine/model/d_ext_model.cpp above.
-# DMASyncWordTransfer and MI_DmaCopy32Async live in src/engine/mi/MI_Dma.cpp,
+# MI_DmaCopy32 and MI_DmaCopy32Async live in src/engine/mi/MI_Dma.cpp,
 # which the gate 4a hostgen set already emits for MI_WaitDma.
 
 # gate 4c additions: the animation path (UpdateBones recursion).

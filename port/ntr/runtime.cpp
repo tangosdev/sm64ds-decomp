@@ -73,7 +73,7 @@ extern "C" void CpuFastSet(const void *src, void *dst, unsigned int ctrl) {
 // Block copies. These matter more than they look: the geometry FIFO is fed by
 // handing 0x4000400 to a copy routine --
 //
-//     *(volatile u32 *)0x4000400 = 0x1a;   Copy36Bytes(m, (int *)0x4000400);
+//     *(volatile u32 *)0x4000400 = 0x1a;   MI_Copy36B(m, (int *)0x4000400);
 //
 // -- so the FIFO address never appears as a dereference the transform can see.
 // docs/mmio-inventory.md calls that the `address-passed` class, and this is where
@@ -98,14 +98,14 @@ void copy_words(const uint32_t *src, uint32_t *dst, int n) {
 // C linkage: in this port the decomp's .c files compile as C TUs (hostgen
 // wraps its transformed copies in extern "C"), so the copy primitives must
 // carry C names.
-extern "C" void Copy36Bytes(const void *src, void *dst) {
+extern "C" void MI_Copy36B(const void *src, void *dst) {
     copy_words(reinterpret_cast<const uint32_t *>(src), reinterpret_cast<uint32_t *>(dst), 9);
 }
 
 // stmia WITHOUT writeback: twelve words through the same port address. Only
 // ever used against the FIFO; for a memory destination the DS semantics would
 // overwrite the same three words four times, so a memory dst is a bug here.
-extern "C" void Copy48BytesFixed(const void *src, void *dst) {
+extern "C" void GX_SendFifo48B(const void *src, void *dst) {
     const uint32_t *s = static_cast<const uint32_t *>(src);
     uint32_t *d = static_cast<uint32_t *>(dst);
     if (reinterpret_cast<uintptr_t>(dst) == 0x04000400u) {
@@ -130,7 +130,7 @@ extern "C" void GXi_NopClearFifo128_(unsigned addr) {
 // DMA chunks re-arm on the FIFO-half-empty IRQ (IE bit 21, mask 0x200000) and
 // the final chunk raises the DMA-channel IRQ, whose OS dispatcher calls the
 // callback registered through OSi_EnterDmaCallback. On host the copies are
-// synchronous and the FIFO is always empty, so DMAStartTransfer delivers
+// synchronous and the FIFO is always empty, so MIi_DmaSetParams delivers
 // those interrupts inline right after the copy; the recursion terminates
 // because the pump's re-entry finds no bytes remaining.
 // ---------------------------------------------------------------------------
@@ -169,7 +169,7 @@ extern "C" unsigned OS_ResetRequestIrqMask(unsigned) { return 0; }
 // DMA to the FIFO is the display-list path (MIi_FIFOCallback). ctrl bit 30 is
 // IRQ-on-complete (the final chunk); a GXFIFO-destined chunk without it relies
 // on the half-empty IRQ to pump the next chunk.
-extern "C" void DMAStartTransfer(int ch, int src, int dst, int ctrl) {
+extern "C" void MIi_DmaSetParams(int ch, int src, int dst, int ctrl) {
     const int words = ctrl & 0x1FFFFF;
     copy_words(reinterpret_cast<const uint32_t *>(static_cast<uintptr_t>(src)),
                reinterpret_cast<uint32_t *>(static_cast<uintptr_t>(dst)), words);
@@ -184,11 +184,11 @@ extern "C" void DMAStartTransfer(int ch, int src, int dst, int ctrl) {
 }
 
 // The ITCM DMA fallback src/engine/mi/MI_Dma.cpp's synchronous copies and
-// fills use (DMAStartTransferFB, src/DMAStartTransferFB.cpp); same
+// fills use (MIi_DmaSetParams_wait, src/MIi_DmaSetParams_wait.cpp); same
 // synchronous copy semantics. It lives here rather than in hal/model_host.cpp
 // because smoke_gx builds MI_Dma.cpp (for MI_WaitDma) without the model host.
-extern "C" void DMAStartTransferFB(unsigned char ch, unsigned src, unsigned dst, unsigned ctrl) {
-    DMAStartTransfer(ch, (int)src, (int)dst, (int)ctrl);
+extern "C" void MIi_DmaSetParams_wait(unsigned char ch, unsigned src, unsigned dst, unsigned ctrl) {
+    MIi_DmaSetParams(ch, (int)src, (int)dst, (int)ctrl);
 }
 
 // ---------------------------------------------------------------------------

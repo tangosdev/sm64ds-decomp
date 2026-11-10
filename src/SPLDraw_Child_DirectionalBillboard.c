@@ -11,10 +11,10 @@
 extern void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
 struct Vector3;
 extern void NormalizeVec3(const struct Vector3 *v, struct Vector3 *out);
-extern void Copy36Bytes(const void *src, void *dst);
+extern void MI_Copy36B(const void *src, void *dst);
 extern void MulVec3Mat3x3(const Vector3 *in, const Matrix3x3 *m, Vector3 *out);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-extern void func_02055388(int *m);             /* multiply by the 4x3 matrix */
+extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
 extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
 
 /* Draw one child particle as a quad stretched along its flight (child draw
@@ -72,7 +72,7 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
         return;
 
     NormalizeVec3(&dir, &dir);
-    Copy36Bytes(view, &rot);
+    MI_Copy36B(view, &rot);
     MulVec3Mat3x3(&dir, &rot, &dir);
     MulVec3Mat4x3(&trans, (Matrix4x3 *)view, &trans);
     velDir = ptcl->velocity;
@@ -105,7 +105,7 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
         mat[2] = 0;
         mat[5] = 0;
         reg_G3_IDENTITY = 0;
-        func_02055388(mat);
+        G3_MultMtx43(mat);
     }
 
     reg_G3_COLOR = ptcl->color;

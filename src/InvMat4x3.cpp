@@ -5,7 +5,7 @@
 
 extern "C" {
 
-extern void Copy48Bytes(const void *src, void *dst);
+extern void MI_Copy48B(const void *src, void *dst);
 
 int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst) {
     Matrix4x3 buf;
@@ -64,7 +64,7 @@ int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst) {
                         12);
 
     if (out == &buf) {
-        Copy48Bytes(&buf, dst);
+        MI_Copy48B(&buf, dst);
     }
 
     return 0;
