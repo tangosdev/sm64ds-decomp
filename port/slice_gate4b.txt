@@ -24,14 +24,14 @@ src/engine/model/ModelComponents.cpp
 # GX upload path (no textual MMIO; VRAM windows come from HAL globals)
 src/engine/gx/GX.cpp
 
-# render walk + math. func_02044534/func_0204488c/NormalizeVec3 are in the
+# render walk + math. func_02044534/func_0204488c/VEC_Normalize are in the
 # HOSTGEN list instead: they touch MMIO textually (geometry ports, the
 # hardware divider) and an untransformed build latches those writes
 # silently -- the exact failure hostgen exists to prevent.
-src/MulMat4x3Mat4x3.c
+src/MTX_Concat43.c
 src/func_020458a8.c
 src/func_02048234.c
-src/MulMat3x3Mat3x3.c
+src/MTX_Concat33.c
 # func_02016b24 and dExtModel_c::C2 live in src/engine/model/d_ext_model.cpp above.
 # DMASyncWordTransfer and MI_DmaCopy32Async live in src/engine/mi/MI_Dma.cpp,
 # which the gate 4a hostgen set already emits for MI_WaitDma.

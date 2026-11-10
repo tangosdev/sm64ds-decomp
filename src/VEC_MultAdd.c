@@ -4,7 +4,7 @@ typedef long long s64;
 
 typedef unsigned long long u64;
 
-void func_02053380(s16 *in, s16 *out) {
+void VEC_Fx16Normalize(s16 *in, s16 *out) {
     u64 sq;
     volatile unsigned short *ime;
     unsigned short saved;
@@ -46,7 +46,7 @@ void func_02053380(s16 *in, s16 *out) {
     out[2] = (s16)((prod + (1LL << 44)) >> 45);
 }
 
-void func_02053320(int s, int *a, int *b, int *out) {
+void VEC_MultAdd(int s, int *a, int *b, int *out) {
     out[0] = b[0] + (int)(((long long)s * a[0]) >> 12);
     out[1] = b[1] + (int)(((long long)s * a[1]) >> 12);
     out[2] = b[2] + (int)(((long long)s * a[2]) >> 12);

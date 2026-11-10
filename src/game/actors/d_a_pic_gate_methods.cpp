@@ -220,7 +220,7 @@ void daPicGate_c::DrawRippleImage() {
     }
 
     G3_MTX_PUSH = 0;
-    MulMat4x3Mat4x3(&this->mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43(&this->mMtx, &data_0209b3ec, &tmp);
     G3_MTX_MODE = kMtxPosVec;
     LoadMtx43(&tmp);
     G3_MTX_MODE = kMtxPos;

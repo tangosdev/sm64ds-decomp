@@ -9342,3 +9342,24 @@ ov078	0x2125c98	_ZN12daBombking_c19func_ov078_02125c98Ev	_ZN12daBombking_c12Upda
 ov078	0x2125de0	_ZN12daBombking_c19func_ov078_02125de0Ev	_ZN12daBombking_c16UpdateHandMatrixEv	daBombking_c member: behaviour: composes the hand bone (transforms[10]) with the model matrix into mHoldMtx, mThrowPos = hand world pos, points mCarryMatrix at it and re-attaches spawned bob-ombs to the hand
 ov078	0x2125f8c	_ZN12daBombking_c19func_ov078_02125f8cEv	_ZN12daBombking_c16AttachHeldPlayerEv	daBombking_c member: behaviour: Render calls it while holding; picks the carry offset (data_ov078_0212711c[param1 == 2]) and copies the UpdateCarry matrix onto the model matrix to attach the held player
 ov078	0x02123eb8	_ZN12daBombking_c19func_ov078_02123eb8Ev	_ZN12daBombking_c16EnterCarryPlayerEv	daBombking_c member: N64 king_bobomb_act_3 sub-action 1 entry: Walk2 animation, 50-frame timer, forward speed 0xa000
+arm9	0x020524f0	Matrix3x3_LoadIdentity	MTX_Identity33_	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02052514	func_02052514	MTX_Copy33To44_	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02052588	Matrix3x3_SetRotationZ	MTX_RotZ33_	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x020525a0	MulVec3Mat3x3	MTX_MultVec33	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02052624	MulMat3x3Mat3x3	MTX_Concat33	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x020527c0	Matrix4x3_LoadIdentity	MTX_Identity43_	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x020527e8	func_020527e8	MTX_Scale43_	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02052800	func_02052800	MTX_RotX43_	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02052820	func_02052820	MTX_RotY43_	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x0205283c	func_0205283c	MTX_RotZ43_	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02052858	MulVec3Mat4x3	MTX_MultVec43	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02052914	MulMat4x3Mat4x3	MTX_Concat43	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02052b34	InvMat4x3	MTX_Inverse43	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02053320	func_02053320	VEC_MultAdd	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02053380	func_02053380	VEC_Fx16Normalize	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x020534ec	NormalizeVec3	VEC_Normalize	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x020536e4	LenVec3	VEC_Mag	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02053770	CrossVec3	VEC_CrossProduct	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x0205380c	DotVec3	VEC_DotProduct	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02053850	SubVec3	VEC_Subtract	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x02053884	AddVec3	VEC_Add	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order

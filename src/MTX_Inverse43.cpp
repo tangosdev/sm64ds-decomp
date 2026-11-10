@@ -7,7 +7,7 @@ extern "C" {
 
 extern void Copy48Bytes(const void *src, void *dst);
 
-int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst) {
+int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst) {
     Matrix4x3 buf;
     Matrix4x3 *out;
     int p, q, r;

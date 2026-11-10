@@ -40,7 +40,7 @@ extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 extern Matrix4x3 data_0209b41c;
 extern s32 data_0209f32c;
-void MulVec3Mat4x3(Vector3 *vector, Matrix4x3 *matrix, Vector3 *result);
+void MTX_MultVec43(Vector3 *vector, Matrix4x3 *matrix, Vector3 *result);
 void func_0204dab4(void *system, void *records, int count, u32 mask, void *callback);
 /* This initializer's 0xc-byte layout is evidenced, but its original class
  * name is not. Keep that single unresolved ABI boundary explicit. */
@@ -343,7 +343,7 @@ int dPa_c::level_c::clipCallback_c::OnUpdate(
                     clipPos.x = clipPos.x < 0 ? 0x20000 : -0x20000;
                 }
 
-                MulVec3Mat4x3(&clipPos, &data_0209b41c, &adjustment);
+                MTX_MultVec43(&clipPos, &data_0209b41c, &adjustment);
                 particle->offsetAsr3.x += adjustment.x - worldPos.x;
                 particle->offsetAsr3.y += adjustment.y - worldPos.y;
                 particle->offsetAsr3.z += adjustment.z - worldPos.z;

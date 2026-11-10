@@ -28,10 +28,10 @@ extern "C" {
 /* local extern: no header declares these arm9 vector and matrix helpers.
    EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
    receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
-int InvMat4x3(const Matrix4x3 *, Matrix4x3 *);
-void SubVec3(Vector3 *, Vector3 *, Vector3 *);
-void CrossVec3(const Vector3 *, const Vector3 *, Vector3 *);
-void NormalizeVec3(const Vector3 *, Vector3 *);
+int MTX_Inverse43(const Matrix4x3 *, Matrix4x3 *);
+void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
+void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
+void VEC_Normalize(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 unsigned int func_02045ad8(const void *, unsigned int);
@@ -85,7 +85,7 @@ void EntryMesh::CalcMatrix() {
                               mPos.z >> 3);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     *(Matrix4x3 *)&mMtx = data_020a0e68;
-    InvMat4x3(&data_020a0e68, &data_020a0e68);
+    MTX_Inverse43(&data_020a0e68, &data_020a0e68);
     *(Matrix4x3 *)&mInvMtx = data_020a0e68;
 }
 
@@ -174,23 +174,25 @@ void EntryMesh::CalcNormals() {
             q[2] = z;
 
             if (j == 0)
-                SubVec3((Vector3 *)&p->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)&p->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
             else if (j == mGridDim[0] - 1)
-                SubVec3((Vector3 *)&(p - 1)->pos, (Vector3 *)&p->pos, (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)&(p - 1)->pos, (Vector3 *)&p->pos, (Vector3 *)&ej);
             else
-                SubVec3((Vector3 *)&(p - 1)->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)&(p - 1)->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
 
             if (i == 0)
-                SubVec3((Vector3 *)&p->pos, (Vector3 *)&(p + mGridDim[1])->pos, (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)&p->pos, (Vector3 *)&(p + mGridDim[1])->pos,
+                             (Vector3 *)&ei);
             else if (i == mGridDim[1] - 1)
-                SubVec3((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&p->pos, (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&p->pos,
+                             (Vector3 *)&ei);
             else
-                SubVec3((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&(p + mGridDim[1])->pos,
-                        (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&(p + mGridDim[1])->pos,
+                             (Vector3 *)&ei);
 
-            CrossVec3((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
+            VEC_CrossProduct((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
             n.z >>= 1;
-            NormalizeVec3((const Vector3 *)&n, (Vector3 *)&n);
+            VEC_Normalize((const Vector3 *)&n, (Vector3 *)&n);
             p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);
             p++;
         }
@@ -299,7 +301,7 @@ void EntryMesh::DrawGrid() {
     int sz;
 
     *(int *)0x4000444 = 0;
-    MulMat4x3Mat4x3((const Matrix4x3 *)&mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43((const Matrix4x3 *)&mMtx, &data_0209b3ec, &tmp);
     *(int *)0x4000440 = 2;
     func_020553a4(&tmp);
     *(int *)0x4000440 = 1;

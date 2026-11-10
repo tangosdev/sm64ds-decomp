@@ -5,9 +5,9 @@
 extern "C" {
 /* recovered: shared common types */
 extern short data_02082214[];
-extern void func_0205283c(struct Matrix4x3 *out, int s, int c);
-extern void func_02052820(struct Matrix4x3 *out, int s, int c);
-extern void func_02052800(struct Matrix4x3 *out, int s, int c);
+extern void MTX_RotZ43_(struct Matrix4x3 *out, int s, int c);
+extern void MTX_RotY43_(struct Matrix4x3 *out, int s, int c);
+extern void MTX_RotX43_(struct Matrix4x3 *out, int s, int c);
 
 /* The table reads stay hand-indexed: the ROM doubles all three indices up
    front, before the first call. Through FX_SinIdx/FX_CosIdx
@@ -19,11 +19,11 @@ void func_ov007_020c39f8(struct Matrix4x3 *mat, int rx, int ry, int rz) {
     int ix = (rx >> 4) * 2;
     int iy = (ry >> 4) * 2;
     int iz = (rz >> 4) * 2;
-    func_0205283c(&t, data_02082214[iz], data_02082214[iz + 1]);
-    MulMat4x3Mat4x3(mat, &t, mat);
-    func_02052820(&t, data_02082214[iy], data_02082214[iy + 1]);
-    MulMat4x3Mat4x3(mat, &t, mat);
-    func_02052800(&t, data_02082214[ix], data_02082214[ix + 1]);
-    MulMat4x3Mat4x3(mat, &t, mat);
+    MTX_RotZ43_(&t, data_02082214[iz], data_02082214[iz + 1]);
+    MTX_Concat43(mat, &t, mat);
+    MTX_RotY43_(&t, data_02082214[iy], data_02082214[iy + 1]);
+    MTX_Concat43(mat, &t, mat);
+    MTX_RotX43_(&t, data_02082214[ix], data_02082214[ix + 1]);
+    MTX_Concat43(mat, &t, mat);
 }
 }

@@ -531,7 +531,7 @@ void daJgm_c::UpdateModels()
     lv.t[2] = 0x1000;
 
     data_020a0e68 = mAnmModel.mat4x3;
-    MulMat4x3Mat4x3(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
 
     mThrowPosX = data_020a0e68.m[9];
     mThrowPosY = data_020a0e68.m[10];

@@ -1,7 +1,7 @@
 #include "Ov007Sprite.h"
 #include "math/Matrix.h"
 
-extern void Matrix3x3_LoadIdentity(Matrix3x3 *m);
+extern void MTX_Identity33_(Matrix3x3 *m);
 extern void func_ov007_020c3abc(Matrix3x3 *out, int ax, int ay, int az);
 extern void func_0205532c(int *a, int *v);
 
@@ -14,7 +14,7 @@ void func_ov007_020c42f8(Ov007Sprite *sprite) {
     vec[0] = sprite->pos.x + sprite->posOffset.x;
     vec[1] = sprite->pos.y + sprite->posOffset.y;
     vec[2] = sprite->pos.z + sprite->posOffset.z;
-    Matrix3x3_LoadIdentity(&mtx);
+    MTX_Identity33_(&mtx);
     func_ov007_020c3abc(&mtx, sprite->rotX, sprite->rotY, sprite->rotZ);
     func_0205532c((int *)&mtx, vec);
     a = sprite->scaleX;

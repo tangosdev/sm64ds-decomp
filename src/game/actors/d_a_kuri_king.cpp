@@ -133,7 +133,7 @@ union KuriKingFreeState {
 };
 
 extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
-extern "C" void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *b);
+extern "C" void MTX_MultVec43(Vector3 *a, Matrix4x3 *m, Vector3 *b);
 extern "C" dCamera_c *gCamera;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" u16 DecIfAbove0_Short(u16* p);
@@ -169,7 +169,7 @@ extern "C" s32 Vec3_HorzLen(const Vector3 *v);
 extern "C" s16 atan2_hold_d_a_kuri_king_1(s32 y, s32 x);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern "C" s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
-extern "C" void MulMat4x3Mat4x3(void* out, void* a, void* b);
+extern "C" void MTX_Concat43(void *out, void *a, void *b);
 extern "C" int *Vec3_LslInPlace(void *v, int n);
 extern "C" struct Matrix4x3 data_020a0e68;
 extern "C" struct Matrix4x3 IDENTITY_MATRIX4X3;
@@ -287,7 +287,7 @@ void daKuriKing_c::SetDefeatTalkCamera() {
     look.y += 0x1a0000;
     in.z = 0x59c000;
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MTX_MultVec43(&in, &data_020a0e68, &out);
     pos.x = pos.x + out.x;
     pos.y = pos.y + 0x300000;
     pos.z = pos.z + out.z;
@@ -1297,7 +1297,7 @@ extern "C" void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) 
     v->z = 0;
     data_020a0e68 = *(struct Matrix4x3 *)self->mBodyMatrix;
     boneMat = (Matrix4x3 *)self->mAnmModel.data.transforms + bone;
-    MulMat4x3Mat4x3(boneMat, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(boneMat, &data_020a0e68, &data_020a0e68);
     v->x = data_020a0e68.m[9];
     v->y = data_020a0e68.m[10];
     v->z = data_020a0e68.m[11];

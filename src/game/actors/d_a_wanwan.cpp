@@ -73,15 +73,15 @@ void func_ov102_0214ae1c(void *bomb);
 
 short atan2_hold_d_a_wanwan_1(int y, int x);
 
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* local extern: CalcLib's declaration is unnamed; retain these names so this
  * TU's compiler-numbered aliases remain stable. */
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 int Vec3_HorzLen(void *v);
-int LenVec3(const Vector3 *v);
+int VEC_Mag(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
@@ -339,7 +339,7 @@ void daWanwan_c::UpdateChainSegments() {
     }
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
+    MTX_MultVec43(&head, &data_020a0e68, &rotated);
     Vec3_Add(&tmp, (const Vector3 *)&mPosX, &rotated);
     saved.x = tmp.x;
     saved.y = tmp.y;
@@ -375,7 +375,7 @@ void daWanwan_c::UpdateChainSegments() {
         angX = (short)(-cstd::atan2(dvec.y, Vec3_HorzLen(&dvec)));
         Matrix4x3_FromRotationY(&data_020a0e68, angY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
-        MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
+        MTX_MultVec43(&head, &data_020a0e68, &rotated);
 
         dst->x = seg->x;
         dst->y = seg->y;
@@ -458,7 +458,7 @@ void daWanwan_c::CapChainToPivot() {
         angX = (short)(-cstd::atan2(tmp.y, Vec3_HorzLen(&tmp)));
         Matrix4x3_FromRotationY(&data_020a0e68, angY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
-        MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
+        MTX_MultVec43(&head, &data_020a0e68, &rotated);
         sum.x = cur->x;
         sum.y = cur->y;
         sum.z = cur->z;
@@ -489,7 +489,7 @@ void daWanwan_c::PinChainToHead() {
     i = 0;
     do {
         Vec3_MulScalar(&scaled, &diff, (7 - i) / 7);
-        AddVec3(p, &scaled, p);
+        VEC_Add(p, &scaled, p);
         i++;
         p++;
     } while (i < 7);
@@ -564,7 +564,7 @@ void daWanwan_c::RestrictToChain() {
     int len;
     int lim;
     Vec3_Sub(&v, &mPos, (const Vector3 *)&mSpawnPosX);
-    len = LenVec3(&v);
+    len = VEC_Mag(&v);
     lim = mChainExtension * 7 + kRestLift;
     if (len <= lim)
         return;

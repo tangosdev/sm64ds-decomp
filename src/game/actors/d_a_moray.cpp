@@ -113,8 +113,8 @@ short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-int LenVec3(const Vector3 *v);
+void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *out);
+int VEC_Mag(const Vector3 *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 
@@ -123,8 +123,8 @@ void Matrix4x3_FromRotationY(Matrix4x3 *m, int angY);
 void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short angX);
 void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void MulMat4x3Mat4x3(void *m1, void *m0, void *mF);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+void MTX_Concat43(void *m1, void *m0, void *mF);
 }
 
 /* Render's per-segment bend table, one 0xc record per body bone.
@@ -206,7 +206,7 @@ void daMoray_c::UpdateHitCylinders() {
         va.y = 0xfee90000;
         va.z = 0x65e000;
         Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
-        MulVec3Mat4x3(&vb, &data_020a0e68, &out);
+        MTX_MultVec43(&vb, &data_020a0e68, &out);
         va.x = va.x + out.x;
         va.y = va.y + out.y;
         va.z = va.z + out.z;
@@ -240,7 +240,7 @@ void daMoray_c::UpdateHitCylinders() {
         vb.z = 0x7c000;
 
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
-    MulVec3Mat4x3(&vb, &data_020a0e68, &out);
+    MTX_MultVec43(&vb, &data_020a0e68, &out);
 
     {
         /* Three int bases stepped by a byte index keep the * 0xc per axis. */
@@ -332,7 +332,7 @@ int daMoray_c::StatePathSwimMain() {
     ApproachLinear(this->mPrevAngleX, Vec3_VertAngle(&this->mPos, &node), 0x80);
 
     Vec3_Sub(&diff, &this->mPos, &node);
-    len = LenVec3(&diff);
+    len = VEC_Mag(&diff);
     if (len == 0 || len <= 0xa000) {
         if (this->mVariant == 1 && this->mPathNodeIndex == 0) {
             this->mPathNodeIndex = 1;
@@ -345,7 +345,7 @@ int daMoray_c::StatePathSwimMain() {
         func_02012694(0xfa, &this->mCamSpacePos);
     } else {
         Vec3_MulScalar(&scaled, &diff, cstd::fdiv(0xa000, len));
-        SubVec3(&this->mPos, &scaled, &this->mPos);
+        VEC_Subtract(&this->mPos, &scaled, &this->mPos);
     }
     return 1;
 }
@@ -375,7 +375,7 @@ int daMoray_c::StateLungeMain() {
         }
         Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngleX);
-        MulVec3Mat4x3(&localOffset, &data_020a0e68, &worldTarget);
+        MTX_MultVec43(&localOffset, &data_020a0e68, &worldTarget);
         worldTarget.x += this->mHomePosX;
         worldTarget.y += this->mHomePosY;
         worldTarget.z += this->mHomePosZ;
@@ -407,7 +407,7 @@ int daMoray_c::StateSwimOutMain() {
     localOffset.z = 0x76c000;
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngleX);
-    MulVec3Mat4x3(&localOffset, &data_020a0e68, &worldTarget);
+    MTX_MultVec43(&localOffset, &data_020a0e68, &worldTarget);
     worldTarget.x += this->mHomePosX;
     worldTarget.y += this->mHomePosY;
     worldTarget.z += this->mHomePosZ;
@@ -492,7 +492,7 @@ int daMoray_c::StateDenWaitMain() {
             thrVert = 0x6ee000;
             Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
             Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mAngleX);
-            MulVec3Mat4x3(&local, &data_020a0e68, &world);
+            MTX_MultVec43(&local, &data_020a0e68, &world);
             world.x += this->mHomePosX;
             world.y += this->mHomePosY;
             world.z += this->mHomePosZ;
@@ -556,7 +556,7 @@ void daMoray_c::UpdatePose() {
     worldTarget.y = 0;
     worldTarget.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
-    MulVec3Mat4x3(&localOffset, &data_020a0e68, &worldTarget);
+    MTX_MultVec43(&localOffset, &data_020a0e68, &worldTarget);
     Matrix4x3_FromTranslation(&data_020a0e68, (this->mPosX + worldTarget.x) >> 3, this->mPosY >> 3,
                               (this->mPosZ + worldTarget.z) >> 3);
     Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, this->mAngleX, this->mAngleY, this->mAngleZ);
@@ -580,7 +580,7 @@ void daMoray_c::UpdatePose() {
         row->mSegmentPos[0].z = zero[0];
         dst = &data_020a0e68;
         *dst = *modelMtx;
-        MulMat4x3Mat4x3((char *)this->mBlendAnmModel.data.transforms + transformOffset, dst, dst);
+        MTX_Concat43((char *)this->mBlendAnmModel.data.transforms + transformOffset, dst, dst);
         pos->x = dst->m[9];
         pos->y = dst->m[10];
         pos->z = dst->m[11];
@@ -603,11 +603,11 @@ void daMoray_c::UpdatePose() {
     this->mStarPos.x = 0;
     this->mStarPos.y = 0;
     this->mStarPos.z = 0;
-    MulMat4x3Mat4x3(&this->mBlendAnmModel.data.transforms[4], &this->mBlendAnmModel.mat4x3,
-                    &this->mStarMtx);
+    MTX_Concat43(&this->mBlendAnmModel.data.transforms[4], &this->mBlendAnmModel.mat4x3,
+                 &this->mStarMtx);
     Matrix4x3_FromTranslation(&data_020a0e68, 0x28000, 0, 0);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0x4000, -0x8000, this->mStarSpinAngle);
-    MulMat4x3Mat4x3(&data_020a0e68, &this->mStarMtx, &this->mStarMtx);
+    MTX_Concat43(&data_020a0e68, &this->mStarMtx, &this->mStarMtx);
     data_020a0e68 = this->mStarMtx;
     this->mStarPos.x = data_020a0e68.m[9];
     this->mStarPos.y = data_020a0e68.m[10];

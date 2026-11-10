@@ -18,7 +18,7 @@
  * is its ROM location.
  *
  * Known limits:
- * - LenVec3 remains declared with void * parameters because no shared header
+ * - VEC_Mag remains declared with void * parameters because no shared header
  *   records its signature. The other vector helpers use the shared Vector3
  *   spelling.
  * - data_ov002_0210d9f0 is a SharedFilePtr, read here through a local
@@ -71,13 +71,13 @@ extern u16 DecIfAbove0_Short(u16 *p);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(void *v);
+extern int VEC_Mag(void *v);
 extern short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 extern short Vec3_VertAngle(const Vector3 *from, const Vector3 *to);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* local extern: CalcLib agrees on the type, but including it renumbers the
    compiler-local sinit aliases and changes their relocation targets. */
-extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
+extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *out);
 /* Sound.cpp: plays sound `id' at a camera-space position. */
 void func_02012694(unsigned int id, const Vector3 *camSpacePos);
 /* dBgW.cpp: sets a collider's stoodOnCallback. */
@@ -247,9 +247,9 @@ void dPathLiftActor_c::StatePath()
     mPath.GetNode(destNode, mCurrPathNode);
 
     Vec3_Sub(&fromDest, &mPos, &destNode);
-    destDist = LenVec3(&fromDest);
+    destDist = VEC_Mag(&fromDest);
     Vec3_Sub(&segment, &srcNode, &destNode);
-    segLen = LenVec3(&segment);
+    segLen = VEC_Mag(&segment);
     segFrames = cstd::fdiv(segLen, mHorzSpeed) / 0x1000;
 
     horzDist = Vec3_HorzDist(&srcNode, &destNode);
@@ -276,11 +276,11 @@ void dPathLiftActor_c::StatePath()
 
     if (destDist == 0 || destDist <= mHorzSpeed) {
         Vec3_MulScalar(&stepA, &fromDest, cstd::fdiv(mHorzSpeed, destDist));
-        SubVec3(&mPos, &stepA, &mPos);
+        VEC_Subtract(&mPos, &stepA, &mPos);
         arrived = 1;
     } else {
         Vec3_MulScalar(&stepB, &fromDest, cstd::fdiv(mHorzSpeed, destDist));
-        SubVec3(&mPos, &stepB, &mPos);
+        VEC_Subtract(&mPos, &stepB, &mPos);
     }
 
     if (arrived == 0) return;
@@ -416,7 +416,7 @@ void dPathLiftActor_c::UpdatePathModels()
                 Vector3 diff;
                 mPath.GetNode(node, idx);
                 Vec3_Sub(&diff, &node, &mPos);
-                if (LenVec3(&diff) < 0xc8000) {
+                if (VEC_Mag(&diff) < 0xc8000) {
                     if (found == 0) {
                         found = one;
                         idx += 1;

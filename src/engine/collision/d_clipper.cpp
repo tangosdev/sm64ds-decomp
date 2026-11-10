@@ -34,9 +34,9 @@ namespace cstd {
 int fdiv(s32, s32);
 }
 extern "C" {
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
-void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *result);
-void NormalizeVec3(const Vector3 *src, Vector3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *result);
+void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 }
 extern short data_02082214[];
 
@@ -121,7 +121,7 @@ int dClipper::ClipSphere(Vector3 &viewPos, Fix12i radius, u8 *cachedPlane) {
 
 int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i radius,
                                Vector3 &viewPos) {
-    MulVec3Mat4x3(&worldPos, &worldToView, &viewPos);
+    MTX_MultVec43(&worldPos, &worldToView, &viewPos);
     return ClipSphere(viewPos, radius, (u8 *)0);
 }
 
@@ -153,14 +153,14 @@ void dClipper::UpdateFrustumPlanes() {
     corner3.x = halfWidth;
     corner3.y = -halfHeight;
     corner3.z = -mNearZ;
-    CrossVec3(&corner1, &corner0, (Vector3 *)&mPlaneNormals[0]);
-    CrossVec3(&corner2, &corner1, (Vector3 *)&mPlaneNormals[1]);
-    CrossVec3(&corner3, &corner2, (Vector3 *)&mPlaneNormals[2]);
-    CrossVec3(&corner0, &corner3, (Vector3 *)&mPlaneNormals[3]);
-    NormalizeVec3((Vector3 *)&mPlaneNormals[0], (Vector3 *)&mPlaneNormals[0]);
-    NormalizeVec3((Vector3 *)&mPlaneNormals[1], (Vector3 *)&mPlaneNormals[1]);
-    NormalizeVec3((Vector3 *)&mPlaneNormals[2], (Vector3 *)&mPlaneNormals[2]);
-    NormalizeVec3((Vector3 *)&mPlaneNormals[3], (Vector3 *)&mPlaneNormals[3]);
+    VEC_CrossProduct(&corner1, &corner0, (Vector3 *)&mPlaneNormals[0]);
+    VEC_CrossProduct(&corner2, &corner1, (Vector3 *)&mPlaneNormals[1]);
+    VEC_CrossProduct(&corner3, &corner2, (Vector3 *)&mPlaneNormals[2]);
+    VEC_CrossProduct(&corner0, &corner3, (Vector3 *)&mPlaneNormals[3]);
+    VEC_Normalize((Vector3 *)&mPlaneNormals[0], (Vector3 *)&mPlaneNormals[0]);
+    VEC_Normalize((Vector3 *)&mPlaneNormals[1], (Vector3 *)&mPlaneNormals[1]);
+    VEC_Normalize((Vector3 *)&mPlaneNormals[2], (Vector3 *)&mPlaneNormals[2]);
+    VEC_Normalize((Vector3 *)&mPlaneNormals[3], (Vector3 *)&mPlaneNormals[3]);
 }
 
 /* The former `Ev` spelling claimed this method took no arguments, contradicting

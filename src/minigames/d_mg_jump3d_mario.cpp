@@ -69,7 +69,7 @@ extern "C" {
 /* Fix12<int> by value in the real signatures; see the banner. */
 void Sound_PlayBank1Panned(int a, int b, int c);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 int NormalizeVec3IfNonZero(VecFx32 *v);
 int  RandomIntInternal(int *seed);
 void func_02012718(int a, int b);
@@ -430,7 +430,7 @@ void dMgJump3DMario_c::Draw()
 void dMgJump3DMario_c::Update()
 {
     ApproachLinear(mVel.y, sJump3DFallSpeed, sJump3DGravityStep);
-    AddVec3((Vector3 *)&mPos, (Vector3 *)&mVel, (Vector3 *)&mPos);
+    VEC_Add((Vector3 *)&mPos, (Vector3 *)&mVel, (Vector3 *)&mPos);
     (this->*mState)();
     Camera_ProjectToScreen16(sMgMainCamera, &mPos, &mScreenX);
     UpdateModelMatrix();

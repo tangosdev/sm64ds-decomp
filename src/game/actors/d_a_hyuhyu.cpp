@@ -78,7 +78,7 @@ s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 }
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
@@ -378,7 +378,7 @@ int daHyuhyu_c::StateGustFlyMain() {
     mPrevAngleX -= 0x80;
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-    MulVec3Mat4x3(&fwd, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&fwd, &data_020a0e68, (Vector3 *)&mSpeedX);
     if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0 || mWithMeshClsn.IsOnWall() != 0 ||
         (mFlags & 8))
         MarkForDestruction();

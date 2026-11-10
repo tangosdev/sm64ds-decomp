@@ -75,7 +75,7 @@ or used as a DMA destination — it cannot be redirected by redefining an lvalue
 - `src/engine/sound/Sound2.cpp:87` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000)`
 - `src/engine/sound/Sound2.cpp:89` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000)`
 - `src/cstd.cpp:2` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000)`
-- `src/unnamed/arm9/0205/func_02053320.c:32` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000) {`
+- `src/VEC_MultAdd.c:32` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000) {`
 
 ## Address-passed sites (not lvalue-redirectable)
 

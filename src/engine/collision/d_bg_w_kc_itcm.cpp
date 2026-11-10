@@ -62,8 +62,8 @@ s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri); /* prism -> triangle index */
 void func_020381cc(void *block, int idx, void **out);
 void func_02037eb0(SurfaceInfo *info, CLPS clps, Vector3 *normal);
 
-/* local extern: no shared header declares it; match src/DotVec3.c. */
-Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
+/* local extern: no shared header declares it; match src/VEC_DotProduct.c. */
+Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* local extern: no header in include/ declares it. */
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 
@@ -212,7 +212,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
                 continue;                                                          \
             dh = (d) >> 4;                                                         \
             fh = faceDot >> 4;                                                     \
-            axisDot = DotVec3(&sn, (const Vector3 *)&upAxis);                       \
+            axisDot = VEC_DotProduct(&sn, (const Vector3 *)&upAxis);                       \
             SqrtStart((s64)fh * fh + (s64)dh * dh, zval, k1);                 \
             hypv = SQRT_RESULT;                                                    \
             if (IsNearZeroDivisor(hypv))                                               \
@@ -681,7 +681,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             nrm[0] = fn[0] << 2;
                             nrm[1] = fn[1] << 2;
                             nrm[2] = fn[2] << 2;
-                            if (DotVec3((const Vector3 *)nrm, (const Vector3 *)&depthDir) >
+                            if (VEC_DotProduct((const Vector3 *)nrm, (const Vector3 *)&depthDir) >
                                 depthDirMinDot) {
                                 if (faceDot < -f->prismThickness)
                                     continue;

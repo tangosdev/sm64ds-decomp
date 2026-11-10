@@ -12,7 +12,7 @@
 // m arrives in r0. "stmia r0!, {r2, r3}" stores r2 and r3 into the next
 // two entries of m and moves r0 past them, so m is written in pairs.
 // Nine entries don't split into pairs, so the last 1 (m[8]) goes first.
-asm void Matrix3x3_LoadIdentity(Matrix3x3 *m)
+asm void MTX_Identity33_(Matrix3x3 *m)
 {
     mov r2, #0x1000
     str r2, [r0, #0x20]

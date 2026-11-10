@@ -118,7 +118,7 @@ void UnloadKeyModels(int n);
 unsigned char NumStars(void);
 int IsStarCollectedInCurLevel(int n);
 void Matrix4x3_FromTranslation(void *m, s32 x, s32 y, s32 z);
-void MulMat4x3Mat4x3(void *a, void *b, void *dst);
+void MTX_Concat43(void *a, void *b, void *dst);
 u8 IsAreaShowing(int idx);
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
@@ -181,7 +181,7 @@ void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
-extern int LenVec3(const Vector3 *v);
+extern int VEC_Mag(const Vector3 *v);
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
    state timer there, so the callee takes no object: ov055's free function at
    0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
@@ -267,12 +267,13 @@ void daTrs_c::func_ov063_021160d4() {
     this->mClsnOffY = 0;
     this->mClsnOffZ = 0;
     Matrix4x3_FromTranslation(&data_020a0e68, this->mPosX, this->mPosY, this->mPosZ);
-    MulMat4x3Mat4x3(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
     this->mClsnOffX = data_020a0e68.m[9];
     this->mClsnOffY = inline_fn(10);
     this->mClsnOffZ = inline_fn(11);
-    SubVec3((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mPosX, (Vector3 *)&this->mClsnOffX);
-    SubVec3((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mClsnBaseX, (Vector3 *)&this->mClsnOffX);
+    VEC_Subtract((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mPosX, (Vector3 *)&this->mClsnOffX);
+    VEC_Subtract((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mClsnBaseX,
+                 (Vector3 *)&this->mClsnOffX);
     Vec3_MulScalarInPlace((VecFx32 *)&this->mClsnOffX, 0x6800);
     p = (int *)&this->mClsnOffZ;
     *p += this->mClsnZBias;
@@ -1144,7 +1145,7 @@ void daTrs_c::func_ov063_02117cdc() {
         w[0] = src->x;
         w[1] = src->y;
         w[2] = src->z;
-        if (LenVec3((const Vector3 *)w) >= 0x12c000) {
+        if (VEC_Mag((const Vector3 *)w) >= 0x12c000) {
             return;
         }
         if (this->mTalkPlayer->StartTalk(*(fBase_c *)(this), 1) == 0) {
@@ -3455,11 +3456,11 @@ int daTrs_c::InitResources()
     mClsnBaseY = 0;
     mClsnBaseZ = 0;
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
-    MulMat4x3Mat4x3(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
     mClsnBaseX = data_020a0e68.m[9];
     mClsnBaseY = data_020a0e68.m[10];
     mClsnBaseZ = data_020a0e68.m[11];
-    SubVec3((Vector3 *)&mClsnBaseX, &mPos, (Vector3 *)&mClsnBaseX);
+    VEC_Subtract((Vector3 *)&mClsnBaseX, &mPos, (Vector3 *)&mClsnBaseX);
     mTalkStep = 0;
     mTargetAngleY = mPrevAngleY;
     mParticle1 = 0;

@@ -240,7 +240,7 @@ void daGrock_c::ApplyGravityAndMove() {
     if (sum >= clamped)
         clamped = sum;
     mVertSpeed = clamped;
-    AddVec3(&mPos, (Vector3 *)&mSpeedX, &mPos);
+    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
 }
 
 int daGrock_c::CleanupResources() {

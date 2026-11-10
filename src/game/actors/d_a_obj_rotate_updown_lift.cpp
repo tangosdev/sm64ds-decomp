@@ -131,13 +131,13 @@ int fdiv(int numerator, int denominator);
 
 extern "C" {
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
-/* local extern: no shared math header declares MulVec3Mat4x3. */
-void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+/* local extern: no shared math header declares MTX_MultVec43. */
+void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-void SubVec3(void *a, void *b, void *c);
-int LenVec3(void *v);
+void VEC_Subtract(void *a, void *b, void *c);
+int VEC_Mag(void *v);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void func_02012694(unsigned int id, const Vector3 *pos);
 extern void hold_d_a_obj_rotate_updown_lift(dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
@@ -164,7 +164,7 @@ void daObjRotateUpdownLift_c::func_ov091_02130fac()
     mPosZ = mBasePosZ;
     mWaypointIndex = (u8)(param1 & 0xf);
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
                   (Vector3 *)&tmp[0]);
     Vec3_Add((Vector3 *)&tmp[1], (const Vector3 *)&mBasePosX, (const Vector3 *)&tmp[0]);
     mPosX = tmp[1].x;
@@ -381,14 +381,14 @@ int daObjRotateUpdownLift_c::Behavior()
     if (prevIndex < 0)
         prevIndex = 9;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
+    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[mWaypointIndex], &data_020a0e68,
                   &cur);
-    MulVec3Mat4x3((Vector3 *)&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
+    MTX_MultVec43((Vector3 *)&data_ov091_02134cdc[mVariant].node[prevIndex], &data_020a0e68, &prev);
     Vec3_Add(&target, (const Vector3 *)&mBasePosX, &cur);
     Vec3_Sub(&remain, &mPos, &target);
     Vec3_Sub(&edge, &cur, &prev);
-    span = LenVec3(&edge);
-    dist = LenVec3(&remain);
+    span = VEC_Mag(&edge);
+    dist = VEC_Mag(&remain);
     along = cstd::fdiv(span - dist, span);
     mAngleX = (s16)(mPitchBase + (s16)FX_MUL(mPitchStep, along));
 
@@ -408,7 +408,7 @@ int daObjRotateUpdownLift_c::Behavior()
         }
     } else {
         Vec3_MulScalar(&stepVec, &remain, cstd::fdiv(stepLen, dist));
-        SubVec3(&mPosX, &stepVec, &mPosX);
+        VEC_Subtract(&mPosX, &stepVec, &mPosX);
     }
 
     if (arrived != 0) {
@@ -489,7 +489,7 @@ int daObjRotateUpdownLift_c::InitResources()
         int stride = 0x78;
         int i = mVariant;
         node = mWaypointIndex;
-        MulVec3Mat4x3((Vector3 *)(tbl + i * stride + node * 0xc), &data_020a0e68, &rotated);
+        MTX_MultVec43((Vector3 *)(tbl + i * stride + node * 0xc), &data_020a0e68, &rotated);
     }
     Vec3_Add(&placed, (const Vector3 *)&mBasePosX, &rotated);
     mPosX = placed.x;

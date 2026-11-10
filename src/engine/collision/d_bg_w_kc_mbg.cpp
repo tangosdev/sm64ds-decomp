@@ -24,11 +24,11 @@ void func_020398fc(dBgW_KcMbg *self);
 
 /* Shared math workers.
    local extern: no header in include/ declares them. */
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
-int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, s32 x, s32 y, s32 z);
-int LenVec3(const Vector3 *v);
-void NormalizeVec3(const Vector3 *src, Vector3 *dst);
+int VEC_Mag(const Vector3 *v);
+void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 int func_02053200(int v);
 
 /* The scratch line's lineEnd and dBgPi base (both inside data_020a0d0c,
@@ -71,7 +71,7 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, Fix12i scale, s16
     self->scale = scale;
     *(Mtx43 *)&self->mat = *(Mtx43 *)&mtx;
     *(Mtx43 *)&self->invMat = *(Mtx43 *)&self->mat;
-    InvMat4x3(&self->invMat, &self->invMat);
+    MTX_Inverse43(&self->invMat, &self->invMat);
     self->angY = angY;
     self->angVelY = 0;
     self->pos.x = mtx.t.x;
@@ -83,14 +83,14 @@ void dBgW_KcMbg::SetFile(KCL_File *file, const Matrix4x3 &mtx, Fix12i scale, s16
     scratch.rotation.r[3].y = 0;
     scratch.rotation.r[3].z = 0;
     *(Mtx43 *)&self->invRotMat = scratch.rotation;
-    InvMat4x3(&self->invRotMat, &self->invRotMat);
+    MTX_Inverse43(&self->invRotMat, &self->invRotMat);
     self->invScale = func_02053200(scale);
     *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mtx;
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, self->scale, self->scale, self->scale);
     scratch.scaled = *(Mtx43 *)&data_020a0e68;
     *(Mtx43 *)&self->newScaledMat = *(Mtx43 *)&data_020a0e68;
     *(Mtx43 *)&self->invScaledMat = scratch.scaled;
-    InvMat4x3(&self->invScaledMat, &self->invScaledMat);
+    MTX_Inverse43(&self->invScaledMat, &self->invScaledMat);
     *(Mtx43 *)&self->prevInvScaledMat = *(Mtx43 *)&self->invScaledMat;
     *(Mtx43 *)&self->scaledMat = scratch.scaled;
     scratch.up.x = 0;
@@ -104,7 +104,7 @@ void dBgW_KcMbg::Virtual08() {}
 
 void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     *(Mtx43 *)&invMat = *(Mtx43 *)&mat;
-    InvMat4x3(&invMat, &invMat);
+    MTX_Inverse43(&invMat, &invMat);
 
     int zero = 0;
     *(Mtx43 *)&mat = *(const Mtx43 *)&mtx;
@@ -125,7 +125,7 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     rotation.r[3].y = zero;
     rotation.r[3].z = zero;
     *(Mtx43 *)&invRotMat = rotation;
-    InvMat4x3(&invRotMat, &invRotMat);
+    MTX_Inverse43(&invRotMat, &invRotMat);
 
     *(Mtx43 *)&scaledMat = *(Mtx43 *)&newScaledMat;
     *(Mtx43 *)&data_020a0e68 = *(const Mtx43 *)&mtx;
@@ -134,7 +134,7 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     *(Mtx43 *)&newScaledMat = *(Mtx43 *)&data_020a0e68;
     *(Mtx43 *)&prevInvScaledMat = *(Mtx43 *)&invScaledMat;
     *(Mtx43 *)&invScaledMat = *(Mtx43 *)&newScaledMat;
-    InvMat4x3(&invScaledMat, &invScaledMat);
+    MTX_Inverse43(&invScaledMat, &invScaledMat);
 
     VecFx32 up;
     up.x = 0;
@@ -151,9 +151,9 @@ void dBgW_KcMbg::Transform(const Matrix4x3 &mtx, s16 angle) {
     VecFx32 moveDir;
     GetVelocity(*(Vector3 *)&moveDir);
     moveDir.y = 0;
-    if (LenVec3((Vector3 *)&moveDir) != 0) {
+    if (VEC_Mag((Vector3 *)&moveDir) != 0) {
         SetDepthByDir();
-        NormalizeVec3((Vector3 *)&moveDir, (Vector3 *)&moveDir);
+        VEC_Normalize((Vector3 *)&moveDir, (Vector3 *)&moveDir);
         VecFx32 localDir;
         WorldToLocalDirection(*(Vector3 *)&moveDir, *(Vector3 *)&localDir);
         SetDepthDir((Vector3 *)&localDir);
@@ -187,15 +187,15 @@ void dBgW_KcMbg::GetTriangleOrigin(s16 triID, Vector3 &res) {
 }
 
 void dBgW_KcMbg::WorldToLocalPosition(const Vector3 &position, Vector3 &result) {
-    MulVec3Mat4x3((Vector3 *)&position, &invScaledMat, &result);
+    MTX_MultVec43((Vector3 *)&position, &invScaledMat, &result);
 }
 
 void dBgW_KcMbg::LocalToWorldPosition(const Vector3 &position, Vector3 &result) {
-    MulVec3Mat4x3((Vector3 *)&position, &newScaledMat, &result);
+    MTX_MultVec43((Vector3 *)&position, &newScaledMat, &result);
 }
 
 void dBgW_KcMbg::WorldToLocalDirection(const Vector3 &direction, Vector3 &result) {
-    MulVec3Mat4x3((Vector3 *)&direction, &invRotMat, &result);
+    MTX_MultVec43((Vector3 *)&direction, &invRotMat, &result);
 }
 
 /* Transform a direction by mat, leaving out the translation. */
@@ -205,7 +205,7 @@ void dBgW_KcMbg::LocalToWorldDirection(const Vector3 &direction, Vector3 &result
     rotation.t.x = 0;
     rotation.t.y = 0;
     rotation.t.z = 0;
-    MulVec3Mat4x3((Vector3 *)&direction, &rotation, &result);
+    MTX_MultVec43((Vector3 *)&direction, &rotation, &result);
 }
 
 int dBgW_KcMbg::DetectClsn(dBgCh_Gnd &ray) {
@@ -323,8 +323,8 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin &ray) {
 /* Out of the previous frame's space, into the current one. */
 int dBgW_KcMbg::TransformPos(const Vector3 &localCentre, Vector3 &res) {
     Vector3 localPos;
-    MulVec3Mat4x3((Vector3 *)&localCentre, &invMat, &localPos);
-    MulVec3Mat4x3(&localPos, &mat, &res);
+    MTX_MultVec43((Vector3 *)&localCentre, &invMat, &localPos);
+    MTX_MultVec43(&localPos, &mat, &res);
     return 1;
 }
 

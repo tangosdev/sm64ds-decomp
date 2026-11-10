@@ -24,7 +24,7 @@ typedef struct Vec3Words {
 #include "Ov007Work.h"
 #include "Ov007Figure.h"
 
-extern void Matrix4x3_LoadIdentity(void *mat);
+extern void MTX_Identity43_(void *mat);
 
 /* stateWork bits, by what this file does with them; medium confidence */
 #define OV007_FIGURE_SWAY 1    /* rock the model and bob it (periods 160 and 40 ticks) */
@@ -107,7 +107,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
                     var_r8 = cstd::div(m2 << 12, 0xa0);
                 }
 
-                Matrix4x3_LoadIdentity(mat);
+                MTX_Identity43_(mat);
 
                 {
                     int angleA = (u16)(((var_r8 * 2 + 0x800) * 0xffff) >> 12);

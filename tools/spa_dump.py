@@ -75,7 +75,7 @@ TEXTURE_FORMATS = {
 # is read from what the routine calls; mode 1/2 labels are inferred.
 DRAW_MODES = {
     0: "billboard",         # 0x0204be40: view-space transform only, camera-facing quad
-    1: "velocity-aligned",  # 0x0204b81c: CrossVec3 + NormalizeVec3 against particle +0x20
+    1: "velocity-aligned",  # 0x0204b81c: VEC_CrossProduct + VEC_Normalize against particle +0x20
     2: "spinning",          # 0x0204b244: angle (particle+0x36) via sin/cos table, axis from flag bits 17-18
 }
 

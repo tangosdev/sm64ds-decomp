@@ -250,10 +250,10 @@ extern "C" void Trmp2Mario_Update(char *o) {
 namespace ns_020c9024 {
 extern "C" {
 extern int sTrmp2FallSpeed;
-void AddVec3(void *dst, void *a, void *b);
+void VEC_Add(void *dst, void *a, void *b);
 void Trmp2Mario_ApplyGravity(char *o) {
     ApproachLinear(MARIO2(o)->mVel.y, sTrmp2FallSpeed, MARIO2(o)->mGravityStep);
-    AddVec3(&MARIO2(o)->mPos, &MARIO2(o)->mVel, &MARIO2(o)->mPos);
+    VEC_Add(&MARIO2(o)->mPos, &MARIO2(o)->mVel, &MARIO2(o)->mPos);
 }
 }
 }
@@ -450,10 +450,10 @@ L260: {
 namespace ns_020c94e0 {
 
 extern "C" {
-int DotVec3(const Vector3 *a, const Vector3 *b);
+int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 void *d_mg_trmpln2_marioNewHold(unsigned int a, unsigned int b, int fx1, int fx2, int fx3,
                                 const void *vec, void *cb);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
@@ -481,15 +481,15 @@ extern "C" void Trmp2Mario_BounceOffLineA(char *c) {
         tmp.z = src[2];
     }
 
-    dot = DotVec3(&MARIO2(c)->mVel, &tmp);
+    dot = VEC_DotProduct(&MARIO2(c)->mVel, &tmp);
     scale = FX_MUL(dot, 0x1400);
     Vec3_MulScalar(&tmp2, &tmp, scale);
-    SubVec3(&MARIO2(c)->mVel, &tmp2, &MARIO2(c)->mVel);
+    VEC_Subtract(&MARIO2(c)->mVel, &tmp2, &MARIO2(c)->mVel);
 
     fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
     scale = FX_MUL(sTrmp2RiseSpeedMax, fdivr);
     Vec3_MulScalar(&tmp3, &tmp, scale);
-    AddVec3(&MARIO2(c)->mVel, &tmp3, &MARIO2(c)->mVel);
+    VEC_Add(&MARIO2(c)->mVel, &tmp3, &MARIO2(c)->mVel);
 
     v = MARIO2(c)->mVel.x;
     if (v < -0x3000)
@@ -673,10 +673,10 @@ namespace ns_020c9aa0 {
 /* recovered: shared common types */
 
 extern "C" {
-int DotVec3(const Vector3 *a, const Vector3 *b);
+int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void Trmp2Mario_StateWallBounce(char *c);
 }
@@ -703,15 +703,15 @@ extern "C" void Trmp2Mario_BounceOffLineB(char *c) {
         tmp.z = src[2];
     }
 
-    dot = DotVec3(&MARIO2(c)->mVel, &tmp);
+    dot = VEC_DotProduct(&MARIO2(c)->mVel, &tmp);
     scale = FX_MUL(dot, 0x1200);
     Vec3_MulScalar(&tmp2, &tmp, scale);
-    SubVec3(&MARIO2(c)->mVel, &tmp2, &MARIO2(c)->mVel);
+    VEC_Subtract(&MARIO2(c)->mVel, &tmp2, &MARIO2(c)->mVel);
 
     fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
     scale = FX_MUL(sTrmpSpeedScale, fdivr);
     Vec3_MulScalar(&tmp3, &tmp, scale);
-    AddVec3(&MARIO2(c)->mVel, &tmp3, &MARIO2(c)->mVel);
+    VEC_Add(&MARIO2(c)->mVel, &tmp3, &MARIO2(c)->mVel);
 
     vx = MARIO2(c)->mVel.x;
     if (vx < -0x2800)
@@ -1588,10 +1588,10 @@ extern "C" void Trmp3DMario_Update(char *o) {
 namespace ns_020cb134 {
 extern "C" {
 extern int sTrmp3DFallSpeed;
-void AddVec3(void *dst, void *a, void *b);
+void VEC_Add(void *dst, void *a, void *b);
 void Trmp3DMario_ApplyGravity(char *o) {
     ApproachLinear(MARIO3D(o)->mVel.y, sTrmp3DFallSpeed, MARIO3D(o)->mGravityStep);
-    AddVec3(&MARIO3D(o)->mPos, &MARIO3D(o)->mVel, &MARIO3D(o)->mPos);
+    VEC_Add(&MARIO3D(o)->mPos, &MARIO3D(o)->mVel, &MARIO3D(o)->mPos);
 }
 }
 }
@@ -2013,10 +2013,10 @@ namespace ns_020cbaec {
 typedef short s16;
 
 extern "C" {
-int DotVec3(const Vector3 *a, const Vector3 *b);
+int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 void *d_mg_trmpln2_marioNewHold2(unsigned int a, unsigned int b, int c, int d, int e, const void *f,
                                  void *g);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
@@ -2045,10 +2045,10 @@ extern "C" void Trmp3DMario_BounceOffLineA(char *c) {
         tmp.z = src[2];
     }
 
-    dot = DotVec3(&MARIO3D(c)->mVel, &tmp);
+    dot = VEC_DotProduct(&MARIO3D(c)->mVel, &tmp);
     scale = FX_MUL(dot, 0x1400);
     Vec3_MulScalar(&tmp2, &tmp, scale);
-    SubVec3(&MARIO3D(c)->mVel, &tmp2, &MARIO3D(c)->mVel);
+    VEC_Subtract(&MARIO3D(c)->mVel, &tmp2, &MARIO3D(c)->mVel);
 
     fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
 
@@ -2074,7 +2074,7 @@ extern "C" void Trmp3DMario_BounceOffLineA(char *c) {
 
     scale = FX_MUL(sTrmp3DHardBounceScale, fdivr);
     Vec3_MulScalar(&tmp4, &tmp, scale);
-    AddVec3(&MARIO3D(c)->mVel, &tmp4, &MARIO3D(c)->mVel);
+    VEC_Add(&MARIO3D(c)->mVel, &tmp4, &MARIO3D(c)->mVel);
 
     {
         int v = MARIO3D(c)->mVel.x;
@@ -2234,10 +2234,10 @@ namespace ns_020cbfd8 {
 /* recovered: shared common types */
 
 extern "C" {
-int DotVec3(const Vector3 *a, const Vector3 *b);
+int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 void Sound_PlayBank1Panned(int a0, int a1, int a2);
 void Trmp3DMario_StateBounce(char *c);
 }
@@ -2265,17 +2265,17 @@ extern "C" void Trmp3DMario_BounceOffLineB(char *c) {
         tmp.z = src[2];
     }
 
-    dot = DotVec3(&MARIO3D(c)->mVel, &tmp);
+    dot = VEC_DotProduct(&MARIO3D(c)->mVel, &tmp);
     scale = FX_MUL(dot, 0x1200);
     Vec3_MulScalar(&tmp2, &tmp, scale);
-    SubVec3(&MARIO3D(c)->mVel, &tmp2, &MARIO3D(c)->mVel);
+    VEC_Subtract(&MARIO3D(c)->mVel, &tmp2, &MARIO3D(c)->mVel);
 
     fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
     MARIO3D(c)->mGravityStep = sTrmp3DGravityStep;
 
     scale = FX_MUL(sTrmp3DBounceScale, fdivr);
     Vec3_MulScalar(&tmp3, &tmp, scale);
-    AddVec3(&MARIO3D(c)->mVel, &tmp3, &MARIO3D(c)->mVel);
+    VEC_Add(&MARIO3D(c)->mVel, &tmp3, &MARIO3D(c)->mVel);
 
     vx = MARIO3D(c)->mVel.x;
     if (vx < -0x1000)

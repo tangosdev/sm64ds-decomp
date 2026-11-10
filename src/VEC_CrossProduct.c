@@ -1,6 +1,6 @@
 #include "types.h"
 
-void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out) {
+void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out) {
     long long cx = (long long)a->y * b->z - (long long)a->z * b->y;
     long long cy = (long long)a->z * b->x - (long long)a->x * b->z;
     long long cz = (long long)a->x * b->y - (long long)a->y * b->x;

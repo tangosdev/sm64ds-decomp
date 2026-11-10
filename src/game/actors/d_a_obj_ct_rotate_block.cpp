@@ -76,7 +76,7 @@ struct RotateBlockCollisionFilePtr : SharedFilePtr {
 };
 
 extern "C" {
-extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
+extern void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
 }
@@ -255,8 +255,8 @@ int daObjCtRotateBlock_c::InitResources() {
         va.z = 0x64000;
 
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MulVec3Mat4x3(&va, &data_020a0e68, &vb);
-        AddVec3(&vb, &mPos, &vb);
+        MTX_MultVec43(&va, &data_020a0e68, &vb);
+        VEC_Add(&vb, &mPos, &vb);
         vb.y -= 0xd2000;
 
         dBgCh_Gnd ground;

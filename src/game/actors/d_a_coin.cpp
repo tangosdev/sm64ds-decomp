@@ -93,7 +93,7 @@ extern "C" {
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(void *v);
-extern int LenVec3(const Vector3 *v);
+extern int VEC_Mag(const Vector3 *v);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void GiveCoins(int idx, int amount);
@@ -270,7 +270,7 @@ void daCoin_c::Step() {
         return;
     }
     UpdatePos(&mdCc_c);
-    if (LenVec3((const Vector3 *)&mSpeedX) > mWithMeshClsn.mRadius)
+    if (VEC_Mag((const Vector3 *)&mSpeedX) > mWithMeshClsn.mRadius)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     else
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -792,7 +792,7 @@ int daCoin_c::Behavior()
     (this->*data_ov002_0210dc70[mBehaviorType])();
     if ((int)(gGameMode == 1) == 0 && (int)((mFlags & 8) != 0) != 0) {
         mdCc_c.Clear();
-        if (mNoClsnTimer == 0 && LenVec3(&mCamSpacePos) < 0x64000) {
+        if (mNoClsnTimer == 0 && VEC_Mag(&mCamSpacePos) < 0x64000) {
             if (mCoinType != COIN_RED || mInBrickBlock == 0)
                 mdCc_c.Update();
         }

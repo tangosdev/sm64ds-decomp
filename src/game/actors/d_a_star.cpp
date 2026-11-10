@@ -142,14 +142,14 @@ extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_02082214[];
 extern void func_02012694(unsigned int a, void *p);
 extern void func_ov002_020e8244(void *out, daStar_c *b);
-extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
 /* local extern: math/MtxStack.h takes Matrix4x3 pointers, and
    func_ov002_020e8244 passes an Mtx43: its scratch copy cannot be a Matrix4x3,
    whose Vector3 member brings a destructor (_ZN9Matrix4x3D1Ev) into the TU. */
-extern void MulMat4x3Mat4x3(void* out, void* a, void* b);
+extern void MTX_Concat43(void *out, void *a, void *b);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -2324,13 +2324,13 @@ void func_ov002_020e8244(void *out, daStar_c *b)
     Matrix4x3_FromTranslation(&data_020a0e68, b->mPosX, b->mPosY, b->mPosZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, b->mPrevAngleY);
     local = *(Mtx43 *)b->mAnmModel1.data.transforms;
-    MulMat4x3Mat4x3(&local, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&local, &data_020a0e68, &data_020a0e68);
     b->mCenterX = data_020a0e68.t.x;
     b->mCenterY = data_020a0e68.t.y;
     b->mCenterZ = data_020a0e68.t.z;
-    SubVec3((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
+    VEC_Subtract((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
     Vec3_LslInPlace((void *)&b->mCenterX, 3);
-    AddVec3((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
+    VEC_Add((struct Vector3 *)&b->mCenterX, &b->mPos, (struct Vector3 *)&b->mCenterX);
     {
         int *p = &b->mCenterY;
         *p = *(int *)((char *)b->mAnmModel1.data.bones + 0xc) * 0xd + *p;
@@ -2375,11 +2375,11 @@ void daStar_c::SpawnCollectEffects() {
     vc.z = v.z;
     if (mState != STATE_SPIN_AND_END)
         vc.y = v.y + 0x32000;
-    SubVec3(&vc, &mPos, &vc);
+    VEC_Subtract(&vc, &mPos, &vc);
     vc.x = FX_MUL(vc.x, mScaleX);
     vc.y = FX_MUL(vc.y, mScaleY);
     vc.z = FX_MUL(vc.z, mScaleZ);
-    AddVec3(&vc, &mPos, &vc);
+    VEC_Add(&vc, &mPos, &vc);
     *(void **)&mParticle[0] =
         (void *)Particle::System::New(mParticle[0], kPtclStarCollectA, vc.x, vc.y, vc.z, 0, 0);
     *(void **)&mParticle[1] =
