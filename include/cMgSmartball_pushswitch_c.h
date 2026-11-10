@@ -5,12 +5,13 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x38, from operator new(0x38) in dScMgSmartball_c::SpawnObjects. Base ends at
- * 0x34, so this class adds exactly one field: a 4-byte countdown at 0x34.
+ * SIZE 0x38, from operator new(0x38) in dScMgSmartball_c::SpawnObjects. The
+ * base's data ends at 0x31, so this class adds a pressed flag in the base's
+ * tail padding (0x31) and a 4-byte countdown at 0x34.
  *
  * mReleaseDelay is how long the switch stays down once nothing is holding it.
  * CheckBall -- the ball-vs-switch proximity test -- is what presses
- * the switch: it sets the base's mTriggered, arms this field with 0xa, starts the
+ * the switch: it sets mTriggered, arms this field with 0xa, starts the
  * slot machine (StartSpin on mgr+0x4778) and plays sound 0x1a4.
  * SaveSnapshot then decrements it while positive and, only while mTriggered is
  * set, calls BallsClear, which returns 1 exactly when NO active ball
@@ -19,13 +20,6 @@
  * reloaded to 0xa, so the ten frames are counted from the last frame a ball
  * was on it, not from the press. RestoreInitial zeroes it, read exhaustively,
  * and says nothing more.
- *
- * THIS CLASS ALSO TOUCHES THE BASE'S 0x31 BYTE, and does so through the
- * base's own member name in every access: SaveSnapshot/RestoreInitial read
- * and write it as a plain byte, and Update reads it as an ARRAY INDEX
- * (sSmartballPushSwitchSprites[mTriggered]) -- still a single-byte load, so the access
- * width matches the base's declared u8 and the name states exactly what the
- * ROM does. No raw cast is needed here (unlike wing_c/ana_c's 0x32).
  *
  * CONSTRUCTED BY cMgSmartball_pushswitch_c_Construct, left a free function per the recipe
  * (this tree has migrated zero constructors), with only its vtable-symbol
@@ -52,6 +46,8 @@ struct cMgSmartball_pushswitch_c : cMgSmartball_object_c {
     int  BallsClear();
     int  CheckBall(int *pos);
 
+    u8 mTriggered;     /* 0x031 -- the switch is pressed; Update draws the
+                          pressed sprite while it is set */
     s32 mReleaseDelay; /* 0x034 -- how long the switch stays down after the
                            last ball leaves it; see the header comment */
 };

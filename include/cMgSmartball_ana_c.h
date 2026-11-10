@@ -3,35 +3,23 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x38, from operator new(0x38) in dScMgSmartball_c::SpawnObjects. Base ends at 0x34, so
- * this class adds exactly one field: a 4-byte countdown at 0x34.
+ * SIZE 0x38, from operator new(0x38) in dScMgSmartball_c::SpawnObjects. The
+ * base's data ends at 0x31, so this class adds two flag bytes in the base's
+ * tail padding (0x31, 0x32) and a 4-byte countdown at 0x34.
  *
  * WHAT THE ONE FIELD IS. mRespawnTimer is armed with 0x3c -- one second --
  * by Swallow, which cMgSmartball_ball_c::UpdatePhysics (the ball physics)
- * calls on this hole the frame a ball falls into it; the same call raises the
- * base's mTriggered, awards the drop and plays the effect. SaveSnapshot opens
+ * calls on this hole the frame a ball falls into it; the same call raises
+ * mHasBall, awards the drop and plays the effect. SaveSnapshot opens
  * with the base's own SaveSnapshot body written out inline (same pattern as
  * every sibling), then ages the timer, and on the frame it reaches zero calls
  * dScMgSmartball_c::ServeNextBall on the manager -- which walks the ball table and puts
- * the first active ball that is not yet in play INTO play -- and sets the
- * base's unk_032. So the field is the delay between losing a ball down this
+ * the first active ball that is not yet in play INTO play -- and sets
+ * mServed. So the countdown is the delay between losing a ball down this
  * hole and being served the next one. Update reads it as exactly that: while
- * mTriggered is set it picks one of three warning sprites at the 0x28 and 0x14
+ * mHasBall is set it picks one of three warning sprites at the 0x28 and 0x14
  * thresholds, i.e. the countdown is shown to the player. RestoreInitial
  * zeroes it after calling the base's RestoreInitial.
- *
- * OFFSETS 0x31 AND 0x32 ARE NOT DECLARED HERE even though this class's own
- * functions touch them -- they belong to cMgSmartball_object_c (mTriggered,
- * unk_032), not to this class's 0x34+ region. Both are reached through the
- * base's member names, and every access here is a byte.
- *
- * That is a change from how this class first landed. The base then declared
- * 0x32 as a 16-bit field, so this class's byte-wide 0/1 write had to go
- * through a raw `(char*)this + 0x32` cast to avoid misstating the emitted
- * instruction. Migrating cMgSmartball_board_c showed the region is three
- * independent bytes read three incompatible ways, the base was corrected to
- * three u8s, and this class's view now agrees with the declaration. Siblings
- * that read a 16-bit angle across 0x32-0x33 still need their casts.
  *
  * CONSTRUCTED BY cMgSmartball_ana_c_Construct, left a free function per the recipe
  * (this tree has migrated zero constructors), with only its vtable-symbol
@@ -47,12 +35,15 @@ struct cMgSmartball_ana_c : cMgSmartball_object_c {
     virtual void RestoreInitial(); /* slot 2 */
     ~cMgSmartball_ana_c() {}
 
-    /* Recovered helpers: HasBall reads the base's mTriggered (a ball has fallen
-       in); Swallow is the drop itself -- arms mRespawnTimer, raises mTriggered,
+    /* Recovered helpers: HasBall reads mHasBall (a ball has fallen in);
+       Swallow is the drop itself -- arms mRespawnTimer, raises mHasBall,
        and awards the 2000-point burst on the manager. */
     int  HasBall();
     void Swallow();
 
+    u8 mHasBall;       /* 0x031 -- a ball has fallen into this hole */
+    u8 mServed;        /* 0x032 -- the countdown ran out and the next ball was
+                          served */
     s32 mRespawnTimer; /* 0x034 -- frames from a ball dropping into this hole
                            to the next waiting ball being put into play; see
                            the header comment */
