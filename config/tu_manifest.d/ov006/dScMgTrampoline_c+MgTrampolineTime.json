@@ -1322,29 +1322,29 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@561",
+      "from": "@580",
       "to": "pmf_dScMgTrampoline_c_StateIntro",
-      "evidence": "Compiler PMF literal: BeginIntro assigns mState = &dScMgTrampoline_c::StateIntro, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target."
+      "evidence": "Compiler PMF literal: BeginIntro assigns mState = &dScMgTrampoline_c::StateIntro, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target. Re-keyed from @561 to @580 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object)."
     },
     {
-      "from": "@582",
+      "from": "@601",
       "to": "pmf_dScMgTrampoline_c_StatePlay",
-      "evidence": "Compiler PMF literal: BeginPlay assigns mState = &dScMgTrampoline_c::StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target."
+      "evidence": "Compiler PMF literal: BeginPlay assigns mState = &dScMgTrampoline_c::StatePlay, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target. Re-keyed from @582 to @601 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object)."
     },
     {
-      "from": "@655",
+      "from": "@674",
       "to": "pmf_dScMgTrampoline_c_StateResults",
-      "evidence": "Compiler PMF literal: BeginResults assigns mState = &dScMgTrampoline_c::StateResults, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target."
+      "evidence": "Compiler PMF literal: BeginResults assigns mState = &dScMgTrampoline_c::StateResults, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target. Re-keyed from @655 to @674 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object)."
     },
     {
-      "from": "@665",
+      "from": "@684",
       "to": "pmf_dScMgTrampoline_c_StateWaitExit",
-      "evidence": "Compiler PMF literal: StateResults assigns mState = &dScMgTrampoline_c::StateWaitExit, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target."
+      "evidence": "Compiler PMF literal: StateResults assigns mState = &dScMgTrampoline_c::StateWaitExit, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target. Re-keyed from @665 to @684 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object)."
     },
     {
-      "from": "@682",
+      "from": "@701",
       "to": "pmf_dScMgTrampoline_c_StateDone",
-      "evidence": "Compiler PMF literal: StateWaitExit assigns mState = &dScMgTrampoline_c::StateDone, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target."
+      "evidence": "Compiler PMF literal: StateWaitExit assigns mState = &dScMgTrampoline_c::StateDone, and mwcc emits that pointer-to-member constant as an 8-byte {code address, 0} .data temporary. Paired with the canonical descriptor by the single relocation that loads it and by its relocation target. Re-keyed from @682 to @701 when the NitroSDK GX/G3X renames merged with the PMF-literal state assignments (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [
