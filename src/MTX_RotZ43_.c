@@ -2,20 +2,23 @@
 // in the original (SDK/runtime primitive: block copy, matrix/math, CP15, context
 // switch, etc.), so there is no C to decompile it to -- the asm block is the
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
-// Matrix3x3_SetRotationZ @ 0x02052588 (arm9, Thumb): build 3x3 fx32 Z-rotation
-// matrix from (sin, cos): {c, s, 0, -s, c, 0, 0, 0, 1} with 4096 = 1.0.
+// MTX_RotZ43_ @ 0x0205283c (arm9, Thumb): build 4x3 fx32 Z-rotation matrix
+// from (sin, cos): rows {c,s,0},{-s,c,0},{0,0,1},{0,0,0} with 4096 = 1.0.
+struct Matrix4x3;
+
 #pragma thumb on
-asm void Matrix3x3_SetRotationZ(int *m, int s, int c) {
+asm void MTX_RotZ43_(struct Matrix4x3 *m, int s, int c) {
     stmia r0!, {r2}
     mov r3, #0
     stmia r0!, {r1, r3}
     neg r1, r1
-    stmia r0!, {r1, r2}
-    mov r1, #1
-    lsl r1, r1, #12
-    str r3, [r0, #0]
-    str r3, [r0, #4]
-    str r3, [r0, #8]
-    str r1, [r0, #12]
+    stmia r0!, {r1, r2, r3}
+    mov r1, #0
+    mov r2, #0
+    mov r3, #1
+    lsl r3, r3, #12
+    stmia r0!, {r1, r2, r3}
+    mov r3, #0
+    stmia r0!, {r1, r2, r3}
     bx lr
 }

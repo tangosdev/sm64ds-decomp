@@ -152,7 +152,7 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 extern "C" {
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
                          unsigned int d);
@@ -164,10 +164,10 @@ int Vec3_Dist(const Vector3 *, const Vector3 *);
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 unsigned int RandomIntInternal(void *seed);
-/* local extern: no shared math header declares MulVec3Mat4x3. */
-void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
+/* local extern: no shared math header declares MTX_MultVec43. */
+void MTX_MultVec43(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(const Vector3 *v);
+int VEC_Mag(const Vector3 *v);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int IsStarCollectedInCurLevel(int);
 unsigned short DecIfAbove0_Short(void *);
@@ -383,12 +383,12 @@ int daOwl_c::UpdateHover() {
     *p3e8 += 0x200;
     ang = unk_3e8;
     idx = ((u16)(short)ang >> 4) * 2;
-    tbl = data_02082214[idx];
+    tbl = FX_SinCosTable_[idx];
     result = FX_MUL(tbl, 0x64000);
     ApproachLinear(mPosY, mAnchor.y + result, 0x3000);
 
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-    MulVec3Mat4x3((Vector3 *)&buf, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43((Vector3 *)&buf, &data_020a0e68, (Vector3 *)&mSpeedX);
     return 1;
 }
 
@@ -440,7 +440,7 @@ int daOwl_c::EnterTalk() {
 
 /* Main of the dormant state. Watches the nearest player and keeps the owl 400
  * units above that player's ground height. When the player's position is
- * within 40 units of the owl (LenVec3 < 0x28000) it sets the anchor 800 units
+ * within 40 units of the owl (VEC_Mag < 0x28000) it sets the anchor 800 units
  * from the owl along a fixed yaw, faces it, and enters hover.
  */
 int daOwl_c::UpdateDormant() {
@@ -456,7 +456,7 @@ int daOwl_c::UpdateDormant() {
         mPosY = p->mGroundY + 0x190000;
         mTalkTarget = p;
         Vec3_Sub((Vector3 *)&d, (const Vector3 *)selfpos, (const Vector3 *)&pp);
-        if (LenVec3((const Vector3 *)&d) < 0x28000) {
+        if (VEC_Mag((const Vector3 *)&d) < 0x28000) {
             d.x = mPosX;
             d.y = mPosY;
             d.z = mPosZ;
@@ -464,7 +464,7 @@ int daOwl_c::UpdateDormant() {
             d.y = 0;
             d.z = 0x320000;
             Matrix4x3_FromRotationY(&data_020a0e68, 0x4000);
-            MulVec3Mat4x3((Vector3 *)&d, &data_020a0e68, &mAnchor);
+            MTX_MultVec43((Vector3 *)&d, &data_020a0e68, &mAnchor);
             {
                 int *px = &mAnchor.x;
                 int *py = &mAnchor.y;
@@ -507,7 +507,7 @@ void daOwl_c::UpdateModelTransform() {
         mAngleX, mAngleY, mAngleZ);
     mAnmModel.ApplyOpacity(mOpacity, 1);
     mAnmModel.mat4x3 = data_020a0e68;
-    MulMat4x3Mat4x3(&mAnmModel.data.transforms[1], &mAnmModel.mat4x3, &out);
+    MTX_Concat43(&mAnmModel.data.transforms[1], &mAnmModel.mat4x3, &out);
     Matrix4x3_FromTranslation(&data_020a0e68,
         mPosX >> 3,
         (mPosY - 0x38000) >> 3,

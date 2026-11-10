@@ -7,9 +7,9 @@
 #include "Memory.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
-#include "cstd.h"
 #include "nitro/fx/fx.h"
 #include "nitro/gx/g3imm.h"
+#include "nitro/fx/fx_cp.h"
 
 /* ROM order: the ENTRY factory, then EntryMesh (0x0211a948..0x0211b524). */
 #pragma defer_codegen off
@@ -28,10 +28,10 @@ extern "C" {
 /* local extern: no header declares these arm9 vector and matrix helpers.
    EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
    receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
-int InvMat4x3(const Matrix4x3 *, Matrix4x3 *);
-void SubVec3(Vector3 *, Vector3 *, Vector3 *);
-void CrossVec3(const Vector3 *, const Vector3 *, Vector3 *);
-void NormalizeVec3(const Vector3 *, Vector3 *);
+int MTX_Inverse43(const Matrix4x3 *, Matrix4x3 *);
+void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
+void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
+void VEC_Normalize(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 unsigned int func_02045ad8(const void *, unsigned int);
@@ -47,7 +47,7 @@ void func_0203cbc0(void *);
 /* local extern: the camera matrix and the interleaved sine/cosine table,
    declared per consumer (d_ext_model.cpp, d_ent_obj.cpp). */
 extern Matrix4x3 data_0209b3ec;
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 /* File 0x8418. The ctor and dtor are func_020178cc / func_020178b4; this
    TU does not define them. The handler row is filled by the static
    initializer those two objects emit. */
@@ -85,7 +85,7 @@ void EntryMesh::CalcMatrix() {
                               mPos.z >> 3);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     *(Matrix4x3 *)&mMtx = data_020a0e68;
-    InvMat4x3(&data_020a0e68, &data_020a0e68);
+    MTX_Inverse43(&data_020a0e68, &data_020a0e68);
     *(Matrix4x3 *)&mInvMtx = data_020a0e68;
 }
 
@@ -174,23 +174,25 @@ void EntryMesh::CalcNormals() {
             q[2] = z;
 
             if (j == 0)
-                SubVec3((Vector3 *)&p->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)&p->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
             else if (j == mGridDim[0] - 1)
-                SubVec3((Vector3 *)&(p - 1)->pos, (Vector3 *)&p->pos, (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)&(p - 1)->pos, (Vector3 *)&p->pos, (Vector3 *)&ej);
             else
-                SubVec3((Vector3 *)&(p - 1)->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)&(p - 1)->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
 
             if (i == 0)
-                SubVec3((Vector3 *)&p->pos, (Vector3 *)&(p + mGridDim[1])->pos, (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)&p->pos, (Vector3 *)&(p + mGridDim[1])->pos,
+                             (Vector3 *)&ei);
             else if (i == mGridDim[1] - 1)
-                SubVec3((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&p->pos, (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&p->pos,
+                             (Vector3 *)&ei);
             else
-                SubVec3((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&(p + mGridDim[1])->pos,
-                        (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&(p + mGridDim[1])->pos,
+                             (Vector3 *)&ei);
 
-            CrossVec3((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
+            VEC_CrossProduct((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
             n.z >>= 1;
-            NormalizeVec3((const Vector3 *)&n, (Vector3 *)&n);
+            VEC_Normalize((const Vector3 *)&n, (Vector3 *)&n);
             p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);
             p++;
         }
@@ -220,13 +222,13 @@ int EntryMesh::RippleHeight(int dist) {
         return 0;
     phase = RipplePhase(dist);
     amp = RippleAmplitude(0x64 - mRippleTimer);
-    slope = cstd::fdiv(amp, 0x384000);
+    slope = FX_Div(amp, 0x384000);
     v = FX_MUL((-slope), dist);
     r2 = amp + v;
     if (r2 < 0)
         r2 = 0;
     idx = (unsigned short)phase >> 4;
-    t = data_02082214[idx * 2];
+    t = FX_SinCosTable_[idx * 2];
     return FX_MUL(t, r2);
 }
 
@@ -237,7 +239,7 @@ int EntryMesh::RippleAmplitude(int age) {
 
 /* The sine phase at distance dist, behind the advancing mRipplePhase. */
 short EntryMesh::RipplePhase(int dist) {
-    int t = cstd::fdiv(0xffff, 0x16c000);
+    int t = FX_Div(0xffff, 0x16c000);
     int v = FX_MUL(dist, t);
     return (short)(v - mRipplePhase);
 }
@@ -299,7 +301,7 @@ void EntryMesh::DrawGrid() {
     int sz;
 
     *(int *)0x4000444 = 0;
-    MulMat4x3Mat4x3((const Matrix4x3 *)&mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43((const Matrix4x3 *)&mMtx, &data_0209b3ec, &tmp);
     *(int *)0x4000440 = 2;
     G3_LoadMtx43(&tmp);
     *(int *)0x4000440 = 1;

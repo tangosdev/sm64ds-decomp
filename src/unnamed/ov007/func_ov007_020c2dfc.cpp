@@ -1,6 +1,6 @@
 //cpp
 #include "Ov007StrokePath.h"
-#include "cstd.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -13,7 +13,7 @@ int func_ov007_020c2dfc(Ov007StrokePath *path, int idx, int v) {
     unsigned short *s;
     int d;
     if (v >= 0 && idx >= 2 && idx < path->pointCount) {
-        q = (unsigned short)cstd::div(v << 0x10, 0x168);
+        q = (unsigned short)FX_DivS32(v << 0x10, 0x168);
         s = path->segmentAngles;
         d = (short)(s[idx] - s[idx - 1]);
         return d * d < q * q;

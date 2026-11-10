@@ -15,12 +15,12 @@
 #include "nitro/gx/g3_util.h"
 #include "math/Matrix.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
-void NormalizeVec3(const Vector3 *v, Vector3 *out);
-void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
-Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
+void VEC_Normalize(const Vector3 *v, Vector3 *out);
+void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
+Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 }
 
 /* The Nitro SDK's G3i_PerspectiveW_: the load flag is a BOOL. Spelled bool,
@@ -36,7 +36,7 @@ void G3i_PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i
     int v;
     int wz;
 
-    tmp = cstd::fdiv(cosF, sinF);
+    tmp = FX_Div(cosF, sinF);
     if (scaleW != 0x1000)
         tmp = tmp * scaleW / 0x1000;
 
@@ -60,7 +60,7 @@ void G3i_PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i
         mtx[13] = 0;
         mtx[15] = 0;
     }
-    xx = cstd::fdiv_result();
+    xx = FX_GetDivResult();
     *(volatile u64 *)0x4000290 = (u64)0x1000 << 32;
     *(volatile u64 *)0x4000298 = (unsigned)(n - f);
     if (flag) {
@@ -79,7 +79,7 @@ void G3i_PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i
         mtx[0] = xx;
         mtx[5] = tmp;
     }
-    q = cstd::ldiv_result();
+    q = FX_GetDivResultFx64c();
     if (scaleW != 0x1000)
         q = q * scaleW / 0x1000;
     zz = (int)(((f + n) * q + 0x80000000LL) >> 32);
@@ -114,12 +114,12 @@ void G3i_LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target
     forward.x = camPos->x - target->x;
     forward.y = camPos->y - target->y;
     forward.z = camPos->z - target->z;
-    NormalizeVec3(&forward, &forward);
+    VEC_Normalize(&forward, &forward);
 
-    CrossVec3(up, &forward, &right);
-    NormalizeVec3(&right, &right);
+    VEC_CrossProduct(up, &forward, &right);
+    VEC_Normalize(&right, &right);
 
-    CrossVec3(&forward, &right, &up2);
+    VEC_CrossProduct(&forward, &right, &up2);
 
     if (draw) {
         *(volatile int *)0x4000440 = 2;
@@ -135,9 +135,9 @@ void G3i_LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target
         *mtx = forward.z;
     }
 
-    tx = -DotVec3(camPos, &right);
-    ty = -DotVec3(camPos, &up2);
-    tz = -DotVec3(camPos, &forward);
+    tx = -VEC_DotProduct(camPos, &right);
+    ty = -VEC_DotProduct(camPos, &up2);
+    tz = -VEC_DotProduct(camPos, &forward);
 
     if (draw) {
         *mtx = tx;

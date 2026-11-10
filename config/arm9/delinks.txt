@@ -2165,11 +2165,11 @@ src/MTX_Rot22_.c:
     complete
     .text start:0x020524e4 end:0x020524f0
 
-src/Matrix3x3_LoadIdentity.c:
+src/MTX_Identity33_.c:
     complete
     .text start:0x020524f0 end:0x02052514
 
-src/unnamed/arm9/0205/func_02052514.c:
+src/MTX_Copy33To44_.c:
     complete
     .text start:0x02052514 end:0x02052550
 
@@ -2181,31 +2181,31 @@ src/MTX_RotY33_.c:
     complete
     .text start:0x0205256c end:0x02052588
 
-src/Matrix3x3_SetRotationZ.c:
+src/MTX_RotZ33_.c:
     complete
     .text start:0x02052588 end:0x020525a0
 
-src/MulVec3Mat3x3.c:
+src/MTX_MultVec33.c:
     complete
     .text start:0x020525a0 end:0x02052624
 
-src/MulMat3x3Mat3x3.c:
+src/MTX_Concat33.c:
     complete
     .text start:0x02052624 end:0x020527c0
 
-src/Matrix4x3_LoadIdentity.c:
+src/MTX_Identity43_.c:
     complete
     .text start:0x020527c0 end:0x020527e8
 
-src/MulVec3Mat4x3.c:
+src/MTX_MultVec43.c:
     complete
     .text start:0x02052858 end:0x02052914
 
-src/MulMat4x3Mat4x3.c:
+src/MTX_Concat43.c:
     complete
     .text start:0x02052914 end:0x02052b34
 
-src/InvMat4x3.cpp:
+src/MTX_Inverse43.cpp:
     complete
     .text start:0x02052b34 end:0x02052ec8
 
@@ -2218,10 +2218,10 @@ src/cstd.cpp:
     .text start:0x02052ef4 end:0x02053320
 
 
-src/unnamed/arm9/0205/func_02053320.c:
+src/VEC_MultAdd.c:
     complete
     .text start:0x02053320 end:0x020534ec
-src/NormalizeVec3.c:
+src/VEC_Normalize.c:
     complete
     .text start:0x020534ec end:0x02053644
 
@@ -2229,33 +2229,38 @@ src/VEC_Fx16Mag.c:
     complete
     .text start:0x02053644 end:0x020536e4
 
-src/LenVec3.c:
+src/VEC_Mag.c:
     complete
     .text start:0x020536e4 end:0x02053770
 
-src/CrossVec3.c:
+src/VEC_CrossProduct.c:
     complete
     .text start:0x02053770 end:0x0205380c
 
-src/DotVec3.c:
+src/VEC_DotProduct.c:
     complete
     .text start:0x0205380c end:0x02053850
 
-src/SubVec3.c:
+src/VEC_Subtract.c:
     complete
     .text start:0x02053850 end:0x02053884
 
-src/AddVec3.c:
+src/VEC_Add.c:
     complete
     .text start:0x02053884 end:0x020538b8
 
-src/data/arm9/data_02086214.c:
+src/FX_AtanTable_.c:
     complete
     .rodata start:0x02086214 end:0x02086314
 
-src/unnamed/arm9/0205/func_020538b8.cpp:
+src/FX_Atan2.c:
     complete
-    .text start:0x020538b8 end:0x02053a90
+    .text start:0x020538b8 end:0x02053a8c
+
+src/FX_Init.c:
+    complete
+    .text start:0x02053a8c end:0x02053a90
+
 src/engine/gx/GX_Init.cpp:
     complete
     .text start:0x02053a90 end:0x02053d9c

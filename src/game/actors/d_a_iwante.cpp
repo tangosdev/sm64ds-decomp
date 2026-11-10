@@ -346,8 +346,8 @@ extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-/* local extern: no shared math header declares MulVec3Mat4x3. */
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+/* local extern: no shared math header declares MTX_MultVec43. */
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int RandomIntInternal(int *seed);
 extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
 extern int Vec3_Dist(const void *a, const void *b);
@@ -875,7 +875,7 @@ int daIwante_c::HandPattern9Execute() {
 
                 ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mTargetPosX);
                 Matrix4x3_FromRotationY(&data_020a0e68, ang);
-                MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+                MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
 
                 mTargetPosX += out.x;
                 mTargetPosZ += out.z;
@@ -2122,7 +2122,7 @@ int daIwante_c::BodyTalkExecute() {
             in.z = -0x32000;
 
             Matrix4x3_FromRotationY(&data_020a0e68, 0);
-            MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+            MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
 
             out.x += mPosX;
             out.y += mPosY;
@@ -2370,7 +2370,7 @@ int daIwante_c::Behavior() {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
                     Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngleY - 0x4000));
-                    MulVec3Mat4x3((Vector3 *)&vin, &data_020a0e68, (Vector3 *)&vout);
+                    MTX_MultVec43((Vector3 *)&vin, &data_020a0e68, (Vector3 *)&vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
                 } else {
@@ -2385,7 +2385,7 @@ int daIwante_c::Behavior() {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
                     Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngleY - 0x4000));
-                    MulVec3Mat4x3((Vector3 *)&vin, &data_020a0e68, (Vector3 *)&vout);
+                    MTX_MultVec43((Vector3 *)&vin, &data_020a0e68, (Vector3 *)&vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
                 } else {

@@ -233,10 +233,10 @@ void dScMgCoin_c::Bag_Draw() {
         int vec[4];
         u8 idx_l = mBouncer[0].sprite;
 
-        vec[0] = FX_MUL(data_02082214[i + 1], 0x1000);
-        vec[1] = FX_MUL(data_02082214[i], 0x1000);
-        vec[2] = -FX_MUL(data_02082214[i], 0x1000);
-        vec[3] = FX_MUL(data_02082214[i + 1], 0x1000);
+        vec[0] = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
+        vec[1] = FX_MUL(FX_SinCosTable_[i], 0x1000);
+        vec[2] = -FX_MUL(FX_SinCosTable_[i], 0x1000);
+        vec[3] = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
         Mg_RenderSpriteBothPalMtx(sCoinBagSprites[idx_l], xr >> 12, yr >> 12, -1, vec);
     }
 }

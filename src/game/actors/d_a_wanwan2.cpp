@@ -162,13 +162,13 @@ void func_02012694(unsigned int, void *);
 void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
-/* local extern: no shared math header declares MulVec3Mat4x3. */
-void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+/* local extern: no shared math header declares MTX_MultVec43. */
+void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 int Vec3_HorzLen(void *v);
-int LenVec3(const Vector3 *v);
+int VEC_Mag(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int ApproachAngle(short *cur, short target, int step, int a, int b);
 int atan2_hold_d_a_wanwan2_1(int y, int x);
@@ -182,7 +182,7 @@ extern ChompState data_ov100_021486f4;
 extern ChompPmf data_ov100_02148000;
 extern ChompPmf data_ov100_02147ff8;
 extern unsigned char gGameMode;
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 extern Matrix4x3 data_020a0e68;
 }
 
@@ -399,7 +399,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
     out.x = 0; out.y = 0; out.z = 0;
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, thisx->mAngleX, thisx->mAngleY, thisx->mAngleZ);
-    MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+    MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
     Vec3_Add((Vector3 *)&added, (const Vector3 *)&thisx->mPosX, (const Vector3 *)&out);
 
     {
@@ -436,7 +436,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         delta.z = vel->z + (pos->z - src->z);
         idx = ((unsigned short)(short)(angOff + (thisx->mChainTimer << 12))) >> 4;
         val = (pos->y + vel->y) - 0x2000 /* 2 units down */
-              + FX_MUL(data_02082214[idx * 2], -0xa000);
+              + FX_MUL(FX_SinCosTable_[idx * 2], -0xa000);
         if (val <= *heights) val = *heights;
         delta.y = val - src->y;
         ang = cstd::atan2(delta.x, delta.z);
@@ -444,7 +444,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         angz = (s16)(-cstd::atan2(delta.y, hlen));
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angz);
-        MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+        MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
         vel->x = pos->x; vel->y = pos->y; vel->z = pos->z;
         Vec3_Add((Vector3 *)&v48, (const Vector3 *)src, (const Vector3 *)&out);
         pos->x = v48.x; pos->y = v48.y; pos->z = v48.z;
@@ -666,7 +666,7 @@ int daWanwan2_c::Behavior()
 
         Vec3_Sub(&diff, &mPos, &node);
 
-        if (LenVec3(&diff) < 0x190000) {
+        if (VEC_Mag(&diff) < 0x190000) {
             mPathNodeIndex += 1;
             if (mPathNodeIndex >= mNumPathNodes) {
                 mPathNodeIndex = 0;

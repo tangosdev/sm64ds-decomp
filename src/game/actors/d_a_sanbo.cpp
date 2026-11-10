@@ -65,12 +65,9 @@ enum daSanbo_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
-
-namespace cstd {
-int fdiv(int, int);
-}
 
 extern "C" {
 extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
@@ -571,7 +568,7 @@ void daSanbo_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
             int x = FX_MUL(n0[0], mSpeedX);
             int z = FX_MUL(n0[2], mSpeedZ);
             int dot = x + z;
-            int slope = cstd::fdiv(dot, n0[1]);
+            int slope = FX_Div(dot, n0[1]);
             mVertSpeed = -(slope + 0x8000);
         }
     }
@@ -752,7 +749,7 @@ void daSanbo_c::UpdateWanderYaw() {
 int daSanbo_c::CalcShyAwayAngle(int x) {
     if (x > 0x190000)
         return 0;
-    int rate = cstd::fdiv(0x4000, 0xc8000);
+    int rate = FX_Div(0x4000, 0xc8000);
     int drop = FX_MUL(rate, x);
     int r = 0x8000 - drop;
     return (short)r;

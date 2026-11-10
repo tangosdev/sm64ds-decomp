@@ -84,7 +84,7 @@ extern "C" {
 
 int *Vec3_AsrInPlace(VecFx32 *v, int n);
 /* Unnamed on purpose: see the @NNN note in the banner. */
-void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
+void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 void func_02012694(unsigned int, void *);
 int CopyTexPalFromLevelModel(void *);
 
@@ -96,7 +96,7 @@ typedef struct Kpa3BgPieceSpot {
     s16 angle;
 } Kpa3BgPieceSpot;
 
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern Kpa3BgPieceSpot data_ov060_02119564[10];
 extern Matrix4x3 data_0209b3ec;
 
@@ -300,11 +300,12 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         row = self->mVariant;
         ang = (u16)data_ov060_02119564[row].angle;
         v[1] = yimm;
-        v[0] = (s16)data_02082214[(ang >> 4) * 2] * (s16)0x366 + (data_ov060_02119564[row].x << 12);
-        v[2] = (s16)data_02082214[(ang >> 4) * 2 + 1] * (s16)0x366 +
+        v[0] =
+            (s16)FX_SinCosTable_[(ang >> 4) * 2] * (s16)0x366 + (data_ov060_02119564[row].x << 12);
+        v[2] = (s16)FX_SinCosTable_[(ang >> 4) * 2 + 1] * (s16)0x366 +
                (data_ov060_02119564[self->mVariant].z << 12);
         Vec3_AsrInPlace((VecFx32 *)v, 3);
-        MulVec3Mat4x3((Vector3 *)v, &data_0209b3ec, &self->mCamSpacePos);
+        MTX_MultVec43((Vector3 *)v, &data_0209b3ec, &self->mCamSpacePos);
         func_02012694(0xbc, &self->mCamSpacePosX);
         self->mCamSpacePosX = saved[0];
         self->mCamSpacePosY = saved[1];
@@ -331,9 +332,9 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         bz = data_ov060_02119564[row].z;
 
         a = ((int)(u16)(s16)(mul + 0x14b0) >> 4) * 2;
-        x = k * (s16)data_02082214[a] + (bx << 12);
+        x = k * (s16)FX_SinCosTable_[a] + (bx << 12);
         y = 0x133000;
-        z = k * (s16)data_02082214[a + 1] + (bz << 12);
+        z = k * (s16)FX_SinCosTable_[a + 1] + (bz << 12);
         v[3] = x;
         v[4] = y;
         v[5] = z;
@@ -343,9 +344,9 @@ void _ZN10daKpa3Bg_c19func_ov060_02117db8Ev(struct daKpa3Bg_c *self) {
         kpaCallPoof(self, &dust1);
 
         a = ((int)(u16)(s16)(mul - 0x14b0) >> 4) * 2;
-        x = k * (s16)data_02082214[a] + (bx << 12);
+        x = k * (s16)FX_SinCosTable_[a] + (bx << 12);
         y = 0x133000;
-        z = k * (s16)data_02082214[a + 1] + (bz << 12);
+        z = k * (s16)FX_SinCosTable_[a + 1] + (bz << 12);
         v[3] = x;
         v[4] = y;
         v[5] = z;

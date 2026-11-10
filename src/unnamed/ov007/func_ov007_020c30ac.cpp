@@ -3,7 +3,7 @@
 
 extern "C" {
 /* recovered: shared common types */
-extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+extern void VEC_Subtract(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 int func_ov007_020c30ac(struct Vector3 *arr, int count, struct Vector3 *target, int arg4,
                         int *out) {
     struct Vector3 diff;
@@ -12,7 +12,7 @@ int func_ov007_020c30ac(struct Vector3 *arr, int count, struct Vector3 *target, 
     int bestIdx;
     long long best = 0x7fffffffffffffffLL;
     for (i = 0; i < count; i++) {
-        SubVec3(arr, target, &diff);
+        VEC_Subtract(arr, target, &diff);
         d2 = (long long)diff.x * diff.x + (long long)diff.y * diff.y + (long long)diff.z * diff.z;
         arr++;
         if (d2 < best) {

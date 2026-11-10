@@ -71,7 +71,7 @@ extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 }
 
 extern LiftState data_ov064_0211c750[];
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 extern AmiliftModelFilePtr data_ov064_0211c730;
 extern AmiliftClsnFilePtr data_ov064_0211c728;
 extern CLPS_Block data_ov064_0211bb6c;
@@ -220,7 +220,7 @@ s32 daObjFl_Amilift_c::Behavior() {
         short *pAng = &mBobPhase;
         *pAng = (short)(*pAng + 0xa00);
         unsigned short h = *(unsigned short *)&mBobPhase;
-        short s = data_02082214[(h >> 4) * 2];
+        short s = FX_SinCosTable_[(h >> 4) * 2];
         short ten = 10;
         mBobOffset = s * ten;
     }

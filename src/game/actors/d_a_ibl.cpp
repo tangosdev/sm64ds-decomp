@@ -54,6 +54,7 @@
 #include "Particle__System.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx_trig.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Actor IDs from symbols/actor_debug_names.tsv. */
 enum {
@@ -238,7 +239,7 @@ void daIbl_c::UpdateWallAndFloor() {
     mPosZ = mPrevPosZ;
     if (mFloorNormalY == 0) return;
     int s = FX_MUL(mFloorNormalX, mSpeedX) + FX_MUL(mFloorNormalZ, mSpeedZ);
-    mVertSpeed = -(cstd::fdiv(s, mFloorNormalY) + 0x8000);
+    mVertSpeed = -(FX_Div(s, mFloorNormalY) + 0x8000);
 }
 
 /* Per-frame model and shadow matrices. The model matrix is the identity with

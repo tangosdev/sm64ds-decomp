@@ -53,6 +53,7 @@
 #include "Memory.h"
 #include "Heap.h"
 #include "BCA_File.h"
+#include "nitro/fx/fx_cp.h"
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -154,10 +155,6 @@ void func_02046b64(BMD_File *model, BTA_File *file);
 void func_020469e8(ModelComponents *model, BTA_File *file, int frame);
 void func_020470e8(BMD_File *model, BMA_File *file);
 void func_02046e28(struct Model *model, struct MatAnimData *file, unsigned short frame);
-}
-
-namespace cstd {
-int fdiv(int a, int b);
 }
 
 /* 0xc-byte records in the common model data array at data_0209cefc, counted
@@ -335,7 +332,7 @@ void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
 
 void dExtSimpleModel_c::Render(const Vector3 *scale) {
     Matrix4x3 temp;
-    MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
+    MTX_Concat43(&mat4x3, &data_0209b3ec, &temp);
     data.Render(&temp, (Vector3 *)scale);
 }
 
@@ -562,7 +559,7 @@ void dExtBlendAnmModel_c::SetAnim(BCA_File &animFile, int numBlendFrames, int fl
             blendWeight = 0x1000;
         } else {
             blendWeight = 0;
-            blendStep = cstd::fdiv(0x1000, (numBlendFrames + 1) << 12);
+            blendStep = FX_Div(0x1000, (numBlendFrames + 1) << 12);
         }
     }
 }
@@ -653,7 +650,7 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
 
 void dExtCommonModel_c::Render(const Vector3 *scale) {
     Matrix4x3 temp;
-    MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
+    MTX_Concat43(&mat4x3, &data_0209b3ec, &temp);
     data->Render(&temp, (Vector3 *)scale);
 }
 
@@ -779,9 +776,9 @@ void dExtShadowModel_c::RenderAll() {
         do {
             ModelComponents *model = node->data;
             func_0203c178(&data_020a0e68, node->scale.x, node->scale.y, node->scale.z);
-            MulMat4x3Mat4x3(&data_020a0e68, node->mat, &data_020a0e68);
+            MTX_Concat43(&data_020a0e68, node->mat, &data_020a0e68);
             data_020a0e68.m[10] += 0x2000;
-            MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
+            MTX_Concat43(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
             func_02046120(model, node->opacity);
             model->Render(&data_020a0e68, 0);
             func_02046088(model, node->opacity, 1);

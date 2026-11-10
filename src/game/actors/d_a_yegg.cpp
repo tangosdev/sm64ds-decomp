@@ -90,12 +90,12 @@
 #include "dBgCh_Actr.h"
 #include "dCc_c.h"
 #include "Sound.h"
-#include "cstd.h"
 #include "daStar_c.h"
 #include "daBtn_c.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 struct dBgPi;
 
@@ -166,7 +166,7 @@ extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void func_0203568c(void *p, int v);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int radius, int height, void *a, void *b);
@@ -722,7 +722,7 @@ void daYegg_c::ExecuteFollowPlayer() {
         in.z = mHoldOffsetZ;
 
         Matrix4x3_FromRotationZXYExt(&data_020a0e68, mEasedAngleX, mEasedAngleY, mEasedAngleZ);
-        MulVec3Mat4x3(&in, &data_020a0e68, &out);
+        MTX_MultVec43(&in, &data_020a0e68, &out);
 
         if (mPlayer->mClimbClsn != 0 || func_ov002_020cf700(mPlayer) != 0 ||
             mPlayer->func_ov002_020d0d2c() != 0) {
@@ -769,7 +769,7 @@ void daYegg_c::ExecuteFollowPlayer() {
 
     {
         /* 0x1000 / 0x3000 as Fix12: a third. */
-        int fd = cstd::fdiv(0x1000, 0x3000);
+        int fd = FX_Div(0x1000, 0x3000);
         Math_Function_0203b14c(&mPosX, mHoldTargetX, fd, 0x3e8000, 4);
         Math_Function_0203b14c(&mPosY, mHoldTargetY, fd, 0x3e8000, 4);
         Math_Function_0203b14c(&mPosZ, mHoldTargetZ, fd, 0x3e8000, 4);
@@ -812,7 +812,7 @@ void daYegg_c::ExecuteFollowPlayer() {
         }
         a4 = mSpeedX;
         {
-            int fd1 = cstd::fdiv(a4, 0x20000);
+            int fd1 = FX_Div(a4, 0x20000);
             int r1 = FX_MUL(fd1, 0xe39);
             short a4ang = (short)(-r1);
             ac = mSpeedZ;
@@ -822,7 +822,7 @@ void daYegg_c::ExecuteFollowPlayer() {
             }
             ac = mSpeedZ;
             {
-                int fd2 = cstd::fdiv(ac, 0x20000);
+                int fd2 = FX_Div(ac, 0x20000);
                 int r2 = FX_MUL(fd2, 0xe39);
                 mAngleX = a4ang;
                 mAngleZ = (short)r2;
@@ -1306,7 +1306,7 @@ int daYegg_c::Behavior()
             vmid.z = 0;
             ang = &mPlayer->mAngleX;
             Matrix4x3_FromRotationZXYExt(&data_020a0e68, ang[0], ang[1], ang[2]);
-            MulVec3Mat4x3(&vin, &data_020a0e68, &vmid);
+            MTX_MultVec43(&vin, &data_020a0e68, &vmid);
             Vec3_Add(&vout, &mPlayer->mPos, &vmid);
             mPosX = vout.x;
             mPosY = vout.y;

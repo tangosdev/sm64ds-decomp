@@ -1,9 +1,9 @@
 //cpp
 #include "types.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "Ov007Mesh.h"
 #include "Ov007Texture.h"
+#include "nitro/fx/fx_cp.h"
 
 #define reg_G3_MTX_PUSH     (*(volatile u32 *)0x04000444)
 #define reg_G3_MTX_POP      (*(volatile u32 *)0x04000448)
@@ -72,8 +72,8 @@ void func_ov007_020ca5f0(Ov007Mesh *mesh, Ov007MeshMaterial *mat, int *pos, int 
     G3_PushMtx();
     G3_Scale(0x40000, 0x40000, 0x40000);
     if (smooth != 0) {
-        int du = cstd::div(tw * mat->tilesS, cellCols);
-        int dv = cstd::div(th * mat->tilesT, cellRows);
+        int du = FX_DivS32(tw * mat->tilesS, cellCols);
+        int dv = FX_DivS32(th * mat->tilesT, cellRows);
         int shiftS = FX_MUL(mesh->cellWidth, mat->warpS);
         int shiftT = FX_MUL(mesh->cellHeight, mat->warpT);
         func_ov007_020caeac(mesh->verts, mesh->vertexNormals, mesh->texOffsetS, mesh->texOffsetT,

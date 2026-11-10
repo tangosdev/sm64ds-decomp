@@ -98,7 +98,7 @@ s16  Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int  Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 /* local extern: include/math/CalcLib.h has the same typed declaration, but
  * including it here conflicts with this TU's other vector helper spellings. */
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c_);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c_);
 /* local extern: CalcLib.h has this signature without a parameter name; retain
  * the name here so the TU's compiler-numbered aliases remain stable. */
 int RandomIntInternal(int *p);
@@ -460,7 +460,7 @@ void daBook_c::StateFly() {
     if (mUsesAnmModel != 0) {
         mAnmModel.Advance();
     }
-    AddVec3((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
+    VEC_Add((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
     if (CheckAttacks() != 0)
         return;
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);

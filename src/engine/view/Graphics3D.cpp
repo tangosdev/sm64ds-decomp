@@ -58,7 +58,7 @@ extern "C" {
 extern Matrix4x3 data_0209b3ec; /* the view matrix */
 extern Matrix4x3 data_0209b41c; /* its inverse */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
+int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
 void func_02045d9c(void);
 }
 
@@ -89,7 +89,7 @@ void func_0200f4f4(void) {
     GX_SetBankForTexPltt(0x30);
     func_02045d9c();
     data_0209b3ec = IDENTITY_MATRIX4X3;
-    InvMat4x3(&data_0209b3ec, &data_0209b41c);
+    MTX_Inverse43(&data_0209b3ec, &data_0209b41c);
 }
 
 // Reset the matrix stacks: identity texture matrix, then back to
@@ -105,7 +105,7 @@ void func_0200f4b4(void) {
 // Copy the camera matrix into the live view, then invert it.
 void CopyToViewMat(const Matrix4x3 *src) {
     data_0209b3ec = *src;
-    InvMat4x3(&data_0209b3ec, &data_0209b41c);
+    MTX_Inverse43(&data_0209b3ec, &data_0209b41c);
 }
 
 /* Crash-screen and title font. 0x2000 bytes; the tail is zero. */

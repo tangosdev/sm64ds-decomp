@@ -622,14 +622,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@500",
+      "from": "@498",
       "to": "@60",
-      "evidence": "mwcc numbers this registration node @491 per TU and ov100 already defines a global @491, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @491 per TU and ov100 already defines a global @491, so the scratch link would multiply-define it Re-keyed from @500 to @498 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
-      "from": "@499",
+      "from": "@497",
       "to": "@490",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @509 now; licensed under the existing pin @490"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @509 now; licensed under the existing pin @490 Re-keyed from @499 to @497 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     }
   ]
 }

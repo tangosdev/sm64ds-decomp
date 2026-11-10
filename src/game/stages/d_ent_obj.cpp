@@ -51,12 +51,10 @@
 #include "private/mtx43.h"
 #include "LevelRng.h"
 #include "nitro/gx/g3_util.h"
+#include "nitro/fx/fx_cp.h"
 
 struct BTP_File;
 
-namespace cstd {
-int fdiv(int a, int b);
-}
 namespace Particle {
 void RenderAll();
 }
@@ -96,7 +94,7 @@ int RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 void Vec3_MulScalarInPlace(Vector3 *v, int scale);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
@@ -200,7 +198,7 @@ void UnknownVsPlayer::AnimFastGait() {
         mModel.SetAnim(*(BCA_File *)data_ov075_0211d424.filePtr, 4, 0, 0x1000, 0);
         mAnimState = ANIM_SLOW_GAIT;
     }
-    mModel.speed = cstd::fdiv(mSpeed, mMaxSpeed) + 0x1000;
+    mModel.speed = FX_Div(mSpeed, mMaxSpeed) + 0x1000;
     if (!mModel.WillHitFrame(4)) {
         if (mModel.WillHitFrame(0x22) == 0)
             return;
@@ -217,7 +215,7 @@ void UnknownVsPlayer::AnimSlowGait() {
         mModel.SetAnim(*(BCA_File *)data_ov075_0211d42c.filePtr, 4, 0, 0x1000, 0);
         mAnimState = ANIM_FAST_GAIT;
     }
-    mModel.speed = cstd::fdiv(mSpeed, mMaxSpeed) + 0x1000;
+    mModel.speed = FX_Div(mSpeed, mMaxSpeed) + 0x1000;
     if (!mModel.WillHitFrame(4)) {
         if (mModel.WillHitFrame(0x22) == 0)
             return;
@@ -267,7 +265,7 @@ void UnknownVsPlayer::MovePoseParticles() {
         return;
     Vector3 pos;
     Matrix4x3 *bone = &mModel.data.transforms[15];
-    MulVec3Mat4x3(&bone->t, &mModel.mat4x3, &pos);
+    MTX_MultVec43(&bone->t, &mModel.mat4x3, &pos);
     Vec3_MulScalarInPlace(&pos, 0x8000);
     pos.y += 0x28000;
     mParticleHandle = Particle::System::New(mParticleHandle, 0x140, pos.x, pos.y, pos.z,
@@ -486,7 +484,7 @@ int UnknownVsPlayer::StartIdle() {
 int UnknownVsPlayer::UpdateCamera(Vector3 *at, Vector3 *pos) {
     int state = mMoveState;
     if (state == MOVE_RUN_OFF_STAGE) {
-        int back = cstd::fdiv(mPosition.z, 0x19000);
+        int back = FX_Div(mPosition.z, 0x19000);
         pos->z = back + 0x50000;
         return 1;
     }

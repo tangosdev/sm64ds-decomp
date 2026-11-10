@@ -49,6 +49,7 @@ enum dScMgRoulette_c_AssetId {
 #include "LevelRng.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Local views of the records the helpers walk. */
 
@@ -81,10 +82,6 @@ typedef char RouletteStrip_size_must_be_0x18[sizeof(RouletteStrip) == 0x18 ? 1 :
 /* The active minigame scene's mCredits, or 0 with no scene. */
 #define SCENE_BONUS ((gMgScene != 0) \
                         ? gMgScene->mCredits : 0)
-
-namespace cstd {
-int fdiv(int a, int b);
-}
 
 /* Thirty-seven tile centres. mwcc emits __sinit_d_s_mg_roulette_methods.cpp
    from this array: each Vector2(x, y) is two stores and a ~Vector2()
@@ -461,7 +458,7 @@ s32 dScMgRoulette_c::Render() {
             int vol = rem * 0x88 + 0x1000;
             if (vol > 0x2000)
                 vol = 0x2000;
-            Mg_DrawNumberRotated(0x80, 0x60, seconds, 1, -1, func_02053200(vol), 0);
+            Mg_DrawNumberRotated(0x80, 0x60, seconds, 1, -1, FX_Inv(vol), 0);
         }
     }
 
@@ -1077,11 +1074,11 @@ void RouletteBoard_SetStateSpin(RouletteBoard *board) {
 extern "C" {
 void RouletteBoard_StateSpin(RouletteBoard *board) {
     int spin = board->mSpinSpeed;
-    int pull = cstd::fdiv(FX_MUL(spin, spin), board->mBallRadius) - 0xc00;
+    int pull = FX_Div(FX_MUL(spin, spin), board->mBallRadius) - 0xc00;
 
     spin = board->mSpinSpeed;
     int scaled = FX_MUL(spin, 0x500);
-    int step = cstd::fdiv(scaled, board->mBallRadius);
+    int step = FX_Div(scaled, board->mBallRadius);
     board->mAngleStep = (s16)step;
 
     board->mOrbitAngle += board->mAngleStep;
@@ -1151,9 +1148,9 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
     spinAbs = board->mSpinSpeed - 0x140;
     if (spinAbs < 0)
         spinAbs = -spinAbs;
-    pull = cstd::fdiv(FX_MUL(spinAbs, spinAbs), board->mBallRadius) - 0xc00;
+    pull = FX_Div(FX_MUL(spinAbs, spinAbs), board->mBallRadius) - 0xc00;
 
-    board->mAngleStep = cstd::fdiv(FX_MUL(board->mSpinSpeed, 0x500), board->mBallRadius);
+    board->mAngleStep = FX_Div(FX_MUL(board->mSpinSpeed, 0x500), board->mBallRadius);
 
     board->mOrbitAngle += board->mAngleStep;
 

@@ -32,7 +32,7 @@
  * - MainMeshCallback and Platform0Callback: testing actorID == 0xbf
  *   inline is 0x34 against 0x40. The int temporary stays on all five
  *   callbacks.
- * - data_02092768, data_020a0e68 and data_02082214 stay address names.
+ * - data_02092768 and data_020a0e68 stay address names.
  */
 
 #include "daObjCvNewsLift_c.h"
@@ -89,9 +89,9 @@ extern CLPS_Block data_ov021_02113a80;
 extern "C" {
 void Matrix4x3_FromQuaternion(const struct Quaternion *q, struct Matrix4x3 *mF);
 void Vec3_Asr(void *d, void *s, int sh);
-int InvMat4x3(const struct Matrix4x3 *s, struct Matrix4x3 *d);
-void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
+int MTX_Inverse43(const struct Matrix4x3 *s, struct Matrix4x3 *d);
+void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 void Quaternion_FromVector3(void *q, Vector3 *axis, Vector3 *v);
 void Quaternion_Normalize(void *q);
 void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
@@ -102,7 +102,7 @@ u8 DecIfAbove0_Byte(u8 *p);
 }
 
 extern s32 data_02092768[];
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 /* Yaw for the +Z, -Z, +X and -X platforms, in the transform loops' order. */
 extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 
@@ -132,9 +132,9 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
         mTargetRotation[3] = data_02092768[3];
     } else {
         data_020a0e68 = mClsnMat;
-        InvMat4x3(&data_020a0e68, &data_020a0e68);
+        MTX_Inverse43(&data_020a0e68, &data_020a0e68);
         Vector3 inFrame;
-        MulVec3Mat4x3(&player->mPos, &data_020a0e68, &inFrame);
+        MTX_MultVec43(&player->mPos, &data_020a0e68, &inFrame);
         inFrame.y *= 0x30;
         Vector3 axis;
         axis.x = 0;
@@ -260,7 +260,7 @@ s32 daObjCvNewsLift_c::Behavior() {
         if (DecIfAbove0_Short(&mWobbleTimer)) {
             mWobblePhase += 0x1f00;
             {
-                s16 sine = data_02082214[((u16)(s16)mWobblePhase >> 4) * 2];
+                s16 sine = FX_SinCosTable_[((u16)(s16)mWobblePhase >> 4) * 2];
                 s32 amp = mWobbleTimer * 0x1a;
                 s8 which = mLoweredPlatform;
                 s16 wobble = (s16)FX_MUL(amp, sine);
@@ -350,10 +350,10 @@ s32 daObjCvNewsLift_c::Behavior() {
                 for (i = 0; i < 3; i++) {
                     ahead = *start;
                     ahead.z += 0x28000;
-                    MulVec3Mat4x3(start, &data_020a0e68, from);
-                    MulVec3Mat4x3(&ahead, &data_020a0e68, to);
-                    AddVec3(from, &mPos, from);
-                    AddVec3(to, &mPos, to);
+                    MTX_MultVec43(start, &data_020a0e68, from);
+                    MTX_MultVec43(&ahead, &data_020a0e68, to);
+                    VEC_Add(from, &mPos, from);
+                    VEC_Add(to, &mPos, to);
                     start++;
                     from++;
                     to++;

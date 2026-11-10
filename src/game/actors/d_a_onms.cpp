@@ -109,7 +109,7 @@ void func_02012694(unsigned int id, const Vector3 *v);
 void func_0203568c(void *p, int v);
 s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-s16 data_02082214[];
+s16 FX_SinCosTable_[];
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, int a1, int a2, int a3, int sp0, int sp1);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -370,7 +370,7 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
         idx = ((u16)t >> 4) * 2;
     }
     y = mRestPos.y + 0x3000;
-    mv = data_02082214[idx];
+    mv = FX_SinCosTable_[idx];
     mPosY = y + ((mv * 0x6793a) >> 12);
 
     mPosX += stepX;
@@ -436,9 +436,9 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     else mPrevAngleY = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
 
     unsigned n = ((u16)mPrevAngleY) >> 4;
-    mTumbleVelX = (s16)(data_02082214[(n << 1) + 1] >> 2);
+    mTumbleVelX = (s16)(FX_SinCosTable_[(n << 1) + 1] >> 2);
     mTumbleVelY = 0;
-    mTumbleVelZ = (s16)((-(int)data_02082214[n << 1]) >> 2);
+    mTumbleVelZ = (s16)((-(int)FX_SinCosTable_[n << 1]) >> 2);
     mFlags &= ~0x2000000;
     mdCcAcPos_c.radius = 0x1a9000;
 }

@@ -26,4 +26,4 @@ src/engine/heap/NestedHeapIterator.cpp
 # cstd::abs, which ExpandingHeapAllocator::MaxAllocatableSize calls, is not
 # sliced: it lives in src/cstd4.cpp, the runtime-library TU, whose hand-asm
 # primitives no host compiler accepts. hal/heap_globals.cpp defines it for the
-# host instead, the way hal/cstd_div.c defines cstd::fdiv.
+# host instead, the way hal/cstd_div.c defines FX_Div.

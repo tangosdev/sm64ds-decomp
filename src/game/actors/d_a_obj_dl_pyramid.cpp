@@ -46,7 +46,7 @@ struct BMD_File;
 struct KCL_File;
 struct CLPS_Block;
 
-extern s16 data_02082214[];            /* sine/cosine table, interleaved */
+extern s16 FX_SinCosTable_[];          /* sine/cosine table, interleaved */
 extern CLPS_Block data_ov024_021129f0; /* the collision CLPS block */
 
 /* The retail static initializer constructs these two 8-byte resource handles
@@ -109,7 +109,7 @@ void daObjDlPyramid_c::FinishDescent() {
  * for the first two seconds, then spin up and sink. Keeps the dust
  * particle alive and moves to state 2 at frame 150. */
 void daObjDlPyramid_c::Descend() {
-    s16 *tbl = data_02082214;
+    s16 *tbl = FX_SinCosTable_;
     int a1 = ((int)((unsigned int)mStateTimer << 0x1e)) >> 0x10;
     mPosX = tbl[((u16)a1 >> 4) * 2] * (s16)0x28 + mHomePosX;
     if (mStateTimer < 0x3c) {

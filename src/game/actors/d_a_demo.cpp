@@ -426,9 +426,9 @@ extern PMF data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
 extern void MIi_CpuCopy16(void *src, void *dst, int count);
 extern int data_ov002_021002a0[];
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern short atan2_hold_d_a_demo_1(int y, int x);
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 extern PMF data_ov002_02110e34[];
 extern unsigned short data_ov002_021000c0[];
 extern int data_ov002_02100120[];
@@ -485,8 +485,8 @@ extern void func_ov002_020f5fe4(char *c);
 extern void func_02012694(unsigned int, void*);
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 /* local extern dropped: decl_common.h declares data_ov002_0210bc88 as 'int'; callers cast the address */
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern char *gCamera;
@@ -586,11 +586,11 @@ extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7384, NOT applied: extern int _Z14ApproachLinearRiii(int* v, int target, int step); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7384, NOT applied: extern unsigned short gKuppaScriptFrame; */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7410, NOT applied: extern unsigned short gKuppaScriptFrame; */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov002_020f7410, NOT applied: extern void MulVec3Mat4x3(void *out, void *m, void *v); */
+/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov002_020f7410, NOT applied: extern void MTX_MultVec43(void *out, void *m, void *v); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_LslInPlace, from the legacy file for func_ov002_020f7410, NOT applied: extern void Vec3_LslInPlace(void *v, int sh); */
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7410, NOT applied: extern int _Z14ApproachLinearRiii(int *p, int target, int step); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN3G2x13SetBlendAlphaEPVttttj, from the legacy file for func_ov002_020f7410, NOT applied: extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *reg, unsigned short a, unsigned short b, int c, int d); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov002_020f7538, NOT applied: extern void MulVec3Mat4x3(void* a, void* b, void* c); */
+/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov002_020f7538, NOT applied: extern void MTX_MultVec43(void* a, void* b, void* c); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_LslInPlace, from the legacy file for func_ov002_020f7538, NOT applied: extern void Vec3_LslInPlace(void* v, int n); */
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7538, NOT applied: extern int _Z14ApproachLinearRiii(int* dst, int target, int step); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7538, NOT applied: extern unsigned short gKuppaScriptFrame; */
@@ -602,7 +602,7 @@ extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f79c0, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
 /* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov002_020f79c0, NOT applied: extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep); */
 /* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void *gCamera; */
-/* TUBUILD CONFLICT -- alternate declaration of AddVec3, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c); */
+/* TUBUILD CONFLICT -- alternate declaration of VEC_Add, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_VertAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd5atan2E5Fix12IiES1_, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 _ZN4cstd5atan2E5Fix12IiES1_(Fix12i y, Fix12i x); */
@@ -1675,10 +1675,10 @@ void func_ov002_020f3ae8(char *base, int idx)
     StaffRoll::Star *arr = (StaffRoll::Star *)base;
     int a;
     int b;
-    a = data_02082214[((arr[idx].heading >> 4) * 2) + 1];
+    a = FX_SinCosTable_[((arr[idx].heading >> 4) * 2) + 1];
     b = arr[idx].radius;
     arr[idx].x = FX_MUL(a, b) + 0xe0000;
-    a = data_02082214[(arr[idx].heading >> 4) * 2];
+    a = FX_SinCosTable_[(arr[idx].heading >> 4) * 2];
     b = arr[idx].radius;
     arr[idx].y = FX_MUL(a, b) + 0x66000;
     if (arr[idx].radius > 0x18000) {
@@ -1701,14 +1701,14 @@ void func_ov002_020f3ba0(char *c, int i)
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2 + 1];
+        short tv = FX_SinCosTable_[idx * 2 + 1];
         int spd = *(int *)(c + STAR_OFF(speed) + off);
         *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
     }
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2];
+        short tv = FX_SinCosTable_[idx * 2];
         int spd = *(int *)(c + STAR_OFF(speed) + off);
         *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
     }
@@ -1796,14 +1796,14 @@ void func_ov002_020f3de4(char *c, int i)
     if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
         }
 
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
         }
@@ -1839,13 +1839,13 @@ void func_ov002_020f3de4(char *c, int i)
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2 + 1];
+        short tv = FX_SinCosTable_[idx * 2 + 1];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
     }
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2];
+        short tv = FX_SinCosTable_[idx * 2];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
     }
@@ -1891,13 +1891,13 @@ void func_ov002_020f40fc(char *c, int i)
         int idx;
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
         }
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
@@ -2003,13 +2003,13 @@ void func_ov002_020f43cc(char *c, int i) {
         int spd;
         idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            tv = data_02082214[idxa * 2 + 1];
+            tv = FX_SinCosTable_[idxa * 2 + 1];
             spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
         }
         idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            tv = data_02082214[idxa * 2];
+            tv = FX_SinCosTable_[idxa * 2];
             spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
         }
@@ -2055,13 +2055,13 @@ void func_ov002_020f43cc(char *c, int i) {
         int spd;
         idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            tv = data_02082214[idxa * 2 + 1];
+            tv = FX_SinCosTable_[idxa * 2 + 1];
             spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
         }
         idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            tv = data_02082214[idxa * 2];
+            tv = FX_SinCosTable_[idxa * 2];
             spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
@@ -2109,14 +2109,14 @@ void func_ov002_020f4710(char *c, int i)
 
         idx = *(u16 *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(s32 *)(c + STAR_OFF(radius) + off);
             *(s32 *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
         }
 
         idx = *(u16 *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(s32 *)(c + STAR_OFF(radius) + off);
             *(s32 *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
@@ -2214,14 +2214,14 @@ void func_ov002_020f4a2c(char *c, int i)
     if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
         }
 
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
         }
@@ -2265,14 +2265,14 @@ void func_ov002_020f4a2c(char *c, int i)
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2 + 1];
+        short tv = FX_SinCosTable_[idx * 2 + 1];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
     }
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2];
+        short tv = FX_SinCosTable_[idx * 2];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
     }
@@ -2326,14 +2326,14 @@ void func_ov002_020f4d70(char *c, int i)
 
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
         }
 
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
@@ -2427,14 +2427,14 @@ void func_ov002_020f5010(char *c, int i)
     if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
         }
 
         idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
         {
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(speed) + off);
             *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
         }
@@ -2478,14 +2478,14 @@ void func_ov002_020f5010(char *c, int i)
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2 + 1];
+        short tv = FX_SinCosTable_[idx * 2 + 1];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
     }
 
     idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
     {
-        short tv = data_02082214[idx * 2];
+        short tv = FX_SinCosTable_[idx * 2];
         int spd = *(int *)(c + STAR_OFF(radius) + off);
         *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
     }
@@ -2529,13 +2529,13 @@ void func_ov002_020f5328(char *c, int i)
         int idx;
         {
             idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
-            short tv = data_02082214[idx * 2 + 1];
+            short tv = FX_SinCosTable_[idx * 2 + 1];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
         }
         {
             idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
-            short tv = data_02082214[idx * 2];
+            short tv = FX_SinCosTable_[idx * 2];
             int spd = *(int *)(c + STAR_OFF(radius) + off);
             *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
         }
@@ -3688,7 +3688,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
           int m = FX_MUL(r, 0xa000);
           this->mMagnitude = m + 0x19000;
       }
-      AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)gCamera)->pos, (Vector3 *)&this->mPosX);
+      VEC_Add((Vector3 *)&this->mPosX, &((dCamera_c *)gCamera)->pos, (Vector3 *)&this->mPosX);
       if (arg2 > 0x2bc) {
           this->mPosY -= 0x96000;
       }
@@ -3710,9 +3710,9 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   }
   else
   {
-    MulVec3Mat4x3((Vector3*)&data_ov002_0210b958, (Matrix4x3*)&data_0209b41c, (Vector3*)&v);
-    Vec3_LslInPlace((int*)&v, 3);
-    func_ov002_020f6f48((Vector3*)&v, 8);
+      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, (Matrix4x3 *)&data_0209b41c, (Vector3 *)&v);
+      Vec3_LslInPlace((int *)&v, 3);
+      func_ov002_020f6f48((Vector3 *)&v, 8);
   }
   this->mPrevAngleX = this->mAngleX;
   this->mPrevAngleY = this->mAngleY;
@@ -3944,7 +3944,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         this->mAngleZ = 0;
         func_0201f138();
     }
-    MulVec3Mat4x3(((param_c &)*(simpleModel_c *)this->mModel).mScale, (Matrix4x3 *)&data_0209b41c,
+    MTX_MultVec43(((param_c &)*(simpleModel_c *)this->mModel).mScale, (Matrix4x3 *)&data_0209b41c,
                   (&this->mPos));
     Vec3_LslInPlace(&this->mPosX, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
@@ -4016,7 +4016,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
         dp->y = sum.y;
         dp->z = sum.z;
     }
-    MulVec3Mat4x3(((param_c &)*(anmModel_c *)this->mAnmModel).mScale, (Matrix4x3 *)&data_0209b41c,
+    MTX_MultVec43(((param_c &)*(anmModel_c *)this->mAnmModel).mScale, (Matrix4x3 *)&data_0209b41c,
                   &this->mPos);
     Vec3_LslInPlace((int *)(&this->mPosX), 3);
     ApproachLinear(this->mMagnitude, f1, f2);
@@ -4092,13 +4092,13 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
     {
         unsigned short a = *((unsigned short *)&this->mPrevAngleX);
         int t = this->mMagnitude;
-        short s0 = data_02082214[((a >> 4) << 1) + 1];
+        short s0 = FX_SinCosTable_[((a >> 4) << 1) + 1];
         this->mHorzSpeed = FX_MUL(t, s0);
     }
     {
         unsigned short a = *(unsigned short *)(&this->mPrevAngleX);
         int t = this->mMagnitude;
-        int s1 = -data_02082214[(a >> 4) << 1];
+        int s1 = -FX_SinCosTable_[(a >> 4) << 1];
         this->mVertSpeed = FX_MUL(t, s1);
     }
 
@@ -4152,7 +4152,7 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
         Vec3_RotateYAndTranslate(&this->mPosX, v, this->mPrevAngleY, w);
 
         h = (unsigned short)this->mPhase;
-        t = data_02082214[(h >> 4) * 2 + 1];
+        t = FX_SinCosTable_[(h >> 4) * 2 + 1];
         {
             int *p60 = (int *)(&this->mPosY);
             *p60 = *p60 + FX_MUL(t, 0x96000);
@@ -4206,7 +4206,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     this->mOpacity = 0x1f;
     cam = (dCamera_c *)gCamera;
 
-    AddVec3((Vector3 *)&v0, &cam->pos, (Vector3 *)&v0);
+    VEC_Add((Vector3 *)&v0, &cam->pos, (Vector3 *)&v0);
     dist = Vec3_Dist(&v0, &cam->pos);
 
     {
@@ -4221,8 +4221,8 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     }
 
     src[0] = 0;
-    src[1] = FX_MUL(dist, data_02082214[(((u16)vertAngle) >> 4) * 2]);
-    src[2] = FX_MUL(dist, data_02082214[(((u16)vertAngle) >> 4) * 2 + 1]);
+    src[1] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2]);
+    src[2] = FX_MUL(dist, FX_SinCosTable_[(((u16)vertAngle) >> 4) * 2 + 1]);
 
     Vec3_RotateYAndTranslate((int *)(&this->mPosX), (int *)&cam->pos, heading, src);
 

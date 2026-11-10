@@ -92,6 +92,7 @@
 #include "Memory.h"
 #include "cstd.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" daPly_c *daPly_c_classInit();
 
@@ -259,7 +260,7 @@ extern int atan2_hold_Player_15(Fix12i, Fix12i);
 extern int atan2_hold_Player_5(Fix12i y, Fix12i x);
 extern Fix12i atan2_hold_Player_6(Fix12i a, Fix12i b);
 extern int atan2_hold_Player_7(Fix12i a, int b);
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern signed char gCurrentSublevel;
 extern unsigned char data_0209f4ae[];
 extern unsigned int data_ov002_020ff220[];
@@ -1851,8 +1852,8 @@ void daPly_c::func_ov002_020bf13c() {
     ang = this->mAngleY;
     {
         int idx = (unsigned short)(short)(ang + 0x8000) >> 4;
-        s = data_02082214[idx * 2];
-        cs = data_02082214[idx * 2 + 1];
+        s = FX_SinCosTable_[idx * 2];
+        cs = FX_SinCosTable_[idx * 2 + 1];
     }
     v.x = this->mPosX;
     v.y = this->mPosY;
@@ -1951,12 +1952,12 @@ extern "C" {
 int daPly_c::func_ov002_020bf40c() {
     /* local extern: CalcLib conflicts with this TU's body-local math
      * declarations; retain this signature at the call site. */
-    extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
+    extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
     extern dCamera_c *gCamera;
     Vector3 pos;
     Vector3 off;
     if (NumStars() < 0x50 || param1 != 0) {
-        AddVec3(&mPos, &data_ov002_0210a590, &mPos);
+        VEC_Add(&mPos, &data_ov002_0210a590, &mPos);
         off.x = data_ov002_0210a590.x;
         off.y = data_ov002_0210a590.y;
         off.z = data_ov002_0210a590.z;
@@ -2173,8 +2174,8 @@ void daPly_c::func_ov002_020bf9d4() {
  * player along the path: grounded states get a position nudge scaled by
  * data_ov002_020ff210[def->unk_004], airborne states get their horizontal
  * velocity bent toward the path direction. Returns 1 when the push applied. */
-#define SIN(a) data_02082214[((u16)(a) >> 4) * 2]
-#define COS(a) data_02082214[((u16)(a) >> 4) * 2 + 1]
+#define SIN(a) FX_SinCosTable_[((u16)(a) >> 4) * 2]
+#define COS(a) FX_SinCosTable_[((u16)(a) >> 4) * 2 + 1]
 extern "C" {
 int daPly_c::func_ov002_020bfa74() {
     extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
@@ -2358,10 +2359,10 @@ int daPly_c::func_ov002_020c0108(int p1) {
 
         w = data_ov002_020ff200[idx] << 12;
 
-        this->mPosY += FX_MUL(w, data_02082214[iY * 2]);
-        s = FX_MUL(w, data_02082214[iY * 2 + 1]);
-        this->mPosX += FX_MUL(s, data_02082214[iX * 2]);
-        this->mPosZ += FX_MUL(s, data_02082214[iX * 2 + 1]);
+        this->mPosY += FX_MUL(w, FX_SinCosTable_[iY * 2]);
+        s = FX_MUL(w, FX_SinCosTable_[iY * 2 + 1]);
+        this->mPosX += FX_MUL(s, FX_SinCosTable_[iX * 2]);
+        this->mPosZ += FX_MUL(s, FX_SinCosTable_[iX * 2 + 1]);
 
         return 1;
     }
@@ -2554,8 +2555,8 @@ int daPly_c::func_ov002_020c06fc(int arg) {
     if (*(s16 *)((char *)data_0209f4a0 + gActivePlayerSlot * 0x18) >= 0x200) {
         s16 d = (s16)(this->mDesiredAngleY - this->mPrevAngleY);
         int j = ((u16)d >> 4) * 2;
-        a = data_02082214[j + 1];
-        b = data_02082214[j];
+        a = FX_SinCosTable_[j + 1];
+        b = FX_SinCosTable_[j];
     }
 
     t = func_ov002_020f030c(this->func_ov002_020c031c());
@@ -2565,8 +2566,8 @@ int daPly_c::func_ov002_020c06fc(int arg) {
     {
         int j = ((u16)mPrevAngleY >> 4) * 2;
         spd = this->mHorzSpeed;
-        r5v = FX_MUL(spd, (int)data_02082214[j]);
-        r4v = FX_MUL(spd, (int)data_02082214[j + 1]);
+        r5v = FX_MUL(spd, (int)FX_SinCosTable_[j]);
+        r4v = FX_MUL(spd, (int)FX_SinCosTable_[j + 1]);
     }
 
     if (this->mSlideType != 0) {
@@ -2591,8 +2592,8 @@ int daPly_c::func_ov002_020c06fc(int arg) {
         mAngleYSpeed = (int)((((long long)b << 8) + 0x800) >> 12);
     }
 
-    f.v0.x = FX_MUL(v, (int)data_02082214[((u16)mFloorAngle >> 4) * 2]);
-    f.v0.z = FX_MUL(v, (int)data_02082214[((u16)mFloorAngle >> 4) * 2 + 1]);
+    f.v0.x = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2]);
+    f.v0.z = FX_MUL(v, (int)FX_SinCosTable_[((u16)mFloorAngle >> 4) * 2 + 1]);
     {
         int len = Vec3_HorzLen(&mFloorNormalX);
         f.v0.x = FX_MUL(f.v0.x, len);
@@ -2611,8 +2612,8 @@ int daPly_c::func_ov002_020c06fc(int arg) {
             VecFx32 t;
             t.x = p5c; t.y = p60 + 0x32000; t.z = p64;
             f.v1.x = t.x; f.v1.y = t.y; f.v1.z = t.z;
-            tx = data_02082214[j] * 0x46 + this->mPosX;
-            tz = data_02082214[j + 1] * 0x46 + this->mPosZ;
+            tx = FX_SinCosTable_[j] * 0x46 + this->mPosX;
+            tz = FX_SinCosTable_[j + 1] * 0x46 + this->mPosZ;
             ty = this->mPosY + 0x32000;
             f.v2.x = tx; f.v2.y = ty; f.v2.z = tz;
         }
@@ -2989,8 +2990,8 @@ int daPly_c::func_ov002_020c179c(int angle) {
     int y1 = mPosY;
     int y2 = y1;
     idx >>= 4;
-    short dx = data_02082214[idx * 2];
-    short dy = data_02082214[idx * 2 + 1];
+    short dx = FX_SinCosTable_[idx * 2];
+    short dy = FX_SinCosTable_[idx * 2 + 1];
     int ox = dx * 5;
     int oy = dy * 5;
     dBgCh_Gnd rg;
@@ -3028,7 +3029,7 @@ void daPly_c::func_ov002_020c18b0(int p1) {
     {
         int a = func_ov002_020c179c(0);
         int idx = (unsigned short)a >> 4;
-        int sinv = data_02082214[idx * 2 + 1];
+        int sinv = FX_SinCosTable_[idx * 2 + 1];
         int f554 = mFloorNormalX;
         int f55c = mFloorNormalZ;
         Vector3 v;
@@ -3053,8 +3054,8 @@ int daPly_c::func_ov002_020c19d0(int arg1, int arg2) {
     int angle = (unsigned short)mAngleY;
     dBgCh_Lin line;
     int k = angle >> 4;
-    int cs = data_02082214[k * 2];
-    int sn = data_02082214[k * 2 + 1];
+    int cs = FX_SinCosTable_[k * 2];
+    int sn = FX_SinCosTable_[k * 2 + 1];
     Vector3 v1(this->mPosX, this->mPosY + (arg2 << 12), this->mPosZ);
     Vector3 v2(arg1 * cs + this->mPosX, this->mPosY + (arg2 << 12), arg1 * sn + this->mPosZ);
     Vector3 nrm;
@@ -3204,8 +3205,8 @@ void daPly_c::func_ov002_020c1eb4(int dmg) {
 
     {
         int idx = ((unsigned short)dmg >> 4);
-        vec.x = data_02082214[idx * 2];
-        vec.z = data_02082214[idx * 2 + 1];
+        vec.x = FX_SinCosTable_[idx * 2];
+        vec.z = FX_SinCosTable_[idx * 2 + 1];
         vec.y = 0;
         Particle::System::New(0, kPtclWallBonk, out.x, out.y, out.z, (const Vector3_16f *)(&vec),
                               0);
@@ -3279,10 +3280,10 @@ int daPly_c::func_ov002_020c2270(void *p1, void *p2) {
 /* recovered: shared common types */
 extern "C" {
 int daPly_c::func_ov002_020c231c() {
-    extern void SubVec3(void*, void*, void*);
+    extern void VEC_Subtract(void *, void *, void *);
     /* local extern: CalcLib conflicts with this TU's body-local math
      * declarations; retain this signature at the call site. */
-    extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
+    extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
     Vector3 tmp;
     Vector3 pos;
     u8 f70f;
@@ -3299,11 +3300,11 @@ int daPly_c::func_ov002_020c231c() {
         if (f70f == 0)
             return 0;
 
-        SubVec3(&mPos, (Vector3 *)&mPreClsnPosX, &tmp);
+        VEC_Subtract(&mPos, (Vector3 *)&mPreClsnPosX, &tmp);
         tmp.x >>= 1;
         tmp.y >>= 1;
         tmp.z >>= 1;
-        AddVec3((Vector3 *)&mPreClsnPosX, &tmp, &mPos);
+        VEC_Add((Vector3 *)&mPreClsnPosX, &tmp, &mPos);
         func_ov002_020c14b8();
 
         if (mGroundY == (s32)0x80000000)
@@ -3328,8 +3329,8 @@ int daPly_c::func_ov002_020c231c() {
 
             if (f70f == 0) {
                 idx = (u16)(s16)(this->mPrevAngleY + 0x8000) >> 4;
-                zz = data_02082214[idx * 2 + 1] * 0x50 + this->mPosZ;
-                xx = data_02082214[idx * 2] * 0x50 + this->mPosX;
+                zz = FX_SinCosTable_[idx * 2 + 1] * 0x50 + this->mPosZ;
+                xx = FX_SinCosTable_[idx * 2] * 0x50 + this->mPosX;
                 pos.x = xx;
                 pos.y = p60;
                 pos.z = zz;
@@ -3439,7 +3440,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         if (mIsUnderwater == 0 && ret != 1) {
             fr->surface.CopyNormalTo(v);
             if (v.y != 0) {
-                int t = cstd::fdiv(FX_MUL(v.x, mSpeedX) + FX_MUL(v.z, mSpeedZ), v.y);
+                int t = FX_Div(FX_MUL(v.x, mSpeedX) + FX_MUL(v.z, mSpeedZ), v.y);
                 t = -(t + 0x8000);
                 if (t < 0)
                     mVertSpeed = t;
@@ -3837,7 +3838,7 @@ void daPly_c::SplineGetWeights(Fix12i *out) {
 /* recovered: shared common types */
 extern "C" {
 void daPly_c::func_ov002_020c37a4(char *arg) {
-    extern void MulVec3Mat4x3(void *, void *, void *);
+    extern void MTX_MultVec43(void *, void *, void *);
     extern void Vec3_RotateYAndTranslate(void *, void *, int ang, void *);
     extern u32 PlayerNewHold4(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                               void *callback);
@@ -3846,7 +3847,7 @@ void daPly_c::func_ov002_020c37a4(char *arg) {
     unsigned int id2 = this->GetBodyModelID(param1 & 0xff, 0);
     Vector3 v;
     Vector3 s;
-    MulVec3Mat4x3(&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
+    MTX_MultVec43(&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
     Vec3_MulScalar(&s, &v, 0x8000);
     v = s;
     Vec3_RotateYAndTranslate(&v, &v, this->mAngleY, arg);
@@ -4875,7 +4876,7 @@ int daPly_c::St_BowserEarthquake_Main() {
 
         mVertSpeed = 0;
 
-        int sinVal = data_02082214[idx * 2];
+        int sinVal = FX_SinCosTable_[idx * 2];
 
         if (sinVal >= 0) {
             mPosY = mGroundY + FX_MUL(radius, sinVal);
@@ -6114,8 +6115,8 @@ int daPly_c::St_LevelEnter_Init() {
         if (func_ov002_020c7cbc() != 0) mStateStep = 0x12;
         *(int*)((char*)&mPosY) += 0x64000;
         idx = ((s32)(u16)(s16)(mAngleY + 0x8000) >> 4) * 2;
-        cosv = data_02082214[idx];
-        sinv = data_02082214[idx + 1];
+        cosv = FX_SinCosTable_[idx];
+        sinv = FX_SinCosTable_[idx + 1];
         *(int *)((char *)&mPosX) += FX_MUL(0xa0000, cosv);
         *(int *)((char *)&mPosZ) += FX_MUL(0xa0000, sinv);
         mStateTimer = 0x20;
@@ -6616,13 +6617,13 @@ extern "C" {
 int daPly_c::func_ov002_020c8a4c() {
     extern short Vec3_HorzAngle(const Vector3*, const Vector3*);
     extern void Vec3_RotateYAndTranslate(void*, const Vector3*, int, const Vector3*);
-    extern int func_02053274(const Vector3*, const Vector3*);
+    extern int VEC_Distance(const Vector3 *, const Vector3 *);
     int spd = this->mHorzSpeed >> 3;
     if (spd < 0x400) spd = 0x400;
     this->SetAnim(0x48, 0, spd, 0);
     this->mPrevAngleY = Vec3_HorzAngle(&mPos, (Vector3 *)&mStateTargetX);
     this->mAngleY = this->mPrevAngleY;
-    if (func_02053274(&mPos, (Vector3 *)&mStateTargetX) < 0xa000) {
+    if (VEC_Distance(&mPos, (Vector3 *)&mStateTargetX) < 0xa000) {
         if (mStateArg == 0) {
             mStateArg = 1;
             /* First entry constructs it: guard, three stores, ~Vector3() registration. */
@@ -8123,9 +8124,9 @@ int daPly_c::St_Climb_Main() {
             s16 ang = (s16)(mAngleY + 0x8000);
             s32 t = (u16)ang;
             s32 ti = (t >> 4) * 2;
-            s16 cosv = data_02082214[ti];
+            s16 cosv = FX_SinCosTable_[ti];
             mPosX += FX_MUL(cosv, 0x64000);
-            s16 sinv = data_02082214[ti + 1];
+            s16 sinv = FX_SinCosTable_[ti + 1];
             mPosZ += FX_MUL(sinv, 0x64000);
             this->ChangeState(data_ov002_021101b4);
             return 1;
@@ -8891,8 +8892,8 @@ int daPly_c::St_Swim_Cleanup() {
 }
 
 void daPly_c::func_ov002_020cd218(int v, int *out1, int *out2) {
-    *out1 = FX_MUL(v, data_02082214[((unsigned short)mPrevAngleX >> 4) * 2 + 1]);
-    *out2 = -FX_MUL(v, data_02082214[((unsigned short)mPrevAngleX >> 4) * 2]);
+    *out1 = FX_MUL(v, FX_SinCosTable_[((unsigned short)mPrevAngleX >> 4) * 2 + 1]);
+    *out2 = -FX_MUL(v, FX_SinCosTable_[((unsigned short)mPrevAngleX >> 4) * 2]);
 }
 
 extern "C" {
@@ -9007,7 +9008,7 @@ void daPly_c::func_ov002_020cd550() {
     if (a < -0x2000) a = -0x2000;
     if (a > 0) a = 0;
     idx = (u16)(short)(a * 2) >> 4;
-    mModelOffsetZ = data_02082214[idx * 2 + 1] * -0x30;
+    mModelOffsetZ = FX_SinCosTable_[idx * 2 + 1] * -0x30;
 }
 
 void daPly_c::func_ov002_020cd71c() {
@@ -9365,8 +9366,8 @@ int daPly_c::func_ov002_020ce324() {
         b1.x = ax;
         b1.y = ay;
         b1.z = az;
-        bz = mPosZ + data_02082214[(ang >> 4) * 2 + 1] * 0x64;
-        bx = mPosX + data_02082214[(ang >> 4) * 2] * 0x64;
+        bz = mPosZ + FX_SinCosTable_[(ang >> 4) * 2 + 1] * 0x64;
+        bx = mPosX + FX_SinCosTable_[(ang >> 4) * 2] * 0x64;
         by = mPosY + 0x32000;
         b2.x = bx;
         b2.y = by;
@@ -9417,7 +9418,7 @@ int daPly_c::St_Swim_Init() {
 /* recovered: shared common types */
 extern "C" {
 int daPly_c::func_ov002_020ce5f8() {
-    extern void MulVec3Mat4x3(void *, void *, void *);
+    extern void MTX_MultVec43(void *, void *, void *);
     extern void* Vec3_LslInPlace(void*, int sh);
     extern int data_0209f32c;
     int y, threshold;
@@ -9461,7 +9462,7 @@ int daPly_c::func_ov002_020ce5f8() {
         base = &m1->data.transforms[15];
         idx2 = GetBodyModelID(param1 & 0xff, 0);
         m2 = mModels.mBodyModels[idx2];
-        MulVec3Mat4x3(&base->m[9], &m2->mat4x3, &pos);
+        MTX_MultVec43(&base->m[9], &m2->mat4x3, &pos);
     }
     Vec3_LslInPlace(&pos, 3);
 
@@ -10048,8 +10049,8 @@ int daPly_c::func_ov002_020cfaf0() {
     {
         int ang = mAngleY;
         int j = 2 * (((unsigned short)(short)(ang + 0x8000)) >> 4);
-        int s = data_02082214[j] * 32;
-        int t = data_02082214[j + 1] * 32;
+        int s = FX_SinCosTable_[j] * 32;
+        int t = FX_SinCosTable_[j + 1] * 32;
         int ax = mPosX + s;
         int az = mPosZ + t;
         int ay = mPosY - 0x20000;
@@ -10075,8 +10076,8 @@ int daPly_c::func_ov002_020cfaf0() {
 int daPly_c::func_ov002_020cfbdc() {
     Vector3 pts[3];
     int idx = (unsigned short)(short)(mAngleY + 0x8000) >> 4;
-    int r6 = data_02082214[idx * 2];
-    int r5 = data_02082214[idx * 2 + 1];
+    int r6 = FX_SinCosTable_[idx * 2];
+    int r5 = FX_SinCosTable_[idx * 2 + 1];
 
     if (mStateWaitTimer == 0) {
         if ((mClsnFlags & 2) != 0) {
@@ -10155,7 +10156,7 @@ int daPly_c::func_ov002_020cfd84(void *a, void *b) {
  * collider that belongs to another actor: standing on one that faces more
  * than 90 degrees away, or touching one as a wall, ends the probe with 1.
  * Otherwise a dBgCh_Gnd is built 32 units ahead of the player along its
- * facing angle (sin/cos from data_02082214, 1.19.12 units shifted up by 5)
+ * facing angle (sin/cos from FX_SinCosTable_, 1.19.12 units shifted up by 5)
  * and 0x14000 above it; ground within 0x50000 below the player's own height
  * ends the probe with 1. The remaining two checks hand func_ov002_020cfd84 a
  * pair of points 0xa000 below that probe: the point itself, and the point
@@ -10204,7 +10205,7 @@ int daPly_c::func_ov002_020cfea4() {
         int y;
         short *tbl;
         int ang = mAngleY;
-        tbl = data_02082214;
+        tbl = FX_SinCosTable_;
         y = mPosY;
         idx = (unsigned short)(short)(ang + 0x8000) >> 4;
         dz = tbl[(idx << 1) + 1];
@@ -10239,7 +10240,7 @@ int daPly_c::func_ov002_020cfea4() {
             int y2;
             int ang = mAngleY;
             y2 = mPosY;
-            tbl = data_02082214;
+            tbl = FX_SinCosTable_;
             idx = (unsigned short)(short)(ang + 0x4000) >> 4;
             {
                 int t = idx << 1;
@@ -10293,8 +10294,8 @@ int daPly_c::func_ov002_020d0178(int arg1, int flag) {
             d = 0xd0;
         i = (((u16)ang) >> 4) * 2;
         d <<= 12;
-        s = data_02082214[i];
-        csn = data_02082214[i + 1];
+        s = FX_SinCosTable_[i];
+        csn = FX_SinCosTable_[i + 1];
         xoff = FX_MUL(d, s);
         zoff = FX_MUL(d, csn);
         h = 0xc8;
@@ -10513,17 +10514,17 @@ void daPly_c::func_ov002_020d0948() {
         int *p0 = (int *)(&mPosX);
         int *p1 = (int *)(&mPosY);
         int *p2 = (int *)(&mPosZ);
-        *p0 = data_02082214[idx * 2] * 0x110 + *p0;
+        *p0 = FX_SinCosTable_[idx * 2] * 0x110 + *p0;
         *p1 = *p1 - 0x12c000;
-        *p2 = data_02082214[idx * 2 + 1] * 0x110 + *p2;
+        *p2 = FX_SinCosTable_[idx * 2 + 1] * 0x110 + *p2;
     } else {
         int idx = (unsigned short)base >> 4;
         int *p0 = (int *)(&mPosX);
         int *p1 = (int *)(&mPosY);
         int *p2 = (int *)(&mPosZ);
-        *p0 = *p0 + (data_02082214[idx * 2] << 6);
+        *p0 = *p0 + (FX_SinCosTable_[idx * 2] << 6);
         *p1 = *p1 - 0x64000;
-        *p2 = *p2 + (data_02082214[idx * 2 + 1] << 6);
+        *p2 = *p2 + (FX_SinCosTable_[idx * 2 + 1] << 6);
     }
     mHorzSpeed = -0x8000;
     ChangeState(data_ov002_021101b4);
@@ -12782,9 +12783,9 @@ int daPly_c::St_BurnLava_Main() {
                angle to WRAP, so the shift must be logical. Spelling it
                `mAngleY >> 4` costs 2 words and changes the meaning for
                negative angles. */
-            info.vec[0] = data_02082214[(*(u16 *)&mAngleY >> 4) * 2];
+            info.vec[0] = FX_SinCosTable_[(*(u16 *)&mAngleY >> 4) * 2];
             info.vec[1] = 0;
-            info.vec[2] = data_02082214[(*(u16 *)&mAngleY >> 4) * 2 + 1];
+            info.vec[2] = FX_SinCosTable_[(*(u16 *)&mAngleY >> 4) * 2 + 1];
             mParticle1 =
                 Particle::System::New(mParticle1, kPtclPlayerBurnA, info.pos[0], info.pos[1],
                                       info.pos[2], (const Vector3_16f *)(info.vec), 0);
@@ -12916,9 +12917,9 @@ int daPly_c::St_BurnFire_Main() {
         info.pos[0] = xx;
         info.pos[1] = yy;
         info.pos[2] = zz;
-        info.vec[0] = data_02082214[(*(u16 *)&mAngleY >> 4) * 2];
+        info.vec[0] = FX_SinCosTable_[(*(u16 *)&mAngleY >> 4) * 2];
         info.vec[1] = 0;
-        info.vec[2] = data_02082214[(*(u16 *)&mAngleY >> 4) * 2 + 1];
+        info.vec[2] = FX_SinCosTable_[(*(u16 *)&mAngleY >> 4) * 2 + 1];
 
         mParticle1 = Particle::System::New(mParticle1, kPtclPlayerBurnA, info.pos[0], info.pos[1],
                                            info.pos[2], (const Vector3_16f *)(info.vec), 0);
@@ -13130,9 +13131,9 @@ int func_ov002_020d5ab4(daPly_c *p) {
     pos.z = pp[2];
 
     a = (unsigned short)(short)(*(volatile short *)(&p->mAngleY) + 0x8000) >> 4;
-    pos.x = pos.x + FX_MUL(data_02082214[a * 2], 0x64000);
+    pos.x = pos.x + FX_MUL(FX_SinCosTable_[a * 2], 0x64000);
     a = (unsigned short)(short)(*(volatile short *)(&p->mAngleY) + 0x8000) >> 4;
-    pos.z = pos.z + FX_MUL(data_02082214[a * 2 + 1], 0x64000);
+    pos.z = pos.z + FX_MUL(FX_SinCosTable_[a * 2 + 1], 0x64000);
 
     p->mPosX = pos.x;
     p->mPosY = pos.y;
@@ -13204,9 +13205,9 @@ extern "C" int func_ov002_020d5cec(void *self) {
     v1.y = y1 + 0x32000;
 
     shifted = (unsigned short)player->mAngleY >> 4;
-    v2.x = v1.x + FX_MUL(data_02082214[shifted * 2], 0x50000);
+    v2.x = v1.x + FX_MUL(FX_SinCosTable_[shifted * 2], 0x50000);
     v2.y = v1.y;
-    v2.z = v1.z + FX_MUL(data_02082214[shifted * 2 + 1], 0x50000);
+    v2.z = v1.z + FX_MUL(FX_SinCosTable_[shifted * 2 + 1], 0x50000);
 
     dBgCh_Lin line;
     line.SetObjAndLine(v1, v2, (dActor_c *)player);
@@ -13455,10 +13456,10 @@ void daPly_c::func_ov002_020d6368() {
     pos.z = mPosZ;
 
     a = *(volatile unsigned short *)(&mAngleY) >> 4;
-    pos.x = pos.x - FX_MUL(data_02082214[a * 2], 0x14000);
+    pos.x = pos.x - FX_MUL(FX_SinCosTable_[a * 2], 0x14000);
 
     a = *(volatile unsigned short *)(&mAngleY) >> 4;
-    pos.y = pos.y - FX_MUL(data_02082214[a * 2 + 1], 0x14000);
+    pos.y = pos.y - FX_MUL(FX_SinCosTable_[a * 2 + 1], 0x14000);
 
     rotY = mAngleY;
     rot.x = zero;
@@ -13699,9 +13700,9 @@ int daPly_c::func_ov002_020d6998() {
                 angle = Vec3_HorzAngle(&((dActor_c *)other)->mPos, &mPos);
                 idx = ((u16)angle >> 4) * 2;
 
-                pos16.x = data_02082214[idx];
+                pos16.x = FX_SinCosTable_[idx];
                 pos16.y = 0;
-                pos16.z = data_02082214[idx + 1];
+                pos16.z = FX_SinCosTable_[idx + 1];
 
                 rotSrc.x = 0;
                 rotSrc.y = 0x32000;
@@ -13792,9 +13793,9 @@ ret0b:
 extern "C" {
 int daPly_c::TongueWallProbe() {
     daPly_c *player = (daPly_c *)this;
-    extern void MulVec3Mat4x3(void *v, void *m, void *dst);
+    extern void MTX_MultVec43(void *v, void *m, void *dst);
     extern void Vec3_MulScalarInPlace(int *v, int s);
-    extern int func_02053274(int *a, int *b);
+    extern int VEC_Distance(int *a, int *b);
     extern u32 PlayerNewHold11(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
     Vector3_16f dir;
@@ -13811,7 +13812,7 @@ int daPly_c::TongueWallProbe() {
         int model;
         Matrix4x3 *m1 = player->mModels.mHeadModels[(b << 2) + 3]->data.transforms;
         model = ((daPly_c *)this)->GetBodyModelID(player->param1 & 0xff, 0);
-        MulVec3Mat4x3(&m1->m[9], &player->mModels.mBodyModels[model]->mat4x3, &p1);
+        MTX_MultVec43(&m1->m[9], &player->mModels.mBodyModels[model]->mat4x3, &p1);
         Vec3_MulScalarInPlace((int *)&p1, 0x8000);
     }
 
@@ -13824,7 +13825,7 @@ int daPly_c::TongueWallProbe() {
         a0 = &m2i->m[9];
         a1 = &((dExtAnmModel_c *)a1)->mat4x3;
         a2 = &p2;
-        MulVec3Mat4x3(a0, a1, a2);
+        MTX_MultVec43(a0, a1, a2);
         Vec3_MulScalarInPlace((int *)&p2, 0x8000);
     }
 
@@ -13841,14 +13842,14 @@ int daPly_c::TongueWallProbe() {
     }
 
     ::Vector3 clsnPos = rl.GetClsnPos();
-    player->mTongueHitDist = func_02053274((int *)&p1, (int *)&clsnPos);
+    player->mTongueHitDist = VEC_Distance((int *)&p1, (int *)&clsnPos);
     Vector3 normal;
     rl.surface.CopyNormalTo(normal);
     ang = cstd::atan2(normal.x, normal.z);
     idx = (u16)ang >> 4;
-    dir.x = data_02082214[idx * 2];
+    dir.x = FX_SinCosTable_[idx * 2];
     dir.y = 0;
-    dir.z = data_02082214[idx * 2 + 1];
+    dir.z = FX_SinCosTable_[idx * 2 + 1];
     Particle::System::New(0, kPtclTongueHitA, clsnPos.x, clsnPos.y, clsnPos.z,
                           (const Vector3_16f *)(&dir), 0);
     Particle::System::New(0, kPtclTongueHitB, clsnPos.x, clsnPos.y, clsnPos.z,
@@ -14050,7 +14051,7 @@ void func_ov002_020d7430(daPly_c &player) {
 struct PVec { int x, y, z; PVec() {} ~PVec() {} };
 extern "C" {
 int daPly_c::St_YoshiPower_Main() {
-    extern void MulVec3Mat4x3(void *, void *, void *);
+    extern void MTX_MultVec43(void *, void *, void *);
     extern void Vec3_MulScalarInPlace(void*, int);
     extern int func_ov002_020d5cec(void *);
     extern u32 PlayerNewHold12(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
@@ -14102,7 +14103,7 @@ int daPly_c::St_YoshiPower_Main() {
                     flag = 0;
                 if (flag != 0) {
                     int id1 = this->GetBodyModelID(this->param1 & 0xff, 0);
-                    MulVec3Mat4x3(&t4->m[9], &mModels.mBodyModels[id1]->mat4x3, &tmp);
+                    MTX_MultVec43(&t4->m[9], &mModels.mBodyModels[id1]->mat4x3, &tmp);
                     Vec3_MulScalarInPlace(&tmp, 0x8000);
                     dp = (char*)*(void**)(&mObjInMouth);
                     ((dActor_c *)dp)->mPosX = tmp.x;
@@ -14255,15 +14256,15 @@ int daPly_c::St_YoshiPower_Main() {
             dExtFrameCtrl_c &anim8 = *mModels.mBodyModels[GetBodyModelID(this->param1 & 0xff, 0)];
             if (((unsigned int)(anim8.currFrame << 4) >> 0x10) >= 4) {
                 int i2 = (*(unsigned short*)&mAngleY >> 4) * 2;
-                short* tbl = data_02082214;
+                short *tbl = FX_SinCosTable_;
                 int zv = mPosZ + (int)(((((long long)tbl[i2+1]) << 18) + 0x800) >> 12);
                 int yv = mPosY + 0x37000;
                 pos.x = mPosX + (int)(((((long long)tbl[i2]) << 18) + 0x800) >> 12);
                 pos.z = zv;
                 pos.y = yv;
-                dir.x = data_02082214[(*(unsigned short*)&mAngleY >> 4) * 2];
+                dir.x = FX_SinCosTable_[(*(unsigned short *)&mAngleY >> 4) * 2];
                 dir.y = 0;
-                dir.z = data_02082214[(*(unsigned short*)&mAngleY >> 4) * 2 + 1];
+                dir.z = FX_SinCosTable_[(*(unsigned short *)&mAngleY >> 4) * 2 + 1];
                 mParticle1 = Particle::System::New(mParticle1, kPtclYoshiFireA, pos.x, pos.y, pos.z,
                                                    (const Vector3_16f *)(&dir), 0);
                 mParticle2 = Particle::System::New(mParticle2, kPtclYoshiFireB, pos.x, pos.y, pos.z,
@@ -14821,8 +14822,8 @@ void daPly_c::func_ov002_020d8a50(int which) {
         v2.x = v1.x;
         v2.y = v1.y;
         v2.z = v1.z;
-        v2.x += data_02082214[idx * 2] * 0x64;
-        v2.z += data_02082214[idx * 2 + 1] * 0x64;
+        v2.x += FX_SinCosTable_[idx * 2] * 0x64;
+        v2.z += FX_SinCosTable_[idx * 2 + 1] * 0x64;
         ray.SetObjAndLine(v1, v2, this);
         if (ray.DetectClsn()) {
             ray.surface.CopyNormalTo(normal);
@@ -14849,9 +14850,9 @@ void daPly_c::func_ov002_020d8d10(Vector3 *pos) {
                                void *callback);
     Vector3_16 vec;
 
-    vec.x = data_02082214[((unsigned short)(short)(mAngleY + 0x8000) >> 4) * 2];
+    vec.x = FX_SinCosTable_[((unsigned short)(short)(mAngleY + 0x8000) >> 4) * 2];
     vec.y = 0;
-    vec.z = data_02082214[(((unsigned short)(short)(mAngleY + 0x8000) >> 4) * 2) + 1];
+    vec.z = FX_SinCosTable_[(((unsigned short)(short)(mAngleY + 0x8000) >> 4) * 2) + 1];
 
     if (param1 != 2) {
         Particle::System::New(0, kPtclAttackHitA, pos->x, pos->y, pos->z,
@@ -15293,7 +15294,7 @@ int daPly_c::St_Hurt_Main() {
 /* recovered: shared common types */
 extern "C" {
 void daPly_c::func_ov002_020d98b4() {
-    extern void MulVec3Mat4x3(void *a, void *b, Vector3 *out);
+    extern void MTX_MultVec43(void *a, void *b, Vector3 *out);
     extern u32 PlayerNewHold14(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
     int t = this->func_ov002_020beb38();
@@ -15308,7 +15309,7 @@ void daPly_c::func_ov002_020d98b4() {
         unsigned int id2 = this->GetBodyModelID(param1 & 0xff, 0);
         Vector3 v;
         Vector3 s;
-        MulVec3Mat4x3(&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
+        MTX_MultVec43(&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
         Vec3_MulScalar(&s, &v, 0x8000);
         s.y += 0x50000;
         mParticle1 =
@@ -16381,7 +16382,7 @@ void daPly_c::func_ov002_020db8bc(unsigned char kind) {
 extern "C" {
 void daPly_c::func_ov002_020db8d8() {
     extern unsigned char gGameMode;
-    extern void MulVec3Mat4x3(void *out, void *mtx, void *vec);
+    extern void MTX_MultVec43(void *out, void *mtx, void *vec);
     Vector3 backup;
     Vector3 tmp;
     Vector3 dir;
@@ -16394,7 +16395,7 @@ void daPly_c::func_ov002_020db8d8() {
     b = this->mUseAltBodyModel;
     m = &mModels.mHeadModels[(b << 2) + 3]->data.transforms[3];
     model = this->GetBodyModelID(param1 & 0xff, 0);
-    MulVec3Mat4x3(&m->m[9], &mModels.mBodyModels[model]->mat4x3, &tmp);
+    MTX_MultVec43(&m->m[9], &mModels.mBodyModels[model]->mat4x3, &tmp);
     Vec3_MulScalar(&scaled, &tmp, 0x8000);
     mPos = scaled;
     dir.x = 0;
@@ -16854,14 +16855,14 @@ void daPly_c::func_ov002_020dc560() {
             short diff = (short)(mDesiredAngleY - mPrevAngleY);
             int idx2 = ((unsigned short)diff >> 4) * 2;
             int r1 = func_01ffa344(0x48400000, (unsigned short)diff >> 4);
-            int sinv = data_02082214[idx2 + 1];
+            int sinv = FX_SinCosTable_[idx2 + 1];
             int scaled = FX_MUL(sinv, 0x1800);
             int combined = FX_MUL(scaled, tblval);
             ApproachLinear(mHorzSpeed, r1, combined);
 
             {
                 short *p94 = (short *)ADDR(&mPrevAngleY);
-                int cosv = data_02082214[idx2];
+                int cosv = FX_SinCosTable_[idx2];
                 int tblval2 = *(short *)(data_0209f4a0 + gActivePlayerSlot * 0x18);
                 int scaled2 = FX_MUL(cosv, 0x200);
                 int combined2 = FX_MUL(scaled2, tblval2);
@@ -17728,8 +17729,8 @@ int daPly_c::St_TornadoSpin_Main() {
         if (v >= 0x1000) v = 0x1000;
         {
             int k = (u16)v >> 4;
-            int sinv = data_02082214[k * 2 + 1];
-            int cosv = data_02082214[k * 2];
+            int sinv = FX_SinCosTable_[k * 2 + 1];
+            int cosv = FX_SinCosTable_[k * 2];
             ((int *)&pos)[0] =
                 FX_MUL(sz, cosv) + (((dActor_c *)mAttachedActor)->mPosX + FX_MUL(sx, sinv));
             ((int *)&pos)[2] =
@@ -17889,10 +17890,10 @@ s32 daPly_c::St_Balloon_Main() {
             if (mHorzSpeed < 0x4000)
                 mHorzSpeed = 0x4000;
             s32 idx = ((s32)(u16)diff >> 4) * 2;
-            s16 t0 = data_02082214[idx + 1];
+            s16 t0 = FX_SinCosTable_[idx + 1];
             s32 v1 = FX_MUL(mHorzSpeed, t0);
             s32 v = FX_MUL(v1, 0xa0);
-            s16 t1 = data_02082214[idx];
+            s16 t1 = FX_SinCosTable_[idx];
             mAngleYSpeed = (s16)FX_MUL(t1, v);
             mAngleXSpeed = (s16)FX_MUL(t0, v);
         }
@@ -18143,8 +18144,8 @@ int daPly_c::St_Cannon_Main() {
 
         int ang = (u16)((dCamera_c *)p)->mAngleX;
         int j = ang >> 4;
-        mHorzSpeed = FX_MUL(data_02082214[j * 2 + 1], 0x64000);
-        mVertSpeed = FX_MUL(data_02082214[j * 2], 0x64000);
+        mHorzSpeed = FX_MUL(FX_SinCosTable_[j * 2 + 1], 0x64000);
+        mVertSpeed = FX_MUL(FX_SinCosTable_[j * 2], 0x64000);
         mAngleX = 0;
         mStateStep = 2;
         mOpacity = 0x1f;
@@ -18331,7 +18332,7 @@ int daPly_c::St_Owl_Main() {
         x += 0xb;
         ang = x * 0xccc;
         i = (unsigned short)ang >> 4;
-        mVertSpeed = data_02082214[i * 2 + 1] * mag;
+        mVertSpeed = FX_SinCosTable_[i * 2 + 1] * mag;
         mHorzSpeed = 0x14000;
         if (*(short *)(data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) {
             ApproachAngle((short *)((char *)&mAngleY), mDesiredAngleY, 0x20, 0x100, 0);
@@ -18540,7 +18541,7 @@ void func_ov002_020df8f0(char* c)
 
     {
         int *p = &player->mPrevVertSpeed;
-        *p -= (0x1000 - data_02082214[((u16)(player->mAngleYSpeed) >> 4) * 2 + 1]) >> 1;
+        *p -= (0x1000 - FX_SinCosTable_[((u16)(player->mAngleYSpeed) >> 4) * 2 + 1]) >> 1;
     }
     if (player->mPrevVertSpeed < 0)
         player->mPrevVertSpeed = 0;
@@ -18560,9 +18561,9 @@ void func_ov002_020df8f0(char* c)
         player->mPrevAngleX = (s16)0xd556;
 
     player->mVertSpeed =
-        FX_MUL(player->mPrevVertSpeed, data_02082214[((u16)player->mPrevAngleX >> 4) * 2]);
+        FX_MUL(player->mPrevVertSpeed, FX_SinCosTable_[((u16)player->mPrevAngleX >> 4) * 2]);
     player->mHorzSpeed =
-        FX_MUL(player->mPrevVertSpeed, data_02082214[((u16)player->mPrevAngleX >> 4) * 2 + 1]);
+        FX_MUL(player->mPrevVertSpeed, FX_SinCosTable_[((u16)player->mPrevAngleX >> 4) * 2 + 1]);
 
     {
         player->mAngleX = player->mPrevAngleX;
@@ -18589,7 +18590,7 @@ extern "C" {
 int daPly_c::St_Fly_Main() {
     extern u32 PlayerNewHold16(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
-    extern void MulVec3Mat4x3(void *dst, void *src, void *out);
+    extern void MTX_MultVec43(void *dst, void *src, void *out);
     extern void Vec3_MulScalarInPlace(s32 *v, s32 s);
     extern int func_02012194(char *, int a1, int a2, int a3, int s0, void *s1, int s2);
     extern u16 data_0209f49e;
@@ -18653,12 +18654,12 @@ skip:
 #define sp18 vec32.y
 #define sp1C vec32.z
     {
-        s16 n = data_02082214[((u16)mPrevAngleX >> 4) * 2 + 1];
+        s16 n = FX_SinCosTable_[((u16)mPrevAngleX >> 4) * 2 + 1];
         s32 r0 = (s16)-n;
-        s16 t = data_02082214[((u16)mAngleY >> 4) * 2];
+        s16 t = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
         spC = (s16)FX_MUL(r0, t);
-        spE = data_02082214[((u16)mAngleX >> 4) * 2];
-        s16 t2 = data_02082214[((u16)mAngleY >> 4) * 2 + 1];
+        spE = FX_SinCosTable_[((u16)mAngleX >> 4) * 2];
+        s16 t2 = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
         sp10 = (s16)FX_MUL(r0, t2);
     }
 
@@ -18680,7 +18681,7 @@ skip:
                          ->data.transforms[14];
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
-                MulVec3Mat4x3(&bone->m[9], &m2->mat4x3, &vec32);
+                MTX_MultVec43(&bone->m[9], &m2->mat4x3, &vec32);
                 Vec3_MulScalarInPlace(&vec32.x, 0x8000);
                 mParticle2 = Particle::System::New(mParticle2, 0xd0, sp14, sp18, sp1C,
                                                    (const Vector3_16f *)(&vec16), 0);
@@ -18691,7 +18692,7 @@ skip:
                          ->data.transforms[11];
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
-                MulVec3Mat4x3(&bone->m[9], &m2->mat4x3, &vec32);
+                MTX_MultVec43(&bone->m[9], &m2->mat4x3, &vec32);
                 Vec3_MulScalarInPlace(&vec32.x, 0x8000);
                 mParticle3 = Particle::System::New(mParticle3, 0xd0, sp14, sp18, sp1C,
                                                    (const Vector3_16f *)(&vec16), 0);
@@ -19079,13 +19080,13 @@ int daPly_c::St_CrazedCrate_Main() {
             int* zpos;
             mPrevAngleY = mAngleY;
             *xpos +=
-                (int)(((s64)mHorzSpeed * data_02082214[(((int)(u16)mPrevAngleY >> 4) << 1) + 1] +
+                (int)(((s64)mHorzSpeed * FX_SinCosTable_[(((int)(u16)mPrevAngleY >> 4) << 1) + 1] +
                        half) >>
                       12);
             zpos = (int *)(int)(&mPosZ);
-            *zpos +=
-                (int)(((s64)mHorzSpeed * data_02082214[((int)(u16)mPrevAngleY >> 4) << 1] + half) >>
-                      12);
+            *zpos += (int)(((s64)mHorzSpeed * FX_SinCosTable_[((int)(u16)mPrevAngleY >> 4) << 1] +
+                            half) >>
+                           12);
         }
     }
 
@@ -19959,7 +19960,7 @@ void daPly_c::func_ov002_020e28d4(int a, int b) {
             r4 = ScaleByCharFactor(0x3c000);
             s16 e = AngleDiff(mDesiredAngleY, mAngleY);
             e = e + 0x4000;
-            s16 tv = data_02082214[((u16)e >> 4) * 2];
+            s16 tv = FX_SinCosTable_[((u16)e >> 4) * 2];
             r4 = FX_MUL(r4, tv);
             if (r4 < 0)
                 r4 = -r4;
@@ -20547,7 +20548,7 @@ int daPly_c::Render() {
     };
     extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
     extern void Matrix4x3_ApplyInPlaceToRotationZ(void* m, int ang);
-    extern void MulMat4x3Mat4x3(void* a, void* b, void* c);
+    extern void MTX_Concat43(void *a, void *b, void *c);
     extern u8 gGameMode;
     extern int data_020a0e68;
     extern void func_ov002_020e3e00(void*, void*, u32);
@@ -20597,7 +20598,7 @@ int daPly_c::Render() {
                 if (mBodyModelId == 3) {
                     Matrix4x3_FromTranslation(&data_020a0e68, -0x1b33, -0x666, 0);
                     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, 0x4000);
-                    MulMat4x3Mat4x3(&data_020a0e68, &bodyMdl->data.transforms[8], &data_020a0e68);
+                    MTX_Concat43(&data_020a0e68, &bodyMdl->data.transforms[8], &data_020a0e68);
                     ((VObj *)((char *)&mModels.mAnmModel2))->m18(&data_020a0e68, &mScale);
                 } else {
                     ((VObj *)((char *)&mModels.mAnmModel2))
@@ -20660,7 +20661,7 @@ int daPly_c::Render() {
    concretely -- `const int *`, `unsigned int`, `dExtSimpleModel_c *` -- while the header
    declares the same symbols with generic `void*`/`int`. Under `extern "C"`
    those are not compatible redeclarations but illegal overloads, so the file
-   did not compile AT ALL (errors on the MulMat3x3Mat3x3, ClearMaterialFlags and
+   did not compile AT ALL (errors on the MTX_Concat33, ClearMaterialFlags and
    func_ov002_020e3e00 lines) for as long as the include was here -- which is
    why no gate ever noticed: an uncompilable file is dropped by all of them.
    Only two declarations were ever needed from the header; they are restated
@@ -20677,7 +20678,7 @@ extern "C" {
 extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsigned int opacity) {
     extern int data_020a0e68[12];
     void func_0203c178(int *dst, int a, int b, int c);
-    void MulMat3x3Mat3x3(int *dst, const int *a, const int *b);
+    void MTX_Concat33(int *dst, const int *a, const int *b);
     int ip = (gCurrentSublevel == 0x2f) ? 1 : 0;
 
     if (!ip) {
@@ -20711,7 +20712,7 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
     src->m[9] = diff;
 
     func_0203c178(data_020a0e68, -0x1000, 0x1000, 0x1000);
-    MulMat3x3Mat3x3((int*)src, data_020a0e68, (int*)src);
+    MTX_Concat33((int *)src, data_020a0e68, (int *)src);
 
     obj->ClearMaterialFlags(0x80);
     obj->SetMaterialFlags(0x40);
@@ -20939,7 +20940,7 @@ void daPly_c::func_ov002_020e4768() {
         virtual void v3();
         virtual void DoThing(int arg);
     };
-    extern void MulMat4x3Mat4x3(void* dst, void* a, void* b);
+    extern void MTX_Concat43(void *dst, void *a, void *b);
     extern Matrix4x3 data_020a0e68;
     unsigned int mid;
     dExtAnm2Model_c *comp;
@@ -20973,7 +20974,7 @@ void daPly_c::func_ov002_020e4768() {
 
             mid = GetBodyModelID(param1 & 0xff, 0);
             comp = mModels.mBodyModels[mid];
-            MulMat4x3Mat4x3(&comp->data.transforms[14], &data_020a0e68, &data_020a0e68);
+            MTX_Concat43(&comp->data.transforms[14], &data_020a0e68, &data_020a0e68);
 
             mHeldObjMatrix = data_020a0e68;
             mCarryMatrix = &mHeldObjMatrix;
@@ -20986,7 +20987,7 @@ void daPly_c::func_ov002_020e4768() {
 
     mid = GetBodyModelID(param1 & 0xff, 0);
     comp = mModels.mBodyModels[mid];
-    MulMat4x3Mat4x3(&comp->data.transforms[15], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&comp->data.transforms[15], &data_020a0e68, &data_020a0e68);
 
     mHeadMatrix = data_020a0e68;
 }

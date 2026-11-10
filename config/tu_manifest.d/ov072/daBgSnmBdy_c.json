@@ -1733,79 +1733,79 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@652",
+      "from": "@650",
       "to": "data_ov072_02122b28",
-      "evidence": "compiler temp mapped to 0x02122b28 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x188, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp mapped to 0x02122b28 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x188, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @652 to @650 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
+    },
+    {
+      "from": "@652",
+      "to": "data_ov072_02122750",
+      "evidence": "compiler temp mapped to 0x02122750 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x18c, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @654 to @652 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@654",
-      "to": "data_ov072_02122750",
-      "evidence": "compiler temp mapped to 0x02122750 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x18c, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov072_02122728",
+      "evidence": "compiler temp mapped to 0x02122728 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x190, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @656 to @654 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@656",
-      "to": "data_ov072_02122728",
-      "evidence": "compiler temp mapped to 0x02122728 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x190, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov072_02122720",
+      "evidence": "compiler temp mapped to 0x02122720 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x194, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @658 to @656 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@658",
-      "to": "data_ov072_02122720",
-      "evidence": "compiler temp mapped to 0x02122720 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x194, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov072_02122730",
+      "evidence": "compiler temp mapped to 0x02122730 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x198, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @660 to @658 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@660",
-      "to": "data_ov072_02122730",
-      "evidence": "compiler temp mapped to 0x02122730 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x198, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov072_02122748",
+      "evidence": "compiler temp mapped to 0x02122748 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x19c, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @662 to @660 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@662",
-      "to": "data_ov072_02122748",
-      "evidence": "compiler temp mapped to 0x02122748 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x19c, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov072_02122738",
+      "evidence": "compiler temp mapped to 0x02122738 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1a0, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @664 to @662 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@664",
-      "to": "data_ov072_02122738",
-      "evidence": "compiler temp mapped to 0x02122738 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1a0, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov072_02122740",
+      "evidence": "compiler temp mapped to 0x02122740 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1a4, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @666 to @664 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@666",
-      "to": "data_ov072_02122740",
-      "evidence": "compiler temp mapped to 0x02122740 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1a4, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov072_02122778",
+      "evidence": "compiler temp mapped to 0x02122778 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1a8, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @668 to @666 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@668",
-      "to": "data_ov072_02122778",
-      "evidence": "compiler temp mapped to 0x02122778 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1a8, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov072_02122770",
+      "evidence": "compiler temp mapped to 0x02122770 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1b0, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @670 to @668 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@670",
-      "to": "data_ov072_02122770",
-      "evidence": "compiler temp mapped to 0x02122770 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1b0, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov072_02122758",
+      "evidence": "compiler temp mapped to 0x02122758 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1b4, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @672 to @670 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@672",
-      "to": "data_ov072_02122758",
-      "evidence": "compiler temp mapped to 0x02122758 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1b4, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov072_02122768",
+      "evidence": "compiler temp mapped to 0x02122768 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1b8, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @674 to @672 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@674",
-      "to": "data_ov072_02122768",
-      "evidence": "compiler temp mapped to 0x02122768 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1b8, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "to": "data_ov072_02122760",
+      "evidence": "compiler temp mapped to 0x02122760 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1bc, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @676 to @674 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
+    },
+    {
+      "from": "@675",
+      "to": "data_ov072_02122b34",
+      "evidence": "compiler temp mapped to 0x02122b34 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1c8, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @677 to @675 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     },
     {
       "from": "@676",
-      "to": "data_ov072_02122760",
-      "evidence": "compiler temp mapped to 0x02122760 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1bc, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@677",
-      "to": "data_ov072_02122b34",
-      "evidence": "compiler temp mapped to 0x02122b34 by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1c8, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
-    },
-    {
-      "from": "@678",
       "to": "data_ov072_02122b4c",
-      "evidence": "compiler temp mapped to 0x02122b4c by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1dc, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp mapped to 0x02122b4c by the retail initializer relocation at the same pool offset; no bytes or relocations change; shared Particle header renumbers this compiler-local object; baseline and candidate .rela.init both target it at +0x1dc, preserving the configured retail destination; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @678 to @676 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object)."
     }
   ],
   "undefined_symbol_aliases": [
