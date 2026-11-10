@@ -39,9 +39,8 @@ src/MTX_Concat33.c
 # gate 4c additions: the animation path (UpdateBones recursion).
 # func_020453c0 lives in the ModelComponents TU listed above.
 src/func_0204547c.cpp
-# cstd::abs is defined host-side in hal/heap_globals.cpp: its src/ home,
-# src/cstd4.cpp, carries hand-asm the host cannot compile, and every target that
-# links this slice links heap_globals.cpp as well.
+# abs is MSL's C abs: its src/ home, src/cstd4.cpp, carries hand-asm the host
+# cannot compile, so the host C library's abs links in its place.
 # dExtFrameCtrl_c::LoadFile lives in src/SharedFilePtr.cpp (slice 3b),
 # compiled under SM64DS_PORT_GATE4B.
 src/engine/animation/dExtFrameCtrl_c_UpdateFileOffsets.cpp
@@ -51,6 +50,5 @@ src/engine/animation/dExtFrameCtrl_c_UpdateFileOffsets.cpp
 # vtable there -- which needs EVERY virtual defined, not the subset a gate
 # happens to exercise. A migrated class can no longer be sliced method by
 # method; it comes across whole. src/engine/model/d_ext_model.cpp (above) is that
-# TU for this class. Its destructor calls the delete veneer func_0203cbc0,
-# which src/engine/heap/Heap.cpp (slice 3a) now defines for the host, along
-# with the allocator func_0203cc0c this slice used to list as well.
+# TU for this class. Its destructor releases its buffer with operator
+# delete[], which on the host is the CRT's.

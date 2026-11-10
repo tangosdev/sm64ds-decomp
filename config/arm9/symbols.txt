@@ -1583,7 +1583,7 @@ _ZN5mHeap9ExpHeap_t7VSizeofEPv kind:function(arm,size=0x10) addr:0x0203c444
 _ZN5mHeap6Heap_t6SizeofEPv kind:function(arm,size=0x48) addr:0x0203c454
 _ZN5mHeap11SolidHeap_t14VDeallocateAllEv kind:function(arm,size=0x14) addr:0x0203c49c
 _ZN5mHeap9ExpHeap_t14VDeallocateAllEv kind:function(arm,size=0x1c) addr:0x0203c4b0
-_ZN22ExpandingHeapAllocator16InvokeDeallocateEPvPS_j kind:function(arm,size=0x18) addr:0x0203c4cc
+_Z16FreeVisitedBlockPvP15NNSiFndHeapHeadj kind:function(arm,size=0x18) addr:0x0203c4cc
 _ZN5mHeap11SolidHeap_t11VDeallocateEPv kind:function(arm,size=0x28) addr:0x0203c4e4
 _ZN5mHeap9ExpHeap_t11VDeallocateEPv kind:function(arm,size=0x2c) addr:0x0203c50c
 _ZN5mHeap6Heap_t10DeallocateEPv kind:function(arm,size=0x20) addr:0x0203c538
@@ -1620,16 +1620,16 @@ _ZN5mHeap9ExpHeap_tD1Ev kind:function(arm,size=0x24) addr:0x0203c9ec
 _ZN5mHeap6Heap_tD2Ev kind:function(arm,size=0x10) addr:0x0203ca10
 _ZN5mHeap6Heap_tD0Ev kind:function(arm,size=0x24) addr:0x0203ca20
 _ZN5mHeap6Heap_tD1Ev kind:function(arm,size=0x10) addr:0x0203ca44
-_ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP18SolidHeapAllocator kind:function(arm,size=0x2c) addr:0x0203ca54
-_ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP22ExpandingHeapAllocator kind:function(arm,size=0x2c) addr:0x0203ca80
+_ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP15NNSiFndHeapHead kind:function(arm,size=0x2c) addr:0x0203ca54
+_ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP15NNSiFndHeapHead kind:function(arm,size=0x2c) addr:0x0203ca80
 _ZN5mHeap6Heap_tC2EPvjPS0_ kind:function(arm,size=0x3c) addr:0x0203caac
 _ZN5mHeap6Heap_t18InitializeRootHeapEv kind:function(arm,size=0x1c) addr:0x0203cae8
 _ZN5mHeap6Heap_t13SetupRootHeapEv kind:function(arm,size=0xbc) addr:0x0203cb04
-func_0203cbc0 kind:function(arm,size=0xc) addr:0x0203cbc0
-_ZN6Memory16operator_delete2EPv kind:function(arm,size=0xc) addr:0x0203cbcc
-_ZN6Memory13operator_new2Ej kind:function(arm,size=0xc) addr:0x0203cbd8
+_ZdaPv kind:function(arm,size=0xc) addr:0x0203cbc0
+_ZdlPv kind:function(arm,size=0xc) addr:0x0203cbcc
+_Znam kind:function(arm,size=0xc) addr:0x0203cbd8
 _Znwm kind:function(arm,size=0xc) addr:0x0203cbe4
-_ZdlPv kind:function(arm,size=0x1c) addr:0x0203cbf0
+func_0203cbf0 kind:function(arm,size=0x1c) addr:0x0203cbf0
 func_0203cc0c kind:function(arm,size=0x1c) addr:0x0203cc0c
 func_0203cc28 kind:function(arm,size=0xac) addr:0x0203cc28
 func_0203ccd4 kind:function(arm,size=0xac) addr:0x0203ccd4
@@ -1992,52 +1992,52 @@ SPLRandom_VecFx32 kind:function(arm,size=0x68) addr:0x0204da4c
 func_0204dab4 kind:function(arm,size=0x1d0) addr:0x0204dab4
 func_0204dc84 kind:function(arm,size=0x3c) addr:0x0204dc84
 func_0204dcc0 kind:function(arm,size=0x3c) addr:0x0204dcc0
-_ZN18NestedHeapIterator8PreviousEP13HeapAllocator kind:function(arm,size=0x14) addr:0x0204dcfc
-_ZN18NestedHeapIterator4NextEP13HeapAllocator kind:function(arm,size=0x18) addr:0x0204dd10
-_ZN18NestedHeapIterator6RemoveEP13HeapAllocator kind:function(arm,size=0x70) addr:0x0204dd28
-_ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_ kind:function(arm,size=0x74) addr:0x0204dd98
-_ZN18NestedHeapIterator8AddFirstEP13HeapAllocator kind:function(arm,size=0x68) addr:0x0204de0c
-_ZN18NestedHeapIterator7AddLastEP13HeapAllocator kind:function(arm,size=0x6c) addr:0x0204de74
-_ZN18NestedHeapIterator4InitEP13HeapAllocator kind:function(arm,size=0x40) addr:0x0204dee0
-_ZN18NestedHeapIteratorC1Ej kind:function(arm,size=0x18) addr:0x0204df20
-_ZN13HeapAllocator6RemoveEv kind:function(arm,size=0x1c) addr:0x0204df38
-func_0204df54 kind:function(arm,size=0x94) addr:0x0204df54
-_ZN18NestedHeapIterator10FindNestedEPv kind:function(arm,size=0x2c) addr:0x0204dfe8
-_ZN18NestedHeapIterator19RecursiveFindNestedEPv kind:function(arm,size=0x70) addr:0x0204e014
-_ZN22ExpandingHeapAllocator14SizeofInternalEPv kind:function(arm,size=0x8) addr:0x0204e084
-_ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj kind:function(arm,size=0x54) addr:0x0204e08c
-_ZN22ExpandingHeapAllocator9GetNodeIDEv kind:function(arm,size=0x8) addr:0x0204e0e0
-_ZN22ExpandingHeapAllocator9SetNodeIDEj kind:function(arm,size=0x10) addr:0x0204e0e8
-_ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi kind:function(arm,size=0x88) addr:0x0204e0f8
-_ZN22ExpandingHeapAllocator10MemoryLeftEv kind:function(arm,size=0x28) addr:0x0204e180
-_ZN22ExpandingHeapAllocator10DeallocateEPv kind:function(arm,size=0x40) addr:0x0204e1a8
-_ZN22ExpandingHeapAllocator10ReallocateEPvj kind:function(arm,size=0x188) addr:0x0204e1e8
-_ZN22ExpandingHeapAllocator8AllocateEji kind:function(arm,size=0x44) addr:0x0204e370
-_ZN13HeapAllocator7DestroyEv kind:function(arm,size=0xc) addr:0x0204e3b4
-_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj kind:function(arm,size=0x4c) addr:0x0204e3c0
-_ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE kind:function(arm,size=0xf8) addr:0x0204e40c
-_ZN22ExpandingHeapAllocator17AllocateBackwardsEjj kind:function(arm,size=0xc4) addr:0x0204e504
-_ZN22ExpandingHeapAllocator16AllocateForwardsEjj kind:function(arm,size=0xc8) addr:0x0204e5c8
-_ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt kind:function(arm,size=0x198) addr:0x0204e690
-_ZN22ExpandingHeapAllocatorC1EPvj kind:function(arm,size=0x88) addr:0x0204e828
-_ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt kind:function(arm,size=0x30) addr:0x0204e8b0
-_ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_ kind:function(arm,size=0x30) addr:0x0204e8e0
-_ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_ kind:function(arm,size=0x28) addr:0x0204e910
-_ZN10MemoryNode6TargetC1EPS_ kind:function(arm,size=0x2c) addr:0x0204e938
-_ZN18SolidHeapAllocator10ReallocateEPvj kind:function(arm,size=0xa4) addr:0x0204e964
-_ZN18SolidHeapAllocator14TryResizeToFitEv kind:function(arm,size=0x34) addr:0x0204ea08
-_ZN18SolidHeapAllocator9LoadStateEj kind:function(arm,size=0x5c) addr:0x0204ea3c
-_ZN18SolidHeapAllocator9SaveStateEj kind:function(arm,size=0x58) addr:0x0204ea98
-_ZN18SolidHeapAllocator10MemoryLeftEi kind:function(arm,size=0x40) addr:0x0204eaf0
-_ZN18SolidHeapAllocator5ResetEj kind:function(arm,size=0x40) addr:0x0204eb30
-_ZN18SolidHeapAllocator8AllocateEji kind:function(arm,size=0x48) addr:0x0204eb70
-func_0204ebb8 kind:function(arm,size=0xc) addr:0x0204ebb8
-_ZN5mHeap6Heap_t24CreateSolidHeapAllocatorEPvjj kind:function(arm,size=0x4c) addr:0x0204ebc4
-_ZN18SolidHeapAllocator8ResetEndEv kind:function(arm,size=0x30) addr:0x0204ec10
-_ZN18SolidHeapAllocator10ResetStartEv kind:function(arm,size=0x18) addr:0x0204ec40
-_ZN18SolidHeapAllocator17AllocateBackwardsEPvjj kind:function(arm,size=0x7c) addr:0x0204ec58
-_ZN18SolidHeapAllocator16AllocateForwardsEPvjj kind:function(arm,size=0x80) addr:0x0204ecd4
-_ZN18SolidHeapAllocatorC1EPvj kind:function(arm,size=0x50) addr:0x0204ed54
+NNS_FndGetPrevListObject kind:function(arm,size=0x14) addr:0x0204dcfc
+NNS_FndGetNextListObject kind:function(arm,size=0x18) addr:0x0204dd10
+NNS_FndRemoveListObject kind:function(arm,size=0x70) addr:0x0204dd28
+NNS_FndInsertListObject kind:function(arm,size=0x74) addr:0x0204dd98
+NNS_FndPrependListObject kind:function(arm,size=0x68) addr:0x0204de0c
+NNS_FndAppendListObject kind:function(arm,size=0x6c) addr:0x0204de74
+SetFirstObject kind:function(arm,size=0x40) addr:0x0204dee0
+NNS_FndInitList kind:function(arm,size=0x18) addr:0x0204df20
+NNSi_FndFinalizeHeap kind:function(arm,size=0x1c) addr:0x0204df38
+NNSi_FndInitHeapHead kind:function(arm,size=0x94) addr:0x0204df54
+FindListContainHeap kind:function(arm,size=0x2c) addr:0x0204dfe8
+FindContainHeap kind:function(arm,size=0x70) addr:0x0204e014
+NNS_FndGetSizeForMBlockExpHeap kind:function(arm,size=0x8) addr:0x0204e084
+NNS_FndVisitAllocatedForExpHeap kind:function(arm,size=0x54) addr:0x0204e08c
+NNS_FndGetGroupIDForExpHeap kind:function(arm,size=0x8) addr:0x0204e0e0
+NNS_FndSetGroupIDForExpHeap kind:function(arm,size=0x10) addr:0x0204e0e8
+NNS_FndGetAllocatableSizeForExpHeapEx kind:function(arm,size=0x88) addr:0x0204e0f8
+NNS_FndGetTotalFreeSizeForExpHeap kind:function(arm,size=0x28) addr:0x0204e180
+NNS_FndFreeToExpHeap kind:function(arm,size=0x40) addr:0x0204e1a8
+NNS_FndResizeForMBlockExpHeap kind:function(arm,size=0x188) addr:0x0204e1e8
+NNS_FndAllocFromExpHeapEx kind:function(arm,size=0x44) addr:0x0204e370
+NNS_FndDestroyExpHeap kind:function(arm,size=0xc) addr:0x0204e3b4
+NNS_FndCreateExpHeapEx kind:function(arm,size=0x4c) addr:0x0204e3c0
+RecycleRegion kind:function(arm,size=0xf8) addr:0x0204e40c
+AllocFromTail kind:function(arm,size=0xc4) addr:0x0204e504
+AllocFromHead kind:function(arm,size=0xc8) addr:0x0204e5c8
+AllocUsedBlockFromFreeBlock kind:function(arm,size=0x198) addr:0x0204e690
+InitExpHeap kind:function(arm,size=0x88) addr:0x0204e828
+InitMBlock kind:function(arm,size=0x30) addr:0x0204e8b0
+InsertMBlock kind:function(arm,size=0x30) addr:0x0204e8e0
+RemoveMBlock kind:function(arm,size=0x28) addr:0x0204e910
+GetRegionOfMBlock kind:function(arm,size=0x2c) addr:0x0204e938
+NNS_FndResizeForMBlockFrmHeap kind:function(arm,size=0xa4) addr:0x0204e964
+NNS_FndAdjustFrmHeap kind:function(arm,size=0x34) addr:0x0204ea08
+NNS_FndFreeByStateToFrmHeap kind:function(arm,size=0x5c) addr:0x0204ea3c
+NNS_FndRecordStateForFrmHeap kind:function(arm,size=0x58) addr:0x0204ea98
+NNS_FndGetAllocatableSizeForFrmHeapEx kind:function(arm,size=0x40) addr:0x0204eaf0
+NNS_FndFreeToFrmHeap kind:function(arm,size=0x40) addr:0x0204eb30
+NNS_FndAllocFromFrmHeapEx kind:function(arm,size=0x48) addr:0x0204eb70
+NNS_FndDestroyFrmHeap kind:function(arm,size=0xc) addr:0x0204ebb8
+NNS_FndCreateFrmHeapEx kind:function(arm,size=0x4c) addr:0x0204ebc4
+FreeTail kind:function(arm,size=0x30) addr:0x0204ec10
+FreeHead kind:function(arm,size=0x18) addr:0x0204ec40
+_Z13AllocFromTailP18NNSiFndFrmHeapHeadji kind:function(arm,size=0x7c) addr:0x0204ec58
+_Z13AllocFromHeadP18NNSiFndFrmHeapHeadji kind:function(arm,size=0x80) addr:0x0204ecd4
+InitFrameHeap kind:function(arm,size=0x50) addr:0x0204ed54
 func_0204eda4 kind:function(arm,size=0x44) addr:0x0204eda4
 func_0204ede8 kind:function(arm,size=0x28) addr:0x0204ede8
 func_0204ee10 kind:function(arm,size=0x30) addr:0x0204ee10
@@ -2969,22 +2969,22 @@ func_0206dd7c kind:function(arm,size=0x50) addr:0x0206dd7c
 func_0206ddcc kind:function(arm,size=0x48) addr:0x0206ddcc
 func_0206de14 kind:function(arm,size=0x100) addr:0x0206de14
 __flush_all kind:function(arm,size=0x70) addr:0x0206df14
-_ZN4cstd3absEi kind:function(arm,size=0xc) addr:0x0206df84
+abs kind:function(arm,size=0xc) addr:0x0206df84
 __flush_buffer kind:function(arm,size=0xa0) addr:0x0206df90
 __prep_buffer kind:function(arm,size=0x38) addr:0x0206e030
 __convert_from_newlines kind:function(arm,size=0x4) addr:0x0206e068
 fflush kind:function(arm,size=0x118) addr:0x0206e06c
-func_0206e184 kind:function(arm,size=0x94) addr:0x0206e184
-func_0206e218 kind:function(arm,size=0x28) addr:0x0206e218
-func_0206e240 kind:function(arm,size=0x14) addr:0x0206e240
-func_0206e254 kind:function(arm,size=0x38) addr:0x0206e254
-func_0206e28c kind:function(arm,size=0x40) addr:0x0206e28c
-func_0206e2cc kind:function(arm,size=0x2c) addr:0x0206e2cc
-func_0206e2f8 kind:function(arm,size=0x18) addr:0x0206e2f8
-func_0206e310 kind:function(arm,size=0x20) addr:0x0206e310
-func_0206e330 kind:function(arm,size=0xac) addr:0x0206e330
-func_0206e3dc kind:function(arm,size=0x74) addr:0x0206e3dc
-func_0206e450 kind:function(arm,size=0x54) addr:0x0206e450
+wcstombs kind:function(arm,size=0x94) addr:0x0206e184
+wctomb kind:function(arm,size=0x28) addr:0x0206e218
+__wctomb_noconv kind:function(arm,size=0x14) addr:0x0206e240
+__mbtowc_noconv kind:function(arm,size=0x38) addr:0x0206e254
+memcmp kind:function(arm,size=0x40) addr:0x0206e28c
+memchr kind:function(arm,size=0x2c) addr:0x0206e2cc
+memset kind:function(arm,size=0x18) addr:0x0206e2f8
+memcpy kind:function(arm,size=0x20) addr:0x0206e310
+__fill_mem kind:function(arm,size=0xac) addr:0x0206e330
+vsnprintf kind:function(arm,size=0x74) addr:0x0206e3dc
+__StringWrite kind:function(arm,size=0x54) addr:0x0206e450
 __pformatter kind:function(arm,size=0x83c) addr:0x0206e4a4
 float2str kind:function(arm,size=0x658) addr:0x0206ece0
 round_decimal kind:function(arm,size=0x134) addr:0x0206f338
@@ -2992,13 +2992,13 @@ double2hex kind:function(arm,size=0x3b4) addr:0x0206f46c
 longlong2str kind:function(arm,size=0x2e8) addr:0x0206f820
 long2str kind:function(arm,size=0x264) addr:0x0206fb08
 parse_format kind:function(arm,size=0x5dc) addr:0x0206fd6c
-func_02070348 kind:function(arm,size=0x34) addr:0x02070348
+rand kind:function(arm,size=0x34) addr:0x02070348
 raise kind:function(arm,size=0x150) addr:0x0207037c
-_ZN4cstd6strchrEPKcc kind:function(arm,size=0x3c) addr:0x020704cc
-_ZN4cstd6strcmpEPKcS1_ kind:function(arm,size=0x134) addr:0x02070508
-_ZN4cstd7strncpyEPcPKcj kind:function(arm,size=0x74) addr:0x0207063c
-func_020706b0 kind:function(arm,size=0xd8) addr:0x020706b0
-_ZN4cstd6strlenEPKc kind:function(arm,size=0x1c) addr:0x02070788
+strchr kind:function(arm,size=0x3c) addr:0x020704cc
+strcmp kind:function(arm,size=0x134) addr:0x02070508
+strncpy kind:function(arm,size=0x74) addr:0x0207063c
+strcpy kind:function(arm,size=0xd8) addr:0x020706b0
+strlen kind:function(arm,size=0x1c) addr:0x02070788
 copysign kind:function(arm,size=0x28) addr:0x020707a4
 fabs kind:function(arm,size=0x28) addr:0x020707cc
 frexp kind:function(arm,size=0xc0) addr:0x020707f4
@@ -3013,16 +3013,16 @@ __rounddec kind:function(arm,size=0x64) addr:0x020715e0
 __dorounddecup kind:function(arm,size=0x54) addr:0x02071644
 __must_round kind:function(arm,size=0x70) addr:0x02071698
 func_02071708 kind:function(arm,size=0x7c) addr:0x02071708
-func_02071784 kind:function(arm,size=0xc) addr:0x02071784
+_ExitProcess kind:function(arm,size=0xc) addr:0x02071784
 func_02071790 kind:function(arm,size=0x30) addr:0x02071790
 __rethrow kind:function(arm,size=0x4c) addr:0x020717c0
 func_0207180c kind:function(arm,size=0x38) addr:0x0207180c
 func_02071844 kind:function(arm,size=0x20) addr:0x02071844
 func_02071864 kind:function(arm,size=0xac) addr:0x02071864
 func_02071910 kind:function(arm,size=0x64) addr:0x02071910
-func_02071974 kind:function(arm,size=0x14) addr:0x02071974
-func_02071988 kind:function(arm,size=0x14) addr:0x02071988
-func_0207199c kind:function(arm,size=0x10) addr:0x0207199c
+sys_writec kind:function(arm,size=0x14) addr:0x02071974
+sys_readc kind:function(arm,size=0x14) addr:0x02071988
+sys_exit kind:function(arm,size=0x10) addr:0x0207199c
 __close_console kind:function(arm,size=0x8) addr:0x020719ac
 __write_console kind:function(arm,size=0x38) addr:0x020719b4
 __read_console kind:function(arm,size=0x64) addr:0x020719ec
@@ -4349,7 +4349,7 @@ _ZTS14dBgW_KcMbgSclY kind:data(any) addr:0x02099474
 _ZTV14dBgW_KcMbgSclY kind:data(any) addr:0x02099490
 _ZTV8dM3dGSph kind:data(any) addr:0x020994cc
 data_020994d4 kind:data(any) addr:0x020994d4
-data_020994e0 kind:data(any) addr:0x020994e0
+gArctanTable kind:data(any) addr:0x020994e0
 _ZTIN5mHeap6Heap_tE kind:data(any) addr:0x02099ce4
 _ZTIN5mHeap9ExpHeap_tE kind:data(any) addr:0x02099cec
 _ZTIN5mHeap11SolidHeap_tE kind:data(any) addr:0x02099cf8
@@ -4426,7 +4426,7 @@ data_0209a088 kind:data(any) addr:0x0209a088
 data_0209a08c kind:data(any) addr:0x0209a08c
 data_0209a0a0 kind:data(any) addr:0x0209a0a0
 data_0209a130 kind:data(any) addr:0x0209a130
-data_0209a330 kind:data(any) addr:0x0209a330
+__files kind:data(any) addr:0x0209a330
 data_0209a414 kind:data(any) addr:0x0209a414
 data_0209a418 kind:data(any) addr:0x0209a418
 data_0209a41c kind:data(any) addr:0x0209a41c
@@ -4451,28 +4451,28 @@ data_0209a60c kind:data(any) addr:0x0209a60c
 data_0209a614 kind:data(any) addr:0x0209a614
 data_0209a618 kind:data(any) addr:0x0209a618
 data_0209a61c kind:data(any) addr:0x0209a61c
-data_0209a624 kind:data(any) addr:0x0209a624
-data_0209a628 kind:data(any) addr:0x0209a628
-data_0209a658 kind:data(any) addr:0x0209a658
-data_0209a680 kind:data(any) addr:0x0209a680
-data_0209a698 kind:data(any) addr:0x0209a698
-data_0209a6a8 kind:data(any) addr:0x0209a6a8
-data_0209a6b0 kind:data(any) addr:0x0209a6b0
-data_0209a6b8 kind:data(any) addr:0x0209a6b8
-data_0209a6c0 kind:data(any) addr:0x0209a6c0
-data_0209a6c8 kind:data(any) addr:0x0209a6c8
-data_0209a6cc kind:data(any) addr:0x0209a6cc
-data_0209a6d0 kind:data(any) addr:0x0209a6d0
-data_0209a6d4 kind:data(any) addr:0x0209a6d4
-data_0209a6d8 kind:data(any) addr:0x0209a6d8
-data_0209a6dc kind:data(any) addr:0x0209a6dc
-data_0209a6e0 kind:data(any) addr:0x0209a6e0
-data_0209a6e4 kind:data(any) addr:0x0209a6e4
-data_0209a6e8 kind:data(any) addr:0x0209a6e8
-data_0209a6ec kind:data(any) addr:0x0209a6ec
-data_0209a6f0 kind:data(any) addr:0x0209a6f0
-data_0209a6f4 kind:data(any) addr:0x0209a6f4
-data_0209a6f8 kind:data(any) addr:0x0209a6f8
+random_next kind:data(any) addr:0x0209a624
+data_0209a628 kind:data(any) addr:0x0209a628 local
+data_0209a658 kind:data(any) addr:0x0209a658 local
+data_0209a680 kind:data(any) addr:0x0209a680 local
+data_0209a698 kind:data(any) addr:0x0209a698 local
+data_0209a6a8 kind:data(any) addr:0x0209a6a8 local
+data_0209a6b0 kind:data(any) addr:0x0209a6b0 local
+data_0209a6b8 kind:data(any) addr:0x0209a6b8 local
+data_0209a6c0 kind:data(any) addr:0x0209a6c0 local
+data_0209a6c8 kind:data(any) addr:0x0209a6c8 local
+data_0209a6cc kind:data(any) addr:0x0209a6cc local
+data_0209a6d0 kind:data(any) addr:0x0209a6d0 local
+data_0209a6d4 kind:data(any) addr:0x0209a6d4 local
+data_0209a6d8 kind:data(any) addr:0x0209a6d8 local
+data_0209a6dc kind:data(any) addr:0x0209a6dc local
+data_0209a6e0 kind:data(any) addr:0x0209a6e0 local
+data_0209a6e4 kind:data(any) addr:0x0209a6e4 local
+data_0209a6e8 kind:data(any) addr:0x0209a6e8 local
+data_0209a6ec kind:data(any) addr:0x0209a6ec local
+data_0209a6f0 kind:data(any) addr:0x0209a6f0 local
+data_0209a6f4 kind:data(any) addr:0x0209a6f4 local
+data_0209a6f8 kind:data(any) addr:0x0209a6f8 local
 _ZSt8thandler kind:data(any) addr:0x0209a6fc
 _ZTISt9type_info kind:data(any) addr:0x0209a700
 _ZTIN3abi21__vmi_class_type_infoE kind:data(any) addr:0x0209a708
@@ -5108,8 +5108,8 @@ data_020a4c64 kind:bss addr:0x020a4c64
 data_020a4c70 kind:bss addr:0x020a4c70
 data_020a4d30 kind:bss addr:0x020a4d30
 PARTICLE_RNG_STATE kind:bss addr:0x020a4d30
-data_020a4d34 kind:bss addr:0x020a4d34
-data_020a4d38 kind:bss addr:0x020a4d38
+sRootListInitialized kind:bss addr:0x020a4d34
+sRootList kind:bss addr:0x020a4d38
 data_020a4d44 kind:bss addr:0x020a4d44
 data_020a4d48 kind:bss addr:0x020a4d48
 data_020a4d4c kind:bss addr:0x020a4d4c
@@ -5272,9 +5272,9 @@ __stdio_exit kind:bss addr:0x020a9ecc
 __atexit_curr_func kind:bss addr:0x020a9ed0
 __aborting kind:bss addr:0x020a9ed4
 __atexit_funcs kind:bss addr:0x020a9ed8
-data_020a9fd8 kind:bss addr:0x020a9fd8
-data_020a9ffc kind:bss addr:0x020a9ffc
-data_020aa020 kind:bss addr:0x020aa020
+__cs_id kind:bss addr:0x020a9fd8
+__cs_ref kind:bss addr:0x020a9ffc
+__cs kind:bss addr:0x020aa020
 data_020aa0ac kind:bss addr:0x020aa0ac
 data_020aa0d4 kind:bss addr:0x020aa0d4
 data_020aa1d4 kind:bss addr:0x020aa1d4

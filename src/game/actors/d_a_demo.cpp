@@ -395,7 +395,6 @@ extern int data_0209e650;
 extern OamAttr data_ov002_0210bddc;
 extern void SetSubBg0Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
-/* local extern dropped: decl_common.h already declares _ZN6Memory16operator_delete2EPv(void*) */
 /* The scene fader: dScene_c::SetFaders(dFdBrightness_c *) assigns it. Kept
    as the void * this file has always declared (the tree's declarations
    disagree); 23f0 casts at the one use. */
@@ -760,7 +759,7 @@ void daDemo_c::func_ov002_020f237c()
 
 int daDemo_c::func_ov002_020f23d0()
 {
-    Memory::operator_delete2(this->mScroll);
+    ::operator delete(this->mScroll);
     return 1;
 }
 
@@ -3175,7 +3174,7 @@ void func_ov002_020f5f60(char *c)
     void *p = ((StaffRoll *)c)->starChars;
     if (p == 0)
         return;
-    Memory::operator_delete2(p);
+    ::operator delete(p);
     ((StaffRoll *)c)->starChars = 0;
 }
 }
@@ -3300,7 +3299,7 @@ void func_ov002_020f5fe4(char* c)
 
     ((StaffRoll *)c)->starChars = 0;
     if (((StaffRoll *)c)->starChars == 0) {
-        ((StaffRoll *)c)->starChars = (u8 *)Memory::operator_new2(0x4000);
+        ((StaffRoll *)c)->starChars = (u8 *)::operator new[](0x4000);
     }
     f = LoadFile(ASSET_D_2D_ED_STAR_NCG_BIN);
     DecompressLZ16(f, ((StaffRoll *)c)->starChars);
@@ -3318,7 +3317,7 @@ int daDemo_c::func_ov002_020f63a0()
 {
     func_ov002_020f5f60((char *)this->mStaffRoll);
     if (this->mStaffRoll != 0) {
-        Memory::operator_delete2(this->mStaffRoll);
+        ::operator delete(this->mStaffRoll);
         this->mStaffRoll = 0;
     }
     return 1;
@@ -3466,9 +3465,7 @@ int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, Sh
 
 /* D0, the deleting destructor. Same class shape as the D1 file beside this one;
  * one destructor definition emits D0/D1/D2 and objisolate keeps the variant this
- * file's delinks entry names. The class operator delete is what routes the tail
- * call to Memory::operator_delete2 (0x0203cbcc) rather than the global _ZdlPv --
- * without it the bytes still match and only the relocation destination differs.
+ * file's delinks entry names, ending in a tail call to operator delete.
  * The D0 variant here emits from the ~anmModel_c definition at ordinal 113. */
 
 /* D1, the complete-object destructor.
@@ -3521,9 +3518,7 @@ int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n)
 
 /* D0, the deleting destructor. Same class shape as the D1 file beside this one;
  * one destructor definition emits D0/D1/D2 and objisolate keeps the variant this
- * file's delinks entry names. The class operator delete is what routes the tail
- * call to Memory::operator_delete2 (0x0203cbcc) rather than the global _ZdlPv --
- * without it the bytes still match and only the relocation destination differs.
+ * file's delinks entry names, ending in a tail call to operator delete.
  * The D0 variant here emits from the ~simpleModel_c definition at ordinal 116. */
 
 /* D1, the complete-object destructor.

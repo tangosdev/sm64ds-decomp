@@ -1,7 +1,7 @@
+//cpp
 #include "MWCPlusLib.h"
 
-extern void func_02073300(void *block, unsigned int n, unsigned int size, dtor_t dtor);
-extern void func_0203cbc0(void *ptr);
+extern "C" void func_02073300(void *block, unsigned int n, unsigned int size, dtor_t dtor);
 
 /* The Itanium C++ ABI's __cxa_vec_delete(array, element_size,
    padding_size, destructor). The name is the compiler's: mwccarm compiles
@@ -12,11 +12,11 @@ extern void func_0203cbc0(void *ptr);
    below the array (*(a - 4)). That is the ABI's __cxa_vec_dtor step, but
    the compiler never emits that name, so func_02073300 keeps its address.
    The block, starting padding bytes before the array, then goes to
-   func_0203cbc0 (operator delete). */
-void __cxa_vec_delete(void *a, int b, int c, void (*d)(void *)) {
+   operator delete[]. */
+extern "C" void __cxa_vec_delete(void *a, int b, int c, void (*d)(void *)) {
     if (a == 0)
         return;
     if (d != 0)
         func_02073300(a, ((int *)a)[-1], b, d);
-    func_0203cbc0((char *)a - c);
+    ::operator delete[]((char *)a - c);
 }

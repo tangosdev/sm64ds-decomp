@@ -60,10 +60,6 @@
  * safe to improve. Offsets, widths and vtable slots are pinned by the bytes.
  */
 #ifdef __cplusplus
-namespace Memory {
-void operator_delete2(void *);
-}
-
 struct dFader_c {
     Fix12i currInterp;  /* 0x04 -- current fade level, 0..0x1000 */
     Fix12i speed;       /* 0x08 -- per-frame delta; sign selects the target */
@@ -73,14 +69,6 @@ struct dFader_c {
        destructor variants and vtable group, while enrollment isolates the
        licensed variant and binds `_ZTV8dFader_c` to the ROM-proven address point. */
     virtual ~dFader_c();                                /* slots 0 (D1), 1 (D0) */
-
-    /* Every deleting destructor in this hierarchy ends at
-       Memory::operator_delete2 (0x0203cbcc). Keeping that class delete path
-       inline makes mwcc emit the ROM's direct call instead of global
-       `_ZdlPv`; it adds neither object state nor a vtable slot. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 
     /* Pure, all eight: the corresponding words in data_0208eafc are null. */
     virtual void AdvanceFade() = 0;                  /* slot 2 */

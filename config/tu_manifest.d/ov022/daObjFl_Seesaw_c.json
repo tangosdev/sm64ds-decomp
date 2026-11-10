@@ -476,14 +476,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@498",
+      "from": "@476",
       "to": "@125",
-      "evidence": "mwcc numbers this registration node @428 per TU and the fleet already defines a global @428, so the scratch link would multiply-define it; the first target @106 collides with ov064 daObjFl_Amilift_c's global @106 on main, so it lands on @125 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "mwcc numbers this registration node @428 per TU and the fleet already defines a global @428, so the scratch link would multiply-define it; the first target @106 collides with ov064 daObjFl_Amilift_c's global @106 on main, so it lands on @125 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @498 to @476 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@499",
+      "from": "@477",
       "to": "@126",
-      "evidence": "mwcc numbers this registration node @429 per TU and the fleet already defines a global @429, so the scratch link would multiply-define it; the first target @107 collides with ov064 daObjFl_Amilift_c's global @107 on main, so it lands on @126 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "mwcc numbers this registration node @429 per TU and the fleet already defines a global @429, so the scratch link would multiply-define it; the first target @107 collides with ov064 daObjFl_Amilift_c's global @107 on main, so it lands on @126 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @499 to @477 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

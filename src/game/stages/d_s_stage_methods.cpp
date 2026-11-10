@@ -89,6 +89,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "dClipper.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
+#include "msl/string.h"
 
 struct OamAttr;
 
@@ -3822,8 +3823,8 @@ extern "C" int CopyTexPalFromLevelModel(void *p) {
         int found = 0;
         u32 j;
         for (j = 0; j < sm->count; j++) {
-            if (cstd::strcmp(texName, mtex[s->texIdx].name) == 0 &&
-                cstd::strcmp(palName, mpal[s->palIdx].name) == 0) {
+            if (strcmp(texName, mtex[s->texIdx].name) == 0 &&
+                strcmp(palName, mpal[s->palIdx].name) == 0) {
                 e->f1c = s->f1c;
                 e->f20 = s->f20;
                 found = 1;
@@ -4476,7 +4477,7 @@ int dScStage_c::CleanupResources() {
                 MinimapChangeNode *block = (MinimapChangeNode *)area->mBlockList;
                 while (block) {
                     MinimapChangeNode *next = block->next;
-                    Memory::operator_delete2(block);
+                    ::operator delete(block);
                     block = next;
                 }
             }

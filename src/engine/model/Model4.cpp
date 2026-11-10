@@ -12,9 +12,9 @@
 
 #include "dExtSimpleModel_c.h"
 #include "nitro/gx/g3x.h"
-#include "cstd.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_load.h"
+#include "msl/string.h"
 #include "GX.h"
 
 namespace CP15 {
@@ -104,7 +104,7 @@ extern "C" int func_02046590(const void *tbl, const char *name)
         BMD_Material *entry = t->materials;
         while (1)
         {
-            if (cstd::strcmp(entry->name, name) == 0)
+            if (strcmp(entry->name, name) == 0)
                 return (int)i;
             i++;
             entry++;

@@ -103,7 +103,6 @@ extern unsigned short data_020a0e5a[];
 extern int data_0208ee44;
 extern void Mg_CommitRecords(void);
 extern void FreeGfxSlotsById(int arg);
-extern void func_0203cbc0(void *ptr);
 extern void func_02012e1c(void);
 void Mg_InitMusic();
 extern void Enable3dEngines(void);
@@ -2245,7 +2244,7 @@ void dScMgBase_c::AfterCleanupResources(u32 vfSuccess)
         sMgGraphCallback.mScene = 0;
         FreeGfxSlotsById(0x1d);
         if (sMgWorkBuffer != 0) {
-            func_0203cbc0(sMgWorkBuffer);
+            ::operator delete[](sMgWorkBuffer);
             sMgWorkBuffer = 0;
         }
         if (mMenuOpen != 0) {
@@ -2288,7 +2287,7 @@ bool dScMgBase_c::BeforeInitResources()
         Enable3dEngines();
     mMusicTrack = gMgMenuRow.musicTrack;
     if (sMgWorkBuffer == 0)
-        sMgWorkBuffer = Memory::operator_new2(0x4000);
+        sMgWorkBuffer = ::operator new[](0x4000);
     /* +0xb0 is the header's pad_0b0. Scanning ov004 and ov006 turns up no
        other word access at +0xb0 in a scene method or through gMgScene, so
        no role is established and the store stays raw. */

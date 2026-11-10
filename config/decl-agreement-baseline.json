@@ -15992,23 +15992,23 @@
         "return:void"
       ]
     },
-    "func_0206e184": {
+    "wcstombs": {
       "src/unnamed/arm9/0206/func_0206e4a4.c": [
         "return:int"
       ]
     },
-    "func_0206e28c": {
+    "memcmp": {
       "src/unnamed/arm9/0201/func_02018568.c": [
         "param:#1 int"
       ]
     },
-    "func_0206e2cc": {
+    "memchr": {
       "src/unnamed/arm9/0206/func_0206e4a4.c": [
         "param:#1 char *",
         "return:char *"
       ]
     },
-    "func_0206e450": {
+    "__StringWrite": {
       "src/unnamed/arm9/0206/func_0206e3dc.c": [
         "arity:0",
         "return:void"
@@ -16046,7 +16046,7 @@
         "return:int"
       ]
     },
-    "func_02071988": {
+    "sys_readc": {
       "src/__read_console.c": [
         "return:unsigned char"
       ]
@@ -17263,6 +17263,11 @@
       "src/engine/mb/MB_GameInfo.c": [
         "param:#5 int",
         "param:#6 int"
+      ]
+    },
+    "NNS_FndVisitAllocatedForExpHeap": {
+      "include/nnsys/fnd.h": [
+        "param:#2 void (*)(void *, NNSFndHeapHandle, unsigned int)"
       ]
     }
   },

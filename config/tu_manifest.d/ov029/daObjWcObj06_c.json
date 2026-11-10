@@ -474,14 +474,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@424",
+      "from": "@381",
       "to": "@82",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @435 to @433. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @82."
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @435 to @433. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @82. Re-keyed from @424 to @381 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@425",
+      "from": "@382",
       "to": "@83",
-      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @436 to @434. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @83."
+      "evidence": "Native GetClsnPos value-return initialization shifts the emitted compiler-local name from @436 to @434. The baseline and candidate have identical allocated sections and relocation targets by section/value/size; preserve the existing canonical binding @83. Re-keyed from @425 to @382 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "relocations": [

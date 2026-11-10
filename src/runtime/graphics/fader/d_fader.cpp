@@ -173,8 +173,8 @@ dFdWipe_c::dFdWipe_c()
 }
 
 /* ~dFdWipe_c: store this class's vptr, destroy the dExtSimpleModel_c member (out of
-   line), run the dFdColor_c sub-object destructor, and -- for D0 -- dFader_c's
-   class operator delete inlined to Memory::operator_delete2. */
+   line), run the dFdColor_c sub-object destructor, and -- for D0 -- operator
+   delete. */
 dFdWipe_c::~dFdWipe_c()
 {
 }
