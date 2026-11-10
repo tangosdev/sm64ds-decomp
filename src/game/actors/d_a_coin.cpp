@@ -252,7 +252,7 @@ void daCoin_c::BounceOffWall() {
     if (mWithMeshClsn.IsOnWall() == 0) return;
     int normal[3];
     dBgPi *wall = mWithMeshClsn.GetWallResult();
-    wall->surface.CopyNormalTo(*(Vector3*)normal);
+    wall->surface.CopyNormalTo(*(Vector3 *)normal);
     mPrevAngleY = ReflectAngle(normal[0], normal[2], mPrevAngleY);
 }
 

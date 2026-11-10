@@ -291,12 +291,14 @@ void daKing_Donketu_c::RenewLoopedParticles() {
     c->mParticleId1 = Particle::System::New(c->mParticleId1, 0x78, pos.x, pos.y, pos.z, 0, 0);
     if (c->mParticleId0 != 0) {
         Particle::System *sys = Particle::System::FromUniqueID(c->mParticleId0);
-        if (sys != 0) sys->emitRadius = c->mScaleX * 0x14;
+        if (sys != 0)
+            sys->emitRadius = c->mScaleX * 0x14;
     }
     if (c->mParticleId1 == 0) return;
     {
         Particle::System *sys = Particle::System::FromUniqueID(c->mParticleId1);
-        if (sys != 0) sys->emitRadius = c->mScaleX * 0x14;
+        if (sys != 0)
+            sys->emitRadius = c->mScaleX * 0x14;
     }
 }
 
