@@ -109,7 +109,7 @@ void Mg_SubCredits(void *c, int val);
 extern void Mg_SubmitScore(int self);
 extern int data_ov006_0213e948[];
 extern void Slot3_ReelDigits(char *c, int i);
-extern int Sound_PlayIfNotActive(int, int, int, int);
+extern int Sound_PlayIfNotActive(int, int, int, short);
 extern int RandomIntInternal(int *seed);
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);

@@ -198,7 +198,7 @@ extern void func_02012718(int a, int b);
 extern struct W9 sSmartballCellStartOrder;
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
-extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 extern void *sSmartballSlotFrameSprite;
 extern void *sSmartballSlotReelEndSprite;
 extern void *sSmartballSlotReelLowerSprite;
