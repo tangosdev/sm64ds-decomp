@@ -217,9 +217,7 @@ int daBmb_c::InitResources()
     mWithMeshClsn.Init(this, 0x32000, 0x32000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
     mShouldRender = 1;
-    /* Matrix4x3* while mVariant is 2. It lives in dActor_c's pad, the word
-       after mClipResult. */
-    *(int *)((char *)&mClipResult + 4) = 0;
+    mCarryMatrix = 0;
     mHurtDamage = 2;
     mDetonate = 0;
     mHomeAngleY = mAngleY;
@@ -863,7 +861,7 @@ void daBmb_c::UpdateShadow() {
         if (b2) {
             daPly_c *p = mCarrier;
             if (p != 0) {
-                if (*(int *)((char *)&p->mClipResult + 4) != 0)
+                if (p->mCarryMatrix != 0)
                     v = p->mPosY;
             }
         }
@@ -1250,7 +1248,7 @@ ret0:
 
 int daBmb_c::func_ov102_0214aa18() {
     if (mVariant == 2) {
-        if (*(int *)((char *)&mClipResult + 4) != 0) {
+        if (mCarryMatrix != 0) {
             func_ov102_0214b53c();
             return 1;
         }
