@@ -6,27 +6,27 @@
     .ctor       start:0x02086b60 end:0x02086bbc kind:rodata align:4
     .data       start:0x02086bc0 end:0x0209b000 kind:data align:32
     .bss        start:0x0209b000 end:0x020aa420 kind:bss align:32
-src/IntrWait.c:
+src/SVC_WaitIntr.c:
     complete
     .text start:0x020040f4 end:0x020040f8
 
-src/SoftReset.c:
+src/SVC_SoftReset.c:
     complete
     .text start:0x0200414c end:0x02004150
 
-src/RLUnCompReadByCallbackWrite16bit.c:
+src/SVC_UncompressRL16FromDevice.c:
     complete
     .text start:0x02004244 end:0x02004248
 
-src/BitUnPack.c:
+src/SVC_UnpackBits.c:
     complete
     .text start:0x0200432c end:0x02004330
 
-src/Sqrt.c:
+src/SVC_Sqrt.c:
     complete
     .text start:0x020043d0 end:0x020043d4
 
-src/LZ77UnCompReadNormalWrite8bit.c:
+src/SVC_UncompressLZ8.c:
     complete
     .text start:0x02004438 end:0x0200443c
 
@@ -523,7 +523,7 @@ src/TurnBacklightOn.c:
 src/unnamed/arm9/0201/func_020196cc.c:
     complete
     .text start:0x020196cc end:0x02019740
-src/Crash.cpp:
+src/OS_Terminate.cpp:
     complete
     .text start:0x02019740 end:0x02019780
 

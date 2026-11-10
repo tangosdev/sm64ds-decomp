@@ -1,7 +1,7 @@
 #include "private/rom_header_view.h"
 #include "private/arm9_a9db8_mb_parent.h"
 
-extern void Crash(void);
+extern void OS_Terminate(void);
 
 /* NitroSDK MBi_SetSegmentInfo(mrh, seg_type, seg_info, child_recv_buff_addr):
  * fill one segment row for func_020678a4 (MBi_MakeDownloadFileInfo). Segment
@@ -32,7 +32,7 @@ void func_020676e0(unsigned *rom, unsigned *seg_type, unsigned *row, unsigned *r
                 return;
             }
         }
-        Crash();
+        OS_Terminate();
         return;
 
     case 1:
@@ -61,7 +61,7 @@ void func_020676e0(unsigned *rom, unsigned *seg_type, unsigned *row, unsigned *r
             bad = 1;
         }
         if (bad == 1)
-            Crash();
+            OS_Terminate();
         seg_info->size = region->size;
         seg_info->load_addr = region->ram_address;
         if (special == 0)

@@ -23,11 +23,11 @@
 extern "C" {
 
 // local extern: no header declares these yet.
-extern void CpuSet(void *src, void *dst, u32 ctrl); // SVC_CpuClear
+extern void SVC_CpuSet(void *src, void *dst, u32 ctrl); // SVC_CpuClear
 extern int PXI_SendWordByFifo(u32 tag, u32 data, u32 reply);
-extern void WaitByLoop(int count); // SVC_WaitByLoop
+extern void SVC_WaitByLoop(int count);
 
-extern CTRDGWork data_020a9de0; /* CTRDGi_Work */
+extern CTRDGWork CTRDGi_Work;
 
 #define HW_CTRDG_ROM 0x08000000
 #define CTRDG_IS_ROM_CODE 0x96
@@ -36,8 +36,8 @@ extern CTRDGWork data_020a9de0; /* CTRDGi_Work */
 
 void CTRDGi_InitCommon(void) {
     u32 local = 0;
-    CpuSet(&local, &data_020a9de0, 0x5000001);
-    data_020a9de0.lockID = (u16)OS_GetLockID();
+    SVC_CpuSet(&local, &CTRDGi_Work, 0x5000001);
+    CTRDGi_Work.lockID = (u16)OS_GetLockID();
 }
 
 int CTRDG_IsExisting(void) {
@@ -52,7 +52,7 @@ int CTRDG_IsExisting(void) {
     if (cip->detectPullOut == 1)
         return 0;
 
-    CTRDGi_LockByProcessor(data_020a9de0.lockID, lockInfo);
+    CTRDGi_LockByProcessor(CTRDGi_Work.lockID, lockInfo);
     CTRDGi_ChangeLatestAccessCycle(cycle);
 
     if ((chp->isRomCode == CTRDG_IS_ROM_CODE && cip->moduleID != chp->moduleID) ||
@@ -63,7 +63,7 @@ int CTRDG_IsExisting(void) {
     }
 
     CTRDGi_RestoreAccessCycle(cycle);
-    CTRDGi_UnlockByProcessor(data_020a9de0.lockID, lockInfo);
+    CTRDGi_UnlockByProcessor(CTRDGi_Work.lockID, lockInfo);
     return ret;
 }
 
@@ -89,7 +89,7 @@ void CTRDGi_LockByProcessor(u16 lockID, int *info) {
         if (OS_TryLockCartridge(lockID) == 0)
             return;
         IRQ::Restore(info[1]);
-        WaitByLoop(1);
+        SVC_WaitByLoop(1);
     }
 }
 
@@ -101,6 +101,6 @@ void CTRDGi_UnlockByProcessor(u16 lockID, int *info) {
 
 void CTRDGi_SendtoPxi(u32 data) {
     while (PXI_SendWordByFifo(0xd, data, 0) != 0)
-        WaitByLoop(1);
+        SVC_WaitByLoop(1);
 }
 }

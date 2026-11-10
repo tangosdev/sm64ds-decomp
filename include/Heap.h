@@ -160,10 +160,10 @@ struct Heap_t {
     Heap_t* parentHeap;             /* 0x0c -- heap this one was carved out of;
                                        NULL for the root. Heap::Destroy releases
                                        the block back through it. */
-    u32   flags;                    /* 0x10 -- bit 0x4000 = fail-fast: when set,
+    u32 flags;                      /* 0x10 -- bit 0x4000 = fail-fast: when set,
                                        an allocation that returns NULL, a Sizeof
                                        that returns -1, or a ResizeToFit that
-                                       returns 0 calls Crash() instead of
+                                       returns 0 calls OS_Terminate() instead of
                                        reporting failure to the caller. The
                                        constructor sets it, so every heap is
                                        fail-fast unless something clears it. */
@@ -201,16 +201,16 @@ struct Heap_t {
        the rest arrive with their own migrations, where a wrong signature stops
        being unfalsifiable. */
     void* Allocate(u32 size);                /* forwards with align = 4 */
-    void* Allocate(u32 size, int align);     /* slot  3, Crash() on NULL */
+    void *Allocate(u32 size, int align);     /* slot  3, OS_Terminate() on NULL */
     void  Deallocate(void* ptr);             /* slot  4 */
     u32   Reallocate(void* ptr, u32 size);   /* slot  8, the new size or 0 */
-    int   Sizeof(void* ptr);                 /* slot  9, Crash() on -1 */
+    int Sizeof(void *ptr);                   /* slot  9, OS_Terminate() on -1 */
     void  Destroy();                         /* slot  2, then releases 0x0c */
     bool  Intact();                          /* slot  6 */
     void  Rescue();                          /* slot  7 */
     u32   MaxAllocationUnitSize();           /* slot 10 */
     void  SetNodeID(u32 id);                 /* slot 13 */
-    u32   ResizeToFit();                     /* slot 15, Rescue+Crash on 0 */
+    u32 ResizeToFit();                       /* slot 15, Rescue+OS_Terminate on 0 */
     Heap_t* SetDefault();                    /* installs this as the default
                                                 heap, returns the previous one */
 

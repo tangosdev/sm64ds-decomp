@@ -48,7 +48,7 @@ typedef struct CTRDGModuleInfo {
     u32 gameCode;  /* 0x8 */
 } CTRDGModuleInfo;
 
-/* NitroSDK CTRDGWork (CTRDGi_Work, data_020a9de0): CTRDGi_InitCommon clears
+/* NitroSDK CTRDGWork (CTRDGi_Work, 0x020a9de0): CTRDGi_InitCommon clears
  * it and stores the lock ID; the PXI callback sets subpState to 1 when the
  * ARM7 answers. */
 typedef struct CTRDGWork {

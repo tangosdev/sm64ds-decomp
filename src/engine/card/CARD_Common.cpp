@@ -25,9 +25,9 @@
 
 extern "C" {
 
-/* local extern: no header declares these yet. Their SDK names: Crash is
- * OS_Terminate and MultiStore32Bytes MIi_CpuClearFast. */
-extern void Crash(void);
+/* local extern: no header declares these yet. MultiStore32Bytes is the SDK's
+ * MIi_CpuClearFast. */
+extern void OS_Terminate(void);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 
@@ -72,7 +72,7 @@ void CARDi_LockResource(int owner, int target) {
     unsigned int saved = IRQ::Disable();
     if (p->lock_owner == owner) {
         if (p->lock_target != target)
-            Crash();
+            OS_Terminate();
     } else {
         while (p->lock_owner != OS_LOCK_ID_ERROR)
             OS_SleepThread(&p->lock_queue);
@@ -88,10 +88,10 @@ void CARDi_UnlockResource(int owner, int target) {
     CARDiCommon *p = &cardi_common;
     unsigned int saved = IRQ::Disable();
     if (p->lock_owner != owner || !p->lock_ref) {
-        Crash();
+        OS_Terminate();
     } else {
         if (p->lock_target != target)
-            Crash();
+            OS_Terminate();
         if (!--p->lock_ref) {
             p->lock_owner = OS_LOCK_ID_ERROR;
             p->lock_target = CARD_TARGET_NONE;

@@ -78,7 +78,7 @@ int func_020185c0(void *buf, unsigned int x);
 int FS_CloseFile(void *a);
 void CpuCopy8(const void *src, void *dst, unsigned int size);
 void func_02018770(void);
-void Crash(void);
+void OS_Terminate(void);
 int myFS_ReadFile(void *a, void *b, int c);
 }
 
@@ -141,7 +141,7 @@ void *SharedFilePtr::Load() {
     func_020185c0(&obj2, fileID);
     fsize = obj2.end - obj2.cur;
     if (fsize <= 8)
-        Crash();
+        OS_Terminate();
     raw = (int)Memory::Allocate(fsize, 0x20);
     CP15::FlushAndInvalidateDataCache((unsigned int)raw, fsize);
     int r = myFS_ReadFile(&obj2, (void *)raw, fsize);

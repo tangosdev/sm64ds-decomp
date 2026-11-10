@@ -3,7 +3,7 @@
 // switch, etc.), so there is no C to decompile it to -- the asm block is the
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
 #pragma thumb on
-asm void LZ77UnCompReadNormalWrite8bit(void) {
-    swi 0x11
+asm void SVC_UncompressRL16FromDevice(void) {
+    swi 0x15
     bx lr
 }

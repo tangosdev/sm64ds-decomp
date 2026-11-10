@@ -472,7 +472,7 @@ void SolidHeap_t::VDestroy()
 
 /* Heap::Allocate(u32, int) at 0x0203c6cc -- the allocation entry point: call
  * slot 3, and if it comes back empty on a fail-fast heap, do not return the
- * NULL to the caller, Crash() instead.
+ * NULL to the caller, OS_Terminate() instead.
  *
  * RETURN TYPE: void*, from the definition. Its old shard declared `int
  * Heap::Allocate(...)' while the sibling overload in this file, which
@@ -488,7 +488,7 @@ void* Heap_t::Allocate(u32 size, int align)
 {
     void* block = VAllocate(size, align);
     if (block == 0 && (flags & 0x4000))
-        Crash();
+        OS_Terminate();
     return block;
 }
 
@@ -590,7 +590,7 @@ bool SolidHeap_t::VIntact()
 }
 
 /* Heap::Rescue() at 0x0203c634 -- plain forward to slot 7, the concrete heap's
- * last-ditch recovery. Called from Heap::ResizeToFit just before Crash().
+ * last-ditch recovery. Called from Heap::ResizeToFit just before OS_Terminate().
  *
  * RETURN TYPE: void, from the definitions. The old shadow here declared its
  * fake slot as `int m()' and returned it, which is unobservable for a pure
@@ -608,11 +608,11 @@ void Heap_t::Rescue()
  * `bx lr'. No recovery is attempted.
  *
  * The previous comment guessed that the name "appears to be called just
- * before/by Crash, perhaps to rescue heap data before a fatal exception". The
+ * before/by OS_Terminate, perhaps to rescue heap data before a fatal exception". The
  * caller is known and it is Heap::ResizeToFit, which calls Rescue() and then
- * Crash() when a fail-fast heap cannot shrink -- so the guess had the order
- * right and the direction wrong: Rescue runs before Crash because Crash is what
- * follows a failure, not because Crash calls it. */
+ * OS_Terminate() when a fail-fast heap cannot shrink -- so the guess had the order
+ * right and the direction wrong: Rescue runs before OS_Terminate because OS_Terminate is what
+ * follows a failure, not because OS_Terminate calls it. */
 
 void ExpHeap_t::VRescue()
 {
@@ -794,7 +794,7 @@ void SolidHeap_t::VDeallocate(void* ptr)
 {
     if (ptr == 0)
         return;
-    Crash();
+    OS_Terminate();
 }
 
 } /* namespace mHeap */
@@ -857,7 +857,7 @@ void ExpHeap_t::VDeallocateAll()
 /* SolidHeap::VDeallocateAll() at 0x0203c49c -- Heap vtable slot 5. Throws the
  * whole arena away at once, which for a linear allocator is the only kind of
  * free that works: individual blocks cannot be returned (VDeallocate calls
- * Crash), so everything goes together or nothing does. */
+ * OS_Terminate), so everything goes together or nothing does. */
 
 void SolidHeap_t::VDeallocateAll()
 {
@@ -886,7 +886,7 @@ int Heap_t::Sizeof(void* ptr)
 {
     int size = VSizeof(ptr);
     if (size == -1 && (flags & 0x4000))
-        Crash();
+        OS_Terminate();
     return size;
 }
 
@@ -907,7 +907,7 @@ u32 ExpHeap_t::VSizeof(void* ptr)
 /* SolidHeap::VSizeof(void*) at 0x0203c428 -- Heap vtable slot 9.
  *
  * A linear allocator does not record block sizes, so asking is a programming
- * error: it calls Crash() and, if that ever returns, reports -1 -- the failure
+ * error: it calls OS_Terminate() and, if that ever returns, reports -1 -- the failure
  * value Heap::Sizeof tests for.
  *
  * Return type widened from int to u32 to match the slot. Byte-unobservable:
@@ -916,7 +916,7 @@ u32 ExpHeap_t::VSizeof(void* ptr)
 
 u32 SolidHeap_t::VSizeof(void* ptr)
 {
-    Crash();
+    OS_Terminate();
     return (u32)-1;
 }
 
@@ -1012,7 +1012,7 @@ u32 Heap_t::ResizeToFit()
         if (flags & 0x4000)
         {
             Rescue();
-            Crash();
+            OS_Terminate();
         }
     }
     return shrunk;

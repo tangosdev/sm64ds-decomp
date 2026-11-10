@@ -5099,7 +5099,7 @@ extern "C" void func_0202deac(int levelID) {
 void LoadLevelOverlays(int level) {
     if (data_0209f278) {
         if (data_02092130 != data_020758c8[level])
-            Crash();
+            OS_Terminate();
         data_0209f278 = 0;
         return;
     }

@@ -3,75 +3,75 @@
   "functions": {
     "arm9:0x0200406a": {
       "author": "ruspecial",
-      "name": "Div"
+      "name": "SVC_Div"
     },
     "arm9:0x020040f4": {
       "author": "ruspecial",
-      "name": "IntrWait"
+      "name": "SVC_WaitIntr"
     },
     "arm9:0x0200414c": {
       "author": "ruspecial",
-      "name": "SoftReset"
+      "name": "SVC_SoftReset"
     },
     "arm9:0x020041d2": {
       "author": "ruspecial",
-      "name": "GetCRC16"
+      "name": "SVC_GetCRC16"
     },
     "arm9:0x02004244": {
       "author": "ruspecial",
-      "name": "RLUnCompReadByCallbackWrite16bit"
+      "name": "SVC_UncompressRL16FromDevice"
     },
     "arm9:0x020042b6": {
       "author": "ruspecial",
-      "name": "Halt"
+      "name": "SVC_Halt"
     },
     "arm9:0x0200432c": {
       "author": "ruspecial",
-      "name": "BitUnPack"
+      "name": "SVC_UnpackBits"
     },
     "arm9:0x0200438a": {
       "author": "ruspecial",
-      "name": "CpuSet"
+      "name": "SVC_CpuSet"
     },
     "arm9:0x020043d0": {
       "author": "ruspecial",
-      "name": "Sqrt"
+      "name": "SVC_Sqrt"
     },
     "arm9:0x02004438": {
       "author": "ruspecial",
-      "name": "LZ77UnCompReadNormalWrite8bit"
+      "name": "SVC_UncompressLZ8"
     },
     "arm9:0x020044ae": {
       "author": "ruspecial",
-      "name": "IsDebugger"
+      "name": "SVC_IsMmemExpanded"
     },
     "arm9:0x0200451e": {
       "author": "ruspecial",
-      "name": "CpuFastSet"
+      "name": "SVC_CpuSetFast"
     },
     "arm9:0x0200456e": {
       "author": "ruspecial",
-      "name": "RLUnCompReadNormalWrite8bit"
+      "name": "SVC_UncompressRL8"
     },
     "arm9:0x020045e6": {
       "author": "ruspecial",
-      "name": "HuffUnCompReadByCallback"
+      "name": "SVC_UncompressHuffmanFromDevice"
     },
     "arm9:0x02004656": {
       "author": "andrewboudreau",
-      "name": "LZ77UnCompReadByCallbackWrite16bit"
+      "name": "SVC_UncompressLZ16FromDevice"
     },
     "arm9:0x020046c2": {
       "author": "andrewboudreau",
-      "name": "VBlankIntrWait"
+      "name": "SVC_WaitVBlankIntr"
     },
     "arm9:0x0200472a": {
       "author": "andrewboudreau",
-      "name": "WaitByLoop"
+      "name": "SVC_WaitByLoop"
     },
     "arm9:0x02004782": {
       "author": "ruspecial",
-      "name": "Mod"
+      "name": "SVC_DivRem"
     },
     "arm9:0x02004800": {
       "author": "ruspecial",
@@ -3055,7 +3055,7 @@
     },
     "arm9:0x02019740": {
       "author": "tangosdev",
-      "name": "Crash"
+      "name": "OS_Terminate"
     },
     "arm9:0x02019780": {
       "author": "tangosdev",
@@ -11671,11 +11671,11 @@
     },
     "arm9:0x0206a600": {
       "author": "tangosdev",
-      "name": "func_0206a600"
+      "name": "CTRDG_TerminateForPulledOut"
     },
     "arm9:0x0206a634": {
       "author": "tangosdev",
-      "name": "func_0206a634"
+      "name": "CTRDGi_PulledOutCallback"
     },
     "arm9:0x0206a694": {
       "author": "tangosdev",
@@ -11683,7 +11683,7 @@
     },
     "arm9:0x0206a6d0": {
       "author": "tangosdev",
-      "name": "func_0206a6d0"
+      "name": "CTRDGi_InitModuleInfo"
     },
     "arm9:0x0206a88c": {
       "author": "tangosdev",
