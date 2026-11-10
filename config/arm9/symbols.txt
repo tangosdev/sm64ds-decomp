@@ -3741,7 +3741,7 @@ _ZTSN5dPa_c7level_c23cleanParticleCallback_cE kind:data(any) addr:0x0208f5e0
 _ZTSN5dPa_c7level_c24fitWaterSimpleCallback_cE kind:data(any) addr:0x0208f60c
 _ZTSN5dPa_c7level_c26checkWaterRippleCallback_cE kind:data(any) addr:0x0208f638
 data_0208f668 kind:data(any) addr:0x0208f668
-Vec3_InterpCubic kind:data(any) addr:0x0208f670
+data_0208f670 kind:data(any) addr:0x0208f670
 data_0208f674 kind:data(any) addr:0x0208f674
 data_0208f678 kind:data(any) addr:0x0208f678
 data_0208f67c kind:data(any) addr:0x0208f67c
@@ -3801,7 +3801,7 @@ data_0208f820 kind:data(any) addr:0x0208f820
 data_0208f828 kind:data(any) addr:0x0208f828
 data_0208f830 kind:data(any) addr:0x0208f830
 data_0208f838 kind:data(any) addr:0x0208f838
-_ZN14BezierPathIter7AdvanceEv kind:data(any) addr:0x0208f840
+data_0208f840 kind:data(any) addr:0x0208f840
 data_0208f848 kind:data(any) addr:0x0208f848
 data_0208f850 kind:data(any) addr:0x0208f850
 data_0208f858 kind:data(any) addr:0x0208f858
@@ -3877,7 +3877,7 @@ data_0208faec kind:data(any) addr:0x0208faec
 data_0208faf8 kind:data(any) addr:0x0208faf8
 data_0208fb04 kind:data(any) addr:0x0208fb04
 data_0208fb10 kind:data(any) addr:0x0208fb10
-_ZN8Particle7Manager13UnloadNewTexsEv kind:data(any) addr:0x0208fb1c
+data_0208fb1c kind:data(any) addr:0x0208fb1c
 data_0208fb28 kind:data(any) addr:0x0208fb28
 data_0208fb34 kind:data(any) addr:0x0208fb34
 data_0208fb40 kind:data(any) addr:0x0208fb40
