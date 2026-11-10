@@ -8,7 +8,7 @@
   "boundary_evidence": [
     "One contiguous run of the Nitro SDK's gx_bgcnt.c, 0x02054d38..0x020551f0: for each of BG0..BG3 the screen-base and character-base getter of the main engine (G2_) and the sub engine (G2S_), sixteen functions with no gaps. Each matches by body the function in the same position in pret's pokediamond GX_bgcnt.c (16 of 16).",
     "Order: pret's file defines the getters BG0 screen through BG3 character, each G2S_ getter directly after its G2_ twin. mwccarm emits the bodies in reverse, so G2S_GetBG3CharPtr is lowest at 0x02054d38 and G2_GetBG0ScrPtr highest at 0x020551bc.",
-    "Vram__Map (0x02054c80..0x02054d38) below is the last of arm9/GX_VramCnt; G2x_ChangeBlendBrightness_ (0x020551f0) above is the first of arm9/G2x (gx_g2.c). Neither calls into or is called by the getter set.",
+    "GX_VRAMCNT_SetLCDC_ (0x02054c80..0x02054d38) below is the last of arm9/GX_VramCnt; G2x_ChangeBlendBrightness_ (0x020551f0) above is the first of arm9/G2x (gx_g2.c). Neither calls into or is called by the getter set.",
     "No data, bss or RTTI: the getters read fixed I/O registers and return computed addresses, so nothing but the sixteen functions emits."
   ],
   "sections": [

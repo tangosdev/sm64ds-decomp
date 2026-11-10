@@ -55,8 +55,6 @@ extern int data_0208ee44;
 extern dScMgBase_c::graphCallback_c sMgGraphCallback;
 
 /* arm9 / ov004 helpers with no project header. */
-void  func_02054430(int);
-void  func_02054748(int);
 void  func_02056674(const void *src, unsigned int offset, unsigned int count);
 int   func_020126e8(int a);
 void  func_020126ac(int a0, int a1, int a2, int a3, int s0);
@@ -89,7 +87,7 @@ extern "C" void D3D_CaptureToMain(void) {
     *(volatile unsigned short *)0x4000304 |= 0x8000;
     GX_ResetBankForSubOBJ();
     GX_SetBankForSubBG(4);
-    func_02054430(8);
+    GX_SetBankForLCDC(8);
     *(volatile unsigned int *)0x4000064 = 0x80330010;
     gSubScreenLayers &= ~0x10;
     gSubScreenLayers |= 4;
@@ -106,7 +104,7 @@ extern "C" void D3D_CaptureToSub(void)
     *(volatile unsigned short *)0x4000304 &= ~0x8000;
     GX_ResetBankForSubBG();
     GX_SetBankForSubOBJ(8);
-    func_02054430(4);
+    GX_SetBankForLCDC(4);
     *(volatile int *)0x4000064 = 0x80360010;
     GXS_SetGraphicsMode(5);
     gSubScreenLayers |= 0x10;
@@ -217,7 +215,7 @@ void dScMgD3DBase_c::InitEngines()
     GX_SetBankForTexPltt(0x40);
     *(vu32 *)0x4000000u &= ~0x7000000u;
     *(vu32 *)0x4000000u &= ~0x38000000u;
-    func_02054748(0);
+    GX_SetBankForBGExtPltt(0);
     GX_SetBankForOBJ(0x10);
     GX_SetBankForBG(2);
     file = Ov004_LoadFile(sD3DCommonNcgByLanguage[GetGameLanguage()]);

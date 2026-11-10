@@ -2,7 +2,6 @@
 #include "nitro/gx/gx_vramcnt.h"
 
 extern "C" {
-extern void func_02054430(int x);
 extern void MultiStore_Int(int val, int *dst, int len);
 extern void MultiStore32Bytes(unsigned val, void *dst, int len);
 
@@ -17,7 +16,7 @@ void MenuGfx_ResetVram(void) {
     GX_ResetBankForTexPltt();
     GX_ResetBankForSubBG();
     GX_ResetBankForSubOBJ();
-    func_02054430(0x1ff);
+    GX_SetBankForLCDC(0x1ff);
 
     b = 0;
     MultiStore_Int(b, (int *)0x6800000, 0xa4000);

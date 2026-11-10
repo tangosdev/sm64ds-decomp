@@ -8915,11 +8915,11 @@
     },
     "arm9:0x02053e1c": {
       "author": "tangosdev",
-      "name": "_ZN2GX16GetSizeOfTexPlttEv"
+      "name": "GX_GetSizeOfTexPltt"
     },
     "arm9:0x02053e34": {
       "author": "tangosdev",
-      "name": "_ZN2GX12GetSizeOfTexEv"
+      "name": "GX_GetSizeOfTex"
     },
     "arm9:0x02053e4c": {
       "author": "tangosdev",
@@ -8995,7 +8995,7 @@
     },
     "arm9:0x0205402c": {
       "author": "tangosdev",
-      "name": "DisableVramBanks"
+      "name": "disableBankForX_"
     },
     "arm9:0x020540f0": {
       "author": "ruspecial",
@@ -9031,7 +9031,7 @@
     },
     "arm9:0x020541b8": {
       "author": "tangosdev",
-      "name": "func_020541b8"
+      "name": "resetBankForX_"
     },
     "arm9:0x020541f0": {
       "author": "tangosdev",
@@ -9051,7 +9051,7 @@
     },
     "arm9:0x02054430": {
       "author": "ruspecial",
-      "name": "func_02054430"
+      "name": "GX_SetBankForLCDC"
     },
     "arm9:0x02054450": {
       "author": "tangosdev",
@@ -9063,7 +9063,7 @@
     },
     "arm9:0x02054748": {
       "author": "tangosdev",
-      "name": "func_02054748"
+      "name": "GX_SetBankForBGExtPltt"
     },
     "arm9:0x0205485c": {
       "author": "tangosdev",
@@ -9075,7 +9075,7 @@
     },
     "arm9:0x02054c80": {
       "author": "tangosdev",
-      "name": "Vram__Map"
+      "name": "GX_VRAMCNT_SetLCDC_"
     },
     "arm9:0x02054d38": {
       "author": "tangosdev",

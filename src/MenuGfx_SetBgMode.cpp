@@ -5,7 +5,6 @@
 #include "nitro/gx/gx_vramcnt.h"
 
 extern "C" {
-extern void func_02054430(int a);
 
 #define BG0CNT (*(volatile u16 *)0x4000008)
 #define BG1CNT (*(volatile u16 *)0x400000a)
@@ -30,7 +29,7 @@ void MenuGfx_SetBgMode(int mode) {
         break;
     case 2:
         GX_ResetBankForBG();
-        func_02054430(8);
+        GX_SetBankForLCDC(8);
         GX_SetBankForBG(0x10);
         break;
     case 3:

@@ -21,8 +21,10 @@ extern "C" {
 
 void GX_SetBankForBG(int);
 void GX_SetBankForOBJ(int);
+void GX_SetBankForBGExtPltt(int);
 void GX_SetBankForTex(int);
 void GX_SetBankForTexPltt(int);
+void GX_SetBankForLCDC(int);
 void GX_SetBankForSubBG(int);
 void GX_SetBankForSubOBJ(int);
 void GX_SetBankForSubBGExtPltt(int);
@@ -56,6 +58,10 @@ int GX_GetBankForTex(void);
 int GX_GetBankForTexPltt(void);
 int GX_GetBankForSubBG(void);
 int GX_GetBankForSubOBJ(void);
+
+/* The bytes of VRAM a user currently holds (the SDK returns u32). */
+int GX_GetSizeOfTex(void);
+int GX_GetSizeOfTexPltt(void);
 
 #ifdef __cplusplus
 }

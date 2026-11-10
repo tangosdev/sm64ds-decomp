@@ -998,7 +998,7 @@
 0x02054544	GX_SetBankForTex	function
 0x0205485c	GX_SetBankForOBJ	function
 0x020549c8	GX_SetBankForBG	function
-0x02054c80	Vram__Map	function
+0x02054c80	GX_VRAMCNT_SetLCDC_	function
 0x02054d38	G2S_GetBG3CharPtr	function
 0x02054e30	G2_GetBG2CharPtr	function
 0x02054edc	G2S_GetBG0CharPtr	function
