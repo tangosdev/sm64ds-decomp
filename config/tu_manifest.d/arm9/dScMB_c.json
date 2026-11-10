@@ -130,14 +130,14 @@
   "data": [],
   "bss": [
     {
-      "symbol": "sPrevHeap$405",
+      "symbol": "sPrevHeap$390",
       "address": "0x020a0c5c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "LoadMultiBootResources's function-local static mHeap::Heap_t *: the default heap the loader restores after each archive load. Its dynamic initializer (the previous default that SetDefault returns when the func_0201a458 heap is installed) runs once under the guard word above it; LoadMultiBootResources is its only reference."
     },
     {
-      "symbol": "_ZGVsPrevHeap$405",
+      "symbol": "_ZGVsPrevHeap$390",
       "address": "0x020a0c60",
       "size": "0x4",
       "binding": "STB_GLOBAL",
@@ -529,13 +529,13 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "sPrevHeap$405",
+      "symbol": "sPrevHeap$390",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "function-local static; DSD requires a configured global symbol at 0x020a0c5c, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
     },
     {
-      "symbol": "_ZGVsPrevHeap$405",
+      "symbol": "_ZGVsPrevHeap$390",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "function-local static guard; DSD requires a configured global symbol at 0x020a0c60, and changing the ELF binding preserves storage, relocations and bytes"
