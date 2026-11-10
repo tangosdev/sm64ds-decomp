@@ -1,14 +1,18 @@
 //cpp
-/* engine/gx/G3i.cpp — G3i TU (arm9 0x02055998..0x02055dec)
+/* engine/gx/G3i.cpp -- the Nitro SDK's gx_g3_util.c (arm9 0x02055998..0x02055dec)
  *
- * G3i is the geometry engine's matrix-command writer set: LookAt_ builds a
- * camera basis (right/up2/forward) and streams it to the position-matrix port,
- * PerspectiveW_ drives the division unit at 0x4000290 to build a perspective
- * projection and streams it to the projection port. Both are static (no this)
- * and both optionally mirror the matrix into a caller's Matrix4x3.
+ * The geometry engine's matrix builders, under the SDK's names with C
+ * linkage (include/nitro/gx/g3_util.h; ntrtwl/NitroSDK
+ * libraries/gx/src/g3_util.c): G3i_LookAt_ builds a camera basis
+ * (right/up2/forward) and streams it to the position-matrix port,
+ * G3i_PerspectiveW_ drives the division unit at 0x4000290 to build a
+ * perspective projection and streams it to the projection port. Both
+ * optionally mirror the matrix into the caller's Matrix4x3.
  */
-// leftovers: func_02055998 keeps its address name (no recovered name exists).
-#include "G3i.h"
+// G3_LoadTexMtxEnv, the TU's first function, is the Nitro SDK's g3_util.c
+// function of that name: it selects the texture matrix mode and loads a 4x4
+// matrix, the first twelve words shifted left by 4.
+#include "nitro/gx/g3_util.h"
 #include "math/Matrix.h"
 #include "nitro/fx/fx.h"
 #include "cstd.h"
@@ -21,8 +25,8 @@ Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
 
 /* The Nitro SDK's G3i_PerspectiveW_: the load flag is a BOOL. Spelled bool,
    the body tests it differently from the ROM; int reproduces it. */
-void G3i::PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i f, Fix12i scaleW,
-                        int flag, Matrix4x3 *mtxp) {
+void G3i_PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i f, Fix12i scaleW,
+                       int flag, Matrix4x3 *mtxp) {
     int *mtx = (int *)mtxp;
     int tmp;
     volatile int *port;
@@ -95,8 +99,8 @@ void G3i::PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12
     }
 }
 
-void G3i::LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target, bool draw,
-                  Matrix4x3 *mat) {
+void G3i_LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target, bool draw,
+                 Matrix4x3 *mat) {
     Vector3 forward;
     Vector3 right;
     Vector3 up2;
@@ -159,8 +163,7 @@ void G3i::LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *targe
     mat->t.z = tz;
 }
 
-extern "C" void func_02055998(int *m)
-{
+extern "C" void G3_LoadTexMtxEnv(int *m) {
     *(volatile int *)0x4000440 = 3;
     *(volatile int *)0x4000458 = m[0] << 4;
     *(volatile int *)0x4000458 = m[1] << 4;

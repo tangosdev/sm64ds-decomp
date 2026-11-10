@@ -30,9 +30,9 @@
 #include "nitro/hw/registers.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
-#include "G2.h"
-#include "G2x.h"
-#include "GX.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/gx_load.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
@@ -44,7 +44,7 @@
 #include "dExtAnmTexSRT_c.h"
 #include "dExtAnmTexPat_c.h"
 #include "dExtAnmMaterial_c.h"
-#include "G3X.h"
+#include "nitro/gx/g3x.h"
 #include "Sound.h"
 #include "PlayerInput.h"
 #include "dExtSimpleModel_c.h"
@@ -109,7 +109,7 @@ void InitialiseVramGlobals(void);
 void Deallocate(void*);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
-void func_02056374(const void*, u32, u32);
+void GXS_LoadBG2Scr(const void *, u32, u32);
 
 extern int sEsp3DMaterialAnim;
 extern int pmf_dMg3DEspModel_c_Idle_2[];
@@ -143,7 +143,6 @@ dScMg3DEsp_c::~dScMg3DEsp_c()
 }
 
 /* ---- dMg3DEspAnimSet_c ------------------------------------------------- */
-
 
 void dMg3DEspAnimSet_c::Render()
 {
@@ -236,7 +235,6 @@ dMg3DEspAnimSet_c::~dMg3DEspAnimSet_c()
 }
 
 dMg3DEspAnimSet_c::dMg3DEspAnimSet_c() {}
-
 
 /* ---- dMg3DEspModel_c --------------------------------------------------- */
 
@@ -713,7 +711,7 @@ void dScMg3DEsp_c::RowFade(int i)
     mFade += 1;
     {
         unsigned char ip = mFade;
-        G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 4, 0x10 - ip, ip);
+        G2x_SetBlendAlpha_((volatile unsigned short *)0x4001050, 0, 4, 0x10 - ip, ip);
     }
     if (mFade < 0x10)
         return;
@@ -1044,7 +1042,7 @@ void dScMg3DEsp_c::Fade()
     if (mFadeTick >= 4) {
         mFadeTick = 0;
         mFade += 1;
-        G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 4, mFade, 0x10 - mFade);
+        G2x_SetBlendAlpha_((volatile unsigned short *)0x4001050, 0, 4, mFade, 0x10 - mFade);
     }
     UpdateCards();
     if (mFade < 0x10)
@@ -1271,7 +1269,7 @@ s32 dScMg3DEsp_c::InitResources()
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x10;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
 
     /* main BG0CNT: priority 1 */
@@ -1312,21 +1310,21 @@ s32 dScMg3DEsp_c::InitResources()
     *(volatile unsigned short*)0x400100c = (*(volatile unsigned short*)0x400100c & 0x43) | 0x210;
 
     f = LoadFile(0x12);
-    DecompressLZ16(f, (void *)((unsigned)G2S::GetBG2CharPtr() + 0x4000));
+    DecompressLZ16(f, (void *)((unsigned)G2S_GetBG2CharPtr() + 0x4000));
     Deallocate(f);
 
     f = LoadFile(0x13);
-    GXS::LoadBGPltt(f, 0x1e0, 0x20);
+    GXS_LoadBGPltt(f, 0x1e0, 0x20);
     Deallocate(f);
 
     f = LoadFile(0x14);
-    func_02056374(f, 0, 0x800);
+    GXS_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     r5v = LoadFile(8);
     r4v = LoadFile(9);
     DecompressLZ16(r5v, (void *)0x6600000);
-    GXS::LoadOBJPltt(r4v, 0, 0x100);
+    GXS_LoadOBJPltt(r4v, 0, 0x100);
     Deallocate(r5v);
     Deallocate(r4v);
 

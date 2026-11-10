@@ -4,8 +4,8 @@
 
 extern "C" {
 
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
-extern void func_0205a588(void *dst, unsigned char v, unsigned int size);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MI_CpuFill8(void *dst, unsigned char v, unsigned int size);
 
 /* NitroSDK WM_StartConnect(callback, pInfo, ssid): func_020690b0 passes it
  * its connectBssDesc (a 0xc0-byte WMBssDesc, flushed here) and no ssid. The
@@ -34,9 +34,9 @@ int WM_StartConnect(void *callback, int b, void *c) {
     q->apiid = 0xc;
     q->pInfo = b;
     if (c != 0) {
-        CpuCopy8(c, q->ssid, 0x18);
+        MI_CpuCopy8(c, q->ssid, 0x18);
     } else {
-        func_0205a588(q->ssid, 0, 0x18);
+        MI_CpuFill8(q->ssid, 0, 0x18);
     }
     r = WM_SendCommand(0xc, 0);
     return (r == 0) ? 2 : r;

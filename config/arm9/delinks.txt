@@ -2268,7 +2268,7 @@ src/engine/gx/GX_VramCnt.cpp:
     complete
     .text start:0x02053e1c end:0x02054d38
 
-src/engine/gx/G2.cpp:
+src/engine/gx/GX_BgCnt.c:
     complete
     .text start:0x02054d38 end:0x020551f0
 
@@ -2276,21 +2276,9 @@ src/engine/gx/G2x.cpp:
     complete
     .text start:0x020551f0 end:0x0205532c
 
-src/unnamed/arm9/0205/func_0205532c.c:
+src/engine/gx/GX_g3imm.c:
     complete
-    .text start:0x0205532c end:0x0205536c
-
-src/Geometry_MatrixMultiply3x3.c:
-    complete
-    .text start:0x0205536c end:0x02055388
-
-src/unnamed/arm9/0205/func_02055388.c:
-    complete
-    .text start:0x02055388 end:0x020553a4
-
-src/unnamed/arm9/0205/func_020553a4.c:
-    complete
-    .text start:0x020553a4 end:0x020553c0
+    .text start:0x0205532c end:0x020553c0
 
 src/GXi_NopClearFifo128_.c:
     complete
@@ -2316,7 +2304,7 @@ src/engine/gx/GX.cpp:
     complete
     .text start:0x020568cc end:0x02056c1c
 
-src/Copy48BytesFixed.c:
+src/GX_SendFifo48B.c:
     complete
     .text start:0x02056c1c end:0x02056c40
 

@@ -149,13 +149,13 @@ extern int WM_StartMPEx(void *callback, int recvBuf, u16 recvBufSize, int sendBu
 extern int WM_SetMPDataToPort(int callback, int data, int size, int aidBitmap, u16 port, u16 prio);
 
 extern void OS_GetMacAddress(unsigned char *macAddress);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
-extern void MultiStore_Int(int val, int *dst, int len);
-extern void MultiCopyHalf(const void *src, void *dst, int count);
-extern void DMASyncHalfTransfer(unsigned int ch, void *src, void *dst, unsigned int n);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear32(int val, int *dst, int len);
+extern void MIi_CpuCopy16(const void *src, void *dst, int count);
+extern void MI_DmaCopy16(unsigned int ch, void *src, void *dst, unsigned int n);
 // local extern: MI_Memory.c defines these two as assembly stubs.
-extern void CpuCopy8(const void *src, void *dst, u32 size);
-extern void func_0205a588(void *dst, u8 val, u32 size);
+extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
+extern void MI_CpuFill8(void *dst, u8 val, u32 size);
 
 extern void MB_CommSetParentStateCallback(u32 callback);
 extern void MB_InitSendGameInfoStatus(void);
@@ -428,16 +428,16 @@ static inline void RecordScannedParent(WmWork *const w, char *arg0) {
             tbl[i].scan.gameInfoLength = cb->gameInfoLength;
             *(GameInfo *)tbl[i].scan.gameInfo = *(GameInfo *)cb->gameInfo;
             CP15::InvalidateDataCache((u32)&w->parents[i], 0xc0);
-            DMASyncHalfTransfer(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
+            MI_DmaCopy16(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
             w->lastParentIndex = i;
             return;
         }
     }
     if (i < 0x10) {
         w->parentCount = i + 1;
-        MultiCopyHalf(arg0, &tbl[i].scan, 0xb8);
+        MIi_CpuCopy16(arg0, &tbl[i].scan, 0xb8);
         CP15::InvalidateDataCache((u32)&w->parents[i], 0xc0);
-        DMASyncHalfTransfer(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
+        MI_DmaCopy16(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
         w->lastParentIndex = i;
     }
 }
@@ -660,9 +660,9 @@ int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 
     data_020a9db0 = (u16)dma;
     data_020a9db4 = base1;
     data_020a9db8 = base2;
-    MultiStore_Int(fill_i, (int *)base1, sizeof(WmWork));
+    MIi_CpuClear32(fill_i, (int *)base1, sizeof(WmWork));
     fill_s = 0;
-    MultiStore16(fill_s, base2, 0x1340);
+    MIi_CpuClear16(fill_s, base2, 0x1340);
     /* The user's name and L"multiboot" (MB_Init's static game-name pointer,
      stepped as it is read); 10 halfwords overrun the 8-byte uname into
      gname, which the second copy then overwrites */
@@ -692,7 +692,7 @@ int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 
             *(dst++) = *ptr;
         } while (j < 0x10);
     }
-    CpuCopy8(user, base2 + 0x1300, 0x16);
+    MI_CpuCopy8(user, base2 + 0x1300, 0x16);
     ((WmWork *)base1)->parentMaxSize = 0x100;
     ((WmWork *)base1)->childMaxSize = 8;
     ((WmWork *)base1)->sendBufSize = 0;
@@ -790,7 +790,7 @@ int func_02068ae8(int param0) {
     cb = MB_WORK->mParentCallback;
 
     sp0 = 0;
-    MultiStore16(sp0, (char *)MB_WORK->mChildUser, 0x60a0);
+    MIi_CpuClear16(sp0, (char *)MB_WORK->mChildUser, 0x60a0);
 
     MB_CommSetParentStateCallback(cb);
 
@@ -805,9 +805,9 @@ int func_02068ae8(int param0) {
     MB_WORK->mFileCount = 0;
 
     sp2 = 0;
-    MultiStore16(sp2, (char *)MB_WORK->mFiles, 0x5c40);
+    MIi_CpuClear16(sp2, (char *)MB_WORK->mFiles, 0x5c40);
 
-    func_0205a588(MB_WORK->mChildResponse, 0, 0x1e);
+    MI_CpuFill8(MB_WORK->mChildResponse, 0, 0x1e);
 
     WM_WORK->mode = 1;
     WM_WORK->userCallback = (void (*)(int, void *))MBi_CommParentCallback;

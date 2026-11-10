@@ -13,8 +13,7 @@
  *   stay linker names, and neither is claimed here.
  */
 #include "common.h"
-#include "G3X.h"
-#include "GX.h"
+#include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/g3x.h"
 #include "nitro/hw/registers.h"
 
@@ -60,26 +59,25 @@ extern Matrix4x3 data_0209b3ec; /* the view matrix */
 extern Matrix4x3 data_0209b41c; /* its inverse */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
-void func_0205583c(void);
 void func_02045d9c(void);
 }
 
-#include "G3i.h"
+#include "nitro/gx/g3_util.h"
 
 extern "C" {
 
 // Bring up the geometry engine with the game's default 3D state.
 void Initialise3dGraphics(int arg) {
-    func_0205583c();
-    G3X::InitTable();
-    G3X::InitMtxStack();
+    G3X_Init();
+    G3X_InitTable();
+    G3X_InitMtxStack();
     G3X_SetShading(GX_SHADING_TOON);
     G3X_AntiAlias(true);
     G3X_AlphaBlend(true);
     G3X_EdgeMarking(false);
-    G3X::SetClearColor(0, arg, 0x7fff, 0x3f, false);
+    G3X_SetClearColor(0, arg, 0x7fff, 0x3f, false);
     G3_ViewPort(0, 0, 255, 191);
-    G3i::PerspectiveW_(0x579, 0xf09, 0x1555, 0x1000, 0x3e8000, 0x1000, 1, 0);
+    G3i_PerspectiveW_(0x579, 0xf09, 0x1555, 0x1000, 0x3e8000, 0x1000, 1, 0);
     G3_StoreMtx(0);
     G3_SwapBuffers(GX_SORTMODE_MANUAL, GX_BUFFERMODE_W);
 }
@@ -87,8 +85,8 @@ void Initialise3dGraphics(int arg) {
 // Full 3D setup: engine state, texture banks, an identity view.
 void func_0200f4f4(void) {
     Initialise3dGraphics(0);
-    GX::SetBankForTex(3);
-    GX::SetBankForTexPltt(0x30);
+    GX_SetBankForTex(3);
+    GX_SetBankForTexPltt(0x30);
     func_02045d9c();
     data_0209b3ec = IDENTITY_MATRIX4X3;
     InvMat4x3(&data_0209b3ec, &data_0209b41c);
@@ -97,7 +95,7 @@ void func_0200f4f4(void) {
 // Reset the matrix stacks: identity texture matrix, then back to
 // position-vector mode.
 void func_0200f4b4(void) {
-    G3X::Reset();
+    G3X_Reset();
     G3_MtxMode(GX_MTXMODE_TEXTURE);
     G3_Identity();
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);

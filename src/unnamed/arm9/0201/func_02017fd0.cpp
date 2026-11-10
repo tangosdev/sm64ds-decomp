@@ -5,7 +5,7 @@
 
 extern "C" {
 
-extern void MultiStore_Int(s32 val, void *dst, s32 size);
+extern void MIi_CpuClear32(s32 val, void *dst, s32 size);
 
 /* Poison an unloaded overlay's RAM (UnloadOverlay): invalidate both caches
    over its code and bss, then fill them with 0xe6000010, an ARM undefined
@@ -26,6 +26,6 @@ void func_02017fd0(FSOverlayInfo *info) {
     CP15::InvalidateDataCache((u32)ptr, len);
 
     fillVal = 0xe6000010;
-    MultiStore_Int(fillVal, ptr, len);
+    MIi_CpuClear32(fillVal, ptr, len);
 }
 }

@@ -155,7 +155,7 @@ to both gates above. **Keep this one closest.**
 - **9 "interior to a typed member"** findings -- header self-contradictions, not typing
   questions. Separate fix.
 - **`dScStage_c.unk_874`** -- rests only on a cast through a locally-declared struct.
-- **`include/G2x.h`** -- describes hardware registers, not an object. Issue **#1148**,
+- **the G2x header** (`include/nitro/gx/g2.h` since the SDK rename) -- describes hardware registers, not an object. Issue **#1148**,
   someone else is on it. Do not type it.
 - **`ModelBase::SetFile` is declared `void`** but the ROM's call sites consume r0, so it
   returned a value. Two call sites keep the mangled spelling with a note. Fixing it means

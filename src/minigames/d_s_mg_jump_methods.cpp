@@ -27,6 +27,7 @@
 #include "types.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "nitro/gx/g3x.h"
 
 /* `C` stands in for the receiver of the state pointer-to-member at 0x5004.
  * It must stay non-polymorphic: mwccarm lays out a pointer-to-member of a
@@ -38,6 +39,7 @@ struct C { char pad[0x5004]; PMF m; };
 /* Whole-matrix copies go through this so they stay one block move. */
 #include "private/mtx43.h"
 #include "LevelRng.h"
+#include "nitro/gx/gx_load.h"
 struct V3 { int w[3]; };
 
 /* The two model file handles InitResources swaps between through
@@ -96,10 +98,6 @@ extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle_2;
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Play;
 }
 
-namespace GX   { void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size); }
-namespace G3X {
-void SetFog(int enable, int mode, int slope, int offset);
-}
 namespace cstd {
 s32 fdiv(s32 a, s32 b);
 }
@@ -200,12 +198,12 @@ s32 dScMgJump_c::InitResources()
     buf1 = LoadFile(sJumpNcgByLanguage[idx]);
     buf2 = LoadFile(0xd1);
     DecompressLZ16(buf1, (void *)0x6400000);
-    GX::LoadOBJPltt(buf2, 0, 0x80);
+    GX_LoadOBJPltt(buf2, 0, 0x80);
     Deallocate(buf1);
     Deallocate(buf2);
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = cstd::fdiv(0xc0000, (s32)data_02082614);

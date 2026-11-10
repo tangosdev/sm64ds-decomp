@@ -2567,9 +2567,9 @@
   "undefined_symbol_aliases": [],
   "defined_symbol_renames": [
     {
-      "from": "@845",
+      "from": "@864",
       "to": "data_0209f388",
-      "evidence": "compiler temp: the destructor-registration node for data_0209f43c. mwcc numbers it @834 here, and ov032 already defines @834, so it keeps the configured address name Re-keyed from @837 to @845 when the TU included nitro/fx/fx_trig.h (#821)."
+      "evidence": "compiler temp: the destructor-registration node for data_0209f43c. mwcc numbers it @834 here, and ov032 already defines @834, so it keeps the configured address name Re-keyed from @837 to @845 when the TU included nitro/fx/fx_trig.h (#821). Re-keyed from @845 to @848 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @845 to @861 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

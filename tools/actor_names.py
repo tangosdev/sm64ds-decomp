@@ -55,7 +55,7 @@ def load_modules():
     # uncompressed prefix.
     arm9 = (REPO / "extracted/arm9_dec.bin").read_bytes()
     assert arm9[0x0205A548 - ARM9_BASE:0x0205A54C - ARM9_BASE] != b"\x00\x00\x00\x00", \
-        "arm9_dec.bin failed the known-code anchor (Copy36Bytes)"
+        "arm9_dec.bin failed the known-code anchor (MI_Copy36B)"
     mods = [("arm9", ARM9_BASE, arm9)]
     # Overlay images come from the raw ndspy extraction (the ROM's linked
     # bytes). The dsd delink export zeroes every relocated word -- a

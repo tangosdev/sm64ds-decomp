@@ -1,13 +1,11 @@
 //cpp
-#include "GX.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
 
-namespace GXS {
-void SetGraphicsMode(int a);
-}
 extern "C" void MenuGfx_InitSubEngine(void) {
-    GX::SetBankForSubBG(4);
-    GX::SetBankForSubOBJ(0x100);
-    GXS::SetGraphicsMode(0);
+    GX_SetBankForSubBG(4);
+    GX_SetBankForSubOBJ(0x100);
+    GXS_SetGraphicsMode(0);
 
     *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 0x314;
     *(volatile unsigned short *)0x400100c = (*(volatile unsigned short *)0x400100c & 0x43) | 0x84;

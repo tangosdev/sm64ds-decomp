@@ -37,8 +37,8 @@
 #include "SaveData.h"
 #include "Message.h"
 #include "MessageBank.h"
-#include "G2x.h"
-#include "G2.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "private/mb_views.h"
 
 struct OamAttr;
@@ -121,8 +121,8 @@ extern u32 data_0209287c[];
 extern MBUserInfo *func_0203d8a0(int idx);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
-extern void MultiStore_Int(int val, int *dst, int len);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear32(int val, int *dst, int len);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
 /* local extern: Fix12 wall -- the by-value Fix12<int> form cannot be spelled
@@ -324,19 +324,19 @@ extern "C" void func_02031428(void) {
     int j;
     u32 *base;
 
-    base = (u32 *)(func_02054d88() + 0x4000);
+    base = (u32 *)((int)G2_GetBG3CharPtr() + 0x4000);
 
     for (i = 0; i < (cnt = ((MessageEntry *)data_0209fd00)->lineCount * 2); i++) {
         for (j = 0; j < data_0209fc78; j++) {
             /* scroll the tile up four pixel rows (4 bytes per 4bpp row) */
-            MultiCopy_Int((int *)(base + 4), (int *)base, 0x10);
+            MIi_CpuCopy32((int *)(base + 4), (int *)base, 0x10);
             if (i == ((MessageEntry *)data_0209fd00)->lineCount * 2 - 1) {
                 base[4] = 0;
                 base[5] = 0;
                 base[6] = 0;
                 base[7] = 0;
             } else {
-                MultiCopy_Int((int *)(base + data_0209fc78 * 8), (int *)(base + 4), 0x10);
+                MIi_CpuCopy32((int *)(base + data_0209fc78 * 8), (int *)(base + 4), 0x10);
             }
             base += 8;
         }
@@ -355,7 +355,7 @@ extern "C" void func_02031428(void) {
         int i2;
         int i3;
 
-        dst = (u32 *)(func_02054d88() + ((data_0209fc78 * (cnt - 1) + 0x200) << 5) + 0x10);
+        dst = (u32 *)((int)G2_GetBG3CharPtr() + ((data_0209fc78 * (cnt - 1) + 0x200) << 5) + 0x10);
         col = data_0209fc7c;
         count = data_0209fcd8;
 
@@ -398,17 +398,17 @@ extern "C" void func_020316d8(int screen, int c, u32 x, void *buf) {
     u32 *chr;
     int pitch;
     if (screen == 1)
-        chr = (u32 *)((char *)G2::GetBG2CharPtr() + ((data_0209fcdc + 0x280 + (x >> 3)) << 5));
+        chr = (u32 *)((char *)G2_GetBG2CharPtr() + ((data_0209fcdc + 0x280 + (x >> 3)) << 5));
     else if (screen == 0)
-        chr = (u32 *)((char *)G2S::GetBG0CharPtr() + ((data_0209fc78 + 0x200 + (x >> 3)) << 5));
+        chr = (u32 *)((char *)G2S_GetBG0CharPtr() + ((data_0209fc78 + 0x200 + (x >> 3)) << 5));
     else
-        chr = (u32 *)((char *)func_02054d88() + ((data_0209fc78 + 0x200 + (x >> 3)) << 5));
+        chr = (u32 *)((char *)G2_GetBG3CharPtr() + ((data_0209fc78 + 0x200 + (x >> 3)) << 5));
 
     if ((x & 0xf) == 0) {
-        MultiCopy_Int((int *)((char *)buf + ((((c & 0xf) << 1) + ((c & 0xf0) << 2)) << 5)),
+        MIi_CpuCopy32((int *)((char *)buf + ((((c & 0xf) << 1) + ((c & 0xf0) << 2)) << 5)),
                       (int *)chr, 0x40);
         pitch = (data_0209fc88 + 7) / 8;
-        MultiCopy_Int((int *)((char *)buf + (((c & 0xf) + (((c & 0xf0) << 1) + 0x10)) << 6)),
+        MIi_CpuCopy32((int *)((char *)buf + (((c & 0xf) + (((c & 0xf0) << 1) + 0x10)) << 6)),
                       (int *)(chr + pitch * 8), 0x40);
     } else {
         int lo;
@@ -466,7 +466,7 @@ extern "C" void func_020318a4(int sl) {
     u8 op;
 
     acc = data_0209fc7c;
-    base = func_02054d88() + 0x8000;
+    base = (int)G2_GetBG3CharPtr() + 0x8000;
     m = -1;
     z = 0;
 
@@ -521,10 +521,10 @@ extern "C" void func_020319fc(int n) {
     u8 rem;
 
     if (data_0209fc94 != 0)
-        dst = (u32 *)((char *)G2S::GetBG0CharPtr() +
+        dst = (u32 *)((char *)G2S_GetBG0CharPtr() +
                       (((data_0209fcb0 * data_0209fc78 << 1) + 0x200) << 5));
     else
-        dst = (u32 *)((char *)func_02054d88() +
+        dst = (u32 *)((char *)G2_GetBG3CharPtr() +
                       (((data_0209fcb0 * data_0209fc78 << 1) + 0x200) << 5));
 
     skip = (n - 1) << 5;
@@ -562,9 +562,9 @@ void Message::AddCharVS(u8 c) {
     if (sh == 2) {
         ip = (int *)(((char *)data_0209fd10) + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
     } else if (sh == 1) {
-        ip = (int *)(((char *)G2S::GetBG1CharPtr()) + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
+        ip = (int *)(((char *)G2S_GetBG1CharPtr()) + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
     } else {
-        ip = (int *)(((char *)func_02054d88()) + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
+        ip = (int *)(((char *)G2_GetBG3CharPtr()) + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
     }
     mask = data_0209285c[data_0209fcd4];
     sh = data_0209fccc;
@@ -650,7 +650,7 @@ void Message::LayoutLineVS() {
         data_0209fd1c = 0;
         data_0209fcd8 = 0;
         data_0209fc88 = 0;
-        MultiStore_Int(zero, (int *)data_0209fd5c, 0xf00);
+        MIi_CpuClear32(zero, (int *)data_0209fd5c, 0xf00);
     }
 
     for (;;) {
@@ -1104,13 +1104,13 @@ extern "C" void func_02032f9c(int a) {
                            ((MessageInfoSection *)data_0209fcf8)->sectionSize +
                            ((MessageEntry *)((char *)data_0209fd08 + idx * 8))->textOffset);
 
-    p = func_02054d88() + 0x4000;
+    p = (int)G2_GetBG3CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int *)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
 
-    s = (int)G2::GetBG3ScrPtr();
+    s = (int)G2_GetBG3ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char *)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
 
     if (a < 0) {
         return;
@@ -1121,7 +1121,7 @@ extern "C" void func_02032f9c(int a) {
 
     w = 0x100 - data_0209fc88;
     data_0209fc7c = (u8)((w >> 1) & 7);
-    q = (u16 *)((char *)G2::GetBG3ScrPtr() + 0x40) + (u16)(w / 8 >> 1);
+    q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x40) + (u16)(w / 8 >> 1);
     c = data_0209fc7c;
     n = (data_0209fc88 + c + 7) >> 3;
     i = 0;
@@ -1162,17 +1162,17 @@ extern "C" void func_020331fc(int a0, int a1, int a2) {
     int old;
     unsigned char *p;
 
-    base = func_02054d88() + 0x8000;
+    base = (int)G2_GetBG3CharPtr() + 0x8000;
     data_0209fc78 = 0;
     data_0209fc88 = 0;
     data_0209fc84 = a2;
 
     {
-        int cp = (u32)G2S::GetBG0CharPtr() + 0x4000;
+        int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
         li = 0;
-        MultiStore_Int(li, (int *)(cp + (data_0209fc78 << 5)), 0x800);
+        MIi_CpuClear32(li, (int *)(cp + (data_0209fc78 << 5)), 0x800);
     }
-    scr = (short *)((u32)G2S::GetBG0ScrPtr() + a0 * 2);
+    scr = (short *)((u32)G2S_GetBG0ScrPtr() + a0 * 2);
     func_02031028(1);
 
     old = data_0209fc88;
@@ -1217,17 +1217,17 @@ extern "C" void func_02033390(int sub) {
     if (sub != 0) {
         volatile u16 fill;
         volatile s32 v;
-        int *dst = (int *)(func_02054d88() + 0x4000);
+        int *dst = (int *)((int)G2_GetBG3CharPtr() + 0x4000);
         v = 0;
-        MultiStore_Int(v, dst, 0x2000);
-        MultiStore16(fill = 0x2ff, (char *)G2::GetBG3ScrPtr(), 0x800);
+        MIi_CpuClear32(v, dst, 0x2000);
+        MIi_CpuClear16(fill = 0x2ff, (char *)G2_GetBG3ScrPtr(), 0x800);
     } else {
         volatile u16 fill;
         volatile s32 v;
-        int *dst = (int *)((int)G2S::GetBG0CharPtr() + 0x4000);
+        int *dst = (int *)((int)G2S_GetBG0CharPtr() + 0x4000);
         v = 0;
-        MultiStore_Int(v, dst, 0x2000);
-        MultiStore16(fill = 0x2ff, (char *)G2S::GetBG0ScrPtr(), 0x800);
+        MIi_CpuClear32(v, dst, 0x2000);
+        MIi_CpuClear16(fill = 0x2ff, (char *)G2S_GetBG0ScrPtr(), 0x800);
     }
 }
 
@@ -1258,15 +1258,15 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
     data_0209fcd8 = 0;
     data_0209fc84 = arg1;
 
-    MultiStore_Int(li4, (int *)data_0209fd5c, 0xf00);
+    MIi_CpuClear32(li4, (int *)data_0209fd5c, 0xf00);
 
     if (arg2 == 0) {
         x = (arg0 * 2 + 8) << 0x15;
         data_0209fc94 = 1;
         t = x >> 16;
-        d = (char *)((u32)G2S::GetBG0ScrPtr() + (((x >> 16) & 0xffe0) << 1));
+        d = (char *)((u32)G2S_GetBG0ScrPtr() + (((x >> 16) & 0xffe0) << 1));
         sv0 = 0x2ff;
-        MultiStore16(sv0, d, 0x80);
+        MIi_CpuClear16(sv0, d, 0x80);
         if (arg1 < 0)
             return;
         func_02031028(0);
@@ -1286,12 +1286,12 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
         }
         data_0209fc78 = (u8)(arg0 * 0x18 + data_0209fcdc);
         {
-            int cp = (u32)G2S::GetBG0CharPtr() + 0x4000;
+            int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
             int *dst = (int *)(cp + (data_0209fc78 << 5));
             li8 = 0;
-            MultiStore_Int(li8, dst, 0x300);
+            MIi_CpuClear32(li8, dst, 0x300);
         }
-        base = (u16 *)((u32)G2S::GetBG0ScrPtr() + ((t + (data_0209fc7c >> 3)) << 1));
+        base = (u16 *)((u32)G2S_GetBG0ScrPtr() + ((t + (data_0209fc7c >> 3)) << 1));
         {
             u32 ch = data_0209fc78;
             x = ch + 0x200;
@@ -1311,9 +1311,9 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
         func_020319fc(0xc);
     } else {
         data_0209fc94 = 0;
-        d = (char *)G2::GetBG3ScrPtr() + (arg0 << 1);
+        d = (char *)G2_GetBG3ScrPtr() + (arg0 << 1);
         sv2 = 0x2ff;
-        MultiStore16(sv2, d, 0x80);
+        MIi_CpuClear16(sv2, d, 0x80);
         func_02031028(0);
         n = data_0209fca0;
         data_0209fc7c = 4;
@@ -1331,12 +1331,12 @@ extern "C" void func_02033464(int arg0, int arg1, int arg2) {
         }
         data_0209fc78 = (u8)(arg1 * 0x18 + data_0209fcdc);
         {
-            int cp = func_02054d88() + 0x4000;
+            int cp = (int)G2_GetBG3CharPtr() + 0x4000;
             int *dst = (int *)(cp + (data_0209fc78 << 5));
             liC = 0;
-            MultiStore_Int(liC, dst, 0x300);
+            MIi_CpuClear32(liC, dst, 0x300);
         }
-        base = (u16 *)((char *)G2::GetBG3ScrPtr() + ((arg0 + (data_0209fc7c >> 3)) << 1));
+        base = (u16 *)((char *)G2_GetBG3ScrPtr() + ((arg0 + (data_0209fc7c >> 3)) << 1));
         {
             u32 ch = data_0209fc78;
             x = ch + 0x200;
@@ -1366,14 +1366,14 @@ extern "C" void func_020337ec(void) {
     data_0209fc94 = 1;
     data_0209fc78 = 0;
     {
-        int *dst = (int *)((u32)G2S::GetBG0CharPtr() + 0x4000);
+        int *dst = (int *)((u32)G2S_GetBG0CharPtr() + 0x4000);
         z = 0;
-        MultiStore_Int(z, dst, 0x2000);
+        MIi_CpuClear32(z, dst, 0x2000);
     }
     {
-        char *dst = (char *)G2S::GetBG0ScrPtr();
+        char *dst = (char *)G2S_GetBG0ScrPtr();
         v = 0x2ff;
-        MultiStore16(v, dst, 0x800);
+        MIi_CpuClear16(v, dst, 0x800);
     }
     data_0209fce8 = 0x18;
     Message_DrawCenteredLineVS(0x280, 0x20);
@@ -1395,20 +1395,20 @@ extern "C" void func_020338b0(int a, int b, short c, int d) {
     switch (data_0209fce8) {
     case 0x13:
     case 0x15:
-        p = (u32)G2S::GetBG0CharPtr() + 0x4000;
+        p = (u32)G2S_GetBG0CharPtr() + 0x4000;
         li0 = 0;
-        MultiStore_Int(li0, (int *)p, 0x3000);
-        s = (u32)G2S::GetBG0ScrPtr();
+        MIi_CpuClear32(li0, (int *)p, 0x3000);
+        s = (u32)G2S_GetBG0ScrPtr();
         ls0 = 0x37f;
-        MultiStore16(ls0, (char *)s, 0x800);
+        MIi_CpuClear16(ls0, (char *)s, 0x800);
         break;
     default:
-        p = (u32)G2S::GetBG0CharPtr() + 0x4000;
+        p = (u32)G2S_GetBG0CharPtr() + 0x4000;
         li1 = 0;
-        MultiStore_Int(li1, (int *)p, 0x2000);
-        s = (u32)G2S::GetBG0ScrPtr();
+        MIi_CpuClear32(li1, (int *)p, 0x2000);
+        s = (u32)G2S_GetBG0ScrPtr();
         ls1 = 0x2ff;
-        MultiStore16(ls1, (char *)s, 0x800);
+        MIi_CpuClear16(ls1, (char *)s, 0x800);
         break;
     }
     func_02033e50(a, b);
@@ -1424,12 +1424,12 @@ void Message::DisplayVsExitText(unsigned short n) {
     data_0209fc94 = 1;
     data_0209fc78 = 0;
     data_0209fcdc = 0;
-    p = (u32)G2S::GetBG0CharPtr() + 0x4000;
+    p = (u32)G2S_GetBG0CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int *)p, 0x2000);
-    s = (u32)G2S::GetBG0ScrPtr();
+    MIi_CpuClear32(li, (int *)p, 0x2000);
+    s = (u32)G2S_GetBG0ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char *)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     Message_DrawCenteredLineVS(0x100, 0x20);
     data_0209fce8 = 0x22;
     Message_DrawCenteredLineVS(0x1c0, 0x20);
@@ -1450,12 +1450,12 @@ void Message::DisplayOptionsMenuTextVS(s16 arg) {
     volatile int li;
     volatile unsigned short ls;
     int p, s;
-    p = (u32)G2S::GetBG0CharPtr() + 0x4000;
+    p = (u32)G2S_GetBG0CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int *)p, 0x2000);
-    s = (u32)G2S::GetBG0ScrPtr();
+    MIi_CpuClear32(li, (int *)p, 0x2000);
+    s = (u32)G2S_GetBG0ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char *)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     func_02033a80(arg);
     data_0209fce8 = 0xc;
     data_0209fcb0 = 1;
@@ -1489,21 +1489,21 @@ extern "C" void func_02033bb8(int param0) {
     data_0209fcdc = 0;
 
     {
-        int *chr = (int *)((char *)G2S::GetBG0CharPtr() + 0x4000);
+        int *chr = (int *)((char *)G2S_GetBG0CharPtr() + 0x4000);
         li = 0;
-        MultiStore_Int(li, chr, 0x2000);
+        MIi_CpuClear32(li, chr, 0x2000);
     }
 
     {
-        char *scr0 = (char *)G2S::GetBG0ScrPtr();
+        char *scr0 = (char *)G2S_GetBG0ScrPtr();
         sv = 0x2ff;
-        MultiStore16(sv, scr0, 0x800);
+        MIi_CpuClear16(sv, scr0, 0x800);
     }
 
     Message_DrawLineBG2VS();
     n = data_0209fc88;
     m = (n + 7) / 8;
-    scr = (short *)((char *)G2::GetBG2ScrPtr() + 0x40 + (16 - m / 2) * 2);
+    scr = (short *)((char *)G2_GetBG2ScrPtr() + 0x40 + (16 - m / 2) * 2);
     i = 0;
     if (m > 0) {
         int v2 = m + 0x280;
@@ -1520,7 +1520,7 @@ extern "C" void func_02033bb8(int param0) {
     Message_DrawLineBG2VS();
     n = data_0209fc88;
     m = (n + 7) / 8;
-    scr = (short *)((char *)G2::GetBG2ScrPtr() + 0x840 + (16 - m / 2) * 2);
+    scr = (short *)((char *)G2_GetBG2ScrPtr() + 0x840 + (16 - m / 2) * 2);
     i = 0;
     if (m > 0) {
         int mm = (n + 7) / 8;
@@ -1541,7 +1541,7 @@ extern "C" void func_02033bb8(int param0) {
     Message_DrawLineBG2VS();
     n = data_0209fc88;
     m = (n + 7) / 8;
-    scr = (short *)((char *)G2::GetBG2ScrPtr() + 0x1040 + (16 - m / 2) * 2);
+    scr = (short *)((char *)G2_GetBG2ScrPtr() + 0x1040 + (16 - m / 2) * 2);
     i = 0;
     if (m > 0) {
         int mm = (n + 7) / 8;
@@ -1585,12 +1585,12 @@ extern "C" void func_02033e50(int p0, int p1) {
             data_0209fc7c = 0xc;
             n = ((data_0209fc88 + 0x13) >> 3) & 0xff;
             {
-                int cp = (u32)G2S::GetBG0CharPtr() + 0x4000;
+                int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
                 li = 0;
-                MultiStore_Int(li, (int *)(cp + (data_0209fc78 << 6)), n << 6);
+                MIi_CpuClear32(li, (int *)(cp + (data_0209fc78 << 6)), n << 6);
             }
             {
-                short *scr = (short *)((u32)G2S::GetBG0ScrPtr() + p0 * 2);
+                short *scr = (short *)((u32)G2S_GetBG0ScrPtr() + p0 * 2);
                 i = 0;
                 if (n > 0) {
                     int v1 = (data_0209fc78 << 1) + 0x200;
@@ -1613,13 +1613,13 @@ extern "C" void func_02033e50(int p0, int p1) {
             volatile int li;
             data_0209fc7c = (unsigned char)((p1 - data_0209fc88) >> 1);
             {
-                int cp = (u32)G2S::GetBG0CharPtr() + 0x4000;
+                int cp = (u32)G2S_GetBG0CharPtr() + 0x4000;
                 li = 0;
-                MultiStore_Int(li, (int *)(cp + (data_0209fc78 << 6)), n << 6);
+                MIi_CpuClear32(li, (int *)(cp + (data_0209fc78 << 6)), n << 6);
             }
             {
                 int v1, v2;
-                short *scr = (short *)((u32)G2S::GetBG0ScrPtr() + p0 * 2);
+                short *scr = (short *)((u32)G2S_GetBG0ScrPtr() + p0 * 2);
                 i = 0;
                 if (n > 0) {
                     v1 = (data_0209fc78 << 1) + 0x200;
@@ -1657,9 +1657,9 @@ extern "C" void Message_DrawLineBG2VS(void) {
     data_0209fc7c = 0;
     n = ((data_0209fc88 + 7) / 8) << 6;
     {
-        int p = (int)G2::GetBG2CharPtr() + ((data_0209fcdc + 0x280) << 5);
+        int p = (int)G2_GetBG2CharPtr() + ((data_0209fcdc + 0x280) << 5);
         li = 0;
-        MultiStore_Int(li, (int *)p, n);
+        MIi_CpuClear32(li, (int *)p, n);
     }
     func_020318a4(1);
     data_0209fcdc = data_0209fcdc + (u8)(((data_0209fc88 + 7) / 8) << 1);
@@ -1682,12 +1682,12 @@ extern "C" void Message_DrawCenteredLineVS(int a0, int a1) {
     data_0209fc88 = oldc + data_0209fc7c;
     n = ((data_0209fc88 + 7) / 8) << 6;
     {
-        int p = (u32)G2S::GetBG0CharPtr() + 0x4000 + (data_0209fc78 << 5);
+        int p = (u32)G2S_GetBG0CharPtr() + 0x4000 + (data_0209fc78 << 5);
         li = 0;
-        MultiStore_Int(li, (int *)p, n);
+        MIi_CpuClear32(li, (int *)p, n);
     }
     {
-        int sp0 = (u32)G2S::GetBG0ScrPtr() + a0 * 2;
+        int sp0 = (u32)G2S_GetBG0ScrPtr() + a0 * 2;
         scr = (short *)(sp0 + ((unsigned short)((a1 - ((oldc + 7) / 8)) >> 1)) * 2);
     }
     for (i = 0; i < (data_0209fc88 + 7) / 8; i++) {
@@ -1705,12 +1705,12 @@ void Message::DisplayPauseTextVS(unsigned short n) {
     data_0209fce8 = n;
     data_0209fc78 = 0;
     data_0209fc94 = 1;
-    p = (u32)G2S::GetBG0CharPtr() + 0x4000;
+    p = (u32)G2S_GetBG0CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int *)p, 0x2000);
-    s = (u32)G2S::GetBG0ScrPtr();
+    MIi_CpuClear32(li, (int *)p, 0x2000);
+    s = (u32)G2S_GetBG0ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char *)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     Message_DrawCenteredLineVS(0xc0, 0x20);
     data_0209fce8 = data_0209fce8 + 1;
     Message_DrawCenteredLineVS(0x160, 0x20);
@@ -1728,12 +1728,12 @@ void Message::DisplayDontSaveTextVS(unsigned short n) {
     func_02034504();
     data_0209fc94 = 1;
     data_0209fc78 = 0;
-    p = (u32)G2S::GetBG0CharPtr() + 0x4000;
+    p = (u32)G2S_GetBG0CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int *)p, 0x2000);
-    s = (u32)G2S::GetBG0ScrPtr();
+    MIi_CpuClear32(li, (int *)p, 0x2000);
+    s = (u32)G2S_GetBG0ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char *)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     data_0209fce8 = n;
     func_02033e50(0x105, 0xb0);
     data_0209fce8 = 0xf;
@@ -1795,18 +1795,18 @@ extern "C" void func_020345b0(int arg0) {
     gNextActorUpdateMask |= 0x800000;
 
     {
-        void *p = (char *)func_02054d88() + 0x4000;
+        void *p = (char *)G2_GetBG3CharPtr() + 0x4000;
         li = 0;
-        MultiStore_Int(li, (int *)p, 0x3000);
+        MIi_CpuClear32(li, (int *)p, 0x3000);
     }
 
     {
-        void *s = G2::GetBG3ScrPtr();
+        void *s = G2_GetBG3ScrPtr();
         ls = 0x37f;
-        MultiStore16(ls, (char *)s, 0x800);
+        MIi_CpuClear16(ls, (char *)s, 0x800);
     }
 
-    scr = (u16 *)G2::GetBG3ScrPtr() + 0x21;
+    scr = (u16 *)G2_GetBG3ScrPtr() + 0x21;
     SetBg3Offset(-(int)data_0209fc6c, 4 - (int)data_0209fce0);
 
     i = 0;
@@ -1832,7 +1832,7 @@ extern "C" void func_020345b0(int arg0) {
     }
     data_0209fcb4 = t;
 
-    G2x::SetBlendBrightness((volatile u16 *)0x4000050, (gMainScreenLayers ^ 0x10) | 0x20, -8);
+    G2x_SetBlendBrightness_((volatile u16 *)0x4000050, (gMainScreenLayers ^ 0x10) | 0x20, -8);
 
     *(volatile u16 *)0x4000048 =
         (*(volatile u16 *)0x4000048 & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
@@ -1853,10 +1853,10 @@ extern "C" void LoadFont3D(void) {
     void *r4;
 
     r5 = LoadFile(0x980e);
-    MultiCopy_Int((int *)r5, (int *)func_02054d88(), 0x4000);
+    MIi_CpuCopy32((int *)r5, (int *)G2_GetBG3CharPtr(), 0x4000);
 
     r4 = LoadFile(0x980d);
-    DecompressLZ16(r4, (u8 *)func_02054d88() + 0x8000);
+    DecompressLZ16(r4, (u8 *)G2_GetBG3CharPtr() + 0x8000);
 
     Deallocate(r4);
     Deallocate(r5);

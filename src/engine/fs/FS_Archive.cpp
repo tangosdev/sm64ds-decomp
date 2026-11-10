@@ -68,8 +68,8 @@ extern "C" {
 extern FSArchive *data_020a8048;
 extern FSDirPos data_020a804c;
 
-void CpuCopy8(const void *src, void *dst, u32 size);
-void func_0205a588(void *dst, u8 value, u32 size);
+void MI_CpuCopy8(const void *src, void *dst, u32 size);
+void MI_CpuFill8(void *dst, u8 value, u32 size);
 
 void FS_InitFile(FSFile *p_file);
 int FS_ReadFile(FSFile *p_file, void *dst, int len);
@@ -181,20 +181,20 @@ u32 FSi_GetPackedName(const char *name, int name_len) {
 
 /* FS_LoadArchive's default read_func: copy from base + pos. */
 int FSi_ReadMemCallback(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
-    CpuCopy8((const void *)FS_GetArchiveOffset(p_arc, pos), dst, size);
+    MI_CpuCopy8((const void *)FS_GetArchiveOffset(p_arc, pos), dst, size);
     return FS_RESULT_SUCCESS;
 }
 
 /* FS_LoadArchive's default write_func: copy to base + pos. */
 int FSi_WriteMemCallback(FSArchive *p_arc, const void *src, u32 pos, u32 size) {
-    CpuCopy8(src, (void *)FS_GetArchiveOffset(p_arc, pos), size);
+    MI_CpuCopy8(src, (void *)FS_GetArchiveOffset(p_arc, pos), size);
     return FS_RESULT_SUCCESS;
 }
 
 /* The table_func of an archive whose tables are loaded: pos is already an
  * address. */
 int FSi_ReadMemoryCore(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
-    CpuCopy8((const void *)pos, dst, size);
+    MI_CpuCopy8((const void *)pos, dst, size);
     return FS_RESULT_SUCCESS;
 }
 
@@ -373,9 +373,9 @@ void FS_NotifyArchiveAsyncEnd(FSArchive *p_arc, int ret) {
 
 /* Clear the archive, then empty its two thread queues. A thread queue here
  * is a 16-bit mask of thread ids, so emptying one is a store of 0 where
- * pret's calls OS_InitThreadQueue. func_0205a588 is MI_CpuFill8. */
+ * pret's calls OS_InitThreadQueue. */
 void FS_InitArchive(FSArchive *p_arc) {
-    func_0205a588(p_arc, 0, sizeof(FSArchive));
+    MI_CpuFill8(p_arc, 0, sizeof(FSArchive));
     p_arc->sync_q = 0;
     p_arc->stat_q = 0;
 }

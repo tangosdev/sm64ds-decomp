@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "Ov007Work.h"
-#include "G3i.h"
+#include "nitro/gx/g3_util.h"
 #include "cstd.h"
 #include "Ov007Camera.h"
 
@@ -44,7 +44,7 @@ void func_ov007_020b1fa4(int preset) {
         break;
     }
     func_ov007_020bffb8(cam);
-    G3i::LookAt_(&cam->eye, &cam->up, &cam->target, true, &cam->viewMatrix);
+    G3i_LookAt_(&cam->eye, &cam->up, &cam->target, true, &cam->viewMatrix);
     func_ov007_020c0078(cam);
     WORK->cameraPreset = preset;
 }

@@ -48,21 +48,21 @@
       "ordinal": 3
     },
     {
-      "symbol": "DMASyncHalfTransfer",
+      "symbol": "MI_DmaCopy16",
       "address": "0x0205a10c",
       "size": "0x00000054",
       "legacy_source": "src/DMASyncHalfTransfer.c",
       "ordinal": 4
     },
     {
-      "symbol": "DMASyncWordTransfer",
+      "symbol": "MI_DmaCopy32",
       "address": "0x0205a160",
       "size": "0x00000054",
       "legacy_source": "src/DMASyncWordTransfer.c",
       "ordinal": 5
     },
     {
-      "symbol": "DMASyncFillTransfer",
+      "symbol": "MI_DmaFill32",
       "address": "0x0205a1b4",
       "size": "0x00000068",
       "legacy_source": "src/DMASyncFillTransfer.c",

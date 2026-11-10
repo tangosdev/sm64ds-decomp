@@ -71,7 +71,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "Sound.h"
 #include "Memory.h"
 #include "nitro/fx/fx.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "cstd.h"
 #include "Vector2Math.h"
 
@@ -79,7 +79,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 typedef struct {
     int x, y;
 } Vec2;
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* Local value types carried over from the legacy files. None of these is a
  * view of a class any more: the object-side views (Obj, Obj2, SBoard, Owl,
@@ -185,7 +185,7 @@ extern OamAttr *sSmartballCellRowSprites[];
    implicitly, and the screen-pointer caller already yields one. A pointer
    parameter is passed the same way either way, so this is a spelling choice,
    not a change of contract. */
-extern void MultiStore16(u16 val, void *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 extern void func_02012718(int a, int b);
 extern struct W9 sSmartballCellStartOrder;
 extern int RandomIntInternal(int *seed);
@@ -292,7 +292,7 @@ extern OamAttr *sSmartballPakkunSprites[];
 extern OamAttr *sSmartballWingBodySprites[];
 /* The Render shard read 0x5998 as a void * and this one read it as an int;
    both now read the header's s32 mResultSlideX. */
-/* The alternate MultiStore16 view carried by the InitResources shard is the
+/* The alternate MIi_CpuClear16 view carried by the InitResources shard is the
    void * one adopted above; the two are reconciled, not in conflict. */
 }
 
@@ -352,7 +352,6 @@ extern "C" {
 extern int sMgResultsBannerY;
 extern int sMgResultsBannerX;
 extern int sSmartballOptionNcgByLanguage[];
-extern int func_02054d88(void);
 extern void SetSubBg1Offset(int, int);
 extern void Mg_RestoreMusic(void);
 extern void Mg_SetSharedState(int);
@@ -920,9 +919,9 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
             } else {
                 tile = (u16)(jj + b1);
             }
-            p = (char *)G2S::GetBG3ScrPtr();
+            p = (char *)G2S_GetBG3ScrPtr();
             t1 = tile | 0xf000;
-            MultiStore16(t1, p + row + cx * 2 + kk, layer);
+            MIi_CpuClear16(t1, p + row + cx * 2 + kk, layer);
             kk += 2;
             jj++;
         } while (jj <= 0);
@@ -941,9 +940,9 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         int i2;
         int bas2 = base;
         for (i2 = -1; i2 <= 1; i2++) {
-            p = (char *)G2S::GetBG3ScrPtr() + ((cy + i2) << 6);
+            p = (char *)G2S_GetBG3ScrPtr() + ((cy + i2) << 6);
             t2 = (bas2 + 0x20 * i2) | 0xf000;
-            MultiStore16(t2, p + cx * 2 - 4, lay2);
+            MIi_CpuClear16(t2, p + cx * 2 - 4, lay2);
         }
     }
 
@@ -952,9 +951,9 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         int i3;
         int bas3 = 0x336;
         for (i3 = -1; i3 <= 0; i3++) {
-            p = (char *)G2S::GetBG3ScrPtr() + ((cy + i3) << 6);
+            p = (char *)G2S_GetBG3ScrPtr() + ((cy + i3) << 6);
             t3 = (bas3 + 0x20 * i3) | 0xf000;
-            MultiStore16(t3, p + cx * 2 + 2, lay3);
+            MIi_CpuClear16(t3, p + cx * 2 + 2, lay3);
         }
         return;
     }
@@ -964,9 +963,9 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         int i4;
         int bas4 = 0x33f;
         for (i4 = -1; i4 <= 1; i4++) {
-            p = (char *)G2S::GetBG3ScrPtr() + ((cy + i4) << 6);
+            p = (char *)G2S_GetBG3ScrPtr() + ((cy + i4) << 6);
             t4 = (bas4 + 0x20 * i4) | 0xf000;
-            MultiStore16(t4, p + cx * 2 + 2, lay4);
+            MIi_CpuClear16(t4, p + cx * 2 + 2, lay4);
         }
         return;
     }
@@ -976,9 +975,9 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         int i5;
         int bas5 = 0x33e;
         for (i5 = -1; i5 <= 1; i5++) {
-            p = (char *)G2S::GetBG3ScrPtr() + ((cy + i5) << 6);
+            p = (char *)G2S_GetBG3ScrPtr() + ((cy + i5) << 6);
             t5 = (bas5 + 0x20 * i5) | 0xf000;
-            MultiStore16(t5, p + cx * 2 + 2, lay5);
+            MIi_CpuClear16(t5, p + cx * 2 + 2, lay5);
         }
     }
 }
@@ -1269,7 +1268,6 @@ void cMgSmartball_board_c::SaveSnapshot() {
     }
 }
 
-
 /* Slot 2. Unlike most of this family's slot 2s this is a real body, not a
  * tail-call veneer -- but it still OPENS with the qualified call to the base,
  * and the qualification is load-bearing exactly as it is in the veneers: an
@@ -1489,7 +1487,6 @@ void cMgSmartball_slot_c::UpdateSpin() {
     }
     mSpinCooldown = 0x3c;
 }
-
 
 /* Slot 1. First loop draws three copies of one sprite in a row (index i is
  * computed but never read -- only the running x offset matters). Second
@@ -1784,7 +1781,6 @@ void cMgSmartball_pakkun_c::SaveSnapshot() {
         mTriggered = 0;
 }
 
-
 /* Slot 2. A real override, not a tail-call veneer: it calls the base's
  * RestoreInitial() (qualified -- unqualified would dispatch through the
  * vtable and recurse) and then also zeroes mTriggered and this child's own
@@ -1882,7 +1878,6 @@ void cMgSmartball_dokan_c::SaveSnapshot() {
         Sound::PlayBank2_2D(0x16);
     }
 }
-
 
 /* Slot 2. The ROM is three words -- ldr ip, [pc]; bx ip; .word target -- which
  * is mwcc's interworking-safe TAIL CALL, not a linker veneer and not a
@@ -2426,7 +2421,6 @@ done:
     }
 }
 
-
 /* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial, qualified --
  * unqualified would dispatch virtually and recurse), then zeroes mWasHit and
  * mHitTimer. Does NOT touch mVariant -- read exhaustively, this function simply
@@ -2582,7 +2576,6 @@ int cMgSmartball_ball_c::HitWing(int *src) {
     return ((dScMgSmartball_c *)mpManager)->mpWing->HitTest((int *)&v);
 }
 
-
 int cMgSmartball_ball_c::HitSwitches(int *arg) {
     int buf[2];
     int i = 0;
@@ -2618,7 +2611,6 @@ int cMgSmartball_ball_c::HitPakkuns(int *arg) {
     }
     return 0;
 }
-
 
 int cMgSmartball_ball_c::HitDokans(int *arg) {
     int buf[2];
@@ -2707,7 +2699,6 @@ int cMgSmartball_ball_c::HitKinokos(int *pos) {
     return 0;
 }
 
-
 int cMgSmartball_ball_c::CheckExits(int *pos) {
     struct S *arg = (struct S *)pos;
     struct S p, q0, q1, q2;
@@ -2748,7 +2739,6 @@ int cMgSmartball_ball_c::CheckExits(int *pos) {
     }
     return 0;
 }
-
 
 int cMgSmartball_ball_c::AtSpring(int *b) {
     int local[2];
@@ -4669,29 +4659,29 @@ void dScMgSmartball_c::SpawnObjects() {
     }
     if (((int)param1 & 0xff) == 0) {
         void *d = Ov004_LoadFileByPath(sSmartballLay0Bg1FrameNscPath);
-        DecompressLZ16(d, G2::GetBG2ScrPtr());
+        DecompressLZ16(d, G2_GetBG2ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay0Bg2FrameNscPath);
-        DecompressLZ16(d, G2S::GetBG2ScrPtr());
+        DecompressLZ16(d, G2S_GetBG2ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay0Bg1NscPath);
-        DecompressLZ16(d, G2::GetBG3ScrPtr());
+        DecompressLZ16(d, G2_GetBG3ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay0Bg2NscPath);
-        DecompressLZ16(d, G2S::GetBG3ScrPtr());
+        DecompressLZ16(d, G2S_GetBG3ScrPtr());
         Ov004_Deallocate(d);
     } else {
         void *d = Ov004_LoadFileByPath(sSmartballLay1Bg1FrameNscPath);
-        DecompressLZ16(d, G2::GetBG2ScrPtr());
+        DecompressLZ16(d, G2_GetBG2ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay1Bg2FrameNscPath);
-        DecompressLZ16(d, G2S::GetBG2ScrPtr());
+        DecompressLZ16(d, G2S_GetBG2ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay1Bg1NscPath);
-        DecompressLZ16(d, G2::GetBG3ScrPtr());
+        DecompressLZ16(d, G2_GetBG3ScrPtr());
         Ov004_Deallocate(d);
         d = Ov004_LoadFileByPath(sSmartballLay1Bg2NscPath);
-        DecompressLZ16(d, G2S::GetBG3ScrPtr());
+        DecompressLZ16(d, G2S_GetBG3ScrPtr());
         Ov004_Deallocate(d);
     }
 
@@ -5812,7 +5802,7 @@ s32 dScMgSmartball_c::Behavior() {
 
 #pragma pop
 
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "types.h"
 #include "dScMgSmartball_c.h"
 /* vtable slot 18 -- an override of
@@ -5820,8 +5810,8 @@ s32 dScMgSmartball_c::Behavior() {
    declaration exactly, or mwcc appends a slot instead of overriding. */
 void dScMgSmartball_c::StartRound(int /* arg */) {
     SpawnObjects();
-    G2x::SetBlendAlpha((volatile unsigned short *)0x4000050, 0, 0x18, 4, 0xa);
-    G2x::SetBlendAlpha((volatile unsigned short *)0x4001050, 0, 0x18, 4, 0xa);
+    G2x_SetBlendAlpha_((volatile unsigned short *)0x4000050, 0, 0x18, 4, 0xa);
+    G2x_SetBlendAlpha_((volatile unsigned short *)0x4001050, 0, 0x18, 4, 0xa);
 }
 
 /* dScMgSmartball_c::InitSubScreenBg - slot 31, this class's own override.
@@ -5837,8 +5827,8 @@ int dScMgSmartball_c::InitSubScreenBg() {
     SetSubBg1Offset(0, 0);
     gSubScreenLayers[0] &= ~2;
     f = GetGameLanguage();
-    LoadCompressedFileAt(sSmartballOptionNcgByLanguage[f], (void *)G2S::GetBG1CharPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S::GetBG1ScrPtr());
+    LoadCompressedFileAt(sSmartballOptionNcgByLanguage[f], (void *)G2S_GetBG1CharPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S_GetBG1ScrPtr());
 }
 
 /* NitroSDK's G2_SetOBJMode and G2_GetOBJColorParam, on OamAttr: the mode
@@ -5896,21 +5886,21 @@ s32 dScMgSmartball_c::InitResources() {
     *((volatile s32 *)0x4001010) = 0x100;
     *((volatile u16 *)0x4001008) &= ~3;
     f = Ov004_LoadFileByPath(&sSmartballResultBgNcgPath);
-    DecompressLZ16(f, G2S::GetBG0CharPtr());
+    DecompressLZ16(f, G2S_GetBG0CharPtr());
     Ov004_Deallocate(f);
     {
         /* Kept volatile (measured 2026-11-07): the same stack round trip of
            the fill value as PaintCell. A literal 0, u16 v = 0, a separate
            v = 0 and a u16[1] all give 52 words, 8 bytes short. */
         volatile u16 v;
-        MultiStore16((u16)(v = 0), G2S::GetBG0ScrPtr(), 0x1000);
+        MIi_CpuClear16((u16)(v = 0), G2S_GetBG0ScrPtr(), 0x1000);
     }
     f = Ov004_LoadFileByPath(&sSmartballResultBgNscPath);
-    DecompressLZ16(f, G2S::GetBG0ScrPtr());
+    DecompressLZ16(f, G2S_GetBG0ScrPtr());
     Ov004_Deallocate(f);
     f = Ov004_LoadFileByPath(&sSmartballResultNclPath);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x20);
-    GXS::LoadBGPltt(((char *)f) + 2, 2, 0x1e);
+    GXS_LoadBGPltt(((char *)f) + 2, 2, 0x1e);
     Ov004_Deallocate(f);
     *((volatile u16 *)0x400000c) = (((*((volatile u16 *)0x400000c)) & 0xFFFF) & 0x43) | 0x1410;
     *((volatile u16 *)0x400000c) &= ~0x40;
@@ -5930,48 +5920,48 @@ s32 dScMgSmartball_c::InitResources() {
     *((volatile u16 *)0x400100e) = ((*((volatile u16 *)0x400100e)) & (~3)) | 2;
     if (((u8)(*((s32 *)(c + 8)))) == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1FrameNcgPath);
-        DecompressLZ16(f, G2::GetBG2CharPtr());
+        DecompressLZ16(f, G2_GetBG2CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg2FrameNcgPath);
-        DecompressLZ16(f, G2S::GetBG2CharPtr());
+        DecompressLZ16(f, G2S_GetBG2CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1NcgPath);
-        DecompressLZ16(f, (void *)func_02054d88());
+        DecompressLZ16(f, (void *)G2_GetBG3CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg2NcgPath);
-        DecompressLZ16(f, G2S::GetBG3CharPtr());
+        DecompressLZ16(f, G2S_GetBG3CharPtr());
         Ov004_Deallocate(f);
     } else {
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg1FrameNcgPath);
-        DecompressLZ16(f, G2::GetBG2CharPtr());
+        DecompressLZ16(f, G2_GetBG2CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg2FrameNcgPath);
-        DecompressLZ16(f, G2S::GetBG2CharPtr());
+        DecompressLZ16(f, G2S_GetBG2CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg1NcgPath);
-        DecompressLZ16(f, (void *)func_02054d88());
+        DecompressLZ16(f, (void *)G2_GetBG3CharPtr());
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg2NcgPath);
-        DecompressLZ16(f, G2S::GetBG3CharPtr());
+        DecompressLZ16(f, G2S_GetBG3CharPtr());
         Ov004_Deallocate(f);
     }
     if (((u8)(*((s32 *)(c + 8)))) == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1NclPath);
         CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
-        GX::LoadBGPltt(f, 0x60, 0x1a0);
+        GX_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg2NclPath);
         CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
-        GXS::LoadBGPltt(f, 0x60, 0x1a0);
+        GXS_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
     } else {
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg1NclPath);
         CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
-        GX::LoadBGPltt(f, 0x60, 0x1a0);
+        GX_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
         f = Ov004_LoadFileByPath(&sSmartballLay1Bg2NclPath);
         CP15::FlushAndInvalidateDataCache((u32)f, 0x1a0);
-        GXS::LoadBGPltt(f, 0x60, 0x1a0);
+        GXS_LoadBGPltt(f, 0x60, 0x1a0);
         Ov004_Deallocate(f);
     }
     gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
@@ -5979,8 +5969,8 @@ s32 dScMgSmartball_c::InitResources() {
     gSubScreenLayers[0] |= 0xd;
     f = Ov004_LoadFileByPath(&sSmartballNclPath);
     CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
-    GX::LoadOBJPltt(f, 0, 0x100);
-    GXS::LoadOBJPltt(f, 0, 0x100);
+    GX_LoadOBJPltt(f, 0, 0x100);
+    GXS_LoadOBJPltt(f, 0, 0x100);
     Ov004_Deallocate(f);
     i = 0;
     do {
@@ -6032,8 +6022,8 @@ s32 dScMgSmartball_c::InitResources() {
     mpSlot = 0;
     mpBoard = 0;
     mpWing = 0;
-    G2x::SetBlendAlpha((volatile u16 *)0x4000050, 0, 0x18, 4, 0xa);
-    G2x::SetBlendAlpha((volatile u16 *)0x4001050, 0, 0x18, 4, 0xa);
+    G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 0, 0x18, 4, 0xa);
+    G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 0, 0x18, 4, 0xa);
     G2_SetOBJMode(sSmartballBallSprites[1], GX_OAM_MODE_XLU,
                   G2_GetOBJColorParam(sSmartballBallSprites[1]));
     G2_SetOBJMode(sSmartballBallSpritesAlt[1], GX_OAM_MODE_XLU,

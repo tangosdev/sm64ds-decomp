@@ -22,7 +22,7 @@ int _ZN6Memory25isRootHeapIterInitializedE;
 
 // SDK asm primitive (stmia burst fill) -> plain word fill on host. The
 // frontier classifies its TU as HAL-owned; this is the HAL half.
-void MultiStore_Int(int val, int *dst, int len)
+void MIi_CpuClear32(int val, int *dst, int len)
 {
     for (int i = 0; i < len / 4; ++i)
         dst[i] = val;

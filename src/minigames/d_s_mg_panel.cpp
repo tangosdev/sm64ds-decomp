@@ -53,22 +53,8 @@ enum dScMgPanel_c_AssetId {
 
 #include "Sound.h"
 #include "OamAttr.h"
-
-namespace G2 {
-char *GetBG2ScrPtr();
-}
-namespace G2S {
-char *GetBG2ScrPtr();
-char *GetBG3CharPtr();
-}
-namespace GX {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
-}
-namespace GXS {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
-}
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 /* Callees of the member helpers. Declared here, not in the bodies: a
    declaration inside a member body gets C++ linkage and names a symbol the ROM
@@ -1538,15 +1524,14 @@ extern void Deallocate(void *);
 extern int GetOwnerLanguage(void);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void FreeGfxSlotsById(int arg);
 extern void SetSubBg0Offset(int, int);
-extern int func_02054d88(void);
-extern void func_020562b4(const void *, u32, u32);
-extern void func_02056314(void *, u32, u32);
-extern void func_02056374(const void *, u32, u32);
-extern void func_020563d4(const void *, u32, u32);
-extern void func_020564f4(const void *, int, int);
+extern void GXS_LoadBG3Scr(const void *, u32, u32);
+extern void GX_LoadBG3Scr(void *, u32, u32);
+extern void GXS_LoadBG2Scr(const void *, u32, u32);
+extern void GX_LoadBG2Scr(const void *, u32, u32);
+extern void GXS_LoadBG0Scr(const void *, int, int);
 extern void Mg_SubmitScore(int);
 extern void Mg_SetTopScreenYOffset(int);
 extern void Mg_ShowBanner(int, int, int, int, int, s16);
@@ -1632,15 +1617,15 @@ s32 dScMgPanel_c::InitResources() {
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
-    DecompressLZ16(file, (void *)(func_02054d88() + 0x4000));
+    DecompressLZ16(file, (void *)((int)G2_GetBG3CharPtr() + 0x4000));
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCL_BIN);
-    GX::LoadBGPltt(file, 0x1a0, 0x60);
+    GX_LoadBGPltt(file, 0x1a0, 0x60);
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_UP_NSC_BIN);
-    func_02056314(file, 0, 0x800);
+    GX_LoadBG3Scr(file, 0, 0x800);
     Deallocate(file);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
@@ -1649,12 +1634,12 @@ s32 dScMgPanel_c::InitResources() {
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x9410;
 
-    b = G2::GetBG2ScrPtr();
+    b = (char *)G2_GetBG2ScrPtr();
     mainFill = 0xf361;
-    MultiStore16(mainFill, b, 0x1000);
+    MIi_CpuClear16(mainFill, b, 0x1000);
 
     file = LoadFile(ASSET_D_2D_YOSIFINX_NORMAL_NSC_BIN);
-    func_020563d4(file, 0x800, 0x800);
+    GX_LoadBG2Scr(file, 0x800, 0x800);
     Deallocate(file);
 
     msgFile = LoadFile(ASSET_D_2D_MG_PAZZLE_PANEL_NCG_BIN);
@@ -1670,7 +1655,7 @@ s32 dScMgPanel_c::InitResources() {
 
     file = LoadFile(ASSET_D_2D_MG_PAZZLE_PANEL_NCL_BIN);
     DecompressLZ16(msgFile, (void *)0x6400000);
-    GX::LoadOBJPltt(file, 0, 0x100);
+    GX_LoadOBJPltt(file, 0, 0x100);
 
     gSubScreenLayers |= 8;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
@@ -1681,15 +1666,15 @@ s32 dScMgPanel_c::InitResources() {
 
     {
         void *subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
-        DecompressLZ16(subFile, (void *)(G2S::GetBG3CharPtr() + 0x4000));
+        DecompressLZ16(subFile, (void *)((char *)G2S_GetBG3CharPtr() + 0x4000));
         Deallocate(subFile);
 
         subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCL_BIN);
-        GXS::LoadBGPltt(subFile, 0x1a0, 0x60);
+        GXS_LoadBGPltt(subFile, 0x1a0, 0x60);
         Deallocate(subFile);
 
         subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_DOWN_NSC_BIN);
-        func_020562b4(subFile, 0, 0x800);
+        GXS_LoadBG3Scr(subFile, 0, 0x800);
         Deallocate(subFile);
 
         gSubScreenLayers |= 4;
@@ -1698,24 +1683,24 @@ s32 dScMgPanel_c::InitResources() {
         *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
         *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x8410;
 
-        b = G2S::GetBG2ScrPtr();
+        b = (char *)G2S_GetBG2ScrPtr();
         subFill = 0xf361;
-        MultiStore16(subFill, b, 0x1000);
+        MIi_CpuClear16(subFill, b, 0x1000);
 
         subFile = LoadFile(ASSET_D_2D_YOSIFINX_NORMAL_NSC_BIN);
-        func_02056374(subFile, 0, 0x800);
+        GXS_LoadBG2Scr(subFile, 0, 0x800);
         Deallocate(subFile);
 
         *(volatile u16 *)0x4001008 &= ~3;
         *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x610;
 
         subFile = LoadFile(ASSET_D_2D_YOSIFINX_BIKKURI_NSC_BIN);
-        func_020564f4(subFile, 0, 0x800);
+        GXS_LoadBG0Scr(subFile, 0, 0x800);
         Deallocate(subFile);
     }
 
     DecompressLZ16(msgFile, (void *)0x6600000);
-    GXS::LoadOBJPltt(file, 0, 0x100);
+    GXS_LoadOBJPltt(file, 0, 0x100);
     Deallocate(msgFile);
     Deallocate(file);
 

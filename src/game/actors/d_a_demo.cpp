@@ -104,9 +104,11 @@ enum daDemo_c_AssetId {
 #include "KuppaScript.h"
 #include "types.h"
 #include "CP15.h"
-#include "G2.h"
-#include "G2x.h"
-#include "GX.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/gx/g2.h"
 #include "Memory.h"
 #include "nitro/fx/fx.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -422,7 +424,7 @@ extern void SetSubBg2Offset(int a, int b);
 extern PMF data_ov002_02110e24[];
 extern PMF data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
-extern void MultiCopyHalf(void *src, void *dst, int count);
+extern void MIi_CpuCopy16(void *src, void *dst, int count);
 extern int data_ov002_021002a0[];
 extern s16 data_02082214[];
 extern short atan2_hold_d_a_demo_1(int y, int x);
@@ -463,9 +465,9 @@ extern void SetSubBg3Offset(int a, int b);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 extern void Deallocate(void* p);
-extern void func_02056434(const void* src, int offset, int count);
-extern void func_020562b4(const void* src, u32 offset, u32 count);
-extern void func_02056374(const void* src, u32 offset, u32 count);
+extern void GXS_LoadBG1Scr(const void *src, int offset, int count);
+extern void GXS_LoadBG3Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
 extern void func_ov002_020f5ad4(char* c);
 extern void func_ov002_020f5f60(char *c);
 extern int func_ov002_020f5fb8(void* c);
@@ -626,7 +628,7 @@ daDemo_c::~daDemo_c()
 /* -------------------------------------------------------------------------- */
 /* Sub-screen fade step (param1 0x2f, states 2 and 3). While fadeLevel is
  * non-zero it counts fadeTimer to 0x18, then drops fadeLevel by one and calls
- * G2x::SetBlendAlpha on 0x4001050 with (4, 0x28, fadeLevel, 0x10 - fadeLevel).
+ * G2x_SetBlendAlpha_ on 0x4001050 with (4, 0x28, fadeLevel, 0x10 - fadeLevel).
  * When fadeLevel reaches zero it clears bit 2 of gSubScreenLayers, writes that
  * mask into bits 8..12 of 0x4001000, sets the blend to (0, 0x28, 0xc, 4),
  * advances the state and gives the three sprite slots delays 0x10/0x20/0x30. */
@@ -643,13 +645,13 @@ void daDemo_c::func_ov002_020f1fcc()
     mScroll->fadeLevel--;
     v = mScroll->fadeLevel;
     if (v != 0) {
-        G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 0x28, v, 0x10 - v);
+        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 4, 0x28, v, 0x10 - v);
         return;
     }
     gSubScreenLayers &= ~4;
     *(volatile unsigned int *)0x4001000 =
         (*(volatile unsigned int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
-    G2x::SetBlendAlpha((volatile u16 *)0x4001050, 0, 0x28, 0xc, 4);
+    G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 0, 0x28, 0xc, 4);
     mScroll->state++;
     for (i = 0; i < 3; i++) {
         mScroll->spriteDelay[i] = (i + 1) << 4;
@@ -1096,7 +1098,7 @@ void func_ov002_020f2aec(char *c, int idx)
         s->credit[idx].blendTimer = 0;
         s->credit[idx].blend++;
         unsigned char cnt = s->credit[idx].blend;
-        G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x36, cnt, 0x10 - cnt);
+        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 1, 0x36, cnt, 0x10 - cnt);
     }
 
     if (s->credit[idx].timer < 30) {
@@ -1123,7 +1125,7 @@ void func_ov002_020f2bf4(char *c, int idx)
         s->credit[idx].blendTimer = 0;
         s->credit[idx].blend++;
         unsigned char cnt = s->credit[idx].blend;
-        G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x36, 0x10 - cnt, cnt);
+        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 1, 0x36, 0x10 - cnt, cnt);
     }
 
     if (s->credit[idx].timer < 30) {
@@ -1658,7 +1660,7 @@ void func_ov002_020f39ec(char *self, int idx) {
         int src = i * 0x800 + ((v & 7) << 8);
         if (v & 8)
             src += 0x2000;
-        MultiCopyHalf(s->starChars + src,
+        MIi_CpuCopy16(s->starChars + src,
                       (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
     }
 }
@@ -3215,7 +3217,7 @@ void func_ov002_020f5fe4(char* c)
     SetSubBg1Offset(0, 0);
     SetSubBg2Offset(0, 0);
     SetSubBg3Offset(0, 0);
-    GXS::SetGraphicsMode(0);
+    GXS_SetGraphicsMode(0);
 
     gSubScreenLayers &= ~0x1f;
 
@@ -3224,7 +3226,7 @@ void func_ov002_020f5fe4(char* c)
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_END_EUR_NCL_BIN);
-    GX::LoadOBJPltt(f, 0, 0x200);
+    GX_LoadOBJPltt(f, 0, 0x200);
     Deallocate(f);
 
     *(volatile u16*)0x400000e = (*(volatile u16*)0x400000e & ~3);
@@ -3235,16 +3237,16 @@ void func_ov002_020f5fe4(char* c)
     *(volatile u16*)0x400100a = (*(volatile u16*)0x400100a & 0x43) | 0x800;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCG_BIN);
-    DecompressLZ16(f, (void *)G2S::GetBG1CharPtr());
+    DecompressLZ16(f, (void *)G2S_GetBG1CharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_4BIT_NCL_BIN);
-    GX::LoadBGPltt(f, 0, 2);
-    GXS::LoadBGPltt(f, 0, 0x200);
+    GX_LoadBGPltt(f, 0, 2);
+    GXS_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK1_NSC_BIN);
-    func_02056434(f, 0, 0x800);
+    GXS_LoadBG1Scr(f, 0, 0x800);
     Deallocate(f);
 
     *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 2;
@@ -3262,27 +3264,27 @@ void func_ov002_020f5fe4(char* c)
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCG_BIN);
     }
 
-    DecompressLZ16(r5, (void *)G2S::GetBG3CharPtr());
+    DecompressLZ16(r5, (void *)G2S_GetBG3CharPtr());
     Deallocate(r5);
 
     r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_8BIT_NCL_BIN);
     CP15::FlushAndInvalidateDataCache((u32)r5, 0x200);
-    GX::SetBankForSubBGExtPltt(0x80);
-    GXS::BeginLoadBGExtPltt();
-    GXS::LoadBGExtPltt(r5, 0x4000, 0x200);
-    GXS::LoadBGExtPltt(r5, 0x6000, 0x200);
-    GXS::EndLoadBGExtPltt();
+    GX_SetBankForSubBGExtPltt(0x80);
+    GXS_BeginLoadBGExtPltt();
+    GXS_LoadBGExtPltt(r5, 0x4000, 0x200);
+    GXS_LoadBGExtPltt(r5, 0x6000, 0x200);
+    GXS_EndLoadBGExtPltt();
     Deallocate(r5);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_BRIGHT_NSC_BIN);
-    func_020562b4(f, 0, 0x800);
+    GXS_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & ~3) | 2;
     *(volatile u16*)0x400100c = (*(volatile u16*)0x400100c & 0x43) | 0xa90;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DARK2_NSC_BIN);
-    func_02056374(f, 0, 0x800);
+    GXS_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     gSubScreenLayers |= 0x10;
@@ -3291,7 +3293,7 @@ void func_ov002_020f5fe4(char* c)
         void *f6 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCG_BIN);
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCL_BIN);
         DecompressLZ16(f6, (void*)0x6600000);
-        GXS::LoadOBJPltt(r5, 0, 0x200);
+        GXS_LoadOBJPltt(r5, 0, 0x200);
         Deallocate(f6);
         Deallocate(r5);
     }
@@ -3674,7 +3676,6 @@ inline unsigned int inline_fn(unsigned int arg0)
   return arg0;
 }
 
-
 }
 
 int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
@@ -3954,7 +3955,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         if (r != 0 || a != 0) {
             t = (r * 0xa00) >> 12;
             if (t > 0x10) t = 0x10;
-            G2x::SetBlendAlpha((volatile u16 *)0x4000050, 8, 1, t, 0x10 - t);
+            G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 8, 1, t, 0x10 - t);
         }
     }
     return 1;

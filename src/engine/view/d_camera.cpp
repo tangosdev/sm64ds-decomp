@@ -48,8 +48,8 @@
 #include "nitro/fx/fx.h"
 #include "Sound.h"
 #include "OAM.h"
-#include "G2x.h"
-#include "G3i.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/g3_util.h"
 
 /* Defined at the bottom of this file; every use here only takes the address. */
 extern dCamera_c::State data_0209b008;
@@ -409,7 +409,7 @@ int dCamera_c::Render()
             if ((u8 *)self->mMode == &data_0208738c) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3b0, 0x80, 0x60, -1, -1, 0x1000, 0x1000,
                             0, -1);
-                G2x::SetBlendAlpha((volatile unsigned short *)0x04000050, 0x10, 0x2f, 0xc, 6);
+                G2x_SetBlendAlpha_((volatile unsigned short *)0x04000050, 0x10, 0x2f, 0xc, 6);
             } else {
                 if (f & 0x20) {
                     OAM::Render(0, (OamAttr *)data_ov002_0210c3e0[0], 0x14, 0x60, -1, -1, 0x1000,
@@ -461,8 +461,8 @@ int dCamera_c::Render()
     }
 
     s32 idx = ((s32)(u16)sp18 >> 4) * 2;
-    G3i::PerspectiveW_(data_02082214[idx], data_02082214[idx + 1], self->mAspect, self->mNear,
-                       self->mFar, var_r6, 1, (Matrix4x3 *)0);
+    G3i_PerspectiveW_(data_02082214[idx], data_02082214[idx + 1], self->mAspect, self->mNear,
+                      self->mFar, var_r6, 1, (Matrix4x3 *)0);
 
     {
         s32 s2 = (s32)(sp[2] + 4) >> 3;
@@ -481,7 +481,7 @@ int dCamera_c::Render()
     if (Vec3_HorzDist((Vector3 *)&sp[0], (Vector3 *)&sp[3]) == 0) {
         lookdir = &data_02086f08;
     }
-    G3i::LookAt_((Vector3 *)&sp[3], (Vector3 *)lookdir, (Vector3 *)&sp[0], 1, &self->viewMat);
+    G3i_LookAt_((Vector3 *)&sp[3], (Vector3 *)lookdir, (Vector3 *)&sp[0], 1, &self->viewMat);
 
     if (var_r4 != 0) {
         Matrix4x3_FromRotationZ(&data_020a0e68, var_r4);

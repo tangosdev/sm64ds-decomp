@@ -2,8 +2,8 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-extern void func_0205a588(void *dst, unsigned char val, unsigned int size);
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MI_CpuFill8(void *dst, unsigned char val, unsigned int size);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 struct S { unsigned int f0; unsigned char *f4; unsigned char *f8; unsigned int fc; };
 void func_02067b68(struct S *s, unsigned int start, unsigned int end, int flag) {
     unsigned int f0 = s->f0;
@@ -15,6 +15,8 @@ void func_02067b68(struct S *s, unsigned int start, unsigned int end, int flag) 
     top = f0 + fc;
     if (end > top) end = top;
     if (start >= end) return;
-    if (flag) func_0205a588(s->f8 + start, 0, end - start);
-    else CpuCopy8(s->f4 + start, s->f8 + start, end - start);
+    if (flag)
+        MI_CpuFill8(s->f8 + start, 0, end - start);
+    else
+        MI_CpuCopy8(s->f4 + start, s->f8 + start, end - start);
 }

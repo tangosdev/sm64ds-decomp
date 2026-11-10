@@ -23,9 +23,10 @@
 #include "dFdWipe_c.h"
 #include "dFdDummy_c.h"
 #include "decl_common.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "dExtModel_c.h"
 #include "math/MtxStack.h"
+#include "nitro/gx/gx_load.h"
 
 // These helpers have native definitions but no shared declaration yet.
 namespace cstd {
@@ -34,16 +35,10 @@ Fix12i fdiv(Fix12i a, Fix12i b);
 namespace CP15 {
 void FlushAndInvalidateDataCache(u32 addr, u32 len);
 }
-namespace GX {
-void LoadBGPltt(const void *src, u32 offset, u32 len);
-}
-namespace GXS {
-void LoadBGPltt(const void *src, u32 offset, u32 len);
-}
 int ApproachLinear(Fix12i &value, Fix12i target, Fix12i step);
 
 extern "C" {
-void func_02053a90(u16 *reg, int value);
+void GXx_SetMasterBrightness_(u16 *reg, int value);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *m, Fix12i x, Fix12i y, Fix12i z);
 }
 
@@ -71,14 +66,14 @@ void dFdBrightness_c::AdvanceFade()
         return;
 
     level = -(currInterp << 4) >> 0xc;
-    func_02053a90((u16*)0x400006c, level);
-    func_02053a90((u16*)0x400106c, level);
+    GXx_SetMasterBrightness_((u16 *)0x400006c, level);
+    GXx_SetMasterBrightness_((u16 *)0x400106c, level);
     if (level > -0x10)
         return;
 
     CP15::FlushAndInvalidateDataCache((u32)data_0209d3ac, 2);
-    GX::LoadBGPltt(data_0209d3ac, 0, 2);
-    GXS::LoadBGPltt(data_0209d3ac, 0, 2);
+    GX_LoadBGPltt(data_0209d3ac, 0, 2);
+    GXS_LoadBGPltt(data_0209d3ac, 0, 2);
 }
 #endif
 
@@ -161,8 +156,8 @@ void dFdColor_c::AdvanceFade()
         int m = color ? 0x10 : -0x10;
         int r = (currInterp * m) >> 12;
         if (r != 0) {
-            G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, 0x3f, r);
-            G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, 0x3f, r);
+            G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, 0x3f, r);
+            G2x_SetBlendBrightness_((volatile unsigned short *)0x4001050, 0x3f, r);
         } else {
             *(unsigned short*)0x4000050 = 0;
             *(unsigned short*)0x4001050 = 0;
@@ -194,7 +189,7 @@ void dFdWipe_c::AdvanceFade()
     cur = currInterp;
     if (cur == 0 && cur == old) return;
     if (cur == 0x1000) {
-        G2x::SetBlendBrightness((volatile u16 *)0x4000050, 0x3f, -0x10);
+        G2x_SetBlendBrightness_((volatile u16 *)0x4000050, 0x3f, -0x10);
     } else {
         if (speed != 0) {
             if (old != 0x1000) *(u16*)0x4000050 = 0;
@@ -215,7 +210,7 @@ void dFdWipe_c::AdvanceFade()
         int prod = currInterp * m;
         int r = prod >> 12;
         if (r != 0) {
-            G2x::SetBlendBrightness((volatile u16 *)0x4001050, 0x3f, r);
+            G2x_SetBlendBrightness_((volatile u16 *)0x4001050, 0x3f, r);
         } else {
             *(u16*)0x4000050 = 0;
             *(u16*)0x4001050 = 0;

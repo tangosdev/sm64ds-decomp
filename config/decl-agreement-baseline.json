@@ -209,7 +209,7 @@
         "return:void"
       ]
     },
-    "Copy36Bytes": {
+    "MI_Copy36B": {
       "src/SPLDraw_Child_DirectionalBillboard.c": [
         "param:#1 int *"
       ],
@@ -217,7 +217,7 @@
         "param:#1 int *"
       ]
     },
-    "Copy48Bytes": {
+    "MI_Copy48B": {
       "src/InvMat4x3.cpp": [
         "param:#1 int *"
       ]
@@ -227,7 +227,7 @@
         "return:void"
       ]
     },
-    "CpuCopy8": {
+    "MI_CpuCopy8": {
       "src/engine/mb/MB_WmBase.cpp": [
         "param:#1 unsigned short *",
         "param:#3 int"
@@ -1003,7 +1003,7 @@
         "param:#2 const void *"
       ]
     },
-    "MultiCopy_Int": {
+    "MIi_CpuCopy32": {
       "src/unnamed/arm9/0206/func_02065730.c": [
         "param:#1 const void *"
       ],
@@ -4127,7 +4127,7 @@
         "param:#1 int",
         "return:void"
       ],
-      "src/DMAStartTransfer.cpp": [
+      "src/MIi_DmaSetParams.cpp": [
         "return:void"
       ],
       "src/unnamed/arm9/0204/func_02040a5c.cpp": [
@@ -15622,7 +15622,7 @@
         "param:#3 void (*)(void *)"
       ]
     },
-    "func_0205a588": {
+    "MI_CpuFill8": {
       "src/WM_StartConnect.cpp": [
         "param:#2 int"
       ],

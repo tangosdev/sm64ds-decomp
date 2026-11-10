@@ -26,7 +26,7 @@
  *   func_02049d60  hand a system the free-particle list
  */
 #include "types.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "nitro/gx/g3x.h"
 #include "Particle__Behavior.h"
 #include "Particle__Manager.h"
@@ -229,7 +229,7 @@ void func_0204a17c(Particle::Manager *manager, char *resource) {
 
 int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(const void *, u32)) {
     int i;
-    GX::BeginLoadTex();
+    GX_BeginLoadTex();
     for (i = 0; i < manager->mNumTextures; i++) {
         TextureEntry *texture = &manager->mTextures[i];
         TextureEntry::Resource *record = texture->resource;
@@ -238,10 +238,10 @@ int func_0204a0dc(Particle::Manager *manager, u32 (*allocTexVram)(const void *, 
            Particle.cpp's cast spell its type const void *. */
         u32 address = allocTexVram((const void *)record->texelSize, isTexel4x4);
         /* The texels follow the 0x20-byte record header. */
-        GX::LoadTex(texture->resource + 1, address, record->texelSize);
+        GX_LoadTex(texture->resource + 1, address, record->texelSize);
         texture->texelAddress = address;
     }
-    GX::EndLoadTex();
+    GX_EndLoadTex();
     return 1;
 }
 
@@ -249,7 +249,7 @@ int func_0204a028(Particle::Manager *manager,
                   unsigned int (*allocPalVram)(unsigned int, unsigned int)) {
     int i;
 
-    GX::BeginLoadTexPltt();
+    GX_BeginLoadTexPltt();
 
     for (i = 0; i < manager->mNumTextures; i++) {
         TextureEntry *texture = &manager->mTextures[i];
@@ -259,13 +259,13 @@ int func_0204a028(Particle::Manager *manager,
         if (record->paletteSize != 0) {
             unsigned int fromLowAddress = record->params.format == 2 ? 1 : 0;
             address = allocPalVram(record->paletteSize, fromLowAddress);
-            GX::LoadTexPltt((char *)texture->resource + record->paletteOffset, address,
-                            record->paletteSize);
+            GX_LoadTexPltt((char *)texture->resource + record->paletteOffset, address,
+                           record->paletteSize);
         }
         texture->paletteAddress = address;
     }
 
-    GX::EndLoadTexPltt();
+    GX_EndLoadTexPltt();
     return 1;
 }
 

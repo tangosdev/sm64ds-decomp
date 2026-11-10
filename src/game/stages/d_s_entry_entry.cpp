@@ -39,7 +39,7 @@ unsigned int func_02045a50(const void *, unsigned int);
 /* local extern: the geometry-engine matrix load and the
    BMD load through a file handle, declared only in decl_common.h, which
    clashes with dScEntry_c.h's vtable spellings. */
-void func_020553a4(void *);
+void G3_LoadMtx43(void *);
 void *func_0201787c(SharedFilePtr *);
 /* local extern: the veneer to operator delete (src/engine/heap/Heap.cpp). */
 void func_0203cbc0(void *);
@@ -301,9 +301,9 @@ void EntryMesh::DrawGrid() {
     *(int *)0x4000444 = 0;
     MulMat4x3Mat4x3((const Matrix4x3 *)&mMtx, &data_0209b3ec, &tmp);
     *(int *)0x4000440 = 2;
-    func_020553a4(&tmp);
+    G3_LoadMtx43(&tmp);
     *(int *)0x4000440 = 1;
-    func_020553a4(&tmp);
+    G3_LoadMtx43(&tmp);
     *(int *)0x40004c8 = 0xe0000000;
     *(int *)0x40004cc = 0xc0007fff;
     SendMaterial();
