@@ -9657,3 +9657,4 @@ arm9	0x020a9ffc	data_020a9ffc	__cs_ref	MSL/Metrowerks runtime for NITRO, body an
 arm9	0x020aa020	data_020aa020	__cs	MSL/Metrowerks runtime for NITRO, body and layout against pret pokediamond (arm9/asm/RUNTIME_ARM_semihosted_console_io.s, RUNTIME_NITRO_eabi_init.s, MSL_ARM_critical_regions_NITRO.s)
 arm9	0x0209a330	data_0209a330	__files	MSL ansi_files.c __files (3 console FILEs, 0x4c each) and rand.c random_next (seed, initialised 1)
 arm9	0x0209a624	data_0209a624	random_next	MSL ansi_files.c __files (3 console FILEs, 0x4c each) and rand.c random_next (seed, initialised 1)
+arm9	0x020994e0	data_020994e0	gArctanTable	N64 SM64 gArctanTable (include/trig_tables.inc.c): all 0x401 s16 entries byte-identical
