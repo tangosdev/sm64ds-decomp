@@ -15,7 +15,7 @@
  * Source order is ROM-ascending under `#pragma defer_codegen off` -- the
  * deferred default would read optimization pragmas last-wins at end of file
  * and this member needs a positional bracket: the 10-arg Render keeps its
- * opt_common_subs/opt_propagation/opt_loop_invariants offs, and the bracket
+ * opt_propagation/opt_loop_invariants offs, and the bracket
  * restores `on` so the rest of the file gets defaults.
  *
  * The bodies read and write OAM records as NitroSDK's GXOamAttr: the
@@ -153,7 +153,6 @@ u8 OAM::GetObjWidth(int shape, int sizeBits)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- OAM::Render(bool, OamAttr *, int, int, int, int, int, int, int, int)
  * 0x02020994  size 0x690 */
-#pragma opt_common_subs off
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 
@@ -385,7 +384,6 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
     }
 }
 #pragma cplusplus on
-#pragma opt_common_subs on
 #pragma opt_propagation on
 #pragma opt_loop_invariants on
 
