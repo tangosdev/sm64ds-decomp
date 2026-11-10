@@ -1,22 +1,22 @@
 //cpp
-/* arm9/Particle_Behavior -- the six effect behaviors of the particle engine,
- * folded from six legacy shards at .text 0x0204d4d0..0x0204d8e8. Each
- * Particle::<Name> is a POD behavior struct carrying one static Func that a
- * SystemDefinition's Particle::Behavior table (built by func_0204a17c in
- * Particle_Manager.cpp) calls per particle: the resource supplies the
- * EffectData record, the Element the per-particle state, and Func advances
- * the particle's velocity/offset accordingly. The span is bounded on both
- * sides by C free functions: SPLAnim_Scale below and func_0204d8e8 above.
- * mwccarm emits .text in reverse source order, so the definitions below run
- * ROM-descending; the roster reads ROM-ascending.
+/* arm9/Particle_Behavior -- the six particle behaviours of the NitroSystem
+ * particle library (SPL), folded from six legacy shards at .text
+ * 0x0204d4d0..0x0204d8e8. func_0204a17c (Particle_Manager.cpp) pairs each
+ * apply function with its record in the particle resource in a definition's
+ * SPLBehavior table, and the particle update calls each entry once per
+ * particle per frame. Gravity, random and magnet add into the particle's
+ * acceleration; spin, collision plane and convergence act on the particle
+ * itself. The span is bounded on both sides by C free functions:
+ * SPLAnim_Scale below and func_0204d8e8 above. mwccarm emits .text in
+ * reverse source order, so the definitions below run ROM-descending.
  *
- *   RadiusConverge, LimitPlane, Turn, Converge, Jitter, Acceleration -- the
- *   Func of each behavior, against the typed data records in
- *   Particle__Behavior.h.
- *
- * Member and field names are the tree's readable inferences (see
- * Particle__Behavior.h's header comment); offsets, extents and the effect
- * record sizes are ROM-proven.
+ * Each body is the function pret's pokeplatinum decomp of SPL
+ * (lib/spl/src/spl_behavior.c) gives the same job, in the same source order,
+ * so the names are pret's coinages (see Particle__Behavior.h). This
+ * cartridge's SPL is older: no emitter argument, the spin angle is shifted
+ * down four bits into a sine-table index, and the collision plane always
+ * uses the record's height. SPL is a C library; the file stays C++ because
+ * Particle::Element is still a C++ type.
  */
 
 #include "decl_common.h"
@@ -34,136 +34,114 @@ void MTX_RotZ33_(Matrix3x3 *matrix, int sin, int cos);
 void MTX_MultVec33(const Vector3 *in, const Matrix3x3 *matrix, Vector3 *out);
 }
 
-namespace Particle {
-
-void Acceleration::Func(EffectData& effect, char*, Vector3& velocity)
-{
-    velocity.x += effect.acceleration.x;
-    velocity.y += effect.acceleration.y;
-    velocity.z += effect.acceleration.z;
+/* SPL's random draw (pret pokeplatinum lib/spl/include/spl_random.h);
+ * data_020a4d30 is its state, read by the SPLAnim callbacks too. */
+static inline u32 SPLRandom_Next(void) {
+    data_020a4d30 = data_020a4d30 * 0x5eedf715 + 0x1b0cb173;
+    return data_020a4d30;
 }
 
-void Jitter::Func(EffectData& effect, char* particle, Vector3& velocity)
-{
-    Element& state = *(Element*)particle;
-    u32 s;
-    int r;
-    int amp;
+static inline u32 SPLRandom_U32(u32 bits) {
+    return SPLRandom_Next() >> (sizeof(u32) * 8 - bits);
+}
 
-    if (state.age % effect.jitter.period != 0)
+/* A random number in [-num, num). */
+#define SPLRandom_RangeFX32(num) (((num) * (s32)SPLRandom_U32(9) - ((num) << 8)) >> 8)
+
+void SPLBehavior_ApplyGravity(const void *obj, Particle::Element *, Vector3 *acc) {
+    const SPLGravityBehavior *gravity = (const SPLGravityBehavior *)obj;
+
+    acc->x += gravity->magnitude.x;
+    acc->y += gravity->magnitude.y;
+    acc->z += gravity->magnitude.z;
+}
+
+void SPLBehavior_ApplyRandom(const void *obj, Particle::Element *ptcl, Vector3 *acc) {
+    const SPLRandomBehavior *rng = (const SPLRandomBehavior *)obj;
+
+    if (ptcl->age % rng->applyInterval != 0)
         return;
 
-    s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-    data_020a4d30 = s;
-    amp = effect.jitter.xAmplitude;
-    r = s >> 23;
-    velocity.x += (amp * r - (amp << 8)) >> 8;
-
-    s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-    data_020a4d30 = s;
-    amp = effect.jitter.yAmplitude;
-    r = s >> 23;
-    velocity.y += (amp * r - (amp << 8)) >> 8;
-
-    s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
-    data_020a4d30 = s;
-    amp = effect.jitter.zAmplitude;
-    r = s >> 23;
-    velocity.z += (amp * r - (amp << 8)) >> 8;
+    acc->x += SPLRandom_RangeFX32(rng->magnitude.x);
+    acc->y += SPLRandom_RangeFX32(rng->magnitude.y);
+    acc->z += SPLRandom_RangeFX32(rng->magnitude.z);
 }
 
-void Converge::Func(EffectData& effect, char* particle,
-                    Vector3& acceleration)
-{
-    Element& state = *(Element*)particle;
+void SPLBehavior_ApplyMagnet(const void *obj, Particle::Element *ptcl, Vector3 *acc) {
+    const SPLMagnetBehavior *magnet = (const SPLMagnetBehavior *)obj;
 
-    acceleration.x += effect.converge.strength
-        * ((effect.converge.targetX - state.offset.x) - state.velocity.x) >> 12;
-    acceleration.y += effect.converge.strength
-        * ((effect.converge.targetY - state.offset.y) - state.velocity.y) >> 12;
-    acceleration.z += effect.converge.strength
-        * ((effect.converge.targetZ - state.offset.z) - state.velocity.z) >> 12;
+    acc->x += magnet->force * ((magnet->target.x - ptcl->offset.x) - ptcl->velocity.x) >> 12;
+    acc->y += magnet->force * ((magnet->target.y - ptcl->offset.y) - ptcl->velocity.y) >> 12;
+    acc->z += magnet->force * ((magnet->target.z - ptcl->offset.z) - ptcl->velocity.z) >> 12;
 }
 
-void Turn::Func(EffectData& effect, char* particle, Vector3&)
-{
-    Element& state = *(Element*)particle;
+void SPLBehavior_ApplySpin(const void *obj, Particle::Element *ptcl, Vector3 *) {
+    const SPLSpinBehavior *spin = (const SPLSpinBehavior *)obj;
     Matrix3x3 matrix;
     int idx;
 
-    switch (effect.turn.axis) {
-    case 0:
-        idx = effect.turn.angle >> 4;
+    switch (spin->axis) {
+    case SPL_SPIN_BEHAVIOR_AXIS_X:
+        idx = spin->angle >> 4;
         MTX_RotX33_(&matrix, FX_SinIdx(idx), FX_CosIdx(idx));
         break;
-    case 1:
-        idx = effect.turn.angle >> 4;
+    case SPL_SPIN_BEHAVIOR_AXIS_Y:
+        idx = spin->angle >> 4;
         MTX_RotY33_(&matrix, FX_SinIdx(idx), FX_CosIdx(idx));
         break;
-    case 2:
-        idx = effect.turn.angle >> 4;
+    case SPL_SPIN_BEHAVIOR_AXIS_Z:
+        idx = spin->angle >> 4;
         MTX_RotZ33_(&matrix, FX_SinIdx(idx), FX_CosIdx(idx));
         break;
     }
 
-    MTX_MultVec33(&state.offset, &matrix, &state.offset);
+    MTX_MultVec33(&ptcl->offset, &matrix, &ptcl->offset);
 }
 
-void LimitPlane::Func(EffectData& effect, char* particle, Vector3&)
-{
-    Element& state = *(Element*)particle;
+void SPLBehavior_ApplyCollisionPlane(const void *obj, Particle::Element *ptcl, Vector3 *) {
+    const SPLCollisionPlaneBehavior *plane = (const SPLCollisionPlaneBehavior *)obj;
 
-    switch (effect.limitPlane.mode) {
-    case 0:
-        {
-            int current, plane;
-            plane = effect.limitPlane.position;
-            current = state.basePosition.y;
-            if (current < plane) {
-                if (current + state.offset.y > plane) {
-                    state.age = state.lifetime;
-                    return;
-                }
-            }
-            if (current > plane) {
-                if (current + state.offset.y < plane)
-                    state.age = state.lifetime;
+    switch (plane->collisionType) {
+    case SPL_COLLISION_BEHAVIOR_TYPE_KILL: {
+        int ey, y;
+        y = plane->y;
+        ey = ptcl->basePosition.y;
+        if (ey < y) {
+            if (ey + ptcl->offset.y > y) {
+                ptcl->age = ptcl->lifetime;
+                return;
             }
         }
-        break;
-    case 1:
-        {
-            int current, plane;
-            plane = effect.limitPlane.position;
-            current = state.basePosition.y;
-            if (current < plane) {
-                if (current + state.offset.y > plane) {
-                    state.offset.y = plane - current;
-                    state.velocity.y = -FX_MUL(state.velocity.y, effect.limitPlane.restitution);
-                    return;
-                }
-            }
-            if (current > plane) {
-                if (current + state.offset.y < plane) {
-                    state.offset.y = plane - current;
-                    state.velocity.y = -FX_MUL(state.velocity.y, effect.limitPlane.restitution);
-                }
+        if (ey > y) {
+            if (ey + ptcl->offset.y < y)
+                ptcl->age = ptcl->lifetime;
+        }
+    } break;
+    case SPL_COLLISION_BEHAVIOR_TYPE_BOUNCE: {
+        int ey, y;
+        y = plane->y;
+        ey = ptcl->basePosition.y;
+        if (ey < y) {
+            if (ey + ptcl->offset.y > y) {
+                ptcl->offset.y = y - ey;
+                ptcl->velocity.y = -FX_MUL(ptcl->velocity.y, plane->elasticity);
+                return;
             }
         }
-        break;
+        if (ey > y) {
+            if (ey + ptcl->offset.y < y) {
+                ptcl->offset.y = y - ey;
+                ptcl->velocity.y = -FX_MUL(ptcl->velocity.y, plane->elasticity);
+            }
+        }
+    } break;
     }
 }
 
-void RadiusConverge::Func(EffectData& effect, char* particle, Vector3&)
-{
-    Element& state = *(Element*)particle;
+void SPLBehavior_ApplyConvergence(const void *obj, Particle::Element *ptcl, Vector3 *) {
+    const SPLConvergenceBehavior *conv = (const SPLConvergenceBehavior *)obj;
 
-    state.offset.x +=
-        FX_MUL(effect.radiusConverge.strength, (effect.radiusConverge.targetX - state.offset.x));
-    state.offset.y +=
-        FX_MUL(effect.radiusConverge.strength, (effect.radiusConverge.targetY - state.offset.y));
-    state.offset.z +=
-        FX_MUL(effect.radiusConverge.strength, (effect.radiusConverge.targetZ - state.offset.z));
+    ptcl->offset.x += FX_MUL(conv->force, (conv->target.x - ptcl->offset.x));
+    ptcl->offset.y += FX_MUL(conv->force, (conv->target.y - ptcl->offset.y));
+    ptcl->offset.z += FX_MUL(conv->force, (conv->target.z - ptcl->offset.z));
 }
-
-} // namespace Particle

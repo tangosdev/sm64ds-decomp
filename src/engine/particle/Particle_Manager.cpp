@@ -168,44 +168,44 @@ void func_0204a17c(Particle::Manager *manager, char *resource) {
                                    flags.hasTurn + flags.hasLimitPlane + flags.hasRadiusConverge;
 
         if (definition->numBehaviors != 0) {
-            definition->behaviors = (Particle::Behavior *)manager->allocator(
-                definition->numBehaviors * sizeof(Particle::Behavior));
-            Particle::Behavior *behavior = definition->behaviors;
+            definition->behaviors =
+                (SPLBehavior *)manager->allocator(definition->numBehaviors * sizeof(SPLBehavior));
+            SPLBehavior *behavior = definition->behaviors;
 
             if (flags.hasAcceleration) {
-                behavior->data = (Particle::EffectData *)(resource + offset);
-                behavior->func = Particle::Acceleration::Func;
-                offset += sizeof(Particle::AccelerationData);
+                behavior->object = resource + offset;
+                behavior->applyFunc = SPLBehavior_ApplyGravity;
+                offset += sizeof(SPLGravityBehavior);
                 behavior++;
             }
             if (flags.hasJitter) {
-                behavior->data = (Particle::EffectData *)(resource + offset);
-                behavior->func = Particle::Jitter::Func;
-                offset += sizeof(Particle::JitterData);
+                behavior->object = resource + offset;
+                behavior->applyFunc = SPLBehavior_ApplyRandom;
+                offset += sizeof(SPLRandomBehavior);
                 behavior++;
             }
             if (flags.hasConverge) {
-                behavior->data = (Particle::EffectData *)(resource + offset);
-                behavior->func = Particle::Converge::Func;
-                offset += sizeof(Particle::ConvergeData);
+                behavior->object = resource + offset;
+                behavior->applyFunc = SPLBehavior_ApplyMagnet;
+                offset += sizeof(SPLMagnetBehavior);
                 behavior++;
             }
             if (flags.hasTurn) {
-                behavior->data = (Particle::EffectData *)(resource + offset);
-                behavior->func = Particle::Turn::Func;
-                offset += sizeof(Particle::TurnData);
+                behavior->object = resource + offset;
+                behavior->applyFunc = SPLBehavior_ApplySpin;
+                offset += sizeof(SPLSpinBehavior);
                 behavior++;
             }
             if (flags.hasLimitPlane) {
-                behavior->data = (Particle::EffectData *)(resource + offset);
-                behavior->func = Particle::LimitPlane::Func;
-                offset += sizeof(Particle::LimitPlaneData);
+                behavior->object = resource + offset;
+                behavior->applyFunc = SPLBehavior_ApplyCollisionPlane;
+                offset += sizeof(SPLCollisionPlaneBehavior);
                 behavior++;
             }
             if (flags.hasRadiusConverge) {
-                behavior->data = (Particle::EffectData *)(resource + offset);
-                behavior->func = Particle::RadiusConverge::Func;
-                offset += sizeof(Particle::RadiusConvergeData);
+                behavior->object = resource + offset;
+                behavior->applyFunc = SPLBehavior_ApplyConvergence;
+                offset += sizeof(SPLConvergenceBehavior);
                 behavior++;
             }
         } else {

@@ -7919,27 +7919,27 @@
     },
     "arm9:0x0204d4d0": {
       "author": "ruspecial",
-      "name": "_ZN8Particle14RadiusConverge4FuncERNS_10EffectDataEPcR7Vector3"
+      "name": "SPLBehavior_ApplyConvergence"
     },
     "arm9:0x0204d57c": {
       "author": "tangosdev",
-      "name": "_ZN8Particle10LimitPlane4FuncERNS_10EffectDataEPcR7Vector3"
+      "name": "SPLBehavior_ApplyCollisionPlane"
     },
     "arm9:0x0204d680": {
       "author": "tangosdev",
-      "name": "_ZN8Particle4Turn4FuncERNS_10EffectDataEPcR7Vector3"
+      "name": "SPLBehavior_ApplySpin"
     },
     "arm9:0x0204d758": {
       "author": "ruspecial",
-      "name": "_ZN8Particle8Converge4FuncERNS_10EffectDataEPcR7Vector3"
+      "name": "SPLBehavior_ApplyMagnet"
     },
     "arm9:0x0204d7ec": {
       "author": "andrewboudreau",
-      "name": "_ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3"
+      "name": "SPLBehavior_ApplyRandom"
     },
     "arm9:0x0204d8b0": {
       "author": "ruspecial",
-      "name": "_ZN8Particle12Acceleration4FuncERNS_10EffectDataEPcR7Vector3"
+      "name": "SPLBehavior_ApplyGravity"
     },
     "arm9:0x0204d8e8": {
       "author": "tangosdev",

@@ -9561,3 +9561,9 @@ arm9	0x02053770	CrossVec3	VEC_CrossProduct	NitroSDK fx_mtx/fx_vec name; ROM orde
 arm9	0x0205380c	DotVec3	VEC_DotProduct	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
 arm9	0x02053850	SubVec3	VEC_Subtract	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
 arm9	0x02053884	AddVec3	VEC_Add	NitroSDK fx_mtx/fx_vec name; ROM order matches the SDK source file order
+arm9	0x0204d4d0	_ZN8Particle14RadiusConverge4FuncERNS_10EffectDataEPcR7Vector3	SPLBehavior_ApplyConvergence	SPL particle behaviour: body for body pret pokeplatinum lib/spl/src/spl_behavior.c (pret coinage; C library, no Particle:: class)
+arm9	0x0204d57c	_ZN8Particle10LimitPlane4FuncERNS_10EffectDataEPcR7Vector3	SPLBehavior_ApplyCollisionPlane	SPL particle behaviour: body for body pret pokeplatinum lib/spl/src/spl_behavior.c (pret coinage; C library, no Particle:: class)
+arm9	0x0204d680	_ZN8Particle4Turn4FuncERNS_10EffectDataEPcR7Vector3	SPLBehavior_ApplySpin	SPL particle behaviour: body for body pret pokeplatinum lib/spl/src/spl_behavior.c (pret coinage; C library, no Particle:: class)
+arm9	0x0204d758	_ZN8Particle8Converge4FuncERNS_10EffectDataEPcR7Vector3	SPLBehavior_ApplyMagnet	SPL particle behaviour: body for body pret pokeplatinum lib/spl/src/spl_behavior.c (pret coinage; C library, no Particle:: class)
+arm9	0x0204d7ec	_ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3	SPLBehavior_ApplyRandom	SPL particle behaviour: body for body pret pokeplatinum lib/spl/src/spl_behavior.c (pret coinage; C library, no Particle:: class)
+arm9	0x0204d8b0	_ZN8Particle12Acceleration4FuncERNS_10EffectDataEPcR7Vector3	SPLBehavior_ApplyGravity	SPL particle behaviour: body for body pret pokeplatinum lib/spl/src/spl_behavior.c (pret coinage; C library, no Particle:: class)
