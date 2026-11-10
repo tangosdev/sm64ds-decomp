@@ -13306,7 +13306,7 @@
     "src/_ZN4CP1518GetDTCMBaseAddressEv.cpp",
     "src/_ZN4CP159EnableMPUEv.cpp",
     "src/_ZN4CP1510DisableMPUEv.cpp",
-    "src/engine/cp15/CP15_MPUDataRegion1.cpp",
+    "src/engine/cp15/OS_SetProtectionRegion1.cpp",
     "src/unnamed/arm9/0205/func_020593f4.c",
     "src/unnamed/arm9/0205/func_0205947c.c",
     "src/unnamed/arm9/0205/func_0205950c.c",

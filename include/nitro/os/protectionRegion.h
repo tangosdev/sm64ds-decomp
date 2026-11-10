@@ -5,7 +5,7 @@
  * The protection region setters of the Nitro SDK's os_protectionRegion.c,
  * under the SDK's own names (pret/pokediamond
  * arm9/lib/NitroSDK/include/OS_protectionRegion.h). The body is in
- * src/engine/cp15/CP15_MPUDataRegion1.cpp; it writes CP15 c6,c1, and the value
+ * src/engine/cp15/OS_SetProtectionRegion1.cpp; it writes CP15 c6,c1, and the value
  * packs the region's base, size and enable bit, as init_cp15
  * (src/init_cp15.c) shows when it programs all eight regions. Of the SDK's
  * setters only region 1's is linked into this ROM.

@@ -9,7 +9,7 @@
     "One contiguous run of the Nitro SDK's os_exception.c, 0x020593f4..0x02059624: 6 functions, gapless in config/arm9/delinks.txt. pret/pokediamond's arm9/lib/NitroSDK/src/OS_exception.c defines, in this order, OS_InitException, OSi_ExceptionHandler (asm), OSi_GetAndDisplayContext (asm), OSi_SetExContext (asm) and OSi_DisplayExContext. Each is here, identified by body; all but OS_InitException are at pret's sizes (ExceptionHandler 0x74, GetAndDisplayContext 0x14, SetExContext 0x90, DisplayExContext 0x6c). OS_InitException is 0x90 (pret 0x70) because this older SDK also tests OS_GetConsoleType before installing the vector.",
     "This SDK also has OS_SetUserExceptionHandler (0x1c), which stores the two words OSi_DisplayExContext calls through; pret's revision lacks it. main() installs the game's handler with it.",
     "Order: mwccarm emits an asm function where it stands and defers the C bodies, which come out in reverse. The three asm functions open the run in source order; the C bodies follow reversed: OSi_DisplayExContext, OS_SetUserExceptionHandler, OS_InitException.",
-    "BOTTOM EDGE: OS_SetProtectionRegion1 (0x020593ec..0x020593f4, src/engine/cp15/CP15_MPUDataRegion1.cpp), the last of three CP15 files below this run, is not exception code.",
+    "BOTTOM EDGE: OS_SetProtectionRegion1 (0x020593ec..0x020593f4, src/engine/cp15/OS_SetProtectionRegion1.cpp), the last of three CP15 files below this run, is not exception code.",
     "TOP EDGE: OSi_SetTimerReserved (0x02059624, src/OSi_SetTimerReserved.c) is os_timer.c, a separate one-function SDK file."
   ],
   "sections": [
