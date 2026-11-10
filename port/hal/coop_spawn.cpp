@@ -44,6 +44,9 @@ void _ZN12daStarBase_c27LinkSilverStarAndStarMarkerEPc(char *a, char *b);
 void _ZN8daStar_c19func_ov002_020e7e58Ev(char *c);
 void _ZN18daObjHatenaBlock_c19func_ov102_02149da8Ei(void *self, int state);
 signed char NumRedCoins(void);
+signed char NumVsStarsObtained(void);    // SILVERCOOP1: the ROM's silver-star sum (the gold star's "== 5" test)
+extern signed char data_0209f310[];       // the silver-star count per player (GiveVsStars)
+int _ZN6Player19func_ov002_020d94ccEv(void *player);   // the ROM's hurt drop of one silver star (SM64DS_SILVER_DROP proof knob)
 void _ZN12daStarBase_c27SpawnRedCoinStarIfNecessaryEv(void *self);
 unsigned DeathTable_GetBit(int id);
 void _ZN5Event6SetBitEj(unsigned b);
@@ -113,6 +116,24 @@ bool g_red_armed = false;
 bool g_red_snap_have = false; int g_red_snap_sum = 0;
 int g_red_star = 0;               // the star number the level's red coins carry (0 = not seen)
 
+// silver stars (SILVERCOOP1)
+struct SilTrk { char *a; unsigned uid; short slot; int area; bool seen, mine, other; };
+enum : int { kSilMax = 24, kSilOutMax = 4, kSilGold = 5 };
+SilTrk g_sil[kSilMax]; int g_nsil = 0;
+int  g_sil_last = -1;              // my count as last seen or written (-1 = not armed yet)
+unsigned g_sil_wm = 0;             // uid watermark: a silver star with a larger uid is new (a hurt drop is one)
+bool g_sil_snap_have = false, g_sil_snap_done = false; int g_sil_snap_sum = 0;
+struct EarlySil { bool on; int seat; SpSilverWire w; };
+EarlySil g_early_sil;
+struct SilOut { bool on; uint16_t seq; uint8_t n; int sent; unsigned next; };
+SilOut g_so[kSilOutMax];
+uint16_t g_sseq = 0;
+uint16_t g_lastsseq[kCoopMaxSeats];
+unsigned g_sil_drop_frame = 0; bool g_sil_drop_done = true;   // SM64DS_SILVER_DROP=<frame>: the ROM's hurt drop on my player once (proof knob)
+long long g_sil_goto_wall = 0;     // SM64DS_SILVER_GOTO_WALL=<wall ms>: at that machine time put my player on the lowest-slot silver star once (proof knob: two consoles on one star at one moment)
+bool g_sil_off = false;            // SM64DS_SPAWN_OFF=silver: must-fail control, no silver sharing at all
+struct SilStats { unsigned long long credit_take, credit_ann, credit_snap, capped, drop_sent, drop_applied, drop_local, ghost_take, sent_snap, recv_snap; } g_sst = {};
+
 // announced actors
 struct Net {
     bool used, remote, gone;
@@ -131,7 +152,7 @@ struct Ack { bool on; uint8_t origin; uint16_t counter; unsigned t; };
 Ack g_ack[kAckMax];
 
 // inbound queue (filled by the hub handlers, drained in the frame)
-enum : int { kEvSpawn = 1, kEvGone = 2, kEvBlock = 3 };
+enum : int { kEvSpawn = 1, kEvGone = 2, kEvBlock = 3, kEvSilverDrop = 4 };
 struct InEv { bool on; int type, seat; unsigned born; unsigned char buf[32]; };
 InEv g_in[kInMax];
 struct Rate { unsigned t0; int n; };
@@ -187,6 +208,12 @@ void read_env() {
         g_off.spawn = std::strstr(o, "spawn") != nullptr;
         g_off.gone = std::strstr(o, "gone") != nullptr;
         g_off.snap = std::strstr(o, "snap") != nullptr;
+        g_sil_off = std::strstr(o, "silver") != nullptr;
+    }
+    if (const char *e = std::getenv("SM64DS_SILVER_GOTO_WALL")) g_sil_goto_wall = std::atoll(e);
+    if (const char *e = std::getenv("SM64DS_SILVER_DROP")) {
+        unsigned f = 0;
+        if (std::sscanf(e, "%u", &f) == 1) { g_sil_drop_frame = f; g_sil_drop_done = false; }
     }
     if (const char *e = std::getenv("SM64DS_SPAWN_BLOCK")) {
         const char *p = e;
@@ -513,6 +540,141 @@ void red_bump(int n, int star_id, const char *why) {
 void red_rebase() {
     g_nred = 0;
     g_red_prev = red_sum();
+}
+
+// ---------------------------------------------------------------------------
+// Silver stars (SILVERCOOP1).
+// ---------------------------------------------------------------------------
+// The ROM keeps one silver-star count per player, data_0209f310[player] (GiveVsStars: +1 at the take,
+// src/game/actors/d_a_star.cpp daStar_c::func_ov002_020e9d18; -1 at a hurt drop, src/game/player/Player.cpp
+// Player::func_ov002_020d94cc), draws MY player's count (dMeter_c::RenderSilverStars, src/ui/hud/d_meter.cpp) and grows the
+// act's gold star (kind 6) while the sum over the players, NumVsStarsObtained, is exactly 5 (daStar_c::InitResources and
+// func_ov002_020ea420). Each console runs only its own player, so a friend's take is credited to MY count, the one the HUD
+// draws, never past 5 (the gold star's test is "== 5").
+int sil_me() { const int me = (int)data_0209f250; return (me >= 0 && me < 16) ? me : -1; }
+int sil_total() { return (int)NumVsStarsObtained(); }
+void sil_write(int v) {
+    const int me = sil_me();
+    if (me < 0) return;
+    if (v < 0) v = 0;
+    if (v > 0x7f) v = 0x7f;
+    data_0209f310[me] = (signed char)v;
+    g_sil_last = v;
+}
+void sil_credit(int n, const char *why) {
+    const int me = sil_me();
+    if (me < 0 || n <= 0) return;
+    const int room = kSilGold - sil_total();
+    if (n > room) { g_sst.capped += (unsigned)(n - (room > 0 ? room : 0)); n = room; }
+    if (n > 0) sil_write((int)data_0209f310[me] + n);
+    if (g_log)
+        std::fprintf(stderr, "[coopsilver] credit %s +%d: mine=%d sum=%d frame=%u wall=%lld\n", why, n > 0 ? n : 0, (int)data_0209f310[me], sil_total(), g_frames, wall_ms());
+}
+bool sil_taken_by(const char *a, const char *pl) {
+    const unsigned st = *(const unsigned *)(a + 0x440);
+    return pl && *(const char *const *)(a + 0x438) == pl && st >= 5u && st != 8u && st != 9u;
+}
+// A friend's take of an announced silver star (its GONE arrived while my copy stands, not taken by my player).
+void sil_on_remote_gone(const char *a) {
+    if (g_sil_off || g_sil_last < 0 || !a || a_dead(a) || a_cls(a) != 179) return;
+    if (sil_taken_by(a, my_player())) return;
+    for (int i = 0; i < g_nsil; ++i) if (g_sil[i].a == a) g_sil[i].mine = true;    // handled here, never again in the walk
+    ++g_sst.credit_ann;
+    sil_credit(1, "announced take");
+}
+void sil_queue_drop(int n) {
+    ++g_sseq; if (!g_sseq) g_sseq = 1;
+    int fi = 0;
+    for (int i = 0; i < kSilOutMax; ++i) if (!g_so[i].on) { fi = i; break; }
+    g_so[fi] = {true, g_sseq, (uint8_t)(n > 5 ? 5 : n), 0, 0};
+    ++g_sst.drop_local;
+}
+void sil_send_drops(unsigned now) {
+    for (SilOut &o : g_so) {
+        if (!o.on || (int)(now - o.next) < 0) continue;
+        if (!others_here()) { o.on = false; continue; }
+        SpSilverDropWire w; std::memset(&w, 0, sizeof w);
+        w.key = wkey(); w.seq = o.seq; w.n = o.n;
+        if (send_world(kSpWorldSilverDrop, &w, sizeof w)) ++g_sst.drop_sent;
+        if (++o.sent >= 3) o.on = false; else o.next = now + kResendMs;
+    }
+}
+void sil_arm() {
+    const int me = sil_me();
+    g_nsil = 0;
+    g_sil_last = me >= 0 ? (int)data_0209f310[me] : 0;
+    unsigned m = g_sil_wm;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) if (a_uid(a) > m) m = a_uid(a);
+    g_sil_wm = m;
+}
+void sil_scan() {
+    if (g_sil_off || g_sil_last < 0) return;
+    const int me = sil_me();
+    if (me < 0) return;
+    const char *pl = my_player();
+    for (int i = 0; i < g_nsil; ++i) g_sil[i].seen = false;
+    int new_drops = 0;
+    unsigned maxuid = g_sil_wm;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (a_cls(a) != 179 || is_player_ptr(a)) continue;
+        const unsigned uid = a_uid(a);
+        if (uid > maxuid) maxuid = uid;
+        if (uid > g_sil_wm && a_slot(a) == -1 && (a_param(a) & 0xffu) == 0x10u) ++new_drops;
+        if (a_dead(a)) continue;
+        SilTrk *t = nullptr;
+        for (int i = 0; i < g_nsil; ++i) if (g_sil[i].a == a && g_sil[i].uid == uid) { t = &g_sil[i]; break; }
+        if (!t && g_nsil < kSilMax) { t = &g_sil[g_nsil++]; *t = {a, uid, a_slot(a), a_area(a), false, false, false}; }
+        if (!t) continue;
+        t->seen = true; t->area = a_area(a);
+        const char *by = *(const char *const *)(a + 0x438);
+        const unsigned st = *(const unsigned *)(a + 0x440);
+        if (by && st >= 5u && st != 8u && st != 9u) {
+            if (by == pl) t->mine = true;
+            else if (is_player_ptr(by)) t->other = true;
+        }
+    }
+    g_sil_wm = maxuid;
+    // my own count: a rise is my take (the ROM's), a fall with a new dropped star is my hurt drop, told to the group
+    const int cur = (int)data_0209f310[me];
+    if (cur < g_sil_last) {
+        const int n = g_sil_last - cur;
+        if (new_drops > 0) sil_queue_drop(n);
+        if (g_log) std::fprintf(stderr, "[coopsilver] my count fell %d -> %d (%s) frame=%u wall=%lld\n", g_sil_last, cur,
+                                new_drops > 0 ? "hurt drop, sent" : "no dropped star, not sent", g_frames, wall_ms());
+    } else if (cur > g_sil_last && g_log) {
+        std::fprintf(stderr, "[coopsilver] my take: mine=%d sum=%d frame=%u wall=%lld\n", cur, sil_total(), g_frames, wall_ms());
+    }
+    g_sil_last = cur;
+    // placed stars gone with their death bit up and not taken by my player: a friend's take (the death-bit sync removed my copy)
+    for (int i = 0; i < g_nsil;) {
+        SilTrk &t = g_sil[i];
+        if (t.seen) { ++i; continue; }
+        if (!t.mine && t.slot >= 0 && t.slot < kSpSlots && DeathTable_GetBit(t.slot)) {
+            if (t.other) {
+                ++g_sst.ghost_take;
+                if (g_log) std::fprintf(stderr, "[coopsilver] slot %d taken by another body on this console: the ROM counted it there frame=%u wall=%lld\n", (int)t.slot, g_frames, wall_ms());
+            } else {
+                ++g_sst.credit_take;
+                char why[40]; std::snprintf(why, sizeof why, "placed slot %d", (int)t.slot);
+                sil_credit(1, why);
+            }
+        }
+        g_sil[i] = g_sil[--g_nsil];
+    }
+}
+void apply_silver_drop(int seat, const SpSilverDropWire &w) {
+    const int me = sil_me();
+    if (me < 0 || g_sil_last < 0) return;
+    sil_write((int)data_0209f310[me] - (int)w.n);
+    ++g_sst.drop_applied;
+    if (g_log) std::fprintf(stderr, "[coopsilver] seat %d dropped %d: mine=%d sum=%d frame=%u wall=%lld\n", seat, (int)w.n, (int)data_0209f310[me], sil_total(), g_frames, wall_ms());
+}
+void apply_silver_snap() {
+    if (!g_sil_snap_have || g_sil_snap_done || g_sil_last < 0) return;
+    g_sil_snap_done = true;
+    const int have = sil_total();
+    if (g_log) std::fprintf(stderr, "[coopsilver] snapshot from the owner: sum=%d (mine %d) wall=%lld\n", g_sil_snap_sum, have, wall_ms());
+    if (g_sil_snap_sum > have) { ++g_sst.credit_snap; sil_credit(g_sil_snap_sum - have, "snapshot"); }
 }
 
 // ---------------------------------------------------------------------------
@@ -845,6 +1007,7 @@ void apply_gone(int seat, const SpGoneWire &w, unsigned now) {
         Net *n = net_find(w.origin, w.id);
         if (!n) { ++g_st.gone_unknown; return; }
         if (n->gone) return;
+        if (n->a && n->seen && n->cls == 179) sil_on_remote_gone(n->a);      // SILVERCOOP1: a friend's take counts here too
         if (n->a && n->seen) kill_quiet(n->a);
         n->gone = true; n->gsends = 3;               // heard, not re-sent: the claimer already told everyone
         ++g_st.gone_applied;
@@ -873,6 +1036,7 @@ void drain_in(unsigned now) {
         if (e.type == kEvBlock) { SpBlockWire w; std::memcpy(&w, e.buf, sizeof w); apply_block(e.seat, w); }
         else if (e.type == kEvSpawn) { SpSpawnWire w; std::memcpy(&w, e.buf, sizeof w); apply_spawn(e.seat, w, now); }
         else if (e.type == kEvGone) { SpGoneWire w; std::memcpy(&w, e.buf, sizeof w); apply_gone(e.seat, w, now); }
+        else if (e.type == kEvSilverDrop) { SpSilverDropWire w; std::memcpy(&w, e.buf, sizeof w); apply_silver_drop(e.seat, w); }
     }
 }
 
@@ -896,6 +1060,17 @@ void on_ctl(int seat, int sub, const unsigned char *p, int len, void *) {
         if (!live_key_is(w.key)) { ++g_st.drop_group; return; }
         if (!ready_for(w.key) || !is_member(seat)) { g_early.on = true; g_early.seat = seat; g_early.w = w; return; }
         apply_red_snap(w);
+        return;
+    }
+    if (sub == kSpCtlSilver) {          // SILVERCOOP1
+        ++g_sst.recv_snap;
+        if (!sp_silver_validate(p, len)) { ++g_st.drop_bad; return; }
+        SpSilverWire w; std::memcpy(&w, p, sizeof w);
+        if (seat == g_my || w.target != g_my) return;
+        if (!live_key_is(w.key)) { ++g_st.drop_group; return; }
+        if (g_sil_off || g_off.snap) { ++g_st.drop_off; return; }
+        if (!ready_for(w.key) || !is_member(seat)) { g_early_sil.on = true; g_early_sil.seat = seat; g_early_sil.w = w; return; }
+        if (!g_sil_snap_have) { g_sil_snap_have = true; g_sil_snap_sum = w.sum; }
         return;
     }
     ++g_st.drop_bad;
@@ -956,6 +1131,18 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
         push_in(kEvBlock, seat, &w, (int)sizeof w, now);
         return;
     }
+    case kSpWorldSilverDrop: {          // SILVERCOOP1
+        if (!sp_silver_drop_validate(p, len)) { ++g_st.drop_bad; return; }
+        SpSilverDropWire w; std::memcpy(&w, p, sizeof w);
+        if (!live_key_is(w.key)) { ++g_st.drop_group; return; }
+        if (!is_member(seat)) { ++g_st.drop_member; return; }
+        if (g_sil_off) { ++g_st.drop_off; return; }
+        uint16_t &last = g_lastsseq[seat];
+        if (!sp_seq_newer(w.seq, last)) { ++g_st.drop_old; return; }
+        last = w.seq;
+        push_in(kEvSilverDrop, seat, &w, (int)sizeof w, now);
+        return;
+    }
     default:
         ++g_st.drop_bad;
     }
@@ -981,6 +1168,13 @@ void serve_job(Job &j) {
     int s = (int)NumRedCoins(); if (s < 0) s = 0; if (s > 8) s = 8;
     r.sum = (uint8_t)s; r.star = (uint8_t)(g_red_star & 7);
     if (send_ctl(kSpCtlRed, &r, sizeof r)) ++g_st.sent_red;
+    if (!g_sil_off) {                   // SILVERCOOP1: the group's silver-star count
+        SpSilverWire sv; std::memset(&sv, 0, sizeof sv);
+        sv.key = wkey(); sv.nonce = j.nonce; sv.target = (uint8_t)j.seat;
+        int ss = sil_total(); if (ss < 0) ss = 0; if (ss > kSilGold) ss = kSilGold;
+        sv.sum = (uint8_t)ss;
+        if (send_ctl(kSpCtlSilver, &sv, sizeof sv)) ++g_sst.sent_snap;
+    }
     int n = 0;
     for (Net &e : g_net)
         if (e.used && !e.gone && e.seen && n < 8) { send_spawn_of(e); ++n; }
@@ -1149,6 +1343,13 @@ void new_level() {
     for (int i = 0; i < g_nkt; ++i) g_kt[i].done = false;
     for (int i = 0; i < g_nforge; ++i) g_forge[i].done = false;
     g_early = keep;
+    EarlySil keep_sil = g_early_sil;
+    if (keep_sil.on && !(keep_sil.w.key.level == g_lvl && keep_sil.w.key.act == g_act)) keep_sil.on = false;
+    g_nsil = 0; g_sil_last = -1; g_sil_wm = 0; g_sil_snap_have = false; g_sil_snap_done = false; g_sil_snap_sum = 0;
+    std::memset(g_so, 0, sizeof g_so);
+    std::memset(g_lastsseq, 0, sizeof g_lastsseq);
+    g_sil_drop_done = g_sil_drop_frame == 0;
+    g_early_sil = keep_sil;
 }
 
 void on_latched(int level, int act) {
@@ -1175,6 +1376,7 @@ void on_snapshot_request(int seat, unsigned nonce) {
 void on_member_gone(int seat) {
     if (seat >= 0 && seat < kCoopMaxSeats) {
         std::memset(g_lastbseq[seat], 0, sizeof g_lastbseq[seat]);
+        g_lastsseq[seat] = 0;
         g_job[seat].on = false;
     }
 }
@@ -1234,6 +1436,12 @@ void on_frame(unsigned now) {
         if (g_early.w.key.level == g_lvl && g_early.w.key.act == g_act) apply_red_snap(g_early.w);
     }
 
+    // SILVERCOOP1: the owner's silver count, from a sender that was not yet a member
+    if (g_early_sil.on && is_member(g_early_sil.seat)) {
+        g_early_sil.on = false;
+        if (g_early_sil.w.key.level == g_lvl && g_early_sil.w.key.act == g_act && !g_sil_snap_have) { g_sil_snap_have = true; g_sil_snap_sum = g_early_sil.w.sum; }
+    }
+
     // arm: the level has settled and a joiner has been told (or nobody could tell it)
     if (!g_armed && g_frames >= kSettleFrames &&
         (g_red_snap_have || coop_group_i_am_owner() || g_frames >= kRedWait)) {
@@ -1244,6 +1452,7 @@ void on_frame(unsigned now) {
         }
         red_rebase();
         g_red_armed = true;
+        if (!g_sil_off) sil_arm();
         if (g_log) std::fprintf(stderr, "[coopspawn] armed frame=%u redsum=%d snap=%d wall=%lld\n", g_frames, red_sum(), g_red_snap_have ? g_red_snap_sum : -1, wall_ms());
     }
     if (!g_census_on && g_frames >= kSettleFrames) {         // everything the level placed or started with is not "new"
@@ -1254,7 +1463,21 @@ void on_frame(unsigned now) {
     }
 
     if (g_frames >= 3) scan(now);
+    if (g_armed) { sil_scan(); apply_silver_snap(); }
     drain_in(now);
+    if (g_sil_goto_wall > 0 && g_armed && my_player() && wall_ms() >= g_sil_goto_wall) {    // proof knob: one star, one moment, every console
+        char *best = nullptr;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+            if (a_cls(a) == 179 && !a_dead(a) && !is_player_ptr(a) && a_slot(a) >= 0 && (!best || a_slot(a) < a_slot(best))) best = a;
+        g_sil_goto_wall = 0;
+        if (best) std::memcpy(my_player() + 0x5c, best + 0x5c, 12);
+        std::fprintf(stderr, "[coopsilver-knob] goto wall: slot=%d frame=%u wall=%lld\n", best ? (int)a_slot(best) : -1, g_frames, wall_ms());
+    }
+    if (!g_sil_drop_done && g_armed && g_frames >= g_sil_drop_frame && my_player()) {       // proof knob: the ROM's hurt drop
+        g_sil_drop_done = true;
+        const int r = _ZN6Player19func_ov002_020d94ccEv(my_player());
+        std::fprintf(stderr, "[coopsilver-knob] hurt drop on my player: %d (mine=%d) wall=%lld\n", r, sil_me() >= 0 ? (int)data_0209f310[sil_me()] : -1, wall_ms());
+    }
 
     // proof knobs
     if (!g_near_done && g_armed && g_frames >= g_near_frame) {
@@ -1287,6 +1510,7 @@ void on_frame(unsigned now) {
     // outgoing
     send_blocks(now);
     send_net(now);
+    sil_send_drops(now);
     if (coop_group_i_am_owner())
         for (Job &j : g_job) {
             if (!j.on || (int)(now - j.next) < 0) continue;
@@ -1295,7 +1519,13 @@ void on_frame(unsigned now) {
             ++j.sent;
             if (j.sent >= 3) j.on = false; else j.next = now + (j.sent == 1 ? kJobMs : 400u);
         }
-    if (g_log && (g_frames % 120u) == 0) stats_line();
+    if (g_log && (g_frames % 120u) == 0) {
+        stats_line();
+        const int me = sil_me();
+        std::fprintf(stderr, "[coopsilver] stat mine=%d sum=%d tracked=%d credit take=%llu ann=%llu snap=%llu capped=%llu drops sent=%llu applied=%llu local=%llu ghost=%llu snap sent=%llu recv=%llu frame=%u\n",
+                     me >= 0 ? (int)data_0209f310[me] : -1, sil_total(), g_nsil, g_sst.credit_take, g_sst.credit_ann, g_sst.credit_snap, g_sst.capped,
+                     g_sst.drop_sent, g_sst.drop_applied, g_sst.drop_local, g_sst.ghost_take, g_sst.sent_snap, g_sst.recv_snap, g_frames);
+    }
 }
 
 struct Reg {
