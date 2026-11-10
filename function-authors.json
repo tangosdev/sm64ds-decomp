@@ -9231,7 +9231,7 @@
     },
     "arm9:0x02055998": {
       "author": "tangosdev",
-      "name": "func_02055998"
+      "name": "G3_LoadTexMtxEnv"
     },
     "arm9:0x02055a64": {
       "author": "tangosdev",

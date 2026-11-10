@@ -519,7 +519,7 @@ void daPicGate_c::PlaceCorners() {
 enum { kMtxPosVec = 2, kMtxPos = 1, kScale = 0x20000, kTriStrip = 2 };
 extern "C" {
 extern void G3_MultMtx43(void *m);
-extern void func_02055998(void *m);
+extern void G3_LoadTexMtxEnv(void *m);
 extern int data_ov080_0212771c[];
 }
 /* texgen=NORMAL variant: no per-vertex TEXCOORD, positions at >>7. */
@@ -544,7 +544,7 @@ void daPicGate_c::DrawRippleEnvMapped() {
 
     MulMat4x3Mat4x3(&mMtx, &data_0209b3ec, &tmp);
     G3_MTX_PUSH = 0;
-    func_02055998(data_ov080_0212771c);
+    G3_LoadTexMtxEnv(data_ov080_0212771c);
     G3_MultMtx43(&tmp);
     G3_MTX_MODE = kMtxPosVec;
     G3_LoadMtx43(&tmp);

@@ -167,7 +167,7 @@ void G3_LoadMtx43(void *m);
 void G3_MultMtx43(void *m);
 void MulMat3x3Mat3x3(void *a, void *b, void *dst);
 void func_02052514(void *a, void *b);
-void func_02055998(int *n);
+void G3_LoadTexMtxEnv(int *n);
 void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength);
 }
 
@@ -508,7 +508,7 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
             N[1] = M[1] * sy;
             N[5] = M[4] * sy;
             N[9] = M[7] * sy;
-            func_02055998(N);
+            G3_LoadTexMtxEnv(N);
             *(volatile int*)0x400044c = 0;
         }
 

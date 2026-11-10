@@ -875,7 +875,7 @@ extern void func_02053320(int, int*, int*, int*);
 extern void func_02053b98(void);
 extern void G3_MultMtx43(void *);
 extern void G3_LoadMtx43(void *);
-extern void func_02055998(int*);
+extern void G3_LoadTexMtxEnv(int *);
 extern void func_020562b4(const void*, u32, u32);
 extern void func_02056314(void*, u32, u32);
 extern void func_02056374(const void*, u32, u32);
