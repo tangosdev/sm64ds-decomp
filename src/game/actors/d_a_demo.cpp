@@ -4040,9 +4040,9 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
         {
             int v[3];
             unsigned char idx;
-            v[0] = *(int *)((char *)data_ov002_0210b970 + 0);
-            v[1] = *(int *)((char *)data_ov002_0210b970 + 4);
-            v[2] = *(int *)((char *)data_ov002_0210b970 + 8);
+            v[0] = data_ov002_0210b970[0];
+            v[1] = data_ov002_0210b970[1];
+            v[2] = data_ov002_0210b970[2];
 
             idx = *(volatile unsigned char *)&gLocalPlayerId;
             {
