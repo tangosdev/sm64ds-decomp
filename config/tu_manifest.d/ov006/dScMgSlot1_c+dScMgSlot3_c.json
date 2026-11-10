@@ -87,56 +87,56 @@
       "ordinal": 6
     },
     {
-      "symbol": "_Z16Slot3_ReelDigitsPci",
+      "symbol": "_ZN12dScMgSlot3_c10ReelDigitsEi",
       "address": "0x0210ab08",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_0210ab08.c",
       "ordinal": 7
     },
     {
-      "symbol": "_Z15Slot3_StateDonev",
+      "symbol": "_ZN12dScMgSlot3_c9StateDoneEv",
       "address": "0x0210ab90",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0210ab90.c",
       "ordinal": 8
     },
     {
-      "symbol": "_Z19Slot3_StateGameOverPc",
+      "symbol": "_ZN12dScMgSlot3_c13StateGameOverEv",
       "address": "0x0210ab94",
       "size": "0x000000a4",
       "legacy_source": "src/func_ov006_0210ab94.c",
       "ordinal": 9
     },
     {
-      "symbol": "_Z15Slot3_StateWaitv",
+      "symbol": "_ZN12dScMgSlot3_c9StateWaitEv",
       "address": "0x0210ac38",
       "size": "0x00000004",
       "legacy_source": "src/func_ov006_0210ac38.c",
       "ordinal": 10
     },
     {
-      "symbol": "_Z17Slot3_StatePayoutPc",
+      "symbol": "_ZN12dScMgSlot3_c11StatePayoutEv",
       "address": "0x0210ac3c",
       "size": "0x00000170",
       "legacy_source": "src/func_ov006_0210ac3c.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_Z16Slot3_StateJudgePc",
+      "symbol": "_ZN12dScMgSlot3_c10StateJudgeEv",
       "address": "0x0210adac",
       "size": "0x000001b8",
       "legacy_source": "src/func_ov006_0210adac.c",
       "ordinal": 12
     },
     {
-      "symbol": "_Z15Slot3_StateSpinPc",
+      "symbol": "_ZN12dScMgSlot3_c9StateSpinEv",
       "address": "0x0210af64",
       "size": "0x00000298",
       "legacy_source": "src/func_ov006_0210af64.c",
       "ordinal": 13
     },
     {
-      "symbol": "_Z16Slot3_StateIntroPc",
+      "symbol": "_ZN12dScMgSlot3_c10StateIntroEv",
       "address": "0x0210b1fc",
       "size": "0x00000118",
       "legacy_source": "src/func_ov006_0210b1fc.c",
@@ -178,70 +178,70 @@
       "ordinal": 19
     },
     {
-      "symbol": "_Z14SlotLamp_StartPv",
+      "symbol": "_ZN8SlotLamp5StartEv",
       "address": "0x0210c180",
       "size": "0x00000028",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "_Z13SlotLamp_TickPv",
+      "symbol": "_ZN8SlotLamp4TickEv",
       "address": "0x0210c1a8",
       "size": "0x00000060",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "_Z14SlotLamp_ClearPc",
+      "symbol": "_ZN8SlotLamp5ClearEv",
       "address": "0x0210c208",
       "size": "0x00000010",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "_Z15SlotBlink_StartPvss",
+      "symbol": "_ZN9SlotBlink5StartEss",
       "address": "0x0210c218",
       "size": "0x0000001c",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "_Z14SlotBlink_DrawPh",
+      "symbol": "_ZN9SlotBlink4DrawEv",
       "address": "0x0210c234",
       "size": "0x00000044",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_Z14SlotBlink_TickPv",
+      "symbol": "_ZN9SlotBlink4TickEv",
       "address": "0x0210c278",
       "size": "0x00000038",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "_Z15SlotBlink_ClearPc",
+      "symbol": "_ZN9SlotBlink5ClearEv",
       "address": "0x0210c2b0",
       "size": "0x00000010",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_Z17SlotReel_SetSpeedPvi",
+      "symbol": "_ZN12dScMgSlot1_c9betIcon_c9ArmPayoutEi",
       "address": "0x0210c2c0",
       "size": "0x00000014",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "_Z15SlotBet_OnTouchPv",
+      "symbol": "_ZN12dScMgSlot1_c9betIcon_c7OnTouchEv",
       "address": "0x0210c2d4",
       "size": "0x00000080",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
       "ordinal": 28
     },
     {
-      "symbol": "_Z13SlotBet_ResetPv",
+      "symbol": "_ZN12dScMgSlot1_c9betIcon_c5ResetEv",
       "address": "0x0210c354",
       "size": "0x00000020",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
@@ -262,7 +262,7 @@
       "ordinal": 31
     },
     {
-      "symbol": "_Z13SlotBet_PlacePc",
+      "symbol": "_ZN12dScMgSlot1_c9betIcon_c5PlaceEv",
       "address": "0x0210c478",
       "size": "0x00000040",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
@@ -290,7 +290,7 @@
       "ordinal": 35
     },
     {
-      "symbol": "_Z13Slot1_InitHudPv",
+      "symbol": "_ZN12dScMgSlot1_c7InitHudEv",
       "address": "0x0210c638",
       "size": "0x0000003c",
       "legacy_source": "src/actors/dScMgSlot1_c.cpp",
