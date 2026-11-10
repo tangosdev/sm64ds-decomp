@@ -338,7 +338,7 @@ extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
 extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 angX);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 angZ);
-extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
+extern void MTX_Concat43(void *dst, void *a, void *b);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
 void d_a_kpaEarthquakeHold(void *self, struct Vector3 *v, int f);
@@ -1039,7 +1039,7 @@ skip_angles:
     this->mFootPosBX = zero;
     this->mFootPosBY = zero;
     this->mFootPosBZ = zero;
-    MulMat4x3Mat4x3((char *)&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43((char *)&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
     this->mFootPosBX = data_020a0e68.m[9];
     this->mFootPosBY = data_020a0e68.m[10];
     this->mFootPosBZ = data_020a0e68.m[11];
@@ -1049,7 +1049,7 @@ skip_angles:
     this->mFootPosAY = zero;
     this->mFootPosAZ = zero;
     data_020a0e68 = saved;
-    MulMat4x3Mat4x3((char *)&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43((char *)&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
     this->mFootPosAX = data_020a0e68.m[9];
     this->mFootPosAY = data_020a0e68.m[10];
     this->mFootPosAZ = data_020a0e68.m[11];

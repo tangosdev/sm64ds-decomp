@@ -2,7 +2,7 @@
 
 typedef long long s64;
 
-void MulMat4x3Mat4x3(const Matrix4x3 *A, const Matrix4x3 *B, Matrix4x3 *dst) {
+void MTX_Concat43(const Matrix4x3 *A, const Matrix4x3 *B, Matrix4x3 *dst) {
     Matrix4x3 tmp;
     int a0, a1, a2;
     int b0, b1, b2;

@@ -66,8 +66,8 @@ typedef char Ov007Fade_size_must_be_0x14[sizeof(Ov007Fade) == 0x14 ? 1 : -1];
 extern Ov007Fade *sScreenFade;
 
 extern void InitialiseVramGlobals(void);
-extern int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
+extern int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
 extern void func_ov007_020b3edc(int size);
 extern void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020bbff0(void *c);
@@ -134,8 +134,8 @@ void func_ov007_020bfbdc(void *self) {
     vec.y = 0;
     vec.x = 0;
     vec.z = -0x1064;
-    InvMat4x3(&cam->viewMatrix, &mat);
-    MulVec3Mat4x3(&vec, &mat, &model->pos);
+    MTX_Inverse43(&cam->viewMatrix, &mat);
+    MTX_MultVec43(&vec, &mat, &model->pos);
 }
 
 /* While the model is visible, scales it in x and z to fill the camera's view

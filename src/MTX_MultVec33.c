@@ -1,7 +1,7 @@
 #include "types.h"
 #include "math/Matrix.h"
 
-void MulVec3Mat3x3(const Vector3 *in, const Matrix3x3 *m, Vector3 *out) {
+void MTX_MultVec33(const Vector3 *in, const Matrix3x3 *m, Vector3 *out) {
     int x = in->x;
     int y = in->y;
     int z = in->z;

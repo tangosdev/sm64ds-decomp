@@ -94,7 +94,7 @@ int RandomIntInternal(int *seed);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 void Vec3_MulScalarInPlace(Vector3 *v, int scale);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angY);
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
@@ -265,7 +265,7 @@ void UnknownVsPlayer::MovePoseParticles() {
         return;
     Vector3 pos;
     Matrix4x3 *bone = &mModel.data.transforms[15];
-    MulVec3Mat4x3(&bone->t, &mModel.mat4x3, &pos);
+    MTX_MultVec43(&bone->t, &mModel.mat4x3, &pos);
     Vec3_MulScalarInPlace(&pos, 0x8000);
     pos.y += 0x28000;
     mParticleHandle = Particle::System::New(mParticleHandle, 0x140, pos.x, pos.y, pos.z,

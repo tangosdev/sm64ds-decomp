@@ -6,8 +6,8 @@
 
 extern "C" {
 
-extern int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *out);
-extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+extern int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *out);
+extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 
 /* Unprojects the screen point (a, b), in 20.12 pixels, at depth c through
  * the camera's fovy and inverse view matrix. */
@@ -25,7 +25,7 @@ void func_ov007_020bfe4c(Ov007Camera *cam, int a, int b, int c, Vector3 *out) {
     f1 = FX_Div(FX_MUL(sinv, ac), cosv);
     v.x = FX_DivS32(FX_MUL(v.x, f1), 0x60);
     v.y = FX_DivS32(FX_MUL(v.y, f1), 0x60);
-    InvMat4x3(&cam->viewMatrix, &inv);
-    MulVec3Mat4x3(&v, &inv, out);
+    MTX_Inverse43(&cam->viewMatrix, &inv);
+    MTX_MultVec43(&v, &inv, out);
 }
 }

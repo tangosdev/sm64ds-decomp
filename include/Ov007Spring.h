@@ -12,7 +12,7 @@
  * func_ov007_020c83fc resets. Its steppers read every slot:
  * func_ov007_020c81a0 (x/y), func_ov007_020c80c8 (z) and func_ov007_020c831c
  * (3D). The vectors are typed Vector3 because the link steps hand velocity
- * and force to AddVec3, SubVec3, DotVec3 and func_02053320 (out = b + s * a,
+ * and force to VEC_Add, VEC_Subtract, VEC_DotProduct and VEC_MultAdd (out = b + s * a,
  * per component). */
 typedef struct Ov007Follower {
     /* 0x00: the Q12 position each step moves (func_ov007_020c844c's p). The
@@ -36,7 +36,7 @@ typedef struct Ov007Follower {
 typedef struct Ov007Link {
     Ov007Follower *from; /* 0x00 */
     Ov007Follower *to;   /* 0x04 */
-    int length;          /* 0x08: LenVec3(dir) */
+    int length;          /* 0x08: VEC_Mag(dir) */
     Vector3 dir;         /* 0x0c: from->target - to->target when bound */
 } Ov007Link;
 

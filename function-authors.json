@@ -8715,11 +8715,11 @@
     },
     "arm9:0x020524f0": {
       "author": "tangosdev",
-      "name": "Matrix3x3_LoadIdentity"
+      "name": "MTX_Identity33_"
     },
     "arm9:0x02052514": {
       "author": "tangosdev",
-      "name": "func_02052514"
+      "name": "MTX_Copy33To44_"
     },
     "arm9:0x02052550": {
       "author": "ruspecial",
@@ -8731,47 +8731,47 @@
     },
     "arm9:0x02052588": {
       "author": "ruspecial",
-      "name": "Matrix3x3_SetRotationZ"
+      "name": "MTX_RotZ33_"
     },
     "arm9:0x020525a0": {
       "author": "tangosdev",
-      "name": "MulVec3Mat3x3"
+      "name": "MTX_MultVec33"
     },
     "arm9:0x02052624": {
       "author": "tangosdev",
-      "name": "MulMat3x3Mat3x3"
+      "name": "MTX_Concat33"
     },
     "arm9:0x020527c0": {
       "author": "tangosdev",
-      "name": "Matrix4x3_LoadIdentity"
+      "name": "MTX_Identity43_"
     },
     "arm9:0x020527e8": {
       "author": "ruspecial",
-      "name": "func_020527e8"
+      "name": "MTX_Scale43_"
     },
     "arm9:0x02052800": {
       "author": "ruspecial",
-      "name": "func_02052800"
+      "name": "MTX_RotX43_"
     },
     "arm9:0x02052820": {
       "author": "ruspecial",
-      "name": "func_02052820"
+      "name": "MTX_RotY43_"
     },
     "arm9:0x0205283c": {
       "author": "ruspecial",
-      "name": "func_0205283c"
+      "name": "MTX_RotZ43_"
     },
     "arm9:0x02052858": {
       "author": "ruspecial",
-      "name": "MulVec3Mat4x3"
+      "name": "MTX_MultVec43"
     },
     "arm9:0x02052914": {
       "author": "tangosdev",
-      "name": "MulMat4x3Mat4x3"
+      "name": "MTX_Concat43"
     },
     "arm9:0x02052b34": {
       "author": "andrewboudreau",
-      "name": "InvMat4x3"
+      "name": "MTX_Inverse43"
     },
     "arm9:0x02052ec8": {
       "author": "tangosdev",
@@ -8835,15 +8835,15 @@
     },
     "arm9:0x02053320": {
       "author": "tangosdev",
-      "name": "func_02053320"
+      "name": "VEC_MultAdd"
     },
     "arm9:0x02053380": {
       "author": "tangosdev",
-      "name": "func_02053380"
+      "name": "VEC_Fx16Normalize"
     },
     "arm9:0x020534ec": {
       "author": "tangosdev",
-      "name": "NormalizeVec3"
+      "name": "VEC_Normalize"
     },
     "arm9:0x02053644": {
       "author": "andrewboudreau",
@@ -8851,23 +8851,23 @@
     },
     "arm9:0x020536e4": {
       "author": "tangosdev",
-      "name": "LenVec3"
+      "name": "VEC_Mag"
     },
     "arm9:0x02053770": {
       "author": "tangosdev",
-      "name": "CrossVec3"
+      "name": "VEC_CrossProduct"
     },
     "arm9:0x0205380c": {
       "author": "andrewboudreau",
-      "name": "DotVec3"
+      "name": "VEC_DotProduct"
     },
     "arm9:0x02053850": {
       "author": "tangosdev",
-      "name": "SubVec3"
+      "name": "VEC_Subtract"
     },
     "arm9:0x02053884": {
       "author": "tangosdev",
-      "name": "AddVec3"
+      "name": "VEC_Add"
     },
     "arm9:0x020538b8": {
       "author": "andrewboudreau",

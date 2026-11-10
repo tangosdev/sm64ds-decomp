@@ -30,8 +30,8 @@ extern "C" {
  * include/math/*.h and decl_*.h). */
 void MTX_RotX33_(Matrix3x3 *matrix, int sin, int cos);
 void MTX_RotY33_(Matrix3x3 *matrix, int sin, int cos);
-void Matrix3x3_SetRotationZ(Matrix3x3* matrix, int sin, int cos);
-void MulVec3Mat3x3(const Vector3* in, const Matrix3x3* matrix, Vector3* out);
+void MTX_RotZ33_(Matrix3x3 *matrix, int sin, int cos);
+void MTX_MultVec33(const Vector3 *in, const Matrix3x3 *matrix, Vector3 *out);
 }
 
 namespace Particle {
@@ -102,11 +102,11 @@ void Turn::Func(EffectData& effect, char* particle, Vector3&)
         break;
     case 2:
         idx = effect.turn.angle >> 4;
-        Matrix3x3_SetRotationZ(&matrix, FX_SinIdx(idx), FX_CosIdx(idx));
+        MTX_RotZ33_(&matrix, FX_SinIdx(idx), FX_CosIdx(idx));
         break;
     }
 
-    MulVec3Mat3x3(&state.offset, &matrix, &state.offset);
+    MTX_MultVec33(&state.offset, &matrix, &state.offset);
 }
 
 void LimitPlane::Func(EffectData& effect, char* particle, Vector3&)

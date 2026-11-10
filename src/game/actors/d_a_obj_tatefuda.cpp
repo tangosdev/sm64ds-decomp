@@ -1008,7 +1008,7 @@ void daObjTatefuda_c::AttachToHolder() {
     v.y = 0;
     v.z = 0;
     *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&body->mat4x3;
-    MulMat4x3Mat4x3(&bones[14], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.t.x;
     v.y = data_020a0e68.t.y;
     v.z = data_020a0e68.t.z;

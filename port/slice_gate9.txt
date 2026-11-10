@@ -33,7 +33,7 @@ src/engine/collision/d_bg_w.cpp
 # dExtModel_c::SetFile lives in src/engine/model/d_ext_model.cpp, which slice 4b
 # already compiles; smoke_actor links that slice, so listing it again
 # would define the class twice.
-src/InvMat4x3.cpp
+src/MTX_Inverse43.cpp
 # cstd is one production translation unit; the FX_Inv helper this slice
 # used to name separately lives in it with the rest of the namespace.
 src/cstd.cpp
@@ -41,7 +41,7 @@ src/cstd.cpp
 # base-subobject ctor lives in the arm9 one.
 src/engine/collision/d_bg_w_kc.cpp
 src/func_0203b244.c
-src/LenVec3.c
+src/VEC_Mag.c
 src/Matrix4x3_FromRotationY.c
 # The six func_01ffb0* flag/accessor helpers live in the ITCM half of the
 # dBgW_Kc production TU.
@@ -52,7 +52,7 @@ src/func_0203b27c.c
 # func_0204424c, func_02044284 and func_02044334 live in the fListNode
 # production translation unit.
 src/fListNode.cpp
-src/MulVec3Mat4x3.c
+src/MTX_MultVec43.c
 src/func_0203b2ec.c
 src/func_0203b20c.c
 

@@ -786,7 +786,7 @@ void daBmb_c::func_ov102_0214b53c() {
         p.y = 0;
         p.z = 0;
         data_020a0e68 = mAnmModel.mat4x3;
-        MulMat4x3Mat4x3(&mAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
+        MTX_Concat43(&mAnmModel.data.transforms[2], &data_020a0e68, &data_020a0e68);
         p.x = data_020a0e68.m[9];
         p.y = data_020a0e68.m[10];
         p.z = data_020a0e68.m[11];

@@ -1,6 +1,6 @@
 #include "types.h"
 
-int LenVec3(const Vector3 *v) {
+int VEC_Mag(const Vector3 *v) {
     unsigned long long sq = ((long long)v->x * v->x);
     sq += ((long long)v->y * v->y);
     sq += ((long long)v->z * v->z);

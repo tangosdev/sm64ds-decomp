@@ -12,7 +12,7 @@
 // 1 is written as 0x1000 (fixed point; the DS has no FPU).
 // m arrives in r0. "stmia r0!, {r2, r3}" stores r2 and r3 into the next
 // two entries of m and moves r0 past them, so m is written in pairs.
-asm void Matrix4x3_LoadIdentity(Matrix4x3 *m)
+asm void MTX_Identity43_(Matrix4x3 *m)
 {
     mov r2, #0x1000
     mov r3, #0

@@ -29,11 +29,11 @@
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
-void MulVec3Mat4x3(void* v, void* m, void* out);
+void MTX_MultVec43(void *v, void *m, void *out);
 
 void func_ov007_020bfd70(Ov007Camera *cam, void *pos, int *outX, int *outY) {
     int out[3];
-    MulVec3Mat4x3(pos, &cam->viewMatrix, out);
+    MTX_MultVec43(pos, &cam->viewMatrix, out);
     int z = out[2];
     if (z < 0)
         z = -z;

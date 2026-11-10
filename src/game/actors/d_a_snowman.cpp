@@ -96,14 +96,14 @@ extern daPly_c *gPlayers[];
 extern unsigned d_a_snowmanNewHold(unsigned a, unsigned b, int c, int d, int e, const void *f,
                                    void *g);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(const Vector3 *v);
+extern int VEC_Mag(const Vector3 *v);
 extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
-extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+extern void VEC_Subtract(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
+extern void MTX_Concat43(void *dst, void *a, void *b);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern struct Matrix4x3 data_020a0e68;
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
@@ -113,7 +113,7 @@ extern int atan2_hold_d_a_snowman_1(int a, int b);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern int Vec3_HorzLen(void *v);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-extern void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *b);
+extern void MTX_MultVec43(Vector3 *a, Matrix4x3 *m, Vector3 *b);
 }
 
 /* File handles the static initializer constructs. The two models use
@@ -522,7 +522,7 @@ int daSnowman_c::StateThrowSnowballExecute() {
                     Matrix4x3_FromRotationY(&data_020a0e68, angle);
                     Matrix4x3_ApplyInPlaceToRotationX(
                         &data_020a0e68, (short)(-cstd::atan2(v[0].y, Vec3_HorzLen(&v[0]))));
-                    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+                    MTX_MultVec43(&in, &data_020a0e68, &out);
                 }
                 out.y += 0x14000;
                 target->mSpeedX = out.x;
@@ -668,14 +668,14 @@ int daSnowman_c::StateHopExecute() {
     p.GetNode(node, this->mPathNodeIndex);
     node.y = this->mPosY;
     Vec3_Sub(&diff, &this->mPos, &node);
-    len = LenVec3(&diff);
+    len = VEC_Mag(&diff);
     ApproachAngle(&this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &node), 1, 0x1000, 0x500);
     if (len == 0 || len <= this->mHopStep)
         return 1;
     {
         int q = FX_Div(this->mHopStep, len);
         Vec3_MulScalar(&scaled, &diff, q);
-        SubVec3(&this->mPos, &scaled, &this->mPos);
+        VEC_Subtract(&this->mPos, &scaled, &this->mPos);
     }
     return 1;
 }
@@ -735,7 +735,7 @@ int daSnowman_c::StateWalkEnter() {
     pp.GetNode(node, this->mPathNodeIndex);
     node.y = this->mPosY;
     Vec3_Sub(&diff, &this->mPos, &node);
-    len = LenVec3(&diff);
+    len = VEC_Mag(&diff);
     this->mHopStep = 0xa000;
     this->mStep = 0;
     if (len == 0 || len <= this->mHopStep) {
@@ -787,8 +787,8 @@ void daSnowman_c::UpdateModelMatrices() {
         this->mCapPos.z = 0;
         actor = dActor_c::FindWithID(this->mCapUniqueID);
         if (actor != 0) {
-            MulMat4x3Mat4x3(&this->mAnmModel.data.transforms[5], &this->mAnmModel.mat4x3,
-                            &this->mCapMatrix);
+            MTX_Concat43(&this->mAnmModel.data.transforms[5], &this->mAnmModel.mat4x3,
+                         &this->mCapMatrix);
 
             this->mCapPos.x = data_020a0e68.m[9];
             this->mCapPos.y = data_020a0e68.m[10];
@@ -802,7 +802,7 @@ void daSnowman_c::UpdateModelMatrices() {
 
             Matrix4x3_FromTranslation(&data_020a0e68, 0, 0x4000, 0);
             Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0, 0x2000, 0);
-            MulMat4x3Mat4x3(&data_020a0e68, &this->mCapMatrix, &this->mCapMatrix);
+            MTX_Concat43(&data_020a0e68, &this->mCapMatrix, &this->mCapMatrix);
             actor->mCarryMatrix = &this->mCapMatrix;
         }
     }
@@ -811,7 +811,7 @@ void daSnowman_c::UpdateModelMatrices() {
     this->mHandPos.y = 0;
     this->mHandPos.z = 0;
     data_020a0e68 = this->mAnmModel.mat4x3;
-    MulMat4x3Mat4x3(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0xc000, -0x1000, 0);
 
     this->mHandPos.x = data_020a0e68.m[9];

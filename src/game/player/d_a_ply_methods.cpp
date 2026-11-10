@@ -1952,12 +1952,12 @@ extern "C" {
 int daPly_c::func_ov002_020bf40c() {
     /* local extern: CalcLib conflicts with this TU's body-local math
      * declarations; retain this signature at the call site. */
-    extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
+    extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
     extern dCamera_c *gCamera;
     Vector3 pos;
     Vector3 off;
     if (NumStars() < 0x50 || param1 != 0) {
-        AddVec3(&mPos, &data_ov002_0210a590, &mPos);
+        VEC_Add(&mPos, &data_ov002_0210a590, &mPos);
         off.x = data_ov002_0210a590.x;
         off.y = data_ov002_0210a590.y;
         off.z = data_ov002_0210a590.z;
@@ -3280,10 +3280,10 @@ int daPly_c::func_ov002_020c2270(void *p1, void *p2) {
 /* recovered: shared common types */
 extern "C" {
 int daPly_c::func_ov002_020c231c() {
-    extern void SubVec3(void*, void*, void*);
+    extern void VEC_Subtract(void *, void *, void *);
     /* local extern: CalcLib conflicts with this TU's body-local math
      * declarations; retain this signature at the call site. */
-    extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
+    extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
     Vector3 tmp;
     Vector3 pos;
     u8 f70f;
@@ -3300,11 +3300,11 @@ int daPly_c::func_ov002_020c231c() {
         if (f70f == 0)
             return 0;
 
-        SubVec3(&mPos, (Vector3 *)&mPreClsnPosX, &tmp);
+        VEC_Subtract(&mPos, (Vector3 *)&mPreClsnPosX, &tmp);
         tmp.x >>= 1;
         tmp.y >>= 1;
         tmp.z >>= 1;
-        AddVec3((Vector3 *)&mPreClsnPosX, &tmp, &mPos);
+        VEC_Add((Vector3 *)&mPreClsnPosX, &tmp, &mPos);
         func_ov002_020c14b8();
 
         if (mGroundY == (s32)0x80000000)
@@ -3838,7 +3838,7 @@ void daPly_c::SplineGetWeights(Fix12i *out) {
 /* recovered: shared common types */
 extern "C" {
 void daPly_c::func_ov002_020c37a4(char *arg) {
-    extern void MulVec3Mat4x3(void *, void *, void *);
+    extern void MTX_MultVec43(void *, void *, void *);
     extern void Vec3_RotateYAndTranslate(void *, void *, int ang, void *);
     extern u32 PlayerNewHold4(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                               void *callback);
@@ -3847,7 +3847,7 @@ void daPly_c::func_ov002_020c37a4(char *arg) {
     unsigned int id2 = this->GetBodyModelID(param1 & 0xff, 0);
     Vector3 v;
     Vector3 s;
-    MulVec3Mat4x3(&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
+    MTX_MultVec43(&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
     Vec3_MulScalar(&s, &v, 0x8000);
     v = s;
     Vec3_RotateYAndTranslate(&v, &v, this->mAngleY, arg);
@@ -9418,7 +9418,7 @@ int daPly_c::St_Swim_Init() {
 /* recovered: shared common types */
 extern "C" {
 int daPly_c::func_ov002_020ce5f8() {
-    extern void MulVec3Mat4x3(void *, void *, void *);
+    extern void MTX_MultVec43(void *, void *, void *);
     extern void* Vec3_LslInPlace(void*, int sh);
     extern int data_0209f32c;
     int y, threshold;
@@ -9462,7 +9462,7 @@ int daPly_c::func_ov002_020ce5f8() {
         base = &m1->data.transforms[15];
         idx2 = GetBodyModelID(param1 & 0xff, 0);
         m2 = mModels.mBodyModels[idx2];
-        MulVec3Mat4x3(&base->m[9], &m2->mat4x3, &pos);
+        MTX_MultVec43(&base->m[9], &m2->mat4x3, &pos);
     }
     Vec3_LslInPlace(&pos, 3);
 
@@ -13793,7 +13793,7 @@ ret0b:
 extern "C" {
 int daPly_c::TongueWallProbe() {
     daPly_c *player = (daPly_c *)this;
-    extern void MulVec3Mat4x3(void *v, void *m, void *dst);
+    extern void MTX_MultVec43(void *v, void *m, void *dst);
     extern void Vec3_MulScalarInPlace(int *v, int s);
     extern int VEC_Distance(int *a, int *b);
     extern u32 PlayerNewHold11(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
@@ -13812,7 +13812,7 @@ int daPly_c::TongueWallProbe() {
         int model;
         Matrix4x3 *m1 = player->mModels.mHeadModels[(b << 2) + 3]->data.transforms;
         model = ((daPly_c *)this)->GetBodyModelID(player->param1 & 0xff, 0);
-        MulVec3Mat4x3(&m1->m[9], &player->mModels.mBodyModels[model]->mat4x3, &p1);
+        MTX_MultVec43(&m1->m[9], &player->mModels.mBodyModels[model]->mat4x3, &p1);
         Vec3_MulScalarInPlace((int *)&p1, 0x8000);
     }
 
@@ -13825,7 +13825,7 @@ int daPly_c::TongueWallProbe() {
         a0 = &m2i->m[9];
         a1 = &((dExtAnmModel_c *)a1)->mat4x3;
         a2 = &p2;
-        MulVec3Mat4x3(a0, a1, a2);
+        MTX_MultVec43(a0, a1, a2);
         Vec3_MulScalarInPlace((int *)&p2, 0x8000);
     }
 
@@ -14051,7 +14051,7 @@ void func_ov002_020d7430(daPly_c &player) {
 struct PVec { int x, y, z; PVec() {} ~PVec() {} };
 extern "C" {
 int daPly_c::St_YoshiPower_Main() {
-    extern void MulVec3Mat4x3(void *, void *, void *);
+    extern void MTX_MultVec43(void *, void *, void *);
     extern void Vec3_MulScalarInPlace(void*, int);
     extern int func_ov002_020d5cec(void *);
     extern u32 PlayerNewHold12(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
@@ -14103,7 +14103,7 @@ int daPly_c::St_YoshiPower_Main() {
                     flag = 0;
                 if (flag != 0) {
                     int id1 = this->GetBodyModelID(this->param1 & 0xff, 0);
-                    MulVec3Mat4x3(&t4->m[9], &mModels.mBodyModels[id1]->mat4x3, &tmp);
+                    MTX_MultVec43(&t4->m[9], &mModels.mBodyModels[id1]->mat4x3, &tmp);
                     Vec3_MulScalarInPlace(&tmp, 0x8000);
                     dp = (char*)*(void**)(&mObjInMouth);
                     ((dActor_c *)dp)->mPosX = tmp.x;
@@ -15294,7 +15294,7 @@ int daPly_c::St_Hurt_Main() {
 /* recovered: shared common types */
 extern "C" {
 void daPly_c::func_ov002_020d98b4() {
-    extern void MulVec3Mat4x3(void *a, void *b, Vector3 *out);
+    extern void MTX_MultVec43(void *a, void *b, Vector3 *out);
     extern u32 PlayerNewHold14(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
     int t = this->func_ov002_020beb38();
@@ -15309,7 +15309,7 @@ void daPly_c::func_ov002_020d98b4() {
         unsigned int id2 = this->GetBodyModelID(param1 & 0xff, 0);
         Vector3 v;
         Vector3 s;
-        MulVec3Mat4x3(&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
+        MTX_MultVec43(&bone->m[9], &mModels.mBodyModels[id2]->mat4x3, &v);
         Vec3_MulScalar(&s, &v, 0x8000);
         s.y += 0x50000;
         mParticle1 =
@@ -16382,7 +16382,7 @@ void daPly_c::func_ov002_020db8bc(unsigned char kind) {
 extern "C" {
 void daPly_c::func_ov002_020db8d8() {
     extern unsigned char gGameMode;
-    extern void MulVec3Mat4x3(void *out, void *mtx, void *vec);
+    extern void MTX_MultVec43(void *out, void *mtx, void *vec);
     Vector3 backup;
     Vector3 tmp;
     Vector3 dir;
@@ -16395,7 +16395,7 @@ void daPly_c::func_ov002_020db8d8() {
     b = this->mUseAltBodyModel;
     m = &mModels.mHeadModels[(b << 2) + 3]->data.transforms[3];
     model = this->GetBodyModelID(param1 & 0xff, 0);
-    MulVec3Mat4x3(&m->m[9], &mModels.mBodyModels[model]->mat4x3, &tmp);
+    MTX_MultVec43(&m->m[9], &mModels.mBodyModels[model]->mat4x3, &tmp);
     Vec3_MulScalar(&scaled, &tmp, 0x8000);
     mPos = scaled;
     dir.x = 0;
@@ -18590,7 +18590,7 @@ extern "C" {
 int daPly_c::St_Fly_Main() {
     extern u32 PlayerNewHold16(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                                void *callback);
-    extern void MulVec3Mat4x3(void *dst, void *src, void *out);
+    extern void MTX_MultVec43(void *dst, void *src, void *out);
     extern void Vec3_MulScalarInPlace(s32 *v, s32 s);
     extern int func_02012194(char *, int a1, int a2, int a3, int s0, void *s1, int s2);
     extern u16 data_0209f49e;
@@ -18681,7 +18681,7 @@ skip:
                          ->data.transforms[14];
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
-                MulVec3Mat4x3(&bone->m[9], &m2->mat4x3, &vec32);
+                MTX_MultVec43(&bone->m[9], &m2->mat4x3, &vec32);
                 Vec3_MulScalarInPlace(&vec32.x, 0x8000);
                 mParticle2 = Particle::System::New(mParticle2, 0xd0, sp14, sp18, sp1C,
                                                    (const Vector3_16f *)(&vec16), 0);
@@ -18692,7 +18692,7 @@ skip:
                          ->data.transforms[11];
                 dExtAnmModel_c *m2 =
                     mModels.mBodyModels[this->GetBodyModelID(this->param1 & 0xff, 0)];
-                MulVec3Mat4x3(&bone->m[9], &m2->mat4x3, &vec32);
+                MTX_MultVec43(&bone->m[9], &m2->mat4x3, &vec32);
                 Vec3_MulScalarInPlace(&vec32.x, 0x8000);
                 mParticle3 = Particle::System::New(mParticle3, 0xd0, sp14, sp18, sp1C,
                                                    (const Vector3_16f *)(&vec16), 0);
@@ -20548,7 +20548,7 @@ int daPly_c::Render() {
     };
     extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
     extern void Matrix4x3_ApplyInPlaceToRotationZ(void* m, int ang);
-    extern void MulMat4x3Mat4x3(void* a, void* b, void* c);
+    extern void MTX_Concat43(void *a, void *b, void *c);
     extern u8 gGameMode;
     extern int data_020a0e68;
     extern void func_ov002_020e3e00(void*, void*, u32);
@@ -20598,7 +20598,7 @@ int daPly_c::Render() {
                 if (mBodyModelId == 3) {
                     Matrix4x3_FromTranslation(&data_020a0e68, -0x1b33, -0x666, 0);
                     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, 0x4000);
-                    MulMat4x3Mat4x3(&data_020a0e68, &bodyMdl->data.transforms[8], &data_020a0e68);
+                    MTX_Concat43(&data_020a0e68, &bodyMdl->data.transforms[8], &data_020a0e68);
                     ((VObj *)((char *)&mModels.mAnmModel2))->m18(&data_020a0e68, &mScale);
                 } else {
                     ((VObj *)((char *)&mModels.mAnmModel2))
@@ -20661,7 +20661,7 @@ int daPly_c::Render() {
    concretely -- `const int *`, `unsigned int`, `dExtSimpleModel_c *` -- while the header
    declares the same symbols with generic `void*`/`int`. Under `extern "C"`
    those are not compatible redeclarations but illegal overloads, so the file
-   did not compile AT ALL (errors on the MulMat3x3Mat3x3, ClearMaterialFlags and
+   did not compile AT ALL (errors on the MTX_Concat33, ClearMaterialFlags and
    func_ov002_020e3e00 lines) for as long as the include was here -- which is
    why no gate ever noticed: an uncompilable file is dropped by all of them.
    Only two declarations were ever needed from the header; they are restated
@@ -20678,7 +20678,7 @@ extern "C" {
 extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsigned int opacity) {
     extern int data_020a0e68[12];
     void func_0203c178(int *dst, int a, int b, int c);
-    void MulMat3x3Mat3x3(int *dst, const int *a, const int *b);
+    void MTX_Concat33(int *dst, const int *a, const int *b);
     int ip = (gCurrentSublevel == 0x2f) ? 1 : 0;
 
     if (!ip) {
@@ -20712,7 +20712,7 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
     src->m[9] = diff;
 
     func_0203c178(data_020a0e68, -0x1000, 0x1000, 0x1000);
-    MulMat3x3Mat3x3((int*)src, data_020a0e68, (int*)src);
+    MTX_Concat33((int *)src, data_020a0e68, (int *)src);
 
     obj->ClearMaterialFlags(0x80);
     obj->SetMaterialFlags(0x40);
@@ -20940,7 +20940,7 @@ void daPly_c::func_ov002_020e4768() {
         virtual void v3();
         virtual void DoThing(int arg);
     };
-    extern void MulMat4x3Mat4x3(void* dst, void* a, void* b);
+    extern void MTX_Concat43(void *dst, void *a, void *b);
     extern Matrix4x3 data_020a0e68;
     unsigned int mid;
     dExtAnm2Model_c *comp;
@@ -20974,7 +20974,7 @@ void daPly_c::func_ov002_020e4768() {
 
             mid = GetBodyModelID(param1 & 0xff, 0);
             comp = mModels.mBodyModels[mid];
-            MulMat4x3Mat4x3(&comp->data.transforms[14], &data_020a0e68, &data_020a0e68);
+            MTX_Concat43(&comp->data.transforms[14], &data_020a0e68, &data_020a0e68);
 
             mHeldObjMatrix = data_020a0e68;
             mCarryMatrix = &mHeldObjMatrix;
@@ -20987,7 +20987,7 @@ void daPly_c::func_ov002_020e4768() {
 
     mid = GetBodyModelID(param1 & 0xff, 0);
     comp = mModels.mBodyModels[mid];
-    MulMat4x3Mat4x3(&comp->data.transforms[15], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&comp->data.transforms[15], &data_020a0e68, &data_020a0e68);
 
     mHeadMatrix = data_020a0e68;
 }

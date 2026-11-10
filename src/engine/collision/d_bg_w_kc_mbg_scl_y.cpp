@@ -23,8 +23,8 @@
 extern "C" {
 /* Shared math workers.
    local extern: no header in include/ declares them. */
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
-void NormalizeVec3(const Vector3 *src, Vector3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 
 /* local extern: no header in include/ declares these three. */
 extern dBgCh_Lin data_020a0d0c; /* the scratch line, in collider space */
@@ -57,7 +57,7 @@ s32 dBgW_KcMbgSclY::GetScaleY() {
 /* World -> collider space: the parent's inverse-scale matrix, then a divide
  * out of the y stretch. */
 void dBgW_KcMbgSclY::ToColliderSpace(Vector3 *worldPos, Vector3 *localPos) {
-    MulVec3Mat4x3(worldPos, &invScaledMat, localPos);
+    MTX_MultVec43(worldPos, &invScaledMat, localPos);
     Fix12i inverseVerticalScale = invScaleY;
     if (inverseVerticalScale == 0x1000)
         return;
@@ -75,7 +75,7 @@ void dBgW_KcMbgSclY::ToWorldSpace(Vector3 *localPos, Vector3 *worldPos) {
         Fix12i verticalScale = scaleY;
         scaledPos.y = FX_MUL(scaledPos.y, verticalScale);
     }
-    MulVec3Mat4x3(&scaledPos, &newScaledMat, worldPos);
+    MTX_MultVec43(&scaledPos, &newScaledMat, worldPos);
 }
 
 void dBgW_KcMbgSclY::Virtual08() {}
@@ -225,6 +225,6 @@ void dBgW_KcMbgSclY::GetNormal(s16 triID, Vector3 &res) {
     normal.x = FX_MUL(normal.x, verticalScale);
     verticalScale = scaleY;
     normal.z = FX_MUL(normal.z, verticalScale);
-    NormalizeVec3(&normal, &normal);
+    VEC_Normalize(&normal, &normal);
     LocalToWorldDirection(normal, res);
 }

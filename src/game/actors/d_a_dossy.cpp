@@ -134,9 +134,9 @@ extern SharedFilePtr *data_ov065_0211c08c[];
 extern int atan2_hold_d_a_dossy_1(int a, int b);
 /* The named local declarations below keep this TU's @NNN compiler-temp
    identities stable. Their signatures now match CalcLib.h exactly. */
-void SubVec3(Vector3 *a, Vector3 *b,
-             Vector3 *o); /* local extern: named parameters preserve @NNN identities */
-void AddVec3(Vector3 *a, Vector3 *b,
+void VEC_Subtract(Vector3 *a, Vector3 *b,
+                  Vector3 *o); /* local extern: named parameters preserve @NNN identities */
+void VEC_Add(Vector3 *a, Vector3 *b,
              Vector3 *o); /* local extern: named parameters preserve @NNN identities */
 void Vec3_Asr(Vector3 *d, Vector3 *s,
               int sh); /* local extern: named parameters preserve @NNN identities */
@@ -497,13 +497,13 @@ void daDossy_c::func_ov065_02118838()
         v.y = 0;
         v.z = 0;
         data_020a0e68 = base;
-        MulMat4x3Mat4x3(&mAnmModel.data.transforms[*tbl], &data_020a0e68, &data_020a0e68);
+        MTX_Concat43(&mAnmModel.data.transforms[*tbl], &data_020a0e68, &data_020a0e68);
         v.x = data_020a0e68.m[9];
         v.y = data_020a0e68.m[10];
         v.z = data_020a0e68.m[11];
-        SubVec3(&v, &mPos, &v);
+        VEC_Subtract(&v, &mPos, &v);
         Vec3_LslInPlace(&v, 3);
-        AddVec3(&v, &mPos, &v);
+        VEC_Add(&v, &mPos, &v);
         if (i == 2) {
             s32 scaled;
             mHeadRotX = mPlatforms[2].mRot.x;

@@ -45,7 +45,7 @@
 /* arm9 C helpers with no shared header. */
 extern "C" {
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 }
 extern short FX_SinCosTable_[];
@@ -270,7 +270,7 @@ s32 daBrq_c::UpdateActiveState() {
         mCylinderOffset.z = FX_MUL(orbitRadius, cosv);
     }
 
-    AddVec3(&mOrbitCenter, &mCylinderOffset, &mOrbitCenter);
+    VEC_Add(&mOrbitCenter, &mCylinderOffset, &mOrbitCenter);
 
     mSpinAngle = (short)(mSpinAngle + 0x4000);
 

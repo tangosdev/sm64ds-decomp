@@ -327,7 +327,7 @@ void daKinopio_c::UpdateModelPose()
             capPos.y = 0;
             capPos.z = 0;
             dst = &mAnmModel.data.transforms[5];
-            MulMat4x3Mat4x3(dst, &mAnmModel.mat4x3, &mCapTransform);
+            MTX_Concat43(dst, &mAnmModel.mat4x3, &mCapTransform);
 
             data_020a0e68 = mCapTransform;
             Matrix4x3_ApplyInPlaceToTranslation(

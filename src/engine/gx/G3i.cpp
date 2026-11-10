@@ -18,9 +18,9 @@
 #include "nitro/fx/fx_cp.h"
 
 extern "C" {
-void NormalizeVec3(const Vector3 *v, Vector3 *out);
-void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
-Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
+void VEC_Normalize(const Vector3 *v, Vector3 *out);
+void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
+Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 }
 
 /* The Nitro SDK's G3i_PerspectiveW_: the load flag is a BOOL. Spelled bool,
@@ -114,12 +114,12 @@ void G3i_LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target
     forward.x = camPos->x - target->x;
     forward.y = camPos->y - target->y;
     forward.z = camPos->z - target->z;
-    NormalizeVec3(&forward, &forward);
+    VEC_Normalize(&forward, &forward);
 
-    CrossVec3(up, &forward, &right);
-    NormalizeVec3(&right, &right);
+    VEC_CrossProduct(up, &forward, &right);
+    VEC_Normalize(&right, &right);
 
-    CrossVec3(&forward, &right, &up2);
+    VEC_CrossProduct(&forward, &right, &up2);
 
     if (draw) {
         *(volatile int *)0x4000440 = 2;
@@ -135,9 +135,9 @@ void G3i_LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target
         *mtx = forward.z;
     }
 
-    tx = -DotVec3(camPos, &right);
-    ty = -DotVec3(camPos, &up2);
-    tz = -DotVec3(camPos, &forward);
+    tx = -VEC_DotProduct(camPos, &right);
+    ty = -VEC_DotProduct(camPos, &up2);
+    tz = -VEC_DotProduct(camPos, &forward);
 
     if (draw) {
         *mtx = tx;

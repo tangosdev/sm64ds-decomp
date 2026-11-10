@@ -99,7 +99,7 @@ struct dExtSimpleModel_c { ~dExtSimpleModel_c(); };
 
 extern "C" {
 extern void Trmp2Spinner_UpdateMatrix(char *c);
-extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+extern void VEC_Add(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern Trampoline2ModelFilePtr sTrmp2StarModelFile;
 extern int sTrmp2SpinnerCount;
 extern unsigned char *sTrmp2Spinners;
@@ -1165,7 +1165,7 @@ void Trmp2Spinner_Update(char *raw) {
     ApproachLinear2(SPINNER(raw)->mLifeTimer, 0, 1);
     short *p = &SPINNER(raw)->mAngleZ;
     *p = *p + 0x400;
-    AddVec3(&SPINNER(raw)->mPos, &SPINNER(raw)->mVel, &SPINNER(raw)->mPos);
+    VEC_Add(&SPINNER(raw)->mPos, &SPINNER(raw)->mVel, &SPINNER(raw)->mPos);
 }
 }
 

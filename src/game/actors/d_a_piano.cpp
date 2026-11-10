@@ -12,7 +12,7 @@
  * What stays:
  * - common.h supplies the flat Matrix4x3 representation.
  * - The radius/height store veneers (func_0203568c / func_02035684) and
- *   the vector helpers (Vec3_Sub, LenVec3, MulVec3Mat4x3, AddVec3) stay
+ *   the vector helpers (Vec3_Sub, VEC_Mag, MTX_MultVec43, VEC_Add) stay
  *   local externs: no shared header declares them.
  * - The CLPS payload and external g_profile_PIANO are not reconstructed
  *   here.
@@ -55,11 +55,11 @@ extern char data_ov063_0211ecb8;
 /* local extern: no shared header declares these. */
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(const Vector3 *v);
+extern int VEC_Mag(const Vector3 *v);
 void func_0203568c(int *clsn, int radius);
 void func_02035684(int *clsn, int height);
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 }
 
 /* Reconstructed registry name; the class identity is backed by retail RTTI.
@@ -216,7 +216,7 @@ void daPiano_c::StateSearch() {
         if (cand == 0)
             continue;
         Vec3_Sub(&v, &this->mPos, &cand->mPos);
-        dist = LenVec3(&v);
+        dist = VEC_Mag(&v);
         if (IsTargetMoving(cand) != 0 && dist < 0x1f4000 && dist < bestDist) {
             this->mTarget = cand;
             SetState(kStateAttack);
@@ -288,7 +288,7 @@ void daPiano_c::StateAttack() {
     target = this->mTarget;
     if (target != 0) {
         Vec3_Sub(&tmp, &this->mPos, &target->mPos);
-        dist = LenVec3(&tmp);
+        dist = VEC_Mag(&tmp);
         ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &this->mTarget->mPos), 0x200);
         this->mAngleY = this->mPrevAngleY;
         if (dist > 0x3ab000) {
@@ -354,8 +354,8 @@ void daPiano_c::UpdateShadows() {
     out.z = 0;
     in.z = -0x10000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
-    AddVec3(&out, &mPos, &out);
+    MTX_MultVec43(&in, &data_020a0e68, &out);
+    VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[2], mAngleY);
     mShadowMats[2].m[9] = out.x >> 3;
     mShadowMats[2].m[10] = mPosY >> 3;
@@ -368,8 +368,8 @@ void daPiano_c::UpdateShadows() {
     in.z = 0;
     in.x = -0x60000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
-    AddVec3(&out, &mPos, &out);
+    MTX_MultVec43(&in, &data_020a0e68, &out);
+    VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[0], mAngleY);
     mShadowMats[0].m[9] = out.x >> 3;
     mShadowMats[0].m[10] = mPosY >> 3;
@@ -382,8 +382,8 @@ void daPiano_c::UpdateShadows() {
     in.y = 0;
     in.z = -0x10000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
-    AddVec3(&out, &mPos, &out);
+    MTX_MultVec43(&in, &data_020a0e68, &out);
+    VEC_Add(&out, &mPos, &out);
     Matrix4x3_FromRotationY(&mShadowMats[1], mAngleY);
     mShadowMats[1].m[9] = out.x >> 3;
     mShadowMats[1].m[10] = mPosY >> 3;

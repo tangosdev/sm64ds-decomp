@@ -2,7 +2,7 @@
 #include "types.h"
 #include "Ov007Camera.h"
 #include "nitro/fx/fx_cp.h"
-extern "C" void Matrix4x3_LoadIdentity(void *m);
+extern "C" void MTX_Identity43_(void *m);
 extern "C" void MTX_Identity44_(void *p);
 
 /* Resets a camera: eye at z 1.0 looking at the origin, y up, a 30-degree
@@ -33,7 +33,7 @@ extern "C" void func_ov007_020c0128(Ov007Camera *cam) {
     cam->viewportMaxY = 0xbf;
     cam->wordCC = 0x1000;
     cam->wordD0 = 0xc00;
-    Matrix4x3_LoadIdentity(&cam->viewMatrix);
+    MTX_Identity43_(&cam->viewMatrix);
     MTX_Identity44_(cam->projMatrix);
     cam->scaleW = 0x1000;
     cam->word00 = 0;

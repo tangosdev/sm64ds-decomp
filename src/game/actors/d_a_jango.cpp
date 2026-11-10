@@ -163,19 +163,19 @@ typedef struct { int x, y, z; } Vector3;
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
-/* local extern: no shared math header declares MulVec3Mat4x3. */
-extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+/* local extern: no shared math header declares MTX_MultVec43. */
+extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 extern Matrix4x3 data_020a0e68;
 extern signed char gCurrentSublevel;
 extern void func_02012694(unsigned int, void *);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(const Vector3 *v);
+extern int VEC_Mag(const Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
-extern void MulMat4x3Mat4x3(void* a, void* b, void* c);
+extern void MTX_Concat43(void *a, void *b, void *c);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i c, void *d, void *e);
 extern SharedFilePtr data_ov002_0210da40;
@@ -188,7 +188,7 @@ extern daPly_c *gPlayers[];
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211ba84, NOT applied: extern int func_ov062_0211c658(char *c, void *p); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211ba84, NOT applied: extern void Matrix4x3_FromRotationY(void *m, int angle); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_ApplyInPlaceToRotationX, from the legacy file for func_ov062_0211ba84, NOT applied: extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211ba84, NOT applied: extern void MulVec3Mat4x3(const Vector3 *v, void *m, Vector3 *out); */
+/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov062_0211ba84, NOT applied: extern void MTX_MultVec43(const Vector3 *v, void *m, Vector3 *out); */
 /* TUBUILD CONFLICT -- alternate declaration of data_ov062_0211e17c, from the legacy file for func_ov062_0211ba84, NOT applied: extern void *data_ov062_0211e17c; */
 /* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211bc54, NOT applied: extern "C" signed char gCurrentSublevel; */
 /* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov062_0211bc54, NOT applied: extern "C" void func_02012694(int a0, void *a1); */
@@ -205,12 +205,12 @@ extern daPly_c *gPlayers[];
 /* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int ApproachAngle(void *p, int target, int a, int b, int c); */
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov062_0211c2f4, NOT applied: extern int RandomIntInternal(int *seed); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void Matrix4x3_FromRotationY(void *m, int angle); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void MulVec3Mat4x3(Vector3 *in, void *m, void *out); */
+/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void MTX_MultVec43(Vector3 *in, void *m, void *out); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov062_0211c658, from the legacy file for func_ov062_0211c2f4, NOT applied: extern void func_ov062_0211c658(void *c, void *p); */
 /* TUBUILD CONFLICT -- alternate declaration of gCurrentSublevel, from the legacy file for func_ov062_0211c2f4, NOT applied: extern s8 gCurrentSublevel; */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_FromRotationY(struct Matrix4x3 *m, short angY); */
 /* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_ApplyInPlaceToRotationX, from the legacy file for func_ov062_0211c594, NOT applied: extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *m, short angX); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov062_0211c594, NOT applied: extern void MulVec3Mat4x3(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *out); */
+/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov062_0211c594, NOT applied: extern void MTX_MultVec43(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *out); */
 /* TUBUILD CONFLICT -- alternate declaration of data_020a0e68, from the legacy file for func_ov062_0211c594, NOT applied: extern struct Matrix4x3 data_020a0e68; */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN7PathPtrC1Ev, from the legacy file for _ZN9daJango_c13InitResourcesEv, NOT applied: extern void _ZN7PathPtrC1Ev(void *self); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN7PathPtr6FromIDEj, from the legacy file for _ZN9daJango_c13InitResourcesEv, NOT applied: extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id); */
@@ -553,7 +553,7 @@ void daJango_c::UpdateModelAndShadow() {
             mHeldPosX = 0;
             mHeldPosY = 0;
             mHeldPosZ = 0;
-            MulMat4x3Mat4x3(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
+            MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
             mHeldPosX = data_020a0e68.t.x;
             mHeldPosY = data_020a0e68.t.y;
             mHeldPosZ = data_020a0e68.t.z;
@@ -572,7 +572,7 @@ void daJango_c::UpdateModelAndShadow() {
                 Matrix4x3_FromTranslation(&data_020a0e68, -0x7000, 0x1800, 0);
                 Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x3000, -0x8000, -0x4000);
             }
-            MulMat4x3Mat4x3(&data_020a0e68, &mHeldMat, &mHeldMat);
+            MTX_Concat43(&data_020a0e68, &mHeldMat, &mHeldMat);
             actor->mCarryMatrix = (Matrix4x3 *)&mHeldMat;
         }
     }
@@ -614,7 +614,7 @@ int daJango_c::EnterFlyPathState() {
         in.z = 0x14000;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, -0x4000);
-        MulVec3Mat4x3(&in, &data_020a0e68, &out);
+        MTX_MultVec43(&in, &data_020a0e68, &out);
         mVertSpeed = out.y;
         mStateTimer = 0x3c;
     }
@@ -659,7 +659,7 @@ int daJango_c::UpdateFlyPathState() {
         idx = mPathNodeCount - 1;
     path.GetNode(node2, idx);
     Vec3_Sub(&diff, &mPos, &node);
-    len = LenVec3(&diff);
+    len = VEC_Mag(&diff);
     /* len == 0 is already covered by len <= 0x14000, but the ROM keeps
        it as a test of its own. */
     if (len == 0 || len <= 0x14000) {
@@ -689,7 +689,7 @@ int daJango_c::UpdateFlyPathState() {
         zero[1] = 0;
         zero[2] = 0x14000;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MulVec3Mat4x3((Vector3 *)zero, &data_020a0e68, (Vector3 *)&mSpeedX);
+        MTX_MultVec43((Vector3 *)zero, &data_020a0e68, (Vector3 *)&mSpeedX);
         ChangeState(JANGO_STATE_CIRCLE);
         return 1;
     }
@@ -699,7 +699,7 @@ int daJango_c::UpdateFlyPathState() {
         zero[1] = mPosY;
         s = FX_Div(0x14000, len);
         Vec3_MulScalar(&scaled, &diff, s);
-        SubVec3(&mPos, &scaled, &mPos);
+        VEC_Subtract(&mPos, &scaled, &mPos);
         if (mRiseToFarNode == 1) {
             mPosY = zero[1];
             if (*(u16 *)&mStateTimer == 0) {
@@ -977,7 +977,7 @@ int daJango_c::UpdateSwoopState() {
     v.z = 0x1e000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    MulVec3Mat4x3(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
     HandleCylinderHit();
     /* Retail reads the timer as unsigned here; the inherited field is s16. */
     if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnWall() != 0) {
@@ -1297,7 +1297,7 @@ void daJango_c::UpdateCircleVelocity() {
     }
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    MulVec3Mat4x3(&v[0], &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&v[0], &data_020a0e68, (Vector3 *)&mSpeedX);
 }
 
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body

@@ -1,5 +1,5 @@
 #include "types.h"
-void NormalizeVec3(const Vector3 *v, Vector3 *out) {
+void VEC_Normalize(const Vector3 *v, Vector3 *out) {
     s64 sq;
     volatile u16 *ime;
     u16 saved;

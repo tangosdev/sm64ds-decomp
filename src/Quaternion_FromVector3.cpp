@@ -13,7 +13,7 @@ typedef struct { int x, y, z; } Vec3;
 typedef struct { int x, y, z, w; } Quat;
 
 extern int NormalizeVec3IfNonZero(Vector3 *v);
-extern int DotVec3(const Vector3 *a, const Vector3 *b);
+extern int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 extern void func_0203cebc(Vector3 *out, Vector3 *p, Vector3 *q, Vector3 *r);
 extern Quat data_02075b04;
 
@@ -29,7 +29,7 @@ void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
     va.z = a->z;
     if (NormalizeVec3IfNonZero((Vector3 *)&vb) != 0 &&
         NormalizeVec3IfNonZero((Vector3 *)&va) != 0) {
-        r4 = FX_Sqrt((DotVec3((const Vector3 *)&va, (const Vector3 *)&vb) + 0x1000) << 1);
+        r4 = FX_Sqrt((VEC_DotProduct((const Vector3 *)&va, (const Vector3 *)&vb) + 0x1000) << 1);
         vb2.x = vb.x;
         vb2.y = vb.y;
         vb2.z = vb.z;

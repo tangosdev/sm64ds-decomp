@@ -2,7 +2,7 @@
 /* Move a point toward another, in 3D and on the horizontal plane.
  *
  * leftovers:
- * - Vec3 and Vector3 are the same three ints. LenVec3, Vec3_Sub, SubVec3,
+ * - Vec3 and Vector3 are the same three ints. VEC_Mag, Vec3_Sub, VEC_Subtract,
  *   Vec3_HorzLen, Vec3_Equal and Vec3_MulScalar take Vector3; the local POD
  *   Vector3 keeps those calls on their declared interface without adding
  *   types.h Vector3 lifetimes. Vec3_ApproachHorz's own parameters are
@@ -21,9 +21,9 @@ typedef struct { int x, y, z; } Vec3_Fix12;
 extern "C" {
 extern void Vec3_Sub(struct Vector3 *out, const struct Vector3 *a, const struct Vector3 *b);
 extern int Vec3_HorzLen(const struct Vector3* v);
-extern int LenVec3(const struct Vector3 *v);
+extern int VEC_Mag(const struct Vector3 *v);
 extern void Vec3_MulScalar(struct Vector3 *out, const struct Vector3 *in, int scale);
-extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 extern int Vec3_Equal(const struct Vector3 *a, const struct Vector3 *b);
 }
 
@@ -32,13 +32,13 @@ int ApproachLinear(Vector3 &dst, const Vector3 &target, int step) {
     struct Vector3 scaled;
     if (step != 0) {
         Vec3_Sub(&diff, &dst, &target);
-        int len = LenVec3(&diff);
+        int len = VEC_Mag(&diff);
         if (len == 0 || len <= step) {
             dst = target;
             return 1;
         }
         Vec3_MulScalar(&scaled, &diff, FX_Div(step, len));
-        SubVec3(&dst, &scaled, &dst);
+        VEC_Subtract(&dst, &scaled, &dst);
     } else if (Vec3_Equal(&dst, &target)) {
         return 1;
     }
@@ -61,7 +61,7 @@ extern "C" int Vec3_ApproachHorz(struct Vector3 *out, struct Vector3 *a, int max
         {
             int s = FX_Div(maxStep, len);
             Vec3_MulScalar(&scaled, &diff, s);
-            SubVec3(out, &scaled, out);
+            VEC_Subtract(out, &scaled, out);
         }
     } else {
         if (len == 0) return 1;

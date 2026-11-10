@@ -49,9 +49,9 @@ struct PoleliftModelFile : SharedFilePtr {
 extern "C" {
 u16 DecIfAbove0_Short(u16 *timer);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(const Vector3 *v);
+int VEC_Mag(const Vector3 *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *a, int scale);
-void SubVec3(Vector3 *out, Vector3 *a, Vector3 *b);
+void VEC_Subtract(Vector3 *out, Vector3 *a, Vector3 *b);
 
 void func_ov026_02111234(daObjWlPolelift_c *actor);
 void func_ov026_021112a4(daObjWlPolelift_c *actor);
@@ -121,7 +121,7 @@ s32 daObjWlPolelift_c::Behavior()
         path.GetNode(node, current);
         path.GetNode(prevNode, prevNodeIdx);
         Vec3_Sub(&delta, &mPos, &node);
-        length = LenVec3(&delta);
+        length = VEC_Mag(&delta);
         if (length == 0 || length <= 0xa000) {
             mPosX = node.x;
             moved = 1;
@@ -130,7 +130,7 @@ s32 daObjWlPolelift_c::Behavior()
         } else {
             scale = FX_Div(0xa000, length);
             Vec3_MulScalar(&step, &delta, scale);
-            SubVec3(&mPos, &step, &mPos);
+            VEC_Subtract(&mPos, &step, &mPos);
         }
 
         if (moved) {

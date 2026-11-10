@@ -70,8 +70,8 @@ extern CLPS_Block data_ov035_02112258;
 
 /* local extern: arm9 vector helpers and the dBgW stores; no shared header. */
 extern "C" {
-extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *matrix, Vector3 *dst);
-extern void AddVec3(Vector3 *left, Vector3 *right, Vector3 *dst);
+extern void MTX_MultVec43(Vector3 *src, Matrix4x3 *matrix, Vector3 *dst);
+extern void VEC_Add(Vector3 *left, Vector3 *right, Vector3 *dst);
 }
 
 /* CT_MECHA05 is the literal ROM registry ID. The g_profile spelling is a
@@ -278,8 +278,8 @@ void daObjCtMecha05_c::UpdateShadow() {
     offset.y = 0;
 
     Matrix4x3_FromRotationY(&mShadowMatrix, mAngleY);
-    MulVec3Mat4x3(&offset, &mShadowMatrix, &shadowPos);
-    AddVec3(&shadowPos, &mPos, &shadowPos);
+    MTX_MultVec43(&offset, &mShadowMatrix, &shadowPos);
+    VEC_Add(&shadowPos, &mPos, &shadowPos);
 
     mShadowMatrix.m[9] = shadowPos.x >> 3;
     mShadowMatrix.m[10] = mGroundY >> 3;

@@ -271,9 +271,9 @@ void func_ov007_020c9a84(Ov007Swing *self, Vector3 *offset, u16 *rotX, u16 *rotY
     offset->x = self->chainPositions[self->chain->count - 1].x;
     offset->y = self->chainPositions[self->chain->count - 1].y;
 
-    SubVec3(&self->xPointPos[0], &self->xPointPos[1], &span);
+    VEC_Subtract(&self->xPointPos[0], &self->xPointPos[1], &span);
     angleX = FX_Atan2(span.x, span.z);
-    SubVec3(&self->yPointPos[0], &self->yPointPos[1], &span);
+    VEC_Subtract(&self->yPointPos[0], &self->yPointPos[1], &span);
     angleY = FX_Atan2(span.z, span.y);
     tiltX = (u16)(angleX + 0x3fff);
     tiltY = (u16)(angleY + 0x7fff);

@@ -18,7 +18,7 @@ extern "C" {
 
 // ---- asm primitives ------------------------------------------------------
 /* 4x3 fx32 scale matrix from (sx,sy,sz): rows {sx,0,0},{0,sy,0},{0,0,sz},0 */
-void func_020527e8(int *m, int sx, int sy, int sz)
+void MTX_Scale43_(int *m, int sx, int sy, int sz)
 {
     memset(m, 0, 12 * sizeof(int));
     m[0] = sx;
@@ -51,16 +51,16 @@ int data_0209e67c[0x20];
 int data_0209e694[0x100];
 
 /* asm primitive: 4x3 fx32 identity */
-void Matrix4x3_LoadIdentity(int *m)
+void MTX_Identity43_(int *m)
 {
     memset(m, 0, 12 * sizeof(int));
     m[0] = m[4] = m[8] = 0x1000;
 }
 
 /* asm primitive: expand a 3x3 fx32 matrix (read from a) into a 4x4 (b):
- * fourth column zero, last row {0,0,0,1.0}. The decomp declares the args
- * (dst,src) but r0 is the READ side; register semantics win here. */
-void func_02052514(int *a, int *b)
+ * fourth column zero, last row {0,0,0,1.0}. NitroSDK's MTX_Copy33To44_
+ * takes (src, dst). */
+void MTX_Copy33To44_(int *a, int *b)
 {
     for (int r = 0; r < 3; ++r) {
         b[r * 4 + 0] = a[r * 3 + 0];

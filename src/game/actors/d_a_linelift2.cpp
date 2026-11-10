@@ -25,7 +25,7 @@
 // - &mTargetPosX / &mSpeedX: this class and dActor_c store those triples
 //   as scalars, so the vector helpers take the first word's address.
 // - Vec3_Sub is defined on a file-local struct Vec3, so no shared header
-//   declares it yet; it is declared here. AddVec3 takes Vector3 now.
+//   declares it yet; it is declared here. VEC_Add takes Vector3 now.
 // - Behavior lowers mPosY by the sink offset and restores it before the
 //   model update, which the cartridge does too; the dead store is its own.
 
@@ -71,7 +71,7 @@ extern s16 FX_SinCosTable_[];                     /* sin/cos pairs */
 /* arm9 C helpers with no shared header. */
 extern "C" {
 void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
 }
 
 enum {
@@ -239,7 +239,7 @@ void daLinelift2_c::StateReturn() {
    off either end of the path, 1 on reaching a node, 0 in between. */
 int daLinelift2_c::StepAlongPath() {
     int result;
-    AddVec3((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
+    VEC_Add((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
     if (Vec3_Dist(&mPos, (const Vector3 *)&mTargetPosX) < (mHorzSpeed >> 1)) {
         result = 1;
         mBasePosX = mTargetPosX;

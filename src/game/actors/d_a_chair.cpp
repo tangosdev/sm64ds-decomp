@@ -12,7 +12,7 @@
  */
 // What stays, and why:
 // - The extern "C" block holds the arm9 helpers that have no shared header
-//   (Vec3_Sub, AddVec3, AngleDiff,
+//   (Vec3_Sub, VEC_Add, AngleDiff,
 //   Matrix4x3_FromRotationZXYExt).
 // - The ROM calls dBgCh_Actr_UpdateContinuous_Veneer (0x020383fc), not
 //   UpdateContinuous. func_0201267c is Sound.h's bank-3 player, one past
@@ -76,11 +76,11 @@ enum ChairSfxId {
 #define SINCOS_INDEX(angle) ((*(u16 *)&(angle) >> 4) * 2)
 
 /* local extern: arm9 C helpers with no shared header yet. Vec3_Sub takes the
-   shared Vector3 interface; this TU keeps NitroSDK VecFx32 views. AddVec3
+   shared Vector3 interface; this TU keeps NitroSDK VecFx32 views. VEC_Add
    also takes Vector3 (math/CalcLib.h declares it). */
 extern "C" {
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void AddVec3(Vector3 *dst, Vector3 *add, Vector3 *src);
+void VEC_Add(Vector3 *dst, Vector3 *add, Vector3 *src);
 int AngleDiff(int a, int b);
 }
 
@@ -331,7 +331,7 @@ void daChair_c::State2() {
         }
     }
 
-    AddVec3((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
+    VEC_Add((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
 
     {
         u32 id = mCylinder.otherOwner;

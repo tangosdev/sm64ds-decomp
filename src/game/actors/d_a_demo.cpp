@@ -485,8 +485,8 @@ extern void func_ov002_020f5fe4(char *c);
 extern void func_02012694(unsigned int, void*);
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 /* local extern dropped: decl_common.h declares data_ov002_0210bc88 as 'int'; callers cast the address */
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern int* Vec3_LslInPlace(int *v, int sh);
 extern u16 gKuppaScriptFrame;
 extern char *gCamera;
@@ -586,11 +586,11 @@ extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7384, NOT applied: extern int _Z14ApproachLinearRiii(int* v, int target, int step); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7384, NOT applied: extern unsigned short gKuppaScriptFrame; */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7410, NOT applied: extern unsigned short gKuppaScriptFrame; */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov002_020f7410, NOT applied: extern void MulVec3Mat4x3(void *out, void *m, void *v); */
+/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov002_020f7410, NOT applied: extern void MTX_MultVec43(void *out, void *m, void *v); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_LslInPlace, from the legacy file for func_ov002_020f7410, NOT applied: extern void Vec3_LslInPlace(void *v, int sh); */
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7410, NOT applied: extern int _Z14ApproachLinearRiii(int *p, int target, int step); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN3G2x13SetBlendAlphaEPVttttj, from the legacy file for func_ov002_020f7410, NOT applied: extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *reg, unsigned short a, unsigned short b, int c, int d); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov002_020f7538, NOT applied: extern void MulVec3Mat4x3(void* a, void* b, void* c); */
+/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov002_020f7538, NOT applied: extern void MTX_MultVec43(void* a, void* b, void* c); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_LslInPlace, from the legacy file for func_ov002_020f7538, NOT applied: extern void Vec3_LslInPlace(void* v, int n); */
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7538, NOT applied: extern int _Z14ApproachLinearRiii(int* dst, int target, int step); */
 /* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7538, NOT applied: extern unsigned short gKuppaScriptFrame; */
@@ -602,7 +602,7 @@ extern JugemModelFile data_ov085_0213074c;
 /* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f79c0, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
 /* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov002_020f79c0, NOT applied: extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep); */
 /* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void *gCamera; */
-/* TUBUILD CONFLICT -- alternate declaration of AddVec3, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c); */
+/* TUBUILD CONFLICT -- alternate declaration of VEC_Add, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_VertAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0); */
 /* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd5atan2E5Fix12IiES1_, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 _ZN4cstd5atan2E5Fix12IiES1_(Fix12i y, Fix12i x); */
@@ -3688,7 +3688,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
           int m = FX_MUL(r, 0xa000);
           this->mMagnitude = m + 0x19000;
       }
-      AddVec3((Vector3 *)&this->mPosX, &((dCamera_c *)gCamera)->pos, (Vector3 *)&this->mPosX);
+      VEC_Add((Vector3 *)&this->mPosX, &((dCamera_c *)gCamera)->pos, (Vector3 *)&this->mPosX);
       if (arg2 > 0x2bc) {
           this->mPosY -= 0x96000;
       }
@@ -3710,9 +3710,9 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   }
   else
   {
-    MulVec3Mat4x3((Vector3*)&data_ov002_0210b958, (Matrix4x3*)&data_0209b41c, (Vector3*)&v);
-    Vec3_LslInPlace((int*)&v, 3);
-    func_ov002_020f6f48((Vector3*)&v, 8);
+      MTX_MultVec43((Vector3 *)&data_ov002_0210b958, (Matrix4x3 *)&data_0209b41c, (Vector3 *)&v);
+      Vec3_LslInPlace((int *)&v, 3);
+      func_ov002_020f6f48((Vector3 *)&v, 8);
   }
   this->mPrevAngleX = this->mAngleX;
   this->mPrevAngleY = this->mAngleY;
@@ -3944,7 +3944,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         this->mAngleZ = 0;
         func_0201f138();
     }
-    MulVec3Mat4x3(((param_c &)*(simpleModel_c *)this->mModel).mScale, (Matrix4x3 *)&data_0209b41c,
+    MTX_MultVec43(((param_c &)*(simpleModel_c *)this->mModel).mScale, (Matrix4x3 *)&data_0209b41c,
                   (&this->mPos));
     Vec3_LslInPlace(&this->mPosX, 3);
     if (ApproachLinear(this->mMagnitude, a, b) != 0 && a == 0 && b != 0)
@@ -4016,7 +4016,7 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
         dp->y = sum.y;
         dp->z = sum.z;
     }
-    MulVec3Mat4x3(((param_c &)*(anmModel_c *)this->mAnmModel).mScale, (Matrix4x3 *)&data_0209b41c,
+    MTX_MultVec43(((param_c &)*(anmModel_c *)this->mAnmModel).mScale, (Matrix4x3 *)&data_0209b41c,
                   &this->mPos);
     Vec3_LslInPlace((int *)(&this->mPosX), 3);
     ApproachLinear(this->mMagnitude, f1, f2);
@@ -4206,7 +4206,7 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     this->mOpacity = 0x1f;
     cam = (dCamera_c *)gCamera;
 
-    AddVec3((Vector3 *)&v0, &cam->pos, (Vector3 *)&v0);
+    VEC_Add((Vector3 *)&v0, &cam->pos, (Vector3 *)&v0);
     dist = Vec3_Dist(&v0, &cam->pos);
 
     {

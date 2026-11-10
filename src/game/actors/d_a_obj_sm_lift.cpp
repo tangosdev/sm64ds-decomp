@@ -16,7 +16,7 @@
  * - InitResources keeps the param1 mask as an offset read, and the yaw
  *   adjust and node-index add as writes through a pointer to the member.
  *   Plain member arithmetic changed the function size.
- * - Vec3_Asr, AngleDiff, Vec3_Sub, LenVec3, Vec3_MulScalar, SubVec3 and
+ * - Vec3_Asr, AngleDiff, Vec3_Sub, VEC_Mag, Vec3_MulScalar, VEC_Subtract and
  *   Math_Function_0203b14c are arm9 C helpers no header declares yet.
  * The file ends with the mesh-collider hook HandlePlayerContact, the
  * veneer StoodOnCallback that InitResources installs, and the registry
@@ -47,9 +47,9 @@ void Vec3_Asr(Vector3 *d, Vector3 *s, int n);
 int AngleDiff(int, int);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(void *v);
+int VEC_Mag(void *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int scalar);
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 }
 
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
@@ -167,7 +167,7 @@ int daObjSm_Lift_c::Behavior() {
 
         Vec3_Sub(&diff, (const Vector3 *)&mPosX, &nodeA);
         {
-            int len = LenVec3(&diff);
+            int len = VEC_Mag(&diff);
             if (len == 0 || len <= mHorzSpeed) {
                 mPosX = nodeA.x;
                 reached = 1;
@@ -176,7 +176,7 @@ int daObjSm_Lift_c::Behavior() {
             } else {
                 int scale = FX_Div(mHorzSpeed, len);
                 Vec3_MulScalar(&scaled, &diff, scale);
-                SubVec3((Vector3 *)&mPosX, (Vector3 *)&scaled, (Vector3 *)&mPosX);
+                VEC_Subtract((Vector3 *)&mPosX, (Vector3 *)&scaled, (Vector3 *)&mPosX);
             }
         }
 

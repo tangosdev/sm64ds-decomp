@@ -189,7 +189,7 @@ endif()
 # feeders to the hostgen set and the dExtSimpleModel_c/render slice on top of everything.
 set(GATE4B_SYMS _ZN15ModelComponents13func_02044b30Ei G3_MultMtx33
     G3_LoadTexMtxEnv _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
-    _ZN15ModelComponents13func_0204488cEiP7Vector3 NormalizeVec3)
+    _ZN15ModelComponents13func_0204488cEiP7Vector3 VEC_Normalize)
 sm64ds_hostgen_symbols(GATE4B_GEN ${GATE4B_SYMS})
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate4b.txt" SLICE4B_LINES)

@@ -86,7 +86,7 @@ typedef struct Pair {
 extern "C" {
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
 extern OamAttr *sSnowballBitSprites[];
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int m);
@@ -166,7 +166,7 @@ void dScMgSnowball_c::SnowSpray_UpdateAll() {
                 }
             }
             mSprays[i].vz -= 0x200;
-            AddVec3((Vector3 *)&mSprays[i].x, (Vector3 *)&mSprays[i].vx, (Vector3 *)&mSprays[i].x);
+            VEC_Add((Vector3 *)&mSprays[i].x, (Vector3 *)&mSprays[i].vx, (Vector3 *)&mSprays[i].x);
             if (mSprays[i].vz < 0 && mSprays[i].z < 0) {
                 mSprays[i].active = 0;
                 return;
