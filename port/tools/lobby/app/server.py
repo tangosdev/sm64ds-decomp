@@ -58,7 +58,7 @@ import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-REVISION = "lobby-6"
+REVISION = "lobby-7"
 
 # ------------------------------------------------------- the contract version
 #
@@ -156,10 +156,22 @@ REVISION = "lobby-6"
 #     while the room has not started. Every plan of a party or coop room
 #     carries the room's `settings`, so each launcher can turn them into env.
 #     A v6 create without `settings` gets the defaults, exactly as before.
+# v7 (LOBBYBAN1): the host's BAN, for the life of the room. All of it:
+#   * create/join may carry `install`, the game install's own random id (16 to
+#     64 lower-case hex; never derived from hardware or a name). Stored per
+#     member and nowhere else; dropped with the room.
+#   * the `ban` verb (a v7-ONLY verb, the shape of `kick`): the host removes a
+#     seat and the room remembers that member's token, last address and install
+#     id with NO expiry. A join from any of them, and every request from that
+#     token, is refused 403 `banned` until the room closes. A new room is clean.
+#   Nothing older changes: kick keeps its cooldown, a v5/v6 client never sends
+#   either, and a banned v6 client just sees its join refused (it has no word
+#   for `banned`, so it says what it says for an unknown refusal).
 CONTRACT_MIN = 5
-CONTRACT_V = 6
+CONTRACT_V = 7
 V_SESSION = 4    # create.session_type
 V_ROOMS = 6      # session_type party / coop, create.save_name
+V_BAN = 7        # create/join.install, and the `ban` verb itself
 
 # The session types a room may be. "vs" is the versus match; "adventure" is the
 # ghost-presence session (design section 1): every console plays its own save
@@ -349,6 +361,17 @@ KING_TARGET_DEFAULT = env_int("KING_TARGET_DEFAULT", 30, 1, 9999)
 # housemate for as long as the room lived. The real remedy for someone who will
 # not leave is still the host closing the room, which costs one button.
 KICK_COOLDOWN_S = env_int("KICK_COOLDOWN_S", 120, 0, 86400)
+
+# A BAN (v7) is the owner's answer to "somebody will not stay out": it lasts
+# until the room closes, by address AND install id AND token, so it catches a
+# restarted game, a deleted install file on the same address, and a new address
+# on the same install. The cost is the one KICK_COOLDOWN_S above names: a
+# housemate on the same address is caught too. The owner was told and accepted
+# that (11-08). A new room starts clean. BAN_MAX bounds what one room keeps:
+# each ban adds at most three short strings.
+BAN_MAX = env_int("BAN_MAX", 64, 1, 1024)
+INSTALL_MIN = 16
+INSTALL_MAX = 64
 
 MEMBER_TIMEOUT_S = env_int("MEMBER_TIMEOUT_S", 45, 5, 3600)
 ROOM_IDLE_S = env_int("ROOM_IDLE_S", 1800, 30, 86400)
@@ -788,10 +811,10 @@ WORLDS = {}                 # hub code -> World (v5 world rooms)
 class Member(object):
     __slots__ = ("seat", "token", "nick", "display", "playing", "pre_ok",
                  "armed", "seen", "chat_allowance", "chat_stamp", "last_addr",
-                 "color", "shoes")
+                 "color", "shoes", "install")
 
     def __init__(self, seat, token, nick, playing, pre_ok, now, addr="",
-                 color="", shoes=""):
+                 color="", shoes="", install=""):
         self.seat = seat
         self.token = token
         self.nick = nick            # exactly as sent, never rewritten
@@ -812,6 +835,9 @@ class Member(object):
         # something to put its cooldown against. Never logged whole, never
         # sent to any client, and dropped with the member.
         self.last_addr = addr
+        # v7: the game install's random id, or "" (an older client). Kept ONLY
+        # so a ban has it; never logged, never sent to any client.
+        self.install = install
 
     @property
     def game_name(self):
@@ -943,6 +969,16 @@ class Room(object):
         # next poll instead of a bare "you are not a member".
         self.kicked_addr = {}
         self.kicked_token = {}
+        # v7 bans: the same three handles, with no expiry. They live exactly as
+        # long as this object, which is the room's life.
+        self.banned_addr = set()
+        self.banned_token = set()
+        self.banned_install = set()
+        self.bans = 0
+
+    def is_banned(self, who, install):
+        return who in self.banned_addr or (
+            bool(install) and install in self.banned_install)
 
     # -- roster ----------------------------------------------------------
 
@@ -1500,6 +1536,22 @@ def v_color(body, key):
     return s.lower(), None
 
 
+def v_install(body):
+    """create/join `install` (v7): the game install's random id, or "".
+
+    Lower-case hex, INSTALL_MIN..INSTALL_MAX long. The game makes it once from
+    random bytes; anything else (a name, a path, a hardware string) is refused
+    rather than stored. shape_for has already refused the key below v7.
+    """
+    if "install" not in body:
+        return "", None
+    val = body["install"]
+    if (not isinstance(val, str) or not INSTALL_MIN <= len(val) <= INSTALL_MAX
+            or any(c not in "0123456789abcdef" for c in val)):
+        return None, "bad_install"
+    return val, None
+
+
 def v_color_pair(body):
     """The two colour keys, which travel together or not at all.
 
@@ -1675,9 +1727,12 @@ VERB_FIELDS = {
                    # it for coop and refuses it anywhere else).
                    "save_name": V_ROOMS,
                    # v6 (ROOMSET1): the room's toggles, party and coop only.
-                   "settings": V_ROOMS}),
+                   "settings": V_ROOMS,
+                   # v7 (LOBBYBAN1): the game install's random id.
+                   "install": V_BAN}),
     "join":      (("v", "room", "nick", "game"),
-                  {"pre_ok": 1, "color": V_COLOR, "shoes": V_COLOR}),
+                  {"pre_ok": 1, "color": V_COLOR, "shoes": V_COLOR,
+                   "install": V_BAN}),
     "poll":      (("v", "room", "token", "cursor"), {"wait": 1}),
     "chat":      (("v", "room", "token", "text"), {}),
     "params":    (("v", "room", "token", "map", "win_mode"),
@@ -1701,6 +1756,8 @@ VERB_FIELDS = {
     "result":    (("v", "room", "token", "match", "win", "scores"), {}),
     "failed":    (("v", "room", "token", "match", "reason"), {}),
     "kick":      (("v", "room", "token", "seat"), {}),
+    # v7 (LOBBYBAN1): the whole verb is v7; same fields as kick.
+    "ban":       (("v", "room", "token", "seat"), {}, V_BAN),
     "leave":     (("v", "room", "token"), {}),
     # v5 WORLD ROOMS. Both verbs are v5 as a whole. `skip` is the world the
     # relay just answered "full" for (the game exited with code 4).
@@ -1770,13 +1827,24 @@ def seat_of(room, token):
     return room.by_token.get(token)
 
 
-def refuse_member(room, token, now):
+def ban_word(body):
+    """The error a banned client is given. `banned` is a v7 word: a v5 or v6
+    client (the 1.0 game, the launcher) does not know it, and is answered
+    `kicked` instead so it leaves exactly the way it does today."""
+    if body is not None and request_version(body) < V_BAN:
+        return "kicked"
+    return "banned"
+
+
+def refuse_member(room, token, now, body=None):
     """The 403 a token that is not seated gets, and why.
 
     A token the host kicked is answered `kicked` rather than `not_a_member`,
     so the launcher can say what happened in a plain sentence instead of
     guessing between "you were removed" and "this room forgot you".
     """
+    if token in room.banned_token:
+        return 403, {"error": ban_word(body)}
     room.forget_old_kicks(now)
     if token in room.kicked_token:
         return 403, {"error": "kicked"}
@@ -1813,6 +1881,9 @@ def do_create(body, who, now):
         return 400, {"error": err}
     if not game_allowed(game):
         return 409, {"error": "unknown_game"}
+    install, err = v_install(body)
+    if err:
+        return 400, {"error": err}
     # ADVENTURE co-op (v4): the session type. shape_for has already refused the
     # key for a v1..v3 body, so reaching here with it present means a v4 caller;
     # the value is the only thing left to check. Absent is "vs", the default and
@@ -1884,7 +1955,7 @@ def do_create(body, who, now):
     # the session's parent, so a host who is not playing is not a thing any
     # later code has to handle: `apply_dial` refuses to demote seat 1.
     m = Member(1, token, nick, room.match_players >= 1, pre_ok, now, who,
-               color, shoes)
+               color, shoes, install)
     room.members[1] = m
     room.by_token[token] = 1
     room.host_seat = 1
@@ -1922,6 +1993,9 @@ def do_join(body, who, now):
         return 400, {"error": err}
     if not game_allowed(game):
         return 409, {"error": "unknown_game"}
+    install, err = v_install(body)
+    if err:
+        return 400, {"error": err}
 
     if not BUCKETS.allow_join(who, now):
         return 429, {"error": "too_fast"}
@@ -1929,6 +2003,9 @@ def do_join(body, who, now):
     room = ROOMS.get(code)
     if room is None or room.state == "closed":
         return 404, {"error": "no_such_room"}
+    # v7: a ban outranks a kick and never expires while the room lives.
+    if room.is_banned(who, install):
+        return 403, {"error": ban_word(body)}
     room.forget_old_kicks(now)
     if who in room.kicked_addr:
         return 403, {"error": "kicked"}
@@ -1972,7 +2049,7 @@ def do_join(body, who, now):
         room.host_seat = seat
         room.empty_since = None
     room.members[seat] = Member(seat, token, nick, playing, pre_ok, now, who,
-                                color, shoes)
+                                color, shoes, install)
     room.by_token[token] = seat
     room.refresh_displays()
     room.push("joined", seat=seat, display=room.members[seat].display)
@@ -2007,7 +2084,7 @@ def do_chat(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     m.last_addr = who
@@ -2118,7 +2195,7 @@ def do_params(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     room.members[seat].seen = now
     if seat != room.host_seat:
         return 403, {"error": "not_host"}
@@ -2194,7 +2271,7 @@ def do_settings(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     room.members[seat].seen = now
     if seat != room.host_seat:
         return 403, {"error": "not_host"}
@@ -2230,7 +2307,7 @@ def do_leave(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     drop_member(room, seat, "quit")
     return 200, {"ok": True}
 
@@ -2391,7 +2468,7 @@ def do_kick(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     room.members[seat].seen = now
     if seat != room.host_seat:
         return 403, {"error": "not_host"}
@@ -2415,6 +2492,60 @@ def do_kick(body, who, now):
             room.kicked_addr[victim.last_addr] = now + KICK_COOLDOWN_S
     drop_member(room, target, "kicked")
     log("room %s kick seat %d by host (%d/%d)"
+        % (code, target, len(room.members), MAX_SEATS))
+    return 200, {"cursor": room.seq, "ok": True}
+
+
+def do_ban(body, who, now):
+    """Host only, v7. A kick that lasts until the room closes.
+
+    Every check is kick's, in kick's order, so a ban is refused exactly where a
+    kick is (not the host, not in the lobby state, the host's own seat, an empty
+    seat). It then records the victim's token, last address and install id with
+    no expiry (see BAN_MAX) and frees the seat the way a kick does -- the same
+    `left` event with why "kicked", so every older client in the room words it
+    as a removal. The victim learns `banned` from its next request.
+    """
+    err = shape_for("ban", body)
+    if err:
+        return 400, {"error": err}
+    code, err = v_room(body)
+    if err:
+        return 400, {"error": err}
+    token, err = v_token(body)
+    if err:
+        return 400, {"error": err}
+    target, err = v_int(body, "seat", 1, MAX_SEATS, "bad_seat")
+    if err:
+        return 400, {"error": err}
+
+    room = ROOMS.get(code)
+    if room is None or room.state == "closed":
+        return 404, {"error": "no_such_room"}
+    seat = seat_of(room, token)
+    if seat is None:
+        return refuse_member(room, token, now, body)
+    room.members[seat].seen = now
+    if seat != room.host_seat:
+        return 403, {"error": "not_host"}
+    if room.state != "lobby":
+        return 409, {"error": "not_in_lobby"}
+    if target == room.host_seat:
+        return 400, {"error": "bad_seat"}
+    victim = room.members.get(target)
+    if victim is None:
+        return 400, {"error": "bad_seat"}
+    if room.bans >= BAN_MAX:
+        return 409, {"error": "too_many_bans"}
+
+    room.bans += 1
+    room.banned_token.add(victim.token)
+    if victim.last_addr:
+        room.banned_addr.add(victim.last_addr)
+    if victim.install:
+        room.banned_install.add(victim.install)
+    drop_member(room, target, "kicked")
+    log("room %s ban seat %d by host (%d/%d)"
         % (code, target, len(room.members), MAX_SEATS))
     return 200, {"cursor": room.seq, "ok": True}
 
@@ -2841,7 +2972,7 @@ def do_start(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     room.members[seat].seen = now
     if seat != room.host_seat:
         return 403, {"error": "not_host"}
@@ -2927,7 +3058,7 @@ def do_ready(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     # Every ready/result/failed carries the match id, and a stale one is 409:
@@ -2972,7 +3103,7 @@ def do_failed(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     if room.match is None or match != room.match:
@@ -3066,7 +3197,7 @@ def do_result(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     # ONLY A PLAYING MEMBER MAY REPORT A RESULT (spec 3.2), the same gap as
@@ -3136,7 +3267,7 @@ def do_preflight(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     m.last_addr = who
@@ -3220,7 +3351,7 @@ def do_color(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     m = room.members[seat]
     m.seen = now
     m.last_addr = who
@@ -3272,7 +3403,7 @@ def do_poll(body, who, now):
         return 404, {"error": "no_such_room"}
     seat = seat_of(room, token)
     if seat is None:
-        return refuse_member(room, token, now)
+        return refuse_member(room, token, now, body)
     room.members[seat].seen = now
     room.members[seat].last_addr = who
 
@@ -3294,7 +3425,7 @@ def do_poll(body, who, now):
                     # way a kicked launcher finds out, so it gets the reason
                     # rather than a bare "you are not a member".
                     if seat not in room.members and room.state != "closed":
-                        return refuse_member(room, token, now)
+                        return refuse_member(room, token, now, body)
             finally:
                 WAITERS -= 1
         # Over MAX_WAITERS the answer is immediate, exactly as if wait were 0.
@@ -3455,6 +3586,7 @@ VERBS = {
     "result": do_result,
     "failed": do_failed,
     "kick": do_kick,
+    "ban": do_ban,
     "leave": do_leave,
     "world": do_world,
     "world_ping": do_world_ping,

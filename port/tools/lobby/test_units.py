@@ -41,7 +41,7 @@ def _locked(fn):
 
 for _name in ("do_create", "do_join", "do_poll", "do_chat", "do_params",
               "do_preflight", "do_color", "do_start", "do_ready", "do_result",
-              "do_failed", "do_kick", "do_leave", "do_world",
+              "do_failed", "do_kick", "do_ban", "do_leave", "do_world",
               "do_world_ping", "do_settings", "sweep"):
     setattr(S, _name, _locked(getattr(S, _name)))
 S.VERBS = {"create": S.do_create, "join": S.do_join, "poll": S.do_poll,
@@ -49,7 +49,7 @@ S.VERBS = {"create": S.do_create, "join": S.do_join, "poll": S.do_poll,
            "preflight": S.do_preflight, "color": S.do_color,
            "start": S.do_start, "settings": S.do_settings,
            "ready": S.do_ready, "result": S.do_result, "failed": S.do_failed,
-           "kick": S.do_kick, "leave": S.do_leave,
+           "kick": S.do_kick, "ban": S.do_ban, "leave": S.do_leave,
            "world": S.do_world, "world_ping": S.do_world_ping}
 
 PASSED = []
@@ -806,12 +806,12 @@ def test_the_v5_floor():
     instead of spawning a game that cannot pair with it.
     """
     print("\n-- contract v5 is the floor and the ceiling")
-    check("the version range is exactly 5..6",
-          (S.CONTRACT_MIN, S.CONTRACT_V) == (5, 6),
+    check("the version range is exactly 5..7",
+          (S.CONTRACT_MIN, S.CONTRACT_V) == (5, 7),
           (S.CONTRACT_MIN, S.CONTRACT_V))
     for verb, row in sorted(S.VERB_FIELDS.items()):
         body = {k: _FIELD_SAMPLES[k] for k in row[0]}
-        for ver in (1, 2, 3, 4, 7):
+        for ver in (1, 2, 3, 4, 8):
             body["v"] = ver
             check("%s: a v%d body is bad_version" % (verb, ver),
                   S.shape_for(verb, body) == "bad_version",
@@ -900,6 +900,7 @@ _FIELD_SAMPLES = {
     "luigi": 1,
     "voice": 1,
     "netmode": "arena",
+    "install": "0123456789abcdef0123456789abcdef",
     "code": "K7QMR3AB",
     "skip": "K7QMR3AB",
     "save_name": "My file",
@@ -1176,7 +1177,9 @@ def test_opacity():
               "seat", "token", "nick", "display", "playing", "pre_ok", "armed",
               "seen", "chat_allowance", "chat_stamp", "last_addr",
               # v2: the two colours this player picked.
-              "color", "shoes"},
+              "color", "shoes",
+              # v7: the game install's random id, kept only for a ban.
+              "install"},
           Member_fields(room.members[1]))
     check("the only client address kept is the one a kick needs, and it never "
           "reaches a client",
@@ -1275,6 +1278,181 @@ def test_kick():
                          "seat": 2}, "10.0.0.1", 1000.0)
     check("a kick is refused once the room has left the lobby state",
           st == 409 and out["error"] == "not_in_lobby", (st, out))
+
+
+INST_A = "a" * 32
+INST_B = "b" * 32
+INST_C = "c" * 32
+
+
+def _ban(code, token, seat, who="10.0.0.1", now=1000.0, v=7):
+    return S.do_ban({"v": v, "room": code, "token": token, "seat": seat},
+                    who, now)
+
+
+def test_ban():
+    print("\n-- the host banning somebody for the room's life (v7, LOBBYBAN1)")
+    reset()
+    st, host = create(who="10.0.0.1", v=7, install=INST_A)
+    code = host["room"]
+    st, g2 = join(code, "rude", who="10.0.0.2", v=7, install=INST_B)
+    st, g3 = join(code, "fine", who="10.0.0.3", v=7, install=INST_C)
+    room = S.ROOMS[code]
+    check("the install id is stored per member and never reaches a client",
+          room.members[2].install == INST_B
+          and INST_B not in json.dumps(room.view(1))
+          and "install" not in room.members[2].view(), room.view(1))
+
+    st, out = _ban(code, g2["token"], 3, who="10.0.0.2")
+    check("a member who is not the host cannot ban",
+          st == 403 and out["error"] == "not_host", (st, out))
+    st, out = _ban(code, host["token"], 1)
+    check("the host cannot ban itself",
+          st == 400 and out["error"] == "bad_seat", (st, out))
+    st, out = _ban(code, host["token"], 4)
+    check("an empty seat cannot be banned",
+          st == 400 and out["error"] == "bad_seat", (st, out))
+    st, out = _ban(code, host["token"], 2, v=6)
+    check("a v6 caller cannot reach the ban verb (bad_field, like any v7 verb)",
+          st == 400 and out["error"] == "bad_field", (st, out))
+
+    st, out = _ban(code, host["token"], 2)
+    check("the host can ban a member", st == 200 and out.get("ok") is True,
+          (st, out))
+    check("the seat is freed with the same left event a kick sends",
+          2 not in room.members and room.events[-1]["kind"] == "left"
+          and room.events[-1]["why"] == "kicked", room.events[-1])
+    check("the other friend is unaffected", 3 in room.members)
+
+    st, out = S.do_poll({"v": 7, "room": code, "token": g2["token"],
+                         "cursor": 0, "wait": 0}, "10.0.0.2", 1000.0)
+    check("the banned v7 game is told `banned` on its next request (the token)",
+          st == 403 and out["error"] == "banned", (st, out))
+    st, out = S.do_chat({"v": 7, "room": code, "token": g2["token"],
+                         "text": "hi"}, "10.0.0.9", 1000.0)
+    check("its token stays refused from any address",
+          st == 403 and out["error"] == "banned", (st, out))
+    for ov in (5, 6):
+        st, out = S.do_poll({"v": ov, "room": code, "token": g2["token"],
+                             "cursor": 0, "wait": 0}, "10.0.0.2", 1000.0)
+        check("a v%d poll on a banned token is told `kicked` (a word it knows)"
+              % ov, st == 403 and out["error"] == "kicked", (st, out))
+        st, out = S.do_leave({"v": ov, "room": code, "token": g2["token"]},
+                             "10.0.0.2", 1000.0)
+        check("a v%d leave on a banned token is told `kicked` too" % ov,
+              st == 403 and out["error"] == "kicked", (st, out))
+
+    st, out = join(code, "rude", who="10.0.0.2", v=7, install=INST_B)
+    check("same address, same install (a restarted game): refused banned",
+          st == 403 and out["error"] == "banned", (st, out))
+    st, out = join(code, "rude", who="10.0.0.2", v=7, install="d" * 32)
+    check("same address, a new install (the install file deleted): refused",
+          st == 403 and out["error"] == "banned", (st, out))
+    st, out = join(code, "rude", who="10.0.0.2", v=6)
+    check("same address from an old client with no install: refused `kicked`",
+          st == 403 and out["error"] == "kicked", (st, out))
+    st, out = join(code, "rude", who="10.0.0.2", v=5)
+    check("and a v5 client the same way",
+          st == 403 and out["error"] == "kicked", (st, out))
+    st, out = join(code, "rude", who="10.0.0.77", v=7, install=INST_B)
+    check("a new address, the same install: refused",
+          st == 403 and out["error"] == "banned", (st, out))
+
+    later = 1000.0 + S.KICK_COOLDOWN_S + 3600
+    st, out = join(code, "rude", who="10.0.0.2", now=later, v=7,
+                   install=INST_B)
+    check("the ban outlives the kick cooldown",
+          st == 403 and out["error"] == "banned", (st, out))
+    st, out = join(code, "newfriend", who="10.0.0.5", now=later, v=7,
+                   install="e" * 32)
+    check("somebody else still joins the room", st == 200, (st, out))
+
+    # A new room by the same host is clean.
+    S.do_leave({"v": 6, "room": code, "token": host["token"]}, "10.0.0.1",
+               later)
+    st, host2 = create(who="10.0.0.1", now=later, v=7, install=INST_A)
+    st, out = join(host2["room"], "rude", who="10.0.0.2", now=later, v=7,
+                   install=INST_B)
+    check("a new room starts clean: the banned player joins it", st == 200,
+          (st, out))
+
+    # Kick still behaves exactly as before, beside a ban.
+    reset()
+    st, host = create(who="10.0.0.1", v=7, install=INST_A)
+    code = host["room"]
+    join(code, "kicked", who="10.0.0.2", v=7, install=INST_B)
+    S.do_kick({"v": 6, "room": code, "token": host["token"], "seat": 2},
+              "10.0.0.1", 1000.0)
+    st, out = join(code, "kicked", who="10.0.0.2", v=7, install=INST_B)
+    check("a kick is still a kick (refused `kicked`, not `banned`)",
+          st == 403 and out["error"] == "kicked", (st, out))
+    st, out = join(code, "kicked", who="10.0.0.2", v=7, install=INST_B,
+                   now=1000.0 + S.KICK_COOLDOWN_S + 1)
+    check("and lets the player back after the cooldown", st == 200, (st, out))
+
+    # Only in the lobby state, like kick.
+    reset()
+    st, host = create(who="10.0.0.1", v=7)
+    code = host["room"]
+    join(code, "b", who="10.0.0.2", v=7)
+    S.ROOMS[code].state = "arming"
+    st, out = _ban(code, host["token"], 2)
+    check("a ban is refused once the room has left the lobby state",
+          st == 409 and out["error"] == "not_in_lobby", (st, out))
+
+    # The install field: optional, v7 only, shape checked.
+    reset()
+    st, out = create(who="10.0.0.1", v=6, install=INST_A)
+    check("a v6 create carrying install is bad_field",
+          st == 400 and out["error"] == "bad_field", (st, out))
+    for bad in ("A" * 32, "a" * 15, "a" * 65, "zz" * 10, 12345, "../x" * 5):
+        st, out = create(who="10.0.0.1", v=7, install=bad)
+        check("install %r is refused bad_install" % (bad,),
+              st == 400 and out["error"] == "bad_install", (st, out))
+    st, out = create(who="10.0.0.1", v=7)
+    check("a v7 create without install is fine (it is optional)", st == 200,
+          (st, out))
+    st, j = join(out["room"], "x", who="10.0.0.2", v=7, install="bad!")
+    check("a join with a bad install is refused bad_install",
+          st == 400 and j["error"] == "bad_install", (st, j))
+
+    # A v5/v6 client (the 1.0 game, today's launcher) still creates and joins.
+    reset()
+    st, host = create(who="10.0.0.1", v=6, session_type="coop",
+                      save_name="Coop 1")
+    st2, g = join(host["room"], "old", who="10.0.0.2", v=6)
+    check("a v6 client with no install creates and joins as before",
+          st == 200 and st2 == 200, (st, host, st2, g))
+    # And a banned old client is told what it already understands.
+    _ban(host["room"], host["token"], 2)
+    st, out = S.do_poll({"v": 6, "room": host["room"], "token": g["token"],
+                         "cursor": 0, "wait": 0}, "10.0.0.2", 1000.0)
+    check("a banned old client's next poll says `kicked`, so it leaves",
+          st == 403 and out["error"] == "kicked", (st, out))
+    st, out = join(host["room"], "old", who="10.0.0.2", v=6)
+    check("a banned old client's join is refused (403 kicked)",
+          st == 403 and out["error"] == "kicked", (st, out))
+    later = 1000.0 + S.KICK_COOLDOWN_S + 3600
+    st, out = join(host["room"], "old", who="10.0.0.2", v=6, now=later)
+    check("and stays refused after the kick cooldown (it is still a ban)",
+          st == 403 and out["error"] == "kicked", (st, out))
+
+    # The cap on what one room keeps.
+    reset()
+    old = S.BAN_MAX
+    S.BAN_MAX = 2
+    try:
+        st, host = create(who="10.0.0.1", v=7)
+        code = host["room"]
+        results = []
+        for i in range(3):
+            st, g = join(code, "p%d" % i, who="10.0.1.%d" % i, v=7)
+            results.append(_ban(code, host["token"], g["member"]))
+        check("a room keeps at most BAN_MAX bans, then says too_many_bans",
+              [r[0] for r in results] == [200, 200, 409]
+              and results[2][1]["error"] == "too_many_bans", results)
+    finally:
+        S.BAN_MAX = old
 
 
 def test_no_two_player_assumption():
@@ -4230,7 +4408,7 @@ def test_party_and_coop_rooms():
     Hub rooms like an adventure room (one hub code for the room's life, a plan
     at create/join and on every poll) with a host Start on top."""
     print("\n-- v6 party and coop rooms: types, caps, plan, host Start")
-    check("the lobby speaks v5..v6", (S.CONTRACT_MIN, S.CONTRACT_V) == (5, 6))
+    check("the lobby speaks v5..v7", (S.CONTRACT_MIN, S.CONTRACT_V) == (5, 7))
     check("party and coop are session types",
           "party" in S.SESSION_TYPES and "coop" in S.SESSION_TYPES)
     check("both hold four seats by default",
@@ -4921,6 +5099,7 @@ def main():
     test_room_settings()
     test_room_soloexit()
     test_party_coop_malformed_input()
+    test_ban()
 
     print("\n%d passed, %d failed" % (len(PASSED), len(FAILED)))
     for name in FAILED:

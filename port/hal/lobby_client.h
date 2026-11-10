@@ -16,7 +16,7 @@
 enum LobbyKind  { LOBBY_COOP = 0, LOBBY_VS = 1 };
 enum LobbyPhase { LOBBY_NONE, LOBBY_BUSY, LOBBY_IN_ROOM, LOBBY_STARTING, LOBBY_FAILED };
 
-struct LobbySeat { char name[32]; unsigned body_rgb, shoe_rgb; int ready, is_host, is_me, muted; };
+struct LobbySeat { char name[32]; unsigned body_rgb, shoe_rgb; int ready, is_host, is_me, muted; int member; };   /* member: the server's seat number, stable while the player stays */
 struct LobbySetting { const char *key; const char *label; int value, min, max; const char *const *choices; int n_choices; };
 
 struct LobbyState {
@@ -26,6 +26,7 @@ struct LobbyState {
     int n_settings; LobbySetting settings[16];   /* the kind's rules, host edits, frozen after the first start */
     int coop_save_continue;                      /* coop: 0 New, 1 Continue */
     int n_chat; char chat[32][96];               /* newest last, "name: text" */
+    char error_head[40];                         /* LOBBY_FAILED's heading when it is not "could not get in" ("" = that) */
 };
 
 const LobbyState *lobby_state(void);
@@ -40,6 +41,7 @@ void lobby_set_coop_save(int continue_save);      /* host, coop */
 void lobby_set_server_name(const char *name);     /* stored only */
 void lobby_send_chat(const char *text);
 void lobby_kick(int seat);                        /* host */
+void lobby_ban(int seat);                         /* host: a kick that keeps that player out until the room closes (lobby v7) */
 void lobby_mute(int seat, int muted);             /* local only */
 
 #endif
