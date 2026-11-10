@@ -1222,7 +1222,7 @@ void daTrs_c::func_ov063_02117cdc() {
         int *d560;
         u8 *st;
         int v0;
-        if ((&data_ov008_02111b6c)[0] == 0x1f000 || (data_0209caa0.file.flags1 & 0x10)) {
+        if (data_ov008_02111b6c == 0x1f000 || (data_0209caa0.file.flags1 & 0x10)) {
             v0 = 1;
         } else {
             v0 = 0;
