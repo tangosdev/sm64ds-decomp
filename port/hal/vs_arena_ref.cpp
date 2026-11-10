@@ -153,10 +153,11 @@ enum : int {
     kHitRetryFrames = 8,
     kLocalTimeupGraceMs = 3000,
     kReportMs = 10000,
-    // LUIGI INFECTION: no START this long after my first READY = the match is given up. The
-    // referee itself starts a short room START_WAIT_MS (20 s) after the first READY, so 30 s
-    // never cuts a room that was going to start.
-    kLuigiStartGiveUpMs = 30000,
+    // LUIGI INFECTION: no START this long after my first READY = the match is given up. Longer
+    // than the launcher's own 60 s connect window: the referee's 20 s part-ready start
+    // (START_WAIT_MS) needs two READY seats, so it never starts a 2-player room whose second
+    // game is slow to load, and only the second READY does.
+    kLuigiStartGiveUpMs = 90000,
 };
 
 struct PClaim {
@@ -2060,7 +2061,7 @@ void luigi_start_watch() {
     std::fprintf(stderr, "[vsarena] LUIGI START GIVEN UP (cancel=%d): %s\n", cancel,
                  cancel == 1 ? "the relay refused Luigi Infection (UNSUPPORTED): it needs an update"
                  : cancel == 2 ? "the room refused my READY (MISMATCH): the games in it disagree"
-                 : "no START from the referee 30 s after my READY");
+                 : "no START from the referee 90 s after my READY");
 }
 
 // ---------------------------------------------------------------------------
@@ -3939,6 +3940,14 @@ bool vs_ref_countdown(int *count, int *f304, int *beep, int *music) {
     *beep = 0;
     *music = 0;
     if (!vs_ref_active() || data_0209f2d8 != 1 || !g.inited) return false;
+    // LUIGI INFECTION, a match given up before START (luigi_start_watch): the count stays on
+    // the 3 it was held at until the game leaves (the ROM's own countdown would run on to 1
+    // and start the clock under the NO MATCH banner)
+    if (g.over && g.luigi && !g.started && g.over_v.luigi_cancel) {
+        *count = 3;
+        *f304 = 0x2a;
+        return true;
+    }
     if (g.over) return false;
     if (!g.started) {
         *count = 3;

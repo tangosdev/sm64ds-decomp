@@ -2054,7 +2054,7 @@ extern "C" int port_vs_match_end_banner(char *out, int n)
         if (g_end_by_luigi == 3)
             std::snprintf(out, (size_t)n, "%s",
                     g_arena_li_cancel == 1 ? "NO MATCH  -  THIS SERVER NEEDS AN UPDATE"
-                    : g_arena_li_cancel == 2 ? "NO MATCH  -  THIS ROOM NEEDS A NEWER GAME"
+                    : g_arena_li_cancel == 2 ? "NO MATCH  -  THE GAMES IN THIS ROOM DO NOT MATCH"
                     : "NO MATCH  -  THE MATCH NEVER STARTED");
         else if (g_end_by_luigi == 1 && g_arena_li_left)
             std::snprintf(out, (size_t)n,
