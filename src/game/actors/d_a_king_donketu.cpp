@@ -80,8 +80,6 @@
  *   RunningSlidingDustAt, daPly_c::Hurt, Sound::ChangeMusicVolume and
  *   DropShadowRadHeight stay mangled (Fix12<int> by value).
  *   NewSimple and the layer-3 sound calls retain their local declarations.
- *   FromUniqueID is followed by a store at sys+0x44, which is still pad_042
- *   on Particle::System.
  * - Vec3_* / Matrix4x3_* have no shared header this TU
  *   can include alone. gCamera, data_020a0e68 and data_0209e650 are arm9
  *   globals. data_ov002_0210da30 is ov002's; Cleanup only Releases it.
@@ -269,7 +267,7 @@ daKing_Donketu_c::~daKing_Donketu_c()
    mPos with y raised by 30.0 * the scale (mScaleX is Fix12, so the 0x1e000
    constant shrinks with the boss) and x/z moved 200.0 (0xc8000) along
    mPrevAngleY. Particle systems 0x77 and 0x78 are renewed there (ids kept in
-   mParticleId0/1), and word +0x44 of each is set to 20.0 * the scale. The
+   mParticleId0/1), and the emitRadius of each is set to 20.0 * the scale. The
    Vec3_HorzAngle result is not used. */
 void daKing_Donketu_c::RenewLoopedParticles() {
     daKing_Donketu_c *c = this;
@@ -292,13 +290,13 @@ void daKing_Donketu_c::RenewLoopedParticles() {
     c->mParticleId0 = Particle::System::New(c->mParticleId0, 0x77, pos.x, pos.y, pos.z, 0, 0);
     c->mParticleId1 = Particle::System::New(c->mParticleId1, 0x78, pos.x, pos.y, pos.z, 0, 0);
     if (c->mParticleId0 != 0) {
-        void* sys = Particle::System::FromUniqueID(c->mParticleId0);
-        if (sys != 0) *(int*)((char*)sys + 0x44) = c->mScaleX * 0x14;
+        Particle::System *sys = Particle::System::FromUniqueID(c->mParticleId0);
+        if (sys != 0) sys->emitRadius = c->mScaleX * 0x14;
     }
     if (c->mParticleId1 == 0) return;
     {
-        void* sys = Particle::System::FromUniqueID(c->mParticleId1);
-        if (sys != 0) *(int*)((char*)sys + 0x44) = c->mScaleX * 0x14;
+        Particle::System *sys = Particle::System::FromUniqueID(c->mParticleId1);
+        if (sys != 0) sys->emitRadius = c->mScaleX * 0x14;
     }
 }
 
