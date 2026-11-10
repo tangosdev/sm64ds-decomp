@@ -14766,11 +14766,6 @@
         "return:char *"
       ]
     },
-    "func_02037f44": {
-      "include/dBgPi.h": [
-        "param:#1 const struct dBgPi *"
-      ]
-    },
     "func_02037dc4": {
       "src/runtime/actor/d_actor.cpp": [
         "param:#1 SurfaceInfo *",

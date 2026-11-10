@@ -25,7 +25,7 @@
  *   bl targets. dBgCh_Actr::GetSphereResult returns its argument plus 0x30;
  *   GetFloorResult is the previous symbol, and this TU still calls
  *   dBgCh_Actr::GetSphereResult. DetectClsnSlot0 only queries collider slot zero.
- *   func_02037f44 returns word 8 of the record it is handed. Real
+ *   dBgPi::GetOwner returns the result's owner (+0x20). Real
  *   dBgPi copy construction avoids the unwanted default-constructor call.
  * - Native Matrix4x3 copies use common.h's shared flat representation.
  *   common.h and math/Matrix.h still define incompatible C++ forms under
@@ -475,7 +475,7 @@ int daMky_c::func_ov030_02112400()
     } else {
         if (this->mWithMeshClsn.IsOnGround()) {
             dBgPi res = *mWithMeshClsn.GetSphereResult();
-            if (res.GetClsnID() == -1 || func_02037f44(&res) == 0) {
+            if (res.GetClsnID() == -1 || res.GetOwner() == 0) {
                 ChangeState(0);
             }
         }
