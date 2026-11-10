@@ -545,9 +545,33 @@ NETMODE_DEFAULT = env_str("NETMODE_DEFAULT", "arena")
 if NETMODE_DEFAULT not in NETMODES:
     NETMODE_DEFAULT = "arena"
 
-# The win modes arena can referee today. King of the Star and Luigi Infection
-# stay on lockstep until the referee has their rules (plan phase C).
+# The win modes arena can referee today. King of the Star stays on lockstep
+# until the referee has its rules (plan phase C). Luigi Infection is not a win
+# mode (it rides on `luigi` with win_mode "time"); ARENA_LUIGI_GAME_IDS below
+# decides whether a Luigi match may use the referee.
 ARENA_WIN_MODES = ("time", "stars")
+
+# ARENA_LUIGI_GAME_IDS: the builds whose Luigi Infection matches play arena
+# (relay referee contract 2: READY mode 2, EV_INFECTED, end reasons 5 and 6).
+# Same grammar as ARENA_GAME_IDS, and a build must be on BOTH lists. EMPTY (the
+# default) = every Luigi match plays lockstep, exactly this server before the
+# referee knew Luigi. "*" = every arena build: dev and test boxes only.
+# Keyed on the exact build id, never a minimum version: the server compares
+# ids and never parses them, and an id names one build (version + git tip), so
+# a build only gets here when the deploy names it. A build that predates the
+# referee's Luigi rules would sit on the countdown forever if it were handed an
+# arena Luigi plan, and nothing in its request can say so.
+#
+# Who can be in such a room: only that build. A join must carry the room's own
+# `game` (ONE GAME BUILD PER ROOM, room_join), so an older game that tries to
+# join is refused at the door with 409 `game_mismatch`, words every 1.0 game
+# and launcher already show ("This room runs a different game version.
+# Everyone needs the same update."). It never reaches the countdown. A Luigi
+# room made by an older build is not on this list and plays lockstep as today.
+_ARENA_LUIGI_RAW = (os.environ.get("ARENA_LUIGI_GAME_IDS", "") or "").strip()
+ARENA_LUIGI_ANY = _ARENA_LUIGI_RAW == "*"
+ARENA_LUIGI_GAME_IDS, ARENA_LUIGI_GAME_IDS_DROPPED = (
+    ((), []) if ARENA_LUIGI_ANY else parse_game_ids(_ARENA_LUIGI_RAW))
 
 
 def arena_ok(room):
@@ -559,16 +583,27 @@ def arena_ok(room):
     return ARENA_ANY or room.game in ARENA_GAME_IDS
 
 
+def arena_luigi_ok(room):
+    """True when this room's build can play Luigi Infection on the arena
+    referee: it can play arena at all (arena_ok) and it is on
+    ARENA_LUIGI_GAME_IDS (or that list is "*")."""
+    if not arena_ok(room):
+        return False
+    return ARENA_LUIGI_ANY or room.game in ARENA_LUIGI_GAME_IDS
+
+
 def arena_for(room, players, win_mode, luigi):
     """The netmode a match with these settings plays in this room. Arena only
     when the host picked it, the build and relay can play it, the match is
-    2..ARENA_MAX_PLAYERS players, the win mode is one the referee knows and
-    Luigi is off; lockstep otherwise. Never an error: a host who picked arena
-    for a six-player King match just plays lockstep, and the view says so."""
+    2..ARENA_MAX_PLAYERS players, the win mode is one the referee knows and,
+    with Luigi on, the build is on ARENA_LUIGI_GAME_IDS; lockstep otherwise.
+    Never an error: a host who picked arena for a six-player King match just
+    plays lockstep, and the view says so."""
     if (room.session_type == "vs" and room.netmode == "arena"
             and arena_ok(room)
             and 2 <= players <= ARENA_MAX_PLAYERS
-            and win_mode in ARENA_WIN_MODES and not luigi):
+            and win_mode in ARENA_WIN_MODES
+            and (not luigi or arena_luigi_ok(room))):
         return "arena"
     return "lockstep"
 
@@ -1152,6 +1187,10 @@ class Room(object):
             # running match's resolved netmode (null in lobby).
             v["netmode"] = self.netmode
             v["arena_ok"] = arena_ok(self)
+            # Whether a Luigi Infection match in this room can play arena
+            # (false = Luigi plays lockstep here; the in-game lobby, which
+            # opens arena rooms only, then does not offer Luigi).
+            v["arena_luigi"] = arena_luigi_ok(self)
             v["arena_max"] = ARENA_MAX_PLAYERS
             v["arena_now"] = arena_for(self, self.playing_count(),
                                        self.win_mode, self.luigi)
@@ -3821,6 +3860,10 @@ class Handler(BaseHTTPRequestHandler):
                 # run mp1 A4: how many builds play arena (-1 = "*", every
                 # build), the arena size limit, and a new room's pick.
                 "arena_game_ids": -1 if ARENA_ANY else len(ARENA_GAME_IDS),
+                # how many of those builds play Luigi Infection on arena
+                # (-1 = "*"); 0 = every Luigi match is lockstep.
+                "arena_luigi_game_ids": (-1 if ARENA_LUIGI_ANY
+                                         else len(ARENA_LUIGI_GAME_IDS)),
                 "arena_max": ARENA_MAX_PLAYERS,
                 "netmode_default": NETMODE_DEFAULT,
                 "rooms": len(ROOMS),
@@ -4107,6 +4150,18 @@ def main():
         log("arena: OFF (ARENA_GAME_IDS is empty): every VS match is lockstep")
     for bad in ARENA_GAME_IDS_DROPPED:
         log("ARENA_GAME_IDS entry dropped, not a build id (%d chars)"
+            % len(bad))
+    if ARENA_LUIGI_ANY:
+        log("arena Luigi Infection: EVERY arena build (ARENA_LUIGI_GAME_IDS=*,"
+            " a dev/test box setting)")
+    elif ARENA_LUIGI_GAME_IDS:
+        log("arena Luigi Infection: %d build(s) (ARENA_LUIGI_GAME_IDS)"
+            % len(ARENA_LUIGI_GAME_IDS))
+    else:
+        log("arena Luigi Infection: OFF (ARENA_LUIGI_GAME_IDS is empty): "
+            "every Luigi match is lockstep")
+    for bad in ARENA_LUIGI_GAME_IDS_DROPPED:
+        log("ARENA_LUIGI_GAME_IDS entry dropped, not a build id (%d chars)"
             % len(bad))
     log("limits rooms=%d seats=%d players=%d waiters=%d body=%d read_timeout=%ds "
         "req=%d/s burst=%d create=%d/h join=%d/min star_max=%d king_max=%d "
