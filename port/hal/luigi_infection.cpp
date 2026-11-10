@@ -84,6 +84,15 @@ unsigned port_vs_seat_mask_round(void);    /* ... and its round      */
 int port_vs_match_end_frozen(void);        /* hal/star_flow.cpp */
 }
 
+/* ARENA (lane ARENALUIGI1). In an arena match the referee in the relay owns the
+ * team (port/tools/relay/referee.py, mode 2): it picks the first Luigi at T0,
+ * decides every tag and hands the Luigi on when the last one leaves. This file
+ * then only applies its word (port_luigi_arena_infect / _team below, called
+ * from hal/vs_arena_ref.cpp's INFECTED / TEAM_STATE handlers); the local pick,
+ * the local hand-off and the local tag stand down, because a console that
+ * guessed would show a Luigi the referee never made. */
+namespace port { bool vs_ref_active(); }
+
 /* NONZERO WHILE A REWIND IS BEING RE-RUN. The mode's WORLD writes (the team
  * bits, the character swap, the mapID blanking) must happen on a replayed frame
  * -- reproducing them is what the replay is for -- but its EFFECTS on the
@@ -294,6 +303,11 @@ static void li_infect(int slot)
 extern "C" void port_luigi_tag_player(const void *victim)
 {
     if (!g_li_on) return;
+    /* ARENA: the referee decides the tag (the Luigi's console claims TAG / HIT /
+       STOMP, INFECTED comes back); a local conversion here would run ahead of
+       it on one screen only. The caller still returns 1, so the ROM's own
+       knockback and star drop stay off for the pair, as on Classic. */
+    if (port::vs_ref_active()) return;
     const int s = li_slot_of(victim);
     if (s < 0 || g_li_team[s] || !li_in_match(s)) return;
     if (!g_port_rb_replaying)
@@ -339,6 +353,7 @@ static void li_hand_off(int frame)
 extern "C" void port_luigi_seed(int frame)
 {
     if (data_0209f2d8 != 1) return;        /* VS mode only */
+    if (port::vs_ref_active()) return;     /* ARENA: the referee picks and hands off */
     li_load();
     if (!g_li_on) return;
     if (g_li_seeded) { li_hand_off(frame); return; }
@@ -390,6 +405,39 @@ extern "C" void port_luigi_seed(int frame)
             "tagger); local player is slot %d; seed %u over %d bodies\n",
             frame, slot, (int)data_0209f250, g_li_seed, n);
     li_infect(slot);
+}
+
+/* ---- ARENA: THE REFEREE'S WORD -------------------------------------------
+ * port_luigi_arena_infect: the referee's INFECTED event names `seat` a Luigi
+ * (cause = the wire's INF_* code: 1 the first pick at T0, 2 / 3 / 4 a Luigi's
+ * hit / stomp / tag, 5 the hand-off, 6 a late joiner, 7 a returning Luigi; by =
+ * the tagging seat or 0xFF). Team bit + the Luigi body at once, through the
+ * same li_infect the Classic tag uses, for my own body and for a puppet alike
+ * (hal/vs_arena.cpp holds an infected seat's puppet at the Luigi look).
+ * port_luigi_arena_team: the whole Luigi mask (an INFECTED's d field, or a
+ * snapshot's TEAM_STATE), so a console that joined late or missed an event
+ * comes out with the same team as everyone else. A bit is never cleared here:
+ * nobody is cured, and a Luigi who left keeps a parked body nobody reaches.
+ * Both are inert unless the mode is armed. */
+extern "C" void port_luigi_arena_infect(int seat, int cause, int by)
+{
+    li_load();
+    if (!g_li_on || seat < 0 || seat >= kPortMaxPlayers) return;
+    g_li_seeded = 1;                       /* the team now means something */
+    g_li_absent = 0;                       /* the referee's roster, not the seat mask */
+    if (g_li_team[seat]) return;
+    if (!g_port_rb_replaying)
+        std::fprintf(stderr, "[luigi] ARENA INFECTED: seat %d is a Luigi now (cause %d, by %d); "
+                     "local player is seat %d\n", seat, cause, by, (int)data_0209f250);
+    li_infect(seat);
+}
+
+extern "C" void port_luigi_arena_team(unsigned mask)
+{
+    li_load();
+    if (!g_li_on) return;
+    for (int i = 0; i < kPortMaxPlayers && i < 32; ++i)
+        if ((mask >> i & 1u) && !g_li_team[i]) port_luigi_arena_infect(i, 0, 0xFF);
 }
 
 /* MINIMAP HIDE: after Minimap::Behavior has reseated every slot's blip, blank

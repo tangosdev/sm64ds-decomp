@@ -1034,6 +1034,10 @@ void port_luigi_countdown_drive(int frame)
             return;
         }
     }
+    /* ARENA LUIGI INFECTION (lane ARENALUIGI1): once the referee's countdown is
+       over (START shown), the count stays where the ROM leaves it; the frame
+       schedule below is the Classic one and would put a 3 back on the HUD. */
+    if (port::vs_ref_active()) return;
     if (!port_luigi_enabled()) return;      /* a normal VS round never enters */
 
     /* THE HOLD STARTS AT FRAME 0, not at the first beep. The ROM's own
@@ -1422,6 +1426,13 @@ static int g_scene7_answered;
    way. The marker's results_screen field reads this in an arena instead of
    g_scene7_answered, which is a per-console race there (see the marker). */
 static int g_arena_results;
+/* lane ARENALUIGI1: the referee's Luigi Infection verdict, for the banner. In an
+   arena the team and the players are the referee's (its MATCH_OVER names the
+   winning side), not this console's seat array: a survivor who left inside the
+   hold still won, and a Luigi who left is not one of "all infected". -1 = not an
+   arena Luigi end (the banner reads the local team, as on Classic). */
+static int g_arena_li_surv = -1;
+static int g_arena_li_np = -1;
 /* lane DROPOUT1: the slots that have been in play this match, and those of
    them that have left it (vs_track_seats, below, keeps both). A slot that left
    has no place in the result: the winner, the draw test and the scores run
@@ -2031,8 +2042,10 @@ extern "C" int port_vs_match_end_banner(char *out, int n)
        and how many survivors were left rather than picking a slot by carried
        stars. */
     if (g_end_by_luigi != 0) {
-        const int surv = port_luigi_survivors_alive();
-        const int np_li = port_luigi_match_slots();
+        const int surv = g_arena_li_np >= 0 ? g_arena_li_surv
+                                            : port_luigi_survivors_alive();
+        const int np_li = g_arena_li_np >= 0 ? g_arena_li_np
+                                             : port_luigi_match_slots();
         if (g_end_by_luigi == 1)
             std::snprintf(out, (size_t)n,
                     "MATCH OVER  -  THE LUIGIS WIN  (all %d infected)", np_li);
@@ -2449,6 +2462,32 @@ void port_window_quit(int code);                       /* hal/handoff_poll.cpp: 
 }
 extern "C++" {   /* this part of the file sits inside an extern "C" block: these are C++ names */
 namespace ntr { namespace backup { void select_online(int on); bool online_selected(); } }
+/* ARENA LUIGI INFECTION, Tango's rule: everyone can run during the 5 s
+   countdown. The ROM holds every player in the level-entry step
+   (Player::func_ov002_020c71e0, src/game/player/Player.cpp: "if (data_0209f2bc
+   != 0) return;") while the count is up. The count itself has to stay up (the
+   HUD's 3-2-1 and the VS timer and the pause test read it), so only that one
+   call sees 0: hal/player_states.inc lifts it around the call and puts it back.
+   Arena + Luigi only; a normal arena match and every Classic match keep the
+   ROM's hold, and the referee still ignores every claim before T0. */
+static unsigned char g_entry_hold_saved;
+static int g_entry_hold_lifted;
+extern "C" void port_vs_entry_hold_lift(void)
+{
+    g_entry_hold_lifted = 0;
+    if (data_0209f2d8 != 1 || data_0209f2bc == 0) return;
+    if (!port::vs_ref_active() || !port_luigi_enabled()) return;
+    g_entry_hold_saved = data_0209f2bc;
+    g_entry_hold_lifted = 1;
+    data_0209f2bc = 0;
+}
+extern "C" void port_vs_entry_hold_restore(void)
+{
+    if (!g_entry_hold_lifted) return;
+    g_entry_hold_lifted = 0;
+    data_0209f2bc = g_entry_hold_saved;
+}
+
 namespace port {
 bool vs_arena_leave_reset(const char *why);            /* hal/vs_arena.cpp (SEAMVS1) */
 bool comms_hub_active();
@@ -2494,6 +2533,8 @@ static void vs_latches_reset(void)
     g_vs_left = 0;
     g_scene7_answered = 0;
     g_arena_results = 0;
+    g_arena_li_surv = -1;
+    g_arena_li_np = -1;
     g_king_armed = 0;
     g_king_tick = 0;
     g_king_holder = -1;
@@ -2643,6 +2684,8 @@ extern "C" int port_vs_match_end_poll(int frame)
         g_vs_left = 0;
         g_scene7_answered = 0;
         g_arena_results = 0;
+        g_arena_li_surv = -1;
+        g_arena_li_np = -1;
         /* Outside VS the king match is disarmed, so the next VS entry re-zeroes
            the points. This is the only reset point, so a king match always
            starts from zero however it was reached. */
@@ -2789,11 +2832,33 @@ extern "C" int port_vs_match_end_poll(int frame)
             return 0;
         const int np_arena = vs_players();
         g_end_fired = frame;
-        g_end_by_luigi = 0;
+        /* LUIGI INFECTION (lane ARENALUIGI1): reason 5 = every survivor infected,
+           6 = the clock ran out with a survivor left. The same two team ends the
+           Classic poll below reaches (TRIGGER FOUR), so the banner and the
+           marker's win word are the ones Classic prints. The winners mask is the
+           referee's: a survivor who left inside the hold is still in it, and
+           nothing here checks it against the live roster. Survivors win on the
+           clock, so that end answers the ROM's results ask like a time-up. */
+        g_end_by_luigi = ov.reason == arena_wire::OVER_LUIGIS_WIN ? 1
+                       : ov.reason == arena_wire::OVER_SURVIVORS_WIN ? 2 : 0;
+        g_arena_li_surv = -1;
+        g_arena_li_np = -1;
+        if (g_end_by_luigi != 0) {
+            const unsigned in_play = (unsigned)(ov.roster_mask | ov.winners_mask);
+            g_arena_li_np = vs_popcount(in_play);
+            g_arena_li_surv = g_end_by_luigi == 2 ? vs_popcount((unsigned)ov.winners_mask) : 0;
+            fprintf(stderr, "[vs] f%d LUIGI INFECTION OVER from the referee: %s, "
+                    "winners=0x%04x (%d), players %d\n", frame,
+                    g_end_by_luigi == 1 ? "the Luigis win (all infected)"
+                                        : "the survivors win (time up)",
+                    (unsigned)ov.winners_mask, vs_popcount((unsigned)ov.winners_mask),
+                    g_arena_li_np);
+        }
         g_end_by_king = 0;
         g_end_by_last = 0;
         g_end_by_target = (ov.reason == arena_wire::OVER_FIRST_TO_N);
-        g_arena_results = (ov.reason == arena_wire::OVER_TIME_UP) ? 1 : 2;
+        g_arena_results = (ov.reason == arena_wire::OVER_TIME_UP ||
+                           ov.reason == arena_wire::OVER_SURVIVORS_WIN) ? 1 : 2;
         g_vs_seen = (unsigned)ov.seen_mask;
         g_vs_left = (unsigned)(ov.seen_mask & ~ov.roster_mask);
         int total = 0;

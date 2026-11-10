@@ -305,7 +305,11 @@
     case 0x020c6f34: return ((Player *)self)->Player::St_LevelEnter_Cleanup();
     case 0x020c75f0: _ZN6Player19func_ov002_020c75f0Ev((char *)self); return 1;
     case 0x020c7350: _ZN6Player19func_ov002_020c7350Ev((char *)self); return 1;
-    case 0x020c71e0: _ZN6Player19func_ov002_020c71e0Ev((char *)self); return 1;
+    case 0x020c71e0:   /* ARENALUIGI1: on an arena Luigi match the countdown does not hold this step */
+        port_vs_entry_hold_lift();
+        _ZN6Player19func_ov002_020c71e0Ev((char *)self);
+        port_vs_entry_hold_restore();
+        return 1;
     case 0x020c7194: _ZN6Player19func_ov002_020c7194Ev((char *)self); return 1;
     case 0x020c72a4: func_ov002_020c72a4((void *)self); return 1;
     case 0x020c70ac: _ZN6Player19func_ov002_020c70acEv((char *)self); return 1;

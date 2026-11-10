@@ -76,6 +76,7 @@ char *_ZN8dActor_c10FindWithIDEj(unsigned id);
 int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(char *self, void *clsn, char *player);
 int _ZN6Player7IsInAirEv(char *player);
 int func_ov002_020d9298(char *stomper);                       // the stomper's bounce (+ its voice)
+int port_luigi_is_infected_slot(int slot);                    // hal/luigi_infection.cpp (ARENALUIGI1)
 void func_ov002_020db8bc(unsigned char *victim, unsigned char val);   // the victim's squash
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned id, int x, int y, int z);
 void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned id, const void *pos);
@@ -821,6 +822,12 @@ void stomp_scan() {
         if (!other || (u32r(pb, 0x2f4) & kAttackMask)) continue;
         if (_ZN8dActor_c10FindWithIDEj(other) != me) continue;
         if (!seat_stompable(k) || ptr(pb, kGrabbedBy) != nullptr) continue;
+        // ARENALUIGI1: LUIGI INFECTION. Classic's team guard (port/unmatched/LuigiInfection_Hit.cpp)
+        // runs before the resolver's stomp branch: a Luigi landing on a survivor tags it (no bounce,
+        // no squash) and anything landing on a Luigi does nothing. So no local stomp here when either
+        // body is a Luigi; the Luigi's own contact goes to the referee as TAG (hal/vs_arena_ref.cpp
+        // hit_detect). Inert unless the mode is armed (the test reads 0 for every seat then).
+        if (port_luigi_is_infected_slot(as.seat) || port_luigi_is_infected_slot(k)) continue;
         if (!_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(pb, pb + 0x2d4, me)) continue;
         if (!_ZN6Player7IsInAirEv(me)) continue;
         if (!func_ov002_020d9298(me)) continue;       // (a ground pound is not a stomp: it returns 0)

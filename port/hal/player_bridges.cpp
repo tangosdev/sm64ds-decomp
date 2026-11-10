@@ -2541,6 +2541,9 @@ extern "C" int func_ov002_020c6f3c(void *c);
 extern "C" void _ZN6Player19func_ov002_020c75f0Ev(char *c);
 extern "C" void _ZN6Player19func_ov002_020c7350Ev(char *c);
 extern "C" void _ZN6Player19func_ov002_020c71e0Ev(char *c);
+/* arena Luigi Infection: run during the countdown (hal/star_flow.cpp) */
+extern "C" void port_vs_entry_hold_lift(void);
+extern "C" void port_vs_entry_hold_restore(void);
 extern "C" void _ZN6Player19func_ov002_020c7194Ev(char *c);
 extern "C" void func_ov002_020c72a4(void *c);
 extern "C" void _ZN6Player19func_ov002_020c70acEv(char *c);
