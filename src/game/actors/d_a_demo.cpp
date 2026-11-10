@@ -137,15 +137,12 @@ struct OamAttr;
    the file spell them without the daDemo_c:: qualifier. */
 typedef daDemo_c::StaffRoll StaffRoll;
 
-/* Field offsets inside one star, window or credit entry. Where a helper
-   indexes an entry, the ROM's code adds the field offset to the block
-   first and the scaled index second ([base, i*stride] addressing, with
-   unencodable sums like 0x1c9 in the literal pool); the arr[i] member
-   spelling folds the index into the element pointer first and compiles
-   differently. */
-#define STAR_OFF(m) ((int)&((StaffRoll *)0)->stars[0].m)
-#define WINDOW_OFF(m) ((int)&((StaffRoll *)0)->window[0].m)
-#define CREDIT_OFF(m) ((int)&((StaffRoll *)0)->credit[0].m)
+/* Indexed staff-roll fields go through the StaffRoll pointer
+   (self->stars[i].field). An inline cast of self folds the index into the
+   element first and comes out shorter than the ROM. Three sites add the
+   byte index to the field address instead: 43cc's speed clamp (member
+   access proves the two bases are the same and drops an add), 55b4's step
+   bump, and 5894's kira fields. */
 
 /* shadow typedef 's16' */
 typedef signed short s16;
@@ -997,16 +994,11 @@ void StaffRoll::func_ov002_020f2a78(StaffRoll *self, int i) {
 /* ROM ordinal 21 -- func_ov002_020f2a88, 0x020f2a88, size 0x64 */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f2a88(StaffRoll *self, int i) {
-    unsigned long new_var;
-    *((short *)(((char *)self + CREDIT_OFF(timer)) + (i * 8))) =
-        (*((u16 *)(((char *)self + CREDIT_OFF(timer)) + (i * 8)))) + 1;
-    new_var = i;
-    if ((*((u16 *)(((char *)self + (new_var * 8)) + CREDIT_OFF(timer)))) < 0x39) {
+    self->credit[i].timer++;
+    if (self->credit[i].timer < 0x39)
         return;
-    }
-    *((u16 *)(((char *)self + (new_var * 8)) + CREDIT_OFF(timer))) = 0;
-    *((u8 *)(((char *)self + CREDIT_OFF(step)) + (new_var * 8))) =
-        (*((u8 *)(((char *)self + CREDIT_OFF(step)) + (new_var * 8)))) + 1;
+    self->credit[i].timer = 0;
+    self->credit[i].step++;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1068,33 +1060,22 @@ void StaffRoll::func_ov002_020f2bf4(StaffRoll *self, int idx) {
 /* ROM ordinal 24 -- func_ov002_020f2d0c, 0x020f2d0c, size 0x64 */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f2d0c(StaffRoll *self, int i) {
-    long new_var;
-    *((short *)(((char *)self + CREDIT_OFF(timer)) + (i * 8))) =
-        (*((unsigned short *)(((char *)self + CREDIT_OFF(timer)) + (i * 8)))) + 1;
-    new_var = 8;
-    StaffRoll *r = (StaffRoll *)((char *)self + (i * new_var));
-    if (r->credit[0].timer < 0x39) {
+    self->credit[i].timer++;
+    if (self->credit[i].timer < 0x39)
         return;
-    }
-    r->credit[0].timer = 0;
-    *((unsigned char *)(((char *)self + CREDIT_OFF(step)) + (i * new_var))) =
-        (*((unsigned char *)(((char *)self + CREDIT_OFF(step)) + (i * new_var)))) + 1;
+    self->credit[i].timer = 0;
+    self->credit[i].step++;
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- func_ov002_020f2d70, 0x020f2d70, size 0x64 */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f2d70(StaffRoll *self, int i) {
-    StaffRoll *p;
-    p = (StaffRoll *)((char *)self + CREDIT_OFF(timer));
-    *((short *)(((char *)p) + (i * 8))) = (*((unsigned short *)(((char *)p) + (i * 8)))) + 1;
-    p = (StaffRoll *)((char *)self + (i * 8));
-    if (p->credit[0].timer < 0x1e) {
+    self->credit[i].timer++;
+    if (self->credit[i].timer < 0x1e)
         return;
-    }
-    p->credit[0].timer = 0;
-    *((unsigned char *)(((char *)self + CREDIT_OFF(step)) + (i * 8))) =
-        (*((unsigned char *)(((char *)self + CREDIT_OFF(step)) + (i * 8)))) + 1;
+    self->credit[i].timer = 0;
+    self->credit[i].step++;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1234,63 +1215,62 @@ void StaffRoll::func_ov002_020f30d4() {
 /* ROM ordinal 34 -- func_ov002_020f30f8, 0x020f30f8, size 0x1ec */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f30f8(StaffRoll *self, int i) {
-    int idx = i * 0x30;
     unsigned short t;
     int oldA, oldB;
     int cc, dd, ee, ff;
 
-    t = *(unsigned short *)((char *)self + WINDOW_OFF(delay) + idx);
+    t = self->window[i].delay;
     if (t != 0) {
-        *(unsigned short *)((char *)self + WINDOW_OFF(delay) + idx) = t - 1;
+        self->window[i].delay = t - 1;
         return;
     }
 
-    *(int *)((char *)self + WINDOW_OFF(left) + idx) -=
-        *(int *)((char *)self + WINDOW_OFF(stepX) + idx);
-    *(int *)((char *)self + WINDOW_OFF(top) + idx) -=
-        *(int *)((char *)self + WINDOW_OFF(stepY) + idx);
-    *(int *)((char *)self + WINDOW_OFF(right) + idx) +=
-        *(int *)((char *)self + WINDOW_OFF(stepX) + idx);
-    *(int *)((char *)self + WINDOW_OFF(bottom) + idx) +=
-        *(int *)((char *)self + WINDOW_OFF(stepY) + idx);
+    self->window[i].left -=
+        self->window[i].stepX;
+    self->window[i].top -=
+        self->window[i].stepY;
+    self->window[i].right +=
+        self->window[i].stepX;
+    self->window[i].bottom +=
+        self->window[i].stepY;
 
-    oldA = *(int *)((char *)self + WINDOW_OFF(bgX) + idx);
-    oldB = *(int *)((char *)self + WINDOW_OFF(bgY) + idx);
-    *(int *)((char *)self + WINDOW_OFF(bgX) + idx) =
-        oldA + *(int *)((char *)self + WINDOW_OFF(stepX) + idx);
-    *(int *)((char *)self + WINDOW_OFF(bgY) + idx) +=
-        *(int *)((char *)self + WINDOW_OFF(stepY) + idx);
+    oldA = self->window[i].bgX;
+    oldB = self->window[i].bgY;
+    self->window[i].bgX =
+        oldA + self->window[i].stepX;
+    self->window[i].bgY +=
+        self->window[i].stepY;
 
-    if (*(int *)((char *)self + WINDOW_OFF(bgX) + idx) >= 0)
-        *(int *)((char *)self + WINDOW_OFF(bgX) + idx) = 0;
-    if (*(int *)((char *)self + WINDOW_OFF(bgY) + idx) >= 0)
-        *(int *)((char *)self + WINDOW_OFF(bgY) + idx) = 0;
-    if (*(int *)((char *)self + WINDOW_OFF(left) + idx) < 0)
-        *(int *)((char *)self + WINDOW_OFF(left) + idx) = 0;
-    if (*(int *)((char *)self + WINDOW_OFF(top) + idx) < 0)
-        *(int *)((char *)self + WINDOW_OFF(top) + idx) = 0;
-    if (*(int *)((char *)self + WINDOW_OFF(right) + idx) >= 0xff000)
-        *(int *)((char *)self + WINDOW_OFF(right) + idx) = 0xff000;
-    if (*(int *)((char *)self + WINDOW_OFF(bottom) + idx) >= 0xc0000)
-        *(int *)((char *)self + WINDOW_OFF(bottom) + idx) = 0xc0000;
-    if (*(int *)((char *)self + WINDOW_OFF(bgX) + idx) > 0)
-        *(int *)((char *)self + WINDOW_OFF(bgX) + idx) = 0;
-    if (*(int *)((char *)self + WINDOW_OFF(bgY) + idx) > 0)
-        *(int *)((char *)self + WINDOW_OFF(bgY) + idx) = 0;
+    if (self->window[i].bgX >= 0)
+        self->window[i].bgX = 0;
+    if (self->window[i].bgY >= 0)
+        self->window[i].bgY = 0;
+    if (self->window[i].left < 0)
+        self->window[i].left = 0;
+    if (self->window[i].top < 0)
+        self->window[i].top = 0;
+    if (self->window[i].right >= 0xff000)
+        self->window[i].right = 0xff000;
+    if (self->window[i].bottom >= 0xc0000)
+        self->window[i].bottom = 0xc0000;
+    if (self->window[i].bgX > 0)
+        self->window[i].bgX = 0;
+    if (self->window[i].bgY > 0)
+        self->window[i].bgY = 0;
 
-    cc = *(int *)((char *)self + WINDOW_OFF(bgX) + idx) - oldA;
-    self->func_ov002_020f2f18(cc, *(int *)((char *)self + WINDOW_OFF(bgY) + idx) - oldB);
+    cc = self->window[i].bgX - oldA;
+    self->func_ov002_020f2f18(cc, self->window[i].bgY - oldB);
 
-    ee = *(int *)((char *)self + WINDOW_OFF(right) + idx) >> 12;
-    ff = *(int *)((char *)self + WINDOW_OFF(bottom) + idx) >> 12;
-    cc = *(int *)((char *)self + WINDOW_OFF(left) + idx) >> 12;
-    dd = *(int *)((char *)self + WINDOW_OFF(top) + idx) >> 12;
+    ee = self->window[i].right >> 12;
+    ff = self->window[i].bottom >> 12;
+    cc = self->window[i].left >> 12;
+    dd = self->window[i].top >> 12;
     *(unsigned short *)0x4001042 = ((cc << 8) & 0xff00) | (ee & 0xff);
     *(unsigned short *)0x4001046 = ((dd << 8) & 0xff00) | (ff & 0xff);
-    SetSubBg1Offset(*(int *)((char *)self + WINDOW_OFF(bgX) + idx) >> 12,
-                    *(int *)((char *)self + WINDOW_OFF(bgY) + idx) >> 12);
-    SetSubBg2Offset(*(int *)((char *)self + WINDOW_OFF(bgX) + idx) >> 12,
-                    *(int *)((char *)self + WINDOW_OFF(bgY) + idx) >> 12);
+    SetSubBg1Offset(self->window[i].bgX >> 12,
+                    self->window[i].bgY >> 12);
+    SetSubBg2Offset(self->window[i].bgX >> 12,
+                    self->window[i].bgY >> 12);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1357,31 +1337,30 @@ void StaffRoll::func_ov002_020f340c(StaffRoll *self, int i) {
 /* ROM ordinal 39 -- func_ov002_020f34bc, 0x020f34bc, size 0x128 */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f34bc(StaffRoll *self, int idx) {
-    int k = idx * 0x30;
     int flag;
     int a, b, c, d;
     int bs, cs, ds, as_;
-    *(int *)((unsigned char *)self + WINDOW_OFF(left) + k) -= 0x1800;
-    *(int *)((unsigned char *)self + WINDOW_OFF(top) + k) -= 0x1800;
-    *(int *)((unsigned char *)self + WINDOW_OFF(right) + k) += 0x1800;
-    *(int *)((unsigned char *)self + WINDOW_OFF(bottom) + k) += 0x1800;
+    self->window[idx].left -= 0x1800;
+    self->window[idx].top -= 0x1800;
+    self->window[idx].right += 0x1800;
+    self->window[idx].bottom += 0x1800;
     flag = 0;
-    if (*(int *)((unsigned char *)self + WINDOW_OFF(left) + k) <= 0x80000)
-        *(int *)((unsigned char *)self + WINDOW_OFF(left) + k) = 0x80000;
-    if (*(int *)((unsigned char *)self + WINDOW_OFF(top) + k) <= 0x56000)
-        *(int *)((unsigned char *)self + WINDOW_OFF(top) + k) = 0x56000;
-    if (*(int *)((unsigned char *)self + WINDOW_OFF(right) + k) >= 0xfc000)
-        *(int *)((unsigned char *)self + WINDOW_OFF(right) + k) = 0xfc000;
-    if (*(int *)((unsigned char *)self + WINDOW_OFF(bottom) + k) >= 0xbc000) {
-        *(int *)((unsigned char *)self + WINDOW_OFF(bottom) + k) = 0xbc000;
+    if (self->window[idx].left <= 0x80000)
+        self->window[idx].left = 0x80000;
+    if (self->window[idx].top <= 0x56000)
+        self->window[idx].top = 0x56000;
+    if (self->window[idx].right >= 0xfc000)
+        self->window[idx].right = 0xfc000;
+    if (self->window[idx].bottom >= 0xbc000) {
+        self->window[idx].bottom = 0xbc000;
         flag++;
     }
     if (flag != 0)
-        (*(unsigned char *)((unsigned char *)self + WINDOW_OFF(step) + k))++;
-    a = *(int *)((unsigned char *)self + WINDOW_OFF(top) + k);
-    b = *(int *)((unsigned char *)self + WINDOW_OFF(left) + k);
-    c = *(int *)((unsigned char *)self + WINDOW_OFF(right) + k);
-    d = *(int *)((unsigned char *)self + WINDOW_OFF(bottom) + k);
+        self->window[idx].step++;
+    a = self->window[idx].top;
+    b = self->window[idx].left;
+    c = self->window[idx].right;
+    d = self->window[idx].bottom;
     bs = b >> 12;
     cs = c >> 12;
     ds = d >> 12;
@@ -1394,11 +1373,10 @@ void StaffRoll::func_ov002_020f34bc(StaffRoll *self, int idx) {
 /* ROM ordinal 40 -- func_ov002_020f35e4, 0x020f35e4, size 0x15c */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f35e4(StaffRoll *self, int i) {
-    int off = i * 0x30;
-    *(int *)((char *)self + WINDOW_OFF(left) + off) = 0xe0000;
-    *(int *)((char *)self + WINDOW_OFF(top) + off) = 0x66000;
-    *(int *)((char *)self + WINDOW_OFF(right) + off) = 0xe0000;
-    *(int *)((char *)self + WINDOW_OFF(bottom) + off) = 0x66000;
+    self->window[i].left = 0xe0000;
+    self->window[i].top = 0x66000;
+    self->window[i].right = 0xe0000;
+    self->window[i].bottom = 0x66000;
     *((volatile unsigned int *)0x4001000) =
         ((*((volatile unsigned int *)0x4001000)) & (~0xe000)) | 0x4000;
     *((volatile unsigned short *)0x4001048) =
@@ -1410,24 +1388,24 @@ void StaffRoll::func_ov002_020f35e4(StaffRoll *self, int i) {
                           0xFFFFFFFFFFFFFFFFull) |
                          0x20);
     {
-        int a = *(int *)((char *)self + WINDOW_OFF(left) + off) >> 12;
-        int d = *(int *)((char *)self + WINDOW_OFF(right) + off) >> 12;
-        int e = *(int *)((char *)self + WINDOW_OFF(bottom) + off) >> 12;
-        int b = *(int *)((char *)self + WINDOW_OFF(top) + off) >> 12;
+        int a = self->window[i].left >> 12;
+        int d = self->window[i].right >> 12;
+        int e = self->window[i].bottom >> 12;
+        int b = self->window[i].top >> 12;
         *((volatile unsigned short *)0x4001042) =
             (unsigned short)(((a << 8) & 0xff00) | (d & 0xff));
         *((volatile unsigned short *)0x4001046) =
             (unsigned short)(((b << 8) & 0xff00) | (e & 0xff));
     }
-    *(int *)((char *)self + WINDOW_OFF(bgX) + off) = -0x60000;
-    *(int *)((char *)self + WINDOW_OFF(bgY) + off) = -0x38000;
-    SetSubBg1Offset(*(int *)((char *)self + WINDOW_OFF(bgX) + off) >> 12,
-                    *(int *)((char *)self + WINDOW_OFF(bgY) + off) >> 12);
-    SetSubBg2Offset(*(int *)((char *)self + WINDOW_OFF(bgX) + off) >> 12,
-                    *(int *)((char *)self + WINDOW_OFF(bgY) + off) >> 12);
+    self->window[i].bgX = -0x60000;
+    self->window[i].bgY = -0x38000;
+    SetSubBg1Offset(self->window[i].bgX >> 12,
+                    self->window[i].bgY >> 12);
+    SetSubBg2Offset(self->window[i].bgX >> 12,
+                    self->window[i].bgY >> 12);
     gSubScreenLayers |= 6;
-    *(unsigned char *)((char *)self + WINDOW_OFF(step) + off) =
-        *(unsigned char *)((char *)self + WINDOW_OFF(step) + off) + 1;
+    self->window[i].step =
+        self->window[i].step + 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1582,52 +1560,51 @@ void StaffRoll::func_ov002_020f3ae8(StaffRoll *self, int idx) {
 /* ROM ordinal 51 -- func_ov002_020f3ba0, 0x020f3ba0, size 0x198 */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f3ba0(StaffRoll *self, int i) {
-    int off = i * 0x4c;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
 
-    idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+    idx = self->stars[i].heading >> 4;
     {
         short tv = data_02082214[idx * 2 + 1];
-        int spd = *(int *)((char *)self + STAR_OFF(speed) + off);
-        *(int *)((char *)self + STAR_OFF(x) + off) += FX_MUL(tv, spd);
+        int spd = self->stars[i].speed;
+        self->stars[i].x += FX_MUL(tv, spd);
     }
 
-    idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+    idx = self->stars[i].heading >> 4;
     {
         short tv = data_02082214[idx * 2];
-        int spd = *(int *)((char *)self + STAR_OFF(speed) + off);
-        *(int *)((char *)self + STAR_OFF(y) + off) += FX_MUL(tv, spd);
+        int spd = self->stars[i].speed;
+        self->stars[i].y += FX_MUL(tv, spd);
     }
 
-    *(int *)((char *)self + STAR_OFF(speed) + off) += 0x30;
+    self->stars[i].speed += 0x30;
 
-    dx = 0xe0 - (*(int *)((char *)self + STAR_OFF(x) + off) >> 12);
-    dy = 0x46 - (*(int *)((char *)self + STAR_OFF(y) + off) >> 12);
+    dx = 0xe0 - (self->stars[i].x >> 12);
+    dy = 0x46 - (self->stars[i].y >> 12);
 
     if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-        *(unsigned char *)((char *)self + STAR_OFF(step) + off) += 1;
-        *(unsigned short *)((char *)self + STAR_OFF(delay) + off) = 0;
-        *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = 0xc000;
-        *(int *)((char *)self + STAR_OFF(radius) + off) = 0x20000;
-        *(int *)((char *)self + STAR_OFF(x) + off) = 0xe0000;
-        *(int *)((char *)self + STAR_OFF(y) + off) = 0x46000;
+        self->stars[i].step += 1;
+        self->stars[i].delay = 0;
+        self->stars[i].heading = 0xc000;
+        self->stars[i].radius = 0x20000;
+        self->stars[i].x = 0xe0000;
+        self->stars[i].y = 0x46000;
         return;
     }
 
     target = cstd::atan2(dy, dx);
-    ang = *(unsigned short *)((char *)self + STAR_OFF(heading) + off);
+    ang = self->stars[i].heading;
     if (target > ang) {
-        *(unsigned short *)((char *)self + STAR_OFF(heading) + off) += 0x80;
-        if (target <= *(unsigned short *)((char *)self + STAR_OFF(heading) + off))
-            *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = target;
+        self->stars[i].heading += 0x80;
+        if (target <= self->stars[i].heading)
+            self->stars[i].heading = target;
     } else {
         if (ang <= target)
             return;
-        *(unsigned short *)((char *)self + STAR_OFF(heading) + off) -= 0x80;
-        if (*(unsigned short *)((char *)self + STAR_OFF(heading) + off) <= target)
-            *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = target;
+        self->stars[i].heading -= 0x80;
+        if (self->stars[i].heading <= target)
+            self->stars[i].heading = target;
     }
 }
 
@@ -1635,18 +1612,17 @@ void StaffRoll::func_ov002_020f3ba0(StaffRoll *self, int i) {
 /* ROM ordinal 52 -- func_ov002_020f3d38, 0x020f3d38, size 0x60 */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f3d38(StaffRoll *self, int i) {
-    int off = i * 0x4c;
-    if (*(u16 *)((char *)self + STAR_OFF(delay) + off) != 0) {
-        *(u16 *)((char *)self + STAR_OFF(delay) + off) =
-            *(u16 *)((char *)self + STAR_OFF(delay) + off) - 1;
+    if (self->stars[i].delay != 0) {
+        self->stars[i].delay =
+            self->stars[i].delay - 1;
         return;
     }
-    *(s32 *)((char *)self + STAR_OFF(x) + off) = -0x10000;
-    *(s32 *)((char *)self + off + STAR_OFF(y)) = -0x10000;
-    *(s32 *)((char *)self + off + STAR_OFF(speed)) = 0x2000;
-    *(u16 *)((char *)self + off + STAR_OFF(heading)) = 0;
-    *(u16 *)((char *)self + STAR_OFF(delay) + off) = 0;
-    *(u8 *)((char *)self + STAR_OFF(step) + off) = *(u8 *)((char *)self + STAR_OFF(step) + off) + 1;
+    self->stars[i].x = -0x10000;
+    self->stars[i].y = -0x10000;
+    self->stars[i].speed = 0x2000;
+    self->stars[i].heading = 0;
+    self->stars[i].delay = 0;
+    self->stars[i].step = self->stars[i].step + 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1660,82 +1636,78 @@ void StaffRoll::func_ov002_020f3d98(StaffRoll *self, int idx) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 54 -- func_ov002_020f3de4, 0x020f3de4, size 0x318 */
 /* -------------------------------------------------------------------------- */
-/* Per-slot update of one 0x4c-byte cutscene record. func_ov002_020f5a94
- * takes c so r0 stays live through the orbit path to the call. */
 void StaffRoll::func_ov002_020f3de4(StaffRoll *self, int i) {
-    char *c = (char *)self;
-    int off = i * 0x4c;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
     unsigned short v;
     int j;
 
-    v = *(unsigned short *)(c + STAR_OFF(delay) + off);
+    v = self->stars[i].delay;
     if (v != 0) {
-        *(unsigned short *)(c + STAR_OFF(delay) + off) = v - 1;
+        self->stars[i].delay = v - 1;
         return;
     }
 
-    if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    if (self->stars[i].phase == 0) {
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2 + 1];
-            int spd = *(int *)(c + STAR_OFF(speed) + off);
-            *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
+            int spd = self->stars[i].speed;
+            self->stars[i].x += FX_MUL(tv, spd);
         }
 
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2];
-            int spd = *(int *)(c + STAR_OFF(speed) + off);
-            *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
+            int spd = self->stars[i].speed;
+            self->stars[i].y += FX_MUL(tv, spd);
         }
 
-        if (*(int *)(c + STAR_OFF(speed) + off) >= 0x2000)
-            *(int *)(c + STAR_OFF(speed) + off) -= 0x120;
+        if (self->stars[i].speed >= 0x2000)
+            self->stars[i].speed -= 0x120;
 
-        dx = (*(int *)(c + STAR_OFF(targetX) + off) - *(int *)(c + STAR_OFF(x) + off)) >> 12;
-        dy = (*(int *)(c + STAR_OFF(targetY) + off) - *(int *)(c + STAR_OFF(y) + off)) >> 12;
+        dx = (self->stars[i].targetX - self->stars[i].x) >> 12;
+        dy = (self->stars[i].targetY - self->stars[i].y) >> 12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-            *(unsigned char *)(c + STAR_OFF(phase) + off) += 1;
-            *(int *)(c + STAR_OFF(orbitTravel) + off) = 0;
-            *(unsigned short *)(c + STAR_OFF(heading) + off) = 0xc000;
+            self->stars[i].phase += 1;
+            self->stars[i].orbitTravel = 0;
+            self->stars[i].heading = 0xc000;
             return;
         }
 
         target = cstd::atan2(dy, dx);
-        ang = *(unsigned short *)(c + STAR_OFF(heading) + off);
+        ang = self->stars[i].heading;
         if (target > ang) {
-            *(unsigned short *)(c + STAR_OFF(heading) + off) += 0x100;
-            if (target <= *(unsigned short *)(c + STAR_OFF(heading) + off))
-                *(unsigned short *)(c + STAR_OFF(heading) + off) = target;
+            self->stars[i].heading += 0x100;
+            if (target <= self->stars[i].heading)
+                self->stars[i].heading = target;
         } else {
             if (ang <= target)
                 return;
-            *(unsigned short *)(c + STAR_OFF(heading) + off) -= 0x100;
-            if (*(unsigned short *)(c + STAR_OFF(heading) + off) <= target)
-                *(unsigned short *)(c + STAR_OFF(heading) + off) = target;
+            self->stars[i].heading -= 0x100;
+            if (self->stars[i].heading <= target)
+                self->stars[i].heading = target;
         }
         return;
     }
 
-    idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    idx = self->stars[i].heading >> 4;
     {
         short tv = data_02082214[idx * 2 + 1];
-        int spd = *(int *)(c + STAR_OFF(radius) + off);
-        *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+        int spd = self->stars[i].radius;
+        self->stars[i].x = FX_MUL(tv, spd) + 0x80000;
     }
-    idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    idx = self->stars[i].heading >> 4;
     {
         short tv = data_02082214[idx * 2];
-        int spd = *(int *)(c + STAR_OFF(radius) + off);
-        *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+        int spd = self->stars[i].radius;
+        self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
     }
-    *(unsigned short *)(c + STAR_OFF(heading) + off) +=
-        *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
-    *(int *)(c + STAR_OFF(orbitTravel) + off) += *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
+    self->stars[i].heading +=
+        self->stars[i].angSpeed;
+    self->stars[i].orbitTravel += self->stars[i].angSpeed;
 
     if (i != self->func_ov002_020f5a94() - 1)
         return;
@@ -1761,85 +1733,83 @@ void StaffRoll::func_ov002_020f3de4(StaffRoll *self, int i) {
 /* ROM ordinal 55 -- func_ov002_020f40fc, 0x020f40fc, size 0x2d0 */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f40fc(StaffRoll *self, int i) {
-    int off = i * 0x4c;
 
-    if (*(unsigned short *)((char *)self + STAR_OFF(frame) + off) == 0) {
-        if (*(unsigned short *)((char *)self + STAR_OFF(frameTimer) + off) == 0) {
-            *(unsigned short *)((char *)self + STAR_OFF(loops) + off) += 1;
+    if (self->stars[i].frame == 0) {
+        if (self->stars[i].frameTimer == 0) {
+            self->stars[i].loops += 1;
         }
     }
 
-    if (*(unsigned char *)((char *)self + STAR_OFF(phase) + off) == 0) {
+    if (self->stars[i].phase == 0) {
         int idx;
-        idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2 + 1];
-            int spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-            *(int *)((char *)self + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+            int spd = self->stars[i].radius;
+            self->stars[i].x = FX_MUL(tv, spd) + 0x80000;
         }
-        idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2];
-            int spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-            *(int *)((char *)self + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+            int spd = self->stars[i].radius;
+            self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        *(unsigned short *)((char *)self + STAR_OFF(heading) + off) -=
-            *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off);
-        *(int *)((char *)self + STAR_OFF(orbitTravel) + off) +=
-            *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off);
+        self->stars[i].heading -=
+            self->stars[i].angSpeed;
+        self->stars[i].orbitTravel +=
+            self->stars[i].angSpeed;
 
         if (self->stars[0].phase != 0) {
-            *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off) += 8;
+            self->stars[i].angSpeed += 8;
         } else {
-            if (*(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off) < 0x200) {
-                *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off) += 6;
-                if (*(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off) > 0x200)
-                    *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off) = 0x200;
+            if (self->stars[i].angSpeed < 0x200) {
+                self->stars[i].angSpeed += 6;
+                if (self->stars[i].angSpeed > 0x200)
+                    self->stars[i].angSpeed = 0x200;
             }
         }
 
-        if ((unsigned int)*(int *)((char *)self + STAR_OFF(orbitTravel) + off) >=
+        if ((unsigned int)self->stars[i].orbitTravel >=
                 (unsigned int)data_ov002_02100120[i] &&
             self->holdOrbit == 0) {
-            *(unsigned char *)((char *)self + STAR_OFF(phase) + off) += 1;
-            *(unsigned short *)((char *)self + STAR_OFF(flyTimer) + off) = 0;
-            *(int *)((char *)self + STAR_OFF(speed) + off) = 0x2000;
+            self->stars[i].phase += 1;
+            self->stars[i].flyTimer = 0;
+            self->stars[i].speed = 0x2000;
         }
 
         if (self->func_ov002_020f5a94() != 3)
             return;
-        if ((unsigned int)*(int *)((char *)self + STAR_OFF(orbitTravel) + off) < 0xc000)
+        if ((unsigned int)self->stars[i].orbitTravel < 0xc000)
             return;
         if (i != 2)
             return;
         if (self->holdOrbit != 0)
             return;
-        *(unsigned char *)((char *)self + STAR_OFF(phase) + off) += 1;
-        *(unsigned short *)((char *)self + STAR_OFF(flyTimer) + off) = 0;
-        *(int *)((char *)self + STAR_OFF(speed) + off) = 0x2000;
+        self->stars[i].phase += 1;
+        self->stars[i].flyTimer = 0;
+        self->stars[i].speed = 0x2000;
         return;
     }
 
-    *(unsigned short *)((char *)self + STAR_OFF(flyTimer) + off) += 1;
-    *(int *)((char *)self + STAR_OFF(x) + off) += *(int *)((char *)self + STAR_OFF(speed) + off);
-    *(int *)((char *)self + STAR_OFF(speed) + off) += 0x300;
+    self->stars[i].flyTimer += 1;
+    self->stars[i].x += self->stars[i].speed;
+    self->stars[i].speed += 0x300;
     if (self->stars[0].flyTimer < 0x70)
         return;
     {
-        int off2 = (int)((long long)i) * 0x4c;
-        *(unsigned char *)((char *)self + STAR_OFF(step) + off2) += 1;
-        *(unsigned short *)((char *)self + STAR_OFF(loops) + off2) = 0;
-        *(unsigned char *)((char *)self + STAR_OFF(phase) + off) = 0;
-        *(int *)((char *)self + STAR_OFF(radius) + off2) = 0x38000;
-        *(unsigned short *)((char *)self + STAR_OFF(heading) + off2) = 0;
-        *(unsigned short *)((char *)self + STAR_OFF(delay) + off2) = data_ov002_02100130[i] << 6;
-        *(int *)((char *)self + STAR_OFF(x) + off) = -0x10000;
-        *(int *)((char *)self + STAR_OFF(y) + off2) = 0;
-        *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off2) = 0x100;
-        *(int *)((char *)self + STAR_OFF(speed) + off) = 0x5800;
-        *(int *)((char *)self + STAR_OFF(targetX) + off2) = 0x80000;
-        *(int *)((char *)self + STAR_OFF(targetY) + off2) = 0x28000;
+        self->stars[i].step += 1;
+        self->stars[i].loops = 0;
+        self->stars[i].phase = 0;
+        self->stars[i].radius = 0x38000;
+        self->stars[i].heading = 0;
+        self->stars[i].delay = data_ov002_02100130[i] << 6;
+        self->stars[i].x = -0x10000;
+        self->stars[i].y = 0;
+        self->stars[i].angSpeed = 0x100;
+        self->stars[i].speed = 0x5800;
+        self->stars[i].targetX = 0x80000;
+        self->stars[i].targetY = 0x28000;
     }
 }
 
@@ -1863,7 +1833,8 @@ void StaffRoll::func_ov002_020f40fc(StaffRoll *self, int i) {
  * dx/dy block needs TWO named bases: px = c + off defined before the clamp
  * (colours to sb) and s = c + idx * 0x4c at the block start (recomputes the
  * same product as off under its own value number, so it is the r2 base the
- * tx/ty loads and the +0x24 store share).
+ * tx/ty loads and the +0x24 store share). The speed clamp addresses
+ * stars[0].speed plus off; stars[idx].speed there proves px == s.
  */
 void StaffRoll::func_ov002_020f43cc(StaffRoll *self, int i) {
     int idx = i;
@@ -1871,59 +1842,59 @@ void StaffRoll::func_ov002_020f43cc(StaffRoll *self, int i) {
     char *s;
     int off = idx * 0x4c;
     {
-        unsigned short v = *(unsigned short *)((char *)self + STAR_OFF(delay) + off);
+        unsigned short v = self->stars[idx].delay;
         if (v != 0) {
-            *(unsigned short *)((char *)self + STAR_OFF(delay) + off) = v - 1;
+            self->stars[idx].delay = v - 1;
             return;
         }
     }
-    if (*(unsigned char *)((char *)self + STAR_OFF(phase) + off) == 0) {
+    if (self->stars[idx].phase == 0) {
         int idxa;
         short tv;
         int spd;
-        idxa = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idxa = self->stars[idx].heading >> 4;
         {
             tv = data_02082214[idxa * 2 + 1];
-            spd = *(int *)((char *)self + STAR_OFF(speed) + off);
-            *(int *)((char *)self + STAR_OFF(x) + off) += FX_MUL(tv, spd);
+            spd = self->stars[idx].speed;
+            self->stars[idx].x += FX_MUL(tv, spd);
         }
-        idxa = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idxa = self->stars[idx].heading >> 4;
         {
             tv = data_02082214[idxa * 2];
-            spd = *(int *)((char *)self + STAR_OFF(speed) + off);
-            *(int *)((char *)self + STAR_OFF(y) + off) += FX_MUL(tv, spd);
+            spd = self->stars[idx].speed;
+            self->stars[idx].y += FX_MUL(tv, spd);
         }
         px = (char *)self + off;
-        if (*(int *)((char *)self + STAR_OFF(speed) + off) <= -0x2000)
-            *(int *)((char *)self + STAR_OFF(speed) + off) =
-                *(int *)((char *)self + STAR_OFF(speed) + off) + 0x120;
+        if (*(int *)((char *)&self->stars[0].speed + off) <= -0x2000)
+            *(int *)((char *)&self->stars[0].speed + off) =
+                *(int *)((char *)&self->stars[0].speed + off) + 0x120;
         {
             s = (char *)self + idx * 0x4c;
             int dx = (((Star *)s)->targetX - ((Star *)px)->x) >> 12;
-            int dy = (((Star *)s)->targetY - *(int *)((char *)self + STAR_OFF(y) + off)) >> 12;
+            int dy = (((Star *)s)->targetY - self->stars[idx].y) >> 12;
             if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-                (*(unsigned char *)((char *)self + STAR_OFF(phase) + off))++;
+                self->stars[idx].phase++;
                 ((Star *)s)->orbitTravel = 0;
-                *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = 0xc000;
+                self->stars[idx].heading = 0xc000;
                 return;
             }
             {
                 unsigned short a = (unsigned short)cstd::atan2(dy, dx);
-                unsigned short cur = *(unsigned short *)((char *)self + STAR_OFF(heading) + off);
+                unsigned short cur = self->stars[idx].heading;
                 if (a > cur) {
                     unsigned short nv;
-                    *(unsigned short *)((char *)self + STAR_OFF(heading) + off) += 0x100;
-                    nv = *(unsigned short *)((char *)self + STAR_OFF(heading) + off);
+                    self->stars[idx].heading += 0x100;
+                    nv = self->stars[idx].heading;
                     if (a <= nv)
-                        *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = a;
+                        self->stars[idx].heading = a;
                     return;
                 }
                 if (cur > a) {
                     unsigned short nv2;
-                    *(unsigned short *)((char *)self + STAR_OFF(heading) + off) -= 0x100;
-                    nv2 = *(unsigned short *)((char *)self + STAR_OFF(heading) + off);
+                    self->stars[idx].heading -= 0x100;
+                    nv2 = self->stars[idx].heading;
                     if (nv2 <= a)
-                        *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = a;
+                        self->stars[idx].heading = a;
                     return;
                 }
                 return;
@@ -1934,22 +1905,22 @@ void StaffRoll::func_ov002_020f43cc(StaffRoll *self, int i) {
         int idxa;
         short tv;
         int spd;
-        idxa = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idxa = self->stars[idx].heading >> 4;
         {
             tv = data_02082214[idxa * 2 + 1];
-            spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-            *(int *)((char *)self + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+            spd = self->stars[idx].radius;
+            self->stars[idx].x = FX_MUL(tv, spd) + 0x80000;
         }
-        idxa = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idxa = self->stars[idx].heading >> 4;
         {
             tv = data_02082214[idxa * 2];
-            spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-            *(int *)((char *)self + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+            spd = self->stars[idx].radius;
+            self->stars[idx].y = FX_MUL(tv, spd) + 0x60000;
         }
-        *(unsigned short *)((char *)self + STAR_OFF(heading) + off) -=
-            *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off);
-        *(int *)((char *)self + STAR_OFF(orbitTravel) + off) +=
-            *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off);
+        self->stars[idx].heading -=
+            self->stars[idx].angSpeed;
+        self->stars[idx].orbitTravel +=
+            self->stars[idx].angSpeed;
     }
     if (idx != self->func_ov002_020f5a94() - 1)
         return;
@@ -1980,51 +1951,50 @@ void StaffRoll::func_ov002_020f43cc(StaffRoll *self, int i) {
 /* ROM ordinal 57 -- func_ov002_020f4710, 0x020f4710, size 0x31c */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f4710(StaffRoll *self, int i) {
-    int off = i * 0x4c;
 
-    if (*(u8 *)((char *)self + STAR_OFF(phase) + off) == 0) {
+    if (self->stars[i].phase == 0) {
         int idx;
 
-        idx = *(u16 *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2 + 1];
-            int spd = *(s32 *)((char *)self + STAR_OFF(radius) + off);
-            *(s32 *)((char *)self + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+            int spd = self->stars[i].radius;
+            self->stars[i].x = FX_MUL(tv, spd) + 0x80000;
         }
 
-        idx = *(u16 *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2];
-            int spd = *(s32 *)((char *)self + STAR_OFF(radius) + off);
-            *(s32 *)((char *)self + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+            int spd = self->stars[i].radius;
+            self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        *(u16 *)((char *)self + STAR_OFF(heading) + off) -=
-            *(u16 *)((char *)self + STAR_OFF(angSpeed) + off);
-        *(s32 *)((char *)self + STAR_OFF(orbitTravel) + off) +=
-            *(u16 *)((char *)self + STAR_OFF(angSpeed) + off);
+        self->stars[i].heading -=
+            self->stars[i].angSpeed;
+        self->stars[i].orbitTravel +=
+            self->stars[i].angSpeed;
 
         if (self->stars[0].phase != 0) {
-            *(u16 *)((char *)self + STAR_OFF(angSpeed) + off) += 8;
-        } else if (*(u16 *)((char *)self + STAR_OFF(angSpeed) + off) < 0x200) {
-            *(u16 *)((char *)self + STAR_OFF(angSpeed) + off) += 6;
-            if (*(u16 *)((char *)self + STAR_OFF(angSpeed) + off) > 0x200)
-                *(u16 *)((char *)self + STAR_OFF(angSpeed) + off) = 0x200;
+            self->stars[i].angSpeed += 8;
+        } else if (self->stars[i].angSpeed < 0x200) {
+            self->stars[i].angSpeed += 6;
+            if (self->stars[i].angSpeed > 0x200)
+                self->stars[i].angSpeed = 0x200;
         }
 
-        if ((u32) * (s32 *)((char *)self + STAR_OFF(orbitTravel) + off) <
+        if ((u32) self->stars[i].orbitTravel <
             (u32)data_ov002_02100100[i])
             return;
         if (self->holdOrbit != 0)
             return;
 
-        (*(u8 *)((char *)self + STAR_OFF(phase) + off))++;
-        *(u16 *)((char *)self + STAR_OFF(flyTimer) + off) = 0;
+        self->stars[i].phase++;
+        self->stars[i].flyTimer = 0;
 
         if (i == 0 || i == 3) {
-            *(s32 *)((char *)self + STAR_OFF(speed) + off) = 0x2000;
+            self->stars[i].speed = 0x2000;
         } else {
-            *(s32 *)((char *)self + STAR_OFF(speed) + off) = -0x2000;
+            self->stars[i].speed = -0x2000;
         }
 
         if (self->func_ov002_020f5a94() != 3)
@@ -2032,138 +2002,136 @@ void StaffRoll::func_ov002_020f4710(StaffRoll *self, int i) {
         if (i != 2)
             return;
         if (self->holdOrbit == 0)
-            *(s32 *)((char *)self + STAR_OFF(speed) + off) = 0x2000;
+            self->stars[i].speed = 0x2000;
         return;
     }
 
-    (*(u16 *)((char *)self + STAR_OFF(flyTimer) + off))++;
-    *(s32 *)((char *)self + STAR_OFF(x) + off) += *(s32 *)((char *)self + STAR_OFF(speed) + off);
+    self->stars[i].flyTimer++;
+    self->stars[i].x += self->stars[i].speed;
 
     if (self->func_ov002_020f5a94() == 3 && i == 2) {
-        *(s32 *)((char *)self + STAR_OFF(speed) + off) += 0x300;
+        self->stars[i].speed += 0x300;
     } else if (i == 0 || i == 3) {
-        *(s32 *)((char *)self + STAR_OFF(speed) + off) += 0x300;
+        self->stars[i].speed += 0x300;
     } else {
-        *(s32 *)((char *)self + STAR_OFF(speed) + off) -= 0x300;
+        self->stars[i].speed -= 0x300;
     }
 
     if (self->stars[0].flyTimer < 0x60)
         return;
 
     {
-        int o2 = (int)((unsigned long long)i) * 0x4c;
-        (*(u8 *)((char *)self + STAR_OFF(step) + o2))++;
-        *(u16 *)((char *)self + STAR_OFF(loops) + o2) = 0;
-        *(u8 *)((char *)self + STAR_OFF(phase) + off) = 0;
-        *(s32 *)((char *)self + STAR_OFF(radius) + o2) = 0x38000;
-        *(u16 *)((char *)self + STAR_OFF(heading) + o2) = 0x8000;
-        *(u16 *)((char *)self + STAR_OFF(delay) + o2) = (u16)(data_ov002_02100110[i] << 6);
+        self->stars[i].step++;
+        self->stars[i].loops = 0;
+        self->stars[i].phase = 0;
+        self->stars[i].radius = 0x38000;
+        self->stars[i].heading = 0x8000;
+        self->stars[i].delay = (u16)(data_ov002_02100110[i] << 6);
 
         if (self->func_ov002_020f5a94() == 3) {
             if (i == 2)
-                *(u16 *)((char *)self + STAR_OFF(delay) + o2) = 0x40;
+                self->stars[i].delay = 0x40;
         }
     }
 
-    *(s32 *)((char *)self + STAR_OFF(x) + off) = 0x110000;
-    *(s32 *)((char *)self + STAR_OFF(y) + off) = 0;
-    *(u16 *)((char *)self + STAR_OFF(angSpeed) + off) = 0x100;
-    *(s32 *)((char *)self + STAR_OFF(speed) + off) = 0x5800;
-    *(s32 *)((char *)self + STAR_OFF(targetX) + off) = 0x80000;
-    *(s32 *)((char *)self + STAR_OFF(targetY) + off) = 0x28000;
+    self->stars[i].x = 0x110000;
+    self->stars[i].y = 0;
+    self->stars[i].angSpeed = 0x100;
+    self->stars[i].speed = 0x5800;
+    self->stars[i].targetX = 0x80000;
+    self->stars[i].targetY = 0x28000;
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 58 -- func_ov002_020f4a2c, 0x020f4a2c, size 0x344 */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f4a2c(StaffRoll *self, int i) {
-    int off = i * 0x4c;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
     unsigned short v;
 
-    v = *(unsigned short *)((char *)self + STAR_OFF(delay) + off);
+    v = self->stars[i].delay;
     if (v != 0) {
-        *(unsigned short *)((char *)self + STAR_OFF(delay) + off) = v - 1;
+        self->stars[i].delay = v - 1;
         return;
     }
 
-    if (*(unsigned char *)((char *)self + STAR_OFF(phase) + off) == 0) {
-        idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+    if (self->stars[i].phase == 0) {
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2 + 1];
-            int spd = *(int *)((char *)self + STAR_OFF(speed) + off);
-            *(int *)((char *)self + STAR_OFF(x) + off) += FX_MUL(tv, spd);
+            int spd = self->stars[i].speed;
+            self->stars[i].x += FX_MUL(tv, spd);
         }
 
-        idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2];
-            int spd = *(int *)((char *)self + STAR_OFF(speed) + off);
-            *(int *)((char *)self + STAR_OFF(y) + off) += FX_MUL(tv, spd);
+            int spd = self->stars[i].speed;
+            self->stars[i].y += FX_MUL(tv, spd);
         }
 
-        if (*(int *)((char *)self + STAR_OFF(speed) + off) <= -0x2000)
-            *(int *)((char *)self + STAR_OFF(speed) + off) =
-                *(int *)((char *)self + STAR_OFF(speed) + off) + 0x120;
+        if (self->stars[i].speed <= -0x2000)
+            self->stars[i].speed =
+                self->stars[i].speed + 0x120;
 
-        dx = (*(int *)((char *)self + STAR_OFF(targetX) + off) -
-              *(int *)((char *)self + STAR_OFF(x) + off)) >>
+        dx = (self->stars[i].targetX -
+              self->stars[i].x) >>
              12;
-        dy = (*(int *)((char *)self + STAR_OFF(targetY) + off) -
-              *(int *)((char *)self + STAR_OFF(y) + off)) >>
+        dy = (self->stars[i].targetY -
+              self->stars[i].y) >>
              12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-            *(unsigned char *)((char *)self + STAR_OFF(phase) + off) += 1;
-            *(int *)((char *)self + STAR_OFF(orbitTravel) + off) = 0;
-            *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = 0xc000;
+            self->stars[i].phase += 1;
+            self->stars[i].orbitTravel = 0;
+            self->stars[i].heading = 0xc000;
             return;
         }
 
         {
             int raw = cstd::atan2(dy, dx);
-            ang = *(unsigned short *)((char *)self + STAR_OFF(heading) + off);
+            ang = self->stars[i].heading;
             target = (unsigned short)raw;
         }
         if (target > ang) {
             unsigned short nv;
-            *(unsigned short *)((char *)self + STAR_OFF(heading) + off) += 0x100;
-            nv = *(unsigned short *)((char *)self + STAR_OFF(heading) + off);
+            self->stars[i].heading += 0x100;
+            nv = self->stars[i].heading;
             if (target <= nv)
-                *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = target;
+                self->stars[i].heading = target;
             return;
         }
         if (ang > target) {
             unsigned short nv2;
-            *(unsigned short *)((char *)self + STAR_OFF(heading) + off) -= 0x100;
-            nv2 = *(unsigned short *)((char *)self + STAR_OFF(heading) + off);
+            self->stars[i].heading -= 0x100;
+            nv2 = self->stars[i].heading;
             if (nv2 <= target)
-                *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = target;
+                self->stars[i].heading = target;
             return;
         }
         return;
     }
 
-    idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+    idx = self->stars[i].heading >> 4;
     {
         short tv = data_02082214[idx * 2 + 1];
-        int spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-        *(int *)((char *)self + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+        int spd = self->stars[i].radius;
+        self->stars[i].x = FX_MUL(tv, spd) + 0x80000;
     }
 
-    idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+    idx = self->stars[i].heading >> 4;
     {
         short tv = data_02082214[idx * 2];
-        int spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-        *(int *)((char *)self + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+        int spd = self->stars[i].radius;
+        self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
     }
 
-    *(unsigned short *)((char *)self + STAR_OFF(heading) + off) -=
-        *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off);
-    *(int *)((char *)self + STAR_OFF(orbitTravel) + off) +=
-        *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off);
+    self->stars[i].heading -=
+        self->stars[i].angSpeed;
+    self->stars[i].orbitTravel +=
+        self->stars[i].angSpeed;
 
     if (i != self->func_ov002_020f5a94() - 1)
         return;
@@ -2195,86 +2163,84 @@ void StaffRoll::func_ov002_020f4a2c(StaffRoll *self, int i) {
 /* ROM ordinal 59 -- func_ov002_020f4d70, 0x020f4d70, size 0x2a0 */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f4d70(StaffRoll *self, int i) {
-    int off = i * 0x4c;
 
-    if (*(u16 *)((char *)self + STAR_OFF(frame) + off) == 0) {
-        if (*(u16 *)((char *)self + STAR_OFF(frameTimer) + off) == 0)
-            (*(u16 *)((char *)self + STAR_OFF(loops) + off))++;
+    if (self->stars[i].frame == 0) {
+        if (self->stars[i].frameTimer == 0)
+            self->stars[i].loops++;
     }
 
-    if (*(u8 *)((char *)self + STAR_OFF(phase) + off) == 0) {
+    if (self->stars[i].phase == 0) {
         int idx;
 
-        idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2 + 1];
-            int spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-            *(int *)((char *)self + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+            int spd = self->stars[i].radius;
+            self->stars[i].x = FX_MUL(tv, spd) + 0x80000;
         }
 
-        idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2];
-            int spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-            *(int *)((char *)self + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+            int spd = self->stars[i].radius;
+            self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        *(u16 *)((char *)self + STAR_OFF(heading) + off) +=
-            *(u16 *)((char *)self + STAR_OFF(angSpeed) + off);
-        *(s32 *)((char *)self + STAR_OFF(orbitTravel) + off) +=
-            *(u16 *)((char *)self + STAR_OFF(angSpeed) + off);
+        self->stars[i].heading +=
+            self->stars[i].angSpeed;
+        self->stars[i].orbitTravel +=
+            self->stars[i].angSpeed;
 
         if (self->stars[0].phase != 0) {
-            *(u16 *)((char *)self + STAR_OFF(angSpeed) + off) += 8;
+            self->stars[i].angSpeed += 8;
         } else {
-            if (*(u16 *)((char *)self + STAR_OFF(angSpeed) + off) < 0x200) {
-                *(u16 *)((char *)self + STAR_OFF(angSpeed) + off) += 6;
-                if (*(u16 *)((char *)self + STAR_OFF(angSpeed) + off) > 0x200)
-                    *(u16 *)((char *)self + STAR_OFF(angSpeed) + off) = 0x200;
+            if (self->stars[i].angSpeed < 0x200) {
+                self->stars[i].angSpeed += 6;
+                if (self->stars[i].angSpeed > 0x200)
+                    self->stars[i].angSpeed = 0x200;
             }
         }
 
-        if ((u32) * (s32 *)((char *)self + STAR_OFF(orbitTravel) + off) <
+        if ((u32) self->stars[i].orbitTravel <
             (u32)data_ov002_021000e0[i])
             return;
 
         if (self->holdOrbit != 0)
             return;
 
-        (*(u8 *)((char *)self + STAR_OFF(phase) + off))++;
-        *(u16 *)((char *)self + STAR_OFF(flyTimer) + off) = 0;
-        *(s32 *)((char *)self + STAR_OFF(speed) + off) = -0x2000;
+        self->stars[i].phase++;
+        self->stars[i].flyTimer = 0;
+        self->stars[i].speed = -0x2000;
         return;
     }
 
-    (*(u16 *)((char *)self + STAR_OFF(flyTimer) + off))++;
-    *(s32 *)((char *)self + STAR_OFF(x) + off) += *(s32 *)((char *)self + STAR_OFF(speed) + off);
-    *(s32 *)((char *)self + STAR_OFF(speed) + off) -= 0x300;
+    self->stars[i].flyTimer++;
+    self->stars[i].x += self->stars[i].speed;
+    self->stars[i].speed -= 0x300;
 
     if (self->stars[0].flyTimer < 0x70)
         return;
 
     {
-        int o2 = (unsigned)i * 0x4c;
-        (*(u8 *)((char *)self + STAR_OFF(step) + o2))++;
-        *(s32 *)((char *)self + STAR_OFF(radius) + o2) = 0x38000;
-        *(u16 *)((char *)self + STAR_OFF(heading) + o2) = 0x8000;
-        *(u8 *)((char *)self + STAR_OFF(phase) + off) = 0;
-        *(u16 *)((char *)self + STAR_OFF(loops) + o2) = 0;
-        *(u16 *)((char *)self + STAR_OFF(delay) + o2) = data_ov002_021000f0[i] << 6;
+        self->stars[i].step++;
+        self->stars[i].radius = 0x38000;
+        self->stars[i].heading = 0x8000;
+        self->stars[i].phase = 0;
+        self->stars[i].loops = 0;
+        self->stars[i].delay = data_ov002_021000f0[i] << 6;
 
         if (self->func_ov002_020f5a94() == 3) {
             if (i == 2)
-                *(u16 *)((char *)self + STAR_OFF(delay) + o2) = 0x40;
+                self->stars[i].delay = 0x40;
         }
     }
 
-    *(s32 *)((char *)self + STAR_OFF(x) + off) = 0x110000;
-    *(s32 *)((char *)self + STAR_OFF(y) + off) = 0;
-    *(u16 *)((char *)self + STAR_OFF(angSpeed) + off) = 0x100;
-    *(s32 *)((char *)self + STAR_OFF(speed) + off) = 0x5800;
-    *(s32 *)((char *)self + STAR_OFF(targetX) + off) = 0x80000;
-    *(s32 *)((char *)self + STAR_OFF(targetY) + off) = 0x28000;
+    self->stars[i].x = 0x110000;
+    self->stars[i].y = 0;
+    self->stars[i].angSpeed = 0x100;
+    self->stars[i].speed = 0x5800;
+    self->stars[i].targetX = 0x80000;
+    self->stars[i].targetY = 0x28000;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2293,93 +2259,92 @@ void StaffRoll::func_ov002_020f4d70(StaffRoll *self, int i) {
  * With fewer live values the compiler needs only r4-r8/sb and keeps c in r6.
  */
 void StaffRoll::func_ov002_020f5010(StaffRoll *self, int i) {
-    int off = i * 0x4c;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
     unsigned short v;
 
-    v = *(unsigned short *)((char *)self + STAR_OFF(delay) + off);
+    v = self->stars[i].delay;
     if (v != 0) {
-        *(unsigned short *)((char *)self + STAR_OFF(delay) + off) = v - 1;
+        self->stars[i].delay = v - 1;
         return;
     }
 
-    if (*(unsigned char *)((char *)self + STAR_OFF(phase) + off) == 0) {
-        idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+    if (self->stars[i].phase == 0) {
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2 + 1];
-            int spd = *(int *)((char *)self + STAR_OFF(speed) + off);
-            *(int *)((char *)self + STAR_OFF(x) + off) += FX_MUL(tv, spd);
+            int spd = self->stars[i].speed;
+            self->stars[i].x += FX_MUL(tv, spd);
         }
 
-        idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+        idx = self->stars[i].heading >> 4;
         {
             short tv = data_02082214[idx * 2];
-            int spd = *(int *)((char *)self + STAR_OFF(speed) + off);
-            *(int *)((char *)self + STAR_OFF(y) + off) += FX_MUL(tv, spd);
+            int spd = self->stars[i].speed;
+            self->stars[i].y += FX_MUL(tv, spd);
         }
 
-        if (*(int *)((char *)self + STAR_OFF(speed) + off) >= 0x2000)
-            *(int *)((char *)self + STAR_OFF(speed) + off) =
-                *(int *)((char *)self + STAR_OFF(speed) + off) - 0x120;
+        if (self->stars[i].speed >= 0x2000)
+            self->stars[i].speed =
+                self->stars[i].speed - 0x120;
 
-        dx = (*(int *)((char *)self + STAR_OFF(targetX) + off) -
-              *(int *)((char *)self + STAR_OFF(x) + off)) >>
+        dx = (self->stars[i].targetX -
+              self->stars[i].x) >>
              12;
-        dy = (*(int *)((char *)self + STAR_OFF(targetY) + off) -
-              *(int *)((char *)self + STAR_OFF(y) + off)) >>
+        dy = (self->stars[i].targetY -
+              self->stars[i].y) >>
              12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-            *(unsigned char *)((char *)self + STAR_OFF(phase) + off) += 1;
-            *(int *)((char *)self + STAR_OFF(orbitTravel) + off) = 0;
-            *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = 0xc000;
+            self->stars[i].phase += 1;
+            self->stars[i].orbitTravel = 0;
+            self->stars[i].heading = 0xc000;
             return;
         }
 
         {
             int raw = cstd::atan2(dy, dx);
-            ang = *(unsigned short *)((char *)self + STAR_OFF(heading) + off);
+            ang = self->stars[i].heading;
             target = (unsigned short)raw;
         }
         if (target > ang) {
             unsigned short nv;
-            *(unsigned short *)((char *)self + STAR_OFF(heading) + off) += 0x100;
-            nv = *(unsigned short *)((char *)self + STAR_OFF(heading) + off);
+            self->stars[i].heading += 0x100;
+            nv = self->stars[i].heading;
             if (target <= nv)
-                *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = target;
+                self->stars[i].heading = target;
             return;
         }
         if (ang > target) {
             unsigned short nv2;
-            *(unsigned short *)((char *)self + STAR_OFF(heading) + off) -= 0x100;
-            nv2 = *(unsigned short *)((char *)self + STAR_OFF(heading) + off);
+            self->stars[i].heading -= 0x100;
+            nv2 = self->stars[i].heading;
             if (nv2 <= target)
-                *(unsigned short *)((char *)self + STAR_OFF(heading) + off) = target;
+                self->stars[i].heading = target;
             return;
         }
         return;
     }
 
-    idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+    idx = self->stars[i].heading >> 4;
     {
         short tv = data_02082214[idx * 2 + 1];
-        int spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-        *(int *)((char *)self + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+        int spd = self->stars[i].radius;
+        self->stars[i].x = FX_MUL(tv, spd) + 0x80000;
     }
 
-    idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+    idx = self->stars[i].heading >> 4;
     {
         short tv = data_02082214[idx * 2];
-        int spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-        *(int *)((char *)self + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+        int spd = self->stars[i].radius;
+        self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
     }
 
-    *(unsigned short *)((char *)self + STAR_OFF(heading) + off) +=
-        *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off);
-    *(int *)((char *)self + STAR_OFF(orbitTravel) + off) +=
-        *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off);
+    self->stars[i].heading +=
+        self->stars[i].angSpeed;
+    self->stars[i].orbitTravel +=
+        self->stars[i].angSpeed;
 
     if (i != self->func_ov002_020f5a94() - 1)
         return;
@@ -2407,79 +2372,77 @@ void StaffRoll::func_ov002_020f5010(StaffRoll *self, int i) {
 /* ROM ordinal 61 -- func_ov002_020f5328, 0x020f5328, size 0x28c */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5328(StaffRoll *self, int i) {
-    int off = i * 0x4c;
 
-    if (*(unsigned char *)((char *)self + STAR_OFF(phase) + off) == 0) {
+    if (self->stars[i].phase == 0) {
         int idx;
         {
-            idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+            idx = self->stars[i].heading >> 4;
             short tv = data_02082214[idx * 2 + 1];
-            int spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-            *(int *)((char *)self + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+            int spd = self->stars[i].radius;
+            self->stars[i].x = FX_MUL(tv, spd) + 0x80000;
         }
         {
-            idx = *(unsigned short *)((char *)self + STAR_OFF(heading) + off) >> 4;
+            idx = self->stars[i].heading >> 4;
             short tv = data_02082214[idx * 2];
-            int spd = *(int *)((char *)self + STAR_OFF(radius) + off);
-            *(int *)((char *)self + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+            int spd = self->stars[i].radius;
+            self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        *(unsigned short *)((char *)self + STAR_OFF(heading) + off) +=
-            *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off);
-        *(int *)((char *)self + STAR_OFF(orbitTravel) + off) +=
-            *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off);
+        self->stars[i].heading +=
+            self->stars[i].angSpeed;
+        self->stars[i].orbitTravel +=
+            self->stars[i].angSpeed;
 
         if (self->stars[0].phase != 0) {
-            *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off) += 8;
-        } else if (*(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off) < 0x200) {
-            *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off) += 6;
-            if (*(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off) > 0x200)
-                *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off) = 0x200;
+            self->stars[i].angSpeed += 8;
+        } else if (self->stars[i].angSpeed < 0x200) {
+            self->stars[i].angSpeed += 6;
+            if (self->stars[i].angSpeed > 0x200)
+                self->stars[i].angSpeed = 0x200;
         }
 
-        if ((unsigned int)*(int *)((char *)self + STAR_OFF(orbitTravel) + off) <
+        if ((unsigned int)self->stars[i].orbitTravel <
             (unsigned int)data_ov002_02100150[i])
             return;
         if (self->holdOrbit != 0)
             return;
 
-        *(unsigned char *)((char *)self + STAR_OFF(phase) + off) += 1;
-        *(unsigned short *)((char *)self + STAR_OFF(flyTimer) + off) = 0;
+        self->stars[i].phase += 1;
+        self->stars[i].flyTimer = 0;
 
         if (i == 1 || i == 3) {
-            *(int *)((char *)self + STAR_OFF(speed) + off) = 0x2000;
+            self->stars[i].speed = 0x2000;
         } else {
-            *(int *)((char *)self + STAR_OFF(speed) + off) = -0x2000;
+            self->stars[i].speed = -0x2000;
         }
         return;
     }
 
-    *(unsigned short *)((char *)self + STAR_OFF(flyTimer) + off) += 1;
-    *(int *)((char *)self + STAR_OFF(x) + off) += *(int *)((char *)self + STAR_OFF(speed) + off);
+    self->stars[i].flyTimer += 1;
+    self->stars[i].x += self->stars[i].speed;
     if (i == 1 || i == 3) {
-        *(int *)((char *)self + STAR_OFF(speed) + off) += 0x300;
+        self->stars[i].speed += 0x300;
     } else {
-        *(int *)((char *)self + STAR_OFF(speed) + off) -= 0x300;
+        self->stars[i].speed -= 0x300;
     }
 
     if (self->stars[0].flyTimer < 0x60)
         return;
 
     {
-        int off2 = (int)((unsigned long long)i) * 0x4c;
-        *(unsigned char *)((char *)self + STAR_OFF(step) + off2) += 1;
-        *(unsigned short *)((char *)self + STAR_OFF(loops) + off2) = 0;
-        *(unsigned char *)((char *)self + STAR_OFF(phase) + off) = 0;
-        *(int *)((char *)self + STAR_OFF(radius) + off2) = 0x38000;
-        *(unsigned short *)((char *)self + STAR_OFF(heading) + off2) = 0;
-        *(unsigned short *)((char *)self + STAR_OFF(delay) + off2) =
+        self->stars[i].step += 1;
+        self->stars[i].loops = 0;
+        self->stars[i].phase = 0;
+        self->stars[i].radius = 0x38000;
+        self->stars[i].heading = 0;
+        self->stars[i].delay =
             (unsigned short)(data_ov002_02100160[i] << 6);
-        *(int *)((char *)self + STAR_OFF(x) + off) = -0x10000;
-        *(int *)((char *)self + STAR_OFF(y) + off2) = 0;
-        *(unsigned short *)((char *)self + STAR_OFF(angSpeed) + off2) = 0x100;
-        *(int *)((char *)self + STAR_OFF(speed) + off) = 0x5800;
-        *(int *)((char *)self + STAR_OFF(targetX) + off2) = 0x80000;
-        *(int *)((char *)self + STAR_OFF(targetY) + off2) = 0x28000;
+        self->stars[i].x = -0x10000;
+        self->stars[i].y = 0;
+        self->stars[i].angSpeed = 0x100;
+        self->stars[i].speed = 0x5800;
+        self->stars[i].targetX = 0x80000;
+        self->stars[i].targetY = 0x28000;
     }
 }
 
@@ -2490,7 +2453,7 @@ void StaffRoll::func_ov002_020f55b4(StaffRoll *self, int i) {
     Star *e = (Star *)((char *)self + i * 0x4c);
     if (e->frame != 0x10)
         return;
-    *(unsigned char *)((char *)self + STAR_OFF(step) + i * 0x4c) += 1;
+    (*((unsigned char *)&self->stars[0].step + i * 0x4c)) += 1;
     e->radius = 0x38000;
     e->heading = data_ov002_021000d8[i];
     e->phase = 0;
@@ -2522,56 +2485,52 @@ void StaffRoll::func_ov002_020f5678(StaffRoll *self, int i) {
 /* ROM ordinal 65 -- func_ov002_020f569c, 0x020f569c, size 0x124 */
 /* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f569c(StaffRoll *self, int i) {
-    char *p = (char *)self;
     int ax;
     int by;
     int tx;
     int ty;
-    int idx;
 
-    idx = i * 0x4c;
-
-    if (*(unsigned short *)(p + STAR_OFF(delay) + idx) != 0) {
-        *(unsigned short *)(p + STAR_OFF(delay) + idx) =
-            *(unsigned short *)(p + STAR_OFF(delay) + idx) - 1;
+    if (self->stars[i].delay != 0) {
+        self->stars[i].delay =
+            self->stars[i].delay - 1;
         return;
     }
 
-    *(int *)(p + idx + STAR_OFF(kiraDefParam)) = 0x1000;
-    *(short *)(p + idx + STAR_OFF(kiraSysParam)) = 0x200;
+    self->stars[i].kiraDefParam = 0x1000;
+    self->stars[i].kiraSysParam = 0x200;
 
-    *(int *)(p + STAR_OFF(x) + idx) =
-        *(int *)(p + STAR_OFF(x) + idx) + *(int *)(p + STAR_OFF(speed) + idx);
-    *(int *)(p + STAR_OFF(y) + idx) =
-        *(int *)(p + STAR_OFF(y) + idx) + *(int *)(p + STAR_OFF(speedY) + idx);
+    self->stars[i].x =
+        self->stars[i].x + self->stars[i].speed;
+    self->stars[i].y =
+        self->stars[i].y + self->stars[i].speedY;
 
     tx = data_ov002_02100190[i * 2];
     ty = data_ov002_02100190[i * 2 + 1];
-    ax = *(int *)(p + STAR_OFF(x) + idx) >> 12;
-    by = *(int *)(p + STAR_OFF(y) + idx) >> 12;
+    ax = self->stars[i].x >> 12;
+    by = self->stars[i].y >> 12;
 
-    if (*(int *)(p + STAR_OFF(speed) + idx) > 0) {
+    if (self->stars[i].speed > 0) {
         if (ax > tx)
-            *(int *)(p + STAR_OFF(x) + idx) = tx << 12;
+            self->stars[i].x = tx << 12;
     } else {
         if (ax < tx)
-            *(int *)(p + STAR_OFF(x) + idx) = tx << 12;
+            self->stars[i].x = tx << 12;
     }
 
-    if (*(int *)(p + STAR_OFF(speedY) + idx) > 0) {
+    if (self->stars[i].speedY > 0) {
         if (by > ty)
-            *(int *)(p + STAR_OFF(y) + idx) = ty << 12;
+            self->stars[i].y = ty << 12;
     } else {
         if (by < ty)
-            *(int *)(p + STAR_OFF(y) + idx) = ty << 12;
+            self->stars[i].y = ty << 12;
     }
 
-    ax = *(int *)(p + STAR_OFF(x) + idx) >> 12;
-    by = *(int *)(p + STAR_OFF(y) + idx) >> 12;
+    ax = self->stars[i].x >> 12;
+    by = self->stars[i].y >> 12;
 
     if (ax == tx && by == ty) {
-        *(unsigned char *)(p + STAR_OFF(step) + idx) =
-            *(unsigned char *)(p + STAR_OFF(step) + idx) + 1;
+        self->stars[i].step =
+            self->stars[i].step + 1;
     }
 }
 
@@ -2612,24 +2571,24 @@ void StaffRoll::func_ov002_020f5894(StaffRoll *self, int i) {
     if (i != 0)
         return;
     off = i * 0x4c;
-    p34 = (unsigned short *)((char *)self + STAR_OFF(kiraTimer) + off);
+    p34 = (unsigned short *)((char *)&self->stars[0].kiraTimer + off);
     *p34 = *p34 + 1;
-    if (*(int *)((char *)self + STAR_OFF(kiraDefParam) + off) != 0x1000) {
+    if (*(int *)((char *)&self->stars[0].kiraDefParam + off) != 0x1000) {
         unsigned short v = *p34;
         if (v == 0xf || v == 0x1e) {
-            *(int *)((char *)self + STAR_OFF(kiraDefParam) + off) =
-                *(int *)((char *)self + STAR_OFF(kiraDefParam) + off) + 0x199;
-            if (*(int *)((char *)self + STAR_OFF(kiraDefParam) + off) >= 0x1000)
-                *(int *)((char *)self + STAR_OFF(kiraDefParam) + off) = 0x1000;
+            *(int *)((char *)&self->stars[0].kiraDefParam + off) =
+                *(int *)((char *)&self->stars[0].kiraDefParam + off) + 0x199;
+            if (*(int *)((char *)&self->stars[0].kiraDefParam + off) >= 0x1000)
+                *(int *)((char *)&self->stars[0].kiraDefParam + off) = 0x1000;
         }
     }
-    s2c = *(short *)((char *)self + STAR_OFF(kiraSysParam) + off);
+    s2c = *(short *)((char *)&self->stars[0].kiraSysParam + off);
     if (s2c != 0x800) {
-        if (*(unsigned short *)((char *)self + off + STAR_OFF(kiraPeriods)) >= 5) {
+        if (((StaffRoll *)((char *)self + off))->stars[0].kiraPeriods >= 5) {
             if ((*p34 & 3) == 3) {
-                *(short *)((char *)self + STAR_OFF(kiraSysParam) + off) = s2c + 0x199;
-                if (*(short *)((char *)self + STAR_OFF(kiraSysParam) + off) >= 0x800)
-                    *(short *)((char *)self + STAR_OFF(kiraSysParam) + off) = 0x800;
+                *(short *)((char *)&self->stars[0].kiraSysParam + off) = s2c + 0x199;
+                if (*(short *)((char *)&self->stars[0].kiraSysParam + off) >= 0x800)
+                    *(short *)((char *)&self->stars[0].kiraSysParam + off) = 0x800;
             }
         }
     }
@@ -2637,13 +2596,11 @@ void StaffRoll::func_ov002_020f5894(StaffRoll *self, int i) {
         return;
     *p34 = 0;
     {
-        unsigned short *p3e = (unsigned short *)((char *)self + STAR_OFF(kiraPeriods) + off);
+        unsigned short *p3e =
+            (unsigned short *)((char *)&self->stars[0].kiraPeriods + off);
         *p3e = *p3e + 1;
     }
 }
-#undef STAR_OFF
-#undef WINDOW_OFF
-#undef CREDIT_OFF
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 69 -- func_ov002_020f5990, 0x020f5990, size 0xdc */
