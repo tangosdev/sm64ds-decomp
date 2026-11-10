@@ -1318,7 +1318,7 @@ extern "C" void *func_02050cdc(int a, int idx)
     e = ((struct Elem * (*)(struct ElemTable * obj, int idx)) func_020523e0)(o, idx);
     if (e == 0)
         return 0;
-    return (char *)e + 4;
+    return &e->bankId;
 }
 
 Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(u32 id)
