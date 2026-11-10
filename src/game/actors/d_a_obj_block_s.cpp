@@ -54,8 +54,10 @@
  *   is discarded here), the extra arguments of Math_Function_0203b14c and
  *   IsClsnInRangeOnScreen, the 0x199 passed to dBgW_KcMbg::SetFile, and what
  *   daPly_c::Hurt's trailing arguments select.
- * Leftover: the SurfaceInfo inside a dBgCh_Actr result is reached as
- *   `(char *)fr + 4`.
+ * Leftover: SurfaceInfo_TestFlag0x20 is declared here (and at its
+ *   definition) as taking int *, so its two callers still pass the floor
+ *   result's surface as `(int *)((char *)... + 4)`; the other reads use
+ *   dBgPi::surface.
  * Leftover: the state names STATE_IN_MOUTH and STATE_SPIT_OUT rest on how the
  *   handlers use mFlags bit 0x80000 and the 0x20000 / 0x40000 bits (nothing
  *   in this file sets 0x80000); mSlideSoundHandle rests on PlayLong's id
@@ -854,7 +856,7 @@ void daObjBlockS_c::HandleWallHit() {
         return;
     }
     Vector3 v;
-    ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))->CopyNormalTo(v);
+    mWithMeshClsn.GetWallResult()->surface.CopyNormalTo(v);
     mPrevAngleY = ReflectAngle(v.x, v.z, mPrevAngleY);
 }
 
@@ -893,7 +895,7 @@ void daObjBlockS_c::HandleWallHit() {
  * difference, at most 0x1000 per call) toward the angles func_02010844 gives
  * for the floor normal, the crate's yaw and the yaw minus a quarter turn. */
 int daObjBlockS_c::UpdateFloorContact() {
-    void *fr;
+    dBgPi *fr;
     int n;
     int ang;
     int newAng;
@@ -907,7 +909,7 @@ int daObjBlockS_c::UpdateFloorContact() {
         return 0;
 
     fr = mWithMeshClsn.GetFloorResult();
-    switch (((SurfaceInfo *)((char *)fr + 4))->clps.GetSurfaceType()) {
+    switch (fr->surface.clps.GetSurfaceType()) {
     case 6:
         mClsnYOffsetTarget = 0x1e000;
         break;
@@ -937,8 +939,8 @@ int daObjBlockS_c::UpdateFloorContact() {
         Kill();
     }
 
-    ((SurfaceInfo *)((char *)fr + 4))->CopyNormalTo(*(Vector3 *)&mFloorNormalX);
-    n = ((SurfaceInfo *)((char *)fr + 4))->clps.GetFloorClass();
+    fr->surface.CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+    n = fr->surface.clps.GetFloorClass();
     ang = cstd::atan2(mFloorNormalX, mFloorNormalZ);
     hl = func_ov002_020f02c8(n);
     func_ov002_020f030c(n);
