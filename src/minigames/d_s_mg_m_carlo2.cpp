@@ -499,7 +499,8 @@ void dMgMCarlo2CardObj_c::Render()
     state = mState;
     if (state == 0) return;
     if (state == 3) {
-        if (((&data_020a0db0)[0] & 8) != 0) return;
+        if ((data_020a0db0 & 8) != 0)
+            return;
     }
     {
         int idx = (mFace + 1) * 5 + (mLift >> 12);
