@@ -932,26 +932,10 @@
     {
       "path": "src/engine/sound/SoundEngine.cpp",
       "rule": "handspelled-member",
-      "match": "_ZN12Elem_204f27813func_0204f278Ev",
-      "count": 2,
-      "reason": "Elem_204f278::func_0204f278 is passed as a function pointer into func_020511d4. mwccarm will not form that pointer from the member, so the call names the mangled symbol. The local extern exists for the same pointer.",
-      "evidence": "arm9/SoundEngine 138/138 MATCH with the mangled pointer; a member-pointer conversion is not a legal argument to the int-arity callee."
-    },
-    {
-      "path": "src/engine/sound/SoundEngine.cpp",
-      "rule": "handspelled-member",
       "match": "_ZN2E113func_0204f5a0Ei",
       "count": 2,
       "reason": "E1::func_0204f5a0 is called through an int-arity cast because the receiver at that site is a raw byte. The local extern keeps the pool word pointed at the method.",
       "evidence": "arm9/SoundEngine 138/138 MATCH. The direct E1 method call is used at the typed site; this cast is the untyped one."
-    },
-    {
-      "path": "src/engine/sound/SoundEngine.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN1T13func_020500a4Ev",
-      "count": 2,
-      "reason": "T::func_020500a4 is passed as a callback word to SND_SetupAlarm. A member cannot be cast to that function pointer, so the call names the mangled symbol. The local extern is the same pointer.",
-      "evidence": "arm9/SoundEngine 138/138 MATCH with the mangled callback word."
     },
     {
       "path": "src/minigames/d_s_mg_m_carlo2.cpp",
