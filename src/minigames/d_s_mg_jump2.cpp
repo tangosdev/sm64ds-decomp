@@ -43,14 +43,6 @@ enum d_s_mg_jump2_AssetId {
 #include "nitro/fx/fx_cp.h"
 #include "nitro/gx/gx_bgcnt.h"
 
-/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
-   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
-   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
-   d_a_demo.cpp's pinned @NNN symbols. */
-static inline void *G2_GetOBJCharPtr(void) {
-    return (void *)HW_OBJ_VRAM;
-}
-
 /* The list link at the head of each Jump2Popup. Its two methods link `this` into
  * and back out of the live list at sJump2PopupList. */
 struct Jump2PopupLink {

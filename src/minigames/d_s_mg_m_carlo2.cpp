@@ -24,14 +24,6 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 
-/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
-   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
-   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
-   d_a_demo.cpp's pinned @NNN symbols. */
-static inline void *G2_GetOBJCharPtr(void) {
-    return (void *)HW_OBJ_VRAM;
-}
-
 /* sMCarlo2Cards is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
  * which UpdateBoard deals back onto the tail. _02142570 and _02142574 are the

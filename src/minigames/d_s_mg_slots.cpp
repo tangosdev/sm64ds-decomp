@@ -65,14 +65,6 @@ enum dScMgSlots_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "LevelRng.h"
 
-/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
-   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
-   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
-   d_a_demo.cpp's pinned @NNN symbols. */
-static inline void *G2_GetOBJCharPtr(void) {
-    return (void *)HW_OBJ_VRAM;
-}
-
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which is why its
  * optimisation pragmas are otherwise file-global last-wins. With it off, the

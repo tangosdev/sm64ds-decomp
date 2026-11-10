@@ -3221,7 +3221,7 @@ void func_ov002_020f5fe4(char* c)
     gSubScreenLayers &= ~0x1f;
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_END_EUR_NCG_BIN);
-    DecompressLZ16(f, (void*)0x6400000);
+    DecompressLZ16(f, G2_GetOBJCharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_STAFF_ROLL_END_EUR_NCL_BIN);
@@ -3291,7 +3291,7 @@ void func_ov002_020f5fe4(char* c)
     {
         void *f6 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCG_BIN);
         r5 = LoadFile(ASSET_D_2D_STAFF_ROLL_CAKE_DOLL_NCL_BIN);
-        DecompressLZ16(f6, (void*)0x6600000);
+        DecompressLZ16(f6, G2S_GetOBJCharPtr());
         GXS_LoadOBJPltt(r5, 0, 0x200);
         Deallocate(f6);
         Deallocate(r5);

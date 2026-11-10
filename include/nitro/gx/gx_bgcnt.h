@@ -39,6 +39,14 @@ void *G2S_GetBG3CharPtr(void);
 }
 #endif
 
+/* The two engines' OBJ character bases. The address is fixed, so the SDK
+ * reads it through an inline, not a call. Read through the getter, the ROM
+ * builds 0x06401280 as `mov #0x6400000 / add #0x1280` where a literal
+ * address would load it from the pool. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 static inline void *G2S_GetOBJCharPtr(void) {
     return (void *)HW_DB_OBJ_VRAM;
 }

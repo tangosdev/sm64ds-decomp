@@ -65,16 +65,6 @@ extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 }
 
-/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
-   Read through the inline, the ROM builds 0x06401280 as `mov #0x6400000 /
-   add #0x1280` where a literal address would load it from the pool.
-   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
-   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
-   d_a_demo.cpp's pinned @NNN symbols. */
-static inline void *G2_GetOBJCharPtr(void) {
-    return (void *)HW_OBJ_VRAM;
-}
-
 /* The scene's graph callback. A global, not a member: InitResources points
    it at the scene and hands it to the graph hook. Its constructor is inline,
    so mwcc emits __sinit_d_s_mb.cpp to run it (was the handwritten
