@@ -55,6 +55,9 @@ void hal_padptr_mouse_down(void);
 /* 1 while the pointer is on (for the proof traces and the pad seam that must not double a confirm) */
 int  hal_padptr_on(void);
 
+/* LOBBYKEYS1: 1 while the controller's own confirm (the pad's jump binding) is down this frame; a key or mouse binding never sets it */
+int  hal_padptr_pad_confirm(void);
+
 #ifdef __cplusplus
 }
 #endif

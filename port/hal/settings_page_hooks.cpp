@@ -181,7 +181,8 @@ extern "C" int settings_page_hook_pad(uint16_t *pressed)
         if (mk && menu_online_modal_up()) {
             unsigned short *held = (unsigned short *)((char *)data_020a0e58 + data_020a0e40 * 4);
             const uint16_t cb = 0x0001 | 0x0002 | 0x0008;
-            if (*pressed & cb) {
+            const int grid = mk == 2 && menu_online_rc_pad(*pressed, *held);      /* LOBBYKEYS1: the ROOM CODE letter grid takes the pad while it is up */
+            if ((*pressed & cb) && !grid) {
                 if (mk == 1) menu_online_press_main(title_cursor_elem(), 1);
                 else menu_online_press_file(title_cursor_elem(), 1);
             }

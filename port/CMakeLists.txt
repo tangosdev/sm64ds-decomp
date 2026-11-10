@@ -26061,3 +26061,16 @@ foreach(_thdselicon1 walk_window walk_window_hires)
         target_sources(${_thdselicon1} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/hd_selicon.cpp")
     endif()
 endforeach()
+
+# run after093, lane LOBBYKEYS1: the letter grid plank, typing with a controller (hal/pad_keyboard.h). The logic side goes wherever the online menu's
+# logic does (the smoke player links that too); the draw side needs ui_text (walk_window only). Own block.
+foreach(_tpkb1 walk_window walk_window_hires smoke_player)
+    if(TARGET ${_tpkb1})
+        target_sources(${_tpkb1} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/pad_keyboard.cpp")
+    endif()
+endforeach()
+foreach(_tpkb2 walk_window walk_window_hires)
+    if(TARGET ${_tpkb2})
+        target_sources(${_tpkb2} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/hal/pad_keyboard_draw.cpp")
+    endif()
+endforeach()

@@ -12,6 +12,8 @@
    header in the tree (a build of this lane alone) a pick can only end in that sentence. */
 #include "menu_online.h"
 #include "lobby_page.h"
+#include "pad_keyboard.h"
+#include "pad_pointer.h"
 #include <chrono>
 #include <stdio.h>
 #include <stdlib.h>
@@ -147,15 +149,31 @@ void rc_sync_keys()
 {
     for (int vk = 8; vk < 256; ++vk) g.rc_prev[vk] = (unsigned char)key_down(vk);
 }
-void rc_open()
+/* LOBBYKEYS1: THE LETTER GRID (hal/pad_keyboard.h) over the plank. The pad's A on the focused plank opens the plank WITH the grid (the keyboard and a click
+   open it without, as before). The DS words say pad and keyboard alike (W A S D, Space and Enter share bits with the pad), so while a typing key of the
+   keyboard is held the words are the keyboard's and the grid leaves them alone. */
+const int kRcOwner = 2;
+int typing_key_held()
+{
+    for (int vk = '0'; vk <= 'Z'; ++vk) if ((vk <= '9' || vk >= 'A') && key_down(vk)) return 1;
+    for (int vk = VK_NUMPAD0; vk <= VK_DIVIDE; ++vk) if (key_down(vk)) return 1;
+    static const int kOther[] = { VK_SPACE, VK_BACK, VK_RETURN, VK_ESCAPE, VK_OEM_1, VK_OEM_2, VK_OEM_3, VK_OEM_4, VK_OEM_5, VK_OEM_6, VK_OEM_7,
+                                  VK_OEM_PLUS, VK_OEM_COMMA, VK_OEM_MINUS, VK_OEM_PERIOD };
+    for (int vk : kOther) if (key_down(vk)) return 1;
+    return 0;
+}
+void rc_open(int grid = 0)
 {
     rc_sync_keys();          /* the press that gave the plank the keyboard (Enter, A) is not typing */
     set_screen(ONL_SCR_ROOMCODE);
-    fprintf(stderr, "[online] ROOM CODE plank: typing (%s)\n", g.rc);
+    fprintf(stderr, "[online] ROOM CODE plank: typing (%s)%s\n", g.rc, grid ? ", the letter grid is up (pad A)" : "");
+    if (grid) pkb_open(kRcOwner, PKB_CODE, PKB_OK_JOIN, 6);
+    else if (pkb_owner() == kRcOwner) pkb_close();
 }
 void rc_close(const char *why)
 {
     fprintf(stderr, "[online] ROOM CODE plank: let go (%s), code '%s'\n", why, g.rc);
+    if (pkb_owner() == kRcOwner) pkb_close();
     set_screen(ONL_SCR_NONE);
     g.rc_closed_tick = g.tick ? g.tick : 1;
     g.touch_hold = 1;
@@ -164,6 +182,7 @@ void rc_submit()
 {
     if (strlen(g.rc) != 6) { fprintf(stderr, "[online] ROOM CODE: '%s' is not six letters yet\n", g.rc); return; }
     fprintf(stderr, "[online] ROOM CODE %s: the lobby page joins it\n", g.rc);
+    if (pkb_owner() == kRcOwner) pkb_close();
     set_screen(ONL_SCR_NONE);
     lobby_page_request_join(g.rc);
 }
@@ -186,6 +205,23 @@ void rc_tick()
     if (fresh(VK_RETURN)) rc_submit();
     else if (fresh(VK_ESCAPE)) rc_close("Escape");
 }
+/* LOBBYKEYS1: what the grid asked for */
+void rc_grid_event(int ev, char ch)
+{
+    const size_t n = strlen(g.rc);
+    switch (ev) {
+    case PKB_TYPE:
+        if (n < 6 && ch && strchr(kRcAlphabet, ch)) { g.rc[n] = ch; g.rc[n + 1] = 0; fprintf(stderr, "[online] ROOM CODE typed (grid): %s\n", g.rc); }
+        break;
+    case PKB_DELETE:
+        if (n) { g.rc[n - 1] = 0; fprintf(stderr, "[online] ROOM CODE deleted (grid): '%s'\n", g.rc); }
+        break;
+    case PKB_SUBMIT: rc_submit(); break;      /* six letters join, as Enter does; fewer keep the grid up */
+    case PKB_CLOSE: rc_close("the grid"); break;
+    default: break;
+    }
+}
+
 void host_press(const char *how)
 {
     fprintf(stderr, "[online] HOST (%s): the lobby page's Coop / VS choice\n", how);
@@ -221,6 +257,8 @@ void menu_online_facts(OnlFacts *f)
     memcpy(f->rc, g.rc, sizeof f->rc - 1);
     f->rc[sizeof f->rc - 1] = 0;
     f->rc_caret = (unsigned char)(g.scr == ONL_SCR_ROOMCODE && ((g.tick / 20) & 1) == 0);
+    f->rc_grid = (unsigned char)(g.scr == ONL_SCR_ROOMCODE && pkb_owner() == kRcOwner);
+    f->rc_key = (unsigned char)(f->rc_grid ? pkb_key() : 0);
     profile_facts(&f->prof);
 }
 
@@ -240,6 +278,7 @@ void menu_online_tick(int top, int elem, int req)
     ++g.tick;
     if (g.scr == ONL_SCR_PROFILE) profile_tick();
     if (g.scr == ONL_SCR_ROOMCODE) rc_tick();
+    if (g.scr != ONL_SCR_ROOMCODE && pkb_owner() == kRcOwner) pkb_close();      /* LOBBYKEYS1: the plank let go some other way (the scene left) */
     if (g.scr != ONL_SCR_NONE && g.tick - g.t_scr > 8) g.released_since = 1;
     if (top == 0 && elem == 0 && req == -1) {            /* the main page is settled */
         if ((g.flow || g.med_online) && g.tick - g.t_flow > 40) {
@@ -307,7 +346,7 @@ static int pad_focus_press(int kind, int edge)
         if (hal_menu_trace_on()) fprintf(stderr, "[padnav] confirm on the focused plank %d\n", g.padfocus);
         if (g.padfocus == ONL_PF_HELP) { g.help_files = kind == 2; set_screen(ONL_SCR_HELP); }
         else if (g.padfocus == ONL_PF_NAME && kind == 2) { fprintf(stderr, "[online] NAME plank: the name popup (pad)\n"); open_profile(-1); }
-        else if (g.padfocus == ONL_PF_ROOMCODE && kind == 2) rc_open();
+        else if (g.padfocus == ONL_PF_ROOMCODE && kind == 2) rc_open(hal_padptr_pad_confirm() && !typing_key_held());   /* LOBBYKEYS1: the controller's own A brings the letter grid (a key or mouse Jump does not) */
         else if (g.padfocus == ONL_PF_HOST && kind == 2) host_press("pad");
     }
     return 1;
@@ -400,6 +439,10 @@ int menu_online_touch(int kind, int down, int sx, int sy)
         return 1;
     }
     if (g.scr == ONL_SCR_ROOMCODE) {        /* LOBBYUI1: a click on the plank keeps the typing; a click anywhere else lets it go */
+        if (pkb_owner() == kRcOwner && pkb_in_panel((float)sx, (float)sy)) {      /* LOBBYKEYS1: a click on the letter grid works its key */
+            if (edge) { char ch = 0; const int ev = pkb_click((float)sx, (float)sy, (int)strlen(g.rc), &ch); rc_grid_event(ev, ch); }
+            return 1;
+        }
         if (edge && !in_box(sx, sy, ONL_RC_X, ONL_RC_Y, ONL_RC_W, ONL_RC_H)) rc_close("a click elsewhere");
         return 1;
     }
@@ -552,6 +595,23 @@ void menu_online_hover_focus(int kind, int pf, int cursor)
 }
 
 int menu_online_modal_up(void) { return menu_online_enabled() && g.scr != ONL_SCR_NONE; }
+
+int menu_online_rc_pad(unsigned pressed, unsigned held)
+{
+    if (g.scr != ONL_SCR_ROOMCODE || pkb_owner() != kRcOwner) return 0;
+    PkbPad gp;
+    memset(&gp, 0, sizeof gp);
+    if (!typing_key_held()) {         /* DS words: 0x40 up, 0x80 down, 0x20 left, 0x10 right; 0x0002 A, 0x0001 B (the port's punch), 0x0008 Start */
+        gp.dirs = (held & 0x40 ? 1u : 0) | (held & 0x80 ? 2u : 0) | (held & 0x20 ? 4u : 0) | (held & 0x10 ? 8u : 0);
+        gp.a = (pressed & 0x0002) != 0;
+        gp.b = (pressed & 0x0001) != 0;
+        gp.start = (pressed & 0x0008) != 0;
+    }
+    char ch = 0;
+    const int ev = pkb_pad(&gp, (int)strlen(g.rc), &ch);      /* the event first: ch is written by the call */
+    rc_grid_event(ev, ch);
+    return 1;
+}
 
 int menu_online_rc_backspace(void)
 {

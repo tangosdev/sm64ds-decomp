@@ -641,6 +641,7 @@ void online_overlays(MenuLayout *L, bool main_page, bool show_help)
         menu_online_add_help(L, L->w - 5 * un / ud, 5 * un / ud, 30 * un / ud);
         menu_online_add_name_plank(L, L->w - 40 * un / ud, 5 * un / ud, 30 * un / ud);
         online_lobby_planks(L, of);
+        menu_online_add_modal(L, of);      /* LOBBYKEYS1: the letter grid over the page when the pad opened the plank (nothing otherwise) */
         return;
     }
     if (show_help && of->scr == ONL_SCR_NONE) {
