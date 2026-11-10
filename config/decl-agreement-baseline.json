@@ -1093,6 +1093,16 @@
         "return:int"
       ]
     },
+    "OS_GetIrqFunction": {
+      "include/nitro/os/interrupt.h": [
+        "return:void (*)(void)"
+      ]
+    },
+    "OS_SetIrqFunction": {
+      "include/nitro/os/interrupt.h": [
+        "param:#2 void (*)(void)"
+      ]
+    },
     "OS_SleepThread": {
       "src/myFS_ReadFile.c": [
         "param:#1 int"
@@ -15663,19 +15673,24 @@
       ]
     },
     "FSi_SendCommand": {
-      "src/unnamed/arm9/0205/func_0205d568.c": [
+      "src/FS_OpenFileFast.c": [
         "arity:4"
       ],
       "src/FSi_FindPath.c": [
         "param:#1 FSFile *"
       ]
     },
-    "func_0205d568": {
-      "src/unnamed/arm9/0205/func_0205d518.c": [
-        "arity:2"
-      ],
+    "FS_OpenFileFast": {
       "src/engine/sound/SoundEngine.cpp": [
-        "param:#1 struct Node *"
+        "arity:3"
+      ]
+    },
+    "FS_SeekFile": {
+      "src/engine/sound/SoundEngine.cpp": [
+        "param:#3 int"
+      ],
+      "src/unnamed/arm9/0204/func_020412f0.cpp": [
+        "param:#3 int"
       ]
     },
     "FS_LoadArchive": {

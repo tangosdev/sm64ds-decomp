@@ -16,7 +16,7 @@
  * nitro/ctrdg/ctrdg_common.h.
  */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/ctrdg/ctrdg_common.h"
 #include "nitro/os/spinLock.h"
 
@@ -82,13 +82,13 @@ void CTRDGi_RestoreAccessCycle(int *cycle) {
 
 void CTRDGi_LockByProcessor(u16 lockID, int *info) {
     for (;;) {
-        info[1] = IRQ::Disable();
+        info[1] = OS_DisableInterrupts();
         info[0] = OS_ReadOwnerOfLockCartridge() & OS_MAINP_LOCKED_FLAG;
         if (info[0] != 0)
             return;
         if (OS_TryLockCartridge(lockID) == 0)
             return;
-        IRQ::Restore(info[1]);
+        OS_RestoreInterrupts((OSIntrMode)info[1]);
         WaitByLoop(1);
     }
 }
@@ -96,7 +96,7 @@ void CTRDGi_LockByProcessor(u16 lockID, int *info) {
 void CTRDGi_UnlockByProcessor(u16 lockID, int *info) {
     if (info[0] == 0)
         OS_UnLockCartridge(lockID);
-    IRQ::Restore(info[1]);
+    OS_RestoreInterrupts((OSIntrMode)info[1]);
 }
 
 void CTRDGi_SendtoPxi(u32 data) {

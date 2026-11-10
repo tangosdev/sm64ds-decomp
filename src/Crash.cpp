@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -14,13 +14,13 @@ extern void func_0201a03c(u32 context, void *arg);
 extern u8 data_0209d4d8; // 0x0209d4d8
 
 void Crash(void) {
-    IRQ::Disable();
+    OS_DisableInterrupts();
     if (data_0209d4d8 == 0) {
         data_0209d4d8 = 1;
         func_0201a03c(0, 0);
     }
     for (;;) {
-        IRQ::Disable();
+        OS_DisableInterrupts();
         CP15::WaitForInterrupt();
     }
 }

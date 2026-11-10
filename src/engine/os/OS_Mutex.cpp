@@ -15,7 +15,7 @@
  *
  * leftovers: func_02058960 keeps its address name; no SDK source spells it.
  */
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/os/thread.h"
 
 extern "C" {
@@ -44,7 +44,7 @@ void OS_InitMutex(OSMutex *mutex) {
 }
 
 void OS_LockMutex(OSMutex *mutex) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     OSThread *current = data_020a6134.current;
 
     for (;;) {
@@ -63,11 +63,11 @@ void OS_LockMutex(OSMutex *mutex) {
         current->mutex = 0;
     }
 
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 void OS_UnlockMutex(OSMutex *mutex) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     OSThread *current = data_020a6134.current;
     if (mutex->thread == current) {
         if (--mutex->count == 0) {
@@ -76,7 +76,7 @@ void OS_UnlockMutex(OSMutex *mutex) {
             OS_WakeupThread(&mutex->queue);
         }
     }
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 void OSi_UnlockAllMutex(OSThread *thread) {
@@ -90,7 +90,7 @@ void OSi_UnlockAllMutex(OSThread *thread) {
 }
 
 int OS_TryLockMutex(OSMutex *mutex) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     OSThread *current = data_020a6134.current;
     int locked;
     if (mutex->thread == 0) {
@@ -103,7 +103,7 @@ int OS_TryLockMutex(OSMutex *mutex) {
     } else {
         locked = 0;
     }
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     return locked;
 }
 

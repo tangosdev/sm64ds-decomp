@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/card/card_common.h"
 extern "C" int PXI_IsCallbackReady(int tag, int proc);
 extern "C" void OS_SpinWait(unsigned int cycles);
@@ -14,7 +14,7 @@ extern "C" int PXI_SendWordByFifo(unsigned int a, unsigned int c, unsigned int b
  * clears CARD_STAT_REQ. INIT also sends the request block's address.
  * Returns whether the request succeeded. */
 extern "C" int CARDi_Request(CARDiCommon *p, s32 req_type, s32 retry_count) {
-    unsigned int saved;
+    OSIntrMode saved;
     int r;
 
     if (!(p->flag & CARD_STAT_INIT_CMD)) {
@@ -43,11 +43,11 @@ extern "C" int CARDi_Request(CARDiCommon *p, s32 req_type, s32 retry_count) {
             }
         }
 
-        saved = IRQ::Disable();
+        saved = OS_DisableInterrupts();
         while (p->flag & CARD_STAT_REQ) {
             OS_SleepThread(0);
         }
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
 
         r = p->cmd->result;
         if (r != CARD_RESULT_TIMEOUT) {

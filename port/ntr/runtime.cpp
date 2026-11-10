@@ -7,7 +7,7 @@
 //
 // Linkage matters and is not uniform in the decomp:
 //   src/VBlankIntrWait.c        `asm void VBlankIntrWait(void)`      -> C++ linkage
-//   src/IRQ3.cpp                `extern "C" asm unsigned int ...`    -> C linkage
+//   src/IRQ3.cpp                `asm OSIntrMode OS_DisableInterrupts` -> C linkage
 // The decomp's filenames are already Itanium mangled names, so a .c file built as
 // C++ gets mangled a second time. Match whichever form the original used, or the
 // link fails in a way that looks like a missing symbol rather than a mismatch.
@@ -23,9 +23,9 @@
 // previous masked state (0x80 = was disabled).
 // ---------------------------------------------------------------------------
 
-extern "C" unsigned int _ZN3IRQ7DisableEv(void) { return ntr::rt_irq_disable(); }
-extern "C" unsigned int _ZN3IRQ6EnableEv(void) { return ntr::rt_irq_enable(); }
-extern "C" unsigned int _ZN3IRQ7RestoreEj(unsigned int prev) {
+extern "C" unsigned int OS_DisableInterrupts(void) { return ntr::rt_irq_disable(); }
+extern "C" unsigned int OS_EnableInterrupts(void) { return ntr::rt_irq_enable(); }
+extern "C" unsigned int OS_RestoreInterrupts(unsigned int prev) {
     return ntr::rt_irq_restore(prev);
 }
 
@@ -146,45 +146,25 @@ unsigned g_ie;                      // IE word stand-in
 void (*g_gxfifo_handler)(void);     // handler for mask 0x200000
 }  // namespace
 
-extern "C" void *_ZN3IRQ13GetIRQHandlerEj(unsigned mask) {
-    return mask == 0x200000u ? reinterpret_cast<void *>(g_gxfifo_handler) : nullptr;
+extern "C" void (*OS_GetIrqFunction(unsigned mask))(void) {
+    return mask == 0x200000u ? g_gxfifo_handler : nullptr;
 }
-extern "C" void _ZN3IRQ13SetIRQHandlerEjPFvvE(unsigned mask, void (*h)(void)) {
+extern "C" void OS_SetIrqFunction(unsigned mask, void (*h)(void)) {
     if (mask == 0x200000u) g_gxfifo_handler = h;
 }
-extern "C" unsigned _ZN3IRQ10EnableIRQsEj(unsigned mask) {
+extern "C" unsigned OS_EnableIrqMask(unsigned mask) {
     const unsigned prev = g_ie;
     g_ie |= mask;
     return prev;
 }
-extern "C" unsigned _ZN3IRQ11DisableIRQsEj(unsigned mask) {
+extern "C" unsigned OS_DisableIrqMask(unsigned mask) {
     const unsigned prev = g_ie;
     g_ie &= ~mask;
     return prev;
 }
-extern "C" void _ZN3IRQ15ClearInterruptsEj(unsigned) {}
-
-// The same registry under include/IRQ.h's real names. Decomp files that call
-// IRQ::GetIRQHandler and friends through that header (MI_SendGXCommandAsync) link
-// against these C++-linkage definitions; files that still declare the mangled
-// spelling locally link against the extern "C" ones above.
-namespace IRQ {
-typedef void (*Handler)(void);
-Handler GetIRQHandler(unsigned mask) {
-    return reinterpret_cast<Handler>(_ZN3IRQ13GetIRQHandlerEj(mask));
-}
-void SetIRQHandler(unsigned mask, Handler h) { _ZN3IRQ13SetIRQHandlerEjPFvvE(mask, h); }
-unsigned EnableIRQs(unsigned mask) { return _ZN3IRQ10EnableIRQsEj(mask); }
-unsigned DisableIRQs(unsigned mask) { return _ZN3IRQ11DisableIRQsEj(mask); }
 // The host has no IF register to acknowledge; MIi_FIFOCallback calls this after
 // every chunk it starts and ignores the result.
-unsigned ClearInterrupts(unsigned mask) {
-    _ZN3IRQ15ClearInterruptsEj(mask);
-    return 0;
-}
-unsigned Disable() { return _ZN3IRQ7DisableEv(); }
-unsigned Restore(unsigned prev) { return _ZN3IRQ7RestoreEj(prev); }
-}  // namespace IRQ
+extern "C" unsigned OS_ResetRequestIrqMask(unsigned) { return 0; }
 
 // DMA to the FIFO is the display-list path (MIi_FIFOCallback). ctrl bit 30 is
 // IRQ-on-complete (the final chunk); a GXFIFO-destined chunk without it relies

@@ -10,7 +10,7 @@
  *   nnsys/snd types (NNSSndSeqPlayer, NNSSndHandle, NNSSndFader); the
  *   heap records (HeapOwner, AllocNode, Node, SolidHeapWithIter,
  *   Obj_2050fd4, HeapAllocator_205212c) keep their own local layouts.
- * - IRQ::Disable and IRQ::Restore stay namespace-scope externs so
+ * - OS_DisableInterrupts and OS_RestoreInterrupts stay namespace-scope externs so
  *   they mangle as the IRQ TU defines them.
  * - Channel and heap records stay address arithmetic. A guessed
  *   sequencer member is not what these bodies share.
@@ -29,13 +29,7 @@
 #include "nitro/os/message.h"
 #include "nitro/os/thread.h"
 #include "nitro/snd/alarm.h"
-
-namespace IRQ {
-    /* Defined at 0x02059d1c/0x02059d30 (the IRQ TU); namespace-scope externs
-       mangle exactly like the ROM's IRQ::Disable/IRQ::Restore. */
-    u32 Disable(void);
-    u32 Restore(u32 state);
-}
+#include "nitro/os/system.h"
 
 struct Elem_204f278;
 struct HeapAllocator_204f460;
@@ -146,7 +140,7 @@ struct data_020a5bb8_t {
     /* 0x28 */ int fileImageOffset; /* the FILE block; files are read by fileTable offset */
     /* 0x2c */ int fileImageSize;
     /* 0x30 */ char file[0x44];         /* NitroSDK FSFile */
-    /* 0x74 */ struct TwoInt fileId;    /* filled from the path by func_0205d644 */
+    /* 0x74 */ struct TwoInt fileId;    /* filled from the path by FS_ConvertPathToFileID */
     /* 0x7c */ struct Hdr84 *fileTable; /* per-file records (func_020509b0, func_020509d8) */
     /* 0x80 */ void *symbols;           /* loaded only when func_02050d54's flag is set */
     /* 0x84 */ void *info;              /* the Info*Entry::GetWithID tables */
@@ -394,9 +388,9 @@ extern int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32
 extern void FS_ReleaseArchiveName(void *thiz);
 extern int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len);
 extern void FS_InitArchive(void *o);
-extern int func_0205d368(void *o, int r1, int sel);
-extern int func_0205d568(Node *node, int b, ...);
-extern int func_0205d644(void *out_file_id, const char *path);
+extern int FS_SeekFile(void *o, int r1, int sel);
+extern int FS_OpenFileFast(Node *node, int b, ...);
+extern int FS_ConvertPathToFileID(void *out_file_id, const char *path);
 
 /* In-span forward declarations. */
 extern int func_0204eda4(int r0, char* a, u32 idx);
@@ -644,7 +638,7 @@ extern "C" void func_0205212c(Obj_205212c *self) {
     if (b != 0) {
         ((void (*)(void *p))FS_CloseFile)(self->file);
     }
-    u32 irq = IRQ::Disable();
+    OSIntrMode irq = OS_DisableInterrupts();
     HeapAllocator_205212c *node = (HeapAllocator_205212c*)((HeapAllocator_205212c*)(data_020a5bc8.Next(0)));
     while (node != 0) {
         HeapAllocator_205212c *next = (HeapAllocator_205212c*)((HeapAllocator_205212c*)(data_020a5bc8.Next((HeapAllocator*)(node))));
@@ -654,7 +648,7 @@ extern "C" void func_0205212c(Obj_205212c *self) {
         }
         node = next;
     }
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
     u32 *p = &self->uf0;
     *p &= ~1u;
     *p &= ~4u;
@@ -675,11 +669,11 @@ extern "C" void func_020520dc(Obj_205212c *self) {
 
 extern "C" void func_020520a4(HeapAllocator *node)
 {
-    u32 state;
+    OSIntrMode state;
 
-    state = IRQ::Disable();
+    state = OS_DisableInterrupts();
     ((NestedHeapIterator*)(&data_020a5bbc))->AddLast((HeapAllocator*)(node));
-    IRQ::Restore(state);
+    OS_RestoreInterrupts(state);
 }
 
 extern "C" int func_02052008(int arg)
@@ -1063,14 +1057,14 @@ extern "C" int func_020514b4(int a, int b)
 
 extern "C" void func_02051454(int a, int b, unsigned int c) {
     int t;
-    unsigned int irq;
-    irq = IRQ::Disable();
+    OSIntrMode irq;
+    irq = OS_DisableInterrupts();
     t = func_02050d3c(b);
     if (a == func_020509b0(c)) {
         func_02050994(c, 0);
     }
     func_02050d3c(t);
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
 }
 
 extern "C" void func_02051420(char *a, int b, int c, int d)
@@ -1248,9 +1242,9 @@ extern "C" void func_02050f34(data_020a5bb8_t *self, int a1, int a2, int a3) {
     self->info = 0;
     self->fileTable = 0;
     self->symbols = 0;
-    ((int (*)(void *p, int b))func_0205d644)(&self->fileId, a1);
+    ((int (*)(void *p, int b))FS_ConvertPathToFileID)(&self->fileId, a1);
     FS_InitFile(self->file);
-    ((void (*)(void *p, struct TwoInt v))func_0205d568)(self->file, self->fileId);
+    ((void (*)(void *p, struct TwoInt v))FS_OpenFileFast)(self->file, self->fileId);
     ((void (*)(void *dst, void *src, int n))FS_ReadFile)(self->file, self, 0x30);
     if (a2 != 0)
         ((void(*)(void *self, int a, int b))func_02050d54)(self, a2, a3);
@@ -1277,19 +1271,19 @@ extern "C" int func_02050d54(data_020a5bb8_t *obj, void *owner, int flag) {
         if (obj->symbols == 0)
             return 0;
     }
-    if (func_0205d368(obj->file, obj->infoOffset, 0) == 0)
+    if (FS_SeekFile(obj->file, obj->infoOffset, 0) == 0)
         return 0;
     r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->info, obj->infoSize);
     if (r != obj->infoSize)
         return 0;
-    if (func_0205d368(obj->file, obj->fileTableOffset, 0) == 0)
+    if (FS_SeekFile(obj->file, obj->fileTableOffset, 0) == 0)
         return 0;
     r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->fileTable,
                                                       obj->fileTableSize);
     if (r != obj->fileTableSize)
         return 0;
     if (flag != 0 && obj->symbolSize != 0) {
-        if (func_0205d368(obj->file, obj->symbolOffset, 0) == 0)
+        if (FS_SeekFile(obj->file, obj->symbolOffset, 0) == 0)
             return 0;
         r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->symbols,
                                                           obj->symbolSize);
@@ -1426,8 +1420,8 @@ extern "C" int func_020509d8(unsigned int idx, int a1, unsigned int len, unsigne
     if (len > avail)
         len = avail;
 
-    if (((int (*)(int *o, int r1, int sel))func_0205d368)((int *)((data_020a5bb8_t *)G)->file,
-                                                          entry->offset + off, 0) == 0)
+    if (((int (*)(int *o, int r1, int sel))FS_SeekFile)((int *)((data_020a5bb8_t *)G)->file,
+                                                        entry->offset + off, 0) == 0)
         return -1;
 
     return ((int (*)(int *o, int a1, unsigned int len))FS_ReadFile)(
@@ -1753,9 +1747,9 @@ extern "C" void func_0204ff48(struct C *p) {
 extern "C" void func_0204fed0(struct C *c) {
     if (((c->fc << 30) >> 31) == 0) return;
     while (c->f20 != 0) {
-        unsigned int saved = IRQ::Disable();
+        OSIntrMode saved = OS_DisableInterrupts();
         c->func_0204fce8((void *)1);
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
     }
     SND_StartTimer(c->f2c, 0, 1 << c->f28, 0);
 }
@@ -2431,7 +2425,7 @@ extern "C" int func_0204eda4(int r0, char* a, u32 idx) {
         struct Pair p;
         p.a = a;
         p.idx = idx;
-        r = ((int(*)(int r0, struct Pair p))func_0205d568)(r0, p);
+        r = ((int (*)(int r0, struct Pair p))FS_OpenFileFast)(r0, p);
     }
     return r;
 }

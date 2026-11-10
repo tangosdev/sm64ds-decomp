@@ -22,7 +22,7 @@
  */
 #include "types.h"
 #include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
 #include "private/fs_views.h"
@@ -63,7 +63,7 @@ int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_b
 int FS_ReadFile(FSFile *file, void *dst, int len);
 int FS_CloseFile(void *self);
 int func_0206cf98(int a, u32 b, u32 c);
-int func_0205e904(s32 newVal);
+int DGT_SetOverlayTableMode(s32 newVal);
 void Crash(void);
 
 /* Invalidate the I- and D-cache over the overlay's whole region (image and
@@ -208,7 +208,7 @@ void FS_EndOverlay(FSOverlayInfo *p_ovi) {
     struct MWiDestructorChain *head;
     struct MWiDestructorChain *tail;
     u32 region_top, image_bottom, region_bottom;
-    u32 saved;
+    OSIntrMode saved;
     struct MWiDestructorChain *base;
     struct MWiDestructorChain *p;
     struct MWiDestructorChain *next;
@@ -223,7 +223,7 @@ void FS_EndOverlay(FSOverlayInfo *p_ovi) {
             image_bottom +
             (u32)((int)(p_ovi->header.ram_size + p_ovi->header.bss_size) - p_ovi->header.ram_size);
         tail = 0;
-        saved = IRQ::Disable();
+        saved = OS_DisableInterrupts();
         prev = 0;
         base = *chain;
         p = base;
@@ -251,7 +251,7 @@ void FS_EndOverlay(FSOverlayInfo *p_ovi) {
             }
             p = next;
         }
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         if (head == 0)
             break;
         do {
@@ -287,10 +287,9 @@ int FS_UnloadOverlay(int target, int id) {
 
 /* Attach an in-memory overlay table for target, so FS_LoadOverlayInfo
  * reads entries from it. An ARM9 table is first checked against the
- * digest at data_0209a7d8, with func_0205e904(1) in effect
+ * digest at data_0209a7d8, with DGT_SetOverlayTableMode(1) in effect
  * around the check, and a mismatch crashes. Then ptr and size go into the
- * target's region with interrupts disabled. pret's FS_overlay.c has no
- * function like it, so it keeps its address name. */
+ * target's region with interrupts disabled. */
 void FS_AttachOverlayTable(int target, void *ptr, u32 size) {
     CARDRomRegion *pr;
     if (target == 0) {
@@ -299,15 +298,15 @@ void FS_AttachOverlayTable(int target, void *ptr, u32 size) {
         pr = &data_020a806c;
     }
     if (ptr != 0 && target == 0) {
-        u32 r4 = func_0205e904(1);
+        u32 r4 = DGT_SetOverlayTableMode(1);
         if (!FSi_CompareDigest(data_0209a7d8, ptr, size)) {
             Crash();
         }
-        func_0205e904(r4);
+        DGT_SetOverlayTableMode(r4);
     }
-    u32 irqState = IRQ::Disable();
+    OSIntrMode irqState = OS_DisableInterrupts();
     pr->offset = (u32)ptr;
     pr->length = size;
-    IRQ::Restore(irqState);
+    OS_RestoreInterrupts(irqState);
 }
 }

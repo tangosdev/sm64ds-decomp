@@ -2,9 +2,9 @@
  * left between prop.file.pos and prop.file.bottom (and to 0), store the
  * request in arg.readfile, and send FS_COMMAND_READFILE (0) through
  * FSi_SendCommand. A synchronous caller (async == 0; FS_ReadFile)
- * marks the file FS_FILE_STATUS_SYNC (4) first, waits in func_0205d3f4
- * (FS_WaitAsync) and returns the bytes the position moved, or -1 on failure;
- * func_0205d3e4 (FS_ReadFileAsync) returns the clamped length at once.
+ * marks the file FS_FILE_STATUS_SYNC (4) first, waits in FS_WaitAsync and
+ * returns the bytes the position moved, or -1 on failure;
+ * FS_ReadFileAsync returns the clamped length at once.
  * The body follows the SDK's: pos, rest and the requested length are taken
  * up front as constants and len is clamped in place. */
 #include "private/fs_views.h"
@@ -12,8 +12,8 @@
 typedef struct FSFile FSFile;
 
 extern int FSi_SendCommand(FSFile *p_file, int command);
-extern int func_0205d3f4(FSFile *p_file);
-int func_0205d688(FSFile *p_file, void *dst, int len, int async) {
+extern int FS_WaitAsync(FSFile *p_file);
+int FSi_ReadFileCore(FSFile *p_file, void *dst, int len, int async) {
     const int pos = p_file->prop.file.pos;
     const int rest = p_file->prop.file.bottom - pos;
     const unsigned int org = len;
@@ -28,7 +28,7 @@ int func_0205d688(FSFile *p_file, void *dst, int len, int async) {
         p_file->stat |= 4;
     FSi_SendCommand(p_file, 0);
     if (!async) {
-        if (func_0205d3f4(p_file))
+        if (FS_WaitAsync(p_file))
             len = p_file->prop.file.pos - pos;
         else
             len = -1;

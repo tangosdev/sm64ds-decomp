@@ -4,13 +4,13 @@
  * command bit (8); on a send failure set its error bit and report
  * (3, 4, 0) to the user callback. */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/spi/tp.h"
 extern "C" {
 int PXI_SendWordByFifo(unsigned int a, unsigned int b, unsigned int c);
 }
 extern "C" void TP_RequestSetStabilityAsync(int a, int b) {
-    unsigned int irq = IRQ::Disable();
+    OSIntrMode irq = OS_DisableInterrupts();
     int ok;
     if (PXI_SendWordByFifo(6, a | 0x2000300, 0) < 0)
         ok = 0;
@@ -19,7 +19,7 @@ extern "C" void TP_RequestSetStabilityAsync(int a, int b) {
     else
         ok = 1;
     if (ok == 0) {
-        IRQ::Restore(irq);
+        OS_RestoreInterrupts(irq);
         data_020a80cc.mErrFlags |= 8;
         if (data_020a80cc.mCallback != 0)
             data_020a80cc.mCallback(3, 4, 0);
@@ -27,5 +27,5 @@ extern "C" void TP_RequestSetStabilityAsync(int a, int b) {
     }
     data_020a80cc.mCommandFlags |= 8;
     data_020a80cc.mErrFlags &= ~8;
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
 }

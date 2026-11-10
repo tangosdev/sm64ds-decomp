@@ -75,7 +75,7 @@
   "compiler_only_output": [],
   "notes": [
     "Hand-assembled, following arm9/FS_Rom: tu_map cannot segment arm9/main.",
-    "C++ for IRQ::Disable/IRQ::Restore (MI_StopDma); every function keeps C linkage.",
+    "Every function keeps C linkage.",
     "func_02059f58, func_02059fa8, func_02059fd0 and func_0205a064 were renamed MI_StopDma, MI_WaitDma, MI_DmaCopy32Async and MI_DmaFill32Async from their bodies in this change. symbols/actor_renames.tsv records the evidence. The three synchronous copies keep their earlier names DMASyncFillTransfer, DMASyncWordTransfer and DMASyncHalfTransfer.",
     "Text-only."
   ],

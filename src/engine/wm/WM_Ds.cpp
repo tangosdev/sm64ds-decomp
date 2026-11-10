@@ -9,7 +9,7 @@
  * WM_EndDataSharing is not linked. */
 #include "types.h"
 #include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -326,14 +326,14 @@ void WmDataSharingReceiveCallback_Parent(WMPortRecvCallback *callback) {
             return;
         case 9: {
             u16 mask = (u16)(1 << callback->aid);
-            u32 saved = IRQ::Disable();
+            OSIntrMode saved = OS_DisableInterrupts();
             u16 b408 = dsInfo->writeIndex;
             dsInfo->ds[b408].aidHeader &= ~mask;
             if (dsInfo->doubleMode == 1) {
                 int n = (dsInfo->writeIndex + 1) % 4;
                 dsInfo->ds[n].aidHeader &= ~mask;
             }
-            IRQ::Restore(saved);
+            OS_RestoreInterrupts(saved);
             WmDataSharingSendDataSet(dsInfo, 0);
             if (dsInfo->doubleMode == 1)
                 WmDataSharingSendDataSet(dsInfo, 0);
@@ -396,7 +396,7 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
     u16 idx;
     volatile u16 zero;
     u16 *slot;
-    unsigned s;
+    OSIntrMode s;
 
     if ((aidBitmap & mask) == 0)
         return;
@@ -417,10 +417,10 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
         zero = 0;
         MultiStore16(zero, slot, dsInfo->dataLength);
     }
-    s = IRQ::Disable();
+    s = OS_DisableInterrupts();
     dsInfo->ds[idx].aidHeader &= ~mask;
     dsInfo->ds[idx].receivedBitmap |= mask;
-    IRQ::Restore(s);
+    OS_RestoreInterrupts(s);
 }
 
 /* Once every member has filled ds[writeIndex], step writeIndex, open the
@@ -430,7 +430,7 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
  * set counts as sent; any failure but OPERATING (2) is state 3. */
 void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
     WMArm9Buf *ctx;
-    u32 saved;
+    OSIntrMode saved;
     u16 slot;
     u16 next;
     u16 mask;
@@ -440,7 +440,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
     int ret;
 
     ctx = WM_GetSystemWork();
-    saved = IRQ::Disable();
+    saved = OS_DisableInterrupts();
     slot = dsInfo->writeIndex;
     if (dsInfo->ds[slot].aidHeader == 0) {
         CP15::InvalidateDataCache((u32)&ctx->status->mp_readyBitmap, 2);
@@ -460,7 +460,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
             dsInfo->ds[prevSlot].aidHeader &= ~1;
         }
 
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
 
         ret = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (int)&dsInfo->ds[prevSlot],
                                  dsInfo->dataSetLength, (u16)(dsInfo->aidBitmap & mask),
@@ -473,7 +473,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
             dsInfo->state = 3;
         }
     } else {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
     }
 }
 

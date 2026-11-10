@@ -1,6 +1,6 @@
 //cpp
 #include "private/arm9_a1fc0_file_share.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -17,7 +17,7 @@ extern char data_02082158[];
    reply slot. Only while mState is set. The third word is
    unused: func_02042254 passes 1 (reloaded from its frame into r2). */
 void func_02041d28(char *r7, FileShareNode *node, int) {
-    unsigned int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     int mask;
 
     if (data_020a1fc0.mState != 0) {
@@ -44,6 +44,6 @@ void func_02041d28(char *r7, FileShareNode *node, int) {
             r7 += 0xc;
         }
     }
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 }

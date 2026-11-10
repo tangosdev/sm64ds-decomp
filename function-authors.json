@@ -10443,7 +10443,7 @@
     },
     "arm9:0x0205d368": {
       "author": "tangosdev",
-      "name": "func_0205d368"
+      "name": "FS_SeekFile"
     },
     "arm9:0x0205d3d4": {
       "author": "ruspecial",
@@ -10451,11 +10451,11 @@
     },
     "arm9:0x0205d3e4": {
       "author": "ruspecial",
-      "name": "func_0205d3e4"
+      "name": "FS_ReadFileAsync"
     },
     "arm9:0x0205d3f4": {
       "author": "ruspecial",
-      "name": "func_0205d3f4"
+      "name": "FS_WaitAsync"
     },
     "arm9:0x0205d4a0": {
       "author": "ruspecial",
@@ -10467,11 +10467,11 @@
     },
     "arm9:0x0205d518": {
       "author": "tangosdev",
-      "name": "func_0205d518"
+      "name": "FS_OpenFile"
     },
     "arm9:0x0205d568": {
       "author": "ruspecial",
-      "name": "func_0205d568"
+      "name": "FS_OpenFileFast"
     },
     "arm9:0x0205d5e8": {
       "author": "tangosdev",
@@ -10479,11 +10479,11 @@
     },
     "arm9:0x0205d644": {
       "author": "tangosdev",
-      "name": "func_0205d644"
+      "name": "FS_ConvertPathToFileID"
     },
     "arm9:0x0205d688": {
       "author": "tangosdev",
-      "name": "func_0205d688"
+      "name": "FSi_ReadFileCore"
     },
     "arm9:0x0205d714": {
       "author": "tangosdev",
@@ -10595,7 +10595,7 @@
     },
     "arm9:0x0205e904": {
       "author": "tangosdev",
-      "name": "func_0205e904"
+      "name": "DGT_SetOverlayTableMode"
     },
     "arm9:0x0205e91c": {
       "author": "andrewboudreau",

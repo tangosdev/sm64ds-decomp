@@ -19,7 +19,7 @@
 
 #include "types.h"
 #include "nitro/hw/registers.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -33,9 +33,9 @@ typedef struct DMAChannelRegs {
 void DMAStartTransferFB(u32 channel, u32 src, u32 dst, u32 cnt)
 {
     volatile DMAChannelRegs *reg;
-    u32 savedState;
+    OSIntrMode savedState;
 
-    savedState = IRQ::Disable();
+    savedState = OS_DisableInterrupts();
 
     reg = (volatile DMAChannelRegs *)REG_DMA_BASE + channel;
     reg->src = src;
@@ -45,6 +45,6 @@ void DMAStartTransferFB(u32 channel, u32 src, u32 dst, u32 cnt)
     (void)REG_DMA_BASE[0];
     (void)REG_DMA_BASE[0];
 
-    IRQ::Restore(savedState);
+    OS_RestoreInterrupts(savedState);
 }
 }

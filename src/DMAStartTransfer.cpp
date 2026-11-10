@@ -13,7 +13,7 @@
  */
 
 #include "nitro/hw/registers.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -27,13 +27,13 @@ typedef struct DMAChannelRegs {
 
 void DMAStartTransfer(u32 channel, u32 src, u32 dest, u32 ctrl)
 {
-    u32 state = IRQ::Disable();
+    OSIntrMode state = OS_DisableInterrupts();
     DMAChannelRegs *reg = (DMAChannelRegs *)REG_DMA_BASE + channel;
 
     reg->src = src;
     reg->dest = dest;
     reg->ctrl = ctrl;
 
-    IRQ::Restore(state);
+    OS_RestoreInterrupts(state);
 }
 }

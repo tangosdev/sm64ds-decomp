@@ -98,7 +98,7 @@ void FSi_SeekDirDirect(FSFile *p_dir, u32 id);
 int FSi_StrNICmp(const u8 *str1, const u8 *str2, int len);
 }
 
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -123,11 +123,11 @@ void FSi_ReadTable(FSiSyncReadParam *p, void *dst, u32 len) {
         p_arc->flag &= ~FS_ARCHIVE_FLAG_IS_SYNC;
         break;
     case FS_RESULT_PROC_ASYNC: {
-        u32 saved = IRQ::Disable();
+        OSIntrMode saved = OS_DisableInterrupts();
         while (FSi_IsArchiveSync(p_arc)) {
             OS_SleepThread(&p_arc->sync_q);
         }
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         break;
     }
     }

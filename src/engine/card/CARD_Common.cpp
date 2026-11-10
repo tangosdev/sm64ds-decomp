@@ -18,7 +18,7 @@
  * 0x20 / 0x21 against the calling thread.
  */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "CP15.h"
 #include "nitro/card/card_common.h"
 #include "nitro/os/spinLock.h"
@@ -69,7 +69,7 @@ void CARDi_SetTask(void (*task)(CARDiCommon *)) {
 
 void CARDi_LockResource(int owner, int target) {
     CARDiCommon *const p = &cardi_common;
-    unsigned int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     if (p->lock_owner == owner) {
         if (p->lock_target != target)
             Crash();
@@ -81,12 +81,12 @@ void CARDi_LockResource(int owner, int target) {
     }
     ++p->lock_ref;
     p->cmd->result = CARD_RESULT_SUCCESS;
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 void CARDi_UnlockResource(int owner, int target) {
     CARDiCommon *p = &cardi_common;
-    unsigned int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     if (p->lock_owner != owner || !p->lock_ref) {
         Crash();
     } else {
@@ -99,7 +99,7 @@ void CARDi_UnlockResource(int owner, int target) {
         }
     }
     p->cmd->result = CARD_RESULT_SUCCESS;
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 void CARDi_InitCommon(void) {
@@ -124,10 +124,10 @@ void CARDi_InitCommon(void) {
 
 int CARDi_WaitAsync(void) {
     CARDiCommon *const p = &cardi_common;
-    unsigned int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     while (p->flag & CARD_STAT_BUSY)
         OS_SleepThread(&p->busy_q);
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     return p->cmd->result == CARD_RESULT_SUCCESS;
 }
 
