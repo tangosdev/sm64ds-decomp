@@ -2353,8 +2353,7 @@ void daStar_c::UpdateTrailEffect() {
     v.y = mPosY;
     v.z = mPosZ;
     v.y += 0xd000;
-    *(void **)&mParticle[0] = (void *)Particle::System::New(*(volatile unsigned int *)&mParticle[0],
-                                                            kPtclStarTrail, v.x, v.y, v.z, 0, 0);
+    mParticle[0] = Particle::System::New(mParticle[0], kPtclStarTrail, v.x, v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */
