@@ -1150,7 +1150,7 @@
       "rule": "handspelled-member",
       "match": "_ZN3IRQ11SetFIQStateEb",
       "count": 2,
-      "reason": "IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry labels inside the hand-written func_0206d9cc and func_0206da18, and func_0206d868 passes them the saved word unnormalised. Declared in namespace IRQ with their bool parameter, the call adds the `!= 0` the ROM lacks; declared with int, the name mangles to a symbol the ROM does not have. No header declares IRQ. Follow-up: give IRQ a header once its primitives are reconstructed as C++.",
+      "reason": "IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry labels inside the hand-written func_0206d9cc and func_0206da18, and func_0206d868 passes them the saved word unnormalised. Declared in namespace IRQ with their bool parameter, the call adds the `!= 0` the ROM lacks; declared with int, the name mangles to a symbol the ROM does not have. The SDK primitives that shared the IRQ namespace now carry their NitroSDK names in nitro/os/system.h and nitro/os/interrupt.h; these two labels have no SDK counterpart, so no header declares them. Follow-up: give them a header once their primitives are reconstructed as C++.",
       "evidence": "arm9/isdoverlay 6/6 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from src/unnamed/arm9/0206/func_0206d868.cpp on main, which this fold absorbs, with its `local extern:` note"
     },
     {
@@ -1158,7 +1158,7 @@
       "rule": "handspelled-member",
       "match": "_ZN3IRQ11SetIRQStateEb",
       "count": 2,
-      "reason": "IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry labels inside the hand-written func_0206d9cc and func_0206da18, and func_0206d868 passes them the saved word unnormalised. Declared in namespace IRQ with their bool parameter, the call adds the `!= 0` the ROM lacks; declared with int, the name mangles to a symbol the ROM does not have. No header declares IRQ. Follow-up: give IRQ a header once its primitives are reconstructed as C++.",
+      "reason": "IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry labels inside the hand-written func_0206d9cc and func_0206da18, and func_0206d868 passes them the saved word unnormalised. Declared in namespace IRQ with their bool parameter, the call adds the `!= 0` the ROM lacks; declared with int, the name mangles to a symbol the ROM does not have. The SDK primitives that shared the IRQ namespace now carry their NitroSDK names in nitro/os/system.h and nitro/os/interrupt.h; these two labels have no SDK counterpart, so no header declares them. Follow-up: give them a header once their primitives are reconstructed as C++.",
       "evidence": "arm9/isdoverlay 6/6 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from src/unnamed/arm9/0206/func_0206d868.cpp on main, which this fold absorbs, with its `local extern:` note"
     },
     {

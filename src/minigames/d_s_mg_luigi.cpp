@@ -40,7 +40,7 @@ enum dScMgLuigi_c_AssetId {
 #include "dScMgLuigi_c.h"
 #include "LevelRng.h"
 #include "Sound.h"
-#include "IRQ.h"
+#include "nitro/os/interrupt.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "SpawnInfo.h"
@@ -178,14 +178,14 @@ dScMgLuigi_c::~dScMgLuigi_c() {}
 
 /* The base cleanup returns void; call it, don't return it. */
 void dScMgLuigi_c::AfterCleanupResources(u32 vfSuccess) {
-    if (vfSuccess == 2 && IRQ::GetIRQHandler(OS_IE_H_BLANK) == Luigi_PrepareScanlines) {
+    if (vfSuccess == 2 && OS_GetIrqFunction(OS_IE_H_BLANK) == Luigi_PrepareScanlines) {
         /* The ROM reads IME back until it comes back clear, so this is a
            loop, not the save/restore pair IrisStop uses. */
         while (OS_DisableIrq() != 0) {
         }
-        IRQ::DisableIRQs(OS_IE_H_BLANK);
+        OS_DisableIrqMask(OS_IE_H_BLANK);
         func_02053c10(0); /* GX_HBlankIntr(FALSE) */
-        IRQ::SetIRQHandler(OS_IE_H_BLANK, 0);
+        OS_SetIrqFunction(OS_IE_H_BLANK, 0);
         OS_EnableIrq();
     }
     dScMgBase_c::AfterCleanupResources(vfSuccess);
@@ -282,9 +282,9 @@ void dScMgLuigi_c::IrisStop(int idx) {
     int enabled;
     mIris[idx].active = 0;
     enabled = OS_DisableIrq();
-    IRQ::DisableIRQs(OS_IE_H_BLANK);
+    OS_DisableIrqMask(OS_IE_H_BLANK);
     func_02053c10(0);
-    IRQ::SetIRQHandler(OS_IE_H_BLANK, 0);
+    OS_SetIrqFunction(OS_IE_H_BLANK, 0);
     if (enabled != 0)
         OS_EnableIrq();
     GX_SetVisibleWnd(GX_WNDMASK_NONE);
@@ -335,14 +335,14 @@ void dScMgLuigi_c::StartIris() {
 
     data_0209f608 = 0;
     enabled = OS_DisableIrq();
-    IRQ::SetIRQHandler(OS_IE_H_BLANK, Luigi_PrepareScanlines);
+    OS_SetIrqFunction(OS_IE_H_BLANK, Luigi_PrepareScanlines);
 
     GX_SetVisibleWnd(GX_WNDMASK_W0);
     data_0209d460 = 1;
     G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ, 1);
     G2_SetWndOutsidePlane(GX_WND_PLANEMASK_BG2 | GX_WND_PLANEMASK_OBJ, 0);
     G2_SetWnd0Position(0, 0, 0, 0xc0);
-    IRQ::EnableIRQs(OS_IE_H_BLANK);
+    OS_EnableIrqMask(OS_IE_H_BLANK);
     func_02053c10(1);
     if (enabled != 0)
         OS_EnableIrq();

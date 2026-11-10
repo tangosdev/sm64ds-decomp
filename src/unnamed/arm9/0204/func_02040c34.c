@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "CP15.h"
 
 static inline void FlushFileShareArea(char *base, unsigned int size) {
@@ -43,12 +43,12 @@ typedef char FileShareChildArea_mRecvWork_must_be_0xc70
 extern "C" void func_02040c34(int isParent, int port, int stateCallback, int allocFunc,
                               int allocArg) {
     FileShareWork *G = &data_020a1fc0;
-    unsigned int state = IRQ::Disable();
+    OSIntrMode state = OS_DisableInterrupts();
     if (data_020a0f84 != 0) {
-        IRQ::Restore(state);
+        OS_RestoreInterrupts(state);
     } else {
         data_020a0f84 = 1;
-        IRQ::Restore(state);
+        OS_RestoreInterrupts(state);
 
         G->mIsParent = isParent;
         G->mPort = port;
@@ -156,5 +156,5 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
             WBT_InitChild(func_02040f30);
         }
     }
-    IRQ::Restore(state);
+    OS_RestoreInterrupts(state);
 }

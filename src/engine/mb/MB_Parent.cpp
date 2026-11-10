@@ -28,7 +28,7 @@
  * address, and pmd-sky's MBi_ReloadCache is absent.
  */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_comm_child_block_header.h"
 #include "private/wm_views.h"
@@ -153,9 +153,9 @@ void MBi_CommChangeParentStateCallbackOnly(u32 aid, int state, void *arg);
 void MBi_CommChangeParentState(u32 aid, int state, void *arg);
 
 void MB_CommSetParentStateCallback(u32 callback) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     MB_WORK->mParentCallback = callback;
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 int MB_CommGetParentState(u16 aid) {
@@ -165,13 +165,13 @@ int MB_CommGetParentState(u16 aid) {
 }
 
 void *MB_CommGetChildUser(u16 aid) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     if (data_020a9db8 != 0 && IsChildAidValid(aid)) {
         CpuCopy8(MB_WORK->mChildUser[aid - 1], MB_WORK->mChildUserBuf, 0x16);
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return MB_WORK->mChildUserBuf;
     }
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     return 0;
 }
 
@@ -195,7 +195,7 @@ int MB_CommIsBootable(u16 aid) {
 int MB_CommResponseRequest(u16 aid, int ack) {
     int response;
     int state;
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     switch (ack) {
     case 0:
         state = MB_COMM_PSTATE_REQUESTED;
@@ -214,18 +214,18 @@ int MB_CommResponseRequest(u16 aid, int ack) {
         response = 5;
         break;
     default:
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return 0;
     }
     if (data_020a9db8 != 0 && IsChildAidValid(aid)) {
         u32 i = aid - 1;
         if (MB_WORK->mChildState[i] == state) {
             MB_WORK->mChildResponse[i] = (u16)response;
-            IRQ::Restore(saved);
+            OS_RestoreInterrupts(saved);
             return 1;
         }
     }
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     return 0;
 }
 

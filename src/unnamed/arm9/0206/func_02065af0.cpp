@@ -1,5 +1,5 @@
 //cpp
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "private/arm9_wbt.h"
 
 extern "C" {
@@ -11,19 +11,19 @@ extern int data_020a9570;
 
 int func_02065af0(int *thiz)
 {
-    int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     WBTCommand *r;
     if (data_020a94c0 != 1) {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return 0;
     }
     r = func_02065b88();
     if (r == 0 || r->command != 0) {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return 0;
     }
     MultiCopy_Int(thiz, &data_020a9570, 0x9c);
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     return 1;
 }
 }

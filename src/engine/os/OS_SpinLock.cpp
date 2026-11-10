@@ -12,11 +12,8 @@
  * which come out in reverse. So the three asm functions open the run and the
  * C functions read bottom-up: OSi_WaitByLoop at 0x020570a8, OS_InitLock at
  * 0x02057320.
- *
- * The IRQ:: calls are the SDK's OS_DisableInterrupts/OS_RestoreInterrupts
- * (Disable/Restore) and their _IrqAndFiq forms (DisableAll/RestoreAll).
  */
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/hw/registers.h"
 #include "nitro/os/spinLock.h"
 
@@ -84,13 +81,13 @@ s32 OS_TryLockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void))
 
 s32 OSi_DoUnlockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), u32 disableFiq)
 {
-    u32 lastIntrMode;
+    OSIntrMode lastIntrMode;
 
     if (lockID != lockp->ownerID) {
         return -2;
     }
 
-    lastIntrMode = disableFiq ? IRQ::DisableAll() : IRQ::Disable();
+    lastIntrMode = disableFiq ? OS_DisableInterrupts_IrqAndFiq() : OS_DisableInterrupts();
 
     lockp->ownerID = 0;
     if (ctrlFuncp) {
@@ -99,9 +96,9 @@ s32 OSi_DoUnlockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), u
     lockp->lockFlag = 0;
 
     if (disableFiq) {
-        IRQ::RestoreAll(lastIntrMode);
+        OS_RestoreInterrupts_IrqAndFiq(lastIntrMode);
     } else {
-        IRQ::Restore(lastIntrMode);
+        OS_RestoreInterrupts(lastIntrMode);
     }
 
     return 0;
@@ -114,7 +111,7 @@ s32 OS_UnlockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void))
 
 s32 OSi_DoTryLockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), u32 disableFiq)
 {
-    u32 lastIntrMode = disableFiq ? IRQ::DisableAll() : IRQ::Disable();
+    OSIntrMode lastIntrMode = disableFiq ? OS_DisableInterrupts_IrqAndFiq() : OS_DisableInterrupts();
 
     s32 lastLockFlag = (s32)MI_SwapWord(lockID, &lockp->lockFlag);
 
@@ -126,9 +123,9 @@ s32 OSi_DoTryLockByWord(u16 lockID, OSLockWord *lockp, void (*ctrlFuncp)(void), 
     }
 
     if (disableFiq) {
-        IRQ::RestoreAll(lastIntrMode);
+        OS_RestoreInterrupts_IrqAndFiq(lastIntrMode);
     } else {
-        IRQ::Restore(lastIntrMode);
+        OS_RestoreInterrupts(lastIntrMode);
     }
 
     return lastLockFlag;

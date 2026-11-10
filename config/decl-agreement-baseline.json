@@ -1093,6 +1093,16 @@
         "return:int"
       ]
     },
+    "OS_GetIrqFunction": {
+      "include/nitro/os/interrupt.h": [
+        "return:void (*)(void)"
+      ]
+    },
+    "OS_SetIrqFunction": {
+      "include/nitro/os/interrupt.h": [
+        "param:#2 void (*)(void)"
+      ]
+    },
     "OS_SleepThread": {
       "src/myFS_ReadFile.c": [
         "param:#1 int"

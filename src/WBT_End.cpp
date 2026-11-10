@@ -1,7 +1,7 @@
 //cpp
 #include "private/arm9_wbt.h"
 #include "private/wbt_block_info_list.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -22,12 +22,12 @@ extern int data_020a94c0;
  * (func_02065af0 copies its 0x9c bytes into queued_cmd) and set both packet
  * sizes (func_02065ba0, func_02065bb0) to -1. */
 void WBT_End(void) {
-    int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     WBTWork *work;
     int i;
     WBTCommand cmd;
     if (data_020a94c0 == 0) {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return;
     }
     data_020a94c0 = 0;
@@ -50,6 +50,6 @@ void WBT_End(void) {
     func_02065be0();
     func_02065ba0(-1);
     func_02065bb0(-1);
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 }

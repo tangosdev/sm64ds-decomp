@@ -3,7 +3,7 @@
 #include "private/rom_header_view.h"
 #include "private/mb_views.h"
 #include "private/arm9_a9db8_mb_parent.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -40,28 +40,28 @@ int func_02067928(void *a, void *b)
     void *dst2;
     int idx;
     char *end;
-    u32 state;
+    OSIntrMode state;
     u8 i;
 
     end = (char *)b + sizeof(RomHeaderView) + ((RomHeaderView *)b)->main.size +
           ((RomHeaderView *)b)->sub.size;
     idx = 0xff;
 
-    state = IRQ::Disable();
+    state = OS_DisableInterrupts();
     if (!MBi_IsStarted()) {
-        IRQ::Restore(state);
+        OS_RestoreInterrupts(state);
         return 0;
     }
 
     if (MB_WORK->mFileCount + 1 > 0x10) {
-        IRQ::Restore(state);
+        OS_RestoreInterrupts(state);
         return 0;
     }
 
     for (i = 0; i < 0x10; i++) {
         MbParentWork *slot = MB_STEP(i);
         if (slot->mFiles[0].mGameRegistry == a) {
-            IRQ::Restore(state);
+            OS_RestoreInterrupts(state);
             return 0;
         }
         if (slot->mFiles[0].mActive == 0) {
@@ -70,7 +70,7 @@ int func_02067928(void *a, void *b)
         }
     }
     if (i == 0x10) {
-        IRQ::Restore(state);
+        OS_RestoreInterrupts(state);
         return 0;
     }
 
@@ -80,7 +80,7 @@ int func_02067928(void *a, void *b)
     func_020678a4(dst2, b, end);
 
     if (!func_02067604(MB_WORK->mFiles[idx].mBlockTable, dst2)) {
-        IRQ::Restore(state);
+        OS_RestoreInterrupts(state);
         return 0;
     }
 
@@ -101,7 +101,7 @@ int func_02067928(void *a, void *b)
     MB_WORK->mFiles[idx].mActive = 1;
     MB_WORK->mFileCount += 1;
 
-    IRQ::Restore(state);
+    OS_RestoreInterrupts(state);
     return 1;
 }
 }

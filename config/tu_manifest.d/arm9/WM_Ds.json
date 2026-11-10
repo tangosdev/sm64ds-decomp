@@ -89,7 +89,7 @@
   "compiler_only_output": [],
   "notes": [
     "Hand-assembled, following arm9/FS_Overlay: tu_map cannot segment arm9/main.",
-    "C++ for CP15:: and IRQ::; every function keeps C linkage. The helpers pret has static keep external linkage: the ROM's symbols are global.",
+    "C++ for CP15::; every function keeps C linkage. The helpers pret has static keep external linkage: the ROM's symbols are global.",
     "The pragmas each shard carried are kept around their functions: opt_common_subs off for WM_StartDataSharing, WM_StepDataSharing, WmDataSharingReceiveData and WmDataSharingSendDataSet, and opt_strength_reduction off for WM_StartDataSharing."
   ],
   "verification": {

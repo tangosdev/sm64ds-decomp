@@ -43,7 +43,7 @@
  */
 #include "types.h"
 #include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "WmWork.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_views.h"
@@ -649,13 +649,13 @@ int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 
      index, 15 words longer. */
     char *base1;
     char *base2;
-    int irq;
+    OSIntrMode irq;
     if ((data_020a9db8 != 0) && (MB_WORK->mIsMbInitialized != 0)) {
         return 2;
     }
     base1 = (char *)MATH_ROUNDUP((u32)work, 32);
     base2 = (char *)MATH_ROUNDUP((int)base1 + sizeof(WmWork), 32);
-    irq = IRQ::Disable();
+    irq = OS_DisableInterrupts();
     fill_i = 0;
     data_020a9db0 = (u16)dma;
     data_020a9db4 = base1;
@@ -715,7 +715,7 @@ int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 
     ((WmWork *)base1)->mpSending = 0;
     ((WmWork *)base1)->initialized = 0;
     ((MbParentWork *)base2)->mStartMpBusy = 0;
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
     ((MbParentWork *)base2)->mIsMbInitialized = 1;
     return 0;
 }
@@ -776,14 +776,14 @@ int func_02068d08(void) {
  * MB_StartParent, sizes the request pieces through MBi_SetChildMPMaxSize and
  * reads PXI_IsCallbackReady for useWvrFlag at the end. */
 int func_02068ae8(int param0) {
-    u32 saved;
+    OSIntrMode saved;
     volatile u16 sp0;
     volatile u16 sp2;
     u32 cb;
     int i;
     int result;
 
-    saved = IRQ::Disable();
+    saved = OS_DisableInterrupts();
 
     WM_WORK->parentParam.channel = param0;
 
@@ -822,7 +822,7 @@ int func_02068ae8(int param0) {
     MB_InitSendGameInfoStatus();
     result = func_02068d08();
 
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 
     return result;
 }
@@ -851,9 +851,9 @@ int func_02068a74(void) {
 /* MB_End: func_02068a74 with interrupts disabled. Lead: the reconstruction's
  * also calls OS_Terminate when MB_StartParent was not used. */
 void func_02068a54(void) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     func_02068a74();
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 /* MBi_SetMPData: send on port 1 at priority 3 through WM_SetMPDataToPort.

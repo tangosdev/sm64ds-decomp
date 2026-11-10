@@ -19,7 +19,7 @@
  */
 #include "types.h"
 #include "nitro/hw/registers.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 typedef void (*MIDmaCallback)(void *);
 
@@ -143,7 +143,7 @@ void MI_WaitDma(u32 dmaNo) {
 /* Clears the channel's timing and repeat bits, then its enable bit, and
  * reads the control register twice while the channel winds down. */
 void MI_StopDma(u32 dmaNo) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     vu16 *dmaCntp = &((vu16 *)REG_DMA_BASE)[dmaNo * 6 + 5];
 
     *dmaCntp &= ~0x3a00;
@@ -151,6 +151,6 @@ void MI_StopDma(u32 dmaNo) {
     (void)*dmaCntp;
     (void)*dmaCntp;
 
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 }

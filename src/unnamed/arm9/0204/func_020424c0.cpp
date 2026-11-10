@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "private/fs_views.h"
 
 typedef struct FSFile FSFile;
@@ -67,7 +67,7 @@ void func_020424c0(void) {
     RomRegion *ptrs[4];
     FSFile file;
     u32 sl;
-    u32 irq;
+    OSIntrMode irq;
     void *fp;
     int i;
 
@@ -84,9 +84,9 @@ void func_020424c0(void) {
         i++;
     } while (i < 4);
 
-    irq = IRQ::Disable();
+    irq = OS_DisableInterrupts();
     fp = data_020a1fc0.mAllocFunc(data_020a1fc0.mAllocArg, sl, 0);
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
 
     if (data_020a1fc0.mIsParent != 0) {
         FSArchive *sb;

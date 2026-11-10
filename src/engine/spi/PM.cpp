@@ -32,7 +32,8 @@
  * 0x70..0x74.
  */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
+#include "nitro/os/interrupt.h"
 #include "CP15.h"
 #include "nitro/spi/pm.h"
 #include "nitro/ctrdg/ctrdg_common.h"
@@ -90,13 +91,13 @@ u32 PMi_SendSleepStart(u16 trigger, u16 keyPattern);
 void PMi_SendPxiData(u32 data);
 
 int PMi_Lock(void) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     if (data_020a8114.lock != 0) {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return 0;
     }
     data_020a8114.lock = 1;
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     return 1;
 }
 
@@ -318,16 +319,16 @@ void PMi_SendPxiData(u32 data) {
 }
 
 void PM_GoSleepMode(u32 trigger, u32 logic, u32 keyPattern) {
-    u32 saved_mode;
+    OSIntrMode saved_mode;
     u32 saved_mask;
     u32 card_pulled = 0;
     u16 saved_ime;
 
     saved_ime = OS_DisableIrq();
-    saved_mode = IRQ::Disable();
-    saved_mask = IRQ::DisableIRQs(0x3fffff);
-    IRQ::SetIRQs(0x40000);
-    IRQ::Restore(saved_mode);
+    saved_mode = OS_DisableInterrupts();
+    saved_mask = OS_DisableIrqMask(0x3fffff);
+    OS_SetIrqMask(0x40000);
+    OS_RestoreInterrupts(saved_mode);
 
     (void)OS_EnableIrq();
     if (trigger & PM_TRIGGER_CARD) {
@@ -351,9 +352,9 @@ void PM_GoSleepMode(u32 trigger, u32 logic, u32 keyPattern) {
     if (card_pulled == 0) {
         PMi_SetLCDPower(PM_LCD_POWER_ON, 1, 1, 0);
     }
-    IRQ::Disable();
-    IRQ::SetIRQs(saved_mask);
-    IRQ::Restore(saved_mode);
+    OS_DisableInterrupts();
+    OS_SetIrqMask(saved_mask);
+    OS_RestoreInterrupts(saved_mode);
 
     (void)OS_RestoreIrq(saved_ime);
     if (card_pulled != 0) {

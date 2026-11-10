@@ -1,7 +1,7 @@
 //cpp
 #pragma long_calls on
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "private/fs_views.h"
 
 typedef struct FSFile FSFile;
@@ -33,7 +33,7 @@ static inline int FS_IsBusy(FSFile *p_file) {
 
 int func_0205d3f4(FSFile *t) {
     int woken = 0;
-    u32 irq = IRQ::Disable();
+    OSIntrMode irq = OS_DisableInterrupts();
     if (FS_IsBusy(t)) {
         woken = (t->arc->list.next != t) ? 1 : 0;
         if (woken) {
@@ -43,7 +43,7 @@ int func_0205d3f4(FSFile *t) {
             OS_SleepThread(&t->queue);
         } while (FS_IsBusy(t));
     }
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
     if (woken) {
         return FSi_ExecuteSyncCommand(t);
     }

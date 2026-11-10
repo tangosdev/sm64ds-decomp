@@ -4,14 +4,14 @@
  * (+0x30), else store x0/xDotSize and y0/yDotSize with their divider
  * inverses (0x10000000 / dot size) at +0x18..+0x2c and set it. */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/spi/tp.h"
 
 extern "C" {
 
 
 void TP_SetCalibrateParam(s16 *arg) {
-    u32 state;
+    OSIntrMode state;
     unsigned long long vv;
 
     if (arg == 0) {
@@ -19,7 +19,7 @@ void TP_SetCalibrateParam(s16 *arg) {
         return;
     }
 
-    state = IRQ::Disable();
+    state = OS_DisableInterrupts();
 
     vv = (u32)arg[2];
     *(volatile u16 *)0x4000280 = 0;
@@ -41,7 +41,7 @@ void TP_SetCalibrateParam(s16 *arg) {
     }
     data_020a80cc.mCalibration[5] = *(volatile u32 *)0x40002a0;
 
-    IRQ::Restore(state);
+    OS_RestoreInterrupts(state);
     data_020a80cc.mCalibrated = 1;
 }
 }
