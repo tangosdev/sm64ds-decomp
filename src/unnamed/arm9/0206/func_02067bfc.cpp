@@ -31,7 +31,7 @@ extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, unsigned int image_top,
                              unsigned int image_bottom, unsigned int file_index);
 extern void CpuCopy8(const void *src, void *dst, unsigned int size);
-extern int func_0205d368(int *o, int r1, int sel);
+extern int FS_SeekFile(FSFile *p_file, int offset, FSSeekFileMode origin);
 extern int FS_CloseFile(char *self);
 extern void func_02067b68(void *s, unsigned int start, unsigned int end, int flag);
 
@@ -94,24 +94,24 @@ int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
         if (remain >= threshold) {
             cur += 0x160;
             remain -= 0x160;
-            func_0205d368((int *)a, base + ctx->wr, 0);
+            FS_SeekFile(a, base + ctx->wr, FS_SEEK_SET);
             FS_ReadFile(a, cur, ctx->f2c);
             cur += ctx->f2c;
             remain -= ctx->f2c;
 
-            func_0205d368((int *)a, base + ctx->f30, 0);
+            FS_SeekFile(a, base + ctx->f30, FS_SEEK_SET);
             FS_ReadFile(a, cur, ctx->f3c);
             cur += ctx->f3c;
             remain -= ctx->f3c;
         }
 
         if (remain >= 0x88) {
-            func_0205d368((int *)a, base + ctx->f80, 0);
+            FS_SeekFile(a, base + ctx->f80, FS_SEEK_SET);
             FS_ReadFile(a, cur, 0x88);
             result = 1;
         }
 
-        func_0205d368((int *)a, base, 0);
+        FS_SeekFile(a, base, FS_SEEK_SET);
 
         if (flag) {
             FS_CloseFile((char *)&file);

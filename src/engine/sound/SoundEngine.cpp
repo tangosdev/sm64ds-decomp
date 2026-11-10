@@ -146,7 +146,7 @@ struct data_020a5bb8_t {
     /* 0x28 */ int fileImageOffset; /* the FILE block; files are read by fileTable offset */
     /* 0x2c */ int fileImageSize;
     /* 0x30 */ char file[0x44];         /* NitroSDK FSFile */
-    /* 0x74 */ struct TwoInt fileId;    /* filled from the path by func_0205d644 */
+    /* 0x74 */ struct TwoInt fileId;    /* filled from the path by FS_ConvertPathToFileID */
     /* 0x7c */ struct Hdr84 *fileTable; /* per-file records (func_020509b0, func_020509d8) */
     /* 0x80 */ void *symbols;           /* loaded only when func_02050d54's flag is set */
     /* 0x84 */ void *info;              /* the Info*Entry::GetWithID tables */
@@ -396,9 +396,9 @@ extern int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32
 extern void FS_ReleaseArchiveName(void *thiz);
 extern int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len);
 extern void FS_InitArchive(void *o);
-extern int func_0205d368(void *o, int r1, int sel);
-extern int func_0205d568(Node *node, int b, ...);
-extern int func_0205d644(void *out_file_id, const char *path);
+extern int FS_SeekFile(void *o, int r1, int sel);
+extern int FS_OpenFileFast(Node *node, int b, ...);
+extern int FS_ConvertPathToFileID(void *out_file_id, const char *path);
 
 /* In-span forward declarations. */
 extern int func_0204eda4(int r0, char* a, u32 idx);
@@ -1250,9 +1250,9 @@ extern "C" void func_02050f34(data_020a5bb8_t *self, int a1, int a2, int a3) {
     self->info = 0;
     self->fileTable = 0;
     self->symbols = 0;
-    ((int (*)(void *p, int b))func_0205d644)(&self->fileId, a1);
+    ((int (*)(void *p, int b))FS_ConvertPathToFileID)(&self->fileId, a1);
     FS_InitFile(self->file);
-    ((void (*)(void *p, struct TwoInt v))func_0205d568)(self->file, self->fileId);
+    ((void (*)(void *p, struct TwoInt v))FS_OpenFileFast)(self->file, self->fileId);
     ((void (*)(void *dst, void *src, int n))FS_ReadFile)(self->file, self, 0x30);
     if (a2 != 0)
         ((void(*)(void *self, int a, int b))func_02050d54)(self, a2, a3);
@@ -1279,19 +1279,19 @@ extern "C" int func_02050d54(data_020a5bb8_t *obj, void *owner, int flag) {
         if (obj->symbols == 0)
             return 0;
     }
-    if (func_0205d368(obj->file, obj->infoOffset, 0) == 0)
+    if (FS_SeekFile(obj->file, obj->infoOffset, 0) == 0)
         return 0;
     r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->info, obj->infoSize);
     if (r != obj->infoSize)
         return 0;
-    if (func_0205d368(obj->file, obj->fileTableOffset, 0) == 0)
+    if (FS_SeekFile(obj->file, obj->fileTableOffset, 0) == 0)
         return 0;
     r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->fileTable,
                                                       obj->fileTableSize);
     if (r != obj->fileTableSize)
         return 0;
     if (flag != 0 && obj->symbolSize != 0) {
-        if (func_0205d368(obj->file, obj->symbolOffset, 0) == 0)
+        if (FS_SeekFile(obj->file, obj->symbolOffset, 0) == 0)
             return 0;
         r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->symbols,
                                                           obj->symbolSize);
@@ -1428,8 +1428,8 @@ extern "C" int func_020509d8(unsigned int idx, int a1, unsigned int len, unsigne
     if (len > avail)
         len = avail;
 
-    if (((int (*)(int *o, int r1, int sel))func_0205d368)((int *)((data_020a5bb8_t *)G)->file,
-                                                          entry->offset + off, 0) == 0)
+    if (((int (*)(int *o, int r1, int sel))FS_SeekFile)((int *)((data_020a5bb8_t *)G)->file,
+                                                        entry->offset + off, 0) == 0)
         return -1;
 
     return ((int (*)(int *o, int a1, unsigned int len))FS_ReadFile)(
@@ -2435,7 +2435,7 @@ extern "C" int func_0204eda4(int r0, char* a, u32 idx) {
         struct Pair p;
         p.a = a;
         p.idx = idx;
-        r = ((int(*)(int r0, struct Pair p))func_0205d568)(r0, p);
+        r = ((int (*)(int r0, struct Pair p))FS_OpenFileFast)(r0, p);
     }
     return r;
 }

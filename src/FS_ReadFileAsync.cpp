@@ -11,7 +11,7 @@ extern "C" {
 extern int FSi_SendCommand(FSFile *self, int a);
 extern void OS_SleepThread(unsigned short *self);
 extern int FSi_ExecuteSyncCommand(FSFile *);
-extern int func_0205d688(FSFile *p_file, void *dst, int len, int async);
+extern int FSi_ReadFileCore(FSFile *p_file, void *dst, int len, int async);
 
 /* NitroSDK FS_GetPathName: store buf and len in arg.getpath, restarting the
    measure unless the last command was already FS_COMMAND_GETPATH (5), and
@@ -31,26 +31,26 @@ static inline int FS_IsBusy(FSFile *p_file) {
     return (p_file->stat & 1) ? 1 : 0;
 }
 
-int func_0205d3f4(FSFile *t) {
-    int woken = 0;
+int FS_WaitAsync(FSFile *p_file) {
+    int is_owner = 0;
     u32 irq = IRQ::Disable();
-    if (FS_IsBusy(t)) {
-        woken = (t->arc->list.next != t) ? 1 : 0;
-        if (woken) {
-            t->stat |= 4;
+    if (FS_IsBusy(p_file)) {
+        is_owner = (p_file->arc->list.next != p_file) ? 1 : 0;
+        if (is_owner) {
+            p_file->stat |= 4;
         }
         do {
-            OS_SleepThread(&t->queue);
-        } while (FS_IsBusy(t));
+            OS_SleepThread(&p_file->queue);
+        } while (FS_IsBusy(p_file));
     }
     IRQ::Restore(irq);
-    if (woken) {
-        return FSi_ExecuteSyncCommand(t);
+    if (is_owner) {
+        return FSi_ExecuteSyncCommand(p_file);
     }
-    return t->error == 0;
+    return p_file->error == 0;
 }
 
-void func_0205d3e4(FSFile *p_file, void *dst, int len) {
-    func_0205d688(p_file, dst, len, 1);
+int FS_ReadFileAsync(FSFile *p_file, void *dst, int len) {
+    return FSi_ReadFileCore(p_file, dst, len, 1);
 }
 }
