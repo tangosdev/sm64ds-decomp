@@ -65,7 +65,7 @@ enum {
 };
 
 extern signed char gCurrentSublevel;
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 /* Second particle parameter per segment: 0xe61 + i * 0x689. */
 extern short data_ov095_02136f98[];
 
@@ -259,7 +259,7 @@ int daObjFlamethrower_c::Behavior() {
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum2[2];
                     }
                     if (gCurrentSublevel == kBigBoosHaunt) {
-                        s16 wave = data_02082214[(((u16)(s16)wavePhase) >> 4) * 2];
+                        s16 wave = FX_SinCosTable_[(((u16)(s16)wavePhase) >> 4) * 2];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y =
                             mPosY + FX_MUL(wave, -0xaa000);
                     }

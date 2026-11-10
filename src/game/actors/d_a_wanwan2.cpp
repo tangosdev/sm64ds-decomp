@@ -182,7 +182,7 @@ extern ChompState data_ov100_021486f4;
 extern ChompPmf data_ov100_02148000;
 extern ChompPmf data_ov100_02147ff8;
 extern unsigned char gGameMode;
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 extern Matrix4x3 data_020a0e68;
 }
 
@@ -436,7 +436,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         delta.z = vel->z + (pos->z - src->z);
         idx = ((unsigned short)(short)(angOff + (thisx->mChainTimer << 12))) >> 4;
         val = (pos->y + vel->y) - 0x2000 /* 2 units down */
-              + FX_MUL(data_02082214[idx * 2], -0xa000);
+              + FX_MUL(FX_SinCosTable_[idx * 2], -0xa000);
         if (val <= *heights) val = *heights;
         delta.y = val - src->y;
         ang = cstd::atan2(delta.x, delta.z);

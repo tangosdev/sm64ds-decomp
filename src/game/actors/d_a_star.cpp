@@ -139,7 +139,7 @@ extern int RandomIntInternal(int* seed);
 extern dCamera_c *gCamera;
 extern unsigned char IsAreaShowing(int idx);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 extern void func_02012694(unsigned int a, void *p);
 extern void func_ov002_020e8244(void *out, daStar_c *b);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
@@ -2597,16 +2597,16 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
         if (flag) {
             short ang = Vec3_HorzAngle(&vec[0], (Vector3*)&mCamPosX);
             int k = (unsigned short)(short)(ang + ((r6 & 3) << 14)) >> 4;
-            vec[0].x = data_02082214[k * 2] * 1000 + vec[0].x;
-            vec[0].z = data_02082214[k * 2 + 1] * 1000 + vec[0].z;
+            vec[0].x = FX_SinCosTable_[k * 2] * 1000 + vec[0].x;
+            vec[0].z = FX_SinCosTable_[k * 2 + 1] * 1000 + vec[0].z;
             ((dCamera_c *)cam)->SetPos(*(const Vector3 *)&vec[0]);
         } else {
             if (!IsAreaShowing(mAreaId))
                 return;
             short ang = Vec3_HorzAngle(&vec[0], (Vector3*)&mCamPosX);
             int k = (unsigned short)(short)(ang + ((r6 & 3) << 14)) >> 4;
-            vec[0].x += FX_MUL(dist, data_02082214[k * 2]);
-            vec[0].z += FX_MUL(dist, data_02082214[k * 2 + 1]);
+            vec[0].x += FX_MUL(dist, FX_SinCosTable_[k * 2]);
+            vec[0].z += FX_MUL(dist, FX_SinCosTable_[k * 2 + 1]);
             ((dCamera_c *)cam)->SetPos(*(const Vector3 *)&vec[0]);
         }
 

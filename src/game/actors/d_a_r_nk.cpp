@@ -881,7 +881,7 @@ int daRNk_c::func_ov062_021199ac()
     selfAngle = this->mPrevAngleY;
     otherAngle = other->mPrevAngleY;
     idx = (u16)(s16)(otherAngle - selfAngle);
-    tableVal = data_02082214[(idx >> 4) * 2 + 1];
+    tableVal = FX_SinCosTable_[(idx >> 4) * 2 + 1];
     otherK = other->mHorzSpeed;
     fixed1 = FX_MUL(otherK, tableVal);
 

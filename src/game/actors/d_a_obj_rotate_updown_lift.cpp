@@ -123,7 +123,7 @@ extern VariantWords data_ov091_02134bd0;
 extern UpdownFileSlot data_ov091_02134c30[];
 extern UpdownFileSlot data_ov091_02134c34[];
 extern UpdownClpsSlot data_ov091_02134c38[];
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern s8 gCurrentSublevel;
 
 extern "C" {
@@ -217,7 +217,7 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     ((Matrix4x3 *)mShadowMat)->t.x = mPosX >> 3;
 
     int sinIdx = (u16)mAngleX >> 4;
-    int sine = data_02082214[sinIdx << 1];
+    int sine = FX_SinCosTable_[sinIdx << 1];
     int sineAbs = sine < 0 ? -sine : sine;
     int scaled = FX_MUL(sineAbs, 0xa0000);
     int variantA = mVariant;
@@ -241,7 +241,7 @@ void daObjRotateUpdownLift_c::func_ov091_02131160() {
     int cosIdx = (u16)mAngleX >> 4;
     int variantC = mVariant;
     int sx = shadowSizeX.v[variantC] - shr;
-    int cosine = data_02082214[(cosIdx << 1) + 1];
+    int cosine = FX_SinCosTable_[(cosIdx << 1) + 1];
     int fac = 0xa0000 - shr;
     if (cosine < 0)
         cosine = -cosine;

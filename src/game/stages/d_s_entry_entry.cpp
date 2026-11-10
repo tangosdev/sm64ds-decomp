@@ -47,7 +47,7 @@ void func_0203cbc0(void *);
 /* local extern: the camera matrix and the interleaved sine/cosine table,
    declared per consumer (d_ext_model.cpp, d_ent_obj.cpp). */
 extern Matrix4x3 data_0209b3ec;
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 /* File 0x8418. The ctor and dtor are func_020178cc / func_020178b4; this
    TU does not define them. The handler row is filled by the static
    initializer those two objects emit. */
@@ -226,7 +226,7 @@ int EntryMesh::RippleHeight(int dist) {
     if (r2 < 0)
         r2 = 0;
     idx = (unsigned short)phase >> 4;
-    t = data_02082214[idx * 2];
+    t = FX_SinCosTable_[idx * 2];
     return FX_MUL(t, r2);
 }
 

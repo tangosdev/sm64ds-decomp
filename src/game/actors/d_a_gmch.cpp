@@ -440,7 +440,7 @@ int daGmch_c::UpdateState7()
    reload and the bytes keep it. */
 int daGmch_c::EnterState7()
 {
-    extern s16 data_02082214[];
+    extern s16 FX_SinCosTable_[];
 
     Vector3 rayStart;
     dActor_c *holder;
@@ -468,11 +468,11 @@ int daGmch_c::EnterState7()
     mPosZ = holderPos[2];
 
     angleIdx = ((u16)mAngleY >> 4);
-    trig = data_02082214[angleIdx * 2];
+    trig = FX_SinCosTable_[angleIdx * 2];
     mPosX = mPosX + FX_MUL(trig, 0x50000);
     mPosY = mPosY + 0x50000;
     angleIdx = ((u16)mAngleY >> 4);
-    trig = data_02082214[angleIdx * 2 + 1];
+    trig = FX_SinCosTable_[angleIdx * 2 + 1];
     mPosZ = mPosZ + FX_MUL(trig, 0x50000);
 
     holder = mHolder;

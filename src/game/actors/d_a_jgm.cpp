@@ -42,7 +42,7 @@
  *   reference spelling; a pointer emits identical ARM. SetState's `int`
  *   signedness is indistinguishable.
  * - func_0201267c (throw SFX 0xd2 at +0x74, mCamSpacePosX),
- *   data_02082214 (sin/cos pairs) and data_020a0e68 (arm9 scratch
+ *   FX_SinCosTable_ (sin/cos pairs) and data_020a0e68 (arm9 scratch
  *   matrix) keep linker names.
  * - This TU claims .text only: the SharedFilePtr handles, the BCA/BTP
  *   pointer tables, the PMF state table data_ov077_02127bc4 and the
@@ -142,7 +142,7 @@ extern DaJgmStateHandler data_ov077_021277f0;
 extern DaJgmStateHandler data_ov077_02127808;
 extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
@@ -430,11 +430,11 @@ s32 daJgm_c::EnterSpitState()
     mPosZ = src[2];
 
     idx = ((int)(u16)mPrevAngleY) >> 4;
-    sinv = data_02082214[idx * 2];
+    sinv = FX_SinCosTable_[idx * 2];
     *pPosX = *pPosX + FX_MUL(sinv, 0x50000);
     *pPosY = *pPosY + 0x50000;
     idx = ((int)(u16)mPrevAngleY) >> 4;
-    cosv = data_02082214[idx * 2 + 1];
+    cosv = FX_SinCosTable_[idx * 2 + 1];
     *pPosZ = *pPosZ + FX_MUL(cosv, 0x50000);
 
     mAngVelY = 0x7000;
@@ -713,7 +713,7 @@ int daJgm_c::CountSpinies()
 void daJgm_c::UpdateHoverBob()
 {
     unsigned short v = (unsigned short)mBobAngle;
-    short s = data_02082214[(v >> 4) * 2];
+    short s = FX_SinCosTable_[(v >> 4) * 2];
     long long prod = (long long)s * 0x27000;
     mBobOffsetY = (int)((prod + 0x800) >> 12);
     mBobAngle = (short)(mBobAngle + 0x700);

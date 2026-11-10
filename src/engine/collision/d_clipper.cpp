@@ -36,7 +36,7 @@ void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *result);
 void NormalizeVec3(const Vector3 *src, Vector3 *dst);
 }
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 
 /* Signed distance of (x, y, z) from a frustum side plane, each product rounded to Fix12. */
 static inline int PlaneDistance(const ClipperPlane &n, long long x, long long y, long long z) {
@@ -127,7 +127,7 @@ int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i
  * and near-plane distance.
  *
  * mFovAngle is an angle; its top 12 bits index a sine/cosine pair table at
- * data_02082214, and fdiv of that pair gives the tangent. Scaling by mNearZ
+ * FX_SinCosTable_, and fdiv of that pair gives the tangent. Scaling by mNearZ
  * (the plane distance) gives the half-height, and by mAspectRatio (the
  * aspect ratio) the half-width. The four corner vectors at z = -mNearZ
  * follow, and each adjacent pair crossed and normalised is one side plane's
@@ -135,7 +135,7 @@ int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i
  */
 void dClipper::UpdateFrustumPlanes() {
     int angleIndex = (int)mFovAngle >> 4;
-    int tanHalfFov = FX_Div(data_02082214[2 * angleIndex], data_02082214[2 * angleIndex + 1]);
+    int tanHalfFov = FX_Div(FX_SinCosTable_[2 * angleIndex], FX_SinCosTable_[2 * angleIndex + 1]);
     Fix12i halfHeight = FX_MUL(mNearZ, tanHalfFov);
     Fix12i halfWidth = FX_MUL(mAspectRatio, halfHeight);
     Vector3 corner0, corner1, corner2, corner3;

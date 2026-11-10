@@ -876,7 +876,7 @@ void daObjBlockS_c::HandleWallHit() {
  * floor class (CLPS::GetFloorClass; include/daPly_c.h calls it the slipperiness class),
  * hl its slide acceleration (func_ov002_020f02c8). a1 is the current
  * velocity (mHorzSpeed along mPrevAngleY, through the sin / cos table at
- * data_02082214), a2 is hl in the direction atan2 of the normal's x and z
+ * FX_SinCosTable_), a2 is hl in the direction atan2 of the normal's x and z
  * gives (through the same table), scaled by Vec3_HorzLen of the normal;
  * their sum becomes the new mPrevAngleY and mHorzSpeed (capped at 100 units,
  * 0x64000). mVertSpeed is set to -((normalX * mSpeedX + normalZ * mSpeedZ)
@@ -949,12 +949,12 @@ int daObjBlockS_c::UpdateFloorContact() {
         int sMove = (u16)ang >> 4;
         int sPrev = (u16)mPrevAngleY >> 4;
         s32 speed = mHorzSpeed;
-        a1.x = FX_MUL(speed, data_02082214[sPrev * 2]);
+        a1.x = FX_MUL(speed, FX_SinCosTable_[sPrev * 2]);
         a1.y = 0;
-        a1.z = FX_MUL(speed, data_02082214[sPrev * 2 + 1]);
-        a2.x = FX_MUL(hl, data_02082214[sMove * 2]);
+        a1.z = FX_MUL(speed, FX_SinCosTable_[sPrev * 2 + 1]);
+        a2.x = FX_MUL(hl, FX_SinCosTable_[sMove * 2]);
         a2.y = 0;
-        a2.z = FX_MUL(hl, data_02082214[sMove * 2 + 1]);
+        a2.z = FX_MUL(hl, FX_SinCosTable_[sMove * 2 + 1]);
     }
     Vec3_MulScalarInPlace(&a2, Vec3_HorzLen((Vector3 *)&mFloorNormalX));
     Vec3_Add(&sum, &a1, &a2);

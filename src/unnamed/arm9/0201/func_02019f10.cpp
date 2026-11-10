@@ -52,7 +52,7 @@ void func_02019f64(void *arg) {
 }
 
 /* The thread and its stack reuse the 0x4000-byte sin/cos table
-   data_02082214 (0x02082214..0x02086214), which ends where FX_AtanTable_
+   FX_SinCosTable_ (0x02082214..0x02086214), which ends where FX_AtanTable_
    begins: the OSThread takes the table's top 0x94 bytes and its
    0x3f6c-byte stack runs down from there to the table's start. */
 int func_02019f10(void) {

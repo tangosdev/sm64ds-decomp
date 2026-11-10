@@ -75,7 +75,7 @@ extern dCamera_c::State data_0209b128;
 extern Matrix4x3 data_0209b41c;
 extern unsigned int gNextActorUpdateMask;
 
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern void *data_02086efc;
 extern void *data_02086f08;
 extern s32 data_02086f14[3];
@@ -352,7 +352,7 @@ block_7:
         daPly_c *m = (daPly_c *)mTargetPlayer;
         enum Bool isBf = (enum Bool)(m->actorID == 0xbf);
         if (isBf != FALSE) {
-            s32 t2 = data_0209f32c - (data_02082214[((u16)mAngleX >> 4) * 2] * 0x10);
+            s32 t2 = data_0209f32c - (FX_SinCosTable_[((u16)mAngleX >> 4) * 2] * 0x10);
             if (!(mFlags & 1)) {
                 if (m->mIsUnderwater != 0 || m->mIsInShallowWater != 0) {
                     if (pos.y <= t2) {
@@ -438,13 +438,13 @@ int dCamera_c::Render()
 
     s16 tr3 = self->mRollShake;
     if (tr3 != 0) {
-        s16 c = data_02082214[((s32)(u16)self->mRollShakePhase >> 4) * 2];
+        s16 c = FX_SinCosTable_[((s32)(u16)self->mRollShakePhase >> 4) * 2];
         var_r4 = (s16)(var_r4 + (s16)FX_MUL(tr3, c));
     }
 
     s16 tr0 = self->mFovShake;
     if (tr0 != 0) {
-        s16 c = data_02082214[((s32)(u16)self->mFovShakePhase >> 4) * 2 + 1];
+        s16 c = FX_SinCosTable_[((s32)(u16)self->mFovShakePhase >> 4) * 2 + 1];
         s32 m = FX_MUL(c, 0x360);
         sp18 = (s16)(sp18 + ((tr0 * m) << 4 >> 16));
     }
@@ -462,7 +462,7 @@ int dCamera_c::Render()
     }
 
     s32 idx = ((s32)(u16)sp18 >> 4) * 2;
-    G3i::PerspectiveW_(data_02082214[idx], data_02082214[idx + 1], self->mAspect, self->mNear,
+    G3i::PerspectiveW_(FX_SinCosTable_[idx], FX_SinCosTable_[idx + 1], self->mAspect, self->mNear,
                        self->mFar, var_r6, 1, (Matrix4x3 *)0);
 
     {
@@ -516,8 +516,8 @@ extern "C" {
 void dCamera_c::SetFovAngle(short arg) {
     int i = (int)(unsigned short)arg >> 4;
     int j = i * 2;
-    mInvSinFov = FX_Inv(data_02082214[j]);
-    mInvCosFov = FX_Inv(data_02082214[j + 1]);
+    mInvSinFov = FX_Inv(FX_SinCosTable_[j]);
+    mInvCosFov = FX_Inv(FX_SinCosTable_[j + 1]);
     data_0209f43c.Func_020156DC(mAspect, arg, mNear, mFar);
 }
 }
@@ -2075,8 +2075,8 @@ void dCamera_c::func_0200af20(Vector3 *v1, Vector3 *v2, short *out) {
     idx = (ang >> 4) * 2;
 
     v2->y = mTargetPos.y + 0x8f7690;
-    v2->x = mTargetPos.x + FX_MUL(data_02082214[idx], 0x15a6f80);
-    v2->z = mTargetPos.z + FX_MUL(data_02082214[idx + 1], 0x15a6f80);
+    v2->x = mTargetPos.x + FX_MUL(FX_SinCosTable_[idx], 0x15a6f80);
+    v2->z = mTargetPos.z + FX_MUL(FX_SinCosTable_[idx + 1], 0x15a6f80);
 
     if (b != 0) {
         {
@@ -2439,8 +2439,8 @@ s32 dCamera_c::func_02009e70() {
                                     sp18 = cstd::atan2(-sp40.y, fp);
                                     ApproachAngle((s16 *)&sp18, sb, 0x20, 0x800, 0);
                                     t0 = (sp18 >> 4) * 2;
-                                    sp40.y = FX_MUL(sp28, -data_02082214[t0]);
-                                    t0 = FX_Div(FX_MUL(sp28, data_02082214[t0 + 1]), fp);
+                                    sp40.y = FX_MUL(sp28, -FX_SinCosTable_[t0]);
+                                    t0 = FX_Div(FX_MUL(sp28, FX_SinCosTable_[t0 + 1]), fp);
                                     sp40.x = FX_MUL(sp40.x, t0);
                                     sp40.z = FX_MUL(sp40.z, t0);
                                 }
@@ -3660,8 +3660,8 @@ void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, Fix12i mag, short 
     unsigned idx = (unsigned short)ang >> 4;
 
     v.x = 0;
-    v.y = FX_MUL(mag, data_02082214[idx * 2]);
-    v.z = FX_MUL(mag, data_02082214[idx * 2 + 1]);
+    v.y = FX_MUL(mag, FX_SinCosTable_[idx * 2]);
+    v.z = FX_MUL(mag, FX_SinCosTable_[idx * 2 + 1]);
     Vec3_RotateYAndTranslate(res, trans, angY, &v);
 }
 

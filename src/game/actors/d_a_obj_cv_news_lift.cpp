@@ -32,7 +32,7 @@
  * - MainMeshCallback and Platform0Callback: testing actorID == 0xbf
  *   inline is 0x34 against 0x40. The int temporary stays on all five
  *   callbacks.
- * - data_02092768, data_020a0e68 and data_02082214 stay address names.
+ * - data_02092768 and data_020a0e68 stay address names.
  */
 
 #include "daObjCvNewsLift_c.h"
@@ -102,7 +102,7 @@ u8 DecIfAbove0_Byte(u8 *p);
 }
 
 extern s32 data_02092768[];
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 /* Yaw for the +Z, -Z, +X and -X platforms, in the transform loops' order. */
 extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 
@@ -260,7 +260,7 @@ s32 daObjCvNewsLift_c::Behavior() {
         if (DecIfAbove0_Short(&mWobbleTimer)) {
             mWobblePhase += 0x1f00;
             {
-                s16 sine = data_02082214[((u16)(s16)mWobblePhase >> 4) * 2];
+                s16 sine = FX_SinCosTable_[((u16)(s16)mWobblePhase >> 4) * 2];
                 s32 amp = mWobbleTimer * 0x1a;
                 s8 which = mLoweredPlatform;
                 s16 wobble = (s16)FX_MUL(amp, sine);

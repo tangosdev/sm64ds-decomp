@@ -35,7 +35,7 @@
  *   0210d9c0 are shared ov002 files the cloud also claims. symbols.txt has
  *   no recovered names for any of them.
  * - func_ov002_020aea30 (fire hit), func_02012694 (sound at a
- *   camera-space position), data_02082214 (sin/cos pairs) and
+ *   camera-space position), FX_SinCosTable_ (sin/cos pairs) and
  *   data_0209e650 (random seed) keep linker names.
  */
 
@@ -65,7 +65,7 @@ extern SharedFilePtr data_ov002_0210d9c0;
 extern daHyuhyu_c_State data_ov091_021356b0; /* cloud: blowing */
 extern daHyuhyu_c_State data_ov091_021356c0; /* gust: flying */
 extern daHyuhyu_c_State data_ov091_021356d0; /* cloud: waiting */
-extern s16 data_02082214[];                  /* sin/cos pairs */
+extern s16 FX_SinCosTable_[];                /* sin/cos pairs */
 
 /* C helpers with no shared header. */
 extern "C" {
@@ -316,9 +316,9 @@ int daHyuhyu_c::StateBlowMain() {
         func_02012694(0x164, &mCamSpacePos);
 
     if ((u16)(mAnmModel.currFrame >> 12) > 0x1e) {
-        rot.x = data_02082214[((u16)mAngleY >> 4) * 2];
+        rot.x = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
         rot.y = 0;
-        rot.z = data_02082214[((u16)mAngleY >> 4) * 2 + 1];
+        rot.z = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
 
         pos.y = pos.y + 0x28000;
 

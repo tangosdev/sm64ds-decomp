@@ -116,7 +116,7 @@ extern int func_02054d88(void);
 
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern unsigned char sCurling2StepXPicks[];
 extern unsigned char sCurling2StepXFastPicks[];
 extern int sCurling2StepModes[];
@@ -967,10 +967,10 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
             int separationY;
 
             angleIndex = (contactAngle >> 4) * 2;
-            contactCos = data_02082214[angleIndex + 1];
+            contactCos = FX_SinCosTable_[angleIndex + 1];
             separationX = FX_MUL(contactCos, 0x1a);
             mStone[hitIndex].x = mStone[stoneIndex].x + (separationX << 12);
-            contactSin = data_02082214[angleIndex];
+            contactSin = FX_SinCosTable_[angleIndex];
             separationY = FX_MUL(contactSin, 0x1a);
             mStone[hitIndex].y = mStone[stoneIndex].y + (separationY << 12);
             for (nextIndex = 0; nextIndex < 11; nextIndex++) {
@@ -996,10 +996,10 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
                     int nextSeparationY;
 
                     angleIndex = (nextContactAngle >> 4) * 2;
-                    nextContactCos = data_02082214[angleIndex + 1];
+                    nextContactCos = FX_SinCosTable_[angleIndex + 1];
                     nextSeparationX = FX_MUL(nextContactCos, 0x1a);
                     mStone[nextIndex].x = mStone[hitIndex].x + (nextSeparationX << 12);
-                    nextContactSin = data_02082214[angleIndex];
+                    nextContactSin = FX_SinCosTable_[angleIndex];
                     nextSeparationY = FX_MUL(nextContactSin, 0x1a);
                     mStone[nextIndex].y = mStone[hitIndex].y + (nextSeparationY << 12);
                     func_02012718(0xe8, mStone[stoneIndex].x);
@@ -1080,17 +1080,17 @@ void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
             contactAngleIndex = (contactAngle >> 4) * 2;
             relativeAngle = mStone[stoneIndex].angle - contactAngle;
             relativeAngleIndex = (relativeAngle >> 4) * 2;
-            relativeCos = data_02082214[relativeAngleIndex + 1];
-            relativeSin = data_02082214[relativeAngleIndex];
+            relativeCos = FX_SinCosTable_[relativeAngleIndex + 1];
+            relativeSin = FX_SinCosTable_[relativeAngleIndex];
             movingNormal = FX_MUL(relativeCos, mStone[stoneIndex].speed);
             movingTangent = FX_MUL(relativeSin, mStone[stoneIndex].speed);
             relativeAngle = mStone[hitIndex].angle - contactAngle;
             relativeAngleIndex = (relativeAngle >> 4) * 2;
-            relativeCos = data_02082214[relativeAngleIndex + 1];
-            relativeSin = data_02082214[relativeAngleIndex];
+            relativeCos = FX_SinCosTable_[relativeAngleIndex + 1];
+            relativeSin = FX_SinCosTable_[relativeAngleIndex];
             hitNormal = FX_MUL(relativeCos, mStone[hitIndex].speed);
-            contactSin = data_02082214[contactAngleIndex];
-            contactCos = data_02082214[contactAngleIndex + 1];
+            contactSin = FX_SinCosTable_[contactAngleIndex];
+            contactCos = FX_SinCosTable_[contactAngleIndex + 1];
             hitTangent = FX_MUL(relativeSin, mStone[hitIndex].speed);
             /* Reuse dy/dx for the moving stone's resulting x/y velocity. */
             wideContactCos = (long long)contactCos;
@@ -1145,7 +1145,7 @@ void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
 void dScMgCurling2_c::StoneSpin(int stoneIndex) {
     char *o = (char *)this + stoneIndex * 0x30;
     int heading = ((dScMgCurling2_c *)o)->mStone[0].angle;
-    int cosHeading = data_02082214[((heading >> 4) << 1) + 1];
+    int cosHeading = FX_SinCosTable_[((heading >> 4) << 1) + 1];
     int speed = ((dScMgCurling2_c *)o)->mStone[0].speed;
     long long product = (long long)cosHeading * speed;
     int velocityX = (int)((product + 0x800) >> 12);
@@ -1229,9 +1229,9 @@ void dScMgCurling2_c::StoneSlide(int stoneIndex) {
     pX = &mStone[stoneIndex].x;
     pY = &mStone[stoneIndex].y;
 
-    cosAngle = data_02082214[((*pHeading) >> 4) * 2 + 1];
+    cosAngle = FX_SinCosTable_[((*pHeading) >> 4) * 2 + 1];
     *pX += FX_MUL(cosAngle, *pSpeed);
-    sinAngle = data_02082214[((*pHeading) >> 4) * 2];
+    sinAngle = FX_SinCosTable_[((*pHeading) >> 4) * 2];
     *pY += FX_MUL(sinAngle, *pSpeed);
     mStone[stoneIndex].spinAngle += mStone[stoneIndex].spinVel;
 

@@ -134,7 +134,7 @@ extern void *sSoundWinSpriteASprites[];
 /* Stored timing suffixes are retained; WinSpriteA reads only indices 0 and 1. */
 extern const u16 sSoundWinSpriteATimes[4] = {50, 4, 50, 0};
 extern void Mg_DrawStockCounter(int a, int b);
-extern const short data_02082214[];
+extern const short FX_SinCosTable_[];
 extern u8 data_ov006_0213f54c[];
 extern u8 data_ov006_0213f544[];
 extern u8 data_ov006_0213f65c[];
@@ -1508,8 +1508,8 @@ extern "C" void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void
 void dScMgSound_c::DrawPops() {
     char *popCursor = (char *)this;
     int slot;
-    int sinAngle = data_02082214[0];
-    long long cosAngle = data_02082214[1];
+    int sinAngle = FX_SinCosTable_[0];
+    long long cosAngle = FX_SinCosTable_[1];
 
     for (slot = 0; slot < 30; slot++) {
         dMgSoundPopCur *pop = (dMgSoundPopCur *)popCursor;
@@ -1527,7 +1527,7 @@ void dScMgSound_c::DrawPops() {
             Mg_RenderSpriteBothPalMtx(sSoundPopsSprites[pop->pop.sprite], (x >> 12) - 8,
                                       (y >> 12) - 0x10, -1, matrix);
         }
-        sinAngle = data_02082214[0];
+        sinAngle = FX_SinCosTable_[0];
         popCursor += 0x24;
     }
 }

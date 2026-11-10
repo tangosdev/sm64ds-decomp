@@ -254,7 +254,7 @@ typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void 
 
 /* -- data -- */
 extern Matrix4x3      data_020a0e68;
-extern short          data_02082214[];
+extern short FX_SinCosTable_[];
 extern int            data_02092138;
 extern u8 gGameMode[];
 
@@ -1009,8 +1009,8 @@ int daObjMarioCap_c::Slide()
     func_ov002_020f030c(surface);
     spd = mHorzSpeed;
     j = (CAP_ANGLE(mPrevAngleY) >> 4) * 2;
-    s = data_02082214[j];
-    co = data_02082214[j + 1];
+    s = FX_SinCosTable_[j];
+    co = FX_SinCosTable_[j + 1];
     /* Velocity in the plane: speed times {sin, cos} of the angle, fix12 multiply
        rounded to nearest. FX_MUL's 64-bit product is the MATCH form; a plain
        32-bit mul DIFFs. */
@@ -1018,8 +1018,8 @@ int daObjMarioCap_c::Slide()
     ownVel.y = 0;
     ownVel.z = FX_MUL(spd, co);
     j = (CAP_ANGLE(mSlopeAngle) >> 4) * 2;
-    s = data_02082214[j];
-    co = data_02082214[j + 1];
+    s = FX_SinCosTable_[j];
+    co = FX_SinCosTable_[j + 1];
     slopeVel.x = FX_MUL(slopePush, s);
     slopeVel.y = 0;
     slopeVel.z = FX_MUL(slopePush, co);

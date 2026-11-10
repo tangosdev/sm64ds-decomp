@@ -6,15 +6,15 @@
  * a {sin, cos} pair of fx16 for each of the 4096 steps of a full turn, so a
  * 16-bit game angle indexes it as angle >> 4.
  *
- * The table is still data_02082214 in config/; most sources declare it locally
- * and index it by hand. Through these inlines the index and the load become
- * their own expression, which changes register allocation, so switching a
- * caller over is matching work, not a respelling.
+ * Most sources declare the table locally and index it by hand. Through these
+ * inlines the index and the load become their own expression, which changes
+ * register allocation, so switching a caller over is matching work, not a
+ * respelling.
  */
 
 #include "nitro/fx/fx.h"
 
-extern short data_02082214[]; /* FX_SinCosTable_; the definition spells fx16 as short */
+extern short FX_SinCosTable_[];
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,11 +32,11 @@ unsigned short FX_Atan2(fx32, fx32);
 #endif
 
 static inline fx16 FX_SinIdx(int idx) {
-    return data_02082214[idx * 2];
+    return FX_SinCosTable_[idx * 2];
 }
 
 static inline fx16 FX_CosIdx(int idx) {
-    return data_02082214[idx * 2 + 1];
+    return FX_SinCosTable_[idx * 2 + 1];
 }
 
 #endif /* NITRO_FX_FX_TRIG_H */

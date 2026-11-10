@@ -89,7 +89,7 @@ enum {
 
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8* p);
-extern signed short data_02082214[];
+extern signed short FX_SinCosTable_[];
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern dCamera_c *gCamera;
 extern void func_0203568c(int *p, int v);
@@ -155,13 +155,13 @@ void daObjPowerUpItem_c::StateOpening()
         int fdivResult = FX_Div(a, 0x1c000);
         unsigned short hw = mWobbleAngle;
         int idx = hw >> 4;
-        signed short odd = data_02082214[idx * 2 + 1];
+        signed short odd = FX_SinCosTable_[idx * 2 + 1];
         int t1 = FX_MUL(odd, fdivResult);
         int u1 = FX_MUL(t1, 0x332);
         int v1 = u1 + 0xffa;
         int w1 = FX_MUL(v1, 0xfa0);
         mScaleY = w1;
-        signed short even = data_02082214[idx * 2];
+        signed short even = FX_SinCosTable_[idx * 2];
         int t2 = FX_MUL(even, fdivResult);
         int u2 = FX_MUL(t2, 0x332);
         int v2 = u2 + 0xffa;

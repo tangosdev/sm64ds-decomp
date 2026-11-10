@@ -137,7 +137,7 @@ void func_ov001_020ab3f0(void *);
 
 extern u8 data_0208f274;
 extern OamAttr *data_0208a0f8[];
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern dScEntry_c::StepSet data_ov075_0211d918;
 // Behavior slot of the player-sync step set, at data_ov075_0211d918 + 8.
 extern dScEntry_c::Step data_ov075_0211d920;
@@ -1662,7 +1662,7 @@ void dScEntry_c::RenderWaitingText() {
             if (phase >= 0 && phase < 0x10000) {
                 waving = true;
                 // The intermediate narrowing preserves the retail ARM shifts.
-                y = (data_02082214[2 * ((u16)(s16)(u16)phase >> 4)] >> 10) + 96;
+                y = (FX_SinCosTable_[2 * ((u16)(s16)(u16)phase >> 4)] >> 10) + 96;
             } else {
                 y = 96;
             }
@@ -1820,7 +1820,7 @@ void dScEntry_c::RenderRecruitText() {
 
             if (ang >= 0 && ang < 0x10000) {
                 flag = one;
-                y = (((SinePair *)data_02082214)[(unsigned short)(short)(unsigned short)ang >> 4]
+                y = (((SinePair *)FX_SinCosTable_)[(unsigned short)(short)(unsigned short)ang >> 4]
                          .a >>
                      0xa) +
                     fallback;

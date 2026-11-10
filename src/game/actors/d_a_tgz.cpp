@@ -118,7 +118,7 @@ int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 void func_02035684(int *p, int v);
 int RandomIntInternal(int *seed);
 unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
@@ -501,11 +501,11 @@ int daTgz_c::func_ov077_021256b4() {
     mPosZ = src[2];
 
     idx = ((int)(u16)mAngleY) >> 4;
-    sinv = data_02082214[idx * 2];
+    sinv = FX_SinCosTable_[idx * 2];
     mPosX = mPosX + FX_MUL(sinv, 0x3c000);
     mPosY = mPosY + 0x85000;
     idx = ((int)(u16)mAngleY) >> 4;
-    cosv = data_02082214[idx * 2 + 1];
+    cosv = FX_SinCosTable_[idx * 2 + 1];
     mPosZ = mPosZ + FX_MUL(cosv, 0x3c000);
 
     carrier = mCarrier;

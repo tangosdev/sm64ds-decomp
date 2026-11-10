@@ -3168,7 +3168,7 @@ data_02082204 kind:data(any) addr:0x02082204
 data_02082208 kind:data(any) addr:0x02082208
 data_0208220c kind:data(any) addr:0x0208220c
 data_02082210 kind:data(any) addr:0x02082210
-data_02082214 kind:data(any) addr:0x02082214
+FX_SinCosTable_ kind:data(any) addr:0x02082214
 data_02082314 kind:data(any) addr:0x02082314
 data_02082414 kind:data(any) addr:0x02082414
 data_02082614 kind:data(any) addr:0x02082614

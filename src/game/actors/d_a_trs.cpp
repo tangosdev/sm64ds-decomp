@@ -171,7 +171,7 @@ int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, in
 int func_020092c4(void *cam, void *out, void *target);
 void func_02012694(unsigned int a, const Vector3 *p);
 u16 func_0201277c(unsigned int a);
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern dCamera_c *gCamera;
 void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
 int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
@@ -982,7 +982,7 @@ void daTrs_c::func_ov063_021177b0() {
 
                 if (look.x <= (int)0xFF894000) {
                     ang = Vec3_HorzAngle((Vector3 *)&v, (Vector3 *)&this->mPosX);
-                    sn = data_02082214[(((unsigned short)ang >> 4) * 2) + 1];
+                    sn = FX_SinCosTable_[(((unsigned short)ang >> 4) * 2) + 1];
                     t = (int)0xFF894000 - look.x;
                     mid.z = mid.z + FX_MUL(t, sn);
                     look.x = (int)0xFF894000;
@@ -1393,8 +1393,8 @@ void daTrs_c::func_ov063_02118458() {
             v.x = this->mPosX;
             v.y = this->mPosY;
             v.z = this->mPosZ;
-            v.x = data_02082214[(*(u16 *)&this->mAngleY >> 4) * 2] * m + v.x;
-            v.z = data_02082214[(*(u16 *)&this->mAngleY >> 4) * 2 + 1] * m + v.z;
+            v.x = FX_SinCosTable_[(*(u16 *)&this->mAngleY >> 4) * 2] * m + v.x;
+            v.z = FX_SinCosTable_[(*(u16 *)&this->mAngleY >> 4) * 2 + 1] * m + v.z;
             dActor_c *fb;
             this->mAngleX = 0x1000;
             func_02012694(0x156, &this->mCamSpacePos);
@@ -2592,7 +2592,7 @@ void daTrs_c::ShakeAfterHit() {
     a = (u16)(s16)((*(u16 *)&this->mStateTimer - 0x1f) << 13) >> 4;
     p = (s16*)&this->mAngleY;
     v = *p;
-    *p = v + (data_02082214[a * 2 + 1] << 10) / 4096;
+    *p = v + (FX_SinCosTable_[a * 2 + 1] << 10) / 4096;
 }
 
 void daTrs_c::MoveDuringHit(int cond, int val) {
@@ -2605,7 +2605,7 @@ void daTrs_c::MoveDuringHit(int cond, int val) {
     ip = (ip << 1) + 1;
 
     this->mHorzSpeed = val;
-    this->mVertSpeed = data_02082214[ip];
+    this->mVertSpeed = FX_SinCosTable_[ip];
     this->mPrevAngleY = this->mKnockbackAngleY;
     if (cond == 0) return;
 
@@ -2637,7 +2637,7 @@ void daTrs_c::SetMoveYawForDuringHit(int cond) {
         d = (unsigned short)d;
         d >>= 4;
         {
-            short t = data_02082214[(d << 1) + 1];
+            short t = FX_SinCosTable_[(d << 1) + 1];
             if (t < 0)
                 this->mKnockbackAngleY = base;
             else
@@ -2682,11 +2682,10 @@ void daTrs_c::Oscillate(int arg1) {
             return;
     }
     t = this->mWobblePhase >> 4;
-    this->mScaleX = this->mClsnScale +
-        ((*(short *)((char *)data_02082214 + t * 4) << 3) / 100);
+    this->mScaleX = this->mClsnScale + ((*(short *)((char *)FX_SinCosTable_ + t * 4) << 3) / 100);
     t = this->mWobblePhase >> 4;
-    this->mScaleY = this->mClsnScale +
-        ((-(*(short *)((char *)data_02082214 + t * 4) << 3)) / 100);
+    this->mScaleY =
+        this->mClsnScale + ((-(*(short *)((char *)FX_SinCosTable_ + t * 4) << 3)) / 100);
     this->mScaleZ = this->mScaleX;
     func_ov063_0211a960();
     this->mdCcAcPos_c.radius = this->mClsnRadius * this->mScaleX;

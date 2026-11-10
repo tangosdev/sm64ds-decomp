@@ -7158,7 +7158,7 @@
         "param:#1 struct dBgCh_Actr *"
       ]
     },
-    "data_02082214": {
+    "FX_SinCosTable_": {
       "src/unnamed/ov075/func_ov075_021194e4.cpp": [
         "return:S4 []"
       ],

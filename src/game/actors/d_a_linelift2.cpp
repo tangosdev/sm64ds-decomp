@@ -66,7 +66,7 @@ extern SharedFilePtr *gLinelift2ModelFiles[];     /* BMD, by mVariant */
 extern SharedFilePtr *gLinelift2CollisionFiles[]; /* KCL, by mVariant */
 extern CLPS_Block *gLinelift2ClpsBlocks[];        /* CLPS, by mVariant */
 extern StateFunc gLinelift2StateFuncs[];          /* by mState */
-extern s16 data_02082214[];                       /* sin/cos pairs */
+extern s16 FX_SinCosTable_[];                     /* sin/cos pairs */
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
@@ -286,10 +286,10 @@ void daLinelift2_c::SetVelocityToward(const Vector3 *to, const Vector3 *from) {
     Vec3_Sub(&d, to, from);
     mPrevAngleY = cstd::atan2(d.x, d.z);
     mPrevAngleX = cstd::atan2(d.y, Vec3_HorzLen(&d));
-    s32 horz = FX_MUL(mHorzSpeed, data_02082214[((u16)mPrevAngleX >> 4) * 2 + 1]);
-    mSpeedX = FX_MUL(horz, data_02082214[((u16)mPrevAngleY >> 4) * 2]);
-    mVertSpeed = FX_MUL(mHorzSpeed, data_02082214[((u16)mPrevAngleX >> 4) * 2]);
-    mSpeedZ = FX_MUL(horz, data_02082214[((u16)mPrevAngleY >> 4) * 2 + 1]);
+    s32 horz = FX_MUL(mHorzSpeed, FX_SinCosTable_[((u16)mPrevAngleX >> 4) * 2 + 1]);
+    mSpeedX = FX_MUL(horz, FX_SinCosTable_[((u16)mPrevAngleY >> 4) * 2]);
+    mVertSpeed = FX_MUL(mHorzSpeed, FX_SinCosTable_[((u16)mPrevAngleX >> 4) * 2]);
+    mSpeedZ = FX_MUL(horz, FX_SinCosTable_[((u16)mPrevAngleY >> 4) * 2 + 1]);
 }
 
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header

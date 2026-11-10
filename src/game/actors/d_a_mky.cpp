@@ -683,7 +683,7 @@ int daMky_c::EnterState7()
     typedef unsigned char u8;
     typedef unsigned short u16;
     typedef short s16;
-    extern short data_02082214[];
+    extern short FX_SinCosTable_[];
     extern void *gMonkeyJumpStAnimationFile[];
     u8 *new_var;
     int *pos;
@@ -717,11 +717,11 @@ int daMky_c::EnterState7()
         this->mPosZ = t2;
     }
     ang = (u16)this->mAngleY;
-    s = data_02082214[(ang >> 4) * 2];
+    s = FX_SinCosTable_[(ang >> 4) * 2];
     *pos = (*pos) + FX_MUL(s, mul);
     *py = (*py) + 0x50000;
     ang = (u16)this->mAngleY;
-    s = data_02082214[((ang >> 4) * 2) + 1];
+    s = FX_SinCosTable_[((ang >> 4) * 2) + 1];
     *pz = (*pz) + FX_MUL(s, mul);
     other = this->mPlayer;
     {

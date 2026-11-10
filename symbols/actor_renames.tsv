@@ -9356,3 +9356,4 @@ arm9	0x02053274	func_02053274	VEC_Distance	NitroSDK fx_vec.c VEC_Distance; ROM o
 arm9	0x020538b8	func_020538b8	FX_Atan2	NitroSDK fx_atan.c/fx.c name (pret pokediamond FX_atan.c, FX.c); ROM order is the SDK's reverse-emitted source order
 arm9	0x02053a8c	func_02053a8c	FX_Init	NitroSDK fx_atan.c/fx.c name (pret pokediamond FX_atan.c, FX.c); ROM order is the SDK's reverse-emitted source order
 arm9	0x02086214	data_02086214	FX_AtanTable_	NitroSDK fx_atan.c/fx.c name (pret pokediamond FX_atan.c, FX.c); ROM order is the SDK's reverse-emitted source order
+arm9	0x02082214	data_02082214	FX_SinCosTable_	NitroSDK fx_trig.h FX_SinCosTable_: {sin, cos} fx16 pairs for 4096 steps of a turn, indexed angle >> 4

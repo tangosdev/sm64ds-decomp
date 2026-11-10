@@ -209,7 +209,7 @@ extern int *data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 extern char data_ov084_0213089c;
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
@@ -1031,7 +1031,7 @@ block_68:
  * shadow (radius 80 * mScaleX; depth 30.0 on the ground, 150.0 in the air)
  * unless mFlags bit 0x40000 is set. Then the cap is attached (UpdateCapPos)
  * 108.0 above the origin, offset horizontally (x, z) by 10 * the sine/cosine
- * pair read from data_02082214 at (mAngleY >> 4). */
+ * pair read from FX_SinCosTable_ at (mAngleY >> 4). */
 void daKrb_c::func_ov084_0212a580() {
     Vector3_16 rotation;
     Vector3 pos;
@@ -1057,8 +1057,8 @@ void daKrb_c::func_ov084_0212a580() {
     pos.x = 0;
     pos.z = 0;
     pos.y = 0x6c000;     /* 108.0 */
-    pos.x += ((short*)data_02082214)[((unsigned short)mAngleY >> 4) * 2] * 10;
-    pos.z += ((short*)data_02082214)[((unsigned short)mAngleY >> 4) * 2 + 1] * 10;
+    pos.x += ((short *)FX_SinCosTable_)[((unsigned short)mAngleY >> 4) * 2] * 10;
+    pos.z += ((short *)FX_SinCosTable_)[((unsigned short)mAngleY >> 4) * 2 + 1] * 10;
     arg.x = ((int*)&pos)[0];
     arg.y = ((int*)&pos)[1];
     arg.z = ((int*)&pos)[2];

@@ -176,7 +176,7 @@ extern OamAttr *sSmartballLineSpritesGerman[];
 extern OamAttr *sSmartballLineSpritesFrench[];
 extern OamAttr *sSmartballLineSprites[];
 extern OamAttr *sSmartballCellSprites[];
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern s32 sSmartballCellOrder[];
 extern OamAttr *sSmartballCellRowSprites[];
 
@@ -730,7 +730,7 @@ int cMgSmartball_board_c::AnyLineActive() {
  * 2. The nine cells. A cell's angle in mCellFlipAngle picks its face sprite (past
  *    0x4000 it has flipped), a lit cell blinks on bit 0x20 of mFanfareTimer, and a
  *    cell mid-flip is sheared with a matrix built from the shared sine table
- *    data_02082214 -- edge-on at +-0x4000 it degenerates to the flat sprite.
+ *    FX_SinCosTable_ -- edge-on at +-0x4000 it degenerates to the flat sprite.
  *
  * 3. The nine slot markers along the bottom, in the order the shuffle table
  *    sSmartballCellOrder currently holds.
@@ -856,9 +856,9 @@ void cMgSmartball_board_c::Update() {
             s32 vec[4];
 
             if (ang < 0x4000)
-                vec[0] = -FX_Div(0x1000, data_02082214[((u16)(ang + 0x8000) >> 4) * 2 + 1]);
+                vec[0] = -FX_Div(0x1000, FX_SinCosTable_[((u16)(ang + 0x8000) >> 4) * 2 + 1]);
             else
-                vec[0] = -FX_Div(0x1000, data_02082214[((u16)ang >> 4) * 2 + 1]);
+                vec[0] = -FX_Div(0x1000, FX_SinCosTable_[((u16)ang >> 4) * 2 + 1]);
             vec[1] = 0;
             vec[2] = 0;
             vec[3] = 0x1000;
@@ -1686,7 +1686,7 @@ int cMgSmartball_pakkun_c::CheckBall(int *pos) {
 }
 
 /* Slot 1. While mActionTimer is counting down it renders a rotate/scale pair
- * of frames (the shift-by-12 fixed-point matrix built from data_02082214);
+ * of frames (the shift-by-12 fixed-point matrix built from FX_SinCosTable_);
  * otherwise it renders one of two idle frames selected by mTriggered, plus a
  * common third frame beneath it. */
 void cMgSmartball_pakkun_c::Update() {
@@ -1708,8 +1708,8 @@ void cMgSmartball_pakkun_c::Update() {
                 if ((f38 - 0x20) % 16 < 4)
                     idx = 0;
             }
-            b = (int)((((long long)data_02082214[1] * scale) + 0x800) >> 12);
-            a = (int)((((long long)data_02082214[0] * scale) + 0x800) >> 12);
+            b = (int)((((long long)FX_SinCosTable_[1] * scale) + 0x800) >> 12);
+            a = (int)((((long long)FX_SinCosTable_[0] * scale) + 0x800) >> 12);
             vec._00 = b;
             vec._01 = a;
             vec._10 = -a;
@@ -2029,16 +2029,16 @@ void cMgSmartball_propeller_c::RebuildVerts() {
  * mCurrent1) using that matrix; touches nothing in this class's own 0x34+
  * region at all. */
 void cMgSmartball_propeller_c::Update() {
-    int b =
-        (short)((((long long)data_02082214[(*(unsigned short *)((char *)this + 0x32) >> 4) * 2 + 1]
-                  << 12) +
-                 0x800) >>
-                12);
+    int b = (short)((((long long)
+                          FX_SinCosTable_[(*(unsigned short *)((char *)this + 0x32) >> 4) * 2 + 1]
+                      << 12) +
+                     0x800) >>
+                    12);
     int a;
     int vec[4];
 
     vec[0] = b;
-    a = (short)((((long long)data_02082214[(*(unsigned short *)((char *)this + 0x32) >> 4) * 2]
+    a = (short)((((long long)FX_SinCosTable_[(*(unsigned short *)((char *)this + 0x32) >> 4) * 2]
                   << 12) +
                  0x800) >>
                 12);
@@ -2341,8 +2341,8 @@ void cMgSmartball_kinoko_c::Update() {
         if (mRadius < 0x1000)
             return;
         d = FX_Div(0x7000, mRadius);
-        b = FX_MUL(data_02082214[1], d);
-        a = FX_MUL(data_02082214[0], d);
+        b = FX_MUL(FX_SinCosTable_[1], d);
+        a = FX_MUL(FX_SinCosTable_[0], d);
         vec[0] = b;
         vec[1] = a;
         vec[2] = -a;
@@ -4210,15 +4210,15 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
                 int rnd2 = RandomIntInternal(&data_0209d4b8);
                 int angB = ((((unsigned int)rnd2 >> 16) & 0x7fff) * 0x8000) >> 16;
                 int angA = ((((unsigned int)rnd1 >> 16) & 0x7fff) * 0x20000) >> 16;
-                s16 sinB = data_02082214[(angB >> 4) * 2 + 1];
-                s16 sinA = data_02082214[(angA >> 4) * 2 + 1];
+                s16 sinB = FX_SinCosTable_[(angB >> 4) * 2 + 1];
+                s16 sinA = FX_SinCosTable_[(angA >> 4) * 2 + 1];
                 s16 cosA;
                 s64 sa;
                 TVec2 v;
                 sa = (s64)sinA;
                 v.x = FX_MUL(sinB, FX_MUL(sinA, 0x8000));
                 *(int *)((dScMgSmartball_c *)(c + j * 8))->mDustPos = v.x;
-                cosA = data_02082214[(angA >> 4) * 2];
+                cosA = FX_SinCosTable_[(angA >> 4) * 2];
                 v.y = FX_MUL(sinB, FX_MUL(cosA, 0x8000));
                 *(int *)&((dScMgSmartball_c *)(c + j * 8))->mDustPos[4] = v.y;
                 *(int *)((dScMgSmartball_c *)(c + j * 8))->mDustPos += origin[0];

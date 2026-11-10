@@ -3,7 +3,7 @@
  *
  * The point at `pos` is transformed by the camera's viewMatrix into a local
  * camera-space triple. The camera's 16-bit fovy, reduced by >> 4, indexes the
- * arm9 SINE_TABLE (data_02082214) in PAIRS: the even half multiplies the absolute depth
+ * arm9 SINE_TABLE (FX_SinCosTable_) in PAIRS: the even half multiplies the absolute depth
  * out[2] to give the denominator, and FX_Div divides the odd half by it. Everything
  * is 1.12 fixed point, so each product is rounded with + 0x800 and shifted down by 12.
  * The resulting factor scales the x and y components, and the last two lines land them
