@@ -262,6 +262,7 @@ and no version moved. Lockstep stays as the fallback for one release.
 | knob | default | what |
 |---|---|---|
 | `ARENA_GAME_IDS` | empty | the builds that play arena, comma-separated. **Empty = arena off for every build** (this server then behaves exactly as before). `*` = every build, for dev and test boxes only. Written at the relay redeploy that brings the referee; removing it is the rollback |
+| `ARENA_LUIGI_GAME_IDS` | empty | the builds whose Luigi Infection matches play arena (the referee's Luigi rules, relay contract 2), comma-separated; a build must be on `ARENA_GAME_IDS` too. **Empty = every Luigi match plays lockstep** (as before). `*` = every arena build, dev and test boxes only. Exact build ids, never a minimum version. Written when the game build that sends READY mode 2 ships, after the relay; removing it is the rollback. The view's `arena_luigi` and /health's `arena_luigi_game_ids` report it |
 | `ARENA_MAX_PLAYERS` | 4 | the largest arena match (2..16); bigger matches play lockstep |
 | `NETMODE_DEFAULT` | arena | a new room's pick (`arena` or `lockstep`) |
 
