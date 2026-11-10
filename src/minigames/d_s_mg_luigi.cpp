@@ -49,6 +49,14 @@ enum dScMgLuigi_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 /* A random integer in [0, n): the top 15 bits of the shared generator, scaled. */
 #define LUIGI_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
 
@@ -1710,7 +1718,7 @@ s32 dScMgLuigi_c::InitResources() {
 
     objectTiles = LoadFile(ASSET_D_2D_MG_LUIGI_NCG_BIN);
     fileData = LoadFile(ASSET_D_2D_MG_LUIGI_NCL_BIN);
-    DecompressLZ16(objectTiles, (void *)0x6400000);
+    DecompressLZ16(objectTiles, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(fileData, 0, 0x100);
 
     REG_DB_BG2CNT &= ~3;
@@ -1743,7 +1751,7 @@ s32 dScMgLuigi_c::InitResources() {
         Deallocate(subFileData);
     }
 
-    DecompressLZ16(objectTiles, (void *)0x6600000);
+    DecompressLZ16(objectTiles, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(fileData, 0, 0x100);
     Deallocate(objectTiles);
     Deallocate(fileData);

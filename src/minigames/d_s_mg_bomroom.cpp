@@ -46,6 +46,14 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "PlayerInput.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 extern "C" {
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 extern OamAttr *sBomroomPenGateSprites[];
@@ -1849,7 +1857,7 @@ s32 dScMgBomroom_c::InitResources() {
 
     arc = LoadFile(ASSET_D_2D_MG_BOMROOM_NCG_BIN);
     f = LoadFile(ASSET_D_2D_MG_BOMROOM_NCL_BIN);
-    DecompressLZ16(arc, (void *)0x6400000);
+    DecompressLZ16(arc, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(f, 0, 0x100);
 
     gSubScreenLayers |= DISPLAY_LAYER_BG3;
@@ -1869,7 +1877,7 @@ s32 dScMgBomroom_c::InitResources() {
         GXS_LoadBG3Scr(f7, 0, 0x800);
         Deallocate(f7);
 
-        DecompressLZ16(arc, (void *)0x6600000);
+        DecompressLZ16(arc, G2S_GetOBJCharPtr());
         GXS_LoadOBJPltt(f, 0, 0x100);
         Deallocate(arc);
         Deallocate(f);

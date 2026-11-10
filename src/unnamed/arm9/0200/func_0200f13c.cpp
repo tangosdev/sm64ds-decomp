@@ -21,6 +21,14 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 extern "C" {
 
 s32 GetLanguageIndex(void);
@@ -73,13 +81,13 @@ void func_0200f13c(void) {
     LoadCompressedFileAt(0x9808, G2_GetBG2ScrPtr());
     LoadCompressedFileAt(0x9809, (char *)G2_GetBG2ScrPtr() + 0x800);
     LoadCompressedFileAt(0x980a, (char *)G2_GetBG2ScrPtr() + 0x1000);
-    char *a5 = (char *)0x6400000;
+    char *a5 = (char *)G2_GetOBJCharPtr();
     a5 += 0x2000;
     LoadCompressedFileAt(data_0208a15c[GetLanguageIndex()], a5);
     void *p = LoadFile(0x980f);
     GX_LoadOBJPltt(p, 0x120, 0xe0);
     Deallocate(p);
-    char *a6 = (char *)0x6600000;
+    char *a6 = (char *)G2S_GetOBJCharPtr();
     a6 += 0x800;
     LoadCompressedFileAt(data_0208a120[GetLanguageIndex()], a6);
     void *q = LoadFile(0x8400);

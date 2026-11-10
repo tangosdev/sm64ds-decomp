@@ -56,6 +56,14 @@ enum dScMgPanel_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 /* Callees of the member helpers. Declared here, not in the bodies: a
    declaration inside a member body gets C++ linkage and names a symbol the ROM
    doesn't have. */
@@ -1654,7 +1662,7 @@ s32 dScMgPanel_c::InitResources() {
     }
 
     file = LoadFile(ASSET_D_2D_MG_PAZZLE_PANEL_NCL_BIN);
-    DecompressLZ16(msgFile, (void *)0x6400000);
+    DecompressLZ16(msgFile, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(file, 0, 0x100);
 
     gSubScreenLayers |= 8;
@@ -1699,7 +1707,7 @@ s32 dScMgPanel_c::InitResources() {
         Deallocate(subFile);
     }
 
-    DecompressLZ16(msgFile, (void *)0x6600000);
+    DecompressLZ16(msgFile, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(file, 0, 0x100);
     Deallocate(msgFile);
     Deallocate(file);

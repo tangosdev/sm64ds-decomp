@@ -51,6 +51,14 @@
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 #pragma defer_codegen off
 
 /* The 0x40 records at sMgFxPool are 0x20 bytes each. Mg_InitFx
@@ -1412,7 +1420,8 @@ void dScMgBase_c::RestoreScreenFromMenu() {
 
     if (GetDisplayMode() != 2)
     {
-        char *src = (char*)0x6600000; src += 0x6000;
+        char *src = (char *)G2S_GetOBJCharPtr();
+        src += 0x6000;
         MIi_CpuCopy32((int *)save->subObjChars, (int *)src, 0x2000);
     }
 
@@ -1548,7 +1557,7 @@ int dScMgBase_c::SaveScreenForMenu() {
     gSubScreenLayers = 0x10;
 
     if (GetDisplayMode() != 2) {
-        int *vbase = (int *)0x6600000;
+        int *vbase = (int *)G2S_GetOBJCharPtr();
         int *vram = vbase + 0x1800;
         MIi_CpuCopy32(vram, (int *)save->subObjChars, 0x2000);
         int idx = GetGameLanguage();
@@ -3401,11 +3410,13 @@ void dScMgBase_c::InitEngines() {
     GX_SetBankForSubOBJ(8);
     p = Ov004_LoadFile(sMgStockCounterFiles[GetGameLanguage()]);
     {
-        char *dst = (char *)0x6400000; dst += 0x4000;
+        char *dst = (char *)G2_GetOBJCharPtr();
+        dst += 0x4000;
         DecompressLZ16(p, dst);
     }
     {
-        char *dst = (char *)0x6600000; dst += 0x4000;
+        char *dst = (char *)G2S_GetOBJCharPtr();
+        dst += 0x4000;
         DecompressLZ16(p, dst);
     }
     Ov004_Deallocate(p);

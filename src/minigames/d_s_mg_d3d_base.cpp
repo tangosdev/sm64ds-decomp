@@ -23,6 +23,14 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "CP15.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 /* An OAM entry, with attributes 0 and 1 stored as one word the way this
  * code writes them. */
 typedef struct Oam {
@@ -173,9 +181,10 @@ int dScMgD3DBase_c::InitSubScreenBg()
 {
     mSavedSubObjBank = GX_GetBankForSubOBJ();
     GX_SetBankForSubOBJ(0x100);
-    LoadCompressedFileAt(sD3DCommonNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
+    LoadCompressedFileAt(sD3DCommonNcgByLanguage[GetGameLanguage()], G2S_GetOBJCharPtr());
     {
-        char *dst = (char*)0x6600000; dst += 0x2000;
+        char *dst = (char *)G2S_GetOBJCharPtr();
+        dst += 0x2000;
         DecompressLZ16((void *)sD3DSubScreenBgByLanguage[GetGameLanguage()], dst);
     }
     GX_SetBankForSubOBJ(mSavedSubObjBank);
@@ -221,7 +230,7 @@ void dScMgD3DBase_c::InitEngines()
     file = Ov004_LoadFile(sD3DCommonNcgByLanguage[GetGameLanguage()]);
     sD3DLanguageFile = file;
     {
-        char *dst = (char *)0x6400000;
+        char *dst = (char *)G2_GetOBJCharPtr();
         dst += 0x4000;
         DecompressLZ16(file, dst);
     }

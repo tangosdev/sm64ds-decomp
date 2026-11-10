@@ -33,6 +33,7 @@
 #include "OamAttr.h"
 #include "Sound.h"
 #include "nitro/gx/gx.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_trig.h"
 
@@ -71,7 +72,7 @@ extern int data_0208ee44;
    G2S_GetOBJCharPtr, and adding a second inline body there renumbers
    d_a_demo.cpp's pinned @NNN symbols. */
 static inline void *G2_GetOBJCharPtr(void) {
-    return (void *)0x06400000;
+    return (void *)HW_OBJ_VRAM;
 }
 
 /* The scene's graph callback. A global, not a member: InitResources points
@@ -179,8 +180,8 @@ s32 dScMB_c::Behavior() {
     case 0:
         if (func_0203d8fc() == 0)
             break;
-        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6400000);
-        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6600000);
+        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], G2_GetOBJCharPtr());
+        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], G2S_GetOBJCharPtr());
         gMainScreenLayers = DISPLAY_LAYER_OBJ;
         gSubScreenLayers = 0x10;
         REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1000;

@@ -45,6 +45,15 @@ enum d_s_mg_trampoline_AssetId {
 #include "decl_common.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
+
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 /* local: UpdateTouchInput only reproduces through a 4-byte-record view of
    each lane; the flat `gTouchHeld[slot * 4]` and TouchInfo forms DIFF there
    (measured 2026-11-08). */
@@ -241,7 +250,7 @@ void dScMgTrampoline_c::InitDisplay() {
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1318;
     REG_BG3CNT &= ~0x40;
 
-    DecompressLZ16(objChar, (void *)0x6400000);
+    DecompressLZ16(objChar, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x60);
 
     Deallocate(bgChar);

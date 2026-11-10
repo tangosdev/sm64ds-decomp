@@ -64,6 +64,14 @@
 #include "LevelRng.h"
 #include "SaveData.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 struct OamAttr;
 
 struct TouchRec {
@@ -276,7 +284,7 @@ s32 dScMiniGm_c::InitResources()
     } else {
         f = LoadFile(0xd8);
     }
-    DecompressLZ16(f, (void *)0x6400000);
+    DecompressLZ16(f, G2_GetOBJCharPtr());
     Deallocate(f);
 
     f = LoadFile(0xd9);
@@ -331,7 +339,7 @@ s32 dScMiniGm_c::InitResources()
     } else {
         f = LoadFile(0xd8);
     }
-    DecompressLZ16(f, (void *)0x6600000);
+    DecompressLZ16(f, G2S_GetOBJCharPtr());
     Deallocate(f);
 
     f = LoadFile(0xd9);

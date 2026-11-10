@@ -105,6 +105,14 @@ extern "C" dFdBrightness_c *gSceneFader;
 #include "Message.h"
 #include "nitro/gx/gx_load.h"
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 extern "C" {
 int func_0203d974(void);
 u8 func_02020168(void);
@@ -379,7 +387,6 @@ s32 dScEntry_c::InitResultResources() {
     int acc;
     int base;
     int step;
-    char *sub;
     int n;
 
     REG_BG1CNT = (u16)((REG_BG1CNT & 0x43) | 0x208);
@@ -413,16 +420,16 @@ s32 dScEntry_c::InitResultResources() {
         } while (i < n);
     }
 
-    LoadCompressedFileAt(data_ov075_0211c990[GetLanguageIndex()], (void *)0x6400000);
+    LoadCompressedFileAt(data_ov075_0211c990[GetLanguageIndex()], G2_GetOBJCharPtr());
     tmp = LoadFile(0x8415);
     GX_LoadOBJPltt(tmp, 0, 0x140);
     Deallocate(tmp);
 
     REG_BG1CNT = (u16)((REG_BG1CNT & ~3) | 2);
     SetBg1Offset(0, 0);
-    sub = (char *)0x6600000;
-    LoadCompressedFileAt(0x8402, sub);
-    LoadCompressedFileAt(data_ov075_0211c97c[GetLanguageIndex()], sub + 0x6000);
+    LoadCompressedFileAt(0x8402, G2S_GetOBJCharPtr());
+    LoadCompressedFileAt(data_ov075_0211c97c[GetLanguageIndex()],
+                         (u8 *)G2S_GetOBJCharPtr() + 0x6000);
     tmp = LoadFile(0x8403);
     GXS_LoadOBJPltt(tmp, 0, 0x200);
     Deallocate(tmp);
@@ -479,9 +486,9 @@ s32 dScEntry_c::InitEntryResources() {
             LoadCompressedFileAt(ASSET_D_2D_BATTLE_FRAMEWORK_GAMESTART_P_NSC_BIN,
                                  G2S_GetBG2ScrPtr());
         }
-        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6600000);
+        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], G2S_GetOBJCharPtr());
     }
-    LoadCompressedFileAt(data_ov075_0211c9a4[GetLanguageIndex()], (void *)0x6400000);
+    LoadCompressedFileAt(data_ov075_0211c9a4[GetLanguageIndex()], G2_GetOBJCharPtr());
 
     tmp = LoadFile(0x8412);
     GX_LoadOBJPltt(tmp, 0, 0xc0);

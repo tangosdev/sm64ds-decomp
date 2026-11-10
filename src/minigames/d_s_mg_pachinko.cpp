@@ -192,6 +192,14 @@ extern PMF pmf_dScMgPachinko_c_Bg_StateSinkOut;
 
 }  /* extern "C" */
 
+/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
+   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
+   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
+   d_a_demo.cpp's pinned @NNN symbols. */
+static inline void *G2_GetOBJCharPtr(void) {
+    return (void *)HW_OBJ_VRAM;
+}
+
 /* Both D1 and D0 come from this one definition. */
 dScMgPachinko_c::~dScMgPachinko_c()
 {
@@ -2196,7 +2204,7 @@ s32 dScMgPachinko_c::InitResources()
 
     objChar = LoadFile(0xe0);
     objPltt = LoadFile(0xe1);
-    DecompressLZ16(objChar, (void *)0x6400000);
+    DecompressLZ16(objChar, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd;
@@ -2247,7 +2255,7 @@ s32 dScMgPachinko_c::InitResources()
     GXS_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);
 
-    DecompressLZ16(objChar, (void *)0x6600000);
+    DecompressLZ16(objChar, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(objPltt, 0, 0x100);
     Deallocate(objChar);
     Deallocate(objPltt);
