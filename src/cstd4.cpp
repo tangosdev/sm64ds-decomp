@@ -264,17 +264,17 @@ void func_0206de14(int a0, Pair p1, Pair p2, unsigned int flags)
 #pragma push
 #pragma defer_codegen off
 /* MSL __flush_all, statement for statement with Spirit Tracks' copy of
-   ansi_files.c: walk the three console FILEs of the __files table at
-   data_0209a330 (0x4c bytes each), fflush every FILE whose file_kind, bits
+   ansi_files.c: walk the three console FILEs of the __files table
+   (0x4c bytes each), fflush every FILE whose file_kind, bits
    7..9 of the mode word at +4, is not closed, and return -1 if any flush
    fails. fflush(NULL) calls it, as MSL's does. */
-extern char data_0209a330[];
+extern char __files[];
 typedef struct S6e06c S6e06c;
 int fflush(S6e06c *p);
 
 int __flush_all(void) {
     int result = 0;
-    char *p = data_0209a330;
+    char *p = __files;
     int i = 1;
     do {
         if (((unsigned int)*(int *)(p + 4) << 22) >> 29) {
@@ -282,7 +282,7 @@ int __flush_all(void) {
                 result = -1;
             }
         }
-        p = (i < 3) ? (data_0209a330 + i++ * 0x4c) : 0;
+        p = (i < 3) ? (__files + i++ * 0x4c) : 0;
     } while (p);
     return result;
 }

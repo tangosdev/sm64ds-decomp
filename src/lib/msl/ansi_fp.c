@@ -14,35 +14,20 @@
  * BOTTOM EDGE: ldexp (0x020708b4..0x02070b98) is MSL's s_ldexp.c, its own
  * file. TOP EDGE: _ExitProcess begins where the run ends.
  *
- * The digit tables __two_exp reads (data_0209a628..data_0209a6f8) stay
- * extern: this fold claims .text only. */
+ * __two_exp's digit strings are its own literals: the file also claims .data
+ * 0x0209a628..0x0209a6fc, where they sit in source order, each padded to 4.
+ *
+ * MSL was built with ARM's default unsigned plain char, not the -char signed
+ * this tree compiles with: __str2dec reads its const char digits with ldrb
+ * and compares them unsigned. */
+#pragma unsigned_char on
+
 #include "types.h"
 #include "Decimal.h"
 
 extern double frexp(double, int *);
 extern double ldexp(double, int);
 
-extern unsigned char data_0209a628[];
-extern unsigned char data_0209a658[];
-extern unsigned char data_0209a680[];
-extern unsigned char data_0209a698[];
-extern unsigned char data_0209a6a8[];
-extern unsigned char data_0209a6b0[];
-extern unsigned char data_0209a6b8[];
-extern unsigned char data_0209a6c0[];
-extern unsigned char data_0209a6c8[];
-extern unsigned char data_0209a6cc[];
-extern unsigned char data_0209a6d0[];
-extern unsigned char data_0209a6d4[];
-extern unsigned char data_0209a6d8[];
-extern unsigned char data_0209a6dc[];
-extern unsigned char data_0209a6e0[];
-extern unsigned char data_0209a6e4[];
-extern unsigned char data_0209a6e8[];
-extern unsigned char data_0209a6ec[];
-extern unsigned char data_0209a6f0[];
-extern unsigned char data_0209a6f4[];
-extern unsigned char data_0209a6f8[];
 
 /* Count the trailing zero bits of w0, 32 for 0: skip whole zero bytes from
    the low end, then count the low set bits of the complemented byte.
@@ -242,9 +227,9 @@ void __timesdec(Decimal *result, const Decimal *x, const Decimal *y) {
     }
 }
 
-void __str2dec(Decimal *result, unsigned char *digits, short exp) {
+void __str2dec(Decimal *result, const char *digits, short exp) {
     int i;
-    unsigned char c;
+    char c;
     result->exp = exp;
     result->sign = 0;
     i = 0;
@@ -275,8 +260,8 @@ docall:
 }
 
 /* MSL __two_exp: 2^n as a Decimal. n = -64, -53, -32, -16 and -8..8 come
-   from the digit strings at data_0209a628..data_0209a6f8 (data_0209a628 is
-   "54210108..." with exponent -20, i.e. 2^-64), built by __str2dec.
+   straight from a digit string and exponent ("54210108..." with exponent -20
+   is 2^-64), built by __str2dec.
    Any other n is 2^(n/2) squared (__timesdec, the Decimal multiply),
    times one more 2 or 0.5 when n is odd. __num2dec_internal
    calls it to scale the binary exponent. */
@@ -286,67 +271,67 @@ void __two_exp(Decimal *out, int n) {
 
     switch (n) {
     case -64:
-        __str2dec(out, data_0209a628, -20);
+        __str2dec(out, "542101086242752217003726400434970855712890625", -20);
         return;
     case -53:
-        __str2dec(out, data_0209a658, -16);
+        __str2dec(out, "11102230246251565404236316680908203125", -16);
         return;
     case -32:
-        __str2dec(out, data_0209a680, -10);
+        __str2dec(out, "23283064365386962890625", -10);
         return;
     case -16:
-        __str2dec(out, data_0209a698, -5);
+        __str2dec(out, "152587890625", -5);
         return;
     case -8:
-        __str2dec(out, data_0209a6a8, -3);
+        __str2dec(out, "390625", -3);
         return;
     case -7:
-        __str2dec(out, data_0209a6b0, -3);
+        __str2dec(out, "78125", -3);
         return;
     case -6:
-        __str2dec(out, data_0209a6b8, -2);
+        __str2dec(out, "15625", -2);
         return;
     case -5:
-        __str2dec(out, data_0209a6c0, -2);
+        __str2dec(out, "3125", -2);
         return;
     case -4:
-        __str2dec(out, data_0209a6c8, -2);
+        __str2dec(out, "625", -2);
         return;
     case -3:
-        __str2dec(out, data_0209a6cc, -1);
+        __str2dec(out, "125", -1);
         return;
     case -2:
-        __str2dec(out, data_0209a6d0, -1);
+        __str2dec(out, "25", -1);
         return;
     case -1:
-        __str2dec(out, data_0209a6d4, -1);
+        __str2dec(out, "5", -1);
         return;
     case 0:
-        __str2dec(out, data_0209a6d8, 0);
+        __str2dec(out, "1", 0);
         return;
     case 1:
-        __str2dec(out, data_0209a6dc, 0);
+        __str2dec(out, "2", 0);
         return;
     case 2:
-        __str2dec(out, data_0209a6e0, 0);
+        __str2dec(out, "4", 0);
         return;
     case 3:
-        __str2dec(out, data_0209a6e4, 0);
+        __str2dec(out, "8", 0);
         return;
     case 4:
-        __str2dec(out, data_0209a6e8, 1);
+        __str2dec(out, "16", 1);
         return;
     case 5:
-        __str2dec(out, data_0209a6ec, 1);
+        __str2dec(out, "32", 1);
         return;
     case 6:
-        __str2dec(out, data_0209a6f0, 1);
+        __str2dec(out, "64", 1);
         return;
     case 7:
-        __str2dec(out, data_0209a6f4, 2);
+        __str2dec(out, "128", 2);
         return;
     case 8:
-        __str2dec(out, data_0209a6f8, 2);
+        __str2dec(out, "256", 2);
         return;
     default:
         __two_exp(&half, (int)(n + ((n & 0x80000000u) >> 31)) >> 1);
@@ -354,9 +339,9 @@ void __two_exp(Decimal *out, int n) {
         if (n & 1) {
             copy = *out;
             if (n > 0)
-                __str2dec(&half, data_0209a6dc, 0);
+                __str2dec(&half, "2", 0);
             else
-                __str2dec(&half, data_0209a6d4, -1);
+                __str2dec(&half, "5", -1);
             __timesdec(out, &copy, &half);
         }
         return;

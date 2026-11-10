@@ -9,7 +9,7 @@
  * while the ROM spills it to the stack. Above, copysign begins exactly where
  * the run ends.
  */
-// leftovers: rand's seed stays data_0209a624 (MSL's static random_next).
+// leftovers: rand's seed random_next is MSL's static, declared extern here.
 // strcpy's alignment preamble and word-at-a-time copy stay as built
 // (even the no-op u64 mask colours two words). strcmp keeps MSL's two
 // scalar_reload gotos. Callers of raise sit in the same 0x0206 band,
@@ -21,7 +21,7 @@
 #include "msl/critical_regions.h"
 
 extern "C" {
-extern unsigned int data_0209a624;
+extern unsigned int random_next;
 extern int OS_TryLockMutex(void *p);
 extern void OS_LockMutex(void *p);
 extern void OS_UnlockMutex(void *p);
@@ -234,8 +234,8 @@ int raise(int sig) {
 
 extern "C" {
 int rand(void) {
-    unsigned int s = data_0209a624 * 0x41c64e6d + 0x3039;
-    data_0209a624 = s;
+    unsigned int s = random_next * 0x41c64e6d + 0x3039;
+    random_next = s;
     return (s >> 16) & 0x7fff;
 }
 }

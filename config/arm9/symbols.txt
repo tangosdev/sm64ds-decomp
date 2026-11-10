@@ -4426,7 +4426,7 @@ data_0209a088 kind:data(any) addr:0x0209a088
 data_0209a08c kind:data(any) addr:0x0209a08c
 data_0209a0a0 kind:data(any) addr:0x0209a0a0
 data_0209a130 kind:data(any) addr:0x0209a130
-data_0209a330 kind:data(any) addr:0x0209a330
+__files kind:data(any) addr:0x0209a330
 data_0209a414 kind:data(any) addr:0x0209a414
 data_0209a418 kind:data(any) addr:0x0209a418
 data_0209a41c kind:data(any) addr:0x0209a41c
@@ -4451,28 +4451,28 @@ data_0209a60c kind:data(any) addr:0x0209a60c
 data_0209a614 kind:data(any) addr:0x0209a614
 data_0209a618 kind:data(any) addr:0x0209a618
 data_0209a61c kind:data(any) addr:0x0209a61c
-data_0209a624 kind:data(any) addr:0x0209a624
-data_0209a628 kind:data(any) addr:0x0209a628
-data_0209a658 kind:data(any) addr:0x0209a658
-data_0209a680 kind:data(any) addr:0x0209a680
-data_0209a698 kind:data(any) addr:0x0209a698
-data_0209a6a8 kind:data(any) addr:0x0209a6a8
-data_0209a6b0 kind:data(any) addr:0x0209a6b0
-data_0209a6b8 kind:data(any) addr:0x0209a6b8
-data_0209a6c0 kind:data(any) addr:0x0209a6c0
-data_0209a6c8 kind:data(any) addr:0x0209a6c8
-data_0209a6cc kind:data(any) addr:0x0209a6cc
-data_0209a6d0 kind:data(any) addr:0x0209a6d0
-data_0209a6d4 kind:data(any) addr:0x0209a6d4
-data_0209a6d8 kind:data(any) addr:0x0209a6d8
-data_0209a6dc kind:data(any) addr:0x0209a6dc
-data_0209a6e0 kind:data(any) addr:0x0209a6e0
-data_0209a6e4 kind:data(any) addr:0x0209a6e4
-data_0209a6e8 kind:data(any) addr:0x0209a6e8
-data_0209a6ec kind:data(any) addr:0x0209a6ec
-data_0209a6f0 kind:data(any) addr:0x0209a6f0
-data_0209a6f4 kind:data(any) addr:0x0209a6f4
-data_0209a6f8 kind:data(any) addr:0x0209a6f8
+random_next kind:data(any) addr:0x0209a624
+data_0209a628 kind:data(any) addr:0x0209a628 local
+data_0209a658 kind:data(any) addr:0x0209a658 local
+data_0209a680 kind:data(any) addr:0x0209a680 local
+data_0209a698 kind:data(any) addr:0x0209a698 local
+data_0209a6a8 kind:data(any) addr:0x0209a6a8 local
+data_0209a6b0 kind:data(any) addr:0x0209a6b0 local
+data_0209a6b8 kind:data(any) addr:0x0209a6b8 local
+data_0209a6c0 kind:data(any) addr:0x0209a6c0 local
+data_0209a6c8 kind:data(any) addr:0x0209a6c8 local
+data_0209a6cc kind:data(any) addr:0x0209a6cc local
+data_0209a6d0 kind:data(any) addr:0x0209a6d0 local
+data_0209a6d4 kind:data(any) addr:0x0209a6d4 local
+data_0209a6d8 kind:data(any) addr:0x0209a6d8 local
+data_0209a6dc kind:data(any) addr:0x0209a6dc local
+data_0209a6e0 kind:data(any) addr:0x0209a6e0 local
+data_0209a6e4 kind:data(any) addr:0x0209a6e4 local
+data_0209a6e8 kind:data(any) addr:0x0209a6e8 local
+data_0209a6ec kind:data(any) addr:0x0209a6ec local
+data_0209a6f0 kind:data(any) addr:0x0209a6f0 local
+data_0209a6f4 kind:data(any) addr:0x0209a6f4 local
+data_0209a6f8 kind:data(any) addr:0x0209a6f8 local
 _ZSt8thandler kind:data(any) addr:0x0209a6fc
 _ZTISt9type_info kind:data(any) addr:0x0209a700
 _ZTIN3abi21__vmi_class_type_infoE kind:data(any) addr:0x0209a708
