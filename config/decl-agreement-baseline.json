@@ -7171,8 +7171,8 @@
         "return:short []"
       ]
     },
-    "data_02086214": {
-      "src/unnamed/arm9/0205/func_020538b8.cpp": [
+    "FX_AtanTable_": {
+      "src/FX_Atan2.c": [
         "return:short []"
       ]
     },

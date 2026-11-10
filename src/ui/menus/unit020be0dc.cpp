@@ -54,6 +54,7 @@
 #include "Vector3s.h"
 #include "dExtModel_c.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gxcommon.h"
 #include "types.h"
 #include "Ov007Model.h"
@@ -132,7 +133,6 @@ extern char data_ov007_02103234[]; /* "2DEffect" */
 extern int data_ov007_020d7c6c;
 extern u16 data_ov007_020d7c58[];
 
-extern int func_020538b8(int x, int y);
 extern void func_0204dab4(void *sys, TrackingRecord *buf, int count, unsigned int mask, void *cb);
 extern void func_0204dc84(char *self);
 extern void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int rev, int frame);
@@ -177,7 +177,7 @@ void func_ov007_020beb80(Ov007Figure *fig) {
     int vel;
     int speed;
     Vector3 *pos = &bone0->t;
-    yaw = func_020538b8(row[0], row[2]);
+    yaw = FX_Atan2(row[0], row[2]);
     motion.x = (short)(pos->x - fig->prevPos.x);
     motion.y = (short)(pos->y - fig->prevPos.y);
     motion.z = (short)(pos->z - fig->prevPos.z);
@@ -542,7 +542,7 @@ int func_ov007_020be0dc(void) {
 
         {
             int *row = &Bone0(fig)->r.m[6];
-            int yaw = func_020538b8(row[0], row[2]);
+            int yaw = FX_Atan2(row[0], row[2]);
             int turn = FX_DivS32(yaw << 0xc, 0xffff);
             unsigned int scale = ((turn * 0x12) >> 0xc) & 0xff;
             if (scale >= 0x12)

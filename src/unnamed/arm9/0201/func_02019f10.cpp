@@ -2,6 +2,7 @@
 #include "types.h"
 #include "CP15.h"
 #include "IRQ.h"
+#include "nitro/fx/fx_trig.h"
 #include "nitro/os/thread.h"
 #include "nitro/spi/pm.h"
 
@@ -12,7 +13,6 @@ extern int func_02040714(void);
 extern void func_02040724(void);
 extern void func_0201a4d0(void);
 extern unsigned char data_0209d4e4;
-extern const s16 data_02086214[];
 
 void func_0201a028(void) {
     for (;;) {
@@ -52,11 +52,11 @@ void func_02019f64(void *arg) {
 }
 
 /* The thread and its stack reuse the 0x4000-byte sin/cos table
-   data_02082214 (0x02082214..0x02086214), which ends where data_02086214
+   data_02082214 (0x02082214..0x02086214), which ends where FX_AtanTable_
    begins: the OSThread takes the table's top 0x94 bytes and its
    0x3f6c-byte stack runs down from there to the table's start. */
 int func_02019f10(void) {
-    OSThread *thread = (OSThread *)data_02086214 - 1;
+    OSThread *thread = (OSThread *)FX_AtanTable_ - 1;
     OS_CreateThread(thread, func_02019f64, 0, thread, 0x3f6c, 0);
     OS_WakeupThreadDirect(thread);
     return 0;

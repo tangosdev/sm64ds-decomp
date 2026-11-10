@@ -2216,8 +2216,8 @@ CrossVec3 kind:function(arm,size=0x9c) addr:0x02053770
 DotVec3 kind:function(arm,size=0x44) addr:0x0205380c
 SubVec3 kind:function(arm,size=0x34) addr:0x02053850
 AddVec3 kind:function(arm,size=0x34) addr:0x02053884
-func_020538b8 kind:function(arm,size=0x1d4) addr:0x020538b8
-func_02053a8c kind:function(arm,size=0x4) addr:0x02053a8c
+FX_Atan2 kind:function(arm,size=0x1d4) addr:0x020538b8
+FX_Init kind:function(arm,size=0x4) addr:0x02053a8c
 func_02053a90 kind:function(arm,size=0x2c) addr:0x02053a90
 _ZN3GXS15SetGraphicsModeEi kind:function(arm,size=0x1c) addr:0x02053abc
 _ZN2GX15SetGraphicsModeEiii kind:function(arm,size=0x74) addr:0x02053ad8
@@ -3178,7 +3178,7 @@ data_02082a28 kind:data(any) addr:0x02082a28
 data_02082a2a kind:data(any) addr:0x02082a2a
 data_02082a34 kind:data(any) addr:0x02082a34
 data_02083620 kind:data(any) addr:0x02083620
-data_02086214 kind:data(any) addr:0x02086214
+FX_AtanTable_ kind:data(any) addr:0x02086214
 data_02086314 kind:data(any) addr:0x02086314
 data_02086324 kind:data(any) addr:0x02086324
 data_02086326 kind:data(any) addr:0x02086326
