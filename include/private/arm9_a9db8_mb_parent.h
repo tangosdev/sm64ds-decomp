@@ -54,7 +54,7 @@ typedef struct MbParentFile {
                              the MBGameInfo from it at +0xe4 (MBi_MakeGameInfo);
                              MBi_CommParentRecvDataPerChild checks a child's ggid (+0x14) and
                              maxPlayerNum (+0x18) in it */
-    s32 mSrcAddr;         /* 0x5b4 -- added to a block's offset before CpuCopy8 */
+    s32 mSrcAddr;         /* 0x5b4 -- added to a block's offset before MI_CpuCopy8 */
     u16 mCurrentBlock;    /* 0x5b8 -- block number being sent */
     u16 mRequestedBlock;  /* 0x5ba -- highest block a child asked for this
                              cycle: MBi_CommParentRecvData zeroes it, MBi_CommParentRecvDataPerChild

@@ -27,13 +27,13 @@ void func_020527e8(int *m, int sx, int sy, int sz)
 }
 
 /* word copy primitive used by the VRAM upload CPU path */
-void MultiCopy_Int(int *src, int *dst, int len)
+void MIi_CpuCopy32(int *src, int *dst, int len)
 {
     memcpy(dst, src, len);
 }
 
 /* 32-byte-block copy primitive (asm on the DS) */
-void MultiCopy32Bytes(const void *src, void *dst, int len) {
+void MIi_CpuCopyFast(const void *src, void *dst, int len) {
     memcpy(dst, src, len);
 }
 

@@ -114,7 +114,7 @@ extern SaveBlock data_0209caa0;
 extern Matrix4x3 data_0209b3ec;
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u8 data_ov080_02127714[];
-extern void func_020553a4(void *mtx);
+extern void G3_LoadMtx43(void *mtx);
 extern void *data_ov080_02127834;
 extern void func_0203cbc0(void *a);
 }
@@ -125,7 +125,7 @@ namespace Memory { void *operator_new2(unsigned int size); }
 
 /* The helpers are daPicGate_c members declared on the class and defined in
  * src/game/actors/d_a_pic_gate.cpp. */
-#define LoadMtx43 func_020553a4
+#define LoadMtx43 G3_LoadMtx43
 #define kStates data_ov080_02128628
 #define kDefaultWave data_ov080_02127834
 

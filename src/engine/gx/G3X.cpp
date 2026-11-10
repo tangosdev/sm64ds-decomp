@@ -27,14 +27,14 @@
 #include "nitro/hw/registers.h"
 
 extern "C" {
-void MultiCopyHalf(const void *src, void *dst, int size);
-void Copy32Bytes(void *src, void *dst);
+void MIi_CpuCopy16(const void *src, void *dst, int size);
+void MI_Copy32B(void *src, void *dst);
 extern int data_02099fd0;
 void MI_DmaFill32Async(unsigned int dmaNo, void *dest, unsigned int data, unsigned int size,
                        void (*callback)(void *), void *arg);
 void DMASyncFillTransfer(unsigned int channel, void *dst, unsigned int data,
                          unsigned int size);
-void MultiStore_Int(int val, int *dst, int len);
+void MIi_CpuClear32(int val, int *dst, int len);
 void GXi_NopClearFifo128_(unsigned addr);
 void func_020555a4(void *dst);
 void func_0205583c(void);
@@ -148,12 +148,12 @@ void G3X::SetFog(int enable, int a, int b, int c) {
 
 // FOG_TABLE (0x4000360) takes the whole 32-byte table from the caller buffer.
 void G3X::SetFogTable(void *table) {
-    Copy32Bytes(table, (void *)0x4000360);
+    MI_Copy32B(table, (void *)0x4000360);
 }
 
 // G3X_SetToonTable: the 32-entry toon table to TOON_TABLE (0x4000380).
 extern "C" void func_020555a4(void *dst) {
-    MultiCopyHalf(dst, (void *)0x04000380, 0x40);
+    MIi_CpuCopy16(dst, (void *)0x04000380, 0x40);
 }
 
 void G3X::SetClearColor(unsigned short a, int b, int c, int d, bool e) {
@@ -172,9 +172,9 @@ void G3X::InitTable(void) {
     } else {
         volatile int a = 0;
         volatile int b;
-        MultiStore_Int(a, (int *)0x4000330, 0x10);
+        MIi_CpuClear32(a, (int *)0x4000330, 0x10);
         b = 0;
-        MultiStore_Int(b, (int *)0x4000360, 0x50);
+        MIi_CpuClear32(b, (int *)0x4000360, 0x50);
     }
     for (i = 0; i < 0x20; i++)
         *(volatile int *)0x40004d0 = 0;

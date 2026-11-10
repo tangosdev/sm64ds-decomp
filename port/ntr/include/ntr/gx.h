@@ -9,7 +9,7 @@
 // SM64DS drives it both ways, so both are implemented:
 //
 //     *(volatile u32 *)0x4000400 = 0x1a;      // packed command word
-//     Copy36Bytes(m, (int *)0x4000400);       // ...then its 9 parameters
+//     MI_Copy36B(m, (int *)0x4000400);       // ...then its 9 parameters
 //
 //     DMAStartTransfer(ch, src, 0x4000400, 0x84400000 | (len >> 2));   // display list
 //

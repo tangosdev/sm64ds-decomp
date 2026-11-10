@@ -1228,7 +1228,7 @@ extern "C" void Matrix4x3_FromTranslation(struct Matrix4x3 *m, int x, int y, int
 extern "C" void MulMat4x3Mat4x3(const struct Matrix4x3 *a, const struct Matrix4x3 *b,
                                 struct Matrix4x3 *out);
 extern "C" void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *m, int x, int y, int z);
-extern "C" void func_020553a4(int *m);
+extern "C" void G3_LoadMtx43(int *m);
 
 #define PATCH_VTX(obj) ((Vec3 *)TRMPLINE(obj)->mVerts)
 #define PATCH_NRM(obj) (TRMPLINE(obj)->mPackedNormals)
@@ -1256,9 +1256,9 @@ extern "C" void TrmpLine_Draw(char *obj) {
                                   TRMPLINE(obj)->mScale.z);
     MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &m2);
     REG_MTX_MODE = 2;
-    func_020553a4(m1.m);
+    G3_LoadMtx43(m1.m);
     REG_MTX_MODE = 1;
-    func_020553a4(m2.m);
+    G3_LoadMtx43(m2.m);
     REG_MTX_SCALE = 0x100000;
     REG_MTX_SCALE = 0x100000;
     REG_MTX_SCALE = 0x100000;
@@ -2053,7 +2053,7 @@ extern Matrix4x3 data_0209b3ec; /* local extern: the view matrix (Graphics3D.cpp
 extern "C" void TrmpLine_DrawAll(void) {
     int light[3];
     REG_MTX_MODE = 2;
-    func_020553a4(&data_0209b3ec);
+    G3_LoadMtx43(&data_0209b3ec);
     light[0] = 0;
     light[1] = 0;
     light[2] = 0xfffff008;

@@ -4422,7 +4422,7 @@ extern "C" void ResetInput(void) {
             mode = p->mode;
         else
             mode = GetControllerMode(i);
-        func_0205a588(p, 0, 0x18);
+        MI_CpuFill8(p, 0, 0x18);
         p->mode = mode;
         p->delay = 5;
         p++;
@@ -4892,7 +4892,7 @@ u32 LoadCompressedFileAt(int fileID, void *target);
 int LoadFileAt(int handle, int dest);
 void LoadControllerModeText(int a);
 void LoadFont3D(void);
-void MultiStore16(u16 val, char *dst, int nbytes);
+void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 void SetSubBg0Offset(int a, int b);
 void SetSubBg1Offset(int a, int b);
 void SetSubBg2Offset(int a, int b);
@@ -4955,7 +4955,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         {
             char *clearScreenMap = (char *)G2S::GetBG2ScrPtr();
             volatile u16 fillTile = 0x10d0;
-            MultiStore16(fillTile, clearScreenMap, 0x800);
+            MIi_CpuClear16(fillTile, clearScreenMap, 0x800);
         }
         gSubScreenLayers = 0x17;
         SetSubBg0Offset(0, 0);
@@ -5036,7 +5036,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
 
     if (SublevelToLevel(sublevel) == 0x1d) {
         volatile u16 blankTile = 0;
-        MultiStore16(blankTile, screenMap, 0x40);
+        MIi_CpuClear16(blankTile, screenMap, 0x40);
         LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_SELECT_PAUSE_NSC_BIN, screenMap + 0x40);
         LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_PAGE_NSC_BIN,
                              (char *)G2::GetBG2ScrPtr() + 0x1800);

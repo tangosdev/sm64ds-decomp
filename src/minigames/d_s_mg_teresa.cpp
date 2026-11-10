@@ -82,7 +82,7 @@ extern void  Mg_DrawScoreTally(void *, int, int, int);
 extern int   Mg_IsNewRecord(void);
 extern int   func_020126e8(int a);
 extern int   func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
-extern void  MultiStore16(u16 val, void *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 #include "OAM.h"
 extern void OamRender10_d_s_mg_teresa(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                       s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);
@@ -1663,9 +1663,9 @@ void dScMgTeresa_c::PaintSquare(int cx, int cy, int val, int n)
                     if (x >= 0 && x < 0x100) {
                         if (y >= -0xc0 - sMgTopScreenYOffset && y >= 0 && y < 0xc0) {
                             addr = (int *)((char *)G2S::GetBG0CharPtr() + ((x / 8) + (y / 8) * 32) * 32 + (y & 7) * 4);
-                            MultiCopy_Int(addr, &buf, 4);
+                            MIi_CpuCopy32(addr, &buf, 4);
                             buf = (buf & (-1 ^ (0xf << ((x & 7) * 4)))) | (val << ((x & 7) * 4));
-                            MultiCopy_Int(&buf, addr, 4);
+                            MIi_CpuCopy32(&buf, addr, 4);
                         }
                     }
                 }
@@ -1691,7 +1691,7 @@ void dScMgTeresa_c::OnNewRecord()
    instead of overriding. */
 void dScMgTeresa_c::StartRound(int reset) {
     /* volatile: the cartridge stores the fill value to the stack and reloads
-       it (strh/ldrh [sp]) before MultiStore16. Plain locals, by-value and
+       it (strh/ldrh [sp]) before MIi_CpuClear16. Plain locals, by-value and
        by-reference wrappers all fold the constant; no other spelling found. */
     volatile unsigned short val;
     if (reset == 0) {
@@ -1714,7 +1714,7 @@ void dScMgTeresa_c::StartRound(int reset) {
     SpawnBoos();
     char* dst = (char *)G2S::GetBG0CharPtr();
     val = 0x1111;
-    MultiStore16(val, dst, 0x6000);
+    MIi_CpuClear16(val, dst, 0x6000);
     mSceneState = 0;
     FreeGfxSlotsById(0x1d);
     mBannerTimer = 0x20;
@@ -1757,7 +1757,7 @@ s32 dScMgTeresa_c::InitResources()
     void *f2;
     void *t;
     /* volatile: each fill value round-trips through the stack before
-       MultiStore16, as in StartRound. */
+       MIi_CpuClear16, as in StartRound. */
     volatile u16 fa;
     volatile u16 fb;
     volatile u16 fc;
@@ -1768,7 +1768,7 @@ s32 dScMgTeresa_c::InitResources()
     {
         void *p = G2::GetBG2ScrPtr();
         fa = 0x5300;
-        MultiStore16(fa, p, 0x800);
+        MIi_CpuClear16(fa, p, 0x800);
     }
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     REG_BG3CNT = REG_BG3CNT & ~3;
@@ -1798,13 +1798,13 @@ s32 dScMgTeresa_c::InitResources()
     {
         void *p = G2S::GetBG0ScrPtr();
         fb = 0;
-        MultiStore16(fb, p, 0x800);
+        MIi_CpuClear16(fb, p, 0x800);
     }
     Mg_InitBrush((char *)this, 0, 0, 0);
     {
         void *p = (char *)G2S::GetBG0CharPtr();
         fc = 0x1111;
-        MultiStore16(fc, p, 0x6000);
+        MIi_CpuClear16(fc, p, 0x6000);
     }
     gSubScreenLayers |= 4;
     REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 1;

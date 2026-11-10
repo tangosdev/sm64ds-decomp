@@ -64,13 +64,13 @@ extern void SDK_IRQ_STACKSIZE(void);
 
 /* local extern: no header declares these yet. Their SDK names:
  * ARMProcessorMode is OS_GetProcMode, ARMSaveContext OS_SaveContext,
- * ARMRestoreContext OS_LoadContext
- * and MultiStore_Int MIi_CpuClear32; OSi_UnlockAllMutex is src/engine/os/OS_Mutex.cpp. */
+ * ARMRestoreContext OS_LoadContext; OSi_UnlockAllMutex is
+ * src/engine/os/OS_Mutex.cpp. */
 extern int ARMProcessorMode(void);
 extern int ARMSaveContext(void *ctx);
 extern void ARMRestoreContext(void *ctx);
 extern void OS_InitContext(void *ctx, unsigned int pc, unsigned int sp);
-extern void MultiStore_Int(int val, int *dst, int len);
+extern void MIi_CpuClear32(int val, int *dst, int len);
 extern void OSi_UnlockAllMutex(OSThread *thread);
 
 extern OSSwitchThreadCallback data_020a6128; /* OSi_SystemCallbackInSwitchThread */
@@ -214,7 +214,7 @@ void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *st
     {
         /* MI_CpuClear32's value: the ROM passes it through a stack slot. */
         volatile int fill = 0;
-        MultiStore_Int(fill, (int *)((u32)stack - stackSize + 4), stackSize - 8);
+        MIi_CpuClear32(fill, (int *)((u32)stack - stackSize + 4), stackSize - 8);
     }
 
     thread->mutex = 0;

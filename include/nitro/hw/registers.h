@@ -102,6 +102,10 @@
 #define REG_DB_MOSAIC_BG  (*(volatile u8 *)0x0400104c)
 #define REG_DB_MOSAIC_OBJ (*(volatile u8 *)0x0400104d)
 
+/* The geometry command FIFO port: a command word, then its parameter words.
+   Packed and immediate-mode senders (nitro/gx/g3.h opcodes) write here. */
+#define REG_GXFIFO       (*(volatile u32 *)0x04000400)
+
 /* 3D geometry commands: the material colours, and a light's vector and colour
    (bits 30-31 of each pick the light). */
 #define REG_DIF_AMB      (*(volatile u32 *)0x040004c0)

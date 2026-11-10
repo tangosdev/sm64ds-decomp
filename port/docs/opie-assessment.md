@@ -101,8 +101,8 @@ geometry engine exactly this way — command word then packed params to the FIFO
 straight to it:
 
 ```c
-/* src/Geometry_MatrixMultiply3x3.c:5 */   *(volatile u32 *)0x4000400 = 0x1a;
-                                           Copy36Bytes(m, (int *)0x4000400);
+/* src/engine/gx/GX_g3imm.c */   *(volatile u32 *)0x4000400 = 0x1a;
+                                           MI_Copy36B(m, (int *)0x4000400);
 /* src/engine/mi/MI_DmaGXCommand.cpp:118 */ DMAStartTransfer(dmaNo, src, 0x4000400, 0x84400000 | ...);
 ```
 

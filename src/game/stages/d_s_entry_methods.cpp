@@ -235,7 +235,7 @@ void func_020201c0(void);
 void func_0202048c(void *dst, int a, int b);
 void func_02020768(char *thiz);
 void func_02020820(OamAnimation *anim, int *src, int screen, int loops, u8 enabled, u8 affine);
-void MultiStore_Int(int val, void *dst, int len);
+void MIi_CpuClear32(int val, void *dst, int len);
 void func_020331fc(int a, int b, int c);
 void PrepareVsMode(void);
 void LoadLevelNoReturn(int levelID, u32 entranceID, u32 mode, u32 arg3);
@@ -1322,7 +1322,7 @@ void dScEntry_c::EnterResults() {
     {
         void *bg0 = G2S::GetBG0ScrPtr();
         volatile int zero = 0;
-        MultiStore_Int(zero, bg0, 0x800);
+        MIi_CpuClear32(zero, bg0, 0x800);
     }
 
     func_02033390(0);

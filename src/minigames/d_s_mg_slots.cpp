@@ -159,7 +159,7 @@ extern dWipe_c data_0209f61c;
 
 extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 }
 
 /* ~dScMgSlot1_c() (D1, complete-object destructor). The empty body is the
@@ -1464,7 +1464,7 @@ s32 dScMgSlot1_c::InitResources() {
     {
         char *d3 = (char *)G2S::GetBG3ScrPtr();
         fill = 0x43e4;
-        MultiStore16(fill, d3, 0x800);
+        MIi_CpuClear16(fill, d3, 0x800);
     }
 
     LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], (void *)0x6400000);

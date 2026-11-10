@@ -92,7 +92,7 @@ extern void func_02012718(int, int);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *);
 extern void DecompressLZ16(void *src, void *dst);
-extern void MultiStore16(unsigned short val, char *dst, int nbytes);
+extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern int func_02054d88(void);
 extern void func_02056314(void *, u32, u32);
 extern void func_020562b4(const void *, u32, u32);
@@ -620,7 +620,7 @@ void dScMgPachinko2_c::StartRoundEnd(int a) {
     mEndTimer = 0x40;
     dst = (char *)G2S::GetBG2CharPtr();
     v = 0;
-    MultiStore16(v, dst, 0x6000);
+    MIi_CpuClear16(v, dst, 0x6000);
     mResult = a;
     Ball_ClearAll();
 }
@@ -1440,7 +1440,7 @@ void dScMgPachinko2_c::CheckCountdownEnd() {
     mEndTimer = 0x40;
     dst = (char *)G2S::GetBG2CharPtr();
     v = 0;
-    MultiStore16(v, dst, 0x6000);
+    MIi_CpuClear16(v, dst, 0x6000);
     mResult = 0;
     Ball_ClearAll();
 }
@@ -1497,7 +1497,7 @@ void dScMgPachinko2_c::ClearAimLine() {
     {
         char *dst = (char *)G2S::GetBG2CharPtr();
         tmp = 0;
-        MultiStore16(tmp, dst, 0x6000);
+        MIi_CpuClear16(tmp, dst, 0x6000);
     }
 }
 
@@ -1551,7 +1551,7 @@ void dScMgPachinko2_c::DrawAimLine() {
     if (mBalls[idx].x != mBalls[idx].prevX || mBalls[idx].y != mBalls[idx].prevY) {
         char *dst = (char *)G2S::GetBG2CharPtr();
         tmp = 0;
-        MultiStore16(tmp, dst, 0x6000);
+        MIi_CpuClear16(tmp, dst, 0x6000);
 
         k = 0;
         pivot[0] = 0x6c;
@@ -2265,14 +2265,14 @@ s32 dScMgPachinko2_c::InitResources() {
 
     b = (char *)G2S::GetBG2CharPtr();
     spC = 0;
-    MultiStore16(spC, b, 0x6000);
+    MIi_CpuClear16(spC, b, 0x6000);
 
     n = 0;
     for (y = 0; y < 0x18; y++) {
         for (x = 0; x < 0x20; x++) {
             dst = (char *)((u16 *)G2S::GetBG2ScrPtr() + x + y * 0x20);
             spE = n;
-            MultiStore16(spE, dst, 2);
+            MIi_CpuClear16(spE, dst, 2);
             n++;
         }
     }

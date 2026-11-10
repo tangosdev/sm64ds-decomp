@@ -74,7 +74,7 @@ extern u16 sBomroomSpawnDelays[];
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 
 extern void func_02056554(const void *src, int offset, int count);
 extern u8 gMainScreenLayers;
@@ -1876,9 +1876,9 @@ s32 dScMgBomroom_c::Behavior()
 s32 dScMgBomroom_c::InitResources() {
     char *b;
     /* The ROM spills the BG fill value through the stack (strh/ldrh at sp)
-       before MultiStore16. A plain u16 compiles InitResources to 0x328
+       before MIi_CpuClear16. A plain u16 compiles InitResources to 0x328
        against the ROM's 0x330; no non-volatile spelling is known (the same
-       spill as Message.cpp's MultiStore_Int fills). */
+       spill as Message.cpp's MIi_CpuClear32 fills). */
     volatile u16 fill;
     void *f;
     void *arc;
@@ -1906,7 +1906,7 @@ s32 dScMgBomroom_c::InitResources() {
     f = LoadFile(ASSET_D_2D_ELEVATOR_NSC_BIN);
     b = (char *)G2::GetBG2ScrPtr();
     fill = 0xf23f;
-    MultiStore16(fill, b, 0x1000);
+    MIi_CpuClear16(fill, b, 0x1000);
     func_020563d4(f, 0, 0x800);
     Deallocate(f);
 

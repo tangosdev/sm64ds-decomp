@@ -2,7 +2,7 @@
 #include "private/rom_header_view.h"
 #include "private/arm9_a9db8_mb_parent.h"
 extern void func_020676e0(void *in, void *tbl, void *dst, void *recvCursor);
-extern void CpuCopy8(const void *src, void *dst, u32 size);
+extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
 extern u32 data_0208685c[];
 
 /* NitroSDK MB_DownloadFileInfo, the start of MbParentFile.mHeader: the
@@ -38,5 +38,5 @@ void func_020678a4(int *out, int *in, void *authCode) {
         seg++;
         t += 1;
     }
-    CpuCopy8(authCode, info->auth_code, 0x88);
+    MI_CpuCopy8(authCode, info->auth_code, 0x88);
 }

@@ -40,7 +40,7 @@ extern int PXI_IsCallbackReady(int tag, int proc);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 extern int PXI_SendWordByFifo(u32 tag, u32 data, u32 reply);
 extern void DMASyncHalfTransfer(unsigned int channel, void *src, void *dst, unsigned int numHalfs);
-extern void MultiCopy_Int(int *dst, int *src, int len);
+extern void MIi_CpuCopy32(int *dst, int *src, int len);
 extern void WaitByLoop(int n);
 
 extern CTRDGWork data_020a9de0;   /* CTRDGi_Work */
@@ -114,7 +114,7 @@ void func_0206a6d0(void) {
         cip->makerCode = chd->makerCode;
         cip->gameCode = chd->gameCode;
     }
-    MultiCopy_Int((int *)0xffff0020, &data_020a9e04, 0x9c);
+    MIi_CpuCopy32((int *)0xffff0020, &data_020a9e04, 0x9c);
     CP15::FlushAndInvalidateDataCache();
     data = (((unsigned int)&data_020a9e00 + 0xfe000000) >> 5) << 6 | 1;
     CTRDGi_SendtoPxi(data);

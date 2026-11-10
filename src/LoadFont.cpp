@@ -14,7 +14,7 @@ extern "C" int LoadFileAt(int handle, int dest);
 extern "C" void Deallocate(void *ptr);
 
 extern "C" int func_02054d88(void);
-extern "C" void MultiCopy_Int(int *src, int *dst, int len);
+extern "C" void MIi_CpuCopy32(int *src, int *dst, int len);
 extern "C" void DecompressLZ16(void *dst, void *src);
 
 struct GX  { static void LoadBGPltt(void const *p, unsigned a, unsigned b); };
@@ -39,12 +39,12 @@ extern "C" void LoadFont(unsigned char arg)
         GX::LoadBGPltt((char *)file + 2, 2, 0x20);
         Deallocate(file);
     } else if (data_0209d698 == 1) {
-        MultiCopy_Int((int *)r4, (int *)G2S::GetBG1CharPtr(), 0x4000);
+        MIi_CpuCopy32((int *)r4, (int *)G2S::GetBG1CharPtr(), 0x4000);
         file = LoadFile(ASSET_D_2D_MARIO_3DFONT_NCL_BIN);
         GXS::LoadBGPltt(file, 0x40, 0x20);
         Deallocate(file);
     } else {
-        MultiCopy_Int((int *)r4, (int *)func_02054d88(), 0x4000);
+        MIi_CpuCopy32((int *)r4, (int *)func_02054d88(), 0x4000);
         file = LoadFile(0x980d);
         DecompressLZ16(file, (void *)(func_02054d88() + 0x8000));
         Deallocate(file);

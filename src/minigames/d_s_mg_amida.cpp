@@ -101,8 +101,8 @@ extern "C" {
 /* --- shared ov004 and main helpers --- */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
-extern void MultiCopyHalf(void *dst, void *src, int nbytes);
-extern void MultiStore16(u16 val, void *dst, int nbytes);
+extern void MIi_CpuCopy16(void *dst, void *src, int nbytes);
+extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 extern int RandomIntInternal(int *seed);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
@@ -1282,17 +1282,17 @@ void dScMgAmida_c::StepWalkers() {
 
 extern "C" void Amida_RestoreBgChars(void *) {
     char *mainChars = (char *)func_02054efc();
-    MultiCopyHalf((char *)func_02054efc() + 0xc000, mainChars, 0x6000);
+    MIi_CpuCopy16((char *)func_02054efc() + 0xc000, mainChars, 0x6000);
     char *subChars = (char *)G2S::GetBG0CharPtr();
-    MultiCopyHalf((char *)G2S::GetBG0CharPtr() + 0x6000, subChars, 0x6000);
+    MIi_CpuCopy16((char *)G2S::GetBG0CharPtr() + 0x6000, subChars, 0x6000);
 }
 
 /* The scene pointer its caller passes is never read. */
 extern "C" void Amida_SaveBgChars(void *) {
     char *mainChars = (char *)func_02054efc() + 0xc000;
-    MultiCopyHalf((char *)func_02054efc(), mainChars, 0x6000);
+    MIi_CpuCopy16((char *)func_02054efc(), mainChars, 0x6000);
     char *subChars = (char *)G2S::GetBG0CharPtr() + 0x6000;
-    MultiCopyHalf(G2S::GetBG0CharPtr(), subChars, 0x6000);
+    MIi_CpuCopy16(G2S::GetBG0CharPtr(), subChars, 0x6000);
 }
 
 void dScMgAmida_c::InitWalkers() {
@@ -1488,10 +1488,10 @@ void dScMgAmida_c::SetupRound() {
         volatile u16 fillSub;
         chars = func_02054efc();
         fillMain = 0;
-        MultiStore16(fillMain, chars, 0x6000);
+        MIi_CpuClear16(fillMain, chars, 0x6000);
         chars = G2S::GetBG0CharPtr();
         fillSub = 0;
-        MultiStore16(fillSub, chars, 0x6000);
+        MIi_CpuClear16(fillSub, chars, 0x6000);
     }
 
     mLineStart.x = -1;
@@ -2100,7 +2100,7 @@ s32 dScMgAmida_c::InitResources() {
 
     file = func_02054efc();
     fillMain = 0;
-    MultiStore16(fillMain, file, 0x6000);
+    MIi_CpuClear16(fillMain, file, 0x6000);
 
     REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x2214;
     REG_DB_BG0CNT &= ~0x40;
@@ -2109,7 +2109,7 @@ s32 dScMgAmida_c::InitResources() {
 
     file = G2S::GetBG0CharPtr();
     fillSub = 0;
-    MultiStore16(fillSub, file, 0x6000);
+    MIi_CpuClear16(fillSub, file, 0x6000);
 
     Mg_InitBrush((char *)this, 1, 0, 2);
 

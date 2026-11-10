@@ -108,8 +108,8 @@ extern void (*MSG_GEN_TEXT_FUNCS[])(void);
 
 extern int func_02054d88(void);
 extern void *func_02054ea8(void);
-extern void MultiCopy_Int(int *dst, int *src, int len);
-extern void MultiStore_Int(int val, int *dst, int len);
+extern void MIi_CpuCopy32(int *dst, int *src, int len);
+extern void MIi_CpuClear32(int val, int *dst, int len);
 extern int IsButtonInputValid(void);
 extern int func_0201fb4c(void);
 extern u8 NumStars(void);
@@ -274,14 +274,14 @@ void func_0201adfc(void) {
 
     for (i = 0; i < data_0209d6f0[6] * 2; i++) {
         for (j = 0; j < data_0209d6a8; j++) {
-            MultiCopy_Int((int *)(p + 4), (int *)p, 0x10);
+            MIi_CpuCopy32((int *)(p + 4), (int *)p, 0x10);
             if (i == data_0209d6f0[6] * 2 - 1) {
                 p[4] = 0;
                 p[5] = 0;
                 p[6] = 0;
                 p[7] = 0;
             } else {
-                MultiCopy_Int((int *)(p + data_0209d6a8 * 8), (int *)(p + 4), 0x10);
+                MIi_CpuCopy32((int *)(p + data_0209d6a8 * 8), (int *)(p + 4), 0x10);
             }
             p += 8;
         }
@@ -368,9 +368,9 @@ void func_0201b100(int mode) {
             int lo2 = opcode & 0xf;
             int hi2 = opcode & 0xf0;
             int w;
-            MultiCopy_Int((int *)(base + (((lo2 << 1) + (hi2 << 2)) << 5)), (int *)r4addr, size);
+            MIi_CpuCopy32((int *)(base + (((lo2 << 1) + (hi2 << 2)) << 5)), (int *)r4addr, size);
             w = ((int)data_0209d6b0 + 7) / 8;
-            MultiCopy_Int((int *)(base + ((lo2 + ((hi2 << 1) + 0x10)) << 6)),
+            MIi_CpuCopy32((int *)(base + ((lo2 + ((hi2 << 1) + 0x10)) << 6)),
                           (int *)(r4addr + (w << 5)), size);
         } else {
             int lo;
@@ -565,7 +565,7 @@ void Message::LayoutLine() {
         data_0209d704 = 0;
         data_0209d6a4 = 0;
         data_0209d6b0 = 0;
-        MultiStore_Int(fill, data_0209d74c, 0xf00);
+        MIi_CpuClear32(fill, data_0209d74c, 0xf00);
     }
 
     while (1) {

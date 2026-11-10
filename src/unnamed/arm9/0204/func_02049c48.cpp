@@ -9,7 +9,7 @@ extern "C" {
    effect's work (data_020a4c70) and store the kind under the IRQ lock, and
    for kind 1 send SNDi_SetSurroundDecay(0x3000) as func_02049cd8 does. */
 
-extern void MultiStore16(unsigned short val, void *dest, int size);
+extern void MIi_CpuClear16(unsigned short val, void *dest, int size);
 extern void SNDi_SetSurroundDecay(int val);
 
 void func_02049c48(int kind) {
@@ -23,7 +23,7 @@ void func_02049c48(int kind) {
     }
     savedIRQ = IRQ::Disable();
     tmp = 0;
-    MultiStore16(tmp, &data_020a4c70, sizeof(data_020a4c70));
+    MIi_CpuClear16(tmp, &data_020a4c70, sizeof(data_020a4c70));
     data_020a4c64.kind = kind;
     IRQ::Restore(savedIRQ);
     if (kind == 1) {

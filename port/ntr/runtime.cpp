@@ -73,7 +73,7 @@ extern "C" void CpuFastSet(const void *src, void *dst, unsigned int ctrl) {
 // Block copies. These matter more than they look: the geometry FIFO is fed by
 // handing 0x4000400 to a copy routine --
 //
-//     *(volatile u32 *)0x4000400 = 0x1a;   Copy36Bytes(m, (int *)0x4000400);
+//     *(volatile u32 *)0x4000400 = 0x1a;   MI_Copy36B(m, (int *)0x4000400);
 //
 // -- so the FIFO address never appears as a dereference the transform can see.
 // docs/mmio-inventory.md calls that the `address-passed` class, and this is where
@@ -98,14 +98,14 @@ void copy_words(const uint32_t *src, uint32_t *dst, int n) {
 // C linkage: in this port the decomp's .c files compile as C TUs (hostgen
 // wraps its transformed copies in extern "C"), so the copy primitives must
 // carry C names.
-extern "C" void Copy36Bytes(const void *src, void *dst) {
+extern "C" void MI_Copy36B(const void *src, void *dst) {
     copy_words(reinterpret_cast<const uint32_t *>(src), reinterpret_cast<uint32_t *>(dst), 9);
 }
 
 // stmia WITHOUT writeback: twelve words through the same port address. Only
 // ever used against the FIFO; for a memory destination the DS semantics would
 // overwrite the same three words four times, so a memory dst is a bug here.
-extern "C" void Copy48BytesFixed(const void *src, void *dst) {
+extern "C" void GX_SendFifo48B(const void *src, void *dst) {
     const uint32_t *s = static_cast<const uint32_t *>(src);
     uint32_t *d = static_cast<uint32_t *>(dst);
     if (reinterpret_cast<uintptr_t>(dst) == 0x04000400u) {

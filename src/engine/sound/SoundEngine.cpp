@@ -316,7 +316,7 @@ extern int FS_CloseFile(char *self);
 extern void FS_InitFile(void *s);
 extern int FS_ReadFile(int a, int b, int c);
 extern struct HeapAllocator;
-extern void MultiStore_Int(int val, int *dst, int len);
+extern void MIi_CpuClear32(int val, int *dst, int len);
 extern struct NestedHeapIterator;
 extern struct ElemTable;
 /* local extern: these callers run the constructor over storage that already
@@ -1497,7 +1497,7 @@ extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, 
     if (data_020a5634.f0 != 0)
         return 0;
     z = 0;
-    MultiStore_Int(z, (int *)a0, a1);
+    MIi_CpuClear32(z, (int *)a0, a1);
     CP15::FlushAndInvalidateDataCache((unsigned int)a0, a1);
     return ((int (*)(int a0, int a1, int a2, int a3, int s0, int s1, int s2, int s3, int s4, int s5,
                      int s6, int s7, int s8, int s9, int s10))func_020503a4)(
@@ -1667,9 +1667,9 @@ extern "C" void func_020501b8(void)
     if (g->f0 == 0) return;
     g->f18 = 0;
     a = 0;
-    ((extern void (*)(int val, int *dst, int len))MultiStore_Int)(a, (int *)g->fc, g->f14);
+    ((extern void (*)(int val, int *dst, int len))MIi_CpuClear32)(a, (int *)g->fc, g->f14);
     b = 0;
-    ((extern void (*)(int val, int *dst, int len))MultiStore_Int)(b, (int *)g->f10, g->f14);
+    ((extern void (*)(int val, int *dst, int len))MIi_CpuClear32)(b, (int *)g->f10, g->f14);
     ((extern void (*)(unsigned int a, unsigned int b))CP15::FlushAndInvalidateDataCache)(
         (unsigned int)g->fc, g->f14);
     ((extern void (*)(unsigned int a, unsigned int b))CP15::FlushAndInvalidateDataCache)(

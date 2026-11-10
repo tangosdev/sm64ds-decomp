@@ -53,8 +53,8 @@ extern char data_0209a7ec[];
 extern char data_0209aff8[];
 extern struct MWiDestructorChain *__global_destructor_chain;
 
-void CpuCopy8(const void *src, void *dst, u32 size);
-void func_0205a588(void *dst, u8 value, u32 size);
+void MI_CpuCopy8(const void *src, void *dst, u32 size);
+void MI_CpuFill8(void *dst, u8 value, u32 size);
 void DGT_Hash2CalcHmac(void *out, void *msg, int msglen, void *key, int keylen);
 void MIi_UncompressBackward(void *bottom);
 void FS_InitFile(void *s);
@@ -75,7 +75,7 @@ void FS_ClearOverlayImage(FSOverlayInfo *p_ovi) {
     u32 total_size = ram_size + bss_size;
     CP15::InvalidateInstructionCache(im_start, total_size);
     CP15::InvalidateDataCache(im_start, total_size);
-    func_0205a588((void *)(im_start + ram_size), 0, total_size - ram_size);
+    MI_CpuFill8((void *)(im_start + ram_size), 0, total_size - ram_size);
 }
 
 /* The overlay's FSFileID: the ROM archive and the header's file_id. */
@@ -124,7 +124,7 @@ int FS_LoadOverlayInfo(FSOverlayInfo *p_ovi, int target, int id) {
         u32 pos = id << 5;
         if (pos >= pr->length)
             return 0;
-        CpuCopy8((void *)(offset + pos), p_ovi, 0x20);
+        MI_CpuCopy8((void *)(offset + pos), p_ovi, 0x20);
         p_ovi->target = target;
         return 1;
     }
@@ -141,8 +141,8 @@ int FSi_CompareDigest(char *spec_digest, void *src, int len) {
     int digest_key[16];
     unsigned int i;
     int *p;
-    func_0205a588(digest, 0, 0x14);
-    CpuCopy8(data_0209a04c, digest_key, data_0209a050);
+    MI_CpuFill8(digest, 0, 0x14);
+    MI_CpuCopy8(data_0209a04c, digest_key, data_0209a050);
     DGT_Hash2CalcHmac(digest, src, len, digest_key, data_0209a050);
     p = digest;
     for (i = 0; i < 0x14; i += 4) {
@@ -178,7 +178,7 @@ void FS_StartOverlay(FSOverlayInfo *p_ovi) {
             }
         }
         if (ret == 0) {
-            func_0205a588(p_ovi->header.ram_address, 0, rare_size);
+            MI_CpuFill8(p_ovi->header.ram_address, 0, rare_size);
             Crash();
             return;
         }

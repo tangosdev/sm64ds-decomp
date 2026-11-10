@@ -30,7 +30,7 @@
 #include "G2x.h"
 
 extern "C" {
-void MultiStore_Int(int val, int *dst, int len);
+void MIi_CpuClear32(int val, int *dst, int len);
 void Wipe_HBlankHandler(void);
 }
 
@@ -297,8 +297,8 @@ void dWipe_c::AdvanceFade()
    line-0 windows from it. */
 extern "C" void Wipe_LatchTable(void) {
     data_0209f608 = data_0209f60c;
-    MultiCopy_Int((int *)(data_0209f648 + data_0209f608 * 0x300u), (int *)0x4000040, 4);
-    MultiCopy_Int((int *)(data_0209f648 + data_0209f608 * 0x300u), (int *)0x4001040, 4);
+    MIi_CpuCopy32((int *)(data_0209f648 + data_0209f608 * 0x300u), (int *)0x4000040, 4);
+    MIi_CpuCopy32((int *)(data_0209f648 + data_0209f608 * 0x300u), (int *)0x4001040, 4);
     data_0209f5fc = 1;
 }
 
@@ -322,8 +322,8 @@ extern "C" void Wipe_HBlankHandler(void) {
     if ((*(volatile u16 *)0x4000004 & 2) == 0)
         return;
 
-    MultiCopy_Int((int *)(data_0209f648 + data_0209f608 * 0x300u + line * 4), (int *)0x4000040, 4);
-    MultiCopy_Int((int *)(data_0209f648 + data_0209f608 * 0x300u + line * 4), (int *)0x4001040, 4);
+    MIi_CpuCopy32((int *)(data_0209f648 + data_0209f608 * 0x300u + line * 4), (int *)0x4000040, 4);
+    MIi_CpuCopy32((int *)(data_0209f648 + data_0209f608 * 0x300u + line * 4), (int *)0x4001040, 4);
 
     data_0209f5fc = 0;
 }
@@ -362,7 +362,7 @@ void dWipe_c::BuildStarTable() {
     buf = (struct WindowEdges *)(data_0209f648 + idx * 0x300);
     fill = 0x80807F7F;
     i = 0;
-    MultiStore_Int(fill, (int *)buf, 0x300);
+    MIi_CpuClear32(fill, (int *)buf, 0x300);
 
     dur = wipeInterp;
     if (dur > 0) {
@@ -456,7 +456,7 @@ void dWipe_c::BuildCircleTable() {
     fill = 0x80807f7f;
     buf = (struct WindowEdges *)(data_0209f648 + idx * 0x300);
 
-    MultiStore_Int(fill, (int *)buf, 0x300);
+    MIi_CpuClear32(fill, (int *)buf, 0x300);
 
     radius = wipeInterp >> 0xc;
     start = 0x60 - radius;

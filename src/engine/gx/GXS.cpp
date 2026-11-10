@@ -58,8 +58,8 @@ extern void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size,
                               void (*callback)(void *), void *arg);
 extern void DMASyncWordTransfer(u32 ch, const void *src, void *dst, u32 size);
 extern void DMASyncHalfTransfer(u32 ch, const void *src, volatile void *dst, u32 count);
-extern void MultiCopyHalf(const void *src, volatile void *dst, int count);
-extern void MultiCopy_Int(int *src, int *dst, int len);
+extern void MIi_CpuCopy16(const void *src, volatile void *dst, int count);
+extern void MIi_CpuCopy32(int *src, int *dst, int len);
 
 extern int func_02054d88(void);
 extern void *func_02054ea8(void);
@@ -74,7 +74,7 @@ void LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
     if (channel != -1) {
         DMASyncHalfTransfer(channel, src, (void *)((char *)0x05000000 + offset), size);
     } else {
-        MultiCopyHalf(src, (void *)((char *)0x05000000 + offset), size);
+        MIi_CpuCopy16(src, (void *)((char *)0x05000000 + offset), size);
     }
 }
 
@@ -88,7 +88,7 @@ void LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
     if (channel != -1) {
         DMASyncHalfTransfer(channel, src, (void *)((char *)0x05000400 + offset), size);
     } else {
-        MultiCopyHalf(src, (void *)((char *)0x05000400 + offset), size);
+        MIi_CpuCopy16(src, (void *)((char *)0x05000400 + offset), size);
     }
 }
 
@@ -102,7 +102,7 @@ void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
     if (channel != -1) {
         DMASyncHalfTransfer(channel, src, (void *)((char *)0x05000200 + offset), size);
     } else {
-        MultiCopyHalf(src, (void *)((char *)0x05000200 + offset), size);
+        MIi_CpuCopy16(src, (void *)((char *)0x05000200 + offset), size);
     }
 }
 
@@ -116,7 +116,7 @@ void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
     if (channel != -1) {
         DMASyncHalfTransfer(channel, src, (void *)((char *)0x05000600 + offset), size);
     } else {
-        MultiCopyHalf(src, (void *)((char *)0x05000600 + offset), size);
+        MIi_CpuCopy16(src, (void *)((char *)0x05000600 + offset), size);
     }
 }
 
@@ -131,7 +131,7 @@ void func_020566dc(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (void *)(0x7000000 + offset), count);
     } else {
-        MultiCopy_Int((int *)src, (int *)(0x7000000 + offset), count);
+        MIi_CpuCopy32((int *)src, (int *)(0x7000000 + offset), count);
     }
 }
 
@@ -142,7 +142,7 @@ void func_02056674(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (void *)(0x07000400 + offset), count);
     } else {
-        MultiCopy_Int((int *)src, (int *)(0x07000400 + offset), count);
+        MIi_CpuCopy32((int *)src, (int *)(0x07000400 + offset), count);
     }
 }
 
@@ -158,7 +158,7 @@ void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (void *)(base + offset), count);
     } else {
-        MultiCopy_Int((int *)src, (int *)(base + offset), count);
+        MIi_CpuCopy32((int *)src, (int *)(base + offset), count);
     }
 }
 
@@ -174,7 +174,7 @@ void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (void *)(base + offset), count);
     } else {
-        MultiCopy_Int((int *)src, (int *)(base + offset), count);
+        MIi_CpuCopy32((int *)src, (int *)(base + offset), count);
     }
 }
 
@@ -189,7 +189,7 @@ void func_02056554(const void *src, int offset, int count) {
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
     } else {
-        MultiCopyHalf(src, ptr + offset, count);
+        MIi_CpuCopy16(src, ptr + offset, count);
     }
 }
 
@@ -200,7 +200,7 @@ void func_020564f4(const void *src, int offset, int count) {
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
     } else {
-        MultiCopyHalf(src, ptr + offset, count);
+        MIi_CpuCopy16(src, ptr + offset, count);
     }
 }
 }
@@ -214,7 +214,7 @@ void LoadBG1Scr(const void *src, int offset, int count) {
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
     } else {
-        MultiCopyHalf(src, ptr + offset, count);
+        MIi_CpuCopy16(src, ptr + offset, count);
     }
 }
 
@@ -229,7 +229,7 @@ void func_02056434(const void *src, int offset, int count) {
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, ptr + offset, count);
     } else {
-        MultiCopyHalf(src, ptr + offset, count);
+        MIi_CpuCopy16(src, ptr + offset, count);
     }
 }
 
@@ -243,7 +243,7 @@ void func_020563d4(const void *src, u32 offset, u32 count) {
     if (ch != (u32)-1)
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
     else
-        MultiCopyHalf(src, (char *)bgPtr + offset, count);
+        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
 }
 
 // Loads BG2 screen data to the sub-engine plane (G2S::GetBG2ScrPtr).
@@ -256,7 +256,7 @@ void func_02056374(const void *src, u32 offset, u32 count) {
     if (ch != (u32)-1)
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
     else
-        MultiCopyHalf(src, (char *)bgPtr + offset, count);
+        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
 }
 
 // Loads BG3 screen data to the main-engine plane (G2::GetBG3ScrPtr).
@@ -266,7 +266,7 @@ void func_02056314(const void *src, u32 offset, u32 count) {
     if (ch != -1) {
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
     } else {
-        MultiCopyHalf(src, (char *)bgPtr + offset, count);
+        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
     }
 }
 
@@ -280,7 +280,7 @@ void func_020562b4(const void *src, u32 offset, u32 count) {
     if (ch != (u32)-1)
         DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
     else
-        MultiCopyHalf(src, (char *)bgPtr + offset, count);
+        MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
 }
 
 }
@@ -294,7 +294,7 @@ void LoadBG0Char(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
     } else {
-        MultiCopy_Int((int *)src, (int *)((char *)base + offset), count);
+        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
     }
 }
 
@@ -308,7 +308,7 @@ void LoadBG0Char(const void *src, u32 offset, u32 size) {
     if (data_02099fd0 != (u32)-1)
         DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
     else
-        MultiCopy_Int((int *)src, (int *)((char *)charPtr + offset), size);
+        MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
 }
 
 }
@@ -322,7 +322,7 @@ void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
     } else {
-        MultiCopy_Int((int *)src, (int *)((char *)base + offset), count);
+        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
     }
 }
 
@@ -337,7 +337,7 @@ void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
     } else {
-        MultiCopy_Int((int *)src, (int *)((char *)base + offset), count);
+        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
     }
 }
 
@@ -351,7 +351,7 @@ void LoadBG2Char(const void *src, u32 offset, u32 size) {
     if (data_02099fd0 != (u32)-1)
         DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
     else
-        MultiCopy_Int((int *)src, (int *)((char *)charPtr + offset), size);
+        MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
 }
 
 }
@@ -365,7 +365,7 @@ void LoadBG2Char(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
     } else {
-        MultiCopy_Int((int *)src, (int *)((char *)base + offset), count);
+        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
     }
 }
 
@@ -380,7 +380,7 @@ void func_02056014(const void *src, unsigned int offset, unsigned int count) {
     if (channel != (unsigned int)-1) {
         DMASyncWordTransfer(channel, src, (char *)base + offset, count);
     } else {
-        MultiCopy_Int((int *)src, (int *)((char *)base + offset), count);
+        MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
     }
 }
 }
@@ -393,7 +393,7 @@ void LoadBG3Char(const void *src, u32 offset, u32 size) {
     if (data_02099fd0 != (u32)-1)
         DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
     else
-        MultiCopy_Int((int *)src, (int *)((char *)charPtr + offset), size);
+        MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
 }
 
 }
@@ -411,7 +411,7 @@ void LoadBGExtPltt(const void *src, u32 destSlotAddr, u32 size) {
     if (dmaId != (u32)-1) {
         MI_DmaCopy32Async(dmaId, src, (void *)(destSlotAddr + GXS_BG_EXT_PLTT_BASE), size, 0, 0);
     } else {
-        MultiCopy_Int((int *)src, (int *)(destSlotAddr + GXS_BG_EXT_PLTT_BASE), size);
+        MIi_CpuCopy32((int *)src, (int *)(destSlotAddr + GXS_BG_EXT_PLTT_BASE), size);
     }
 }
 
@@ -435,7 +435,7 @@ void LoadOBJExtPltt(const void *src, u32 destSlotAddr, u32 size) {
     if (dmaId != (u32)-1) {
         MI_DmaCopy32Async(dmaId, src, (void *)(destSlotAddr + GXS_OBJ_EXT_PLTT_BASE), size, 0, 0);
     } else {
-        MultiCopy_Int((int *)src, (int *)(destSlotAddr + GXS_OBJ_EXT_PLTT_BASE), size);
+        MIi_CpuCopy32((int *)src, (int *)(destSlotAddr + GXS_OBJ_EXT_PLTT_BASE), size);
     }
 }
 

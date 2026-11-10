@@ -36,7 +36,7 @@
 #include "nitro/fx/fx_trig.h"
 
 extern "C" {
-void MultiStore16(u16 val, char *dst, int nbytes);
+void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 void DecompressLZ16(void *src, void *dst);
 
 void func_020308b4(void);
@@ -273,9 +273,9 @@ s32 dScMB_c::InitResources() {
     REG_DB_BG1CNT &= ~0x40;
 
     fillMain = 0xffff;
-    MultiStore16(fillMain, (char *)0x5000000, 2);
+    MIi_CpuClear16(fillMain, (char *)0x5000000, 2);
     fillSub = 0xffff;
-    MultiStore16(fillSub, (char *)0x5000400, 2);
+    MIi_CpuClear16(fillSub, (char *)0x5000400, 2);
 
     /* From OBJ tile 0x94 onwards; a 4bpp tile is 0x20 bytes. */
     DecompressLZ16(&data_0209446c, (u8 *)G2_GetOBJCharPtr() + 0x94 * 0x20);

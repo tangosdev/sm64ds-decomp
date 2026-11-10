@@ -152,8 +152,8 @@ extern s8 gNextSublevel;
 extern u32 gNextActorUpdateMask;
 extern s32 data_0208ee44;
 
-extern void MultiStore_Int(int val, int *dst, int len);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear32(int val, int *dst, int len);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void SetBg1Offset(int a, int b);
 extern void SetBg3Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
@@ -243,10 +243,10 @@ extern "C" void func_0201cd08(int arg) {
     data_0209d6a8 = 0;
     p = G2S::GetBG0CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int *)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
     s = G2S::GetBG0ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char *)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     data_0209d6d4 = (s16)arg;
     func_0201d418(data_0209d6d4 == 0x29a ? 0x105 : 0xc5, 0xb0);
     data_0209d6d4 = 0x293;
@@ -269,10 +269,10 @@ void Message::DisplaySaveStatusText(unsigned short n)
     data_0209d674 = 0;
     p = G2S::GetBG0CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int*)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
     s = G2S::GetBG0ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char*)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     func_0201d418(0x109, 0x70);
 }
 
@@ -289,12 +289,12 @@ extern "C" void func_0201cebc(short a0)
     {
         int *dst = (int *)(G2S::GetBG0CharPtr() + 0x4000);
         z = 0;
-        MultiStore_Int(z, dst, 0x2000);
+        MIi_CpuClear32(z, dst, 0x2000);
     }
     {
         char *dst = (char *)G2S::GetBG0ScrPtr();
         v = 0x2ff;
-        MultiStore16(v, dst, 0x800);
+        MIi_CpuClear16(v, dst, 0x800);
     }
     Message_DrawCenteredLine(0x100, 0x20);
     data_0209d6d4 = 0x27e;
@@ -324,10 +324,10 @@ void Message::DisplayOptionsMenuText(s16 n) {
     int p, s;
     p = G2S::GetBG0CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int*)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
     s = G2S::GetBG0ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char*)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     func_0201cfb8(n);
     data_0209d6d4 = 0x287;
     data_0209d6c0 = 1;
@@ -437,10 +437,10 @@ void Message::DisplayControllerModeText(unsigned short n)
     data_0209d674 = 0;
     p = G2S::GetBG0CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int*)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
     s = G2S::GetBG0ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char*)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     func_0201d418(0xa9, 0x70);
     data_0209d6d4 = data_0209d6d4 + 1;
     func_0201d418(0x149, 0x70);
@@ -467,7 +467,7 @@ extern "C" void func_0201d418(int p0, int p1) {
         {
             int cp = G2S::GetBG0CharPtr() + 0x4000;
             li = 0;
-            MultiStore_Int(li, (int*)(cp + (data_0209d6a8 << 6)), n << 6);
+            MIi_CpuClear32(li, (int *)(cp + (data_0209d6a8 << 6)), n << 6);
         }
         {
             short *scr = (short *)(G2S::GetBG0ScrPtr() + p0 * 2);
@@ -501,7 +501,7 @@ extern "C" void Message_DrawLineBG2(void) {
     {
         int p = (int)G2::GetBG2CharPtr() + ((data_0209d674 + 0x280) << 5);
         li = 0;
-        MultiStore_Int(li, (int*)p, n);
+        MIi_CpuClear32(li, (int *)p, n);
     }
     func_0201b100(1);
     data_0209d674 = data_0209d674 + (u8)(((data_0209d6b0 + 7) / 8) << 1);
@@ -538,7 +538,7 @@ extern "C" void Message_DrawCenteredLine(int a, int b)
     new_var3 = b - ((old + 7) / 8);
     new_var2 = new_var3;
     li = 0;
-    MultiStore_Int(li, (int*)p, n);
+    MIi_CpuClear32(li, (int *)p, n);
     col = (u16) (new_var2 >> 1);
     old = old;
     ptr = ((u16 *)(G2S::GetBG0ScrPtr() + (a * 2))) + col;
@@ -573,12 +573,12 @@ extern "C" void func_0201d850(u32 arg0)
     {
         void *pa = (char *)func_02054d88() + 0x4000;
         sp4 = 0;
-        MultiStore_Int(sp4, (int *)pa, 0x2000);
+        MIi_CpuClear32(sp4, (int *)pa, 0x2000);
     }
     {
         void *pb = G2::GetBG3ScrPtr();
         sp0 = 0x2ff;
-        MultiStore16(sp0, (char *)pb, 0x800);
+        MIi_CpuClear16(sp0, (char *)pb, 0x800);
     }
     SetBg3Offset(0, 0);
 
@@ -675,7 +675,7 @@ L_r4_else:
         data_0209d704 = 0;
         data_0209d6a4 = 0;
         data_0209d6b0 = 0;
-        MultiStore_Int(sp8, data_0209d74c, 0xf00);
+        MIi_CpuClear32(sp8, data_0209d74c, 0xf00);
         data_0209d6b8 = 1;
         if ((IsStarCollected(arg0, gCurrentStarId) != 0) || (data_0209f20c != 0)) {
             Message::AddChar(0xf0);
@@ -805,10 +805,10 @@ void Message::DisplayPauseText(unsigned short n, unsigned char b)
     data_0209d668 = 1;
     p = G2S::GetBG0CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int*)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
     s = G2S::GetBG0ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char*)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     Message_DrawCenteredLine(0x80, 0x20);
     data_0209d6d4 = data_0209d6d4 + 1;
     Message_DrawCenteredLine(0x260, 0x20);
@@ -829,10 +829,10 @@ void Message::DisplayDontSaveText(unsigned short n)
     data_0209d6a8 = 0;
     p = G2S::GetBG0CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int*)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
     s = G2S::GetBG0ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char*)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     data_0209d6d4 = n;
     func_0201d418(0x105, 0xb0);
     data_0209d6d4 = 0x293;
@@ -848,10 +848,10 @@ extern "C" void func_0201e220(int arg) {
     int p, s;
     p = G2S::GetBG0CharPtr() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int*)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
     s = G2S::GetBG0ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char*)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     if (arg == 0) {
         Message_DrawCenteredLine(0x160, 0x20);
         data_0209d6d4 = data_0209d6d4 + 1;
@@ -903,11 +903,11 @@ void Message::DisplayText(int t) {
 
     p = func_02054d88() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int*)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
 
     s = (int)G2::GetBG3ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char*)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
 
     if (t != 0x1b3) {
         func_0201b6f8(0);
@@ -946,10 +946,10 @@ void Message::Display(unsigned int msg)
     func_0201eaac();
     p = func_02054d88() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int*)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
     s = (int)G2::GetBG3ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char*)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
     DisplayText(msg);
     data_0209d6d4 = 0x276;
     gMsgBoxStyle = 0;
@@ -957,10 +957,10 @@ void Message::Display(unsigned int msg)
     data_0209d6a8 = 0;
     p = G2S::GetBG0CharPtr() + 0x4000;
     li2 = 0;
-    MultiStore_Int(li2, (int*)p, 0x2000);
+    MIi_CpuClear32(li2, (int *)p, 0x2000);
     s = G2S::GetBG0ScrPtr();
     ls2 = 0x2ff;
-    MultiStore16(ls2, (char*)s, 0x800);
+    MIi_CpuClear16(ls2, (char *)s, 0x800);
     Message_DrawCenteredLine(0xa0, 0x20);
     data_0209d6d4 = 0x279;
     Message_DrawCenteredLine(0x140, 0x20);
@@ -995,7 +995,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
 
     p = func_02054d88() + 0x5000;
     li = 0;
-    MultiStore_Int(li, (int*)p, 0x800);
+    MIi_CpuClear32(li, (int *)p, 0x800);
 
     q = (u16 *)((char *)G2::GetBG3ScrPtr() + 0x180);
     for (i = 0; i < 0x40; i++) {
@@ -1035,13 +1035,13 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     {
         int p1 = func_02054d88() + 0x4000;
         li1 = 0;
-        MultiStore_Int(li1, (int*)p1, 0x2000);
+        MIi_CpuClear32(li1, (int *)p1, 0x2000);
     }
 
     {
         int s1 = (int)G2::GetBG3ScrPtr();
         ls = 0x2ff;
-        MultiStore16(ls, (char*)s1, 0x800);
+        MIi_CpuClear16(ls, (char *)s1, 0x800);
     }
 
     if (data_0209d6d4 >= 0x1a5) {
@@ -1082,7 +1082,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     {
         int p2 = func_02054d88() + 0x4800;
         li2 = 0;
-        MultiStore_Int(li2, (int*)p2, 0x800);
+        MIi_CpuClear32(li2, (int *)p2, 0x800);
     }
 
     q = (u16 *)((char *)G2::GetBG3ScrPtr() + 0x240);
@@ -1172,11 +1172,11 @@ void Message::DisplaySaving(unsigned short n)
 
     p = func_02054d88() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int*)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
 
     s = (int)G2::GetBG3ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char*)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
 
     scr = (u8 *)((char *)G2::GetBG3ScrPtr() + 0x42);
     SetBg3Offset(-(int)gMsgBoxLeft, 4 - (int)gMsgBoxTop);
@@ -1244,7 +1244,7 @@ extern "C" void func_0201ef50(int arg)
     data_0209d690 = 1;
     cp = G2S::GetBG0CharPtr();
     li = 0;
-    MultiStore_Int(li, (int *) cp, 0x8000);
+    MIi_CpuClear32(li, (int *)cp, 0x8000);
     if (arg < 0)
     {
         return;
@@ -1269,7 +1269,7 @@ extern "C" void func_0201ef50(int arg)
         new_var = cp;
         new_var = new_var + sl;
         li2 = 0;
-        MultiStore_Int(li2, (int *) new_var, 0x800);
+        MIi_CpuClear32(li2, (int *)new_var, 0x800);
         Message::LayoutLine();
         func_0201b388(0x20);
         sl = (u16) (sl + 0x800);
@@ -1314,11 +1314,11 @@ extern "C" void func_0201f138(void)
 
     p = func_02054d88() + 0x4000;
     li = 0;
-    MultiStore_Int(li, (int*)p, 0x2000);
+    MIi_CpuClear32(li, (int *)p, 0x2000);
 
     s = (int)G2::GetBG3ScrPtr();
     ls = 0x2ff;
-    MultiStore16(ls, (char*)s, 0x800);
+    MIi_CpuClear16(ls, (char *)s, 0x800);
 
     q = (u16 *)((char *)G2::GetBG3ScrPtr() + 0x42);
     div = data_0209d6a8;
@@ -1435,12 +1435,12 @@ extern "C" void func_0201f32c(int arg0)
         {
             void *pa = (char *)func_02054ea8() + 0x4000;
             sp8 = 0;
-            MultiStore_Int(sp8, (int *)pa, 0x4000);
+            MIi_CpuClear32(sp8, (int *)pa, 0x4000);
         }
         {
             void *pb = (char *)G2::GetBG1ScrPtr() + 0x200;
             sp0 = 0x3ff;
-            MultiStore16(sp0, (char *)pb, 0x400);
+            MIi_CpuClear16(sp0, (char *)pb, 0x400);
         }
         var_r8 = (char *)G2::GetBG1ScrPtr() + 0x24e;
         SetBg1Offset(0, 0);
@@ -1450,12 +1450,12 @@ extern "C" void func_0201f32c(int arg0)
         {
             void *pa = (char *)G2S::GetBG1CharPtr() + 0x4000;
             spC = 0;
-            MultiStore_Int(spC, (int *)pa, 0x2000);
+            MIi_CpuClear32(spC, (int *)pa, 0x2000);
         }
         {
             void *pb = (void *)G2S::GetBG1ScrPtr();
             sp2 = 0x22ff;
-            MultiStore16(sp2, (char *)pb, 0x800);
+            MIi_CpuClear16(sp2, (char *)pb, 0x800);
         }
         var_r8 = (char *)G2S::GetBG1ScrPtr() + 0x42;
         SetSubBg1Offset(4 - gMsgBoxLeft, 4 - gMsgBoxTop);
@@ -1464,12 +1464,12 @@ extern "C" void func_0201f32c(int arg0)
         {
             void *pa = (char *)func_02054d88() + 0x4000;
             sp10 = 0;
-            MultiStore_Int(sp10, (int *)pa, 0x3000);
+            MIi_CpuClear32(sp10, (int *)pa, 0x3000);
         }
         {
             void *pb = G2::GetBG3ScrPtr();
             sp4 = 0x37f;
-            MultiStore16(sp4, (char *)pb, 0x800);
+            MIi_CpuClear16(sp4, (char *)pb, 0x800);
         }
         var_r8 = (char *)G2::GetBG3ScrPtr() + 0x42;
         {

@@ -123,10 +123,10 @@ typedef struct WMMpRecvData {
     u16 cdata[1];   /* 0x0a -- the child's packet */
 } WMMpRecvData;
 
-extern void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern void MultiStore32Bytes(unsigned val, void *dst, int len);
-extern void CpuCopy8(const void *src, void *dst, u32 size);
-extern void func_0205a588(void *dst, u8 val, u32 size);
+extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
+extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
+extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
+extern void MI_CpuFill8(void *dst, u8 val, u32 size);
 extern char *WM_ReadMPData(char *buf, unsigned int aid);
 extern u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst);
 extern u8 *MBi_MakeParentSendBuffer(MBCommParentBlockHeader *hdr, u8 *buf);
@@ -167,7 +167,7 @@ int MB_CommGetParentState(u16 aid) {
 void *MB_CommGetChildUser(u16 aid) {
     u32 saved = IRQ::Disable();
     if (data_020a9db8 != 0 && IsChildAidValid(aid)) {
-        CpuCopy8(MB_WORK->mChildUser[aid - 1], MB_WORK->mChildUserBuf, 0x16);
+        MI_CpuCopy8(MB_WORK->mChildUser[aid - 1], MB_WORK->mChildUserBuf, 0x16);
         IRQ::Restore(saved);
         return MB_WORK->mChildUserBuf;
     }
@@ -263,12 +263,12 @@ void MBi_CommParentCallback(int type, char *arg) {
         u16 v = cb->aid;
         if (v != 0 && v < 0x10) {
             MB_WORK->mChildVersion[v - 1] = 0;
-            func_0205a588(&MB_WORK->mChildGameId[cb->aid - 1], 0, 4);
-            func_0205a588(MB_WORK->mChildUser[cb->aid - 1], 0, 0x16);
+            MI_CpuFill8(&MB_WORK->mChildGameId[cb->aid - 1], 0, 4);
+            MI_CpuFill8(MB_WORK->mChildUser[cb->aid - 1], 0, 0x16);
             {
                 int cur = func_0206881c();
-                func_0205a588(&MB_WORK->mChildRequest[cb->aid - 1], 0,
-                              (cur - 2) * 0x1e / (func_0206881c() - 2));
+                MI_CpuFill8(&MB_WORK->mChildRequest[cb->aid - 1], 0,
+                            (cur - 2) * 0x1e / (func_0206881c() - 2));
             }
             MB_WORK->mChildRequestPieces[cb->aid - 1] = 0;
             {
@@ -401,7 +401,7 @@ void MBi_CommParentCallback(int type, char *arg) {
     }
     {
         volatile int sp0 = 0;
-        MultiStore32Bytes(sp0, data_020a9db8, 0x73e0);
+        MIi_CpuClearFast(sp0, data_020a9db8, 0x73e0);
     }
     data_020a9db8 = 0;
 }
@@ -441,10 +441,10 @@ void MBi_CommParentRecvDataPerChild(void *arg, u32 aid) {
     case 7:
         if (phase == MB_COMM_PSTATE_CONNECTED && func_02065de4((u8 *)&hd, aid) == 1) {
             i = aid - 1;
-            CpuCopy8(&MB_WORK->mChildRequest[i], &req, 0x1d);
+            MI_CpuCopy8(&MB_WORK->mChildRequest[i], &req, 0x1d);
             MB_WORK->mChildGameId[i] = req.mGameId;
             MB_WORK->mChildVersion[i] = req.mVersion;
-            CpuCopy8(req.mUser, MB_WORK->mChildUser[i], 0x16);
+            MI_CpuCopy8(req.mUser, MB_WORK->mChildUser[i], 0x16);
             {
                 u8 *pp = MB_WORK->mChildUser[i];
                 *pp = (u8)((*pp & ~0xf0) | (((u8)aid & 0xf) << 4));
@@ -593,7 +593,7 @@ int MBi_CommParentSendDlFileInfo(void) {
     u8 k;
     u8 *ret;
 
-    func_0205a588(count, mask, 16);
+    MI_CpuFill8(count, mask, 16);
 
     for (n = 1; n <= 15; n++) {
         if (MB_WORK->mChildState[n - 1] == MB_COMM_PSTATE_REQ_ACCEPTED) {
@@ -628,7 +628,7 @@ int MBi_CommParentSendDlFileInfo(void) {
     hd.fid = found;
     ret = MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8);
     if (ret != 0)
-        CpuCopy8(MB_WORK->mFiles[found].mHeader, ret, 0xe4);
+        MI_CpuCopy8(MB_WORK->mFiles[found].mHeader, ret, 0xe4);
 
     return func_02067f2c(0xea, mask, (u32)data_020a9db8);
 }
@@ -637,7 +637,7 @@ int MBi_CommParentSendDlFileInfo(void) {
  * char* form this replaces pooled the whole 0x1525 address once the byte was
  * read from more than one statement (+12 bytes), and with that fixed by hand
  * a named `g + 0x1000` base still rotated five registers in the three reads
- * before CpuCopy8; a struct field at 0x1525 makes that base a compiler temp
+ * before MI_CpuCopy8; a struct field at 0x1525 makes that base a compiler temp
  * and the colouring falls into place. */
 int MBi_CommParentSendBlock(void) {
     unsigned int loopCount;
@@ -682,7 +682,7 @@ int MBi_CommParentSendBlock(void) {
         hd.seqno = g->mFiles[g->mCurrentFile].mCurrentBlock;
     }
 
-    CpuCopy8((void *)bi.offset, MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8), bi.size);
+    MI_CpuCopy8((void *)bi.offset, MBi_MakeParentSendBuffer(&hd, (u8 *)data_020a9db8), bi.size);
 
     idxByte = MB_WORK->mCurrentFile;
     return func_02067f2c(bi.size + 6, MB_WORK->mFiles[idxByte].mChildBitmap, (u32)data_020a9db8);
@@ -698,7 +698,7 @@ void MBi_CommParentSendData(void) {
     int result;
 
     bmp[0] = 0;
-    MultiStore16(bmp[0], (char *)&bmp[1], 10);
+    MIi_CpuClear16(bmp[0], (char *)&bmp[1], 10);
 
     for (i = 1; i <= 0xf; i++) {
         switch (MB_WORK->mChildState[i - 1]) {

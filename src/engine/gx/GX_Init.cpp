@@ -65,7 +65,7 @@ extern u16 data_020a6084; // display mode parked by GX_DispOff
 
 void GX_InitGXState(void);
 void DMASyncFillTransfer(u32 channel, void *dst, u32 data, u32 size);
-void MultiStore_Int(int val, int *dst, int len);
+void MIi_CpuClear32(int val, int *dst, int len);
 
 // GX_Init: power the display engines, reset the VRAM state, and clear both
 // engines' 2D registers. The ROM spills each zero of the CPU path to its own
@@ -86,10 +86,10 @@ void func_02053c40(void) {
         DMASyncFillTransfer(data_02099fd0, REG_DB_DISPCNT_ADDR, 0, 0x70);
     } else {
         volatile u32 zero = 0;
-        MultiStore_Int(zero, (int *)REG_BG0CNT_ADDR, 0x60);
+        MIi_CpuClear32(zero, (int *)REG_BG0CNT_ADDR, 0x60);
         REG_MASTER_BRIGHT = 0;
         volatile u32 subZero = 0;
-        MultiStore_Int(subZero, (int *)REG_DB_DISPCNT_ADDR, 0x70);
+        MIi_CpuClear32(subZero, (int *)REG_DB_DISPCNT_ADDR, 0x70);
     }
 
     // Identity scale for the affine BGs of both engines.

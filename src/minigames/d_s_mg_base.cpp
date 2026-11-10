@@ -901,7 +901,7 @@ extern "C" {
    inside it with palette index `colour`.  The address arithmetic is the DS
    4bpp background-character layout: `(x/8 + (y/8)*32)*32 + (y&7)*4` picks the
    word holding eight pixels of one row of one 8x8 tile, `(x&7)*4` is the
-   nibble inside it, and MultiCopy_Int is used for the read and the write-back
+   nibble inside it, and MIi_CpuCopy32 is used for the read and the write-back
    rather than a plain load/store.  Sixteen colours, one nibble per pixel.  All
    four sides clip.
 
@@ -924,7 +924,7 @@ extern "C" {
 extern int* func_02054efc(void);
 extern int* func_02054ea8(void);
 extern int* func_02054d88(void);
-extern void MultiCopy_Int(void* a, void* b, int n);
+extern void MIi_CpuCopy32(void *a, void *b, int n);
 
 extern int sMgPaintWord;
 extern int sMgTopScreenYOffset;
@@ -932,7 +932,7 @@ extern int sMgTopScreenYOffset;
 }
 
 void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size) {
-    using s20ae3b4::MultiCopy_Int;
+    using s20ae3b4::MIi_CpuCopy32;
     using s20ae3b4::sMgPaintWord;
     using s20ae3b4::sMgTopScreenYOffset;
     using s20ae3b4::func_02054d88;
@@ -1010,10 +1010,10 @@ void dScMgBase_c::PaintSquare(int cx, int cy, int colour, int size) {
                     }
                 }
                 cell = (int*)((char*)base + ((xx / 8 + (yy / 8) * 32) * 32) + ((yy & 7) * 4));
-                MultiCopy_Int(cell, &sMgPaintWord, four);
+                MIi_CpuCopy32(cell, &sMgPaintWord, four);
                 sh = (xx & 7) << 2;
                 sMgPaintWord = (sMgPaintWord & (-1 ^ (m << sh))) | (colour << sh);
-                MultiCopy_Int(&sMgPaintWord, cell, four);
+                MIi_CpuCopy32(&sMgPaintWord, cell, four);
             inc:;
             } while (++ci < size);
         }
@@ -1411,7 +1411,7 @@ void dScMgBase_c::RestoreScreenFromMenu() {
     if (GetDisplayMode() != 2)
     {
         char *src = (char*)0x6600000; src += 0x6000;
-        MultiCopy_Int((int *)save->subObjChars, (int *)src, 0x2000);
+        MIi_CpuCopy32((int *)save->subObjChars, (int *)src, 0x2000);
     }
 
     gMainScreenLayers = (u8)mSavedMainBgBits;
@@ -1475,7 +1475,7 @@ extern "C" {
    this module is dScMgBase_c::OnGraphCallback2, which reaches it only on a rising edge
    of mMenuOpen.  That is the three-item overlay menu going up, not a Yoshi egg.
    See the slot 29 block in include/dScMgBase_c.h for why the name is kept. */
-extern void MultiStore16(unsigned short val, char *dst, int nbytes);
+extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern void func_0201f32c(int arg0);
 extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *src, void *dst);
@@ -1497,7 +1497,7 @@ extern unsigned char gSubScreenLayers;
 int dScMgBase_c::SaveScreenForMenu() {
     using s20af094::DecompressLZ16;
     using s20af094::GetGameLanguage;
-    using s20af094::MultiStore16;
+    using s20af094::MIi_CpuClear16;
     using s20af094::gSubScreenLayers;
     using s20af094::gMainScreenLayers;
     using s20af094::func_0201f32c;
@@ -1520,11 +1520,11 @@ int dScMgBase_c::SaveScreenForMenu() {
     *(volatile int *)0x4000000 &= ~0xe000;
     *(volatile int *)0x4001000 &= ~0xe000;
 
-    MultiCopy_Int((int *)0x5000020, (int *)save->mainBgPltt, 0x1e0);
+    MIi_CpuCopy32((int *)0x5000020, (int *)save->mainBgPltt, 0x1e0);
     {
         /* stepped from mainBgPltt: save->subBgPltt moves the literal pool */
         int *pltt = (int *)save->mainBgPltt;
-        MultiCopy_Int((int *)0x5000400, pltt + 0x80, 0x80);
+        MIi_CpuCopy32((int *)0x5000400, pltt + 0x80, 0x80);
     }
     CP15::FlushAndInvalidateDataCache((u32)save->mainBgPltt, 0x400);
 
@@ -1533,11 +1533,11 @@ int dScMgBase_c::SaveScreenForMenu() {
 
     {
         volatile unsigned short tmp = 0;
-        MultiStore16(tmp, (char *)0x5000000, 2);
+        MIi_CpuClear16(tmp, (char *)0x5000000, 2);
     }
     {
         volatile unsigned short tmp = 0;
-        MultiStore16(tmp, (char *)0x5000400, 2);
+        MIi_CpuClear16(tmp, (char *)0x5000400, 2);
     }
 
     func_0201f32c(mSceneKind);
@@ -1548,7 +1548,7 @@ int dScMgBase_c::SaveScreenForMenu() {
     if (GetDisplayMode() != 2) {
         int *vbase = (int *)0x6600000;
         int *vram = vbase + 0x1800;
-        MultiCopy_Int(vram, (int *)save->subObjChars, 0x2000);
+        MIi_CpuCopy32(vram, (int *)save->subObjChars, 0x2000);
         int idx = GetGameLanguage();
         DecompressLZ16(sMgMenuScreenByLanguage[idx], vram);
         CP15::FlushAndInvalidateDataCache((u32)save->subObjChars, 0x2000);
@@ -1576,7 +1576,7 @@ void dScMgBase_c::OpenMenu()
 
 namespace s20af2f8 {
 extern "C" {
-extern void MultiStore16(unsigned short val, void *dst, int nbytes);
+extern void MIi_CpuClear16(unsigned short val, void *dst, int nbytes);
 extern void *func_02054efc(void);
 extern void *func_02054ea8(void);
 
@@ -1611,34 +1611,34 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
         case 0:
             if (scene->mBrushOnMain) {
                 t = (char *)G2::GetBG0ScrPtr() + off;
-                MultiStore16(v0 = val, t, 2);
+                MIi_CpuClear16(v0 = val, t, 2);
             }
             t = (char *)G2S::GetBG0ScrPtr() + off;
-            MultiStore16(v1 = val, t, 2);
+            MIi_CpuClear16(v1 = val, t, 2);
             break;
         case 1:
             if (scene->mBrushOnMain) {
                 t = (char *)G2::GetBG1ScrPtr() + off;
-                MultiStore16(v2 = val, t, 2);
+                MIi_CpuClear16(v2 = val, t, 2);
             }
             t = (char *)G2S::GetBG1ScrPtr() + off;
-            MultiStore16(v3 = val, t, 2);
+            MIi_CpuClear16(v3 = val, t, 2);
             break;
         case 2:
             if (scene->mBrushOnMain) {
                 t = (char *)G2::GetBG2ScrPtr() + off;
-                MultiStore16(v4 = val, t, 2);
+                MIi_CpuClear16(v4 = val, t, 2);
             }
             t = (char *)G2S::GetBG2ScrPtr() + off;
-            MultiStore16(v5 = val, t, 2);
+            MIi_CpuClear16(v5 = val, t, 2);
             break;
         case 3:
             if (scene->mBrushOnMain) {
                 t = (char *)G2::GetBG3ScrPtr() + off;
-                MultiStore16(v6 = val, t, 2);
+                MIi_CpuClear16(v6 = val, t, 2);
             }
             t = (char *)G2S::GetBG3ScrPtr() + off;
-            MultiStore16(v7 = val, t, 2);
+            MIi_CpuClear16(v7 = val, t, 2);
             break;
         default:
             return;
@@ -1650,41 +1650,41 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
         if (scene->mBrushOnMain) {
             t = func_02054efc();
             w0 = 0;
-            MultiStore16(w0, t, 0x6000);
+            MIi_CpuClear16(w0, t, 0x6000);
         }
         t = G2S::GetBG0CharPtr();
         w1 = 0;
-        MultiStore16(w1, t, 0x6000);
+        MIi_CpuClear16(w1, t, 0x6000);
         break;
     case 1:
         if (scene->mBrushOnMain) {
             t = func_02054ea8();
             w2 = 0;
-            MultiStore16(w2, t, 0x6000);
+            MIi_CpuClear16(w2, t, 0x6000);
         }
         t = G2S::GetBG1CharPtr();
         w3 = 0;
-        MultiStore16(w3, t, 0x6000);
+        MIi_CpuClear16(w3, t, 0x6000);
         break;
     case 2:
         if (scene->mBrushOnMain) {
             t = G2::GetBG2CharPtr();
             w4 = 0;
-            MultiStore16(w4, t, 0x6000);
+            MIi_CpuClear16(w4, t, 0x6000);
         }
         t = G2S::GetBG2CharPtr();
         w5 = 0;
-        MultiStore16(w5, t, 0x6000);
+        MIi_CpuClear16(w5, t, 0x6000);
         break;
     case 3:
         if (scene->mBrushOnMain) {
             t = (void *)func_02054d88();
             w6 = 0;
-            MultiStore16(w6, t, 0x6000);
+            MIi_CpuClear16(w6, t, 0x6000);
         }
         t = G2S::GetBG3CharPtr();
         w7 = 0;
-        MultiStore16(w7, t, 0x6000);
+        MIi_CpuClear16(w7, t, 0x6000);
         break;
     default:
         return;

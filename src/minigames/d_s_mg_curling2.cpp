@@ -107,7 +107,7 @@ extern void DecompressLZ16(const void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *p);
 extern void Ov004_Deallocate(void *p);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void func_02056554(const void *src, int offset, int count);
 extern void func_02056314(void *a, u32 b, u32 c);
 extern void func_020563d4(const void *a, u32 b, u32 c);
@@ -1690,7 +1690,7 @@ s32 dScMgCurling2_c::InitResources() {
     {
         char *b = (char *)G2::GetBG2ScrPtr();
         sp4 = 0x4300;
-        MultiStore16(sp4, b, 0x1000);
+        MIi_CpuClear16(sp4, b, 0x1000);
     }
     func_020563d4(f, 0, 0x800);
 
@@ -1699,7 +1699,7 @@ s32 dScMgCurling2_c::InitResources() {
     {
         char *b = (char *)G2::GetBG0ScrPtr();
         sp6 = 0x4300;
-        MultiStore16(sp6, b, 0x1000);
+        MIi_CpuClear16(sp6, b, 0x1000);
     }
     func_02056554(f, 0, 0x800);
     Deallocate(f);

@@ -422,7 +422,7 @@ extern void SetSubBg2Offset(int a, int b);
 extern PMF data_ov002_02110e24[];
 extern PMF data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
-extern void MultiCopyHalf(void *src, void *dst, int count);
+extern void MIi_CpuCopy16(void *src, void *dst, int count);
 extern int data_ov002_021002a0[];
 extern s16 data_02082214[];
 extern short atan2_hold_d_a_demo_1(int y, int x);
@@ -1658,7 +1658,7 @@ void func_ov002_020f39ec(char *self, int idx) {
         int src = i * 0x800 + ((v & 7) << 8);
         if (v & 8)
             src += 0x2000;
-        MultiCopyHalf(s->starChars + src,
+        MIi_CpuCopy16(s->starChars + src,
                       (u8 *)G2S_GetOBJCharPtr() + 0x2000 + idx * 0x100 + i * 0x400, 0x100);
     }
 }
