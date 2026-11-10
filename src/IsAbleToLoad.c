@@ -1,9 +1,9 @@
 #include "types.h"
 
-extern u32 data_0208685c[];
+extern u32 MBi_defaultLoadSegList[];
 
-int func_02067480(u32 idx, u32 addr, u32 size) {
-    switch (data_0208685c[idx]) {
+int MBi_IsAbleToRecv(u32 idx, u32 addr, u32 size) {
+    switch (MBi_defaultLoadSegList[idx]) {
     case 2:
         if (addr >= 0x27ffe00 && addr + size <= 0x27fff60)
             return 1;
@@ -24,15 +24,16 @@ int func_02067480(u32 idx, u32 addr, u32 size) {
     return 0;
 }
 
-/* func_0206736c at 0x0206736c
- *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
+/* The SDK's static IsAbleToLoad (ntrtwl's libraries/mb/src/mb_fileinfo.c,
+ * next to MBi_IsAbleToRecv above): the ROM header and ARM9 static take
+ * MBi_IsAbleToRecv's answer; the ARM7 static may also load anywhere in main
+ * RAM below the boot loader's area, or in ARM7 WRAM.
  */
-int func_0206736c(u32 idx, u32 addr, u32 size) {
-    switch (data_0208685c[idx]) {
+int IsAbleToLoad(u32 idx, u32 addr, u32 size) {
+    switch (MBi_defaultLoadSegList[idx]) {
     case 0:
     case 2:
-        return func_02067480(idx, addr, size);
+        return MBi_IsAbleToRecv(idx, addr, size);
     case 1:
         if (addr >= 0x2000000 && addr < 0x23fe800) {
             u32 end = addr + size;

@@ -1,12 +1,11 @@
 #include "private/arm9_a9db8_mb_parent.h"
-extern int func_0206736c(unsigned int idx, unsigned int addr, unsigned int size);
+extern int IsAbleToLoad(unsigned int idx, unsigned int addr, unsigned int size);
 extern char *data_020a9db8;
 
 /* NitroSDK MBi_MakeBlockInfoTable(table, mdfi): lay the three segments out as
- * consecutive mBlockSize-byte blocks, refusing a segment func_0206736c
+ * consecutive mBlockSize-byte blocks, refusing a segment IsAbleToLoad
  * (MBi_IsAbleToRecv) says the child cannot receive. */
-int func_02067604(int *c, char *list)
-{
+int MBi_MakeBlockInfoTable(int *c, char *list) {
     MB_BlockInfoTable *table = (MB_BlockInfoTable *)c;
     MbDownloadFileInfoHeader *mdfi = (MbDownloadFileInfoHeader *)list;
     unsigned char idx;
@@ -18,7 +17,8 @@ int func_02067604(int *c, char *list)
     blockHead = table->block_head;
 
     sum = 0;
-    if (list == 0) return 0;
+    if (list == 0)
+        return 0;
 
     idx = 0;
     do {
@@ -37,8 +37,9 @@ int func_02067604(int *c, char *list)
         unsigned short sb = (unsigned short)(blockHead[idx] + (unsigned short)n);
         unsigned int addr = e->load_addr;
 
-        r = func_0206736c(idx, addr, esize);
-        if (r == 0) return 0;
+        r = IsAbleToLoad(idx, addr, esize);
+        if (r == 0)
+            return 0;
 
         if (idx < 2) {
             blockHead[idx + 1] = sb;

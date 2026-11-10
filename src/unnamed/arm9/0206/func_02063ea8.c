@@ -1,7 +1,7 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
 extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
-extern int func_02065a74(void);
+extern int WBT_GetOwnAid(void);
 extern void func_02064470(void *self, int code, int idx);
 extern void func_02064554(void *self, int sel, int idx, s16 a3);
 extern void func_02065ba0(int v);
@@ -74,9 +74,9 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
                 r8 += 2;
                 r7 += 2;
                 t = peer->target_bmp;
-                if (func_02065a74() == -1) {
+                if (WBT_GetOwnAid() == -1) {
                     v = spC;
-                } else if (t & (sp10 << func_02065a74())) {
+                } else if (t & (sp10 << WBT_GetOwnAid())) {
                     v = sp10;
                 } else {
                     v = sp14;
@@ -148,7 +148,7 @@ int func_02063ea8(char *arg0, int arg1, int arg2, int arg3)
                 u8 v;
                 MI_CpuCopy8((const void *)r8, &peer->peer_packet_size, 2);
                 MI_CpuCopy8((const void *)(r8 + 2), &peer->my_packet_size, 2);
-                if (func_02065a74() != 0) {
+                if (WBT_GetOwnAid() != 0) {
                     func_02065ba0(peer->my_packet_size);
                     func_02065bb0(peer->peer_packet_size);
                 }

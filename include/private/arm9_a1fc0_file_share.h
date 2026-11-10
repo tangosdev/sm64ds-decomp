@@ -17,7 +17,7 @@ enum { FILE_SHARE_NODE_SIZE = 0xcc0 }; /* node slot stride, sizeof(FileShareNode
 
 typedef struct FileShareNode {
     struct FileShareNode *mNext; /* 0x00 -- list link (func_02041bbc moves nodes) */
-    /* 0x04 -- func_020658c0 (WBT_RegisterBlock) registers it (block id,
+    /* 0x04 -- WBT_RegisterBlock (WBT_RegisterBlock) registers it (block id,
      * size, 0x20-byte name, data); func_02041c2c finds a node by its id */
     unsigned char mRegion[0x34];
     /* 0x38 -- FS_InitFile here; func_02042254 opens, reads and closes the
@@ -72,7 +72,7 @@ typedef struct FileShareFileExtent {
 
 #define FILE_SHARE_EXTENT(node) ((FileShareFileExtent *)(node)->mFile)
 
-/* One file-share message: 9 bytes on the air (func_020656d4), 0xc as a slot
+/* One file-share message: 9 bytes on the air (WBT_PutUserData), 0xc as a slot
  * of FileShareParentArea::mReplies. mKind is 0 for a child's open request,
  * 1 for its reply, 2 for a child's release request and 3 for its reply. The
  * parent packet size rides split across mPacketSizeHigh (bits 8-11) and
@@ -133,10 +133,10 @@ typedef struct FileShareParentArea {
 typedef struct FileShareChildArea {
     /* 0x000 -- a WBTBlockInfoTable: func_02040c34 points entry i at the 0x28-byte
      * WBTBlockInfo at 0xc0 + i * 0x28; func_02040f30 passes the table to
-     * WBT_GetBlockInfo (func_02065788) */
+     * WBT_GetBlockInfo (WBT_GetBlockInfo) */
     int mBlockInfoTable[0x10];
     /* 0x040 -- a WBTRecvBufTable: func_02040f30 sets the peer's entry to the
-     * receive buffer before WBT_GetBlock (func_02065730) */
+     * receive buffer before WBT_GetBlock (WBT_GetBlock) */
     int mRecvBufTable[0x10];
     /* 0x080 -- a WBTPacketBitmapTable, WBT_GetBlock's last table: func_02041224
      * points entry 0 at mRecvWork */

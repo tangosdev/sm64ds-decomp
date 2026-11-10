@@ -5,14 +5,15 @@ extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 /* On a download-play child, rebuild the parent's WMBssDesc from the copy
  * the boot loader left at 0x027ffc42. The copy is valid when the halfword at
  * 0x027ffc40 is 2, a multiboot child: pret's pokediamond MB_mb.h has this
- * MBParam layout. The name lead is the SDK's MB_ReadMultiBootParentBssDesc,
- * but no pret repository carries its body, so the address name stays. The
+ * MBParam layout. This is the SDK's MB_ReadMultiBootParentBssDesc, whose
+ * body ntrtwl's NitroSDK has in libraries/mb/src/mb_child.c. The
  * first 0x3c bytes come over as-is; the game info is then filled in from
  * the arguments, with the parent's ggid and tgid taken from the first six
  * bytes of its SSID. Field names follow the SDK's WMBssDesc/WMGameInfo;
  * this SDK version writes ggid as two halfwords, so the shared view splits it. */
 
-void func_020672d0(char *thiz, int parentMaxSize, int childMaxSize, int ksFlag, int csFlag) {
+void MB_ReadMultiBootParentBssDesc(char *thiz, int parentMaxSize, int childMaxSize, int ksFlag,
+                                   int csFlag) {
     WMBssDesc *desc = (WMBssDesc *)thiz;
     char *base = (char *)0x27ffc40;
     const void *src;

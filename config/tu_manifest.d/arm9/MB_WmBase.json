@@ -78,63 +78,63 @@
       "ordinal": 7
     },
     {
-      "symbol": "func_020688fc",
+      "symbol": "MBi_SendMP",
       "address": "0x020688fc",
       "size": "0x0000012c",
       "legacy_source": "src/unnamed/arm9/0206/func_020688fc.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_02068a28",
+      "symbol": "MBi_SetMPData",
       "address": "0x02068a28",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0206/func_02068a28.c",
       "ordinal": 9
     },
     {
-      "symbol": "func_02068a54",
+      "symbol": "MB_End",
       "address": "0x02068a54",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0206/func_02068a54.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "func_02068a74",
+      "symbol": "MBi_CommEnd",
       "address": "0x02068a74",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/arm9/0206/func_02068a74.c",
       "ordinal": 11
     },
     {
-      "symbol": "func_02068ae8",
+      "symbol": "MB_StartParent",
       "address": "0x02068ae8",
       "size": "0x00000220",
       "legacy_source": "src/unnamed/arm9/0206/func_02068ae8.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "func_02068d08",
+      "symbol": "MBi_StartCommon",
       "address": "0x02068d08",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0206/func_02068d08.c",
       "ordinal": 13
     },
     {
-      "symbol": "func_02068dc8",
+      "symbol": "MB_SetParentCommParam",
       "address": "0x02068dc8",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/arm9/0206/func_02068dc8.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_02068e44",
+      "symbol": "MBi_IsCommSizeValid",
       "address": "0x02068e44",
       "size": "0x00000008",
       "legacy_source": "src/unnamed/arm9/0206/func_02068e44.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_02068e4c",
+      "symbol": "MB_Init",
       "address": "0x02068e4c",
       "size": "0x000001ec",
       "legacy_source": "src/unnamed/arm9/0206/func_02068e4c.cpp",
@@ -148,21 +148,21 @@
       "ordinal": 17
     },
     {
-      "symbol": "func_020690b0",
+      "symbol": "MBi_ChildCallback",
       "address": "0x020690b0",
       "size": "0x00000868",
       "legacy_source": "src/unnamed/arm9/0206/func_020690b0.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_02069918",
+      "symbol": "MBi_ChildPortCallback",
       "address": "0x02069918",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/arm9/0206/func_02069918.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_02069994",
+      "symbol": "MBi_ParentCallback",
       "address": "0x02069994",
       "size": "0x0000089c",
       "legacy_source": "src/unnamed/arm9/0206/func_02069994.c",
@@ -188,7 +188,7 @@
   "relocations": [],
   "compiler_only_output": [],
   "notes": [
-    "Seven members carry the SDK name on a statement-for-statement match with the reconstruction or the HeartGold fork's mb_comm_params.c; the other sixteen keep address names with a comment saying which SDK function they are an older version of and what differs.",
+    "Seven members carry the SDK name on a statement-for-statement match with the reconstruction or the HeartGold fork's mb_comm_params.c; twelve more are an older SDK's version of a named function and take that name (an SDK function keeps its name across versions), each with a comment saying what differs; three getters with no counterpart keep address names.",
     "The SDK built this file as C. Three things keep the C++ compile byte-identical: `#pragma always_inline on` for the whole file, because the GameInfo struct copy is an implicit operator= that is called out of line otherwise, and mwccarm generates code only after reading the whole file, so a push/pop-scoped pragma does not reach it; the WM API declared with pointer callbacks, because passing `(int)func` schedules differently from passing a function's address; and `(u16)(cond ? 1 : 0)` where the C source widened a comparison, because a C++ comparison is a bool."
   ],
   "verification": {

@@ -33,24 +33,24 @@ extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, unsigned int image_
 extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int FS_SeekFile(FSFile *p_file, int offset, FSSeekFileMode origin);
 extern int FS_CloseFile(char *self);
-extern void func_02067b68(void *s, unsigned int start, unsigned int end, int flag);
+extern void MBi_ReadSegmentHeader(void *s, unsigned int start, unsigned int end, int flag);
 
-/* One entry of the zero-size-terminated list at data_0209a07c. */
+/* One entry of the zero-size-terminated list at mbi_seg_header. */
 typedef struct {
     unsigned int start, size;
 } Region;
 
 extern char data_0209a080[];
-extern Region *data_0209a07c;
+extern Region *mbi_seg_header;
 
-/* Copies one listed range through func_02067b68 (flag 0: MI_CpuCopy8). Taking
+/* Copies one listed range through MBi_ReadSegmentHeader (flag 0: MI_CpuCopy8). Taking
  * the entry by pointer makes the body reload size after the loop test, as the
  * ROM does. */
 static inline void CopyRegion(Args *args, const Region *r) {
-    func_02067b68(args, r->start, r->start + r->size, 0);
+    MBi_ReadSegmentHeader(args, r->start, r->start + r->size, 0);
 }
 
-int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
+int MB_ReadSegment(FSFile *a, Ctx *b, unsigned int c) {
     int result;
     unsigned int remain;
     char *cur;
@@ -117,11 +117,11 @@ int func_02067bfc(FSFile *a, Ctx *b, unsigned int c) {
             FS_CloseFile((char *)&file);
             if (result) {
                 args.a = ctx->wr;
-                rgn = data_0209a07c;
+                rgn = mbi_seg_header;
                 args.b = ctx->rd - ctx->wr;
                 args.c = ((unsigned int)b + 0x160) - ctx->wr;
                 args.d = c;
-                func_02067b68(&args, 0x4000, 0x8000, 1);
+                MBi_ReadSegmentHeader(&args, 0x4000, 0x8000, 1);
                 for (; rgn->size != 0; rgn++)
                     CopyRegion(&args, rgn);
             }
