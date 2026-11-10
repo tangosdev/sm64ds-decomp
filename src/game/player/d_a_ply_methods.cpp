@@ -7500,6 +7500,35 @@ int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
 }
 }
 
+struct P2 { int w[2]; };
+extern "C" {
+extern s32 data_0209f32c;
+extern struct P2 data_ov002_0210a084;
+extern struct P2 data_ov002_0210a34c;
+extern u8 gMeterShownHealth;
+extern int RandomIntInternal(int *seed);
+extern u32 PlayerNewHold7(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                          void *callback);
+extern u32 PlayerNewHold8(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                          void *callback);
+extern u32 PlayerNewHold9(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                          void *callback);
+extern u32 PlayerNewHold10(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern u32 PlayerNewHold11(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern u32 PlayerNewHold12(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern u32 PlayerNewHold13(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern u32 PlayerNewHold14(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern u32 PlayerNewHold15(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern void PlayerPlayLongHold_burnfire(unsigned int handle, unsigned int id, unsigned int vol,
+                                        const void *vec, unsigned int flags);
+}
+
 /* recovered: named members + shared header, real C++ method */
 // daPly_c::CanEnterDoor(unsigned char door)
 // The +0x48 vcall on the held actor is dActor_c::OnYoshiTryEat (slot 18), and
@@ -12316,7 +12345,6 @@ void daPly_c::func_ov002_020d413c(int arg) {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_Walk_Init() {
-    extern int RandomIntInternal(int *seed);
     extern short data_0209f4a0;
     extern unsigned char gGameMode;
     extern int data_0209caa0[3];
@@ -12589,7 +12617,6 @@ void daPly_c::func_ov002_020d4748() {
 extern "C" {
 void daPly_c::PlayLandingEffects() {
     extern void func_0201251c(int a, int b, int c, int d);
-    extern int data_0209f32c;
     int id;
     if (mIsInShallowWater) {
         mParticle1 = Particle::System::NewCheckWaterRipple(mParticle1, kPtclShallowWaterLand, mPosX,
@@ -12749,12 +12776,7 @@ void daPly_c::BlowAway(short v) {
 /* Particle::System::New takes Fix12<int> by value -- the
    mwccarm 6az wall, runbook section 7 -- so it stays extern "C" with scalars
    in those slots. */
-extern "C" {
 int daPly_c::St_BurnLava_Main() {
-    extern u8 gMeterShownHealth;
-    extern u32 PlayerNewHold7(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                              void *callback);
-
     if (gMeterShownHealth == 0 && mStateArg == 0) {
         KillPlayer();
         mStateArg = 1;
@@ -12825,7 +12847,6 @@ int daPly_c::St_BurnLava_Main() {
     AdvanceAnims();
     return 1;
 }
-}
 
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
@@ -12873,10 +12894,6 @@ int daPly_c::St_BurnFire_Main() {
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     extern void func_02012694(unsigned int id, const void *v);
-    extern u32 PlayerNewHold8(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                              void *callback);
-    extern void PlayerPlayLongHold_burnfire(unsigned int handle, unsigned int id, unsigned int vol,
-                                            const void *vec, unsigned int flags);
     extern void ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
     int speed = 0;
 
@@ -13028,10 +13045,7 @@ int daPly_c::Burn() {
    runbook section 7 -- so it stays extern "C" with scalars in those slots. */
 /* the walk state */
 /* the swim state */
-extern "C" {
 int daPly_c::St_Electrocute_Main() {
-    extern u32 PlayerNewHold9(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                              void *callback);
     Vector3 pos;
 
     mLoopingSoundHandle = Sound::PlayLong(mLoopingSoundHandle, 0, 0x10b, mCamSpacePos, 0);
@@ -13066,7 +13080,6 @@ int daPly_c::St_Electrocute_Main() {
 
     AdvanceAnims();
     return 1;
-}
 }
 
 /* recovered: named members + shared header, real C++ method */
@@ -13257,7 +13270,6 @@ int func_ov002_020d5f34(daPly_c *c, void *st) {
 
 extern "C" {
 int daPly_c::func_ov002_020d5f98(unsigned char *a, unsigned char *b) {
-    extern int RandomIntInternal(int* seed);
     extern int data_ov002_0210e160[];
 
   if (this->IsState(data_ov002_02110064)
@@ -13641,8 +13653,6 @@ int daPly_c::func_ov002_020d6998() {
     typedef int (*VFunc)(void*);
     extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
     extern void Vec3_RotateYAndTranslate(int* out, int* in, s16 angle, int* src);
-    extern u32 PlayerNewHold10(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                               void *callback);
     char* self = (char*)this;
     s16 saved;
     void* other;
@@ -13794,8 +13804,6 @@ int daPly_c::TongueWallProbe() {
     extern void MulVec3Mat4x3(void *v, void *m, void *dst);
     extern void Vec3_MulScalarInPlace(int *v, int s);
     extern int func_02053274(int *a, int *b);
-    extern u32 PlayerNewHold11(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                               void *callback);
     Vector3_16f dir;
     Vector3 p1;
     Vector3 p2;
@@ -13937,9 +13945,6 @@ void daPly_c::func_ov002_020d71a0() {
  * made it. */
 extern "C" {
 void daPly_c::func_ov002_020d71ec(int arg1) {
-    struct P2 { int w[2]; };
-    extern struct P2 data_ov002_0210a34c;
-    extern struct P2 data_ov002_0210a084;
     extern struct P2 data_ov002_0210eb88;
     int arr[4];
     u32 shifted;
@@ -14052,8 +14057,6 @@ int daPly_c::St_YoshiPower_Main() {
     extern void MulVec3Mat4x3(void *, void *, void *);
     extern void Vec3_MulScalarInPlace(void*, int);
     extern int func_ov002_020d5cec(void *);
-    extern u32 PlayerNewHold12(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                               void *callback);
     extern void ApproachAngle(void*, short, int, int, int);
     extern int data_ov002_0210e3d8[];
     /* The helpers this calls are all declared taking char*, and there are
@@ -14841,11 +14844,8 @@ void daPly_c::func_ov002_020d8a50(int which) {
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
  */
-extern "C" {
 void daPly_c::func_ov002_020d8d10(Vector3 *pos) {
     struct Callback;
-    extern u32 PlayerNewHold13(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                               void *callback);
     Vector3_16 vec;
 
     vec.x = data_02082214[((unsigned short)(short)(mAngleY + 0x8000) >> 4) * 2];
@@ -14863,7 +14863,6 @@ void daPly_c::func_ov002_020d8d10(Vector3 *pos) {
                               (const Vector3_16f *)(&vec), 0);
         Particle::System::New(0, kPtclWarioAttackHitC, pos->x, pos->y, pos->z, 0, 0);
     }
-}
 }
 
 /* recovered: named members + shared header, declarations from a shared header */
@@ -15293,8 +15292,6 @@ int daPly_c::St_Hurt_Main() {
 extern "C" {
 void daPly_c::func_ov002_020d98b4() {
     extern void MulVec3Mat4x3(void *a, void *b, Vector3 *out);
-    extern u32 PlayerNewHold14(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                               void *callback);
     int t = this->func_ov002_020beb38();
     this->mStateTimer -= t;
     {
@@ -15542,8 +15539,6 @@ extern "C" {
 int daPly_c::St_SwingPlayer_Main() {
     char* c = (char*)this;
     typedef s32 Fix12;
-    extern u32 PlayerNewHold15(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                               void *callback);
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
     switch (this->mStateStep) {
@@ -16793,7 +16788,6 @@ L1d8:
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_SlideKick_Init() {
-    extern int RandomIntInternal(int* seed);
     extern int data_ov002_0210e160;
     Sound::PlayBank0(0x11, mCamSpacePos);
     unsigned int r = (unsigned int)RandomIntInternal(&data_ov002_0210e160);
