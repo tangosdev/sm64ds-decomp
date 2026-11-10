@@ -9359,3 +9359,8 @@ arm9	0x0205a564	Copy48Bytes	MI_Copy48B	NitroSDK name (mi_memory.c, gxasm.c, g3im
 arm9	0x0205a588	func_0205a588	MI_CpuFill8	NitroSDK name (mi_memory.c, gxasm.c, g3imm.c; pret pokediamond MI_memory.c, GX_g3imm.c); sizes and ROM order match the SDK source
 arm9	0x0205a61c	CpuCopy8	MI_CpuCopy8	NitroSDK name (mi_memory.c, gxasm.c, g3imm.c; pret pokediamond MI_memory.c, GX_g3imm.c); sizes and ROM order match the SDK source
 arm9	0x02055998	func_02055998	G3_LoadTexMtxEnv	NitroSDK g3_util.c G3_LoadTexMtxEnv: MtxMode(TEXTURE) then sixteen MTX_LOAD_4x4 words, the first twelve <<4
+arm9	0x0205a10c	DMASyncHalfTransfer	MI_DmaCopy16	NitroSDK mi_dma.c (pret MI_dma.c): the synchronous DMA fill and copies, third to fifth from the top of the file's reverse-emitted run
+arm9	0x0205a160	DMASyncWordTransfer	MI_DmaCopy32	NitroSDK mi_dma.c (pret MI_dma.c): the synchronous DMA fill and copies, third to fifth from the top of the file's reverse-emitted run
+arm9	0x0205a1b4	DMASyncFillTransfer	MI_DmaFill32	NitroSDK mi_dma.c (pret MI_dma.c): the synchronous DMA fill and copies, third to fifth from the top of the file's reverse-emitted run
+itcm	0x01ffde50	DMAStartTransfer	MIi_DmaSetParams	NitroSDK mi_dma.c (pret MI_dma.c) ITCM section: MIi_DmaSetParams programs a channel with IRQs masked; MIi_DmaSetParams_wait adds the two dummy DMA0SAD reads and is what MI_DmaCopy32/16 and MI_DmaFill32 call
+itcm	0x01ffde00	DMAStartTransferFB	MIi_DmaSetParams_wait	NitroSDK mi_dma.c (pret MI_dma.c) ITCM section: MIi_DmaSetParams programs a channel with IRQs masked; MIi_DmaSetParams_wait adds the two dummy DMA0SAD reads and is what MI_DmaCopy32/16 and MI_DmaFill32 call

@@ -56,8 +56,8 @@ extern "C" {
 extern void MI_WaitDma(u32 dmaNo);
 extern void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size,
                               void (*callback)(void *), void *arg);
-extern void DMASyncWordTransfer(u32 ch, const void *src, void *dst, u32 size);
-extern void DMASyncHalfTransfer(u32 ch, const void *src, volatile void *dst, u32 count);
+extern void MI_DmaCopy32(u32 ch, const void *src, void *dst, u32 size);
+extern void MI_DmaCopy16(u32 ch, const void *src, volatile void *dst, u32 count);
 extern void MIi_CpuCopy16(const void *src, volatile void *dst, int count);
 extern void MIi_CpuCopy32(int *src, int *dst, int len);
 
@@ -72,7 +72,7 @@ namespace GX {
 void LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
     int channel = data_02099fd0;
     if (channel != -1) {
-        DMASyncHalfTransfer(channel, src, (void *)((char *)0x05000000 + offset), size);
+        MI_DmaCopy16(channel, src, (void *)((char *)0x05000000 + offset), size);
     } else {
         MIi_CpuCopy16(src, (void *)((char *)0x05000000 + offset), size);
     }
@@ -86,7 +86,7 @@ namespace GXS {
 void LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {
     int channel = data_02099fd0;
     if (channel != -1) {
-        DMASyncHalfTransfer(channel, src, (void *)((char *)0x05000400 + offset), size);
+        MI_DmaCopy16(channel, src, (void *)((char *)0x05000400 + offset), size);
     } else {
         MIi_CpuCopy16(src, (void *)((char *)0x05000400 + offset), size);
     }
@@ -100,7 +100,7 @@ namespace GX {
 void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
     int channel = data_02099fd0;
     if (channel != -1) {
-        DMASyncHalfTransfer(channel, src, (void *)((char *)0x05000200 + offset), size);
+        MI_DmaCopy16(channel, src, (void *)((char *)0x05000200 + offset), size);
     } else {
         MIi_CpuCopy16(src, (void *)((char *)0x05000200 + offset), size);
     }
@@ -114,7 +114,7 @@ namespace GXS {
 void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size) {
     int channel = data_02099fd0;
     if (channel != -1) {
-        DMASyncHalfTransfer(channel, src, (void *)((char *)0x05000600 + offset), size);
+        MI_DmaCopy16(channel, src, (void *)((char *)0x05000600 + offset), size);
     } else {
         MIi_CpuCopy16(src, (void *)((char *)0x05000600 + offset), size);
     }
@@ -129,7 +129,7 @@ extern "C" {
 void func_020566dc(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
-        DMASyncWordTransfer(channel, src, (void *)(0x7000000 + offset), count);
+        MI_DmaCopy32(channel, src, (void *)(0x7000000 + offset), count);
     } else {
         MIi_CpuCopy32((int *)src, (int *)(0x7000000 + offset), count);
     }
@@ -140,7 +140,7 @@ void func_020566dc(const void *src, unsigned int offset, unsigned int count) {
 void func_02056674(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
-        DMASyncWordTransfer(channel, src, (void *)(0x07000400 + offset), count);
+        MI_DmaCopy32(channel, src, (void *)(0x07000400 + offset), count);
     } else {
         MIi_CpuCopy32((int *)src, (int *)(0x07000400 + offset), count);
     }
@@ -156,7 +156,7 @@ void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
     unsigned int base = (unsigned int)G2::GetOBJCharPtr();
     if (channel != (unsigned int)-1) {
-        DMASyncWordTransfer(channel, src, (void *)(base + offset), count);
+        MI_DmaCopy32(channel, src, (void *)(base + offset), count);
     } else {
         MIi_CpuCopy32((int *)src, (int *)(base + offset), count);
     }
@@ -172,7 +172,7 @@ void LoadOBJ(const void *src, unsigned int offset, unsigned int count) {
     unsigned int channel = data_02099fd0;
     unsigned int base = (unsigned int)G2S::GetOBJCharPtr();
     if (channel != (unsigned int)-1) {
-        DMASyncWordTransfer(channel, src, (void *)(base + offset), count);
+        MI_DmaCopy32(channel, src, (void *)(base + offset), count);
     } else {
         MIi_CpuCopy32((int *)src, (int *)(base + offset), count);
     }
@@ -187,7 +187,7 @@ void func_02056554(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2::GetBG0ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
-        DMASyncHalfTransfer(ch, src, ptr + offset, count);
+        MI_DmaCopy16(ch, src, ptr + offset, count);
     } else {
         MIi_CpuCopy16(src, ptr + offset, count);
     }
@@ -198,7 +198,7 @@ void func_020564f4(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2S::GetBG0ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
-        DMASyncHalfTransfer(ch, src, ptr + offset, count);
+        MI_DmaCopy16(ch, src, ptr + offset, count);
     } else {
         MIi_CpuCopy16(src, ptr + offset, count);
     }
@@ -212,7 +212,7 @@ void LoadBG1Scr(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2::GetBG1ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
-        DMASyncHalfTransfer(ch, src, ptr + offset, count);
+        MI_DmaCopy16(ch, src, ptr + offset, count);
     } else {
         MIi_CpuCopy16(src, ptr + offset, count);
     }
@@ -227,7 +227,7 @@ void func_02056434(const void *src, int offset, int count) {
     volatile unsigned char *ptr = (volatile unsigned char *)G2S::GetBG1ScrPtr();
     int ch = data_02099fd0;
     if (ch != -1) {
-        DMASyncHalfTransfer(ch, src, ptr + offset, count);
+        MI_DmaCopy16(ch, src, ptr + offset, count);
     } else {
         MIi_CpuCopy16(src, ptr + offset, count);
     }
@@ -241,7 +241,7 @@ void func_020563d4(const void *src, u32 offset, u32 count) {
     bgPtr = G2::GetBG2ScrPtr();
     ch = data_02099fd0;
     if (ch != (u32)-1)
-        DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
+        MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
     else
         MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
 }
@@ -254,7 +254,7 @@ void func_02056374(const void *src, u32 offset, u32 count) {
     bgPtr = (void *)G2S::GetBG2ScrPtr();
     ch = data_02099fd0;
     if (ch != (u32)-1)
-        DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
+        MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
     else
         MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
 }
@@ -264,7 +264,7 @@ void func_02056314(const void *src, u32 offset, u32 count) {
     void *bgPtr = G2::GetBG3ScrPtr();
     s32 ch = data_02099fd0;
     if (ch != -1) {
-        DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
+        MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
     } else {
         MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
     }
@@ -278,7 +278,7 @@ void func_020562b4(const void *src, u32 offset, u32 count) {
     bgPtr = (void *)G2S::GetBG3ScrPtr();
     ch = data_02099fd0;
     if (ch != (u32)-1)
-        DMASyncHalfTransfer(ch, src, (char *)bgPtr + offset, count);
+        MI_DmaCopy16(ch, src, (char *)bgPtr + offset, count);
     else
         MIi_CpuCopy16(src, (char *)bgPtr + offset, count);
 }
@@ -292,7 +292,7 @@ void LoadBG0Char(const void *src, unsigned int offset, unsigned int count) {
     void *base = func_02054efc();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
-        DMASyncWordTransfer(channel, src, (char *)base + offset, count);
+        MI_DmaCopy32(channel, src, (char *)base + offset, count);
     } else {
         MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
     }
@@ -306,7 +306,7 @@ namespace GXS {
 void LoadBG0Char(const void *src, u32 offset, u32 size) {
     void *charPtr = (void *)G2S::GetBG0CharPtr();
     if (data_02099fd0 != (u32)-1)
-        DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
+        MI_DmaCopy32(data_02099fd0, src, (char *)charPtr + offset, size);
     else
         MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
 }
@@ -320,7 +320,7 @@ void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
     void *base = func_02054ea8();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
-        DMASyncWordTransfer(channel, src, (char *)base + offset, count);
+        MI_DmaCopy32(channel, src, (char *)base + offset, count);
     } else {
         MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
     }
@@ -335,7 +335,7 @@ void LoadBG1Char(const void *src, unsigned int offset, unsigned int count) {
     void *base = (void *)G2S::GetBG1CharPtr();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
-        DMASyncWordTransfer(channel, src, (char *)base + offset, count);
+        MI_DmaCopy32(channel, src, (char *)base + offset, count);
     } else {
         MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
     }
@@ -349,7 +349,7 @@ namespace GX {
 void LoadBG2Char(const void *src, u32 offset, u32 size) {
     void *charPtr = G2::GetBG2CharPtr();
     if (data_02099fd0 != (u32)-1)
-        DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
+        MI_DmaCopy32(data_02099fd0, src, (char *)charPtr + offset, size);
     else
         MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
 }
@@ -363,7 +363,7 @@ void LoadBG2Char(const void *src, unsigned int offset, unsigned int count) {
     void *base = (void *)G2S::GetBG2CharPtr();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
-        DMASyncWordTransfer(channel, src, (char *)base + offset, count);
+        MI_DmaCopy32(channel, src, (char *)base + offset, count);
     } else {
         MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
     }
@@ -378,7 +378,7 @@ void func_02056014(const void *src, unsigned int offset, unsigned int count) {
     void *base = (void *)func_02054d88();
     unsigned int channel = data_02099fd0;
     if (channel != (unsigned int)-1) {
-        DMASyncWordTransfer(channel, src, (char *)base + offset, count);
+        MI_DmaCopy32(channel, src, (char *)base + offset, count);
     } else {
         MIi_CpuCopy32((int *)src, (int *)((char *)base + offset), count);
     }
@@ -391,7 +391,7 @@ namespace GXS {
 void LoadBG3Char(const void *src, u32 offset, u32 size) {
     void *charPtr = (void *)G2S::GetBG3CharPtr();
     if (data_02099fd0 != (u32)-1)
-        DMASyncWordTransfer(data_02099fd0, src, (char *)charPtr + offset, size);
+        MI_DmaCopy32(data_02099fd0, src, (char *)charPtr + offset, size);
     else
         MIi_CpuCopy32((int *)src, (int *)((char *)charPtr + offset), size);
 }

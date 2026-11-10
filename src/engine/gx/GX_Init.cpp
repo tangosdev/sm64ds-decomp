@@ -64,7 +64,7 @@ extern int data_02099fd0; // GX DMA channel, -1 if none
 extern u16 data_020a6084; // display mode parked by GX_DispOff
 
 void GX_InitGXState(void);
-void DMASyncFillTransfer(u32 channel, void *dst, u32 data, u32 size);
+void MI_DmaFill32(u32 channel, void *dst, u32 data, u32 size);
 void MIi_CpuClear32(int val, int *dst, int len);
 
 // GX_Init: power the display engines, reset the VRAM state, and clear both
@@ -81,9 +81,9 @@ void func_02053c40(void) {
     REG_DISPCNT = 0;
 
     if (data_02099fd0 != -1) {
-        DMASyncFillTransfer(data_02099fd0, REG_BG0CNT_ADDR, 0, 0x60);
+        MI_DmaFill32(data_02099fd0, REG_BG0CNT_ADDR, 0, 0x60);
         REG_MASTER_BRIGHT = 0;
-        DMASyncFillTransfer(data_02099fd0, REG_DB_DISPCNT_ADDR, 0, 0x70);
+        MI_DmaFill32(data_02099fd0, REG_DB_DISPCNT_ADDR, 0, 0x70);
     } else {
         volatile u32 zero = 0;
         MIi_CpuClear32(zero, (int *)REG_BG0CNT_ADDR, 0x60);

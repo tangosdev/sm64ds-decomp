@@ -11,7 +11,7 @@
 //     *(volatile u32 *)0x4000400 = 0x1a;      // packed command word
 //     MI_Copy36B(m, (int *)0x4000400);       // ...then its 9 parameters
 //
-//     DMAStartTransfer(ch, src, 0x4000400, 0x84400000 | (len >> 2));   // display list
+//     MIi_DmaSetParams(ch, src, 0x4000400, 0x84400000 | (len >> 2));   // display list
 //
 // See notes/assessment.md section 2a and docs/mmio-inventory.md.
 

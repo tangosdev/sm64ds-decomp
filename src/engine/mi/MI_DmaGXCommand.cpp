@@ -50,8 +50,8 @@ extern "C" {
 
 extern MIiGXDmaParams MIi_GXDmaParams;
 
-/* MIi_DmaSetParams, in ITCM */
-extern void DMAStartTransfer(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
+/* in ITCM */
+extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
 extern void OSi_EnterDmaCallback(u32 dmaNo, u32 callback, u32 arg);
 extern void MI_WaitDma(u32 dmaNo);
 
@@ -110,10 +110,10 @@ void MIi_FIFOCallback(void) {
 
     if (!MIi_GXDmaParams.length) {
         OSi_EnterDmaCallback(MIi_GXDmaParams.dmaNo, (u32)MIi_DMACallback, 0);
-        DMAStartTransfer(MIi_GXDmaParams.dmaNo, src, REG_GXFIFO_ADDR, MI_CNT_SEND32_IF(length));
+        MIi_DmaSetParams(MIi_GXDmaParams.dmaNo, src, REG_GXFIFO_ADDR, MI_CNT_SEND32_IF(length));
         IRQ::ClearInterrupts(OS_IE_GXFIFO);
     } else {
-        DMAStartTransfer(MIi_GXDmaParams.dmaNo, src, REG_GXFIFO_ADDR, MI_CNT_SEND32(length));
+        MIi_DmaSetParams(MIi_GXDmaParams.dmaNo, src, REG_GXFIFO_ADDR, MI_CNT_SEND32(length));
         IRQ::ClearInterrupts(OS_IE_GXFIFO);
     }
 }

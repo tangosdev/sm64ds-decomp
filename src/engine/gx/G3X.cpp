@@ -32,8 +32,7 @@ void MI_Copy32B(void *src, void *dst);
 extern int data_02099fd0;
 void MI_DmaFill32Async(unsigned int dmaNo, void *dest, unsigned int data, unsigned int size,
                        void (*callback)(void *), void *arg);
-void DMASyncFillTransfer(unsigned int channel, void *dst, unsigned int data,
-                         unsigned int size);
+void MI_DmaFill32(unsigned int channel, void *dst, unsigned int data, unsigned int size);
 void MIi_CpuClear32(int val, int *dst, int len);
 void GXi_NopClearFifo128_(unsigned addr);
 void func_020555a4(void *dst);
@@ -168,7 +167,7 @@ void G3X::InitTable(void) {
     int i;
     if (data_02099fd0 != -1) {
         MI_DmaFill32Async(data_02099fd0, (void *)0x4000330, 0, 0x10, 0, 0);
-        DMASyncFillTransfer(data_02099fd0, (void *)0x4000360, 0, 0x50);
+        MI_DmaFill32(data_02099fd0, (void *)0x4000360, 0, 0x50);
     } else {
         volatile int a = 0;
         volatile int b;

@@ -9987,15 +9987,15 @@
     },
     "arm9:0x0205a10c": {
       "author": "tangosdev",
-      "name": "DMASyncHalfTransfer"
+      "name": "MI_DmaCopy16"
     },
     "arm9:0x0205a160": {
       "author": "tangosdev",
-      "name": "DMASyncWordTransfer"
+      "name": "MI_DmaCopy32"
     },
     "arm9:0x0205a1b4": {
       "author": "aitddlabs",
-      "name": "DMASyncFillTransfer"
+      "name": "MI_DmaFill32"
     },
     "arm9:0x0205a21c": {
       "author": "tangosdev",
@@ -12515,11 +12515,11 @@
     },
     "itcm:0x01ffde00": {
       "author": "andrewboudreau",
-      "name": "DMAStartTransferFB"
+      "name": "MIi_DmaSetParams_wait"
     },
     "itcm:0x01ffde50": {
       "author": "andrewboudreau",
-      "name": "DMAStartTransfer"
+      "name": "MIi_DmaSetParams"
     },
     "itcm:0x01ffde98": {
       "author": "andrewboudreau",

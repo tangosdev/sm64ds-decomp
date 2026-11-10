@@ -103,7 +103,7 @@ straight to it:
 ```c
 /* src/engine/gx/GX_g3imm.c */   *(volatile u32 *)0x4000400 = 0x1a;
                                            MI_Copy36B(m, (int *)0x4000400);
-/* src/engine/mi/MI_DmaGXCommand.cpp:118 */ DMAStartTransfer(dmaNo, src, 0x4000400, 0x84400000 | ...);
+/* src/engine/mi/MI_DmaGXCommand.cpp:118 */ MIi_DmaSetParams(dmaNo, src, 0x4000400, 0x84400000 | ...);
 ```
 
 So the 3D seam for us is the **command stream**, not per-call immediate inlines.

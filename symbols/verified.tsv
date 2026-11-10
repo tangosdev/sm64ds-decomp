@@ -12,8 +12,8 @@
 0x01ffd920	_ZN7dBgW_Kc14GetSurfaceInfoEsR11SurfaceInfo	function
 0x01ffd97c	_ZN3IRQ20UserInterruptHandlerEv	function
 0x01ffdbd8	OSReadROMArea	function
-0x01ffde00	DMAStartTransferFB	function
-0x01ffde50	DMAStartTransfer	function
+0x01ffde00	MIi_DmaSetParams_wait	function
+0x01ffde50	MIi_DmaSetParams	function
 0x01ffe684	__aeabi_uldivmod	data
 0x02004800	_start	function
 0x020049f0	init_cp15	function
@@ -1078,9 +1078,9 @@
 0x02059d5c	_ZN3IRQ10RestoreAllEj	function
 0x02059d74	ARMProcessorMode	function
 0x02059d80	_ZN4CP1516WaitForInterruptEv	function
-0x0205a10c	DMASyncHalfTransfer	function
-0x0205a160	DMASyncWordTransfer	function
-0x0205a1b4	DMASyncFillTransfer	function
+0x0205a10c	MI_DmaCopy16	function
+0x0205a160	MI_DmaCopy32	function
+0x0205a1b4	MI_DmaFill32	function
 0x0205a448	MIi_CpuClear16	function
 0x0205a460	MIi_CpuCopy16	function
 0x0205a47c	MIi_CpuClear32	function

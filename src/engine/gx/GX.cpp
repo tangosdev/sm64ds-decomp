@@ -28,7 +28,7 @@ extern "C" {
 extern void MI_WaitDma(u32 dmaNo);
 extern void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size,
                               void (*callback)(void *), void *arg);
-extern void DMASyncWordTransfer(unsigned int channel, const void *src, void *dest, unsigned int len);
+extern void MI_DmaCopy32(unsigned int channel, const void *src, void *dest, unsigned int len);
 extern void MIi_CpuCopy32(int *src, int *dst, int len);
 }
 
@@ -62,7 +62,7 @@ void LoadTex(const void *src, unsigned int offset, unsigned int size) {
             unsigned int d0 = data_020a60ac + offset;
             int ch = data_02099fd0;
             if (ch != -1) {
-                DMASyncWordTransfer(ch, src, (void*)d0, top);
+                MI_DmaCopy32(ch, src, (void *)d0, top);
                 MI_DmaCopy32Async(data_02099fd0, (char *)src + top, (void *)base, size - top, 0, 0);
                 return;
             }

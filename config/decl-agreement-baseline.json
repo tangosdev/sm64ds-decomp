@@ -4117,7 +4117,7 @@
         "param:#1 int",
         "return:void"
       ],
-      "src/DMAStartTransfer.cpp": [
+      "src/MIi_DmaSetParams.cpp": [
         "return:void"
       ],
       "src/unnamed/arm9/0204/func_02040a5c.cpp": [

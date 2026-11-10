@@ -39,7 +39,7 @@ extern void PXI_Init(void);
 extern int PXI_IsCallbackReady(int tag, int proc);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 extern int PXI_SendWordByFifo(u32 tag, u32 data, u32 reply);
-extern void DMASyncHalfTransfer(unsigned int channel, void *src, void *dst, unsigned int numHalfs);
+extern void MI_DmaCopy16(unsigned int channel, void *src, void *dst, unsigned int numHalfs);
 extern void MIi_CpuCopy32(int *dst, int *src, int len);
 extern void WaitByLoop(int n);
 
@@ -79,7 +79,7 @@ void CTRDG_Init(void) {
 /* pret's CTRDGi_InitModuleInfo, older: copy the cartridge's module ID, the
  * three extended LSI IDs, the maker and game codes into the shared module
  * information at 0x027ffc30 and hand the header copy to the ARM7. It reads
- * the header's last 0x40 bytes with DMASyncHalfTransfer, and has none of
+ * the header's last 0x40 bytes with MI_DmaCopy16, and has none of
  * pret's checks of the 0x027fff9b flag or of CTRDG_IsExisting. */
 void func_0206a6d0(void) {
     int sp[4];
@@ -101,7 +101,7 @@ void func_0206a6d0(void) {
     flag = ((int)*(volatile u16 *)0x4000204 & 0x8000) >> 15;
     CTRDGi_ChangeLatestAccessCycle(sp + 2);
     *(volatile u16 *)0x4000204 &= ~0x8000;
-    DMASyncHalfTransfer(0, (void *)0x8000080, (void *)((char *)&CTRDG_HEADER + 0x80), 0x40);
+    MI_DmaCopy16(0, (void *)0x8000080, (void *)((char *)&CTRDG_HEADER + 0x80), 0x40);
     *(volatile u16 *)0x4000204 = (*(volatile u16 *)0x4000204 & ~0x8000) | (flag << 15);
     CTRDGi_RestoreAccessCycle(sp + 2);
     CTRDGi_UnlockByProcessor(data_020a9de0.lockID, sp);

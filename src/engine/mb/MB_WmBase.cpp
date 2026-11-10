@@ -152,7 +152,7 @@ extern void OS_GetMacAddress(unsigned char *macAddress);
 extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void MIi_CpuClear32(int val, int *dst, int len);
 extern void MIi_CpuCopy16(const void *src, void *dst, int count);
-extern void DMASyncHalfTransfer(unsigned int ch, void *src, void *dst, unsigned int n);
+extern void MI_DmaCopy16(unsigned int ch, void *src, void *dst, unsigned int n);
 // local extern: MI_Memory.c defines these two as assembly stubs.
 extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
 extern void MI_CpuFill8(void *dst, u8 val, u32 size);
@@ -428,7 +428,7 @@ static inline void RecordScannedParent(WmWork *const w, char *arg0) {
             tbl[i].scan.gameInfoLength = cb->gameInfoLength;
             *(GameInfo *)tbl[i].scan.gameInfo = *(GameInfo *)cb->gameInfo;
             CP15::InvalidateDataCache((u32)&w->parents[i], 0xc0);
-            DMASyncHalfTransfer(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
+            MI_DmaCopy16(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
             w->lastParentIndex = i;
             return;
         }
@@ -437,7 +437,7 @@ static inline void RecordScannedParent(WmWork *const w, char *arg0) {
         w->parentCount = i + 1;
         MIi_CpuCopy16(arg0, &tbl[i].scan, 0xb8);
         CP15::InvalidateDataCache((u32)&w->parents[i], 0xc0);
-        DMASyncHalfTransfer(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
+        MI_DmaCopy16(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
         w->lastParentIndex = i;
     }
 }

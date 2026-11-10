@@ -6,8 +6,7 @@
 
 extern "C" {
 
-/* MI_DmaCopy32 */
-extern void DMASyncWordTransfer(u32 dmaNo, const void *src, void *dest, u32 size);
+extern void MI_DmaCopy32(u32 dmaNo, const void *src, void *dest, u32 size);
 extern int PXI_SendWordByFifo(u32 a, u32 c, u32 b);
 extern OSMessageQueue data_020a89b0;
 
@@ -25,7 +24,7 @@ int WM_SendCommand(short a0, unsigned short count, ...)
     if (count == 0) {
         CP15::FlushDataCache((u32)data_020a89ac->fifo9to7, 0x100);
         CP15::InvalidateDataCache((u32)buf, 0x100);
-        DMASyncWordTransfer(data_020a89ac->dmaNo, data_020a89ac->fifo9to7, buf, 0x100);
+        MI_DmaCopy32(data_020a89ac->dmaNo, data_020a89ac->fifo9to7, buf, 0x100);
     }
 
     *(u16 *)buf = a0;
