@@ -368,6 +368,31 @@ extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
 extern int func_ov002_020f02c8(int sel);
+extern s32 data_0209f32c;
+extern struct P2 data_ov002_0210a084;
+extern struct P2 data_ov002_0210a34c;
+extern u8 gMeterShownHealth;
+extern int RandomIntInternal(int *seed);
+extern u32 PlayerNewHold7(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                          void *callback);
+extern u32 PlayerNewHold8(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                          void *callback);
+extern u32 PlayerNewHold9(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                          void *callback);
+extern u32 PlayerNewHold10(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern u32 PlayerNewHold11(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern u32 PlayerNewHold12(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern u32 PlayerNewHold13(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern u32 PlayerNewHold14(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern u32 PlayerNewHold15(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                           void *callback);
+extern void PlayerPlayLongHold_burnfire(unsigned int handle, unsigned int id, unsigned int vol,
+                                        const void *vec, unsigned int flags);
 }
 
 /* ---------------------------------------------------------------------------
@@ -407,6 +432,7 @@ struct State2i { int a; int b; };
 struct S18a { short f0; char pad[0x16]; };
 struct S18b { u16 f0; char pad[0x16]; };
 struct S18b2 { short a; short b; int c[5]; };
+struct P2 { int w[2]; };
 /* The Kuppa-script command table at the head of the file holds pointers to
  * members of one signature. */
 typedef int (daPly_c::*ScriptCommand)(unsigned char *, int, int);
@@ -7498,35 +7524,6 @@ int daPly_c::TryEnterStarDoor(Vector3 &pos_, short kind) {
     }
     return 0;
 }
-}
-
-struct P2 { int w[2]; };
-extern "C" {
-extern s32 data_0209f32c;
-extern struct P2 data_ov002_0210a084;
-extern struct P2 data_ov002_0210a34c;
-extern u8 gMeterShownHealth;
-extern int RandomIntInternal(int *seed);
-extern u32 PlayerNewHold7(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                          void *callback);
-extern u32 PlayerNewHold8(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                          void *callback);
-extern u32 PlayerNewHold9(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                          void *callback);
-extern u32 PlayerNewHold10(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                           void *callback);
-extern u32 PlayerNewHold11(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                           void *callback);
-extern u32 PlayerNewHold12(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                           void *callback);
-extern u32 PlayerNewHold13(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                           void *callback);
-extern u32 PlayerNewHold14(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                           void *callback);
-extern u32 PlayerNewHold15(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                           void *callback);
-extern void PlayerPlayLongHold_burnfire(unsigned int handle, unsigned int id, unsigned int vol,
-                                        const void *vec, unsigned int flags);
 }
 
 /* recovered: named members + shared header, real C++ method */
