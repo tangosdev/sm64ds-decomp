@@ -998,11 +998,7 @@ s32 dScStarSel_c::InitResources() {
     DecompressLZ16(file, G2_GetOBJCharPtr());
     Deallocate(file);
     file = LoadFile(ASSET_D_2D_BTM_ICON_NCG_BIN);
-    {
-        char *dst = (char *)G2_GetOBJCharPtr();
-        dst += 0x2000;
-        DecompressLZ16(file, dst);
-    }
+    DecompressLZ16(file, (u8 *)G2_GetOBJCharPtr() + 0x2000);
     Deallocate(file);
     if (GetOwnerLanguage() == 5) {
         file = LoadFile(0xB00A);
@@ -1040,11 +1036,7 @@ s32 dScStarSel_c::InitResources() {
     switch (data_0209caa0.file.mCharacter) {
     case 0:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_MARIO_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)G2S_GetOBJCharPtr();
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_MARIO_8BIT_NCL_BIN);
         GXS_BeginLoadOBJExtPltt();
@@ -1054,11 +1046,7 @@ s32 dScStarSel_c::InitResources() {
         break;
     case 1:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_LUIGI_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)G2S_GetOBJCharPtr();
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_LUIGI_8BIT_NCL_BIN);
         GXS_BeginLoadOBJExtPltt();
@@ -1068,11 +1056,7 @@ s32 dScStarSel_c::InitResources() {
         break;
     case 2:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_WARIO_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)G2S_GetOBJCharPtr();
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_WARIO_8BIT_NCL_BIN);
         GXS_BeginLoadOBJExtPltt();
@@ -1082,11 +1066,7 @@ s32 dScStarSel_c::InitResources() {
         break;
     case 3:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_YOSHI_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)G2S_GetOBJCharPtr();
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_YOSHI_8BIT_NCL_BIN);
         GXS_BeginLoadOBJExtPltt();

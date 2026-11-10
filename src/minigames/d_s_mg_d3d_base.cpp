@@ -182,11 +182,8 @@ int dScMgD3DBase_c::InitSubScreenBg()
     mSavedSubObjBank = GX_GetBankForSubOBJ();
     GX_SetBankForSubOBJ(0x100);
     LoadCompressedFileAt(sD3DCommonNcgByLanguage[GetGameLanguage()], G2S_GetOBJCharPtr());
-    {
-        char *dst = (char *)G2S_GetOBJCharPtr();
-        dst += 0x2000;
-        DecompressLZ16((void *)sD3DSubScreenBgByLanguage[GetGameLanguage()], dst);
-    }
+    DecompressLZ16((void *)sD3DSubScreenBgByLanguage[GetGameLanguage()],
+                   (u8 *)G2S_GetOBJCharPtr() + 0x2000);
     GX_SetBankForSubOBJ(mSavedSubObjBank);
     mSubBgBank = GX_GetBankForSubBG();
     GX_SetBankForSubBG(0x80);
@@ -229,11 +226,7 @@ void dScMgD3DBase_c::InitEngines()
     GX_SetBankForBG(2);
     file = Ov004_LoadFile(sD3DCommonNcgByLanguage[GetGameLanguage()]);
     sD3DLanguageFile = file;
-    {
-        char *dst = (char *)G2_GetOBJCharPtr();
-        dst += 0x4000;
-        DecompressLZ16(file, dst);
-    }
+    DecompressLZ16(file, (u8 *)G2_GetOBJCharPtr() + 0x4000);
     file = Ov004_LoadFile(0xc3);
     sD3DSubObjPalette = file;
     GX_LoadOBJPltt(file, 0x100u, 0x100u);

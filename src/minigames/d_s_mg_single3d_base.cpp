@@ -92,18 +92,8 @@ void dScMgSingle3DBase_c::InitEngines()
     GX_SetBankForSubBG(4);
     GX_SetBankForSubOBJ(8);
     fileData = Ov004_LoadFile(sSingle3DCommonNcgByLanguage[GetGameLanguage()]);
-    /* Each split `dst += 0x4000` keeps the ROM's mov and add pair; a single
-     * constant becomes a literal-pool load. */
-    {
-        char *dst = (char *)G2_GetOBJCharPtr();
-        dst += 0x4000;
-        DecompressLZ16(fileData, dst);
-    }
-    {
-        char *dst = (char *)G2S_GetOBJCharPtr();
-        dst += 0x4000;
-        DecompressLZ16(fileData, dst);
-    }
+    DecompressLZ16(fileData, (u8 *)G2_GetOBJCharPtr() + 0x4000);
+    DecompressLZ16(fileData, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
     Ov004_Deallocate(fileData);
     fileData = Ov004_LoadFile(0xc3);
     CP15::FlushAndInvalidateDataCache((u32)fileData, 0x100u);
