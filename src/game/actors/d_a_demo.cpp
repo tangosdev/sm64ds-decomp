@@ -855,21 +855,15 @@ void StaffRoll::func_ov002_020f30f8(StaffRoll *self, int i) {
         return;
     }
 
-    self->window[i].left -=
-        self->window[i].stepX;
-    self->window[i].top -=
-        self->window[i].stepY;
-    self->window[i].right +=
-        self->window[i].stepX;
-    self->window[i].bottom +=
-        self->window[i].stepY;
+    self->window[i].left -= self->window[i].stepX;
+    self->window[i].top -= self->window[i].stepY;
+    self->window[i].right += self->window[i].stepX;
+    self->window[i].bottom += self->window[i].stepY;
 
     oldA = self->window[i].bgX;
     oldB = self->window[i].bgY;
-    self->window[i].bgX =
-        oldA + self->window[i].stepX;
-    self->window[i].bgY +=
-        self->window[i].stepY;
+    self->window[i].bgX = oldA + self->window[i].stepX;
+    self->window[i].bgY += self->window[i].stepY;
 
     if (self->window[i].bgX >= 0)
         self->window[i].bgX = 0;
@@ -897,10 +891,8 @@ void StaffRoll::func_ov002_020f30f8(StaffRoll *self, int i) {
     dd = self->window[i].top >> 12;
     *(unsigned short *)0x4001042 = ((cc << 8) & 0xff00) | (ee & 0xff);
     *(unsigned short *)0x4001046 = ((dd << 8) & 0xff00) | (ff & 0xff);
-    SetSubBg1Offset(self->window[i].bgX >> 12,
-                    self->window[i].bgY >> 12);
-    SetSubBg2Offset(self->window[i].bgX >> 12,
-                    self->window[i].bgY >> 12);
+    SetSubBg1Offset(self->window[i].bgX >> 12, self->window[i].bgY >> 12);
+    SetSubBg2Offset(self->window[i].bgX >> 12, self->window[i].bgY >> 12);
 }
 
 void StaffRoll::func_ov002_020f32e4(StaffRoll *self, int i) {
@@ -1011,13 +1003,10 @@ void StaffRoll::func_ov002_020f35e4(StaffRoll *self, int i) {
     }
     self->window[i].bgX = -0x60000;
     self->window[i].bgY = -0x38000;
-    SetSubBg1Offset(self->window[i].bgX >> 12,
-                    self->window[i].bgY >> 12);
-    SetSubBg2Offset(self->window[i].bgX >> 12,
-                    self->window[i].bgY >> 12);
+    SetSubBg1Offset(self->window[i].bgX >> 12, self->window[i].bgY >> 12);
+    SetSubBg2Offset(self->window[i].bgX >> 12, self->window[i].bgY >> 12);
     gSubScreenLayers |= 6;
-    self->window[i].step =
-        self->window[i].step + 1;
+    self->window[i].step = self->window[i].step + 1;
 }
 
 void StaffRoll::func_ov002_020f3740(StaffRoll *self, int idx) {
@@ -1189,8 +1178,7 @@ void StaffRoll::func_ov002_020f3ba0(StaffRoll *self, int i) {
 
 void StaffRoll::func_ov002_020f3d38(StaffRoll *self, int i) {
     if (self->stars[i].delay != 0) {
-        self->stars[i].delay =
-            self->stars[i].delay - 1;
+        self->stars[i].delay = self->stars[i].delay - 1;
         return;
     }
     self->stars[i].x = -0x10000;
@@ -1275,8 +1263,7 @@ void StaffRoll::func_ov002_020f3de4(StaffRoll *self, int i) {
         int spd = self->stars[i].radius;
         self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
     }
-    self->stars[i].heading +=
-        self->stars[i].angSpeed;
+    self->stars[i].heading += self->stars[i].angSpeed;
     self->stars[i].orbitTravel += self->stars[i].angSpeed;
 
     if (i != self->func_ov002_020f5a94() - 1)
@@ -1322,10 +1309,8 @@ void StaffRoll::func_ov002_020f40fc(StaffRoll *self, int i) {
             self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        self->stars[i].heading -=
-            self->stars[i].angSpeed;
-        self->stars[i].orbitTravel +=
-            self->stars[i].angSpeed;
+        self->stars[i].heading -= self->stars[i].angSpeed;
+        self->stars[i].orbitTravel += self->stars[i].angSpeed;
 
         if (self->stars[0].phase != 0) {
             self->stars[i].angSpeed += 8;
@@ -1337,8 +1322,7 @@ void StaffRoll::func_ov002_020f40fc(StaffRoll *self, int i) {
             }
         }
 
-        if ((unsigned int)self->stars[i].orbitTravel >=
-                (unsigned int)data_ov002_02100120[i] &&
+        if ((unsigned int)self->stars[i].orbitTravel >= (unsigned int)data_ov002_02100120[i] &&
             self->holdOrbit == 0) {
             self->stars[i].phase += 1;
             self->stars[i].flyTimer = 0;
@@ -1461,10 +1445,8 @@ void StaffRoll::func_ov002_020f43cc(StaffRoll *self, int i) {
             spd = self->stars[idx].radius;
             self->stars[idx].y = FX_MUL(tv, spd) + 0x60000;
         }
-        self->stars[idx].heading -=
-            self->stars[idx].angSpeed;
-        self->stars[idx].orbitTravel +=
-            self->stars[idx].angSpeed;
+        self->stars[idx].heading -= self->stars[idx].angSpeed;
+        self->stars[idx].orbitTravel += self->stars[idx].angSpeed;
     }
     if (idx != self->func_ov002_020f5a94() - 1)
         return;
@@ -1510,10 +1492,8 @@ void StaffRoll::func_ov002_020f4710(StaffRoll *self, int i) {
             self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        self->stars[i].heading -=
-            self->stars[i].angSpeed;
-        self->stars[i].orbitTravel +=
-            self->stars[i].angSpeed;
+        self->stars[i].heading -= self->stars[i].angSpeed;
+        self->stars[i].orbitTravel += self->stars[i].angSpeed;
 
         if (self->stars[0].phase != 0) {
             self->stars[i].angSpeed += 8;
@@ -1523,8 +1503,7 @@ void StaffRoll::func_ov002_020f4710(StaffRoll *self, int i) {
                 self->stars[i].angSpeed = 0x200;
         }
 
-        if ((u32) self->stars[i].orbitTravel <
-            (u32)data_ov002_02100100[i])
+        if ((u32)self->stars[i].orbitTravel < (u32)data_ov002_02100100[i])
             return;
         if (self->holdOrbit != 0)
             return;
@@ -1611,15 +1590,10 @@ void StaffRoll::func_ov002_020f4a2c(StaffRoll *self, int i) {
         }
 
         if (self->stars[i].speed <= -0x2000)
-            self->stars[i].speed =
-                self->stars[i].speed + 0x120;
+            self->stars[i].speed = self->stars[i].speed + 0x120;
 
-        dx = (self->stars[i].targetX -
-              self->stars[i].x) >>
-             12;
-        dy = (self->stars[i].targetY -
-              self->stars[i].y) >>
-             12;
+        dx = (self->stars[i].targetX - self->stars[i].x) >> 12;
+        dy = (self->stars[i].targetY - self->stars[i].y) >> 12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
             self->stars[i].phase += 1;
@@ -1666,10 +1640,8 @@ void StaffRoll::func_ov002_020f4a2c(StaffRoll *self, int i) {
         self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
     }
 
-    self->stars[i].heading -=
-        self->stars[i].angSpeed;
-    self->stars[i].orbitTravel +=
-        self->stars[i].angSpeed;
+    self->stars[i].heading -= self->stars[i].angSpeed;
+    self->stars[i].orbitTravel += self->stars[i].angSpeed;
 
     if (i != self->func_ov002_020f5a94() - 1)
         return;
@@ -1721,10 +1693,8 @@ void StaffRoll::func_ov002_020f4d70(StaffRoll *self, int i) {
             self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        self->stars[i].heading +=
-            self->stars[i].angSpeed;
-        self->stars[i].orbitTravel +=
-            self->stars[i].angSpeed;
+        self->stars[i].heading += self->stars[i].angSpeed;
+        self->stars[i].orbitTravel += self->stars[i].angSpeed;
 
         if (self->stars[0].phase != 0) {
             self->stars[i].angSpeed += 8;
@@ -1736,8 +1706,7 @@ void StaffRoll::func_ov002_020f4d70(StaffRoll *self, int i) {
             }
         }
 
-        if ((u32) self->stars[i].orbitTravel <
-            (u32)data_ov002_021000e0[i])
+        if ((u32)self->stars[i].orbitTravel < (u32)data_ov002_021000e0[i])
             return;
 
         if (self->holdOrbit != 0)
@@ -1806,15 +1775,10 @@ void StaffRoll::func_ov002_020f5010(StaffRoll *self, int i) {
         }
 
         if (self->stars[i].speed >= 0x2000)
-            self->stars[i].speed =
-                self->stars[i].speed - 0x120;
+            self->stars[i].speed = self->stars[i].speed - 0x120;
 
-        dx = (self->stars[i].targetX -
-              self->stars[i].x) >>
-             12;
-        dy = (self->stars[i].targetY -
-              self->stars[i].y) >>
-             12;
+        dx = (self->stars[i].targetX - self->stars[i].x) >> 12;
+        dy = (self->stars[i].targetY - self->stars[i].y) >> 12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
             self->stars[i].phase += 1;
@@ -1861,10 +1825,8 @@ void StaffRoll::func_ov002_020f5010(StaffRoll *self, int i) {
         self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
     }
 
-    self->stars[i].heading +=
-        self->stars[i].angSpeed;
-    self->stars[i].orbitTravel +=
-        self->stars[i].angSpeed;
+    self->stars[i].heading += self->stars[i].angSpeed;
+    self->stars[i].orbitTravel += self->stars[i].angSpeed;
 
     if (i != self->func_ov002_020f5a94() - 1)
         return;
@@ -1905,10 +1867,8 @@ void StaffRoll::func_ov002_020f5328(StaffRoll *self, int i) {
             self->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        self->stars[i].heading +=
-            self->stars[i].angSpeed;
-        self->stars[i].orbitTravel +=
-            self->stars[i].angSpeed;
+        self->stars[i].heading += self->stars[i].angSpeed;
+        self->stars[i].orbitTravel += self->stars[i].angSpeed;
 
         if (self->stars[0].phase != 0) {
             self->stars[i].angSpeed += 8;
@@ -1918,8 +1878,7 @@ void StaffRoll::func_ov002_020f5328(StaffRoll *self, int i) {
                 self->stars[i].angSpeed = 0x200;
         }
 
-        if ((unsigned int)self->stars[i].orbitTravel <
-            (unsigned int)data_ov002_02100150[i])
+        if ((unsigned int)self->stars[i].orbitTravel < (unsigned int)data_ov002_02100150[i])
             return;
         if (self->holdOrbit != 0)
             return;
@@ -1952,8 +1911,7 @@ void StaffRoll::func_ov002_020f5328(StaffRoll *self, int i) {
         self->stars[i].phase = 0;
         self->stars[i].radius = 0x38000;
         self->stars[i].heading = 0;
-        self->stars[i].delay =
-            (unsigned short)(data_ov002_02100160[i] << 6);
+        self->stars[i].delay = (unsigned short)(data_ov002_02100160[i] << 6);
         self->stars[i].x = -0x10000;
         self->stars[i].y = 0;
         self->stars[i].angSpeed = 0x100;
@@ -1996,18 +1954,15 @@ void StaffRoll::func_ov002_020f569c(StaffRoll *self, int i) {
     int ty;
 
     if (self->stars[i].delay != 0) {
-        self->stars[i].delay =
-            self->stars[i].delay - 1;
+        self->stars[i].delay = self->stars[i].delay - 1;
         return;
     }
 
     self->stars[i].kiraDefParam = 0x1000;
     self->stars[i].kiraSysParam = 0x200;
 
-    self->stars[i].x =
-        self->stars[i].x + self->stars[i].speed;
-    self->stars[i].y =
-        self->stars[i].y + self->stars[i].speedY;
+    self->stars[i].x = self->stars[i].x + self->stars[i].speed;
+    self->stars[i].y = self->stars[i].y + self->stars[i].speedY;
 
     tx = data_ov002_02100190[i * 2];
     ty = data_ov002_02100190[i * 2 + 1];
@@ -2034,8 +1989,7 @@ void StaffRoll::func_ov002_020f569c(StaffRoll *self, int i) {
     by = self->stars[i].y >> 12;
 
     if (ax == tx && by == ty) {
-        self->stars[i].step =
-            self->stars[i].step + 1;
+        self->stars[i].step = self->stars[i].step + 1;
     }
 }
 
@@ -2092,8 +2046,7 @@ void StaffRoll::func_ov002_020f5894(StaffRoll *self, int i) {
         return;
     *p34 = 0;
     {
-        unsigned short *p3e =
-            (unsigned short *)((char *)&self->stars[0].kiraPeriods + off);
+        unsigned short *p3e = (unsigned short *)((char *)&self->stars[0].kiraPeriods + off);
         *p3e = *p3e + 1;
     }
 }
