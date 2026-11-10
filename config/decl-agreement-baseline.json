@@ -16912,10 +16912,6 @@
       "src/unnamed/arm9/0207/func_02071be8.cpp": [
         "param:#1 struct Src *",
         "param:#2 Ctx *"
-      ],
-      "src/unnamed/arm9/0207/func_02072168.cpp": [
-        "param:#1 char *",
-        "param:#2 char *"
       ]
     },
     "func_02071ccc": {

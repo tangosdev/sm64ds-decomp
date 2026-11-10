@@ -7,7 +7,7 @@
 /* CodeWarrior exception runtime: the register/frame state the unwinder walks
  * (func_02072168 interprets actions against it, func_02071910 unwinds one
  * frame, func_02071f1c hands the exception to a handler). Total size is not
- * evidenced; the last field read is mArgsPushed at 0x6a. */
+ * evidenced; the last field read is mFPIsR7 at 0x6c. */
 typedef struct ThrowContext {
     int mThrowType; /* 0x00 -- type string; func_02071ccc tests it for '*' */
     int mLocation;  /* 0x04 -- thrown object; matched against a CatchInfo */
@@ -24,13 +24,21 @@ typedef struct ThrowContext {
     /* 0x60 -- frame size, an unsigned LEB128 from the header; the save area
      * ends at mFP + mFrameSize */
     int mFrameSize;
-    char pad_64[4];
+    /* 0x64 -- a second unsigned LEB128, present only when header flag 0x40 is
+     * set (func_02071864) */
+    int mFPInfo;
     /* 0x68 -- the saved registers, bit n = rn: header byte 1 << 4 (r4..r11)
      * plus lr (0x4000) */
     u16 mSavedRegMask;
     /* 0x6a -- header flag 0x20: the save area ends 0x10 bytes lower, as when
      * a prologue pushes r0..r3 above the saved registers (medium) */
     u8 mArgsPushed;
+    /* 0x6b -- header flag 0x40: the frame keeps a frame pointer, so
+     * func_02071864 takes mFP from r7 or r11 rather than mSP */
+    u8 mHasFP;
+    /* 0x6c -- header flag 0x80: that frame pointer is r7 (Thumb) rather than
+     * r11 */
+    u8 mFPIsR7;
 } ThrowContext;
 
 #ifndef SM64DS_PLATFORM_PC
