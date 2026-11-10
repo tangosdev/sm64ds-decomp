@@ -43,8 +43,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 //   popup list, line tallies and award tallies) still step a cast `this` by
 //   the element size and read element 0, because indexing moves bytes; Render
 //   re-reads one popup score through an int address. Each has its reason
-//   beside it. The spark methods index mSparks[i] directly. The objects' angle at +0x32 stays a per-reader cast,
-//   as cMgSmartball_object_c.h explains.
+//   beside it. The spark methods index mSparks[i] directly.
 
 #include "dScMgSmartball_c.h"
 #include "nitro/hw/registers.h"
@@ -413,7 +412,7 @@ void SmartballObj_ElemDtor(void) {}
 int cMgSmartball_wing_c::IsSettled() {
     if (mTriggerCount == 0)
         return 1;
-    return GetAngle() == 0x3000;
+    return mAngle == 0x3000;
 }
 
 void cMgSmartball_wing_c::Trigger() {
@@ -449,14 +448,14 @@ void cMgSmartball_wing_c::RebuildVerts() {
     mVertices[7].x = 0x4000;
     mVertices[7].y = -0x18000;
 
-    func_0203d388((V2 *)&mVertices[0], (s16)-GetAngle());
-    func_0203d388((V2 *)&mVertices[1], (s16)-GetAngle());
-    func_0203d388((V2 *)&mVertices[2], (s16)-GetAngle());
-    func_0203d388((V2 *)&mVertices[3], (s16)-GetAngle());
-    func_0203d388((V2 *)&mVertices[4], GetAngle());
-    func_0203d388((V2 *)&mVertices[5], GetAngle());
-    func_0203d388((V2 *)&mVertices[6], GetAngle());
-    func_0203d388((V2 *)&mVertices[7], GetAngle());
+    func_0203d388((V2 *)&mVertices[0], (s16)-mAngle);
+    func_0203d388((V2 *)&mVertices[1], (s16)-mAngle);
+    func_0203d388((V2 *)&mVertices[2], (s16)-mAngle);
+    func_0203d388((V2 *)&mVertices[3], (s16)-mAngle);
+    func_0203d388((V2 *)&mVertices[4], mAngle);
+    func_0203d388((V2 *)&mVertices[5], mAngle);
+    func_0203d388((V2 *)&mVertices[6], mAngle);
+    func_0203d388((V2 *)&mVertices[7], mAngle);
 
     mVertices[0].x += mCurrent0 - 0x10000;
     mVertices[0].y += mCurrent1 + 0x28000;
@@ -539,7 +538,7 @@ int cMgSmartball_wing_c::HitTest(int *point) {
 
 /* Slot 1. While mTriggerCount is 0 or 1, draws two extra base sprites under the
  * main pair; then four OAM::Render calls draw a mirrored quad using the
- * eased angle at offset 0x32 (a BASE field -- see the header) to
+ * eased mAngle to
  * spread each half away from vertical. */
 void cMgSmartball_wing_c::Update() {
     if (mTriggerCount <= 1) {
@@ -548,48 +547,46 @@ void cMgSmartball_wing_c::Update() {
                             -1, 2);
     }
     OAM::Render(0, sSmartballWingSprites[0], (mCurrent0 >> 12) - 0x10, (mCurrent1 >> 12) + 0x118,
-                -1, 1, 0x1000, 0x1000, (unsigned short)(short)(-0x4000 - GetAngle()), -1);
+                -1, 1, 0x1000, 0x1000, (unsigned short)(short)(-0x4000 - mAngle), -1);
     OAM::Render(0, sSmartballWingSprites[0], (mCurrent0 >> 12) + 0x10, (mCurrent1 >> 12) + 0x118,
-                -1, 1, 0x1000, 0x1000, (unsigned short)(short)(GetAngle() - 0x4000), -1);
+                -1, 1, 0x1000, 0x1000, (unsigned short)(short)(mAngle - 0x4000), -1);
     OAM::Render(0, sSmartballWingSprites[1], (mCurrent0 >> 12) - 0x10, (mCurrent1 >> 12) + 0x11d,
-                -1, 2, 0x1000, 0x1000, (unsigned short)(short)(-0x4000 - GetAngle()), -1);
+                -1, 2, 0x1000, 0x1000, (unsigned short)(short)(-0x4000 - mAngle), -1);
     OAM::Render(0, sSmartballWingSprites[1], (mCurrent0 >> 12) + 0x10, (mCurrent1 >> 12) + 0x11d,
-                -1, 2, 0x1000, 0x1000, (unsigned short)(short)(GetAngle() - 0x4000), -1);
+                -1, 2, 0x1000, 0x1000, (unsigned short)(short)(mAngle - 0x4000), -1);
 }
 
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same pattern as every sibling in this family (the
  * base's copy is out-of-line and there is no bl here). Then, unless mAngleSettled
- * is 1 or mTriggerCount is not positive, eases the angle at offset 0x32 (see the
- * header -- it belongs to the BASE, not this class) toward
- * 0x3000 by steps of 0x200, clamping on overshoot in either direction.
+ * is 1 or mTriggerCount is not positive, eases mAngle toward 0x3000 by steps of 0x200, clamping on overshoot in either direction.
  * Always tail-calls the shared helper RebuildVerts, which touches
  * the eight collision vertices at 0x48..0x87. */
 void cMgSmartball_wing_c::SaveSnapshot() {
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
     if (mAngleSettled != 1 && mTriggerCount > 0) {
-        if (*(s16 *)((char *)this + 0x32) < 0x3000) {
-            (*(s16 *)((char *)this + 0x32)) += 0x200;
-            if (*(s16 *)((char *)this + 0x32) >= 0x3000)
-                *(s16 *)((char *)this + 0x32) = 0x3000;
+        if (mAngle < 0x3000) {
+            mAngle += 0x200;
+            if (mAngle >= 0x3000)
+                mAngle = 0x3000;
         } else {
-            (*(s16 *)((char *)this + 0x32)) -= 0x200;
-            if (*(s16 *)((char *)this + 0x32) < 0x3000)
-                *(s16 *)((char *)this + 0x32) = 0x3000;
+            mAngle -= 0x200;
+            if (mAngle < 0x3000)
+                mAngle = 0x3000;
         }
     }
     RebuildVerts();
 }
 
 /* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial), then
- * zeroes the pad-region angle at 0x32 (see the header) and every unk_
+ * zeroes mAngle and every unk_
  * field this class adds, in the ROM's own (non-address-order) sequence --
  * 0x34, then 0x3c, then 0x38, then 0x40, then 0x44. Tail-calls the shared
  * helper RebuildVerts, same as SaveSnapshot. */
 void cMgSmartball_wing_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
-    *(unsigned short *)((char *)this + 0x32) = 0;
+    mAngle = 0;
     mTriggerTime = 0;
     mTriggerFlag = 0;
     mTriggerPhase = 0;
@@ -673,7 +670,7 @@ void cMgSmartball_pushswitch_c::Update() {
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same pattern as every sibling in this family. Then
  * decrements this class's own countdown (mReleaseDelay) while it is positive.
- * While the base's mTriggered flag is set, calls the out-of-scope helper
+ * While mTriggered is set, calls the out-of-scope helper
  * cMgSmartball_pushswitch_c::BallsClear (an escape/proximity check over the actor list): if
  * it reports clear and the countdown has drained to zero, mTriggered is
  * cleared; otherwise the countdown is reloaded to 0xa. */
@@ -694,7 +691,7 @@ void cMgSmartball_pushswitch_c::SaveSnapshot() {
 }
 
 /* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial), then
- * clears the base's mTriggered flag and this class's own countdown. */
+ * clears mTriggered and the countdown. */
 void cMgSmartball_pushswitch_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
     mTriggered = 0;
@@ -741,10 +738,7 @@ int cMgSmartball_board_c::AnyLineActive() {
  *
  * 3. The nine slot markers along the bottom, in the order the shuffle table
  *    sSmartballCellOrder currently holds.
- *
- * No raw offsets are needed anywhere here: this slot never touches the base's
- * 0x31-0x33 span, so unlike SaveSnapshot and RestoreInitial it reaches
- * everything through real member names. */
+ */
 void cMgSmartball_board_c::Update() {
     s32 i;
     s32 j;
@@ -938,7 +932,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         b1 += 0x20;
     }
 
-    if (idx == 0 || (&mTriggered)[sSmartballCellOrder[idx - 1]] == 1) {
+    if (idx == 0 || mCells[sSmartballCellOrder[idx - 1]] == 1) {
         base = 0x33f;
     } else {
         base = 0x33d;
@@ -967,7 +961,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         return;
     }
 
-    if ((&mTriggered)[sSmartballCellOrder[idx + 1]] == 1) {
+    if (mCells[sSmartballCellOrder[idx + 1]] == 1) {
         int lay4 = 2;
         int i4;
         int bas4 = 0x33f;
@@ -1004,9 +998,9 @@ void cMgSmartball_board_c::ClaimCell(int i) {
     int e[2];
 
     slot = sSmartballCellOrder[i];
-    if ((&mTriggered)[slot] == 1)
+    if (mCells[slot] == 1)
         return;
-    (&mTriggered)[slot] = 1;
+    mCells[slot] = 1;
     v = i * 0x18000 + 0x10000;
     a[0] = v;
     a[1] = 0x78000;
@@ -1018,7 +1012,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
     Sound::PlayBank2_2D(0x173);
     count = 0;
     if (slot < 3) {
-        if ((&mTriggered)[slot + 3] == 1 && (&mTriggered)[slot + 6] == 1) {
+        if (mCells[slot + 3] == 1 && mCells[slot + 6] == 1) {
             mLineTimer[slot] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[slot] = 1;
@@ -1026,7 +1020,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
             mLinesScored++;
         }
     } else if (slot < 6) {
-        if ((&mTriggered)[slot - 3] == 1 && (&mTriggered)[slot + 3] == 1) {
+        if (mCells[slot - 3] == 1 && mCells[slot + 3] == 1) {
             mLineTimer[slot - 3] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[slot - 3] = 1;
@@ -1034,7 +1028,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
             mLinesScored++;
         }
     } else {
-        if ((&mTriggered)[slot - 6] == 1 && (&mTriggered)[slot - 3] == 1) {
+        if (mCells[slot - 6] == 1 && mCells[slot - 3] == 1) {
             mLineTimer[slot - 6] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[slot - 6] = 1;
@@ -1044,7 +1038,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
     }
     i = slot % 3;
     if (i == 0) {
-        if ((&mTriggered)[slot + 1] == 1 && (&mTriggered)[slot + 2] == 1) {
+        if (mCells[slot + 1] == 1 && mCells[slot + 2] == 1) {
             mLineTimer[slot / 3 + 3] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[slot / 3 + 3] = 1;
@@ -1052,7 +1046,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
             mLinesScored++;
         }
     } else if (i == 1) {
-        if ((&mTriggered)[slot - 1] == 1 && (&mTriggered)[slot + 1] == 1) {
+        if (mCells[slot - 1] == 1 && mCells[slot + 1] == 1) {
             mLineTimer[slot / 3 + 3] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[slot / 3 + 3] = 1;
@@ -1060,7 +1054,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
             mLinesScored++;
         }
     } else {
-        if ((&mTriggered)[slot - 2] == 1 && (&mTriggered)[slot - 1] == 1) {
+        if (mCells[slot - 2] == 1 && mCells[slot - 1] == 1) {
             mLineTimer[slot / 3 + 3] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[slot / 3 + 3] = 1;
@@ -1070,7 +1064,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
     }
     switch (slot) {
     case 0:
-        if ((&mTriggered)[4] == 1 && (&mTriggered)[8] == 1) {
+        if (mCells[4] == 1 && mCells[8] == 1) {
             mLineTimer[6] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[6] = 1;
@@ -1079,7 +1073,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
         }
         break;
     case 2:
-        if ((&mTriggered)[4] == 1 && (&mTriggered)[6] == 1) {
+        if (mCells[4] == 1 && mCells[6] == 1) {
             mLineTimer[7] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[7] = 1;
@@ -1088,14 +1082,14 @@ void cMgSmartball_board_c::ClaimCell(int i) {
         }
         break;
     case 4:
-        if ((&mTriggered)[0] == 1 && (&mTriggered)[8] == 1) {
+        if (mCells[0] == 1 && mCells[8] == 1) {
             mLineTimer[6] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[6] = 1;
             count += 1;
             mLinesScored++;
         }
-        if ((&mTriggered)[2] == 1 && (&mTriggered)[6] == 1) {
+        if (mCells[2] == 1 && mCells[6] == 1) {
             mLineTimer[7] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[7] = 1;
@@ -1104,7 +1098,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
         }
         break;
     case 6:
-        if ((&mTriggered)[2] == 1 && (&mTriggered)[4] == 1) {
+        if (mCells[2] == 1 && mCells[4] == 1) {
             mLineTimer[7] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[7] = 1;
@@ -1113,7 +1107,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
         }
         break;
     case 8:
-        if ((&mTriggered)[0] == 1 && (&mTriggered)[4] == 1) {
+        if (mCells[0] == 1 && mCells[4] == 1) {
             mLineTimer[6] = 0x21d;
             mFanfareTimer = 0xb5;
             mLineScored[6] = 1;
@@ -1128,7 +1122,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
         for (j = 0; j < 9; j++) {
             if (j == slot)
                 continue;
-            if ((&mTriggered)[j] == 0) {
+            if (mCells[j] == 0) {
                 bingo = 0;
                 break;
             }
@@ -1167,10 +1161,7 @@ void cMgSmartball_board_c::ClaimCell(int i) {
  * horizontal strip, map its x to one of the nine cells through the shuffle
  * table sSmartballCellOrder and claim that cell; finally spin every claimed
  * cell's angle in mCellFlipAngle up to its 0x8000 stop.
- *
- * The nine cell bytes are reached as (&mTriggered)[k] -- the array begins at the
- * BASE's mTriggered and runs into this class's mCellsTail[6], so no member can name
- * it. See cMgSmartball_board_c.h. */
+ */
 static inline cMgSmartball_ball_c *GetObjBoard(char *g, int i) {
     return i >= 13 ? 0 : ((dScMgSmartball_c *)g)->mpBalls[i];
 }
@@ -1248,7 +1239,7 @@ void cMgSmartball_board_c::SaveSnapshot() {
             int slot = sSmartballCellOrder[j];
             if (v.x >= lo && v.x < hi) {
                 if (GetObjBoard((char *)mpManager, n)->ArmExpire(0x14)) {
-                    if ((&mTriggered)[slot] == 0) {
+                    if (mCells[slot] == 0) {
                         SetV2(&a, mCurrent0 + ((sSmartballCellOrder[j] % 3 - 1) * 0x18 << 12),
                               mCurrent1 + ((sSmartballCellOrder[j] / 3 - 1) * 0x18 << 12));
                         ((dScMgSmartball_c *)((char *)mpManager))->EmitSparks((int *)&a, 0);
@@ -1269,7 +1260,7 @@ void cMgSmartball_board_c::SaveSnapshot() {
         }
     }
     for (i = 0; i < 9; i++) {
-        if ((&mTriggered)[i] == 1) {
+        if (mCells[i] == 1) {
             mCellFlipAngle[i] += 0x400;
             if (mCellFlipAngle[i] >= 0x8000)
                 mCellFlipAngle[i] = 0x8000;
@@ -1288,14 +1279,7 @@ void cMgSmartball_board_c::SaveSnapshot() {
  * field this class owns. That zero pass is exhaustive and in address order,
  * which is why it -- not a union of the "obvious" accesses in the other two
  * slots -- is the authority for the layout in cMgSmartball_board_c.h.
- *
- * The nine cell bytes are reached as (&mTriggered)[i] -- pointer arithmetic off
- * the BASE's first cell byte, running through unk_032/unk_033 and on into
- * this class's mCellsTail[6]. No member can name that array: it begins three
- * bytes inside the base and a member cannot straddle the boundary. This is
- * the only spelling that reproduces; five others were measured and every one
- * of them compiled the wrong addressing mode or let strength reduction build
- * an induction variable the ROM does not have. See the header. */
+ */
 void cMgSmartball_board_c::RestoreInitial() {
     int i;
     cMgSmartball_object_c::RestoreInitial();
@@ -1303,7 +1287,7 @@ void cMgSmartball_board_c::RestoreInitial() {
         sSmartballCellOrder[i] = i;
     ShuffleCells();
     for (i = 0; i < 9; i++) {
-        (&mTriggered)[i] = 0;
+        mCells[i] = 0;
         mCellFlipAngle[i] = 0;
         mCellHighlight[i] = 0;
     }
@@ -1972,12 +1956,6 @@ int cMgSmartball_propeller_c::HitTest(int *pos) {
     return PointInTriangle((int *)&v0, (int *)&v1, (int *)&v2, (int *)&v3) != 0;
 }
 
-/* The base's angle at 0x32 read signed, as RebuildVerts needs it. Update reads
-   the same two bytes unsigned and keeps its own cast. */
-inline s16 cMgSmartball_propeller_c::GetAngle() const {
-    return *(const s16 *)((const char *)this + 0x32);
-}
-
 void cMgSmartball_propeller_c::RebuildVerts() {
     mVertices[0].x = 0x20000;
     mVertices[0].y = 0;
@@ -1996,14 +1974,14 @@ void cMgSmartball_propeller_c::RebuildVerts() {
     mVertices[7].x = 0;
     mVertices[7].y = -0x20000;
 
-    func_0203d388((V2 *)&mVertices[0], GetAngle());
-    func_0203d388((V2 *)&mVertices[1], GetAngle());
-    func_0203d388((V2 *)&mVertices[2], GetAngle());
-    func_0203d388((V2 *)&mVertices[3], GetAngle());
-    func_0203d388((V2 *)&mVertices[4], GetAngle());
-    func_0203d388((V2 *)&mVertices[5], GetAngle());
-    func_0203d388((V2 *)&mVertices[6], GetAngle());
-    func_0203d388((V2 *)&mVertices[7], GetAngle());
+    func_0203d388((V2 *)&mVertices[0], mAngle);
+    func_0203d388((V2 *)&mVertices[1], mAngle);
+    func_0203d388((V2 *)&mVertices[2], mAngle);
+    func_0203d388((V2 *)&mVertices[3], mAngle);
+    func_0203d388((V2 *)&mVertices[4], mAngle);
+    func_0203d388((V2 *)&mVertices[5], mAngle);
+    func_0203d388((V2 *)&mVertices[6], mAngle);
+    func_0203d388((V2 *)&mVertices[7], mAngle);
 
     mVertices[0].x += mCurrent0;
     mVertices[0].y += mCurrent1;
@@ -2023,27 +2001,20 @@ void cMgSmartball_propeller_c::RebuildVerts() {
     mVertices[7].y += mCurrent1;
 }
 
-/* Slot 1. Looks up a rotation matrix from the base's angle field at 0x32,
- * reading it UNSIGNED (>> 4, lsr not asr) to index the sine table -- one of
- * the three incompatible readings cMgSmartball_object_c.h records for that
- * three-byte region, so it stays a raw cast rather than the base's member
- * name: no single member type is right for all three readers. Draws two
+/* Slot 1. Looks up a rotation matrix from mAngle, reading it UNSIGNED
+ * (>> 4, lsr not asr) to index the sine table. Draws two
  * OAM sprites (front and back cap) at the base's position (mCurrent0/
  * mCurrent1) using that matrix; touches nothing in this class's own 0x34+
  * region at all. */
 void cMgSmartball_propeller_c::Update() {
-    int b = (short)((((long long)
-                          FX_SinCosTable_[(*(unsigned short *)((char *)this + 0x32) >> 4) * 2 + 1]
-                      << 12) +
-                     0x800) >>
-                    12);
+    int b =
+        (short)((((long long)FX_SinCosTable_[((unsigned short)mAngle >> 4) * 2 + 1] << 12) + 0x800) >>
+                12);
     int a;
     int vec[4];
 
     vec[0] = b;
-    a = (short)((((long long)FX_SinCosTable_[(*(unsigned short *)((char *)this + 0x32) >> 4) * 2]
-                  << 12) +
-                 0x800) >>
+    a = (short)((((long long)FX_SinCosTable_[((unsigned short)mAngle >> 4) * 2] << 12) + 0x800) >>
                 12);
     vec[3] = b;
     vec[1] = a;
@@ -2060,8 +2031,7 @@ void cMgSmartball_propeller_c::Update() {
  * mRoundEnded flag is set, it returns before touching anything else.
  * Otherwise it steps the rotation speed (mSpinSpeed) by +-8 toward the target
  * (mSpinSpeedTarget), clamping once it crosses, adds the stepped speed onto the
- * base's own angle at 0x32 (a raw cast -- see cMgSmartball_object_c.h
- * on why that field has no single type), and calls the shared helper that
+ * mAngle, and calls the shared helper that
  * recomputes the propeller-blade positions from the new angle.
  *
  * The step writes through a local `short *p` taken from &mSpinSpeed while
@@ -2086,7 +2056,7 @@ void cMgSmartball_propeller_c::SaveSnapshot() {
             mSpinSpeed = mSpinSpeedTarget;
     }
     {
-        short *q = (short *)((char *)this + 0x32);
+        short *q = &mAngle;
         *q = *q + mSpinSpeed;
     }
     RebuildVerts();
@@ -2094,14 +2064,12 @@ void cMgSmartball_propeller_c::SaveSnapshot() {
 
 /* Slot 2. A real override, not a tail-call veneer: calls the base's
  * RestoreInitial() (qualified -- unqualified would dispatch through the
- * vtable and recurse), then clears the base's own angle at 0x32 (raw cast,
- * same reasoning as SaveSnapshot/Update -- see cMgSmartball_propeller_c.h),
- * resets the target rotation speed (mSpinSpeedTarget) to its default 0x40, zeroes
+ * vtable and recurse), then clears mAngle, resets the target rotation speed (mSpinSpeedTarget) to its default 0x40, zeroes
  * the current rotation speed (mSpinSpeed), and calls the shared helper that
  * recomputes the propeller-blade positions from the reset state. */
 void cMgSmartball_propeller_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
-    *(short *)((char *)this + 0x32) = 0;
+    mAngle = 0;
     mSpinSpeedTarget = 0x40;
     mSpinSpeed = 0;
     RebuildVerts();
@@ -2238,14 +2206,14 @@ cMgSmartball_spring_c *cMgSmartball_spring_c_Construct(cMgSmartball_spring_c *c,
 }
 
 int cMgSmartball_ana_c::HasBall() {
-    return mTriggered;
+    return mHasBall;
 }
 
 void cMgSmartball_ana_c::Swallow() {
     int tmp1[2];
     int tmp2[2];
     mRespawnTimer = 0x3c;
-    mTriggered = 1;
+    mHasBall = 1;
     tmp1[0] = mCurrent0;
     tmp1[1] = mCurrent1;
     ((dScMgSmartball_c *)mpManager)->EmitSparks((int *)tmp1, 0);
@@ -2256,12 +2224,11 @@ void cMgSmartball_ana_c::Swallow() {
     func_02012718(0xe0, mCurrent0);
 }
 
-/* Slot 1. While the BASE's mTriggered flag is set, picks a warning-sprite
+/* Slot 1. While mHasBall is set, picks a warning-sprite
  * index from this class's countdown (mRespawnTimer) and draws it under the main
- * sprite; the main sprite is always drawn. mTriggered belongs to the base
- * class, not this one -- see cMgSmartball_ana_c.h. */
+ * sprite; the main sprite is always drawn. */
 void cMgSmartball_ana_c::Update() {
-    if (mTriggered == 1) {
+    if (mHasBall == 1) {
         int v = mRespawnTimer;
         int idx;
         if (v < 0x14)
@@ -2282,10 +2249,7 @@ void cMgSmartball_ana_c::Update() {
  * rather than called -- same pattern as every sibling in this family (the
  * base's copy is out-of-line and there is no bl here). Then decrements this
  * class's own countdown (mRespawnTimer); when it reaches zero it calls the shared
- * helper ServeNextBall and sets the BASE's unk_032 byte to 1 -- the
- * low byte only. 0x031-0x033 is a three-byte region that three children read
- * three incompatible ways; this class's byte-wide view is one of them. See
- * cMgSmartball_object_c.h. */
+ * helper ServeNextBall and sets mServed. */
 void cMgSmartball_ana_c::SaveSnapshot() {
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
@@ -2295,21 +2259,15 @@ void cMgSmartball_ana_c::SaveSnapshot() {
     if (mRespawnTimer > 0)
         return;
     ((dScMgSmartball_c *)mpManager)->ServeNextBall();
-    unk_032 = 1;
+    mServed = 1;
 }
 
 /* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial), then clears
- * the base's mTriggered flag, the low byte of the base's unk_032, and this
- * class's own countdown.
- *
- * Both go through the base's member names. That became possible when
- * cMgSmartball_board_c showed 0x031-0x033 to be three independent bytes
- * rather than a byte plus a halfword -- this class's byte-wide view now
- * agrees with the base's declaration, so no cast is needed. */
+ * mHasBall, mServed and the countdown. */
 void cMgSmartball_ana_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
-    mTriggered = 0;
-    unk_032 = 0;
+    mHasBall = 0;
+    mServed = 0;
     mRespawnTimer = 0;
 }
 

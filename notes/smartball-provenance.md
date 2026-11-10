@@ -98,7 +98,7 @@ helpers are what say so.
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x034 | `mCellsTail[6]` | The tail of the nine per-cell claimed flags that begin at the base's `unk_031`; [func_ov006_0210ef48](../src/minigames/d_s_mg_smartball.cpp) models the same nine bytes as `u8 cells[9]` at 0x31 in its own shadow struct and sets an entry to 1 when a ball claims that cell. Never indexed through this name -- see the header for why the array is reached as `(&unk_031)[i]`. |
+| 0x031 | `mCells[9]` | The nine per-cell claimed flags, 0x31..0x39, in the base's tail padding (the base's data ends at 0x31 and mwccarm lays the first derived member there). [func_ov006_0210ef48](../src/minigames/d_s_mg_smartball.cpp) models the same nine bytes as `u8 cells[9]` at 0x31 in its own shadow struct and sets an entry to 1 when a ball claims that cell. |
 | 0x03c | `mCellFlipAngle[9]` | `SaveSnapshot` advances a claimed cell's entry by 0x400 a frame and clamps at 0x8000, a half turn; `Update` feeds it to the sine table [data_02082214](../config/arm9/symbols.txt) to shear the sprite and picks a flipped-face sprite past 0x4000. |
 | 0x060 | `mCellHighlight[9]` | `Update` sets it for each of a scoring line's three cells -- `{i,i+3,i+6}`, `{3k..3k+2}`, `{0,4,8}`, `{2,4,6}` -- and blinks those cells off `mFanfareTimer`. |
 | 0x06c | `mLineTimer[8]` | [func_ov006_0210ef48](../src/minigames/d_s_mg_smartball.cpp) arms the completed line's entry with 0x21d; `SaveSnapshot` ages each one and `Update` draws that line's banner while it is positive. |
