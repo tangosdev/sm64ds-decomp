@@ -17,43 +17,7 @@
 #include "GX.h"
 #include "nitro/gx/g3x.h"
 #include "nitro/hw/registers.h"
-
-/* NitroSDK's matrix-mode, sort-mode and buffer-mode enums (g3.h) and the
- * immediate-mode commands this file issues (g3imm.h). local copy: an inline
- * body in include/nitro/gx/g3imm.h renumbers ov075/d_s_entry_entry's pinned
- * @NNN (see src/unnamed/ov007/func_ov007_020c4684.c). */
-typedef enum {
-    GX_MTXMODE_PROJECTION = 0,
-    GX_MTXMODE_POSITION = 1,
-    GX_MTXMODE_POSITION_VECTOR = 2,
-    GX_MTXMODE_TEXTURE = 3
-} GXMtxMode;
-
-typedef enum { GX_SORTMODE_AUTO = 0, GX_SORTMODE_MANUAL = 1 } GXSortMode;
-typedef enum { GX_BUFFERMODE_Z = 0, GX_BUFFERMODE_W = 1 } GXBufferMode;
-
-#define GX_PACK_SWAPBUFFERS_PARAM(am, zw) ((u32)((am) | ((zw) << 1)))
-#define GX_PACK_VIEWPORT_PARAM(x1, y1, x2, y2)     ((u32)((x1) | ((y1) << 8) | ((x2) << 16) | ((y2) << 24)))
-
-static inline void G3_MtxMode(GXMtxMode mode) {
-    REG_MTX_MODE = (u32)mode;
-}
-
-static inline void G3_StoreMtx(int num) {
-    REG_MTX_STORE = (u32)num;
-}
-
-static inline void G3_Identity(void) {
-    REG_MTX_IDENTITY = 0;
-}
-
-static inline void G3_SwapBuffers(GXSortMode am, GXBufferMode zw) {
-    REG_SWAP_BUFFERS = GX_PACK_SWAPBUFFERS_PARAM(am, zw);
-}
-
-static inline void G3_ViewPort(int x1, int y1, int x2, int y2) {
-    REG_VIEWPORT = GX_PACK_VIEWPORT_PARAM(x1, y1, x2, y2);
-}
+#include "nitro/gx/g3imm_cmd.h"
 
 extern "C" {
 extern Matrix4x3 data_0209b3ec; /* the view matrix */

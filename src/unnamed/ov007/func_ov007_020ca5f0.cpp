@@ -5,34 +5,10 @@
 #include "Ov007Mesh.h"
 #include "Ov007Texture.h"
 
-#define reg_G3_MTX_PUSH     (*(volatile u32 *)0x04000444)
-#define reg_G3_MTX_POP      (*(volatile u32 *)0x04000448)
-#define reg_G3_MTX_SCALE    (*(volatile u32 *)0x0400046c)
-#define reg_G3_MTX_TRANS    (*(volatile u32 *)0x04000470)
-#define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
-#define reg_G3_DIF_AMB      (*(volatile u32 *)0x040004c0)
-#define reg_G3_SPE_EMI      (*(volatile u32 *)0x040004c4)
+#include "nitro/gx/g3imm_cmd.h"
 
-/* NitroSDK G3 immediate-mode commands (g3imm.h); the right-to-left argument
- * evaluation is the z, y, x load order the ROM shows for the translate.
- * File-local because adding them to include/nitro/gx/g3imm.h renumbers
- * ov075/d_s_entry_entry's pinned @NNN. */
-static inline void G3_PushMtx(void) {
-    reg_G3_MTX_PUSH = 0;
-}
-static inline void G3_PopMtx(int num) {
-    reg_G3_MTX_POP = num;
-}
-static inline void G3_Translate(fx32 x, fx32 y, fx32 z) {
-    reg_G3_MTX_TRANS = x;
-    reg_G3_MTX_TRANS = y;
-    reg_G3_MTX_TRANS = z;
-}
-static inline void G3_Scale(fx32 x, fx32 y, fx32 z) {
-    reg_G3_MTX_SCALE = x;
-    reg_G3_MTX_SCALE = y;
-    reg_G3_MTX_SCALE = z;
-}
+/* The NitroSDK immediate-mode commands evaluate their arguments right to
+ * left, which is the z, y, x load order the ROM shows for the translate. */
 
 extern "C" {
 
@@ -56,15 +32,15 @@ void func_ov007_020ca5f0(Ov007Mesh *mesh, Ov007MeshMaterial *mat, int *pos, int 
     int cellRows = grid->rows - 1;
     int tw = 0;
     int th = 0;
-    reg_G3_DIF_AMB = (u32)mat->diffuse | ((u32)mat->ambient << 16) | 0x8000;
-    reg_G3_SPE_EMI = 0;
+    REG_DIF_AMB = (u32)mat->diffuse | ((u32)mat->ambient << 16) | 0x8000;
+    REG_SPE_EMI = 0;
     if (tex != 0) {
         tw = 8 << tex->sizeS;
         th = 8 << tex->sizeT;
     }
     func_ov007_020c1448(tex, 1, mat->texRepeat, 0, mat->texColor0);
     Texture_BindPalette(tex);
-    reg_G3_POLYGON_ATTR =
+    REG_POLYGON_ATTR =
         0x8c1 | (mat->polygonMode << 4) | (mat->polygonId << 24) | (mat->alpha << 16);
     G3_PushMtx();
     G3_Translate(pos[0], pos[1], pos[2]);
