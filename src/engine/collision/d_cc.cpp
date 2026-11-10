@@ -32,8 +32,7 @@ dCc_c::dCc_c() {
 }
 
 /* One definition emits D2, D0 and D1: the destructor body's only obligation
-   is the intrusive-list unlink, and D0 follows it with the class-local
-   operator delete (Memory::operator_delete2, see the header). */
+   is the intrusive-list unlink, and D0 follows it with operator delete. */
 dCc_c::~dCc_c() {
     Unlink();
 }

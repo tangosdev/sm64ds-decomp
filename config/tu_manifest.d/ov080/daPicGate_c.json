@@ -2172,159 +2172,159 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@612",
+      "from": "@608",
       "to": "@514",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @528 now; licensed under the existing pin @514; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @528 now; licensed under the existing pin @514; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @612 to @608 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@609",
+      "to": "@515",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @529 now; licensed under the existing pin @515; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @613 to @609 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@610",
+      "to": "@516",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @530 now; licensed under the existing pin @516; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @614 to @610 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@611",
+      "to": "@517",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @531 now; licensed under the existing pin @517; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @615 to @611 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@612",
+      "to": "@518",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @532 now; licensed under the existing pin @518; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @612 to @608 x (measured from the compiled object). Re-keyed from @616 to @612 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@613",
-      "to": "@515",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @529 now; licensed under the existing pin @515; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@519",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @533 now; licensed under the existing pin @519; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @613 to @609 x (measured from the compiled object). Re-keyed from @617 to @613 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@614",
-      "to": "@516",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @530 now; licensed under the existing pin @516; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@520",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @534 now; licensed under the existing pin @520; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @614 to @610 x (measured from the compiled object). Re-keyed from @618 to @614 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@615",
-      "to": "@517",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @531 now; licensed under the existing pin @517; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@521",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @535 now; licensed under the existing pin @521; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @615 to @611 x (measured from the compiled object). Re-keyed from @619 to @615 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@616",
-      "to": "@518",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @532 now; licensed under the existing pin @518; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@522",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @536 now; licensed under the existing pin @522; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @616 to @612 x (measured from the compiled object). Re-keyed from @620 to @616 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@617",
-      "to": "@519",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @533 now; licensed under the existing pin @519; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@523",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @537 now; licensed under the existing pin @523; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @617 to @613 x (measured from the compiled object). Re-keyed from @621 to @617 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@618",
-      "to": "@520",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @534 now; licensed under the existing pin @520; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@524",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @538 now; licensed under the existing pin @524; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @618 to @614 x (measured from the compiled object). Re-keyed from @622 to @618 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@619",
-      "to": "@521",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @535 now; licensed under the existing pin @521; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@525",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @539 now; licensed under the existing pin @525; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @619 to @615 x (measured from the compiled object). Re-keyed from @623 to @619 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@620",
-      "to": "@522",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @536 now; licensed under the existing pin @522; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@526",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @540 now; licensed under the existing pin @526; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @620 to @616 x (measured from the compiled object). Re-keyed from @624 to @620 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@621",
-      "to": "@523",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @537 now; licensed under the existing pin @523; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@527",
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @541 now; licensed under the existing pin @527; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @621 to @617 x (measured from the compiled object). Re-keyed from @625 to @621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@622",
-      "to": "@524",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @538 now; licensed under the existing pin @524; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@224",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @622 to @618 x (measured from the compiled object). Re-keyed from @626 to @622 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@623",
-      "to": "@525",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @539 now; licensed under the existing pin @525; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@225",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @623 to @619 x (measured from the compiled object). Re-keyed from @627 to @623 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@624",
-      "to": "@526",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @540 now; licensed under the existing pin @526; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@226",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @624 to @620 x (measured from the compiled object). Re-keyed from @628 to @624 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@625",
-      "to": "@527",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @541 now; licensed under the existing pin @527; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@222",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @625 to @621 x (measured from the compiled object). Re-keyed from @629 to @625 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@626",
-      "to": "@224",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
-    },
-    {
-      "from": "@627",
-      "to": "@225",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@223",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @626 to @622 x (measured from the compiled object). Re-keyed from @630 to @626 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@628",
-      "to": "@226",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
-    },
-    {
-      "from": "@629",
-      "to": "@222",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@186",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @628 to @624 x (measured from the compiled object). Re-keyed from @632 to @628 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@630",
-      "to": "@223",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@187",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @630 to @626 x (measured from the compiled object). Re-keyed from @634 to @630 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@632",
-      "to": "@186",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@217",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @632 to @628 x (measured from the compiled object). Re-keyed from @636 to @632 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@634",
-      "to": "@187",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@219",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @634 to @630 x (measured from the compiled object). Re-keyed from @638 to @634 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@636",
-      "to": "@217",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@221",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @636 to @632 x (measured from the compiled object). Re-keyed from @640 to @636 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@638",
-      "to": "@219",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@94",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @638 to @634 x (measured from the compiled object). Re-keyed from @642 to @638 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@640",
-      "to": "@221",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@93",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @640 to @636 x (measured from the compiled object). Re-keyed from @644 to @640 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@642",
-      "to": "@94",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@188",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @642 to @638 x (measured from the compiled object). Re-keyed from @646 to @642 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@644",
-      "to": "@93",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@200",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @644 to @640 x (measured from the compiled object). Re-keyed from @648 to @644 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@646",
-      "to": "@188",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@220",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @646 to @642 x (measured from the compiled object). Re-keyed from @650 to @646 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@648",
-      "to": "@200",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "to": "@227",
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @648 to @644 x (measured from the compiled object). Re-keyed from @652 to @648 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@650",
-      "to": "@220",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
-    },
-    {
-      "from": "@652",
-      "to": "@227",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
-    },
-    {
-      "from": "@654",
       "to": "@199",
-      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13"
+      "evidence": "compiler temp renamed under the pin this row claims; include/types.h's added Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwccarm emits it under this name now; including math/MtxStack.h in place of local prototypes shifts this local number (#4570); the grid walks' for-loop form (#821) moves this local number up by 13 Re-keyed from @650 to @646 x (measured from the compiled object). Re-keyed from @654 to @650 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

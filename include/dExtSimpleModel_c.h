@@ -25,8 +25,8 @@
  *
  * LAYOUT evidence: dExtSimpleModel_c::C2 calls dExtModel_c::C2, stores _ZTV17dExtSimpleModel_c, copies
  * mat4x3 from IDENTITY_MATRIX4X3 and zeroes +0x4c. dExtSimpleModel_c::DoSetFile allocates
- * transformsBuf with Memory::operator_new2 and the destructors operator
- * delete it. dExtSimpleModel_c::Render multiplies mat4x3 into a stack temp before
+ * transformsBuf with operator new[] and the destructors operator delete[]
+ * it. dExtSimpleModel_c::Render multiplies mat4x3 into a stack temp before
  * handing it to ModelComponents::Render.
  *
  * The static loaders (LoadFile, LoadTexAndPal, UpdateFileOffsets, the VRAM

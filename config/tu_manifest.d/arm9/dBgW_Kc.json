@@ -362,9 +362,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@102",
+      "from": "@90",
       "to": "data_020a0ce0",
-      "evidence": "compiler temp: the destructor-registration node for data_020a0cec. mwcc numbers it @101 here, and every source position in this file gives a number another module already defines (@101 ov095, @147 ov025, and so on), so it keeps its existing configured address name"
+      "evidence": "compiler temp: the destructor-registration node for data_020a0cec. mwcc numbers it @101 here, and every source position in this file gives a number another module already defines (@101 ov095, @147 ov025, and so on), so it keeps its existing configured address name Re-keyed from @102 to @90 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "relocations": [

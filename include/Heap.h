@@ -132,10 +132,6 @@
  * FIELD MEANINGS ARE DOCUMENTED ON THE C++ SPELLING BELOW. They are kept off
  * these lines because that gate parses a trailing `/* 0xNN *[/]' and a comment
  * running onto the next line makes the field unparsed. */
-namespace Memory {
-void operator_delete2(void *);
-}
-
 /* Global, so the elaborated `struct SolidHeapAllocator*' below names the
    allocator classes and does not declare new ones inside mHeap. */
 struct SolidHeapAllocator;
@@ -253,21 +249,6 @@ struct Heap_t {
        0x30 bytes for the solid one, 0x4c for the expanding one. */
     static struct SolidHeapAllocator*     CreateSolidHeapAllocator(void* address, u32 size, u32 flags);
     static struct ExpandingHeapAllocator* CreateExpandingHeapAllocator(void* address, u32 size, u32 flags);
-
-    /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
-       Without it the compiler emits the global `_ZdlPv`, which exists nowhere
-       in this image, and D0 comes out one relocated word different from the
-       ROM -- a difference build_pin.verify CANNOT SEE, because it wildcards
-       relocated words. Only the link catches it.
-
-       This family deallocates through Memory::operator_delete2; dActor_c's copy of
-       this member calls Memory::Deallocate instead, which is why each family
-       needs its own. Inline and in the IMMEDIATE base: mwcc inlines it only
-       when it finds it in the class or one level up (see include/dActor_c.h).
-       No layout effect. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 };
 
 } /* namespace mHeap */

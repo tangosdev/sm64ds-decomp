@@ -3539,7 +3539,7 @@ src/unnamed/arm9/0207/func_02073238.c:
     complete
     .text start:0x02073238 end:0x02073244
 
-src/__cxa_vec_delete.c:
+src/__cxa_vec_delete.cpp:
     complete
     .text start:0x02073244 end:0x0207328c
 

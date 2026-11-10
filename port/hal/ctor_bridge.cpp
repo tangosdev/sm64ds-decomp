@@ -79,14 +79,6 @@ void _ZN17dExtSimpleModel_cC1Ev(void *self)
 }
 CTOR_BRIDGE(_ZN11dExtModel_cC2Ev, dExtModelHeir)
 
-
-// The DS global operator delete routes through the Memory layer. This lived
-// in cxxname_bridge.cpp, which only smoke_actor links; every target that
-// builds a migrated model-family constructor needs it now, because the
-// synthesized dExtModel_c::operator delete references it.
-void _ZN6Memory10DeallocateEPv(void *p);
-void _ZN6Memory16operator_delete2EPv(void *p) { _ZN6Memory10DeallocateEPv(p); }
-
 }
 
 // dExtSimpleModel_c::~dExtSimpleModel_c() is NOT bridged here: src/engine/model/d_ext_model.cpp defines a
@@ -108,8 +100,3 @@ dExtModel_c::~dExtModel_c()
     abort();
 }
 
-// _ZdlPv is the DS global operator delete. Its delete veneer, func_0203cbc0,
-// which dExtSimpleModel_c's destructor calls, now comes from src/engine/heap/Heap.cpp with
-// a host body over the default heap; this keeps the _ZdlPv spelling itself
-// routed through the Memory layer.
-extern "C" void _ZdlPv(void *p) { _ZN6Memory10DeallocateEPv(p); }

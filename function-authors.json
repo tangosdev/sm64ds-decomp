@@ -6507,15 +6507,15 @@
     },
     "arm9:0x0203cbc0": {
       "author": "ruspecial",
-      "name": "func_0203cbc0"
+      "name": "_ZdaPv"
     },
     "arm9:0x0203cbcc": {
       "author": "ruspecial",
-      "name": "_ZN6Memory16operator_delete2EPv"
+      "name": "_ZdlPv"
     },
     "arm9:0x0203cbd8": {
       "author": "ruspecial",
-      "name": "_ZN6Memory13operator_new2Ej"
+      "name": "_Znam"
     },
     "arm9:0x0203cbe4": {
       "author": "ruspecial",
@@ -6523,7 +6523,7 @@
     },
     "arm9:0x0203cbf0": {
       "author": "ruspecial",
-      "name": "_ZdlPv"
+      "name": "func_0203cbf0"
     },
     "arm9:0x0203cc0c": {
       "author": "ruspecial",

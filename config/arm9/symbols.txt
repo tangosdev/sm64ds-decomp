@@ -1625,11 +1625,11 @@ _ZN5mHeap9ExpHeap_tC1EPvjPNS_6Heap_tEP22ExpandingHeapAllocator kind:function(arm
 _ZN5mHeap6Heap_tC2EPvjPS0_ kind:function(arm,size=0x3c) addr:0x0203caac
 _ZN5mHeap6Heap_t18InitializeRootHeapEv kind:function(arm,size=0x1c) addr:0x0203cae8
 _ZN5mHeap6Heap_t13SetupRootHeapEv kind:function(arm,size=0xbc) addr:0x0203cb04
-func_0203cbc0 kind:function(arm,size=0xc) addr:0x0203cbc0
-_ZN6Memory16operator_delete2EPv kind:function(arm,size=0xc) addr:0x0203cbcc
-_ZN6Memory13operator_new2Ej kind:function(arm,size=0xc) addr:0x0203cbd8
+_ZdaPv kind:function(arm,size=0xc) addr:0x0203cbc0
+_ZdlPv kind:function(arm,size=0xc) addr:0x0203cbcc
+_Znam kind:function(arm,size=0xc) addr:0x0203cbd8
 _Znwm kind:function(arm,size=0xc) addr:0x0203cbe4
-_ZdlPv kind:function(arm,size=0x1c) addr:0x0203cbf0
+func_0203cbf0 kind:function(arm,size=0x1c) addr:0x0203cbf0
 func_0203cc0c kind:function(arm,size=0x1c) addr:0x0203cc0c
 func_0203cc28 kind:function(arm,size=0xac) addr:0x0203cc28
 func_0203ccd4 kind:function(arm,size=0xac) addr:0x0203ccd4

@@ -4474,7 +4474,7 @@ int dScStage_c::CleanupResources() {
                 MinimapChangeNode *block = (MinimapChangeNode *)area->mBlockList;
                 while (block) {
                     MinimapChangeNode *next = block->next;
-                    Memory::operator_delete2(block);
+                    ::operator delete(block);
                     block = next;
                 }
             }

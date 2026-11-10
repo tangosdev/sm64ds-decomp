@@ -40,10 +40,6 @@
  * covers the C++ branch instead.
  */
 
-namespace Memory {
-void operator_delete2(void *ptr);
-}
-
 struct dM3dGSph {
     /* --- members --- */
     Vector3 centre;         /* 0x04 */
@@ -65,17 +61,6 @@ struct dM3dGSph {
     void SetRadius(Fix12i radius);
     void Set(const Vector3 &centre, Fix12i radius);
     void SetCentre(const Vector3 &centre);
-
-    /* This family deallocates through Memory::operator_delete2 (0x0203cbcc),
-     * not the actor heap and not the global _ZdlPv. CW inlines operator delete
-     * into the deleting destructor (D0) only when it finds one on the class
-     * itself or its immediate base, so it has to live here: without it D0 emits
-     * a call to _ZdlPv (0x0203cbf0), which BYTE-MATCHES -- match.compare
-     * wildcards every relocated word -- while calling the wrong function. Only
-     * objisolate's reloc-destination check sees the difference. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

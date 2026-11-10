@@ -1371,34 +1371,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@646",
+      "from": "@587",
       "to": "data_ov102_0214e9d0",
-      "evidence": "compiler temp mapped to 0x0214e9d0 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @638 to @646 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
+      "evidence": "compiler temp mapped to 0x0214e9d0 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @638 to @646 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821). Re-keyed from @646 to @587 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@647",
+      "from": "@588",
       "to": "data_ov102_0214e9dc",
-      "evidence": "compiler temp mapped to 0x0214e9dc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @639 to @647 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
+      "evidence": "compiler temp mapped to 0x0214e9dc by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @639 to @647 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821). Re-keyed from @647 to @588 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@649",
+      "from": "@590",
       "to": "data_ov102_0214ea0c",
-      "evidence": "compiler temp mapped to 0x0214ea0c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @641 to @649 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
+      "evidence": "compiler temp mapped to 0x0214ea0c by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @641 to @649 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821). Re-keyed from @649 to @590 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@652",
+      "from": "@593",
       "to": "data_ov102_0214e9f4",
-      "evidence": "compiler temp mapped to 0x0214e9f4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @644 to @652 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
+      "evidence": "compiler temp mapped to 0x0214e9f4 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @644 to @652 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821). Re-keyed from @652 to @593 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@655",
+      "from": "@596",
       "to": "data_ov102_0214ea00",
-      "evidence": "compiler temp mapped to 0x0214ea00 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @647 to @655 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
+      "evidence": "compiler temp mapped to 0x0214ea00 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @647 to @655 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821). Re-keyed from @655 to @596 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@658",
+      "from": "@599",
       "to": "data_ov102_0214e9e8",
-      "evidence": "compiler temp mapped to 0x0214e9e8 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @650 to @658 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821)."
+      "evidence": "compiler temp mapped to 0x0214e9e8 by the retail initializer relocation at the same pool offset; no bytes or relocations change; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @650 to @658 when func_ov102_0214b53c's position launders became Vector3 locals and its sin-table reads FX_SinIdx/FX_CosIdx (#821). Re-keyed from @658 to @599 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

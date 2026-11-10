@@ -79,7 +79,6 @@ int DSMT_SetPendingMusic(int musicId, unsigned int delayFrames);
 void DSMT_UpdateBootArgs(u32 saveSlot);
 int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
 int func_ov007_020b6eb4(void);
-void func_0203cbc0(void *buffer);
 void Enable3dEngines();
 int GetSoundMode(void);
 int IsStarCollected(int course, int star);
@@ -183,7 +182,7 @@ extern "C" u8 DSMT_MenuCallback(s32 command) {
     } else if (command == 18) {
         DSMT_SetPendingMusic(0x38, 8);
     } else if (command == 20) {
-        u8 *fileBytes = (u8 *)Memory::operator_new2(0xcc);
+        u8 *fileBytes = (u8 *)::operator new[](0xcc);
         u32 saveSlot;
         DSMT_SetFileBuffers((FileSaveData *)fileBytes);
         for (saveSlot = 0; (s32)saveSlot < 3; saveSlot++, fileBytes += 0x44) {
@@ -248,7 +247,7 @@ s32 dScDSMT_c::CleanupResources() {
     sBootArgs.bootFlags = func_ov007_020b6f4c();
     sBootArgs.status = 2;
     Sound::UnsetPlayerVoiceGroup();
-    func_0203cbc0(data_0209b33c);
+    ::operator delete[](data_0209b33c);
     data_0209b33c = 0;
     return 1;
 }

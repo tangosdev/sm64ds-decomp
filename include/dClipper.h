@@ -8,10 +8,6 @@
 
 struct Matrix4x3;
 #include "math/Fix12.h"
-namespace Memory {
-void operator_delete2(void *);
-}
-
 /* Same 0xc coordinate layout as Vector3, but deliberately POD. A Vector3[4]
  * member makes mwccarm emit __cxa_vec_cleanup in dClipper's D1/D0; the cartridge's
  * trivial destructors prove these plane records have no element destructor. */
@@ -63,12 +59,6 @@ struct dClipper {
     /* Name inferred from use: transform the position, then test the frustum
        with a scalar fixed-point sphere radius. No original name is known. */
     int TransformAndClip(Matrix4x3 &mat, Vector3 &srcVec, Fix12i radius, Vector3 &dstVec);
-
-    /* D0 calls 0x0203cbcc, Memory::operator_delete2, rather than the global
-       delete at 0x0203cbf0. Inline class lookup makes that choice exactly. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 };
 
 #endif
