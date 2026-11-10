@@ -1,10 +1,10 @@
 //cpp
 /* cstd::atan2(int, int) at 0x0203b4dc.
  *
- * N64 SM64's atan2s (src/engine/math_util.c) in fixed point with its two
+ * N64 SM64's atan2s (sm64/src/engine/math_util.c) in fixed point with its two
  * arguments swapped: atan2(a, b) here is atan2s(b, a) there. Each octant
  * indexes gArctanTable, the N64 table of 0x401 angles
- * (include/trig_tables.inc.c) copied byte for byte, at FX_Div(small, large) >> 2,
+ * (sm64/include/trig_tables.inc.c) copied byte for byte, at FX_Div(small, large) >> 2,
  * the same ratio * 1024 atan2_lookup takes.
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
