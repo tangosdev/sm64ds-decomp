@@ -2211,7 +2211,7 @@
     },
     "arm9:0x020160ac": {
       "author": "tangosdev",
-      "name": "_ZN17dExtCommonModel_c13Func_020160ACEj"
+      "name": "_ZN17dExtCommonModel_c16SetMaterialFlagsEj"
     },
     "arm9:0x02016104": {
       "author": "tangosdev",
@@ -2395,11 +2395,11 @@
     },
     "arm9:0x02016acc": {
       "author": "lplaat",
-      "name": "func_02016acc"
+      "name": "_ZN17dExtSimpleModel_c18ClearMaterialFlagsEj"
     },
     "arm9:0x02016b24": {
       "author": "tangosdev",
-      "name": "func_02016b24"
+      "name": "_ZN17dExtSimpleModel_c16SetMaterialFlagsEj"
     },
     "arm9:0x02016b78": {
       "author": "tangosdev",
@@ -8227,7 +8227,7 @@
     },
     "arm9:0x0204f278": {
       "author": "tangosdev",
-      "name": "_ZN12Elem_204f27813func_0204f278Ev"
+      "name": "func_0204f278"
     },
     "arm9:0x0204f2d4": {
       "author": "tangosdev",
@@ -8407,7 +8407,7 @@
     },
     "arm9:0x020500a4": {
       "author": "andrewboudreau",
-      "name": "_ZN1T13func_020500a4Ev"
+      "name": "func_020500a4"
     },
     "arm9:0x020501b8": {
       "author": "tangosdev",
@@ -41963,7 +41963,7 @@
     },
     "ov084:0x02129c9c": {
       "author": "tangosdev",
-      "name": "_ZN7daKrb_c19func_ov084_02129c9cEv"
+      "name": "_ZN7daKrb_c9BeginJumpEv"
     },
     "ov084:0x02129cf4": {
       "author": "andrewboudreau",
@@ -41979,19 +41979,19 @@
     },
     "ov084:0x0212a6f8": {
       "author": "tangosdev",
-      "name": "_ZN7daKrb_c19func_ov084_0212a6f8Ev"
+      "name": "_ZN7daKrb_c8ActPauseEv"
     },
     "ov084:0x0212a774": {
       "author": "lunavyqo",
-      "name": "_ZN7daKrb_c19func_ov084_0212a774Ev"
+      "name": "_ZN7daKrb_c9ActTumbleEv"
     },
     "ov084:0x0212aab0": {
       "author": "tangosdev",
-      "name": "_ZN7daKrb_c19func_ov084_0212aab0Ev"
+      "name": "_ZN7daKrb_c7ActJumpEv"
     },
     "ov084:0x0212ab48": {
       "author": "tangosdev",
-      "name": "_ZN7daKrb_c19func_ov084_0212ab48Ev"
+      "name": "_ZN7daKrb_c16ActAttackedMarioEv"
     },
     "ov084:0x0212abd4": {
       "author": "lunavyqo",
@@ -42003,7 +42003,7 @@
     },
     "ov084:0x0212b2dc": {
       "author": "tangosdev",
-      "name": "_ZN7daKrb_c19func_ov084_0212b2dcEv"
+      "name": "_ZN7daKrb_c7ActWalkEv"
     },
     "ov084:0x0212b30c": {
       "author": "andrewboudreau",

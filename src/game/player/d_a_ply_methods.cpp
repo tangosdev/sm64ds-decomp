@@ -20659,7 +20659,7 @@ int daPly_c::Render() {
    concretely -- `const int *`, `unsigned int`, `dExtSimpleModel_c *` -- while the header
    declares the same symbols with generic `void*`/`int`. Under `extern "C"`
    those are not compatible redeclarations but illegal overloads, so the file
-   did not compile AT ALL (errors on the MulMat3x3Mat3x3, func_02016acc and
+   did not compile AT ALL (errors on the MulMat3x3Mat3x3, ClearMaterialFlags and
    func_ov002_020e3e00 lines) for as long as the include was here -- which is
    why no gate ever noticed: an uncompilable file is dropped by all of them.
    Only two declarations were ever needed from the header; they are restated
@@ -20677,8 +20677,6 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
     extern int data_020a0e68[12];
     void func_0203c178(int *dst, int a, int b, int c);
     void MulMat3x3Mat3x3(int *dst, const int *a, const int *b);
-    void func_02016acc(void *obj, unsigned int mask);
-    void func_02016b24(void *obj, unsigned int mask);
     int ip = (gCurrentSublevel == 0x2f) ? 1 : 0;
 
     if (!ip) {
@@ -20714,12 +20712,12 @@ extern "C" void func_ov002_020e3e00(dExtSimpleModel_c *obj, Vector3 *vec, unsign
     func_0203c178(data_020a0e68, -0x1000, 0x1000, 0x1000);
     MulMat3x3Mat3x3((int*)src, data_020a0e68, (int*)src);
 
-    func_02016acc(obj, 0x80);
-    func_02016b24(obj, 0x40);
+    obj->ClearMaterialFlags(0x80);
+    obj->SetMaterialFlags(0x40);
     obj->dExtSimpleModel_c::Render(vec);
     obj->ApplyOpacity(opacity, 0);
-    func_02016b24(obj, 0x80);
-    func_02016acc(obj, 0x40);
+    obj->SetMaterialFlags(0x80);
+    obj->ClearMaterialFlags(0x40);
 
     *src = tmp;
 }

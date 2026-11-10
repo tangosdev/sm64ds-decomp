@@ -3816,5 +3816,5 @@ gMeterShownHealth kind:bss addr:0x0211117c
 gZoomButtonActiveTimer kind:bss addr:0x02111180
 gShowRaceTimer kind:bss addr:0x02111184
 data_ov002_02111188 kind:bss addr:0x02111188
-data_ov002_0211118c kind:bss addr:0x0211118c
+sNextDeathTableID kind:bss addr:0x0211118c
 data_ov002_02111190 kind:bss addr:0x02111190

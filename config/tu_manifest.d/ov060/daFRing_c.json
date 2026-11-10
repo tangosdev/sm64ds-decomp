@@ -683,17 +683,17 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@602",
+      "from": "@600",
       "to": "@543",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @540 per TU and ov080 daPicGate_c (on main) also defines a global @540, so the scratch link collides"
     },
     {
-      "from": "@604",
+      "from": "@602",
       "to": "@130",
       "evidence": "compiler-local destructor-registration node; mwcc numbers it @542 per TU and ov080 daPicGate_c (on main) also defines a global @542, so the scratch link collides; the first target @557 collides with ov064 daObjFl_Amilift_c's global @557 on main, so it lands on @130"
     },
     {
-      "from": "@603",
+      "from": "@601",
       "to": "@541",
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @556 now; licensed under the existing pin @541"
     }

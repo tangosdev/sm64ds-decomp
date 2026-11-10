@@ -7,6 +7,7 @@ addr	state	modules	config_names	config_kinds	verified_name	verified_kind	verdict
 0x02008c34	NO-SLOT	-	-	-	_ZN4cstd4finvEi	data	no-slot		
 0x0200e444	DIVERGED	arm9	Camera_Spawn	function	_ZN9dCamera_cC1Ev	function	plain		
 0x0201609c	DIVERGED	arm9	_ZN17dExtCommonModel_c12SetPolygonIDEj	function	_ZN17dExtCommonModel_c13Func_0201609CEj	function	identity
+0x020160ac	DIVERGED	arm9	_ZN17dExtCommonModel_c16SetMaterialFlagsEj	function	_ZN17dExtCommonModel_c13Func_020160ACEj	function	identity
 0x02017168	DIVERGED	arm9	_ZThn80_N14dExtAnmModel_cD0Ev	function	_ZThn80_N15dExtFrameCtrl_cD0Ev	function	identity
 0x02017178	DIVERGED	arm9	_ZThn80_N14dExtAnmModel_cD1Ev	function	_ZThn80_N15dExtFrameCtrl_cD1Ev	function	identity
 0x02017188	DIVERGED	arm9	_ZThn80_N19dExtBlendAnmModel_cD0Ev	function	_ZThn80_N15dExtFrameCtrl_cD0Ev	function	identity
@@ -425,7 +426,7 @@ addr	state	modules	config_names	config_kinds	verified_name	verified_kind	verdict
 0x02111180	CONFIG-PLACEHOLDER	ov002	data_ov002_02111180	bss	ZOOM_CAMERA_BUTTON_ACTIVE_TIMER	data	placeholder		
 0x02111184	CONFIG-PLACEHOLDER	ov002	data_ov002_02111184	bss	DISPLAY_TIMER	data	placeholder		
 0x02111188	CONFIG-PLACEHOLDER	ov002	data_ov002_02111188	bss	VS_MODE_TIMER_TIMER	data	placeholder		
-0x0211118c	CONFIG-PLACEHOLDER	ov002	data_ov002_0211118c	bss	NEXT_DEATH_TABLE_ID	data	placeholder		
+0x0211118c	DIVERGED	ov002	sNextDeathTableID	bss	NEXT_DEATH_TABLE_ID	data	plain		
 0x02132894	DIVERGED	ov006,ov089	__sinit_ov006_02132894;data_ov089_02132894	function;data	KEY_MODEL_PTRS	function	plain		
 0x02132c50	CONFIG-PLACEHOLDER	ov089	data_ov089_02132c50	bss	BOWSER_KEY_MODEL_PTR	data	placeholder		
 0x02148724	CONFIG-PLACEHOLDER	ov100	data_ov100_02148724	bss	DOOR_STAR_1_MODEL_PTR	data	placeholder		

@@ -59,8 +59,8 @@ enum d_s_mg_trampoline2_AssetId {
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
 #define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 
-/* P2, S2 and the forward declarations below are local stand-ins for types
- * that have no header yet (issue #2497). */
+/* The forward declarations below are local stand-ins for types that have
+ * no header yet (issue #2497). */
 
 /* The cartridge's ctor/dtor imports are the functions the wrapper's aliases
  * name. */
@@ -73,15 +73,6 @@ struct BMD_File;
 
 struct Vector3_16f;
 
-
-struct P2 {
-    int words[2];
-};
-
-union StateValue {
-    int words[2];
-    double asDouble;
-};
 
 struct Tbl {
     int a, b, c;
@@ -99,10 +90,6 @@ struct Trampoline2WaveDef {
     const short *angles;
     const short *itemTypes;
     const short *motionTypes;
-};
-
-struct S2 {
-    int words[2];
 };
 
 /* TUBUILD CONFLICT -- alternate body of struct 'dExtSimpleModel_c', from the legacy file for Trmp2Spinner_Destruct, NOT applied:
@@ -148,12 +135,9 @@ extern void func_0203cc28(int *vector, int angle);
 extern char *TrmpItem_Spawn(int resource, int *up, int variant, int face);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
-extern int pmf_dScMgTrampoline2_c_StateDone[];
 extern void TrmpItem_UpdateAll(void);
 extern int Trmp2Mario_Hide(void);
-extern union StateValue pmf_dScMgTrampoline2_c_StateWaitExit;
 extern void Trmp2Mario_EnterAll(void);
-extern struct P2 pmf_dScMgTrampoline2_c_StateResults;
 extern int sTrmpItemsHit;
 extern int sTrmp2Lives;
 extern int sTrmp2Score;
@@ -166,13 +150,11 @@ extern void Trmp2Mario_UpdateAll(void);
 extern void Trmp2Mario_SetTuning(int a);
 extern void Trmp2Mario_MoveToStart(void);
 extern void Trmp2Mario_PlaceAtStart(void);
-extern struct S2 pmf_dScMgTrampoline2_c_StatePlay;
 extern void TrmpLine_CreateStartLineT2(void);
 extern s16 sTrmp2IntroFromX;
 extern s16 sTrmp2IntroToX;
 extern s16 sTrmpStartTouchY;
 extern short sTrmpStartTouchX;
-extern struct P2 pmf_dScMgTrampoline2_c_StateIntro;
 extern void TrmpLine_ClearAll(u32 a);
 extern volatile s16 data_020a0dbc[];
 extern u8 gMainScreenLayers;
@@ -223,18 +205,6 @@ extern OamAttr *sMgTextSpritesItalian[];
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2GX10LoadBGPlttEPKvjj, from the legacy file for func_ov006_021245a8, NOT applied: extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b); */
 
 dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void);
-/* The four non-static state methods. A pointer-to-member initializer
-   (`&dScMgTrampoline2_c::StateIntro` and the same for StatePlay,
-   StateResults, StateWaitExit) was measured on this TU: the four symbols
-   move from .data to .bss (+0x20), and __sinit_d_s_mg_trampoline2.cpp grows
-   from 0x40 to 0xc0. .text stayed 0x2494. The ROM keeps these four in
-   .data, so the mangled externs stay. StateDone is static, so the
-   descriptor below names it directly. A pointer to member does not convert
-   to the int word a descriptor holds. */
-extern void _ZN18dScMgTrampoline2_c13StateWaitExitEv(void *); /* local extern: PMF -> int */
-extern void _ZN18dScMgTrampoline2_c12StateResultsEv(void *);  /* local extern: PMF -> int */
-extern void _ZN18dScMgTrampoline2_c9StatePlayEv(void *);      /* local extern: PMF -> int */
-extern void _ZN18dScMgTrampoline2_c10StateIntroEv(void *);    /* local extern: PMF -> int */
 
 /* Data owned by this production TU; the original TU grouping is inferred. */
 int sTrmp2TouchBlocked = 1;
@@ -243,12 +213,6 @@ BaseSpawnInfo<dScMgTrampoline2_c> g_profile_MG_TRAMPOLINE2 = {
     0x181,
     0x181,
 };
-int pmf_dScMgTrampoline2_c_StateDone[] = {(int)&dScMgTrampoline2_c::StateDone, 0};
-P2 pmf_dScMgTrampoline2_c_StateIntro = {{(int)_ZN18dScMgTrampoline2_c10StateIntroEv, 0}};
-StateValue pmf_dScMgTrampoline2_c_StateWaitExit = {
-    {(int)_ZN18dScMgTrampoline2_c13StateWaitExitEv, 0}};
-S2 pmf_dScMgTrampoline2_c_StatePlay = {{(int)_ZN18dScMgTrampoline2_c9StatePlayEv, 0}};
-P2 pmf_dScMgTrampoline2_c_StateResults = {{(int)_ZN18dScMgTrampoline2_c12StateResultsEv, 0}};
 Tbl sTrmp2SpinnerSpeeds = {0x600, 0xc00, 0xe00};
 int sTrmp2ScoreGates[] = {1000, 5000, 10000, 20000};
 int sTrmp2PuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int)sTrmpPuffFrench,
@@ -414,7 +378,7 @@ void dScMgTrampoline2_c::BeginIntro() {
     mTouchY = b;
     mDragSoundHandle = 0;
     mScoreGate = 0x3e8;
-    *(struct P2 *)mState = pmf_dScMgTrampoline2_c_StateIntro;
+    mState = &dScMgTrampoline2_c::StateIntro;
 }
 
 void dScMgTrampoline2_c::StateIntro() {
@@ -469,7 +433,7 @@ void dScMgTrampoline2_c::BeginPlay() {
     mInputEnabled = 1;
     /* The callee ignores r0; this + 0x7b00 lands mid-element in mScorePopups. */
     Trmp2Mario_PlaceAtStart();
-    *(struct S2 *)mState = pmf_dScMgTrampoline2_c_StatePlay;
+    mState = &dScMgTrampoline2_c::StatePlay;
 }
 
 void dScMgTrampoline2_c::StatePlay() {
@@ -554,7 +518,7 @@ void dScMgTrampoline2_c::StatePlay() {
 void dScMgTrampoline2_c::BeginResults() {
     Trmp2Mario_EnterAll();
     mTimer = 0x5a;
-    *(struct P2 *)mState = pmf_dScMgTrampoline2_c_StateResults;
+    mState = &dScMgTrampoline2_c::StateResults;
 }
 
 void dScMgTrampoline2_c::StateResults() {
@@ -567,7 +531,7 @@ void dScMgTrampoline2_c::StateResults() {
     Mg_SetSharedState(MG_STATE_GAME_OVER);
     mPromptEnabled = 0;
     mTimer = 0xb4;
-    *(double *)mState = pmf_dScMgTrampoline2_c_StateWaitExit.asDouble;
+    mState = &dScMgTrampoline2_c::StateWaitExit;
 }
 
 void dScMgTrampoline2_c::StateWaitExit() {
@@ -589,7 +553,7 @@ void dScMgTrampoline2_c::StateWaitExit() {
         MultiStore16(h, (char *)r, 0x6000);
     }
     mRoundOver = 1;
-    *(struct P2 *)mState = *(struct P2 *)pmf_dScMgTrampoline2_c_StateDone;
+    mState = &dScMgTrampoline2_c::StateDone;
 }
 
 void dScMgTrampoline2_c::StateDone() {}
@@ -830,10 +794,7 @@ s32 dScMgTrampoline2_c::Behavior() {
         trail->emitInterval = mRamp >> 12;
         ApproachLinear(mRamp, 0x14000, 0x200);
     }
-    {
-        State *pp = (State *)mState;
-        (this->**pp)();
-    }
+    (this->*mState)();
     UpdateTouchInput();
     if (saved != sTrmp2Score) {
         Mg_SubmitScore(sTrmp2Score);

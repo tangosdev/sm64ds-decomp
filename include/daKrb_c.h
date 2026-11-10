@@ -140,17 +140,20 @@ struct daKrb_c : dCapEnemy_c {
     void func_ov084_02129864();
     int func_ov084_021298d0();
     int func_ov084_02129a00();
-    void func_ov084_02129c9c();
+    /* Named for the N64 functions they port (n64decomp/sm64 goomba.inc.c,
+       names coined by that project); see d_a_krb.cpp. ActTumble and ActPause
+       have no N64 counterpart. */
+    void BeginJump();
     void func_ov084_02129cf4(Fix12i distThresh);
     void func_ov084_02129ed4();
-    void func_ov084_0212a6f8();
-    void func_ov084_0212a774();
-    void func_ov084_0212ab48();
+    void ActPause();
+    void ActTumble();
+    void ActAttackedMario();
     void func_ov084_0212abd4();
     void func_ov084_0212af74();
-    void func_ov084_0212b2dc();
+    void ActWalk();
     void func_ov084_0212a580();
-    void func_ov084_0212aab0();
+    void ActJump();
 
     /* Size class, stored in mGoombaType by InitResources from the actor id
        (KURIBO_S 201 -> 0, KURIBO 200 -> 1, KURIBO_L 202 -> 2). Type 3 is the
@@ -168,13 +171,22 @@ struct daKrb_c : dCapEnemy_c {
 
     /* mState indexes the five-entry record table data_ov084_02130d74 that
        __sinit_ov084_0213035c fills in this order; Behavior calls the record's
-       pointer-to-member. The names say what each handler does. */
+       pointer-to-member. States 0..2 are the N64 Goomba's GOOMBA_ACT_WALK,
+       ATTACKED_MARIO and JUMP, with the same values; 3 and 4 are DS-only. */
     enum State {
-        STATE_WALK = 0,       /* func_ov084_0212b2dc: wander, chase, or (minion) follow the king */
-        STATE_HOP_START = 1,  /* func_ov084_0212ab48: start a hop (-> STATE_AIRBORNE); set by func_ov084_02129ed4 when the Goomba touches the player in STATE_WALK */
-        STATE_AIRBORNE = 2,   /* func_ov084_0212aab0: in the air, turning toward mTargetAngleY */
-        STATE_TUMBLE = 3,     /* func_ov084_0212a774: thrown clear (func_ov084_02129168) after the cap came off or a Yoshi-held Goomba landed */
-        STATE_PAUSE = 4       /* func_ov084_0212a6f8: stand still until mWanderRerollTimer runs out; nothing in this TU enters it */
+        /* ActWalk: wander, chase, or (minion) follow the king */
+        STATE_WALK = 0,
+        /* ActAttackedMario: start a hop (-> STATE_JUMP); set by
+           func_ov084_02129ed4 when the Goomba touches the player in STATE_WALK */
+        STATE_ATTACKED_MARIO = 1,
+        /* ActJump: in the air, turning toward mTargetAngleY */
+        STATE_JUMP = 2,
+        /* ActTumble: thrown clear (func_ov084_02129168) after the cap came off
+           or a Yoshi-held Goomba landed */
+        STATE_TUMBLE = 3,
+        /* ActPause: stand still until mWanderRerollTimer runs out; nothing in
+           this TU enters it */
+        STATE_PAUSE = 4
     };
 
     /* mRewardType, from bits 4..7 of the spawn parameter. Types 1 and 2 both

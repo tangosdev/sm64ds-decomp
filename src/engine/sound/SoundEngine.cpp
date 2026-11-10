@@ -412,7 +412,7 @@ extern int func_0204f138(unsigned int mask);
 extern void func_0204f15c(void *node);
 extern int func_0204f194(unsigned int a);
 extern void func_0204f1e8(void);
-extern void func_0204f278(Elem_204f278 *);
+extern void func_0204f278(void *mem, u32 size, u32 data1, u32 data2);
 extern void func_0204f2d4(NNSSndSeqPlayer *obj);
 extern char* func_0204f364(int key);
 extern void func_0204f3e0(unsigned char *c);
@@ -442,7 +442,7 @@ extern void func_0204ff9c(struct C *o);
 extern void func_0204ffcc(char *self);
 extern void func_02050008(struct C *o);
 extern void func_02050038(void *arg);
-extern void func_020500a4(struct T *);
+extern void func_020500a4(void *arg);
 extern void func_020501b8(void);
 extern void func_02050258(void);
 extern void func_020502b8(void);
@@ -1582,8 +1582,7 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
         SND_SetupChannelPcm(3, fmt1, (void *)c, pp8 != 0 ? 1 : 2, 0, qlen, pp10, 0, align, p12);
         SND_SetupCapture(1, fmt2, (void *)c, qlen, pp8, p6, p7);
         if (handle >= 0) {
-            ((void (*)(int a, int b, int c, int d, void *e))SND_SetupAlarm)(
-                handle, total + chunk, total, (int)func_020500a4, g);
+            SND_SetupAlarm(handle, total + chunk, total, func_020500a4, g);
         }
         if (a == 1) {
             SND_SetOutputSelector(3, 3, 1, 1);
@@ -1675,15 +1674,16 @@ extern "C" void func_020501b8(void)
     }
 }
 
-extern "C" void func_020500a4(struct T *self) {
-    int quot = self->f14 / self->f2c;
-    int prod = quot * self->f18;
-    int e6 = self->fc + prod;
-    int e5 = self->f10 + prod;
+extern "C" void func_020500a4(void *arg) {
+    struct T *strm = (struct T *)arg;
+    int quot = strm->f14 / strm->f2c;
+    int prod = quot * strm->f18;
+    int e6 = strm->fc + prod;
+    int e5 = strm->f10 + prod;
 
     if (data_020a55fc != 0) {
         struct Q *slot = &data_020a5718[data_020a55f8];
-        slot->f0 = self;
+        slot->f0 = strm;
         slot->f4 = quot;
         slot->f8 = prod;
         slot->fc = e6;
@@ -1694,14 +1694,11 @@ extern "C" void func_020500a4(struct T *self) {
     } else {
         CP15::InvalidateDataCache(e6, quot);
         CP15::InvalidateDataCache(e5, quot);
-        self->f30(e6, e5, quot, self->f8, self->f34);
+        strm->f30(e6, e5, quot, strm->f8, strm->f34);
     }
-    {
-        int *pf18 = (int *)((int)&self->f18);
-        *pf18 = *pf18 + 1;
-        if (self->f18 >= self->f2c)
-            self->f18 = 0;
-    }
+    strm->f18++;
+    if (strm->f18 >= strm->f2c)
+        strm->f18 = 0;
 }
 
 extern "C" void func_02050038(void *arg) {
@@ -2221,17 +2218,18 @@ extern "C" void func_0204f2d4(NNSSndSeqPlayer *obj) {
     obj->status = 0;
 }
 
-extern "C" void func_0204f278(struct Elem_204f278 *self) {
-    int *p = self->heap;
+extern "C" void func_0204f278(void *mem, u32 size, u32 data1, u32 data2) {
+    Elem_204f278 *ph = (Elem_204f278 *)mem;
+    int *p = ph->heap;
     if (p == 0) return;
     func_020512f0(p);
-    NNSSndSeqPlayer *q = self->player;
+    NNSSndSeqPlayer *q = ph->player;
     if (q != 0) {
         q->heap = 0;
         return;
     }
-    int idx = self->playerIndex;
-    data_020a4d6c[idx].mLists[1].Remove((HeapAllocator *)(self));
+    int idx = ph->playerIndex;
+    data_020a4d6c[idx].mLists[1].Remove((HeapAllocator *)(ph));
 }
 
 void HeapAllocator_204f460::func_0204f214(int b) {

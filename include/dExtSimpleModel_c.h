@@ -74,6 +74,10 @@ struct dExtSimpleModel_c : dExtModel_c {
     void HideMaterial(int boneID, int listIdx);
     void ShowMaterial(int boneID, int listIdx);
     void SetPolygonID(int id);
+    /* ANDs ~mask / ORs mask into the flags of every material. The parameters
+       stay unnamed: a named parameter here renumbers every consumer's @NNN. */
+    void ClearMaterialFlags(u32);
+    void SetMaterialFlags(u32);
     void SetPolygonMode(int mode);
     void LoadAndSetFile(u16 ov0ID, int a, int b);
 

@@ -13055,11 +13055,6 @@
         "arity:2"
       ]
     },
-    "func_02016acc": {
-      "include/decl_common.h": [
-        "param:#2 int"
-      ]
-    },
     "func_02017060": {
       "src/unnamed/arm9/0201/func_02016ff4.cpp": [
         "return:int"

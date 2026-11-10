@@ -141,7 +141,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "_ZN7daKrb_c19func_ov084_02129c9cEv",
+      "symbol": "_ZN7daKrb_c9BeginJumpEv",
       "address": "0x02129c9c",
       "size": "0x00000058",
       "legacy_source": "src/func_ov084_02129c9c.c",
@@ -169,28 +169,28 @@
       "ordinal": 16
     },
     {
-      "symbol": "_ZN7daKrb_c19func_ov084_0212a6f8Ev",
+      "symbol": "_ZN7daKrb_c8ActPauseEv",
       "address": "0x0212a6f8",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov084_0212a6f8.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN7daKrb_c19func_ov084_0212a774Ev",
+      "symbol": "_ZN7daKrb_c9ActTumbleEv",
       "address": "0x0212a774",
       "size": "0x0000033c",
       "legacy_source": "src/func_ov084_0212a774.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN7daKrb_c19func_ov084_0212aab0Ev",
+      "symbol": "_ZN7daKrb_c7ActJumpEv",
       "address": "0x0212aab0",
       "size": "0x00000098",
       "legacy_source": "src/func_ov084_0212aab0.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN7daKrb_c19func_ov084_0212ab48Ev",
+      "symbol": "_ZN7daKrb_c16ActAttackedMarioEv",
       "address": "0x0212ab48",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov084_0212ab48.c",
@@ -211,7 +211,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "_ZN7daKrb_c19func_ov084_0212b2dcEv",
+      "symbol": "_ZN7daKrb_c7ActWalkEv",
       "address": "0x0212b2dc",
       "size": "0x00000030",
       "legacy_source": "src/func_ov084_0212b2dc.c",
@@ -301,35 +301,35 @@
       "address": "0x021308ac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF literal {code address, 0} for the &daKrb_c:: entry of data_ov084_02130d74's initializer; its first word relocates to func_ov084_0212a774 (the STATE_TUMBLE handler)"
+      "evidence": "compiler PMF literal {code address, 0} for the &daKrb_c:: entry of data_ov084_02130d74's initializer; its first word relocates to daKrb_c::ActTumble (the STATE_TUMBLE handler)"
     },
     {
       "symbol": "krbStateDesc_HopStart",
       "address": "0x021308b4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF literal {code address, 0} for the &daKrb_c:: entry of data_ov084_02130d74's initializer; its first word relocates to func_ov084_0212ab48 (the STATE_HOP_START handler)"
+      "evidence": "compiler PMF literal {code address, 0} for the &daKrb_c:: entry of data_ov084_02130d74's initializer; its first word relocates to daKrb_c::ActAttackedMario (the STATE_ATTACKED_MARIO handler)"
     },
     {
       "symbol": "krbStateDesc_Walk",
       "address": "0x021308bc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF literal {code address, 0} for the &daKrb_c:: entry of data_ov084_02130d74's initializer; its first word relocates to func_ov084_0212b2dc (the STATE_WALK handler)"
+      "evidence": "compiler PMF literal {code address, 0} for the &daKrb_c:: entry of data_ov084_02130d74's initializer; its first word relocates to daKrb_c::ActWalk (the STATE_WALK handler)"
     },
     {
       "symbol": "@1954",
       "address": "0x021308c4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKrb_c19func_ov084_0212aab0Ev (the STATE_AIRBORNE handler)"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN7daKrb_c7ActJumpEv (the STATE_JUMP handler)"
     },
     {
       "symbol": "krbStateDesc_Pause",
       "address": "0x021308cc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler PMF literal {code address, 0} for the &daKrb_c:: entry of data_ov084_02130d74's initializer; its first word relocates to func_ov084_0212a6f8 (the STATE_PAUSE handler)"
+      "evidence": "compiler PMF literal {code address, 0} for the &daKrb_c:: entry of data_ov084_02130d74's initializer; its first word relocates to daKrb_c::ActPause (the STATE_PAUSE handler)"
     },
     {
       "symbol": "_ZTS7daKrb_c",
@@ -1221,7 +1221,7 @@
       "source": "0x021308ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKrb_c19func_ov084_0212a774Ev",
+      "symbol": "_ZN7daKrb_c9ActTumbleEv",
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x0212a774"
@@ -1231,7 +1231,7 @@
       "source": "0x021308b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKrb_c19func_ov084_0212ab48Ev",
+      "symbol": "_ZN7daKrb_c16ActAttackedMarioEv",
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x0212ab48"
@@ -1241,7 +1241,7 @@
       "source": "0x021308bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKrb_c19func_ov084_0212b2dcEv",
+      "symbol": "_ZN7daKrb_c7ActWalkEv",
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x0212b2dc"
@@ -1251,7 +1251,7 @@
       "source": "0x021308c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKrb_c19func_ov084_0212aab0Ev",
+      "symbol": "_ZN7daKrb_c7ActJumpEv",
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x0212aab0"
@@ -1261,7 +1261,7 @@
       "source": "0x021308cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN7daKrb_c19func_ov084_0212a6f8Ev",
+      "symbol": "_ZN7daKrb_c8ActPauseEv",
       "addend": 0,
       "target_module": "ov084",
       "target_address": "0x0212a6f8"

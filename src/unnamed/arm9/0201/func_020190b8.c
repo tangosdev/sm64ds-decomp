@@ -1,7 +1,5 @@
 #include "types.h"
-
-/* local define: as src/engine/view/Graphics3D.cpp spells it */
-#define REG_SWAP_BUFFERS (*(volatile u32 *)0x04000540)
+#include "nitro/hw/registers.h"
 
 extern int func_02019018(void);
 extern unsigned char data_0209d464;

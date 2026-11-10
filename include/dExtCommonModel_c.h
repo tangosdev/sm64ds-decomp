@@ -26,11 +26,11 @@
  * mat4x3 landing at +0xc is what pins the components as a pointer here and
  * rules the embedded struct out of dExtModel_c.
  *
- * Func_020160AC keeps its placeholder name for now, but
- * its body is the material-flag OR pass, called from DoSetFile exactly
- * where dExtSimpleModel_c::DoSetFile calls its counterpart; it waits for a
- * human-approved name. SetPolygonID's rename had airtight evidence:
- * identical callee, identical call position.
+ * SetPolygonID and SetMaterialFlags are named from their dExtSimpleModel_c
+ * counterparts. SetPolygonID has the identical callee in the identical call
+ * position. SetMaterialFlags is the same material-flag OR pass, called from
+ * DoSetFile at the point where dExtSimpleModel_c::DoSetFile calls its own,
+ * with the same 0x8000 mask.
  */
 
 struct dExtCommonModel_c : dExtModel_c {
@@ -60,7 +60,7 @@ struct dExtCommonModel_c : dExtModel_c {
     /* --- non-virtual --- */
     void Render(const Vector3 *scale);
     void SetPolygonID(u32 id);
-    void Func_020160AC(u32 flags); /* ORs flags into every material */
+    void SetMaterialFlags(u32 flags); /* ORs flags into every material */
 };
 
 #ifndef SM64DS_PLATFORM_PC

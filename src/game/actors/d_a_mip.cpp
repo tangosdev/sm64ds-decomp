@@ -97,8 +97,6 @@ u8 NumStars(void);
 int func_02013890(int, int);
 void func_02013944(void);
 void func_02012694(unsigned int id, const Vector3 *pos);
-void func_02016acc(void *, unsigned int);
-void func_02016b24(void *, unsigned int);
 void  func_0203c178(void *, int, int, int);
 
 }
@@ -1176,12 +1174,12 @@ void daMip_c::RenderMirrorImage()
     mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
     MulMat3x3Mat3x3(&mAnmModel.mat4x3, &data_020a0e68, &mAnmModel.mat4x3);
-    func_02016acc(&mAnmModel, 0x80);
-    func_02016b24(&mAnmModel, 0x40);
+    mAnmModel.ClearMaterialFlags(0x80);
+    mAnmModel.SetMaterialFlags(0x40);
     mAnmModel.dExtAnmModel_c::Render(&mScale);
     mAnmModel.ApplyOpacity(0xff, 0);
-    func_02016b24(&mAnmModel, 0x80);
-    func_02016acc(&mAnmModel, 0x40);
+    mAnmModel.SetMaterialFlags(0x80);
+    mAnmModel.ClearMaterialFlags(0x40);
     *(Mtx43 *)&mAnmModel.mat4x3 = tmp;
 }
 

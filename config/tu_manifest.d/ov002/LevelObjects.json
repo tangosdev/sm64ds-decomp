@@ -324,7 +324,7 @@
     ],
     "bss": [
       {
-        "symbol": "data_ov002_0211118c",
+        "symbol": "sNextDeathTableID",
         "address": "0x0211118c",
         "note": "the spawn-order / death-table counter; written by dScStage_c::LoadClsnAndObjects, LoadStandardObjects and LoadSimpleObjects, all inside this TU"
       }
