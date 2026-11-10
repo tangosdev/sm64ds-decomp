@@ -28,6 +28,10 @@ typedef struct NNSFndList {
     u16 offset;
 } NNSFndList;
 
+#ifndef SM64DS_PLATFORM_PC
+typedef char NNSFndList_size_must_be_0xc[sizeof(NNSFndList) == 0xc ? 1 : -1];
+#endif
+
 /* The header every fnd heap starts with; childList holds the heaps carved
  * out of this one, linked through their own `link'. */
 typedef struct NNSiFndHeapHead {
