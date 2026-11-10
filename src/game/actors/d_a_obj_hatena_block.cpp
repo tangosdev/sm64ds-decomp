@@ -648,7 +648,7 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
 
     b0 = (mFlags & 8) ? 1 : 0;
     if (b0 != 0) {
-        b1 = (*(volatile unsigned char *)&gGameMode == 1) ? 1 : 0;
+        b1 = (gGameMode == 1) ? 1 : 0;
         if (b1 == 0) goto skipcall;
     }
     mFloorY = GetFloorY();
