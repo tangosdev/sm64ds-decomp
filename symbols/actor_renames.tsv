@@ -9725,3 +9725,9 @@ arm9	0x0209a330	data_0209a330	__files	MSL ansi_files.c __files (3 console FILEs,
 arm9	0x0209a624	data_0209a624	random_next	MSL ansi_files.c __files (3 console FILEs, 0x4c each) and rand.c random_next (seed, initialised 1)
 arm9	0x020994e0	data_020994e0	gArctanTable	N64 SM64 gArctanTable (include/trig_tables.inc.c): all 0x401 s16 entries byte-identical
 ov074	0x02121a4c	func_ov074_02121a4c	_ZN12daKuriKing_c8PlayAnimEi	daKuriKing_c::PlayAnim: the (char *self, int idx) helper is a member; the (char*,int,int) cast call's r2 was mSubState's zero, not an argument
+ov102	0x0214bd20	func_ov102_0214bd20	_ZN7daBmb_c19func_ov102_0214bd20Ev	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
+ov102	0x0214bc20	func_ov102_0214bc20	_ZN7daBmb_c19func_ov102_0214bc20Ev	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
+ov102	0x0214baa0	func_ov102_0214baa0	_ZN7daBmb_c19func_ov102_0214baa0Ev	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
+ov102	0x0214b384	func_ov102_0214b384	_ZN7daBmb_c19func_ov102_0214b384Ej	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
+ov102	0x0214ae1c	func_ov102_0214ae1c	_ZN7daBmb_c19func_ov102_0214ae1cEv	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
+ov102	0x0214ad14	func_ov102_0214ad14	_ZN7daBmb_c19func_ov102_0214ad14Ev	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument

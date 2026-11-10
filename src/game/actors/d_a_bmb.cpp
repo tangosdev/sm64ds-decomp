@@ -18,9 +18,10 @@
  *   come from extern "C" file-scope declarations (this block, Sound.h,
  *   CalcLib.h): a block-scope extern inside a member gets C++ linkage and the
  *   module stops linking.
- * - func_ov102_0214ad14, 0214ae1c and 0214b384 are called from other overlays,
- *   so those labels stay. data_ov102_* are the file handles; SharedFilePtr
- *   has no fields, so the loaded BCA is still the word at +4.
+ * - func_ov102_0214ad14, 0214ae1c and 0214b384 are called from other overlays
+ *   too, as members on a Bob-omb the caller holds or spawned.
+ * - data_ov102_* are the file handles; SharedFilePtr has no fields, so the
+ *   loaded BCA is still the word at +4.
  * - func_0203568c / func_02035684 are the out-of-line stores of
  *   mWithMeshClsn.mRadius / mHeight. Inlining them drops the call.
  * - func_ov102_0214b53c keeps the volatile stack pins and reads the eating
@@ -85,13 +86,6 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
  * C++-named member, which cannot declare it in its own body.
  * ------------------------------------------------------------------------ */
 extern "C" {
-
-/* -- this TU's own free functions, forward-declared because mwcc lays .text
-      down in reverse source order and every one of these calls is a forward
-      reference. */
-void  func_ov102_0214ae1c(void *self);
-void  func_ov102_0214b384(void *self, unsigned int level);
-void  func_ov102_0214baa0(char *self);
 
 /* -- other modules -- */
 void  GiveCoins(int who, int count);
@@ -235,7 +229,7 @@ int daBmb_c::Behavior()
     void *other;
 
     if (mDetonate != 0) {
-        func_ov102_0214ae1c(this);
+        func_ov102_0214ae1c();
         return 1;
     }
     if (func_ov102_0214ab1c()) {
@@ -248,7 +242,7 @@ int daBmb_c::Behavior()
     killResult = UpdateKillByInvincibleChar(mWithMeshClsn, mAnmModel, 0);
     if (killResult != 0) {
         if (killResult == 2) {
-            func_ov102_0214ae1c(this);
+            func_ov102_0214ae1c();
         }
         return 1;
     }
@@ -297,7 +291,7 @@ int daBmb_c::Behavior()
 
             if (mWithMeshClsn.IsOnGround()) {
                 if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4))) {
-                    func_ov102_0214ae1c(this);
+                    func_ov102_0214ae1c();
                     return 1;
                 }
                 if (mWithMeshClsn.IsOnWall() && mState == 0) {
@@ -313,7 +307,7 @@ int daBmb_c::Behavior()
 
         if (mdCc_c.otherOwner != 0) {
             if ((mdCc_c.hitFlags & 0x4000) != 0) {
-                func_ov102_0214b384(this, 4);
+                func_ov102_0214b384(4);
             }
             if (mState == 4) {
                 unsigned char b = mVariant;
@@ -323,7 +317,7 @@ int daBmb_c::Behavior()
                         int flag2 = ((dActor_c *)other)->actorID;
                         flag2 = flag2 == 0xbd;
                         if (flag2 != false) {
-                            func_ov102_0214b384(this, 2);
+                            func_ov102_0214b384(2);
                             mdCc_c.flags |= 0x4000;
                         }
                     }
@@ -513,19 +507,14 @@ void daBmb_c::func_ov102_0214bd90(){
 /* ==========================================================================
  * ======================================================================== */
 
-extern "C" {
-
-void func_ov102_0214bd20(char *c) {
-    daBmb_c *self = (daBmb_c *)c;
-
-    self->mState = 3;
-    self->mVertAccel = 0;
-    self->mHorzSpeed = 0;
-    self->mAnmModel.SetAnim((BCA_File *)gBmbCarryAnimFile.filePtr, 0, 0x1000, 0);
-    func_ov102_0214b384(c, 0x96);
-    self->mdCc_c.flags |= 2;
-    self->mdCc_c.flags &= ~4;
-}
+void daBmb_c::func_ov102_0214bd20() {
+    mState = 3;
+    mVertAccel = 0;
+    mHorzSpeed = 0;
+    mAnmModel.SetAnim((BCA_File *)gBmbCarryAnimFile.filePtr, 0, 0x1000, 0);
+    func_ov102_0214b384(0x96);
+    mdCc_c.flags |= 2;
+    mdCc_c.flags &= ~4;
 }
 
 /* ==========================================================================
@@ -581,24 +570,22 @@ typedef struct { int v[4]; } Quad;
    horizontal, then vertical. */
 extern "C" Quad data_ov102_0214e514 = {{0x28000, 0x28000, 0x50000, 0x28000}};
 extern "C" Quad data_ov102_0214e524 = {{0xa000, 0xa000, 0x1a000, 0xa000}};
+}
 
-void func_ov102_0214bc20(char *c) {
-    daBmb_c *self = (daBmb_c *)c;
-
+void daBmb_c::func_ov102_0214bc20() {
     Quad a1 = data_ov102_0214e514;
     Quad a2 = data_ov102_0214e524;
-    daPly_c *p = self->mCarrier;
+    daPly_c *p = mCarrier;
     int idx = 0;
     if (p != 0) {
         idx = p->param1;
         if ((unsigned)idx > 4) idx = 4;
     }
-    self->mHorzSpeed = a1.v[idx];
-    self->mVertSpeed = a2.v[idx];
-    self->mState = 4;
-    self->mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
-    self->mVertAccel = -0x2000;
-}
+    mHorzSpeed = a1.v[idx];
+    mVertSpeed = a2.v[idx];
+    mState = 4;
+    mAnmModel.SetAnim((BCA_File *)gBmbWalkAnimFile.filePtr, 0, 0x1000, 0);
+    mVertAccel = -0x2000;
 }
 
 /* ==========================================================================
@@ -613,69 +600,60 @@ int daBmb_c::State4() {
         int r = mWithMeshClsn.IsOnWall();
         if (r == 0) return r;
     }
-    func_ov102_0214b384(this, 4);
+    func_ov102_0214b384(4);
     mHorzSpeed = 0;
     return 0;
 }
 
 /* Void on purpose. An int return keeps r0 live, so the final param1 = 0
    lands in r1 and the function no longer matches. */
-extern "C" {
-
-void func_ov102_0214baa0(char *raw)
-{
-    extern void func_0203568c(int *value, int target);
-    extern void func_02035684(int *value, int target);
-
-    daBmb_c *self = (daBmb_c *)raw;
+void daBmb_c::func_ov102_0214baa0() {
     u8 variant;
 
-    self->mFlags &= ~0x10000000;
-    variant = self->mVariant;
+    mFlags &= ~0x10000000;
+    variant = mVariant;
     if (!(variant < 2 || variant == 5)) {
-        self->KillAndTrackInDeathTable();
+        KillAndTrackInDeathTable();
         return;
     }
 
-    self->mState = 5;
-    self->mHorzSpeed = 0;
-    self->mdCc_c.Clear();
+    mState = 5;
+    mHorzSpeed = 0;
+    mdCc_c.Clear();
 
-    self->mFlags &= 0xfff1fffe;
-    self->mPosX = self->mHomePosX;
-    self->mPosY = self->mHomePosY;
-    self->mPosZ = self->mHomePosZ;
-    self->mShouldRender = 0;
-    self->mChasePlayer = 0;
-    self->mCarrier = 0;
-    self->mFuse = 0;
-    self->mScaleX = 0x1000;
-    self->mScaleY = 0x1000;
-    self->mScaleZ = 0x1000;
-    self->mAngleX = 0;
-    self->mAngleY = 0;
-    self->mAngleZ = 0;
-    self->mPrevAngleX = 0;
-    self->mPrevAngleY = 0;
-    self->mPrevAngleZ = 0;
+    mFlags &= 0xfff1fffe;
+    mPosX = mHomePosX;
+    mPosY = mHomePosY;
+    mPosZ = mHomePosZ;
+    mShouldRender = 0;
+    mChasePlayer = 0;
+    mCarrier = 0;
+    mFuse = 0;
+    mScaleX = 0x1000;
+    mScaleY = 0x1000;
+    mScaleZ = 0x1000;
+    mAngleX = 0;
+    mAngleY = 0;
+    mAngleZ = 0;
+    mPrevAngleX = 0;
+    mPrevAngleY = 0;
+    mPrevAngleZ = 0;
 
     {
-        s16 angle = *(s16 *)&self->mHomeAngleY;
-        self->mAngleY = angle;
-        s16 copy = self->mAngleY;
-        self->mPrevAngleY = copy;
+        s16 angle = *(s16 *)&mHomeAngleY;
+        mAngleY = angle;
+        s16 copy = mAngleY;
+        mPrevAngleY = copy;
     }
 
-    self->mdCc_c.flags &= ~0x4002;
-    self->mdCc_c.flags |= 4;
-    self->mdCc_c.radius = 0x3c000;
-    self->mdCc_c.height = 0x50000;
+    mdCc_c.flags &= ~0x4002;
+    mdCc_c.flags |= 4;
+    mdCc_c.radius = 0x3c000;
+    mdCc_c.height = 0x50000;
 
-    func_0203568c((int *)&self->mWithMeshClsn, 0x32000);
-    func_02035684((int *)&self->mWithMeshClsn, 0x32000);
-    self->param1 = 0;
-}
-
+    func_0203568c((int *)&mWithMeshClsn, 0x32000);
+    func_02035684((int *)&mWithMeshClsn, 0x32000);
+    param1 = 0;
 }
 
 /* ==========================================================================
@@ -720,7 +698,7 @@ void daBmb_c::func_ov102_0214b988() {
     if (AngleDiff(Vec3_HorzAngle(&mPos, &v), mAngleY) >= mNoticeAngle)
         return;
     mChasePlayer = pl;
-    func_ov102_0214b384(this, 0x96);
+    func_ov102_0214b384(0x96);
 }
 
 /* ==========================================================================
@@ -880,8 +858,6 @@ void daBmb_c::UpdateShadow() {
 extern "C" {
 
 void daBmb_c::func_ov102_0214b3f0(int a1) {
-    extern void func_ov102_0214bd20(void *c);
-
     unsigned int v = mState - 3;
     if (v <= 1u) return;
     unsigned short h = mFuse;
@@ -889,7 +865,7 @@ void daBmb_c::func_ov102_0214b3f0(int a1) {
     if (h != 0u) return;
 do_call:
     mCarrier = (daPly_c *)a1;
-    func_ov102_0214bd20(this);
+    func_ov102_0214bd20();
 }
 
 }
@@ -900,11 +876,9 @@ do_call:
 extern "C" {
 
 void daBmb_c::func_ov102_0214b3b8() {
-    extern void func_ov102_0214bc20(void *c);
-
     if (mState != 3)
         return;
-    func_ov102_0214bc20(this);
+    func_ov102_0214bc20();
     mPrevAngleY = mCarrier->mAngleY;
     mCarrier = 0;
 }
@@ -913,20 +887,15 @@ void daBmb_c::func_ov102_0214b3b8() {
 /* ==========================================================================
  *
  * CALLED FROM OUTSIDE THIS TU: ov078 0x0212519c, and ov102's own
- * daObjHatenaBlock_c run at 0x02149278.  It keeps external linkage.
+ * daObjHatenaBlock_c run at 0x02149278.
  * ======================================================================== */
 
-extern "C" {
-
-void func_ov102_0214b384(void *arg0, unsigned int arg1) {
-    daBmb_c *self = (daBmb_c *)arg0;
-    unsigned int cur = self->mFuse;
-    if (cur == 0 || cur > arg1) {
-        self->mFuse = (unsigned short)arg1;
+void daBmb_c::func_ov102_0214b384(unsigned int count) {
+    unsigned int cur = mFuse;
+    if (cur == 0 || cur > count) {
+        mFuse = (unsigned short)count;
     }
-    self->mFlags &= ~1u;
-}
-
+    mFlags &= ~1u;
 }
 
 /* ==========================================================================
@@ -947,7 +916,7 @@ int daBmb_c::UpdateFuse() {
         if (st != 0 && st <= 4) {
             mdCc_c.flags &= ~0x8000;
             if (mFuse == 1) {
-                func_ov102_0214ae1c(this);
+                func_ov102_0214ae1c();
                 return 0;
             }
             {
@@ -992,7 +961,7 @@ void daBmb_c::func_ov102_0214b128() {
     }
     t = mdCc_c.hitFlags;
     if (t & 0x40000) {
-        func_ov102_0214b384(this, 4);
+        func_ov102_0214b384(4);
         return;
     }
     if (!(t & 0x380)) return;
@@ -1002,7 +971,7 @@ void daBmb_c::func_ov102_0214b128() {
     {
         dActor_c *hitter = dActor_c::FindWithID(mdCc_c.otherOwner);
         if (!hitter) return;
-        func_ov102_0214bc20((char *)this);
+        func_ov102_0214bc20();
         mPrevAngleY = hitter->mAngleY;
         UpdatePos(&mdCc_c);
         mWithMeshClsn.ClearGroundFlag();
@@ -1042,69 +1011,61 @@ void daBmb_c::func_ov102_0214b03c() {
 
 /* ==========================================================================
  *
- * CALLED FROM OUTSIDE THIS TU: ov014 0x021122c0 and ov098 0x0213ad80.  It
- * keeps external linkage.
+ * CALLED FROM OUTSIDE THIS TU: ov014 0x021122c0 and ov098 0x0213ad80.
  * ======================================================================== */
 
-extern "C" {
-
-void func_ov102_0214ae1c(void *cv) {
-    extern void d_a_bmbNewSimpleHold(unsigned int id, int x, int y, int z);
-
-    daBmb_c *self = (daBmb_c *)cv;
+void daBmb_c::func_ov102_0214ae1c() {
     Vector3 v;
     int y, z, w;
-    self->mdCc_c.flags &= ~0x8000;
-    y = self->mPosY;
-    z = self->mPosZ;
+    mdCc_c.flags &= ~0x8000;
+    y = mPosY;
+    z = mPosZ;
     w = y + 0x78000;
-    v.x = self->mPosX;
+    v.x = mPosX;
     v.y = w;
     v.z = z;
-    if (self->mCoinType) {
-        dActor_c::Spawn(0x120, 2, v, 0, self->mAreaId, -1);
-        self->mCoinType = 0;
+    if (mCoinType) {
+        dActor_c::Spawn(0x120, 2, v, 0, mAreaId, -1);
+        mCoinType = 0;
     }
-    func_0201267c(0x10c, &self->mCamSpacePos);
-    v.y = self->mPosY + 0x64000;
+    func_0201267c(0x10c, &mCamSpacePos);
+    v.y = mPosY + 0x64000;
     Particle::System::NewSimple(kPtclBobOmbExplodeA, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeB, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeC, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeD, v.x, v.y, v.z);
     Particle::System::NewSimple(kPtclBobOmbExplodeE, v.x, v.y, v.z);
-    func_ov002_020ef228(&self->mWithMeshClsn, self);
-    if (self->mCarrier) {
+    func_ov002_020ef228(&mWithMeshClsn, this);
+    if (mCarrier) {
         Vector3 w;
-        self->mCarrier->DropActor();
-        w.x = self->mPosX;
-        w.y = self->mPosY;
-        w.z = self->mPosZ;
-        self->mCarrier->Hurt(w, 2, 0xc000, 1, 0, 1);
-        self->mCarrier = 0;
-    } else if (self->mdCc_c.otherOwner) {
-        dActor_c *a = dActor_c::FindWithID(self->mdCc_c.otherOwner);
+        mCarrier->DropActor();
+        w.x = mPosX;
+        w.y = mPosY;
+        w.z = mPosZ;
+        mCarrier->Hurt(w, 2, 0xc000, 1, 0, 1);
+        mCarrier = 0;
+    } else if (mdCc_c.otherOwner) {
+        dActor_c *a = dActor_c::FindWithID(mdCc_c.otherOwner);
         if (a) {
-            if (self->mdCc_c.hitFlags & 0x400000) {
+            if (mdCc_c.hitFlags & 0x400000) {
                 Vector3 w;
-                w.x = self->mPosX;
-                w.y = self->mPosY;
-                w.z = self->mPosZ;
-                ((daPly_c *)a)->Hurt(w, self->mHurtDamage, 0xc000, 1, 0, 1);
+                w.x = mPosX;
+                w.y = mPosY;
+                w.z = mPosZ;
+                ((daPly_c *)a)->Hurt(w, mHurtDamage, 0xc000, 1, 0, 1);
             }
         }
     }
-    if (self->mEatingPlayer) {
+    if (mEatingPlayer) {
         Vector3 w;
-        w.x = self->mPosX;
-        w.y = self->mPosY;
-        w.z = self->mPosZ;
-        self->mEatingPlayer->Hurt(w, self->mHurtDamage, 0xc000, 1, 0, 1);
-        self->mEatingPlayer->func_ov002_020d718c();
-        self->mEatingPlayer = 0;
+        w.x = mPosX;
+        w.y = mPosY;
+        w.z = mPosZ;
+        mEatingPlayer->Hurt(w, mHurtDamage, 0xc000, 1, 0, 1);
+        mEatingPlayer->func_ov002_020d718c();
+        mEatingPlayer = 0;
     }
-    func_ov102_0214baa0((char *)self);
-}
-
+    func_ov102_0214baa0();
 }
 
 /* ==========================================================================
@@ -1117,7 +1078,7 @@ void daBmb_c::OnTurnIntoEgg(daPly_c &player) {
         GiveCoins(player.mPlayerNo, 1);
         player.Heal(0x100);
     }
-    func_ov102_0214baa0((char *)this);
+    func_ov102_0214baa0();
 }
 
 /* ==========================================================================
@@ -1135,7 +1096,7 @@ void daBmb_c::func_ov102_0214ad40() {
         else if (v != 0)
             return;
     }
-    func_ov102_0214b384(this, 4);
+    func_ov102_0214b384(4);
     mVariant = 3;
     mdCc_c.flags &= ~2;
     func_ov102_0214c0b8();
@@ -1144,20 +1105,13 @@ void daBmb_c::func_ov102_0214ad40() {
 /* ==========================================================================
  *
  * CALLED FROM OUTSIDE THIS TU: ov002 0x020f1740, ov078 0x02125284, and
- * ov102's own daObjHatenaBlock_c run at 0x0214926c.  It keeps external linkage.
+ * ov102's own daObjHatenaBlock_c run at 0x0214926c.
  * ======================================================================== */
 
-extern "C" {
-
-void func_ov102_0214ad14(void *c)
-{
-    daBmb_c *self = (daBmb_c *)c;
-
-    func_ov102_0214b384(c, 0x96);
-    self->mChasePlayer = self->ClosestPlayer();
-    self->func_ov102_0214c0b8();
-}
-
+void daBmb_c::func_ov102_0214ad14() {
+    func_ov102_0214b384(0x96);
+    mChasePlayer = ClosestPlayer();
+    func_ov102_0214c0b8();
 }
 
 /* ==========================================================================
@@ -1188,7 +1142,7 @@ int daBmb_c::func_ov102_0214ab1c() {
         }
         goto after_cannon;
     shocked:
-        func_ov102_0214b384(this, 3);
+        func_ov102_0214b384(3);
     }
 after_cannon:
 
@@ -1202,7 +1156,7 @@ after_cannon:
     }
 
     if (eatState == 2) {
-        func_ov102_0214b384(this, 0x50);
+        func_ov102_0214b384(0x50);
     }
 
     if (eatState == 3) {
@@ -1225,7 +1179,7 @@ after_cannon:
     }
 
 hit:
-    func_ov102_0214b384(this, 4);
+    func_ov102_0214b384(4);
     mEatenByYoshi = 0;
     return 1;
 

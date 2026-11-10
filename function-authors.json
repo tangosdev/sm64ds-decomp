@@ -45323,7 +45323,7 @@
     },
     "ov102:0x0214ad14": {
       "author": "tangosdev",
-      "name": "func_ov102_0214ad14"
+      "name": "_ZN7daBmb_c19func_ov102_0214ad14Ev"
     },
     "ov102:0x0214ad40": {
       "author": "tangosdev",
@@ -45335,7 +45335,7 @@
     },
     "ov102:0x0214ae1c": {
       "author": "tangosdev",
-      "name": "func_ov102_0214ae1c"
+      "name": "_ZN7daBmb_c19func_ov102_0214ae1cEv"
     },
     "ov102:0x0214b03c": {
       "author": "tangosdev",
@@ -45351,7 +45351,7 @@
     },
     "ov102:0x0214b384": {
       "author": "ruspecial",
-      "name": "func_ov102_0214b384"
+      "name": "_ZN7daBmb_c19func_ov102_0214b384Ej"
     },
     "ov102:0x0214b3b8": {
       "author": "tangosdev",
@@ -45379,7 +45379,7 @@
     },
     "ov102:0x0214baa0": {
       "author": "aitddlabs",
-      "name": "func_ov102_0214baa0"
+      "name": "_ZN7daBmb_c19func_ov102_0214baa0Ev"
     },
     "ov102:0x0214bbd8": {
       "author": "tangosdev",
@@ -45387,7 +45387,7 @@
     },
     "ov102:0x0214bc20": {
       "author": "andrewboudreau",
-      "name": "func_ov102_0214bc20"
+      "name": "_ZN7daBmb_c19func_ov102_0214bc20Ev"
     },
     "ov102:0x0214bcc8": {
       "author": "tangosdev",
@@ -45395,7 +45395,7 @@
     },
     "ov102:0x0214bd20": {
       "author": "tangosdev",
-      "name": "func_ov102_0214bd20"
+      "name": "_ZN7daBmb_c19func_ov102_0214bd20Ev"
     },
     "ov102:0x0214bd90": {
       "author": "tangosdev",
