@@ -598,7 +598,7 @@ int daMip_c::StateCaughtMain()
         }
     }
 
-    if (*(volatile s32 *)&mActionStep != 1)
+    if (mActionStep != 1)
         return 1;
 
     if (pl->GetTalkState() != -1) {
