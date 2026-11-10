@@ -9733,3 +9733,24 @@ ov102	0x0214ae1c	func_ov102_0214ae1c	_ZN7daBmb_c19func_ov102_0214ae1cEv	daBmb_c 
 ov102	0x0214ad14	func_ov102_0214ad14	_ZN7daBmb_c19func_ov102_0214ad14Ev	daBmb_c helpers become members: every caller passes a Bob-omb as the first argument
 arm9	0x0203568c	func_0203568c	_ZN10dBgCh_Actr9SetRadiusEi	dBgCh_Actr's mRadius / mHeight setters: every caller passed &mWithMeshClsn as an int *
 arm9	0x02035684	func_02035684	_ZN10dBgCh_Actr9SetHeightEi	dBgCh_Actr's mRadius / mHeight setters: every caller passed &mWithMeshClsn as an int *
+ov006	0x020eb558	Wiggler_UpdateSway	_ZN15dScMgHanachan_c7Wiggler10UpdateSwayEv	Which Wiggler helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020eb610	Wiggler_Move	_ZN15dScMgHanachan_c7Wiggler4MoveEv	Which Wiggler helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020eb768	Wiggler_HitTest	_ZN15dScMgHanachan_c7Wiggler7HitTestEPKNS_5PointE	Which Wiggler helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020eb7b0	Wiggler_IsStarVisible	_ZN15dScMgHanachan_c7Wiggler13IsStarVisibleEv	Which Wiggler helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020eb7f8	Wiggler_StopIfIdle	_ZN15dScMgHanachan_c7Wiggler10StopIfIdleEv	Which Wiggler helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020eb8f0	Wiggler_OnTouched	_ZN15dScMgHanachan_c7Wiggler9OnTouchedEv	Which Wiggler helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020eb9b0	Wiggler_SetCruiseSpeed	_ZN15dScMgHanachan_c7Wiggler14SetCruiseSpeedEv	Which Wiggler helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020eb9dc	Wiggler_Retarget	_ZN15dScMgHanachan_c7Wiggler8RetargetEi	Which Wiggler helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ebb40	Wiggler_GetFrame	_ZN15dScMgHanachan_c7Wiggler8GetFrameEi	Which Wiggler helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ebc08	Wiggler_GetFlag	_ZN15dScMgHanachan_c7Wiggler7GetFlagEi	Which Wiggler helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ebeb4	Wiggler_ClampToScreen	_ZN15dScMgHanachan_c7Wiggler13ClampToScreenEv	Which Wiggler helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ea914	Wiggler_DrawTarget	_ZN15dScMgHanachan_c7Wiggler10DrawTargetEv	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020eac38	Wiggler_DrawField	_ZN15dScMgHanachan_c7Wiggler9DrawFieldEv	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ebf20	Wiggler_StepSegmentsA	_ZN15dScMgHanachan_c7Wiggler13StepSegmentsAEv	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ec134	Wiggler_StepSegmentsB	_ZN15dScMgHanachan_c7Wiggler13StepSegmentsBEv	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ec2bc	Wiggler_StepSegmentsC	_ZN15dScMgHanachan_c7Wiggler13StepSegmentsCEv	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ec4dc	Wiggler_StartPathA	_ZN15dScMgHanachan_c7Wiggler10StartPathAEi	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ec84c	Wiggler_StartBounce	_ZN15dScMgHanachan_c7Wiggler11StartBounceEi	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ec9c0	Wiggler_StartPathB	_ZN15dScMgHanachan_c7Wiggler10StartPathBEi	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ecba4	Wiggler_StartPathC	_ZN15dScMgHanachan_c7Wiggler10StartPathCEi	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020ecdb8	Hana_SpawnWigglers	_ZN15dScMgHanachan_c7Wiggler5SpawnEii	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument

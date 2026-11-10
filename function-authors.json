@@ -23291,11 +23291,11 @@
     },
     "ov006:0x020ea914": {
       "author": "tangosdev",
-      "name": "Wiggler_DrawTarget"
+      "name": "_ZN15dScMgHanachan_c7Wiggler10DrawTargetEv"
     },
     "ov006:0x020eac38": {
       "author": "andrewboudreau",
-      "name": "Wiggler_DrawField"
+      "name": "_ZN15dScMgHanachan_c7Wiggler9DrawFieldEv"
     },
     "ov006:0x020eb018": {
       "author": "tangosdev",
@@ -23319,43 +23319,43 @@
     },
     "ov006:0x020eb558": {
       "author": "tangosdev",
-      "name": "Wiggler_UpdateSway"
+      "name": "_ZN15dScMgHanachan_c7Wiggler10UpdateSwayEv"
     },
     "ov006:0x020eb610": {
       "author": "andrewboudreau",
-      "name": "Wiggler_Move"
+      "name": "_ZN15dScMgHanachan_c7Wiggler4MoveEv"
     },
     "ov006:0x020eb768": {
       "author": "tangosdev",
-      "name": "Wiggler_HitTest"
+      "name": "_ZN15dScMgHanachan_c7Wiggler7HitTestEPKNS_5PointE"
     },
     "ov006:0x020eb7b0": {
       "author": "tangosdev",
-      "name": "Wiggler_IsStarVisible"
+      "name": "_ZN15dScMgHanachan_c7Wiggler13IsStarVisibleEv"
     },
     "ov006:0x020eb7f8": {
       "author": "tangosdev",
-      "name": "Wiggler_StopIfIdle"
+      "name": "_ZN15dScMgHanachan_c7Wiggler10StopIfIdleEv"
     },
     "ov006:0x020eb8f0": {
       "author": "tangosdev",
-      "name": "Wiggler_OnTouched"
+      "name": "_ZN15dScMgHanachan_c7Wiggler9OnTouchedEv"
     },
     "ov006:0x020eb9b0": {
       "author": "tangosdev",
-      "name": "Wiggler_SetCruiseSpeed"
+      "name": "_ZN15dScMgHanachan_c7Wiggler14SetCruiseSpeedEv"
     },
     "ov006:0x020eb9dc": {
       "author": "andrewboudreau",
-      "name": "Wiggler_Retarget"
+      "name": "_ZN15dScMgHanachan_c7Wiggler8RetargetEi"
     },
     "ov006:0x020ebb40": {
       "author": "tangosdev",
-      "name": "Wiggler_GetFrame"
+      "name": "_ZN15dScMgHanachan_c7Wiggler8GetFrameEi"
     },
     "ov006:0x020ebc08": {
       "author": "tangosdev",
-      "name": "Wiggler_GetFlag"
+      "name": "_ZN15dScMgHanachan_c7Wiggler7GetFlagEi"
     },
     "ov006:0x020ebc7c": {
       "author": "andrewboudreau",
@@ -23371,19 +23371,19 @@
     },
     "ov006:0x020ebeb4": {
       "author": "tangosdev",
-      "name": "Wiggler_ClampToScreen"
+      "name": "_ZN15dScMgHanachan_c7Wiggler13ClampToScreenEv"
     },
     "ov006:0x020ebf20": {
       "author": "andrewboudreau",
-      "name": "Wiggler_StepSegmentsA"
+      "name": "_ZN15dScMgHanachan_c7Wiggler13StepSegmentsAEv"
     },
     "ov006:0x020ec134": {
       "author": "tangosdev",
-      "name": "Wiggler_StepSegmentsB"
+      "name": "_ZN15dScMgHanachan_c7Wiggler13StepSegmentsBEv"
     },
     "ov006:0x020ec2bc": {
       "author": "tangosdev",
-      "name": "Wiggler_StepSegmentsC"
+      "name": "_ZN15dScMgHanachan_c7Wiggler13StepSegmentsCEv"
     },
     "ov006:0x020ec458": {
       "author": "tangosdev",
@@ -23391,7 +23391,7 @@
     },
     "ov006:0x020ec4dc": {
       "author": "lunavyqo",
-      "name": "Wiggler_StartPathA"
+      "name": "_ZN15dScMgHanachan_c7Wiggler10StartPathAEi"
     },
     "ov006:0x020ec6e8": {
       "author": "ruspecial",
@@ -23399,7 +23399,7 @@
     },
     "ov006:0x020ec84c": {
       "author": "tangosdev",
-      "name": "Wiggler_StartBounce"
+      "name": "_ZN15dScMgHanachan_c7Wiggler11StartBounceEi"
     },
     "ov006:0x020ec93c": {
       "author": "ruspecial",
@@ -23407,7 +23407,7 @@
     },
     "ov006:0x020ec9c0": {
       "author": "andrewboudreau",
-      "name": "Wiggler_StartPathB"
+      "name": "_ZN15dScMgHanachan_c7Wiggler10StartPathBEi"
     },
     "ov006:0x020ecb80": {
       "author": "ruspecial",
@@ -23415,11 +23415,11 @@
     },
     "ov006:0x020ecba4": {
       "author": "tangosdev",
-      "name": "Wiggler_StartPathC"
+      "name": "_ZN15dScMgHanachan_c7Wiggler10StartPathCEi"
     },
     "ov006:0x020ecdb8": {
       "author": "NitroShellMKDS",
-      "name": "Hana_SpawnWigglers"
+      "name": "_ZN15dScMgHanachan_c7Wiggler5SpawnEii"
     },
     "ov006:0x020ecec8": {
       "author": "andrewboudreau",
