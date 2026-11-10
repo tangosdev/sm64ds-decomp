@@ -9,7 +9,7 @@ extern "C" {
  *
  * The name is the link's. NitroSDK library code -- CARD, CTRDG, FS, OS_Alarm,
  * OS_Reset, TP, WM -- calls this function where a FINALROM build expands
- * OS_Panic to OS_Terminate() (include/nitro/os/common/printf.h), and those
+ * OS_Panic to OS_Terminate() (NitroSDK/include/nitro/os/common/printf.h), and those
  * objects can only have reached it by that name. The body is more than
  * os_terminate_proc.c's halt loop: it runs the exception handler once
  * (data_0209d4d8 guards it) before halting with interrupts off, and it sits

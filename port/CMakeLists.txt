@@ -129,7 +129,11 @@ get_filename_component(PORT_REPO_ROOT_ABS "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOL
 # path: two requested symbols in the same TU must compile that TU once, not twice.
 function(sm64ds_hostgen_symbols out_var)
     set(generated "")
-    set(seen_sources "")
+    # Seen sources span every call: one TU can hold symbols from two gates (the
+    # G3 immediates live together in GX_g3imm), and a second custom rule for the
+    # same output is a configure error. Every target that links a later gate's
+    # list links the earlier gates' lists too, so the TU is still compiled.
+    get_property(seen_sources GLOBAL PROPERTY SM64DS_HOSTGEN_SEEN)
     foreach(sym IN LISTS ARGN)
         execute_process(
             COMMAND python "${PORT_REPO_ROOT_ABS}/tools/srcpath.py" "${sym}"
@@ -151,6 +155,7 @@ function(sm64ds_hostgen_symbols out_var)
             continue()
         endif()
         list(APPEND seen_sources "${sym_src}")
+        set_property(GLOBAL APPEND PROPERTY SM64DS_HOSTGEN_SEEN "${sym_src}")
         string(REGEX REPLACE "\\.(c|cpp)$" ".cpp" sym_out_rel "${sym_rel}")
         set(sym_out "${CMAKE_BINARY_DIR}/host-src/${sym_out_rel}")
         add_custom_command(OUTPUT "${sym_out}"
