@@ -429,7 +429,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
 
     for (; loop < 6; ) {
         if (loop != 0)
-            src = (VecFx32 *)((char *)pos - 0xc);
+            src = pos - 1;
         else
             src = &cur;
         delta.x = vel->x + (pos->x - src->x);
@@ -454,8 +454,8 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
         *heights = thisx->mPosY - 0xc8000;     /* 200 units below the chomp */
         if (*heights - pos->y > 0xc8000) *heights = pos->y;
         angOff += 0x2000;
-        vel = (VecFx32 *)((char *)vel + 0xc);
-        pos = (VecFx32 *)((char *)pos + 0xc);
+        vel++;
+        pos++;
         loop++;
         heights = heights + 1;
     }
