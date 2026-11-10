@@ -11,8 +11,8 @@ extern void (*data_02099fbc[])(int, int, void *); /* func_0204c0a8, func_0204c0e
 extern void (*data_02099fb4[])(u8, u8);           /* func_0204c24c, func_0204c194 */
 
 extern void MTX_Scale43_(int *m, int sx, int sy, int sz); /* scale matrix */
-extern void G3_LoadMtx43(void *m);                         /* load the 4x3 matrix */
-extern void G3_MultMtx43(void *m);                         /* multiply by the 4x3 matrix */
+extern void G3_LoadMtx43(void *m);                        /* load the 4x3 matrix */
+extern void G3_MultMtx43(void *m);                        /* multiply by the 4x3 matrix */
 
 /* Draw one particle as a textured quad (draw type 2, func_0204a5c8): alpha
  * and the next polygon ID into POLYGON_ATTR (nothing more when the alpha is
