@@ -128,6 +128,53 @@ def texel_counts(m, pal, ncol):
     return cnt
 
 
+# TEXTURE-SWAP TWINS (lane PALPOWER1). Luigi's body is drawn from luigi_body_tr_1 with luigi_body_1_pl, and the
+# Power Flower's vanish look swaps it (data/player/L_tx_bodytrans.btp, a texture sequence on mat_body) to
+# luigi_body_tr_2 with luigi_body_2_pl. The two textures are the same 64x64 picture encoded twice, texel for
+# texel the same colours, but each indexes its own palette, so the Studio could not credit body_2's entries
+# to any rig part and Tango never labelled them: without this, a picked colour reached his normal body and
+# never the vanish one, and vanish Luigi showed the cartridge's green and blue. So a twin palette's entries
+# take their label from the source palette: for every texel both textures draw, each twin entry the texel
+# reads votes (with its weight) for the label of whichever source entry at that texel is nearest it in
+# colour, and the label with the most votes wins. An entry no texel reaches keeps the label it had.
+# A twin palette never sets kBroCart: the cartridge colour stays the source palette's main tone.
+# (file, twin palette, twin texture, source palette, source texture)
+SWAP_TWINS = {
+    "luigi": [("data/player/luigi_model.bmd", "luigi_body_2_pl", "luigi_body_tr_2", "luigi_body_1_pl",
+               "luigi_body_tr_1")],
+}
+
+
+def twin_labels(m, src_lab, twin_pal, twin_tex, src_pal, src_tex):
+    """{twin entry: (label, "twin")} voted from src_lab through the shared picture"""
+    def pal_words(name):
+        p = [p for p in m["pals"] if p["name"] == name][0]
+        return [struct.unpack_from("<H", p["data"], i * 2)[0] for i in range(len(p["data"]) // 2)]
+
+    def tex(name):
+        return [t for t in m["texs"] if t["name"] == name][0]
+
+    def c5(v):
+        return (v & 31, (v >> 5) & 31, (v >> 10) & 31)
+
+    ws, wt = pal_words(src_pal), pal_words(twin_pal)
+    w1, h1, r1 = decode_refs(tex(src_tex), len(ws))
+    w2, h2, r2 = decode_refs(tex(twin_tex), len(wt))
+    if (w1, h1) != (w2, h2):
+        raise SystemExit("swap twin %s is %dx%d, its source %s %dx%d" % (twin_tex, w2, h2, src_tex, w1, h1))
+    votes = {}
+    for p in range(len(r1)):
+        if not r1[p] or not r2[p]:
+            continue
+        for k, wgt in r2[p]:
+            ck = c5(wt[k])
+            near = min(r1[p], key=lambda e: (sum((a - b) ** 2 for a, b in zip(c5(ws[e[0]]), ck)), e[0]))[0]
+            lab = src_lab.get(near, ("", ""))[0]
+            v = votes.setdefault(k, {})
+            v[lab] = v.get(lab, 0.0) + wgt
+    return {k: (max(sorted(v), key=lambda x: v[x]), "twin") for k, v in votes.items()}
+
+
 def load_labels(path):
     """bro -> {(file, pal): {index: (label, how)}}, and bro -> {"file:pal": length}"""
     with open(path) as f:
@@ -186,6 +233,15 @@ def collect(files_root, labels_path, keep_path):
     for ci, chr_name in enumerate(CHARS):
         for idx, path, body in FILES[chr_name]:
             m = lc.parse_bmd(lc.narc_member(arc, idx))
+            twins = set()
+            for tfile, tpal, ttex, spal, stex in SWAP_TWINS.get(chr_name, []):
+                if tfile != path:
+                    continue
+                derived = twin_labels(m, labels[chr_name].get((path, spal), {}), tpal, ttex, spal, stex)
+                merged = dict(labels[chr_name].get((path, tpal), {}))
+                merged.update(derived)
+                labels[chr_name][(path, tpal)] = merged
+                twins.add(tpal)
             for pal in m["pals"]:
                 words = [struct.unpack_from("<H", pal["data"], i * 2)[0] for i in range(len(pal["data"]) // 2)]
                 want = lens[chr_name].get("%s:%s" % (path, pal["name"]))
@@ -216,7 +272,7 @@ def collect(files_root, labels_path, keep_path):
                     records.append({"chr": ci, "cat": c, "label": label, "file": path, "pal": pal["name"],
                                     "idx": members, "seams": sum(1 for k in members if how[k] == "seam"),
                                     "main": main, "drawn": drawn})
-                    if body and drawn > cart_drawn[ci][c]:
+                    if body and pal["name"] not in twins and drawn > cart_drawn[ci][c]:
                         cart_drawn[ci][c] = drawn
                         cart[ci][c] = rgb8(words[main])
     records.sort(key=lambda r: (r["chr"], r["cat"], r["file"], r["pal"], r["label"]))

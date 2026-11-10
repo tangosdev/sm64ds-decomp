@@ -960,6 +960,7 @@ extern signed char data_02092120;    /* currently shown area, -1 = none */
 extern unsigned char data_0209f250;  /* local player index */
 extern "C" void _ZN6Player14InitMetalWarioEv(void *);   /* SM64DS_METAL_POKE */
 extern "C" void _ZN6Player16InitBalloonMarioEv(void *);   /* SM64DS_BALLOON_POKE */
+extern "C" void _ZN6Player15InitVanishLuigiEv(void *);   /* SM64DS_VANISH_POKE */
 extern void *data_0209f394[];        /* per-player Actor* */
 extern unsigned char data_0209f1f8;  /* view-object count */
 extern signed char data_0209f2f8;    /* level/sublevel id (weather select) */
@@ -21527,6 +21528,31 @@ int main(void)
                                 *(const unsigned *)(pl + 0xdc), *(const unsigned *)(pl + 0xe0), *(const unsigned *)(pl + 0xe4), *(const unsigned *)(pl + 0xe8), *(const unsigned *)(pl + 0xec),
                                 *(const unsigned *)(pl + 0x154), *(const unsigned *)(pl + 0x158), *(const unsigned *)(pl + 0x15c), *(const unsigned *)(pl + 0x160),
                                 *(const unsigned *)(pl + 0x164), *(const unsigned *)(pl + 0x168), *(const unsigned *)(pl + 0x16c), *(const unsigned *)(pl + 0x170), (unsigned)pl[0x6db]);
+                }
+            }
+
+            /* ---- SM64DS_VANISH_POKE=<frame>[,<ticks>] --------------------
+               Test-only (lane PALPOWER1): on that frame hand the local Luigi
+               the Power Flower's vanish look through the ROM's own
+               Player::InitVanishLuigi, then set the power-up timer
+               (Player+0x6ae) to <ticks> (default 600). Inert unless set. */
+            {
+                static int vp_read, vp_frame = -1, vp_ticks = 600;
+                if (!vp_read) {
+                    const char *e = getenv("SM64DS_VANISH_POKE");
+                    vp_read = 1;
+                    if (e) {
+                        int a = -1, b = 600;
+                        if (sscanf(e, "%d,%d", &a, &b) >= 1) { vp_frame = a; vp_ticks = b; }
+                    }
+                }
+                if (vp_frame >= 0 && frame == vp_frame) {
+                    char *pl = (char *)data_0209f394[(int)data_0209f250];
+                    if (pl) {
+                        _ZN6Player15InitVanishLuigiEv(pl);
+                        *(unsigned short *)(pl + 0x6ae) = (unsigned short)vp_ticks;
+                    }
+                    fprintf(stderr, "[vanishpoke] f%d player=%p ticks=%d\n", frame, (void *)pl, vp_ticks);
                 }
             }
 

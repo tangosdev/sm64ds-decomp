@@ -14,9 +14,9 @@
  *   mario  hat_undershirt  Hat mario_head_pl 100/654, Hat mario_head_n_pl 5/16, Undershirt mario_body_pl 97/1188
  *   mario  overalls        Overalls mario_body_pl 95/1577
  *   mario  shoes           Shoes mario_body_pl 21/213
- *   luigi  hat_undershirt  Hat luigi_head_1_pl 64/925, Hat luigi_head_2_pl 56/319, Hat luigi_head_n_pl 10/172, Undershirt luigi_body_1_pl 96/1113
- *   luigi  overalls        Overalls luigi_body_1_pl 81/1750
- *   luigi  shoes           Shoes luigi_body_1_pl 33/437
+ *   luigi  hat_undershirt  Hat luigi_head_1_pl 64/925, Hat luigi_head_2_pl 56/319, Hat luigi_head_n_pl 10/172, Undershirt luigi_body_1_pl 96/1113, Undershirt luigi_body_2_pl 93/391
+ *   luigi  overalls        Overalls luigi_body_1_pl 81/1750, Overalls luigi_body_2_pl 79/642
+ *   luigi  shoes           Shoes luigi_body_1_pl 33/437, Shoes luigi_body_2_pl 35/154
  *   wario  hat_undershirt  Hat wario_head_pl 117/733, Undershirt wario_body_pl 65/1088
  *   wario  overalls        Overalls wario_body_pl 56/1246
  *   wario  shoes           Shoes wario_body_pl 24/532
@@ -96,7 +96,15 @@ static const int kIdx_8[96] = {
     240, 241, 242, 243, 244, 245, 250, 252, 253, 254, 255, 256, 257, 258, 259, 260,
     261, 262, 264, 265, 266, 267, 268, 269, 270, 271, 272, 276, 278, 279, 280, 281
 };
-static const int kIdx_9[81] = {
+static const int kIdx_9[93] = {
+    0, 2, 4, 5, 6, 8, 10, 11, 12, 14, 26, 30, 31, 36, 37, 38,
+    52, 53, 54, 55, 60, 61, 62, 64, 67, 78, 84, 85, 86, 88, 90, 91,
+    102, 103, 106, 110, 111, 112, 114, 124, 125, 130, 131, 132, 133, 142, 146, 154,
+    156, 157, 200, 202, 214, 224, 226, 227, 228, 230, 231, 232, 233, 234, 235, 236,
+    237, 242, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 256, 257, 258,
+    259, 260, 262, 263, 266, 268, 269, 270, 271, 272, 273, 274, 275
+};
+static const int kIdx_10[81] = {
     1, 3, 7, 13, 15, 27, 29, 33, 39, 40, 41, 53, 56, 57, 63, 65,
     79, 81, 82, 83, 89, 91, 106, 107, 109, 110, 113, 115, 117, 119, 126, 127,
     128, 129, 130, 134, 135, 137, 145, 153, 154, 155, 157, 158, 159, 161, 163, 165,
@@ -104,12 +112,24 @@ static const int kIdx_9[81] = {
     211, 213, 215, 228, 229, 230, 231, 233, 246, 247, 248, 249, 251, 263, 273, 274,
     275
 };
-static const int kIdx_10[33] = {
+static const int kIdx_11[79] = {
+    1, 3, 7, 13, 15, 27, 28, 29, 32, 39, 40, 41, 56, 57, 63, 65,
+    77, 79, 80, 81, 87, 89, 104, 105, 107, 108, 113, 115, 116, 117, 120, 121,
+    122, 123, 126, 127, 135, 143, 144, 145, 147, 148, 149, 151, 153, 155, 159, 171,
+    172, 173, 180, 181, 183, 192, 193, 194, 195, 198, 199, 201, 203, 216, 217, 218,
+    219, 220, 221, 222, 223, 225, 238, 239, 240, 241, 243, 255, 261, 264, 265
+};
+static const int kIdx_12[33] = {
     144, 146, 148, 149, 150, 151, 168, 170, 171, 172, 173, 174, 175, 176, 177, 178,
     179, 186, 187, 188, 189, 196, 198, 199, 200, 201, 202, 203, 208, 209, 219, 223,
     225
 };
-static const int kIdx_11[117] = {
+static const int kIdx_13[35] = {
+    134, 136, 138, 139, 140, 141, 158, 160, 161, 162, 163, 164, 165, 166, 167, 168,
+    169, 174, 175, 176, 177, 178, 179, 182, 184, 185, 186, 187, 188, 189, 196, 197,
+    207, 211, 213
+};
+static const int kIdx_14[117] = {
     0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17,
     19, 20, 21, 24, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38,
     39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 51, 52, 53, 54, 56,
@@ -119,20 +139,20 @@ static const int kIdx_11[117] = {
     131, 132, 133, 134, 135, 136, 137, 138, 139, 141, 142, 143, 145, 148, 150, 164,
     168, 172, 176, 180, 187
 };
-static const int kIdx_12[65] = {
+static const int kIdx_15[65] = {
     14, 15, 18, 19, 37, 42, 43, 46, 47, 50, 51, 52, 53, 54, 55, 68,
     69, 76, 77, 78, 79, 81, 82, 83, 85, 86, 87, 91, 92, 93, 94, 95,
     96, 97, 99, 100, 101, 103, 104, 105, 109, 110, 111, 112, 113, 115, 116, 117,
     120, 121, 122, 123, 125, 126, 127, 135, 137, 138, 139, 143, 154, 155, 172, 173,
     177
 };
-static const int kIdx_13[56] = {
+static const int kIdx_16[56] = {
     7, 8, 44, 45, 48, 49, 80, 88, 89, 90, 98, 102, 106, 107, 108, 114,
     118, 119, 124, 130, 131, 134, 136, 140, 141, 142, 144, 145, 147, 148, 149, 150,
     151, 152, 153, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 167, 170, 171,
     175, 178, 179, 184, 188, 192, 193, 197
 };
-static const int kIdx_14[24] = {
+static const int kIdx_17[24] = {
     181, 182, 183, 185, 186, 187, 189, 198, 199, 200, 201, 202, 203, 224, 225, 227,
     233, 234, 235, 239, 245, 247, 248, 249
 };
@@ -147,14 +167,17 @@ static const Group kVscGroups[] = {
     { 1, 0, "data/player/luigi_head_cap.bmd", "luigi_head_2_pl", 56, kIdx_6, 0, "Hat" },
     { 1, 0, "data/player/luigi_head_nocap.bmd", "luigi_head_n_pl", 10, kIdx_7, 59, "Hat" },
     { 1, 0, "data/player/luigi_model.bmd", "luigi_body_1_pl", 96, kIdx_8, 266, "Undershirt" },
-    { 1, 1, "data/player/luigi_model.bmd", "luigi_body_1_pl", 81, kIdx_9, 128, "Overalls" },
-    { 1, 4, "data/player/luigi_model.bmd", "luigi_body_1_pl", 33, kIdx_10, 174, "Shoes" },
-    { 2, 0, "data/player/wario_head_cap.bmd", "wario_head_pl", 117, kIdx_11, 0, "Hat" },
-    { 2, 0, "data/player/wario_model.bmd", "wario_body_pl", 65, kIdx_12, 112, "Undershirt" },
-    { 2, 1, "data/player/wario_model.bmd", "wario_body_pl", 56, kIdx_13, 150, "Overalls" },
-    { 2, 4, "data/player/wario_model.bmd", "wario_body_pl", 24, kIdx_14, 203, "Shoes" },
+    { 1, 0, "data/player/luigi_model.bmd", "luigi_body_2_pl", 93, kIdx_9, 256, "Undershirt" },
+    { 1, 1, "data/player/luigi_model.bmd", "luigi_body_1_pl", 81, kIdx_10, 128, "Overalls" },
+    { 1, 1, "data/player/luigi_model.bmd", "luigi_body_2_pl", 79, kIdx_11, 120, "Overalls" },
+    { 1, 4, "data/player/luigi_model.bmd", "luigi_body_1_pl", 33, kIdx_12, 174, "Shoes" },
+    { 1, 4, "data/player/luigi_model.bmd", "luigi_body_2_pl", 35, kIdx_13, 164, "Shoes" },
+    { 2, 0, "data/player/wario_head_cap.bmd", "wario_head_pl", 117, kIdx_14, 0, "Hat" },
+    { 2, 0, "data/player/wario_model.bmd", "wario_body_pl", 65, kIdx_15, 112, "Undershirt" },
+    { 2, 1, "data/player/wario_model.bmd", "wario_body_pl", 56, kIdx_16, 150, "Overalls" },
+    { 2, 4, "data/player/wario_model.bmd", "wario_body_pl", 24, kIdx_17, 203, "Shoes" },
 };
-static const int kVscGroupCount = 15;
+static const int kVscGroupCount = 18;
 
 /* entries that stay cartridge though a picker label holds them (bro_groups_keep.json) */
 struct Kept {
