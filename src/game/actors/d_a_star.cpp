@@ -3122,7 +3122,17 @@ void daStar_c::func_ov002_020e7554() {
         }
     } while (cnt < 5);
 
+#ifdef _MSC_VER
+    /* NO FREE MARKER: `% 0`. The DS's software divide returns 0 and the star
+       links to nothing (arr[0] is null); an x86 divide faults. Coop's shared
+       silver count lets a player drop a star with no marker of his own free,
+       which the cartridge never allowed. Same random draw, same outcome; the
+       ARM arm is untouched. */
+    idx = (unsigned int)RandomIntInternal(&data_0209e650) >> 16;
+    idx = cnt != 0 ? idx % (unsigned int)cnt : 0;
+#else
     idx = ((unsigned int)RandomIntInternal(&data_0209e650) >> 16) % (unsigned int)cnt;
+#endif
     found = arr[idx];
     if (found == 0) return;
     mMarkerID = found->uniqueID;

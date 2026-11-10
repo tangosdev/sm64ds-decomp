@@ -18,6 +18,13 @@
 //     loses one tells the others, who delete their copy quietly ("gone").
 //     A late joiner gets the owner's live ones. Enemy coin drops, bubbles,
 //     particles and every other class are NEVER announced (per console).
+//   * silver stars (SILVERCOOP1). The ROM counts them per player
+//     (data_0209f310[player], GiveVsStars) and grows the act's gold star when
+//     the sum (NumVsStarsObtained) is 5. A friend's take is seen here the way
+//     a red coin is (the placed star's death bit, an announced star's GONE)
+//     and credited to MY count, the one the HUD draws, so every screen shows
+//     the room's count and grows the gold star at the room's fifth. A hurt
+//     drop is sent (SILVER DROP); a joiner gets the count from the owner.
 //   * a star that every console spawns natively (the red-coin star, linked to
 //     a placed star marker) is not announced; its collect is sent as a "gone
 //     for marker slot S" so the other copies vanish.
@@ -57,6 +64,7 @@ namespace port {
 // ---- SYNB (control) sub-types, 0x12-0x17 -----------------------------------
 enum : uint8_t {
     kSpCtlRed  = 0x12,   // owner -> joiner: the group's red-coin sum
+    kSpCtlSilver = 0x13, // SILVERCOOP1: owner -> joiner: the group's silver-star count (a 1.0.1 peer drops it as unknown)
     kSpCtlLast = 0x17,
 };
 
@@ -65,6 +73,7 @@ enum : uint8_t {
     kSpWorldSpawn = 0x40,   // an announced runtime actor
     kSpWorldGone  = 0x41,   // an announced actor (or a linked star) is gone
     kSpWorldBlock = 0x42,   // a block was hit
+    kSpWorldSilverDrop = 0x43,  // SILVERCOOP1: my player dropped silver stars (hurt); the group's count goes down (a 1.0.1 peer drops it as unknown)
     kSpWorldLast  = 0x4f,
 };
 
@@ -117,9 +126,27 @@ struct SpRedWire {
     uint8_t  star;        // 0..7, the red coins' star number (0 = unknown)
     uint8_t  reserved;    // 0
 };
+// SILVER (control), 12 B. SILVERCOOP1.
+struct SpSilverWire {
+    CoopKeyWire key;
+    uint32_t nonce;       // the joiner's enter nonce, echoed
+    uint8_t  target;      // the joiner's seat
+    uint8_t  sum;         // 0..5, the group's silver-star count
+    uint16_t reserved;    // 0
+};
+// SILVER DROP (world), 12 B. SILVERCOOP1.
+struct SpSilverDropWire {
+    CoopKeyWire key;
+    uint16_t seq;         // non-zero, per sender, wrap-safe
+    uint8_t  n;           // 1..5 stars dropped
+    uint8_t  reserved;    // 0
+    uint32_t reserved2;   // 0
+};
 #pragma pack(pop)
 
 static_assert(sizeof(SpSpawnWire) == 32, "spawn");
+static_assert(sizeof(SpSilverWire) == 12, "silver");
+static_assert(sizeof(SpSilverDropWire) == 12, "silver drop");
 static_assert(sizeof(SpGoneWire) == 12, "gone");
 static_assert(sizeof(SpBlockWire) == 16, "block");
 static_assert(sizeof(SpRedWire) == 12, "red");
@@ -168,6 +195,16 @@ inline bool sp_red_validate(const void *p, int len) {
     if (!p || len != (int)sizeof(SpRedWire)) return false;
     SpRedWire w; std::memcpy(&w, p, sizeof w);
     return coop_key_ok(w.key) && w.target < kCoopMaxSeats && w.sum <= 8 && w.star <= 7 && w.reserved == 0;
+}
+inline bool sp_silver_validate(const void *p, int len) {
+    if (!p || len != (int)sizeof(SpSilverWire)) return false;
+    SpSilverWire w; std::memcpy(&w, p, sizeof w);
+    return coop_key_ok(w.key) && w.target < kCoopMaxSeats && w.sum <= 5 && w.reserved == 0;
+}
+inline bool sp_silver_drop_validate(const void *p, int len) {
+    if (!p || len != (int)sizeof(SpSilverDropWire)) return false;
+    SpSilverDropWire w; std::memcpy(&w, p, sizeof w);
+    return coop_key_ok(w.key) && w.seq != 0 && w.n >= 1 && w.n <= 5 && w.reserved == 0 && w.reserved2 == 0;
 }
 // Wrap-safe "newer" for the per-sender block sequence (0 = nothing seen yet).
 inline bool sp_seq_newer(uint16_t seq, uint16_t last) { return last == 0 || (int16_t)(uint16_t)(seq - last) > 0; }
