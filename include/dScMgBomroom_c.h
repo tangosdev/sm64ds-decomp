@@ -159,7 +159,7 @@ struct dScMgBomroom_c : dScMgBase_c {
          mMarkers     @0x62b0 -- two HUD sprite markers */
     dScMgBomroom_Slot mHatchPanels[2]; /* 0x6260 */
     dScMgBomroom_Slot mPenGates[2];    /* 0x6280 */
-    dScMgBomroom_Slot mTopDoor;        /* 0x62a0 */
+    dScMgBomroom_Slot mTopDoor[1];     /* 0x62a0 */
     dScMgBomroom_Slot mMarkers[2];     /* 0x62b0 */
     s32 mSceneState;    /* 0x62d0 -- round state; 3 once a picked bomb has gone off */
     s32 mSubState;      /* 0x62d4 -- index into the sBomroomRoundEndTable {fptr,adj} pairs */
