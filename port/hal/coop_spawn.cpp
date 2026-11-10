@@ -131,7 +131,8 @@ uint16_t g_sseq = 0;
 uint16_t g_lastsseq[kCoopMaxSeats];
 unsigned g_sil_drop_frame = 0; bool g_sil_drop_done = true;   // SM64DS_SILVER_DROP=<frame>: the ROM's hurt drop on my player once (proof knob)
 unsigned g_sil_pit_frame = 0; bool g_sil_pit_done = true;     // SM64DS_SILVER_PIT=<frame>[:nomarker]: from that frame, lift the first bouncing dropped silver star out of the level's bounds once (proof knob)
-bool g_sil_pit_nomarker = false;   // ...and first forget its marker, so the ROM destroys even the dropper's own star
+bool g_sil_pit_nomarker = false;
+bool g_sil_drop_nofree = false;    // SM64DS_SILVER_DROP=<frame>:nofree: no star marker counts as free during that drop (proof knob: zero free markers)   // ...and first forget its marker, so the ROM destroys even the dropper's own star
 long long g_sil_goto_wall = 0;     // SM64DS_SILVER_GOTO_WALL=<wall ms>: at that machine time put my player on the lowest-slot silver star once (proof knob: two consoles on one star at one moment)
 bool g_sil_off = false;            // SM64DS_SPAWN_OFF=silver: must-fail control, no silver sharing at all
 struct SilStats { unsigned long long credit_take, credit_ann, credit_snap, capped, drop_sent, drop_applied, drop_local, ghost_take, sent_snap, recv_snap, fell, fell_take; } g_sst = {};
@@ -217,6 +218,7 @@ void read_env() {
     if (const char *e = std::getenv("SM64DS_SILVER_DROP")) {
         unsigned f = 0;
         if (std::sscanf(e, "%u", &f) == 1) { g_sil_drop_frame = f; g_sil_drop_done = false; }
+        g_sil_drop_nofree = std::strstr(e, "nofree") != nullptr;
     }
     if (const char *e = std::getenv("SM64DS_SILVER_PIT")) {
         unsigned f = 0;
@@ -1503,7 +1505,14 @@ void on_frame(unsigned now) {
     }
     if (!g_sil_drop_done && g_armed && g_frames >= g_sil_drop_frame && my_player()) {       // proof knob: the ROM's hurt drop
         g_sil_drop_done = true;
+        unsigned char keep[16]; char *mk[16]; int nk = 0;
+        if (g_sil_drop_nofree)       // state 0 is never free in daStar_c::func_ov002_020e7554
+            for (char *m = _ZN8dActor_c15FindWithActorIDEjPS_(0xb4, nullptr); m && nk < 16; m = _ZN8dActor_c15FindWithActorIDEjPS_(0xb4, m)) {
+                mk[nk] = m; keep[nk++] = *(unsigned char *)(m + 0x1d8); *(unsigned char *)(m + 0x1d8) = 0;
+            }
+        if (nk) std::fprintf(stderr, "[coopsilver-knob] nofree: %d markers held not free for the drop wall=%lld\n", nk, wall_ms());
         const int r = _ZN6Player19func_ov002_020d94ccEv(my_player());
+        for (int i = 0; i < nk; ++i) *(unsigned char *)(mk[i] + 0x1d8) = keep[i];
         std::fprintf(stderr, "[coopsilver-knob] hurt drop on my player: %d (mine=%d) wall=%lld\n", r, sil_me() >= 0 ? (int)data_0209f310[sil_me()] : -1, wall_ms());
     }
     if (!g_sil_pit_done && g_armed && g_frames >= g_sil_pit_frame) {        // proof knob: a dropped star falls out of the level
