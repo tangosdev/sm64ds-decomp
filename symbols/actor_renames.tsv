@@ -9349,3 +9349,4 @@ arm9	0x0205d518	func_0205d518	FS_OpenFile	NitroSDK fs_file.c (pret FS_file.c): r
 arm9	0x0205d568	func_0205d568	FS_OpenFileFast	NitroSDK fs_file.c (pret FS_file.c): reverse source order fills the gaps between the named FS_file functions
 arm9	0x0205d644	func_0205d644	FS_ConvertPathToFileID	NitroSDK fs_file.c (pret FS_file.c): reverse source order fills the gaps between the named FS_file functions
 arm9	0x0205d688	func_0205d688	FSi_ReadFileCore	NitroSDK fs_file.c (pret FS_file.c): reverse source order fills the gaps between the named FS_file functions
+arm9	0x0205e904	func_0205e904	DGT_SetOverlayTableMode	NitroSDK dgt DGT_SetOverlayTableMode (ntrtwl NitroSDK include/nitro/dgt/dgt.h): swaps the overlay-table flag the SHA-1 block function reads; FS_AttachOverlayTable sets it around the overlay digest

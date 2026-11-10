@@ -2603,7 +2603,7 @@ src/unnamed/arm9/0205/func_0205e89c.c:
     complete
     .text start:0x0205e89c end:0x0205e904
 
-src/unnamed/arm9/0205/func_0205e904.c:
+src/DGT_SetOverlayTableMode.c:
     complete
     .text start:0x0205e904 end:0x0205e91c
 

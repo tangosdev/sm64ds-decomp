@@ -10595,7 +10595,7 @@
     },
     "arm9:0x0205e904": {
       "author": "tangosdev",
-      "name": "func_0205e904"
+      "name": "DGT_SetOverlayTableMode"
     },
     "arm9:0x0205e91c": {
       "author": "andrewboudreau",
