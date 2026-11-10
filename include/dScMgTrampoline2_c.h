@@ -39,7 +39,7 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
        uses: eight-byte PMF records in .data, dispatched by Behavior every
        frame. The State/Begin names are coined from the matched bodies; the
        ROM symbols were address-only. */
-    static void StateDone(); /* ov006 0x02123b20 */
+    void StateDone();        /* ov006 0x02123b20 */
     void StateWaitExit();    /* ov006 0x02123b24 */
     void StateResults();     /* ov006 0x02123bf4 */
     void StatePlay();        /* ov006 0x02123cb4 */
@@ -54,9 +54,8 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
     void InitDisplay();      /* ov006 0x021245a8 -- loads BG/OBJ screens */
     void InitBrush(int layer); /* ov006 0x02122e20 -- fills the stroke layer */
 
-    /* Raw eight-byte state PMF. Behavior calls through it. A typed
-       global initializer emits a __sinit this ROM does not have. */
-    u32 mState[2];            /* 0x5004 */
+    /* Current state; Behavior calls through it. */
+    State mState;                 /* 0x5004 */
     dMgTrmpln2Mario_c mMarios[5]; /* 0x500c -- 5 * 0xdc */
     TrmpLine mLines[3];           /* 0x5458 -- 3 * 0x32c */
     TrmpItem mItems[0xa];         /* 0x5ddc -- 0xa * 0x1d0 */
@@ -97,6 +96,8 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char
+    dScMgTrampoline2_c_State_size_must_be_0x8[sizeof(dScMgTrampoline2_c::State) == 0x8 ? 1 : -1];
 typedef char dScMgTrampoline2_c_size_must_be_0x7bac[sizeof(dScMgTrampoline2_c) == 0x7bac ? 1 : -1];
 #endif
 

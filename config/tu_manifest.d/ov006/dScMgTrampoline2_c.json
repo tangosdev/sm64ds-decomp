@@ -377,31 +377,31 @@
       "symbol": "pmf_dScMgTrampoline2_c_StateDone",
       "address": "0x0213fbd0",
       "size": "0x8",
-      "evidence": "eight-byte dScMgTrampoline2_c PMF descriptor targeting the byte-verified StateDone member"
+      "evidence": "compiler PMF literal {code address, 0} emitted for an &dScMgTrampoline2_c:: state assignment; placed by defined_symbol_renames"
     },
     {
       "symbol": "pmf_dScMgTrampoline2_c_StateIntro",
       "address": "0x0213fbd8",
       "size": "0x8",
-      "evidence": "eight-byte dScMgTrampoline2_c PMF descriptor targeting the byte-verified StateIntro member"
+      "evidence": "compiler PMF literal {code address, 0} emitted for an &dScMgTrampoline2_c:: state assignment; placed by defined_symbol_renames"
     },
     {
       "symbol": "pmf_dScMgTrampoline2_c_StateWaitExit",
       "address": "0x0213fbe0",
       "size": "0x8",
-      "evidence": "eight-byte dScMgTrampoline2_c PMF descriptor targeting the byte-verified StateWaitExit member"
+      "evidence": "compiler PMF literal {code address, 0} emitted for an &dScMgTrampoline2_c:: state assignment; placed by defined_symbol_renames"
     },
     {
       "symbol": "pmf_dScMgTrampoline2_c_StatePlay",
       "address": "0x0213fbe8",
       "size": "0x8",
-      "evidence": "eight-byte dScMgTrampoline2_c PMF descriptor targeting the byte-verified StatePlay member"
+      "evidence": "compiler PMF literal {code address, 0} emitted for an &dScMgTrampoline2_c:: state assignment; placed by defined_symbol_renames"
     },
     {
       "symbol": "pmf_dScMgTrampoline2_c_StateResults",
       "address": "0x0213fbf0",
       "size": "0x8",
-      "evidence": "eight-byte dScMgTrampoline2_c PMF descriptor targeting the byte-verified StateResults member"
+      "evidence": "compiler PMF literal {code address, 0} emitted for an &dScMgTrampoline2_c:: state assignment; placed by defined_symbol_renames"
     },
     {
       "symbol": "sTrmp2SpinnerSpeeds",
@@ -1550,6 +1550,36 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02142f88"
+    },
+    {
+      "symbol": "pmf_dScMgTrampoline2_c_StateDone",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTrampoline2_c_StateIntro",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTrampoline2_c_StatePlay",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTrampoline2_c_StateResults",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
+    },
+    {
+      "symbol": "pmf_dScMgTrampoline2_c_StateWaitExit",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF literal is a configured relocation destination (symbols.txt row is global)"
     }
   ],
   "undefined_symbol_aliases": [
@@ -2593,9 +2623,34 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@1209",
+      "from": "@1215",
       "to": "@1086",
-      "evidence": "data-trampoline2-wave-tables1017: named local wave-record type shifts compiler-local destructor registration node from@1111 to@1110. Both are unique12-byte local NOBITS objects; identical64-byte initializer references the node at the same relocation offset/type/addend. Its configured canonicalidentity remains@1086. Complete71-definition proof permits only this exactsite-derived bijection and the random-position semanticrename. Re-keyed -1 (from @1156) when this TU's extern Mg_DrawLine was removed and dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @1148) when the unread TU-local vtable-slot scaffold struct C was deleted.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed -2 (from @1215) when the unread pointer parameters of Trmp2Mario_EnterAll and Trmp2Mario_PlaceAtStart were dropped from this TU's externs. Re-keyed -1 (from @1213) when Trmp2Spinner_Init took its hit count as an int parameter instead of re-reading a void * into a local (decl agreement with Trmp2Spinner_InitAll's caller); paired by symtab index 92, every non-strtab section byte-identical. Re-keyed from @1212 to @1211 (same symtab index 92, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1211 to @1209 when StateWaitExit copied its PMF state as a struct P2 instead of a b ? a : a ternary."
+      "evidence": "data-trampoline2-wave-tables1017: named local wave-record type shifts compiler-local destructor registration node from@1111 to@1110. Both are unique12-byte local NOBITS objects; identical64-byte initializer references the node at the same relocation offset/type/addend. Its configured canonicalidentity remains@1086. Complete71-definition proof permits only this exactsite-derived bijection and the random-position semanticrename. Re-keyed -1 (from @1156) when this TU's extern Mg_DrawLine was removed and dScMgBase_c.h gained Mg_DrawLine. Re-keyed -1 (from @1148) when the unread TU-local vtable-slot scaffold struct C was deleted.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed -2 (from @1215) when the unread pointer parameters of Trmp2Mario_EnterAll and Trmp2Mario_PlaceAtStart were dropped from this TU's externs. Re-keyed -1 (from @1213) when Trmp2Spinner_Init took its hit count as an int parameter instead of re-reading a void * into a local (decl agreement with Trmp2Spinner_InitAll's caller); paired by symtab index 92, every non-strtab section byte-identical. Re-keyed from @1212 to @1211 (same symtab index 92, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @1211 to @1209 when StateWaitExit copied its PMF state as a struct P2 instead of a b ? a : a ternary. Re-keyed from @1209 to @1215 when the five state assignments became mState = &dScMgTrampoline2_c::X (five new PMF literals ahead of it) and the dead P2/S2/StateValue types were deleted."
+    },
+    {
+      "from": "@670",
+      "to": "pmf_dScMgTrampoline2_c_StateIntro",
+      "evidence": "Compiler PMF literal: BeginIntro assigns mState = &dScMgTrampoline2_c::StateIntro, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (BeginIntro's load of 0x0213fbd8)."
+    },
+    {
+      "from": "@691",
+      "to": "pmf_dScMgTrampoline2_c_StatePlay",
+      "evidence": "Compiler PMF literal: BeginPlay assigns mState = &dScMgTrampoline2_c::StatePlay, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (BeginPlay's load of 0x0213fbe8)."
+    },
+    {
+      "from": "@755",
+      "to": "pmf_dScMgTrampoline2_c_StateResults",
+      "evidence": "Compiler PMF literal: BeginResults assigns mState = &dScMgTrampoline2_c::StateResults, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (BeginResults's load of 0x0213fbf0)."
+    },
+    {
+      "from": "@765",
+      "to": "pmf_dScMgTrampoline2_c_StateWaitExit",
+      "evidence": "Compiler PMF literal: StateResults assigns mState = &dScMgTrampoline2_c::StateWaitExit, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (StateResults's load of 0x0213fbe0)."
+    },
+    {
+      "from": "@782",
+      "to": "pmf_dScMgTrampoline2_c_StateDone",
+      "evidence": "Compiler PMF literal: StateWaitExit assigns mState = &dScMgTrampoline2_c::StateDone, so mwcc emits an 8-byte {code address, 0} @N constant in .data that the copy into mState loads. Paired with the canonical descriptor by the relocation it satisfies (StateWaitExit's load of 0x0213fbd0)."
     }
   ],
   "rodata": [

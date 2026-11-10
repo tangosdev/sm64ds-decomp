@@ -68,35 +68,6 @@ typedef struct Vec2s {
     s16 x, y;
 } Vec2s;
 
-/* Eight-byte state descriptors. A pointer-to-member initializer
-   (`TrampState pmf = &dScMgTrampoline_c::StateIntro` and the same for
-   StatePlay, StateResults, StateWaitExit) was measured on this TU: the four
-   symbols move from .data to .bss (0x20), __sinit_d_s_mg_trampoline.cpp
-   is emitted at size 0x94 with a .ctor word, and the (code, 0) words survive only as
-   anonymous .data temps that __sinit copies. .text stayed 0x1e10. The ROM
-   keeps these four in .data, so the mangled externs stay. StateDone is
-   empty, so it is static and its address is an ordinary function pointer. */
-struct P2 {
-    int a, b;
-};
-
-// Preserve the original front end's blind two-word aggregate copy in C++ mode.
-struct P2Words {
-    int words[2];
-};
-
-/* TUBUILD CONFLICT -- alternate body of struct 'P2', from the legacy file for func_ov006_021218c4, NOT applied:
-struct P2 { int a, b; };
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'P2', from the legacy file for func_ov006_02121cf4, NOT applied:
-struct P2 { int a, b; };
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'P2', from the legacy file for func_ov006_02121f04, NOT applied:
-struct P2 { int a, b; };
-*/
-
 /* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied:
 struct Obj {
     virtual void m00();
@@ -198,14 +169,6 @@ extern void Trmp3DMario_DrawAll(void);
 extern void TrmpLine_DrawAll(void);
 
 dScMgTrampoline_c *dScMgTrampoline_c_classInit(void);
-/* The four non-static state methods. A pointer to member does not convert
-   to the int word a descriptor holds, and a pointer-to-member initializer
-   is not static .data (see the note above the P2 definition). StateDone is
-   static, so the descriptor below names it directly. */
-extern void _ZN17dScMgTrampoline_c13StateWaitExitEv(void *); /* local extern: PMF -> int */
-extern void _ZN17dScMgTrampoline_c12StateResultsEv(void *);  /* local extern: PMF -> int */
-extern void _ZN17dScMgTrampoline_c9StatePlayEv(void *);      /* local extern: PMF -> int */
-extern void _ZN17dScMgTrampoline_c10StateIntroEv(void *);    /* local extern: PMF -> int */
 extern int sTrmpPuffEnglish[];
 extern int sTrmpPuffSpanish[];
 extern int sTrmpPuffFrench[];
@@ -218,16 +181,11 @@ extern OamAttr *sMgTextSpritesGerman[];
 extern OamAttr *sMgTextSpritesItalian[];
 
 /* Data owned by the same original TU. */
-P2 pmf_dScMgTrampoline_c_StateWaitExit = {(int)_ZN17dScMgTrampoline_c13StateWaitExitEv, 0};
-P2 pmf_dScMgTrampoline_c_StateDone = {(int)&dScMgTrampoline_c::StateDone, 0};
-P2 pmf_dScMgTrampoline_c_StateIntro = {(int)_ZN17dScMgTrampoline_c10StateIntroEv, 0};
 BaseSpawnInfo<dScMgTrampoline_c> g_profile_MG_TRAMPOLINE = {
     dScMgTrampoline_c_classInit,
     0x180,
     0x180,
 };
-P2 pmf_dScMgTrampoline_c_StatePlay = {(int)_ZN17dScMgTrampoline_c9StatePlayEv, 0};
-P2 pmf_dScMgTrampoline_c_StateResults = {(int)_ZN17dScMgTrampoline_c12StateResultsEv, 0};
 int sTrmpNcgByLanguage[] = {0x107, 0x109, 0x104, 0x105, 0x106};
 OamAttr **sTrmpTextSpritesByLanguage[] = {sMgTextSpritesEnglish, sMgTextSpritesSpanish,
                                           sMgTextSpritesFrench, sMgTextSpritesGerman,
@@ -434,7 +392,7 @@ void dScMgTrampoline_c::BeginIntro() {
     mTouchX = startX;
     mTouchY = startY;
     mDragSoundHandle = 0;
-    *(P2Words *)mState = *(P2Words *)&pmf_dScMgTrampoline_c_StateIntro;
+    mState = &dScMgTrampoline_c::StateIntro;
 }
 
 void dScMgTrampoline_c::StateIntro() {
@@ -493,7 +451,7 @@ void dScMgTrampoline_c::BeginPlay() {
     mDoorMark.Show(mDoorSide);
     mDragSoundHandle = 0;
     Sound::PlayBank2_2D(0x1b6);
-    *(P2Words *)mState = *(P2Words *)&pmf_dScMgTrampoline_c_StatePlay;
+    mState = &dScMgTrampoline_c::StatePlay;
 }
 
 void dScMgTrampoline_c::UpdateScroll() {
@@ -603,7 +561,7 @@ void dScMgTrampoline_c::StatePlay() {
 void dScMgTrampoline_c::BeginResults() {
     Trmp3DMario_StartAll();
     mTimer = 0x5a;
-    *(P2Words *)mState = *(P2Words *)&pmf_dScMgTrampoline_c_StateResults;
+    mState = &dScMgTrampoline_c::StateResults;
 }
 
 void dScMgTrampoline_c::StateResults() {
@@ -615,7 +573,7 @@ void dScMgTrampoline_c::StateResults() {
     Mg_SetSharedState(MG_STATE_GAME_OVER);
     mPromptEnabled = 0;
     mTimer = 0xb4;
-    *(P2Words *)mState = *(P2Words *)&pmf_dScMgTrampoline_c_StateWaitExit;
+    mState = &dScMgTrampoline_c::StateWaitExit;
 }
 
 void dScMgTrampoline_c::StateWaitExit() {
@@ -637,7 +595,7 @@ void dScMgTrampoline_c::StateWaitExit() {
         MultiStore16(fill, (char *)dst, 0x6000);
     }
     mRoundOver = 1;
-    *(P2Words *)mState = *(P2Words *)&pmf_dScMgTrampoline_c_StateDone;
+    mState = &dScMgTrampoline_c::StateDone;
 }
 
 void dScMgTrampoline_c::StateDone() {}
@@ -697,7 +655,7 @@ void dScMgTrampoline_c::UpdateTouchInput() {
 s32 dScMgTrampoline_c::Behavior() {
     int saved = sTrmpComboCount;
     TrmpFx_UpdateAll();
-    (this->*(*(State *)mState))();
+    (this->*mState)();
     UpdateTouchInput();
     mDoorMark.Update();
     if (saved != sTrmpComboCount)
