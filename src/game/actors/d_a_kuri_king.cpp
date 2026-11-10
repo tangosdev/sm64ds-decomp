@@ -922,7 +922,7 @@ int daKuriKing_c::StepScaleTransition() {
             v.x = this->mPosX;
             v.y = this->mPosY;
             v.z = this->mPosZ;
-            v.y += FX_MUL(this->mCurrentScale, (long long)0x190000);
+            v.y += FX_MUL(this->mCurrentScale, 0x190000);
             Particle::System::NewSimple(kPtclHugeLandingDust, ((int *)&v)[0], ((int *)&v)[1],
                                         ((int *)&v)[2]);
         }

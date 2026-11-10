@@ -2856,7 +2856,7 @@ int func_020095e4(dCamera_c *cam) {
         }
         cam->mAngleY = cam->mBehindAngleY + cam->mTargetAngleY;
         old17e = cam->mAngleX;
-        cam->mAngleX += FX_MUL(r7, (long long)func_02008a70(cam));
+        cam->mAngleX += FX_MUL(r7, func_02008a70(cam));
         {
             int t = cam->mAngleX;
             if (t < 0)

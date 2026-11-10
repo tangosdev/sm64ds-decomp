@@ -2691,7 +2691,7 @@ int cMgSmartball_ball_c::HitKinokos(int *pos) {
                                     : (void *)((dScMgSmartball_c *)mpManager)->mpKinokos[i]));
                     delta[0] = delta[0] - out[0];
                     delta[1] = delta[1] - out[1];
-                    if (func_0203d5bc(delta) < (long long)r7) {
+                    if (func_0203d5bc(delta) < r7) {
                         void *e = i >= ((dScMgSmartball_c *)mpManager)->mKinokoCount
                                       ? 0
                                       : (void *)((dScMgSmartball_c *)mpManager)->mpKinokos[i];
