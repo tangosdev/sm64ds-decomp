@@ -359,7 +359,6 @@ extern int func_020092c4(void *cam, void *out, void *target);
 extern void func_02011cfc(void);
 extern void func_02011d2c(void);
 extern void func_02012694(unsigned int a, void *p);
-extern void func_020398fc(void *p);
 
 /* Unreferenced. */
 extern void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
@@ -637,7 +636,7 @@ void daIwante_c::SetLoweredPose() {
 
     mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-    func_020398fc(&mMeshCollider2);
+    mMeshCollider2.SetFilterByMoveDir();
     mMeshCollider2.Enable(this);
 
     {
@@ -925,7 +924,7 @@ int daIwante_c::HandPattern9Execute() {
                                           *(CLPS_Block *)(&data_ov025_02112d48));
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-            func_020398fc(&mMeshCollider2);
+            mMeshCollider2.SetFilterByMoveDir();
             mMeshCollider2.Enable(this);
             mSubState = 4;
         }
@@ -1286,7 +1285,7 @@ int daIwante_c::HandPattern7Execute() {
                                           *(CLPS_Block *)(&data_ov025_02112d48));
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-            func_020398fc(&mMeshCollider2);
+            mMeshCollider2.SetFilterByMoveDir();
             mMeshCollider2.Enable(this);
             data_ov066_0211ae08 += 1;
             mSubState = 8;
@@ -1466,7 +1465,7 @@ int daIwante_c::HandPattern6Execute() {
                                           *(CLPS_Block *)(&data_ov025_02112d48));
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-            func_020398fc(&mMeshCollider2);
+            mMeshCollider2.SetFilterByMoveDir();
             mMeshCollider2.Enable(this);
             data_ov066_0211ae08 += 1;
             mSubState = 7;
@@ -1610,7 +1609,7 @@ int daIwante_c::HandPattern5Execute() {
 
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
         mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-        func_020398fc(&mMeshCollider2);
+        mMeshCollider2.SetFilterByMoveDir();
         mMeshCollider2.Enable(this);
 
         data_ov066_0211ae08 += 1;
@@ -2590,7 +2589,7 @@ int daIwante_c::InitResources() {
         }
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
         mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-        func_020398fc(&mMeshCollider2);
+        mMeshCollider2.SetFilterByMoveDir();
         mRestPosZ -= 0x32000;
         mHitPoints = 3;
         data_ov066_0211ae00 = 0;

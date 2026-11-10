@@ -5795,7 +5795,7 @@
     },
     "arm9:0x020398fc": {
       "author": "tangosdev",
-      "name": "func_020398fc"
+      "name": "_ZN10dBgW_KcMbg18SetFilterByMoveDirEv"
     },
     "arm9:0x02039908": {
       "author": "tangosdev",
