@@ -23,7 +23,7 @@
  *   does not apply symbol_binding_rewrites to a .text-only TU.
  * - FillAllocMemory's zero goes through a volatile: the ROM passes
  *   MI_CpuFill32's value through a stack slot (OS_CreateThread's fill does
- *   the same). MIi_CpuClear32 is still MultiStore_Int in this tree.
+ *   the same).
  * - abs() is cstd::abs, the name this tree gives 0x0206df84.
  * - NNS_FndSetGroupIDForExpHeap takes a u32 groupID, not the SDK's u16: its
  *   one caller passes a u32 through un-narrowed (see include/nnsys/fnd.h).
@@ -31,7 +31,8 @@
 #include "nnsys/fnd.h"
 #include "cstd.h"
 
-extern "C" void MIi_CpuClear32(int val, int *dst, int len); /* MIi_CpuClear32 */
+/* local extern: no header declares this yet. */
+extern "C" void MIi_CpuClear32(int val, int *dst, int len);
 
 extern "C" {
 
