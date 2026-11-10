@@ -60,7 +60,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
         out.x = 0;
         out.z = 0;
 
-        if (!(*(volatile int *)&st->stateWork & OV007_FIGURE_TOUCHED) && counter >= 4) {
+        if (!(st->stateWork & OV007_FIGURE_TOUCHED) && counter >= 4) {
             Ov007Touch *rp = WORK->touch;
             if (rp->cur.touch != 0) {
                 int a = rp->cur.x;
