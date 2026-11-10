@@ -788,7 +788,7 @@ int daIbl_c::InitResources()
             mWithMeshClsn.Init(this, 0x64000, 0x64000, 0, 0);
             /* Full size: scale 1.0, collider radius and height 100 units.
                Speed per frame: 25 units in sublevel 0x18, 20 in 6, else 10. */
-            d = *(volatile signed char *)&gCurrentSublevel;
+            d = gCurrentSublevel;
             if (d == 0x18) {
                 mHorzSpeed = 0x19000;
                 mKillY = 0xfec78000;       /* -5000 units */
