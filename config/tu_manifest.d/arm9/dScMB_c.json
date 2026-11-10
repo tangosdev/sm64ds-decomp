@@ -30,7 +30,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x020a0c68",
+      "start": "0x020a0c5c",
       "end": "0x020a0c78"
     }
   ],
@@ -130,17 +130,39 @@
   "data": [],
   "bss": [
     {
+      "symbol": "sPrevHeap$405",
+      "address": "0x020a0c5c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "LoadMultiBootResources's function-local static mHeap::Heap_t *: the default heap the loader restores after each archive load. Its dynamic initializer (the previous default that SetDefault returns when the func_0201a458 heap is installed) runs once under the guard word above it; LoadMultiBootResources is its only reference."
+    },
+    {
+      "symbol": "_ZGVsPrevHeap$405",
+      "address": "0x020a0c60",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "guard word of LoadMultiBootResources's function-local static sPrevHeap; mwcc emits the tst #1 test and the orr #1 store exactly as retail."
+    },
+    {
+      "symbol": "data_020a0c64",
+      "address": "0x020a0c64",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "an int word, spelled u8[] by include/decl_common.h and defined here as u8[4] with that spelling: whether the loader job has finished. InitResources stores func_0201a244's return value (1 when the job ran synchronously) and Behavior's step 1 stores each func_0201a1bc poll; they are its only readers and writers. arm9 .bss slots are sorted by ascending size within a TU, so the three 4-byte words sit below the 0x10-byte sMBGraphCallback in this TU's run. The name stays a placeholder because include/decl_common.h declares it."
+    },
+    {
       "symbol": "sMBGraphCallback",
       "address": "0x020a0c68",
       "size": "0x10",
-      "evidence": "the global dScMB_c::graphCallback_c (sizeof 0x10) InitResources passes to func_02034b1c and stores into the graph hook gGraphCallback; retail __sinit_02074fb8 stores _ZTVN8dGraph_c10callback_cE then _ZTVN7dScMB_c15graphCallback_cE at +0 and zeroes +4 (mOwner). No destructor, so no registration node. data_020a0c64 sits directly below and the dBgCh_SphCrr static at 0x020a0c78 directly above.",
+      "evidence": "the global dScMB_c::graphCallback_c (sizeof 0x10) InitResources passes to func_02034b1c and stores into the graph hook gGraphCallback; retail __sinit_02074fb8 stores _ZTVN8dGraph_c10callback_cE then _ZTVN7dScMB_c15graphCallback_cE at +0 and zeroes +4 (mOwner). No destructor, so no registration node. The three 4-byte words below it are this TU too (see their entries); the dBgCh_SphCrr static at 0x020a0c78 directly above.",
       "binding": "STB_GLOBAL"
     }
   ],
   "notes": [
     "Text-only. The class's _ZTV/_ZTI/_ZTS and the nested graphCallback_c records stay in the cartridge .data at 0x02094364..0x0209440c; this TU re-emits them and deadstrips the copies.",
     "Destructor is the key function, defined out of line under defer_codegen off, so the file is ROM-ascending. D2 is deadstripped.",
-    "Static initializer folded: sMBGraphCallback, the scene's global dScMB_c::graphCallback_c, is now defined in this TU (it was declared u8[] in decl_common.h and built by the handwritten src/unnamed/arm9/0207/__sinit_02074fb8.c). graphCallback_c gains the inline constructor the retail initializer implies (mOwner(0); func_02034b1c sets the other fields later). mwcc emits __sinit_d_s_mb.cpp and its .ctor word; both plus the object's .bss are byte- and relocation-identical to retail. The class has no destructor, so there is no registration call and no @NNN node."
+    "Static initializer folded: sMBGraphCallback, the scene's global dScMB_c::graphCallback_c, is now defined in this TU (it was declared u8[] in decl_common.h and built by the handwritten src/unnamed/arm9/0207/__sinit_02074fb8.c). graphCallback_c gains the inline constructor the retail initializer implies (mOwner(0); func_02034b1c sets the other fields later). mwcc emits __sinit_d_s_mb.cpp and its .ctor word; both plus the object's .bss are byte- and relocation-identical to retail. The class has no destructor, so there is no registration call and no @NNN node.",
+    "Function-local static folded (0x020a0c5c..0x020a0c68): the hand-written `if (!(data_020a0c60 & 1)) { data_020a0c5c = heap->SetDefault(); data_020a0c60 |= 1; }` in LoadMultiBootResources was the decompiler's rendering of `static mHeap::Heap_t *sPrevHeap = heap->SetDefault();`. mwcc emits the guard test and store itself, byte- and relocation-identical. data_020a0c64, the loader-job flag, is now defined here too, as u8[4] to agree with decl_common.h's u8[] declaration; its two int stores keep the cast. Re-spelling it int is a decl_common.h change."
   ],
   "compiler_only_output": [
     {
@@ -381,14 +403,14 @@
         },
         {
           "section": ".bss",
-          "start": "0x020a0c68",
+          "start": "0x020a0c5c",
           "end": "0x020a0c78",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 16
+          "LICENSED": 19
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -399,32 +421,66 @@
           {
             "section": ".init",
             "original": [
-              53
+              60
             ],
             "desired": [
-              53
+              60
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              51
+              58
             ],
             "desired": [
-              51
+              58
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5
+              5,
+              6,
+              24,
+              25
             ],
             "desired": [
-              5
+              24,
+              25,
+              5,
+              6
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                24,
+                25
+              ],
+              "desired": [
+                24,
+                25,
+                5,
+                6
+              ],
+              "slots": [
+                5,
+                6,
+                24,
+                25
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -471,6 +527,18 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "sPrevHeap$405",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "function-local static; DSD requires a configured global symbol at 0x020a0c5c, and changing the ELF binding preserves its function-local lifetime, storage, relocations and bytes"
+    },
+    {
+      "symbol": "_ZGVsPrevHeap$405",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "function-local static guard; DSD requires a configured global symbol at 0x020a0c60, and changing the ELF binding preserves storage, relocations and bytes"
     }
   ],
   "relocations": [
