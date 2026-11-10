@@ -4402,8 +4402,8 @@ data_02099fb0 kind:data(any) addr:0x02099fb0
 data_02099fb4 kind:data(any) addr:0x02099fb4
 data_02099fbc kind:data(any) addr:0x02099fbc
 data_02099fc4 kind:data(any) addr:0x02099fc4
-data_02099fcc kind:data(any) addr:0x02099fcc
-data_02099fd0 kind:data(any) addr:0x02099fd0
+sIsDispOn kind:data(any) addr:0x02099fcc
+GXi_DmaId kind:data(any) addr:0x02099fd0
 data_02099fd4 kind:data(any) addr:0x02099fd4
 data_02099fe4 kind:data(any) addr:0x02099fe4
 data_0209a03c kind:data(any) addr:0x0209a03c
@@ -5133,7 +5133,7 @@ data_020a5bb8 kind:bss addr:0x020a5bb8
 data_020a5bbc kind:bss addr:0x020a5bbc
 data_020a5bc8 kind:bss addr:0x020a5bc8
 data_020a5bd4 kind:bss addr:0x020a5bd4
-data_020a6084 kind:bss addr:0x020a6084
+sDispMode kind:bss addr:0x020a6084
 data_020a6088 kind:bss addr:0x020a6088
 data_020a608a kind:bss addr:0x020a608a
 data_020a608c kind:bss addr:0x020a608c

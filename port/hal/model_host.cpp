@@ -85,11 +85,11 @@ void MI_SendGXCommand(int ch, int src, int size)
 //   data_020a60ac  base window address        -> texture slots at 0x06800000
 //   data_020a60bc  secondary bank address     -> 0 = single flat window
 //   data_020a60c0  where the window splits    -> unused while _bc is 0
-//   data_02099fd0  preferred DMA channel      -> -1 = CPU copy path
+//   GXi_DmaId      preferred DMA channel      -> -1 = CPU copy path
 u32 data_020a60ac = 0x06800000u;
 u32 data_020a60bc = 0;
 u32 data_020a60c0 = 0;
-int data_02099fd0 = -1;
+int GXi_DmaId = -1;
 
 // LoadTexPltt destination base (palette slots, same convention)
 u32 data_020a60b0 = 0x06880000u;
@@ -168,7 +168,7 @@ unsigned short data_02099f94[8];
 #pragma comment(linker, "/alternatename:?data_020a60ac@@3IA=_data_020a60ac")
 #pragma comment(linker, "/alternatename:?data_020a60bc@@3IA=_data_020a60bc")
 #pragma comment(linker, "/alternatename:?data_020a60c0@@3IA=_data_020a60c0")
-#pragma comment(linker, "/alternatename:?data_02099fd0@@3HA=_data_02099fd0")
+#pragma comment(linker, "/alternatename:?GXi_DmaId@@3HA=_GXi_DmaId")
 
 // ---- upload-chain bridges -------------------------------------------------
 // operator_new2 on the DS is a register-passthrough tail-call veneer to

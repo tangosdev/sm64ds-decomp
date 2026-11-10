@@ -6,14 +6,14 @@
  */
 // leftovers: LoadTex's base/top stay plain int (the register web the bytes
 // were built against). BeginLoadTex's byte-offset table reads stay a char *
-// tower (indexing reschedules the body). data_02099fd0 is the render DMA
+// tower (indexing reschedules the body). GXi_DmaId is the render DMA
 // channel, -1 if none.
 
 #include "types.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_vramcnt.h"
 
-extern int data_02099fd0;  // RENDER_DMA_CHANNEL: DMA channel number, -1 if none
+extern int GXi_DmaId;      // RENDER_DMA_CHANNEL: DMA channel number, -1 if none
 extern u32 data_020a60ac;  // texture upload window: base address
 extern u32 data_020a60b0;  // texture-palette VRAM base address
 extern u32 data_020a60b4;  // texture-palette bank selector (BeginLoadTexPltt result)
@@ -58,10 +58,10 @@ void GX_LoadTex(const void *src, unsigned int offset, unsigned int size) {
         } else {
             top -= offset;
             unsigned int d0 = data_020a60ac + offset;
-            int ch = data_02099fd0;
+            int ch = GXi_DmaId;
             if (ch != -1) {
                 DMASyncWordTransfer(ch, src, (void*)d0, top);
-                MI_DmaCopy32Async(data_02099fd0, (char *)src + top, (void *)base, size - top, 0, 0);
+                MI_DmaCopy32Async(GXi_DmaId, (char *)src + top, (void *)base, size - top, 0, 0);
                 return;
             }
             MultiCopy_Int((int*)src, (int*)d0, top);
@@ -69,8 +69,8 @@ void GX_LoadTex(const void *src, unsigned int offset, unsigned int size) {
             return;
         }
     }
-    if (data_02099fd0 != -1) {
-        MI_DmaCopy32Async(data_02099fd0, src, (void *)dst, size, 0, 0);
+    if (GXi_DmaId != -1) {
+        MI_DmaCopy32Async(GXi_DmaId, src, (void *)dst, size, 0, 0);
         return;
     }
     MultiCopy_Int((int*)src, (int*)dst, size);
@@ -79,8 +79,8 @@ void GX_LoadTex(const void *src, unsigned int offset, unsigned int size) {
 // Ends a banked texture upload: waits on the upload DMA channel if one is
 // active, restores the texture bank, then clears the four upload-window globals.
 void GX_EndLoadTex() {
-    if (data_02099fd0 != -1) {
-        MI_WaitDma(data_02099fd0);
+    if (GXi_DmaId != -1) {
+        MI_WaitDma(GXi_DmaId);
     }
     GX_SetBankForTex(data_020a60b8);
     data_020a60c0 = 0;
@@ -96,10 +96,10 @@ void GX_BeginLoadTexPltt() {
 }
 
 // Loads a texture palette into VRAM: async DMA when a channel is configured
-// (data_02099fd0 != -1), otherwise MultiCopy_Int.
+// (GXi_DmaId != -1), otherwise MultiCopy_Int.
 void GX_LoadTexPltt(const void *src, u32 destSlotAddr, u32 size) {
     void *dest = (void *)(data_020a60b0 + destSlotAddr);
-    s32 dmaCh = data_02099fd0;
+    s32 dmaCh = GXi_DmaId;
     if (dmaCh != -1) {
         MI_DmaCopy32Async(dmaCh, src, dest, size, 0, 0);
     } else {
@@ -108,7 +108,7 @@ void GX_LoadTexPltt(const void *src, u32 destSlotAddr, u32 size) {
 }
 
 void GX_EndLoadTexPltt() {
-    u32 dmaId = data_02099fd0;
+    u32 dmaId = GXi_DmaId;
     if (dmaId != (u32)-1) {
         MI_WaitDma(dmaId);
     }

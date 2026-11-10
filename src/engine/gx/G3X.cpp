@@ -16,7 +16,7 @@
  * SetClearColor reads the bool slot as an int (byte-proven widening; the
  * header's bool spelling emits a narrower compare at the call).
  * InitTable's split volatile zeroing (init for a, store for b) is as
- * built: merging b into an init reschedules the body. data_02099fd0 is the
+ * built: merging b into an init reschedules the body. GXi_DmaId is the
  * shared render DMA channel (named at its GX.cpp use).
  *
  * PC port: smoke_gx builds G3X::ClearFifo from this file through
@@ -29,7 +29,7 @@
 extern "C" {
 void MultiCopyHalf(const void *src, void *dst, int size);
 void Copy32Bytes(void *src, void *dst);
-extern int data_02099fd0;
+extern int GXi_DmaId;
 void MI_DmaFill32Async(unsigned int dmaNo, void *dest, unsigned int data, unsigned int size,
                        void (*callback)(void *), void *arg);
 void DMASyncFillTransfer(unsigned int channel, void *dst, unsigned int data,
@@ -166,9 +166,9 @@ void G3X::SetClearColor(unsigned short a, int b, int c, int d, bool e) {
 
 void G3X::InitTable(void) {
     int i;
-    if (data_02099fd0 != -1) {
-        MI_DmaFill32Async(data_02099fd0, (void *)0x4000330, 0, 0x10, 0, 0);
-        DMASyncFillTransfer(data_02099fd0, (void *)0x4000360, 0, 0x50);
+    if (GXi_DmaId != -1) {
+        MI_DmaFill32Async(GXi_DmaId, (void *)0x4000330, 0, 0x10, 0, 0);
+        DMASyncFillTransfer(GXi_DmaId, (void *)0x4000360, 0, 0x50);
     } else {
         volatile int a = 0;
         volatile int b;

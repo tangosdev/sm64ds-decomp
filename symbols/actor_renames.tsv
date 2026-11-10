@@ -9442,3 +9442,6 @@ arm9	0x020564f4	func_020564f4	GXS_LoadBG0Scr	NitroSDK gx_load2d.c (pret GX_load2
 arm9	0x02056554	func_02056554	GX_LoadBG0Scr	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
 arm9	0x02056674	func_02056674	GXS_LoadOAM	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
 arm9	0x020566dc	func_020566dc	GX_LoadOAM	NitroSDK gx_load2d.c (pret GX_load2d.c): each fills the gap its neighbours leave in the file's reverse-emitted run; same 0x60/0x68/0x5c body shape as its named twin
+arm9	0x02099fd0	data_02099fd0	GXi_DmaId	NitroSDK gx.c variable (pret GX.c): GXi_DmaId = 3, sIsDispOn = TRUE in .data; sDispMode in .bss
+arm9	0x02099fcc	data_02099fcc	sIsDispOn	NitroSDK gx.c variable (pret GX.c): GXi_DmaId = 3, sIsDispOn = TRUE in .data; sDispMode in .bss
+arm9	0x020a6084	data_020a6084	sDispMode	NitroSDK gx.c variable (pret GX.c): GXi_DmaId = 3, sIsDispOn = TRUE in .data; sDispMode in .bss

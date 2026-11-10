@@ -6,21 +6,22 @@
  * the file reads top-down from GX_Init at 0x02053c40 to the brightness
  * helper at 0x02053a90.
  *
- * GX_DispOff parks the display mode (DISPCNT bits 16-17) in data_020a6084
+ * GX_DispOff parks the display mode (DISPCNT bits 16-17) in sDispMode
  * and clears it, which blanks engine A; GX_DispOn puts it back, or selects
- * "graphics" when no mode was parked. data_02099fcc is the display-on flag:
+ * "graphics" when no mode was parked. sIsDispOn is the display-on flag:
  * while it is clear, GX_SetGraphicsMode records the requested mode but
  * writes mode 0, so a mode change cannot light a display that is off.
  *
- * data_02099fd0 is the GX DMA channel (-1: none), shared by the whole GX
+ * GXi_DmaId is the GX DMA channel (-1: none), shared by the whole GX
  * library. GX_InitGXState (src/GX_InitGXState.c, the file above) clears the VRAM
  * state block. The empty function just below this run (func_02053a8c) is
  * FX_Init, which the boot sequence calls just before GX_Init; it belongs to
  * the fixed-point library, not to this file.
  *
  * This TU owns .text only: the three variables above stay at their ROM
- * addresses. Every function has C linkage and pret's GX.c name, and
- * nitro/gx/gx.h declares them all.
+ * addresses, which is why gx.c's two file statics, sIsDispOn and sDispMode,
+ * are declared extern below. Every function has C linkage and pret's GX.c
+ * name, and nitro/gx/gx.h declares them all.
  */
 
 #include "types.h"
@@ -60,9 +61,9 @@
 
 extern "C" {
 
-extern u16 data_02099fcc; // display on (TRUE until GX_DispOff)
-extern int data_02099fd0; // GX DMA channel, -1 if none
-extern u16 data_020a6084; // display mode parked by GX_DispOff
+extern u16 sIsDispOn; // display on (TRUE until GX_DispOff)
+extern int GXi_DmaId; // GX DMA channel, -1 if none
+extern u16 sDispMode; // display mode parked by GX_DispOff
 
 void GX_InitGXState(void);
 void DMASyncFillTransfer(u32 channel, void *dst, u32 data, u32 size);
@@ -81,10 +82,10 @@ void GX_Init(void) {
     REG_DISPSTAT = 0;
     REG_DISPCNT = 0;
 
-    if (data_02099fd0 != -1) {
-        DMASyncFillTransfer(data_02099fd0, REG_BG0CNT_ADDR, 0, 0x60);
+    if (GXi_DmaId != -1) {
+        DMASyncFillTransfer(GXi_DmaId, REG_BG0CNT_ADDR, 0, 0x60);
         REG_MASTER_BRIGHT = 0;
-        DMASyncFillTransfer(data_02099fd0, REG_DB_DISPCNT_ADDR, 0, 0x70);
+        DMASyncFillTransfer(GXi_DmaId, REG_DB_DISPCNT_ADDR, 0, 0x70);
     } else {
         volatile u32 zero = 0;
         MultiStore_Int(zero, (int *)REG_BG0CNT_ADDR, 0x60);
@@ -126,30 +127,29 @@ int GX_VBlankIntr(int enable) {
 
 void GX_DispOff(void) {
     u32 cnt = REG_DISPCNT;
-    data_02099fcc = 0;
-    data_020a6084 = (u16)((cnt & DISPCNT_MODE_MASK) >> DISPCNT_MODE_SHIFT);
+    sIsDispOn = 0;
+    sDispMode = (u16)((cnt & DISPCNT_MODE_MASK) >> DISPCNT_MODE_SHIFT);
     REG_DISPCNT = cnt & ~DISPCNT_MODE_MASK;
 }
 
 void GX_DispOn(void) {
-    data_02099fcc = 1;
-    if (data_020a6084 != 0)
-        REG_DISPCNT =
-            (REG_DISPCNT & ~DISPCNT_MODE_MASK) | ((u32)data_020a6084 << DISPCNT_MODE_SHIFT);
+    sIsDispOn = 1;
+    if (sDispMode != 0)
+        REG_DISPCNT = (REG_DISPCNT & ~DISPCNT_MODE_MASK) | ((u32)sDispMode << DISPCNT_MODE_SHIFT);
     else
         REG_DISPCNT |= DISPMODE_GRAPHICS << DISPCNT_MODE_SHIFT;
 }
 
 void GX_SetGraphicsMode(int dispMode, int bgMode, int bg0As3d) {
     u32 cnt = REG_DISPCNT;
-    data_020a6084 = (u16)dispMode;
-    if (data_02099fcc == 0)
+    sDispMode = (u16)dispMode;
+    if (sIsDispOn == 0)
         dispMode = 0;
     cnt &= ~(DISPCNT_BGMODE_MASK | DISPCNT_BG0_3D | DISPCNT_MODE_MASK | DISPCNT_VRAM_MASK);
     REG_DISPCNT =
         cnt | (dispMode << DISPCNT_MODE_SHIFT) | bgMode | (bg0As3d << DISPCNT_BG0_3D_SHIFT);
-    if (data_020a6084 == 0)
-        data_02099fcc = 0;
+    if (sDispMode == 0)
+        sIsDispOn = 0;
 }
 
 void GXS_SetGraphicsMode(int bgMode) {
