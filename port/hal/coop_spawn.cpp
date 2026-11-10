@@ -130,7 +130,8 @@ SilOut g_so[kSilOutMax];
 uint16_t g_sseq = 0;
 uint16_t g_lastsseq[kCoopMaxSeats];
 unsigned g_sil_drop_frame = 0; bool g_sil_drop_done = true;   // SM64DS_SILVER_DROP=<frame>: the ROM's hurt drop on my player once (proof knob)
-unsigned g_sil_pit_frame = 0; bool g_sil_pit_done = true;     // SM64DS_SILVER_PIT=<frame>: from that frame, lift the first bouncing dropped silver star out of the level's bounds once, so the ROM loses it (proof knob)
+unsigned g_sil_pit_frame = 0; bool g_sil_pit_done = true;     // SM64DS_SILVER_PIT=<frame>[:nomarker]: from that frame, lift the first bouncing dropped silver star out of the level's bounds once (proof knob)
+bool g_sil_pit_nomarker = false;   // ...and first forget its marker, so the ROM destroys even the dropper's own star
 long long g_sil_goto_wall = 0;     // SM64DS_SILVER_GOTO_WALL=<wall ms>: at that machine time put my player on the lowest-slot silver star once (proof knob: two consoles on one star at one moment)
 bool g_sil_off = false;            // SM64DS_SPAWN_OFF=silver: must-fail control, no silver sharing at all
 struct SilStats { unsigned long long credit_take, credit_ann, credit_snap, capped, drop_sent, drop_applied, drop_local, ghost_take, sent_snap, recv_snap; } g_sst = {};
@@ -219,6 +220,7 @@ void read_env() {
     if (const char *e = std::getenv("SM64DS_SILVER_PIT")) {
         unsigned f = 0;
         if (std::sscanf(e, "%u", &f) == 1) { g_sil_pit_frame = f; g_sil_pit_done = false; }
+        g_sil_pit_nomarker = std::strstr(e, "nomarker") != nullptr;
     }
     if (const char *e = std::getenv("SM64DS_SPAWN_BLOCK")) {
         const char *p = e;
@@ -1489,9 +1491,10 @@ void on_frame(unsigned now) {
             if (a_cls(a) != 179 || a_dead(a) || is_player_ptr(a) || a_slot(a) != -1 || *(const unsigned *)(a + 0x440) != 8u) continue;
             // STATE_BOUNCE runs the bounds test (daStar_c::func_ov002_020e8c34) every frame; above 80000.0 it calls
             // func_ov002_020e8abc, which destroys a star without a marker: the cartridge's "fell off the level".
+            if (g_sil_pit_nomarker) *(unsigned *)(a + 0x434) = 0;      // mMarkerID
             *(int *)(a + 0x60) = 0x14000000;
             g_sil_pit_done = true;
-            std::fprintf(stderr, "[coopsilver-knob] pit: dropped star uid=%u lifted out of bounds frame=%u wall=%lld\n", a_uid(a), g_frames, wall_ms());
+            std::fprintf(stderr, "[coopsilver-knob] pit: dropped star uid=%u lifted out of bounds%s frame=%u wall=%lld\n", a_uid(a), g_sil_pit_nomarker ? " (marker forgotten)" : "", g_frames, wall_ms());
             break;
         }
     }
