@@ -34,9 +34,9 @@ extern CLPS data_020a0c78;
 
 /* Ground and line scans use the real dBgW virtual interface and dActor_c
    clip-volume fields, as the sphere scans do below. PFN retains its pending
-   stored-callback reconstruction. Position reads keep the measured
-   three-word byte view of the actor: direct mPosX/Y/Z accesses remove one
-   address-setup instruction from each of three scans. */
+   stored-callback reconstruction. Position reads go through a
+   `const Vector3 *` to owner->mPos: direct owner->mPos.x/y/z accesses remove
+   one address-setup instruction from each of three scans. */
 
 int dBgCh_Gnd::DetectClsn()
 {
@@ -57,10 +57,10 @@ int dBgCh_Gnd::DetectClsn()
         if (IsOwnedBy(owner))
             continue;
         if (owner != 0 && ((owner->mFlags & 2) ? flag : 0) != 0) {
-            const char *position = (const char *)owner + 0x5c;
-            ownerPos.x = *(const s32 *)(position + 0);
-            ownerPos.y = *(const s32 *)(position + 4);
-            ownerPos.z = *(const s32 *)(position + 8);
+            const Vector3 *position = &owner->mPos;
+            ownerPos.x = position->x;
+            ownerPos.y = position->y;
+            ownerPos.z = position->z;
             int clipDist = obj->GetClipRadius();
             if (clipDist == -0x1000) {
                 int clipRadius = owner->mClipRadius;
@@ -287,10 +287,10 @@ bool dBgCh_Lin::DetectClsn()
             int active = (owner->mFlags & 2) ? 1 : 0;
             if (active != 0) {
                 Vector3 ownerPos;
-                const char *position = (const char *)owner + 0x5c;
-                ownerPos.x = *(const s32 *)(position + 0);
-                ownerPos.y = *(const s32 *)(position + 4);
-                ownerPos.z = *(const s32 *)(position + 8);
+                const Vector3 *position = &owner->mPos;
+                ownerPos.x = position->x;
+                ownerPos.y = position->y;
+                ownerPos.z = position->z;
                 clipDist = o->GetClipRadius();
                 if (clipDist == -0x1000) {
                     int clipOffsetY = owner->mClipOffsetY;
@@ -358,10 +358,10 @@ int dBgCh_Lin::DetectClsnExceptSlot0() {
             int active = (owner->mFlags & 2) ? 1 : 0;
             if (active != 0) {
                 Vector3 ownerPos;
-                const char *position = (const char *)owner + 0x5c;
-                ownerPos.x = *(const s32 *)(position + 0);
-                ownerPos.y = *(const s32 *)(position + 4);
-                ownerPos.z = *(const s32 *)(position + 8);
+                const Vector3 *position = &owner->mPos;
+                ownerPos.x = position->x;
+                ownerPos.y = position->y;
+                ownerPos.z = position->z;
                 clipDist = o->GetClipRadius();
                 if (clipDist == -0x1000) {
                     int clipOffsetY = owner->mClipOffsetY;
