@@ -368,7 +368,18 @@ extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
 extern int func_ov002_020f02c8(int sel);
+extern s32 data_0209f32c;
+extern u32 PlayerNewHold5(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                          void *callback);
+extern void PlayerPlayLongHold_cec2c(unsigned int a, unsigned int b, unsigned int c,
+                                     const Vector3 *v, unsigned int d);
 }
+
+class dFdColor_c;
+extern dFdColor_c gSceneColorFader;
+extern void (daPly_c::*data_ov002_02110884[20])();
+extern u32 PlayerNewHold6(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
+                          void *callback);
 
 /* ---------------------------------------------------------------------------
  * Shadow types and ABI stand-ins that cannot live inside a function body.
@@ -6522,10 +6533,7 @@ int daPly_c::func_ov002_020c8540() {
  * when the anim finishes either spawns the cap-return actor with the level
  * fanfare (mode 0x10) or spawns the star and hands the player to it.
  */
-extern "C" {
 int daPly_c::func_ov002_020c8714() {
-    extern u32 PlayerNewHold5(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                              void *callback);
     volatile int v[3];
 
     if (mStateArg == 0) {
@@ -6584,7 +6592,6 @@ int daPly_c::func_ov002_020c8714() {
         mStateArg = 0;
     }
     return 0;
-}
 }
 
 extern "C" {
@@ -7010,10 +7017,8 @@ done:
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
  */
-extern "C" {
 void daPly_c::func_ov002_020c9718() {
     unsigned char *self = (unsigned char *)this;
-    extern int data_0209f32c;
     int r2;
     if (mIsUnderwater == 0)
         return;
@@ -7024,12 +7029,9 @@ void daPly_c::func_ov002_020c9718() {
     if (mVertSpeed >= 0)
         mPosY = r2;
 }
-}
 
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_NoControl_Init() {
-    extern void (daPly_c::*data_ov002_02110884[])();
     mIsControlDisabled = 1;
     mStatePhase = 0;
     DisableInteraction();
@@ -7040,7 +7042,6 @@ int daPly_c::St_NoControl_Init() {
     mIsOpeningBigDoor = 0;
     (this->*data_ov002_02110884[mNoCtrlKind])();
     return 1;
-}
 }
 
 void daPly_c::func_ov002_020c97e0() {
@@ -7755,7 +7756,6 @@ int daPly_c::St_CameraZoom_Cleanup() {
 }
 
 int daPly_c::func_ov002_020cac60() {
-    extern short gSceneColorFader;
     short ang;
     short angle;
     if (mSurfaceType == 0xd && NumStars() >= 0xe) {
@@ -8012,8 +8012,6 @@ int daPly_c::func_ov002_020cb400() {
 }
 
 void daPly_c::func_ov002_020cb474() {
-    extern u32 PlayerNewHold6(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
-                              void *callback);
     dCc_c *r1 = mClimbClsn;
     if ((r1->flags & 0x1000000) == 0)
         return;
@@ -8605,9 +8603,7 @@ int daPly_c::St_Shell_Init() {
 }
 
 /* recovered: named members + shared header, real C++ method */
-extern "C" {
 int daPly_c::St_HurtWater_Main() {
-    extern int data_0209f32c;
     if (func_ov002_020cec2c())
         return 1;
     ApproachLinear(*((int *)((char *)&mHorzSpeed)), 0, 0x800);
@@ -8641,7 +8637,6 @@ int daPly_c::St_HurtWater_Main() {
     func_ov002_020ceb7c();
     AdvanceAnims();
     return 1;
-}
 }
 
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -8683,7 +8678,6 @@ int daPly_c::St_MetalWaterWater_Main() {
     extern int func_ov002_020eeca8(void*, void*);
     extern void ApproachAngle(void*, int target, int a, int b, int d);
     extern struct S18b2 data_0209f4a0[];
-    extern int data_0209f32c;
     u32 f;
     int v;
     int lim;
@@ -8771,7 +8765,6 @@ extern "C" {
 int daPly_c::St_MetalWaterGround_Main() {
     extern void ApproachAngle(void*, short, int, int, int);
     extern void func_0201251c(int, int, void*, int);
-    extern int data_0209f32c;
     extern unsigned char data_0209f49e;
     extern short data_0209f4a0;
     extern void func_ov002_020cd190(void*);
@@ -8872,8 +8865,6 @@ tail:
 extern "C" {
 void func_ov002_020cd190(char* c){
     daPly_c *self = (daPly_c *)c;
-    extern int data_0209f32c;
-    extern void func_ov002_020cd190(void*);
   if(self->mIsMega==0) return;
   if(self->mPosY + 0x180000 <= data_0209f32c) return;
   self->func_ov002_020ce8bc(self->mHorzSpeed);
@@ -9418,7 +9409,6 @@ extern "C" {
 int daPly_c::func_ov002_020ce5f8() {
     extern void MulVec3Mat4x3(void *, void *, void *);
     extern void* Vec3_LslInPlace(void*, int sh);
-    extern int data_0209f32c;
     int y, threshold;
     Vector3 pos;
 
@@ -9475,10 +9465,8 @@ int daPly_c::func_ov002_020ce5f8() {
 }
 }
 
-extern "C" {
 void daPly_c::func_ov002_020ce798() {
     typedef struct dActor_c dActor_c;
-    extern int data_0209f32c;
     Vector3 v1, v2;
 
     if (!IsState(data_ov002_0211067c))
@@ -9508,11 +9496,8 @@ void daPly_c::func_ov002_020ce798() {
         }
     }
 }
-}
 
-extern "C" {
 void daPly_c::func_ov002_020ce8bc(int arg1) {
-    extern int data_0209f32c;
     Vector3 pos(mPosX, data_0209f32c + 0x3000, mPosZ);
 
     if (mIsMega != 0) {
@@ -9533,11 +9518,8 @@ void daPly_c::func_ov002_020ce8bc(int arg1) {
         }
     }
 }
-}
 
-extern "C" {
 void daPly_c::func_ov002_020ce9c8() {
-    extern int data_0209f32c;
     Vector3 v = mPos;
     int effectID;
 
@@ -9564,30 +9546,22 @@ void daPly_c::func_ov002_020ce9c8() {
     else
         Sound::PlayBank0(0x16, mCamSpacePos);
 }
-}
 
-extern "C" {
 int daPly_c::func_ov002_020ceaf4() {
-    extern int data_0209f32c;
     int v;
     if (data_0209f32c - 0x50000 - mPosY < 0x1f4000)
         return 0x1800;
     v = data_ov002_020ff1e0[param1];
     return -(int)((((long long)v << 13) + 0x800) >> 12);
 }
-}
 
-extern "C" {
 int daPly_c::func_ov002_020ceb54() {
-    extern int data_0209f32c;
     return data_0209f32c - 0x50000 >= mPosY + 0x3c000;
-}
 }
 
 extern "C" {
 void daPly_c::func_ov002_020ceb7c() {
     extern struct CameraRaw *gCamera;
-    extern int data_0209f32c;
     struct CameraRaw *g = gCamera;
 
     if (mStateWork & 2) {
@@ -9610,10 +9584,7 @@ void daPly_c::func_ov002_020ceb7c() {
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-extern "C" {
 int daPly_c::func_ov002_020cec2c() {
-    extern void PlayerPlayLongHold_cec2c(unsigned int a, unsigned int b, unsigned int c,
-                                         const Vector3 *v, unsigned int d);
     int flag;
     int thresh;
 
@@ -9660,7 +9631,6 @@ int daPly_c::func_ov002_020cec2c() {
 ret0:
     return 0;
 }
-}
 
 Fix12i daPly_c::func_ov002_020cedb0(Fix12i a) {
     unsigned int t = data_ov002_020ff158[param1];
@@ -9669,9 +9639,7 @@ Fix12i daPly_c::func_ov002_020cedb0(Fix12i a) {
 
 /* recovered: shared common types, declarations from a shared header */
 /* recovered: shared common types */
-extern "C" {
 int daPly_c::func_ov002_020cede0() {
-    extern int data_0209f32c;
     char *thiz = (char *)this;
     daPly_c *p = (daPly_c *)thiz;
     Vector3 v;
@@ -9716,7 +9684,6 @@ int daPly_c::func_ov002_020cede0() {
         return 0;
     }
     return 1;
-}
 }
 
 extern "C" {
@@ -9936,7 +9903,6 @@ int daPly_c::St_CeilingGrate_Init() {
 
 extern "C" {
 int func_ov002_020cf700(daPly_c *player) {
-    extern int func_ov002_020cf700(void*);
     return player->IsState(data_ov002_0211001c);
 }
 }
@@ -11204,7 +11170,6 @@ void daPly_c::func_ov002_020d1f78(u32 param) {
     extern Rec18 data_0209f4ac[];
     extern Rec18 data_0209f49c[];
     extern Rec18 data_0209f4a0[];
-    extern int data_0209f32c;
     extern void func_0201251c(int a, int b, int c, int d);
 
     daPly_c *p = this;
