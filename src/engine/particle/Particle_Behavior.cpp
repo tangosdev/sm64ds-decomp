@@ -11,7 +11,7 @@
  * reverse source order, so the definitions below run ROM-descending.
  *
  * Each body is the function pret's pokeplatinum decomp of SPL
- * (lib/spl/src/spl_behavior.c) gives the same job, in the same source order,
+ * (pokeplatinum/lib/spl/src/spl_behavior.c) gives the same job, in the same source order,
  * so the names are pret's coinages (see Particle__Behavior.h). This
  * cartridge's SPL is older: no emitter argument, the spin angle is shifted
  * down four bits into a sine-table index, and the collision plane always
@@ -34,7 +34,7 @@ void MTX_RotZ33_(Matrix3x3 *matrix, int sin, int cos);
 void MTX_MultVec33(const Vector3 *in, const Matrix3x3 *matrix, Vector3 *out);
 }
 
-/* SPL's random draw (pret pokeplatinum lib/spl/include/spl_random.h);
+/* SPL's random draw (pret's pokeplatinum/lib/spl/include/spl_random.h);
  * data_020a4d30 is its state, read by the SPLAnim callbacks too. */
 static inline u32 SPLRandom_Next(void) {
     data_020a4d30 = data_020a4d30 * 0x5eedf715 + 0x1b0cb173;
