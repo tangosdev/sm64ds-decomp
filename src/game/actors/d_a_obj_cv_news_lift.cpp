@@ -20,8 +20,10 @@
  *   by 20 words.
  * - OnMainMeshRide: copying mTargetRotation in a loop is 0x100 against
  *   0x104.
- * - Behavior: reset reads of data_02092768 without volatile are 0x594
- *   against 0x5a4. Dropping (u16)(s16) on mWobblePhase is 0x59c, and so
+ * - Behavior: the reset assigns both quaternions from data_02092768 by
+ *   value, and each struct copy reloads its four words. A const
+ *   Quaternion source lets the second copy reuse the first one's loads:
+ *   0x594 against 0x5a4. Dropping (u16)(s16) on mWobblePhase is 0x59c, and so
  *   is writing rayStart[1] and rayStart[2] by name. Dropping the zero
  *   fills of rayFrom and rayTo is 0x54c.
  * - UpdateClsnTransforms: mPlatformMats[i] = differs by 8 words;
@@ -44,8 +46,6 @@
 #include "Sound.h"
 #include "nitro/fx/fx.h"
 #include "math/MtxStack.h"
-
-struct Quaternion;
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daObjCvNewsLift_c_AssetId {
@@ -101,6 +101,8 @@ u8 DecIfAbove0_Byte(u8 *p);
 
 }
 
+/* The identity quaternion. Its other readers still declare it int[4], so this
+   TU copies it through a Quaternion view. */
 extern s32 data_02092768[];
 extern s16 data_02082214[];
 /* Yaw for the +Z, -Z, +X and -X platforms, in the transform loops' order. */
@@ -126,10 +128,7 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
     mPlayerOnMesh = 1;
     mResetTimer = 300;
     if (mBumped) {
-        mTargetRotation[0] = data_02092768[0];
-        mTargetRotation[1] = data_02092768[1];
-        mTargetRotation[2] = data_02092768[2];
-        mTargetRotation[3] = data_02092768[3];
+        mTargetRotation = *(Quaternion *)data_02092768;
     } else {
         data_020a0e68 = mClsnMat;
         InvMat4x3(&data_020a0e68, &data_020a0e68);
@@ -140,8 +139,8 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
         axis.x = 0;
         axis.y = 0x1000;
         axis.z = 0;
-        Quaternion_FromVector3(&mTargetRotation[0], &axis, &inFrame);
-        Quaternion_Normalize(&mTargetRotation[0]);
+        Quaternion_FromVector3(&mTargetRotation, &axis, &inFrame);
+        Quaternion_Normalize(&mTargetRotation);
         mTiltHoldTimer = 10;
     }
 }
@@ -386,25 +385,16 @@ s32 daObjCvNewsLift_c::Behavior() {
             }
         }
         if (!DecIfAbove0_Byte(&mTiltHoldTimer)) {
-            mTargetRotation[0] = data_02092768[0];
-            mTargetRotation[1] = data_02092768[1];
-            mTargetRotation[2] = data_02092768[2];
-            mTargetRotation[3] = data_02092768[3];
+            mTargetRotation = *(Quaternion *)data_02092768;
         }
     }
-    Quaternion_SLerp(&mRotation[0], &mTargetRotation[0], 0x199, &mRotation[0]);
+    Quaternion_SLerp(&mRotation, &mTargetRotation, 0x199, &mRotation);
     if (Vec3_Equal(&mPos, &mHomePos))
         mResetTimer = 300;
     if (!DecIfAbove0_Short(&mResetTimer)) {
         mPos = mHomePos;
-        mRotation[0] = *(volatile s32 *)&data_02092768[0];
-        mRotation[1] = *(volatile s32 *)&data_02092768[1];
-        mRotation[2] = *(volatile s32 *)&data_02092768[2];
-        mRotation[3] = *(volatile s32 *)&data_02092768[3];
-        mTargetRotation[0] = *(volatile s32 *)&data_02092768[0];
-        mTargetRotation[1] = *(volatile s32 *)&data_02092768[1];
-        mTargetRotation[2] = *(volatile s32 *)&data_02092768[2];
-        mTargetRotation[3] = *(volatile s32 *)&data_02092768[3];
+        mRotation = *(Quaternion *)data_02092768;
+        mTargetRotation = *(Quaternion *)data_02092768;
         mLoweredPlatform = -1;
         mWobblePhase = 0;
         mBumped = 0;
@@ -459,7 +449,7 @@ void daObjCvNewsLift_c::UpdateModelTransforms() {
     Vector3 pos;
     Vector3 scaled;
 
-    Matrix4x3_FromQuaternion((Quaternion *)mRotation, &tilt);
+    Matrix4x3_FromQuaternion(&mRotation, &tilt);
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     MtxStack::concat(tilt);
@@ -498,7 +488,7 @@ void daObjCvNewsLift_c::UpdateClsnTransforms() {
     dBgW_KcMbg *platformCollider;
     Vector3 hang;
 
-    Matrix4x3_FromQuaternion((Quaternion *)mRotation, &tilt);
+    Matrix4x3_FromQuaternion(&mRotation, &tilt);
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
     MtxStack::concat(tilt);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
