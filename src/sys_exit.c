@@ -2,10 +2,10 @@
 // in the original (SDK/runtime primitive: block copy, matrix/math, CP15, context
 // switch, etc.), so there is no C to decompile it to -- the asm block is the
 // faithful source. Counts as matched (asm-primitive policy), not a C transcription.
-asm void func_02071974(const unsigned char *c) {
-    str lr, [sp, #-4]!
-    mov r1, r0
-    mov r0, #3
+/* The ARM semihosting SYS_EXIT call (r0 = 0x18); see sys_writec. */
+asm void sys_exit(void) {
+    mov r1, #0
+    mov r0, #0x18
     swi 0x123456
-    ldr pc, [sp], #4
+    mov pc, lr
 }

@@ -3395,8 +3395,9 @@ src/ldexp.c:
 src/lib/msl/ansi_fp.c:
     complete
     .text start:0x02070b98 end:0x02071784
+    .data start:0x0209a628 end:0x0209a6fc
 
-src/unnamed/arm9/0207/func_02071784.c:
+src/_ExitProcess.c:
     complete
     .text start:0x02071784 end:0x02071790
 
@@ -3424,15 +3425,15 @@ src/unnamed/arm9/0207/func_02071910.c:
     complete
     .text start:0x02071910 end:0x02071974
 
-src/unnamed/arm9/0207/func_02071974.c:
+src/sys_writec.c:
     complete
     .text start:0x02071974 end:0x02071988
 
-src/unnamed/arm9/0207/func_02071988.c:
+src/sys_readc.c:
     complete
     .text start:0x02071988 end:0x0207199c
 
-src/unnamed/arm9/0207/func_0207199c.c:
+src/sys_exit.c:
     complete
     .text start:0x0207199c end:0x020719ac
 

@@ -11875,7 +11875,7 @@
     },
     "arm9:0x0206df84": {
       "author": "tangosdev",
-      "name": "_ZN4cstd3absEi"
+      "name": "abs"
     },
     "arm9:0x0206df90": {
       "author": "andrewboudreau",
@@ -11895,47 +11895,47 @@
     },
     "arm9:0x0206e184": {
       "author": "tangosdev",
-      "name": "func_0206e184"
+      "name": "wcstombs"
     },
     "arm9:0x0206e218": {
       "author": "tangosdev",
-      "name": "func_0206e218"
+      "name": "wctomb"
     },
     "arm9:0x0206e240": {
       "author": "tangosdev",
-      "name": "func_0206e240"
+      "name": "__wctomb_noconv"
     },
     "arm9:0x0206e254": {
       "author": "tangosdev",
-      "name": "func_0206e254"
+      "name": "__mbtowc_noconv"
     },
     "arm9:0x0206e28c": {
       "author": "tangosdev",
-      "name": "func_0206e28c"
+      "name": "memcmp"
     },
     "arm9:0x0206e2cc": {
       "author": "tangosdev",
-      "name": "func_0206e2cc"
+      "name": "memchr"
     },
     "arm9:0x0206e2f8": {
       "author": "tangosdev",
-      "name": "func_0206e2f8"
+      "name": "memset"
     },
     "arm9:0x0206e310": {
       "author": "tangosdev",
-      "name": "func_0206e310"
+      "name": "memcpy"
     },
     "arm9:0x0206e330": {
       "author": "tangosdev",
-      "name": "func_0206e330"
+      "name": "__fill_mem"
     },
     "arm9:0x0206e3dc": {
       "author": "aitddlabs",
-      "name": "func_0206e3dc"
+      "name": "vsnprintf"
     },
     "arm9:0x0206e450": {
       "author": "tangosdev",
-      "name": "func_0206e450"
+      "name": "__StringWrite"
     },
     "arm9:0x0206e4a4": {
       "author": "tangosdev",
@@ -11967,7 +11967,7 @@
     },
     "arm9:0x02070348": {
       "author": "tangosdev",
-      "name": "func_02070348"
+      "name": "rand"
     },
     "arm9:0x0207037c": {
       "author": "tangosdev",
@@ -11975,23 +11975,23 @@
     },
     "arm9:0x020704cc": {
       "author": "tangosdev",
-      "name": "_ZN4cstd6strchrEPKcc"
+      "name": "strchr"
     },
     "arm9:0x02070508": {
       "author": "tangosdev",
-      "name": "_ZN4cstd6strcmpEPKcS1_"
+      "name": "strcmp"
     },
     "arm9:0x0207063c": {
       "author": "tangosdev",
-      "name": "_ZN4cstd7strncpyEPcPKcj"
+      "name": "strncpy"
     },
     "arm9:0x020706b0": {
       "author": "tangosdev",
-      "name": "func_020706b0"
+      "name": "strcpy"
     },
     "arm9:0x02070788": {
       "author": "tangosdev",
-      "name": "_ZN4cstd6strlenEPKc"
+      "name": "strlen"
     },
     "arm9:0x020707a4": {
       "author": "ruspecial",
@@ -12051,7 +12051,7 @@
     },
     "arm9:0x02071784": {
       "author": "ruspecial",
-      "name": "func_02071784"
+      "name": "_ExitProcess"
     },
     "arm9:0x02071790": {
       "author": "tangosdev",
@@ -12079,15 +12079,15 @@
     },
     "arm9:0x02071974": {
       "author": "tangosdev",
-      "name": "func_02071974"
+      "name": "sys_writec"
     },
     "arm9:0x02071988": {
       "author": "tangosdev",
-      "name": "func_02071988"
+      "name": "sys_readc"
     },
     "arm9:0x0207199c": {
       "author": "tangosdev",
-      "name": "func_0207199c"
+      "name": "sys_exit"
     },
     "arm9:0x020719ac": {
       "author": "tangosdev",

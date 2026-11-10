@@ -20,19 +20,6 @@
 
 extern "C" {
 
-typedef struct OSMutexLink {
-    struct OSMutex *prev; /* 0x00 */
-    struct OSMutex *next; /* 0x04 */
-} OSMutexLink;
-
-/* NitroSDK OSMutex, this SDK's layout. */
-typedef struct OSMutex {
-    u16 queue;        /* 0x00 -- OSThreadQueue: threads waiting for it */
-    OSThread *thread; /* 0x04 -- the owner, 0 while free */
-    s32 count;        /* 0x08 -- times the owner has locked it */
-    OSMutexLink link; /* 0x0c -- the owner's held-mutex list */
-} OSMutex;
-
 void OSi_EnqueueTail(OSThread *thread, OSMutex *mutex);
 void OSi_DequeueItem(OSThread *thread, OSMutex *mutex);
 OSMutex *func_02058960(OSThread *thread);

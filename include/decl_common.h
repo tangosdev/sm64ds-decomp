@@ -477,7 +477,6 @@ extern int func_0204a0dc(void*, u32 (*cb)(const void*, u32));
 extern int func_0204fa2c(int*, int);
 extern int GX_HBlankIntr(int);
 extern int VEC_Distance(const Vector3 *, const Vector3 *);
-extern int func_0206e28c(const u8*, const u8*, u32);
 extern int gMgCoinsShowDelta;
 extern int sMgWinBannerY;
 extern int sMgResultsBannerY;
@@ -878,7 +877,6 @@ extern void GXS_LoadBG2Scr(const void *, u32, u32);
 extern void GX_LoadBG2Scr(const void *, u32, u32);
 extern void GXS_LoadBG0Scr(const void *, int, int);
 extern void MI_CpuFill8(void *, u8, u32);
-extern void* func_0206e2f8(void*, int, unsigned int);
 extern void __cxa_vec_delete(void *, int, int, void (*)(void *));
 extern void data_ov001_020ad494(void);
 

@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "cstd.h"
+#include "msl/string.h"
 #include "BMD_File.h"
 
 extern "C" {
@@ -16,7 +16,7 @@ int func_02047144(const BMD_File *tbl, const char *name) {
     if (i < count) {
         BMD_Palette *entries = tbl->palettes;
         do {
-            if (cstd::strcmp(entries[i].name, name) == 0)
+            if (strcmp(entries[i].name, name) == 0)
                 return (int)i;
             i++;
         } while (i < tbl->numPalettes);

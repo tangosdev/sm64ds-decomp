@@ -67,18 +67,13 @@ extern "C" void _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(
 }
 
 // operator new support: the game heap pointer for actors (the smoke seeds
-// it with the root heap), and the zero-fill veneer -- its DS chain rides
-// arguments through registers, so the host supplies the semantics direct.
+// it with the root heap). Its zero fill is MSL's memset, which the host CRT
+// supplies.
 extern "C" {
 void *data_020a0eac_c;
 }
 #pragma comment(linker, "/alternatename:?data_020a0eac@@3PAUHeap_t@mHeap@@A=_data_020a0eac_c")
 #pragma comment(linker, "/alternatename:_data_020a0eac=_data_020a0eac_c")
-extern "C" void func_0206e2f8(void *p, int v, unsigned n)
-{
-    unsigned char *b = (unsigned char *)p;
-    for (unsigned i = 0; i < n; ++i) b[i] = (unsigned char)v;
-}
 extern "C" void hal_m43_roty(void *m, int a);
 void Matrix4x3_FromRotationY(void *m, int a) { hal_m43_roty(m, a); }
 

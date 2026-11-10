@@ -13,6 +13,7 @@
 #include "types.h"
 #include "Heap.h"
 #include "decl_common.h"
+#include "msl/string.h"
 #include "dExtSimpleModel_c.h"
 #include "dPa_c.h"
 #include "Particle__Texture.h"
@@ -127,7 +128,7 @@ void dPa_c::Initialise() {
     mManager = (Particle::Manager *)func_0204a4c8(func_02023178, countA, countB, 0x1a, 0x3e);
     mManager->mPolygonAttr = 0x8000;
 
-    if (func_0206e28c((u8*)data_02075f14, data_0208f668, 4) != 0) {
+    if (memcmp((u8 *)data_02075f14, data_0208f668, 4) != 0) {
         mResourceFile = data_02075f14;
     } else {
         /* The compressed stream starts at +4; its header word carries the

@@ -22,7 +22,7 @@ src/engine/heap/NestedHeapIterator.cpp
 # method is a one-line call into this layer, so a host link that has the
 # override and not its target has half of a pair.
 
-# cstd::abs, which NNS_FndGetAllocatableSizeForExpHeapEx calls, is not
-# sliced: it lives in src/cstd4.cpp, the runtime-library TU, whose hand-asm
-# primitives no host compiler accepts. hal/heap_globals.cpp defines it for the
-# host instead, the way hal/cstd_div.c defines FX_Div.
+# abs, which NNS_FndGetAllocatableSizeForExpHeapEx calls, is not sliced: it
+# lives in src/cstd4.cpp, the runtime-library TU, whose hand-asm primitives no
+# host compiler accepts. It is MSL's C abs, so the host C library's abs links
+# in its place.
