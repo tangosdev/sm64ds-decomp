@@ -252,8 +252,8 @@ daStarBase_c *daCoin_c::FindStarMarker() {
 void daCoin_c::BounceOffWall() {
     if (mWithMeshClsn.IsOnWall() == 0) return;
     int normal[3];
-    void *wall = mWithMeshClsn.GetWallResult();
-    ((SurfaceInfo*)((char*)wall + 4))->CopyNormalTo(*(Vector3*)normal);
+    dBgPi *wall = mWithMeshClsn.GetWallResult();
+    wall->surface.CopyNormalTo(*(Vector3 *)normal);
     mPrevAngleY = ReflectAngle(normal[0], normal[2], mPrevAngleY);
 }
 
