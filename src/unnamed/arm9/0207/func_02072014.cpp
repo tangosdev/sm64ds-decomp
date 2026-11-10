@@ -10,13 +10,6 @@ void terminate();
 
 extern "C" {
 
-/* The catch record's first three words, as the rethrow reads them back. */
-typedef struct CatchInfo {
-    int mLocation; /* 0x00 */
-    int mTypeInfo; /* 0x04 */
-    int mDtor;     /* 0x08 */
-} CatchInfo;
-
 extern unsigned char func_02072d90(struct ActionWalk *c);
 extern unsigned char func_020729f4(struct ActionWalk *c);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);

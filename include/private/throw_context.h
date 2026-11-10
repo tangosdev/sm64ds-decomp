@@ -4,9 +4,23 @@
 #include "types.h"
 #include "MWCPlusLib.h"
 
-/* The catch record in a handler's frame (func_02071ccc fills it); its
- * readers each spell the fields they use. */
-struct CatchInfo;
+/* The catch record in a handler's frame, at a frame offset an action names.
+ * func_02071ccc fills the first five words for a catch: the thrown object,
+ * its type string and destructor, and the object the handler sees, which for
+ * a '*' (pointer) type is mPointerCopy, a copy of the adjusted pointer.
+ * func_02071f1c fills the first three and mStackTop for an exception
+ * specification; func_02072168 (case 0xd) and func_02072014 read the first
+ * three back. Names follow CodeWarrior's runtime record; mSublocation,
+ * mPointerCopy and mStackTop are named from it, not from a reader in this
+ * image (medium). */
+typedef struct CatchInfo {
+    int mLocation;    /* 0x00 -- ThrowContext.mLocation */
+    int mTypeInfo;    /* 0x04 -- ThrowContext.mThrowType */
+    int mDtor;        /* 0x08 -- ThrowContext.mDtor */
+    int mSublocation; /* 0x0c */
+    int mPointerCopy; /* 0x10 */
+    void *mStackTop;  /* 0x14 */
+} CatchInfo;
 
 /* An exception-specification action as func_02071d3c decodes it (case 15):
  * the allowed-type count and list func_02071f88 checks, the unexpected
