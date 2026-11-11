@@ -3210,7 +3210,7 @@ int daKpa_c::UpdateIntroCamera() {
     switch (this->mCutsceneStep) {
     case 0:
         cam->SetFlag_3();
-        pv = (struct Vector3*)&((dActor_c *)player)->mPosX;
+        pv = &((dActor_c *)player)->mPos;
         sp.x = pv->x;
         sp.y = pv->y;
         sp.z = pv->z;
@@ -3238,7 +3238,7 @@ int daKpa_c::UpdateIntroCamera() {
             this->mCutsceneStep++;
         break;
     case 2:
-        pv = (struct Vector3*)&((dActor_c *)player)->mPosX;
+        pv = &((dActor_c *)player)->mPos;
         sp.x = pv->x;
         sp.y = pv->y;
         sp.z = pv->z;

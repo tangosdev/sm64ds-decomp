@@ -14734,7 +14734,7 @@ void daPly_c::func_ov002_020d8854() {
         tr.x = 0;
         tr.y = 0x50000;
         tr.z = 0x64000;
-        Vec3_RotateYAndTranslate(&out, (Vector3 *)(&mPosX), mAngleY, &tr);
+        Vec3_RotateYAndTranslate(&out, &mPos, mAngleY, &tr);
         cp = out;
         func_ov002_020d8d10(&cp);
     }
@@ -19575,8 +19575,8 @@ void daPly_c::func_ov002_020e1c20() {
             if ((mClsnFlags) & 4) {
                 mVertSpeed = -0x20000;
             }
-            mLoopingSoundHandle = func_02012120(mLoopingSoundHandle, mCharacter, 0x18,
-                                                (const Vector3 *)(&mCamSpacePosX), 0);
+            mLoopingSoundHandle =
+                func_02012120(mLoopingSoundHandle, mCharacter, 0x18, &mCamSpacePos, 0);
             mHorzSpeed = FX_MUL(mHorzSpeed, 0xf00);
             if ((mVertSpeed) < 0) {
                 int *p = (int *)(&mVertSpeed);
@@ -19642,9 +19642,8 @@ void func_ov002_020e1e70(char *c) {
         dExtFrameCtrl_c &anim =
             *player->mModels.mBodyModels[((daPly_c *)c)->GetBodyModelID(player->param1 & 0xff, 0)];
         anim.speed = 0x4000;
-        player->mLoopingSoundHandle =
-            func_02012120(player->mLoopingSoundHandle, player->mCharacter, 0x18,
-                          (const Vector3 *)(&player->mCamSpacePosX), 0);
+        player->mLoopingSoundHandle = func_02012120(player->mLoopingSoundHandle, player->mCharacter,
+                                                    0x18, &player->mCamSpacePos, 0);
         if ((player->mHasWings) != 0) {
             player->mVertAccel = player->func_ov002_020bf27c(-0x4000) >> 1;
             player->mTerminalVelocity = -0x25800;

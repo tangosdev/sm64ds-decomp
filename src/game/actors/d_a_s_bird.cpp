@@ -31,7 +31,7 @@
  *   names, so they are not coined.
  * - data_0209e650 RNG seed; func_0201267c plays
  *   sound 0x6a at mCamSpacePos.
- * - The player position is read at +0x5c of the ClosestPlayer result.
+ * - The flock measures from the ClosestPlayer result's mPos.
  * - g_profile_SBIRD stays outside the licensed sections.
  * - common.h is included after the class header so dExtAnmModel_c's
  *   Matrix4x3 spelling wins.
@@ -40,6 +40,7 @@
 #pragma defer_codegen off
 #include "daSBird_c.h"
 #include "common.h"
+#include "daPly_c.h"
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
@@ -166,11 +167,11 @@ void daSBird_c::StateFly() {
    comes out five words short. */
 void daSBird_c::StateLaunchFlock() {
     if (mIsLeader) {
-        char *player = (char *)ClosestPlayer();
+        daPly_c *player = ClosestPlayer();
         if (player != 0) {
             Vector3 copy;
             Vector3 diff;
-            Vec3_Sub(&diff, (const Vector3 *)&mPosX, (const Vector3 *)(player + 0x5c));
+            Vec3_Sub(&diff, &mPos, &player->mPos);
             copy.x = diff.x;
             copy.y = diff.y;
             copy.z = diff.z;
@@ -204,12 +205,12 @@ void daSBird_c::StateLaunchFlock() {
    random pitch and enters state 3. */
 void daSBird_c::StateWaitForPlayer() {
     if (mIsLeader) {
-        char *player = (char *)ClosestPlayer();
+        daPly_c *player = ClosestPlayer();
         if (player != 0) {
             Vector3 copy;
             Vector3 diff;
             int len;
-            Vec3_Sub(&diff, (const Vector3 *)&mPosX, (const Vector3 *)(player + 0x5c));
+            Vec3_Sub(&diff, &mPos, &player->mPos);
             copy.x = diff.x;
             copy.y = diff.y;
             copy.z = diff.z;
@@ -273,9 +274,9 @@ s32 daSBird_c::Render() {
 
 s32 daSBird_c::Behavior() {
     (this->*data_ov009_02113c48.slots[mState])();
-    int tmp[3];
-    Vec3_Asr((Vector3 *)tmp, (Vector3 *)&mPosX, 3);
-    MtxStack::transS(tmp[0], tmp[1], tmp[2]);
+    Vector3 tmp;
+    Vec3_Asr(&tmp, &mPos, 3);
+    MtxStack::transS(tmp.x, tmp.y, tmp.z);
     mAngleY = mPrevAngleY;
     Matrix4x3_ApplyInPlaceToRotationZ(&MtxStack::get(), mAngleZ);
     MtxStack::YrotM(mAngleY);

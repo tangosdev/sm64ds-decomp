@@ -1673,7 +1673,7 @@ int daKuriKing_c::InitResources()
 
     k = 0;
     do {
-        mdCc_cs[k].Init(this, *(Vector3 *)&mPosX, mScaleX * 0xa, mScaleY * 0xa, 0x200004, 0x26fe0);
+        mdCc_cs[k].Init(this, mPos, mScaleX * 0xa, mScaleY * 0xa, 0x200004, 0x26fe0);
         k++;
     } while (k < 4);
 

@@ -688,7 +688,7 @@ void daObjMarioCap_c::OnTurnIntoEgg(daPly_c &player) {
 void daObjMarioCap_c::UpdateMatrix()
 {
     int probe[3];
-    int v[3];
+    Vector3 v;
     int m = mType;
     if (m != 5 && m != 0x12 && m != 0x10 && m != 0xb && m != 7 && m != 9 &&
         m != 0x14 && m != 0x15 && m != 0x16) {
@@ -706,8 +706,8 @@ void daObjMarioCap_c::UpdateMatrix()
         mAnmModel.ApplyOpacity(0, 0);
 
     /* position / 8: the model matrix's translation scale */
-    Vec3_Asr((Vector3 *)v, (Vector3 *)&mPosX, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+    Vec3_Asr(&v, &mPos, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX,
                                            mAngleY, mAngleZ);
     mAnmModel.mat4x3 = data_020a0e68;

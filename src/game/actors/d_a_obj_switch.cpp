@@ -121,8 +121,7 @@ void daObjSwitch_c::OnStoodOn(dActor_c *other) {
             if (player->mIsMega == 0) return;
         }
     }
-    if (Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
-                  reinterpret_cast<const Vector3 *>(&other->mPosX)) < 0x98000)
+    if (Vec3_Dist(&mPos, &other->mPos) < 0x98000)
         mPlayerNearby = 1;
 }
 
@@ -337,7 +336,7 @@ void daObjSwitch_c::StateIdleMain() {
 void daObjSwitch_c::StatePressedMain() {
     ScaleOverTime(2, 3, 0x1000, 0x333);
     if (mTimer != 3) return;
-    Sound::PlayBank3(0x3e, *reinterpret_cast<const Vector3 *>(&mCamSpacePosX));
+    Sound::PlayBank3(0x3e, mCamSpacePos);
     if ((int)(actorID == 0xc) != 0) {
         dActor_c *p = mTargetActor;
         if (p != 0) {
@@ -391,7 +390,7 @@ void daObjSwitch_c::StateTickingMain() {
 void daObjSwitch_c::StateUnpressedMain() {
     ScaleOverTime(2, 3, 0x333, 0x1000);
     if (mTimer != 3) return;
-    Sound::PlayBank3(0x3e, *reinterpret_cast<const Vector3 *>(&mCamSpacePosX));
+    Sound::PlayBank3(0x3e, mCamSpacePos);
     {
         int b = (actorID == 0xc);
         if (b) {

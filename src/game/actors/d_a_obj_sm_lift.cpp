@@ -163,7 +163,7 @@ int daObjSm_Lift_c::Behavior() {
 
         Math_Function_0203b14c(&mHorzSpeed, 0xa000, 0x200, 0x2000, 0x200);
 
-        Vec3_Sub(&diff, (const Vector3 *)&mPosX, &nodeA);
+        Vec3_Sub(&diff, &mPos, &nodeA);
         {
             int len = VEC_Mag(&diff);
             if (len == 0 || len <= mHorzSpeed) {
@@ -174,7 +174,7 @@ int daObjSm_Lift_c::Behavior() {
             } else {
                 int scale = FX_Div(mHorzSpeed, len);
                 Vec3_MulScalar(&scaled, &diff, scale);
-                VEC_Subtract((Vector3 *)&mPosX, (Vector3 *)&scaled, (Vector3 *)&mPosX);
+                VEC_Subtract(&mPos, &scaled, &mPos);
             }
         }
 

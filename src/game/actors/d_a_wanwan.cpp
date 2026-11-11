@@ -339,7 +339,7 @@ void daWanwan_c::UpdateChainSegments() {
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     MTX_MultVec43(&head, &data_020a0e68, &rotated);
-    Vec3_Add(&tmp, (const Vector3 *)&mPosX, &rotated);
+    Vec3_Add(&tmp, &mPos, &rotated);
     saved.x = tmp.x;
     saved.y = tmp.y;
     saved.z = tmp.z;
@@ -483,7 +483,7 @@ void daWanwan_c::PinChainToHead() {
     Vector3 diff;
     Vector3 scaled;
 
-    Vec3_Sub(&diff, (const Vector3 *)&mPosX, &mLinkPos[0]);
+    Vec3_Sub(&diff, &mPos, &mLinkPos[0]);
     p = &mLinkPos[0];
     i = 0;
     do {

@@ -493,8 +493,7 @@ void daYegg_c::SeekStraight() {
                 rot.z = FX_CosIdx((u16)mAngleY >> 4);
                 mParticleHandle = Particle::System::New(mParticleHandle, kPtclYoshiEggTrail, pos.x,
                                                         pos.y, pos.z, (const Vector3_16f *)&rot, 0);
-                mSoundHandle =
-                    Sound::PlayLong(mSoundHandle, 3, 0x93, *(Vector3 *)&mCamSpacePosX, 0);
+                mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x93, mCamSpacePos, 0);
                 flag = 1;
                 UpdateTilt();
                 if (HandleCylinderHit() != 0)

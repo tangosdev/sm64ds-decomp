@@ -214,8 +214,7 @@ int daObjCtMecha04_c::Behavior() {
             mTextureTransformer.speed = mBeltSpeed;
             mTextureTransformer.Advance();
             if (mBeltSpeed != 0) {
-                mSoundHandle =
-                    Sound::PlayLong(mSoundHandle, 3, 0x88, *(Vector3 *)&mCamSpacePosX, 0);
+                mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x88, mCamSpacePos, 0);
             }
         }
 

@@ -327,7 +327,7 @@ void daKpaFire_c::func_ov060_0211747c() {
         this->mSoundHandle = 0;
     this->mSoundID = SOUND_ID_MOUTH;
     this->mSoundHandle =
-        Sound::PlayLong(this->mSoundHandle, 3, this->mSoundID, *(Vector3 *)&this->mCamSpacePosX, 0);
+        Sound::PlayLong(this->mSoundHandle, 3, this->mSoundID, this->mCamSpacePos, 0);
 
     side = t[0];
     fwd = t[2] + 0x14;

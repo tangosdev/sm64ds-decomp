@@ -239,7 +239,7 @@ void daLinelift2_c::StateReturn() {
    off either end of the path, 1 on reaching a node, 0 in between. */
 int daLinelift2_c::StepAlongPath() {
     int result;
-    VEC_Add((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
+    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
     if (Vec3_Dist(&mPos, (const Vector3 *)&mTargetPosX) < (mHorzSpeed >> 1)) {
         result = 1;
         mBasePosX = mTargetPosX;

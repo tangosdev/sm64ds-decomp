@@ -335,9 +335,9 @@ int daBtn_c::InitResources()
     anim = ((SharedFilePtr *)data_ov079_021275ec[idx * 5 + 3])->filePtr;
     mAnmModel.SetAnim((BCA_File *)anim, 0, 0x1000, 0);
 
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     mSpawnAngleX = mAngleX;
     mSpawnAngleY = mAngleY;
     mSpawnAngleZ = mAngleZ;
@@ -494,7 +494,7 @@ int daBtn_c::CleanupResources()
    message box is up, and after the talk ends start walking (state 2). */
 void daBtn_c::func_ov079_02125b44()
 {
-    int pos[3];
+    Vector3 pos;
 
     if (mAnmModel.Finished() != 0) {
         mAnmModel.SetAnim(
@@ -532,17 +532,16 @@ void daBtn_c::func_ov079_02125b44()
                 {
                     daPly_c *p = mPlayers[mNearestPlayer];
                     int *src = &p->mPosX;
-                    pos[0] = src[0];
-                    pos[1] = src[1];
-                    pos[2] = src[2];
+                    pos.x = src[0];
+                    pos.y = src[1];
+                    pos.z = src[2];
                 }
-                ang = ::Vec3_HorzAngle((const ::Vector3 *)pos, (const ::Vector3 *)&mPosX);
-                y = pos[1] + 0x96000;
-                pos[0] = FX_SinIdx((u16)ang >> 4) * 0xd7 + pos[0];
-                pos[2] = FX_CosIdx((u16)ang >> 4) * 0xd7 + pos[2];
-                pos[1] = y;
-                if (mPlayers[mNearestPlayer]->ShowMessage(
-                        *this, 0xa4, (Vector3 *)pos, 0, 0) != 0) {
+                ang = ::Vec3_HorzAngle(&pos, &mPos);
+                y = pos.y + 0x96000;
+                pos.x = FX_SinIdx((u16)ang >> 4) * 0xd7 + pos.x;
+                pos.z = FX_CosIdx((u16)ang >> 4) * 0xd7 + pos.z;
+                pos.y = y;
+                if (mPlayers[mNearestPlayer]->ShowMessage(*this, 0xa4, &pos, 0, 0) != 0) {
                     mSubState++;
                     Message::PrepareTalk();
                     func_0201267c(0x133, &mCamSpacePos);
@@ -631,7 +630,7 @@ void daBtn_c::func_ov079_021258fc()
     else
         lim = 0x2bc000;
     mAnmModel.speed = 0x1000;
-    if (::Vec3_HorzDist((const ::Vector3 *)&mPosX, (const ::Vector3 *)&mSpawnPosX) > lim) {
+    if (::Vec3_HorzDist(&mPos, &mSpawnPos) > lim) {
         mState = 7;
         mAnmModel.SetAnim(
             (BCA_File *)(((SharedFilePtr *)data_ov079_021275ec[mIsKing * 5 + 3])->filePtr), 0,
@@ -726,10 +725,10 @@ void daBtn_c::func_ov079_021256d4()
         Sound::StopLoadedMusic_Layer3();
         func_02011cfc();
         mState = 0;
-        mPosX = mSpawnPosX;
-        mPosY = mSpawnPosY;
+        mPosX = mSpawnPos.x;
+        mPosY = mSpawnPos.y;
         five = 5;
-        mPosZ = mSpawnPosZ;
+        mPosZ = mSpawnPos.z;
         tab = data_ov079_021275ec;
         t = mSpawnAngleX;
         ma = &mAnmModel;
@@ -1214,7 +1213,7 @@ void daBtn_c::func_ov079_021246dc()
                 pos.x = op->x;
                 pos.y = op->y;
                 pos.z = op->z;
-                ang = ::Vec3_HorzAngle((const ::Vector3 *)&pos, (const ::Vector3 *)&mPosX);
+                ang = ::Vec3_HorzAngle(&pos, &mPos);
                 pos.y += 0x32000;
                 pos.x = FX_SinIdx(ang >> 4) * mag + pos.x;
                 pos.z = FX_CosIdx(ang >> 4) * mag + pos.z;
@@ -1360,7 +1359,7 @@ int daBtn_c::func_ov079_021243e0(int range)
     }
 
     player = ClosestPlayer();
-    dist = ::Vec3_Dist((const ::Vector3 *)&v, (const ::Vector3 *)&player->mPosX);
+    dist = ::Vec3_Dist(&v, &player->mPos);
     if (dist > range) {
         if (mMovingMeshCollider.IsEnabled())
             mMovingMeshCollider.Disable();
@@ -1496,8 +1495,8 @@ void daBtn_c::func_ov079_02123f34()
         v.x = p->x;
         v.y = p->y;
         v.z = p->z;
-        dist = ::Vec3_HorzDist((const ::Vector3 *)&mPosX, (const ::Vector3 *)&v);
-        angle = ::Vec3_HorzAngle((const ::Vector3 *)&mPosX, (const ::Vector3 *)&v);
+        dist = ::Vec3_HorzDist(&mPos, &v);
+        angle = ::Vec3_HorzAngle(&mPos, &v);
         if (dist < minDist) {
             mNearestPlayer = i;
             minDist = dist;
@@ -1578,7 +1577,7 @@ int daBtn_c::func_ov079_02123bcc() {
     p = &player->mPosX;
     v[0] = p[0]; v[1] = p[1]; v[2] = p[2];
     if (v[1] > mPosY) return 0;
-    dist = ::Vec3_HorzDist((const ::Vector3 *)v, (const ::Vector3 *)&mPosX);
+    dist = ::Vec3_HorzDist((const ::Vector3 *)v, &mPos);
     a0 = mAngleY; a1 = mBodyYaw; a2 = mTargetAngle;
     raw = (a0 + a1) << 16; ang = a2 + (raw >> 16); rangle = raw >> 16;
     cosv = FX_CosIdx((u16)(s16)ang >> 4);
@@ -1637,7 +1636,7 @@ int daBtn_c::func_ov079_02123a8c()
         v.y = mPosY;
         v.z = mPosZ;
         v.y = v.y + OnAimedAtWithEgg();
-        int dist = ::Vec3_Dist((const ::Vector3 *)&v, (const ::Vector3 *)&closest->mPosX);
+        int dist = ::Vec3_Dist(&v, &closest->mPos);
         if (dist < (mClipRadius << 3)) {
             if (!mMovingMeshCollider.IsEnabled())
                 mMovingMeshCollider.Enable(this);

@@ -226,14 +226,14 @@ void daFPkn_c::UpdateClsnOffset()
     mClsnOffset.y = 0;
     mClsnOffset.z = 0;
 
-    Vec3_Asr((Vector3 *)locals.tmp, (Vector3 *)&mPosX, 3);
+    Vec3_Asr((Vector3 *)locals.tmp, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, locals.tmp[0], locals.tmp[1], locals.tmp[2]);
     MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
     mClsnOffset.x = data_020a0e68.m[9];
     mClsnOffset.y = data_020a0e68.m[10];
     mClsnOffset.z = data_020a0e68.m[11];
     Vec3_LslInPlace(&mClsnOffset, 3);
-    VEC_Subtract((Vector3 *)&mClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mClsnOffset);
+    VEC_Subtract(&mClsnOffset, &mPos, &mClsnOffset);
 
     scaledSinAcc0 = FX_SinIdx((u16)locals.acc[0] >> 4) * 0x32;
     sinAcc1 = FX_SinIdx((u16)locals.acc[1] >> 4);
