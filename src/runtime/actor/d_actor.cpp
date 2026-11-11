@@ -188,7 +188,7 @@ void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern int data_0209fc68; /* nonzero forces the actor to think anyway */
 extern Matrix4x3 data_0209b3ec; /* world -> camera */
 extern dClipper data_0209f43c;  /* the dClipper instance */
-extern u8 data_0209f274; /* doubles the clip distance when set */
+extern u8 data_0209f274;        /* doubles the clip distance when set */
 extern u8 gGamePaused;
 extern u8 data_0209f20c;
 extern u8 gVsExitScreenActive;
