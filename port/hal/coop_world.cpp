@@ -835,6 +835,19 @@ bool room_course_held(const CoopKey &k) {
     }
     return false;
 }
+// A friend in ANOTHER part of my course and act (from his fresh presence): my death bits go out for him even when my own
+// group has nobody else in it, so his room memory has them for his visit here.
+bool course_listener() {
+    if (roombits_off() || !g_key.valid() || castle_course(g_key.level)) return false;
+    for (int s = 0; s < kCoopSeats; ++s) {
+        if (s == g_my) continue;
+        HubPresence p; unsigned age = 0;
+        if (!hub_presence_get(s, &p, &age) || !p.in_level() || age >= kPresenceMs) continue;
+        const CoopKey cur(p.level, p.act);
+        if (cur.level != g_key.level && same_course(cur, g_key)) return true;
+    }
+    return false;
+}
 void room_bits_forget(unsigned now) {
     for (int i = 0; i < g_rbits_n; ++i) {
         RoomBits &r = g_rbits[i];
@@ -2524,7 +2537,8 @@ void tick_est(unsigned now) {
         uint16_t slots[kCoopMaxDelta]; int idx[kCoopMaxDelta]; int n = 0;
         for (int i = 0; i < g_out_n && n < kCoopMaxDelta; ++i)
             if ((int)(now - g_out[i].next) >= 0) { slots[n] = g_out[i].slot; idx[n++] = i; }
-        if (n > 0 && g_grp.others() > 0) {
+        const bool listener = course_listener();   // AREACOIN1
+        if (n > 0 && (g_grp.others() > 0 || listener)) {
             CoopDeltaWire h; std::memset(&h, 0, sizeof h); h.key = wire_key(g_key); h.count = (uint8_t)n;
             std::memcpy(buf, &h, sizeof h);
             std::memcpy(buf + sizeof h, slots, (size_t)n * 2);
@@ -2543,7 +2557,7 @@ void tick_est(unsigned now) {
         // The owner's 1 Hz full bitmap carries the rest; a guest keeps telling until that bitmap shows the bit.
         const int limit = (g_grp.i_am_owner() || g_leg_retry) ? (int)kOwnerTries : (int)kGuestTries;
         for (int i = 0; i < g_out_n; ++i) if (g_out[i].sent < limit) g_out[k++] = g_out[i];
-        if (g_grp.others() == 0) k = 0;      // nobody to tell: the owner-less table is the whole truth
+        if (g_grp.others() == 0 && !listener) k = 0;      // nobody to tell: the owner-less table is the whole truth
         g_out_n = k;
     }
     if (g_sync) { coin_tick(now); watch_secrets(now); }   // COOPCOUNT1
@@ -2552,7 +2566,7 @@ void tick_est(unsigned now) {
     if ((unsigned)(now - g_hello_t) >= kHelloMs) send_hello(now);
     g_grp.update(now);
     if (g_grp.take_owner_announce()) { send_owner_change(); send_full(now); send_hello(now); }
-    if (g_grp.i_am_owner() && g_grp.others() > 0 && (unsigned)(now - g_full_t) >= kFullMs) send_full(now);
+    if (g_grp.i_am_owner() && (g_grp.others() > 0 || course_listener()) && (unsigned)(now - g_full_t) >= kFullMs) send_full(now);   // AREACOIN1: course mates too
     // 4. snapshots I owe
     for (int s = 0; s < CoopGroups::kSeats; ++s) {
         Job &j = g_job[s];
