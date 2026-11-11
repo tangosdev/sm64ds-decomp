@@ -11,13 +11,13 @@
 #include "types.h"
 #include "private/fs_views.h"
 #include "nitro/os/thread.h"
+#include "nitro/os/system.h"
 
 typedef struct FSFile FSFile;
 
 extern int func_0203d7d4(int);
 extern void *data_0209d3c0;
 extern int FS_ConvertPathToFileID(void *out_file_id, const char *path);
-extern void OS_Terminate(void);
 extern int data_0208ecd8[7];
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                              u32 file_index);

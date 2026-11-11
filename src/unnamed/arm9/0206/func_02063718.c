@@ -1,5 +1,6 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
+#include "nitro/mi/memory.h"
 
 /* NitroSDK WBT (wireless block transfer): start the command the application
  * queued. When no command is running (cmd.command == 0) and one is queued,
@@ -11,7 +12,6 @@
  * tables, GET_BLOCKINFO into the peer record's own bitmap words.
  * The WBTCommand / WBTWork views are in private/arm9_wbt.h. */
 
-extern void MIi_CpuCopy32(void *src, void *dst, int n); /* loads through r0, stores through r1 */
 extern void func_02065bf4(void);
 extern int func_02065c1c(void);
 extern int func_02065bc0(void);

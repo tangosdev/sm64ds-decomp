@@ -253,7 +253,9 @@ extern void SetSubBg2Offset(int a, int b);
 extern StaffRollStep data_ov002_02110e24[];
 extern StaffRollStep data_ov002_02110e9c[];
 extern void func_ov002_020f3828(int *c);
-extern void MIi_CpuCopy16(void *src, void *dst, int count);
+/* local extern: these named parameters hold this TU's @NNN numbering; the
+   switch to nitro/mi/memory.h waits on the manifest re-key in #5260. */
+extern void MIi_CpuCopy16(const void *src, void *dst, unsigned int count);
 extern int data_ov002_021002a0[];
 extern s16 FX_SinCosTable_[];
 extern short atan2_hold_d_a_demo_1(int y, int x);

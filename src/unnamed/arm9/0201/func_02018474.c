@@ -1,10 +1,10 @@
 #include "private/fs_views.h"
+#include "nitro/os/system.h"
 
 typedef struct FSFile FSFile;
 
 extern void FS_InitFile(FSFile *p_file);
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
-extern void OS_Terminate(void);
 extern int func_020184e0(FSFile *p_file, unsigned int dst, unsigned int size);
 
 /* Open the file fileId names (func_02018434 passes it by value), crash if

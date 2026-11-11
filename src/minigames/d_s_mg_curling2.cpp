@@ -46,6 +46,7 @@ enum dScMgCurling2_c_AssetId {
 #include "math/CalcLib.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/mi/memory.h"
 
 /* The receiver for the pointer-to-member tables. It must stay incomplete:
  * mwccarm picks the pointer-to-member layout from whether the class is
@@ -87,7 +88,6 @@ extern void DecompressLZ16(const void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *p);
 extern void Ov004_Deallocate(void *p);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void GX_LoadBG0Scr(const void *src, int offset, int count);
 extern void GX_LoadBG3Scr(void *a, u32 b, u32 c);
 extern void GX_LoadBG2Scr(const void *a, u32 b, u32 c);

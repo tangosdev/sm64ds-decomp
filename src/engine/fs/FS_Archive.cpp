@@ -28,6 +28,7 @@
 #include "nitro/os/system.h"
 #include "nitro/os/thread.h"
 #include "private/fs_views.h"
+#include "nitro/mi/memory.h"
 
 typedef struct FSFile FSFile;
 
@@ -67,9 +68,6 @@ extern "C" {
 
 extern FSArchive *data_020a8048;
 extern FSDirPos data_020a804c;
-
-void MI_CpuCopy8(const void *src, void *dst, u32 size);
-void MI_CpuFill8(void *dst, u8 value, u32 size);
 
 void FS_InitFile(FSFile *p_file);
 int FS_ReadFile(FSFile *p_file, void *dst, int len);

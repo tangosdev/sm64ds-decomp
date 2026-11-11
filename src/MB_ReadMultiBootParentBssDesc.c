@@ -1,6 +1,6 @@
 #include "types.h"
 #include "private/wm_views.h"
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+#include "nitro/mi/memory.h"
 
 /* On a download-play child, rebuild the parent's WMBssDesc from the copy
  * the boot loader left at 0x027ffc42. The copy is valid when the halfword at

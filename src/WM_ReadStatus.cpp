@@ -6,11 +6,11 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
 extern int WMi_CheckInitialized(void);
-extern void MIi_CpuCopyFast(const void *src, void *dst, int len);
 
 int WM_ReadStatus(int *statusBuf) {
     WMArm9Buf *sys = WM_GetSystemWork();

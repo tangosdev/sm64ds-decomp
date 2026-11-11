@@ -1,8 +1,8 @@
 #include "types.h"
 #include "private/rom_header_view.h"
 #include "private/arm9_a9db8_mb_parent.h"
+#include "nitro/mi/memory.h"
 extern void MBi_SetSegmentInfo(void *in, void *tbl, void *dst, void *recvCursor);
-extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
 extern u32 MBi_defaultLoadSegList[];
 
 /* NitroSDK MB_DownloadFileInfo, the start of MbParentFile.mHeader: the

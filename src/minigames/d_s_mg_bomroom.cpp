@@ -35,6 +35,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "PlayerInput.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 extern void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
@@ -63,8 +64,6 @@ extern int RandomIntInternal(int *seed);
 extern u16 sBomroomSpawnDelays[];
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 
 extern void GX_LoadBG0Scr(const void *src, int offset, int count);
 extern u8 gMainScreenLayers;

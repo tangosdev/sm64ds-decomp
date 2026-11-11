@@ -1,9 +1,8 @@
 //cpp
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
-
-extern void MIi_CpuClear16(unsigned short value, void *dst, int count);
 
 void ResetCrashScreen(void)
 {

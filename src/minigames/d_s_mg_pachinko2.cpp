@@ -50,6 +50,7 @@ enum dScMgPachinko2_c_AssetId {
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "LevelRng.h"
+#include "nitro/mi/memory.h"
 
 namespace Sound {
 void PlayBank2_2D(unsigned int id);
@@ -92,7 +93,6 @@ extern void func_02012718(int, int);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *);
 extern void DecompressLZ16(void *src, void *dst);
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern void GX_LoadBG3Scr(void *, u32, u32);
 extern void GXS_LoadBG3Scr(const void *, u32, u32);
 extern void GXS_LoadBG0Scr(const void *, int, int);

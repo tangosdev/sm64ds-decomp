@@ -1,11 +1,9 @@
 //cpp
 #include "nitro/os/cache.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
-
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
-extern void MI_CpuFill8(void *dst, unsigned char v, unsigned int size);
 
 /* NitroSDK WM_StartConnect(callback, pInfo, ssid): MBi_ChildCallback passes it
  * its connectBssDesc (a 0xc0-byte WMBssDesc, flushed here) and no ssid. The

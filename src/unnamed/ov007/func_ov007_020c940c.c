@@ -1,8 +1,6 @@
 #include "types.h"
 #include "Ov007PaletteBuf.h"
-
-extern void MIi_CpuCopy16(const void *src, void *dst, int nbytes);
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
+#include "nitro/mi/memory.h"
 
 /* Reloads the buffer's colours from its source, or clears them when it has
  * none. */

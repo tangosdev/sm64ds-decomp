@@ -12,9 +12,7 @@
  * the linker dropped it.
  */
 #include "private/nvram_config.h"
-
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
-extern void MIi_CpuCopy16(const void *src, void *dst, int size);
+#include "nitro/mi/memory.h"
 
 void OS_GetMacAddress(unsigned char *macAddress) {
     MI_CpuCopy8((void *)0x027ffcf4, macAddress, 6);

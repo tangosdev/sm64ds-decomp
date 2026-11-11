@@ -28,6 +28,7 @@
 #include "nitro/os/thread.h"
 #include "nitro/snd/alarm.h"
 #include "nitro/os/system.h"
+#include "nitro/mi/memory.h"
 
 struct Elem_204f278;
 struct HeapAllocator_205212c;
@@ -291,7 +292,6 @@ extern "C" {
 extern int FS_CloseFile(char *p_file);
 extern void FS_InitFile(FSFile *p_file);
 extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
-extern void MIi_CpuClear32(int val, int *dst, int len);
 
 extern int __aeabi_idiv(int a, int b);
 extern s16 data_02086384[];

@@ -29,7 +29,9 @@
 #include "nitro/gx/g2.h"
 
 extern "C" {
-void MIi_CpuClear32(int val, int *dst, int len);
+/* local extern: these named parameters hold this TU's @NNN numbering; the
+   switch to nitro/mi/memory.h waits on the manifest re-key in #5260. */
+void MIi_CpuClear32(unsigned int val, void *dst, unsigned int len);
 void Wipe_HBlankHandler(void);
 }
 

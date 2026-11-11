@@ -1,5 +1,6 @@
 #include "types.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
 extern int data_020a0f5c;
 extern u16 data_020a0f24;
 extern u8 data_020a0f9d[4];
@@ -8,7 +9,6 @@ extern u16 data_020a0fa0[][3];
 
 extern int Wireless_Reset(void);
 extern int func_0203faa8(void);
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int func_02042748(u16 *a, u16 *b);
 extern int WM_Disconnect(void *callback, unsigned int aid);
 

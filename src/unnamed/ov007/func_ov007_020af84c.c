@@ -2,6 +2,7 @@
 #include "Ov007Touch.h"
 #include "Ov007Work.h"
 #include "Ov007Pad.h"
+#include "nitro/os/system.h"
 
 extern int data_ov007_020ccc20[];
 
@@ -14,7 +15,6 @@ extern int func_ov007_020b4438(void);
 extern void func_ov007_020c1d8c(int i);
 extern int func_ov007_020b79c8(void);
 extern void func_ov007_020aec00(void);
-extern void OS_Terminate(void);
 extern int func_ov007_020bdeb0(int idx);
 extern void MessageWindow_Close(void);
 

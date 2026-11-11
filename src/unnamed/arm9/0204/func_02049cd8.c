@@ -1,6 +1,6 @@
 #include "CaptureEffect.h"
+#include "nitro/mi/memory.h"
 
-extern void MIi_CpuClear16(unsigned short val, void *dst, int nbytes);
 extern void SNDi_SetSurroundDecay(int decay);
 extern int func_020507e0(void *buffer, unsigned int size, int format, int rate, int interval,
                          void *callback, void *arg);

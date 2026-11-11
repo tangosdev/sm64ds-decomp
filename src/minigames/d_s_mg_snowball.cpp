@@ -72,6 +72,7 @@ enum dScMgSnowball_c_AssetId {
 #include "nitro/gx/g3imm_light.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
+#include "nitro/mi/memory.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -101,7 +102,6 @@ extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern struct Matrix4x3 data_020a0e68;
-extern void MIi_CpuClear16(unsigned short value, void *dst, int count);
 extern u16 sSnowballCourseTiles[][4];
 extern unsigned char data_ov006_0212f3b0[];
 extern unsigned char data_ov006_0212f3ac[];

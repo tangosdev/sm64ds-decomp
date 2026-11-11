@@ -55,6 +55,7 @@ enum dScMgPanel_c_AssetId {
 #include "OamAttr.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/mi/memory.h"
 
 /* Callees of the member helpers. Declared here, not in the bodies: a
    declaration inside a member body gets C++ linkage and names a symbol the ROM
@@ -1524,7 +1525,6 @@ extern void Deallocate(void *);
 extern int GetOwnerLanguage(void);
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void FreeGfxSlotsById(int arg);
 extern void SetSubBg0Offset(int, int);
 extern void GXS_LoadBG3Scr(const void *, u32, u32);

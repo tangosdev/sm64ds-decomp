@@ -2,6 +2,8 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -30,8 +32,6 @@ typedef struct WMPortSendCallback {
     Handler callback; /* 0x14 */
 } WMPortSendCallback;
 
-extern void OS_Terminate(void);
-extern void MIi_CpuCopy16(const void *src, void *dst, s32 count);
 extern int WM_Finish(void);
 extern void WmClearFifoRecvFlag(void);
 extern WMArm9Buf *data_020a89ac;

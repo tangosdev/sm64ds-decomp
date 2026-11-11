@@ -1,11 +1,11 @@
 #include "nitro/spi/tp.h"
+#include "nitro/os/system.h"
 
 extern void TP_Init(void);
 extern void TP_SetCalibrateParam(void *p);
 extern void TP_RequestSetStabilityAsync(int a, int b);
 extern void TP_WaitBusy(int mask);
 extern int TP_CheckError(int mask);
-extern void OS_Terminate(void);
 extern void TP_RequestAutoSamplingStartAsync(unsigned int vcount, unsigned int frequency,
                                              TPData *samplingBufs, unsigned int bufSize);
 extern TPCalibrateParam data_020a0de0;

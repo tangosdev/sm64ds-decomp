@@ -59,6 +59,7 @@
 #include "nitro/gx/gx_load.h"
 #include "Ov007Sprite.h"
 #include "Ov007Settings.h"
+#include "nitro/mi/memory.h"
 
 #pragma opt_loop_invariants off
 
@@ -123,10 +124,6 @@ extern s16 data_ov007_020d7a84[];   /* shown-state frames per window kind; 0 sta
 extern u32 data_ov007_020d7aa0[];   /* keep-masks per pixel offset in a tile */
 extern u32 data_ov007_020d7ac4[];   /* colour masks per text colour */
 extern u8 data_ov007_020d7b04[][6]; /* first text line per kind and language */
-
-extern void MIi_CpuCopyFast(const void *src, void *dst, int len);
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 
 extern int func_ov007_020bdeb0(int sound);
 extern void func_ov007_020c0308(unsigned short *dst, int b, int c);

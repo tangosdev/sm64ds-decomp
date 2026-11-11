@@ -29,6 +29,7 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "cMgSmartball_board_c.h"
 #include "types.h"
 #include "cMgSmartball_slot_c.h"
+#include "nitro/mi/memory.h"
 #include "cMgSmartball_pakkun_c.h"
 #include "cMgSmartball_dokan_c.h"
 #include "cMgSmartball_propeller_c.h"
@@ -137,7 +138,6 @@ extern s16 FX_SinCosTable_[];
 extern s32 sSmartballCellOrder[];
 extern OamAttr *sSmartballCellRowSprites[];
 
-extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 extern void func_02012718(int a, int b);
 extern struct W9 sSmartballCellStartOrder;
 extern int RandomIntInternal(int *seed);

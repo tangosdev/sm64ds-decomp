@@ -1,7 +1,7 @@
 #include "Ov007SpriteBank.h"
+#include "nitro/mi/memory.h"
 
 extern void *func_ov007_020c3df4(const char *name, int size);
-extern void MIi_CpuClear32(int val, int *dst, int len);
 
 /* Allocates a sprite bank for `cellCount` cells and `animCount`
  * animations, each table zeroed record by record. */

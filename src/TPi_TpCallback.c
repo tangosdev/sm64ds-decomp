@@ -4,6 +4,7 @@
  * callback. */
 #include "types.h"
 #include "nitro/spi/tp.h"
+#include "nitro/os/system.h"
 typedef struct {
     u32 x : 12;
     u32 y : 12;
@@ -15,8 +16,6 @@ typedef union {
     TP f;
     u16 h[2];
 } TPU;
-
-extern void OS_Terminate(void);
 
 void TPi_TpCallback(int a0, unsigned int a1, int a2) {
     u16 msg = (u16)a1;

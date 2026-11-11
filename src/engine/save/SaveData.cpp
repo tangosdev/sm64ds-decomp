@@ -47,6 +47,7 @@
  */
 
 #include "SaveData.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 extern int data_0209caf4[][5];        /* the minigame record tables, at block + 0x54 */
@@ -54,8 +55,6 @@ extern u8 gGameMode;                  /* gate byte read by CanPlayerHaveCap */
 extern u8 data_0209cad2[];            /* coin records; local extern: no field on the byte array */
 extern unsigned char data_0209cab4[]; /* star bits per course */
 extern unsigned char data_0209f224;   /* last collected star id */
-extern void MI_CpuFill8(void *dest, u8 value, u32 size);
-extern void MI_CpuCopy8(const void *src, void *dst, u32 count);
 extern void ClearCapHeldByToad(void); /* forward: called by func_02013a88 above its definition */
 extern void UnlockMinigame(int minigame); /* forward: defined at the end of this file */
 /* local extern: src/SublevelToLevel.cpp is int(int), but these four callers match only as s8.

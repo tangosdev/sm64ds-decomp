@@ -51,6 +51,7 @@
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_views.h"
 #include "private/wm_views.h"
+#include "nitro/mi/memory.h"
 
 /* The SDK built this file as C, where the GameInfo copy in
  * RecordScannedParent is an inline 0x20-pass halfword loop. As C++ it is an
@@ -152,13 +153,8 @@ extern int WM_StartMPEx(void *callback, int recvBuf, u16 recvBufSize, int sendBu
 extern int WM_SetMPDataToPort(int callback, int data, int size, int aidBitmap, u16 port, u16 prio);
 
 extern void OS_GetMacAddress(unsigned char *macAddress);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
-extern void MIi_CpuClear32(int val, int *dst, int len);
-extern void MIi_CpuCopy16(const void *src, void *dst, int count);
 extern void MI_DmaCopy16(unsigned int ch, void *src, void *dst, unsigned int n);
 // local extern: MI_Memory.c defines these two as assembly stubs.
-extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
-extern void MI_CpuFill8(void *dst, u8 val, u32 size);
 
 extern void MB_CommSetParentStateCallback(u32 callback);
 extern void MB_InitSendGameInfoStatus(void);

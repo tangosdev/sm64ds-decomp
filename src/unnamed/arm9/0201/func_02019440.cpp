@@ -3,6 +3,7 @@
 #include "nitro/gx/gx_vramcnt.h"
 #include "dGraph_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 
@@ -14,7 +15,6 @@ extern int data_0209d4b0;
 
 extern void func_0203bd24(void);
 extern int GX_VBlankIntr(int enable);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 extern void func_0200f4f4(void);
 extern void func_0200f46c(void);
 

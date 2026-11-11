@@ -54,6 +54,10 @@ OSIntrMode OS_RestoreInterrupts_IrqAndFiq(OSIntrMode);
 OSProcMode OS_GetProcMode(void);
 void OS_Halt(void);
 
+/* Halts for good. The SDK's lives in os_terminate_proc.c; this ROM links the
+ * game's own in its place (src/OS_Terminate.cpp). */
+void OS_Terminate(void);
+
 #ifdef __cplusplus
 }
 #endif

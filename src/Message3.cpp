@@ -120,8 +120,6 @@ extern u32 data_0209287c[];
 extern MBUserInfo *func_0203d8a0(int idx);
 extern u8 NumStars(void);
 extern int func_020138dc(void);
-extern void MIi_CpuClear32(int val, int *dst, int len);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
 /* local extern: Fix12 wall -- the by-value Fix12<int> form cannot be spelled
@@ -129,6 +127,7 @@ extern void *LoadFile(int handle);
 extern void OamRender10_Message3(int sub, struct OamAttr *attr_, int xOff, int yOff, int palette,
                                  int priority, int scaleX, int scaleY, int rotation, int mode);
 #include "OAM.h"
+#include "nitro/mi/memory.h"
 
 void func_02031cd4(void *arg);
 int func_020321fc(void);

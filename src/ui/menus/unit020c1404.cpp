@@ -44,6 +44,7 @@
 #include "nitro/gx/gx_load.h"
 #include "Ov007Texture.h"
 #include "nitro/gx/g3imm.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -52,7 +53,6 @@ extern u32 data_ov007_02104be0; /* end of the palette region */
 extern u32 data_ov007_02104be4; /* end of the texture region */
 extern u32 data_ov007_02104be8; /* next free palette slot */
 
-extern void OS_Terminate(void);
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c3d1c(void *self);
 

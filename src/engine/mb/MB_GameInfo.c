@@ -39,13 +39,11 @@
 #include "types.h"
 #include "private/mb_views.h"
 #include "private/fs_views.h"
+#include "nitro/mi/memory.h"
 
 typedef struct FSFile FSFile;
 
 /* local extern: MI_Memory.c's asm fills and copies; no header declares them. */
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
-extern void MIi_CpuCopy16(const void *src, void *dst, s32 size);
-extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 extern void FS_InitFile(FSFile *p_file);
 extern int FS_OpenFile(void *file, const char *path);
 extern int FS_CloseFile(void *p_file);

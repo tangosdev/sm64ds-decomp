@@ -29,9 +29,9 @@
  */
 #include "nnsys/fnd.h"
 #include "msl/stdlib.h"
+#include "nitro/mi/memory.h"
 
 /* local extern: no header declares this yet. */
-extern "C" void MIi_CpuClear32(int val, int *dst, int len);
 
 extern "C" {
 

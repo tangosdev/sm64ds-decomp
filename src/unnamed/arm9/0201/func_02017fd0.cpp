@@ -2,10 +2,9 @@
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "nitro/fs/overlay.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
-
-extern void MIi_CpuClear32(s32 val, void *dst, s32 size);
 
 /* Poison an unloaded overlay's RAM (UnloadOverlay): invalidate both caches
    over its code and bss, then fill them with 0xe6000010, an ARM undefined

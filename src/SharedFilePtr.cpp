@@ -50,6 +50,8 @@ void Deallocate(void *ptr);
 } // namespace Memory
 
 #include "nitro/os/cache.h"
+#include "nitro/mi/memory.h"
+#include "nitro/os/system.h"
 
 /* The card stream Load reads through; only the cursor and end words are known. */
 struct FileStream {
@@ -73,9 +75,7 @@ unsigned int func_02018ac4(unsigned int *p);
 void DecompressLZ16(void *src, void *dst);
 int func_020185c0(void *buf, unsigned int x);
 int FS_CloseFile(void *a);
-void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 void func_02018770(void);
-void OS_Terminate(void);
 int myFS_ReadFile(void *a, void *b, int c);
 }
 

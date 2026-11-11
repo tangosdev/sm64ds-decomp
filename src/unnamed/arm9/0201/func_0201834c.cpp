@@ -2,6 +2,8 @@
 #include "nitro/os/cache.h"
 #include "Memory.h"
 #include "private/fs_views.h"
+#include "nitro/mi/memory.h"
+#include "nitro/os/system.h"
 
 typedef struct FSFile FSFile;
 
@@ -11,8 +13,6 @@ extern int myFS_ReadFile(void *s, void *b, int c);
 extern int func_02018568(void *a);
 extern unsigned int func_02018ac4(void *p);
 extern void DecompressLZ16(void *src, void *dst);
-extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
-extern void OS_Terminate(void);
 extern int FS_CloseFile(void *self);
 extern void func_02018770(void);
 

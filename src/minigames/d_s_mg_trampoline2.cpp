@@ -56,6 +56,7 @@ enum d_s_mg_trampoline2_AssetId {
 #include "Sound.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "nitro/mi/memory.h"
 
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
@@ -109,8 +110,6 @@ extern void Trmp2Spinner_Update(char *obj);
 extern void Trmp2Spinner_Init(void *obj, int hitCount);
 extern void Trmp2Spinner_SetModel(void *self);
 extern int sTrmp2BrushWord[];
-extern void MIi_CpuCopy32(int *src, int *dst, int len);
-extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 extern const u16 sTrmp2BrushPltt[];
 extern dFdBrightness_c *gSceneFader;
 extern int sTrmp2TouchBlocked;

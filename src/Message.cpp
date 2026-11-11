@@ -41,6 +41,7 @@
 #include "Sound.h"
 #include "MessageBank.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/mi/memory.h"
 
 extern "C" {
 extern u8 gMainScreenLayers;
@@ -139,8 +140,6 @@ extern s8 gNextSublevel;
 extern u32 gNextActorUpdateMask;
 extern s32 data_0208ee44;
 
-extern void MIi_CpuClear32(int val, int *dst, int len);
-extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void SetBg1Offset(int a, int b);
 extern void SetBg3Offset(int a, int b);
 extern void SetSubBg1Offset(int a, int b);
