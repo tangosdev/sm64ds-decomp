@@ -62,154 +62,154 @@
       "ordinal": 3
     },
     {
-      "symbol": "Trmp2Mario_Render",
+      "symbol": "_ZN17dMgTrmpln2Mario_c6RenderEv",
       "address": "0x020c8e90",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020c8e90.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "Trmp2Mario_UpdateMatrix",
+      "symbol": "_ZN17dMgTrmpln2Mario_c12UpdateMatrixEv",
       "address": "0x020c8ecc",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020c8ecc.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "Trmp2Mario_Update",
+      "symbol": "_ZN17dMgTrmpln2Mario_c6UpdateEv",
       "address": "0x020c8f20",
       "size": "0x00000104",
       "legacy_source": "src/func_ov006_020c8f20.cpp",
       "ordinal": 6
     },
     {
-      "symbol": "Trmp2Mario_ApplyGravity",
+      "symbol": "_ZN17dMgTrmpln2Mario_c12ApplyGravityEv",
       "address": "0x020c9024",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020c9024.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "Trmp2Mario_StateKnockedOut",
+      "symbol": "_ZN17dMgTrmpln2Mario_c15StateKnockedOutEv",
       "address": "0x020c905c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020c905c.c",
       "ordinal": 8
     },
     {
-      "symbol": "Trmp2Mario_EnterByKind",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11EnterByKindEv",
       "address": "0x020c9098",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020c9098.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "Trmp2Mario_StateBounce",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11StateBounceEv",
       "address": "0x020c91ac",
       "size": "0x00000334",
       "legacy_source": "src/func_ov006_020c91ac.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "Trmp2Mario_BounceOffLineA",
+      "symbol": "_ZN17dMgTrmpln2Mario_c14BounceOffLineAEv",
       "address": "0x020c94e0",
       "size": "0x000002dc",
       "legacy_source": "src/func_ov006_020c94e0.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "Trmp2Mario_StateWallBounce",
+      "symbol": "_ZN17dMgTrmpln2Mario_c15StateWallBounceEv",
       "address": "0x020c97bc",
       "size": "0x000002e4",
       "legacy_source": "src/func_ov006_020c97bc.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "Trmp2Mario_BounceOffLineB",
+      "symbol": "_ZN17dMgTrmpln2Mario_c14BounceOffLineBEv",
       "address": "0x020c9aa0",
       "size": "0x000001ec",
       "legacy_source": "src/func_ov006_020c9aa0.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "Trmp2Mario_EnterBounce",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11EnterBounceEv",
       "address": "0x020c9c8c",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov006_020c9c8c.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "Trmp2Mario_StateRespawnWait",
+      "symbol": "_ZN17dMgTrmpln2Mario_c16StateRespawnWaitEv",
       "address": "0x020c9d7c",
       "size": "0x00000100",
       "legacy_source": "src/func_ov006_020c9d7c.c",
       "ordinal": 15
     },
     {
-      "symbol": "Trmp2Mario_EnterRespawnWait",
+      "symbol": "_ZN17dMgTrmpln2Mario_c16EnterRespawnWaitEv",
       "address": "0x020c9e7c",
       "size": "0x00000080",
       "legacy_source": "src/func_ov006_020c9e7c.c",
       "ordinal": 16
     },
     {
-      "symbol": "Trmp2Mario_StateMissed",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11StateMissedEv",
       "address": "0x020c9efc",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_020c9efc.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "Trmp2Mario_EnterMissed",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11EnterMissedEv",
       "address": "0x020c9fe4",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020c9fe4.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "Trmp2Mario_StateFall",
+      "symbol": "_ZN17dMgTrmpln2Mario_c9StateFallEv",
       "address": "0x020ca070",
       "size": "0x0000027c",
       "legacy_source": "src/func_ov006_020ca070.cpp",
       "ordinal": 19
     },
     {
-      "symbol": "Trmp2Mario_EnterFall",
+      "symbol": "_ZN17dMgTrmpln2Mario_c9EnterFallEv",
       "address": "0x020ca2ec",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020ca2ec.c",
       "ordinal": 20
     },
     {
-      "symbol": "Trmp2Mario_StateAppearWait",
+      "symbol": "_ZN17dMgTrmpln2Mario_c15StateAppearWaitEv",
       "address": "0x020ca310",
       "size": "0x00000064",
       "legacy_source": "src/func_ov006_020ca310.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "Trmp2Mario_EnterAppearWait",
+      "symbol": "_ZN17dMgTrmpln2Mario_c15EnterAppearWaitEs",
       "address": "0x020ca374",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020ca374.c",
       "ordinal": 22
     },
     {
-      "symbol": "Trmp2Mario_StateHidden",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11StateHiddenEv",
       "address": "0x020ca39c",
       "size": "0x0000000c",
       "legacy_source": "src/func_ov006_020ca39c.c",
       "ordinal": 23
     },
     {
-      "symbol": "Trmp2Mario_EnterHidden",
+      "symbol": "_ZN17dMgTrmpln2Mario_c11EnterHiddenEv",
       "address": "0x020ca3a8",
       "size": "0x00000088",
       "legacy_source": "src/func_ov006_020ca3a8.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "Trmp2Mario_Load",
+      "symbol": "_ZN17dMgTrmpln2Mario_c4LoadEv",
       "address": "0x020ca430",
       "size": "0x000001d4",
       "legacy_source": "src/func_ov006_020ca430.c",
@@ -321,182 +321,182 @@
       "ordinal": 40
     },
     {
-      "symbol": "Trmp3DMario_Render",
+      "symbol": "_ZN18dMgTrmpln3DMario_c6RenderEv",
       "address": "0x020cafb4",
       "size": "0x00000028",
       "legacy_source": "src/func_ov006_020cafb4.cpp",
       "ordinal": 41
     },
     {
-      "symbol": "Trmp3DMario_UpdateMatrix",
+      "symbol": "_ZN18dMgTrmpln3DMario_c12UpdateMatrixEv",
       "address": "0x020cafdc",
       "size": "0x00000054",
       "legacy_source": "src/func_ov006_020cafdc.cpp",
       "ordinal": 42
     },
     {
-      "symbol": "Trmp3DMario_Update",
+      "symbol": "_ZN18dMgTrmpln3DMario_c6UpdateEv",
       "address": "0x020cb030",
       "size": "0x00000104",
       "legacy_source": "src/func_ov006_020cb030.cpp",
       "ordinal": 43
     },
     {
-      "symbol": "Trmp3DMario_ApplyGravity",
+      "symbol": "_ZN18dMgTrmpln3DMario_c12ApplyGravityEv",
       "address": "0x020cb134",
       "size": "0x00000038",
       "legacy_source": "src/func_ov006_020cb134.cpp",
       "ordinal": 44
     },
     {
-      "symbol": "Trmp3DMario_StateKnockedOut",
+      "symbol": "_ZN18dMgTrmpln3DMario_c15StateKnockedOutEv",
       "address": "0x020cb16c",
       "size": "0x0000003c",
       "legacy_source": "src/func_ov006_020cb16c.c",
       "ordinal": 45
     },
     {
-      "symbol": "Trmp3DMario_EnterByKind",
+      "symbol": "_ZN18dMgTrmpln3DMario_c11EnterByKindEv",
       "address": "0x020cb1a8",
       "size": "0x0000010c",
       "legacy_source": "src/func_ov006_020cb1a8.cpp",
       "ordinal": 46
     },
     {
-      "symbol": "Trmp3DMario_StateGoal",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9StateGoalEv",
       "address": "0x020cb2b4",
       "size": "0x00000274",
       "legacy_source": "src/func_ov006_020cb2b4.c",
       "ordinal": 47
     },
     {
-      "symbol": "Trmp3DMario_EnterGoal",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9EnterGoalEv",
       "address": "0x020cb528",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020cb528.cpp",
       "ordinal": 48
     },
     {
-      "symbol": "Trmp3DMario_StateLand",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9StateLandEv",
       "address": "0x020cb5c4",
       "size": "0x000000cc",
       "legacy_source": "src/func_ov006_020cb5c4.c",
       "ordinal": 49
     },
     {
-      "symbol": "Trmp3DMario_EnterLand",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9EnterLandEv",
       "address": "0x020cb690",
       "size": "0x0000009c",
       "legacy_source": "src/func_ov006_020cb690.cpp",
       "ordinal": 50
     },
     {
-      "symbol": "Trmp3DMario_StateFallToLedge",
+      "symbol": "_ZN18dMgTrmpln3DMario_c16StateFallToLedgeEv",
       "address": "0x020cb72c",
       "size": "0x000000e8",
       "legacy_source": "src/func_ov006_020cb72c.c",
       "ordinal": 51
     },
     {
-      "symbol": "Trmp3DMario_EnterFallToLedge",
+      "symbol": "_ZN18dMgTrmpln3DMario_c16EnterFallToLedgeEv",
       "address": "0x020cb814",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cb814.c",
       "ordinal": 52
     },
     {
-      "symbol": "Trmp3DMario_StateHardBounce",
+      "symbol": "_ZN18dMgTrmpln3DMario_c15StateHardBounceEv",
       "address": "0x020cb838",
       "size": "0x000002b4",
       "legacy_source": "src/func_ov006_020cb838.cpp",
       "ordinal": 53
     },
     {
-      "symbol": "Trmp3DMario_BounceOffLineA",
+      "symbol": "_ZN18dMgTrmpln3DMario_c14BounceOffLineAEv",
       "address": "0x020cbaec",
       "size": "0x00000290",
       "legacy_source": "src/func_ov006_020cbaec.cpp",
       "ordinal": 54
     },
     {
-      "symbol": "Trmp3DMario_StateBounce",
+      "symbol": "_ZN18dMgTrmpln3DMario_c11StateBounceEv",
       "address": "0x020cbd7c",
       "size": "0x0000025c",
       "legacy_source": "src/func_ov006_020cbd7c.cpp",
       "ordinal": 55
     },
     {
-      "symbol": "Trmp3DMario_BounceOffLineB",
+      "symbol": "_ZN18dMgTrmpln3DMario_c14BounceOffLineBEv",
       "address": "0x020cbfd8",
       "size": "0x000001c0",
       "legacy_source": "src/func_ov006_020cbfd8.cpp",
       "ordinal": 56
     },
     {
-      "symbol": "Trmp3DMario_JumpOff",
+      "symbol": "_ZN18dMgTrmpln3DMario_c7JumpOffEv",
       "address": "0x020cc198",
       "size": "0x00000114",
       "legacy_source": "src/func_ov006_020cc198.cpp",
       "ordinal": 57
     },
     {
-      "symbol": "Trmp3DMario_StateMissed",
+      "symbol": "_ZN18dMgTrmpln3DMario_c11StateMissedEv",
       "address": "0x020cc2ac",
       "size": "0x000000d0",
       "legacy_source": "src/func_ov006_020cc2ac.c",
       "ordinal": 58
     },
     {
-      "symbol": "Trmp3DMario_EnterMissed",
+      "symbol": "_ZN18dMgTrmpln3DMario_c11EnterMissedEv",
       "address": "0x020cc37c",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020cc37c.cpp",
       "ordinal": 59
     },
     {
-      "symbol": "Trmp3DMario_StateFall",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9StateFallEv",
       "address": "0x020cc408",
       "size": "0x00000210",
       "legacy_source": "src/func_ov006_020cc408.cpp",
       "ordinal": 60
     },
     {
-      "symbol": "Trmp3DMario_EnterFall",
+      "symbol": "_ZN18dMgTrmpln3DMario_c9EnterFallEv",
       "address": "0x020cc618",
       "size": "0x00000024",
       "legacy_source": "src/func_ov006_020cc618.c",
       "ordinal": 61
     },
     {
-      "symbol": "Trmp3DMario_StateWalkBack",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13StateWalkBackEv",
       "address": "0x020cc63c",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov006_020cc63c.c",
       "ordinal": 62
     },
     {
-      "symbol": "Trmp3DMario_EnterWalkBack",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13EnterWalkBackEv",
       "address": "0x020cc698",
       "size": "0x0000008c",
       "legacy_source": "src/func_ov006_020cc698.cpp",
       "ordinal": 63
     },
     {
-      "symbol": "Trmp3DMario_StateOnLedge",
+      "symbol": "_ZN18dMgTrmpln3DMario_c12StateOnLedgeEv",
       "address": "0x020cc724",
       "size": "0x000001a4",
       "legacy_source": "src/func_ov006_020cc724.c",
       "ordinal": 64
     },
     {
-      "symbol": "Trmp3DMario_EnterOnLedge",
+      "symbol": "_ZN18dMgTrmpln3DMario_c12EnterOnLedgeEv",
       "address": "0x020cc8c8",
       "size": "0x000000f0",
       "legacy_source": "src/func_ov006_020cc8c8.c",
       "ordinal": 65
     },
     {
-      "symbol": "Trmp3DMario_StateWalkIn",
+      "symbol": "_ZN18dMgTrmpln3DMario_c11StateWalkInEv",
       "address": "0x020cc9b8",
       "size": "0x00000044",
       "legacy_source": "src/func_ov006_020cc9b8.c",
@@ -510,14 +510,14 @@
       "ordinal": 67
     },
     {
-      "symbol": "Trmp3DMario_StateOnGround",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13StateOnGroundEv",
       "address": "0x020ccae0",
       "size": "0x000001ac",
       "legacy_source": "src/func_ov006_020ccae0.c",
       "ordinal": 68
     },
     {
-      "symbol": "Trmp3DMario_EnterOnGround",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13EnterOnGroundEv",
       "address": "0x020ccc8c",
       "size": "0x00000078",
       "legacy_source": "src/func_ov006_020ccc8c.cpp",
@@ -531,21 +531,21 @@
       "ordinal": 70
     },
     {
-      "symbol": "Trmp3DMario_StateOffstage",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13StateOffstageEv",
       "address": "0x020ccd64",
       "size": "0x00000014",
       "legacy_source": "src/func_ov006_020ccd64.c",
       "ordinal": 71
     },
     {
-      "symbol": "Trmp3DMario_EnterOffstage",
+      "symbol": "_ZN18dMgTrmpln3DMario_c13EnterOffstageEv",
       "address": "0x020ccd78",
       "size": "0x00000094",
       "legacy_source": "src/func_ov006_020ccd78.cpp",
       "ordinal": 72
     },
     {
-      "symbol": "Trmp3DMario_Load",
+      "symbol": "_ZN18dMgTrmpln3DMario_c4LoadEv",
       "address": "0x020cce0c",
       "size": "0x000001bc",
       "legacy_source": "src/func_ov006_020cce0c.c",
