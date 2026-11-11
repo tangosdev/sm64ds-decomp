@@ -1077,6 +1077,14 @@ void spawn_frame() {
 }  // namespace port
 
 // The level loop's hold. 1 = skip this frame's game tick.
+/* REJOIN1 piece 5: this guest came into a room whose game had already started (a late joiner, or back by JOIN GAME).
+   0 = not; else a number that changes on every such entry (an in-place rejoin is a new entry in the same process). */
+static int g_late_entry;
+extern "C" int port_coop_late_joiner(void) {
+    using namespace port;
+    return (C.on && !C.host && C.at_first_frame && C.late_at_first) ? g_late_entry : 0;
+}
+
 extern "C" int port_coop_boot_frame(void) {
     using namespace port;
     if (!C.on) return 0;
@@ -1087,6 +1095,7 @@ extern "C" int port_coop_boot_frame(void) {
         if (C.inplace)   // BROADCAST-M5-1 note 4: the time from the accepted hand-off to the room's first level frame
             LOG("first frame of the room %u ms after the hand-off was accepted (in place)", (unsigned)(tick() - C.t_boot));
         C.late_at_first = C.released;
+        if (C.released && ++g_late_entry <= 0) g_late_entry = 1;
         C.host_ready_ms = tick();
         C.last_ready = 0;
         LOG("%s at the file's first frame: %s", C.host ? "host" : "guest",

@@ -31,6 +31,7 @@ extern unsigned char data_0209f22c[];     // hold timer
 void LoadLevelNoReturn(unsigned level, unsigned entrance, unsigned star, unsigned unk);
 int port_level_is_mounted(int level);
 void port_chat_system_line(const char *text);
+int port_coop_late_joiner(void);
 }
 
 namespace port {
@@ -56,6 +57,9 @@ struct State {
     int badge_log[kSeats];
     bool inited;
     int fake_seat; unsigned fake_tick; bool fake_done;
+    int follow;                  // REJOIN1 piece 5: 0 not yet looked, 1 armed, 2 done (went, or nothing to do)
+    unsigned follow_since;
+    int follow_entry;            // which late entry (port_coop_late_joiner) the follow belongs to
 };
 State g;
 
@@ -263,6 +267,41 @@ void on_ctl(int seat, int sub, const unsigned char *pl, int len, void *) {
     g.heard_ms = comms_hub_now_ms();
 }
 
+// REJOIN1 piece 5: a guest that came into a running room (a late joiner, or back through JOIN GAME) lands at the
+// castle. When the host is inside a course it is taken there once, by the same TP the badge does (so the castle
+// painting return is set too). Off with SM64DS_COOP_FOLLOW_HOST=0, with the TP off, or with SM64DS_COOP_REJOIN=0.
+// It waits quietly (no refusal lines) until the host has settled in its course and this player can leave, up to 60 s.
+enum : int { kFollowGiveUpMs = 60000 };
+void follow_host(unsigned now) {
+    if (g.host) return;
+    const int entry = port_coop_late_joiner();
+    if (entry && entry != g.follow_entry) { g.follow_entry = entry; g.follow = 0; }   // a new late entry: look again
+    if (g.follow == 2) return;
+    if (g.follow == 0) {
+        if (!entry || !in_hub()) return;
+        static const char *fe = std::getenv("SM64DS_COOP_FOLLOW_HOST");
+        if (!comms_hub_coop_rejoin() || (fe && fe[0] == '0' && fe[1] == 0)) { g.follow = 2; return; }
+        g.follow = 1; g.follow_since = now ? now : 1;
+        std::fprintf(stderr, "[cotp] REJOIN follow: late joiner at the castle, looking for the host's course\n");
+    }
+    if (!in_hub()) { g.follow = 2; std::fprintf(stderr, "[cotp] REJOIN follow: I left the castle myself, no follow\n"); return; }
+    if ((int)(now - g.follow_since) > kFollowGiveUpMs) {
+        g.follow = 2; std::fprintf(stderr, "[cotp] REJOIN follow: the host never settled in a course within 60 s, staying\n"); return;
+    }
+    if (!on_now()) return;
+    HubPresence p; unsigned age = 0;
+    if (!hub_presence_get(kHostSeat, &p, &age) || age > (unsigned)kPresMaxAgeMs || !p.in_level()) return;
+    if (p.level >= 1 && p.level <= 5) {     // the host is in the castle too: nothing to follow
+        g.follow = 2; std::fprintf(stderr, "[cotp] REJOIN follow: the host is in the castle (sublevel %d), no follow\n", p.level); return;
+    }
+    const Seen &z = g.seen[kHostSeat];
+    if (p.in_menu() || p.in_cutscene() || !z.valid || (int)(now - z.since) < kSettleMs || p.level > 51 || p.act < 0 || p.act > 7) return;
+    if (!port_level_is_mounted(p.level) || my_gate()) return;
+    g.follow = 2;
+    std::fprintf(stderr, "[cotp] REJOIN follow: the host is in level %d act %d, going there\n", p.level, p.act);
+    try_tp(kHostSeat, now);
+}
+
 void on_frame(unsigned now) {
     init();
     ++g.tick;
@@ -284,6 +323,7 @@ void on_frame(unsigned now) {
     }
 #endif
     if (s >= 0) try_tp(s, now);
+    else follow_host(now);
 }
 
 void on_established(int level, int act) {
