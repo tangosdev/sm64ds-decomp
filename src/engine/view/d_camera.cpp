@@ -1287,139 +1287,126 @@ body:
             return 1;
     }
     }
-
 }
-int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
-    int r5 = arg4;
-    VecFx32 sp8;
-    VecFx32 sp14;
-    VecFx32 sp20;
-    VecFx32 sp2C;
-    VecFx32 sp38;
-    VecFx32 sp44;
-    int r4;
-    int t;
-    int sl;
 
-    sp44.z = ScaleDistByFov(((CamMode *)arg3)->lookAtDist);
-    data_02086f2c.z = sp44.z;
-    sp44.x = data_02086f2c.x;
-    sp44.y = data_02086f2c.y;
-    Vec3_RotateYAndTranslate(&sp8, arg1, mTargetPlayer->mAngleY, (int *)&sp44);
+/* Places lookAt for the follow modes: mode's look-at point ahead of the
+ * target player, pulled in by walls and ceilings and lifted onto the ground,
+ * eases mLookAtOffset toward it at speed, then moves lookAt.y within the
+ * mode's followRise. Returns the ground height under that point. */
+int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
+    VecFx32 goal;
+    Vector3 to;
+    Vector3 from;
+    Vector3 above;
+    Vector3 delta;
+    VecFx32 offset;
+    int groundY;
+    int height;
+    int horzDist;
+    CamMode *mode = (CamMode *)modeArg;
+
+    offset.z = ScaleDistByFov(mode->lookAtDist);
+    data_02086f2c.z = offset.z;
+    offset.x = data_02086f2c.x;
+    offset.y = data_02086f2c.y;
+    Vec3_RotateYAndTranslate(&goal, target, mTargetPlayer->mAngleY, (int *)&offset);
     dBgCh_Lin line;
-    sp14.x = sp8.x;
-    sp14.y = sp8.y + 0x32000;
-    sp14.z = sp8.z;
-    {
-        int tz = arg1[2];
-        int ty = arg1[1] + 0x32000;
-        int tx = arg1[0];
-        sp20.x = tx;
-        sp20.y = ty;
-        sp20.z = tz;
-    }
+    to.x = goal.x;
+    to.y = goal.y + 0x32000;
+    to.z = goal.z;
+    SetVec(from, target[0], target[1] + 0x32000, target[2]);
     PrepareBgCh(line);
-    line.SetObjAndLine(*(Vector3 *)&sp20, *(Vector3 *)&sp14, 0);
+    line.SetObjAndLine(from, to, 0);
     if (line.DetectClsn() != 0) {
-        Vector3 sp50 = line.GetClsnPos();
-        sp8.x = sp50.x;
-        sp8.y = sp50.y;
-        sp8.z = sp50.z;
+        Vector3 hit = line.GetClsnPos();
+        goal.x = hit.x;
+        goal.y = hit.y;
+        goal.z = hit.z;
     }
-    sp2C.x = sp8.x;
-    sp2C.y = sp8.y + 0x100000;
-    sp2C.z = sp8.z;
+    above.x = goal.x;
+    above.y = goal.y + 0x100000;
+    above.z = goal.z;
     PrepareBgCh(line);
-    line.SetObjAndLine(*(Vector3 *)&sp8, *(Vector3 *)&sp2C, 0);
+    line.SetObjAndLine(*(Vector3 *)&goal, above, 0);
     if (line.DetectClsn() != 0) {
-        Vector3 sp5C = line.GetClsnPos();
-        sp2C.x = sp5C.x;
-        sp2C.y = sp5C.y;
-        sp2C.z = sp5C.z;
+        Vector3 hit = line.GetClsnPos();
+        above = hit;
     }
-    dBgCh_Gnd spEC;
-    PrepareBgCh(spEC);
-    spEC.SetObjAndPos(*(Vector3 *)&sp2C, 0);
-    r4 = sp8.y;
-    if (spEC.DetectClsn() != 0) {
-        int d;
-        r4 = spEC.clsnY;
-        d = r4 - sp8.y;
-        if (d > 0) {
-            if (d > 0x30000)
-                d = 0x30000;
-            sp8.y += d;
+    dBgCh_Gnd ground;
+    PrepareBgCh(ground);
+    ground.SetObjAndPos(above, 0);
+    groundY = goal.y;
+    if (ground.DetectClsn() != 0) {
+        int rise;
+        groundY = ground.clsnY;
+        rise = groundY - goal.y;
+        if (rise > 0) {
+            if (rise > 0x30000)
+                rise = 0x30000;
+            goal.y += rise;
         }
     }
-    VEC_Subtract(&sp8, arg1, &sp8);
-    t = ((CamMode *)arg3)->lookAtHeight;
+    VEC_Subtract(&goal, target, &goal);
+    height = mode->lookAtHeight;
     if (mFlags & 0x20000) {
-        t = FX_MUL(t, 0x3000);
+        height = FX_MUL(height, 0x3000);
     }
-    sp8.y += ScaleHeightByFov(t);
-    sl = Vec3_HorzLen(&sp8);
-    VecFx32 sp68;
-    Vec3_MulScalar((Vector3 *)&sp68, &mLookTargetPos, mFocusBlend);
-    VEC_Add(&sp8, &sp68, &sp8);
+    goal.y += ScaleHeightByFov(height);
+    horzDist = Vec3_HorzLen(&goal);
+    VecFx32 focus;
+    Vec3_MulScalar((Vector3 *)&focus, &mLookTargetPos, mFocusBlend);
+    VEC_Add(&goal, &focus, &goal);
     if (mFlags & 4) {
-        mLookAtOffset.x = sp8.x;
-        mLookAtOffset.y = sp8.y;
-        mLookAtOffset.z = sp8.z;
+        mLookAtOffset.x = goal.x;
+        mLookAtOffset.y = goal.y;
+        mLookAtOffset.z = goal.z;
     } else {
-        int hl = Vec3_HorzLen(&mLookAtOffset) - sl;
-        if (((CamMode *)arg3)->flags & 0x40) {
-            r5 = 0x10000;
-        } else if (hl > 0) {
-            r5 += FX_MUL(hl, 0x400);
+        int shrink = Vec3_HorzLen(&mLookAtOffset) - horzDist;
+        if (mode->flags & 0x40) {
+            speed = 0x10000;
+        } else if (shrink > 0) {
+            speed += FX_MUL(shrink, 0x400);
         }
-        Vec3_Sub((Vector3 *)&sp38, (const Vector3 *)&sp8, &mLookAtOffset);
-        sl = Vec3_HorzLen(&sp38);
+        Vec3_Sub(&delta, (const Vector3 *)&goal, &mLookAtOffset);
+        horzDist = Vec3_HorzLen(&delta);
         {
-            int f = sl;
-            int fd;
-            if (sl != 0) {
-                Math_Function_0203b14c(&f, 0, 0x100, FX_MUL(r5, 0x600), 0x1000);
-                fd = FX_Div(f, sl);
-                mLookAtOffset.x = sp8.x - FX_MUL(sp38.x, fd);
-                mLookAtOffset.z = sp8.z - FX_MUL(sp38.z, fd);
+            int left = horzDist;
+            int frac;
+            if (horzDist != 0) {
+                Math_Function_0203b14c(&left, 0, 0x100, FX_MUL(speed, 0x600), 0x1000);
+                frac = FX_Div(left, horzDist);
+                mLookAtOffset.x = goal.x - FX_MUL(delta.x, frac);
+                mLookAtOffset.z = goal.z - FX_MUL(delta.z, frac);
             }
         }
-        {
-            int a8 = mLookAtOffset.y;
-            int diff = sp8.y - a8;
-            mLookAtOffset.y = sp8.y - FX_MUL(diff, 0xf80);
-        }
+        mLookAtOffset.y = goal.y - FX_MUL(goal.y - mLookAtOffset.y, 0xf80);
         if (mFlags & 0x400) {
-            return r4;
+            return groundY;
         }
     }
-    lookAt.x = arg1[0] + mLookAtOffset.x;
-    lookAt.z = arg1[2] + mLookAtOffset.z;
+    lookAt.x = target[0] + mLookAtOffset.x;
+    lookAt.z = target[2] + mLookAtOffset.z;
     {
-        int sl2 = arg1[1] + mLookAtOffset.y;
-        int r5b = sl2 - lookAt.y;
-        if (r5b < (int)ScaleHeightByFov(((CamMode *)arg3)->followRise)) {
-            ApproachLinear(*(int *)&lookAt.y, sl2, 0x64000);
+        int goalY = target[1] + mLookAtOffset.y;
+        int climb = goalY - lookAt.y;
+        if (climb < (int)ScaleHeightByFov(mode->followRise)) {
+            ApproachLinear(*(int *)&lookAt.y, goalY, 0x64000);
         } else {
-            int r6 = arg2 - arg1[1];
-            if (r6 >= 0) {
-                r6 = 0;
+            int drop = baseY - target[1];
+            if (drop >= 0) {
+                drop = 0;
             } else {
                 int lim = ScaleHeightByFov(-0xf0a00);
-                if (r6 < lim)
-                    r6 = lim;
+                if (drop < lim)
+                    drop = lim;
             }
-            {
-                int r2 = r6 + r5b;
-                if (r2 > 0) {
-                    lookAt.y = sl2 - (r5b - FX_MUL(r2, 0x600));
-                }
+            if (drop + climb > 0) {
+                lookAt.y = goalY - (climb - FX_MUL(drop + climb, 0x600));
             }
         }
     }
-    return r4;
+    return groundY;
 }
-#pragma cplusplus on
 
 /* ---------------------------------------------------------------------------
  * The camera's states and script ops, 0x020073a0..0x0200bec4.
