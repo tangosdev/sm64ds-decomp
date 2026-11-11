@@ -27,9 +27,7 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/thread.h"
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 extern "C" {
 
@@ -70,12 +68,6 @@ extern FSDirPos data_020a804c;
 
 void MI_CpuCopy8(const void *src, void *dst, u32 size);
 void MI_CpuFill8(void *dst, u8 value, u32 size);
-
-void FS_InitFile(FSFile *p_file);
-int FS_ReadFile(FSFile *p_file, void *dst, int len);
-int FS_CloseFile(char *p_file);
-int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
-                      u32 file_index);
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
 void FSi_ReleaseCommand(FSFile *p_file, int ret);
@@ -492,14 +484,14 @@ u32 FS_LoadArchiveTables(FSArchive *p_arc, void *p_mem, u32 max_size) {
         u8 *p_cache = (u8 *)ALIGN_BYTE(p_mem, 32);
         FSFile tmp;
         FS_InitFile(&tmp);
-        FS_OpenFileDirect((char *)&tmp, p_arc, p_arc->fat, p_arc->fat + p_arc->fat_size, (u32)~0);
+        FS_OpenFileDirect(&tmp, p_arc, p_arc->fat, p_arc->fat + p_arc->fat_size, (u32)~0);
         FS_ReadFile(&tmp, p_cache, p_arc->fat_size);
-        FS_CloseFile((char *)&tmp);
+        FS_CloseFile(&tmp);
         p_arc->fat = (u32)p_cache;
         p_cache += p_arc->fat_size;
-        FS_OpenFileDirect((char *)&tmp, p_arc, p_arc->fnt, p_arc->fnt + p_arc->fnt_size, (u32)~0);
+        FS_OpenFileDirect(&tmp, p_arc, p_arc->fnt, p_arc->fnt + p_arc->fnt_size, (u32)~0);
         FS_ReadFile(&tmp, p_cache, p_arc->fnt_size);
-        FS_CloseFile((char *)&tmp);
+        FS_CloseFile(&tmp);
         p_arc->fnt = (u32)p_cache;
         p_arc->load_mem = p_mem;
         p_arc->table_func = FSi_ReadMemoryCore;

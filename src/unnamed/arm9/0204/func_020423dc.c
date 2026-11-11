@@ -1,7 +1,6 @@
 #include "types.h"
 #include "private/fs_views.h"
 
-typedef struct FSFile FSFile;
 
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
 extern int FS_UnloadArchive(FSArchive *p_arc);

@@ -5,9 +5,7 @@
  * ROM's (movlo, then movgt), so this SDK compares offset against the u32
  * top uncast and casts only bottom, where pret's later FS_file.c casts
  * both. */
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 int FS_SeekFile(FSFile *p_file, int offset, FSSeekFileMode origin) {
     switch (origin) {

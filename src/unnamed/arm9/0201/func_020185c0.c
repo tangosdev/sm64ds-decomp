@@ -1,10 +1,7 @@
 #include "private/arm9_archive_table.h"
 
-#include "private/fs_views.h"
+#include "nitro/fs/file.h"
 
-typedef struct FSFile FSFile;
-
-extern void FS_InitFile(FSFile *p_file);
 extern void func_02018598(FSFileID *c, int arg);
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
 extern int LoadArchive(int idx);

@@ -1,7 +1,6 @@
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/fs_views.h"
 
-typedef struct FSFile FSFile;
 
 extern void func_02041a00(FSFile *self);
 

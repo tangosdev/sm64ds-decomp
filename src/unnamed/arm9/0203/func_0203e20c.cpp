@@ -2,8 +2,7 @@
 #include "types.h"
 #include "Memory.h"
 #include "private/mb_views.h"
-
-typedef struct FSFile FSFile;
+#include "private/fs_views.h"
 
 extern "C" {
 

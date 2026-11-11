@@ -1,9 +1,7 @@
 /* NitroSDK FS_OpenFileFast: open the file a FSFileID names, through the
  * archive it carries (FS_COMMAND_OPENFILEFAST, 6), and mark the FSFile a
  * file (FS_FILE_STATUS_IS_FILE, 0x10) rather than a directory (0x20). */
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 extern int FSi_SendCommand(FSFile *p_file, int command);
 

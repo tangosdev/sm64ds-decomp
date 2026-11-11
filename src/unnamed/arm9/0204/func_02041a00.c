@@ -6,7 +6,6 @@ extern char data_020a2400[];
 extern void func_02041224(char *thiz, int n);
 extern void func_02042160(void *arg);
 
-typedef struct FSFile FSFile;
 
 /* The open request (kind 0) a child sends the parent: FileShareMsg's layout
  * (arm9_a1fc0_file_share.h), with the region's length and offset where the
