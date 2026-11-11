@@ -5215,8 +5215,8 @@ data_020a8064 kind:bss addr:0x020a8064
 data_020a806c kind:bss addr:0x020a806c
 data_020a8074 kind:bss addr:0x020a8074
 data_020a80c4 kind:bss addr:0x020a80c4
-data_020a80c8 kind:bss addr:0x020a80c8
-data_020a80cc kind:bss addr:0x020a80cc
+initial$145 kind:bss addr:0x020a80c8
+tpState kind:bss addr:0x020a80cc
 data_020a80e4 kind:bss addr:0x020a80e4
 data_020a8104 kind:bss addr:0x020a8104
 data_020a8108 kind:bss addr:0x020a8108

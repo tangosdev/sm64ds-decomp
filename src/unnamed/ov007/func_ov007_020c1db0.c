@@ -1,8 +1,6 @@
 #include "types.h"
+#include "nitro/spi/tp.h"
 #include "Ov007Touch.h"
-
-extern void TP_RequestSamplingAsync(void);
-extern int TP_WaitCalibratedResult(void *result);
 
 /* Updates the touch record once a frame from a stylus reading (b, or a
  * fresh calibrated sample when b is null): patches invalid axes from the
@@ -12,13 +10,12 @@ void func_ov007_020c1db0(Ov007Touch *a, Ov007TouchSample *b) {
     a->prev = a->cur;
     a->cur = a->raw;
     if (b == 0) {
-        u16 tmp[4];
-        TP_RequestSamplingAsync();
-        TP_WaitCalibratedResult(tmp);
-        a->raw.x = tmp[0];
-        a->raw.y = tmp[1];
-        a->raw.touch = tmp[2];
-        a->raw.validity = tmp[3];
+        TPData tp;
+        TP_RequestCalibratedSampling(&tp);
+        a->raw.x = tp.x;
+        a->raw.y = tp.y;
+        a->raw.touch = tp.touch;
+        a->raw.validity = tp.validity;
     } else {
         a->raw = *b;
     }

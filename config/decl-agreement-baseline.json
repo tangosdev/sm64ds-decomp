@@ -4150,12 +4150,6 @@
       "src/engine/fs/FS_Command.cpp": [
         "return:void"
       ],
-      "src/TP_CalcCalibrateParam.cpp": [
-        "return:void"
-      ],
-      "src/TP_SetCalibrateParam.cpp": [
-        "return:void"
-      ],
       "src/unnamed/arm9/0205/func_0205ff20.cpp": [
         "return:void"
       ],
@@ -15735,25 +15729,6 @@
     },
     "func_0205e6e4": {
       "src/DGT_Hash2CalcHmac.c": [
-        "return:void"
-      ]
-    },
-    "TP_CalcCalibrateParam": {
-      "src/TP_GetUserInfo.c": [
-        "param:#1 int",
-        "param:#2 int",
-        "param:#3 int",
-        "param:#4 int",
-        "param:#5 int",
-        "param:#6 int",
-        "param:#7 int",
-        "param:#8 int",
-        "param:#9 int"
-      ]
-    },
-    "TP_GetUserInfo": {
-      "src/unnamed/arm9/0203/func_0203bbc0.c": [
-        "param:#1 void *",
         "return:void"
       ]
     },

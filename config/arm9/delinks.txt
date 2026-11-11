@@ -2608,61 +2608,10 @@ src/ARMMathSaveState.c:
     complete
     .text start:0x0205e988 end:0x0205e9fc
 
-src/TP_CheckError.c:
+src/engine/spi/TP.c:
     complete
-    .text start:0x0205e9fc end:0x0205ea10
-
-src/TP_WaitBusy.c:
-    complete
-    .text start:0x0205ea10 end:0x0205ea28
-
-src/TP_GetCalibratedPoint.c:
-    complete
-    .text start:0x0205ea28 end:0x0205eb58
-
-src/TP_CalcCalibrateParam.cpp:
-    complete
-    .text start:0x0205eb58 end:0x0205edc8
-
-src/TP_GetLatestIndexInAuto.c:
-    complete
-    .text start:0x0205edc8 end:0x0205edd8
-
-src/TP_RequestSetStabilityAsync.cpp:
-    complete
-    .text start:0x0205edd8 end:0x0205eeac
-
-src/TP_RequestAutoSamplingStartAsync.cpp:
-    complete
-    .text start:0x0205eeac end:0x0205efc0
-
-src/TP_WaitCalibratedResult.c:
-    complete
-    .text start:0x0205efc0 end:0x0205efe0
-
-src/TP_GetCalibratedResult.c:
-    complete
-    .text start:0x0205efe0 end:0x0205f040
-
-src/TP_RequestSamplingAsync.cpp:
-    complete
-    .text start:0x0205f040 end:0x0205f0e0
-
-src/TP_SetCalibrateParam.cpp:
-    complete
-    .text start:0x0205f0e0 end:0x0205f1e4
-
-src/TP_GetUserInfo.c:
-    complete
-    .text start:0x0205f1e4 end:0x0205f270
-
-src/TP_Init.c:
-    complete
-    .text start:0x0205f270 end:0x0205f300
-
-src/TPi_TpCallback.c:
-    complete
-    .text start:0x0205f300 end:0x0205f5c0
+    .text start:0x0205e9fc end:0x0205f5c0
+    .bss start:0x020a80c8 end:0x020a8104
 
 src/engine/spi/PM.cpp:
     complete
