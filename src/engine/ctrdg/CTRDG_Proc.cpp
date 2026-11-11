@@ -29,6 +29,22 @@
 #include "nitro/ctrdg/ctrdg_common.h"
 #include "nitro/mi/memory.h"
 #include "nitro/os/system.h"
+#include "nitro/hw/registers.h"
+
+/* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
+ * previous master enable. File-local because an inline body in a shared
+ * header renumbers every includer's @NNN symbols. */
+static inline int OS_EnableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 1;
+    return prep;
+}
+
+static inline int OS_RestoreIrq(int enable) {
+    u16 prep = REG_IME;
+    REG_IME = (u16)enable;
+    return prep;
+}
 
 #define PXI_FIFO_TAG_CTRDG 13
 #define PXI_PROC_ARM7 1
@@ -84,9 +100,9 @@ void CTRDG_Init(void) {
  * pret's checks of the 0x027fff9b flag or of CTRDG_IsExisting. */
 void CTRDGi_InitModuleInfo(void) {
     int sp[4];
-    unsigned int irq;
+    OSIrqMask lastIrq;
     int flag;
-    u16 save208;
+    int lastIme;
     int i;
     u32 data;
 
@@ -95,15 +111,14 @@ void CTRDGi_InitModuleInfo(void) {
     data_020a9de4 = 1;
     if ((*(volatile u16 *)0x4000300 & 1) == 0)
         return;
-    irq = OS_SetIrqMask(0x40000);
-    save208 = *(volatile u16 *)0x4000208;
-    *(volatile u16 *)0x4000208 = 1;
+    lastIrq = OS_SetIrqMask(OS_IE_SPFIFO_RECV);
+    lastIme = OS_EnableIrq();
     CTRDGi_LockByProcessor(CTRDGi_Work.lockID, sp);
-    flag = ((int)*(volatile u16 *)0x4000204 & 0x8000) >> 15;
+    flag = ((int)REG_EXMEMCNT & 0x8000) >> 15;
     CTRDGi_ChangeLatestAccessCycle(sp + 2);
-    *(volatile u16 *)0x4000204 &= ~0x8000;
+    REG_EXMEMCNT &= ~0x8000;
     MI_DmaCopy16(0, (void *)0x8000080, (void *)((char *)&CTRDG_HEADER + 0x80), 0x40);
-    *(volatile u16 *)0x4000204 = (*(volatile u16 *)0x4000204 & ~0x8000) | (flag << 15);
+    REG_EXMEMCNT = (REG_EXMEMCNT & ~0x8000) | (flag << 15);
     CTRDGi_RestoreAccessCycle(sp + 2);
     CTRDGi_UnlockByProcessor(CTRDGi_Work.lockID, sp);
     {
@@ -124,9 +139,8 @@ void CTRDGi_InitModuleInfo(void) {
             SVC_WaitByLoop(1);
         } while (CTRDGi_Work.subpState != 1);
     }
-    (void)*(volatile u16 *)0x4000208;
-    *(volatile u16 *)0x4000208 = save208;
-    OS_SetIrqMask(irq);
+    (void)OS_RestoreIrq(lastIme);
+    (void)OS_SetIrqMask(lastIrq);
 }
 
 void CTRDGi_CallbackForInitModuleInfo(int a0, int a1) {

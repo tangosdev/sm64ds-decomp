@@ -1506,8 +1506,8 @@ void dScMgCurling2_c::StartRound(int /* arg */) {
     mState = 0;
     ResetGame();
     Scroll();
-    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xd, 2, 0x10);
-    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
+    G2_SetBlendAlpha(0, 0xd, 2, 0x10);
+    G2S_SetBlendAlpha(0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
 }
 
@@ -1549,8 +1549,9 @@ s32 dScMgCurling2_c::InitResources() {
         return 0;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1220;
+    G2_SetBG3Priority(2);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x20000);
     DecompressLZ16(r6, (void *)G2_GetBG3CharPtr());
 
     f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING_NCL_BIN);
@@ -1562,8 +1563,9 @@ s32 dScMgCurling2_c::InitResources() {
     Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x5420;
+    G2_SetBG2Priority(2);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                         GX_BG_CHARBASE_0x20000);
 
     f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING1_MATO_NSC_BIN);
     {
@@ -1573,8 +1575,9 @@ s32 dScMgCurling2_c::InitResources() {
     }
     GX_LoadBG2Scr(f, 0, 0x800);
 
-    REG_BG0CNT = (REG_BG0CNT & ~3) | 2;
-    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x5620;
+    G2_SetBG0Priority(2);
+    G2_SetBG0Control(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                     GX_BG_CHARBASE_0x20000, GX_BG_EXTPLTT_01);
     {
         char *b = (char *)G2_GetBG0ScrPtr();
         sp6 = 0x4300;
@@ -1589,8 +1592,9 @@ s32 dScMgCurling2_c::InitResources() {
     GX_LoadOBJPltt(c8, 0, 0x100);
 
     gSubScreenLayers |= 4;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x814;
+    G2S_SetBG2Priority(2);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x4000,
+                          GX_BG_CHARBASE_0x14000);
     DecompressLZ16(r6, (void *)G2S_GetBG2CharPtr());
 
     f = LoadFile(ASSET_D_2D_MG_BG_JOKYU_CURLING_NCL_BIN);
@@ -1620,8 +1624,8 @@ s32 dScMgCurling2_c::InitResources() {
     Mg_SetTopScreenYOffset(0x20);
     mStateTimer = 0x40;
     mRunDuringFade = 1;
-    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xd, 2, 0x10);
-    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
+    G2_SetBlendAlpha(0, 0xd, 2, 0x10);
+    G2S_SetBlendAlpha(0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
     return 1;
 }

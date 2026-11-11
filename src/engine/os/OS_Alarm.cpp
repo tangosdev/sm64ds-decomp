@@ -21,7 +21,6 @@
 #define REG_TM1CNT_L (*(volatile u16 *)0x04000104)
 #define REG_TM1CNT_H (*(volatile u16 *)0x04000106)
 
-#define OS_IE_TIMER1 0x10
 #define OSi_TICK_TIMERCONTROL 0xc1 /* enable, IRQ, prescaler /64 */
 
 extern "C" {

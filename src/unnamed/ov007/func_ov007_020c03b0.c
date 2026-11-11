@@ -1,4 +1,5 @@
 #include "Ov007BgLayer.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 typedef volatile unsigned short vu16;
 
@@ -51,32 +52,32 @@ void func_ov007_020c03b0(Ov007BgList *list) {
                 if (toMain) {
                     switch (bg) {
                     case 0:
-                        *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | pri;
+                        G2_SetBG0Priority(pri);
                         break;
                     case 1:
-                        *(vu16 *)0x400000a = (*(vu16 *)0x400000a & ~3) | pri;
+                        G2_SetBG1Priority(pri);
                         break;
                     case 2:
-                        *(vu16 *)0x400000c = (*(vu16 *)0x400000c & ~3) | pri;
+                        G2_SetBG2Priority(pri);
                         break;
                     case 3:
-                        *(vu16 *)0x400000e = (*(vu16 *)0x400000e & ~3) | pri;
+                        G2_SetBG3Priority(pri);
                         break;
                     }
                 }
                 if (toSub) {
                     switch (bg) {
                     case 0:
-                        *(vu16 *)0x4001008 = (*(vu16 *)0x4001008 & ~3) | pri;
+                        G2S_SetBG0Priority(pri);
                         break;
                     case 1:
-                        *(vu16 *)0x400100a = (*(vu16 *)0x400100a & ~3) | pri;
+                        G2S_SetBG1Priority(pri);
                         break;
                     case 2:
-                        *(vu16 *)0x400100c = (*(vu16 *)0x400100c & ~3) | pri;
+                        G2S_SetBG2Priority(pri);
                         break;
                     case 3:
-                        *(vu16 *)0x400100e = (*(vu16 *)0x400100e & ~3) | pri;
+                        G2S_SetBG3Priority(pri);
                         break;
                     }
                 }

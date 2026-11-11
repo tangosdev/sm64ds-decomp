@@ -5372,16 +5372,17 @@ s32 dScMgSmartball_c::Behavior() {
 /* Slot 18: starts a round and sets up both screen blends. */
 void dScMgSmartball_c::StartRound(int /* arg */) {
     SpawnObjects();
-    G2x_SetBlendAlpha_((volatile unsigned short *)0x4000050, 0, 0x18, 4, 0xa);
-    G2x_SetBlendAlpha_((volatile unsigned short *)0x4001050, 0, 0x18, 4, 0xa);
+    G2_SetBlendAlpha(0, 0x18, 4, 0xa);
+    G2S_SetBlendAlpha(0, 0x18, 4, 0xa);
 }
 
 /* Slot 31: loads the option palette and tilemap for the sub screen. */
 int dScMgSmartball_c::InitSubScreenBg() {
     int f;
-    *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 4;
-    *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~0x40;
-    *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                      GX_BG_CHARBASE_0x04000, GX_BG_EXTPLTT_01);
+    G2S_BG1Mosaic(0);
+    G2S_SetBG1Priority(0);
     SetSubBg1Offset(0, 0);
     gSubScreenLayers[0] &= ~2;
     f = GetGameLanguage();
@@ -5557,8 +5558,8 @@ s32 dScMgSmartball_c::InitResources() {
     mpSlot = 0;
     mpBoard = 0;
     mpWing = 0;
-    G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 0, 0x18, 4, 0xa);
-    G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 0, 0x18, 4, 0xa);
+    G2_SetBlendAlpha(0, 0x18, 4, 0xa);
+    G2S_SetBlendAlpha(0, 0x18, 4, 0xa);
     G2_SetOBJMode(sSmartballBallSprites[1], GX_OAM_MODE_XLU,
                   G2_GetOBJColorParam(sSmartballBallSprites[1]));
     G2_SetOBJMode(sSmartballBallSpritesAlt[1], GX_OAM_MODE_XLU,

@@ -224,9 +224,10 @@ int dScMgAmida_c::IsVariant2() {
 int dScMgAmida_c::InitSubScreenBg() {
     int language;
     void *chars;
-    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 4;
-    REG_DB_BG1CNT &= ~0x40;
-    REG_DB_BG1CNT &= ~3;
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                      GX_BG_CHARBASE_0x04000, GX_BG_EXTPLTT_01);
+    G2S_BG1Mosaic(0);
+    G2S_SetBG1Priority(0);
     SetSubBg1Offset(0, 0);
     gSubScreenLayers &= ~2;
     language = GetGameLanguage();
@@ -1673,8 +1674,8 @@ void dScMgAmida_c::SetupRound() {
     /* pad_5370: this store is the only access in the class, so there is no
        evidence for a name yet. */
     *(s32 *)(raw + 0x5370) = 1;
-    REG_BLDCNT = 0;
-    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 4, 8, 6, 0x10);
+    G2_BlendNone();
+    G2S_SetBlendAlpha(4, 8, 6, 0x10);
     Mg_ShowBanner(0xd, 0x80, 0x60, 1, -1, 0xd);
 
     mStartBannerTimer = 0x3c;
@@ -2084,19 +2085,21 @@ s32 dScMgAmida_c::InitResources() {
     }
 
     data_0208ee44 = 1;
-    REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x3218;
-    REG_BG0CNT &= ~0x40;
-    REG_BG0OFS = 0;
-    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
+    G2_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                     GX_BG_CHARBASE_0x18000, GX_BG_EXTPLTT_23);
+    G2_BG0Mosaic(0);
+    G2_SetBG0Offset(0, 0);
+    G2_SetBG0Priority(1);
 
     file = G2_GetBG0CharPtr();
     fillMain = 0;
     MIi_CpuClear16(fillMain, file, 0x6000);
 
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x2214;
-    REG_DB_BG0CNT &= ~0x40;
-    REG_DB_BG0OFS = 0;
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 1;
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                      GX_BG_CHARBASE_0x14000, GX_BG_EXTPLTT_23);
+    G2S_BG0Mosaic(0);
+    G2S_SetBG0Offset(0, 0);
+    G2S_SetBG0Priority(1);
 
     file = G2S_GetBG0CharPtr();
     fillSub = 0;
@@ -2104,10 +2107,11 @@ s32 dScMgAmida_c::InitResources() {
 
     Mg_InitBrush((char *)this, 1, 0, 2);
 
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x140c;
-    REG_BG3CNT &= ~0x40;
-    REG_BG3OFS = 0;
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 3;
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                         GX_BG_CHARBASE_0x0c000);
+    G2_BG3Mosaic(0);
+    G2_SetBG3Offset(0, 0);
+    G2_SetBG3Priority(3);
 
     if (IsVariant2() != 0) {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_UP_NCG_BIN, (void *)G2_GetBG3CharPtr());
@@ -2125,14 +2129,16 @@ s32 dScMgAmida_c::InitResources() {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA1_NSC_BIN, G2_GetBG3ScrPtr());
     }
 
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x40c;
-    REG_DB_BG2CNT &= ~0x40;
-    REG_DB_BG2OFS = 0;
-    REG_DB_BG2CNT &= ~3;
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x60c;
-    REG_DB_BG3CNT &= ~0x40;
-    REG_DB_BG3OFS = 0;
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 3;
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                          GX_BG_CHARBASE_0x0c000);
+    G2S_BG2Mosaic(0);
+    G2S_SetBG2Offset(0, 0);
+    G2S_SetBG2Priority(0);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3000,
+                          GX_BG_CHARBASE_0x0c000);
+    G2S_BG3Mosaic(0);
+    G2S_SetBG3Offset(0, 0);
+    G2S_SetBG3Priority(3);
 
     if (IsVariant2() != 0) {
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA_FACE_DOWN_NCG_BIN, G2S_GetBG3CharPtr());
@@ -2149,8 +2155,8 @@ s32 dScMgAmida_c::InitResources() {
         Deallocate(file);
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_2_NSC_BIN, G2S_GetBG2ScrPtr());
         LoadCompressedFileAt(ASSET_D_2D_MG_BG_AMIDA2_1_NSC_BIN, G2S_GetBG3ScrPtr());
-        REG_BLDCNT = 0;
-        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 4, 8, 6, 0x10);
+        G2_BlendNone();
+        G2S_SetBlendAlpha(4, 8, 6, 0x10);
         gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3;
         gSubScreenLayers |= 0xd;
     }

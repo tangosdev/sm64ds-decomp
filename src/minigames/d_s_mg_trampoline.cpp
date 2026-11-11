@@ -227,9 +227,10 @@ void dScMgTrampoline_c::InitDisplay() {
     objChar = LoadFile(sTrmpNcgByLanguage[GetGameLanguage()]);
     objPltt = LoadFile(ASSET_D_2D_MG_TRAMPOLINE_NCL_BIN);
 
-    REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9110;
-    REG_BG2CNT &= ~0x40;
+    G2_SetBG2Priority(2);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
+                         GX_BG_CHARBASE_0x10000);
+    G2_BG2Mosaic(0);
 
     {
         char *dst = (char *)G2_GetBG2CharPtr();
@@ -240,9 +241,10 @@ void dScMgTrampoline_c::InitDisplay() {
     DecompressLZ16(bgScr, (void *)G2_GetBG2ScrPtr());
     GX_LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1318;
-    REG_BG3CNT &= ~0x40;
+    G2_SetBG3Priority(1);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9800,
+                         GX_BG_CHARBASE_0x18000);
+    G2_BG3Mosaic(0);
 
     DecompressLZ16(objChar, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x60);
@@ -269,7 +271,7 @@ s32 dScMgTrampoline_c::InitResources() {
     G3X_SetFog(false, 0, 2, 0x1000);
     REG_DISP3DCNT = (REG_DISP3DCNT & ~0x3000) | 8;
     InitialiseVramGlobals();
-    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
+    G2_SetBG0Priority(1);
     fov = FX_Div(0xc0000, (s32)data_02082414);
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
@@ -303,7 +305,7 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
     volatile unsigned short fill;
     int heightMix;
 
-    G2x_SetBlendAlpha_(&REG_BLDCNT, 1, 0x3e, 0x10, 0x10);
+    G2_SetBlendAlpha(1, 0x3e, 0x10, 0x10);
 
     mTouchStartX = data_020a0dbc[0];
     mTouchStartY = data_020a0dbc[1];
@@ -713,12 +715,11 @@ int dScMgTrampoline_c::OnGraphCallback2() {
         if (mDrawSubScreen == 0) {
             gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
             SetBg2Offset(0, mScrollY + mScrollOffsetY);
-            REG_BG2OFS = (mScrollY + mScrollOffsetY) << 16 & 0x1ff0000;
+            G2_SetBG2Offset(0, mScrollY + mScrollOffsetY);
         } else {
             gMainScreenLayers |= DISPLAY_LAYER_BG3;
             SetBg2Offset(0, mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset());
-            REG_BG2OFS =
-                (mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset()) << 16 & 0x1ff0000;
+            G2_SetBG2Offset(0, mScrollY + 0xc0 + mScrollOffsetY + Mg_GetTopScreenYOffset());
         }
     }
     return 1;

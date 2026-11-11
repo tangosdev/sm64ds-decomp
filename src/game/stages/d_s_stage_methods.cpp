@@ -695,8 +695,8 @@ void dScStage_c::VE_Update() {
         data_0209f290 = 2;
         gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
         gSubScreenLayers &= ~3;
-        *(u16 *)0x04000050 = 0;
-        *(u16 *)0x04001050 = 0;
+        G2_BlendNone();
+        G2S_BlendNone();
         break;
     }
     }
@@ -707,8 +707,10 @@ void dScStage_c::VE_Init() {
 
     a = gMainScreenLayers ^ DISPLAY_LAYER_OBJ;
     b = gSubScreenLayers ^ DISPLAY_LAYER_OBJ;
-    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x1100;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1010;
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
+                      GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8000,
+                         GX_BG_CHARBASE_0x10000);
     Message::DisplayVsExitText(0x1f);
     sMenuButtonTileOffsets[0] = 0xe0;
     sMenuButtonTileOffsets[1] = 0x1a0;
@@ -724,8 +726,8 @@ void dScStage_c::VE_Init() {
     gActorUpdateMask = gNextActorUpdateMask;
     gVsExitScreenActive = 1;
     data_0209f290 = 0;
-    G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, a | 0x20, -7);
-    G2x_SetBlendBrightness_((volatile unsigned short *)0x4001050, b | 0x20, -7);
+    G2_SetBlendBrightness(a | 0x20, -7);
+    G2S_SetBlendBrightness(b | 0x20, -7);
 }
 void dScStage_c::RenderBouncingArrows() {
     int r4;
@@ -832,7 +834,8 @@ void dScStage_c::LC_Update() {
 
     switch (gLevelClearStep) {
     case 0:
-        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xd00;
+        G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x6800,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
         Message::DisplayLevelClearText(0x27a, SublevelToLevel(gLastCourseSublevel));
         sMenuButtonTileOffsets[0] = 0xa0;
         sMenuButtonTileOffsets[1] = 0x140;
@@ -902,9 +905,11 @@ void dScStage_c::LC_Update() {
         int t6;
         int t5;
         if (SublevelToLevel(gCurrentSublevel) == 0x1d) {
-            REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1210;
+            G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16,
+                                 GX_BG_SCRBASE_0x9000, GX_BG_CHARBASE_0x10000);
         } else {
-            REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1010;
+            G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16,
+                                 GX_BG_SCRBASE_0x8000, GX_BG_CHARBASE_0x10000);
         }
         gNumCoins[0] = 0;
         t6 = gMainScreenLayers ^ (DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
@@ -914,8 +919,8 @@ void dScStage_c::LC_Update() {
         SetSubBg1Offset(0, 0);
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
         gSubScreenLayers |= 3;
-        G2x_SetBlendBrightness_((volatile u16 *)0x4000050, t6 | 0x20, -7);
-        G2x_SetBlendBrightness_((volatile u16 *)0x4001050, t5 | 0x20, -7);
+        G2_SetBlendBrightness(t6 | 0x20, -7);
+        G2S_SetBlendBrightness(t5 | 0x20, -7);
         gLevelClearStep = 3;
         return;
     }
@@ -982,7 +987,8 @@ void dScStage_c::LC_Update() {
         }
     }
     case 4:
-        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xe00;
+        G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x7000,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
         gLevelClearStep = 5;
         gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
         Message::DisplaySaveStatusText(0x295);
@@ -1007,7 +1013,7 @@ void dScStage_c::LC_Update() {
         }
         gMainScreenLayers &= ~(DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
         gSubScreenLayers &= ~3;
-        REG_BLDCNT = 0;
+        G2_BlendNone();
         if (sSelectedMenuButton != 1) {
             gMeterCounterSlideState = 5;
         } else {
@@ -1501,8 +1507,8 @@ void dScStage_c::PS_Cleanup() {
     else
         Sound::StopLoadedMusic_Layer1(0x3c);
     sPauseInputLockout = 0xf;
-    *(short *)0x4000050 = 0;
-    *(short *)0x4001050 = 0;
+    G2_BlendNone();
+    G2S_BlendNone();
     data_0209f280 = 0;
     gGamePaused = 0;
 }
@@ -1585,9 +1591,12 @@ void dScStage_c::PS_Update() {
     switch (sPauseState) {
     case 0: {
         u8 i;
-        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xc00;
-        REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1210;
-        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1010;
+        G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x6000,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+        G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x10000, GX_BG_EXTPLTT_01);
+        G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8000,
+                             GX_BG_CHARBASE_0x10000);
         i = 0;
         do {
             if (CountStarsCollectedInLevelToDisplay(i) != 0)
@@ -1782,8 +1791,10 @@ void dScStage_c::PS_Update() {
         return;
     }
     case 2: {
-        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xc00;
-        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1010;
+        G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x6000,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+        G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8000,
+                             GX_BG_CHARBASE_0x10000);
         sNextPauseState = 3;
         sPauseDisplayedCourse = SublevelToLevel(gCurrentSublevel);
         Message::DisplayPauseText(0x277, sPauseDisplayedCourse);
@@ -1886,8 +1897,10 @@ void dScStage_c::PS_Update() {
         }
     }
     case 4: {
-        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xd00;
-        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1010;
+        G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x6800,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+        G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8000,
+                             GX_BG_CHARBASE_0x10000);
         sNextPauseState = 5;
         Message::DisplayPauseTextVS(0);
         sMenuButtonTileOffsets[0] = 0xa0;
@@ -1980,7 +1993,8 @@ void dScStage_c::PS_Update() {
         return;
     }
     case 7: {
-        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xf00;
+        G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x7800,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
         if (sPausedWithSelect != 0) {
             if (GetOwnerLanguage() == 5) {
                 LoadCompressedFileAt(0xb001, G2S_GetBG1ScrPtr());
@@ -2021,8 +2035,8 @@ void dScStage_c::PS_Update() {
         REG_BG2CNT = (((sSelectedControllerMode + 0xd) << 8) | (REG_BG2CNT & 0x43)) | 0x10;
         SetSubBg0Offset(0, 0);
         SetSubBg1Offset(0, 0);
-        REG_DB_BG0OFS = 0;
-        REG_DB_BG1OFS = 0;
+        G2S_SetBG0Offset(0, 0);
+        G2S_SetBG1Offset(0, 0);
         sBackButtonSelected = 0;
         data_0209f240 = 0;
         dScStage_c::PS_UpdateOkAndBackButtons(1);
@@ -2077,7 +2091,8 @@ void dScStage_c::PS_Update() {
                     return;
             }
             data_0209f2a4 = 1;
-            REG_BG2CNT = (REG_BG2CNT & 0x43) | 0xd10;
+            G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16,
+                                 GX_BG_SCRBASE_0x6800, GX_BG_CHARBASE_0x10000);
             sMenuHighlightDelay = data_0208ee44 << 2;
             {
                 u8 a = gTouchHeld[slot * 4];
@@ -2110,7 +2125,8 @@ void dScStage_c::PS_Update() {
                     return;
             }
             data_0209f2a4 = 2;
-            REG_BG2CNT = (REG_BG2CNT & 0x43) | 0xe10;
+            G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16,
+                                 GX_BG_SCRBASE_0x7000, GX_BG_CHARBASE_0x10000);
             sMenuHighlightDelay = data_0208ee44 << 2;
             {
                 u8 a = gTouchHeld[slot * 4];
@@ -2143,7 +2159,8 @@ void dScStage_c::PS_Update() {
                     return;
             }
             data_0209f2a4 = 3;
-            REG_BG2CNT = (REG_BG2CNT & 0x43) | 0xf10;
+            G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16,
+                                 GX_BG_SCRBASE_0x7800, GX_BG_CHARBASE_0x10000);
             sMenuHighlightDelay = data_0208ee44 << 2;
             {
                 u8 a = gTouchHeld[slot * 4];
@@ -2208,7 +2225,8 @@ void dScStage_c::PS_Update() {
         }
     }
     case 9: {
-        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x1000;
+        G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8000,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
         sNextPauseState = 0xa;
         data_0209f234 = GetSoundMode();
         sSelectedBacklightButton = data_0208ee3c ^ 1;
@@ -2498,7 +2516,8 @@ void dScStage_c::PS_Update() {
         return;
     }
     case 0xc: {
-        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xd00;
+        G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x6800,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
         Message::DisplaySaveMenuText(0x290);
         sMenuButtonTileOffsets[0] = 0xa0;
         sMenuButtonTileOffsets[1] = 0x140;
@@ -2574,7 +2593,8 @@ void dScStage_c::PS_Update() {
         }
     }
     case 0xe: {
-        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xe00;
+        G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x7000,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
         sNextPauseState = 0xf;
         Message::DisplaySaveStatusText(0x295);
         gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
@@ -2604,7 +2624,8 @@ void dScStage_c::PS_Update() {
         return;
     }
     case 0x10: {
-        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x1100;
+        G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
         sNextPauseState = 0x11;
         Message::DisplayDontSaveText(0x297);
         sSelectedMenuButton = 1;
@@ -2774,8 +2795,8 @@ void dScStage_c::PS_Init() {
     }
 
     Sound::PauseMusic();
-    G2x_SetBlendBrightness_((volatile u16 *)0x04000050, mainBlendTargets | 0x20, -7);
-    G2x_SetBlendBrightness_((volatile u16 *)0x04001050, subBlendTargets | 0x20, -7);
+    G2_SetBlendBrightness(mainBlendTargets | 0x20, -7);
+    G2S_SetBlendBrightness(subBlendTargets | 0x20, -7);
 }
 
 extern "C" {
@@ -2837,7 +2858,7 @@ int IsButtonInputValid(void) {
    blx r1` with r0 = the callback object. The matrix at +0x4 stays zero until
    UpdateMinimap; the static initializer does not seed it. */
 int dScStage_c::graphCallback_c::GraphCallback2() {
-    G2x_SetBGyAffine_(&REG_DB_BG3PA, &matrix, originX, originY, targetX, targetY);
+    G2S_SetBG3Affine(&matrix, originX, originY, targetX, targetY);
     return 1;
 }
 
@@ -2887,7 +2908,7 @@ extern "C" void FUN_02029934(void) {
     dFdBrightness_c *o = gSceneFader;
     if (o->IsBetweenStartAndEnd() == 0) {
         data_0209d4b0 = 0;
-        REG_BLDCNT = 0;
+        G2_BlendNone();
     }
 }
 
@@ -2927,7 +2948,7 @@ extern "C" void FUN_020299f4(void) {
 extern "C" void FUN_02029a68(void) {
     if (data_0209d4b0 == (int)((dFdWipe_c *)data_0209f324 + 6)) {
         data_0209d4b0 = 0;
-        REG_BLDCNT = 0;
+        G2_BlendNone();
     }
     data_0209f274 = 0;
 }
@@ -4769,7 +4790,7 @@ int dScStage_c::InitResources() {
             Sound::LoadGroupAndSetBank(soundGroup, bank);
         }
 
-        REG_BG0CNT = (REG_BG0CNT & ~3) | 2;
+        G2_SetBG0Priority(2);
         LoadGraphics2D(gGameMode == 1, gCurrentSublevel);
 
         {
@@ -4904,14 +4925,16 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
     char *screenMap;
     char *subBg2Screen;
 
-    REG_BG3CNT &= ~3;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1100;
-    REG_BG3CNT &= ~0x40;
+    G2_SetBG3Priority(0);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8800,
+                         GX_BG_CHARBASE_0x00000);
+    G2_BG3Mosaic(0);
     SetBg0Offset(0, 0);
 
-    REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
-    REG_BG2CNT &= ~0x40;
-    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0xd10;
+    G2_SetBG2Priority(1);
+    G2_BG2Mosaic(0);
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x6800,
+                         GX_BG_CHARBASE_0x10000);
 
     if (vsMode == 0) {
         LoadFont(0);
@@ -4938,15 +4961,18 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
 
     if ((int)(gGameMode == 0) != 0 && (data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) == 0 &&
         (int)(gRunningKuppaScript != 0) == 0) {
-        REG_DB_BG0CNT &= ~3;
-        REG_DB_BG0CNT &= ~0x40;
-        REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0xd000;
-        REG_DB_BG1CNT &= ~3;
-        REG_DB_BG1CNT &= ~0x40;
-        REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xd400;
-        REG_DB_BG1CNT &= ~3;
-        REG_DB_BG1CNT &= ~0x40;
-        REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1800;
+        G2S_SetBG0Priority(0);
+        G2S_BG0Mosaic(0);
+        G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_512x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8000,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+        G2S_SetBG1Priority(0);
+        G2S_BG1Mosaic(0);
+        G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_512x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                          GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+        G2S_SetBG1Priority(0);
+        G2S_BG1Mosaic(0);
+        G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xc000,
+                              GX_BG_CHARBASE_0x00000);
 
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NCG_BIN, G2S_GetBG0CharPtr());
         LoadFileAt(ASSET_D_2D_OP_BG_CL_NCL_BIN, 0x5000400);
@@ -4966,15 +4992,18 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         return;
     }
 
-    REG_DB_BG0CNT &= ~3;
-    REG_DB_BG0CNT &= ~0x40;
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x1200;
-    REG_DB_BG1CNT &= ~3;
-    REG_DB_BG1CNT &= ~0x40;
-    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xc00;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
-    REG_DB_BG2CNT &= ~0x40;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1300;
+    G2S_SetBG0Priority(0);
+    G2S_BG0Mosaic(0);
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                      GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+    G2S_SetBG1Priority(0);
+    G2S_BG1Mosaic(0);
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x6000,
+                      GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+    G2S_SetBG2Priority(2);
+    G2S_BG2Mosaic(0);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9800,
+                          GX_BG_CHARBASE_0x00000);
 
     if (GetOwnerLanguage() == 5) {
         LoadCompressedFileAt(0xb00d, G2S_GetBG0CharPtr());

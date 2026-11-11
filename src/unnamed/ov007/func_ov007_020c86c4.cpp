@@ -64,26 +64,26 @@ void func_ov007_020c86c4(Ov007Transition *tr) {
     case 2:
     case 3:
         if (tr->screens & 1) {
-            G2x_SetBlendAlpha_(&REG_BLDCNT, tr->planes, tr->fx.alpha.planes2,
-                               tr->reversed ? tr->fx.alpha.evaTo : tr->fx.alpha.evaFrom,
-                               tr->reversed ? tr->fx.alpha.evbTo : tr->fx.alpha.evbFrom);
+            G2_SetBlendAlpha(tr->planes, tr->fx.alpha.planes2,
+                             tr->reversed ? tr->fx.alpha.evaTo : tr->fx.alpha.evaFrom,
+                             tr->reversed ? tr->fx.alpha.evbTo : tr->fx.alpha.evbFrom);
         }
         if (!(tr->screens & 2))
             return;
-        G2x_SetBlendAlpha_(&REG_DB_BLDCNT, tr->planes, tr->fx.alpha.planes2,
-                           tr->reversed ? tr->fx.alpha.evaTo : tr->fx.alpha.evaFrom,
-                           tr->reversed ? tr->fx.alpha.evbTo : tr->fx.alpha.evbFrom);
+        G2S_SetBlendAlpha(tr->planes, tr->fx.alpha.planes2,
+                          tr->reversed ? tr->fx.alpha.evaTo : tr->fx.alpha.evaFrom,
+                          tr->reversed ? tr->fx.alpha.evbTo : tr->fx.alpha.evbFrom);
         return;
 
     case 4:
         if (tr->screens & 1) {
-            G2x_SetBlendBrightness_(&REG_BLDCNT, tr->planes,
-                                    tr->reversed ? tr->fx.brightness.to : tr->fx.brightness.from);
+            G2_SetBlendBrightness(tr->planes,
+                                  tr->reversed ? tr->fx.brightness.to : tr->fx.brightness.from);
         }
         if (!(tr->screens & 2))
             return;
-        G2x_SetBlendBrightness_(&REG_DB_BLDCNT, tr->planes,
-                                tr->reversed ? tr->fx.brightness.to : tr->fx.brightness.from);
+        G2S_SetBlendBrightness(tr->planes,
+                               tr->reversed ? tr->fx.brightness.to : tr->fx.brightness.from);
         return;
     }
 }

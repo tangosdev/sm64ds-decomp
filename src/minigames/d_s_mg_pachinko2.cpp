@@ -49,6 +49,7 @@ enum dScMgPachinko2_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "LevelRng.h"
 #include "nitro/mi/memory.h"
 
@@ -2234,10 +2235,11 @@ s32 dScMgPachinko2_c::InitResources() {
     int x;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3; /* main BG3 on */
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
-    REG_BG3CNT &= ~0x40;
-    REG_BG3OFS = 0;
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
+    G2_SetBG3Priority(1);
+    G2_BG3Mosaic(0);
+    G2_SetBG3Offset(0, 0);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                         GX_BG_CHARBASE_0x10000);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_UP_NCG_BIN);
     DecompressLZ16(f, (void *)G2_GetBG3CharPtr());
@@ -2257,10 +2259,11 @@ s32 dScMgPachinko2_c::InitResources() {
     GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd; /* sub BG0, BG2 and BG3 on */
-    REG_DB_BG2CNT &= ~3;
-    REG_DB_BG2CNT &= ~0x40;
-    REG_DB_BG2OFS = 0;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x418;
+    G2S_SetBG2Priority(0);
+    G2S_BG2Mosaic(0);
+    G2S_SetBG2Offset(0, 0);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                          GX_BG_CHARBASE_0x18000);
 
     b = (char *)G2S_GetBG2CharPtr();
     spC = 0;
@@ -2278,10 +2281,11 @@ s32 dScMgPachinko2_c::InitResources() {
 
     Mg_InitBrush((char *)this, 0, 2, 0);
 
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 2;
-    REG_DB_BG3CNT &= ~0x40;
-    REG_DB_BG3OFS = 0;
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x208;
+    G2S_SetBG3Priority(2);
+    G2S_BG3Mosaic(0);
+    G2S_SetBG3Offset(0, 0);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                          GX_BG_CHARBASE_0x08000);
 
     f = LoadFile(ASSET_D_2D_MG_BG_PACHINKO_DOWN_NCG_BIN);
     DecompressLZ16(f, (void *)G2S_GetBG3CharPtr());
@@ -2295,10 +2299,11 @@ s32 dScMgPachinko2_c::InitResources() {
     GXS_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 1;
-    REG_DB_BG0CNT &= ~0x40;
-    REG_DB_BG0OFS = 0;
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x608;
+    G2S_SetBG0Priority(1);
+    G2S_BG0Mosaic(0);
+    G2S_SetBG0Offset(0, 0);
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3000,
+                      GX_BG_CHARBASE_0x08000, GX_BG_EXTPLTT_01);
 
     f = LoadFile(ASSET_D_2D_HEI_TOP_DOWN_NSC_BIN);
     GXS_LoadBG0Scr(f, 0, 0x800);

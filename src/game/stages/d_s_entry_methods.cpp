@@ -381,8 +381,9 @@ s32 dScEntry_c::InitResultResources() {
     int step;
     int n;
 
-    REG_BG1CNT = (u16)((REG_BG1CNT & 0x43) | 0x208);
-    REG_BG1CNT = (u16)(REG_BG1CNT & ~0x40);
+    G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                     GX_BG_CHARBASE_0x08000, GX_BG_EXTPLTT_01);
+    G2_BG1Mosaic(0);
 
     LoadCompressedFileAt(0x8413, G2_GetBG2CharPtr());
     tmp = LoadFile(0x8414);
@@ -417,7 +418,7 @@ s32 dScEntry_c::InitResultResources() {
     GX_LoadOBJPltt(tmp, 0, 0x140);
     Deallocate(tmp);
 
-    REG_BG1CNT = (u16)((REG_BG1CNT & ~3) | 2);
+    G2_SetBG1Priority(2);
     SetBg1Offset(0, 0);
     LoadCompressedFileAt(0x8402, G2S_GetOBJCharPtr());
     LoadCompressedFileAt(data_ov075_0211c97c[GetLanguageIndex()],
@@ -586,7 +587,7 @@ void dScEntry_c::UpdateSettingsSync() {
     if (func_02020168()) {
         func_02020304();
         func_020200e0();
-        *(short *)0x4000050 = 0;
+        G2_BlendNone();
         ChangeStepsAfterDelay(&EntryCourseSelectSteps, 5);
         return;
     }
@@ -733,7 +734,7 @@ void dScEntry_c::EnterSoundSettings() {
     Message::DisplayOptionsMenuTextVS((s16)(GetSoundMode() + 9));
 
     gSubScreenLayers |= 5;
-    G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, 0xb, ~5);
+    G2_SetBlendBrightness(0xb, ~5);
 
     mSelectedIcon = 0;
 
@@ -899,7 +900,7 @@ void dScEntry_c::EnterControlSettings() {
     func_02033bb8(5);
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     gSubScreenLayers |= 5;
-    G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, 0xb, ~5);
+    G2_SetBlendBrightness(0xb, ~5);
 
     mStepWork[0] = mSelectedIcon;
     func_02020304();
@@ -913,7 +914,7 @@ void dScEntry_c::EnterQuitMessage() {
     func_020338b0(0x145, 0xb0, 0x17, -1);
     gSubScreenLayers = gSubScreenLayers | 5;
     mIconCount = 0;
-    G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, 0x1f, ~5);
+    G2_SetBlendBrightness(0x1f, ~5);
     mStepDelay = 2;
 }
 
@@ -1153,7 +1154,7 @@ void dScEntry_c::EnterRematchPrompt() {
     mIcons[0].Place(0xa, 0, 0x80, 0x48);
     mIcons[1].Place(0xa, 0, 0x80, 0x78);
     mIconCount = 2;
-    G2x_SetBlendAlpha_((volatile unsigned short *)0x4000050, 4, 0x11, 0xc, 4);
+    G2_SetBlendAlpha(4, 0x11, 0xc, 4);
     mDisconnectHideMask = 0xe;
     if (data_0209fc68 != 0)
         data_0209fc68 = 5;
@@ -1457,7 +1458,7 @@ void dScEntry_c::UpdateCourseSelect() {
             func_0202029c(data_0209b2e4);
         }
     }
-    *(u16 *)0x4000050 = 0;
+    G2_BlendNone();
     if (data_020a0e58[func_0203da9c()].pressed & ~0xc) {
         func_02012790(0xe);
     }
@@ -1876,7 +1877,7 @@ void dScEntry_c::UpdateStepFadeOut() {
     if (mFadeTick & 1)
         return;
     ++mFadeBrightness;
-    G2x_ChangeBlendBrightness_((volatile unsigned short *)0x4001050, mFadeBrightness);
+    G2S_ChangeBlendBrightness(mFadeBrightness);
     if (mFadeBrightness < 16)
         return;
     mIsFading = 1;
@@ -1884,8 +1885,8 @@ void dScEntry_c::UpdateStepFadeOut() {
 }
 
 void dScEntry_c::EnterStepFadeOut() {
-    REG_BLDCNT = 0;
-    G2x_SetBlendBrightness_((volatile u16 *)0x4001050, 0x1d, 0);
+    G2_BlendNone();
+    G2S_SetBlendBrightness(0x1d, 0);
     mFadeBrightness = 0;
     mFadeTick = 0;
 }
@@ -1935,8 +1936,8 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
         gMainScreenLayers = gMainScreenLayers & ~mDisconnectHideMask;
         if (mDisconnectHideMask)
             mRenderStep = 0;
-        G2x_SetBlendBrightness_((volatile u16 *)0x4000050, 0x1f, -6);
-        REG_DB_BLDCNT = 0;
+        G2_SetBlendBrightness(0x1f, -6);
+        G2S_BlendNone();
         Sound::StopLoadedMusic_Layer1(4);
         func_02012790(0x123);
         mEntObj->mSuspended = 1;
@@ -1953,7 +1954,7 @@ void dScEntry_c::HandlePlayerDisconnect(const StepSet *resumeSteps) {
             gMainScreenLayers = gMainScreenLayers & ~mDisconnectHideMask;
             if (mDisconnectHideMask)
                 mRenderStep = 0;
-            G2x_SetBlendBrightness_((volatile u16 *)0x4000050, 0x1f, -6);
+            G2_SetBlendBrightness(0x1f, -6);
             func_02012790(0x12a);
         } else {
             for (player = 0; player < 4; player++) {
@@ -2028,9 +2029,9 @@ s32 dScEntry_c::Behavior() {
         mFadeTick++;
         if ((mFadeTick & 1) == 0) {
             mFadeBrightness--;
-            G2x_ChangeBlendBrightness_((volatile unsigned short *)0x4001050, mFadeBrightness);
+            G2S_ChangeBlendBrightness(mFadeBrightness);
             if (mFadeBrightness == 0) {
-                *(u16 *)0x4001050 = 0;
+                G2S_BlendNone();
                 mFadeBrightness = 0;
                 mIsFading = 0;
             }
@@ -2090,17 +2091,17 @@ s32 dScEntry_c::InitResources() {
         Deallocate(paletteData);
     }
 
-    *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 3;
-    *(u16 *)0x400000c = (*(u16 *)0x400000c & ~3) | 2;
-    *(u16 *)0x400000e = (*(u16 *)0x400000e & ~3) | 1;
+    G2_SetBG0Priority(3);
+    G2_SetBG2Priority(2);
+    G2_SetBG3Priority(1);
     SetBg0Offset(0, 0);
     SetBg2Offset(0, 0);
     SetBg3Offset(0, 0);
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
 
-    *(u16 *)0x4001008 = (*(u16 *)0x4001008 & ~3) | 1;
-    *(u16 *)0x400100c = (*(u16 *)0x400100c & ~3) | 3;
-    *(u16 *)0x400100e = (*(u16 *)0x400100e & ~3) | 3;
+    G2S_SetBG0Priority(1);
+    G2S_SetBG2Priority(3);
+    G2S_SetBG3Priority(3);
     SetSubBg0Offset(0, 0);
     SetSubBg2Offset(0, 0);
     SetSubBg3Offset(0, 0);

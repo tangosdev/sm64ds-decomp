@@ -239,7 +239,7 @@ s32 dScMiniGm_c::InitResources()
     REG_DISPCNT &= ~0x7000000;
     REG_DISPCNT &= ~0x38000000;
     GX_DispOn();
-    REG_DISPCNT_SUB |= 0x10000;
+    GXS_DispOn();
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));

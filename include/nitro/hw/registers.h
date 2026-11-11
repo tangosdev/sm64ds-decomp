@@ -48,11 +48,16 @@
 #define REG_DB_BG2CNT (*(volatile u16 *)0x0400100c)
 #define REG_DB_BG3CNT (*(volatile u16 *)0x0400100e)
 
+#define BG_CONTROL_PRIORITY_MASK 3u
 #define BG_CONTROL_MOSAIC (1u << 6)
 
 /* Colour special effects (alpha blending and brightness), one per engine. */
 #define REG_BLDCNT    (*(volatile u16 *)0x04000050)
 #define REG_DB_BLDCNT (*(volatile u16 *)0x04001050)
+
+/* Master brightness: fades the whole engine toward white or black. */
+#define REG_MASTER_BRIGHT    (*(volatile u16 *)0x0400006c)
+#define REG_DB_MASTER_BRIGHT (*(volatile u16 *)0x0400106c)
 
 /* DISPSTAT bit 1 is the HBlank flag; VCOUNT is the line being drawn. */
 #define REG_DISPSTAT (*(volatile u16 *)0x04000004)
@@ -171,7 +176,5 @@
 #define REG_IME (*(volatile u16 *)0x04000208)
 #define REG_IE (*(volatile u32 *)0x04000210)
 #define REG_IF (*(volatile u32 *)0x04000214)
-
-#define IRQ_GAME_CARD (1u << 19)
 
 #endif /* NITRO_HW_REGISTERS_H */

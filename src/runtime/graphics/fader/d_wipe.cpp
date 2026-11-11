@@ -27,6 +27,8 @@
 #include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
+#include "nitro/hw/registers.h"
+#include "nitro/gx/gx.h"
 
 extern "C" {
 /* local extern: these named parameters hold this TU's @NNN numbering; the
@@ -41,6 +43,21 @@ extern volatile u32 data_0209f608;   /* table index the IRQ reads */
 extern volatile u32 data_0209f60c;   /* table index the CPU fills */
 extern u8           data_0209f648[]; /* two 0x300-byte scanline tables */
 extern short        data_023c0000[];
+
+/* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
+   previous master enable. File-local because an inline body in a shared
+   header renumbers every includer's @NNN symbols. */
+static inline int OS_DisableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 0;
+    return prep;
+}
+
+static inline int OS_EnableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 1;
+    return prep;
+}
 
 dWipe_c::dWipe_c() : dFdColor_c(0)
 {
@@ -59,18 +76,14 @@ dWipe_c::~dWipe_c()
    WIN0/WIN1/OBJWIN enables in both engines' DISPCNT, and if a type change
    was stashed mid-transition, commit it now. */
 void dWipe_c::DisableWindows() {
-    u16 ime = *(volatile u16 *)0x4000208;
-    *(volatile u16 *)0x4000208 = 0;
-    OS_DisableIrqMask(2);
+    int enabled = OS_DisableIrq();
+    OS_DisableIrqMask(OS_IE_H_BLANK);
     GX_HBlankIntr(0);
-    OS_SetIrqFunction(2, 0);
-    if (ime != 0) {
-        u16 dead = *(volatile u16 *)0x4000208;
-        *(volatile u16 *)0x4000208 = 1;
-        (void)dead;
-    }
-    *(volatile u32 *)0x4000000 &= ~0xe000;
-    *(volatile u32 *)0x4001000 &= ~0xe000;
+    OS_SetIrqFunction(OS_IE_H_BLANK, 0);
+    if (enabled)
+        (void)OS_EnableIrq();
+    GX_SetVisibleWnd(GX_WNDMASK_NONE);
+    GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     if (typePending == 1) {
         type = pendingType;
         typePending = 0;
@@ -108,29 +121,21 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
 
         wipeInterp = 0;
 
-        *(volatile u16 *)0x4000040 = 0x7f7f;
-        *(volatile u16 *)0x4000044 = 0xc0;
-        *(volatile u16 *)0x4001040 = 0x7f7f;
-        *(volatile u16 *)0x4001044 = 0xc0;
-        *(volatile u16 *)0x4000042 = 0x8080;
-        *(volatile u16 *)0x4000046 = 0xc0;
-        *(volatile u16 *)0x4001042 = 0x8080;
-        *(volatile u16 *)0x4001046 = 0xc0;
+        G2_SetWnd0Position(0x7f, 0, 0x7f, 0xc0);
+        G2S_SetWnd0Position(0x7f, 0, 0x7f, 0xc0);
+        G2_SetWnd1Position(0x80, 0, 0x80, 0xc0);
+        G2S_SetWnd1Position(0x80, 0, 0x80, 0xc0);
 
         state = 1;
         EnableWindows();
 
         {
-            u16 ime = *(volatile u16 *)0x4000208;
-            *(volatile u16 *)0x4000208 = 0;
-            OS_SetIrqFunction(2, Wipe_HBlankHandler);
-            OS_EnableIrqMask(2);
+            int enabled = OS_DisableIrq();
+            OS_SetIrqFunction(OS_IE_H_BLANK, Wipe_HBlankHandler);
+            OS_EnableIrqMask(OS_IE_H_BLANK);
             GX_HBlankIntr(1);
-            if (ime != 0) {
-                u16 dead = *(volatile u16 *)0x4000208;
-                *(volatile u16 *)0x4000208 = 1;
-                (void)dead;
-            }
+            if (enabled)
+                (void)OS_EnableIrq();
         }
 
         needsCleanup = 1;
@@ -151,7 +156,7 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
 int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
     if (state == 0 || state == 2) {
         int t;
-        u16 saved;
+        int enabled;
 
         if (type == 1)
             return dFdBrightness_c::SetForwardTime(frames, extra);
@@ -177,28 +182,20 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
         }
 
         wipeInterp = 0x200000;
-        *(volatile u16 *)0x4000040 = 0x7f;
-        *(volatile u16 *)0x4000044 = 0xc0;
-        *(volatile u16 *)0x4001040 = 0x7f;
-        *(volatile u16 *)0x4001044 = 0xc0;
-        *(volatile u16 *)0x4000042 = 0x80ff;
-        *(volatile u16 *)0x4000046 = 0xc0;
-        *(volatile u16 *)0x4001042 = 0x80ff;
-        *(volatile u16 *)0x4001046 = 0xc0;
+        G2_SetWnd0Position(0, 0, 0x7f, 0xc0);
+        G2S_SetWnd0Position(0, 0, 0x7f, 0xc0);
+        G2_SetWnd1Position(0x80, 0, 0xff, 0xc0);
+        G2S_SetWnd1Position(0x80, 0, 0xff, 0xc0);
 
         state = 3;
         EnableWindows();
 
-        saved = *(volatile u16 *)0x4000208;
-        *(volatile u16 *)0x4000208 = 0;
-        OS_SetIrqFunction(2, Wipe_HBlankHandler);
-        OS_EnableIrqMask(2);
+        enabled = OS_DisableIrq();
+        OS_SetIrqFunction(OS_IE_H_BLANK, Wipe_HBlankHandler);
+        OS_EnableIrqMask(OS_IE_H_BLANK);
         GX_HBlankIntr(1);
-        if (saved != 0) {
-            u16 dead = *(volatile u16 *)0x4000208;
-            *(volatile u16 *)0x4000208 = 1;
-            (void)dead;
-        }
+        if (enabled)
+            (void)OS_EnableIrq();
 
         needsCleanup = 1;
         return 0;
@@ -218,20 +215,28 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
 void dWipe_c::EnableWindows() {
     unk_00e = 1;
 
-    { u32 v = *(volatile u16 *)0x4000048; v = (v & ~0x3f) | 0x1f; v = v | 0x20; *(volatile u16 *)0x4000048 = v; }
-    { u32 v = *(volatile u16 *)0x4001048; v = (v & ~0x3f) | 0x1f; v = v | 0x20; *(volatile u16 *)0x4001048 = v; }
-    { u32 v = *(volatile u16 *)0x4000048; v = (v & ~0x3f00) | 0x1f00; v = v | 0x2000; *(volatile u16 *)0x4000048 = v; }
-    { u32 v = *(volatile u16 *)0x4001048; v = (v & ~0x3f00) | 0x1f00; v = v | 0x2000; *(volatile u16 *)0x4001048 = v; }
+    G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                              GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                          1);
+    G2S_SetWnd0InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                               GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                           1);
+    G2_SetWnd1InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                              GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                          1);
+    G2S_SetWnd1InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                               GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                           1);
 
-    *(volatile u16 *)0x400004a &= ~0x3f;
-    *(volatile u16 *)0x400104a &= ~0x3f;
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
 
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0xe000) | 0x6000;
+    GX_SetVisibleWnd(GX_WNDMASK_W0 | GX_WNDMASK_W1);
 
     if (data_0209f5f8 != 0) {
-        *(volatile u32 *)0x4001000 &= ~0xe000;
+        GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     } else {
-        *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0xe000) | 0x6000;
+        GXS_SetVisibleWnd(GX_WNDMASK_W0 | GX_WNDMASK_W1);
     }
 
     data_0209f608 = 0;
@@ -243,8 +248,10 @@ void dWipe_c::EnableWindows() {
     data_0209f5fc = 0;
     BuildTable();
 
-    if ((*(volatile u16 *)0x4000050 & 0x80) == 0x80) *(volatile u16 *)0x4000050 = 0;
-    if ((*(volatile u16 *)0x4001050 & 0x80) == 0x80) *(volatile u16 *)0x4001050 = 0;
+    if ((REG_BLDCNT & 0x80) == 0x80)
+        G2_BlendNone();
+    if ((REG_DB_BLDCNT & 0x80) == 0x80)
+        G2S_BlendNone();
 }
 
 /* Vtable slot 2. Type 1 is the plain colour fade and the base owns it.
@@ -281,8 +288,8 @@ void dWipe_c::AdvanceFade()
             wipeInterp = 0;
             needsCleanup = 0;
             b = (type == 0) ? 0x10 : -0x10;
-            G2x_SetBlendBrightness_((u16 *)0x4000050, 0x3f, b);
-            G2x_SetBlendBrightness_((u16 *)0x4001050, 0x3f, b);
+            G2_SetBlendBrightness(0x3f, b);
+            G2S_SetBlendBrightness(0x3f, b);
             DisableWindows();
             state = 4;
         }
@@ -320,7 +327,7 @@ extern "C" void Wipe_HBlankHandler(void) {
         return;
     }
 
-    if ((*(volatile u16 *)0x4000004 & 2) == 0)
+    if ((REG_DISPSTAT & 2) == 0)
         return;
 
     MIi_CpuCopy32((int *)(data_0209f648 + data_0209f608 * 0x300u + line * 4), (int *)0x4000040, 4);

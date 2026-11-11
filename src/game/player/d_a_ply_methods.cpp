@@ -5710,7 +5710,7 @@ int daPly_c::St_Teleport_Main() {
         }
         break;
     }
-    G2x_SetBlendBrightness_((volatile u16 *)0x4000050, 0x3f, mStateWork);
+    G2_SetBlendBrightness(0x3f, mStateWork);
     AdvanceAnims();
     return 1;
 }

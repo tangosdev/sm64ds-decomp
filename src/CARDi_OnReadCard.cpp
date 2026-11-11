@@ -17,8 +17,8 @@ void CARDi_OnReadCard(void) {
     cardi_common.len -= CARD_ROM_PAGE_SIZE;
     if (cardi_common.len == 0) {
         MI_StopDma(cardi_common.dma);
-        OS_DisableIrqMask(0x80000);
-        OS_ResetRequestIrqMask(0x80000);
+        OS_DisableIrqMask(OS_IE_CARD_DATA);
+        OS_ResetRequestIrqMask(OS_IE_CARD_DATA);
         CARDi_ReadEnd();
     } else {
         CARDi_SetCardDma();

@@ -7,6 +7,15 @@
 #include "dScene_c.h"
 #include "private/watchdog_alarm.h"
 #include "nitro/gx/g3imm_light.h"
+#include "nitro/hw/registers.h"
+
+/* NitroSDK's inline IME helper (os/common/interrupt.h); returns the previous
+ * master enable. */
+static inline int OS_EnableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 1;
+    return prep;
+}
 
 extern "C" {
 
@@ -61,13 +70,8 @@ void func_0201a054(void) {
     func_0203d740();
     ClearSaveBlock();
     func_0201a4e4();
-    OS_EnableIrqMask(1);
-    {
-        /* REG_IME = 1, NitroSDK's OS_EnableIrq inlined */
-        volatile u16 *p = (volatile u16 *)0x4000208;
-        u16 old = *p;
-        *p = 1;
-    }
+    OS_EnableIrqMask(OS_IE_V_BLANK);
+    (void)OS_EnableIrq();
     OS_EnableInterrupts();
     GX_VBlankIntr(1);
     func_0203bbc0();
@@ -78,7 +82,7 @@ void func_0201a054(void) {
     if (!isChild)
         func_02018aa4();
     if (isChild)
-        OS_DisableIrqMask(0x100000);
+        OS_DisableIrqMask(OS_IE_CARD_IREQ);
     if (!isChild)
         func_0203ad84();
     func_0201a9fc((char *)&data_0209d574);
