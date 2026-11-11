@@ -114,7 +114,6 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
    prototypes for header-declared calls dropped their 33 named parameters
    (-33); Message.h and dCamera_c.h came in (+30). These three names put
    the count back. */
-void *func_0200fa04(void *c, void *v, int b);
 void func_02011cfc(void);
 void func_02011d38(void);
 void func_02012694(unsigned int a, void *p);
@@ -897,7 +896,7 @@ void daBtn_c::func_ov079_02125240(){
     mMovingMeshCollider.SetStoodOnCallback(func_ov079_0212522c);
     if (mIsKing != 0) {
         func_ov079_02123d4c(&a, this);
-        func_0200fa04(this, &a, 0);
+        func_0200fa04(&a, 0);
     } else {
         func_ov079_02123d4c(&b, this);
         LandingDustAt(b, false);

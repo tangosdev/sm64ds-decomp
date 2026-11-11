@@ -588,7 +588,7 @@ int daKing_Donketu_c::UpdateDefeat() {
     func_02011cfc();
     Sound::ChangeMusicVolume(0x7f, 0x15666);
     pos.y = pos.y + 0x190000;
-    func_0200fa8c(c, 1);
+    c->func_0200fa8c(1);
 
     {
         unsigned short a = *(unsigned short *)&c->mAngleX;

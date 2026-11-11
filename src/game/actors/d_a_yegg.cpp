@@ -169,7 +169,6 @@ typedef void BgchInitAt_(void *self, void *actor, int radius, int height, void *
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int Math_Function_0203b14c(void *ptr, int target, int rate, int limit, int step);
 extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
-extern short func_02010844(void *unused, void *v, short angle);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *m, int x, int y, int z);
@@ -929,8 +928,8 @@ void daYegg_c::UpdateTilt() {
         struct Vector3 n;
         dBgPi *fr = static_cast<dBgPi *>(mWithMeshClsn.GetFloorResult());
         fr->surface.CopyNormalTo(n);
-        e4 = func_02010844(this, &n, mAngleY);
-        e6 = func_02010844(this, &n, (short)(mAngleY - 0x4000));
+        e4 = func_02010844(&n, mAngleY);
+        e6 = func_02010844(&n, (short)(mAngleY - 0x4000));
     } else {
         if (mState == 0) {
             daPly_c *p = mPlayer;

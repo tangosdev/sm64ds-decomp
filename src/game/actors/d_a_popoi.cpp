@@ -123,7 +123,6 @@ unsigned short DecIfAbove0_Short(unsigned short *p);      /* local extern: prese
 int RandomIntInternal(int *s);                            /* local extern: preserve @NNN names */
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);        /* local extern: preserve @NNN names */
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b); /* local extern: preserve @NNN names */
-extern s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
 void func_02012694(unsigned int id, const Vector3 *pos);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
@@ -233,7 +232,7 @@ int daPopoi_c::Behavior()
     if (mWithMeshClsn.IsOnGround()) {
         dBgPi *floorResult = mWithMeshClsn.GetFloorResult();
         floorResult->surface.CopyNormalTo(floorNormal);
-        slope = func_02010844(((char *)this), &floorNormal, mAngleY);
+        slope = func_02010844(&floorNormal, mAngleY);
     }
 
     /* Roll back to last frame's position if this step would walk off a ledge,

@@ -100,9 +100,8 @@ int func_ov002_020e496c(daPly_c *c);
 int Math_Function_0203b14c(int *out, int a1, int a2, int a3, int a4);
 void Vec3_Lsl(Vector3 *d, const Vector3 *s, int sh);
 int *Vec3_LslInPlace(int *v, int sh);
-/* Real definitions: func_0201267c and func_0200fc44 (arm9).
-   The methods call through these so the names stay unmangled. */
-int func_0200fc44(dActor_c *a, Vector3 *pos, int flag);
+/* Real definition: func_0201267c (arm9). The methods call through it so the
+   name stays unmangled. */
 
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
@@ -478,8 +477,8 @@ void daBmb_c::State1() {
 
 /* ==========================================================================
  *
- * mState arm 2. The first argument is this Bob-omb. It calls func_0200fc44
- * through the file-scope three-argument prototype, the definition's own.
+ * mState arm 2. It calls the inherited dActor_c::func_0200fc44 at this
+ * Bob-omb's position.
  * ======================================================================== */
 
 void daBmb_c::func_ov102_0214bd90(){
@@ -488,7 +487,7 @@ void daBmb_c::func_ov102_0214bd90(){
     v.x = mPosX;
     v.y = mPosY;
     v.z = mPosZ;
-    func_0200fc44(this, &v, 1);
+    func_0200fc44(&v, 1);
   }
   if (mWithMeshClsn.IsOnGround()) {
     if (mChasePlayer == 0) {
@@ -1213,7 +1212,7 @@ int daBmb_c::func_ov102_0214aa18() {
             v.x = mPosX;
             v.y = mPosY;
             v.z = mPosZ;
-            func_0200fc44(this, &v, 1);
+            func_0200fc44(&v, 1);
         }
         if (mWithMeshClsn.IsOnGround() == 0)
             return 1;

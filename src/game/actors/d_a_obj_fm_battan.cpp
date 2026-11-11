@@ -53,7 +53,6 @@ enum d_a_obj_fm_battan_AssetId { ASSET_FM_BATTAN_BMD = 0x0616, ASSET_FM_BATTAN_K
 extern CLPS_Block data_ov064_0211ba4c;
 extern "C" {
 extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
-extern void *func_0200fa04(dActor_c *, Vector3 *, int);
 
 /* The 8-byte store into the mesh collider's +0x18 callback slot. */
 }
@@ -141,7 +140,7 @@ int daObjFm_Battan_c::Behavior() {
             dustPos.x = offset.x;
             dustPos.y = offset.y;
             dustPos.z = offset.z;
-            func_0200fa04(this, &dustPos, 1);
+            func_0200fa04(&dustPos, 1);
             mState++;
         }
         break;

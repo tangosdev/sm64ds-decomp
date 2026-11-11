@@ -160,7 +160,6 @@ extern "C" {
 extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void func_0200fa8c(void *c, int a);
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -713,7 +712,7 @@ int daBombking_c::TickReturnHome() {
             this->mFlags = 0x10000002;
             func_02012694(0x12c, &this->mCamSpacePosX);
             ShakeScreen(0xfa0000);
-            func_0200fa8c(this, 1);
+            func_0200fa8c(1);
             this->mActionStep = 2;
             this->mSpeedX = 0;
             this->mVertSpeed = 0;
@@ -770,7 +769,7 @@ int daBombking_c::TickBounceOffHill() {
     if (this->mWithMeshClsn.IsOnGround() != 0) {
         if (this->mActionStep == 0) {
             ShakeScreen(0x7d0000);
-            func_0200fa8c(this, 1);
+            func_0200fa8c(1);
             func_02012694(0x128, &this->mCamSpacePosX);
             this->mStateTimer = 5;
             this->mVertSpeed = 0x14000;
@@ -793,7 +792,7 @@ int daBombking_c::EnterBounceOffHill() {
     this->mStateTimer = 5;
     this->mFlags = 0x10000000;
     ShakeScreen(0xfa0000);
-    func_0200fa8c(this, 1);
+    func_0200fa8c(1);
     return 1;
 }
 
@@ -810,7 +809,7 @@ int daBombking_c::TickThrown() {
         func_02012694(0x128, &this->mCamSpacePosX);
         func_02012694(0x12b, &this->mCamSpacePosX);
         ShakeScreen(0x7d0000);
-        func_0200fa8c(this, 1);
+        func_0200fa8c(1);
         this->mActionStep = 1;
         this->mHealth -= 1;
     }
