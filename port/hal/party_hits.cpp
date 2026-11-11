@@ -1124,6 +1124,7 @@ void later_run(char *me) {
     g.later_n = 0;
 }
 
+int squash_curve(unsigned at);     // HEADBOUNCE1, below
 void handle_reply(int seat, unsigned ik, int yaw, int x, int y, int z) {
     (void)y; (void)z;
     switch (ik) {
