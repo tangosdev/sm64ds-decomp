@@ -841,8 +841,8 @@ void Message::DisplayText(int t) {
     int idx;
     int p, s;
     int i;
-    u16* q;
-    int cnt, div;
+    u16 *map;
+    int cnt, mapPos;
     int base;
 
     data_0209d6d4 = (short)t;
@@ -869,24 +869,24 @@ void Message::DisplayText(int t) {
 
     if (t != 0x1b3) {
         func_0201b6f8(0);
-        data_0209d6a8 = (u8)(((int)data_0209d6b0 + 7) / 8);
+        data_0209d6a8 = (u8)((data_0209d6b0 + 7) / 8);
         data_0209d65c = 0;
-        div = 0x107;
+        mapPos = 0x107;
     } else {
         data_0209d6f4 += 3;
         func_0201b6f8(0);
-        data_0209d65c = (u8)((0xb0 - (int)data_0209d6b0) >> 1);
+        data_0209d65c = (u8)((0xb0 - data_0209d6b0) >> 1);
         data_0209d6a8 = 0x16;
         data_0209d678 = data_0209d65c & 7;
-        div = 0x105;
+        mapPos = 0x105;
     }
 
-    q = (u16 *)((char *)G2_GetBG3ScrPtr() + div * 2);
+    map = (u16 *)((char *)G2_GetBG3ScrPtr() + mapPos * 2);
     cnt = data_0209d6a8;
     for (i = 0; i < cnt; i++) {
-        u16* q2 = q + 0x20;
-        q[i] = (u16)(i + 0x200);
-        q2[i] = (u16)(i + 0x200 + cnt);
+        u16 *lower = map + 0x20;
+        map[i] = (u16)(i + 0x200);
+        lower[i] = (u16)(i + 0x200 + cnt);
     }
 
     LayoutLine();
