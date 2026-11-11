@@ -6,6 +6,7 @@
 #include "nitro/fx/fx.h"
 #include "dScene_c.h"
 #include "private/watchdog_alarm.h"
+#include "nitro/gx/g3imm_light.h"
 
 extern "C" {
 
@@ -92,10 +93,10 @@ void func_0201a054(void) {
     dScene_c::PrepareToSpawnBoot();
     func_020196cc();
     data_0209ee90.f44 = 0x100;
-    *(volatile u32 *)0x40004c8 = 0x296a5800;
-    *(volatile u32 *)0x40004cc = 0x7fff;
-    *(volatile u32 *)0x40004c0 = 0x7fff;
-    *(volatile u32 *)0x40004c4 = 0;
+    G3_LightVector(GX_LIGHTID_0, 0, -0xb50, -0xb50); /* (0, -1/sqrt2, -1/sqrt2) */
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    REG_DIF_AMB = GX_RGB(31, 31, 31);
+    REG_SPE_EMI = 0;
     func_0201a5cc();
 }
 }

@@ -80,8 +80,8 @@
  *   the dispatchers call (this->*table[step])(i) on the credit and window
  *   entries. The {addr, 0} words in .data before the tables are the
  *   compiler's literals for those initializers. Indexed entry fields
- *   are spelled with STAR_OFF and its siblings where the ROM adds the
- *   field offset before the index.
+ *   are the members. 43cc's speed clamp, 55b4's step and 5894's kira
+ *   fields add the index in bytes to the field address.
  *   common.h must precede daDemo_c.h: dExtAnmModel_c.h's nested Matrix4x3
  *   otherwise wins and scalarizes Behavior's 12-word matrix copy.
  */
@@ -144,14 +144,6 @@ struct OamAttr;
    as char *; they read it through this record. */
 typedef daDemo_c::StaffRoll StaffRoll;
 
-/* Field offsets inside one star, window or credit entry. Where a helper
-   indexes an entry, the ROM adds the field offset to the block first and
-   the scaled index second; the member spelling folds the two into one
-   multiply-add and comes out shorter. */
-#define STAR_OFF(m) ((int)&((StaffRoll *)0)->stars[0].m)
-#define WINDOW_OFF(m) ((int)&((StaffRoll *)0)->window[0].m)
-#define CREDIT_OFF(m) ((int)&((StaffRoll *)0)->credit[0].m)
-
 /* shadow typedef 's16' */
 typedef signed short s16;
 
@@ -208,153 +200,6 @@ typedef unsigned short u16;
 typedef int Fix12i;
 
 /* shadow typedef 'Vector3' */
-
-/* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for func_ov002_020f237c, NOT applied:
-struct Obj {
-    char _pad0[0xd4];
-    struct ScrollState* scroll; /* 0xd4 *\/
-};
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for func_ov002_020f2e30, NOT applied:
-struct Obj {
-    char pad1c4[0x1c4];
-    unsigned short f1c4;   /* +0x1c4 *\/
-    unsigned short f1c6;   /* +0x1c6 *\/
-    unsigned char f1c8;    /* +0x1c8 *\/
-    unsigned char f1c9;    /* +0x1c9 *\/
-    unsigned char f1ca;    /* +0x1ca *\/
-    unsigned char f1cb;    /* +0x1cb *\/
-};
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'E', from the legacy file for func_ov002_020f5678, NOT applied:
-struct E { char pad[0x4c]; };
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'E', from the legacy file for func_ov002_020f57c0, NOT applied:
-struct E {
-  char p0[8];
-  int f8;
-  int fc;
-  char p10[0x20];
-  unsigned short f30;
-  unsigned short f32;
-  char p34[6];
-  unsigned short f3a;
-  char p3c[9];
-  unsigned char f45;
-  char p46;
-  unsigned char f47;
-  char p48;
-  unsigned char f49;
-  char p4a[2];
-};
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'Ent', from the legacy file for func_ov002_020f5b98, NOT applied:
-struct Ent {
-    char pad44[0x44];
-    unsigned char f44;   /* 0x44 *\/
-    char pad45;          /* 0x45 *\/
-    unsigned char f46;   /* 0x46 *\/
-    unsigned char f47;   /* 0x47 *\/
-    char pad48[2];       /* 0x48 *\/
-    unsigned char f4a;   /* 0x4a *\/
-    char pad4b[0x4c - 0x4b];
-};
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'E', from the legacy file for func_ov002_020f5cd0, NOT applied:
-struct E {
-    s32 f0;       /* 0x00 *\/
-    s32 f4;       /* 0x04 *\/
-    char p8[0x28-8];
-    s32 f28;      /* 0x28 *\/
-    u16 f2c;      /* 0x2c *\/
-    char p2e[0x30-0x2e];
-    u16 f30;      /* 0x30 *\/
-    u16 f32;      /* 0x32 *\/
-    char p34[0x3a-0x34];
-    u16 f3a;      /* 0x3a *\/
-    char p3c[0x4c-0x3c];
-};
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'void', from the legacy file for func_ov002_020f5f0c, NOT applied:
-typedef void (C::*PMF)();
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for func_ov002_020f63a0, NOT applied:
-struct Obj { char pad[0xd8]; void *p; /* 0xd8 *\/ };
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'Ent', from the legacy file for func_ov002_020f6514, NOT applied:
-struct Ent { void *p0; void *p4; };
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for func_ov002_020f65b8, NOT applied:
-struct Obj { char pad[0x7c]; void *seq; /* 0x7c *\/ };
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'void', from the legacy file for _ZN8daDemo_c10anmModel_cD0Ev, NOT applied:
-typedef void (*VFN)(void *);
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'void', from the legacy file for _ZN8daDemo_c10anmModel_cD1Ev, NOT applied:
-typedef void (*VFN)(void *);
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 's16', from the legacy file for func_ov002_020f6b4c, NOT applied:
-typedef short s16;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for func_ov002_020f6b4c, NOT applied:
-struct Obj {
-    char pad5c[0x5c];
-    struct Vector3 v5c;   /* +0x5c *\/
-    char pad8e[0x8e - (0x5c + 0xc)];
-    s16 f8e;              /* +0x8e *\/
-    char pad94[0x94 - 0x90];
-    s16 f94;              /* +0x94 *\/
-    char pad98[0x98 - 0x96];
-    int f98;             /* +0x98 *\/
-};
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 's16', from the legacy file for func_ov002_020f6bc0, NOT applied:
-typedef short s16;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 's16', from the legacy file for func_ov002_020f6f48, NOT applied:
-typedef short s16;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 's16', from the legacy file for func_ov002_020f7bb8, NOT applied:
-typedef short s16;
-*/
-
-/* TUBUILD CONFLICT -- alternate body of typedef 'void', from the legacy file for func_ov002_020f7d74, NOT applied:
-typedef void (C::*PMF)(unsigned char*, int, int);
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for _ZN8daDemo_c16CleanupResourcesEv, NOT applied:
-struct Obj { virtual void v00(); virtual void m04(); };
-*/
-
-/* TUBUILD CONFLICT -- alternate body of struct 'Obj', from the legacy file for _ZN8daDemo_c13InitResourcesEv, NOT applied:
-struct Obj {
-    char pad0[8];
-    unsigned int unk8;
-    char pad_c[0x74];
-    int unk80;
-    int unk84;
-    int unk88;
-    char pad_8c[0x50];
-    void *unkDC;
-    void *unkE0;
-};
-*/
 
 /* Lakitu's model, animation and texture-sequence file handles, owned and
  * constructed by d_a_c_jugem.cpp's static init. Same TU-local wrapper
@@ -509,69 +354,11 @@ extern SharedFilePtr *data_ov002_0210b610[1];
 extern int data_ov002_0210b614;
 extern JugemTexSequenceFilePtr data_ov085_0213073c;
 extern JugemAnimationFilePtr data_ov085_02130744;
-/* TUBUILD CONFLICT -- alternate declaration of gSubScreenLayers, from the legacy file for func_ov002_020f23f0, NOT applied: extern u8 gSubScreenLayers; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN3G2x13SetBlendAlphaEPVttttj, from the legacy file for func_ov002_020f2aec, NOT applied: extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *p, unsigned short a, unsigned short b, unsigned short c, int d); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN3G2x13SetBlendAlphaEPVttttj, from the legacy file for func_ov002_020f2bf4, NOT applied: extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *p, unsigned short a, unsigned short b, int c, unsigned short d); */
-/* TUBUILD CONFLICT -- alternate declaration of func_0201ef50, from the legacy file for func_ov002_020f2e30, NOT applied: extern void func_0201ef50(unsigned int x); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f5a94, from the legacy file for func_ov002_020f3de4, NOT applied: extern int func_ov002_020f5a94(char *c); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f5a94, from the legacy file for func_ov002_020f40fc, NOT applied: extern int func_ov002_020f5a94(char *c); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd5atan2E5Fix12IiES1_, from the legacy file for func_ov002_020f43cc, NOT applied: extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f5a94, from the legacy file for func_ov002_020f43cc, NOT applied: extern int func_ov002_020f5a94(void *a); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f5a94, from the legacy file for func_ov002_020f4710, NOT applied: extern int func_ov002_020f5a94(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f5a94, from the legacy file for func_ov002_020f4a2c, NOT applied: extern int func_ov002_020f5a94(char *c); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f5a94, from the legacy file for func_ov002_020f4d70, NOT applied: extern int func_ov002_020f5a94(void *c); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f5a94, from the legacy file for func_ov002_020f5010, NOT applied: extern int func_ov002_020f5a94(char *c); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f2790, from the legacy file for func_ov002_020f5990, NOT applied: extern "C" void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8SaveData19IsCharacterUnlockedEj, from the legacy file for func_ov002_020f5a94, NOT applied: extern int _ZN8SaveData19IsCharacterUnlockedEj(unsigned int idx); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f2984, from the legacy file for func_ov002_020f5ad4, NOT applied: extern void func_ov002_020f2984(char* p); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f3828, from the legacy file for func_ov002_020f5e38, NOT applied: extern void func_ov002_020f3828(void *); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f3828, from the legacy file for func_ov002_020f5e58, NOT applied: extern void func_ov002_020f3828(void *); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f3828, from the legacy file for func_ov002_020f5e78, NOT applied: extern void func_ov002_020f3828(void *); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f3828, from the legacy file for func_ov002_020f5e98, NOT applied: extern void func_ov002_020f3828(void *); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f3828, from the legacy file for func_ov002_020f5eb8, NOT applied: extern void func_ov002_020f3828(void *); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f3828, from the legacy file for func_ov002_020f5ed8, NOT applied: extern void func_ov002_020f3828(void *); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f3828, from the legacy file for func_ov002_020f5ee4, NOT applied: extern void func_ov002_020f3828(void *); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Memory16operator_delete2EPv, from the legacy file for func_ov002_020f5f60, NOT applied: extern void _ZN6Memory16operator_delete2EPv(void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of gSubScreenLayers, from the legacy file for func_ov002_020f5fe4, NOT applied: extern u8 gSubScreenLayers; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Memory16operator_delete2EPv, from the legacy file for func_ov002_020f63a0, NOT applied: extern void _ZN6Memory16operator_delete2EPv(void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN15dExtFrameCtrl_c7AdvanceEv, from the legacy file for func_ov002_020f65ec, NOT applied: extern int _ZN15dExtFrameCtrl_c7AdvanceEv(void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of ReadUnalignedShort, from the legacy file for func_ov002_020f6bc0, NOT applied: extern s16 ReadUnalignedShort(unsigned char *p); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020f6514, from the legacy file for func_ov002_020f6c34, NOT applied: extern void func_ov002_020f6514(void *p, void *tbl, unsigned char v); */
-/* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov002_020f6c60, NOT applied: extern unsigned int RandomIntInternal(int *seed); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN7Vector3D1Ev, from the legacy file for func_ov002_020f6c60, NOT applied: extern int _ZN7Vector3D1Ev; */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f6f48, NOT applied: extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE, from the legacy file for func_ov002_020f7038, NOT applied: extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE( unsigned int a, unsigned int b, int p2, int p3, int p4, void* p5, void* p6); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE, from the legacy file for func_ov002_020f71c4, NOT applied: extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE( unsigned int a, unsigned int b, int p2, int p3, int p4, void* p5, void* p6); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE, from the legacy file for func_ov002_020f72bc, NOT applied: extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE( u32 slot, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const void* rot, struct Callback* cb); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7384, NOT applied: extern int _Z14ApproachLinearRiii(int* v, int target, int step); */
-/* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7384, NOT applied: extern unsigned short gKuppaScriptFrame; */
-/* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7410, NOT applied: extern unsigned short gKuppaScriptFrame; */
-/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov002_020f7410, NOT applied: extern void MTX_MultVec43(void *out, void *m, void *v); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_LslInPlace, from the legacy file for func_ov002_020f7410, NOT applied: extern void Vec3_LslInPlace(void *v, int sh); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7410, NOT applied: extern int _Z14ApproachLinearRiii(int *p, int target, int step); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN3G2x13SetBlendAlphaEPVttttj, from the legacy file for func_ov002_020f7410, NOT applied: extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *reg, unsigned short a, unsigned short b, int c, int d); */
-/* TUBUILD CONFLICT -- alternate declaration of MTX_MultVec43, from the legacy file for func_ov002_020f7538, NOT applied: extern void MTX_MultVec43(void* a, void* b, void* c); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_LslInPlace, from the legacy file for func_ov002_020f7538, NOT applied: extern void Vec3_LslInPlace(void* v, int n); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov002_020f7538, NOT applied: extern int _Z14ApproachLinearRiii(int* dst, int target, int step); */
-/* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7538, NOT applied: extern unsigned short gKuppaScriptFrame; */
-/* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f7780, NOT applied: extern unsigned short gKuppaScriptFrame; */
-/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7780, NOT applied: extern void *gCamera; */
-/* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f7780, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7780, NOT applied: extern short Vec3_HorzAngle(const int *v0, const int *v1); */
-/* TUBUILD CONFLICT -- alternate declaration of gKuppaScriptFrame, from the legacy file for func_ov002_020f79c0, NOT applied: extern unsigned short gKuppaScriptFrame; */
-/* TUBUILD CONFLICT -- alternate declaration of Math_Function_0203b0fc, from the legacy file for func_ov002_020f79c0, NOT applied: extern void Math_Function_0203b0fc(int *p, int target, int scale, int max); */
-/* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov002_020f79c0, NOT applied: extern int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep); */
-/* TUBUILD CONFLICT -- alternate declaration of gCamera, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void *gCamera; */
-/* TUBUILD CONFLICT -- alternate declaration of VEC_Add, from the legacy file for func_ov002_020f7bb8, NOT applied: extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_VertAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd5atan2E5Fix12IiES1_, from the legacy file for func_ov002_020f7bb8, NOT applied: extern s16 _ZN4cstd5atan2E5Fix12IiES1_(Fix12i y, Fix12i x); */
 /* The file handles and their registration nodes are defined at the
    bottom of this file; only the 12-byte gap between the two out-of-order
    nodes stays here so the function-local Vector3 statics keep their retail
    addresses. */
 int data_ov002_02110ddc[3];
-/* TUBUILD CONFLICT -- alternate declaration of data_0209b41c, from the legacy file for _ZN8daDemo_c6RenderEv, NOT applied: extern M48 data_0209b41c; */
 }
 
 daDemo_c::~daDemo_c()
@@ -582,9 +369,6 @@ daDemo_c::~daDemo_c()
    ~daDemo_c definition at ordinal 0 below; objisolate keeps the
    variant this file's delinks entry names. */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov002_020f1fcc, 0x020f1fcc, size 0x128 */
-/* -------------------------------------------------------------------------- */
 /* Sub-screen fade step (param1 0x2f, states 2 and 3). While fadeLevel is
  * non-zero it counts fadeTimer to 0x18, then drops fadeLevel by one and calls
  * G2x_SetBlendAlpha_ on 0x4001050 with (4, 0x28, fadeLevel, 0x10 - fadeLevel).
@@ -617,9 +401,6 @@ void daDemo_c::func_ov002_020f1fcc()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov002_020f20f4, 0x020f20f4, size 0x11c */
-/* -------------------------------------------------------------------------- */
 /* Moving-sprite step. For each active slot, on frames where FRAME_TIMER bit 0
  * is clear, spriteX += spriteVelX and the RNG is stepped (result unused); a
  * slot that reaches x 0x140 moving right or x -0x40 moving left goes idle with
@@ -647,9 +428,6 @@ void daDemo_c::func_ov002_020f20f4() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- func_ov002_020f2210, 0x020f2210, size 0x130 */
-/* -------------------------------------------------------------------------- */
 /* Sprite respawn. Counts each slot's non-zero spriteDelay down; when it hits
  * zero on an idle slot, RNG bit 0 picks x -0x40 moving right or x 0x140 moving
  * left, and y is (rng >> 16) % 48 + 0x30 * slot. Does nothing in state 6. */
@@ -687,9 +465,6 @@ void daDemo_c::func_ov002_020f2210()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov002_020f2340, 0x020f2340, size 0x3c */
-/* -------------------------------------------------------------------------- */
 /* Draw the two centre sprites at x 0x80. */
 
 void daDemo_c::func_ov002_020f2340()
@@ -698,9 +473,6 @@ void daDemo_c::func_ov002_020f2340()
     OAM::RenderSub(&data_ov002_0210bddc, 0x80, mScroll->centerSpriteY[1]);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov002_020f237c, 0x020f237c, size 0x54 */
-/* -------------------------------------------------------------------------- */
 /* Scroll the two sub-screen BG layers in opposite directions (bg1 x down
  * one, bg0 x up one) and write both offsets to the hardware. */
 
@@ -712,9 +484,6 @@ void daDemo_c::func_ov002_020f237c()
     SetSubBg1Offset(mScroll->bg1X, mScroll->bg1Y);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov002_020f23d0, 0x020f23d0, size 0x20 */
-/* -------------------------------------------------------------------------- */
 /* CleanupResources for param1 0x2f: free the scroll block. */
 
 int daDemo_c::func_ov002_020f23d0()
@@ -723,9 +492,6 @@ int daDemo_c::func_ov002_020f23d0()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov002_020f23f0, 0x020f23f0, size 0x240 */
-/* -------------------------------------------------------------------------- */
 /* Behavior for param1 0x2f: the scroll block's seven states.
  *   0  each frame the scene fader (gSceneFader) reports IsAtStart,
  *      centerSpriteY[0]++ and centerSpriteY[1]--; next state when
@@ -814,9 +580,6 @@ int daDemo_c::func_ov002_020f23f0()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov002_020f2630, 0x020f2630, size 0x94 */
-/* -------------------------------------------------------------------------- */
 int daDemo_c::func_ov002_020f2630() {
     this->mScroll = (daDemo_c::ScrollState *)::operator new(0x36);
     this->mScroll->bg0X = 0x30;
@@ -831,9 +594,6 @@ int daDemo_c::func_ov002_020f2630() {
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov002_020f26c4, 0x020f26c4, size 0x10 */
-/* -------------------------------------------------------------------------- */
 /* Script handler (table entry 23): mCue = p[0], the value 23f0 waits on. */
 
 int daDemo_c::func_ov002_020f26c4(unsigned char *src)
@@ -842,9 +602,6 @@ int daDemo_c::func_ov002_020f26c4(unsigned char *src)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov002_020f26d4, 0x020f26d4, size 0xc */
-/* -------------------------------------------------------------------------- */
 /* func_ov002_020f26d4 @ 0x20f26d4 (ov002) -- tail call to func_ov002_020f2630 (0x20f2630),
  * emitted as ldr ip, [pc]; bx ip; .word 0x20f2630. Command 22 in RunCommand's table.
  */
@@ -852,9 +609,6 @@ int daDemo_c::func_ov002_020f26d4() {
     return func_ov002_020f2630();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov002_020f26e0, 0x020f26e0, size 0xb0 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f26e0() {
     /* The kira callback's tracking records: dPa_c.h keeps them as opaque
        words, so OamEnt views each one as the sparkle sprite it draws. */
@@ -877,9 +631,6 @@ void StaffRoll::func_ov002_020f26e0() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov002_020f2790, 0x020f2790, size 0x58 */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
 {
@@ -891,9 +642,6 @@ void func_ov002_020f2790(char* c, int p1, int p2, int p3, s16 p4)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov002_020f27e8, 0x020f27e8, size 0x170 */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f27e8(char *c)
 {
@@ -936,9 +684,6 @@ int func_ov002_020f27e8(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov002_020f2958, 0x020f2958, size 0x2c */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2958(char *c)
 {
@@ -950,9 +695,6 @@ void func_ov002_020f2958(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- func_ov002_020f2984, 0x020f2984, size 0xc */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f2984(char *p)
 {
@@ -961,9 +703,6 @@ int func_ov002_020f2984(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- func_ov002_020f2990, 0x020f2990, size 0xb8 */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f2990(char* c)
 {
@@ -984,9 +723,6 @@ int func_ov002_020f2990(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- func_ov002_020f2a48, 0x020f2a48, size 0x20 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f2a48() {
     /* 0x1d8/0x1d9 and the position: see func_ov002_020f2990. */
     endActive = 1;
@@ -995,9 +731,6 @@ void StaffRoll::func_ov002_020f2a48() {
     endY = 393216;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- func_ov002_020f2a68, 0x020f2a68, size 0x10 */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2a68(char *p)
 {
@@ -1007,33 +740,18 @@ void func_ov002_020f2a68(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- func_ov002_020f2a78, 0x020f2a78, size 0x10 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f2a78(int i) {
     this->credit[i].active = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- func_ov002_020f2a88, 0x020f2a88, size 0x64 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f2a88(int i) {
-    char *c = (char *)this;
-    unsigned long new_var;
-    *((short *)((c + CREDIT_OFF(timer)) + (i * 8))) =
-        (*((u16 *)((c + CREDIT_OFF(timer)) + (i * 8)))) + 1;
-    new_var = i;
-    if ((*((u16 *)((c + (new_var * 8)) + CREDIT_OFF(timer)))) < 0x39) {
+    this->credit[i].timer++;
+    if (this->credit[i].timer < 0x39)
         return;
-    }
-    *((u16 *)((c + (new_var * 8)) + CREDIT_OFF(timer))) = 0;
-    *((u8 *)((c + CREDIT_OFF(step)) + (new_var * 8))) =
-        (*((u8 *)((c + CREDIT_OFF(step)) + (new_var * 8)))) + 1;
+    this->credit[i].timer = 0;
+    this->credit[i].step++;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- func_ov002_020f2aec, 0x020f2aec, size 0x108 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f2aec(int idx) {
     char *c = (char *)this;
     StaffRoll *s = (StaffRoll *)c;
@@ -1059,9 +777,6 @@ void StaffRoll::func_ov002_020f2aec(int idx) {
     *(volatile unsigned short *)0x4001050 = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- func_ov002_020f2bf4, 0x020f2bf4, size 0x118 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f2bf4(int idx) {
     char *c = (char *)this;
     StaffRoll *s = (StaffRoll *)c;
@@ -1088,44 +803,22 @@ void StaffRoll::func_ov002_020f2bf4(int idx) {
     func_0201ef50(s->credit[idx].message);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- func_ov002_020f2d0c, 0x020f2d0c, size 0x64 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f2d0c(int i) {
-    char *c = (char *)this;
-    long new_var;
-    *((short *)((c + CREDIT_OFF(timer)) + (i * 8))) =
-        (*((unsigned short *)((c + CREDIT_OFF(timer)) + (i * 8)))) + 1;
-    new_var = 8;
-    char *r = c + (i * new_var);
-    if (((StaffRoll *)r)->credit[0].timer < 0x39) {
+    this->credit[i].timer++;
+    if (this->credit[i].timer < 0x39)
         return;
-    }
-    ((StaffRoll *)r)->credit[0].timer = 0;
-    *((unsigned char *)((c + CREDIT_OFF(step)) + (i * new_var))) =
-        (*((unsigned char *)((c + CREDIT_OFF(step)) + (i * new_var)))) + 1;
+    this->credit[i].timer = 0;
+    this->credit[i].step++;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- func_ov002_020f2d70, 0x020f2d70, size 0x64 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f2d70(int i) {
-    char *c = (char *)this;
-    char *p;
-    p = c + CREDIT_OFF(timer);
-    *((short *)(p + (i * 8))) = (*((unsigned short *)(p + (i * 8)))) + 1;
-    p = c + (i * 8);
-    if (((StaffRoll *)p)->credit[0].timer < 0x1e) {
+    this->credit[i].timer++;
+    if (this->credit[i].timer < 0x1e)
         return;
-    }
-    ((StaffRoll *)p)->credit[0].timer = 0;
-    *((unsigned char *)((c + CREDIT_OFF(step)) + (i * 8))) =
-        (*((unsigned char *)((c + CREDIT_OFF(step)) + (i * 8)))) + 1;
+    this->credit[i].timer = 0;
+    this->credit[i].step++;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- func_ov002_020f2dd4, 0x020f2dd4, size 0x5c */
-/* -------------------------------------------------------------------------- */
 extern StaffRollStep data_ov002_02110ebc[];
 void StaffRoll::func_ov002_020f2dd4() {
     if (this->credit[0].active == 0)
@@ -1133,9 +826,6 @@ void StaffRoll::func_ov002_020f2dd4() {
     (this->*data_ov002_02110ebc[this->credit[0].step])(0);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- StartCredit, 0x020f2e30, size 0x70 */
-/* -------------------------------------------------------------------------- */
 /* StartCredit at 0x020f2e30
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov002).
@@ -1155,9 +845,6 @@ void StaffRoll::StartCredit(int n) {
     gSubScreenLayers |= 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- func_ov002_020f2ea0, 0x020f2ea0, size 0xc */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2ea0(char *p)
 {
@@ -1165,9 +852,6 @@ void func_ov002_020f2ea0(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- func_ov002_020f2eac, 0x020f2eac, size 0x6c */
-/* -------------------------------------------------------------------------- */
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2eac(void *c) {
     int i;
@@ -1183,9 +867,6 @@ void func_ov002_020f2eac(void *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- func_ov002_020f2f18, 0x020f2f18, size 0x4c */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2f18(char* c, int a, int b)
 {
@@ -1201,9 +882,6 @@ void func_ov002_020f2f18(char* c, int a, int b)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- func_ov002_020f2f64, 0x020f2f64, size 0x38 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f2f64() {
     int i;
     for (i = 0; i < 5; i++) {
@@ -1213,9 +891,6 @@ void StaffRoll::func_ov002_020f2f64() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 32 -- func_ov002_020f2f9c, 0x020f2f9c, size 0x138 */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f2f9c(void* self, int count)
 {
@@ -1249,9 +924,6 @@ void func_ov002_020f2f9c(void* self, int count)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- func_ov002_020f30d4, 0x020f30d4, size 0x24 */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f30d4(char *p)
 {
@@ -1264,67 +936,58 @@ void func_ov002_020f30d4(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 34 -- func_ov002_020f30f8, 0x020f30f8, size 0x1ec */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f30f8(int i) {
     char *o = (char *)this;
-    int idx = i * 0x30;
     unsigned short t;
     int oldA, oldB;
     int cc, dd, ee, ff;
 
-    t = *(unsigned short *)(o + WINDOW_OFF(delay) + idx);
+    t = this->window[i].delay;
     if (t != 0) {
-        *(unsigned short *)(o + WINDOW_OFF(delay) + idx) = t - 1;
+        this->window[i].delay = t - 1;
         return;
     }
 
-    *(int *)(o + WINDOW_OFF(left) + idx) -= *(int *)(o + WINDOW_OFF(stepX) + idx);
-    *(int *)(o + WINDOW_OFF(top) + idx) -= *(int *)(o + WINDOW_OFF(stepY) + idx);
-    *(int *)(o + WINDOW_OFF(right) + idx) += *(int *)(o + WINDOW_OFF(stepX) + idx);
-    *(int *)(o + WINDOW_OFF(bottom) + idx) += *(int *)(o + WINDOW_OFF(stepY) + idx);
+    this->window[i].left -= this->window[i].stepX;
+    this->window[i].top -= this->window[i].stepY;
+    this->window[i].right += this->window[i].stepX;
+    this->window[i].bottom += this->window[i].stepY;
 
-    oldA = *(int *)(o + WINDOW_OFF(bgX) + idx);
-    oldB = *(int *)(o + WINDOW_OFF(bgY) + idx);
-    *(int *)(o + WINDOW_OFF(bgX) + idx) = oldA + *(int *)(o + WINDOW_OFF(stepX) + idx);
-    *(int *)(o + WINDOW_OFF(bgY) + idx) += *(int *)(o + WINDOW_OFF(stepY) + idx);
+    oldA = this->window[i].bgX;
+    oldB = this->window[i].bgY;
+    this->window[i].bgX = oldA + this->window[i].stepX;
+    this->window[i].bgY += this->window[i].stepY;
 
-    if (*(int *)(o + WINDOW_OFF(bgX) + idx) >= 0)
-        *(int *)(o + WINDOW_OFF(bgX) + idx) = 0;
-    if (*(int *)(o + WINDOW_OFF(bgY) + idx) >= 0)
-        *(int *)(o + WINDOW_OFF(bgY) + idx) = 0;
-    if (*(int *)(o + WINDOW_OFF(left) + idx) < 0)
-        *(int *)(o + WINDOW_OFF(left) + idx) = 0;
-    if (*(int *)(o + WINDOW_OFF(top) + idx) < 0)
-        *(int *)(o + WINDOW_OFF(top) + idx) = 0;
-    if (*(int *)(o + WINDOW_OFF(right) + idx) >= 0xff000)
-        *(int *)(o + WINDOW_OFF(right) + idx) = 0xff000;
-    if (*(int *)(o + WINDOW_OFF(bottom) + idx) >= 0xc0000)
-        *(int *)(o + WINDOW_OFF(bottom) + idx) = 0xc0000;
-    if (*(int *)(o + WINDOW_OFF(bgX) + idx) > 0)
-        *(int *)(o + WINDOW_OFF(bgX) + idx) = 0;
-    if (*(int *)(o + WINDOW_OFF(bgY) + idx) > 0)
-        *(int *)(o + WINDOW_OFF(bgY) + idx) = 0;
+    if (this->window[i].bgX >= 0)
+        this->window[i].bgX = 0;
+    if (this->window[i].bgY >= 0)
+        this->window[i].bgY = 0;
+    if (this->window[i].left < 0)
+        this->window[i].left = 0;
+    if (this->window[i].top < 0)
+        this->window[i].top = 0;
+    if (this->window[i].right >= 0xff000)
+        this->window[i].right = 0xff000;
+    if (this->window[i].bottom >= 0xc0000)
+        this->window[i].bottom = 0xc0000;
+    if (this->window[i].bgX > 0)
+        this->window[i].bgX = 0;
+    if (this->window[i].bgY > 0)
+        this->window[i].bgY = 0;
 
-    cc = *(int *)(o + WINDOW_OFF(bgX) + idx) - oldA;
-    func_ov002_020f2f18(o, cc, *(int *)(o + WINDOW_OFF(bgY) + idx) - oldB);
+    cc = this->window[i].bgX - oldA;
+    func_ov002_020f2f18(o, cc, this->window[i].bgY - oldB);
 
-    ee = *(int *)(o + WINDOW_OFF(right) + idx) >> 12;
-    ff = *(int *)(o + WINDOW_OFF(bottom) + idx) >> 12;
-    cc = *(int *)(o + WINDOW_OFF(left) + idx) >> 12;
-    dd = *(int *)(o + WINDOW_OFF(top) + idx) >> 12;
+    ee = this->window[i].right >> 12;
+    ff = this->window[i].bottom >> 12;
+    cc = this->window[i].left >> 12;
+    dd = this->window[i].top >> 12;
     *(unsigned short *)0x4001042 = ((cc << 8) & 0xff00) | (ee & 0xff);
     *(unsigned short *)0x4001046 = ((dd << 8) & 0xff00) | (ff & 0xff);
-    SetSubBg1Offset(*(int *)(o + WINDOW_OFF(bgX) + idx) >> 12,
-                    *(int *)(o + WINDOW_OFF(bgY) + idx) >> 12);
-    SetSubBg2Offset(*(int *)(o + WINDOW_OFF(bgX) + idx) >> 12,
-                    *(int *)(o + WINDOW_OFF(bgY) + idx) >> 12);
+    SetSubBg1Offset(this->window[i].bgX >> 12, this->window[i].bgY >> 12);
+    SetSubBg2Offset(this->window[i].bgX >> 12, this->window[i].bgY >> 12);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 35 -- func_ov002_020f32e4, 0x020f32e4, size 0x2c */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f32e4(int i) {
     this->window[i].delay = 0x10;
     this->window[i].stepX = 0x1800;
@@ -1332,17 +995,11 @@ void StaffRoll::func_ov002_020f32e4(int i) {
     this->window[i].step = 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 36 -- func_ov002_020f3310, 0x020f3310, size 0x4c */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f3310(int idx) {
     unsigned char sel = this->window[idx].step;
     (this->*data_ov002_02110e24[sel])(idx);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 37 -- func_ov002_020f335c, 0x020f335c, size 0xb0 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f335c(int i) {
     char *o = (char *)this;
     StaffRoll *s = (StaffRoll *)o;
@@ -1362,9 +1019,6 @@ void StaffRoll::func_ov002_020f335c(int i) {
         (unsigned short)(((top << 8) & 0xff00) | (bottom & 0xff));
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 38 -- func_ov002_020f340c, 0x020f340c, size 0xb0 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f340c(int i) {
     char *o = (char *)this;
     StaffRoll *s = (StaffRoll *)o;
@@ -1384,36 +1038,31 @@ void StaffRoll::func_ov002_020f340c(int i) {
         (unsigned short)(((top << 8) & 0xff00) | (bottom & 0xff));
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 39 -- func_ov002_020f34bc, 0x020f34bc, size 0x128 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f34bc(int idx) {
-    unsigned char *s = (unsigned char *)this;
-    int k = idx * 0x30;
     int flag;
     int a, b, c, d;
     int bs, cs, ds, as_;
-    *(int *)(s + WINDOW_OFF(left) + k) -= 0x1800;
-    *(int *)(s + WINDOW_OFF(top) + k) -= 0x1800;
-    *(int *)(s + WINDOW_OFF(right) + k) += 0x1800;
-    *(int *)(s + WINDOW_OFF(bottom) + k) += 0x1800;
+    this->window[idx].left -= 0x1800;
+    this->window[idx].top -= 0x1800;
+    this->window[idx].right += 0x1800;
+    this->window[idx].bottom += 0x1800;
     flag = 0;
-    if (*(int *)(s + WINDOW_OFF(left) + k) <= 0x80000)
-        *(int *)(s + WINDOW_OFF(left) + k) = 0x80000;
-    if (*(int *)(s + WINDOW_OFF(top) + k) <= 0x56000)
-        *(int *)(s + WINDOW_OFF(top) + k) = 0x56000;
-    if (*(int *)(s + WINDOW_OFF(right) + k) >= 0xfc000)
-        *(int *)(s + WINDOW_OFF(right) + k) = 0xfc000;
-    if (*(int *)(s + WINDOW_OFF(bottom) + k) >= 0xbc000) {
-        *(int *)(s + WINDOW_OFF(bottom) + k) = 0xbc000;
+    if (this->window[idx].left <= 0x80000)
+        this->window[idx].left = 0x80000;
+    if (this->window[idx].top <= 0x56000)
+        this->window[idx].top = 0x56000;
+    if (this->window[idx].right >= 0xfc000)
+        this->window[idx].right = 0xfc000;
+    if (this->window[idx].bottom >= 0xbc000) {
+        this->window[idx].bottom = 0xbc000;
         flag++;
     }
     if (flag != 0)
-        (*(unsigned char *)(s + WINDOW_OFF(step) + k))++;
-    a = *(int *)(s + WINDOW_OFF(top) + k);
-    b = *(int *)(s + WINDOW_OFF(left) + k);
-    c = *(int *)(s + WINDOW_OFF(right) + k);
-    d = *(int *)(s + WINDOW_OFF(bottom) + k);
+        this->window[idx].step++;
+    a = this->window[idx].top;
+    b = this->window[idx].left;
+    c = this->window[idx].right;
+    d = this->window[idx].bottom;
     bs = b >> 12;
     cs = c >> 12;
     ds = d >> 12;
@@ -1422,56 +1071,39 @@ void StaffRoll::func_ov002_020f34bc(int idx) {
     *(unsigned short *)0x4001046 = ((as_ << 8) & 0xff00) | (ds & 0xff);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 40 -- func_ov002_020f35e4, 0x020f35e4, size 0x15c */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f35e4(int i) {
-    char *c = (char *)this;
-    int off = i * 0x30;
-    *(int *)(c + WINDOW_OFF(left) + off) = 0xe0000;
-    *(int *)(c + WINDOW_OFF(top) + off) = 0x66000;
-    *(int *)(c + WINDOW_OFF(right) + off) = 0xe0000;
-    *(int *)(c + WINDOW_OFF(bottom) + off) = 0x66000;
+    this->window[i].left = 0xe0000;
+    this->window[i].top = 0x66000;
+    this->window[i].right = 0xe0000;
+    this->window[i].bottom = 0x66000;
     *((volatile unsigned int *) 0x4001000) = ((*((volatile unsigned int *) 0x4001000)) & (~0xe000)) | 0x4000;
     *((volatile unsigned short *) 0x4001048) = (unsigned short) (((((*((volatile unsigned short *) 0x4001048)) & (~0x3f00)) | 0x1700) & 0xFFFFFFFFFFFFFFFFull) | 0x2000);
     *((volatile unsigned short *) 0x400104a) = (unsigned short) (((((*((volatile unsigned short *) 0x400104a)) & (~0x3f)) | 0x11) & 0xFFFFFFFFFFFFFFFFull) | 0x20);
     {
-        int a = *(int *)(c + WINDOW_OFF(left) + off) >> 12;
-        int d = *(int *)(c + WINDOW_OFF(right) + off) >> 12;
-        int e = *(int *)(c + WINDOW_OFF(bottom) + off) >> 12;
-        int b = *(int *)(c + WINDOW_OFF(top) + off) >> 12;
+        int a = this->window[i].left >> 12;
+        int d = this->window[i].right >> 12;
+        int e = this->window[i].bottom >> 12;
+        int b = this->window[i].top >> 12;
         *((volatile unsigned short *) 0x4001042) = (unsigned short) (((a << 8) & 0xff00) | (d & 0xff));
         *((volatile unsigned short *) 0x4001046) = (unsigned short) (((b << 8) & 0xff00) | (e & 0xff));
     }
-    *(int *)(c + WINDOW_OFF(bgX) + off) = -0x60000;
-    *(int *)(c + WINDOW_OFF(bgY) + off) = -0x38000;
-    SetSubBg1Offset(*(int *)(c + WINDOW_OFF(bgX) + off) >> 12,
-                    *(int *)(c + WINDOW_OFF(bgY) + off) >> 12);
-    SetSubBg2Offset(*(int *)(c + WINDOW_OFF(bgX) + off) >> 12,
-                    *(int *)(c + WINDOW_OFF(bgY) + off) >> 12);
+    this->window[i].bgX = -0x60000;
+    this->window[i].bgY = -0x38000;
+    SetSubBg1Offset(this->window[i].bgX >> 12, this->window[i].bgY >> 12);
+    SetSubBg2Offset(this->window[i].bgX >> 12, this->window[i].bgY >> 12);
     gSubScreenLayers |= 6;
-    *(unsigned char *)(c + WINDOW_OFF(step) + off) =
-        *(unsigned char *)(c + WINDOW_OFF(step) + off) + 1;
+    this->window[i].step = this->window[i].step + 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 41 -- func_ov002_020f3740, 0x020f3740, size 0x4c */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f3740(int idx) {
     unsigned char sel = this->window[idx].step;
     (this->*data_ov002_02110e9c[sel])(idx);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 42 -- func_ov002_020f378c, 0x020f378c, size 0x14 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f378c(int idx) {
     this->window[idx].step = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 43 -- func_ov002_020f37a0, 0x020f37a0, size 0x5c */
-/* -------------------------------------------------------------------------- */
 extern StaffRollStep data_ov002_02110e4c[];
 void StaffRoll::func_ov002_020f37a0() {
     if (this->window[0].active == 0)
@@ -1479,9 +1111,6 @@ void StaffRoll::func_ov002_020f37a0() {
     (this->*data_ov002_02110e4c[this->window[0].kind])(0);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 44 -- func_ov002_020f37fc, 0x020f37fc, size 0x2c */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f37fc(char *c)
 {
@@ -1492,9 +1121,6 @@ void func_ov002_020f37fc(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 45 -- func_ov002_020f3828, 0x020f3828, size 0x12c */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f3828(int *c)
 {
@@ -1530,9 +1156,6 @@ void func_ov002_020f3828(int *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 46 -- func_ov002_020f3954, 0x020f3954, size 0x18 */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f3954(char *p)
 {
@@ -1542,9 +1165,6 @@ void func_ov002_020f3954(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 47 -- func_ov002_020f396c, 0x020f396c, size 0xc */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f396c(char *p)
 {
@@ -1552,9 +1172,6 @@ void func_ov002_020f396c(char *p)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 48 -- func_ov002_020f3978, 0x020f3978, size 0x74 */
-/* -------------------------------------------------------------------------- */
 extern "C" {
 extern void *data_ov002_0210b998[];
 void func_ov002_020f3978(char *c) {
@@ -1570,9 +1187,6 @@ void func_ov002_020f3978(char *c) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 49 -- func_ov002_020f39ec, 0x020f39ec, size 0xfc */
-/* -------------------------------------------------------------------------- */
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f39ec(char *self, int idx) {
     StaffRoll *s = (StaffRoll *)self;
@@ -1599,9 +1213,6 @@ void func_ov002_020f39ec(char *self, int idx) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 50 -- func_ov002_020f3ae8, 0x020f3ae8, size 0xb8 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f3ae8(int idx) {
     char *base = (char *)this;
     StaffRoll::Star *arr = (StaffRoll::Star *)base;
@@ -1619,165 +1230,147 @@ void StaffRoll::func_ov002_020f3ae8(int idx) {
     arr[idx].heading += 0x200;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 51 -- func_ov002_020f3ba0, 0x020f3ba0, size 0x198 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f3ba0(int i) {
-    char *c = (char *)this;
-    int off = i * 0x4c;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
 
-    idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    idx = this->stars[i].heading >> 4;
     {
         short tv = FX_SinCosTable_[idx * 2 + 1];
-        int spd = *(int *)(c + STAR_OFF(speed) + off);
-        *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
+        int spd = this->stars[i].speed;
+        this->stars[i].x += FX_MUL(tv, spd);
     }
 
-    idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    idx = this->stars[i].heading >> 4;
     {
         short tv = FX_SinCosTable_[idx * 2];
-        int spd = *(int *)(c + STAR_OFF(speed) + off);
-        *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
+        int spd = this->stars[i].speed;
+        this->stars[i].y += FX_MUL(tv, spd);
     }
 
-    *(int *)(c + STAR_OFF(speed) + off) += 0x30;
+    this->stars[i].speed += 0x30;
 
-    dx = 0xe0 - (*(int *)(c + STAR_OFF(x) + off) >> 12);
-    dy = 0x46 - (*(int *)(c + STAR_OFF(y) + off) >> 12);
+    dx = 0xe0 - (this->stars[i].x >> 12);
+    dy = 0x46 - (this->stars[i].y >> 12);
 
     if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-        *(unsigned char *)(c + STAR_OFF(step) + off) += 1;
-        *(unsigned short *)(c + STAR_OFF(delay) + off) = 0;
-        *(unsigned short *)(c + STAR_OFF(heading) + off) = 0xc000;
-        *(int *)(c + STAR_OFF(radius) + off) = 0x20000;
-        *(int *)(c + STAR_OFF(x) + off) = 0xe0000;
-        *(int *)(c + STAR_OFF(y) + off) = 0x46000;
+        this->stars[i].step += 1;
+        this->stars[i].delay = 0;
+        this->stars[i].heading = 0xc000;
+        this->stars[i].radius = 0x20000;
+        this->stars[i].x = 0xe0000;
+        this->stars[i].y = 0x46000;
         return;
     }
 
     target = cstd::atan2(dy, dx);
-    ang = *(unsigned short *)(c + STAR_OFF(heading) + off);
+    ang = this->stars[i].heading;
     if (target > ang) {
-        *(unsigned short *)(c + STAR_OFF(heading) + off) += 0x80;
-        if (target <= *(unsigned short *)(c + STAR_OFF(heading) + off))
-            *(unsigned short *)(c + STAR_OFF(heading) + off) = target;
+        this->stars[i].heading += 0x80;
+        if (target <= this->stars[i].heading)
+            this->stars[i].heading = target;
     } else {
         if (ang <= target)
             return;
-        *(unsigned short *)(c + STAR_OFF(heading) + off) -= 0x80;
-        if (*(unsigned short *)(c + STAR_OFF(heading) + off) <= target)
-            *(unsigned short *)(c + STAR_OFF(heading) + off) = target;
+        this->stars[i].heading -= 0x80;
+        if (this->stars[i].heading <= target)
+            this->stars[i].heading = target;
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 52 -- func_ov002_020f3d38, 0x020f3d38, size 0x60 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f3d38(int i) {
-    char *c = (char *)this;
-    int off = i * 0x4c;
-    if (*(u16 *)(c + STAR_OFF(delay) + off) != 0) {
-        *(u16 *)(c + STAR_OFF(delay) + off) = *(u16 *)(c + STAR_OFF(delay) + off) - 1;
+    if (this->stars[i].delay != 0) {
+        this->stars[i].delay = this->stars[i].delay - 1;
         return;
     }
-    *(s32 *)(c + STAR_OFF(x) + off) = -0x10000;
-    *(s32 *)(c + off + STAR_OFF(y)) = -0x10000;
-    *(s32 *)(c + off + STAR_OFF(speed)) = 0x2000;
-    *(u16 *)(c + off + STAR_OFF(heading)) = 0;
-    *(u16 *)(c + STAR_OFF(delay) + off) = 0;
-    *(u8 *)(c + STAR_OFF(step) + off) = *(u8 *)(c + STAR_OFF(step) + off) + 1;
+    this->stars[i].x = -0x10000;
+    this->stars[i].y = -0x10000;
+    this->stars[i].speed = 0x2000;
+    this->stars[i].heading = 0;
+    this->stars[i].delay = 0;
+    this->stars[i].step = this->stars[i].step + 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 53 -- func_ov002_020f3d98, 0x020f3d98, size 0x4c */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f3d98(int idx) {
     unsigned char sel = this->stars[idx].step;
     (this->*data_ov002_02110e34[sel])(idx);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 54 -- func_ov002_020f3de4, 0x020f3de4, size 0x318 */
-/* -------------------------------------------------------------------------- */
 /* Per-slot update of one 0x4c-byte cutscene record. func_ov002_020f5a94
  * takes c so r0 stays live through the orbit path to the call. */
 void StaffRoll::func_ov002_020f3de4(int i) {
     char *c = (char *)this;
-    int off = i * 0x4c;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
     unsigned short v;
     int j;
 
-    v = *(unsigned short *)(c + STAR_OFF(delay) + off);
+    v = this->stars[i].delay;
     if (v != 0) {
-        *(unsigned short *)(c + STAR_OFF(delay) + off) = v - 1;
+        this->stars[i].delay = v - 1;
         return;
     }
 
-    if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    if (this->stars[i].phase == 0) {
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2 + 1];
-            int spd = *(int *)(c + STAR_OFF(speed) + off);
-            *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
+            int spd = this->stars[i].speed;
+            this->stars[i].x += FX_MUL(tv, spd);
         }
 
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2];
-            int spd = *(int *)(c + STAR_OFF(speed) + off);
-            *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
+            int spd = this->stars[i].speed;
+            this->stars[i].y += FX_MUL(tv, spd);
         }
 
-        if (*(int *)(c + STAR_OFF(speed) + off) >= 0x2000)
-            *(int *)(c + STAR_OFF(speed) + off) -= 0x120;
+        if (this->stars[i].speed >= 0x2000)
+            this->stars[i].speed -= 0x120;
 
-        dx = (*(int *)(c + STAR_OFF(targetX) + off) - *(int *)(c + STAR_OFF(x) + off)) >> 12;
-        dy = (*(int *)(c + STAR_OFF(targetY) + off) - *(int *)(c + STAR_OFF(y) + off)) >> 12;
+        dx = (this->stars[i].targetX - this->stars[i].x) >> 12;
+        dy = (this->stars[i].targetY - this->stars[i].y) >> 12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-            *(unsigned char *)(c + STAR_OFF(phase) + off) += 1;
-            *(int *)(c + STAR_OFF(orbitTravel) + off) = 0;
-            *(unsigned short *)(c + STAR_OFF(heading) + off) = 0xc000;
+            this->stars[i].phase += 1;
+            this->stars[i].orbitTravel = 0;
+            this->stars[i].heading = 0xc000;
             return;
         }
 
         target = cstd::atan2(dy, dx);
-        ang = *(unsigned short *)(c + STAR_OFF(heading) + off);
+        ang = this->stars[i].heading;
         if (target > ang) {
-            *(unsigned short *)(c + STAR_OFF(heading) + off) += 0x100;
-            if (target <= *(unsigned short *)(c + STAR_OFF(heading) + off))
-                *(unsigned short *)(c + STAR_OFF(heading) + off) = target;
+            this->stars[i].heading += 0x100;
+            if (target <= this->stars[i].heading)
+                this->stars[i].heading = target;
         } else {
             if (ang <= target)
                 return;
-            *(unsigned short *)(c + STAR_OFF(heading) + off) -= 0x100;
-            if (*(unsigned short *)(c + STAR_OFF(heading) + off) <= target)
-                *(unsigned short *)(c + STAR_OFF(heading) + off) = target;
+            this->stars[i].heading -= 0x100;
+            if (this->stars[i].heading <= target)
+                this->stars[i].heading = target;
         }
         return;
     }
 
-    idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    idx = this->stars[i].heading >> 4;
     {
         short tv = FX_SinCosTable_[idx * 2 + 1];
-        int spd = *(int *)(c + STAR_OFF(radius) + off);
-        *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+        int spd = this->stars[i].radius;
+        this->stars[i].x = FX_MUL(tv, spd) + 0x80000;
     }
-    idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    idx = this->stars[i].heading >> 4;
     {
         short tv = FX_SinCosTable_[idx * 2];
-        int spd = *(int *)(c + STAR_OFF(radius) + off);
-        *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+        int spd = this->stars[i].radius;
+        this->stars[i].y = FX_MUL(tv, spd) + 0x60000;
     }
-    *(unsigned short *)(c + STAR_OFF(heading) + off) +=
-        *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
-    *(int *)(c + STAR_OFF(orbitTravel) + off) += *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
+    this->stars[i].heading += this->stars[i].angSpeed;
+    this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
     if (i != func_ov002_020f5a94(c) - 1)
         return;
@@ -1798,96 +1391,85 @@ void StaffRoll::func_ov002_020f3de4(int i) {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 55 -- func_ov002_020f40fc, 0x020f40fc, size 0x2d0 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f40fc(int i) {
     char *c = (char *)this;
-    int off = i * 0x4c;
 
-    if (*(unsigned short *)(c + STAR_OFF(frame) + off) == 0) {
-        if (*(unsigned short *)(c + STAR_OFF(frameTimer) + off) == 0) {
-            *(unsigned short *)(c + STAR_OFF(loops) + off) += 1;
+    if (this->stars[i].frame == 0) {
+        if (this->stars[i].frameTimer == 0) {
+            this->stars[i].loops += 1;
         }
     }
 
-    if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
+    if (this->stars[i].phase == 0) {
         int idx;
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2 + 1];
-            int spd = *(int *)(c + STAR_OFF(radius) + off);
-            *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+            int spd = this->stars[i].radius;
+            this->stars[i].x = FX_MUL(tv, spd) + 0x80000;
         }
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2];
-            int spd = *(int *)(c + STAR_OFF(radius) + off);
-            *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+            int spd = this->stars[i].radius;
+            this->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        *(unsigned short *)(c + STAR_OFF(heading) + off) -=
-            *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
-        *(int *)(c + STAR_OFF(orbitTravel) + off) +=
-            *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
+        this->stars[i].heading -= this->stars[i].angSpeed;
+        this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
         if (this->stars[0].phase != 0) {
-            *(unsigned short *)(c + STAR_OFF(angSpeed) + off) += 8;
+            this->stars[i].angSpeed += 8;
         } else {
-            if (*(unsigned short *)(c + STAR_OFF(angSpeed) + off) < 0x200) {
-                *(unsigned short *)(c + STAR_OFF(angSpeed) + off) += 6;
-                if (*(unsigned short *)(c + STAR_OFF(angSpeed) + off) > 0x200)
-                    *(unsigned short *)(c + STAR_OFF(angSpeed) + off) = 0x200;
+            if (this->stars[i].angSpeed < 0x200) {
+                this->stars[i].angSpeed += 6;
+                if (this->stars[i].angSpeed > 0x200)
+                    this->stars[i].angSpeed = 0x200;
             }
         }
 
-        if ((unsigned int)*(int *)(c + STAR_OFF(orbitTravel) + off) >=
-                (unsigned int)data_ov002_02100120[i] &&
+        if ((unsigned int)this->stars[i].orbitTravel >= (unsigned int)data_ov002_02100120[i] &&
             this->holdOrbit == 0) {
-            *(unsigned char *)(c + STAR_OFF(phase) + off) += 1;
-            *(unsigned short *)(c + STAR_OFF(flyTimer) + off) = 0;
-            *(int *)(c + STAR_OFF(speed) + off) = 0x2000;
+            this->stars[i].phase += 1;
+            this->stars[i].flyTimer = 0;
+            this->stars[i].speed = 0x2000;
         }
 
         if (func_ov002_020f5a94(c) != 3)
             return;
-        if ((unsigned int)*(int *)(c + STAR_OFF(orbitTravel) + off) < 0xc000)
+        if ((unsigned int)this->stars[i].orbitTravel < 0xc000)
             return;
         if (i != 2)
             return;
         if (this->holdOrbit != 0)
             return;
-        *(unsigned char *)(c + STAR_OFF(phase) + off) += 1;
-        *(unsigned short *)(c + STAR_OFF(flyTimer) + off) = 0;
-        *(int *)(c + STAR_OFF(speed) + off) = 0x2000;
+        this->stars[i].phase += 1;
+        this->stars[i].flyTimer = 0;
+        this->stars[i].speed = 0x2000;
         return;
     }
 
-    *(unsigned short *)(c + STAR_OFF(flyTimer) + off) += 1;
-    *(int *)(c + STAR_OFF(x) + off) += *(int *)(c + STAR_OFF(speed) + off);
-    *(int *)(c + STAR_OFF(speed) + off) += 0x300;
+    this->stars[i].flyTimer += 1;
+    this->stars[i].x += this->stars[i].speed;
+    this->stars[i].speed += 0x300;
     if (this->stars[0].flyTimer < 0x70)
         return;
     {
-        int off2 = (int)((long long)i) * 0x4c;
-        *(unsigned char *)(c + STAR_OFF(step) + off2) += 1;
-        *(unsigned short *)(c + STAR_OFF(loops) + off2) = 0;
-        *(unsigned char *)(c + STAR_OFF(phase) + off) = 0;
-        *(int *)(c + STAR_OFF(radius) + off2) = 0x38000;
-        *(unsigned short *)(c + STAR_OFF(heading) + off2) = 0;
-        *(unsigned short *)(c + STAR_OFF(delay) + off2) = data_ov002_02100130[i] << 6;
-        *(int *)(c + STAR_OFF(x) + off) = -0x10000;
-        *(int *)(c + STAR_OFF(y) + off2) = 0;
-        *(unsigned short *)(c + STAR_OFF(angSpeed) + off2) = 0x100;
-        *(int *)(c + STAR_OFF(speed) + off) = 0x5800;
-        *(int *)(c + STAR_OFF(targetX) + off2) = 0x80000;
-        *(int *)(c + STAR_OFF(targetY) + off2) = 0x28000;
+        this->stars[i].step += 1;
+        this->stars[i].loops = 0;
+        this->stars[i].phase = 0;
+        this->stars[i].radius = 0x38000;
+        this->stars[i].heading = 0;
+        this->stars[i].delay = data_ov002_02100130[i] << 6;
+        this->stars[i].x = -0x10000;
+        this->stars[i].y = 0;
+        this->stars[i].angSpeed = 0x100;
+        this->stars[i].speed = 0x5800;
+        this->stars[i].targetX = 0x80000;
+        this->stars[i].targetY = 0x28000;
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 56 -- func_ov002_020f43cc, 0x020f43cc, size 0x344 */
-/* -------------------------------------------------------------------------- */
 /* recovered: per-slot update of a 4-entry cursor/target table (0x4c-byte
  * records at c). Slot i first burns its hold timer (+0x30); while its arrival
  * flag (+0x48) is clear it steps position (+0/+4) along heading (+0x2e) at
@@ -1914,58 +1496,59 @@ void StaffRoll::func_ov002_020f43cc(int i) {
     char *s;
     int off = idx * 0x4c;
     {
-        unsigned short v = *(unsigned short *)(c + STAR_OFF(delay) + off);
+        unsigned short v = this->stars[idx].delay;
         if (v != 0) {
-            *(unsigned short *)(c + STAR_OFF(delay) + off) = v - 1;
+            this->stars[idx].delay = v - 1;
             return;
         }
     }
-    if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
+    if (this->stars[idx].phase == 0) {
         int idxa;
         short tv;
         int spd;
-        idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idxa = this->stars[idx].heading >> 4;
         {
             tv = FX_SinCosTable_[idxa * 2 + 1];
-            spd = *(int *)(c + STAR_OFF(speed) + off);
-            *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
+            spd = this->stars[idx].speed;
+            this->stars[idx].x += FX_MUL(tv, spd);
         }
-        idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idxa = this->stars[idx].heading >> 4;
         {
             tv = FX_SinCosTable_[idxa * 2];
-            spd = *(int *)(c + STAR_OFF(speed) + off);
-            *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
+            spd = this->stars[idx].speed;
+            this->stars[idx].y += FX_MUL(tv, spd);
         }
         px = c + off;
-        if (*(int *)(c + STAR_OFF(speed) + off) <= -0x2000)
-            *(int *)(c + STAR_OFF(speed) + off) = *(int *)(c + STAR_OFF(speed) + off) + 0x120;
+        if (*(int *)((char *)&this->stars[0].speed + off) <= -0x2000)
+            *(int *)((char *)&this->stars[0].speed + off) =
+                *(int *)((char *)&this->stars[0].speed + off) + 0x120;
         {
             s = c + idx * 0x4c;
             int dx = (((StaffRoll *)s)->stars[0].targetX - *(int *)px) >> 12;
-            int dy = (((StaffRoll *)s)->stars[0].targetY - *(int *)(c + STAR_OFF(y) + off)) >> 12;
+            int dy = (((StaffRoll *)s)->stars[0].targetY - this->stars[idx].y) >> 12;
             if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-                (*(unsigned char *)(c + STAR_OFF(phase) + off))++;
+                this->stars[idx].phase++;
                 ((StaffRoll *)s)->stars[0].orbitTravel = 0;
-                *(unsigned short *)(c + STAR_OFF(heading) + off) = 0xc000;
+                this->stars[idx].heading = 0xc000;
                 return;
             }
             {
                 unsigned short a = (unsigned short)cstd::atan2(dy, dx);
-                unsigned short cur = *(unsigned short *)(c + STAR_OFF(heading) + off);
+                unsigned short cur = this->stars[idx].heading;
                 if (a > cur) {
                     unsigned short nv;
-                    *(unsigned short *)(c + STAR_OFF(heading) + off) += 0x100;
-                    nv = *(unsigned short *)(c + STAR_OFF(heading) + off);
+                    this->stars[idx].heading += 0x100;
+                    nv = this->stars[idx].heading;
                     if (a <= nv)
-                        *(unsigned short *)(c + STAR_OFF(heading) + off) = a;
+                        this->stars[idx].heading = a;
                     return;
                 }
                 if (cur > a) {
                     unsigned short nv2;
-                    *(unsigned short *)(c + STAR_OFF(heading) + off) -= 0x100;
-                    nv2 = *(unsigned short *)(c + STAR_OFF(heading) + off);
+                    this->stars[idx].heading -= 0x100;
+                    nv2 = this->stars[idx].heading;
                     if (nv2 <= a)
-                        *(unsigned short *)(c + STAR_OFF(heading) + off) = a;
+                        this->stars[idx].heading = a;
                     return;
                 }
                 return;
@@ -1976,22 +1559,20 @@ void StaffRoll::func_ov002_020f43cc(int i) {
         int idxa;
         short tv;
         int spd;
-        idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idxa = this->stars[idx].heading >> 4;
         {
             tv = FX_SinCosTable_[idxa * 2 + 1];
-            spd = *(int *)(c + STAR_OFF(radius) + off);
-            *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+            spd = this->stars[idx].radius;
+            this->stars[idx].x = FX_MUL(tv, spd) + 0x80000;
         }
-        idxa = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idxa = this->stars[idx].heading >> 4;
         {
             tv = FX_SinCosTable_[idxa * 2];
-            spd = *(int *)(c + STAR_OFF(radius) + off);
-            *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+            spd = this->stars[idx].radius;
+            this->stars[idx].y = FX_MUL(tv, spd) + 0x60000;
         }
-        *(unsigned short *)(c + STAR_OFF(heading) + off) -=
-            *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
-        *(int *)(c + STAR_OFF(orbitTravel) + off) +=
-            *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
+        this->stars[idx].heading -= this->stars[idx].angSpeed;
+        this->stars[idx].orbitTravel += this->stars[idx].angSpeed;
     }
     if (idx != func_ov002_020f5a94(c) - 1)
         return;
@@ -2018,53 +1599,49 @@ void StaffRoll::func_ov002_020f43cc(int i) {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 57 -- func_ov002_020f4710, 0x020f4710, size 0x31c */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f4710(int i) {
     char *c = (char *)this;
-    int off = i * 0x4c;
 
-    if (*(u8 *)(c + STAR_OFF(phase) + off) == 0) {
+    if (this->stars[i].phase == 0) {
         int idx;
 
-        idx = *(u16 *)(c + STAR_OFF(heading) + off) >> 4;
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2 + 1];
-            int spd = *(s32 *)(c + STAR_OFF(radius) + off);
-            *(s32 *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+            int spd = this->stars[i].radius;
+            this->stars[i].x = FX_MUL(tv, spd) + 0x80000;
         }
 
-        idx = *(u16 *)(c + STAR_OFF(heading) + off) >> 4;
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2];
-            int spd = *(s32 *)(c + STAR_OFF(radius) + off);
-            *(s32 *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+            int spd = this->stars[i].radius;
+            this->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        *(u16 *)(c + STAR_OFF(heading) + off) -= *(u16 *)(c + STAR_OFF(angSpeed) + off);
-        *(s32 *)(c + STAR_OFF(orbitTravel) + off) += *(u16 *)(c + STAR_OFF(angSpeed) + off);
+        this->stars[i].heading -= this->stars[i].angSpeed;
+        this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
         if (this->stars[0].phase != 0) {
-            *(u16 *)(c + STAR_OFF(angSpeed) + off) += 8;
-        } else if (*(u16 *)(c + STAR_OFF(angSpeed) + off) < 0x200) {
-            *(u16 *)(c + STAR_OFF(angSpeed) + off) += 6;
-            if (*(u16 *)(c + STAR_OFF(angSpeed) + off) > 0x200)
-                *(u16 *)(c + STAR_OFF(angSpeed) + off) = 0x200;
+            this->stars[i].angSpeed += 8;
+        } else if (this->stars[i].angSpeed < 0x200) {
+            this->stars[i].angSpeed += 6;
+            if (this->stars[i].angSpeed > 0x200)
+                this->stars[i].angSpeed = 0x200;
         }
 
-        if ((u32) * (s32 *)(c + STAR_OFF(orbitTravel) + off) < (u32)data_ov002_02100100[i])
+        if ((u32)this->stars[i].orbitTravel < (u32)data_ov002_02100100[i])
             return;
         if (this->holdOrbit != 0)
             return;
 
-        (*(u8 *)(c + STAR_OFF(phase) + off))++;
-        *(u16 *)(c + STAR_OFF(flyTimer) + off) = 0;
+        this->stars[i].phase++;
+        this->stars[i].flyTimer = 0;
 
         if (i == 0 || i == 3) {
-            *(s32 *)(c + STAR_OFF(speed) + off) = 0x2000;
+            this->stars[i].speed = 0x2000;
         } else {
-            *(s32 *)(c + STAR_OFF(speed) + off) = -0x2000;
+            this->stars[i].speed = -0x2000;
         }
 
         if (func_ov002_020f5a94(c) != 3)
@@ -2072,133 +1649,127 @@ void StaffRoll::func_ov002_020f4710(int i) {
         if (i != 2)
             return;
         if (this->holdOrbit == 0)
-            *(s32 *)(c + STAR_OFF(speed) + off) = 0x2000;
+            this->stars[i].speed = 0x2000;
         return;
     }
 
-    (*(u16 *)(c + STAR_OFF(flyTimer) + off))++;
-    *(s32 *)(c + STAR_OFF(x) + off) += *(s32 *)(c + STAR_OFF(speed) + off);
+    this->stars[i].flyTimer++;
+    this->stars[i].x += this->stars[i].speed;
 
     if (func_ov002_020f5a94(c) == 3 && i == 2) {
-        *(s32 *)(c + STAR_OFF(speed) + off) += 0x300;
+        this->stars[i].speed += 0x300;
     } else if (i == 0 || i == 3) {
-        *(s32 *)(c + STAR_OFF(speed) + off) += 0x300;
+        this->stars[i].speed += 0x300;
     } else {
-        *(s32 *)(c + STAR_OFF(speed) + off) -= 0x300;
+        this->stars[i].speed -= 0x300;
     }
 
     if (this->stars[0].flyTimer < 0x60)
         return;
 
     {
-        int o2 = (int)((unsigned long long)i) * 0x4c;
-        (*(u8 *)(c + STAR_OFF(step) + o2))++;
-        *(u16 *)(c + STAR_OFF(loops) + o2) = 0;
-        *(u8 *)(c + STAR_OFF(phase) + off) = 0;
-        *(s32 *)(c + STAR_OFF(radius) + o2) = 0x38000;
-        *(u16 *)(c + STAR_OFF(heading) + o2) = 0x8000;
-        *(u16 *)(c + STAR_OFF(delay) + o2) = (u16)(data_ov002_02100110[i] << 6);
+        this->stars[i].step++;
+        this->stars[i].loops = 0;
+        this->stars[i].phase = 0;
+        this->stars[i].radius = 0x38000;
+        this->stars[i].heading = 0x8000;
+        this->stars[i].delay = (u16)(data_ov002_02100110[i] << 6);
 
         if (func_ov002_020f5a94(c) == 3) {
             if (i == 2)
-                *(u16 *)(c + STAR_OFF(delay) + o2) = 0x40;
+                this->stars[i].delay = 0x40;
         }
     }
 
-    *(s32 *)(c + STAR_OFF(x) + off) = 0x110000;
-    *(s32 *)(c + STAR_OFF(y) + off) = 0;
-    *(u16 *)(c + STAR_OFF(angSpeed) + off) = 0x100;
-    *(s32 *)(c + STAR_OFF(speed) + off) = 0x5800;
-    *(s32 *)(c + STAR_OFF(targetX) + off) = 0x80000;
-    *(s32 *)(c + STAR_OFF(targetY) + off) = 0x28000;
+    this->stars[i].x = 0x110000;
+    this->stars[i].y = 0;
+    this->stars[i].angSpeed = 0x100;
+    this->stars[i].speed = 0x5800;
+    this->stars[i].targetX = 0x80000;
+    this->stars[i].targetY = 0x28000;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 58 -- func_ov002_020f4a2c, 0x020f4a2c, size 0x344 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f4a2c(int i) {
     char *c = (char *)this;
-    int off = i * 0x4c;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
     unsigned short v;
 
-    v = *(unsigned short *)(c + STAR_OFF(delay) + off);
+    v = this->stars[i].delay;
     if (v != 0) {
-        *(unsigned short *)(c + STAR_OFF(delay) + off) = v - 1;
+        this->stars[i].delay = v - 1;
         return;
     }
 
-    if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    if (this->stars[i].phase == 0) {
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2 + 1];
-            int spd = *(int *)(c + STAR_OFF(speed) + off);
-            *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
+            int spd = this->stars[i].speed;
+            this->stars[i].x += FX_MUL(tv, spd);
         }
 
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2];
-            int spd = *(int *)(c + STAR_OFF(speed) + off);
-            *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
+            int spd = this->stars[i].speed;
+            this->stars[i].y += FX_MUL(tv, spd);
         }
 
-        if (*(int *)(c + STAR_OFF(speed) + off) <= -0x2000)
-            *(int *)(c + STAR_OFF(speed) + off) = *(int *)(c + STAR_OFF(speed) + off) + 0x120;
+        if (this->stars[i].speed <= -0x2000)
+            this->stars[i].speed = this->stars[i].speed + 0x120;
 
-        dx = (*(int *)(c + STAR_OFF(targetX) + off) - *(int *)(c + STAR_OFF(x) + off)) >> 12;
-        dy = (*(int *)(c + STAR_OFF(targetY) + off) - *(int *)(c + STAR_OFF(y) + off)) >> 12;
+        dx = (this->stars[i].targetX - this->stars[i].x) >> 12;
+        dy = (this->stars[i].targetY - this->stars[i].y) >> 12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-            *(unsigned char *)(c + STAR_OFF(phase) + off) += 1;
-            *(int *)(c + STAR_OFF(orbitTravel) + off) = 0;
-            *(unsigned short *)(c + STAR_OFF(heading) + off) = 0xc000;
+            this->stars[i].phase += 1;
+            this->stars[i].orbitTravel = 0;
+            this->stars[i].heading = 0xc000;
             return;
         }
 
         {
             int raw = cstd::atan2(dy, dx);
-            ang = *(unsigned short *)(c + STAR_OFF(heading) + off);
+            ang = this->stars[i].heading;
             target = (unsigned short)raw;
         }
         if (target > ang) {
             unsigned short nv;
-            *(unsigned short *)(c + STAR_OFF(heading) + off) += 0x100;
-            nv = *(unsigned short *)(c + STAR_OFF(heading) + off);
+            this->stars[i].heading += 0x100;
+            nv = this->stars[i].heading;
             if (target <= nv)
-                *(unsigned short *)(c + STAR_OFF(heading) + off) = target;
+                this->stars[i].heading = target;
             return;
         }
         if (ang > target) {
             unsigned short nv2;
-            *(unsigned short *)(c + STAR_OFF(heading) + off) -= 0x100;
-            nv2 = *(unsigned short *)(c + STAR_OFF(heading) + off);
+            this->stars[i].heading -= 0x100;
+            nv2 = this->stars[i].heading;
             if (nv2 <= target)
-                *(unsigned short *)(c + STAR_OFF(heading) + off) = target;
+                this->stars[i].heading = target;
             return;
         }
         return;
     }
 
-    idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    idx = this->stars[i].heading >> 4;
     {
         short tv = FX_SinCosTable_[idx * 2 + 1];
-        int spd = *(int *)(c + STAR_OFF(radius) + off);
-        *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+        int spd = this->stars[i].radius;
+        this->stars[i].x = FX_MUL(tv, spd) + 0x80000;
     }
 
-    idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    idx = this->stars[i].heading >> 4;
     {
         short tv = FX_SinCosTable_[idx * 2];
-        int spd = *(int *)(c + STAR_OFF(radius) + off);
-        *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+        int spd = this->stars[i].radius;
+        this->stars[i].y = FX_MUL(tv, spd) + 0x60000;
     }
 
-    *(unsigned short *)(c + STAR_OFF(heading) + off) -=
-        *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
-    *(int *)(c + STAR_OFF(orbitTravel) + off) += *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
+    this->stars[i].heading -= this->stars[i].angSpeed;
+    this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
     if (i != func_ov002_020f5a94(c) - 1)
         return;
@@ -2226,93 +1797,85 @@ void StaffRoll::func_ov002_020f4a2c(int i) {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 59 -- func_ov002_020f4d70, 0x020f4d70, size 0x2a0 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f4d70(int i) {
     char *c = (char *)this;
-    int off = i * 0x4c;
 
-    if (*(u16 *)(c + STAR_OFF(frame) + off) == 0) {
-        if (*(u16 *)(c + STAR_OFF(frameTimer) + off) == 0)
-            (*(u16 *)(c + STAR_OFF(loops) + off))++;
+    if (this->stars[i].frame == 0) {
+        if (this->stars[i].frameTimer == 0)
+            this->stars[i].loops++;
     }
 
-    if (*(u8 *)(c + STAR_OFF(phase) + off) == 0) {
+    if (this->stars[i].phase == 0) {
         int idx;
 
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2 + 1];
-            int spd = *(int *)(c + STAR_OFF(radius) + off);
-            *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+            int spd = this->stars[i].radius;
+            this->stars[i].x = FX_MUL(tv, spd) + 0x80000;
         }
 
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2];
-            int spd = *(int *)(c + STAR_OFF(radius) + off);
-            *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+            int spd = this->stars[i].radius;
+            this->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        *(u16 *)(c + STAR_OFF(heading) + off) += *(u16 *)(c + STAR_OFF(angSpeed) + off);
-        *(s32 *)(c + STAR_OFF(orbitTravel) + off) += *(u16 *)(c + STAR_OFF(angSpeed) + off);
+        this->stars[i].heading += this->stars[i].angSpeed;
+        this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
         if (this->stars[0].phase != 0) {
-            *(u16 *)(c + STAR_OFF(angSpeed) + off) += 8;
+            this->stars[i].angSpeed += 8;
         } else {
-            if (*(u16 *)(c + STAR_OFF(angSpeed) + off) < 0x200) {
-                *(u16 *)(c + STAR_OFF(angSpeed) + off) += 6;
-                if (*(u16 *)(c + STAR_OFF(angSpeed) + off) > 0x200)
-                    *(u16 *)(c + STAR_OFF(angSpeed) + off) = 0x200;
+            if (this->stars[i].angSpeed < 0x200) {
+                this->stars[i].angSpeed += 6;
+                if (this->stars[i].angSpeed > 0x200)
+                    this->stars[i].angSpeed = 0x200;
             }
         }
 
-        if ((u32) * (s32 *)(c + STAR_OFF(orbitTravel) + off) < (u32)data_ov002_021000e0[i])
+        if ((u32)this->stars[i].orbitTravel < (u32)data_ov002_021000e0[i])
             return;
 
         if (this->holdOrbit != 0)
             return;
 
-        (*(u8 *)(c + STAR_OFF(phase) + off))++;
-        *(u16 *)(c + STAR_OFF(flyTimer) + off) = 0;
-        *(s32 *)(c + STAR_OFF(speed) + off) = -0x2000;
+        this->stars[i].phase++;
+        this->stars[i].flyTimer = 0;
+        this->stars[i].speed = -0x2000;
         return;
     }
 
-    (*(u16 *)(c + STAR_OFF(flyTimer) + off))++;
-    *(s32 *)(c + STAR_OFF(x) + off) += *(s32 *)(c + STAR_OFF(speed) + off);
-    *(s32 *)(c + STAR_OFF(speed) + off) -= 0x300;
+    this->stars[i].flyTimer++;
+    this->stars[i].x += this->stars[i].speed;
+    this->stars[i].speed -= 0x300;
 
     if (this->stars[0].flyTimer < 0x70)
         return;
 
     {
-        int o2 = (unsigned)i * 0x4c;
-        (*(u8 *)(c + STAR_OFF(step) + o2))++;
-        *(s32 *)(c + STAR_OFF(radius) + o2) = 0x38000;
-        *(u16 *)(c + STAR_OFF(heading) + o2) = 0x8000;
-        *(u8 *)(c + STAR_OFF(phase) + off) = 0;
-        *(u16 *)(c + STAR_OFF(loops) + o2) = 0;
-        *(u16 *)(c + STAR_OFF(delay) + o2) = data_ov002_021000f0[i] << 6;
+        this->stars[i].step++;
+        this->stars[i].radius = 0x38000;
+        this->stars[i].heading = 0x8000;
+        this->stars[i].phase = 0;
+        this->stars[i].loops = 0;
+        this->stars[i].delay = data_ov002_021000f0[i] << 6;
 
         if (func_ov002_020f5a94(c) == 3) {
             if (i == 2)
-                *(u16 *)(c + STAR_OFF(delay) + o2) = 0x40;
+                this->stars[i].delay = 0x40;
         }
     }
 
-    *(s32 *)(c + STAR_OFF(x) + off) = 0x110000;
-    *(s32 *)(c + STAR_OFF(y) + off) = 0;
-    *(u16 *)(c + STAR_OFF(angSpeed) + off) = 0x100;
-    *(s32 *)(c + STAR_OFF(speed) + off) = 0x5800;
-    *(s32 *)(c + STAR_OFF(targetX) + off) = 0x80000;
-    *(s32 *)(c + STAR_OFF(targetY) + off) = 0x28000;
+    this->stars[i].x = 0x110000;
+    this->stars[i].y = 0;
+    this->stars[i].angSpeed = 0x100;
+    this->stars[i].speed = 0x5800;
+    this->stars[i].targetX = 0x80000;
+    this->stars[i].targetY = 0x28000;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 60 -- func_ov002_020f5010, 0x020f5010, size 0x318 */
-/* -------------------------------------------------------------------------- */
 /* recovered: the third of the three per-slot cursor/target updaters in this
  * family (func_ov002_020f43cc, func_ov002_020f4a2c, this one), same 0x4c-byte
  * record layout: hold timer +0x30, arrival flag +0x48, position +0/+4,
@@ -2327,87 +1890,85 @@ void StaffRoll::func_ov002_020f4d70(int i) {
  */
 void StaffRoll::func_ov002_020f5010(int i) {
     char *c = (char *)this;
-    int off = i * 0x4c;
     int idx, dx, dy;
     unsigned short ang;
     unsigned short target;
     unsigned short v;
 
-    v = *(unsigned short *)(c + STAR_OFF(delay) + off);
+    v = this->stars[i].delay;
     if (v != 0) {
-        *(unsigned short *)(c + STAR_OFF(delay) + off) = v - 1;
+        this->stars[i].delay = v - 1;
         return;
     }
 
-    if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    if (this->stars[i].phase == 0) {
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2 + 1];
-            int spd = *(int *)(c + STAR_OFF(speed) + off);
-            *(int *)(c + STAR_OFF(x) + off) += FX_MUL(tv, spd);
+            int spd = this->stars[i].speed;
+            this->stars[i].x += FX_MUL(tv, spd);
         }
 
-        idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+        idx = this->stars[i].heading >> 4;
         {
             short tv = FX_SinCosTable_[idx * 2];
-            int spd = *(int *)(c + STAR_OFF(speed) + off);
-            *(int *)(c + STAR_OFF(y) + off) += FX_MUL(tv, spd);
+            int spd = this->stars[i].speed;
+            this->stars[i].y += FX_MUL(tv, spd);
         }
 
-        if (*(int *)(c + STAR_OFF(speed) + off) >= 0x2000)
-            *(int *)(c + STAR_OFF(speed) + off) = *(int *)(c + STAR_OFF(speed) + off) - 0x120;
+        if (this->stars[i].speed >= 0x2000)
+            this->stars[i].speed = this->stars[i].speed - 0x120;
 
-        dx = (*(int *)(c + STAR_OFF(targetX) + off) - *(int *)(c + STAR_OFF(x) + off)) >> 12;
-        dy = (*(int *)(c + STAR_OFF(targetY) + off) - *(int *)(c + STAR_OFF(y) + off)) >> 12;
+        dx = (this->stars[i].targetX - this->stars[i].x) >> 12;
+        dy = (this->stars[i].targetY - this->stars[i].y) >> 12;
 
         if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
-            *(unsigned char *)(c + STAR_OFF(phase) + off) += 1;
-            *(int *)(c + STAR_OFF(orbitTravel) + off) = 0;
-            *(unsigned short *)(c + STAR_OFF(heading) + off) = 0xc000;
+            this->stars[i].phase += 1;
+            this->stars[i].orbitTravel = 0;
+            this->stars[i].heading = 0xc000;
             return;
         }
 
         {
             int raw = cstd::atan2(dy, dx);
-            ang = *(unsigned short *)(c + STAR_OFF(heading) + off);
+            ang = this->stars[i].heading;
             target = (unsigned short)raw;
         }
         if (target > ang) {
             unsigned short nv;
-            *(unsigned short *)(c + STAR_OFF(heading) + off) += 0x100;
-            nv = *(unsigned short *)(c + STAR_OFF(heading) + off);
+            this->stars[i].heading += 0x100;
+            nv = this->stars[i].heading;
             if (target <= nv)
-                *(unsigned short *)(c + STAR_OFF(heading) + off) = target;
+                this->stars[i].heading = target;
             return;
         }
         if (ang > target) {
             unsigned short nv2;
-            *(unsigned short *)(c + STAR_OFF(heading) + off) -= 0x100;
-            nv2 = *(unsigned short *)(c + STAR_OFF(heading) + off);
+            this->stars[i].heading -= 0x100;
+            nv2 = this->stars[i].heading;
             if (nv2 <= target)
-                *(unsigned short *)(c + STAR_OFF(heading) + off) = target;
+                this->stars[i].heading = target;
             return;
         }
         return;
     }
 
-    idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    idx = this->stars[i].heading >> 4;
     {
         short tv = FX_SinCosTable_[idx * 2 + 1];
-        int spd = *(int *)(c + STAR_OFF(radius) + off);
-        *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+        int spd = this->stars[i].radius;
+        this->stars[i].x = FX_MUL(tv, spd) + 0x80000;
     }
 
-    idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+    idx = this->stars[i].heading >> 4;
     {
         short tv = FX_SinCosTable_[idx * 2];
-        int spd = *(int *)(c + STAR_OFF(radius) + off);
-        *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+        int spd = this->stars[i].radius;
+        this->stars[i].y = FX_MUL(tv, spd) + 0x60000;
     }
 
-    *(unsigned short *)(c + STAR_OFF(heading) + off) +=
-        *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
-    *(int *)(c + STAR_OFF(orbitTravel) + off) += *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
+    this->stars[i].heading += this->stars[i].angSpeed;
+    this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
     if (i != func_ov002_020f5a94(c) - 1)
         return;
@@ -2431,96 +1992,83 @@ void StaffRoll::func_ov002_020f5010(int i) {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 61 -- func_ov002_020f5328, 0x020f5328, size 0x28c */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5328(int i) {
-    char *c = (char *)this;
-    int off = i * 0x4c;
 
-    if (*(unsigned char *)(c + STAR_OFF(phase) + off) == 0) {
+    if (this->stars[i].phase == 0) {
         int idx;
         {
-            idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+            idx = this->stars[i].heading >> 4;
             short tv = FX_SinCosTable_[idx * 2 + 1];
-            int spd = *(int *)(c + STAR_OFF(radius) + off);
-            *(int *)(c + STAR_OFF(x) + off) = FX_MUL(tv, spd) + 0x80000;
+            int spd = this->stars[i].radius;
+            this->stars[i].x = FX_MUL(tv, spd) + 0x80000;
         }
         {
-            idx = *(unsigned short *)(c + STAR_OFF(heading) + off) >> 4;
+            idx = this->stars[i].heading >> 4;
             short tv = FX_SinCosTable_[idx * 2];
-            int spd = *(int *)(c + STAR_OFF(radius) + off);
-            *(int *)(c + STAR_OFF(y) + off) = FX_MUL(tv, spd) + 0x60000;
+            int spd = this->stars[i].radius;
+            this->stars[i].y = FX_MUL(tv, spd) + 0x60000;
         }
 
-        *(unsigned short *)(c + STAR_OFF(heading) + off) +=
-            *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
-        *(int *)(c + STAR_OFF(orbitTravel) + off) +=
-            *(unsigned short *)(c + STAR_OFF(angSpeed) + off);
+        this->stars[i].heading += this->stars[i].angSpeed;
+        this->stars[i].orbitTravel += this->stars[i].angSpeed;
 
         if (this->stars[0].phase != 0) {
-            *(unsigned short *)(c + STAR_OFF(angSpeed) + off) += 8;
-        } else if (*(unsigned short *)(c + STAR_OFF(angSpeed) + off) < 0x200) {
-            *(unsigned short *)(c + STAR_OFF(angSpeed) + off) += 6;
-            if (*(unsigned short *)(c + STAR_OFF(angSpeed) + off) > 0x200)
-                *(unsigned short *)(c + STAR_OFF(angSpeed) + off) = 0x200;
+            this->stars[i].angSpeed += 8;
+        } else if (this->stars[i].angSpeed < 0x200) {
+            this->stars[i].angSpeed += 6;
+            if (this->stars[i].angSpeed > 0x200)
+                this->stars[i].angSpeed = 0x200;
         }
 
-        if ((unsigned int)*(int *)(c + STAR_OFF(orbitTravel) + off) <
-            (unsigned int)data_ov002_02100150[i])
+        if ((unsigned int)this->stars[i].orbitTravel < (unsigned int)data_ov002_02100150[i])
             return;
         if (this->holdOrbit != 0)
             return;
 
-        *(unsigned char *)(c + STAR_OFF(phase) + off) += 1;
-        *(unsigned short *)(c + STAR_OFF(flyTimer) + off) = 0;
+        this->stars[i].phase += 1;
+        this->stars[i].flyTimer = 0;
 
         if (i == 1 || i == 3) {
-            *(int *)(c + STAR_OFF(speed) + off) = 0x2000;
+            this->stars[i].speed = 0x2000;
         } else {
-            *(int *)(c + STAR_OFF(speed) + off) = -0x2000;
+            this->stars[i].speed = -0x2000;
         }
         return;
     }
 
-    *(unsigned short *)(c + STAR_OFF(flyTimer) + off) += 1;
-    *(int *)(c + STAR_OFF(x) + off) += *(int *)(c + STAR_OFF(speed) + off);
+    this->stars[i].flyTimer += 1;
+    this->stars[i].x += this->stars[i].speed;
     if (i == 1 || i == 3) {
-        *(int *)(c + STAR_OFF(speed) + off) += 0x300;
+        this->stars[i].speed += 0x300;
     } else {
-        *(int *)(c + STAR_OFF(speed) + off) -= 0x300;
+        this->stars[i].speed -= 0x300;
     }
 
     if (this->stars[0].flyTimer < 0x60)
         return;
 
     {
-        int off2 = (int)((unsigned long long)i) * 0x4c;
-        *(unsigned char *)(c + STAR_OFF(step) + off2) += 1;
-        *(unsigned short *)(c + STAR_OFF(loops) + off2) = 0;
-        *(unsigned char *)(c + STAR_OFF(phase) + off) = 0;
-        *(int *)(c + STAR_OFF(radius) + off2) = 0x38000;
-        *(unsigned short *)(c + STAR_OFF(heading) + off2) = 0;
-        *(unsigned short *)(c + STAR_OFF(delay) + off2) =
-            (unsigned short)(data_ov002_02100160[i] << 6);
-        *(int *)(c + STAR_OFF(x) + off) = -0x10000;
-        *(int *)(c + STAR_OFF(y) + off2) = 0;
-        *(unsigned short *)(c + STAR_OFF(angSpeed) + off2) = 0x100;
-        *(int *)(c + STAR_OFF(speed) + off) = 0x5800;
-        *(int *)(c + STAR_OFF(targetX) + off2) = 0x80000;
-        *(int *)(c + STAR_OFF(targetY) + off2) = 0x28000;
+        this->stars[i].step += 1;
+        this->stars[i].loops = 0;
+        this->stars[i].phase = 0;
+        this->stars[i].radius = 0x38000;
+        this->stars[i].heading = 0;
+        this->stars[i].delay = (unsigned short)(data_ov002_02100160[i] << 6);
+        this->stars[i].x = -0x10000;
+        this->stars[i].y = 0;
+        this->stars[i].angSpeed = 0x100;
+        this->stars[i].speed = 0x5800;
+        this->stars[i].targetX = 0x80000;
+        this->stars[i].targetY = 0x28000;
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 62 -- func_ov002_020f55b4, 0x020f55b4, size 0x78 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f55b4(int i) {
     char *c = (char *)this;
     char *e = c + i * 0x4c;
     if (((StaffRoll *)e)->stars[0].frame != 0x10)
         return;
-    *(unsigned char *)(c + STAR_OFF(step) + i * 0x4c) += 1;
+    (*((unsigned char *)&this->stars[0].step + i * 0x4c)) += 1;
     ((StaffRoll *)e)->stars[0].radius = 0x38000;
     ((StaffRoll *)e)->stars[0].heading = data_ov002_021000d8[i];
     ((StaffRoll *)e)->stars[0].phase = 0;
@@ -2531,17 +2079,11 @@ void StaffRoll::func_ov002_020f55b4(int i) {
     ((StaffRoll *)e)->stars[0].kiraSysParam = 0x200;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 63 -- func_ov002_020f562c, 0x020f562c, size 0x4c */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f562c(int idx) {
     unsigned char sel = this->stars[idx].step;
     (this->*data_ov002_02110eec[sel])(idx);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 64 -- func_ov002_020f5678, 0x020f5678, size 0x24 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5678(int i) {
     char *base = (char *)this;
     StaffRoll::Star *e = (StaffRoll::Star *)base + i;
@@ -2549,67 +2091,53 @@ void StaffRoll::func_ov002_020f5678(int i) {
     e->kiraSysParam = 0x155;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 65 -- func_ov002_020f569c, 0x020f569c, size 0x124 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f569c(int i) {
-    char *p = (char *)this;
     int ax;
     int by;
     int tx;
     int ty;
-    int idx;
 
-    idx = i * 0x4c;
-
-    if (*(unsigned short *)(p + STAR_OFF(delay) + idx) != 0) {
-        *(unsigned short *)(p + STAR_OFF(delay) + idx) =
-            *(unsigned short *)(p + STAR_OFF(delay) + idx) - 1;
+    if (this->stars[i].delay != 0) {
+        this->stars[i].delay = this->stars[i].delay - 1;
         return;
     }
 
-    *(int *)(p + idx + STAR_OFF(kiraDefParam)) = 0x1000;
-    *(short *)(p + idx + STAR_OFF(kiraSysParam)) = 0x200;
+    this->stars[i].kiraDefParam = 0x1000;
+    this->stars[i].kiraSysParam = 0x200;
 
-    *(int *)(p + STAR_OFF(x) + idx) =
-        *(int *)(p + STAR_OFF(x) + idx) + *(int *)(p + STAR_OFF(speed) + idx);
-    *(int *)(p + STAR_OFF(y) + idx) =
-        *(int *)(p + STAR_OFF(y) + idx) + *(int *)(p + STAR_OFF(speedY) + idx);
+    this->stars[i].x = this->stars[i].x + this->stars[i].speed;
+    this->stars[i].y = this->stars[i].y + this->stars[i].speedY;
 
     tx = data_ov002_02100190[i * 2];
     ty = data_ov002_02100190[i * 2 + 1];
-    ax = *(int *)(p + STAR_OFF(x) + idx) >> 12;
-    by = *(int *)(p + STAR_OFF(y) + idx) >> 12;
+    ax = this->stars[i].x >> 12;
+    by = this->stars[i].y >> 12;
 
-    if (*(int *)(p + STAR_OFF(speed) + idx) > 0) {
+    if (this->stars[i].speed > 0) {
         if (ax > tx)
-            *(int *)(p + STAR_OFF(x) + idx) = tx << 12;
+            this->stars[i].x = tx << 12;
     } else {
         if (ax < tx)
-            *(int *)(p + STAR_OFF(x) + idx) = tx << 12;
+            this->stars[i].x = tx << 12;
     }
 
-    if (*(int *)(p + STAR_OFF(speedY) + idx) > 0) {
+    if (this->stars[i].speedY > 0) {
         if (by > ty)
-            *(int *)(p + STAR_OFF(y) + idx) = ty << 12;
+            this->stars[i].y = ty << 12;
     } else {
         if (by < ty)
-            *(int *)(p + STAR_OFF(y) + idx) = ty << 12;
+            this->stars[i].y = ty << 12;
     }
 
-    ax = *(int *)(p + STAR_OFF(x) + idx) >> 12;
-    by = *(int *)(p + STAR_OFF(y) + idx) >> 12;
+    ax = this->stars[i].x >> 12;
+    by = this->stars[i].y >> 12;
 
     if (ax == tx && by == ty)
     {
-        *(unsigned char *)(p + STAR_OFF(step) + idx) =
-            *(unsigned char *)(p + STAR_OFF(step) + idx) + 1;
+        this->stars[i].step = this->stars[i].step + 1;
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 66 -- func_ov002_020f57c0, 0x020f57c0, size 0x88 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f57c0(int idx) {
     StaffRoll::Star *arr = this->stars;
     if (arr[idx].frame != 0)
@@ -2627,59 +2155,46 @@ void StaffRoll::func_ov002_020f57c0(int idx) {
         arr[idx].delay = 0x20;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 67 -- func_ov002_020f5848, 0x020f5848, size 0x4c */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5848(int idx) {
     unsigned char sel = this->stars[idx].step;
     (this->*data_ov002_02110e64[sel])(idx);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 68 -- func_ov002_020f5894, 0x020f5894, size 0xfc */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5894(int i) {
-    char *a = (char *)this;
     int off;
     unsigned short *p34;
     short s2c;
     if (i != 0) return;
     off = i * 0x4c;
-    p34 = (unsigned short *)(a + STAR_OFF(kiraTimer) + off);
+    p34 = (unsigned short *)((char *)&this->stars[0].kiraTimer + off);
     *p34 = *p34 + 1;
-    if (*(int *)(a + STAR_OFF(kiraDefParam) + off) != 0x1000) {
+    if (*(int *)((char *)&this->stars[0].kiraDefParam + off) != 0x1000) {
         unsigned short v = *p34;
         if (v == 0xf || v == 0x1e) {
-            *(int *)(a + STAR_OFF(kiraDefParam) + off) =
-                *(int *)(a + STAR_OFF(kiraDefParam) + off) + 0x199;
-            if (*(int *)(a + STAR_OFF(kiraDefParam) + off) >= 0x1000)
-                *(int *)(a + STAR_OFF(kiraDefParam) + off) = 0x1000;
+            *(int *)((char *)&this->stars[0].kiraDefParam + off) =
+                *(int *)((char *)&this->stars[0].kiraDefParam + off) + 0x199;
+            if (*(int *)((char *)&this->stars[0].kiraDefParam + off) >= 0x1000)
+                *(int *)((char *)&this->stars[0].kiraDefParam + off) = 0x1000;
         }
     }
-    s2c = *(short *)(a + STAR_OFF(kiraSysParam) + off);
+    s2c = *(short *)((char *)&this->stars[0].kiraSysParam + off);
     if (s2c != 0x800) {
-        if (*(unsigned short *)(a + off + STAR_OFF(kiraPeriods)) >= 5) {
+        if (((StaffRoll *)((char *)this + off))->stars[0].kiraPeriods >= 5) {
             if ((*p34 & 3) == 3) {
-                *(short *)(a + STAR_OFF(kiraSysParam) + off) = s2c + 0x199;
-                if (*(short *)(a + STAR_OFF(kiraSysParam) + off) >= 0x800)
-                    *(short *)(a + STAR_OFF(kiraSysParam) + off) = 0x800;
+                *(short *)((char *)&this->stars[0].kiraSysParam + off) = s2c + 0x199;
+                if (*(short *)((char *)&this->stars[0].kiraSysParam + off) >= 0x800)
+                    *(short *)((char *)&this->stars[0].kiraSysParam + off) = 0x800;
             }
         }
     }
     if (*p34 < 0x1e) return;
     *p34 = 0;
     {
-        unsigned short *p3e = (unsigned short *)(a + STAR_OFF(kiraPeriods) + off);
+        unsigned short *p3e = (unsigned short *)((char *)&this->stars[0].kiraPeriods + off);
         *p3e = *p3e + 1;
     }
-#undef STAR_OFF
-#undef WINDOW_OFF
-#undef CREDIT_OFF
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 69 -- func_ov002_020f5990, 0x020f5990, size 0xdc */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5990() {
     char *c = (char *)this;
     int i;
@@ -2703,9 +2218,6 @@ void StaffRoll::func_ov002_020f5990() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 70 -- func_ov002_020f5a6c, 0x020f5a6c, size 0x28 */
-/* -------------------------------------------------------------------------- */
 extern "C" { /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5a6c(char *p) {
     int i;
@@ -2718,9 +2230,6 @@ void func_ov002_020f5a6c(char *p) {
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 71 -- func_ov002_020f5a94, 0x020f5a94, size 0x40 */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f5a94(void *unused){
     unsigned char count = 0;
@@ -2733,9 +2242,6 @@ int func_ov002_020f5a94(void *unused){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 72 -- func_ov002_020f5ad4, 0x020f5ad4, size 0x50 */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5ad4(char* c)
 {
@@ -2753,9 +2259,6 @@ void func_ov002_020f5ad4(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 73 -- func_ov002_020f5b24, 0x020f5b24, size 0x58 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5b24() {
     gSubScreenLayers &= ~6;
     gSubScreenLayers |= 8;
@@ -2765,36 +2268,18 @@ void StaffRoll::func_ov002_020f5b24() {
     func_ov002_020f2a48();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 74 -- func_ov002_020f5b7c, 0x020f5b7c, size 0x4 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5b7c() {}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 75 -- func_ov002_020f5b80, 0x020f5b80, size 0x4 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5b80() {}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 76 -- func_ov002_020f5b84, 0x020f5b84, size 0x4 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5b84() {}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 77 -- func_ov002_020f5b88, 0x020f5b88, size 0x4 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5b88() {}
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 78 -- func_ov002_020f5b8c, 0x020f5b8c, size 0xc */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5b8c() {
     this->holdOrbit = 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 79 -- func_ov002_020f5b98, 0x020f5b98, size 0x34 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5b98() {
     StaffRoll::Star *e = this->stars;
     int i;
@@ -2808,9 +2293,6 @@ void StaffRoll::func_ov002_020f5b98() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 80 -- func_ov002_020f5bcc, 0x020f5bcc, size 0x28 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5bcc() {
     char *p = (char *)this;
     int i;
@@ -2821,9 +2303,6 @@ void StaffRoll::func_ov002_020f5bcc() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 81 -- func_ov002_020f5bf4, 0x020f5bf4, size 0x4c */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5bf4() {
     if (this->stars[3].active == 0)
         return;
@@ -2835,9 +2314,6 @@ void StaffRoll::func_ov002_020f5bf4() {
     this->stars[3].kiraSysParam = 0x155;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 82 -- func_ov002_020f5c40, 0x020f5c40, size 0x48 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5c40() {
     if (!this->stars[2].active)
         return;
@@ -2849,9 +2325,6 @@ void StaffRoll::func_ov002_020f5c40() {
     this->stars[2].kiraSysParam = 0x155;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 83 -- func_ov002_020f5c88, 0x020f5c88, size 0x48 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5c88() {
     if (this->stars[1].active == 0)
         return;
@@ -2863,9 +2336,6 @@ void StaffRoll::func_ov002_020f5c88() {
     this->stars[1].kiraSysParam = 0x155;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 84 -- func_ov002_020f5cd0, 0x020f5cd0, size 0x64 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5cd0() {
     StaffRoll::Star *c = this->stars;
     int i;
@@ -2884,9 +2354,6 @@ void StaffRoll::func_ov002_020f5cd0() {
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 85 -- func_ov002_020f5d34, 0x020f5d34, size 0xa4 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5d34() {
     u8 *self = (u8 *)this;
     int n = func_ov002_020f5a94(self);
@@ -2922,104 +2389,65 @@ done:
     func_ov002_020f2958((char*)self);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 86 -- func_ov002_020f5dd8, 0x020f5dd8, size 0x40 */
-/* -------------------------------------------------------------------------- */
 extern StaffRollCue data_ov002_02110f34[];
 void StaffRoll::func_ov002_020f5dd8(int idx) {
     (this->*data_ov002_02110f34[idx])();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 87 -- func_ov002_020f5e18, 0x020f5e18, size 0x20 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5e18() {
     func_ov002_020f37fc((char *)this);
     func_ov002_020f2f9c(this, 4);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 88 -- func_ov002_020f5e38, 0x020f5e38, size 0x20 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5e38() {
     func_ov002_020f3828((int *)this);
     func_ov002_020f2f9c(this, 4);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 89 -- func_ov002_020f5e58, 0x020f5e58, size 0x20 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5e58() {
     func_ov002_020f3828((int *)this);
     func_ov002_020f2f9c(this, 3);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 90 -- func_ov002_020f5e78, 0x020f5e78, size 0x20 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5e78() {
     func_ov002_020f3828((int *)this);
     func_ov002_020f2f9c(this, 2);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 91 -- func_ov002_020f5e98, 0x020f5e98, size 0x20 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5e98() {
     func_ov002_020f3828((int *)this);
     func_ov002_020f2f9c(this, 1);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 92 -- func_ov002_020f5eb8, 0x020f5eb8, size 0x20 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5eb8() {
     func_ov002_020f3828((int *)this);
     func_ov002_020f2f9c(this, 0);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 93 -- func_ov002_020f5ed8, 0x020f5ed8, size 0xc */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5ed8() {
     func_ov002_020f3828((int *)this);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 94 -- func_ov002_020f5ee4, 0x020f5ee4, size 0xc */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5ee4() {
     func_ov002_020f3828((int *)this);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 95 -- func_ov002_020f5ef0, 0x020f5ef0, size 0xc */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5ef0() {
     char *p = (char *)this;
     func_ov002_020f3954(p);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 96 -- func_ov002_020f5efc, 0x020f5efc, size 0x10 */
-/* -------------------------------------------------------------------------- */
 /* func_ov002_020f5efc @ 0x20f5efc (ov002) -- tail-call veneer to LoadFont (0x201fcd4) with r0=0.
  */
 void StaffRoll::func_ov002_020f5efc() {
     LoadFont(0);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 97 -- func_ov002_020f5f0c, 0x020f5f0c, size 0x54 */
-/* -------------------------------------------------------------------------- */
 void StaffRoll::func_ov002_020f5f0c(int idx) {
     (this->*data_ov002_02110f9c[idx])();
     this->StartCredit(idx);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 98 -- func_ov002_020f5f60, 0x020f5f60, size 0x2c */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5f60(char *c)
 {
@@ -3031,9 +2459,6 @@ void func_ov002_020f5f60(char *c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 99 -- func_ov002_020f5f8c, 0x020f5f8c, size 0x2c */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f5f8c(void* c){
     ((StaffRoll *)c)->func_ov002_020f26e0();
@@ -3043,9 +2468,6 @@ int func_ov002_020f5f8c(void* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 100 -- func_ov002_020f5fb8, 0x020f5fb8, size 0x2c */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov002_020f5fb8(void* c){
     ((StaffRoll *)c)->func_ov002_020f5990();
@@ -3055,9 +2477,6 @@ int func_ov002_020f5fb8(void* c){
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 101 -- func_ov002_020f5fe4, 0x020f5fe4, size 0x3bc */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov002_020f5fe4(char* c)
 {
@@ -3161,9 +2580,6 @@ void func_ov002_020f5fe4(char* c)
 }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 102 -- func_ov002_020f63a0, 0x020f63a0, size 0x34 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f63a0()
 {
@@ -3175,9 +2591,6 @@ int daDemo_c::func_ov002_020f63a0()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 103 -- func_ov002_020f63d4, 0x020f63d4, size 0x24 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f63d4()
 {
@@ -3186,9 +2599,6 @@ int daDemo_c::func_ov002_020f63d4()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 104 -- func_ov002_020f63f8, 0x020f63f8, size 0x2c */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f63f8(unsigned char *src)
 {
@@ -3197,9 +2607,6 @@ int daDemo_c::func_ov002_020f63f8(unsigned char *src)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 105 -- func_ov002_020f6424, 0x020f6424, size 0x24 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f6424()
 {
@@ -3207,9 +2614,6 @@ int daDemo_c::func_ov002_020f6424()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 106 -- func_ov002_020f6448, 0x020f6448, size 0x64 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f6448(unsigned char *arg1)
 {
@@ -3223,9 +2627,6 @@ int daDemo_c::func_ov002_020f6448(unsigned char *arg1)
     return func_ov002_020f6424();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 107 -- func_ov002_020f64ac, 0x020f64ac, size 0x68 */
-/* -------------------------------------------------------------------------- */
 
 void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4)
 {
@@ -3238,9 +2639,6 @@ void daDemo_c::anmModel_c::func_ov002_020f64ac(char *r4)
     func_ov002_020f6514((u8 *)r4, (u8)(r2 & 0xff));
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 108 -- func_ov002_020f6514, 0x020f6514, size 0xa4 */
-/* -------------------------------------------------------------------------- */
 
 void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg)
 {
@@ -3260,9 +2658,6 @@ void daDemo_c::anmModel_c::func_ov002_020f6514(void *tbl, unsigned char arg)
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 109 -- func_ov002_020f65b8, 0x020f65b8, size 0x34 */
-/* -------------------------------------------------------------------------- */
 
 void daDemo_c::anmModel_c::func_ov002_020f65b8()
 {
@@ -3271,18 +2666,12 @@ void daDemo_c::anmModel_c::func_ov002_020f65b8()
     mTexSeq->Update(data);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 110 -- func_ov002_020f65ec, 0x020f65ec, size 0x2c */
-/* -------------------------------------------------------------------------- */
 
 void daDemo_c::anmModel_c::func_ov002_020f65ec() {
     if (mTexSeq != 0)
         mTexSeq->Advance();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 111 -- func_ov002_020f6618, 0x020f6618, size 0x160 */
-/* -------------------------------------------------------------------------- */
 int daDemo_c::anmModel_c::func_ov002_020f6618(SharedFilePtr *mdl, int nAnims, SharedFilePtr **anims,
                         int arg5, unsigned char texByte, SharedFilePtr **texs, int tsData)
 {
@@ -3357,9 +2746,6 @@ daDemo_c::anmModel_c::~anmModel_c()
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 114 -- func_ov002_020f6960, 0x020f6960, size 0x48 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::simpleModel_c::func_ov002_020f6960(SharedFilePtr *fp, int n)
 {
@@ -3399,9 +2785,6 @@ daDemo_c::simpleModel_c::~simpleModel_c()
 }
 #pragma defer_codegen off
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 117 -- func_ov002_020f6a50, 0x020f6a50, size 0x4c */
-/* -------------------------------------------------------------------------- */
 
 daDemo_c::param_c::param_c() {
     mScale[0].x = 0;
@@ -3409,9 +2792,6 @@ daDemo_c::param_c::param_c() {
     mScale[0].z = 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 118 -- func_ov002_020f6a9c, 0x020f6a9c, size 0x1c */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f6a9c()
 {
@@ -3419,9 +2799,6 @@ int daDemo_c::func_ov002_020f6a9c()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 119 -- func_ov002_020f6ab8, 0x020f6ab8, size 0x2c */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f6ab8(unsigned char *p)
 {
@@ -3430,9 +2807,6 @@ int daDemo_c::func_ov002_020f6ab8(unsigned char *p)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 120 -- func_ov002_020f6ae4, 0x020f6ae4, size 0x44 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
 {
@@ -3441,9 +2815,6 @@ int daDemo_c::func_ov002_020f6ae4(unsigned char *p)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 121 -- func_ov002_020f6b28, 0x020f6b28, size 0x24 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f6b28(unsigned char *p)
 {
@@ -3452,9 +2823,6 @@ int daDemo_c::func_ov002_020f6b28(unsigned char *p)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 122 -- func_ov002_020f6b4c, 0x020f6b4c, size 0x74 */
-/* -------------------------------------------------------------------------- */
 /* Script handler 15: turn to face the point whose whole-unit coordinates
  * are the unaligned shorts at p+0/+2/+4, and take the short at p+6 as the
  * horizontal speed. The legacy per-function file recorded its match under
@@ -3475,9 +2843,6 @@ int daDemo_c::func_ov002_020f6b4c(unsigned char *p)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 123 -- func_ov002_020f6bc0, 0x020f6bc0, size 0x64 */
-/* -------------------------------------------------------------------------- */
 
 s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
 {
@@ -3493,9 +2858,6 @@ s32 daDemo_c::func_ov002_020f6bc0(unsigned char *data)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 124 -- func_ov002_020f6c24, 0x020f6c24, size 0x10 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f6c24(unsigned char *src)
 {
@@ -3503,9 +2865,6 @@ int daDemo_c::func_ov002_020f6c24(unsigned char *src)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 125 -- func_ov002_020f6c34, 0x020f6c34, size 0x2c */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f6c34(unsigned char *src)
 {
@@ -3514,9 +2873,6 @@ int daDemo_c::func_ov002_020f6c34(unsigned char *src)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 126 -- func_ov002_020f6c60, 0x020f6c60, size 0x1e8 */
-/* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 inline unsigned int inline_fn(unsigned int arg0)
 {
@@ -3567,9 +2923,6 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
   return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 127 -- func_ov002_020f6e48, 0x020f6e48, size 0x100 */
-/* -------------------------------------------------------------------------- */
 /* Script handler 10: position (p[0..5], whole units shifted into 20.12) and
  * angles (p[6..11]) from the record, mMagnitude = p[12] << 12, scale 0xb33, and
  * the animation's currFrame set from a random draw scaled by
@@ -3612,9 +2965,6 @@ int daDemo_c::func_ov002_020f6e48(unsigned char *p)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 128 -- func_ov002_020f6f48, 0x020f6f48, size 0xd8 */
-/* -------------------------------------------------------------------------- */
 /* Turn mAngleX/mAngleY toward v by 1/amt of the remaining difference per
  * call (step capped at 0x4000, 90 degrees), then set mSpeedX, mVertSpeed and
  * mSpeedZ to mMagnitude times rotation elements 6..8 of the animated model's
@@ -3631,9 +2981,6 @@ void daDemo_c::func_ov002_020f6f48(struct Vector3 *v, int amt)
     this->mSpeedZ = FX_MUL(this->mMagnitude, m->m[8]);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 129 -- func_ov002_020f7020, 0x020f7020, size 0x18 */
-/* -------------------------------------------------------------------------- */
 /* Script handler 9: clear mFlags bit 0x2. */
 
 int daDemo_c::func_ov002_020f7020()
@@ -3642,9 +2989,6 @@ int daDemo_c::func_ov002_020f7020()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 130 -- func_ov002_020f7038, 0x020f7038, size 0x18c */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f7038(int a, int arg)
 {
@@ -3687,9 +3031,6 @@ int daDemo_c::func_ov002_020f7038(int a, int arg)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 131 -- func_ov002_020f71c4, 0x020f71c4, size 0xf8 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f71c4(int a, int arg)
 {
@@ -3718,9 +3059,6 @@ int daDemo_c::func_ov002_020f71c4(int a, int arg)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 132 -- func_ov002_020f72bc, 0x020f72bc, size 0xc8 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f72bc()
 {
@@ -3745,9 +3083,6 @@ int daDemo_c::func_ov002_020f72bc()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 133 -- func_ov002_020f7384, 0x020f7384, size 0x8c */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
 {
@@ -3765,9 +3100,6 @@ int daDemo_c::func_ov002_020f7384(unsigned char *flag, int val)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 134 -- func_ov002_020f7410, 0x020f7410, size 0x128 */
-/* -------------------------------------------------------------------------- */
 /* Script handler 4. On the record's start frame, when in[0] is non-zero, it
  * stores a fixed vector at mModel + 0x50 (the param_c tail base), sets fixed
  * angles and calls func_0201f138. Every frame mPos = that vector times
@@ -3808,9 +3140,6 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 135 -- func_ov002_020f7538, 0x020f7538, size 0x248 */
-/* -------------------------------------------------------------------------- */
 /* Script handler 3. On the start frame, when arg1[0] is non-zero, it sets
  * fixed angles and clears mRate. Every frame Math_Function_0203b0fc moves
  * mRate toward 1.0 (arg1[0] non-zero) or 0, and the vector at mAnmModel +
@@ -3871,9 +3200,6 @@ int daDemo_c::func_ov002_020f7538(unsigned char *arg1, int arg2)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 136 -- func_ov002_020f7780, 0x020f7780, size 0x240 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f7780(void *unused, int mode)
 {
@@ -3957,9 +3283,6 @@ int daDemo_c::func_ov002_020f7780(void *unused, int mode)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 137 -- func_ov002_020f79c0, 0x020f79c0, size 0x1f8 */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
 {
@@ -4020,9 +3343,6 @@ int daDemo_c::func_ov002_020f79c0(void *unused, int mode)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 138 -- func_ov002_020f7bb8, 0x020f7bb8, size 0x1bc */
-/* -------------------------------------------------------------------------- */
 
 int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
 {
@@ -4079,9 +3399,6 @@ int daDemo_c::func_ov002_020f7bb8(unsigned char *p, u16 id)
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 139 -- daDemo_c::RunCommand, 0x020f7d74, size 0x2b4 */
-/* -------------------------------------------------------------------------- */
 void daDemo_c::RunCommand(unsigned char *p, int a2, int a3) {
     /* Indexed by the command byte p[6]. The handlers take what they read
        from the command, so each is cast to the table's signature. */

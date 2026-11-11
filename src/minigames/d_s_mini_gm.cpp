@@ -45,6 +45,7 @@
 
 #include "dScMiniGm_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 #include "MgMenuRow.h"
 #include "dWipe_c.h"
 #include "dFdBrightness_c.h"
@@ -241,8 +242,8 @@ s32 dScMiniGm_c::InitResources()
     *(volatile u32 *)0x4001000 |= 0x10000;
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
-    *(volatile u32 *)0x40004cc = 0x7fff;
-    *(volatile u32 *)0x40004cc = 0x40007fff;
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
     func_020233f4();
 
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
