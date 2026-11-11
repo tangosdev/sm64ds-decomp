@@ -18,7 +18,10 @@
 // whose snapshot timed out, or a console that lost the owner's hello for a few
 // seconds and took over) are settled the same way on every console, from the
 // hellos alone: the claimant more established consoles name as owner wins,
-// counting each console's own belief, and a draw goes to the lower seat. Every
+// counting each console's own belief. On a draw, a claimant that followed the
+// other one earlier in this visit gives way to it (so a joiner that lost the
+// hellos for a moment hands the group back to the console it took its state
+// from); only when neither ever followed the other does the lower seat win. Every
 // console sees the same hellos, so they all reach the same answer within about
 // a hello period; a claimant that loses stops claiming, and whoever followed it
 // moves on with it. (Before coopfix1 a late claim never displaced a standing
@@ -97,7 +100,10 @@ private:
         unsigned claim_ms;   // when this seat's standing claim was first heard
         bool pinned;         // the owner I took my state from: nobody displaces it while it lives
         int  names;          // the owner this seat's last established hello named, else -1
+        unsigned followed;   // every owner this seat's established hellos named during this visit, bit = seat
     };
+    unsigned followed_ = 0;                   // every owner I followed during this visit, bit = seat
+    bool deferred(int a, int b) const;        // claimant a followed b earlier in this visit
     int  votes(int seat) const;               // established consoles (me included) that name this seat owner
     bool beats(int a, int b) const;           // claimant a wins over claimant b
     void update_legacy(unsigned now);         // the rule before coopfix1 (proof knob)

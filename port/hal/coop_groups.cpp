@@ -30,6 +30,7 @@ void CoopGroups::reset(int my_seat) {
     }
     est_ms_ = 0;
     log_ms_ = 0;
+    followed_ = 0;
     me_ = my_seat;
     key_ = CoopKey();
     est_ = false;
@@ -37,7 +38,7 @@ void CoopGroups::reset(int my_seat) {
     announce_ = false;
     own_ms_ = 0;
     std::memset(s_, 0, sizeof s_);
-    for (int i = 0; i < kSeats; ++i) { s_[i].claim = -1; s_[i].names = -1; }
+    for (int i = 0; i < kSeats; ++i) { s_[i].claim = -1; s_[i].names = -1; }   // followed 0 from the memset
 }
 
 bool CoopGroups::blind(unsigned now) const {
@@ -51,6 +52,7 @@ void CoopGroups::set_owner(int o, unsigned now, const char *why) {
     owner_ = o;
     if (o == was) return;
     if (o == me_) own_ms_ = now;
+    if (o >= 0 && o < kSeats && o != me_) followed_ |= 1u << o;
     if (o == me_ && others() > 0) announce_ = true;
     std::fprintf(stderr, "[coopowner] seat=%d owner %d -> %d (%s) votes=%d members=%u wall=%lld\n",
                  me_, was, o, why, o >= 0 ? votes(o) : 0, member_mask(), owner_wall_ms());
@@ -68,7 +70,9 @@ void CoopGroups::enter(const CoopKey &k, unsigned) {
         s_[i].claim = -1;
         s_[i].pinned = false;
         s_[i].names = -1;
+        s_[i].followed = 0;
     }
+    followed_ = 0;
 }
 
 void CoopGroups::leave() {
@@ -89,6 +93,7 @@ void CoopGroups::establish(unsigned now, int owner_hint) {
         s_[owner_hint].claim_ms = now;
         s_[owner_hint].pinned = true;
         s_[owner_hint].names = owner_hint;
+        followed_ |= 1u << owner_hint;
         s_[owner_hint].hello_ms = now;
     }
     // owner_ stays -1 without a hint: update() picks me when I am alone.
@@ -106,6 +111,7 @@ void CoopGroups::note_presence(int seat, bool present, const CoopKey &theirs,
         s.claim = -1;
         s.pinned = false;
         s.names = -1;
+        s.followed = 0;
     }
 }
 
@@ -117,6 +123,7 @@ void CoopGroups::note_hello(int seat, const CoopKey &k, bool est,
     s.hello = true;
     s.est = est;
     s.names = (est && owner_claim >= 0 && owner_claim < kSeats) ? owner_claim : -1;
+    if (s.names >= 0 && s.names != seat) s.followed |= 1u << s.names;
     const int was = s.claim;
     s.claim = (est && owner_claim == seat) ? seat : -1;   // only a seat's claim about itself counts
     if (s.claim == seat && was != seat) s.claim_ms = now;
@@ -177,11 +184,22 @@ int CoopGroups::votes(int seat) const {
     return n;
 }
 
+bool CoopGroups::deferred(int a, int b) const {
+    if (a < 0 || a >= kSeats || b < 0 || b >= kSeats) return false;
+    const unsigned m = (a == me_) ? followed_ : s_[a].followed;
+    return ((m >> b) & 1u) != 0;
+}
+
 bool CoopGroups::beats(int a, int b) const {
     if (b < 0) return a >= 0;
     if (a < 0) return false;
     const int va = votes(a), vb = votes(b);
     if (va != vb) return va > vb;
+    // A draw: the claimant that followed the other one earlier in this visit gives way to it (a joiner that lost the
+    // hellos for a moment hands the group back to the console it took its state from). Both consoles saw the same
+    // hellos, so both reach the same answer; when neither or both followed the other, the lower seat wins.
+    const bool da = deferred(a, b), db = deferred(b, a);
+    if (da != db) return db;
     return a < b;
 }
 
