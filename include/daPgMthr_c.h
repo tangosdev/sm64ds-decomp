@@ -32,9 +32,7 @@ struct daPgMthr_c : dActor_c {
     dExtShadowModel_c mShadowModel;        /* 0x14c */
     dCcAc_c mdCcAc_c;                /* 0x174 */
     dBgCh_Actr mWithMeshClsn;        /* 0x1a8 */
-    s32 mHomePosX;                   /* 0x364 */
-    s32 mHomePosY;                   /* 0x368 */
-    s32 mHomePosZ;                   /* 0x36c */
+    Vector3 mHomePos;                /* 0x364 */
     /* ChangeState writes data_ov018_02113c4c + (i<<4) here; CallStateEnter
        and CallStateUpdate call through it as a PMF pair. */
     void *mState;                    /* 0x370 */

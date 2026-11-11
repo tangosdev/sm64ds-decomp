@@ -16,7 +16,7 @@
  * reads.
  */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 
 extern "C" {
 
@@ -43,12 +43,12 @@ typedef struct SNDSharedWork {
 extern SNDSharedWork *data_020a7fc0; /* SNDi_SharedWork */
 
 u32 SND_GetPlayerStatus(void) {
-    CP15::InvalidateDataCache((u32)data_020a7fc0, sizeof(SNDSharedWork));
+    DC_InvalidateRange(data_020a7fc0, sizeof(SNDSharedWork));
     return data_020a7fc0->playerStatus;
 }
 
 u32 SNDi_GetFinishedCommandTag(void) {
-    CP15::InvalidateDataCache((u32)data_020a7fc0, sizeof(SNDSharedWork));
+    DC_InvalidateRange(data_020a7fc0, sizeof(SNDSharedWork));
     return data_020a7fc0->finishCommandTag;
 }
 
@@ -69,6 +69,6 @@ void SNDi_InitSharedWork(SNDSharedWork *sw) {
     for (j = 0; j < SND_GLOBAL_VARIABLE_COUNT; j++)
         sw->globalVariable[j] = SND_DEFAULT_VARIABLE;
 
-    CP15::FlushAndInvalidateDataCache((u32)sw, sizeof(SNDSharedWork));
+    DC_FlushRange(sw, sizeof(SNDSharedWork));
 }
 }

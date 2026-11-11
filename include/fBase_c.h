@@ -204,7 +204,7 @@ struct fBase_c {
     static void *operator new(size_t);
     /* CW builds D0 (slot 17) as "run the destructor, then call operator delete".
        The inline class overload selects the actor heap at data_020a0eac. The
-       global _ZdlPv exists at arm9 0x0203cbf0 but uses Memory::defaultHeapPtr. The
+       global operator delete (arm9 0x0203cbcc) frees to Memory::defaultHeapPtr. The
        deleting destructor additionally calls the actor-heap deallocator.
        This inline overload reaches only fBase_c and dBase_c --
        CW inlines it from the class itself or its IMMEDIATE base -- which is why

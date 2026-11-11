@@ -4,9 +4,9 @@
  *
  * The parent side sets up the WmWork (data_020a9db4, the BW2 reconstruction's sWmWork;
  * ntrtwl's p_mbi_param) in
- * func_02068e4c, starts the manager in func_02068ae8 and func_02068d08, and
- * answers its replies in func_02069994. The child side scans and connects in
- * func_020690b0. func_020688fc sends one MP frame for either side, and
+ * MB_Init, starts the manager in MB_StartParent and MBi_StartCommon, and
+ * answers its replies in MBi_ParentCallback. The child side scans and connects in
+ * MBi_ChildCallback. MBi_SendMP sends one MP frame for either side, and
  * MBi_CheckWmErrcode turns a failed WM call into event 0xff for
  * WmWork.userCallback.
  *
@@ -31,9 +31,12 @@
  * reconstruction's (or the HeartGold fork's mb_comm_params.c) statement for
  * statement: MBi_IsSendEnabled, MBi_GetBeaconPeriodDispersion,
  * MBi_SetMaxScanTime, MBi_GetTgid, MBi_GetAttribute, MBi_IsStarted and
- * MBi_CheckWmErrcode. The rest are an older SDK's versions of their
- * counterparts; each function's comment says which and what differs, and they
- * keep their address names until a reference of this SDK's age turns up.
+ * MBi_CheckWmErrcode. Twelve more are an older SDK's versions of their
+ * counterparts and take those names too, since an SDK function keeps its name
+ * across versions; each one's comment says what differs. Where this SDK has
+ * one function for the reconstruction's two, it takes the name its callers
+ * use: MB_StartParent (with MBi_StartParentCore inside) and MBi_CommEnd (with
+ * MBi_CallReset). Three getters have no counterpart and keep address names.
  *
  * This SDK is older than the reconstruction's. MB_Init takes the GGID in two
  * halves, resolves no MB_TGID_AUTO and sets no lifetimes or power-save flag,
@@ -42,8 +45,8 @@
  * MBi_SendMP pads short frames to a minimum size.
  */
 #include "types.h"
-#include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/cache.h"
+#include "nitro/os/system.h"
 #include "WmWork.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_views.h"
@@ -149,20 +152,20 @@ extern int WM_StartMPEx(void *callback, int recvBuf, u16 recvBufSize, int sendBu
 extern int WM_SetMPDataToPort(int callback, int data, int size, int aidBitmap, u16 port, u16 prio);
 
 extern void OS_GetMacAddress(unsigned char *macAddress);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
-extern void MultiStore_Int(int val, int *dst, int len);
-extern void MultiCopyHalf(const void *src, void *dst, int count);
-extern void DMASyncHalfTransfer(unsigned int ch, void *src, void *dst, unsigned int n);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear32(int val, int *dst, int len);
+extern void MIi_CpuCopy16(const void *src, void *dst, int count);
+extern void MI_DmaCopy16(unsigned int ch, void *src, void *dst, unsigned int n);
 // local extern: MI_Memory.c defines these two as assembly stubs.
-extern void CpuCopy8(const void *src, void *dst, u32 size);
-extern void func_0205a588(void *dst, u8 val, u32 size);
+extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
+extern void MI_CpuFill8(void *dst, u8 val, u32 size);
 
 extern void MB_CommSetParentStateCallback(u32 callback);
 extern void MB_InitSendGameInfoStatus(void);
 extern void MBi_CommParentCallback(int type, char *arg);
 
 void MBi_CheckWmErrcode(int apiid, int errcode);
-int func_02068a74(void);
+int MBi_CommEnd(void);
 void MBi_SetMaxScanTime(u16 time);
 
 /* changeScanChannel: step the scan's channel to the next one the allowed mask
@@ -219,15 +222,15 @@ int MBi_IsSendEnabled(void) {
  * refreshes the bitmap through WM_ReadStatus and decides on starting MP from
  * the status's mp_flag instead of mpStarted; mStartMpBusy is the SDK's
  * start_mp_busy. */
-void func_02069994(char *arg0) {
+void MBi_ParentCallback(char *arg0) {
     WmCallback *cb = (WmCallback *)arg0;
 
     switch (cb->apiid) {
     case 0x0:
         if (cb->errcode == 0) {
             MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&WM_WORK->status));
-            MBi_CheckWmErrcode(0x80, WM_SetIndCallback((void *)func_02069994));
-            MBi_CheckWmErrcode(0x1D, WM_SetLifeTime((void *)func_02069994, 0xFFFF, 0x28, 5));
+            MBi_CheckWmErrcode(0x80, WM_SetIndCallback((void *)MBi_ParentCallback));
+            MBi_CheckWmErrcode(0x1D, WM_SetLifeTime((void *)MBi_ParentCallback, 0xFFFF, 0x28, 5));
             return;
         }
         WM_WORK->userCallback(0x100, arg0);
@@ -235,8 +238,8 @@ void func_02069994(char *arg0) {
 
     case 0x1D:
         if (cb->errcode == 0) {
-            MBi_CheckWmErrcode(7,
-                               WM_SetParentParameter((void *)func_02069994, &WM_WORK->parentParam));
+            MBi_CheckWmErrcode(
+                7, WM_SetParentParameter((void *)MBi_ParentCallback, &WM_WORK->parentParam));
             return;
         }
         WM_WORK->userCallback(0x100, arg0);
@@ -244,12 +247,12 @@ void func_02069994(char *arg0) {
 
     case 0x7:
         WM_WORK->userCallback(0x15, arg0);
-        MBi_CheckWmErrcode(0x19, WM_SetBeaconIndication((void *)func_02069994, 1));
+        MBi_CheckWmErrcode(0x19, WM_SetBeaconIndication((void *)MBi_ParentCallback, 1));
         return;
 
     case 0x19:
         if (cb->errcode == 0) {
-            MBi_CheckWmErrcode(8, WM_StartParent((void *)func_02069994));
+            MBi_CheckWmErrcode(8, WM_StartParent((void *)MBi_ParentCallback));
             return;
         }
         WM_WORK->userCallback(0x100, arg0);
@@ -273,7 +276,7 @@ void func_02069994(char *arg0) {
                             v = 0;
                         }
                         MBi_CheckWmErrcode(
-                            0xE, WM_StartMPEx((void *)func_02069994, (int)WM_WORK->recvBuf,
+                            0xE, WM_StartMPEx((void *)MBi_ParentCallback, (int)WM_WORK->recvBuf,
                                               WM_WORK->recvBufSize, (int)WM_WORK->sendBuf,
                                               WM_WORK->sendBufSize, (u16)v, 0, 0, 0, 1, 1));
                         return;
@@ -336,7 +339,7 @@ void func_02069994(char *arg0) {
 
     case 0x1:
         if (cb->errcode == 0) {
-            MBi_CheckWmErrcode(2, WM_End((void *)func_02069994));
+            MBi_CheckWmErrcode(2, WM_End((void *)MBi_ParentCallback));
             return;
         }
         WM_WORK->resetting = 0;
@@ -392,12 +395,12 @@ void func_02069994(char *arg0) {
     }
 }
 
-/* MBi_ChildPortCallback: the port-1 receive callback func_020690b0 installs
+/* MBi_ChildPortCallback: the port-1 receive callback MBi_ChildCallback installs
  * through WM_SetPortCallback. A successful PORT_RECV goes to userCallback as
  * event 9. Lead: the reconstruction's switch also lists states 0x19 and 0x1a
  * (DISCONNECTED_FROM_MYSELF), and with those cases this does not compile to
  * the ROM's bytes (0xdc, not 0x7c). */
-void func_02069918(void *arg) {
+void MBi_ChildPortCallback(void *arg) {
     WmPortRecvCallback *cb = (WmPortRecvCallback *)arg;
 
     if (cb->errcode == 0) {
@@ -427,17 +430,17 @@ static inline void RecordScannedParent(WmWork *const w, char *arg0) {
             cb->macAddress[2] == tbl[i].scan.macAddress[2]) {
             tbl[i].scan.gameInfoLength = cb->gameInfoLength;
             *(GameInfo *)tbl[i].scan.gameInfo = *(GameInfo *)cb->gameInfo;
-            CP15::InvalidateDataCache((u32)&w->parents[i], 0xc0);
-            DMASyncHalfTransfer(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
+            DC_InvalidateRange(&w->parents[i], 0xc0);
+            MI_DmaCopy16(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
             w->lastParentIndex = i;
             return;
         }
     }
     if (i < 0x10) {
         w->parentCount = i + 1;
-        MultiCopyHalf(arg0, &tbl[i].scan, 0xb8);
-        CP15::InvalidateDataCache((u32)&w->parents[i], 0xc0);
-        DMASyncHalfTransfer(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
+        MIi_CpuCopy16(arg0, &tbl[i].scan, 0xb8);
+        DC_InvalidateRange(&w->parents[i], 0xc0);
+        MI_DmaCopy16(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
         w->lastParentIndex = i;
     }
 }
@@ -450,13 +453,13 @@ static inline void RecordScannedParent(WmWork *const w, char *arg0) {
  * While resetting is set only the RESET and END results are taken. Lead: the
  * reconstruction's version scans with WM_StartScanEx and filters parents by
  * GGID; this one uses WM_StartScan and keeps every parent it finds. */
-void func_020690b0(char *arg0) {
+void MBi_ChildCallback(char *arg0) {
     WmWork *const w = (WmWork *)data_020a9db4;
 
     if (w->resetting != 0) {
         if (*(u16 *)arg0 == 1) {
             if (*(u16 *)(arg0 + 2) == 0) {
-                MBi_CheckWmErrcode(2, WM_End((void *)func_020690b0));
+                MBi_CheckWmErrcode(2, WM_End((void *)MBi_ChildCallback));
                 return;
             }
             w->resetting = 0;
@@ -481,7 +484,7 @@ void func_020690b0(char *arg0) {
         if (*(u16 *)(arg0 + 2) == 0) {
             w->userCallback(0x15, arg0);
             MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&w->status));
-            MBi_CheckWmErrcode(0x1d, WM_SetLifeTime((void *)func_020690b0, 0xffff, 0x28, 5));
+            MBi_CheckWmErrcode(0x1d, WM_SetLifeTime((void *)MBi_ChildCallback, 0xffff, 0x28, 5));
             return;
         }
         w->userCallback(0x100, arg0);
@@ -499,7 +502,7 @@ void func_020690b0(char *arg0) {
             SCAN_PARAM->bssid[2] = 0xffff;
             w->scanContinue = 1;
             w->scanNextChannel = 1;
-            MBi_CheckWmErrcode(0xa, WM_StartScan((void *)func_020690b0, data_020a9dc0));
+            MBi_CheckWmErrcode(0xa, WM_StartScan((void *)MBi_ChildCallback, data_020a9dc0));
             return;
         }
         w->userCallback(0x100, arg0);
@@ -516,16 +519,16 @@ void func_020690b0(char *arg0) {
                 if (w->scanContinue == 0)
                     return;
                 if (w->scanNextChannel != 0 && changeScanChannel(SCAN_PARAM) == 0)
-                    MBi_CheckWmErrcode(2, func_02068a74());
-                MBi_CheckWmErrcode(0xa, WM_StartScan((void *)func_020690b0, data_020a9dc0));
+                    MBi_CheckWmErrcode(2, MBi_CommEnd());
+                MBi_CheckWmErrcode(0xa, WM_StartScan((void *)MBi_ChildCallback, data_020a9dc0));
                 return;
             case 4:
                 w->userCallback(5, arg0);
                 if (w->scanContinue == 0)
                     return;
                 if (w->scanNextChannel != 0 && changeScanChannel(SCAN_PARAM) == 0)
-                    MBi_CheckWmErrcode(2, func_02068a74());
-                MBi_CheckWmErrcode(0xa, WM_StartScan((void *)func_020690b0, data_020a9dc0));
+                    MBi_CheckWmErrcode(2, MBi_CommEnd());
+                MBi_CheckWmErrcode(0xa, WM_StartScan((void *)MBi_ChildCallback, data_020a9dc0));
                 return;
             default:
                 w->userCallback(0x100, arg0);
@@ -538,7 +541,8 @@ void func_020690b0(char *arg0) {
 
     case 0xb:
         if (*(u16 *)(arg0 + 2) == 0) {
-            MBi_CheckWmErrcode(0xc, WM_StartConnect((void *)func_020690b0, w->connectBssDesc, 0));
+            MBi_CheckWmErrcode(0xc,
+                               WM_StartConnect((void *)MBi_ChildCallback, w->connectBssDesc, 0));
             return;
         }
         w->userCallback(0x100, arg0);
@@ -553,10 +557,10 @@ void func_020690b0(char *arg0) {
                 w->aid = ((WmStartConnectCallback *)arg0)->aid;
                 w->userCallback(6, arg0);
                 w->childBitmap = 1;
-                if (WM_SetPortCallback(1, (void *)func_02069918, 0) != 0)
+                if (WM_SetPortCallback(1, (void *)MBi_ChildPortCallback, 0) != 0)
                     return;
                 MBi_CheckWmErrcode(
-                    0xe, WM_StartMPEx((void *)func_020690b0, (int)w->recvBuf, w->recvBufSize,
+                    0xe, WM_StartMPEx((void *)MBi_ChildCallback, (int)w->recvBuf, w->recvBufSize,
                                       (int)w->sendBuf, w->sendBufSize,
                                       (u16)(w->mpContinuous == 0 ? 1 : 0), 0, 0, 0, 1, 1));
                 return;
@@ -638,7 +642,7 @@ int MBi_GetBeaconPeriodDispersion(void) {
  * takes (work, user, ggid, tgid, dma), resolves MB_TGID_AUTO and sets the
  * lifetimes and the power-save flag; this one takes the GGID as two halves
  * (a2, a3) and does none of that. */
-int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma) {
+int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma) {
     volatile unsigned short fill_s;
     volatile int fill_i;
     /* base1 (the WmWork) and base2 are byte pointers, not ints: every WmWork
@@ -649,20 +653,20 @@ int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 
      index, 15 words longer. */
     char *base1;
     char *base2;
-    int irq;
+    OSIntrMode irq;
     if ((data_020a9db8 != 0) && (MB_WORK->mIsMbInitialized != 0)) {
         return 2;
     }
     base1 = (char *)MATH_ROUNDUP((u32)work, 32);
     base2 = (char *)MATH_ROUNDUP((int)base1 + sizeof(WmWork), 32);
-    irq = IRQ::Disable();
+    irq = OS_DisableInterrupts();
     fill_i = 0;
     data_020a9db0 = (u16)dma;
     data_020a9db4 = base1;
     data_020a9db8 = base2;
-    MultiStore_Int(fill_i, (int *)base1, sizeof(WmWork));
+    MIi_CpuClear32(fill_i, (int *)base1, sizeof(WmWork));
     fill_s = 0;
-    MultiStore16(fill_s, base2, 0x1340);
+    MIi_CpuClear16(fill_s, base2, 0x1340);
     /* The user's name and L"multiboot" (MB_Init's static game-name pointer,
      stepped as it is read); 10 halfwords overrun the 8-byte uname into
      gname, which the second copy then overwrites */
@@ -692,7 +696,7 @@ int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 
             *(dst++) = *ptr;
         } while (j < 0x10);
     }
-    CpuCopy8(user, base2 + 0x1300, 0x16);
+    MI_CpuCopy8(user, base2 + 0x1300, 0x16);
     ((WmWork *)base1)->parentMaxSize = 0x100;
     ((WmWork *)base1)->childMaxSize = 8;
     ((WmWork *)base1)->sendBufSize = 0;
@@ -715,28 +719,28 @@ int func_02068e4c(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 
     ((WmWork *)base1)->mpSending = 0;
     ((WmWork *)base1)->initialized = 0;
     ((MbParentWork *)base2)->mStartMpBusy = 0;
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
     ((MbParentWork *)base2)->mIsMbInitialized = 1;
     return 0;
 }
 
-/* MBi_IsCommSizeValid: the size check func_02068dc8 runs. Lead: the
+/* MBi_IsCommSizeValid: the size check MB_SetParentCommParam runs. Lead: the
  * reconstruction's checks the parent size (0xe4..0x1fe), the child size
  * (8..0x10) and the buffer they need; this one accepts everything. */
-int func_02068e44(int parentMaxSize, int childMaxSize, int maxEntry) {
+int MBi_IsCommSizeValid(int parentMaxSize, int childMaxSize, int maxEntry) {
     return 1;
 }
 
 /* MB_SetParentCommParam: set the MP sizes and the parent's maxEntry. Refused
- * (0) once the wireless layer is initialized, or if func_02068e44 rejects
+ * (0) once the wireless layer is initialized, or if MBi_IsCommSizeValid rejects
  * them. The game's link setup func_0203e20c passes (0x1fe, 8, 3). Lead: the
  * reconstruction's takes (sendSize, maxChildren), fixes the child size at 8
  * and disables interrupts around it; this one takes all three sizes and
  * disables nothing. */
-int func_02068dc8(int parentMaxSize, int childMaxSize, int maxEntry) {
+int MB_SetParentCommParam(int parentMaxSize, int childMaxSize, int maxEntry) {
     if (WM_WORK->initialized)
         return 0;
-    if (func_02068e44(parentMaxSize, childMaxSize, maxEntry) == 0)
+    if (MBi_IsCommSizeValid(parentMaxSize, childMaxSize, maxEntry) == 0)
         return 0;
     WM_WORK->parentParam.maxEntry = maxEntry;
     WM_WORK->parentMaxSize = parentMaxSize;
@@ -748,7 +752,7 @@ int func_02068dc8(int parentMaxSize, int childMaxSize, int maxEntry) {
  * manager (WM_Initialize until it is not WM_DISABLE), 8 if that fails. Lead:
  * the reconstruction's sets the scan time to 30, not 10, and has an
  * is_started_ex path that skips WM_Initialize. */
-int func_02068d08(void) {
+int MBi_StartCommon(void) {
     WmWork *base;
     int ret;
     base = WM_WORK;
@@ -775,22 +779,22 @@ int func_02068d08(void) {
  * start. Lead: the reconstruction's sets mbc->is_started_ex in a separate
  * MB_StartParent, sizes the request pieces through MBi_SetChildMPMaxSize and
  * reads PXI_IsCallbackReady for useWvrFlag at the end. */
-int func_02068ae8(int param0) {
-    u32 saved;
+int MB_StartParent(int param0) {
+    OSIntrMode saved;
     volatile u16 sp0;
     volatile u16 sp2;
     u32 cb;
     int i;
     int result;
 
-    saved = IRQ::Disable();
+    saved = OS_DisableInterrupts();
 
     WM_WORK->parentParam.channel = param0;
 
     cb = MB_WORK->mParentCallback;
 
     sp0 = 0;
-    MultiStore16(sp0, (char *)MB_WORK->mChildUser, 0x60a0);
+    MIi_CpuClear16(sp0, (char *)MB_WORK->mChildUser, 0x60a0);
 
     MB_CommSetParentStateCallback(cb);
 
@@ -805,13 +809,13 @@ int func_02068ae8(int param0) {
     MB_WORK->mFileCount = 0;
 
     sp2 = 0;
-    MultiStore16(sp2, (char *)MB_WORK->mFiles, 0x5c40);
+    MIi_CpuClear16(sp2, (char *)MB_WORK->mFiles, 0x5c40);
 
-    func_0205a588(MB_WORK->mChildResponse, 0, 0x1e);
+    MI_CpuFill8(MB_WORK->mChildResponse, 0, 0x1e);
 
     WM_WORK->mode = 1;
     WM_WORK->userCallback = (void (*)(int, void *))MBi_CommParentCallback;
-    WM_WORK->stateCallback = func_02069994;
+    WM_WORK->stateCallback = MBi_ParentCallback;
 
     WM_WORK->parentParam.parentMaxSize = WM_WORK->parentMaxSize;
     WM_WORK->sendBufSize = (WM_WORK->parentParam.parentMaxSize + 0x23) & ~0x1f;
@@ -820,9 +824,9 @@ int func_02068ae8(int param0) {
     WM_WORK->recvBufSize = (((WM_WORK->parentParam.childMaxSize + 0xe) * 0xf + 0x29) & ~0x1f) << 1;
 
     MB_InitSendGameInfoStatus();
-    result = func_02068d08();
+    result = MBi_StartCommon();
 
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 
     return result;
 }
@@ -833,7 +837,7 @@ int func_02068ae8(int param0) {
  * interrupts, calls MBi_EndCommon when the manager never started and resets
  * through the task thread when there is one; MBi_CallReset also checks the
  * WM result. */
-int func_02068a74(void) {
+int MBi_CommEnd(void) {
     WmWork *p = WM_WORK;
     if (p->resetting == 0) {
         int r;
@@ -848,28 +852,28 @@ int func_02068a74(void) {
     return 1;
 }
 
-/* MB_End: func_02068a74 with interrupts disabled. Lead: the reconstruction's
+/* MB_End: MBi_CommEnd with interrupts disabled. Lead: the reconstruction's
  * also calls OS_Terminate when MB_StartParent was not used. */
-void func_02068a54(void) {
-    u32 saved = IRQ::Disable();
-    func_02068a74();
-    IRQ::Restore(saved);
+void MB_End(void) {
+    OSIntrMode saved = OS_DisableInterrupts();
+    MBi_CommEnd();
+    OS_RestoreInterrupts(saved);
 }
 
 /* MBi_SetMPData: send on port 1 at priority 3 through WM_SetMPDataToPort.
  * The fourth parameter is unused. Lead: the reconstruction's calls
  * WM_SetMPDataToPortEx and passes the result to MBi_CheckWmErrcode. */
-int func_02068a28(int callback, int data, int size, int unused, u16 aidBitmap) {
+int MBi_SetMPData(int callback, int data, int size, int unused, u16 aidBitmap) {
     return WM_SetMPDataToPort(callback, data, size, aidBitmap, 1, 3);
 }
 
 /* MBi_SendMP: queue one MP send. Fails (1) until MP has started or while a
  * reset is under way. A parent (mode 1) sends through stateCallback, a child
- * (mode 2) through func_020690b0. On WM's OPERATING (2) it sets mpSending and
+ * (mode 2) through MBi_ChildCallback. On WM's OPERATING (2) it sets mpSending and
  * returns 0; any other code is returned as it is. Lead: the reconstruction's
  * has the same two cases, but this parent case first pads the size up to
  * data_0209a088 (6). */
-int func_020688fc(int arg0, int arg1, int arg2) {
+int MBi_SendMP(int arg0, int arg1, int arg2) {
     WmWork *hdr = WM_WORK;
     int a = (u16)arg1;
     u16 b = arg2;
@@ -888,7 +892,7 @@ int func_020688fc(int arg0, int arg1, int arg2) {
         } else {
             u = 0;
         }
-        ret = func_02068a28((int)hdr->stateCallback, arg0, a, (u16)u, b);
+        ret = MBi_SetMPData((int)hdr->stateCallback, arg0, a, (u16)u, b);
         if (ret == 2) {
             WM_WORK->mpSending = 1;
         }
@@ -898,7 +902,7 @@ int func_020688fc(int arg0, int arg1, int arg2) {
         return ret;
 
     case 2:
-        ret = func_02068a28((int)func_020690b0, arg0, a, 0, b);
+        ret = MBi_SetMPData((int)MBi_ChildCallback, arg0, a, 0, b);
         if (ret == 2) {
             WM_WORK->mpSending = 1;
         }
@@ -943,7 +947,7 @@ void MBi_SetMaxScanTime(u16 time) {
     SCAN_PARAM->maxChannelTime = time;
 }
 
-/* WmWork.parentMaxSize, the parent's MP send size (set by func_02068dc8).
+/* WmWork.parentMaxSize, the parent's MP send size (set by MB_SetParentCommParam).
  * MBi_CommParentCallback uses it to size the request record it clears for a
  * child. Lead: the reconstruction has no getter for p_sendlen. */
 int func_0206881c(void) {
@@ -951,7 +955,7 @@ int func_0206881c(void) {
 }
 
 /* Whether the wireless layer is up: WmWork.initialized == 1, set after
- * WM_Initialize. func_02067928 refuses to register a file before then. */
+ * WM_Initialize. MB_RegisterFile refuses to register a file before then. */
 int MBi_IsStarted(void) {
     return WM_WORK->initialized == 1;
 }

@@ -47,7 +47,9 @@ enum dScMgRoulette_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Local views of the records the helpers walk. */
 
@@ -80,20 +82,6 @@ typedef char RouletteStrip_size_must_be_0x18[sizeof(RouletteStrip) == 0x18 ? 1 :
 /* The active minigame scene's mCredits, or 0 with no scene. */
 #define SCENE_BONUS ((gMgScene != 0) \
                         ? gMgScene->mCredits : 0)
-
-
-namespace cstd {
-int fdiv(int a, int b);
-}
-
-namespace GX {
-void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
-}
-
-namespace GXS {
-void LoadBGPltt(const void *data, unsigned int offset, unsigned int size);
-void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
-}
 
 /* Thirty-seven tile centres. mwcc emits __sinit_d_s_mg_roulette_methods.cpp
    from this array: each Vector2(x, y) is two stores and a ~Vector2()
@@ -153,7 +141,7 @@ extern int data_020a0db0;
    marker: {0, 2, 6, 8} for strips 0..3. A horizontal pair adds 2. */
 extern s32 sRouletteStripSpriteBase[];
 extern void *sRouletteStripSprites[];
-extern void *sRouletteTextSpritesByLanguage[];
+extern void **sRouletteTextSpritesByLanguage[];
 extern int sRoulettePayoutMultipliers[];
 extern void *sRouletteRacerSprites;
 extern Matrix4x3 data_020a0e68;
@@ -226,10 +214,10 @@ s32 dScMgRoulette_c::InitResources() {
     bgMap = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NSC_BIN);
     file = LoadFile(ASSET_D_2D_YAKU_NSC_BIN);
     pltt = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NCL_BIN);
-    DecompressLZ16(bgChars, G2S::GetBG2CharPtr());
-    DecompressLZ16(bgMap, G2S::GetBG2ScrPtr());
-    DecompressLZ16(file, G2S::GetBG0ScrPtr());
-    GXS::LoadBGPltt(pltt, 0x1a0, 0x60);
+    DecompressLZ16(bgChars, G2S_GetBG2CharPtr());
+    DecompressLZ16(bgMap, G2S_GetBG2ScrPtr());
+    DecompressLZ16(file, G2S_GetBG0ScrPtr());
+    GXS_LoadBGPltt(pltt, 0x1a0, 0x60);
     Deallocate(bgChars);
     Deallocate(bgMap);
     Deallocate(file);
@@ -244,10 +232,10 @@ s32 dScMgRoulette_c::InitResources() {
 
     file = LoadFile(ASSET_D_2D_MG_ROULETTE_NCG_BIN);
     pltt = LoadFile(ASSET_D_2D_MG_ROULETTE_NCL_BIN);
-    DecompressLZ16(file, (void *)0x6400000);
-    DecompressLZ16(file, (void *)0x6600000);
-    GX::LoadOBJPltt(pltt, 0, 0x100);
-    GXS::LoadOBJPltt(pltt, 0, 0x100);
+    DecompressLZ16(file, G2_GetOBJCharPtr());
+    DecompressLZ16(file, G2S_GetOBJCharPtr());
+    GX_LoadOBJPltt(pltt, 0, 0x100);
+    GXS_LoadOBJPltt(pltt, 0, 0x100);
     Deallocate(file);
     Deallocate(pltt);
 
@@ -470,7 +458,7 @@ s32 dScMgRoulette_c::Render() {
             int vol = rem * 0x88 + 0x1000;
             if (vol > 0x2000)
                 vol = 0x2000;
-            Mg_DrawNumberRotated(0x80, 0x60, seconds, 1, -1, func_02053200(vol), 0);
+            Mg_DrawNumberRotated(0x80, 0x60, seconds, 1, -1, FX_Inv(vol), 0);
         }
     }
 
@@ -1086,11 +1074,11 @@ void RouletteBoard_SetStateSpin(RouletteBoard *board) {
 extern "C" {
 void RouletteBoard_StateSpin(RouletteBoard *board) {
     int spin = board->mSpinSpeed;
-    int pull = cstd::fdiv(FX_MUL(spin, spin), board->mBallRadius) - 0xc00;
+    int pull = FX_Div(FX_MUL(spin, spin), board->mBallRadius) - 0xc00;
 
     spin = board->mSpinSpeed;
     int scaled = FX_MUL(spin, 0x500);
-    int step = cstd::fdiv(scaled, board->mBallRadius);
+    int step = FX_Div(scaled, board->mBallRadius);
     board->mAngleStep = (s16)step;
 
     board->mOrbitAngle += board->mAngleStep;
@@ -1160,9 +1148,9 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
     spinAbs = board->mSpinSpeed - 0x140;
     if (spinAbs < 0)
         spinAbs = -spinAbs;
-    pull = cstd::fdiv(FX_MUL(spinAbs, spinAbs), board->mBallRadius) - 0xc00;
+    pull = FX_Div(FX_MUL(spinAbs, spinAbs), board->mBallRadius) - 0xc00;
 
-    board->mAngleStep = cstd::fdiv(FX_MUL(board->mSpinSpeed, 0x500), board->mBallRadius);
+    board->mAngleStep = FX_Div(FX_MUL(board->mSpinSpeed, 0x500), board->mBallRadius);
 
     board->mOrbitAngle += board->mAngleStep;
 
@@ -1240,9 +1228,7 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
 
 extern "C" void RouletteBoard_Update(RouletteBoard *c) {
     c->mBoardAngle += c->mBoardSpin;
-    /* -boardAngle lands at bones + 0x82, inside the third 0x40-byte
-       BMD_Bone's unk_00; BMD_File.h names no field there. */
-    *(short *)((char *)c->mWheel.data.bones + 0x82) = (short)(-c->mBoardAngle);
+    c->mWheel.data.bones[2].rotX = -c->mBoardAngle;
     c->mWheel.UpdateVerts();
     Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
     c->mWheel.mat4x3 = data_020a0e68;
@@ -1290,7 +1276,7 @@ void RouletteStrip_AddRacer(RouletteStrip *strip, RouletteRacer *racer) {
 extern "C" {
 void RouletteStrip_Draw(RouletteStrip *strip, int y) {
     int idx = GetGameLanguage();
-    void *p = *(void **)((char *)sRouletteTextSpritesByLanguage[idx] + 0x50);
+    void *p = sRouletteTextSpritesByLanguage[idx][20];
     Hud_RenderSprite(p, 0xc, y, -1, -1);
 
     Mg_DrawBigNumber(0x1e, y, sRoulettePayoutMultipliers[strip->payoutIndex], 0, -1, 2, 0);

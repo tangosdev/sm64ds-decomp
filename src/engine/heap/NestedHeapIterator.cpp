@@ -1,226 +1,171 @@
 //cpp
-/* arm9/NestedHeapIterator -- the intrusive doubly-linked list every HeapAllocator
- * carries at +0xc, plus the two functions that drive it: HeapAllocator::Remove
- * and func_0204df54, the shared allocator initializer both heap families call
- * from their constructors.
- * .text 0x0204dcfc..0x0204e084, folded from twelve legacy shards.
- * mwccarm emits .text in reverse source order, so the definitions below run
- * ROM-descending; the roster reads ROM-ascending.
+/* arm9/NestedHeapIterator -- NitroSystem's foundation list and heap-common
+ * code (NNS_FND_list.c, NNS_FND_heapcommon.c), .text 0x0204dcfc..0x0204e084.
  *
- *   Previous/Next      -- walk the embedded link pair.
- *   Remove             -- unlink one node and fix head/tail.
- *   AddAt/AddFirst/AddLast/Init -- splice in at a position, either end, or an
- *                          empty list.
- *   NNS_FndInitList    -- linkOffset + empty list.
- *   HeapAllocator::Remove -- remove self from whichever iterator owns it.
- *   func_0204df54      -- the shared initializer: stamps magic/range/flags,
- *                          constructs the child iterator, builds the global
- *                          root iterator once, and links self under it.
- *   FindNested         -- the innermost iterator that owns an address (static;
- *                          starts from the file-scope root, not from this).
- *   RecursiveFindNested -- the walk proper.
+ * The bodies are pret/pokediamond's arm9/lib/libnns sources as written,
+ * and every one reproduces the ROM. mwccarm emits a file's functions in
+ * reverse order, and the ROM runs GetPrev..InitList, then FinalizeHeap..
+ * FindContainHeap: list.c's order reversed, followed by heapcommon.c's.
  *
- * The link pair lives at mLinkOffset bytes into each HeapAllocator -- prev at
- * +0, next at +4 -- so the list walks through char* offsets rather than named
- * members: the offset is a runtime value the layout cannot spell.
+ *   NNS_FndInitList and the Append/Prepend/Insert/Remove/GetNext/GetPrev
+ *   ListObject calls -- an intrusive doubly-linked list whose objects carry
+ *   their NNSFndLink `offset' bytes in.
+ *   NNSi_FndInitHeapHead -- stamps a heap header (signature, range, option
+ *   bits), sets up its child list, sets up the root list once, and links
+ *   the heap into whichever list contains it. The expanding and frame heaps
+ *   both call it.
+ *   NNSi_FndFinalizeHeap -- unlinks a heap from that list.
  *
- * deslop leftovers:
- * - Init keeps its recovered new_var/double-add scaffolding (the link slot
- *   is formed twice, once into new_var and once inline); the u16 puns on
- *   mCount and mLinkOffset it used to carry measured byte-neutral as plain
- *   member spellings and are gone.
+ * The two files are folded into one translation unit here. heapcommon.c's
+ * .bss (sRootListInitialized, sRootList at 0x020a4d34) is declared rather
+ * than defined: no arm9 .bss range is enrolled to a TU yet, and defining
+ * them here would add storage the build has nowhere to place. pret's
+ * FindContainHeap, FindListContainHeap and SetFirstObject are static; here
+ * they have external linkage, as the FS_Archive TU's static helpers do,
+ * because dsd cannot record a local symbol in symbols.txt.
  */
+#include "nnsys/fnd.h"
 
-#include "HeapAllocator.h"
-#include "NestedHeapIterator.h"
-#include "decl_NestedHeapIterator.h"
+extern "C" {
 
-extern int data_020a4d34;
-extern "C" NestedHeapIterator data_020a4d38;
+/* ---- NNS_FND_heapcommon.c ---- */
 
-/* The walk: for the first node whose [mStart, mEnd) contains addr, recurse
- * into that node's own child list before falling back to the node itself. */
-void *NestedHeapIterator::RecursiveFindNested(void *addr)
-{
-    HeapAllocator *cur = (HeapAllocator *)Next(0);
-    while (cur != 0) {
-        if (cur->mStart <= addr && addr < cur->mEnd) {
-            void *r = cur->mChildren.RecursiveFindNested(addr);
-            if (r == 0) r = cur;
-            return r;
+extern int sRootListInitialized;
+extern NNSFndList sRootList;
+
+#define OBJ_TO_LINK(list, obj) ((NNSFndLink *)((char *)(obj) + (list)->offset))
+
+/* The innermost heap in `list' (searched depth-first through each heap's
+ * childList) whose [heapStart, heapEnd) contains memBlock. */
+NNSiFndHeapHead *FindContainHeap(NNSFndList *list, const void *memBlock) {
+    NNSiFndHeapHead *heap = 0;
+
+    while ((heap = (NNSiFndHeapHead *)NNS_FndGetNextListObject(list, heap)) != 0) {
+        if (heap->heapStart <= memBlock && memBlock < heap->heapEnd) {
+            NNSiFndHeapHead *ret = FindContainHeap(&heap->childList, memBlock);
+            if (ret == 0)
+                ret = heap;
+            return ret;
         }
-        cur = (HeapAllocator *)Next(cur);
     }
-    return (void *)0;
+    return 0;
 }
 
-/* The public entry over RecursiveFindNested: start from the root iterator and
- * hand back the innermost iterator that owns `addr', or the root itself. */
-NestedHeapIterator *NestedHeapIterator::FindNested(void *addr)
-{
-    NestedHeapIterator *root = &data_020a4d38;
-    HeapAllocator *found = (HeapAllocator *)root->RecursiveFindNested(addr);
-    if (found) {
-        return &found->mChildren;
-    }
-    return root;
+/* The list a heap at memBlock belongs in: the child list of the heap that
+ * contains it, or the root list. */
+NNSFndList *FindListContainHeap(const void *memBlock) {
+    NNSFndList *ret = &sRootList;
+    NNSiFndHeapHead *heap = FindContainHeap(&sRootList, memBlock);
+    if (heap != 0)
+        ret = &heap->childList;
+    return ret;
 }
 
-/* Shared allocator initializer -- not a constructor: its final AddLast call
- * leaves the iterator count in r0, where a constructor restores `this'. The
- * callers pass the last argument as u32 while the body reads it as u16. */
-extern "C" void func_0204df54(HeapAllocator* self, u32 magic, void* start,
-                               void* end, u16 flags)
-{
-    self->mMagic = magic;
-    self->mStart = start;
-    self->mEnd = end;
-    self->mFlags = 0;
-    self->mFlags &= ~0xffu;
-    self->mFlags |= flags & 0xffu;
-
-    NNS_FndInitList(&self->mChildren, 4);
-
-    if (data_020a4d34 == 0) {
-        NNS_FndInitList(&data_020a4d38, 4);
-        data_020a4d34 = 1;
+void NNSi_FndInitHeapHead(NNSiFndHeapHead *heap, u32 signature, void *heapStart, void *heapEnd,
+                          u16 optFlag) {
+    heap->signature = signature;
+    heap->heapStart = heapStart;
+    heap->heapEnd = heapEnd;
+    heap->attribute = 0;
+    heap->attribute &= ~0xffu;
+    heap->attribute |= optFlag & 0xffu;
+    NNS_FndInitList(&heap->childList, 4);
+    if (!sRootListInitialized) {
+        NNS_FndInitList(&sRootList, 4);
+        sRootListInitialized = 1;
     }
-
-    NestedHeapIterator::FindNested(self)->AddLast(self);
+    NNS_FndAppendListObject(FindListContainHeap(heap), heap);
 }
 
-/* Remove self from whichever iterator owns it. */
-void HeapAllocator::Remove()
-{
-    NestedHeapIterator* iter = NestedHeapIterator::FindNested(this);
-    iter->Remove(this);
+void NNSi_FndFinalizeHeap(NNSiFndHeapHead *heap) {
+    NNS_FndRemoveListObject(FindListContainHeap(heap), heap);
 }
 
-/* NitroSDK's list initializer, run on the embedded child lists. */
-extern "C" void NNS_FndInitList(void *list_, u16 linkOffset) {
-    NestedHeapIterator *list = (NestedHeapIterator *)list_;
+/* ---- NNS_FND_list.c ---- */
 
-    list->mFirst = 0;
-    list->mLast = 0;
-    list->mCount = 0;
-    list->mLinkOffset = linkOffset;
+void NNS_FndInitList(NNSFndList *list, u16 offset) {
+    list->headObject = 0;
+    list->tailObject = 0;
+    list->numObjects = 0;
+    list->offset = offset;
 }
 
-/* Empty list: link the node to itself and make it both ends. */
-void NestedHeapIterator::Init(HeapAllocator * a_)
-{
-    char * a = (char *)a_;
-
-    char *new_var = a + mLinkOffset;
-    *((int *)((a + mLinkOffset) + 4)) = 0;
-    *((int *)new_var) = 0;
-    mFirst = (HeapAllocator *)a;
-    mLast = (HeapAllocator *)a;
-    mCount += 1;
+void SetFirstObject(NNSFndList *list, void *object) {
+    NNSFndLink *link = OBJ_TO_LINK(list, object);
+    link->nextObject = 0;
+    link->prevObject = 0;
+    list->headObject = object;
+    list->tailObject = object;
+    list->numObjects++;
 }
 
-void NestedHeapIterator::AddLast(HeapAllocator * a_)
-{
-    char * a = (char *)a_;
-
-    if (mFirst == 0) {
-        Init((HeapAllocator *)a);
-        return;
-    }
-    {
-        unsigned short link_off = mLinkOffset;
-        int last = (int)mLast;
-        *(int *)(a + link_off) = last;
-        *(int *)(a + link_off + 4) = 0;
-        link_off = mLinkOffset;
-        last = (int)mLast;
-        *(int *)((char *)last + link_off + 4) = (int)a;
-        mLast = (HeapAllocator*)a;
-        mCount += 1;
-    }
-}
-
-void NestedHeapIterator::AddFirst(HeapAllocator * a_)
-{
-    char* a = (char*)a_;
-
-    if (mFirst == 0) {
-        Init((HeapAllocator *)a);
-        return;
-    }
-    {
-        int* pa = (int*)(a + mLinkOffset);
-        pa[0] = 0;
-        pa[1] = (int)mFirst;
-    }
-    *(int *)((char *)mFirst + mLinkOffset) = (int)a;
-    mFirst = (HeapAllocator *)a;
-    mCount += 1;
-}
-
-/* Splice `node_' in immediately before `at_'. A null `at_' means append and
- * `at_' being the head means prepend, so both ends delegate; only the middle
- * case does the four-pointer relink. */
-void NestedHeapIterator::AddAt(HeapAllocator *at_, HeapAllocator *node_)
-{
-    if (at_ == 0) {
-        AddLast(node_);
-        return;
-    }
-    if (at_ == mFirst) {
-        AddFirst(node_);
-        return;
-    }
-    {
-        unsigned short off = mLinkOffset;
-        char *nlink = (char *)node_ + off;
-        char *prev = *(char **)((char *)at_ + off);
-        *(char **)nlink = prev;
-        *(char **)(nlink + 4) = (char *)at_;
-        *(char **)(prev + off + 4) = (char *)node_;
-        *(char **)((char *)at_ + mLinkOffset) = (char *)node_;
-        mCount += 1;
-    }
-}
-
-void NestedHeapIterator::Remove(HeapAllocator * node_)
-{
-    void* node = (void*)node_;
-
-    u16 off = this->mLinkOffset;
-    void* prev = *(void**)((char*)node + off);
-    if (prev == 0) {
-        this->mFirst = *(HeapAllocator**)((char*)node + off + 4);
+void NNS_FndAppendListObject(NNSFndList *list, void *object) {
+    if (list->headObject == 0) {
+        SetFirstObject(list, object);
     } else {
-        *(void**)((char*)prev + off + 4) = *(void**)((char*)node + off + 4);
+        NNSFndLink *link = OBJ_TO_LINK(list, object);
+        link->prevObject = list->tailObject;
+        link->nextObject = 0;
+        OBJ_TO_LINK(list, list->tailObject)->nextObject = object;
+        list->tailObject = object;
+        list->numObjects++;
     }
-    void* next = *(void**)((char*)node + off + 4);
-    if (next == 0) {
-        this->mLast = *(HeapAllocator**)((char*)node + off);
+}
+
+void NNS_FndPrependListObject(NNSFndList *list, void *object) {
+    if (list->headObject == 0) {
+        SetFirstObject(list, object);
     } else {
-        u16 off2 = this->mLinkOffset;
-        *(void**)((char*)next + off2) = *(void**)((char*)node + off);
+        NNSFndLink *link = OBJ_TO_LINK(list, object);
+        link->prevObject = 0;
+        link->nextObject = list->headObject;
+        OBJ_TO_LINK(list, list->headObject)->prevObject = object;
+        list->headObject = object;
+        list->numObjects++;
     }
-    *(void**)((char*)node + off) = 0;
-    *(void**)((char*)node + off + 4) = 0;
-    mCount -= 1;
 }
 
-int NestedHeapIterator::Next(HeapAllocator * h_)
-{
-    char* h = (char*)h_;
-
-    if (h == 0)
-        return (int)mFirst;
-    unsigned short off = mLinkOffset;
-    return *(int *)(h + off + 4);
+void NNS_FndInsertListObject(NNSFndList *list, void *target, void *object) {
+    if (target == 0) {
+        NNS_FndAppendListObject(list, object);
+    } else if (target == list->headObject) {
+        NNS_FndPrependListObject(list, object);
+    } else {
+        NNSFndLink *link = OBJ_TO_LINK(list, object);
+        void *prevObject = OBJ_TO_LINK(list, target)->prevObject;
+        NNSFndLink *prevLink = OBJ_TO_LINK(list, prevObject);
+        link->prevObject = prevObject;
+        link->nextObject = target;
+        prevLink->nextObject = object;
+        OBJ_TO_LINK(list, target)->prevObject = object;
+        list->numObjects++;
+    }
 }
 
-int NestedHeapIterator::Previous(HeapAllocator * h_)
-{
-    char* h = (char*)h_;
+void NNS_FndRemoveListObject(NNSFndList *list, void *object) {
+    NNSFndLink *link = OBJ_TO_LINK(list, object);
+    if (link->prevObject == 0)
+        list->headObject = link->nextObject;
+    else
+        OBJ_TO_LINK(list, link->prevObject)->nextObject = link->nextObject;
+    if (link->nextObject == 0)
+        list->tailObject = link->prevObject;
+    else
+        OBJ_TO_LINK(list, link->nextObject)->prevObject = link->prevObject;
+    link->prevObject = 0;
+    link->nextObject = 0;
+    list->numObjects--;
+}
 
-  if (h == 0) return (int)mLast;
-  unsigned short off = mLinkOffset;
-  return *(int*)(h+off);
+void *NNS_FndGetNextListObject(NNSFndList *list, void *object) {
+    if (object == 0)
+        return list->headObject;
+    return OBJ_TO_LINK(list, object)->nextObject;
+}
+
+void *NNS_FndGetPrevListObject(NNSFndList *list, void *object) {
+    if (object == 0)
+        return list->tailObject;
+    return OBJ_TO_LINK(list, object)->prevObject;
+}
 }

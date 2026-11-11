@@ -38,8 +38,8 @@ enum d_a_obj_ice_block_AssetId { ASSET_ICE_BLOCK_LL_BMD = 0x045a, ASSET_ICE_BLOC
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx_cp.h"
 
 struct KCL_File;
 struct CLPS_Block;
@@ -95,7 +95,7 @@ s32 daObjIceBlock_c::Behavior() {
     IsClsnInRangeOnScreen(0, 0);
 
     if (mMeltTimer != 0) {
-        mScale = cstd::fdiv(mMeltTimer << 12, kMeltFrames << 12);
+        mScale = FX_Div(mMeltTimer << 12, kMeltFrames << 12);
 
         if (DecIfAbove0_Byte(&mMeltTimer) == 0) {
             dActor_c *star = mContainedActor;

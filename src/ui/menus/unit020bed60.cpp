@@ -32,7 +32,6 @@
  * The functions keep their ROM names under C linkage.
  */
 #include "common.h"
-#include "cstd.h"
 #include "nitro/fx/fx.h"
 #include "types.h"
 #include "Ov007MenuState.h"
@@ -43,6 +42,7 @@
 #include "Ov007Camera.h"
 #include "Ov007Item.h"
 #include "Ov007Light.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -65,7 +65,6 @@ extern Ov007MeshWaveParams data_ov007_020d7c9c;
 extern Ov007SwingParams data_ov007_020d7cc8;
 extern Ov007MeshMaterial data_ov007_020d7cf8[2];
 
-extern int func_020531a4(int a);
 extern Ov007MenuState *func_ov007_020b2cdc(void);
 extern Ov007Sprite *NumberSprite_Create(int index);
 extern void func_ov007_020bce70(int n, int m);
@@ -252,7 +251,7 @@ static inline int FadeRatio(int ticks, int frames) {
         return 0;
     if (ticks >= frames)
         return 0x1000;
-    return cstd::div(ticks << 12, frames);
+    return FX_DivS32(ticks << 12, frames);
 }
 
 /* One frame of the backdrop: pokes the mesh under the stylus (harder for a
@@ -277,7 +276,7 @@ void func_ov007_020beeb0(void) {
         if (WORK->touch->heldFrames != 0) {
             int dy = WORK->touch->deltaY;
             int dx = WORK->touch->deltaX;
-            int speed = cstd::div(func_020531a4((dx * dx + dy * dy) << 12), 30);
+            int speed = FX_DivS32(FX_Sqrt((dx * dx + dy * dy) << 12), 30);
             int t = FX_MUL(strength, speed);
             if (t >= 0x1000)
                 t = 0x1000;
@@ -409,8 +408,8 @@ void func_ov007_020bed60(int arg0, int arg1, int arg2) {
     if (res == -1)
         return;
     {
-        int m = cstd::mod(res, mesh->grid->columns);
-        int d = cstd::div(res, mesh->grid->columns);
+        int m = FX_ModS32(res, mesh->grid->columns);
+        int d = FX_DivS32(res, mesh->grid->columns);
         func_ov007_020ca578(mesh, m, d, arg2);
     }
     SCENE->wave->delay = 0x78;

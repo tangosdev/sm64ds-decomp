@@ -135,7 +135,7 @@ extern Vector3 data_ov002_020ff0d4[];
 extern void func_02012694(unsigned int a, void *b);
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern u8 data_0209d660;
 extern u8 data_0209d6bc;
 extern u8 gShowTouchScreenArrows;
@@ -620,7 +620,7 @@ void daObjTatefuda_c::InitTalk()
  *
  * The reading spot is the sign's own position pushed 0x5a000 (90 units), or
  * 0x78000 (120 units) when mPoundsLeft is 1, forward along the sign's facing
- * angle, using the shared sine/cosine table at data_02082214 (the angle is read
+ * angle, using the shared sine/cosine table at FX_SinCosTable_ (the angle is read
  * unsigned, >> 4, to index it; the products are Fix12 multiplies, rounded). The
  * message is anchored 0x50000 (80 units) above the sign itself.
  *
@@ -682,12 +682,12 @@ void daObjTatefuda_c::Talk()
 
 
     ang = (s32) * (u16 *)&mAngleY;
-    sinV = data_02082214[(ang >> 4) * 2];
+    sinV = FX_SinCosTable_[(ang >> 4) * 2];
     tx = tx + FX_MUL(scale, sinV);
     tgt.x = tx;
 
     ang = (s32) * (u16 *)&mAngleY;
-    cosV = data_02082214[(ang >> 4) * 2 + 1];
+    cosV = FX_SinCosTable_[(ang >> 4) * 2 + 1];
     tz = tz + FX_MUL(scale, cosV);
     tgt.z = tz;
 
@@ -1008,7 +1008,7 @@ void daObjTatefuda_c::AttachToHolder() {
     v.y = 0;
     v.z = 0;
     *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&body->mat4x3;
-    MulMat4x3Mat4x3(&bones[14], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);
     v.x = data_020a0e68.t.x;
     v.y = data_020a0e68.t.y;
     v.z = data_020a0e68.t.z;

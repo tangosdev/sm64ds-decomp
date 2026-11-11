@@ -1,8 +1,7 @@
 #include "Ov007Transition.h"
+#include "nitro/gx/g2.h"
 
 typedef long long s64;
-/* src/engine/gx/G2x.cpp */
-extern void G2x_ChangeBlendBrightness_(volatile unsigned short *reg, int v);
 inline int inline_fn(int arg0) {
     return arg0;
 }

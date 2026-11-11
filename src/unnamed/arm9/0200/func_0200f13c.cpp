@@ -18,8 +18,8 @@
  * top of the run down.
  */
 #include "types.h"
-#include "G2.h"
-#include "GX.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 extern "C" {
 
@@ -52,14 +52,14 @@ extern u32 data_0208a15c[5]; /* main OBJ characters */
 void func_0200f220(void) {
     s32 idx;
     idx = GetLanguageIndex();
-    LoadCompressedFileAt(data_0208a10c[idx], G2S::GetBG2CharPtr());
+    LoadCompressedFileAt(data_0208a10c[idx], G2S_GetBG2CharPtr());
     idx = GetLanguageIndex();
-    LoadCompressedFileAt(data_0208a134[idx], (char *)G2S::GetBG3CharPtr() + 0x6000);
-    LoadCompressedFileAt(0x8405, (char *)G2S::GetBG3CharPtr() + 0x3000);
-    LoadCompressedFileAt(0x9802, (char *)G2S::GetBG2ScrPtr() + 0x800);
-    LoadCompressedFileAt(0x9800, (char *)G2S::GetBG2ScrPtr() + 0x2000);
-    LoadCompressedFileAt(0x8408, (char *)G2S::GetBG2ScrPtr() + 0x2800);
-    LoadCompressedFileAt(0x8407, G2S::GetBG3ScrPtr());
+    LoadCompressedFileAt(data_0208a134[idx], (char *)G2S_GetBG3CharPtr() + 0x6000);
+    LoadCompressedFileAt(0x8405, (char *)G2S_GetBG3CharPtr() + 0x3000);
+    LoadCompressedFileAt(0x9802, (char *)G2S_GetBG2ScrPtr() + 0x800);
+    LoadCompressedFileAt(0x9800, (char *)G2S_GetBG2ScrPtr() + 0x2000);
+    LoadCompressedFileAt(0x8408, (char *)G2S_GetBG2ScrPtr() + 0x2800);
+    LoadCompressedFileAt(0x8407, G2S_GetBG3ScrPtr());
 }
 
 /* Loads the main-engine BG2 graphics (language-specific characters and the
@@ -69,21 +69,17 @@ void func_0200f220(void) {
  * func_0200f220 just before it. */
 void func_0200f13c(void) {
     s32 i = GetLanguageIndex();
-    LoadCompressedFileAt(data_0208a148[i], G2::GetBG2CharPtr());
-    LoadCompressedFileAt(0x9808, G2::GetBG2ScrPtr());
-    LoadCompressedFileAt(0x9809, (char *)G2::GetBG2ScrPtr() + 0x800);
-    LoadCompressedFileAt(0x980a, (char *)G2::GetBG2ScrPtr() + 0x1000);
-    char *a5 = (char *)0x6400000;
-    a5 += 0x2000;
-    LoadCompressedFileAt(data_0208a15c[GetLanguageIndex()], a5);
+    LoadCompressedFileAt(data_0208a148[i], G2_GetBG2CharPtr());
+    LoadCompressedFileAt(0x9808, G2_GetBG2ScrPtr());
+    LoadCompressedFileAt(0x9809, (char *)G2_GetBG2ScrPtr() + 0x800);
+    LoadCompressedFileAt(0x980a, (char *)G2_GetBG2ScrPtr() + 0x1000);
+    LoadCompressedFileAt(data_0208a15c[GetLanguageIndex()], (u8 *)G2_GetOBJCharPtr() + 0x2000);
     void *p = LoadFile(0x980f);
-    GX::LoadOBJPltt(p, 0x120, 0xe0);
+    GX_LoadOBJPltt(p, 0x120, 0xe0);
     Deallocate(p);
-    char *a6 = (char *)0x6600000;
-    a6 += 0x800;
-    LoadCompressedFileAt(data_0208a120[GetLanguageIndex()], a6);
+    LoadCompressedFileAt(data_0208a120[GetLanguageIndex()], (u8 *)G2S_GetOBJCharPtr() + 0x800);
     void *q = LoadFile(0x8400);
-    GXS::LoadOBJPltt(q, 0, 0x200);
+    GXS_LoadOBJPltt(q, 0, 0x200);
     Deallocate(q);
 }
 }

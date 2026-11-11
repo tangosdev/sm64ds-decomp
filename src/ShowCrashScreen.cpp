@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "Heap.h"
 #include "fListNode.h"
 #include "fBase_c.h"
@@ -45,7 +45,7 @@ extern Buf52 data_0208e504;
 
 void ShowCrashScreen(void)
 {
-    char *scr = (char *)G2::GetBG1ScrPtr();
+    char *scr = (char *)G2_GetBG1ScrPtr();
     int hp;
     int rr;
     int cc;

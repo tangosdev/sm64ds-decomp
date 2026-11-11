@@ -1,149 +1,26 @@
 // Host storage and linkage bridging for the heap subsystem.
 //
-// THE PROBLEM THIS FILE SOLVES: on the NDS, symbols resolve by ADDRESS, so
-// one global can be referenced as C++ `Memory::rootHeapIterator` in one TU
-// and as C `data_020a4d38` in another and both land on 0x020a4d38. A host
-// linker resolves by NAME; without bridging, those become two separate
-// storages and the heap registry silently forks -- the ctor registers into
-// one list while FindNested searches the other. /alternatename restores the
-// by-address identity: one storage, every historical name an alias.
-//
-// The same split affects functions: some C++ TUs declare the iterator entry
-// points without extern "C" (MSVC-mangled references) while the defining
-// TUs are C (plain-name definitions). Each alias below names the x86-32
-// decorated forms.
+// The NitroSystem heap registry -- NNS_FND_heapcommon.c's sRootList and
+// sRootListInitialized -- is .bss the decomp TU only declares
+// (src/engine/heap/NestedHeapIterator.cpp says why: no arm9 .bss range is
+// enrolled for it). On the NDS the link places it at 0x020a4d34; on the host
+// this file is the definition.
+#include "nnsys/fnd.h"
 
 extern "C" {
-// The single real storage. Memory::rootHeapIterator is a NestedHeapIterator
-// (a list head); the decomp TUs address it as a blob. 0x20 covers the
-// evidenced fields with room; the ctor initializes it.
-char _ZN6Memory16rootHeapIteratorE[0x20];
-int _ZN6Memory25isRootHeapIterInitializedE;
+int sRootListInitialized;
+NNSFndList sRootList;
 
 // SDK asm primitive (stmia burst fill) -> plain word fill on host. The
 // frontier classifies its TU as HAL-owned; this is the HAL half.
-void MultiStore_Int(int val, int *dst, int len)
+void MIi_CpuClear32(int val, int *dst, int len)
 {
     for (int i = 0; i < len / 4; ++i)
         dst[i] = val;
 }
 }
 
-// DATA aliases: point every historical name at the one storage above. Safe
-// for data (no calling convention); the decorated spellings come verbatim
-// from link errors -- the linker is the authority on decoration.
-#pragma comment(linker, "/alternatename:_data_020a4d38=__ZN6Memory16rootHeapIteratorE")
-#pragma comment(linker, "/alternatename:_data_020a4d34=__ZN6Memory25isRootHeapIterInitializedE")
-#pragma comment(linker, "/alternatename:?_ZN6Memory16rootHeapIteratorE@@3DA=__ZN6Memory16rootHeapIteratorE")
-#pragma comment(linker, "/alternatename:?_ZN6Memory25isRootHeapIterInitializedE@@3HA=__ZN6Memory25isRootHeapIterInitializedE")
-#pragma comment(linker, "/alternatename:?data_020a4d34@@3HA=__ZN6Memory25isRootHeapIterInitializedE")
-#pragma comment(linker, "/alternatename:?data_020a4d38@@3DA=__ZN6Memory16rootHeapIteratorE")
-// ...and the same storage under the TYPED spelling. src/engine/heap/NestedHeapIterator.cpp
-// declares `extern NestedHeapIterator data_020a4d38', so MSVC decorates the
-// reference with the struct name (@@3U...@@A) rather than as the char array
-// (@@3DA) the line above covers. Both are references to one address on the NDS.
-#pragma comment(linker, "/alternatename:?data_020a4d38@@3UNestedHeapIterator@@A=__ZN6Memory16rootHeapIteratorE")
-
-// FUNCTION BRIDGES where aliasing would be a silent ABI bug: C TUs call the
-// iterator entry points as __cdecl free functions under Itanium names, but
-// the .cpp TUs define them as __thiscall METHODS (this in ecx). An
-// /alternatename between those links fine and then reads garbage as `this`
-// at runtime. Real forwarders convert the convention.
-#include "NestedHeapIterator.h"
-extern "C" {
-void _ZN18NestedHeapIterator7AddLastEP13HeapAllocator(void *self, HeapAllocator *a)
-{ ((NestedHeapIterator *)self)->AddLast(a); }
-void _ZN18NestedHeapIterator8AddFirstEP13HeapAllocator(void *self, HeapAllocator *a)
-{ ((NestedHeapIterator *)self)->AddFirst(a); }
-int _ZN18NestedHeapIterator4NextEP13HeapAllocator(void *self, HeapAllocator *a)
-{ return ((NestedHeapIterator *)self)->Next(a); }
-void _ZN18NestedHeapIterator6RemoveEP13HeapAllocator(void *self, HeapAllocator *a)
-{ ((NestedHeapIterator *)self)->Remove(a); }
-}
-// C-name references left in the slice -> methods that have since migrated to
-// real C++. These must be forwarders, not /alternatename aliases: instance
-// methods use __thiscall on x86 MSVC while the historical C spellings are
-// __cdecl and pass `this` on the stack.
-#include "Heap.h"
-#include "ExpandingHeap.h"
-#include "ExpandingHeapAllocator.h"
-#include "MemoryNode.h"
-extern "C" {
-ExpandingHeapAllocator *_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj(
-    void *address, u32 size, u32 flags)
-{ return Heap::CreateExpandingHeapAllocator(address, size, flags); }
-
-void *_ZN22ExpandingHeapAllocator8AllocateEji(
-    ExpandingHeapAllocator *self, u32 size, int align)
-{ return self->Allocate(size, align); }
-
-int _ZN22ExpandingHeapAllocator10DeallocateEPv(
-    ExpandingHeapAllocator *self, void *ptr)
-{ return self->Deallocate(ptr); }
-
-void *_ZN22ExpandingHeapAllocator16AllocateForwardsEjj(
-    ExpandingHeapAllocator *self, u32 size, u32 align)
-{ return self->AllocateForwards(size, align); }
-
-void *_ZN22ExpandingHeapAllocator17AllocateBackwardsEjj(
-    ExpandingHeapAllocator *self, u32 size, u32 align)
-{ return self->AllocateBackwards(size, align); }
-
-void *_ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt(
-    MemoryNode::Target *extent, u16 tag)
-{ return ExpandingHeapAllocator::CreateNode(extent, tag); }
-
-void *_ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_(
-    MemoryNode *list, MemoryNode *node, MemoryNode *prev)
-{ return ExpandingHeapAllocator::LinkNode(list, node, prev); }
-
-void *_ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_(
-    MemoryNode *list, MemoryNode *node)
-{ return ExpandingHeapAllocator::UnlinkNode(list, node); }
-
-NestedHeapIterator *_ZN18NestedHeapIterator10FindNestedEPv(void *address)
-{ return NestedHeapIterator::FindNested(address); }
-
-void _ZN18NestedHeapIterator4InitEP13HeapAllocator(
-    NestedHeapIterator *self, HeapAllocator *allocator)
-{ self->Init(allocator); }
-
-}
-
-// ---- HOST CONSTRUCTOR BRIDGE ---------------------------------------------
-//
-// The allocator and iterator initializers are C-linkage functions in their
-// source TUs, so the host links them directly. MemoryNode::Target is still a
-// real constructor: MSVC emits its own decorated symbol, while the port's
-// source references the flat C1 name, so this host definition runs the
-// constructor in place.
-#include <new>
-
-// func_0204e828 and Reallocate both build a Target on the
-// stack. A `MemoryNode::Target *' return matches the flat symbol the port
-// references; both callers drop it.
-#include "MemoryNode.h"
-
-extern "C" MemoryNode::Target *_ZN10MemoryNode6TargetC1EPS_(
-    MemoryNode::Target *self, MemoryNode *node)
-{ return ::new ((void *)self) MemoryNode::Target(node); }
-
-// cstd::abs under its C spelling, which ExpandingHeapAllocator::MaxAllocatableSize
-// references. The forwarder was in hal/gx_upload_bridge.cpp and moved here with
-// the source file's move from slice_gate4b.txt to slice_gate2.txt, for the same
-// reason: the nine targets that link gx_upload_bridge.cpp all link this file too,
-// so the pair can have one home instead of one per layer that reaches it.
-//
-// The definition is the host's own, like hal/cstd_div.c's fdiv. cstd::abs now
-// lives in src/cstd4.cpp, the runtime-library TU, which also owns hand-asm
-// primitives (swp, dcd, the soft-float compare stubs) that no host compiler
-// accepts -- so the slice can no longer compile the src/ definition. The body
-// is the one src/cstd4.cpp carries.
-namespace cstd {
-int abs(int x)
-{
-    return x < 0 ? -x : x;
-}
-}
-
-extern "C" int _ZN4cstd3absEi(int value) { return cstd::abs(value); }
+// abs, which the expanded and frame heaps' allocatable-size queries call, is
+// MSL's C abs (include/msl/stdlib.h): the host C library's own abs links in
+// its place, so no forwarder is needed. Its src/ home, src/cstd4.cpp, carries
+// hand-asm primitives no host compiler accepts.

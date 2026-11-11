@@ -22,11 +22,14 @@
 
 #include "dScMgJump_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "types.h"
 #include "Sound.h"
 #include "math/Approach.h"
+#include "nitro/gx/g3x.h"
+#include "nitro/fx/fx_cp.h"
 
 /* `C` stands in for the receiver of the state pointer-to-member at 0x5004.
  * It must stay non-polymorphic: mwccarm lays out a pointer-to-member of a
@@ -38,6 +41,9 @@ struct C { char pad[0x5004]; PMF m; };
 /* Whole-matrix copies go through this so they stay one block move. */
 #include "private/mtx43.h"
 #include "LevelRng.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/gx/gx_bgcnt.h"
+
 struct V3 { int w[3]; };
 
 /* The two model file handles InitResources swaps between through
@@ -96,13 +102,6 @@ extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Idle_2;
 extern dScMgJump_c::StatePmf pmf_dScMgJump_c_State_Play;
 }
 
-namespace GX   { void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size); }
-namespace G3X {
-void SetFog(int enable, int mode, int slope, int offset);
-}
-namespace cstd {
-s32 fdiv(s32 a, s32 b);
-}
 
 /* Slot 18. 0 is an eat (one more egg, capped like the HUD score), 0x12 a
  * miss that clears the count and the shared scene's copy of it; anything
@@ -199,16 +198,16 @@ s32 dScMgJump_c::InitResources()
     idx = GetGameLanguage();
     buf1 = LoadFile(sJumpNcgByLanguage[idx]);
     buf2 = LoadFile(0xd1);
-    DecompressLZ16(buf1, (void *)0x6400000);
-    GX::LoadOBJPltt(buf2, 0, 0x80);
+    DecompressLZ16(buf1, G2_GetOBJCharPtr());
+    GX_LoadOBJPltt(buf2, 0, 0x80);
     Deallocate(buf1);
     Deallocate(buf2);
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
-    fov = cstd::fdiv(0xc0000, (s32)data_02082614);
+    fov = FX_Div(0xc0000, (s32)data_02082614);
 
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
@@ -395,9 +394,9 @@ s32 dScMgJump_c::Behavior()
     return 1;
 }
 
-/* Slot 9. Draws the instruction rows while mDrawSubScreen == 1, then programs the
- * light vector and light color registers at 0x040004c8 and 0x040004cc
- * (lights 0 and 1, hence volatile) and renders the model. The row
+/* Slot 9. Draws the instruction rows while mDrawSubScreen == 1, then sets
+ * lights 0 and 1 (white, both tilted by -0x2000 about x) and renders the
+ * model. The row
  * sprites and the ov006 draw helpers are unnamed in symbols.txt. */
 s32 dScMgJump_c::Render()
 {
@@ -426,26 +425,20 @@ s32 dScMgJump_c::Render()
         int m[3];
         m[0] = 0;
         m[1] = 0;
-        m[2] = 0xfffff008;
+        m[2] = -0xff8;
         func_0203cd80(m, -0x2000);
-        *(volatile int *)0x40004c8 =
-            (((short)m[0] >> 3) & 0x3ff) |
-            ((((short)m[1] >> 3) & 0x3ff) << 10) |
-            ((((short)m[2] >> 3) & 0x3ff) << 20);
-        *(volatile int *)0x40004cc = 0x7fff;
-        *(volatile int *)0x40004cc = 0x40007fff;
+        G3_LightVector(GX_LIGHTID_0, m[0], m[1], m[2]);
+        G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+        G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
         Matrix4x3_FromTranslation(&data_020a0e68, 0, -0xef000, 0);
     }
     {
         int m[3];
         m[0] = 0;
         m[1] = 0;
-        m[2] = 0xfffff008;
+        m[2] = -0xff8;
         func_0203cd80(m, -0x2000);
-        *(volatile int *)0x40004c8 =
-            ((((short)m[0] >> 3) & 0x3ff) |
-            ((((short)m[1] >> 3) & 0x3ff) << 10) |
-            ((((short)m[2] >> 3) & 0x3ff) << 20)) | 0x40000000;
+        G3_LightVector(GX_LIGHTID_1, m[0], m[1], m[2]);
     }
 
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;

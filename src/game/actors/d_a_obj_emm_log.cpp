@@ -16,7 +16,7 @@
  *   naming belongs with dBgW in arm9.
  * - data_ov052_021124d4 is this overlay's BMD/KCL/CLPS bundle;
  *   symbols.txt has no recovered name.
- * - The bob reads the arm9 sine table, data_02082214, through FX_SinIdx.
+ * - The bob reads the arm9 sine table, FX_SinCosTable_, through FX_SinIdx.
  * - Inline destructor (out-of-line emits D0 before D1 plus a homeless D2).
  * - g_profile_EMM_LOG lives outside this TU (S14).
  */

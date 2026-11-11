@@ -20,8 +20,8 @@ typedef struct {
 } Rec;
 
 extern void func_020408b0(u16 arg);
-extern void CpuCopy8(const void *src, void *dst, u32 size);
-extern void func_0205a588(void *dst, u8 val, u32 len);
+extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
+extern void MI_CpuFill8(void *dst, u8 val, u32 len);
 extern s32 func_02040714(void);
 extern void func_02040820(void);
 extern void func_02040790(void);
@@ -180,24 +180,24 @@ void func_0203ea5c(void) {
                     sp2c = data_020a0ef8 - 1;
                 }
                 data_020a1040.flags = (u16)(data_020a1040.flags | 1);
-                CpuCopy8(&data_020a104c, &data_020a1020, sp14);
-                CpuCopy8(&sp2c, &data_020a1022, 1);
-                CpuCopy8((u8 *)((sp2c * 0x16) + (s32)&data_020a10a4), &data_020a1023, 0x16);
+                MI_CpuCopy8(&data_020a104c, &data_020a1020, sp14);
+                MI_CpuCopy8(&sp2c, &data_020a1022, 1);
+                MI_CpuCopy8((u8 *)((sp2c * 0x16) + (s32)&data_020a10a4), &data_020a1023, 0x16);
             } else {
                 data_020a1040.flags = (u16)(data_020a1040.flags & 0xFFFE);
             }
         }
         if (data_020a0ef8 == 0) {
-            CpuCopy8(&data_020a104c, &data_020a1020, sp14);
-            CpuCopy8(&data_020a1040, &data_020a1022, sp18);
-            CpuCopy8(&data_020a104e, &data_020a1026, sp14);
-            CpuCopy8(&data_020a1044, &data_020a1028, 1);
-            CpuCopy8(&data_020a1046, &data_020a1029, 1);
-            CpuCopy8(&data_020a1048, &data_020a102a, 1);
-            CpuCopy8(&data_020a1050, &data_020a102b, sp14);
-            CpuCopy8(&data_020a0f08, &data_020a102d, 1);
-            CpuCopy8(&data_020a0f00, &data_020a102e, 1);
-            CpuCopy8(&data_020a1052, &data_020a102f, sp1c);
+            MI_CpuCopy8(&data_020a104c, &data_020a1020, sp14);
+            MI_CpuCopy8(&data_020a1040, &data_020a1022, sp18);
+            MI_CpuCopy8(&data_020a104e, &data_020a1026, sp14);
+            MI_CpuCopy8(&data_020a1044, &data_020a1028, 1);
+            MI_CpuCopy8(&data_020a1046, &data_020a1029, 1);
+            MI_CpuCopy8(&data_020a1048, &data_020a102a, 1);
+            MI_CpuCopy8(&data_020a1050, &data_020a102b, sp14);
+            MI_CpuCopy8(&data_020a0f08, &data_020a102d, 1);
+            MI_CpuCopy8(&data_020a0f00, &data_020a102e, 1);
+            MI_CpuCopy8(&data_020a1052, &data_020a102f, sp1c);
         }
         data_020a0f1c &= 0xBFFF;
         temp_r0_2 = func_02040714();
@@ -252,30 +252,30 @@ void func_0203ea5c(void) {
             sp4 = sp20;
             temp_r0_6 = func_0204068c(0U);
             if (temp_r0_6 != 0) {
-                CpuCopy8(temp_r0_6, &data_020a1160, sp14);
+                MI_CpuCopy8(temp_r0_6, &data_020a1160, sp14);
                 if (data_020a1154[0].flags & 0x8000) {
                     if (data_020a1154[0].flags & 1) {
                         if (data_020a0f10 != 0) {
-                            CpuCopy8(temp_r0_6 + 2, &sp2c, 1);
+                            MI_CpuCopy8(temp_r0_6 + 2, &sp2c, 1);
                             switch (sp2c) {
                             default:
                                 break;
                             case 0:
                                 data_020a1040.flags = (u16)(data_020a1040.flags & 0xFFFE);
-                                func_0205a588(&data_020a10a4, 0, 0x16);
-                                CpuCopy8(temp_r0_6 + 3, &data_020a10a4, 0x16);
+                                MI_CpuFill8(&data_020a10a4, 0, 0x16);
+                                MI_CpuCopy8(temp_r0_6 + 3, &data_020a10a4, 0x16);
                                 break;
                             case 1:
-                                func_0205a588(&data_020a10ba, 0, 0x16);
-                                CpuCopy8(temp_r0_6 + 3, &data_020a10ba, 0x16);
+                                MI_CpuFill8(&data_020a10ba, 0, 0x16);
+                                MI_CpuCopy8(temp_r0_6 + 3, &data_020a10ba, 0x16);
                                 break;
                             case 2:
-                                func_0205a588(&data_020a10d0, 0, 0x16);
-                                CpuCopy8(temp_r0_6 + 3, &data_020a10d0, 0x16);
+                                MI_CpuFill8(&data_020a10d0, 0, 0x16);
+                                MI_CpuCopy8(temp_r0_6 + 3, &data_020a10d0, 0x16);
                                 break;
                             case 3:
-                                func_0205a588(&data_020a10e6, 0, 0x16);
-                                CpuCopy8(temp_r0_6 + 3, &data_020a10e6, 0x16);
+                                MI_CpuFill8(&data_020a10e6, 0, 0x16);
+                                MI_CpuCopy8(temp_r0_6 + 3, &data_020a10e6, 0x16);
                                 break;
                             }
                         }
@@ -285,21 +285,21 @@ void func_0203ea5c(void) {
                         var_r7 = 0;
                         do {
                             temp_r5 = func_0204068c(var_r7);
-                            func_0205a588(var_r6, 0, sp24);
+                            MI_CpuFill8(var_r6, 0, sp24);
                             if (temp_r5 != 0) {
-                                CpuCopy8(temp_r5, &var_r6->flags, sp14);
+                                MI_CpuCopy8(temp_r5, &var_r6->flags, sp14);
                                 if (var_r6->flags & 0x8000) {
                                     data_02099e18 += 1;
-                                    CpuCopy8(temp_r5 + 2, var_r6, sp18);
-                                    CpuCopy8(temp_r5 + 6, &var_r6->keys, sp14);
-                                    CpuCopy8(temp_r5 + 8, &var_r6->touch.x, 1);
-                                    CpuCopy8(temp_r5 + 9, &var_r6->touch.y, 1);
-                                    CpuCopy8(temp_r5 + 0xA, &var_r6->touch.touch, 1);
-                                    CpuCopy8(temp_r5 + 0xB, &var_r6->inputYaw, sp14);
-                                    CpuCopy8(temp_r5 + 0xF, var_r6->settings, sp1c);
+                                    MI_CpuCopy8(temp_r5 + 2, var_r6, sp18);
+                                    MI_CpuCopy8(temp_r5 + 6, &var_r6->keys, sp14);
+                                    MI_CpuCopy8(temp_r5 + 8, &var_r6->touch.x, 1);
+                                    MI_CpuCopy8(temp_r5 + 9, &var_r6->touch.y, 1);
+                                    MI_CpuCopy8(temp_r5 + 0xA, &var_r6->touch.touch, 1);
+                                    MI_CpuCopy8(temp_r5 + 0xB, &var_r6->inputYaw, sp14);
+                                    MI_CpuCopy8(temp_r5 + 0xF, var_r6->settings, sp1c);
                                     if ((data_020a0f10 != 0) && (var_r7 == 0)) {
-                                        CpuCopy8(temp_r5 + 0xD, &data_020a0f08, 1);
-                                        CpuCopy8(temp_r5 + 0xE, &data_020a0f00, 1);
+                                        MI_CpuCopy8(temp_r5 + 0xD, &data_020a0f08, 1);
+                                        MI_CpuCopy8(temp_r5 + 0xE, &data_020a0f00, 1);
                                     }
                                 }
                             }
@@ -335,7 +335,7 @@ void func_0203ea5c(void) {
                                                     var_r5_2 = 1;
                                                     do {
                                                         if (func_02042748(var_sb, var_r7_2) != 0) {
-                                                            CpuCopy8(var_r6_3, var_r8, 0x16);
+                                                            MI_CpuCopy8(var_r6_3, var_r8, 0x16);
                                                         }
                                                         var_r7_2 += 1;
                                                         var_r6_3 += 0x16;

@@ -53,6 +53,19 @@ typedef struct OSThread {
     u16 joinQueue;           /* 0x90 -- a mask of thread ids */
 } OSThread;
 
+typedef struct OSMutexLink {
+    struct OSMutex *prev; /* 0x00 */
+    struct OSMutex *next; /* 0x04 */
+} OSMutexLink;
+
+/* NitroSDK OSMutex (os_mutex.c), this SDK's layout: 0x14 bytes. */
+typedef struct OSMutex {
+    u16 queue;        /* 0x00 -- OSThreadQueue: threads waiting for it */
+    OSThread *thread; /* 0x04 -- the owner, 0 while free */
+    s32 count;        /* 0x08 -- times the owner has locked it */
+    OSMutexLink link; /* 0x0c -- the owner's held-mutex list */
+} OSMutex;
+
 typedef void (*OSSwitchThreadCallback)(OSThread *, OSThread *);
 
 typedef struct OSThreadInfo {

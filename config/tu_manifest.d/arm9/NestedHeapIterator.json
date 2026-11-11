@@ -5,7 +5,7 @@
   "promoted_source": "src/engine/heap/NestedHeapIterator.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
-  "boundary_evidence": "Contiguous .text span 0x0204dcfc..0x0204e084: the ten NestedHeapIterator methods plus HeapAllocator::Remove and func_0204df54, the shared allocator initializer both heap families call from their C1s. Right edge ends exactly where ExpandingHeapAllocator's span begins.",
+  "boundary_evidence": "Contiguous .text span 0x0204dcfc..0x0204e084: NitroSystem's NNS_FND_list.c (GetPrev..InitList, reversed) followed by NNS_FND_heapcommon.c (NNSi_FndFinalizeHeap..FindContainHeap, reversed), which the expanded and frame heaps both call from their initializers. Right edge ends exactly where ExpandingHeapAllocator's span begins.",
   "sections": [
     {
       "name": ".text",
@@ -15,49 +15,49 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN18NestedHeapIterator8PreviousEP13HeapAllocator",
+      "symbol": "NNS_FndGetPrevListObject",
       "address": "0x0204dcfc",
       "size": "0x14",
       "ordinal": 0,
       "legacy_source": "src/_ZN18NestedHeapIterator8PreviousEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "_ZN18NestedHeapIterator4NextEP13HeapAllocator",
+      "symbol": "NNS_FndGetNextListObject",
       "address": "0x0204dd10",
       "size": "0x18",
       "ordinal": 1,
       "legacy_source": "src/_ZN18NestedHeapIterator4NextEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "_ZN18NestedHeapIterator6RemoveEP13HeapAllocator",
+      "symbol": "NNS_FndRemoveListObject",
       "address": "0x0204dd28",
       "size": "0x70",
       "ordinal": 2,
       "legacy_source": "src/_ZN18NestedHeapIterator6RemoveEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "_ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_",
+      "symbol": "NNS_FndInsertListObject",
       "address": "0x0204dd98",
       "size": "0x74",
       "ordinal": 3,
       "legacy_source": "src/_ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_.cpp"
     },
     {
-      "symbol": "_ZN18NestedHeapIterator8AddFirstEP13HeapAllocator",
+      "symbol": "NNS_FndPrependListObject",
       "address": "0x0204de0c",
       "size": "0x68",
       "ordinal": 4,
       "legacy_source": "src/_ZN18NestedHeapIterator8AddFirstEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "_ZN18NestedHeapIterator7AddLastEP13HeapAllocator",
+      "symbol": "NNS_FndAppendListObject",
       "address": "0x0204de74",
       "size": "0x6c",
       "ordinal": 5,
       "legacy_source": "src/_ZN18NestedHeapIterator7AddLastEP13HeapAllocator.cpp"
     },
     {
-      "symbol": "_ZN18NestedHeapIterator4InitEP13HeapAllocator",
+      "symbol": "SetFirstObject",
       "address": "0x0204dee0",
       "size": "0x40",
       "ordinal": 6,
@@ -71,28 +71,28 @@
       "legacy_source": "src/_ZN18NestedHeapIteratorC1Ej.cpp"
     },
     {
-      "symbol": "_ZN13HeapAllocator6RemoveEv",
+      "symbol": "NNSi_FndFinalizeHeap",
       "address": "0x0204df38",
       "size": "0x1c",
       "ordinal": 8,
       "legacy_source": "src/_ZN13HeapAllocator6RemoveEv.cpp"
     },
     {
-      "symbol": "func_0204df54",
+      "symbol": "NNSi_FndInitHeapHead",
       "address": "0x0204df54",
       "size": "0x94",
       "ordinal": 9,
       "legacy_source": "src/func_0204df54.cpp"
     },
     {
-      "symbol": "_ZN18NestedHeapIterator10FindNestedEPv",
+      "symbol": "FindListContainHeap",
       "address": "0x0204dfe8",
       "size": "0x2c",
       "ordinal": 10,
       "legacy_source": "src/_ZN18NestedHeapIterator10FindNestedEPv.cpp"
     },
     {
-      "symbol": "_ZN18NestedHeapIterator19RecursiveFindNestedEPv",
+      "symbol": "FindContainHeap",
       "address": "0x0204e014",
       "size": "0x70",
       "ordinal": 11,
@@ -102,7 +102,7 @@
   "data": [],
   "bss": [],
   "compiler_only_output": [],
-  "notes": "Folded from twelve legacy shards; source definitions run ROM-descending because mwccarm emits .text in reverse source order.",
+  "notes": "NitroSystem fnd list and heap-common code, bodies as pret/pokediamond's arm9/lib/libnns NNS_FND_list.c and NNS_FND_heapcommon.c write them. Folded from twelve legacy shards; source definitions run ROM-descending because mwccarm emits .text in reverse source order. heapcommon's .bss (sRootListInitialized, sRootList) is declared extern: no arm9 .bss range is enrolled.",
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",

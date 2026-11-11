@@ -1,7 +1,7 @@
 //cpp
 
 #include "private/arm9_a1fc0_file_share.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "private/fs_views.h"
 
 typedef struct FSFile FSFile;
@@ -39,18 +39,18 @@ void func_02042254(void) {
     char *base = data_020a2400;
 
     while (1) {
-        unsigned int irq = IRQ::Disable();
+        OSIntrMode irq = OS_DisableInterrupts();
         FileShareParentArea *area = (FileShareParentArea *)base;
         node = area->mBusyList;
         while (node == 0) {
             if (work->mState == 0) {
-                IRQ::Restore(irq);
+                OS_RestoreInterrupts(irq);
                 return;
             }
             OS_SleepThread(0);
             node = area->mBusyList;
         }
-        IRQ::Restore(irq);
+        OS_RestoreInterrupts(irq);
 
         if (node->mState == 1) {
             FS_OpenFileDirect((char *)node->mFile, arc, node->mFileOffset,
@@ -69,14 +69,14 @@ void func_02042254(void) {
             node->mPrevSeqNo = 0;
             node->mLastRefillPage = b;
             node->mLoadingPage = c;
-            irq = IRQ::Disable();
+            irq = OS_DisableInterrupts();
             func_02041d28(base, node, d);
-            IRQ::Restore(irq);
+            OS_RestoreInterrupts(irq);
         } else {
             FS_CloseFile((char *)node->mFile);
-            irq = IRQ::Disable();
+            irq = OS_DisableInterrupts();
             func_02041a94(area, node);
-            IRQ::Restore(irq);
+            OS_RestoreInterrupts(irq);
         }
     }
 }

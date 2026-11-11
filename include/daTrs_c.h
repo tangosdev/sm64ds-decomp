@@ -240,7 +240,7 @@ struct daTrs_c : dCapEnemy_c {
     /* Knockback headings: 0211a810 saves mPrevAngleY in the first and picks
        the push direction in the second: the player's yaw, or else by the
        sign of the cosine of (mPrevAngleY - mAngleToPlayer) (SINE_TABLE
-       data_02082214[2d+1]) -- player behind: mPrevAngleY, otherwise
+       FX_SinCosTable_[2d+1]) -- player behind: mPrevAngleY, otherwise
        mPrevAngleY + 0x8000. 0211a76c holds
        mPrevAngleY at the second while it runs and 0211a6f0 restores the
        first. */

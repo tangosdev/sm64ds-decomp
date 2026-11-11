@@ -107,7 +107,6 @@ extern u8 gLocalPlayerId;              /* CURR_PLAYER_ID */
 extern u8 gGameMode;                   /* CURRENT_GAMEMODE */
 extern daPly_c *gPlayers[];            /* PLAYER_ARR */
 extern u32 gNextActorUpdateMask;       /* NEXT_ACTOR_UPDATE_FLAGS */
-extern SaveBlock data_0209caa0;        /* the live save block */
 extern dFdBrightness_c *data_0209d4b0; /* KS_FADER */
 extern dFdBrightness_c *gSceneFader;   /* SCENE_FADER */
 extern u8 gMainScreenLayers;           /* TOP_SCREEN_RELATED */

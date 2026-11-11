@@ -21,7 +21,6 @@
 #include <windows.h>
 #include "Heap.h"
 #include "ExpandingHeap.h"
-#include "ExpandingHeapAllocator.h"
 
 namespace Memory {
 void *Allocate(u32 size, int align, Heap *heap);
@@ -30,11 +29,6 @@ void *Allocate(u32 size, int align, Heap *heap);
    class decoration split this used to bridge cannot arise. */
 
 extern "C" {
-u32 _ZN22ExpandingHeapAllocator14SizeofInternalEPv(void *ptr)
-{ return ExpandingHeapAllocator::SizeofInternal(ptr); }
-u32 _ZN22ExpandingHeapAllocator10MemoryLeftEv(
-    ExpandingHeapAllocator *self)
-{ return self->MemoryLeft(); }
 Heap *_ZN5mHeap6Heap_t13SetupRootHeapEv()
 { return Heap::SetupRootHeap(); }
 void *_ZN6Memory8AllocateEjiPN5mHeap6Heap_tE(u32 size, int align, Heap *heap)
@@ -64,11 +58,11 @@ void _ZN5mHeap6Heap_t10DeallocateEPv(void *self, void *p)
 // follows the class: `Heap' is a typedef for mHeap::Heap_t (include/Heap.h).
 #pragma comment(linker, "/alternatename:?defaultHeapPtr@Memory@@3PAUHeap_t@mHeap@@A=_data_020a0ea0")
 
-// Crash(): the game's fatal stop. Loud on host. C linkage for the .c TUs;
+// OS_Terminate(): the game's fatal stop. Loud on host. C linkage for the .c TUs;
 // the C++-linkage references alias onto the same definition.
-extern "C" void Crash(void)
+extern "C" void OS_Terminate(void)
 {
-    fprintf(stderr, "FATAL: game Crash() reached\n");
+    fprintf(stderr, "FATAL: game OS_Terminate() reached\n");
     void *frames[12];
     unsigned n = CaptureStackBackTrace(0, 12, frames, 0);
     char *base = (char *)GetModuleHandleA(0);
@@ -77,7 +71,7 @@ extern "C" void Crash(void)
                 (unsigned)((char *)frames[i] - base));
     abort();
 }
-#pragma comment(linker, "/alternatename:?Crash@@YAXXZ=_Crash")
+#pragma comment(linker, "/alternatename:?OS_Terminate@@YAXXZ=_OS_Terminate")
 
 // Heap::Allocate(u32): the one-argument overload the allocator veneer path
 // uses (func_0203cc0c). Align 4, same as Memory::Allocate(u32)'s default.
@@ -121,7 +115,3 @@ extern "C" void *_ZTVN5mHeap9ExpHeap_tE[15] = {
     (void *)slot_trap13,       /* 13: VGetNodeID */
     (void *)slot_trap14,       /* 14: VResizeToFit */
 };
-
-// SolidHeapAllocator's initializer is C linkage in its source TU
-// (src/engine/heap/SolidHeapAllocator.cpp, slice_gate3a.txt), so the host
-// links the same NNS-style free function the ROM calls and needs no bridge.

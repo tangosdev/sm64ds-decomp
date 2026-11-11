@@ -9,7 +9,6 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 
-
 #include "dScMgBSC_c.h"
 #include "nitro/hw/registers.h"
 #include "dScMgCard_c.h"
@@ -18,6 +17,8 @@ enum d_s_mg_bsc_AssetId { ASSET_D_2D_MG_BIG_SMALL_NCL_BIN = 0x00b3 };
 #include "PlayerInput.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* The state table: one pointer-to-member per state, indexed by mState.
  * Declared outside extern "C" it still links by its plain name. */
@@ -82,10 +83,6 @@ namespace Sound {
 void PlayBank2_2D(u32 id);
 }
 
-namespace GXS {
-void LoadOBJPltt(const void *plt, u32 base, u32 size);
-}
-
 /* Moves value toward target by step; nonzero once it gets there. */
 
 /* `new` inlines the implicit constructor: the base chain, this class's
@@ -102,9 +99,9 @@ s32 dScMgBSC_c::InitResources() {
     void *paletteData;
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     LoadCard2SubBg3(this);
-    LoadCompressedFileAt(sBscBigSmallNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
+    LoadCompressedFileAt(sBscBigSmallNcgByLanguage[GetGameLanguage()], G2S_GetOBJCharPtr());
     paletteData = LoadFile(ASSET_D_2D_MG_BIG_SMALL_NCL_BIN);
-    GXS::LoadOBJPltt(paletteData, 0, 0x100);
+    GXS_LoadOBJPltt(paletteData, 0, 0x100);
     Deallocate(paletteData);
     Camera_InitDealerView(&mCamera);
     if (Dealer_Load(&mDealer) == 0)

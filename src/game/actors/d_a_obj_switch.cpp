@@ -34,10 +34,7 @@ enum daObjSwitch_c_AssetId {
 #include "Sound.h"
 #include "daStar_c.h"
 #include "nitro/fx/fx.h"
-
-namespace cstd {
-Fix12i fdiv(Fix12i numerator, Fix12i denominator);
-}
+#include "nitro/fx/fx_cp.h"
 
 namespace Event { int ClearBit(unsigned int bit); void SetBit(unsigned int bit); }
 
@@ -418,10 +415,10 @@ void daObjSwitch_c::StateExpiredMain() {
 }
 
 void daObjSwitch_c::ScaleOverTime(int mask, Fix12i frames, Fix12i base, Fix12i target) {
-    Fix12i d = cstd::fdiv((Fix12i)mTimer, frames);
+    Fix12i d = FX_Div((Fix12i)mTimer, frames);
     Fix12i diff = target - base;
     Fix12i e = FX_MUL(diff, d);
-    Fix12i v = base + cstd::fdiv(e, 0x1000);
+    Fix12i v = base + FX_Div(e, 0x1000);
     Fix12i h = FX_MUL(v, 0x3c000);
     mDisplacementY = 0x3c000 - h;
     if (mask & 1) mDrawScale.x = v;

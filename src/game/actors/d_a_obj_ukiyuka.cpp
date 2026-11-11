@@ -12,7 +12,7 @@
  * - The (s64) cast on mBobPhase before the u16 table index is load-bearing;
  *   the plain (u16) read is two instructions shorter.
  * - FX_SinIdx reads the sine table, which keeps its arm9 linker name,
- *   data_02082214.
+ *   FX_SinCosTable_.
  * - Abstract class: no factory, no g_profile row.
  */
 

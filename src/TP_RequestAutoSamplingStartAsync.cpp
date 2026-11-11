@@ -3,7 +3,7 @@
  * samplingBufs, bufSize): record the ring, clear each sample's touch, then
  * send the auto-sampling command 1 (flag 2) over PXI tag 6. */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/spi/tp.h"
 extern "C" {
 int PXI_SendWordByFifo(unsigned int a, unsigned int c, unsigned int b);
@@ -13,7 +13,7 @@ int PXI_SendWordByFifo(unsigned int a, unsigned int c, unsigned int b);
 extern "C" void TP_RequestAutoSamplingStartAsync(unsigned int vcount, unsigned int frequency,
                                                  TPData *samplingBufs, unsigned int bufSize) {
     unsigned int i;
-    unsigned int irq;
+    OSIntrMode irq;
     int ok;
 
     data_020a80cc.mSamplingBufs = samplingBufs;
@@ -23,7 +23,7 @@ extern "C" void TP_RequestAutoSamplingStartAsync(unsigned int vcount, unsigned i
     for (i = 0; i < bufSize; i++) {
         data_020a80cc.mSamplingBufs[i].touch = 0;
     }
-    irq = IRQ::Disable();
+    irq = OS_DisableInterrupts();
     if (PXI_SendWordByFifo(6, (frequency & 0xff) | 0x2000100, 0) < 0)
         ok = 0;
     else if (PXI_SendWordByFifo(6, vcount | 0x1010000, 0) < 0)
@@ -31,7 +31,7 @@ extern "C" void TP_RequestAutoSamplingStartAsync(unsigned int vcount, unsigned i
     else
         ok = 1;
     if ((ok & 0xff) == 0) {
-        IRQ::Restore(irq);
+        OS_RestoreInterrupts(irq);
         data_020a80cc.mErrFlags |= 2;
         if (data_020a80cc.mCallback != 0)
             data_020a80cc.mCallback(1, 4, 0);
@@ -39,5 +39,5 @@ extern "C" void TP_RequestAutoSamplingStartAsync(unsigned int vcount, unsigned i
     }
     data_020a80cc.mCommandFlags |= 2;
     data_020a80cc.mErrFlags &= ~2;
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
 }

@@ -1,10 +1,10 @@
 //cpp
-#include "GX.h"
+#include "nitro/gx/gx_vramcnt.h"
 
 extern "C" void MenuGfx_InitMainEngine(void) {
-    GX::SetBankForTex(3);
-    GX::SetBankForTexPltt(0x20);
-    GX::SetBankForOBJ(0x40);
+    GX_SetBankForTex(3);
+    GX_SetBankForTexPltt(0x20);
+    GX_SetBankForOBJ(0x40);
 
     *(volatile unsigned short*)0x4000008 &= ~0x40;
     *(volatile unsigned short*)0x400000a &= ~0x40;

@@ -61,7 +61,7 @@ struct daPicGate_c : dActor_c {
     s32 mWaveOrigin[3];          /* 0x134 -- x, y, 0 in cell space: BeginWave sets it,
                                     UpdateCellDistances measures each cell's dist from it */
     Vertex mCorners[4];          /* 0x140 */
-    Vertex *mCells;              /* 0x1a0 -- mNumCells, Memory::operator_new2'd */
+    Vertex *mCells;              /* 0x1a0 -- mNumCells, from operator new[] */
     State *mState;               /* 0x1a4 */
     s32 mTexRecord;              /* 0x1a8 -- from LoadTexture */
     const WaveParams *mWaveParams; /* 0x1ac */

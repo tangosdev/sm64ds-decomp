@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "private/fs_views.h"
 
 /* The FSFile a child read is in flight on (mReadRequest); only its archive is
@@ -26,18 +26,18 @@ typedef void (*CallbackFn)(void *ctx, int zero, int val);
  * function is 12 bytes shorter). */
 void func_02040aa4(void) {
     FileShareWork *work = &data_020a1fc0;
-    u32 saved0 = IRQ::Disable();
+    OSIntrMode saved0 = OS_DisableInterrupts();
 
     if (data_020a0f84 != 0) {
         int table = work->mTable;
 
         if (table != 0) {
             if (table != 0) {
-                u32 saved1 = IRQ::Disable();
+                OSIntrMode saved1 = OS_DisableInterrupts();
                 void *ctxArg = (void *)data_020a1fc0.mAllocArg;
                 CallbackFn fn = (CallbackFn)data_020a1fc0.mAllocFunc;
                 fn(ctxArg, 0, table);
-                IRQ::Restore(saved1);
+                OS_RestoreInterrupts(saved1);
             }
             work->mTable = 0;
             work->mTableSize = 0;
@@ -57,11 +57,11 @@ void func_02040aa4(void) {
             {
                 int recvWork = child->mRecvWork;
                 if (recvWork != 0) {
-                    u32 saved2 = IRQ::Disable();
+                    OSIntrMode saved2 = OS_DisableInterrupts();
                     void *ctxArg2 = (void *)data_020a1fc0.mAllocArg;
                     CallbackFn fn2 = (CallbackFn)data_020a1fc0.mAllocFunc;
                     fn2(ctxArg2, 0, recvWork);
-                    IRQ::Restore(saved2);
+                    OS_RestoreInterrupts(saved2);
                 }
             }
         } else {
@@ -72,6 +72,6 @@ void func_02040aa4(void) {
         data_020a0f84 = 0;
     }
 
-    IRQ::Restore(saved0);
+    OS_RestoreInterrupts(saved0);
 }
 }
