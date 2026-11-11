@@ -72,6 +72,12 @@ extern "C" int AngleDiff(int a, int b);
 #include "dExtFrameCtrl_c.h"
 #include "daObjMarioCap_c.h"
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane CAPLOSS1): set by port/hal/coop_cap.cpp in a coop room, 1 for a friend's drawn body;
+   defined in d_a_obj_mario_cap.cpp. */
+extern "C" int (*port_coop_cap_foreign)(const void *player);
+#endif
+
 /* Static-init ownership (was the handwritten __sinit_ov062_0211d6fc shard).
  * The file-scope objects at the end of this file construct the four
  * resource handles (model file 0x348, animation files 0x349, 0x34a, 0x34b)
@@ -1273,6 +1279,12 @@ int daJango_c::func_ov062_0211b51c()
 
     st = mSilverStarFlag;
     hc = pl->mCharacter;
+#ifdef _MSC_VER
+    /* A friend's body in a coop room: his own console takes his cap; here nothing is taken (st 2 skips the theft the
+       way the silver-star variant does), and the hurt below still runs. */
+    if (port_coop_cap_foreign && port_coop_cap_foreign(pl))
+        st = 2;
+#endif
     if (st != 2 &&
         pl->mHasWings == 0 &&
         pl->mIsBalloon == 0 &&

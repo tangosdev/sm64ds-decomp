@@ -29,6 +29,12 @@
 #include "Player.h"
 #include "SaveData.h"
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane CAPLOSS1): set by port/hal/coop_cap.cpp in a coop room, 1 for a friend's drawn body;
+   defined in d_a_obj_mario_cap.cpp. */
+extern "C" int (*port_coop_cap_foreign)(const void *player);
+#endif
+
 extern "C" {
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32, s32, s32, s32);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -104,6 +110,10 @@ void SnowmanBreathParticle::HitPlayer()
     if (player->mIsBalloon)
         return;
     _ZN6Player8BlowAwayEs(player, mAngleY);
+#ifdef _MSC_VER
+    if (port_coop_cap_foreign && port_coop_cap_foreign(player))
+        return;     /* a friend's body in a coop room: his console blows his cap off */
+#endif
     if (player->IsCollectingCap())
         return;
     if (player->mHasWings)

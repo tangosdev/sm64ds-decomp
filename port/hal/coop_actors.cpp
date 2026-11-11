@@ -31,6 +31,7 @@ extern unsigned char data_ov002_021100f4[], data_ov002_0211010c[], data_ov002_02
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 }
 
+namespace port { void coop_cap_frame(unsigned now_ms); }   // hal/coop_cap.cpp (CAPLOSS1)
 namespace port {
 namespace {
 
@@ -1058,6 +1059,7 @@ void on_frame(unsigned now) {
     maybe_request(now);
     process(now);
     ghost_eggs_frame(now);     // FRIENDVIS1: a friend's Yoshi eggs on my console (hal/coop_ghost_eggs.h)
+    coop_cap_frame(now);       // CAPLOSS1: a friend's lost cap on my console (hal/coop_cap.cpp)
     if (g_god) {      // lab knob: the proof player does not die and does not fall out of a course whose warp lands in the air
         data_02092144[data_0209f250 & 15] = (short)(8 << 8);
         if (g_spawned && g_lf - g_spawn_lf == 30) { std::memcpy(g_god_pos, pl + 0x5c, 12); g_god_set = true; }
