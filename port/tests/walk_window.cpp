@@ -5030,17 +5030,30 @@ static int cam_rig_owns(void *cam)
     return cam_mode != CAM_DS && !cutscene_cam && !cam93_ds_owned(cam);
 }
 /* the freecam's centre: the game camera's look-at while it is trusted, held otherwise, and after a second eased to the
-   player's chest (the analog pivot's rule) */
-static int fc_pivot[3], fc_pivot_ok, fc_pivot_hold;
+   player's chest (the analog pivot's rule). When trust comes back after a hold the centre eases back onto the look-at the
+   same way (a quarter of the gap a frame) and only then sticks to it, so it never jumps the up to 3000 units between the
+   two. A trusted camera that was never held (single player, every ordinary coop frame) is copied as it always was. */
+static int fc_pivot[3], fc_pivot_ok, fc_pivot_hold, fc_pivot_back;
 static const int *c3_free_pivot(void *cam, char *player)
 {
     const int *at = (const int *)((char *)cam + 0x80);
     if (c3_trust(cam, player)) {
+        fc_pivot_hold = 0;
+        if (fc_pivot_back && fc_pivot_ok) {
+            int far = 0;
+            for (int k = 0; k < 3; ++k) {
+                const int d = at[k] - fc_pivot[k];
+                if (d > (8 << 12) || d < -(8 << 12)) far = 1;
+                fc_pivot[k] += d / 4;
+            }
+            if (far) return fc_pivot;
+            fc_pivot_back = 0;
+        }
         fc_pivot[0] = at[0]; fc_pivot[1] = at[1]; fc_pivot[2] = at[2];
         fc_pivot_ok = 1;
-        fc_pivot_hold = 0;
         return fc_pivot;
     }
+    fc_pivot_back = 1;
     const int tgt[3] = {*(int *)(player + 0x5c), *(int *)(player + 0x60) + AN_LIFT, *(int *)(player + 0x64)};
     if (!fc_pivot_ok) { fc_pivot[0] = tgt[0]; fc_pivot[1] = tgt[1]; fc_pivot[2] = tgt[2]; fc_pivot_ok = 1; }
     if (++fc_pivot_hold > 30)
@@ -5064,6 +5077,7 @@ static void cam_handover(void *cam, char *player, const char *why)
     an_pivot_live = 0;
     fc_pivot_ok = 0;
     fc_pivot_hold = 0;
+    fc_pivot_back = 0;
     fprintf(stderr, "[cam] handover %s: mode %s, seed from %s\n", why, cam_mode_name(cam_mode),
             trusted ? "the game camera" : "behind the player (the game camera is held or far away)");
 }

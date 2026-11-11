@@ -14,15 +14,19 @@
 //                     within 3000 units of my player and its eye-to-look-at length is inside the rig's clamp. Outside a coop
 //                     room it is always 1 (SM64DS_CAMWD=1 applies the coop test there too), so single player is as before.
 //   cam_guard_frame   once per play frame: counts frames the picture has not followed a moving player with nothing to explain
-//                     it (cutscene, pause, star select, level clear, a talk) and, past the limit, frees the game camera (flags
+//                     it (cutscene, pause, star select, level clear, a talk, my player in the cannon, a fade or level
+//                     change in flight for up to 10 s) and, past the limit, frees the game camera (flags
 //                     8, 0x10, 0x4000, 0x8000 off, the follow state, the level-start placement behind my player) and logs
 //                     one [camwd] line. The caller re-seeds the rig when it returns 1.
 //
 // Trips (each needs my player to have moved over 200 units since the condition began, so a frozen player never trips one):
 //   T1  the shown look-at more than 1500 units from my player while the shown eye and look-at stay put, 150 frames (5 s);
 //   T2  flag 8 held 300 frames (10 s);
-//   T3  a scripted state (9 first person, 11 into the cannon, 13 / 16 talks, 15 exit look-at, 17 no-control hold) held 300
-//       frames.
+//   T3  a scripted state (11 into the cannon, 13 / 16 talks, 15 exit look-at, 17 no-control hold) held 300 frames. Not 9
+//       (first person): a player holding first person on a moving platform (the Rainbow Ride carpet, Tick Tock Clock) is
+//       carried and that is no leak; first person ends on the player's own button, on this console.
+// No "CANNON2 shield active" excuse: CANNON2 landed as a star-side fix (hal/coop_camshield.cpp) that keeps a friend's star
+// from filming at all, so there is no shielded state to ask about; the cannon itself is excused below.
 // Acts in a coop room only; elsewhere it logs the trip and leaves the camera alone. At most one recovery every 10 s.
 // SM64DS_CAMWD=0 off entirely, SM64DS_CAMWD=1 acts in single player too (proof rows), SM64DS_CAMWD=L logs trips but never
 // acts (the before arm of a proof row: the knobs below still fire).
@@ -43,6 +47,9 @@ extern unsigned char data_0209fc48[];    // the running cutscene script, 0 = non
 extern unsigned char data_0209f294[];    // star select
 extern unsigned char data_0209f2c4[];    // the pause is up
 extern unsigned char data_0209f20c[];    // the level-clear screen owns the game
+extern int data_0209b454[];              // the freeze-request word: 0x40000000 = the stage's fade / scene-change freeze
+extern signed char data_02092110;        // the level the game asked to change to, -1 = none
+extern unsigned char data_ov002_021102d4[];   // the Player's cannon-aim State object (Player +0x370)
 extern unsigned data_0209b008[4], data_0209b098[4], data_0209b0b8[4], data_0209b0d8[4], data_0209b0f8[4],
     data_0209b108[4], data_0209b118[4];
 int _ZN9dCamera_c11ChangeStateEPNS_5StateE(void *self, void *state);
@@ -52,7 +59,7 @@ void func_0200cce4(char *cam);
 namespace {
 
 enum : int { kFlags = 0x154, kState = 0x138, kAt = 0x80, kEye = 0x8c, kPrevAt = 0xc8, kTarget = 0x11c, kTargetPos = 0x120,
-             kExitYaw = 0x186, kPlPos = 0x5c, kPlYaw = 0x8e, kPlTalk = 0x368 };
+             kExitYaw = 0x186, kPlPos = 0x5c, kPlYaw = 0x8e, kPlTalk = 0x368, kPlState = 0x370 };
 const long long kUnit = 1 << 12;
 
 int g_env = -1;           // -1 unread, 0 off, 1 coop only, 2 always, 3 log only
@@ -66,6 +73,7 @@ int g_t1_from[3], g_t2_from[3], g_t3_from[3];
 int g_prev_eye[3], g_prev_at[3], g_prev_ok;
 int g_leak_spot[3];
 unsigned g_trips, g_fixes;
+unsigned g_change;        // frames a fade / level change has been in flight
 
 void read_env() {
     if (g_env >= 0) return;
@@ -152,7 +160,12 @@ extern "C" int cam_guard_frame(void *camv, void *player, const int *shown_eye, c
     leak_knob(cam, me);
     const unsigned fl = *(const unsigned *)(cam + kFlags);
     const int st = state_idx(cam);
-    const int excused = host_excused || g_since_cam < 60 || data_0209fc48[0] || data_0209fc48[1] || data_0209fc48[2] ||
+    // a fade or a level change in flight is excused for 300 frames; one that never lands (a level exit whose load the room
+    // held back: state 15 + 0x10 for ever) stops being an excuse after that
+    const int changing = data_02092110 >= 0 || (data_0209b454[0] & 0x40000000) != 0;
+    g_change = changing ? g_change + 1 : 0;
+    const int in_cannon = *(void *const *)((char *)player + kPlState) == (void *)data_ov002_021102d4;
+    const int excused = host_excused || g_since_cam < 60 || (changing && g_change < 300) || in_cannon || data_0209fc48[0] || data_0209fc48[1] || data_0209fc48[2] ||
                         data_0209fc48[3] || data_0209f294[0] || data_0209f2c4[0] || data_0209f20c[0] ||
                         *(void *const *)((char *)player + kPlTalk) != nullptr;
     int still = 0;
@@ -165,7 +178,7 @@ extern "C" int cam_guard_frame(void *camv, void *player, const int *shown_eye, c
     const int far = dist3(shown_at, me) > 1500 * kUnit;
     const int trip1 = streak(g_t1, g_t1_from, far && still, me) && g_t1 >= 150;
     const int trip2 = streak(g_t2, g_t2_from, (fl & 8u) != 0, me) && g_t2 >= 300;
-    const int trip3 = streak(g_t3, g_t3_from, st == 9 || st == 11 || st == 13 || st == 15 || st == 16 || st == 17, me) &&
+    const int trip3 = streak(g_t3, g_t3_from, st == 11 || st == 13 || st == 15 || st == 16 || st == 17, me) &&
                       g_t3 >= 300;
     if (g_trace && g_frame % g_trace == 0)
         std::fprintf(stderr, "[camwd] f%u st=%d cf=%x t1=%d t2=%d t3=%d look=%lld still=%d\n", g_frame, st, fl, g_t1, g_t2,
@@ -177,7 +190,7 @@ extern "C" int cam_guard_frame(void *camv, void *player, const int *shown_eye, c
     ++g_trips;
     std::fprintf(stderr, "[camwd] trip T%d f%u st=%d cf=%x look=%lld me=%d,%d,%d -> %s\n", which, g_frame, st, fl,
                  dist3(shown_at, me) >> 12, me[0] >> 12, me[1] >> 12, me[2] >> 12,
-                 !acts ? (g_env == 3 ? "logged (SM64DS_CAMWD=L: left alone)" : "logged (single player: left alone)") : rate ? "held (recovered under 10 s ago)" : "recovered");
+                 !acts ? (g_env == 3 ? "logged (SM64DS_CAMWD=L: left alone)" : "logged (not a coop room: left alone)") : rate ? "held (recovered under 10 s ago)" : "recovered");
     g_t1 = g_t2 = g_t3 = 0;
     if (!acts || rate) return 0;
     *(unsigned *)(cam + kFlags) &= ~(8u | 0x10u | 0x4000u | 0x8000u);
