@@ -52,6 +52,9 @@ void _ZN13daObjBlockL_c4KillEv(char *self);            // the brick block's brea
 void func_ov084_021296cc(void *goomba);                // the Goomba's silver star reward (SM64DS_SILVER_GOOMBA proof knob)
 void func_ov084_02129498(void *goomba);                // the Goomba's removal at the end of its death
 void _ZN12daStarBase_c27SpawnRedCoinStarIfNecessaryEv(void *self);
+void coop_camshield_mark(void *a, const char *why);   // hal/coop_camshield.cpp (CANNON2): a friend's star never films here
+void coop_camshield_on_kill(void *a);                 // ...and a copy removed mid-scene gives the camera back first
+void coop_camshield_frame(unsigned frame);            // ...and its proof knobs
 unsigned DeathTable_GetBit(int id);
 void _ZN5Event6SetBitEj(unsigned b);
 extern int data_ov089_02132894[];      // Key kinds 0..6: pointers to the kind's SharedFilePtr (src/_ZN3Key13InitResourcesEv.cpp)
@@ -455,7 +458,7 @@ void kill_quiet(char *a) {
         char *m = _ZN8dActor_c10FindWithIDEj(*(unsigned *)(a + 0x434));
         if (m) { _ZN12daStarBase_c27LinkSilverStarAndStarMarkerEPc(m, nullptr); _ZN7fBase_c18MarkForDestructionEv(m); }
     }
-    if (is_star_cls(cls)) _ZN8daStar_c19func_ov002_020e7e58Ev(a);
+    if (is_star_cls(cls)) { coop_camshield_on_kill(a); _ZN8daStar_c19func_ov002_020e7e58Ev(a); }
     _ZN7fBase_c18MarkForDestructionEv(a);
 }
 
@@ -639,7 +642,11 @@ void red_check_star(int star_id) {
         if (*(unsigned char *)(m + 0x1d8) != 0) continue;
         if (*(unsigned char *)(m + 0x1d9) != star_id) continue;
         if (*(unsigned char *)(m + 0x1db) & 4) continue;           // its star is already out
+        unsigned wm = 0;                                            // CANNON2: the star this makes is a friend's (his coins finished it)
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) if (a_uid(a) > wm) wm = a_uid(a);
         _ZN12daStarBase_c27SpawnRedCoinStarIfNecessaryEv(m);
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+            if (a_uid(a) > wm && is_star_cls(a_cls(a))) coop_camshield_mark(a, "a friend's eighth red coin");
         ++g_st.star_spawn_native;
         if (g_log)
             std::fprintf(stderr, "[coopspawn] red coin star: marker slot=%d star=%d sum=%d called the ROM's spawn frame=%u wall=%lld\n",
@@ -1468,6 +1475,7 @@ void apply_spawn(int seat, const SpSpawnWire &w, unsigned now) {
     }
     char *a = adopt ? adopt : (w.cls == 200 ? coop_boss_spawn_minion(w.pos, w.param, w.area, w.reserved) : do_spawn(w));
     if (!a) { ++g_st.spawn_failed; return; }
+    if (is_star_cls(w.cls)) coop_camshield_mark(a, adopt ? "adopted for a friend's announce" : "built for a friend's announce");
     *n = Net();
     n->used = true; n->remote = true; n->origin = w.origin; n->kind = w.kind; n->counter = w.counter; n->cls = w.cls;
     n->param = w.param; n->pos[0] = w.pos[0]; n->pos[1] = w.pos[1]; n->pos[2] = w.pos[2]; n->area = w.area;
@@ -1953,6 +1961,7 @@ void on_frame(unsigned now) {
     }
     if (!my_player()) return;
     ++g_frames;
+    coop_camshield_frame(g_frames);
 
     // SMALLS9B proof knob: SM64DS_SMALLS9B_KEYBIT=<frame>:<mask> ORs the mask into my live save copy's flags1 at that frame (the bit a rabbit
     // catch sets: 0x40 / 0x80, a monotonic bit of the shared record); while the knob is set the live flags1 is logged every 60 frames.
