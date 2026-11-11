@@ -1,5 +1,20 @@
 {
   "known": {
+    "func_ov002_020eedc0": {
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:void"
+      ]
+    },
+    "func_ov002_020edca4": {
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:int"
+      ]
+    },
+    "data_0209f2bc": {
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:unsigned char []"
+      ]
+    },
     "ARMMathLoadState": {
       "src/ui/menus/unit020b6eb4.cpp": [
         "param:#1 ARMMathState *"
@@ -7259,7 +7274,11 @@
     "data_02092114": {
       "src/ui/hud/CapIconMgr.cpp": [
         "return:signed char"
+      ],
+      "include/decl_common.h": [
+        "return:unsigned char"
       ]
+
     },
     "gReturnSublevel": {
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
@@ -9512,12 +9531,20 @@
     "gMeterShownHealth": {
       "src/_ZN7daPly_c16St_BurnLava_MainEv.cpp": [
         "return:unsigned char"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:unsigned char"
       ]
+
     },
     "gShowRaceTimer": {
       "src/ui/hud/d_meter.cpp": [
         "return:unsigned char"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:unsigned char []"
       ]
+
     },
     "data_ov003_020b1704": {
       "src/game/stages/d_s_star_sel_methods.cpp": [
