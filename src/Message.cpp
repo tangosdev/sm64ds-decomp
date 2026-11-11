@@ -500,7 +500,7 @@ extern "C" void Message_DrawLineBG2(void) {
 extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
     volatile int zero;
     int bytes;
-    char *p;
+    u8 *p;
     int i;
     int idx = data_0209d6d4;
     char *base = (char *)data_0209d708;
@@ -516,7 +516,7 @@ extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
     data_0209d65c = ((width * 8 - old) & 0xf) >> 1;
     data_0209d6b0 = old + data_0209d65c;
     bytes = (data_0209d6b0 + 7) / 8 * 0x40;
-    p = (char *)G2S_GetBG0CharPtr() + 0x4000 + (data_0209d6a8 << 5);
+    p = (u8 *)G2S_GetBG0CharPtr() + 0x4000 + (data_0209d6a8 << 5);
     col = width - (old + 7) / 8;
     zero = 0;
     MIi_CpuClear32(zero, (int *)p, bytes);
@@ -1037,7 +1037,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     data_0209d6a8 = 0x20;
 
     {
-        void *chars = (char *)G2_GetBG3CharPtr() + 0x4800;
+        void *chars = (u8 *)G2_GetBG3CharPtr() + 0x4800;
         zero2 = 0;
         MIi_CpuClear32(zero2, (int *)chars, 0x800);
     }
@@ -1114,7 +1114,7 @@ void Message::DisplaySaving(unsigned short n)
     data_0209d65c = 0;
 
     {
-        void *chars = (char *)G2_GetBG3CharPtr() + 0x4000;
+        void *chars = (u8 *)G2_GetBG3CharPtr() + 0x4000;
         zero = 0;
         MIi_CpuClear32(zero, (int *)chars, 0x2000);
     }
@@ -1398,7 +1398,7 @@ extern "C" void func_0201f32c(int arg0)
         tile = 0x2200;
     } else {
         {
-            void *pa = (char *)G2_GetBG3CharPtr() + 0x4000;
+            void *pa = (u8 *)G2_GetBG3CharPtr() + 0x4000;
             bg3Zero = 0;
             MIi_CpuClear32(bg3Zero, (int *)pa, 0x3000);
         }
