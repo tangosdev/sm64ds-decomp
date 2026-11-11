@@ -51,9 +51,9 @@ static int minimap_ghost_impl(int slot, int pos[3]) {
         const int f = port_rom_frame();
         if (b0 >= 0 && f >= b0 && f < b1) return 0;
     }
-    if (port_adventure_ghost_seat(slot) < 0) return 0;   // not a hub ghost
+    const bool seated = port_adventure_ghost_seat(slot) >= 0;   // MAPDOTS1: a friend in another area has no seat on a body here
     s_char[slot & 31] = -1;
-    if (!port_adventure_ghost_drawpos(slot, pos)) {
+    if (!seated || !port_adventure_ghost_drawpos(slot, pos)) {
         // MAPDOTS1: not drawn here. A friend in another area of THIS level is still on the
         // map, from his newest synced frame (answer 3); another level shows nothing (2).
         int ch = 0;
@@ -67,7 +67,7 @@ static int minimap_ghost_impl(int slot, int pos[3]) {
             }
             return 3;
         }
-        return 2;
+        return seated ? 2 : 0;
     }
     if (log_env()) {
         static unsigned n[kMinimapWidePlayers];

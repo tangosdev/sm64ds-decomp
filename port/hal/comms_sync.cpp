@@ -4209,8 +4209,28 @@ extern "C" int port_adventure_ghost_drawpos(int slot, int out[3]) {
 // newest frame's position, *character his character).
 extern "C" int port_adventure_ghost_mappos(int slot, int out[3], int *character) {
     if (!g_hub || slot < 0 || slot >= kPortBodySlots) return 0;
-    const int s = gw_seat_for_body(slot);
-    if (s < 0 || s >= kHubMaxSeats) return 0;
+    int s = gw_seat_for_body(slot);
+    if (s < 0) {
+        /* A friend in another area is given no body by gw_assign (his seat is not here), so no body names him. The bodies that
+           name nobody stand in for such friends, in body order and seat order, the same on every call this frame. */
+        if (!g_assign_init || slot >= (int)data_0209f21c || slot == (int)data_0209f250 || !data_0209f394[slot]) return 0;
+        int rank = 0;
+        for (int b2 = 0; b2 < slot; ++b2)
+            if (b2 != (int)data_0209f250 && b2 < (int)data_0209f21c && data_0209f394[b2] && g_body_seat[b2] < 0) ++rank;
+        const int my = comms_hub_my_seat();
+        for (int q = 0; q < kHubMaxSeats; ++q) {
+            if (q == my) continue;
+            bool taken = false;
+            for (int b2 = 0; b2 < kPortBodySlots; ++b2) if (g_body_seat[b2] == q) taken = true;
+            if (taken) continue;
+            GwSeat &zq = g_gw[q];
+            if (zq.n == 0 || (int)zq.ring[zq.n - 1].f.level_id != (int)data_0209f2f8) continue;
+            if (gw_here(zq) != 2) continue;
+            if (rank-- == 0) { s = q; break; }
+        }
+        if (s < 0) return 0;
+    }
+    if (s >= kHubMaxSeats) return 0;
     GwSeat &z = g_gw[s];
     const int h = gw_here(z);
     if (h == 0) return 0;
