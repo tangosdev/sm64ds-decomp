@@ -7,10 +7,10 @@
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "One contiguous run of the Nitro SDK's gx_load2d.c, 0x02055dec..0x020568cc: 30 functions. pret/pokediamond's arm9/lib/NitroSDK/src/GX_load2d.c, compiled with its own pinned mwccarm 1.2/sp2p3, emits 36; every function here lines up with one in the same order. The run ends with GXS_LoadOBJ 0x60, GX_LoadOBJ 0x60, GXS_LoadOAM 0x68, GX_LoadOAM 0x5c, GXS_LoadOBJPltt 0x68, GX_LoadOBJPltt 0x68, GXS_LoadBGPltt 0x68 and GX_LoadBGPltt 0x5c, eight exact sizes at 0x020565b4..0x020568cc. The six GX_ (main-engine) extended-palette loaders are absent because nothing in this game calls them, so the linker dropped them; the BG char/screen loaders run 0x60 here against pret's 0x68 (SDK version drift).",
-    "The file holds both engines' loaders, so GX:: members inside the run (LoadBGPltt, LoadOBJPltt, LoadOBJ, LoadBG0Char, LoadBG1Char) belong here: the edge to gx_load3d.c is the file edge 0x020568cc, not the GX/GXS namespace change at 0x02056870.",
-    "TOP EDGE: GX::EndLoadTexPltt at 0x020568cc is GX_EndLoadTexPltt, the first gx_load3d.c function here (arm9/GX).",
+    "The file holds both engines' loaders, so the GX_ (main-engine) loaders inside the run (GX_LoadBGPltt, GX_LoadOBJPltt, GX_LoadOBJ, GX_LoadBG0Char, GX_LoadBG1Char, GX_LoadBG2Char, GX_LoadBG1Scr) belong here: the edge to gx_load3d.c is the file edge 0x020568cc.",
+    "TOP EDGE: GX_EndLoadTexPltt at 0x020568cc is the first gx_load3d.c function here (arm9/GX).",
     "BOTTOM EDGE: src/engine/gx/G3i.cpp ends at 0x02055dec where the run begins.",
-    "GXS is a namespace (Nitro SDK sub-screen family), not a class: no this, no vtable, no layout -- plain static functions only."
+    "These are NitroSDK C functions under their SDK names (extern \"C\"), not a class: no this, no vtable, no layout."
   ],
   "sections": [
     {
@@ -21,210 +21,210 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN3GXS17EndLoadOBJExtPlttEv",
+      "symbol": "GXS_EndLoadOBJExtPltt",
       "address": "0x02055dec",
       "size": "0x0000004c",
       "legacy_source": "src/_ZN3GXS17EndLoadOBJExtPlttEv.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "_ZN3GXS14LoadOBJExtPlttEPKvjj",
+      "symbol": "GXS_LoadOBJExtPltt",
       "address": "0x02055e38",
       "size": "0x00000074",
       "legacy_source": "src/_ZN3GXS14LoadOBJExtPlttEPKvjj.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_ZN3GXS19BeginLoadOBJExtPlttEv",
+      "symbol": "GXS_BeginLoadOBJExtPltt",
       "address": "0x02055eac",
       "size": "0x00000024",
       "legacy_source": "src/_ZN3GXS19BeginLoadOBJExtPlttEv.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN3GXS16EndLoadBGExtPlttEv",
+      "symbol": "GXS_EndLoadBGExtPltt",
       "address": "0x02055ed0",
       "size": "0x0000004c",
       "legacy_source": "src/_ZN3GXS16EndLoadBGExtPlttEv.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN3GXS13LoadBGExtPlttEPKvjj",
+      "symbol": "GXS_LoadBGExtPltt",
       "address": "0x02055f1c",
       "size": "0x00000074",
       "legacy_source": "src/_ZN3GXS13LoadBGExtPlttEPKvjj.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN3GXS18BeginLoadBGExtPlttEv",
+      "symbol": "GXS_BeginLoadBGExtPltt",
       "address": "0x02055f90",
       "size": "0x00000024",
       "legacy_source": "src/_ZN3GXS18BeginLoadBGExtPlttEv.cpp",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN3GXS11LoadBG3CharEPKvjj",
+      "symbol": "GXS_LoadBG3Char",
       "address": "0x02055fb4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02055fb4.c",
       "ordinal": 6
     },
     {
-      "symbol": "func_02056014",
+      "symbol": "GX_LoadBG3Char",
       "address": "0x02056014",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056014.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN3GXS11LoadBG2CharEPKvjj",
+      "symbol": "GXS_LoadBG2Char",
       "address": "0x02056074",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056074.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN2GX11LoadBG2CharEPKvjj",
+      "symbol": "GX_LoadBG2Char",
       "address": "0x020560d4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_020560d4.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN3GXS11LoadBG1CharEPKvjj",
+      "symbol": "GXS_LoadBG1Char",
       "address": "0x02056134",
       "size": "0x00000060",
       "legacy_source": "src/_ZN3GXS11LoadBG1CharEPKvjj.cpp",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN2GX11LoadBG1CharEPKvjj",
+      "symbol": "GX_LoadBG1Char",
       "address": "0x02056194",
       "size": "0x00000060",
       "legacy_source": "src/_ZN2GX11LoadBG1CharEPKvjj.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN3GXS11LoadBG0CharEPKvjj",
+      "symbol": "GXS_LoadBG0Char",
       "address": "0x020561f4",
       "size": "0x00000060",
       "legacy_source": "src/_ZN3GXS11LoadBG0CharEPKvjj.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN2GX11LoadBG0CharEPKvjj",
+      "symbol": "GX_LoadBG0Char",
       "address": "0x02056254",
       "size": "0x00000060",
       "legacy_source": "src/_ZN2GX11LoadBG0CharEPKvjj.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "func_020562b4",
+      "symbol": "GXS_LoadBG3Scr",
       "address": "0x020562b4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_020562b4.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_02056314",
+      "symbol": "GX_LoadBG3Scr",
       "address": "0x02056314",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056314.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_02056374",
+      "symbol": "GXS_LoadBG2Scr",
       "address": "0x02056374",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056374.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_020563d4",
+      "symbol": "GX_LoadBG2Scr",
       "address": "0x020563d4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_020563d4.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_02056434",
+      "symbol": "GXS_LoadBG1Scr",
       "address": "0x02056434",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056434.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN2GX10LoadBG1ScrEPKvii",
+      "symbol": "GX_LoadBG1Scr",
       "address": "0x02056494",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056494.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_020564f4",
+      "symbol": "GXS_LoadBG0Scr",
       "address": "0x020564f4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_020564f4.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_02056554",
+      "symbol": "GX_LoadBG0Scr",
       "address": "0x02056554",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_02056554.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN3GXS7LoadOBJEPKvjj",
+      "symbol": "GXS_LoadOBJ",
       "address": "0x020565b4",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0205/func_020565b4.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN2GX7LoadOBJEPKvjj",
+      "symbol": "GX_LoadOBJ",
       "address": "0x02056614",
       "size": "0x00000060",
       "legacy_source": "src/_ZN2GX7LoadOBJEPKvjj.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "func_02056674",
+      "symbol": "GXS_LoadOAM",
       "address": "0x02056674",
       "size": "0x00000068",
       "legacy_source": "src/func_02056674.c",
       "ordinal": 24
     },
     {
-      "symbol": "func_020566dc",
+      "symbol": "GX_LoadOAM",
       "address": "0x020566dc",
       "size": "0x0000005c",
       "legacy_source": "src/func_020566dc.c",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN3GXS11LoadOBJPlttEPKvjj",
+      "symbol": "GXS_LoadOBJPltt",
       "address": "0x02056738",
       "size": "0x00000068",
       "legacy_source": "src/_ZN3GXS11LoadOBJPlttEPKvjj.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN2GX11LoadOBJPlttEPKvjj",
+      "symbol": "GX_LoadOBJPltt",
       "address": "0x020567a0",
       "size": "0x00000068",
       "legacy_source": "src/_ZN2GX11LoadOBJPlttEPKvjj.cpp",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN3GXS10LoadBGPlttEPKvjj",
+      "symbol": "GXS_LoadBGPltt",
       "address": "0x02056808",
       "size": "0x00000068",
       "legacy_source": "src/_ZN3GXS10LoadBGPlttEPKvjj.cpp",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN2GX10LoadBGPlttEPKvjj",
+      "symbol": "GX_LoadBGPltt",
       "address": "0x02056870",
       "size": "0x0000005c",
       "legacy_source": "src/_ZN2GX10LoadBGPlttEPKvjj.cpp",

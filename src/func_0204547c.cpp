@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "cstd.h"
+#include "msl/stdlib.h"
 
 extern "C" {
 
@@ -127,7 +127,7 @@ unsigned short func_020456a0(int a0, int a1, int shift, int a3, short *tbl) {
     if (sfrac == 0)
         return (unsigned short)lo;
 
-    if (cstd::abs(lo - hi) >= 0x800) {
+    if (abs(lo - hi) >= 0x800) {
         if (lo > hi)
             hi = (short)(hi + 0x1000);
         else

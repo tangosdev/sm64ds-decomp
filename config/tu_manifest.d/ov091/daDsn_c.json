@@ -574,19 +574,19 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@686",
+      "from": "@617",
       "to": "@795",
-      "evidence": "compiler-local __register_global_object node; renamed to an unused fleet temp of equal length | compiler temp; retiring this TU's named-parameter extern \"C\" helper and Particle stub declarations lowers the per-TU @NNN uniquifier and including Particle__System.h raises it, so mwcc emits it under this name now"
+      "evidence": "compiler-local __register_global_object node; renamed to an unused fleet temp of equal length | compiler temp; retiring this TU's named-parameter extern \"C\" helper and Particle stub declarations lowers the per-TU @NNN uniquifier and including Particle__System.h raises it, so mwcc emits it under this name now Re-keyed from @686 to @617 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@687",
+      "from": "@618",
       "to": "@791",
-      "evidence": "compiler-local __register_global_object node; @629 is taken on main by ov064 data, renamed to an unused fleet temp of equal length | compiler temp; retiring this TU's named-parameter extern \"C\" helper and Particle stub declarations lowers the per-TU @NNN uniquifier and including Particle__System.h raises it, so mwcc emits it under this name now"
+      "evidence": "compiler-local __register_global_object node; @629 is taken on main by ov064 data, renamed to an unused fleet temp of equal length | compiler temp; retiring this TU's named-parameter extern \"C\" helper and Particle stub declarations lowers the per-TU @NNN uniquifier and including Particle__System.h raises it, so mwcc emits it under this name now Re-keyed from @687 to @618 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@688",
+      "from": "@619",
       "to": "@789",
-      "evidence": "compiler-local __register_global_object node; renamed to an unused fleet temp of equal length | compiler temp; retiring this TU's named-parameter extern \"C\" helper and Particle stub declarations lowers the per-TU @NNN uniquifier and including Particle__System.h raises it, so mwcc emits it under this name now"
+      "evidence": "compiler-local __register_global_object node; renamed to an unused fleet temp of equal length | compiler temp; retiring this TU's named-parameter extern \"C\" helper and Particle stub declarations lowers the per-TU @NNN uniquifier and including Particle__System.h raises it, so mwcc emits it under this name now Re-keyed from @688 to @619 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "relocations": [

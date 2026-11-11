@@ -91,7 +91,8 @@ HIST = "be9d58ed~1"
 REPORT = os.path.join(ROOT, "build", "gen_header_report.json")
 MARKER_BUCKET = "marker: object, extent unknown"
 
-# include/G2x.h describes hardware registers, not an object (issue #1148).
+# The G2x header (include/nitro/gx/g2.h since the SDK rename) describes hardware
+# registers, not an object (issue #1148).
 BOGUS_HEADERS = {"G2x"}
 
 

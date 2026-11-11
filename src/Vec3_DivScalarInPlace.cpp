@@ -1,6 +1,6 @@
 //cpp
-#include "cstd.h"
 #include "types.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -19,9 +19,9 @@ Vector3 *Vec3_DivScalarInPlace(Vector3 *v, int s) {
         else if (v->z < 0)
             v->z = (s32)0x80000000;
     } else {
-        v->x = cstd::fdiv(v->x, s);
-        v->y = cstd::fdiv(v->y, s);
-        v->z = cstd::fdiv(v->z, s);
+        v->x = FX_Div(v->x, s);
+        v->y = FX_Div(v->y, s);
+        v->z = FX_Div(v->z, s);
     }
     return v;
 }

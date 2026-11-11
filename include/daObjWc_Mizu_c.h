@@ -36,7 +36,7 @@ struct daObjWc_Mizu_c : dBgActor_c {
     s32 mSoundID;   /* 0x33c */
     s8 mTrueAreaID; /* 0x340 -- mAreaId as spawned; s8 like it */
     u8 pad_341;
-    /* Behavior adds 0x200 per frame; (u16)>>4 indexes data_02082214.
+    /* Behavior adds 0x200 per frame; (u16)>>4 indexes FX_SinCosTable_.
        Same sine-table shape as daObjFl_UkiKi_c::mPhaseAngle. Was pad_341[3]
        covering this live halfword. */
     s16 mPhaseAngle;  /* 0x342 */

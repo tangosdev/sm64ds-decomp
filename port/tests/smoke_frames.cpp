@@ -1,6 +1,6 @@
 // Gate-5 smoke: the game's frame shape runs on the fiber runtime.
 //
-// A DS game is a loop that blocks in VBlankIntrWait, and the port keeps
+// A DS game is a loop that blocks in SVC_WaitVBlankIntr, and the port keeps
 // that shape: the loop below runs on its own fiber (ntr::rt_run), poses and
 // renders through the game's code each frame, and yields at VBlank exactly
 // where the real main loop does. The host fiber rasters each completed

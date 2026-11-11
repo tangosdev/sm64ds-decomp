@@ -164,9 +164,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@619",
+      "from": "@565",
       "to": "@555",
-      "evidence": "mwcc numbers this registration node @542 per TU and ov080/daPicGate_c already defines a global @542 at 0x0212826c, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this registration node @542 per TU and ov080/daPicGate_c already defines a global @542 at 0x0212826c, so the scratch link would multiply-define it Re-keyed from @619 to @565 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "relocations": [

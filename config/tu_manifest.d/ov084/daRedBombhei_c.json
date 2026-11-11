@@ -621,44 +621,44 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@642",
+      "from": "@568",
       "to": "data_ov084_02130dac",
-      "evidence": "compiler temp mapped to 0x02130dac by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02130dac by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @642 to @568 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@643",
+      "from": "@569",
       "to": "data_ov084_02130db8",
-      "evidence": "compiler temp mapped to 0x02130db8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02130db8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @643 to @569 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@645",
+      "from": "@571",
       "to": "data_ov084_021309dc",
-      "evidence": "compiler temp mapped to 0x021309dc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021309dc by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @645 to @571 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@647",
+      "from": "@573",
       "to": "data_ov084_021309ec",
-      "evidence": "compiler temp mapped to 0x021309ec by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021309ec by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @647 to @573 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@649",
+      "from": "@575",
       "to": "data_ov084_021309cc",
-      "evidence": "compiler temp mapped to 0x021309cc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021309cc by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @649 to @575 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@651",
+      "from": "@577",
       "to": "data_ov084_021309e4",
-      "evidence": "compiler temp mapped to 0x021309e4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021309e4 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @651 to @577 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@653",
+      "from": "@579",
       "to": "data_ov084_021309c4",
-      "evidence": "compiler temp mapped to 0x021309c4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021309c4 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @653 to @579 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@655",
+      "from": "@581",
       "to": "data_ov084_021309d4",
-      "evidence": "compiler temp mapped to 0x021309d4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x021309d4 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @655 to @581 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

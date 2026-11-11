@@ -154,19 +154,18 @@ extern dCamera_c *gCamera;
    clash with these (illegal function overloading). */
 extern Matrix4x3 data_020a0e68;
 extern int data_02092138;
-extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
+extern void MTX_Concat43(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void func_02012694(unsigned int a, void *p);
 extern void func_02011cfc(void);
 }
 extern "C" {
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
 extern void func_0200fa8c(void *c, int a);
-extern void func_ov102_0214b384(void *a, unsigned int b);
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
@@ -224,7 +223,7 @@ int daBombking_c::TickDefeated() {
     v.y = 0;
     v.z = 0;
     data_020a0e68 = this->mBlendAnmModel.mat4x3;
-    MulMat4x3Mat4x3(&this->mBlendAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&this->mBlendAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
 
     v.x = data_020a0e68.m[9];
     v.y = data_020a0e68.m[10];
@@ -591,7 +590,7 @@ int daBombking_c::TickHomeTalk() {
         a.y = 0;
         a.z = 0;
         data_020a0e68 = this->mBlendAnmModel.mat4x3;
-        MulMat4x3Mat4x3(&this->mBlendAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
+        MTX_Concat43(&this->mBlendAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
         a.x = data_020a0e68.m[9];
         a.y = data_020a0e68.m[10];
         a.z = data_020a0e68.m[11];
@@ -626,7 +625,7 @@ int daBombking_c::TickHomeTalk() {
         look.y += 0x100000;
         in.z = 0x800000;
         Matrix4x3_FromRotationY(&data_020a0e68, ang);
-        MulVec3Mat4x3(&in, &data_020a0e68, &out);
+        MTX_MultVec43(&in, &data_020a0e68, &out);
         pos.y += 0x100000;
         pos.x += out.x;
         pos.z += out.z;
@@ -682,7 +681,7 @@ int daBombking_c::TickReturnHome() {
         vC.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, this->mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngleX);
-        MulVec3Mat4x3((Vector3 *)&vB, &data_020a0e68, (Vector3 *)&vC);
+        MTX_MultVec43((Vector3 *)&vB, &data_020a0e68, (Vector3 *)&vC);
         this->mSpeedX = vC.x;
         if (this->mActionStep == 0) {
             this->mVertSpeed = vC.y;
@@ -948,7 +947,7 @@ int daBombking_c::EnterHeldByPlayer() {
 
 int daBombking_c::TickThrowBomb() {
     struct Vector3 in, out, v[2];
-    dActor_c *target;
+    daBmb_c *target;
     daPly_c *player;
 
     if (CheckKnockbackHit() == 1) {
@@ -957,7 +956,7 @@ int daBombking_c::TickThrowBomb() {
     }
 
     if (this->mSpawnedThrown[this->mSpawnSlot] == 0) {
-        target = dActor_c::FindWithID(this->mSpawnedId[this->mSpawnSlot]);
+        target = (daBmb_c *)dActor_c::FindWithID(this->mSpawnedId[this->mSpawnSlot]);
         if (target != 0) {
             target->mPosX = this->mThrowPosX;
             target->mPosY = this->mThrowPosY;
@@ -968,7 +967,7 @@ int daBombking_c::TickThrowBomb() {
             target->mAngleX = this->mAngleX;
             target->mAngleY = this->mAngleY;
             target->mAngleZ = this->mAngleZ;
-            func_ov102_0214b384(target, 0x78);
+            target->func_ov102_0214b384(0x78);
             if (((dExtFrameCtrl_c *)&this->mBlendAnmModel)->WillHitFrame(0x13) != 0 ||
                 CheckKnockbackHit() == 1) {
                 in.x = 0; in.y = 0; in.z = 0x28000;
@@ -987,13 +986,13 @@ int daBombking_c::TickThrowBomb() {
                     Matrix4x3_ApplyInPlaceToRotationX(
                         &data_020a0e68, (short)(-cstd::atan2(v[0].y, Vec3_HorzLen(&v[0]))));
                     out.y += 0x14000;
-                    func_ov102_0214ad14(target);
+                    target->func_ov102_0214ad14();
                     target->mSpeedX = out.x;
                     target->mVertSpeed = out.y;
                     target->mSpeedZ = out.z;
                     target->mHorzSpeed = 0x14000;
                     target->mVertAccel = -0x2000;
-                    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+                    MTX_MultVec43(&in, &data_020a0e68, &out);
                 }
                 this->mSpawnedThrown[this->mSpawnSlot] = 1;
                 target->mCarryMatrix = 0;
@@ -1171,7 +1170,7 @@ int daBombking_c::TickActivate() {
         s.y = 0;
         s.z = 0;
         data_020a0e68 = this->mBlendAnmModel.mat4x3;
-        MulMat4x3Mat4x3(&this->mBlendAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
+        MTX_Concat43(&this->mBlendAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
         s.x = data_020a0e68.m[9];
         s.y = data_020a0e68.m[10];
         s.z = data_020a0e68.m[11];
@@ -1357,8 +1356,8 @@ void daBombking_c::UpdateHandMatrix() {
     this->mBlendAnmModel.mat4x3.m[9] = this->mPosX >> 3;
     this->mBlendAnmModel.mat4x3.m[10] = this->mPosY >> 3;
     this->mBlendAnmModel.mat4x3.m[11] = this->mPosZ >> 3;
-    MulMat4x3Mat4x3(&this->mBlendAnmModel.data.transforms[10], &this->mBlendAnmModel.mat4x3,
-                    this->mHoldMtx);
+    MTX_Concat43(&this->mBlendAnmModel.data.transforms[10], &this->mBlendAnmModel.mat4x3,
+                 this->mHoldMtx);
 
     /* Held-matrix pointer: dActor_c's mCarryMatrix. */
     this->mCarryMatrix = (Matrix4x3 *)this->mHoldMtx;

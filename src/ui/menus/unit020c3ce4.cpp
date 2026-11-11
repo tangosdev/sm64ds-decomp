@@ -53,10 +53,10 @@ extern Ov007QueryHook data_ov007_02104c14;
 extern Ov007FreeHook data_ov007_02103254;
 extern Ov007AllocHook data_ov007_02103258;
 
-extern void MultiStore32Bytes(unsigned val, void *dst, int len);
-extern void MultiStore_Int(int val, int *dst, int len);
-extern void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern void func_0205a588(void *dst, unsigned char value, unsigned int size);
+extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
+extern void MIi_CpuClear32(int val, int *dst, int len);
+extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
+extern void MI_CpuFill8(void *dst, unsigned char value, unsigned int size);
 
 /* local extern: no include/ header declares the OS heap entry points. */
 extern void *OS_AllocFromHeap(int id, int heap, unsigned int size);
@@ -100,19 +100,19 @@ void *MenuMem_AllocClear(const char *name, int n) {
     case 0:
         if (n - (n & ~0x1f) != 0) {
             v32 = 0;
-            MultiStore32Bytes(v32, r, n);
+            MIi_CpuClearFast(v32, r, n);
         } else {
             vint = 0;
-            MultiStore_Int(vint, r, n);
+            MIi_CpuClear32(vint, r, n);
         }
         break;
     case 2:
         v16 = 0;
-        MultiStore16(v16, (char *)r, n);
+        MIi_CpuClear16(v16, (char *)r, n);
         break;
     case 1:
     case 3:
-        func_0205a588(r, 0, n);
+        MI_CpuFill8(r, 0, n);
         break;
     }
     return r;

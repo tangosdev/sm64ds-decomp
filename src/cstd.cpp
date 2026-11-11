@@ -1,34 +1,28 @@
 //cpp
-/* cstd -- the division-unit routines (mod/div/fdiv/ldiv plus the
- * async/result pairs) and the square-root-unit helpers that live in the
- * same contiguous run, arm9 .text 0x02052ef4..0x02053320, 14 functions.
+/* NitroSDK's coprocessor divide and square-root routines, FX_cp.c (pret
+ * pokediamond arm9/lib/NitroSDK/src/FX_cp.c), arm9 .text 0x02052ef4..
+ * 0x02053274, plus VEC_Distance at the top of the run. VEC_Distance is the
+ * last live function of fx_vec.c (NitroSDK libraries/fx/src/fx_vec.c; its
+ * VEC_Fx16Distance is dead-stripped), so this TU's upper boundary is still
+ * the shard fold's and not the SDK's.
  *
  * mwccarm emits .text in reverse source order here, so definitions run from
- * the highest address (func_02053274) down to the lowest (mod); each earlier
- * definition is the declaration its callers need, with the remaining
- * callees forward-declared below.
+ * the highest address (VEC_Distance) down to the lowest (FX_ModS32), the
+ * order pret's FX_cp.c writes them in. FX_DivFx64c, FX_InvSqrt and
+ * FX_SqrtAsync are the later SDK's additions to the same file.
  *
- * cstd::fdiv_async and cstd::reciprocal_async are real namespaced functions.
- * They used to keep the shards' extern "C" spellings of mangled names
- * carrying Fix12<int> by value, on the grounds that such a parameter is
- * stack-homed when the body reads it (wall 6az). The Fix12<int> in those
- * names was ours, not the ROM's: declared with the honest scalar Fix12i
- * (plain int) parameters they reproduce exactly. See notes/mwccarm-codegen.md 6az, MEASURED 2026-10-22.
+ * These were the coined cstd:: namespace (fdiv, div, mod, ldiv, fdiv_async,
+ * reciprocal_async, fdiv_result, ldiv_result) and two func_ names; the ROM
+ * calls them from C, so they are C symbols under the SDK's names.
  */
 #include "types.h"
 #include "nitro/hw/registers.h"
-#include "cstd.h"
+#include "nitro/fx/fx_cp.h"
 
+/* |a - b|: the squared distance through the hardware sqrt unit, rounded
+   back to 20.12. */
 extern "C" {
-int FX_GetSqrtResult(void);
-void FX_SqrtAsync(int n);
-}
-
-/* Squared distance |a-b|^2 through the hardware sqrt unit; returns the
-   20.12 result. */
-extern "C" {
-int func_02053274(int *a, int *b)
-{
+int VEC_Distance(int *a, int *b) {
     volatile unsigned short *imeReg = (volatile unsigned short *)0x4000208;
     volatile unsigned short *sqrtcnt = (volatile unsigned short *)0x40002b0;
     volatile unsigned int *sqrtParam = (volatile unsigned int *)0x40002b8;
@@ -53,39 +47,33 @@ int func_02053274(int *a, int *b)
 }
 }
 
-namespace cstd {
+extern "C" {
 
-s32 fdiv(s32 numerator, s32 denominator)
-{
-    fdiv_async(numerator, denominator);
-    return fdiv_result();
+fx32 FX_Div(fx32 numerator, fx32 denominator) {
+    FX_DivAsync(numerator, denominator);
+    return FX_GetDivResult();
+}
 }
 
-}
+extern "C" {
 
-namespace cstd {
-
-long long ldiv(int a, int b)
-{
-    fdiv_async(a, b);
+fx64c FX_DivFx64c(fx32 a, fx32 b) {
+    FX_DivAsync(a, b);
     while (*(volatile unsigned short *)0x4000280 & 0x8000)
         ;
     return *(volatile long long *)0x40002a0;
 }
-
 }
 
 extern "C" {
-s32 func_02053200(s32 x)
-{
-    cstd::reciprocal_async(x);
-    return cstd::fdiv_result();
+fx32 FX_Inv(fx32 x) {
+    FX_InvAsync(x);
+    return FX_GetDivResult();
 }
 }
 
 extern "C" {
-int func_020531a4(int a)
-{
+fx32 FX_Sqrt(fx32 a) {
     volatile unsigned short *imeReg = (volatile unsigned short *)0x4000208;
     volatile int *sqrtParam = (volatile int *)0x40002b8;
     unsigned short savedIME;
@@ -102,13 +90,13 @@ int func_020531a4(int a)
 }
 
 extern "C" {
-s32 FX_InvSqrt(s32 x) {
+fx32 FX_InvSqrt(fx32 x) {
     s64 quotient;
 
     if (x > 0) {
-        cstd::reciprocal_async(x);
+        FX_InvAsync(x);
         FX_SqrtAsync(x);
-        quotient = cstd::ldiv_result();
+        quotient = FX_GetDivResultFx64c();
 
         while (REG_SQRTCNT & SQRT_CONTROL_BUSY)
             ;
@@ -120,28 +108,26 @@ s32 FX_InvSqrt(s32 x) {
 }
 }
 
-namespace cstd {
+extern "C" {
 
-long long ldiv_result(void)
-{
-  while(*(volatile unsigned short*)0x4000280 & 0x8000);
-  return *(volatile long long*)0x40002a0;
+fx64c FX_GetDivResultFx64c(void) {
+    while (*(volatile unsigned short *)0x4000280 & 0x8000)
+        ;
+    return *(volatile long long *)0x40002a0;
+}
 }
 
+extern "C" {
+
+fx32 FX_GetDivResult(void) {
+    while (*(volatile unsigned short *)0x4000280 & 0x8000)
+        ;
+    return (int)((*(volatile long long *)0x40002a0 + 0x80000) >> 20);
+}
 }
 
-namespace cstd {
-
-int fdiv_result(void)
-{
-  while(*(volatile unsigned short*)0x4000280 & 0x8000);
-  return (int)((*(volatile long long*)0x40002a0 + 0x80000) >> 20);
-}
-
-}
-
-namespace cstd {
-void reciprocal_async(Fix12i a) {
+extern "C" {
+void FX_InvAsync(fx32 a) {
     *(volatile unsigned short *)0x4000280 = 1;
     *(volatile unsigned long long *)0x4000290 = ((unsigned long long)0x1000) << 32;
     *(volatile unsigned long long *)0x4000298 = (unsigned)a;
@@ -149,7 +135,7 @@ void reciprocal_async(Fix12i a) {
 }
 
 extern "C" {
-void FX_SqrtAsync(int n) {
+void FX_SqrtAsync(fx32 n) {
     volatile unsigned short *imeReg = (volatile unsigned short *)0x4000208;
     volatile unsigned short *sqrtcnt = (volatile unsigned short *)0x40002b0;
     volatile unsigned int *sqrtParam = (volatile unsigned int *)0x40002b8;
@@ -175,43 +161,41 @@ void FX_SqrtAsync(int n) {
 }
 
 extern "C" {
-int FX_GetSqrtResult(void) {
+fx32 FX_GetSqrtResult(void) {
     while (*(volatile unsigned short *)0x40002b0 & 0x8000)
         ;
     return (*(volatile unsigned int *)0x40002b4 + 0x200) >> 10;
 }
 }
 
-namespace cstd {
-void fdiv_async(Fix12i a, Fix12i b) {
+extern "C" {
+void FX_DivAsync(fx32 a, fx32 b) {
     *(volatile unsigned short *)0x4000280 = 1;
     *(volatile unsigned long long *)0x4000290 = ((unsigned long long)(unsigned)a) << 32;
     *(volatile unsigned long long *)0x4000298 = (unsigned)b;
 }
 }
 
-namespace cstd {
+extern "C" {
 
-int div(int a, int b)
-{
-  *(volatile unsigned short*)0x4000280 = 0;
-  *(volatile int*)0x4000290 = a;
-  *(volatile unsigned long long*)0x4000298 = (unsigned)b;
-  while(*(volatile unsigned short*)0x4000280 & 0x8000);
-  return *(volatile int*)0x40002a0;
+s32 FX_DivS32(s32 a, s32 b) {
+    *(volatile unsigned short *)0x4000280 = 0;
+    *(volatile int *)0x4000290 = a;
+    *(volatile unsigned long long *)0x4000298 = (unsigned)b;
+    while (*(volatile unsigned short *)0x4000280 & 0x8000)
+        ;
+    return *(volatile int *)0x40002a0;
+}
 }
 
+extern "C" {
+
+s32 FX_ModS32(s32 a, s32 b) {
+    *(volatile unsigned short *)0x4000280 = 0;
+    *(volatile int *)0x4000290 = a;
+    *(volatile unsigned long long *)0x4000298 = (unsigned)b;
+    while (*(volatile unsigned short *)0x4000280 & 0x8000)
+        ;
+    return *(volatile int *)0x40002a8;
 }
-
-namespace cstd {
-
-int mod(int a, int b)
-{
-  *(volatile unsigned short*)0x4000280 = 0;
-  *(volatile int*)0x4000290 = a;
-  *(volatile unsigned long long*)0x4000298 = (unsigned)b;
-  while(*(volatile unsigned short*)0x4000280 & 0x8000);
-  return *(volatile int*)0x40002a8;
-}
-
 }

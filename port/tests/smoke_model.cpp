@@ -3,7 +3,7 @@
 // SharedFilePtr loads b_mario_all.bmd through the gate-3b card seam into the
 // gate-3a game heap; dExtSimpleModel_c::LoadFile rebases the file image in place
 // (int base = (int)&file -- the reason this build is 32-bit); LoadTexAndPal
-// pushes textures and palettes through GX::LoadTex into the mapped VRAM
+// pushes textures and palettes through GX_LoadTex into the mapped VRAM
 // windows; DoSetFile builds ModelComponents and the transforms buffer; and
 // dExtSimpleModel_c::Render walks bones and materials, binding TEXIMAGE_PARAM/PLTT_BASE
 // and pumping display lists through the gate-4a machinery. The ntr GX

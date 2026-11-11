@@ -60,8 +60,8 @@ extern FileTable data_ov064_0211adbc;
 /* local extern: arm9 vector helpers and the dBgW callback store, with no
  * shared header yet. */
 extern "C" {
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 }
 
 daObjFl_KomaU_c::~daObjFl_KomaU_c() {}
@@ -119,8 +119,8 @@ s32 daObjFl_KomaU_c::Behavior() {
         in.z = (i < 4) ? ((int)(long long)i - 4) * 0x96000 - 0x64000
                        : ((int)(long long)i - 3) * 0x96000 + 0x64000;
 
-        MulVec3Mat4x3(&in, &data_020a0e68, &out);
-        AddVec3(&out, &mPos, &out);
+        MTX_MultVec43(&in, &data_020a0e68, &out);
+        VEC_Add(&out, &mPos, &out);
 
         /* Strided through w, not cyl->pos / cyl->otherOwner. The cyl
          * spelling makes mwccarm recompute the element address and Behavior

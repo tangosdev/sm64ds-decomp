@@ -70,7 +70,7 @@
   "compiler_only_output": [],
   "notes": [
     "The ROM's .exceptix records for all six functions (0x0207385c..0x02073898) show the file was built with exceptions on. The source leaves `#pragma exceptions on` out: rombuild's text-only multi-symbol isolate refuses any section beyond .text (the same refusal recorded in NMWException.cpp), so the records stay ROM bytes. The .text is the same either way.",
-    "The ROM names the file .c; the source is .cpp because cstd.h and CP15.h are C++ headers. Everything is inside extern \"C\".",
+    "The ROM names the file .c; the source is .cpp because cstd.h and CP15.h (CP15::MPUDataRegion7) are C++ headers. Everything is inside extern \"C\".",
     "func_0206cf98 and func_0206d32c need the ldm/stm block copy of an entry for their 0x1c/0x44 frames; CopyInfo copies through an array-member struct to get it under C++ (notes/cpp-class-form.md)."
   ],
   "verification": {

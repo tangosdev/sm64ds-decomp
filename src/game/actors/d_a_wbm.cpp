@@ -62,6 +62,7 @@ enum daWbm_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 typedef void (daWbm_c::*State)();
 
@@ -71,10 +72,6 @@ enum {
     ACTOR_BOMBHEI = 206,
     ACTOR_WATERBOMB = 208
 };
-
-namespace cstd {
-s32 fdiv(s32 numerator, s32 denominator);
-}
 
 extern "C" {
 /* dExtSimpleModel_c files: the fragment's, which the other variants load too. */
@@ -337,7 +334,7 @@ void daWbm_c::StateBounce()
             if (ApproachLinear(mSquashScale, 0x300, mSquashSpeed) != 0)
                 mBouncePhase++;
         }
-        mSquashSpeed = cstd::fdiv(FX_MUL(mSquashSpeed, 0xb00), 0x1000);
+        mSquashSpeed = FX_Div(FX_MUL(mSquashSpeed, 0xb00), 0x1000);
         mScaleY = mSquashScale;
         mScaleZ = 0x2000 - mScaleY;
         mScaleX = mScaleZ;
@@ -356,7 +353,7 @@ void daWbm_c::StateBounce()
                 return;
             }
         }
-        mSquashSpeed = cstd::fdiv(FX_MUL(mSquashSpeed, 0x1400), 0x1000);
+        mSquashSpeed = FX_Div(FX_MUL(mSquashSpeed, 0x1400), 0x1000);
         mScaleY = mSquashScale;
         mScaleZ = 0x2000 - mScaleY;
         mScaleX = mScaleZ;

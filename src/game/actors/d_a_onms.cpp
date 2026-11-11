@@ -23,8 +23,8 @@
  *   Building the landing dust without the dead tmp copy, size 0x1a0 -> 0x190.
  * - StateKnocked: o->mPosX/Y/Z instead of int *p = &o->mPosX, size
  *   0x200 -> 0x1f8. Hoisting &floor->surface.clps.w0, 13 words (size stayed
- *   0x200); each call adds 4. mRadius = 0x78000 instead of func_0203568c
- *   (the +0x18 store), size 0x200 -> 0x1fc. UpdateContinuous() relocates to
+ *   0x200); each call adds 4. mWithMeshClsn.mRadius = 0x78000 instead of
+ *   SetRadius (the +0x18 store), size 0x200 -> 0x1fc. UpdateContinuous() relocates to
  *   _ZN10dBgCh_Actr16UpdateContinuousEv; the ROM calls the veneer at
  *   0x020383fc (size stayed 0x200).
  * - CheckPlayerHit: `if (actorID != 0xbf) return`, size 0xd8 -> 0xcc.
@@ -106,10 +106,9 @@ void d_a_onmsEarthquakeHold(void *v, int f);
 /* Sound::Play(3, id, pos). The overlay calls this wrapper, not Sound::Play. */
 void func_02012694(unsigned int id, const Vector3 *v);
 /* Stores mRadius: p[6] = value, the word at dBgCh_Actr + 0x18. */
-void func_0203568c(void *p, int v);
 s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-s16 data_02082214[];
+s16 FX_SinCosTable_[];
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, int a1, int a2, int a3, int sp0, int sp1);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -242,7 +241,7 @@ void daOnms_c::StateKnocked()
         dActor_c *o;
         int *p;
         mMoveDir = kDirBounce;
-        func_0203568c(&mWithMeshClsn, 0x78000);
+        mWithMeshClsn.SetRadius(0x78000);
         o = mPlayerActor;
         p = &o->mPosX;
         v1.x = p[0];
@@ -370,7 +369,7 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
         idx = ((u16)t >> 4) * 2;
     }
     y = mRestPos.y + 0x3000;
-    mv = data_02082214[idx];
+    mv = FX_SinCosTable_[idx];
     mPosY = y + ((mv * 0x6793a) >> 12);
 
     mPosX += stepX;
@@ -436,9 +435,9 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     else mPrevAngleY = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
 
     unsigned n = ((u16)mPrevAngleY) >> 4;
-    mTumbleVelX = (s16)(data_02082214[(n << 1) + 1] >> 2);
+    mTumbleVelX = (s16)(FX_SinCosTable_[(n << 1) + 1] >> 2);
     mTumbleVelY = 0;
-    mTumbleVelZ = (s16)((-(int)data_02082214[n << 1]) >> 2);
+    mTumbleVelZ = (s16)((-(int)FX_SinCosTable_[n << 1]) >> 2);
     mFlags &= ~0x2000000;
     mdCcAcPos_c.radius = 0x1a9000;
 }
