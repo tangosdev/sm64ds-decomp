@@ -165,7 +165,7 @@ enum : unsigned { kSilGraceMs = 1500, kSilBeatMs = 1000, kSilSeqStaleMs = 3000, 
 //     so a take in that window is not lost; the leader's next number settles it either way.
 bool g_sil_synced = false; unsigned g_sil_armed_t = 0; int g_sil_alone_frames = 0;
 unsigned g_sil_led_t = 0; bool g_sil_led = false;                 // when I last said a count as leader
-bool g_sil_regain = false; int g_sil_regain_beats = 0;            // the leader is back after I led: lower numbers wait a beat
+bool g_sil_regain = false; unsigned g_sil_regain_t = 0;          // the leader is back after I led: lower numbers wait a beat
 unsigned g_sil_change_t = 0; bool g_sil_changed = false;     // comms time of my last count change by a game event here
 int g_sil_sent_sum = -1; unsigned g_sil_beat_t = 0, g_sil_burst_t = 0; int g_sil_burst = 0; uint16_t g_scseq = 0;
 bool g_sil_auth_have = false; int g_sil_auth_sum = 0; int g_sil_auth_owner = -1;    // the last count heard, and the leader seat I follow
@@ -758,9 +758,10 @@ void apply_silver_snap() {
     g_sil_snap_done = true;
     const int have = sil_total();
     if (!g_sil_auth_off) {
-        if (g_sil_snap_sum > have && !sil_follow()) { ++g_sst.credit_snap; sil_credit(g_sil_snap_sum - have, "snapshot"); }
-        sil_set_synced("owner's snapshot");
         if (g_log) std::fprintf(stderr, "[coopsilver] snapshot from the owner: sum=%d (mine %d) wall=%lld\n", g_sil_snap_sum, have, wall_ms());
+        if (sil_lead() != g_my) return;          // a member already says the count: its number syncs me (row rlate0: a snapshot here, then leading with 0, wiped the room)
+        if (g_sil_snap_sum > have) { ++g_sst.credit_snap; sil_credit(g_sil_snap_sum - have, "snapshot"); }
+        sil_set_synced("owner's snapshot");
         return;
     }
     if (g_log) std::fprintf(stderr, "[coopsilver] snapshot from the owner: sum=%d (mine %d) wall=%lld\n", g_sil_snap_sum, have, wall_ms());
@@ -806,13 +807,13 @@ void sil_auth_apply(unsigned now) {
     if (me < 0) return;
     if (g_sil_changed && (unsigned)(now - g_sil_change_t) < kSilGraceMs) { ++g_sst.auth_late; return; }   // said before the owner heard of my change
     const int have = sil_total();
-    if (g_sil_regain && g_sil_auth_sum < have && g_sil_regain_beats < 2) {     // REVIEW-C (2): a lower number waits one beat
+    if (g_sil_regain && (unsigned)(now - g_sil_regain_t) > kSilBeatMs + kSilGraceMs) g_sil_regain = false;
+    if (g_sil_regain && g_sil_auth_sum < have && (unsigned)(now - g_sil_regain_t) <= kSilBeatMs + 2 * kResendMs) {     // REVIEW-C (2): a lower number waits one beat
         ++g_sst.auth_late;
         if (g_log) std::fprintf(stderr, "[coopsilver] leader seat %d back after my lead: its lower sum %d waits a beat (mine %d) frame=%u wall=%lld\n",
                                 g_sil_auth_owner, g_sil_auth_sum, have, g_frames, wall_ms());
         return;
     }
-    if (g_sil_regain_beats >= 2) g_sil_regain = false;
     sil_set_synced("leader's count");
     if (have == g_sil_auth_sum) return;
     const int mine = (int)data_0209f310[me];
@@ -1327,10 +1328,9 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
         g_cnt_heard[seat] = true; g_cnt_heard_t[seat] = now;
         if (seat != sil_lead()) return;              // a higher seat that has not heard me yet: I lead
         if (lead_before == g_my && g_sil_led && (unsigned)(now - g_sil_led_t) <= kSilSeqStaleMs + kSilBeatMs) {   // REVIEW-C (2)
-            g_sil_regain = true; g_sil_regain_beats = 0; g_sil_sent_sum = -1; g_sil_burst = 0;
+            g_sil_regain = true; g_sil_regain_t = now; g_sil_sent_sum = -1; g_sil_burst = 0;
             if (g_log) std::fprintf(stderr, "[coopsilver] seat %d leads again: lead given back sum=%d wall=%lld\n", seat, (int)w.sum, wall_ms());
         }
-        if (g_sil_regain) ++g_sil_regain_beats;
         if (g_sil_auth_owner != seat && g_log)
             std::fprintf(stderr, "[coopsilver] following seat %d's count: sum=%d wall=%lld\n", seat, (int)w.sum, wall_ms());
         g_sil_auth_owner = seat; g_sil_auth_have = true; g_sil_auth_sum = w.sum;     // taken in the frame (sil_auth_apply)
@@ -1545,7 +1545,7 @@ void new_level() {
     g_sil_changed = false; g_sil_sent_sum = -1; g_sil_burst = 0; g_sil_beat_t = 0;
     g_sil_auth_have = false; g_sil_auth_owner = -1;
     std::memset(g_cnt_heard, 0, sizeof g_cnt_heard); std::memset(g_cnt_heard_t, 0, sizeof g_cnt_heard_t);
-    g_sil_synced = false; g_sil_alone_frames = 0; g_sil_led = false; g_sil_regain = false; g_sil_regain_beats = 0;
+    g_sil_synced = false; g_sil_alone_frames = 0; g_sil_led = false; g_sil_regain = false; g_sil_regain_t = 0;
     g_sil_drop_done = g_sil_drop_frame == 0;
     g_sil_pit_done = g_sil_pit_frame == 0;
     g_sil_brick_done = g_sil_brick_frame == 0;
