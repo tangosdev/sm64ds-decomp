@@ -8,6 +8,7 @@ extern "C" int port_adventure_ghost_seat(int slot);
 extern "C" int port_adventure_ghost_drawpos(int slot, int out[3]);
 extern "C" int port_adventure_ghost_mappos(int slot, int out[3], int *character);
 extern "C" unsigned char data_0209f2d8;
+extern "C" signed char data_02092120;
 extern "C" int port_rom_frame(void);
 
 namespace {
@@ -36,7 +37,7 @@ int s_char[32];   // MAPDOTS1: the character of a friend answered 3 (other area)
 
 extern "C" int port_coop_minimap_char(int slot) { return (slot >= 0 && slot < 32) ? s_char[slot] : -1; }
 
-extern "C" int port_coop_minimap_ghost(int slot, int pos[3]) {
+static int minimap_ghost_impl(int slot, int pos[3]) {
     if (!mode_env() || data_0209f2d8 == 1) return 0;     // VS draws its own
     {   // proof knob SM64DS_COOP_MINIMAP_BLINK=<from>:<to>: the hook answers "not a ghost" for ROM frames
         // from..to-1, so one run holds both pictures (the icon on, then off) for the same scene
@@ -76,6 +77,21 @@ extern "C" int port_coop_minimap_ghost(int slot, int pos[3]) {
                          pos[2] >> 12);
     }
     return 1;
+}
+
+extern "C" int port_coop_minimap_ghost(int slot, int pos[3]) {
+    const int r = minimap_ghost_impl(slot, pos);
+    if (log_env() && slot >= 0 && slot < kMinimapWidePlayers) {   // MAPDOTS1: one line per ~2 s per slot, whatever the answer
+        static unsigned nw[kMinimapWidePlayers];
+        if ((nw[slot]++ % 240u) == 0) {
+            int mp[3] = {0, 0, 0}, ch = 0;
+            const int m = port_adventure_ghost_mappos(slot, mp, &ch);
+            std::fprintf(stderr, "[comap] ask slot %d answer %d mappos %d my area %d seat %d"
+                         "
+", slot, r, m, (int)data_02092120, port_adventure_ghost_seat(slot));
+        }
+    }
+    return r;
 }
 
 extern "C" void port_coop_minimap_trace(int slot, int gk, int x, int y, int mapid, int cur) {
