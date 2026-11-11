@@ -208,6 +208,13 @@
       "canonical_module": "ov002",
       "canonical_address": "0x0210b584",
       "reason": "Own vtable, emitted here because this TU defines the key function (out-of-line destructor). Cartridge copy at ov002:0x0210b584 (address point), outside the .text run claimed."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Behavior holds Vector3 locals filled by Vec3_Sub and Vec3_RotateYAndTranslate, so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     }
   ]
 }

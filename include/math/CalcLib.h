@@ -33,6 +33,8 @@ int RandomIntInternal(int *);
 /* Shift a vector right per axis. Reads all three components before writing
    any, so d == s is allowed. */
 void Vec3_Asr(Vector3 *, Vector3 *, int);
+/* ...and left; d may alias s. */
+void Vec3_Lsl(Vector3 *, const Vector3 *, int);
 
 /* out = a + b and a - b, per axis; out may alias either operand. */
 void VEC_Add(Vector3 *, Vector3 *, Vector3 *);

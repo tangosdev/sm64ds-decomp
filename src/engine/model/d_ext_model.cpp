@@ -92,20 +92,6 @@ extern int data_0209cef0;
    A scalar, matching the other reader; [0] on an int[] is the same word
    but flips the declaration plurality onto this shorter path. */
 extern int data_0208e738;
-/* local extern: polygon-mode / polygon-id / opacity. Model4.cpp defines the
-   first and third as (void *, void *) and (void *, unsigned); these are the
-   spellings the call shards matched (banked rows). */
-void func_02046234(ModelComponents *data, int mode);
-void func_02046008(ModelComponents *data, int id);
-void func_020461b4(ModelComponents *data, u32 a);
-/* local extern: the +8 adjustors the low veneers forward to; Model4.cpp
-   defines them and no header declares them. Each veneer passes its own
-   arguments straight through in r1/r2. */
-void func_02045ec4(void *self, unsigned int value, int index);
-void func_02045e70(char *p, unsigned int color);
-void func_02045ef8(char *p, unsigned int color);
-void func_02045f80(char *p, unsigned int color);
-void func_0204605c(char *p, int id, int index);
 u32 TrimModelFile(void *ptr);
 /* local extern: defined in src/engine/model/Model4.cpp, which types the frame
    `short`; no header declares it. Stores (file, frame) into bone slot i of the
@@ -131,11 +117,8 @@ extern u8 data_0209ceec;
  * strings, so the objects are overlay 1's .data. */
 extern BMD_File data_ov001_020ad524;
 extern BMD_File data_ov001_020ad560;
-/* local extern: no header declares these; the shadow scale matrix and the two
-   opacity passes RenderAll draws with */
+/* local extern: no header declares it; the shadow scale matrix */
 void func_0203c178(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz);
-void func_02046120(ModelComponents *data, s32 opacity);
-void func_02046088(ModelComponents *data, s32 opacity, int f);
 /* local extern: the texture-animation helpers. Each Prepare's ROM body is a
    0xc long-call veneer (ldr ip, [pc]; bx ip); the registers pass through
    untouched, so the helper's own two-argument signature is the call surface. */
@@ -345,19 +328,19 @@ void dExtSimpleModel_c::ClearMaterialFlags(u32 mask) {
 }
 
 void dExtSimpleModel_c::SetPolygonID(int id) {
-    func_02046008(&data, id);
+    data.SetPolygonID(id);
 }
 
 extern "C" void func_02016aac(char *self, int id, int index) {
-    func_0204605c(self + 8, id, index);
+    ((dExtSimpleModel_c *)self)->data.SetMaterialPolygonID(id, index);
 }
 
 void dExtModel_c::ApplyOpacity(u32 opacity, u32) {
-    func_020461b4(&static_cast<dExtSimpleModel_c *>(this)->data, opacity);
+    static_cast<dExtSimpleModel_c *>(this)->data.SetAlpha(opacity);
 }
 
 void dExtSimpleModel_c::SetPolygonMode(int mode) {
-    func_02046234(&data, mode);
+    data.SetPolygonMode(mode);
 }
 
 void dExtSimpleModel_c::HideMaterial(int boneID, int listIdx) {
@@ -375,19 +358,19 @@ void dExtSimpleModel_c::ShowMaterial(int boneID, int listIdx) {
 }
 
 extern "C" void func_02016a14(char *self, int color) {
-    func_02045f80(self + 8, color);
+    ((dExtSimpleModel_c *)self)->data.SetDiffuse(color);
 }
 
 extern "C" void func_02016a04(char *self, int color) {
-    func_02045ef8(self + 8, color);
+    ((dExtSimpleModel_c *)self)->data.SetAmbient(color);
 }
 
 extern "C" void func_020169f4(char *self, int color) {
-    func_02045e70(self + 8, color);
+    ((dExtSimpleModel_c *)self)->data.SetEmission(color);
 }
 
 extern "C" void func_020169d8(char *self, int index, unsigned int value) {
-    func_02045ec4(self + 8, value, index);
+    ((dExtSimpleModel_c *)self)->data.SetMaterialEmission(value, index);
 }
 
 /* ---------------------------------------------------------------------------
@@ -654,7 +637,7 @@ void dExtCommonModel_c::SetMaterialFlags(u32 flags) {
 }
 
 void dExtCommonModel_c::SetPolygonID(u32 id) {
-    func_02046008(data, id);
+    data->SetPolygonID(id);
 }
 
 /* ---------------------------------------------------------------------------
@@ -765,9 +748,9 @@ void dExtShadowModel_c::RenderAll() {
             MTX_Concat43(&data_020a0e68, node->mat, &data_020a0e68);
             data_020a0e68.m[10] += 0x2000;
             MTX_Concat43(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
-            func_02046120(model, node->opacity);
+            model->SetShadowMask(node->opacity);
             model->Render(&data_020a0e68, 0);
-            func_02046088(model, node->opacity, 1);
+            model->SetShadowDraw(node->opacity, 1);
             model->Render(&data_020a0e68, 0);
             node = node->next;
         } while (node);

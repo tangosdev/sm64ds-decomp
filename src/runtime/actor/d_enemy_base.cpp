@@ -788,7 +788,7 @@ extern Matrix4x3 data_020a0e68;
 
 int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &anim,
                                              unsigned int flags) {
-    int v[3];
+    Vector3 v;
 
     if (mDeathState != 8)
         return 0;
@@ -816,8 +816,8 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr &clsn, dExtAnmModel_c &a
         mAngleX += mSpinRateX;
         mAngleY += mSpinRateY;
         mAngleZ += mSpinRateZ;
-        Vec3_Asr((Vector3 *)v, (Vector3 *)&mPosX, 3);
-        Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+        Vec3_Asr(&v, &mPos, 3);
+        Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, OnAimedAtWithEgg() >> 3, 0);
         Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, (-OnAimedAtWithEgg()) >> 3, 0);

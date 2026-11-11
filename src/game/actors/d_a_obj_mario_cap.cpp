@@ -139,6 +139,7 @@ enum daObjMarioCap_c_AssetId {
 #include "dBgCh_Actr.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* --------------------------------------------------------------------------
  * Local shapes the merged members need.
@@ -193,10 +194,6 @@ struct Flags3eb {
 /* dEnemyBase_c declares mStateTimer as an s16, but the helpers below read and
  * write it as an unsigned halfword (ldrh/strh); a signed read is ldrsh. */
 #define CAP_TIMER(cap) (*(u16 *)&(cap)->mStateTimer)
-
-/* An s16 angle read as unsigned: the index into the sin/cos table is
- * (angle >> 4) * 2, one {sin, cos} pair of s16 per 16 angle units. */
-#define CAP_ANGLE(a) (*(u16 *)&(a))
 
 /* mCarryMatrix: the actor carrying the cap sets it (daMky_c stores its
  * mCapMtx there for the cap it spawns); this file only tests it and clears
@@ -254,7 +251,6 @@ typedef void BgchInitAt_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void 
 
 /* -- data -- */
 extern Matrix4x3      data_020a0e68;
-extern short FX_SinCosTable_[];
 extern int            data_02092138;
 extern u8 gGameMode[];
 
@@ -692,7 +688,7 @@ void daObjMarioCap_c::OnTurnIntoEgg(daPly_c &player) {
 void daObjMarioCap_c::UpdateMatrix()
 {
     int probe[3];
-    int v[3];
+    Vector3 v;
     int m = mType;
     if (m != 5 && m != 0x12 && m != 0x10 && m != 0xb && m != 7 && m != 9 &&
         m != 0x14 && m != 0x15 && m != 0x16) {
@@ -710,8 +706,8 @@ void daObjMarioCap_c::UpdateMatrix()
         mAnmModel.ApplyOpacity(0, 0);
 
     /* position / 8: the model matrix's translation scale */
-    Vec3_Asr((Vector3 *)v, (Vector3 *)&mPosX, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+    Vec3_Asr(&v, &mPos, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX,
                                            mAngleY, mAngleZ);
     mAnmModel.mat4x3 = data_020a0e68;
@@ -969,7 +965,6 @@ int daObjMarioCap_c::Slide()
     short pitch;
     short roll;
     int b;
-    int j;
     int s;
     int co;
 
@@ -1008,18 +1003,15 @@ int daObjMarioCap_c::Slide()
     slopePush = func_ov002_020f02c8(surface);
     func_ov002_020f030c(surface);
     spd = mHorzSpeed;
-    j = (CAP_ANGLE(mPrevAngleY) >> 4) * 2;
-    s = FX_SinCosTable_[j];
-    co = FX_SinCosTable_[j + 1];
-    /* Velocity in the plane: speed times {sin, cos} of the angle, fix12 multiply
-       rounded to nearest. FX_MUL's 64-bit product is the MATCH form; a plain
-       32-bit mul DIFFs. */
+    s = FX_SinIdx((u16)mPrevAngleY >> 4);
+    co = FX_CosIdx((u16)mPrevAngleY >> 4);
+    /* Velocity in the plane: the cap's own speed along its heading, plus the
+       floor's push along the slope. */
     ownVel.x = FX_MUL(spd, s);
     ownVel.y = 0;
     ownVel.z = FX_MUL(spd, co);
-    j = (CAP_ANGLE(mSlopeAngle) >> 4) * 2;
-    s = FX_SinCosTable_[j];
-    co = FX_SinCosTable_[j + 1];
+    s = FX_SinIdx((u16)mSlopeAngle >> 4);
+    co = FX_CosIdx((u16)mSlopeAngle >> 4);
     slopeVel.x = FX_MUL(slopePush, s);
     slopeVel.y = 0;
     slopeVel.z = FX_MUL(slopePush, co);

@@ -238,9 +238,9 @@ void dScMgTrampoline2_c::InitDisplay() {
     bgScr = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_HARD_NSC_BIN);
     bgPltt = LoadFile(ASSET_D_2D_MG_BG_TRAMPOLINE_HARD_NCL_BIN);
 
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 2;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x9110;
-    *(volatile u16 *)0x400000c &= ~0x40;
+    REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9110;
+    REG_BG2CNT &= ~0x40;
 
     {
         char *dst = (char *)G2_GetBG2CharPtr();
@@ -251,9 +251,9 @@ void dScMgTrampoline2_c::InitDisplay() {
     DecompressLZ16(bgScr, G2_GetBG2ScrPtr());
     GX_LoadBGPltt(bgPltt, 0x1a0, 0x60);
 
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1318;
-    *(volatile u16 *)0x400000e &= ~0x40;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1318;
+    REG_BG3CNT &= ~0x40;
 
     DecompressLZ16(objChar, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x60);

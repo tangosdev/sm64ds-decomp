@@ -559,17 +559,10 @@ struct P2 data_ov002_0210a34c = {{(void *)0x6e, (void *)0x6f}};
 /* Free handlers are stored as their actual function pointers; the union gives
  * them the PMF spelling the descriptor tables use. */
 extern "C" void func_ov002_020c9de4(char *);
-extern "C" void func_ov002_020c9b7c(daPly_c *);
 extern "C" void func_ov002_020e200c(char *);
-extern "C" void func_ov002_020c990c(daPly_c *);
-extern "C" void func_ov002_020c9998(daPly_c *);
 extern "C" void func_ov002_020c72a4(void *);
 union PlayerFreeCharPmf {
     void (*free)(char *);
-    void (daPly_c::*pmf)();
-};
-union PlayerFreePlayerPmf {
-    void (*free)(daPly_c *);
     void (daPly_c::*pmf)();
 };
 union PlayerFreeVoidPmf {
@@ -584,11 +577,8 @@ union PlayerStateFn {
     void (*freeVoid)(void *);
 };
 PlayerFreeCharPmf data_ov002_02109dfc = {func_ov002_020c9de4};
-PlayerFreePlayerPmf data_ov002_02109e2c = {func_ov002_020c9b7c};
 PlayerFreeCharPmf data_ov002_02109f0c = {func_ov002_020e200c};
-PlayerFreePlayerPmf data_ov002_02109f44 = {func_ov002_020c990c};
 PlayerFreeCharPmf data_ov002_0210a10c = {func_ov002_020e200c};
-PlayerFreePlayerPmf data_ov002_0210a174 = {func_ov002_020c9998};
 PlayerFreeCharPmf data_ov002_0210a23c = {func_ov002_020c9de4};
 PlayerFreeCharPmf data_ov002_0210a244 = {func_ov002_020c9de4};
 PlayerFreeCharPmf data_ov002_0210a264 = {func_ov002_020c9de4};
@@ -14734,7 +14724,7 @@ void daPly_c::func_ov002_020d8854() {
         tr.x = 0;
         tr.y = 0x50000;
         tr.z = 0x64000;
-        Vec3_RotateYAndTranslate(&out, (Vector3 *)(&mPosX), mAngleY, &tr);
+        Vec3_RotateYAndTranslate(&out, &mPos, mAngleY, &tr);
         cp = out;
         func_ov002_020d8d10(&cp);
     }
@@ -19572,8 +19562,8 @@ void daPly_c::func_ov002_020e1c20() {
             if ((mClsnFlags) & 4) {
                 mVertSpeed = -0x20000;
             }
-            mLoopingSoundHandle = func_02012120(mLoopingSoundHandle, mCharacter, 0x18,
-                                                (const Vector3 *)(&mCamSpacePosX), 0);
+            mLoopingSoundHandle =
+                func_02012120(mLoopingSoundHandle, mCharacter, 0x18, &mCamSpacePos, 0);
             mHorzSpeed = FX_MUL(mHorzSpeed, 0xf00);
             if ((mVertSpeed) < 0) {
                 int *p = (int *)(&mVertSpeed);
@@ -19639,9 +19629,8 @@ void func_ov002_020e1e70(char *c) {
         dExtFrameCtrl_c &anim =
             *player->mModels.mBodyModels[((daPly_c *)c)->GetBodyModelID(player->param1 & 0xff, 0)];
         anim.speed = 0x4000;
-        player->mLoopingSoundHandle =
-            func_02012120(player->mLoopingSoundHandle, player->mCharacter, 0x18,
-                          (const Vector3 *)(&player->mCamSpacePosX), 0);
+        player->mLoopingSoundHandle = func_02012120(player->mLoopingSoundHandle, player->mCharacter,
+                                                    0x18, &player->mCamSpacePos, 0);
         if ((player->mHasWings) != 0) {
             player->mVertAccel = player->func_ov002_020bf27c(-0x4000) >> 1;
             player->mTerminalVelocity = -0x25800;
@@ -23280,9 +23269,7 @@ extern int (daPly_c::*data_ov002_0210a32c)();
 extern int (daPly_c::*data_ov002_0210a33c)();
 extern int (daPly_c::*data_ov002_0210a344)();
 extern PlayerFreeCharPmf data_ov002_02109dfc;
-extern PlayerFreePlayerPmf data_ov002_02109e2c;
 extern PlayerFreeCharPmf data_ov002_02109f0c;
-extern PlayerFreePlayerPmf data_ov002_02109f44;
 extern void (daPly_c::*data_ov002_02109f54)();
 extern void (daPly_c::*data_ov002_0210a074)();
 extern PlayerFreeCharPmf data_ov002_0210a10c;
@@ -23290,7 +23277,6 @@ extern void (daPly_c::*data_ov002_0210a12c)();
 extern void (daPly_c::*data_ov002_0210a134)();
 extern void (daPly_c::*data_ov002_0210a144)();
 extern void (daPly_c::*data_ov002_0210a154)();
-extern PlayerFreePlayerPmf data_ov002_0210a174;
 extern void (daPly_c::*data_ov002_0210a1b4)();
 extern void (daPly_c::*data_ov002_0210a1cc)();
 extern void (daPly_c::*data_ov002_0210a1ec)();
@@ -23565,13 +23551,13 @@ static inline void PlayerInitStates() {
     data_ov002_02110884[6].voidPmf = &daPly_c::func_ov002_020c9cc0;
     data_ov002_02110884[7].voidPmf = &daPly_c::func_ov002_020c9c4c;
     data_ov002_02110884[8].intPmf = &daPly_c::func_ov002_020c9c00;
-    data_ov002_02110884[9].voidPmf = data_ov002_02109e2c.pmf;
+    data_ov002_02110884[9].voidPmf = &daPly_c::func_ov002_020c9b7c;
     data_ov002_02110884[10].voidPmf = &daPly_c::func_ov002_020c9b5c;
     data_ov002_02110884[11].voidPmf = &daPly_c::func_ov002_020c9ac0;
     data_ov002_02110884[12].intPmf = &daPly_c::func_ov002_020c9b10;
     data_ov002_02110884[13].voidPmf = &daPly_c::func_ov002_020c9a04;
-    data_ov002_02110884[14].voidPmf = data_ov002_0210a174.pmf;
-    data_ov002_02110884[15].voidPmf = data_ov002_02109f44.pmf;
+    data_ov002_02110884[14].voidPmf = &daPly_c::func_ov002_020c9998;
+    data_ov002_02110884[15].voidPmf = &daPly_c::func_ov002_020c990c;
     data_ov002_02110884[16].voidPmf = &daPly_c::func_ov002_020c98a4;
     data_ov002_02110884[17].voidPmf = &daPly_c::func_ov002_020c9840;
     data_ov002_02110884[18].voidPmf = &daPly_c::func_ov002_020c97f8;
