@@ -1691,7 +1691,8 @@ void lobby_join(const char *code)
     for (const char *p = code ? code : ""; *p; ++p)
         if (*p != ' ' && *p != '-') c += (char)std::toupper((unsigned char)*p);
     if (!g.room.empty()) {
-        if (c == g.room) {
+        const char *rj = std::getenv("SM64DS_COOP_REJOIN");   /* REJOIN1: 0 = the old refusal (the before rows) */
+        if (c == g.room && !(rj && *rj == '0')) {
             /* REJOIN1: the code of the room this console is still in opens that room, and takes its running game back */
             if (!rejoin_locked("its code typed again")) g.error.clear();
             say("join %s: already in that room", c.c_str());
