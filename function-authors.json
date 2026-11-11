@@ -11775,11 +11775,11 @@
     },
     "arm9:0x0206cf98": {
       "author": "tangosdev",
-      "name": "func_0206cf98"
+      "name": "_ISDbgLib_UnregistOverlayInfo"
     },
     "arm9:0x0206d32c": {
       "author": "tangosdev",
-      "name": "func_0206d32c"
+      "name": "_ISDbgLib_RegistOverlayInfo"
     },
     "arm9:0x0206d868": {
       "author": "tangosdev",
@@ -12495,7 +12495,7 @@
     },
     "itcm:0x01ffd9d4": {
       "author": "ruspecial",
-      "name": "func_01ffd9d4"
+      "name": "OS_IrqHandler_ThreadSwitch"
     },
     "itcm:0x01ffdb28": {
       "author": "ruspecial",
