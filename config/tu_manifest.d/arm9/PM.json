@@ -196,7 +196,7 @@
   "notes": [
     "Hand-assembled, following arm9/FS_Command: tu_map cannot segment arm9/main.",
     "PM_Init kept its name; the other 23 were renamed from their func_ names to the SDK names in this change (symbols/actor_renames.tsv records the evidence). The spellings are pret's pokediamond's (LED, LCD in capitals, as in the SDK headers); pret's pmd-sky writes Led and Lcd.",
-    "Text-only. The channel's .bss variables (data_020a8104..data_020a813c) stay with their owner unassigned and keep their address names: neither pret repository has their SDK names."
+    "Text-only. The channel's .bss variables (0x020a8104..0x020a813c) stay with their owner unassigned. They carry pm.c's static names from ntrtwl/NitroSDK: PMi_IsInit, PMi_SyncFlag, PMi_SleepEndFlag, PMi_LCDCount, PMi_Work, PMi_Mutex and PMi_RegisterBuffer (data_020a813c is the buffer field of its last entry, which dsd records as its own reloc target)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
