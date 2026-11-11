@@ -16783,7 +16783,8 @@ La8:
             u16 bit = mStateFlags & 1;
             if (bit == 0) {
                 int t = -mPrevVertSpeed;
-                if (t > 0x14000) t = 0x14000;
+                if (t > 0x14000)
+                    t = 0x14000;
                 mVertSpeed = t;
                 mStateWork = 1;
             }
