@@ -671,7 +671,7 @@ void open_picker(void)
 
 void close_picker(int ok)
 {
-    char b[160];
+    char b[256];
     if (ok) {
         unsigned y[2], br[3][3];
         saved_colours(y, br);
@@ -1093,9 +1093,12 @@ extern "C" int lobby_page_env_poll(void)
    D-pad steps reaches. A press of SETTINGS opens the panel and a seat's focus shows its buttons, as in play. */
 void reach_report(const LobbyState *s)
 {
-    const int saved_menu = P.seat_menu, saved_panel = P.panel;
-    for (int panel = 0; panel < 2; ++panel) {
+    const int saved_menu = P.seat_menu, saved_panel = P.panel, saved_picker = P.picker;
+    for (int pass = 0; pass < 3; ++pass) {      /* the page, the settings panel open, the colour picker open (coopfix1 LOBBYUI1) */
+        const int panel = pass == 1;
         P.panel = panel;
+        P.picker = pass == 2;
+        if (P.picker) { saved_colours(P.pk_yoshi, P.pk_bro); P.pk_chr = 0; P.pk_row = 0; }
         P.seat_menu = -1;
         Geom g;
         make_geom(&g, P.pw > 0 ? P.pw : 512, P.ph > 0 ? P.ph : 384, s);
@@ -1136,12 +1139,14 @@ void reach_report(const LobbyState *s)
             if (rc) ++nr;
             else if (len < 240) len += snprintf(miss + len, sizeof miss - (size_t)len, " %d", c);
         }
-        snprintf(b, sizeof b, "pad reach (%s, %s, panel %s): %d live controls, %d reached from the first focus, missing:%s",
-                 s->kind == LOBBY_VS ? "vs" : "coop", s->am_host ? "host" : "guest", panel ? "open" : "shut", nl_, nr, nr == nl_ ? " none" : miss);
+        snprintf(b, sizeof b, "pad reach (%s, %s, panel %s%s): %d live controls, %d reached from the first focus, missing:%s",
+                 s->kind == LOBBY_VS ? "vs" : "coop", s->am_host ? "host" : "guest", panel ? "open" : "shut", pass == 2 ? ", colour picker open" : "",
+                 nl_, nr, nr == nl_ ? " none" : miss);
         log_line(b);
     }
     P.seat_menu = saved_menu;
     P.panel = saved_panel;
+    P.picker = saved_picker;
 }
 #endif
 
