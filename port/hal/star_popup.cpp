@@ -115,6 +115,9 @@ struct State {
     bool grand_sent, grand_forced;   // STAREXIT2: this level: my own Grand Star event went out / I was put on the ending flight
     char line[kStarPopupLines - 1][kStarPopupLineMax]; int nline;
     bool note_only;                  // STAREXIT1: the lines are a note (no countdown, no exit)
+    bool choice;                     // STARPOP2: the countdown is a choice: UP leaves, running out stays
+    bool up_armed;                   // STARPOP2: UP was seen released since the choice came up (a held d-pad is not a press)
+    unsigned auto_up_ms;             // proof knob SM64DS_STAR_POPUP_AUTOUP=<ms>: press UP that long into the choice
     unsigned t_last;
     bool registered;
     StarPopupStats st;
@@ -170,6 +173,7 @@ void init_once() {
         else if (std::sscanf(e, "lv%d", &v) == 1) { g.stop_kind = 3; g.stop_val = v; }  // v ms after the level changed following an event
     }
     g.no_timeout = env_on("SM64DS_STAR_POPUP_NOTIMEOUT", false);
+    if (const char *e = std::getenv("SM64DS_STAR_POPUP_AUTOUP")) { const int ms = std::atoi(e); if (ms > 0) g.auto_up_ms = (unsigned)ms; }
     if (const char *e = std::getenv("SM64DS_STAR_POPUP_STALE")) { const int f = std::atoi(e); if (f > 0) g.stale_frame = (unsigned)f; }
     std::fprintf(stderr, "[starpop] on: enabled=%d only_collector=%d\n", (int)g.enabled, (int)env_on("SM64DS_ROOM_SOLOEXIT", true));
 }
@@ -368,8 +372,7 @@ void describe(const char *name, int kind, int course, int star, char *out, size_
             star_title(course, star, st, sizeof st);
             if (st[0]) std::snprintf(out, cap, "%s got %s", name, st); else std::snprintf(out, cap, "%s got a star", name);
         }
-        if (std::strlen(out) > 34) { out[31] = '.'; out[32] = '.'; out[33] = '.'; out[34] = 0; }
-        return;
+        return;     // STARPOP2: a long line is drawn smaller (star_popup_paint.h), never cut
     }
     if (kind == kKindKey) {
         const char *prep = (course >= 15 && course <= 17) ? "from" : "in";      // courses 15 to 17 are the three Bowser fights
@@ -419,6 +422,7 @@ void clear_stale_d4b0() {
 
 void clear_receiver() {
     g.counting = false; g.exit_pending = false; g.nline = 0; g.t_end = 0; g.note_only = false; g.exit_grand = false;
+    g.choice = false; g.up_armed = false;
 }
 
 // ---- STAREXIT2: the Grand Star -----------------------------------------------------------------------------------------------
@@ -624,10 +628,15 @@ void start_popup(const char *name, int kind, int course, int star) {
         g.exit_key = (kind == kKindKey);
         g.exit_star = (kind == kKindStar && star >= 1 && star <= 7) ? star : -1;   // the first star is the one the clear screen names
         g.exit_grand = (kind == kKindGrand);
+        // STARPOP2: a star asks (UP leaves, running out stays); a key's boss room and the Grand Star still take everyone out
+        g.choice = (kind == kKindStar);
+        g.up_armed = false;
     } else if (kind == kKindKey) {
         g.exit_key = true;       // a key anywhere in the batch: use the key landing
+        g.choice = false;
     } else if (kind == kKindGrand) {
         g.exit_grand = true;     // the Grand Star wins over any other exit in the batch: it is the end of the game
+        g.choice = false;
     }
 }
 
@@ -1041,8 +1050,26 @@ bool star_popup_party_rx(int seat, const unsigned char *d, int len) {
     return true;
 }
 
+// STARPOP2: UP during the choice: the exit starts now, through the same safe-frame gates the old countdown's end used.
+void choose_exit(unsigned now) {
+    g.counting = false; g.choice = false; g.exit_pending = true; g.t_pend = now; g.last_wait_log = 0; g.cleared_d4b0 = false;
+    ++g.st.ups;
+    std::fprintf(stderr, "[starpop] UP: I leave the stage wall=%lld\n", wall_ms());
+}
+
+unsigned star_popup_exit_input(unsigned pad_buttons, unsigned up_mask, bool key_down) {
+    if (!g.counting || !g.choice) return 0;
+    const unsigned mine = pad_buttons & up_mask;
+    const bool down = mine != 0 || key_down;
+    if (!down) { g.up_armed = true; return 0; }
+    if (g.up_armed) choose_exit(now_ms());
+    g.up_armed = false;
+    return mine;            // held or pressed, the choice's UP never also walks
+}
+
 void star_popup_view(StarPopupView *out) {
     out->n = 0;
+    out->count = 0;
     if (!g.counting && !g.exit_pending && g.nline == 0) return;
     const unsigned now = now_ms();
     for (int i = 0; i < g.nline && out->n < kStarPopupLines; ++i)
@@ -1051,7 +1078,12 @@ void star_popup_view(StarPopupView *out) {
         int left = ((int)(g.t_end - now) + 999) / 1000;
         if (left < 1) left = 1;
         if (left > 5) left = 5;
-        std::snprintf(out->line[out->n++], kStarPopupLineMax, "Exiting in %d...", left);
+        if (g.choice) {
+            std::snprintf(out->line[out->n++], kStarPopupLineMax, "Press \x01 to exit stage");
+            out->count = left;
+        } else {
+            std::snprintf(out->line[out->n++], kStarPopupLineMax, "Exiting in %d...", left);
+        }
         if (g.stop_kind == 1 && left == g.stop_val && !g.stop_timer) { g.stop_timer = true; g.stop_at = now + 150; }
     } else if (g.exit_pending && out->n < kStarPopupLines) {
         std::snprintf(out->line[out->n++], kStarPopupLineMax, "Exiting in 1...");
@@ -1105,7 +1137,19 @@ extern "C" void port_star_popup_frame(void) {
         g.stop_flag = true;
         std::fprintf(stderr, "[starpop] STOP requested (picture) wall=%lld\n", wall_ms());
     }
-    if (g.counting && (int)(now - g.t_end) >= 0) { g.counting = false; g.exit_pending = true; g.t_pend = now; g.last_wait_log = 0; g.cleared_d4b0 = false; }
+    if (g.counting && g.choice && g.auto_up_ms && (int)(now - (g.t_end - kCountMs + g.auto_up_ms)) >= 0) {
+        std::fprintf(stderr, "[starpop] proof knob: UP pressed %u ms into the choice wall=%lld\n", g.auto_up_ms, wall_ms());
+        choose_exit(now);
+    }
+    if (g.counting && (int)(now - g.t_end) >= 0) {
+        if (g.choice) {         // STARPOP2: nobody pressed UP: I stay in the stage, the box goes
+            std::fprintf(stderr, "[starpop] no UP within %u ms: I stay wall=%lld\n", (unsigned)kCountMs, wall_ms());
+            ++g.st.stays;
+            clear_receiver();
+        } else {
+            g.counting = false; g.exit_pending = true; g.t_pend = now; g.last_wait_log = 0; g.cleared_d4b0 = false;
+        }
+    }
     if (g.exit_pending) {
         const char *why = "";
         bool hard = false;
