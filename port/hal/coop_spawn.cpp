@@ -521,11 +521,13 @@ int red_remote_slot() {
     for (int i = 0; i < n; ++i) if (i != me) return i;
     return (me >= 0 && me < n) ? me : -1;      // a one-body count: the sum is all that matters
 }
+// AREACOIN1 (REVIEW-H note 1): star 0 (no red coin of this level stood here, as when the room memory removed them all before
+// they spawned) takes the level's red coin star marker itself: its own star id is the one the red coins carry.
 void red_check_star(int star_id) {
-    if (NumRedCoins() != 8 || star_id <= 0) return;
+    if (NumRedCoins() != 8) return;
     for (char *m = _ZN8dActor_c15FindWithActorIDEjPS_(0xb4, nullptr); m; m = _ZN8dActor_c15FindWithActorIDEjPS_(0xb4, m)) {
         if (*(unsigned char *)(m + 0x1d8) != 0) continue;
-        if (*(unsigned char *)(m + 0x1d9) != star_id) continue;
+        if (star_id > 0 && *(unsigned char *)(m + 0x1d9) != star_id) continue;
         if (*(unsigned char *)(m + 0x1db) & 4) continue;           // its star is already out
         _ZN12daStarBase_c27SpawnRedCoinStarIfNecessaryEv(m);
         ++g_st.star_spawn_native;
@@ -1351,6 +1353,13 @@ void knob_forge(const char *name) {
 // Level lifecycle and the frame.
 // ---------------------------------------------------------------------------
 void new_level() {
+    // AREACOIN1 (REVIEW-H note 2): a move to another part of the same course keeps the cartridge's red coin count and the
+    // star its coins carry (InitResources only clears data_0209f30c on a course change); everything else starts again
+    static int s_lvl = -1, s_act = -1;
+    const bool keep_red = coop_world_course_move(s_lvl, s_act, g_lvl, g_act);
+    const int from_lvl = s_lvl;
+    s_lvl = g_lvl; s_act = g_act;
+    const int keep_star = g_red_star;
     EarlyRed keep = g_early;
     if (keep.on && !(keep.w.key.level == g_lvl && keep.w.key.act == g_act)) keep.on = false;
     std::memset(g_blk, 0, sizeof g_blk);
@@ -1363,8 +1372,13 @@ void new_level() {
     std::memset(g_in, 0, sizeof g_in);
     std::memset(g_job, 0, sizeof g_job);
     std::memset(g_rate, 0, sizeof g_rate);
-    for (int i = 0; i < 4; ++i) red_cell(i) = 0;     // the port's level clear misses the data_0209f30d half
+    if (!keep_red) for (int i = 0; i < 4; ++i) red_cell(i) = 0;     // the port's level clear misses the data_0209f30d half
     g_nred = 0; g_red_prev = 0; g_red_armed = false; g_red_snap_have = false; g_red_snap_sum = 0; g_red_star = 0;
+    if (keep_red) {
+        g_red_star = keep_star; g_red_prev = red_sum();
+        if (g_log) std::fprintf(stderr, "[coopspawn] red coin count kept: level %d -> %d is the same course, sum=%d star=%d wall=%lld\n",
+                                from_lvl, g_lvl, g_red_prev, g_red_star, wall_ms());
+    }
     g_frames = 0; g_armed = false; g_census_on = false; g_wm = 0; g_census_lines = 0;
     for (int i = 0; i < g_nkb; ++i) g_kb[i].done = false;
     for (int i = 0; i < g_nkr; ++i) g_kr[i].done = false;
@@ -1482,6 +1496,17 @@ void on_frame(unsigned now) {
         }
         red_rebase();
         g_red_armed = true;
+        // AREACOIN1: all eight in before this part's red coin star marker was here (taken in another part, or before a part
+        // move); the ROM's dead-coin path (daCoin_c::func_ov002_020b10a0) spawns it when a dead red coin starts up, this is
+        // the same call for a level whose red coins the room memory removed before they spawned
+        if (NumRedCoins() == 8 && !g_off.red) {
+            int nm = 0, out = 0;
+            for (char *m = _ZN8dActor_c15FindWithActorIDEjPS_(0xb4, nullptr); m; m = _ZN8dActor_c15FindWithActorIDEjPS_(0xb4, m))
+                if (*(unsigned char *)(m + 0x1d8) == 0) { ++nm; if (*(unsigned char *)(m + 0x1db) & 4) ++out; }
+            if (g_log && nm) std::fprintf(stderr, "[coopspawn] armed with all 8 red coins: %d red coin star marker(s), %d star(s) already out frame=%u wall=%lld\n",
+                                          nm, out, g_frames, wall_ms());
+            red_check_star(g_red_star);
+        }
         if (!g_sil_off) sil_arm();
         if (g_log) std::fprintf(stderr, "[coopspawn] armed frame=%u redsum=%d snap=%d wall=%lld\n", g_frames, red_sum(), g_red_snap_have ? g_red_snap_sum : -1, wall_ms());
     }

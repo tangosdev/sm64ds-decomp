@@ -1426,7 +1426,12 @@ bool coin_count_off() {
     return off;
 }
 int g_coin_group = 0;            // the highest count a member of my group told me for this (level, act)
-int g_coin_course = 0;           // AREACOIN1: the highest count a friend in another part of my course told me
+// AREACOIN1 (REVIEW-H note 3): the course count is a sum over its parts. g_part_rep[L] is the highest placed count a friend
+// told me for part L of my course (what was taken in L), g_part_applied[L] how much of part L is in my counter, and
+// g_applied_other the sum of g_part_applied over the parts I am not in. The count message carries the placed count of my
+// part only (my placed part less g_applied_other), so the group max() and the course sum never count a coin twice.
+enum : int { kCoursePartMax = 52 };
+int g_part_rep[kCoursePartMax], g_part_applied[kCoursePartMax], g_applied_other = 0;
 int g_red_sent_t = 0, g_red_sent_v = -1;   // AREACOIN1: my red coin count as last told to the course
 bool g_coin_star = false;        // a member's 100-coin star is out
 unsigned g_coin_sent_t = 0; int g_coin_sent_v = -1, g_coin_seen_v = -1;
@@ -1437,18 +1442,31 @@ unsigned long long g_coin_sends = 0, g_coin_recvs = 0, g_coin_raises = 0;
 // the per-slot reads (a part's slots are its own) start again.
 bool g_coin_keep = false;
 void coin_reset();
+int my_local_part();
 void coin_reset_for(const CoopKey &nk) {
     g_coin_keep = same_course(g_key, nk) && nk.level != g_key.level && !boss_arena(g_key.level) && g_loose_visit != 0;
     if (!g_coin_keep) { coin_reset(); return; }
+    // the part I leave: all of it is in my counter now; the part I enter: what of it is in my counter becomes my local part
+    const int cur = g_key.level, nl = nk.level;
+    if (cur >= 0 && cur < kCoursePartMax) {
+        const int local = my_local_part();
+        g_part_applied[cur] = local;
+        if (local > g_part_rep[cur]) g_part_rep[cur] = local;
+    }
+    g_applied_other = 0;
+    for (int l = 0; l < kCoursePartMax; ++l) if (l != nl) g_applied_other += g_part_applied[l];
+    // the old group's max and owed balance were for that part; its late death bits go to the room memory, not to credits
+    g_coin_group = 0; g_coin_unpaid = 0;
     g_coin_sent_t = 0; g_coin_sent_v = -1; g_coin_seen_v = -1; g_red_sent_t = 0; g_red_sent_v = -1;
     g_coin_last = -1; g_own_pend = 0; g_placed_pend = 0;
     std::memset(g_slot_val, 0, sizeof g_slot_val);
     std::memset(g_slot_tmr, 0, sizeof g_slot_tmr);
-    if (g_log) std::fprintf(stderr, "[coop] coin count: level %d -> %d is the same course: count, loose totals (mine %u, in %u) kept wall=%lld\n",
-                            g_key.level, nk.level, g_loose_mine, g_loose_in, wall_ms());
+    if (g_log) std::fprintf(stderr, "[coop] coin count: level %d -> %d is the same course: count, loose totals (mine %u, in %u) kept, other parts %d in my count wall=%lld\n",
+                            g_key.level, nk.level, g_loose_mine, g_loose_in, g_applied_other, wall_ms());
 }
 void coin_reset() {
-    g_coin_course = 0; g_red_sent_t = 0; g_red_sent_v = -1;
+    std::memset(g_part_rep, 0, sizeof g_part_rep); std::memset(g_part_applied, 0, sizeof g_part_applied); g_applied_other = 0;
+    g_red_sent_t = 0; g_red_sent_v = -1;
     g_coin_group = 0; g_coin_unpaid = 0; g_coin_star = false; g_coin_sent_t = 0; g_coin_sent_v = -1; g_coin_seen_v = -1;
     // COINS10: a new visit: my loose total starts again under a new id, and so does what I saw from the others
     g_coin_last = -1; g_own_pend = 0; g_placed_pend = 0; g_loose_mine = 0; g_loose_in = 0;
@@ -1465,6 +1483,11 @@ int my_coin_count() {
 // carries and the group's max() works on, so a raise never holds someone's loose coins.
 int my_placed_part() {
     const int p = my_coin_count() - (int)(g_loose_mine + g_loose_in);
+    return p < 0 ? 0 : p;
+}
+// AREACOIN1: the placed coins of the part I am in (other parts of the course left out)
+int my_local_part() {
+    const int p = my_placed_part() - g_applied_other;
     return p < 0 ? 0 : p;
 }
 // COINS10: split what my counter rose by since the last look into placed coins (their death bits went out this frame)
@@ -1500,7 +1523,7 @@ void send_coin_count(unsigned now) {
     send_loose();   // COINS10: first, so a receiver has my loose total before my placed part
     CoopCoinWire w; std::memset(&w, 0, sizeof w);
     w.key = wire_key(g_key);
-    int c = my_placed_part(); if (c > 0xff) c = 0xff;   // COINS10: the placed part (it was the whole counter)
+    int c = my_local_part(); if (c > 0xff) c = 0xff;   // COINS10: the placed part (it was the whole counter); AREACOIN1: of my part
     w.count = (uint16_t)c;
     w.flags = _ZN5Event6GetBitEj(0x1f) ? 1 : 0;
     if (send_kind(kHubTagCoopWorld, kWorldCoinCount, &w, (int)sizeof w)) { g_coin_sent_t = now; g_coin_sent_v = my_coin_count(); ++g_coin_sends; }
@@ -1535,18 +1558,29 @@ void coin_tick(unsigned now) {
         std::fprintf(stderr, "[coop] coin count: a friend's 100-coin star is out: event bit 0x1f set here wall=%lld\n", wall_ms());
     }
     // COINS10: the max() works on the placed part; the loose coins sit on top of it
-    const int placed = my_placed_part();
-    // AREACOIN1: a friend in another part of the course counts too; his coins never come here as death bits (no copy of
-    // them stands in my part), so that part of a raise is not owed to anything
-    const int top = g_coin_group > g_coin_course ? g_coin_group : g_coin_course;
-    if (top > placed && (int)data_0209f358[me] < 0xff) {
-        int n = (int)data_0209f358[me] + (top - placed);
+    const int placed = my_local_part();   // AREACOIN1: my part only; the other parts are added below
+    if (g_coin_group > placed && (int)data_0209f358[me] < 0xff) {
+        int n = (int)data_0209f358[me] + (g_coin_group - placed);
         if (n > 0xff) n = 0xff;
-        std::fprintf(stderr, "[coop] coin count: the group has %d (course %d), mine was %d: took %d (placed part %d, loose %u) wall=%lld\n", g_coin_group,
-                     g_coin_course, (int)data_0209f358[me], n, placed, g_loose_mine + g_loose_in, wall_ms());
-        const int owed = g_coin_group > placed ? g_coin_group - placed : 0;
+        std::fprintf(stderr, "[coop] coin count: the group has %d, mine was %d: took %d (placed part %d, loose %u) wall=%lld\n", g_coin_group,
+                     (int)data_0209f358[me], n, placed, g_loose_mine + g_loose_in, wall_ms());
+        const int owed = g_coin_group - placed;
         const int raised = n - (int)data_0209f358[me];
         g_coin_unpaid += raised < owed ? raised : owed;   // COOPCOUNT2: owed to the death bits still on their way
+        data_0209f358[me] = (short)n;
+        coin_wrote();
+        ++g_coin_raises;
+    }
+    // AREACOIN1: what friends took in the other parts of the course is added on top; those coins never come here as death
+    // bits (no copy of them stands in my part), so none of it is owed
+    for (int l = 0; l < kCoursePartMax; ++l) {
+        if (l == g_key.level || g_part_rep[l] <= g_part_applied[l] || (int)data_0209f358[me] >= 0xff) continue;
+        const int d = g_part_rep[l] - g_part_applied[l];
+        int n = (int)data_0209f358[me] + d;
+        if (n > 0xff) n = 0xff;
+        g_part_applied[l] += d; g_applied_other += d;
+        std::fprintf(stderr, "[coop] coin count: +%d taken in level %d of my course (that part %d, other parts %d), mine was %d: took %d wall=%lld\n",
+                     d, l, g_part_rep[l], g_applied_other, (int)data_0209f358[me], n, wall_ms());
         data_0209f358[me] = (short)n;
         coin_wrote();
         ++g_coin_raises;
@@ -1558,10 +1592,10 @@ void coin_tick(unsigned now) {
     }
     if (g_grp.others() > 0 && ((unsigned)(now - g_coin_sent_t) >= kFullMs || (c != g_coin_sent_v && (unsigned)(now - g_coin_sent_t) >= 250u)))
         send_coin_count(now);
-    else if (!roombits_off() && !castle_course(g_key.level) && ((unsigned)(now - g_coin_sent_t) >= kFullMs || (c != g_coin_sent_v && (unsigned)(now - g_coin_sent_t) >= 250u)))
-        send_coin_count(now);   // AREACOIN1: alone in my part, friends in other parts of the course still count my coins
-    // AREACOIN1: my red coin count, for friends in other parts of the course
-    if (!roombits_off() && !castle_course(g_key.level)) {
+    else if (((unsigned)(now - g_coin_sent_t) >= kFullMs || (c != g_coin_sent_v && (unsigned)(now - g_coin_sent_t) >= 250u)) && course_listener())
+        send_coin_count(now);   // AREACOIN1: alone in my part, a friend in another part of the course still counts my coins
+    // AREACOIN1: my red coin count, for a friend in another part of the course
+    if (course_listener()) {
         int star = 0; const int r = coop_spawn_red_sum(&star);
         if ((unsigned)(now - (unsigned)g_red_sent_t) >= kFullMs || (r != g_red_sent_v && (unsigned)(now - (unsigned)g_red_sent_t) >= 250u)) {
             CoopRedWire w; std::memset(&w, 0, sizeof w);
@@ -1982,9 +2016,9 @@ void on_world(int seat, const unsigned char *d, int len, void *) {
         if (!for_me(k)) {
             // AREACOIN1: a friend in another part of my course: the cartridge's coin count is the course's
             if (course_mate(k) && !coins_off() && !coin_count_off()) {
-                if ((int)w.count > g_coin_course) {
+                if (k.level >= 0 && k.level < kCoursePartMax && (int)w.count > g_part_rep[k.level]) {
                     if (g_log) std::fprintf(stderr, "[coop] coin count from seat %d in level %d (same course): %d wall=%lld\n", seat, k.level, (int)w.count, wall_ms());
-                    g_coin_course = (int)w.count;
+                    g_part_rep[k.level] = (int)w.count;
                 }
                 if (w.flags & 1) g_coin_star = true;
                 return;
@@ -2658,6 +2692,11 @@ void tick_est(unsigned now) {
 }
 
 }  // namespace
+
+bool coop_world_course_move(int from_level, int from_act, int to_level, int to_act) {
+    const CoopKey a(from_level, from_act), b(to_level, to_act);
+    return from_level != to_level && same_course(a, b) && !boss_arena(from_level);
+}
 
 // ---------------------------------------------------------------------------
 // Public.
