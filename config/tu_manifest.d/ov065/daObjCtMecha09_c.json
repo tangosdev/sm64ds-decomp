@@ -522,14 +522,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@612",
+      "from": "@575",
       "to": "@539",
-      "evidence": "mwcc numbers this node @536 per TU and the fleet already defines a global @536 in ov080, so the merged link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "mwcc numbers this node @536 per TU and the fleet already defines a global @536 in ov080, so the merged link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @612 to @575 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@613",
+      "from": "@576",
       "to": "@537",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @557 now; licensed under the existing pin @537 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @557 now; licensed under the existing pin @537 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @613 to @576 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "relocations": [

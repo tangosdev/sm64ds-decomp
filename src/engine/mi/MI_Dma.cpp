@@ -8,18 +8,16 @@
  * functions this game never calls left out. mwccarm emits the bodies in
  * reverse, so MI_StopDma is lowest and MI_DmaFill32 highest.
  *
- * The SetParams functions live in ITCM: DMAStartTransfer (0x01ffde50) is
- * MIi_DmaSetParams and DMAStartTransferFB (0x01ffde00) is
- * MIi_DmaSetParams_wait_noInt. The synchronous copies keep their older
- * names here (DMASyncFillTransfer is MI_DmaFill32, DMASyncWordTransfer
- * MI_DmaCopy32, DMASyncHalfTransfer MI_DmaCopy16).
+ * The SetParams functions live in ITCM: MIi_DmaSetParams (0x01ffde50) and
+ * MIi_DmaSetParams_wait (0x01ffde00), which the synchronous copies call; both
+ * mask interrupts, and _wait adds the two dummy DMA0SAD reads.
  *
  * This SDK is older than pret's: MI_WaitDma only spins on the enable bit,
  * and MI_StopDma has no DMA0 workaround.
  */
 #include "types.h"
 #include "nitro/hw/registers.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 typedef void (*MIDmaCallback)(void *);
 
@@ -30,15 +28,14 @@ typedef void (*MIDmaCallback)(void *);
 
 extern "C" {
 
-/* MIi_DmaSetParams and MIi_DmaSetParams_wait_noInt, in ITCM */
-extern void DMAStartTransfer(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
-extern void DMAStartTransferFB(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
+/* in ITCM */
+extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
+extern void MIi_DmaSetParams_wait(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
 extern void OSi_EnterDmaCallback(u32 dmaNo, u32 callback, u32 arg);
 
 void MI_WaitDma(u32 dmaNo);
 
-/* MI_DmaFill32 */
-void DMASyncFillTransfer(u32 dmaNo, void *dest, u32 data, u32 size) {
+void MI_DmaFill32(u32 dmaNo, void *dest, u32 data, u32 size) {
     vu32 *dmaCntp;
     vu32 *fillReg;
 
@@ -51,15 +48,14 @@ void DMASyncFillTransfer(u32 dmaNo, void *dest, u32 data, u32 size) {
 
     fillReg = (vu32 *)REG_DMA_FILL_ADDR(dmaNo);
     *fillReg = data;
-    DMAStartTransferFB(dmaNo, (u32)fillReg, (u32)dest,
-                       (size >> 2) | MI_CNT_ENABLE | MI_CNT_32BIT | MI_CNT_SRC_FIX);
+    MIi_DmaSetParams_wait(dmaNo, (u32)fillReg, (u32)dest,
+                          (size >> 2) | MI_CNT_ENABLE | MI_CNT_32BIT | MI_CNT_SRC_FIX);
 
     while (*dmaCntp & MI_CNT_ENABLE)
         ;
 }
 
-/* MI_DmaCopy32 */
-void DMASyncWordTransfer(u32 dmaNo, const void *src, void *dest, u32 size) {
+void MI_DmaCopy32(u32 dmaNo, const void *src, void *dest, u32 size) {
     vu32 *dmaCntp;
 
     if (size == 0)
@@ -69,14 +65,13 @@ void DMASyncWordTransfer(u32 dmaNo, const void *src, void *dest, u32 size) {
     while (*dmaCntp & MI_CNT_ENABLE)
         ;
 
-    DMAStartTransferFB(dmaNo, (u32)src, (u32)dest, (size >> 2) | MI_CNT_ENABLE | MI_CNT_32BIT);
+    MIi_DmaSetParams_wait(dmaNo, (u32)src, (u32)dest, (size >> 2) | MI_CNT_ENABLE | MI_CNT_32BIT);
 
     while (*dmaCntp & MI_CNT_ENABLE)
         ;
 }
 
-/* MI_DmaCopy16 */
-void DMASyncHalfTransfer(u32 dmaNo, const void *src, void *dest, u32 size) {
+void MI_DmaCopy16(u32 dmaNo, const void *src, void *dest, u32 size) {
     vu32 *dmaCntp;
 
     if (size == 0)
@@ -86,7 +81,7 @@ void DMASyncHalfTransfer(u32 dmaNo, const void *src, void *dest, u32 size) {
     while (*dmaCntp & MI_CNT_ENABLE)
         ;
 
-    DMAStartTransferFB(dmaNo, (u32)src, (u32)dest, (size >> 1) | MI_CNT_ENABLE);
+    MIi_DmaSetParams_wait(dmaNo, (u32)src, (u32)dest, (size >> 1) | MI_CNT_ENABLE);
 
     while (*dmaCntp & MI_CNT_ENABLE)
         ;
@@ -105,12 +100,12 @@ void MI_DmaFill32Async(u32 dmaNo, void *dest, u32 data, u32 size, MIDmaCallback 
         OSi_EnterDmaCallback(dmaNo, (u32)callback, (u32)arg);
         vu32 *fillReg = (vu32 *)REG_DMA_FILL_ADDR(dmaNo);
         *fillReg = data;
-        DMAStartTransfer(dmaNo, (u32)fillReg, (u32)dest,
+        MIi_DmaSetParams(dmaNo, (u32)fillReg, (u32)dest,
                          (size >> 2) | MI_CNT_ENABLE | MI_CNT_IRQ | MI_CNT_32BIT | MI_CNT_SRC_FIX);
     } else {
         vu32 *fillReg = (vu32 *)REG_DMA_FILL_ADDR(dmaNo);
         *fillReg = data;
-        DMAStartTransfer(dmaNo, (u32)fillReg, (u32)dest,
+        MIi_DmaSetParams(dmaNo, (u32)fillReg, (u32)dest,
                          (size >> 2) | MI_CNT_ENABLE | MI_CNT_32BIT | MI_CNT_SRC_FIX);
     }
 }
@@ -126,10 +121,10 @@ void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size, MIDmaCa
     MI_WaitDma(dmaNo);
     if (callback) {
         OSi_EnterDmaCallback(dmaNo, (u32)callback, (u32)arg);
-        DMAStartTransfer(dmaNo, (u32)src, (u32)dest,
+        MIi_DmaSetParams(dmaNo, (u32)src, (u32)dest,
                          (size >> 2) | MI_CNT_ENABLE | MI_CNT_IRQ | MI_CNT_32BIT);
     } else {
-        DMAStartTransfer(dmaNo, (u32)src, (u32)dest, (size >> 2) | MI_CNT_ENABLE | MI_CNT_32BIT);
+        MIi_DmaSetParams(dmaNo, (u32)src, (u32)dest, (size >> 2) | MI_CNT_ENABLE | MI_CNT_32BIT);
     }
 }
 
@@ -143,7 +138,7 @@ void MI_WaitDma(u32 dmaNo) {
 /* Clears the channel's timing and repeat bits, then its enable bit, and
  * reads the control register twice while the channel winds down. */
 void MI_StopDma(u32 dmaNo) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     vu16 *dmaCntp = &((vu16 *)REG_DMA_BASE)[dmaNo * 6 + 5];
 
     *dmaCntp &= ~0x3a00;
@@ -151,6 +146,6 @@ void MI_StopDma(u32 dmaNo) {
     (void)*dmaCntp;
     (void)*dmaCntp;
 
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 }

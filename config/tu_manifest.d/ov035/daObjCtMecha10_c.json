@@ -760,24 +760,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@413",
+      "from": "@391",
       "to": "@419",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @413 to @391 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@414",
+      "from": "@392",
       "to": "@420",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @414 to @392 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@415",
+      "from": "@393",
       "to": "@421",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @415 to @393 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@416",
+      "from": "@394",
       "to": "@422",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @416 to @394 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

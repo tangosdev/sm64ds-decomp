@@ -539,14 +539,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@363",
+      "from": "@346",
       "to": "@286",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @300 now; licensed under the existing pin @286 | compiler temp; including math/MtxStack.h in place of the local matrix stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @300 now; licensed under the existing pin @286 | compiler temp; including math/MtxStack.h in place of the local matrix stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @363 to @346 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@364",
+      "from": "@347",
       "to": "@287",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @301 now; licensed under the existing pin @287 | compiler temp; including math/MtxStack.h in place of the local matrix stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @301 now; licensed under the existing pin @287 | compiler temp; including math/MtxStack.h in place of the local matrix stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @364 to @347 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

@@ -7,9 +7,12 @@
 #include "Memory.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
-#include "cstd.h"
 #include "nitro/fx/fx.h"
 #include "nitro/gx/g3imm.h"
+#include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_cmd.h"
+#include "nitro/gx/g3imm_light.h"
+#include "nitro/fx/fx_cp.h"
 
 /* ROM order: the ENTRY factory, then EntryMesh (0x0211a948..0x0211b524). */
 #pragma defer_codegen off
@@ -28,10 +31,10 @@ extern "C" {
 /* local extern: no header declares these arm9 vector and matrix helpers.
    EntryMeshVec is the POD view used for the grid data; APIs taking Vector3
    receive explicit pointer views so the C++ Vector3 destructor is not emitted. */
-int InvMat4x3(const Matrix4x3 *, Matrix4x3 *);
-void SubVec3(Vector3 *, Vector3 *, Vector3 *);
-void CrossVec3(const Vector3 *, const Vector3 *, Vector3 *);
-void NormalizeVec3(const Vector3 *, Vector3 *);
+int MTX_Inverse43(const Matrix4x3 *, Matrix4x3 *);
+void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
+void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
+void VEC_Normalize(const Vector3 *, Vector3 *);
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 /* local extern: the BMD texture and palette VRAM loaders. */
 unsigned int func_02045ad8(const void *, unsigned int);
@@ -39,15 +42,14 @@ unsigned int func_02045a50(const void *, unsigned int);
 /* local extern: the geometry-engine matrix load and the
    BMD load through a file handle, declared only in decl_common.h, which
    clashes with dScEntry_c.h's vtable spellings. */
-void func_020553a4(void *);
+void G3_LoadMtx43(void *);
 void *func_0201787c(SharedFilePtr *);
 /* local extern: the veneer to operator delete (src/engine/heap/Heap.cpp). */
-void func_0203cbc0(void *);
 }
 /* local extern: the camera matrix and the interleaved sine/cosine table,
    declared per consumer (d_ext_model.cpp, d_ent_obj.cpp). */
 extern Matrix4x3 data_0209b3ec;
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 /* File 0x8418. The ctor and dtor are func_020178cc / func_020178b4; this
    TU does not define them. The handler row is filled by the static
    initializer those two objects emit. */
@@ -58,24 +60,20 @@ struct EntryMeshTexture : SharedFilePtr {
 extern EntryMeshTexture EntryMeshTextureFile;
 extern EntryMeshHandler EntryMeshHandlers[3];
 
-#define reg_G3_DIF_AMB        (*(volatile u32 *)0x040004c0)
-#define reg_G3_SPE_EMI        (*(volatile u32 *)0x040004c4)
-#define reg_G3_POLYGON_ATTR   (*(volatile u32 *)0x040004a4)
-
 /* Push the cached material to the geometry engine: diffuse/ambient,
  * specular/emission, the texture image param and the palette base, then a
  * fixed polygon attribute, through NitroSDK's G3 immediate inlines. Same
  * shape as daPicGate_c::LoadMaterial. */
 void EntryMesh::SendMaterial() {
-    reg_G3_DIF_AMB = mMaterial.difAmb;
-    reg_G3_SPE_EMI = mMaterial.speEmi;
+    REG_DIF_AMB = mMaterial.difAmb;
+    REG_SPE_EMI = mMaterial.speEmi;
     G3_TexImageParam((GXTexFmt)((mMaterial.param >> 0x1a) & 7), GX_TEXGEN_NONE,
                      (GXTexSizeS)((mMaterial.param >> 0x14) & 7),
                      (GXTexSizeT)((mMaterial.param >> 0x17) & 7), GX_TEXREPEAT_NONE,
                      GX_TEXFLIP_NONE, (GXTexPlttColor0)((mMaterial.param >> 0x1d) & 1),
                      mMaterial.texAddr);
     G3_TexPlttBase(mMaterial.pltAddr, (GXTexFmt)((mMaterial.param >> 0x1a) & 7));
-    reg_G3_POLYGON_ATTR = 0x11f0088;
+    REG_POLYGON_ATTR = 0x11f0088;
 }
 
 /* Build mMtx from mPos (recentred on the 0xfa000 grid middle, in 1/8
@@ -85,7 +83,7 @@ void EntryMesh::CalcMatrix() {
                               mPos.z >> 3);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     *(Matrix4x3 *)&mMtx = data_020a0e68;
-    InvMat4x3(&data_020a0e68, &data_020a0e68);
+    MTX_Inverse43(&data_020a0e68, &data_020a0e68);
     *(Matrix4x3 *)&mInvMtx = data_020a0e68;
 }
 
@@ -174,23 +172,25 @@ void EntryMesh::CalcNormals() {
             q[2] = z;
 
             if (j == 0)
-                SubVec3((Vector3 *)&p->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)&p->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
             else if (j == mGridDim[0] - 1)
-                SubVec3((Vector3 *)&(p - 1)->pos, (Vector3 *)&p->pos, (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)&(p - 1)->pos, (Vector3 *)&p->pos, (Vector3 *)&ej);
             else
-                SubVec3((Vector3 *)&(p - 1)->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)&(p - 1)->pos, (Vector3 *)&(p + 1)->pos, (Vector3 *)&ej);
 
             if (i == 0)
-                SubVec3((Vector3 *)&p->pos, (Vector3 *)&(p + mGridDim[1])->pos, (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)&p->pos, (Vector3 *)&(p + mGridDim[1])->pos,
+                             (Vector3 *)&ei);
             else if (i == mGridDim[1] - 1)
-                SubVec3((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&p->pos, (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&p->pos,
+                             (Vector3 *)&ei);
             else
-                SubVec3((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&(p + mGridDim[1])->pos,
-                        (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)&(p - mGridDim[1])->pos, (Vector3 *)&(p + mGridDim[1])->pos,
+                             (Vector3 *)&ei);
 
-            CrossVec3((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
+            VEC_CrossProduct((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
             n.z >>= 1;
-            NormalizeVec3((const Vector3 *)&n, (Vector3 *)&n);
+            VEC_Normalize((const Vector3 *)&n, (Vector3 *)&n);
             p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);
             p++;
         }
@@ -220,13 +220,13 @@ int EntryMesh::RippleHeight(int dist) {
         return 0;
     phase = RipplePhase(dist);
     amp = RippleAmplitude(0x64 - mRippleTimer);
-    slope = cstd::fdiv(amp, 0x384000);
+    slope = FX_Div(amp, 0x384000);
     v = FX_MUL((-slope), dist);
     r2 = amp + v;
     if (r2 < 0)
         r2 = 0;
     idx = (unsigned short)phase >> 4;
-    t = data_02082214[idx * 2];
+    t = FX_SinCosTable_[idx * 2];
     return FX_MUL(t, r2);
 }
 
@@ -237,7 +237,7 @@ int EntryMesh::RippleAmplitude(int age) {
 
 /* The sine phase at distance dist, behind the advancing mRipplePhase. */
 short EntryMesh::RipplePhase(int dist) {
-    int t = cstd::fdiv(0xffff, 0x16c000);
+    int t = FX_Div(0xffff, 0x16c000);
     int v = FX_MUL(dist, t);
     return (short)(v - mRipplePhase);
 }
@@ -271,88 +271,43 @@ void EntryMesh::StartRipple(int x, int y) {
 }
 
 /* The render handler. Concatenates mMtx with the camera matrix
- * (data_0209b3ec) and loads the result as both the position and the
- * directional matrix, sets a full-white diffuse/ambient and specular/emission
- * pair, sends the material, then draws the (mGridDim[0] - 1) x mGridDim[1]
- * grid as triangle strips: each inner iteration emits vertex (i, j) and
- * vertex (i + 1, j), converting each 1.19.12 coordinate to VTX_16 with
- * (v << 9) >> 16 and packing x and y into one command word.
- *
- * Two spellings in the vertex emission are load-bearing for the register
- * colouring of the second emission (notes/mwccarm-codegen.md 6ct): the z
- * coordinate is loaded straight into `sz` and shifted in place, and x << 9 is
- * parked in `cols`, the inner loop's bound, which the loop reloads from
- * mGridDim[1] before its next use. Both keep the shift out of the register of
- * the value it consumes, which is where the ROM's compiler puts it. */
+ * (data_0209b3ec) and loads the result as both the directional and the
+ * position matrix, shines white light 3 straight down -z, sends the material,
+ * then draws the (mGridDim[0] - 1) x mGridDim[1] grid as triangle strips:
+ * each inner iteration emits vertex (i, j) and vertex (i + 1, j), its 1.19.12
+ * position at >>7. The same draw as daPicGate_c::DrawRippleImage. */
 void EntryMesh::DrawGrid() {
-    int z0;
-    int z1;
     Matrix4x3 tmp;
-    int i;
-    int j;
-    int cols;
-    EntryMeshVertex *p0;
-    EntryMeshVertex *p1;
-    int vx;
-    int vy;
-    int sx;
-    int sz;
+    int i, j;
 
-    *(int *)0x4000444 = 0;
-    MulMat4x3Mat4x3((const Matrix4x3 *)&mMtx, &data_0209b3ec, &tmp);
-    *(int *)0x4000440 = 2;
-    func_020553a4(&tmp);
-    *(int *)0x4000440 = 1;
-    func_020553a4(&tmp);
-    *(int *)0x40004c8 = 0xe0000000;
-    *(int *)0x40004cc = 0xc0007fff;
+    G3_PushMtx();
+    MTX_Concat43((const Matrix4x3 *)&mMtx, &data_0209b3ec, &tmp);
+    G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
+    G3_LoadMtx43(&tmp);
+    G3_MtxMode(GX_MTXMODE_POSITION);
+    G3_LoadMtx43(&tmp);
+    G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
+    G3_LightColor(GX_LIGHTID_3, GX_RGB(31, 31, 31));
     SendMaterial();
 
-    *(int *)0x400046c = 0x10000;
-    *(int *)0x400046c = 0x10000;
-    *(int *)0x400046c = 0x10000;
+    G3_Scale(0x10000, 0x10000, 0x10000);
 
-    z0 = 0;
-    z1 = 0;
-    i = 0;
-    if ((int)(mGridDim[0] - 1) > 0) {
-        do {
-            j = z0;
-            *(int *)0x4000500 = 2;
-            cols = mGridDim[1];
-            if (cols > 0) {
-                do {
-                    p0 = &mVertices[i + j * cols];
-                    p1 = &mVertices[i + 1 + j * cols];
-                    *(int *)0x4000488 = p0->texCoord;
-                    j = j + 1;
-                    *(int *)0x4000484 = p0->normal;
-                    vx = p0->pos.x;
-                    sz = p0->pos.z;
-                    cols = vx << 9;
-                    sx = cols >> 16;
-                    sz = (sz << 9) >> 16;
-                    vy = p0->pos.y;
-                    *(int *)0x400048c = (u16)sx | ((u16)((vy << 9) >> 16) << 16);
-                    *(int *)0x400048c = (u16)sz;
-                    *(int *)0x4000488 = p1->texCoord;
-                    *(int *)0x4000484 = p1->normal;
-                    vx = p1->pos.x;
-                    sz = p1->pos.z;
-                    cols = vx << 9;
-                    sx = cols >> 16;
-                    sz = (sz << 9) >> 16;
-                    vy = p1->pos.y;
-                    *(int *)0x400048c = (u16)sx | ((u16)((vy << 9) >> 16) << 16);
-                    *(int *)0x400048c = (u16)sz;
-                    cols = mGridDim[1];
-                } while (j < cols);
-            }
-            i = i + 1;
-            *(int *)0x4000504 = z1;
-        } while (i < (int)(mGridDim[0] - 1));
+    for (i = 0; i < mGridDim[0] - 1; i++) {
+        G3_Begin(GX_BEGIN_TRIANGLE_STRIP);
+        for (j = 0; j < mGridDim[1]; j++) {
+            EntryMeshVertex *p0 = &mVertices[i + j * mGridDim[1]];
+            EntryMeshVertex *p1 = &mVertices[i + 1 + j * mGridDim[1]];
+
+            REG_TEXCOORD = p0->texCoord;
+            REG_NORMAL = p0->normal;
+            G3_Vtx(p0->pos.x >> 7, p0->pos.y >> 7, p0->pos.z >> 7);
+            REG_TEXCOORD = p1->texCoord;
+            REG_NORMAL = p1->normal;
+            G3_Vtx(p1->pos.x >> 7, p1->pos.y >> 7, p1->pos.z >> 7);
+        }
+        G3_End();
     }
-    *(int *)0x4000448 = 1;
+    G3_PopMtx(1);
 }
 
 /* The behavior handler: while the ripple runs, set every vertex's height,
@@ -374,67 +329,38 @@ void EntryMesh::UpdateRipple() {
  * the last row and column snapped to the far edge, with texture
  * coordinates across 0..0x80000 (v flipped). */
 void EntryMesh::InitGrid() {
-    int q[4];
-    int acc;
-    int j;
-    int i;
-    int uu;
-    int vv;
-    int nb;
+    int x = 0;
+    int y = 0;
+    int row, col;
 
-    acc = 0;
-    q[0] = acc;
-    j = 0;
-    if (((int)mGridDim[1]) <= 0)
-        return;
-
-    q[2] = acc;
-    q[3] = acc;
-    q[1] = acc;
-
-    do {
-        i = q[1];
-        if (((int)mGridDim[0]) > 0) {
-            do {
-                EntryMeshVertex *e;
-                int b;
-                int c;
-
-                e = &mVertices[j * mGridDim[1] + i];
-                e->pos.x = acc;
-                e->pos.y = q[0];
-                e->pos.z = q[2];
-                e->normal = 0x1ff00000;
-
-                uu = 0x80000 / (mGridDim[0] - 1);
-                vv = 0x80000 / (mGridDim[1] - 1);
-                c = ((0x80000 - vv * j) << 8) >> 16;
-                b = ((uu * i) << 8) >> 16;
-                e->texCoord = (unsigned short)b | ((unsigned short)c << 16);
-
-                nb = (int)mGridDim[0];
-                if (i == nb - 2)
-                    acc = 0x1f4000;
-                else
-                    acc += 0x1f4000 / (nb - 1);
-                i++;
-            } while (i < nb);
+    for (row = 0; row < mGridDim[1]; row++) {
+        for (col = 0; col < mGridDim[0]; col++) {
+            EntryMeshVertex *v = &mVertices[row * mGridDim[1] + col];
+            v->pos.x = x;
+            v->pos.y = y;
+            v->pos.z = 0;
+            v->normal = GX_VECFX10(0, 0, 0xfff);
+            int du = 0x80000 / (mGridDim[0] - 1);
+            int dv = 0x80000 / (mGridDim[1] - 1);
+            int s = du * col;
+            int t = 0x80000 - dv * row;
+            v->texCoord = GX_ST(s, t);
+            if (col == mGridDim[0] - 2)
+                x = 0x1f4000;
+            else
+                x += 0x1f4000 / (mGridDim[0] - 1);
         }
-
-        nb = (int)mGridDim[1];
-        acc = q[3];
-        if (j == nb - 2)
-            q[0] = 0x1f4000;
+        x = 0;
+        if (row == mGridDim[1] - 2)
+            y = 0x1f4000;
         else
-            q[0] += 0x1f4000 / (nb - 1);
-
-        j++;
-    } while (j < nb);
+            y += 0x1f4000 / (mGridDim[1] - 1);
+    }
 }
 
 /* Free the vertex array. */
 int EntryMesh::Destroy() {
-    func_0203cbc0(mVertices);
+    ::operator delete[](mVertices);
     return 1;
 }
 
@@ -456,7 +382,7 @@ int EntryMesh::Init(const Vector3 *pos, int angleY) {
     mGridDim[0] = 0x14;
     mGridDim[1] = 0x14;
     mNumVertices = mGridDim[0] * mGridDim[1];
-    mVertices = (EntryMeshVertex *)Memory::operator_new2(mNumVertices * sizeof(EntryMeshVertex));
+    mVertices = (EntryMeshVertex *)::operator new[](mNumVertices * sizeof(EntryMeshVertex));
     LoadTexture((BMD_File *)func_0201787c(&EntryMeshTextureFile));
     EntryMeshTextureFile.Release();
     mState = EntryMeshHandlers;

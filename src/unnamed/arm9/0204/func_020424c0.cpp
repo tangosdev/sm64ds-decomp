@@ -1,22 +1,21 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/cache.h"
+#include "nitro/os/system.h"
 #include "private/fs_views.h"
 
 typedef struct FSFile FSFile;
 
 extern "C" {
 
-/* Measured: without loop_invariants 7 of 106 words differ (&file and -1 swap
- * r4/r5); without propagation 22; without both 29. for-loop forms are 0x1b0.
- * With neither pragma, plain for loops match everything except the first
- * loop (22 words): the ROM seeds the length from the zeroed counter
- * (`mov r0, #0` ... `add sl, r0, #4`), which only opt_propagation off
- * reproduces; `sl = 4`, `sl = sizeof(u32)`, `for (sl = 4, i = 0; ...)` and
- * `i = 0; for (sl = i + 4; ...)` all fold the seed to a constant. */
+/* Measured: without propagation 22 of 106 words differ. for-loop forms are
+ * 0x1b0. Plain for loops match everything except the first loop (22 words):
+ * the ROM seeds the length from the zeroed counter (`mov r0, #0` ...
+ * `add sl, r0, #4`), which only opt_propagation off reproduces; `sl = 4`,
+ * `sl = sizeof(u32)`, `for (sl = 4, i = 0; ...)` and `i = 0; for (sl = i + 4;
+ * ...)` all fold the seed to a constant. (The opt_loop_invariants off this file
+ * also carried is inert now: the function is exact without it.) */
 #pragma opt_propagation off
-#pragma opt_loop_invariants off
 /* data_020a1fc0, the file-sharing work block, under FileShareWork's names
  * (include/private/arm9_a1fc0_file_share.h); typed here for the allocator
  * call. Only the fields this function touches are spelled out. */
@@ -67,7 +66,7 @@ void func_020424c0(void) {
     RomRegion *ptrs[4];
     FSFile file;
     u32 sl;
-    u32 irq;
+    OSIntrMode irq;
     void *fp;
     int i;
 
@@ -84,9 +83,9 @@ void func_020424c0(void) {
         i++;
     } while (i < 4);
 
-    irq = IRQ::Disable();
+    irq = OS_DisableInterrupts();
     fp = data_020a1fc0.mAllocFunc(data_020a1fc0.mAllocArg, sl, 0);
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
 
     if (data_020a1fc0.mIsParent != 0) {
         FSArchive *sb;
@@ -134,8 +133,8 @@ void func_020424c0(void) {
             *(int *)fp = max;
         }
 
-        CP15::FlushAndInvalidateDataCache((u32)fp, sl);
-        CP15::DrainWriteBuffer();
+        DC_FlushRange(fp, sl);
+        DC_WaitWriteBufferEmpty();
     }
 
     data_020a1fc0.mTable = fp;

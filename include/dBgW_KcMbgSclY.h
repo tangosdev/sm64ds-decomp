@@ -31,7 +31,7 @@
 
 struct dBgW_KcMbgSclY : dBgW_KcMbg {
     Fix12i scaleY;             /* 0x1c8 */
-    Fix12i invScaleY;          /* 0x1cc - func_02053200(scaleY) */
+    Fix12i invScaleY;          /* 0x1cc - FX_Inv(scaleY) */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~dBgW_KcMbgSclY();                     /* slots 0/1 */

@@ -2,7 +2,7 @@
 #include "private/arm9_wbt.h"
 #include "private/wbt_block_info_list.h"
 
-extern int func_02065a74(void);
+extern int WBT_GetOwnAid(void);
 extern struct WBTBlockInfoList *func_02065a94(int key);
 extern int func_0206491c(unsigned int key, int val);
 extern char *func_02064888(unsigned int id, int idx);
@@ -22,7 +22,10 @@ int func_02063bc4(void *base, int idx, int r8) {
     WBTPeerRecord *e = &work->peer[idx];
     if (e->state == 2) {
         int r7;
-        if (func_02065a74() == 0) r7 = 0xfffe; else r7 = 1;
+        if (WBT_GetOwnAid() == 0)
+            r7 = 0xfffe;
+        else
+            r7 = 1;
         if (e->command == 4) {
             struct WBTBlockInfoList *node = func_02065a94(e->block_id);
             if (node != 0) {

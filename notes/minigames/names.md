@@ -111,7 +111,7 @@ and only the lines the compiler then rejected were changed.
 | 0x054 | `unk_054` | `mTallyAnimTimer` | high | It starts at 1 when the tally rises and drives the newest icon's blink and the close-up at five. |
 | 0x060 | `unk_060` | `mRecordRevealTimer` | high | `Mg_DrawRecordTable` reveals a row every 0x14 frames as it counts, then loops it over 0x64..0x8b. `Mg_SetSharedState` zeroes it. |
 | 0x064 | `unk_064` | `mLastRecordRank` | high | `Mg_RankSessionBest` stores the rank (0..4, or -1); `Mg_GetLastRecordRank` returns it. |
-| 0x0a0 | `unk_0a0` | `mSubBgBank` | medium | Only `dScMgD3DBase_c` uses it: it saves `func_02053eb0()` and passes the value to `GX::SetBankForSubBG`. |
+| 0x0a0 | `unk_0a0` | `mSubBgBank` | medium | Only `dScMgD3DBase_c` uses it: it saves `GX_GetBankForSubBG()` and passes the value to `GX_SetBankForSubBG`. |
 | 0x0a4 | `unk_0a4` | `mRunDuringFade` | high | `BeforeBehavior` skips the frame while it is 0 and the fader is busy. 3DEsp, Coin, Curling and Curling2 set it to 1. |
 | 0x0a8 | `unk_0a8` | `mCredits` | high (coins seen) | It is clamped to 0..9999 by `Mg_Add/SubCredits`, and 0 sends the shared states to game over. Seen at runtime in Slot3: the coin counter starts at 12, a miss takes 3 coins and a win pays 3 or 6 (runtime-checks.md). Cup uses the same field as lives (2), so "credits" covers both readings. |
 | 0x0ac | `unk_0ac` | `mCreditsShown` | high | `BeforeBehavior` eases it toward `mCredits`, and `Mg_DrawCredits` draws it. |

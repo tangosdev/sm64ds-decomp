@@ -1,7 +1,7 @@
 // DS 2D engine, text-mode backgrounds.
 //
 // Register layout from GBATEK. The address arithmetic is cross-checked against
-// the decomp's own G2::GetBG0ScrPtr, which computes
+// the decomp's own G2_GetBG0ScrPtr, which computes
 //
 //     0x6000000 + ((DISPCNT & 0x38000000) >> 27 << 16) + ((BG0CNT & 0x1f00) >> 8 << 11)
 //

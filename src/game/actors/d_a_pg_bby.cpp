@@ -18,9 +18,9 @@
 #include "dClipper.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx_cp.h"
 
 /* The carry matrix is copied through the flat Mtx43: assigning Matrix4x3
    grows .text by 0x1c bytes. */
@@ -49,7 +49,7 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Matrix4x3_FromRotationY(void *m, int angle);
 
-extern short data_02082214[];   /* sine/cosine table */
+extern short FX_SinCosTable_[]; /* sine/cosine table */
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 
@@ -469,12 +469,12 @@ int daPgBby_c::func_ov072_02121368()
     }
 
     index = mAngleY;
-    angle = data_02082214[(index >> 4) * 2];
+    angle = FX_SinCosTable_[(index >> 4) * 2];
     *posX = *posX + (int)(((s64)angle * dist + round) >> 12);
     *posY = *posY + dist;
 
     index = mAngleY;
-    angle = data_02082214[(index >> 4) * 2 + 1];
+    angle = FX_SinCosTable_[(index >> 4) * 2 + 1];
     *posZ = *posZ + (int)(((s64)angle * dist + round) >> 12);
 
     eater = mEatingPlayer;
@@ -575,7 +575,7 @@ void daPgBby_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
         if (floorNormal.y != 0) {
             int x = FX_MUL(floorNormal.x, mSpeedX);
             int y = FX_MUL(floorNormal.z, mSpeedZ);
-            mVertSpeed = -(cstd::fdiv(x + y, floorNormal.y) + 0x8000);
+            mVertSpeed = -(FX_Div(x + y, floorNormal.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {

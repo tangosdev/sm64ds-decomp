@@ -1,6 +1,6 @@
 //cpp
 #include "private/arm9_a1fc0_file_share.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -14,7 +14,7 @@ extern "C" {
  * nothing is moved. That is the ROM's code (0x02041bf4..0x02041c14), not a
  * decompilation slip; with a pool of three nodes, a list can be three long. */
 void func_02041bbc(FileShareNode **from, FileShareNode **to, FileShareNode *node) {
-    unsigned int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     FileShareNode *cur = *from;
     if (cur == node) {
         *from = node->mNext;
@@ -30,7 +30,7 @@ void func_02041bbc(FileShareNode **from, FileShareNode **to, FileShareNode *node
             break;
         }
     }
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 /* free -> busy: takes the free list's head to be loaded (state 1) and

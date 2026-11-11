@@ -9,7 +9,7 @@
  * with the ten 0x100-byte FIFO blocks and install the PXI receive callback
  * (WmReceiveFifo). */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 #include "nitro/os/message.h"
 
@@ -17,8 +17,7 @@ extern "C" {
 
 extern void PXI_Init(void);
 extern int PXI_IsCallbackReady(int tag, int proc);
-/* MI_DmaFill32 */
-extern void DMASyncFillTransfer(u32 dmaNo, void *dest, u32 data, u32 size);
+extern void MI_DmaFill32(u32 dmaNo, void *dest, u32 data, u32 size);
 extern void WmClearFifoRecvFlag(void);
 extern int WM_SetPortCallback(int port, void *callback, void *arg);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
@@ -53,8 +52,8 @@ int WM_Init(void *buf, int ch) {
         return 4;
     }
 
-    CP15::InvalidateDataCache((unsigned int)buf, 0x1300);
-    DMASyncFillTransfer(ch, buf, 0, 0x1300);
+    DC_InvalidateRange(buf, 0x1300);
+    MI_DmaFill32(ch, buf, 0, 0x1300);
 
     data_020a89ac = (WMArm9Buf *)buf;
     data_020a89ac->WM7 = (void *)((int)buf + 0x600);

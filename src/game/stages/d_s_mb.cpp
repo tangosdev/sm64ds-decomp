@@ -18,12 +18,8 @@
 // leftovers: func_02034b1c initialises the global graph callback, retaining
 // the raw store to its unmodelled byte at +0x0f; it keeps its placeholder name
 // and its untyped parameters because include/decl_common.h declares it.
-// LoadMultiBootResources stays free (no receiver). Its guarded store to
-// data_020a0c5c under data_020a0c60 is a function-local static
-// (`static mHeap::Heap_t *sPrevHeap = heap->SetDefault();` reproduces it), but
-// folding it moves this TU's .bss start to 0x020a0c5c, which takes a
-// config/arm9/delinks.txt change. The loader-job word data_020a0c64 is an int
-// that decl_common.h spells u8[].
+// LoadMultiBootResources stays free (no receiver). The loader-job word
+// data_020a0c64 is an int that decl_common.h spells u8[].
 #include "dScMB_c.h"
 #include "nitro/hw/registers.h"
 #include "AsyncJob.h"
@@ -32,19 +28,19 @@
 #include "OAM.h"
 #include "OamAttr.h"
 #include "Sound.h"
-#include "GX.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "nitro/fx/fx_trig.h"
 
 extern "C" {
-void MultiStore16(u16 val, char *dst, int nbytes);
+void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 void DecompressLZ16(void *src, void *dst);
 
 void func_020308b4(void);
 
 void func_0201a5f8(int t);
 void *func_0201a3e4(void);
-extern u32 data_020a0c60;
-extern void *data_020a0c5c;
 /* Linker-defined overlay IDs: the address is the overlay number. */
 extern int OVERLAY_100_ID;
 extern int OVERLAY_102_ID;
@@ -63,15 +59,13 @@ extern dGraph_c::callback_c *gGraphCallback;
 extern int data_0208ee44;
 }
 
-/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
-   Read through the inline, the ROM builds 0x06401280 as `mov #0x6400000 /
-   add #0x1280` where a literal address would load it from the pool.
-   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
-   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
-   d_a_demo.cpp's pinned @NNN symbols. */
-static inline void *G2_GetOBJCharPtr(void) {
-    return (void *)0x06400000;
-}
+/* Whether the loader job Behavior waits on has finished: InitResources seeds
+   it from func_0201a244's return value (1 when the job ran synchronously) and
+   Behavior's step 1 polls func_0201a1bc into it. It is this TU's .bss, sorted
+   between LoadMultiBootResources's static and sMBGraphCallback. The word is an
+   int, but include/decl_common.h spells it u8[], so the definition follows that
+   spelling (with C linkage from that declaration) until the header can change. */
+u8 data_020a0c64[4];
 
 /* The scene's graph callback. A global, not a member: InitResources points
    it at the scene and hands it to the graph hook. Its constructor is inline,
@@ -178,8 +172,8 @@ s32 dScMB_c::Behavior() {
     case 0:
         if (func_0203d8fc() == 0)
             break;
-        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6400000);
-        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6600000);
+        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], G2_GetOBJCharPtr());
+        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], G2S_GetOBJCharPtr());
         gMainScreenLayers = DISPLAY_LAYER_OBJ;
         gSubScreenLayers = 0x10;
         REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1000;
@@ -241,26 +235,24 @@ s32 dScMB_c::Behavior() {
 void LoadMultiBootResources(int unused) {
     LoadArchive(0);
     mHeap::Heap_t *heap = (mHeap::Heap_t *)func_0201a458();
-    if (!(data_020a0c60 & 1)) {
-        data_020a0c5c = heap->SetDefault();
-        data_020a0c60 |= 1;
-    }
+    /* The default heap to restore after each load. */
+    static mHeap::Heap_t *sPrevHeap = heap->SetDefault();
     LoadTextNarcs();
     LoadArchive(1);
-    ((mHeap::Heap_t *)data_020a0c5c)->SetDefault();
+    sPrevHeap->SetDefault();
     func_0201a5f8(6);
     LoadOverlay((int)&OVERLAY_100_ID);
     LoadOverlay((int)&OVERLAY_102_ID);
-    data_020a0c5c = ((mHeap::Heap_t *)func_0201a3e4())->SetDefault();
+    sPrevHeap = ((mHeap::Heap_t *)func_0201a3e4())->SetDefault();
     LoadArchive(7);
-    ((mHeap::Heap_t *)data_020a0c5c)->SetDefault();
+    sPrevHeap->SetDefault();
 }
 
 s32 dScMB_c::InitResources() {
     volatile u16 fillMain;
     volatile u16 fillSub;
 
-    func_02053b98();
+    GX_DispOff();
     REG_DISPCNT_SUB &= ~0x10000;
     func_02030aa4(2);
 
@@ -273,15 +265,15 @@ s32 dScMB_c::InitResources() {
     REG_DB_BG1CNT &= ~0x40;
 
     fillMain = 0xffff;
-    MultiStore16(fillMain, (char *)0x5000000, 2);
+    MIi_CpuClear16(fillMain, (char *)0x5000000, 2);
     fillSub = 0xffff;
-    MultiStore16(fillSub, (char *)0x5000400, 2);
+    MIi_CpuClear16(fillSub, (char *)0x5000400, 2);
 
     /* From OBJ tile 0x94 onwards; a 4bpp tile is 0x20 bytes. */
     DecompressLZ16(&data_0209446c, (u8 *)G2_GetOBJCharPtr() + 0x94 * 0x20);
-    GX::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
-    GX::LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
-    GXS::LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
+    GX_LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
+    GX_LoadOBJPltt((const void *)&data_020945d0, 0xa0, 0x20);
+    GXS_LoadOBJPltt((const void *)&data_0209444c, 0, 0x20);
 
     REG_BG1CNT &= ~3;
     REG_DB_BG1CNT &= ~3;
@@ -292,7 +284,7 @@ s32 dScMB_c::InitResources() {
     gSubScreenLayers = 0;
     REG_DISPCNT &= ~0x1f00;
     REG_DISPCNT_SUB &= ~0x1f00;
-    GX::DispOn();
+    GX_DispOn();
 
     REG_DISPCNT_SUB |= 0x10000;
     func_02034b1c(&sMBGraphCallback, this);

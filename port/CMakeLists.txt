@@ -40,7 +40,6 @@ add_executable(smoke
     hal/cstd_div.c
     hal/os_time.cpp
     hal/shims.cpp
-    hal/mem_delete2.cpp
     ${SLICE_SOURCES})
 
 target_include_directories(smoke PRIVATE
@@ -89,7 +88,7 @@ endforeach()
 sm64ds_honor_cpp_markers(SLICE3A_SOURCES)
 
 add_executable(smoke_roots tests/smoke_roots.cpp
-    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/mem_delete2.cpp
+    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES})
 target_include_directories(smoke_roots PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -130,7 +129,11 @@ get_filename_component(PORT_REPO_ROOT_ABS "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOL
 # path: two requested symbols in the same TU must compile that TU once, not twice.
 function(sm64ds_hostgen_symbols out_var)
     set(generated "")
-    set(seen_sources "")
+    # Seen sources span every call: one TU can hold symbols from two gates (the
+    # G3 immediates live together in GX_g3imm), and a second custom rule for the
+    # same output is a configure error. Every target that links a later gate's
+    # list links the earlier gates' lists too, so the TU is still compiled.
+    get_property(seen_sources GLOBAL PROPERTY SM64DS_HOSTGEN_SEEN)
     foreach(sym IN LISTS ARGN)
         execute_process(
             COMMAND python "${PORT_REPO_ROOT_ABS}/tools/srcpath.py" "${sym}"
@@ -152,6 +155,7 @@ function(sm64ds_hostgen_symbols out_var)
             continue()
         endif()
         list(APPEND seen_sources "${sym_src}")
+        set_property(GLOBAL APPEND PROPERTY SM64DS_HOSTGEN_SEEN "${sym_src}")
         string(REGEX REPLACE "\\.(c|cpp)$" ".cpp" sym_out_rel "${sym_rel}")
         set(sym_out "${CMAKE_BINARY_DIR}/host-src/${sym_out_rel}")
         add_custom_command(OUTPUT "${sym_out}"
@@ -170,7 +174,7 @@ endfunction()
 # These src/ files touch MMIO textually, so they build from hostgen-emitted
 # copies under the build tree -- src/ itself is never edited.
 set(GATE4A_SYMS
-    func_0205532c func_02055388 func_020553a4 _ZN3G3X9ClearFifoEv
+    G3_MultTransMtx33 G3_MultMtx43 G3_LoadMtx43 G3X_ClearFifo
     MI_SendGXCommandAsync MIi_FIFOCallback MIi_DMACallback OSi_EnterDmaCallback MI_WaitDma)
 sm64ds_hostgen_symbols(GATE4A_GEN ${GATE4A_SYMS})
 
@@ -187,9 +191,9 @@ endif()
 
 # Gate 4b: the whole dExtSimpleModel_c pipeline. Adds the material-bind and matrix
 # feeders to the hostgen set and the dExtSimpleModel_c/render slice on top of everything.
-set(GATE4B_SYMS _ZN15ModelComponents13func_02044b30Ei Geometry_MatrixMultiply3x3
-    func_02055998 _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
-    _ZN15ModelComponents13func_0204488cEiP7Vector3 NormalizeVec3)
+set(GATE4B_SYMS _ZN15ModelComponents13func_02044b30Ei G3_MultMtx33
+    G3_LoadTexMtxEnv _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
+    _ZN15ModelComponents13func_0204488cEiP7Vector3 VEC_Normalize)
 sm64ds_hostgen_symbols(GATE4B_GEN ${GATE4B_SYMS})
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate4b.txt" SLICE4B_LINES)
@@ -259,8 +263,10 @@ if(MSVC)
 endif()
 
 # Gate 8: collision -- the octree walk over real KCL data. cstd::sqrt
-# drives the hardware sqrt unit through literal MMIO -> hostgen.
-set(GATE8_SYMS _ZN4cstd4sqrtEy _ZN4cstd11fdiv_resultEv _ZN4cstd16reciprocal_asyncEi
+# drives the hardware sqrt unit through literal MMIO -> hostgen. The hostgen
+# copy of src/cstd.cpp also defines FX_Div, so these targets drop
+# hal/cstd_div.c.
+set(GATE8_SYMS _ZN4cstd4sqrtEy FX_GetDivResult FX_InvAsync
     Matrix4x3_ApplyInPlaceToScale)
 sm64ds_hostgen_symbols(GATE8_GEN ${GATE8_SYMS})
 
@@ -277,7 +283,7 @@ sm64ds_honor_cpp_markers(SLICE8_SOURCES)
 
 add_executable(smoke_clsn tests/smoke_clsn.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     hal/clsn_vtable.cpp hal/bg_ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE8_SOURCES} ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} "${ROMDATA_C}")
@@ -387,7 +393,6 @@ endif()
 
 add_executable(smoke_fs tests/smoke_fs.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/mem_delete2.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES})
 target_include_directories(smoke_fs PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -417,7 +422,7 @@ sm64ds_honor_cpp_markers(SLICE9_SOURCES)
 
 add_executable(smoke_actor tests/smoke_actor.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     hal/clsn_vtable.cpp hal/bg_ctor_bridge.cpp hal/actor_vtables.cpp hal/actor_ctor_bridge.cpp hal/host_d0_demo.cpp hal/anim_bridge.cpp hal/anim_ctor_bridge.cpp hal/host_d0.cpp
     hal/cxxname_bridge.cpp hal/megachar_stub.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}

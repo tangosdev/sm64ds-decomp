@@ -1,5 +1,5 @@
 //cpp
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/card/card_common.h"
 
 extern "C" {
@@ -11,13 +11,13 @@ extern "C" {
 void CARDi_EndTask(CARDiCommon *p) {
     MIDmaCallback callback = p->callback;
     void *arg = p->callback_arg;
-    u32 mask = IRQ::Disable();
+    OSIntrMode mask = OS_DisableInterrupts();
     p->flag &= ~(CARD_STAT_BUSY | CARD_STAT_TASK);
     OS_WakeupThread(&p->busy_q);
     if (p->flag & CARD_STAT_RECV) {
         OS_WakeupThreadDirect(&p->thread);
     }
-    IRQ::Restore(mask);
+    OS_RestoreInterrupts(mask);
     if (callback != 0) {
         callback(arg);
     }

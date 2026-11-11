@@ -30,6 +30,8 @@ enum dScMgSound_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "Sound.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 /* A cursor keeps the add-#0x5000 split on a walk that advances the scene
    pointer. Pointing the record itself at the slot pools the base instead. */
@@ -48,20 +50,6 @@ typedef void (dScMgSound_c::*Pmf)(int);
 struct PmfEntry {
     Pmf pmf;
 };
-
-
-namespace G2S {
-unsigned GetBG2CharPtr();
-}
-
-namespace GX {
-void LoadOBJPltt(const void *data, u32 offset, u32 size);
-}
-
-namespace GXS {
-void LoadBGPltt(const void *data, u32 offset, u32 size);
-void LoadOBJPltt(const void *data, u32 offset, u32 size);
-}
 
 #define RND (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
 #define LAUNDER(p) ((int)(p))
@@ -134,7 +122,7 @@ extern void *sSoundWinSpriteASprites[];
 /* Stored timing suffixes are retained; WinSpriteA reads only indices 0 and 1. */
 extern const u16 sSoundWinSpriteATimes[4] = {50, 4, 50, 0};
 extern void Mg_DrawStockCounter(int a, int b);
-extern const short data_02082214[];
+extern const short FX_SinCosTable_[];
 extern u8 data_ov006_0213f54c[];
 extern u8 data_ov006_0213f544[];
 extern u8 data_ov006_0213f65c[];
@@ -313,28 +301,28 @@ s32 dScMgSound_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     objChars = LoadFile(ASSET_D_2D_MG_SOUND_NCG_BIN);
     objPltt = LoadFile(ASSET_D_2D_MG_SOUND_NCL_BIN);
-    DecompressLZ16(objChars, (void *)0x6400000);
-    GX::LoadOBJPltt(objPltt, 0, 0x100);
+    DecompressLZ16(objChars, G2_GetOBJCharPtr());
+    GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 4;
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCG_BIN);
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x214;
-    DecompressLZ16(file, (void *)G2S::GetBG2CharPtr());
+    DecompressLZ16(file, (void *)G2S_GetBG2CharPtr());
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NCL_BIN);
-    GXS::LoadBGPltt(file, 0x60, 0x1a0);
+    GXS_LoadBGPltt(file, 0x60, 0x1a0);
     Deallocate(file);
 
     file = LoadFile(ASSET_D_2D_MG_BG_SOUND2_NSC_BIN);
-    func_02056374(file, 0, 0x800);
+    GXS_LoadBG2Scr(file, 0, 0x800);
     Deallocate(file);
 
     *(volatile u16 *)0x400100c &= ~0x40;
     *(volatile u32 *)0x4001018 = 0;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
-    DecompressLZ16(objChars, (void *)0x6600000);
-    GXS::LoadOBJPltt(objPltt, 0, 0x100);
+    DecompressLZ16(objChars, G2S_GetOBJCharPtr());
+    GXS_LoadOBJPltt(objPltt, 0, 0x100);
     Deallocate(objChars);
     Deallocate(objPltt);
 
@@ -1508,8 +1496,8 @@ extern "C" void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void
 void dScMgSound_c::DrawPops() {
     char *popCursor = (char *)this;
     int slot;
-    int sinAngle = data_02082214[0];
-    long long cosAngle = data_02082214[1];
+    int sinAngle = FX_SinCosTable_[0];
+    long long cosAngle = FX_SinCosTable_[1];
 
     for (slot = 0; slot < 30; slot++) {
         dMgSoundPopCur *pop = (dMgSoundPopCur *)popCursor;
@@ -1527,7 +1515,7 @@ void dScMgSound_c::DrawPops() {
             Mg_RenderSpriteBothPalMtx(sSoundPopsSprites[pop->pop.sprite], (x >> 12) - 8,
                                       (y >> 12) - 0x10, -1, matrix);
         }
-        sinAngle = data_02082214[0];
+        sinAngle = FX_SinCosTable_[0];
         popCursor += 0x24;
     }
 }
