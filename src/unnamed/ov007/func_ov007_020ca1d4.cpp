@@ -3,8 +3,8 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "Ov007MenuState.h"
-#include "cstd.h"
 #include "Ov007Mesh.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -56,7 +56,7 @@ void func_ov007_020ca308(Ov007MeshWave *wave, Ov007Mesh *mesh, int i) {
         int keep = params->keepChance;
         if (func_ov007_020c3ba8(10000) <= keep * 10 - 1) {
             u16 base;
-            u16 step = (u16)cstd::div(spread, count);
+            u16 step = (u16)FX_DivS32(spread, count);
             base = (u16)(ticks * speed);
             for (j = 0; j < count; j++) {
                 fx16 sine = FX_SinIdx((u16)(base + j * step) >> 4);

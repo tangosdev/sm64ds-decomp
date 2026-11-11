@@ -21,7 +21,7 @@
  * `return new daSBird_c()` through the inherited fBase_c::operator new.
  *
  * NOTES:
- * - Vec3_Asr / Vec3_Sub / LenVec3 have no shared header and keep local
+ * - Vec3_Asr / Vec3_Sub / VEC_Mag have no shared header and keep local
  *   void * externs. Random() wraps math/CalcLib.h's RandomIntInternal as
  *   unsigned: a signed % 400 / % 4000 or >> 16 changes codegen.
  * - Behavior builds the model matrix through MtxStack (math/MtxStack.h) but
@@ -88,7 +88,7 @@ extern SBirdStateTable data_ov009_02113c48;
 extern "C" {
 extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern s32 LenVec3(void *v);
+extern s32 VEC_Mag(void *v);
 }
 
 /* The flock's random draws are unsigned: a signed % or >> changes codegen. */
@@ -135,7 +135,7 @@ void daSBird_c::StateFly() {
         s32 hl = Vec3_HorzLen(&diff);
         mTargetPitch = cstd::atan2(hl, -diff.y);
         mTargetYaw = cstd::atan2(diff.z, diff.x);
-        mFlySpeed = LenVec3(&diff) / 25 + 0x14000;
+        mFlySpeed = VEC_Mag(&diff) / 25 + 0x14000;
     }
 
     ApproachLinear(mPrevAngleX, mTargetPitch, 0x8c);

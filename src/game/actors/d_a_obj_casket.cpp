@@ -24,7 +24,7 @@
  * - data_ov071_02122ecc, data_ov071_021230d0 and data_ov071_021230d8 are
  *   defined at the end of this file so their dynamic init stays out of
  *   .text.
- * - MulVec3Mat4x3, Vec3_Add, AddVec3, Vec3_HorzDist and DecIfAbove0_Short
+ * - MTX_MultVec43, Vec3_Add, VEC_Add, Vec3_HorzDist and DecIfAbove0_Short
  *   stay local externs; no shared header declares them.
  */
 
@@ -76,9 +76,9 @@ extern CasketCollisionFilePtr data_ov071_021230d8;
 extern CLPS_Block data_ov063_0211ebd8;
 
 extern "C" {
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 }
@@ -108,7 +108,7 @@ int daObjCasket_c::InitResources() {
     worldOffset.y = 0;
     worldOffset.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&localOffset, &data_020a0e68, &worldOffset);
+    MTX_MultVec43(&localOffset, &data_020a0e68, &worldOffset);
     Vector3 newPos;
     Vec3_Add(&newPos, &mPos, &worldOffset);
     mPosX = newPos.x;
@@ -200,8 +200,8 @@ void daObjCasket_c::St_Wait_Main() {
         landWorld.y = 0;
         landWorld.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MulVec3Mat4x3(&landLocal, &data_020a0e68, &landWorld);
-        AddVec3(&landWorld, &mPos, &landWorld);
+        MTX_MultVec43(&landLocal, &data_020a0e68, &landWorld);
+        VEC_Add(&landWorld, &mPos, &landWorld);
         dustPos.x = landWorld.x;
         dustPos.y = landWorld.y;
         dustPos.z = landWorld.z;
@@ -224,8 +224,8 @@ void daObjCasket_c::St_Wait_Main() {
         reachWorld.y = 0;
         reachWorld.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MulVec3Mat4x3(&reachLocal, &data_020a0e68, &reachWorld);
-        AddVec3(&reachWorld, &mPos, &reachWorld);
+        MTX_MultVec43(&reachLocal, &data_020a0e68, &reachWorld);
+        VEC_Add(&reachWorld, &mPos, &reachWorld);
         if (Vec3_HorzDist(&reachWorld, &playerPos) >= 0x12c000)
             return;
         if (DecIfAbove0_Short(&mStateTimer) != 0)

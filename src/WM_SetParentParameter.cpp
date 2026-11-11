@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "WmWork.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -29,9 +29,9 @@ int WM_SetParentParameter(void *callback, WmParentParam *param) {
         return 6;
     WmCheckParentParameter(param);
     WM_SetCallbackTable(7, callback);
-    CP15::FlushDataCache((u32)param, sizeof(WmParentParam));
+    DC_StoreRange(param, sizeof(WmParentParam));
     if (param->userGameInfoLength != 0) {
-        CP15::FlushDataCache((u32)param->userGameInfo, param->userGameInfoLength);
+        DC_StoreRange(param->userGameInfo, param->userGameInfoLength);
     }
     r = WM_SendCommand(7, 1, param);
     if (r == 0) return 2;

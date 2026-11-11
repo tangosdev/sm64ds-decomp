@@ -85,7 +85,7 @@ typedef struct WMBssDesc {
 typedef char WMBssDesc_size_must_be_0xc0[sizeof(WMBssDesc) == 0xc0 ? 1 : -1];
 
 /* Leading fields of NitroSDK WMStartParentCallback, the argument the WM
- * parent callback (func_02069994) passes for CONNECTED (code 0),
+ * parent callback (MBi_ParentCallback) passes for CONNECTED (code 0),
  * DISCONNECTED (code 1) and BEACON_SENT (code 0x1c). Codes 0xff (a failed
  * WM call, from MBi_CheckWmErrcode: {apiid, errcode}) and 0x100 (any other WM
  * result) read only the WMCallback header the SDK callbacks all share. */

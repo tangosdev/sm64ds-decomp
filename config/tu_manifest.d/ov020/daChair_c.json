@@ -534,9 +534,9 @@
   "externalized_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@782",
+      "from": "@728",
       "to": "@678",
-      "evidence": "compiler temp; the current source moves this TU's per-TU @NNN uniquifier, so mwcc emits it as @690 (was @691); licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @785 to @784 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570)."
+      "evidence": "compiler temp; the current source moves this TU's per-TU @NNN uniquifier, so mwcc emits it as @690 (was @691); licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @785 to @784 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from @782 to @728 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

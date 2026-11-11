@@ -761,54 +761,54 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@602",
+      "from": "@543",
       "to": "@182",
-      "evidence": "Compiler-local registration node at ov071:0x02123058; fleet-unique short label changes no storage or relocation.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "Compiler-local registration node at ov071:0x02123058; fleet-unique short label changes no storage or relocation.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @602 to @543 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@603",
+      "from": "@544",
       "to": "@183",
-      "evidence": "Compiler-local registration node at ov071:0x02123064; fleet-unique short label changes no storage or relocation.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "Compiler-local registration node at ov071:0x02123064; fleet-unique short label changes no storage or relocation.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @603 to @544 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@604",
+      "from": "@545",
       "to": "@184",
-      "evidence": "Compiler-local registration node at ov071:0x02123070; fleet-unique short label changes no storage or relocation.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "Compiler-local registration node at ov071:0x02123070; fleet-unique short label changes no storage or relocation.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @604 to @545 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@605",
+      "from": "@546",
       "to": "@185",
-      "evidence": "Compiler-local registration node at ov071:0x0212307c; fleet-unique short label changes no storage or relocation.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "Compiler-local registration node at ov071:0x0212307c; fleet-unique short label changes no storage or relocation.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @605 to @546 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@617",
+      "from": "@558",
       "to": "pmf_daEykn_c_St_Die_Main",
-      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @617 to @558 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@609",
+      "from": "@550",
       "to": "pmf_daEykn_c_St_Wait_Main",
-      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @609 to @550 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@611",
+      "from": "@552",
       "to": "pmf_daEykn_c_St_Attack_Init",
-      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @611 to @552 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@607",
+      "from": "@548",
       "to": "pmf_daEykn_c_St_Wait_Init",
-      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @607 to @548 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@615",
+      "from": "@556",
       "to": "pmf_daEykn_c_St_Die_Init",
-      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @615 to @556 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@613",
+      "from": "@554",
       "to": "pmf_daEykn_c_St_Attack_Main",
-      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "Native eight-byte member-pointer literal identified by exact state method relocation and zero this adjustment.; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @613 to @554 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

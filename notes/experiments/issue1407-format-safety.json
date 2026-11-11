@@ -168,8 +168,8 @@
       "src/engine/cp15/CP15_SystemSetup.cpp": [
         "src/engine/cp15/CP15_SystemSetup.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/engine/cp15/CP15_MPUDataRegion1.cpp": [
-        "src/engine/cp15/CP15_MPUDataRegion1.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/OS_SetProtectionRegion1.cpp": [
+        "src/engine/cp15/OS_SetProtectionRegion1.cpp: assembly requires original instruction line boundaries"
       ],
       "src/_ZN4CP1516WaitForInterruptEv.cpp": [
         "src/_ZN4CP1516WaitForInterruptEv.cpp: assembly requires original instruction line boundaries"
@@ -533,8 +533,8 @@
       "src/engine/cp15/CP15_SystemSetup.cpp": [
         "src/engine/cp15/CP15_SystemSetup.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/engine/cp15/CP15_MPUDataRegion1.cpp": [
-        "src/engine/cp15/CP15_MPUDataRegion1.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/OS_SetProtectionRegion1.cpp": [
+        "src/engine/cp15/OS_SetProtectionRegion1.cpp: assembly requires original instruction line boundaries"
       ],
       "src/_ZN4CP1516WaitForInterruptEv.cpp": [
         "src/_ZN4CP1516WaitForInterruptEv.cpp: assembly requires original instruction line boundaries"
@@ -717,8 +717,8 @@
       "src/engine/cp15/CP15_SystemSetup.cpp": [
         "src/engine/cp15/CP15_SystemSetup.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/engine/cp15/CP15_MPUDataRegion1.cpp": [
-        "src/engine/cp15/CP15_MPUDataRegion1.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/OS_SetProtectionRegion1.cpp": [
+        "src/engine/cp15/OS_SetProtectionRegion1.cpp: assembly requires original instruction line boundaries"
       ],
       "src/_ZN4CP1516WaitForInterruptEv.cpp": [
         "src/_ZN4CP1516WaitForInterruptEv.cpp: assembly requires original instruction line boundaries"
@@ -948,8 +948,8 @@
       "src/engine/cp15/CP15_SystemSetup.cpp": [
         "src/engine/cp15/CP15_SystemSetup.cpp: assembly requires original instruction line boundaries"
       ],
-      "src/engine/cp15/CP15_MPUDataRegion1.cpp": [
-        "src/engine/cp15/CP15_MPUDataRegion1.cpp: assembly requires original instruction line boundaries"
+      "src/engine/cp15/OS_SetProtectionRegion1.cpp": [
+        "src/engine/cp15/OS_SetProtectionRegion1.cpp: assembly requires original instruction line boundaries"
       ],
       "src/_ZN4CP1516WaitForInterruptEv.cpp": [
         "src/_ZN4CP1516WaitForInterruptEv.cpp: assembly requires original instruction line boundaries"

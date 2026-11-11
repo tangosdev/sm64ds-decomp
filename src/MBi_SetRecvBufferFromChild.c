@@ -1,18 +1,18 @@
 #include "types.h"
 #include "private/arm9_a9db8_mb_parent.h"
 #include "private/mb_comm_child_block_header.h"
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern char *data_020a9db8;
 
 /* NitroSDK MBi_SetRecvBufferFromChild: unpack a child's MP message into its
  * block header. Type 7 (file request) carries a piece number and one piece
- * of the entry request (func_02065de4 assembles them); types 8 and 9 carry
+ * of the entry request (MBi_ReceiveRequestDataPiece assembles them); types 8 and 9 carry
  * a 16-bit request built from two bytes, and 9 also a piece of reserved
  * data. The header follows the SDK's MBCommChildBlockHeader.
  *
  * This build's SDK revision takes no child id: ntrtwl's later
  * MBi_SetRecvBufferFromChild(recvbuf, hdr, child_id) files the request
- * piece itself, where this one leaves that to the caller's func_02065de4. */
+ * piece itself, where this one leaves that to the caller's MBi_ReceiveRequestDataPiece. */
 u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst) {
     MBCommChildBlockHeader *hd = (MBCommChildBlockHeader *)dst;
     u8 *r4;
@@ -26,7 +26,7 @@ u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst) {
             if (hd->u.req_data.piece > ((MbParentWork *)g)->mReqPieceCount) {
                 return 0;
             }
-            CpuCopy8(r4, hd->u.req_data.data, ((MbParentWork *)g)->mReqPieceSize);
+            MI_CpuCopy8(r4, hd->u.req_data.data, ((MbParentWork *)g)->mReqPieceSize);
             r4 = r4 + ((MbParentWork *)data_020a9db8)->mReqPieceSize;
         }
         break;
@@ -50,7 +50,7 @@ u8 *MBi_SetRecvBufferFromChild(u8 *src, u8 *dst) {
             r4 = src + 3;
             *p = (*p) | ((hi << 8) & 0xff00);
         }
-        CpuCopy8(r4, hd->u.data.reserved, ((MbParentWork *)data_020a9db8)->mReqPieceSize);
+        MI_CpuCopy8(r4, hd->u.data.reserved, ((MbParentWork *)data_020a9db8)->mReqPieceSize);
         r4 = r4 + ((MbParentWork *)data_020a9db8)->mReqPieceSize;
     } break;
 

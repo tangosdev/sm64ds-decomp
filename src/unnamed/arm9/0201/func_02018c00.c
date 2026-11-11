@@ -15,7 +15,7 @@ extern struct CARDRomRegion data_020a8064; /* fsi_ovt9 */
 extern struct CARDRomRegion data_020a806c; /* fsi_ovt7 */
 /* the archive func_02018cbc reads the table out of */
 extern FSArchive data_020a8074; /* fsi_arc_rom */
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 
 /* The card half of func_02018c00: read overlay table entry index (0x20
    bytes) straight out of archive's ROM, the table offset and length coming
@@ -60,7 +60,7 @@ int func_02018c00(FSOverlayInfo *info, int flag, int index) {
         u32 off = index << 5;
         if (off >= base->length)
             return 0;
-        CpuCopy8((void *)(ptr + off), &info->header, 0x20);
+        MI_CpuCopy8((void *)(ptr + off), &info->header, 0x20);
         info->target = flag;
         return 1;
     }

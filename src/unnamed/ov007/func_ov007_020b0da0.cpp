@@ -3,9 +3,9 @@
 #include "dExtModel_c.h"
 #include "Ov007MenuState.h"
 #include "Ov007Touch.h"
-#include "cstd.h"
 #include "Ov007Item.h"
 #include "Ov007Model.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -24,7 +24,7 @@ typedef struct Vec3Words {
 #include "Ov007Work.h"
 #include "Ov007Figure.h"
 
-extern void Matrix4x3_LoadIdentity(void *mat);
+extern void MTX_Identity43_(void *mat);
 
 /* stateWork bits, by what this file does with them; medium confidence */
 #define OV007_FIGURE_SWAY 1    /* rock the model and bob it (periods 160 and 40 ticks) */
@@ -60,7 +60,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
         out.x = 0;
         out.z = 0;
 
-        if (!(*(volatile int *)&st->stateWork & OV007_FIGURE_TOUCHED) && counter >= 4) {
+        if (!(st->stateWork & OV007_FIGURE_TOUCHED) && counter >= 4) {
             Ov007Touch *rp = WORK->touch;
             if (rp->cur.touch != 0) {
                 int a = rp->cur.x;
@@ -79,15 +79,15 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
 
         if (st->stateWork & OV007_FIGURE_SWAY) {
             int var_r4;
-            cstd::mod(counter, 0x28);
+            FX_ModS32(counter, 0x28);
             {
-                int m1 = cstd::mod(counter, 0x28);
+                int m1 = FX_ModS32(counter, 0x28);
                 if (m1 <= 0) {
                     var_r4 = 0;
                 } else if (m1 >= 0x28) {
                     var_r4 = 0x1000;
                 } else {
-                    var_r4 = cstd::div(m1 << 12, 0x28);
+                    var_r4 = FX_DivS32(m1 << 12, 0x28);
                 }
             }
 
@@ -98,16 +98,16 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
 
             {
                 int var_r8;
-                int m2 = cstd::mod(counter, 0xa0);
+                int m2 = FX_ModS32(counter, 0xa0);
                 if (m2 <= 0) {
                     var_r8 = 0;
                 } else if (m2 >= 0xa0) {
                     var_r8 = 0x1000;
                 } else {
-                    var_r8 = cstd::div(m2 << 12, 0xa0);
+                    var_r8 = FX_DivS32(m2 << 12, 0xa0);
                 }
 
-                Matrix4x3_LoadIdentity(mat);
+                MTX_Identity43_(mat);
 
                 {
                     int angleA = (u16)(((var_r8 * 2 + 0x800) * 0xffff) >> 12);
@@ -137,7 +137,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
             } else if (diff >= 0x50) {
                 ratio = 0x1000;
             } else {
-                ratio = cstd::fdiv(diff, 0x50);
+                ratio = FX_Div(diff, 0x50);
             }
             sq = (int)(((s64)ratio * ratio) >> 12);
             out.y = sq * 30;

@@ -23,8 +23,8 @@
  *   same order (0x020daa6c..0x020db2a8).
  * - The send status data_020a9d2c and the beacon buffer data_020a9d40
  *   are used by these functions and by no other code.
- * - Bottom edge: func_02067f2c (cache flush, then a DMA copy) is not game
- *   record code. The SDK file's other functions (MB_DeleteGameInfo and the
+ * - Bottom edge: MBi_BlockHeaderEnd (mb_common.c: cache flush, then
+ *   MBi_SendMP) is not game record code. The SDK file's other functions (MB_DeleteGameInfo and the
  *   child's beacon-receive side) are not in this ROM, nor in Lego Star
  *   Wars II's: nothing calls them, so they were dead-stripped. Top edge:
  *   arm9/MB_WmBase begins at 0x0206879c.
@@ -43,14 +43,14 @@
 typedef struct FSFile FSFile;
 
 /* local extern: MI_Memory.c's asm fills and copies; no header declares them. */
-extern void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern void MultiCopyHalf(const void *src, void *dst, s32 size);
-extern void MultiStore32Bytes(unsigned val, void *dst, int len);
+extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
+extern void MIi_CpuCopy16(const void *src, void *dst, s32 size);
+extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 extern void FS_InitFile(FSFile *p_file);
-extern int func_0205d518(void *file, const char *path);
+extern int FS_OpenFile(void *file, const char *path);
 extern int FS_CloseFile(void *p_file);
 extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
-extern u16 func_02067ee4(u16 *p, int len);
+extern u16 MBi_calc_cksum(u16 *p, int len);
 extern int func_020688e4(void);
 extern int func_020688cc(void);
 extern int MBi_GetTgid(void);
@@ -135,7 +135,7 @@ void MBi_InitSendVolatBeacon(void);
 void MBi_SendVolatBeacon(void);
 
 /* NitroSDK MBi_MakeGameInfo(gameInfo, mbGameList, parent): build the game
- * record a parent beacons from the game's registry entry. func_02067928
+ * record a parent beacons from the game's registry entry. MB_RegisterFile
  * builds it into each registered file's slot of the data_020a9db8 work
  * block, with data_020a9db8 + 0x1300 as the parent's user record.
  * MBi_ReadIconInfo reads the icon's 0x20-byte palette and 0x200-byte
@@ -147,22 +147,22 @@ void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent) {
     volatile unsigned short tmp;
     volatile int z;
     tmp = 0;
-    MultiStore16(tmp, dst, 0x4b8);
+    MIi_CpuClear16(tmp, dst, 0x4b8);
     info->dataAttr = 0;
     if (MBi_ReadIconInfo(src->iconCharPathp, dst, 1) == 0 |
         MBi_ReadIconInfo(src->iconPalettePathp, dst, 0) == 0) {
         info->dataAttr = 1;
         z = 0;
-        MultiStore32Bytes(z, dst, 0x220);
+        MIi_CpuClearFast(z, dst, 0x220);
     }
     info->ggid = src->ggid;
     if (parent) {
-        MultiCopyHalf(parent, &info->fixed.parent, 0x16);
+        MIi_CpuCopy16(parent, &info->fixed.parent, 0x16);
     }
     info->fixed.maxPlayerNum = src->maxPlayerNum;
-    MultiCopyHalf(src->gameNamep, info->fixed.gameName,
+    MIi_CpuCopy16(src->gameNamep, info->fixed.gameName,
                   (unsigned)(mystrlen(src->gameNamep) << 0x11) >> 0x10);
-    MultiCopyHalf(src->gameIntroductionp, info->fixed.gameIntroduction,
+    MIi_CpuCopy16(src->gameIntroductionp, info->fixed.gameIntroduction,
                   (unsigned)(mystrlen(src->gameIntroductionp) << 0x11) >> 0x10);
     info->volat.nowPlayerNum = 1;
     info->volat.nowPlayerFlag = 1;
@@ -175,7 +175,7 @@ void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent) {
  * failed open, or a file whose length (bottom - top, words 9 and 8 of the
  * FSFile) is not exactly that size. Newer SDKs open with
  * FS_OpenFileEx(file, path, FS_FILEMODE_R); this one takes the
- * two-argument open func_0205d518. */
+ * two-argument open FS_OpenFile. */
 int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
     FSFile file;
     int sz;
@@ -190,7 +190,7 @@ int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
 
     FS_InitFile(&file);
 
-    if (func_0205d518(&file, filePathp) == 0)
+    if (FS_OpenFile(&file, filePathp) == 0)
         return 0;
 
     param = file.prop.file.bottom - file.prop.file.top;
@@ -216,7 +216,7 @@ void MB_UpdateGameInfoMember(char *self, void *src, unsigned int flags, int s) {
     int i;
     int cnt;
     cnt = 1;
-    MultiCopyHalf(src, gameInfo->volat.member, 0x14a);
+    MIi_CpuCopy16(src, gameInfo->volat.member, 0x14a);
     for (i = 0; i < 0xf; i++) {
         if (flags & (2 << i))
             cnt = (cnt + 1) & 0xff;
@@ -239,7 +239,7 @@ int mystrlen(const u16 *str) {
 }
 
 /* NitroSDK MB_AddGameInfo: append a game record to the beacon list. The new
- * record ends the list. func_02067928 adds each registered file's record
+ * record ends the list. MB_RegisterFile adds each registered file's record
  * this way. */
 void MB_AddGameInfo(MBGameInfo *n) {
     MBGameInfo *p = data_020a9d2c.gameInfoListTop;
@@ -256,7 +256,7 @@ void MB_AddGameInfo(MBGameInfo *n) {
 
 /* NitroSDK MB_InitSendGameInfoStatus: reset the beacon send status. It
  * empties the record list, clears the current record, sets state 1 (pick a
- * record) and clears the send counters. The parent setup func_02068ae8
+ * record) and clears the send counters. The parent setup MB_StartParent
  * calls it after it clears the file table.
  *
  * Later SDKs have one more statement, `sSendVolatCallback = NULL;`. It
@@ -390,11 +390,11 @@ void MBi_SendFixedBeacon(void) {
         } else {
             data_020a9d40.data.fixed.size = (u8)(lim - (unsigned)cur);
             v = 0;
-            MultiStore16(v, (char *)data_020a9d4e + data_020a9d40.data.fixed.size,
-                         0x62 - data_020a9d40.data.fixed.size);
+            MIi_CpuClear16(v, (char *)data_020a9d4e + data_020a9d40.data.fixed.size,
+                           0x62 - data_020a9d40.data.fixed.size);
         }
     }
-    MultiCopyHalf(data_020a9d2c.srcp, data_020a9d4e, data_020a9d40.data.fixed.size);
+    MIi_CpuCopy16(data_020a9d2c.srcp, data_020a9d4e, data_020a9d40.data.fixed.size);
 
     data_020a9d40.data.fixed.fragmentNo = data_020a9d2c.fragmentNo;
     data_020a9d40.data.fixed.fragmentMaxNum = data_020a9d2c.fragmentMaxNum;
@@ -405,7 +405,7 @@ void MBi_SendFixedBeacon(void) {
     data_020a9d40.fileNo = data_020a9d2c.nowGameInfop->fileNo;
     data_020a9d40.beaconNo = data_020a9d2c.beaconNo++;
     data_020a9d40.data.fixed.sum = 0;
-    data_020a9d40.data.fixed.sum = func_02067ee4(data_020a9d48, 0x68);
+    data_020a9d40.data.fixed.sum = MBi_calc_cksum(data_020a9d48, 0x68);
 
     if (++data_020a9d2c.fragmentNo < data_020a9d2c.fragmentMaxNum)
         data_020a9d2c.srcp += 0x62;
@@ -466,7 +466,7 @@ void MBi_SendVolatBeacon(void) {
     data_020a9d40.data.volat.changePlayerFlag = ptr->volat.changePlayerFlag;
 
     zero = 0;
-    MultiStore16(zero, (char *)data_020a9d50, 0x58);
+    MIi_CpuClear16(zero, (char *)data_020a9d50, 0x58);
 
     ptr = data_020a9d2c.nowGameInfop;
     mask = ptr->volat.broadcastedPlayerFlag ^ ptr->volat.nowPlayerFlag;
@@ -474,7 +474,7 @@ void MBi_SendVolatBeacon(void) {
     dst = data_020a9d50;
     for (i = 0; i < 15; i++) {
         if (mask & (2 << i)) {
-            MultiCopyHalf(&data_020a9d2c.nowGameInfop->volat.member[i], dst, 0x16);
+            MIi_CpuCopy16(&data_020a9d2c.nowGameInfop->volat.member[i], dst, 0x16);
             count++;
             dst += 0x16;
             data_020a9d2c.nowGameInfop->volat.broadcastedPlayerFlag |= 2 << i;
@@ -489,7 +489,7 @@ void MBi_SendVolatBeacon(void) {
     }
 
     data_020a9d40.data.volat.sum = 0;
-    data_020a9d40.data.volat.sum = func_02067ee4(data_020a9d48, 0x68);
+    data_020a9d40.data.volat.sum = MBi_calc_cksum(data_020a9d48, 0x68);
 
     ptr = data_020a9d2c.nowGameInfop;
     if (ptr->volat.broadcastedPlayerFlag == ptr->volat.nowPlayerFlag) {

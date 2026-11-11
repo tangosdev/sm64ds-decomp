@@ -8,7 +8,7 @@ extern void FS_InitFile(FSFile *p_file);
 extern void func_02018598(FSFileID *c, int arg);
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
 extern int LoadArchive(int idx);
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern int func_0204eda4(int file, char *archive, unsigned int index);
 
 /* Open game file id into the FSFile at file. Ids below 0x8000 are FAT ids
@@ -36,7 +36,7 @@ int func_020185c0(FSFile *file, unsigned int id) {
                     if (LoadArchive(i) != 0)
                         data_0208eb54 = i;
                     if (e->archive == 0) {
-                        Crash();
+                        OS_Terminate();
                         return 0;
                     }
                 }
@@ -49,6 +49,6 @@ int func_020185c0(FSFile *file, unsigned int id) {
     }
 
     if (result == 0)
-        Crash();
+        OS_Terminate();
     return result;
 }

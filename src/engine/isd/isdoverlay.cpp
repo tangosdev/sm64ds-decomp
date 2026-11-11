@@ -132,7 +132,7 @@ void func_0206d940(struct OverlayTable *pInfo, u32 nIndex) {
     unsigned int n;
     int i;
     if (nIndex > pInfo->m_header.m_nInfoCount) {
-        cstd::__assert(&data_020868fc, (const char *)0x42, &data_02086a30, 1);
+        cstd::__assert(&data_020868fc, 0x42, &data_02086a30, 1);
     }
     n = pInfo->m_header.m_nInfoCount;
     if (n - nIndex != 0) {
@@ -146,7 +146,7 @@ void func_0206d940(struct OverlayTable *pInfo, u32 nIndex) {
 void func_0206d8c4(struct OverlayTable *pInfo, u32 nIndex) {
     unsigned int n;
     if (nIndex >= pInfo->m_header.m_nInfoCount) {
-        cstd::__assert(&data_020868fc, (const char *)0x55, &data_02086a08, 1);
+        cstd::__assert(&data_020868fc, 0x55, &data_02086a08, 1);
     }
     pInfo->m_header.m_nInfoCount--;
     for (n = pInfo->m_header.m_nInfoCount; nIndex < n; nIndex++)
@@ -230,16 +230,16 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
                     if (nWrapSize <= 0)
                         break;
                     if (!(pInfo->m_info[j].m_SIZE > (u32)nWrapSize)) {
-                        cstd::__assert(&data_020868fc, (const char *)0x121, &data_0208698c, 1);
+                        cstd::__assert(&data_020868fc, 0x121, &data_0208698c, 1);
                     }
                     EB(pInfo, j)->m_info[0].m_VMA += (u32)nWrapSize;
                     EB(pInfo, j)->m_info[0].romOffset += (u32)nWrapSize;
                     EB(pInfo, j)->m_info[0].m_SIZE -= (u32)nWrapSize;
                     if (!(pInfo->m_info[j].m_SIZE != 0)) {
-                        cstd::__assert(&data_020868fc, (const char *)0x127, data_020869bc, 1);
+                        cstd::__assert(&data_020868fc, 0x127, data_020869bc, 1);
                     }
                     if (!(pInfo->m_info[j].m_SIZE < 0xf0000000)) {
-                        cstd::__assert(&data_020868fc, (const char *)0x128, &data_020869dc, 1);
+                        cstd::__assert(&data_020868fc, 0x128, &data_020869dc, 1);
                     }
                     break;
                 }
@@ -247,12 +247,12 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
         } else if (ea <= nVMA) {
             if (vma64 < (unsigned long long)(u32)ea + (u32)pInfo->m_info[i].m_SIZE) {
                 if (!(ea <= nVMA)) {
-                    cstd::__assert(&data_020868fc, (const char *)0x12e, &data_0208690c, 1);
+                    cstd::__assert(&data_020868fc, 0x12e, &data_0208690c, 1);
                 }
                 if (!((unsigned long long)(u32)pInfo->m_info[i].m_VMA +
                           (u32)pInfo->m_info[i].m_SIZE >
                       vma64)) {
-                    cstd::__assert(&data_020868fc, (const char *)0x12f, &data_0208692c, 1);
+                    cstd::__assert(&data_020868fc, 0x12f, &data_0208692c, 1);
                 }
                 if (nVMA != pInfo->m_info[i].m_VMA) {
                     u32 ni;
@@ -270,7 +270,7 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
                     srcb->m_info[0].m_SIZE -= dstb->m_info[0].m_SIZE;
                 }
                 if (!(nVMA == pInfo->m_info[i].m_VMA)) {
-                    cstd::__assert(&data_020868fc, (const char *)0x13c, &data_0208696c, 1);
+                    cstd::__assert(&data_020868fc, 0x13c, &data_0208696c, 1);
                 }
                 if (pInfo->m_info[i].m_SIZE <= size) {
                     found = 1;
@@ -289,8 +289,7 @@ int func_0206d32c(int type, u32 nVMA, u32 lma, u32 size) {
                             if (nWrapSize <= 0)
                                 break;
                             if (!(wc > (u32)nWrapSize)) {
-                                cstd::__assert(&data_020868fc, (const char *)0x151, &data_0208698c,
-                                               1);
+                                cstd::__assert(&data_020868fc, 0x151, &data_0208698c, 1);
                             }
                             EB(pInfo, k)->m_info[0].m_VMA += (u32)nWrapSize;
                             EB(pInfo, k)->m_info[0].romOffset += (u32)nWrapSize;
@@ -375,11 +374,11 @@ int func_0206cf98(int type, u32 nVMA, u32 size) {
             continue;
 
         if (!(ea <= nVMA)) {
-            cstd::__assert(&data_020868fc, (const char *)0x1a9, &data_0208690c, 1);
+            cstd::__assert(&data_020868fc, 0x1a9, &data_0208690c, 1);
         }
         if (!((unsigned long long)(u32)pInfo->m_info[i].m_VMA + (u32)pInfo->m_info[i].m_SIZE >
               nVMA)) {
-            cstd::__assert(&data_020868fc, (const char *)0x1aa, &data_0208692c, 1);
+            cstd::__assert(&data_020868fc, 0x1aa, &data_0208692c, 1);
         }
 
         if (nVMA != pInfo->m_info[i].m_VMA) {
@@ -399,7 +398,7 @@ int func_0206cf98(int type, u32 nVMA, u32 size) {
         }
 
         if (!(nVMA == pInfo->m_info[i].m_VMA)) {
-            cstd::__assert(&data_020868fc, (const char *)0x1b7, &data_0208696c, 1);
+            cstd::__assert(&data_020868fc, 0x1b7, &data_0208696c, 1);
         }
 
         if (pInfo->m_info[i].m_SIZE <= size) {
@@ -416,7 +415,7 @@ int func_0206cf98(int type, u32 nVMA, u32 size) {
                     if (nWrapSize <= 0)
                         break;
                     if (!(wc > (u32)nWrapSize)) {
-                        cstd::__assert(&data_020868fc, (const char *)0x1ca, &data_0208698c, 1);
+                        cstd::__assert(&data_020868fc, 0x1ca, &data_0208698c, 1);
                     }
                     EB(pInfo, i)->m_info[0].m_VMA += (u32)nWrapSize;
                     EB(pInfo, i)->m_info[0].romOffset += (u32)nWrapSize;

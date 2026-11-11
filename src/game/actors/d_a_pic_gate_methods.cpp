@@ -15,7 +15,7 @@
  *
  * The grid is square (mCols is copied from mRows) and indexed with mRows
  * as the stride. Vertex::normal is the packed GX normal (10 bits per axis): the
- * strip writer stores it at 0x04000484.
+ * strip writer stores it to REG_NORMAL.
  *
  * The five handlers are daPicGate_c members bound through the four
  * data_ov080_02128628 state rows. Row 0 is N64's proximity-triggered image
@@ -73,27 +73,15 @@ enum daPicGate_c_AssetId {
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "SaveBlock.h"
-
-/* Geometry command ports. Plain stores, not volatile: a volatile port
- * reloads where the cartridge keeps the value in a register. */
-#define G3_MTX_MODE     (*(int *)0x04000440)
-#define G3_MTX_PUSH     (*(int *)0x04000444)
-#define G3_MTX_POP      (*(int *)0x04000448)
-#define G3_MTX_SCALE    (*(int *)0x0400046c)
-#define G3_NORMAL       (*(int *)0x04000484)
-#define G3_TEXCOORD     (*(int *)0x04000488)
-#define G3_VTX_16       (*(int *)0x0400048c)
-#define G3_LIGHT_VECTOR (*(int *)0x040004c8)
-#define G3_LIGHT_COLOR  (*(int *)0x040004cc)
-#define G3_BEGIN        (*(int *)0x04000500)
-#define G3_END          (*(int *)0x04000504)
+#include "nitro/gx/g3imm_cmd.h"
+#include "nitro/gx/g3imm_light.h"
 
 enum {
     kCell = 0x64000,         /* 100.0, one width or height step */
     kSlide = 0x802000,       /* 2050.0 */
     kSlideStep = 0x13e72,
     kOpened = 0x40000,
-    kFlatNormal = 0x1ff00000,
+    kFlatNormal = GX_VECFX10(0, 0, 0xfff),
     kTexSpan = 0x80000,
     kRangePad = 0xc8000,     /* 200.0, added to the clip radius */
     kFar = 0x1964000,        /* 6500.0, clip distance and far distance */
@@ -101,31 +89,23 @@ enum {
     kPicUnclipped = 4,
     kGateLevel = 0x12,
     kGateStar = 1,
-    kMtxPosVec = 2,          /* GX_MTXMODE_POSITION_VECTOR */
-    kMtxPos = 1,             /* GX_MTXMODE_POSITION */
-    kScale = 0x20000,        /* 32.0, the three MTX_SCALE parameters */
-    kTriStrip = 2,
     kClipEnable = 3
 };
 
 extern "C" {
 extern int IsStarCollectedInLevel(signed char levelID, int starID);
-extern SaveBlock data_0209caa0;
 extern Matrix4x3 data_0209b3ec;
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u8 data_ov080_02127714[];
-extern void func_020553a4(void *mtx);
+extern void G3_LoadMtx43(void *mtx);
 extern void *data_ov080_02127834;
-extern void func_0203cbc0(void *a);
 }
 
 /* The cartridge's vtable label is the address point (slot 0), and the
    vtable itself is emitted with the destructor, outside this file. */
-namespace Memory { void *operator_new2(unsigned int size); }
-
 /* The helpers are daPicGate_c members declared on the class and defined in
  * src/game/actors/d_a_pic_gate.cpp. */
-#define LoadMtx43 func_020553a4
+#define LoadMtx43 G3_LoadMtx43
 #define kStates data_ov080_02128628
 #define kDefaultWave data_ov080_02127834
 
@@ -143,20 +123,6 @@ struct PicGateFilePtr : SharedFilePtr {
 
 /* Rows for widths 3, 4, 5, 6, 7, 8 and 16: 13, 14, 16, 20, 20, 25, 30. */
 #define kGridRows data_ov080_02127714
-
-/* One vertex of a strip: texcoord, packed normal, then the 4.12 position
- * as two VTX_16 writes. vx/vy/vz/s0/s1/s2 are the caller's locals. */
-#define EMIT_VTX(v) \
-    G3_TEXCOORD = (v)->texCoord; \
-    G3_NORMAL = (v)->normal; \
-    vx = (v)->x; \
-    vy = (v)->y; \
-    vz = (v)->z; \
-    s0 = (s16)(vx >> 8); \
-    s1 = (s16)(vy >> 8); \
-    s2 = (s16)(vz >> 8); \
-    G3_VTX_16 = (u16)s0 | ((u16)s1 << 16); \
-    G3_VTX_16 = (u16)s2
 
 /* State 1 behavior. Picture 7 slides open; every picture then ripples. */
 void daPicGate_c::UpdateContinuousRipple() {
@@ -219,35 +185,35 @@ void daPicGate_c::DrawRippleImage() {
         return;
     }
 
-    G3_MTX_PUSH = 0;
-    MulMat4x3Mat4x3(&this->mMtx, &data_0209b3ec, &tmp);
-    G3_MTX_MODE = kMtxPosVec;
+    G3_PushMtx();
+    MTX_Concat43(&this->mMtx, &data_0209b3ec, &tmp);
+    G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     LoadMtx43(&tmp);
-    G3_MTX_MODE = kMtxPos;
+    G3_MtxMode(GX_MTXMODE_POSITION);
     LoadMtx43(&tmp);
 
-    G3_LIGHT_VECTOR = 0xe0000000;
-    G3_LIGHT_COLOR = 0xc0007fff;
+    G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
+    G3_LightColor(GX_LIGHTID_3, GX_RGB(31, 31, 31));
     this->LoadMaterial();
 
-    G3_MTX_SCALE = kScale;
-    G3_MTX_SCALE = kScale;
-    G3_MTX_SCALE = kScale;
+    G3_Scale(0x20000, 0x20000, 0x20000);
 
     for (i = 0; i < this->mCols - 1; i++) {
-        G3_BEGIN = kTriStrip;
+        G3_Begin(GX_BEGIN_TRIANGLE_STRIP);
         for (j = 0; j < this->mRows; j++) {
             daPicGate_c::Vertex *v1 = &this->mCells[i + j * this->mRows];
             daPicGate_c::Vertex *v2 = &this->mCells[(i + 1) + j * this->mRows];
-            int vx, vy, vz;
-            s16 s0, s1, s2;
 
-            EMIT_VTX(v1);
-            EMIT_VTX(v2);
+            REG_TEXCOORD = v1->texCoord;
+            REG_NORMAL = v1->normal;
+            G3_Vtx(v1->x >> 8, v1->y >> 8, v1->z >> 8);
+            REG_TEXCOORD = v2->texCoord;
+            REG_NORMAL = v2->normal;
+            G3_Vtx(v2->x >> 8, v2->y >> 8, v2->z >> 8);
         }
-        G3_END = 0;
+        G3_End();
     }
-    G3_MTX_POP = 1;
+    G3_PopMtx(1);
 }
 
 /* State 0 behavior. Ripples only while mWaveTimer is still counting. */
@@ -286,7 +252,7 @@ void daPicGate_c::InitProximityRipple() {
             int dv = kTexSpan / (this->mRows - 1);
             int s = du * col;
             int t = kTexSpan - dv * row;
-            v->texCoord = (u16)(s16)(s >> 8) | (((u16)(s16)(t >> 8) << 1) << 15);
+            v->texCoord = GX_ST(s, t);
             if (col == this->mCols - 2)
                 x = (u8)(this->param1 & 0xf) * kCell + kCell;
             else
@@ -302,7 +268,7 @@ void daPicGate_c::InitProximityRipple() {
 }
 
 s32 daPicGate_c::CleanupResources() {
-    func_0203cbc0(mCells);
+    ::operator delete[](mCells);
     return 1;
 }
 
@@ -373,7 +339,7 @@ s32 daPicGate_c::InitResources() {
         mNumCells = (u16)(mCols * mRows);
     }
 
-    mCells = (Vertex *)Memory::operator_new2((unsigned)mNumCells * 0x18u);
+    mCells = (Vertex *)::operator new[]((unsigned)mNumCells * 0x18u);
     mTexRecord = (s32)this->LoadTexture((int)((unsigned char)((param1 >> 8) & 0x1f)));
     mWaveParams = (const daPicGate_c::WaveParams *)&kDefaultWave;
     mState = &kStates[(unsigned char)((param1 >> 0xd) & 3)];

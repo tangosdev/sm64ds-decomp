@@ -1,5 +1,5 @@
 //cpp
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -21,22 +21,22 @@ int WM_GetMPReceiveBufferSize(void) {
     if (WM_CheckStateEx(2, 7, 8) != 0)
         return 0;
 
-    CP15::InvalidateDataCache((unsigned int)&h->status->mp_flag, 4);
+    DC_InvalidateRange(&h->status->mp_flag, 4);
     p = h->status;
     if (p->mp_flag == 1)
         return 0;
 
-    CP15::InvalidateDataCache((unsigned int)&h->status->aid, 2);
+    DC_InvalidateRange(&h->status->aid, 2);
     p = h->status;
     flag = (p->aid == 0);
 
-    CP15::InvalidateDataCache((unsigned int)&p->mp_maxRecvSize, 2);
+    DC_InvalidateRange(&p->mp_maxRecvSize, 2);
     p = h->status;
     v = p->mp_maxRecvSize;
     if (flag != 1)
         return (((v + 0x51) & ~0x1f) << 1);
 
-    CP15::InvalidateDataCache((unsigned int)&p->pparam.maxEntry, 2);
+    DC_InvalidateRange(&p->pparam.maxEntry, 2);
     p = h->status;
     return (((((v + 0xc) * p->pparam.maxEntry) + 0x29) & ~0x1f) << 1);
 }

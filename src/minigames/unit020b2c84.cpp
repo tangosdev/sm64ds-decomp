@@ -109,6 +109,7 @@
 #include "dScMgBase_c.h"
 #include "LevelRng.h"
 #include "MgBanner.h"
+#include "nitro/fx/fx_cp.h"
 
 struct M { int _00, _01, _10, _11; };
 struct SlotCharNos {
@@ -128,16 +129,12 @@ struct EntryTable {
 struct OamAttr;
 
 
-namespace cstd {
-int fdiv(s32 a, s32 b);
-}
 extern "C" {
 void Deallocate(void *ptr);
 int GetGameLanguage(void);
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 int Mg_CopySpriteList(int a, void *b, int c, int d);
-int func_02053200(int x);
 void func_0203d704(int *o, int *a, int *b);
 void func_0203d388(int *p, int angle);
 int RandomIntInternal(int *seed);
@@ -546,7 +543,7 @@ extern "C" void Banner_DrawWave(MgBanner *e) {
         if (d < 0) d = -d;
         if (d < 0x1000)
             v += FX_MUL((0x1000 - d), 0x400);
-        v = func_02053200(v);
+        v = FX_Inv(v);
         {
             M m = {0};
             m._00 = v;
@@ -608,8 +605,8 @@ extern "C" void Banner_DrawSqueeze(MgBanner *e) {
     m = FX_MUL(e->mTimer, 0xcc);
     {
         GXOamAttr *oam = (GXOamAttr *)e->mOam;
-        t = FX_MUL(cstd::fdiv(m, 0x1000), 0x1000);
-        v = func_02053200(m);
+        t = FX_MUL(FX_Div(m, 0x1000), 0x1000);
+        v = FX_Inv(m);
         {
             M buf = {0};
             buf._00 = v;
@@ -651,9 +648,9 @@ extern "C" void Banner_DrawPopSpinA(MgBanner *e) {
             if (e->mTimer >= 0x14000) {
                 v = 0x1000;
             } else {
-                int t = cstd::fdiv(0x1000, 0x18000);
+                int t = FX_Div(0x1000, 0x18000);
                 v -= FX_MUL(e->mTimer, t);
-                v = func_02053200(v);
+                v = FX_Inv(v);
             }
             {
                 M m = {0};
@@ -697,9 +694,9 @@ extern "C" void Banner_DrawPopSpinB(MgBanner *e) {
             if (e->mTimer >= 0x14000) {
                 v = 0x1000;
             } else {
-                int t = cstd::fdiv(0x1000, 0x18000);
+                int t = FX_Div(0x1000, 0x18000);
                 v -= FX_MUL(e->mTimer, t);
-                v = func_02053200(v);
+                v = FX_Inv(v);
             }
             {
                 M m = {0};
@@ -755,7 +752,7 @@ extern "C" void Banner_DrawPressed(MgBanner *e) {
     int x = e->mTimer;
     u16 ang = (unsigned int)x >> 1;
     fx16 s = FX_SinIdx(ang >> 4);
-    int v = func_02053200(FX_MUL(s, 0x800) + 0x1000);
+    int v = FX_Inv(FX_MUL(s, 0x800) + 0x1000);
     M m = {0};
     u16 flag;
     m._00 = v;
@@ -819,16 +816,16 @@ extern "C" void Banner_DrawZoomA(MgBanner *e) {
             if (val < 0x14000) {
                 int t;
                 d = FX_MUL(val, 0x100);
-                t = cstd::fdiv(d, 0x1400);
+                t = FX_Div(d, 0x1400);
                 scale = FX_MUL(t, 0x1400);
             } else {
                 int a = FX_MUL((val - 0x14000), 0x66);
                 int b = 0x1400 - a;
-                int t = cstd::fdiv(b - 0x1000, 0x400);
+                int t = FX_Div(b - 0x1000, 0x400);
                 scale = (0x1000 - t) + FX_MUL(t, 0x1400);
                 d = b;
             }
-            d = func_02053200(d);
+            d = FX_Inv(d);
             {
                 M m = {0};
                 m._00 = d;
@@ -854,7 +851,7 @@ extern "C" void Banner_DrawZoomA(MgBanner *e) {
                 if (diff < 0x1000) {
                     r += FX_MUL((0x1000 - diff), 0x400);
                 }
-                r = func_02053200(r);
+                r = FX_Inv(r);
                 {
                     M m2 = {0};
                     m2._00 = r;
@@ -881,16 +878,16 @@ extern "C" void Banner_DrawZoomB(MgBanner *e) {
             if (val < 0x14000) {
                 int t;
                 d = FX_MUL(val, 0x100);
-                t = cstd::fdiv(d, 0x1400);
+                t = FX_Div(d, 0x1400);
                 scale = FX_MUL(t, 0x1400);
             } else {
                 int a = FX_MUL((val - 0x14000), 0x66);
                 int b = 0x1400 - a;
-                int t = cstd::fdiv(b - 0x1000, 0x400);
+                int t = FX_Div(b - 0x1000, 0x400);
                 scale = (0x1000 - t) + FX_MUL(t, 0x1400);
                 d = b;
             }
-            d = func_02053200(d);
+            d = FX_Inv(d);
             {
                 M m = {0};
                 m._00 = d;
@@ -916,7 +913,7 @@ extern "C" void Banner_DrawZoomB(MgBanner *e) {
                 if (diff < 0x1000) {
                     r += FX_MUL((0x1000 - diff), 0x400);
                 }
-                r = func_02053200(r);
+                r = FX_Inv(r);
                 {
                     M m2 = {0};
                     m2._00 = r;

@@ -1,6 +1,6 @@
 //cpp
 /* What stays:
- * - data_02082214 is the sine table. gCurrentStarId is the star index.
+ * - FX_SinCosTable_ is the sine table. gCurrentStarId is the star index.
  * - data_ov016_021136dc, 021136e4 and 021149d4 are the overlay file
  *   and CLPS tables, indexed by mModelIndex. This TU does not own them.
  * - mBobAngle += 0xda is an s16 pun. The u16 member spelling fails.
@@ -44,7 +44,7 @@ typedef char KiFuneClsnFileHandle_size_must_be_8[sizeof(KiFuneClsnFileHandle) ==
 extern "C" {
 
 extern int IsStarCollected(int a, int b);
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 extern unsigned char gCurrentStarId;
 }
 
@@ -102,7 +102,7 @@ int daObjKi_Fune_c::Behavior() {
     mMeshCollider.SetClipRadius(0x2000000);
     if (mModelIndex == 0) {
         *(s16 *)&mBobAngle += 0xda;
-        mAngleX = (s16)((data_02082214[(mBobAngle >> 4) * 2] << 0xa) >> 0xc);
+        mAngleX = (s16)((FX_SinCosTable_[(mBobAngle >> 4) * 2] << 0xa) >> 0xc);
         if (DistToCPlayer() < 0xbb8000) {
             mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8b, mCamSpacePos, 0);
         }

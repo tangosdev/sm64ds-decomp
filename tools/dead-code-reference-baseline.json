@@ -350,7 +350,7 @@
   "port/ntr/lz77.cpp": [
    "src/dst"
   ],
-  "src/CpuCopy8.c": [
+  "src/MI_CpuCopy8.c": [
    "src/dst"
   ],
   "src/_ZN10dMgPsOpt_c11TouchIcon_c6RenderEv.cpp": [

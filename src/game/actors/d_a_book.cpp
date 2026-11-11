@@ -98,12 +98,11 @@ s16  Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int  Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 /* local extern: include/math/CalcLib.h has the same typed declaration, but
  * including it here conflicts with this TU's other vector helper spellings. */
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c_);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c_);
 /* local extern: CalcLib.h has this signature without a parameter name; retain
  * the name here so the TU's compiler-numbered aliases remain stable. */
 int RandomIntInternal(int *p);
 void func_ov063_0211cae8(void *found, int mask);
-void func_0203568c(int *p, int v);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(dBgCh_Actr *self, dActor_c *actor, int radius, int height,
                          Vector3_16 *first, Vector3_16 *second);
@@ -414,12 +413,10 @@ void daBook_c::UpdateSwitchBook() {
 
 /* STATE_YOSHI_SKID: brakes the book to a standstill at 0x800 a frame, with
  * its collider off while mSpitOutTimer counts down, then resumes mSavedState (a
- * book that was in flight goes back to winding up). func_0203568c stores its
- * second argument in word 6 of mWithMeshClsn (the radius, as daBgSnmBdy_c
- * reads it): 100 units on every skid frame, back to Init's 50 when the skid
- * ends. */
+ * book that was in flight goes back to winding up). mWithMeshClsn's radius is
+ * 100 units on every skid frame, back to Init's 50 when the skid ends. */
 void daBook_c::StateYoshiSkid() {
-    func_0203568c((int *)&mWithMeshClsn, 0x64000);
+    mWithMeshClsn.SetRadius(0x64000);
     if (mSpitOutTimer != 0) {
         mSpitOutTimer--;
         if (mSpitOutTimer != 0)
@@ -430,7 +427,7 @@ void daBook_c::StateYoshiSkid() {
     ApproachLinear(mVertSpeed, 0, 0x800);
     ApproachLinear(mHorzSpeed, 0, 0x800);
     if (mVertSpeed == 0 && mHorzSpeed == 0) {
-        func_0203568c((int *)&mWithMeshClsn, 0x32000);
+        mWithMeshClsn.SetRadius(0x32000);
         mState = mSavedState;
         if (mState == STATE_FLY)
             mState = STATE_WIND_UP;
@@ -460,7 +457,7 @@ void daBook_c::StateFly() {
     if (mUsesAnmModel != 0) {
         mAnmModel.Advance();
     }
-    AddVec3((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
+    VEC_Add((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
     if (CheckAttacks() != 0)
         return;
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);

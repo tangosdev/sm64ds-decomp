@@ -859,7 +859,7 @@
     "src/engine/collision/d_bg_ch_sph_crr_query.cpp#_ZN12dBgCh_SphCrr21DetectClsnExceptSlot0Ev": "tangosdev",
     "src/engine/collision/d_bg_ch_sph_crr_query.cpp#_ZN12dBgCh_SphCrr15DetectClsnSlot0Ev": "andrewboudreau",
     "src/engine/collision/d_bg_ch_sph_crr_query.cpp#_ZN12dBgCh_SphCrr10DetectClsnEv": "andrewboudreau",
-    "src/engine/collision/d_bg_w_kc_mbg.cpp#func_020398fc": "tangosdev",
+    "src/engine/collision/d_bg_w_kc_mbg.cpp#_ZN10dBgW_KcMbg18SetFilterByMoveDirEv": "tangosdev",
     "src/engine/collision/d_bg_w_kc_mbg.cpp#_ZN10dBgW_KcMbg11GetVelocityER7Vector3": "tangosdev",
     "src/engine/collision/d_bg_w_kc_mbg.cpp#_ZN10dBgW_KcMbg14GetAngularVelYEv": "tangosdev",
     "src/engine/collision/d_bg_w_kc_mbg.cpp#_ZN10dBgW_KcMbg12TransformPosERK7Vector3RS0_": "tangosdev",

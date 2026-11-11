@@ -2,6 +2,7 @@
 #include "nitro/fx/fx.h"
 #include "Ov007Picker.h"
 #include "Ov007Camera.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Builds group `idx`'s spring chain: a point list over the stroke's points
  * (func_ov007_020c798c), each point's position (the stroke point
@@ -17,7 +18,6 @@
  * bases lengthen the function by 12 bytes. */
 
 extern int func_ov007_020c249c(Ov007StrokePath *path);
-extern int func_020531a4(int a);
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern Ov007Link *func_ov007_020c80a4(void);
 extern void func_ov007_020c8010(Ov007Link *link, Ov007Follower *from, Ov007Follower *to);
@@ -53,7 +53,7 @@ void func_ov007_020c6e68(Ov007Picker *self, int idx) {
     dx = px[0] - px[last];
     dz = pz[0] - pz[last];
     lensq = FX_MUL(dx, dx) + FX_MUL(dz, dz);
-    if (func_020531a4(lensq) <= proj)
+    if (FX_Sqrt(lensq) <= proj)
         flag |= 2;
 
     {

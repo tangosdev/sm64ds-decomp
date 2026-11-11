@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 #include "private/watchdog_alarm.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/os/alarm.h"
 
 extern "C" {
@@ -25,7 +25,7 @@ extern void func_0201a8b4(void *);
    cancels the alarm through func_0201aaa4. */
 u8 func_0201a96c(WatchdogAlarm *context, int suspended) {
     Struct_0201a96c *self = (Struct_0201a96c *)context;
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     u8 oldVal = self->suspended;
     self->suspended = suspended;
 
@@ -35,7 +35,7 @@ u8 func_0201a96c(WatchdogAlarm *context, int suspended) {
         func_0201aaa4(self);
     }
 
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     return oldVal;
 }
 }

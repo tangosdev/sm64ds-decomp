@@ -594,29 +594,29 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@541",
+      "from": "@519",
       "to": "@106",
-      "evidence": "mwcc emits this compiler temp as @545; ov091 promotes @545 globally, so the configured @106 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc emits this compiler temp as @545; ov091 promotes @545 globally, so the configured @106 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @541 to @519 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@542",
+      "from": "@520",
       "to": "@557",
-      "evidence": "mwcc emits this compiler temp as @546; ov080 promotes @546 globally, so the configured @557 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc emits this compiler temp as @546; ov080 promotes @546 globally, so the configured @557 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @542 to @520 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@544",
+      "from": "@522",
       "to": "@107",
-      "evidence": "mwcc emits this compiler temp as @548; ov080 promotes @548 globally, so the configured @107 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc emits this compiler temp as @548; ov080 promotes @548 globally, so the configured @107 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @544 to @522 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@545",
+      "from": "@523",
       "to": "@108",
-      "evidence": "mwcc emits this compiler temp as @549; ov091 promotes @549 globally, so the configured @108 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc emits this compiler temp as @549; ov091 promotes @549 globally, so the configured @108 stays the licensed name | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @545 to @523 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@547",
+      "from": "@525",
       "to": "@109",
-      "evidence": "mwcc emits this compiler temp as @551; the configured @109 stays the licensed name so the ov064 symbol surface is unchanged by the classInit tail merge | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc emits this compiler temp as @551; the configured @109 stays the licensed name so the ov064 symbol surface is unchanged by the classInit tail merge | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @547 to @525 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [
