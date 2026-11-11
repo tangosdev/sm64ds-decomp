@@ -15,18 +15,21 @@
  *
  * leftovers:
  * - The func_0200* handlers whose names are not recovered keep their
- *   addresses. Those that work on the camera they are passed are dCamera_c
- *   members; the rest keep C linkage. The three line-query handlers use C++
- *   for native collision-result initialization, and the state-change, shake
- *   and FOV handlers use C++ so they can call ChangeState and FX_Div
- *   directly.
- * - NitroSDK's POD VecFx32 remains the scratch triple in the older handlers. Native
- *   collision results use Vector3 and its empty destructor.
- * - The 0x0209b008 state table is nineteen dCamera_c::State records
- *   defined at the bottom of this file. These bodies only take their
- *   address.
- * - CleanupResources keeps both null checks. The second is the
- *   inlined deleting destructor.
+ *   addresses. The ones the header declares are dCamera_c members; the rest
+ *   stay free functions because they are reached as 8-byte member-function
+ *   pointers: the script ops through the ROM .data constants
+ *   data_02086bc0..data_02086e38, the state entries and ticks through the
+ *   nineteen State records at 0x0209b008. Those records name their symbol,
+ *   so making one a method is a config/arm9/symbols.txt + relocs.txt re-key
+ *   rather than a body edit; it is left for a separate pass.
+ * - The PMF class is the CamPmfHost shadow below: it exists only to give
+ *   `int (Host::*)()` a class for those .data words.
+ * - Scratch vectors are VecFx32 or s32[3]; collision-query results use
+ *   Vector3 and its empty destructor.
+ * - The 0x0209b008 state table is nineteen dCamera_c::State records defined
+ *   at the bottom of this file; __sinit_d_camera.cpp copies their PMFs.
+ * - CleanupResources keeps both null checks. The second is the inlined
+ *   deleting destructor.
  */
 #include "KuppaScript.h"
 #include "dCamera_c.h"
@@ -141,14 +144,9 @@ extern void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out)
 extern void MTX_Identity43_(Matrix4x3 *matrix);
 }
 
-/* Opaque camera-side records used by the older handlers. Ground and line
-   queries use the real dBgCh_Gnd and dBgCh_Lin classes above. The remaining
-   records are typedef'd for the cplusplus-off regions. */
-typedef struct dBgCh_LinHit {
-    char pad[0x14];
-    char surf[0x64];
-} dBgCh_LinHit; /* UpdateRadialCamera's variant */
-typedef struct Entry3 { int a, b, c; } Entry3;                      /* data_02086f58 rows */
+/* Camera-side records used by the follow handlers. Ground and line queries
+   use the real dBgCh_Gnd and dBgCh_Lin classes above. */
+typedef struct Entry3 { int a, b, c; } Entry3; /* data_02086f58: max distance, max distance with mFlags 0xc00, fraction */
 extern Entry3 data_02086f58[];
 /* The 0x28-byte mode record dCamera_c::mMode and mAreaMode point at, entry N
    of the table at 0x02086fcc (SetMode). func_02009e70 calls it CamMode.
@@ -1392,10 +1390,11 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
  * The camera's states and script ops, 0x020073a0..0x0200bec4.
  *
  * The states run through the State records in the 0x0209b008 table, and the
- * script ops through the member-function table that RunCameraCommand builds from
- * 0x02086bc0. Their names are not recovered. The follow, placement and state
- * helpers among them are dCamera_c members; the rest keep C linkage, but every
- * one takes the camera as its first argument.
+ * script ops through the member-function table RunCameraCommand builds from
+ * 0x02086bc0. Their names are not recovered: both dispatches reach them as
+ * the code words of the .data PMF constants, whose symbol is the address
+ * label. The follow and placement helpers among them are dCamera_c members;
+ * the rest stay free and take the camera as their first argument.
  * ------------------------------------------------------------------------- */
 
 /* KuppaScript.cpp's readers of the script's unaligned operands and its
