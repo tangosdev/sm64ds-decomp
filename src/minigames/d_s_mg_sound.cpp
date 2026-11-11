@@ -1496,6 +1496,8 @@ extern "C" void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void
 void dScMgSound_c::DrawPops() {
     char *popCursor = (char *)this;
     int slot;
+    /* sin 0 and cos 0, read from the table by hand: FX_SinIdx(0) and
+       FX_CosIdx(0) compile to a different body. */
     int sinAngle = FX_SinCosTable_[0];
     long long cosAngle = FX_SinCosTable_[1];
 

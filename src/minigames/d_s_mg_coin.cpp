@@ -229,6 +229,9 @@ void dScMgCoin_c::Bag_Draw() {
         u16 idx_h = mBouncer[0].spin;
         s32 xr = mBouncer[0].x;
         s32 yr = mBouncer[0].y;
+        /* The table reads stay hand-indexed: through FX_SinIdx/FX_CosIdx
+           (nitro/fx/fx_trig.h), with or without an index local, the
+           function compiles to a different body. */
         int i = (idx_h >> 4) * 2;
         int vec[4];
         u8 idx_l = mBouncer[0].sprite;
