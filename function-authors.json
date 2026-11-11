@@ -32447,11 +32447,11 @@
     },
     "ov026:0x02111234": {
       "author": "tangosdev",
-      "name": "func_ov026_02111234"
+      "name": "_ZN17daObjWlPolelift_c12UpdateShadowEv"
     },
     "ov026:0x021112a4": {
       "author": "tangosdev",
-      "name": "func_ov026_021112a4"
+      "name": "_ZN17daObjWlPolelift_c20UpdateModelTransformEv"
     },
     "ov026:0x021112e4": {
       "author": "tangosdev",
