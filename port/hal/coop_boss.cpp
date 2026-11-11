@@ -708,8 +708,7 @@ int trip_slot_of(const char *a) {
         }
         if (n != 3) {                         // not the three of a fresh spawn: left alone for this visit (and not scanned again every frame)
             g_trip.bb = bb; g_trip.set = true; g_trip.clash = true;
-            std::fprintf(stderr, "[cbs] bully triplet of big bully id %u: %d found, not 3: not synced
-", (unsigned)bb, n);
+            std::fprintf(stderr, "[cbs] bully triplet of big bully id %u: %d found, not 3: not synced\n", (unsigned)bb, n);
             return -1;
         }
         std::sort(u, u + 3);
