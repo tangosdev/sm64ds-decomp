@@ -1441,8 +1441,6 @@ unsigned long long g_coin_sends = 0, g_coin_recvs = 0, g_coin_raises = 0;
 // each seat, under the same visit id so nobody credits mine twice), the group and course maxima and the owed balance. Only
 // the per-slot reads (a part's slots are its own) start again.
 bool g_coin_keep = false;
-int g_coin_guard_v = -1;         // AREACOIN1: my counter at the end of the last coin_tick
-int g_coin_me_last = -1;         // AREACOIN1: my body slot at the last coin_tick (-1: a new course)
 void coin_reset();
 int my_local_part();
 void coin_reset_for(const CoopKey &nk) {
@@ -1467,8 +1465,6 @@ void coin_reset_for(const CoopKey &nk) {
                             g_key.level, nk.level, g_loose_mine, g_loose_in, g_applied_other, wall_ms());
 }
 void coin_reset() {
-    g_coin_me_last = -1;
-    g_coin_guard_v = -1;
     std::memset(g_part_rep, 0, sizeof g_part_rep); std::memset(g_part_applied, 0, sizeof g_part_applied); g_applied_other = 0;
     g_red_sent_t = 0; g_red_sent_v = -1;
     g_coin_group = 0; g_coin_unpaid = 0; g_coin_star = false; g_coin_sent_t = 0; g_coin_sent_v = -1; g_coin_seen_v = -1;
@@ -1556,24 +1552,6 @@ void coin_tick(unsigned now) {
     if (coins_off() || coin_count_off() || !g_sync) return;
     const int me = (int)data_0209f250;
     if (me < 0 || me > 3) return;
-    // AREACOIN1: my body slot can change with the group (alone in a part I am slot 0); the cartridge counter is per slot, so
-    // my count follows me to the new slot (measured: LLL main -> volcano alone, 17 coins at slot 1, 0 at slot 0)
-    if (g_coin_me_last >= 0 && g_coin_me_last != me) {
-        const int was = (int)data_0209f358[g_coin_me_last], here = (int)data_0209f358[me];
-        if (g_log) std::fprintf(stderr, "[coop] coin count: my body slot %d -> %d (counts %d, %d)%s wall=%lld\n", g_coin_me_last, me, was, here,
-                                was > here ? ": mine moves with me" : "", wall_ms());
-        if (was > here) { coin_observe(); data_0209f358[me] = (short)was; coin_wrote(); }
-    }
-    g_coin_me_last = me;
-    // AREACOIN1: the cartridge keeps the coin counter across a move between parts of one course, but measured in LLL (main ->
-    // volcano, alone or not, after the red coins): the counter falls to 0 about 135 frames into the new part with no clear of
-    // ours or InitResources' running (writer not found). Nothing else lowers it inside a level, so in the first 600 frames after
-    // such a move a fall is put back.
-    if (g_coin_keep && g_est_frames < 600 && g_coin_guard_v > (int)data_0209f358[me]) {
-        std::fprintf(stderr, "[coop] coin count: my counter fell %d -> %d in the new part of the course (est %u): put back wall=%lld\n",
-                     g_coin_guard_v, (int)data_0209f358[me], g_est_frames, wall_ms());
-        coin_observe(); data_0209f358[me] = (short)g_coin_guard_v; coin_wrote();
-    }
     coin_classify();   // COINS10
     if (g_coin_star && !_ZN5Event6GetBitEj(0x1f)) {
         _ZN5Event6SetBitEj(0x1f);
@@ -1608,7 +1586,6 @@ void coin_tick(unsigned now) {
         ++g_coin_raises;
     }
     const int c = my_coin_count();
-    g_coin_guard_v = c;
     if (g_log && c != g_coin_seen_v) {
         std::fprintf(stderr, "[coop] coin count now %d (est %u) wall=%lld\n", c, g_est_frames, wall_ms());
         g_coin_seen_v = c;
@@ -2901,7 +2878,9 @@ extern "C" void port_coop_world_frame(void) {
         if (!g_warp[i].done && g_kframe >= g_warp[i].frame) {
             g_warp[i].done = true;
             std::fprintf(stderr, "[coop-knob] warp to level %d act %d\n", g_warp[i].level, g_warp[i].act);
-            LoadLevelNoReturn((unsigned)g_warp[i].level, (unsigned)g_warp[i].entrance, (unsigned)g_warp[i].act, 1);
+            // reason 0, a plain entry like the volcano hole and the coop teleport; reason 1 ("back from a course exit") made
+            // the cartridge run its course clear tally (dScStage_c::LC_Update) on a move inside one course (AREACOIN1)
+            LoadLevelNoReturn((unsigned)g_warp[i].level, (unsigned)g_warp[i].entrance, (unsigned)g_warp[i].act, 0);
             // COOPRACE1 proof knob SM64DS_COOP_WARP_ACT=1: the warp's act really is the act (Koopa the Quick is in Bob-omb
             // Battlefield's act 2 only). Without it the change keeps the act it always had here (1): the star it stages
             // is not the one the latch takes, measured "[adventure table branch, star=1]" for a warp to act 2.
