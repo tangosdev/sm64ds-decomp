@@ -952,9 +952,11 @@ void kpa_bfs_guard(Boss &b, bool mine, unsigned now) {
     // recovery, held or defeated: put down where the authority has him, his floor point with him, falling normally
     const BDesc &d = *b.d;
     const Rx &x = b.rx;
-    if (!x.valid || d.pos < 0 || b.kpa_shown || st == 2u || st == 4u || rd32(b.a, 0x410) != 0) { b.kpa_air_t = 0; return; }
+    // nor in the intro (5, 6: the intro talk guard owns the state there) nor the arena tilt (0x13: his rocking sits 150 to 230 units
+    // above the authority's for about 1.5 s as a matter of course), on this copy or on the record
+    if (!x.valid || d.pos < 0 || b.kpa_shown || st == 2u || st == 4u || st == 5u || st == 6u || st == 0x13u || rd32(b.a, 0x410) != 0) { b.kpa_air_t = 0; return; }
     const uint32_t rs = x.w[d.state];
-    if (rs == 2u || rs == 4u || rs == 1u || x.w[2] != 0u) { b.kpa_air_t = 0; return; }
+    if (rs == 2u || rs == 4u || rs == 1u || rs == 5u || rs == 6u || rs == 0x13u || x.w[2] != 0u) { b.kpa_air_t = 0; return; }
     const int32_t ry = (int32_t)x.w[d.pos + 1];
     const int dy = (rd32(b.a, 0x60) - ry) >> 12;
     if (dy < 150) { b.kpa_air_t = 0; return; }
@@ -966,7 +968,6 @@ void kpa_bfs_guard(Boss &b, bool mine, unsigned now) {
     std::memcpy(b.a + 0xa8, &zero, 4); std::memcpy(b.a + 0x98, &zero, 4); std::memcpy(b.a + 0x9c, &g, 4);
     if (rs != st && rs <= 0x13u) {
         const int32_t ns = (int32_t)rs; std::memcpy(b.a + 0x40c, &ns, 4); b.a[0x423] = 0;
-        if (rs == 0x13u) { if (char *ar = kpa_arena()) std::memcpy(b.a + 0x3ac, ar + 4, 4); }
     }
     if (g_log) std::fprintf(stderr, "[cbs] bowser airborne watchdog: this copy was %d units above the authority's for 3 s (st=%u, authority st=%u): put down at %d,%d,%d w=%lld\n",
                             dy, st, rs, rd32(b.a, 0x5c) >> 12, rd32(b.a, 0x60) >> 12, rd32(b.a, 0x64) >> 12, wall_ms());
