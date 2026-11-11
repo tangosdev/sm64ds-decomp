@@ -46,7 +46,10 @@ enum IKind : unsigned {
     // burst three times): yaw = egg id (low byte of its actor id) | flags << 8 (1 in hand, 2 flying, 4 burst), x / y / z =
     // its position. Builds before it judge kind 13 as a claim and refuse it (kBadKind: not a victim-side kind), drawing nothing.
     kEggFlight = 13,
-    kKinds = 14,
+    // HEADBOUNCE1: a friend landed on my head and I took it (squash only, no knock): to every other seat so each console
+    // draws my squash on my ghost. yaw = the bouncer's seat. Builds before it refuse kind 14 as a bad kind and draw nothing.
+    kSquish = 14,
+    kKinds = 15,
 };
 // seq = kind (4 bits) | stamp (4 bits) | counter (8 bits). The stamp is the attacker's estimate, in frames,
 // of how old its view of the victim was when it struck (INTERACT9: the victim judges against its own pose
@@ -83,7 +86,7 @@ inline ReachRule reach_rule(unsigned ikind) {
     switch (ikind) {
     case kMelee:    return { 2 * kBodyRadius + 70 + kLagAllow, -120, 150 };
     case kPound:    return { 220 + kLagAllow, -120, 150 };
-    case kStomp:    return { 2 * kBodyRadius + kLagAllow, 40, 260 };
+    case kStomp:    return { 2 * kBodyRadius + kLagAllow, 115, 260 };   // HEADBOUNCE1: feet over feet; under 115 he passes the waist
     case kEatClaim: return { 420 + kLagAllow, -150, 200 };
     case kGrabCatch: return { 2 * kBodyRadius + 70 + kLagAllow, -120, 150 };
     }
