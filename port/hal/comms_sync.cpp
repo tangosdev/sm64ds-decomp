@@ -3531,8 +3531,7 @@ void coop_drawgate_note(int body, int seat, bool old_rule, bool placed) {
     if (odd == was[body]) return;
     was[body] = odd;
     if (odd) ++n;
-    std::fprintf(stderr, "[coopdraw] f=%u body %d seat %d: %s (gate %d, pal %d, rule %s, count %llu)
-",
+    std::fprintf(stderr, "[coopdraw] f=%u body %d seat %d: %s (gate %d, pal %d, rule %s, count %llu)\n",
                  g_gw_frame, body, seat,
                  odd ? "fresh frames but parked by the follower" : "rules agree again",
                  seat >= 0 && party::seat_is_party(seat) ? party::gate(seat) : -1, g_gw_pal[body],
