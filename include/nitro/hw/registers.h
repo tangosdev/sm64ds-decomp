@@ -143,12 +143,23 @@
 #define REG_EXMEMCNT (*(volatile u16 *)0x04000204)
 #define REG_WRAMCNT  (*(volatile u8  *)0x04000247)
 
-/* Hardware square root. SQRTCNT bit 15 is the busy flag; the ROM spins on it
-   through a pointer, so the address form is what that loop needs. */
-#define REG_SQRTCNT     (*(volatile u16 *)0x040002b0)
-#define REG_SQRT_RESULT (*(volatile s32 *)0x040002b4)
+/* The divider and square-root coprocessor (NitroSDK's ioreg_CP.h). The
+   operand and result registers are 64 bits wide and are read or written either
+   whole or by their low word, so they are named by address; nitro/cp/divider.h
+   and nitro/cp/sqrt.h are the accessors. */
+#define REG_DIVCNT             (*(volatile u16 *)0x04000280)
+#define REG_DIV_NUMER_ADDR     0x04000290
+#define REG_DIV_DENOM_ADDR     0x04000298
+#define REG_DIV_RESULT_ADDR    0x040002a0
+#define REG_DIVREM_RESULT_ADDR 0x040002a8
+#define REG_SQRTCNT            (*(volatile u16 *)0x040002b0)
+#define REG_SQRT_RESULT        (*(volatile u32 *)0x040002b4)
+#define REG_SQRT_PARAM_ADDR    0x040002b8
 
-#define SQRT_CONTROL_BUSY (1u << 15)
+#define REG_CP_DIVCNT_BUSY_MASK  0x8000
+#define REG_CP_DIVCNT_MODE_MASK  0x0003
+#define REG_CP_SQRTCNT_BUSY_MASK 0x8000
+#define REG_CP_SQRTCNT_MODE_MASK 0x0001
 
 /* Power control: bit 0 is the master enable for the 2D/3D hardware. */
 #define REG_POWCNT1 (*(volatile u16 *)0x04000304)

@@ -1,16 +1,12 @@
 #include "types.h"
+#include "nitro/cp/sqrt.h"
 
+/* |v|: the squared length through the hardware square root, rounded back to
+   20.12 (NitroSDK fx_vec.c). */
 int VEC_Mag(const Vector3 *v) {
-    unsigned long long sq = ((long long)v->x * v->x);
-    sq += ((long long)v->y * v->y);
-    sq += ((long long)v->z * v->z);
-    volatile unsigned short *ime = (volatile unsigned short *)0x4000208;
-    unsigned short saved = *ime;
-    *ime = 0;
-    *(volatile unsigned short *)0x40002b0 = 1;
-    *(volatile unsigned long long *)0x40002b8 = sq << 2;
-    *ime;
-    *ime = saved;
-    while (*(volatile unsigned short *)0x40002b0 & 0x8000);
-    return (*(volatile int *)0x40002b4 + 1) >> 1;
+    s64 sq = (s64)v->x * v->x;
+    sq += (s64)v->y * v->y;
+    sq += (s64)v->z * v->z;
+    CP_SetSqrt64((u64)(sq << 2));
+    return ((s32)CP_GetSqrtResult32() + 1) >> 1;
 }
