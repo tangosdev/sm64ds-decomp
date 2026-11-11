@@ -1601,6 +1601,13 @@ inline void gw_tilt_of(const HubGhostFrame &f, short *ax, short *az) {
         *ax = *az = 0;
     }
 }
+// SWIM2: an angle to its high byte, rounded to the nearest 1.4 degree step (a
+// plain shift rounds down, so a small negative angle would arrive as -256).
+inline int gw_tilt_byte(int a) {
+    int b = (a + 128) >> 8;
+    if (b > 127) b = 127; else if (b < -128) b = -128;
+    return b & 0xff;
+}
 inline short gw_tilt_lerp(short a, short b, double num, double den) {
     const short d = (short)(b - a);              // the short way round
     return (short)(a + (int)((double)d * num / den));
@@ -2433,7 +2440,7 @@ void gw_send(unsigned now) {
             const int px = *(const short *)((const char *)a + 0x8c);
             const int pz = *(const short *)((const char *)a + 0x90);
             f.vy = dkind ? (short)ghostdoor::sender_frame(a) :
-                (short)((((px >> 8) & 0xff) << 8) | ((pz >> 8) & 0xff));
+                (short)((gw_tilt_byte(px) << 8) | gw_tilt_byte(pz));
         }
         {
             const unsigned st = comms_hub_now_ms() & 0xffffffu;
