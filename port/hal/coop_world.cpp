@@ -1005,6 +1005,30 @@ void gone_push(unsigned now) {
     g_gone_push_at = now + 700u;
 }
 
+// COOPBOO5: the Boo message goes out three times in 360 ms and is never answered, so a console that lost all three kept a
+// short count and never saw the Big Boo (Tango's 4-player field report, 11-10). While the Big Boo the lobby Boos report to
+// stands here undefeated, the beaten Boos on the group list go out again, one every 300 ms in turn (a list of five is
+// round in 1.5 s). A console that counted the slot already only removes its copy (boo_counted), so a repeat never counts twice.
+enum : unsigned { kBooResendGapMs = 300u };
+unsigned g_boo_resend_at = 0; int g_boo_resend_i = 0;
+void boo_resend(unsigned now) {
+    if (g_gone_n == 0 || g_grp.others() == 0 || (int)(now - g_boo_resend_at) < 0) return;
+    const char *big = lobby_big_boo();
+    if (!big || (*(const unsigned short *)(big + 0x5d4) & 0x80u)) return;   // no Big Boo here, or he is beaten (TRS_FLAG_DEFEATED)
+    for (int n = 0; n < g_gone_n; ++n) {
+        const int i = (g_boo_resend_i + n) % g_gone_n;
+        if (g_gone[i].cls != 209) continue;
+        CoopBooWire w; std::memset(&w, 0, sizeof w);
+        w.head.key = wire_key(g_key); w.head.slot = g_gone[i].slot; w.head.cls = 209; w.count = *(const int *)(big + kBooCount);
+        send_kind(kHubTagCoopWorld, kWorldSwallowGone, &w, (int)sizeof w);
+        if (g_log) std::fprintf(stderr, "[coop] boo: resent beaten Boo slot %d (Big Boo count %d here) wall=%lld\n", (int)g_gone[i].slot,
+                                w.count, wall_ms());
+        g_boo_resend_i = i + 1;
+        break;
+    }
+    g_boo_resend_at = now + kBooResendGapMs;
+}
+
 // ---------------------------------------------------------------------------
 // The courtyard's cage Boo (run after093, lane COOPBOO1). In the castle garden (level 3, 15 stars or more) the variant-5 Boo
 // (daTrs_c, class 209, src/game/actors/d_a_trs.cpp) carries the cage (T_BASKET, class 212) that is the way into Big Boo's Haunt.
@@ -2339,6 +2363,7 @@ void tick_est(unsigned now) {
         watch_capped(now);
         send_swallows(now);
         gone_push(now);
+        boo_resend(now);   // COOPBOO5
         watch_cage(now);   // COOPBOO1
         watch_boos(now);   // COOPBOO2
         boohit_knob();     // COOPBOO2 proof knob, inert unless SM64DS_COOP_BOOHIT is set
