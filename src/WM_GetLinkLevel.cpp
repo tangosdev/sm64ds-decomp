@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -16,18 +16,18 @@ int WM_GetLinkLevel(void) {
     WMStatus *status;
     if (WMi_CheckInitialized())
         return 0;
-    CP15::InvalidateDataCache((unsigned int)&sys->status->state, 2);
+    DC_InvalidateRange(&sys->status->state, 2);
     status = sys->status;
     switch (status->state) {
     case 9:
-        CP15::InvalidateDataCache((unsigned int)&status->child_bitmap, 2);
+        DC_InvalidateRange(&status->child_bitmap, 2);
         status = sys->status;
         if (status->child_bitmap == 0)
             return 0;
         /* fall through */
     case 0xa:
     case 0xb:
-        CP15::InvalidateDataCache((unsigned int)&status->linkLevel, 2);
+        DC_InvalidateRange(&status->linkLevel, 2);
         return sys->status->linkLevel;
     }
     return 0;

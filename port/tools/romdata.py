@@ -12,7 +12,7 @@ import struct
 import sys
 
 # extracted/arm9_dec.bin: the DECOMPRESSED arm9, flat at base 0x02004000
-# (verified by two code anchors: Copy36Bytes @0x0205a548, DecompressLZ16
+# (verified by two code anchors: MI_Copy36B @0x0205a548, DecompressLZ16
 # @0x0205a754). extracted/dsd/arm9/arm9.bin is the COMPRESSED payload
 # (arm9.yaml: compressed true) and must not be read directly. Addresses at
 # or past bss_start are runtime-initialized and belong in the HAL.
@@ -44,7 +44,7 @@ def main():
     anchor = img.read_bytes()
     a = 0x0205A548 - BASE
     if anchor[a:a + 4] != b"\x0c\x10\xb0\xe8":
-        sys.exit("arm9_dec.bin failed the Copy36Bytes anchor -- wrong image/base")
+        sys.exit("arm9_dec.bin failed the MI_Copy36B anchor -- wrong image/base")
     for addr, length, _, *_rest in TABLES:
         if addr + length > BSS_START:
             sys.exit(f"{addr:#x}+{length:#x} crosses into BSS -- not file-backed")

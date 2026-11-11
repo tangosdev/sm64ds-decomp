@@ -48,10 +48,8 @@
  *
  * deslop leftovers:
  * - func_ov074_0212087c and func_ov074_02121270 take the object as arg1 (out
- *   param in arg0); func_ov074_02121a4c is reached through a (char*,int,int)
- *   cast call whose third argument survives in the emitted code; and
- *   func_ov074_0212007c/021201ec/021203e0 are (void) stubs whose data records
- *   don't carry `this`. Those six stay free.
+ *   param in arg0), and func_ov074_0212007c/021201ec/021203e0 are (void)
+ *   stubs whose data records don't carry `this`. Those five stay free.
  * - mBodyMatrix is raw s32 words reached through a Matrix4x3 cast; a
  *   Matrix4x3 member there would run ~Vector3 from ~daKuriKing_c.
  *   mShadowMatrices is left untyped with it [GUESS: same ~Vector3 cost].
@@ -103,6 +101,8 @@ enum daKuriKing_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
  * spellings are reconstructed; constructor and destructor addresses, file
@@ -133,12 +133,11 @@ union KuriKingFreeState {
 };
 
 extern "C" void Matrix4x3_FromRotationY(void *m, int ang);
-extern "C" void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *b);
+extern "C" void MTX_MultVec43(Vector3 *a, Matrix4x3 *m, Vector3 *b);
 extern "C" dCamera_c *gCamera;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" u16 DecIfAbove0_Short(u16* p);
 extern "C" s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern "C" s16 data_02082214[];
 extern "C" void func_02012694(u32 a, void* b);
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. */
@@ -150,26 +149,22 @@ extern "C" void func_02011cfc();
 namespace Sound {
 void ChangeMusicVolume(u32 a, int f);
 }
-extern "C" int func_01ffa344(int f);
 extern "C" unsigned short data_ov074_02122e04[];
 extern "C" int ApproachAngle(short *, short, int, int, int);
 extern "C" void func_ov084_021296b0(void* a, void* b);
 extern "C" int __aeabi_idiv(int a, int b);
 extern "C" int AngleDiff(int a, int b);
-extern "C" int func_01ffa594(int a, int b);
-extern "C" int func_01ffa4bc(int a);
-extern "C" int func_01ff9378(int a, int b);
 extern "C" int Math_Function_0203b14c(int* p, int a, int b, int d, int e);
 extern "C" unsigned short data_ov074_02122dfc[];
 extern "C" int data_ov074_0212291c[];
 extern "C" int data_ov074_0212290c[];
-extern "C" void *data_ov074_02122e4c[];
+extern "C" float data_ov074_02122e4c[];
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" s32 Vec3_HorzLen(const Vector3 *v);
 extern "C" s16 atan2_hold_d_a_kuri_king_1(s32 y, s32 x);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern "C" s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
-extern "C" void MulMat4x3Mat4x3(void* out, void* a, void* b);
+extern "C" void MTX_Concat43(void *out, void *a, void *b);
 extern "C" int *Vec3_LslInPlace(void *v, int n);
 extern "C" struct Matrix4x3 data_020a0e68;
 extern "C" struct Matrix4x3 IDENTITY_MATRIX4X3;
@@ -211,7 +206,6 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_);
 extern "C" void func_ov074_021203e0(void);
 extern "C" void func_ov074_021201ec(void);
 extern "C" void func_ov074_0212007c(void);
-extern "C" void func_ov074_02121a4c(char* c, int idx);
 
 /* data_ov074_021230f8 is copied as 8-byte records (__sinit_ov074). daKuriKing_c
  * has virtuals, so a daKuriKing_c::* is wider than that; the call stays on this
@@ -287,7 +281,7 @@ void daKuriKing_c::SetDefeatTalkCamera() {
     look.y += 0x1a0000;
     in.z = 0x59c000;
     Matrix4x3_FromRotationY(&data_020a0e68, this->mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MTX_MultVec43(&in, &data_020a0e68, &out);
     pos.x = pos.x + out.x;
     pos.y = pos.y + 0x300000;
     pos.z = pos.z + out.z;
@@ -376,11 +370,8 @@ int daKuriKing_c::SpawnVanishCopy() {
             spawnAngle.y=(short)((this->mSpawnedCount-0xc)*0x5555+spawnAngle.y);
             radius=0x84000;
         }
-        {
-            int sinIdx=((u16)spawnAngle.y>>4)<<1;
-            spawnPos.x += FX_MUL(radius, data_02082214[sinIdx]);
-            spawnPos.z += FX_MUL(radius, data_02082214[sinIdx + 1]);
-        }
+        spawnPos.x += FX_MUL(radius, FX_SinIdx((u16)spawnAngle.y >> 4));
+        spawnPos.z += FX_MUL(radius, FX_CosIdx((u16)spawnAngle.y >> 4));
         spawnAngle.x=Vec3_VertAngle(&basePos, &spawnPos);
         dActor_c::Spawn(0xc7, 0x1111, spawnPos, &spawnAngle, this->mAreaId, -1);
         this->mSpawnedCount += 1;
@@ -410,7 +401,7 @@ void daKuriKing_c::UpdateDefeat() {
     player = this->mTalkPlayer;
 
     if (this->mAnmModel.Finished() != 0) {
-        func_ov074_02121a4c((char*)this, 4);
+        PlayAnim(4);
     }
 
     switch (this->mSubState) {
@@ -529,14 +520,14 @@ void daKuriKing_c::UpdateDefeat() {
 
 void daKuriKing_c::EnterDefeat() {
     this->mSizeIndex = 0;
-    int v = func_01ffa344((int)data_ov074_02122e4c[1]);
+    int v = data_ov074_02122e4c[1];
     this->mScaleX = v;
     this->mScaleY = v;
     this->mScaleZ = v;
     this->mTextureSequence.currFrame = 0x2000;
     this->mMaterialChanger.currFrame = ((int)data_ov074_02122e04[1]) << 0xc;
     this->mSubState = 0;
-    ((void (*)(char *, int, int))func_ov074_02121a4c)((char *)this, 3, 0);
+    PlayAnim(3);
     this->mScaleSteps = 3;
 }
 
@@ -553,7 +544,7 @@ void daKuriKing_c::UpdateScaleChange() {
             if (b == 0) return;
             p = (unsigned char*)(((int)&this->mSubState));
             *p = *p + 1;
-            func_ov074_02121a4c((char*)this, 0);
+            PlayAnim(0);
             func_02012694(0x15c, &this->mCamSpacePosX);
             return;
         }
@@ -561,7 +552,7 @@ void daKuriKing_c::UpdateScaleChange() {
             unsigned char* p = (unsigned char*)(((int)&this->mSubState));
             *p = *p + 1;
         }
-        func_ov074_02121a4c((char*)this, 0);
+        PlayAnim(0);
         func_02012694(0x15c, &this->mCamSpacePosX);
         return;
     case 1:
@@ -608,7 +599,7 @@ void daKuriKing_c::UpdateKnockback() {
         if (player->StartTalk(*this, 1) == 0) return;
         Message::PrepareTalk();
         if (IsAnimPlaying(1) != 0 || IsAnimPlaying(2) != 0) {
-            func_ov074_02121a4c((char*)this, 0xc);
+            PlayAnim(0xc);
             return;
         }
         ChangeState(7);
@@ -636,14 +627,14 @@ void daKuriKing_c::UpdateSummonGoombas() {
     if (IsAnimPlaying(6) != 0) {
         if (FinishTurnAround() == 0)
             return;
-        func_ov074_02121a4c((char*)this, 0xb);
+        PlayAnim(0xb);
         return;
     } else {
         if (IsAnimPlaying(0xb) != 0)
             goto L90;
         if (StopWalking() == 0)
             return;
-        func_ov074_02121a4c((char*)this, 0xb);
+        PlayAnim(0xb);
         return;
     }
 
@@ -704,7 +695,7 @@ void daKuriKing_c::func_ov074_0211ffcc() {
     if (IsAnimPlaying(5) == 0) {
         if (StopWalking() == 0)
             return;
-        func_ov074_02121a4c((char *)this, 5);
+        PlayAnim(5);
         return;
     }
   if (this->DistToCPlayer() >= 0x4b0000) {
@@ -731,7 +722,7 @@ void daKuriKing_c::UpdateWalk() {
     if (IsAnimPlaying(0xa) != 0) {
         if (this->mAnmModel.Finished() == 0)
             return;
-        func_ov074_02121a4c((char *)this, 8);
+        PlayAnim(8);
         return;
     }
     ApproachAngle(&this->mWalkSpeed, this->mMaxWalkSpeed, 0xa, 0x20, 1);
@@ -744,7 +735,7 @@ void daKuriKing_c::UpdateWalk() {
 }
 
 void daKuriKing_c::EnterWalk() {
-    func_ov074_02121a4c((char*)this, 0xa);
+    PlayAnim(0xa);
     UpdateMaxWalkSpeed();
 }
 
@@ -873,28 +864,26 @@ int daKuriKing_c::AdvanceMaterialChanger() {
 
 /* daKuriKing_c shrink/grow interpolation tick.
  *
- * Called from UpdateDefeat and UpdateScaleChange. Picks a pair of
- * float sizes out of data_ov074_02122e4c (12288.0f, 9557.0f, 6826.0f,
- * 4096.0f -- Fix12 scales stored as IEEE singles), divides their difference
- * by the remaining step count in mScaleSteps, and steps mTargetScale toward
- * the next one. Math_Function_0203b14c eases mCurrentScale toward that target;
- * unless the last step has just finished, the scale triple then gets a
- * wobble from a sin/cos pair out of data_02082214 indexed by mScalePhase,
- * which advances 0x1230 per frame. In state 6, each finished step except
- * the last also spits particle 0xb1 at 400.0 * mCurrentScale above the boss.
+ * Called from UpdateDefeat and UpdateScaleChange. data_ov074_02122e4c holds
+ * the boss's four sizes as floats (3.0, 2.333, 1.666 and 1.0 in Fix12 units);
+ * mTargetScale is the next size plus the gap back to the current one,
+ * divided by the steps left in mScaleSteps. Math_Function_0203b14c eases
+ * mCurrentScale toward that target; unless the last step has just finished,
+ * the scale triple then gets a wobble from the sine and cosine of
+ * mScalePhase, which advances 0x1230 per frame. In state 6, each finished
+ * step except the last also spits particle 0xb1 at 400.0 * mCurrentScale
+ * above the boss.
  *
- * The float arithmetic goes through the ITCM soft-float block by hand, the
- * way the rest of this tree calls it: func_01ffa594 (single add/sub),
- * func_01ffa344 (float to int), func_01ffa4bc (int to float) and
- * func_01ff9378, with cstd::fdiv doing the Fix12 divide in between.
+ * The float arithmetic compiles to the ITCM soft-float helpers (_fsub, _ffix,
+ * _fflt, _fadd), as written.
  *
  * Shape notes: the particle position temp must stay MEMORY-HOMED -- reading
  * its words back through the address (the ((int *)&v)[n] form) is what keeps
  * the three dead stores the ROM emits; plain member reads scalarize the
- * struct away and cost four instructions. And k has to be computed BEFORE d,
- * which is worth ten words of register identity in the tail: with d first,
- * the index web takes r2 and the mCurrentScale web takes r3, exactly reversed
- * from the ROM.
+ * struct away and cost four instructions. The wobble reads the table by
+ * element index k computed BEFORE d: written as FX_SinIdx/FX_CosIdx (with
+ * k first, d first, k block-scoped, u32 or masked) the index web and the
+ * mCurrentScale web swap r2 and r3, ten words off the ROM.
  *
  * Matched byte-for-byte with mwccarm 2004/b56 (ov074); linkcheck VERIFIED.
  */
@@ -902,12 +891,9 @@ int daKuriKing_c::StepScaleTransition() {
     struct Vector3 v;
     int d, k;
 
-    this->mTargetScale = func_01ffa344(func_01ff9378(
-        (int)data_ov074_02122e4c[this->mSizeIndex + 1],
-        func_01ffa4bc(cstd::fdiv(
-            func_01ffa344(func_01ffa594((int)data_ov074_02122e4c[this->mSizeIndex],
-                                        (int)data_ov074_02122e4c[this->mSizeIndex + 1])),
-            this->mScaleSteps << 12))));
+    mTargetScale = data_ov074_02122e4c[mSizeIndex + 1] +
+                   FX_Div(data_ov074_02122e4c[mSizeIndex] - data_ov074_02122e4c[mSizeIndex + 1],
+                          mScaleSteps << 12);
 
     if (Math_Function_0203b14c(&this->mCurrentScale, this->mTargetScale, 0x78, 0x100, 0x20) == 0) {
         if (this->mScalePhase == 0) {
@@ -921,16 +907,16 @@ int daKuriKing_c::StepScaleTransition() {
             v.x = this->mPosX;
             v.y = this->mPosY;
             v.z = this->mPosZ;
-            v.y += FX_MUL(this->mCurrentScale, (long long)0x190000);
+            v.y += FX_MUL(this->mCurrentScale, 0x190000);
             Particle::System::NewSimple(kPtclHugeLandingDust, ((int *)&v)[0], ((int *)&v)[1],
                                         ((int *)&v)[2]);
         }
     }
-    k = ((u16)this->mScalePhase >> 4) * 2;
-    d = this->mTargetScale - this->mCurrentScale + 0x11e;
-    this->mScaleY = this->mCurrentScale + FX_MUL(d, data_02082214[k]);
-    this->mScaleX = this->mCurrentScale;
-    this->mScaleX = this->mCurrentScale + FX_MUL(d, data_02082214[k + 1]);
+    k = ((u16)mScalePhase >> 4) * 2;
+    d = mTargetScale - mCurrentScale + 0x11e;
+    mScaleY = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k]);
+    mScaleX = mCurrentScale;
+    mScaleX = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k + 1]);
     this->mScaleZ = this->mScaleX;
     this->mScalePhase += 0x1230;
     return 0;
@@ -940,7 +926,7 @@ int daKuriKing_c::StopWalking() {
     if (IsAnimPlaying(8) != 0) {
         if (ApproachAngle(&this->mWalkSpeed, 0, 0x1e, 0x20, 1) == 0) {
             if ((unsigned short)(this->mAnmModel.currFrame >> 12) == 0) {
-                func_ov074_02121a4c((char*)this, 9);
+                PlayAnim(9);
             }
             goto ret0;
         }
@@ -948,7 +934,7 @@ int daKuriKing_c::StopWalking() {
         goto ret0;
     }
     if (IsAnimPlaying(0xa) != 0) {
-        func_ov074_02121a4c((char*)this, 9);
+        PlayAnim(9);
         goto ret0;
     }
     if (IsAnimPlaying(9) != 0) {
@@ -979,7 +965,7 @@ void daKuriKing_c::TurnIfPlayerBehind() {
     int ang = (short)(this->mWalkAngle + this->mDirection * 0x4500);
     if (AngleDiff(ang, this->HorzAngleToCPlayer()) <= 0x4000)
         return;
-    func_ov074_02121a4c((char*)this, 6);
+    PlayAnim(6);
     this->mDirection *= -1;
 }
 
@@ -1001,7 +987,6 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         int sum;
         int prod;
         int diff;
-        int idx;
         u8 mode;
 
         rem = n % 3;
@@ -1019,11 +1004,9 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         sum = (s16)(q * 0x350 + 0x500) + (s16)(rem * 0x600);
         prod = self->mDirection * sum;
         diff = (self->mWalkAngle + self->mMaxWalkSpeed) - prod;
-        idx = ((u16)(s16)diff >> 4) * 2;
-
-        out[0] = FX_MUL(scale, data_02082214[idx]);
+        out[0] = FX_MUL(scale, FX_SinIdx((u16)(s16)diff >> 4));
         out[1] += 0x32000;
-        out[2] = FX_MUL(scale, data_02082214[idx + 1]);
+        out[2] = FX_MUL(scale, FX_CosIdx((u16)(s16)diff >> 4));
     } else {
         int lim;
         int one;
@@ -1035,7 +1018,6 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         int prod2;
         int prod3;
         int diff2;
-        int idx2;
 
         lim = 3;
         if (self->mSizeIndex == 1)
@@ -1058,11 +1040,9 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         prod2 = self->mDirection * sum2;
         prod3 = sign * prod2;
         diff2 = (self->mWalkAngle + self->mWalkSpeed) - prod3;
-        idx2 = ((u16)(s16)diff2 >> 4) * 2;
-
-        out[0] = FX_MUL(scale2, data_02082214[idx2]);
+        out[0] = FX_MUL(scale2, FX_SinIdx((u16)(s16)diff2 >> 4));
         out[1] += 0x32000;
-        out[2] = FX_MUL(scale2, data_02082214[idx2 + 1]);
+        out[2] = FX_MUL(scale2, FX_CosIdx((u16)(s16)diff2 >> 4));
     }
 }
 
@@ -1072,7 +1052,7 @@ int daKuriKing_c::CalcWalkAnimSpeed() {
     int r;
     if (num < 0) num = -num;
     den = data_ov074_0212291c[this->mSizeIndex] + (data_ov074_02122dfc[3] << 12) + 1;
-    r = cstd::fdiv(num, den);
+    r = FX_Div(num, den);
     if (r < 0x1000) return 0x1000;
     if (r > 0x3000) return 0x3000;
     return r;
@@ -1114,13 +1094,10 @@ void daKuriKing_c::SpawnHitParticles(dActor_c *other, dCcAcPos_c *clsn, int mode
     aX = cstd::atan2(v.x, v.z);
     aY = cstd::atan2(v.y, Vec3_HorzLen(&v));
 
-    iY = (u16)aY >> 4;
-    iX = (u16)aX >> 4;
-
-    s = FX_MUL(w, data_02082214[iY * 2 + 1]);
-    dst.x += FX_MUL(s, data_02082214[iX * 2]);
-    dst.y += FX_MUL(w, data_02082214[iY * 2]);
-    dst.z += FX_MUL(s, data_02082214[iX * 2 + 1]);
+    s = FX_MUL(w, FX_CosIdx((u16)aY >> 4));
+    dst.x += FX_MUL(s, FX_SinIdx((u16)aX >> 4));
+    dst.y += FX_MUL(w, FX_SinIdx((u16)aY >> 4));
+    dst.z += FX_MUL(s, FX_CosIdx((u16)aX >> 4));
 
     switch (mode) {
     case 0:
@@ -1222,7 +1199,7 @@ void daKuriKing_c::HandleCylinderHits() {
                         dir = 1;
                         if (AngleDiff(ang, this->mAngleY) > 0x4000)
                             dir = -1;
-                        func_ov074_02121a4c((char *)this, 7);
+                        PlayAnim(7);
                         ChangeState(8);
                         SpawnHitParticles(pl, cur, 0);
                         func_02012694(0x15a, &this->mCamSpacePosX);
@@ -1248,9 +1225,9 @@ void daKuriKing_c::HandleCylinderHits() {
                                                          0x600) +
                                                     (this->mWalkAngle + this->mMaxWalkSpeed))) >>
                                         4;
-                                    v0.x = FX_MUL(data_02082214[k * 2], 0x546000LL);
+                                    v0.x = FX_MUL(FX_SinIdx(k), 0x546000LL);
                                     v0.y += 0x32000;
-                                    v0.z = FX_MUL(data_02082214[k * 2 + 1], 0x546000LL);
+                                    v0.z = FX_MUL(FX_CosIdx(k), 0x546000LL);
                                     this->mMegaMushroomID =
                                         dActor_c::Spawn(0x115, 0, v0, 0, this->mAreaId, -1)
                                             ->uniqueID;
@@ -1275,10 +1252,10 @@ void daKuriKing_c::HandleCylinderHits() {
         int ang2 = Vec3_HorzAngle(&this->mPos, &player->mPos);
         dir2 = 1;
         if (AngleDiff(ang2, this->mAngleY) > 0x4000) {
-            func_ov074_02121a4c((char *)this, dir2);
+            PlayAnim(dir2);
             dir2 = -1;
         } else {
-            func_ov074_02121a4c((char *)this, 2);
+            PlayAnim(2);
         }
     }
     this->mWalkSpeed = dir2 * (this->mDirection * -0x190);
@@ -1297,7 +1274,7 @@ extern "C" void func_ov074_02121270(Vector3 *out, daKuriKing_c *self, int bone) 
     v->z = 0;
     data_020a0e68 = *(struct Matrix4x3 *)self->mBodyMatrix;
     boneMat = (Matrix4x3 *)self->mAnmModel.data.transforms + bone;
-    MulMat4x3Mat4x3(boneMat, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(boneMat, &data_020a0e68, &data_020a0e68);
     v->x = data_020a0e68.m[9];
     v->y = data_020a0e68.m[10];
     v->z = data_020a0e68.m[11];
@@ -1420,8 +1397,8 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
 int daKuriKing_c::WalkAlongRing() {
     if (this->mWithMeshClsn.IsOnGround()) {
         this->mWalkAngle += this->mWalkSpeed;
-        this->mPosX = FX_MUL(data_02082214[(((u16)this->mWalkAngle) >> 4) * 2], 0x546000);
-        this->mPosZ = FX_MUL(data_02082214[(((u16)this->mWalkAngle) >> 4) * 2 + 1], 0x546000);
+        this->mPosX = FX_MUL(FX_SinIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
+        this->mPosZ = FX_MUL(FX_CosIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
     }
     ApproachAngle(&this->mAngleY, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800, 0x10);
 }
@@ -1508,15 +1485,14 @@ int daKuriKing_c::IsAnimPlaying(int idx) {
     return this->mAnmModel.file == anim->filePtr;
 }
 
-extern "C" void func_ov074_02121a4c(char* c, int idx)
-{
+/* Start clip `idx`: its BCA on the dExtAnmModel_c and its BTA on the texture
+ * transformer. */
+void daKuriKing_c::PlayAnim(int idx) {
     int off = idx * 0xc;
     void* file1 = data_ov074_02122f34[idx].anim->filePtr;
     int arg2 = *(int*)(data_ov074_02122f3c + off);
-    ((dExtAnmModel_c *)&((daKuriKing_c *)c)->mAnmModel)
-        ->SetAnim((BCA_File *)file1, arg2, 0x1000, 0);
-    ((daKuriKing_c *)c)
-        ->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
+    ((dExtAnmModel_c *)&this->mAnmModel)->SetAnim((BCA_File *)file1, arg2, 0x1000, 0);
+    this->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
 }
 
 int daKuriKing_c::CleanupResources()
@@ -1684,7 +1660,7 @@ int daKuriKing_c::InitResources()
     } while (j < 3);
 
     mSizeIndex = 3;
-    p = (void *)func_01ffa344((s32)data_ov074_02122e4c[mSizeIndex]);
+    p = (void *)(s32)data_ov074_02122e4c[mSizeIndex];
     mScaleX = (s32)p;
     mScaleY = (s32)p;
     mScaleZ = (s32)p;
@@ -1697,7 +1673,7 @@ int daKuriKing_c::InitResources()
 
     k = 0;
     do {
-        mdCc_cs[k].Init(this, *(Vector3 *)&mPosX, mScaleX * 0xa, mScaleY * 0xa, 0x200004, 0x26fe0);
+        mdCc_cs[k].Init(this, mPos, mScaleX * 0xa, mScaleY * 0xa, 0x200004, 0x26fe0);
         k++;
     } while (k < 4);
 
@@ -1729,8 +1705,8 @@ int daKuriKing_c::InitResources()
     mWalkAngle = 0x1000;
     mWalkAngle += mWalkSpeed;
 
-    mPosX = FX_MUL(data_02082214[((u16)mWalkAngle >> 4) * 2], 0x546000);
-    mPosZ = FX_MUL(data_02082214[((u16)mWalkAngle >> 4) * 2 + 1], 0x546000);
+    mPosX = FX_MUL(FX_SinIdx((u16)mWalkAngle >> 4), 0x546000);
+    mPosZ = FX_MUL(FX_CosIdx((u16)mWalkAngle >> 4), 0x546000);
 
     {
         s32 a2;

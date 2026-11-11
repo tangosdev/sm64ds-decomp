@@ -25,13 +25,14 @@
  *   ROM-low helper last. InitResources is the key function; with the inline
  *   destructor in the real header this emits retail D1 then D0 and the
  *   class RTTI/vtable without a forcing object.
- *   VecFx32 locals: a local Vector3 would emit vague-linkage ~Vector3.
+ *   offset is VecFx32 because NitroSDK VEC_Add fills it (its prototype
+ *   still says Vector3, #5207); pos and dustPos go to Vector3 game APIs.
  *   common.h first (via dBgActor_c.h): Matrix4x3 is s32 m[12], so the
  *   translation stays m[9]/m[10]/m[11].
  *
  * Known limits:
  *   func_0200fa04 is Behavior's impact dust; no named method in this TU.
- *   AddVec3: no shared header declares it.
+ *   VEC_Add: no shared header declares it.
  *   data_ov023_02112088 / 02112080 are resource handles this TU's sinit
  *   owns; data_ov064_0211ba4c (CLPS) is overlay .data.
  *   No daPly_c.h / dCamera_c.h.
@@ -51,7 +52,7 @@ enum d_a_obj_fm_battan_AssetId { ASSET_FM_BATTAN_BMD = 0x0616, ASSET_FM_BATTAN_K
 /* local extern: no shared header declares these. */
 extern CLPS_Block data_ov064_0211ba4c;
 extern "C" {
-extern void AddVec3(Vector3 *, Vector3 *, Vector3 *);
+extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 extern void *func_0200fa04(dActor_c *, Vector3 *, int);
 
 /* The 8-byte store into the mesh collider's +0x18 callback slot. */
@@ -122,27 +123,25 @@ int daObjFm_Battan_c::Behavior() {
         mAngleX += mAngVelX;
         if (mAngleX <= -0x4000) {
             VecFx32 offset;
-            VecFx32 pos;
-            VecFx32 dustPos;
+            Vector3 pos;
+            Vector3 dustPos;
 
             mAngleX = -0x4000;
             mAngVelX = 0;
             mStateTimer = 0;
 
-            pos.x = mPosX;
-            pos.y = mPosY;
-            pos.z = mPosZ;
-            Earthquake(*(const Vector3 *)&pos, 0x04000000);
+            pos = mPos;
+            Earthquake(pos, 0x04000000);
             Sound::PlayBank3(0x44, mCamSpacePos);
 
             offset.x = FX_MUL(FX_SinIdx((u16)mAngleY >> 4), -0x190000);
             offset.z = FX_MUL(FX_CosIdx((u16)mAngleY >> 4), -0x190000);
-            AddVec3((Vector3 *)&offset, (Vector3 *)&mPosX, (Vector3 *)&offset);
+            VEC_Add((Vector3 *)&offset, &mPos, (Vector3 *)&offset);
 
             dustPos.x = offset.x;
             dustPos.y = offset.y;
             dustPos.z = offset.z;
-            func_0200fa04(this, (Vector3 *)&dustPos, 1);
+            func_0200fa04(this, &dustPos, 1);
             mState++;
         }
         break;

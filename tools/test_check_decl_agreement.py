@@ -2592,6 +2592,46 @@ class HeaderRedeclarationTests(unittest.TestCase):
         rc, out = repo.run_main(["--changed", "HEAD"])
         self.assertIn("no new local redeclarations", out)
 
+    def _renamed_base(self, repo):
+        repo.reset()
+        repo.write("config/probe/symbols.txt",
+                   "hdr_old_name kind:function(arm,size=0x4) addr:0x02000000\n")
+        repo.write("include/hdr_probe.h", "extern void hdr_old_name(int n);\n")
+        repo.write("src/hdr_user.c", '#include "hdr_probe.h"\n'
+                                     "void hdr_user_body(int n) { hdr_old_name(n); }\n")
+        repo.write("src/hdr_old.c", "extern void hdr_old_name(int n);\n"
+                                    "void hdr_old_body(int n) { hdr_old_name(n); }\n")
+        repo.git("add", "-A")
+        repo.git("commit", "-q", "-m", "renamed base")
+
+    def _rename(self, repo):
+        for rel in ("config/probe/symbols.txt", "include/hdr_probe.h",
+                    "src/hdr_user.c", "src/hdr_old.c"):
+            path = repo.root / rel
+            repo.write(rel, path.read_text(encoding="utf-8")
+                       .replace("hdr_old_name", "hdr_new_name"))
+
+    def test_renaming_a_symbol_does_not_make_its_existing_copies_new(self):
+        """A rename rewrites every local copy, so each copy is an ADDED line and
+        the new name's base count is 0. The base count follows the symbols.txt
+        row at the same address back to the old name."""
+        repo = BigRepo.shared()
+        self._renamed_base(repo)
+        self._rename(repo)
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("no new local redeclarations", out)
+
+    def test_a_rename_does_not_hide_a_new_copy(self):
+        repo = BigRepo.shared()
+        self._renamed_base(repo)
+        self._rename(repo)
+        repo.write("src/hdr_new.c", "extern void hdr_new_name(int n);\n"
+                                    "void hdr_new_body(int n) { hdr_new_name(n); }\n")
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("src/ redeclarations 1 -> 2", out)
+
 
 class NativeConstructorAndWrapperTests(unittest.TestCase):
     def inspect(self, declaration, variant="C1", owner="Widget", init="", between=""):

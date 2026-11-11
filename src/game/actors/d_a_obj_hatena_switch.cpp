@@ -94,7 +94,6 @@ extern CLPS_Block data_ov002_0210d8b4;
 extern CLPS_Block data_ov002_0210d774;
 extern u8 data_0209d684;
 extern u8 data_0209d660;
-extern SaveBlock data_0209caa0;
 
 /*
  * Every instruction the cartridge has here falls out of the one `new`.
@@ -274,7 +273,7 @@ s32 daObjHatenaSwitch_c::CleanupResources() {
 
 void daObjHatenaSwitch_c::UpdateModelTransform() {
     s32 shifted[4];
-    Vec3_Asr((Vector3 *)&shifted, (Vector3 *)&mPosX, 3);
+    Vec3_Asr((Vector3 *)&shifted, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, shifted[0], shifted[1], shifted[2]);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     *(Mtx43 *)&mAnmModel.mat4x3 = *(Mtx43 *)&data_020a0e68;

@@ -16,34 +16,24 @@
  * closes with the registry factory dScMgBomroom_c_classInit. Functions run
  * in ROM order under
  * `#pragma defer_codegen off`; do not reorder.
- *
- * SpawnBombs keeps the file-global pragmas of the shard it came from in a
- * bracket; the bracket moves bytes, and binds only under defer_codegen off.
  */
 
-// leftovers: SpawnBombs reaches its bomb's color through a bomb pointer
-// stepped by j * 0x40 and cast back to the scene, ((dScMgBomroom_c *)
-// bomb)->mBombs[0].color, and adds the offset of mBombs[0].active to
-// this + j * 0x40. Its color roll stays unrolled from BOMROOM_RAND(2):
-// rolling first and computing the color pointer after is the ROM's order;
-// mBombs[j].color = BOMROOM_RAND(2), the macro through the same pointer, or
-// the roll into rnd first all reshuffle the hoisted-constant stack slots
-// (+0x4..+0x10 bytes).
-// The roaming steps read the table into a block-scoped fx16 before FX_MUL:
-// FX_CosIdx inside the FX_MUL argument swaps the table and speed registers.
+// leftovers: the roaming steps read the table into a block-scoped fx16
+// before FX_MUL: FX_CosIdx inside the FX_MUL argument swaps the table and
+// speed registers.
 
 #include "dScMgBomroom_c.h"
 #include "nitro/hw/registers.h"
 #include "types.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "cstd.h"
 #include "decl_common.h"
 #include "LevelRng.h"
 #include "Sound.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "PlayerInput.h"
 
 extern "C" {
@@ -74,9 +64,9 @@ extern u16 sBomroomSpawnDelays[];
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
 
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 
-extern void func_02056554(const void *src, int offset, int count);
+extern void GX_LoadBG0Scr(const void *src, int offset, int count);
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
@@ -131,8 +121,6 @@ void dScMgBomroom_c::DrawRoundOver() {
         return;
     RenderOamMainScreen(sBomroomRoundOverSprites, 0x80, 0xc0, -1, 1);
 }
-
-
 
 void dScMgBomroom_c::SetRoundOver() {
     mRoundOver = 1;
@@ -196,7 +184,6 @@ void dScMgBomroom_c::UpdateBg2Lift() {
     }
 }
 
-
 void dScMgBomroom_c::ResetBg2Lift() {
     mBg2Y = 0;
     mBg2State = 0;
@@ -222,8 +209,6 @@ void dScMgBomroom_c::Marker_DrawAll() {
     }
 }
 
-
-
 void dScMgBomroom_c::Marker_UpdateAll() {
     int i;
     for (i = 0; i < 2; i++) {
@@ -237,8 +222,6 @@ void dScMgBomroom_c::Marker_UpdateAll() {
         }
     }
 }
-
-
 
 void dScMgBomroom_c::Marker_Show(int idx) {
     mMarkers[idx].state = 1;
@@ -260,7 +243,6 @@ void dScMgBomroom_c::Marker_HideAll() {
     }
 }
 
-
 extern "C" {
 void Bomroom_DrawScore(void)
 {
@@ -268,93 +250,84 @@ void Bomroom_DrawScore(void)
 }
 }
 
-
 void dScMgBomroom_c::TopDoor_Close() {
-    mTopDoor.state = 3;
+    mTopDoor[0].state = 3;
     Sound::PlayBank2_2D(0x1e3);
 }
 
-
 void dScMgBomroom_c::TopDoor_Open() {
-    mTopDoor.state = 1;
+    mTopDoor[0].state = 1;
     Sound::PlayBank2_2D(0x1e2);
 }
 
-
 void dScMgBomroom_c::TopDoor_Draw() {
-    if (mTopDoor.level == 0)
+    if (mTopDoor[0].level == 0)
         return;
-    RenderOamMainScreen(sBomroomTopDoorSprites[mTopDoor.idx], mTopDoor.x >> 0xc, mTopDoor.y >> 0xc,
-                        -1, 2);
+    RenderOamMainScreen(sBomroomTopDoorSprites[mTopDoor[0].idx], mTopDoor[0].x >> 0xc,
+                        mTopDoor[0].y >> 0xc, -1, 2);
 }
 
-// The top door is a single record, but its state handlers keep the index the
-// shared PMF signature passes (TopDoor_Update always passes 0), indexing off
-// mTopDoor the way the two-slot mPenGates handlers index their array.
+// The top door is a one-record array: its state handlers take the index the
+// shared PMF signature passes (TopDoor_Update always passes 0), the same way
+// the two-slot mPenGates handlers index theirs.
 
 void dScMgBomroom_c::TopDoor_StateClosing(int index) {
-    if ((&mTopDoor)[index].idx != 0) {
-        (&mTopDoor)[index].timer++;
-        if ((&mTopDoor)[index].timer < 3)
+    if (mTopDoor[index].idx != 0) {
+        mTopDoor[index].timer++;
+        if (mTopDoor[index].timer < 3)
             return;
-        (&mTopDoor)[index].timer = 0;
-        (&mTopDoor)[index].idx--;
+        mTopDoor[index].timer = 0;
+        mTopDoor[index].idx--;
     } else {
-        (&mTopDoor)[index].state = 0;
+        mTopDoor[index].state = 0;
     }
 }
-
 
 void dScMgBomroom_c::TopDoor_StateOpen() {}
 
-
 void dScMgBomroom_c::TopDoor_StateOpening(int index) {
-    if ((&mTopDoor)[index].idx >= 4) {
-        (&mTopDoor)[index].idx = 4;
-        (&mTopDoor)[index].state = 2;
+    if (mTopDoor[index].idx >= 4) {
+        mTopDoor[index].idx = 4;
+        mTopDoor[index].state = 2;
         return;
     }
-    (&mTopDoor)[index].timer++;
-    if ((&mTopDoor)[index].timer < 3) {
+    mTopDoor[index].timer++;
+    if (mTopDoor[index].timer < 3) {
         return;
     }
-    (&mTopDoor)[index].timer = 0;
-    (&mTopDoor)[index].idx++;
-    if ((&mTopDoor)[index].idx >= 4) {
-        (&mTopDoor)[index].idx = 4;
-        (&mTopDoor)[index].state = 2;
+    mTopDoor[index].timer = 0;
+    mTopDoor[index].idx++;
+    if (mTopDoor[index].idx >= 4) {
+        mTopDoor[index].idx = 4;
+        mTopDoor[index].state = 2;
     }
 }
 
-
 void dScMgBomroom_c::TopDoor_StateShut(int index) {
-    (&mTopDoor)[index].timer = 0;
+    mTopDoor[index].timer = 0;
 }
 
 extern "C" PMF sBomroomTopDoorStateTable[];
 void dScMgBomroom_c::TopDoor_Update() {
-    if (!mTopDoor.gate)
+    if (!mTopDoor[0].gate)
         return;
-    (this->*sBomroomTopDoorStateTable[mTopDoor.state])(0);
+    (this->*sBomroomTopDoorStateTable[mTopDoor[0].state])(0);
 }
-
 
 void dScMgBomroom_c::TopDoor_Show() {
-    mTopDoor.gate = 1;
-    mTopDoor.state = 0;
-    mTopDoor.idx = 0;
-    mTopDoor.level = 1;
-    mTopDoor.timer = 0;
-    mTopDoor.x = 0x80000;
-    mTopDoor.y = 0x8000;
+    mTopDoor[0].gate = 1;
+    mTopDoor[0].state = 0;
+    mTopDoor[0].idx = 0;
+    mTopDoor[0].level = 1;
+    mTopDoor[0].timer = 0;
+    mTopDoor[0].x = 0x80000;
+    mTopDoor[0].y = 0x8000;
 }
-
 
 void dScMgBomroom_c::TopDoor_Hide() {
-    mTopDoor.gate = 0;
-    mTopDoor.level = 0;
+    mTopDoor[0].gate = 0;
+    mTopDoor[0].level = 0;
 }
-
 
 void dScMgBomroom_c::PenGate_DrawAll() {
     int i;
@@ -366,7 +339,6 @@ void dScMgBomroom_c::PenGate_DrawAll() {
         Hud_RenderSprite(sBomroomPenGateSprites[k], xv, yv, -1, -1);
     }
 }
-
 
 void dScMgBomroom_c::PenGate_StateClosing(int index) {
     if (mPenGates[index].level != 0) {
@@ -380,7 +352,6 @@ void dScMgBomroom_c::PenGate_StateClosing(int index) {
     }
 }
 
-
 void dScMgBomroom_c::PenGate_StateHold(int index) {
     if (mPenGates[index].timer != 0) {
         mPenGates[index].timer--;
@@ -391,7 +362,6 @@ void dScMgBomroom_c::PenGate_StateHold(int index) {
 
     mPenGates[index].state = 3;
 }
-
 
 void dScMgBomroom_c::PenGate_StateOpening(int index) {
     mPenGates[index].timer++;
@@ -405,11 +375,9 @@ void dScMgBomroom_c::PenGate_StateOpening(int index) {
     }
 }
 
-
 void dScMgBomroom_c::PenGate_StateShut(int index) {
     mPenGates[index].timer = 0;
 }
-
 
 extern "C" PMF sBomroomPenGateStateTable[];
 void dScMgBomroom_c::PenGate_UpdateAll() {
@@ -420,8 +388,6 @@ void dScMgBomroom_c::PenGate_UpdateAll() {
         }
     }
 }
-
-
 
 void dScMgBomroom_c::PenGate_ShowAll() {
     int i;
@@ -435,8 +401,6 @@ void dScMgBomroom_c::PenGate_ShowAll() {
         mPenGates[i].timer = 0;
     }
 }
-
-
 
 void dScMgBomroom_c::PenGate_Open(int index) {
     unsigned char st = mPenGates[index].state;
@@ -452,7 +416,6 @@ void dScMgBomroom_c::PenGate_Open(int index) {
     SetBg0Offset(0x100, 0);
 }
 
-
 void dScMgBomroom_c::PenGate_HideAll() {
     int slot;
     for (slot = 0; slot < 2; slot++) {
@@ -460,8 +423,6 @@ void dScMgBomroom_c::PenGate_HideAll() {
         mPenGates[slot].idx = 0;
     }
 }
-
-
 
 void dScMgBomroom_c::HatchPanel_DrawAll() {
     int i;
@@ -476,7 +437,6 @@ void dScMgBomroom_c::HatchPanel_DrawAll() {
     }
 }
 
-
 void dScMgBomroom_c::HatchPanel_StateRevert(int index) {
     if (mHatchPanels[index].level != 0) {
         mHatchPanels[index].timer++;
@@ -489,9 +449,7 @@ void dScMgBomroom_c::HatchPanel_StateRevert(int index) {
     }
 }
 
-
 void dScMgBomroom_c::HatchPanel_StateHeld() {}
-
 
 void dScMgBomroom_c::HatchPanel_StateAnimate(int index) {
     mHatchPanels[index].timer += 1;
@@ -511,12 +469,9 @@ void dScMgBomroom_c::HatchPanel_StateAnimate(int index) {
         mHatchPanels[index].state = 2;
 }
 
-
-
 void dScMgBomroom_c::HatchPanel_StateIdle(int index) {
     mHatchPanels[index].timer = 0;
 }
-
 
 extern "C" PMF sBomroomHatchPanelStateTable[];
 void dScMgBomroom_c::HatchPanel_UpdateAll() {
@@ -527,8 +482,6 @@ void dScMgBomroom_c::HatchPanel_UpdateAll() {
         }
     }
 }
-
-
 
 void dScMgBomroom_c::HatchPanel_ShowAll() {
     int i;
@@ -543,8 +496,6 @@ void dScMgBomroom_c::HatchPanel_ShowAll() {
     }
 }
 
-
-
 void dScMgBomroom_c::HatchPanel_HideAll() {
     int slot;
     for (slot = 0; slot < 2; slot++) {
@@ -552,8 +503,6 @@ void dScMgBomroom_c::HatchPanel_HideAll() {
         mHatchPanels[slot].idx = 0;
     }
 }
-
-
 
 void dScMgBomroom_c::HatchPanel_Activate(int index) {
     if (mHatchPanels[index].state != 0)
@@ -564,14 +513,11 @@ void dScMgBomroom_c::HatchPanel_Activate(int index) {
     Marker_Show(index);
 }
 
-
 void dScMgBomroom_c::DrawRemaining() {
     if (mShowTally == 0)
         return;
     Mg_DrawBigNumber(0x80, 0xc, mTallyCount, 1, -1, 0, 0);
 }
-
-
 
 void dScMgBomroom_c::CountSortedBombs() {
     int plain, colored, i;
@@ -601,7 +547,6 @@ void dScMgBomroom_c::CountSortedBombs() {
         Sound::PlayBank2_2D(0x1e6);
     }
 }
-
 
 /* Bomb `picked` has gone off. Its pen byte is 0 when it
  * was loose: every other live bomb not yet sorted (state 5) is knocked into
@@ -686,8 +631,6 @@ void dScMgBomroom_c::Bomb_Animate(int index) {
     mBombs[index].frame = max;
 }
 
-
-
 void dScMgBomroom_c::Bomb_CheckSorted(int index) {
     u8 color = mBombs[index].color;
     int x = mBombs[index].x >> 0xc;
@@ -714,7 +657,6 @@ void dScMgBomroom_c::Bomb_CheckSorted(int index) {
         func_02012718(0x1dc, mBombs[index].x);
     }
 }
-
 
 void dScMgBomroom_c::Bomb_CheckWrongPen(int index) {
     unsigned char color = mBombs[index].color;
@@ -781,7 +723,6 @@ void dScMgBomroom_c::Bomb_CheckGrab(int index) {
     mBombs[index].overPen = 0;
     func_02012718(0x1d2, mBombs[index].x);
 }
-
 
 void dScMgBomroom_c::Bomb_PushApart(int index) {
     int x, y, py, dx, dy1, ang, a, dy2, sy, px;
@@ -925,8 +866,6 @@ void dScMgBomroom_c::Bomb_PushApart(int index) {
     }
 }
 
-
-
 void dScMgBomroom_c::DrawBombs() {
     int i;
     for (i = 0; i < 0x70; i++) {
@@ -962,8 +901,6 @@ void dScMgBomroom_c::DrawBombs() {
         }
     }
 }
-
-
 
 void dScMgBomroom_c::CheckColorComplete() {
     int nColored = 0;
@@ -1023,9 +960,7 @@ void dScMgBomroom_c::CheckColorComplete() {
     TopDoor_Open();
 }
 
-
 void dScMgBomroom_c::BombMarch_LinedUp() {}
-
 
 void dScMgBomroom_c::BombMarch_ToLine(int index) {
     if (mBombs[index].marchDelay != 0) {
@@ -1069,8 +1004,6 @@ void dScMgBomroom_c::BombMarch_ToLine(int index) {
     }
 }
 
-
-
 void dScMgBomroom_c::BombMarch_Offscreen() {}
 
 void dScMgBomroom_c::BombMarch_Exit(int index) {
@@ -1100,8 +1033,6 @@ void dScMgBomroom_c::BombMarch_Exit(int index) {
     }
     PenGate_Open(mBombs[index].color);
 }
-
-
 
 void dScMgBomroom_c::BombMarch_ToGate(int index) {
     int color, x, z, tx, ty;
@@ -1137,7 +1068,6 @@ void dScMgBomroom_c::BombMarch_ToGate(int index) {
 
     PenGate_Open(mBombs[index].color);
 }
-
 
 /* Runs the bomb's current handler: its substate indexes the
  * pointer-to-member table sBomroomBombMarchTable. */
@@ -1201,7 +1131,6 @@ void dScMgBomroom_c::Bomb_StateInPen(int idx) {
     }
 }
 
-
 void dScMgBomroom_c::Bomb_StateExploding(int i) {
     if (mBombs[i].exploded == 0)
         return;
@@ -1210,7 +1139,6 @@ void dScMgBomroom_c::Bomb_StateExploding(int i) {
     Sound::PlayBank2_2D(0x1e0);
     mDispatchDelay = 0x60;
 }
-
 
 void dScMgBomroom_c::Bomb_StateChainDelay(int idx) {
     if (mBombs[idx].marchDelay != 0) {
@@ -1281,7 +1209,6 @@ void dScMgBomroom_c::Bomb_StateHeld(int idx) {
     }
 }
 
-
 /* While the bomb's fuse runs it counts down (unless mFusesFrozen is
  * set) and the bomb moves along its angle; once it reaches 0 the bomb goes
  * to state 4 and OnBombExploded takes over. */
@@ -1327,7 +1254,6 @@ void dScMgBomroom_c::Bomb_StateWalk(int idx) {
     mBombs[idx].prevY = mBombs[idx].y;
 }
 
-
 void dScMgBomroom_c::Bomb_StateWaiting(int i) {
     if (mBombs[i].marchDelay != 0) {
         mBombs[i].marchDelay--;
@@ -1357,179 +1283,139 @@ void dScMgBomroom_c::UpdateBombs() {
     }
 }
 
-
 /* Spawner: once mSpawnDelay runs out, picks a step from the spawn
  * count mSpawnCount, drops that many new bombs into free records with a
  * random color and angle, and reloads the delay from
- * sBomroomSpawnDelays.
- * Both pragmas bind: with common subexpressions on, the constants hoisted
- * ahead of the bomb loop take a different set of stack slots, and with
- * strength reduction on, j * 0x40 becomes a stepped pointer. */
-#pragma push
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
-
+ * sBomroomSpawnDelays. */
 void dScMgBomroom_c::SpawnBombs() {
-    char *c = (char *)this;
-    s32 sb;
-    s32 step;
-    s32 ang;
-    s32 i;
-    s32 off;
-    u32 rnd;
-    s32 cnt;
-    s32 flag;
-    s32 j;
     if (mSpawnDelay != 0) {
         mSpawnDelay--;
-        if ((s16)mSpawnDelay < 0) {
+        if ((s16)mSpawnDelay < 0)
             mSpawnDelay = 0;
-        }
         return;
     }
-    sb = 0;
-    if (mSpawnCount >= 0x12c) {
-        sb = 0xc;
-    } else if (mSpawnCount >= 0xc6) {
-        sb = 0xb;
-    } else if (mSpawnCount >= 0x9f) {
-        sb = 0xa;
-    } else if (mSpawnCount >= 0x84) {
-        sb = 9;
-    } else if (mSpawnCount >= 0x5c) {
-        sb = 8;
-    } else if (mSpawnCount >= 0x39) {
-        sb = 7;
-    } else if (mSpawnCount >= 0x21) {
-        sb = 6;
-    } else if (mSpawnCount >= 0x1b) {
-        sb = 5;
-    } else if (mSpawnCount >= 0x15) {
-        sb = 4;
-    } else if (mSpawnCount >= 0xf) {
-        sb = 3;
-    } else if (mSpawnCount >= 9) {
-        sb = 2;
-    } else if (mSpawnCount >= 3) {
-        sb = 1;
-    }
-    cnt = 1;
-    step = 0;
-    if (sb >= 5) {
-        cnt = 2;
-    }
-    if (sb == 9) {
-        cnt = 1;
-    }
-    flag = 0;
-    if (sb == 7) {
-        cnt = 2;
-        flag = (mSpawnHatchFlip & 1) + 1;
+
+    int stage = 0;
+    if (mSpawnCount >= 300)
+        stage = 12;
+    else if (mSpawnCount >= 198)
+        stage = 11;
+    else if (mSpawnCount >= 159)
+        stage = 10;
+    else if (mSpawnCount >= 132)
+        stage = 9;
+    else if (mSpawnCount >= 92)
+        stage = 8;
+    else if (mSpawnCount >= 57)
+        stage = 7;
+    else if (mSpawnCount >= 33)
+        stage = 6;
+    else if (mSpawnCount >= 27)
+        stage = 5;
+    else if (mSpawnCount >= 21)
+        stage = 4;
+    else if (mSpawnCount >= 15)
+        stage = 3;
+    else if (mSpawnCount >= 9)
+        stage = 2;
+    else if (mSpawnCount >= 3)
+        stage = 1;
+
+    int count = 1;
+    int step = 0;
+    if (stage >= 5)
+        count = 2;
+    if (stage == 9)
+        count = 1;
+    int hatch = 0;
+    if (stage == 7) {
+        count = 2;
+        hatch = (mSpawnHatchFlip & 1) + 1;
         mSpawnHatchFlip ^= 1;
         step = 0x3000;
     }
-    if (sb == 8) {
-        s32 bit = mSpawnHatchFlip & 1;
-        cnt = bit + 2;
+    if (stage == 8) {
+        int bit = mSpawnHatchFlip & 1;
+        count = bit + 2;
         mSpawnHatchFlip ^= 1;
-        flag = bit + 1;
-        if (cnt == 2) {
+        hatch = bit + 1;
+        if (count == 2)
             step = 0x3000;
-        } else {
+        else
             step = 0x1800;
-        }
     }
-    if (sb == 10) {
-        cnt = 4;
+    if (stage == 10) {
+        count = 4;
         step = 0x3000;
     }
-    if (sb == 11) {
-        cnt = 3;
-        flag = (mSpawnHatchFlip & 1) + 1;
+    if (stage == 11) {
+        count = 3;
+        hatch = (mSpawnHatchFlip & 1) + 1;
         mSpawnHatchFlip ^= 1;
         step = 0x1800;
     }
-    if (sb >= 12) {
-        cnt = 6;
+    if (stage >= 12) {
+        count = 6;
         step = 0x1800;
     }
-    i = 0;
-    if (cnt > 0) {
-        /* Offset of mBombs[0].active, kept in a register and added to
-       this + j*0x40 below: &mBombs[j].active shrinks the function by 0xc. */
-        off = (int)&((dScMgBomroom_c *)0)->mBombs[0].active;
-        ang = 0;
-        do {
-            j = 0;
-            while (1) {
-                unsigned char *slot = (unsigned char *)((c + (j << 6)) + off);
-                if ((*slot) == 0) {
-                    unsigned char *ptype;
-                    *slot = 1;
-                    mBombs[j].state = 0;
-                    mBombs[j].substate = 0;
-                    mBombs[j].lineSlot = 0;
-                    mBombs[j].exploded = 0;
-                    mBombs[j].x = 0x80000;
-                    mBombs[j].marchDelay = 4;
-                    mBombs[j].fuse = 0x200;
-                    rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
-                    ptype = &((dScMgBomroom_c *)(c + (j << 6)))->mBombs[0].color;
-                    *ptype = (((rnd >> 16) & 0x7fff) << 1) >> 15;
-                    mBombs[j].speed = 0x999;
-                    mBombs[j].dragSound = 0;
-                    if (sb == 0) {
-                        *ptype = 1;
-                        HatchPanel_Activate(0);
-                    }
-                    if (sb <= 1) {
-                        mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
-                        mBombs[j].y = 0;
-                    } else if (flag != 0) {
-                        if (flag == 1) {
-                            mBombs[j].angle = ang + 0x2000;
-                            mBombs[j].y = 0;
-                            HatchPanel_Activate(0);
-                        } else {
-                            mBombs[j].angle = ang + 0xa000;
-                            mBombs[j].y = 0xb8000;
-                            HatchPanel_Activate(1);
-                        }
-                    } else if ((mSpawnCount & 1) != 0) {
-                        if (step != 0) {
-                            mBombs[j].angle = (step * (i >> 1)) + 0x2800;
-                        } else {
-                            mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
-                        }
+
+    for (int i = 0; i < count; i++) {
+        for (int j = 0; j < 0x70; j++) {
+            if (mBombs[j].active == 0) {
+                mBombs[j].active = 1;
+                mBombs[j].state = 0;
+                mBombs[j].substate = 0;
+                mBombs[j].lineSlot = 0;
+                mBombs[j].exploded = 0;
+                mBombs[j].x = 0x80000;
+                mBombs[j].marchDelay = 4;
+                mBombs[j].fuse = 0x200;
+                /* The color is BOMROOM_RAND(2) rolled into rnd first: the
+                   ROM computes the color's address after the roll, and
+                   the macro inside the store computes it before. */
+                u32 rnd = RandomIntInternal(&data_0209d4b8.value);
+                mBombs[j].color = (((rnd >> 16) & 0x7fff) * 2) >> 15;
+                mBombs[j].speed = 0x999;
+                mBombs[j].dragSound = 0;
+                if (stage == 0) {
+                    mBombs[j].color = 1;
+                    HatchPanel_Activate(0);
+                }
+                if (stage <= 1) {
+                    mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
+                    mBombs[j].y = 0;
+                } else if (hatch != 0) {
+                    if (hatch == 1) {
+                        mBombs[j].angle = step * i + 0x2000;
                         mBombs[j].y = 0;
                         HatchPanel_Activate(0);
                     } else {
-                        if (step != 0) {
-                            mBombs[j].angle = (step * (i >> 1)) + 0xa800;
-                        } else {
-                            mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0xa000;
-                        }
+                        mBombs[j].angle = step * i + 0xa000;
                         mBombs[j].y = 0xb8000;
                         HatchPanel_Activate(1);
                     }
-                    mSpawnCount++;
-                    break;
+                } else if (mSpawnCount & 1) {
+                    if (step != 0)
+                        mBombs[j].angle = step * (i >> 1) + 0x2800;
+                    else
+                        mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
+                    mBombs[j].y = 0;
+                    HatchPanel_Activate(0);
+                } else {
+                    if (step != 0)
+                        mBombs[j].angle = step * (i >> 1) + 0xa800;
+                    else
+                        mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0xa000;
+                    mBombs[j].y = 0xb8000;
+                    HatchPanel_Activate(1);
                 }
-                j++;
-                if (j >= 0x70) {
-                    break;
-                }
+                mSpawnCount++;
+                break;
             }
-
-            ang += step;
-            i++;
-        } while (i < cnt);
+        }
     }
-    mSpawnDelay = sBomroomSpawnDelays[sb];
+    mSpawnDelay = sBomroomSpawnDelays[stage];
 }
-
-#pragma pop
-
 
 void dScMgBomroom_c::HideExplodedBombs() {
     int i;
@@ -1574,7 +1460,6 @@ void dScMgBomroom_c::ClearBombs() {
     }
 }
 
-
 void dScMgBomroom_c::RoundEnd_Finish() {
     int j;
 
@@ -1613,8 +1498,6 @@ void dScMgBomroom_c::RoundEnd_Finish() {
     mTallyCount = 0;
     SetBg0Offset(0, 0);
 }
-
-
 
 void dScMgBomroom_c::RoundEnd_Tally() {
     int found;
@@ -1664,7 +1547,6 @@ void dScMgBomroom_c::RoundEnd_Tally() {
     }
 }
 
-
 int dScMgBomroom_c::AnyBombMarching() {
     int i;
     i = 0;
@@ -1675,7 +1557,6 @@ int dScMgBomroom_c::AnyBombMarching() {
     } while (i < 0x70);
     return 0;
 }
-
 
 void dScMgBomroom_c::RoundEnd_WaitLinedUp() {
     UpdateBombs();
@@ -1699,8 +1580,6 @@ void dScMgBomroom_c::RoundEnd_WaitLinedUp() {
     mSubState = 2;
     mShowTally = 1;
 }
-
-
 
 void dScMgBomroom_c::RoundEnd_StartMarch() {
     int flag;
@@ -1758,7 +1637,6 @@ void dScMgBomroom_c::RoundEnd_StartMarch() {
     mSubState = 1;
 }
 
-
 void dScMgBomroom_c::Round_StateGameOver() {
     if (mStateTimer == 0)
         return;
@@ -1781,7 +1659,6 @@ void dScMgBomroom_c::Round_StateEnd() {
     TopDoor_Update();
 }
 
-
 void dScMgBomroom_c::Round_StatePlay() {
     HatchPanel_UpdateAll();
     SpawnBombs();
@@ -1789,12 +1666,10 @@ void dScMgBomroom_c::Round_StatePlay() {
     CountSortedBombs();
 }
 
-
 void dScMgBomroom_c::Round_StateStart() {
     if (mPromptBlinkCount == 0) { mPromptEnabled = 1; mPromptBlinkCount = 1; mPromptBlinkTimer = 0; }
     mSceneState = 2;
 }
-
 
 void dScMgBomroom_c::Round_StateSetup() {
     HatchPanel_ShowAll();
@@ -1836,7 +1711,7 @@ void dScMgBomroom_c::StartRound(int /* arg */) {
     ResetRound();
     mTallyCount = 0;
     mSceneState = 0;
-    G2x::SetBlendAlpha(&REG_BLDCNT, 1, 0x1c, 4, 3);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 1, 0x1c, 4, 3);
     SetBg0Offset(0, 0);
 }
 
@@ -1876,9 +1751,9 @@ s32 dScMgBomroom_c::Behavior()
 s32 dScMgBomroom_c::InitResources() {
     char *b;
     /* The ROM spills the BG fill value through the stack (strh/ldrh at sp)
-       before MultiStore16. A plain u16 compiles InitResources to 0x328
+       before MIi_CpuClear16. A plain u16 compiles InitResources to 0x328
        against the ROM's 0x330; no non-volatile spelling is known (the same
-       spill as Message.cpp's MultiStore_Int fills). */
+       spill as Message.cpp's MIi_CpuClear32 fills). */
     volatile u16 fill;
     void *f;
     void *arc;
@@ -1888,15 +1763,15 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
 
     f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN);
-    DecompressLZ16(f, (void *)(func_02054d88() + 0x4000));
+    DecompressLZ16(f, (void *)((int)G2_GetBG3CharPtr() + 0x4000));
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCL_BIN);
-    GX::LoadBGPltt(f, 0x180, 0x80);
+    GX_LoadBGPltt(f, 0x180, 0x80);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_UP_NSC_BIN);
-    func_02056314(f, 0, 0x800);
+    GX_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
@@ -1904,10 +1779,10 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9410;
 
     f = LoadFile(ASSET_D_2D_ELEVATOR_NSC_BIN);
-    b = (char *)G2::GetBG2ScrPtr();
+    b = (char *)G2_GetBG2ScrPtr();
     fill = 0xf23f;
-    MultiStore16(fill, b, 0x1000);
-    func_020563d4(f, 0, 0x800);
+    MIi_CpuClear16(fill, b, 0x1000);
+    GX_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG0;
@@ -1915,19 +1790,19 @@ s32 dScMgBomroom_c::InitResources() {
     REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x5610;
 
     f = LoadFile(ASSET_D_2D_BLUE_SHADOW_NSC_BIN);
-    func_02056554(f, 0, 0x800);
+    GX_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_LIGHT_UP_NSC_BIN);
-    func_02056554(f, 0x800, 0x800);
+    GX_LoadBG0Scr(f, 0x800, 0x800);
     Deallocate(f);
 
-    G2x::SetBlendAlpha(&REG_BLDCNT, 1, 0x1c, 4, 3);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 1, 0x1c, 4, 3);
 
     arc = LoadFile(ASSET_D_2D_MG_BOMROOM_NCG_BIN);
     f = LoadFile(ASSET_D_2D_MG_BOMROOM_NCL_BIN);
-    DecompressLZ16(arc, (void *)0x6400000);
-    GX::LoadOBJPltt(f, 0, 0x100);
+    DecompressLZ16(arc, G2_GetOBJCharPtr());
+    GX_LoadOBJPltt(f, 0, 0x100);
 
     gSubScreenLayers |= DISPLAY_LAYER_BG3;
     REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 1;
@@ -1935,19 +1810,19 @@ s32 dScMgBomroom_c::InitResources() {
 
     {
         void *f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCG_BIN);
-        DecompressLZ16(f7, (void *)((char *)G2S::GetBG3CharPtr() + 0x4000));
+        DecompressLZ16(f7, (void *)((char *)G2S_GetBG3CharPtr() + 0x4000));
         Deallocate(f7);
 
         f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_NCL_BIN);
-        GXS::LoadBGPltt(f7, 0x180, 0x80);
+        GXS_LoadBGPltt(f7, 0x180, 0x80);
         Deallocate(f7);
 
         f7 = LoadFile(ASSET_D_2D_MG_BG_BOMROOM_DOWN_NSC_BIN);
-        func_020562b4(f7, 0, 0x800);
+        GXS_LoadBG3Scr(f7, 0, 0x800);
         Deallocate(f7);
 
-        DecompressLZ16(arc, (void *)0x6600000);
-        GXS::LoadOBJPltt(f, 0, 0x100);
+        DecompressLZ16(arc, G2S_GetOBJCharPtr());
+        GXS_LoadOBJPltt(f, 0, 0x100);
         Deallocate(arc);
         Deallocate(f);
     }

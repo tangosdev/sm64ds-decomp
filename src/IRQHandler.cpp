@@ -2,13 +2,13 @@
 /* IRQ entry and thread switch (SDK os_irqHandler.c, the ITCM part),
  * itcm .text 0x01ffd97c..0x01ffdb28.
  *
- * IRQ::UserInterruptHandler is OS_IrqHandler: read IE & IF, acknowledge the
- * highest-priority (lowest) set bit and jump to its handler in data_02099fe4
- * (the table IRQ::SetIRQHandler fills), with lr preloaded so the handler
- * returns into func_01ffd9d4. That is OS_IrqHandler_ThreadSwitch: wake the
- * threads waiting on the DTCM interrupt mask, then, when a reschedule is
- * pending, save the interrupted thread's user-mode registers and switch to
- * the highest-priority ready one.
+ * OS_IrqHandler (pret/pokediamond OS_irqHandler.c): read IE & IF,
+ * acknowledge the highest-priority (lowest) set bit and jump to its handler
+ * in data_02099fe4 (the table OS_SetIrqFunction fills), with lr preloaded so
+ * the handler returns into func_01ffd9d4. That is
+ * OS_IrqHandler_ThreadSwitch: wake the threads waiting on the DTCM interrupt
+ * mask, then, when a reschedule is pending, save the interrupted thread's
+ * user-mode registers and switch to the highest-priority ready one.
  *
  * HAND-ASM PRIMITIVE: both are whole-function asm, as in the SDK: `clz`, the
  * banked-register transfers (`stmib ...^`, `ldmib ...^`) and the CPSR/SPSR
@@ -25,20 +25,18 @@
  * leftovers: data_02099fe4, data_023c0000 and data_020a6134 belong to other
  * files and are not claimed here.
  */
-#include "IRQ.h"
+#include "nitro/os/interrupt.h"
 #include "nitro/os/thread.h" /* data_020a6134, the thread scheduler head */
 #include "private/arm_math_state.h"
 
 extern "C" {
-extern IRQ::Handler data_02099fe4[]; /* one handler per IE bit */
+extern OSIrqFunction data_02099fe4[]; /* one handler per IE bit */
 extern short data_023c0000[];        /* DTCM: interrupts threads wait on */
 void func_01ffd9d4(void);
 }
 
-namespace IRQ {
-
-// OS_IrqHandler: dispatch the lowest pending interrupt.
-asm void UserInterruptHandler(void)
+// Dispatch the lowest pending interrupt.
+asm void OS_IrqHandler(void)
 {
     stmdb sp!, {lr}
     mov ip, #0x04000000
@@ -61,8 +59,6 @@ _loop:
     ldr r0, [r1, r0, lsl #2]
     ldr lr, =func_01ffd9d4
     bx r0
-}
-
 }
 
 extern "C" {

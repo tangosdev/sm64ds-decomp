@@ -4,13 +4,13 @@
  * WM_ERRCODE_ILLEGAL_STATE (3) before WM_Init, WM_ERRCODE_INVALID_PARAM
  * (6) for a null statusBuf, else WM_ERRCODE_SUCCESS. */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
 
 extern int WMi_CheckInitialized(void);
-extern void MultiCopy32Bytes(const void *src, void *dst, int len);
+extern void MIi_CpuCopyFast(const void *src, void *dst, int len);
 
 int WM_ReadStatus(int *statusBuf) {
     WMArm9Buf *sys = WM_GetSystemWork();
@@ -19,8 +19,8 @@ int WM_ReadStatus(int *statusBuf) {
         return result;
     if (statusBuf == 0)
         return 6;
-    CP15::InvalidateDataCache((u32)sys->status, 0x930);
-    MultiCopy32Bytes(sys->status, statusBuf, 0x930);
+    DC_InvalidateRange(sys->status, 0x930);
+    MIi_CpuCopyFast(sys->status, statusBuf, 0x930);
     return 0;
 }
 }

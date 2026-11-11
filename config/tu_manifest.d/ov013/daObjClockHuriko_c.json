@@ -477,9 +477,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@363",
+      "from": "@356",
       "to": "@282",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @296 now; licensed under the existing pin @282 | registration node renumbers once the free-function declaration is gone; re-keyed by __sinit relocation site; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @296 now; licensed under the existing pin @282 | registration node renumbers once the free-function declaration is gone; re-keyed by __sinit relocation site; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @363 to @356 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

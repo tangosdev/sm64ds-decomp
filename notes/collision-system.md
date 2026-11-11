@@ -612,7 +612,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
      cannot see a member-function definition, a reference parameter, a namespace-
      qualified call or a virtual call. `mkbase.py` mechanically flattens all of them
      (headers to flat structs at the same offsets, `extern "C"` dropped, `cstd::fdiv`
-     to `_ZN4cstd4fdivEii`, the slot-3 dispatch hand-rolled). That is legitimate only
+     to `FX_Div`, the slot-3 dispatch hand-rolled). That is legitimate only
      because `check.py` proves the two compile to the same bytes: **9 differing words
      out of 1,777**, both accounted for - a four-slot permutation in the prologue's
      zero-init, and a five-instruction reordering of the virtual dispatch, which

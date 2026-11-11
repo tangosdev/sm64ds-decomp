@@ -12,8 +12,6 @@
  * NOTES:
  * - dBgCh_Actr_UpdateContinuous_Veneer is the ROM's own tail-call thunk, not
  *   UpdateContinuous itself: the reloc points at the veneer symbol.
- * - The GetWallResult +4 in State1 is the unrecovered result struct's
- *   SurfaceInfo slot; dEnemyBase_c spells it the same way.
  * - State1 copies the player position through an s32 pointer to mPosX:
  *   three named mPosX/Y/Z loads come out one instruction shorter.
  * - unk_352 stays unnamed: zeroed by state 0 and read nowhere.
@@ -176,8 +174,8 @@ cont:
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     if (mWithMeshClsn.IsOnWall() != 0) {
         Vector3 normal;
-        void *wall = mWithMeshClsn.GetWallResult();
-        ((SurfaceInfo *)((char *)wall + 4))->CopyNormalTo(normal);
+        dBgPi *wall = mWithMeshClsn.GetWallResult();
+        wall->surface.CopyNormalTo(normal);
         mPrevAngleY = cstd::atan2(normal.x, normal.z);
     }
 

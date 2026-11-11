@@ -6,8 +6,8 @@
 
 /* NitroSDK's DISP3DCNT setters (g3x.h). Every write masks off bits 12 and 13,
  * the color-buffer underflow and polygon/vertex RAM overflow
- * acknowledgements, which a 1 would clear. The SDK's BOOL is spelled bool,
- * as G3X::SetClearColor and G3X::SetFog take it (include/G3X.h). Not in
+ * acknowledgements, which a 1 would clear. The SDK's BOOL is spelled bool
+ * in these setters. Not in
  * g3imm.h: an inline body there renumbers ov075/d_s_entry_entry's pinned
  * @NNN (src/unnamed/ov007/func_ov007_020c4684.c). */
 
@@ -18,6 +18,32 @@
 #define REG_G3X_DISP3DCNT_RO_MASK  0x1000
 #define REG_G3X_DISP3DCNT_GO_MASK  0x2000
 #define REG_G3X_DISP3DCNT_THS_SHIFT 1
+
+/* gx_g3x.c, under the SDK's names with C linkage (ntrtwl/NitroSDK
+ * libraries/gx/src/g3x.c). Parameters unnamed: a named parameter here
+ * renumbers every includer's @NNN.
+ * G3X_SetFog and G3X_SetClearColor take the SDK's BOOL as an int: callers
+ * pass a stored flag byte straight through. GXRgb is spelled unsigned short.
+ * The stack-level getters' s32 * is spelled int *. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+void G3X_Init(void);
+void G3X_Reset(void);
+void G3X_ClearFifo(void);
+void G3X_InitMtxStack(void);
+void G3X_ResetMtxStack(void);
+void G3X_SetFog(int, int, int, int);
+void G3X_SetFogTable(void *);
+void G3X_SetToonTable(void *);
+void G3X_SetClearColor(unsigned short, int, int, int, int);
+void G3X_InitTable(void);
+int G3X_GetMtxStackLevelPV(int *);
+int G3X_GetMtxStackLevelPJ(int *);
+void G3X_SetHOffset(int);
+#ifdef __cplusplus
+}
+#endif
 
 typedef enum { GX_SHADING_TOON = 0, GX_SHADING_HIGHLIGHT = 1 } GXShading;
 

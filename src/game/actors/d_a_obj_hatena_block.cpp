@@ -96,7 +96,7 @@
  *     SECRET_COIN (actorID 0x149).
  *   data_ov002_0210d9* / da40 / d954 -- ov002 BMD/CLPS handles loaded for
  *     the caps and contents.
- *   data_02082214 -- NitroSDK FX_SinCosTable_; the bounce squash indexes it
+ *   FX_SinCosTable_ -- NitroSDK's sin/cos table; the bounce squash indexes it
  *     by mBounceAng.
  *   data_0209caa0, gGameMode, gCurrentSublevel, data_0209f32c, gCamera,
  *     data_0209e650, data_020a0edc -- arm9 globals.
@@ -133,10 +133,12 @@ enum daObjHatenaBlock_c_AssetId {
 #include "daSCoin_c.h"
 #include "dCamera_c.h"
 #include "daShl_c.h"
+#include "daBmb_c.h"
 #include "nitro/fx/fx.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 struct CLPS_Block;
 struct KCL_File;
@@ -188,8 +190,6 @@ extern int data_0209f32c;
 extern unsigned char gGameMode;
 extern dCamera_c *gCamera;
 extern char data_020a0edc[];
-extern SaveBlock data_0209caa0;
-extern s16 data_02082214[];
 
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
@@ -211,7 +211,6 @@ extern void Matrix4x3_FromRotationY(void *m, int angle);
 void d_a_obj_hatena_blockEarthquakeHold(void *self, void *pos, s32 radius);
 extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
                                       void *clps);
-extern void func_ov102_0214ad14(void *actor);
 
 /* Free: the block is its second argument (dst, src), so member form would
    swap the register operands. */
@@ -648,7 +647,7 @@ void daObjHatenaBlock_c::UpdateDropShadow() {
 
     b0 = (mFlags & 8) ? 1 : 0;
     if (b0 != 0) {
-        b1 = (*(volatile unsigned char *)&gGameMode == 1) ? 1 : 0;
+        b1 = (gGameMode == 1) ? 1 : 0;
         if (b1 == 0) goto skipcall;
     }
     mFloorY = GetFloorY();
@@ -746,7 +745,7 @@ void daObjHatenaBlock_c::EnterBouncing() {
  *
  * While mBounceTimer is still counting down (DecIfAbove0_Short returns the
  * new value; non-zero means it has not reached 0), squash and stretch, with
- * s = sin(mBounceAng) as Fix12 from data_02082214 (0x1000 = 1.0):
+ * s = sin(mBounceAng) as Fix12 from FX_SinCosTable_ (0x1000 = 1.0):
  *   mScaleY       = (1 + s) * 0x999/0x1000 + 0x666/0x1000
  *                 = 0.4 + 0.6 * (1 + s)
  *   mScaleX, Z    = (1 - s) + 1.0
@@ -775,7 +774,6 @@ void daObjHatenaBlock_c::EnterBouncing() {
  *  - enters STATE_POPPED.
  * The `ch >= 4` tests below cannot fire: ch was clamped to 3 above. */
 void daObjHatenaBlock_c::UpdateBouncing() {
-    daObjHatenaBlock_c *self = this;
     Vector3 pos;
     int ch;
     u16 typ;
@@ -783,22 +781,11 @@ void daObjHatenaBlock_c::UpdateBouncing() {
     func_ov102_02149684((int *)&pos, this);
     if (DecIfAbove0_Short(&mBounceTimer) != 0) {
 
-        s16 *pang = (s16 *)&mBounceAng;
-        u16 ang = mBounceAng;
-        s16 s = data_02082214[(ang >> 4) * 2];
-        int conf = 0x999;
-        int t = (int)s + 0x1000;
-        int y = FX_MUL(t, conf);
-        mScaleY = y + 0x666;
-        ang = mBounceAng;
-        s = data_02082214[(ang >> 4) * 2];
-        int u = 0x1000 - (int)s;
-        mScaleX = FX_MUL(u, 0x1000) + 0x1000;
+        mScaleY = FX_MUL(FX_SinIdx((u16)mBounceAng >> 4) + 0x1000, 0x999) + 0x666;
+        mScaleX = FX_MUL(0x1000 - FX_SinIdx((u16)mBounceAng >> 4), 0x1000) + 0x1000;
         mScaleZ = mScaleX;
-        ang = mBounceAng;
-        s = data_02082214[(ang >> 4) * 2];
-        mBounceYOffs = (0x1000 - (int)s) * 0xd;
-        *pang += 0x1000;
+        mBounceYOffs = (0x1000 - FX_SinIdx((u16)mBounceAng >> 4)) * 0xd;
+        mBounceAng += 0x1000;
 
         return;
     }
@@ -830,14 +817,14 @@ void daObjHatenaBlock_c::UpdateBouncing() {
     case 1: {   /* ITEM_BLOCK */
         PMF (*tbl)[4] = data_ov102_0214e8c0;
         u8 content = mContentType;
-        (self->*tbl[content][0])();
+        (this->*tbl[content][0])();
         break;
     }
     case 2: {   /* VS_ITEM_BLOCK */
         PMF (*tbl)[4] = data_ov102_0214e870;
         u8 content = mContentType;
         if (ch >= 4) ch = 0;
-        (self->*tbl[content][ch])();
+        (this->*tbl[content][ch])();
         break;
     }
     case 0:     /* HATENA_BLOCK */
@@ -845,7 +832,7 @@ void daObjHatenaBlock_c::UpdateBouncing() {
             PMF (*tbl)[4] = data_ov102_0214e8c0;
             u8 content = mContentType;
             if (ch >= 4) ch = 0;
-            (self->*tbl[content][ch])();
+            (this->*tbl[content][ch])();
         } else {
             SpawnPrizeBobOmb();
         }
@@ -1099,17 +1086,16 @@ void daObjHatenaBlock_c::SpawnPrizePowerUpItem() {
 
 /* Bob-omb prize: spawns a BOMBHEI (param 4) at the prize point; if it
    spawned, func_ov102_0214ad14 (daBmb_c: stores ClosestPlayer as its chase
-   target) and func_ov102_0214b384(a, 0x3c) (daBmb_c.h: only shortens the
+   target) and func_ov102_0214b384(0x3c) (daBmb_c.h: only shortens the
    fuse). Callers discard the result of that helper. */
-extern "C" void func_ov102_0214b384(void *, unsigned int);
 void daObjHatenaBlock_c::SpawnPrizeBobOmb() {
     Vector3 v;
     func_ov102_02149684((int *)&v, this);
-    void *a = dActor_c::Spawn(ACTOR_BOMBHEI, 4, v, 0, mAreaId, -1);
+    daBmb_c *a = (daBmb_c *)dActor_c::Spawn(ACTOR_BOMBHEI, 4, v, 0, mAreaId, -1);
     if (a == 0)
         return;
-    func_ov102_0214ad14(a);
-    func_ov102_0214b384(a, 0x3c);
+    a->func_ov102_0214ad14();
+    a->func_ov102_0214b384(0x3c);
 }
 
 /* Spawns n COINs (param 2) at *pos. Each coin gets a heading baseAngle + dir

@@ -53,6 +53,7 @@
 #include "Memory.h"
 #include "Heap.h"
 #include "BCA_File.h"
+#include "nitro/fx/fx_cp.h"
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
@@ -69,16 +70,6 @@ void func_020462d0(ModelComponents *data, BMD_File *file, void *buffer);
 /* defined below; dExtCommonModel_c and dExtShadowModel_c take their pooled
    components from it */
 ModelComponents *GetCommonModelComponents(BMD_File *file);
-/* local extern: no header declares it; delete veneer for the transforms and
-   blend buffers */
-void func_0203cbc0(void *ptr);
-#ifdef _MSC_VER
-/* local extern: host only. ::operator new is the CRT's on the PC port, but
-   Memory::operator_delete2 hands this block back to the DS default heap, so
-   the host allocates it from that heap directly (src/engine/heap/Heap.cpp
-   defines this veneer for the host). */
-void *func_0203cc0c(u32 size);
-#endif
 /* local extern: LoadFile.c defines int(int); the file comes back as a
    pointer here (banked return row). */
 void *LoadFile(int ov0ID);
@@ -101,20 +92,6 @@ extern int data_0209cef0;
    A scalar, matching the other reader; [0] on an int[] is the same word
    but flips the declaration plurality onto this shorter path. */
 extern int data_0208e738;
-/* local extern: polygon-mode / polygon-id / opacity. Model4.cpp defines the
-   first and third as (void *, void *) and (void *, unsigned); these are the
-   spellings the call shards matched (banked rows). */
-void func_02046234(ModelComponents *data, int mode);
-void func_02046008(ModelComponents *data, int id);
-void func_020461b4(ModelComponents *data, u32 a);
-/* local extern: the +8 adjustors the low veneers forward to; Model4.cpp
-   defines them and no header declares them. Each veneer passes its own
-   arguments straight through in r1/r2. */
-void func_02045ec4(void *self, unsigned int value, int index);
-void func_02045e70(char *p, unsigned int color);
-void func_02045ef8(char *p, unsigned int color);
-void func_02045f80(char *p, unsigned int color);
-void func_0204605c(char *p, int id, int index);
 u32 TrimModelFile(void *ptr);
 /* local extern: defined in src/engine/model/Model4.cpp, which types the frame
    `short`; no header declares it. Stores (file, frame) into bone slot i of the
@@ -140,11 +117,8 @@ extern u8 data_0209ceec;
  * strings, so the objects are overlay 1's .data. */
 extern BMD_File data_ov001_020ad524;
 extern BMD_File data_ov001_020ad560;
-/* local extern: no header declares these; the shadow scale matrix and the two
-   opacity passes RenderAll draws with */
+/* local extern: no header declares it; the shadow scale matrix */
 void func_0203c178(Matrix4x3 *m, Fix12i sx, Fix12i sy, Fix12i sz);
-void func_02046120(ModelComponents *data, s32 opacity);
-void func_02046088(ModelComponents *data, s32 opacity, int f);
 /* local extern: the texture-animation helpers. Each Prepare's ROM body is a
    0xc long-call veneer (ldr ip, [pc]; bx ip); the registers pass through
    untouched, so the helper's own two-argument signature is the call surface. */
@@ -154,10 +128,6 @@ void func_02046b64(BMD_File *model, BTA_File *file);
 void func_020469e8(ModelComponents *model, BTA_File *file, int frame);
 void func_020470e8(BMD_File *model, BMA_File *file);
 void func_02046e28(struct Model *model, struct MatAnimData *file, unsigned short frame);
-}
-
-namespace cstd {
-int fdiv(int a, int b);
 }
 
 /* 0xc-byte records in the common model data array at data_0209cefc, counted
@@ -181,7 +151,7 @@ dExtModel_c::dExtModel_c() : modelFile(0) {}
 
 /* One definition emits D2, D0 and D1, in that order: the vptr store is the
    compiler's; the body releases modelFile. D0 follows with the dExtModel_c
-   operator delete (Memory::operator_delete2). */
+   operator delete. */
 dExtModel_c::~dExtModel_c() {
     if (modelFile != 0) {
         Deallocate(modelFile);
@@ -252,17 +222,13 @@ extern "C" ModelComponents *GetCommonModelComponents(BMD_File *file) {
 
     e = (CommonModelData *)dExtSimpleModel_c::AddToCommonModelDataArr(*file);
     if (e->components == 0) {
-#ifdef _MSC_VER
-        e->components = (ModelComponents *)func_0203cc0c(0x14);
-#else
         e->components = (ModelComponents *)::operator new(0x14);
-#endif
         if (e->components == 0)
             return 0;
-        e->buffer = Memory::operator_new2(func_02046564(file));
+        e->buffer = ::operator new[](func_02046564(file));
         b = e->buffer;
         if (b == 0) {
-            Memory::operator_delete2(e->components);
+            ::operator delete(e->components);
             e->components = 0;
             return 0;
         }
@@ -278,9 +244,9 @@ extern "C" void CleanCommonModelDataArr(void) {
     if (data_0209cef8[0] > 0) {
         do {
             if (e->buffer)
-                func_0203cbc0(e->buffer);
+                ::operator delete[](e->buffer);
             if (e->components)
-                Memory::operator_delete2(e->components);
+                ::operator delete(e->components);
             i++;
             e++;
         } while (i < data_0209cef8[0]);
@@ -299,11 +265,11 @@ dExtSimpleModel_c::dExtSimpleModel_c() : transformsBuf(0) {
 
 /* One definition emits D2, D0 and D1: the vptr store and the dExtModel_c
    destructor call are the compiler's; the body is the class's one written
-   obligation -- handing transformsBuf back through the delete veneer. D0
-   follows with the dExtModel_c operator delete (Memory::operator_delete2). */
+   obligation -- handing transformsBuf back through operator delete[]. D0
+   follows with operator delete. */
 dExtSimpleModel_c::~dExtSimpleModel_c() {
     if (transformsBuf)
-        func_0203cbc0(transformsBuf);
+        ::operator delete[](transformsBuf);
 }
 
 void dExtSimpleModel_c::UpdateVerts() {
@@ -314,7 +280,7 @@ int dExtSimpleModel_c::DoSetFile(char *file_, int a, int b) {
     BMD_File *file = (BMD_File *)file_;
     void *buffer;
     AddToCommonModelDataArr(*file);
-    transformsBuf = Memory::operator_new2(func_02046564(file));
+    transformsBuf = ::operator new[](func_02046564(file));
     buffer = transformsBuf;
     if (buffer == 0)
         return 0;
@@ -335,7 +301,7 @@ void dExtSimpleModel_c::Virtual10(Matrix4x3 &mat) {
 
 void dExtSimpleModel_c::Render(const Vector3 *scale) {
     Matrix4x3 temp;
-    MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
+    MTX_Concat43(&mat4x3, &data_0209b3ec, &temp);
     data.Render(&temp, (Vector3 *)scale);
 }
 
@@ -362,19 +328,19 @@ void dExtSimpleModel_c::ClearMaterialFlags(u32 mask) {
 }
 
 void dExtSimpleModel_c::SetPolygonID(int id) {
-    func_02046008(&data, id);
+    data.SetPolygonID(id);
 }
 
 extern "C" void func_02016aac(char *self, int id, int index) {
-    func_0204605c(self + 8, id, index);
+    ((dExtSimpleModel_c *)self)->data.SetMaterialPolygonID(id, index);
 }
 
 void dExtModel_c::ApplyOpacity(u32 opacity, u32) {
-    func_020461b4(&static_cast<dExtSimpleModel_c *>(this)->data, opacity);
+    static_cast<dExtSimpleModel_c *>(this)->data.SetAlpha(opacity);
 }
 
 void dExtSimpleModel_c::SetPolygonMode(int mode) {
-    func_02046234(&data, mode);
+    data.SetPolygonMode(mode);
 }
 
 void dExtSimpleModel_c::HideMaterial(int boneID, int listIdx) {
@@ -392,19 +358,19 @@ void dExtSimpleModel_c::ShowMaterial(int boneID, int listIdx) {
 }
 
 extern "C" void func_02016a14(char *self, int color) {
-    func_02045f80(self + 8, color);
+    ((dExtSimpleModel_c *)self)->data.SetDiffuse(color);
 }
 
 extern "C" void func_02016a04(char *self, int color) {
-    func_02045ef8(self + 8, color);
+    ((dExtSimpleModel_c *)self)->data.SetAmbient(color);
 }
 
 extern "C" void func_020169f4(char *self, int color) {
-    func_02045e70(self + 8, color);
+    ((dExtSimpleModel_c *)self)->data.SetEmission(color);
 }
 
 extern "C" void func_020169d8(char *self, int index, unsigned int value) {
-    func_02045ec4(self + 8, value, index);
+    ((dExtSimpleModel_c *)self)->data.SetMaterialEmission(value, index);
 }
 
 /* ---------------------------------------------------------------------------
@@ -421,7 +387,7 @@ dExtAnmModel_c::dExtAnmModel_c() {
 /* One definition emits D2, D0 and D1, and queues its _ZThn80_ pair for the
    end of the object. The body is empty: both vptr restores and the base
    destructor calls are the compiler's, and D0 finishes with
-   dExtAnmModel_c::operator delete. The cartridge keeps all three. */
+   operator delete. The cartridge keeps all three. */
 dExtAnmModel_c::~dExtAnmModel_c() {}
 
 void dExtAnmModel_c::UpdateVerts() {
@@ -485,11 +451,11 @@ void dExtAnmModel_c::Copy(const dExtAnmModel_c &src, char *newFile) {
 dExtBlendAnmModel_c::dExtBlendAnmModel_c() : blendWeight(0x1000), mBlendBuffer(0) {}
 
 /* One definition emits D2, D0 and D1, and queues its _ZThn80_ pair. D0 adds
-   the class operator delete. The written obligation is the conditional free
+   operator delete. The written obligation is the conditional free
    of mBlendBuffer; a bare delete would call operator delete with no test. */
 dExtBlendAnmModel_c::~dExtBlendAnmModel_c() {
     if (mBlendBuffer)
-        func_0203cbc0(mBlendBuffer);
+        ::operator delete[](mBlendBuffer);
 }
 
 int dExtBlendAnmModel_c::DoSetFile(char *file, int a, int b) {
@@ -504,7 +470,7 @@ int dExtBlendAnmModel_c::DoSetFile(char *file, int a, int b) {
    hands it plus the ModelComponents member to func_020462b4. It sits between
    UpdateVerts and DoSetFile in the ROM. Coined name. */
 int dExtBlendAnmModel_c::InitBlendBuffer(char *file) {
-    mBlendBuffer = Memory::operator_new2(func_020462bc((int *)file));
+    mBlendBuffer = ::operator new[](func_020462bc((int *)file));
     void *p = mBlendBuffer;
     if (p == 0)
         return 0;
@@ -562,7 +528,7 @@ void dExtBlendAnmModel_c::SetAnim(BCA_File &animFile, int numBlendFrames, int fl
             blendWeight = 0x1000;
         } else {
             blendWeight = 0;
-            blendStep = cstd::fdiv(0x1000, (numBlendFrames + 1) << 12);
+            blendStep = FX_Div(0x1000, (numBlendFrames + 1) << 12);
         }
     }
 }
@@ -579,7 +545,7 @@ void dExtBlendAnmModel_c::SetAnim(BCA_File &animFile, int numBlendFrames, int fl
 dExtAnm2Model_c::dExtAnm2Model_c() : otherFile(0) {}
 
 /* One definition emits D2, D0 and D1, and queues the last _ZThn80_ pair. D0
-   adds the class operator delete. The body is empty: the vptr stores and the
+   adds operator delete. The body is empty: the vptr stores and the
    base destructor follow from the class. */
 dExtAnm2Model_c::~dExtAnm2Model_c() {}
 
@@ -635,7 +601,7 @@ dExtCommonModel_c::dExtCommonModel_c() : data(0) {
  * call at the bottom are what `struct dExtCommonModel_c : dExtModel_c` and
  * `virtual ~dExtCommonModel_c()` already mean, and the compiler emits them around
  * it. Neither member has a destructor, so the ROM's 0x24 bytes are exactly
- * that. D0 is generated from the same body plus the class operator delete. */
+ * that. D0 is generated from the same body plus operator delete. */
 dExtCommonModel_c::~dExtCommonModel_c() {}
 
 int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
@@ -653,7 +619,7 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b) {
 
 void dExtCommonModel_c::Render(const Vector3 *scale) {
     Matrix4x3 temp;
-    MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
+    MTX_Concat43(&mat4x3, &data_0209b3ec, &temp);
     data->Render(&temp, (Vector3 *)scale);
 }
 
@@ -671,7 +637,7 @@ void dExtCommonModel_c::SetMaterialFlags(u32 flags) {
 }
 
 void dExtCommonModel_c::SetPolygonID(u32 id) {
-    func_02046008(data, id);
+    data->SetPolygonID(id);
 }
 
 /* ---------------------------------------------------------------------------
@@ -691,8 +657,8 @@ dExtShadowModel_c::dExtShadowModel_c() : mat(0), prev(0), next(0) {}
  * dExtModel_c subobject call at the bottom are the compiler's. The list is
  * singly-headed, so removing the first node is the case that needs the head
  * compared against `this`; every other node is reached through its
- * predecessor. D0 is generated from the same body plus the class
- * operator delete. */
+ * predecessor. D0 is generated from the same body plus operator
+ * delete. */
 dExtShadowModel_c::~dExtShadowModel_c() {
     if (prev)
         prev->next = next;
@@ -779,12 +745,12 @@ void dExtShadowModel_c::RenderAll() {
         do {
             ModelComponents *model = node->data;
             func_0203c178(&data_020a0e68, node->scale.x, node->scale.y, node->scale.z);
-            MulMat4x3Mat4x3(&data_020a0e68, node->mat, &data_020a0e68);
+            MTX_Concat43(&data_020a0e68, node->mat, &data_020a0e68);
             data_020a0e68.m[10] += 0x2000;
-            MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
-            func_02046120(model, node->opacity);
+            MTX_Concat43(&data_020a0e68, &data_0209b3ec, &data_020a0e68);
+            model->SetShadowMask(node->opacity);
             model->Render(&data_020a0e68, 0);
-            func_02046088(model, node->opacity, 1);
+            model->SetShadowDraw(node->opacity, 1);
             model->Render(&data_020a0e68, 0);
             node = node->next;
         } while (node);
@@ -809,8 +775,7 @@ dExtFrameCtrl_c::dExtFrameCtrl_c() {
 }
 
 /* The destructor, first among the class's virtuals and so its key function.
- * The body is empty; D0 adds the call to the class operator delete the
- * header defines. dExtFrameCtrl_c has no virtual bases, so D1 and D2 are
+ * The body is empty; D0 adds the call to operator delete. dExtFrameCtrl_c has no virtual bases, so D1 and D2 are
  * the same code: a vtable slot reaches D1, a derived destructor's base step
  * reaches D2. */
 dExtFrameCtrl_c::~dExtFrameCtrl_c() {}

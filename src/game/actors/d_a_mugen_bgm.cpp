@@ -39,15 +39,12 @@ extern void *data_ov002_02110af8;
 extern u8 gLocalPlayerId;
 extern daPly_c *gPlayers[];
 extern Vector3 data_020a0ebc;
-extern SaveBlock data_0209caa0;
 extern dCamera_c *gCamera;
 
 /* arm9 / ov100 C helpers with no shared header. */
 extern "C" {
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-/* void *: Behavior's diff/rotated scratch stays POD int[3]; a Vector3 local
-   would emit ~Vector3, which this object does not have. */
-void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src);
+void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *trans, short angle, const Vector3 *v);
 u8 NumStars(void);
 int func_ov100_02144f84(void);
 }
@@ -87,20 +84,20 @@ int daMugenBGM_c::Behavior() {
     int flag;
     int depth;
     int color;
-    int diff[3];
-    int rotated[3];
+    Vector3 diff;
+    Vector3 rotated;
 
-    Vec3_Sub((Vector3 *)diff, &gPlayers[gLocalPlayerId]->mPos, (const Vector3 *)&mPosX);
-    Vec3_RotateYAndTranslate(rotated, &data_020a0ebc, mAngleY, diff);
+    Vec3_Sub(&diff, &gPlayers[gLocalPlayerId]->mPos, &mPos);
+    Vec3_RotateYAndTranslate(&rotated, &data_020a0ebc, mAngleY, &diff);
 
     if (param1 == 1) {
-        int z = rotated[2];
-        int x = rotated[0];
+        int z = rotated.z;
+        int x = rotated.x;
         int az = (z < 0) ? -z : z;
         if (x < 0)
             x = -x;
         if (x < 0x320000) {
-            int y = rotated[1];
+            int y = rotated.y;
             if (y > -0x12c000 && y < 0x5dc000 && az > 0x32000 && az < 0xc8000)
                 gMusicTrackModeOverride = (z < 0) ? 2 : -1;
         }
@@ -113,13 +110,13 @@ int daMugenBGM_c::Behavior() {
     flag = 0;
 
     if (NumStars() < 0x50 || data_0209caa0.file.mCharacter != 0) {
-        int x = rotated[0];
+        int x = rotated.x;
         color = 0xd00;
         if (x < 0)
             x = -x;
         if (x < 0x200000) {
-            int y = rotated[1];
-            if (y > -0x32000 && y < 0x1000000 && rotated[2] < 0) {
+            int y = rotated.y;
+            if (y > -0x32000 && y < 0x1000000 && rotated.z < 0) {
                 int d;
                 vol = 0;
                 flag = 0x7f;
@@ -128,7 +125,7 @@ int daMugenBGM_c::Behavior() {
                     d = 0;
                 else if (d > 0x4000)
                     d = 0x4000;
-                depth = FX_MUL(rotated[2], (0x40 - (d >> 8))) + 0xffff;
+                depth = FX_MUL(rotated.z, (0x40 - (d >> 8))) + 0xffff;
                 if (depth < 0x700)
                     depth = 0x700;
             }

@@ -15,7 +15,7 @@
 
 struct dMap_c : dBase_c {
     /* The BG's 2x2 affine matrix, in the order the hardware wants it:
-       Behavior fills A and B from the sin/cos table data_02082214 scaled by
+       Behavior fills A and B from the sin/cos table FX_SinCosTable_ scaled by
        mInvScale, then sets C = -B and D = A -- a rotate-and-scale -- and hands
        &mBgMatrixA to UpdateMinimap as the four-word block. Seeded 1,0,0,1 in
        Fix12 by InitResources. D was called mPosX, which the `mBgMatrixD =
@@ -68,7 +68,7 @@ struct dMap_c : dBase_c {
     s32 mMapCenterWorldY;                      /* 0x1f8 */
     s32 mMapCenterWorldZ;                      /* 0x1fc */
     /* The direction arrow's 2x2 OAM matrix, same four-word shape as
-       mBgMatrix*: Render fills A and B from data_02082214 scaled by
+       mBgMatrix*: Render fills A and B from FX_SinCosTable_ scaled by
        mArrowScale and sets C = -B, D = A, in both the VS and single-player
        branches, immediately before drawing OAM::MM_ARROW. */
     s32 mArrowMatrixA;                      /* 0x200 */

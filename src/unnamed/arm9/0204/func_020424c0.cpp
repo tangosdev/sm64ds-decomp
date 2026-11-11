@@ -1,35 +1,22 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/cache.h"
+#include "nitro/os/system.h"
 #include "private/fs_views.h"
+#include "private/file_share_alloc.h"
 
 typedef struct FSFile FSFile;
 
 extern "C" {
 
-/* Measured: without loop_invariants 7 of 106 words differ (&file and -1 swap
- * r4/r5); without propagation 22; without both 29. for-loop forms are 0x1b0.
- * With neither pragma, plain for loops match everything except the first
- * loop (22 words): the ROM seeds the length from the zeroed counter
- * (`mov r0, #0` ... `add sl, r0, #4`), which only opt_propagation off
- * reproduces; `sl = 4`, `sl = sizeof(u32)`, `for (sl = 4, i = 0; ...)` and
- * `i = 0; for (sl = i + 4; ...)` all fold the seed to a constant. */
+/* Measured: without propagation 22 of 106 words differ. for-loop forms are
+ * 0x1b0. Plain for loops match everything except the first loop (22 words):
+ * the ROM seeds the length from the zeroed counter (`mov r0, #0` ...
+ * `add sl, r0, #4`), which only opt_propagation off reproduces; `sl = 4`,
+ * `sl = sizeof(u32)`, `for (sl = 4, i = 0; ...)` and `i = 0; for (sl = i + 4;
+ * ...)` all fold the seed to a constant. (The opt_loop_invariants off this file
+ * also carried is inert now: the function is exact without it.) */
 #pragma opt_propagation off
-#pragma opt_loop_invariants off
-/* data_020a1fc0, the file-sharing work block, under FileShareWork's names
- * (include/private/arm9_a1fc0_file_share.h); typed here for the allocator
- * call. Only the fields this function touches are spelled out. */
-typedef struct {
-    int mIsParent; /* 0x00 */
-    char pad_04[0x10];
-    void *(*mAllocFunc)(void *, u32, u32); /* 0x14 */
-    void *mAllocArg;                       /* 0x18 */
-    char pad_1c[4];
-    void *mTable;   /* 0x20 -- the card header's FAT, FNT and overlay tables */
-    u32 mTableSize; /* 0x24 */
-} WorkInfo;
-
 typedef struct {
     int start;
     int end;
@@ -41,10 +28,6 @@ typedef struct {
     int size;
 } RomRegion;
 
-/* local extern: the header's FileShareWork (arm9_a1fc0_file_share.h) types
- * mAllocFunc, mAllocArg and mTable as int, so through it this function would
- * cast the allocator, its argument and the result back. Same layout. */
-extern WorkInfo data_020a1fc0;
 extern char data_02099e6c[]; /* "rom" */
 
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
@@ -67,7 +50,6 @@ void func_020424c0(void) {
     RomRegion *ptrs[4];
     FSFile file;
     u32 sl;
-    u32 irq;
     void *fp;
     int i;
 
@@ -84,9 +66,7 @@ void func_020424c0(void) {
         i++;
     } while (i < 4);
 
-    irq = IRQ::Disable();
-    fp = data_020a1fc0.mAllocFunc(data_020a1fc0.mAllocArg, sl, 0);
-    IRQ::Restore(irq);
+    fp = FileShareAlloc(sl);
 
     if (data_020a1fc0.mIsParent != 0) {
         FSArchive *sb;
@@ -134,8 +114,8 @@ void func_020424c0(void) {
             *(int *)fp = max;
         }
 
-        CP15::FlushAndInvalidateDataCache((u32)fp, sl);
-        CP15::DrainWriteBuffer();
+        DC_FlushRange(fp, sl);
+        DC_WaitWriteBufferEmpty();
     }
 
     data_020a1fc0.mTable = fp;

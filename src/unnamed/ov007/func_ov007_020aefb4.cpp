@@ -1,8 +1,8 @@
 //cpp
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
-#include "cstd.h"
 #include "Ov007Item.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -24,8 +24,8 @@ void func_ov007_020aefb4(void) {
     int r6 = 0;
     int n = WORK->states[1]->stateTicks - 0x3c;
     if (n >= 0) {
-        int rem = cstd::mod(n, 0xf0);
-        int quo = cstd::div(n - rem, 0xf0);
+        int rem = FX_ModS32(n, 0xf0);
+        int quo = FX_DivS32(n - rem, 0xf0);
         if (rem == 0) {
             Ov007Item *p = WORK->itemNodes[1]->item;
             p->wiggleFrames = 0x3c;

@@ -50,6 +50,8 @@
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* One row of the state table: enter action (pmf[0]), per-frame update
  * (pmf[1]) and a name literal. */
@@ -86,17 +88,10 @@ enum {
     CHARACTER_YOSHI = 3
 };
 
-namespace cstd {
-int fdiv(int, int);
-}
-
 extern "C" {
 extern u8 DecIfAbove0_Byte(u8* p);
-extern signed short data_02082214[];
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern dCamera_c *gCamera;
-extern void func_0203568c(int *p, int v);
-extern void func_02035684(int *p, int v);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void *gPFlowerCloseModelFile[];
 extern void *gPFlowerOpenModelFile[];
@@ -155,16 +150,15 @@ void daObjPowerUpItem_c::StateOpening()
 {
     if (DecIfAbove0_Byte(&mWobbleTimer)) {
         int a = (int)mWobbleTimer << 12;
-        int fdivResult = cstd::fdiv(a, 0x1c000);
+        int fdivResult = FX_Div(a, 0x1c000);
         unsigned short hw = mWobbleAngle;
-        int idx = hw >> 4;
-        signed short odd = data_02082214[idx * 2 + 1];
+        signed short odd = FX_CosIdx(hw >> 4);
         int t1 = FX_MUL(odd, fdivResult);
         int u1 = FX_MUL(t1, 0x332);
         int v1 = u1 + 0xffa;
         int w1 = FX_MUL(v1, 0xfa0);
         mScaleY = w1;
-        signed short even = data_02082214[idx * 2];
+        signed short even = FX_SinIdx(hw >> 4);
         int t2 = FX_MUL(even, fdivResult);
         int u2 = FX_MUL(t2, 0x332);
         int v2 = u2 + 0xffa;
@@ -233,8 +227,8 @@ void daObjPowerUpItem_c::StateLaunched()
     else
         mAngleY -= delta;
 
-    func_0203568c((int*)&mWithMeshClsn, 0x3c000);
-    func_02035684((int*)&mWithMeshClsn, 0x3c000);
+    mWithMeshClsn.SetRadius(0x3c000);
+    mWithMeshClsn.SetHeight(0x3c000);
     UpdatePos((dCc_c*)&mdCcAc_c);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
 

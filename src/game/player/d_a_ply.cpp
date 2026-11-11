@@ -6,7 +6,7 @@
  * allocation size, vtable identity, and the PLAYER registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
  * preserved. Historical alias: Player_Spawn. */
-extern "C" daPly_c *daPly_c_classInit() {
+daPly_c *daPly_c_classInit() {
     return new daPly_c;
 }
 

@@ -985,14 +985,12 @@ s32 dBgCh_Actr::GetLimMovFlag() const
     return mFlags & 0x80;
 }
 
-extern "C" void func_0203568c(int *p, int v)
-{
-    p[6] = v;   /* mRadius */
+void dBgCh_Actr::SetRadius(Fix12i radius) {
+    mRadius = radius;
 }
 
-extern "C" void func_02035684(int *p, int v)
-{
-    p[7] = v;   /* mHeight */
+void dBgCh_Actr::SetHeight(Fix12i height) {
+    mHeight = height;
 }
 
 dBgPi *dBgCh_Actr::GetSphereResult() {

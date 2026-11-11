@@ -17,7 +17,7 @@
  * OS_GetInitArenaLo / OS_GetInitArenaHi return this game's fixed bounds.
  */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/protectionRegion.h"
 
 /* OSArenaId */
 #define OS_ARENA_MAIN 0
@@ -79,7 +79,7 @@ void OS_InitArenaEx(void) {
         return;
     OS_SetArenaHi(OS_ARENA_MAINEX, OS_GetInitArenaHi(OS_ARENA_MAINEX));
     OS_SetArenaLo(OS_ARENA_MAINEX, OS_GetInitArenaLo(OS_ARENA_MAINEX));
-    CP15::MPUDataRegion1(0x200002d); /* main RAM, 8 MB, enabled */
+    OS_SetProtectionRegion1(0x200002d); /* main RAM, 8 MB, enabled */
 }
 
 unsigned int OS_GetArenaHi(int id) {

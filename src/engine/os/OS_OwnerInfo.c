@@ -13,11 +13,11 @@
  */
 #include "private/nvram_config.h"
 
-extern void CpuCopy8(const void *src, void *dst, unsigned int size); /* MI_CpuCopy8 */
-extern void MultiCopyHalf(const void *src, void *dst, int size);     /* MIi_CpuCopy16 */
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MIi_CpuCopy16(const void *src, void *dst, int size);
 
 void OS_GetMacAddress(unsigned char *macAddress) {
-    CpuCopy8((void *)0x027ffcf4, macAddress, 6);
+    MI_CpuCopy8((void *)0x027ffcf4, macAddress, 6);
 }
 
 /* The older SDK's 0x50-byte OSOwnerInfo: nickName and comment have no
@@ -45,6 +45,6 @@ void OS_GetOwnerInfo(unsigned char *dst) {
     info->birthdayDay = src->owner.birthdayDay;
     info->nickNameLength = src->owner.nickNameLength;
     info->commentLength = src->owner.commentLength;
-    MultiCopyHalf(src->owner.nickName, info->nickName, sizeof(info->nickName));
-    MultiCopyHalf(src->owner.comment, info->comment, sizeof(info->comment));
+    MIi_CpuCopy16(src->owner.nickName, info->nickName, sizeof(info->nickName));
+    MIi_CpuCopy16(src->owner.comment, info->comment, sizeof(info->comment));
 }

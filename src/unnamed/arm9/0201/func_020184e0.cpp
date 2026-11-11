@@ -1,5 +1,5 @@
 //cpp
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/fs_views.h"
 
 typedef struct FSFile FSFile;
@@ -20,14 +20,14 @@ int func_020184e0(FSFile *self, unsigned int buf, unsigned int n) {
     unsigned int len = self->prop.file.bottom - self->prop.file.top; /* FS_GetLength */
     if (len > n)
         len = n;
-    CP15::FlushAndInvalidateDataCache(buf, len);
+    DC_FlushRange((void *)buf, len);
     r = myFS_ReadFile(self, (void *)buf, len);
     FS_CloseFile(self);
     func_02018770();
     if (len != r)
         return 0;
     func_02018568(buf);
-    CP15::FlushDataCache(buf, len);
+    DC_StoreRange((void *)buf, len);
     return len;
 }
 }

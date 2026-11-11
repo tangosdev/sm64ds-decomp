@@ -26,8 +26,7 @@
  * static OSi_RescheduleThread are a later split.
  */
 #include "types.h"
-#include "IRQ.h"
-#include "CP15.h"
+#include "nitro/os/system.h"
 #include "nitro/os/thread.h"
 
 /* The SDK's nitro/types.h spellings; include/types.h has no BOOL. */
@@ -41,8 +40,6 @@ typedef int BOOL;
 #define OS_THREAD_STATE_WAITING 0
 #define OS_THREAD_STATE_READY 1
 #define OS_THREAD_STATE_TERMINATED 2
-
-#define OS_PROCMODE_IRQ 0x12
 
 #define OSi_STACK_CHECKNUM_BOTTOM 0xfddb597dUL
 #define OSi_STACK_CHECKNUM_TOP 0x7bf9dd5bUL
@@ -63,14 +60,12 @@ extern void SDK_SYS_STACKSIZE(void);
 extern void SDK_IRQ_STACKSIZE(void);
 
 /* local extern: no header declares these yet. Their SDK names:
- * ARMProcessorMode is OS_GetProcMode, ARMSaveContext OS_SaveContext,
- * ARMRestoreContext OS_LoadContext
- * and MultiStore_Int MIi_CpuClear32; OSi_UnlockAllMutex is src/engine/os/OS_Mutex.cpp. */
-extern int ARMProcessorMode(void);
+ * ARMSaveContext is OS_SaveContext, ARMRestoreContext OS_LoadContext;
+ * OSi_UnlockAllMutex is src/engine/os/OS_Mutex.cpp. */
 extern int ARMSaveContext(void *ctx);
 extern void ARMRestoreContext(void *ctx);
 extern void OS_InitContext(void *ctx, unsigned int pc, unsigned int sp);
-extern void MultiStore_Int(int val, int *dst, int len);
+extern void MIi_CpuClear32(int val, int *dst, int len);
 extern void OSi_UnlockAllMutex(OSThread *thread);
 
 extern OSSwitchThreadCallback data_020a6128; /* OSi_SystemCallbackInSwitchThread */
@@ -186,10 +181,10 @@ void OS_InitThread(void) {
 
 void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *stack, u32 stackSize,
                      u32 prio) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     s32 index = OSi_GetUnusedThreadId();
     if (index < 0) {
-        IRQ::Restore(enabled);
+        OS_RestoreInterrupts(enabled);
         return;
     }
 
@@ -214,19 +209,19 @@ void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *st
     {
         /* MI_CpuClear32's value: the ROM passes it through a stack slot. */
         volatile int fill = 0;
-        MultiStore_Int(fill, (int *)((u32)stack - stackSize + 4), stackSize - 8);
+        MIi_CpuClear32(fill, (int *)((u32)stack - stackSize + 4), stackSize - 8);
     }
 
     thread->mutex = 0;
     thread->mutexQueue.head = 0;
     thread->mutexQueue.tail = 0;
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 void OS_ExitThread(void) {
     OSThread *currentThread;
 
-    IRQ::Disable();
+    OS_DisableInterrupts();
     currentThread = *data_020a612c;
     OSi_UnlockAllMutex(currentThread);
     OSi_RemoveThreadFromList(currentThread);
@@ -237,11 +232,11 @@ void OS_ExitThread(void) {
 }
 
 void OS_JoinThread(OSThread *thread) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     if (thread->state != OS_THREAD_STATE_TERMINATED) {
         OS_SleepThread(&thread->joinQueue);
     }
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 BOOL OS_IsThreadTerminated(const OSThread *thread) {
@@ -249,18 +244,18 @@ BOOL OS_IsThreadTerminated(const OSThread *thread) {
 }
 
 void OS_SleepThread(u16 *queue) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     OSThread *currentThread = *data_020a612c;
     if (queue != 0) {
         *queue = *queue | (u16)(1 << currentThread->id);
     }
     currentThread->state = OS_THREAD_STATE_WAITING;
     OS_RescheduleThread();
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 void OS_WakeupThread(u16 *queue) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     u32 mask = *queue;
     if (mask != 0) {
         OSThread *thread;
@@ -272,14 +267,14 @@ void OS_WakeupThread(u16 *queue) {
         *queue = 0;
         OS_RescheduleThread();
     }
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 void OS_WakeupThreadDirect(OSThread *thread) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     thread->state = OS_THREAD_STATE_READY;
     OS_RescheduleThread();
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 OSThread *OS_SelectThread(void) {
@@ -295,7 +290,7 @@ void OS_RescheduleThread(void) {
     OSThread *nextThread;
     OSThreadInfo *info = &data_020a6134;
 
-    if (info->irqDepth != 0 || ARMProcessorMode() == OS_PROCMODE_IRQ) {
+    if (info->irqDepth != 0 || OS_GetProcMode() == OS_PROCMODE_IRQ) {
         info->isNeedRescheduling = TRUE;
         return;
     }
@@ -326,7 +321,7 @@ void OS_SetThreadStackWarningOffset(OSThread *thread, u32 offset) {
 BOOL OS_SetThreadPriority(OSThread *thread, u32 prio) {
     OSThread *t = data_020a6134.list;
     OSThread *pre = 0;
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
 
     while (t != 0 && t != thread) {
         pre = t;
@@ -334,7 +329,7 @@ BOOL OS_SetThreadPriority(OSThread *thread, u32 prio) {
     }
 
     if (t == 0 || t == &data_020a6188) {
-        IRQ::Restore(enabled);
+        OS_RestoreInterrupts(enabled);
         return FALSE;
     }
 
@@ -349,7 +344,7 @@ BOOL OS_SetThreadPriority(OSThread *thread, u32 prio) {
         OS_RescheduleThread();
     }
 
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
     return TRUE;
 }
 
@@ -358,18 +353,18 @@ u32 OS_GetThreadPriority(const OSThread *thread) {
 }
 
 OSSwitchThreadCallback OS_SetSwitchThreadCallback(OSSwitchThreadCallback callback) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     OSSwitchThreadCallback prev = data_020a6134.switchCallback;
     data_020a6134.switchCallback = callback;
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
     return prev;
 }
 
 void OSi_IdleThreadProc(void *unused) {
 #pragma unused(unused)
-    IRQ::Enable();
+    OS_EnableInterrupts();
     for (;;) {
-        CP15::WaitForInterrupt();
+        OS_Halt();
     }
 }
 }

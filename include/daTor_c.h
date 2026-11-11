@@ -95,7 +95,7 @@ struct daTor_c : dActor_c {
                                      player, steered toward while chasing. */
     s16 mSpinPhase;              /* 0x35a -- the phase UpdateSpin advances by
                                      0x200 each call; (u16 >> 4) * 2 + 1 of it
-                                     indexes the data_02082214 sine table that
+                                     indexes the FX_SinCosTable_ sine table that
                                      waves the scale. */
     s32 mState;                  /* 0x35c -- 0/1/2, the switch in Behavior;
                                      see the header comment. */

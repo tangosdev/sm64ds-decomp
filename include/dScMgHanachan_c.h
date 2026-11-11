@@ -89,6 +89,30 @@ struct dScMgHanachan_c : dScMgBase_c {
         void CheckOffLeftA();
         void CheckOffLeftB();
         void TurnTowardAim();
+
+        /* Called by the scene and by the methods above on one wiggler.
+           Descriptive names, reconstructed like the rest. */
+        void UpdateSway();
+        void Move();
+        int HitTest(const Point *);
+        int IsStarVisible();
+        void StopIfIdle();
+        void OnTouched();
+        void SetCruiseSpeed();
+        void Retarget(int);
+        int GetFrame(int);
+        int GetFlag(int);
+        int ClampToScreen();
+        void DrawTarget();
+        void DrawField();
+        void StepSegmentsA();
+        void StepSegmentsB();
+        void StepSegmentsC();
+        void StartPathA(int);
+        void StartBounce(int);
+        void StartPathB(int);
+        void StartPathC(int);
+        void Spawn(int, int);
     };
     Wiggler mWiggler[15]; /* 0x4678, five segment points per wiggler */
     Wiggler *mTarget;     /* 0x4f60 the starred wiggler */

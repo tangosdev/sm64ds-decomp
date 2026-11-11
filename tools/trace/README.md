@@ -48,7 +48,7 @@ DeSmuME fallback: launch with `--arm9gdb=3333`; everything below is identical.
 python tools/trace/gdb_harness.py --duration 20
 
 # pick your own targets (must exist in nearmiss/db.jsonl)
-python tools/trace/gdb_harness.py --names func_02043288,DMASyncFillTransfer
+python tools/trace/gdb_harness.py --names func_02043288,MI_DmaFill32
 
 # write every hit record to JSONL for inspection
 python tools/trace/gdb_harness.py --duration 30 --out traces/spike.jsonl

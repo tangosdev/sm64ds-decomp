@@ -41,8 +41,8 @@ enum d_a_obj_cannon_shutter_AssetId {
 #include "math/MtxStack.h"
 
 extern "C" {
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 }
@@ -155,8 +155,8 @@ int daObjCannonShutter_c::Behavior() {
             slide.y = -0x1000; /* -1.0 down */
         }
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MulVec3Mat4x3(&slide, &data_020a0e68, &rotated);
-        AddVec3(&mPos, &rotated, &mPos);
+        MTX_MultVec43(&slide, &data_020a0e68, &rotated);
+        VEC_Add(&mPos, &rotated, &mPos);
         if (Vec3_Dist((Vector3 *)&mHomePosX, &mPos) > 0xa000) {
             mOpenPhase = 1; /* past 10.0: go forward */
         }

@@ -1385,44 +1385,44 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@509",
+      "from": "@469",
       "to": "data_ov021_021149c0",
-      "evidence": "compiler temp mapped to 0x021149c0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp mapped to 0x021149c0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @509 to @461 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @461 to @469 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@510",
+      "from": "@470",
       "to": "data_ov021_02114a14",
-      "evidence": "compiler temp mapped to 0x02114a14 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp mapped to 0x02114a14 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @510 to @462 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @462 to @470 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@511",
+      "from": "@471",
       "to": "data_ov021_021149e4",
-      "evidence": "compiler temp mapped to 0x021149e4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp mapped to 0x021149e4 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @511 to @463 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @463 to @471 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@512",
+      "from": "@472",
       "to": "data_ov021_021149f0",
-      "evidence": "compiler temp mapped to 0x021149f0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp mapped to 0x021149f0 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @512 to @464 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @464 to @472 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@514",
+      "from": "@474",
       "to": "data_ov021_021149fc",
-      "evidence": "compiler temp mapped to 0x021149fc by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp mapped to 0x021149fc by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @514 to @466 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @466 to @474 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@517",
+      "from": "@477",
       "to": "data_ov021_02114a08",
-      "evidence": "compiler temp mapped to 0x02114a08 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp mapped to 0x02114a08 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @517 to @469 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @469 to @477 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@520",
+      "from": "@480",
       "to": "data_ov021_021149d8",
-      "evidence": "compiler temp mapped to 0x021149d8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp mapped to 0x021149d8 by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @520 to @472 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @472 to @480 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@523",
+      "from": "@483",
       "to": "data_ov021_021149cc",
-      "evidence": "compiler temp mapped to 0x021149cc by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp mapped to 0x021149cc by the retail initializer relocation at the same pool offset; no bytes or relocations change | registration nodes renumber after the shared-header includes and the deleted named-parameter declarations; re-keyed by __sinit relocation site order Re-keyed from @523 to @475 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @475 to @483 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

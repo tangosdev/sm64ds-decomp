@@ -6,25 +6,27 @@
  * the file reads top-down from GX_Init at 0x02053c40 to the brightness
  * helper at 0x02053a90.
  *
- * GX_DispOff parks the display mode (DISPCNT bits 16-17) in data_020a6084
+ * GX_DispOff parks the display mode (DISPCNT bits 16-17) in sDispMode
  * and clears it, which blanks engine A; GX_DispOn puts it back, or selects
- * "graphics" when no mode was parked. data_02099fcc is the display-on flag:
- * while it is clear, GX::SetGraphicsMode records the requested mode but
+ * "graphics" when no mode was parked. sIsDispOn is the display-on flag:
+ * while it is clear, GX_SetGraphicsMode records the requested mode but
  * writes mode 0, so a mode change cannot light a display that is off.
  *
- * data_02099fd0 is the GX DMA channel (-1: none), shared by the whole GX
+ * GXi_DmaId is the GX DMA channel (-1: none), shared by the whole GX
  * library. GX_InitGXState (src/GX_InitGXState.c, the file above) clears the VRAM
- * state block. The empty function just below this run (func_02053a8c) is
- * FX_Init, which the boot sequence calls just before GX_Init; it belongs to
- * the fixed-point library, not to this file.
+ * state block. The empty function just below this run is
+ * FX_Init (src/FX_Init.c), which the boot sequence calls just before
+ * GX_Init; it belongs to the fixed-point library's fx.c, not to this file.
  *
  * This TU owns .text only: the three variables above stay at their ROM
- * addresses. Callers reach the address-named members under C linkage; those
- * keep their ROM names here.
+ * addresses, which is why gx.c's two file statics, sIsDispOn and sDispMode,
+ * are declared extern below. Every function has C linkage and pret's GX.c
+ * name, and nitro/gx/gx.h declares them all.
  */
 
 #include "types.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/gx.h"
 
 #define REG_DISPSTAT      (*(volatile u16 *)0x04000004)
 #define REG_MASTER_BRIGHT (*(volatile u16 *)0x0400006c)
@@ -59,18 +61,18 @@
 
 extern "C" {
 
-extern u16 data_02099fcc; // display on (TRUE until GX_DispOff)
-extern int data_02099fd0; // GX DMA channel, -1 if none
-extern u16 data_020a6084; // display mode parked by GX_DispOff
+extern u16 sIsDispOn; // display on (TRUE until GX_DispOff)
+extern int GXi_DmaId; // GX DMA channel, -1 if none
+extern u16 sDispMode; // display mode parked by GX_DispOff
 
 void GX_InitGXState(void);
-void DMASyncFillTransfer(u32 channel, void *dst, u32 data, u32 size);
-void MultiStore_Int(int val, int *dst, int len);
+void MI_DmaFill32(u32 channel, void *dst, u32 data, u32 size);
+void MIi_CpuClear32(int val, int *dst, int len);
 
-// GX_Init: power the display engines, reset the VRAM state, and clear both
+// Power the display engines, reset the VRAM state, and clear both
 // engines' 2D registers. The ROM spills each zero of the CPU path to its own
 // stack slot and reloads it for the call; the volatile locals reproduce that.
-void func_02053c40(void) {
+void GX_Init(void) {
     REG_POWCNT1 |= POWCNT_DISPLAY_SWAP;
     REG_POWCNT1 = (u16)((REG_POWCNT1 & ~POWCNT_ALL_ENGINES) | POWCNT_ALL_ENGINES);
     REG_POWCNT1 |= POWER_CONTROL_ENABLE;
@@ -80,16 +82,16 @@ void func_02053c40(void) {
     REG_DISPSTAT = 0;
     REG_DISPCNT = 0;
 
-    if (data_02099fd0 != -1) {
-        DMASyncFillTransfer(data_02099fd0, REG_BG0CNT_ADDR, 0, 0x60);
+    if (GXi_DmaId != -1) {
+        MI_DmaFill32(GXi_DmaId, REG_BG0CNT_ADDR, 0, 0x60);
         REG_MASTER_BRIGHT = 0;
-        DMASyncFillTransfer(data_02099fd0, REG_DB_DISPCNT_ADDR, 0, 0x70);
+        MI_DmaFill32(GXi_DmaId, REG_DB_DISPCNT_ADDR, 0, 0x70);
     } else {
         volatile u32 zero = 0;
-        MultiStore_Int(zero, (int *)REG_BG0CNT_ADDR, 0x60);
+        MIi_CpuClear32(zero, (int *)REG_BG0CNT_ADDR, 0x60);
         REG_MASTER_BRIGHT = 0;
         volatile u32 subZero = 0;
-        MultiStore_Int(subZero, (int *)REG_DB_DISPCNT_ADDR, 0x70);
+        MIi_CpuClear32(subZero, (int *)REG_DB_DISPCNT_ADDR, 0x70);
     }
 
     // Identity scale for the affine BGs of both engines.
@@ -103,8 +105,8 @@ void func_02053c40(void) {
     REG_DB_BG3PD = 0x100;
 }
 
-// GX_HBlankIntr: returns the previous enable bit.
-int func_02053c10(int enable) {
+// Returns the previous H-blank IRQ enable bit.
+int GX_HBlankIntr(int enable) {
     int old = REG_DISPSTAT & DISPSTAT_HBLANK_IRQ;
     if (enable)
         REG_DISPSTAT |= DISPSTAT_HBLANK_IRQ;
@@ -113,8 +115,8 @@ int func_02053c10(int enable) {
     return old;
 }
 
-// GX_VBlankIntr: returns the previous enable bit.
-int func_02053be0(int enable) {
+// Returns the previous V-blank IRQ enable bit.
+int GX_VBlankIntr(int enable) {
     int old = REG_DISPSTAT & DISPSTAT_VBLANK_IRQ;
     if (enable)
         REG_DISPSTAT |= DISPSTAT_VBLANK_IRQ;
@@ -123,54 +125,40 @@ int func_02053be0(int enable) {
     return old;
 }
 
-// GX_DispOff
-void func_02053b98(void) {
+void GX_DispOff(void) {
     u32 cnt = REG_DISPCNT;
-    data_02099fcc = 0;
-    data_020a6084 = (u16)((cnt & DISPCNT_MODE_MASK) >> DISPCNT_MODE_SHIFT);
+    sIsDispOn = 0;
+    sDispMode = (u16)((cnt & DISPCNT_MODE_MASK) >> DISPCNT_MODE_SHIFT);
     REG_DISPCNT = cnt & ~DISPCNT_MODE_MASK;
 }
 
-} // extern "C"
-
-namespace GX {
-
-void DispOn() {
-    data_02099fcc = 1;
-    if (data_020a6084 != 0)
-        REG_DISPCNT =
-            (REG_DISPCNT & ~DISPCNT_MODE_MASK) | ((u32)data_020a6084 << DISPCNT_MODE_SHIFT);
+void GX_DispOn(void) {
+    sIsDispOn = 1;
+    if (sDispMode != 0)
+        REG_DISPCNT = (REG_DISPCNT & ~DISPCNT_MODE_MASK) | ((u32)sDispMode << DISPCNT_MODE_SHIFT);
     else
         REG_DISPCNT |= DISPMODE_GRAPHICS << DISPCNT_MODE_SHIFT;
 }
 
-void SetGraphicsMode(int dispMode, int bgMode, int bg0As3d) {
+void GX_SetGraphicsMode(int dispMode, int bgMode, int bg0As3d) {
     u32 cnt = REG_DISPCNT;
-    data_020a6084 = (u16)dispMode;
-    if (data_02099fcc == 0)
+    sDispMode = (u16)dispMode;
+    if (sIsDispOn == 0)
         dispMode = 0;
     cnt &= ~(DISPCNT_BGMODE_MASK | DISPCNT_BG0_3D | DISPCNT_MODE_MASK | DISPCNT_VRAM_MASK);
     REG_DISPCNT =
         cnt | (dispMode << DISPCNT_MODE_SHIFT) | bgMode | (bg0As3d << DISPCNT_BG0_3D_SHIFT);
-    if (data_020a6084 == 0)
-        data_02099fcc = 0;
+    if (sDispMode == 0)
+        sIsDispOn = 0;
 }
 
-} // namespace GX
-
-namespace GXS {
-
-void SetGraphicsMode(int bgMode) {
+void GXS_SetGraphicsMode(int bgMode) {
     REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~DISPCNT_BGMODE_MASK) | bgMode;
 }
 
-} // namespace GXS
-
-extern "C" {
-
-// GXx_SetMasterBrightness_: reg is either engine's MASTER_BRIGHT. Positive
+// reg is either engine's MASTER_BRIGHT. Positive
 // levels fade up toward white, negative ones down toward black.
-void func_02053a90(u16 *reg, int brightness) {
+void GXx_SetMasterBrightness_(u16 *reg, int brightness) {
     if (brightness == 0)
         *reg = 0;
     else if (brightness > 0)

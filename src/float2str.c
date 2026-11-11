@@ -4,6 +4,7 @@
  * Returns pointer to first character, or NULL if result would exceed 509 chars.
  */
 #include "Decimal.h"
+#include "msl/string.h"
 
 typedef struct {
     unsigned char justification_options;
@@ -22,7 +23,6 @@ enum { only_minus = 0, sign_always = 1, space_holder = 2 };
 
 extern void __num2dec(decform *f, double x, Decimal *d);
 extern int func_01ff9e2c(double a, double b);                      /* double less-than */
-extern char *func_020706b0(char *dst, const char *src);           /* strcpy */
 extern void round_decimal(Decimal *d, int digits);
 extern unsigned short data_02086a58[];                            /* ctype map */
 extern char data_0209a5ec[]; /* "-INF" */
@@ -77,15 +77,15 @@ char *float2str(double x, char *buff_end, print_format format) {
         if (func_01ff9e2c(x, 0.0)) {
             p = (unsigned char *)buff_end - 5;
             if (ISUPPER(code))
-                func_020706b0((char *)p, data_0209a5ec);
+                strcpy((char *)p, data_0209a5ec);
             else
-                func_020706b0((char *)p, data_0209a5f4);
+                strcpy((char *)p, data_0209a5f4);
         } else {
             p = (unsigned char *)buff_end - 4;
             if (ISUPPER(code))
-                func_020706b0((char *)p, data_0209a5fc);
+                strcpy((char *)p, data_0209a5fc);
             else
-                func_020706b0((char *)p, data_0209a600);
+                strcpy((char *)p, data_0209a600);
         }
         return (char *)p;
 
@@ -93,15 +93,15 @@ char *float2str(double x, char *buff_end, print_format format) {
         if (dec.sign) {
             p = (unsigned char *)buff_end - 5;
             if (ISUPPER(code))
-                func_020706b0((char *)p, data_0209a604);
+                strcpy((char *)p, data_0209a604);
             else
-                func_020706b0((char *)p, data_0209a60c);
+                strcpy((char *)p, data_0209a60c);
         } else {
             p = (unsigned char *)buff_end - 4;
             if (ISUPPER(code))
-                func_020706b0((char *)p, data_0209a614);
+                strcpy((char *)p, data_0209a614);
             else
-                func_020706b0((char *)p, data_0209a618);
+                strcpy((char *)p, data_0209a618);
         }
         return (char *)p;
     }

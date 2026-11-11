@@ -28,8 +28,8 @@
  * The bounce states still walk the line in gotos and raw offsets -- that is
  * the matched state machine, not decoration. Helper prototypes with no owning
  * header (Puff_*, Sound_PlayBank1Panned, Camera_ProjectToScreen*,
- * TrmpFx_Spawn, TrmpItem_UpdateWithJumper, func_020531a4, func_0203cd80,
- * DotVec3, Vec3_MulScalar) stay TU-local until include/ owns them.
+ * TrmpFx_Spawn, TrmpItem_UpdateWithJumper, func_0203cd80, VEC_DotProduct,
+ * Vec3_MulScalar) stay TU-local until include/ owns them.
  */
 
 #include "Particle__System.h"
@@ -46,6 +46,9 @@
 #include "math/CalcLib.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 #include "Sound.h"
 #include "dMgTrmpln2Mario_c.h"
 #include "dMgTrmpln3DMario_c.h"
@@ -122,10 +125,6 @@ extern Trmpln2MarioAnimFilePtr sTrmpMarioTurnEndAnimFile;
 extern Trmpln2MarioAnimFilePtr sTrmpMarioRollJumpAnimFile;
 extern Trmpln2MarioAnimFilePtr sTrmpMarioStruggleAnimFile;
 extern Trmpln2MarioAnimFilePtr sTrmpMarioSdownAnimFile;
-
-namespace cstd {
-int fdiv(s32, s32);
-}
 
 /* One declaration per symbol for the whole unit. The state records live in
  * unit020cd744; the tuning words and pools are defined at the bottom of this
@@ -233,7 +232,7 @@ void Trmp3DMario_SetSpawnHeight(int n);
 int Trmp3DMario_InitPool(unsigned char *base, int n);
 
 /* helpers with no owning header (leftover: they belong in include/) */
-int DotVec3(const Vector3 *a, const Vector3 *b);
+int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 void Camera_ProjectToScreen(void *camera, void *pos, int *outX, int *outY);
 void Sound_PlayBank1Panned(int bank, int id, int panX);
@@ -242,7 +241,6 @@ void Puff_DrawAll();
 void Puff_UpdateAll();
 void TrmpFx_Spawn(int y, int combo);
 void TrmpItem_UpdateWithJumper(void *jumper, int index);
-int func_020531a4(int a);
 void func_0203cd80(VecFx32 *v, short angle);
 }
 
@@ -340,7 +338,7 @@ void dMgTrmpln2Mario_c::Update() {
 
 void dMgTrmpln2Mario_c::ApplyGravity() {
     ApproachLinear(mVel.y, sTrmp2FallSpeed, mGravityStep);
-    AddVec3(&mPos, &mVel, &mPos);
+    VEC_Add(&mPos, &mVel, &mPos);
 }
 
 void dMgTrmpln2Mario_c::StateKnockedOut() {
@@ -516,15 +514,15 @@ void dMgTrmpln2Mario_c::BounceOffLineA() {
         tmp.z = src[2];
     }
 
-    dot = DotVec3(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &tmp);
     scale = FX_MUL(dot, 0x1400);
     Vec3_MulScalar(&tmp2, &tmp, scale);
-    SubVec3(&mVel, &tmp2, &mVel);
+    VEC_Subtract(&mVel, &tmp2, &mVel);
 
-    fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
+    fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     scale = FX_MUL(sTrmp2RiseSpeedMax, fdivr);
     Vec3_MulScalar(&tmp3, &tmp, scale);
-    AddVec3(&mVel, &tmp3, &mVel);
+    VEC_Add(&mVel, &tmp3, &mVel);
 
     v = mVel.x;
     if (v < -0x3000)
@@ -710,15 +708,15 @@ void dMgTrmpln2Mario_c::BounceOffLineB() {
         tmp.z = src[2];
     }
 
-    dot = DotVec3(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &tmp);
     scale = FX_MUL(dot, 0x1200);
     Vec3_MulScalar(&tmp2, &tmp, scale);
-    SubVec3(&mVel, &tmp2, &mVel);
+    VEC_Subtract(&mVel, &tmp2, &mVel);
 
-    fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
+    fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     scale = FX_MUL(sTrmpSpeedScale, fdivr);
     Vec3_MulScalar(&tmp3, &tmp, scale);
-    AddVec3(&mVel, &tmp3, &mVel);
+    VEC_Add(&mVel, &tmp3, &mVel);
 
     vx = mVel.x;
     if (vx < -0x2800)
@@ -1135,22 +1133,17 @@ void Trmp2Mario_DrawAll(void) {
     int i, n, off;
     v.x = 0;
     v.y = 0;
-    v.z = 0xfffff008;
+    v.z = -0xff8;
     func_0203cd80(&v, -0x2000);
     func_0203ccd4((Vector3 *)&v, -0x3000);
-    *(volatile unsigned *)0x40004c8 = (((short)v.x >> 3) & 0x3ff) |
-                                      ((((short)v.y >> 3) & 0x3ff) << 10) |
-                                      ((((short)v.z >> 3) & 0x3ff) << 20);
+    G3_LightVector(GX_LIGHTID_0, v.x, v.y, v.z);
     w.x = 0;
     w.y = 0;
-    w.z = 0xfffff008;
+    w.z = -0xff8;
     func_0203cd80(&w, -0x2000);
-    *(volatile unsigned *)0x40004c8 =
-        ((((short)w.x >> 3) & 0x3ff) | ((((short)w.y >> 3) & 0x3ff) << 10) |
-         ((((short)w.z >> 3) & 0x3ff) << 20)) |
-        0x40000000;
-    *(volatile unsigned *)0x40004cc = 0x7fff;
-    *(volatile unsigned *)0x40004cc = 0x40007fff;
+    G3_LightVector(GX_LIGHTID_1, w.x, w.y, w.z);
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
 
     n = sTrmp2MarioCount;
     i = 0;
@@ -1205,7 +1198,7 @@ void Trmp2Mario_SetTuning(int a) {
     int v;
     if (a > 0x2800)
         a = 0x2800;
-    v = func_020531a4(a);
+    v = FX_Sqrt(a);
     sTrmp2FallSpeed = FX_MUL(v, -0x1c00);
     sTrmp2GravityStep = FX_MUL(a, 0xc0);
     data_ov006_0214053c = FX_MUL(v, 0xe00);
@@ -1311,7 +1304,7 @@ void dMgTrmpln3DMario_c::Update() {
 
 void dMgTrmpln3DMario_c::ApplyGravity() {
     ApproachLinear(mVel.y, sTrmp3DFallSpeed, mGravityStep);
-    AddVec3(&mPos, &mVel, &mPos);
+    VEC_Add(&mPos, &mVel, &mPos);
 }
 
 void dMgTrmpln3DMario_c::StateKnockedOut() {
@@ -1632,12 +1625,12 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
         tmp.z = src[2];
     }
 
-    dot = DotVec3(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &tmp);
     scale = FX_MUL(dot, 0x1400);
     Vec3_MulScalar(&tmp2, &tmp, scale);
-    SubVec3(&mVel, &tmp2, &mVel);
+    VEC_Subtract(&mVel, &tmp2, &mVel);
 
-    fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
+    fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
 
     mGravityStep = sTrmp3DGravityStep;
 
@@ -1661,7 +1654,7 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
 
     scale = FX_MUL(sTrmp3DHardBounceScale, fdivr);
     Vec3_MulScalar(&tmp4, &tmp, scale);
-    AddVec3(&mVel, &tmp4, &mVel);
+    VEC_Add(&mVel, &tmp4, &mVel);
 
     {
         int v = mVel.x;
@@ -1823,17 +1816,17 @@ void dMgTrmpln3DMario_c::BounceOffLineB() {
         tmp.z = src[2];
     }
 
-    dot = DotVec3(&mVel, &tmp);
+    dot = VEC_DotProduct(&mVel, &tmp);
     scale = FX_MUL(dot, 0x1200);
     Vec3_MulScalar(&tmp2, &tmp, scale);
-    SubVec3(&mVel, &tmp2, &mVel);
+    VEC_Subtract(&mVel, &tmp2, &mVel);
 
-    fdivr = cstd::fdiv(lineHalfLength, lineHalfLength + alongLine);
+    fdivr = FX_Div(lineHalfLength, lineHalfLength + alongLine);
     mGravityStep = sTrmp3DGravityStep;
 
     scale = FX_MUL(sTrmp3DBounceScale, fdivr);
     Vec3_MulScalar(&tmp3, &tmp, scale);
-    AddVec3(&mVel, &tmp3, &mVel);
+    VEC_Add(&mVel, &tmp3, &mVel);
 
     vx = mVel.x;
     if (vx < -0x1000)
@@ -2338,20 +2331,16 @@ void Trmp3DMario_DrawAll(void) {
 
     v[0] = 0;
     v[1] = 0;
-    v[2] = 0xfffff008;
+    v[2] = -0xff8;
     func_0203cd80((VecFx32 *)v, 0x2000);
     func_0203ccd4((Vector3 *)v, 0);
-    *(volatile int *)0x040004c8 = (((short)v[0] >> 3) & 0x3ff) |
-                                  ((((short)v[1] >> 3) & 0x3ff) << 10) |
-                                  ((((short)v[2] >> 3) & 0x3ff) << 20);
+    G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
 
     w[0] = 0;
     w[1] = 0;
-    w[2] = 0xfffff008;
+    w[2] = -0xff8;
     func_0203cd80((VecFx32 *)w, -0x2000);
-    *(volatile int *)0x040004c8 = (((short)w[0] >> 3) & 0x3ff) |
-                                  ((((short)w[1] >> 3) & 0x3ff) << 10) |
-                                  ((((short)w[2] >> 3) & 0x3ff) << 20) | 0x40000000;
+    G3_LightVector(GX_LIGHTID_1, w[0], w[1], w[2]);
 
     {
         int i;
@@ -2392,7 +2381,7 @@ void Trmp3DMario_SetTuning(int a) {
     int v;
     if (a > 0x2800)
         a = 0x2800;
-    v = func_020531a4(a);
+    v = FX_Sqrt(a);
     sTrmp3DFallSpeed = FX_MUL(v, -0x2400);
     sTrmp3DGravityStep = FX_MUL(a, 0xe0);
     sTrmp3DJumpOffSpeed = FX_MUL(v, 0xc00);

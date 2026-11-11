@@ -6,8 +6,8 @@
 // file it stands in for.
 //
 // Linkage matters and is not uniform in the decomp:
-//   src/VBlankIntrWait.c        `asm void VBlankIntrWait(void)`      -> C++ linkage
-//   src/IRQ3.cpp                `extern "C" asm unsigned int ...`    -> C linkage
+//   src/SVC_WaitVBlankIntr.c        `asm void SVC_WaitVBlankIntr(void)`      -> C++ linkage
+//   src/IRQ3.cpp                `asm OSIntrMode OS_DisableInterrupts` -> C linkage
 // The decomp's filenames are already Itanium mangled names, so a .c file built as
 // C++ gets mangled a second time. Match whichever form the original used, or the
 // link fails in a way that looks like a missing symbol rather than a mismatch.
@@ -23,9 +23,9 @@
 // previous masked state (0x80 = was disabled).
 // ---------------------------------------------------------------------------
 
-extern "C" unsigned int _ZN3IRQ7DisableEv(void) { return ntr::rt_irq_disable(); }
-extern "C" unsigned int _ZN3IRQ6EnableEv(void) { return ntr::rt_irq_enable(); }
-extern "C" unsigned int _ZN3IRQ7RestoreEj(unsigned int prev) {
+extern "C" unsigned int OS_DisableInterrupts(void) { return ntr::rt_irq_disable(); }
+extern "C" unsigned int OS_EnableInterrupts(void) { return ntr::rt_irq_enable(); }
+extern "C" unsigned int OS_RestoreInterrupts(unsigned int prev) {
     return ntr::rt_irq_restore(prev);
 }
 
@@ -33,20 +33,20 @@ extern "C" unsigned int _ZN3IRQ7RestoreEj(unsigned int prev) {
 // BIOS SWI wrappers. These are .c files in the decomp, so C++ linkage.
 // ---------------------------------------------------------------------------
 
-void VBlankIntrWait(void) { ntr::rt_vblank_wait(); }
+void SVC_WaitVBlankIntr(void) { ntr::rt_vblank_wait(); }
 
 // swi 0x04. The game only ever waits on VBlank in practice.
-void IntrWait(void) { ntr::rt_vblank_wait(); }
+void SVC_WaitIntr(void) { ntr::rt_vblank_wait(); }
 
 // swi 0x06 -- halt until an interrupt. Same thing here.
-void Halt(void) { ntr::rt_vblank_wait(); }
+void SVC_Halt(void) { ntr::rt_vblank_wait(); }
 
 // swi 0x03 -- burn `count` loop iterations. Nothing to wait for on a host.
-void WaitByLoop(void) {}
+void SVC_WaitByLoop(void) {}
 
 // swi 0x0B/0x0C. The DS BIOS copies in 4- or 32-byte units, with an optional
 // fixed-source fill mode; bit 24 selects fill, bit 26 selects 32-bit units.
-extern "C" void CpuSet(const void *src, void *dst, unsigned int ctrl) {
+extern "C" void SVC_CpuSet(const void *src, void *dst, unsigned int ctrl) {
     const unsigned int count = ctrl & 0x1FFFFF;
     const bool fill = (ctrl >> 24) & 1;
     const bool word = (ctrl >> 26) & 1;
@@ -61,7 +61,7 @@ extern "C" void CpuSet(const void *src, void *dst, unsigned int ctrl) {
     }
 }
 
-extern "C" void CpuFastSet(const void *src, void *dst, unsigned int ctrl) {
+extern "C" void SVC_CpuSetFast(const void *src, void *dst, unsigned int ctrl) {
     const unsigned int count = ctrl & 0x1FFFFF;
     const bool fill = (ctrl >> 24) & 1;
     const uint32_t *s = static_cast<const uint32_t *>(src);
@@ -73,7 +73,7 @@ extern "C" void CpuFastSet(const void *src, void *dst, unsigned int ctrl) {
 // Block copies. These matter more than they look: the geometry FIFO is fed by
 // handing 0x4000400 to a copy routine --
 //
-//     *(volatile u32 *)0x4000400 = 0x1a;   Copy36Bytes(m, (int *)0x4000400);
+//     *(volatile u32 *)0x4000400 = 0x1a;   MI_Copy36B(m, (int *)0x4000400);
 //
 // -- so the FIFO address never appears as a dereference the transform can see.
 // docs/mmio-inventory.md calls that the `address-passed` class, and this is where
@@ -98,14 +98,14 @@ void copy_words(const uint32_t *src, uint32_t *dst, int n) {
 // C linkage: in this port the decomp's .c files compile as C TUs (hostgen
 // wraps its transformed copies in extern "C"), so the copy primitives must
 // carry C names.
-extern "C" void Copy36Bytes(const void *src, void *dst) {
+extern "C" void MI_Copy36B(const void *src, void *dst) {
     copy_words(reinterpret_cast<const uint32_t *>(src), reinterpret_cast<uint32_t *>(dst), 9);
 }
 
 // stmia WITHOUT writeback: twelve words through the same port address. Only
 // ever used against the FIFO; for a memory destination the DS semantics would
 // overwrite the same three words four times, so a memory dst is a bug here.
-extern "C" void Copy48BytesFixed(const void *src, void *dst) {
+extern "C" void GX_SendFifo48B(const void *src, void *dst) {
     const uint32_t *s = static_cast<const uint32_t *>(src);
     uint32_t *d = static_cast<uint32_t *>(dst);
     if (reinterpret_cast<uintptr_t>(dst) == 0x04000400u) {
@@ -130,7 +130,7 @@ extern "C" void GXi_NopClearFifo128_(unsigned addr) {
 // DMA chunks re-arm on the FIFO-half-empty IRQ (IE bit 21, mask 0x200000) and
 // the final chunk raises the DMA-channel IRQ, whose OS dispatcher calls the
 // callback registered through OSi_EnterDmaCallback. On host the copies are
-// synchronous and the FIFO is always empty, so DMAStartTransfer delivers
+// synchronous and the FIFO is always empty, so MIi_DmaSetParams delivers
 // those interrupts inline right after the copy; the recursion terminates
 // because the pump's re-entry finds no bytes remaining.
 // ---------------------------------------------------------------------------
@@ -146,50 +146,30 @@ unsigned g_ie;                      // IE word stand-in
 void (*g_gxfifo_handler)(void);     // handler for mask 0x200000
 }  // namespace
 
-extern "C" void *_ZN3IRQ13GetIRQHandlerEj(unsigned mask) {
-    return mask == 0x200000u ? reinterpret_cast<void *>(g_gxfifo_handler) : nullptr;
+extern "C" void (*OS_GetIrqFunction(unsigned mask))(void) {
+    return mask == 0x200000u ? g_gxfifo_handler : nullptr;
 }
-extern "C" void _ZN3IRQ13SetIRQHandlerEjPFvvE(unsigned mask, void (*h)(void)) {
+extern "C" void OS_SetIrqFunction(unsigned mask, void (*h)(void)) {
     if (mask == 0x200000u) g_gxfifo_handler = h;
 }
-extern "C" unsigned _ZN3IRQ10EnableIRQsEj(unsigned mask) {
+extern "C" unsigned OS_EnableIrqMask(unsigned mask) {
     const unsigned prev = g_ie;
     g_ie |= mask;
     return prev;
 }
-extern "C" unsigned _ZN3IRQ11DisableIRQsEj(unsigned mask) {
+extern "C" unsigned OS_DisableIrqMask(unsigned mask) {
     const unsigned prev = g_ie;
     g_ie &= ~mask;
     return prev;
 }
-extern "C" void _ZN3IRQ15ClearInterruptsEj(unsigned) {}
-
-// The same registry under include/IRQ.h's real names. Decomp files that call
-// IRQ::GetIRQHandler and friends through that header (MI_SendGXCommandAsync) link
-// against these C++-linkage definitions; files that still declare the mangled
-// spelling locally link against the extern "C" ones above.
-namespace IRQ {
-typedef void (*Handler)(void);
-Handler GetIRQHandler(unsigned mask) {
-    return reinterpret_cast<Handler>(_ZN3IRQ13GetIRQHandlerEj(mask));
-}
-void SetIRQHandler(unsigned mask, Handler h) { _ZN3IRQ13SetIRQHandlerEjPFvvE(mask, h); }
-unsigned EnableIRQs(unsigned mask) { return _ZN3IRQ10EnableIRQsEj(mask); }
-unsigned DisableIRQs(unsigned mask) { return _ZN3IRQ11DisableIRQsEj(mask); }
 // The host has no IF register to acknowledge; MIi_FIFOCallback calls this after
 // every chunk it starts and ignores the result.
-unsigned ClearInterrupts(unsigned mask) {
-    _ZN3IRQ15ClearInterruptsEj(mask);
-    return 0;
-}
-unsigned Disable() { return _ZN3IRQ7DisableEv(); }
-unsigned Restore(unsigned prev) { return _ZN3IRQ7RestoreEj(prev); }
-}  // namespace IRQ
+extern "C" unsigned OS_ResetRequestIrqMask(unsigned) { return 0; }
 
 // DMA to the FIFO is the display-list path (MIi_FIFOCallback). ctrl bit 30 is
 // IRQ-on-complete (the final chunk); a GXFIFO-destined chunk without it relies
 // on the half-empty IRQ to pump the next chunk.
-extern "C" void DMAStartTransfer(int ch, int src, int dst, int ctrl) {
+extern "C" void MIi_DmaSetParams(int ch, int src, int dst, int ctrl) {
     const int words = ctrl & 0x1FFFFF;
     copy_words(reinterpret_cast<const uint32_t *>(static_cast<uintptr_t>(src)),
                reinterpret_cast<uint32_t *>(static_cast<uintptr_t>(dst)), words);
@@ -204,22 +184,23 @@ extern "C" void DMAStartTransfer(int ch, int src, int dst, int ctrl) {
 }
 
 // The ITCM DMA fallback src/engine/mi/MI_Dma.cpp's synchronous copies and
-// fills use (DMAStartTransferFB, src/DMAStartTransferFB.cpp); same
+// fills use (MIi_DmaSetParams_wait, src/MIi_DmaSetParams_wait.cpp); same
 // synchronous copy semantics. It lives here rather than in hal/model_host.cpp
 // because smoke_gx builds MI_Dma.cpp (for MI_WaitDma) without the model host.
-extern "C" void DMAStartTransferFB(unsigned char ch, unsigned src, unsigned dst, unsigned ctrl) {
-    DMAStartTransfer(ch, (int)src, (int)dst, (int)ctrl);
+extern "C" void MIi_DmaSetParams_wait(unsigned char ch, unsigned src, unsigned dst, unsigned ctrl) {
+    MIi_DmaSetParams(ch, (int)src, (int)dst, (int)ctrl);
 }
 
 // ---------------------------------------------------------------------------
-// CP15 cache maintenance. The host has coherent memory, so these are no-ops --
-// but they must still exist, because the decomp calls them around every DMA.
+// CP15 cache maintenance (the SDK's os_cache.c, include/nitro/os/cache.h).
+// The host has coherent memory, so these are no-ops -- but they must still
+// exist, because the decomp calls them around every DMA.
 // ---------------------------------------------------------------------------
 
-extern "C" void _ZN4CP1514FlushDataCacheEv(void) {}
-extern "C" void _ZN4CP1514FlushDataCacheEjj(unsigned int, unsigned int) {}
-extern "C" void _ZN4CP1516DrainWriteBufferEv(void) {}
-extern "C" void _ZN4CP1519InvalidateDataCacheEjj(unsigned int, unsigned int) {}
-extern "C" void _ZN4CP1526InvalidateInstructionCacheEjj(unsigned int, unsigned int) {}
-extern "C" void _ZN4CP1527FlushAndInvalidateDataCacheEv(void) {}
-extern "C" void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int, unsigned int) {}
+extern "C" void DC_StoreAll(void) {}
+extern "C" void DC_StoreRange(void *, unsigned int) {}
+extern "C" void DC_WaitWriteBufferEmpty(void) {}
+extern "C" void DC_InvalidateRange(void *, unsigned int) {}
+extern "C" void IC_InvalidateRange(void *, unsigned int) {}
+extern "C" void DC_FlushAll(void) {}
+extern "C" void DC_FlushRange(const void *, unsigned int) {}

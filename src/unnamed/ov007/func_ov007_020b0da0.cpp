@@ -3,11 +3,19 @@
 #include "dExtModel_c.h"
 #include "Ov007MenuState.h"
 #include "Ov007Touch.h"
-#include "cstd.h"
 #include "Ov007Item.h"
 #include "Ov007Model.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
+
+#include "decl_common.h"
+#include "common.h"
+#include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
+#include "Ov007Work.h"
+#include "Ov007Figure.h"
+#include "math/ProgressRatio.h"
 
 /* Vector3 declares a constructor and destructor under C++, which makes its
  * assignment copy word by word. The ROM copies these with C's ldm/stm block
@@ -15,16 +23,8 @@ extern "C" {
 typedef struct Vec3Words {
     Fix12i w[3];
 } Vec3Words;
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
-#include "nitro/fx/fx.h"
-#include "nitro/fx/fx_trig.h"
-#include "Ov007Work.h"
-#include "Ov007Figure.h"
 
-extern void Matrix4x3_LoadIdentity(void *mat);
+extern void MTX_Identity43_(void *mat);
 
 /* stateWork bits, by what this file does with them; medium confidence */
 #define OV007_FIGURE_SWAY 1    /* rock the model and bob it (periods 160 and 40 ticks) */
@@ -40,11 +40,11 @@ extern void Matrix4x3_LoadIdentity(void *mat);
 void func_ov007_020b0da0(Ov007Figure *figure) {
     Ov007Model *obj = figure->model;
     Ov007MenuState *st = WORK->states[1];
-    int counter = st->stateTicks;
+    int ticks = st->stateTicks;
     Matrix4x3 *mat = obj->model->transforms;
     int noSaveFiles = func_ov007_020aebac();
 
-    if (counter == 1) {
+    if (ticks == 1) {
         obj->visible = 1;
         st->stateWork = OV007_FIGURE_SWAY;
         data_ov007_02103340 = 0;
@@ -60,16 +60,15 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
         out.x = 0;
         out.z = 0;
 
-        if (!(*(volatile int *)&st->stateWork & OV007_FIGURE_TOUCHED) && counter >= 4) {
-            Ov007Touch *rp = WORK->touch;
-            if (rp->cur.touch != 0) {
-                int a = rp->cur.x;
-                if (a >= 0x60 && a <= 0xa0) {
-                    int b = rp->cur.y;
-                    if (b >= 0x40 && b <= 0x80) {
-                        int *pflag = (int *)&st->stateWork;
-                        *pflag |= OV007_FIGURE_TOUCHED;
-                        data_ov007_02103340 = counter;
+        if (!(st->stateWork & OV007_FIGURE_TOUCHED) && ticks >= 4) {
+            Ov007Touch *touch = WORK->touch;
+            if (touch->cur.touch != 0) {
+                int x = touch->cur.x;
+                if (x >= 0x60 && x <= 0xa0) {
+                    int y = touch->cur.y;
+                    if (y >= 0x40 && y <= 0x80) {
+                        st->stateWork |= OV007_FIGURE_TOUCHED;
+                        data_ov007_02103340 = ticks;
                         func_ov007_020bdeb0(0x34);
                         WORK->itemNodes[8]->item->state->requestedState = 4;
                     }
@@ -78,68 +77,38 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
         }
 
         if (st->stateWork & OV007_FIGURE_SWAY) {
-            int var_r4;
-            cstd::mod(counter, 0x28);
+            int bob, rock;
+            /* The cartridge calls this once more and drops the result. */
+            FX_ModS32(ticks, 0x28);
+            bob = ProgressRatio(FX_ModS32(ticks, 0x28), 0x28);
+            out.y = FX_SinIdx((u16)((bob * 0xffff) >> 12) >> 4) >> 2;
+
+            rock = ProgressRatio(FX_ModS32(ticks, 0xa0), 0xa0);
+            MTX_Identity43_(mat);
             {
-                int m1 = cstd::mod(counter, 0x28);
-                if (m1 <= 0) {
-                    var_r4 = 0;
-                } else if (m1 >= 0x28) {
-                    var_r4 = 0x1000;
-                } else {
-                    var_r4 = cstd::div(m1 << 12, 0x28);
-                }
+                int swing = FX_SinIdx((u16)(((rock * 2 + 0x800) * 0xffff) >> 12) >> 4);
+                int reach = FX_SinIdx((u16)((rock * 0xffff) >> 12) >> 4);
+                int tilt = FX_MUL((reach + 0x2000) / 2, FX_MUL(swing, 0x82));
+                func_ov007_020c39f8(mat, 0, 0, (u16)(short)(0x3fff + ((tilt * 0x7fff) >> 12)));
             }
 
-            {
-                int angle1 = (u16)((var_r4 * 0xffff) >> 12);
-                out.y = FX_SinIdx(angle1 >> 4) >> 2;
-            }
-
-            {
-                int var_r8;
-                int m2 = cstd::mod(counter, 0xa0);
-                if (m2 <= 0) {
-                    var_r8 = 0;
-                } else if (m2 >= 0xa0) {
-                    var_r8 = 0x1000;
-                } else {
-                    var_r8 = cstd::div(m2 << 12, 0xa0);
-                }
-
-                Matrix4x3_LoadIdentity(mat);
-
-                {
-                    int angleA = (u16)(((var_r8 * 2 + 0x800) * 0xffff) >> 12);
-                    int valA = FX_SinIdx(angleA >> 4);
-                    int angleB = (u16)((var_r8 * 0xffff) >> 12);
-                    int valB = FX_SinIdx(angleB >> 4);
-
-                    int valBhalf = (valB + 0x2000) / 2;
-                    int term = FX_MUL(valA, 0x82);
-                    int combined = FX_MUL(valBhalf, term);
-                    short rzS = (short)(0x3fff + ((combined * 0x7fff) >> 12));
-                    func_ov007_020c39f8(mat, 0, 0, (u16)rzS);
-                }
-
-                if ((st->stateWork & OV007_FIGURE_TOUCHED) && (var_r4 == 0 || var_r4 == 0x800)) {
-                    WORK->figure->update = 0;
-                }
+            if ((st->stateWork & OV007_FIGURE_TOUCHED) && (bob == 0 || bob == 0x800)) {
+                WORK->figure->update = 0;
             }
         }
 
         if (st->stateWork & OV007_FIGURE_RISE) {
-            int diff = counter - data_ov007_02103344;
-            int ratio;
-            int sq;
+            int diff = ticks - data_ov007_02103344;
+            int ratio, sq;
+            /* FX_Div here, not FX_DivS32: the rise calls the SDK's out-of-line divide. */
             if (diff <= 0) {
                 ratio = 0;
             } else if (diff >= 0x50) {
                 ratio = 0x1000;
             } else {
-                ratio = cstd::fdiv(diff, 0x50);
+                ratio = FX_Div(diff, 0x50);
             }
-            sq = (int)(((s64)ratio * ratio) >> 12);
+            sq = (fx32)(((fx64)ratio * ratio) >> FX32_SHIFT);
             out.y = sq * 30;
             if (ratio >= 0x1000) {
                 WORK->figure->update = 0;

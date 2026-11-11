@@ -3,7 +3,7 @@
 // store, through 32 no-writeback stmia.
 // It is gx_g3x.c's first function by address but stays its own source: port/tools/hostgen.py
 // skips any file holding an asm block, and the port hostgens G3X.cpp for
-// G3X::ClearFifo (port/ntr/runtime.cpp supplies this function on host).
+// G3X_ClearFifo (port/ntr/runtime.cpp supplies this function on host).
 asm void GXi_NopClearFifo128_(unsigned addr)
 {
     mov r1, #0

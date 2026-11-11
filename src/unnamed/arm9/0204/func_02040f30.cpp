@@ -2,7 +2,7 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/arm9_wbt.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/fs_views.h"
 
 /* The FSFile a child read is for (FileShareWork.mReadRequest, set by
@@ -11,108 +11,86 @@ typedef struct FSFile FSFile;
 
 extern "C" {
 
-extern int WBT_AidbitmapToAid(int x);
-extern void func_02065788(u16 type, u32 arg1, const void *src, u32 arg3);
 extern void func_02041a00(FSFile *file);
-extern void func_02065730(u16 type, u32 arg1, const void *src1, u32 arg3, const void *src2,
-                          u32 extra);
 extern int func_020423dc(int *table);
-extern int func_020656d4(u16 arg0, const void *arg1, int arg2, u32 arg3);
-extern void func_020657d0(u16 id, void *obj);
 extern void FS_NotifyArchiveAsyncEnd(void *self, int arg);
-extern void func_02042160(void);
+extern void func_02042160(void *arg);
 extern void func_02040f30(void *arg);
 extern char data_020a2400[];
 void func_02040f30(void *arg) {
-    WBTCommand *cmdp = (WBTCommand *)arg;
-    FileShareChildArea *child;
-    int idx;
-    int type;
-    idx = WBT_AidbitmapToAid(cmdp->peer_bmp);
-    type = cmdp->command;
-    child = (FileShareChildArea *)data_020a2400;
-    switch (type) {
+    WBTCommand *cmd = (WBTCommand *)arg;
+    int aid = WBT_AidbitmapToAid(cmd->peer_bmp);
+    FileShareChildArea *child = (FileShareChildArea *)data_020a2400;
+    switch (cmd->command) {
     case 2:
-        if (cmdp->target_bmp != 0) {
+        if (cmd->target_bmp != 0) {
             return;
         }
-        data_020a1fc0.mParentPacketSize = cmdp->u.sync.peer_packet_size + 0xe;
-        data_020a1fc0.mChildPacketSize = cmdp->u.sync.my_packet_size + 0xe;
+        data_020a1fc0.mParentPacketSize = cmd->u.sync.peer_packet_size + 0xe;
+        data_020a1fc0.mChildPacketSize = cmd->u.sync.my_packet_size + 0xe;
         if (data_020a1fc0.mState != 2) {
-            func_02065788((u16)1, 0, (const void *)child->mBlockInfoTable, (u32)func_02040f30);
+            WBT_GetBlockInfo(1, 0, child->mBlockInfoTable, func_02040f30);
             return;
         }
-        {
-            int request = data_020a1fc0.mReadRequest;
-            if (request != 0) {
-                func_02041a00((FSFile *)request);
-            }
+        if (data_020a1fc0.mReadRequest != 0) {
+            func_02041a00(data_020a1fc0.mReadRequest);
         }
         return;
 
     case 6:
-        child->mRecvBufTable[idx] = data_020a1fc0.mTable;
-        func_02065730((u16)1, 0x20000, (const void *)child->mRecvBufTable,
-                      (u32)data_020a1fc0.mTableSize, (const void *)child->mPacketBitmapTable,
-                      (u32)func_02040f30);
+        child->mRecvBufTable[aid] = data_020a1fc0.mTable;
+        WBT_GetBlock(1, 0x20000, child->mRecvBufTable, data_020a1fc0.mTableSize,
+                     child->mPacketBitmapTable, func_02040f30);
         return;
 
     case 4:
-        if (cmdp->target_bmp != 0) {
+        if (cmd->target_bmp != 0) {
             return;
         }
-        if ((data_020a1fc0.mState != 2) != 0) {
-            CP15::FlushAndInvalidateDataCache((u32)data_020a1fc0.mTable,
-                                              (u32)data_020a1fc0.mTableSize);
+        if (data_020a1fc0.mState != 2) {
+            DC_FlushRange(data_020a1fc0.mTable, data_020a1fc0.mTableSize);
             func_020423dc((int *)data_020a1fc0.mTable);
-            {
-                data_020a1fc0.mState = 2;
-                {
-                    int fn = data_020a1fc0.mStateCallback;
-                    if (fn != 0) {
-                        ((void (*)(int))fn)(0);
-                    }
-                }
+            data_020a1fc0.mState = 2;
+            if (data_020a1fc0.mStateCallback != 0) {
+                data_020a1fc0.mStateCallback(0);
             }
             return;
         }
         {
-            u32 w4;
-            int c;
-            w4 = child->mReadRegion;
-            FileShareMsg cmd;
-            cmd.mKind = 2;
-            cmd.mFlag = 1;
-            c = data_020a1fc0.mParentPacketSize;
-            cmd.mFileId = w4;
-            cmd.mPacketSizeHigh = (u8)(c >> 8);
-            cmd.mPacketSizeLow = (u8)c;
-            func_020656d4((u16)1, &cmd, 9, (u32)func_02042160);
+            FileShareMsg msg;
+            u32 region = child->mReadRegion;
+            int packetSize;
+            msg.mKind = 2;
+            msg.mFlag = 1;
+            packetSize = data_020a1fc0.mParentPacketSize;
+            msg.mFileId = region;
+            msg.mPacketSizeHigh = (u8)(packetSize >> 8);
+            msg.mPacketSizeLow = (u8)packetSize;
+            WBT_PutUserData(1, &msg, 9, func_02042160);
         }
         return;
 
     case 0xc: {
         FileShareMsg *m;
-        if (cmdp->event != 0xa) {
+        if (cmd->event != 0xa) {
             return;
         }
-        m = (FileShareMsg *)cmdp->u.user_data.data;
+        m = (FileShareMsg *)cmd->u.user_data.data;
         switch (m->mKind) {
         case 1:
             if (m->mFlag == 0) {
-                func_020657d0((u16)1, (void *)func_02040f30);
+                WBT_RequestSync(1, func_02040f30);
                 return;
             }
             child->mReadRegion = m->mFileId;
-            child->mRecvBufTable[idx] =
-                (int)((FSFile *)data_020a1fc0.mReadRequest)->arg.readfile.dst;
-            func_02065730((u16)1, child->mReadRegion, (const void *)child->mRecvBufTable,
-                          ((FSFile *)data_020a1fc0.mReadRequest)->arg.readfile.len,
-                          (const void *)child->mPacketBitmapTable, (u32)func_02040f30);
+            child->mRecvBufTable[aid] = data_020a1fc0.mReadRequest->arg.readfile.dst;
+            WBT_GetBlock(1, child->mReadRegion, child->mRecvBufTable,
+                         data_020a1fc0.mReadRequest->arg.readfile.len, child->mPacketBitmapTable,
+                         func_02040f30);
             return;
 
         case 3: {
-            FSFile *p = (FSFile *)data_020a1fc0.mReadRequest;
+            FSFile *p = data_020a1fc0.mReadRequest;
             void *arc = p->arc;
             data_020a1fc0.mReadRequest = 0;
             p->prop.file.pos += p->arg.readfile.len;
