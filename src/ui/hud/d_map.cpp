@@ -25,7 +25,7 @@
  *   local, so `&focus->mPos` needs no launder.
  * - GetPosFromMinimapPos and GetPosOnMinimap are static Fix12i methods;
  *   the third parameter is the scalar, not Fix12<int>.
- * - The OAM, G2x and Vec3 helpers stay on C-linkage or hand-mangled
+ * - The OAM and Vec3 helpers stay on C-linkage or hand-mangled
  *   externs for the same reason.
  */
 #include "dMap_c.h"
@@ -41,11 +41,11 @@
 #include "dFdBrightness_c.h"
 #include "SaveData.h"
 #include "OAM.h"
-#include "G2x.h"
-#include "cstd.h"
-#include "GX.h"
-#include "G2.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "nitro/hw/registers.h"
+#include "nitro/fx/fx_cp.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which makes its
@@ -73,7 +73,6 @@ extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern signed char gCurrentSublevel;
 extern u8 gCurrentStarId;
-extern SaveBlock data_0209caa0;
 int SublevelToLevel(int i);
 int IsStarCollected(int level, int star);
 
@@ -113,7 +112,7 @@ extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
 extern void *data_0209f3a4[];
 extern void SetSubBg2Offset(s32 a, s32 b);
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 extern s32 GetMinimapID(dActor_c *actor, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
 extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
@@ -176,7 +175,7 @@ void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
     if (v->z <= p0.z) {
         int factor;
         Vec3_Sub(&out, v, &p0);
-        factor = 0xc00 - (cstd::fdiv(out.z, (int)0xffffd1a0) >> 12);
+        factor = 0xc00 - (FX_Div(out.z, (int)0xffffd1a0) >> 12);
         v->x = p0.x + FX_MUL(out.x, factor);
         v->z = p0.z + FX_MUL(out.z, 0x200);
     } else {
@@ -201,7 +200,7 @@ void dMap_c::UpdateLevelSpecific()
         if (!IsStarCollected(SublevelToLevel(sublevel), 1)) return;
         if (gCurrentStarId < 2)
             return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x734);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x734);
         tile = 0x39c;
         for (i = 0; i < 4; i++) {
             p[0] = tile;
@@ -220,7 +219,7 @@ void dMap_c::UpdateLevelSpecific()
         if (!IsStarCollected(SublevelToLevel(sublevel), 1)) return;
         if (gCurrentStarId < 2)
             return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x6ea);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x6ea);
         tile = 0x35c;
         for (i = 0; i < 6; i++) {
             p[0] = tile;
@@ -238,7 +237,7 @@ void dMap_c::UpdateLevelSpecific()
         u16* p;
         if (!(data_0209caa0.file.flags1 & 0x204))
             return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x748);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x748);
         tile = 0x35d;
         for (i = 0; i < 6; i++) {
             p[0] = tile;
@@ -255,7 +254,7 @@ void dMap_c::UpdateLevelSpecific()
         u16* p;
         if (!(data_0209caa0.file.flags2 & 0x80000))
             return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x73a);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x73a);
         tile = 0x396;
         for (i = 0; i < 4; i++) {
             p[0] = tile;
@@ -279,7 +278,7 @@ void dMap_c::UpdateLevelSpecific()
         u16* p;
         if (!(data_0209caa0.file.flags2 & 0x80000))
             return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x1ca4);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x1ca4);
         tile = 0x38e;
         for (i = 0; i < 4; i++) {
             p[0] = tile;
@@ -310,7 +309,7 @@ void dMap_c::UpdateLevelSpecific()
         int i;
         u16* p;
         if (!Event::GetBit(0xe)) return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x736);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x736);
         tile = 0x3de;
         for (i = 0; i < 2; i++) {
             p[0] = tile;
@@ -325,7 +324,7 @@ void dMap_c::UpdateLevelSpecific()
         int i;
         u16* p;
         if (!Event::GetBit(0xe)) return;
-        p = (u16*)((char*)G2S::GetBG3CharPtr() - 0x752);
+        p = (u16 *)((char *)G2S_GetBG3CharPtr() - 0x752);
         tile = 0x3be;
         for (i = 0; i < 3; i++) {
             p[0] = tile;
@@ -338,7 +337,7 @@ void dMap_c::UpdateLevelSpecific()
     case 0x19: {
         u16* p;
         if (!Event::GetBit(0xe)) return;
-        p = (u16*)((int)G2S::GetBG3CharPtr() - 0x712);
+        p = (u16 *)((int)G2S_GetBG3CharPtr() - 0x712);
         p[0] = 0x3fe;
         p[1] = 0x3ff;
         break;
@@ -538,7 +537,6 @@ int dMap_c::Render()
     return 1;
 }
 
-
 /* One frame of the minimap: pick the map for the focus object, scroll and
  * scale the BG, then project every icon onto the screen.
  *
@@ -590,7 +588,7 @@ s32 dMap_c::Behavior()
             SetSubBg2Offset(0x100 - data_0209f498[gActivePlayerSlot].tx,
                             0x80 - data_0209f498[gActivePlayerSlot].ty);
         }
-        G2x::SetBlendAlpha((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
+        G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
         if (data_0209f498[gActivePlayerSlot].mode != 2)
             *(volatile u16 *)0x400100c = (u16)((*(volatile u16 *)0x400100c & 0x43) | 0x5300);
         else
@@ -705,7 +703,7 @@ L4b0:
         this->mInvScale = this->mTargetInvScale;
 
 L4d8:
-    this->mCurrentScale = cstd::fdiv(this->mScale, this->mInvScale);
+    this->mCurrentScale = FX_Div(this->mScale, this->mInvScale);
     {
         fx32 cs = FX_CosIdx(this->mAngle >> 4);
         this->mBgMatrixA = FX_MUL(cs, this->mInvScale);
@@ -765,7 +763,7 @@ L738:
     GetPosFromMinimapPos(miniPos, *(Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
                          this->mAngle, clampedWorld);
     Vec3_Sub(&scrollDelta, &focusPos, &clampedWorld);
-    AddVec3((Vector3*)&this->mMapCenterWorldX, &scrollDelta, (Vector3*)&this->mMapCenterWorldX);
+    VEC_Add((Vector3 *)&this->mMapCenterWorldX, &scrollDelta, (Vector3 *)&this->mMapCenterWorldX);
     this->mMapCenterX =
         this->mMapCenterOffset +
         ((FX_MUL(((Vector3 *)&this->mMapCenterWorldX)->x, this->mScale) + 0x800) >> 12);
@@ -930,7 +928,7 @@ int dMap_c::InitResources()
         int id1 = func_0202a980();
         if (id1 != 0) {
             void *f1 = LoadFile(id1);
-            DecompressLZ16(f1, G2S::GetBG3CharPtr());
+            DecompressLZ16(f1, G2S_GetBG3CharPtr());
             Deallocate(f1);
         }
     }
@@ -939,10 +937,10 @@ int dMap_c::InitResources()
         int id2 = func_0202a96c();
         if (id2 != 0) {
             void *f2 = LoadFile(id2);
-            GXS::BeginLoadBGExtPltt();
-            GXS::LoadBGExtPltt(f2, 0x6000, 0x200);
-            GXS::EndLoadBGExtPltt();
-            GXS::LoadBGPltt(f2, 0, 2);
+            GXS_BeginLoadBGExtPltt();
+            GXS_LoadBGExtPltt(f2, 0x6000, 0x200);
+            GXS_EndLoadBGExtPltt();
+            GXS_LoadBGPltt(f2, 0, 2);
             Deallocate(f2);
         }
     }
@@ -951,7 +949,7 @@ int dMap_c::InitResources()
     for (i = 0; i < gNumMinimapTileObjs; i++) {
         if (*p != 0) {
             void *f3 = LoadFile(*p);
-            DecompressLZ16(f3, (char *)G2S::GetBG3ScrPtr() - (i << 11));
+            DecompressLZ16(f3, (char *)G2S_GetBG3ScrPtr() - (i << 11));
             Deallocate(f3);
         }
         p++;

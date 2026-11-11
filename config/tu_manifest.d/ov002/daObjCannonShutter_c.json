@@ -658,14 +658,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@721",
+      "from": "@652",
       "to": "@651",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Deleting the leaf operator new from daObjCannonShutter_c.h moved the emission from @665 to @659 (same entity: section 21, symbol index 22) | registration nodes renumber after the MtxStack.h include and the deleted named-parameter declaration; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Deleting the leaf operator new from daObjCannonShutter_c.h moved the emission from @665 to @659 (same entity: section 21, symbol index 22) | registration nodes renumber after the MtxStack.h include and the deleted named-parameter declaration; re-keyed by __sinit relocation site order Re-keyed from @721 to @652 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@722",
+      "from": "@653",
       "to": "@652",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Deleting the leaf operator new from daObjCannonShutter_c.h moved the emission from @666 to @660 (same entity: section 14, symbol index 21) | registration nodes renumber after the MtxStack.h include and the deleted named-parameter declaration; re-keyed by __sinit relocation site order"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Deleting the leaf operator new from daObjCannonShutter_c.h moved the emission from @666 to @660 (same entity: section 14, symbol index 21) | registration nodes renumber after the MtxStack.h include and the deleted named-parameter declaration; re-keyed by __sinit relocation site order Re-keyed from @722 to @653 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

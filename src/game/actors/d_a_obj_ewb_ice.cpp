@@ -141,7 +141,7 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 /* local extern: d_bg_w.cpp defines these; no header declares them. */
 }
 
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern int data_02092138;
 extern u8 data_ov073_02123420[];
 extern u8 data_ov073_02123424[];
@@ -191,7 +191,7 @@ int daObjEwbIce_c::StateArena_Update() {
         mWobblePhase += kWobbleStep;
         angle = mWobblePhase;
         amp = mWobbleAmp;
-        sine = data_02082214[(((int)((unsigned)(angle << 16) >> 16)) >> 4) * 2];
+        sine = FX_SinCosTable_[(((int)((unsigned)(angle << 16) >> 16)) >> 4) * 2];
         mAngleX = (s16)(amp + FX_MUL(amp, sine));
         ApproachLinear(mWobbleAmp, 0, kWobbleApproach);
         return 1;

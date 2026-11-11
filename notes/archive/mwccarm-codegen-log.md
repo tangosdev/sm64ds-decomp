@@ -230,7 +230,7 @@ Three things this batch adds to the recipe:
   the namespace, so their calls need `cstd::` qualification -- an unqualified
   call compiles nowhere and the error (`undefined identifier`) is the only
   symptom.
-- **A `.c` caller cannot follow at all.** `src/InvMat4x3.cpp` was still C then
+- **A `.c` caller cannot follow at all.** `src/MTX_Inverse43.cpp` was still C then
   and could not name a C++ namespaced function, so it kept a mangled extern under
   the new spelling with a `local extern:` reason. This is a third category
   alongside shadow scaffolds and raw-offset TUs. (A later batch made it C++, and
@@ -5005,7 +5005,7 @@ the lever should not be re-tried.
 **51 committed sources carry it right now** (`grep -rl '#pragma long_calls' src/`) -- 50 of
 them overlay files (19 in ov007, the rest spread over
 ov002/006/014/015/016/022/029/030/036/063/064/065/066/073/079/080/091/095/098) and exactly
-ONE arm9 file, `src/unnamed/arm9/0205/func_0205d3e4.cpp`. Most sit under a header comment that says the pragma
+ONE arm9 file, `src/FS_ReadFileAsync.cpp`. Most sit under a header comment that says the pragma
 is what emits the pooled veneer. They all still byte-match, because the pragma is inert, but
 the comment is wrong and every one of those compiles now prints `warning: illegal #pragma`
 under the `-w illpragmas` in `DEFAULT_FLAGS`. Deleting the line from those files is a no-op
@@ -5187,7 +5187,7 @@ So the ROM's fabricated fourth word -- a zero that rides along in the store mult
 never in the load multiple -- has no C spelling. Combined with the leaf frame
 `stmdb sp!,{r4}` / `ldm sp!,{r4}` (mwccarm spends `push {r4,lr}` here because its block move
 needs `lr` as a scratch), this is a hand-written primitive and the existing HAND-ASM header on
-`src/unnamed/arm9/0205/func_02052514.c` is correct. Do not re-open it.
+`src/MTX_Copy33To44_.c` is correct. Do not re-open it.
 
 The transferable test: **an `ldm`/`stm` pair with different register counts, or an `stm` whose
 register list contains a value the matching `ldm` did not load, is hand-asm.** Equal widths

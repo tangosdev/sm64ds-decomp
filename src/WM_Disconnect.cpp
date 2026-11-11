@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -22,7 +22,7 @@ int WM_Disconnect(void *callback, unsigned int idx) {
         if (v == 7 || v == 9) {
             if (idx < 1 || idx > 0xf)
                 return 6;
-            CP15::InvalidateDataCache((u32)&status->child_bitmap, 2);
+            DC_InvalidateRange(&status->child_bitmap, 2);
             if ((sys->status->child_bitmap & (1u << idx)) == 0)
                 return 7;
         } else {

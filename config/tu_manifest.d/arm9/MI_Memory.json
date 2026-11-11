@@ -20,77 +20,77 @@
   ],
   "functions": [
     {
-      "symbol": "MultiStore16",
+      "symbol": "MIi_CpuClear16",
       "address": "0x0205a448",
       "size": "0x00000018",
       "legacy_source": "src/MultiStore16.c",
       "ordinal": 0
     },
     {
-      "symbol": "MultiCopyHalf",
+      "symbol": "MIi_CpuCopy16",
       "address": "0x0205a460",
       "size": "0x0000001c",
       "legacy_source": "src/MultiCopyHalf.c",
       "ordinal": 1
     },
     {
-      "symbol": "MultiStore_Int",
+      "symbol": "MIi_CpuClear32",
       "address": "0x0205a47c",
       "size": "0x00000014",
       "legacy_source": "src/MultiStore_Int.c",
       "ordinal": 2
     },
     {
-      "symbol": "MultiCopy_Int",
+      "symbol": "MIi_CpuCopy32",
       "address": "0x0205a490",
       "size": "0x00000018",
       "legacy_source": "src/MultiCopy_Int.c",
       "ordinal": 3
     },
     {
-      "symbol": "MultiStore32Bytes",
+      "symbol": "MIi_CpuClearFast",
       "address": "0x0205a4a8",
       "size": "0x0000004c",
       "legacy_source": "src/MultiStore32Bytes.c",
       "ordinal": 4
     },
     {
-      "symbol": "MultiCopy32Bytes",
+      "symbol": "MIi_CpuCopyFast",
       "address": "0x0205a4f4",
       "size": "0x00000038",
       "legacy_source": "src/MultiCopy32Bytes.c",
       "ordinal": 5
     },
     {
-      "symbol": "Copy32Bytes",
+      "symbol": "MI_Copy32B",
       "address": "0x0205a52c",
       "size": "0x0000001c",
       "legacy_source": "src/Copy32Bytes.c",
       "ordinal": 6
     },
     {
-      "symbol": "Copy36Bytes",
+      "symbol": "MI_Copy36B",
       "address": "0x0205a548",
       "size": "0x0000001c",
       "legacy_source": "src/Copy36Bytes.c",
       "ordinal": 7
     },
     {
-      "symbol": "Copy48Bytes",
+      "symbol": "MI_Copy48B",
       "address": "0x0205a564",
       "size": "0x00000024",
       "legacy_source": "src/Copy48Bytes.c",
       "ordinal": 8
     },
     {
-      "symbol": "func_0205a588",
+      "symbol": "MI_CpuFill8",
       "address": "0x0205a588",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/arm9/0205/func_0205a588.c",
       "ordinal": 9
     },
     {
-      "symbol": "CpuCopy8",
+      "symbol": "MI_CpuCopy8",
       "address": "0x0205a61c",
       "size": "0x00000130",
       "legacy_source": "src/CpuCopy8.c",

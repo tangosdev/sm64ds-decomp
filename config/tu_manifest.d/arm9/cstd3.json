@@ -26,7 +26,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "_ZN4cstd8__assertEPKcS1_S1_i",
+      "symbol": "_ZN4cstd8__assertEPKciS1_i",
       "address": "0x0206cd44",
       "size": "0x00000058",
       "legacy_source": "src/_ZN4cstd8__assertEPKcS1_S1_i.cpp",

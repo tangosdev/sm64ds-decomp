@@ -552,21 +552,16 @@ every relocated word, so all four "matched" byte-for-byte with the bug in place.
 argument for the ROM build as a gate** — it catches a class the byte oracle is blind to
 by construction.
 
-**Three remain. All three of the original six that took the cast-and-call shape were
-retired by the C++ class migration; see the struck-through bullet below.**
+**None remain. The three that took the cast-and-call shape were retired by the C++ class
+migration, and the other three turned out to be a misnamed operator; see both bullets below.**
 
-- three (`_ZN17dExtSimpleModel_cD1Ev`, `_ZN17dExtSimpleModel_cD2Ev`, `_ZN19dExtBlendAnmModel_cD1Ev`) call `_ZdlPv`
-  where the ROM goes through the 12-byte veneer at `0x0203cbc0`. That trampoline is the
-  standard `LDR ip,[pc]; BX ip; .word target` shape, and its target word is
-  **`0x0203cbf0` = `_ZdlPv`** —
-  the same callee the source names — passing *over* `_ZN6Memory16operator_delete2EPv` at
-  `0x0203cbcc`. So ROM and source call the identical function and only the route differs.
-  [`link-verification.md`](link-verification.md) is explicit that naming the real symbol
-  is correct and inserting a veneer is the linker's job. It is also unreachable: the
-  veneer is a pre-existing ROM function living in the gap object, and mwldarm only
-  synthesizes veneers it *needs* (out-of-range or interworking, neither of which applies
-  to an in-range ARM→ARM `BL`). No linker flag routes a call through another object's
-  existing trampoline. Left alone deliberately.
+- ~~three (`_ZN17dExtSimpleModel_cD1Ev`, `_ZN17dExtSimpleModel_cD2Ev`, `_ZN19dExtBlendAnmModel_cD1Ev`) call `_ZdlPv`
+  where the ROM goes through the 12-byte veneer at `0x0203cbc0`~~ **Resolved: the names were wrong, not the
+  route.** `0x0203cbf0` is reached only by the loads in the veneers at `0x0203cbc0` and `0x0203cbcc`, so it is
+  the body both forward to, not an operator. `0x0203cbcc` (every deleting destructor calls it) is
+  `operator delete(void*)`, `_ZdlPv`; `0x0203cbc0` (where `__cxa_vec_delete` releases an array) is
+  `operator delete[](void*)`, `_ZdaPv`. The three destructors free a `new[]` buffer, so `delete[]` is the
+  call they make; see `config/tu_manifest.d/arm9/Heap.json`.
 - ~~three (`_ZN11MirrorLuigiD1Ev`, `_ZN13daObjCloset_cD0Ev`, `_ZN13daObjCloset_cD1Ev`)
   write `((Actor *)c)->~Actor()`, for which the compiler emits the D1 complete-object
   destructor while the ROM calls the D2 base-object one.~~ **Two of the three are fixed,

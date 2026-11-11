@@ -49,10 +49,7 @@ void *Allocate(u32 size, int align);
 void Deallocate(void *ptr);
 } // namespace Memory
 
-namespace CP15 {
-void FlushDataCache(unsigned int addr, unsigned int size);
-void FlushAndInvalidateDataCache(unsigned int addr, unsigned int size);
-} // namespace CP15
+#include "nitro/os/cache.h"
 
 /* The card stream Load reads through; only the cursor and end words are known. */
 struct FileStream {
@@ -76,9 +73,9 @@ unsigned int func_02018ac4(unsigned int *p);
 void DecompressLZ16(void *src, void *dst);
 int func_020185c0(void *buf, unsigned int x);
 int FS_CloseFile(void *a);
-void CpuCopy8(const void *src, void *dst, unsigned int size);
+void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 void func_02018770(void);
-void Crash(void);
+void OS_Terminate(void);
 int myFS_ReadFile(void *a, void *b, int c);
 }
 
@@ -124,10 +121,10 @@ void *SharedFilePtr::Load() {
             size = obj.end - obj.cur;
             FS_CloseFile(&obj);
             mem = Memory::Allocate(size, 0x20);
-            CpuCopy8((void *)p, mem, size);
+            MI_CpuCopy8((void *)p, mem, size);
         }
         func_02018770();
-        CP15::FlushDataCache((unsigned int)mem, size);
+        DC_StoreRange(mem, size);
         filePtr = mem;
         return filePtr;
     }
@@ -141,9 +138,9 @@ void *SharedFilePtr::Load() {
     func_020185c0(&obj2, fileID);
     fsize = obj2.end - obj2.cur;
     if (fsize <= 8)
-        Crash();
+        OS_Terminate();
     raw = (int)Memory::Allocate(fsize, 0x20);
-    CP15::FlushAndInvalidateDataCache((unsigned int)raw, fsize);
+    DC_FlushRange((void *)raw, fsize);
     int r = myFS_ReadFile(&obj2, (void *)raw, fsize);
     if (r != fsize)
         return 0;
@@ -156,13 +153,13 @@ void *SharedFilePtr::Load() {
         csize = fsize - 4;
         fsize = t;
         void *tmp = Memory::Allocate(csize);
-        CpuCopy8(cp, tmp, csize);
+        MI_CpuCopy8(cp, tmp, csize);
         Memory::Deallocate((void *)raw);
         raw = (int)Memory::Allocate(fsize);
         DecompressLZ16(tmp, (void *)raw);
         Memory::Deallocate(tmp);
     }
-    CP15::FlushDataCache((unsigned int)raw, fsize);
+    DC_StoreRange((void *)raw, fsize);
     filePtr = (void *)raw;
     return filePtr;
 }

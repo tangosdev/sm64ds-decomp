@@ -1,7 +1,6 @@
 //cpp
 #include "types.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "Ov007MenuState.h"
 #include "Ov007Touch.h"
 #include "Ov007Work.h"
@@ -10,6 +9,7 @@
 #include "Ov007Pad.h"
 #include "Ov007Figure.h"
 #include "Ov007Model.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -81,7 +81,7 @@ void func_ov007_020b0a20(void) {
             } else if (v >= 0x14) {
                 v = 0x1000;
             } else {
-                v = cstd::div((v - 0x10) << 12, 4);
+                v = FX_DivS32((v - 0x10) << 12, 4);
             }
             model->scale.z = 0x1770 - FX_MUL(v, 0x9C4);
             model->scale.y = model->scale.z;

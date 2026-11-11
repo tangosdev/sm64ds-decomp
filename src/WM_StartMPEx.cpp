@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -26,7 +26,7 @@ int WM_StartMPEx(void *callback, int arg1, u16 arg2, int arg3, u16 arg4, u16 arg
     r = WM_CheckStateEx(2, 7, 8);
     if (r != 0)
         return r;
-    CP15::InvalidateDataCache((unsigned int)&base->status->mp_flag, 4);
+    DC_InvalidateRange(&base->status->mp_flag, 4);
     if (base->status->mp_flag == 1)
         return 3;
     if (arg2 < WM_GetMPReceiveBufferSize())

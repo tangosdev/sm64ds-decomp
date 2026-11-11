@@ -14,7 +14,7 @@
  * - Quaternion_SLerp / FromVector3 / Normalize stay untyped (mTilt
  *   is s32[4]).
  * - Rest-pose data_02092768 and scratch matrix data_020a0e68 (arm9).
- *   math/MtxStack.h types MulMat4x3Mat4x3 as const int *, so this file
+ *   math/MtxStack.h types MTX_Concat43 as const int *, so this file
  *   keeps its own Matrix4x3 * spellings of the matrix helpers.
  * - Toucher position is (Vector3 *)(arg + 0x5c); the callback arg
  *   is not a typed actor here.
@@ -36,8 +36,8 @@ extern int data_02092768[4];
 /* local extern: arm9 matrix, quaternion and dBgW helpers with no shared
  * header that agrees with these spellings. */
 extern "C" {
-int InvMat4x3(const Matrix4x3 *s, Matrix4x3 *d);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+int MTX_Inverse43(const Matrix4x3 *s, Matrix4x3 *d);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Quaternion_FromVector3(int *q, Vector3 *from, Vector3 *to);
 void Quaternion_Normalize(int *q);
 void Quaternion_SLerp(int *q0, int *q1, int t, int *out);
@@ -84,7 +84,7 @@ void daObjGuragura_c::UpdateModelMatrix() {
     Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(mTilt), &q);
     Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    MulMat4x3Mat4x3(&q, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&q, &data_020a0e68, &data_020a0e68);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     mModel.mat4x3 = data_020a0e68;
 }
@@ -153,8 +153,8 @@ void daObjGuragura_c::TiltToward(unsigned char *arg) {
     Vector3 axis;
     mBumped = 1;
     data_020a0e68 = mClsnMat;
-    InvMat4x3(&data_020a0e68, &data_020a0e68);
-    MulVec3Mat4x3((Vector3 *)(arg + 0x5c), &data_020a0e68, &v);
+    MTX_Inverse43(&data_020a0e68, &data_020a0e68);
+    MTX_MultVec43((Vector3 *)(arg + 0x5c), &data_020a0e68, &v);
     v.y = v.y << 1;
     axis.x = 0;
     axis.z = 0;

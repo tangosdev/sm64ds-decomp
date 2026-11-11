@@ -21,7 +21,7 @@
 #include "ntr/mmio.h"
 #include "ntr/ppu.h"
 
-#include "G3X.h"
+#include "nitro/gx/g3x.h"
 
 extern "C" {
 void MI_SendGXCommandAsync(int ch, int src, int size, void (*cb)(int), int arg);
@@ -113,7 +113,7 @@ static void submit_via_game(const ntr::BmdModel &m)
         CHECK(MIi_GXDmaParams[0] == 0); /* the pump drained and cleared busy */
     }
     ntr::gx_bind_texture(nullptr, 0, 0);
-    G3X::ClearFifo();                   /* the game's FIFO flush (128 NOPs) */
+    G3X_ClearFifo();                   /* the game's FIFO flush (128 NOPs) */
 }
 
 int main(void)

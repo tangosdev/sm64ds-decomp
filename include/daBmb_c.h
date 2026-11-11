@@ -160,6 +160,20 @@ struct daBmb_c : dEnemyBase_c {
     void func_ov102_0214ad40();
     void func_ov102_0214b128();
     void func_ov102_0214b53c();
+
+    /* The arm entries and the fuse. bd20 enters arm 3 (held), bc20 arm 4
+       (thrown), baa0 arm 5 (dormant at the home position; a variant other
+       than 0, 1 or 5 is killed instead). b384 lights
+       the fuse at the given count, or shortens one already burning. ae1c is the
+       explosion and ad14 starts the chase with a 0x96 fuse. ov002, ov014,
+       ov078 and ov098 call ad14, ae1c and b384 on a Bob-omb they hold or
+       spawned. */
+    void func_ov102_0214bd20();
+    void func_ov102_0214bc20();
+    void func_ov102_0214baa0();
+    void func_ov102_0214b384(unsigned int);
+    void func_ov102_0214ae1c();
+    void func_ov102_0214ad14();
 };
 
 #ifndef SM64DS_PLATFORM_PC

@@ -17,7 +17,7 @@ typedef char MBUserInfo_size_must_be_0x16[sizeof(MBUserInfo) == 0x16 ? 1 : -1];
 /* The NitroSDK multiboot game record (MBGameInfo, 0x4b8 bytes) as the ROM's
  * code reads it: built by MBi_MakeGameInfo, chained by MB_AddGameInfo and
  * sent by the beacon state machine (src/engine/mb/MB_GameInfo.c); the
- * parent's file registration (func_02067928) fills fileNo and seqNoFixed in
+ * parent's file registration (MB_RegisterFile) fills fileNo and seqNoFixed in
  * the copy at MbParentFile::mHeader + 0xe4. Field names follow the SDK's
  * mb.h; unread bytes stay padding. Plain C types so C and C++ files can
  * include it without types.h. */

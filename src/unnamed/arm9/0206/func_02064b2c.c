@@ -2,18 +2,18 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 
 int func_02064b2c(int off, unsigned short b, int c, int d) {
     unsigned char tag = 9;
     short val = b;
     int c1, c2, c3;
-    CpuCopy8(&tag, (void *)off, 1);
+    MI_CpuCopy8(&tag, (void *)off, 1);
     c1 = off + 1;
-    CpuCopy8(&val, (void *)c1, 2);
+    MI_CpuCopy8(&val, (void *)c1, 2);
     c2 = c1 + 2;
-    CpuCopy8(&c, (void *)c2, 1);
+    MI_CpuCopy8(&c, (void *)c2, 1);
     c3 = c2 + 1;
-    CpuCopy8(&d, (void *)c3, 4);
+    MI_CpuCopy8(&d, (void *)c3, 4);
     return c3 + 4 - off;
 }

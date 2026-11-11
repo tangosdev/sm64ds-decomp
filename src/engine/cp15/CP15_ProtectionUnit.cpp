@@ -2,12 +2,13 @@
 /* Protection unit on/off (SDK os_protectionUnit.c), .text 0x020593cc..0x020593ec.
  * HAND-ASM PRIMITIVE: mrc/mcr p15 read-modify-write the CP15 control register
  * c1, which no C construct compiles to, so the asm blocks are the faithful
- * source. Bit 0 enables the MPU.
+ * source. Bit 0 enables the MPU. The names are pret/pokediamond's
+ * OS_protectionUnit.c ones, declared in nitro/os/protectionUnit.h.
  */
 
-namespace CP15 {
+#include "nitro/os/protectionUnit.h"
 
-asm void EnableMPU(void)
+asm void OS_EnableProtectionUnit(void)
 {
     mrc p15, 0, r0, c1, c0, 0
     orr r0, r0, #1
@@ -15,12 +16,10 @@ asm void EnableMPU(void)
     bx lr
 }
 
-asm void DisableMPU(void)
+asm void OS_DisableProtectionUnit(void)
 {
     mrc p15, 0, r0, c1, c0, 0
     bic r0, r0, #1
     mcr p15, 0, r0, c1, c0, 0
     bx lr
-}
-
 }

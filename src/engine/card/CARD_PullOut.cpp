@@ -11,12 +11,11 @@
  * data_020a89a4) are not claimed here; the three C-linkage members keep their
  * address names.
  */
-#include "IRQ.h"
+#include "nitro/os/system.h"
+#include "nitro/os/interrupt.h"
 
 namespace IRQ {
 
-u32 Disable(void);
-u32 Restore(u32 saved);
 void GameCardIREQMCHandler(void);
 
 }
@@ -35,10 +34,10 @@ extern "C" {
 
 // Install the pull-out handler on the card interrupt.
 void func_02061138(void) {
-    u32 saved = IRQ::Disable();
-    IRQ::SetIRQHandler(IRQ_CARD_IREQ_MC, IRQ::GameCardIREQMCHandler);
-    IRQ::EnableIRQs(IRQ_CARD_IREQ_MC);
-    IRQ::Restore(saved);
+    OSIntrMode saved = OS_DisableInterrupts();
+    OS_SetIrqFunction(IRQ_CARD_IREQ_MC, IRQ::GameCardIREQMCHandler);
+    OS_EnableIrqMask(IRQ_CARD_IREQ_MC);
+    OS_RestoreInterrupts(saved);
 }
 
 // Register the game's pull-out callback.

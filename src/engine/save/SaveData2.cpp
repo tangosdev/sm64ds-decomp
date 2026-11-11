@@ -46,7 +46,7 @@ extern "C" void func_02042f68(int type, unsigned char *magic) {
         return;
     CARD_Init();
     CARD_IdentifyBackup(type);
-    func_0205a588(data_020a4b40, 0, 8);
+    MI_CpuFill8(data_020a4b40, 0, 8);
     d = data_020a4b40;
     for (i = 0; i < 8; i++) {
         unsigned char c = magic[i];

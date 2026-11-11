@@ -21,7 +21,7 @@
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/arm9_wbt.h"
 #include "private/wbt_block_info_list.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -39,8 +39,8 @@ extern struct WBTBlockInfoList *WBT_UnregisterBlock(int key);
 extern void func_02041ae8(void *base, void *node);
 extern void func_020423c8(void);
 extern void func_0204175c(void);
-extern int func_0205d368(void *o, int a, int b);
-extern void func_0205d3e4(void *p_file, void *dst, int len);
+extern int FS_SeekFile(void *o, int a, int b);
+extern int FS_ReadFileAsync(void *p_file, void *dst, int len);
 
 extern char data_020a2400[];
 extern char data_020a2404[];
@@ -132,7 +132,7 @@ void func_020412f0(char *thiz)
             break;
         }
         case 2: {
-            u32 saved = IRQ::Disable();
+            OSIntrMode saved = OS_DisableInterrupts();
             FileShareNode *p;
 
             area->mReplyPending |= (1 << sb);
@@ -148,7 +148,7 @@ void func_020412f0(char *thiz)
                 }
             }
 
-            IRQ::Restore(saved);
+            OS_RestoreInterrupts(saved);
             break;
         }
         }
@@ -238,8 +238,8 @@ void func_020412f0(char *thiz)
                 p->mLoadingPage = nxt;
                 masked = prod2 & -0x200;
                 p->mPageOffset[nxt] = masked;
-                func_0205d368(p->mFile, masked, 0);
-                func_0205d3e4(p->mFile, p->mPages[nxt], 0x400);
+                FS_SeekFile(p->mFile, masked, 0);
+                FS_ReadFileAsync(p->mFile, p->mPages[nxt], 0x400);
             }
         }
 

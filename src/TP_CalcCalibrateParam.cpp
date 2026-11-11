@@ -4,7 +4,7 @@
  * of range, when the two points share a raw or screen coordinate, or when a
  * result does not fit. */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/spi/tp.h"
 
 extern "C" {
@@ -36,7 +36,7 @@ u32 TP_CalcCalibrateParam(TPCalibrateParam *calibrate, u16 raw_x1, u16 raw_y1, u
                           u16 raw_x2, u16 raw_y2, u16 dx2, u16 dy2) {
     s32 rx_width, dx_width, ry_width, dy_width;
     s32 tmp32;
-    u32 enabled;
+    OSIntrMode enabled;
 
     if (raw_x1 >= 0x1000 || raw_y1 >= 0x1000 || raw_x2 >= 0x1000 || raw_y2 >= 0x1000) {
         return 1;
@@ -53,7 +53,7 @@ u32 TP_CalcCalibrateParam(TPCalibrateParam *calibrate, u16 raw_x1, u16 raw_y1, u
     rx_width = raw_x1 - raw_x2;
     dx_width = dx1 - dx2;
 
-    enabled = IRQ::Disable();
+    enabled = OS_DisableInterrupts();
 
     CP_SetDiv32_32(((u32)rx_width) << 8, (u32)dx_width);
 
@@ -64,19 +64,19 @@ u32 TP_CalcCalibrateParam(TPCalibrateParam *calibrate, u16 raw_x1, u16 raw_y1, u
     CP_SetDiv32_32(((u32)ry_width) << 8, (u32)dy_width);
 
     if (!IN_S16_RANGE(tmp32)) {
-        IRQ::Restore(enabled);
+        OS_RestoreInterrupts(enabled);
         return 1;
     }
     calibrate->xDotSize = (s16)tmp32;
     tmp32 = (s16)((((s32)(raw_x1 + raw_x2) << 8) - ((s32)(dx1 + dx2) * calibrate->xDotSize)) >> 7);
     if (!IN_S16_RANGE(tmp32)) {
-        IRQ::Restore(enabled);
+        OS_RestoreInterrupts(enabled);
         return 1;
     }
     calibrate->x0 = (s16)tmp32;
 
     tmp32 = CP_GetDivResult32();
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 
     if (!IN_S16_RANGE(tmp32)) {
         return 1;

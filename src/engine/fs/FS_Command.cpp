@@ -15,7 +15,7 @@
  * its OPERATING bit), and the thread queues are 16-bit masks of thread ids.
  */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/os/thread.h"
 #include "private/fs_views.h"
 
@@ -52,7 +52,7 @@ int FSi_TranslateCommand(FSFile *p_file, int command) {
     u32 stat;
     int ret;
     int bit;
-    u32 irq;
+    OSIntrMode irq;
     int sync;
     int busy;
 
@@ -97,12 +97,12 @@ int FSi_TranslateCommand(FSFile *p_file, int command) {
         int sync_mode = (p_file->stat & FS_FILE_STATUS_SYNC) ? 1 : 0;
         if (sync_mode != 0) {
             u16 *queue;
-            irq = IRQ::Disable();
+            irq = OS_DisableInterrupts();
             queue = &p_arc->sync_q;
             while ((busy = (p_arc->flag & FS_ARCHIVE_FLAG_IS_SYNC) ? 1 : 0) != 0)
                 OS_SleepThread(queue);
             ret = p_file->error;
-            IRQ::Restore(irq);
+            OS_RestoreInterrupts(irq);
         }
     } else {
         int sync_mode = (p_file->stat & FS_FILE_STATUS_SYNC) ? 1 : 0;

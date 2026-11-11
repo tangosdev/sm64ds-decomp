@@ -346,8 +346,8 @@ extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-/* local extern: no shared math header declares MulVec3Mat4x3. */
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+/* local extern: no shared math header declares MTX_MultVec43. */
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int RandomIntInternal(int *seed);
 extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
 extern int Vec3_Dist(const void *a, const void *b);
@@ -359,7 +359,6 @@ extern int func_020092c4(void *cam, void *out, void *target);
 extern void func_02011cfc(void);
 extern void func_02011d2c(void);
 extern void func_02012694(unsigned int a, void *p);
-extern void func_020398fc(void *p);
 
 /* Unreferenced. */
 extern void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
@@ -637,7 +636,7 @@ void daIwante_c::SetLoweredPose() {
 
     mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-    func_020398fc(&mMeshCollider2);
+    mMeshCollider2.SetFilterByMoveDir();
     mMeshCollider2.Enable(this);
 
     {
@@ -875,7 +874,7 @@ int daIwante_c::HandPattern9Execute() {
 
                 ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mTargetPosX);
                 Matrix4x3_FromRotationY(&data_020a0e68, ang);
-                MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+                MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
 
                 mTargetPosX += out.x;
                 mTargetPosZ += out.z;
@@ -925,7 +924,7 @@ int daIwante_c::HandPattern9Execute() {
                                           *(CLPS_Block *)(&data_ov025_02112d48));
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-            func_020398fc(&mMeshCollider2);
+            mMeshCollider2.SetFilterByMoveDir();
             mMeshCollider2.Enable(this);
             mSubState = 4;
         }
@@ -1286,7 +1285,7 @@ int daIwante_c::HandPattern7Execute() {
                                           *(CLPS_Block *)(&data_ov025_02112d48));
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-            func_020398fc(&mMeshCollider2);
+            mMeshCollider2.SetFilterByMoveDir();
             mMeshCollider2.Enable(this);
             data_ov066_0211ae08 += 1;
             mSubState = 8;
@@ -1466,7 +1465,7 @@ int daIwante_c::HandPattern6Execute() {
                                           *(CLPS_Block *)(&data_ov025_02112d48));
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
             mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-            func_020398fc(&mMeshCollider2);
+            mMeshCollider2.SetFilterByMoveDir();
             mMeshCollider2.Enable(this);
             data_ov066_0211ae08 += 1;
             mSubState = 7;
@@ -1610,7 +1609,7 @@ int daIwante_c::HandPattern5Execute() {
 
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
         mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-        func_020398fc(&mMeshCollider2);
+        mMeshCollider2.SetFilterByMoveDir();
         mMeshCollider2.Enable(this);
 
         data_ov066_0211ae08 += 1;
@@ -2122,7 +2121,7 @@ int daIwante_c::BodyTalkExecute() {
             in.z = -0x32000;
 
             Matrix4x3_FromRotationY(&data_020a0e68, 0);
-            MulVec3Mat4x3((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
+            MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
 
             out.x += mPosX;
             out.y += mPosY;
@@ -2370,7 +2369,7 @@ int daIwante_c::Behavior() {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
                     Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngleY - 0x4000));
-                    MulVec3Mat4x3((Vector3 *)&vin, &data_020a0e68, (Vector3 *)&vout);
+                    MTX_MultVec43((Vector3 *)&vin, &data_020a0e68, (Vector3 *)&vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
                 } else {
@@ -2385,7 +2384,7 @@ int daIwante_c::Behavior() {
                 if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
                     Matrix4x3_FromRotationY(&data_020a0e68, (s16)(mAngleY - 0x4000));
-                    MulVec3Mat4x3((Vector3 *)&vin, &data_020a0e68, (Vector3 *)&vout);
+                    MTX_MultVec43((Vector3 *)&vin, &data_020a0e68, (Vector3 *)&vout);
                     mDustPos[idx].x += vout.x;
                     mDustPos[idx].z += vout.z;
                 } else {
@@ -2590,7 +2589,7 @@ int daIwante_c::InitResources() {
         }
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
         mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
-        func_020398fc(&mMeshCollider2);
+        mMeshCollider2.SetFilterByMoveDir();
         mRestPosZ -= 0x32000;
         mHitPoints = 3;
         data_ov066_0211ae00 = 0;

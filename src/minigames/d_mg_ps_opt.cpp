@@ -18,6 +18,7 @@
 #include "types.h"
 #include "dMgPsOpt_c.h"
 #include "Sound.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* The blitter's 2x2 matrix. This panel always passes none. */
 struct M;
@@ -91,10 +92,6 @@ extern unsigned char gSubScreenLayers;
 /* 1 while the backlight is on. TurnBacklightOn / Off write it. */
 extern unsigned char data_0208ee3c;
 void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y);
-}
-
-namespace G2S {
-u16 *GetBG1ScrPtr();
 }
 
 /* One icon's half extents. The destructor is the shared empty arm9 one
@@ -381,7 +378,7 @@ void dMgPsOpt_c::TouchIcon_c::Render() {
         break;
 
     case kStyleSoundMode:
-        scr = (u16 *)((char *)G2S::GetBG1ScrPtr() + 0x19e);
+        scr = (u16 *)((char *)G2S_GetBG1ScrPtr() + 0x19e);
         tile = (u16)((mVariant << 6) + 0x13);
         for (i = 0; i < 13; i++) {
             scr[0] = tile;
@@ -395,7 +392,7 @@ void dMgPsOpt_c::TouchIcon_c::Render() {
         /* Lit keeps palette 0. Dim sets screen-entry bits 0x3000. */
         mask = (mOn != 0) ? 0 : 0x3000;
         w = mHalfW;
-        scr = G2S::GetBG1ScrPtr();
+        scr = (u16 *)G2S_GetBG1ScrPtr();
         x = mX;
         h = mHalfH;
         x -= w;

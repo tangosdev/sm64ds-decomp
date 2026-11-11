@@ -10,7 +10,7 @@
  * other heap functions (OS_CreateHeap, OS_SetCurrentHeap, ...) are not called
  * and were dropped by the linker.
  */
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 #define ALIGNMENT 32
 #define ROUND(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))
@@ -110,11 +110,11 @@ void *OS_AllocFromHeap(int id, int heap, u32 size) {
     Cell *cell;
     Cell *newCell;
     long leftoverSize;
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
 
     heapInfo = OSiHeapInfo[id];
     if (heapInfo == 0) {
-        IRQ::Restore(enabled);
+        OS_RestoreInterrupts(enabled);
         return 0;
     }
     if (heap < 0)
@@ -131,7 +131,7 @@ void *OS_AllocFromHeap(int id, int heap, u32 size) {
     }
 
     if (cell == 0) {
-        IRQ::Restore(enabled);
+        OS_RestoreInterrupts(enabled);
         return 0;
     }
 
@@ -156,7 +156,7 @@ void *OS_AllocFromHeap(int id, int heap, u32 size) {
 
     hd->allocated = DLAddFront(hd->allocated, cell);
 
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
     return (char *)cell + HEADERSIZE;
 }
 
@@ -164,7 +164,7 @@ void OS_FreeToHeap(int id, int heap, void *ptr) {
     OSHeapInfo *heapInfo;
     HeapDesc *hd;
     Cell *cell;
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
 
     heapInfo = OSiHeapInfo[id];
     if (heap < 0)
@@ -176,7 +176,7 @@ void OS_FreeToHeap(int id, int heap, void *ptr) {
     hd->allocated = DLExtract(hd->allocated, cell);
     hd->free = DLInsert(hd->free, cell);
 
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
 }
 
 /* Lay out arena id's OSHeapInfo and maxHeaps empty heap descriptors at
@@ -185,7 +185,7 @@ void *OS_InitAlloc(int id, void *arenaStart, void *arenaEnd, int maxHeaps) {
     OSHeapInfo *heapInfo;
     u32 arraySize;
     int i;
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
 
     heapInfo = (OSHeapInfo *)arenaStart;
     OSiHeapInfo[id] = heapInfo;
@@ -207,7 +207,7 @@ void *OS_InitAlloc(int id, void *arenaStart, void *arenaEnd, int maxHeaps) {
     heapInfo->arenaStart = arenaStart;
     heapInfo->arenaEnd = (void *)TRUNC(arenaEnd, ALIGNMENT);
 
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
     return heapInfo->arenaStart;
 }
 }

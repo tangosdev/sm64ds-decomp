@@ -50,10 +50,6 @@ struct dActor_c;
  * and skipped.
  */
 
-namespace Memory {
-void operator_delete2(void *);
-}
-
 /* Lifecycle declarations have no inline bodies: owners must emit calls
  * to the ROM-owned constructor and destructor rather than duplicating
  * their vtable stores and unlink logic. */
@@ -83,9 +79,6 @@ struct dCapIcon_c {
     /* Name coined: the inverse of Unlink. It pushes this node onto
        character's list for owner and stores iconKind and the bank bit. */
     void Link(char *owner, int character, int iconKind, unsigned char bank);
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 };
 
 typedef dCapIcon_c CapIcon;

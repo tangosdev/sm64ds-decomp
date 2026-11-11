@@ -3,7 +3,7 @@
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c806c(void *c);
 extern void func_ov007_020c3d1c(void *p);
-extern void MultiStore_Int(int val, void *dst, int size);
+extern void MIi_CpuClear32(int val, void *dst, int size);
 
 /* Allocates a link and clears it (func_ov007_020c806c). */
 Ov007Link *func_ov007_020c80a4(void) {
@@ -22,5 +22,5 @@ void func_ov007_020c8098(void *p) {
 
 void func_ov007_020c806c(void *c) {
     volatile int li = 0;
-    MultiStore_Int(li, c, 0x18);
+    MIi_CpuClear32(li, c, 0x18);
 }

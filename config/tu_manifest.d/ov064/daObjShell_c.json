@@ -462,19 +462,19 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@656",
+      "from": "@602",
       "to": "@88",
-      "evidence": "emitted destructor-registration node name collides with the configured @360 on ov023 on main; @88 is unused everywhere and shorter than the original"
+      "evidence": "emitted destructor-registration node name collides with the configured @360 on ov023 on main; @88 is unused everywhere and shorter than the original Re-keyed from @656 to @602 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@657",
+      "from": "@603",
       "to": "@89",
-      "evidence": "emitted destructor-registration node name collides with the configured @361 on ov036 on main; @89 is unused everywhere and shorter than the original"
+      "evidence": "emitted destructor-registration node name collides with the configured @361 on ov036 on main; @89 is unused everywhere and shorter than the original Re-keyed from @657 to @603 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@658",
+      "from": "@604",
       "to": "@90",
-      "evidence": "emitted destructor-registration node name collides with the configured @362 on ov036 on main; @90 is unused everywhere and shorter than the original"
+      "evidence": "emitted destructor-registration node name collides with the configured @362 on ov036 on main; @90 is unused everywhere and shorter than the original Re-keyed from @658 to @604 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "relocations": [

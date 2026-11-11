@@ -161,7 +161,7 @@ mwccarm sometimes emits `add rX, base, #OFF; ldr/strb [rX]` (materialize) where 
 `[base,#OFF]` would do. From the corpus + hand-cracking:
 - It IS reproducible when a base is reused at CONSECUTIVE NON-ZERO offsets: `int* p = (int*)(c+OFF);
   p[1]; p[2];` or `r[0x17]; r[0x18]; r[0x19];` materializes `add rX,base,#OFF` and uses [rX,#k].
-  (Examples: _ZN18SolidHeapAllocator8ResetEndEv, func_020080b0.)
+  (Examples: FreeTail in the frame heap, func_020080b0.)
 - It is NOT reproducible when the FIRST/only access is at offset 0 from the materialized base
   (`q[0]`, `*f`, `o->flags[0]`): C always folds the zero-offset access to direct `[base,#OFF]`.
   Tried pointer locals, sub-objects, volatile, real struct array members -- all fold. The permuter
@@ -179,7 +179,7 @@ corpus show exactly what makes mwccarm emit it instead of folding:
 - ARGUMENT MATERIALIZATION (func_02022b04, CutsceneGrandStarStart): passing `&obj->field` or `(T*)(base+OFF)`
   as a POINTER ARGUMENT to a call emits `add rX, base, #OFF`. Dereferencing the same expression
   (`*(T*)(base+OFF)`) stays folded `[base,#OFF]`. So `f(&this->sub)` materializes; `this->sub.x` folds.
-- LIVE-ACROSS-CALL (_ZN18SolidHeapAllocatorC1EPvj): a base pointer that is used both before and after
+- LIVE-ACROSS-CALL (InitFrameHeap): a base pointer that is used both before and after
   a `bl` is forced into a callee-saved register and kept materialized; all post-add accesses go via it.
 - CONSECUTIVE NON-ZERO indices on an OPAQUE base (func_020080b0-style `r=call(); r[0x17];r[0x18]`):
   materializes `add rX,r,#0x5c` then `[rX],[rX,#4],[rX,#8]`.

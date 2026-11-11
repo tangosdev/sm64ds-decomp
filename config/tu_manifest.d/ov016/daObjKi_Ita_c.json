@@ -95,14 +95,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@361",
+      "from": "@339",
       "to": "@612",
-      "evidence": "batch-5 atdup: @357 collides cross-module (temps are fleet-global); renumber to unused same-length @612"
+      "evidence": "batch-5 atdup: @357 collides cross-module (temps are fleet-global); renumber to unused same-length @612 Re-keyed from @361 to @339 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@360",
+      "from": "@338",
       "to": "@356",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @370 now; licensed under the existing pin @356"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @370 now; licensed under the existing pin @356 Re-keyed from @360 to @338 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "notes": [
