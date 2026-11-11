@@ -164,8 +164,8 @@ void func_0201cfb8(int arg0);
 void LoadControllerModeText(int param0);
 void func_0201d418(int p0, int p1);
 void Message_DrawLineBG2(void);
-void Message_DrawCenteredLine(int a, int b);
-void func_0201d850(u32 arg0);
+void Message_DrawCenteredLine(int mapPos, int width);
+void func_0201d850(u32 course);
 void func_0201e220(int arg);
 void func_0201eaac(void);
 void func_0201ef38(void);
@@ -492,52 +492,42 @@ extern "C" void Message_DrawLineBG2(void) {
     data_0209d674 = data_0209d674 + (u8)(((data_0209d6b0 + 7) / 8) << 1);
 }
 
-extern "C" void Message_DrawCenteredLine(int a, int b)
-{
-    int new_var5;
-    volatile int li;
-    int n;
-    int new_var4;
-    int p;
+/* Lays out the current message line on the sub screen's BG0, centred in a
+   field width tiles wide that starts at map entry mapPos. Whole tiles of
+   the centring go into the map position; the remaining pixels go into
+   data_0209d65c as a shift. The line takes the next character tiles after
+   data_0209d6a8, two map rows per line. */
+extern "C" void Message_DrawCenteredLine(int mapPos, int width) {
+    volatile int zero;
+    int bytes;
+    char *p;
     int i;
     int idx = data_0209d6d4;
-    int new_var;
-    char *base = (char *) data_0209d708;
-    u16 *ptr;
-    int new_var3;
-    int new_var2;
+    char *base = (char *)data_0209d708;
+    u16 *map;
     int col;
-    int cnt;
     int old;
-    data_0209d6f0 = (u8*) (base + (idx * 8));
-    data_0209d6f4 = ((data_0209d6fc + 0x28) + data_0209d70c[1]) +
-                    ((MessageEntry *)(base + (idx * 8)))->textOffset;
-    new_var4 = 1;
-    func_0201b6f8(new_var4);
+
+    data_0209d6f0 = (u8 *)(base + idx * 8);
+    data_0209d6f4 =
+        data_0209d6fc + 0x28 + data_0209d70c[1] + ((MessageEntry *)(base + idx * 8))->textOffset;
+    func_0201b6f8(1);
     old = data_0209d6b0;
-    data_0209d65c = (((b * 8) - old) & 0xf) >> new_var4;
+    data_0209d65c = ((width * 8 - old) & 0xf) >> 1;
     data_0209d6b0 = old + data_0209d65c;
-    n = ((data_0209d6b0 + 7) / 8) << 6;
-    new_var5 = ((u32)G2S_GetBG0CharPtr() + 0x4000) + (data_0209d6a8 << 5);
-    p = new_var5;
-    new_var3 = b - ((old + 7) / 8);
-    new_var2 = new_var3;
-    li = 0;
-    MIi_CpuClear32(li, (int *)p, n);
-    col = (u16) (new_var2 >> 1);
-    old = old;
-    ptr = ((u16 *)((u32)G2S_GetBG0ScrPtr() + (a * 2))) + col;
-    cnt = data_0209d6b0;
-    cnt = (cnt + 7) / 8;
-    for (i = 0; i < cnt; i++)
-    {
-        new_var = 0x200;
-        ptr[i] = (u16) ((data_0209d6a8 + new_var) + i);
-        (ptr + i)[0x20] = (u16) (((data_0209d6a8 + 0x200) + cnt) + i);
+    bytes = (data_0209d6b0 + 7) / 8 * 0x40;
+    p = (char *)G2S_GetBG0CharPtr() + 0x4000 + (data_0209d6a8 << 5);
+    col = width - (old + 7) / 8;
+    zero = 0;
+    MIi_CpuClear32(zero, (int *)p, bytes);
+    map = (u16 *)G2S_GetBG0ScrPtr() + mapPos + (u16)(col >> 1);
+    for (i = 0; i < (data_0209d6b0 + 7) / 8; i++) {
+        map[i] = data_0209d6a8 + 0x200 + i;
+        (&map[i])[0x20] = data_0209d6a8 + 0x200 + (data_0209d6b0 + 7) / 8 + i;
     }
 
     func_0201b100(0);
-    data_0209d6a8 = data_0209d6a8 + ((u8) (((data_0209d6b0 + 7) / 8) << new_var4));
+    data_0209d6a8 += (u8)((data_0209d6b0 + 7) / 8 * 2);
 }
 
 /* Lays out the pause and level-clear titles on BG3. Each line is rendered
