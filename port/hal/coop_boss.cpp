@@ -742,6 +742,9 @@ void log_sample(int slot, const Boss &b, int auth) {
                                           auth, g_my, hp_of(b), state_of(b));
     for (int k = 2; k < b.d->nf && n < (int)sizeof line - 20; ++k) n += std::snprintf(line + n, sizeof line - n, " f%d=%u", k, read_field(b.a, b.d->f[k]));
     if (b.d->cls == 279) n += std::snprintf(line + n, sizeof line - n, " talk=%d cnt=%d", (int)(signed char)b.a[0x424], (int)rd16(b.a, 0x3fe));
+    if (b.d->cls == 210)   // COOPBOO5: the Big Boo's count, VISIBLE flag, collider off bit (dCc_c flags +0x18 of mdCcAcPos_c +0x184)
+        n += std::snprintf(line + n, sizeof line - n, " var=%x cnt=%d vis=%d cc_off=%d", (unsigned)(unsigned char)b.a[0x5cf], (int)rd32(b.a, 0x180),
+                           (rd16(b.a, 0x5d4) & 0x8) ? 1 : 0, (int)(rd32(b.a, 0x19c) & 1));
     n += std::snprintf(line + n, sizeof line - n, " tgt=%d", coop_target_seat_of_slot(slot));
     std::fprintf(stderr, "%s\n", line);
 }

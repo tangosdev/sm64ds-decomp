@@ -1234,7 +1234,19 @@ void boohit_knob() {
         const int *bp = (const int *)(b + 0x5c);
         int *pp = (int *)(body + 0x5c);
         const long long dx = (long long)(pp[0] - bp[0]) >> 12, dz = (long long)(pp[2] - bp[2]) >> 12;
-        if (dx * dx + dz * dz < 600LL * 600LL) return;
+        if (dx * dx + dz * dz < 600LL * 600LL) {
+            // COOPBOO5: SM64DS_COOP_BOOHIT_BIG=1 punches the Big Boo the same way, but only while the cartridge shows him and lets
+            // him be hit (chasing in state 1, VISIBLE +0x5d4 bit 0x8, collider +0x19c bit 0x1 clear), so a hit taken proves both
+            static const bool big = [] { const char *e = std::getenv("SM64DS_COOP_BOOHIT_BIG"); return e && *e && *e != '0'; }();
+            const bool vis = (*(const unsigned short *)(b + 0x5d4) & 0x8u) != 0, cc_on = !(*(const unsigned *)(b + 0x19c) & 1u);
+            if (big && *(const unsigned char *)(b + kBooState) == 1 && vis && cc_on) {
+                *(unsigned *)(b + 0x184 + 0x20) |= 0x40u;
+                *(unsigned *)(b + 0x184 + 0x24) = *(const unsigned *)(body + 0x04);
+                std::fprintf(stderr, "[coop-knob] big boo hit: Big Boo (visible, hittable) reads as punched by my player, hp %d (est %u)\n",
+                             (int)*(const unsigned char *)(b + 0x5ca), g_est_frames);
+            }
+            return;
+        }
         pp[0] = bp[0]; pp[1] = bp[1]; pp[2] = bp[2] + (400 << 12);
         const signed char area = *(const signed char *)(b + 0x5d0);
         if (area >= 0 && data_02092120 != area) ChangeArea(area);
