@@ -656,7 +656,10 @@ bool going(const char *a) { return *(const unsigned char *)(a + 0x0f) || *(const
 // MarkForDestruction; 47 BK_KABE01 goes at once in Kill) and Jolly Roger Bay's stone pillars (58, daObjKi_Hasira_c,
 // d_a_obj_ki_hasira.cpp:220: it topples when a player comes within 1300 units and ends in MarkForDestruction; nothing
 // counts the pillars, no star waits on them). They go on the group list and the room list like the blocks.
-bool breakable_block(unsigned cls) { return cls == 15 || cls == 16 || cls == 17 || cls == 46 || cls == 47 || cls == 48 || cls == 58; }
+// BREAKFX2: the CCM ice block (18, daObjIceBlock_c) is watched the same way: shattered or melted on one console it ends in
+// MarkForDestruction with no death bit, so it stood on every friend's console for good.
+bool bfx_env_off() { static const bool off = [] { const char *e = std::getenv("SM64DS_COOP_BREAKFX"); return e && *e == '0'; }(); return off; }   // proof control: the 1.0.2 behaviour
+bool breakable_block(unsigned cls) { if (cls == 18 && bfx_env_off()) return false; return cls == 15 || cls == 16 || cls == 17 || cls == 18 || cls == 46 || cls == 47 || cls == 48 || cls == 58; }
 // COOPWALLS1: star holders that also leave with no death bit: Big Mr. I (263, daEykn_c, d_a_eykn.cpp:470-474: a death bit
 // only in level 0x2e) and the Chill Bully (217, daIDonketu_c, d_a_i_donketu.cpp:137). Beaten on one console they are
 // removed on the others and kept on the group's list for this visit (a member who joins the group is sent it), but never
@@ -984,6 +987,59 @@ void watch_capped(unsigned now) {
     g_cap_slotted = slotted; g_cap_frame = g_est_frames;
 }
 
+
+// BREAKFX2: what a block, wall or ice block a friend broke looks and sounds like on my console. The friend's console ran the
+// real Kill (coins, star, linked actor); mine only removes its copy, which used to be silent. This plays the effects the
+// cartridge's own Kill plays (d_a_obj_block_l.cpp Kill, d_a_obj_ice_block.cpp Kill, d_a_obj_bk_kabe.cpp Kill,
+// d_a_obj_ki_hasira.cpp) and NOTHING else: no coins, no star, no NotifyLinkedActor, so no reward is made twice.
+extern "C" {
+void *_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned t, int x, int y, int z);
+void _ZN8dActor_c10PoofDustAtERK7Vector3(void *self, const void *v);
+void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned id, const void *v);
+void func_ov081_02127be0(void *iceBlock);   // lets the frozen star go (destroys the frozen copy, respawns it free-standing)
+}
+bool g_bfx_off = false, g_bfx_read = false;   // SM64DS_COOP_BREAKFX=0: effects off (the before row of the proof)
+unsigned g_bfx_n = 0;
+bool break_fx_class(unsigned cls) { return cls == 15 || cls == 16 || cls == 17 || cls == 18 || cls == 46 || cls == 47 || cls == 48 || cls == 58; }
+void play_break_fx(char *a, unsigned cls) {
+    if (!g_bfx_read) { g_bfx_read = true; const char *e = std::getenv("SM64DS_COOP_BREAKFX"); g_bfx_off = e && *e == '0'; }
+    if (g_bfx_off || !a) return;
+    const int *p = (const int *)(a + 0x5c);
+    const int x = p[0], y = p[1], z = p[2];
+    int snd = 0x41;
+    int py = y + 0x64000;
+    unsigned parts[3] = {0, 0, 0};
+    if (cls == 15 || cls == 16) parts[0] = 0xa;
+    else if (cls == 17) { parts[0] = 0xf; py = y + 0x96000; }
+    else if (cls == 46) parts[0] = 0x48;
+    else if (cls == 18) { parts[0] = 0x74; parts[1] = 0x75; parts[2] = 0x76; py = y + 0x96000; }
+    else if (cls == 47 || cls == 48) { parts[0] = 0x121; snd = 0xf; py = y; }
+    else if (cls == 58) { parts[0] = 0x107; }
+    for (int i = 0; i < 3; ++i) if (parts[i]) _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(parts[i], x, py, z);
+    if (cls != 47 && cls != 48) {   // the two Fortress walls play no dust in their own Kill
+        int d[3] = {x, py, z};
+        _ZN8dActor_c10PoofDustAtERK7Vector3(a, d);
+    }
+    _ZN5Sound9PlayBank3EjRK7Vector3((unsigned)snd, a + 0x74);   // camera-space position, as the cartridge passes it
+    ++g_bfx_n;
+    if (g_log) std::fprintf(stderr, "[coop] break fx: class %u played at (%d,%d,%d) sound 0x%x particle 0x%x (no coins, no star) wall=%lld\n",
+                            cls, x >> 12, y >> 12, z >> 12, (unsigned)snd, parts[0], wall_ms());
+}
+// The ice block's frozen star: on the breaker's console the real Kill let it go; here only the block is removed, so let
+// it go too or it would stay frozen inside nothing. Same call the cartridge's Kill and melt end make.
+// Never twice on one block: the release leaves mContainedActor on the freed star and sets mFlags bit 0x4000000, and a fire melt
+// (mMeltTimer at +0x354, d_a_obj_ice_block.cpp:184) has already released the star when it starts. A second call would destroy
+// the freed star, spawn another star and star base, or read a dead pointer if the star was already taken.
+void ice_release_star(char *a, unsigned cls) {
+    if (cls != 18) return;
+    if ((*(const unsigned *)(a + 0xb0) & 0x4000000u) || *(const unsigned char *)(a + 0x354)) {
+        if (g_log) std::fprintf(stderr, "[coop] ice block: star already released here (flag %d melt %d), not released again wall=%lld\n",
+                                (*(const unsigned *)(a + 0xb0) & 0x4000000u) ? 1 : 0, (int)*(const unsigned char *)(a + 0x354), wall_ms());
+        return;
+    }
+    func_ov081_02127be0(a);
+}
+
 // A friend's swallow left no death bit: my copy goes the way his did in OnTurnIntoEgg (d_a_krb.cpp:1635-1678), with
 // the rewards left to his console. A Goomba with a cap, or one that gives the silver star only on its own star, goes
 // home and RespawnIfHasCap leaves the dormant replacement there; func_ov084_02129498 removes it (MarkForDestruction for a
@@ -1014,6 +1070,8 @@ void apply_swallow(int seat, int slot, unsigned cls, bool boo_beaten = false) {
         if (g_log) std::fprintf(stderr, "[coop] boo: seat %d beat Boo slot %d, removed here wall=%lld\n", seat, slot, wall_ms());
         return;
     }
+    bool new_break = true;   // BREAKFX2: only the first message of a break plays the effects (the repeats find it on the list)
+    for (int i = 0; i < g_gone_n; ++i) if (g_gone[i].slot == slot && g_gone[i].cls == cls) new_break = false;
     if (breakable_block(cls)) { gone_note(slot, cls); room_gone_note(g_key, slot, cls); }   // kept even with no copy standing yet
     if (live_gone(cls)) gone_note(slot, cls);   // COOPWALLS1: Big Mr. I / Chill Bully, this visit only
     if (!a || going(a) || is_player_ptr(a)) {
@@ -1032,6 +1090,8 @@ void apply_swallow(int seat, int slot, unsigned cls, bool boo_beaten = false) {
     } else {
         if (live_gone(cls)) untrack_markers(a);
         block_glint_off(a, "friend's break");      // COOPSILVER3
+        if (new_break && break_fx_class(cls) && g_est_frames >= 60) play_break_fx(a, cls);   // BREAKFX2
+        ice_release_star(a, cls);
         _ZN7fBase_c18MarkForDestructionEv(a);
     }
     if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = (uint16_t)slot;
@@ -1064,6 +1124,7 @@ void gone_apply() {
         }
         if (live_gone(g_gone[i].cls)) untrack_markers(a);
         block_glint_off(a, "broken list");      // COOPSILVER3
+        ice_release_star(a, g_gone[i].cls);   // BREAKFX2: silent here (a late list), but the frozen star is let go
         _ZN7fBase_c18MarkForDestructionEv(a);
         if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = g_gone[i].slot;
         else { std::memmove(g_sw_applied, g_sw_applied + 1, sizeof g_sw_applied - sizeof g_sw_applied[0]); g_sw_applied[kSwOutMax - 1] = g_gone[i].slot; }
@@ -2275,6 +2336,83 @@ void knob_goto(int id, int tries) {
                  *(const int *)(a + 0x60) >> 12, *(const int *)(a + 0x64) >> 12);
 }
 
+
+// BREAKFX2 proof knob SM64DS_COOP_ICE=F:mode (off by default). Every 30 frames from F-30 to F+420 it logs the stars and the ice
+// blocks standing here; mode 1 also, at frame F, runs the real daObjIceBlock_c::Kill on the first ice block that holds a star
+// (what an explosion does) and, 60 frames later, puts the local player on the star it let go so the real collect runs.
+extern "C" void _ZN15daObjIceBlock_c4KillEv(void *self);
+unsigned g_ice_f = 0; int g_ice_mode = -1; bool g_ice_read = false, g_ice_broke = false, g_ice_went = false, g_ice_spawned = false, g_ice_melt = false; int g_ice_pos[3]; unsigned g_ice_param = 0x21; int g_ice_hold = 0;
+void ice_probe(const char *tag) {
+    int stars = 0, ice = 0, frozen = 0, inice = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        const unsigned c = *(const unsigned short *)(a + 0x0c);
+        if (c == 178 && std::getenv("SM64DS_COOP_ICE_LIST")) std::fprintf(stderr, "[coop-ice]   star uid=%u slot=%d pos=%d,%d,%d going=%d/%d param=%x inice=%d\n", *(const unsigned *)(a + 0x04), (int)*(const short *)(a + 0xce), *(const int *)(a + 0x5c) >> 12, *(const int *)(a + 0x60) >> 12, *(const int *)(a + 0x64) >> 12, (int)*(const unsigned char *)(a + 0x0f), (int)*(const unsigned char *)(a + 0x0e), *(const unsigned *)(a + 0x08), (int)*(const unsigned char *)(a + 0x49f));
+        if (going(a)) continue;
+        if (c == 178) { ++stars; if (*(const unsigned char *)(a + 0x49f)) ++inice; }
+        if (c == 18) { ++ice; if (*(void **)(a + 0x364)) ++frozen; }
+    }
+    std::fprintf(stderr, "[coop-ice] %s est=%u class178 live=%d ice blocks live=%d holding a star=%d stars flagged inside ice=%d wall=%lld\n", tag, g_est_frames,
+                 stars, ice, frozen, inice, wall_ms());
+}
+void knob_ice() {
+    if (!g_ice_read) {
+        g_ice_read = true;
+        const char *e = std::getenv("SM64DS_COOP_ICE");
+        if (const char *pp = std::getenv("SM64DS_COOP_ICE_PARAM")) g_ice_param = (unsigned)std::strtoul(pp, nullptr, 16);
+        if (e) { unsigned f = 0; int m = 0; if (std::sscanf(e, "%u:%i", &f, &m) >= 1) { g_ice_f = f; g_ice_mode = m; } }
+    }
+    if (g_ice_mode < 0 || g_est_frames + 90 < g_ice_f || g_est_frames > g_ice_f + 900) return;
+    if ((g_ice_mode & 2) && !g_ice_spawned && g_est_frames + 60 >= g_ice_f) {
+        g_ice_spawned = true;
+        char *best = nullptr;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+            if (*(const unsigned short *)(a + 0x0c) == 18 && !going(a) && !*(void **)(a + 0x364) &&
+                (!best || *(const short *)(a + 0xce) < *(const short *)(best + 0xce))) best = a;
+        if (best) {
+            char *s = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(178, g_ice_param, best + 0x5c, nullptr, -1, -1);
+            std::fprintf(stderr, "[coop-ice] spawned a star in ice block slot %d: %s\n", (int)*(const short *)(best + 0xce), s ? "yes" : "no");
+        } else std::fprintf(stderr, "[coop-ice] no empty ice block to freeze a star in\n");
+    }
+    static unsigned last = 0;
+    if (g_est_frames - last >= (g_est_frames >= g_ice_f && g_est_frames < g_ice_f + 60 ? 6u : 30u) || g_est_frames < last) { last = g_est_frames; ice_probe("probe"); }
+    if ((g_ice_mode & 4) && !g_ice_melt && g_est_frames + 10 >= g_ice_f) {   // a fire melt starts here before the friend's break arrives
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && !g_ice_melt; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+            if (*(const unsigned short *)(a + 0x0c) == 18 && !going(a) && *(void **)(a + 0x364)) {
+                g_ice_melt = true;
+                *(unsigned char *)(a + 0x354) = 30;   // mMeltTimer, as d_a_obj_ice_block.cpp:184 sets it
+                func_ov081_02127be0(a);               // and the melt start releases the star
+                std::fprintf(stderr, "[coop-ice] melt started here on ice block slot %d (star released, timer 30)\n", (int)*(const short *)(a + 0xce));
+            }
+    }
+    if (!(g_ice_mode & 1)) return;
+    if (!g_ice_broke && g_est_frames >= g_ice_f) {
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && !g_ice_broke; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            if (*(const unsigned short *)(a + 0x0c) != 18 || going(a)) continue;
+            char *st = *(char **)(a + 0x364);
+            if (!st) continue;
+            g_ice_broke = true;
+            std::memcpy(g_ice_pos, st + 0x5c, 12);
+            std::fprintf(stderr, "[coop-ice] breaking the ice block slot %d (star inside at %d,%d,%d) with its real Kill\n",
+                         (int)*(const short *)(a + 0xce), g_ice_pos[0] >> 12, g_ice_pos[1] >> 12, g_ice_pos[2] >> 12);
+            _ZN15daObjIceBlock_c4KillEv(a);
+            ice_probe("after the break");
+        }
+        if (!g_ice_broke) { g_ice_broke = true; std::fprintf(stderr, "[coop-ice] no ice block holds a star here\n"); }
+    }
+    if (g_ice_broke && g_ice_hold < 240 && g_est_frames >= g_ice_f + 200) {   // the freed star has flown to its marker and landed
+        char *fs = nullptr;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+            if (*(const unsigned short *)(a + 0x0c) == 178 && !going(a) && (*(const unsigned *)(a + 0x08) & 0xf0) == 0x20) fs = a;
+        char *pl = (char *)data_0209f394[data_0209f250 & 15];
+        if (fs && pl) {
+            *(unsigned char *)(fs + 0x49f) = 0;   // proof only: the freed star is flagged "inside ice" by the dying block
+            if (g_ice_hold++ > 0) { std::memcpy(pl + 0x5c, fs + 0x5c, 12); return; }
+            g_ice_went = true;
+            std::memcpy(pl + 0x5c, fs + 0x5c, 12);
+            std::fprintf(stderr, "[coop-ice] player put on the freed star at %d,%d,%d\n", *(const int *)(fs + 0x5c) >> 12, *(const int *)(fs + 0x60) >> 12, *(const int *)(fs + 0x64) >> 12);
+        }
+    }
+}
 void knob_loose() {
     char *pl = (char *)data_0209f394[data_0209f250 & 15];
     if (!pl) return;
@@ -2526,6 +2664,7 @@ void tick_est(unsigned now) {
     if (g_goto_id >= 0 && g_goto_tries < g_goto_max && g_est_frames >= g_goto_frame + 90u * (unsigned)g_goto_tries &&
         g_sec_count >= g_goto_after) knob_goto(g_goto_id, g_goto_tries++);
     if (knobs_on && !g_star_done && g_est_frames >= g_star_frame) knob_star();
+    if (knobs_on) knob_ice();   // BREAKFX2 proof knob, off unless SM64DS_COOP_ICE is set
     if (knobs_on && (g_loose_left > 0 || g_loose_uid)) knob_loose();   // COINS10
     if (knobs_on && g_place_on && g_est_frames >= g_place_frame && (g_place_level < 0 || (int)data_0209f2f8 == g_place_level)) {
         g_place_on = false;
