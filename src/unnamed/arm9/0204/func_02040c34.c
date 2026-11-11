@@ -2,10 +2,10 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
 #include "nitro/os/system.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 
 static inline void FlushFileShareArea(char *base, unsigned int size) {
-    CP15::FlushAndInvalidateDataCache((unsigned int)base, size);
+    DC_FlushRange(base, size);
 }
 
 /* mFreeList is base+0x2700, the same address as `end`. A member store CSEs
@@ -77,7 +77,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
                 char *zero;
                 FileShareNode *end;
                 FlushFileShareArea(base, sizeof(FileShareParentArea));
-                CP15::DrainWriteBuffer();
+                DC_WaitWriteBufferEmpty();
                 FileShareParentArea *nodes = (FileShareParentArea *)base;
                 saved = nodes->mNodes;
                 zero = 0;
@@ -110,7 +110,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
                 area->mBusyCount = 0;
                 area->mNewPacketSize = G->mParentPacketSize;
                 FlushFileShareArea(base, sizeof(FileShareParentArea));
-                CP15::DrainWriteBuffer();
+                DC_WaitWriteBufferEmpty();
                 WBT_InitParent(G->mParentPacketSize, G->mChildPacketSize, func_020412f0);
                 func_020424c0();
             }
@@ -135,7 +135,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
             int i;
             char *p;
             FlushFileShareArea(base, sizeof(FileShareChildArea));
-            CP15::DrainWriteBuffer();
+            DC_WaitWriteBufferEmpty();
             p = base + 0xc0;
             for (i = 0; i < 0x10; i++) {
                 arr->mBlockInfoTable[i] = (int)p;
@@ -152,7 +152,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
             func_020424c0();
             func_02041224(base, data_020a1fc0.mTableSize);
             FlushFileShareArea(base, sizeof(FileShareChildArea));
-            CP15::DrainWriteBuffer();
+            DC_WaitWriteBufferEmpty();
             WBT_InitChild(func_02040f30);
         }
     }

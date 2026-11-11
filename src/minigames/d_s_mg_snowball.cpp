@@ -51,7 +51,7 @@ enum dScMgSnowball_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "SpawnInfo.h"
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 #include "cstd.h"
 #include "decl_common.h"
@@ -1796,7 +1796,7 @@ s32 dScMgSnowball_c::InitResources() {
     gSubScreenLayers |= 0xc;
 
     buf = Ov004_LoadFileByPath(&sSnowballBgNclPath);
-    CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
+    DC_FlushRange(buf, 0x100);
     GX_LoadBGPltt(buf, 0x100, 0x100);
     GXS_LoadBGPltt(buf, 0x100, 0x100);
     Ov004_Deallocate(buf);
@@ -1807,7 +1807,7 @@ s32 dScMgSnowball_c::InitResources() {
     Ov004_Deallocate(buf);
 
     buf = Ov004_LoadFileByPath(&sSnowballNclPath);
-    CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
+    DC_FlushRange(buf, 0x100);
     GX_LoadOBJPltt(buf, 0, 0x100);
     GXS_LoadOBJPltt(buf, 0, 0x100);
     Ov004_Deallocate(buf);

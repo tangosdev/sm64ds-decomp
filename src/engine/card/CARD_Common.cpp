@@ -19,7 +19,7 @@
  */
 #include "types.h"
 #include "nitro/os/system.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/card/card_common.h"
 #include "nitro/os/spinLock.h"
 
@@ -112,7 +112,7 @@ void CARDi_InitCommon(void) {
         volatile u32 fill = 0;
         MIi_CpuClearFast(fill, &cardi_arg, sizeof(cardi_arg));
     }
-    CP15::FlushAndInvalidateDataCache((unsigned int)&cardi_arg, sizeof(cardi_arg));
+    DC_FlushRange(&cardi_arg, sizeof(cardi_arg));
     p->lock_queue = 0;
     p->busy_q = 0;
     p->priority = CARD_THREAD_PRIORITY_DEFAULT;

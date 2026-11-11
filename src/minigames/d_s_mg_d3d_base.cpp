@@ -21,7 +21,7 @@
 #include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "nitro/gx/gx_bgcnt.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 
 /* An OAM entry, with attributes 0 and 1 stored as one word the way this
  * code writes them. */
@@ -148,7 +148,7 @@ extern "C" void D3D_DrawSpriteTable(void)
         tileY += 8;
     }
 
-    CP15::FlushAndInvalidateDataCache((u32)sD3DOamShadow, 0x400);
+    DC_FlushRange(sD3DOamShadow, 0x400);
     GXS_LoadOAM(sD3DOamShadow, 0, 0x400);
 }
 

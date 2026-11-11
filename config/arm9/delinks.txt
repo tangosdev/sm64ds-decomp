@@ -2389,7 +2389,7 @@ src/engine/cp15/CP15_ProtectionUnit.cpp:
     complete
     .text start:0x020593cc end:0x020593ec
 
-src/engine/cp15/CP15_MPUDataRegion1.cpp:
+src/engine/cp15/OS_SetProtectionRegion1.cpp:
     complete
     .text start:0x020593ec end:0x020593f4
 

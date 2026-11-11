@@ -97,7 +97,7 @@
   "compiler_only_output": [],
   "notes": [
     "Hand-assembled, following arm9/FS_Rom: tu_map cannot segment arm9/main.",
-    "C++ for CP15:: (FS_ClearOverlayImage); every function keeps C linkage.",
+    "Built as C++, which the CP15:: cache calls once required; those calls are now the SDK's C-linkage DC_*/IC_* functions (nitro/os/cache.h). Every function keeps C linkage.",
     "Text-only: the digest key (data_0209a04c, data_0209a050) and the digest tables stay in the data link.",
     "FS_GetOverlayFileID returns its FSFileID by value, as pret's does: as C++, the old out-parameter form lost its stack temporary (0x18 bytes, not 0x28), and the by-value form matches. Its callers LoadOverlay and func_02018b64 take the same form and still match. struct Pair is the SDK's FSFileID. Those callers spell it Pair too, and a rename would change their declarations."
   ],

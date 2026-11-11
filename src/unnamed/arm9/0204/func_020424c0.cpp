@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "private/fs_views.h"
 
@@ -133,8 +133,8 @@ void func_020424c0(void) {
             *(int *)fp = max;
         }
 
-        CP15::FlushAndInvalidateDataCache((u32)fp, sl);
-        CP15::DrainWriteBuffer();
+        DC_FlushRange(fp, sl);
+        DC_WaitWriteBufferEmpty();
     }
 
     data_020a1fc0.mTable = fp;

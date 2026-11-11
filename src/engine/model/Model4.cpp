@@ -16,10 +16,7 @@
 #include "nitro/gx/gx_load.h"
 #include "msl/string.h"
 #include "GX.h"
-
-namespace CP15 {
-void EnableDTCM(void);
-}
+#include "nitro/os/tcm.h"
 
 extern "C" {
 extern u32 data_020a4bc8;
@@ -415,7 +412,7 @@ extern "C" void func_02045e2c(int obj, int i, int a, short b)
 
 extern "C" void func_02045d9c(void)
 {
-    CP15::EnableDTCM();
+    OS_EnableDTCM();
     u16 r3 = *(volatile u16 *)0x4000060;
     u16 r1 = (u16)0x4000340;
     int r2 = 0x7fff;

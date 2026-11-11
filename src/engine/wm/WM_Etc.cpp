@@ -6,7 +6,7 @@
  * WM_SetLifeTime sends three parameters, not four, and WM_SetGameInfo six,
  * not five. */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -29,7 +29,7 @@ int WM_SetGameInfo(int callback, int *userGameInfo, int userGameInfoSize, int gg
     if ((unsigned int)userGameInfoSize > 0x70)
         return 6;
     MIi_CpuCopy32(userGameInfo, data_020a9440, userGameInfoSize);
-    CP15::FlushDataCache((unsigned int)data_020a9440, userGameInfoSize);
+    DC_StoreRange(data_020a9440, userGameInfoSize);
     WM_SetCallbackTable(0x18, (void *)callback);
     ret = WM_SendCommand(0x18, 6, data_020a9440, userGameInfoSize, ggid, arg5, arg6, arg7);
     if (ret == 0)

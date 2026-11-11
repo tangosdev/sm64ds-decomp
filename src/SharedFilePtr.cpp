@@ -49,10 +49,7 @@ void *Allocate(u32 size, int align);
 void Deallocate(void *ptr);
 } // namespace Memory
 
-namespace CP15 {
-void FlushDataCache(unsigned int addr, unsigned int size);
-void FlushAndInvalidateDataCache(unsigned int addr, unsigned int size);
-} // namespace CP15
+#include "nitro/os/cache.h"
 
 /* The card stream Load reads through; only the cursor and end words are known. */
 struct FileStream {
@@ -127,7 +124,7 @@ void *SharedFilePtr::Load() {
             MI_CpuCopy8((void *)p, mem, size);
         }
         func_02018770();
-        CP15::FlushDataCache((unsigned int)mem, size);
+        DC_StoreRange(mem, size);
         filePtr = mem;
         return filePtr;
     }
@@ -143,7 +140,7 @@ void *SharedFilePtr::Load() {
     if (fsize <= 8)
         OS_Terminate();
     raw = (int)Memory::Allocate(fsize, 0x20);
-    CP15::FlushAndInvalidateDataCache((unsigned int)raw, fsize);
+    DC_FlushRange((void *)raw, fsize);
     int r = myFS_ReadFile(&obj2, (void *)raw, fsize);
     if (r != fsize)
         return 0;
@@ -162,7 +159,7 @@ void *SharedFilePtr::Load() {
         DecompressLZ16(tmp, (void *)raw);
         Memory::Deallocate(tmp);
     }
-    CP15::FlushDataCache((unsigned int)raw, fsize);
+    DC_StoreRange((void *)raw, fsize);
     filePtr = (void *)raw;
     return filePtr;
 }

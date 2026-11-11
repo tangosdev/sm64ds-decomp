@@ -4,7 +4,7 @@
  * WM_ERRCODE_ILLEGAL_STATE (3) before WM_Init, WM_ERRCODE_INVALID_PARAM
  * (6) for a null statusBuf, else WM_ERRCODE_SUCCESS. */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -19,7 +19,7 @@ int WM_ReadStatus(int *statusBuf) {
         return result;
     if (statusBuf == 0)
         return 6;
-    CP15::InvalidateDataCache((u32)sys->status, 0x930);
+    DC_InvalidateRange(sys->status, 0x930);
     MIi_CpuCopyFast(sys->status, statusBuf, 0x930);
     return 0;
 }

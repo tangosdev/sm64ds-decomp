@@ -149,9 +149,7 @@ extern void Luigi_PrepareScanlines(void);
 extern void Luigi_PushScanlineRecord(void);
 extern dScMgLuigi_c *dScMgLuigi_c_classInit(void);
 }
-namespace CP15 {
-void FlushAndInvalidateDataCache(u32 addr, u32 size);
-}
+#include "nitro/os/cache.h"
 
 namespace cstd {
 int sqrt(unsigned long long x);
@@ -256,7 +254,7 @@ void dScMgLuigi_c::BuildIrisTable(int irisIndex) {
         data_0209f648[writeBuffer][mirrorLine + 0x60].right =
             data_0209f648[writeBuffer][sourceLine].right;
     }
-    CP15::FlushAndInvalidateDataCache((u32)data_0209f648, 0x600);
+    DC_FlushRange(data_0209f648, 0x600);
     data_0209f60c = writeBuffer;
 }
 

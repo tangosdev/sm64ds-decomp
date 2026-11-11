@@ -20,7 +20,7 @@
 #include "Particle__Manager.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "Memory.h"
 #include "private/particle_resource_header.h"
 
@@ -139,7 +139,7 @@ void dPa_c::Initialise() {
         u32 size = *(u32 *)(file + 4) >> 8;
         void *dst = Memory::Allocate(size);
         DecompressLZ16(file + 4, dst);
-        CP15::FlushDataCache((unsigned int)dst, size);
+        DC_StoreRange(dst, size);
         mResourceFile = dst;
     }
 

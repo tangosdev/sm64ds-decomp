@@ -24,7 +24,7 @@
  * the functions at the same places in pret's order; an SDK function keeps
  * its name across versions, and each comment says what differs.
  */
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/os/interrupt.h"
 #include "nitro/ctrdg/ctrdg_common.h"
 
@@ -116,7 +116,7 @@ void CTRDGi_InitModuleInfo(void) {
         cip->gameCode = chd->gameCode;
     }
     MIi_CpuCopy32((int *)0xffff0020, &data_020a9e04, 0x9c);
-    CP15::FlushAndInvalidateDataCache();
+    DC_FlushAll();
     data = (((unsigned int)&data_020a9e00 + 0xfe000000) >> 5) << 6 | 1;
     CTRDGi_SendtoPxi(data);
     if (CTRDGi_Work.subpState != 1) {

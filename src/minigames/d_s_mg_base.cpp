@@ -40,7 +40,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "dEnemyBase_c.h"
 #include "PlayerInput.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx.h"
 #include "nitro/gx/gx_vramcnt.h"
@@ -1523,7 +1523,7 @@ int dScMgBase_c::SaveScreenForMenu() {
         int *pltt = (int *)save->mainBgPltt;
         MIi_CpuCopy32((int *)0x5000400, pltt + 0x80, 0x80);
     }
-    CP15::FlushAndInvalidateDataCache((u32)save->mainBgPltt, 0x400);
+    DC_FlushRange(save->mainBgPltt, 0x400);
 
     GX_LoadBGPltt((const void *)sMgMenuBgPltt, 0x20, 0xa0);
     GXS_LoadBGPltt((const void *)sMgMenuSubBgPltt, 0, 0x80);
@@ -1547,7 +1547,7 @@ int dScMgBase_c::SaveScreenForMenu() {
         MIi_CpuCopy32(vram, (int *)save->subObjChars, 0x2000);
         int idx = GetGameLanguage();
         DecompressLZ16(sMgMenuScreenByLanguage[idx], vram);
-        CP15::FlushAndInvalidateDataCache((u32)save->subObjChars, 0x2000);
+        DC_FlushRange(save->subObjChars, 0x2000);
     }
 }
 
@@ -3403,7 +3403,7 @@ void dScMgBase_c::InitEngines() {
     DecompressLZ16(p, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
     Ov004_Deallocate(p);
     p = Ov004_LoadFile(0xc3);
-    CP15::FlushAndInvalidateDataCache((u32)p, 0x100u);
+    DC_FlushRange(p, 0x100u);
     GX_LoadOBJPltt(p, 0x100u, 0x100u);
     GXS_LoadOBJPltt(p, 0x100u, 0x100u);
     Ov004_Deallocate(p);

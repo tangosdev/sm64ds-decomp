@@ -1,5 +1,5 @@
 //cpp
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "Memory.h"
 #include "private/fs_views.h"
 
@@ -25,7 +25,7 @@ void *func_0201834c(FSFile *self, int flag) {
     unsigned int len = self->prop.file.bottom - self->prop.file.top;
     if (len > 8) {
         void *buf = Memory::Allocate(len, -4);
-        CP15::FlushAndInvalidateDataCache((unsigned int)buf, len);
+        DC_FlushRange(buf, len);
         int r = myFS_ReadFile(self, buf, len);
         if (r != len)
             return result;
@@ -44,7 +44,7 @@ void *func_0201834c(FSFile *self, int flag) {
     FS_CloseFile(self);
     func_02018770();
     if (flag != 0)
-        CP15::FlushDataCache((unsigned int)result, len);
+        DC_StoreRange(result, len);
     return result;
 }
 }

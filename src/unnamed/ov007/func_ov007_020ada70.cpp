@@ -4,9 +4,7 @@
 #include "Ov007Display.h"
 #include "nitro/gx/gx_load.h"
 
-namespace CP15 {
-void FlushAndInvalidateDataCache(unsigned int a, unsigned int b);
-}
+#include "nitro/os/cache.h"
 
 extern "C" {
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
@@ -40,7 +38,7 @@ void func_ov007_020ada70(void) {
             break;
     }
     const u16 *dst = r5->palettes[1]->colors + n * 16;
-    CP15::FlushAndInvalidateDataCache((unsigned int)dst, 0x20);
+    DC_FlushRange(dst, 0x20);
     GXS_LoadOBJPltt(dst, 0x180, 0x20);
     RequestScreenFade(9, 2, func_ov007_020adb84);
 }

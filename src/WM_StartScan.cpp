@@ -1,9 +1,7 @@
 //cpp
 #include "private/wm_views.h"
 
-namespace CP15 {
-void FlushDataCache(unsigned int a, unsigned int b);
-}
+#include "nitro/os/cache.h"
 extern "C" {
 
 /* NitroSDK WMScanParam, WM_StartScan's argument (same names as
@@ -40,7 +38,7 @@ int WM_StartScan(void *callback, char *b) {
         return 6;
     h = param->channel;
     if (h < 1 || h > 0xe) return 6;
-    CP15::FlushDataCache((unsigned int)b, 0x20);
+    DC_StoreRange(b, 0x20);
     WM_SetCallbackTable(0xa, callback);
     req = (WMStartScanReq *)WM_GetSystemWork()->fifo9to7;
     req->apiid = 0xa;

@@ -9,7 +9,7 @@
  * with the ten 0x100-byte FIFO blocks and install the PXI receive callback
  * (WmReceiveFifo). */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 #include "nitro/os/message.h"
 
@@ -52,7 +52,7 @@ int WM_Init(void *buf, int ch) {
         return 4;
     }
 
-    CP15::InvalidateDataCache((unsigned int)buf, 0x1300);
+    DC_InvalidateRange(buf, 0x1300);
     MI_DmaFill32(ch, buf, 0, 0x1300);
 
     data_020a89ac = (WMArm9Buf *)buf;

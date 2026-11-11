@@ -45,7 +45,7 @@
  * MBi_SendMP pads short frames to a minimum size.
  */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "WmWork.h"
 #include "private/arm9_a9db8_mb_parent.h"
@@ -430,7 +430,7 @@ static inline void RecordScannedParent(WmWork *const w, char *arg0) {
             cb->macAddress[2] == tbl[i].scan.macAddress[2]) {
             tbl[i].scan.gameInfoLength = cb->gameInfoLength;
             *(GameInfo *)tbl[i].scan.gameInfo = *(GameInfo *)cb->gameInfo;
-            CP15::InvalidateDataCache((u32)&w->parents[i], 0xc0);
+            DC_InvalidateRange(&w->parents[i], 0xc0);
             MI_DmaCopy16(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
             w->lastParentIndex = i;
             return;
@@ -439,7 +439,7 @@ static inline void RecordScannedParent(WmWork *const w, char *arg0) {
     if (i < 0x10) {
         w->parentCount = i + 1;
         MIi_CpuCopy16(arg0, &tbl[i].scan, 0xb8);
-        CP15::InvalidateDataCache((u32)&w->parents[i], 0xc0);
+        DC_InvalidateRange(&w->parents[i], 0xc0);
         MI_DmaCopy16(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
         w->lastParentIndex = i;
     }

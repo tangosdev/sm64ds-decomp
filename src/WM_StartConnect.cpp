@@ -1,5 +1,5 @@
 //cpp
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -27,7 +27,7 @@ int WM_StartConnect(void *callback, int b, void *c) {
     r = WM_CheckStateEx(1, 2);
     if (r != 0) return r;
     if (b == 0) return 6;
-    CP15::FlushDataCache(b, 0xc0);
+    DC_StoreRange((void *)b, 0xc0);
     WM_SetCallbackTable(0xc, callback);
     p = WM_GetSystemWork();
     q = (WMStartConnectReq *)p->fifo9to7;

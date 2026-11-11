@@ -1,6 +1,5 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
 #include "nitro/os/system.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/os/thread.h"
@@ -17,7 +16,7 @@ extern unsigned char data_0209d4e4;
 void func_0201a028(void) {
     for (;;) {
         OS_DisableInterrupts();
-        CP15::WaitForInterrupt();
+        OS_Halt();
     }
 }
 

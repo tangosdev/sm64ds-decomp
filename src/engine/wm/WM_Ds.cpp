@@ -8,7 +8,7 @@
  * with WM_SetMPDataToPort, a failed send is state 3, not 5, and
  * WM_EndDataSharing is not linked. */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "private/wm_views.h"
 
@@ -66,7 +66,7 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
     if (r != 0)
         return r;
 
-    CP15::InvalidateDataCache((u32)&sys->status->mp_flag, 4);
+    DC_InvalidateRange(&sys->status->mp_flag, 4);
     if (sys->status->mp_flag == 0)
         return 3;
 
@@ -77,10 +77,10 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
     if (aidBitmap == 0)
         return 6;
 
-    CP15::InvalidateDataCache((u32)&sys->status->aid, 2);
+    DC_InvalidateRange(&sys->status->aid, 2);
     aid = sys->status->aid;
     if (aid == 0) {
-        CP15::InvalidateDataCache((u32)&sys->status->mp_readyBitmap, 2);
+        DC_InvalidateRange(&sys->status->mp_readyBitmap, 2);
         childMask = sys->status->mp_readyBitmap;
     }
 
@@ -173,7 +173,7 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
     if (result != 0)
         return result;
 
-    CP15::InvalidateDataCache((u32)(&p->status->mp_flag), 4);
+    DC_InvalidateRange(&p->status->mp_flag, 4);
     if (p->status->mp_flag == 0)
         return 3;
 
@@ -184,10 +184,10 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
     if (receiveData == 0)
         return 6;
 
-    CP15::InvalidateDataCache((u32)(&p->status->aid), 2);
+    DC_InvalidateRange(&p->status->aid, 2);
     aid = p->status->aid;
     if (aid == 0) {
-        CP15::InvalidateDataCache((u32)&p->status->mp_readyBitmap, 2);
+        DC_InvalidateRange(&p->status->mp_readyBitmap, 2);
         childMask = p->status->mp_readyBitmap;
     }
 
@@ -290,7 +290,7 @@ void WmDataSharingSetDataCallback(void *arg) {
     WMPortSendCallback *callback = (WMPortSendCallback *)arg;
     WMArm9Buf *c = WM_GetSystemWork();
     WMDataSharingInfo *r4 = (WMDataSharingInfo *)c->portCallbackArgument[callback->port];
-    CP15::InvalidateDataCache((u32)&c->status->aid, 2);
+    DC_InvalidateRange(&c->status->aid, 2);
     u16 v = c->status->aid;
     int kind = callback->errcode;
     if (kind == 0) {
@@ -370,7 +370,7 @@ void WmDataSharingReceiveCallback_Child(WMPortRecvCallback *callback) {
             if (r4 > 0x100)
                 r4 = 0x100;
         }
-        CP15::InvalidateDataCache((u32)&h->status->aid, 2);
+        DC_InvalidateRange(&h->status->aid, 2);
         if (r4 < 4)
             return;
         src = callback->data;
@@ -443,7 +443,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
     saved = OS_DisableInterrupts();
     slot = dsInfo->writeIndex;
     if (dsInfo->ds[slot].aidHeader == 0) {
-        CP15::InvalidateDataCache((u32)&ctx->status->mp_readyBitmap, 2);
+        DC_InvalidateRange(&ctx->status->mp_readyBitmap, 2);
 
         prevSlot = dsInfo->writeIndex;
         next = (u16)((prevSlot + 1) % 4);

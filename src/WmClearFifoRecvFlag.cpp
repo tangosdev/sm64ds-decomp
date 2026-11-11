@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -50,8 +50,8 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
     if (err != 0)
         return;
 
-    CP15::InvalidateDataCache((u32)data_020a89ac->fifo7to9, 0x100);
-    CP15::InvalidateDataCache((u32)data_020a89ac->status, 0xa00);
+    DC_InvalidateRange(data_020a89ac->fifo7to9, 0x100);
+    DC_InvalidateRange(data_020a89ac->status, 0xa00);
 
     op = msg[0];
     if (op >= 0x25) {
@@ -64,8 +64,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
             WMPortRecvCallback *recv = (WMPortRecvCallback *)msg;
             if (data_020a89ac->portCallbackTable[recv->port] != 0) {
                 recv->arg = data_020a89ac->portCallbackArgument[recv->port];
-                CP15::InvalidateDataCache((u32)recv->recvBuf,
-                                          data_020a89ac->status->mp_recvBufSize);
+                DC_InvalidateRange(recv->recvBuf, data_020a89ac->status->mp_recvBufSize);
                 ((Handler)data_020a89ac->portCallbackTable[recv->port])(msg);
             }
         } else if (op == 0x81) {
@@ -77,7 +76,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
     } else {
         if (op == 0xe) {
             if ((u16)(msg[2] + 0xfff5) <= 1 && msg[1] == 0) {
-                CP15::InvalidateDataCache(*(u32 *)(msg + 4), data_020a89ac->status->mp_recvBufSize);
+                DC_InvalidateRange(*(void **)(msg + 4), data_020a89ac->status->mp_recvBufSize);
             }
         }
 
@@ -132,7 +131,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
         }
     }
 
-    CP15::InvalidateDataCache((u32)data_020a89ac->fifo7to9, 0x100);
+    DC_InvalidateRange(data_020a89ac->fifo7to9, 0x100);
     WmClearFifoRecvFlag();
 }
 

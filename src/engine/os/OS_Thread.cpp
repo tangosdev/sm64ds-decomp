@@ -27,7 +27,6 @@
  */
 #include "types.h"
 #include "nitro/os/system.h"
-#include "CP15.h"
 #include "nitro/os/thread.h"
 
 /* The SDK's nitro/types.h spellings; include/types.h has no BOOL. */
@@ -41,8 +40,6 @@ typedef int BOOL;
 #define OS_THREAD_STATE_WAITING 0
 #define OS_THREAD_STATE_READY 1
 #define OS_THREAD_STATE_TERMINATED 2
-
-#define OS_PROCMODE_IRQ 0x12
 
 #define OSi_STACK_CHECKNUM_BOTTOM 0xfddb597dUL
 #define OSi_STACK_CHECKNUM_TOP 0x7bf9dd5bUL
@@ -63,10 +60,8 @@ extern void SDK_SYS_STACKSIZE(void);
 extern void SDK_IRQ_STACKSIZE(void);
 
 /* local extern: no header declares these yet. Their SDK names:
- * ARMProcessorMode is OS_GetProcMode, ARMSaveContext OS_SaveContext,
- * ARMRestoreContext OS_LoadContext; OSi_UnlockAllMutex is
- * src/engine/os/OS_Mutex.cpp. */
-extern int ARMProcessorMode(void);
+ * ARMSaveContext is OS_SaveContext, ARMRestoreContext OS_LoadContext;
+ * OSi_UnlockAllMutex is src/engine/os/OS_Mutex.cpp. */
 extern int ARMSaveContext(void *ctx);
 extern void ARMRestoreContext(void *ctx);
 extern void OS_InitContext(void *ctx, unsigned int pc, unsigned int sp);
@@ -295,7 +290,7 @@ void OS_RescheduleThread(void) {
     OSThread *nextThread;
     OSThreadInfo *info = &data_020a6134;
 
-    if (info->irqDepth != 0 || ARMProcessorMode() == OS_PROCMODE_IRQ) {
+    if (info->irqDepth != 0 || OS_GetProcMode() == OS_PROCMODE_IRQ) {
         info->isNeedRescheduling = TRUE;
         return;
     }
@@ -369,7 +364,7 @@ void OSi_IdleThreadProc(void *unused) {
 #pragma unused(unused)
     OS_EnableInterrupts();
     for (;;) {
-        CP15::WaitForInterrupt();
+        OS_Halt();
     }
 }
 }

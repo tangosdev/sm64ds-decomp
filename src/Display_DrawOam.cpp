@@ -1,6 +1,6 @@
 //cpp
 #include "Ov007Display.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 
 extern "C" {
 extern int func_ov007_020be0dc(void);
@@ -19,7 +19,7 @@ void Display_DrawOam(Ov007Display *d) {
     func_ov007_020c0b20(d->oamListMain, d->oamMain, 0);
     func_ov007_020c0b20(d->oamListSub, d->oamSub, 0);
     func_ov007_020be3bc();
-    CP15::FlushAndInvalidateDataCache((unsigned int)d->oamMain, 0x400);
-    CP15::FlushAndInvalidateDataCache((unsigned int)d->oamSub, 0x400);
+    DC_FlushRange(d->oamMain, 0x400);
+    DC_FlushRange(d->oamSub, 0x400);
 }
 }

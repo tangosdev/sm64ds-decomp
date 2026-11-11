@@ -21,7 +21,7 @@
  * (FS_LoadOverlayInfo).
  */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
@@ -73,8 +73,8 @@ void FS_ClearOverlayImage(FSOverlayInfo *p_ovi) {
     u32 ram_size = p_ovi->header.ram_size;
     u32 bss_size = p_ovi->header.bss_size;
     u32 total_size = ram_size + bss_size;
-    CP15::InvalidateInstructionCache(im_start, total_size);
-    CP15::InvalidateDataCache(im_start, total_size);
+    IC_InvalidateRange((void *)im_start, total_size);
+    DC_InvalidateRange((void *)im_start, total_size);
     MI_CpuFill8((void *)(im_start + ram_size), 0, total_size - ram_size);
 }
 
