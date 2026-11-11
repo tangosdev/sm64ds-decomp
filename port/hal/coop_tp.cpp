@@ -23,23 +23,30 @@ extern unsigned char data_0209f294[];     // star select
 extern unsigned char data_0209f2c4[];     // pause menu
 extern unsigned char data_0209b454[];     // fade / scene change flags
 extern unsigned char data_0209fc48[];     // cutscene
+extern signed char data_02092118;      // saved sublevel for the no-return chain
+extern signed char data_0209211c;      // castle sublevel to come back to
+void KillPlayer(void);
+void LoadLevel(unsigned level, unsigned entrance, unsigned star, unsigned unk, unsigned retEntrance);
 extern unsigned char data_02092110[];     // pending level change, <0 = none
 extern unsigned char data_0209f22c[];     // hold timer
 void LoadLevelNoReturn(unsigned level, unsigned entrance, unsigned star, unsigned unk);
 int port_level_is_mounted(int level);
 void port_chat_system_line(const char *text);
+int port_coop_late_joiner(void);
+int port_coop_host_seat(void);
 }
 
 namespace port {
 namespace {
 
-enum : int { kSubToggle = 0x40, kSettleMs = 1500, kPresMaxAgeMs = 4000, kToggleEveryMs = 3000, kSeats = 4, kHostSeat = 0, kHeardMaxAgeMs = 10000 };
+enum : int { kSubToggle = 0x40, kSettleMs = 1500, kPresMaxAgeMs = 4000, kToggleEveryMs = 3000, kSeats = 4, kHeardMaxAgeMs = 10000 };
 
 struct Seen { int level, act; unsigned since; bool valid; };
 
 struct State {
     bool env_on;                 // my own env (default on)
     bool host;                   // SM64DS_COOP_HOST
+    int  heard_seat = -1;        // the seat the setting came from
     int  heard;                  // -1 never, else the host's setting 0/1
     unsigned heard_ms;           // when the host last said it (comms_hub_now_ms)
     int  log;
@@ -53,6 +60,12 @@ struct State {
     int badge_log[kSeats];
     bool inited;
     int fake_seat; unsigned fake_tick; bool fake_done;
+    int follow;                  // REJOIN1 piece 5: 0 not yet looked, 1 armed, 2 done (went, or nothing to do)
+    unsigned follow_since;
+    int follow_entry;            // which late entry (port_coop_late_joiner) the follow belongs to
+    int fake2_seat = -1; unsigned fake2_tick; bool fake2_done;
+    unsigned chain_tick; int chain_from, chain_level; bool chain_done;
+    unsigned die_tick; bool die_done;
 };
 State g;
 
@@ -84,6 +97,17 @@ void init() {
         int s = -1; unsigned t = 0;
         if (std::sscanf(f, "%d@%u", &s, &t) == 2 && s >= 0 && s < kSeats) { g.fake_seat = s; g.fake_tick = t; }
     }
+    // Proof knobs for the saved sub-area chain: SM64DS_COOP_TP_FAKE2=<seat>@<tick> is a second click;
+    // SM64DS_COOP_TP_CHAIN=<tick>:<from>:<to> goes through a course's own door (LoadLevel with no return).
+    if (const char *f = std::getenv("SM64DS_COOP_TP_FAKE2")) {
+        int s = -1; unsigned t = 0;
+        if (std::sscanf(f, "%d@%u", &s, &t) == 2 && s >= 0 && s < kSeats) { g.fake2_seat = s; g.fake2_tick = t; }
+    }
+    if (const char *f = std::getenv("SM64DS_COOP_TP_DIE")) g.die_tick = (unsigned)std::atoi(f);   // KillPlayer in the chain level at this tick
+    if (const char *f = std::getenv("SM64DS_COOP_TP_CHAIN")) {
+        unsigned t = 0; int lv = 0, fr = 0;
+        if (std::sscanf(f, "%u:%d:%d", &t, &fr, &lv) == 3) { g.chain_tick = t; g.chain_from = fr; g.chain_level = lv; }
+    }
 #endif
 }
 
@@ -103,7 +127,7 @@ bool on_now() {
     // the host repeats its setting every kToggleEveryMs; silence (or the host
     // seat gone) means the last word no longer stands and my own env decides
     if (g.heard >= 0 && ((int)(comms_hub_now_ms() - g.heard_ms) > kHeardMaxAgeMs ||
-                         !(comms_hub_seat_mask() & (1u << kHostSeat))))
+                         g.heard_seat < 0 || !(comms_hub_seat_mask() & (1u << g.heard_seat))))
         g.heard = -1;
     return g.heard >= 0 ? g.heard != 0 : g.env_on;
 }
@@ -124,6 +148,28 @@ void seat_name(int seat, char *out, int cap) {
         }
     std::snprintf(out, (size_t)cap, "Player %d", seat + 1);
 }
+
+// ---- course -> castle painting table ---------------------------------------
+// Read from the ROM's castle sublevels (1 grounds, 2 first floor, 3 courtyard, 4 basement, 5 upper floors): every class 349 exit object
+// whose return entrance is not 0xff is a painting or door into a course. param1 = dest << 24 | destEntrance << 16
+// | retEntrance << 8. Sub-areas of a course (a later sublevel reached from inside it) come back through their
+// parent course's painting. Courses not listed (the cloud, Bowser fights not entered by a castle door) keep the
+// old "no return" load.
+struct CourseDoor { signed char course, castle, ret; };
+const CourseDoor kDoors[] = {
+    // first floor (2)
+    {6, 2, 8}, {8, 2, 9}, {10, 2, 6}, {7, 2, 7}, {35, 2, 10}, {29, 2, 14}, {30, 2, 13},
+    // grounds (1)
+    {32, 1, 11},
+    // courtyard (3)
+    {42, 3, 6},
+    // basement (4)
+    {14, 4, 4}, {16, 4, 6}, {13, 4, 7}, {18, 4, 8}, {37, 4, 9},
+    // upper floors (5)
+    {24, 5, 7}, {21, 5, 4}, {22, 5, 5}, {19, 5, 6}, {25, 5, 7}, {27, 5, 8}, {39, 5, 9}, {28, 5, 10}, {34, 5, 12}, {48, 5, 11},
+    // sub-areas, through the parent course's painting
+    {9, 2, 9}, {11, 2, 6}, {15, 4, 4}, {17, 4, 6}, {20, 5, 6}, {23, 5, 5}, {26, 5, 7}, {33, 4, 7},
+};
 
 // Why this console cannot leave now; null = it can.
 const char *my_gate() {
@@ -185,7 +231,31 @@ void try_tp(int seat, unsigned now) {
     g.tp_wall = wall_ms(); g.tp_level = p.level; g.tp_act = p.act;
     // Landing: the level's own START (entrance 0), as entering the course from its painting. The friend's
     // position is never read here: only their level and act.
-    LoadLevelNoReturn((unsigned)p.level, 0, (unsigned)p.act, 0);
+    int castle = 0, ret = 0;
+#ifndef PORT_ROM_CLEAN
+    static const bool old_way = std::getenv("SM64DS_COOP_TP_NORET") != nullptr;   // proof knob: the pre-fix load
+#else
+    const bool old_way = false;
+#endif
+    if (!old_way && coop_castle_entrance_for_course(p.level, &castle, &ret)) {
+        // Entered like the painting does: the castle sublevel and the painting's entrance are recorded, so a
+        // star exit, Exit Course or death puts this player back at that painting.
+        // A saved sub-area chain (LLL, SSL, TTM) must not survive: LoadLevel's return branch would redirect into it.
+        if (g.log) std::fprintf(stderr, "[cotp] saved chain before the load: data_02092118 = %d\n", (int)data_02092118);
+#ifndef PORT_ROM_CLEAN
+        static const bool late_clear = std::getenv("SM64DS_COOP_TP_LATECLEAR") != nullptr;   // proof knob: the order before review
+#else
+        const bool late_clear = false;
+#endif
+        if (!late_clear) data_02092118 = -1;
+        LoadLevel((unsigned)p.level, 0, (unsigned)p.act, 0, (unsigned)ret);
+        data_0209211c = (signed char)castle;
+        if (late_clear) data_02092118 = -1;
+        if (g.log) std::fprintf(stderr, "[cotp] return set: course %d -> castle sublevel %d entrance %d\n", p.level, castle, ret);
+    } else {
+        LoadLevelNoReturn((unsigned)p.level, 0, (unsigned)p.act, 0);
+        if (g.log) std::fprintf(stderr, "[cotp] no painting known for course %d: no-return load\n", p.level);
+    }
     ++g.st.warps;
     std::snprintf(t, sizeof t, "Going to %s", nm);
     say(t);
@@ -218,12 +288,50 @@ void on_ctl(int seat, int sub, const unsigned char *pl, int len, void *) {
     init();
     if (sub != kSubToggle || len != 4 || !pl || pl[1] != 1 || pl[2] || pl[3] || pl[0] > 1) return;
     if (g.host) return;                        // the host's own setting stands
-    if (seat != kHostSeat) return;             // only the host seat sets it for the others
+    if (seat < 0 || seat >= kSeats || seat == comms_hub_my_seat()) return;   // the host may sit on any hub seat (a lobby room can make it 1); only the host console ever sends this
     ++g.st.toggle_rx;
     if (g.heard != (int)pl[0] && g.log)
         std::fprintf(stderr, "[cotp] host setting from seat %d: TP %s wall=%lld\n", seat, pl[0] ? "ON" : "OFF", wall_ms());
     g.heard = pl[0];
+    g.heard_seat = seat;
     g.heard_ms = comms_hub_now_ms();
+}
+
+// REJOIN1 piece 5: a guest that came into a running room (a late joiner, or back through JOIN GAME) lands at the
+// castle. When the host is inside a course it is taken there once, by the same TP the badge does (so the castle
+// painting return is set too). Off with SM64DS_COOP_FOLLOW_HOST=0, with the TP off, or with SM64DS_COOP_REJOIN=0.
+// It waits quietly (no refusal lines) until the host has settled in its course and this player can leave, up to 60 s.
+enum : int { kFollowGiveUpMs = 60000 };
+void follow_host(unsigned now) {
+    if (g.host) return;
+    const int entry = port_coop_late_joiner();
+    if (entry && entry != g.follow_entry) { g.follow_entry = entry; g.follow = 0; }   // a new late entry: look again
+    if (g.follow == 2) return;
+    if (g.follow == 0) {
+        if (!entry || !in_hub()) return;
+        static const char *fe = std::getenv("SM64DS_COOP_FOLLOW_HOST");
+        if (!comms_hub_coop_rejoin() || (fe && fe[0] == '0' && fe[1] == 0)) { g.follow = 2; return; }
+        g.follow = 1; g.follow_since = now ? now : 1;
+        std::fprintf(stderr, "[cotp] REJOIN follow: late joiner at the castle, looking for the host's course\n");
+    }
+    if (!in_hub()) { g.follow = 2; std::fprintf(stderr, "[cotp] REJOIN follow: I left the castle myself, no follow\n"); return; }
+    if ((int)(now - g.follow_since) > kFollowGiveUpMs) {
+        g.follow = 2; std::fprintf(stderr, "[cotp] REJOIN follow: the host never settled in a course within 60 s, staying\n"); return;
+    }
+    if (!on_now()) return;
+    const int hs = port_coop_host_seat();   // a lobby room can put the host on hub seat 1
+    if (hs < 0 || hs >= kSeats || hs == comms_hub_my_seat()) return;
+    HubPresence p; unsigned age = 0;
+    if (!hub_presence_get(hs, &p, &age) || age > (unsigned)kPresMaxAgeMs || !p.in_level()) return;
+    if (p.level >= 1 && p.level <= 5) {     // the host is in the castle too: nothing to follow
+        g.follow = 2; std::fprintf(stderr, "[cotp] REJOIN follow: the host is in the castle (sublevel %d), no follow\n", p.level); return;
+    }
+    const Seen &z = g.seen[hs];
+    if (p.in_menu() || p.in_cutscene() || !z.valid || (int)(now - z.since) < kSettleMs || p.level > 51 || p.act < 0 || p.act > 7) return;
+    if (!port_level_is_mounted(p.level) || my_gate()) return;
+    g.follow = 2;
+    std::fprintf(stderr, "[cotp] REJOIN follow: the host is in level %d act %d, going there\n", p.level, p.act);
+    try_tp(hs, now);
 }
 
 void on_frame(unsigned now) {
@@ -245,8 +353,23 @@ void on_frame(unsigned now) {
         g.fake_done = true;
         if (on_now()) s = g.fake_seat; else if (g.log) std::fprintf(stderr, "[cotp] fake click ignored: TP is off\n");
     }
+    if (g.fake2_seat >= 0 && !g.fake2_done && g.tick >= g.fake2_tick) {
+        g.fake2_done = true;
+        if (on_now()) s = g.fake2_seat;
+    }
+    if (g.chain_level && !g.chain_done && g.tick >= g.chain_tick && (int)data_0209f2f8 == g.chain_from && (data_0209f22c[0] == 0)) {
+        g.chain_done = true;
+        std::fprintf(stderr, "[cotp] chain knob: door from level %d to %d, no return\n", (int)data_0209f2f8, g.chain_level);
+        LoadLevel((unsigned)g.chain_level, 0, 1, 0, (unsigned)-1);
+    }
+    if (g.die_tick && !g.die_done && g.tick >= g.die_tick && g.chain_done && (int)data_0209f2f8 == g.chain_level) {
+        g.die_done = true;
+        std::fprintf(stderr, "[cotp] die knob: KillPlayer in level %d, chain word %d\n", (int)data_0209f2f8, (int)data_02092118);
+        KillPlayer();
+    }
 #endif
     if (s >= 0) try_tp(s, now);
+    else follow_host(now);
 }
 
 void on_established(int level, int act) {
@@ -270,6 +393,16 @@ struct Reg {
 }  // namespace
 
 CoopTpStats coop_tp_stats() { return g.st; }
+
+bool coop_castle_entrance_for_course(int course, int *castle_sublevel, int *return_entrance) {
+    for (const CourseDoor &d : kDoors)
+        if (d.course == course) {
+            if (castle_sublevel) *castle_sublevel = d.castle;
+            if (return_entrance) *return_entrance = d.ret;
+            return true;
+        }
+    return false;
+}
 bool coop_tp_enabled() { return on_now(); }
 
 }  // namespace port

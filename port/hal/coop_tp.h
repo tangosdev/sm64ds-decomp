@@ -45,6 +45,10 @@ CoopTpStats coop_tp_stats();
 // True while TP is on for this console (coop room, toggle on).
 bool coop_tp_enabled();
 
+// Where leaving a course puts the player: the castle sublevel (1..5) holding that course's painting and the
+// entrance number inside it. False for a level no castle door leads to. (REJOIN1 reads this too.)
+bool coop_castle_entrance_for_course(int course, int *castle_sublevel, int *return_entrance);
+
 }  // namespace port
 
 #endif

@@ -27,6 +27,8 @@ struct LobbyState {
     int coop_save_continue;                      /* coop: 0 New, 1 Continue */
     int n_chat; char chat[32][96];               /* newest last, "name: text" */
     char error_head[40];                         /* LOBBY_FAILED's heading when it is not "could not get in" ("" = that) */
+    int can_rejoin;                              /* REJOIN1: a started coop room whose game this console has left (quit, or the
+                                                    connection was lost): lobby_rejoin_game() takes it back in (JOIN GAME) */
 };
 
 const LobbyState *lobby_state(void);
@@ -43,5 +45,7 @@ void lobby_send_chat(const char *text);
 void lobby_kick(int seat);                        /* host */
 void lobby_ban(int seat);                         /* host: a kick that keeps that player out until the room closes (lobby v7) */
 void lobby_mute(int seat, int muted);             /* local only */
+void lobby_rejoin_game(void);                     /* REJOIN1: back into the room's running coop game (when can_rejoin) */
+void lobby_set_colors(void);                      /* coopfix1 LOBBYUI1: send the colours saved in the settings (the `color` verb, lobby state only) */
 
 #endif
