@@ -37,6 +37,7 @@
 //   SM64DS_COOP_BULLY=0              MUST-FAIL control (coopbully1): no bully claim, a knock stays on the hitter's console
 //   SM64DS_COOP_BULLY_BUMP=F:cls[:every[:count[:angle[:speed]]]]   from boss tick F knock the nearest live bully of class 215 / 216 back
 //                                    the way a punch does, on THIS console, with the local player put behind it (proof only)
+//   SM64DS_COOP_BULLY_STAND=F:cls:dist[:every]   put the local player dist units beside the nearest live bully of that class
 //   SM64DS_COOP_BOSS_FORGE=F:name    one forged datagram (short long count cls slot nf hp key flags notboss)
 
 #ifndef PORT_HAL_COOP_BOSS_H

@@ -378,6 +378,8 @@ enum : unsigned { kBullyClaimMs = 1500 };
 unsigned g_bclaim[kSlots][kSeats];  // hub ms until which a seat's claim on a bully slot holds
 bool g_bully_on = true;             // SM64DS_COOP_BULLY=0: must-fail control, no bully claim (the 1.0.2 behaviour, plus the small Bully row)
 struct BumpKnob { unsigned tick, every; int cls; int ang; bool on; int left; int speed; };
+struct BStandKnob { unsigned tick, every; int cls, dist; bool on; };
+BStandKnob g_bstand = {};          // SM64DS_COOP_BULLY_STAND=F:cls:dist[:every]: the local player stands dist units from the nearest bully of cls
 BumpKnob g_bump = {};               // SM64DS_COOP_BULLY_BUMP=F:cls[:every[:count[:angle[:speed]]]]
 bool is_bully(unsigned cls) { return cls == 215 || cls == 216; }
 unsigned g_tok_t = 0; double g_tokens = 6.0;
@@ -547,6 +549,11 @@ void read_env() {
     check_descriptors();
     g_deadmark = flag("SM64DS_COOP_BOSS_DEADMARK", true);
     g_bully_on = flag("SM64DS_COOP_BULLY", true);
+    if (const char *bs = std::getenv("SM64DS_COOP_BULLY_STAND")) {
+        unsigned f = 0, ev = 0; int cls = 0, dist = 0;
+        const int n = std::sscanf(bs, "%u:%i:%i:%u", &f, &cls, &dist, &ev);
+        if (n >= 3 && (cls == 215 || cls == 216)) { g_bstand.tick = f; g_bstand.cls = cls; g_bstand.dist = dist; g_bstand.every = n >= 4 ? ev : 0; g_bstand.on = true; }
+    }
     if (const char *bp = std::getenv("SM64DS_COOP_BULLY_BUMP")) {
         unsigned f = 0, ev = 0; int cls = 0, cnt = 1, ang = -1, spd = 40;
         const int n = std::sscanf(bp, "%u:%i:%u:%i:%i:%i", &f, &cls, &ev, &cnt, &ang, &spd);
@@ -1322,6 +1329,26 @@ void do_bump() {
                  was, state_of(b), rd32(a, 0x5c) >> 12, rd32(a, 0x60) >> 12, rd32(a, 0x64) >> 12, (int)(uint16_t)ang, g_bump.speed, g_bump.left, wall_ms());
 }
 
+// coopbully1 proof knob SM64DS_COOP_BULLY_STAND: the local player stands `dist` units beside the nearest live bully of class cls (so the
+// shared target, and with it the Big Bully's authority, can be put on this console in a row).
+void do_bstand() {
+    const int me = (int)data_0209f250;
+    g_bstand.tick = g_ticks + (g_bstand.every ? g_bstand.every : 1u);
+    if (!g_bstand.every) g_bstand.on = false;
+    if (me < 0 || me >= 16 || !data_0209f394[me]) return;
+    char *pl = (char *)data_0209f394[me];
+    for (int slot = 0; slot < kSlots; ++slot) {
+        const Boss &b = g_boss[slot];
+        if (!b.a || b.d->cls != (unsigned)g_bstand.cls || state_of(b) >= 4u) continue;
+        if (b.d->cls == 216 && (unsigned char)b.a[0x3fe] < 4u) continue;
+        const int32_t x = rd32(b.a, 0x5c) + (g_bstand.dist << 12), y = rd32(b.a, 0x60) + 0x8000, z = rd32(b.a, 0x64);
+        std::memcpy(pl + 0x5c, &x, 4); std::memcpy(pl + 0x60, &y, 4); std::memcpy(pl + 0x64, &z, 4);
+        if (g_log) std::fprintf(stderr, "[cbs-knob] bully stand: local player %d units from slot=%d cls=%u w=%lld\n", g_bstand.dist, slot, (unsigned)b.d->cls, wall_ms());
+        return;
+    }
+    g_bstand.on = true;                     // none yet: try again next tick
+}
+
 void do_forge(const char *name) {
     int slot = -1;
     for (int i = 0; i < kSlots; ++i) if (g_boss[i].a) { slot = i; break; }
@@ -1486,6 +1513,7 @@ void on_frame(unsigned now) {
         for (int i = 0; i < g_nforge; ++i)
             if (!g_forge[i].done && g_ticks >= g_forge[i].tick) { g_forge[i].done = true; do_forge(g_forge[i].name); }
         if (g_bump.on && g_bump.left > 0 && g_ticks >= g_bump.tick) do_bump();
+        if (g_bstand.on && g_ticks >= g_bstand.tick) do_bstand();
     }
     if (g_log && g_nb > 0 && (unsigned)(now - g_stat_t) >= 4000u) {
         g_stat_t = now;
