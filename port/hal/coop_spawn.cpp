@@ -149,6 +149,7 @@ struct SilStats { unsigned long long credit_take, credit_ann, credit_snap, cappe
 // A member whose owner never says a count (an older build) keeps counting on its own, as before.
 unsigned g_sil_brick_frame = 0; bool g_sil_brick_done = true;     // SM64DS_SILVER_BRICK=<frame>: break (daObjBlockL_c::Kill) the first brick block holding a silver star tag (proof knob)
 unsigned g_sil_goomba_frame = 0; bool g_sil_goomba_done = true;   // SM64DS_SILVER_GOOMBA=<frame>: the first silver star Goomba gives its star and is removed, the ROM's two calls (proof knob)
+unsigned g_sil_skew_frame = 0; int g_sil_skew = 0; bool g_sil_skew_done = true;   // SM64DS_SILVER_SKEW=<frame>:<delta>: my count moves by delta with nothing said, a lost message's drift (proof knob)
 bool g_sil_auth_off = false;       // SM64DS_SILVER_AUTH_OFF=1: must-fail control, every console keeps its own count (the 1.0.2 behaviour)
 enum : unsigned { kSilGraceMs = 1500, kSilBeatMs = 1000, kSilSeqStaleMs = 3000 };
 unsigned g_sil_change_t = 0; bool g_sil_changed = false;     // comms time of my last count change by a game event here
@@ -235,6 +236,7 @@ void read_env() {
     }
     if (const char *e = std::getenv("SM64DS_SILVER_GOTO_WALL")) g_sil_goto_wall = std::atoll(e);
     if (const char *e = std::getenv("SM64DS_SILVER_AUTH_OFF")) g_sil_auth_off = *e && *e != '0';
+    if (const char *e = std::getenv("SM64DS_SILVER_SKEW")) { unsigned f = 0; int d = 0; if (std::sscanf(e, "%u:%i", &f, &d) == 2) { g_sil_skew_frame = f; g_sil_skew = d; g_sil_skew_done = false; } }
     if (const char *e = std::getenv("SM64DS_SILVER_BRICK")) { unsigned f = 0; if (std::sscanf(e, "%u", &f) == 1) { g_sil_brick_frame = f; g_sil_brick_done = false; } }
     if (const char *e = std::getenv("SM64DS_SILVER_GOOMBA")) { unsigned f = 0; if (std::sscanf(e, "%u", &f) == 1) { g_sil_goomba_frame = f; g_sil_goomba_done = false; } }
     if (const char *e = std::getenv("SM64DS_SILVER_DROP")) {
@@ -1481,6 +1483,7 @@ void new_level() {
     g_sil_drop_done = g_sil_drop_frame == 0;
     g_sil_pit_done = g_sil_pit_frame == 0;
     g_sil_brick_done = g_sil_brick_frame == 0;
+    g_sil_skew_done = g_sil_skew_frame == 0;
     g_sil_goomba_done = g_sil_goomba_frame == 0;
     g_early_sil = keep_sil;
 }
@@ -1618,6 +1621,12 @@ void on_frame(unsigned now) {
         const int r = _ZN6Player19func_ov002_020d94ccEv(my_player());
         for (int i = 0; i < nk; ++i) *(unsigned char *)(mk[i] + 0x1d8) = keep[i];
         std::fprintf(stderr, "[coopsilver-knob] hurt drop on my player: %d (mine=%d) wall=%lld\n", r, sil_me() >= 0 ? (int)data_0209f310[sil_me()] : -1, wall_ms());
+    }
+    if (!g_sil_skew_done && g_armed && g_frames >= g_sil_skew_frame && sil_me() >= 0) {   // COOPSILVER3 proof knob: a silent drift
+        g_sil_skew_done = true;
+        const int was = (int)data_0209f310[sil_me()];
+        sil_write(was + g_sil_skew);
+        std::fprintf(stderr, "[coopsilver-knob] skew: mine %d -> %d sum=%d, nothing said frame=%u wall=%lld\n", was, (int)data_0209f310[sil_me()], sil_total(), g_frames, wall_ms());
     }
     if (!g_sil_brick_done && g_armed && g_frames >= g_sil_brick_frame) {     // COOPSILVER3 proof knob: a silver star brick block breaks here
         g_sil_brick_done = true;
