@@ -50,7 +50,7 @@ enum dScMgSlots_AssetId {
 
 #include "dScMgSlot1_c.h"
 #include "nitro/hw/registers.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "dScMgSlot3_c.h"
 #include "Sound.h"
 #include "OAM.h"
@@ -60,9 +60,9 @@ enum dScMgSlots_AssetId {
 #include "types.h"
 #include "PlayerInput.h"
 #include "dWipe_c.h"
-#include "G2x.h"
-#include "CP15.h"
-#include "GX.h"
+#include "nitro/gx/g2.h"
+#include "nitro/os/cache.h"
+#include "nitro/gx/gx_load.h"
 #include "LevelRng.h"
 
 #pragma defer_codegen off
@@ -92,7 +92,6 @@ extern "C" {
 extern int sMgMainBannerY;
 void SetBg1Offset(int a, int b);
 int GetGameLanguage(void);
-void *func_02054ea8(void);
 // Retained caller ABI: narrowing to the definition's u16 adds a mask in InitMainScreenBg.
 unsigned int LoadCompressedFileAt(int fileID, void *target);
 extern unsigned char gMainScreenLayers;
@@ -102,7 +101,7 @@ void Mg_SubCredits(void *c, int val);
 extern void Mg_SubmitScore(int self);
 extern int data_ov006_0213e948[];
 extern void Slot3_ReelDigits(char *c, int i);
-extern int Sound_PlayIfNotActive(int, int, int, int);
+extern int Sound_PlayIfNotActive(int, int, int, short);
 extern int RandomIntInternal(int *seed);
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
@@ -149,7 +148,6 @@ extern void SlotLamp_Tick(void *o);
 extern void SlotBlink_Start(void *o, s16 x, s16 y);
 extern void SlotBlink_Tick(void *o);
 extern void SlotReel_SetSpeed(void *o, int v);
-extern int SlotReels_CheckStopped(void *self);
 extern int sSlotReelScrollSpeeds[];
 extern u8 sSlot1Payouts[];
 extern s16 sSlotMatchBlinkX[][2];
@@ -160,7 +158,7 @@ extern dWipe_c data_0209f61c;
 
 extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 }
 
 /* ~dScMgSlot1_c() (D1, complete-object destructor). The empty body is the
@@ -222,8 +220,8 @@ void dScMgSlot3_c::InitMainScreenBg() {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
 
     idx = GetGameLanguage();
-    LoadCompressedFileAt(sSlotPauseBgNcgByLanguage[idx], func_02054ea8());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_PAUSE_NSC_BIN, G2::GetBG1ScrPtr());
+    LoadCompressedFileAt(sSlotPauseBgNcgByLanguage[idx], G2_GetBG1CharPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_PAUSE_NSC_BIN, G2_GetBG1ScrPtr());
 
     *(volatile unsigned short *)0x400000a = (*(volatile unsigned short *)0x400000a & 0x43) | 0x1118;
 }
@@ -593,7 +591,6 @@ void dScMgSlot3_c::StartRound(int mode) {
     }
 }
 
-
 // Bracketed, not file-global: with #pragma defer_codegen off these bind to
 // the functions between them. Measured -- this member DIFFs without them and
 // the members outside them DIFF with them applied file-wide.
@@ -800,25 +797,25 @@ s32 dScMgSlot3_c::InitResources() {
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 3;
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NCG_BIN, (void *)func_02054d88());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NCG_BIN, (void *)G2_GetBG3CharPtr());
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NCL_BIN);
-        GX::LoadBGPltt(h, 0x60, 0x1a0);
-        GXS::LoadBGPltt(h, 0x60, 0x1a0);
+        GX_LoadBGPltt(h, 0x60, 0x1a0);
+        GXS_LoadBGPltt(h, 0x60, 0x1a0);
         Deallocate(h);
     }
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE02_NSC_BIN, G2::GetBG1ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NUKI_NSC_BIN, G2::GetBG2ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE02_NSC_BIN, G2_GetBG1ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NUKI_NSC_BIN, G2_GetBG2ScrPtr());
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_FACE_NSC_BIN);
-        func_02056314(h, 0, 0x800);
+        GX_LoadBG3Scr(h, 0, 0x800);
         Deallocate(h);
     }
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, (void *)0x6400000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, G2_GetOBJCharPtr());
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
                         DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
@@ -826,20 +823,20 @@ s32 dScMgSlot3_c::InitResources() {
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x1218;
     *(volatile u16 *)0x400100c = *(volatile u16 *)0x400100c & ~0x40;
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NCG_BIN, G2S::GetBG2CharPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_DOWN_NSC_BIN, G2S::GetBG2ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, (void *)0x6600000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NCG_BIN, G2S_GetBG2CharPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_DOWN_NSC_BIN, G2S_GetBG2ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, G2S_GetOBJCharPtr());
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_SLOT_FACE_NCL_BIN);
-        CP15::FlushAndInvalidateDataCache((u32)h, 0xe0);
-        GX::LoadOBJPltt(h, 0, 0xe0);
-        GXS::LoadOBJPltt(h, 0, 0xe0);
+        DC_FlushRange(h, 0xe0);
+        GX_LoadOBJPltt(h, 0, 0xe0);
+        GXS_LoadOBJPltt(h, 0, 0xe0);
         Deallocate(h);
     }
 
     gSubScreenLayers = 0x14;
-    G2x::SetBlendAlpha((volatile u16 *)0x4000050, 0, 0xc, 0xc, 4);
+    G2x_SetBlendAlpha_((volatile u16 *)0x4000050, 0, 0xc, 0xc, 4);
 
     Mascot_Load((char *)&mMascot);
     Camera_InitSlotsView((char *)&mCamera);
@@ -1059,7 +1056,6 @@ void SlotBet_Place(char *icon) {
 }
 }
 
-
 int dScMgSlot1_c::CloseMenu() {
     dScMgBase_c::CloseMenu();
     SetSubBg1Offset(0x100, 0);
@@ -1072,43 +1068,40 @@ void dScMgSlot1_c::OpenMenu() {
     dScMgBase_c::OpenMenu();
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
-int SlotReels_CheckStopped(void *self) {
-    dScMgSlot1_c *scene = (dScMgSlot1_c *)self;
+int dScMgSlot1_c::SlotReels_CheckStopped() {
     int matches;
     int matchedSymbol;
     int reelIndex;
 
-    scene->mWildCount = 0;
+    mWildCount = 0;
     matches = 1;
     for (reelIndex = 0; reelIndex < 3; reelIndex++) {
-        if (scene->mReelStrip[reelIndex][scene->mSymbolIndex[reelIndex]] == 5) {
-            scene->mWildCount++;
+        if (mReelStrip[reelIndex][mSymbolIndex[reelIndex]] == 5) {
+            mWildCount++;
         } else {
-            matchedSymbol = scene->mReelStrip[reelIndex][scene->mSymbolIndex[reelIndex]];
+            matchedSymbol = mReelStrip[reelIndex][mSymbolIndex[reelIndex]];
             break;
         }
     }
-    if (scene->mWildCount >= 3) {
+    if (mWildCount >= 3) {
         matchedSymbol = 5;
     } else if (reelIndex < 2) {
         for (reelIndex = reelIndex + 1; reelIndex < 3; reelIndex++) {
-            u8 symbol = scene->mReelStrip[reelIndex][scene->mSymbolIndex[reelIndex]];
+            u8 symbol = mReelStrip[reelIndex][mSymbolIndex[reelIndex]];
             if (symbol == 5) {
-                scene->mWildCount++;
+                mWildCount++;
             } else if (matchedSymbol != symbol) {
                 matches = 0;
             }
         }
     }
     if (matches) {
-        if (scene->mSpeedTableOffset < 2) {
-            scene->mSpeedTableOffset += 1;
+        if (mSpeedTableOffset < 2) {
+            mSpeedTableOffset += 1;
         }
-        scene->mMatchedSymbol = matchedSymbol;
+        mMatchedSymbol = matchedSymbol;
     }
     return matches;
-}
 }
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
@@ -1192,7 +1185,6 @@ s32 dScMgSlot1_c::Render() {
     SlotBlink_Draw((unsigned char *)&mWildBlink);
     return 1;
 }
-
 
 /* Mario Slot's per-frame state machine (vtable slot 6). Byte-exact since
  * 2026-10-12; the 19-word residue banked as a compiler floor was a source
@@ -1292,7 +1284,7 @@ s32 dScMgSlot1_c::Behavior() {
                 }
             }
             if (stopped == 1) {
-                mHasMatch = SlotReels_CheckStopped(this);
+                mHasMatch = SlotReels_CheckStopped();
                 mPayoutMultiplier = 0;
                 if (mHasMatch != 0) {
                     mPayoutMultiplier += sSlot1Payouts[mMatchedSymbol];
@@ -1426,15 +1418,15 @@ s32 dScMgSlot1_c::InitResources() {
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1310;
     *(volatile u16 *)0x400000e = *(volatile u16 *)0x400000e & ~0x40;
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_UP_NCG_BIN, (void *)func_02054d88());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN, (char *)G2::GetBG2CharPtr() + 0x7800);
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_UP_NCG_BIN, (void *)G2_GetBG3CharPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN, (char *)G2_GetBG2CharPtr() + 0x7800);
     {
         void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_UP_NCL_BIN);
-        GX::LoadBGPltt(h, 0x60, 0x1a0);
+        GX_LoadBGPltt(h, 0x60, 0x1a0);
         Deallocate(h);
     }
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_SCORE_UP_NSC_BIN, G2::GetBG2ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_UP_NSC_BIN, G2::GetBG3ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_SCORE_UP_NSC_BIN, G2_GetBG2ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_UP_NSC_BIN, G2_GetBG3ScrPtr());
 
     gMainScreenLayers = DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
 
@@ -1453,37 +1445,36 @@ s32 dScMgSlot1_c::InitResources() {
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x1310;
     *(volatile u16 *)0x400100e = *(volatile u16 *)0x400100e & ~0x40;
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_DOWN_NCG_BIN, G2S::GetBG2CharPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN,
-                         (char *)G2S::GetBG0CharPtr() + 0x7800);
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_DOWN_NCG_BIN, G2S_GetBG2CharPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN, (char *)G2S_GetBG0CharPtr() + 0x7800);
     {
         void *h = LoadFile(ASSET_D_2D_MG_BG_SLOT_DOWN_NCL_BIN);
-        GXS::LoadBGPltt(h, 0x60, 0x1a0);
+        GXS_LoadBGPltt(h, 0x60, 0x1a0);
         Deallocate(h);
     }
-    LoadCompressedFileAt(ASSET_D_2D_GRADE_NSC_BIN, G2S::GetBG0ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_BADWIZER_NSC_BIN, (char *)G2S::GetBG1ScrPtr() + 0x800);
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_DOWN_NSC_BIN, G2S::GetBG2ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_GRADE_NSC_BIN, G2S_GetBG0ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_BADWIZER_NSC_BIN, (char *)G2S_GetBG1ScrPtr() + 0x800);
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_DOWN_NSC_BIN, G2S_GetBG2ScrPtr());
 
     {
-        char *d3 = (char *)G2S::GetBG3ScrPtr();
+        char *d3 = (char *)G2S_GetBG3ScrPtr();
         fill = 0x43e4;
-        MultiStore16(fill, d3, 0x800);
+        MIi_CpuClear16(fill, d3, 0x800);
     }
 
-    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], (void *)0x6400000);
-    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
+    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], G2_GetOBJCharPtr());
+    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], G2S_GetOBJCharPtr());
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_SLOT_NCL_BIN);
-        GX::LoadOBJPltt(h, 0, 0x40);
-        GXS::LoadOBJPltt(h, 0, 0x40);
+        GX_LoadOBJPltt(h, 0, 0x40);
+        GXS_LoadOBJPltt(h, 0, 0x40);
         Deallocate(h);
     }
 
     gSubScreenLayers = 0x1d;
     *(volatile u16 *)0x4000050 = 0;
-    G2x::SetBlendAlpha((volatile u16 *)0x4001050, 1, 0x1c, 7, 9);
+    G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 1, 0x1c, 7, 9);
 
     sMgWinBannerX = 0x80;
     sMgWinBannerY = 0x40;

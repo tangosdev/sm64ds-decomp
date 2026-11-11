@@ -5,7 +5,7 @@
  * CARDi_EndTask, which clears the bit again.
  */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/card/card_common.h"
 
 extern "C" {
@@ -13,14 +13,14 @@ extern "C" {
 void CARDi_TaskThread(void *arg) {
     CARDiCommon *const p = &cardi_common;
     for (;;) {
-        u32 bak_psr = IRQ::Disable();
+        OSIntrMode bak_psr = OS_DisableInterrupts();
         for (;;) {
             if (p->flag & CARD_STAT_TASK)
                 break;
             p->cur_th = &p->thread;
             OS_SleepThread(0);
         }
-        IRQ::Restore(bak_psr);
+        OS_RestoreInterrupts(bak_psr);
         (*p->task_func)(p);
     }
 }

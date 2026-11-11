@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -17,13 +17,13 @@ int WM_GetMPSendBufferSize(void) {
     if (WM_CheckStateEx(2, 7, 8) != 0)
         return 0;
 
-    CP15::InvalidateDataCache((u32)&r4->status->mp_flag, 4);
+    DC_InvalidateRange(&r4->status->mp_flag, 4);
 
     p = r4->status;
     if (p->mp_flag == 1)
         return 0;
 
-    CP15::InvalidateDataCache((u32)&p->mp_maxSendSize, 4);
+    DC_InvalidateRange(&p->mp_maxSendSize, 4);
 
     return (r4->status->mp_maxSendSize + 0x1f) & ~0x1f;
 }

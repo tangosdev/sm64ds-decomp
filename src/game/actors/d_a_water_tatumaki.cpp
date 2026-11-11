@@ -113,7 +113,7 @@ extern BTA_File data_ov026_02112f40;
 
 /* local extern: no shared header declares these. */
 extern "C" {
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void KillPlayer(void);
 }
@@ -141,7 +141,7 @@ int daWater_Tatumaki_c::StateDrag() {
     player = this->ClosestPlayer();
     if (player) {
         Matrix4x3_FromRotationY(&data_020a0e68, this->mPullAngle);
-        MulVec3Mat4x3(&target, &data_020a0e68, &offset);
+        MTX_MultVec43(&target, &data_020a0e68, &offset);
         target.x = this->mCenter.x;
         target.y = this->mCenter.y;
         target.z = this->mCenter.z;
@@ -239,7 +239,7 @@ int daWater_Tatumaki_c::StateSpin() {
                 Matrix4x3_FromRotationY(&data_020a0e68,
                                         (short)(this->HorzAngleToCPlayer() + kHalfTurn));
                 Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, kPullTilt);
-                MulVec3Mat4x3(&pull, &data_020a0e68, &out);
+                MTX_MultVec43(&pull, &data_020a0e68, &out);
 
                 {
                     const Vector3 *playerPos = &player->mPos;

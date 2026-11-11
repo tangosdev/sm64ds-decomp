@@ -54,276 +54,276 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02123804Ev",
+      "symbol": "_ZN12daBombking_c17CheckKnockbackHitEv",
       "address": "0x02123804",
       "size": "0x00000060",
-      "legacy_source": "src/func_ov078_02123804.c",
+      "legacy_source": "src/CheckKnockbackHit.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02123864Ev",
+      "symbol": "_ZN12daBombking_c20DetonateSpawnedBombsEv",
       "address": "0x02123864",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov078_02123864.c",
+      "legacy_source": "src/DetonateSpawnedBombs.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_021238acEv",
+      "symbol": "_ZN12daBombking_c12TickDefeatedEv",
       "address": "0x021238ac",
       "size": "0x00000190",
-      "legacy_source": "src/func_ov078_021238ac.c",
+      "legacy_source": "src/TickDefeated.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02123a3cEv",
+      "symbol": "_ZN12daBombking_c13EnterDefeatedEv",
       "address": "0x02123a3c",
       "size": "0x00000064",
-      "legacy_source": "src/func_ov078_02123a3c.c",
+      "legacy_source": "src/EnterDefeated.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02123aa0Ev",
+      "symbol": "_ZN12daBombking_c12TickWalkHomeEv",
       "address": "0x02123aa0",
       "size": "0x00000124",
-      "legacy_source": "src/func_ov078_02123aa0.c",
+      "legacy_source": "src/TickWalkHome.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02123bc4Ev",
+      "symbol": "_ZN12daBombking_c13EnterWalkHomeEv",
       "address": "0x02123bc4",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov078_02123bc4.cpp",
+      "legacy_source": "src/EnterWalkHome.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02123c20Ev",
+      "symbol": "_ZN12daBombking_c15TickThrowPlayerEv",
       "address": "0x02123c20",
       "size": "0x000000d0",
-      "legacy_source": "src/func_ov078_02123c20.cpp",
+      "legacy_source": "src/TickThrowPlayer.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02123cf0Ev",
+      "symbol": "_ZN12daBombking_c16EnterThrowPlayerEv",
       "address": "0x02123cf0",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov078_02123cf0.cpp",
+      "legacy_source": "src/EnterThrowPlayer.cpp",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02123d3cEv",
+      "symbol": "_ZN12daBombking_c15TickCarryPlayerEv",
       "address": "0x02123d3c",
       "size": "0x0000017c",
-      "legacy_source": "src/func_ov078_02123d3c.c",
+      "legacy_source": "src/TickCarryPlayer.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02123eb8Ev",
+      "symbol": "_ZN12daBombking_c16EnterCarryPlayerEv",
       "address": "0x02123eb8",
       "size": "0x00000064",
-      "legacy_source": "src/func_ov078_02123eb8.c",
+      "legacy_source": "src/EnterCarryPlayer.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02123f1cEv",
+      "symbol": "_ZN12daBombking_c14TickGrabPlayerEv",
       "address": "0x02123f1c",
       "size": "0x00000098",
-      "legacy_source": "src/func_ov078_02123f1c.cpp",
+      "legacy_source": "src/TickGrabPlayer.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02123fb4Ev",
+      "symbol": "_ZN12daBombking_c15EnterGrabPlayerEv",
       "address": "0x02123fb4",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov078_02123fb4.cpp",
+      "legacy_source": "src/EnterGrabPlayer.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02124000Ev",
+      "symbol": "_ZN12daBombking_c9TickGetUpEv",
       "address": "0x02124000",
       "size": "0x00000060",
-      "legacy_source": "src/func_ov078_02124000.c",
+      "legacy_source": "src/TickGetUp.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02124060Ev",
+      "symbol": "_ZN12daBombking_c10EnterGetUpEv",
       "address": "0x02124060",
       "size": "0x00000040",
-      "legacy_source": "src/func_ov078_02124060.cpp",
+      "legacy_source": "src/EnterGetUp.cpp",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_021240a0Ev",
+      "symbol": "_ZN12daBombking_c13TickKnockbackEv",
       "address": "0x021240a0",
       "size": "0x00000320",
-      "legacy_source": "src/func_ov078_021240a0.c",
+      "legacy_source": "src/TickKnockback.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_021243c0Ev",
+      "symbol": "_ZN12daBombking_c14EnterKnockbackEv",
       "address": "0x021243c0",
       "size": "0x000000b0",
-      "legacy_source": "src/func_ov078_021243c0.cpp",
+      "legacy_source": "src/EnterKnockback.cpp",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02124470Ev",
+      "symbol": "_ZN12daBombking_c11TickDamagedEv",
       "address": "0x02124470",
       "size": "0x00000060",
-      "legacy_source": "src/func_ov078_02124470.c",
+      "legacy_source": "src/TickDamaged.c",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_021244d0Ev",
+      "symbol": "_ZN12daBombking_c12EnterDamagedEv",
       "address": "0x021244d0",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov078_021244d0.c",
+      "legacy_source": "src/EnterDamaged.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02124520Ev",
+      "symbol": "_ZN12daBombking_c12TickHomeTalkEv",
       "address": "0x02124520",
       "size": "0x00000258",
-      "legacy_source": "src/func_ov078_02124520.c",
+      "legacy_source": "src/TickHomeTalk.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02124778Ev",
+      "symbol": "_ZN12daBombking_c13EnterHomeTalkEv",
       "address": "0x02124778",
       "size": "0x00000044",
-      "legacy_source": "src/func_ov078_02124778.cpp",
+      "legacy_source": "src/EnterHomeTalk.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_021247bcEv",
+      "symbol": "_ZN12daBombking_c14TickReturnHomeEv",
       "address": "0x021247bc",
       "size": "0x00000384",
-      "legacy_source": "src/func_ov078_021247bc.c",
+      "legacy_source": "src/TickReturnHome.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02124b40Ev",
+      "symbol": "_ZN12daBombking_c15EnterReturnHomeEv",
       "address": "0x02124b40",
       "size": "0x00000084",
-      "legacy_source": "src/func_ov078_02124b40.c",
+      "legacy_source": "src/EnterReturnHome.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02124bc4Ev",
+      "symbol": "_ZN12daBombking_c17TickBounceOffHillEv",
       "address": "0x02124bc4",
       "size": "0x000000d0",
-      "legacy_source": "src/func_ov078_02124bc4.cpp",
+      "legacy_source": "src/TickBounceOffHill.cpp",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02124c94Ev",
+      "symbol": "_ZN12daBombking_c18EnterBounceOffHillEv",
       "address": "0x02124c94",
       "size": "0x00000060",
-      "legacy_source": "src/func_ov078_02124c94.c",
+      "legacy_source": "src/EnterBounceOffHill.c",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02124cf4Ev",
+      "symbol": "_ZN12daBombking_c10TickThrownEv",
       "address": "0x02124cf4",
       "size": "0x000001a8",
-      "legacy_source": "src/func_ov078_02124cf4.cpp",
+      "legacy_source": "src/TickThrown.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02124e9cEv",
+      "symbol": "_ZN12daBombking_c11EnterThrownEv",
       "address": "0x02124e9c",
       "size": "0x0000008c",
-      "legacy_source": "src/func_ov078_02124e9c.c",
+      "legacy_source": "src/EnterThrown.c",
       "ordinal": 27
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02124f28Ev",
+      "symbol": "_ZN12daBombking_c16TickHeldByPlayerEv",
       "address": "0x02124f28",
       "size": "0x000001a8",
-      "legacy_source": "src/func_ov078_02124f28.cpp",
+      "legacy_source": "src/TickHeldByPlayer.cpp",
       "ordinal": 28
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_021250d0Ev",
+      "symbol": "_ZN12daBombking_c17EnterHeldByPlayerEv",
       "address": "0x021250d0",
       "size": "0x00000028",
-      "legacy_source": "src/func_ov078_021250d0.c",
+      "legacy_source": "src/EnterHeldByPlayer.c",
       "ordinal": 29
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_021250f8Ev",
+      "symbol": "_ZN12daBombking_c13TickThrowBombEv",
       "address": "0x021250f8",
       "size": "0x00000258",
-      "legacy_source": "src/func_ov078_021250f8.c",
+      "legacy_source": "src/TickThrowBomb.c",
       "ordinal": 30
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02125350Ev",
+      "symbol": "_ZN12daBombking_c14EnterThrowBombEv",
       "address": "0x02125350",
       "size": "0x000000f8",
-      "legacy_source": "src/func_ov078_02125350.c",
+      "legacy_source": "src/EnterThrowBomb.c",
       "ordinal": 31
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02125448Ev",
+      "symbol": "_ZN12daBombking_c9TickChaseEv",
       "address": "0x02125448",
       "size": "0x000002ec",
-      "legacy_source": "src/func_ov078_02125448.c",
+      "legacy_source": "src/TickChase.c",
       "ordinal": 32
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02125734Ev",
+      "symbol": "_ZN12daBombking_c10EnterChaseEv",
       "address": "0x02125734",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov078_02125734.c",
+      "legacy_source": "src/EnterChase.c",
       "ordinal": 33
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02125790Ev",
+      "symbol": "_ZN12daBombking_c12TickActivateEv",
       "address": "0x02125790",
       "size": "0x00000154",
-      "legacy_source": "src/func_ov078_02125790.cpp",
+      "legacy_source": "src/TickActivate.cpp",
       "ordinal": 34
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_021258e4Ev",
+      "symbol": "_ZN12daBombking_c13EnterActivateEv",
       "address": "0x021258e4",
       "size": "0x0000006c",
-      "legacy_source": "src/func_ov078_021258e4.c",
+      "legacy_source": "src/EnterActivate.c",
       "ordinal": 35
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02125950Ev",
+      "symbol": "_ZN12daBombking_c13TickIntroTalkEv",
       "address": "0x02125950",
       "size": "0x00000094",
-      "legacy_source": "src/func_ov078_02125950.cpp",
+      "legacy_source": "src/TickIntroTalk.cpp",
       "ordinal": 36
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_021259e4Ev",
+      "symbol": "_ZN12daBombking_c14EnterIntroTalkEv",
       "address": "0x021259e4",
       "size": "0x00000008",
-      "legacy_source": "src/func_ov078_021259e4.c",
+      "legacy_source": "src/EnterIntroTalk.c",
       "ordinal": 37
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_021259ecEv",
+      "symbol": "_ZN12daBombking_c12TickInactiveEv",
       "address": "0x021259ec",
       "size": "0x000001dc",
-      "legacy_source": "src/func_ov078_021259ec.c",
+      "legacy_source": "src/TickInactive.c",
       "ordinal": 38
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02125bc8Ev",
+      "symbol": "_ZN12daBombking_c13EnterInactiveEv",
       "address": "0x02125bc8",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov078_02125bc8.cpp",
+      "legacy_source": "src/EnterInactive.cpp",
       "ordinal": 39
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02125c24Ei",
+      "symbol": "_ZN12daBombking_c11ShakeScreenEi",
       "address": "0x02125c24",
       "size": "0x00000024",
-      "legacy_source": "src/func_ov078_02125c24.c",
+      "legacy_source": "src/ShakeScreen.c",
       "ordinal": 40
     },
     {
@@ -334,24 +334,24 @@
       "ordinal": 41
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02125c98Ev",
+      "symbol": "_ZN12daBombking_c12UpdateShadowEv",
       "address": "0x02125c98",
       "size": "0x00000148",
-      "legacy_source": "src/func_ov078_02125c98.cpp",
+      "legacy_source": "src/UpdateShadow.cpp",
       "ordinal": 42
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02125de0Ev",
+      "symbol": "_ZN12daBombking_c16UpdateHandMatrixEv",
       "address": "0x02125de0",
       "size": "0x000001ac",
-      "legacy_source": "src/func_ov078_02125de0.c",
+      "legacy_source": "src/UpdateHandMatrix.c",
       "ordinal": 43
     },
     {
-      "symbol": "_ZN12daBombking_c19func_ov078_02125f8cEv",
+      "symbol": "_ZN12daBombking_c16AttachHeldPlayerEv",
       "address": "0x02125f8c",
       "size": "0x00000068",
-      "legacy_source": "src/func_ov078_02125f8c.cpp",
+      "legacy_source": "src/AttachHeldPlayer.cpp",
       "ordinal": 44
     },
     {
@@ -1025,138 +1025,138 @@
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
     "FOLDED 2026-10-02: g_profile_BOMBKING moved into this TU as BombkingSpawnInfo (0x1c at ov078:0x02126e28). The profile fold forced the .data claim to span ZTI + ZTS + profile + ZTV (0x02126e0c..0x02126ec8, 0xbc), which pulled the class's own _ZTS/_ZTV from compiler-only deadstrip into licensed data and flipped production_mode to intact-object. 36 .data relocation rows license every relocated word in the claim (si_class_type_info, ZTS, base ZTI, classInit, own ZTI, 31 vtable slots). tubuild verify 52/52 TEXT-VERIFIED. Copied from daBmb_c.",
-    "tubuild create warning: RAW: src/func_ov078_02123c20.cpp (func_ov078_02123c20) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov078_02123cf0.cpp (func_ov078_02123cf0) did not split (the definition is inside the extern \"C\" block opened on line 3, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov078_02123fb4.cpp (func_ov078_02123fb4) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov078_02124060.cpp (func_ov078_02124060) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov078_021243c0.cpp (func_ov078_021243c0) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov078_02124778.cpp (func_ov078_02124778) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov078_02124bc4.cpp (func_ov078_02124bc4) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov078_02124f28.cpp (func_ov078_02124f28) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov078_02125f8c.cpp (func_ov078_02125f8c) did not split (the definition is inside the extern \"C\" block opened on line 9, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02123864; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02123aa0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02123aa0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02123bc4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_ov078_02123864' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02123d3c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02123d3c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02123d3c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02123d3c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02123d3c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02123d3c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_ov078_02123804' differs between the legacy file that used to hold func_ov078_02123d3c and the one that held func_ov078_02123f1c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_ov078_02123864' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02123f1c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_ov002_020db54c' differs between the legacy file that used to hold func_ov078_02123d3c and the one that held func_ov078_02123f1c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02123f1c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02124000; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold func_ov078_02123f1c and the one that held func_ov078_02124000; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02124000; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov078_02124000 and the one that held func_ov078_021240a0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_021240a0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_021240a0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_021240a0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_021240a0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_021240a0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f220' differs between the legacy file that used to hold func_ov078_02123d3c and the one that held func_ov078_021240a0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov078_02124000 and the one that held func_ov078_02124470; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02124470; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02124470; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_021244d0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'MulMat4x3Mat4x3' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Lsl' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c12GetTalkStateEv' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold func_ov078_02123f1c and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold func_ov078_02123f1c and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN9dCamera_c9SetFlag_3Ev' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_021247bc; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02124b40; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124b40; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_ov078_02125c24' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_02124c94; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_0200fa8c' differs between the legacy file that used to hold func_ov078_021247bc and the one that held func_ov078_02124c94; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_ov078_02125c24' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_0200fa8c' differs between the legacy file that used to hold func_ov078_021247bc and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c9StartTalkER7fBase_cb' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_0212705c' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f220' differs between the legacy file that used to hold func_ov078_02123d3c and the one that held func_ov078_02124cf4; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02124e9c; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Matrix4x3_ApplyInPlaceToRotationX' differs between the legacy file that used to hold func_ov078_021247bc and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold func_ov078_02123f1c and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_0212703c' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_021250f8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02125350; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125448; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02125448; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov078_02124000 and the one that held func_ov078_02125448; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02125448; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02125734; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold func_ov078_02124000 and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'MulMat4x3Mat4x3' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Lsl' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c17HugeLandingDustAtER7Vector3b' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold func_ov078_02123f1c and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_0212703c' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_02125790; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_02125950; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov078_02124520 and the one that held func_ov078_021259ec; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_021259ec; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov078_02123aa0 and the one that held func_ov078_021259ec; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c9StartTalkER7fBase_cb' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_021259ec; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_021259ec; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_021259ec; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_021259ec; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f220' differs between the legacy file that used to hold func_ov078_02123d3c and the one that held func_ov078_021259ec; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold func_ov078_02123a3c and the one that held func_ov078_02125bc8; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f318' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125c24; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov078_021240a0 and the one that held func_ov078_02125c98; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Lsl' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125de0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov078_02123804 and the one that held func_ov078_02125de0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov078_021238ac and the one that held func_ov078_02125de0; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f20' differs between the legacy file that used to hold func_ov078_02124e9c and the one that held _ZN12daBombking_c16CleanupResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f10' differs between the legacy file that used to hold func_ov078_02124b40 and the one that held _ZN12daBombking_c16CleanupResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f08' differs between the legacy file that used to hold func_ov078_021247bc and the one that held _ZN12daBombking_c16CleanupResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f28' differs between the legacy file that used to hold func_ov078_02123eb8 and the one that held _ZN12daBombking_c16CleanupResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126ef8' differs between the legacy file that used to hold func_ov078_021258e4 and the one that held _ZN12daBombking_c16CleanupResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f20' differs between the legacy file that used to hold func_ov078_02124e9c and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f10' differs between the legacy file that used to hold func_ov078_02124b40 and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f08' differs between the legacy file that used to hold func_ov078_021247bc and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f28' differs between the legacy file that used to hold func_ov078_02123eb8 and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126ef8' differs between the legacy file that used to hold func_ov078_021258e4 and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold func_ov078_02123804 and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "tubuild create warning: CONFLICT (RESOLVED): local declaration ('typedef', 's16') differs between the legacy file that used to hold func_ov078_02123d3c and the one that held func_ov078_02124520; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
-    "Static initializer folded: the model and twelve animation handles gain declared constructors and destructors, and the two Vector3 carry offsets and the eighteen two-PMF state records are real definitions in d_a_bombking.cpp, replacing the handwritten src/unnamed/ov078/__sinit_ov078_02126660.cpp. mwcc emits __sinit_d_a_bombking.cpp (0x674), its .ctor word, the thirty-six PMF literals and the fifteen registration nodes itself; all are byte- and relocation-identical to retail. Ownership: ov078 holds one TU; its only .ctor word is 0x02126cd4. The 0x02126ffc record's tick handler, func_ov078_021240a0, was a free function; naming it in the record needs a member, and the member spelling now reproduces it byte for byte (match.py, ov078 0x021240a0 size 0x320), so it becomes daBombking_c::func_ov078_021240a0 and its symbols.txt row and attribution override take the mangled name. The same change claims data_ov078_02126e00 (the collision-sphere offset {0, 0x3c000, 0}), so .data is one run 0x02126ce0..0x02126ec8. The carry-offset array data_ov078_0212711c is the terminal .bss object, so symbols.txt gives it an explicit size (0x18) and sizes the two interior labels it covers to zero: data_ov078_02127124 stays for the ambiguous ov022/ov030 references, and data_ov078_02127128 stays because dsd resolves the initializer's element-1 pool word (0x02126bf4) to the nearest preceding label; the manifest records that word as data_ov078_0212711c + 0xc, as mwcc emits it.",
+    "tubuild create warning: RAW: src/TickThrowPlayer.cpp (TickThrowPlayer) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/EnterThrowPlayer.cpp (EnterThrowPlayer) did not split (the definition is inside the extern \"C\" block opened on line 3, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/EnterGrabPlayer.cpp (EnterGrabPlayer) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/EnterGetUp.cpp (EnterGetUp) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/EnterKnockback.cpp (EnterKnockback) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/EnterHomeTalk.cpp (EnterHomeTalk) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/TickBounceOffHill.cpp (TickBounceOffHill) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/TickHeldByPlayer.cpp (TickHeldByPlayer) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/AttachHeldPlayer.cpp (AttachHeldPlayer) did not split (the definition is inside the extern \"C\" block opened on line 9, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold CheckKnockbackHit and the one that held DetonateSpawnedBombs; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickWalkHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold TickDefeated and the one that held TickWalkHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold EnterDefeated and the one that held EnterWalkHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'DetonateSpawnedBombs' differs between the legacy file that used to hold EnterDefeated and the one that held TickCarryPlayer; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold TickWalkHome and the one that held TickCarryPlayer; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold TickWalkHome and the one that held TickCarryPlayer; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Dist' differs between the legacy file that used to hold TickWalkHome and the one that held TickCarryPlayer; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold TickDefeated and the one that held TickCarryPlayer; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickCarryPlayer; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'CheckKnockbackHit' differs between the legacy file that used to hold TickCarryPlayer and the one that held TickGrabPlayer; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'DetonateSpawnedBombs' differs between the legacy file that used to hold EnterDefeated and the one that held TickGrabPlayer; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_ov002_020db54c' differs between the legacy file that used to hold TickCarryPlayer and the one that held TickGrabPlayer; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickGrabPlayer; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold TickWalkHome and the one that held TickGetUp; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold TickGrabPlayer and the one that held TickGetUp; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickGetUp; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold TickGetUp and the one that held TickKnockback; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold TickWalkHome and the one that held TickKnockback; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE' differs between the legacy file that used to hold TickDefeated and the one that held TickKnockback; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold TickDefeated and the one that held TickKnockback; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickKnockback; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickKnockback; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f220' differs between the legacy file that used to hold TickCarryPlayer and the one that held TickKnockback; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold TickGetUp and the one that held TickDamaged; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold TickWalkHome and the one that held TickDamaged; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickDamaged; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold EnterDefeated and the one that held EnterDamaged; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold TickDefeated and the one that held TickHomeTalk; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'MulMat4x3Mat4x3' differs between the legacy file that used to hold TickDefeated and the one that held TickHomeTalk; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Lsl' differs between the legacy file that used to hold TickDefeated and the one that held TickHomeTalk; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c12GetTalkStateEv' differs between the legacy file that used to hold TickDefeated and the one that held TickHomeTalk; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold TickWalkHome and the one that held TickHomeTalk; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold TickGrabPlayer and the one that held TickHomeTalk; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickHomeTalk; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_020a0e68' differs between the legacy file that used to hold TickDefeated and the one that held TickHomeTalk; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold TickWalkHome and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Dist' differs between the legacy file that used to hold TickWalkHome and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold TickWalkHome and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold TickGrabPlayer and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold TickHomeTalk and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold TickKnockback and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold TickWalkHome and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold EnterDefeated and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold TickKnockback and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN9dCamera_c9SetFlag_3Ev' differs between the legacy file that used to hold TickDefeated and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_020a0e68' differs between the legacy file that used to hold TickDefeated and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f318' differs between the legacy file that used to hold TickDefeated and the one that held TickReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold EnterDefeated and the one that held EnterReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold TickDefeated and the one that held EnterReturnHome; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ShakeScreen' differs between the legacy file that used to hold TickHomeTalk and the one that held EnterBounceOffHill; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_0200fa8c' differs between the legacy file that used to hold TickReturnHome and the one that held EnterBounceOffHill; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold TickKnockback and the one that held TickThrown; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickThrown; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold TickDefeated and the one that held TickThrown; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ShakeScreen' differs between the legacy file that used to hold TickHomeTalk and the one that held TickThrown; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_0200fa8c' differs between the legacy file that used to hold TickReturnHome and the one that held TickThrown; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c9StartTalkER7fBase_cb' differs between the legacy file that used to hold TickKnockback and the one that held TickThrown; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE' differs between the legacy file that used to hold TickDefeated and the one that held TickThrown; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold TickKnockback and the one that held TickThrown; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_0212705c' differs between the legacy file that used to hold TickKnockback and the one that held TickThrown; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f220' differs between the legacy file that used to hold TickCarryPlayer and the one that held TickThrown; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold EnterDefeated and the one that held EnterThrown; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickThrowBomb; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold TickWalkHome and the one that held TickThrowBomb; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold TickHomeTalk and the one that held TickThrowBomb; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Matrix4x3_ApplyInPlaceToRotationX' differs between the legacy file that used to hold TickReturnHome and the one that held TickThrowBomb; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold TickHomeTalk and the one that held TickThrowBomb; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold TickGrabPlayer and the one that held TickThrowBomb; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickThrowBomb; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_0212703c' differs between the legacy file that used to hold TickHomeTalk and the one that held TickThrowBomb; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold EnterDefeated and the one that held EnterThrowBomb; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold TickDefeated and the one that held TickChase; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickChase; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold TickGetUp and the one that held TickChase; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickChase; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold EnterDefeated and the one that held EnterChase; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c18HorzAngleToCPlayerEv' differs between the legacy file that used to hold TickGetUp and the one that held TickActivate; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'ApproachAngle' differs between the legacy file that used to hold TickWalkHome and the one that held TickActivate; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold TickDefeated and the one that held TickActivate; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'MulMat4x3Mat4x3' differs between the legacy file that used to hold TickDefeated and the one that held TickActivate; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Lsl' differs between the legacy file that used to hold TickDefeated and the one that held TickActivate; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c17HugeLandingDustAtER7Vector3b' differs between the legacy file that used to hold TickHomeTalk and the one that held TickActivate; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN15dExtFrameCtrl_c8FinishedEv' differs between the legacy file that used to hold TickGrabPlayer and the one that held TickActivate; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickActivate; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_020a0e68' differs between the legacy file that used to hold TickDefeated and the one that held TickActivate; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_0212703c' differs between the legacy file that used to hold TickHomeTalk and the one that held TickActivate; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold TickWalkHome and the one that held TickIntroTalk; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold TickHomeTalk and the one that held TickInactive; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold TickWalkHome and the one that held TickInactive; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Dist' differs between the legacy file that used to hold TickWalkHome and the one that held TickInactive; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c9StartTalkER7fBase_cb' differs between the legacy file that used to hold TickKnockback and the one that held TickInactive; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN7daPly_c11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold TickKnockback and the one that held TickInactive; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'func_02012694' differs between the legacy file that used to hold TickDefeated and the one that held TickInactive; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held TickInactive; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f220' differs between the legacy file that used to hold TickCarryPlayer and the one that held TickInactive; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN19dExtBlendAnmModel_c7SetAnimER8BCA_Fileii5Fix12IiEt' differs between the legacy file that used to hold EnterDefeated and the one that held EnterInactive; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_0209f318' differs between the legacy file that used to hold TickDefeated and the one that held ShakeScreen; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold TickKnockback and the one that held UpdateShadow; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'Vec3_Lsl' differs between the legacy file that used to hold TickDefeated and the one that held UpdateHandMatrix; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold CheckKnockbackHit and the one that held UpdateHandMatrix; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_020a0e68' differs between the legacy file that used to hold TickDefeated and the one that held UpdateHandMatrix; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f20' differs between the legacy file that used to hold EnterThrown and the one that held _ZN12daBombking_c16CleanupResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f10' differs between the legacy file that used to hold EnterReturnHome and the one that held _ZN12daBombking_c16CleanupResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f08' differs between the legacy file that used to hold TickReturnHome and the one that held _ZN12daBombking_c16CleanupResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f28' differs between the legacy file that used to hold EnterCarryPlayer and the one that held _ZN12daBombking_c16CleanupResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126ef8' differs between the legacy file that used to hold EnterActivate and the one that held _ZN12daBombking_c16CleanupResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f20' differs between the legacy file that used to hold EnterThrown and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f10' differs between the legacy file that used to hold EnterReturnHome and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f08' differs between the legacy file that used to hold TickReturnHome and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126f28' differs between the legacy file that used to hold EnterCarryPlayer and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'data_ov078_02126ef8' differs between the legacy file that used to hold EnterActivate and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): extern declaration 'KingBobOmb_SetState' differs between the legacy file that used to hold CheckKnockbackHit and the one that held _ZN12daBombking_c13InitResourcesEv; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "tubuild create warning: CONFLICT (RESOLVED): local declaration ('typedef', 's16') differs between the legacy file that used to hold TickCarryPlayer and the one that held TickHomeTalk; kept the first. Resolved by hand: one canonical declaration per symbol was imposed across the merged TU and reconciled against include/ (decl_common.h and dActor_c.h are authoritative where they declare a symbol); the alternate was dropped, not left commented out.",
+    "Static initializer folded: the model and twelve animation handles gain declared constructors and destructors, and the two Vector3 carry offsets and the eighteen two-PMF state records are real definitions in d_a_bombking.cpp, replacing the handwritten src/unnamed/ov078/__sinit_ov078_02126660.cpp. mwcc emits __sinit_d_a_bombking.cpp (0x674), its .ctor word, the thirty-six PMF literals and the fifteen registration nodes itself; all are byte- and relocation-identical to retail. Ownership: ov078 holds one TU; its only .ctor word is 0x02126cd4. The 0x02126ffc record's tick handler, TickKnockback, was a free function; naming it in the record needs a member, and the member spelling now reproduces it byte for byte (match.py, ov078 0x021240a0 size 0x320), so it becomes daBombking_c::TickKnockback and its symbols.txt row and attribution override take the mangled name. The same change claims data_ov078_02126e00 (the collision-sphere offset {0, 0x3c000, 0}), so .data is one run 0x02126ce0..0x02126ec8. The carry-offset array data_ov078_0212711c is the terminal .bss object, so symbols.txt gives it an explicit size (0x18) and sizes the two interior labels it covers to zero: data_ov078_02127124 stays for the ambiguous ov022/ov030 references, and data_ov078_02127128 stays because dsd resolves the initializer's element-1 pool word (0x02126bf4) to the nearest preceding label; the manifest records that word as data_ov078_0212711c + 0xc, as mwcc emits it.",
     "Collision property member calls replace local helper declarations. Reconciled 51 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (152 sections, 634 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov078-daBombking_c/daBombking_c.o (gitignored)",
+    "object": "build/tu/ov078-daBombking_c/d_a_bombking.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 52,
     "functions_declared": 52,
@@ -1170,21 +1170,21 @@
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        9,
-        10,
-        29,
-        114,
-        115,
-        116,
-        117,
-        118,
-        119,
-        120,
-        121,
-        122,
-        123,
-        124,
-        125
+        129,
+        130,
+        149,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245
       ],
       "data": [
         "_ZTI12dEnemyBase_c",
@@ -1205,14 +1205,15 @@
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
         "_ZTS8dActor_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "no_unexpected_vtable_rtti_or_data_emission": "PASS -- after the 2026-10-02 profile fold the TU is intact-object. The vtable and RTTI chain are licensed data in .data (0x02126e0c..0x02126ec8). The class's own _ZTS/_ZTV are in the data claim; base-class RTTI is deadstrip-data.",
       "all_content_sections_licensed": "PASS -- 52 text functions at 0x02123740..0x02126660, four initialized metadata records at 0x02126e0c..0x02126ec8, and thirteen eight-byte BSS handles at 0x02126ee0..0x02126f48. Fresh scratch link proves all three complete ranges and full ROM identity; separate initializer remains independently compiled.",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -3392,7 +3393,7 @@
       "source": "0x02126ce0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02125790Ev",
+      "symbol": "_ZN12daBombking_c12TickActivateEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02125790"
@@ -3402,7 +3403,7 @@
       "source": "0x02126ce8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_021258e4Ev",
+      "symbol": "_ZN12daBombking_c13EnterActivateEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x021258e4"
@@ -3412,7 +3413,7 @@
       "source": "0x02126cf0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02124000Ev",
+      "symbol": "_ZN12daBombking_c9TickGetUpEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02124000"
@@ -3422,7 +3423,7 @@
       "source": "0x02126cf8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_021259e4Ev",
+      "symbol": "_ZN12daBombking_c14EnterIntroTalkEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x021259e4"
@@ -3432,7 +3433,7 @@
       "source": "0x02126d00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02125734Ev",
+      "symbol": "_ZN12daBombking_c10EnterChaseEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02125734"
@@ -3442,7 +3443,7 @@
       "source": "0x02126d08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_021243c0Ev",
+      "symbol": "_ZN12daBombking_c14EnterKnockbackEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x021243c0"
@@ -3452,7 +3453,7 @@
       "source": "0x02126d10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02124060Ev",
+      "symbol": "_ZN12daBombking_c10EnterGetUpEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02124060"
@@ -3462,7 +3463,7 @@
       "source": "0x02126d18",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02123cf0Ev",
+      "symbol": "_ZN12daBombking_c16EnterThrowPlayerEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02123cf0"
@@ -3472,7 +3473,7 @@
       "source": "0x02126d20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_021247bcEv",
+      "symbol": "_ZN12daBombking_c14TickReturnHomeEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x021247bc"
@@ -3482,7 +3483,7 @@
       "source": "0x02126d28",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02124e9cEv",
+      "symbol": "_ZN12daBombking_c11EnterThrownEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02124e9c"
@@ -3492,7 +3493,7 @@
       "source": "0x02126d30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_021244d0Ev",
+      "symbol": "_ZN12daBombking_c12EnterDamagedEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x021244d0"
@@ -3502,7 +3503,7 @@
       "source": "0x02126d38",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02124cf4Ev",
+      "symbol": "_ZN12daBombking_c10TickThrownEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02124cf4"
@@ -3512,7 +3513,7 @@
       "source": "0x02126d40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_021259ecEv",
+      "symbol": "_ZN12daBombking_c12TickInactiveEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x021259ec"
@@ -3522,7 +3523,7 @@
       "source": "0x02126d48",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02123c20Ev",
+      "symbol": "_ZN12daBombking_c15TickThrowPlayerEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02123c20"
@@ -3532,7 +3533,7 @@
       "source": "0x02126d50",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02124bc4Ev",
+      "symbol": "_ZN12daBombking_c17TickBounceOffHillEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02124bc4"
@@ -3542,7 +3543,7 @@
       "source": "0x02126d58",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_021238acEv",
+      "symbol": "_ZN12daBombking_c12TickDefeatedEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x021238ac"
@@ -3552,7 +3553,7 @@
       "source": "0x02126d60",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02124b40Ev",
+      "symbol": "_ZN12daBombking_c15EnterReturnHomeEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02124b40"
@@ -3562,7 +3563,7 @@
       "source": "0x02126d68",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02123a3cEv",
+      "symbol": "_ZN12daBombking_c13EnterDefeatedEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02123a3c"
@@ -3572,7 +3573,7 @@
       "source": "0x02126d70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02124778Ev",
+      "symbol": "_ZN12daBombking_c13EnterHomeTalkEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02124778"
@@ -3582,7 +3583,7 @@
       "source": "0x02126d78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02125bc8Ev",
+      "symbol": "_ZN12daBombking_c13EnterInactiveEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02125bc8"
@@ -3592,7 +3593,7 @@
       "source": "0x02126d80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_021240a0Ev",
+      "symbol": "_ZN12daBombking_c13TickKnockbackEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x021240a0"
@@ -3602,7 +3603,7 @@
       "source": "0x02126d88",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02124520Ev",
+      "symbol": "_ZN12daBombking_c12TickHomeTalkEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02124520"
@@ -3612,7 +3613,7 @@
       "source": "0x02126d90",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02123bc4Ev",
+      "symbol": "_ZN12daBombking_c13EnterWalkHomeEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02123bc4"
@@ -3622,7 +3623,7 @@
       "source": "0x02126d98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02124c94Ev",
+      "symbol": "_ZN12daBombking_c18EnterBounceOffHillEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02124c94"
@@ -3632,7 +3633,7 @@
       "source": "0x02126da0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02124470Ev",
+      "symbol": "_ZN12daBombking_c11TickDamagedEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02124470"
@@ -3642,7 +3643,7 @@
       "source": "0x02126da8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02123aa0Ev",
+      "symbol": "_ZN12daBombking_c12TickWalkHomeEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02123aa0"
@@ -3652,7 +3653,7 @@
       "source": "0x02126db0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02123d3cEv",
+      "symbol": "_ZN12daBombking_c15TickCarryPlayerEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02123d3c"
@@ -3662,7 +3663,7 @@
       "source": "0x02126db8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02125950Ev",
+      "symbol": "_ZN12daBombking_c13TickIntroTalkEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02125950"
@@ -3672,7 +3673,7 @@
       "source": "0x02126dc0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02123eb8Ev",
+      "symbol": "_ZN12daBombking_c16EnterCarryPlayerEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02123eb8"
@@ -3682,7 +3683,7 @@
       "source": "0x02126dc8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02125448Ev",
+      "symbol": "_ZN12daBombking_c9TickChaseEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02125448"
@@ -3692,7 +3693,7 @@
       "source": "0x02126dd0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02124f28Ev",
+      "symbol": "_ZN12daBombking_c16TickHeldByPlayerEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02124f28"
@@ -3702,7 +3703,7 @@
       "source": "0x02126dd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_021250d0Ev",
+      "symbol": "_ZN12daBombking_c17EnterHeldByPlayerEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x021250d0"
@@ -3712,7 +3713,7 @@
       "source": "0x02126de0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02123f1cEv",
+      "symbol": "_ZN12daBombking_c14TickGrabPlayerEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02123f1c"
@@ -3722,7 +3723,7 @@
       "source": "0x02126de8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_021250f8Ev",
+      "symbol": "_ZN12daBombking_c13TickThrowBombEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x021250f8"
@@ -3732,7 +3733,7 @@
       "source": "0x02126df0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02125350Ev",
+      "symbol": "_ZN12daBombking_c14EnterThrowBombEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02125350"
@@ -3742,7 +3743,7 @@
       "source": "0x02126df8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN12daBombking_c19func_ov078_02123fb4Ev",
+      "symbol": "_ZN12daBombking_c15EnterGrabPlayerEv",
       "addend": 0,
       "target_module": "ov078",
       "target_address": "0x02123fb4"
@@ -3777,259 +3778,259 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@637",
+      "from": "@573",
       "to": "data_ov078_02126f48",
-      "evidence": "compiler temp mapped to 0x02126f48 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02126f48 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @637 to @573 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@574",
+      "to": "data_ov078_02126f54",
+      "evidence": "compiler temp mapped to 0x02126f54 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @638 to @574 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@575",
+      "to": "data_ov078_02126f60",
+      "evidence": "compiler temp mapped to 0x02126f60 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @639 to @575 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@576",
+      "to": "data_ov078_02126f6c",
+      "evidence": "compiler temp mapped to 0x02126f6c by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @640 to @576 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@577",
+      "to": "data_ov078_02126f78",
+      "evidence": "compiler temp mapped to 0x02126f78 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @641 to @577 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@578",
+      "to": "data_ov078_02126f84",
+      "evidence": "compiler temp mapped to 0x02126f84 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @642 to @578 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@579",
+      "to": "data_ov078_02126f90",
+      "evidence": "compiler temp mapped to 0x02126f90 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @643 to @579 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@580",
+      "to": "data_ov078_02126f9c",
+      "evidence": "compiler temp mapped to 0x02126f9c by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @644 to @580 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@581",
+      "to": "data_ov078_02126fa8",
+      "evidence": "compiler temp mapped to 0x02126fa8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @645 to @581 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@582",
+      "to": "data_ov078_02126fb4",
+      "evidence": "compiler temp mapped to 0x02126fb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @646 to @582 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@583",
+      "to": "data_ov078_02126fc0",
+      "evidence": "compiler temp mapped to 0x02126fc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @647 to @583 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@584",
+      "to": "data_ov078_02126fcc",
+      "evidence": "compiler temp mapped to 0x02126fcc by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @648 to @584 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@585",
+      "to": "data_ov078_02126fd8",
+      "evidence": "compiler temp mapped to 0x02126fd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @649 to @585 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@587",
+      "to": "data_ov078_02126fe4",
+      "evidence": "compiler temp mapped to 0x02126fe4 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @651 to @587 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@590",
+      "to": "data_ov078_02126ff0",
+      "evidence": "compiler temp mapped to 0x02126ff0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @654 to @590 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@592",
+      "to": "data_ov078_02126d78",
+      "evidence": "compiler temp mapped to 0x02126d78 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @656 to @592 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@594",
+      "to": "data_ov078_02126d40",
+      "evidence": "compiler temp mapped to 0x02126d40 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @658 to @594 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@596",
+      "to": "data_ov078_02126cf8",
+      "evidence": "compiler temp mapped to 0x02126cf8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @660 to @596 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@598",
+      "to": "data_ov078_02126db8",
+      "evidence": "compiler temp mapped to 0x02126db8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @662 to @598 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@600",
+      "to": "data_ov078_02126ce8",
+      "evidence": "compiler temp mapped to 0x02126ce8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @664 to @600 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@602",
+      "to": "data_ov078_02126ce0",
+      "evidence": "compiler temp mapped to 0x02126ce0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @666 to @602 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@604",
+      "to": "data_ov078_02126d00",
+      "evidence": "compiler temp mapped to 0x02126d00 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @668 to @604 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@606",
+      "to": "data_ov078_02126dc8",
+      "evidence": "compiler temp mapped to 0x02126dc8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @670 to @606 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@608",
+      "to": "data_ov078_02126df0",
+      "evidence": "compiler temp mapped to 0x02126df0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @672 to @608 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@610",
+      "to": "data_ov078_02126de8",
+      "evidence": "compiler temp mapped to 0x02126de8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @674 to @610 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@612",
+      "to": "data_ov078_02126dd8",
+      "evidence": "compiler temp mapped to 0x02126dd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @676 to @612 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@614",
+      "to": "data_ov078_02126dd0",
+      "evidence": "compiler temp mapped to 0x02126dd0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @678 to @614 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@616",
+      "to": "data_ov078_02126d28",
+      "evidence": "compiler temp mapped to 0x02126d28 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @680 to @616 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@618",
+      "to": "data_ov078_02126d38",
+      "evidence": "compiler temp mapped to 0x02126d38 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @682 to @618 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@620",
+      "to": "data_ov078_02126d98",
+      "evidence": "compiler temp mapped to 0x02126d98 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @684 to @620 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@622",
+      "to": "data_ov078_02126d50",
+      "evidence": "compiler temp mapped to 0x02126d50 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @686 to @622 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@624",
+      "to": "data_ov078_02126d60",
+      "evidence": "compiler temp mapped to 0x02126d60 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @688 to @624 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@626",
+      "to": "data_ov078_02126d20",
+      "evidence": "compiler temp mapped to 0x02126d20 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @690 to @626 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@628",
+      "to": "data_ov078_02126d70",
+      "evidence": "compiler temp mapped to 0x02126d70 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @692 to @628 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@630",
+      "to": "data_ov078_02126d88",
+      "evidence": "compiler temp mapped to 0x02126d88 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @694 to @630 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@632",
+      "to": "data_ov078_02126d30",
+      "evidence": "compiler temp mapped to 0x02126d30 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @696 to @632 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@634",
+      "to": "data_ov078_02126da0",
+      "evidence": "compiler temp mapped to 0x02126da0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @698 to @634 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@636",
+      "to": "data_ov078_02126d08",
+      "evidence": "compiler temp mapped to 0x02126d08 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @700 to @636 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@638",
-      "to": "data_ov078_02126f54",
-      "evidence": "compiler temp mapped to 0x02126f54 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@639",
-      "to": "data_ov078_02126f60",
-      "evidence": "compiler temp mapped to 0x02126f60 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d80",
+      "evidence": "compiler temp mapped to 0x02126d80 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @702 to @638 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@640",
-      "to": "data_ov078_02126f6c",
-      "evidence": "compiler temp mapped to 0x02126f6c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@641",
-      "to": "data_ov078_02126f78",
-      "evidence": "compiler temp mapped to 0x02126f78 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d10",
+      "evidence": "compiler temp mapped to 0x02126d10 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @704 to @640 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@642",
-      "to": "data_ov078_02126f84",
-      "evidence": "compiler temp mapped to 0x02126f84 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@643",
-      "to": "data_ov078_02126f90",
-      "evidence": "compiler temp mapped to 0x02126f90 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126cf0",
+      "evidence": "compiler temp mapped to 0x02126cf0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @706 to @642 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@644",
-      "to": "data_ov078_02126f9c",
-      "evidence": "compiler temp mapped to 0x02126f9c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@645",
-      "to": "data_ov078_02126fa8",
-      "evidence": "compiler temp mapped to 0x02126fa8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126df8",
+      "evidence": "compiler temp mapped to 0x02126df8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @708 to @644 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@646",
-      "to": "data_ov078_02126fb4",
-      "evidence": "compiler temp mapped to 0x02126fb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@647",
-      "to": "data_ov078_02126fc0",
-      "evidence": "compiler temp mapped to 0x02126fc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126de0",
+      "evidence": "compiler temp mapped to 0x02126de0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @710 to @646 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@648",
-      "to": "data_ov078_02126fcc",
-      "evidence": "compiler temp mapped to 0x02126fcc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126dc0",
+      "evidence": "compiler temp mapped to 0x02126dc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @712 to @648 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@649",
-      "to": "data_ov078_02126fd8",
-      "evidence": "compiler temp mapped to 0x02126fd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "from": "@650",
+      "to": "data_ov078_02126db0",
+      "evidence": "compiler temp mapped to 0x02126db0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @714 to @650 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@651",
-      "to": "data_ov078_02126fe4",
-      "evidence": "compiler temp mapped to 0x02126fe4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "from": "@652",
+      "to": "data_ov078_02126d18",
+      "evidence": "compiler temp mapped to 0x02126d18 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @716 to @652 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@654",
-      "to": "data_ov078_02126ff0",
-      "evidence": "compiler temp mapped to 0x02126ff0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d48",
+      "evidence": "compiler temp mapped to 0x02126d48 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @718 to @654 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@656",
-      "to": "data_ov078_02126d78",
-      "evidence": "compiler temp mapped to 0x02126d78 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d90",
+      "evidence": "compiler temp mapped to 0x02126d90 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @720 to @656 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@658",
-      "to": "data_ov078_02126d40",
-      "evidence": "compiler temp mapped to 0x02126d40 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126da8",
+      "evidence": "compiler temp mapped to 0x02126da8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @722 to @658 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@660",
-      "to": "data_ov078_02126cf8",
-      "evidence": "compiler temp mapped to 0x02126cf8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d68",
+      "evidence": "compiler temp mapped to 0x02126d68 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @724 to @660 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@662",
-      "to": "data_ov078_02126db8",
-      "evidence": "compiler temp mapped to 0x02126db8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@664",
-      "to": "data_ov078_02126ce8",
-      "evidence": "compiler temp mapped to 0x02126ce8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@666",
-      "to": "data_ov078_02126ce0",
-      "evidence": "compiler temp mapped to 0x02126ce0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@668",
-      "to": "data_ov078_02126d00",
-      "evidence": "compiler temp mapped to 0x02126d00 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@670",
-      "to": "data_ov078_02126dc8",
-      "evidence": "compiler temp mapped to 0x02126dc8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@672",
-      "to": "data_ov078_02126df0",
-      "evidence": "compiler temp mapped to 0x02126df0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@674",
-      "to": "data_ov078_02126de8",
-      "evidence": "compiler temp mapped to 0x02126de8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@676",
-      "to": "data_ov078_02126dd8",
-      "evidence": "compiler temp mapped to 0x02126dd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@678",
-      "to": "data_ov078_02126dd0",
-      "evidence": "compiler temp mapped to 0x02126dd0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@680",
-      "to": "data_ov078_02126d28",
-      "evidence": "compiler temp mapped to 0x02126d28 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@682",
-      "to": "data_ov078_02126d38",
-      "evidence": "compiler temp mapped to 0x02126d38 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@684",
-      "to": "data_ov078_02126d98",
-      "evidence": "compiler temp mapped to 0x02126d98 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@686",
-      "to": "data_ov078_02126d50",
-      "evidence": "compiler temp mapped to 0x02126d50 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@688",
-      "to": "data_ov078_02126d60",
-      "evidence": "compiler temp mapped to 0x02126d60 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@690",
-      "to": "data_ov078_02126d20",
-      "evidence": "compiler temp mapped to 0x02126d20 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@692",
-      "to": "data_ov078_02126d70",
-      "evidence": "compiler temp mapped to 0x02126d70 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@694",
-      "to": "data_ov078_02126d88",
-      "evidence": "compiler temp mapped to 0x02126d88 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@696",
-      "to": "data_ov078_02126d30",
-      "evidence": "compiler temp mapped to 0x02126d30 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@698",
-      "to": "data_ov078_02126da0",
-      "evidence": "compiler temp mapped to 0x02126da0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@700",
-      "to": "data_ov078_02126d08",
-      "evidence": "compiler temp mapped to 0x02126d08 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@702",
-      "to": "data_ov078_02126d80",
-      "evidence": "compiler temp mapped to 0x02126d80 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@704",
-      "to": "data_ov078_02126d10",
-      "evidence": "compiler temp mapped to 0x02126d10 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@706",
-      "to": "data_ov078_02126cf0",
-      "evidence": "compiler temp mapped to 0x02126cf0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@708",
-      "to": "data_ov078_02126df8",
-      "evidence": "compiler temp mapped to 0x02126df8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@710",
-      "to": "data_ov078_02126de0",
-      "evidence": "compiler temp mapped to 0x02126de0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@712",
-      "to": "data_ov078_02126dc0",
-      "evidence": "compiler temp mapped to 0x02126dc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@714",
-      "to": "data_ov078_02126db0",
-      "evidence": "compiler temp mapped to 0x02126db0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@716",
-      "to": "data_ov078_02126d18",
-      "evidence": "compiler temp mapped to 0x02126d18 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@718",
-      "to": "data_ov078_02126d48",
-      "evidence": "compiler temp mapped to 0x02126d48 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@720",
-      "to": "data_ov078_02126d90",
-      "evidence": "compiler temp mapped to 0x02126d90 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@722",
-      "to": "data_ov078_02126da8",
-      "evidence": "compiler temp mapped to 0x02126da8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@724",
-      "to": "data_ov078_02126d68",
-      "evidence": "compiler temp mapped to 0x02126d68 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@726",
       "to": "data_ov078_02126d58",
-      "evidence": "compiler temp mapped to 0x02126d58 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02126d58 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @726 to @662 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

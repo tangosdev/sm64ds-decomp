@@ -36,6 +36,7 @@ enum dScMgCup_c_AssetId {
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "Sound.h"
+#include "nitro/fx/fx_cp.h"
 
 /* sCupRoundTable: swap count, then two speed-row nibbles.
    StateSetup reads byte [kind * 2]. df024 reads .lo / .hi. */
@@ -66,21 +67,11 @@ struct AnimStep {
     int ticks;
 };
 
-
-namespace G2S {
-int GetBG2CharPtr();
-int GetBG0ScrPtr();
-int GetBG2ScrPtr();
-}
-
-namespace GXS {
-void LoadBGPltt(const void *data, unsigned int offset, unsigned int size);
-void LoadOBJPltt(const void *data, unsigned int offset, unsigned int size);
-}
-
 struct OamAttr;
 #include "OAM.h"
 #include "LevelRng.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 extern "C" {
 extern void CupFx_Move(char *p, int a, int b);
@@ -95,7 +86,6 @@ extern OamAttr *sCupFxSprites[];
 extern int OamRender8_d_s_mg_cup(int show, struct OamAttr *attr, int a, int b, int c, int d, int e,
                                  int f);
 extern unsigned char DecIfAbove0_Byte(unsigned char *counter);
-extern int func_02053200(int x);
 extern int Mg_RenderSubSpriteScaled(int a0, int a1, int a2, int a3, int a4, int a5,
                                     unsigned short a6);
 extern RoundRow sCupRoundTable[];
@@ -296,7 +286,7 @@ extern "C" void Cup_DrawOamList(int scene, void *list, int x, int y, int scale, 
     screenX = x >> 12;
     screenY = y >> 12;
     content = cupContent;
-    scale = func_02053200(scale);
+    scale = FX_Inv(scale);
 
     for (;;) {
         GXOamAttr *oam =
@@ -918,15 +908,15 @@ s32 dScMgCup_c::InitResources() {
     gSubScreenLayers |= 4;
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP_NCG_BIN,
-                         (void *)((char *)G2S::GetBG2CharPtr() + 0x4000));
+                         (void *)((char *)G2S_GetBG2CharPtr() + 0x4000));
     file = LoadFile(ASSET_D_2D_MG_BG_CUP_NCL_BIN);
-    GXS::LoadBGPltt(file, 0x60, 0x1a0);
+    GXS_LoadBGPltt(file, 0x60, 0x1a0);
     Deallocate(file);
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_2_NSC_BIN, (void *)G2S::GetBG0ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_1_NSC_BIN, (void *)G2S::GetBG2ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_CUP_NCG_BIN, (void *)0x6600000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_2_NSC_BIN, (void *)G2S_GetBG0ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_CUP2_1_NSC_BIN, (void *)G2S_GetBG2ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_CUP_NCG_BIN, G2S_GetOBJCharPtr());
     file = LoadFile(ASSET_D_2D_MG_CUP_NCL_BIN);
-    GXS::LoadOBJPltt(file, 0, 0xa0);
+    GXS_LoadOBJPltt(file, 0, 0xa0);
     Deallocate(file);
 
     data_0208ee44 = 1;

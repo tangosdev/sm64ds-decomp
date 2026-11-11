@@ -8,8 +8,8 @@
  * with WM_SetMPDataToPort, a failed send is state 3, not 5, and
  * WM_EndDataSharing is not linked. */
 #include "types.h"
-#include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/cache.h"
+#include "nitro/os/system.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -30,9 +30,9 @@ typedef void (*WMCallbackFunc)(void *arg);
 /* sendData stays an int, as WM_SetMPDataToPort.c defines it. */
 extern int WM_SetMPDataToPort(WMCallbackFunc callback, int sendData, int sendDataSize,
                               int destBitmap, u16 port, u16 prio);
-extern void MultiStore16(u16 val, void *dst, int nbytes);
-extern void MultiStore32Bytes(unsigned val, void *dst, int len);
-extern void MultiCopyHalf(const void *src, void *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
+extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
+extern void MIi_CpuCopy16(const void *src, void *dst, int nbytes);
 
 void WmDataSharingSetDataCallback(void *arg);
 void WmDataSharingReceiveCallback_Parent(WMPortRecvCallback *callback);
@@ -66,7 +66,7 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
     if (r != 0)
         return r;
 
-    CP15::InvalidateDataCache((u32)&sys->status->mp_flag, 4);
+    DC_InvalidateRange(&sys->status->mp_flag, 4);
     if (sys->status->mp_flag == 0)
         return 3;
 
@@ -77,15 +77,15 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
     if (aidBitmap == 0)
         return 6;
 
-    CP15::InvalidateDataCache((u32)&sys->status->aid, 2);
+    DC_InvalidateRange(&sys->status->aid, 2);
     aid = sys->status->aid;
     if (aid == 0) {
-        CP15::InvalidateDataCache((u32)&sys->status->mp_readyBitmap, 2);
+        DC_InvalidateRange(&sys->status->mp_readyBitmap, 2);
         childMask = sys->status->mp_readyBitmap;
     }
 
     zero = 0;
-    MultiStore32Bytes(zero, dsInfo, 0x420);
+    MIi_CpuClearFast(zero, dsInfo, 0x420);
 
     dsInfo->writeIndex = 0;
     dsInfo->sendIndex = 0;
@@ -173,7 +173,7 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
     if (result != 0)
         return result;
 
-    CP15::InvalidateDataCache((u32)(&p->status->mp_flag), 4);
+    DC_InvalidateRange(&p->status->mp_flag, 4);
     if (p->status->mp_flag == 0)
         return 3;
 
@@ -184,10 +184,10 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
     if (receiveData == 0)
         return 6;
 
-    CP15::InvalidateDataCache((u32)(&p->status->aid), 2);
+    DC_InvalidateRange(&p->status->aid, 2);
     aid = p->status->aid;
     if (aid == 0) {
-        CP15::InvalidateDataCache((u32)&p->status->mp_readyBitmap, 2);
+        DC_InvalidateRange(&p->status->mp_readyBitmap, 2);
         childMask = p->status->mp_readyBitmap;
     }
 
@@ -222,7 +222,7 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
 
         if (dsInfo->readIndex != dsInfo->sendIndex) {
             dsInfo->ds[dsInfo->readIndex].aidHeader |= 1;
-            MultiCopyHalf(&dsInfo->ds[dsInfo->readIndex], receiveData, 0x100);
+            MIi_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, 0x100);
             did = 1;
             result = 0;
             dsInfo->currentSeqNum = dsInfo->seqNum[dsInfo->readIndex];
@@ -253,7 +253,7 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
                 if ((dsInfo->ds[dsInfo->readIndex].aidHeader & 1) == 0) {
                     dsInfo->ds[dsInfo->readIndex].aidHeader |= 1;
                 } else {
-                    MultiCopyHalf(&dsInfo->ds[dsInfo->readIndex], receiveData, 0x100);
+                    MIi_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, 0x100);
                     changed = 1;
                     result = 0;
                     dsInfo->currentSeqNum = dsInfo->seqNum[dsInfo->readIndex];
@@ -266,7 +266,7 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
             /* the child stages its own data 0x20 bytes into the set it sends */
             u8 *addr = (u8 *)&dsInfo->ds[dsInfo->sendIndex] + 0x20;
             int cr;
-            MultiCopyHalf(sendData, addr, dsInfo->dataLength);
+            MIi_CpuCopy16(sendData, addr, dsInfo->dataLength);
             cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (int)addr, dsInfo->dataLength,
                                     dsInfo->aidBitmap, dsInfo->port, 1);
             dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % 4);
@@ -290,7 +290,7 @@ void WmDataSharingSetDataCallback(void *arg) {
     WMPortSendCallback *callback = (WMPortSendCallback *)arg;
     WMArm9Buf *c = WM_GetSystemWork();
     WMDataSharingInfo *r4 = (WMDataSharingInfo *)c->portCallbackArgument[callback->port];
-    CP15::InvalidateDataCache((u32)&c->status->aid, 2);
+    DC_InvalidateRange(&c->status->aid, 2);
     u16 v = c->status->aid;
     int kind = callback->errcode;
     if (kind == 0) {
@@ -326,14 +326,14 @@ void WmDataSharingReceiveCallback_Parent(WMPortRecvCallback *callback) {
             return;
         case 9: {
             u16 mask = (u16)(1 << callback->aid);
-            u32 saved = IRQ::Disable();
+            OSIntrMode saved = OS_DisableInterrupts();
             u16 b408 = dsInfo->writeIndex;
             dsInfo->ds[b408].aidHeader &= ~mask;
             if (dsInfo->doubleMode == 1) {
                 int n = (dsInfo->writeIndex + 1) % 4;
                 dsInfo->ds[n].aidHeader &= ~mask;
             }
-            IRQ::Restore(saved);
+            OS_RestoreInterrupts(saved);
             WmDataSharingSendDataSet(dsInfo, 0);
             if (dsInfo->doubleMode == 1)
                 WmDataSharingSendDataSet(dsInfo, 0);
@@ -370,7 +370,7 @@ void WmDataSharingReceiveCallback_Child(WMPortRecvCallback *callback) {
             if (r4 > 0x100)
                 r4 = 0x100;
         }
-        CP15::InvalidateDataCache((u32)&h->status->aid, 2);
+        DC_InvalidateRange(&h->status->aid, 2);
         if (r4 < 4)
             return;
         src = callback->data;
@@ -378,7 +378,7 @@ void WmDataSharingReceiveCallback_Child(WMPortRecvCallback *callback) {
             return;
         if ((1u << h->status->aid) == 0)
             return;
-        MultiCopyHalf(src, &r5->ds[r5->writeIndex], r4);
+        MIi_CpuCopy16(src, &r5->ds[r5->writeIndex], r4);
         r5->seqNum[r5->writeIndex] = callback->seqNo >> 1;
         r5->writeIndex = (r5->writeIndex + 1) % 4;
     } else {
@@ -396,7 +396,7 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
     u16 idx;
     volatile u16 zero;
     u16 *slot;
-    unsigned s;
+    OSIntrMode s;
 
     if ((aidBitmap & mask) == 0)
         return;
@@ -412,15 +412,15 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
 
     slot = WmGetSharedDataAddress(dsInfo, aidBitmap, dsInfo->ds[idx].data, aid);
     if (data != 0) {
-        MultiCopyHalf(data, slot, dsInfo->dataLength);
+        MIi_CpuCopy16(data, slot, dsInfo->dataLength);
     } else {
         zero = 0;
-        MultiStore16(zero, slot, dsInfo->dataLength);
+        MIi_CpuClear16(zero, slot, dsInfo->dataLength);
     }
-    s = IRQ::Disable();
+    s = OS_DisableInterrupts();
     dsInfo->ds[idx].aidHeader &= ~mask;
     dsInfo->ds[idx].receivedBitmap |= mask;
-    IRQ::Restore(s);
+    OS_RestoreInterrupts(s);
 }
 
 /* Once every member has filled ds[writeIndex], step writeIndex, open the
@@ -430,7 +430,7 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
  * set counts as sent; any failure but OPERATING (2) is state 3. */
 void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
     WMArm9Buf *ctx;
-    u32 saved;
+    OSIntrMode saved;
     u16 slot;
     u16 next;
     u16 mask;
@@ -440,10 +440,10 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
     int ret;
 
     ctx = WM_GetSystemWork();
-    saved = IRQ::Disable();
+    saved = OS_DisableInterrupts();
     slot = dsInfo->writeIndex;
     if (dsInfo->ds[slot].aidHeader == 0) {
-        CP15::InvalidateDataCache((u32)&ctx->status->mp_readyBitmap, 2);
+        DC_InvalidateRange(&ctx->status->mp_readyBitmap, 2);
 
         prevSlot = dsInfo->writeIndex;
         next = (u16)((prevSlot + 1) % 4);
@@ -451,7 +451,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
         newSlot = (dsInfo->doubleMode == 1) ? (u16)((next + 1) % 4) : next;
 
         zero = 0;
-        MultiStore16(zero, &dsInfo->ds[newSlot], 0x100);
+        MIi_CpuClear16(zero, &dsInfo->ds[newSlot], 0x100);
 
         dsInfo->ds[newSlot].aidHeader = (u16)(dsInfo->aidBitmap & (mask | 1));
         dsInfo->writeIndex = next;
@@ -460,7 +460,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
             dsInfo->ds[prevSlot].aidHeader &= ~1;
         }
 
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
 
         ret = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (int)&dsInfo->ds[prevSlot],
                                  dsInfo->dataSetLength, (u16)(dsInfo->aidBitmap & mask),
@@ -473,7 +473,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
             dsInfo->state = 3;
         }
     } else {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
     }
 }
 

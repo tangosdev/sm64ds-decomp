@@ -47,4 +47,14 @@ typedef struct MtxFx43 {
 
 #define FX_MUL(v1, v2) FX32_CAST(((fx64)(v1) * (v2) + 0x800LL) >> FX32_SHIFT)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void FX_Init(void); /* fx.c */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* NITRO_FX_FX_H */

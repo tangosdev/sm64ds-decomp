@@ -44,7 +44,7 @@ int *Vec3_LslInPlace(Vector3 *v, int sh);
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
 }
 
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 
 /* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail
  * SharedFilePtr pair; this TU does not define them. */
@@ -175,7 +175,7 @@ void daBttBk_c::UpdateModelTransform() {
     mShadowMtx.m[11] = mPosZ >> 3;
     {
         s16 a = mAngleX;
-        int sv = data_02082214[((unsigned short)(short)(a << 1) >> 4) * 2];
+        int sv = FX_SinCosTable_[((unsigned short)(short)(a << 1) >> 4) * 2];
         if (sv < 0)
             sv = -sv;
         int result = FX_MUL(sv, 0x28000);

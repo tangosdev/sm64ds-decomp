@@ -18,12 +18,12 @@
  * Leftover: func_02013568 / func_02013580 / func_02013598 /
  *   func_020135d0 / func_02013638 are arm9 save-table helpers. This
  *   TU's InitResources, MiniGm_IsUnlocked, MiniGm_IsNew,
- *   MiniGm_ClearNew, MiniGm_GetRecord, MiniGm_SetRecord
+ *   ClearNew, MiniGm_GetRecord, SetRecord
  *   call them; MiniGm_GetSaveTable reads the table's save-slot byte
  *   and hands it over. Naming belongs in arm9.
  * Leftover: func_02012790 is still the linker name of Sound::Play2D(2,
  *   id). This TU's Behavior and tap handlers (UpdateGameSelect /
- *   MiniGm_UpdatePageArrows / MiniGm_UpdateExitButton / MiniGm_UpdateGroupTabs)
+ *   UpdatePageArrows / UpdateExitButton / UpdateGroupTabs)
  *   call it. Naming belongs in arm9.
  * Leftover: Disable3dEngines / func_020233f4 are arm9 graphics-setup
  *   tails. This TU's InitResources calls them.
@@ -45,6 +45,7 @@
 
 #include "dScMiniGm_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 #include "MgMenuRow.h"
 #include "dWipe_c.h"
 #include "dFdBrightness_c.h"
@@ -53,10 +54,13 @@
 #include "OAM.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
-#include "CP15.h"
-#include "G3X.h"
+#include "nitro/os/cache.h"
+#include "nitro/gx/g3x.h"
 #include "dScene_c.h"
 #include "LevelRng.h"
 #include "SaveData.h"
@@ -80,7 +84,6 @@ extern u8 gMgMenuPage;
 extern MgEntry gMgMenuRow;
 extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
-extern SaveBlock data_0209caa0;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern short gSubBg3HOffset;
@@ -129,7 +132,6 @@ extern void *sMiniGmRecordLabels[];
  * forward reference. */
 int  MiniGm_GetSaveTable(void *self, int i);
 void MiniGm_DrawNumber(void *self, int x, int y, int val);
-void MiniGm_LoadIconPalette(char *self, int n);
 
 /* ---- arm9 / cross-overlay externals ---- */
 void func_02013568(int a, int b, int v);
@@ -140,7 +142,7 @@ int  func_02013638(int n);
 int  RandomIntInternal(int *seed);
 extern void *LoadFile(int id);
 extern void DecompressLZ16(void *src, void *dst);
-extern void MultiStore16(u16 val, void *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 
 extern void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pal, int prio, int sx,
                                     int sy, int c, int d);
@@ -175,7 +177,7 @@ s32 dScMiniGm_c::InitResources()
         tbl = sMiniGmRows;
         for (i = 0; i < 0x24; i++) {
             for (j = 0; j < 5; j++) {
-                MiniGm_SetRecord((char *)this, i, j, tbl->recordDefaults.v[j]);
+                SetRecord(i, j, tbl->recordDefaults.v[j]);
             }
             tbl++;
         }
@@ -201,7 +203,7 @@ s32 dScMiniGm_c::InitResources()
         }
         if (flag != 0) {
             for (j3 = 0; j3 < 5; j3++) {
-                MiniGm_SetRecord((char *)this, i2, j3, tbl2->recordDefaults.v[j3]);
+                SetRecord(i2, j3, tbl2->recordDefaults.v[j3]);
             }
             gMgSaveDirty = 1;
         }
@@ -217,31 +219,31 @@ s32 dScMiniGm_c::InitResources()
 
     GX::DisableAllBanks();
     *(volatile u16 *)0x4000304 |= 0x8000;
-    GX::SetBankForTex(1);
-    GX::SetBankForBG(2);
-    GX::SetBankForSubBG(4);
-    GX::SetBankForSubOBJ(8);
-    GX::SetBankForOBJ(0x10);
-    GX::SetBankForTexPltt(0x20);
+    GX_SetBankForTex(1);
+    GX_SetBankForBG(2);
+    GX_SetBankForSubBG(4);
+    GX_SetBankForSubOBJ(8);
+    GX_SetBankForOBJ(0x10);
+    GX_SetBankForTexPltt(0x20);
 
     gMainScreenLayers &= ~(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
                            DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
     gSubScreenLayers &= ~0x1f;
     *(volatile u32 *)0x4000000 &= ~0x1f00;
     *(volatile u32 *)0x4001000 &= ~0x1f00;
-    GX::SetGraphicsMode(1, 0, 1);
-    GXS::SetGraphicsMode(0);
+    GX_SetGraphicsMode(1, 0, 1);
+    GXS_SetGraphicsMode(0);
 
     *(volatile u32 *)0x4000000 &= 0xffcfffef;
     *(volatile u32 *)0x4001000 &= 0xffcfffef;
     *(volatile u32 *)0x4000000 &= ~0x7000000;
     *(volatile u32 *)0x4000000 &= ~0x38000000;
-    GX::DispOn();
+    GX_DispOn();
     *(volatile u32 *)0x4001000 |= 0x10000;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
-    *(volatile u32 *)0x40004cc = 0x7fff;
-    *(volatile u32 *)0x40004cc = 0x40007fff;
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
     func_020233f4();
 
     *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
@@ -251,16 +253,16 @@ s32 dScMiniGm_c::InitResources()
     SetBg2Offset(0, 0);
 
     f = LoadFile(0x4e);
-    DecompressLZ16(f, G2::GetBG2CharPtr());
+    DecompressLZ16(f, G2_GetBG2CharPtr());
     Deallocate(f);
 
     f = LoadFile(0x58);
-    CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
-    GX::LoadBGPltt(f, 0, 0x200);
+    DC_FlushRange(f, 0x200);
+    GX_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
     f = LoadFile(0x59);
-    DecompressLZ16(f, G2::GetBG2ScrPtr());
+    DecompressLZ16(f, G2_GetBG2ScrPtr());
     Deallocate(f);
 
     if (GetOwnerLanguage() == 5) {
@@ -274,12 +276,12 @@ s32 dScMiniGm_c::InitResources()
     } else {
         f = LoadFile(0xd8);
     }
-    DecompressLZ16(f, (void *)0x6400000);
+    DecompressLZ16(f, G2_GetOBJCharPtr());
     Deallocate(f);
 
     f = LoadFile(0xd9);
-    CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
-    GX::LoadOBJPltt(f, 0, 0x100);
+    DC_FlushRange(f, 0x100);
+    GX_LoadOBJPltt(f, 0, 0x100);
     Deallocate(f);
 
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
@@ -295,12 +297,12 @@ s32 dScMiniGm_c::InitResources()
     SetSubBg3Offset(mSubBgScrollX, 0);
 
     f = LoadFile(0x53);
-    DecompressLZ16(f, G2S::GetBG2CharPtr());
+    DecompressLZ16(f, G2S_GetBG2CharPtr());
     Deallocate(f);
 
     f = LoadFile(0x5a);
-    CP15::FlushAndInvalidateDataCache((u32)f, 0x200);
-    GXS::LoadBGPltt(f, 0, 0x200);
+    DC_FlushRange(f, 0x200);
+    GXS_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 2;
@@ -309,12 +311,12 @@ s32 dScMiniGm_c::InitResources()
     *(volatile u32 *)0x4001010 = mSubBgScrollX & 0x1ff;
     SetSubBg0Offset(mSubBgScrollX, 0);
 
-    dst = (char *)G2S::GetBG0CharPtr();
+    dst = (char *)G2S_GetBG0CharPtr();
     sp0 = 0;
-    MultiStore16(sp0, dst, 0x8000);
-    dst = (char *)G2S::GetBG0ScrPtr();
+    MIi_CpuClear16(sp0, dst, 0x8000);
+    dst = (char *)G2S_GetBG0ScrPtr();
     sp2 = 0x1f;
-    MultiStore16(sp2, dst, 0x1000);
+    MIi_CpuClear16(sp2, dst, 0x1000);
 
     MiniGm_LoadGroupIcons((char *)this);
 
@@ -329,12 +331,12 @@ s32 dScMiniGm_c::InitResources()
     } else {
         f = LoadFile(0xd8);
     }
-    DecompressLZ16(f, (void *)0x6600000);
+    DecompressLZ16(f, G2S_GetOBJCharPtr());
     Deallocate(f);
 
     f = LoadFile(0xd9);
-    CP15::FlushAndInvalidateDataCache((u32)f, 0x100);
-    GXS::LoadOBJPltt(f, 0, 0x100);
+    DC_FlushRange(f, 0x100);
+    GXS_LoadOBJPltt(f, 0, 0x100);
     Deallocate(f);
 
     mPageFlipped = 0;
@@ -388,8 +390,8 @@ void MiniGm_LoadGroupIcons(void *selfv)
     int pInit;
     int qInit;
     int resetVal;
-    volatile u16 valA; /* pin MultiStore16 src */
-    volatile u16 valB; /* pin MultiStore16 src */
+    volatile u16 valA; /* pin MIi_CpuClear16 src */
+    volatile u16 valB; /* pin MIi_CpuClear16 src */
     struct Off9 tbl;
     void *f;
     int fill;
@@ -397,11 +399,11 @@ void MiniGm_LoadGroupIcons(void *selfv)
     int t;
 
     f = LoadFile(sMiniGmBgFiles[gMgGroupBase]);
-    DecompressLZ16(f, G2S::GetBG2ScrPtr());
+    DecompressLZ16(f, G2S_GetBG2ScrPtr());
     Deallocate(f);
 
     f = LoadFile(sMiniGmBgFiles[gMgGroupBase + 4]);
-    DecompressLZ16(f, G2S::GetBG3ScrPtr());
+    DecompressLZ16(f, G2S_GetBG3ScrPtr());
     Deallocate(f);
 
     i = 0;
@@ -435,11 +437,11 @@ void MiniGm_LoadGroupIcons(void *selfv)
                 destOff = off << 1;
                 do {
                     char *dstp;
-                    scr = (char *)G2S::GetBG0ScrPtr();
+                    scr = (char *)G2S_GetBG0ScrPtr();
                     dstp = scr + destOff;
                     dstp = destOff ? dstp : dstp; /* register-dest pin; arms identical */
                     valA = (u16)fill;
-                    MultiStore16(valA, dstp, nbytes);
+                    MIi_CpuClear16(valA, dstp, nbytes);
                     destOff += 2;
                     off += 1;
                     col += 1;
@@ -458,23 +460,23 @@ void MiniGm_LoadGroupIcons(void *selfv)
             int p;
 
             f = LoadFile(sMiniGmIconChars[gMgGroupBase + j]);
-            DecompressLZ16(f, (char *)G2S::GetBG0CharPtr() + 0x8000);
+            DecompressLZ16(f, (char *)G2S_GetBG0CharPtr() + 0x8000);
             Deallocate(f);
 
             row = m;
             destOff = row;
             do {
                 idx = scene->mGfxSlot;
-                ch = (char *)G2S::GetBG0CharPtr();
+                ch = (char *)G2S_GetBG0CharPtr();
                 scr = ch + (idx / 4) * 0x2400 + (idx % 4) * 0xc0 + destOff;
-                ch = (char *)G2S::GetBG0CharPtr();
-                MultiCopy_Int((int *)(ch + 0x8000 + destOff), (int *)scr, copyLen);
+                ch = (char *)G2S_GetBG0CharPtr();
+                MIi_CpuCopy32((int *)(ch + 0x8000 + destOff), (int *)scr, copyLen);
                 destOff += 0x400;
             } while (++row < 9);
 
             f = LoadFile(sMiniGmIconPalettes[gMgGroupBase + j]);
-            CP15::FlushAndInvalidateDataCache((u32)f, flushSize);
-            GXS::LoadBGPltt(f, scene->mGfxSlot << 5, plttSize);
+            DC_FlushRange(f, flushSize);
+            GXS_LoadBGPltt(f, scene->mGfxSlot << 5, plttSize);
             Deallocate(f);
 
             scene->mGfxSlots[i] = scene->mGfxSlot;
@@ -488,11 +490,11 @@ void MiniGm_LoadGroupIcons(void *selfv)
                 do {
                     char *dstp;
                     idx = scene->mGfxSlot;
-                    scr = (char *)G2S::GetBG0ScrPtr();
+                    scr = (char *)G2S_GetBG0ScrPtr();
                     dstp = scr + destOff;
                     dstp = idx ? dstp : dstp; /* register-dest pin; arms identical */
                     valB = (u16)(q + (p + ((idx % 4) * 6 + ((idx / 4) * 0x120 + (idx << 12)))));
-                    MultiStore16(valB, dstp, nbytes);
+                    MIi_CpuClear16(valB, dstp, nbytes);
                     destOff += 2;
                     off += 1;
                     q += 1;
@@ -515,21 +517,18 @@ void MiniGm_LoadGroupIcons(void *selfv)
 }
 }
 
-extern "C" {
-void MiniGm_LoadIconPalette(char *self, int index)
-{
+void dScMiniGm_c::LoadIconPalette(int index) {
     void *file = LoadFile(sMiniGmIconPalettes[index]);
-    CP15::FlushAndInvalidateDataCache((u32)file, 0x200);
-    u32 slot = ((dScMiniGm_c *)self)->mGfxSlots[index / 4];
-    GXS::LoadBGPltt((u16 *)file + 16, slot << 5, 0x20);
+    DC_FlushRange(file, 0x200);
+    u32 slot = mGfxSlots[index / 4];
+    GXS_LoadBGPltt((u16 *)file + 16, slot << 5, 0x20);
     Deallocate(file);
-}
 }
 
 s32 dScMiniGm_c::CleanupResources()
 {
     if (gMgLastSelected[0] >= 0) {
-        MiniGm_ClearNew(this, gMgLastSelected[0]);
+        ClearNew(gMgLastSelected[0]);
     }
     Sound::UnsetPlayerVoiceGroup();
     return 1;
@@ -574,19 +573,15 @@ s32 dScMiniGm_c::Behavior()
         mIconBlinkPhase += 1;
         if (mIconBlinkPhase >= 0x40) mIconBlinkPhase = 0;
     }
-    MiniGm_UpdateGroupTabs((char *)this);
-    MiniGm_UpdatePageArrows((char *)this);
+    UpdateGroupTabs();
+    UpdatePageArrows();
     UpdateGameSelect();
-    MiniGm_UpdateExitButton((char *)this);
-    MiniGm_UpdatePageScroll((char *)this);
+    UpdateExitButton();
+    UpdatePageScroll();
     return 1;
 }
 
-extern "C" {
-void MiniGm_DrawRecords(void *selfv)
-{
-    dScMiniGm_c *scene = (dScMiniGm_c *)selfv;
-    char *self = (char *)selfv;
+void dScMiniGm_c::DrawRecords() {
     int end;
     int i;
     int r8;
@@ -600,7 +595,7 @@ void MiniGm_DrawRecords(void *selfv)
     unsigned int rem;
     unsigned int pct;
 
-    if (scene->mPageFlipped == 1)
+    if (mPageFlipped == 1)
         return;
 
     if (gMgMenuPage == 1) {
@@ -617,59 +612,58 @@ void MiniGm_DrawRecords(void *selfv)
     neg1 = -1;
     r8 = i * 4;
     do {
-        if (MiniGm_IsUnlocked(self, gMgGroupBase + r8) != 0) {
+        if (MiniGm_IsUnlocked(this, gMgGroupBase + r8) != 0) {
             type = sMiniGmRows[gMgGroupBase + r8].scoringMode;
             if (type != 0) {
                 if (type == 1) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
                     OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[0], x - 0x10, y, neg1, zero);
-                    val = MiniGm_GetRecord(self, gMgGroupBase + r8, zero);
-                    MiniGm_DrawNumber(self, x - 4, y, val);
+                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
+                    MiniGm_DrawNumber(this, x - 4, y, val);
                 } else if (type == 2) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
                     OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[1], x - 0x10, y, neg1, zero);
-                    val = MiniGm_GetRecord(self, gMgGroupBase + r8, zero);
-                    MiniGm_DrawNumber(self, x - 4, y, val);
+                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
+                    MiniGm_DrawNumber(this, x - 4, y, val);
                 } else if (type == 4) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
                     OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[2], x - 0x10, y, neg1, zero);
-                    val = MiniGm_GetRecord(self, gMgGroupBase + r8, zero);
-                    MiniGm_DrawNumber(self, x - 4, y, val);
+                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
+                    MiniGm_DrawNumber(this, x - 4, y, val);
                 } else if (type == 3) {
-                    val = MiniGm_GetRecord(self, gMgGroupBase + r8, zero);
+                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
                     x = sMiniGmRecordPos[i].x;
                     y = sMiniGmRecordPos[i].y;
-                    MiniGm_DrawNumber(self, x - 0x14, y, val);
+                    MiniGm_DrawNumber(this, x - 0x14, y, val);
                 } else if (type == 5) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    val = MiniGm_GetRecord(self, gMgGroupBase + r8, zero);
+                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
                     u = (unsigned int)val;
                     major = u / 60u;
-                    MiniGm_DrawNumber(self, x - 0x10, y, (int)major);
+                    MiniGm_DrawNumber(this, x - 0x10, y, (int)major);
                     OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[4], x, y - 8, neg1, zero);
 
-                    val = MiniGm_GetRecord(self, gMgGroupBase + r8, zero);
+                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
                     u = (unsigned int)val;
                     rem = u % 60u;
                     pct = rem * 100u;
-                    MiniGm_DrawNumber(self, x + 8, y, (int)(pct / 600u));
+                    MiniGm_DrawNumber(this, x + 8, y, (int)(pct / 600u));
 
-                    val = MiniGm_GetRecord(self, gMgGroupBase + r8, zero);
+                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
                     u = (unsigned int)val;
                     rem = u % 60u;
                     pct = rem * 100u / 60u;
-                    MiniGm_DrawNumber(self, x + 0x10, y, (int)(pct % 10u));
+                    MiniGm_DrawNumber(this, x + 0x10, y, (int)(pct % 10u));
                 }
             }
         }
         r8 += 4;
         i += 1;
     } while (i <= end);
-}
 }
 
 extern "C" {
@@ -698,12 +692,8 @@ void MiniGm_DrawNumber(void *a0, int x, int y, int val){
 }
 }
 
-extern "C" {
-void MiniGm_DrawNewBadges(void *selfv)
-{
-    dScMiniGm_c *scene = (dScMiniGm_c *)selfv;
-    char *self = (char *)selfv;
-    int g = (scene->mIconBlinkPhase >= 0x20) ? 1 : 0;
+void dScMiniGm_c::DrawNewBadges() {
+    int g = (mIconBlinkPhase >= 0x20) ? 1 : 0;
     int start, end;
     if (gMgMenuPage == 1) {
         start = 6;
@@ -712,18 +702,17 @@ void MiniGm_DrawNewBadges(void *selfv)
         start = 0;
         end = 5;
     }
-    if (scene->mPageFlipped == 1)
+    if (mPageFlipped == 1)
         return;
     int i;
     for (i = start; i <= end; i++) {
-        if (MiniGm_IsUnlocked(self, gMgGroupBase + i * 4) == 0)
+        if (MiniGm_IsUnlocked(this, gMgGroupBase + i * 4) == 0)
             continue;
-        if (MiniGm_IsNew(self, gMgGroupBase + i * 4) == 0)
+        if (MiniGm_IsNew(this, gMgGroupBase + i * 4) == 0)
             continue;
         OAM::RenderSub((OamAttr *)sMiniGmNewBadge[g],
             sMiniGmBadgePos[i].x, sMiniGmBadgePos[i].y + 0x30, -1, 0);
     }
-}
 }
 
 s32 dScMiniGm_c::Render()
@@ -795,8 +784,8 @@ s32 dScMiniGm_c::Render()
         }
     }
 
-    MiniGm_DrawRecords(this);
-    MiniGm_DrawNewBadges(this);
+    DrawRecords();
+    DrawNewBadges();
 
     t = mExitTimer;
     if (t < 0x14)
@@ -813,33 +802,29 @@ void dScMiniGm_c::OnPendingDestroy()
 {
 }
 
-extern "C" {
-
-void MiniGm_UpdateGroupTabs(char *self)
-{
-    dScMiniGm_c *scene = (dScMiniGm_c *)self;
+void dScMiniGm_c::UpdateGroupTabs() {
     if (gSceneFader->IsAtStart() == 0)
         return;
-    if (scene->mExiting != 0)
+    if (mExiting != 0)
         return;
-    if (scene->mPageFlipped == 1)
+    if (mPageFlipped == 1)
         return;
-    if (scene->mPrevPageTimer > 0)
+    if (mPrevPageTimer > 0)
         return;
-    if (scene->mNextPageTimer > 0)
+    if (mNextPageTimer > 0)
         return;
-    if (scene->mExitTimer > 0)
+    if (mExitTimer > 0)
         return;
 
-    if (scene->mScrollDelay > 0) {
-        int* pa0 = &scene->mScrollDelay;
+    if (mScrollDelay > 0) {
+        int *pa0 = &mScrollDelay;
         *pa0 = *pa0 - 1;
-        if (scene->mScrollDelay == 0) {
-            int f58 = scene->mGroupBase;
+        if (mScrollDelay == 0) {
+            int f58 = mGroupBase;
             if (f58 != gMgGroupBase) {
                 gMgGroupBase = f58;
-                MiniGm_LoadGroupIcons(self);
-                scene->mScrollDelay = 0x1e;
+                MiniGm_LoadGroupIcons(this);
+                mScrollDelay = 0x1e;
             }
         }
     }
@@ -852,7 +837,7 @@ void MiniGm_UpdateGroupTabs(char *self)
             if (gTouchEdge[idx * 4] != 0)
                 flag = 1;
         }
-        if (flag != 0 || (scene->mScrollDelay <= 0 && v != 0)) {
+        if (flag != 0 || (mScrollDelay <= 0 && v != 0)) {
             int i = 0;
             int lo = 2;
             int hi = 0x2e;
@@ -865,10 +850,10 @@ void MiniGm_UpdateGroupTabs(char *self)
                     unsigned char* p = (unsigned char*)gTouchHeld + (ix * 4);
                     if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
                         gMgGroupBase = e;
-                        scene->mGroupBase = e;
+                        mGroupBase = e;
                         func_02012790(z);
-                        MiniGm_LoadGroupIcons(self);
-                        scene->mScrollDelay = t;
+                        MiniGm_LoadGroupIcons(this);
+                        mScrollDelay = t;
                     }
                 }
                 i++;
@@ -878,7 +863,7 @@ void MiniGm_UpdateGroupTabs(char *self)
             return;
         }
 
-        if (scene->mScrollDelay <= 0)
+        if (mScrollDelay <= 0)
             return;
         if (v == 0)
             return;
@@ -890,13 +875,13 @@ void MiniGm_UpdateGroupTabs(char *self)
             int t = 0x1e;
             do {
                 int e = sMiniGmGroupBases[i];
-                if (scene->mGroupBase != e) {
+                if (mGroupBase != e) {
                     unsigned char ix = gActivePlayerSlot;
                     unsigned char* p = (unsigned char*)gTouchHeld + (ix * 4);
                     if (p[2] <= 0x30 && p[3] >= lo && p[3] <= hi) {
-                        scene->mGroupBase = e;
+                        mGroupBase = e;
                         func_02012790(z);
-                        scene->mScrollDelay = t;
+                        mScrollDelay = t;
                     }
                 }
                 i++;
@@ -906,20 +891,22 @@ void MiniGm_UpdateGroupTabs(char *self)
         }
     }
 }
-}
 
-extern "C" {
-void MiniGm_UpdatePageArrows(char *self)
-{
-    dScMiniGm_c *scene = (dScMiniGm_c *)self;
+void dScMiniGm_c::UpdatePageArrows() {
     if (gSceneFader->IsAtStart() == 0)
         return;
-    if (scene->mExiting != 0) return;
-    if (scene->mPageFlipped == 1) return;
-    if (scene->mPrevPageTimer > 0) return;
-    if (scene->mNextPageTimer > 0) return;
-    if (scene->mExitTimer > 0) return;
-    if (MiniGm_HasSecondPage(self) == 0) return;
+    if (mExiting != 0)
+        return;
+    if (mPageFlipped == 1)
+        return;
+    if (mPrevPageTimer > 0)
+        return;
+    if (mNextPageTimer > 0)
+        return;
+    if (mExitTimer > 0)
+        return;
+    if (MiniGm_HasSecondPage(this) == 0)
+        return;
 
     {
         u8 idx = gActivePlayerSlot;
@@ -936,7 +923,7 @@ void MiniGm_UpdatePageArrows(char *self)
             if (gTouchY[idx*4] < 0x40) return;
             if (gTouchY[idx*4] > 0x80) return;
             func_02012790(0);
-            scene->mNextPageTimer = 0x12;
+            mNextPageTimer = 0x12;
             return;
         } else {
             u8 v = gTouchX[idx*4];
@@ -945,11 +932,10 @@ void MiniGm_UpdatePageArrows(char *self)
             if (gTouchY[idx*4] < 0x40) return;
             if (gTouchY[idx*4] > 0x80) return;
             func_02012790(0);
-            scene->mPrevPageTimer = 0x12;
+            mPrevPageTimer = 0x12;
             return;
         }
     }
-}
 }
 
 void dScMiniGm_c::UpdateGameSelect()
@@ -1005,7 +991,7 @@ void dScMiniGm_c::UpdateGameSelect()
         gMgMenuRow.musicMode = src->musicMode;
         gMgMenuRow.level = src->level;
     }
-    MiniGm_LoadIconPalette((char *)this, sel);
+    LoadIconPalette(sel);
     func_02012790(0x1e);
     dScene_c::SetFaders(&data_0209f61c);
     data_0209f61c.SetType(0);
@@ -1017,17 +1003,19 @@ void dScMiniGm_c::UpdateGameSelect()
     data_0209b2fc = 1;
 }
 
-extern "C" {
-
-void MiniGm_UpdateExitButton(char *self) {
-    dScMiniGm_c *scene = (dScMiniGm_c *)self;
+void dScMiniGm_c::UpdateExitButton() {
     if (gSceneFader->IsAtStart() == 0)
         return;
-    if (scene->mExiting != 0) return;
-    if (scene->mPageFlipped == 1) return;
-    if (scene->mPrevPageTimer > 0) return;
-    if (scene->mNextPageTimer > 0) return;
-    if (scene->mExitTimer > 0) return;
+    if (mExiting != 0)
+        return;
+    if (mPageFlipped == 1)
+        return;
+    if (mPrevPageTimer > 0)
+        return;
+    if (mNextPageTimer > 0)
+        return;
+    if (mExitTimer > 0)
+        return;
     unsigned int i = gActivePlayerSlot;
     bool ok = false;
     if (gTouchHeld[i].held != 0) {
@@ -1041,53 +1029,51 @@ void MiniGm_UpdateExitButton(char *self) {
     if (y < 0x90) return;
     if (y > 0xb0) return;
     func_02012790(0x63);
-    scene->mExitTimer = 0x1c;
-}
+    mExitTimer = 0x1c;
 }
 
-extern "C" {
-
-void MiniGm_UpdatePageScroll(char *self) {
-    dScMiniGm_c *scene = (dScMiniGm_c *)self;
+void dScMiniGm_c::UpdatePageScroll() {
     if (gSceneFader->IsAtStart() == 0)
         return;
-    if (scene->mExiting != 0) return;
-    if (scene->mPrevPageTimer > 0) return;
-    if (scene->mNextPageTimer > 0) return;
-    if (scene->mExitTimer > 0) return;
+    if (mExiting != 0)
+        return;
+    if (mPrevPageTimer > 0)
+        return;
+    if (mNextPageTimer > 0)
+        return;
+    if (mExitTimer > 0)
+        return;
     if (gMgMenuPage == 0) {
-        if (scene->mSubBgScrollX >= 0) {
-            scene->mSubBgScrollX -= 8;
-            if (scene->mSubBgScrollX <= 0) {
-                scene->mSubBgScrollX = 0;
-                scene->mPageFlipped = 0;
+        if (mSubBgScrollX >= 0) {
+            mSubBgScrollX -= 8;
+            if (mSubBgScrollX <= 0) {
+                mSubBgScrollX = 0;
+                mPageFlipped = 0;
             }
         }
     } else {
-        if (scene->mSubBgScrollX <= 0xb0) {
-            scene->mSubBgScrollX += 8;
-            if (scene->mSubBgScrollX >= 0xb0) {
-                scene->mSubBgScrollX = 0xb0;
-                scene->mPageFlipped = 0;
+        if (mSubBgScrollX <= 0xb0) {
+            mSubBgScrollX += 8;
+            if (mSubBgScrollX >= 0xb0) {
+                mSubBgScrollX = 0xb0;
+                mPageFlipped = 0;
             }
         }
     }
-    gSubBg0HOffset = (short)scene->mSubBgScrollX;
-    gSubBg3HOffset = (short)scene->mSubBgScrollX;
-}
+    gSubBg0HOffset = (short)mSubBgScrollX;
+    gSubBg3HOffset = (short)mSubBgScrollX;
 }
 
 extern "C" {
-int MiniGm_HasSecondPage(void *self){
-  int i, j;
-  for(i=0;i<4;i++){
-    char *p = (char*)i + 0x18;
-    for(j=6;j<9;j++){
-      if(MiniGm_IsUnlocked(self, (int)p)) return 1;
-      p += 4;
+int MiniGm_HasSecondPage(void *self) {
+    int i, j;
+    for (i = 0; i < 4; i++) {
+        for (j = 6; j < 9; j++) {
+            if (MiniGm_IsUnlocked(self, j * 4 + i))
+                return 1;
+        }
     }
-  }
-  return 0;
+    return 0;
 }
 }
 
@@ -1110,10 +1096,8 @@ int MiniGm_IsNew(void *self, int n) {
 }
 }
 
-extern "C" {
-void MiniGm_ClearNew(void *self, int n)
-{
-    int seen = MiniGm_IsNew(self, n);
+void dScMiniGm_c::ClearNew(int n) {
+    int seen = MiniGm_IsNew(this, n);
     if (seen == 0)
         return;
     if (n < 8)
@@ -1121,7 +1105,6 @@ void MiniGm_ClearNew(void *self, int n)
     else
         func_02013598(n - 8);
     gMgSaveDirty = 1;
-}
 }
 
 extern "C" {
@@ -1138,13 +1121,11 @@ int MiniGm_GetRecord(void *a, int b, int c) {
 }
 }
 
-extern "C" {
-void MiniGm_SetRecord(void *a0, int a1, int r2, int r3) {
+void dScMiniGm_c::SetRecord(int a1, int r2, int r3) {
     int r5 = r2;
     int r4 = r3;
-    int r0 = MiniGm_GetSaveTable(a0, a1);
+    int r0 = MiniGm_GetSaveTable(this, a1);
     func_02013568(r0, r5, r4);
-}
 }
 
 extern "C" void MiniGm_SaveIfDirty(char *self)
@@ -1156,5 +1137,4 @@ extern "C" void MiniGm_SaveIfDirty(char *self)
     gMgSaveDirty = 0;
     gSoftResetDisabled = 0;
 }
-
 

@@ -401,7 +401,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            two exits and neither sets a result: the early one is
            `cmp r0,#2; addeq sp,sp,#8; popeq {r4-r8,lr}; bxeq lr`, returning
            the 2 it has just compared against slot 26's result, and the
-           fall-through returns whatever MultiCopy_Int last left in r0.
+           fall-through returns whatever MIi_CpuCopy32 last left in r0.
            No caller settles it either, and here that is MEASURED rather than
            assumed.  Scanning arm9 and all 103 overlays for the dispatch
            pattern -- `ldr rN,[rM,#0x74]` immediately followed by `blx rN`,
@@ -611,8 +611,8 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            SetSubBg1Offset(0, 0) resets the layer's scroll, `gSubScreenLayers &= ~2`
            clears BG1's bit in the sub BG-enable shadow that slot 30 restores
            the sub DISPCNT from, and two LoadCompressedFileAt calls install a
-           language-indexed character file at G2S::GetBG1CharPtr() and the
-           shared screen map, file 0x5b, at G2S::GetBG1ScrPtr().  Each class
+           language-indexed character file at G2S_GetBG1CharPtr() and the
+           shared screen map, file 0x5b, at G2S_GetBG1ScrPtr().  Each class
            differs only in X and in its own language table.  It installs this
            minigame's touch-screen background; it destroys nothing.
          WHEN IT RUNS.  BeforeInitResources (ov004:0x020b0930) calls slot 33 at
@@ -655,9 +655,9 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            BG-enable shadow that slot 30 restores the main DISPCNT from, and two
            LoadCompressedFileAt calls install a language-indexed character file
            and the shared screen map -- file 0x67 here, 0x5b there.  Slot 31
-           went through G2S::GetBG1CharPtr and G2S::GetBG1ScrPtr; this one goes
-           through func_02054ea8 and _ZN2G212GetBG1ScrPtrEv (ov004:0x020b2848
-           and 0x020b285c).  So the ROM itself names the pair G2S/G2.  It builds
+           went through G2S_GetBG1CharPtr and G2S_GetBG1ScrPtr; this one goes
+           through G2_GetBG1CharPtr and G2_GetBG1ScrPtr (ov004:0x020b2848
+           and 0x020b285c): the main engine where slot 31 used the sub.  It builds
            this minigame's TOP-screen background; it has nothing to do with
            collision.
          WHEN IT RUNS, and this is the other half of the symmetry.  Slot 31 is
@@ -777,10 +777,10 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
          (InitEngines, engine bring-up) sets mBrushOnMain (+0x68) to 0 and
          mBrushLayer (+0x6c) to -1.
          Here mBrushLayer selects WHICH background layer to draw into -- 0..3
-         index G2S::GetBG0CharPtr through GetBG3CharPtr, anything else returns
+         index G2S_GetBG0CharPtr through G2S_GetBG3CharPtr, anything else returns
          without drawing, which is what -1 buys -- and mBrushOnMain gates the
          wrapped region above the touch screen, where the main engine's
-         G2::GetBG*CharPtr are used instead and y is folded by
+         G2_GetBG*CharPtr are used instead and y is folded by
          `+ sMgTopScreenYOffset + 0xc0`.  So slot 33 leaves the brush disabled
          and a minigame arms it by picking a layer.  Two slots, one mechanism.
        WHO CALLS IT: ov004:0x020ae5c4, a line rasteriser sitting immediately
@@ -887,6 +887,8 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
        PaintSquare (slot 34); a zero-length line plots once. The amida, teresa
        and both trampoline minigames draw their strokes with it. */
     void Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int size);
+    void UpdateMenu();
+    void DrawPrompt();
 
     s32 mTallyShown;            /* 0x050 */
     s32 mTallyAnimTimer;            /* 0x054 */
@@ -943,7 +945,9 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
     s16 mMenuItem2X;        /* 0x463c */
     s16 mMenuItem2Y;        /* 0x463e */
     s32 mMenuCursorPhase;   /* 0x4640 -- drives the highlighted item's pulse */
-    u8  pad_4644[0x2];
+    s16 mMenuPickDelay;     /* 0x4644 -- UpdateMenu counts it down after a
+                                touch picks an item (0x10 for item 0, else 0)
+                                and acts on the pick when it reaches 0 */
     s16 mMenuCursor;        /* 0x4646 -- highlighted item, -1 for none */
     s32 mQuitFadeStarted;           /* 0x4648 */
     s32 mSubmittedScore;           /* 0x464c */

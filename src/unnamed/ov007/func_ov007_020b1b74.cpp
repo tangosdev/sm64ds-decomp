@@ -1,9 +1,9 @@
 //cpp
 #include "types.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -31,7 +31,7 @@ void func_ov007_020b1b74(void)
         else if (r4 >= 0xa)
             val = 0x1000;
         else
-            val = cstd::div(r4 << 12, 0xa);
+            val = FX_DivS32(r4 << 12, 0xa);
         sq = (int)(((long long)val * val) >> 12);
         WORK->modelGrowth = FX_MUL(sq, 0x17d0);
     } else if (r4 <= 0x1e) {
@@ -43,7 +43,7 @@ void func_ov007_020b1b74(void)
         else if (r4 >= 0x1e)
             val = 0x1000;
         else
-            val = cstd::div((r4 - 0xa) << 12, 0x14);
+            val = FX_DivS32((r4 - 0xa) << 12, 0x14);
         t = 0x1000 - val;
         sq = (int)(((long long)t * t) >> 12);
         WORK->modelGrowth = FX_MUL(sq, 0x7d0) + 0x1000;

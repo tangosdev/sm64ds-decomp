@@ -14,7 +14,8 @@
  * due and re-queues the periodic ones.
  */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
+#include "nitro/os/interrupt.h"
 #include "nitro/os/alarm.h"
 
 #define REG_TM1CNT_L (*(volatile u16 *)0x04000104)
@@ -44,7 +45,7 @@ typedef struct OSiAlarmQueue {
 extern long long OS_GetTick(void);
 extern void OSi_SetTimerReserved(int timerNum);
 extern void OSi_EnterTimerCallback(u32 idx, u32 handler, u32 arg);
-extern void Crash(void); /* OS_Terminate */
+extern void OS_Terminate(void);
 
 extern u16 data_020a6440;           /* OSi_UseAlarm */
 extern OSiAlarmQueue data_020a6444; /* OSi_AlarmQueue */
@@ -70,7 +71,7 @@ void OSi_SetTimer(OSAlarm *alarm) {
         timerCount = 0;
     REG_TM1CNT_L = timerCount;
     REG_TM1CNT_H = OSi_TICK_TIMERCONTROL;
-    IRQ::EnableIRQs(OS_IE_TIMER1);
+    OS_EnableIrqMask(OS_IE_TIMER1);
 }
 
 void OS_InitAlarm(void) {
@@ -80,7 +81,7 @@ void OS_InitAlarm(void) {
     OSi_SetTimerReserved(1);
     data_020a6444.head = 0;
     data_020a6444.tail = 0;
-    IRQ::DisableIRQs(OS_IE_TIMER1);
+    OS_DisableIrqMask(OS_IE_TIMER1);
 }
 
 int OS_IsAlarmAvailable(void) {
@@ -138,22 +139,22 @@ void OSi_InsertAlarm(OSAlarm *alarm, u64 fire) {
 }
 
 void OS_SetAlarm(OSAlarm *alarm, long long tick, OSAlarmHandler handler, void *arg) {
-    u32 saved;
+    OSIntrMode saved;
     if (alarm == 0 || alarm->handler != 0)
-        Crash();
-    saved = IRQ::Disable();
+        OS_Terminate();
+    saved = OS_DisableInterrupts();
     alarm->period = 0;
     alarm->handler = handler;
     alarm->arg = arg;
     OSi_InsertAlarm(alarm, OS_GetTick() + tick);
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 void OS_CancelAlarm(OSAlarm *alarm) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     OSAlarm *next;
     if (alarm->handler == 0) {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return;
     }
     next = alarm->next;
@@ -170,7 +171,7 @@ void OS_CancelAlarm(OSAlarm *alarm) {
     }
     alarm->handler = 0;
     alarm->period = 0;
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 /* The timer 1 IRQ entry. It pushes lr alone and calls out with no stack pad,
@@ -188,7 +189,7 @@ void OSi_ArrangeTimer(void) {
     OSAlarm *next;
     u64 tick;
     REG_TM1CNT_H = 0;
-    IRQ::DisableIRQs(OS_IE_TIMER1);
+    OS_DisableIrqMask(OS_IE_TIMER1);
     /* OS_SetIrqCheckFlag: HW_INTR_CHECK_BUF, DTCM + 0x3ff8. */
     *(int *)((int)data_023c0000 + 0x3ff8) |= OS_IE_TIMER1;
     tick = OS_GetTick();

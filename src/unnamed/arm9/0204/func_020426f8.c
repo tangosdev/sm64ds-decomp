@@ -4,9 +4,9 @@
 #include "types.h"
 #include "private/fs_views.h"
 
-extern void CpuCopy8(const void *src, void *dst, u32 size);
+extern void MI_CpuCopy8(const void *src, void *dst, u32 size);
 
 int func_020426f8(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
-    CpuCopy8((const void *)pos, dst, size);
+    MI_CpuCopy8((const void *)pos, dst, size);
     return 0;
 }

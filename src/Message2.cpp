@@ -93,7 +93,6 @@ extern int data_0208eeac[];
 extern int data_0208eecc[];
 extern u8 data_0208f074[];
 extern u8 data_0208f174[];
-extern SaveBlock data_0209caa0;
 extern u32 gNextActorUpdateMask;
 extern u8 gGameMode;
 extern s16 data_0209f4a2[];
@@ -106,10 +105,8 @@ extern u8 data_ov002_0210c3a0;
 extern u8 data_ov002_0210c3a8;
 extern void (*MSG_GEN_TEXT_FUNCS[])(void);
 
-extern int func_02054d88(void);
-extern void *func_02054ea8(void);
-extern void MultiCopy_Int(int *dst, int *src, int len);
-extern void MultiStore_Int(int val, int *dst, int len);
+extern void MIi_CpuCopy32(int *dst, int *src, int len);
+extern void MIi_CpuClear32(int val, int *dst, int len);
 extern int IsButtonInputValid(void);
 extern int func_0201fb4c(void);
 extern u8 NumStars(void);
@@ -121,15 +118,7 @@ void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int
 
 struct OamAttr;
 #include "OAM.h"
-
-namespace G2 {
-void *GetBG2CharPtr();
-}
-
-namespace G2S {
-unsigned int GetBG0CharPtr();
-unsigned int GetBG1CharPtr();
-}
+#include "nitro/gx/gx_bgcnt.h"
 
 /* gGameMode (CURRENT_GAMEMODE) is 2 while the fall-in-front-of-castle
  * cutscene runs: ContinueKuppaScriptIfNecessary stores 2 only when the
@@ -267,21 +256,21 @@ void func_0201adfc(void) {
     u32 *p;
 
     if (data_0209d698 != 0) {
-        p = (u32 *)(G2S::GetBG1CharPtr() + 0x4000);
+        p = (u32 *)((u32)G2S_GetBG1CharPtr() + 0x4000);
     } else {
-        p = (u32 *)(func_02054d88() + 0x4000);
+        p = (u32 *)((int)G2_GetBG3CharPtr() + 0x4000);
     }
 
     for (i = 0; i < data_0209d6f0[6] * 2; i++) {
         for (j = 0; j < data_0209d6a8; j++) {
-            MultiCopy_Int((int *)(p + 4), (int *)p, 0x10);
+            MIi_CpuCopy32((int *)(p + 4), (int *)p, 0x10);
             if (i == data_0209d6f0[6] * 2 - 1) {
                 p[4] = 0;
                 p[5] = 0;
                 p[6] = 0;
                 p[7] = 0;
             } else {
-                MultiCopy_Int((int *)(p + data_0209d6a8 * 8), (int *)(p + 4), 0x10);
+                MIi_CpuCopy32((int *)(p + data_0209d6a8 * 8), (int *)(p + 4), 0x10);
             }
             p += 8;
         }
@@ -289,9 +278,9 @@ void func_0201adfc(void) {
 
     n = data_0209d6f0[6] * 2;
     if (data_0209d698 != 0) {
-        p = (u32 *)(G2S::GetBG1CharPtr() + ((data_0209d6a8 * (n - 1) + 0x200) << 5) + 0x10);
+        p = (u32 *)((u32)G2S_GetBG1CharPtr() + ((data_0209d6a8 * (n - 1) + 0x200) << 5) + 0x10);
     } else {
-        p = (u32 *)(func_02054d88() + ((data_0209d6a8 * (n - 1) + 0x200) << 5) + 0x10);
+        p = (u32 *)((int)G2_GetBG3CharPtr() + ((data_0209d6a8 * (n - 1) + 0x200) << 5) + 0x10);
     }
 
     {
@@ -344,7 +333,7 @@ void func_0201b100(int mode) {
     int r4addr;
     unsigned char *cursor;
     acc = data_0209d65c;
-    base = func_02054d88() + 0x8000;
+    base = (int)G2_GetBG3CharPtr() + 0x8000;
     startRow = 0;
     size = 0x40;
     for (;;) {
@@ -360,17 +349,17 @@ void func_0201b100(int mode) {
             return;
         }
         if (mode != 0) {
-            r4addr = (int)G2::GetBG2CharPtr() + (((data_0209d674 + 0x280) + (acc >> 3)) << 5);
+            r4addr = (int)G2_GetBG2CharPtr() + (((data_0209d674 + 0x280) + (acc >> 3)) << 5);
         } else {
-            r4addr = G2S::GetBG0CharPtr() + (((data_0209d6a8 + 0x200) + (acc >> 3)) << 5);
+            r4addr = (u32)G2S_GetBG0CharPtr() + (((data_0209d6a8 + 0x200) + (acc >> 3)) << 5);
         }
         if ((acc & 0xf) == 0) {
             int lo2 = opcode & 0xf;
             int hi2 = opcode & 0xf0;
             int w;
-            MultiCopy_Int((int *)(base + (((lo2 << 1) + (hi2 << 2)) << 5)), (int *)r4addr, size);
+            MIi_CpuCopy32((int *)(base + (((lo2 << 1) + (hi2 << 2)) << 5)), (int *)r4addr, size);
             w = ((int)data_0209d6b0 + 7) / 8;
-            MultiCopy_Int((int *)(base + ((lo2 + ((hi2 << 1) + 0x10)) << 6)),
+            MIi_CpuCopy32((int *)(base + ((lo2 + ((hi2 << 1) + 0x10)) << 6)),
                           (int *)(r4addr + (w << 5)), size);
         } else {
             int lo;
@@ -438,18 +427,18 @@ void func_0201b388(int a0) {
     int step;
 
     if (data_0209d668 != 0) {
-        sl = (int *)(G2S::GetBG0CharPtr() + ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
+        sl = (int *)((u32)G2S_GetBG0CharPtr() + ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
     } else if (data_0209d690 != 0) {
-        sl = (int *)(G2S::GetBG0CharPtr() + (data_0209d6e0 << 5));
+        sl = (int *)((u32)G2S_GetBG0CharPtr() + (data_0209d6e0 << 5));
     } else if (data_0209d698 == 2) {
-        sl =
-            (int *)(((char *)func_02054ea8()) + ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
+        sl = (int *)(((char *)G2_GetBG1CharPtr()) +
+                     ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
     } else if (data_0209d698 == 1) {
-        sl = (int *)(((char *)G2S::GetBG1CharPtr()) +
+        sl = (int *)(((char *)G2S_GetBG1CharPtr()) +
                      ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
     } else {
-        sl =
-            (int *)(((char *)func_02054d88()) + ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
+        sl = (int *)(((char *)G2_GetBG3CharPtr()) +
+                     ((data_0209d6c0 * data_0209d6a8 * 2 + 0x200) << 5));
     }
 
     start = data_0209d65c;
@@ -491,9 +480,9 @@ void Message::AddChar(u8 c) {
     if (data_0209d698 == 2)
         ip = (int *)((char *)data_0209d6f8 + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
     else if (data_0209d698 == 1)
-        ip = (int *)((char *)G2S::GetBG1CharPtr() + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
+        ip = (int *)((char *)G2S_GetBG1CharPtr() + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
     else
-        ip = (int *)((char *)func_02054d88() + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
+        ip = (int *)((char *)G2_GetBG3CharPtr() + (((c & 0x1f) + ((c & 0xe0) << 1)) << 5));
 
     mask = data_0208eecc[gMsgBoxStyle];
     sh = data_0209d678;
@@ -565,7 +554,7 @@ void Message::LayoutLine() {
         data_0209d704 = 0;
         data_0209d6a4 = 0;
         data_0209d6b0 = 0;
-        MultiStore_Int(fill, data_0209d74c, 0xf00);
+        MIi_CpuClear32(fill, data_0209d74c, 0xf00);
     }
 
     while (1) {

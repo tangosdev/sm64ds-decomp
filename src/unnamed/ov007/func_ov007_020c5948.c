@@ -1,6 +1,6 @@
 #include "Ov007Picker.h"
 
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 
 /* Moves the picked point to src: its follower's velocity and force are
  * cleared and its x/y set. Then mode 0 moves pos to src, mode 1 moves it
@@ -45,7 +45,7 @@ void func_ov007_020c5948(Ov007Picker *s, Vector3 *src) {
         dst = &s->pos;
         min = &s->boundsMin;
         max = &s->boundsMax;
-        AddVec3((Vector3 *)src, (Vector3 *)&s->hitOffset, (Vector3 *)dst);
+        VEC_Add((Vector3 *)src, (Vector3 *)&s->hitOffset, (Vector3 *)dst);
         if (min->x > dst->x)
             dst->x = min->x;
         if (max->x < dst->x)

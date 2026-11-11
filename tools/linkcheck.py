@@ -151,7 +151,7 @@ def is_thumb_pointer(rtype, rom_t, cand_t):
     WRONG.
 
     Proven on func_0203c178 (arm9 0x0203c178), a veneer whose literal is 0x020527e9
-    for the Thumb symbol func_020527e8: enrolling that range and building the ROM
+    for the Thumb symbol MTX_Scale43_: enrolling that range and building the ROM
     reproduces the cartridge byte for byte while this check called it WRONG.
     """
     return (rtype == R_ARM_ABS32 and cand_t is not None

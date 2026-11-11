@@ -33,7 +33,7 @@ MAIN_RAM = (0x02000000, 0x02400000)
 # Default ground-truth targets: small always-resident arm9 funcs from nearmiss DB.
 DEFAULT_NAMES = [
     "func_02043288", "func_0204335c", "func_0204322c",
-    "OS_InitContext", "DMASyncFillTransfer", "func_0206e3dc",
+    "OS_InitContext", "MI_DmaFill32", "func_0206e3dc",
 ]
 
 

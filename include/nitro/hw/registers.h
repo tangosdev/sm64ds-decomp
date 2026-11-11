@@ -102,6 +102,10 @@
 #define REG_DB_MOSAIC_BG  (*(volatile u8 *)0x0400104c)
 #define REG_DB_MOSAIC_OBJ (*(volatile u8 *)0x0400104d)
 
+/* The geometry command FIFO port: a command word, then its parameter words.
+   Packed and immediate-mode senders (nitro/gx/g3.h opcodes) write here. */
+#define REG_GXFIFO       (*(volatile u32 *)0x04000400)
+
 /* 3D geometry commands: the material colours, and a light's vector and colour
    (bits 30-31 of each pick the light). */
 #define REG_DIF_AMB      (*(volatile u32 *)0x040004c0)
@@ -112,14 +116,24 @@
 /* 3D geometry commands: matrix stack, polygon setup and the vertex list. The
    texture-parameter pair (0x040004a8, 0x040004ac) is in nitro/gx/g3imm.h. */
 #define REG_MTX_MODE     (*(volatile u32 *)0x04000440)
+#define REG_MTX_PUSH     (*(volatile u32 *)0x04000444)
+#define REG_MTX_POP      (*(volatile u32 *)0x04000448)
+#define REG_MTX_STORE    (*(volatile u32 *)0x0400044c)
 #define REG_MTX_IDENTITY (*(volatile u32 *)0x04000454)
 #define REG_MTX_SCALE    (*(volatile u32 *)0x0400046c)
+#define REG_MTX_TRANS    (*(volatile u32 *)0x04000470)
+#define REG_COLOR        (*(volatile u32 *)0x04000480)
 #define REG_NORMAL       (*(volatile u32 *)0x04000484)
 #define REG_TEXCOORD     (*(volatile u32 *)0x04000488)
 #define REG_VTX_16       (*(volatile u32 *)0x0400048c)
+#define REG_VTX_10       (*(volatile u32 *)0x04000490)
+#define REG_VTX_XZ       (*(volatile u32 *)0x04000498)
+#define REG_VTX_YZ       (*(volatile u32 *)0x0400049c)
 #define REG_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
 #define REG_BEGIN_VTXS   (*(volatile u32 *)0x04000500)
 #define REG_END_VTXS     (*(volatile u32 *)0x04000504)
+#define REG_SWAP_BUFFERS (*(volatile u32 *)0x04000540)
+#define REG_VIEWPORT     (*(volatile u32 *)0x04000580)
 
 /* Timer 0. The counter and the control word share an address: reads see the live
    count, writes set the reload value. */

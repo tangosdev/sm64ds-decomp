@@ -9,7 +9,7 @@
     "One contiguous run of the Nitro SDK's os_mutex.c, 0x02058960..0x02058bb0: 8 functions, gapless in config/arm9/delinks.txt. pret/pokediamond's arm9/lib/NitroSDK/src/OS_mutex.c defines, in this order, OS_InitMutex, OS_LockMutex, OS_UnlockMutex, OSi_UnlockAllMutex, OS_TryLockMutex, OSi_EnqueueTail and OSi_DequeueItem. All seven are here, each identified by body.",
     "Order: mwccarm emits deferred bodies in reverse. The ROM run is pret's source order reversed, OSi_DequeueItem at 0x02058988 and OS_InitMutex highest. Below OSi_DequeueItem, func_02058960 unlinks the first mutex a thread holds (pret's OSi_RemoveMutexLinkFromQueue does this from OS_thread.c, taking the queue); here it takes the thread and is the file's last function.",
     "BOTTOM EDGE: OS_InitMessageQueue (0x02058940) closes os_message.c (arm9/OS_Message).",
-    "TOP EDGE: CP15::FlushDataCache (0x02058bb0) opens the cache primitives (arm9/CP15)."
+    "TOP EDGE: DC_StoreAll (0x02058bb0) opens the cache primitives (arm9/CP15)."
   ],
   "sections": [
     {

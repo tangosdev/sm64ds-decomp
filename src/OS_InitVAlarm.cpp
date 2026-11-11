@@ -1,7 +1,7 @@
 //cpp
 /* OS_InitVAlarm (the Nitro SDK's os_valarm.c). This SDK's version keeps no
  * frame counters: it only empties the alarm queue and masks V-count. */
-#include "IRQ.h"
+#include "nitro/os/interrupt.h"
 
 #define OS_IE_V_COUNT 0x4
 
@@ -16,6 +16,6 @@ void OS_InitVAlarm(void) {
     data_020a644c = 1;
     queue[0] = 0;
     queue[1] = 0;
-    IRQ::DisableIRQs(OS_IE_V_COUNT);
+    OS_DisableIrqMask(OS_IE_V_COUNT);
 }
 }

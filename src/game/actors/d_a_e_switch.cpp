@@ -4,8 +4,8 @@
  * The original source boundary remains an inference.
  *
  * daECreate_c spawns actor 0xce when its event bit rises and hands it to
- * func_ov102_0214ad14, the daBmb_c chase-start helper (src/game/actors/
- * d_a_bmb.cpp), which keeps its label because three overlays call it.
+ * daBmb_c::func_ov102_0214ad14, the Bob-omb's chase start (src/game/actors/
+ * d_a_bmb.cpp).
  * data_ov002_0210d9e0 is the ov002 model handle daECreate_c loads.
  */
 #include "EnemySwitchTag.h"
@@ -13,9 +13,9 @@
 #include "SharedFilePtr.h"
 #include "dExtSimpleModel_c.h"
 #include "Event.h"
+#include "daBmb_c.h"
 
 extern SharedFilePtr data_ov002_0210d9e0;
-extern "C" void func_ov102_0214ad14(void *actor);
 
 extern "C" daESwitch_c *daESwitch_c_classInit() {
     return new daESwitch_c;
@@ -74,9 +74,10 @@ int daESwitch_c::Behavior() {
 
 int daECreate_c::Behavior() {
     if (Event::GetBit(mEventBit) && mPreviousEventBit == 0) {
-        dActor_c *actor = dActor_c::Spawn(mActorToSpawn, 4, mPos, &mPrevAngle, mAreaId, -1);
+        daBmb_c *actor =
+            (daBmb_c *)dActor_c::Spawn(mActorToSpawn, 4, mPos, &mPrevAngle, mAreaId, -1);
         if (actor != 0)
-            func_ov102_0214ad14(actor);
+            actor->func_ov102_0214ad14();
     }
     mPreviousEventBit = Event::GetBit(mEventBit);
     return 1;

@@ -66,7 +66,8 @@ int Vec3_Dist(const Vector3 *a,
               const Vector3 *b); /* local extern: named parameters preserve @NNN */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_FromRotationY(struct Matrix4x3 *mF, int angY);
-extern void MulMat4x3Mat4x3(const struct Matrix4x3 *m1, const struct Matrix4x3 *m0, struct Matrix4x3 *mF);
+extern void MTX_Concat43(const struct Matrix4x3 *m1, const struct Matrix4x3 *m0,
+                         struct Matrix4x3 *mF);
 extern int Math_Function_0203b14c(void*, int, int, int, int);
 unsigned short
 DecIfAbove0_Short(unsigned short *p); /* local extern: named parameters preserve @NNN */
@@ -317,7 +318,7 @@ void daHolhei_c::BuildHoldMatrix() {
     mModel.mat4x3.m[9] = mPosX >> 3;
     mModel.mat4x3.m[10] = mPosY >> 3;
     mModel.mat4x3.m[11] = mPosZ >> 3;
-    MulMat4x3Mat4x3(&mModel.data.transforms[3], &mModel.mat4x3, &mHoldMtx);
+    MTX_Concat43(&mModel.data.transforms[3], &mModel.mat4x3, &mHoldMtx);
     mCarryMatrix = &mHoldMtx;
 }
 

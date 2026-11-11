@@ -70,7 +70,7 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
        this class; Behavior dispatches the same eight-byte pointer-to-member
        every frame. The State/Begin/Update names are coined from the
        matched bodies; the ROM symbols were address-only. */
-    static void StateDone(); /* ov006 0x02121774 */
+    void StateDone();      /* ov006 0x02121774 */
     void StateWaitExit();  /* ov006 0x02121778 */
     void StateResults();   /* ov006 0x02121848 */
     void StatePlay();      /* ov006 0x021218fc */
@@ -87,8 +87,7 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     s16  GetDoorSide();        /* ov006 0x02121768 */
     void SetDoorSide(short v); /* ov006 0x02121750 -- mirrors pick to sTrmpGoalRow */
 
-    u32 mState[2];          /* 0x5004 -- raw eight-byte State encoding; a
-                               typed global PMF emits a non-ROM __sinit */
+    State mState;                       /* 0x5004 */
     dMgTrmpln3DMario_c mMarios[4];      /* 0x500c -- StatePlay launches one */
     TrmpLine mLines[3];                 /* 0x534c */
     TrmpScorePopup mScorePopups[5];     /* 0x5cd0 -- floating scores */
@@ -128,6 +127,8 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
 
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm; host ABI divergence is tracked separately. */
+typedef char
+    dScMgTrampoline_c_State_size_must_be_0x8[sizeof(dScMgTrampoline_c::State) == 0x8 ? 1 : -1];
 typedef char dScMgTrampoline_c_size_must_be_0x5dc8[sizeof(dScMgTrampoline_c) == 0x5dc8 ? 1 : -1];
 #endif
 

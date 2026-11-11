@@ -6,7 +6,7 @@
  * children (7), and a size of 0 or one past mp_maxSendSize less the header
  * (6), then flushes the data and sends API 0xf (SET_MP_DATA) with pret's
  * argument order. */
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -31,16 +31,16 @@ int WM_SetMPDataToPortEx(int p0, int p1, int p2, int p3, unsigned short p4, unsi
     if (ret != 0)
         return ret;
 
-    CP15::InvalidateDataCache((unsigned int)&handle->status->mp_maxSendSize, 2);
+    DC_InvalidateRange(&handle->status->mp_maxSendSize, 2);
     maxSendSize = handle->status->mp_maxSendSize;
-    CP15::InvalidateDataCache((unsigned int)&handle->status->aid, 2);
+    DC_InvalidateRange(&handle->status->aid, 2);
 
     aid = handle->status->aid;
     flag = (aid == 0) ? x : 0;
     if (flag == 1) {
-        CP15::InvalidateDataCache((unsigned int)&handle->status->child_bitmap, 2);
+        DC_InvalidateRange(&handle->status->child_bitmap, 2);
         x = handle->status->child_bitmap;
-        CP15::InvalidateDataCache((unsigned int)&handle->status->mp_readyBitmap, 2);
+        DC_InvalidateRange(&handle->status->mp_readyBitmap, 2);
     }
 
     if (p2 == 0)
@@ -52,7 +52,7 @@ int WM_SetMPDataToPortEx(int p0, int p1, int p2, int p3, unsigned short p4, unsi
     if (p3 == 0)
         return 6;
 
-    CP15::FlushDataCache(p2, p3);
+    DC_StoreRange((void *)p2, p3);
     ret = WM_SendCommand(0xf, 7, p2, p3, p4, p5, p6, p0, p1);
     if (ret == 0)
         return 2;

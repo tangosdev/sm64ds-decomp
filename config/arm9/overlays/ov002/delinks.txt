@@ -297,8 +297,8 @@ src/game/actors/d_a_demo.cpp:
     .text start:0x020f1f70 end:0x020f8858
     .init start:0x02107370 end:0x02107f88
     .ctor start:0x02108128 end:0x0210812c
-    .data start:0x0210b650 end:0x0210b958
-    .bss start:0x02110afc end:0x0211104c
+    .data start:0x0210b600 end:0x0210b958
+    .bss start:0x02110afc end:0x0211110c
 
 src/game/actors/d_a_f_pkn_ball.cpp:
     complete

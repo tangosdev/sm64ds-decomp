@@ -13,7 +13,6 @@
  * - data_ov048_021115e4 / 021115f4 are the BMA and BTA this TU's
  *   dExtAnmMaterial_c::Prepare and dExtAnmTexSRT_c::Prepare load. They sit
  *   in the level overlay; only ov048 has an animation record at both words.
- * - func_02016b24 is the unnamed model-mask call in InitResources.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -58,8 +57,6 @@ extern FRingModelFilePtr data_ov060_0211b208;
 extern BMA_File data_ov048_021115e4;
 extern BTA_File data_ov048_021115f4;
 
-/* local extern: the model-mask helper has no shared header yet. */
-extern "C" void func_02016b24(void *model, unsigned int mask);
 
 daFRing_c::~daFRing_c() {}
 
@@ -122,8 +119,8 @@ s32 daFRing_c::InitResources() {
     dExtFrameCtrl_c::LoadFile(data_ov060_0211b1f8);
     dExtAnmTexPat_c::LoadFile(data_ov060_0211b200);
 
-    func_02016b24(&mAnmModel1, 0x4000);
-    func_02016b24(&mAnmModel2, 0x4000);
+    mAnmModel1.SetMaterialFlags(0x4000);
+    mAnmModel2.SetMaterialFlags(0x4000);
 
     mAnmModel1.SetAnim((BCA_File *)data_ov060_0211b1f8.filePtr, 0x40000000, 0x1000, 0);
     mAnmModel2.SetAnim((BCA_File *)data_ov060_0211b1f8.filePtr, 0x40000000, 0x1000, 0);

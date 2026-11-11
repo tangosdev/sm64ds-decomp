@@ -59,7 +59,7 @@ enum { HIT_MEGA_CHARACTER = 0x10 };
 extern s32 data_ov002_02100320[];
 extern s32 data_ov002_02100334[];
 extern s32 data_ov002_02100348[];
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. Vec3_Asr is
    not among them any more -- math/CalcLib.h, included above, declares it. */
@@ -281,12 +281,12 @@ int daFPknBall_c::Behavior() {
     }
 
     /* mPrevAngleY is the heading (ApproachLinear steers it toward
-     * mTargetAngleY) and mPrevAngleX the pitch; data_02082214 holds (sin, cos)
+     * mTargetAngleY) and mPrevAngleX the pitch; FX_SinCosTable_ holds (sin, cos)
      * pairs in fix12. */
-    flatSpeed = (mHorzSpeed * data_02082214[((u16)mPrevAngleX >> 4) * 2 + 1]) / 4096;
-    mSpeedX = (flatSpeed * data_02082214[((u16)mPrevAngleY >> 4) * 2]) / 4096;
-    mVertSpeed = (-mHorzSpeed * data_02082214[((u16)mPrevAngleX >> 4) * 2]) / 4096;
-    mSpeedZ = (flatSpeed * data_02082214[((u16)mPrevAngleY >> 4) * 2 + 1]) / 4096;
+    flatSpeed = (mHorzSpeed * FX_SinCosTable_[((u16)mPrevAngleX >> 4) * 2 + 1]) / 4096;
+    mSpeedX = (flatSpeed * FX_SinCosTable_[((u16)mPrevAngleY >> 4) * 2]) / 4096;
+    mVertSpeed = (-mHorzSpeed * FX_SinCosTable_[((u16)mPrevAngleX >> 4) * 2]) / 4096;
+    mSpeedZ = (flatSpeed * FX_SinCosTable_[((u16)mPrevAngleY >> 4) * 2 + 1]) / 4096;
     mPosX += mSpeedX;
     mPosY += mVertSpeed;
     mPosZ += mSpeedZ;

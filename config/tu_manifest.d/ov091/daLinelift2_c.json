@@ -321,39 +321,39 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@477",
+      "from": "@455",
       "to": "@511",
-      "evidence": "compiler temp; mwcc numbers this registration node @480 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers)"
+      "evidence": "compiler temp; mwcc numbers this registration node @480 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @477 to @455 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@478",
+      "from": "@456",
       "to": "@510",
-      "evidence": "compiler temp; mwcc numbers this registration node @481 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers)"
+      "evidence": "compiler temp; mwcc numbers this registration node @481 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @478 to @456 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@480",
+      "from": "@458",
       "to": "@512",
-      "evidence": "compiler temp; mwcc numbers this registration node @483 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers)"
+      "evidence": "compiler temp; mwcc numbers this registration node @483 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @480 to @458 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@479",
+      "from": "@457",
       "to": "@508",
-      "evidence": "compiler temp; mwcc numbers this registration node @482 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers)"
+      "evidence": "compiler temp; mwcc numbers this registration node @482 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @479 to @457 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@482",
+      "from": "@460",
       "to": "data_ov091_02134e54",
-      "evidence": "StateWait pointer-to-member constant (the initializer's first table copy source); ov100 already defines a global @485"
+      "evidence": "StateWait pointer-to-member constant (the initializer's first table copy source); ov100 already defines a global @485 Re-keyed from @482 to @460 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@484",
+      "from": "@462",
       "to": "data_ov091_02134e44",
-      "evidence": "StateForward pointer-to-member constant (second table copy source); ov100 already defines a global @487"
+      "evidence": "StateForward pointer-to-member constant (second table copy source); ov100 already defines a global @487 Re-keyed from @484 to @462 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@486",
+      "from": "@464",
       "to": "data_ov091_02134e4c",
-      "evidence": "StateReturn pointer-to-member constant (third table copy source); ov100 already defines a global @489"
+      "evidence": "StateReturn pointer-to-member constant (third table copy source); ov100 already defines a global @489 Re-keyed from @486 to @464 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "relocations": [

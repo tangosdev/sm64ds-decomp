@@ -162,18 +162,6 @@ struct dBgW {
     static void UpdateAngsWithAngularVelY(dBgW &clsn, dActor_c *clsnActor,
                                           dBgPi &res, Vector3 &pos,
                                           Vector3_16 *motionAng, Vector3_16 *ang);
-
-    /* This family deallocates through Memory::operator_delete2 (0x0203cbcc),
-       not the actor heap. CW inlines operator delete into the deleting
-       destructor (D0) only when it finds one on the class or its immediate
-       base, so it has to be spelt here. Without it D0 calls the global
-       _ZdlPv (0x0203cbf0) and still BYTE-MATCHES -- match.compare wildcards
-       every relocated word -- while calling the wrong function; only the
-       reloc-destination check sees it. No layout effect: a non-virtual
-       inline member adds no field and no vtable slot. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 };
 
 /* The enabled-collider table: Enable puts a collider in the first free

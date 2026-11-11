@@ -34,7 +34,6 @@ extern "C" {
 /* data_0209caa0 is the live save block; its first 0x44 bytes are the
  * current file. LoadEntranceObjects reads the character, LoadClsnAndObjects
  * flags2. */
-extern SaveBlock data_0209caa0;
 
 /* gCurrentScene, the running scene, is the parent passed to dBase_c::Spawn. */
 extern fBase_c *gCurrentScene;
@@ -60,6 +59,11 @@ extern s8 sEntranceWipes[];
 extern u8 sDoorVariants[];
 extern u16 sDoorActorIds[];
 extern u16 sObjToActorIdTable[];
+
+/* The death-table ID the next spawned object gets (the SM64DS modding symbol
+ * list's NEXT_DEATH_TABLE_ID): LoadClsnAndObjects zeroes it, and every
+ * loader passes it, post-incremented, as dActor_c::Spawn's deathTableID. */
+extern s16 sNextDeathTableID;
 
 void func_0202af80(void *entries, s32 count);
 void func_0202b044(void *entries, s32 count);
@@ -107,23 +111,22 @@ void LoadSimpleObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
             LoadMinimapChangeObject(areaID, position.y, actorParam & 0xf);
         } else {
             dActor_c::Spawn(sObjToActorIdTable[actorIndex], actorParam, position, 0, areaID,
-                            data_ov002_0211118c++);
+                            sNextDeathTableID++);
         }
     }
 }
 
 /* One actor per standard object entry. Each StandardEntry is 0x10 bytes: raw id
  * index into sObjToActorIdTable, s16 position (shifted left by 12 into Fix12),
- * Vector3s rotation, u16 param. data_ov002_0211118c is a running death-table /
- * spawn-order counter incremented per spawn. The third parameter is part of the
- * shared loader signature and unused here. */
+ * Vector3s rotation, u16 param. Each spawn takes the next death-table ID. The
+ * third parameter is part of the shared loader signature and unused here. */
 void LoadStandardObjects(LVL_Overlay::ObjSubTable &table, s8 areaID, u32 param) {
     LVL_Overlay::StandardEntry *entry = (LVL_Overlay::StandardEntry *)table.entries;
     for (int objectIndex = 0; objectIndex < table.count; objectIndex++, entry++) {
         u32 actorID = sObjToActorIdTable[entry->raw];
         Vector3 position(entry->x << 12, entry->y << 12, entry->z << 12);
         dActor_c::Spawn(actorID, entry->param, position, (const Vector3_16 *)&entry->rot, areaID,
-                        data_ov002_0211118c++);
+                        sNextDeathTableID++);
     }
 }
 
@@ -335,7 +338,7 @@ void dScStage_c::LoadClsnAndObjects(LVL_Overlay &overlay, u32 entranceIndex,
         meshCollider.Enable(0);
     }
 
-    data_ov002_0211118c = 0;
+    sNextDeathTableID = 0;
     LoadObjects(*overlay.objTable, -1, entranceIndex);
 
     LVL_Overlay::Area *area = overlay.areas;
