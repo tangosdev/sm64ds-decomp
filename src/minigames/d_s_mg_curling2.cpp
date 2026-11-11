@@ -930,7 +930,6 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
     int dy;
     int distance;
     u16 contactAngle;
-    int angleIndex;
 
     for (hitIndex = 0; hitIndex < 11; hitIndex++) {
         if (mStone[hitIndex].active == 0)
@@ -949,11 +948,10 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
             int separationX;
             int separationY;
 
-            angleIndex = (contactAngle >> 4) * 2;
-            contactCos = FX_SinCosTable_[angleIndex + 1];
+            contactCos = FX_CosIdx(contactAngle >> 4);
             separationX = FX_MUL(contactCos, 0x1a);
             mStone[hitIndex].x = mStone[stoneIndex].x + (separationX << 12);
-            contactSin = FX_SinCosTable_[angleIndex];
+            contactSin = FX_SinIdx(contactAngle >> 4);
             separationY = FX_MUL(contactSin, 0x1a);
             mStone[hitIndex].y = mStone[stoneIndex].y + (separationY << 12);
             for (nextIndex = 0; nextIndex < 11; nextIndex++) {
@@ -978,11 +976,10 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
                     int nextSeparationX;
                     int nextSeparationY;
 
-                    angleIndex = (nextContactAngle >> 4) * 2;
-                    nextContactCos = FX_SinCosTable_[angleIndex + 1];
+                    nextContactCos = FX_CosIdx(nextContactAngle >> 4);
                     nextSeparationX = FX_MUL(nextContactCos, 0x1a);
                     mStone[nextIndex].x = mStone[hitIndex].x + (nextSeparationX << 12);
-                    nextContactSin = FX_SinCosTable_[angleIndex];
+                    nextContactSin = FX_SinIdx(nextContactAngle >> 4);
                     nextSeparationY = FX_MUL(nextContactSin, 0x1a);
                     mStone[nextIndex].y = mStone[hitIndex].y + (nextSeparationY << 12);
                     func_02012718(0xe8, mStone[stoneIndex].x);
