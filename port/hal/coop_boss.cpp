@@ -703,8 +703,15 @@ void mark_dead_slot(int slot, Boss &b) {
 enum : int { kTripSlot0 = 505 };
 struct Trip { uint32_t bb; uint32_t uid[3]; bool set; bool clash; };
 Trip g_trip = {};
+Trip g_trip_logged = {};                      // the last mapping logged (a key reset re-takes the same one: logged once per visit)
+bool trip_log_new() {
+    const bool same = g_trip_logged.set && g_trip_logged.bb == g_trip.bb && g_trip_logged.clash == g_trip.clash &&
+                      std::memcmp(g_trip_logged.uid, g_trip.uid, sizeof g_trip.uid) == 0;
+    g_trip_logged = g_trip;
+    return !same;
+}
 int trip_slot_of(const char *a) {
-    if (!g_bully_on || !a || *(const unsigned short *)(a + 0x0c) != 215 || rd16(a, 0xce) >= 0) return -1;
+    if (!g_on || !g_bully_on || !a || *(const unsigned short *)(a + 0x0c) != 215 || rd16(a, 0xce) >= 0) return -1;
     const uint32_t bb = (uint32_t)rd32(a, 0x3fc), uid = (uint32_t)rd32(a, 0x04);
     if (!bb) return -1;
     if (!g_trip.set || g_trip.bb != bb) {
@@ -715,14 +722,14 @@ int trip_slot_of(const char *a) {
             if (*(const unsigned short *)(x + 0x0c) == 215 && sl < 0 && (uint32_t)rd32(x, 0x3fc) == bb && n < 8) u[n++] = (uint32_t)rd32(x, 0x04);
         }
         if (n != 3) {                         // not the three of a fresh spawn: left alone for this visit (and not scanned again every frame)
-            g_trip.bb = bb; g_trip.set = true; g_trip.clash = true;
-            std::fprintf(stderr, "[cbs] bully triplet of big bully id %u: %d found, not 3: not synced\n", (unsigned)bb, n);
+            g_trip.bb = bb; g_trip.set = true; g_trip.clash = true; std::memset(g_trip.uid, 0, sizeof g_trip.uid);
+            if (trip_log_new()) std::fprintf(stderr, "[cbs] bully triplet of big bully id %u: %d found, not 3: not synced\n", (unsigned)bb, n);
             return -1;
         }
         std::sort(u, u + 3);
         g_trip.bb = bb; g_trip.set = true; g_trip.clash = clash;
         for (int i = 0; i < 3; ++i) g_trip.uid[i] = u[i];
-        std::fprintf(stderr, "[cbs] bully triplet of big bully id %u: record slots %d..%d by spawn order (ids %u %u %u)%s\n", (unsigned)bb, kTripSlot0,
+        if (trip_log_new()) std::fprintf(stderr, "[cbs] bully triplet of big bully id %u: record slots %d..%d by spawn order (ids %u %u %u)%s\n", (unsigned)bb, kTripSlot0,
                      kTripSlot0 + 2, (unsigned)u[0], (unsigned)u[1], (unsigned)u[2], clash ? ": OFF, a placed actor uses one of those slots" : "");
     }
     if (g_trip.clash) return -1;
@@ -1034,13 +1041,14 @@ void process(unsigned now) {
             const bool live = g_bclaim[slot][g_my] && (int)(g_bclaim[slot][g_my] - wnow) > 0;
             if (b.bst_valid && st != b.bst && st == 2u) {
                 bully_claim_new = !live;
+                const int was = auth_for(slot, wnow, d.cls);
                 g_bclaim[slot][g_my] = (wnow + kBullyClaimMs) | 1u;
                 b.lw_valid = false;
                 ++g_st.claims;
                 if (g_log) std::fprintf(stderr, "[cbs] bully claim slot=%d cls=%u st %u->2 by my player (was auth %d) pos=%d,%d,%d spd=%d ang=%d w=%lld\n", slot, (unsigned)d.cls,
-                                        b.bst, auth_for(slot, wnow, d.cls), rd32(b.a, 0x5c) >> 12, rd32(b.a, 0x60) >> 12, rd32(b.a, 0x64) >> 12, rd32(b.a, 0x98) >> 12,
+                                        b.bst, was, rd32(b.a, 0x5c) >> 12, rd32(b.a, 0x60) >> 12, rd32(b.a, 0x64) >> 12, rd32(b.a, 0x98) >> 12,
                                         (int)rd16(b.a, 0x94), wall_ms());
-            } else if (live && (st == 2u || st == 4u || st == 5u)) {
+            } else if (live && (st == 2u || st == 4u || st == 5u) && auth_for(slot, wnow, d.cls) == g_my) {   // a claim lost to a lower seat's is not renewed
                 g_bclaim[slot][g_my] = (wnow + kBullyClaimMs) | 1u;     // held while the knock or the death lasts
             }
             claiming = g_bclaim[slot][g_my] && (int)(g_bclaim[slot][g_my] - wnow) > 0;
