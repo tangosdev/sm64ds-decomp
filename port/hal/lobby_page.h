@@ -32,13 +32,16 @@ struct SpInput;
 extern "C" {
 #endif
 
-/* the online file select asks (logic thread): HOST opens the Coop / VS choice first; a room code opens the page joining that room */
+/* the online menu asks (logic thread): HOST on the online file select makes a coop room, the online title's VS plank a VS room (PORTMENU1: no choice screen);
+   a room code opens the page joining that room */
 void lobby_page_request_host(void);
+void lobby_page_request_vs(void);
 void lobby_page_request_join(const char *code);
 int  lobby_page_pending(void);
 void lobby_page_clear_request(void);
 void lobby_page_open_now(void);
 int  lobby_page_open(void);                      /* 1 while the page is up */
+unsigned lobby_page_closed_count(void);          /* PORTMENU1: counts every close of the page; the online menu under it holds the press / hover that closed it */
 void lobby_page_cancel(void);                    /* something else took the pause away: leaves the room */
 /* proof rows only (compiled out of the kit): SM64DS_LOBBY_SHOW=<what>@<frame> asks for the page at that frame. Called once a frame while
    the page is closed; 1 = a request was made this frame */

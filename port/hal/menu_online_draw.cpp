@@ -14,9 +14,8 @@
 namespace {
 
 /* the texts (basic UI text rule: short and plain); Tango's wording pass edits these strings. */
-const char *const kTxtVs = "VS rooms are made in the launcher's Multiplayer window for now.";
-const char *const kTxtHelpMain = "Adventure Online: play the whole game on a shared server with up to 32 others. VS: races and fights, made in the launcher for now.";
-const char *const kTxtHelpFiles = "Pick a file to join a server. Party rooms (share stars with up to 3 friends) are joined from inside Adventure Online. Your online file is separate from your solo files.";
+const char *const kTxtHelpMain = "Adventure Online: play the whole game on a shared server with up to 32 others. VS: press VS to host a room for races and fights.";
+const char *const kTxtHelpFiles = "Pick a file to join a server. HOST makes a party room (share stars with up to 3 friends); to join one, type its room code. Your online file is separate from your solo files.";
 const char *const kTxtWait = "Finding a server...";
 
 int art_id(int kind)
@@ -262,7 +261,7 @@ void modal_draw(const MenuLayout *L, int piece, uint32_t *dst, int w, int h, int
         }
     const UiSurface sf = { dst, stride, w, h };
     if (!ui_text_ready()) return;
-    const char *txt = kTxtVs;
+    const char *txt = kTxtHelpMain;      /* PORTMENU1: the VS note is gone (the VS plank opens a VS lobby); a stray ONL_SCR_VS draws the main help */
     if (f->scr == ONL_SCR_HELP) txt = f->help_files ? kTxtHelpFiles : kTxtHelpMain;
     else if (f->scr == ONL_SCR_WAIT) txt = kTxtWait;
     else if (f->scr == ONL_SCR_FAIL) txt = f->why[0] ? f->why : "No server answered.";
