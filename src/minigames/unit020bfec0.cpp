@@ -17,9 +17,25 @@
  *   declare (a char* or an int*), because retyping the definition alone
  *   would make the two sides disagree. Each casts once and then works on
  *   the record.
- * - The IsIdle / IsBusy tests compare a state record word by word: the
- *   scenes hand them the record's two words, and a member-pointer compare
- *   would not reproduce it.
+ * - Measured shapes kept for the bytes they produce: the IsIdle / IsBusy /
+ *   IsIdleAtRest tests return through a flag (returning the test directly
+ *   shortens the function); Presenter_PlayCheerLoop stores its state through
+ *   a u64 identity mask and a local copy; Presenter_PlayIdle copies its pair
+ *   through two volatile reads; MascotWalker_StartNextPath keeps its no-op
+ *   `adj ? fn : fn`; FallingPetal_Draw stores its scale z, y, x; and
+ *   Dealer_StateReveal keeps its `goto other` (the structured rewrite moves
+ *   92 words).
+ * - Presenter_Draw's material table stays an int* view reached through a
+ *   char* components pointer: naming the ModelComponents or the BMD_Material
+ *   pad_0c fields moves 30 words. Dealer_Draw fills its lamp array through a
+ *   walking pointer with an if/else body (indexing or a value-select moves
+ *   three words). MascotWalker_Update compares its state words through int*
+ *   (a StateSlot view changes the relocation).
+ * - The identity quaternion stays a four-word QuaternionBlock: spelling
+ *   math/Quaternion.h's named members makes mwcc scalarise
+ *   FallingPetal_Update's 16-byte copy.
+ * - Camera_ProjectToScreen / Camera_ProjectToScreen16 keep `void *pos`
+ *   because include/MgCamera.h declares them that way.
  */
 
 #include "types.h"
