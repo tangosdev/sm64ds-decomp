@@ -33,6 +33,8 @@
 #include "types.h"
 #include "decl_common.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "nitro/gx/g2.h"
 #include "PlayerInput.h"
@@ -42,6 +44,11 @@
 #include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 
+/* A random integer in [0, n): the generator's top 15 bits, scaled. */
+static inline u32 MgRandom(u32 n) {
+    return (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * n >> 15;
+}
+
 #pragma defer_codegen off
 
 /* The first two OAM attribute words, copied whole from the petal template. */
@@ -50,10 +57,8 @@ struct SpriteAttr {
 };
 
 extern "C" {
-extern int RandomIntInternal(int *seed);
 extern void func_0203d388(int *p, int angle);
 extern void Mg_SetTopScreenYOffset(int n);
-extern s16 FX_SinCosTable_[];
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 /* The dragged petal's two adjacent fixed-point coordinates. */
@@ -124,7 +129,6 @@ void dScMgFlower_c::UpdatePetals() {
  * the angle signed; the swap moves it as the stored u16. */
 void dScMgFlower_c::DealPetals() {
     dScMgFlower_c *self = this;
-    unsigned int roll;
     int shuffleIndex;
     int petalIndex;
     int clearIndex;
@@ -148,21 +152,13 @@ void dScMgFlower_c::DealPetals() {
         self->mPetals[clearIndex].fallSpeed = 0;
     }
     if (self->mHoldTimer == 0x14) {
-        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        self->mPetalsLeft = ((roll * 2) >> 15) + 1;
+        self->mPetalsLeft = MgRandom(2) + 1;
+    } else if (MgRandom(10) == 0) {
+        self->mPetalsLeft = MgRandom(2) + 0x14;
     } else {
-        int raw = RandomIntInternal(&data_0209d4b8.value);
-        roll = ((unsigned int)raw >> 16) & 0x7fff;
-        if (((roll * 10) >> 15) == 0) {
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            self->mPetalsLeft = ((roll * 2) >> 15) + 0x14;
-        } else {
-            roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            self->mPetalsLeft = ((roll * 8) >> 15) + 8;
-        }
+        self->mPetalsLeft = MgRandom(8) + 8;
     }
-    roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-    baseAngle = (roll * 0x10000) >> 15;
+    baseAngle = MgRandom(0x10000);
     for (petalIndex = 0; petalIndex < self->mPetalsLeft; petalIndex++) {
         self->mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / self->mPetalsLeft;
         self->mPetals[petalIndex].x = 0;
@@ -174,8 +170,11 @@ void dScMgFlower_c::DealPetals() {
     }
     for (shuffleIndex = 0; shuffleIndex < self->mPetalsLeft; shuffleIndex++) {
         int swapIndex;
-        roll = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        swapIndex = (self->mPetalsLeft * roll) >> 15;
+        /* count * roll, the multiply the other way round from MgRandom's
+           roll * n: through the inline the function shrinks by a word. */
+        swapIndex = (self->mPetalsLeft *
+                     (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)) >>
+                    15;
         if (swapIndex != shuffleIndex) {
             u16 savedAngle;
             dScMgFlower_c::Vec2 savedPosition;
@@ -222,15 +221,11 @@ s32 dScMgFlower_c::Render() {
 
     mBgScrollPhase += 0xc0;
     {
-        int sine = FX_SinCosTable_[(mBgScrollPhase >> 4) << 1];
-        int t = sine + 0x80;
-        int off = (t + (int)((unsigned)(t >> 7) >> 24)) >> 8;
+        int off = (FX_SinIdx(mBgScrollPhase >> 4) + 0x80) / 256;
         SetSubBg2Offset(off, off + 8);
     }
     {
-        int sine = FX_SinCosTable_[(mBgScrollPhase >> 4) << 1];
-        int t = 0x80 - sine;
-        int off = (t + (int)((unsigned)(t >> 7) >> 24)) >> 8;
+        int off = (0x80 - FX_SinIdx(mBgScrollPhase >> 4)) / 256;
         SetSubBg3Offset(off, off);
     }
     Mg_RenderSpriteBoth(sFlowerFaceSprites[mFaceSprite], 0x80, 0x60, -1, 1);
