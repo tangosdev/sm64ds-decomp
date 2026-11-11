@@ -374,6 +374,7 @@ extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
 extern int func_ov002_020f02c8(int sel);
+/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
 extern int RandomIntInternal(int *seed);
 extern char *gPlayers[];
 extern u32 PlayerNewHold16(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
@@ -382,8 +383,11 @@ extern int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, cons
                          short p4);
 extern SharedFilePtr data_ov002_02110aa4;
 extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
+/* local extern: MtxStack's named parameters take an @NNN in every includer. */
 extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
+/* local extern: MtxStack's named parameters take an @NNN in every includer. */
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
+/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern signed char data_02092114;
 extern u8 gReturnSublevel;
