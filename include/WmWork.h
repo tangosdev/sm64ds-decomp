@@ -116,7 +116,7 @@ typedef struct {
     unsigned short childMaxSize;       /* 0x1402 */
     char *sendBuf;                     /* 0x1404 */
     char *recvBuf;                     /* 0x1408 */
-    void (*stateCallback)(char *);     /* 0x140c */
+    void (*stateCallback)(void *);     /* 0x140c */
     unsigned char mpSending;           /* 0x1410 */
     unsigned char initialized;         /* 0x1411 */
     unsigned char pad_1412[6];         /* 0x1412 */

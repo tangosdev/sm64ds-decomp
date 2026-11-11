@@ -16,21 +16,11 @@
  * closes with the registry factory dScMgBomroom_c_classInit. Functions run
  * in ROM order under
  * `#pragma defer_codegen off`; do not reorder.
- *
- * SpawnBombs keeps the file-global pragmas of the shard it came from in a
- * bracket; the bracket moves bytes, and binds only under defer_codegen off.
  */
 
-// leftovers: SpawnBombs reaches its bomb's color through a bomb pointer
-// stepped by j * 0x40 and cast back to the scene, ((dScMgBomroom_c *)
-// bomb)->mBombs[0].color, and adds the offset of mBombs[0].active to
-// this + j * 0x40. Its color roll stays unrolled from BOMROOM_RAND(2):
-// rolling first and computing the color pointer after is the ROM's order;
-// mBombs[j].color = BOMROOM_RAND(2), the macro through the same pointer, or
-// the roll into rnd first all reshuffle the hoisted-constant stack slots
-// (+0x4..+0x10 bytes).
-// The roaming steps read the table into a block-scoped fx16 before FX_MUL:
-// FX_CosIdx inside the FX_MUL argument swaps the table and speed registers.
+// leftovers: the roaming steps read the table into a block-scoped fx16
+// before FX_MUL: FX_CosIdx inside the FX_MUL argument swaps the table and
+// speed registers.
 
 #include "dScMgBomroom_c.h"
 #include "nitro/hw/registers.h"
@@ -1296,174 +1286,136 @@ void dScMgBomroom_c::UpdateBombs() {
 /* Spawner: once mSpawnDelay runs out, picks a step from the spawn
  * count mSpawnCount, drops that many new bombs into free records with a
  * random color and angle, and reloads the delay from
- * sBomroomSpawnDelays.
- * Both pragmas bind: with common subexpressions on, the constants hoisted
- * ahead of the bomb loop take a different set of stack slots, and with
- * strength reduction on, j * 0x40 becomes a stepped pointer. */
-#pragma push
-#pragma opt_strength_reduction off
-#pragma opt_common_subs off
-
+ * sBomroomSpawnDelays. */
 void dScMgBomroom_c::SpawnBombs() {
-    char *c = (char *)this;
-    s32 sb;
-    s32 step;
-    s32 ang;
-    s32 i;
-    s32 off;
-    u32 rnd;
-    s32 cnt;
-    s32 flag;
-    s32 j;
     if (mSpawnDelay != 0) {
         mSpawnDelay--;
-        if ((s16)mSpawnDelay < 0) {
+        if ((s16)mSpawnDelay < 0)
             mSpawnDelay = 0;
-        }
         return;
     }
-    sb = 0;
-    if (mSpawnCount >= 0x12c) {
-        sb = 0xc;
-    } else if (mSpawnCount >= 0xc6) {
-        sb = 0xb;
-    } else if (mSpawnCount >= 0x9f) {
-        sb = 0xa;
-    } else if (mSpawnCount >= 0x84) {
-        sb = 9;
-    } else if (mSpawnCount >= 0x5c) {
-        sb = 8;
-    } else if (mSpawnCount >= 0x39) {
-        sb = 7;
-    } else if (mSpawnCount >= 0x21) {
-        sb = 6;
-    } else if (mSpawnCount >= 0x1b) {
-        sb = 5;
-    } else if (mSpawnCount >= 0x15) {
-        sb = 4;
-    } else if (mSpawnCount >= 0xf) {
-        sb = 3;
-    } else if (mSpawnCount >= 9) {
-        sb = 2;
-    } else if (mSpawnCount >= 3) {
-        sb = 1;
-    }
-    cnt = 1;
-    step = 0;
-    if (sb >= 5) {
-        cnt = 2;
-    }
-    if (sb == 9) {
-        cnt = 1;
-    }
-    flag = 0;
-    if (sb == 7) {
-        cnt = 2;
-        flag = (mSpawnHatchFlip & 1) + 1;
+
+    int stage = 0;
+    if (mSpawnCount >= 300)
+        stage = 12;
+    else if (mSpawnCount >= 198)
+        stage = 11;
+    else if (mSpawnCount >= 159)
+        stage = 10;
+    else if (mSpawnCount >= 132)
+        stage = 9;
+    else if (mSpawnCount >= 92)
+        stage = 8;
+    else if (mSpawnCount >= 57)
+        stage = 7;
+    else if (mSpawnCount >= 33)
+        stage = 6;
+    else if (mSpawnCount >= 27)
+        stage = 5;
+    else if (mSpawnCount >= 21)
+        stage = 4;
+    else if (mSpawnCount >= 15)
+        stage = 3;
+    else if (mSpawnCount >= 9)
+        stage = 2;
+    else if (mSpawnCount >= 3)
+        stage = 1;
+
+    int count = 1;
+    int step = 0;
+    if (stage >= 5)
+        count = 2;
+    if (stage == 9)
+        count = 1;
+    int hatch = 0;
+    if (stage == 7) {
+        count = 2;
+        hatch = (mSpawnHatchFlip & 1) + 1;
         mSpawnHatchFlip ^= 1;
         step = 0x3000;
     }
-    if (sb == 8) {
-        s32 bit = mSpawnHatchFlip & 1;
-        cnt = bit + 2;
+    if (stage == 8) {
+        int bit = mSpawnHatchFlip & 1;
+        count = bit + 2;
         mSpawnHatchFlip ^= 1;
-        flag = bit + 1;
-        if (cnt == 2) {
+        hatch = bit + 1;
+        if (count == 2)
             step = 0x3000;
-        } else {
+        else
             step = 0x1800;
-        }
     }
-    if (sb == 10) {
-        cnt = 4;
+    if (stage == 10) {
+        count = 4;
         step = 0x3000;
     }
-    if (sb == 11) {
-        cnt = 3;
-        flag = (mSpawnHatchFlip & 1) + 1;
+    if (stage == 11) {
+        count = 3;
+        hatch = (mSpawnHatchFlip & 1) + 1;
         mSpawnHatchFlip ^= 1;
         step = 0x1800;
     }
-    if (sb >= 12) {
-        cnt = 6;
+    if (stage >= 12) {
+        count = 6;
         step = 0x1800;
     }
-    i = 0;
-    if (cnt > 0) {
-        /* Offset of mBombs[0].active, kept in a register and added to
-       this + j*0x40 below: &mBombs[j].active shrinks the function by 0xc. */
-        off = (int)&((dScMgBomroom_c *)0)->mBombs[0].active;
-        ang = 0;
-        do {
-            j = 0;
-            while (1) {
-                unsigned char *slot = (unsigned char *)((c + (j << 6)) + off);
-                if ((*slot) == 0) {
-                    unsigned char *ptype;
-                    *slot = 1;
-                    mBombs[j].state = 0;
-                    mBombs[j].substate = 0;
-                    mBombs[j].lineSlot = 0;
-                    mBombs[j].exploded = 0;
-                    mBombs[j].x = 0x80000;
-                    mBombs[j].marchDelay = 4;
-                    mBombs[j].fuse = 0x200;
-                    rnd = (u32)RandomIntInternal(&data_0209d4b8.value);
-                    ptype = &((dScMgBomroom_c *)(c + (j << 6)))->mBombs[0].color;
-                    *ptype = (((rnd >> 16) & 0x7fff) << 1) >> 15;
-                    mBombs[j].speed = 0x999;
-                    mBombs[j].dragSound = 0;
-                    if (sb == 0) {
-                        *ptype = 1;
-                        HatchPanel_Activate(0);
-                    }
-                    if (sb <= 1) {
-                        mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
-                        mBombs[j].y = 0;
-                    } else if (flag != 0) {
-                        if (flag == 1) {
-                            mBombs[j].angle = ang + 0x2000;
-                            mBombs[j].y = 0;
-                            HatchPanel_Activate(0);
-                        } else {
-                            mBombs[j].angle = ang + 0xa000;
-                            mBombs[j].y = 0xb8000;
-                            HatchPanel_Activate(1);
-                        }
-                    } else if ((mSpawnCount & 1) != 0) {
-                        if (step != 0) {
-                            mBombs[j].angle = (step * (i >> 1)) + 0x2800;
-                        } else {
-                            mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
-                        }
+
+    for (int i = 0; i < count; i++) {
+        for (int j = 0; j < 0x70; j++) {
+            if (mBombs[j].active == 0) {
+                mBombs[j].active = 1;
+                mBombs[j].state = 0;
+                mBombs[j].substate = 0;
+                mBombs[j].lineSlot = 0;
+                mBombs[j].exploded = 0;
+                mBombs[j].x = 0x80000;
+                mBombs[j].marchDelay = 4;
+                mBombs[j].fuse = 0x200;
+                /* The color is BOMROOM_RAND(2) rolled into rnd first: the
+                   ROM computes the color's address after the roll, and
+                   the macro inside the store computes it before. */
+                u32 rnd = RandomIntInternal(&data_0209d4b8.value);
+                mBombs[j].color = (((rnd >> 16) & 0x7fff) * 2) >> 15;
+                mBombs[j].speed = 0x999;
+                mBombs[j].dragSound = 0;
+                if (stage == 0) {
+                    mBombs[j].color = 1;
+                    HatchPanel_Activate(0);
+                }
+                if (stage <= 1) {
+                    mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
+                    mBombs[j].y = 0;
+                } else if (hatch != 0) {
+                    if (hatch == 1) {
+                        mBombs[j].angle = step * i + 0x2000;
                         mBombs[j].y = 0;
                         HatchPanel_Activate(0);
                     } else {
-                        if (step != 0) {
-                            mBombs[j].angle = (step * (i >> 1)) + 0xa800;
-                        } else {
-                            mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0xa000;
-                        }
+                        mBombs[j].angle = step * i + 0xa000;
                         mBombs[j].y = 0xb8000;
                         HatchPanel_Activate(1);
                     }
-                    mSpawnCount++;
-                    break;
+                } else if (mSpawnCount & 1) {
+                    if (step != 0)
+                        mBombs[j].angle = step * (i >> 1) + 0x2800;
+                    else
+                        mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0x2000;
+                    mBombs[j].y = 0;
+                    HatchPanel_Activate(0);
+                } else {
+                    if (step != 0)
+                        mBombs[j].angle = step * (i >> 1) + 0xa800;
+                    else
+                        mBombs[j].angle = (BOMROOM_RAND(4) << 12) + 0xa000;
+                    mBombs[j].y = 0xb8000;
+                    HatchPanel_Activate(1);
                 }
-                j++;
-                if (j >= 0x70) {
-                    break;
-                }
+                mSpawnCount++;
+                break;
             }
-
-            ang += step;
-            i++;
-        } while (i < cnt);
+        }
     }
-    mSpawnDelay = sBomroomSpawnDelays[sb];
+    mSpawnDelay = sBomroomSpawnDelays[stage];
 }
-
-#pragma pop
 
 void dScMgBomroom_c::HideExplodedBombs() {
     int i;

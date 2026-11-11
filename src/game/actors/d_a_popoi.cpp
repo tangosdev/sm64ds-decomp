@@ -372,8 +372,7 @@ int daPopoi_c::UpdateWanderState() {
     daPly_c *player;
     struct Vector3 pp;
 
-    dist = Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
-                     reinterpret_cast<const Vector3 *>(&mHomePosX));
+    dist = Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, daPopoi_SND_MOVE_LOOP, mCamSpacePos, 0);
 
     if (IsBlockedAhead() != 0) {
@@ -388,8 +387,7 @@ int daPopoi_c::UpdateWanderState() {
     }
 
     if (dist > 0x1f4000) {
-        mTargetAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
-                                       reinterpret_cast<const Vector3 *>(&mHomePosX));
+        mTargetAngleY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
         if ((unsigned short)mStateTimer < 0x14)
             mStateTimer = 0x14;
         ApproachLinear(mPrevAngleY, mTargetAngleY, 0x400);
@@ -507,8 +505,7 @@ int daPopoi_c::UpdateChaseState() {
     daPly_c *p;
     unsigned short spd;
 
-    dist = Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
-                     reinterpret_cast<const Vector3 *>(&mHomePosX));
+    dist = Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
 
     if (IsBlockedAhead() != 0) {
         ChangeState((daPopoi_StateRecord *)&data_ov077_02127d18); /* TurnAway */
@@ -527,7 +524,7 @@ int daPopoi_c::UpdateChaseState() {
         pv.x = pp->x;
         pv.y = pp->y;
         pv.z = pp->z;
-        mTargetAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX), &pv);
+        mTargetAngleY = Vec3_HorzAngle(&mPos, &pv);
     }
 
     ApproachLinear(mPrevAngleY, mTargetAngleY, mTurnRate);

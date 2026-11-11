@@ -29,6 +29,7 @@
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 enum {
     kYoshiEggId = 9,
@@ -68,7 +69,6 @@ extern WanwanAnimationFileHandle data_ov014_02114980;
 extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
-extern s16 FX_SinCosTable_[]; /* SINE_TABLE: sin, cos pairs */
 extern dCamera_c *gCamera;  /* CAMERA */
 
 short atan2_hold_d_a_wanwan_1(int y, int x);
@@ -339,7 +339,7 @@ void daWanwan_c::UpdateChainSegments() {
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     MTX_MultVec43(&head, &data_020a0e68, &rotated);
-    Vec3_Add(&tmp, (const Vector3 *)&mPosX, &rotated);
+    Vec3_Add(&tmp, &mPos, &rotated);
     saved.x = tmp.x;
     saved.y = tmp.y;
     saved.z = tmp.z;
@@ -483,7 +483,7 @@ void daWanwan_c::PinChainToHead() {
     Vector3 diff;
     Vector3 scaled;
 
-    Vec3_Sub(&diff, (const Vector3 *)&mPosX, &mLinkPos[0]);
+    Vec3_Sub(&diff, &mPos, &mLinkPos[0]);
     p = &mLinkPos[0];
     i = 0;
     do {
@@ -719,7 +719,6 @@ void daWanwan_c::StateAttackInit() {
     Vector3 tgt;
     daPly_c *player;
     int a;
-    int i;
     int v;
 
     mVertAccel = 0;
@@ -738,15 +737,14 @@ void daWanwan_c::StateAttackInit() {
     }
 
     a = (unsigned short)Vec3_VertAngle(&mPos, &tgt);
-    i = (a >> 4) << 1;
-    mVertSpeed = -FX_MUL(FX_SinCosTable_[i], 0x8c000);
+    mVertSpeed = -FX_MUL(FX_SinIdx(a >> 4), 0x8c000);
     v = mVertSpeed;
     if (v < 0x5000)
         v = 0x5000;
     else if (v > 0x2d000)
         v = 0x2d000;
     mVertSpeed = v;
-    mHorzSpeed = FX_MUL(FX_SinCosTable_[i + 1], 0x8c000);
+    mHorzSpeed = FX_MUL(FX_CosIdx(a >> 4), 0x8c000);
     mActionTimer = 0x3c;
 }
 
@@ -852,27 +850,9 @@ void daWanwan_c::StateEscapeDemoMain() {
             mReleaseSpeed = kChainMax;
         }
         {
-            Vector3 target;
-            s32 x = partnerPos.x;
-            target.x = x;
-            s32 z = partnerPos.z;
-            target.z = z;
-            s32 y = partnerPos.y;
-            target.y = y;
-            {
-                s16 *tbl = FX_SinCosTable_;
-                u16 ang = fence->mAngleY;
-                s32 s = tbl[(ang >> 4) << 1];
-                s32 add = FX_MUL(s, 0x96000);
-                target.x = x + add;
-            }
-            {
-                s16 *tbl = FX_SinCosTable_;
-                u16 ang = fence->mAngleY;
-                s32 s = tbl[(((ang >> 4) << 1) + 1)];
-                s32 add = FX_MUL(s, 0x96000);
-                target.z = z + add;
-            }
+            Vector3 target = partnerPos;
+            target.x += FX_MUL(FX_SinIdx((u16)fence->mAngleY >> 4), 0x96000);
+            target.z += FX_MUL(FX_CosIdx((u16)fence->mAngleY >> 4), 0x96000);
             if (Vec3_ApproachHorz(&mPos, &target, mReleaseSpeed) != 0) {
                 incRelease(this);
                 mPrevAngleY = (s16)(Vec3_HorzAngle(&mPos, &partnerPos) + 0x8000);

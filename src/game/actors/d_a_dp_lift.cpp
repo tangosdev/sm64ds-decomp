@@ -11,20 +11,9 @@
  *
  * `#pragma defer_codegen off` is file-level and load-bearing. It emits
  * each function as it is parsed, so the out-of-line destructor comes
- * out D1 then D0, and it lets the opt_strength_reduction bracket around
- * InitResources bind. Do not move either pragma.
+ * out D1 then D0.
  *
  * Notes (measured spellings that do not match):
- * - InitResources walks a copy of this by 0xc. Offsets 0x37c, 0x380 and
- *   0x384 are mMarkerPositions x, y and z. An indexed for-loop
- *   size-DIFF 0x124->0x118. An indexed do-loop size-DIFF 0x124->0x128.
- *   A Vector3* from &mMarkerPositions[0] stays 0x124 and DIFFs 5 words.
- *   A Vector3* recomputed as (Vector3 *)(ip + 0x37c) size-DIFF
- *   0x124->0x128. An s32* of mk[0], mk[1], mk[2] stays 0x124 and DIFFs
- *   24 words. That s32* plus a separate y pointer size-DIFF
- *   0x124->0x128. One store of mPosY - prod, with no reload,
- *   size-DIFF 0x124->0x118. offsetof(daDpLift_c, mMarkerPositions) does
- *   not compile ("( expected").
  * - Behavior: the marker test flipped to
  *   `mMarkerPositions[mNextMarker].y + 0x14000 >= mPosY` stays 0x210
  *   and DIFFs 10 words. Settle `mShakeTimer == 8` instead of `>= 8`
@@ -45,6 +34,7 @@ enum daDpLift_c_AssetId { ASSET_DP_LIFT_BMD = 0x05e1, ASSET_DP_LIFT_KCL = 0x05e2
 #include "daDpLift_c.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "math/MtxStack.h"
 
 #pragma defer_codegen off
@@ -69,8 +59,6 @@ extern DpLiftModelFilePtr data_ov025_02113ae0;
 extern SharedFilePtr data_ov002_0210d9f0;
 extern DpLiftCollisionFilePtr data_ov025_02113ad8;
 extern CLPS_Block data_ov025_02112d08;
-
-extern s16 FX_SinCosTable_[];
 
 daDpLift_c::~daDpLift_c() {}
 
@@ -105,7 +93,7 @@ s32 daDpLift_c::Behavior() {
         break;
     case STATE_SHAKE: {
         s16 ang = mShakeTimer << 12;
-        s32 wave = FX_MUL(FX_SinCosTable_[((u16)ang >> 4) * 2], 10);
+        s32 wave = FX_MUL(FX_SinIdx((u16)ang >> 4), 10);
         mPosY = mBasePosY + wave;
         if (mShakeTimer == 8) {
             mState = STATE_SINK;
@@ -127,7 +115,7 @@ s32 daDpLift_c::Behavior() {
     }
     case STATE_SETTLE: {
         s16 ang = mShakeTimer << 12;
-        s32 wave = FX_MUL(FX_SinCosTable_[((u16)ang >> 4) * 2], 10);
+        s32 wave = FX_MUL(FX_SinIdx((u16)ang >> 4), 10);
         mPosY = wave + 0x80000;
         if (mShakeTimer >= 8) {
             mVertSpeed = 0;
@@ -144,10 +132,6 @@ s32 daDpLift_c::Behavior() {
     return 1;
 }
 
-#pragma push
-/* Strength reduction turns the marker loop's (i + 1) * 0x1cc000 into an
- * added step; the cartridge keeps the mul (20 of 73 words differ). */
-#pragma opt_strength_reduction off
 s32 daDpLift_c::InitResources() {
     mModel.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov025_02113ae0), 1, -1);
     mModel2.SetFile((BMD_File *)dExtSimpleModel_c::LoadFile(data_ov002_0210d9f0), 1, -1);
@@ -158,28 +142,23 @@ s32 daDpLift_c::InitResources() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
 
-    /* Ten markers under the lift, each 0x1cc000 lower than the last.
-       The walk is a copy of this; see Leftover. */
     mBasePosX = mPosX;
-    int n = 0;
     mBasePosY = mPosY;
-    char *ip = (char *)this;
     mBasePosZ = mPosZ;
     mState = 0;
     mHadClsn = 0;
-    int step = 0x1cc000;
-    do {
-        n++;
-        *(s32 *)(ip + 0x37c) = mPosX;
-        *(s32 *)(ip + 0x380) = mPosY;
-        s32 drop = n * step;
-        *(s32 *)(ip + 0x384) = mPosZ;
-        *(s32 *)(ip + 0x380) -= drop;
-        ip += 0xc;
-    } while (n < 10);
+
+    /* Ten markers under the lift, each 460.0 lower than the last. The
+       spacing is `long`, NitroSDK's fx32 (this tree's fx32 is an int): with
+       an int the compiler turns (i + 1) * spacing into a running sum, where
+       the cartridge multiplies it out per marker. */
+    long spacing = 0x1cc000;
+    for (int i = 0; i < 10; i++) {
+        mMarkerPositions[i] = mPos;
+        mMarkerPositions[i].y -= (i + 1) * spacing;
+    }
     return 1;
 }
-#pragma pop
 
 /* Source order is construction order: model file 1505, collision file 1506.
  * __sinit_d_a_dp_lift.cpp emits both constructions and registers the
