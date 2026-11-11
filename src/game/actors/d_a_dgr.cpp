@@ -73,7 +73,7 @@ enum {
 
 extern DgrModelFilePtr data_ov025_02113a68;
 extern DgrCollisionFilePtr data_ov025_02113a60;
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 /* CLPS.h keeps the block opaque: header with the entry stride at +4, then
    the entries. This TU hands SetFile a one-entry block. */
 struct CLPS_Block {
@@ -189,7 +189,7 @@ s32 daDgr_c::Behavior() {
         {
             s16 angleX = mAngleX;
             s32 idx = ((u16)(s16)(angleX << 2) >> 4) * 2;
-            s32 bob = (s32)data_02082214[idx] * kBobScale;
+            s32 bob = (s32)FX_SinCosTable_[idx] * kBobScale;
             if (bob < 0) {
                 s32 neg = -1;
                 bob = bob * neg;
@@ -210,10 +210,10 @@ s32 daDgr_c::Behavior() {
         {
             s32 along;
             s32 across;
-            across = data_02082214[((u16)mAngleY >> 4) * 2 + 1];
+            across = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
             loc[0] = across * kDustReach + mPosX;
             loc[1] = mBasePosY - kDustDrop;
-            along = data_02082214[((u16)mAngleY >> 4) * 2];
+            along = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
             loc[2] = along * kDustReach + mPosZ;
             mDustParticle1 = Particle::System::New(mDustParticle1, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),
@@ -222,9 +222,9 @@ s32 daDgr_c::Behavior() {
         {
             s32 along;
             s32 across;
-            across = data_02082214[((u16)mAngleY >> 4) * 2 + 1];
+            across = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
             loc[0] = mPosX - across * kDustReach;
-            along = data_02082214[((u16)mAngleY >> 4) * 2];
+            along = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
             loc[2] = mPosZ - along * kDustReach;
             mDustParticle2 = Particle::System::New(mDustParticle2, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),

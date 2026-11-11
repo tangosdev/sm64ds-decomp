@@ -41,7 +41,6 @@ extern dCamera_c *gCamera;         /* CAMERA */
 extern s8 gCurrentSublevel;        /* LEVEL_ID */
 extern u8 gCurrentStarId;          /* STAR_ID */
 extern u8 gGameMode;               /* CURRENT_GAMEMODE */
-extern SaveBlock data_0209caa0;    /* the live save block */
 extern int gRunningKuppaScript;    /* RUNNING_KUPPA_SCRIPT */
 
 extern "C" int IsStarCollectedInLevel(s8 levelID, int starID);

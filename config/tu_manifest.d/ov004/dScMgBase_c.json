@@ -1675,32 +1675,32 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@344",
+      "from": "@343",
       "to": "@315",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @324) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @330) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @336 to @344 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @324) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @330) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @336 to @344 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @344 to @347 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @344 to @337 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @340 to @343 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object)."
     },
     {
-      "from": "@346",
+      "from": "@345",
       "to": "@317",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @326) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @332) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @338 to @346 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @326) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @332) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @338 to @346 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @346 to @349 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @346 to @339 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @342 to @345 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object)."
     },
     {
-      "from": "@348",
+      "from": "@347",
       "to": "@319",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @328) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @334) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @340 to @348 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @328) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @334) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @340 to @348 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @348 to @351 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @348 to @341 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @344 to @347 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object)."
     },
     {
-      "from": "@350",
+      "from": "@349",
       "to": "@321",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @330) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @336) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @342 to @350 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @330) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @336) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @342 to @350 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @350 to @353 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @350 to @343 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @346 to @349 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object)."
     },
     {
-      "from": "@352",
+      "from": "@351",
       "to": "@323",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @332) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @338) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @344 to @352 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed +6 (from @332) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from @338) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from @344 to @352 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @352 to @355 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @352 to @345 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @348 to @351 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object)."
     },
     {
-      "from": "__arraydtor$343",
+      "from": "__arraydtor$342",
       "to": "__arraydtor$328",
       "owned_function": {
         "module": "ov004",
@@ -1710,7 +1710,7 @@
         "raw_type": "STT_FUNC",
         "raw_binding": "STB_LOCAL"
       },
-      "evidence": "the Ent pool array destructor thunk; deleting a declaration with a named parameter from include/decl_common.h moves the per-TU counter back by one, so mwccarm emits __arraydtor$327; renamed onto the configured __arraydtor$328 at 0x020b2c58. Re-keyed +6 (from __arraydtor$323) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from __arraydtor$329) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index."
+      "evidence": "the Ent pool array destructor thunk; deleting a declaration with a named parameter from include/decl_common.h moves the per-TU counter back by one, so mwccarm emits __arraydtor$327; renamed onto the configured __arraydtor$328 at 0x020b2c58. Re-keyed +6 (from __arraydtor$323) when dScMgBase_c.h gained Mg_DrawLine. Re-keyed +6 (from __arraydtor$329) when d_s_mg_base.cpp gained #include \"MgBanner.h\" (decl agreement); all non-strtab sections identical, renamed by symtab index. Re-keyed from __arraydtor$343 to __arraydtor$346 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from __arraydtor$343 to __arraydtor$336 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from __arraydtor$339 to __arraydtor$342 when the raw OBJ VRAM addresses became G2_GetOBJCharPtr/G2S_GetOBJCharPtr calls (a file-local G2_ inline beside nitro/gx/gx_bgcnt.h) (measured from the compiled object)."
     }
   ]
 }

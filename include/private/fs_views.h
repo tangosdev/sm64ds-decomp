@@ -143,6 +143,9 @@ struct FSFile {
     } arg; /* 0x2c */
 };
 
+/* FS_SeekFile's origin. */
+typedef enum FSSeekFileMode { FS_SEEK_SET, FS_SEEK_CUR, FS_SEEK_END } FSSeekFileMode;
+
 typedef char FSFile_size_must_be_0x44[sizeof(struct FSFile) == 0x44 ? 1 : -1];
 
 #endif

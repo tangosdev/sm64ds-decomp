@@ -5,11 +5,12 @@
 #include "common.h"
 #include "math/MtxStack.h"
 
-extern void func_020527e8(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z) __attribute__((long_call, target("thumb")));
+extern void MTX_Scale43_(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z)
+    __attribute__((long_call, target("thumb")));
 
 void Matrix4x3_ApplyInPlaceToScale(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z)
 {
     struct Matrix4x3 tmp;
-    func_020527e8(&tmp, x, y, z);
-    MulMat4x3Mat4x3(&tmp, mF, mF);
+    MTX_Scale43_(&tmp, x, y, z);
+    MTX_Concat43(&tmp, mF, mF);
 }

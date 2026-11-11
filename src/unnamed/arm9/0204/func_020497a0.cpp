@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "CaptureEffect.h"
 
 extern "C" {
@@ -80,7 +80,7 @@ void func_020497a0(s16 *p0, s16 *p1, u32 len, CaptureEffect *st) {
         st->work.echo[dst].r = (p0[idx] + 1) >> 2;
     }
 
-    CP15::FlushAndInvalidateDataCache((u32)p0, len);
-    CP15::FlushAndInvalidateDataCache((u32)p1, len);
+    DC_FlushRange(p0, len);
+    DC_FlushRange(p1, len);
 }
 }

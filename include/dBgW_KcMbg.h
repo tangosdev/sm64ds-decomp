@@ -22,10 +22,6 @@
 
 #include "math/Fix12.h"
 
-namespace Memory {
-void operator_delete2(void *);
-}
-
 struct dBgW_KcMbg : dBgW_Kc {
     Fix12i scale;              /* 0x50 */
     Matrix4x3 mat;             /* 0x54 */
@@ -36,13 +32,13 @@ struct dBgW_KcMbg : dBgW_Kc {
     s16 angVelY;               /* 0x116 */
     Vector3 pos;               /* 0x118 */
     Vector3 velocity;          /* 0x124 */
-    /* Set by func_020398fc. While set, Transform points dBgW_Kc's
+    /* Set by SetFilterByMoveDir. While set, Transform points dBgW_Kc's
        depth policy (shallowOnly/depthByDir/depthDir/depthDirMinDot) along the
        collider's horizontal velocity every frame. SetFile clears it. */
     bool filterByMoveDir; /* 0x130 */
     u8 pad_131[3];
     Matrix4x3 newScaledMat;    /* 0x134 */
-    s32 invScale;               /* 0x164 - func_02053200(scale) */
+    s32 invScale;              /* 0x164 - FX_Inv(scale) */
     Matrix4x3 invScaledMat;    /* 0x168 */
     Matrix4x3 prevInvScaledMat;/* 0x198 */
 
@@ -78,23 +74,8 @@ struct dBgW_KcMbg : dBgW_Kc {
        with its translation dropped. Both GetNormal overrides use it. */
     void LocalToWorldDirection(const Vector3 &, Vector3 &);
 
-    /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
-       The compiler generates D0 as "run the destructor body, then call operator
-       delete on the class". Without this it emits the global `_ZdlPv`, which
-       exists nowhere in this image, and the D0 comes out one relocated word
-       different from the ROM -- a difference build_pin.verify CANNOT SEE,
-       because it wildcards relocated words. Only the link catches it.
-
-       This family deallocates through Memory::operator_delete2, not the actor
-       heap: every D0 below ends with a call to 0x0203cbcc. dActor_c's copy of this
-       member calls Memory::Deallocate instead, which is why each needs its own.
-
-       Inline, and in the IMMEDIATE base -- mwcc inlines it only when it finds it
-       in the class or one level up, as include/dActor_c.h records. No layout
-       effect: a non-virtual inline member adds no field and no vtable slot. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
+    /* Sets filterByMoveDir (0x130); the actor calls it once the mesh moves. */
+    void SetFilterByMoveDir(); /* 0x020398fc */
 };
 
 #ifndef SM64DS_PLATFORM_PC

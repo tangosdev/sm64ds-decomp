@@ -52,7 +52,7 @@ extern CLPS_Block data_ov046_021115bc;
 
 /* local extern: arm9 C helpers with no shared header yet. */
 extern "C" {
-int Sound_PlayIfNotActive(int handle, int a, int b, int c);
+int Sound_PlayIfNotActive(int handle, int a, int b, short c);
 void Vec3_Asr(void *dst, void *src, int shift);
 }
 

@@ -14,7 +14,7 @@
  * Here OS_IsRunOnEmulator always returns FALSE, the same as pret's
  * pokediamond, while OS_GetConsoleType still does the full detection.
  */
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/os/spinLock.h"
 
 #define OSi_CONSOLE_NOT_DETECT 0xffffffff
@@ -67,14 +67,14 @@ int OSi_GetDeviceType(void) {
     int checked = 0;
     u16 lockId;
     s32 ret;
-    u32 enabled;
+    OSIntrMode enabled;
 
     lockId = (u16)OS_GetLockID();
     result = checked;
 
     do {
         ret = -1;
-        enabled = IRQ::Disable();
+        enabled = OS_DisableInterrupts();
 
         if ((OS_ReadOwnerOfLockCartridge() & OS_MAINP_LOCKED_FLAG) != 0 ||
             (ret = OS_TryLockCartridge(lockId)) == 0) {
@@ -89,7 +89,7 @@ int OSi_GetDeviceType(void) {
             }
         }
 
-        IRQ::Restore(enabled);
+        OS_RestoreInterrupts(enabled);
     } while (checked == 0);
 
     return result;

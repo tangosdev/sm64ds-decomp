@@ -772,24 +772,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@372",
+      "from": "@350",
       "to": "@609",
-      "evidence": "mwcc numbers the 0x614 model-handle destructor-registration node @369. ov036 already defines @369, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @609. | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc numbers the 0x614 model-handle destructor-registration node @369. ov036 already defines @369, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @609. | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @372 to @350 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@373",
+      "from": "@351",
       "to": "@608",
-      "evidence": "mwcc numbers the 0x615 collision-handle destructor-registration node @370. ov036 already defines @370, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @608. | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc numbers the 0x615 collision-handle destructor-registration node @370. ov036 already defines @370, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @608. | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @373 to @351 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@374",
+      "from": "@352",
       "to": "@611",
-      "evidence": "batch-5 atdup: @371 collides cross-module (temps are fleet-global); renumber to unused same-length @611 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "batch-5 atdup: @371 collides cross-module (temps are fleet-global); renumber to unused same-length @611 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @374 to @352 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@375",
+      "from": "@353",
       "to": "@610",
-      "evidence": "batch-5 atdup: @372 collides cross-module (temps are fleet-global); renumber to unused same-length @610 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "batch-5 atdup: @372 collides cross-module (temps are fleet-global); renumber to unused same-length @610 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @375 to @353 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

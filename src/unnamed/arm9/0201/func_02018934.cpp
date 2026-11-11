@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "Heap.h"
 #include "private/fs_views.h"
 
@@ -30,7 +30,7 @@ void *func_02018934(char *name, char *path, void *heap) {
     aligned = (diff + 0xf) & ~0xf;
     ptr = ((mHeap::Heap_t *)heap)->_Allocate(aligned + 0x60, -0x10);
     p60 = (char *)ptr + 0x60;
-    CP15::FlushAndInvalidateDataCache((u32)p60, aligned);
+    DC_FlushRange(p60, aligned);
     if (myFS_ReadFile(&file, p60, diff) == diff && func_0204ee40(ptr, name, p60)) {
         result = ptr;
     } else {

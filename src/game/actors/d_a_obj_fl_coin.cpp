@@ -38,7 +38,7 @@
 // - The two callback helpers keep their address names and stay free
 //   extern "C" functions.
 // - The two daWater_Hakidasi_c slots past this span are not piece methods.
-// - AdvanceStepScript keeps the p_addr/u64 round trip and m1: removing
+// - AdvanceStepScript keeps the p_addr round trip and m1: removing
 //   the locals renumbers the TU's static-init temporaries, which the
 //   manifest pins.
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -281,7 +281,7 @@ void daObjFl_Puzzle_c::AdvanceStepScript() {
     {
         u8 idx = mStepIndex;
         s8 *tab = (s8 *)mStepScript;
-        u8 *p = (u8 *)((u64)p_addr);
+        u8 *p = (u8 *)p_addr;
         int m1 = ~0;
         mState = tab[idx];
         *p = *p + 1;

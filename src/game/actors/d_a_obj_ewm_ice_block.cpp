@@ -29,17 +29,14 @@ enum daObjEwmIceBlock_c_AssetId {
 #include "decl_common.h"
 #include "daObjEwmIceBlock_c.h"
 #include "SharedFilePtr.h"
-
-namespace cstd {
-int fdiv(int a, int b);
-}
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 extern SharedFilePtr *data_ov056_02113314[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(const Vector3 *v);
+extern int VEC_Mag(const Vector3 *v);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
-extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void hold_d_a_obj_ewm_ice_block(dBgW_KcMbg *self, void *kcl, const Matrix4x3 *mtx, int scale,
                                        short angle, void *clps);
 }
@@ -101,16 +98,16 @@ int daObjEwmIceBlock_c::Behavior()
 
     mPath.GetNode(prev, mPathNodeIdx);
     Vec3_Sub(&diff, &mPos, &prev);
-    len = LenVec3(&diff);
+    len = VEC_Mag(&diff);
     if (len == 0 || len <= mHorzSpeed) {
-        int q = cstd::fdiv(mHorzSpeed, len);
+        int q = FX_Div(mHorzSpeed, len);
         Vec3_MulScalar(&scaled1, &diff, q);
-        SubVec3(&mPos, &scaled1, &mPos);
+        VEC_Subtract(&mPos, &scaled1, &mPos);
         looped = 1;
     } else {
-        int q = cstd::fdiv(mHorzSpeed, len);
+        int q = FX_Div(mHorzSpeed, len);
         Vec3_MulScalar(&scaled2, &diff, q);
-        SubVec3(&mPos, &scaled2, &mPos);
+        VEC_Subtract(&mPos, &scaled2, &mPos);
     }
 
     if (looped) {

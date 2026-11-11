@@ -42,13 +42,13 @@ typedef struct TexAnim {
 } TexAnim;
 
 extern Vector3s data_02099fc4;
-extern void func_02053380(void *a, Vector3s *b);
+extern void VEC_Fx16Normalize(void *a, Vector3s *b);
 extern Node *func_0204d958(List *list);
 extern void func_0204d9a0(List *list, Node *node);
 extern void SPLRandom_VecFx32(Vector3 *out);
 extern void SPLRandom_VecFx32_XY(Vector3 *out);
 struct Vector3;
-extern void NormalizeVec3(const struct Vector3 *v, struct Vector3 *out);
+extern void VEC_Normalize(const struct Vector3 *v, struct Vector3 *out);
 extern u32 data_020a4d30;
 
 static inline u32 RandVal(void) {
@@ -71,7 +71,7 @@ void func_0204cebc(void *c) {
     Vector3s vecB;
 
     vecA = data_02099fc4;
-    func_02053380(&sys->direction, &vecB);
+    VEC_Fx16Normalize(&sys->direction, &vecB);
 
     if (vecA.x == vecB.x && vecA.y == vecB.y && vecA.z == vecB.z) {
         vecA.x = 0x1000;
@@ -222,7 +222,7 @@ void func_0204c584(u8 *self, List *list) {
         if (p->offset.x == 0 && p->offset.y == 0 && p->offset.z == 0)
             SPLRandom_VecFx32(&nrm);
         else
-            NormalizeVec3((const struct Vector3 *)&p->offset, (struct Vector3 *)&nrm);
+            VEC_Normalize((const struct Vector3 *)&p->offset, (struct Vector3 *)&nrm);
         p->velocity.x = (nrm.x * mag1 + sys->direction[0] * mag2) >> 0xc;
         p->velocity.y = (nrm.y * mag1 + sys->direction[1] * mag2) >> 0xc;
         p->velocity.z = (nrm.z * mag1 + sys->direction[2] * mag2) >> 0xc;

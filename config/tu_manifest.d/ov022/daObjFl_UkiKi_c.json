@@ -409,14 +409,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@340",
+      "from": "@318",
       "to": "data_ov022_02114634",
-      "evidence": "compiler temp mapped to 0x02114634 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02114634 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @340 to @318 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@341",
+      "from": "@319",
       "to": "data_ov022_02114628",
-      "evidence": "compiler temp mapped to 0x02114628 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02114628 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @341 to @319 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

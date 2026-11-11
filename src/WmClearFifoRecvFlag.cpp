@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -30,8 +30,8 @@ typedef struct WMPortSendCallback {
     Handler callback; /* 0x14 */
 } WMPortSendCallback;
 
-extern void Crash(void);
-extern void MultiCopyHalf(const void *src, void *dst, s32 count);
+extern void OS_Terminate(void);
+extern void MIi_CpuCopy16(const void *src, void *dst, s32 count);
 extern int WM_Finish(void);
 extern void WmClearFifoRecvFlag(void);
 extern WMArm9Buf *data_020a89ac;
@@ -50,22 +50,21 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
     if (err != 0)
         return;
 
-    CP15::InvalidateDataCache((u32)data_020a89ac->fifo7to9, 0x100);
-    CP15::InvalidateDataCache((u32)data_020a89ac->status, 0xa00);
+    DC_InvalidateRange(data_020a89ac->fifo7to9, 0x100);
+    DC_InvalidateRange(data_020a89ac->status, 0xa00);
 
     op = msg[0];
     if (op >= 0x25) {
         if (op == 0x80) {
             if (msg[1] == 0x13)
-                Crash();
+                OS_Terminate();
             if ((Handler)data_020a89ac->indCallback != 0)
                 ((Handler)data_020a89ac->indCallback)(msg);
         } else if (op == 0x82) {
             WMPortRecvCallback *recv = (WMPortRecvCallback *)msg;
             if (data_020a89ac->portCallbackTable[recv->port] != 0) {
                 recv->arg = data_020a89ac->portCallbackArgument[recv->port];
-                CP15::InvalidateDataCache((u32)recv->recvBuf,
-                                          data_020a89ac->status->mp_recvBufSize);
+                DC_InvalidateRange(recv->recvBuf, data_020a89ac->status->mp_recvBufSize);
                 ((Handler)data_020a89ac->portCallbackTable[recv->port])(msg);
             }
         } else if (op == 0x81) {
@@ -77,7 +76,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
     } else {
         if (op == 0xe) {
             if ((u16)(msg[2] + 0xfff5) <= 1 && msg[1] == 0) {
-                CP15::InvalidateDataCache(*(u32 *)(msg + 4), data_020a89ac->status->mp_recvBufSize);
+                DC_InvalidateRange(*(void **)(msg + 4), data_020a89ac->status->mp_recvBufSize);
             }
         }
 
@@ -114,7 +113,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
                     data_020a89ec.w10 = 0;
                     data_020a89ec.w12 = v5;
                     data_020a89ec.w1a = 0xffff;
-                    MultiCopyHalf(p, &data_020a8a00, 6);
+                    MIi_CpuCopy16(p, &data_020a8a00, 6);
                     for (i = 0; i < 0x10; i++) {
                         data_020a89ec.w6 = i;
                         if (data_020a89ac->portCallbackTable[i] != 0) {
@@ -132,7 +131,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
         }
     }
 
-    CP15::InvalidateDataCache((u32)data_020a89ac->fifo7to9, 0x100);
+    DC_InvalidateRange(data_020a89ac->fifo7to9, 0x100);
     WmClearFifoRecvFlag();
 }
 

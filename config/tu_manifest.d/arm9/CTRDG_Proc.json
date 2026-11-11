@@ -21,14 +21,14 @@
   ],
   "functions": [
     {
-      "symbol": "func_0206a600",
+      "symbol": "CTRDG_TerminateForPulledOut",
       "address": "0x0206a600",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a600.c",
       "ordinal": 0
     },
     {
-      "symbol": "func_0206a634",
+      "symbol": "CTRDGi_PulledOutCallback",
       "address": "0x0206a634",
       "size": "0x00000060",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a600.c",
@@ -42,7 +42,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_0206a6d0",
+      "symbol": "CTRDGi_InitModuleInfo",
       "address": "0x0206a6d0",
       "size": "0x000001bc",
       "legacy_source": "src/unnamed/arm9/0206/func_0206a6d0.cpp",
@@ -61,7 +61,7 @@
   "relocations": [],
   "compiler_only_output": [],
   "notes": [
-    "func_0206a600, func_0206a634 and func_0206a6d0 are older versions of pret's CTRDG_TerminateForPulledOut, CTRDGi_PulledOutCallback and CTRDGi_InitModuleInfo; each comment says what differs, and they keep their address names.",
+    "CTRDG_TerminateForPulledOut, CTRDGi_PulledOutCallback and CTRDGi_InitModuleInfo are older versions of pret's functions of those names, at the same places in the file's order; each comment says what differs.",
     "`#pragma opt_strength_reduction off` (func_0206a6d0's, from its shard) is set for the whole file: mwccarm generates code only after reading the whole file, so the pragma scoped with push/pop around func_0206a6d0 changes nothing, and the other four functions compile the same with it on."
   ],
   "verification": {
