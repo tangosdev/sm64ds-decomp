@@ -19,7 +19,6 @@
 #include "nitro/os/thread.h"
 #include "private/fs_views.h"
 
-
 extern "C" {
 
 #define FS_FILE_STATUS_SYNC 0x00000004
