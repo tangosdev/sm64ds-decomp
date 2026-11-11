@@ -14,7 +14,7 @@ namespace cstd {
 int sqrt(unsigned long long);
 short atan2(int, int);
 /* Assertion failure (src/cstd3.cpp): file, expression, function, line. */
-void __assert(const char *, const char *, const char *, int);
+void __assert(const char *, int, const char *, int);
 }
 
 #endif
