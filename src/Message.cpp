@@ -1196,9 +1196,9 @@ void Message::DisplaySaving(unsigned short n)
         *win0v = (u16)((*win0v & ~0x3f) | 0x17);
     }
 
-    *(volatile u16 *)0x4000040 = (u16)(((gMsgBoxWinLeft << 8) & 0xff00) |
-                                       ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff));
-    *(volatile u16 *)0x4000044 =
+    REG_WIN0H = (u16)(((gMsgBoxWinLeft << 8) & 0xff00) |
+                      ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff));
+    REG_WIN0V =
         (u16)(((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff));
 
     {
@@ -1502,12 +1502,11 @@ extern "C" void func_0201f32c(int arg0)
     }
     if (disp2 == 1) {
         G2x_SetBlendBrightness_((volatile u16 *)0x04001050, gSubScreenLayers | 0x20, -7);
-        *(volatile u16 *)0x04001048 =
-            (*(volatile u16 *)0x04001048 & ~0x3f) | (gSubScreenLayers | 2) | 0x20;
-        *(volatile u16 *)0x0400104a = (*(volatile u16 *)0x0400104a & ~0x3f) | 0x1d;
+        REG_DB_WININ = (REG_DB_WININ & ~0x3f) | (gSubScreenLayers | 2) | 0x20;
+        REG_DB_WINOUT = (REG_DB_WINOUT & ~0x3f) | 0x1d;
         *(volatile s16 *)0x04001040 =
             ((gMsgBoxWinLeft << 8) & 0xff00) | (u8)(((gMsgBoxCenterX * 2) - gMsgBoxWinLeft) + 1);
-        *(volatile u16 *)0x04001044 =
+        REG_DB_WIN0V =
             ((gMsgBoxWinTop << 8) & 0xff00) | (u8)(((gMsgBoxCenterY * 2) - gMsgBoxWinTop) + 1);
         *(volatile s32 *)0x04001000 = (*(volatile s32 *)0x04001000 & ~0xe000) | 0x2000;
         gSubScreenLayers |= 2;
@@ -1521,9 +1520,8 @@ extern "C" void func_0201f32c(int arg0)
     } else {
         G2x_SetBlendBrightness_((volatile u16 *)0x04000050, gMainScreenLayers & ~0x38, -8);
     }
-    *(volatile u16 *)0x04000048 =
-        (*(volatile u16 *)0x04000048 & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
-    *(volatile u16 *)0x0400004a = (*(volatile u16 *)0x0400004a & ~0x3f) | 0x17;
+    REG_WININ = (REG_WININ & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
+    REG_WINOUT = (REG_WINOUT & ~0x3f) | 0x17;
     *(volatile s16 *)0x04000040 =
         ((gMsgBoxWinLeft << 8) & 0xff00) | (u8)(((gMsgBoxCenterX * 2) - gMsgBoxWinLeft) + 1);
     *(volatile s16 *)0x04000044 =
