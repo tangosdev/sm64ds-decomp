@@ -28,14 +28,22 @@ extern "C" {
 extern void func_02013f4c(void);
 }
 
+/* NitroSDK's inline IME helper (os/common/interrupt.h); returns the previous
+ * master enable. File-local: an inline body in a shared header renumbers
+ * every includer's @NNN symbols. */
+static inline int OS_DisableIrq(void) {
+    u16 prep = REG_IME;
+    REG_IME = 0;
+    return prep;
+}
+
 /* Absorbed from the retired arm9 helper func_02013f28
  * (arm9 0x02013f28..0x02013f4c): fatal-error spin, IME off then call the
  * next entry forever. Defined first because this file emits in reverse
  * source order, so the tail body lands at the run's right edge. */
 extern "C" void func_02013f28(void)
 {
-    REG_IME;
-    REG_IME = 0;
+    (void)OS_DisableIrq();
     for (;;)
         func_02013f4c();
 }

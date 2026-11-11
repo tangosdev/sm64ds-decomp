@@ -25,7 +25,6 @@ typedef void (*MIDmaCallback)(void *);
 #define MIi_GX_LENGTH_ONCE 0x1d8
 #define REG_GXFIFO_ADDR 0x04000400
 #define REG_G3X_GXSTAT (*(vu32 *)0x04000600)
-#define OS_IE_GXFIFO 0x200000
 
 /* MI_CNT_SEND32: enable, 32-bit, destination fixed, start immediately */
 #define MI_CNT_SEND32(size) (0x84400000 | ((size) >> 2))

@@ -25,9 +25,9 @@ void func_0204175c(void)
     ie     = REG_IE;
     iflags = REG_IF;
 
-    if ((iflags & IRQ_GAME_CARD) && !(ie & IRQ_GAME_CARD))
+    if ((iflags & OS_IE_CARD_DATA) && !(ie & OS_IE_CARD_DATA))
     {
-        OS_EnableIrqMask(IRQ_GAME_CARD);
+        OS_EnableIrqMask(OS_IE_CARD_DATA);
         gGameCardHandlerPtr(&gGameCardHandlerArg);
         gGameCardSentinel = 0x80000000;
     }

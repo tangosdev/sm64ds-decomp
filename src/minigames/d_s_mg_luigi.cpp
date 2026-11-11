@@ -55,9 +55,6 @@ enum dScMgLuigi_c_AssetId {
 typedef void (dScMgLuigi_c::*LuigiSlotHandler)(int);
 typedef void (dScMgLuigi_c::*LuigiStateHandler)();
 
-/* The HBlank interrupt the iris runs on (NitroSDK's OS_IE_H_BLANK). */
-#define OS_IE_H_BLANK 0x2
-
 /* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
    previous master enable. */
 static inline int OS_DisableIrq(void) {

@@ -172,6 +172,4 @@
 #define REG_IE (*(volatile u32 *)0x04000210)
 #define REG_IF (*(volatile u32 *)0x04000214)
 
-#define IRQ_GAME_CARD (1u << 19)
-
 #endif /* NITRO_HW_REGISTERS_H */
