@@ -2673,6 +2673,14 @@ void tick_est(unsigned now) {
             std::fprintf(stderr, "[coop-knob] place at %d,%d,%d (frame %u)\n", g_place_xyz[0], g_place_xyz[1], g_place_xyz[2], g_est_frames);
         }
     }
+    {   // MAPDOTS1 proof knob SM64DS_COOP_AREA=F:area: F established frames in, show area `area` here once (a door's ChangeArea); off unset
+        static unsigned af = 0; static int aa = -2;
+        if (aa == -2) { aa = -1; if (const char *e = std::getenv("SM64DS_COOP_AREA")) { unsigned f = 0; int a = -1; if (std::sscanf(e, "%u:%i", &f, &a) == 2) { af = f; aa = a; } } }
+        if (knobs_on && aa >= 0 && g_est_frames >= af) {
+            static int nre = 0;  // held every frame: the game moves the shown area back on its own, so a once-only change did not last
+            if (data_02092120 != aa) { ChangeArea(aa); if (nre++ < 8) std::fprintf(stderr, "[coop-knob] area %d shown (frame %u)\n", aa, g_est_frames); }
+        }
+    }
     if (g_trace_id >= 0 && (g_est_frames % g_trace_every) == 0) {
         const char *me = (const char *)data_0209f394[data_0209f250 & 15];
         char line[1024]; int n = 0; line[0] = 0;

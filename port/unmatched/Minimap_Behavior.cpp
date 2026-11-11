@@ -351,7 +351,7 @@ L738:
         int gpos[3] = {0, 0, 0};
         const int gk = (g_mm_ghost_pos && i != data_0209f250 && data_0209f2d8 != 1)
                            ? g_mm_ghost_pos(i, gpos) : 0;
-        if (gk == 1) {
+        if (gk == 1 || gk == 3) {
             v2c.x = gpos[0]; v2c.y = gpos[1]; v2c.z = gpos[2];
         } else {
             v2c = *(Vector3 *)(((int)o + 0x5c));
@@ -360,7 +360,15 @@ L738:
         _ZN6dMap_c15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_(&v2c, &self->v1f4, self->f1f0, self->ang, &v8);
         g_mm_iconX[i] = (v8.x + 0x800) >> 12;
         g_mm_iconY[i] = (v8.z + 0x800) >> 12;
-        if (gk == 1)
+        if (gk == 3) {
+            /* MAPDOTS1: a friend in another area of this level: his marker rides the edge of the
+               map when his spot is off it, so it points the way instead of vanishing */
+            if (g_mm_iconX[i] < 10) g_mm_iconX[i] = 10;
+            if (g_mm_iconX[i] > 245) g_mm_iconX[i] = 245;
+            if (g_mm_iconY[i] < 10) g_mm_iconY[i] = 10;
+            if (g_mm_iconY[i] > 182) g_mm_iconY[i] = 182;
+        }
+        if (gk == 1 || gk == 3)
             g_mm_mapID[i] = data_ov002_02111148;
         else if (gk == 2)
             g_mm_mapID[i] = -1;

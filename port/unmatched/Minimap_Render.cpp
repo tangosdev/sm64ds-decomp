@@ -73,6 +73,7 @@ struct Minimap {
 
 extern "C" void _ZN3OAM9RenderSubEP7OamAttriiii(void *oam, int x, int y, int a, int pal);
 extern "C" void port_coop_minimap_trace(int slot, int gk, int x, int y, int mapid, int cur);
+extern "C" int port_coop_minimap_char(int slot);
 extern "C" void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int on, void *oam, int x, int y, int a, int pal, int scale, int ang);
 extern "C" void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int on, void *oam, int x, int y, int a, int pal, void *mtx);
 
@@ -162,7 +163,7 @@ int Minimap::Render()
                     int gp[3];
                     const int gk = (i == idx) ? 0 : g_mm_ghost_pos(i, gp);
                     if (gk) port_coop_minimap_trace(i, gk, g_mm_iconX[i], g_mm_iconY[i], g_mm_mapID[i], data_ov002_02111148);
-                    if (gk != 1) continue;
+                    if (gk != 1 && gk != 3) continue;
                     int y = g_mm_iconY[i];
                     if ((u16)(y + 0x10) < 0xe0) {
                         int x = g_mm_iconX[i];
@@ -175,6 +176,10 @@ int Minimap::Render()
                                 gicon = gp2->unk6D9 * 4 + 3;
                             else
                                 gicon = gp2->unk8 + gp2->unk6D9 * 4;
+                            if (gk == 3) {   /* MAPDOTS1: his body is parked unswapped here; the frame's character and his own cap */
+                                const int gc = port_coop_minimap_char(i);
+                                if (gc >= 0 && gc < 4) gicon = gc * 4 + (gc < 3 ? gc : 3);   /* his own cap: the frame carries only the character; the stand-in body's cap and HasNoCap are someone else's */
+                            }
                             if (gicon < 0 || gicon > 15) gicon = 0;
                             _ZN3OAM9RenderSubEP7OamAttriiii(_ZN3OAM15MM_PLAYER_ICONSE[gicon],
                                 x, y, -1, 2);

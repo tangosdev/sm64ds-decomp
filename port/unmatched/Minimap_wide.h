@@ -52,7 +52,8 @@ extern signed char g_mm_mapID[kMinimapWidePlayers];   /* was Minimap +0x21e */
  * ghost (the ROM's own path, nothing drawn in adventure), 1 = a ghost drawn
  * this frame (pos[3] = its Fix12 world position, the follower's draw position,
  * because a ghost body is parked 200000 units up between draws), 2 = a hub
- * ghost that is not in this level. NULL = never installed (solo, VS). */
+ * ghost that is not in this level, 3 = (MAPDOTS1) a ghost in another AREA of this level (pos[3] = his
+ * newest synced position; the icon is clamped to the map's edge). NULL = never installed (solo, VS). */
 extern int (*g_mm_ghost_pos)(int slot, int pos[3]);
 
 /* Both loops run the full sixteen slots and lean on the ROM's own per-slot

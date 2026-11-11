@@ -1534,6 +1534,12 @@ int gw_here(GwSeat &z) {
        tag carries the pause mark (tests/nametag.h), instead of fading out
        after kGwPauseFadeMs as he used to. */
     if ((int)nw.level_id != (int)data_0209f2f8) return 2;
+    {   /* MAPDOTS1 proof knob SM64DS_GHOST_FAKE_OTHER_AREA=<follower frame>: from that frame on, treat every friend as standing in another area
+           of my level (what a door to a far room does), without touching either console's real area */
+        static int fk = -2;
+        if (fk == -2) { const char *e = std::getenv("SM64DS_GHOST_FAKE_OTHER_AREA"); fk = (e && *e) ? std::atoi(e) : -1; }
+        if (fk >= 0 && g_gw_frame >= (unsigned)fk) return 2;
+    }
     if (nw.flags & kGwFrameClock) {
         /* his area is not mine: HideArea hid that room's world for me, and a
            friend in it would float in a room I cannot see */
@@ -4333,6 +4339,49 @@ extern "C" int port_adventure_ghost_drawpos(int slot, int out[3]) {
     out[1] = g_drawpos[slot][1];
     out[2] = g_drawpos[slot][2];
     return 1;
+}
+
+// MAPDOTS1: where a hub friend stands in MY level, for the bottom-screen map, whether or
+// not his area is the one loaded here. A friend in another room of the level (Hazy Maze
+// Cave's areas, the castle's) is parked and undrawn on this console (gw_here answers 2 for
+// his area), so port_adventure_ghost_drawpos has nothing for him; his newest synced frame
+// still says where he is. Returns 0 when he is not in this level (or is gone / fell out),
+// 1 when drawn here (use drawpos), 2 when he is in another area of this level (out[] is the
+// newest frame's position, *character his character).
+extern "C" int port_adventure_ghost_mappos(int slot, int out[3], int *character) {
+    if (!g_hub || slot < 0 || slot >= kPortBodySlots) return 0;
+    int s = gw_seat_for_body(slot);
+    if (s < 0) {
+        /* A friend in another area is given no body by gw_assign (his seat is not here), so no body names him. The bodies that
+           name nobody stand in for such friends, in body order and seat order, the same on every call this frame. */
+        if (!g_assign_init || slot >= (int)data_0209f21c || slot == (int)data_0209f250 || !data_0209f394[slot]) return 0;
+        int rank = 0;
+        for (int b2 = 0; b2 < slot; ++b2)
+            if (b2 != (int)data_0209f250 && b2 < (int)data_0209f21c && data_0209f394[b2] && g_body_seat[b2] < 0) ++rank;
+        const int my = comms_hub_my_seat();
+        for (int q = 0; q < kHubMaxSeats; ++q) {
+            if (q == my) continue;
+            bool taken = false;
+            for (int b2 = 0; b2 < kPortBodySlots; ++b2) if (g_body_seat[b2] == q) taken = true;
+            if (taken) continue;
+            GwSeat &zq = g_gw[q];
+            if (zq.n == 0 || (int)zq.ring[zq.n - 1].f.level_id != (int)data_0209f2f8) continue;
+            if (gw_here(zq) != 2) continue;
+            if (rank-- == 0) { s = q; break; }
+        }
+        if (s < 0) return 0;
+    }
+    if (s >= kHubMaxSeats) return 0;
+    GwSeat &z = g_gw[s];
+    const int h = gw_here(z);
+    if (h == 0) return 0;
+    const HubGhostFrame &nw = z.ring[z.n - 1].f;
+    if ((int)nw.level_id != (int)data_0209f2f8) return 0;
+    out[0] = nw.x; out[1] = nw.y; out[2] = nw.z;
+    /* hidden by his own state (cannon, pipe, warp): off the map, as a same-room friend is */
+    if ((nw.flags & kGwFrameClock) && (nw.flags & ghostdoor::kFlagHidden)) return 0;
+    if (character) *character = (int)nw.character;
+    return h == 1 ? 1 : 2;
 }
 
 // ---------------------------------------------------------------------------
