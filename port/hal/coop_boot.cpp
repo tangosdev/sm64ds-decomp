@@ -315,11 +315,13 @@ struct SeatWatch {
     unsigned epoch = 0;
     bool ever = false;       // was in the room at some point this game
     bool bye = false;        // said BYE before it went
+    ULONGLONG bye_at = 0;    // when; a BYE counts only if the seat goes within kByeLastsMs (a quick rejoin keeps the seat)
     bool join_pending = false;
     ULONGLONG join_at = 0;
     char name[kPlistNameMax + 1] = {0};
 };
 SeatWatch SW[4];
+const ULONGLONG kByeLastsMs = 10000;
 bool g_sw_frozen = false;    // my own line is out: every seat looks gone, and none of that is news
 
 int host_grace_ms() {
@@ -341,6 +343,7 @@ void rejoin_say(const char *line) {
 void rejoin_bye_heard(int seat) {
     if (seat < 0 || seat > 3) return;
     SW[seat].bye = true;
+    SW[seat].bye_at = tick();
     LOG("BYE from seat %d (a guest quit the room)", seat);
 }
 
@@ -426,6 +429,7 @@ void roster_watch() {
             w.bye = false;                 // a new stay: an old BYE is spent
             LOG("REJOIN seat %d %s (epoch %u)", s, w.ever ? "is back" : "joined", ep);
         } else if (!p && w.present) {
+            if (w.bye && now - w.bye_at > kByeLastsMs) w.bye = false;   // that BYE was for a stay that already came back
             LOG("REJOIN seat %d is gone (%s)", s, w.bye ? "it said BYE" : "no BYE: lost connection");
             if (!host_seat) {
                 std::snprintf(line, sizeof line, w.bye ? "%s left." : "%s lost connection.", nm);
