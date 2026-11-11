@@ -1,8 +1,8 @@
 {
   "id": "arm9/PM",
   "module": "arm9",
-  "source": "src/engine/spi/PM.cpp",
-  "promoted_source": "src/engine/spi/PM.cpp",
+  "source": "src/engine/spi/PM.c",
+  "promoted_source": "src/engine/spi/PM.c",
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [

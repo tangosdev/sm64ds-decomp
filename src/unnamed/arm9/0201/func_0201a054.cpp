@@ -7,6 +7,7 @@
 #include "dScene_c.h"
 #include "private/watchdog_alarm.h"
 #include "nitro/gx/g3imm_light.h"
+#include "nitro/mb/mb.h"
 
 extern "C" {
 
@@ -43,7 +44,7 @@ struct S0209ee90 {
 extern struct S0209ee90 data_0209ee90;
 
 /* The game's start-up, run once from main before the frame loop
-   (func_020197b8). On a download-play child (boot type 2 at 0x27ffc40) it
+   (func_020197b8). On a download-play child (MB_IsMultiBootChild) it
    leaves out func_0201fec8 (which reads the owner's language and starts the
    link through func_0203db64), the file system (func_02018aa4) and
    func_020134c8; the boot job func_0201a2f8 runs those three later for a
@@ -52,7 +53,7 @@ extern struct S0209ee90 data_0209ee90;
    calls the save setup (func_02042f68) and sets up the game heap, the
    display (func_02019440), the actor spawn table and the boot scene. */
 void func_0201a054(void) {
-    int isChild = (*(u16 *)0x27ffc40 == 2);
+    int isChild = MB_IsMultiBootChild();
     func_020427f8();
     func_02042784();
     FX_Init();

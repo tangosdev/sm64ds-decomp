@@ -1,7 +1,12 @@
+//cpp
 #include "types.h"
 #include "nitro/os/thread.h"
 #include "private/player_input_record.h"
 #include "private/mb_views.h"
+#include "nitro/mb/mb.h"
+
+extern "C" {
+
 extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern void MI_CpuFill8(void *dst, unsigned char c, unsigned int n);
 extern void func_02042778(void);
@@ -26,7 +31,7 @@ extern u8 data_020a0ef0;
 extern u8 data_020a1064[];
 extern u8 data_020a0fec[];
 extern u8 data_020a0fb8[];
-extern u8 data_020a0fa0[];
+extern u16 data_020a0fa0[][3];
 extern MBUserInfo data_020a10fc[4];
 extern MBUserInfo data_020a10a4[4];
 extern u8 data_020a0f08;
@@ -56,15 +61,13 @@ typedef struct {
 
 /* Start the link (func_0201fec8 passes per-language data): keep the 0x40 and
    0x1c bytes it is given, clear the input records, profiles and link state.
-   A download-play child (the boot type at 0x27ffc40 is 2, NitroSDK's
-   MB_IsMultiBootChild; see OSi_ReloadRomData.cpp) takes mode 2 and runs the
+   A download-play child (MB_IsMultiBootChild) takes mode 2 and runs the
    link step (func_0203df40) until each of four handshake waits is met, 0x4b0
    frames for the first and 0x258 for the rest; a wait that runs out flags
    data_020a0f1c bit 0, shuts the link down and parks the thread. Otherwise
    this console fills in its own profile from the owner settings. */
 void func_0203db64(void *arg0, void *arg1) {
     OwnerInfo buf;
-    int b;
 
     data_020a0ef0 = 0;
     MI_CpuCopy8(arg0, data_020a1064, 0x40);
@@ -79,14 +82,10 @@ void func_0203db64(void *arg0, void *arg1) {
     data_020a0f1c = 0;
     data_020a0f30 = 0;
     data_020a0f28 = 0;
-    b = 1;
     data_02099e18 = 1;
     data_020a0f10 = 0;
     data_020a0f04 = 0;
-    if (*(u16 *)0x27ffc40 != 2) {
-        b = 0;
-    }
-    if (b) {
+    if (MB_IsMultiBootChild()) {
         int count;
 
         data_020a0f04 = 2;
@@ -161,4 +160,5 @@ void func_0203db64(void *arg0, void *arg1) {
         OS_GetMacAddress(data_020a0fa0);
     }
     data_020a0ef0 = 1;
+}
 }

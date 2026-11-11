@@ -1,9 +1,9 @@
-//cpp
 #include "types.h"
 #include "nitro/os/cache.h"
 #include "nitro/os/spinLock.h"
-
-extern "C" {
+#include "nitro/hw/registers.h"
+#include "nitro/hw/mmap_shared.h"
+#include "nitro/mb/mb.h"
 
 #define ROM_HEADER_ARM9_ROM_OFFSET (*(u32 *)0x027FFE20)
 #define ROM_HEADER_ARM9_RAM_ADDR   (*(u8 **)0x027FFE28)
@@ -23,9 +23,9 @@ extern void OSReadROMArea(u32 romOffset, void *dest, s32 size);
 /* OS_ResetSystem at 0x01ffdd98 (ITCM) -- NitroSDK soft reset, with OSi_DoResetSystem
  * inlined. Identified against pret/pokediamond's OS_reset.c, whose OS_ResetSystem and
  * OSi_DoResetSystem run the same steps in the same order:
- *   - a multiboot child cannot reset: MB_IsMultiBootChild() is the halfword at 0x027ffc40
- *     (HW_BOOT_CHECK_INFO_BUF) == 2, and the SDK calls OS_Terminate there;
- *   - the parameter goes to HW_RESET_PARAMETER_BUF (0x027ffc20) for the rebooted image;
+ *   - a multiboot child cannot reset (MB_IsMultiBootChild), and this SDK calls
+ *     OS_Terminate there;
+ *   - the parameter goes to HW_RESET_PARAMETER_BUF for the rebooted image;
  *   - OSi_SendToPxi(OS_PXI_COMMAND_RESET) sends 0x10 << 8 on PXI tag 0xc
  *     (PXI_FIFO_TAG_OS), retrying until the FIFO takes it;
  *   - spin until the ARM7 answers: OSi_IsResetOccurred is set by the PXI
@@ -38,16 +38,16 @@ extern void OSReadROMArea(u32 romOffset, void *dest, s32 size);
  * Sole caller: src/func_02013f4c.cpp, which passes 0.
  */
 void OS_ResetSystem(u32 resetArg) {
-    if (*(vu16 *)0x27ffc40 == 2)
+    if (MB_IsMultiBootChild())
         OS_Terminate();
 
-    *(vu32 *)0x27ffc20 = resetArg;
+    *(u32 *)HW_RESET_PARAMETER_BUF = resetArg;
     OSi_SendToPxi(0x10);
 
     while (OSi_IsResetOccurred == 0)
         ;
 
-    *(vu16 *)0x4000208 = 0;
+    REG_IME = 0;
     OSi_ReloadRomData();
     OSi_DoBoot();
 }
@@ -82,5 +82,4 @@ void OSi_ReloadRomData(void) {
     OSReadROMArea(romOffset, dest, size);
 
     OSReadROMArea(ROM_HEADER_ARM7_ROM_OFFSET, ROM_HEADER_ARM7_RAM_ADDR, ROM_HEADER_ARM7_SIZE);
-}
 }
