@@ -248,11 +248,33 @@ int dCamera_c::InitResources()
     return this->Render();
 }
 
+static inline int IsKuppaScriptRunning() {
+    return gRunningKuppaScript != 0;
+}
+
+/* Actor 0xbf is PLAYER. */
+static inline int IsPlayer(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
+static inline int IsSnowWeatherLevel() {
+    return gCurrentSublevel == 0xa || gCurrentSublevel == 0x13;
+}
+
+static inline int IsRainWeatherLevel() {
+    return gCurrentSublevel == 0x8 || gCurrentSublevel == 0x12 || gCurrentSublevel == 0x15 ||
+           gCurrentSublevel == 0x1e;
+}
+
+/* Per-frame update: remember last frame's eye and target, run the camera state
+ * and decay the shakes (unless a Kuppa script is driving the camera), keep the
+ * level's weather particles around the eye, and track whether the eye has gone
+ * below the water line. */
 int dCamera_c::Behavior()
 {
-    s32 spVec[3];
-    s32 temp_r1;
-    s32 r5;
+    s32 weatherPos[3];
+    s32 flags;
+    s32 weather;
 
     mPrevLookAt.x = lookAt.x;
     mPrevLookAt.y = lookAt.y;
@@ -264,13 +286,9 @@ int dCamera_c::Behavior()
     if ((u32)mAreaMode != (u32)&data_0208733c) {
         mFlags &= ~0x60u;
     }
-    temp_r1 = mFlags;
-    if (!(temp_r1 & 8)) {
-        enum Bool b = (enum Bool)(gRunningKuppaScript != 0);
-        if (b != FALSE) goto block_7;
-    } else {
-block_7:
-        if (temp_r1 & 0xc000) {
+    flags = mFlags;
+    if ((flags & 8) || IsKuppaScriptRunning()) {
+        if (flags & 0xc000) {
             mFlags &= ~0xc000u;
             ChangeState((State *)&data_0209b008);
         }
@@ -281,102 +299,79 @@ block_7:
 
     if ((u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) == 0 &&
         !(gNextActorUpdateMask & ACTOR_UPDATE_MASK_STAGE_ENDING)) {
-        enum Bool b2 = (enum Bool)(gRunningKuppaScript != 0);
-        if (b2 == FALSE) {
-            if (mFlags & 0x2000) {
+        if (!IsKuppaScriptRunning()) {
+            if (mFlags & 0x2000)
                 Math_Function_0203b0fc((int *)&mFovBlend, 0x1000, 0x88, 0x7fffffff);
-            } else {
+            else
                 Math_Function_0203b0fc((int *)&mFovBlend, 0, 0x88, 0x7fffffff);
-            }
             UpdateState();
             if (mShakeY != 0) {
-                ApproachLinear(*(int *)&mShakeY, 0, 0x1000);
-                mShakeY = 0 - mShakeY;
+                ApproachLinear(mShakeY, 0, 0x1000);
+                mShakeY = -mShakeY;
             }
             if (mRollShake != 0) {
                 if (ApproachLinear2(mRollShake, 0, 0x10) != 0) {
                     mRollShakePhase = 0;
                 } else {
-                    *(s16 *)((int)&mRollShakePhase) =
-                        (s16)(*(s16 *)((int)&mRollShakePhase) + 0x3000);
+                    mRollShakePhase += 0x3000;
                 }
             }
         }
         if (mFovShake != 0) {
-            *(s16 *)((int)&mFovShakePhase) =
-                (s16)(*(s16 *)((int)&mFovShakePhase) + mFovShakePhaseStep);
+            mFovShakePhase += mFovShakePhaseStep;
             ApproachLinear2(mFovShake, 0, mFovShakeDecay);
         }
-        {
-            int condA = 1;
-            if (gCurrentSublevel != 0xa && gCurrentSublevel != 0x13)
-                condA = 0;
-            if (condA != 0) {
-                r5 = 0x112;
-            } else {
-                u8 t = (u8)gCurrentSublevel + 0xf8;
-                enum Bool ip = FALSE;
-                if ((u32)t <= 0x16) {
-                    if ((1 << t) & 0x402401) {
-                        ip = TRUE;
-                    }
-                }
-                if (ip != FALSE) {
-                    r5 = 0xbc;
-                } else if (gCurrentSublevel == 0x31) {
-                    r5 = 0x86;
-                } else {
-                    r5 = -1;
-                }
-            }
-        }
-        if (r5 >= 0) {
-            MTX_MultVec43(&CAM_SPACE_CAM_POS_ASR_3, &data_0209b41c, spVec);
-            Vec3_LslInPlace(spVec, 3);
+        if (IsSnowWeatherLevel())
+            weather = 0x112;
+        else if (IsRainWeatherLevel())
+            weather = 0xbc;
+        else if (gCurrentSublevel == 0x31)
+            weather = 0x86;
+        else
+            weather = -1;
+        if (weather >= 0) {
+            MTX_MultVec43(&CAM_SPACE_CAM_POS_ASR_3, &data_0209b41c, weatherPos);
+            Vec3_LslInPlace(weatherPos, 3);
             int flag;
-            if (r5 != 0xbc) {
+            if (weather != 0xbc)
                 flag = 1;
-            } else {
+            else
                 flag = IsUnderwater();
-            }
-            mWeather = Particle::System::NewWeather(mWeather, (u32)r5, spVec[0], spVec[1], spVec[2],
+            mWeather = Particle::System::NewWeather(mWeather, (u32)weather, weatherPos[0], weatherPos[1], weatherPos[2],
                                                     0, flag);
-            if (r5 == 0x86) {
-                mWeather2 = Particle::System::NewWeather(mWeather2, 0x87, spVec[0], spVec[1],
-                                                         spVec[2], 0, 1);
+            if (weather == 0x86) {
+                mWeather2 = Particle::System::NewWeather(mWeather2, 0x87, weatherPos[0], weatherPos[1],
+                                                         weatherPos[2], 0, 1);
             }
         }
     }
 
     {
-        daPly_c *m = (daPly_c *)mTargetPlayer;
-        enum Bool isBf = (enum Bool)(m->actorID == 0xbf);
-        if (isBf != FALSE) {
-            s32 t2 = data_0209f32c - (FX_SinCosTable_[((u16)mAngleX >> 4) * 2] * 0x10);
+        if (IsPlayer(mTargetPlayer)) {
+            daPly_c *player = (daPly_c *)mTargetPlayer;
+            s32 waterLine = data_0209f32c - (FX_SinCosTable_[((u16)mAngleX >> 4) * 2] * 0x10);
             if (!(mFlags & 1)) {
-                if (m->mIsUnderwater != 0 || m->mIsInShallowWater != 0) {
-                    if (pos.y <= t2) {
+                if (player->mIsUnderwater != 0 || player->mIsInShallowWater != 0) {
+                    if (pos.y <= waterLine) {
                         mFlags |= 1u;
                     }
                 }
-            } else if (pos.y > t2) {
+            } else if (pos.y > waterLine) {
                 mFlags &= ~1u;
             }
         }
     }
-    {
-        u32 *pf = &mFlags;
-        *pf &= 0xfff8fdfbu;
-        if (mFocusActor != 0) {
-            mFocusActor = 0;
-            *pf |= 4u;
-        }
+    mFlags &= 0xfff8fdfbu;
+    if (mFocusActor != 0) {
+        mFocusActor = 0;
+        mFlags |= 4u;
     }
     mFramedActor = 0;
     func_0203dafc((short)(mAngleY + mInputYawLag));
     ApproachLinear2(mInputYawLag, 0, 0x400);
     return 1;
 }
+
 
 int dCamera_c::Render()
 {
@@ -839,7 +834,6 @@ void dCamera_c::SetFlag_3()
 }
 
 void dCamera_c::func_0200cf40() {
-    int new_var;
     mViewport[0] = 0;
     mViewport[1] = 0;
     mViewport[2] = 0xff;
@@ -851,21 +845,19 @@ void dCamera_c::func_0200cf40() {
     mViewObj = 0;
     if ((int)param1 != 0xf) {
         CamEntryE *v;
-        int x;
-        int y;
-        int z;
         SetMode(0xa);
         mFovAngle = mMode->fovAngle;
         SetFovAngle(mFovAngle);
         func_0200cce4();
         v = (CamEntryE *)GetViewObj((int)param1 & 0xff);
-        x = v->f2;
-        z = v->f6;
-        new_var = z << 12;
-        y = v->f4;
-        pos.x = x << 12;
-        pos.y = y << 12;
-        pos.z = new_var;
+        {
+            int x = v->f2 << 12;
+            int z = v->f6 << 12;
+            int y = v->f4 << 12;
+            pos.x = x;
+            pos.y = y;
+            pos.z = z;
+        }
         mBaseAngleY = v->fa + 0x8000;
         return;
     }
@@ -874,6 +866,7 @@ void dCamera_c::func_0200cf40() {
     SetFovAngle(mFovAngle);
     func_0200cce4();
 }
+
 
 void dCamera_c::func_0200cce4() {
     VecFx32 vec;
