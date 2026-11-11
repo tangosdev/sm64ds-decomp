@@ -640,24 +640,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@784",
+      "from": "@715",
       "to": "@939",
-      "evidence": "Compiler-local registration node at its original address 0x021149c8, given a unique short label so overlay globals cannot collide. Re-keyed from @787 to @784 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured)."
+      "evidence": "Compiler-local registration node at its original address 0x021149c8, given a unique short label so overlay globals cannot collide. Re-keyed from @787 to @784 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @784 to @715 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@785",
+      "from": "@716",
       "to": "@940",
-      "evidence": "Compiler-local registration node at its original address 0x021149d4, given a unique short label so overlay globals cannot collide. Re-keyed from @788 to @785 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured)."
+      "evidence": "Compiler-local registration node at its original address 0x021149d4, given a unique short label so overlay globals cannot collide. Re-keyed from @788 to @785 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @785 to @716 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@786",
+      "from": "@717",
       "to": "@943",
-      "evidence": "Compiler-local registration node at its original address 0x021149e0, given a unique short label so overlay globals cannot collide. Re-keyed from @789 to @786 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured)."
+      "evidence": "Compiler-local registration node at its original address 0x021149e0, given a unique short label so overlay globals cannot collide. Re-keyed from @789 to @786 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @786 to @717 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@787",
+      "from": "@718",
       "to": "@963",
-      "evidence": "Compiler-local registration node at its original address 0x021149bc, given a unique short label so overlay globals cannot collide. Re-keyed from @790 to @787 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured)."
+      "evidence": "Compiler-local registration node at its original address 0x021149bc, given a unique short label so overlay globals cannot collide. Re-keyed from @790 to @787 after the dBgW_Kc ITCM accessors became members (three named parameters in removed local externs; measured). Re-keyed from @787 to @718 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

@@ -1080,14 +1080,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@399",
+      "from": "@366",
       "to": "@427",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @393 to @399 when Re-keyed when fx_trig.h was included for Behavior's FX_SinIdx (#821).."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @393 to @399 when Re-keyed when fx_trig.h was included for Behavior's FX_SinIdx (#821).. Re-keyed from @399 to @366 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@400",
+      "from": "@367",
       "to": "@428",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @394 to @400 when Re-keyed when fx_trig.h was included for Behavior's FX_SinIdx (#821).."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @394 to @400 when Re-keyed when fx_trig.h was included for Behavior's FX_SinIdx (#821).. Re-keyed from @400 to @367 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

@@ -42,7 +42,10 @@
 #include "PlayerInput.h"
 #include "private/controller_input.h"
 #include "dFdBrightness_c.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "OAM.h"
 #include "nitro/hw/registers.h"
@@ -83,7 +86,7 @@ extern int data_0208ee44;
 extern char data_0209ee90[];
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void Enable3dEngines(void);
-extern void MultiStore16(unsigned short val, char *dst, int nbytes);
+extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
 /* The print helper reads name; Behavior reads the signed level ID and entrance.
  * IDs -2 and -1 select the versus and minigame scenes. The two trailing bytes
  * are natural alignment padding; no observed consumer reads them. These type
@@ -143,35 +146,35 @@ static inline int IsTouchStarted() {
  * map at (row, col): the level number in two digits (a blank for a leading
  * zero), a blank, the level's name from sTitleLevelEntries, then blanks out
  * to column 0x1d. Coined name. Called only from TitleScrollLevelList. Each
- * tile goes through MultiStore16 from a volatile temporary, five of them;
+ * tile goes through MIi_CpuClear16 from a volatile temporary, five of them;
  * that is the spelling the bytes need. */
 extern "C" void TitlePrintLevelRow(int level, int row, int col) {
     volatile u16 t0, t1, t2, t3, t4;
     int tens = level / 10;
     int ones = level % 10;
-    short *scr = (short *)G2::GetBG0ScrPtr();
+    short *scr = (short *)G2_GetBG0ScrPtr();
     short *d = scr + (col + (row << 5));
     t0 = tens == 0 ? 0xff : tens + 0x30;
-    MultiStore16(t0, (char *)d, 2);
+    MIi_CpuClear16(t0, (char *)d, 2);
     t1 = ones + 0x30;
-    MultiStore16(t1, (char *)(d + 1), 2);
+    MIi_CpuClear16(t1, (char *)(d + 1), 2);
     t2 = 0xff;
     short *d2 = d + 2;
     d += 3;
-    MultiStore16(t2, (char *)d2, 2);
+    MIi_CpuClear16(t2, (char *)d2, 2);
     int cnt = 0x1d - col;
     volatile const signed char *s =
         reinterpret_cast<volatile const signed char *>(sTitleLevelEntries[level].name);
     while (*s != 0) {
         t3 = *s;
-        MultiStore16(t3, (char *)d, 2);
+        MIi_CpuClear16(t3, (char *)d, 2);
         s++;
         d++;
         cnt--;
     }
     for (int i = 0; i < cnt; i++) {
         t4 = 0xff;
-        MultiStore16(t4, (char *)d, 2);
+        MIi_CpuClear16(t4, (char *)d, 2);
         d++;
     }
 }
@@ -180,7 +183,7 @@ extern "C" void TitlePrintLevelRow(int level, int row, int col) {
  * at (row, col), one tile per character. Called only from
  * TitleScrollLevelList, for the caption. Coined name. */
 extern "C" void TitlePrintString(signed char *s, int row, int col) {
-    short *p = (short *)G2::GetBG0ScrPtr() + (col + (row << 5));
+    short *p = (short *)G2_GetBG0ScrPtr() + (col + (row << 5));
     if (*s == 0)
         return;
     do {
@@ -210,27 +213,27 @@ s32 dScTitle_c::InitResources() {
     UnloadArchives();
     Enable3dEngines();
     GX::DisableAllBanks();
-    GX::SetBankForBG(8);
-    GX::SetBankForOBJ(1);
+    GX_SetBankForBG(8);
+    GX_SetBankForOBJ(1);
     REG_DISPCNT &= 0xffcfffef;
-    GX::SetGraphicsMode(1, 0, 0);
+    GX_SetGraphicsMode(1, 0, 0);
     REG_DISPCNT_SUB |= 0x10000;
     func_020233f4();
     REG_BG0CNT &= ~3;
     REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x1f00;
     REG_BG0CNT &= ~0x40;
-    GX::LoadBG0Char(data_0208a178, 0, 0x2000);
-    GX::LoadBGPltt(data_0208c178, 0, 0x200);
+    GX_LoadBG0Char(data_0208a178, 0, 0x2000);
+    GX_LoadBGPltt(data_0208c178, 0, 0x200);
     {
-        u16 *scr = (u16 *)G2::GetBG0ScrPtr();
+        u16 *scr = (u16 *)G2_GetBG0ScrPtr();
         int i = 0;
         do {
             *scr++ = 0xff;
             i++;
         } while (i < 0x1800);
     }
-    GX::LoadOBJ(data_0208c378, 0, 0x2000);
-    GX::LoadOBJPltt(data_0208c178, 0, 0x200);
+    GX_LoadOBJ(data_0208c378, 0, 0x2000);
+    GX_LoadOBJPltt(data_0208c178, 0, 0x200);
     gMainScreenLayers = 0x11;
     REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1100;
     data_0208ee44 = 2;

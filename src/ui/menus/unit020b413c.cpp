@@ -51,7 +51,6 @@
  * bodies, after the in-tree Ov007ItemView.
  */
 #include "types.h"
-#include "cstd.h"
 #include "nitro/fx/fx.h"
 #include "Ov007MenuState.h"
 #include "Ov007Sprite.h"
@@ -60,6 +59,8 @@
 #include "Ov007Settings.h"
 #include "Ov007Item.h"
 #include "Ov007Pad.h"
+#include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 /* The 0xc-byte item rows at data_ov007_020d77d8, one per item id.
  * symbols.txt also names the columns (data_ov007_020d77dc flags,
@@ -213,13 +214,7 @@ void ItemView_UpdateChosen(Ov007ItemView *view) {
 
     if (t < thresh) {
         int q;
-        if (t <= 0) {
-            q = 0;
-        } else if (t >= thresh) {
-            q = 0x1000;
-        } else {
-            q = cstd::div(t << 12, thresh);
-        }
+        q = ProgressRatio(t, thresh);
         if (pops != 0) {
             if (q < 0x555) {
                 int c;

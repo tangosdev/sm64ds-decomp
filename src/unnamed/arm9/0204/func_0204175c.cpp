@@ -1,6 +1,7 @@
 //cpp
 #include "nitro/hw/registers.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
+#include "nitro/os/interrupt.h"
 
 extern "C" {
 
@@ -16,21 +17,21 @@ extern int data_020a0f38;
 
 void func_0204175c(void)
 {
-    u32 state;
+    OSIntrMode state;
     u32 ie;
     u32 iflags;
 
-    state = IRQ::Disable();
+    state = OS_DisableInterrupts();
     ie     = REG_IE;
     iflags = REG_IF;
 
     if ((iflags & IRQ_GAME_CARD) && !(ie & IRQ_GAME_CARD))
     {
-        IRQ::EnableIRQs(IRQ_GAME_CARD);
+        OS_EnableIrqMask(IRQ_GAME_CARD);
         gGameCardHandlerPtr(&gGameCardHandlerArg);
         gGameCardSentinel = 0x80000000;
     }
 
-    IRQ::Restore(state);
+    OS_RestoreInterrupts(state);
 }
 }

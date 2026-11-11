@@ -65,8 +65,8 @@ extern HuwaAnimationFileHandle gHuwahuwaMoveAnimationFile;
 extern "C" {
 extern int func_ov002_020e10a8(void *);
 
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
+void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *out);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
 int *Vec3_LslInPlace(Vector3 *v, int shift);
 int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
@@ -128,14 +128,14 @@ void daHuwa_c::KillWithCoins() {
     SpawnCoins(coins, 3, 0xa000, 0);
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
-    MulMat4x3Mat4x3(&mAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&mAnmModel.data.transforms[1], &data_020a0e68, &data_020a0e68);
 
     dust.x = data_020a0e68.m[9];
     dust.y = data_020a0e68.m[10];
     dust.z = data_020a0e68.m[11];
-    SubVec3(&dust, &mPos, &dust);
+    VEC_Subtract(&dust, &mPos, &dust);
     Vec3_LslInPlace(&dust, 3);
-    AddVec3(&dust, &mPos, &dust);
+    VEC_Add(&dust, &mPos, &dust);
 
     Particle::System::NewSimple(kPtclHuwahuwaDefeat, dust.x, dust.y, dust.z);
     func_0201267c(0xd5, &mCamSpacePos);

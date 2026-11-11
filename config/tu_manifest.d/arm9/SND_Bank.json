@@ -47,7 +47,7 @@
   "compiler_only_output": [],
   "notes": [
     "Hand-assembled, following arm9/FS_Overlay: tu_map cannot segment arm9/main.",
-    "C++ for CP15::FlushDataCache; every function keeps C linkage."
+    "Built as C++, which CP15::FlushDataCache once required; that call is now the SDK's C-linkage DC_StoreRange (nitro/os/cache.h). Every function keeps C linkage."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

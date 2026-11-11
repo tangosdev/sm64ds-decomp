@@ -44,7 +44,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 
 #include "KuppaScript.h"
 #include "types.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "private/controller_input.h"
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
@@ -57,7 +57,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "daPly_c.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "nitro/hw/registers.h"
 #include "dScene_c.h"
 #include "Event.h"
@@ -69,7 +69,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "dBgW.h"
 #include "dFdWipe_c.h"
 #include "SaveData.h"
-#include "G3X.h"
+#include "nitro/gx/g3x.h"
 #include "dExtAnmTexSRT_c.h"
 #include "dExtFrameCtrl_c.h"
 #include "dExtShadowModel_c.h"
@@ -78,6 +78,8 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "Message.h"
 #include "Memory.h"
 #include "Heap.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "cstd.h"
 #include "daMugenBGM_c.h"
@@ -86,6 +88,8 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "dGraph_c.h"
 #include "dClipper.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
+#include "msl/string.h"
 
 struct OamAttr;
 
@@ -262,7 +266,6 @@ extern unsigned int data_02092134;
 extern int data_02092138;
 extern u16 *data_0209214c[];
 extern s32 data_02092208[];
-extern SaveBlock data_0209caa0;
 extern s32 data_0209cef0;
 /* The scene's graph callback: the scene registers its own object here and
    clears it on the way out. The frame calls its four slots: GraphCallback0 at
@@ -703,8 +706,8 @@ void dScStage_c::VE_Init() {
 
     a = gMainScreenLayers ^ DISPLAY_LAYER_OBJ;
     b = gSubScreenLayers ^ DISPLAY_LAYER_OBJ;
-    *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 0x1100;
-    *(volatile unsigned short *)0x400000c = (*(volatile unsigned short *)0x400000c & 0x43) | 0x1010;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x1100;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1010;
     Message::DisplayVsExitText(0x1f);
     sMenuButtonTileOffsets[0] = 0xe0;
     sMenuButtonTileOffsets[1] = 0x1a0;
@@ -720,8 +723,8 @@ void dScStage_c::VE_Init() {
     gActorUpdateMask = gNextActorUpdateMask;
     gVsExitScreenActive = 1;
     data_0209f290 = 0;
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4000050, a | 0x20, -7);
-    G2x::SetBlendBrightness((volatile unsigned short *)0x4001050, b | 0x20, -7);
+    G2x_SetBlendBrightness_((volatile unsigned short *)0x4000050, a | 0x20, -7);
+    G2x_SetBlendBrightness_((volatile unsigned short *)0x4001050, b | 0x20, -7);
 }
 void dScStage_c::RenderBouncingArrows() {
     int r4;
@@ -752,8 +755,8 @@ void dScStage_c::LC_Render() {
 
     {
         void *p = LoadFile(ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN);
-        GX::LoadOBJPltt((void *)((char *)p + (((unsigned int)sLevelClearPaletteTimer >> 2) << 5)),
-                        0x1c0, 0x10);
+        GX_LoadOBJPltt((void *)((char *)p + (((unsigned int)sLevelClearPaletteTimer >> 2) << 5)),
+                       0x1c0, 0x10);
         Deallocate(p);
     }
 
@@ -910,8 +913,8 @@ void dScStage_c::LC_Update() {
         SetSubBg1Offset(0, 0);
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
         gSubScreenLayers |= 3;
-        G2x::SetBlendBrightness((volatile u16 *)0x4000050, t6 | 0x20, -7);
-        G2x::SetBlendBrightness((volatile u16 *)0x4001050, t5 | 0x20, -7);
+        G2x_SetBlendBrightness_((volatile u16 *)0x4000050, t6 | 0x20, -7);
+        G2x_SetBlendBrightness_((volatile u16 *)0x4001050, t5 | 0x20, -7);
         gLevelClearStep = 3;
         return;
     }
@@ -1373,7 +1376,7 @@ void dScStage_c::PS_UpdateOkAndBackButtons(bool b) {
         }
 
         idx = i + base;
-        u16 *scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755cc[idx];
+        u16 *scr = (u16 *)G2S_GetBG1ScrPtr() + data_020755cc[idx];
         for (j = 0; j < data_02075610[idx]; j++) {
             scr[0] = (scr[0] & 0x3ff) | sl;
             scr[0x20] = (scr[0x20] & 0x3ff) | sl;
@@ -1399,7 +1402,7 @@ void dScStage_c::PS_UpdateSaveMenu(bool b) {
                 t = 0x1000;
             v = (u16)t;
         }
-        p = (u16 *)G2S::GetBG1ScrPtr() + data_020755c8[i];
+        p = (u16 *)G2S_GetBG1ScrPtr() + data_020755c8[i];
         for (j = 0; j < 10; j++) {
             p[0] = (p[0] & 0x3ff) | v;
             p[0x20] = (p[0x20] & 0x3ff) | v;
@@ -1418,7 +1421,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
     u16 v;
 
     sel = (sSoundBoxFlashTimer != 0) ? 0x5000 : 0x6000;
-    scr = (u16 *)G2S::GetBG1ScrPtr() + 0xae;
+    scr = (u16 *)G2S_GetBG1ScrPtr() + 0xae;
     for (j = 0; j < 0xf; j++) {
         scr[0] = (scr[0] & 0x3ff) | sel;
         scr[0x20] = (scr[0x20] & 0x3ff) | sel;
@@ -1428,7 +1431,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
     }
 
     for (j = 0; j < 2; j++) {
-        scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755c0[j];
+        scr = (u16 *)G2S_GetBG1ScrPtr() + data_020755c0[j];
         v = (sSelectedMenuButton == j) ? 0x4000 : 0x3000;
         counter = 0;
         for (; counter < 0xa; counter++) {
@@ -1439,7 +1442,7 @@ void dScStage_c::PS_UpdateOptionsMenu() {
     }
 
     for (i = 0; i < 2; i++) {
-        scr = (u16 *)G2S::GetBG1ScrPtr() + data_020755c4[i];
+        scr = (u16 *)G2S_GetBG1ScrPtr() + data_020755c4[i];
         v = (sSelectedBacklightButton == i && sBacklightFlashTimer == 0) ? 0x6000 : 0x5000;
         counter = 0;
         for (; counter < 7; counter++) {
@@ -1457,7 +1460,7 @@ void dScStage_c::UpdateMenuButtons(bool b) {
         unsigned int v;
         int j;
         u16 *p;
-        p = (u16 *)G2S::GetBG1ScrPtr() + sMenuButtonTileOffsets[i];
+        p = (u16 *)G2S_GetBG1ScrPtr() + sMenuButtonTileOffsets[i];
         if (b == 0) {
             if (sSelectedMenuButton == i && sMenuHighlightDelay == 0) {
                 v = 0x2000;
@@ -1979,27 +1982,27 @@ void dScStage_c::PS_Update() {
         REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0xf00;
         if (sPausedWithSelect != 0) {
             if (GetOwnerLanguage() == 5) {
-                LoadCompressedFileAt(0xb001, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xb001, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 4) {
-                LoadCompressedFileAt(0xac01, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xac01, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 3) {
-                LoadCompressedFileAt(0xa801, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa801, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 2) {
-                LoadCompressedFileAt(0xa401, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa401, G2S_GetBG1ScrPtr());
             } else {
-                LoadCompressedFileAt(0xa001, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa001, G2S_GetBG1ScrPtr());
             }
         } else {
             if (GetOwnerLanguage() == 5) {
-                LoadCompressedFileAt(0xb009, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xb009, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 4) {
-                LoadCompressedFileAt(0xac09, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xac09, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 3) {
-                LoadCompressedFileAt(0xa809, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa809, G2S_GetBG1ScrPtr());
             } else if (GetOwnerLanguage() == 2) {
-                LoadCompressedFileAt(0xa409, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa409, G2S_GetBG1ScrPtr());
             } else {
-                LoadCompressedFileAt(0xa009, G2S::GetBG1ScrPtr());
+                LoadCompressedFileAt(0xa009, G2S_GetBG1ScrPtr());
             }
         }
         sMenuButtonTileOffsets[0] = 0x80;
@@ -2770,8 +2773,8 @@ void dScStage_c::PS_Init() {
     }
 
     Sound::PauseMusic();
-    G2x::SetBlendBrightness((volatile u16 *)0x04000050, mainBlendTargets | 0x20, -7);
-    G2x::SetBlendBrightness((volatile u16 *)0x04001050, subBlendTargets | 0x20, -7);
+    G2x_SetBlendBrightness_((volatile u16 *)0x04000050, mainBlendTargets | 0x20, -7);
+    G2x_SetBlendBrightness_((volatile u16 *)0x04001050, subBlendTargets | 0x20, -7);
 }
 
 extern "C" {
@@ -2833,7 +2836,7 @@ int IsButtonInputValid(void) {
    blx r1` with r0 = the callback object. The matrix at +0x4 stays zero until
    UpdateMinimap; the static initializer does not seed it. */
 int dScStage_c::graphCallback_c::GraphCallback2() {
-    G2x::SetBGyAffine(&REG_DB_BG3PA, &matrix, originX, originY, targetX, targetY);
+    G2x_SetBGyAffine_(&REG_DB_BG3PA, &matrix, originX, originY, targetX, targetY);
     return 1;
 }
 
@@ -2883,7 +2886,7 @@ extern "C" void FUN_02029934(void) {
     dFdBrightness_c *o = gSceneFader;
     if (o->IsBetweenStartAndEnd() == 0) {
         data_0209d4b0 = 0;
-        *(volatile unsigned short *)0x4000050 = 0;
+        REG_BLDCNT = 0;
     }
 }
 
@@ -2923,7 +2926,7 @@ extern "C" void FUN_020299f4(void) {
 extern "C" void FUN_02029a68(void) {
     if (data_0209d4b0 == (int)((dFdWipe_c *)data_0209f324 + 6)) {
         data_0209d4b0 = 0;
-        *(volatile unsigned short *)0x4000050 = 0;
+        REG_BLDCNT = 0;
     }
     data_0209f274 = 0;
 }
@@ -3819,8 +3822,8 @@ extern "C" int CopyTexPalFromLevelModel(void *p) {
         int found = 0;
         u32 j;
         for (j = 0; j < sm->count; j++) {
-            if (cstd::strcmp(texName, mtex[s->texIdx].name) == 0 &&
-                cstd::strcmp(palName, mpal[s->palIdx].name) == 0) {
+            if (strcmp(texName, mtex[s->texIdx].name) == 0 &&
+                strcmp(palName, mpal[s->palIdx].name) == 0) {
                 e->f1c = s->f1c;
                 e->f20 = s->f20;
                 found = 1;
@@ -3874,7 +3877,6 @@ void dScStage_c::LoadModel() {
     data_0209f320 = (int)components;
 }
 
-
 void dScStage_c::RenderFog() {
     Fog *fog = 0;
     if (gCurrentSublevel == 5)
@@ -3885,9 +3887,9 @@ void dScStage_c::RenderFog() {
         if (camera->IsUnderwater())
             fog++;
     }
-    G3X::SetFog(fog->mEnabled, 0, fog->mShift, fog->mOffset);
+    G3X_SetFog(fog->mEnabled, 0, fog->mShift, fog->mOffset);
     *(volatile unsigned int *)0x4000358 = fog->mColor | 0x1f0000;
-    G3X::SetFogTable(fog);
+    G3X_SetFogTable(fog);
 }
 
 /* dScStage_c::LoadFog. Lays down two default ramps -- a shallow one in mFog[0] and
@@ -4303,7 +4305,7 @@ void dScStage_c::CheckInput() {
                 else
                     maxDistance = 0x24;
                 if (distance > maxDistance) {
-                    int scale = cstd::fdiv(maxDistance, distance);
+                    int scale = FX_Div(maxDistance, distance);
                     deltaX = FX_MUL(deltaX, scale);
                     control->tx = touchX - deltaX;
                     deltaY = FX_MUL(deltaY, scale);
@@ -4422,7 +4424,7 @@ extern "C" void ResetInput(void) {
             mode = p->mode;
         else
             mode = GetControllerMode(i);
-        func_0205a588(p, 0, 0x18);
+        MI_CpuFill8(p, 0, 0x18);
         p->mode = mode;
         p->delay = 5;
         p++;
@@ -4474,7 +4476,7 @@ int dScStage_c::CleanupResources() {
                 MinimapChangeNode *block = (MinimapChangeNode *)area->mBlockList;
                 while (block) {
                     MinimapChangeNode *next = block->next;
-                    Memory::operator_delete2(block);
+                    ::operator delete(block);
                     block = next;
                 }
             }
@@ -4685,11 +4687,11 @@ int dScStage_c::InitResources() {
         *p0 &= 0xFFCFFFEF;
         *p1 &= 0xFFCFFFEF;
         int one = 1;
-        GX::SetGraphicsMode(one, 0, one);
-        GXS::SetGraphicsMode(3);
+        GX_SetGraphicsMode(one, 0, one);
+        GXS_SetGraphicsMode(3);
         *p0 = (*p0 & ~0x38000000) | 0x08000000;
         REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
-        GX::DispOn();
+        GX_DispOn();
         *p1 |= 0x10000;
         InitialiseVramGlobals();
 
@@ -4892,7 +4894,7 @@ u32 LoadCompressedFileAt(int fileID, void *target);
 int LoadFileAt(int handle, int dest);
 void LoadControllerModeText(int a);
 void LoadFont3D(void);
-void MultiStore16(u16 val, char *dst, int nbytes);
+void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 void SetSubBg0Offset(int a, int b);
 void SetSubBg1Offset(int a, int b);
 void SetSubBg2Offset(int a, int b);
@@ -4914,18 +4916,18 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
     if (vsMode == 0) {
         LoadFont(0);
         if (GetOwnerLanguage() == 5) {
-            LoadCompressedFileAt(0xb00f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xb00f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 4) {
-            LoadCompressedFileAt(0xac0f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xac0f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 3) {
-            LoadCompressedFileAt(0xa80f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa80f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 2) {
-            LoadCompressedFileAt(0xa40f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa40f, G2_GetBG2CharPtr());
         } else {
-            LoadCompressedFileAt(0xa00f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa00f, G2_GetBG2CharPtr());
         }
         LoadFileAt(0x980b, 0x5000000);
-        screenMap = (char *)G2::GetBG2ScrPtr();
+        screenMap = (char *)G2_GetBG2ScrPtr();
         LoadCompressedFileAt(0x9808, screenMap);
         LoadCompressedFileAt(0x9809, screenMap + 0x800);
         LoadCompressedFileAt(0x980a, screenMap + 0x1000);
@@ -4946,16 +4948,16 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         REG_DB_BG1CNT &= ~0x40;
         REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1800;
 
-        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NCG_BIN, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NCG_BIN, G2S_GetBG0CharPtr());
         LoadFileAt(ASSET_D_2D_OP_BG_CL_NCL_BIN, 0x5000400);
-        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL02_NSC_BIN, G2S::GetBG0ScrPtr());
-        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NSC_BIN, (char *)G2S::GetBG1ScrPtr());
-        LoadCompressedFileAt(ASSET_D_2D_OP_OBJ_CL_NCG_BIN, (void *)0x6600000);
+        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL02_NSC_BIN, G2S_GetBG0ScrPtr());
+        LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NSC_BIN, (char *)G2S_GetBG1ScrPtr());
+        LoadCompressedFileAt(ASSET_D_2D_OP_OBJ_CL_NCG_BIN, G2S_GetOBJCharPtr());
         LoadFileAt(ASSET_D_2D_OP_OBJ_CL_NCL_BIN, 0x5000600);
         {
-            char *clearScreenMap = (char *)G2S::GetBG2ScrPtr();
+            char *clearScreenMap = (char *)G2S_GetBG2ScrPtr();
             volatile u16 fillTile = 0x10d0;
-            MultiStore16(fillTile, clearScreenMap, 0x800);
+            MIi_CpuClear16(fillTile, clearScreenMap, 0x800);
         }
         gSubScreenLayers = 0x17;
         SetSubBg0Offset(0, 0);
@@ -4975,19 +4977,19 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
     REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1300;
 
     if (GetOwnerLanguage() == 5) {
-        LoadCompressedFileAt(0xb00d, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(0xb00d, G2S_GetBG0CharPtr());
     } else if (GetOwnerLanguage() == 4) {
-        LoadCompressedFileAt(0xac0d, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(0xac0d, G2S_GetBG0CharPtr());
     } else if (GetOwnerLanguage() == 3) {
-        LoadCompressedFileAt(0xa80d, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(0xa80d, G2S_GetBG0CharPtr());
     } else if (GetOwnerLanguage() == 2) {
-        LoadCompressedFileAt(0xa40d, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(0xa40d, G2S_GetBG0CharPtr());
     } else {
-        LoadCompressedFileAt(0xa00d, G2S::GetBG0CharPtr());
+        LoadCompressedFileAt(0xa00d, G2S_GetBG0CharPtr());
     }
 
     LoadFileAt(0x9807, 0x5000400);
-    screenMap = (char *)G2S::GetBG1ScrPtr();
+    screenMap = (char *)G2S_GetBG1ScrPtr();
     LoadCompressedFileAt(0x9804, screenMap + 0x800);
     LoadCompressedFileAt(0x9803, screenMap + 0x1000);
 
@@ -5008,7 +5010,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadCompressedFileAt(0xa00b, screenMap + 0x2000);
     }
 
-    subBg2Screen = (char *)G2S::GetBG2ScrPtr();
+    subBg2Screen = (char *)G2S_GetBG2ScrPtr();
     LoadCompressedFileAt(0x9805, subBg2Screen);
     LoadCompressedFileAt(0x9806, subBg2Screen + 0x1000);
 
@@ -5017,37 +5019,36 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
             return;
         }
         if (GetOwnerLanguage() == 5) {
-            LoadCompressedFileAt(0xb00f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xb00f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 4) {
-            LoadCompressedFileAt(0xac0f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xac0f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 3) {
-            LoadCompressedFileAt(0xa80f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa80f, G2_GetBG2CharPtr());
         } else if (GetOwnerLanguage() == 2) {
-            LoadCompressedFileAt(0xa40f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa40f, G2_GetBG2CharPtr());
         } else {
-            LoadCompressedFileAt(0xa00f, G2::GetBG2CharPtr());
+            LoadCompressedFileAt(0xa00f, G2_GetBG2CharPtr());
         }
         LoadFileAt(0x980b, 0x5000000);
         LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,
-                             (char *)G2::GetBG2ScrPtr() + 0x1800);
+                             (char *)G2_GetBG2ScrPtr() + 0x1800);
         LoadCompressedFileAt(0x9801, screenMap + 0x2800);
         return;
     }
 
     if (SublevelToLevel(sublevel) == 0x1d) {
         volatile u16 blankTile = 0;
-        MultiStore16(blankTile, screenMap, 0x40);
+        MIi_CpuClear16(blankTile, screenMap, 0x40);
         LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_SELECT_PAUSE_NSC_BIN, screenMap + 0x40);
-        LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_PAGE_NSC_BIN,
-                             (char *)G2::GetBG2ScrPtr() + 0x1800);
+        LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_PAGE_NSC_BIN, (char *)G2_GetBG2ScrPtr() + 0x1800);
         LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,
-                             (char *)G2::GetBG2ScrPtr() + 0x2800);
+                             (char *)G2_GetBG2ScrPtr() + 0x2800);
         LoadCompressedFileAt(0x9802, screenMap + 0x2800);
         return;
     }
 
     LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,
-                         (char *)G2::GetBG2ScrPtr() + 0x1800);
+                         (char *)G2_GetBG2ScrPtr() + 0x1800);
     LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_SELECT_PAUSE_NSC_BIN, screenMap);
 }
 
@@ -5099,7 +5100,7 @@ extern "C" void func_0202deac(int levelID) {
 void LoadLevelOverlays(int level) {
     if (data_0209f278) {
         if (data_02092130 != data_020758c8[level])
-            Crash();
+            OS_Terminate();
         data_0209f278 = 0;
         return;
     }

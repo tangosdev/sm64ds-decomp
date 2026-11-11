@@ -14,7 +14,7 @@ extern int func_ov007_020b4438(void);
 extern void func_ov007_020c1d8c(int i);
 extern int func_ov007_020b79c8(void);
 extern void func_ov007_020aec00(void);
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern int func_ov007_020bdeb0(int idx);
 extern void MessageWindow_Close(void);
 
@@ -106,7 +106,7 @@ void func_ov007_020af84c(void)
                 s2->stateWork = 2;
                 return;
             case 2:
-                Crash();
+                OS_Terminate();
                 return;
             }
             return;

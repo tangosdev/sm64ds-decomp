@@ -32,17 +32,12 @@
 
 #include "MWCPlusLib.h"
 
-namespace Memory {
-void *operator_new2(unsigned int size);
-}
-
-extern "C" void func_0203cbc0(void *block);
 
 extern "C" void func_02073534(void *base, void *current, unsigned int size, dtor_t dtor);
 
 extern "C" void *__cxa_vec_new(unsigned int n, unsigned int elem_size, unsigned int cookie_size,
                                ctor_t ctor, dtor_t dtor) {
-    char *block = (char *)Memory::operator_new2(n * elem_size + cookie_size);
+    char *block = (char *)::operator new[](n * elem_size + cookie_size);
     if (!block) {
         return 0;
     }
@@ -67,7 +62,7 @@ extern "C" void *__cxa_vec_new(unsigned int n, unsigned int elem_size, unsigned 
             if (dtor) {
                 func_02073534(base, p, elem_size, dtor);
             }
-            func_0203cbc0(block);
+            ::operator delete[](block);
             throw;
         }
     }

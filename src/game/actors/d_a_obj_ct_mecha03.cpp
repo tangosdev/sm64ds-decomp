@@ -82,8 +82,8 @@ extern CLPS_Block data_ov035_02112198;
 /* local extern: arm9 matrix/vector helpers and dBgW stores with no shared
  * header. */
 extern "C" {
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 }
 
 extern "C" daObjCtMecha03_c *daObjCtMecha03_c_classInit() {
@@ -205,8 +205,8 @@ void daObjCtMecha03_c::UpdateShadow() {
     armOffset.x = 0;
     armOffset.z = 0;
     Matrix4x3_FromRotationZXYExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    MulVec3Mat4x3(&armOffset, &data_020a0e68, &bobPos);
-    AddVec3(&bobPos, &mPos, &bobPos);
+    MTX_MultVec43(&armOffset, &data_020a0e68, &bobPos);
+    VEC_Add(&bobPos, &mPos, &bobPos);
     {
         int bobY = bobPos.y;
         pos.x = bobPos.x;

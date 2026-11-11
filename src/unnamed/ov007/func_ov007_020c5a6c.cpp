@@ -11,7 +11,7 @@ struct Vec3Words {
 
 extern "C" {
 int func_ov007_020c30ac(void *arr, int count, void *target, int arg4, int *out);
-int LenVec3(const Vector3 *v);
+int VEC_Mag(const Vector3 *v);
 }
 
 /* Picks the stroke point nearest target over every group (with flag set,
@@ -49,14 +49,14 @@ extern "C" void func_ov007_020c5a6c(Ov007Picker *self, void *target, int flag) {
         func_ov007_020c64c4(self, 1);
         break;
     case 1:
-        SubVec3(&self->pos, hit->target, &self->hitOffset);
+        VEC_Subtract(&self->pos, hit->target, &self->hitOffset);
         break;
     case 2: {
         self->pos.z = self->anchorPos.z;
         *(Vec3Words *)&self->anchorPos = *(Vec3Words *)hit->target;
         Ov007Link *link = self->link;
-        SubVec3(link->from->target, link->to->target, &link->dir);
-        link->length = LenVec3(&link->dir);
+        VEC_Subtract(link->from->target, link->to->target, &link->dir);
+        link->length = VEC_Mag(&link->dir);
         break;
     }
     }

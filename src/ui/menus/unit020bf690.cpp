@@ -38,15 +38,15 @@
  */
 #include "types.h"
 #include "common.h"
-#include "cstd.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "Ov007Camera.h"
 #include "Ov007Transition.h"
 #include "Ov007Model.h"
 #include "dExtModel_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -66,8 +66,8 @@ typedef char Ov007Fade_size_must_be_0x14[sizeof(Ov007Fade) == 0x14 ? 1 : -1];
 extern Ov007Fade *sScreenFade;
 
 extern void InitialiseVramGlobals(void);
-extern int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
+extern int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *mat, Vector3 *out);
 extern void func_ov007_020b3edc(int size);
 extern void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020bbff0(void *c);
@@ -128,14 +128,14 @@ void func_ov007_020bfbdc(void *self) {
     Matrix4x3 mat;
 
     func_ov007_020bc47c(model);
-    model->rotX = (short)cstd::div(0x5a0000, 0x168);
+    model->rotX = (short)FX_DivS32(0x5a0000, 0x168);
     model->visible = 0;
 
     vec.y = 0;
     vec.x = 0;
     vec.z = -0x1064;
-    InvMat4x3(&cam->viewMatrix, &mat);
-    MulVec3Mat4x3(&vec, &mat, &model->pos);
+    MTX_Inverse43(&cam->viewMatrix, &mat);
+    MTX_MultVec43(&vec, &mat, &model->pos);
 }
 
 /* While the model is visible, scales it in x and z to fill the camera's view
@@ -150,8 +150,8 @@ void ScreenFade_Draw(Ov007Camera *cam) {
     Fix12i size = model->scale.x * 0xd800 + 0x12c000;
     Fix12i scaled = FX_MUL(size, sinDist);
     int cosScaled = FX_CosIdx(fovyIdx) * 0x60;
-    Fix12i extent = cstd::fdiv(scaled, cosScaled);
-    model->scale.z = cstd::fdiv(extent, 0x5000);
+    Fix12i extent = FX_Div(scaled, cosScaled);
+    model->scale.z = FX_Div(extent, 0x5000);
     model->scale.x = model->scale.z;
     func_ov007_020bc02c(model, &cam->viewMatrix);
     func_ov007_020bbff0(model);
@@ -293,7 +293,7 @@ void ScreenFade_Start(void) {
     }
 
     if (flags & 0x10) {
-        G2x::SetBlendBrightness(&REG_BLDCNT, 0x3F, 0);
+        G2x_SetBlendBrightness_(&REG_BLDCNT, 0x3F, 0);
     }
 
     if (flags & 2) {
@@ -324,7 +324,7 @@ void ScreenFade_Update(void) {
         return;
     int progress = tr->t;
     if (started == 0 && (flags & 2) != 0) {
-        G2x::SetBlendBrightness(&REG_BLDCNT, 0x3f, 0);
+        G2x_SetBlendBrightness_(&REG_BLDCNT, 0x3f, 0);
     }
     if (tr->reversed != 0)
         progress = 0x1000 - progress;
@@ -339,6 +339,6 @@ void ScreenFade_Update(void) {
     }
     if (tr->reversed == 0)
         return;
-    G2x::SetBlendBrightness(&REG_BLDCNT, 0x3f, -0x10);
+    G2x_SetBlendBrightness_(&REG_BLDCNT, 0x3f, -0x10);
 }
 }

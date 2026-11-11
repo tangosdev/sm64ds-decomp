@@ -858,7 +858,7 @@ def prune_matched(args):
     2026-09-09 gave a HAND-ASM PRIMITIVE file that also says NONMATCHING back its
     place in the count. Eight rows then sat in this DB describing functions the
     progress bar already counted -- __rethrow, func_02052ec8, func_02057014,
-    func_02057078, func_02058568, func_02059468, func_02059824, func_0205a588 --
+    func_02057078, func_02058568, func_02059468, func_02059824, MI_CpuFill8 --
     and every close-first worklist put them at the top of the queue, because a
     divergence of 1 against an assembly primitive with no C to recover is the
     lowest number in the file.

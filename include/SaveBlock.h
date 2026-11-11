@@ -92,13 +92,8 @@ struct SaveBlock {
     u8 activeFile;       /* 0x328 */
 };
 
-/* The one save block, data_0209caa0, is declared `extern SaveBlock` by each
-   reader rather than here: d_a_ply_methods.cpp still declares block-scope
-   `int[]`/`u8[]` views of it, which a declaration in this header would
-   contradict. Readers reach its fields as members. On an `int[]` view mwccarm
-   keeps the block address in one register across SaveData's func_02013598
-   branch, while the ROM reloads it per arm, which is what member access on the
-   struct compiles to. */
+/* The one save block. Every reader reaches its fields as members. */
+extern SaveBlock data_0209caa0;
 
 #endif
 

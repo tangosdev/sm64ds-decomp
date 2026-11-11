@@ -1,9 +1,10 @@
 //cpp
 #include "types.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
+#include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -16,36 +17,20 @@ extern void func_ov007_020b2614(int a, int b, int c);
  * to state 3. Figure 1 holds the growth at 0x1000. */
 void func_ov007_020b1b74(void)
 {
-    int r4 = WORK->states[1]->stateTicks;
-    if (r4 == 0)
+    int ticks = WORK->states[1]->stateTicks;
+    if (ticks == 0)
         func_ov007_020b2614(0, 0, -1);
 
-    if (r4 == 0xa)
+    if (ticks == 0xa)
         WORK->states[2]->requestedState = 3;
 
-    if (r4 >= 0 && r4 <= 0xa) {
-        int val;
-        int sq;
-        if (r4 <= 0)
-            val = 0;
-        else if (r4 >= 0xa)
-            val = 0x1000;
-        else
-            val = cstd::div(r4 << 12, 0xa);
-        sq = (int)(((long long)val * val) >> 12);
+    if (ticks >= 0 && ticks <= 0xa) {
+        int rise = ProgressRatio(ticks, 0xa);
+        int sq = (fx32)(((fx64)rise * rise) >> FX32_SHIFT);
         WORK->modelGrowth = FX_MUL(sq, 0x17d0);
-    } else if (r4 <= 0x1e) {
-        int val;
-        int t;
-        int sq;
-        if (r4 <= 0xa)
-            val = 0;
-        else if (r4 >= 0x1e)
-            val = 0x1000;
-        else
-            val = cstd::div((r4 - 0xa) << 12, 0x14);
-        t = 0x1000 - val;
-        sq = (int)(((long long)t * t) >> 12);
+    } else if (ticks <= 0x1e) {
+        int fall = 0x1000 - RangeRatio(ticks, 0xa, 0x1e);
+        int sq = (fx32)(((fx64)fall * fall) >> FX32_SHIFT);
         WORK->modelGrowth = FX_MUL(sq, 0x7d0) + 0x1000;
     } else {
         WORK->states[1]->requestedState = 0;

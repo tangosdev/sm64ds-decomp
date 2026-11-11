@@ -92,7 +92,6 @@ extern SharedFilePtr data_ov002_0210ebd8;
 
 extern unsigned char gLocalPlayerId;
 extern daPly_c *gPlayers[];
-extern SaveBlock data_0209caa0;
 extern dCamera_c *gCamera;
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. */
@@ -106,7 +105,7 @@ unsigned int func_0201277c(unsigned int soundID);
 int func_ov002_020e496c(daPly_c *player);
 
 void func_0203c178(Matrix4x3 *m, int sx, int sy, int sz);
-void MulMat3x3Mat3x3(const int *a, const int *b, int *dst);
+void MTX_Concat33(const int *a, const int *b, int *dst);
 /* local extern: math/CalcLib.h's spelling is the one below, but including
    that header renumbers this TU's @NNN .data locals. */
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
@@ -212,7 +211,7 @@ int daLuigi_c::Render() {
     *(Mtx43 *)mat = *(Mtx43 *)&body->mat4x3;
     mat->t.x = -mat->t.x;
     func_0203c178(&data_020a0e68, kMirrorSx, kFxOne, kFxOne);
-    MulMat3x3Mat3x3((const int *)mat, (const int *)&data_020a0e68, (int *)mat);
+    MTX_Concat33((const int *)mat, (const int *)&data_020a0e68, (int *)mat);
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)mat;
 
     if (data_ov055_02111b64 & kHideBit)

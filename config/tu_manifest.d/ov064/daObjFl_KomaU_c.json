@@ -485,14 +485,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@823",
+      "from": "@771",
       "to": "@167",
-      "evidence": "mwcc numbers this registration node @717 per TU and another module already defines @717"
+      "evidence": "mwcc numbers this registration node @717 per TU and another module already defines @717 Re-keyed from @823 to @754 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed +17 (2026-11-11): Behavior was rewritten without its launders (the (int)(long long) multiplier, the raw collider stride pointer, the hand-materialized flag tests), the file gained the IsOffScreen / IsPlayerActor inlines its siblings use, and VEC_Add now comes from math/CalcLib.h instead of a named-parameter local extern (measured from the compiled object)."
     },
     {
-      "from": "@824",
+      "from": "@772",
       "to": "@168",
-      "evidence": "mwcc numbers this registration node @718 per TU and another module already defines @718"
+      "evidence": "mwcc numbers this registration node @718 per TU and another module already defines @718 Re-keyed from @824 to @755 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed +17 (2026-11-11): Behavior was rewritten without its launders (the (int)(long long) multiplier, the raw collider stride pointer, the hand-materialized flag tests), the file gained the IsOffScreen / IsPlayerActor inlines its siblings use, and VEC_Add now comes from math/CalcLib.h instead of a named-parameter local extern (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

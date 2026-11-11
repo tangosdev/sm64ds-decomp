@@ -18,7 +18,7 @@
  * is its ROM location.
  *
  * Known limits:
- * - LenVec3 remains declared with void * parameters because no shared header
+ * - VEC_Mag remains declared with void * parameters because no shared header
  *   records its signature. The other vector helpers use the shared Vector3
  *   spelling.
  * - data_ov002_0210d9f0 is a SharedFilePtr, read here through a local
@@ -38,9 +38,10 @@
 #include "decl_PathPtr.h"
 #include "decl_common.h"
 #include "common.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 typedef void (dPathLiftActor_c::*PathLiftStateFn)();
 
@@ -66,18 +67,17 @@ extern PathStuff data_ov002_0210d9f0;
 
 /* ROM symbols with no header of their own. */
 extern "C" {
-extern s16 data_02082214[]; /* sine/cosine pairs, indexed by angle >> 4 */
 extern u16 DecIfAbove0_Short(u16 *p);
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(void *v);
+extern int VEC_Mag(void *v);
 extern short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 extern short Vec3_VertAngle(const Vector3 *from, const Vector3 *to);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* local extern: CalcLib agrees on the type, but including it renumbers the
    compiler-local sinit aliases and changes their relocation targets. */
-extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
+extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *out);
 /* Sound.cpp: plays sound `id' at a camera-space position. */
 void func_02012694(unsigned int id, const Vector3 *camSpacePos);
 /* dBgW.cpp: sets a collider's stoodOnCallback. */
@@ -155,7 +155,7 @@ void dPathLiftActor_c::StateFall()
         /* Retain the mixed signed/unsigned access tree: collapsing both views
            into mFallAngle makes mwcc reuse the signed load and drops 12 bytes. */
         raw = mFallAngle;
-        v = data_02082214[((u16)(int)(long long)raw >> 4) * 2];
+        v = FX_SinIdx((u16)(int)(long long)raw >> 4);
         mPosY = mFallStartY + (s32)(u32)((((long long)v << 15) + 0x800) >> 12);
         *(u16 *)((int)&mFallAngle) = (u16)(*(u16 *)((int)&mFallAngle) + 0x3000);
         return;
@@ -247,10 +247,10 @@ void dPathLiftActor_c::StatePath()
     mPath.GetNode(destNode, mCurrPathNode);
 
     Vec3_Sub(&fromDest, &mPos, &destNode);
-    destDist = LenVec3(&fromDest);
+    destDist = VEC_Mag(&fromDest);
     Vec3_Sub(&segment, &srcNode, &destNode);
-    segLen = LenVec3(&segment);
-    segFrames = cstd::fdiv(segLen, mHorzSpeed) / 0x1000;
+    segLen = VEC_Mag(&segment);
+    segFrames = FX_Div(segLen, mHorzSpeed) / 0x1000;
 
     horzDist = Vec3_HorzDist(&srcNode, &destNode);
     if (horzDist != 0) {
@@ -275,12 +275,12 @@ void dPathLiftActor_c::StatePath()
     }
 
     if (destDist == 0 || destDist <= mHorzSpeed) {
-        Vec3_MulScalar(&stepA, &fromDest, cstd::fdiv(mHorzSpeed, destDist));
-        SubVec3(&mPos, &stepA, &mPos);
+        Vec3_MulScalar(&stepA, &fromDest, FX_Div(mHorzSpeed, destDist));
+        VEC_Subtract(&mPos, &stepA, &mPos);
         arrived = 1;
     } else {
-        Vec3_MulScalar(&stepB, &fromDest, cstd::fdiv(mHorzSpeed, destDist));
-        SubVec3(&mPos, &stepB, &mPos);
+        Vec3_MulScalar(&stepB, &fromDest, FX_Div(mHorzSpeed, destDist));
+        VEC_Subtract(&mPos, &stepB, &mPos);
     }
 
     if (arrived == 0) return;
@@ -416,7 +416,7 @@ void dPathLiftActor_c::UpdatePathModels()
                 Vector3 diff;
                 mPath.GetNode(node, idx);
                 Vec3_Sub(&diff, &node, &mPos);
-                if (LenVec3(&diff) < 0xc8000) {
+                if (VEC_Mag(&diff) < 0xc8000) {
                     if (found == 0) {
                         found = one;
                         idx += 1;

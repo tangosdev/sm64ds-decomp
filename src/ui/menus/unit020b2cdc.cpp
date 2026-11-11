@@ -40,7 +40,6 @@
  * keep their address names for now.
  */
 #include "types.h"
-#include "cstd.h"
 #include "Ov007MenuState.h"
 #include "Ov007Sprite.h"
 #include "Ov007Work.h"
@@ -48,6 +47,8 @@
 #include "Ov007Item.h"
 #include "Ov007Pad.h"
 #include "Ov007Touch.h"
+#include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -688,13 +689,13 @@ void func_ov007_020b2e64(Ov007TouchSample *sample) {
 
     if (func_ov007_020c1da0(0) != 0) {
         dir = -1;
-    } else if (held[0] == 1 || (held[0] >= 0x14 && cstd::mod(held[0] - 0x14, 0xa) == 0)) {
+    } else if (held[0] == 1 || (held[0] >= 0x14 && FX_ModS32(held[0] - 0x14, 0xa) == 0)) {
         dir = 0;
-    } else if (held[1] == 1 || (held[1] >= 0x14 && cstd::mod(held[1] - 0x14, 0xa) == 0)) {
+    } else if (held[1] == 1 || (held[1] >= 0x14 && FX_ModS32(held[1] - 0x14, 0xa) == 0)) {
         dir = 1;
-    } else if (held[2] == 1 || (held[2] >= 0x14 && cstd::mod(held[2] - 0x14, 0xa) == 0)) {
+    } else if (held[2] == 1 || (held[2] >= 0x14 && FX_ModS32(held[2] - 0x14, 0xa) == 0)) {
         dir = 2;
-    } else if (held[3] == 1 || (held[3] >= 0x14 && cstd::mod(held[3] - 0x14, 0xa) == 0)) {
+    } else if (held[3] == 1 || (held[3] >= 0x14 && FX_ModS32(held[3] - 0x14, 0xa) == 0)) {
         dir = 3;
     } else {
         dir = -1;
@@ -762,13 +763,7 @@ void func_ov007_020b2cf0(void) {
         y = dy + (q->screenY >> 12);
     }
     if (ticks <= 4) {
-        if (ticks <= 0) {
-            factor = 0;
-        } else if (ticks >= 4) {
-            factor = 0x1000;
-        } else {
-            factor = cstd::div(ticks << 12, 4);
-        }
+        factor = ProgressRatio(ticks, 4);
         factor = 0x1000 - factor;
         easeX = -data_ov007_02103360->nudgeX * factor * 6;
         easeY = -data_ov007_02103360->nudgeY * factor * 6;

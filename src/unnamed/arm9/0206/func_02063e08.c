@@ -1,6 +1,6 @@
 #include "private/arm9_wbt.h"
 
-int func_02065970(void);
+int WBT_NumOfRegisteredBlock(void);
 int func_02065bc0(void);
 int func_02065bd0(void);
 int func_02064eac(int p0, unsigned short mask, unsigned char e2, short a, int b, int c);
@@ -14,7 +14,7 @@ int func_02063e08(WBTWork *work, int aid, int p2) {
     peer = &work->peer[aid];
     mask = (unsigned short)(1 << aid);
     if (peer->state == 2 && peer->command == 2) {
-        a = func_02065970();
+        a = WBT_NumOfRegisteredBlock();
         b = func_02065bc0();
         c = func_02065bd0();
         r = func_02064eac(p2, mask, peer->cmd_counter, (short)a, b, c);

@@ -55,6 +55,7 @@
 #include "Ov007Sprite.h"
 #include "Ov007Work.h"
 #include "Ov007Model.h"
+#include "dExtModel_c.h"
 #include "Ov007Figure.h"
 
 extern "C" {
@@ -76,8 +77,6 @@ extern void *data_ov007_02103348[3];           /* data_ov007_020ccc80[set], load
 extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureIndex], loaded */
 
 extern void func_02044efc(void *bmd);
-extern void func_02045ef8(void *model, unsigned int value);
-extern void func_02046234(void *model, void *value);
 extern void func_ov007_020b3edc(int idx);
 extern void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020b7708(int idx, void *pos);
@@ -96,8 +95,8 @@ void func_ov007_020b283c(void);
 /* Loads figure figureIndex's model at the given stroke stage and returns
  * its model record: the model file, the two sets of three animation files
  * bound with func_ov007_020bc6b4 and func_ov007_020bc5fc, and the overlay's
- * set bound with func_ov007_020bc658. func_02045ef8 and func_02046234 then
- * set 0x3def and 2 on every material and func_ov007_020bbf98 sets 3 in each
+ * set bound with func_ov007_020bc658. SetAmbient and SetPolygonMode then
+ * set 0x3def and 2 (toon) on every material and func_ov007_020bbf98 sets 3 in each
  * one's low four bits. */
 Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
     void *file;
@@ -121,8 +120,8 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
     func_ov007_020bc6b4(model, data_ov007_02103348, 3);
     func_ov007_020bc5fc(model, data_ov007_02103354, 3);
     func_ov007_020bc658(model, data_ov007_020d7ee8[set], 3);
-    func_02045ef8(model->model, 0x3def);
-    func_02046234(model->model, (void *)2);
+    model->model->SetAmbient(0x3def);
+    model->model->SetPolygonMode(2);
     func_ov007_020bbf98(model, 3);
     return model;
 }

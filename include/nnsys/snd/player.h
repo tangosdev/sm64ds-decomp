@@ -4,9 +4,9 @@
 /*
  * NitroSystem's sequence-player handle and the player it points at, laid
  * out as the Sonic Rush Adventure decomp spells NNS snd_player's types.
- * SoundEngine.cpp's struct E1 is the same object (fader at 0x1c, status
- * at 0x2c, player number at 0x3c, initial volume at 0x40). The record
- * types it nests are opaque here past their size.
+ * SoundEngine.cpp's sixteen players at data_020a50ec are this type (fader
+ * at 0x1c, status at 0x2c, player number at 0x3c, initial volume at 0x40).
+ * The record types it nests are opaque here past their size.
  */
 
 #include "types.h"

@@ -42,13 +42,13 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 s32 Vec3_Dist(const Vector3 *, const Vector3 *);
-void AddVec3(Vector3 *, Vector3 *, Vector3 *);
+void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 u8 DecIfAbove0_Byte(u8 *);
 s32 RandomIntInternal(s32 *);
 void Vec3_Asr(Vector3 *, Vector3 *, int);
-void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
+void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 int *Vec3_LslInPlace(Vector3 *, int);
-int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
+int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
 /* local extern: these five names hold the @NNN count. */
 void d_a_snm_bthPlayLongHold(int handle, unsigned int a, unsigned int b, void *pos, unsigned int c);
 extern u8 gGameMode;
@@ -151,7 +151,7 @@ void SnowmanBreathParticle::UpdatePosition()
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, 0x50000);
     Vector3 offset;
     offset = data_020a0e68.t;
-    AddVec3(&mPos, &offset, &mPos);
+    VEC_Add(&mPos, &offset, &mPos);
 }
 
 void SnowmanBreathParticle::Render()
@@ -211,7 +211,7 @@ int daSnmBth_c::IsPlayerInRange()
     *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mInvModelMat;
 
     Vector3 localPos;
-    MulVec3Mat4x3(&playerPos, &data_020a0e68, &localPos);
+    MTX_MultVec43(&playerPos, &data_020a0e68, &localPos);
     Vec3_LslInPlace(&localPos, 3);
 
     if (localPos.x >= -0xe1000 && localPos.x <= 0xe1000 && localPos.y >= -0x5000 &&
@@ -310,7 +310,7 @@ int daSnmBth_c::Behavior()
                     *idx = *idx % 0x32;
                 } while (b == 0);
             }
-            mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x184, *(Vector3 *)&mCamSpacePosX, 0);
+            mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x184, mCamSpacePos, 0);
         }
     }
 
@@ -338,7 +338,7 @@ int daSnmBth_c::InitResources()
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
-    InvMat4x3(&data_020a0e68, &data_020a0e68);
+    MTX_Inverse43(&data_020a0e68, &data_020a0e68);
     *(Mtx43 *)&mInvModelMat = *(Mtx43 *)&data_020a0e68;
     return 1;
 }

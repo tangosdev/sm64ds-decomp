@@ -1,7 +1,7 @@
 #include "Ov007SpriteBank.h"
 
 extern void *func_ov007_020c3df4(const char *name, int size);
-extern void MultiStore_Int(int val, int *dst, int len);
+extern void MIi_CpuClear32(int val, int *dst, int len);
 
 /* Allocates a sprite bank for `cellCount` cells and `animCount`
  * animations, each table zeroed record by record. */
@@ -16,7 +16,7 @@ Ov007SpriteBank *func_ov007_020c12ac(int cellCount, int animCount) {
         int i;
         for (i = 0; i < cellCount; i++) {
             v1 = 0;
-            MultiStore_Int(v1, (int *)&bank->cells[i], sizeof(Ov007Cell));
+            MIi_CpuClear32(v1, (int *)&bank->cells[i], sizeof(Ov007Cell));
         }
     }
     {
@@ -24,7 +24,7 @@ Ov007SpriteBank *func_ov007_020c12ac(int cellCount, int animCount) {
         int j;
         for (j = 0; j < animCount; j++) {
             v2 = 0;
-            MultiStore_Int(v2, (int *)&bank->anims[j], sizeof(Ov007CellAnim));
+            MIi_CpuClear32(v2, (int *)&bank->anims[j], sizeof(Ov007CellAnim));
         }
     }
     return bank;

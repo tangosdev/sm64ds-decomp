@@ -32,10 +32,9 @@
  *   bl is 0x020383fc, the veneer, not UpdateContinuous at 0x020366b4.
  * - GetFloorResult returns an existing polygon through void *. The local
  *   cast names that borrowed dBgPi and accesses its real surface member.
- * - func_0203568c / func_02035684 (InitState0, State2): store mRadius /
- *   mHeight (p[6] / p[7]). Direct stores on State2 are 0x1a8 -> 0x1a0
- *   (2 words) and drop those bls. Their C definitions take int *, so
- *   the calls cast.
+ * - dBgCh_Actr::SetRadius / SetHeight (InitState0, State2) are out of
+ *   line. Direct stores to mRadius / mHeight on State2 are 0x1a8 -> 0x1a0
+ *   (2 words) and drop those bls.
  * - func_0201267c (State3): Sound::Play(3, id, pos) at 0x0201267c.
  *   Sound::PlayBank3 is the twin at 0x02012664, a different function.
  * - gBgSnmBdyModelFile, gBgSnmBdyStates, gBgSnmBdyReachPoint and
@@ -62,13 +61,10 @@
 #include "dClipper.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Real C++ names. Declared here, not via decl_common.h: that header's
  * other spellings of these symbols collide with this TU. */
-
-namespace cstd {
-int fdiv(int numerator, int denominator);
-}
 
 /* Shared ABI seams. Each is the most complete of the spellings the retired
  * one-function shards carried. */
@@ -78,8 +74,6 @@ int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int shift);
 unsigned short DecIfAbove0_Short(unsigned short *timer);
-void  func_0203568c(int *clsn, int radius);
-void  func_02035684(int *clsn, int height);
 
 
 }
@@ -273,8 +267,8 @@ int daBgSnmBdy_c::InitState0()
     mRadius = FX_Mul(mScaleX, 0x82000);
     mCylinder.radius = mRadius;
     mCylinder.height = mRadius << 1;
-    func_0203568c((int *)&mWithMeshClsn, mRadius);
-    func_02035684((int *)&mWithMeshClsn, mRadius);
+    mWithMeshClsn.SetRadius(mRadius);
+    mWithMeshClsn.SetHeight(mRadius);
     SetRanges(mRadius, mRadius, 0x1000000, 0x1000000);
     mFlags |= 1;
     mStateValue = 0;
@@ -353,8 +347,8 @@ int daBgSnmBdy_c::State2()
         mRadius = FX_Mul(growScale, 0x82000);
         mCylinder.radius = mRadius;
         mCylinder.height = mRadius << 1;
-        func_0203568c((int *)&mWithMeshClsn, mRadius);
-        func_02035684((int *)&mWithMeshClsn, mRadius);
+        mWithMeshClsn.SetRadius(mRadius);
+        mWithMeshClsn.SetHeight(mRadius);
         SetRanges(mRadius, mRadius, 0x1000000, 0x1000000);
     }
     if (AdvancePath() != 0) {
@@ -507,7 +501,7 @@ void daBgSnmBdy_c::UpdateGroundCollision(dBgCh_Actr *mc)
     {
         int alongX = FX_Mul(normal.x, mSpeedX);
         int alongZ = FX_Mul(normal.z, mSpeedZ);
-        mVertSpeed = -(cstd::fdiv(alongX + alongZ, normal.y) + 0x8000);
+        mVertSpeed = -(FX_Div(alongX + alongZ, normal.y) + 0x8000);
     }
 }
 
@@ -551,7 +545,7 @@ int daBgSnmBdy_c::AdvancePath()
 void daBgSnmBdy_c::UpdateRollAngle()
 {
     int circumference = FX_Mul32x64c(mRadius << 1, FX64C_PI);
-    Fix12i turns = cstd::fdiv(mHorzSpeed, circumference);
+    Fix12i turns = FX_Div(mHorzSpeed, circumference);
     mAngleX = (short)(mAngleX + FX_Mul(turns, ANGLE_FULL_TURN));
 }
 

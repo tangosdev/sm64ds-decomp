@@ -18,18 +18,17 @@
  * 0x20 / 0x21 against the calling thread.
  */
 #include "types.h"
-#include "IRQ.h"
-#include "CP15.h"
+#include "nitro/os/system.h"
+#include "nitro/os/cache.h"
 #include "nitro/card/card_common.h"
 #include "nitro/os/spinLock.h"
 
 extern "C" {
 
-/* local extern: no header declares these yet. Their SDK names: Crash is
- * OS_Terminate and MultiStore32Bytes MIi_CpuClearFast. */
-extern void Crash(void);
+/* local extern: no header declares this yet. */
+extern void OS_Terminate(void);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
-extern void MultiStore32Bytes(unsigned val, void *dst, int len);
+extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 
 #define OS_LOCK_ID_ERROR (-3)
 #define CARD_TARGET_NONE 0
@@ -69,10 +68,10 @@ void CARDi_SetTask(void (*task)(CARDiCommon *)) {
 
 void CARDi_LockResource(int owner, int target) {
     CARDiCommon *const p = &cardi_common;
-    unsigned int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     if (p->lock_owner == owner) {
         if (p->lock_target != target)
-            Crash();
+            OS_Terminate();
     } else {
         while (p->lock_owner != OS_LOCK_ID_ERROR)
             OS_SleepThread(&p->lock_queue);
@@ -81,17 +80,17 @@ void CARDi_LockResource(int owner, int target) {
     }
     ++p->lock_ref;
     p->cmd->result = CARD_RESULT_SUCCESS;
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 void CARDi_UnlockResource(int owner, int target) {
     CARDiCommon *p = &cardi_common;
-    unsigned int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     if (p->lock_owner != owner || !p->lock_ref) {
-        Crash();
+        OS_Terminate();
     } else {
         if (p->lock_target != target)
-            Crash();
+            OS_Terminate();
         if (!--p->lock_ref) {
             p->lock_owner = OS_LOCK_ID_ERROR;
             p->lock_target = CARD_TARGET_NONE;
@@ -99,7 +98,7 @@ void CARDi_UnlockResource(int owner, int target) {
         }
     }
     p->cmd->result = CARD_RESULT_SUCCESS;
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 void CARDi_InitCommon(void) {
@@ -111,9 +110,9 @@ void CARDi_InitCommon(void) {
     {
         /* MI_CpuFillFast's value: the ROM passes it through a stack slot. */
         volatile u32 fill = 0;
-        MultiStore32Bytes(fill, &cardi_arg, sizeof(cardi_arg));
+        MIi_CpuClearFast(fill, &cardi_arg, sizeof(cardi_arg));
     }
-    CP15::FlushAndInvalidateDataCache((unsigned int)&cardi_arg, sizeof(cardi_arg));
+    DC_FlushRange(&cardi_arg, sizeof(cardi_arg));
     p->lock_queue = 0;
     p->busy_q = 0;
     p->priority = CARD_THREAD_PRIORITY_DEFAULT;
@@ -124,10 +123,10 @@ void CARDi_InitCommon(void) {
 
 int CARDi_WaitAsync(void) {
     CARDiCommon *const p = &cardi_common;
-    unsigned int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     while (p->flag & CARD_STAT_BUSY)
         OS_SleepThread(&p->busy_q);
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     return p->cmd->result == CARD_RESULT_SUCCESS;
 }
 

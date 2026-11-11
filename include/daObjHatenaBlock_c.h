@@ -32,8 +32,8 @@ struct daObjHatenaBlock_c : dBgActor_c {
     s32 mState;                       /* 0x3e8 -- State */
     /* Bounce phase: starts at 0x4000 (a quarter turn) when the bounce begins
        and grows by 0x1000 (1/16 turn) per frame; its sine, from
-       data_02082214, drives the squash scale and mBounceYOffs. */
-    u16 mBounceAng;                   /* 0x3ec */
+       FX_SinCosTable_, drives the squash scale and mBounceYOffs. */
+    s16 mBounceAng; /* 0x3ec */
     /* Frame countdown, ticked by DecIfAbove0_Short: 7 when the bounce begins
        (EnterBouncing); 300 (0x12c) when the block pops
        (EnterPopped), where it is the delay before the block can come

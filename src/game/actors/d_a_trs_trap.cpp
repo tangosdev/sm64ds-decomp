@@ -12,8 +12,8 @@
  * This file is the whole linker unit 0x0211c600..0x0211d270, 16 functions:
  *   0x0211c600  D1, D0 (the out-of-line destructor, the key function)
  *   0x0211c684  UpdateModelTransform  model matrix from position and angles
- *   0x0211c6f8  func_ov063_0211c6f8   collision matrix, and the mesh Transform
- *   0x0211c770  func_ov063_0211c770   staircase settle step (per-frame table)
+ *   0x0211c6f8  UpdateClsnMatrix      collision matrix, and the mesh Transform
+ *   0x0211c770  SettleStaircase       staircase settle step (per-frame table)
  *   0x0211c7b0  UpdateMerryGoRound    merry-go-round state  (mIndex 3)
  *   0x0211c82c  UpdateOccupiedFlag    merry-go-round occupancy
  *   0x0211c89c  UpdateBookshelf       bookshelf state       (mIndex 2)
@@ -131,8 +131,6 @@ struct TrsTrapCollisionFilePtr : SharedFilePtr {
  * The one file-scope extern "C" region.
  * ------------------------------------------------------------------------ */
 extern "C" {
-/* This TU's collision refresh; the mesh callback lives in the factory unit. */
-void func_ov063_0211c6f8(daTrsTrap_c *c);
 /* dBgW callback-word stores (see above). */
 /* dBgW_KcMbg::SetFile, mangled (wall 6az, see above). Spelled exactly as the
    free definition declares it; only the TU-local linkage differs. */
@@ -177,19 +175,19 @@ void daTrsTrap_c::UpdateModelTransform() {
 
 /* The collision matrix mClsnMat from position and angles, then the moving
    mesh follows it. Called from InitResources and Behavior. */
-extern "C" void func_ov063_0211c6f8(daTrsTrap_c *c) {
-    Matrix4x3_FromTranslation(&data_020a0e68, c->mPosX, c->mPosY, c->mPosZ);
-    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
-    c->mClsnMat = data_020a0e68;
-    c->mMovingMeshCollider.Transform(c->mClsnMat, c->mAngleY);
+void daTrsTrap_c::UpdateClsnMatrix() {
+    Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
+    Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
+    mClsnMat = data_020a0e68;
+    mMovingMeshCollider.Transform(mClsnMat, mAngleY);
 }
 
 /* Staircase settle: frames 0..3 nudge mPosY by the signed table entry
    (<< 12); any later frame reports done. */
-extern "C" int func_ov063_0211c770(daTrsTrap_c *c, int idx) {
-    if ((unsigned int)idx > 3 || (short)idx < 0)
+int daTrsTrap_c::SettleStaircase(int frame) {
+    if ((unsigned int)frame > 3 || (short)frame < 0)
         return 1;
-    c->mPosY += data_ov063_0211e26c[idx] << 12;
+    mPosY += data_ov063_0211e26c[frame] << 12;
     return 0;
 }
 
@@ -333,7 +331,7 @@ void daTrsTrap_c::UpdateTiltingTrap() {
 
 /* Staircase rise state. Waits until the master step (or this one, for the
    master) is released; then rises 8 per frame to this step's limit, settles
-   through func_ov063_0211c770, and the last step plays the secret chime. */
+   through SettleStaircase, and the last step plays the secret chime. */
 void daTrsTrap_c::UpdateStaircase() {
     int limit;
     daTrsTrap_c *other;
@@ -369,7 +367,7 @@ void daTrsTrap_c::UpdateStaircase() {
     case 2:
         if (mStateTimer == 0)
             Sound::PlayBank3(0x3d, mCamSpacePos);
-        if (func_ov063_0211c770(this, mStateTimer) != 0)
+        if (SettleStaircase(mStateTimer) != 0)
             mState++;
         return;
     case 3:
@@ -424,7 +422,7 @@ int daTrsTrap_c::Behavior()
         mStateTimer = 0;
     }
     UpdateModelTransform();
-    func_ov063_0211c6f8(this);
+    UpdateClsnMatrix();
     mStandingActor = 0;
     return 1;
 }
@@ -503,7 +501,7 @@ int daTrsTrap_c::InitResources()
                        -1) == 0)
         return 0;
 
-    func_ov063_0211c6f8(this);
+    UpdateClsnMatrix();
 
     {
         int m = mIndex;

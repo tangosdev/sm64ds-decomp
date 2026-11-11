@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -16,7 +16,7 @@ int WM_CheckStateEx(int count, ...)
     r = WMi_CheckInitialized();
     if (r != 0)
         return r;
-    CP15::InvalidateDataCache((unsigned int)data_020a89ac->status, 2);
+    DC_InvalidateRange(data_020a89ac->status, 2);
     target = data_020a89ac->status->state;
     p = (int *)((unsigned int)&count & ~3) + 1;
     r = 3;

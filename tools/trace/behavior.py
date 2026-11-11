@@ -23,7 +23,7 @@ heavy breakpoint churn, so capture a few functions per session and restart
 melonDS between sessions (cases are flushed per-function as they complete).
 
 Usage (melonDS running with a ROM/savestate loaded, stub on 3333):
-  python tools/trace/behavior.py --names NormalizeVec3,MulMat4x3Mat4x3 \
+  python tools/trace/behavior.py --names VEC_Normalize,MTX_Concat43 \
       --cases 20 --out behavior/retail
 """
 import argparse

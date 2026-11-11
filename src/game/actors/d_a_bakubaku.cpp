@@ -104,7 +104,7 @@ void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void *m, int angY);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
-void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 
 /* local extern: retain the matched scalar ABI; native Fix12<int> calls remain pending. */
 /* Parameter names keep this TU's @NNN. */
@@ -303,7 +303,7 @@ int daBakubaku_c::ExecuteWander() {
     out.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MTX_MultVec43(&in, &data_020a0e68, &out);
     mVertSpeed = out.y;
     if (FindChaseTarget() == 1) {
         SetState(&data_ov032_02113aac);
@@ -425,7 +425,7 @@ int daBakubaku_c::ExecuteDive() {
             rotatedOffset.z = 0;
             forwardOffset.z = 0xa0000;
             Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-            MulVec3Mat4x3(&forwardOffset, &data_020a0e68, &rotatedOffset);
+            MTX_MultVec43(&forwardOffset, &data_020a0e68, &rotatedOffset);
             splashPosition.x += rotatedOffset.x;
             splashPosition.z += rotatedOffset.z;
             Particle::System::NewFitWaterRaised(0, kPtclMegaWaterEntrySurface, splashPosition.x,
@@ -457,7 +457,7 @@ int daBakubaku_c::ExecuteDive() {
         out2.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-        MulVec3Mat4x3(&in2, &data_020a0e68, &out2);
+        MTX_MultVec43(&in2, &data_020a0e68, &out2);
         mVertSpeed = out2.y;
     }
     ApproachLinear(mAngTarget, speed, 0x200);
@@ -520,7 +520,7 @@ int daBakubaku_c::ExecuteSurface() {
         out.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-        MulVec3Mat4x3(&in, &data_020a0e68, &out);
+        MTX_MultVec43(&in, &data_020a0e68, &out);
         mVertSpeed = out.y;
     }
 

@@ -4,31 +4,27 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x78, from operator new(0x78) in dScMgSmartball_c::SpawnObjects. Base ends at 0x34, so
- * this class adds 0x44 bytes.
+ * SIZE 0x78, from operator new(0x78) in dScMgSmartball_c::SpawnObjects. The
+ * base's data ends at 0x31, so this class adds 0x47 bytes, starting with
+ * mAngle at 0x32 in the base's tail padding.
  *
- * ONLY TWO OF THOSE BYTES ARE TOUCHED BY THIS CLASS'S OWN FOUR FUNCTIONS
- * (the constructor, SaveSnapshot, Update, RestoreInitial): an s16 "ease
- * toward target" pair at 0x34/0x36. SaveSnapshot steps 0x36 by +-8 toward
+ * SaveSnapshot and RestoreInitial drive an s16 "ease toward target" pair at
+ * 0x34/0x36. SaveSnapshot steps 0x36 by +-8 toward
  * the target at 0x34 (clamping once it crosses), then adds the stepped
- * value onto the BASE's field at 0x32 -- so 0x36 is a rotation speed and
+ * value onto mAngle at 0x32 -- so 0x36 is a rotation speed and
  * 0x32 accumulates it into a rotation angle.
  * RestoreInitial zeroes 0x36, sets 0x34 to 0x40 (the default target speed),
  * and (through the base call) zeroes mCurrent. Update never touches 0x34+
- * at all -- it only reads the base's angle (0x32) and position
+ * at all -- it only reads mAngle and the position
  * (mCurrent0/mCurrent1) to look up a rotation matrix and draw two sprites.
  *
- * 0x32 IS NOT DECLARED HERE, same as every sibling that reaches it: it
- * belongs to cMgSmartball_object_c (unk_032), reached by a per-reader cast
- * because 0x31-0x33 is a three-byte region with no single type, read three
- * incompatible ways (see cMgSmartball_object_c.h). This class reads it both
- * ways itself: RebuildVerts and SaveSnapshot signed, Update unsigned -- it
- * indexes a sine table with `>> 4` (lsr, not asr) on that field.
+ * Update reads mAngle unsigned: it indexes a sine table with `>> 4` (lsr,
+ * not asr).
  *
  * THE TAIL FROM 0x38 TO 0x77 IS mVertices[8], eight (x, y) pairs. Both
  * readers are in d_s_mg_smartball.cpp: RebuildVerts (called from SaveSnapshot
- * and RestoreInitial) seeds the eight blade-tip offsets, rotates each by the
- * base's angle at 0x32 and adds mCurrent0/mCurrent1; HitTest reads them back
+ * and RestoreInitial) seeds the eight blade-tip offsets, rotates each by
+ * mAngle and adds mCurrent0/mCurrent1; HitTest reads them back
  * as the corners of four triangles -- {0,1,2}, {3,1,2}, {4,5,6}, {7,5,6} --
  * for its PointInTriangle tests. The wing models its own vertex ring the
  * same way (cMgSmartball_wing_c::mVertices).
@@ -57,12 +53,13 @@ struct cMgSmartball_propeller_c : cMgSmartball_object_c {
     ~cMgSmartball_propeller_c() {}
 
     /* Recovered helpers: HitTest runs the ball-vs-blade fan collision (the
-       0x38..0x77 tip ring); RebuildVerts rewrites that ring from the base's
-       0x32 angle and mCurrent position. */
+       0x38..0x77 tip ring); RebuildVerts rewrites that ring from mAngle and
+       the mCurrent position. */
     int  HitTest(int *pos);
     void RebuildVerts();
-    s16 GetAngle() const; /* the base's 0x32 angle, signed; inline in the .cpp */
 
+    s16 mAngle;           /* 0x032 -- blade angle; SaveSnapshot adds mSpinSpeed
+                              onto it every frame */
     s16 mSpinSpeedTarget; /* 0x034 -- the rotation speed mSpinSpeed is eased
                               toward. RestoreInitial sets it to 0x40 and the
                               scene's KickGate negates it, reversing the
@@ -70,8 +67,8 @@ struct cMgSmartball_propeller_c : cMgSmartball_object_c {
                               proves. */
     s16 mSpinSpeed;       /* 0x036 -- the live rotation speed. SaveSnapshot
                               steps it by +-8 toward mSpinSpeedTarget, clamping
-                              on overshoot, and then ADDS it onto the base's
-                              angle at 0x32 every frame -- which is what makes
+                              on overshoot, and then ADDS it onto mAngle
+                              every frame -- which is what makes
                               it an angular speed rather than an angle.
                               RestoreInitial zeroes it. */
     struct CollisionVertex {

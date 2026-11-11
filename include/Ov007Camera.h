@@ -11,8 +11,8 @@
  *
  * - func_ov007_020bffb8 places the eye `distance` from the target at
  *   elevation/azimuth.
- * - func_ov007_020b2160 passes eye/up/target to G3i::LookAt_ (into
- *   viewMatrix), and fovy/aspect/nearZ/farZ/scaleW to G3i::PerspectiveW_
+ * - func_ov007_020b2160 passes eye/up/target to G3i_LookAt_ (into
+ *   viewMatrix), and fovy/aspect/nearZ/farZ/scaleW to G3i_PerspectiveW_
  *   (into projMatrix).
  * - func_ov007_020bff38 steps the three tweens while their `tweening` bits
  *   are set.

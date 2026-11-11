@@ -43,10 +43,11 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 #include "common.h"
 #include "SharedFilePtr.h"
 #include "PlayerInput.h"
-#include "G3i.h"
+#include "nitro/gx/g3_util.h"
 #include "dClipper.h"
 #include "MascotWalker.h"
 #include "Presenter.h"
@@ -56,8 +57,7 @@
 #include "BMD_File.h"
 #include "dExtAnmTexPat_c.h"
 #include "dExtAnmTexSRT_c.h"
-#include "cstd.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
@@ -66,6 +66,7 @@
 #include "LevelRng.h"
 #include "MgCamera.h"
 #include "math/Quaternion.h"
+#include "nitro/fx/fx_cp.h"
 /* Typed views of the records the helpers the scenes call receive as char* or
    int*. Kept as casts rather than parameters: the scene translation units
    declare those helpers with the flat pointer type, and C++ function
@@ -119,13 +120,12 @@ struct WalkPath {
 };
 
 extern "C" {
-/* local extern: no shared math header declares MulVec3Mat4x3 or MulVec3Mat3x3. */
-void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
-void MulVec3Mat3x3(void *, void *, void *);
-// local extern: no shared header declares Matrix4x3_FromQuaternion yet.
+/* local extern: no shared math header declares these; the other math
+   helpers come from math/CalcLib.h and math/MtxStack.h. */
+void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+void MTX_MultVec33(void *, void *, void *);
 void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
-/* local extern: no shared header declares these five vector helpers yet. */
-int DotVec3(const Vector3 *, const Vector3 *);
+int VEC_DotProduct(const Vector3 *, const Vector3 *);
 int NormalizeVec3IfNonZero(Vector3 *);
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 short Vec3_VertAngle(const Vector3 *, const Vector3 *);
@@ -406,12 +406,11 @@ extern "C" void FlowerFace_Draw(FlowerFace *face) {
 
     light.x = 0;
     light.y = 0;
-    light.z = 0xfffff008;
+    light.z = -0xff8;
     func_0203cd80(&light, 0);
     func_0203ccd4(&light, 0x600);
 
-    REG_LIGHT_VECTOR = (((short)light.x >> 3) & 0x3ff) | ((((short)light.y >> 3) & 0x3ff) << 10) |
-                       ((((short)light.z >> 3) & 0x3ff) << 20);
+    G3_LightVector(GX_LIGHTID_0, light.x, light.y, light.z);
 
     func_02016a14(&face->mModel, 0x2bff);
     func_02016a04(&face->mModel, 0x1211);
@@ -616,9 +615,9 @@ void FallingPetal_Update(FallingPetal *petal) {
         petal->mActive = 0;
         return;
     }
-    AddVec3(&petal->mPos, &petal->mVel, &petal->mPos);
+    VEC_Add(&petal->mPos, &petal->mVel, &petal->mPos);
     petal->mAccel.y = -0x40;
-    AddVec3(&petal->mVel, &petal->mAccel, &petal->mVel);
+    VEC_Add(&petal->mVel, &petal->mAccel, &petal->mVel);
     phase = ((petal->mPos.y >> 1) << 16) >> 20;
     wave = FX_SinIdx(phase);
     sway.x = wave;
@@ -626,10 +625,10 @@ void FallingPetal_Update(FallingPetal *petal) {
     sway.z = wave;
     Vec3_MulScalarInPlace(&sway, 0x400);
     Vec3_Add(&flow, &petal->mVel, &sway);
-    dot = DotVec3(&petal->mAxis, &flow);
+    dot = VEC_DotProduct(&petal->mAxis, &flow);
     Vec3_MulScalar(&drag, &petal->mAxis, dot);
     Vec3_MulScalarInPlace(&drag, 0x300);
-    SubVec3(&petal->mVel, &drag, &petal->mVel);
+    VEC_Subtract(&petal->mVel, &drag, &petal->mVel);
     dir.x = flow.x;
     dir.y = flow.y;
     dir.z = flow.z;
@@ -659,9 +658,9 @@ void FallingPetal_UpdateMatrix(char *c) {
     FallingPetal *petal = PETAL(c);
     Matrix4x3 rot;
     Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(petal->mRot), &rot);
-    MulVec3Mat3x3(&sPetalUpAxis, &rot, &petal->mAxis);
+    MTX_MultVec33(&sPetalUpAxis, &rot, &petal->mAxis);
     Matrix4x3_FromTranslation(&data_020a0e68, petal->mPos.x, petal->mPos.y, petal->mPos.z);
-    MulMat4x3Mat4x3(&rot, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&rot, &data_020a0e68, &data_020a0e68);
     petal->mModel.mat4x3 = data_020a0e68;
 }
 }
@@ -850,25 +849,21 @@ extern "C" void Presenter_Draw(Presenter *presenter) {
 
     keyLight[0] = 0;
     keyLight[1] = 0;
-    keyLight[2] = 0xfffff008;
+    keyLight[2] = -0xff8;
     fillLight[0] = 0;
     fillLight[1] = 0;
-    fillLight[2] = 0xfffff008;
+    fillLight[2] = -0xff8;
     func_02016a04(&presenter->mFace, 0x3d6d);
     func_0203cd80(keyLight, -0x2000);
     func_0203ccd4(keyLight, 0x2000);
     func_0203cd80(fillLight, 0x4200);
     func_0203ccd4(fillLight, 0x7000);
 
-    REG_LIGHT_COLOR = 0x7fff;
-    REG_LIGHT_VECTOR = (((short)keyLight[0] >> 3) & 0x3ff) |
-                       ((((short)keyLight[1] >> 3) & 0x3ff) << 10) |
-                       ((((short)keyLight[2] >> 3) & 0x3ff) << 20);
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    G3_LightVector(GX_LIGHTID_0, keyLight[0], keyLight[1], keyLight[2]);
     components = (char *)&presenter->mFace.data;
-    REG_LIGHT_COLOR = 0x4000294b;
-    REG_LIGHT_VECTOR = (((short)fillLight[0] >> 3) & 0x3ff) |
-                       ((((short)fillLight[1] >> 3) & 0x3ff) << 10) |
-                       ((((short)fillLight[2] >> 3) & 0x3ff) << 20) | 0x40000000;
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(11, 10, 10));
+    G3_LightVector(GX_LIGHTID_1, fillLight[0], fillLight[1], fillLight[2]);
 
     /* The two tex animations scroll materials 5 and 6 by +0x14/+0x18, which
        BMD_Material leaves in its unnamed pad_0c (the u offsets are pad_0c[8]).
@@ -1356,23 +1351,18 @@ extern "C" void Dealer_Draw(void *self) {
 
     keyLight.x = 0;
     keyLight.y = 0;
-    keyLight.z = 0xfffff008;
+    keyLight.z = -0xff8;
     spinLight.x = 0;
     spinLight.y = 0;
-    spinLight.z = 0xfffff008;
+    spinLight.z = -0xff8;
     func_0203cd80(&keyLight, -0x1000);
     func_0203ccd4(&keyLight, 0x1000);
 
     angle = dealer->mLightAngle;
     func_0203ccd4(&spinLight, angle);
 
-    REG_LIGHT_VECTOR = (((short)keyLight.x >> 3) & 0x3ff) |
-                       ((((short)keyLight.y >> 3) & 0x3ff) << 10) |
-                       ((((short)keyLight.z >> 3) & 0x3ff) << 20);
-
-    REG_LIGHT_VECTOR = (((short)spinLight.x >> 3) & 0x3ff) |
-                       ((((short)spinLight.y >> 3) & 0x3ff) << 10) |
-                       ((((short)spinLight.z >> 3) & 0x3ff) << 20) | 0x40000000;
+    G3_LightVector(GX_LIGHTID_0, keyLight.x, keyLight.y, keyLight.z);
+    G3_LightVector(GX_LIGHTID_1, spinLight.x, spinLight.y, spinLight.z);
 
     func_02016a14(&dealer->mModel, 0x7fff);
     func_02016a04(&dealer->mModel, 0x4210);
@@ -1870,7 +1860,7 @@ extern "C" void MascotWalker_UpdateMatrix(MascotWalker *walker) {
     data_020a0e68 = walker->mModel.data.transforms[6];
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, walker->mHeadAngle);
     walker->mModel.data.transforms[6] = data_020a0e68;
-    Matrix4x3_FromTranslation((Matrix4x3 *)&data_020a0e68, walker->mPos.x, walker->mPos.y,
+    Matrix4x3_FromTranslation(&data_020a0e68, walker->mPos.x, walker->mPos.y,
                               walker->mPos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, walker->mAngleY);
     walker->mModel.mat4x3 = data_020a0e68;
@@ -2028,7 +2018,7 @@ void Camera_UpdateMatrices(MgCamera *camera) {
     up.y = 0x1000;
     up.z = 0;
 
-    SubVec3((Vector3 *)&camera->mLookAt, (Vector3 *)&camera->mPos, &forward);
+    VEC_Subtract((Vector3 *)&camera->mLookAt, (Vector3 *)&camera->mPos, &forward);
     if (NormalizeVec3IfNonZero(&forward)) {
         func_0203cebc(&scratch0, &right, &forward, &up);
         if (NormalizeVec3IfNonZero(&right)) {
@@ -2040,11 +2030,11 @@ void Camera_UpdateMatrices(MgCamera *camera) {
         }
     }
 
-    G3i::PerspectiveW_(FX_SinIdx(camera->mFovAngle >> 4), FX_CosIdx(camera->mFovAngle >> 4), 0x1555,
-                       0x1000, 0x1388000, 0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
+    G3i_PerspectiveW_(FX_SinIdx(camera->mFovAngle >> 4), FX_CosIdx(camera->mFovAngle >> 4), 0x1555,
+                      0x1000, 0x1388000, 0x1000, 1, (Matrix4x3 *)camera->mProjMtx);
 
-    G3i::LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
-                 (Matrix4x3 *)&camera->mViewMtx);
+    G3i_LookAt_((Vector3 *)&camera->mPos, &up, (Vector3 *)&camera->mLookAt, true,
+                (Matrix4x3 *)&camera->mViewMtx);
 
     CopyToViewMat((Matrix4x3 *)&camera->mViewMtx);
 
@@ -2056,15 +2046,15 @@ extern "C" {
 
 void Camera_ProjectToScreen(MgCamera *camera, void *pos, int *screenX, int *screenY) {
     int view[3];
-    MulVec3Mat4x3((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
+    MTX_MultVec43((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
     int fovIdx = camera->mFovAngle >> 4;
-    int tanFov = cstd::fdiv(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
+    int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
     int height = FX_MUL(tanFov, -view[2]);
-    int fracY = cstd::fdiv(view[1], height);
+    int fracY = FX_Div(view[1], height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screenY[0] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = cstd::fdiv(view[0], width);
+    int fracX = FX_Div(view[0], width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screenX[0] = (pixelX + 0x7f800) >> 0xc;
 }
@@ -2074,15 +2064,15 @@ extern "C" {
 
 void Camera_ProjectToScreen16(MgCamera *camera, void *pos, short *screen) {
     int view[3];
-    MulVec3Mat4x3((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
+    MTX_MultVec43((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
     int fovIdx = camera->mFovAngle >> 4;
-    int tanFov = cstd::fdiv(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
+    int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
     int height = FX_MUL(tanFov, -view[2]);
-    int fracY = cstd::fdiv(view[1], height);
+    int fracY = FX_Div(view[1], height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screen[1] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = cstd::fdiv(view[0], width);
+    int fracX = FX_Div(view[0], width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screen[0] = (pixelX + 0x7f800) >> 0xc;
 }

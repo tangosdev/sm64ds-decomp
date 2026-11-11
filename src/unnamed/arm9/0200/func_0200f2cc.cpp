@@ -1,5 +1,7 @@
 //cpp
 #include "types.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
 #include "GX.h"
 #include "nitro/hw/registers.h"
 
@@ -13,19 +15,19 @@ extern "C" {
 void func_0200f2cc(void)
 {
     GX::DisableAllBanks();
-    GX::SetBankForTex(3);
-    GX::SetBankForTexPltt(0x10);
-    GX::SetBankForBG(4);
-    GX::SetBankForOBJ(0x60);
-    GX::SetBankForSubBG(0x180);
-    GX::SetBankForSubOBJ(8);
+    GX_SetBankForTex(3);
+    GX_SetBankForTexPltt(0x10);
+    GX_SetBankForBG(4);
+    GX_SetBankForOBJ(0x60);
+    GX_SetBankForSubBG(0x180);
+    GX_SetBankForSubOBJ(8);
 
     /* Main engine character and screen base offsets to 0. */
     REG_DISPCNT &= ~0x7000000;
     REG_DISPCNT &= ~0x38000000;
     /* Main engine on the top screen. */
     REG_POWCNT1 |= 0x8000;
-    GX::SetGraphicsMode(1, 0, 1);
+    GX_SetGraphicsMode(1, 0, 1);
 
     /* OBJ characters 2D-mapped (bit 4 and the 1D boundary bits 20-21 clear). */
     REG_DISPCNT &= 0xffcfffef;
@@ -33,7 +35,7 @@ void func_0200f2cc(void)
     REG_BG3CNT &= ~0x40;
     REG_BG2CNT = (u16)((REG_BG2CNT & 0x43) | 0xc108);
     REG_BG2CNT &= ~0x40;
-    GXS::SetGraphicsMode(0);
+    GXS_SetGraphicsMode(0);
 
     REG_DISPCNT_SUB &= 0xffcfffef;
     REG_DB_BG0CNT = (u16)((REG_DB_BG0CNT & 0x43) | 4);
