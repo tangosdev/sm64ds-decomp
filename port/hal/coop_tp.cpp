@@ -23,6 +23,9 @@ extern unsigned char data_0209f294[];     // star select
 extern unsigned char data_0209f2c4[];     // pause menu
 extern unsigned char data_0209b454[];     // fade / scene change flags
 extern unsigned char data_0209fc48[];     // cutscene
+extern signed char data_02092118;      // saved sublevel for the no-return chain
+extern signed char data_0209211c;      // castle sublevel to come back to
+void LoadLevel(unsigned level, unsigned entrance, unsigned star, unsigned unk, unsigned retEntrance);
 extern unsigned char data_02092110[];     // pending level change, <0 = none
 extern unsigned char data_0209f22c[];     // hold timer
 void LoadLevelNoReturn(unsigned level, unsigned entrance, unsigned star, unsigned unk);
@@ -125,6 +128,28 @@ void seat_name(int seat, char *out, int cap) {
     std::snprintf(out, (size_t)cap, "Player %d", seat + 1);
 }
 
+// ---- course -> castle painting table ---------------------------------------
+// Read from the ROM's castle sublevels (1 grounds, 2 1F, 3 basement, 4 2F, 5 3F): every class 349 exit object
+// whose return entrance is not 0xff is a painting or door into a course. param1 = dest << 24 | destEntrance << 16
+// | retEntrance << 8. Sub-areas of a course (a later sublevel reached from inside it) come back through their
+// parent course's painting. Courses not listed (the cloud, Bowser fights not entered by a castle door) keep the
+// old "no return" load.
+struct CourseDoor { signed char course, castle, ret; };
+const CourseDoor kDoors[] = {
+    // castle 1F (2)
+    {6, 2, 8}, {8, 2, 9}, {10, 2, 6}, {7, 2, 7}, {35, 2, 10}, {29, 2, 14}, {30, 2, 13},
+    // grounds (1)
+    {32, 1, 11},
+    // basement (3)
+    {42, 3, 6},
+    // 2F (4)
+    {14, 4, 4}, {16, 4, 6}, {13, 4, 7}, {18, 4, 8}, {37, 4, 9},
+    // 3F (5)
+    {24, 5, 7}, {21, 5, 4}, {22, 5, 5}, {19, 5, 6}, {25, 5, 7}, {27, 5, 8}, {39, 5, 9}, {28, 5, 10}, {34, 5, 12}, {48, 5, 11},
+    // sub-areas, through the parent course's painting
+    {9, 2, 9}, {11, 2, 6}, {15, 4, 4}, {17, 4, 6}, {20, 5, 6}, {23, 5, 5}, {26, 5, 7}, {33, 4, 7},
+};
+
 // Why this console cannot leave now; null = it can.
 const char *my_gate() {
     if (!my_body()) return "nobody";
@@ -185,7 +210,19 @@ void try_tp(int seat, unsigned now) {
     g.tp_wall = wall_ms(); g.tp_level = p.level; g.tp_act = p.act;
     // Landing: the level's own START (entrance 0), as entering the course from its painting. The friend's
     // position is never read here: only their level and act.
-    LoadLevelNoReturn((unsigned)p.level, 0, (unsigned)p.act, 0);
+    int castle = 0, ret = 0;
+    static const bool old_way = std::getenv("SM64DS_COOP_TP_NORET") != nullptr;   // proof knob: the pre-fix load
+    if (!old_way && coop_castle_entrance_for_course(p.level, &castle, &ret)) {
+        // Entered like the painting does: the castle sublevel and the painting's entrance are recorded, so a
+        // star exit, Exit Course or death puts this player back at that painting.
+        LoadLevel((unsigned)p.level, 0, (unsigned)p.act, 0, (unsigned)ret);
+        data_0209211c = (signed char)castle;
+        data_02092118 = -1;
+        if (g.log) std::fprintf(stderr, "[cotp] return set: course %d -> castle sublevel %d entrance %d\n", p.level, castle, ret);
+    } else {
+        LoadLevelNoReturn((unsigned)p.level, 0, (unsigned)p.act, 0);
+        if (g.log) std::fprintf(stderr, "[cotp] no painting known for course %d: no-return load\n", p.level);
+    }
     ++g.st.warps;
     std::snprintf(t, sizeof t, "Going to %s", nm);
     say(t);
@@ -270,6 +307,16 @@ struct Reg {
 }  // namespace
 
 CoopTpStats coop_tp_stats() { return g.st; }
+
+bool coop_castle_entrance_for_course(int course, int *castle_sublevel, int *return_entrance) {
+    for (const CourseDoor &d : kDoors)
+        if (d.course == course) {
+            if (castle_sublevel) *castle_sublevel = d.castle;
+            if (return_entrance) *return_entrance = d.ret;
+            return true;
+        }
+    return false;
+}
 bool coop_tp_enabled() { return on_now(); }
 
 }  // namespace port
