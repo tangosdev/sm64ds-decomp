@@ -21,7 +21,7 @@
  * OS_CONTEXT_* and OS_THREADINFO_OFFSET_* (nitro/os/thread.h,
  * nitro/os/context.h).
  *
- * leftovers: data_02099fe4, data_023c0000 and data_020a6134 belong to other
+ * leftovers: data_02099fe4 and data_020a6134 belong to other
  * files and are not claimed here.
  */
 #include "nitro/os/interrupt.h"
@@ -30,7 +30,7 @@
 
 extern "C" {
 extern OSIrqFunction data_02099fe4[]; /* one handler per IE bit */
-extern short data_023c0000[];        /* DTCM: interrupts threads wait on */
+extern OSThreadQueue OSi_IrqThreadQueue; /* in DTCM: threads waiting on an interrupt */
 void func_01ffd9d4(void);
 }
 
@@ -65,7 +65,7 @@ extern "C" {
 // OS_IrqHandler_ThreadSwitch: wake waiters, then switch threads if asked.
 asm void func_01ffd9d4(void)
 {
-    ldr ip, =data_023c0000
+    ldr ip, =OSi_IrqThreadQueue
     ldrh r3, [ip]
     mov r0, #0
     cmp r3, #0

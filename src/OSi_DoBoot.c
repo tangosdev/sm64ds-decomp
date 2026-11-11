@@ -31,20 +31,24 @@
 //
 // 0x04000208 is REG_IME; storing 0x04000000 there clears bit 0, i.e. interrupts off.
 // The I/O base doubles as both the value and the store's base register.
-// data_023c0000 is the DTCM block src/engine/os/OS_Interrupt.cpp (OS_InitIrqTable) also
-// writes; +0x3ffc is its last word, and the same pool entry is reloaded as the
-// register-image pointer at the end.
+// OSi_HW_DTCM is the SDK's own spelling of the DTCM base in OS_reset.c. The word it
+// clears, 0x3fc0 + HW_DTCM_SYSRV_OFS_INTR_VECTOR, is the IRQ vector in the system
+// reserve. The same pool entry is reloaded as the register-image pointer at the end,
+// where the later SDK loads HW_PXI_SIGNAL_PARAM_ARM9 instead.
 
-extern short data_023c0000[];
+#include "nitro/hw/mmap_tcm.h"
+
+#define OSi_HW_DTCM SDK_AUTOLOAD_DTCM_START
+
 extern void func_02059d98(void *p, unsigned int n);
 
 asm void OSi_DoBoot(void)
 {
     mov ip, #0x4000000
     str ip, [ip, #0x208]
-    ldr r1, =data_023c0000
+    ldr r1, =OSi_HW_DTCM
     add r1, r1, #0x3fc0
-    add r1, r1, #0x3c
+    add r1, r1, #HW_DTCM_SYSRV_OFS_INTR_VECTOR
     mov r0, #0
     str r0, [r1]
     ldr r1, =0x04000180
@@ -76,7 +80,7 @@ _wait_release:
     ldr r3, =0x027ffe00
     ldr ip, [r3, #0x24]
     mov lr, ip
-    ldr r11, =data_023c0000
+    ldr r11, =OSi_HW_DTCM
     ldmia r11, {r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10}
     mov r11, #0
     bx ip

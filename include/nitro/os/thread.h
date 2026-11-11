@@ -21,6 +21,9 @@ extern "C" {
 
 #define OS_THREAD_MAX_NUM 16
 
+/* A set of waiting threads, one bit per thread id. */
+typedef u16 OSThreadQueue;
+
 /* OSThread::state */
 #define OS_THREAD_STATE_WAITING 0
 #define OS_THREAD_STATE_READY 1
@@ -98,8 +101,8 @@ void OS_CreateThread(OSThread *, void (*)(void *), void *, void *, u32, u32);
 void OS_ExitThread(void);
 void OS_JoinThread(OSThread *);
 int OS_IsThreadTerminated(const OSThread *);
-void OS_SleepThread(u16 *);
-void OS_WakeupThread(u16 *);
+void OS_SleepThread(OSThreadQueue *);
+void OS_WakeupThread(OSThreadQueue *);
 void OS_WakeupThreadDirect(OSThread *);
 OSThread *OS_SelectThread(void);
 void OS_RescheduleThread(void);

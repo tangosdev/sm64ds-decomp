@@ -21,6 +21,7 @@
  */
 
 #include "nitro/os/interrupt.h"
+#include "nitro/os/thread.h"
 #include "nitro/hw/registers.h"
 
 #define REG_IME (*(volatile u16 *)0x04000208)
@@ -31,7 +32,7 @@ extern "C" {
 extern OSIrqFunction data_02099fe4[];
 extern OSIrqCallbackInfo data_020a60c4[];
 extern OSIrqCallbackInfo data_020a60f4[];
-extern short data_023c0000[];
+extern OSThreadQueue OSi_IrqThreadQueue; /* os_irqHandler.c, in DTCM */
 
 // local extern: the SDK's (u32, void (*)(void *), void *) parameters are not
 // adopted yet; their callers in MI_Dma, MI_DmaGXCommand, OS_Alarm and OS_Tick
@@ -43,9 +44,9 @@ void OSi_EnterTimerCallback(u32 idx, u32 handler, u32 arg);
 #ifndef _MSC_VER
 
 // OS_InitThreadQueue(&OSi_IrqThreadQueue): this SDK's thread queue is a u16
-// mask of thread ids, and the IRQ thread queue is the first halfword of DTCM.
+// mask of thread ids, so emptying it is a store of 0.
 extern "C" void OS_InitIrqTable(void) {
-    data_023c0000[0] = 0;
+    OSi_IrqThreadQueue = 0;
 }
 
 extern "C" void OS_SetIrqFunction(OSIrqMask intrBit, OSIrqFunction function) {

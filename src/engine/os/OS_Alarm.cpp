@@ -16,12 +16,12 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
+#include "nitro/os/interrupt_check.h"
 #include "nitro/os/alarm.h"
 
 #define REG_TM1CNT_L (*(volatile u16 *)0x04000104)
 #define REG_TM1CNT_H (*(volatile u16 *)0x04000106)
 
-#define OS_IE_TIMER1 0x10
 #define OSi_TICK_TIMERCONTROL 0xc1 /* enable, IRQ, prescaler /64 */
 
 extern "C" {
@@ -49,7 +49,6 @@ extern void OS_Terminate(void);
 
 extern u16 data_020a6440;           /* OSi_UseAlarm */
 extern OSiAlarmQueue data_020a6444; /* OSi_AlarmQueue */
-extern short data_023c0000[];       /* HW_DTCM */
 
 void OSi_AlarmHandler(void);
 void OSi_InsertAlarm(OSAlarm *alarm, u64 fire);
@@ -190,8 +189,7 @@ void OSi_ArrangeTimer(void) {
     u64 tick;
     REG_TM1CNT_H = 0;
     OS_DisableIrqMask(OS_IE_TIMER1);
-    /* OS_SetIrqCheckFlag: HW_INTR_CHECK_BUF, DTCM + 0x3ff8. */
-    *(int *)((int)data_023c0000 + 0x3ff8) |= OS_IE_TIMER1;
+    OS_SetIrqCheckFlag(OS_IE_TIMER1);
     tick = OS_GetTick();
     alarm = data_020a6444.head;
     if (alarm == 0)
