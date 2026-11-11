@@ -365,7 +365,6 @@ extern void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, 
 }
 extern "C" {
 extern u32 d_a_iwanteNewHold(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
-
 }
 
 
@@ -2615,17 +2614,17 @@ extern unsigned char data_ov066_0211ae08;
 
 /* Something stood on mMeshCollider2 while the fight is still dormant: when
    the closest player is past the trigger depth, bump the shared count. */
-void daIwante_c::OnStoodOn(dActor_c *other)
-{
-    daPly_c *p;
-    if (data_ov066_0211ae04 != PHASE_DORMANT) return;
-    if (other == 0) return;
-    p = ClosestPlayer();
-    if (p == 0) return;
-    Vector3 playerPos = p->mPos;
-    if (playerPos.z < (int)0xff387000) {
+void daIwante_c::OnStoodOn(dActor_c *other) {
+    if (data_ov066_0211ae04 != PHASE_DORMANT)
+        return;
+    if (other == 0)
+        return;
+    daPly_c *player = ClosestPlayer();
+    if (player == 0)
+        return;
+    Vector3 playerPos = player->mPos;
+    if (playerPos.z < -0xc79000)
         data_ov066_0211ae08++;
-    }
 }
 
 /* dBgW stood-on veneer: drops the collider and forwards the touching actor
