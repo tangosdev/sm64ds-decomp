@@ -136,6 +136,7 @@ struct G {
     unsigned long long squished = 0, squish_air = 0;
     // LAB (SM64DS_HEADBOUNCE_FLAG=<file>): the file exists while a squash runs here (for SM64DS_STACK_BMP_ON pictures)
     const char *shot_flag = nullptr; bool shot_on = false; unsigned shot_tail = 0;
+    unsigned short pad_held = 0;     // my DS pad's held bits, read in the prewalk hook (proof lines only)
     // INTERACT9: who is in whose mouth / hands, from the victim's own broadcast
     Attach att[kHubPartySeats];
     // I am eaten through the ROM's own mouth state (else the synthetic hold)
@@ -1346,9 +1347,8 @@ int squash_curve(unsigned at) {
     if (f < (unsigned)kSquashHold) return kSquashLow;
     return kSquashLow + (int)(f - kSquashHold + 1) * kSquashStep;
 }
-unsigned short my_held_buttons() {
-    const int slot = (int)data_0209f250;
-    return (slot >= 0 && slot < 4) ? data_020a0e58[slot * 2] : 0;
+unsigned short my_held_buttons() {     // the DS pad this frame, sampled before the walk (proof lines only)
+    return g.pad_held;
 }
 void head_bounce(char *me, int seat) {
     const int vy0 = *(const int *)(me + kVertSpeed), st0 = g.state;
@@ -1410,19 +1410,21 @@ void shot_flag_tick() {
     if (want) { if (FILE *f = std::fopen(g.shot_flag, "wb")) std::fclose(f); }
     else std::remove(g.shot_flag);
 }
-// LAB: put my body over the host's ghost, still, every <every> frames from <first>.
+// LAB: put my body over the first other seat's ghost, still, every <every> frames from <first> (set on one console only).
 void lab_drop(char *me) {
-    if (!g.drop_every || comms_hub_my_seat() <= 0 || g.frame < g.drop_first) return;
+    if (!g.drop_every || g.frame < g.drop_first) return;
     if ((g.frame - g.drop_first) % g.drop_every) return;
+    int to = -1;
+    for (int i = 0; i < kHubPartySeats && to < 0; ++i) if (i != comms_hub_my_seat() && party::seat_is_party(i)) to = i;
     Seen s;
-    if (!see(0, &s) || !s.have_ghost || !s.in_level) return;
+    if (to < 0 || !see(to, &s) || !s.have_ghost || !s.in_level) return;
     const Place mp = my_place();
     if (s.at.level != mp.level || s.at.area != mp.area) return;
     *player::pos_x(me) = s.x << 12;
     *player::pos_y(me) = (s.y + g.drop_height) << 12;
     *player::pos_z(me) = s.z << 12;
     *(int *)(me + kHorzSpeed) = 0; *(int *)(me + kVertSpeed) = 0;
-    std::fprintf(stderr, "[headbounce] f=%u LAB drop #%u: %d units over seat 0 at (%d,%d,%d)\n", g.frame, ++g.drop_n, g.drop_height, s.x, s.y, s.z);
+    std::fprintf(stderr, "[headbounce] f=%u LAB drop #%u: %d units over seat %d at (%d,%d,%d)\n", g.frame, ++g.drop_n, g.drop_height, to, s.x, s.y, s.z);
 }
 
 void attacker_scan(char *me) {
@@ -1747,6 +1749,10 @@ extern "C" void port_party_hits_prewalk(void) {
     char *me = my_body();
     if (!me) return;
     diag_links("prewalk-before", me);
+    {   // HEADBOUNCE1 proof lines: my DS pad's held bits for this frame (PadData {held, pressed} per slot)
+        const int slot = (int)data_0209f250;
+        g.pad_held = (slot >= 0 && slot < 4) ? data_020a0e58[slot * 2] : 0;
+    }
     lab_seek(me);                                 // LAB (TONGUE1): inert unless SM64DS_PHIT_LAB_SEEK
     if (g.hold.active() && g.rom_mouth) {
         if (char *ep = body_of_seat(g.hold.eater())) {
