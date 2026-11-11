@@ -8,6 +8,7 @@
 #include "coop_world.h"
 #include "coop_groups.h"
 #include "coop_wire.h"
+#include "coop_actors.h"
 #include "comms_hub.h"
 
 #include "dActor_c.h"
@@ -188,6 +189,13 @@ const BDesc kDescs[] = {
         { 0x4d0, 2, kVol }, { 0x4d2, 2, kVol }, { 0x5c, 4, kVol }, { 0x60, 4, kVol }, { 0x64, 4, kVol },
         { 0, 1, kGlobal }, { 1, 1, kGlobal }, { 0x98, 4, kVol }, { 0xa8, 4, kVol } },
       1, 0, 7, { 0x490, 0 }, 0, 0 },
+    // coopbully1: the small Bully (class 215, daDonketu_c on daOts_c): the Big Bully's row without his killed counter (+0x3fc..+0x3ff is
+    // this class's Big Bully unique id, console-local). Placed ones, and the Big Bully's three runtime spawns on record slots 505..507.
+    { 215, "BULLY", 13,
+      { { 0x398, 4, kBullyState }, { 0x398, 4, kAlive }, { 0x3f9, 1, kVol }, { 0x3a8, 4, kPlain }, { 0x3ac, 4, kPlain },
+        { 0x3b0, 4, kPlain }, { 0x5c, 4, kVol }, { 0x60, 4, kVol }, { 0x64, 4, kVol }, { 0x98, 4, kVol }, { 0x9c, 4, kVol },
+        { 0xa0, 4, kVol }, { 0xa8, 4, kVol } },
+      1, 0, 6, { 0, 0 }, 0, 0 },
 };
 const int kNumDescs = (int)(sizeof kDescs / sizeof kDescs[0]);
 
@@ -202,7 +210,7 @@ const BDesc *desc_of(unsigned cls) {
 int class_size(unsigned cls) {
     switch (cls) {
     case 165: return 0x610; case 189: return 0x50c; case 176: return 0x874; case 198: return 0x610; case 210: return 0x5e0;
-    case 248: return 0x8e8; case 279: return 0x454; case 216: return 0x400; case 218: return 0x504;
+    case 248: return 0x8e8; case 279: return 0x454; case 216: return 0x400; case 218: return 0x504; case 215: return 0x400;
     default: return 0;
     }
 }
@@ -362,6 +370,7 @@ struct Boss {
     unsigned kpa_talk_t;           // bowser2: wall ms since which this copy's own intro talk kept a forced state away (0 = not)
     unsigned kpa_quiet_t;          // bowser2: when this copy was let go quietly (kpa_release quiet; 0 = not): hits ignored for 5 s
     unsigned kpa_air_t;            // bowser2 BFS: wall ms since which this copy has been far above the authority's Bowser (0 = not)
+    uint32_t bst; bool bst_valid;  // coopbully1: a bully's state at the end of the last tick (a change before the next one is the ROM's own)
     Rx rx;
 };
 
@@ -396,6 +405,17 @@ uint16_t g_dead_cls[kSlots];    // slot -> class of a boss the group knows is de
 uint8_t  g_dead_tx[kSlots];     // sends still owed for it
 unsigned g_dead_t[kSlots];
 unsigned g_claim_until[kSeats];     // wall ms until which a seat's claim holds
+// coopbully1: A BULLY BELONGS TO THE PLAYER WHO KNOCKED IT. A bump exists only on the hitter's console (a friend's body is parked away
+// between draws, coop_target.h), so the console whose own copy entered the knocked-back state by itself owns that bully, pose and state,
+// while the knock or the lava death lasts and kBullyClaimMs after. Per slot (several bullies at once), unlike the per-seat claim above.
+enum : unsigned { kBullyClaimMs = 1500 };
+unsigned g_bclaim[kSlots][kSeats];  // hub ms until which a seat's claim on a bully slot holds
+bool g_bully_on = true;             // SM64DS_COOP_BULLY=0: must-fail control, no bully claim (the 1.0.2 behaviour, plus the small Bully row)
+struct BumpKnob { unsigned tick, every; int cls; int ang; bool on; int left; int speed; };
+struct BStandKnob { unsigned tick, every; int cls, dist; bool on; };
+BStandKnob g_bstand = {};          // SM64DS_COOP_BULLY_STAND=F:cls:dist[:every]: the local player stands dist units from the nearest bully of cls
+BumpKnob g_bump = {};               // SM64DS_COOP_BULLY_BUMP=F:cls[:every[:count[:angle[:speed]]]]
+bool is_bully(unsigned cls) { return cls == 215 || cls == 216; }
 unsigned g_tok_t = 0; double g_tokens = 6.0;
 unsigned g_stat_t = 0;
 
@@ -490,6 +510,11 @@ bool value_ok(const BDesc &d, int idx, uint32_t v) {
         if (idx == 2) return v <= 4 || v == 0xffu;   // bullies killed (0xff: none to kill)
         return true;
     }
+    if (d.cls == 215) {
+        if (idx == 0) return v <= 5;                 // int state
+        if (idx == 1) return v <= 1;                 // alive
+        return true;
+    }
     if (d.cls == 210) {
         if (idx == 0) return v <= 8;                 // state byte
         if (idx == 1) return v <= 3;                 // hits left
@@ -581,6 +606,18 @@ void read_env() {
             p += used; while (*p == ',' || *p == ';' || *p == ' ') ++p;
         }
     }
+    g_bully_on = flag("SM64DS_COOP_BULLY", true);
+    if (const char *bs = std::getenv("SM64DS_COOP_BULLY_STAND")) {
+        unsigned f = 0, ev = 0; int cls = 0, dist = 0;
+        const int n = std::sscanf(bs, "%u:%i:%i:%u", &f, &cls, &dist, &ev);
+        if (n >= 3 && (cls == 215 || cls == 216)) { g_bstand.tick = f; g_bstand.cls = cls; g_bstand.dist = dist; g_bstand.every = n >= 4 ? ev : 0; g_bstand.on = true; }
+    }
+    if (const char *bp = std::getenv("SM64DS_COOP_BULLY_BUMP")) {
+        unsigned f = 0, ev = 0; int cls = 0, cnt = 1, ang = -1, spd = 40;
+        const int n = std::sscanf(bp, "%u:%i:%u:%i:%i:%i", &f, &cls, &ev, &cnt, &ang, &spd);
+        g_bump.speed = n >= 6 && spd > 0 && spd <= 200 ? spd : 40;
+        if (n >= 2 && (cls == 215 || cls == 216)) { g_bump.tick = f; g_bump.cls = cls; g_bump.every = n >= 3 ? ev : 0; g_bump.left = n >= 4 && cnt > 0 ? cnt : 1; g_bump.ang = n >= 5 ? ang : -1; g_bump.on = true; }
+    }
     if (const char *f = std::getenv("SM64DS_COOP_BOSS_FORGE")) {
         const char *p = f;
         while (*p && g_nforge < 8) {
@@ -625,8 +662,24 @@ bool take_token(unsigned now) {
     return true;
 }
 
+// coopbully1: the seat that holds a live claim on a bully slot (the lowest seat when two players knocked it at once), or -1.
+int bully_claim_seat(int slot, unsigned wnow) {
+    if (!g_bully_on || slot < 0 || slot >= kSlots) return -1;
+    for (int s = 0; s < kSeats; ++s)
+        if (g_bclaim[slot][s] && (int)(g_bclaim[slot][s] - wnow) > 0 && (s == g_my || ((coop_group_member_mask() >> s) & 1u))) return s;
+    return -1;
+}
+
 // The seat whose copy of this boss is the right one.
-int auth_for(int slot, unsigned wnow) {
+int auth_for(int slot, unsigned wnow, unsigned cls = 0) {
+    if (is_bully(cls)) {
+        const int c = bully_claim_seat(slot, wnow);
+        if (c >= 0) return c;
+        if (cls == 215) {                    // a small Bully has no target seat of its own: the console that steers its pose
+            const int o = coop_move_owner(slot);
+            return o >= 0 ? o : g_my;
+        }
+    }
     for (int s = 0; s < kSeats; ++s)
         if ((int)(g_claim_until[s] - wnow) > 0 && (s == g_my || ((coop_group_member_mask() >> s) & 1u))) return s;
     int s = coop_target_seat_of_slot(slot);
@@ -700,6 +753,48 @@ void mark_dead_slot(int slot, Boss &b) {
     if (g_log) std::fprintf(stderr, "[cbs] dead boss marked: cls=%u slot=%d (kept by the group; a joiner is told, not given the boss) w=%lld\n", (unsigned)b.d->cls, slot, wall_ms());
 }
 
+// coopbully1: THE BIG BULLY'S THREE BULLIES. daBDonketu_c::InitResources spawns them with no death-table slot (Spawn(0xd7, -1, ...),
+// d_a_b_donketu.cpp), so neither this lane nor the movers saw them and each console fought its own three. They are spawned one after
+// another, so their unique ids rise in spawn order on every console: the first, second and third get record slots 505, 506, 507. The
+// order is taken once, while all three are alive, and kept (a dead one must not shift the others). Off when a placed actor of this level
+// already uses one of those slots.
+enum : int { kTripSlot0 = 505 };
+struct Trip { uint32_t bb; uint32_t uid[3]; bool set; bool clash; };
+Trip g_trip = {};
+Trip g_trip_logged = {};                      // the last mapping logged (a key reset re-takes the same one: logged once per visit)
+bool trip_log_new() {
+    const bool same = g_trip_logged.set && g_trip_logged.bb == g_trip.bb && g_trip_logged.clash == g_trip.clash &&
+                      std::memcmp(g_trip_logged.uid, g_trip.uid, sizeof g_trip.uid) == 0;
+    g_trip_logged = g_trip;
+    return !same;
+}
+int trip_slot_of(const char *a) {
+    if (!g_on || !g_bully_on || !a || *(const unsigned short *)(a + 0x0c) != 215 || rd16(a, 0xce) >= 0) return -1;
+    const uint32_t bb = (uint32_t)rd32(a, 0x3fc), uid = (uint32_t)rd32(a, 0x04);
+    if (!bb) return -1;
+    if (!g_trip.set || g_trip.bb != bb) {
+        uint32_t u[8]; int n = 0; bool clash = false;
+        for (char *x = (char *)_ZN8dActor_c4NextEPKS_(0); x; x = (char *)_ZN8dActor_c4NextEPKS_(x)) {
+            const short sl = rd16(x, 0xce);
+            if (sl >= kTripSlot0 && sl < kTripSlot0 + 3) clash = true;
+            if (*(const unsigned short *)(x + 0x0c) == 215 && sl < 0 && (uint32_t)rd32(x, 0x3fc) == bb && n < 8) u[n++] = (uint32_t)rd32(x, 0x04);
+        }
+        if (n != 3) {                         // not the three of a fresh spawn: left alone for this visit (and not scanned again every frame)
+            g_trip.bb = bb; g_trip.set = true; g_trip.clash = true; std::memset(g_trip.uid, 0, sizeof g_trip.uid);
+            if (trip_log_new()) std::fprintf(stderr, "[cbs] bully triplet of big bully id %u: %d found, not 3: not synced\n", (unsigned)bb, n);
+            return -1;
+        }
+        std::sort(u, u + 3);
+        g_trip.bb = bb; g_trip.set = true; g_trip.clash = clash;
+        for (int i = 0; i < 3; ++i) g_trip.uid[i] = u[i];
+        if (trip_log_new()) std::fprintf(stderr, "[cbs] bully triplet of big bully id %u: record slots %d..%d by spawn order (ids %u %u %u)%s\n", (unsigned)bb, kTripSlot0,
+                     kTripSlot0 + 2, (unsigned)u[0], (unsigned)u[1], (unsigned)u[2], clash ? ": OFF, a placed actor uses one of those slots" : "");
+    }
+    if (g_trip.clash) return -1;
+    for (int i = 0; i < 3; ++i) if (g_trip.uid[i] == uid) return kTripSlot0 + i;
+    return -1;
+}
+
 int g_nb = 0;
 char *g_key_seen = nullptr; int g_keys_seen = 0;
 void scan() {
@@ -713,9 +808,11 @@ void scan() {
         }
         const BDesc *d = desc_of(id);
         if (!d) continue;
+        if (id == 215 && !g_bully_on) continue;                    // coopbully1 control: the small Bully stays unsynced, as in 1.0.2
         short slot = rd16(a, 0xce);
         // bossdesc2: Eyerok's two hands are runtime spawns (slot -1); their record slot is 509 + the part number
         if (slot < 0 && id == 176) { const int part = rd32(a, 0x49c); if (part == 1 || part == 2) slot = (short)(509 + part); }
+        if (slot < 0 && id == 215) slot = (short)trip_slot_of(a);     // coopbully1: the Big Bully's three
         if (slot < 0 || slot >= kSlots || is_player_ptr(a)) continue;
         if (id == 165 && *(const unsigned char *)(a + 0x414) == 0) continue;   // a plain Whomp that shares the class body
         Boss &b = g_boss[slot];
@@ -778,6 +875,7 @@ bool is_defeated(const Boss &b) {
     case 189: return hp <= 0;                                                       // King Bob-omb
     case 218: return hp <= 0 && (st == 13u || st == 9u || st == 12u || st == 15u || st == 5u);   // Chilly: after the last blow (the revive happens before it)
     case 216: return hp == 0;                                                       // Big Bully: "alive" field 0 = dying or gone
+    case 215: return hp == 0;                                                       // small Bully (coopbully1): the same
     case 210:                                                                       // Big Boo: no hits left and in his defeat
         // COOPBOO5: the hidden Big Boos (0xc..0xe) have states 0..5 and are beaten in state 4 (d_a_trs.cpp func_ov063_02118cd8 sets
         // it with the DEFEATED flag); state 6 and on is the Big Boo's Battle one (0xf)
@@ -820,6 +918,7 @@ void log_sample(int slot, const Boss &b, int auth) {
                            cam ? (unsigned)rd32(cam, 0x154) : 0u, cam ? rd32(cam, 0x8c) >> 12 : 0, cam ? rd32(cam, 0x90) >> 12 : 0, cam ? rd32(cam, 0x94) >> 12 : 0);
     }
     n += std::snprintf(line + n, sizeof line - n, " tgt=%d", coop_target_seat_of_slot(slot));
+    if (is_bully(b.d->cls)) n += std::snprintf(line + n, sizeof line - n, " claim=%d mover=%d", bully_claim_seat(slot, comms_hub_now_ms()), coop_move_owner(slot));
     std::fprintf(stderr, "%s\n", line);
 }
 
@@ -1069,6 +1168,8 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
     x.fresh = false;
     const BDesc &d = *b.d;
     ++g_st.recs_rx;
+    // coopbully1: the console that owns a bully (its player knocked it) is never pulled back by a record that was sent before it took it
+    if (g_bully_on && is_bully(d.cls) && mine) return;
     // HP only goes down.
     const int lhp = hp_of(b);
     int rhp = (int)x.w[d.hp];
@@ -1133,6 +1234,9 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
             if ((unsigned)(now - b.kpa_talk_t) < 20000u) force = false;
         }
     }
+    // coopbully1: a knock by the owner's player and a death show at once on every copy (two records late, the knock was half over),
+    // with the ROM's animation for the state (bully_enter); the pose follows through the mover pin.
+    if (g_bully_on && is_bully(d.cls) && !mine && ls != rs && (rs == 2u || rs == 4u || rs == 5u) && ((x.rflags & 2) || rs != 2u)) force = true;
     // coopkbo1: carried by a friend: the copy shows the carried state at once (see kbo_show_held), not the jump back to the arena.
     if (d.cls == 189 && !mine && rs == kKboHeld && ls != kKboHeld && ls != kKboDefeat && hp_of(b) > 0 && kbo_show_held(b, x.from)) {
         ++g_st.applied_state;
@@ -1245,9 +1349,30 @@ void process(unsigned now) {
             }
             claiming = (int)(g_claim_until[g_my] - wnow) > 0;
         }
-        const int auth = auth_for(slot, wnow);
+        bool bully_claim_new = false;
+        if (g_bully_on && g_on && is_bully(d.cls) && g_my >= 0 && g_my < kSeats) {
+            // coopbully1: my copy went into the knocked-back state between two ticks: only my player can have done that here (a friend's
+            // body is parked away; a state forced by a record is taken into bst below, after apply_rx)
+            const uint32_t st = state_of(b);
+            const bool live = g_bclaim[slot][g_my] && (int)(g_bclaim[slot][g_my] - wnow) > 0;
+            if (b.bst_valid && st != b.bst && st == 2u) {
+                bully_claim_new = !live;
+                const int was = auth_for(slot, wnow, d.cls);
+                g_bclaim[slot][g_my] = (wnow + kBullyClaimMs) | 1u;
+                b.lw_valid = false;
+                ++g_st.claims;
+                if (g_log) std::fprintf(stderr, "[cbs] bully claim slot=%d cls=%u st %u->2 by my player (was auth %d) pos=%d,%d,%d spd=%d ang=%d w=%lld\n", slot, (unsigned)d.cls,
+                                        b.bst, was, rd32(b.a, 0x5c) >> 12, rd32(b.a, 0x60) >> 12, rd32(b.a, 0x64) >> 12, rd32(b.a, 0x98) >> 12,
+                                        (int)rd16(b.a, 0x94), wall_ms());
+            } else if (live && (st == 2u || st == 4u || st == 5u) && auth_for(slot, wnow, d.cls) == g_my) {   // a claim lost to a lower seat's is not renewed
+                g_bclaim[slot][g_my] = (wnow + kBullyClaimMs) | 1u;     // held while the knock or the death lasts
+            }
+            claiming = g_bclaim[slot][g_my] && (int)(g_bclaim[slot][g_my] - wnow) > 0;
+        }
+        const int auth = auth_for(slot, wnow, d.cls);
         const bool mine = auth == g_my;
-        g_recent_t = wnow ? wnow : 1u; g_recent_mine = mine;
+        if (d.cls != 215) { g_recent_t = wnow ? wnow : 1u; g_recent_mine = mine; }    // (a small Bully gives no reward)
+        if (bully_claim_new && mine) urgent = true;
         b.mine_last = mine;
         // a hit that landed on my copy: HP below what was last synced
         const int hp = hp_of(b);
@@ -1353,6 +1478,7 @@ void process(unsigned now) {
                 }
             }
         }
+        if (is_bully(d.cls)) { b.bst = state_of(b); b.bst_valid = true; }
         // coopkbo1: the authority's King Bob-omb at HP 0 outside the states that end in his defeat (his last point arrived by merge)
         // never runs the defeat, so nobody got the star. Put him in the hurt state, whose tick on the ground runs the defeat talk and
         // the star; its entry takes a point, the HP is put back.
@@ -1566,6 +1692,70 @@ void do_minion_kill(MinionKnob &k) {
     }
 }
 
+// coopbully1 proof knob SM64DS_COOP_BULLY_BUMP=F:cls[:every[:count[:angle]]]: from boss tick F, on THIS console, the nearest live bully of
+// class cls (215 or 216) is knocked back as the ROM's hit reaction does it for a punch (daOts_c::func_ov064_02116754: heading, 40 units a
+// frame, the hit animation, STATE_KNOCKED_BACK, hops cleared), with the local player put 150 units behind it, facing the push. The
+// push goes away from where the player stood, or along `angle` (0..65535, -1 = away) when given, at `speed` units a frame (default 40).
+// Repeated every `every` ticks, `count` times.
+void do_bump() {
+    const int me = (int)data_0209f250;
+    if (me < 0 || me >= 16 || !data_0209f394[me]) return;
+    char *pl = (char *)data_0209f394[me];
+    int best = -1; double bd = 1e18;
+    for (int slot = 0; slot < kSlots; ++slot) {
+        const Boss &b = g_boss[slot];
+        if (!b.a || b.d->cls != (unsigned)g_bump.cls) continue;
+        const uint32_t st = state_of(b);
+        if (st == 2u || st >= 4u) continue;
+        if (b.d->cls == 216 && (unsigned char)b.a[0x3fe] < 4u) continue;   // still waiting for its three bullies: its Behavior does not run yet
+        const double dx = ((double)rd32(pl, 0x5c) - rd32(b.a, 0x5c)) / 4096.0, dz = ((double)rd32(pl, 0x64) - rd32(b.a, 0x64)) / 4096.0;
+        const double dd = dx * dx + dz * dz;
+        if (dd < bd) { bd = dd; best = slot; }
+    }
+    g_bump.tick = g_ticks + (g_bump.every ? g_bump.every : 30u);
+    if (best < 0) return;
+    Boss &b = g_boss[best];
+    char *a = b.a;
+    int16_t ang;
+    if (g_bump.ang >= 0) ang = (int16_t)(uint16_t)g_bump.ang;
+    else {
+        const double dx = (double)rd32(a, 0x5c) - rd32(pl, 0x5c), dz = (double)rd32(a, 0x64) - rd32(pl, 0x64);
+        ang = (int16_t)(std::atan2(dx, dz) * 32768.0 / 3.14159265358979323846);
+    }
+    const double rad = (double)(uint16_t)ang * 6.283185307179586 / 65536.0;
+    const int32_t px = rd32(a, 0x5c) - (int32_t)(std::sin(rad) * 150.0 * 4096.0), py = rd32(a, 0x60) + 0x2000, pz = rd32(a, 0x64) - (int32_t)(std::cos(rad) * 150.0 * 4096.0);
+    std::memcpy(pl + 0x5c, &px, 4); std::memcpy(pl + 0x60, &py, 4); std::memcpy(pl + 0x64, &pz, 4);
+    std::memcpy(pl + 0x8e, &ang, 2);
+    std::memcpy(a + 0x94, &ang, 2);                     // mPrevAngleY = the player's mAngleY
+    const int32_t spd = g_bump.speed << 12; std::memcpy(a + 0x98, &spd, 4);   // 40 = the ROM's punch; more only to reach the lava in a row
+    a[0x3f9] = 0;                                       // mHopCount
+    const uint32_t was = state_of(b);
+    bully_enter(a, 2u);
+    --g_bump.left;
+    std::fprintf(stderr, "[cbs-knob] bully bump slot=%d cls=%u st %u->%u at %d,%d,%d heading %d speed %d, my player put behind it (%d left) w=%lld\n", best, (unsigned)b.d->cls,
+                 was, state_of(b), rd32(a, 0x5c) >> 12, rd32(a, 0x60) >> 12, rd32(a, 0x64) >> 12, (int)(uint16_t)ang, g_bump.speed, g_bump.left, wall_ms());
+}
+
+// coopbully1 proof knob SM64DS_COOP_BULLY_STAND: the local player stands `dist` units beside the nearest live bully of class cls (so the
+// shared target, and with it the Big Bully's authority, can be put on this console in a row).
+void do_bstand() {
+    const int me = (int)data_0209f250;
+    g_bstand.tick = g_ticks + (g_bstand.every ? g_bstand.every : 1u);
+    if (!g_bstand.every) g_bstand.on = false;
+    if (me < 0 || me >= 16 || !data_0209f394[me]) return;
+    char *pl = (char *)data_0209f394[me];
+    for (int slot = 0; slot < kSlots; ++slot) {
+        const Boss &b = g_boss[slot];
+        if (!b.a || b.d->cls != (unsigned)g_bstand.cls || state_of(b) >= 4u) continue;
+        if (b.d->cls == 216 && (unsigned char)b.a[0x3fe] < 4u) continue;
+        const int32_t x = rd32(b.a, 0x5c) + (g_bstand.dist << 12), y = rd32(b.a, 0x60) + 0x8000, z = rd32(b.a, 0x64);
+        std::memcpy(pl + 0x5c, &x, 4); std::memcpy(pl + 0x60, &y, 4); std::memcpy(pl + 0x64, &z, 4);
+        if (g_log) std::fprintf(stderr, "[cbs-knob] bully stand: local player %d units from slot=%d cls=%u w=%lld\n", g_bstand.dist, slot, (unsigned)b.d->cls, wall_ms());
+        return;
+    }
+    g_bstand.on = true;                     // none yet: try again next tick
+}
+
 void do_forge(const char *name) {
     int slot = -1;
     for (int i = 0; i < kSlots; ++i) if (g_boss[i].a) { slot = i; break; }
@@ -1620,7 +1810,7 @@ bool star_is_mine(dActor_c *self) {
     const short slot = rd16((const char *)self, 0xce);
     if (slot < 0 || slot >= kSlots) return true;
     if (g_my < 0) g_my = comms_hub_my_seat();
-    const int auth = desc_of(cls) ? auth_for(slot, comms_hub_now_ms()) : coop_target_seat_of_slot(slot);
+    const int auth = desc_of(cls) ? auth_for(slot, comms_hub_now_ms(), cls) : coop_target_seat_of_slot(slot);
     if (auth < 0) return true;
     return auth == g_my;
 }
@@ -1732,6 +1922,7 @@ void on_frame(unsigned now) {
         for (int s = 0; s < kSeats; ++s) g_claim_until[s] = 0;
         g_recent_t = 0; g_recent_mine = true;
         std::memset(g_dead_cls, 0, sizeof g_dead_cls); std::memset(g_dead_tx, 0, sizeof g_dead_tx);
+        std::memset(g_bclaim, 0, sizeof g_bclaim); g_trip = Trip();
         g_key = nk;
     }
     ++g_ticks; ++g_st.ticks;
@@ -1795,6 +1986,8 @@ void on_frame(unsigned now) {
             if (!g_forge[i].done && g_ticks >= g_forge[i].tick) { g_forge[i].done = true; do_forge(g_forge[i].name); }
         for (int i = 0; i < g_nmkill; ++i)
             if (!g_mkill[i].done && g_ticks >= g_mkill[i].tick) do_minion_kill(g_mkill[i]);
+        if (g_bump.on && g_bump.left > 0 && g_ticks >= g_bump.tick) do_bump();
+        if (g_bstand.on && g_ticks >= g_bstand.tick) do_bstand();
     }
     if (g_log && g_nb > 0 && (unsigned)(now - g_stat_t) >= 4000u) {
         g_stat_t = now;
@@ -1878,6 +2071,14 @@ bool coop_boss_reward_not_mine() {
     return r;
 }
 
+int coop_boss_bully_claim_seat(int slot) {
+    if (!g_on || !coop_world_active()) return -1;
+    return bully_claim_seat(slot, comms_hub_now_ms());
+}
+int coop_bully_virtual_slot(const void *actor) {
+    return trip_slot_of(static_cast<const char *>(actor));
+}
+
 bool coop_boss_validate(const void *payload, int len) {
     if (!payload || len < (int)sizeof(BossHead) + (int)sizeof(BossRec)) return false;
     const unsigned char *p = static_cast<const unsigned char *>(payload);
@@ -1928,7 +2129,7 @@ void coop_boss_on_world(int seat, int sub, const unsigned char *p, int len) {
         bool ok = true;
         for (int k = 0; k < d->nf; ++k) if (!value_ok(*d, k, w[k])) ok = false;
         if (!ok) { ++g_st.drop_bad; continue; }
-        const int auth = auth_for(r.slot, now);
+        const int auth = auth_for(r.slot, now, d->cls);
         if (sub == kWorldBossHit) {
             ++g_st.hits_rx;
             // the hitter's copy was hit: take its HP at once everywhere; the authority takes its state whole
@@ -1956,7 +2157,14 @@ void coop_boss_on_world(int seat, int sub, const unsigned char *p, int len) {
             }
             continue;
         }
-        if (r.rflags & 2) {                      // a claim: that seat's copy is carried by its player
+        if ((r.rflags & 2) && is_bully(d->cls)) {     // coopbully1: that seat's player knocked this bully: it owns this slot for a while
+            if (!g_bully_on) { ++g_st.drop_notauth; continue; }
+            if (g_log && !(g_bclaim[r.slot][seat] && (int)(g_bclaim[r.slot][seat] - now) > 0))
+                std::fprintf(stderr, "[cbs] bully claim-rx slot=%d cls=%u from seat %d (its player knocked it; was auth %d) st=%u w=%lld\n", (int)r.slot, (unsigned)d->cls, seat,
+                             auth, w[d->state], wall_ms());
+            g_bclaim[r.slot][seat] = (now + kBullyClaimMs) | 1u; ++g_st.claims;
+            if (auth_for(r.slot, now, d->cls) != seat) { ++g_st.drop_notauth; continue; }   // two claims at once: the lower seat's copy is the one
+        } else if (r.rflags & 2) {               // a claim: that seat's copy is carried by its player
             if (g_log && (int)(g_claim_until[seat] - now) <= 0) std::fprintf(stderr, "[cbs] claim-rx slot=%d from seat %d (that console's player holds the boss) w=%lld\n", (int)r.slot, seat, wall_ms());
             g_claim_until[seat] = now + 3000u; ++g_st.claims;
         } else if (seat != auth) {

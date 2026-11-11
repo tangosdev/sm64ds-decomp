@@ -11,6 +11,7 @@
 #include "comms_hub.h"
 #include "hub_presence.h"
 #include "coop_target.h"
+#include "coop_boss.h"
 #include "coop_stats_log.h"
 #include "coop_ghost_eggs.h"
 
@@ -669,7 +670,8 @@ void scan_ents() {
         if (id >= 1024 || g_prof_of[id] < 0) continue;
         check_live(g_prof[g_prof_of[id]], a);
         if (g_prof_of[id] < 0) continue;
-        const short slot = rd16(a, 0xce);
+        short slot = rd16(a, 0xce);
+        if (slot < 0 && id == 215) slot = (short)coop_bully_virtual_slot(a);   // coopbully1: the Big Bully's three runtime bullies
         if (slot < 0 || slot >= kSlots) continue;
         if (is_player_ptr(a)) continue;
         Slot &s = g_slot[slot];
@@ -821,6 +823,11 @@ void process(unsigned now) {
             const int ts = coop_target_seat_of_slot(slot);
             if (ts == g_my) nown = g_my;
             else if (ts >= 0 && ts < kSeats && ((coop_group_member_mask() >> ts) & 1u) && alive_rx(g_rx[slot][ts], now)) nown = ts;
+        }
+        if (p.id == 215 || p.id == 216) {             // coopbully1: the player who knocked a bully steers it while the knock lasts (no dwell)
+            const int cs = coop_boss_bully_claim_seat(slot);
+            if (cs == g_my) nown = g_my;
+            else if (cs >= 0 && cs < kSeats && ((coop_group_member_mask() >> cs) & 1u) && alive_rx(g_rx[slot][cs], now)) nown = cs;
         }
         if (nown != was) {
             s.owner = nown; s.owner_t = now;
@@ -1104,6 +1111,11 @@ bool coop_move_i_own(int slot, unsigned cls) {
     const Slot &s = g_slot[slot];
     if (!s.a || *(const unsigned short *)(s.a + 0x0c) != cls) return false;
     return s.owner == g_my;
+}
+
+int coop_move_owner(int slot) {
+    if (slot < 0 || slot >= kSlots || !g_slot[slot].a) return -1;
+    return g_slot[slot].owner;
 }
 
 void coop_move_pinned(int slot, bool stay) {
