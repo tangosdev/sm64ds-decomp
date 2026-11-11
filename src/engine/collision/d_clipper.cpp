@@ -134,8 +134,7 @@ int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i
  * normal.
  */
 void dClipper::UpdateFrustumPlanes() {
-    int angleIndex = (int)mFovAngle >> 4;
-    int tanHalfFov = FX_Div(FX_SinIdx(angleIndex), FX_CosIdx(angleIndex));
+    int tanHalfFov = FX_Div(FX_SinIdx(mFovAngle >> 4), FX_CosIdx(mFovAngle >> 4));
     Fix12i halfHeight = FX_MUL(mNearZ, tanHalfFov);
     Fix12i halfWidth = FX_MUL(mAspectRatio, halfHeight);
     Vector3 corner0, corner1, corner2, corner3;

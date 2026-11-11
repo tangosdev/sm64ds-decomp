@@ -152,14 +152,13 @@ void daObjPowerUpItem_c::StateOpening()
         int a = (int)mWobbleTimer << 12;
         int fdivResult = FX_Div(a, 0x1c000);
         unsigned short hw = mWobbleAngle;
-        int idx = hw >> 4;
-        signed short odd = FX_CosIdx(idx);
+        signed short odd = FX_CosIdx(hw >> 4);
         int t1 = FX_MUL(odd, fdivResult);
         int u1 = FX_MUL(t1, 0x332);
         int v1 = u1 + 0xffa;
         int w1 = FX_MUL(v1, 0xfa0);
         mScaleY = w1;
-        signed short even = FX_SinIdx(idx);
+        signed short even = FX_SinIdx(hw >> 4);
         int t2 = FX_MUL(even, fdivResult);
         int u2 = FX_MUL(t2, 0x332);
         int v2 = u2 + 0xffa;

@@ -2587,13 +2587,11 @@ void daTrs_c::ResetAfterHit() {
 
 void daTrs_c::ShakeAfterHit() {
 
-    int a;
     s16 v;
     s16* p;
-    a = (u16)(s16)((*(u16 *)&this->mStateTimer - 0x1f) << 13) >> 4;
     p = (s16*)&this->mAngleY;
     v = *p;
-    *p = v + (FX_CosIdx(a) << 10) / 4096;
+    *p = v + (FX_CosIdx((u16)(s16)((*(u16 *)&this->mStateTimer - 0x1f) << 13) >> 4) << 10) / 4096;
 }
 
 void daTrs_c::MoveDuringHit(int cond, int val) {

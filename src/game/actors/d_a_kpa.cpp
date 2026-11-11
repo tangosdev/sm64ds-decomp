@@ -3315,10 +3315,9 @@ int daKpa_c::UpdateIntroCamera() {
         break;
     case 3: {
         int ty, tz, tx;
-        k = (int)((unsigned short)this->mAngleY) >> 4;
-        tz = FX_CosIdx(k) * 0xc0 + this->mPosZ;
+        tz = FX_CosIdx((u16)this->mAngleY >> 4) * 0xc0 + this->mPosZ;
         ty = this->mPosY + 0xfa000;
-        tx = FX_SinIdx(k) * 0xc0 + this->mPosX;
+        tx = FX_SinIdx((u16)this->mAngleY >> 4) * 0xc0 + this->mPosX;
         sp.x = tx;
         sp.y = ty;
         sp.z = tz;

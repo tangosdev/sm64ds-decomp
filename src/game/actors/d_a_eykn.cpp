@@ -552,7 +552,6 @@ int daEykn_c::St_Attack_Main()
             s32 pz;
             s32 scale;
             s32 round;
-            int idx;
             s16 s;
             int isBig;
             int param;
@@ -575,12 +574,10 @@ int daEykn_c::St_Attack_Main()
                 rot.z = rz;
             }
 
-            idx = (u16)mAngleY >> 4;
-            s = FX_SinIdx(idx);
+            s = FX_SinIdx((u16)mAngleY >> 4);
             pos.x = px + (s32)(((s64)s * scale + round) >> 12);
 
-            idx = (u16)mAngleY >> 4;
-            s = FX_CosIdx(idx);
+            s = FX_CosIdx((u16)mAngleY >> 4);
             pos.z = pz + (s32)(((s64)s * scale + round) >> 12);
 
             rot.x = Vec3_VertAngle(&pos, &target2);

@@ -100,8 +100,7 @@ s32 daObjFl_UkiKi_c::InitResources() {
 /* Bob 30 units either side of mOriginalPosY, one cycle per 64 frames
  * (mPhaseAngle advances 0x400 of 0x10000 a frame). */
 s32 daObjFl_UkiKi_c::Behavior() {
-    int val = (u16)mPhaseAngle >> 4;
-    mPosY = FX_SinIdx(val) * (s16)0x1e + mOriginalPosY;
+    mPosY = FX_SinIdx((u16)mPhaseAngle >> 4) * (s16)0x1e + mOriginalPosY;
     mPhaseAngle += 0x400;
 
     UpdateModelPosAndRotY();

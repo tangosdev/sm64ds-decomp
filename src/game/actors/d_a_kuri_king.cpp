@@ -1113,13 +1113,11 @@ void daKuriKing_c::SpawnHitParticles(dActor_c *other, dCcAcPos_c *clsn, int mode
     aX = cstd::atan2(v.x, v.z);
     aY = cstd::atan2(v.y, Vec3_HorzLen(&v));
 
-    iY = (u16)aY >> 4;
-    iX = (u16)aX >> 4;
 
-    s = FX_MUL(w, FX_CosIdx(iY));
-    dst.x += FX_MUL(s, FX_SinIdx(iX));
-    dst.y += FX_MUL(w, FX_SinIdx(iY));
-    dst.z += FX_MUL(s, FX_CosIdx(iX));
+    s = FX_MUL(w, FX_CosIdx((u16)aY >> 4));
+    dst.x += FX_MUL(s, FX_SinIdx((u16)aX >> 4));
+    dst.y += FX_MUL(w, FX_SinIdx((u16)aY >> 4));
+    dst.z += FX_MUL(s, FX_CosIdx((u16)aX >> 4));
 
     switch (mode) {
     case 0:

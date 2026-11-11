@@ -2595,17 +2595,15 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
 
         if (flag) {
             short ang = Vec3_HorzAngle(&vec[0], (Vector3*)&mCamPosX);
-            int k = (unsigned short)(short)(ang + ((r6 & 3) << 14)) >> 4;
-            vec[0].x = FX_SinIdx(k) * 1000 + vec[0].x;
-            vec[0].z = FX_CosIdx(k) * 1000 + vec[0].z;
+            vec[0].x = FX_SinIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4) * 1000 + vec[0].x;
+            vec[0].z = FX_CosIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4) * 1000 + vec[0].z;
             ((dCamera_c *)cam)->SetPos(*(const Vector3 *)&vec[0]);
         } else {
             if (!IsAreaShowing(mAreaId))
                 return;
             short ang = Vec3_HorzAngle(&vec[0], (Vector3*)&mCamPosX);
-            int k = (unsigned short)(short)(ang + ((r6 & 3) << 14)) >> 4;
-            vec[0].x += FX_MUL(dist, FX_SinIdx(k));
-            vec[0].z += FX_MUL(dist, FX_CosIdx(k));
+            vec[0].x += FX_MUL(dist, FX_SinIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4));
+            vec[0].z += FX_MUL(dist, FX_CosIdx((u16)(s16)(ang + ((r6 & 3) << 14)) >> 4));
             ((dCamera_c *)cam)->SetPos(*(const Vector3 *)&vec[0]);
         }
 

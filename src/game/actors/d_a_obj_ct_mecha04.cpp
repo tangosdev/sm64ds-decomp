@@ -107,19 +107,17 @@ void daObjCtMecha04_c::AfterClsnCallback(dBgW *collider, dActor_c *owner, dActor
  * actor.mPosX/mPosZ stores differ; the PosX-derived pointer chain matches. */
 void daObjCtMecha04_c::MoveActorOnBelt(dActor_c &actor) {
     u16 angleForX = (u16)mAngleY;
-    int angleIndexForX = angleForX >> 4;
     int beltStepForX = mBeltSpeed << 2;
-    int sinY = FX_SinIdx(angleIndexForX);
+    int sinY = FX_SinIdx(angleForX >> 4);
     int deltaX = FX_MUL(beltStepForX, sinY);
     s32 *actorPosX = &actor.mPosX;
     int oldX = *actorPosX;
     *actorPosX = oldX + deltaX;
 
     u16 angleForZ = (u16)mAngleY;
-    int angleIndexForZ = angleForZ >> 4;
     int beltStepForZ = mBeltSpeed << 2;
     s32 *actorPosZ = actorPosX + 2;
-    int cosY = FX_CosIdx(angleIndexForZ);
+    int cosY = FX_CosIdx(angleForZ >> 4);
     int oldZ = *actorPosZ;
     int deltaZ = FX_MUL(beltStepForZ, cosY);
     *actorPosZ = oldZ + deltaZ;

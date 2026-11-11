@@ -168,8 +168,7 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
 void daObjBk_Botaosi_c::UpdateShadow() {
     u16 yaw;
     int lean = 0;
-    int idx = (u16)mAngleX >> 4;
-    int sine = FX_SinIdx(idx);
+    int sine = FX_SinIdx((u16)mAngleX >> 4);
     int tilt = FX_MUL(sine, 0x7d0000);
     yaw = 0x8000;
     if (tilt <= 0) {
@@ -228,8 +227,7 @@ int daObjBk_Botaosi_c::Behavior() {
         break;
     case 1: {
         unsigned short ang = mWobbleAng;
-        int idx = ang >> 4;
-        int s = FX_SinIdx(idx);
+        int s = FX_SinIdx(ang >> 4);
         int amp = mKnockDir;
         int prod = amp * s;
         int d = FX_MUL(prod, mWobbleTimer);

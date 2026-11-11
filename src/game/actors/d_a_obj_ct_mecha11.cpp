@@ -86,8 +86,7 @@ void daObjCtMecha11_c::UpdateShadow() {
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = mFloorPosY >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
-    int idx = (unsigned short)mAngleX >> 4;
-    int s = FX_CosIdx(idx);
+    int s = FX_CosIdx((u16)mAngleX >> 4);
     int sa = s < 0 ? -s : s;
     int scaled = FX_MUL(sa, 0x26c000);
     DropShadowScaleXYZ(mShadowModel, mShadowMat, 0x12c000, 0x32000, scaled + 0x50000, 0xf);

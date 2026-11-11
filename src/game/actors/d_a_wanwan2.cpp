@@ -434,9 +434,8 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
             src = &cur;
         delta.x = vel->x + (pos->x - src->x);
         delta.z = vel->z + (pos->z - src->z);
-        idx = ((unsigned short)(short)(angOff + (thisx->mChainTimer << 12))) >> 4;
         val = (pos->y + vel->y) - 0x2000 /* 2 units down */
-              + FX_MUL(FX_SinIdx(idx), -0xa000);
+              + FX_MUL(FX_SinIdx((u16)(s16)(angOff + (thisx->mChainTimer << 12)) >> 4), -0xa000);
         if (val <= *heights) val = *heights;
         delta.y = val - src->y;
         ang = cstd::atan2(delta.x, delta.z);

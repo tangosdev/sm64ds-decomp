@@ -101,7 +101,6 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     s16 angle;
     s16 relativeAngle;
     s32 distance;
-    s32 index;
     s16 projection;
     s32 projectedDistance;
     s32 isPlayer;
@@ -131,8 +130,7 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     angle = Vec3_HorzAngle((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
     relativeAngle = (s16)(angle + spawner->mAngleY);
     distance = Vec3_HorzDist((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
-    index = (u16)relativeAngle >> 4;
-    projection = FX_SinIdx(index);
+    projection = FX_SinIdx((u16)relativeAngle >> 4);
     projectedDistance = FX_MUL(distance, projection);
     if (projectedDistance < 0x10e000)
         spawner->mTrapActive = 1;
@@ -237,11 +235,9 @@ int daObjC1_Trap_c::CleanupResources() {
 
 
 void daObjC1_Trap_c::UpdateModelTransform() {
-    int angleY = (int)(u16)mAngleY >> 4;
-    int angleZ = (int)(u16)mAngleZ >> 4;
-    int sinZ = FX_SinIdx(angleZ);
-    int cosY = FX_CosIdx(angleY);
-    int sinY = FX_SinIdx(angleY);
+    int sinZ = FX_SinIdx((u16)mAngleZ >> 4);
+    int cosY = FX_CosIdx((u16)mAngleY >> 4);
+    int sinY = FX_SinIdx((u16)mAngleY >> 4);
     int radius = sinZ * 5;
     int offsetX = FX_MUL(radius, cosY);
     int offsetZ = FX_MUL(radius, sinY);

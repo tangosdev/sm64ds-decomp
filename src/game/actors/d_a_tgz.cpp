@@ -473,7 +473,6 @@ int daTgz_c::func_ov077_02125550() {
 /* State 4 entry: leave the carrier, pop up in front of it, and start spinning. */
 int daTgz_c::func_ov077_021256b4() {
     dActor_c *carrier;
-    int idx;
     s16 sinv;
     s16 cosv;
     s16 carrierYaw;
@@ -499,12 +498,10 @@ int daTgz_c::func_ov077_021256b4() {
     mPosY = src[1];
     mPosZ = src[2];
 
-    idx = ((int)(u16)mAngleY) >> 4;
-    sinv = FX_SinIdx(idx);
+    sinv = FX_SinIdx((u16)mAngleY >> 4);
     mPosX = mPosX + FX_MUL(sinv, 0x3c000);
     mPosY = mPosY + 0x85000;
-    idx = ((int)(u16)mAngleY) >> 4;
-    cosv = FX_CosIdx(idx);
+    cosv = FX_CosIdx((u16)mAngleY >> 4);
     mPosZ = mPosZ + FX_MUL(cosv, 0x3c000);
 
     carrier = mCarrier;

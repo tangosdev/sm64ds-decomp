@@ -528,7 +528,6 @@ void daBtn_c::func_ov079_02125b44()
         case 2:
             if (mPlayers[mNearestPlayer]->GetTalkState() == 0) {
                 u16 ang;
-                int i;
                 int y;
                 {
                     daPly_c *p = mPlayers[mNearestPlayer];
@@ -538,10 +537,9 @@ void daBtn_c::func_ov079_02125b44()
                     pos[2] = src[2];
                 }
                 ang = ::Vec3_HorzAngle((const ::Vector3 *)pos, (const ::Vector3 *)&mPosX);
-                i = (u16)ang >> 4;
                 y = pos[1] + 0x96000;
-                pos[0] = FX_SinIdx(i) * 0xd7 + pos[0];
-                pos[2] = FX_CosIdx(i) * 0xd7 + pos[2];
+                pos[0] = FX_SinIdx((u16)ang >> 4) * 0xd7 + pos[0];
+                pos[2] = FX_CosIdx((u16)ang >> 4) * 0xd7 + pos[2];
                 pos[1] = y;
                 if (mPlayers[mNearestPlayer]->ShowMessage(
                         *this, 0xa4, (Vector3 *)pos, 0, 0) != 0) {
@@ -809,15 +807,13 @@ void daBtn_c::func_ov079_02125504()
         }
 
         if (frame <= 7) {
-            int idx = (u16)t >> 4;
-            s16 sn = FX_SinIdx(idx);
-            s16 cs = FX_CosIdx(idx);
+            s16 sn = FX_SinIdx((u16)t >> 4);
+            s16 cs = FX_CosIdx((u16)t >> 4);
             v[0].x = px - sn * 0xaa;
             v[0].z = pz - cs * 0xaa;
         } else {
-            int idx = (u16)t >> 4;
-            s16 sn = FX_SinIdx(idx);
-            s16 cs = FX_CosIdx(idx);
+            s16 sn = FX_SinIdx((u16)t >> 4);
+            s16 cs = FX_CosIdx((u16)t >> 4);
             v[0].x = px + sn * 0xaa;
             v[0].z = pz + cs * 0xaa;
         }
@@ -1214,16 +1210,14 @@ void daBtn_c::func_ov079_021246dc()
                 daPly_c *other = mPlayers[idx];
                 Vector3 *op = &other->mPos;
                 unsigned short ang;
-                int i;
                 short mag = 0x10e;
                 pos.x = op->x;
                 pos.y = op->y;
                 pos.z = op->z;
                 ang = ::Vec3_HorzAngle((const ::Vector3 *)&pos, (const ::Vector3 *)&mPosX);
-                i = ang >> 4;
                 pos.y += 0x32000;
-                pos.x = FX_SinIdx(i) * mag + pos.x;
-                pos.z = FX_CosIdx(i) * mag + pos.z;
+                pos.x = FX_SinIdx(ang >> 4) * mag + pos.x;
+                pos.z = FX_CosIdx(ang >> 4) * mag + pos.z;
                 if (mPounder->ShowMessage(*this, 0xa5, (Vector3 *)&pos, 0, 0) == 0)
                     return;
                 mSubState++;
@@ -1588,20 +1582,18 @@ int daBtn_c::func_ov079_02123bcc() {
     dist = ::Vec3_HorzDist((const ::Vector3 *)v, (const ::Vector3 *)&mPosX);
     a0 = mAngleY; a1 = mBodyYaw; a2 = mTargetAngle;
     raw = (a0 + a1) << 16; ang = a2 + (raw >> 16); rangle = raw >> 16;
-    idx = (u16)(s16)ang >> 4;
-    cosv = FX_CosIdx(idx);
+    cosv = FX_CosIdx((u16)(s16)ang >> 4);
     hc = FX_MUL(dist, cosv);
     if (hc < 0) hc = -hc;
     if (hc <= 0x3c000) {
-        sinv = FX_SinIdx(idx);
+        sinv = FX_SinIdx((u16)(s16)ang >> 4);
         hs = FX_MUL(dist, sinv);
         if (hs < 0) hs = -hs;
         if (hs <= 0xe1000) {
             int vx, vy, vz;
             int i;
-            idx2 = (u16)rangle >> 4;
-            sin2 = FX_SinIdx(idx2);
-            cos2 = FX_CosIdx(idx2);
+            sin2 = FX_SinIdx((u16)rangle >> 4);
+            cos2 = FX_CosIdx((u16)rangle >> 4);
             vx = v[0]; vy = v[1]; vz = v[2];
             nx = (s16)sin2 * 5 + vx;
             nz = (s16)cos2 * 5 + vz;
@@ -1666,7 +1658,6 @@ int daBtn_c::func_ov079_02123a8c()
 void daBtn_c::func_ov079_02123804(dActor_c *other)
 {
     Vector3 v;
-    int idx;
     s16 cosv, sinv;
     int ang;
 
@@ -1677,9 +1668,8 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         v.z = q[2];
     }
 
-    idx = (unsigned short)other->mPrevAngleY >> 4;
-    cosv = FX_SinIdx(idx);
-    sinv = FX_CosIdx(idx);
+    cosv = FX_SinIdx((u16)other->mPrevAngleY >> 4);
+    sinv = FX_CosIdx((u16)other->mPrevAngleY >> 4);
     v.x = v.x - cosv * 0x50;
     v.z = v.z - sinv * 0x50;
 

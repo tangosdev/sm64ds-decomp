@@ -108,8 +108,7 @@ void daObjCtRotateBlock_c::UpdateShadow() {
     mShadowMat.m[10] = (mFloorY + 0x1000) >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
     {
-        int idx = (unsigned short)(short)(mAngleZ << 1) >> 4;
-        int s = FX_SinIdx(idx);
+        int s = FX_SinIdx((u16)(s16)(mAngleZ << 1) >> 4);
         int sa = s < 0 ? -s : s;
         int depthAdd = FX_MUL(sa, 0x64000);
         DropShadowScaleXYZ(mShadowModel, mShadowMat, d + depthAdd, b, d, 0xf);

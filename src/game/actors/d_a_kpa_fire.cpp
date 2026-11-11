@@ -447,16 +447,15 @@ void daKpaFire_c::func_ov060_021171e8() {
  * with h = mPrevAngleY >> 4 (the heading, read unsigned) and p = phase >> 4. */
 void daKpaFire_c::func_ov060_0211712c() {
     short phase = (short)(((this->mTickCount + this->mPhaseOffset) & 0x3f) << 10);
-    int p = (unsigned short)phase >> 4;
     int *px = &this->mPosX;
     int *pz;
     *px = *px + ((FX_SinIdx((int)*(unsigned short *)&this->mPrevAngleY >> 4) *
-                  FX_SinIdx(p))
+                  FX_SinIdx((u16)phase >> 4))
                  << 2) /
                     0x1000;
     pz = &this->mPosZ;
     *pz = *pz + ((FX_CosIdx((int)*(unsigned short *)&this->mPrevAngleY >> 4) *
-                  FX_CosIdx(p))
+                  FX_CosIdx((u16)phase >> 4))
                  << 2) /
                     0x1000;
 }

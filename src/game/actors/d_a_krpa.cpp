@@ -201,9 +201,8 @@ int daKrpa_c::EnterSpit() {
 int daKrpa_c::ExecuteSpit() {
     if (this->mFrameController.cursor == 0x1e) {
         Vector3 firePos;
-        int idx = (int)(u16)this->mAngleY >> 4;
-        int cosv = FX_CosIdx(idx);
-        int sinv = FX_SinIdx(idx);
+        int cosv = FX_CosIdx((u16)this->mAngleY >> 4);
+        int sinv = FX_SinIdx((u16)this->mAngleY >> 4);
         int offZ = FX_MUL(cosv, 0x50000);
         int offX = FX_MUL(sinv, 0x50000);
         int x = this->mPosX + offX;
