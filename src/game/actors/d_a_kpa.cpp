@@ -184,9 +184,7 @@ enum BowserTail_State {
 /* dActor_c::mFlags bit daPly_c sets on the actor it releases
  * (d_a_ply_methods.cpp func_ov002_020daa74); the tail tests it to release
  * Bowser at once. */
-enum BowserTail_Flag {
-    BOWSER_TAIL_RELEASED = 0x400
-};
+enum BowserTail_Flag { BOWSER_TAIL_RELEASED = 0x400 };
 
 /* Actor IDs, from symbols/actor_debug_names.tsv. */
 enum Bowser_ActorID {
@@ -1336,7 +1334,8 @@ void daKpa_c::ActWalkToMario() {
             this->mCondFlags &= ~BOWSER_COND_BREATHING;
             return;
         }
-        if (angleDiff >= 0x2000) return;
+        if (angleDiff >= 0x2000)
+            return;
         this->mAnmModel.currFrame = 0;
         (this->mStep)++;
         this->mStepCounter = 0;
@@ -1927,7 +1926,8 @@ void daKpa_c::ActThrown() {
         rg.SetObjAndPos(v, (dActor_c*)this);
         if (rg.DetectClsn() != 0) {
             int hy = rg.clsnY;
-            if (hy >= this->mHomePosY - 0x64000) referenceY = hy;
+            if (hy >= this->mHomePosY - 0x64000)
+                referenceY = hy;
         }
     }
 
@@ -2497,10 +2497,10 @@ void daKpa_c::ActTiltLavaPlatform() {
             short b = *(short*)((char*)data_ov060_02119296 + off);
             int v;
             if (a > 0) {
-                v = (short)(b * (*(short*)((char*)data_ov060_02119298 + off) - 1 - timer));
+                v = (short)(b * (*(short *)((char *)data_ov060_02119298 + off) - 1 - timer));
             } else {
                 i -= 1; off = i * 6;
-                v = (short)(b * (timer - *(short*)((char*)data_ov060_02119298 + off)));
+                v = (short)(b * (timer - *(short *)((char *)data_ov060_02119298 + off)));
             }
             TiltPlatform(v);
             if (v != 0 && (this->mTimer & 1)) {
