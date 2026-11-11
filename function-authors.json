@@ -32095,15 +32095,15 @@
     },
     "ov022:0x02112654": {
       "author": "tangosdev",
-      "name": "func_ov022_02112654"
+      "name": "_ZN21daObj_volcanoCannon_c14CheckPlayerHitEv"
     },
     "ov022:0x021126ac": {
       "author": "tangosdev",
-      "name": "func_ov022_021126ac"
+      "name": "_ZN21daObj_volcanoCannon_c10ExecuteFlyEv"
     },
     "ov022:0x02112710": {
       "author": "tangosdev",
-      "name": "func_ov022_02112710"
+      "name": "_ZN21daObj_volcanoCannon_c8EnterFlyEv"
     },
     "ov022:0x02112790": {
       "author": "andrewboudreau",
