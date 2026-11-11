@@ -964,16 +964,20 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
     func_0201b388(data_0209d6a8);
 }
 
+/* Shows the course name on the star-select screen (message base + 0x196)
+   on BG3, centred across the screen in a two-row strip of map entries.
+   Main courses (message < 0x1a5) also get a second line, message 0x28e,
+   centred in 0xd2 pixels. */
 void Message::DisplayCourseNameForStarSelect(u32 base)
 {
-    volatile unsigned short ls;
-    volatile int li1;
-    volatile int li2;
+    volatile unsigned short blank;
+    volatile int zero;
+    volatile int zero2;
     int idx;
     int sum;
-    u16* q;
-    int div;
-    int div2;
+    u16 *map;
+    int i;
+    int j;
 
     data_0209d6d4 = (short)(base + 0x196);
     data_0209d660 = 0;
@@ -991,37 +995,32 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     data_0209d6a8 = 0x20;
 
     {
-        int p1 = (int)G2_GetBG3CharPtr() + 0x4000;
-        li1 = 0;
-        MIi_CpuClear32(li1, (int *)p1, 0x2000);
+        void *chars = (char *)G2_GetBG3CharPtr() + 0x4000;
+        zero = 0;
+        MIi_CpuClear32(zero, (int *)chars, 0x2000);
     }
-
     {
-        int s1 = (int)G2_GetBG3ScrPtr();
-        ls = 0x2ff;
-        MIi_CpuClear16(ls, (char *)s1, 0x800);
+        void *scr = G2_GetBG3ScrPtr();
+        blank = 0x2ff;
+        MIi_CpuClear16(blank, (char *)scr, 0x800);
     }
 
     if (data_0209d6d4 >= 0x1a5) {
         gMsgBoxStyle = 0;
-        q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x400);
+        map = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x400);
     } else {
         gMsgBoxStyle = 1;
-        q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x4c0);
+        map = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x4c0);
     }
-    div = 0;
-    do {
-        q[div] = (u16)(div + 0x200);
-        div++;
-    } while (div < 0x40);
+    for (i = 0; i < 0x40; i++)
+        map[i] = i + 0x200;
 
     SetSubBg1Offset(0, 0);
     LayoutLine();
     func_0201b388(data_0209d6a8);
 
-    if (data_0209d6d4 >= 0x1a5) {
+    if (data_0209d6d4 >= 0x1a5)
         return;
-    }
 
     data_0209d6c0 = 1;
     {
@@ -1038,17 +1037,14 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
     data_0209d6a8 = 0x20;
 
     {
-        int p2 = (int)G2_GetBG3CharPtr() + 0x4800;
-        li2 = 0;
-        MIi_CpuClear32(li2, (int *)p2, 0x800);
+        void *chars = (char *)G2_GetBG3CharPtr() + 0x4800;
+        zero2 = 0;
+        MIi_CpuClear32(zero2, (int *)chars, 0x800);
     }
 
-    q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x240);
-    div2 = 0;
-    do {
-        q[div2] = (u16)(div2 + 0x240);
-        div2++;
-    } while (div2 < 0x40);
+    map = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x240);
+    for (j = 0; j < 0x40; j++)
+        map[j] = j + 0x240;
 
     LayoutLine();
     func_0201b388(data_0209d6a8);
