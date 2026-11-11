@@ -119,6 +119,8 @@ extern "C" {
 extern int func_020092c4(void *cam, Vector3 *out, const Vector3 *target);
 extern s32 Math_Function_0203b14c(s32 *p, s32 tgt, s32 rate, s32 lim, s32 step);
 extern int StartWithFarCamera();
+/* Actor-table factory; the registry row names the bare symbol. */
+extern dCamera_c *dCamera_c_classInit();
 extern struct ViewObj *GetViewObj(int idx);
 
 extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
@@ -215,7 +217,7 @@ enum Bool { FALSE, TRUE };
 
 /* Allocation factory. new dCamera_c is the fBase constructor, the dBase and
  * dView vtables, the view-matrix clear, and the dCamera vtable. */
-extern "C" dCamera_c *dCamera_c_classInit() {
+dCamera_c *dCamera_c_classInit() {
     return new dCamera_c;
 }
 
@@ -1400,8 +1402,8 @@ int dCamera_c::func_0200bec4(int *target, int baseY, char *modeArg, int speed) {
 
 /* KuppaScript.cpp's readers of the script's unaligned operands and its
    lookups of the script's actors. */
-extern "C" dActor_c *KuppaScript::FindScriptPlayer(u32 character);
-extern "C" dActor_c *KuppaScript::FindDemoActor(u32 param1);
+dActor_c *KuppaScript::FindScriptPlayer(u32 character);
+dActor_c *KuppaScript::FindDemoActor(u32 param1);
 
 extern "C" {
 /* local extern: math/CalcLib.h spells the Vec3 helpers with const Vector3 *,
@@ -1461,9 +1463,27 @@ void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang
 void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist, short *outVertAng,
                           short *outHorzAng);
 void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int stepY, int stepZ);
-}
 
-extern "C" {
+/* State entries and helpers defined below. The declarations carry the C
+   linkage their ROM symbols need. */
+int func_02009e30(dCamera_c *cam);
+int func_02009e10(dCamera_c *cam);
+int func_02009df0(dCamera_c *cam);
+int func_02009dd0(dCamera_c *cam);
+int func_02009db0(dCamera_c *cam);
+int func_02009d90(dCamera_c *cam);
+int func_02009d70(dCamera_c *cam);
+int func_02009aa8(dCamera_c *cam);
+int func_020098b8(dCamera_c *cam);
+void func_0200987c(dCamera_c *cam);
+int func_0200985c(dCamera_c *cam);
+int func_020097ec(dCamera_c *cam);
+int func_020095e4(dCamera_c *cam);
+int func_020095c4(dCamera_c *cam);
+int func_02009540(dCamera_c *cam);
+int func_020094e4(dCamera_c *cam);
+void func_020094c0(dCamera_c *cam);
+}
 
 /* The turn-by-buttons follow (mode data_0208733c), Super Mario 64's
    mode_8_directions_camera: the yaw is mBaseAngleY plus mBaseAngleOffset
@@ -3251,7 +3271,6 @@ void dCamera_c::PrepareBgCh(dBgCh &bgCh) {
         bgCh.StartIgnoringVanishSurfaces();
     }
     bgCh.EnableCameraMode();
-}
 }
 
 /* The script ops, called through RunCameraCommand's member-function table
