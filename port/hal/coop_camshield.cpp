@@ -37,6 +37,7 @@ extern int data_0209b454[];            // the freeze-request word (the star's bi
 extern unsigned int data_0209b464;     // this frame's copy of it
 extern char *data_0209f318;            // the camera
 extern unsigned data_0209b098[4], data_0209b0b8[4], data_0209b0c8[4];   // camera modes 9 (first person), 11 (climb into the cannon), 12 (cannon aim)
+int _ZN5Event6GetBitEj(unsigned int bit);   // event bits 0x1e (no star takes a touch) and 0x1d (HUD hidden), for the trace
 int func_ov002_020df34c(void *player); // Player.cpp: into the cannon state + the climb-in camera
 int func_ov002_020df300(void *player); // Player.cpp: the cannon aim camera
 }
@@ -69,7 +70,8 @@ void read_env() {
     g_env = true;
     const char *o = std::getenv("SM64DS_COOP_CAMSHIELD");
     g_off = o && *o == '0';
-    g_log = std::getenv("SM64DS_COOP_LOG") != nullptr;
+    const char *lg = std::getenv("SM64DS_COOP_LOG");
+    g_log = lg && *lg && *lg != '0';     // "0" (or empty) means off
     if (const char *t = std::getenv("SM64DS_COOP_CAMSHIELD_TRACE")) g_trace = (unsigned)std::atoi(t);
     if (const char *c = std::getenv("SM64DS_COOP_CANNON_TEST")) g_cannon_frame = std::atoi(c);
     if (const char *g = std::getenv("SM64DS_COOP_CAMSHIELD_GOTO"))
@@ -183,9 +185,10 @@ extern "C" void coop_camshield_frame(unsigned frame) {
         const int *eye = (const int *)(cam + kCamEye), *at = (const int *)(cam + kCamAt);
         const void *md = *(const void *const *)(cam + kCamMode);
         const int *pp = (const int *)(pl + kPlPos);
-        std::fprintf(stderr, "[camshield] f%u%s mode=%s cam8=%u b454cut=%u b464cut=%u eye=%d,%d,%d at=%d,%d,%d me=%d,%d,%d pstate=%08x quiet=%u ended=%u\n",
+        std::fprintf(stderr, "[camshield] f%u%s mode=%s cam8=%u b454cut=%u b464cut=%u eye=%d,%d,%d at=%d,%d,%d me=%d,%d,%d pstate=%08x ev1e=%d ev1d=%d quiet=%u ended=%u\n",
                      frame, edge ? " EDGE" : "", mode_name(md), cam8, cut, (data_0209b464 & kCut) ? 1u : 0u, eye[0] >> 12, eye[1] >> 12, eye[2] >> 12,
-                     at[0] >> 12, at[1] >> 12, at[2] >> 12, pp[0] >> 12, pp[1] >> 12, pp[2] >> 12, *(const unsigned *)(pl + kPlState), g_quiet, g_ended);
+                     at[0] >> 12, at[1] >> 12, at[2] >> 12, pp[0] >> 12, pp[1] >> 12, pp[2] >> 12, *(const unsigned *)(pl + kPlState),
+                     _ZN5Event6GetBitEj(0x1e) != 0, _ZN5Event6GetBitEj(0x1d) != 0, g_quiet, g_ended);
     }
     if (g_shots[0]) {
         for (const char *q = g_shots; *q;) {

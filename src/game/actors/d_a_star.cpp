@@ -3194,6 +3194,11 @@ extern "C" int port_star_end_cutscene(void *star)
         s->mPlayer->mFlags &= ~CUTSCENE_FLAG;
         if (!port_collector_foreign(s->mPlayer))
             data_0209b454 &= ~CUTSCENE_FLAG;
+        /* The collect step set event bits 0x1e (no star takes a touch) and 0x1d (coin / red / silver /
+           timer HUD hidden); the cartridge's own end of a collection (func_ov002_020e8618) clears
+           both, so a copy removed mid-collect clears them too. */
+        _ZN5Event8ClearBitEj(0x1e);
+        _ZN5Event8ClearBitEj(0x1d);
         ended = 1;
     }
     s->mFlags &= ~CUTSCENE_FLAG;
