@@ -6,7 +6,7 @@
  * (FL_COIN, 0xd8). daObjFl_Puzzle_c is a piece (FL_PUZZLE, 0x33c).
  * Typeinfo: _ZTI14daObjFl_Coin_c at 0x0211bf98, _ZTI16daObjFl_Puzzle_c at
  * 0x0211bfa4. The run ends with the piece's touch helper
- * MarkTouchedByPlayer, its collision callback func_ov064_021192bc and the
+ * MarkTouchedByPlayer, its collision callback StoodOnCallback and the
  * two registry factories; both g_profile rows live outside this file.
  *
  * Source order is the reverse of the ROM. mwccarm 2004/b56 emits one .text
@@ -103,12 +103,6 @@ extern CLPS_Block data_ov064_0211baac;
 /* Per-type step scripts, indexed by mType (ov064 .data). */
 extern int data_ov064_0211c198[];
 
-extern "C" {
-/* The collision callback piece InitResources installs, and the touch helper
- * it forwards to; both are defined just below. */
-void func_ov064_021192bc(dBgW *collider, dActor_c *owner, dActor_c *other);
-}
-
 /* Reconstructed source-style name: SM64DS proves daObjFl_Puzzle_c through RTTI,
  * allocation size, vtable identity, and the FL_PUZZLE registry profile; later
  * EAD lineage supplies classInit. Exact original spelling is not preserved.
@@ -140,7 +134,7 @@ extern "C" daObjFl_Coin_c *daObjFl_Coin_c_classInit(void) {
  * two. long_calls keeps the pooled absolute tail call. */
 #pragma push
 #pragma long_calls on
-extern "C" void func_ov064_021192bc(dBgW *collider, dActor_c *owner, dActor_c *other) {
+void daObjFl_Puzzle_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other) {
     static_cast<daObjFl_Puzzle_c *>(owner)->MarkTouchedByPlayer(other);
 }
 #pragma pop
@@ -163,7 +157,7 @@ s32 daObjFl_Coin_c::InitResources() {
 
 /* Picks the model and script from param1's low nibble (mType), loads the
  * model and the shared collision file, puts both matrices at the piece's
- * position, registers func_ov064_021192bc with the collider through
+ * position, registers StoodOnCallback with the collider through
  * dBgW::SetStoodOnCallback, and starts in PIECE_STATE_INIT with the step marked running
  * and the coin spawn still allowed. */
 int daObjFl_Puzzle_c::InitResources() {
@@ -173,7 +167,7 @@ int daObjFl_Puzzle_c::InitResources() {
     UpdateClsnMatrix();
     mMeshCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(data_ov064_0211c800), mClsnMat, 0x1000,
                           mAngleY, data_ov064_0211baac);
-    mMeshCollider.SetStoodOnCallback(&func_ov064_021192bc);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mStepScript = data_ov064_0211c198[mType];
     mStepIndex = 0;
     unk_32c = 0;

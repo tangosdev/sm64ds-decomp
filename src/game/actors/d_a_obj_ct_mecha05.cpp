@@ -40,6 +40,7 @@ enum daObjCtMecha05_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x5c2, collision file 0x5c3). mwcc emits
@@ -63,7 +64,6 @@ extern Mecha05ModelFile TTC_MovingBar_ModelFile;
 extern Mecha05CollisionFilePtr TTC_MovingBar_ClsnFile;
 
 extern u8 data_0209f2c0;
-extern s16 FX_SinCosTable_[];
 extern s16 data_ov065_0211c0c8[];
 extern s8 data_ov065_0211d26c[];
 extern CLPS_Block data_ov035_02112258;
@@ -127,9 +127,9 @@ int daObjCtMecha05_c::Behavior() {
         int ang;
         /* ldrh, not the ldrsh a plain s16 mPrevAngleY read would emit. */
         ang = *(u16 *)&mPrevAngleY;
-        mPosX = mHomePosX + FX_MUL(FX_SinCosTable_[(ang >> 4) << 1], 0xfa000);
+        mPosX = mHomePosX + FX_MUL(FX_SinIdx(ang >> 4), 0xfa000);
         ang = *(u16 *)&mPrevAngleY;
-        mPosZ = mHomePosZ + FX_MUL(FX_SinCosTable_[((ang >> 4) << 1) + 1], 0xfa000);
+        mPosZ = mHomePosZ + FX_MUL(FX_CosIdx(ang >> 4), 0xfa000);
         UpdateModelPosAndRotY();
         UpdateShadow();
         if (IsClsnInRange(0, 0) != 0)

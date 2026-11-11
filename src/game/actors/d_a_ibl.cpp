@@ -281,15 +281,15 @@ void daIbl_c::UpdateModelMatrix() {
  *  - u64-launder materializes pidx between the first path-node load and store.
  */
 int daIbl_c::AdvancePath() {
-    int px = mNextNodePosX;
+    int px = mNextNodePos.x;
     int ax = mPosX;
     int prevx = mPrevNodePosX;
     /* name A  = node.x - prev.x  (C8)  -- high-priority web -> r8 */
     int A = px - prevx;
-    int pz = mNextNodePosZ;
+    int pz = mNextNodePos.z;
     int az = mPosZ;
     int prevz = mPrevNodePosZ;
-    int py = mNextNodePosY;
+    int py = mNextNodePos.y;
     int prevy = mPrevNodePosY;
     /* name B  = node.y - prev.y  (C7) */
     int B = py - prevy;
@@ -360,18 +360,18 @@ int daIbl_c::AdvancePath() {
     /* s6=sign(C8), s8=sign(C6) after the dest-name swap above */
     dot = s6 * sA + s7 * ssl + s8 * sB;
     if (dot <= 0) {
-        int v = mNextNodePosX;
+        int v = mNextNodePos.x;
         int *pidx = &mPathNodeIndex;
         mPrevNodePosX = v;
-        v = mNextNodePosY;
+        v = mNextNodePos.y;
         mPrevNodePosY = v;
-        v = mNextNodePosZ;
+        v = mNextNodePos.z;
         mPrevNodePosZ = v;
         *pidx = *pidx + 1;
         if (mPathNodeIndex >= mNumPathNodes) {
             mPathNodeIndex = 0;
         }
-        mPathPtr.GetNode(*(Vector3 *)&mNextNodePosX, mPathNodeIndex);
+        mPathPtr.GetNode(mNextNodePos, mPathNodeIndex);
         return (mPathNodeIndex == 0) ? -1 : 1;
     }
     return 0;
@@ -442,8 +442,8 @@ void daIbl_c::PathBehavior() {
                     mVertSpeed = (int)(-vy + ((u32)-vy >> 31)) >> 1;
                 mRollSoundHandle = 0;
             } else {
-                mRollSoundHandle = Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL,
-                                                   *(Vector3 *)&mCamSpacePosX, 0);
+                mRollSoundHandle =
+                    Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, mCamSpacePos, 0);
             }
             if (mHorzSpeed >= 0x23000) {
                 mHorzSpeed = 0x23000;
@@ -516,7 +516,7 @@ void daIbl_c::RollOffBehavior() {
                 mVertSpeed = mVertSpeed * -3 / 2;
         } else {
             mRollSoundHandle =
-                Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, *(Vector3 *)&mCamSpacePosX, 0);
+                Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, mCamSpacePos, 0);
         }
     }
 
@@ -590,7 +590,7 @@ void daIbl_c::FreeRollBehavior() {
             LandingDust(1);
         } else {
             mRollSoundHandle =
-                Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, *(Vector3 *)&mCamSpacePosX, 0);
+                Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, mCamSpacePos, 0);
         }
     }
 
@@ -656,7 +656,7 @@ void daIbl_c::SpawnerBehavior() {
     }
 
     {
-        int d = Vec3_HorzDist((const Vector3 *)&mPosX, &pos);
+        int d = Vec3_HorzDist(&mPos, &pos);
         if (d < mMinSpawnDist) return;
         if (d > mMaxSpawnDist) return;
     }
@@ -762,10 +762,10 @@ int daIbl_c::InitResources()
         mPrevNodePosX = mPosX;
         mPrevNodePosY = mPosY;
         mPrevNodePosZ = mPosZ;
-        mPathPtr.GetNode(*(Vector3 *)&mNextNodePosX, mPathNodeIndex);
-        if (Vec3_Equal((const Vector3 *)&mPosX, (const Vector3 *)&mNextNodePosX)) {
+        mPathPtr.GetNode(mNextNodePos, mPathNodeIndex);
+        if (Vec3_Equal(&mPos, &mNextNodePos)) {
             mPathNodeIndex += 1;
-            mPathPtr.GetNode(*(Vector3 *)&mNextNodePosX, mPathNodeIndex);
+            mPathPtr.GetNode(mNextNodePos, mPathNodeIndex);
         }
         AdvancePath();
         mPrevAngleY = mHeadingToNode;

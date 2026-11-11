@@ -38,6 +38,7 @@ enum daObjFl_Amilift_c_AssetId { ASSET_FL_AMILIFT_BMD = 0x05ef, ASSET_FL_AMILIFT
 #include "SharedFilePtr.h"
 #include "math/Approach.h"
 #include "cstd.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
  * model handle constructs through func_02017acc and destroys through
@@ -71,7 +72,6 @@ extern void Vec3_Sub(Vector3 *dst, const Vector3 *a, const Vector3 *b);
 }
 
 extern LiftState data_ov064_0211c750[];
-extern short FX_SinCosTable_[];
 extern AmiliftModelFilePtr data_ov064_0211c730;
 extern AmiliftClsnFilePtr data_ov064_0211c728;
 extern CLPS_Block data_ov064_0211bb6c;
@@ -220,7 +220,7 @@ s32 daObjFl_Amilift_c::Behavior() {
         short *pAng = &mBobPhase;
         *pAng = (short)(*pAng + 0xa00);
         unsigned short h = *(unsigned short *)&mBobPhase;
-        short s = FX_SinCosTable_[(h >> 4) * 2];
+        short s = FX_SinIdx(h >> 4);
         short ten = 10;
         mBobOffset = s * ten;
     }

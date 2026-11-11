@@ -83,6 +83,7 @@
 #include "dActor_c.h"
 #include "dCc_c.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx_trig.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -182,7 +183,6 @@ extern ChompState data_ov100_021486f4;
 extern ChompPmf data_ov100_02148000;
 extern ChompPmf data_ov100_02147ff8;
 extern unsigned char gGameMode;
-extern short FX_SinCosTable_[];
 extern Matrix4x3 data_020a0e68;
 }
 
@@ -400,7 +400,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, thisx->mAngleX, thisx->mAngleY, thisx->mAngleZ);
     MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
-    Vec3_Add((Vector3 *)&added, (const Vector3 *)&thisx->mPosX, (const Vector3 *)&out);
+    Vec3_Add((Vector3 *)&added, &thisx->mPos, (const Vector3 *)&out);
 
     {
         int ax = added.x, ay = added.y, az = added.z;
@@ -434,9 +434,8 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
             src = &cur;
         delta.x = vel->x + (pos->x - src->x);
         delta.z = vel->z + (pos->z - src->z);
-        idx = ((unsigned short)(short)(angOff + (thisx->mChainTimer << 12))) >> 4;
         val = (pos->y + vel->y) - 0x2000 /* 2 units down */
-              + FX_MUL(FX_SinCosTable_[idx * 2], -0xa000);
+              + FX_MUL(FX_SinIdx((u16)(s16)(angOff + (thisx->mChainTimer << 12)) >> 4), -0xa000);
         if (val <= *heights) val = *heights;
         delta.y = val - src->y;
         ang = cstd::atan2(delta.x, delta.z);
