@@ -4194,6 +4194,27 @@ extern "C" int port_adventure_ghost_drawpos(int slot, int out[3]) {
     return 1;
 }
 
+// MAPDOTS1: where a hub friend stands in MY level, for the bottom-screen map, whether or
+// not his area is the one loaded here. A friend in another room of the level (Hazy Maze
+// Cave's areas, the castle's) is parked and undrawn on this console (gw_here answers 2 for
+// his area), so port_adventure_ghost_drawpos has nothing for him; his newest synced frame
+// still says where he is. Returns 0 when he is not in this level (or is gone / fell out),
+// 1 when drawn here (use drawpos), 2 when he is in another area of this level (out[] is the
+// newest frame's position, *character his character).
+extern "C" int port_adventure_ghost_mappos(int slot, int out[3], int *character) {
+    if (!g_hub || slot < 0 || slot >= kPortBodySlots) return 0;
+    const int s = gw_seat_for_body(slot);
+    if (s < 0 || s >= kHubMaxSeats) return 0;
+    GwSeat &z = g_gw[s];
+    const int h = gw_here(z);
+    if (h == 0) return 0;
+    const HubGhostFrame &nw = z.ring[z.n - 1].f;
+    if ((int)nw.level_id != (int)data_0209f2f8) return 0;
+    out[0] = nw.x; out[1] = nw.y; out[2] = nw.z;
+    if (character) *character = (int)nw.character;
+    return h == 1 ? 1 : 2;
+}
+
 // ---------------------------------------------------------------------------
 // ADVENTURE GHOSTS: the pure-follower step. Called once per RENDER frame from
 // the walk loop, AFTER sync_tick (so the target is this frame's freshest) and

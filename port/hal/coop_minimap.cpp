@@ -6,6 +6,7 @@
 
 extern "C" int port_adventure_ghost_seat(int slot);
 extern "C" int port_adventure_ghost_drawpos(int slot, int out[3]);
+extern "C" int port_adventure_ghost_mappos(int slot, int out[3], int *character);
 extern "C" unsigned char data_0209f2d8;
 extern "C" int port_rom_frame(void);
 
@@ -29,7 +30,11 @@ int log_env() {
     return v;
 }
 
+int s_char[32];   // MAPDOTS1: the character of a friend answered 3 (other area), else -1
+
 }  // namespace
+
+extern "C" int port_coop_minimap_char(int slot) { return (slot >= 0 && slot < 32) ? s_char[slot] : -1; }
 
 extern "C" int port_coop_minimap_ghost(int slot, int pos[3]) {
     if (!mode_env() || data_0209f2d8 == 1) return 0;     // VS draws its own
@@ -46,7 +51,24 @@ extern "C" int port_coop_minimap_ghost(int slot, int pos[3]) {
         if (b0 >= 0 && f >= b0 && f < b1) return 0;
     }
     if (port_adventure_ghost_seat(slot) < 0) return 0;   // not a hub ghost
-    if (!port_adventure_ghost_drawpos(slot, pos)) return 2;
+    s_char[slot & 31] = -1;
+    if (!port_adventure_ghost_drawpos(slot, pos)) {
+        // MAPDOTS1: not drawn here. A friend in another area of THIS level is still on the
+        // map, from his newest synced frame (answer 3); another level shows nothing (2).
+        int ch = 0;
+        if (std::getenv("SM64DS_COOP_MAPDOTS_OFF") == 0 && port_adventure_ghost_mappos(slot, pos, &ch) == 2) {
+            s_char[slot & 31] = ch;
+            if (log_env()) {
+                static unsigned n3[kMinimapWidePlayers];
+                if (slot >= 0 && slot < kMinimapWidePlayers && (n3[slot]++ % 120u) == 0)
+                    std::fprintf(stderr, "[comap] slot %d OTHER AREA at (%d,%d,%d) char %d
+", slot,
+                                 pos[0] >> 12, pos[1] >> 12, pos[2] >> 12, ch);
+            }
+            return 3;
+        }
+        return 2;
+    }
     if (log_env()) {
         static unsigned n[kMinimapWidePlayers];
         if (slot >= 0 && slot < kMinimapWidePlayers && (n[slot]++ % 120u) == 0)
