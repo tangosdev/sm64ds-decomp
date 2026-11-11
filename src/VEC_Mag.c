@@ -7,6 +7,7 @@ int VEC_Mag(const Vector3 *v) {
     s64 sq = (s64)v->x * v->x;
     sq += (s64)v->y * v->y;
     sq += (s64)v->z * v->z;
-    CP_SetSqrt64((u64)(sq << 2));
+    sq <<= 2;
+    CP_SetSqrt64((u64)sq);
     return ((s32)CP_GetSqrtResult32() + 1) >> 1;
 }
