@@ -69,6 +69,7 @@
 #include "private/mtx43.h"
 #include "math/MtxStack.h"
 #include "nitro/gx/g3imm.h"
+#include "nitro/gx/g3imm_cmd.h"
 
 #include "nitro/os/cache.h"
 
@@ -126,15 +127,6 @@ struct MaterialState {
     u32 difAmb;        /* 0x28 */
     u32 speEmi;        /* 0x2c */
 };
-
-/* NitroSDK's geometry-engine ports (ioreg_G3.h) and the matrix mode
-   func_02044b30 selects. */
-#define reg_G3_MTX_MODE (*(volatile u32 *)0x04000440)
-#define reg_G3_TEXCOORD (*(volatile u32 *)0x04000488)
-#define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
-#define reg_G3_DIF_AMB (*(volatile u32 *)0x040004c0)
-#define reg_G3_SPE_EMI (*(volatile u32 *)0x040004c4)
-#define GX_MTXMODE_TEXTURE 3
 
 extern "C" {
 void MTX_Identity43_(Matrix4x3 *mat);
@@ -347,9 +339,9 @@ void func_02044dc4(ModelComponents *self) {
 void ModelComponents::func_02044b30(int idx) {
     const MaterialState &mat = ((const MaterialState *)materials)[idx];
 
-    reg_G3_POLYGON_ATTR = mat.polygonAttr;
-    reg_G3_DIF_AMB = mat.difAmb;
-    reg_G3_SPE_EMI = mat.speEmi;
+    REG_POLYGON_ATTR = mat.polygonAttr;
+    REG_DIF_AMB = mat.difAmb;
+    REG_SPE_EMI = mat.speEmi;
     reg_G3_TEXPLTT_BASE = mat.texPlttBase;
     u32 texImageParam = mat.texImageParam;
     reg_G3_TEXIMAGE_PARAM = texImageParam;
@@ -360,7 +352,7 @@ void ModelComponents::func_02044b30(int idx) {
         /* Load the texture SRT as the texture matrix: the rotation is
            corrected for the texture's aspect ratio and the translation is
            scaled by its size. */
-        reg_G3_MTX_MODE = GX_MTXMODE_TEXTURE;
+        G3_MtxMode(GX_MTXMODE_TEXTURE);
 
         /* The volatile read keeps textureId's load ahead of the textures
            pointer's. Read plainly -- in the subscript, through a named
@@ -410,9 +402,7 @@ void ModelComponents::func_02044b30(int idx) {
         int sizeT = (texImageParam >> 23) & 7;
         data_020a4bc0 = halfSizes[sizeS];
         data_020a4bc4 = -halfSizes[sizeT];
-        s16 s = mat.texTransS >> 8;
-        s16 t = mat.texTransT >> 8;
-        reg_G3_TEXCOORD = (u16)s | ((u16)t << 16);
+        G3_TexCoord(mat.texTransS, mat.texTransT);
         break;
     }
     }
