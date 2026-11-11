@@ -30,8 +30,8 @@ struct DealerAnimationFileHandle : SharedFilePtr {
  * The constructor and destructor are the class's own (ov006 0x020c1d80 and
  * 0x020c1c64, in src/minigames/unit020bfec0.cpp), so the scenes hold a typed
  * Dealer member and the compiler builds and tears it down. The other Dealer_*
- * helpers there are free functions over a char* record and read it through
- * their DEALER() cast. */
+ * helpers there are free functions over the record; the ones the scenes
+ * declare with a char* parameter keep that spelling and cast once. */
 struct Dealer {
     Dealer();
     ~Dealer();

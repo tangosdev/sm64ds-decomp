@@ -12,8 +12,7 @@
  * through the walker's handle types. The constructor and destructor are the
  * class's own (ov006 0x020c221c and 0x020c21e4), so the slot scene holds a
  * typed Mascot member and the compiler tears it down. The other helpers are
- * free functions over a char* record and read it through their MASCOT()
- * cast. */
+ * free functions over the record. */
 struct Mascot {
     Mascot();
     ~Mascot();

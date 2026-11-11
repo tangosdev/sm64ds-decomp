@@ -14,8 +14,8 @@
  * (FlowerFace: ov006 0x020c3f54 and 0x020c3e70; FallingPetal: 0x020c402c and
  * 0x020c3e54), so the flower scene holds a typed FlowerFace member and the
  * compiler builds the petal array. The other helpers are free functions
- * over char* records and read them through their FLOWERFACE() and PETAL()
- * casts. */
+ * over the records; the ones the scenes declare with a char* parameter keep
+ * that spelling and cast once. */
 struct FallingPetal {
     FallingPetal();
     ~FallingPetal();

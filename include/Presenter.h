@@ -38,8 +38,8 @@ struct PresenterTexSeqFileHandle : SharedFilePtr {
  * each with its BTP. The constructor and destructor are the class's own
  * (ov006 0x020c33dc and 0x020c3288), so the cup and sound scenes hold a
  * typed Presenter member and the compiler tears it down. The other helpers
- * are free functions over a char* record and read it through their
- * PRESENTER() cast. The sixteen animation handles are named members, not
+ * are free functions over the record; the ones the scenes declare with a
+ * char* parameter keep that spelling and cast once. The sixteen animation handles are named members, not
  * arrays: an array of a class with a destructor is torn down through
  * __cxa_vec_cleanup, and the cartridge's destructor is unrolled. */
 struct Presenter {
