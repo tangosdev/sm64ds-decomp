@@ -96,10 +96,17 @@ void Model::Virtual10(Matrix4x3 &mat)
     func_02045074(&data, data.modelFile->bones);
 }
 
+#ifdef _MSC_VER
+extern "C" int host_widen_model_skip(const void *mat4x3);   /* ORIGINOBJ1, src/runtime/actor/d_actor.cpp: a never-posed far model */
+#endif
 // @symbol _ZN5Model6RenderEPK7Vector3
 void Model::Render(const Vector3 *scale)
 {
     Matrix4x3 temp;
+#ifdef _MSC_VER
+    if (host_widen_model_skip(&mat4x3))
+        return;
+#endif
     MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
     data.Render(&temp, (Vector3 *)scale);
 }

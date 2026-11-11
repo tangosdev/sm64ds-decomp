@@ -78,10 +78,17 @@ int dExtCommonModel_c::DoSetFile(char *file, int a, int b)
     return 1;
 }
 
+#ifdef _MSC_VER
+extern "C" int host_widen_model_skip(const void *mat4x3);   /* ORIGINOBJ1, src/runtime/actor/d_actor.cpp: a never-posed far model */
+#endif
 // @symbol _ZN17dExtCommonModel_c6RenderEPK7Vector3
 void dExtCommonModel_c::Render(const Vector3 *scale)
 {
     Matrix4x3 temp;
+#ifdef _MSC_VER
+    if (host_widen_model_skip(&mat4x3))
+        return;
+#endif
     MulMat4x3Mat4x3(&mat4x3, &data_0209b3ec, &temp);
     data->Render(&temp, (Vector3 *)scale);
 }

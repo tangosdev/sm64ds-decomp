@@ -257,13 +257,15 @@ static int HostWouldThink(dActor_c *a)
     return data_0209b464 == 0 || (a->mFlags & data_0209b464) != 0 || data_0209fc68 != 0;
 }
 extern "C" int port_mods_multiplayer(void);
-static int HostWidenUpdate(dActor_c *a, int r, int thresh, Vector3 *camPos, int radius)
+/* 1 when the THINK range is widened along with the draw range for this actor (Draw distance past 100, not the SM64DS_WAKE_OFF row,
+   not a g_wake_skip class, not a multiplayer session); else the ROM's think range holds. */
+static int HostUpdateWidened(dActor_c *a)
 {
     const int pct = host_setting_draw_distance_pct();
     static int off = -1;     /* SM64DS_WAKE_OFF=1: the ROM's update range at any setting (the "before" rows of a proof) */
     if (off < 0) off = getenv("SM64DS_WAKE_OFF") ? 1 : 0;
     if (pct <= 100 || off || HostWakeSkipped(a))
-        return 0x7fffffff;
+        return 0;
     /* MPSYNC4: WHO THINKS IS GAME STATE, so a multiplayer session keeps the ROM's update range whatever this console's Draw
        distance is. Lockstep versus has every console run the same actors from the same inputs (one console waking a far enemy the
        other leaves asleep desyncs the match), and a co-op / world session would have an actor walk on one screen and stand on
@@ -278,8 +280,15 @@ static int HostWidenUpdate(dActor_c *a, int r, int thresh, Vector3 *camPos, int 
             said = 1;
             fprintf(stderr, "[wake] multiplayer session: actors keep the ROM's update range (Draw distance %d%% widens the drawing only)\n", pct);
         }
-        return 0x7fffffff;
+        return 0;
     }
+    return 1;
+}
+static int HostWidenUpdate(dActor_c *a, int r, int thresh, Vector3 *camPos, int radius)
+{
+    if (!HostUpdateWidened(a))
+        return 0x7fffffff;
+    const int pct = host_setting_draw_distance_pct();
     long long t2 = (long long)thresh * pct / 100;
     if (t2 > 0x3fffffff)
         t2 = 0x3fffffff;
@@ -295,6 +304,96 @@ static int HostWidenUpdate(dActor_c *a, int r, int thresh, Vector3 *camPos, int 
         c->farZ = saved;
     }
     return (r != 0x7fffffff && r <= t2) ? r : 0x7fffffff;
+}
+/* ORIGINOBJ1 (player report: in multiplayer a coin, a red coin or a small box pops in and out at the level's origin, flat and
+   untouchable). An actor drawn ONLY because Draw distance is past 100 (the pad_0c5[0] arm of BeforeRender) can be one whose model
+   was never posed: it is far, and some classes refresh their model matrix only while 0x08 (off screen) is down. daCoin_c::Behavior
+   (d_a_coin.cpp, the "(mFlags & 8)" arm) is one. In single player the widened think range puts such an actor in range, so it poses.
+   In a multiplayer session (MPSYNC4: versus, co-op and the Adventure hub all keep the ROM's think range) it runs off screen and its
+   model keeps the constructor's identity matrix, so it was drawn at (0,0,0) with no turn. The test is per MODEL, at the draw: while
+   such an actor renders, a Model / dExtCommonModel_c whose matrix still has a zero translation, for an actor whose real position is
+   more than 300 units from the origin, is not drawn. A model that was posed draws where it was posed, so a far enemy the cartridge
+   would cull keeps drawing in its real place. Picture only: nothing is read back into game state, so versus lockstep is not touched.
+   SM64DS_ORIGINOBJ_OFF=1 is the MUST-FAIL control (every widened model drawn, the 1.0.2 behaviour).
+   SM64DS_ORIGIN_LOG=1 (proof knob, off by default): about once a second one [originobj] line per actor drawn by the widened range,
+   with its class, slot, REAL position and where its model is actually DRAWN (or "model HIDDEN at origin" when the gate held it). */
+#include <time.h>
+static dActor_c *g_host_widen_actor;    /* the actor whose widened-only render is running, else null */
+static void HostOriginNote(dActor_c *a, const s32 *mat, int hidden)
+{
+    static int on = -1;
+    if (on < 0) { const char *e = getenv("SM64DS_ORIGIN_LOG"); on = (e && *e && *e != '0') ? 1 : 0; }
+    if (!on)
+        return;
+    enum { kMax = 40 };
+    static struct { unsigned uid; unsigned short cls; short slot; int x, y, z, dx, dy, dz, hidden; } seen[kMax];
+    static int nseen, nmodels, nhidden;
+    static clock_t t0;
+    const clock_t now = clock();
+    if (t0 == 0)
+        t0 = now;
+    if (now - t0 >= CLOCKS_PER_SEC) {
+        int at0 = 0;
+        for (int i = 0; i < nseen; ++i)
+            at0 += !seen[i].hidden && seen[i].dx == 0 && seen[i].dy == 0 && seen[i].dz == 0;
+        fprintf(stderr, "[originobj] sec widened models %d hidden-at-origin %d drawn-at-origin %d (distinct actors %d)\n", nmodels, nhidden,
+                at0, nseen);
+        for (int i = 0; i < nseen; ++i) {
+            if (seen[i].hidden)
+                fprintf(stderr, "[originobj]   cls=%u slot=%d real pos=(%d,%d,%d) model HIDDEN at origin\n", seen[i].cls, seen[i].slot,
+                        seen[i].x, seen[i].y, seen[i].z);
+            else
+                fprintf(stderr, "[originobj]   cls=%u slot=%d real pos=(%d,%d,%d) drawn at (%d,%d,%d)%s\n", seen[i].cls, seen[i].slot,
+                        seen[i].x, seen[i].y, seen[i].z, seen[i].dx, seen[i].dy, seen[i].dz,
+                        (seen[i].dx == 0 && seen[i].dy == 0 && seen[i].dz == 0) ? " AT ORIGIN" : "");
+        }
+        nseen = nmodels = nhidden = 0;
+        t0 = now;
+    }
+    ++nmodels;
+    nhidden += hidden;
+    const unsigned uid = *(unsigned *)((char *)a + 4);
+    int k = 0;
+    while (k < nseen && seen[k].uid != uid)
+        ++k;
+    if (k == nseen) {
+        if (nseen >= kMax)
+            return;
+        ++nseen;
+        seen[k].uid = uid;
+        seen[k].cls = *(unsigned short *)((char *)a + 0xc);
+        seen[k].slot = *(short *)((char *)a + 0xce);
+        seen[k].x = a->mPosX >> 12;
+        seen[k].y = a->mPosY >> 12;
+        seen[k].z = a->mPosZ >> 12;
+        seen[k].hidden = hidden;
+        seen[k].dx = mat[9] >> 9;
+        seen[k].dy = mat[10] >> 9;
+        seen[k].dz = mat[11] >> 9;
+    } else if (!hidden && seen[k].hidden) {   /* one drawn model is enough to say the actor shows; where = that model's translation */
+        seen[k].hidden = 0;
+        seen[k].dx = mat[9] >> 9;
+        seen[k].dy = mat[10] >> 9;
+        seen[k].dz = mat[11] >> 9;
+    }
+}
+/* Model::Render and dExtCommonModel_c::Render ask this first (host only): 1 = do not draw this model. The matrix translation is
+   world position >> 3 in Fix12 (d_a_coin.cpp func_ov002_020b14d8), so >> 9 is world units. */
+extern "C" int host_widen_model_skip(const void *mat4x3)
+{
+    dActor_c *a = g_host_widen_actor;
+    if (!a)
+        return 0;
+    static int ctlOff = -1;
+    if (ctlOff < 0) { const char *o = getenv("SM64DS_ORIGINOBJ_OFF"); ctlOff = (o && *o && *o != '0') ? 1 : 0; }
+    const s32 *m = (const s32 *)mat4x3;
+    int hide = 0;
+    if (!ctlOff && m[9] == 0 && m[10] == 0 && m[11] == 0) {
+        const long long x = a->mPosX >> 12, y = a->mPosY >> 12, z = a->mPosZ >> 12;
+        hide = x * x + y * y + z * z > 300LL * 300LL;
+    }
+    HostOriginNote(a, m, hide);
+    return hide;
 }
 /* SM64DS_WAKE_LOG=1: per actor class, how many BeforeBehavior calls the ROM let think (proof rows for the widened update range). */
 static void HostWakeLog(dActor_c *a, int updated)
@@ -434,6 +533,9 @@ int dActor_c::BeforeRender()
 {
     u32 flags;
 
+#ifdef _MSC_VER
+    g_host_widen_actor = 0;
+#endif
     if (!fBase_c::BeforeRender())
         return 0;
 
@@ -450,8 +552,10 @@ int dActor_c::BeforeRender()
     if (!(flags & 2))
         goto ret1;
 #ifdef _MSC_VER
-    if (pad_0c5[0])
+    if (pad_0c5[0]) {
+        g_host_widen_actor = this;      /* drawn only for the widened Draw distance: host_widen_model_skip checks its models */
         goto ret1;
+    }
 #endif
 ret0:
     return 0;
@@ -465,6 +569,9 @@ ret1:
  * 0x02010f6c  size 0xc */
 void dActor_c::AfterRender(u32 vfSuccess)
 {
+#ifdef _MSC_VER
+    g_host_widen_actor = 0;
+#endif
     fBase_c::AfterRender(vfSuccess);
 }
 
