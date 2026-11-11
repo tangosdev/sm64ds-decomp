@@ -5040,13 +5040,13 @@ static const int *c3_free_pivot(void *cam, char *player)
     if (c3_trust(cam, player)) {
         fc_pivot_hold = 0;
         if (fc_pivot_back && fc_pivot_ok) {
-            int far = 0;
+            int apart = 0;
             for (int k = 0; k < 3; ++k) {
                 const int d = at[k] - fc_pivot[k];
-                if (d > (8 << 12) || d < -(8 << 12)) far = 1;
+                if (d > (8 << 12) || d < -(8 << 12)) apart = 1;
                 fc_pivot[k] += d / 4;
             }
-            if (far) return fc_pivot;
+            if (apart) return fc_pivot;
             fc_pivot_back = 0;
         }
         fc_pivot[0] = at[0]; fc_pivot[1] = at[1]; fc_pivot[2] = at[2];
