@@ -146,7 +146,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov060-daKpa2Bg_c/daKpa2Bg_c.o (gitignored)",
+    "object": "build/tu/ov060-daKpa2Bg_c/d_a_kpa2_bg.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 10,
     "functions_declared": 10,
@@ -164,10 +164,6 @@
         10,
         26,
         27,
-        28,
-        29,
-        30,
-        31,
         32,
         33,
         34,
@@ -180,7 +176,11 @@
         41,
         42,
         43,
-        44
+        44,
+        45,
+        46,
+        47,
+        48
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -207,12 +207,13 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV10daKpa2Bg_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 3 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },

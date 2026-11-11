@@ -179,11 +179,17 @@ extern u8 data_ov002_02109dc4[];
 extern u8 data_ov002_02109dcc[];
 extern int data_ov002_02109fe4[];
 extern u32 data_ov002_0210a07c[];
-extern int data_ov002_0210a424[];
-extern int data_ov002_0210a560[];
-extern u32 data_ov002_0210a578[];
-extern u32 data_ov002_0210a584[];
-extern Vector3 data_ov002_0210a590;
+int data_ov002_0210a560[3] = {116, 124, 120};
+u32 data_ov002_0210a578[3] = {117, 123, 121};
+u32 data_ov002_0210a584[3] = {118, 122, 119};
+/* 20.12 offset added before the camera update: (0, -205.0, 410.0). A C struct
+ * keeps the literal in .data; Vector3's constructors would make it dynamic. */
+#pragma cplusplus off
+typedef struct PlayerPosOffset {
+    int x, y, z;
+} PlayerPosOffset;
+PlayerPosOffset data_ov002_0210a590 = {0, -0xcd000, 0x19a000};
+#pragma cplusplus on
 extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern SharedFilePtr data_ov002_0210d9c0;
@@ -432,7 +438,6 @@ struct State2i { int a; int b; };
 struct S18a { short f0; char pad[0x16]; };
 struct S18b { u16 f0; char pad[0x16]; };
 struct S18b2 { short a; short b; int c[5]; };
-struct P2 { int w[2]; };
 /* The Kuppa-script command table at the head of the file holds pointers to
  * members of one signature. */
 typedef int (daPly_c::*ScriptCommand)(unsigned char *, int, int);
@@ -562,15 +567,71 @@ typedef struct {
     int w[2];
 } AnimScriptStep;
 
-/* The five one-step scripts data_ov002_0210a7a0 points at: {0xb3}, {0xb7},
- * {1}, {0xbc} and {0xbf}. Retail emits them among the pointer-to-member
- * constants at 0x02109db8..0x0210a554, in function order, which this file
- * does not reproduce yet, so they stay ROM data until that band does. */
-extern AnimScriptStep data_ov002_02109ff4[];
-extern AnimScriptStep data_ov002_0210a1d4[];
-extern AnimScriptStep data_ov002_0210a3dc[];
-extern AnimScriptStep data_ov002_0210a434[];
-extern AnimScriptStep data_ov002_0210a4bc[];
+/* The data records between the state-handler literals: animation steps,
+ * two-id tables and the two-word P2 records. */
+int data_ov002_02109fe4[2] = {0xad, 0xad};
+AnimScriptStep data_ov002_02109ff4[1] = {{0xb3, 0}};
+u32 data_ov002_0210a07c[2] = {4, 3};
+struct P2 {
+    void *w[2];
+};
+extern SharedFilePtr data_ov002_0210e6c0;
+extern SharedFilePtr data_ov002_0210eb98;
+struct P2 data_ov002_0210a084 = {{&data_ov002_0210e6c0, &data_ov002_0210eb98}};
+AnimScriptStep data_ov002_0210a1d4[1] = {{0xb7, 0}};
+struct P2 data_ov002_0210a34c = {{(void *)0x6e, (void *)0x6f}};
+
+/* Free handlers are stored as their actual function pointers; the union gives
+ * them the PMF spelling the descriptor tables use. */
+extern "C" void func_ov002_020c9de4(char *);
+extern "C" void func_ov002_020c9b7c(daPly_c *);
+extern "C" void func_ov002_020e200c(char *);
+extern "C" void func_ov002_020c990c(daPly_c *);
+extern "C" void func_ov002_020c9998(daPly_c *);
+extern "C" void func_ov002_020c72a4(void *);
+union PlayerFreeCharPmf {
+    void (*free)(char *);
+    void (daPly_c::*pmf)();
+};
+union PlayerFreePlayerPmf {
+    void (*free)(daPly_c *);
+    void (daPly_c::*pmf)();
+};
+union PlayerFreeVoidPmf {
+    void (*free)(void *);
+    void (daPly_c::*pmf)();
+};
+union PlayerStateFn {
+    void (daPly_c::*voidPmf)();
+    int (daPly_c::*intPmf)();
+    void (*freeChar)(char *);
+    void (*freePlayer)(daPly_c *);
+    void (*freeVoid)(void *);
+};
+PlayerFreeCharPmf data_ov002_02109dfc = {func_ov002_020c9de4};
+PlayerFreePlayerPmf data_ov002_02109e2c = {func_ov002_020c9b7c};
+PlayerFreeCharPmf data_ov002_02109f0c = {func_ov002_020e200c};
+PlayerFreePlayerPmf data_ov002_02109f44 = {func_ov002_020c990c};
+PlayerFreeCharPmf data_ov002_0210a10c = {func_ov002_020e200c};
+PlayerFreePlayerPmf data_ov002_0210a174 = {func_ov002_020c9998};
+PlayerFreeCharPmf data_ov002_0210a23c = {func_ov002_020c9de4};
+PlayerFreeCharPmf data_ov002_0210a244 = {func_ov002_020c9de4};
+PlayerFreeCharPmf data_ov002_0210a264 = {func_ov002_020c9de4};
+PlayerFreeVoidPmf data_ov002_0210a334 = {func_ov002_020c72a4};
+/* func_ov002_020e1e70 stays a free C-linkage body; the table slot is a PMF. */
+union PlayerFreeCleanupTarget {
+    void (*code)(char *);
+    void (daPly_c::*pmf)();
+};
+
+/* Non-PMF records in the descriptor band and the free cleanup handler's PMF
+ * record. */
+AnimScriptStep data_ov002_0210a3dc[] = {{1, 0}};
+int data_ov002_0210a424[] = {19, 21};
+AnimScriptStep data_ov002_0210a434[] = {{188, 0}};
+void func_ov002_020e1e70(char *);
+PlayerFreeCleanupTarget data_ov002_0210a47c = {func_ov002_020e1e70};
+AnimScriptStep data_ov002_0210a4bc[] = {{191, 0}};
 
 /* Player animation scripts, frame windows, hurt tables, and body-model
  * pointer tables. All values and pointer targets are read by the state
@@ -1035,32 +1096,25 @@ int daPly_c::func_ov002_020bd664(unsigned char *cmd, int beginFrame, int endFram
     extern ScriptCommand data_ov002_0210a124;
     extern ScriptCommand data_ov002_0210a054;
     extern ScriptCommand data_ov002_0210a0dc;
-    extern ScriptCommand data_ov002_0210a534;
     extern ScriptCommand data_ov002_0210a0b4;
     extern ScriptCommand data_ov002_0210a094;
-    extern ScriptCommand data_ov002_0210a40c;
-    extern ScriptCommand data_ov002_0210a474;
-    extern ScriptCommand data_ov002_0210a44c;
-    extern ScriptCommand data_ov002_0210a3fc;
-    extern ScriptCommand data_ov002_0210a3c4;
     extern ScriptCommand data_ov002_0210a064;
-    extern ScriptCommand data_ov002_0210a36c;
     if (!(data_ov002_0210e158 & 1)) {
         data_ov002_0210e158 |= 1;
-        data_ov002_02110794[0] = data_ov002_0210a14c;
-        data_ov002_02110794[1] = data_ov002_0210a124;
-        data_ov002_02110794[2] = data_ov002_0210a054;
-        data_ov002_02110794[3] = data_ov002_0210a0dc;
-        data_ov002_02110794[4] = data_ov002_0210a534;
-        data_ov002_02110794[5] = data_ov002_0210a0b4;
-        data_ov002_02110794[6] = data_ov002_0210a094;
-        data_ov002_02110794[7] = data_ov002_0210a40c;
-        data_ov002_02110794[8] = data_ov002_0210a474;
-        data_ov002_02110794[9] = data_ov002_0210a44c;
-        data_ov002_02110794[10] = data_ov002_0210a3fc;
-        data_ov002_02110794[11] = data_ov002_0210a3c4;
-        data_ov002_02110794[12] = data_ov002_0210a064;
-        data_ov002_02110794[13] = data_ov002_0210a36c;
+        data_ov002_02110794[0] = &daPly_c::func_ov002_020bd600;
+        data_ov002_02110794[1] = &daPly_c::func_ov002_020bd4e0;
+        data_ov002_02110794[2] = &daPly_c::func_ov002_020bd4c8;
+        data_ov002_02110794[3] = &daPly_c::func_ov002_020bd4ac;
+        data_ov002_02110794[4] = &daPly_c::func_ov002_020bd480;
+        data_ov002_02110794[5] = &daPly_c::func_ov002_020bd45c;
+        data_ov002_02110794[6] = &daPly_c::func_ov002_020bd438;
+        data_ov002_02110794[7] = &daPly_c::func_ov002_020bd3a0;
+        data_ov002_02110794[8] = &daPly_c::func_ov002_020bd354;
+        data_ov002_02110794[9] = &daPly_c::func_ov002_020bd250;
+        data_ov002_02110794[10] = &daPly_c::func_ov002_020bd20c;
+        data_ov002_02110794[11] = &daPly_c::func_ov002_020bcd38;
+        data_ov002_02110794[12] = &daPly_c::func_ov002_020bcd18;
+        data_ov002_02110794[13] = &daPly_c::func_ov002_020bccfc;
     }
     return (this->*data_ov002_02110794[cmd[6]])(cmd + 7, beginFrame, endFrame);
 }
@@ -1980,7 +2034,7 @@ int daPly_c::func_ov002_020bf40c() {
     Vector3 pos;
     Vector3 off;
     if (NumStars() < 0x50 || param1 != 0) {
-        VEC_Add(&mPos, &data_ov002_0210a590, &mPos);
+        VEC_Add(&mPos, (Vector3 *)&data_ov002_0210a590, &mPos);
         off.x = data_ov002_0210a590.x;
         off.y = data_ov002_0210a590.y;
         off.z = data_ov002_0210a590.z;
@@ -7057,7 +7111,7 @@ void daPly_c::func_ov002_020c9718() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_NoControl_Init() {
-    extern void (daPly_c::*data_ov002_02110884[])();
+    extern PlayerStateFn data_ov002_02110884[];
     mIsControlDisabled = 1;
     mStatePhase = 0;
     DisableInteraction();
@@ -7066,7 +7120,7 @@ int daPly_c::St_NoControl_Init() {
     mHeldObj = 0;
     mGrabbedByActor = 0;
     mIsOpeningBigDoor = 0;
-    (this->*data_ov002_02110884[mNoCtrlKind])();
+    (this->*data_ov002_02110884[mNoCtrlKind].voidPmf)();
     return 1;
 }
 }
@@ -7111,31 +7165,31 @@ void daPly_c::func_ov002_020c98a4() {
 }
 
 extern "C" {
-void func_ov002_020c990c(daPly_c *p) {
+void daPly_c::func_ov002_020c990c() {
     typedef int Fix12;
-    p->mHasNoCap = 1;
-    if (p->mIsAirborne) {
-        p->mStateStep = 0x16;
-        p->SetAnim(0x54, 0x40000000, 0x1000, 0);
+    this->mHasNoCap = 1;
+    if (this->mIsAirborne) {
+        this->mStateStep = 0x16;
+        this->SetAnim(0x54, 0x40000000, 0x1000, 0);
     } else {
-        p->mStateStep = 0x17;
-        p->SetAnim(0x98, 0x40000000, 0x1000, 0);
+        this->mStateStep = 0x17;
+        this->SetAnim(0x98, 0x40000000, 0x1000, 0);
     }
-    p->mHorzSpeed = 0;
-    p->mVertSpeed = 0;
-    Sound::PlayCharVoice(p->mCharacter, 0x29, p->mCamSpacePos);
+    this->mHorzSpeed = 0;
+    this->mVertSpeed = 0;
+    Sound::PlayCharVoice(this->mCharacter, 0x29, this->mCamSpacePos);
 }
 }
 
 /* recovered: shared common types */
 extern "C" {
-void func_ov002_020c9998(daPly_c *p) {
+void daPly_c::func_ov002_020c9998() {
     typedef int Fix12i;
-    p->mStateStep = 0x12;
-    p->SetAnim(0x92, 0x40000000, 0x1000, 0);
-    dActor_c::Spawn(0xb2, 0xffff, p->mPos, &p->mAngle, p->mAreaId, -1);
-    p->mHorzSpeed = 0;
-    p->mVertSpeed = 0;
+    this->mStateStep = 0x12;
+    this->SetAnim(0x92, 0x40000000, 0x1000, 0);
+    dActor_c::Spawn(0xb2, 0xffff, this->mPos, &this->mAngle, this->mAreaId, -1);
+    this->mHorzSpeed = 0;
+    this->mVertSpeed = 0;
 }
 }
 
@@ -7187,20 +7241,20 @@ void daPly_c::func_ov002_020c9b5c() {
 }
 
 extern "C" {
-void func_ov002_020c9b7c(daPly_c *p) {
+void daPly_c::func_ov002_020c9b7c() {
     typedef int Fix12i;
-    p->mStateStep = 0xb;
-    p->mIsBodyClsnEnabled = 0;
-    if (p->mIsAirborne) {
-        p->SetAnim(0x56, 0, 0x1000, 0);
-        Sound::PlayBank0(6, p->mCamSpacePos);
+    this->mStateStep = 0xb;
+    this->mIsBodyClsnEnabled = 0;
+    if (this->mIsAirborne) {
+        this->SetAnim(0x56, 0, 0x1000, 0);
+        Sound::PlayBank0(6, this->mCamSpacePos);
     } else {
-        p->SetAnim(0x4f, 0x40000000, 0x1000, 0);
-        p->func_ov002_020e25f0(0);
+        this->SetAnim(0x4f, 0x40000000, 0x1000, 0);
+        this->func_ov002_020e25f0(0);
     }
-    p->mVertAccel = 0;
-    p->mHorzSpeed = 0;
-    p->mVertSpeed = 0;
+    this->mVertAccel = 0;
+    this->mHorzSpeed = 0;
+    this->mVertSpeed = 0;
 }
 }
 
@@ -14458,6 +14512,7 @@ int daPly_c::func_ov002_020d82f0() {
         return 0;
     if (mIsVanish != 0)
         return 0;
+    // structured early return shrinks this function 0x70 -> 0x6c
     if (mIsTakingDamage != 0)
         goto ret0;
     if (mIsNoControl == 0)
@@ -14879,24 +14934,14 @@ int daPly_c::Hurt(const Vector3 &a, u32 b, Fix12i dmg, u8 arg4, u8 arg5, u8 arg6
     }
 
     hasCap = this->HasNoCap();
-    if (hasCap != 0) goto L88;
-    if (this->mCharacter == this->param1)
-        goto L88;
-    if (this->mIsMetal != 0)
-        goto L88;
-    if (b == 0) goto L88;
-
-    Sound::PlayCharVoice(this->mCharacter, 0x22, this->mCamSpacePos);
-    goto L9c;
-
-L88:
-    {
+    if (hasCap == 0 && this->mCharacter != this->param1 && this->mIsMetal == 0 && b != 0) {
+        Sound::PlayCharVoice(this->mCharacter, 0x22, this->mCamSpacePos);
+    } else {
         int t = 0;
         if ((int)b > 1) t = 1;
         func_ov002_020d91b8(t);
     }
 
-L9c:
     if (this->mIsMetal != 0) {
         b = 0;
     }
@@ -15075,6 +15120,7 @@ int daPly_c::func_ov002_020d93ac() {
     int b;
     int ang, xx, zz;
 
+    // return 0 at each check grows this function 0x120 -> 0x140
     if (this->HasNoCap()) goto fail;
 
     chr = this->param1 & 0xff;
@@ -15130,6 +15176,7 @@ int daPly_c::func_ov002_020d94cc() {
     int xv, yv, sum, zv;
     int b;
 
+    // return 0 at each check grows this function 0x188 -> 0x190
     if ((&gNumStageStars)[this->mPlayerNo] <= 0)
         goto fail;
 
@@ -15891,12 +15938,10 @@ int daPly_c::TryGrab(dActor_c &actor_) {
     int b = (mHeldObj != 0);
     if (b) return 0;
     if ((actor->mFlags & 0x80) == 0) return 0;
-    if (!(IsState(data_ov002_02110574) && mPunchKickStep != 2)) {
-        if (!IsState(data_ov002_0211067c)) goto bd;
+    if ((IsState(data_ov002_02110574) && mPunchKickStep != 2) || IsState(data_ov002_0211067c)) {
+        func_ov002_020dacb4(actor);
+        return 1;
     }
-    func_ov002_020dacb4(actor);
-    return 1;
-bd:
     {
         unsigned short t = actor->actorID;
         int b0 = (t == 0xbd);
@@ -15941,6 +15986,7 @@ int daPly_c::func_ov002_020dacb4(dActor_c *actor) {
             fc = ((dActor_c *)mHeldObj)->actorID;
             t = 0;
             if (fc == 0xbd) t = 1;
+            // structured form grows this function 0x1b8 -> 0x1c0
             if (t != 0) goto chg394;
             u = fc;
             u = u == 0xbe;
@@ -15996,6 +16042,7 @@ int daPly_c::St_Throw_Main() {
         char *q = *(char **)((char *)&mHeldObj);
         unsigned short a = ((dActor_c *)q)->actorID;
         int t1 = (a == 0xbd);
+        // folding the two id tests shrinks this function 0x168 -> 0x164
         if (!t1) {
             int t2 = (a == 0xbe);
             if (!t2)
@@ -16037,6 +16084,7 @@ int daPly_c::St_Throw_Init() {
     if (!b) {
         unsigned short a = held->actorID;
         int t1 = (a == 0xbd);
+        // folding the two id tests differs at +0x3c
         if (!t1) {
             int t2 = (a == 0xbe);
             if (!t2)
@@ -16092,7 +16140,7 @@ int daPly_c::St_Thrown_Main() {
             if (mFloorNormalY == 0x1000) {
                 if (mHorzSpeed == 0) {
                     mStateStep = 1;
-                    goto L1f8;
+                    break;
                 }
             } else {
                 this->ChangeState(data_ov002_0211031c);
@@ -16124,7 +16172,6 @@ int daPly_c::St_Thrown_Main() {
         break;
     }
 
-L1f8:
     if (mIsAirborne == 0) {
         func_ov002_020e2c84();
     }
@@ -16707,70 +16754,55 @@ int daPly_c::St_SlideKick_Main() {
         func_ov002_020dd2f4();
     }
 
-    if (mHorzSpeed != 0)
-        goto La8;
+    if (mHorzSpeed == 0) {
+        if (this->FinishedAnim() != 0) {
+            if (this->IsAnim(0x67) != 0) {
+                this->SetAnim(0x66, 0x40000000, 0x1000, 0);
+            } else {
+                mPrevAngleY = mAngleY;
+                mStateStep = 1;
+                this->ChangeState(data_ov002_021104e4);
+            }
+        }
+    } else {
+        if (func_ov002_020c0688() != 0) {
+            if (mStateWork == 0) {
+                if (mPrevVertSpeed < 0) {
+                    u16 bit = mStateFlags & 1;
+                    if (bit == 0) {
+                        int t = -mPrevVertSpeed;
+                        if (t > 0x14000)
+                            t = 0x14000;
+                        mVertSpeed = t;
+                        mStateWork = 1;
+                    }
+                }
+            }
 
-    if (this->FinishedAnim() == 0)
-        goto L1d8;
-
-    if (this->IsAnim(0x67) == 0)
-        goto L88;
-
-    this->SetAnim(0x66, 0x40000000, 0x1000, 0);
-    goto L1d8;
-
-L88:
-    mPrevAngleY = mAngleY;
-    mStateStep = 1;
-    this->ChangeState(data_ov002_021104e4);
-    goto L1d8;
-
-La8:
-    if (func_ov002_020c0688() == 0)
-        goto L14c;
-
-    if (mStateWork == 0) {
-        if (mPrevVertSpeed < 0) {
-            u16 bit = mStateFlags & 1;
-            if (bit == 0) {
-                int t = -mPrevVertSpeed;
-                if (t > 0x14000) t = 0x14000;
-                mVertSpeed = t;
-                mStateWork = 1;
+            {
+                u16 r1 = *(u16 *)((char *)data_0209f49e + gActivePlayerSlot * 0x18);
+                if ((r1 & 1) || (r1 & 2)) {
+                    if (mSlideType == 0) {
+                        this->ChangeState(data_ov002_021101fc);
+                    }
+                }
+            }
+            mStateStep = 0;
+        } else {
+            mStateStep++;
+            if (mStateStep > 0x1e && mPosY - mGroundY > 0x64000)
+                this->ChangeState(data_ov002_021101b4);
+        }
+        {
+            dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
+            u32 w = anim.currFrame;
+            if ((u16)(w >> 12) >= 4) {
+                func_ov002_020dbaec();
+                mAttackClsn.Clear();
+                mAttackClsn.Update();
             }
         }
     }
-
-    {
-        u16 r1 = *(u16*)((char*)data_0209f49e + gActivePlayerSlot * 0x18);
-        if ((r1 & 1) || (r1 & 2)) {
-            if (mSlideType == 0) {
-                this->ChangeState(data_ov002_021101fc);
-            }
-        }
-    }
-    mStateStep = 0;
-    goto L18c;
-
-L14c:
-    mStateStep++;
-    if (mStateStep <= 0x1e)
-        goto L18c;
-    if (mPosY - mGroundY <= 0x64000)
-        goto L18c;
-    this->ChangeState(data_ov002_021101b4);
-
-L18c: {
-    dExtFrameCtrl_c &anim = *mModels.mBodyModels[GetBodyModelID(param1 & 0xff, 0)];
-    u32 w = anim.currFrame;
-    if ((u16)(w >> 12) < 4)
-        goto L1d8;
-    func_ov002_020dbaec();
-    mAttackClsn.Clear();
-    mAttackClsn.Update();
-}
-
-L1d8:
     AdvanceAnims();
     mPrevVertSpeed = mVertSpeed;
     return 1;
@@ -17038,29 +17070,26 @@ int daPly_c::St_StomachSlide_Main() {
         func_ov002_020bf90c();
         if (mIsAirborne == 0) {
             mIsSlidingOnGround = 1;
-            if (this->IsState(data_ov002_021105bc)) {
-                if (mHeldObj != 0) {
-                    mHorzSpeed = 0;
-                    goto case0_e0;
+            if (this->IsState(data_ov002_021105bc) && mHeldObj != 0) {
+                mHorzSpeed = 0;
+            } else {
+                {
+                    u32 arg = 0x4000;
+                    if (mSlideType == 0)
+                        arg = 0x8000;
+                    func_ov002_020c06fc(arg);
+                }
+                func_ov002_020dd2f4();
+                if (this->IsState(data_ov002_021105bc) && (u16)(mStateFlags & 1)) {
+                    func_ov002_020c0364(2);
                 }
             }
-            {
-                u32 arg = 0x4000;
-                if (mSlideType == 0) arg = 0x8000;
-                func_ov002_020c06fc(arg);
-            }
-            func_ov002_020dd2f4();
-            if (this->IsState(data_ov002_021105bc) &&
-                (u16)(mStateFlags & 1)) {
-                func_ov002_020c0364(2);
-            }
         }
-    case0_e0:
         if (mHorzSpeed == 0) {
             if (mSlideType == 0) {
                 mStateStep = 0;
                 mStatePhase = 2;
-                goto end;
+                break;
             }
             {
                 u8* p = (u8*)((char*)&mSlideStoppedTimer);
@@ -17069,7 +17098,7 @@ int daPly_c::St_StomachSlide_Main() {
             if (mSlideStoppedTimer >= 0x1e) {
                 mStateStep = 0;
                 mStatePhase = 2;
-                goto end;
+                break;
             }
         } else {
             mSlideStoppedTimer = 0;
@@ -17107,7 +17136,7 @@ int daPly_c::St_StomachSlide_Main() {
         func_ov002_020dba0c();
         mAttackClsn.Clear();
         mAttackClsn.Update();
-        goto end;
+        break;
 
     case 1:
         func_ov002_020dba0c();
@@ -17118,15 +17147,17 @@ int daPly_c::St_StomachSlide_Main() {
             mVertSpeed = 0;
             mStateStep = 0;
             this->SetAnim(0x43, 0x40000000, 0x1000, 0);
-            goto end;
+            break;
         }
         func_ov002_020dc560();
         {
             u8* p = (u8*)((char*)&mStateStep);
             *p = (u8)(*p + 1);
         }
-        if (mStateStep <= 0x1e) goto end;
-        if (mPosY - mGroundY <= 0x1f4000) goto end;
+        if (mStateStep <= 0x1e)
+            break;
+        if (mPosY - mGroundY <= 0x1f4000)
+            break;
         this->ChangeState(data_ov002_021101b4);
         return 1;
 
@@ -17157,7 +17188,7 @@ int daPly_c::St_StomachSlide_Main() {
                 u8* p = (u8*)((char*)&mStateStep);
                 *p = (u8)(*p + 1);
             }
-            goto end;
+            break;
         }
         if (this->FinishedAnim()) {
             if (func_ov002_020e0ccc(*(short **)((char *)&mHeldObj))) {
@@ -17165,10 +17196,9 @@ int daPly_c::St_StomachSlide_Main() {
             }
             this->ChangeState(data_ov002_0211013c);
         }
-        goto end;
+        break;
     }
 
-end:
     if (mIsAirborne != 0) {
         s16 v = cstd::atan2(mHorzSpeed >> 8, mVertSpeed >> 8) - 0x4000;
         if (v < 0) v = 0;
@@ -17290,55 +17320,49 @@ int daPly_c::St_PunchKick_Main() {
 
         func_ov002_020d8a50(mPunchKickStep);
 
-        if (mIsAirborne != 0)
-            goto end;
+        if (mIsAirborne == 0) {
+            if (mPunchKickStep == 2 && mStatePhase == 0) {
+                mStatePhase = 1;
+                if (func_ov002_020e2c84() != 0)
+                    return 1;
+            }
 
-        if (mPunchKickStep == 2 && mStatePhase == 0) {
-            mStatePhase = 1;
-            if (func_ov002_020e2c84() != 0)
+            ApproachLinear(*((int *)((char *)&mHorzSpeed)), 0, 0x800);
+            func_ov002_020c2f64();
+
+            if (func_ov002_020c0434() != 0) {
+                func_ov002_020c0364(3);
                 return 1;
-        }
-
-        ApproachLinear(*((int *)((char *)&mHorzSpeed)), 0, 0x800);
-        func_ov002_020c2f64();
-
-        if (func_ov002_020c0434() != 0) {
-            func_ov002_020c0364(3);
-            return 1;
-        }
-
-        if (this->FinishedAnim() || mPunchKickStep == 2) {
-            this->ChangeState(data_ov002_0211013c);
-            mPunchKickCooldown = 0x10;
-
-            if (mPunchKickStep != 2)
-                mHorzSpeed = 0;
-
-            if (mPrevAngleY != mAngleY) {
-                mHorzSpeed = 0;
-                mPrevAngleY = mAngleY;
             }
 
-            {
-                u8 idx2 = gActivePlayerSlot;
-                s16 val = *(s16*)((char*)data_0209f4a0 + idx2 * 0x18);
-                if (val == 0 && mPunchKickStep == 2) {
-                    this->SetAnim(0x52, 0x40000000, 0x1000, 0);
-                    mPrevAngleY = mAngleY;
+            if (this->FinishedAnim() || mPunchKickStep == 2) {
+                this->ChangeState(data_ov002_0211013c);
+                mPunchKickCooldown = 0x10;
+
+                if (mPunchKickStep != 2)
                     mHorzSpeed = 0;
+
+                if (mPrevAngleY != mAngleY) {
+                    mHorzSpeed = 0;
+                    mPrevAngleY = mAngleY;
                 }
+
+                {
+                    u8 idx2 = gActivePlayerSlot;
+                    s16 val = *(s16 *)((char *)data_0209f4a0 + idx2 * 0x18);
+                    if (val == 0 && mPunchKickStep == 2) {
+                        this->SetAnim(0x52, 0x40000000, 0x1000, 0);
+                        mPrevAngleY = mAngleY;
+                        mHorzSpeed = 0;
+                    }
+                }
+
+                if (mPunchKickStep == 2 && mIsInShallowWater == 0)
+                    func_ov002_020bf9d4();
             }
-
-            if (mPunchKickStep != 2)
-                goto end;
-            if (mIsInShallowWater != 0)
-                goto end;
-
-            func_ov002_020bf9d4();
         }
     }
 
-end:
     AdvanceAnims();
     return 1;
 }
@@ -17646,23 +17670,13 @@ int daPly_c::func_ov002_020dde74() {
         ChangeState(data_ov002_02110034);
         return 1;
     }
-    if ((*(u16 *)(data_0209f49c + (u8)gActivePlayerSlot * 0x18) & 2) || mIsMega != 0)
-        goto change574;
-
-    if (mHorzSpeed < ScaleByCharFactor(0x20000)) {
-        if (IsState(data_ov002_021101e4))
-            goto change5bc;
-        if (!IsState(data_ov002_0211019c))
-            goto change574;
-        if (mJumpComboStage != 2)
-            goto change574;
+    if (!((*(u16 *)(data_0209f49c + (u8)gActivePlayerSlot * 0x18) & 2) || mIsMega != 0) &&
+        !(mHorzSpeed < ScaleByCharFactor(0x20000) && !IsState(data_ov002_021101e4) &&
+          (!IsState(data_ov002_0211019c) || mJumpComboStage != 2))) {
+        if (mHorzSpeed < ScaleByCharFactor(0x24000))
+            mHorzSpeed = ScaleByCharFactor(0x24000);
+        return ChangeState(data_ov002_021105bc);
     }
-change5bc:
-    if (mHorzSpeed < ScaleByCharFactor(0x24000))
-        mHorzSpeed = ScaleByCharFactor(0x24000);
-    return ChangeState(data_ov002_021105bc);
-
-change574:
     if (mIsAirborne != 0)
         mPunchKickStep = 2;
     else
@@ -17768,12 +17782,9 @@ int func_ov002_020de328(daPly_c *player) {
 extern "C" {
 int func_ov002_020de33c(daPly_c *c, void *actor) {
     daPly_c *player = (daPly_c *)c;
-    if (player->mIsNoControl == 0 && !((daPly_c *)c)->IsState(data_ov002_021102bc) &&
-        !((daPly_c *)c)->IsState(data_ov002_02110484)) {
-        goto ok;
-    }
-    return 0;
-ok:
+    if (player->mIsNoControl != 0 || ((daPly_c *)c)->IsState(data_ov002_021102bc) ||
+        ((daPly_c *)c)->IsState(data_ov002_02110484))
+        return 0;
     player->mAttachedActor = (s32)actor;
     ((daPly_c *)c)->ChangeState(data_ov002_021102bc);
     return 1;
@@ -18582,17 +18593,14 @@ int daPly_c::St_Fly_Main() {
     extern u16 data_0209f49c;
     mPeakY = mPosY;
 
-    if ((*(u16 *)((char *)&data_0209f49e + gActivePlayerSlot * 0x18) & 0x400) == 0) {
-        goto skip;
+    if ((*(u16 *)((char *)&data_0209f49e + gActivePlayerSlot * 0x18) & 0x400) != 0) {
+        if (func_ov002_020d674c() != 0) {
+            this->ChangeState(data_ov002_0211004c);
+        } else {
+            this->ChangeState(data_ov002_021105a4);
+        }
+        return 1;
     }
-    if (func_ov002_020d674c() != 0) {
-        this->ChangeState(data_ov002_0211004c);
-    } else {
-        this->ChangeState(data_ov002_021105a4);
-    }
-    return 1;
-
-skip:
     if (mHasWings == 0) {
         this->ChangeState(data_ov002_021101b4);
         return 1;
@@ -18843,41 +18851,35 @@ int daPly_c::St_Land_Main() {
         mHorzSpeed = 0;
     }
 
-    if (mStateTimer != 0) {
-        goto tail;
-    }
-
-    if ((*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0)
-        || (this->FinishedAnim() != 0)) {
-        if (this->IsAnim(0x1b) != 0) {
-            this->SetAnim(0x2e, 0x40000000, 0x1000, 0);
-            goto tail;
-        }
-        if (this->IsAnim(0x4e) != 0) {
-            mAngleY = (s16)(mAngleY + 0x8000);
-        }
-        if ((*(s16*)((char*)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0)
-            && AngleDiff(mAngleY, mPrevAngleY) >= 0x4000) {
-            if (AngleDiff(mDesiredAngleY, mAngleY) >= 0x4000) {
-                mAngleY = mPrevAngleY;
+    if (mStateTimer == 0) {
+        if ((*(s16 *)((char *)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) ||
+            (this->FinishedAnim() != 0)) {
+            if (this->IsAnim(0x1b) != 0) {
+                this->SetAnim(0x2e, 0x40000000, 0x1000, 0);
             } else {
-                mHorzSpeed = 0 - mHorzSpeed;
+                if (this->IsAnim(0x4e) != 0) {
+                    mAngleY = (s16)(mAngleY + 0x8000);
+                }
+                if ((*(s16 *)((char *)data_0209f4a0 + gActivePlayerSlot * 0x18) != 0) &&
+                    AngleDiff(mAngleY, mPrevAngleY) >= 0x4000) {
+                    if (AngleDiff(mDesiredAngleY, mAngleY) >= 0x4000) {
+                        mAngleY = mPrevAngleY;
+                    } else {
+                        mHorzSpeed = 0 - mHorzSpeed;
+                    }
+                }
+                mPrevAngleY = mAngleY;
+                this->ChangeState(data_ov002_0211013c);
+                if (this->IsState(data_ov002_0211013c) != 0 && mStateStep != 0 &&
+                    mHorzSpeed >= ScaleByCharFactor(0x1c000)) {
+                    mSpineRot[2] = 0x4000;
+                }
+                return 1;
             }
+        } else if (func_ov002_020e3078(&data_ov002_0211019c) == 0) {
+            mHorzSpeed = 0;
         }
-        mPrevAngleY = mAngleY;
-        this->ChangeState(data_ov002_0211013c);
-        if (this->IsState(data_ov002_0211013c) != 0 && mStateStep != 0 &&
-            mHorzSpeed >= ScaleByCharFactor(0x1c000)) {
-            mSpineRot[2] = 0x4000;
-        }
-        return 1;
     }
-
-    if (func_ov002_020e3078(&data_ov002_0211019c) == 0) {
-        mHorzSpeed = 0;
-    }
-
-tail:
     AdvanceAnims();
     return 1;
 }
@@ -19760,6 +19762,7 @@ int daPly_c::St_Jump_Init() {
         mJumpComboStage = (mJumpComboStage + 1) % 3;
     }
 
+    // if/else around the combo clear grows this function 0x314 -> 0x318
     if (mSinkDepth > 0x1000)
         goto clear;
     t = (mHeldObj != 0);
@@ -19875,6 +19878,7 @@ int daPly_c::func_ov002_020e2664() {
         return 1;
     }
 
+    // return 0 instead of the shared label shrinks this function 0x270 -> 0x26c
     if (!(flags & 1)) goto ret0;
 
     ptr = mHeldObj;
@@ -20102,6 +20106,7 @@ int daPly_c::TryEnterBigFallLanding() {
     daPly_c *p = (daPly_c *)base;
     signed char c = gCurrentSublevel;
 
+    // return 0 at each check grows this function 0x17c -> 0x188
     if (c == 0x13 || c == 0xa || c == 0x10) {
         /* proceed */
     } else if (c != 0x22) {
@@ -20214,10 +20219,12 @@ int daPly_c::ChangeState(daPly_c::State &state) {
            the whole 8-byte pmf first. Reading one to CALL it is free -- the
            calls below use the named members. Measured both ways. */
         cur = mState;
-        if (cur == 0) { ok = 1; goto check_ok; }
-        if (*(int*)((char*)cur+0x10) == 0) { ok = 1; goto check_ok; }
-        ok = (this->*(cur->mCleanup))();
-    check_ok:
+        if (cur == 0)
+            ok = 1;
+        else if (*(int *)((char *)cur + 0x10) == 0)
+            ok = 1;
+        else
+            ok = (this->*(cur->mCleanup))();
         if (!ok) return 0;
     }
 
@@ -21136,6 +21143,7 @@ int daPly_c::Behavior() {
     else
         *(u32 *)LAU((char *)&mdCcAcPos_c.flags) &= ~0x10;
 
+    // duplicating the player-slot store grows this function 0x868 -> 0x874
     if (data_0209fc68 == 0) {
         if (gRunningKuppaScript != 0)
             r0 = 1;
@@ -21419,6 +21427,7 @@ s32 daPly_c::InitResources() {
     {
         unsigned int d = gGameMode;
         t = (unsigned int)(d == 2);
+        // structured form grows this function 0x3bc -> 0x3c4
         if (t != 0)
             goto Ld0;
         t = (unsigned int)(d == 1);
@@ -23267,93 +23276,313 @@ extern int (daPly_c::*data_ov002_0210a324)();
 extern int (daPly_c::*data_ov002_0210a32c)();
 extern int (daPly_c::*data_ov002_0210a33c)();
 extern int (daPly_c::*data_ov002_0210a344)();
-extern int (daPly_c::*data_ov002_0210a354)();
-extern int (daPly_c::*data_ov002_0210a35c)();
-extern int (daPly_c::*data_ov002_0210a364)();
-extern int (daPly_c::*data_ov002_0210a374)();
-extern int (daPly_c::*data_ov002_0210a37c)();
-extern int (daPly_c::*data_ov002_0210a384)();
-extern int (daPly_c::*data_ov002_0210a38c)();
-extern int (daPly_c::*data_ov002_0210a394)();
-extern int (daPly_c::*data_ov002_0210a39c)();
-extern int (daPly_c::*data_ov002_0210a3a4)();
-extern int (daPly_c::*data_ov002_0210a3b4)();
-extern int (daPly_c::*data_ov002_0210a3bc)();
-extern int (daPly_c::*data_ov002_0210a3cc)();
-extern int (daPly_c::*data_ov002_0210a3d4)();
-extern int (daPly_c::*data_ov002_0210a3e4)();
-extern int (daPly_c::*data_ov002_0210a3ec)();
-extern int (daPly_c::*data_ov002_0210a414)();
-extern int (daPly_c::*data_ov002_0210a41c)();
-extern int (daPly_c::*data_ov002_0210a42c)();
-extern int (daPly_c::*data_ov002_0210a43c)();
-extern int (daPly_c::*data_ov002_0210a444)();
-extern int (daPly_c::*data_ov002_0210a454)();
-extern int (daPly_c::*data_ov002_0210a464)();
-extern int (daPly_c::*data_ov002_0210a484)();
-extern int (daPly_c::*data_ov002_0210a494)();
-extern int (daPly_c::*data_ov002_0210a49c)();
-extern int (daPly_c::*data_ov002_0210a4a4)();
-extern int (daPly_c::*data_ov002_0210a4ac)();
-extern int (daPly_c::*data_ov002_0210a4b4)();
-extern int (daPly_c::*data_ov002_0210a4c4)();
-extern int (daPly_c::*data_ov002_0210a4cc)();
-extern int (daPly_c::*data_ov002_0210a4d4)();
-extern int (daPly_c::*data_ov002_0210a4dc)();
-extern int (daPly_c::*data_ov002_0210a4e4)();
-extern int (daPly_c::*data_ov002_0210a4ec)();
-extern int (daPly_c::*data_ov002_0210a4f4)();
-extern int (daPly_c::*data_ov002_0210a4fc)();
-extern int (daPly_c::*data_ov002_0210a504)();
-extern int (daPly_c::*data_ov002_0210a50c)();
-extern int (daPly_c::*data_ov002_0210a514)();
-extern int (daPly_c::*data_ov002_0210a51c)();
-extern int (daPly_c::*data_ov002_0210a524)();
-extern int (daPly_c::*data_ov002_0210a52c)();
-extern int (daPly_c::*data_ov002_0210a53c)();
-extern int (daPly_c::*data_ov002_0210a544)();
-extern int (daPly_c::*data_ov002_0210a54c)();
-extern void (daPly_c::*data_ov002_02109dfc)();
-extern void (daPly_c::*data_ov002_02109e2c)();
-extern void (daPly_c::*data_ov002_02109f0c)();
-extern void (daPly_c::*data_ov002_02109f44)();
+extern PlayerFreeCharPmf data_ov002_02109dfc;
+extern PlayerFreePlayerPmf data_ov002_02109e2c;
+extern PlayerFreeCharPmf data_ov002_02109f0c;
+extern PlayerFreePlayerPmf data_ov002_02109f44;
 extern void (daPly_c::*data_ov002_02109f54)();
 extern void (daPly_c::*data_ov002_0210a074)();
-extern void (daPly_c::*data_ov002_0210a10c)();
+extern PlayerFreeCharPmf data_ov002_0210a10c;
 extern void (daPly_c::*data_ov002_0210a12c)();
 extern void (daPly_c::*data_ov002_0210a134)();
 extern void (daPly_c::*data_ov002_0210a144)();
 extern void (daPly_c::*data_ov002_0210a154)();
-extern void (daPly_c::*data_ov002_0210a174)();
+extern PlayerFreePlayerPmf data_ov002_0210a174;
 extern void (daPly_c::*data_ov002_0210a1b4)();
 extern void (daPly_c::*data_ov002_0210a1cc)();
 extern void (daPly_c::*data_ov002_0210a1ec)();
 extern void (daPly_c::*data_ov002_0210a1fc)();
 extern void (daPly_c::*data_ov002_0210a22c)();
-extern void (daPly_c::*data_ov002_0210a23c)();
-extern void (daPly_c::*data_ov002_0210a244)();
-extern void (daPly_c::*data_ov002_0210a264)();
+extern PlayerFreeCharPmf data_ov002_0210a23c;
+extern PlayerFreeCharPmf data_ov002_0210a244;
+extern PlayerFreeCharPmf data_ov002_0210a264;
 extern void (daPly_c::*data_ov002_0210a274)();
 extern void (daPly_c::*data_ov002_0210a29c)();
 extern void (daPly_c::*data_ov002_0210a30c)();
-extern void (daPly_c::*data_ov002_0210a334)();
-extern void (daPly_c::*data_ov002_0210a3ac)();
-extern void (daPly_c::*data_ov002_0210a3f4)();
-extern void (daPly_c::*data_ov002_0210a404)();
-extern void (daPly_c::*data_ov002_0210a45c)();
-extern void (daPly_c::*data_ov002_0210a46c)();
-extern void (daPly_c::*data_ov002_0210a47c)();
-extern void (daPly_c::*data_ov002_0210a48c)();
-
+extern PlayerFreeVoidPmf data_ov002_0210a334;
 
 /* daPly_c handler tables; the second is indexed by mNoCtrlKind, the third by mStateWork. */
 extern void (daPly_c::*data_ov002_0211073c[4])();
-extern void (daPly_c::*data_ov002_02110884[20])();
+extern PlayerStateFn data_ov002_02110884[20];
 extern void (daPly_c::*data_ov002_0211075c[7])();
 
 /* The two 32-entry palette ramps func_ov002_020e69c0 and func_ov002_020e6a78 work on. */
 extern unsigned short data_ov002_02110804[];
 
+#pragma section initsec end
+/* The state records and handler tables are initialized once, from the
+ * handlers they name.  Keeping this in an inline .text function lets mwccarm
+ * emit the pointer-to-member records in .data rather than in .init. */
+static inline void PlayerInitStates() {
+    data_ov002_0211013c.mInit = &daPly_c::St_Walk_Init;
+    data_ov002_0211013c.mMain = &daPly_c::St_Walk_Main;
+    data_ov002_0211013c.mCleanup = 0;
+    daPly_c::ST_WAIT.mInit = &daPly_c::St_Wait_Init;
+    daPly_c::ST_WAIT.mMain = &daPly_c::St_Wait_Main;
+    daPly_c::ST_WAIT.mCleanup = &daPly_c::St_Wait_Cleanup;
+    data_ov002_02110184.mCleanup = 0;
+    data_ov002_02110184.mInit = &daPly_c::St_TurnAround_Init;
+    data_ov002_02110184.mMain = &daPly_c::St_TurnAround_Main;
+    data_ov002_0211019c.mInit = &daPly_c::St_Jump_Init;
+    data_ov002_0211019c.mCleanup = 0;
+    data_ov002_0211019c.mMain = &daPly_c::St_Jump_Main;
+    data_ov002_021101b4.mCleanup = 0;
+    data_ov002_021101b4.mInit = &daPly_c::St_Fall_Init;
+    data_ov002_021101b4.mMain = &daPly_c::St_Fall_Main;
+    data_ov002_021101e4.mInit = &daPly_c::St_SideFlip_Init;
+    data_ov002_021101e4.mCleanup = 0;
+    data_ov002_021101e4.mMain = &daPly_c::St_SideFlip_Main;
+    data_ov002_021101fc.mCleanup = 0;
+    data_ov002_021101fc.mInit = &daPly_c::St_SlideKickRecover_Init;
+    data_ov002_021101fc.mMain = &daPly_c::St_SideFlip_Main;
+    data_ov002_02110214.mInit = &daPly_c::St_Fly_Init;
+    data_ov002_02110214.mCleanup = 0;
+    data_ov002_02110214.mMain = &daPly_c::St_Fly_Main;
+    daPly_c::ST_OWL.mInit = &daPly_c::St_Owl_Init;
+    daPly_c::ST_OWL.mMain = &daPly_c::St_Owl_Main;
+    daPly_c::ST_OWL.mCleanup = &daPly_c::St_Owl_Cleanup;
+    data_ov002_02110274.mCleanup = 0;
+    data_ov002_02110274.mInit = &daPly_c::St_WindCarry_Init;
+    data_ov002_02110274.mMain = &daPly_c::St_WindCarry_Main;
+    data_ov002_0211028c.mInit = &daPly_c::St_Balloon_Init;
+    data_ov002_0211028c.mMain = &daPly_c::St_Balloon_Main;
+    data_ov002_0211028c.mCleanup = &daPly_c::St_Balloon_Cleanup;
+    data_ov002_021102bc.mCleanup = 0;
+    data_ov002_021102bc.mInit = &daPly_c::St_TornadoSpin_Init;
+    data_ov002_021102bc.mMain = &daPly_c::St_TornadoSpin_Main;
+    data_ov002_021102d4.mInit = &daPly_c::St_Cannon_Init;
+    data_ov002_021102d4.mMain = &daPly_c::St_Cannon_Main;
+    data_ov002_021102d4.mCleanup = &daPly_c::St_Cannon_Cleanup;
+    data_ov002_02110304.mInit = &daPly_c::St_Shell_Init;
+    data_ov002_02110304.mMain = &daPly_c::St_Shell_Main;
+    data_ov002_02110304.mCleanup = &daPly_c::St_Shell_Cleanup;
+    data_ov002_0211031c.mCleanup = 0;
+    data_ov002_0211031c.mInit = &daPly_c::St_StomachSlide_Init;
+    data_ov002_0211031c.mMain = &daPly_c::St_StomachSlide_Main;
+    data_ov002_02110334.mInit = &daPly_c::St_ButtSlide_Init;
+    data_ov002_02110334.mCleanup = 0;
+    data_ov002_02110334.mMain = &daPly_c::St_ButtSlide_Main;
+    data_ov002_02110364.mInit = &daPly_c::St_HoldLight_Init;
+    data_ov002_02110364.mMain = &daPly_c::St_HoldLight_Main;
+    data_ov002_02110364.mCleanup = &daPly_c::St_HoldLight_Cleanup;
+    data_ov002_02110394.mCleanup = 0;
+    data_ov002_02110394.mInit = &daPly_c::St_HoldHeavy_Init;
+    data_ov002_02110394.mMain = &daPly_c::St_HoldHeavy_Main;
+    data_ov002_021103ac.mInit = &daPly_c::St_WallSlide_Init;
+    data_ov002_021103ac.mCleanup = 0;
+    data_ov002_021103ac.mMain = &daPly_c::St_WallSlide_Main;
+    data_ov002_021103dc.mCleanup = 0;
+    data_ov002_021103dc.mInit = &daPly_c::St_WallJump_Init;
+    data_ov002_021103dc.mMain = &daPly_c::St_WallJump_Main;
+    data_ov002_021103f4.mInit = &daPly_c::St_SlopeJump_Init;
+    data_ov002_021103f4.mCleanup = 0;
+    data_ov002_021103f4.mMain = &daPly_c::St_SlopeJump_Main;
+    data_ov002_02110424.mCleanup = 0;
+    data_ov002_02110424.mInit = &daPly_c::St_Land_Init;
+    data_ov002_02110424.mMain = &daPly_c::St_Land_Main;
+    data_ov002_0211043c.mInit = &daPly_c::St_OnWall_Init;
+    data_ov002_0211043c.mCleanup = 0;
+    data_ov002_0211043c.mMain = &daPly_c::St_OnWall_Main;
+    data_ov002_02110454.mInit = &daPly_c::St_Spin_Init;
+    data_ov002_02110454.mMain = &daPly_c::St_Spin_Main;
+    data_ov002_02110454.mCleanup = &daPly_c::St_Spin_Cleanup;
+    data_ov002_02110484.mInit = &daPly_c::St_CrazedCrate_Init;
+    data_ov002_02110484.mMain = &daPly_c::St_CrazedCrate_Main;
+    data_ov002_02110484.mCleanup = &daPly_c::St_CrazedCrate_Cleanup;
+    data_ov002_0211049c.mCleanup = 0;
+    data_ov002_0211049c.mInit = &daPly_c::St_WaitQuicksand_Init;
+    data_ov002_0211049c.mMain = &daPly_c::St_WaitQuicksand_Main;
+    data_ov002_021104cc.mInit = &daPly_c::St_JumpQuicksand_Init;
+    data_ov002_021104cc.mCleanup = 0;
+    data_ov002_021104cc.mMain = &daPly_c::St_JumpQuicksand_Main;
+    data_ov002_021104e4.mCleanup = 0;
+    data_ov002_021104e4.mInit = &daPly_c::St_Crouch_Init;
+    data_ov002_021104e4.mMain = &daPly_c::St_Crouch_Main;
+    data_ov002_02110514.mInit = &daPly_c::St_Crawl_Init;
+    data_ov002_02110514.mCleanup = 0;
+    data_ov002_02110514.mMain = &daPly_c::St_Crawl_Main;
+    data_ov002_0211052c.mCleanup = 0;
+    data_ov002_0211052c.mInit = &daPly_c::St_BackFlip_Init;
+    data_ov002_0211052c.mMain = &daPly_c::St_SideFlip_Main;
+    data_ov002_0211055c.mInit = &daPly_c::St_LongJump_Init;
+    data_ov002_0211055c.mCleanup = 0;
+    data_ov002_0211055c.mMain = &daPly_c::St_LongJump_Main;
+    data_ov002_02110574.mCleanup = 0;
+    data_ov002_02110574.mInit = &daPly_c::St_PunchKick_Init;
+    data_ov002_02110574.mMain = &daPly_c::St_PunchKick_Main;
+    data_ov002_021105a4.mInit = &daPly_c::St_GroundPound_Init;
+    data_ov002_021105a4.mMain = &daPly_c::St_GroundPound_Main;
+    data_ov002_021105a4.mCleanup = &daPly_c::St_GroundPound_Cleanup;
+    data_ov002_021105bc.mCleanup = 0;
+    data_ov002_021105bc.mInit = &daPly_c::St_Dive_Init;
+    data_ov002_021105bc.mMain = &daPly_c::St_StomachSlide_Main;
+    data_ov002_021105d4.mInit = &daPly_c::St_Throw_Init;
+    data_ov002_021105d4.mCleanup = 0;
+    data_ov002_021105d4.mMain = &daPly_c::St_Throw_Main;
+    data_ov002_021105ec.mInit = &daPly_c::St_GrabBowserTail_Init;
+    data_ov002_021105ec.mMain = &daPly_c::St_GrabBowserTail_Main;
+    data_ov002_021105ec.mCleanup = &daPly_c::St_GrabBowserTail_Cleanup;
+    data_ov002_02110604.mInit = &daPly_c::St_SwingPlayer_Init;
+    data_ov002_02110604.mMain = &daPly_c::St_SwingPlayer_Main;
+    data_ov002_02110604.mCleanup = &daPly_c::St_SwingPlayer_Cleanup;
+    data_ov002_0211061c.mCleanup = 0;
+    data_ov002_0211061c.mInit = &daPly_c::St_SweepKick_Init;
+    data_ov002_0211061c.mMain = &daPly_c::St_SweepKick_Main;
+    data_ov002_02110634.mInit = &daPly_c::St_SlideKick_Init;
+    data_ov002_02110634.mCleanup = 0;
+    data_ov002_02110634.mMain = &daPly_c::St_SlideKick_Main;
+    data_ov002_0211064c.mInit = &daPly_c::St_CameraZoom_Init;
+    data_ov002_0211064c.mMain = &daPly_c::St_CameraZoom_Main;
+    data_ov002_0211064c.mCleanup = &daPly_c::St_CameraZoom_Cleanup;
+    data_ov002_02110664.mInit = &daPly_c::St_Null_Init;
+    data_ov002_02110664.mMain = &daPly_c::St_Null_Main;
+    data_ov002_02110664.mCleanup = &daPly_c::St_Null_Cleanup;
+    data_ov002_0211067c.mInit = &daPly_c::St_Swim_Init;
+    data_ov002_0211067c.mMain = &daPly_c::St_Swim_Main;
+    data_ov002_0211067c.mCleanup = &daPly_c::St_Swim_Cleanup;
+    data_ov002_02110694.mCleanup = 0;
+    data_ov002_02110694.mInit = &daPly_c::St_WaterJump_Init;
+    data_ov002_02110694.mMain = &daPly_c::St_SideFlip_Main;
+    data_ov002_021106ac.mInit = &daPly_c::St_MetalWaterGround_Init;
+    data_ov002_021106ac.mMain = &daPly_c::St_MetalWaterGround_Main;
+    data_ov002_021106ac.mCleanup = &daPly_c::St_Swim_Cleanup;
+    data_ov002_021106c4.mInit = &daPly_c::St_MetalWaterWater_Init;
+    data_ov002_021106c4.mMain = &daPly_c::St_MetalWaterWater_Main;
+    data_ov002_021106c4.mCleanup = &daPly_c::St_Swim_Cleanup;
+    data_ov002_021106dc.mInit = &daPly_c::St_Climb_Init;
+    data_ov002_021106dc.mMain = &daPly_c::St_Climb_Main;
+    data_ov002_021106dc.mCleanup = &daPly_c::St_Climb_Cleanup;
+    data_ov002_021106f4.mInit = &daPly_c::St_Headstand_Init;
+    data_ov002_021106f4.mMain = &daPly_c::St_Headstand_Main;
+    data_ov002_021106f4.mCleanup = &daPly_c::St_Climb_Cleanup;
+    data_ov002_0211070c.mCleanup = 0;
+    data_ov002_0211070c.mInit = &daPly_c::St_WallJump_Init;
+    data_ov002_0211070c.mMain = &daPly_c::St_WallJump_Main;
+    data_ov002_02110724.mInit = &daPly_c::St_HeadstandJump_Init;
+    data_ov002_02110724.mCleanup = 0;
+    data_ov002_02110724.mMain = &daPly_c::St_SideFlip_Main;
+    data_ov002_0210ffec.mInit = &daPly_c::St_LedgeHang_Init;
+    data_ov002_0210ffec.mMain = &daPly_c::St_LedgeHang_Main;
+    data_ov002_0210ffec.mCleanup = &daPly_c::St_LedgeHang_Cleanup;
+    data_ov002_02110004.mCleanup = 0;
+    data_ov002_02110004.mInit = &daPly_c::St_LedgeGrab_Init;
+    data_ov002_02110004.mMain = &daPly_c::St_LedgeGrab_Main;
+    data_ov002_0211001c.mInit = &daPly_c::St_CeilingGrate_Init;
+    data_ov002_0211001c.mCleanup = 0;
+    data_ov002_0211001c.mMain = &daPly_c::St_CeilingGrate_Main;
+    data_ov002_02110034.mInit = &daPly_c::St_YoshiPower_Init;
+    data_ov002_02110034.mMain = &daPly_c::St_YoshiPower_Main;
+    data_ov002_02110034.mCleanup = &daPly_c::St_YoshiPower_Cleanup;
+    data_ov002_0211004c.mCleanup = 0;
+    data_ov002_0211004c.mInit = &daPly_c::St_Swallow_Init;
+    data_ov002_0211004c.mMain = &daPly_c::St_Swallow_Main;
+    data_ov002_02110064.mInit = &daPly_c::St_InYoshiMouth_Init;
+    data_ov002_02110064.mMain = &daPly_c::St_InYoshiMouth_Main;
+    data_ov002_02110064.mCleanup = &daPly_c::St_InYoshiMouth_Cleanup;
+    data_ov002_0211007c.mCleanup = 0;
+    data_ov002_0211007c.mInit = &daPly_c::St_SmallLaunchUp_Init;
+    data_ov002_0211007c.mMain = &daPly_c::St_SmallLaunchUp_Main;
+    data_ov002_02110094.mInit = &daPly_c::St_Hurt_Init;
+    data_ov002_02110094.mMain = &daPly_c::St_Hurt_Main;
+    data_ov002_02110094.mCleanup = &daPly_c::St_Hurt_Cleanup;
+    data_ov002_021100ac.mCleanup = 0;
+    data_ov002_021100ac.mInit = &daPly_c::St_HurtWater_Init;
+    data_ov002_021100ac.mMain = &daPly_c::St_HurtWater_Main;
+    data_ov002_021100c4.mInit = &daPly_c::St_Electrocute_Init;
+    data_ov002_021100c4.mCleanup = 0;
+    data_ov002_021100c4.mMain = &daPly_c::St_Electrocute_Main;
+    data_ov002_021100dc.mCleanup = 0;
+    data_ov002_021100dc.mInit = &daPly_c::St_BurnFire_Init;
+    data_ov002_021100dc.mMain = &daPly_c::St_BurnFire_Main;
+    data_ov002_021100f4.mInit = &daPly_c::St_BurnLava_Init;
+    data_ov002_021100f4.mCleanup = 0;
+    data_ov002_021100f4.mMain = &daPly_c::St_BurnLava_Main;
+    data_ov002_0211010c.mCleanup = 0;
+    data_ov002_0211010c.mInit = &daPly_c::St_DeadHit_Init;
+    data_ov002_0211010c.mMain = &daPly_c::St_DeadHit_Main;
+    data_ov002_02110124.mInit = &daPly_c::St_DeadPit_Init;
+    data_ov002_02110124.mCleanup = 0;
+    data_ov002_02110124.mMain = &daPly_c::St_DeadPit_Main;
+    data_ov002_0211016c.mInit = &daPly_c::St_Grabbed_Init;
+    data_ov002_0211016c.mMain = &daPly_c::St_Grabbed_Main;
+    data_ov002_0211016c.mCleanup = &daPly_c::St_Grabbed_Cleanup;
+    data_ov002_021101cc.mInit = &daPly_c::St_Thrown_Init;
+    data_ov002_021101cc.mMain = &daPly_c::St_Thrown_Main;
+    data_ov002_021101cc.mCleanup = &daPly_c::St_Thrown_Cleanup;
+    data_ov002_0211022c.mInit = &daPly_c::St_NoControl_Init;
+    data_ov002_0211022c.mMain = &daPly_c::St_NoControl_Main;
+    data_ov002_0211022c.mCleanup = &daPly_c::St_NoControl_Cleanup;
+    data_ov002_0211025c.mCleanup = 0;
+    data_ov002_0211025c.mInit = &daPly_c::St_DebugFly_Init;
+    data_ov002_0211025c.mMain = &daPly_c::St_DebugFly_Main;
+    data_ov002_021102a4.mInit = &daPly_c::St_Teleport_Init;
+    data_ov002_021102a4.mCleanup = 0;
+    data_ov002_021102a4.mMain = &daPly_c::St_Teleport_Main;
+    data_ov002_021102ec.mInit = &daPly_c::St_Squish_Init;
+    data_ov002_021102ec.mMain = &daPly_c::St_Squish_Main;
+    data_ov002_021102ec.mCleanup = &daPly_c::St_Squish_Cleanup;
+    data_ov002_0211034c.mInit = &daPly_c::St_DizzyStars_Init;
+    data_ov002_0211034c.mMain = &daPly_c::St_DizzyStars_Main;
+    data_ov002_0211034c.mCleanup = &daPly_c::St_DizzyStars_Cleanup;
+    data_ov002_0211037c.mCleanup = 0;
+    data_ov002_0211037c.mInit = &daPly_c::St_Bonk_Init;
+    data_ov002_0211037c.mMain = &daPly_c::St_Bonk_Main;
+    data_ov002_021103c4.mInit = &daPly_c::St_BowserEarthquake_Init;
+    data_ov002_021103c4.mCleanup = 0;
+    data_ov002_021103c4.mMain = &daPly_c::St_BowserEarthquake_Main;
+    data_ov002_0211040c.mCleanup = 0;
+    data_ov002_0211040c.mInit = &daPly_c::St_StuckInGround_Init;
+    data_ov002_0211040c.mMain = &daPly_c::St_StuckInGround_Main;
+    data_ov002_0211046c.mInit = &daPly_c::St_Talk_Init;
+    data_ov002_0211046c.mMain = &daPly_c::St_Talk_Main;
+    data_ov002_0211046c.mCleanup = &daPly_c::St_Talk_Cleanup;
+    data_ov002_021104b4.mInit = &daPly_c::St_LevelEnter_Init;
+    data_ov002_021104b4.mMain = &daPly_c::St_LevelEnter_Main;
+    data_ov002_021104b4.mCleanup = &daPly_c::St_LevelEnter_Cleanup;
+    data_ov002_021104fc.mCleanup = 0;
+    data_ov002_021104fc.mInit = &daPly_c::St_Respawn_Init;
+    data_ov002_021104fc.mMain = &daPly_c::St_Respawn_Main;
+    data_ov002_02110544.mInit = &daPly_c::St_OpeningWakeUp_Init;
+    data_ov002_02110544.mCleanup = 0;
+    data_ov002_02110544.mMain = &daPly_c::St_OpeningWakeUp_Main;
+    data_ov002_0211058c.mInit = &daPly_c::St_EndingFly_Init;
+    data_ov002_0211058c.mCleanup = 0;
+    data_ov002_0211058c.mMain = &daPly_c::St_EndingFly_Main;
+    func_ov002_020e6ad4(data_ov002_02110804);
+    data_ov002_0211073c[0] = data_ov002_02109f0c.pmf;
+    data_ov002_0211073c[1] = data_ov002_0210a47c.pmf;
+    data_ov002_0211073c[2] = data_ov002_0210a10c.pmf;
+    data_ov002_0211073c[3] = &daPly_c::func_ov002_020e1c20;
+    data_ov002_02110884[0].voidPmf = data_ov002_02109dfc.pmf;
+    data_ov002_02110884[1].voidPmf = data_ov002_0210a264.pmf;
+    data_ov002_02110884[2].voidPmf = data_ov002_0210a244.pmf;
+    data_ov002_02110884[3].voidPmf = data_ov002_0210a23c.pmf;
+    data_ov002_02110884[4].voidPmf = &daPly_c::func_ov002_020c9d68;
+    data_ov002_02110884[5].intPmf = &daPly_c::func_ov002_020c9d1c;
+    data_ov002_02110884[6].voidPmf = &daPly_c::func_ov002_020c9cc0;
+    data_ov002_02110884[7].voidPmf = &daPly_c::func_ov002_020c9c4c;
+    data_ov002_02110884[8].intPmf = &daPly_c::func_ov002_020c9c00;
+    data_ov002_02110884[9].voidPmf = data_ov002_02109e2c.pmf;
+    data_ov002_02110884[10].voidPmf = &daPly_c::func_ov002_020c9b5c;
+    data_ov002_02110884[11].voidPmf = &daPly_c::func_ov002_020c9ac0;
+    data_ov002_02110884[12].intPmf = &daPly_c::func_ov002_020c9b10;
+    data_ov002_02110884[13].voidPmf = &daPly_c::func_ov002_020c9a04;
+    data_ov002_02110884[14].voidPmf = data_ov002_0210a174.pmf;
+    data_ov002_02110884[15].voidPmf = data_ov002_02109f44.pmf;
+    data_ov002_02110884[16].voidPmf = &daPly_c::func_ov002_020c98a4;
+    data_ov002_02110884[17].voidPmf = &daPly_c::func_ov002_020c9840;
+    data_ov002_02110884[18].voidPmf = &daPly_c::func_ov002_020c97f8;
+    data_ov002_02110884[19].voidPmf = &daPly_c::func_ov002_020c97e0;
+    data_ov002_0211075c[0] = &daPly_c::func_ov002_020c75f0;
+    data_ov002_0211075c[1] = &daPly_c::func_ov002_020c7350;
+    data_ov002_0211075c[2] = &daPly_c::func_ov002_020c71e0;
+    data_ov002_0211075c[3] = &daPly_c::func_ov002_020c7194;
+    data_ov002_0211075c[4] = data_ov002_0210a334.pmf;
+    data_ov002_0211075c[5] = &daPly_c::func_ov002_020c70ac;
+    data_ov002_0211075c[6] = &daPly_c::func_ov002_020c6fe4;
+}
+
+#pragma section initsec begin
 void __sinit_ov002_021019d0(void) {
     func_0203b9b4(&data_ov002_0210e160, 0x4d2);
     __register_global_object(&data_ov002_0210e160, (void *)func_0201973c, data_ov002_0210f9b0);
@@ -24487,272 +24716,7 @@ void __sinit_ov002_021019d0(void) {
     SharedFilePtr_Construct_TexSeq(&data_ov002_0210e500, 0x80b2);
     __register_global_object(&data_ov002_0210e500, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f2fc);
-    data_ov002_0211013c.mInit = data_ov002_02109e0c;
-    data_ov002_0211013c.mMain = data_ov002_02109f74;
-    data_ov002_0211013c.mCleanup = 0;
-    daPly_c::ST_WAIT.mInit = data_ov002_0210a25c;
-    daPly_c::ST_WAIT.mMain = data_ov002_02109e14;
-    daPly_c::ST_WAIT.mCleanup = data_ov002_02109f84;
-    data_ov002_02110184.mCleanup = 0;
-    data_ov002_02110184.mInit = data_ov002_02109f94;
-    data_ov002_02110184.mMain = data_ov002_02109e1c;
-    data_ov002_0211019c.mInit = data_ov002_02109fa4;
-    data_ov002_0211019c.mCleanup = 0;
-    data_ov002_0211019c.mMain = data_ov002_02109fac;
-    data_ov002_021101b4.mCleanup = 0;
-    data_ov002_021101b4.mInit = data_ov002_02109dec;
-    data_ov002_021101b4.mMain = data_ov002_0210a26c;
-    data_ov002_021101e4.mInit = data_ov002_02109fb4;
-    data_ov002_021101e4.mCleanup = 0;
-    data_ov002_021101e4.mMain = data_ov002_0210a27c;
-    data_ov002_021101fc.mCleanup = 0;
-    data_ov002_021101fc.mInit = data_ov002_02109fbc;
-    data_ov002_021101fc.mMain = data_ov002_02109fc4;
-    data_ov002_02110214.mInit = data_ov002_0210a214;
-    data_ov002_02110214.mCleanup = 0;
-    data_ov002_02110214.mMain = data_ov002_02109fd4;
-    daPly_c::ST_OWL.mInit = data_ov002_02109e9c;
-    daPly_c::ST_OWL.mMain = data_ov002_02109fdc;
-    daPly_c::ST_OWL.mCleanup = data_ov002_0210a2a4;
-    data_ov002_02110274.mCleanup = 0;
-    data_ov002_02110274.mInit = data_ov002_02109eac;
-    data_ov002_02110274.mMain = data_ov002_0210a2b4;
-    data_ov002_0211028c.mInit = data_ov002_0210a2bc;
-    data_ov002_0211028c.mMain = data_ov002_02109fec;
-    data_ov002_0211028c.mCleanup = data_ov002_0210a1e4;
-    data_ov002_021102bc.mCleanup = 0;
-    data_ov002_021102bc.mInit = data_ov002_02109e94;
-    data_ov002_021102bc.mMain = data_ov002_0210a2cc;
-    data_ov002_021102d4.mInit = data_ov002_02109ffc;
-    data_ov002_021102d4.mMain = data_ov002_0210a1c4;
-    data_ov002_021102d4.mCleanup = data_ov002_02109ebc;
-    data_ov002_02110304.mInit = data_ov002_0210a2e4;
-    data_ov002_02110304.mMain = data_ov002_0210a004;
-    data_ov002_02110304.mCleanup = data_ov002_0210a2f4;
-    data_ov002_0211031c.mCleanup = 0;
-    data_ov002_0211031c.mInit = data_ov002_0210a00c;
-    data_ov002_0211031c.mMain = data_ov002_02109e3c;
-    data_ov002_02110334.mInit = data_ov002_0210a18c;
-    data_ov002_02110334.mCleanup = 0;
-    data_ov002_02110334.mMain = data_ov002_0210a304;
-    data_ov002_02110364.mInit = data_ov002_0210a01c;
-    data_ov002_02110364.mMain = data_ov002_02109e44;
-    data_ov002_02110364.mCleanup = data_ov002_0210a314;
-    data_ov002_02110394.mCleanup = 0;
-    data_ov002_02110394.mInit = data_ov002_0210a31c;
-    data_ov002_02110394.mMain = data_ov002_0210a324;
-    data_ov002_021103ac.mInit = data_ov002_0210a164;
-    data_ov002_021103ac.mCleanup = 0;
-    data_ov002_021103ac.mMain = data_ov002_02109dd4;
-    data_ov002_021103dc.mCleanup = 0;
-    data_ov002_021103dc.mInit = data_ov002_0210a33c;
-    data_ov002_021103dc.mMain = data_ov002_0210a034;
-    data_ov002_021103f4.mInit = data_ov002_02109ec4;
-    data_ov002_021103f4.mCleanup = 0;
-    data_ov002_021103f4.mMain = data_ov002_0210a03c;
-    data_ov002_02110424.mCleanup = 0;
-    data_ov002_02110424.mInit = data_ov002_02109ecc;
-    data_ov002_02110424.mMain = data_ov002_0210a35c;
-    data_ov002_0211043c.mInit = data_ov002_0210a044;
-    data_ov002_0211043c.mCleanup = 0;
-    data_ov002_0211043c.mMain = data_ov002_02109e4c;
-    data_ov002_02110454.mInit = data_ov002_0210a04c;
-    data_ov002_02110454.mMain = data_ov002_0210a37c;
-    data_ov002_02110454.mCleanup = data_ov002_0210a384;
-    data_ov002_02110484.mInit = data_ov002_02109e54;
-    data_ov002_02110484.mMain = data_ov002_02109ed4;
-    data_ov002_02110484.mCleanup = data_ov002_0210a38c;
-    data_ov002_0211049c.mCleanup = 0;
-    data_ov002_0211049c.mInit = data_ov002_0210a05c;
-    data_ov002_0211049c.mMain = data_ov002_0210a394;
-    data_ov002_021104cc.mInit = data_ov002_02109ddc;
-    data_ov002_021104cc.mCleanup = 0;
-    data_ov002_021104cc.mMain = data_ov002_0210a0f4;
-    data_ov002_021104e4.mCleanup = 0;
-    data_ov002_021104e4.mInit = data_ov002_02109de4;
-    data_ov002_021104e4.mMain = data_ov002_0210a54c;
-    data_ov002_02110514.mInit = data_ov002_02109df4;
-    data_ov002_02110514.mCleanup = 0;
-    data_ov002_02110514.mMain = data_ov002_0210a0d4;
-    data_ov002_0211052c.mCleanup = 0;
-    data_ov002_0211052c.mInit = data_ov002_0210a544;
-    data_ov002_0211052c.mMain = data_ov002_0210a53c;
-    data_ov002_0211055c.mInit = data_ov002_0210a52c;
-    data_ov002_0211055c.mCleanup = 0;
-    data_ov002_0211055c.mMain = data_ov002_0210a524;
-    data_ov002_02110574.mCleanup = 0;
-    data_ov002_02110574.mInit = data_ov002_0210a514;
-    data_ov002_02110574.mMain = data_ov002_0210a50c;
-    data_ov002_021105a4.mInit = data_ov002_0210a504;
-    data_ov002_021105a4.mMain = data_ov002_0210a4fc;
-    data_ov002_021105a4.mCleanup = data_ov002_0210a4f4;
-    data_ov002_021105bc.mCleanup = 0;
-    data_ov002_021105bc.mInit = data_ov002_0210a4ec;
-    data_ov002_021105bc.mMain = data_ov002_0210a4e4;
-    data_ov002_021105d4.mInit = data_ov002_0210a0ac;
-    data_ov002_021105d4.mCleanup = 0;
-    data_ov002_021105d4.mMain = data_ov002_02109f14;
-    data_ov002_021105ec.mInit = data_ov002_0210a4d4;
-    data_ov002_021105ec.mMain = data_ov002_0210a4cc;
-    data_ov002_021105ec.mCleanup = data_ov002_0210a4c4;
-    data_ov002_02110604.mInit = data_ov002_0210a4b4;
-    data_ov002_02110604.mMain = data_ov002_0210a494;
-    data_ov002_02110604.mCleanup = data_ov002_0210a414;
-    data_ov002_0211061c.mCleanup = 0;
-    data_ov002_0211061c.mInit = data_ov002_0210a1dc;
-    data_ov002_0211061c.mMain = data_ov002_0210a3cc;
-    data_ov002_02110634.mInit = data_ov002_0210a49c;
-    data_ov002_02110634.mCleanup = 0;
-    data_ov002_02110634.mMain = data_ov002_0210a09c;
-    data_ov002_0211064c.mInit = data_ov002_02109e6c;
-    data_ov002_0211064c.mMain = data_ov002_0210a0e4;
-    data_ov002_0211064c.mCleanup = data_ov002_0210a13c;
-    data_ov002_02110664.mInit = data_ov002_0210a17c;
-    data_ov002_02110664.mMain = data_ov002_0210a1a4;
-    data_ov002_02110664.mCleanup = data_ov002_02109f5c;
-    data_ov002_0211067c.mInit = data_ov002_0210a204;
-    data_ov002_0211067c.mMain = data_ov002_0210a224;
-    data_ov002_0211067c.mCleanup = data_ov002_0210a24c;
-    data_ov002_02110694.mCleanup = 0;
-    data_ov002_02110694.mInit = data_ov002_0210a42c;
-    data_ov002_02110694.mMain = data_ov002_0210a2fc;
-    data_ov002_021106ac.mInit = data_ov002_0210a2ec;
-    data_ov002_021106ac.mMain = data_ov002_0210a0a4;
-    data_ov002_021106ac.mCleanup = data_ov002_0210a194;
-    data_ov002_021106c4.mInit = data_ov002_0210a294;
-    data_ov002_021106c4.mMain = data_ov002_02109eb4;
-    data_ov002_021106c4.mCleanup = data_ov002_02109e84;
-    data_ov002_021106dc.mInit = data_ov002_0210a3a4;
-    data_ov002_021106dc.mMain = data_ov002_0210a39c;
-    data_ov002_021106dc.mCleanup = data_ov002_0210a3bc;
-    data_ov002_021106f4.mInit = data_ov002_0210a2c4;
-    data_ov002_021106f4.mMain = data_ov002_0210a3d4;
-    data_ov002_021106f4.mCleanup = data_ov002_0210a3e4;
-    data_ov002_0211070c.mCleanup = 0;
-    data_ov002_0211070c.mInit = data_ov002_0210a3ec;
-    data_ov002_0211070c.mMain = data_ov002_0210a3b4;
-    data_ov002_02110724.mInit = data_ov002_0210a2ac;
-    data_ov002_02110724.mCleanup = 0;
-    data_ov002_02110724.mMain = data_ov002_02109ef4;
-    data_ov002_0210ffec.mInit = data_ov002_0210a41c;
-    data_ov002_0210ffec.mMain = data_ov002_0210a06c;
-    data_ov002_0210ffec.mCleanup = data_ov002_02109eec;
-    data_ov002_02110004.mCleanup = 0;
-    data_ov002_02110004.mInit = data_ov002_0210a43c;
-    data_ov002_02110004.mMain = data_ov002_0210a444;
-    data_ov002_0211001c.mInit = data_ov002_0210a454;
-    data_ov002_0211001c.mCleanup = 0;
-    data_ov002_0211001c.mMain = data_ov002_0210a464;
-    data_ov002_02110034.mInit = data_ov002_02109ee4;
-    data_ov002_02110034.mMain = data_ov002_02109efc;
-    data_ov002_02110034.mCleanup = data_ov002_0210a484;
-    data_ov002_0211004c.mCleanup = 0;
-    data_ov002_0211004c.mInit = data_ov002_02109f04;
-    data_ov002_0211004c.mMain = data_ov002_0210a32c;
-    data_ov002_02110064.mInit = data_ov002_0210a4a4;
-    data_ov002_02110064.mMain = data_ov002_0210a4ac;
-    data_ov002_02110064.mCleanup = data_ov002_0210a08c;
-    data_ov002_0211007c.mCleanup = 0;
-    data_ov002_0211007c.mInit = data_ov002_02109e74;
-    data_ov002_0211007c.mMain = data_ov002_02109e7c;
-    data_ov002_02110094.mInit = data_ov002_02109f1c;
-    data_ov002_02110094.mMain = data_ov002_02109f24;
-    data_ov002_02110094.mCleanup = data_ov002_02109edc;
-    data_ov002_021100ac.mCleanup = 0;
-    data_ov002_021100ac.mInit = data_ov002_02109f2c;
-    data_ov002_021100ac.mMain = data_ov002_0210a2d4;
-    data_ov002_021100c4.mInit = data_ov002_02109e8c;
-    data_ov002_021100c4.mCleanup = 0;
-    data_ov002_021100c4.mMain = data_ov002_02109f34;
-    data_ov002_021100dc.mCleanup = 0;
-    data_ov002_021100dc.mInit = data_ov002_02109f3c;
-    data_ov002_021100dc.mMain = data_ov002_02109e5c;
-    data_ov002_021100f4.mInit = data_ov002_0210a16c;
-    data_ov002_021100f4.mCleanup = 0;
-    data_ov002_021100f4.mMain = data_ov002_02109f4c;
-    data_ov002_0211010c.mCleanup = 0;
-    data_ov002_0211010c.mInit = data_ov002_0210a28c;
-    data_ov002_0211010c.mMain = data_ov002_0210a1bc;
-    data_ov002_02110124.mInit = data_ov002_02109e04;
-    data_ov002_02110124.mCleanup = 0;
-    data_ov002_02110124.mMain = data_ov002_0210a4dc;
-    data_ov002_0211016c.mInit = data_ov002_02109f7c;
-    data_ov002_0211016c.mMain = data_ov002_0210a254;
-    data_ov002_0211016c.mCleanup = data_ov002_02109f8c;
-    data_ov002_021101cc.mInit = data_ov002_02109f9c;
-    data_ov002_021101cc.mMain = data_ov002_02109e24;
-    data_ov002_021101cc.mCleanup = data_ov002_0210a234;
-    data_ov002_0211022c.mInit = data_ov002_0210a284;
-    data_ov002_0211022c.mMain = data_ov002_0210a21c;
-    data_ov002_0211022c.mCleanup = data_ov002_02109fcc;
-    data_ov002_0211025c.mCleanup = 0;
-    data_ov002_0211025c.mInit = data_ov002_0210a20c;
-    data_ov002_0211025c.mMain = data_ov002_02109ea4;
-    data_ov002_021102a4.mInit = data_ov002_0210a1f4;
-    data_ov002_021102a4.mCleanup = 0;
-    data_ov002_021102a4.mMain = data_ov002_02109f6c;
-    data_ov002_021102ec.mInit = data_ov002_02109e34;
-    data_ov002_021102ec.mMain = data_ov002_02109f64;
-    data_ov002_021102ec.mCleanup = data_ov002_0210a2dc;
-    data_ov002_0211034c.mInit = data_ov002_0210a1ac;
-    data_ov002_0211034c.mMain = data_ov002_0210a19c;
-    data_ov002_0211034c.mCleanup = data_ov002_0210a014;
-    data_ov002_0211037c.mCleanup = 0;
-    data_ov002_0211037c.mInit = data_ov002_0210a184;
-    data_ov002_0211037c.mMain = data_ov002_0210a024;
-    data_ov002_021103c4.mInit = data_ov002_0210a02c;
-    data_ov002_021103c4.mCleanup = 0;
-    data_ov002_021103c4.mMain = data_ov002_0210a15c;
-    data_ov002_0211040c.mCleanup = 0;
-    data_ov002_0211040c.mInit = data_ov002_0210a344;
-    data_ov002_0211040c.mMain = data_ov002_0210a354;
-    data_ov002_0211046c.mInit = data_ov002_0210a364;
-    data_ov002_0211046c.mMain = data_ov002_0210a374;
-    data_ov002_0211046c.mCleanup = data_ov002_0210a11c;
-    data_ov002_021104b4.mInit = data_ov002_0210a114;
-    data_ov002_021104b4.mMain = data_ov002_0210a104;
-    data_ov002_021104b4.mCleanup = data_ov002_0210a0fc;
-    data_ov002_021104fc.mCleanup = 0;
-    data_ov002_021104fc.mInit = data_ov002_02109e64;
-    data_ov002_021104fc.mMain = data_ov002_0210a0ec;
-    data_ov002_02110544.mInit = data_ov002_0210a0cc;
-    data_ov002_02110544.mCleanup = 0;
-    data_ov002_02110544.mMain = data_ov002_0210a0c4;
-    data_ov002_0211058c.mInit = data_ov002_0210a51c;
-    data_ov002_0211058c.mCleanup = 0;
-    data_ov002_0211058c.mMain = data_ov002_0210a0bc;
-    func_ov002_020e6ad4(data_ov002_02110804);
-    data_ov002_0211073c[0] = data_ov002_02109f0c;
-    data_ov002_0211073c[1] = data_ov002_0210a47c;
-    data_ov002_0211073c[2] = data_ov002_0210a10c;
-    data_ov002_0211073c[3] = data_ov002_0210a45c;
-    data_ov002_02110884[0] = data_ov002_02109dfc;
-    data_ov002_02110884[1] = data_ov002_0210a264;
-    data_ov002_02110884[2] = data_ov002_0210a244;
-    data_ov002_02110884[3] = data_ov002_0210a23c;
-    data_ov002_02110884[4] = data_ov002_0210a274;
-    data_ov002_02110884[5] = data_ov002_0210a22c;
-    data_ov002_02110884[6] = data_ov002_0210a29c;
-    data_ov002_02110884[7] = data_ov002_0210a1fc;
-    data_ov002_02110884[8] = data_ov002_0210a1ec;
-    data_ov002_02110884[9] = data_ov002_02109e2c;
-    data_ov002_02110884[10] = data_ov002_0210a1cc;
-    data_ov002_02110884[11] = data_ov002_0210a1b4;
-    data_ov002_02110884[12] = data_ov002_02109f54;
-    data_ov002_02110884[13] = data_ov002_0210a30c;
-    data_ov002_02110884[14] = data_ov002_0210a174;
-    data_ov002_02110884[15] = data_ov002_02109f44;
-    data_ov002_02110884[16] = data_ov002_0210a154;
-    data_ov002_02110884[17] = data_ov002_0210a144;
-    data_ov002_02110884[18] = data_ov002_0210a134;
-    data_ov002_02110884[19] = data_ov002_0210a12c;
-    data_ov002_0211075c[0] = data_ov002_0210a48c;
-    data_ov002_0211075c[1] = data_ov002_0210a46c;
-    data_ov002_0211075c[2] = data_ov002_0210a3ac;
-    data_ov002_0211075c[3] = data_ov002_0210a074;
-    data_ov002_0211075c[4] = data_ov002_0210a334;
-    data_ov002_0211075c[5] = data_ov002_0210a404;
-    data_ov002_0211075c[6] = data_ov002_0210a3f4;
+    PlayerInitStates();
 }
 }
 
