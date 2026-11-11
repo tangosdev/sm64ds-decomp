@@ -948,6 +948,7 @@ struct GwStats {
                                      // sender's own state
     unsigned long long linger_frames;  // ...and drawn fading out in place
     unsigned long long char_holds;   // ...and held back for the wrong character
+    unsigned long long eaten_hid;    // COOPYOSHI2: follower passes a swallowed friend had no body
     unsigned long long drains;       // hub drains during my own star select
     unsigned long long ident_holds;  // GHOSTID1: passes a seat waited off screen for its identity
     unsigned long long ident_asks, ident_answers;   // GHOSTID1: identities sent asking / answering
@@ -3217,12 +3218,26 @@ extern "C" void port_adventure_probe_apply(int slot, int x, int y, int z,
 // DRIVEN as a ghost is this predicate, re-evaluated every frame.
 // ---------------------------------------------------------------------------
 namespace {
+bool gw_drawn(int body);   // COOPYOSHI2: did this pass's follower place body `body` (defined with gw_follow)
+bool coop_drawgate();      // ...and its knob
+void coop_drawgate_note(int body, int seat, bool old_rule, bool placed);   // ...and its log
 bool peer_visible(int slot) {
     if (!adventure_ghost_mode()) return false;
     if (slot < 0 || slot >= kPortBodySlots) return false;
     if (slot == (int)data_0209f250) return false;
     /* GHOSTWIRE1: on the hub the body's seat decides, off its own frames */
-    if (g_hub) return !gw_cut() && gw_visible(gw_seat_for_body(slot));
+    /* COOPYOSHI2: the follower's answer, not a second guess. gw_follow runs before the render each tick and
+       parks every body it does not place (a friend in a cutscene, a swallowed one, a character swap in
+       flight); gw_visible alone kept drawing such a body for its frames' life at its last matrix, see-through
+       and without its colour row: the green stand-in of the field report. SM64DS_COOP_DRAWGATE=0 is the
+       before arm. */
+    if (g_hub) {
+        const int seat = gw_seat_for_body(slot);
+        const bool old_rule = gw_visible(seat), placed = gw_drawn(slot);
+        coop_drawgate_note(slot, seat, old_rule, placed);
+        if (!coop_drawgate()) return !gw_cut() && old_rule;
+        return !gw_cut() && placed;
+    }
     if (!g_peer_present[slot]) return false;
     if ((unsigned)(GetTickCount() - g_peer_seen_ms[slot]) > kPresenceTimeoutMs)
         return false;
@@ -3485,6 +3500,8 @@ static void gw_exit_summary() {
         std::fprintf(stderr, "[ghost:exit] paintings: %llu ghosts went through an "
                      "exit on this screen, %llu came back out, %llu frames with "
                      "the tag off\n", d.paint_in, d.paint_out, d.paint_frames);
+        std::fprintf(stderr, "[ghost:exit] coop draw gate %s: %llu passes a swallowed friend had no body\n",
+                     coop_drawgate() ? "on" : "OFF (SM64DS_COOP_DRAWGATE=0)", g_gws.eaten_hid);
     }
     std::fflush(stderr);
 }
@@ -3493,6 +3510,33 @@ int g_drawpos_have[kPortBodySlots];
 int g_gw_pal[kPortBodySlots];   // GHOSTLOOK1: the row each body draws with
 const void *g_gw_pal_body[kPortBodySlots];   // ...the body it was made for
 int g_drawpos[kPortBodySlots][3];
+
+bool coop_drawgate() {
+    static const bool on = [] { const char *e = std::getenv("SM64DS_COOP_DRAWGATE"); return !(e && e[0] == '0' && !e[1]); }();
+    return on;
+}
+
+bool gw_drawn(int body) {
+    return body >= 0 && body < kPortBodySlots && g_drawpos_have[body] != 0;
+}
+
+/* One line each time a body starts or stops being one the two rules disagree on: the old rule
+   (fresh frames) would draw it, the follower parked it. Under SM64DS_COOP_DRAWGATE=0 such a body is
+   drawn at its last matrix with colour row -1 (the stand-in); otherwise it is not drawn. */
+void coop_drawgate_note(int body, int seat, bool old_rule, bool placed) {
+    static bool was[kPortBodySlots];
+    static unsigned long long n;
+    if (body < 0 || body >= kPortBodySlots) return;
+    const bool odd = old_rule && !placed && !gw_cut();
+    if (odd == was[body]) return;
+    was[body] = odd;
+    if (odd) ++n;
+    std::fprintf(stderr, "[coopdraw] f=%u body %d seat %d: %s (gate %d, pal %d, rule %s, count %llu)\n",
+                 g_gw_frame, body, seat,
+                 odd ? "fresh frames but parked by the follower" : "rules agree again",
+                 seat >= 0 && party::seat_is_party(seat) ? party::gate(seat) : -1, g_gw_pal[body],
+                 coop_drawgate() ? "new: not drawn" : "old: DRAWN as the stand-in", n);
+}
 
 void gw_park_body(void *a) {
     if (g_gw_nopark < 0) g_gw_nopark = std::getenv("SM64DS_GHOST_NO_PARK") ? 1 : 0;
@@ -3577,7 +3621,7 @@ void gw_follow() {
            in another level or area is drawn the way a ghost is (it fades out
            as it leaves) but is never solid (party::follow below) */
         const bool pseat = got && party::seat_is_party(s);
-        if (pseat && party::gate(s) == party::kGateHide) got = false;   /* paused: stays, with the pause mark (Tango 10-28) */
+        if (pseat && party::gate(s) == party::kGateHide) got = false;   /* paused (kGatePaused): stays, with the pause mark (Tango 10-28) */
         if (got) {
             if (g_gw[s].leaving) {         // GHOSTDOOR1: fading out in place
                 sm = g_gw_last[s];
@@ -3610,6 +3654,17 @@ void gw_follow() {
             continue;
         }
         GwSeat &z = g_gw[s];
+        /* COOPYOSHI2: in somebody's mouth he is inside a Yoshi, as on the cartridge: no body here until the spit
+           (the attach rule below still places a CARRIED friend at the hands) */
+        if (coop_drawgate()) {
+            int ek = 0;
+            if (port::party_hits::attached_holder(s, &ek) >= 0 && ek == 1) {
+                ++g_gws.eaten_hid;
+                ghostdoor::watcher_release(s);
+                gw_park_body(a);
+                continue;
+            }
+        }
         /* PAINTTAG1: has he gone through a painting (any EXIT volume) on this
            screen. The body is drawn as before (the wall or the floor hides it,
            as on the cartridge); only his tag goes (port_adventure_ghost_tag_off).
@@ -3693,6 +3748,7 @@ void gw_follow() {
                 ++g_gws.char_holds;
                 ghostdoor::watcher_release(s);
                 gw_park_body(a);
+                g_drawpos_have[i] = 0;   // COOPYOSHI2: parked = not drawn (peer_visible reads this)
                 continue;
             }
         } else {
@@ -3748,7 +3804,7 @@ void gw_follow() {
                 *(int *)(m + 0x58) = ok_f << 12;
             }
         }
-        if (frames <= 0) { gw_park_body(a); continue; }
+        if (frames <= 0) { gw_park_body(a); g_drawpos_have[i] = 0; continue; }
         /* POSE9 THE TONGUE. Yoshi's tongue is the head model's own animation
            (ghost_tongue.h): when the wire's body anim is a tongue anim make the
            ROM's call once, then put the head on the body's frame. */
