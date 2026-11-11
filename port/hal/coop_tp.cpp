@@ -25,6 +25,7 @@ extern unsigned char data_0209b454[];     // fade / scene change flags
 extern unsigned char data_0209fc48[];     // cutscene
 extern signed char data_02092118;      // saved sublevel for the no-return chain
 extern signed char data_0209211c;      // castle sublevel to come back to
+void KillPlayer(void);
 void LoadLevel(unsigned level, unsigned entrance, unsigned star, unsigned unk, unsigned retEntrance);
 extern unsigned char data_02092110[];     // pending level change, <0 = none
 extern unsigned char data_0209f22c[];     // hold timer
@@ -59,6 +60,7 @@ struct State {
     int fake_seat; unsigned fake_tick; bool fake_done;
     int fake2_seat = -1; unsigned fake2_tick; bool fake2_done;
     unsigned chain_tick; int chain_from, chain_level; bool chain_done;
+    unsigned die_tick; bool die_done;
 };
 State g;
 
@@ -96,6 +98,7 @@ void init() {
         int s = -1; unsigned t = 0;
         if (std::sscanf(f, "%d@%u", &s, &t) == 2 && s >= 0 && s < kSeats) { g.fake2_seat = s; g.fake2_tick = t; }
     }
+    if (const char *f = std::getenv("SM64DS_COOP_TP_DIE")) g.die_tick = (unsigned)std::atoi(f);   // KillPlayer in the chain level at this tick
     if (const char *f = std::getenv("SM64DS_COOP_TP_CHAIN")) {
         unsigned t = 0; int lv = 0, fr = 0;
         if (std::sscanf(f, "%u:%d:%d", &t, &fr, &lv) == 3) { g.chain_tick = t; g.chain_from = fr; g.chain_level = lv; }
@@ -308,6 +311,11 @@ void on_frame(unsigned now) {
         g.chain_done = true;
         std::fprintf(stderr, "[cotp] chain knob: door from level %d to %d, no return\n", (int)data_0209f2f8, g.chain_level);
         LoadLevel((unsigned)g.chain_level, 0, 1, 0, (unsigned)-1);
+    }
+    if (g.die_tick && !g.die_done && g.tick >= g.die_tick && g.chain_done && (int)data_0209f2f8 == g.chain_level) {
+        g.die_done = true;
+        std::fprintf(stderr, "[cotp] die knob: KillPlayer in level %d, chain word %d\n", (int)data_0209f2f8, (int)data_02092118);
+        KillPlayer();
     }
 #endif
     if (s >= 0) try_tp(s, now);
