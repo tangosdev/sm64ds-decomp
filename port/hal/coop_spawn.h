@@ -74,6 +74,7 @@ enum : uint8_t {
     kSpWorldGone  = 0x41,   // an announced actor (or a linked star) is gone
     kSpWorldBlock = 0x42,   // a block was hit
     kSpWorldSilverDrop = 0x43,  // SILVERCOOP1: my player dropped silver stars (hurt); the group's count goes down (a 1.0.1 peer drops it as unknown)
+    kSpWorldSilverCount = 0x44, // COOPSILVER3: owner -> group: THE silver-star count, on change and every second (a 1.0.2 peer drops it as unknown)
     kSpWorldLast  = 0x4f,
 };
 
@@ -142,9 +143,18 @@ struct SpSilverDropWire {
     uint8_t  reserved;    // 0
     uint32_t reserved2;   // 0
 };
+// SILVER COUNT (world), 12 B. COOPSILVER3.
+struct SpSilverCountWire {
+    CoopKeyWire key;
+    uint16_t seq;         // non-zero, per sender, wrap-safe
+    uint8_t  sum;         // 0..5, the group's silver-star count on the owner's console
+    uint8_t  reserved;    // 0
+    uint32_t reserved2;   // 0
+};
 #pragma pack(pop)
 
 static_assert(sizeof(SpSpawnWire) == 32, "spawn");
+static_assert(sizeof(SpSilverCountWire) == 12, "silver count");
 static_assert(sizeof(SpSilverWire) == 12, "silver");
 static_assert(sizeof(SpSilverDropWire) == 12, "silver drop");
 static_assert(sizeof(SpGoneWire) == 12, "gone");
@@ -205,6 +215,11 @@ inline bool sp_silver_drop_validate(const void *p, int len) {
     if (!p || len != (int)sizeof(SpSilverDropWire)) return false;
     SpSilverDropWire w; std::memcpy(&w, p, sizeof w);
     return coop_key_ok(w.key) && w.seq != 0 && w.n >= 1 && w.n <= 5 && w.reserved == 0 && w.reserved2 == 0;
+}
+inline bool sp_silver_count_validate(const void *p, int len) {
+    if (!p || len != (int)sizeof(SpSilverCountWire)) return false;
+    SpSilverCountWire w; std::memcpy(&w, p, sizeof w);
+    return coop_key_ok(w.key) && w.seq != 0 && w.sum <= 5 && w.reserved == 0 && w.reserved2 == 0;
 }
 // Wrap-safe "newer" for the per-sender block sequence (0 = nothing seen yet).
 inline bool sp_seq_newer(uint16_t seq, uint16_t last) { return last == 0 || (int16_t)(uint16_t)(seq - last) > 0; }

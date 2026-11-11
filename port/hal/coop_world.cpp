@@ -580,6 +580,7 @@ int reconcile() {
         if (is_player_ptr(a)) continue;
         release_mouth_of(a);
         if (count_boo(a) && *(const unsigned char *)(a + kBooVar) != 2) boo_credit(a, -1, "death bit");
+        if (is_goomba(*(const unsigned short *)(a + 0x0c))) goomba_glint_off(a, false, "death bit");     // COOPSILVER3
         _ZN8dActor_c24KillAndTrackInDeathTableEv(a);
         ++kills;
         if (g_log)
@@ -664,6 +665,82 @@ bool live_gone(unsigned cls) { return cls == 263 || cls == 217; }
 void untrack_markers(void *a) {
     for (int m = 0; m < 12; ++m)
         if (STAR_MARKERS[m] == a) { signed char sl = (signed char)m; _ZN8dActor_c11UntrackStarERa(a, sl); }
+}
+// COOPSILVER3: silver star glints held by actors a friend's console removed. Two holders free their glint only on the way
+// that hands the star out, which a copy removed from outside never takes:
+//  - the silver star Goomba (daKrb_c, mStarTracked +0x465: TrackStar in InitResources for REWARD_SILVER_STAR, and in
+//    func_ov084_02129864 for REWARD_SILVER_STAR_IF_CURRENT; UntrackStar only in func_ov084_021296cc and the swallow,
+//    d_a_krb.cpp:594/613/1653/1661; CleanupResources has none, so a removed copy left the slot pointing at a freed Goomba);
+//  - the brick block's silver star tag (daObjBlockItemTag_c 0x144 BLK_SLVSTAR_TAG, mTrackStarID +0xd5, attached to the
+//    block through daObjBlockL_c::mLinkedActor +0x328): UntrackStar only in SpawnSilverStar, run when the block's Kill
+//    fires it. A block removed from outside left its tag standing, attached and glinting, for the whole visit.
+// The star itself is announced by the breaker / beater (COOPSPAWN1), so here the holder only lets go of its glint.
+enum : int { kKrbStarTracked = 0x465, kKrbParam = 0x08, kTagTrack = 0xd5, kTagAttached = 0xd8, kBlockLinked = 0x328, kClsSilverTag = 0x144 };
+bool g_glint_off = false, g_glint_env = false;     // SM64DS_COOP_GLINT_OFF=1: must-fail control, removed holders keep their glint
+bool glint_off() {
+    if (!g_glint_env) { g_glint_env = true; const char *e = std::getenv("SM64DS_COOP_GLINT_OFF"); g_glint_off = e && *e && *e != '0'; }
+    return g_glint_off;
+}
+int glints_held() { int n = 0; for (int m = 0; m < 12; ++m) if (STAR_MARKERS[m]) ++n; return n; }
+void untrack_field(char *a, int off) {
+    signed char &sl = *(signed char *)(a + off);
+    if (sl >= 0 && sl < 12 && STAR_MARKERS[(int)sl] == a) _ZN8dActor_c11UntrackStarERa(a, sl);
+    else if (sl >= 0) sl = -1;
+}
+// A friend's Goomba is removed here: let go of its glint. With `respawn` (a capped Goomba about to leave its dormant
+// replacement at home, RespawnIfHasCap), clear the reward from its parameter the way func_ov084_021296cc does when the
+// star comes out, so the replacement does not claim a glint again.
+void goomba_glint_off(char *a, bool respawn, const char *why) {
+    if (glint_off()) return;
+    const signed char tracked = *(const signed char *)(a + kKrbStarTracked);
+    const unsigned reward = *(const unsigned char *)(a + kKrbReward);
+    const bool had = tracked >= 0;
+    if (had) untrack_field(a, kKrbStarTracked);
+    if (respawn && (reward == 1 || (reward == 2 && had))) *(unsigned *)(a + kKrbParam) &= 0xff0fu;
+    if (had || (respawn && reward && reward != 3))
+        std::fprintf(stderr, "[coopsilver] glint: Goomba slot %d (reward %u) let go of its silver star glint (%s)%s: %d held wall=%lld\n",
+                     (int)*(const short *)(a + 0xce), reward, why, respawn ? ", replacement without the reward" : "", glints_held(), wall_ms());
+}
+// A friend broke this brick block: its silver star tag lets go of the glint and goes (the star is the breaker's, announced).
+void block_glint_off(char *blk, const char *why) {
+    if (glint_off()) return;
+    const unsigned cls = *(const unsigned short *)(blk + 0x0c);
+    if (cls != 15 && cls != 16 && cls != 17) return;
+    char *tag = *(char **)(blk + kBlockLinked);
+    if (tag && !(is_live(tag) && *(const unsigned short *)(tag + 0x0c) == kClsSilverTag)) tag = nullptr;
+    if (!tag) {      // not attached yet: the tag's Behavior attaches to a block within 0x32000 of it (d_a_obj_block_item_tag.cpp)
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && !tag; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            if (*(const unsigned short *)(a + 0x0c) != kClsSilverTag || going(a)) continue;
+            long long d2 = 0;
+            for (int i = 0; i < 3; ++i) { const long long d = (long long)*(const int *)(a + 0x5c + 4 * i) - *(const int *)(blk + 0x5c + 4 * i); d2 += d * d; }
+            if (d2 < 0x32000ll * 0x32000ll) tag = a;
+        }
+    }
+    if (!tag || going(tag)) return;
+    untrack_field(tag, kTagTrack);
+    untrack_markers(tag);
+    _ZN7fBase_c18MarkForDestructionEv(tag);
+    std::fprintf(stderr, "[coopsilver] glint: block class %u slot %d: its silver star tag let go of the glint and went (%s): %d held wall=%lld\n",
+                 cls, (int)*(const short *)(blk + 0xce), why, glints_held(), wall_ms());
+}
+// A holder of those two classes that is on its way out while still holding a glint (a tag whose block was already gone
+// when it looked for it ends itself in Behavior; a Goomba removed by a path above this one) lets go of it now, before the
+// slot points at freed memory. Only live actors are read.
+void glint_sweep() {
+    if (glint_off()) return;
+    for (int m = 0; m < 12; ++m) {
+        char *p = (char *)STAR_MARKERS[m];
+        if (!p || !is_live(p) || !going(p)) continue;
+        const unsigned cls = *(const unsigned short *)(p + 0x0c);
+        int off = -1;
+        if (cls == kClsSilverTag) off = kTagTrack;
+        else if (is_goomba(cls)) off = kKrbStarTracked;
+        if (off < 0) continue;
+        signed char sl = (signed char)m;
+        _ZN8dActor_c11UntrackStarERa(p, sl);
+        if (*(const signed char *)(p + off) == m) *(signed char *)(p + off) = -1;
+        std::fprintf(stderr, "[coopsilver] glint: class %u leaving with glint slot %d: freed wall=%lld\n", cls, m, wall_ms());
+    }
 }
 enum : int { kGoneMax = 32, kGonePushes = 4 };
 struct Gone { uint16_t slot, cls; };
@@ -942,6 +1019,7 @@ void apply_swallow(int seat, int slot, unsigned cls, bool boo_beaten = false) {
     release_mouth_of(a);
     if (is_goomba(cls)) {
         const int cap = *(const unsigned char *)(a + kKrbCapId) & 0xf;
+        goomba_glint_off(a, cap < 6 || *(const unsigned char *)(a + kKrbReward) == 2, "swallow message");     // COOPSILVER3
         if (cap < 6 || *(const unsigned char *)(a + kKrbReward) == 2) {
             std::memcpy(a + 0x5c, a + kKrbHome, 12);
             _ZN11dCapEnemy_c15RespawnIfHasCapEv(a);
@@ -949,6 +1027,7 @@ void apply_swallow(int seat, int slot, unsigned cls, bool boo_beaten = false) {
         func_ov084_02129498(a);
     } else {
         if (live_gone(cls)) untrack_markers(a);
+        block_glint_off(a, "friend's break");      // COOPSILVER3
         _ZN7fBase_c18MarkForDestructionEv(a);
     }
     if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = (uint16_t)slot;
@@ -980,6 +1059,7 @@ void gone_apply() {
             continue;
         }
         if (live_gone(g_gone[i].cls)) untrack_markers(a);
+        block_glint_off(a, "broken list");      // COOPSILVER3
         _ZN7fBase_c18MarkForDestructionEv(a);
         if (g_sw_applied_n < kSwOutMax) g_sw_applied[g_sw_applied_n++] = g_gone[i].slot;
         else { std::memmove(g_sw_applied, g_sw_applied + 1, sizeof g_sw_applied - sizeof g_sw_applied[0]); g_sw_applied[kSwOutMax - 1] = g_gone[i].slot; }
@@ -2335,6 +2415,7 @@ void tick_est(unsigned now) {
         // 1b. how a mouthful left my Yoshi's mouth (TONGUE3), and the swallows the death table cannot carry
         watch_swallow(now);
         if (g_gone_n && (g_est_frames % 10) == 0) gone_apply();
+        glint_sweep();     // COOPSILVER3
         watch_capped(now);
         send_swallows(now);
         gone_push(now);
