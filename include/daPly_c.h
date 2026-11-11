@@ -12,12 +12,10 @@
  * is load-bearing, not advisory.
  *
  * This header is C++ only. The old #ifndef __cplusplus twin is gone, so a
- * consumer that still needs the C spelling has none -- 201 files include it.
+ * consumer that still needs the C spelling has none.
  *
- * NOT yet expressed: the nested type `daPly_c::State`. Both
- * _ZN7daPly_c7IsStateERNS_5StateE and _ZN7daPly_c11ChangeStateERNS_5StateE take
- * a `State&`, and every St_*_Init/_Main/_Cleanup handler is reached through
- * it, so it wants settling before those are migrated.
+ * `daPly_c::State` is the nested type below. IsState and ChangeState take a
+ * `State&`, and every St_*_Init/_Main/_Cleanup handler is reached through it.
  *
  * sizeof(daPly_c) is 0x768 -- _ZN7daPly_cC3Ev asks operator new for exactly that.
  */
@@ -32,13 +30,12 @@
 #include "dExtAnmTexPat_c.h"
 #include "dExtAnmMaterial_c.h"
 
-/* fwd. Only these three are types. gen_header.py used to emit a `struct X;`
-   for every parameter NAME it could not resolve as well -- 26 of them, `struct
-   a;` through `struct x;` -- which declared nothing any declaration below
-   refers to. Removed; none was used as a type anywhere in src/ or include/. */
-struct dActor_c;
-struct fBase_c;
-struct Vector3;
+/* gen_header.py used to emit a `struct X;` for every parameter NAME it could
+   not resolve as well -- 26 of them, `struct a;` through `struct x;` -- which
+   declared nothing any declaration below refers to. Those are gone. dActor_c,
+   fBase_c and Vector3 are already complete through the includes above.
+   Vector3_16f is not: Particle__System.h owns the only complete definition,
+   and this header does not include it. */
 struct Vector3_16f;
 /* Declared, not included: dExtAnm2Model_c.h carries an inline operator delete, and
    any function body in a header this widely consumed renumbers every
@@ -781,7 +778,7 @@ struct daPly_c : dActor_c {
                                            mismatched return type on an override */
 
     int Burn();
-    int CanEnterDoor(unsigned char door);
+    int CanEnterDoor(const u8 door);
     int CanPause();
     int CanWarp();
     int DropActor();
@@ -791,10 +788,10 @@ struct daPly_c : dActor_c {
     int GetTalkState();
     int HasFinishedTalking();
     int HasNoCap();
-    int Heal(int amt);
+    int Heal(const int amt);
     /* Unnamed parameters: a named one advances @NNN in every daPly_c.h consumer. */
-    int Hurt(const Vector3 &, u32, Fix12i, u8, u8, u8);
-    int IsAnim(unsigned int a);
+    int Hurt(const Vector3 &, const u32, const Fix12i, const u8, const u8, const u8);
+    int IsAnim(const u32 a);
     int IsBeingShotOutOfCannon();
     int IsCollectingCap();
     int IsDiving();
@@ -811,14 +808,14 @@ struct daPly_c : dActor_c {
     int IsStateEnteringLevel();
     int JumpIntoBooCage(Vector3 & v_);
     int LostGrabbedObject();
-    int SetNoControlState(unsigned char a_, int b, unsigned char c_);
-    int Shock(unsigned int j);
-    /* The last two are unsigned char, not unsigned int: both functions read
+    int SetNoControlState(const u8 a_, const int b, const u8 c_);
+    int Shock(const u32 j);
+    /* The last two are u8, not u32: both functions read
        their stack-passed arguments with ldrb, and mwcc never fuses a
        narrowing cast into a narrower load. The symbols were imported ending
        jj and are corrected to hh in this commit. */
-    int ShowMessage(fBase_c & a_, unsigned int b, const Vector3 * v, unsigned char d_, unsigned char e_);
-    int ShowMessage2(fBase_c & actor_, unsigned int msg, const Vector3 * pos, unsigned char d_, unsigned char e_);
+    int ShowMessage(fBase_c &a_, const u32 b, const Vector3 *v, const u8 d_, const u8 e_);
+    int ShowMessage2(fBase_c &actor_, const u32 msg, const Vector3 *pos, const u8 d_, const u8 e_);
     int St_BackFlip_Init();
     int St_Balloon_Cleanup();
     int St_Balloon_Init();
@@ -861,9 +858,9 @@ struct daPly_c : dActor_c {
     int St_DebugFly_Init();
     int St_DebugFly_Main();
     int St_Dive_Init();
+    int St_DizzyStars_Cleanup();
     int St_DizzyStars_Init();
     int St_DizzyStars_Main();
-    int St_DizzyStars_Cleanup();
     int St_Electrocute_Init();
     int St_Electrocute_Main();
     int St_EndingFly_Init();
@@ -906,16 +903,19 @@ struct daPly_c : dActor_c {
     int St_JumpQuicksand_Main();
     int St_Jump_Init();
     int St_Jump_Main();
-    int St_Land_Main();
     int St_Land_Init();
+    int St_Land_Main();
     /* ov002 0x020cac30, size 0x8: `return 1` and nothing else. Reached from
        ov002's State pointer-to-member table -- see the relocation note below. */
+    s32 St_Null_Cleanup();
     int St_Null_Init();
+    s32 St_Null_Main();
     int St_LedgeGrab_Init();
     int St_LedgeGrab_Main();
     int St_LedgeHang_Cleanup();
     int St_LedgeHang_Init();
     int St_LedgeHang_Main();
+    s32 St_LevelEnter_Cleanup();
     int St_LevelEnter_Init();
     int St_LevelEnter_Main();
     int St_LongJump_Init();
@@ -1002,41 +1002,38 @@ struct daPly_c : dActor_c {
     int St_YoshiPower_Cleanup();
     int St_YoshiPower_Init();
     int St_YoshiPower_Main();
-    int StartTalk(fBase_c & actor_, bool b_);
-    int TryEnterStarDoor(Vector3 & pos_, short kind);
+    int StartTalk(fBase_c &actor_, const bool b_);
+    int TryEnterStarDoor(Vector3 &pos_, const s16 kind);
     int TryExitWhiteDoorWithStar();
     int TryGrab(dActor_c & actor_);
-    int TryTalkToDoor(unsigned char a);
+    int TryTalkToDoor(const u8 a);
     int TryTalkToKeyDoor();
-    int Unk_020c4f40(unsigned short x);
-    int Unk_020c6a10(unsigned int arg_);
-    int Unk_020c9e5c(unsigned char h);
-    int Unk_020ca150(unsigned char a);
+    int Unk_020c4f40(const u16 x);
+    int Unk_020c6a10(const u32 arg_);
+    int Unk_020c9e5c(const u8 h);
+    int Unk_020ca150(const u8 a);
+    int Unk_020ca488();
     int Unk_020ca8f8();
-    s32 St_LevelEnter_Cleanup();
-    s32 St_Null_Cleanup();
-    s32 St_Null_Main();
-    unsigned int GetBodyModelID(unsigned int a, bool b_) const;
-    void BlowAway(short v);
+    u32 GetBodyModelID(u32 a, bool b_) const;
+    void BlowAway(const s16 v);
     /* Unnamed parameters: a named one advances @NNN in every daPly_c.h consumer. */
-    void Bounce(Fix12i);
-    void SpinBounce(Fix12i);
+    void Bounce(const Fix12i);
+    void SpinBounce(const Fix12i);
     void EnterWhirlpool();
     void IncMegaKillCount();
     void InitBalloonMario();
     void InitFireYoshi();
     void InitMetalWario();
     void InitVanishLuigi();
-    void InitWingFeathers(bool b_);
+    void InitWingFeathers(const bool b_);
     void OpenBigDoor();
     void PlayMammaMiaSound();
-    void RegisterEggCoinCount(unsigned int count, bool b2, bool b3);
+    void RegisterEggCoinCount(const u32 count, const bool b2, const bool b3);
     /* Unnamed parameters: a named one advances @NNN in every daPly_c.h consumer. */
-    void SetAnim(u32, int, Fix12i, u16);
-    void SetNewHatCharacter(unsigned int p1, unsigned int p2, bool p3);
-    void SetRealCharacter(unsigned int chr_);
-    void TurnOffToonShading(unsigned int j);
-    int Unk_020ca488();
+    void SetAnim(const u32, const int, const Fix12i, const u16);
+    void SetNewHatCharacter(const u32 p1, const u32 p2, const bool p3);
+    void SetRealCharacter(const u32 chr_);
+    void TurnOffToonShading(const u32 j);
 
     /* daPly_c commands of the Kuppa script (ov002 0x020bccfc..0x020bd828).
        func_ov002_020bd664 dispatches a command record to one of fourteen of
@@ -1047,22 +1044,22 @@ struct daPly_c : dActor_c {
        advances mwccarm's @NNN counter in every file that includes this
        header (measured: 33 of 258 consumers renumbered their @NNN locals),
        and unnamed they leave all 258 objects byte-identical. */
-    int func_ov002_020bccfc(unsigned char *, int, int);
-    int func_ov002_020bcd18(unsigned char *, int, int);
-    int func_ov002_020bcd38(unsigned char *, int, int);
-    void func_ov002_020bd06c(unsigned int);
-    int func_ov002_020bd20c(unsigned char *, int, int);
-    int func_ov002_020bd250(unsigned char *, int, int);
-    int func_ov002_020bd354(unsigned char *, int, int);
-    int func_ov002_020bd3a0(unsigned char *, int, int);
-    int func_ov002_020bd438(unsigned char *, int, int);
-    int func_ov002_020bd45c(unsigned char *, int, int);
-    int func_ov002_020bd480(unsigned char *, int, int);
-    int func_ov002_020bd4ac(unsigned char *, int, int);
-    int func_ov002_020bd4c8(unsigned char *, int, int);
-    int func_ov002_020bd4e0(unsigned char *, int, int);
-    int func_ov002_020bd600(unsigned char *, int, int);
-    int func_ov002_020bd664(unsigned char *, int, int);
+    int func_ov002_020bccfc(u8 *, const int, const int);
+    int func_ov002_020bcd18(u8 *, const int, const int);
+    int func_ov002_020bcd38(u8 *, const int, const int);
+    void func_ov002_020bd06c(const u32);
+    int func_ov002_020bd20c(u8 *, const int, const int);
+    int func_ov002_020bd250(u8 *, const int, const int);
+    int func_ov002_020bd354(u8 *, const int, const int);
+    int func_ov002_020bd3a0(u8 *, const int, const int);
+    int func_ov002_020bd438(u8 *, const int, const int);
+    int func_ov002_020bd45c(u8 *, const int, const int);
+    int func_ov002_020bd480(u8 *, const int, const int);
+    int func_ov002_020bd4ac(u8 *, const int, const int);
+    int func_ov002_020bd4c8(u8 *, const int, const int);
+    int func_ov002_020bd4e0(u8 *, const int, const int);
+    int func_ov002_020bd600(u8 *, const int, const int);
+    int func_ov002_020bd664(u8 *, const int, const int);
 
     /* The two music layers documented at mPowerupMusic. The argument is the
        layer id being started or ended. Ending always clears the layer; with
@@ -1070,10 +1067,10 @@ struct daPly_c : dActor_c {
        to the other layer only if the id is the one playing and differs from
        it. Unnamed, like the declarations below, so daPly_c.h consumers keep
        their @NNN numbering. */
-    void EndStateMusic(u32);
-    void StartStateMusic(u32);
-    void EndPowerupMusic(u32);
-    void StartPowerupMusic(u32);
+    void EndStateMusic(const u32);
+    void StartStateMusic(const u32);
+    void EndPowerupMusic(const u32);
+    void StartPowerupMusic(const u32);
     /* daPly_c state helpers in the 0x020d2f24..0x020db8d8 span (method review
        020d2f24-020db8d8). Address-named daPly_c methods, verified against the
        ROM bodies; parameters stay unnamed so the 258 daPly_c.h consumers keep
@@ -1081,7 +1078,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020d4748();
     int func_ov002_020d5ed0();
     int func_ov002_020d5338();
-    int func_ov002_020d5f98(unsigned char *, unsigned char *);
+    int func_ov002_020d5f98(u8 *, u8 *);
     int func_ov002_020d6048();
     int func_ov002_020d6998();
     char *func_ov002_020d708c();
@@ -1113,7 +1110,7 @@ struct daPly_c : dActor_c {
     void PlayCharacterSound();           /* func_ov002_020e6330 */
 
     void func_ov002_020bda48();
-    void func_ov002_020bdb50(int);
+    void func_ov002_020bdb50(const int);
     void func_ov002_020bdc18();
     void func_ov002_020bdd2c();
     void func_ov002_020bdd9c();
@@ -1123,9 +1120,9 @@ struct daPly_c : dActor_c {
     int func_ov002_020bea7c();
     void func_ov002_020beabc();
     int func_ov002_020beb38();
-    int func_ov002_020becf4(int, int);
+    int func_ov002_020becf4(const int, const int);
     void func_ov002_020bf13c();
-    void func_ov002_020bf2d8(Fix12i);
+    void func_ov002_020bf2d8(const Fix12i);
     void func_ov002_020bf36c(void *);
     int func_ov002_020bf40c();
     void func_ov002_020bf5e0();
@@ -1134,16 +1131,16 @@ struct daPly_c : dActor_c {
     void func_ov002_020bf9d4();
     int func_ov002_020bfa74();
     int func_ov002_020bfec0();
-    int func_ov002_020c0108(int);
+    int func_ov002_020c0108(const int);
     int func_ov002_020c031c();
-    void func_ov002_020c0364(u32);
+    void func_ov002_020c0364(const u32);
     int func_ov002_020c0434();
     int func_ov002_020c04ac();
     int func_ov002_020c04e0();
     int func_ov002_020c0688();
-    int func_ov002_020c06fc(int);
+    int func_ov002_020c06fc(const int);
     int func_ov002_020c0cbc();
-    int func_ov002_020c0d90(int);
+    int func_ov002_020c0d90(const int);
     int func_ov002_020c0fb4();
 
     void func_ov002_020c1234();
@@ -1151,14 +1148,14 @@ struct daPly_c : dActor_c {
     void func_ov002_020c14b8();
     /* Unnamed parameter on purpose; see the Kuppa note above. */
     void SetFloorSurfaceInfo(const dBgPi &);
-    int func_ov002_020c19d0(int, int);
-    int func_ov002_020c1ad8(int);
-    int func_ov002_020c1c84(int);
-    void func_ov002_020c1eb4(int);
-    int func_ov002_020c200c(int);
+    int func_ov002_020c19d0(const int, const int);
+    int func_ov002_020c1ad8(const int);
+    int func_ov002_020c1c84(const int);
+    void func_ov002_020c1eb4(const int);
+    int func_ov002_020c200c(const int);
     int func_ov002_020c2138();
     int func_ov002_020c231c();
-    int func_ov002_020c25a8(int);
+    int func_ov002_020c25a8(const int);
     void func_ov002_020c29d4();
     void func_ov002_020c2b08();
     void func_ov002_020c2db8();
@@ -1173,16 +1170,16 @@ struct daPly_c : dActor_c {
     void AdvanceCutsceneStep();
     int func_ov002_020c3ea0();
     int func_ov002_020c4188();
-    void func_ov002_020c43c4(unsigned int);
+    void func_ov002_020c43c4(const u32);
     int func_ov002_020c44c4();
     int func_ov002_020c47f4();
     void func_ov002_020c5444();
     int func_ov002_020c5d0c();
     void func_ov002_020c5d60();
-    int func_ov002_020c5dec(int);
-    int func_ov002_020c607c(int, int, int *);
+    int func_ov002_020c5dec(const int);
+    int func_ov002_020c607c(const int, const int, int *);
     int func_ov002_020c61ac();
-    int func_ov002_020c647c(int);
+    int func_ov002_020c647c(const int);
     int func_ov002_020c6538();
     int func_ov002_020c6908();
     int func_ov002_020c6adc();
@@ -1194,10 +1191,10 @@ struct daPly_c : dActor_c {
     void func_ov002_020c7350();
     void func_ov002_020c75f0();
     int func_ov002_020c7cbc();
-    void func_ov002_020c7dd0(int);
+    void func_ov002_020c7dd0(const int);
     int func_ov002_020c7f10();
     void func_ov002_020c7ff8();
-    unsigned char func_ov002_020c84b0();
+    u8 func_ov002_020c84b0();
     int func_ov002_020c8540();
     int func_ov002_020c8714();
     int func_ov002_020c897c();
@@ -1253,16 +1250,16 @@ struct daPly_c : dActor_c {
     void func_ov002_020be008();
     void func_ov002_020bebd4();
     void func_ov002_020bec2c();
-    void func_ov002_020bec9c(unsigned int, int, Fix12i, u16);
+    void func_ov002_020bec9c(const u32, const int, const Fix12i, const u16);
     void AdvanceAnims();
-    int func_ov002_020bf224(int, int);
-    int func_ov002_020bf27c(int);
-    Fix12i ScaleByCharFactor(Fix12i);
-    void func_ov002_020bf340(int *, int, int);
-    int func_ov002_020bf56c(int);
-    void func_ov002_020bf800(Vector3_16f);
-    int func_ov002_020c179c(int);
-    void func_ov002_020c18b0(int);
+    int func_ov002_020bf224(const int, const int);
+    int func_ov002_020bf27c(const int);
+    Fix12i ScaleByCharFactor(const Fix12i);
+    void func_ov002_020bf340(int *, const int, const int);
+    int func_ov002_020bf56c(const int);
+    void func_ov002_020bf800(const Vector3_16f);
+    int func_ov002_020c179c(const int);
+    void func_ov002_020c18b0(const int);
     int func_ov002_020c2270(void *, void *);
     int func_ov002_020c5244();
     int func_ov002_020c6e14();
@@ -1277,9 +1274,9 @@ struct daPly_c : dActor_c {
     void func_ov002_020cb474();
     int func_ov002_020cbea8();
     int func_ov002_020cc01c();
-    void func_ov002_020cc05c(unsigned short);
-    void func_ov002_020cc660(int);
-    void func_ov002_020cd218(int, int *, int *);
+    void func_ov002_020cc05c(const u16);
+    void func_ov002_020cc660(const int);
+    void func_ov002_020cd218(const int, int *, int *);
     void func_ov002_020cd364();
     void func_ov002_020cd448();
     void func_ov002_020cd550();
@@ -1287,13 +1284,13 @@ struct daPly_c : dActor_c {
     int func_ov002_020ce324();
     int func_ov002_020ce5f8();
     void func_ov002_020ce798();
-    void func_ov002_020ce8bc(int);
+    void func_ov002_020ce8bc(const int);
     void func_ov002_020ce9c8();
     int func_ov002_020ceaf4();
     int func_ov002_020ceb54();
     void func_ov002_020ceb7c();
     int func_ov002_020cec2c();
-    Fix12i func_ov002_020cedb0(Fix12i);
+    Fix12i func_ov002_020cedb0(const Fix12i);
     int func_ov002_020cef84();
     int func_ov002_020cf20c();
     void func_ov002_020cf2f8();
@@ -1302,7 +1299,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020cfbdc();
     int func_ov002_020cfd84(void *, void *);
     int func_ov002_020cfea4();
-    int func_ov002_020d0178(int, int);
+    int func_ov002_020d0178(const int, const int);
     int func_ov002_020d0580();
     int func_ov002_020d06c0();
     void func_ov002_020d0948();
@@ -1310,42 +1307,42 @@ struct daPly_c : dActor_c {
     int func_ov002_020d1164();
     int func_ov002_020d1204();
     int func_ov002_020d12b0();
-    void func_ov002_020d1f78(u32);
+    void func_ov002_020d1f78(const u32);
     int func_ov002_020d225c();
     void func_ov002_020d228c();
-    int func_ov002_020d22ec(int);
+    int func_ov002_020d22ec(const int);
     int func_ov002_020d2da0();
     void func_ov002_020d2f24();
     int func_ov002_020d2fdc();
     void func_ov002_020d3498();
-    int func_ov002_020d36d8(int);
+    int func_ov002_020d36d8(const int);
     int func_ov002_020d3b9c();
-    void func_ov002_020d413c(int);
+    void func_ov002_020d413c(const int);
     void func_ov002_020d4540();
     void func_ov002_020d454c();
     void func_ov002_020d45c0();
-    int func_ov002_020d4d88(int, int);
+    int func_ov002_020d4d88(const int, const int);
     int func_ov002_020d5c6c();
-    int func_ov002_020d6334(int);
+    int func_ov002_020d6334(const int);
     void func_ov002_020d6368();
     int func_ov002_020d674c();
     int func_ov002_020d6790();
     int func_ov002_020d6c60(daPly_c *);
     int func_ov002_020d7030(void *);
-    void func_ov002_020d71ec(int);
+    void func_ov002_020d71ec(const int);
     void func_ov002_020d80d0();
     void func_ov002_020d8118();
     void func_ov002_020d8158();
     int func_ov002_020d82f0();
-    int func_ov002_020d8360(daPly_c *, unsigned int);
+    int func_ov002_020d8360(daPly_c *, const u32);
     int func_ov002_020d853c(dActor_c *);
     int func_ov002_020d869c();
     void func_ov002_020d8854();
     int func_ov002_020d8944(daPly_c *, daPly_c *);
-    void func_ov002_020d8a50(int);
+    void func_ov002_020d8a50(const int);
     void func_ov002_020d8d10(Vector3 *);
-    void func_ov002_020d91b8(int);
-    int func_ov002_020d91e0(int, int);
+    void func_ov002_020d91b8(const int);
+    int func_ov002_020d91e0(const int, const int);
     void func_ov002_020d9a4c();
     void func_ov002_020d9aac();
     void func_ov002_020d9c70();
@@ -1353,7 +1350,7 @@ struct daPly_c : dActor_c {
     int func_ov002_020da95c();
     int ReleaseHeldActor();
     int func_ov002_020dacb4(dActor_c *);
-    void func_ov002_020db8bc(unsigned char);
+    void func_ov002_020db8bc(const u8);
     void func_ov002_020dba0c();
     void func_ov002_020dbaec();
     void func_ov002_020dbbc0();
@@ -1362,7 +1359,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020dbe70();
     void func_ov002_020dbf4c();
     void func_ov002_020dc020();
-    void func_ov002_020dc174(const Vector3 *, Fix12i, Fix12i, u32, u32);
+    void func_ov002_020dc174(const Vector3 *, const Fix12i, const Fix12i, const u32, const u32);
     void func_ov002_020dc560();
     void func_ov002_020dcafc();
     int func_ov002_020dd2f4();
@@ -1371,7 +1368,7 @@ struct daPly_c : dActor_c {
     void func_ov002_020dd8f4();
     void func_ov002_020dd908();
     int func_ov002_020dde74();
-    void func_ov002_020de3d0(short *, short *);
+    void func_ov002_020de3d0(s16 *, s16 *);
     void func_ov002_020de968();
     int func_ov002_020dec70();
     void func_ov002_020e032c();
@@ -1379,11 +1376,11 @@ struct daPly_c : dActor_c {
     void func_ov002_020e04a4();
     int func_ov002_020e0a64();
     int func_ov002_020e0ccc(void *);
-    void func_ov002_020e0f38(int);
+    void func_ov002_020e0f38(const int);
     void func_ov002_020e1c20();
-    void func_ov002_020e25f0(int);
+    void func_ov002_020e25f0(const int);
     int func_ov002_020e2664();
-    void func_ov002_020e28d4(int, int);
+    void func_ov002_020e28d4(const int, const int);
     void func_ov002_020e2ad0();
     int func_ov002_020e2b6c();
     int func_ov002_020e2ba8();
@@ -1457,43 +1454,10 @@ typedef char Player_State_size_must_be_0x18[sizeof(daPly_c::State) == 0x18 ? 1 :
  *     EXPECT MORE. The 0x0210a1xx-0x0210a3xx table is daPly_c state pointers;
  *     any ov006 symbol its loads land on is a candidate for the same repair.
  *
- *   St_Null_Init is the SAME DEFECT, found the same way. ov006 carries
- *     _ZN7daPly_c12St_Null_InitEv at 0x020cac30 size 0x6c and ov002 carries an
- *     unnamed func_ov002_020cac30 of size 0x8 at the same address. ov002
- *     reaches it by `kind:load ... module:overlay(2)` from 0x0210a17c -- the
- *     same pointer-to-member region as above -- while ov006 reaches its own
- *     copy by two direct arm_calls. An eight-byte body is exactly what a state
- *     called Null should be. Expect more of these: the whole 0x0210a1xx-0x0210a3xx
- *     table is daPly_c state pointers, and any ov006 symbol its loads land on
- *     is a candidate.
- *
  *   0x62ad, 0x62af  -- still unexplained; source not yet traced. Needs semantic
  *     review before they can be typed.
  */
 
-/* WHY FIVE NAMES ARE NOT DECLARED IN THIS CLASS.
- *
- * ST_WAIT, St_EndingFly_Main, St_InYoshiMouth_Cleanup, St_WallJump_Init and
- * TryExitCharacterDoorWithIntro were declared here until this commit, while
- * each of their sources already said, in terms, "NOT a daPly_c method" and
- * "detached from daPly_c.h". The header was the last thing still making the
- * claim. Nothing called them through the declaration -- every caller in the
- * tree spells the mangled name in its own `extern` -- so removing them is
- * codegen-neutral, and the eligible name list is unchanged by it.
- *
- * ST_WAIT is a separate and still-open question rather than a settled
- * misattribution, and it is NOT declared here for that reason. Three sources
- * disagree about what it even is: this header called it `void ST_WAIT()`,
- * ov006/symbols.txt calls it `kind:function(size=0x68)` at 0x02110154, and
- * four migrated daPly_c methods -- CanWarp, TryTalkToDoor, TryTalkToKeyDoor,
- * St_WaitQuicksand_Main -- use `_ZN7daPly_c7ST_WAITE` as a daPly_c::State
- * OBJECT, passing its address to daPly_c::IsState alongside
- * data_ov002_0211013c. 0x02110154 is 0x0211013c + 0x18, exactly one State
- * apart. Do not resolve this from the arithmetic: ov002 and ov006 share that
- * RAM window, the byte compare wildcards every relocated word, so both
- * spellings match whichever is right. It needs the module question answered
- * first.
- */
 
 /* Actor-table factory. C linkage keeps the bare `daPly_c_classInit` symbol
    that the PLAYER registry profile refers to. */
