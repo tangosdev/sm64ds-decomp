@@ -1,49 +1,23 @@
 //cpp
-/* Runtime asset handles resolved through the overlay 0 file table. */
+/* Option tilemap, loaded by id through LoadCompressedFileAt. */
 enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 
 #pragma defer_codegen off
-/* Smartball scene and its board objects, ov006:0x0210d740..0x02119904.
- * Definitions follow ROM address order. Immediate code generation makes each
- * optimizer bracket local to its function under mwccarm 2004/b56.
+/* Smartball: the minigame scene and the pinball-board objects it spawns --
+ * balls, mushrooms, holes, propellers, pipes, piranhas, push switches, the
+ * spring, the slot machine, the scoreboard and the wing.
  *
- * _ZTS16dScMgSmartball_c 0x0213ec7c. _ZTI16dScMgSmartball_c 0x0213ec28.
- * _ZTV16dScMgSmartball_c 0x0213eefc. The destructor is the key function:
- * D1 at 0x0210d740, D0 at 0x0210d7e0.
+ * ROM evidence: _ZTS 0x0213ec7c, _ZTI 0x0213ec28, _ZTV 0x0213eefc; the
+ * destructor is the key function, D1 at 0x0210d740 and D0 at 0x0210d7e0.
+ * defer_codegen stays off so the destructor is emitted at its definition.
  *
- * The virtual methods use the class hierarchy from the shared headers. The
- * remaining C ABI helpers and local layout views keep the individually
- * verified reconstruction; consolidating this unit does not establish their
- * original names or interfaces.
- */
+ * SaveSnapshot and RestoreInitial are coined names for slots 0 and 2.
+ * Comments marked "Leftover" name a spelling the cartridge's bytes require. */
 
-// leftovers:
-// - OAM::Render uses the shared static declaration from OAM.h; this TU's
-//   ten-argument overload takes no OAM object.
-// - cMgSmartball_ball_c::UpdatePhysics (the ball per-frame physics) is defined
-//   inside an extern "C" block. Outside one, mwccarm folds `angle / 0x20` into
-//   a `+= 0x800` induction accumulator in the two fan-response loops (53 words
-//   differ, measured as a member); inside it the divide sequence stays.
-// - cMgSmartball_object_c_Construct fills the object it is given. Each derived
-//   helper then calls that class's empty destructor, which stores its vtable
-//   word. SmartballObj_ElemDtor and SmartballObj_ElemCtor are the manager
-//   array element destructor and the empty final hook.
-// - The layout shadows are gone. The scene-side ones (Mgr, Mgr2, SArrays)
-//   were dScMgSmartball_c's fields; the object-side ones (Obj, Obj2, SBoard,
-//   Owl, C2, V2ab, A, S28, S24) were the cMgSmartball_*_c members they
-//   overlaid, and those sites read as members now. The objects reach the
-//   scene by casting the base's s32 mpManager. The types still declared
-//   below are local value types, not views of a class.
-// - A few object-side sites keep a pinned shape, each with its reason beside
-//   it: slot BeginStop writes the stop counts through a copy of `this`, and
-//   propeller SaveSnapshot steps the spin speed through a short pointer.
-// - The object tables, popups, dust and score block from 0x4660 on are
-//   dScMgSmartball_c members now. A few strided sites (SpawnObjects,
-//   AfterCleanup, SpawnDust/UpdateDust, CollideBalls' first ball, Render's
-//   popup list, line tallies and award tallies) still step a cast `this` by
-//   the element size and read element 0, because indexing moves bytes; Render
-//   re-reads one popup score through an int address. Each has its reason
-//   beside it. The spark methods index mSparks[i] directly.
+// Leftovers kept for byte-exactness; each has a note at its site:
+// - several slot-0 overrides repeat the base's SaveSnapshot body inline;
+// - the object tables, popups, dust and score arrays are walked by stepping
+//   `this` and reading element 0, because indexing changes the addressing.
 
 #include "dScMgSmartball_c.h"
 #include "nitro/hw/registers.h"
@@ -75,23 +49,15 @@ enum dScMgSmartball_c_AssetId { ASSET_D_2D_MG_BG_OPTION_NSC_BIN = 0x005b };
 #include "Vector2Math.h"
 #include "nitro/fx/fx_cp.h"
 
-/* Local POD pair; Vec2_Len observes these same two words as Vector2. */
+/* Two-word pair that Vec2_Len also accepts as a Vector2. */
 typedef struct {
     int x, y;
 } Vec2;
 #include "nitro/gx/gx_bgcnt.h"
 
-/* Local value types carried over from the legacy files. None of these is a
- * view of a class any more: the object-side views (Obj, Obj2, SBoard, Owl,
- * C2, V2ab, A, S28, S24) were each a cast of `this` or of a table entry, and
- * every one of their fields now reads as a cMgSmartball_*_c or
- * dScMgSmartball_c member. What is left is plain locals and parameters: the
- * two-word position/velocity pairs, a nine-word table, the sprite scale
- * typedef, a vtable-slot pointer and the physics step's search state. No
- * shared header declares an equivalent type, so they stay here. */
+/* Value types the board objects pass around; no shared header declares them. */
 
-/* The two-word (x, y) pair the fx helpers (func_0203d388, func_0203d434,
-   func_0203d570) take. */
+/* (x, y) pair: the unit the board's vector helpers work on. */
 typedef struct {
     int x, y;
 } V2;
@@ -102,14 +68,12 @@ typedef struct V2xz {
     int z;
 } V2xz;
 
-/* The point and triangle corners the pakkun, propeller and ball hit tests
-   hand to PointInTriangle. */
+/* Point and triangle corners passed to PointInTriangle. */
 struct S {
     int a, b;
 };
 
-/* Nine words: the shape of sSmartballCellStartOrder, copied whole by
-   ShuffleCells. */
+/* Nine-word copy of sSmartballCellStartOrder. */
 struct W9 {
     int w[9];
 };
@@ -117,22 +81,22 @@ struct W9 {
 /* OAM::Render's scale arguments. */
 typedef int Fix12i;
 
-/* Three pairs: the dokan's scratch block. */
+/* The pipe's scratch block: three pairs. */
 typedef struct {
     V2 d;
     V2 v;
     V2 e;
 } W;
 
-/* A pair with an empty destructor, used by SpawnDust and ResolveBallPair;
-   the comment above SpawnDust says why the destructor matters. */
+/* Two-word pair with an empty destructor; the destructor keeps the value in
+ * memory. */
 struct TVec2 {
     int x;
     int y;
     ~TVec2() {}
 };
 
-/* A first-vtable-slot call, as Behavior's per-object dispatch spells it. */
+/* First virtual slot, as Behavior dispatches it. */
 typedef void (*VFunc)(void *);
 
 /* cMgSmartball_ball_c::UpdatePhysics's search state. */
@@ -156,17 +120,11 @@ typedef struct State2 {
 extern "C" {
 extern void func_0203d388(V2 *p, int angle);
 extern long long func_0203d5bc(int *p);
-/* Of this helper's five recorded parameter views three spell the first
-   argument int and two spell it a pointer, and of its call sites in this file
-   all but two pass an int. The int spelling is kept and those two sites read
-   their table entry the same way the other eighty do. */
 extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern struct OamAttr *sSmartballWingSprites[];
 extern void OamRender10_d_s_mg_smartball(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                          s32 priority, Fix12i scaleX, Fix12i scaleY, s32 rotation,
                                          s32 mode);
-/* Five of this helper's six recorded views spell the first and last arguments
-   pointers and one spells them ints; the pointer view is kept. */
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
 extern int GetOwnerLanguage(void);
 extern OamAttr *sSmartballLineSpritesItalian[];
@@ -179,12 +137,6 @@ extern s16 FX_SinCosTable_[];
 extern s32 sSmartballCellOrder[];
 extern OamAttr *sSmartballCellRowSprites[];
 
-/* The two legacy views of this helper disagreed on the destination pointer
-   (char * against void *). void * is the reconciliation that accepts every
-   call site in this file unchanged: the byte-stepping callers convert to it
-   implicitly, and the screen-pointer caller already yields one. A pointer
-   parameter is passed the same way either way, so this is a spelling choice,
-   not a change of contract. */
 extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 extern void func_02012718(int a, int b);
 extern struct W9 sSmartballCellStartOrder;
@@ -290,19 +242,10 @@ extern OamAttr *sSmartballSpringSprites[];
 extern OamAttr *sSmartballSpringSpritesAlt[];
 extern OamAttr *sSmartballPakkunSprites[];
 extern OamAttr *sSmartballWingBodySprites[];
-/* The Render shard read 0x5998 as a void * and this one read it as an int;
-   both now read the header's s32 mResultSlideX. */
-/* The alternate MIi_CpuClear16 view carried by the InitResources shard is the
-   void * one adopted above; the two are reconciled, not in conflict. */
 }
 
-/* local extern: no header declares the class vtable symbols; these readable
-   names are symbols.txt aliases at the same ROM addresses as the canonical
-   _ZTV rows (the daDemo_anmModel_vtbl precedent). The symbol IS the slot
-   array, so vptr stores take [0], not the compiler's _ZTV+8 preamble step.
-   The teardown stores and ctor vptr stores still cannot be spelled as C++
-   structor calls (a real ~X() expansion drops the dead first store -- see
-   SpawnObjects). */
+/* local extern: no header declares these vtable symbols. The symbol is the
+   slot array itself, so a vptr store is [0], not the compiler's _ZTV+8. */
 extern int cMgSmartball_pushswitch_c_vtbl[];
 extern int cMgSmartball_board_c_vtbl[];
 extern int cMgSmartball_pakkun_c_vtbl[];
@@ -315,8 +258,7 @@ extern int cMgSmartball_object_c_vtbl[];
 extern int cMgSmartball_kinoko_c_vtbl[];
 extern int cMgSmartball_slot_c_vtbl[];
 extern int cMgSmartball_wing_c_vtbl[];
-/* Local helper declarations. */
-/* These declarations also cover helpers called before their ROM-ordered definition. */
+/* Helpers, some called before their definition. */
 extern "C" {
 cMgSmartball_wing_c *cMgSmartball_wing_c_Construct(cMgSmartball_wing_c *self, char *x, int y,
                                                    V2 *src);
@@ -342,11 +284,8 @@ cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, char 
                                                    V2 *src);
 }
 
-/* Declarations this TU still needs from the shared common header, which is
-   deliberately not included here: three of its parameter views disagree with
-   definitions in this file and pulling it in makes each an illegal overload.
-   Mangled names are declared with C linkage so the C++ front end does not
-   mangle them a second time. */
+/* Declarations kept out of the common header: three of its parameter views
+   clash with definitions here, which makes an illegal overload if included. */
 extern "C" {
 
 extern int sMgResultsBannerY;
@@ -367,37 +306,22 @@ static inline void CallObjectConstruct(cMgSmartball_object_c *c, char *a1, int a
 }
 
 #define LP(e) ((int *)(e))
-/* The signed/unsigned pair of fixed-point multiplies. FIX_MUL_SU's inner (s64)
-   is load-bearing (measured 2026-11-06); the one FIX_MUL_US used to carry on
-   its right operand was not, and is gone. */
+/* Fixed-point multiplies, signed/unsigned pair. Leftover: FIX_MUL_SU's inner
+   (s64) is required. */
 #define FIX_MUL_SU(a, b) \
     ((int)(((s64)((u64)(s64)(a) * (b)) + 0x800) >> 12))
 #define FIX_MUL_US(a, b) \
     ((int)(((s64)((a) * (u64)(b)) + 0x800) >> 12))
 
-/* One definition, both variants. The legacy shard tree carried D0 and D1 as two
-   separate files with byte-identical bodies, which is an artefact of how those
-   shards were cut, not of the ROM: mwccarm emits the complete-object destructor
-   (D1) and the deleting destructor (D0) from this single out-of-line
-   definition, so writing the body twice is an `object redefined` error.
-
-   D1 is the body below -- the four explicit teardowns reproduce the ROM's own
-   body (func_ov006_0210d740, pre-migration) exactly, destroying the
-   arrays in reverse of the factory's construction order. The own-vtable store
-   and the chain to ~dScMgBase_c() are compiler-generated; dScMgBase_c's
-   destructor remains an out-of-line call under the pinned 2004/b56 build,
-   like the ROM's bl to _ZN11dScMgBase_cD2Ev.
-
-   D0 is that same teardown followed by the heap return, through an inline
-   `operator delete`, which is why nothing below mentions a heap. Nobody writes
-   D0; declaring the destructor is enough. */
+/* Both destructor variants come from this one out-of-line body, which tears
+   the four arrays down in reverse construction order. */
 dScMgSmartball_c::~dScMgSmartball_c() {
     __cxa_vec_cleanup(mSparks, 0x40, 0x24, (dtor_t)SmartballObj_ElemDtor);
     __cxa_vec_cleanup(mDustVel, 0x10, 8, (dtor_t)NullDestructor_0203d47c);
     __cxa_vec_cleanup(mDustPos, 0x10, 8, (dtor_t)NullDestructor_0203d47c);
     __cxa_vec_cleanup(mPopupPos, 5, 8, (dtor_t)NullDestructor_0203d47c);
 }
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 void SmartballObj_ElemDtor(void) {}
 }
 
@@ -528,10 +452,7 @@ int cMgSmartball_wing_c::HitTest(int *point) {
     return PointInTriangle(triangle3Point, triangle3A, triangle3B, triangle3C);
 }
 
-/* Slot 1. While mTriggerCount is 0 or 1, draws two extra base sprites under the
- * main pair; then four OAM::Render calls draw a mirrored quad using the
- * eased mAngle to
- * spread each half away from vertical. */
+/* Slot 1: draws the wing's base sprites and its two mirrored blades. */
 void cMgSmartball_wing_c::Update() {
     if (mTriggerCount <= 1) {
         Mg_RenderSpriteBoth(sSmartballWingBodySprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
@@ -548,12 +469,8 @@ void cMgSmartball_wing_c::Update() {
                 -1, 2, 0x1000, 0x1000, (unsigned short)(short)(mAngle - 0x4000), -1);
 }
 
-/* Slot 0. Opens with the base's own SaveSnapshot body written out inline
- * rather than called -- same pattern as every sibling in this family (the
- * base's copy is out-of-line and there is no bl here). Then, unless mAngleSettled
- * is 1 or mTriggerCount is not positive, eases mAngle toward 0x3000 by steps of 0x200, clamping on overshoot in either direction.
- * Always tail-calls the shared helper RebuildVerts, which touches
- * the eight collision vertices at 0x48..0x87. */
+/* Slot 0: eases the flap angle toward its 0x3000 stop and rebuilds the
+ * collision vertices. */
 void cMgSmartball_wing_c::SaveSnapshot() {
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
@@ -571,11 +488,7 @@ void cMgSmartball_wing_c::SaveSnapshot() {
     RebuildVerts();
 }
 
-/* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial), then
- * zeroes mAngle and every unk_
- * field this class adds, in the ROM's own (non-address-order) sequence --
- * 0x34, then 0x3c, then 0x38, then 0x40, then 0x44. Tail-calls the shared
- * helper RebuildVerts, same as SaveSnapshot. */
+/* Slot 2: clears the wing's trigger state and rebuilds the vertices. */
 void cMgSmartball_wing_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
     mAngle = 0;
@@ -587,7 +500,7 @@ void cMgSmartball_wing_c::RestoreInitial() {
     RebuildVerts();
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 cMgSmartball_wing_c *cMgSmartball_wing_c_Construct(cMgSmartball_wing_c *self, char *x, int y,
                                                    V2 *src) {
     int v[2];
@@ -649,9 +562,7 @@ int cMgSmartball_pushswitch_c::CheckBall(int *p) {
     return 1;
 }
 
-/* Slot 1. Draws two OAM sprites: the switch itself, selected by the base's
- * mTriggered flag (0/1 used directly as the table index), and a fixed second
- * frame beneath it. */
+/* Slot 1: draws the switch and the plate under it. */
 void cMgSmartball_pushswitch_c::Update() {
     RenderOamBothScreens(sSmartballPushSwitchSprites[mTriggered], mCurrent0 >> 12, mCurrent1 >> 12,
                          -1, 1, 0);
@@ -659,13 +570,7 @@ void cMgSmartball_pushswitch_c::Update() {
                          2, 0);
 }
 
-/* Slot 0. Opens with the base's own SaveSnapshot body written out inline
- * rather than called -- same pattern as every sibling in this family. Then
- * decrements this class's own countdown (mReleaseDelay) while it is positive.
- * While mTriggered is set, calls the out-of-scope helper
- * cMgSmartball_pushswitch_c::BallsClear (an escape/proximity check over the actor list): if
- * it reports clear and the countdown has drained to zero, mTriggered is
- * cleared; otherwise the countdown is reloaded to 0xa. */
+/* Slot 0: counts down and releases the switch once no ball is on it. */
 void cMgSmartball_pushswitch_c::SaveSnapshot() {
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
@@ -682,15 +587,14 @@ void cMgSmartball_pushswitch_c::SaveSnapshot() {
     }
 }
 
-/* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial), then
- * clears mTriggered and the countdown. */
+/* Slot 2: clears the switch's trigger state. */
 void cMgSmartball_pushswitch_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
     mTriggered = 0;
     mReleaseDelay = 0;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 cMgSmartball_pushswitch_c *cMgSmartball_pushswitch_c_Construct(cMgSmartball_pushswitch_c *c,
                                                                char *b, int d, V2 *s) {
     int tmp[2];
@@ -712,25 +616,9 @@ int cMgSmartball_board_c::AnyLineActive() {
     return 0;
 }
 
-/* Slot 1. Draws the board. Three passes:
- *
- * 1. The eight lines (mLineTimer timers / mLineScored flags). A line is drawn while
- *    its timer is running, or once the manager's 0x4660 flag is up and the
- *    line's own flag is set. The banner sprite is picked by GetOwnerLanguage,
- *    which is why the same five-way chain repeats four times. Each case also
- *    lights that line's three cells in mCellHighlight, and those triples are what
- *    prove the indexing: 0-2 are the columns {i, i+3, i+6}, 3-5 the rows
- *    {3(i-3)..3(i-3)+2}, 6 the diagonal {0,4,8} and 7 the antidiagonal
- *    {2,4,6}.
- *
- * 2. The nine cells. A cell's angle in mCellFlipAngle picks its face sprite (past
- *    0x4000 it has flipped), a lit cell blinks on bit 0x20 of mFanfareTimer, and a
- *    cell mid-flip is sheared with a matrix built from the shared sine table
- *    FX_SinCosTable_ -- edge-on at +-0x4000 it degenerates to the flat sprite.
- *
- * 3. The nine slot markers along the bottom, in the order the shuffle table
- *    sSmartballCellOrder currently holds.
- */
+/* Slot 1: draws the eight scored lines with their lit cells, the nine cells
+ * (a flipping one is sheared from the shared sine table) and the nine slot
+ * markers. */
 void cMgSmartball_board_c::Update() {
     s32 i;
     s32 j;
@@ -882,13 +770,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
     int b0;
     int b1;
     int kk;
-    /* Kept volatile (measured 2026-11-07): the ROM narrows each fill value
-       through its own stack halfword (strh/ldrh at sp+0x18..0x20) rather than
-       lsl/lsr. Plain u16 locals, u16[1] arrays, a struct or union holding the
-       u16, *&t, and inline fill wrappers taking the value by value, by const
-       or non-const reference, or by pointer all give 41 words, 4 bytes long.
-       Only *(u16 *)&t also matches, and that is the same launder spelled
-       differently. */
+    /* volatile: the ROM narrows each fill value through its own stack halfword. */
     volatile u16 t1;
     volatile u16 t2;
     volatile u16 t3;
@@ -1143,17 +1025,9 @@ void cMgSmartball_board_c::ClaimCell(int i) {
     Sound::PlayBank2_2D(0x174);
 }
 
-/* Slot 0. Opens with the base's own SaveSnapshot body written out inline
- * rather than called -- same pattern as every sibling in this family (the
- * base's copy is out-of-line and there is no bl here).
- *
- * Then: spend the countdown at mFanfareTimer and, once a second, replay the jingle
- * selected by mLinesScored; age the eight per-line timers in mLineTimer; scan the
- * shared manager's up-to-13 tracked balls for one sitting in the board's
- * horizontal strip, map its x to one of the nine cells through the shuffle
- * table sSmartballCellOrder and claim that cell; finally spin every claimed
- * cell's angle in mCellFlipAngle up to its 0x8000 stop.
- */
+/* Slot 0: spends the fanfare timer and replays its jingle, ages the eight
+ * line timers, claims the cell the next ball in the drop strip lands on, and
+ * spins claimed cells up to their 0x8000 stop. */
 static inline cMgSmartball_ball_c *GetObjBoard(char *g, int i) {
     return i >= 13 ? 0 : ((dScMgSmartball_c *)g)->mpBalls[i];
 }
@@ -1163,9 +1037,7 @@ static inline void SetV2(V2 *p, int x, int y) {
     p->y = y;
 }
 
-/* Load-bearing for this spelling: without it the function is 5 words too long.
- * Not a property of the function itself -- the same bytes come out with
- * different statement order and no pragma at all. */
+/* Leftover: this form reproduces the body; other spellings come out longer. */
 void cMgSmartball_board_c::SaveSnapshot() {
     int i;
     int n;
@@ -1211,17 +1083,7 @@ void cMgSmartball_board_c::SaveSnapshot() {
         if (GetObjBoard((char *)mpManager, n)->mIsActive == 0)
             continue;
         CopyObjectPos((int *)&t, (int *)GetObjBoard((char *)mpManager, n));
-        /* COMPILER STEER, and the only one in this file. `v = t;` is what the
-           ROM does and it is what the pre-migration C said -- but mwcc
-           scalarizes a whole-struct assignment in C++ where it kept it in
-           memory in C, which deletes v's stack slot, its two stores and the
-           reload of v.x in the loop below: 0x3a4 bytes instead of 0x3b0.
-           Casting the DESTINATION alone restores the memory-to-memory copy;
-           casting the source instead does nothing. Measured, not guessed --
-           six other spellings (memberwise, copy-init, a reference alias, an
-           sret-returning helper, a non-POD V2, a V2 with a base) were all
-           tried and all diverge. See launder.h for the family this belongs
-           to. */
+        /* Leftover: casting the destination keeps this a memory-to-memory copy. */
         *(V2 *)&v = t;
         if (v.y < 0x74000)
             continue;
@@ -1260,18 +1122,7 @@ void cMgSmartball_board_c::SaveSnapshot() {
     }
 }
 
-/* Slot 2. Unlike most of this family's slot 2s this is a real body, not a
- * tail-call veneer -- but it still OPENS with the qualified call to the base,
- * and the qualification is load-bearing exactly as it is in the veneers: an
- * unqualified RestoreInitial() here would dispatch through the vtable and
- * recurse.
- *
- * After that it refills the shared shuffle table sSmartballCellOrder with the
- * identity 0..8, reshuffles it via ShuffleCells, and then zeroes every
- * field this class owns. That zero pass is exhaustive and in address order,
- * which is why it -- not a union of the "obvious" accesses in the other two
- * slots -- is the authority for the layout in cMgSmartball_board_c.h.
- */
+/* Slot 2: resets the board, reshuffles the cell order and clears all state. */
 void cMgSmartball_board_c::RestoreInitial() {
     int i;
     cMgSmartball_object_c::RestoreInitial();
@@ -1300,7 +1151,7 @@ void cMgSmartball_board_c::ShuffleCells() {
     }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 cMgSmartball_board_c *cMgSmartball_board_c_Construct(cMgSmartball_board_c *c, char *b, int d,
                                                      V2 *s) {
     int tmp[2];
@@ -1323,8 +1174,7 @@ int cMgSmartball_slot_c::ReelsStopped() {
 }
 
 void cMgSmartball_slot_c::BeginStop() {
-    /* The stop counts are written through this copy of `this`: spelled
-       mReelStopCount[i] directly, the loop is 9 words shorter than the ROM's. */
+    /* Leftover: the stop counts are stored through a copy of `this`. */
     cMgSmartball_slot_c *c = this;
     int i;
     unsigned char z;
@@ -1473,14 +1323,8 @@ void cMgSmartball_slot_c::UpdateSpin() {
     mSpinCooldown = 0x3c;
 }
 
-/* Slot 1. First loop draws three copies of one sprite in a row (index i is
- * computed but never read -- only the running x offset matters). Second
- * loop, over the same three mReelOffset[i] pairs, draws a stack of four more
- * sprites per element with descending y. Kept identical to the pre-migration
- * source, including the `if (1) {}` no-op, the
- * (x - 0x18) & 0xFFFFFFFFFFFFFFFF mask (measured load-bearing 2026-11-06:
- * without it Update moves 17 words), and the goto-based second loop --
- * only the raw offset accesses became real member access. */
+/* Slot 1: draws the reel window and the three reels.
+ * Leftover: the empty `if (1)`, the x mask and the goto loop are required. */
 inline int inline_fn(int arg0, int arg1) {
     return arg0 + arg1;
 }
@@ -1519,14 +1363,8 @@ second_loop: {
 }
 }
 
-/* Slot 0. Opens with the base's own SaveSnapshot body written out inline
- * rather than called -- same pattern as every sibling in this family (the
- * base's copy is out-of-line and there is no bl here). Then runs three
- * independent countdowns: mSpinCooldown always decrements while positive;
- * mSpinsQueued decrements and fires the spin-start helper StartSpin
- * once mIsSpinning is clear and mSpinCooldown has drained; mSpinTimer decrements and
- * fires BeginStop when it reaches exactly 0. Always tail-calls
- * the shared per-frame helper UpdateSpin. */
+/* Slot 0: runs the spin cooldown, the queued spins and the stop timer, then
+ * steps the reels. */
 void cMgSmartball_slot_c::SaveSnapshot() {
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
@@ -1545,12 +1383,7 @@ void cMgSmartball_slot_c::SaveSnapshot() {
     UpdateSpin();
 }
 
-/* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial), then
- * exhaustively zeroes every field this class adds, in the ROM's own
- * per-index-then-next-field order for the two 3-element arrays (A[i].a,
- * A[i].b, B[i].a, B[i].b, C[i], D[i] before moving to i+1), followed by
- * the four trailing scalars in address order. This function is the
- * strongest evidence for the field list in the header. */
+/* Slot 2: clears the reels, timers and sound handle. */
 void cMgSmartball_slot_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
     for (int i = 0; i < 3; i++) {
@@ -1585,9 +1418,8 @@ cMgSmartball_slot_c *cMgSmartball_slot_c_Construct(cMgSmartball_slot_c *c, char 
 }
 }
 
-/* Ball-vs-piranha collision test. While mActionTimer has run out it tests the
- * ball against the plant's two jaw triangles either side of mCurrent; while
- * the plant is mid-action it tests the ring between the two radii. */
+/* Ball-vs-piranha test: the closed jaws, or the ring around the head while
+ * biting. */
 int cMgSmartball_pakkun_c::CheckBall(int *pos) {
     struct S *v = (struct S *)pos;
     struct S d;
@@ -1666,10 +1498,7 @@ int cMgSmartball_pakkun_c::CheckBall(int *pos) {
     return func_0203d5bc(&d.a) < 0x190000;
 }
 
-/* Slot 1. While mActionTimer is counting down it renders a rotate/scale pair
- * of frames (the shift-by-12 fixed-point matrix built from FX_SinCosTable_);
- * otherwise it renders one of two idle frames selected by mTriggered, plus a
- * common third frame beneath it. */
+/* Slot 1: draws the chewing frames while biting, otherwise the idle pair. */
 void cMgSmartball_pakkun_c::Update() {
     if (mIsActive == 0)
         return;
@@ -1715,15 +1544,8 @@ void cMgSmartball_pakkun_c::Update() {
     }
 }
 
-/* Slot 0. Opens with the base's own SaveSnapshot body written out inline
- * rather than called -- same idiom as every sibling. Then, while
- * mActionTimer is still counting down from a previous trigger, it just
- * spends the timer and returns without scanning. Otherwise it scans the
- * shared manager's up-to-13 tracked objects for one within a fixed-point
- * distance of 0x4000 and, on a hit, arms mActionTimer, flips mTriggered
- * off, fires an effect, deactivates the object it found, and returns. If
- * the whole scan comes up empty, mIdleTimer counts the miss and wraps at
- * 0x3c, toggling mTriggered. */
+/* Slot 0: bites the first ball that comes close, otherwise blinks between
+ * the idle frames. */
 inline cMgSmartball_ball_c *GetObjPakkun(char *g, int i) {
     return i >= 13 ? 0 : ((dScMgSmartball_c *)g)->mpBalls[i];
 }
@@ -1766,10 +1588,7 @@ void cMgSmartball_pakkun_c::SaveSnapshot() {
         mTriggered = 0;
 }
 
-/* Slot 2. A real override, not a tail-call veneer: it calls the base's
- * RestoreInitial() (qualified -- unqualified would dispatch through the
- * vtable and recurse) and then also zeroes mTriggered and this child's own
- * two fields. */
+/* Slot 2: clears the piranha's bite state. */
 void cMgSmartball_pakkun_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
     mTriggered = 0;
@@ -1777,7 +1596,7 @@ void cMgSmartball_pakkun_c::RestoreInitial() {
     mActionTimer = 0;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 cMgSmartball_pakkun_c *cMgSmartball_pakkun_c_Construct(cMgSmartball_pakkun_c *c, char *b, int d,
                                                        V2 *s) {
     int tmp[2];
@@ -1805,10 +1624,7 @@ int cMgSmartball_dokan_c::CheckBall(int *b) {
     return 0;
 }
 
-/* Slot 1. Draws the pipe as five stacked sprites -- one cap, three body
- * segments, one base -- from a three-entry sprite table, all at the same x
- * with y stepping 0x10 units apart in screen space (the >> 12 is the fixed
- * point conversion). The last argument is a flag lifted from the scene. */
+/* Slot 1: draws the pipe as five stacked sprites. */
 void cMgSmartball_dokan_c::Update() {
     int flag = 0;
     if (((dScMgSmartball_c *)mpManager)->mPhase)
@@ -1824,10 +1640,7 @@ void cMgSmartball_dokan_c::Update() {
                         flag);
 }
 
-/* Slot 0. Opens with the base's own SaveSnapshot body written out inline
- * rather than called -- the base's is out-of-line at 0x02114724 and there is
- * no bl here, so the original repeated the two statements. Every sibling's
- * slot 0 opens the same way. */
+/* Slot 0: scores a ball that falls into the pipe mouth. */
 inline cMgSmartball_ball_c *GetObjDokan(char *g, int i) {
     return i >= 13 ? 0 : ((dScMgSmartball_c *)g)->mpBalls[i];
 }
@@ -1864,19 +1677,12 @@ void cMgSmartball_dokan_c::SaveSnapshot() {
     }
 }
 
-/* Slot 2. The ROM is three words -- ldr ip, [pc]; bx ip; .word target -- which
- * is mwcc's interworking-safe TAIL CALL, not a linker veneer and not a
- * "this class does not override" vtable entry. A class that simply inherited
- * the slot would have the base's address sitting in the vtable directly; this
- * one has its own symbol, so the original declared the override and its whole
- * body was the qualified call below. The qualification is load-bearing: an
- * unqualified RestoreInitial() here would dispatch through the vtable and
- * recurse. */
+/* Slot 2: forwards to the base reset. */
 void cMgSmartball_dokan_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 cMgSmartball_dokan_c *cMgSmartball_dokan_c_Construct(cMgSmartball_dokan_c *c, char *b, int d,
                                                      V2 *s) {
     int tmp[2];
@@ -1993,11 +1799,7 @@ void cMgSmartball_propeller_c::RebuildVerts() {
     mVertices[7].y += mCurrent1;
 }
 
-/* Slot 1. Looks up a rotation matrix from mAngle, reading it UNSIGNED
- * (>> 4, lsr not asr) to index the sine table. Draws two
- * OAM sprites (front and back cap) at the base's position (mCurrent0/
- * mCurrent1) using that matrix; touches nothing in this class's own 0x34+
- * region at all. */
+/* Slot 1: draws the two propeller caps rotated by the base angle. */
 void cMgSmartball_propeller_c::Update() {
     int b = (short)((((long long)FX_SinCosTable_[((unsigned short)mAngle >> 4) * 2 + 1] << 12) +
                      0x800) >>
@@ -2018,19 +1820,10 @@ void cMgSmartball_propeller_c::Update() {
                          2, vec);
 }
 
-/* Slot 0. Opens with the base's own SaveSnapshot body written out inline
- * rather than called -- same idiom as every sibling. If the scene's
- * mRoundEnded flag is set, it returns before touching anything else.
- * Otherwise it steps the rotation speed (mSpinSpeed) by +-8 toward the target
- * (mSpinSpeedTarget), clamping once it crosses, adds the stepped speed onto the
- * mAngle, and calls the shared helper that
- * recomputes the propeller-blade positions from the new angle.
- *
- * The step writes through a local `short *p` taken from &mSpinSpeed while
- * every comparison re-reads the member. That pointer is load-bearing:
- * written `mSpinSpeed = mSpinSpeed + 8` the function is 0x9c bytes where
- * the ROM has 0xac, because mwcc then keeps the stepped value in a
- * register instead of reloading it. */
+/* Slot 0: steps the spin speed toward its target, advances the angle and
+ * rebuilds the blades.
+ * Leftover: the step writes through a short pointer; a plain assignment
+ * produces a shorter body. */
 void cMgSmartball_propeller_c::SaveSnapshot() {
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
@@ -2054,11 +1847,7 @@ void cMgSmartball_propeller_c::SaveSnapshot() {
     RebuildVerts();
 }
 
-/* Slot 2. A real override, not a tail-call veneer: calls the base's
- * RestoreInitial() (qualified -- unqualified would dispatch through the
- * vtable and recurse), then clears mAngle, resets the target rotation speed (mSpinSpeedTarget) to its default 0x40, zeroes
- * the current rotation speed (mSpinSpeed), and calls the shared helper that
- * recomputes the propeller-blade positions from the reset state. */
+/* Slot 2: stops the propeller, resets its angle and rebuilds the blades. */
 void cMgSmartball_propeller_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
     mAngle = 0;
@@ -2067,7 +1856,7 @@ void cMgSmartball_propeller_c::RestoreInitial() {
     RebuildVerts();
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 cMgSmartball_propeller_c *cMgSmartball_propeller_c_Construct(cMgSmartball_propeller_c *c, char *b,
                                                              int d, V2 *s) {
     int tmp[2];
@@ -2080,9 +1869,7 @@ cMgSmartball_propeller_c *cMgSmartball_propeller_c_Construct(cMgSmartball_propel
 }
 }
 
-/* Slot 1. Draws one of two sprite pairs depending on a byte flag read
- * through the base's mpManager scene pointer (offset 8, low byte) -- unrelated
- * to this class's own 0x34+ fields, which Update never touches at all. */
+/* Slot 1: draws the spring pair for the current level mode. */
 void cMgSmartball_spring_c::Update() {
     if ((((dScMgSmartball_c *)mpManager)->param1 & 0xff) == 0) {
         Mg_RenderSpriteBoth(sSmartballSpringSprites[0], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
@@ -2095,19 +1882,7 @@ void cMgSmartball_spring_c::Update() {
     }
 }
 
-/* Slot 0. Opens with the base's own SaveSnapshot body written out inline
- * rather than called -- same pattern as every sibling. Then a three-way
- * state machine gated by two slot-indexed byte lanes (gTouchHeld/gTouchEdge)
- * and driven by the touch x/y lanes (gTouchX/gTouchY, shifted <<12 into fixed point): trigger sets
- * mTriggered and latches mGrabXSaved/mDriveBase/mGrabX/mDriveNow; active recomputes
- * and clamps mDriveNow each call and plays a sound on change; release clears
- * mTriggered, or -- if neither holds -- eases mCurrent1 back toward baseline.
- * See cMgSmartball_spring_c.h for the field-by-field evidence.
- *
- * Three statements in the original read and wrote the SAME struct member
- * through a raw pointer cast twice, solely to keep a compound assignment
- * off it (`int *p = (int *)(c + off); *p = *p - k;`). All three are plain
- * compound assignments below and emit the same. */
+/* Slot 0: touch-controlled spring: grab, drive, release, then fall back. */
 void cMgSmartball_spring_c::SaveSnapshot() {
     int slot;
     int held;
@@ -2175,16 +1950,13 @@ void cMgSmartball_spring_c::SaveSnapshot() {
     }
 }
 
-/* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial), then
- * zeroes mSoundHandle -- the ONLY offset this class's RestoreInitial reaches;
- * mGrabXSaved/mDriveBase/mGrabX/mDriveNow carry whatever SaveSnapshot last
- * left there. */
+/* Slot 2: clears the sound handle, the only field this override resets. */
 void cMgSmartball_spring_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
     mSoundHandle = 0;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 cMgSmartball_spring_c *cMgSmartball_spring_c_Construct(cMgSmartball_spring_c *c, char *b, int d,
                                                        V2 *s) {
     int tmp[2];
@@ -2216,9 +1988,7 @@ void cMgSmartball_ana_c::Swallow() {
     func_02012718(0xe0, mCurrent0);
 }
 
-/* Slot 1. While mHasBall is set, picks a warning-sprite
- * index from this class's countdown (mRespawnTimer) and draws it under the main
- * sprite; the main sprite is always drawn. */
+/* Slot 1: draws the hole, with a warning sprite while it holds a ball. */
 void cMgSmartball_ana_c::Update() {
     if (mHasBall == 1) {
         int v = mRespawnTimer;
@@ -2237,11 +2007,7 @@ void cMgSmartball_ana_c::Update() {
     Mg_RenderSpriteBoth(sSmartballAnaSprites[0], mCurrent0 >> 0xc, mCurrent1 >> 0xc, -1, 3);
 }
 
-/* Slot 0. Opens with the base's own SaveSnapshot body written out inline
- * rather than called -- same pattern as every sibling in this family (the
- * base's copy is out-of-line and there is no bl here). Then decrements this
- * class's own countdown (mRespawnTimer); when it reaches zero it calls the shared
- * helper ServeNextBall and sets mServed. */
+/* Slot 0: counts down a swallowed ball, then serves the next one. */
 void cMgSmartball_ana_c::SaveSnapshot() {
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
@@ -2254,8 +2020,7 @@ void cMgSmartball_ana_c::SaveSnapshot() {
     mServed = 1;
 }
 
-/* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial), then clears
- * mHasBall, mServed and the countdown. */
+/* Slot 2: clears the hole's state. */
 void cMgSmartball_ana_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
     mHasBall = 0;
@@ -2263,7 +2028,7 @@ void cMgSmartball_ana_c::RestoreInitial() {
     mRespawnTimer = 0;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 cMgSmartball_ana_c *cMgSmartball_ana_c_Construct(cMgSmartball_ana_c *c, char *b, int d, V2 *s) {
     int tmp[2];
     tmp[0] = s->x;
@@ -2275,11 +2040,7 @@ cMgSmartball_ana_c *cMgSmartball_ana_c_Construct(cMgSmartball_ana_c *c, char *b,
 }
 }
 
-/* Slot 1. Switches on mVariant (see the header): state 0 draws two base
- * sprites via Mg_RenderSpriteBoth; state 1 computes an ease vector from the
- * base's mRadius (bails out once mRadius < 0x1000) and draws two mirrored
- * sprites via RenderOamBothScreens; there is no case for state 2, so
- * nothing renders. */
+/* Slot 1: draws the mushroom (variant 0) or its turning shell (variant 1). */
 void cMgSmartball_kinoko_c::Update() {
     switch (mVariant) {
     case 0:
@@ -2308,15 +2069,7 @@ void cMgSmartball_kinoko_c::Update() {
     }
 }
 
-/* Slot 0. Opens with the base's own SaveSnapshot body written out inline
- * rather than called -- same idiom as every sibling. While mWasHit is set,
- * runs a one-shot transition (an effect/sound trigger, gated on mHitTimer
- * still being 0) and reloads mHitTimer from mVariant; otherwise, while mHitTimer
- * is still counting down, decrements it and, once it drops under 4, scans a
- * fixed actor list for anything within a fixed-point distance of 0x11000,
- * arming mHitTimer back to 4 on a hit. Always ends by easing the base's
- * mRadius toward 0x7000 or 0, depending on mVariant and whether mHitTimer has
- * drained. */
+/* Slot 0: scores a hit, then grows or shrinks the mushroom. */
 void cMgSmartball_kinoko_c::SaveSnapshot() {
     V2 pair;
     V2 bufA;
@@ -2380,17 +2133,14 @@ done:
     }
 }
 
-/* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial, qualified --
- * unqualified would dispatch virtually and recurse), then zeroes mWasHit and
- * mHitTimer. Does NOT touch mVariant -- read exhaustively, this function simply
- * never mentions it. */
+/* Slot 2: clears the hit state. */
 void cMgSmartball_kinoko_c::RestoreInitial() {
     cMgSmartball_object_c::RestoreInitial();
     mWasHit = 0;
     mHitTimer = 0;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 cMgSmartball_kinoko_c *cMgSmartball_kinoko_c_Construct(cMgSmartball_kinoko_c *self, char *x, int y,
                                                        V2 *src) {
     int v[2];
@@ -2515,16 +2265,8 @@ void cMgSmartball_ball_c::PutInPlay() {
     Burst();
 }
 
-/* Both reads of the scene's mpWing (0x4780) are member accesses through the
- * manager pointer, not integer arithmetic cast to a pointer. Under 2004/b56 that
- * choice decides the addressing mode: written as `*(int*)(base + 0x4000 + 0x780)`
- * b56 folds the constant, parks 0x4780 in the literal pool and emits a
- * register-offset `ldr`, while the ROM computes `add r2,r2,#0x4000` and loads
- * `[r2, #0x780]`. `ldr` carries only a 12-bit displacement, so 0x4780 cannot be
- * encoded and the address must be split either way; the member access (like the
- * `char*` pointer arithmetic it replaced) lets b56 split it the ROM's way.
- * Both reads must use it -- respelling only one leaves the other sharing.
- */
+/* Tests the ball against the wing.
+ * Leftover: the two wing reads stay member accesses on the manager. */
 int cMgSmartball_ball_c::HitWing(int *src) {
     int g = (int)((dScMgSmartball_c *)mpManager)->mpWing;
     if (g == 0)
@@ -2891,21 +2633,16 @@ block2:
     }
 }
 
-/* Kept: measured 2026-11-06, UpdatePhysics is the only function this bracket
-   reaches, and with strength reduction on its body changes (53 words). */
+/* Leftover: UpdatePhysics needs strength reduction off. */
 #pragma push
 #pragma opt_strength_reduction off
-/* The equal-arm owner selection below preserves mwccarm's address rematerialization. */
-extern "C" { /* .c-derived member: C linkage for the whole block */
+/* Leftover: the owner selection keeps its own address computation. */
+extern "C" { /* C linkage, as in the original .c file */
 
 void cMgSmartball_ball_c::UpdatePhysics() {
     State2 state;
     V2xz work;
-    /* Kept volatile (measured 2026-11-07): the ROM keeps the entry velocity in
-       memory at sp+0x5c and reloads both words for each hit-sound copy. A
-       plain V2xz is scalarized and moves the frame (216 words), and so does
-       copying it whole (event0 = savedVel) with or without the two stores
-       made adjacent. */
+    /* volatile: the ROM keeps the entry velocity on the stack and reloads it. */
     volatile V2xz savedVel;
     V2xz dist;
     V2xz delta;
@@ -3501,9 +3238,7 @@ void cMgSmartball_ball_c::DrawMarker() {
                              ((mCurrent1 + 0x800) >> 12) + 5, -1, 2, 0);
 }
 
-/* Slot 1. Picks one of two sprites (based on which edge of the level the
- * scene reports) and draws it at the ball's rounded position, with a
- * priority bumped from 1 to 3 while state3a is set. */
+/* Slot 1: draws the ball sprite for the current level mode. */
 void cMgSmartball_ball_c::Update() {
     int r2;
     if (mIsActive == 0)
@@ -3525,10 +3260,7 @@ void cMgSmartball_ball_c::Update() {
     }
 }
 
-/* Slot 0. Does NOT open with the base's SaveSnapshot body inline (unlike
- * every sibling so far) -- this is the one override in the family that
- * replaces the base behaviour instead of repeating it, gating the ball's
- * own countdown/zone/bounce/physics state machine every frame. */
+/* Slot 0: the ball's frame -- expiry, freeze, goal zone, bounce and physics. */
 void cMgSmartball_ball_c::SaveSnapshot() {
     V2xz vc;
     V2xz vd;
@@ -3690,11 +3422,7 @@ after2:
     func_0203d630((V2 *)(V2xz *)&mVel0, dist);
 }
 
-/* Slot 2. Calls the base's RestoreInitial (mCurrent = mInitial), latches
- * mCurrent into the mLastPos0/mLastPos1 position pair, zeroes the base's
- * velocity pair, then exhaustively zeroes every field this class adds --
- * this function is the strongest evidence for the field list in the header,
- * since its zero pass is the one place all of them are touched at once. */
+/* Slot 2: resets the ball and every hit-test array. */
 void cMgSmartball_ball_c::RestoreInitial() {
     int i;
 
@@ -3738,7 +3466,7 @@ void cMgSmartball_ball_c::RestoreInitial() {
     mExitGateOpen = 0;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 cMgSmartball_ball_c *cMgSmartball_ball_c_Construct(cMgSmartball_ball_c *c, char *b, int d, V2 *s) {
     int tmp[2];
     tmp[0] = s->x;
@@ -3778,48 +3506,38 @@ void cMgSmartball_object_c::SetVel(int *velocity) {
     mVel1 = velocity[1];
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 void CopyObjectVel(int *a, int *b) {
     a[0] = ((cMgSmartball_object_c *)b)->mVel0;
     a[1] = ((cMgSmartball_object_c *)b)->mVel1;
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 void GetObjectDelta(void *a, char *b) {
     Vec2_Sub((int *)a, &((cMgSmartball_object_c *)b)->mCurrent0,
              &((cMgSmartball_object_c *)b)->mSnapshot0);
 }
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 void CopyObjectPos(int *a, int *b) {
     a[0] = ((cMgSmartball_object_c *)b)->mCurrent0;
     a[1] = ((cMgSmartball_object_c *)b)->mCurrent1;
 }
 }
 
-/* vtable slot 1. Empty in this class -- the
-   0x4-byte body is a bare `bx lr`. Every child overrides it. */
+/* Slot 1: empty here; every child overrides it. */
 void cMgSmartball_object_c::Update() {}
 
-/* vtable slot 0. Name coined from the body --
-   see include/cMgSmartball_object_c.h's own note on why this hierarchy has
-   no names to recover. */
+/* Slot 0: stores the current position as the previous one. */
 void cMgSmartball_object_c::SaveSnapshot() {
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
 }
 
-/* Name coined from the body --
-   see include/cMgSmartball_object_c.h's own note.
-
-   Both reads come before both writes, deliberately. The plain
-   `mCurrent0 = mInitial0; mCurrent1 = mInitial1;` spelling costs 4 words:
-   the ROM loads the pair and then stores the pair, which is what the two
-   temporaries reproduce. SaveSnapshot above needs no such care -- its
-   source and destination do not overlap in the same way, and the naive
-   spelling emits the same there. */
+/* Restores the starting position.
+   Leftover: both loads happen before both stores. */
 void cMgSmartball_object_c::RestoreInitial() {
     s32 hi = mInitial1;
     s32 lo = mInitial0;
@@ -3827,7 +3545,7 @@ void cMgSmartball_object_c::RestoreInitial() {
     mCurrent1 = hi;
 }
 
-extern "C" { /* .c-derived member: C linkage for the whole block */
+extern "C" { /* C linkage, as in the original .c file */
 cMgSmartball_object_c *cMgSmartball_object_c_Construct(cMgSmartball_object_c *o, char *a1, int a2,
                                                        int *a3) {
     int lo, hi;
@@ -3850,7 +3568,7 @@ cMgSmartball_object_c *cMgSmartball_object_c_Construct(cMgSmartball_object_c *o,
 }
 }
 
-/* dScMgSmartball_c::OnGraphCallback3 - slot 25 override */
+/* Slot 25: forwards the graph callback to the minigame base. */
 int dScMgSmartball_c::OnGraphCallback3() {
     void *t = (void *)this;
     return ((dScMgBase_c *)t)->dScMgBase_c::OnGraphCallback3() != 0;
@@ -3865,9 +3583,7 @@ int dScMgSmartball_c::SparksActive() {
     return 0;
 }
 
-/* Seeds 0x18 sparks around pair: first the free slots in order, then random
- * slots until the count is reached. The first draw is taken before the
- * mPos[0] store and scaled after it, which is the ROM's order. */
+/* Seeds 0x18 sparks around a point, reusing free slots before random ones. */
 #define SPARK_RAND (((u32)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff)
 void dScMgSmartball_c::EmitSparks(int *pair, int a3) {
     int count = 0;
@@ -4015,8 +3731,6 @@ void dScMgSmartball_c::ServeNextBall() {
     }
 }
 
-// The ROM materializes &mOutTally via a pool-loaded constant + add
-// (ldr r1,[pc]; add r1,self,r1) rather than splitting the large offset.
 void dScMgSmartball_c::CountOut() {
     mOutTally++;
 }
@@ -4074,10 +3788,7 @@ unsigned short dScMgSmartball_c::GetTile(int *pos) {
 
 #pragma push
 #pragma opt_strength_reduction off
-/* opt_strength_reduction stays off: the ROM re-adds i * 8 and each field offset per access; indexed mDust* spellings are 0xf4-0x110 of 0xf8.
-   Measured again 2026-11-07: this body without the pragma is 0x108 (36 words);
-   a plain mDustActive[i] / mDustAge[i] / pos and vel pointer spelling is 0x100
-   without the pragma (45) and 0xf4 with it (40). */
+/* Leftover: UpdateDust needs strength reduction off. */
 void dScMgSmartball_c::UpdateDust() {
     char *self = (char *)this;
     int i;
@@ -4110,38 +3821,9 @@ void dScMgSmartball_c::UpdateDust() {
 
 #pragma pop
 
-/* SpawnDust -- dScMgSmartball_c, ov006 0x02115248, 0x238 bytes.
- *
- * Spawns up to four dust puffs: for each of the four passes it takes the first
- * free slot of sixteen, draws two angles from the shared RNG, and fills that
- * slot's mDustPos and mDustVel from the sine table, the position biased by the
- * caller's origin, then marks the slot taken.
- *
- * TWO THINGS ARE LOAD BEARING AND BOTH WERE MEASURED.
- *
- * 1. TVec2 HAS AN EMPTY DESTRUCTOR.  `v` is never address-taken, so a plain POD
- *    pair is scalarised into registers and the frame comes out sub sp,#0x1c; the
- *    non-POD copy forces a stack home and the cartridge's sub sp,#0x24.  That is
- *    the only difference between an otherwise byte-identical body and this one.
- *
- * 2. `sa` IS A SEPARATE s64 STATEMENT, NOT AN INITIALISER.  sinA feeds two
- *    64-bit products, times 0x8000 here and times 0x4000 twelve lines down.
- *    Widening it once into its own local, ASSIGNED as a statement ahead of the
- *    first product, makes 2004/b56 compute the sign word once into a short-lived
- *    scratch and derive both high halves from it back to back (asr ...,#0x1f then
- *    lsl #0xf and lsl #0xe adjacent, the scratch dying immediately into the
- *    #0x800 rounding constant).  Every other spelling defers the second shift
- *    about twenty words into the y block and misses the whole window:
- *    `s64 sa = sinA;` at the declaration, using sa for the 0x8000 product as
- *    well, hoisting either product into a named int, reordering the stores, the
- *    six FX operand and helper forms, and five optimisation pragmas were all
- *    measured and all leave the same 27-word window.
- *
- * The flag and the two arrays are spelled through the stepped base (c + j,
- * c + j * 8), not indexed from `this`: &mDustActive[j], mDustPos[j * 8] and
- * mDustVel[j * 8 + 4] each move bytes, and a struct-array view of either array
- * changes the frame and the loop's addressing and does not reproduce.
- */
+/* Spawns up to four dust puffs at a point.
+ * Leftover: TVec2's empty destructor keeps `v` in memory, and `sa` must be its
+ * own assignment before the first product. */
 void dScMgSmartball_c::SpawnDust(int *origin) {
     char *c = (char *)this;
     int i;
@@ -4185,7 +3867,7 @@ void dScMgSmartball_c::SpawnDust(int *origin) {
 
 #pragma push
 #pragma opt_strength_reduction off
-/* opt_strength_reduction stays off: the ROM re-derives each popup field from i per pass; indexed mPopup* spellings are 0x110-0x130 of 0x118. */
+/* Leftover: UpdateScores needs strength reduction off. */
 void dScMgSmartball_c::UpdateScores() {
     char *o = (char *)this;
     int i;
@@ -4298,11 +3980,11 @@ int dScMgSmartball_c::IsTableAtRest() {
 
 #pragma push
 #pragma opt_common_subs off
-/* opt_common_subs stays off: the ROM narrows inverseAngle to s16 again for the second rotate, a CSE-off recompute. */
+/* Leftover: ResolveBallPair needs common subexpression folding off. */
 void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firstObject,
                                        u8 *secondObject) {
-    // Keep the intermediate pair materialized across the angle calculation.
-    // Named ball-pointer locals change register allocation; use direct casts.
+    // Leftover: keep the pair materialized in memory; direct casts keep the
+    // register assignment.
     TVec2 delta;
     V2 firstPos;
     V2 secondPos;
@@ -4369,8 +4051,7 @@ void dScMgSmartball_c::ResolveBallPair(int firstIndex, int secondIndex, u8 *firs
         CopyObjectVel((int *)&secondSavedVelocity, (int *)secondObject);
         secondVelocity = secondSavedVelocity;
     }
-    // Rotate into the line between the balls, exchange its velocity component,
-    // then rotate back. The perpendicular components stay with their balls.
+    // Rotate into the ball-to-ball line, swap the shared component, rotate back.
     inverseAngle = -collisionAngle;
     func_0203d388(&firstVelocity, (s16)inverseAngle);
     func_0203d388(&secondVelocity, (s16)inverseAngle);
@@ -4404,55 +4085,9 @@ void dScMgSmartball_c::CollideBalls() {
 
 #pragma push
 #pragma opt_strength_reduction off
-/* SpawnObjects: minigame-board teardown+rebuild. 7 inlined-destructor loops
- * over object slot arrays (double vtable store + operator delete +
- * slot=0), 3 single-slot deletes, language-selected asset loads
- * (OS_SPrintf + DecompressLZ16 to VRAM/tilemaps), per-tile-type scan
- * loops over the two 0x300-entry tilemaps mBg1Map/mBg2Map collecting
- * spawn positions ((i%32)<<15, mapA: ((i/32)*8-0xf0)<<12 /
- * mapB: (i/32)<<15), spawn loops (operator new + per-type init, V2 passed via
- * pointer to a caller-local copy), a virtual-init pass (vtbl[2](this) on
- * every spawned object), bulk zeroing.
- *
- * Two pool words the disasm text left ambiguous: the +0x59c scan mask is
- * 0x3ff; the tile ID for the mpDokans object type is 0x3d2 (not 0x2d2/0x1d2).
- *
- * Load-bearing spellings (in order of impact):
- *  - Spawn callees take V2* + explicit caller-local copy (V2 tmp = pos[j];
- *    f(p,c,j,&tmp)). By-value V2 in C mode splits across r3/[sp] with
- *    dynamic sp adjustment, which pins a frame pointer the ROM lacks.
- *    operator new result flows through p into the slot store (no separate r var).
- *  - The two mpKinokos spawn slot stores go through a `void **slot` taken off a
- *    `(dScMgSmartball_c *)(c + j * 4)` view -> pooled 0x46bc + str r0,[r1,rK]!
- *    writeback (also the 9th live value that pulls fp into the push set; frame
- *    0x124 with 9 saved regs). The u64 mask an earlier draft laundered them
- *    through is gone and was not needed for it.
- *  - BOTH vtable stores in every teardown site are volatile ints: forces
- *    the per-loop pool reload of the shared base vtable (0213ed10) that
- *    mwccarm otherwise CSEs function-wide, and pins the preamble emission
- *    order (mov #0 before the pool loads). They cannot be spelled
- *    p->~cMgSmartball_*_c(): mwccarm's expansion emits only the derived
- *    vptr store -- the implicit ~cMgSmartball_object_c is trivial and
- *    emits nothing -- and hoists the vtable load out of the loop
- *    (measured 2026-11-05: whole-function DIFF).
- *  - In the 12 counted scan loops pos[k] is bound to a `V2 &` and the
- *    final shift is folded into the y-store (y kept un-shifted): this emits
- *    str x / add rFresh / lsl into dead-k / str. The 6 k-local
- *    (k++) scan loops keep plain stores with fully-shifted y locals.
- *  - The member-array slot walks are ((T **)this) + i + memberoff/4, not
- *    &mpX[i]: mwccarm must add i*4 to `this` and then the member offset
- *    (add r0,r8,r4 lsl#2 / add sl,r0,rOff); the indexed form hoists
- *    this+offset to a base pointer and indexes inside the loop (DIFF).
- *  - Every loop counter is block-scoped (for (int i = ...)): stabilizes the
- *    per-loop register set (i=r4, const=r5, zero=r6, vtblB=r7, vtblA=sb,
- *    slot=sl) instead of rotating.
- *  - Virtual init calls pass this: ((void(**)(void*))(*(int*)p))[2](p)
- *    keeps the object in r0 and the vptr chain in r1.
- *  - Second mpKinokos spawn loop copies the V2 via int temps loaded y-then-x
- *    (int ty = pos[n].y; int tx = pos[n].x;) to keep its load order.
- *  - #pragma opt_strength_reduction off (as in the draft) keeps every loop
- *    un-strength-reduced; does not break the div/mod-by-32 shift idioms.
- */
+/* Tears the whole table down and rebuilds it from the two tile maps.
+ * Leftovers: the vtable stores, the spawn counters and the scan stores are
+ * volatile, and every slot walk steps `this` instead of indexing. */
 void dScMgSmartball_c::SpawnObjects() {
     char *c = (char *)this;
     V2 pos[25];
@@ -5202,32 +4837,14 @@ void dScMgSmartball_c::SpawnObjects() {
 
 #pragma pop
 
-/* Both kept: measured 2026-11-06, Render is the only function this bracket
-   reaches, and its size changes when the two settings go back on. */
+/* Leftover: Render needs both pragmas off, and the locals below must stay in
+ * this order (each one pins a stack slot). */
 #pragma push
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
-// Spill-order levers (each pins temps to stack slots in order):
-//  - plain (non-u64) pcnt for loop C -> pcnt@sp+0x10
-//  - block-scope pcnt2 for loop G -> val@sp+0x14
-//  - int *slot[2] with early slot[0]=0, slot[1]=loopG pcnt, slot[0]=loop2 pmode
-//    forces spill order pmode@0x18 before pcnt2@0x1c
-// Loop2's digit count reaches the same pooled ldr without the inner u64 mask an
-// earlier draft used; the mask is gone.
-//
-/* dScMgSmartball_c::Render -- vtable slot 9: the third of the three slots
- * where this class's table differs from dScMgBase_c's.
- *
- * The result screen's itemised score, one row per bonus category, gated on how far
- * mResultTimer, the reveal counter, has run; then the two flipper lamps, then every live
- * display object's slot-1 virtual, in the ROM's order.
- *
- * Only the receiver changed: the body below has `this` where the void*
- * parameter was; everything else here -- the two pragmas, the spill-order
- * levers above, the `slot[2]` array whose two entries are written in that
- * particular order -- is load-bearing. */
-/* Both pragmas are load-bearing, not tidying: without them the function
- * emits 0x1170 bytes instead of 0x10c0. Do not remove. */
+/* Slot 9: the frame draw. On the result screen it reveals the tally rows one
+ * at a time, then draws the side lamps, every board object and the score
+ * popups. */
 s32 dScMgSmartball_c::Render() {
     char *g = (char *)this;
     int col;
@@ -5248,7 +4865,7 @@ s32 dScMgSmartball_c::Render() {
         xpos = 0x18;
         slot[0] = (int *)0;
 
-        /* Block B: row 0 */
+        /* Cells row. */
         if (mCellTally > 0) {
             Mg_RenderSpriteBoth(data_ov006_02138ae0[0], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0x64, 0, 0, 1, 0);
@@ -5261,7 +4878,7 @@ s32 dScMgSmartball_c::Render() {
             col++;
         }
 
-        /* Loop C: rows 1..4 */
+        /* Line rows. */
         limit = col * 0x14;
         for (row = 0; row < 4; row++) {
             if (mResultTimer >= limit && mLineTally[row] > 0) {
@@ -5271,7 +4888,7 @@ s32 dScMgSmartball_c::Render() {
                 i = GetGameLanguage();
                 Mg_RenderSpriteBoth((void *)*(int *)(sSmartballTextSpritesByLanguage[i] + 0x54),
                                     0x90, xpos, -1, -1);
-                /* Stepped base, element 0: &mLineTally[row] moves bytes. */
+                /* Leftover: stepped base, element 0. */
                 pcnt = ((dScMgSmartball_c *)(g + row * 4))->mLineTally;
                 Mg_DrawNumber(0xa0, xpos, *pcnt, 0, 0, 0, 0);
                 Mg_DrawNumber(0xe0, xpos, val * *pcnt, 0, 0, 1, 0);
@@ -5281,7 +4898,7 @@ s32 dScMgSmartball_c::Render() {
             }
         }
 
-        /* Block D */
+        /* Mushrooms. */
         if (mKinokoTally > 0 && mResultTimer >= col * 0x14) {
             Mg_RenderSpriteBoth(sSmartballKinokoSprites[0], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0x12c, 0, 0, 1, 0);
@@ -5294,7 +4911,7 @@ s32 dScMgSmartball_c::Render() {
             col++;
         }
 
-        /* Block E */
+        /* Pipes. */
         if (mDokanTally > 0 && mResultTimer >= col * 0x14) {
             Mg_RenderSpriteBoth(data_ov006_02137a78[0], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0xbb8, 0, 0, 1, 0);
@@ -5307,7 +4924,7 @@ s32 dScMgSmartball_c::Render() {
             col++;
         }
 
-        /* Block F */
+        /* Holes. */
         if (mAnaTally > 0 && mResultTimer >= col * 0x14) {
             Mg_RenderSpriteBoth(data_ov006_02137a6c[0], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0x7d0, 0, 0, 1, 0);
@@ -5320,10 +4937,10 @@ s32 dScMgSmartball_c::Render() {
             col++;
         }
 
-        /* Loop G: rows with per-row multiplier */
+        /* Award rows. */
         limG = col * 0x14;
         for (j = 0; j < 3; j++) {
-            /* Stepped base, element 0: &mAwardTally[j] moves bytes. */
+            /* Leftover: stepped base, element 0. */
             slot[1] = ((dScMgSmartball_c *)(g + j * 4))->mAwardTally;
             if (*slot[1] > 0 && mResultTimer >= limG) {
                 int mult;
@@ -5359,7 +4976,7 @@ s32 dScMgSmartball_c::Render() {
             }
         }
 
-        /* Block H */
+        /* Bingos. */
         if (mBingoTally > 0 && mResultTimer >= col * 0x14) {
             Mg_RenderSpriteBoth(data_ov006_02138ae0[5], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0x2710, 0, 0, 1, 0);
@@ -5372,7 +4989,7 @@ s32 dScMgSmartball_c::Render() {
             col++;
         }
 
-        /* Block I */
+        /* Balls lost. */
         if (mOutTally > 0 && mResultTimer >= col * 0x14) {
             Mg_RenderSpriteBoth(sSmartballBallSprites[0], 0x30, xpos, -1, -1);
             Mg_DrawNumber(0x80, xpos, 0x7d0, 0, 0, 1, 0);
@@ -5385,7 +5002,7 @@ s32 dScMgSmartball_c::Render() {
             col++;
         }
 
-        /* Block J: timer */
+        /* Timer row. */
         if (mResultTimer >= col * 0x14) {
             if ((param1 & 0xff) == 0)
                 Mg_RenderSpriteBoth(sSmartballTimerSprite[0], 0x40, xpos, -1, -1);
@@ -5397,7 +5014,7 @@ s32 dScMgSmartball_c::Render() {
                 mResultTimer = 0x118;
         }
 
-        /* Block K */
+        /* Continue prompt. */
         if (mPhase == 1 && mResultTimer >= 0x12c) {
             if (col >= 7)
                 Mg_DrawBlinkSprite(g, 0x80, 0xa8);
@@ -5408,15 +5025,15 @@ s32 dScMgSmartball_c::Render() {
         }
     }
 
-    /* merge */
+    /* Sparks, except while draining on the main screen. */
     if ((param1 & 0xff) != 0 || mDraining == 0)
         ((dScMgSmartball_c *)(g))->RenderSparks();
 
-    /* Section 2 */
+    /* Score counters at the top of both screens. */
     Mg_DrawTopRightCounter(Mg_GetSubmittedScore(), 6);
     Mg_DrawTopLeftCounter(Mg_GetTopRecord());
 
-    /* Loop 2: item list (sb reused as index) */
+    /* Score popups. */
     {
         int sb;
         for (sb = 0; sb < 5; sb++) {
@@ -5432,8 +5049,7 @@ s32 dScMgSmartball_c::Render() {
                     int *px = LP(((dScMgSmartball_c *)(g + sb * 8))->mPopupPos);
                     Mg_DrawNumber((*px >> 12) - 0x10, *py >> 12, cnt, -1, 0, 0, 0);
                     nd = 0;
-                    /* mPopupScore[sb] again, through an int address: the
-                       member spellings, and re-reading *pcnt, all move bytes. */
+                    /* Leftover: the score is read again through an int address. */
                     u = (unsigned int)*(int *)((int)g + sb * 4 + 0x478c);
                     if (u != 0) {
                         do {
@@ -5462,7 +5078,7 @@ s32 dScMgSmartball_c::Render() {
         }
     }
 
-    /* Loop 3: 16 slots */
+    /* Dust puffs. */
     {
         int slot;
         int two = 2, neg = -1, zero = 0;
@@ -5479,7 +5095,7 @@ s32 dScMgSmartball_c::Render() {
         }
     }
 
-    /* Block M */
+    /* Gate lamp, left. */
     {
         int v = mDrainTimer;
         int flag = 0;
@@ -5496,7 +5112,7 @@ s32 dScMgSmartball_c::Render() {
             Mg_RenderSpriteBoth(sSmartballSideSpritesAlt[flag], 0x18, -0x90, -1, 0);
     }
 
-    /* Block N */
+    /* Gate lamp, right. */
     {
         int v = mDrainTimer;
         int flag = 0;
@@ -5513,7 +5129,7 @@ s32 dScMgSmartball_c::Render() {
             Mg_RenderSpriteBoth(sSmartballSideSpritesAlt[flag], 0xe8, -0x90, -1, -1);
     }
 
-    /* Dispatch loops */
+    /* Draw every board object. */
     {
         int k;
         for (k = 0; k < mPropellerCount; k++)
@@ -5570,34 +5186,14 @@ s32 dScMgSmartball_c::Render() {
 
 #pragma pop
 
-/* Kept: measured 2026-11-06, Behavior is the only function this bracket
-   reaches, and its size changes with strength reduction on. */
+/* Leftover: Behavior needs strength reduction off. */
 #pragma push
 #pragma opt_strength_reduction off
-/* dScMgSmartball_c::Behavior -- vtable slot 6.
- *
- * Attributed by the ROM's vtable: one of the three slots where this class's table
- * differs from dScMgBase_c's. The old file's naming comment agreed, and
- * here it is right.
- *
- * State 0 runs the table: every live object's slot-0 virtual is called through its
- * own vptr, one array at a time (balls, mushrooms, holes, propellers, pipes,
- * piranhas, push switches, then the three singletons), then the physics, the score
- * and the ball-lost check. State 1 is the game-over hold, state 2 the hand-off out.
- * The opening `0xc4 == 0` block is dScMgBase_c's shared counter idiom -- the same
- * three fields Flower's and MCarlo's own Behaviors arm, which is why
- * include/dScMgBase_c.h names 0xc0/0xc3/0xc4.
- *
- * THE `(int)` CASTS ON THE SLOT ADDRESSES ARE LOAD-BEARING. They force the address
- * through a temporary so mwccarm re-materialises it instead of strength-reducing the
- * loop, and the pragma below is there for the same reason: neither is a spelling that
- * can be simplified without changing bytes. The `(long long)` each one used to widen
- * through first was measured free on 2026-11-06 and is gone.
- *
- * WAS A C99 FILE, so the declarations move inside `extern "C"`; in C++ they would
- * mangle and resolve to nothing. The `extern` on the four variables is load-bearing
- * -- without it a declaration inside `extern "C" {}` is a definition and collides
- * with the delinked gap object. */
+/* Slot 6: the scene's per-frame rules. Phase 0 updates every object, then the
+ * score, dust and ball collisions, and advances the serve index; phase 1
+ * slides in the result screen and waits for a touch; phase 2 stays there.
+ * Leftovers: the (int) casts on the slot addresses are required, and the
+ * declarations below must keep C linkage and their `extern` keyword. */
 s32 dScMgSmartball_c::Behavior() {
     char *c = (char *)this;
     int vec[3];
@@ -5773,20 +5369,14 @@ s32 dScMgSmartball_c::Behavior() {
 #include "nitro/gx/g2.h"
 #include "types.h"
 #include "dScMgSmartball_c.h"
-/* vtable slot 18 -- an override of
-   dScMgBase_c::StartRound(int). The signature must repeat the base
-   declaration exactly, or mwcc appends a slot instead of overriding. */
+/* Slot 18: starts a round and sets up both screen blends. */
 void dScMgSmartball_c::StartRound(int /* arg */) {
     SpawnObjects();
     G2x_SetBlendAlpha_((volatile unsigned short *)0x4000050, 0, 0x18, 4, 0xa);
     G2x_SetBlendAlpha_((volatile unsigned short *)0x4001050, 0, 0x18, 4, 0xa);
 }
 
-/* dScMgSmartball_c::InitSubScreenBg - slot 31, this class's own override.
-
-   Not a Kill: see the slot-31 block in include/dScMgBase_c.h. Same shape as
-   dScMgAmida_c's -- BG1CNT base bits 4 -- differing only in the language
-   table it indexes. */
+/* Slot 31: loads the option palette and tilemap for the sub screen. */
 int dScMgSmartball_c::InitSubScreenBg() {
     int f;
     *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 4;
@@ -5799,8 +5389,8 @@ int dScMgSmartball_c::InitSubScreenBg() {
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_OPTION_NSC_BIN, G2S_GetBG1ScrPtr());
 }
 
-/* NitroSDK's G2_SetOBJMode and G2_GetOBJColorParam, on OamAttr: the mode
- * sits in attr0|attr1 bits 10-11 and the colour param in attr2 bits 12-15. */
+/* G2_SetOBJMode/G2_GetOBJColorParam: mode in attr0-1 bits 10-11, colour in
+ * attr2 bits 12-15. */
 enum { GX_OAM_MODE_XLU = 1 };
 
 inline int G2_GetOBJColorParam(const OamAttr *oam) {
@@ -5812,32 +5402,11 @@ inline void G2_SetOBJMode(OamAttr *oam, int mode, int cParam) {
     oam->attr2 = (u16)((oam->attr2 & ~0xf000) | (cParam << 12));
 }
 
-/* dScMgSmartball_c::InitResources() -- vtable slot 0, the scene
- * setup for the Smartball (Bounce and Pounce) minigame. Clamps the saved
- * high score, brings up the two screens' BG layers, decompresses one of two
- * tile/palette sets depending on the mode byte at +8, zeroes the seven
- * per-object state arrays, builds the scene's one heap object, and finishes
- * by putting every listed OAM sprite into translucent mode, keeping its
- * colour param.
- *
- * Two shapes below are load-bearing, not style:
- *   - the saved score is narrowed with `(u8)(param & 0xFF)`, and BOTH halves
- *     of that are needed: the ROM masks the byte twice (`ands r0,r0,#0xff`
- *     for the `if`, then `and r0,r0,#0xff` before the store), and the cast
- *     alone or the mask alone lets mwccarm fold the pair into one, costing
- *     four bytes. This replaces the u64 cast the first draft used for the
- *     same effect: the plain narrowing conversion emits the same pair,
- *     so no launder is needed here at all.
- *   - the last Pakkun G2_SetOBJMode call reads its colour param from
- *     sSmartballPakkunSprites[2], NOT from [2]+1 that it then writes. The ROM
- *     does the same, so the original call there was fed the wrong pointer.
- *
- * The offsets still spelled raw off `c` all fall inside dScMgSmartball_c.h's
- * pad_4660, which that header records as real access it has not modelled
- * yet: the seven per-object slot arrays at 0x4688..0x4770,
- * their three singletons at 0x4684/0x4778..0x4780, and the high score at 0xbc.
- * Reading their widths is a separate pass; nothing here shadows a type.
- */
+/* Slot 0: scene setup. Clamps the mode byte into mLevel, brings up both
+ * screens' BG layers, loads the level's tile and palette sets, and spawns the
+ * table.
+ * Leftover: the mode byte needs both the mask and the (u8) cast, and the last
+ * Pakkun G2_SetOBJMode reads its colour param from [2] instead of [2]+1. */
 s32 dScMgSmartball_c::InitResources() {
     char *c = (char *)this;
     void *f;
@@ -5857,9 +5426,7 @@ s32 dScMgSmartball_c::InitResources() {
     DecompressLZ16(f, G2S_GetBG0CharPtr());
     Ov004_Deallocate(f);
     {
-        /* Kept volatile (measured 2026-11-07): the same stack round trip of
-           the fill value as PaintCell. A literal 0, u16 v = 0, a separate
-           v = 0 and a u16[1] all give 52 words, 8 bytes short. */
+        /* volatile: same stack round trip of the fill value as PaintCell. */
         volatile u16 v;
         MIi_CpuClear16((u16)(v = 0), G2S_GetBG0ScrPtr(), 0x1000);
     }
@@ -6020,32 +5587,10 @@ s32 dScMgSmartball_c::InitResources() {
     return 1;
 }
 
-/* Kept: measured 2026-11-06, AfterCleanupResources is the only function this
-   bracket reaches, and its size changes with strength reduction on. */
+/* Leftover: AfterCleanupResources needs strength reduction off. */
 #pragma push
 #pragma opt_strength_reduction off
-/* dScMgSmartball_c::AfterCleanupResources -- vtable slot 5.
- *
- * Attributed by the ROM's vtable: one of the three slots where this class's table
- * differs from dScMgBase_c's. The old file's naming comment agreed, and
- * here it is right.
- *
- * Tears the pinball table down object by object -- balls, mushrooms, holes, the
- * spring, propellers, pipes, piranhas, push switches, then the three singletons.
- * Each pointer slot is walked, the object's vptr rewound to its base's before the
- * free (which is a destructor fully inlined into two vtable stores, the same shape
- * include/dScMgBase_c.h describes for TouchIcon_c), and the slot nulled.
- *
- * THE PARAMETER IS u32, NOT int. The pre-migration spelling was `int mode` and it
- * emitted the same, because the only use is a compare against 2 -- but the virtual being
- * overridden is dScMgBase_c's `void AfterCleanupResources(u32)`, so that is the
- * signature. The chain at the end is a QUALIFIED call, which compiles to the direct
- * `bl` the ROM has; unqualified it would become a virtual dispatch through this
- * very slot and recurse.
- *
- * WAS A C99 FILE. Its three declarations are gone rather than moved: decl_common.h
- * already declares __cxa_vec_cleanup and NullDestructor_0203d47c with C linkage, and
- * the base chain is a real call now. The pragma is load-bearing, not tidying. */
+/* Slot 5: frees every board object, then chains to the base. */
 void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
     char *c = (char *)this;
 
@@ -6204,11 +5749,10 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess) {
 
 #pragma pop
 
-/* The scene factory and its empty particle-element constructor share this unit. */
+/* The scene factory and its empty particle-element constructor. */
 extern "C" void SmartballObj_ElemCtor(void);
 
-/* Inline, so the factory below holds it: dScMgBase_c's C2 and this class's
-   vtable are the compiler's, then the four arrays the destructor tears down. */
+/* Builds the four heap arrays the destructor tears down. */
 inline dScMgSmartball_c::dScMgSmartball_c() {
     __cxa_vec_ctor(mPopupPos, 5, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
     __cxa_vec_ctor(mDustPos, 0x10, 8, (ctor_t)func_0203d738, (dtor_t)NullDestructor_0203d47c);
@@ -6217,8 +5761,7 @@ inline dScMgSmartball_c::dScMgSmartball_c() {
                    (dtor_t)SmartballObj_ElemDtor);
 }
 
-/* Allocates and constructs the scene; returns null if allocation fails.
- * Historical alias: MgBingoBallSlotsShot_Spawn. */
+/* Allocates and constructs the scene; null if allocation fails. */
 extern "C" void *dScMgSmartball_c_classInit(void) {
     return new dScMgSmartball_c;
 }
