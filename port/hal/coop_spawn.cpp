@@ -1864,6 +1864,13 @@ void knob_forge(const char *name) {
 // Level lifecycle and the frame.
 // ---------------------------------------------------------------------------
 void new_level() {
+    // AREACOIN1 (REVIEW-H note 2): a move to another part of the same course keeps the cartridge's red coin count and the
+    // star its coins carry (InitResources only clears data_0209f30c on a course change); everything else starts again
+    static int s_lvl = -1, s_act = -1;
+    const bool keep_red = coop_world_course_move(s_lvl, s_act, g_lvl, g_act);
+    const int from_lvl = s_lvl;
+    s_lvl = g_lvl; s_act = g_act;
+    const int keep_star = g_red_star;
     EarlyRed keep = g_early;
     if (keep.on && !(keep.w.key.level == g_lvl && keep.w.key.act == g_act)) keep.on = false;
     std::memset(g_blk, 0, sizeof g_blk);
@@ -1877,8 +1884,13 @@ void new_level() {
     std::memset(g_in, 0, sizeof g_in);
     std::memset(g_job, 0, sizeof g_job);
     std::memset(g_rate, 0, sizeof g_rate);
-    for (int i = 0; i < 4; ++i) red_cell(i) = 0;     // the port's level clear misses the data_0209f30d half
+    if (!keep_red) for (int i = 0; i < 4; ++i) red_cell(i) = 0;     // the port's level clear misses the data_0209f30d half
     g_nred = 0; g_red_prev = 0; g_red_armed = false; g_red_snap_have = false; g_red_snap_sum = 0; g_red_star = 0;
+    if (keep_red) {
+        g_red_star = keep_star; g_red_prev = red_sum();
+        if (g_log) std::fprintf(stderr, "[coopspawn] red coin count kept: level %d -> %d is the same course, sum=%d star=%d wall=%lld\n",
+                                from_lvl, g_lvl, g_red_prev, g_red_star, wall_ms());
+    }
     g_frames = 0; g_armed = false; g_census_on = false; g_wm = 0; g_census_lines = 0;
     for (int i = 0; i < g_nkb; ++i) g_kb[i].done = false;
     for (int i = 0; i < g_nkr; ++i) g_kr[i].done = false;
@@ -2013,6 +2025,17 @@ void on_frame(unsigned now) {
         }
         red_rebase();
         g_red_armed = true;
+        // AREACOIN1: all eight in before this part's red coin star marker was here (taken in another part, or before a part
+        // move); the ROM's dead-coin path (daCoin_c::func_ov002_020b10a0) spawns it when a dead red coin starts up, this is
+        // the same call for a level whose red coins the room memory removed before they spawned
+        if (NumRedCoins() == 8 && !g_off.red) {
+            int nm = 0, out = 0;
+            for (char *m = _ZN8dActor_c15FindWithActorIDEjPS_(0xb4, nullptr); m; m = _ZN8dActor_c15FindWithActorIDEjPS_(0xb4, m))
+                if (*(unsigned char *)(m + 0x1d8) == 0) { ++nm; if (*(unsigned char *)(m + 0x1db) & 4) ++out; }
+            if (g_log && nm) std::fprintf(stderr, "[coopspawn] armed with all 8 red coins: %d red coin star marker(s), %d star(s) already out frame=%u wall=%lld\n",
+                                          nm, out, g_frames, wall_ms());
+            red_check_star(g_red_star);
+        }
         if (!g_sil_off) sil_arm();
         if (g_log) std::fprintf(stderr, "[coopspawn] armed frame=%u redsum=%d snap=%d wall=%lld\n", g_frames, red_sum(), g_red_snap_have ? g_red_snap_sum : -1, wall_ms());
     }
@@ -2172,6 +2195,27 @@ struct Reg {
 }  // namespace
 
 CoopSpawnStats coop_spawn_stats() { return g_st; }
+
+// AREACOIN1: the red coin count for a friend in another sublevel of the same course (coop_world.cpp kWorldRedCount).
+int coop_spawn_red_sum(int *star) {
+    if (star) *star = g_red_star & 7;
+    int s = (int)NumRedCoins(); if (s < 0) s = 0; if (s > 8) s = 8;
+    return s;
+}
+// Raise my count to a friend's (max, never down): his red coins were in a sublevel I was not in, so no copy of mine saw them
+// go. The ROM's red coin star check runs as for any other red coin credit (red_bump).
+bool coop_spawn_red_raise(int sum, int star, int seat) {
+    if (g_off.red || !g_red_armed) return false;
+    if (star >= 1 && star <= 7 && g_red_star == 0) g_red_star = star;
+    const int have = red_sum();
+    if (sum <= have) return false;
+    // AREACOIN1 (REVIEW-H note 1): the star these red coins carry, from the friend who saw them stand (a level part whose red
+    // coins the room memory removed before they spawned never shows me one; the level's other star markers look the same (0x1d8 == 0), so a
+    // marker alone cannot say which is the red coins' one)
+    if (g_log) std::fprintf(stderr, "[coopspawn] red coin count from seat %d in another part of the course: %d (star %d), mine %d\n", seat, sum, star, have);
+    red_bump(sum - have, star > 0 ? star : g_red_star, "course");
+    return true;
+}
 
 bool coop_spawn_announce(void *local_actor, int cls, unsigned param, const int pos[3], int area) {
     if (!coop_world_active() || !coop_group_established() || !g_have_key || g_my < 0) return false;

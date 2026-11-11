@@ -20,6 +20,7 @@
 #include "coop_boot.h"
 #include "coop_groups.h"
 #include "coop_wire.h"
+#include "coop_spawn.h"
 #include "comms_hub.h"
 #include "hub_presence.h"
 
@@ -37,10 +38,12 @@ extern signed char data_02092120;        // the area shown (-1 none)
 extern void *data_0209f394[];
 extern unsigned char data_0209f250;
 extern short data_0209f358[];
+extern short data_02092144[];           // AREACOIN1 trace: each player slot's health (<<8)
 extern signed char data_0209f2f8;
 extern int data_0209f220[];
 extern int data_0209f4f8[];
 signed char GetLevelPart(int idx);
+int SublevelToLevel(int i);              // AREACOIN1: the course a sublevel belongs to
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 void GiveCoins(int idx, int amount);
 void LoadLevelNoReturn(unsigned level, unsigned entrance, unsigned star, unsigned unk);
@@ -168,6 +171,12 @@ unsigned g_loose_frame = 0, g_loose_every = 45, g_loose_uid = 0; int g_loose_lef
 unsigned g_place_frame = 0; int g_place_xyz[3] = {0, 0, 0}; bool g_place_on = false;   // SM64DS_COOP_PLACE (run after093, lane SEESAW1)
 int g_place_level = -1;   // SM64DS_COOP_PLACE ...:L, only in level L (run after093, lane WHOMPBACK1)
 int g_trace_id = -1; unsigned g_trace_every = 5; int g_trace_off = -1;   // SM64DS_COOP_TRACE (run after093, lane SEESAW1)
+// AREACOIN1 proof knobs. SM64DS_COOP_SHOW_AREA=F:area[,F:area...]: at established frame F show that area the way a door does
+// (ChangeArea) and put my player in it. SM64DS_COOP_SLOTDUMP=F[,F...]: at F list every placed actor (slot, class, area, place,
+// shown or not) so two consoles' lists can be compared. Both inert unless set.
+struct ShowAreaKnob { unsigned frame; int area; bool done; };
+ShowAreaKnob g_showarea[4]; int g_nshowarea = 0;
+unsigned g_slotdump[4]; int g_nslotdump = 0;
 struct WarpKnob { unsigned frame; int level; int act; bool done; int entrance; };
 WarpKnob g_warp[12]; int g_nwarp = 0;   // DIAMOND2: 12, so a proof row can leave and re-enter a level six times
 struct ForgeKnob { unsigned frame; char name[16]; bool done; };
@@ -246,6 +255,20 @@ void read_env() {
         int lv = -1;
         if (std::sscanf(pl, "%u:%i,%i,%i:%i", &f, &x, &y, &z, &lv) >= 4) { g_place_frame = f; g_place_xyz[0] = x; g_place_xyz[1] = y; g_place_xyz[2] = z; g_place_on = true; g_place_level = lv; }
     }
+    if (const char *sa = std::getenv("SM64DS_COOP_SHOW_AREA")) {   // AREACOIN1
+        const char *q = sa; unsigned f = 0; int ar = 0, used = 0;
+        while (g_nshowarea < 4 && std::sscanf(q, "%u:%i%n", &f, &ar, &used) == 2 && used > 0) {
+            g_showarea[g_nshowarea++] = {f, ar, false};
+            q += used; if (*q != ',') break; ++q;
+        }
+    }
+    if (const char *sd = std::getenv("SM64DS_COOP_SLOTDUMP")) {    // AREACOIN1
+        const char *q = sd; unsigned f = 0; int used = 0;
+        while (g_nslotdump < 4 && std::sscanf(q, "%u%n", &f, &used) == 1 && used > 0) {
+            g_slotdump[g_nslotdump++] = f;
+            q += used; if (*q != ',') break; ++q;
+        }
+    }
     if (const char *tr = std::getenv("SM64DS_COOP_TRACE")) {
         // ID[:EVERY[:OFF]]: every EVERY established frames print the local player's place and air flag, and the pose of each live
         // actor of class ID (plus the s16 at OFF when given), with the hub clock, so two consoles' lines can be lined up.
@@ -278,6 +301,28 @@ int part_of_level(int level) {
 }
 
 int popcnt(unsigned v) { int n = 0; for (; v; v &= v - 1) ++n; return n; }
+
+// AREACOIN1. A course split into sublevels (Tiny-Huge Island's huge, tiny and cave; Lethal Lava Land and its volcano; Shifting
+// Sand Land and its pyramid; Jolly Roger Bay and its ship; Snowman's Land and its igloo; the slides of Cool, Cool Mountain and
+// Tall, Tall Mountain) keeps ONE state on the cartridge while the player moves between its parts: dScStage_c::InitResources
+// (src/_ZN10dScStage_c13InitResourcesEv.cpp:183-220) clears the death table, the coin count and the red coin count only when the
+// course changes, the castle is left, or a boss arena is left. Each part has its own death table part (GetLevelPart). A coop
+// group is one sublevel, so a friend's pickups in another part of my course were dropped here (for_me) and never remembered:
+// walking in later found his coins, red coins and items back (collectable twice), my coin count missed his coins, and the red
+// coin count split so the red coin star could need more than 8. The room now keeps the death bits it hears for every level it
+// is not in (room_bits below), starts each level visit with them, and friends in the same course and act share the coin count,
+// the loose coins and the red coin count. SM64DS_COOP_ROOMBITS=0 turns all of it off (the must-fail control).
+bool roombits_off() { static const bool off = [] { const char *e = std::getenv("SM64DS_COOP_ROOMBITS"); return e && *e == '0'; }(); return off; }
+int course_of(int level) { return (level >= 0 && level < 52) ? (int)(unsigned char)SublevelToLevel(level) : -1; }
+bool castle_course(int level) { const int c = course_of(level); return c < 0 || c == 0x1d || c == 0xff; }
+// dScStage_c::InitResources' "came from a boss arena" set (data_02092110 - 0x24 in 0x2A15's bits): leaving one clears.
+bool boss_arena(int level) { const unsigned b = (unsigned)(level - 0x24) & 0xff; return b <= 0xd && ((1u << b) & 0x2a15u); }
+// Two keys are parts of one course visit: same act, same course, not the castle.
+bool same_course(const CoopKey &a, const CoopKey &b) {
+    return !roombits_off() && a.valid() && b.valid() && a.act == b.act && !castle_course(a.level) && course_of(a.level) == course_of(b.level);
+}
+// A friend's key in ANOTHER sublevel of my course (my group already covers my own sublevel).
+bool course_mate(const CoopKey &k) { return k.level != g_key.level && same_course(k, g_key) && part_of_level(k.level) >= 0; }
 
 void stats_line();
 
@@ -819,6 +864,82 @@ void room_gone_load(const CoopKey &k) {   // a new level visit: its broken block
                                          " loaded, it never emptied) wall=%lld\n", k.level, k.act, g_gone_n, s, wall_ms());
         else std::fprintf(stderr, "[coop] block list: level %d act %d starts with %d broken block(s) from the room wall=%lld\n", k.level, k.act,
                           g_gone_n, wall_ms());
+    }
+}
+
+// AREACOIN1: the room's death bits for levels I am not in, per (level, act): a delta adds its slots, the owner's full bitmap
+// replaces the whole part (it is the group's state, a respawned cap enemy's bit cleared included). A level visit starts with
+// its entry (room_bits_apply, before the level spawns), so what a friend took there earlier never stands up again here. An
+// entry lasts while somebody in the room (me included) is in that course and act; once nobody has been for kRoomEmptyMs it is
+// forgotten, as the cartridge forgets a course it leaves.
+enum : int { kRoomBitsMax = 12 };
+struct RoomBits { CoopKey k; unsigned w[kCoopWords]; bool empty; unsigned since; };
+RoomBits g_rbits[kRoomBitsMax]; int g_rbits_n = 0;
+unsigned long long g_rbits_heard = 0, g_rbits_applied = 0;
+RoomBits *room_bits_slot(const CoopKey &k) {
+    for (int i = 0; i < g_rbits_n; ++i) if (g_rbits[i].k == k) return &g_rbits[i];
+    if (g_rbits_n >= kRoomBitsMax) return nullptr;
+    RoomBits &r = g_rbits[g_rbits_n++];
+    r.k = k; std::memset(r.w, 0, sizeof r.w); r.empty = false; r.since = 0;
+    return &r;
+}
+void room_bits_note(const CoopKey &k, int word, unsigned bits, bool whole) {
+    if (roombits_off() || !k.valid() || castle_course(k.level) || part_of_level(k.level) < 0 || word < 0 || word >= kCoopWords) return;
+    RoomBits *r = room_bits_slot(k);
+    if (!r) return;
+    const unsigned before = r->w[word];
+    r->w[word] = whole ? bits : (before | bits);
+    if (r->w[word] != before) {
+        ++g_rbits_heard;
+        if (g_log) std::fprintf(stderr, "[coop] room bits: level %d act %d word %d %08x -> %08x (%s, I am in level %d) wall=%lld\n", k.level, k.act, word,
+                                before, r->w[word], whole ? "full" : "delta", g_key.level, wall_ms());
+    }
+}
+// A level visit: the room's bits for it go into my part before anything spawns, and survivors are reconciled like a snapshot's.
+void room_bits_apply(const CoopKey &k, unsigned *t, unsigned *remote) {
+    if (roombits_off()) return;
+    for (int i = 0; i < g_rbits_n; ++i) {
+        if (!(g_rbits[i].k == k)) continue;
+        int n = 0;
+        for (int w = 0; w < kCoopWords; ++w) { n += popcnt(g_rbits[i].w[w] & ~t[w]); t[w] |= g_rbits[i].w[w]; remote[w] |= g_rbits[i].w[w]; }
+        ++g_rbits_applied;
+        std::fprintf(stderr, "[coop] room bits: level %d act %d starts with %d slot(s) friends took here while I was elsewhere wall=%lld\n",
+                     k.level, k.act, n, wall_ms());
+    }
+}
+// Somebody in the room (me included) is in that course and act.
+bool room_course_held(const CoopKey &k) {
+    if (same_course(g_key, k) || (g_key == k)) return true;
+    for (int s = 0; s < kCoopSeats; ++s) {
+        if (s == g_my) continue;
+        HubPresence p; unsigned age = 0;
+        if (!hub_presence_get(s, &p, &age) || !p.in_level() || age >= kPresenceMs) continue;
+        const CoopKey cur(p.level, p.act);
+        if (cur == k || same_course(cur, k)) return true;
+    }
+    return false;
+}
+// A friend in ANOTHER part of my course and act (from his fresh presence): my death bits go out for him even when my own
+// group has nobody else in it, so his room memory has them for his visit here.
+bool course_listener() {
+    if (roombits_off() || !g_key.valid() || castle_course(g_key.level)) return false;
+    for (int s = 0; s < kCoopSeats; ++s) {
+        if (s == g_my) continue;
+        HubPresence p; unsigned age = 0;
+        if (!hub_presence_get(s, &p, &age) || !p.in_level() || age >= kPresenceMs) continue;
+        const CoopKey cur(p.level, p.act);
+        if (cur.level != g_key.level && same_course(cur, g_key)) return true;
+    }
+    return false;
+}
+void room_bits_forget(unsigned now) {
+    for (int i = 0; i < g_rbits_n; ++i) {
+        RoomBits &r = g_rbits[i];
+        if (room_course_held(r.k)) { r.empty = false; continue; }
+        if (!r.empty) { r.empty = true; r.since = now; continue; }
+        if ((unsigned)(now - r.since) < 3000u) continue;
+        std::fprintf(stderr, "[coop] room bits: nobody in the room is in level %d act %d's course: forgot them wall=%lld\n", r.k.level, r.k.act, wall_ms());
+        g_rbits[i--] = g_rbits[--g_rbits_n];
     }
 }
 
@@ -1486,10 +1607,47 @@ bool coin_count_off() {
     return off;
 }
 int g_coin_group = 0;            // the highest count a member of my group told me for this (level, act)
+// AREACOIN1 (REVIEW-H note 3): the course count is a sum over its parts. g_part_rep[L] is the highest placed count a friend
+// told me for part L of my course (what was taken in L), g_part_applied[L] how much of part L is in my counter, and
+// g_applied_other the sum of g_part_applied over the parts I am not in. The count message carries the placed count of my
+// part only (my placed part less g_applied_other), so the group max() and the course sum never count a coin twice.
+enum : int { kCoursePartMax = 52 };
+int g_part_rep[kCoursePartMax], g_part_applied[kCoursePartMax], g_applied_other = 0;
+int g_red_sent_t = 0, g_red_sent_v = -1;   // AREACOIN1: my red coin count as last told to the course
 bool g_coin_star = false;        // a member's 100-coin star is out
 unsigned g_coin_sent_t = 0; int g_coin_sent_v = -1, g_coin_seen_v = -1;
 unsigned long long g_coin_sends = 0, g_coin_recvs = 0, g_coin_raises = 0;
+// AREACOIN1: a move to another part of the same course keeps the cartridge's coin count (InitResources only clears it when
+// the course changes), so it keeps what goes with that count here too: the loose totals (mine and the ones I credited from
+// each seat, under the same visit id so nobody credits mine twice), the group and course maxima and the owed balance. Only
+// the per-slot reads (a part's slots are its own) start again.
+bool g_coin_keep = false;
+void coin_reset();
+int my_local_part();
+void coin_reset_for(const CoopKey &nk) {
+    g_coin_keep = same_course(g_key, nk) && nk.level != g_key.level && !boss_arena(g_key.level) && g_loose_visit != 0;
+    if (!g_coin_keep) { coin_reset(); return; }
+    // the part I leave: all of it is in my counter now; the part I enter: what of it is in my counter becomes my local part
+    const int cur = g_key.level, nl = nk.level;
+    if (cur >= 0 && cur < kCoursePartMax) {
+        const int local = my_local_part();
+        g_part_applied[cur] = local;
+        if (local > g_part_rep[cur]) g_part_rep[cur] = local;
+    }
+    g_applied_other = 0;
+    for (int l = 0; l < kCoursePartMax; ++l) if (l != nl) g_applied_other += g_part_applied[l];
+    // the old group's max and owed balance were for that part; its late death bits go to the room memory, not to credits
+    g_coin_group = 0; g_coin_unpaid = 0;
+    g_coin_sent_t = 0; g_coin_sent_v = -1; g_coin_seen_v = -1; g_red_sent_t = 0; g_red_sent_v = -1;
+    g_coin_last = -1; g_own_pend = 0; g_placed_pend = 0;
+    std::memset(g_slot_val, 0, sizeof g_slot_val);
+    std::memset(g_slot_tmr, 0, sizeof g_slot_tmr);
+    if (g_log) std::fprintf(stderr, "[coop] coin count: level %d -> %d is the same course: count, loose totals (mine %u, in %u) kept, other parts %d in my count wall=%lld\n",
+                            g_key.level, nk.level, g_loose_mine, g_loose_in, g_applied_other, wall_ms());
+}
 void coin_reset() {
+    std::memset(g_part_rep, 0, sizeof g_part_rep); std::memset(g_part_applied, 0, sizeof g_part_applied); g_applied_other = 0;
+    g_red_sent_t = 0; g_red_sent_v = -1;
     g_coin_group = 0; g_coin_unpaid = 0; g_coin_star = false; g_coin_sent_t = 0; g_coin_sent_v = -1; g_coin_seen_v = -1;
     // COINS10: a new visit: my loose total starts again under a new id, and so does what I saw from the others
     g_coin_last = -1; g_own_pend = 0; g_placed_pend = 0; g_loose_mine = 0; g_loose_in = 0;
@@ -1506,6 +1664,11 @@ int my_coin_count() {
 // carries and the group's max() works on, so a raise never holds someone's loose coins.
 int my_placed_part() {
     const int p = my_coin_count() - (int)(g_loose_mine + g_loose_in);
+    return p < 0 ? 0 : p;
+}
+// AREACOIN1: the placed coins of the part I am in (other parts of the course left out)
+int my_local_part() {
+    const int p = my_placed_part() - g_applied_other;
     return p < 0 ? 0 : p;
 }
 // COINS10: split what my counter rose by since the last look into placed coins (their death bits went out this frame)
@@ -1541,7 +1704,7 @@ void send_coin_count(unsigned now) {
     send_loose();   // COINS10: first, so a receiver has my loose total before my placed part
     CoopCoinWire w; std::memset(&w, 0, sizeof w);
     w.key = wire_key(g_key);
-    int c = my_placed_part(); if (c > 0xff) c = 0xff;   // COINS10: the placed part (it was the whole counter)
+    int c = my_local_part(); if (c > 0xff) c = 0xff;   // COINS10: the placed part (it was the whole counter); AREACOIN1: of my part
     w.count = (uint16_t)c;
     w.flags = _ZN5Event6GetBitEj(0x1f) ? 1 : 0;
     if (send_kind(kHubTagCoopWorld, kWorldCoinCount, &w, (int)sizeof w)) { g_coin_sent_t = now; g_coin_sent_v = my_coin_count(); ++g_coin_sends; }
@@ -1576,13 +1739,29 @@ void coin_tick(unsigned now) {
         std::fprintf(stderr, "[coop] coin count: a friend's 100-coin star is out: event bit 0x1f set here wall=%lld\n", wall_ms());
     }
     // COINS10: the max() works on the placed part; the loose coins sit on top of it
-    const int placed = my_placed_part();
+    const int placed = my_local_part();   // AREACOIN1: my part only; the other parts are added below
     if (g_coin_group > placed && (int)data_0209f358[me] < 0xff) {
         int n = (int)data_0209f358[me] + (g_coin_group - placed);
         if (n > 0xff) n = 0xff;
         std::fprintf(stderr, "[coop] coin count: the group has %d, mine was %d: took %d (placed part %d, loose %u) wall=%lld\n", g_coin_group,
                      (int)data_0209f358[me], n, placed, g_loose_mine + g_loose_in, wall_ms());
-        g_coin_unpaid += n - (int)data_0209f358[me];   // COOPCOUNT2: owed to the death bits still on their way
+        const int owed = g_coin_group - placed;
+        const int raised = n - (int)data_0209f358[me];
+        g_coin_unpaid += raised < owed ? raised : owed;   // COOPCOUNT2: owed to the death bits still on their way
+        data_0209f358[me] = (short)n;
+        coin_wrote();
+        ++g_coin_raises;
+    }
+    // AREACOIN1: what friends took in the other parts of the course is added on top; those coins never come here as death
+    // bits (no copy of them stands in my part), so none of it is owed
+    for (int l = 0; l < kCoursePartMax; ++l) {
+        if (l == g_key.level || g_part_rep[l] <= g_part_applied[l] || (int)data_0209f358[me] >= 0xff) continue;
+        const int d = g_part_rep[l] - g_part_applied[l];
+        int n = (int)data_0209f358[me] + d;
+        if (n > 0xff) n = 0xff;
+        g_part_applied[l] += d; g_applied_other += d;
+        std::fprintf(stderr, "[coop] coin count: +%d taken in level %d of my course (that part %d, other parts %d), mine was %d: took %d wall=%lld\n",
+                     d, l, g_part_rep[l], g_applied_other, (int)data_0209f358[me], n, wall_ms());
         data_0209f358[me] = (short)n;
         coin_wrote();
         ++g_coin_raises;
@@ -1594,6 +1773,17 @@ void coin_tick(unsigned now) {
     }
     if (g_grp.others() > 0 && ((unsigned)(now - g_coin_sent_t) >= kFullMs || (c != g_coin_sent_v && (unsigned)(now - g_coin_sent_t) >= 250u)))
         send_coin_count(now);
+    else if (((unsigned)(now - g_coin_sent_t) >= kFullMs || (c != g_coin_sent_v && (unsigned)(now - g_coin_sent_t) >= 250u)) && course_listener())
+        send_coin_count(now);   // AREACOIN1: alone in my part, a friend in another part of the course still counts my coins
+    // AREACOIN1: my red coin count, for a friend in another part of the course
+    if (course_listener()) {
+        int star = 0; const int r = coop_spawn_red_sum(&star);
+        if ((unsigned)(now - (unsigned)g_red_sent_t) >= kFullMs || (r != g_red_sent_v && (unsigned)(now - (unsigned)g_red_sent_t) >= 250u)) {
+            CoopRedWire w; std::memset(&w, 0, sizeof w);
+            w.key = wire_key(g_key); w.sum = (uint8_t)r; w.star = (uint8_t)star;
+            if (send_kind(kHubTagCoopWorld, kWorldRedCount, &w, (int)sizeof w)) { g_red_sent_t = (int)now; g_red_sent_v = r; }
+        }
+    }
 }
 
 enum : int { kSecretCls = 329, kScLeaderUid = 0x108, kScRole = 0x10f, kScCount = 0x110, kScTimer = 0x113,
@@ -1946,7 +2136,13 @@ void on_world(int seat, const unsigned char *d, int len, void *) {
         CoopDeltaWire w; std::memcpy(&w, p, sizeof w);
         key_from_wire(w.key, &k);
         ++g_st.recv_delta;
-        if (!for_me(k)) { ++g_st.drop_group; return; }
+        if (!for_me(k)) {
+            for (int i = 0; i < (int)w.count; ++i) {   // AREACOIN1: kept for my visit there
+                uint16_t s; std::memcpy(&s, p + sizeof w + 2 * i, 2);
+                if (s < kCoopSlots) room_bits_note(k, s >> 5, 1u << (s & 31), false);
+            }
+            ++g_st.drop_group; return;
+        }
         g_heard[seat] = comms_hub_now_ms() | 1u;
         if (!g_leg_trust && !g_grp.is_member(seat)) { ++g_st.drop_trust; return; }   // members of this group only
         for (int i = 0; i < (int)w.count; ++i) {
@@ -1998,7 +2194,18 @@ void on_world(int seat, const unsigned char *d, int len, void *) {
         if (!coop_coin_validate(p, pl)) { ++g_st.drop_bad; return; }
         CoopCoinWire w; std::memcpy(&w, p, sizeof w);
         key_from_wire(w.key, &k);
-        if (!for_me(k)) { ++g_st.drop_group; return; }
+        if (!for_me(k)) {
+            // AREACOIN1: a friend in another part of my course: the cartridge's coin count is the course's
+            if (course_mate(k) && !coins_off() && !coin_count_off()) {
+                if (k.level >= 0 && k.level < kCoursePartMax && (int)w.count > g_part_rep[k.level]) {
+                    if (g_log) std::fprintf(stderr, "[coop] coin count from seat %d in level %d (same course): %d wall=%lld\n", seat, k.level, (int)w.count, wall_ms());
+                    g_part_rep[k.level] = (int)w.count;
+                }
+                if (w.flags & 1) g_coin_star = true;
+                return;
+            }
+            ++g_st.drop_group; return;
+        }
         g_heard[seat] = comms_hub_now_ms() | 1u;
         if (!g_leg_trust && !g_grp.is_member(seat)) { ++g_st.drop_trust; return; }
         ++g_coin_recvs;
@@ -2015,12 +2222,23 @@ void on_world(int seat, const unsigned char *d, int len, void *) {
         if (!coop_loose_validate(p, pl)) { ++g_st.drop_bad; return; }
         CoopLooseWire w; std::memcpy(&w, p, sizeof w);
         key_from_wire(w.key, &k);
-        if (!for_me(k)) { ++g_st.drop_group; return; }
+        if (!for_me(k)) {
+            if (course_mate(k) && !coins_off() && !coin_count_off()) { ++g_loose_recvs; apply_loose(seat, w); return; }   // AREACOIN1
+            ++g_st.drop_group; return;
+        }
         g_heard[seat] = comms_hub_now_ms() | 1u;
         if (!g_leg_trust && !g_grp.is_member(seat)) { ++g_st.drop_trust; return; }
         ++g_loose_recvs;
         if (coins_off() || coin_count_off()) return;
         apply_loose(seat, w);
+        return;
+    }
+    if (sub == kWorldRedCount) {    // AREACOIN1: a friend in another part of my course
+        if (!coop_red_validate(p, pl)) { ++g_st.drop_bad; return; }
+        CoopRedWire w; std::memcpy(&w, p, sizeof w);
+        key_from_wire(w.key, &k);
+        if (!course_mate(k)) return;    // my own group's red coins go by the death bits
+        coop_spawn_red_raise((int)w.sum, (int)w.star, seat);
         return;
     }
     if (sub == kWorldSecret) {      // COOPCOUNT1
@@ -2044,7 +2262,10 @@ void on_world(int seat, const unsigned char *d, int len, void *) {
         CoopFullWire w; std::memcpy(&w, p, sizeof w);
         key_from_wire(w.key, &k);
         ++g_st.recv_full;
-        if (!for_me(k)) { ++g_st.drop_group; return; }
+        if (!for_me(k)) {   // AREACOIN1: the owner's whole part, kept for my visit there
+            for (int i = 0; i < kCoopWords; ++i) room_bits_note(k, i, w.words[i], true);
+            ++g_st.drop_group; return;
+        }
         if (!g_leg_trust) { g_grp.update(comms_hub_now_ms()); if (!g_grp.owner_claimed_by(seat)) { ++g_st.drop_trust; return; } }   // the group owner only
         for (int i = 0; i < kCoopWords; ++i) merge_remote_word(i, w.words[i]);
         ack_out(w.words);
@@ -2154,7 +2375,7 @@ void join_group(const CoopKey &nk) {
     g_grp.leave();
     g_out_n = 0;
     g_sw_n = 0; g_mouth = nullptr; g_mouth_slot = -1; g_sw_census_at = 0; cap_reset();
-    coin_reset(); sec_reset();   // COOPCOUNT1
+    coin_reset_for(nk); sec_reset();   // COOPCOUNT1; AREACOIN1: kept within a course
     std::memset(g_remote, 0, sizeof g_remote);
     std::memset(g_sticky, 0, sizeof g_sticky);
     std::memset(g_star_seen, 0, sizeof g_star_seen);
@@ -2239,6 +2460,8 @@ void join_group(const CoopKey &nk) {
         ++g_st.first_in;
         std::fprintf(stderr, "[coop] joined level %d act %d: nobody here, first in\n", nk.level, nk.act);
     }
+    room_bits_apply(nk, tbl(g_part), g_remote);   // AREACOIN1: what friends took here while I was elsewhere
+    if (!roombits_off()) for (int i = 0; i < kCoopWords; ++i) if (g_remote[i]) { g_recon_dirty = true; break; }
     std::memcpy(g_prev, tbl(g_part), sizeof g_prev);
     g_grp.establish(comms_hub_now_ms(), hint);
     g_grp.update(comms_hub_now_ms());
@@ -2608,7 +2831,8 @@ void tick_est(unsigned now) {
         uint16_t slots[kCoopMaxDelta]; int idx[kCoopMaxDelta]; int n = 0;
         for (int i = 0; i < g_out_n && n < kCoopMaxDelta; ++i)
             if ((int)(now - g_out[i].next) >= 0) { slots[n] = g_out[i].slot; idx[n++] = i; }
-        if (n > 0 && g_grp.others() > 0) {
+        const bool listener = course_listener();   // AREACOIN1
+        if (n > 0 && (g_grp.others() > 0 || listener)) {
             CoopDeltaWire h; std::memset(&h, 0, sizeof h); h.key = wire_key(g_key); h.count = (uint8_t)n;
             std::memcpy(buf, &h, sizeof h);
             std::memcpy(buf + sizeof h, slots, (size_t)n * 2);
@@ -2627,7 +2851,7 @@ void tick_est(unsigned now) {
         // The owner's 1 Hz full bitmap carries the rest; a guest keeps telling until that bitmap shows the bit.
         const int limit = (g_grp.i_am_owner() || g_leg_retry) ? (int)kOwnerTries : (int)kGuestTries;
         for (int i = 0; i < g_out_n; ++i) if (g_out[i].sent < limit) g_out[k++] = g_out[i];
-        if (g_grp.others() == 0) k = 0;      // nobody to tell: the owner-less table is the whole truth
+        if (g_grp.others() == 0 && !listener) k = 0;      // nobody to tell: the owner-less table is the whole truth
         g_out_n = k;
     }
     if (g_sync) { coin_tick(now); watch_secrets(now); }   // COOPCOUNT1
@@ -2636,7 +2860,7 @@ void tick_est(unsigned now) {
     if ((unsigned)(now - g_hello_t) >= kHelloMs) send_hello(now);
     g_grp.update(now);
     if (g_grp.take_owner_announce()) { send_owner_change(); send_full(now); send_hello(now); }
-    if (g_grp.i_am_owner() && g_grp.others() > 0 && (unsigned)(now - g_full_t) >= kFullMs) send_full(now);
+    if (g_grp.i_am_owner() && (g_grp.others() > 0 || course_listener()) && (unsigned)(now - g_full_t) >= kFullMs) send_full(now);   // AREACOIN1: course mates too
     // 4. snapshots I owe
     for (int s = 0; s < CoopGroups::kSeats; ++s) {
         Job &j = g_job[s];
@@ -2681,11 +2905,31 @@ void tick_est(unsigned now) {
             if (data_02092120 != aa) { ChangeArea(aa); if (nre++ < 8) std::fprintf(stderr, "[coop-knob] area %d shown (frame %u)\n", aa, g_est_frames); }
         }
     }
+    for (int i = 0; knobs_on && i < g_nshowarea; ++i)    // AREACOIN1
+        if (!g_showarea[i].done && g_est_frames >= g_showarea[i].frame) {
+            g_showarea[i].done = true;
+            char *me = (char *)data_0209f394[data_0209f250 & 15];
+            if (me) *(signed char *)(me + 0xcc) = (signed char)g_showarea[i].area;
+            if (data_02092120 != g_showarea[i].area) ChangeArea(g_showarea[i].area);
+            std::fprintf(stderr, "[coop-knob] show area %d (frame %u)\n", g_showarea[i].area, g_est_frames);
+        }
+    for (int i = 0; i < g_nslotdump; ++i)                  // AREACOIN1
+        if (g_est_frames == g_slotdump[i])
+            for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+                const short slot = *(const short *)(a + 0xce);
+                if (slot < 0 || is_player_ptr(a)) continue;
+                const signed char ar = *(const signed char *)(a + 0xcc);
+                std::fprintf(stderr, "[coop-slotdump] est %u slot %d cls %u area %d pos %d,%d,%d going %d shown %d\n", g_est_frames, (int)slot,
+                             (unsigned)*(const unsigned short *)(a + 0x0c), (int)ar, *(const int *)(a + 0x5c) >> 12, *(const int *)(a + 0x60) >> 12,
+                             *(const int *)(a + 0x64) >> 12, (int)going(a), ar >= 0 && ar == data_02092120 ? 1 : 0);
+            }
     if (g_trace_id >= 0 && (g_est_frames % g_trace_every) == 0) {
         const char *me = (const char *)data_0209f394[data_0209f250 & 15];
         char line[1024]; int n = 0; line[0] = 0;
-        if (me) n += std::snprintf(line + n, sizeof line - n, "me (%d,%d,%d) air %d", *(const int *)(me + 0x5c) >> 12,
-                                   *(const int *)(me + 0x60) >> 12, *(const int *)(me + 0x64) >> 12, (int)*(const unsigned char *)(me + 0x6de));
+        if (me) n += std::snprintf(line + n, sizeof line - n, "me (%d,%d,%d) air %d area %d shown %d hp %d", *(const int *)(me + 0x5c) >> 12,
+                                   *(const int *)(me + 0x60) >> 12, *(const int *)(me + 0x64) >> 12, (int)*(const unsigned char *)(me + 0x6de),
+                                   (int)*(const signed char *)(me + 0xcc), (int)data_02092120,
+                                   (int)(data_02092144[data_0209f250 & 3] >> 8));   // AREACOIN1: my area, the area shown, my health
         // run after093, lane WHOMPBACK1: every player body slot's place as this console holds it (friends' bodies included)
         for (int q = 0; q < 4 && n < 600; ++q)
             if (const char *pb = (const char *)data_0209f394[q])
@@ -2717,6 +2961,11 @@ void tick_est(unsigned now) {
 }
 
 }  // namespace
+
+bool coop_world_course_move(int from_level, int from_act, int to_level, int to_act) {
+    const CoopKey a(from_level, from_act), b(to_level, to_act);
+    return from_level != to_level && same_course(a, b) && !boss_arena(from_level);
+}
 
 // ---------------------------------------------------------------------------
 // Public.
@@ -2917,7 +3166,7 @@ extern "C" void port_coop_world_frame(void) {
     if (ticking) ++g_kframe;
     const unsigned now = comms_hub_now_ms();
     refresh_presence(now);
-    if (g_frame % 30 == 0) room_forget(now);   // Tango's rule: a level nobody has loaded loses its broken blocks
+    if (g_frame % 30 == 0) { room_forget(now); room_bits_forget(now); }   // AREACOIN1: room bits too   // Tango's rule: a level nobody has loaded loses its broken blocks
     for (int i = 0; i < g_n_frame; ++i) g_cb_frame[i](now);
     {   // members that left my group since last frame
         g_grp.update(now);
@@ -2948,7 +3197,9 @@ extern "C" void port_coop_world_frame(void) {
         if (!g_warp[i].done && g_kframe >= g_warp[i].frame) {
             g_warp[i].done = true;
             std::fprintf(stderr, "[coop-knob] warp to level %d act %d\n", g_warp[i].level, g_warp[i].act);
-            LoadLevelNoReturn((unsigned)g_warp[i].level, (unsigned)g_warp[i].entrance, (unsigned)g_warp[i].act, 1);
+            // reason 0, a plain entry like the volcano hole and the coop teleport; reason 1 ("back from a course exit") made
+            // the cartridge run its course clear tally (dScStage_c::LC_Update) on a move inside one course (AREACOIN1)
+            LoadLevelNoReturn((unsigned)g_warp[i].level, (unsigned)g_warp[i].entrance, (unsigned)g_warp[i].act, 0);
             // COOPRACE1 proof knob SM64DS_COOP_WARP_ACT=1: the warp's act really is the act (Koopa the Quick is in Bob-omb
             // Battlefield's act 2 only). Without it the change keeps the act it always had here (1): the star it stages
             // is not the one the latch takes, measured "[adventure table branch, star=1]" for a warp to act 2.

@@ -48,6 +48,9 @@ bool coop_group_key(int *level, int *act);     // my current group's sublevel an
 bool coop_group_established();                 // I hold the group's state (snapshot taken, level live)
 int  coop_group_owner();                       // owner seat, -1 none
 bool coop_group_i_am_owner();
+// AREACOIN1: a move from one part of a course to another part of the same course and act, where the cartridge keeps its
+// death table, coin count and red coin count (dScStage_c::InitResources only clears them on a course change)
+bool coop_world_course_move(int from_level, int from_act, int to_level, int to_act);
 unsigned coop_group_member_mask();             // other consoles in my group, bit = seat
 // Callback registries (up to 8 each; false when full, null or already added).
 bool coop_on_frame(void (*fn)(unsigned now_ms));                    // each frame, after the presence refresh

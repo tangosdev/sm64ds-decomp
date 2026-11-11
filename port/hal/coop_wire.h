@@ -63,6 +63,7 @@ enum : uint8_t {
     kWorldSecret     = 0x05,  // COOPCOUNT1: I took this secret coin (class 329); an old build drops it as unknown
     // 0x06 is spoken for (the shared race, not on this branch)
     kWorldCoinLoose  = 0x07,  // COINS10: my running total of coins with no slot this visit; an old build drops it as unknown
+    kWorldRedCount   = 0x08,  // AREACOIN1: my red coin count, for friends in another part of the same course; an old build drops it as unknown
     kWorldLast       = 0x7f,
 };
 
@@ -158,6 +159,15 @@ struct CoopSecretWire {
     uint8_t  count;          // 1..5
     uint8_t  reserved;       // 0
 };
+// RED_COUNT payload, 8 B (AREACOIN1). The sender's red coin count (NumRedCoins, 0..8) and the star the course's red coins
+// carry (0 = not seen). Read only by friends in ANOTHER sublevel of the same course and act: the cartridge keeps one red coin count
+// for the whole course, while the coop group (and its live red coin path) is one sublevel.
+struct CoopRedWire {
+    CoopKeyWire key;
+    uint8_t  sum;            // 0..8
+    uint8_t  star;           // 0..7
+    uint16_t reserved;       // 0
+};
 #pragma pack(pop)
 
 static_assert(sizeof(CoopKeyWire) == 4, "key is 4 bytes");
@@ -252,6 +262,11 @@ inline bool coop_loose_validate(const void *p, int len) {
     if (!p || len != (int)sizeof(CoopLooseWire)) return false;
     CoopLooseWire w; std::memcpy(&w, p, sizeof w);
     return coop_key_ok(w.key) && w.visit != 0 && w.flags == 0 && w.reserved == 0;
+}
+inline bool coop_red_validate(const void *p, int len) {   // AREACOIN1
+    if (!p || len != 8) return false;
+    CoopRedWire w; std::memcpy(&w, p, sizeof w);
+    return coop_key_ok(w.key) && w.sum <= 8 && w.star <= 7 && w.reserved == 0;
 }
 inline bool coop_secret_validate(const void *p, int len) {
     if (!p || len != (int)sizeof(CoopSecretWire)) return false;
