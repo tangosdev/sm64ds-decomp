@@ -3447,9 +3447,9 @@ void dScMgBase_c::InitMainScreenBg() {
     using s20b27f4::LoadCompressedFileAt;
     using s20b27f4::gMainScreenLayers;
     int f;
-    *(volatile unsigned short *)0x400000a = *(volatile unsigned short *)0x400000a & ~3;
-    *(volatile unsigned short *)0x400000a = (*(volatile unsigned short *)0x400000a & 0x43) | 0x1000;
-    *(volatile unsigned short *)0x400000a = *(volatile unsigned short *)0x400000a & ~0x40;
+    REG_BG1CNT = REG_BG1CNT & ~3;
+    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1000;
+    REG_BG1CNT = REG_BG1CNT & ~0x40;
     SetBg1Offset(0, 0);
     gMainScreenLayers &= ~DISPLAY_LAYER_BG1;
     f = GetGameLanguage();
@@ -3487,9 +3487,9 @@ int dScMgBase_c::InitSubScreenBg() {
     using s20b2880::LoadCompressedFileAt;
     using s20b2880::gSubScreenLayers;
     int f;
-    *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 0x10;
-    *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~0x40;
-    *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x10;
+    REG_DB_BG1CNT = REG_DB_BG1CNT & ~0x40;
+    REG_DB_BG1CNT = REG_DB_BG1CNT & ~3;
     SetSubBg1Offset(0, 0);
     gSubScreenLayers &= ~2;
     f = GetGameLanguage();

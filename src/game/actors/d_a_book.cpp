@@ -457,7 +457,7 @@ void daBook_c::StateFly() {
     if (mUsesAnmModel != 0) {
         mAnmModel.Advance();
     }
-    VEC_Add((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
+    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
     if (CheckAttacks() != 0)
         return;
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);

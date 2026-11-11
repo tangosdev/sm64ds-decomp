@@ -858,14 +858,6 @@
       "evidence": "origin/main:src/unnamed/arm9/0200/func_0200af20.c 2x _ZN8dClipper13Func_020156DCEitii; head 2x _ZN8dClipper13Func_020156DCEisii; tools/source_style.py --base origin/main"
     },
     {
-      "path": "src/engine/sound/SoundEngine.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN2E113func_0204f5a0Ei",
-      "count": 2,
-      "reason": "E1::func_0204f5a0 is called through an int-arity cast because the receiver at that site is a raw byte. The local extern keeps the pool word pointed at the method.",
-      "evidence": "arm9/SoundEngine 138/138 MATCH. The direct E1 method call is used at the typed site; this cast is the untyped one."
-    },
-    {
       "path": "src/minigames/d_s_mg_m_carlo2.cpp",
       "rule": "raw-offset",
       "match": "(Dealer*)(raw+0x4f38",

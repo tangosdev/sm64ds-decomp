@@ -15,9 +15,16 @@ extern "C" void __cxa_vec_cleanup(void *base, unsigned int count, unsigned int s
 extern "C" void CupFx_ElemDtor(void);
 extern "C" void NullDestructor_0203d47c(void);
 
-/* One effect slot. CupFx_Init fills it, CupFx_Update steps
- * it, CupFx_Draw draws x>>12, y>>12. */
+struct OamAttr;
+
+/* One effect slot. Init fills it, Update steps it, Draw draws
+ * x>>12, y>>12. */
 struct CupFx {
+    void Move(int dx, int dy);
+    void Draw();
+    void Update();
+    void Init(int kind, int x, int y, s8 cup);
+
     s32 x;        /* +0x00 */
     s32 y;        /* +0x04 */
     s32 vx;       /* +0x08 -- added to x each tick */
@@ -27,7 +34,7 @@ struct CupFx {
     u8 row;       /* +0x13 -- 1 for kind 2; while set, y drops by 6 */
     u8 delay;     /* +0x14 -- DecIfAbove0_Byte, reloaded to 3 */
     u8 active;    /* +0x15 */
-    u8 kind;      /* +0x16 -- 1 lets CupFx_Move follow the cup */
+    u8 kind;      /* +0x16 -- 1 lets Move follow the cup */
     s8 cup;       /* +0x17 */
 };
 
@@ -64,6 +71,11 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     virtual void OnNewRecord();       /* slot 20 */
     s32 Behavior();
     s32 Render();
+
+    void PlayAnimSound(int anim, int frame, int cup);
+    void DrawOamList(OamAttr *list, int x, int y, int scale, int content);
+    void UpdateAnim(int cup);
+    void SetupSwap();
 
     /* StateSelect locks the touched point into mModel.mTouchX/mTouchY and
        sets mModel.mTouchLocked, so the face keeps looking at the cup. */

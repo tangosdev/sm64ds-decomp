@@ -321,39 +321,39 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@455",
+      "from": "@463",
       "to": "@511",
-      "evidence": "compiler temp; mwcc numbers this registration node @480 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @477 to @455 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@456",
-      "to": "@510",
-      "evidence": "compiler temp; mwcc numbers this registration node @481 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @478 to @456 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@458",
-      "to": "@512",
-      "evidence": "compiler temp; mwcc numbers this registration node @483 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @480 to @458 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@457",
-      "to": "@508",
-      "evidence": "compiler temp; mwcc numbers this registration node @482 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @479 to @457 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@460",
-      "to": "data_ov091_02134e54",
-      "evidence": "StateWait pointer-to-member constant (the initializer's first table copy source); ov100 already defines a global @485 Re-keyed from @482 to @460 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@462",
-      "to": "data_ov091_02134e44",
-      "evidence": "StateForward pointer-to-member constant (second table copy source); ov100 already defines a global @487 Re-keyed from @484 to @462 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; mwcc numbers this registration node @480 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @477 to @455 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @455 to @463 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
       "from": "@464",
+      "to": "@510",
+      "evidence": "compiler temp; mwcc numbers this registration node @481 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @478 to @456 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @456 to @464 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+    },
+    {
+      "from": "@466",
+      "to": "@512",
+      "evidence": "compiler temp; mwcc numbers this registration node @483 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @480 to @458 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @458 to @466 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+    },
+    {
+      "from": "@465",
+      "to": "@508",
+      "evidence": "compiler temp; mwcc numbers this registration node @482 per TU, and other overlays already define global @NNN symbols in this range, so the ROM name is restored by rename (re-keyed by the initializer's relocation to the node, after the state table's pointer-to-member constants took the next numbers) Re-keyed from @479 to @457 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @457 to @465 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+    },
+    {
+      "from": "@468",
+      "to": "data_ov091_02134e54",
+      "evidence": "StateWait pointer-to-member constant (the initializer's first table copy source); ov100 already defines a global @485 Re-keyed from @482 to @460 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @460 to @468 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+    },
+    {
+      "from": "@470",
+      "to": "data_ov091_02134e44",
+      "evidence": "StateForward pointer-to-member constant (second table copy source); ov100 already defines a global @487 Re-keyed from @484 to @462 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @462 to @470 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
+    },
+    {
+      "from": "@472",
       "to": "data_ov091_02134e4c",
-      "evidence": "StateReturn pointer-to-member constant (third table copy source); ov100 already defines a global @489 Re-keyed from @486 to @464 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "StateReturn pointer-to-member constant (third table copy source); ov100 already defines a global @489 Re-keyed from @486 to @464 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @464 to @472 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     }
   ],
   "relocations": [

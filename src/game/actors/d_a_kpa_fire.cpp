@@ -327,7 +327,7 @@ void daKpaFire_c::func_ov060_0211747c() {
         this->mSoundHandle = 0;
     this->mSoundID = SOUND_ID_MOUTH;
     this->mSoundHandle =
-        Sound::PlayLong(this->mSoundHandle, 3, this->mSoundID, *(Vector3 *)&this->mCamSpacePosX, 0);
+        Sound::PlayLong(this->mSoundHandle, 3, this->mSoundID, this->mCamSpacePos, 0);
 
     side = t[0];
     fwd = t[2] + 0x14;
@@ -440,25 +440,13 @@ void daKpaFire_c::func_ov060_021171e8() {
 
 /* Sideways wobble, called by the variant 2 handler and the variant 6/7
  * handler. Forms a phase angle ((mTickCount + mPhaseOffset) & 0x3f) << 10 --
- * 64 steps of a full turn (0x10000) -- and nudges x and z by products of two
- * sine-table entries each, `<< 2` then `/ 0x1000`:
- *   x += table[2h]     * table[2p]
- *   z += table[2h + 1] * table[2p + 1]
- * with h = mPrevAngleY >> 4 (the heading, read unsigned) and p = phase >> 4. */
+ * 64 steps of a full turn (0x10000) -- and nudges x by sin(heading) *
+ * sin(phase) and z by cos(heading) * cos(phase), each `<< 2` then `/ 0x1000`
+ * (the heading is mPrevAngleY). */
 void daKpaFire_c::func_ov060_0211712c() {
-    short phase = (short)(((this->mTickCount + this->mPhaseOffset) & 0x3f) << 10);
-    int p = (unsigned short)phase >> 4;
-    int *px = &this->mPosX;
-    int *pz;
-    *px = *px + ((FX_SinCosTable_[((int)*(unsigned short *)&this->mPrevAngleY >> 4) * 2] *
-                  FX_SinCosTable_[p * 2])
-                 << 2) /
-                    0x1000;
-    pz = &this->mPosZ;
-    *pz = *pz + ((FX_SinCosTable_[((int)*(unsigned short *)&this->mPrevAngleY >> 4) * 2 + 1] *
-                  FX_SinCosTable_[p * 2 + 1])
-                 << 2) /
-                    0x1000;
+    s16 phase = ((mTickCount + mPhaseOffset) & 0x3f) << 10;
+    mPosX += ((FX_SinIdx((u16)mPrevAngleY >> 4) * FX_SinIdx((u16)phase >> 4)) << 2) / 0x1000;
+    mPosZ += ((FX_CosIdx((u16)mPrevAngleY >> 4) * FX_CosIdx((u16)phase >> 4)) << 2) / 0x1000;
 }
 
 /* Variant 6 and 7 Behavior: a flame that falls, lands, burns down and bursts.
@@ -533,55 +521,39 @@ void daKpaFire_c::func_ov060_02116f74() {
  * Each frame: mFireScale grows by 0x255 (about 0.146) while below 5.0 (0x5000),
  * and the pitch word (mPrevAngleX, signed) loses 0x200 while above 0x800.
  * The three velocity words come from the speed (mHorzSpeed), the pitch and the
- * heading through the sine table: mSpeedX = x, mVertSpeed = y (-speed times
- * the pitch's table[2p]), mSpeedZ = z; the x and z values are divided by 896
- * (0x380, not decoded). Position moves by those velocities. Shows
+ * heading: mVertSpeed is -speed * sin(pitch), and mSpeedX and mSpeedZ are
+ * speed * sin(pitch) times cos and -sin of the heading, divided by 896 (0x380,
+ * not decoded). Position moves by those velocities. Shows
  * PARTICLE_SCALED_9A scaled by mFireScale (y offset 12 * scale). When the mesh
  * collision reports ground it spawns a variant 6 fire with a 16 in 17 chance
  * (random >> 16, % 17 != 0) and destroys this one; after 60 frames
  * (mFrameCount >= 0x3c) it destroys itself as well. */
 void daKpaFire_c::func_ov060_02116d78() {
-    if (this->mFireScale < 0x5000)
-        this->mFireScale += 0x255;
-    if (this->mPrevAngleX > 0x800)
-        this->mPrevAngleX -= 0x200;
+    if (mFireScale < 0x5000)
+        mFireScale += 0x255;
+    if (mPrevAngleX > 0x800)
+        mPrevAngleX -= 0x200;
 
-    {
-        int i0 = (*(unsigned short *)&this->mPrevAngleX) >> 4;
-        int i1 = (*(unsigned short *)&this->mPrevAngleY) >> 4;
-        i0 = i0 * 2;
-        i1 = i1 * 2 + 1;
-        int s0 = FX_SinCosTable_[i0];
-        int speed = this->mHorzSpeed;
-        int s1 = FX_SinCosTable_[i1];
-        this->mSpeedX = (s1 * (speed * s0)) / 896;
-    }
-    {
-        int speed = this->mHorzSpeed;
-        int s0 = FX_SinCosTable_[((*(unsigned short *)&this->mPrevAngleX) >> 4) * 2];
-        this->mVertSpeed = (-speed) * s0;
-    }
-    {
-        int s0 = FX_SinCosTable_[((*(unsigned short *)&this->mPrevAngleX) >> 4) * 2];
-        int s1 = FX_SinCosTable_[((*(unsigned short *)&this->mPrevAngleY) >> 4) * 2];
-        int speed = this->mHorzSpeed;
-        this->mSpeedZ = (s1 * ((-speed) * s0)) / 896;
-    }
-    this->mPosX += this->mSpeedX;
-    this->mPosY += this->mVertSpeed;
-    this->mPosZ += this->mSpeedZ;
+    mSpeedX =
+        FX_CosIdx((u16)mPrevAngleY >> 4) * (mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 896;
+    mVertSpeed = -mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4);
+    mSpeedZ =
+        FX_SinIdx((u16)mPrevAngleY >> 4) * (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 896;
+    mPosX += mSpeedX;
+    mPosY += mVertSpeed;
+    mPosZ += mSpeedZ;
 
-    func_ov060_02116518(PARTICLE_SCALED_9A, 1, this->mFireScale * 0xc);
-    if (this->mWithMeshClsn.IsOnGround() != 0) {
+    func_ov060_02116518(PARTICLE_SCALED_9A, 1, mFireScale * 0xc);
+    if (mWithMeshClsn.IsOnGround() != 0) {
         int rnd = RandomIntInternal(&data_0209e650.value);
         unsigned int roll = (unsigned int)rnd >> 16;
         if (roll % 17 != 0)
-            dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(6, 0), this->mPos, 0, this->mAreaId, -1);
-        this->MarkForDestruction();
+            dActor_c::Spawn(ACTOR_KOOPAFIRE, FIRE_PARAM(6, 0), mPos, 0, mAreaId, -1);
+        MarkForDestruction();
     }
-    if (this->mFrameCount < 0x3c)
+    if (mFrameCount < 0x3c)
         return;
-    this->MarkForDestruction();
+    MarkForDestruction();
 }
 
 /* Variant 2 init: random heading (16 random bits) and phase; horizontal speed
