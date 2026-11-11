@@ -515,9 +515,10 @@ bool count_boo(const char *a) {
     const unsigned char v = *(const unsigned char *)(a + kBooVar);
     return v == 2 || (v != 0 && *(const unsigned *)(a + kBooBig) != 0);
 }
-// A Boo in its hit states (3 fade, 4, 5 talk: d_a_trs.cpp func_ov063_021162c8 and on) is being beaten on this console
-// by the cartridge's own code, which counts it.
-bool boo_beaten_here(const char *a) { const unsigned st = *(const unsigned char *)(a + kBooState); return st >= 3 && st <= 5; }
+// A Boo in its defeat states (3 spin and fade, 5 talk: d_a_trs.cpp func_ov063_021162c8 and on) is being beaten on this console
+// by the cartridge's own code, which counts it. COOPBOO5: state 4 is not one of them: it is the knock-back a Yoshi's hit gives,
+// and the Boo chases again after it.
+bool boo_beaten_here(const char *a) { const unsigned st = *(const unsigned char *)(a + kBooState); return st == 3 || st == 5; }
 char *lobby_big_boo() {
     for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b)) {   // func_ov063_02119c58's pick
         if (*(const unsigned short *)(b + 0x0c) != 210) continue;
