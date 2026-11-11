@@ -631,7 +631,8 @@ void moat_frame() {
                 std::fprintf(stderr, "[coopmoat] f=%u moat y %d%s, water height word %d\n", g_frame, y >> 12,
                              y == kMoatDrainedY ? " (drained)" : "", data_0209f32c >> 12);
         } else if (cls == 339 && (*(const unsigned *)(a + 0x08) & 0xff) == 0xff) {
-            if (*(const unsigned char *)(a + 0x0f) == 0) {
+            // fBase_c: +0x0f shouldBeKilled (MarkForDestruction), +0x0e aliveState 2 once the frame moved it to the cleanup list
+            if (*(const unsigned char *)(a + 0x0f) == 0 && *(const unsigned char *)(a + 0x0e) != 2) {
                 _ZN7fBase_c18MarkForDestructionEv(a);
                 std::fprintf(stderr, "[coopmoat] f=%u the moat grate removed (it is never created on a drained moat)\n", g_frame);
             }
