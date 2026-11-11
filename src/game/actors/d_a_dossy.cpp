@@ -360,10 +360,8 @@ int daDossy_c::Behavior()
 
     (this->*data_ov065_0211d7fc[mState])();
 
-    mDistToCenter = Vec3_HorzDist(reinterpret_cast<const Vector3 *>(&mPosX),
-                                  reinterpret_cast<const Vector3 *>(&mSpawnPosX));
-    mAngToCenter = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
-                                  reinterpret_cast<const Vector3 *>(&mSpawnPosX));
+    mDistToCenter = Vec3_HorzDist(&mPos, reinterpret_cast<const Vector3 *>(&mSpawnPosX));
+    mAngToCenter = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mSpawnPosX));
 
     d = (short)AngleDiff(mAngToCenter, mAngleY);
 
@@ -453,7 +451,7 @@ extern "C" void func_ov065_02118c4c(char *c)
 {
     daDossyCap_c *cap = (daDossyCap_c *)c;
     Vector3 pos;
-    Vec3_Asr(reinterpret_cast<Vector3 *>(&pos), reinterpret_cast<Vector3 *>(&cap->mPosX), 3);
+    Vec3_Asr(reinterpret_cast<Vector3 *>(&pos), &cap->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, cap->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, cap->mAngleX);
@@ -641,8 +639,7 @@ void daDossy_c::func_ov065_021183c8()
                 }
             }
         }
-        if (Vec3_HorzDist(reinterpret_cast<const Vector3 *>(&mPosX),
-                          reinterpret_cast<const Vector3 *>(&mClsnPlayer->mPosX)) < 0x1f4000)
+        if (Vec3_HorzDist(&mPos, &mClsnPlayer->mPos) < 0x1f4000)
             mStateTimer = 0;
     } else {
         if (mStateTimer > 0x96) {

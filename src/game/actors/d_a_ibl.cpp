@@ -442,8 +442,8 @@ void daIbl_c::PathBehavior() {
                     mVertSpeed = (int)(-vy + ((u32)-vy >> 31)) >> 1;
                 mRollSoundHandle = 0;
             } else {
-                mRollSoundHandle = Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL,
-                                                   *(Vector3 *)&mCamSpacePosX, 0);
+                mRollSoundHandle =
+                    Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, mCamSpacePos, 0);
             }
             if (mHorzSpeed >= 0x23000) {
                 mHorzSpeed = 0x23000;
@@ -516,7 +516,7 @@ void daIbl_c::RollOffBehavior() {
                 mVertSpeed = mVertSpeed * -3 / 2;
         } else {
             mRollSoundHandle =
-                Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, *(Vector3 *)&mCamSpacePosX, 0);
+                Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, mCamSpacePos, 0);
         }
     }
 
@@ -590,7 +590,7 @@ void daIbl_c::FreeRollBehavior() {
             LandingDust(1);
         } else {
             mRollSoundHandle =
-                Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, *(Vector3 *)&mCamSpacePosX, 0);
+                Sound::PlayLong(mRollSoundHandle, 3, daIbl_SND_ROLL, mCamSpacePos, 0);
         }
     }
 

@@ -280,8 +280,7 @@ extern "C" void func_ov077_02124eb0(daTgz_c *self) {
     }
 
     if (self->mdCcAc_c.hitFlags & 0x10) {
-        self->mPrevAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&player->mPosX),
-                                           reinterpret_cast<const Vector3 *>(&self->mPosX));
+        self->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &self->mPos);
         player->IncMegaKillCount();
         func_ov077_02125e94(self, 5);
         return;
@@ -318,8 +317,7 @@ extern "C" void func_ov077_021250a8(daTgz_c *self) {
     }
     int flags = self->mdCcAc_c.hitFlags;
     if ((flags & 0x10) != 0) {
-        self->mPrevAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&player->mPosX),
-                                           reinterpret_cast<const Vector3 *>(&self->mPosX));
+        self->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &self->mPos);
         self->mAngleY = self->mPrevAngleY + 0x8000;
         player->IncMegaKillCount();
         func_ov077_02125e94(self, 5);
@@ -338,7 +336,7 @@ extern "C" void func_ov077_021250a8(daTgz_c *self) {
  * back down by that height, and keep the result on the anim model's matrix. */
 extern "C" void func_ov077_021251d0(daTgz_c *self) {
     int v[3];
-    Vec3_Asr(reinterpret_cast<Vector3 *>(v), reinterpret_cast<Vector3 *>(&self->mPosX), 3);
+    Vec3_Asr(reinterpret_cast<Vector3 *>(v), &self->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
     int aimHeight = self->OnAimedAtWithEgg();
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, aimHeight >> 3, 0);
@@ -596,8 +594,7 @@ int daTgz_c::func_ov077_02125908() {
 int daTgz_c::func_ov077_02125a0c() {
     mHorzSpeed = 0x5000;
     mVertSpeed = 0xd000;
-    short ang = (short)Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mChasePlayer->mPosX),
-                                      reinterpret_cast<const Vector3 *>(&mPosX));
+    short ang = (short)Vec3_HorzAngle(&mChasePlayer->mPos, &mPos);
     mPrevAngleY = ang;
     mWithMeshClsn.SetLimMovFlag();
     mState = 2;

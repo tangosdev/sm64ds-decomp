@@ -203,7 +203,8 @@ void func_02012694(unsigned int a, void *b);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 unsigned short DecIfAbove0_Short(unsigned short *p);
 int func_ov002_020ca78c(void *p);
-void Vec3_RotateYAndTranslate(void *res, void *translation, short angY, void *v);
+void Vec3_RotateYAndTranslate(Vector3 *res, const Vector3 *translation, short angY,
+                              const Vector3 *v);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(void *d, void *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -568,7 +569,7 @@ int daDoor_c::func_ov100_021449c8(daPly_c *a2) {
    func_ov089_0213115c. A nonzero mKeyModelIdx sets the
    data_ov100_02148704 latch. Was a C source. */
 int daDoor_c::func_ov100_02144a38(daPly_c *p) {
-    VecFx32 pos;
+    Vector3 pos;
     DoorEntry *e;
 
     p->OpenBigDoor();
@@ -584,11 +585,11 @@ int daDoor_c::func_ov100_02144a38(daPly_c *p) {
 
     e = &data_ov100_02148204[param1];
 
-    Vec3_RotateYAndTranslate(&pos, &p->mPosX, p->mAngleY, &sKeyOff);
+    Vec3_RotateYAndTranslate(&pos, &p->mPos, p->mAngleY, &sKeyOff);
 
     {
-        void *actor = dActor_c::Spawn(ACTOR_OBJ_KEY, (u32)e->keyIndex, *(Vector3 *)&pos, &p->mAngle,
-                                      p->mAreaId, -1);
+        void *actor =
+            dActor_c::Spawn(ACTOR_OBJ_KEY, (u32)e->keyIndex, pos, &p->mAngle, p->mAreaId, -1);
         if (actor != 0) {
             ((daObjKey_c *)actor)->func_ov089_0213115c(2);
         }
@@ -850,7 +851,7 @@ void daDoor_c::func_ov100_02145170(daPly_c *pl, Vector3 *a, Vector3 *b) {
         v = b;
     }
     pl->mPrevAngleY = pl->mAngleY;
-    Vec3_RotateYAndTranslate(&pl->mPosX, &mPosX, mAngleY, v);
+    Vec3_RotateYAndTranslate(&pl->mPos, &mPos, mAngleY, v);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -923,7 +924,7 @@ daPly_c *daDoor_c::func_ov100_02145370() {
     Vector3 v;
     daPly_c *r5 = gPlayers[gLocalPlayerId];
     Vec3_Sub(&v, &r5->mPos, &mPos);
-    Vec3_RotateYAndTranslate(&mScaleX, &data_020a0ebc, (short)(-mAngleY), &v);
+    Vec3_RotateYAndTranslate(&mScale, &data_020a0ebc, (short)(-mAngleY), &v);
     return r5;
 }
 
@@ -1070,7 +1071,7 @@ s32 daDoor_c::InitResources() {
     /* 75 units along the door's facing. */
     static Vector3 sDoorOff(0x4b000, 0, 0);
 
-    Vec3_RotateYAndTranslate(&mPosX, &mPosX, mAngleY, &sDoorOff);
+    Vec3_RotateYAndTranslate(&mPos, &mPos, mAngleY, &sDoorOff);
 
     idx = param1;
     e = &data_ov100_02148204[idx];

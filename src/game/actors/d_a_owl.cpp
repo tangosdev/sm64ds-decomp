@@ -277,7 +277,7 @@ int daOwl_c::UpdateCarrying() {
     }
 
     if (OWL_TIMER(this) == 0) {
-        mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x18c, *(Vector3 *)&mCamSpacePosX, 0);
+        mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x18c, mCamSpacePos, 0);
     }
 
     if (OWL_TIMER(this) != 0) {

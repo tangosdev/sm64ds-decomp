@@ -53,11 +53,10 @@
 
 #pragma defer_codegen off
 
-
-/* Stack vectors are NitroSDK VecFx32: types.h Vector3 declares an empty
-   destructor under C++, and a stack object would emit ~Vector3. VEC_CrossProduct and
-   VEC_Normalize take Vector3 views, so calls cast this POD storage explicitly. */
-
+/* Locals take the type of the call that fills them: the CalcLib Vec3_* helpers
+   write Vector3, the NitroSDK VEC_* and MTX_MultVec43 write VecFx32. The SDK
+   prototypes below still say Vector3 (tangosdev/sm64ds-decomp#5207), hence
+   the casts on the VecFx32 side. */
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
@@ -110,8 +109,8 @@ void daPicGate_c::LoadMaterial() {
 /* mMtx = translate(pos) * rotate(mAngle) * translate(-width/2): the gate's
  * mesh sits centred on its position, and mInvMtx maps back into it. */
 void daPicGate_c::BuildGateMatrix() {
-    VecFx32 v;
-    Vec3_Asr((Vector3 *)&v, &mPos, 3);
+    Vector3 v;
+    Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68,
@@ -160,8 +159,8 @@ u8 *daPicGate_c::LoadTexture(s32 i) {
  * plane this frame: inside the cell bounds starts a wave toward the field,
  * beyond the far edge starts one from the other side and clicks. */
 void daPicGate_c::HitTest() {
-    VecFx32 a;
-    VecFx32 b;
+    Vector3 a;
+    Vector3 b;
     VecFx32 ob;
     VecFx32 oa;
     daPly_c *r5;
@@ -174,11 +173,11 @@ void daPicGate_c::HitTest() {
     if (r5 == 0)
         return;
 
-    Vec3_Asr((Vector3 *)&a, (Vector3 *)&r5->mPrevPosX, 3);
-    Vec3_Asr((Vector3 *)&b, &r5->mPos, 3);
+    Vec3_Asr(&a, &r5->mPrevPos, 3);
+    Vec3_Asr(&b, &r5->mPos, 3);
     data_020a0e68 = mInvMtx;
-    MTX_MultVec43((Vector3 *)&a, &data_020a0e68, (Vector3 *)&oa);
-    MTX_MultVec43((Vector3 *)&b, &data_020a0e68, (Vector3 *)&ob);
+    MTX_MultVec43(&a, &data_020a0e68, (Vector3 *)&oa);
+    MTX_MultVec43(&b, &data_020a0e68, (Vector3 *)&ob);
 
     if ((oa.z > 0 && ob.z <= 0) || (oa.z < 0 && ob.z >= 0)) {
         x = ob.x << 3;

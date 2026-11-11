@@ -1675,7 +1675,7 @@ void daKing_Donketu_c::OnPendingDestroy()
 
 int daKing_Donketu_c::Render()
 {
-    mBlendAnmModel.Render((const Vector3 *)&mScaleX);
+    mBlendAnmModel.Render(&mScale);
     return 1;
 }
 

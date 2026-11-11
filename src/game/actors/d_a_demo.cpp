@@ -491,8 +491,7 @@ extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src
 extern int data_ov002_0210b964[3];
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i Vec3_HorzLen(const Vector3 *v);
-/* local extern: the Vector3 spelling math/CalcLib.h declares. The locals
-   are the POD VecFx32, so the call casts. */
+/* local extern: the Vector3 spelling math/CalcLib.h declares. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);
