@@ -150,20 +150,16 @@ extern "C" void func_02011cfc();
 namespace Sound {
 void ChangeMusicVolume(u32 a, int f);
 }
-extern "C" int func_01ffa344(int f);
 extern "C" unsigned short data_ov074_02122e04[];
 extern "C" int ApproachAngle(short *, short, int, int, int);
 extern "C" void func_ov084_021296b0(void* a, void* b);
 extern "C" int __aeabi_idiv(int a, int b);
 extern "C" int AngleDiff(int a, int b);
-extern "C" int func_01ffa594(int a, int b);
-extern "C" int func_01ffa4bc(int a);
-extern "C" int func_01ff9378(int a, int b);
 extern "C" int Math_Function_0203b14c(int* p, int a, int b, int d, int e);
 extern "C" unsigned short data_ov074_02122dfc[];
 extern "C" int data_ov074_0212291c[];
 extern "C" int data_ov074_0212290c[];
-extern "C" void *data_ov074_02122e4c[];
+extern "C" float data_ov074_02122e4c[];
 extern "C" void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern "C" s32 Vec3_HorzLen(const Vector3 *v);
 extern "C" s16 atan2_hold_d_a_kuri_king_1(s32 y, s32 x);
@@ -528,7 +524,7 @@ void daKuriKing_c::UpdateDefeat() {
 
 void daKuriKing_c::EnterDefeat() {
     this->mSizeIndex = 0;
-    int v = func_01ffa344((int)data_ov074_02122e4c[1]);
+    int v = data_ov074_02122e4c[1];
     this->mScaleX = v;
     this->mScaleY = v;
     this->mScaleZ = v;
@@ -872,28 +868,26 @@ int daKuriKing_c::AdvanceMaterialChanger() {
 
 /* daKuriKing_c shrink/grow interpolation tick.
  *
- * Called from UpdateDefeat and UpdateScaleChange. Picks a pair of
- * float sizes out of data_ov074_02122e4c (12288.0f, 9557.0f, 6826.0f,
- * 4096.0f -- Fix12 scales stored as IEEE singles), divides their difference
- * by the remaining step count in mScaleSteps, and steps mTargetScale toward
- * the next one. Math_Function_0203b14c eases mCurrentScale toward that target;
- * unless the last step has just finished, the scale triple then gets a
- * wobble from a sin/cos pair out of FX_SinCosTable_ indexed by mScalePhase,
- * which advances 0x1230 per frame. In state 6, each finished step except
- * the last also spits particle 0xb1 at 400.0 * mCurrentScale above the boss.
+ * Called from UpdateDefeat and UpdateScaleChange. data_ov074_02122e4c holds
+ * the boss's four sizes as floats (3.0, 2.333, 1.666 and 1.0 in Fix12 units);
+ * mTargetScale is the next size plus the gap back to the current one,
+ * divided by the steps left in mScaleSteps. Math_Function_0203b14c eases
+ * mCurrentScale toward that target; unless the last step has just finished,
+ * the scale triple then gets a wobble from the sine and cosine of
+ * mScalePhase, which advances 0x1230 per frame. In state 6, each finished
+ * step except the last also spits particle 0xb1 at 400.0 * mCurrentScale
+ * above the boss.
  *
- * The float arithmetic goes through the ITCM soft-float block by hand, the
- * way the rest of this tree calls it: func_01ffa594 (single add/sub),
- * func_01ffa344 (float to int), func_01ffa4bc (int to float) and
- * func_01ff9378, with FX_Div doing the Fix12 divide in between.
+ * The float arithmetic compiles to the ITCM soft-float helpers (_fsub, _ffix,
+ * _fflt, _fadd), as written.
  *
  * Shape notes: the particle position temp must stay MEMORY-HOMED -- reading
  * its words back through the address (the ((int *)&v)[n] form) is what keeps
  * the three dead stores the ROM emits; plain member reads scalarize the
- * struct away and cost four instructions. And k has to be computed BEFORE d,
- * which is worth ten words of register identity in the tail: with d first,
- * the index web takes r2 and the mCurrentScale web takes r3, exactly reversed
- * from the ROM.
+ * struct away and cost four instructions. The wobble reads the table by
+ * element index k computed BEFORE d: written as FX_SinIdx/FX_CosIdx (with
+ * k first, d first, k block-scoped, u32 or masked) the index web and the
+ * mCurrentScale web swap r2 and r3, ten words off the ROM.
  *
  * Matched byte-for-byte with mwccarm 2004/b56 (ov074); linkcheck VERIFIED.
  */
@@ -901,12 +895,9 @@ int daKuriKing_c::StepScaleTransition() {
     struct Vector3 v;
     int d, k;
 
-    this->mTargetScale = func_01ffa344(func_01ff9378(
-        (int)data_ov074_02122e4c[this->mSizeIndex + 1],
-        func_01ffa4bc(
-            FX_Div(func_01ffa344(func_01ffa594((int)data_ov074_02122e4c[this->mSizeIndex],
-                                               (int)data_ov074_02122e4c[this->mSizeIndex + 1])),
-                   this->mScaleSteps << 12))));
+    mTargetScale = data_ov074_02122e4c[mSizeIndex + 1] +
+                   FX_Div(data_ov074_02122e4c[mSizeIndex] - data_ov074_02122e4c[mSizeIndex + 1],
+                          mScaleSteps << 12);
 
     if (Math_Function_0203b14c(&this->mCurrentScale, this->mTargetScale, 0x78, 0x100, 0x20) == 0) {
         if (this->mScalePhase == 0) {
@@ -925,11 +916,11 @@ int daKuriKing_c::StepScaleTransition() {
                                         ((int *)&v)[2]);
         }
     }
-    k = ((u16)this->mScalePhase >> 4) * 2;
-    d = this->mTargetScale - this->mCurrentScale + 0x11e;
-    this->mScaleY = this->mCurrentScale + FX_MUL(d, FX_SinCosTable_[k]);
-    this->mScaleX = this->mCurrentScale;
-    this->mScaleX = this->mCurrentScale + FX_MUL(d, FX_SinCosTable_[k + 1]);
+    k = ((u16)mScalePhase >> 4) * 2;
+    d = mTargetScale - mCurrentScale + 0x11e;
+    mScaleY = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k]);
+    mScaleX = mCurrentScale;
+    mScaleX = mCurrentScale + FX_MUL(d, FX_SinCosTable_[k + 1]);
     this->mScaleZ = this->mScaleX;
     this->mScalePhase += 0x1230;
     return 0;
@@ -1680,7 +1671,7 @@ int daKuriKing_c::InitResources()
     } while (j < 3);
 
     mSizeIndex = 3;
-    p = (void *)func_01ffa344((s32)data_ov074_02122e4c[mSizeIndex]);
+    p = (void *)(s32)data_ov074_02122e4c[mSizeIndex];
     mScaleX = (s32)p;
     mScaleY = (s32)p;
     mScaleZ = (s32)p;
