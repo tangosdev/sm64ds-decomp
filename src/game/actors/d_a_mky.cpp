@@ -62,6 +62,7 @@
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The callees of this TU's members, spelled by their mangled or ROM names.
  * They cannot be declared inside a method body: a block-scope extern in a
@@ -683,7 +684,6 @@ int daMky_c::EnterState7()
     typedef unsigned char u8;
     typedef unsigned short u16;
     typedef short s16;
-    extern short FX_SinCosTable_[];
     extern void *gMonkeyJumpStAnimationFile[];
     u8 *new_var;
     int *pos;
@@ -717,11 +717,11 @@ int daMky_c::EnterState7()
         this->mPosZ = t2;
     }
     ang = (u16)this->mAngleY;
-    s = FX_SinCosTable_[(ang >> 4) * 2];
+    s = FX_SinIdx(ang >> 4);
     *pos = (*pos) + FX_MUL(s, mul);
     *py = (*py) + 0x50000;
     ang = (u16)this->mAngleY;
-    s = FX_SinCosTable_[((ang >> 4) * 2) + 1];
+    s = FX_CosIdx(ang >> 4);
     *pz = (*pz) + FX_MUL(s, mul);
     other = this->mPlayer;
     {

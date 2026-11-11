@@ -144,30 +144,26 @@ void daObjSeesaw_c::OnGroundPounded(dActor_c &other) {
 
 /* Spring *angle toward target by *speed. Behavior calls this with
  * &mAngleX, &mAngleXSpeed, target 0, thresh 6, accel 3, mult 3. It reads
- * nothing from the seesaw itself. Returns 1 once the angle has settled. */
-#pragma push
-/* Without it the two (short)accel casts share one sign-extend and both
- * smulbb become muls: 21 of 44 words differ (0xb4 with `*speed += accel`). */
-#pragma opt_common_subs off
-int daObjSeesaw_c::SpringAngle(short *angle, short *speed, int target, short thresh, int accel,
+ * nothing from the seesaw itself. Returns 1 once the angle has settled.
+ * accel is a short: the ROM sign-extends it after the negation and
+ * multiplies it with smulbb. */
+int daObjSeesaw_c::SpringAngle(short *angle, short *speed, int target, short thresh, short accel,
                                short mult) {
-    short old = angle[0];
-    angle[0] = old + speed[0];
-    short now = angle[0];
-    if (now == target ||
-        ((now - target) * (old - target) < 0 && speed[0] > -thresh && speed[0] < thresh)) {
-        angle[0] = target;
-        speed[0] = 0;
+    short old = *angle;
+    *angle += *speed;
+    if (*angle == target ||
+        ((*angle - target) * (old - target) < 0 && *speed > -thresh && *speed < thresh)) {
+        *angle = target;
+        *speed = 0;
         return 1;
     }
-    if (now >= target)
-        accel = (short)-accel;
-    if ((short)speed[0] * (short)accel < 0)
-        accel = (short)accel * (short)mult;
-    speed[0] = speed[0] + accel;
+    if (*angle >= target)
+        accel = -accel;
+    if (*speed * accel < 0)
+        accel *= mult;
+    *speed += accel;
     return 0;
 }
-#pragma pop
 
 /* Model matrix from the actor angles, translation = position >> 3
  * (world fix12 to the model's units). */

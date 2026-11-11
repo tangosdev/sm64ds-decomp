@@ -117,77 +117,77 @@
       "ordinal": 13
     },
     {
-      "symbol": "func_02045e70",
+      "symbol": "_ZN15ModelComponents11SetEmissionEj",
       "address": "0x02045e70",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0204/func_02045e70.c",
       "ordinal": 14
     },
     {
-      "symbol": "func_02045ec4",
+      "symbol": "_ZN15ModelComponents19SetMaterialEmissionEji",
       "address": "0x02045ec4",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0204/func_02045ec4.c",
       "ordinal": 15
     },
     {
-      "symbol": "func_02045ef8",
+      "symbol": "_ZN15ModelComponents10SetAmbientEj",
       "address": "0x02045ef8",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0204/func_02045ef8.c",
       "ordinal": 16
     },
     {
-      "symbol": "func_02045f4c",
+      "symbol": "_ZN15ModelComponents18SetMaterialAmbientEji",
       "address": "0x02045f4c",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0204/func_02045f4c.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_02045f80",
+      "symbol": "_ZN15ModelComponents10SetDiffuseEj",
       "address": "0x02045f80",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0204/func_02045f80.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_02045fd4",
+      "symbol": "_ZN15ModelComponents18SetMaterialDiffuseEji",
       "address": "0x02045fd4",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0204/func_02045fd4.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_02046008",
+      "symbol": "_ZN15ModelComponents12SetPolygonIDEi",
       "address": "0x02046008",
       "size": "0x00000054",
       "legacy_source": "src/func_02046008.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_0204605c",
+      "symbol": "_ZN15ModelComponents20SetMaterialPolygonIDEii",
       "address": "0x0204605c",
       "size": "0x0000002c",
       "legacy_source": "src/func_0204605c.c",
       "ordinal": 21
     },
     {
-      "symbol": "func_02046088",
+      "symbol": "_ZN15ModelComponents13SetShadowDrawEii",
       "address": "0x02046088",
       "size": "0x00000098",
       "legacy_source": "src/unnamed/arm9/0204/func_02046088.c",
       "ordinal": 22
     },
     {
-      "symbol": "func_02046120",
+      "symbol": "_ZN15ModelComponents13SetShadowMaskEi",
       "address": "0x02046120",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/arm9/0204/func_02046120.c",
       "ordinal": 23
     },
     {
-      "symbol": "func_020461b4",
+      "symbol": "_ZN15ModelComponents8SetAlphaEj",
       "address": "0x020461b4",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0204/func_020461b4.c",
@@ -201,14 +201,14 @@
       "ordinal": 25
     },
     {
-      "symbol": "func_02046234",
+      "symbol": "_ZN15ModelComponents14SetPolygonModeEi",
       "address": "0x02046234",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0204/func_02046234.c",
       "ordinal": 26
     },
     {
-      "symbol": "func_02046288",
+      "symbol": "_ZN15ModelComponents22SetMaterialPolygonModeEii",
       "address": "0x02046288",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0204/func_02046288.c",

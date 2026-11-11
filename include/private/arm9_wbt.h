@@ -104,6 +104,24 @@ typedef struct WBTWork {
     WBTPeerRecord peer[16]; /* 0x1d4 -- indexed by aid */
 } WBTWork;
 
+/* The WBT requests the file share makes. Each queues one WBTCommand
+ * (func_02065af0) for the peers in target_bmp and calls callback with it
+ * when it completes. */
+#ifdef __cplusplus
+extern "C" {
+#endif
+int WBT_AidbitmapToAid(int aid_bmp);
+void WBT_RequestSync(unsigned short target_bmp, void (*callback)(void *));
+void WBT_GetBlockInfo(unsigned short target_bmp, unsigned int block_id, const void *recv_buf_table,
+                      void (*callback)(void *));
+void WBT_GetBlock(unsigned short target_bmp, unsigned int block_id, const void *recv_buf_table,
+                  unsigned int recv_size, const void *pkt_bmp_table, void (*callback)(void *));
+int WBT_PutUserData(unsigned short target_bmp, const void *data, int size,
+                    void (*callback)(void *));
+#ifdef __cplusplus
+}
+#endif
+
 #ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm: a command is 0x9c bytes, a peer record steps
  * 0x68, and peer[] starts at 0x1d4. */

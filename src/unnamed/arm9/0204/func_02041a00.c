@@ -1,10 +1,10 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
 #include "private/fs_views.h"
+#include "private/arm9_wbt.h"
 extern char data_020a2400[];
 extern void func_02041224(char *thiz, int n);
-extern int WBT_PutUserData(u16 arg0, const void *arg1, s32 arg2, u32 arg3);
-extern void func_02042160(void);
+extern void func_02042160(void *arg);
 
 typedef struct FSFile FSFile;
 
@@ -30,7 +30,7 @@ void func_02041a00(FSFile *file) {
     int len;
     int pos;
     func_02041224(data_020a2400, file->arg.readfile.len);
-    data_020a1fc0.mReadRequest = (int)file;
+    data_020a1fc0.mReadRequest = file;
     len = file->arg.readfile.len;
     pos = file->prop.file.pos;
     m.kind = 0;
@@ -39,5 +39,5 @@ void func_02041a00(FSFile *file) {
     m.offset = pos;
     m.packetSizeHigh = (packetSize >> 8) & 0xff;
     m.packetSizeLow = (u8)packetSize;
-    WBT_PutUserData(1, &m, 9, (u32)func_02042160);
+    WBT_PutUserData(1, &m, 9, func_02042160);
 }

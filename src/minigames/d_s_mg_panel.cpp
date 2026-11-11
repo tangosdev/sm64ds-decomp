@@ -1610,11 +1610,11 @@ s32 dScMgPanel_c::InitResources() {
     void *msgFile;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
-    *(volatile u16 *)0x400000e &= ~0x40;
-    *(volatile u32 *)0x400001c = 0;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
+    REG_BG3CNT &= ~0x40;
+    REG_BG3OFS = 0;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
 
     file = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
     DecompressLZ16(file, (void *)((int)G2_GetBG3CharPtr() + 0x4000));
@@ -1629,10 +1629,10 @@ s32 dScMgPanel_c::InitResources() {
     Deallocate(file);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
-    *(volatile u16 *)0x400000c &= ~0x40;
-    *(volatile u32 *)0x4000018 = 0;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x9410;
+    REG_BG2CNT &= ~0x40;
+    REG_BG2OFS = 0;
+    REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x9410;
 
     b = (char *)G2_GetBG2ScrPtr();
     mainFill = 0xf361;
@@ -1658,11 +1658,11 @@ s32 dScMgPanel_c::InitResources() {
     GX_LoadOBJPltt(file, 0, 0x100);
 
     gSubScreenLayers |= 8;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
-    *(volatile u16 *)0x400100e &= ~0x40;
-    *(volatile u32 *)0x400101c = 0;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 1;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x210;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 1;
+    REG_DB_BG3CNT &= ~0x40;
+    REG_DB_BG3OFS = 0;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 1;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x210;
 
     {
         void *subFile = LoadFile(ASSET_D_2D_MG_BG_PAZZLE_PANEL_NCG_BIN);
@@ -1678,10 +1678,10 @@ s32 dScMgPanel_c::InitResources() {
         Deallocate(subFile);
 
         gSubScreenLayers |= 4;
-        *(volatile u16 *)0x400100c &= ~0x40;
-        *(volatile u32 *)0x4001018 = 0;
-        *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
-        *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x8410;
+        REG_DB_BG2CNT &= ~0x40;
+        REG_DB_BG2OFS = 0;
+        REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 1;
+        REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x8410;
 
         b = (char *)G2S_GetBG2ScrPtr();
         subFill = 0xf361;
@@ -1691,8 +1691,8 @@ s32 dScMgPanel_c::InitResources() {
         GXS_LoadBG2Scr(subFile, 0, 0x800);
         Deallocate(subFile);
 
-        *(volatile u16 *)0x4001008 &= ~3;
-        *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x610;
+        REG_DB_BG0CNT &= ~3;
+        REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x610;
 
         subFile = LoadFile(ASSET_D_2D_YOSIFINX_BIKKURI_NSC_BIN);
         GXS_LoadBG0Scr(subFile, 0, 0x800);

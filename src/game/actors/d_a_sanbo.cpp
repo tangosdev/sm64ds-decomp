@@ -148,9 +148,7 @@ int daSanbo_c::InitResources()
 
     t = (actorID == SANBO_HEAD);
     if (t != false) {
-        mRootPosX = mPosX;
-        mRootPosY = mPosY;
-        mRootPosZ = mPosZ;
+        mRootPos = mPos;
         mScaleX = 0x1000;
         mScaleY = 0x1000;
         mScaleZ = 0x1000;
@@ -164,12 +162,7 @@ int daSanbo_c::InitResources()
             mScaleZ = 0;
             mPrevSegment = (daSanbo_c *)dActor_c::FindWithID(param1);
             mNextSegment = 0;
-            {
-                int *p = &mPrevSegment->mRootPosX;
-                mRootPosX = p[0];
-                mRootPosY = p[1];
-                mRootPosZ = p[2];
-            }
+            mRootPos = mPrevSegment->mRootPos;
         }
     }
 
@@ -375,7 +368,7 @@ int daSanbo_c::EnterKnockback() {
         dActor_c::Spawn(0x122, 2, mPos, (Vector3_16 *)0, mAreaId, -1);
     }
     UnlinkSegment();
-    mPrevAngleY = Vec3_HorzAngle((const Vector3 *)&mHitActor->mPosX, (const Vector3 *)&mPosX);
+    mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPos, &mPos);
     mVertSpeed = 0x14000;
     if (mHitActor->param1 == 2)
         mHorzSpeed = 0x28000;
@@ -492,7 +485,7 @@ int daSanbo_c::EnterMegaKill() {
     }
     Sound::PlayBank0(9, mCamSpacePos);
     UnlinkSegment();
-    mPrevAngleY = Vec3_HorzAngle((const Vector3 *)&mHitActor->mPosX, (const Vector3 *)&mPosX);
+    mPrevAngleY = Vec3_HorzAngle(&mHitActor->mPos, &mPos);
     rnd = RandomIntInternal(&data_0209e650.value);
     mPrevAngleY = (s16)(mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
     mAngleY = (s16)(mPrevAngleY + 0x8000);
@@ -629,9 +622,8 @@ void daSanbo_c::HandleAttacks() {
         int shove = (other->actorID == 0x135);
         if (shove) {
         radius = mdCcAc_c.radius;
-        if (Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)&other->mPosX) <
-            radius + 0x1a9000) {
-            angle = Vec3_HorzAngle((const Vector3 *)&other->mPosX, (const Vector3 *)&mPosX);
+        if (Vec3_HorzDist(&mPos, &other->mPos) < radius + 0x1a9000) {
+            angle = Vec3_HorzAngle(&other->mPos, &mPos);
             index = (unsigned short)angle >> 4;
             sine = FX_SinIdx(index);
             dist = mdCcAc_c.radius + 0x1a9000;
@@ -725,22 +717,22 @@ void daSanbo_c::HandleAttacks() {
 
 void daSanbo_c::UpdateWanderYaw() {
     daPly_c *player = ClosestNonVanishPlayer();
-    void *target;
+    const Vector3 *target;
     int dist;
     short ang;
     int turn;
 
     if (player) {
-        dist = Vec3_HorzDist((const Vector3 *)&mRootPosX, (const Vector3 *)&player->mPosX);
+        dist = Vec3_HorzDist(&mRootPos, &player->mPos);
         if (dist < 0x3e8000)
-            target = &player->mPosX;
+            target = &player->mPos;
         else
-            target = &mRootPosX;
+            target = &mRootPos;
     } else {
-        target = &mRootPosX;
+        target = &mRootPos;
     }
-    dist = Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)target);
-    ang = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)target);
+    dist = Vec3_HorzDist(&mPos, target);
+    ang = Vec3_HorzAngle(&mPos, target);
     ApproachLinear(mAngleY, ang, (short)0x320);
     turn = CalcShyAwayAngle(dist);
     mPrevAngleY = (short)(mAngleY + turn);
