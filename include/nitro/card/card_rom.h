@@ -39,8 +39,9 @@ static inline const CARDRomRegion *CARD_GetRomRegionFAT(void) {
 }
 
 static inline const CARDRomRegion *CARD_GetRomRegionOVT(MIProcessor target) {
-    return (target == MI_PROCESSOR_ARM9) ? (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x50)
-                                         : (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x58);
+    return (target == MI_PROCESSOR_ARM9)
+               ? (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x50)
+               : (const CARDRomRegion *)((const u8 *)HW_ROM_HEADER_BUF + 0x58);
 }
 
 /* NitroSDK CARDRomStat (rom_stat, data_020a8780). */

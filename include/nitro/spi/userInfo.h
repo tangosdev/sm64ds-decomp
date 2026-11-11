@@ -30,9 +30,9 @@ typedef struct NVRAMConfigComment {
 } NVRAMConfigComment;
 
 typedef struct NVRAMConfigOwnerInfo {
-    u8 favoriteColor : 4;         /* 0x00 */
+    u8 favoriteColor : 4; /* 0x00 */
     u8 rsv : 4;
-    NVRAMConfigDate birthday;     /* 0x01 */
+    NVRAMConfigDate birthday; /* 0x01 */
     u8 pad;
     NVRAMConfigNickname nickname; /* 0x04 */
     NVRAMConfigComment comment;   /* 0x1a */
@@ -51,14 +51,14 @@ typedef struct NVRAMConfigAlarm {
 /* The touch-screen calibration: two raw sample points and the screen dots
  * they were taken at. */
 typedef struct NVRAMConfigTpCalibData {
-    u16 raw_x1; /* 0x00 */
-    u16 raw_y1; /* 0x02 */
-    u8 dx1;     /* 0x04 */
-    u8 dy1;     /* 0x05 */
-    u16 raw_x2; /* 0x06 */
-    u16 raw_y2; /* 0x08 */
-    u8 dx2;     /* 0x0a */
-    u8 dy2;     /* 0x0b */
+    u16 raw_x1;           /* 0x00 */
+    u16 raw_y1;           /* 0x02 */
+    u8 dx1;               /* 0x04 */
+    u8 dy1;               /* 0x05 */
+    u16 raw_x2;           /* 0x06 */
+    u16 raw_y2;           /* 0x08 */
+    u8 dx2;               /* 0x0a */
+    u8 dy2;               /* 0x0b */
 } NVRAMConfigTpCalibData; /* 0x0c */
 
 typedef struct NVRAMConfigOption {
@@ -79,7 +79,7 @@ typedef struct NVRAMConfigOption {
 } NVRAMConfigOption;   /* 0x0c */
 
 typedef struct NVRAMConfigData {
-    u8 version;                 /* 0x00 */
+    u8 version; /* 0x00 */
     u8 pad;
     NVRAMConfigOwnerInfo owner; /* 0x02 */
     NVRAMConfigAlarm alarm;     /* 0x52 */

@@ -22,7 +22,8 @@ extern void MIi_CpuCopy16(const void *src, void *dst, int size);
 void OS_GetMacAddress(unsigned char *macAddress) {
     u8 *src;
 
-    src = (u8 *)((u32)(OS_GetSystemWork()->nvramUserInfo) + ((sizeof(NVRAMConfig) + 3) & ~0x00000003));
+    src = (u8 *)((u32)(OS_GetSystemWork()->nvramUserInfo) +
+                 ((sizeof(NVRAMConfig) + 3) & ~0x00000003));
     MI_CpuCopy8(src, macAddress, 6);
 }
 
