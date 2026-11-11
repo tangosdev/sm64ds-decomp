@@ -126,6 +126,7 @@ struct State {
     int hold_from, hold_n;
     unsigned last_wait_log;
     unsigned t_pend;                 // when the exit started waiting for a safe frame
+    int fake_star;                   // proof knob SM64DS_STAR_POPUP_FAKE_STAR=<1..7>: which star a fake event names (default 1)
     unsigned stale_frame; bool stale_done;   // proof knob SM64DS_STAR_POPUP_STALE=<frame>: leave data_0209d4b0 non-zero
     bool cleared_d4b0;
     bool no_timeout;                 // proof knob SM64DS_STAR_POPUP_NOTIMEOUT=1: the old behaviour (every gate waits for ever)
@@ -173,6 +174,7 @@ void init_once() {
         else if (std::sscanf(e, "lv%d", &v) == 1) { g.stop_kind = 3; g.stop_val = v; }  // v ms after the level changed following an event
     }
     g.no_timeout = env_on("SM64DS_STAR_POPUP_NOTIMEOUT", false);
+    if (const char *e = std::getenv("SM64DS_STAR_POPUP_FAKE_STAR")) { const int n = std::atoi(e); if (n >= 1 && n <= 7) g.fake_star = n; }
     if (const char *e = std::getenv("SM64DS_STAR_POPUP_AUTOUP")) { const int ms = std::atoi(e); if (ms > 0) g.auto_up_ms = (unsigned)ms; }
     if (const char *e = std::getenv("SM64DS_STAR_POPUP_STALE")) { const int f = std::atoi(e); if (f > 0) g.stale_frame = (unsigned)f; }
     std::fprintf(stderr, "[starpop] on: enabled=%d only_collector=%d\n", (int)g.enabled, (int)env_on("SM64DS_ROOM_SOLOEXIT", true));
@@ -1123,7 +1125,7 @@ extern "C" void port_star_popup_frame(void) {
     for (Fake &f : g.fake)
         if (f.used && !f.done && g.frame >= f.frame && my_body()) {
             f.done = true;
-            send_event(m, f.kind, f.exits != 0, f.kind == kKindKey ? 8 : 1);
+            send_event(m, f.kind, f.exits != 0, f.kind == kKindKey ? 8 : (g.fake_star ? g.fake_star : 1));
         }
     scan_local(m);
     send_copies();
