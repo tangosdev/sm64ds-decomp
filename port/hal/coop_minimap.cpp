@@ -61,8 +61,7 @@ extern "C" int port_coop_minimap_ghost(int slot, int pos[3]) {
             if (log_env()) {
                 static unsigned n3[kMinimapWidePlayers];
                 if (slot >= 0 && slot < kMinimapWidePlayers && (n3[slot]++ % 120u) == 0)
-                    std::fprintf(stderr, "[comap] slot %d OTHER AREA at (%d,%d,%d) char %d
-", slot,
+                    std::fprintf(stderr, "[comap] slot %d OTHER AREA at (%d,%d,%d) char %d\n", slot,
                                  pos[0] >> 12, pos[1] >> 12, pos[2] >> 12, ch);
             }
             return 3;
