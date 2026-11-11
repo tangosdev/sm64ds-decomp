@@ -23,6 +23,7 @@ extern "C" {
 extern unsigned char data_0209f2d8;   // game mode: 0 single file, 1 VS, 2 script
 extern unsigned char data_0209f2fc;   // entry reason: 1 exit course, 2 death
 extern unsigned char data_0209f250;   // local body slot
+extern signed char data_0209f2f8;     // level id
 
 void _ZN9dBgCh_GndC1Ev(void *self);
 void _ZN9dBgCh_GndD1Ev(void *self);
@@ -43,6 +44,7 @@ struct V3 { int x, y, z; };
 
 constexpr int kSpacing = 120;        // world units between seats
 constexpr int kGroundTol = 60;       // slot floor may differ from the entrance floor by this much
+constexpr int kJumpOut = 352;        // painting exits land this far forward of the record (measured, Bob-omb Battlefield)
 constexpr int kLineExtra = 50;       // the wall probe runs this far past the slot
 
 bool g_cfg_read = false, g_cfg_on = true;
@@ -85,12 +87,13 @@ bool step_allowed(int s) {
 }
 
 // Floor height (20.12) under world point (x,z), probed from refY + 200 units. False when nothing is hit.
-bool ground_at(int x, int refY_fx, int z, int *out_y) {
+bool ground_at(int x, int refY_fx, int z, int *out_y, int reach = 500) {
     alignas(16) unsigned char rg[0x60];
     std::memset(rg, 0, sizeof rg);
     V3 pos = {x << 12, refY_fx + (200 << 12), z << 12};
     _ZN9dBgCh_GndC1Ev(rg);
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, nullptr);
+    *(int *)(rg + 0x4c) = (reach + 200) << 12;   // how far down the probe looks (default 500)
     const bool hit = _ZN9dBgCh_Gnd10DetectClsnEv(rg) != 0;
     if (hit) *out_y = *(int *)(rg + 0x44);
     _ZN9dBgCh_GndD1Ev(rg);
@@ -145,10 +148,16 @@ int pick(const Entry *e, int step, int seat, int *ox, int *oz, int *why) {
                 c[n++] = {R(d8[d][0] * len * sc[d]), R(d8[d][1] * len * sc[d])};
             }
     }
+    // Course-return painting exits (steps 11 and 12) throw the body forward from the record before it lands, about 350 units
+    // on and well below the record. Probe from the landing point, not the record, so the walls and floor that matter are
+    // the ones around where the bodies actually come down.
+    const int offx = (step == 11 || step == 12) ? R(fx * kJumpOut) : 0;
+    const int offz = (step == 11 || step == 12) ? R(fz * kJumpOut) : 0;
+    const int lx = e->x + offx, lz = e->z + offz;
     int gy0 = 0;
-    if (!ground_at(e->x, (int)e->y << 12, e->z, &gy0)) { *why = 1; return -1; }
+    if (!ground_at(lx, (int)e->y << 12, lz, &gy0, offx || offz ? 1500 : 500)) { *why = 1; return -1; }
     for (int i = 0; i < n; ++i) {
-        const int sx = e->x + c[i].dx, sz = e->z + c[i].dz;
+        const int sx = lx + c[i].dx, sz = lz + c[i].dz;
         if (sx < -32000 || sx > 32000 || sz < -32000 || sz > 32000) continue;
         int gy = 0;
         if (!ground_at(sx, gy0, sz, &gy)) continue;
@@ -157,10 +166,10 @@ int pick(const Entry *e, int step, int seat, int *ox, int *oz, int *why) {
         // wall probe: from the entrance, 60 above its floor, to the spot and 50 past it, at the same height
         const double len = std::sqrt((double)c[i].dx * c[i].dx + (double)c[i].dz * c[i].dz);
         const double k = len > 0 ? (len + kLineExtra) / len : 1.0;
-        V3 a = {(int)e->x << 12, gy0 + (60 << 12), (int)e->z << 12};
-        V3 b = {(e->x + R(c[i].dx * k)) << 12, gy0 + (60 << 12), (e->z + R(c[i].dz * k)) << 12};
+        V3 a = {lx << 12, gy0 + (60 << 12), lz << 12};
+        V3 b = {(lx + R(c[i].dx * k)) << 12, gy0 + (60 << 12), (lz + R(c[i].dz * k)) << 12};
         if (line_blocked(a, b)) continue;
-        *ox = sx; *oz = sz;
+        *ox = sx - offx; *oz = sz - offz;      // back to a record position
         return i;
     }
     *why = 2;
@@ -169,7 +178,9 @@ int pick(const Entry *e, int step, int seat, int *ox, int *oz, int *why) {
 
 }  // namespace
 
-extern "C" void port_coop_entry_begin(void *tbl, unsigned p3, int local, int hold, int level) {
+extern "C" void port_coop_entry_begin(void *tbl, unsigned p3, int local, int hold, int level_unused) {
+    const int level = (int)data_0209f2f8;
+    (void)level_unused;
     g_rec = nullptr;
     g_extra_valid = false;
     g_extra_slot = -1;
