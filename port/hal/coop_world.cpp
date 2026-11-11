@@ -563,6 +563,9 @@ bool boo_credit(const char *a, int seat, const char *why) {
     return true;
 }
 
+bool is_goomba(unsigned cls);
+void goomba_glint_off(char *a, bool respawn, const char *why);     // COOPSILVER3 (below)
+
 // Remove the live actors whose slot a remote bit names. The ROM's own
 // kill-and-track (bit already up, actor marked for destruction): no effects
 // play on this console, no counters move (COOPBOO2: but a Boo the friend killed still counts for my Big Boo).
