@@ -72,6 +72,7 @@ enum daDossy_c_AssetId {
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -124,7 +125,6 @@ extern DossyCollisionFileHandle gDossyBodyCollisionFile;
 extern DossyCollisionFileHandle gDossyHeadCollisionFile;
 
 extern "C" {
-extern s16 FX_SinCosTable_[];
 extern u8 data_ov065_0211c078[];
 extern void *data_ov065_0211cd68[];
 extern SharedFilePtr data_ov002_0210d9c0;
@@ -368,8 +368,8 @@ int daDossy_c::Behavior()
     d = (short)AngleDiff(mAngToCenter, mAngleY);
 
     {
-        short sv = FX_SinCosTable_[((unsigned short)d >> 4) * 2 + 1];
-        short cv = FX_SinCosTable_[((unsigned short)mPlatforms[1].mRot.x >> 4) * 2];
+        short sv = FX_CosIdx((unsigned short)d >> 4);
+        short cv = FX_SinIdx((unsigned short)mPlatforms[1].mRot.x >> 4);
         int sm = sv * 0x190;
         int t = FX_MUL(sm, cv);
         if (d < 0x4000) {
@@ -383,14 +383,14 @@ int daDossy_c::Behavior()
 
     if (mDistToCenter >= outer) {
         mPosX =
-            mSpawnPosX - FX_MUL(outer, FX_SinCosTable_[((unsigned short)mAngToCenter >> 4) * 2]);
+            mSpawnPosX - FX_MUL(outer, FX_SinIdx((unsigned short)mAngToCenter >> 4));
         mPosZ = mSpawnPosZ -
-                FX_MUL(outer, FX_SinCosTable_[((unsigned short)mAngToCenter >> 4) * 2 + 1]);
+                FX_MUL(outer, FX_CosIdx((unsigned short)mAngToCenter >> 4));
     } else if (mDistToCenter <= inner) {
         mPosX =
-            mSpawnPosX - FX_MUL(inner, FX_SinCosTable_[((unsigned short)mAngToCenter >> 4) * 2]);
+            mSpawnPosX - FX_MUL(inner, FX_SinIdx((unsigned short)mAngToCenter >> 4));
         mPosZ = mSpawnPosZ -
-                FX_MUL(inner, FX_SinCosTable_[((unsigned short)mAngToCenter >> 4) * 2 + 1]);
+                FX_MUL(inner, FX_CosIdx((unsigned short)mAngToCenter >> 4));
     }
 
     UpdatePos(0);
@@ -510,16 +510,16 @@ void daDossy_c::func_ov065_02118838()
             mHomePosX = v.x;
             mHomePosY = v.y;
             mHomePosZ = v.z;
-            scaled = FX_SinCosTable_[((u16)mHeadRotX >> 4) * 2] * 0x96;
+            scaled = FX_SinIdx((u16)mHeadRotX >> 4) * 0x96;
             mCapPosX = mHomePosX;
             mCapPosY = mHomePosY;
             mCapPosZ = mHomePosZ;
-            mCapPosX += FX_MUL(scaled, FX_SinCosTable_[((u16)mAngleY >> 4) * 2]);
-            mCapPosY += 0x8c000 - FX_SinCosTable_[((u16)mHeadRotX >> 4) * 2] * 0x1e;
-            mCapPosZ += FX_MUL(scaled, FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1]);
-            mHomePosX += FX_SinCosTable_[((u16)mAngleY >> 4) * 2] * 0x82;
+            mCapPosX += FX_MUL(scaled, FX_SinIdx((u16)mAngleY >> 4));
+            mCapPosY += 0x8c000 - FX_SinIdx((u16)mHeadRotX >> 4) * 0x1e;
+            mCapPosZ += FX_MUL(scaled, FX_CosIdx((u16)mAngleY >> 4));
+            mHomePosX += FX_SinIdx((u16)mAngleY >> 4) * 0x82;
             mHomePosY += 0x50000;
-            mHomePosZ += FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1] * 0x82;
+            mHomePosZ += FX_CosIdx((u16)mAngleY >> 4) * 0x82;
         }
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         Matrix4x3_ApplyInPlaceToRotationY(
@@ -732,8 +732,8 @@ extern "C" int func_ov065_021180d4(char *self)
                     speed = player->mHorzSpeed;
 
                     pos.y += 0x50000;
-                    pos.x += FX_MUL(speed, FX_SinCosTable_[idx * 2]);
-                    pos.z += FX_MUL(speed, FX_SinCosTable_[idx * 2 + 1]);
+                    pos.x += FX_MUL(speed, FX_SinIdx(idx));
+                    pos.z += FX_MUL(speed, FX_CosIdx(idx));
 
                     if (dActor_c::Spawn(0x10d, 0x1210, pos, &cap->mAngle, cap->mAreaId, -1) != 0) {
                         cap->mCapIcon.Unlink();
