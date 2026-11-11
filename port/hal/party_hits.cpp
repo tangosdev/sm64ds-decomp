@@ -1372,9 +1372,10 @@ void head_squish(char *me, const Claim &c) {
     const int st = port::vs_arena_state_index(me);
     const int hs = *(const int *)(me + kHorzSpeed), vy = *(const int *)(me + kVertSpeed);
     const bool air = !player::on_ground(me);
-    // "not on the ground" is also swimming, hanging from a ledge or a grate, a pole or a tree: no push down there
+    // "not on the ground" is also swimming, flying, hanging from a ledge or a grate, a pole or a tree: no push down there
     bool held_up = false;
-    switch (st) { case 0: case 1: case 2: case 70: case 71: case 72: case 73: case 74: case 75: case 77: held_up = true; }
+    // (state_names in tools/relay/arena_contract.json: 0-2 ledge / grate, 23 St_Fly (wing cap flight), 70-75 and 77 water, climb, headstand)
+    switch (st) { case 0: case 1: case 2: case 23: case 70: case 71: case 72: case 73: case 74: case 75: case 77: held_up = true; }
     const bool push = air && !held_up;
     if (push && vy > kHeadPushDown) *(int *)(me + kVertSpeed) = kHeadPushDown;
     if (*(const int *)(me + 0x84) == 0x1000 || g.self_squashed) { g.self_squash_at = g.frame ? g.frame : 1; g.self_squashed = true; }
