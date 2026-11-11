@@ -1332,6 +1332,7 @@ enum : int {
     kSquashHold = 2,             // frames held at the lowest scale, then +0x100 a frame back to 1.0 (9 frames, 0.3 s)
     kSquashStep = 0x100,
     kSquashFrames = kSquashHold + (0x1000 - kSquashLow) / kSquashStep,
+    kStompTouchDy = 190,         // the bouncer's feet this far over the friend's feet: the body is 150 units tall
     kHeadPushDown = -0x14000,    // an airborne friend underneath falls at least this fast (Fix12 / frame)
 };
 int squash_curve(unsigned at) {
@@ -1466,6 +1467,9 @@ void attacker_scan(char *me) {
             }
             continue;
         }
+        // HEADBOUNCE1: the reach window starts 260 units up, 110 over a 150-unit body: the bounce came off thin air.
+        // Bounce at the head instead (the fastest fall, 75 units a frame, still lands inside the window's 40-unit floor).
+        if (kind == kStomp && g.headbounce && my - s.y > kStompTouchDy) continue;
         if (kind == kGrabCatch) {
             char *vb = body_of_seat(seat);
             if (!vb || !holder_try_grab(me, vb, seat)) continue;
