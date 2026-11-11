@@ -10453,3 +10453,4 @@ arm9	0x02038234	dBgS_RideCallBack	_Z17dBgS_RideCallBackii	C++ linkage; symbols.t
 arm9	0x02038324	dBgS_MoveBgCrrPos	_Z17dBgS_MoveBgCrrPosPviii	C++ linkage; symbols.txt emits this name
 arm9	0x0203cbf0	func_0203cbf0	_Z13func_0203cbf0Pv	C++ linkage; symbols.txt emits this name
 
+ov098	0x02138b28	_Z14Crate_SetStateP13daObjBlockS_ci	_ZN13daObjBlockS_c8SetStateEi	B: enter twin of CallStateUpdate: stores the state in mState and calls the enter member of data_ov098_0213c878[mState]; a member like daRedBombhei_c::ChangeState, matched through a daObjBlockS_c member pointer

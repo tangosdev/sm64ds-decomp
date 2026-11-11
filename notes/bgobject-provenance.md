@@ -62,14 +62,14 @@ recorded in the [integration evidence](experiments/pr2874-integration-0920.json)
 
 Formerly the coined `Crate`. Bodies read: `InitResources`, `Behavior`, `Render`,
 `CleanupResources`, `OnTurnIntoEgg`, `OnYoshiTryEat`, `OnGroundPounded`, `Kill` and
-`Crate_SetState` (then per-function files, now together in
+`SetState` (formerly the free `Crate_SetState`; then per-function files, now together in
 `src/game/actors/d_a_obj_block_s.cpp`).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x4e8/0x4ec/0x4f0 | `mHomePosX/Y/Z` | `InitResources` copies `mPosX/mPosY/mPosZ` into them once; `Behavior` passes `&mHomePosX` as the second `Vector3 *` of `Vec3_HorzDist(&mPosX, …)`. A spawn position kept to measure drift. |
+| 0x4e8 | `mHomePos` | `InitResources` copies `mPosX/mPosY/mPosZ` into it once; `Behavior` passes `&mHomePos` as the second `Vector3 *` of `Vec3_HorzDist(&mPos, …)`. A spawn position kept to measure drift. |
 | 0x500/0x502/0x504 | `mHomeAngleX/Y/Z` | `InitResources` copies `mAngleX/mAngleY/mAngleZ` into them, in the same run as the position triple above. |
-| 0x560 | `mState` | `Crate_SetState(c, i)` writes `i` to 0x560 and immediately dispatches [data_ov098_0213c878](../config/arm9/overlays/ov098/symbols.txt)[i], a table of pointer-to-member functions — so 0x560 is the state index into that table. `Render` short-circuits on `mState == 6`, the value `Kill`, `OnTurnIntoEgg` and the two destruction paths in `Behavior` all park the crate at. |
+| 0x560 | `mState` | `SetState(i)` writes `i` to 0x560 and immediately dispatches [data_ov098_0213c878](../config/arm9/overlays/ov098/symbols.txt)[i], a table of pointer-to-member functions — so 0x560 is the state index into that table. `Render` short-circuits on `mState == 6`, the value `Kill`, `OnTurnIntoEgg` and the two destruction paths in `Behavior` all park the crate at. |
 | 0x5e4 | `mHoldingPlayer` | already typed `daPly_c *`; `Behavior` calls `daPly_c::DropActor()` on it when the pause bit `0x4000000` of `data_0209b454` is set and the crate's own `mFlags & 0x4000000` is set. Only a carrying player can be made to drop the actor. |
 | 0x5f4 | `mClsnYOffset` | `Behavior`'s only use: the crate's own position minus this value in Y is what both `dCcAcPos_c` members' `pos` are set to each frame. A vertical offset from the model origin to the collision origin. |
 | 0x5fc | `mParticleHandle1` | `Behavior` passes the field as the first argument of `Particle::System::New(u32, u32, …)` and stores the returned pointer straight back into it — a handle the particle system reads and rewrites. Effect id `0x13a`. |
@@ -104,9 +104,11 @@ Raw-offset collapses, each re-verified byte-exact:
   and the two `(char *)&mPosX` / `(char *)&mHomePosX` double casts.
 * `Render`: `(Sub *)((char *)&mModel)` → `(Sub *)&mModel`.
 
-`Crate_SetState` keeps a local flat shadow (`BlockSStateHost`) on purpose: it calls through a
-pointer-to-member function, and that representation is not the same for a polymorphic
-class as for the flat shadow the ROM's own code is built against.
+`SetState` and `CallStateUpdate` call through `void (daObjBlockS_c::*)()` member pointers.
+An earlier note kept a flat `char pad[0x560]` shadow for them, on the theory that a
+polymorphic class's member-pointer call compiles differently. It does not: under
+2004/b56 both byte-match (0/18 words each) through the real class, as
+`daRedBombhei_c::ChangeState` already did.
 
 ---
 
