@@ -1016,7 +1016,9 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
     if (carry_state) force = false;
     // bowser2: held by a friend: shown attached to his hands (kpa_show_held); let go when the record stops saying so
     if (d.cls == 279 && !mine && g_kpa_fix) {
-        if (x.w[2] == 1u && hp_of(b) > 0 && ls != 4u) {
+        // not while this copy's own intro talk runs (states 5 / 6, talk started): the talk ends first, the next held record shows it
+        const bool own_talk = (ls == 5u || ls == 6u) && (unsigned char)b.a[0x424] >= 1u && (unsigned char)b.a[0x424] <= 2u;
+        if (x.w[2] == 1u && hp_of(b) > 0 && ls != 4u && (b.kpa_shown || !own_talk)) {
             if (b.kpa_shown) b.kpa_t = now;
             else if (kpa_show_held(b, x.from, now)) {
                 ++g_st.applied_state;
