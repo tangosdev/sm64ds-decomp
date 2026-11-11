@@ -1441,6 +1441,7 @@ unsigned long long g_coin_sends = 0, g_coin_recvs = 0, g_coin_raises = 0;
 // each seat, under the same visit id so nobody credits mine twice), the group and course maxima and the owed balance. Only
 // the per-slot reads (a part's slots are its own) start again.
 bool g_coin_keep = false;
+int g_coin_guard_v = -1;         // AREACOIN1: my counter at the end of the last coin_tick
 int g_coin_me_last = -1;         // AREACOIN1: my body slot at the last coin_tick (-1: a new course)
 void coin_reset();
 int my_local_part();
@@ -1467,6 +1468,7 @@ void coin_reset_for(const CoopKey &nk) {
 }
 void coin_reset() {
     g_coin_me_last = -1;
+    g_coin_guard_v = -1;
     std::memset(g_part_rep, 0, sizeof g_part_rep); std::memset(g_part_applied, 0, sizeof g_part_applied); g_applied_other = 0;
     g_red_sent_t = 0; g_red_sent_v = -1;
     g_coin_group = 0; g_coin_unpaid = 0; g_coin_star = false; g_coin_sent_t = 0; g_coin_sent_v = -1; g_coin_seen_v = -1;
@@ -1563,6 +1565,15 @@ void coin_tick(unsigned now) {
         if (was > here) { coin_observe(); data_0209f358[me] = (short)was; coin_wrote(); }
     }
     g_coin_me_last = me;
+    // AREACOIN1: the cartridge keeps the coin counter across a move between parts of one course, but measured in LLL (main ->
+    // volcano, alone or not, after the red coins): the counter falls to 0 about 135 frames into the new part with no clear of
+    // ours or InitResources' running (writer not found). Nothing else lowers it inside a level, so in the first 600 frames after
+    // such a move a fall is put back.
+    if (g_coin_keep && g_est_frames < 600 && g_coin_guard_v > (int)data_0209f358[me]) {
+        std::fprintf(stderr, "[coop] coin count: my counter fell %d -> %d in the new part of the course (est %u): put back wall=%lld\n",
+                     g_coin_guard_v, (int)data_0209f358[me], g_est_frames, wall_ms());
+        coin_observe(); data_0209f358[me] = (short)g_coin_guard_v; coin_wrote();
+    }
     coin_classify();   // COINS10
     if (g_coin_star && !_ZN5Event6GetBitEj(0x1f)) {
         _ZN5Event6SetBitEj(0x1f);
@@ -1597,6 +1608,7 @@ void coin_tick(unsigned now) {
         ++g_coin_raises;
     }
     const int c = my_coin_count();
+    g_coin_guard_v = c;
     if (g_log && c != g_coin_seen_v) {
         std::fprintf(stderr, "[coop] coin count now %d (est %u) wall=%lld\n", c, g_est_frames, wall_ms());
         g_coin_seen_v = c;

@@ -521,13 +521,11 @@ int red_remote_slot() {
     for (int i = 0; i < n; ++i) if (i != me) return i;
     return (me >= 0 && me < n) ? me : -1;      // a one-body count: the sum is all that matters
 }
-// AREACOIN1 (REVIEW-H note 1): star 0 (no red coin of this level stood here, as when the room memory removed them all before
-// they spawned) takes the level's red coin star marker itself: its own star id is the one the red coins carry.
 void red_check_star(int star_id) {
-    if (NumRedCoins() != 8) return;
+    if (NumRedCoins() != 8 || star_id <= 0) return;
     for (char *m = _ZN8dActor_c15FindWithActorIDEjPS_(0xb4, nullptr); m; m = _ZN8dActor_c15FindWithActorIDEjPS_(0xb4, m)) {
         if (*(unsigned char *)(m + 0x1d8) != 0) continue;
-        if (star_id > 0 && *(unsigned char *)(m + 0x1d9) != star_id) continue;
+        if (*(unsigned char *)(m + 0x1d9) != star_id) continue;
         if (*(unsigned char *)(m + 0x1db) & 4) continue;           // its star is already out
         _ZN12daStarBase_c27SpawnRedCoinStarIfNecessaryEv(m);
         ++g_st.star_spawn_native;
@@ -1627,9 +1625,13 @@ int coop_spawn_red_sum(int *star) {
 // go. The ROM's red coin star check runs as for any other red coin credit (red_bump).
 bool coop_spawn_red_raise(int sum, int star, int seat) {
     if (g_off.red || !g_red_armed) return false;
+    if (star >= 1 && star <= 7 && g_red_star == 0) g_red_star = star;
     const int have = red_sum();
     if (sum <= have) return false;
-    if (g_log) std::fprintf(stderr, "[coopspawn] red coin count from seat %d in another part of the course: %d, mine %d\n", seat, sum, have);
+    // AREACOIN1 (REVIEW-H note 1): the star these red coins carry, from the friend who saw them stand (a level part whose red
+    // coins the room memory removed before they spawned never shows me one; the level's other star markers look the same (0x1d8 == 0), so a
+    // marker alone cannot say which is the red coins' one)
+    if (g_log) std::fprintf(stderr, "[coopspawn] red coin count from seat %d in another part of the course: %d (star %d), mine %d\n", seat, sum, star, have);
     red_bump(sum - have, star > 0 ? star : g_red_star, "course");
     return true;
 }
