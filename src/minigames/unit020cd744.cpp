@@ -1232,8 +1232,6 @@ extern "C" void G3_LoadMtx43(int *m);
 #define PATCH_VTX(obj) ((Vec3 *)TRMPLINE(obj)->mVerts)
 #define PATCH_NRM(obj) (TRMPLINE(obj)->mPackedNormals)
 
-#define SEND_VTX(p) G3_Vtx((s16)((p)->x >> 8), (s16)((p)->y >> 8), (s16)((p)->z >> 8))
-
 /* Loads the object's placement and scale matrices, then draws its 4x4 vertex
  * patch (positions mVerts, packed normals mPackedNormals) as three triangle
  * strips per face, the back face first with negated normals. Each normal
@@ -1286,12 +1284,12 @@ extern "C" void TrmpLine_Draw(char *obj) {
             REG_TEXCOORD = sTrmpLineTexCoords[i * 4 + k];
             REG_NORMAL = -*n0 & 0x3fffffff;
             n0++;
-            SEND_VTX(v0);
+            G3_Vtx(v0->x >> 8, v0->y >> 8, v0->z >> 8);
             v0++;
             REG_TEXCOORD = sTrmpLineTexCoords[(i + 1) * 4 + k];
             REG_NORMAL = -*n1 & 0x3fffffff;
             n1++;
-            SEND_VTX(v1);
+            G3_Vtx(v1->x >> 8, v1->y >> 8, v1->z >> 8);
             v1++;
         }
         G3_End();
@@ -1309,12 +1307,12 @@ extern "C" void TrmpLine_Draw(char *obj) {
             REG_TEXCOORD = sTrmpLineTexCoords[(i + 1) * 4 + k];
             REG_NORMAL = *n1;
             n1++;
-            SEND_VTX(v1);
+            G3_Vtx(v1->x >> 8, v1->y >> 8, v1->z >> 8);
             v1++;
             REG_TEXCOORD = sTrmpLineTexCoords[i * 4 + k];
             REG_NORMAL = *n0;
             n0++;
-            SEND_VTX(v0);
+            G3_Vtx(v0->x >> 8, v0->y >> 8, v0->z >> 8);
             v0++;
         }
         G3_End();
