@@ -2532,48 +2532,44 @@ fall:
 }
 
 int daTrs_c::UpdateDuringNonlethalHit(int arg1) {
-
     Stop();
-    if (*(u16 *)&this->mStateTimer == 0)
+    if (*(u16 *)&mStateTimer == 0)
         SetMoveYawForDuringHit(1);
     {
-        u16 v = *(u16 *)&this->mStateTimer;
-        if (v < 0x20) {
-            int result = ((arg1 * data_ov063_0211e7e0[v]) << 12) / 5000;
-            MoveDuringHit(1, result);
+        u16 t = *(u16 *)&mStateTimer;
+        if (t < 0x20) {
+            MoveDuringHit(1, ((arg1 * data_ov063_0211e7e0[t]) << 12) / 5000);
             goto ret0;
         }
-        if (v < 0x30) {
+        if (t < 0x30) {
             ShakeAfterHit();
             goto ret0;
         }
     }
-    (this->mdCcAcPos_c.flags) &= ~1;
+    mdCcAcPos_c.flags &= ~1;
     ResetAfterHit();
-    this->mState = 1;
+    mState = 1;
     return 1;
 ret0:
     return 0;
 }
 
 int daTrs_c::UpdateAfterBouncedOn(int arg) {
-
-    unsigned int idx;
-    int *pf;
+    unsigned int t;
     int rv;
+
     Stop();
-    if (*(u16 *)&this->mStateTimer == 0)
+    if (*(u16 *)&mStateTimer == 0)
         SetMoveYawForDuringHit(0);
-    idx = *(u16 *)&this->mStateTimer;
-    if (idx < 0x20) {
-        MoveDuringHit(0, ((arg * data_ov063_0211e7e0[idx]) << 12) / 5000);
+    t = *(u16 *)&mStateTimer;
+    if (t < 0x20) {
+        MoveDuringHit(0, ((arg * data_ov063_0211e7e0[t]) << 12) / 5000);
         rv = 0;
         goto done;
     }
-    pf = (int*)&this->mdCcAcPos_c.flags;
-    *pf &= ~1;
+    mdCcAcPos_c.flags &= ~1;
     ResetAfterHit();
-    this->mState = 1;
+    mState = 1;
     return 1;
 done:
     return rv;
@@ -2586,58 +2582,35 @@ void daTrs_c::ResetAfterHit() {
 }
 
 void daTrs_c::ShakeAfterHit() {
-
-    s16 v;
-    s16* p;
-    p = (s16*)&this->mAngleY;
-    v = *p;
-    *p = v + (FX_CosIdx((u16)(s16)((*(u16 *)&this->mStateTimer - 0x1f) << 13) >> 4) << 10) / 4096;
+    mAngle.y += (FX_CosIdx((u16)(s16)((*(u16 *)&mStateTimer - 0x1f) << 13) >> 4) << 10) / 4096;
 }
 
 void daTrs_c::MoveDuringHit(int cond, int val) {
-
     s16 ang = (*(u16 *)&mStateTimer + 1) << 11;
 
     mHorzSpeed = val;
     mVertSpeed = FX_CosIdx((u16)ang >> 4);
-    this->mPrevAngleY = this->mKnockbackAngleY;
-    if (cond == 0) return;
+    mPrevAngleY = mKnockbackAngleY;
+    if (cond == 0)
+        return;
 
-    {
-        short* p8e = (short*)&this->mAngleY;
-        *p8e = *p8e + data_ov063_0211e7e0[*(u16 *)&this->mStateTimer];
-        {
-            short* p90 = (short*)&this->mAngleZ;
-            *p90 = *p90 + data_ov063_0211e7e0[*(u16 *)&this->mStateTimer];
-        }
-    }
+    mAngle.y += data_ov063_0211e7e0[*(u16 *)&mStateTimer];
+    mAngle.z += data_ov063_0211e7e0[*(u16 *)&mStateTimer];
 }
 
 void daTrs_c::SetMoveYawForDuringHit(int cond) {
-
-    int *f = (int *)&this->mdCcAcPos_c.flags;
-    unsigned short *h = (unsigned short *)&this->mBooFlags;
-    *f |= 1;
-    *h &= ~TRS_FLAG_FOLLOW_HEADING;
-    this->mPreKnockbackAngleY = this->mPrevAngleY;
+    mdCcAcPos_c.flags |= 1;
+    mBooFlags.followHeading = 0;
+    mPreKnockbackAngleY = mPrevAngleY;
     if (cond != 0) {
-        this->mKnockbackAngleY = this->mClosestPlayer->mAngleY;
+        mKnockbackAngleY = mClosestPlayer->mAngleY;
         return;
     }
-    {
-        short base = this->mPrevAngleY;
-        int d = (int)base - (int)this->mAngleToPlayer;
-        d = (short)d;
-        d = (unsigned short)d;
-        d >>= 4;
-        {
-            short t = FX_CosIdx(d);
-            if (t < 0)
-                this->mKnockbackAngleY = base;
-            else
-                this->mKnockbackAngleY = (short)(base + 0x8000);
-        }
-    }
+    s16 base = mPrevAngleY;
+    if (FX_CosIdx((u16)(s16)(base - mAngleToPlayer) >> 4) < 0)
+        mKnockbackAngleY = base;
+    else
+        mKnockbackAngleY = base + 0x8000;
 }
 
 int daTrs_c::VanishOrAppear() {
