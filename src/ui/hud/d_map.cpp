@@ -590,9 +590,9 @@ s32 dMap_c::Behavior()
         }
         G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
         if (data_0209f498[gActivePlayerSlot].mode != 2)
-            *(volatile u16 *)0x400100c = (u16)((*(volatile u16 *)0x400100c & 0x43) | 0x5300);
+            REG_DB_BG2CNT = (u16)((REG_DB_BG2CNT & 0x43) | 0x5300);
         else
-            *(volatile u16 *)0x400100c = (u16)((*(volatile u16 *)0x400100c & 0x43) | 0x5500);
+            REG_DB_BG2CNT = (u16)((REG_DB_BG2CNT & 0x43) | 0x5500);
         goto L2a4;
     }
 
@@ -606,7 +606,7 @@ L200: {
     if (!(u8)flagsOr) {
         *(volatile s32 *)0x4001000 =
             (*(volatile s32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
-        *(volatile u16 *)0x4001050 = 0;
+        REG_DB_BLDCNT = 0;
     }
     this->mTouchCircleTimer = 0;
     goto L2a4;
@@ -879,10 +879,10 @@ Lb84:
     if (SublevelToLevel(gCurrentSublevel) != -1)
         goto Lbc0;
 Lb9c:
-        *(volatile u16 *)0x400100e = ((0x1f - id) << 8) | ((*(volatile u16 *)0x400100e & 0x43) | 0x4010);
-        goto Lbdc;
+    REG_DB_BG3CNT = ((0x1f - id) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x4010);
+    goto Lbdc;
 Lbc0:
-        *(volatile u16 *)0x400100e = ((0x1f - id) << 8) | ((*(volatile u16 *)0x400100e & 0x43) | 0x10);
+    REG_DB_BG3CNT = ((0x1f - id) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x10);
 Lbdc:
     gSubScreenLayers |= DISPLAY_LAYER_BG3;
     goto Lc00;
@@ -920,9 +920,9 @@ int dMap_c::InitResources()
     u16 *p;
     s32 i;
 
-    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & ~3) | 2;
-    *(volatile u16*)0x400100e = (*(volatile u16*)0x400100e & 0x43) | 0x1f10;
-    *(volatile u16*)0x400100e &= ~0x40;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 2;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x1f10;
+    REG_DB_BG3CNT &= ~0x40;
 
     {
         int id1 = func_0202a980();
@@ -970,7 +970,8 @@ int dMap_c::InitResources()
             SublevelToLevel(gCurrentSublevel) == 4 ||
             (SublevelToLevel(gCurrentSublevel) == 0x13 && gCurrentSublevel == 0x2e) ||
             SublevelToLevel(gCurrentSublevel) == -1) {
-            *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x4010));
+            REG_DB_BG3CNT =
+                (u16)(((0x1f - data_ov002_02111148) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x4010));
             mMapWidth = 0x100;
             mMapCenterOffset = 0x80;
 
@@ -991,7 +992,8 @@ int dMap_c::InitResources()
             }
             mArrowType = 1;
         } else {
-            *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x10));
+            REG_DB_BG3CNT =
+                (u16)(((0x1f - data_ov002_02111148) << 8) | ((REG_DB_BG3CNT & 0x43) | 0x10));
             mMapWidth = 0x80;
             mMapCenterOffset = 0x40;
             mMapOriginX = 0;
