@@ -684,7 +684,7 @@ void sil_scan() {
         const char *by = *(const char *const *)(a + 0x438);
         const unsigned st = *(const unsigned *)(a + 0x440);
         if (by && st >= 5u && st != 8u && st != 9u) {
-            if (by == pl) t->mine = true;
+            if (by == pl) { t->mine = true; sil_touch(); }      // COOPSILVER3: my take is under way: the leader's number waits
             else if (is_player_ptr(by)) t->other = true;
         }
     }
