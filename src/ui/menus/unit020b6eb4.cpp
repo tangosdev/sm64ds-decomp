@@ -120,7 +120,7 @@ int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     G2S_SetBlendBrightness(0x3f, -0x10);
     GX_SetVisiblePlane(0);
     GXS_SetVisiblePlane(0);
-    REG_POWCNT1 &= ~0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
     Work_Create();
     WORK->settings->bootArgs = bootArgs;
     WORK->callback = hooks->callback;

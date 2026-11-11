@@ -4704,16 +4704,14 @@ int dScStage_c::InitResources() {
         GX::DisableAllBanks();
         dScStage_c::SetVramBanks();
 
-        volatile u32 *p0 = (volatile u32 *)0x04000000;
-        volatile u32 *p1 = (volatile u32 *)0x04001000;
-        *p0 &= 0xFFCFFFEF;
-        *p1 &= 0xFFCFFFEF;
+        GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
+        GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
         GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
         GXS_SetGraphicsMode(GX_BGMODE_3);
-        *p0 = (*p0 & ~0x38000000) | 0x08000000;
-        REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
+        GX_SetBGScrOffset(1);
+        GX_SetPower(GX_POWER_ALL);
         GX_DispOn();
-        *p1 |= 0x10000;
+        GXS_DispOn();
         InitialiseVramGlobals();
 
         G2_SetBG1Priority(0);
@@ -4866,10 +4864,10 @@ int dScStage_c::InitResources() {
         }
         gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
 
-        *p0 = (*p0 & ~0x1F00) | 0x1100;
+        GX_SetVisiblePlane(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ);
         int skipSubDisplayLayers = (gGameMode == 2) ? 1 : 0;
         if (skipSubDisplayLayers == 0) {
-            *p1 = (*p1 & ~0x1F00) | (gSubScreenLayers << 8);
+            GXS_SetVisiblePlane(gSubScreenLayers);
         }
         dCc_c::listHead = 0;
         dExtShadowModel_c::CleanAll();

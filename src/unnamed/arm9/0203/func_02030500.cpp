@@ -48,7 +48,7 @@ void func_02030500(void) {
 
     GX_SetBGCharOffset(0);
     GX_SetBGScrOffset(0);
-    REG_POWCNT1 |= 0x8000; /* bit 15: engine A on the top screen */
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     G2_BlendNone();
     G2S_BlendNone();
     GX_SetVisibleWnd(GX_WNDMASK_NONE);

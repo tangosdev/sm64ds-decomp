@@ -85,7 +85,7 @@ int  D3D_PanForX(int a);
 namespace Particle { void RenderAll(); }
 
 extern "C" void D3D_CaptureToMain(void) {
-    REG_POWCNT1 |= 0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     GX_ResetBankForSubOBJ();
     GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
     GX_SetBankForLCDC(GX_VRAM_LCDC_D);
@@ -101,7 +101,7 @@ extern "C" void D3D_CaptureToMain(void) {
 
 extern "C" void D3D_CaptureToSub(void)
 {
-    REG_POWCNT1 &= ~0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_SUB_MAIN);
     GX_ResetBankForSubBG();
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
     GX_SetBankForLCDC(GX_VRAM_LCDC_C);

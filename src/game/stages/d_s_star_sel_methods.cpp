@@ -806,8 +806,7 @@ s32 dScStarSel_c::Behavior() {
 s32 dScStarSel_c::CleanupResources() {
     CleanCommonModelDataArr();
     Sound::UnsetPlayerVoiceGroup();
-    unsigned short *p = (unsigned short *)0x4000304;
-    *p = *p | 0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     return 1;
 }
 
@@ -902,7 +901,7 @@ s32 dScStarSel_c::InitResources() {
     } else {
         Sound::LoadAndSetMusic_Layer1(0x16);
     }
-    REG_POWCNT1 |= 0x8000;
+    GX_SetDispSelect(GX_DISP_SELECT_MAIN_SUB);
     ::Initialise3dGraphics(0);
     G3X_SetClearColor(0x7FFF, 0x1F, 0x7FFF, 0x3F, false);
     GX::DisableAllBanks();
@@ -918,7 +917,7 @@ s32 dScStarSel_c::InitResources() {
     GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
     GXS_SetGraphicsMode(GX_BGMODE_0);
     GX_SetBGScrOffset(1);
-    REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
+    GX_SetPower(GX_POWER_ALL);
     GX_DispOn();
     GXS_DispOn();
     G3X_SetFog(false, 0, 2, 0x1000);

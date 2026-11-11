@@ -114,4 +114,22 @@ void GXx_SetMasterBrightness_(volatile unsigned short *, int);
 #define GXS_DispOn() (REG_DISPCNT_SUB |= 0x10000)
 #define GXS_DispOff() (REG_DISPCNT_SUB &= ~0x10000)
 
+/* POWCNT1's engine power bits, the SDK's GXPower values, and the setter that
+ * replaces them all at once. */
+#define GX_POWER_OFF     0
+#define GX_POWER_2D_MAIN 0x0002
+#define GX_POWER_RE      0x0004
+#define GX_POWER_GE      0x0008
+#define GX_POWER_2D_SUB  0x0200
+#define GX_POWER_2D      (GX_POWER_2D_MAIN | GX_POWER_2D_SUB)
+#define GX_POWER_3D      (GX_POWER_GE | GX_POWER_RE)
+#define GX_POWER_ALL     (GX_POWER_2D | GX_POWER_3D)
+#define GX_SetPower(power) (REG_POWCNT1 = (u16)((REG_POWCNT1 & ~GX_POWER_ALL) | (power)))
+
+/* POWCNT1 bit 15, which engine drives the top LCD: the SDK's GXDispSelect. */
+#define GX_DISP_SELECT_SUB_MAIN 0
+#define GX_DISP_SELECT_MAIN_SUB 1
+#define GX_SetDispSelect(sel) (REG_POWCNT1 = (u16)((REG_POWCNT1 & ~0x8000) | ((sel) << 15)))
+#define GX_GetDispSelect()    ((REG_POWCNT1 & 0x8000) >> 15)
+
 #endif
