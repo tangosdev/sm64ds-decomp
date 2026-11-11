@@ -268,6 +268,7 @@ void C_kick(int s) { C_CALL(lobby_kick(s), fk_kick(s)); }
 void C_mute(int s, int m) { C_CALL(lobby_mute(s, m), fk_mute(s, m)); }
 void C_ban(int s) { C_CALL(lobby_ban(s), fk_ban(s)); }
 void C_colors(void) { C_CALL(lobby_set_colors(), fk_set_colors()); }
+void C_rejoin(void) { C_CALL(lobby_rejoin_game(), (void)0); }   /* REJOIN1: the stand-in has no running game to go back to */
 
 /* ================================================================ keyboard ====================================================== */
 /* typed text is read by polling the keys once a logic frame (hal/menu_online_profile.cpp does the same for the NAME popup): the window
@@ -337,6 +338,7 @@ enum Ctl {
     C_PK_ROW0 = 135,                      /* its rows (Yoshi: Body, Shoes; a bro: Hat, Overalls, Shoes) */
     C_PK_OK = 138, C_PK_BACK = 139,
     C_PK_CELL0 = 140,                     /* its grid, PROF_COLS x PROF_ROWS cells (C_PK_CELL0 + row * PROF_COLS + col) */
+    C_JOIN = 196,                         /* coopfix1 REJOIN1: JOIN GAME, in READY's place while the room's coop game runs without me */
     C_COUNT = 200
 };
 /* the small buttons on a seat's plate: mute, kick, ban, and the paint bucket on the player's own */
@@ -455,6 +457,7 @@ void make_geom(Geom *g, int w, int h, const LobbyState *s)
         g->r[C_MODS] = R(rx, top + 76, rw, 30);       /* VS: no mods box; this row is the match line (drawn, not pressed) */
     }
     g->r[C_READY] = R(rx, top + 118, rw, bot - top - 118);
+    g->r[C_JOIN] = g->r[C_READY];      /* REJOIN1: one box, two meanings (live() picks) */
     /* the seats along the bottom: one row up to 8, two rows above that */
     const int slots = s->max_seats > 0 ? (s->max_seats > 16 ? 16 : s->max_seats) : 4;
     g->n_seat_slots = slots;
@@ -534,7 +537,9 @@ bool live(const LobbyState *s, int c)
         return c >= C_SET_ROW0 && c < C_SET_ROW0 + s->n_settings && s->am_host;
     }
     switch (c) {
-    case C_EYE: case C_COPY: case C_CHAT: case C_SETTINGS: case C_READY: return true;
+    case C_EYE: case C_COPY: case C_CHAT: case C_SETTINGS: return true;
+    case C_READY: return !s->can_rejoin;
+    case C_JOIN: return s->can_rejoin != 0;   /* REJOIN1 */
     case C_NAME: return s->am_host != 0;
     case C_SAVE: return s->kind == LOBBY_COOP && s->am_host;
     default: break;
@@ -576,7 +581,7 @@ int first_focus(const LobbyState *s)
     if (P.screen == SCR_CHOOSE) return C_CHOOSE_COOP;
     if (s && s->phase == LOBBY_FAILED) return C_FAIL_BACK;
     if (in_room(s) && P.picker) return pk_current_cell();
-    if (in_room(s)) return P.panel ? (s->am_host && s->n_settings ? C_SET_ROW0 : C_SET_BACK) : C_READY;
+    if (in_room(s)) return P.panel ? (s->am_host && s->n_settings ? C_SET_ROW0 : C_SET_BACK) : s->can_rejoin ? C_JOIN : C_READY;
     return C_BACK;
 }
 
@@ -803,6 +808,10 @@ void press(const LobbyState *s, int c)
         C_save(!s->coop_save_continue);
         log_line(!s->coop_save_continue ? "coop save -> Continue" : "coop save -> New");
         return;
+    case C_JOIN:   /* REJOIN1: back into the room's running coop game, in place, as a late joiner */
+        log_line("JOIN GAME");
+        C_rejoin();
+        return;
     case C_READY: {
         if (s->phase != LOBBY_IN_ROOM) return;
         const int me = my_seat(s);
@@ -1024,6 +1033,10 @@ extern "C" void lobby_page_open_now(void)
     } else if (want == 3) {
         P.screen = SCR_ROOM;          /* proof rows: the stand-in's scenario is already set */
         log_line("open: a proof scenario");
+    } else if (want == 4) {
+        P.screen = SCR_ROOM;          /* REJOIN1: back on the room this console is still in, its game left (JOIN GAME shows) */
+        P.seen_phase = 1;
+        log_line("open: the room whose game this console left");
     } else {
         P.screen = SCR_CHOOSE;
         log_line("open: the Coop / VS choice");
@@ -1044,6 +1057,13 @@ extern "C" int lobby_page_env_poll(void)
         C_tick();
         const LobbyState *s = C_state();
         if (s->phase == LOBBY_NONE || s->phase == LOBBY_FAILED) { P.keep_tick = 0; log_line("the client is done with the room: no more ticks"); }
+        /* REJOIN1: the room's coop game ended for this console but runs on (its own quit, or the connection lost): the page comes back
+           on the room, once each time, with JOIN GAME where READY was */
+        static int was_rejoin;
+        const int rj = P.keep_tick && s->can_rejoin;
+        if (rj && !was_rejoin && !g_fake) { P.want = 4; log_line("the room's game runs without this console: the page comes back on the room"); }
+        was_rejoin = rj;
+        if (P.want == 4) return 1;
     }
 #if LP_PROOF
     if (P.env_done) return 0;
@@ -2084,6 +2104,23 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
         label_box(C_MODS, buf, 0, 1);
     }
     label_box(C_PRIVACY, "Privacy: Code", 0, 0);
+    /* JOIN GAME (REJOIN1): the room's coop game runs and this console left it (its own quit, or the connection was lost) */
+    if (st->can_rejoin) {
+        const Rect &r = g.r[C_JOIN];
+        draw_box(s, f, hd, r, 0, lit(C_JOIN));
+        rrect(s, r.x + (int)(6 * u), r.y + (int)(6 * u), r.w - (int)(12 * u), r.h - (int)(12 * u), 8 * u, 0xFFE040u, 80);
+        const char *word = "JOIN GAME";
+        const char *sub = "The game is still going";
+        const float em = 30.0f, sem = 12.0f;
+        const int bev = hd ? (int)(18.0f * r.h / 150.0f) : (int)(3 * u);
+        const Rect face = { r.x + bev, r.y + bev, r.w - 2 * bev, r.h - 2 * bev };
+        const float gap = 6 * u;
+        const float total = f.cap(em) + gap + f.cap(sem);
+        const float y0 = face.y + (face.h - total) * 0.5f;
+        f.draw(s, face.x + (face.w - f.width(word, em)) * 0.5f, y0, word, em, ink_on(hd, 0));
+        const std::string t = fit(f, sub, sem, face.w - 8 * u);
+        f.draw(s, face.x + (face.w - f.width(t.c_str(), sem)) * 0.5f, y0 + f.cap(em) + gap, t.c_str(), sem, ink_on(hd, 0), 200);
+    } else
     /* READY / START */
     {
         const Rect &r = g.r[C_READY];
