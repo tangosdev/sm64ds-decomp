@@ -44,6 +44,7 @@
 
 extern "C" {
 extern unsigned char data_0209caa0[];
+int _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(void *dest);   // RABBIT1: the title's command 21
 extern void *data_0209f394[];
 extern unsigned char data_0209f250;
 extern unsigned char data_0209f21c;
@@ -1500,6 +1501,14 @@ void leave_at_title() {
     std::fflush(stderr);
     ntr::backup::select_coop(0);
     reread_files("the single player save");   // the title was built from the coop medium; a solo pick must read the solo files
+    {   // RABBIT1: and the minigame record (the title's command 21): the room's record stayed in memory, so the solo game showed
+        // the room's minigame record and its next save wrote it over the player's own. The player's own record already holds
+        // the room's rabbit keys (coop_save.cpp rabbit_frame wrote them to this file while the room was up).
+        const int r = _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(data_0209caa0 + 0x44);
+        uint32_t w;
+        std::memcpy(&w, data_0209caa0 + 0x48, 4);
+        std::fprintf(stderr, "[seamless] the minigame record read again from the single player save: ok=%d unlock word %08x\n", r, w);
+    }
     unsigned extra = 0;
     const bool after_level = hub_game_heap_carved(&extra);
     const int ok = after_level ? port_mods_relatch_after_level("leaving the coop room")

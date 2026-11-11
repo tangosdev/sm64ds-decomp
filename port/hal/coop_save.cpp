@@ -45,6 +45,18 @@ void *_ZN8dActor_c4NextEPKS_(const void *prev);   // KEYDOOR10 proof knob: walk 
 extern void *data_0209f394[];                      // the players
 extern int   data_0209f250;                        // my player index
 extern signed char data_0209f2f8;                  // LEVEL_ID
+// RABBIT1: the rabbit key's own save calls (src/engine/save/SaveData.cpp, src/unnamed/arm9/0201/func_02013638.c)
+void func_02013868(int kind, int character);       // the key's carried entry: +0x0c bit and minigame unlock bit
+int  func_02013638(int n);                          // the minigame menu's unlock test (MiniGm_IsUnlocked)
+int  func_02013890(int kind, int character);        // the rabbit's "already caught" test (daMip_c::StateCaughtMain)
+int  _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(void *dest);
+int  _ZN8SaveData13SaveMinigamesEP16MinigameSaveData(void *data);
+// RABBIT1 moat: the castle water's own collider and model refresh (dBgActor_c), the removal call, the water height word
+int  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
+int  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
+extern unsigned char data_0209f2d8[];              // daObjMcWater_c's "b" gate (InitResources: == 1 keeps the water up)
+extern int data_0209f32c;                          // the level's water height word
 }
 
 namespace port {
@@ -285,6 +297,12 @@ void ensure_init() {
                  host() ? "host" : "guest",
                  g_external ? "external" : (g_registered ? "own" : "NONE"),
                  host() ? g_sav : "(temp image)");
+    {   // RABBIT1: which shared mask this process merges with (the kill switches drop the bits that lane added)
+        uint32_t mf1, mf2;
+        std::memcpy(&mf1, coop_mono_mask() + 0x04, 4);
+        std::memcpy(&mf2, coop_mono_mask() + 0x08, 4);
+        std::fprintf(stderr, "[coopsave] shared mask flags1=%08x flags2=%08x\n", mf1, mf2);
+    }
 }
 
 // Frame the seed record the ROM way (the guest first record only).
@@ -475,6 +493,168 @@ void run_keydoor() {
                      (unsigned)(unsigned short)*(const short *)(d + 0x8e));
     }
     if (g_kd_t >= 900) g_kd_var = -1;
+}
+
+// ---- RABBIT1 (run coopfix1): the rabbit keys ---------------------------------
+// A caught rabbit's key is ONE ROM call, func_02013868(kind, character), made by the key's carried entry (d_a_obj_mip_key.cpp,
+// func_ov085_0212d038). It sets bit (kind << 2 | character) in TWO words: the file record's +0x0c (what the rabbit asks to know it was
+// caught, func_02013890, and what the room record carries) and the minigame record's unlock word at +0x48 of the live block
+// (func_0201361c; the minigame menu reads ONLY this one: MiniGm_IsUnlocked -> func_02013638). The minigame record is not part of
+// the coop record (+0x00..+0x43), so before this a friend's key reached everyone's +0x0c and nobody's minigame menu, the host saved
+// the merged +0x0c with SaveFile only (never the minigame record), and the catcher's own unlock lived in a guest temp image that is
+// deleted when the room ends. So, every frame of a coop room, once the file is open:
+//   1. the live minigame unlock word takes every key bit of the room's +0x0c word (the ROM's own invariant: func_02013868 is the
+//      only writer of +0x0c and it always sets both). The host then saves its minigame record into the .coopsav, so the room's
+//      file holds the unlock as well as the key; a late joiner or a restarted host gets it from +0x0c on the first frame.
+//   2. every key bit the room holds is ORed into the minigame record of this player's OWN single player save on disk
+//      (ntr/backup.cpp solo_minigame_unlock), at once, so it survives the room ending, the window being closed or a crash.
+// SM64DS_COOP_RABBIT_FIX=0 turns both off (the "before" of the proof rows).
+// Proof knobs, off unless set:
+//   SM64DS_COOP_RABBIT_GRANT=<frame>:<kind>  at that frame of the room, what the key pickup does for MY character: func_02013868
+//                                            (kind, my character) and SaveData::SaveCurrentFile (the "Saving" box after the key)
+//   SM64DS_COOP_RABBIT_LOG=<kind>            a [cooprabbit] line when the key or unlock word changes, and every 600 frames: both
+//                                            words, the rabbit's "already caught" answer for that kind per character, the menu's test
+constexpr uint32_t kKeyBits = 0x0FFFFFFFu;   // 7 kinds x 4 characters (coop_save_wire.h: +0x0c is 28 bits)
+uint32_t  g_home_done = 0;                   // key bits already in this player's own save
+ULONGLONG g_home_ms = 0;
+uint32_t  g_rl_keys = 0xFFFFFFFFu, g_rl_mg = 0xFFFFFFFFu;
+bool      g_grant_done = false;
+
+bool rabbit_fix() {
+    static int v = -1;
+    if (v < 0) { const char *e = std::getenv("SM64DS_COOP_RABBIT_FIX"); v = (e && *e == '0') ? 0 : 1; }
+    return v == 1;
+}
+uint32_t rd32le(const uint8_t *p) { uint32_t v; std::memcpy(&v, p, 4); return v; }
+int my_character() {
+    const int me = data_0209f250;
+    const char *pl = (me >= 0 && me < 16) ? (const char *)data_0209f394[me] : nullptr;
+    return pl ? (int)(*(const unsigned *)(pl + 0x08) & 3) : -1;   // Player param1 = the character (d_a_mip.cpp reads pl->param1)
+}
+
+void rabbit_frame() {
+    if (!live_valid()) return;
+    const char *gr = std::getenv("SM64DS_COOP_RABBIT_GRANT");
+    if (gr && !g_grant_done) {
+        unsigned f = 0; int kind = 0;
+        if (std::sscanf(gr, "%u:%d", &f, &kind) == 2 && g_frame >= f && kind >= 0 && kind < 7) {
+            const int ch = my_character();
+            if (ch >= 0) {
+                g_grant_done = true;
+                const int before = func_02013890(kind, ch) != 0;
+                func_02013868(kind, ch);
+                const int saved = _ZN8SaveData15SaveCurrentFileEv();
+                std::fprintf(stderr, "[cooprabbit-knob] f=%u key caught: kind %d character %d (bit %d), had it before %d; "
+                             "SaveCurrentFile ok=%d; +0x0c=%08x unlock=%08x\n", g_frame, kind, ch, kind * 4 + ch, before, saved,
+                             rd32le(data_0209caa0 + 0x0c), rd32le(data_0209caa0 + 0x48));
+            }
+        }
+    }
+    const uint32_t keys = rd32le(data_0209caa0 + 0x0c) & kKeyBits;
+    if (rabbit_fix()) {
+        const uint32_t mg = rd32le(data_0209caa0 + 0x48);
+        const uint32_t add = keys & ~mg;
+        if (add) {
+            const uint32_t now_mg = mg | add;
+            std::memcpy(data_0209caa0 + 0x48, &now_mg, 4);
+            int ok = -1;
+            if (host()) ok = _ZN8SaveData13SaveMinigamesEP16MinigameSaveData(data_0209caa0 + 0x44);
+            std::fprintf(stderr, "[cooprabbit] f=%u minigame unlock word took the room's key bits %08x: %08x -> %08x (%s)\n", g_frame,
+                         add, mg, now_mg, host() ? (ok ? "host: minigame record saved to the room file" : "host: minigame save FAILED")
+                                                   : "guest");
+        }
+        const ULONGLONG now = GetTickCount64();
+        if ((keys & ~g_home_done) && (g_home_ms == 0 || now - g_home_ms >= 2000)) {
+            g_home_ms = now;
+            char msg[1400];
+            const int r = ntr::backup::solo_minigame_unlock(keys, msg, sizeof msg);
+            static bool refused_said = false;   // a refusal is said once, not on every 2 s retry
+            if (r >= 0) { g_home_done |= keys; refused_said = false; }
+            if (r >= 0 || !refused_said)
+                std::fprintf(stderr, "[cooprabbit] f=%u own save: %s: %s\n", g_frame,
+                             r > 0 ? "key bits written" : r == 0 ? "already there" : "NOT written (retrying every 2 s, said once)", msg);
+            if (r < 0) refused_said = true;
+        }
+    }
+    if (const char *lg = std::getenv("SM64DS_COOP_RABBIT_LOG")) {
+        const int kind = std::atoi(lg);
+        const uint32_t mg = rd32le(data_0209caa0 + 0x48);
+        if (keys != g_rl_keys || mg != g_rl_mg || (g_frame % 600) == 0) {
+            g_rl_keys = keys; g_rl_mg = mg;
+            std::fprintf(stderr, "[cooprabbit] f=%u me=char%d keys(+0x0c)=%08x unlock(+0x48)=%08x kind %d: caught-before "
+                         "m%d l%d w%d y%d, menu-unlocked m%d l%d w%d y%d\n", g_frame, my_character(), keys, mg, kind,
+                         func_02013890(kind, 0) != 0, func_02013890(kind, 1) != 0, func_02013890(kind, 2) != 0,
+                         func_02013890(kind, 3) != 0, func_02013638(kind * 4 + 0) != 0, func_02013638(kind * 4 + 1) != 0,
+                         func_02013638(kind * 4 + 2) != 0, func_02013638(kind * 4 + 3) != 0);
+        }
+    }
+}
+
+// ---- RABBIT1 (run coopfix1, Tango 11-11): the moat drains live for everyone -------------------------------------------
+// The drain is one save bit, flags2 0x80000, set by the basement pillars (d_a_obj_c0_switch.cpp:198). It is in the room record
+// now (coop_save_wire.h), so it reaches every console within a record round trip. The basement water reads it EVERY frame and
+// drains by itself (daObjC0Water_c::Behavior); the castle grounds moat (CASTLE_WATER, 338) reads it only when it spawns
+// (daObjMcWater_c::InitResources: mPosY = -0x2bc000), and the chain-link grate in the moat wall (METAL_NET, 339, param 0xff) is
+// simply not created when it is set. So a console that is ON the castle grounds when the bit arrives drains its moat here:
+// 0x5000 a frame (the basement water's own rate) down to the drained height, the model and collider moved the ROM's way, the
+// level's water height word lowered with it as InitResources would have set it, and the grate removed. Reloading the grounds then
+// takes the ROM's own path. SM64DS_COOP_MOAT_LIVE=0 turns this off. Proof knob SM64DS_COOP_MOAT_DRAIN=<frame>: at that frame of
+// the room, what the pillars do (flags2 |= 0x80000, then SaveData::SaveCurrentFile).
+constexpr int kMoatDrainedY = -0x2bc000;
+bool     g_moat_drain_done = false, g_moat_logged = false;
+unsigned g_moat_frames = 0;
+
+void moat_frame() {
+    if (!live_valid()) return;
+    uint32_t f2 = rd32le(data_0209caa0 + 0x08);
+    if (const char *md = std::getenv("SM64DS_COOP_MOAT_DRAIN")) {
+        const unsigned f = (unsigned)std::strtoul(md, nullptr, 10);
+        if (!g_moat_drain_done && g_frame >= f) {
+            g_moat_drain_done = true;
+            f2 |= 0x80000u;
+            std::memcpy(data_0209caa0 + 0x08, &f2, 4);
+            const int saved = _ZN8SaveData15SaveCurrentFileEv();
+            std::fprintf(stderr, "[coopmoat-knob] f=%u the pillars' bit set here (flags2 |= 0x80000, now %08x), SaveCurrentFile ok=%d\n",
+                         g_frame, f2, saved);
+        }
+    }
+    static int live_on = -1;
+    if (live_on < 0) { const char *e = std::getenv("SM64DS_COOP_MOAT_LIVE"); live_on = (e && *e == '0') ? 0 : 1; }
+    if (!live_on || !(f2 & 0x80000u) || data_0209f2f8 != 1 || data_0209f2d8[0] == 1) return;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(nullptr); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        const unsigned cls = *(const unsigned short *)(a + 0x0c);
+        if (cls == 338) {
+            int &y = *(int *)(a + 0x60);
+            if (y <= kMoatDrainedY) {
+                if (!g_moat_logged) {   // this console's water spawned drained (the room's bit was in before the level loaded)
+                    g_moat_logged = true;
+                    std::fprintf(stderr, "[coopmoat] f=%u this console's moat is already drained (y %d, water at x %d z %d), nothing to do\n",
+                                 g_frame, y >> 12, *(int *)(a + 0x5c) >> 12, *(int *)(a + 0x64) >> 12);
+                }
+                continue;
+            }
+            if (!g_moat_logged) {
+                g_moat_logged = true;
+                std::fprintf(stderr, "[coopmoat] f=%u the moat is drained in the room record and this console's moat is up (y %d): "
+                             "draining it live\n", g_frame, y >> 12);
+            }
+            y -= 0x5000;
+            if (y < kMoatDrainedY) y = kMoatDrainedY;
+            _ZN10dBgActor_c21UpdateModelPosAndRotYEv(a);
+            _ZN10dBgActor_c19UpdateClsnPosAndRotEv(a);
+            if (data_0209f32c > y - 0x64000) data_0209f32c = y - 0x64000;
+            if (y == kMoatDrainedY || (++g_moat_frames % 60) == 0)
+                std::fprintf(stderr, "[coopmoat] f=%u moat y %d%s, water height word %d\n", g_frame, y >> 12,
+                             y == kMoatDrainedY ? " (drained)" : "", data_0209f32c >> 12);
+        } else if (cls == 339 && (*(const unsigned *)(a + 0x08) & 0xff) == 0xff) {
+            // fBase_c: +0x0f shouldBeKilled (MarkForDestruction), +0x0e aliveState 2 once the frame moved it to the cleanup list
+            if (*(const unsigned char *)(a + 0x0f) == 0 && *(const unsigned char *)(a + 0x0e) != 2) {
+                _ZN7fBase_c18MarkForDestructionEv(a);
+                std::fprintf(stderr, "[coopmoat] f=%u the moat grate removed at x %d y %d z %d (it is never created on a drained moat)\n",
+                             g_frame, *(int *)(a + 0x5c) >> 12, *(int *)(a + 0x60) >> 12, *(int *)(a + 0x64) >> 12);
+            }
+        }
+    }
 }
 
 }  // namespace
@@ -713,6 +893,27 @@ bool coop_save_fetch(int timeout_ms) {
 
 extern "C" void port_coop_save_frame(void) {
     using namespace port;
+    // RABBIT1 proof knob, any session (solo too): SM64DS_RABBIT_READBACK=<frame>:<kind> does what the title's command 21 does
+    // (src/game/stages/d_s_dsmt.cpp: SaveData::ReadMinigameData into the live record at +0x44, from the medium this process has
+    // selected) and prints the unlock word it read and the minigame menu's own test (func_02013638) for that kind, per character.
+    if (const char *rb = std::getenv("SM64DS_RABBIT_READBACK")) {
+        static unsigned rbf = 0; static bool rb_done = false;
+        unsigned f = 0; int kind = 0;
+        ++rbf;
+        if (!rb_done && std::sscanf(rb, "%u:%d", &f, &kind) == 2 && rbf >= f && kind >= 0 && kind < 7) {
+            rb_done = true;
+            uint32_t was, now_w, magic;
+            std::memcpy(&was, data_0209caa0 + 0x48, 4);
+            const int r = _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(data_0209caa0 + 0x44);
+            std::memcpy(&now_w, data_0209caa0 + 0x48, 4);
+            std::memcpy(&magic, data_0209caa0 + 0x44, 4);
+            std::fprintf(stderr, "[rabbit-readback] f=%u medium %s (coop %d): ReadMinigameData=%d magic=%08x unlock word read=%08x "
+                         "(live before %08x); kind %d menu-unlocked m%d l%d w%d y%d; file keys(+0x0c)=%08x\n", rbf, ntr::backup::path(),
+                         coop() ? 1 : 0, r, magic, now_w, was, kind, func_02013638(kind * 4) != 0,
+                         func_02013638(kind * 4 + 1) != 0, func_02013638(kind * 4 + 2) != 0, func_02013638(kind * 4 + 3) != 0,
+                         *(const uint32_t *)(data_0209caa0 + 0x0c));
+        }
+    }
     if (!coop()) return;
     ensure_init();
     ++g_frame;
@@ -728,6 +929,8 @@ extern "C" void port_coop_save_frame(void) {
     run_probe();
     run_forge();
     run_keydoor();
+    rabbit_frame();
+    moat_frame();
     const ULONGLONG now = GetTickCount64();
     const bool live = comms_hub_state() == kHubLive;
     const bool others = live && comms_hub_seat_mask() != 0;

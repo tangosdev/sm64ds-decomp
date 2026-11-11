@@ -53,6 +53,10 @@ struct Stats {
 };
 Stats stats();
 
+// RABBIT1: OR `bits` into the minigame unlock word of the SINGLE PLAYER save on disk (whatever medium this process has selected),
+// the ROM's record format, primary and mirror. 1 = written, 0 = already there, -1 = refused or failed; msg says which and why.
+int solo_minigame_unlock(unsigned bits, char *msg, unsigned cap);
+
 }  // namespace backup
 }  // namespace ntr
 

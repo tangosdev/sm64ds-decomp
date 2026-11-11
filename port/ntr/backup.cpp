@@ -579,29 +579,13 @@ void online_reject(const char *why)
     if (std::rename(g_path, dst) != 0) std::remove(g_path);
 }
 
-// Fill g_path. Candidate order is documented in the header block above.
-void resolve_path_sp()
+// The single player save's path: the non-coop half of resolve_path_sp, also asked by solo_minigame_unlock (RABBIT1) while a coop
+// room holds the medium. The candidate order is the header block's.
+void solo_path_into(char *out, size_t cap)
 {
-    /* COOP (section 6): a guest runs on its own temp image; the host on the
-       file the launcher named. The fence refuses a coop room with no file. */
-    if (coop_mode()) {
-        if (!coop_host()) { resolve_guest_path(); return; }
-        const char *c = std::getenv("SM64DS_COOP_SAVE");
-        if (!c || !*c) c = std::getenv("SM64DS_SAVE_PATH");
-        if (!c || !*c || std::strlen(c) + 1 >= sizeof g_path)
-            fence_die(8, "(none)", "a coop host has no SM64DS_COOP_SAVE file");
-        std::snprintf(g_path, sizeof g_path, "%s", c);
-        char parent[sizeof g_path];
-        std::snprintf(parent, sizeof parent, "%s", g_path);
-        char *bs = std::strrchr(parent, '\\');
-        char *fs = std::strrchr(parent, '/');
-        if (fs && (!bs || fs > bs)) bs = fs;
-        if (bs && bs != parent) { *bs = '\0'; make_dir(parent); }
-        return;
-    }
     const char *env = std::getenv("SM64DS_SAVE_PATH");
-    if (env && *env && std::strlen(env) + 1 < sizeof g_path) {
-        std::snprintf(g_path, sizeof g_path, "%s", env);
+    if (env && *env && std::strlen(env) + 1 < cap) {
+        std::snprintf(out, cap, "%s", env);
         /* The other three candidates below create their save/
            directory; this one returned before make_dir, so a
            shortcut that pointed SM64DS_SAVE_PATH at a directory
@@ -609,8 +593,8 @@ void resolve_path_sp()
            flush_failure, SaveFile answering 0 -- and the game's
            own "Saved!" box regardless, because Message's
            countdown owns the box and not the write. */
-        char parent[sizeof g_path];
-        std::snprintf(parent, sizeof parent, "%s", g_path);
+        char parent[1024];
+        std::snprintf(parent, sizeof parent, "%s", out);
         char *bs = std::strrchr(parent, '\\');
         char *fs = std::strrchr(parent, '/');
         if (fs && (!bs || fs > bs)) bs = fs;
@@ -648,7 +632,30 @@ void resolve_path_sp()
     char sub[960];
     std::snprintf(sub, sizeof sub, "%s/save", dir);
     make_dir(sub);
-    std::snprintf(g_path, sizeof g_path, "%s/sm64ds.sav", sub);
+    std::snprintf(out, cap, "%s/sm64ds.sav", sub);
+}
+
+// Fill g_path. Candidate order is documented in the header block above.
+void resolve_path_sp()
+{
+    /* COOP (section 6): a guest runs on its own temp image; the host on the
+       file the launcher named. The fence refuses a coop room with no file. */
+    if (coop_mode()) {
+        if (!coop_host()) { resolve_guest_path(); return; }
+        const char *c = std::getenv("SM64DS_COOP_SAVE");
+        if (!c || !*c) c = std::getenv("SM64DS_SAVE_PATH");
+        if (!c || !*c || std::strlen(c) + 1 >= sizeof g_path)
+            fence_die(8, "(none)", "a coop host has no SM64DS_COOP_SAVE file");
+        std::snprintf(g_path, sizeof g_path, "%s", c);
+        char parent[sizeof g_path];
+        std::snprintf(parent, sizeof parent, "%s", g_path);
+        char *bs = std::strrchr(parent, '\\');
+        char *fs = std::strrchr(parent, '/');
+        if (fs && (!bs || fs > bs)) bs = fs;
+        if (bs && bs != parent) { *bs = '\0'; make_dir(parent); }
+        return;
+    }
+    solo_path_into(g_path, sizeof g_path);
 }
 
 void resolve_path()
@@ -1007,6 +1014,130 @@ bool verify(unsigned addr, const void *src, unsigned len)
 }
 
 Stats stats() { return g_stats; }
+
+/* RABBIT1 (run coopfix1): a coop room's rabbit keys land in the player's OWN save too. A caught rabbit unlocks a minigame, and the
+   minigame record (slot 3, MinigameSaveData, 0x2e4 bytes: ReadMinigameData / SaveMinigames) is the cartridge's one record that every
+   file shares; its word at payload +4 is the unlock mask the minigame menu reads (MiniGm_IsUnlocked -> func_02013638), bit
+   (kind << 2 | character), the same bit func_02013868 sets in the file record's +0x0c word. A coop room plays on its own medium (the
+   host's .coopsav, a guest's temp image), so without this a key caught in a room never reaches the single player save.
+   This ORs `bits` into that word of the single player save ON DISK, primary and mirror, the ROM's way (tag "ds mario", checksum),
+   under the same named lock and the same temp-and-move write as every other write, so a game window on that file sees the new
+   record at its next card command (refresh_from_disk). Only ever ORs: nothing is cleared, no other byte changes. A missing file is
+   a new cartridge: it gets the record with the ROM's defaults (SetDefaultValuesMg: zeros, magic "5000") plus the bits. A file that
+   is not a whole image, or holds a coop record, is left alone. 1 = written, 0 = it already had them, -1 = refused or failed. */
+int solo_minigame_unlock(unsigned bits, char *msg, unsigned cap)
+{
+    char sp[1024];
+    solo_path_into(sp, sizeof sp);
+    if (msg && cap) msg[0] = '\0';
+    if (ends_with_coopsav(sp)) {
+        if (msg) std::snprintf(msg, cap, "the single player save path %s is a coop save: left alone", sp);
+        return -1;
+    }
+    enum { kMgSlot = 3, kMgLen = 0x2e4, kUnlockOff = 4 };
+#ifdef _WIN32
+    unsigned hsh = 2166136261u;
+    for (const char *p = sp; *p; ++p) {
+        char c = *p;
+        if (c >= 'A' && c <= 'Z') c = (char)(c - 'A' + 'a');
+        if (c == '\\') c = '/';
+        hsh = (hsh ^ (unsigned char)c) * 16777619u;
+    }
+    char mname[64];
+    std::snprintf(mname, sizeof mname, "Local\\sm64ds-save-%08x", hsh);
+    HANDLE mx = CreateMutexA(NULL, FALSE, mname);
+    if (mx) WaitForSingleObject(mx, 5000);
+#endif
+    int rc = -1;
+    static unsigned char img[kSize];
+    bool fresh = false;
+    do {
+        std::memset(img, kErased, sizeof img);
+        if (std::FILE *f = std::fopen(sp, "rb")) {
+            const size_t got = std::fread(img, 1, sizeof img, f);
+            const int extra = (std::fgetc(f) != EOF);
+            std::fclose(f);
+            if (got != (size_t)kSize || extra) {
+                if (msg) std::snprintf(msg, cap, "%s is not a whole 8192-byte image: left alone", sp);
+                break;
+            }
+        } else {
+            fresh = true;
+        }
+        if (classify(img).coop) {
+            if (msg) std::snprintf(msg, cap, "%s holds a coop record: left alone", sp);
+            break;
+        }
+        unsigned char pay[kMgLen];
+        bool have = false;
+        for (int copy = 0; copy < 2 && !have; ++copy) {
+            const unsigned char *r = img + (copy ? kSize / 2 : 0) + (kMgSlot << 7);
+            if (std::memcmp(r + 2, kTagNormal, 8) != 0) continue;
+            unsigned short s = 0;
+            for (int i = 0; i < 8; ++i) s = (unsigned short)(s + kTagNormal[i]);
+            for (int i = 0; i < kMgLen; ++i) s = (unsigned short)((unsigned short)((s << 1) | (s >> 15)) ^ r[10 + i]);
+            if ((unsigned short)(r[0] | (r[1] << 8)) != s) continue;
+            std::memcpy(pay, r + 10, kMgLen);
+            have = true;
+        }
+        if (!have) {   /* SetDefaultValuesMg */
+            std::memset(pay, 0, sizeof pay);
+            const unsigned magic = 0x30303035u;
+            std::memcpy(pay, &magic, 4);
+        }
+        unsigned word;
+        std::memcpy(&word, pay + kUnlockOff, 4);
+        if ((word | bits) == word && have) {
+            if (msg) std::snprintf(msg, cap, "%s already has unlock bits %08x (word %08x)", sp, bits, word);
+            rc = 0;
+            break;
+        }
+        const unsigned was = word;
+        word |= bits;
+        std::memcpy(pay + kUnlockOff, &word, 4);
+        unsigned short s = 0;
+        for (int i = 0; i < 8; ++i) s = (unsigned short)(s + kTagNormal[i]);
+        for (int i = 0; i < kMgLen; ++i) s = (unsigned short)((unsigned short)((s << 1) | (s >> 15)) ^ pay[i]);
+        for (int copy = 0; copy < 2; ++copy) {
+            unsigned char *r = img + (copy ? kSize / 2 : 0) + (kMgSlot << 7);
+            r[0] = (unsigned char)(s & 0xFF);
+            r[1] = (unsigned char)(s >> 8);
+            std::memcpy(r + 2, kTagNormal, 8);
+            std::memcpy(r + 10, pay, kMgLen);
+        }
+        char tmp[1100];
+#ifdef _WIN32
+        std::snprintf(tmp, sizeof tmp, "%s.%lu.mg.tmp", sp, (unsigned long)GetCurrentProcessId());
+#else
+        std::snprintf(tmp, sizeof tmp, "%s.%lu.mg.tmp", sp, (unsigned long)getpid());
+#endif
+        std::FILE *f = std::fopen(tmp, "wb");
+        if (!f) {
+            if (msg) std::snprintf(msg, cap, "could not write beside %s", sp);
+            break;
+        }
+        bool ok = std::fwrite(img, 1, sizeof img, f) == (size_t)kSize;
+        if (std::fflush(f) != 0) ok = false;
+        if (std::fclose(f) != 0) ok = false;
+#ifdef _WIN32
+        if (ok && !MoveFileExA(tmp, sp, MOVEFILE_REPLACE_EXISTING)) ok = false;
+#else
+        if (ok && std::rename(tmp, sp) != 0) ok = false;
+#endif
+        if (!ok) {
+            std::remove(tmp);
+            if (msg) std::snprintf(msg, cap, "could not replace %s", sp);
+            break;
+        }
+        if (msg) std::snprintf(msg, cap, "%s minigame unlock word %08x -> %08x (%s record%s)", sp, was, word,
+                               have ? "its" : "a new", fresh ? ", new file" : "");
+        rc = 1;
+    } while (0);
+#ifdef _WIN32
+    if (mx) { ReleaseMutex(mx); CloseHandle(mx); }
+#endif
+    return rc;
+}
 
 // NAME1 (run after093): the title's online menu picks the save medium at run time. on=1: the signed online save (a missing or foreign file
 // starts blank, as at boot); on=0: the single player save; on<0: back to what the environment says (the boot's own choice). The image is

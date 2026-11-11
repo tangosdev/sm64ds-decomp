@@ -41,6 +41,7 @@
 #define PORT_HAL_COOP_SAVE_WIRE_H
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 namespace port {
@@ -94,22 +95,41 @@ enum : int {
 // sharing it can at most keep that door open and that key held for someone,
 // the state the cartridge has before that cutscene, so it can never lock
 // anyone out.
-// So the mask is 0x80FFFFFF.
+// So the mask was 0x80FFFFFF.
+// RABBIT1 (run coopfix1): bit 30 (0x40000000) is merged too. Its ROM writer is Toad in level 0x32 (d_a_kinopio.cpp:217, set only),
+// and every castle rabbit but MIPS stays away until it is set (d_a_mip.cpp InitResources); left out, the rabbits woke only for
+// the player who talked to Toad. It shares the range with the cap flags only as Yoshi's "cap available" bit (0x8000000 << 3),
+// and Yoshi never has a cap (SaveData::CanPlayerHaveCap), so sharing it cannot give or take anyone's cap. Mask 0xC0FFFFFF.
 //
 // flags2 (+0x08) monotonic bits: 0..3 (character intro / unlock, bit 3 is the
 // default), 7 (the opening was seen, LakituBro), 9 and 10..14 (Player's
 // one-shot cutscene bits 0x200, 0x400..0x4000), 20..27 (the eight glowing
-// rabbits, 0x100000 << n) and 28 (0x10000000, a one-shot). NOT merged: bit 17
-// (0x20000) and bit 19 (0x80000), which daMip clears and sets as state.
+// rabbits, 0x100000 << n) and 28 (0x10000000, a one-shot).
+// RABBIT1 (run coopfix1): bits 15, 17, 18 and 19 are merged too. The old note said daMip clears and sets 0x20000 and 0x80000 as
+// state; it only reads them. Every ROM write of them is an OR:
+//   0x8000   the red Bob-omb buddy's first line was heard (d_a_red_bombhei.cpp:511)
+//   0x20000  Lakitu's castle talk, the rabbit hunt is on (d_a_c_jugem.cpp:659 StateTalkInit; read by d_a_mip.cpp, d_map.cpp)
+//   0x40000  the sliding castle picture has opened (d_a_pic_gate_methods.cpp:185)
+//   0x80000  THE MOAT IS DRAINED (d_a_obj_c0_switch.cpp:198, the basement pillars); daObjMcWater_c::InitResources reads it once,
+//            so a joiner whose record lacked it saw the moat full on every castle grounds load
+// Still NOT merged: bit 16 (0x10000), set by a key door's message (d_a_door.cpp:844) and cleared by Lakitu
+// (d_a_c_jugem.cpp:992): conversation state.
 inline const uint8_t *coop_mono_mask() {
     static uint8_t m[kCoopRecBytes];
     static bool built = false;
     if (!built) {
         memset(m, 0, sizeof m);
-        const uint32_t f1 = 0x80FFFFFFu;   // KEYDOOR10: + 0x214 (key door bits)
+        // RABBIT1: the bits this lane added go with its kill switches, so a "before" row gets the 1.0.2 mask.
+        // SM64DS_COOP_RABBIT_FIX=0 drops Toad, the buddy line, the rabbit hunt and the picture; SM64DS_COOP_MOAT_LIVE=0 drops the moat.
+        const char *rf = getenv("SM64DS_COOP_RABBIT_FIX"), *ml = getenv("SM64DS_COOP_MOAT_LIVE");
+        const bool rabbit_on = !(rf && *rf == '0'), moat_on = !(ml && *ml == '0');
+        const uint32_t f1 = 0x80FFFFFFu |                     // KEYDOOR10: + 0x214 (key door bits)
+                            (rabbit_on ? 0x40000000u : 0u);   // RABBIT1: Toad wakes the rabbits
         const uint32_t f2 = 0x0000000Fu | 0x80u | 0x200u | 0x400u | 0x800u |
                             0x1000u | 0x2000u | 0x4000u | 0x0FF00000u |
-                            0x10000000u;
+                            0x10000000u |
+                            (rabbit_on ? (0x8000u | 0x20000u | 0x40000u) : 0u) |   // RABBIT1: buddy line, rabbit hunt, picture
+                            (moat_on ? 0x80000u : 0u);                             // RABBIT1: the moat
         const uint32_t wd = 0x0FFFFFFFu;     // +0x0c: 28 bits
         const uint32_t cn = 0xFFFFFFFFu;     // +0x10: cannons
         memcpy(m + 0x04, &f1, 4);            // little endian host
