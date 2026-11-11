@@ -2416,8 +2416,8 @@ void tick_est(unsigned now) {
         static unsigned af = 0; static int aa = -2;
         if (aa == -2) { aa = -1; if (const char *e = std::getenv("SM64DS_COOP_AREA")) { unsigned f = 0; int a = -1; if (std::sscanf(e, "%u:%i", &f, &a) == 2) { af = f; aa = a; } } }
         if (knobs_on && aa >= 0 && g_est_frames >= af) {
-            if (data_02092120 != aa) { ChangeArea(aa); std::fprintf(stderr, "[coop-knob] area %d shown (frame %u)\n", aa, g_est_frames); }
-            aa = -1;
+            static int nre = 0;  // held every frame: the game moves the shown area back on its own, so a once-only change did not last
+            if (data_02092120 != aa) { ChangeArea(aa); if (nre++ < 8) std::fprintf(stderr, "[coop-knob] area %d shown (frame %u)\n", aa, g_est_frames); }
         }
     }
     if (g_trace_id >= 0 && (g_est_frames % g_trace_every) == 0) {
