@@ -4,6 +4,7 @@
 #include "Ov007MenuState.h"
 #include "Ov007Item.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -21,12 +22,7 @@ void func_ov007_020ae454(Ov007ItemNode *self) {
         int b = s->wiggleFrames;
         int d = b - a;
         int r4;
-        if (d <= 0)
-            r4 = 0;
-        else if (d >= b)
-            r4 = 0x1000;
-        else
-            r4 = FX_DivS32(d << 0xc, b);
+        r4 = ProgressRatio(d, b);
         int t = ((r4 * (s->wiggleFrames * 0x2d)) >> 0xc) << 0x10;
         int r = FX_DivS32(t, 0x168);
         r = (unsigned short)r;

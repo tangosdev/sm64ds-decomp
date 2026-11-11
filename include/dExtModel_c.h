@@ -126,6 +126,26 @@ struct ModelComponents {
     void func_02044b30(int);
     void func_02045074(BMD_Bone *);
     void func_020453c0(BMD_Bone *, BCA_File *, int);
+
+    /* Material setters (src/engine/model/Model4.cpp). Set*(value) sets every
+       material; SetMaterial*(value, index) sets one. BMD_Material::flags is
+       its POLYGON_ATTR word: polygon mode in bits 4..5, back/front display in
+       6..7, alpha in 16..20, polygon ID in 24..29. The colours are the low
+       (diffuse, specular) or high (ambient, emission) half of
+       diffuseAmbient / specularEmission. */
+    void SetMaterialPolygonMode(int, int);
+    void SetPolygonMode(int);
+    void SetAlpha(unsigned int);
+    void SetShadowMask(int);
+    void SetShadowDraw(int, int);
+    void SetMaterialPolygonID(int, int);
+    void SetPolygonID(int);
+    void SetMaterialDiffuse(unsigned int, int);
+    void SetDiffuse(unsigned int);
+    void SetMaterialAmbient(unsigned int, int);
+    void SetAmbient(unsigned int);
+    void SetMaterialEmission(unsigned int, int);
+    void SetEmission(unsigned int);
 };
 
 struct dExtModel_c {

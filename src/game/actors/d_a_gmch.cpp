@@ -57,6 +57,7 @@ enum daGmch_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Actor ids are from symbols/actor_debug_names.tsv. */
 enum {
@@ -440,7 +441,6 @@ int daGmch_c::UpdateState7()
    reload and the bytes keep it. */
 int daGmch_c::EnterState7()
 {
-    extern s16 FX_SinCosTable_[];
 
     Vector3 rayStart;
     dActor_c *holder;
@@ -468,11 +468,11 @@ int daGmch_c::EnterState7()
     mPosZ = holderPos[2];
 
     angleIdx = ((u16)mAngleY >> 4);
-    trig = FX_SinCosTable_[angleIdx * 2];
+    trig = FX_SinIdx(angleIdx);
     mPosX = mPosX + FX_MUL(trig, 0x50000);
     mPosY = mPosY + 0x50000;
     angleIdx = ((u16)mAngleY >> 4);
-    trig = FX_SinCosTable_[angleIdx * 2 + 1];
+    trig = FX_CosIdx(angleIdx);
     mPosZ = mPosZ + FX_MUL(trig, 0x50000);
 
     holder = mHolder;

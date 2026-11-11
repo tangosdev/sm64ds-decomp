@@ -44,6 +44,7 @@ enum d_a_linelift2_AssetId {
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "cstd.h"
+#include "nitro/fx/fx_trig.h"
 
 struct Vec3;
 
@@ -66,7 +67,6 @@ extern SharedFilePtr *gLinelift2ModelFiles[];     /* BMD, by mVariant */
 extern SharedFilePtr *gLinelift2CollisionFiles[]; /* KCL, by mVariant */
 extern CLPS_Block *gLinelift2ClpsBlocks[];        /* CLPS, by mVariant */
 extern StateFunc gLinelift2StateFuncs[];          /* by mState */
-extern s16 FX_SinCosTable_[];                     /* sin/cos pairs */
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
@@ -239,7 +239,7 @@ void daLinelift2_c::StateReturn() {
    off either end of the path, 1 on reaching a node, 0 in between. */
 int daLinelift2_c::StepAlongPath() {
     int result;
-    VEC_Add((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
+    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
     if (Vec3_Dist(&mPos, (const Vector3 *)&mTargetPosX) < (mHorzSpeed >> 1)) {
         result = 1;
         mBasePosX = mTargetPosX;
@@ -286,10 +286,10 @@ void daLinelift2_c::SetVelocityToward(const Vector3 *to, const Vector3 *from) {
     Vec3_Sub(&d, to, from);
     mPrevAngleY = cstd::atan2(d.x, d.z);
     mPrevAngleX = cstd::atan2(d.y, Vec3_HorzLen(&d));
-    s32 horz = FX_MUL(mHorzSpeed, FX_SinCosTable_[((u16)mPrevAngleX >> 4) * 2 + 1]);
-    mSpeedX = FX_MUL(horz, FX_SinCosTable_[((u16)mPrevAngleY >> 4) * 2]);
-    mVertSpeed = FX_MUL(mHorzSpeed, FX_SinCosTable_[((u16)mPrevAngleX >> 4) * 2]);
-    mSpeedZ = FX_MUL(horz, FX_SinCosTable_[((u16)mPrevAngleY >> 4) * 2 + 1]);
+    s32 horz = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleX >> 4));
+    mSpeedX = FX_MUL(horz, FX_SinIdx((u16)mPrevAngleY >> 4));
+    mVertSpeed = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleX >> 4));
+    mSpeedZ = FX_MUL(horz, FX_CosIdx((u16)mPrevAngleY >> 4));
 }
 
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header

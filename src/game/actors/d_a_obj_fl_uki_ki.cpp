@@ -44,6 +44,7 @@
 #include "daObjFl_UkiKi_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
+#include "nitro/fx/fx_trig.h"
 
 struct KCL_File;
 struct CLPS_Block;
@@ -70,7 +71,6 @@ FlUkiKiModelFile FloatingFloorLllBig_ModelFile(ASSET_FL_UKI_KI_BMD);
 FlUkiKiCollisionFile FloatingFloorLllBig_ClsnFile(ASSET_FL_UKI_KI_KCL);
 
 extern CLPS_Block data_ov064_0211ba6c; /* the CLPS block SetFile is handed */
-extern s16 FX_SinCosTable_[];          /* shared sin/cos table, sin at [i*2] */
 
 /* The registry's allocator for FL_UKI_KI. The implicit default constructor is
    inlined into it at -O4: operator new, dBgActor_c's constructor, the vptr
@@ -100,8 +100,7 @@ s32 daObjFl_UkiKi_c::InitResources() {
 /* Bob 30 units either side of mOriginalPosY, one cycle per 64 frames
  * (mPhaseAngle advances 0x400 of 0x10000 a frame). */
 s32 daObjFl_UkiKi_c::Behavior() {
-    int val = (u16)mPhaseAngle >> 4;
-    mPosY = FX_SinCosTable_[val * 2] * (s16)0x1e + mOriginalPosY;
+    mPosY = FX_SinIdx((u16)mPhaseAngle >> 4) * (s16)0x1e + mOriginalPosY;
     mPhaseAngle += 0x400;
 
     UpdateModelPosAndRotY();

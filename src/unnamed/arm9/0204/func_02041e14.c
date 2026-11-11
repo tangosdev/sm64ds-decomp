@@ -1,75 +1,75 @@
 #include "types.h"
 #include "private/arm9_a1fc0_file_share.h"
+#include "private/arm9_wbt.h"
 
 extern int WBT_SetPacketSize(int a, int b);
-extern int WBT_PutUserData(u16 arg0, const void *arg1, int arg2, u32 arg3);
-extern void func_02042160();
+extern void func_02042160(void *arg);
 
 void func_02041e14(void)
 {
-    FileShareParentArea *s = (FileShareParentArea *)FILE_SHARE_WORK->mArea;
-    FileShareMsg cmd;
-    FileShareMsg cmd2;
+    FileShareParentArea *area = (FileShareParentArea *)FILE_SHARE_WORK->mArea;
+    FileShareMsg resizeMsg;
+    FileShareMsg replyMsg;
 
     if (data_020a1fc0.mIsParent == 0) {
         return;
     }
-    if (s->mReplySending != 0) {
+    if (area->mReplySending != 0) {
         return;
     }
 
-    s->mReplyPending &= s->mConnectedBitmap;
-    s->mReplyGroup &= s->mConnectedBitmap;
-    s->mOpenChildren &= s->mConnectedBitmap;
-    s->mResizeChildren &= s->mConnectedBitmap;
+    area->mReplyPending &= area->mConnectedBitmap;
+    area->mReplyGroup &= area->mConnectedBitmap;
+    area->mOpenChildren &= area->mConnectedBitmap;
+    area->mResizeChildren &= area->mConnectedBitmap;
 
-    if (s->mResizePending != 0 && s->mBusyCount == 0) {
-        int v = s->mNewPacketSize;
+    if (area->mResizePending != 0 && area->mBusyCount == 0) {
+        int newSize = area->mNewPacketSize;
         int childSize = data_020a1fc0.mChildPacketSize;
-        int snd;
+        int children;
 
-        s->mResizePending = 0;
-        data_020a1fc0.mParentPacketSize = v;
-        WBT_SetPacketSize(v, childSize);
+        area->mResizePending = 0;
+        data_020a1fc0.mParentPacketSize = newSize;
+        WBT_SetPacketSize(newSize, childSize);
 
-        snd = s->mResizeChildren;
-        if (snd == 0) {
+        children = area->mResizeChildren;
+        if (children == 0) {
             return;
         }
-        cmd.mKind = 1;
-        cmd.mFlag = 0;
-        cmd.mFileId = 0;
-        cmd.mPacketSizeHigh = (u8)(data_020a1fc0.mParentPacketSize >> 8);
-        cmd.mPacketSizeLow = (u8)data_020a1fc0.mParentPacketSize;
-        WBT_PutUserData((u16)snd, &cmd, 9, (u32)func_02042160);
-        s->mReplySending = 1;
-        s->mResizeChildren = 0;
+        resizeMsg.mKind = 1;
+        resizeMsg.mFlag = 0;
+        resizeMsg.mFileId = 0;
+        resizeMsg.mPacketSizeHigh = (u8)(data_020a1fc0.mParentPacketSize >> 8);
+        resizeMsg.mPacketSizeLow = (u8)data_020a1fc0.mParentPacketSize;
+        WBT_PutUserData(children, &resizeMsg, 9, func_02042160);
+        area->mReplySending = 1;
+        area->mResizeChildren = 0;
     } else {
         int mask;
-        FileShareMsg *found;
-        int cond;
+        FileShareMsg *first;
+        int grouped;
         int i;
-        int pri;
+        int group;
         int bit;
-        FileShareMsg *p;
-        u8 k;
-        int c;
-        int w4;
+        FileShareMsg *msg;
+        u8 kind;
+        int packetSize;
+        int fileId;
 
-        mask = s->mReplyPending;
+        mask = area->mReplyPending;
         if (mask == 0) {
             return;
         }
-        pri = s->mReplyGroup;
-        found = 0;
-        cond = (pri != 0 && pri == (pri & mask));
-        if (cond) {
-            mask = pri;
+        group = area->mReplyGroup;
+        first = 0;
+        grouped = (group != 0 && group == (group & mask));
+        if (grouped) {
+            mask = group;
         } else {
-            mask &= ~pri;
+            mask &= ~group;
         }
 
-        p = (FileShareMsg *)s->mReplies;
+        msg = (FileShareMsg *)area->mReplies;
         i = 0;
         for (;;) {
             bit = 1 << i;
@@ -77,43 +77,43 @@ void func_02041e14(void)
                 break;
             }
             if (bit & mask) {
-                if (found == 0) {
-                    found = p;
-                } else if (found->mKind != p->mKind || found->mFileId != p->mFileId) {
+                if (first == 0) {
+                    first = msg;
+                } else if (first->mKind != msg->mKind || first->mFileId != msg->mFileId) {
                     mask &= ~bit;
                 }
             }
-            p++;
+            msg++;
             i++;
         }
 
-        if (cond && mask != pri) {
-            s->mReplyGroup = 0;
+        if (grouped && mask != group) {
+            area->mReplyGroup = 0;
         }
-        if (found == 0) {
+        if (first == 0) {
             return;
         }
 
-        switch (found->mKind) {
+        switch (first->mKind) {
         case 0:
-            found->mKind = 1;
+            first->mKind = 1;
             break;
         case 2:
-            found->mKind = 3;
-            s->mOpenChildren &= ~mask;
+            first->mKind = 3;
+            area->mOpenChildren &= ~mask;
             break;
         }
 
-        k = found->mKind;
-        w4 = found->mFileId;
-        c = data_020a1fc0.mParentPacketSize;
-        cmd2.mKind = k;
-        cmd2.mFlag = 1;
-        cmd2.mFileId = w4;
-        cmd2.mPacketSizeHigh = (u8)(c >> 8);
-        cmd2.mPacketSizeLow = (u8)c;
-        WBT_PutUserData((u16)mask, &cmd2, 9, (u32)func_02042160);
-        s->mReplySending = 1;
-        s->mReplyPending &= ~mask;
+        kind = first->mKind;
+        fileId = first->mFileId;
+        packetSize = data_020a1fc0.mParentPacketSize;
+        replyMsg.mKind = kind;
+        replyMsg.mFlag = 1;
+        replyMsg.mFileId = fileId;
+        replyMsg.mPacketSizeHigh = (u8)(packetSize >> 8);
+        replyMsg.mPacketSizeLow = (u8)packetSize;
+        WBT_PutUserData(mask, &replyMsg, 9, func_02042160);
+        area->mReplySending = 1;
+        area->mReplyPending &= ~mask;
     }
 }

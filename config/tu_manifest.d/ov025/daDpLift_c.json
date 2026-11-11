@@ -641,14 +641,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@474",
+      "from": "@496",
       "to": "@432",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @446 now; licensed under the existing pin @432 | compiler temp; retiring this TU's named-parameter extern \"C\" block (the callback pair are members now) lowers the per-TU @NNN uniquifier and including math/MtxStack.h raises it, so mwcc emits it under this name now Re-keyed from @496 to @474 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @446 now; licensed under the existing pin @432 | compiler temp; retiring this TU's named-parameter extern \"C\" block (the callback pair are members now) lowers the per-TU @NNN uniquifier and including math/MtxStack.h raises it, so mwcc emits it under this name now Re-keyed from @496 to @474 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @474 to @496 when the TU took a long marker spacing in place of the opt_strength_reduction bracket around InitResources, and NitroSDK's FX_SinIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     },
     {
-      "from": "@473",
+      "from": "@495",
       "to": "@431",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @445 now; licensed under the existing pin @431 | compiler temp; retiring this TU's named-parameter extern \"C\" block (the callback pair are members now) lowers the per-TU @NNN uniquifier and including math/MtxStack.h raises it, so mwcc emits it under this name now Re-keyed from @495 to @473 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @445 now; licensed under the existing pin @431 | compiler temp; retiring this TU's named-parameter extern \"C\" block (the callback pair are members now) lowers the per-TU @NNN uniquifier and including math/MtxStack.h raises it, so mwcc emits it under this name now Re-keyed from @495 to @473 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @473 to @495 when the TU took a long marker spacing in place of the opt_strength_reduction bracket around InitResources, and NitroSDK's FX_SinIdx from nitro/fx/fx_trig.h (measured from the compiled object)."
     }
   ]
 }

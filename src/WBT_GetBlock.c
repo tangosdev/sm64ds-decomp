@@ -4,16 +4,17 @@ extern void MIi_CpuCopy32(const void *src, void *dst, s32 size); /* 0x0205a490 *
 extern int func_02065af0(int *thiz);
 
 /* NitroSDK WBT_GetBlock: queue a REQ_GET_BLOCK command (4) asking the peers
- * in type (target_bmp) for block arg1, recv_data_size arg3 bytes, into the
- * per-aid receive buffers and packet bitmaps of the two 16-entry tables. */
-void WBT_GetBlock(u16 type, u32 arg1, const void *src1, u32 arg3, const void *src2, u32 extra) {
+ * in target_bmp for block block_id, recv_size bytes, into the per-aid
+ * receive buffers and packet bitmaps of the two 16-entry tables. */
+void WBT_GetBlock(u16 target_bmp, u32 block_id, const void *recv_buf_table, u32 recv_size,
+                  const void *pkt_bmp_table, void (*callback)(void *)) {
     WBTCommand cmd;
     cmd.command = 4;
-    cmd.target_bmp = type;
-    cmd.callback = (void (*)(char *))extra;
-    cmd.u.get.block_id = arg1;
-    cmd.u.get.recv_data_size = arg3;
-    MIi_CpuCopy32(src1, cmd.u.get.recv_buf_table, 0x40);
-    MIi_CpuCopy32(src2, cmd.u.get.pkt_bmp_table, 0x40);
+    cmd.target_bmp = target_bmp;
+    cmd.callback = (void (*)(char *))callback;
+    cmd.u.get.block_id = block_id;
+    cmd.u.get.recv_data_size = recv_size;
+    MIi_CpuCopy32(recv_buf_table, cmd.u.get.recv_buf_table, 0x40);
+    MIi_CpuCopy32(pkt_bmp_table, cmd.u.get.pkt_bmp_table, 0x40);
     func_02065af0((int *)&cmd);
 }

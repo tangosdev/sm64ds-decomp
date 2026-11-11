@@ -42,7 +42,7 @@ struct daObjSeesaw_c : dBgActor_c {
     virtual void OnGroundPounded(dActor_c &other); /* slot 21 */
 
     int GetActorWeight(dActor_c *);                                   /* ov095 0x0213579c */
-    int SpringAngle(short *, short *, int, short, int, short);        /* ov095 0x021358cc */
+    int SpringAngle(short *, short *, int, short, short, short);      /* ov095 0x021358cc */
     void UpdateModelMatrix();                                         /* ov095 0x0213597c */
     void OnStoodOn(dActor_c *);                                       /* ov095 0x02135cdc */
     static void StoodOnCallback(void *, daObjSeesaw_c *, dActor_c *); /* ov095 0x02135e90 */

@@ -31,7 +31,6 @@ typedef unsigned char u8;
 typedef signed short s16;
 typedef signed int s32;
 
-extern int WBT_AidbitmapToAid(int x);
 extern FileShareNode *func_02041ce0(void *area, int offset, int size);
 extern FileShareNode *func_02041c64(void *area, int offset, int size);
 extern FileShareNode *func_02041c2c(void *area, int blockId);

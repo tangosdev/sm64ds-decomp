@@ -689,15 +689,15 @@ int Message::UpdateWindow() {
                 data_0209d6bc = data_0209d6ac;
 
             if (data_0209d698 != 0) {
-                *(volatile u16 *)0x4001040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                                             ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-                *(volatile u16 *)0x4001044 = ((gMsgBoxWinTop << 8) & 0xff00) |
-                                             ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+                REG_DB_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                               ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
+                REG_DB_WIN0V = ((gMsgBoxWinTop << 8) & 0xff00) |
+                               ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
             } else {
-                *(volatile u16 *)0x4000040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                                             ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-                *(volatile u16 *)0x4000044 = ((gMsgBoxWinTop << 8) & 0xff00) |
-                                             ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+                REG_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                            ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
+                REG_WIN0V = ((gMsgBoxWinTop << 8) & 0xff00) |
+                            ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
             }
             return 0;
         }
@@ -721,14 +721,14 @@ int Message::UpdateWindow() {
             gMsgBoxWinTop = gMsgBoxCenterY;
 
         if (data_0209d698 != 0) {
-            *(volatile u16 *)0x4001040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                                         ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-            *(volatile u16 *)0x4001044 =
+            REG_DB_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                           ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
+            REG_DB_WIN0V =
                 ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
         } else {
-            *(volatile u16 *)0x4000040 = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                                         ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-            *(volatile u16 *)0x4000044 =
+            REG_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
+                        ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
+            REG_WIN0V =
                 ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
         }
         return 0;
@@ -742,20 +742,18 @@ int Message::UpdateWindow() {
     data_0209d670 = 0;
     if (data_0209d698 != 0) {
         gSubScreenLayers &= ~2;
-        *(volatile u32 *)0x4001000 =
-            (*(volatile u32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
-        *(volatile u16 *)0x4001050 = 0;
-        *(volatile u16 *)0x4001048 &= ~0x3f;
-        *(volatile u16 *)0x400104a &= ~0x3f;
-        *(volatile u32 *)0x4001000 &= ~0xe000;
+        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | (gSubScreenLayers << 8);
+        REG_DB_BLDCNT = 0;
+        REG_DB_WININ &= ~0x3f;
+        REG_DB_WINOUT &= ~0x3f;
+        REG_DISPCNT_SUB &= ~0xe000;
     } else {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
-        *(volatile u32 *)0x4000000 =
-            (*(volatile u32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
-        *(volatile u16 *)0x4000050 = 0;
-        *(volatile u16 *)0x4000048 &= ~0x3f;
-        *(volatile u16 *)0x400004a &= ~0x3f;
-        *(volatile u32 *)0x4000000 &= ~0xe000;
+        REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | (gMainScreenLayers << 8);
+        REG_BLDCNT = 0;
+        REG_WININ &= ~0x3f;
+        REG_WINOUT &= ~0x3f;
+        REG_DISPCNT &= ~0xe000;
     }
     return 0;
 }
