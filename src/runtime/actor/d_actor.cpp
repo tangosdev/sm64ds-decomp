@@ -369,9 +369,6 @@ void dActor_c::func_02010da4() {
         mPosZ = 0x7d00000;
 }
 
-extern "C" {
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-}
 /* Adds the velocity (mSpeedX, mVertSpeed, mSpeedZ) to mPos, then the
    cylinder's horizontal push-out, then clamps to the world bounds. */
 void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
@@ -564,9 +561,6 @@ extern "C" s16 func_02010844(void *actor, Vector3 *v, s16 angle) {
     return cstd::atan2(FX_MUL(horzLen, FX_CosIdx((u16)angle >> 4)), v->y);
 }
 
-extern "C" {
-extern int RandomIntInternal(int *seed);
-}
 /* count is SIGNED, although the old mangled name claimed unsigned: 0x02010734
    branches with `ble` and the loop closes with `blt`, which an unsigned count
    assembles as `bls`/`blo`. */
@@ -794,7 +788,7 @@ dActor_c *dActor_c::SpawnFireball(const Vector3 &pos, const Vector3_16 *rot, Fix
 extern "C" {
 /* local extern: daPly_c has no accessor for the current body model. */
 void *func_ov002_020e496c(daPly_c *p); /* the player's current mBodyModels entry */
-void Vec3_Asr(Vector3 *vF, Vector3 *v, int amount);
+/* local extern: no header declares it. */
 void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
 }
 Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
