@@ -7085,31 +7085,31 @@ void daPly_c::func_ov002_020c98a4() {
 }
 
 extern "C" {
-void func_ov002_020c990c(daPly_c *p) {
+void daPly_c::func_ov002_020c990c() {
     typedef int Fix12;
-    p->mHasNoCap = 1;
-    if (p->mIsAirborne) {
-        p->mStateStep = 0x16;
-        p->SetAnim(0x54, 0x40000000, 0x1000, 0);
+    this->mHasNoCap = 1;
+    if (this->mIsAirborne) {
+        this->mStateStep = 0x16;
+        this->SetAnim(0x54, 0x40000000, 0x1000, 0);
     } else {
-        p->mStateStep = 0x17;
-        p->SetAnim(0x98, 0x40000000, 0x1000, 0);
+        this->mStateStep = 0x17;
+        this->SetAnim(0x98, 0x40000000, 0x1000, 0);
     }
-    p->mHorzSpeed = 0;
-    p->mVertSpeed = 0;
-    Sound::PlayCharVoice(p->mCharacter, 0x29, p->mCamSpacePos);
+    this->mHorzSpeed = 0;
+    this->mVertSpeed = 0;
+    Sound::PlayCharVoice(this->mCharacter, 0x29, this->mCamSpacePos);
 }
 }
 
 /* recovered: shared common types */
 extern "C" {
-void func_ov002_020c9998(daPly_c *p) {
+void daPly_c::func_ov002_020c9998() {
     typedef int Fix12i;
-    p->mStateStep = 0x12;
-    p->SetAnim(0x92, 0x40000000, 0x1000, 0);
-    dActor_c::Spawn(0xb2, 0xffff, p->mPos, &p->mAngle, p->mAreaId, -1);
-    p->mHorzSpeed = 0;
-    p->mVertSpeed = 0;
+    this->mStateStep = 0x12;
+    this->SetAnim(0x92, 0x40000000, 0x1000, 0);
+    dActor_c::Spawn(0xb2, 0xffff, this->mPos, &this->mAngle, this->mAreaId, -1);
+    this->mHorzSpeed = 0;
+    this->mVertSpeed = 0;
 }
 }
 
@@ -7161,20 +7161,20 @@ void daPly_c::func_ov002_020c9b5c() {
 }
 
 extern "C" {
-void func_ov002_020c9b7c(daPly_c *p) {
+void daPly_c::func_ov002_020c9b7c() {
     typedef int Fix12i;
-    p->mStateStep = 0xb;
-    p->mIsBodyClsnEnabled = 0;
-    if (p->mIsAirborne) {
-        p->SetAnim(0x56, 0, 0x1000, 0);
-        Sound::PlayBank0(6, p->mCamSpacePos);
+    this->mStateStep = 0xb;
+    this->mIsBodyClsnEnabled = 0;
+    if (this->mIsAirborne) {
+        this->SetAnim(0x56, 0, 0x1000, 0);
+        Sound::PlayBank0(6, this->mCamSpacePos);
     } else {
-        p->SetAnim(0x4f, 0x40000000, 0x1000, 0);
-        p->func_ov002_020e25f0(0);
+        this->SetAnim(0x4f, 0x40000000, 0x1000, 0);
+        this->func_ov002_020e25f0(0);
     }
-    p->mVertAccel = 0;
-    p->mHorzSpeed = 0;
-    p->mVertSpeed = 0;
+    this->mVertAccel = 0;
+    this->mHorzSpeed = 0;
+    this->mVertSpeed = 0;
 }
 }
 
