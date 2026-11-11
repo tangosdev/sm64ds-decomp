@@ -3687,7 +3687,7 @@ void gw_follow() {
                          g_gw_frame, s, sm.mode, sm.x, sm.y, sm.z, (int)sm.yaw,
                          (unsigned)sm.anim, sm.buf_ms, (unsigned)sm.door_kind,
                          (unsigned)sm.door_frame, sm.teleport ? 1 : 0,
-                         g_gw[s].leaving ? 1 : 0, (unsigned)sm.character);
+                         g_gw[s].leaving ? 1 : 0, (unsigned)sm.character, (int)sm.ax, (int)sm.az);
         *player::pos_x(a) = sm.x;
         *player::pos_y(a) = sm.y;
         *player::pos_z(a) = sm.z;
