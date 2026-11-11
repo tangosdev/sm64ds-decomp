@@ -10,9 +10,9 @@
 extern void (*data_02099fbc[])(int, int, void *); /* func_0204c0a8, func_0204c0e8 */
 extern void (*data_02099fb4[])(u8, u8);           /* func_0204c24c, func_0204c194 */
 
-extern void func_020527e8(int *m, int sx, int sy, int sz); /* scale matrix */
-extern void func_020553a4(void *m); /* load the 4x3 matrix */
-extern void func_02055388(void *m); /* multiply by the 4x3 matrix */
+extern void MTX_Scale43_(int *m, int sx, int sy, int sz); /* scale matrix */
+extern void G3_LoadMtx43(void *m);                        /* load the 4x3 matrix */
+extern void G3_MultMtx43(void *m);                        /* multiply by the 4x3 matrix */
 
 /* Draw one child particle as a textured quad (child draw type 2,
  * func_0204a5c8): func_0204b244 with the child record's rotation axis, plane
@@ -56,17 +56,17 @@ void func_0204b028(ManagerView *mgr, ParticleElement *ptcl) {
         int sy = FX_MUL(ptcl->scale, ptcl->animScale);
         s16 aspectRatio = def->data->aspectRatio;
         int sx = FX_MUL(sy, aspectRatio);
-        func_020527e8(scl.m, sx, sy, sy);
+        MTX_Scale43_(scl.m, sx, sy, sy);
     }
 
-    MulMat4x3Mat4x3(&rot, &scl, &out);
+    MTX_Concat43(&rot, &scl, &out);
 
     out.m[9] = ptcl->offset.x + ptcl->basePosition.x;
     out.m[10] = ptcl->offset.y + ptcl->basePosition.y;
     out.m[11] = ptcl->offset.z + ptcl->basePosition.z;
 
-    func_020553a4(mgr->mDrawMatrix);
-    func_02055388(&out);
+    G3_LoadMtx43(mgr->mDrawMatrix);
+    G3_MultMtx43(&out);
 
     reg_G3_COLOR = ptcl->color;
     {

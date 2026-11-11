@@ -4,7 +4,7 @@
 
 extern "C" {
 extern int func_ov007_020be0dc(void);
-extern void DMASyncFillTransfer(unsigned int ch, void *dst, unsigned int val, unsigned int n);
+extern void MI_DmaFill32(unsigned int ch, void *dst, unsigned int val, unsigned int n);
 extern int func_ov007_020c0b20(Ov007OamList *list, void *oam, int slot);
 extern void func_ov007_020be3bc(void);
 
@@ -14,8 +14,8 @@ extern void func_ov007_020be3bc(void);
  * and flushes both from the data cache. */
 void Display_DrawOam(Ov007Display *d) {
     func_ov007_020be0dc();
-    DMASyncFillTransfer(3, d->oamMain, 0xc0, 0x400);
-    DMASyncFillTransfer(3, d->oamSub, 0xc0, 0x400);
+    MI_DmaFill32(3, d->oamMain, 0xc0, 0x400);
+    MI_DmaFill32(3, d->oamSub, 0xc0, 0x400);
     func_ov007_020c0b20(d->oamListMain, d->oamMain, 0);
     func_ov007_020c0b20(d->oamListSub, d->oamSub, 0);
     func_ov007_020be3bc();

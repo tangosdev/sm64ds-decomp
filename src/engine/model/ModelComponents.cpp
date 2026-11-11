@@ -139,18 +139,18 @@ struct MaterialState {
 #define GX_MTXMODE_TEXTURE 3
 
 extern "C" {
-void Matrix4x3_LoadIdentity(Matrix4x3 *mat);
-int InvMat4x3(const Matrix4x3 *a, Matrix4x3 *b);
+void MTX_Identity43_(Matrix4x3 *mat);
+int MTX_Inverse43(const Matrix4x3 *a, Matrix4x3 *b);
 
 void func_02048234(int *out, int sa, int sb, int sc, u16 ax, u16 ay, u16 az, int tx, int ty,
                    int tz);
 void func_02047218(void *a, void *b, void *out, fx32 c);
 void func_02047910(int *m0, int *m1, int *dst, int t);
 void func_0204547c(int *a, int b, int c, void *elem);
-void func_020527e8(Mtx43 *m, int x, int y, int z);
-void NormalizeVec3(const Vector3 *a, Vector3 *b);
+void MTX_Scale43_(Mtx43 *m, int x, int y, int z);
+void VEC_Normalize(const Vector3 *a, Vector3 *b);
 void func_020458a8(void *src, void *dst);
-void Geometry_MatrixMultiply3x3(void *m);
+void G3_MultMtx33(void *m);
 void MI_SendGXCommandAsync(u32 dmaNo, const void *src, u32 commandLength, void (*callback)(void *),
                            void *arg);
 void MI_WaitDma(u32 dmaNo);
@@ -163,11 +163,11 @@ extern u8 data_020a4bbc;
 extern u16 data_02099f94[8];
 extern s16 data_020a4bc0;
 extern s16 data_020a4bc4;
-void func_020553a4(void *m);
-void func_02055388(void *m);
-void MulMat3x3Mat3x3(void *a, void *b, void *dst);
-void func_02052514(void *a, void *b);
-void func_02055998(int *n);
+void G3_LoadMtx43(void *m);
+void G3_MultMtx43(void *m);
+void MTX_Concat33(void *a, void *b, void *dst);
+void MTX_Copy33To44_(void *a, void *b);
+void G3_LoadTexMtxEnv(int *n);
 void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength);
 }
 
@@ -257,7 +257,7 @@ void ModelComponents::func_02045074(BMD_Bone *fileBone) {
         func_02048234(m, bone->scaleX, bone->scaleY, bone->scaleZ, bone->rotX, bone->rotY,
                       bone->rotZ, bone->transX, bone->transY, bone->transZ);
     }
-    MulMat4x3Mat4x3((Matrix4x3 *)m, &transforms[a + n->f8], &transforms[a]);
+    MTX_Concat43((Matrix4x3 *)m, &transforms[a + n->f8], &transforms[a]);
     if (n->fa != 0)
         func_02045074((BMD_Bone *)(n + n->fa));
     if (n->fc != 0)
@@ -270,7 +270,7 @@ void ModelComponents::func_02045074(BMD_Bone *fileBone) {
  * modelFile->bones (BMD_File @0x08), not the ModelComponents::bones field. */
 void ModelComponents::UpdateVertsUsingBones()
 {
-    Matrix4x3_LoadIdentity(transforms);
+    MTX_Identity43_(transforms);
     func_02045074(modelFile->bones);
 }
 
@@ -285,8 +285,8 @@ void func_02044f74(void *g, struct Node *n)
     {
         int *base = *(int **)((char *)g + 0x34);
         int t = base[3];
-        MulMat4x3Mat4x3((Matrix4x3 *)m, (const Matrix4x3 *)((a + n->f8) * 0x30 + t),
-                        (Matrix4x3 *)((s16)a * 0x30 + t));
+        MTX_Concat43((Matrix4x3 *)m, (const Matrix4x3 *)((a + n->f8) * 0x30 + t),
+                     (Matrix4x3 *)((s16)a * 0x30 + t));
     }
     if (n->fa != 0)
         func_02044f74(g, n + n->fa);
@@ -300,11 +300,11 @@ void func_02044efc(BMD_File *self) {
     if (!self->numWeightedMatrices)
         return;
     Matrix4x3 *matrices = ((struct Sub *)self->skin)->blk;
-    Matrix4x3_LoadIdentity(matrices);
+    MTX_Identity43_(matrices);
     func_02044f74((void *)self, (struct Node *)self->bones);
     for (u32 i = 0; i < self->numBones; i++) {
         Matrix4x3 *mat = &((struct Sub *)self->skin)->blk[i];
-        InvMat4x3(mat, mat);
+        MTX_Inverse43(mat, mat);
     }
     CP15::FlushDataCache();
 }
@@ -397,7 +397,7 @@ void ModelComponents::func_02044b30(int idx) {
         mtx.r[3].y = height * (tSin - tCos - mat.texScaleT + 0x2000) * 8 +
                      height * (int)(((s64)mat.texScaleT * mat.texTransT) >> 8);
         mtx.r[3].z = 0;
-        func_020553a4(&mtx);
+        G3_LoadMtx43(&mtx);
         break;
     }
 
@@ -463,20 +463,20 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
 
             *(volatile int*)0x4000440 = 2;
             *(volatile int*)0x4000454 = 0;
-            Geometry_MatrixMultiply3x3(data_020a4bd0);
+            G3_MultMtx33(data_020a4bd0);
 
             check = bones[fp_index].scaled;
             if (check) {
                 func_020458a8((struct Matrix3x3_Vecs*)partMtx, (struct Matrix3x3_Vecs*)M);
-                Geometry_MatrixMultiply3x3(M);
+                G3_MultMtx33(M);
                 lastMat = M;
             } else {
-                Geometry_MatrixMultiply3x3(partMtx);
+                G3_MultMtx33(partMtx);
                 lastMat = partMtx;
             }
 
             *(volatile int*)0x4000440 = 1;
-            func_020553a4(data_020a4bd0);
+            G3_LoadMtx43(data_020a4bd0);
             if (scale) {
                 int c2 = scale->z;
                 int c1 = scale->y;
@@ -485,7 +485,7 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
                 *mtxScale = c1;
                 *mtxScale = c2;
             }
-            func_02055388(partMtx);
+            G3_MultMtx43(partMtx);
             {
                 int white = data_020a4bd4;
                 *mtxScale = white;
@@ -498,8 +498,8 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
         if (data_020a4bbc == 2) {
             int sx;
             int sy;
-            MulMat3x3Mat3x3(lastMat, data_020a4bd0, M);
-            func_02052514(M, N);
+            MTX_Concat33(lastMat, data_020a4bd0, M);
+            MTX_Copy33To44_(M, N);
             sx = data_020a4bc0;
             N[0] = M[0] * sx;
             N[4] = M[3] * sx;
@@ -508,7 +508,7 @@ void ModelComponents::func_0204488c(int index, Vector3 *scale) {
             N[1] = M[1] * sy;
             N[5] = M[4] * sy;
             N[9] = M[7] * sy;
-            func_02055998(N);
+            G3_LoadTexMtxEnv(N);
             *(volatile int*)0x400044c = 0;
         }
 
@@ -575,10 +575,9 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                 mp = (Mtx43 *)*(Matrix4x3 *volatile *)&transforms + ix;
                 off = ix * 0x30;
                 if (mtx) {
-                    func_020527e8(&mw, dir->x, dir->y, dir->z);
-                    MulMat4x3Mat4x3((const Matrix4x3 *)&mw, mtx, (Matrix4x3 *)&mw);
-                    MulMat4x3Mat4x3((const Matrix4x3 *)mp, (const Matrix4x3 *)&mw,
-                                    (Matrix4x3 *)&mw);
+                    MTX_Scale43_(&mw, dir->x, dir->y, dir->z);
+                    MTX_Concat43((const Matrix4x3 *)&mw, mtx, (Matrix4x3 *)&mw);
+                    MTX_Concat43((const Matrix4x3 *)mp, (const Matrix4x3 *)&mw, (Matrix4x3 *)&mw);
                     mp = &mw;
                 }
                 m.r[2].y = m.r[2].x = z14;
@@ -587,15 +586,15 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                 m.r[3].y = mp->r[3].y;
                 m.r[3].z = mp->r[3].z;
                 if (mtx) {
-                    MulMat4x3Mat4x3((const Matrix4x3 *)((char *)transforms + off), mtx,
-                                    (Matrix4x3 *)&mw);
+                    MTX_Concat43((const Matrix4x3 *)((char *)transforms + off), mtx,
+                                 (Matrix4x3 *)&mw);
                     mp = &mw;
                 }
                 if (mp->r[1].x * mp->r[1].x + mp->r[1].y * mp->r[1].y > 0x4000) {
                     m.r[1].x = mp->r[1].x;
                     m.r[1].y = mp->r[1].y;
                     m.r[1].z = z18;
-                    NormalizeVec3((const Vector3 *)&m.r[1], (Vector3 *)&m.r[1]);
+                    VEC_Normalize((const Vector3 *)&m.r[1], (Vector3 *)&m.r[1]);
                     t = FX_MUL(m.r[1].x, dir->x);
                     m.r[1].x = t;
                     {
@@ -614,7 +613,7 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                     m.r[0].x = mp->r[0].x;
                     m.r[0].y = mp->r[0].y;
                     m.r[0].z = z20;
-                    NormalizeVec3((const Vector3 *)&m.r[0], (Vector3 *)&m.r[0]);
+                    VEC_Normalize((const Vector3 *)&m.r[0], (Vector3 *)&m.r[0]);
                     m.r[0].x = FX_MUL(m.r[0].x, dir->x);
                     t = FX_MUL(m.r[0].y, dir->y);
                     m.r[1].y = m.r[0].x;
@@ -628,9 +627,9 @@ void ModelComponents::func_02044534(int index, Matrix4x3 *mtx, Vector3 *scale) {
                 func_020458a8(&m, out);
                 *(int*)0x4000440 = two;
                 *(int*)0x4000454 = z2c;
-                Geometry_MatrixMultiply3x3(out);
+                G3_MultMtx33(out);
                 *(int*)0x4000440 = 1;
-                func_020553a4(&m);
+                G3_LoadMtx43(&m);
                 {
                     int v = 1 << (modelFile->scaleShift + 12);
                     *(int*)0x400046c = v;

@@ -1,7 +1,9 @@
 //cpp
 #include "types.h"
 #include "Heap.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
+#include "nitro/os/interrupt.h"
+#include "nitro/fx/fx.h"
 #include "dScene_c.h"
 #include "private/watchdog_alarm.h"
 
@@ -9,13 +11,12 @@ extern "C" {
 
 extern void func_020427f8(void);
 extern u64 func_02042784(void);
-extern void func_02053a8c(void);
-extern void func_02053c40(void);
+extern void GX_Init(void);
 extern void PXI_Init(void);
 extern void func_0203d740(void);
 extern void ClearSaveBlock(void);
 extern void func_0201a4e4(void);
-extern int func_02053be0(int enable);
+extern int GX_VBlankIntr(int enable);
 extern void func_0203bbc0(void);
 extern void func_0203bb5c(void);
 extern void func_0201fec8(void);
@@ -53,21 +54,21 @@ void func_0201a054(void) {
     int isChild = (*(u16 *)0x27ffc40 == 2);
     func_020427f8();
     func_02042784();
-    func_02053a8c();
-    func_02053c40();
+    FX_Init();
+    GX_Init();
     PXI_Init();
     func_0203d740();
     ClearSaveBlock();
     func_0201a4e4();
-    IRQ::EnableIRQs(1);
+    OS_EnableIrqMask(1);
     {
         /* REG_IME = 1, NitroSDK's OS_EnableIrq inlined */
         volatile u16 *p = (volatile u16 *)0x4000208;
         u16 old = *p;
         *p = 1;
     }
-    IRQ::Enable();
-    func_02053be0(1);
+    OS_EnableInterrupts();
+    GX_VBlankIntr(1);
     func_0203bbc0();
     func_0203bb5c();
     if (!isChild)
@@ -76,7 +77,7 @@ void func_0201a054(void) {
     if (!isChild)
         func_02018aa4();
     if (isChild)
-        IRQ::DisableIRQs(0x100000);
+        OS_DisableIrqMask(0x100000);
     if (!isChild)
         func_0203ad84();
     func_0201a9fc((char *)&data_0209d574);

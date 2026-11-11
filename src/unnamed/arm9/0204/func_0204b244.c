@@ -10,9 +10,9 @@
 extern void (*data_02099fbc[])(int, int, void *); /* func_0204c0a8, func_0204c0e8 */
 extern void (*data_02099fb4[])(u8, u8);           /* func_0204c24c, func_0204c194 */
 
-extern void func_020527e8(int *m, int sx, int sy, int sz); /* scale matrix */
-extern void func_020553a4(void *m); /* load the 4x3 matrix */
-extern void func_02055388(void *m); /* multiply by the 4x3 matrix */
+extern void MTX_Scale43_(int *m, int sx, int sy, int sz); /* scale matrix */
+extern void G3_LoadMtx43(void *m);                        /* load the 4x3 matrix */
+extern void G3_MultMtx43(void *m);                        /* multiply by the 4x3 matrix */
 
 /* Draw one particle as a textured quad (draw type 2, func_0204a5c8): alpha
  * and the next polygon ID into POLYGON_ATTR (nothing more when the alpha is
@@ -58,17 +58,17 @@ void func_0204b244(ManagerView *mgr, ParticleElement *ptcl) {
         PtclData *data = mgr->mCurrentSystem->mDefinition->data;
         int sy = FX_MUL(ptcl->scale, ptcl->animScale);
         int sx = FX_MUL(sy, data->aspectRatio);
-        func_020527e8(scl.m, sx, sy, sy);
+        MTX_Scale43_(scl.m, sx, sy, sy);
     }
 
-    MulMat4x3Mat4x3(&scl, &rot, &out);
+    MTX_Concat43(&scl, &rot, &out);
 
     out.m[9] = ptcl->offset.x + ptcl->basePosition.x;
     out.m[10] = ptcl->offset.y + ptcl->basePosition.y;
     out.m[11] = ptcl->offset.z + ptcl->basePosition.z;
 
-    func_020553a4(mgr->mDrawMatrix);
-    func_02055388(&out);
+    G3_LoadMtx43(mgr->mDrawMatrix);
+    G3_MultMtx43(&out);
 
     reg_G3_COLOR = ptcl->color;
     {

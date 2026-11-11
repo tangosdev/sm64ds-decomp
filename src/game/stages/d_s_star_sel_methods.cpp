@@ -30,9 +30,12 @@
 #include "SaveData.h"
 #include "Message.h"
 #include "Sound.h"
-#include "G3X.h"
-#include "G3i.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/gx/g3x.h"
+#include "nitro/gx/g3_util.h"
 #include "GX.h"
 #include "private/controller_input.h"
 #include "math/MtxStack.h"
@@ -50,7 +53,6 @@ void OamRender10_d_s_star_sel_methods(int, void *, int, int, int, int, int, int,
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, s32, s32, s32);
 extern s8 gNextSublevel;
 extern s32 data_020a0db0;
-extern SaveBlock data_0209caa0;
 extern u8 data_02092128[];
 extern signed char gNumLives;
 extern u8 data_ov001_020ab938;
@@ -391,9 +393,9 @@ s32 dScStarSel_c::Render() {
     }
 
     if (SublevelToLevel(gNextSublevel) <= 0xe) {
-        G3i::PerspectiveW_(FX_SinIdx(0xb), FX_CosIdx(0xb), 0x1555, 0x1000, 0x1388000, 0x1000, 1, 0);
-        G3i::LookAt_((const Vector3 *)&data_ov003_020b132c, (const Vector3 *)&data_ov003_020b1338,
-                     (const Vector3 *)&data_ov003_020b1344, true, &mtx);
+        G3i_PerspectiveW_(FX_SinIdx(0xb), FX_CosIdx(0xb), 0x1555, 0x1000, 0x1388000, 0x1000, 1, 0);
+        G3i_LookAt_((const Vector3 *)&data_ov003_020b132c, (const Vector3 *)&data_ov003_020b1338,
+                    (const Vector3 *)&data_ov003_020b1344, true, &mtx);
         CopyToViewMat(&mtx);
 
         /* The plates are 0x18000 apart, centred on x = 0, and sit at y = 0x28000. */
@@ -902,24 +904,24 @@ s32 dScStarSel_c::InitResources() {
     }
     REG_POWCNT1 |= 0x8000;
     ::Initialise3dGraphics(0);
-    G3X::SetClearColor(0x7FFF, 0x1F, 0x7FFF, 0x3F, false);
+    G3X_SetClearColor(0x7FFF, 0x1F, 0x7FFF, 0x3F, false);
     GX::DisableAllBanks();
-    GX::SetBankForTex(3);
-    GX::SetBankForTexPltt(0x30);
-    GX::SetBankForBG(4);
-    GX::SetBankForOBJ(0x40);
-    GX::SetBankForSubBG(0x80);
-    GX::SetBankForSubOBJ(8);
-    GX::SetBankForSubOBJExtPltt(0x100);
+    GX_SetBankForTex(3);
+    GX_SetBankForTexPltt(0x30);
+    GX_SetBankForBG(4);
+    GX_SetBankForOBJ(0x40);
+    GX_SetBankForSubBG(0x80);
+    GX_SetBankForSubOBJ(8);
+    GX_SetBankForSubOBJExtPltt(0x100);
     REG_DISPCNT &= 0xFFCFFFEF;
     REG_DISPCNT_SUB &= 0xFFCFFFEF;
-    GX::SetGraphicsMode(1, 0, 1);
-    GXS::SetGraphicsMode(0);
+    GX_SetGraphicsMode(1, 0, 1);
+    GXS_SetGraphicsMode(0);
     REG_DISPCNT = (REG_DISPCNT & ~0x38000000) | 0x08000000;
     REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
-    GX::DispOn();
+    GX_DispOn();
     REG_DISPCNT_SUB |= 0x10000;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     models[0].LoadAndSetFile(0x8015, 1, -1);
     models[1].LoadAndSetFile(0x8017, 1, -1);
@@ -934,14 +936,14 @@ s32 dScStarSel_c::InitResources() {
         REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
         REG_BG2CNT &= ~0x40;
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NCG_BIN);
-        DecompressLZ16(file, G2::GetBG2CharPtr());
+        DecompressLZ16(file, G2_GetBG2CharPtr());
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NCL_BIN);
-        GX::LoadBGPltt(file, 0, 0x1A0);
-        GXS::LoadBGPltt(file, 0, 2);
+        GX_LoadBGPltt(file, 0, 0x1A0);
+        GXS_LoadBGPltt(file, 0, 2);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NSC_BIN);
-        DecompressLZ16(file, G2::GetBG2ScrPtr());
+        DecompressLZ16(file, G2_GetBG2ScrPtr());
         Deallocate(file);
         SetBg2Offset(0, 0);
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
@@ -961,17 +963,17 @@ s32 dScStarSel_c::InitResources() {
         } else {
             file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_NCG_BIN);
         }
-        DecompressLZ16(file, G2::GetBG2CharPtr());
+        DecompressLZ16(file, G2_GetBG2CharPtr());
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_NCL_BIN);
-        GX::LoadBGPltt(file, 0, 0x1A0);
+        GX_LoadBGPltt(file, 0, 0x1A0);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_NSC_BIN);
-        DecompressLZ16(file, G2::GetBG2ScrPtr());
+        DecompressLZ16(file, G2_GetBG2ScrPtr());
         Deallocate(file);
         SetBg2Offset(0, -4);
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
-        GXS::LoadBGPltt(&sStarSelectSubBackdropColor, 0, 2);
+        GXS_LoadBGPltt(&sStarSelectSubBackdropColor, 0, 2);
     }
     if (GetOwnerLanguage() == 5) {
         file = LoadFile(ASSET_D_2D_CMN_ICON_S_NCG_BIN);
@@ -984,14 +986,10 @@ s32 dScStarSel_c::InitResources() {
     } else {
         file = LoadFile(ASSET_D_2D_CMN_ICON_E_NCG_BIN);
     }
-    DecompressLZ16(file, (void *)0x06400000);
+    DecompressLZ16(file, G2_GetOBJCharPtr());
     Deallocate(file);
     file = LoadFile(ASSET_D_2D_BTM_ICON_NCG_BIN);
-    {
-        char *dst = (char *)0x06400000;
-        dst += 0x2000;
-        DecompressLZ16(file, dst);
-    }
+    DecompressLZ16(file, (u8 *)G2_GetOBJCharPtr() + 0x2000);
     Deallocate(file);
     if (GetOwnerLanguage() == 5) {
         file = LoadFile(0xB00A);
@@ -1004,10 +1002,10 @@ s32 dScStarSel_c::InitResources() {
     } else {
         file = LoadFile(0xA00A);
     }
-    GX::LoadOBJPltt(file, 0, 0x120);
+    GX_LoadOBJPltt(file, 0, 0x120);
     Deallocate(file);
     file = LoadFile(ASSET_D_2D_BTM_ICON_NCL_BIN);
-    GX::LoadOBJPltt(file, 0x120, 0xE0);
+    GX_LoadOBJPltt(file, 0x120, 0xE0);
     Deallocate(file);
     if (GetOwnerLanguage() == 5) {
         file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_S_NCG_BIN);
@@ -1020,67 +1018,51 @@ s32 dScStarSel_c::InitResources() {
     } else {
         file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_NCG_BIN);
     }
-    DecompressLZ16(file, (void *)0x06600000);
+    DecompressLZ16(file, G2S_GetOBJCharPtr());
     Deallocate(file);
     file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_NCL_BIN);
-    GXS::LoadOBJPltt(file, 0, 0x200);
+    GXS_LoadOBJPltt(file, 0, 0x200);
     Deallocate(file);
     data_02092128[0] = data_0209caa0.file.mCharacter;
     switch (data_0209caa0.file.mCharacter) {
     case 0:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_MARIO_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)0x06600000;
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_MARIO_8BIT_NCL_BIN);
-        GXS::BeginLoadOBJExtPltt();
-        GXS::LoadOBJExtPltt(file, 0, 0x200);
-        GXS::EndLoadOBJExtPltt();
+        GXS_BeginLoadOBJExtPltt();
+        GXS_LoadOBJExtPltt(file, 0, 0x200);
+        GXS_EndLoadOBJExtPltt();
         Deallocate(file);
         break;
     case 1:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_LUIGI_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)0x06600000;
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_LUIGI_8BIT_NCL_BIN);
-        GXS::BeginLoadOBJExtPltt();
-        GXS::LoadOBJExtPltt(file, 0, 0x200);
-        GXS::EndLoadOBJExtPltt();
+        GXS_BeginLoadOBJExtPltt();
+        GXS_LoadOBJExtPltt(file, 0, 0x200);
+        GXS_EndLoadOBJExtPltt();
         Deallocate(file);
         break;
     case 2:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_WARIO_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)0x06600000;
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_WARIO_8BIT_NCL_BIN);
-        GXS::BeginLoadOBJExtPltt();
-        GXS::LoadOBJExtPltt(file, 0, 0x200);
-        GXS::EndLoadOBJExtPltt();
+        GXS_BeginLoadOBJExtPltt();
+        GXS_LoadOBJExtPltt(file, 0, 0x200);
+        GXS_EndLoadOBJExtPltt();
         Deallocate(file);
         break;
     case 3:
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_YOSHI_8BIT_NCG_BIN);
-        {
-            char *dst = (char *)0x06600000;
-            dst += 0x4000;
-            DecompressLZ16(file, dst);
-        }
+        DecompressLZ16(file, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
         Deallocate(file);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_YOSHI_8BIT_NCL_BIN);
-        GXS::BeginLoadOBJExtPltt();
-        GXS::LoadOBJExtPltt(file, 0, 0x200);
-        GXS::EndLoadOBJExtPltt();
+        GXS_BeginLoadOBJExtPltt();
+        GXS_LoadOBJExtPltt(file, 0, 0x200);
+        GXS_EndLoadOBJExtPltt();
         Deallocate(file);
         break;
     }
@@ -1222,7 +1204,7 @@ extern "C" dScStarSel_c *dScStarSel_c_classInit(void) {
 
 extern "C" {
 /* Sub-screen BG palette entry 0, the backdrop colour (0x7fff, white):
-   InitResources loads these two bytes with GXS::LoadBGPltt(.., 0, 2). */
+   InitResources loads these two bytes with GXS_LoadBGPltt(.., 0, 2). */
 u16 sStarSelectSubBackdropColor = 32767;
 /* The inverse lookup visits three entries; mode 4 bounds the cursor to 0..2. */
 u8 sStarSelectCharacterOrder[3] = {1, 0, 2};

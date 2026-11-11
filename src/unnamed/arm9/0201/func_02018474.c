@@ -4,7 +4,7 @@ typedef struct FSFile FSFile;
 
 extern void FS_InitFile(FSFile *p_file);
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern int func_020184e0(FSFile *p_file, unsigned int dst, unsigned int size);
 
 /* Open the file fileId names (func_02018434 passes it by value), crash if
@@ -14,7 +14,7 @@ int func_02018474(FSFileID fileId, int dst, int size) {
     FSFile file;
     FS_InitFile(&file);
     if (myFS_OpenFileFast(&file, fileId) == 0) {
-        Crash();
+        OS_Terminate();
         return 0;
     }
     return func_020184e0(&file, dst, size);

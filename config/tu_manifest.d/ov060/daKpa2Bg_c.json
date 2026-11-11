@@ -491,14 +491,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@497",
+      "from": "@475",
       "to": "@65",
-      "evidence": "emitted destructor-registration node name is contended fleet-wide (three pending-fold pool claims); @65 is unused everywhere on main and shorter than the original"
+      "evidence": "emitted destructor-registration node name is contended fleet-wide (three pending-fold pool claims); @65 is unused everywhere on main and shorter than the original Re-keyed from @497 to @475 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@498",
+      "from": "@476",
       "to": "@66",
-      "evidence": "emitted destructor-registration node name is contended fleet-wide (three pending-fold pool claims); @66 is unused everywhere on main and shorter than the original"
+      "evidence": "emitted destructor-registration node name is contended fleet-wide (three pending-fold pool claims); @66 is unused everywhere on main and shorter than the original Re-keyed from @498 to @476 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

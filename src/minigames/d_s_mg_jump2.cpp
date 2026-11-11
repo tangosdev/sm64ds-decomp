@@ -38,6 +38,10 @@ enum d_s_mg_jump2_AssetId {
 #include "Particle__System.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/gx/g3x.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* The list link at the head of each Jump2Popup. Its two methods link `this` into
  * and back out of the live list at sJump2PopupList. */
@@ -119,15 +123,6 @@ extern u8 gMainScreenLayers;
 extern s16 data_02082614;
 }
 
-namespace GX {
-void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size);
-}
-namespace G3X {
-void SetFog(int enable, int mode, int slope, int offset);
-}
-namespace cstd {
-s32 fdiv(s32 a, s32 b);
-}
 
 /* Empty and out of line: mPopups' element constructor, which the factory
  * below registers with __cxa_vec_ctor (dScMgTrampoline2_c's factory reuses
@@ -168,16 +163,16 @@ s32 dScMgJump2_c::InitResources() {
 
     tiles = LoadFile(sJump2NcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_JUMP_NCL_BIN);
-    DecompressLZ16(tiles, (void *)0x6400000);
-    GX::LoadOBJPltt(palette, 0, 0x80);
+    DecompressLZ16(tiles, G2_GetOBJCharPtr());
+    GX_LoadOBJPltt(palette, 0, 0x80);
     Deallocate(tiles);
     Deallocate(palette);
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
-    fov = cstd::fdiv(0xc0000, (s32)data_02082614);
+    fov = FX_Div(0xc0000, (s32)data_02082614);
 
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;

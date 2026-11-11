@@ -6,27 +6,27 @@
     .ctor       start:0x02086b60 end:0x02086bbc kind:rodata align:4
     .data       start:0x02086bc0 end:0x0209b000 kind:data align:32
     .bss        start:0x0209b000 end:0x020aa420 kind:bss align:32
-src/IntrWait.c:
+src/SVC_WaitIntr.c:
     complete
     .text start:0x020040f4 end:0x020040f8
 
-src/SoftReset.c:
+src/SVC_SoftReset.c:
     complete
     .text start:0x0200414c end:0x02004150
 
-src/RLUnCompReadByCallbackWrite16bit.c:
+src/SVC_UncompressRL16FromDevice.c:
     complete
     .text start:0x02004244 end:0x02004248
 
-src/BitUnPack.c:
+src/SVC_UnpackBits.c:
     complete
     .text start:0x0200432c end:0x02004330
 
-src/Sqrt.c:
+src/SVC_Sqrt.c:
     complete
     .text start:0x020043d0 end:0x020043d4
 
-src/LZ77UnCompReadNormalWrite8bit.c:
+src/SVC_UncompressLZ8.c:
     complete
     .text start:0x02004438 end:0x0200443c
 
@@ -523,7 +523,7 @@ src/TurnBacklightOn.c:
 src/unnamed/arm9/0201/func_020196cc.c:
     complete
     .text start:0x020196cc end:0x02019740
-src/Crash.cpp:
+src/OS_Terminate.cpp:
     complete
     .text start:0x02019740 end:0x02019780
 
@@ -1030,7 +1030,7 @@ src/game/stages/d_s_mb.cpp:
     .text start:0x02034a78 end:0x02035354
     .init start:0x02074fb8 end:0x02074fe4
     .ctor start:0x02086b94 end:0x02086b98
-    .bss start:0x020a0c68 end:0x020a0c78
+    .bss start:0x020a0c5c end:0x020a0c78
 
 src/engine/collision/d_bg_ch.cpp:
     complete
@@ -2165,11 +2165,11 @@ src/MTX_Rot22_.c:
     complete
     .text start:0x020524e4 end:0x020524f0
 
-src/Matrix3x3_LoadIdentity.c:
+src/MTX_Identity33_.c:
     complete
     .text start:0x020524f0 end:0x02052514
 
-src/unnamed/arm9/0205/func_02052514.c:
+src/MTX_Copy33To44_.c:
     complete
     .text start:0x02052514 end:0x02052550
 
@@ -2181,31 +2181,31 @@ src/MTX_RotY33_.c:
     complete
     .text start:0x0205256c end:0x02052588
 
-src/Matrix3x3_SetRotationZ.c:
+src/MTX_RotZ33_.c:
     complete
     .text start:0x02052588 end:0x020525a0
 
-src/MulVec3Mat3x3.c:
+src/MTX_MultVec33.c:
     complete
     .text start:0x020525a0 end:0x02052624
 
-src/MulMat3x3Mat3x3.c:
+src/MTX_Concat33.c:
     complete
     .text start:0x02052624 end:0x020527c0
 
-src/Matrix4x3_LoadIdentity.c:
+src/MTX_Identity43_.c:
     complete
     .text start:0x020527c0 end:0x020527e8
 
-src/MulVec3Mat4x3.c:
+src/MTX_MultVec43.c:
     complete
     .text start:0x02052858 end:0x02052914
 
-src/MulMat4x3Mat4x3.c:
+src/MTX_Concat43.c:
     complete
     .text start:0x02052914 end:0x02052b34
 
-src/InvMat4x3.cpp:
+src/MTX_Inverse43.cpp:
     complete
     .text start:0x02052b34 end:0x02052ec8
 
@@ -2218,10 +2218,10 @@ src/cstd.cpp:
     .text start:0x02052ef4 end:0x02053320
 
 
-src/unnamed/arm9/0205/func_02053320.c:
+src/VEC_MultAdd.c:
     complete
     .text start:0x02053320 end:0x020534ec
-src/NormalizeVec3.c:
+src/VEC_Normalize.c:
     complete
     .text start:0x020534ec end:0x02053644
 
@@ -2229,33 +2229,38 @@ src/VEC_Fx16Mag.c:
     complete
     .text start:0x02053644 end:0x020536e4
 
-src/LenVec3.c:
+src/VEC_Mag.c:
     complete
     .text start:0x020536e4 end:0x02053770
 
-src/CrossVec3.c:
+src/VEC_CrossProduct.c:
     complete
     .text start:0x02053770 end:0x0205380c
 
-src/DotVec3.c:
+src/VEC_DotProduct.c:
     complete
     .text start:0x0205380c end:0x02053850
 
-src/SubVec3.c:
+src/VEC_Subtract.c:
     complete
     .text start:0x02053850 end:0x02053884
 
-src/AddVec3.c:
+src/VEC_Add.c:
     complete
     .text start:0x02053884 end:0x020538b8
 
-src/data/arm9/data_02086214.c:
+src/FX_AtanTable_.c:
     complete
     .rodata start:0x02086214 end:0x02086314
 
-src/unnamed/arm9/0205/func_020538b8.cpp:
+src/FX_Atan2.c:
     complete
-    .text start:0x020538b8 end:0x02053a90
+    .text start:0x020538b8 end:0x02053a8c
+
+src/FX_Init.c:
+    complete
+    .text start:0x02053a8c end:0x02053a90
+
 src/engine/gx/GX_Init.cpp:
     complete
     .text start:0x02053a90 end:0x02053d9c
@@ -2268,7 +2273,7 @@ src/engine/gx/GX_VramCnt.cpp:
     complete
     .text start:0x02053e1c end:0x02054d38
 
-src/engine/gx/G2.cpp:
+src/engine/gx/GX_BgCnt.c:
     complete
     .text start:0x02054d38 end:0x020551f0
 
@@ -2276,21 +2281,9 @@ src/engine/gx/G2x.cpp:
     complete
     .text start:0x020551f0 end:0x0205532c
 
-src/unnamed/arm9/0205/func_0205532c.c:
+src/engine/gx/GX_g3imm.c:
     complete
-    .text start:0x0205532c end:0x0205536c
-
-src/Geometry_MatrixMultiply3x3.c:
-    complete
-    .text start:0x0205536c end:0x02055388
-
-src/unnamed/arm9/0205/func_02055388.c:
-    complete
-    .text start:0x02055388 end:0x020553a4
-
-src/unnamed/arm9/0205/func_020553a4.c:
-    complete
-    .text start:0x020553a4 end:0x020553c0
+    .text start:0x0205532c end:0x020553c0
 
 src/GXi_NopClearFifo128_.c:
     complete
@@ -2316,7 +2309,7 @@ src/engine/gx/GX.cpp:
     complete
     .text start:0x020568cc end:0x02056c1c
 
-src/Copy48BytesFixed.c:
+src/GX_SendFifo48B.c:
     complete
     .text start:0x02056c1c end:0x02056c40
 
@@ -2516,7 +2509,7 @@ src/engine/fs/FS_Archive.cpp:
     complete
     .text start:0x0205c7c4 end:0x0205d368
 
-src/unnamed/arm9/0205/func_0205d368.c:
+src/FS_SeekFile.c:
     complete
     .text start:0x0205d368 end:0x0205d3d4
 
@@ -2524,18 +2517,18 @@ src/FS_ReadFile.c:
     complete
     .text start:0x0205d3d4 end:0x0205d3e4
 
-src/unnamed/arm9/0205/func_0205d3e4.cpp:
+src/FS_ReadFileAsync.cpp:
     complete
     .text start:0x0205d3e4 end:0x0205d4cc
 src/FS_CloseFile.c:
     complete
     .text start:0x0205d4cc end:0x0205d518
 
-src/unnamed/arm9/0205/func_0205d518.c:
+src/FS_OpenFile.c:
     complete
     .text start:0x0205d518 end:0x0205d568
 
-src/unnamed/arm9/0205/func_0205d568.c:
+src/FS_OpenFileFast.c:
     complete
     .text start:0x0205d568 end:0x0205d5e8
 
@@ -2543,11 +2536,11 @@ src/FS_OpenFileDirect.c:
     complete
     .text start:0x0205d5e8 end:0x0205d644
 
-src/unnamed/arm9/0205/func_0205d644.c:
+src/FS_ConvertPathToFileID.c:
     complete
     .text start:0x0205d644 end:0x0205d688
 
-src/unnamed/arm9/0205/func_0205d688.c:
+src/FSi_ReadFileCore.c:
     complete
     .text start:0x0205d688 end:0x0205d714
 
@@ -2603,7 +2596,7 @@ src/unnamed/arm9/0205/func_0205e89c.c:
     complete
     .text start:0x0205e89c end:0x0205e904
 
-src/unnamed/arm9/0205/func_0205e904.c:
+src/DGT_SetOverlayTableMode.c:
     complete
     .text start:0x0205e904 end:0x0205e91c
 
@@ -3077,19 +3070,19 @@ src/unnamed/arm9/0206/func_02065538.c:
     complete
     .text start:0x02065538 end:0x020656d4
 
-src/unnamed/arm9/0206/func_020656d4.c:
+src/WBT_PutUserData.c:
     complete
     .text start:0x020656d4 end:0x02065730
 
-src/unnamed/arm9/0206/func_02065730.c:
+src/WBT_GetBlock.c:
     complete
     .text start:0x02065730 end:0x02065788
 
-src/unnamed/arm9/0206/func_02065788.c:
+src/WBT_GetBlockInfo.c:
     complete
     .text start:0x02065788 end:0x020657d0
 
-src/unnamed/arm9/0206/func_020657d0.c:
+src/WBT_RequestSync.c:
     complete
     .text start:0x020657d0 end:0x020657fc
 
@@ -3097,11 +3090,11 @@ src/WBT_UnregisterBlock.cpp:
     complete
     .text start:0x020657fc end:0x020658c0
 
-src/unnamed/arm9/0206/func_020658c0.cpp:
+src/WBT_RegisterBlock.cpp:
     complete
     .text start:0x020658c0 end:0x02065970
 
-src/unnamed/arm9/0206/func_02065970.c:
+src/WBT_NumOfRegisteredBlock.c:
     complete
     .text start:0x02065970 end:0x020659a0
 
@@ -3117,7 +3110,7 @@ src/WBT_AidbitmapToAid.c:
     complete
     .text start:0x02065a4c end:0x02065a74
 
-src/unnamed/arm9/0206/func_02065a74.c:
+src/WBT_GetOwnAid.c:
     complete
     .text start:0x02065a74 end:0x02065a94
 src/unnamed/arm9/0206/func_02065a94.c:
@@ -3180,7 +3173,7 @@ src/MBi_MakeParentSendBuffer.c:
     complete
     .text start:0x02065d5c end:0x02065de4
 
-src/unnamed/arm9/0206/func_02065de4.c:
+src/MBi_ReceiveRequestDataPiece.c:
     complete
     .text start:0x02065de4 end:0x02065eb8
 
@@ -3188,50 +3181,50 @@ src/engine/mb/MB_Parent.cpp:
     complete
     .text start:0x02065eb8 end:0x020672d0
 
-src/unnamed/arm9/0206/func_020672d0.c:
+src/MB_ReadMultiBootParentBssDesc.c:
     complete
     .text start:0x020672d0 end:0x0206736c
 
-src/unnamed/arm9/0206/func_0206736c.c:
+src/IsAbleToLoad.c:
     complete
     .text start:0x0206736c end:0x02067530
 src/MBi_get_blockinfo.c:
     complete
     .text start:0x02067530 end:0x02067604
 
-src/unnamed/arm9/0206/func_02067604.c:
+src/MBi_MakeBlockInfoTable.c:
     complete
     .text start:0x02067604 end:0x020676e0
 
-src/unnamed/arm9/0206/func_020676e0.c:
+src/MBi_SetSegmentInfo.c:
     complete
     .text start:0x020676e0 end:0x020678a4
 
-src/unnamed/arm9/0206/func_020678a4.c:
+src/MBi_MakeDownloadFileInfo.c:
     complete
     .text start:0x020678a4 end:0x02067928
 
-src/unnamed/arm9/0206/func_02067928.cpp:
+src/MB_RegisterFile.cpp:
     complete
     .text start:0x02067928 end:0x02067b68
 
-src/unnamed/arm9/0206/func_02067b68.c:
+src/MBi_ReadSegmentHeader.c:
     complete
     .text start:0x02067b68 end:0x02067bfc
 
-src/unnamed/arm9/0206/func_02067bfc.cpp:
+src/MB_ReadSegment.cpp:
     complete
     .text start:0x02067bfc end:0x02067e70
 
-src/unnamed/arm9/0206/func_02067e70.c:
+src/MB_GetSegmentLength.c:
     complete
     .text start:0x02067e70 end:0x02067ee4
 
-src/unnamed/arm9/0206/func_02067ee4.c:
+src/MBi_calc_cksum.c:
     complete
     .text start:0x02067ee4 end:0x02067f2c
 
-src/unnamed/arm9/0206/func_02067f2c.cpp:
+src/MBi_BlockHeaderEnd.cpp:
     complete
     .text start:0x02067f2c end:0x02067f68
 
@@ -3402,8 +3395,9 @@ src/ldexp.c:
 src/lib/msl/ansi_fp.c:
     complete
     .text start:0x02070b98 end:0x02071784
+    .data start:0x0209a628 end:0x0209a6fc
 
-src/unnamed/arm9/0207/func_02071784.c:
+src/_ExitProcess.c:
     complete
     .text start:0x02071784 end:0x02071790
 
@@ -3431,15 +3425,15 @@ src/unnamed/arm9/0207/func_02071910.c:
     complete
     .text start:0x02071910 end:0x02071974
 
-src/unnamed/arm9/0207/func_02071974.c:
+src/sys_writec.c:
     complete
     .text start:0x02071974 end:0x02071988
 
-src/unnamed/arm9/0207/func_02071988.c:
+src/sys_readc.c:
     complete
     .text start:0x02071988 end:0x0207199c
 
-src/unnamed/arm9/0207/func_0207199c.c:
+src/sys_exit.c:
     complete
     .text start:0x0207199c end:0x020719ac
 
@@ -3539,7 +3533,7 @@ src/unnamed/arm9/0207/func_02073238.c:
     complete
     .text start:0x02073238 end:0x02073244
 
-src/__cxa_vec_delete.c:
+src/__cxa_vec_delete.cpp:
     complete
     .text start:0x02073244 end:0x0207328c
 

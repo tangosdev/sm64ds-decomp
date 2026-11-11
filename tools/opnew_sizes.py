@@ -194,9 +194,9 @@ def load_modules(ext, stats):
     arm9 = (ext / "arm9_dec.bin").read_bytes()
     # arm9_dec.bin is the DECOMPRESSED arm9 at 0x02004000. extracted/dsd/arm9/arm9.bin
     # is the compressed payload and is garbage past its uncompressed prefix; the anchor
-    # below is the same one actor_names.py asserts (Copy36Bytes).
+    # below is the same one actor_names.py asserts (MI_Copy36B).
     if arm9[0x0205A548 - ARM9_BASE:0x0205A54C - ARM9_BASE] == b"\0\0\0\0":
-        sys.exit("arm9_dec.bin failed the known-code anchor (Copy36Bytes)")
+        sys.exit("arm9_dec.bin failed the known-code anchor (MI_Copy36B)")
     mods = {"arm9": (ARM9_BASE, arm9)}
     cfg = yaml.safe_load((ext / "dsd/arm9_overlays/overlays.yaml").read_text())
     for o in cfg["overlays"]:

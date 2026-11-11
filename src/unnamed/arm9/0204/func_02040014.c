@@ -8,7 +8,7 @@ extern u16 data_020a0fa0[][3];
 
 extern int Wireless_Reset(void);
 extern int func_0203faa8(void);
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 extern int func_02042748(u16 *a, u16 *b);
 extern int WM_Disconnect(void *callback, unsigned int aid);
 
@@ -56,7 +56,7 @@ void func_02040014(char *a)
             u16 *item_p;
 
             matched = 0;
-            CpuCopy8(cb->macAddress, buf, 6);
+            MI_CpuCopy8(cb->macAddress, buf, 6);
 
             flag_p = data_020a0f9d;
             item_p = data_020a0fbe[0];
@@ -65,7 +65,7 @@ void func_02040014(char *a)
                 if (*flag_p != 0) {
                     if (func_02042748(buf, item_p) != 0) {
                         u16 idx = cb->aid;
-                        CpuCopy8(buf, data_020a0fa0[idx], 6);
+                        MI_CpuCopy8(buf, data_020a0fa0[idx], 6);
                         matched = 1;
                         break;
                     }

@@ -2904,6 +2904,39 @@ def _local_count(symbol, decls):
     return sum(1 for d in decls if d.symbol == symbol and d.file.startswith("src/"))
 
 
+def renamed_config_symbols(base, root=REPO):
+    """{new name: old name} for `config/**/symbols.txt` rows this branch renamed.
+
+    A rename keeps the row's address and changes its name. Matched by address
+    within one symbols.txt, so a moved or re-sized row still pairs up."""
+    proc = subprocess.run(["git", "diff", "--name-only", base, "--", "config"],
+                          cwd=str(root), capture_output=True, text=True)
+    out = {}
+    for rel in proc.stdout.splitlines():
+        if pathlib.PurePosixPath(rel).name != "symbols.txt":
+            continue
+        path = pathlib.Path(root) / rel
+        if not path.exists():
+            continue
+        now = _rows_by_addr(path.read_text(encoding="utf-8", errors="replace"))
+        was = _rows_by_addr(blob_text(rel, base, root))
+        for addr, name in now.items():
+            old = was.get(addr)
+            if old is not None and old != name:
+                out[name] = old
+    return out
+
+
+def _rows_by_addr(text):
+    rows = {}
+    for line in (text or "").splitlines():
+        m = SYMBOLS_ROW.match(line)
+        a = re.search(r"\baddr:(0x[0-9a-fA-F]+)", line)
+        if m and a:
+            rows[a.group(1).lower()] = m.group(1)
+    return rows
+
+
 def _base_local_count(symbol, base, root=REPO):
     proc = subprocess.run(["git", "grep", "-l", "-F", symbol, base, "--", "src"],
                           cwd=str(root), capture_output=True, text=True)
@@ -2951,7 +2984,9 @@ def new_header_redeclarations(base, touched, decls, root=REPO):
     Particle::System::FromUniqueID in several spellings while Particle__System.h
     declared it correctly all along. This is a ratchet: a finding needs a declaration
     on a line the branch adds AND a rise in that symbol's count of src/
-    redeclarations, so a promotion that only MOVES externs is clean."""
+    redeclarations, so a promotion that only MOVES externs is clean. A symbol the
+    branch renames in `config/**/symbols.txt` is counted at the base under its old
+    name too, so a rename that rewrites every existing local copy is clean."""
     root = pathlib.Path(root)
     srcs = [r for r in touched if r.startswith("src/") and (root / r).exists()]
     if not srcs:
@@ -2985,10 +3020,13 @@ def new_header_redeclarations(base, touched, decls, root=REPO):
             candidates.append((d, sorted(headers)))
     out = []
     counts = {}
+    renamed = renamed_config_symbols(base, root) if candidates else {}
     for d, headers in candidates:
         if d.symbol not in counts:
-            counts[d.symbol] = (_base_local_count(d.symbol, base, root),
-                                _local_count(d.symbol, decls))
+            was = _base_local_count(d.symbol, base, root)
+            if d.symbol in renamed:
+                was += _base_local_count(renamed[d.symbol], base, root)
+            counts[d.symbol] = (was, _local_count(d.symbol, decls))
         was, now = counts[d.symbol]
         if now > was:
             out.append({"symbol": d.symbol, "file": d.file, "line": d.line,

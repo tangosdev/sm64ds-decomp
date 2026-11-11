@@ -10,14 +10,14 @@
 
 extern "C" {
 
-extern void CpuCopy8(const void *src, void *dst, unsigned int len);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int len);
 
 void func_0206062c(CARDiCommon *p) {
     do {
         u32 len = p->len;
         if (len > sizeof(p->backup_cache_page_buf))
             len = sizeof(p->backup_cache_page_buf);
-        CpuCopy8((const void *)p->src, p->backup_cache_page_buf, len);
+        MI_CpuCopy8((const void *)p->src, p->backup_cache_page_buf, len);
         CP15::FlushAndInvalidateDataCache((u32)p->backup_cache_page_buf, len);
         CP15::DrainWriteBuffer();
         p->cmd->src = (u32)p->backup_cache_page_buf;

@@ -11,8 +11,8 @@ extern int myFS_ReadFile(void *s, void *b, int c);
 extern int func_02018568(void *a);
 extern unsigned int func_02018ac4(void *p);
 extern void DecompressLZ16(void *src, void *dst);
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
-extern void Crash(void);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void OS_Terminate(void);
 extern int FS_CloseFile(void *self);
 extern void func_02018770(void);
 
@@ -35,11 +35,11 @@ void *func_0201834c(FSFile *self, int flag) {
             DecompressLZ16((void *)((char *)buf + 4), result);
         } else {
             result = Memory::Allocate(len);
-            CpuCopy8(buf, result, len);
+            MI_CpuCopy8(buf, result, len);
         }
         Memory::Deallocate(buf);
     } else {
-        Crash();
+        OS_Terminate();
     }
     FS_CloseFile(self);
     func_02018770();

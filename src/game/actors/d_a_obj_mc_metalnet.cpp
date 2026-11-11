@@ -39,9 +39,6 @@ extern CLPS_Block data_ov009_02112bf8;
 /* The global mode byte. Unnamed in config; compared against 1 in fifty-odd
    places across the tree, always to mean "not the ordinary single-player run". */
 extern unsigned char gGameMode;
-/* The one global SaveData instance (include/SaveData.h). Indexed as int[] here,
-   the way d_a_set_se.cpp does it; [2] is the 0x008 unlock word. */
-extern SaveBlock data_0209caa0;
 
 extern "C" {
 unsigned char NumStars(void);

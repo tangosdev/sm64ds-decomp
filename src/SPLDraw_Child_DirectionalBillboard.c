@@ -8,13 +8,13 @@
 #define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
 
 /* No header declares these. */
-extern void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
+extern void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
 struct Vector3;
-extern void NormalizeVec3(const struct Vector3 *v, struct Vector3 *out);
-extern void Copy36Bytes(const void *src, void *dst);
-extern void MulVec3Mat3x3(const Vector3 *in, const Matrix3x3 *m, Vector3 *out);
-extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-extern void func_02055388(int *m);             /* multiply by the 4x3 matrix */
+extern void VEC_Normalize(const struct Vector3 *v, struct Vector3 *out);
+extern void MI_Copy36B(const void *src, void *dst);
+extern void MTX_MultVec33(const Vector3 *in, const Matrix3x3 *m, Vector3 *out);
+extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+extern void G3_MultMtx43(int *m);                /* multiply by the 4x3 matrix */
 extern void func_0204c24c(int tileS, int tileT); /* the XY-plane quad */
 
 /* Draw one child particle as a quad stretched along its flight (child draw
@@ -66,17 +66,17 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
     look.x = view[2];
     look.y = view[5];
     look.z = view[8];
-    CrossVec3(&dir, &look, &dir);
+    VEC_CrossProduct(&dir, &look, &dir);
 
     if (dir.x == 0 && dir.y == 0 && dir.z == 0)
         return;
 
-    NormalizeVec3(&dir, &dir);
-    Copy36Bytes(view, &rot);
-    MulVec3Mat3x3(&dir, &rot, &dir);
-    MulVec3Mat4x3(&trans, (Matrix4x3 *)view, &trans);
+    VEC_Normalize(&dir, &dir);
+    MI_Copy36B(view, &rot);
+    MTX_MultVec33(&dir, &rot, &dir);
+    MTX_MultVec43(&trans, (Matrix4x3 *)view, &trans);
     velDir = ptcl->velocity;
-    NormalizeVec3(&velDir, &velDir);
+    VEC_Normalize(&velDir, &velDir);
 
     {
         /* |velocity . -view z|: 1 when the particle flies straight at the
@@ -105,7 +105,7 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
         mat[2] = 0;
         mat[5] = 0;
         reg_G3_IDENTITY = 0;
-        func_02055388(mat);
+        G3_MultMtx43(mat);
     }
 
     reg_G3_COLOR = ptcl->color;

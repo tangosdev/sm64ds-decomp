@@ -11,8 +11,10 @@
  */
 
 #include "dExtSimpleModel_c.h"
-#include "G3X.h"
-#include "cstd.h"
+#include "nitro/gx/g3x.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/gx_load.h"
+#include "msl/string.h"
 #include "GX.h"
 
 namespace CP15 {
@@ -27,8 +29,7 @@ extern u32 data_020a4bdc;
 extern u32 data_020a4be0;
 extern u32 data_020a4be4;
 extern u32 data_020a4be8;
-void Crash();
-
+void OS_Terminate();
 }
 
 #define REBASE(p) ((char *)(p) + base)
@@ -103,7 +104,7 @@ extern "C" int func_02046590(const void *tbl, const char *name)
         BMD_Material *entry = t->materials;
         while (1)
         {
-            if (cstd::strcmp(entry->name, name) == 0)
+            if (strcmp(entry->name, name) == 0)
                 return (int)i;
             i++;
             entry++;
@@ -111,7 +112,7 @@ extern "C" int func_02046590(const void *tbl, const char *name)
                 break;
         }
     }
-    Crash();
+    OS_Terminate();
     return -1;
 }
 
@@ -220,7 +221,7 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
         if (idx2 != -1) {
             u32 v2;
             if (h->f20 == 0)
-                Crash();
+                OS_Terminate();
             v2 = h->f20[idx2].fc;
             if (shift == 2)
                 e->f20 = v2 >> 3;
@@ -412,7 +413,6 @@ extern "C" void func_02045e2c(int obj, int i, int a, short b)
     e->animFrame = b;
 }
 
-
 extern "C" void func_02045d9c(void)
 {
     CP15::EnableDTCM();
@@ -425,25 +425,25 @@ extern "C" void func_02045d9c(void)
     u16 ip = *(volatile u16 *)0x4000060;
     ip = (ip & ~0x3000u) | 8;
     *(volatile u16 *)0x4000060 = ip;
-    G3X::SetClearColor(0, 0, r2, 0, false);
-    if (GX::GetBankForTex() == 0) {
-        Crash();
+    G3X_SetClearColor(0, 0, r2, 0, false);
+    if (GX_GetBankForTex() == 0) {
+        OS_Terminate();
     }
-    if (GX::GetBankForTexPltt() != 0) {
+    if (GX_GetBankForTexPltt() != 0) {
         return;
     }
-    Crash();
+    OS_Terminate();
 }
 
 extern "C" void InitialiseVramGlobals(void)
 {
-    int r = GX::GetSizeOfTex();
+    int r = GX_GetSizeOfTex();
     data_020a4be4 = 0;
     data_020a4bc8 = 0;
     data_020a4be0 = 0x20000;
     data_020a4be8 = 0x20000;
     data_020a4bdc = r;
-    data_020a4bd8 = GX::GetSizeOfTexPltt();
+    data_020a4bd8 = GX_GetSizeOfTexPltt();
     data_020a4bcc = 0;
 }
 
@@ -464,7 +464,7 @@ u32 dExtSimpleModel_c::GetVramOffset(u32 size) {
     } else if (b > size) {
         p = &data_020a4be8;
     } else {
-        Crash();
+        OS_Terminate();
     }
     *p -= size;
     return *p;
@@ -472,10 +472,10 @@ u32 dExtSimpleModel_c::GetVramOffset(u32 size) {
 
 u32 dExtSimpleModel_c::LoadTextureToVram(char *texData, u32 size) {
     u32 vramOffset = GetVramOffset(size);
-    GX::BeginLoadTex();
-    GX::LoadTex(texData, vramOffset, size);
+    GX_BeginLoadTex();
+    GX_LoadTex(texData, vramOffset, size);
     data_020a4be4 += size;
-    GX::EndLoadTex();
+    GX_EndLoadTex();
     return vramOffset;
 }
 
@@ -483,13 +483,13 @@ u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *ds
     u32 vramOffset;
 
     if ((data_020a4be8 - data_020a4bc8) < size)
-        Crash();
-    GX::BeginLoadTex();
-    GX::LoadTex(src, data_020a4bc8, size);
+        OS_Terminate();
+    GX_BeginLoadTex();
+    GX_LoadTex(src, data_020a4bc8, size);
     data_020a4be4 += size;
-    GX::LoadTex(dst, data_020a4be0, size / 2);
+    GX_LoadTex(dst, data_020a4be0, size / 2);
     data_020a4be4 += size >> 1;
-    GX::EndLoadTex();
+    GX_EndLoadTex();
     vramOffset = data_020a4bc8;
     data_020a4bc8 += size;
     data_020a4be0 += size >> 1;
@@ -506,11 +506,11 @@ extern "C" u32 func_02045ad8(const void *src, u32 size)
     end  = data_020a4bd8;
 
     if (slot + size > end)
-        Crash();
+        OS_Terminate();
 
-    GX::BeginLoadTexPltt();
-    GX::LoadTexPltt(src, data_020a4bcc, size);
-    GX::EndLoadTexPltt();
+    GX_BeginLoadTexPltt();
+    GX_LoadTexPltt(src, data_020a4bcc, size);
+    GX_EndLoadTexPltt();
 
     slot = data_020a4bcc;
     data_020a4bcc = slot + ((size + 0xf) & 0xfff0);
@@ -528,13 +528,13 @@ extern "C" u32 func_02045a50(const void *src, u32 size)
     end  = data_020a4bd8;
 
     if (slot + size > end)
-        Crash();
+        OS_Terminate();
 
     data_020a4bd8 -= (size + 0xf) & 0xfff0;
 
-    GX::BeginLoadTexPltt();
-    GX::LoadTexPltt(src, data_020a4bd8, size);
-    GX::EndLoadTexPltt();
+    GX_BeginLoadTexPltt();
+    GX_LoadTexPltt(src, data_020a4bd8, size);
+    GX_EndLoadTexPltt();
 
     return data_020a4bd8;
 }
@@ -558,23 +558,23 @@ void dExtSimpleModel_c::LoadTexAndPal(BMD_File &file) {
         t->flags = (t->flags & ~0xffff) | ((ret >> 3) & 0xffff);
     }
 
-    GX::BeginLoadTexPltt();
+    GX_BeginLoadTexPltt();
 
     for (i = 0; i < file.numPalettes; i++) {
         p = &file.palettes[i];
         sz = p->size;
         if (data_020a4bcc + sz > data_020a4bd8)
-            Crash();
+            OS_Terminate();
         if (sz <= 8) {
-            GX::LoadTexPltt(p->data, data_020a4bcc, sz);
+            GX_LoadTexPltt(p->data, data_020a4bcc, sz);
             p->vramOffset = data_020a4bcc;
             data_020a4bcc = data_020a4bcc + ((sz + 7) & 0xfff8);
         } else {
             data_020a4bd8 = data_020a4bd8 - ((sz + 0xf) & 0xfff0);
-            GX::LoadTexPltt(p->data, data_020a4bd8, sz);
+            GX_LoadTexPltt(p->data, data_020a4bd8, sz);
             p->vramOffset = data_020a4bd8;
         }
     }
 
-    GX::EndLoadTexPltt();
+    GX_EndLoadTexPltt();
 }

@@ -68,7 +68,7 @@ enum dMeter_c_AssetId {
 
 #include "dMeter_c.h"
 #include "OAM.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "Timer.h"
 #include "decl_common.h"
 #include "dFdBrightness_c.h"
@@ -82,6 +82,7 @@ enum dMeter_c_AssetId {
 #include "private/controller_input.h"
 #include "Sound.h"
 #include "Event.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* The declarations below are the union of what the nineteen shards declared
  * locally, minus everything a shared header already supplies. What is left is
@@ -135,7 +136,6 @@ extern unsigned char data_0209f2bc;
 extern unsigned short data_ov002_02111188;
 extern unsigned char gSubScreenLayers;
 extern unsigned char gMeterShownHealth[];
-extern SaveBlock data_0209caa0;
 extern unsigned char gShowTouchScreenArrows;
 extern dFdBrightness_c *gSceneFader;
 void *LoadFile(int handle);
@@ -174,64 +174,61 @@ extern "C" dMeter_c *dMeter_c_classInit() {
 
 /* ROM ordinal 18 -- dMeter_c::InitResources(), 0x020fda04, size 0x750 */
 int dMeter_c::InitResources() {
-    /* Main and sub engine OBJ VRAM. */
-    char *objVramMain = (char *)0x6400000;
-    char *objVramSub = (char *)0x6600000;
     if (IsVsMode()) {
         void *h;
         if (GetOwnerLanguage() == 5) {
             h = LoadFile(0xB003);
-            DecompressLZ16(h, objVramMain);
-            DecompressLZ16(h, objVramSub);
+            DecompressLZ16(h, G2_GetOBJCharPtr());
+            DecompressLZ16(h, G2S_GetOBJCharPtr());
             Deallocate(h);
             h = LoadFile(0xB007);
-            DecompressLZ16(h, objVramMain + 0x2000);
+            DecompressLZ16(h, (u8 *)G2_GetOBJCharPtr() + 0x2000);
             Deallocate(h);
         } else if (GetOwnerLanguage() == 4) {
             h = LoadFile(0xAC03);
-            DecompressLZ16(h, objVramMain);
-            DecompressLZ16(h, objVramSub);
+            DecompressLZ16(h, G2_GetOBJCharPtr());
+            DecompressLZ16(h, G2S_GetOBJCharPtr());
             Deallocate(h);
             h = LoadFile(0xAC07);
-            DecompressLZ16(h, objVramMain + 0x2000);
+            DecompressLZ16(h, (u8 *)G2_GetOBJCharPtr() + 0x2000);
             Deallocate(h);
         } else if (GetOwnerLanguage() == 3) {
             h = LoadFile(0xA803);
-            DecompressLZ16(h, objVramMain);
-            DecompressLZ16(h, objVramSub);
+            DecompressLZ16(h, G2_GetOBJCharPtr());
+            DecompressLZ16(h, G2S_GetOBJCharPtr());
             Deallocate(h);
             h = LoadFile(0xA807);
-            DecompressLZ16(h, objVramMain + 0x2000);
+            DecompressLZ16(h, (u8 *)G2_GetOBJCharPtr() + 0x2000);
             Deallocate(h);
         } else if (GetOwnerLanguage() == 2) {
             h = LoadFile(0xA403);
-            DecompressLZ16(h, objVramMain);
-            DecompressLZ16(h, objVramSub);
+            DecompressLZ16(h, G2_GetOBJCharPtr());
+            DecompressLZ16(h, G2S_GetOBJCharPtr());
             Deallocate(h);
             h = LoadFile(0xA407);
-            DecompressLZ16(h, objVramMain + 0x2000);
+            DecompressLZ16(h, (u8 *)G2_GetOBJCharPtr() + 0x2000);
             Deallocate(h);
         } else {
             h = LoadFile(0xA003);
-            DecompressLZ16(h, objVramMain);
-            DecompressLZ16(h, objVramSub);
+            DecompressLZ16(h, G2_GetOBJCharPtr());
+            DecompressLZ16(h, G2S_GetOBJCharPtr());
             Deallocate(h);
             h = LoadFile(0xA007);
-            DecompressLZ16(h, objVramMain + 0x2000);
+            DecompressLZ16(h, (u8 *)G2_GetOBJCharPtr() + 0x2000);
             Deallocate(h);
         }
         h = LoadFile(0x8000);
-        DecompressLZ16(h, objVramSub + 0x2000);
+        DecompressLZ16(h, (u8 *)G2S_GetOBJCharPtr() + 0x2000);
         Deallocate(h);
         h = LoadFile(0x8002);
-        GX::LoadOBJPltt(h, 0, 0x120);
-        GXS::LoadOBJPltt(h, 0, 0x120);
+        GX_LoadOBJPltt(h, 0, 0x120);
+        GXS_LoadOBJPltt(h, 0, 0x120);
         Deallocate(h);
         h = LoadFile(0x8003);
-        GX::LoadOBJPltt(h, 0x120, 0xE0);
+        GX_LoadOBJPltt(h, 0x120, 0xE0);
         Deallocate(h);
         h = LoadFile(0x8001);
-        GXS::LoadOBJPltt(h, 0x120, 0xE0);
+        GXS_LoadOBJPltt(h, 0x120, 0xE0);
         Deallocate(h);
     } else {
         void *h;
@@ -245,8 +242,8 @@ int dMeter_c::InitResources() {
             h = LoadFile(ASSET_D_2D_CMN_ICON_F_NCG_BIN);
         else
             h = LoadFile(ASSET_D_2D_CMN_ICON_E_NCG_BIN);
-        DecompressLZ16(h, objVramMain);
-        DecompressLZ16(h, objVramSub);
+        DecompressLZ16(h, G2_GetOBJCharPtr());
+        DecompressLZ16(h, G2S_GetOBJCharPtr());
         Deallocate(h);
         if (GetOwnerLanguage() == 5)
             h = LoadFile(0xB00E);
@@ -258,10 +255,10 @@ int dMeter_c::InitResources() {
             h = LoadFile(0xA40E);
         else
             h = LoadFile(0xA00E);
-        DecompressLZ16(h, objVramMain + 0x2000);
+        DecompressLZ16(h, (u8 *)G2_GetOBJCharPtr() + 0x2000);
         Deallocate(h);
         h = LoadFile(ASSET_D_2D_BTM_ICON_NCG_BIN);
-        DecompressLZ16(h, objVramSub + 0x2000);
+        DecompressLZ16(h, (u8 *)G2S_GetOBJCharPtr() + 0x2000);
         Deallocate(h);
         if (GetOwnerLanguage() == 5)
             h = LoadFile(0xB00A);
@@ -273,14 +270,14 @@ int dMeter_c::InitResources() {
             h = LoadFile(0xA40A);
         else
             h = LoadFile(0xA00A);
-        GX::LoadOBJPltt(h, 0, 0x120);
-        GXS::LoadOBJPltt(h, 0, 0x120);
+        GX_LoadOBJPltt(h, 0, 0x120);
+        GXS_LoadOBJPltt(h, 0, 0x120);
         Deallocate(h);
         h = LoadFile(0x980F);
-        GX::LoadOBJPltt(h, 0x120, 0xE0);
+        GX_LoadOBJPltt(h, 0x120, 0xE0);
         Deallocate(h);
         h = LoadFile(ASSET_D_2D_BTM_ICON_NCL_BIN);
-        GXS::LoadOBJPltt(h, 0x120, 0xE0);
+        GXS_LoadOBJPltt(h, 0x120, 0xE0);
         Deallocate(h);
     }
 
@@ -653,7 +650,7 @@ void dMeter_c::RenderHealthMeter() {
         OAM::Render(0, &OAM::HEALTH_METER_BG, 0x80, mHealthMeterY, -1, 1, 0x1000, 0x1000, 0, -1);
     }
 
-    GX::LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[gMeterShownHealth[0]]], 0x60, 0x20);
+    GX_LoadOBJPltt(&data_ov002_0210c310[data_ov002_0210c29c[gMeterShownHealth[0]]], 0x60, 0x20);
 }
 
 /* ROM ordinal 11 -- dMeter_c::UpdateVsTimer(), 0x020fce9c, size 0x150 */

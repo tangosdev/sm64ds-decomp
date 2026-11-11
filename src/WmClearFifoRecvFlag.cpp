@@ -30,8 +30,8 @@ typedef struct WMPortSendCallback {
     Handler callback; /* 0x14 */
 } WMPortSendCallback;
 
-extern void Crash(void);
-extern void MultiCopyHalf(const void *src, void *dst, s32 count);
+extern void OS_Terminate(void);
+extern void MIi_CpuCopy16(const void *src, void *dst, s32 count);
 extern int WM_Finish(void);
 extern void WmClearFifoRecvFlag(void);
 extern WMArm9Buf *data_020a89ac;
@@ -57,7 +57,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
     if (op >= 0x25) {
         if (op == 0x80) {
             if (msg[1] == 0x13)
-                Crash();
+                OS_Terminate();
             if ((Handler)data_020a89ac->indCallback != 0)
                 ((Handler)data_020a89ac->indCallback)(msg);
         } else if (op == 0x82) {
@@ -114,7 +114,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
                     data_020a89ec.w10 = 0;
                     data_020a89ec.w12 = v5;
                     data_020a89ec.w1a = 0xffff;
-                    MultiCopyHalf(p, &data_020a8a00, 6);
+                    MIi_CpuCopy16(p, &data_020a8a00, 6);
                     for (i = 0; i < 0x10; i++) {
                         data_020a89ec.w6 = i;
                         if (data_020a89ac->portCallbackTable[i] != 0) {

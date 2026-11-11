@@ -2,7 +2,7 @@
 #define WMWORK_H
 
 /* NitroSDK WM views over the wireless work buffer data_020a9db4 (0x3700
- * bytes, carved by func_02068e4c), the multiboot library's sWmWork in
+ * bytes, carved by MB_Init), the multiboot library's sWmWork in
  * src/engine/mb/MB_WmBase.cpp. SDK field names where the SDK has one; the
  * evidence for each is above WmWork. Plain C types: some consumers do not
  * include types.h. WmCheckParentParameter.c includes this header without
@@ -47,7 +47,7 @@ typedef struct {
 } WmParentParam;                       /* WMParentParam, 0x40 */
 /* ggid is two u16s at 0x06 with no padding before it, so tgid..childMaxSize
  * sit 2 bytes earlier than in the public NitroSDK WMParentParam. That is
- * this ROM's SDK revision: func_02068e4c fills parentParam at these offsets
+ * this ROM's SDK revision: MB_Init fills parentParam at these offsets
  * byte-identically before WM_SetParentParameter, and the size assert below
  * holds. Don't realign it to the public header. */
 
@@ -82,17 +82,17 @@ typedef struct WmStartConnectCallback {
  *                   +0x12 and the max sizes at +0x32/+0x34 are its size check;
  *                   MBi_GetAttribute packs entry/MB/KS/CS into WM_ATTR_FLAG_*
  *   scanBuf         WMScanParam.scanBuf; DMA'd into parents[i].bssDesc
- *   parent/childMaxSize   set by func_02068dc8, copied into parentParam
+ *   parent/childMaxSize   set by MB_SetParentCommParam, copied into parentParam
  *   sendBuf/recvBuf, sendBufSize/recvBufSize   WM_StartMPEx
  *   stateCallback   WM_Initialize / WM_SetIndCallback / WM_Reset callback
  *   mpSending       set while WM_SetMPDataToPort is pending, cleared in its
  *                   callback (id 0xf)
  *   initialized     set after WM_Initialize, cleared in the WM_End callback
- *   userCallback    every DISPATCH; func_02068ae8 installs MBi_CommParentCallback
+ *   userCallback    every DISPATCH; MB_StartParent installs MBi_CommParentCallback
  *   connectBssDesc  WM_StartConnect's pInfo (id 0xc)
- *   mode            func_02068ae8 sets 1 (parent); func_020688fc's case 2
+ *   mode            MB_StartParent sets 1 (parent); MBi_SendMP's case 2
  *                   sends through this (child) callback
- *   resetting       set by func_02068a74 before WM_Reset; while set the
+ *   resetting       set by MBi_CommEnd before WM_Reset; while set the
  *                   callbacks only accept the RESET and END results
  *   mpStarted       set on WM_StartMP's MP_START state (0xa)
  *   childBitmap     WmStatus.child_bitmap after a parent-side (dis)connect, 1
@@ -100,9 +100,9 @@ typedef struct WmStartConnectCallback {
  *   mpContinuous    nonzero passes mpFreq 0 (continuous) to WM_StartMP
  *   parentCount, lastParentIndex   the parents[] fill count / last hit
  *   aid             WMStartConnectCallback.aid on CONNECTED
- *   scanContinue    cleared by func_02068a74; scanning stops when 0
+ *   scanContinue    cleared by MBi_CommEnd; scanning stops when 0
  *   scanNextChannel when set, changeScanChannel steps WMScanParam.channel
- *   uname, gname    MB_Init (func_02068e4c) copies the MBUserInfo name and
+ *   uname, gname    MB_Init (MB_Init) copies the MBUserInfo name and
  *                   its static L"multiboot" (data_0209a084, stepped as it is
  *                   read) into them; its loops run up to 10 and 16 halfwords,
  *                   so the user name can overrun into gname

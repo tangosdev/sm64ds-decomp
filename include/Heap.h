@@ -5,7 +5,7 @@
  * class Heap: 21 matched functions, 5 fields, 16 vtable slots.
  *
  * THE __cplusplus BLOCK BELOW HAD NEVER BEEN COMPILED, and carried the same
- * generator defect as ExpandingHeapAllocator.h and SolidHeapAllocator.h: it
+ * generator defect as the retired allocator class headers: it
  * emitted `struct a; struct a_; struct b;' as forward declarations -- parameter
  * names mistaken for type names. No source file ever referenced them; dropped.
  *
@@ -71,9 +71,9 @@
  * slot 3 is spelled `VAllocate(u32, int)': _ZN5mHeap9ExpHeap_t9VAllocateEji.
  * _ZN9SolidHeap9VAllocateEjj used to claim (u32, u32) for the SAME SLOT, so one
  * of the two imported names was wrong -- and every sibling in the family
- * (Heap::Allocate, SolidHeapAllocator::Allocate,
- * ExpandingHeapAllocator::Allocate) spells `Eji'. The ROM settles it directly:
- * SolidHeapAllocator::Allocate (0x0204eb70) does `cmp r2,#0' then `blt', a
+ * (Heap::Allocate, NNS_FndAllocFromFrmHeapEx, NNS_FndAllocFromExpHeapEx)
+ * takes an int alignment. The ROM settles it directly:
+ * NNS_FndAllocFromFrmHeapEx (0x0204eb70) does `cmp r2,#0' then `blt', a
  * SIGNED branch, and negates with `rsb' to allocate backwards -- a u32 would
  * compile to bcc/blo and make that path unreachable. Both VAllocates are
  * four-instruction thunks that forward r1/r2 untouched into it. The SolidHeap
@@ -94,7 +94,7 @@
  *            `void f(u32 id){id=0;}' loses the store to dead-code elimination
  *            at -O4,p and emits `bx lr' alone). `bool' and `int' produce the
  *            same eight bytes, so the bytes do not pick u32 over them; the
- *            width comes from ExpandingHeapAllocator::SetNodeID (0x0204e0e8),
+ *            width comes from NNS_FndSetGroupIDForExpHeap (0x0204e0e8),
  *            which loads and returns the old id with `ldrh' -- zero-extended,
  *            hence unsigned. ExpandingHeap's override is a pure forward and
  *            matches under any of them.
@@ -132,15 +132,6 @@
  * FIELD MEANINGS ARE DOCUMENTED ON THE C++ SPELLING BELOW. They are kept off
  * these lines because that gate parses a trailing `/* 0xNN *[/]' and a comment
  * running onto the next line makes the field unparsed. */
-namespace Memory {
-void operator_delete2(void *);
-}
-
-/* Global, so the elaborated `struct SolidHeapAllocator*' below names the
-   allocator classes and does not declare new ones inside mHeap. */
-struct SolidHeapAllocator;
-struct ExpandingHeapAllocator;
-
 namespace mHeap {
 
 struct Heap_t {
@@ -160,10 +151,10 @@ struct Heap_t {
     Heap_t* parentHeap;             /* 0x0c -- heap this one was carved out of;
                                        NULL for the root. Heap::Destroy releases
                                        the block back through it. */
-    u32   flags;                    /* 0x10 -- bit 0x4000 = fail-fast: when set,
+    u32 flags;                      /* 0x10 -- bit 0x4000 = fail-fast: when set,
                                        an allocation that returns NULL, a Sizeof
                                        that returns -1, or a ResizeToFit that
-                                       returns 0 calls Crash() instead of
+                                       returns 0 calls OS_Terminate() instead of
                                        reporting failure to the caller. The
                                        constructor sets it, so every heap is
                                        fail-fast unless something clears it. */
@@ -201,16 +192,16 @@ struct Heap_t {
        the rest arrive with their own migrations, where a wrong signature stops
        being unfalsifiable. */
     void* Allocate(u32 size);                /* forwards with align = 4 */
-    void* Allocate(u32 size, int align);     /* slot  3, Crash() on NULL */
+    void *Allocate(u32 size, int align);     /* slot  3, OS_Terminate() on NULL */
     void  Deallocate(void* ptr);             /* slot  4 */
     u32   Reallocate(void* ptr, u32 size);   /* slot  8, the new size or 0 */
-    int   Sizeof(void* ptr);                 /* slot  9, Crash() on -1 */
+    int Sizeof(void *ptr);                   /* slot  9, OS_Terminate() on -1 */
     void  Destroy();                         /* slot  2, then releases 0x0c */
     bool  Intact();                          /* slot  6 */
     void  Rescue();                          /* slot  7 */
     u32   MaxAllocationUnitSize();           /* slot 10 */
     void  SetNodeID(u32 id);                 /* slot 13 */
-    u32   ResizeToFit();                     /* slot 15, Rescue+Crash on 0 */
+    u32 ResizeToFit();                       /* slot 15, Rescue+OS_Terminate on 0 */
     Heap_t* SetDefault();                    /* installs this as the default
                                                 heap, returns the previous one */
 
@@ -232,9 +223,8 @@ struct Heap_t {
     /* STATIC -- and that is read off the argument count, not off the mangled
        name. The Itanium ABI does not encode `this' in the parameter list, so a
        static and a non-static member with the same declared parameters mangle
-       identically; include/SolidHeapAllocator.h states the same rule. Each of
-       these declares exactly as many parameters as its ROM body takes
-       arguments, leaving no room for a leading `this'. The one instance method
+       identically. Each of these declares exactly as many parameters as its
+       ROM body takes arguments, leaving no room for a leading `this'. The one instance method
        among them, ResizeToFit, is declared above and does use `this'. */
     static Heap_t* SetupRootHeap();
     static void    InitializeRootHeap();
@@ -247,27 +237,6 @@ struct Heap_t {
                                              /* veneer -> SetupSolidHeapAsDefault */
     static void  RestoreFromTemporary();
 
-    /* The two allocator factories. `flags' is the node id the allocator stamps
-       on the blocks it hands out; every caller passes 3. Returns NULL when the
-       aligned span is too small to hold the allocator's own bookkeeping --
-       0x30 bytes for the solid one, 0x4c for the expanding one. */
-    static struct SolidHeapAllocator*     CreateSolidHeapAllocator(void* address, u32 size, u32 flags);
-    static struct ExpandingHeapAllocator* CreateExpandingHeapAllocator(void* address, u32 size, u32 flags);
-
-    /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
-       Without it the compiler emits the global `_ZdlPv`, which exists nowhere
-       in this image, and D0 comes out one relocated word different from the
-       ROM -- a difference build_pin.verify CANNOT SEE, because it wildcards
-       relocated words. Only the link catches it.
-
-       This family deallocates through Memory::operator_delete2; dActor_c's copy of
-       this member calls Memory::Deallocate instead, which is why each family
-       needs its own. Inline and in the IMMEDIATE base: mwcc inlines it only
-       when it finds it in the class or one level up (see include/dActor_c.h).
-       No layout effect. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 };
 
 } /* namespace mHeap */

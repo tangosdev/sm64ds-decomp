@@ -13,7 +13,7 @@
 // so MSVC emits the class vtable there and demands every virtual be defined.
 // dBgW declares thirteen; gate 8 exercises the surface queries and one ray
 // overload. The rest have real implementations in src/, but slicing them pulls
-// in dBgCh_SphCrr, dBgPi, DotVec3, four data_020a0xxx tables and a dozen
+// in dBgCh_SphCrr, dBgPi, VEC_DotProduct, four data_020a0xxx tables and a dozen
 // func_0203xxxx -- adopting the collision system into the port, which is a
 // piece of work in its own right and not something a constructor migration
 // should decide.
@@ -55,7 +55,7 @@ BG_TRAP(void dBgW::BeforeClsn(dBgPi &, dActor_c *, Vector3 &,
 // The destructors are still flat extern "C" Itanium functions in src/; the
 // bridge runs the other way here, so MSVC's slot 0 reaches the ROM body.
 /* The ROM destructor releases resources through the collision layer, and
-   slicing it pulls that whole tree in (DotVec3, data_020a0cec, cstd::fdiv,
+   slicing it pulls that whole tree in (VEC_DotProduct, data_020a0cec, FX_Div,
    a dozen func_0203xxxx). MSVC still needs the destructor defined to emit
    the vtable, so it takes hal/clsn_vtable.cpp's shape: present for the
    vtable's sake, loud if anything ever dispatches through it. A gate that

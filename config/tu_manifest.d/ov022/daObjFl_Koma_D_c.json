@@ -625,14 +625,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@395",
+      "from": "@373",
       "to": "@392",
-      "evidence": "mwcc numbers the model-handle destructor-registration node @390. ov012 already defines @390, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @392."
+      "evidence": "mwcc numbers the model-handle destructor-registration node @390. ov012 already defines @390, and objisolate cannot grow a name, so this row maps the compiled name to the unused same-length @392. Re-keyed from @395 to @373 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@396",
+      "from": "@374",
       "to": "@606",
-      "evidence": "batch-5 atdup: @391 collides cross-module (temps are fleet-global); renumber to unused same-length @606"
+      "evidence": "batch-5 atdup: @391 collides cross-module (temps are fleet-global); renumber to unused same-length @606 Re-keyed from @396 to @374 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

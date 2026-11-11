@@ -1,7 +1,7 @@
 #include "private/arm9_archive_table.h"
 
 extern int LoadArchive(int idx);
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern int func_0204ede8(void *o, unsigned int i);
 
 /* The address of archived file val's bytes inside its mounted archive
@@ -19,7 +19,7 @@ int func_020186c0(unsigned int val) {
                 if (LoadArchive(i))
                     data_0208eb54 = i;
                 if (e->archive == 0) {
-                    Crash();
+                    OS_Terminate();
                     return 0;
                 }
             }
@@ -27,6 +27,6 @@ int func_020186c0(unsigned int val) {
         }
         e++;
     }
-    Crash();
+    OS_Terminate();
     return 0;
 }

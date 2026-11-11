@@ -50,6 +50,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g3imm.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 #pragma defer_codegen off
 
@@ -74,22 +75,18 @@
 #define reg_G3_POLYGON_ATTR   (*(volatile u32 *)0x040004a4)
 
 /* Stack vectors are NitroSDK VecFx32: types.h Vector3 declares an empty
-   destructor under C++, and a stack object would emit ~Vector3. CrossVec3 and
-   NormalizeVec3 take Vector3 views, so calls cast this POD storage explicitly. */
-
-namespace cstd {
-Fix12i fdiv(s32, s32);
-}
+   destructor under C++, and a stack object would emit ~Vector3. VEC_CrossProduct and
+   VEC_Normalize take Vector3 views, so calls cast this POD storage explicitly. */
 
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-int InvMat4x3(const Matrix4x3 *src, Matrix4x3 *dst);
-void  MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *out);
-void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
-void NormalizeVec3(const Vector3 *v, Vector3 *out);
+int MTX_Inverse43(const Matrix4x3 *src, Matrix4x3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *out);
+void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
+void VEC_Normalize(const Vector3 *v, Vector3 *out);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
-void  func_020553a4(void *m);
+void G3_LoadMtx43(void *m);
 void  func_02012694(u32 id, void *pos);
 void *func_0201787c(SharedFilePtr *sfp);
 u32   func_02045ad8(const void *src, u32 size);
@@ -140,7 +137,7 @@ void daPicGate_c::BuildGateMatrix() {
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68,
         -(((unsigned char)(param1 & 0xf) + 1) * 0x64000) / 2 >> 3, 0, 0);
     mMtx = data_020a0e68;
-    InvMat4x3(&data_020a0e68, &data_020a0e68);
+    MTX_Inverse43(&data_020a0e68, &data_020a0e68);
     mInvMtx = data_020a0e68;
 }
 
@@ -200,8 +197,8 @@ void daPicGate_c::HitTest() {
     Vec3_Asr((Vector3 *)&a, (Vector3 *)&r5->mPrevPosX, 3);
     Vec3_Asr((Vector3 *)&b, (Vector3 *)&r5->mPosX, 3);
     data_020a0e68 = mInvMtx;
-    MulVec3Mat4x3((Vector3 *)&a, &data_020a0e68, (Vector3 *)&oa);
-    MulVec3Mat4x3((Vector3 *)&b, &data_020a0e68, (Vector3 *)&ob);
+    MTX_MultVec43((Vector3 *)&a, &data_020a0e68, (Vector3 *)&oa);
+    MTX_MultVec43((Vector3 *)&b, &data_020a0e68, (Vector3 *)&ob);
 
     if ((oa.z > 0 && ob.z <= 0) || (oa.z < 0 && ob.z >= 0)) {
         x = ob.x << 3;
@@ -275,22 +272,22 @@ void daPicGate_c::BuildNormals() {
             q = (int *)&n;  q[0] = z; q[1] = z; q[2] = z;
 
             if (j == 0)
-                SubVec3((Vector3 *)p, (Vector3 *)(p + 1), (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)p, (Vector3 *)(p + 1), (Vector3 *)&ej);
             else if (j == mCols - 1)
-                SubVec3((Vector3 *)(p - 1), (Vector3 *)p, (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)(p - 1), (Vector3 *)p, (Vector3 *)&ej);
             else
-                SubVec3((Vector3 *)(p - 1), (Vector3 *)(p + 1), (Vector3 *)&ej);
+                VEC_Subtract((Vector3 *)(p - 1), (Vector3 *)(p + 1), (Vector3 *)&ej);
 
             if (i == 0)
-                SubVec3((Vector3 *)p, (Vector3 *)(p + mRows), (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)p, (Vector3 *)(p + mRows), (Vector3 *)&ei);
             else if (i == mRows - 1)
-                SubVec3((Vector3 *)(p - mRows), (Vector3 *)p, (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)(p - mRows), (Vector3 *)p, (Vector3 *)&ei);
             else
-                SubVec3((Vector3 *)(p - mRows), (Vector3 *)(p + mRows), (Vector3 *)&ei);
+                VEC_Subtract((Vector3 *)(p - mRows), (Vector3 *)(p + mRows), (Vector3 *)&ei);
 
-            CrossVec3((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
+            VEC_CrossProduct((const Vector3 *)&ej, (const Vector3 *)&ei, (Vector3 *)&n);
             n.z >>= 1;
-            NormalizeVec3((const Vector3 *)&n, (Vector3 *)&n);
+            VEC_Normalize((const Vector3 *)&n, (Vector3 *)&n);
             p->normal = (n.x >> 3 & mask) | ((n.y >> 3 & mask) << 10) | ((n.z >> 3 & mask) << 20);
             p += 1;
         }
@@ -339,7 +336,7 @@ s32 daPicGate_c::RippleHeight(s32 r6) {
     r5res = WavePhase(r6);
     r4res = WaveAmplitude(mWaveParams->duration - mWaveTimer);
 
-    f = cstd::fdiv(r4res, mWaveParams->radius);
+    f = FX_Div(r4res, mWaveParams->radius);
     sum = r4res + FX_MUL(-f, r6);
     if (sum < 0)
         sum = 0;
@@ -361,7 +358,7 @@ s32 daPicGate_c::WaveAmplitude(s32 n) {
 /* The wave's phase at distance dist from the origin: dist * 0xffff /
  * wavelength, 4.12 fixed-point, minus the running phase mWavePhase. */
 s32 daPicGate_c::WavePhase(s32 dist) {
-    Fix12i speed = cstd::fdiv(0xffff, mWaveParams->wavelength);
+    Fix12i speed = FX_Div(0xffff, mWaveParams->wavelength);
     int result = FX_MUL(dist, speed);
     s16 cur = mWavePhase;
     return (s16)(result - cur);
@@ -450,9 +447,9 @@ void daPicGate_c::DrawFlat() {
     Vertex *p;
 
     G3_MTX_PUSH = 0;
-    MulMat4x3Mat4x3(&mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43(&mMtx, &data_0209b3ec, &tmp);
     G3_MTX_MODE = 2;
-    func_020553a4(&tmp);
+    G3_LoadMtx43(&tmp);
     G3_LIGHT_VECTOR = 0xe0000000;
     G3_LIGHT_COLOR = 0xc0007fff;
     LoadMaterial();
@@ -518,8 +515,8 @@ void daPicGate_c::PlaceCorners() {
 #define G3_SPE_EMI         (*(int *)0x040004c4)
 enum { kMtxPosVec = 2, kMtxPos = 1, kScale = 0x20000, kTriStrip = 2 };
 extern "C" {
-extern void func_02055388(void *m);
-extern void func_02055998(void *m);
+extern void G3_MultMtx43(void *m);
+extern void G3_LoadTexMtxEnv(void *m);
 extern int data_ov080_0212771c[];
 }
 /* texgen=NORMAL variant: no per-vertex TEXCOORD, positions at >>7. */
@@ -542,12 +539,12 @@ void daPicGate_c::DrawRippleEnvMapped() {
     Matrix4x3 tmp;
     int i, j, n;
 
-    MulMat4x3Mat4x3(&mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43(&mMtx, &data_0209b3ec, &tmp);
     G3_MTX_PUSH = 0;
-    func_02055998(data_ov080_0212771c);
-    func_02055388(&tmp);
+    G3_LoadTexMtxEnv(data_ov080_0212771c);
+    G3_MultMtx43(&tmp);
     G3_MTX_MODE = kMtxPosVec;
-    func_020553a4(&tmp);
+    G3_LoadMtx43(&tmp);
     G3_TEXCOORD = 0x04000400;
     G3_LIGHT_VECTOR = 0xe0000000;
     G3_LIGHT_COLOR = 0xc0007fff;

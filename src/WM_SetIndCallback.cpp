@@ -3,7 +3,7 @@
  * indications ARM7 sends outside any request's own callback, with
  * interrupts off. WM_ERRCODE_ILLEGAL_STATE (3) before WM_Init, else
  * WM_ERRCODE_SUCCESS. */
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -11,14 +11,14 @@ extern "C" {
 extern int WMi_CheckInitialized(void);
 
 int WM_SetIndCallback(void *callback) {
-    int enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     int result = WMi_CheckInitialized();
     if (result != 0) {
-        IRQ::Restore(enabled);
+        OS_RestoreInterrupts(enabled);
         return result;
     }
     WM_GetSystemWork()->indCallback = callback;
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
     return 0;
 }
 }

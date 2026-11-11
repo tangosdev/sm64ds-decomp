@@ -2,8 +2,8 @@
 #include "nitro/os/thread.h"
 #include "private/player_input_record.h"
 #include "private/mb_views.h"
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
-extern void func_0205a588(void *dst, unsigned char c, unsigned int n);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void MI_CpuFill8(void *dst, unsigned char c, unsigned int n);
 extern void func_02042778(void);
 extern void func_0203df40(void);
 extern int func_02040a94(void);
@@ -67,14 +67,14 @@ void func_0203db64(void *arg0, void *arg1) {
     int b;
 
     data_020a0ef0 = 0;
-    CpuCopy8(arg0, data_020a1064, 0x40);
-    CpuCopy8(arg1, data_020a0fec, 0x1c);
-    func_0205a588(&data_020a1040, 0, 0x24);
-    func_0205a588(data_020a0fb8, 0, 0x18);
-    func_0205a588(data_020a0fa0, 0, 0x18);
-    func_0205a588(data_020a10fc, 0, 0x58);
-    func_0205a588(data_020a10a4, 0, 0x58);
-    func_0205a588(data_020a1154, 0, 0x90);
+    MI_CpuCopy8(arg0, data_020a1064, 0x40);
+    MI_CpuCopy8(arg1, data_020a0fec, 0x1c);
+    MI_CpuFill8(&data_020a1040, 0, 0x24);
+    MI_CpuFill8(data_020a0fb8, 0, 0x18);
+    MI_CpuFill8(data_020a0fa0, 0, 0x18);
+    MI_CpuFill8(data_020a10fc, 0, 0x58);
+    MI_CpuFill8(data_020a10a4, 0, 0x58);
+    MI_CpuFill8(data_020a1154, 0, 0x90);
     data_020a0f08 = 0;
     data_020a0f1c = 0;
     data_020a0f30 = 0;
@@ -147,15 +147,15 @@ void func_0203db64(void *arg0, void *arg1) {
         }
     } else {
         OS_GetOwnerInfo(&buf);
-        func_0205a588(&data_020a10fc[0], 0, 0x16);
+        MI_CpuFill8(&data_020a10fc[0], 0, 0x16);
         data_020a10fc[0].favoriteColor = buf.favoriteColor;
         data_020a10fc[0].nameLength = buf.nickNameLength;
         data_020a10a4[0].favoriteColor = data_020a10fc[0].favoriteColor;
         data_020a10fc[0].unknown_04 = 0;
         data_020a10a4[0].unknown_04 = data_020a10fc[0].unknown_04;
         data_020a10a4[0].nameLength = data_020a10fc[0].nameLength;
-        CpuCopy8(buf.nickName, data_020a10fe, buf.nickNameLength * 2);
-        CpuCopy8(buf.nickName, data_020a10a6, buf.nickNameLength * 2);
+        MI_CpuCopy8(buf.nickName, data_020a10fe, buf.nickNameLength * 2);
+        MI_CpuCopy8(buf.nickName, data_020a10a6, buf.nickNameLength * 2);
         data_020a0f00 = buf.language;
         OS_GetMacAddress(data_020a0fb8);
         OS_GetMacAddress(data_020a0fa0);

@@ -20,7 +20,7 @@
  */
 #include "types.h"
 #include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/snd/command.h"
 
 extern "C" {
@@ -279,9 +279,9 @@ s32 SND_CountWaitingCommand(void) {
 }
 
 void PxiFifoCallback(int tag, u32 data, int err) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     SNDi_CallAlarmHandler((s32)data);
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 void InitPXI(void) {

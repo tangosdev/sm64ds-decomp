@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "private/wbt_block_info_list.h"
 
 extern "C" {
@@ -8,17 +8,17 @@ extern "C" {
 extern struct WBTBlockInfoList *func_02065ae0(void);
 extern void func_02065ad0(struct WBTBlockInfoList *list);
 struct WBTBlockInfoList *WBT_UnregisterBlock(int key) {
-    u32 saved = (0, IRQ::Disable());
+    OSIntrMode saved = (0, OS_DisableInterrupts());
     struct WBTBlockInfoList *head = func_02065ae0();
     struct WBTBlockInfoList *cur;
     struct WBTBlockInfoList *prev;
     if (head == 0) {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return 0;
     }
     if (head->block_id == key) {
         func_02065ad0(head->next);
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return head;
     }
     prev = head;
@@ -26,14 +26,14 @@ struct WBTBlockInfoList *WBT_UnregisterBlock(int key) {
     while (cur != 0) {
         if (cur->block_id == key) {
             prev->next = cur->next;
-            IRQ::Restore(saved);
+            OS_RestoreInterrupts(saved);
             return cur;
         }
         prev = cur;
         cur = cur->next;
     }
 
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     return 0;
 }
 }
