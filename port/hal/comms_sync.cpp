@@ -2140,13 +2140,15 @@ unsigned gw_rgb_of555(unsigned short w) {
 #ifndef PORT_ROM_CLEAN
 // BROSCOLOR1 proof knob (dev builds only): SM64DS_BRO_CHOICE=<chr>:<i>[/...] picks choice i for chr through the lobby's own
 // calls (hal/bro_colors.h port_bro_choice_set), or <chr>:c:RRGGBB,RRGGBB[,RRGGBB] sets the Custom parts (port_bro_custom_set),
-// once, before the first identity reads the picks. chr 0 Mario 1 Luigi 2 Wario 3 Yoshi.
+// once, before the first identity reads the picks. chr 0 Mario 1 Luigi 2 Wario 3 Yoshi. The picks last this session only: the
+// knob turns settings.json writes off first (host_settings_session_only), so a row never leaves them in a console's settings.
 static void gw_bro_choice_knob() {
     static bool done;
     if (done) return;
     done = true;
     const char *e = std::getenv("SM64DS_BRO_CHOICE");
     if (!e || !*e) return;
+    host_settings_session_only();
     char buf[160];
     std::snprintf(buf, sizeof buf, "%s", e);
     for (char *tok = std::strtok(buf, "/"); tok; tok = std::strtok(0, "/")) {

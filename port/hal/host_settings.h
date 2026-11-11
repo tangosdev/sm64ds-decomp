@@ -1161,6 +1161,9 @@ int host_settings_cam_gen(void);   /* moves when CameraMode is set or reloaded, 
 void host_settings_save_tick(void);
 int host_settings_save_pending(void);
 int host_settings_save_flush(void);
+/* Dev builds only (a proof knob that sets picks for one row): from now on nothing is written to settings.json in this
+   session; the working values still move. */
+void host_settings_session_only(void);
 
 int host_setting_set_key(int action, int vk);
 /* why the last set_key / set_pad was refused ("" if it was not): Start cannot

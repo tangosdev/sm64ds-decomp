@@ -3379,6 +3379,7 @@ namespace {
 struct Pend { char key[40]; char val[40]; };
 Pend g_pend[24];
 int g_npend;
+int g_session_only;   /* host_settings_session_only: a dev knob's picks never reach settings.json */
 unsigned long long g_last_write_ms;
 
 unsigned long long now_ms(void)
@@ -3392,6 +3393,7 @@ unsigned long long now_ms(void)
 
 int pending_flush(void)
 {
+    if (g_session_only) { g_npend = 0; return 1; }
     if (!g_npend) return 1;
     const char *keys[24];
     const char *vals[24];
@@ -3437,6 +3439,7 @@ extern "C" void host_settings_save_tick(void)
 }
 extern "C" int host_settings_save_pending(void) { return g_npend; }
 extern "C" int host_settings_save_flush(void) { return pending_flush(); }
+extern "C" void host_settings_session_only(void) { g_session_only = 1; g_npend = 0; }
 extern "C" int host_settings_ctl_gen(void) { return g_ctl_gen; }
 extern "C" int host_settings_cam_gen(void) { return g_cam_gen; }
 
