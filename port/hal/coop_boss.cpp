@@ -38,6 +38,9 @@ extern char data_ov073_02123320[], data_ov073_02123330[], data_ov073_02123340[],
             data_ov073_02123410[];
 // bossdesc2: Goomboss's ROM transition (state index at +0x5cc, runs the enter pair), its hit animation, Eyerok's transition + records + globals
 void _ZN7fBase_c18MarkForDestructionEv(void *self);
+// coopgoomboss2: a minion's home point (what the summon calls after the Spawn) and the Goomba's own removal at the end of its death
+void func_ov084_021296b0(void *goomba, void *pos);
+void func_ov084_02129498(void *goomba);
 void _ZN12daKuriKing_c19func_ov074_021203e4Ei(char *c, int state);
 void func_ov074_02121a4c(char *c, int idx);
 int _ZN6Eyerok19func_ov066_02119454EPv(void *c, void *state);
@@ -74,7 +77,9 @@ enum : uint16_t { kPlain = 0, kStatePtr = 1, kVol = 2,   // kVol: changes every 
                  kGlobal = 256,     // not a field of the actor: off = index of an overlay global (Eyerok: 0 = phase bits, 1 = hands down)
                  kZeroOnForce = 512,// a step counter: a forced state restarts at step 0, so the state's own set-up runs
                  kGoomState = 1024, // Goomboss's state index (+0x5cc): set through _ZN12daKuriKing_c19func_ov074_021203e4Ei (enter pair runs)
-                 kEyeState = 2048 };// Eyerok's state record pointer (+0x48c), mapped to a table id; set through _ZN6Eyerok19func_ov066_02119454EPv
+                 kEyeState = 2048,  // Eyerok's state record pointer (+0x48c), mapped to a table id; set through _ZN6Eyerok19func_ov066_02119454EPv
+                 // coopgoomboss2:
+                 kLocal = 4096 };   // sent for the log only, never written: each console keeps its own (Goomboss's summoned count +0x602)
 enum : int { kLoOff = 0x100, kHiOff = 0x900 };
 struct BField { uint16_t off; uint8_t size; uint16_t kind; };
 struct BDesc {
@@ -144,12 +149,13 @@ const BDesc kDescs[] = {
     // ---- bossdesc2 (run mp1, lane BOSSDESC2). Append-only rows. Offsets from include/Goomboss.h, Bowser.h, Eyerok.h and the state
     // code read for each (src/actors/Goomboss.cpp, src/func_ov060_*, src/actors/Eyerok.cpp + src/func_ov066_0211603c.c).
     // Goomboss (class 198, daKuriKing_c): state index +0x5cc (9 states, enter/tick pairs; set through func_ov074_021203e4), HP = the size
-    // index +0x604 (each stomp's state 5 enter takes one, 0 = the defeat talk), sub-step +0x603, goombas spawned +0x602 (the goombas
-    // themselves are runtime spawns, one set per console), shrink counter +0x607, timer +0x5fc, direction +0x5f0, walk angle / speed
+    // index +0x604 (each stomp's state 5 enter takes one, 0 = the defeat talk), sub-step +0x603, goombas out +0x602 (coopgoomboss2: the
+    // goombas are ONE set, summoned by the authority and announced; the count is each console's own, raised by each copy built and
+    // lowered by each copy's CleanupResources, so it is sent for the log only and never written), shrink counter +0x607, timer +0x5fc, direction +0x5f0, walk angle / speed
     // +0x5f4 / +0x5f6, scale +0x5e4. +0x5c8 is the player he talks to (console-local), +0x5dc a spawned actor's unique id (never sent).
     // His reward is a key (actor 0x11a): each console spawns its own in state 7 (COOPSPAWN1 announces keys only in courses 36/38/40/49).
     { 198, "GOOMBOSS", 14,
-      { { 0x5cc, 4, kGoomState }, { 0x604, 1, kPlain }, { 0x603, 1, kPlain }, { 0x602, 1, kPlain }, { 0x607, 1, kPlain },
+      { { 0x5cc, 4, kGoomState }, { 0x604, 1, kPlain }, { 0x603, 1, kPlain }, { 0x602, 1, kLocal | kVol }, { 0x607, 1, kPlain },
         { 0x5fc, 2, kVol }, { 0x5f0, 4, kPlain }, { 0x5f4, 2, kVol }, { 0x5f6, 2, kVol }, { 0x5e4, 4, kVol },
         { 0x5c, 4, kVol }, { 0x60, 4, kVol }, { 0x64, 4, kVol }, { 0x98, 4, kVol } },
       1, 0, 10, { 0x5c8, 0 }, 0, 0 },
@@ -339,6 +345,7 @@ struct Boss {
     bool mine_last;                // bossfix1: I was this boss's authority the last time I saw it
     bool bit_set;                  // bossfix1: the group was told this boss is dead
     bool killed_late;              // bossfix1: this copy was removed because the group said the boss is dead
+    bool summon_held;              // coopgoomboss2: this Goomboss copy's summon is being held (log once per summon)
     Rx rx;
 };
 
@@ -355,6 +362,9 @@ bool g_bomb = false;   // bossfix1: SM64DS_COOP_BOSS_BOMB=1: Bowser's proof hit 
 unsigned g_behind_tick = 0, g_behind_every = 0; int g_behind_dist = 0; bool g_behind_done = true;   // bossdesc2: the local player behind the boss, facing his way (the grab proof)
 bool g_regd = false;
 int  g_my = -1;
+bool g_minion_share = true;   // coopgoomboss2: SM64DS_COOP_GOOMBAS=0 is the must-fail control: every console summons its own goombas (the 1.0.2 behaviour)
+struct MinionKnob { unsigned tick; bool done; };
+MinionKnob g_mkill[8]; int g_nmkill = 0;     // SM64DS_COOP_GOOMBA_KILL=T[,T]: at boss tick T, on THIS console, the first live minion is stomped dead
 CoopKey g_key;
 unsigned g_ticks = 0, g_seq = 0;
 Boss g_boss[kSlots];
@@ -386,6 +396,7 @@ uint32_t read_field(const char *a, const BField &f) {
 void write_field(char *a, const BDesc &d, int idx, uint32_t v) {
     const BField &f = d.f[idx];
     if (!field_ok(f) || !field_in_class(d.cls, f)) return;
+    if ((f.kind & kLocal) && g_minion_share) return;      // SM64DS_COOP_GOOMBAS=0 (control): written as in 1.0.2
     if (f.kind & kGlobal) {                  // the overlay's own words: a merge that only ever moves one way, so a replay is harmless
         if (f.off == 0) { if (v <= 3u) data_ov066_0211abe0 = (unsigned char)(data_ov066_0211abe0 & v); }
         else if (v <= 3u && v > data_ov066_0211ae08) data_ov066_0211ae08 = (unsigned char)v;
@@ -470,7 +481,7 @@ bool value_ok(const BDesc &d, int idx, uint32_t v) {
         if (idx == 0) return v <= 8;                 // state index (nine states)
         if (idx == 1) return v <= 5;                 // size index = HP (the ROM clamps it at 5)
         if (idx == 2) return v <= 8;                 // sub-step
-        if (idx == 3) return v <= 40;                // goombas spawned so far
+        if (idx == 3) return true;                   // goombas out (kLocal, never written; a wrapped count must not refuse the record)
         if (idx == 4) return v <= 4;                 // shrink counter
         return true;
     }
@@ -523,6 +534,16 @@ void read_env() {
     g_face = flag("SM64DS_COOP_BOSS_FACE", false);
     check_descriptors();
     g_deadmark = flag("SM64DS_COOP_BOSS_DEADMARK", true);
+    g_minion_share = flag("SM64DS_COOP_GOOMBAS", true);
+    if (const char *mk = std::getenv("SM64DS_COOP_GOOMBA_KILL")) {
+        const char *p = mk;
+        while (*p && g_nmkill < 8) {
+            unsigned fr = 0; int used = 0;
+            if (std::sscanf(p, "%u%n", &fr, &used) < 1 || used <= 0) break;
+            g_mkill[g_nmkill].tick = fr; g_mkill[g_nmkill].done = false; ++g_nmkill;
+            p += used; while (*p == ',' || *p == ';' || *p == ' ') ++p;
+        }
+    }
     if (const char *f = std::getenv("SM64DS_COOP_BOSS_FORGE")) {
         const char *p = f;
         while (*p && g_nforge < 8) {
@@ -699,12 +720,22 @@ bool is_defeated(const Boss &b) {
     }
 }
 
+// coopgoomboss2: the live minions (class 200, Goomba King minion type) that follow this Goomboss (target unique id +0x43c).
+int count_minions(const char *boss) {
+    int n = 0;
+    const uint32_t uid = (uint32_t)rd32(boss, 0x04);
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+        if (*(const unsigned short *)(a + 0x0c) == 200 && (uint32_t)rd32(a, 0x43c) == uid && !a[0x0f] && a[0x0e] != 2) ++n;
+    return n;
+}
+
 void log_sample(int slot, const Boss &b, int auth) {
     char line[320]; int n = std::snprintf(line, sizeof line, "[cbs] w=%lld t=%u slot=%d cls=%u pos=%d,%d,%d auth=%d me=%d hp=%d st=%u",
                                           wall_ms(), g_ticks, slot, (unsigned)b.d->cls, rd32(b.a, 0x5c) >> 12, rd32(b.a, 0x60) >> 12, rd32(b.a, 0x64) >> 12,
                                           auth, g_my, hp_of(b), state_of(b));
     for (int k = 2; k < b.d->nf && n < (int)sizeof line - 20; ++k) n += std::snprintf(line + n, sizeof line - n, " f%d=%u", k, read_field(b.a, b.d->f[k]));
     if (b.d->cls == 279) n += std::snprintf(line + n, sizeof line - n, " talk=%d cnt=%d", (int)(signed char)b.a[0x424], (int)rd16(b.a, 0x3fe));
+    if (b.d->cls == 198) n += std::snprintf(line + n, sizeof line - n, " goombas_live=%d goombas_cnt=%u", count_minions(b.a), (unsigned)(unsigned char)b.a[0x602]);
     n += std::snprintf(line + n, sizeof line - n, " tgt=%d", coop_target_seat_of_slot(slot));
     std::fprintf(stderr, "%s\n", line);
 }
@@ -984,6 +1015,17 @@ void process(unsigned now) {
         }
         if (g_on) apply_rx(slot, b, now, mine);
         if (g_on && !mine) skip_defeat_talk(b, false);
+        // coopgoomboss2: Goomboss's summon (state 2, func_ov074_0211fd74) runs only on his authority. A copy holds the summon's frame
+        // timer (+0x5fc) above 1, so its tick returns before the Spawn; its goombas are the authority's, built here as they are
+        // announced (coop_boss_spawn_minion), and the authority's records move the copy on to state 3 when the set is out.
+        if (g_on && !mine && d.cls == 198 && g_minion_share && state_of(b) == 2u) {
+            uint16_t t = 0; std::memcpy(&t, b.a + 0x5fc, 2);
+            if (t < 2) { t = 2; std::memcpy(b.a + 0x5fc, &t, 2); }
+            if (!b.summon_held) {
+                b.summon_held = true;
+                if (g_log) std::fprintf(stderr, "[cbs] goomboss summon held on this copy (auth %d me %d): its goombas come from the authority w=%lld\n", auth, g_my, wall_ms());
+            }
+        } else if (d.cls == 198) b.summon_held = false;
         // coopkbo1: the authority's King Bob-omb at HP 0 outside the states that end in his defeat (his last point arrived by merge)
         // never runs the defeat, so nobody got the star. Put him in the hurt state, whose tick on the ground runs the defeat talk and
         // the star; its entry takes a point, the HP is put back.
@@ -1167,6 +1209,25 @@ bool bossdesc2_knob(Boss &b, HitKnob &k) {
     return true;
 }
 
+// SM64DS_COOP_GOOMBA_KILL: the first live minion of the Goomboss on this console ends the way a stomped Goomba ends (its own removal,
+// func_ov084_02129498; its CleanupResources lowers the boss's count). Waits (retried each tick) until a minion is out.
+void do_minion_kill(MinionKnob &k) {
+    for (int slot = 0; slot < kSlots; ++slot) {
+        Boss &b = g_boss[slot];
+        if (!b.a || b.d->cls != 198) continue;
+        const uint32_t uid = (uint32_t)rd32(b.a, 0x04);
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            if (*(const unsigned short *)(a + 0x0c) != 200 || (uint32_t)rd32(a, 0x43c) != uid || a[0x0f] || a[0x0e] == 2) continue;
+            const int before = count_minions(b.a);
+            func_ov084_02129498(a);
+            k.done = true;
+            std::fprintf(stderr, "[cbs-knob] goomba stomped here: minion uid=%u index=%u at %d,%d,%d (live before %d, boss count %u) w=%lld\n", (unsigned)rd32(a, 0x04),
+                         (unsigned)(unsigned char)a[0x474], rd32(a, 0x5c) >> 12, rd32(a, 0x60) >> 12, rd32(a, 0x64) >> 12, before, (unsigned)(unsigned char)b.a[0x602], wall_ms());
+            return;
+        }
+    }
+}
+
 void do_forge(const char *name) {
     int slot = -1;
     for (int i = 0; i < kSlots; ++i) if (g_boss[i].a) { slot = i; break; }
@@ -1329,6 +1390,8 @@ void on_frame(unsigned now) {
             if (!g_hit[i].done && g_ticks >= g_hit[i].tick) do_hit_knob(g_hit[i]);
         for (int i = 0; i < g_nforge; ++i)
             if (!g_forge[i].done && g_ticks >= g_forge[i].tick) { g_forge[i].done = true; do_forge(g_forge[i].name); }
+        for (int i = 0; i < g_nmkill; ++i)
+            if (!g_mkill[i].done && g_ticks >= g_mkill[i].tick) do_minion_kill(g_mkill[i]);
     }
     if (g_log && g_nb > 0 && (unsigned)(now - g_stat_t) >= 4000u) {
         g_stat_t = now;
@@ -1355,6 +1418,52 @@ CoopBossStats coop_boss_stats() { return g_st; }
 bool coop_boss_prefer_local(const char *actor) {
     return g_on && actor && *(const unsigned short *)(actor + 0x0c) == 279 && rd32(actor, 0x40c) == 4;
 }
+// coopgoomboss2 hooks for coop_spawn.
+namespace {
+char *find_goomboss() {
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
+        if (*(const unsigned short *)(a + 0x0c) == 198 && !a[0x0f] && a[0x0e] != 2 && !is_player_ptr(a)) return a;
+    return nullptr;
+}
+}  // namespace
+
+bool coop_boss_minion_mine(const char *minion) {
+    if (!minion || *(const unsigned short *)(minion + 0x0c) != 200) return false;
+    const uint32_t tid = (uint32_t)rd32(minion, 0x43c);
+    if (!tid) return false;
+    const char *boss = (const char *)dActor_c::FindWithID(tid);
+    if (!boss || *(const unsigned short *)(boss + 0x0c) != 198) return false;
+    read_env();
+    if (!g_minion_share) return false;                       // control: nothing is announced, each console keeps its own set
+    if (!g_on || !coop_world_active() || !coop_group_established()) return true;
+    const short slot = rd16(boss, 0xce);
+    if (slot < 0 || slot >= kSlots) return true;
+    if (g_my < 0) g_my = comms_hub_my_seat();
+    return auth_for(slot, comms_hub_now_ms()) == g_my;
+}
+
+bool coop_boss_minion_ready() {
+    read_env();
+    return g_minion_share && find_goomboss() != nullptr;
+}
+
+char *coop_boss_spawn_minion(const int pos[3], unsigned param, int area, unsigned index) {
+    char *boss = find_goomboss();
+    if (!boss || !pos) return nullptr;
+    Vector3 p; std::memcpy((void *)&p, pos, 12);         // three Fix12 words
+    ((dActor_c *)boss)->DisappearPoofDustAt(p);             // the summon's puff
+    char *m = (char *)dActor_c::Spawn(0xc8, param, p, (const Vector3_16 *)(boss + 0x8c), (s8)area, -1);
+    if (!m) return nullptr;
+    std::memcpy(m + 0x43c, boss + 0x04, 4);                 // mTargetUniqueID = the boss
+    int32_t home[3]; std::memcpy(home, boss + 0x5d0, sizeof home);   // the boss's mSpawnPos
+    func_ov084_021296b0(m, home);
+    m[0x474] = (char)(unsigned char)index;                  // mMinionIndex
+    boss[0x602] = (char)(unsigned char)((unsigned char)boss[0x602] + 1);   // mSpawnedCount, as the summon raises it
+    if (g_log) std::fprintf(stderr, "[cbs] goomba copy built: index=%u at %d,%d,%d uid=%u boss count now %u w=%lld\n", index & 0xffu, pos[0] >> 12, pos[1] >> 12, pos[2] >> 12,
+                            (unsigned)rd32(m, 0x04), (unsigned)(unsigned char)boss[0x602], wall_ms());
+    return m;
+}
+
 bool coop_boss_reward_not_mine() {
     static const bool off = [] { const char *e = std::getenv("SM64DS_COOP_REWARD"); return e && *e == '0'; }();     // must-fail control: no suppression
     if (off || !g_on || !coop_world_active() || !coop_group_established() || !g_recent_t) {

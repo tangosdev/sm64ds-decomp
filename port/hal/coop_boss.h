@@ -84,6 +84,17 @@ bool coop_boss_prefer_local(const char *actor);
 // spawned here natively is then a duplicate of the authority's announced one.
 bool coop_boss_reward_not_mine();
 
+// coopgoomboss2: Goomboss's Goombas (class 200 minions) are ONE set for the group. Only the console that is Goomboss's authority
+// summons them; coop_spawn announces each one and the other consoles build their copy with coop_boss_spawn_minion.
+// True when this minion's Goomboss (its target unique id, +0x43c) is a Goomboss whose authority is this console, or when coop boss
+// sync is not running (the ROM's own behaviour). False for a Goomba that is not a Goomboss minion.
+bool coop_boss_minion_mine(const char *minion);
+// True when a Goomboss is on this console (a minion copy can follow it).
+bool coop_boss_minion_ready();
+// Build a copy of an announced minion the way the summon does (func_ov074_0211fd74): spawn with the boss's angle, the boss as its
+// target, the boss's home point, the minion index, and the boss's summoned count raised (the minion's CleanupResources lowers it).
+char *coop_boss_spawn_minion(const int pos[3], unsigned param, int area, unsigned index);
+
 // Validator (payload = after the 12-byte head).
 bool coop_boss_validate(const void *payload, int len);
 // Called by coop_target.cpp's dispatcher for sub-types 0x51-0x53.
