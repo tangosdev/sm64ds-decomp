@@ -217,10 +217,30 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
 void dWipe_c::EnableWindows() {
     unk_00e = 1;
 
-    { u32 v = REG_WININ; v = (v & ~0x3f) | 0x1f; v = v | 0x20; REG_WININ = v; }
-    { u32 v = REG_DB_WININ; v = (v & ~0x3f) | 0x1f; v = v | 0x20; REG_DB_WININ = v; }
-    { u32 v = REG_WININ; v = (v & ~0x3f00) | 0x1f00; v = v | 0x2000; REG_WININ = v; }
-    { u32 v = REG_DB_WININ; v = (v & ~0x3f00) | 0x1f00; v = v | 0x2000; REG_DB_WININ = v; }
+    {
+        u32 v = REG_WININ;
+        v = (v & ~0x3f) | 0x1f;
+        v = v | 0x20;
+        REG_WININ = v;
+    }
+    {
+        u32 v = REG_DB_WININ;
+        v = (v & ~0x3f) | 0x1f;
+        v = v | 0x20;
+        REG_DB_WININ = v;
+    }
+    {
+        u32 v = REG_WININ;
+        v = (v & ~0x3f00) | 0x1f00;
+        v = v | 0x2000;
+        REG_WININ = v;
+    }
+    {
+        u32 v = REG_DB_WININ;
+        v = (v & ~0x3f00) | 0x1f00;
+        v = v | 0x2000;
+        REG_DB_WININ = v;
+    }
 
     REG_WINOUT &= ~0x3f;
     REG_DB_WINOUT &= ~0x3f;
@@ -242,8 +262,10 @@ void dWipe_c::EnableWindows() {
     data_0209f5fc = 0;
     BuildTable();
 
-    if ((REG_BLDCNT & 0x80) == 0x80) REG_BLDCNT = 0;
-    if ((REG_DB_BLDCNT & 0x80) == 0x80) REG_DB_BLDCNT = 0;
+    if ((REG_BLDCNT & 0x80) == 0x80)
+        REG_BLDCNT = 0;
+    if ((REG_DB_BLDCNT & 0x80) == 0x80)
+        REG_DB_BLDCNT = 0;
 }
 
 /* Vtable slot 2. Type 1 is the plain colour fade and the base owns it.
