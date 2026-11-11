@@ -77,6 +77,7 @@ enum d_a_btn_AssetId {
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx_trig.h"
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. It
    sits outside the extern "C" block below, where the names would come out
@@ -125,7 +126,6 @@ extern void hold_d_a_btn(void *mc, void *kcl, void *mtx, int fix, s16 s, void *c
 void d_a_btnEarthquakeHold(void *self, const void *v, int f);
 
 /* ---- data ---- */
-extern s16 FX_SinCosTable_[];
 extern unsigned int gNextActorUpdateMask;
 extern u8 data_0209d660;
 extern u8 gNumPlayers;
@@ -540,8 +540,8 @@ void daBtn_c::func_ov079_02125b44()
                 ang = ::Vec3_HorzAngle((const ::Vector3 *)pos, (const ::Vector3 *)&mPosX);
                 i = (u16)ang >> 4;
                 y = pos[1] + 0x96000;
-                pos[0] = FX_SinCosTable_[i * 2] * 0xd7 + pos[0];
-                pos[2] = FX_SinCosTable_[i * 2 + 1] * 0xd7 + pos[2];
+                pos[0] = FX_SinIdx(i) * 0xd7 + pos[0];
+                pos[2] = FX_CosIdx(i) * 0xd7 + pos[2];
                 pos[1] = y;
                 if (mPlayers[mNearestPlayer]->ShowMessage(
                         *this, 0xa4, (Vector3 *)pos, 0, 0) != 0) {
@@ -810,14 +810,14 @@ void daBtn_c::func_ov079_02125504()
 
         if (frame <= 7) {
             int idx = (u16)t >> 4;
-            s16 sn = FX_SinCosTable_[idx * 2];
-            s16 cs = FX_SinCosTable_[idx * 2 + 1];
+            s16 sn = FX_SinIdx(idx);
+            s16 cs = FX_CosIdx(idx);
             v[0].x = px - sn * 0xaa;
             v[0].z = pz - cs * 0xaa;
         } else {
             int idx = (u16)t >> 4;
-            s16 sn = FX_SinCosTable_[idx * 2];
-            s16 cs = FX_SinCosTable_[idx * 2 + 1];
+            s16 sn = FX_SinIdx(idx);
+            s16 cs = FX_CosIdx(idx);
             v[0].x = px + sn * 0xaa;
             v[0].z = pz + cs * 0xaa;
         }
@@ -1222,8 +1222,8 @@ void daBtn_c::func_ov079_021246dc()
                 ang = ::Vec3_HorzAngle((const ::Vector3 *)&pos, (const ::Vector3 *)&mPosX);
                 i = ang >> 4;
                 pos.y += 0x32000;
-                pos.x = FX_SinCosTable_[i * 2] * mag + pos.x;
-                pos.z = FX_SinCosTable_[i * 2 + 1] * mag + pos.z;
+                pos.x = FX_SinIdx(i) * mag + pos.x;
+                pos.z = FX_CosIdx(i) * mag + pos.z;
                 if (mPounder->ShowMessage(*this, 0xa5, (Vector3 *)&pos, 0, 0) == 0)
                     return;
                 mSubState++;
@@ -1290,7 +1290,7 @@ void daBtn_c::func_ov079_02124638()
         {
             s32 amp = (s32)((t - 0x50) << 6);
             u16 ang = (u16)(s16)(t << 13);
-            mAngleX = (s16)FX_MUL(amp, FX_SinCosTable_[(ang >> 4) * 2]);
+            mAngleX = (s16)FX_MUL(amp, FX_SinIdx(ang >> 4));
         }
         return;
     }
@@ -1407,17 +1407,17 @@ void daBtn_c::func_ov079_02124188()
     mBodyRoll = (short)(*(unsigned short *)(bone + 0x1e) - 0x4000);
 
     if (mIsKing != 0) {
-        cosv = FX_SinCosTable_[((unsigned short)mAngleX >> 4) << 1];
+        cosv = FX_SinIdx((unsigned short)mAngleX >> 4);
         sinComp = cosv * 0x190;
         shadowRad = cosv * 0x1a9 + 0xc8000;
     } else {
-        cosv = FX_SinCosTable_[((unsigned short)mAngleX >> 4) << 1];
+        cosv = FX_SinIdx((unsigned short)mAngleX >> 4);
         sinComp = cosv * 0xc8;
         shadowRad = cosv * 0xd2 + 0x64000;
     }
 
-    pos.x += FX_MUL(sinComp, FX_SinCosTable_[((unsigned short)mAngleY >> 4) << 1]);
-    pos.z += FX_MUL(sinComp, FX_SinCosTable_[(((unsigned short)mAngleY >> 4) << 1) + 1]);
+    pos.x += FX_MUL(sinComp, FX_SinIdx((unsigned short)mAngleY >> 4));
+    pos.z += FX_MUL(sinComp, FX_CosIdx((unsigned short)mAngleY >> 4));
 
     ::Vec3_Asr((::Vector3 *)&asr, (::Vector3 *)&pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
@@ -1555,16 +1555,16 @@ extern "C" void func_ov079_02123d4c(Vector3 *out, daBtn_c *self) {
         int m;
         int d;
         if (self->mIsKing) {
-            m = (s16)FX_SinCosTable_[((unsigned short)self->mAngleX >> 4) * 2] * (s16)0x190;
+            m = (s16)FX_SinIdx((unsigned short)self->mAngleX >> 4) * (s16)0x190;
         } else {
-            m = (s16)FX_SinCosTable_[((unsigned short)self->mAngleX >> 4) * 2] * (s16)0xc8;
+            m = (s16)FX_SinIdx((unsigned short)self->mAngleX >> 4) * (s16)0xc8;
         }
-        out->x = out->x + FX_MUL(m, FX_SinCosTable_[((unsigned short)self->mAngleY >> 4) * 2]);
+        out->x = out->x + FX_MUL(m, FX_SinIdx((unsigned short)self->mAngleY >> 4));
         d = self->OnAimedAtWithEgg();
         {
             out->y += d;
             out->z =
-                out->z + FX_MUL(m, FX_SinCosTable_[((unsigned short)self->mAngleY >> 4) * 2 + 1]);
+                out->z + FX_MUL(m, FX_CosIdx((unsigned short)self->mAngleY >> 4));
         }
     }
 }
@@ -1589,19 +1589,19 @@ int daBtn_c::func_ov079_02123bcc() {
     a0 = mAngleY; a1 = mBodyYaw; a2 = mTargetAngle;
     raw = (a0 + a1) << 16; ang = a2 + (raw >> 16); rangle = raw >> 16;
     idx = (u16)(s16)ang >> 4;
-    cosv = FX_SinCosTable_[idx * 2 + 1];
+    cosv = FX_CosIdx(idx);
     hc = FX_MUL(dist, cosv);
     if (hc < 0) hc = -hc;
     if (hc <= 0x3c000) {
-        sinv = FX_SinCosTable_[idx * 2];
+        sinv = FX_SinIdx(idx);
         hs = FX_MUL(dist, sinv);
         if (hs < 0) hs = -hs;
         if (hs <= 0xe1000) {
             int vx, vy, vz;
             int i;
             idx2 = (u16)rangle >> 4;
-            sin2 = FX_SinCosTable_[idx2 * 2];
-            cos2 = FX_SinCosTable_[idx2 * 2 + 1];
+            sin2 = FX_SinIdx(idx2);
+            cos2 = FX_CosIdx(idx2);
             vx = v[0]; vy = v[1]; vz = v[2];
             nx = (s16)sin2 * 5 + vx;
             nz = (s16)cos2 * 5 + vz;
@@ -1620,10 +1620,10 @@ s32 daBtn_c::OnAimedAtWithEgg() {
     int idx;
     if(mIsKing!=0){
         idx = ((int)(unsigned short)mAngleX >> 4);
-        return FX_SinCosTable_[idx * 2 + 1] * 0x11d + 0x4b000;
+        return FX_CosIdx(idx) * 0x11d + 0x4b000;
     }
     idx = ((int)(unsigned short)mAngleX >> 4);
-    return FX_SinCosTable_[idx * 2 + 1] * 0x90 + 0x24000;
+    return FX_CosIdx(idx) * 0x90 + 0x24000;
 }
 
 Vector3 daBtn_c::OnAimedAtWithEggReturnVec()
@@ -1678,8 +1678,8 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
     }
 
     idx = (unsigned short)other->mPrevAngleY >> 4;
-    cosv = FX_SinCosTable_[idx * 2];
-    sinv = FX_SinCosTable_[idx * 2 + 1];
+    cosv = FX_SinIdx(idx);
+    sinv = FX_CosIdx(idx);
     v.x = v.x - cosv * 0x50;
     v.z = v.z - sinv * 0x50;
 

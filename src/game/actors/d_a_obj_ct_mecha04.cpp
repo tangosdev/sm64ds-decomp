@@ -41,6 +41,7 @@ enum daObjCtMecha04_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 enum {
     ACTOR_CT_MECHA04L = 0x6f,
@@ -75,7 +76,6 @@ extern SharedFilePtr *data_ov065_0211d198[][3];
 extern CLPS_Block *data_ov065_0211d19c[][3];
 extern u8 data_0209f2c0;
 extern int data_ov065_0211c0b8[]; /* per-clock-setting belt speeds */
-extern s16 FX_SinCosTable_[];     /* sin/cos pair per (angle >> 4) index */
 
 /* mFlags 0x08 is the framework's off-screen bit (dActor_c.h bit table). */
 static inline int IsOffScreen(dActor_c *actor) {
@@ -109,7 +109,7 @@ void daObjCtMecha04_c::MoveActorOnBelt(dActor_c &actor) {
     u16 angleForX = (u16)mAngleY;
     int angleIndexForX = angleForX >> 4;
     int beltStepForX = mBeltSpeed << 2;
-    int sinY = FX_SinCosTable_[angleIndexForX * 2];
+    int sinY = FX_SinIdx(angleIndexForX);
     int deltaX = FX_MUL(beltStepForX, sinY);
     s32 *actorPosX = &actor.mPosX;
     int oldX = *actorPosX;
@@ -119,7 +119,7 @@ void daObjCtMecha04_c::MoveActorOnBelt(dActor_c &actor) {
     int angleIndexForZ = angleForZ >> 4;
     int beltStepForZ = mBeltSpeed << 2;
     s32 *actorPosZ = actorPosX + 2;
-    int cosY = FX_SinCosTable_[(angleIndexForZ * 2) + 1];
+    int cosY = FX_CosIdx(angleIndexForZ);
     int oldZ = *actorPosZ;
     int deltaZ = FX_MUL(beltStepForZ, cosY);
     *actorPosZ = oldZ + deltaZ;

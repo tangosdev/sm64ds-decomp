@@ -81,6 +81,7 @@ enum daStar_c_AssetId {
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Plain-data stand-ins. Vector3 and Matrix4x3 carry declared destructors, so
  * a local or a struct copy of either one adds cleanup code the cartridge does
@@ -139,7 +140,6 @@ extern int RandomIntInternal(int* seed);
 extern dCamera_c *gCamera;
 extern unsigned char IsAreaShowing(int idx);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
-extern short FX_SinCosTable_[];
 extern void func_02012694(unsigned int a, void *p);
 extern void func_ov002_020e8244(void *out, daStar_c *b);
 extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
@@ -2596,16 +2596,16 @@ void daStar_c::PlaceCameraOnRing(void *cam) {
         if (flag) {
             short ang = Vec3_HorzAngle(&vec[0], (Vector3*)&mCamPosX);
             int k = (unsigned short)(short)(ang + ((r6 & 3) << 14)) >> 4;
-            vec[0].x = FX_SinCosTable_[k * 2] * 1000 + vec[0].x;
-            vec[0].z = FX_SinCosTable_[k * 2 + 1] * 1000 + vec[0].z;
+            vec[0].x = FX_SinIdx(k) * 1000 + vec[0].x;
+            vec[0].z = FX_CosIdx(k) * 1000 + vec[0].z;
             ((dCamera_c *)cam)->SetPos(*(const Vector3 *)&vec[0]);
         } else {
             if (!IsAreaShowing(mAreaId))
                 return;
             short ang = Vec3_HorzAngle(&vec[0], (Vector3*)&mCamPosX);
             int k = (unsigned short)(short)(ang + ((r6 & 3) << 14)) >> 4;
-            vec[0].x += FX_MUL(dist, FX_SinCosTable_[k * 2]);
-            vec[0].z += FX_MUL(dist, FX_SinCosTable_[k * 2 + 1]);
+            vec[0].x += FX_MUL(dist, FX_SinIdx(k));
+            vec[0].z += FX_MUL(dist, FX_CosIdx(k));
             ((dCamera_c *)cam)->SetPos(*(const Vector3 *)&vec[0]);
         }
 

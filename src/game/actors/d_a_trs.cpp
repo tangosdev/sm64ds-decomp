@@ -71,6 +71,7 @@ enum daTrs_c_AssetId {
 #include "math/CalcLib.h"
 #include "LevelRng.h"
 #include "SaveBlock.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Views of three classes this Boo reaches through other actors' pointers.
    Their headers are not included because each one renumbers this file's
@@ -982,7 +983,7 @@ void daTrs_c::func_ov063_021177b0() {
 
                 if (look.x <= (int)0xFF894000) {
                     ang = Vec3_HorzAngle((Vector3 *)&v, (Vector3 *)&this->mPosX);
-                    sn = FX_SinCosTable_[(((unsigned short)ang >> 4) * 2) + 1];
+                    sn = FX_CosIdx((unsigned short)ang >> 4);
                     t = (int)0xFF894000 - look.x;
                     mid.z = mid.z + FX_MUL(t, sn);
                     look.x = (int)0xFF894000;
@@ -1393,8 +1394,8 @@ void daTrs_c::func_ov063_02118458() {
             v.x = this->mPosX;
             v.y = this->mPosY;
             v.z = this->mPosZ;
-            v.x = FX_SinCosTable_[(*(u16 *)&this->mAngleY >> 4) * 2] * m + v.x;
-            v.z = FX_SinCosTable_[(*(u16 *)&this->mAngleY >> 4) * 2 + 1] * m + v.z;
+            v.x = FX_SinIdx(*(u16 *)&this->mAngleY >> 4) * m + v.x;
+            v.z = FX_CosIdx(*(u16 *)&this->mAngleY >> 4) * m + v.z;
             dActor_c *fb;
             this->mAngleX = 0x1000;
             func_02012694(0x156, &this->mCamSpacePos);
@@ -2592,7 +2593,7 @@ void daTrs_c::ShakeAfterHit() {
     a = (u16)(s16)((*(u16 *)&this->mStateTimer - 0x1f) << 13) >> 4;
     p = (s16*)&this->mAngleY;
     v = *p;
-    *p = v + (FX_SinCosTable_[a * 2 + 1] << 10) / 4096;
+    *p = v + (FX_CosIdx(a) << 10) / 4096;
 }
 
 void daTrs_c::MoveDuringHit(int cond, int val) {
@@ -2637,7 +2638,7 @@ void daTrs_c::SetMoveYawForDuringHit(int cond) {
         d = (unsigned short)d;
         d >>= 4;
         {
-            short t = FX_SinCosTable_[(d << 1) + 1];
+            short t = FX_CosIdx(d);
             if (t < 0)
                 this->mKnockbackAngleY = base;
             else

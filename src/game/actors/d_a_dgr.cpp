@@ -41,6 +41,7 @@ enum daDgr_c_AssetId { ASSET_DONGURU_BMD = 0x02da, ASSET_DONGURU_KCL = 0x02db };
 #include "Particle__System.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
@@ -210,10 +211,10 @@ s32 daDgr_c::Behavior() {
         {
             s32 along;
             s32 across;
-            across = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
+            across = FX_CosIdx((u16)mAngleY >> 4);
             loc[0] = across * kDustReach + mPosX;
             loc[1] = mBasePosY - kDustDrop;
-            along = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
+            along = FX_SinIdx((u16)mAngleY >> 4);
             loc[2] = along * kDustReach + mPosZ;
             mDustParticle1 = Particle::System::New(mDustParticle1, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),
@@ -222,9 +223,9 @@ s32 daDgr_c::Behavior() {
         {
             s32 along;
             s32 across;
-            across = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
+            across = FX_CosIdx((u16)mAngleY >> 4);
             loc[0] = mPosX - across * kDustReach;
-            along = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
+            along = FX_SinIdx((u16)mAngleY >> 4);
             loc[2] = mPosZ - along * kDustReach;
             mDustParticle2 = Particle::System::New(mDustParticle2, kDustEffect, loc[0], loc[1],
                                                    loc[2], (const Vector3_16f *)((void *)0),

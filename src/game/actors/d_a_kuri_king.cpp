@@ -102,6 +102,7 @@ enum daKuriKing_c_AssetId {
 #include "ParticleIds.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Resource handles this TU's static initializer constructs. The wrapper
  * spellings are reconstructed; constructor and destructor addresses, file
@@ -1115,10 +1116,10 @@ void daKuriKing_c::SpawnHitParticles(dActor_c *other, dCcAcPos_c *clsn, int mode
     iY = (u16)aY >> 4;
     iX = (u16)aX >> 4;
 
-    s = FX_MUL(w, FX_SinCosTable_[iY * 2 + 1]);
-    dst.x += FX_MUL(s, FX_SinCosTable_[iX * 2]);
-    dst.y += FX_MUL(w, FX_SinCosTable_[iY * 2]);
-    dst.z += FX_MUL(s, FX_SinCosTable_[iX * 2 + 1]);
+    s = FX_MUL(w, FX_CosIdx(iY));
+    dst.x += FX_MUL(s, FX_SinIdx(iX));
+    dst.y += FX_MUL(w, FX_SinIdx(iY));
+    dst.z += FX_MUL(s, FX_CosIdx(iX));
 
     switch (mode) {
     case 0:
@@ -1246,9 +1247,9 @@ void daKuriKing_c::HandleCylinderHits() {
                                                          0x600) +
                                                     (this->mWalkAngle + this->mMaxWalkSpeed))) >>
                                         4;
-                                    v0.x = FX_MUL(FX_SinCosTable_[k * 2], 0x546000LL);
+                                    v0.x = FX_MUL(FX_SinIdx(k), 0x546000LL);
                                     v0.y += 0x32000;
-                                    v0.z = FX_MUL(FX_SinCosTable_[k * 2 + 1], 0x546000LL);
+                                    v0.z = FX_MUL(FX_CosIdx(k), 0x546000LL);
                                     this->mMegaMushroomID =
                                         dActor_c::Spawn(0x115, 0, v0, 0, this->mAreaId, -1)
                                             ->uniqueID;
@@ -1418,8 +1419,8 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
 int daKuriKing_c::WalkAlongRing() {
     if (this->mWithMeshClsn.IsOnGround()) {
         this->mWalkAngle += this->mWalkSpeed;
-        this->mPosX = FX_MUL(FX_SinCosTable_[(((u16)this->mWalkAngle) >> 4) * 2], 0x546000);
-        this->mPosZ = FX_MUL(FX_SinCosTable_[(((u16)this->mWalkAngle) >> 4) * 2 + 1], 0x546000);
+        this->mPosX = FX_MUL(FX_SinIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
+        this->mPosZ = FX_MUL(FX_CosIdx(((u16)this->mWalkAngle) >> 4), 0x546000);
     }
     ApproachAngle(&this->mAngleY, (this->mDirection * 0x4500) + this->mWalkAngle, 0xa, 0x800, 0x10);
 }
@@ -1726,8 +1727,8 @@ int daKuriKing_c::InitResources()
     mWalkAngle = 0x1000;
     mWalkAngle += mWalkSpeed;
 
-    mPosX = FX_MUL(FX_SinCosTable_[((u16)mWalkAngle >> 4) * 2], 0x546000);
-    mPosZ = FX_MUL(FX_SinCosTable_[((u16)mWalkAngle >> 4) * 2 + 1], 0x546000);
+    mPosX = FX_MUL(FX_SinIdx((u16)mWalkAngle >> 4), 0x546000);
+    mPosZ = FX_MUL(FX_CosIdx((u16)mWalkAngle >> 4), 0x546000);
 
     {
         s32 a2;

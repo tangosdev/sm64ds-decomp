@@ -41,6 +41,7 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/fx/fx_trig.h"
 
 #pragma defer_codegen off
 
@@ -53,7 +54,6 @@ extern "C" {
 extern int RandomIntInternal(int *seed);
 extern void func_0203d388(int *p, int angle);
 extern void Mg_SetTopScreenYOffset(int n);
-extern s16 FX_SinCosTable_[];
 void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
 /* The dragged petal's two adjacent fixed-point coordinates. */
@@ -222,13 +222,13 @@ s32 dScMgFlower_c::Render() {
 
     mBgScrollPhase += 0xc0;
     {
-        int sine = FX_SinCosTable_[(mBgScrollPhase >> 4) << 1];
+        int sine = FX_SinIdx(mBgScrollPhase >> 4);
         int t = sine + 0x80;
         int off = (t + (int)((unsigned)(t >> 7) >> 24)) >> 8;
         SetSubBg2Offset(off, off + 8);
     }
     {
-        int sine = FX_SinCosTable_[(mBgScrollPhase >> 4) << 1];
+        int sine = FX_SinIdx(mBgScrollPhase >> 4);
         int t = 0x80 - sine;
         int off = (t + (int)((unsigned)(t >> 7) >> 24)) >> 8;
         SetSubBg3Offset(off, off);

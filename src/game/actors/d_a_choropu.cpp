@@ -56,6 +56,7 @@ enum daChoropu_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 /* daChoropu_c's state table: one pointer-to-member per state, indexed by
  * the state number at +0x17c. */
@@ -102,7 +103,6 @@ void func_02012694(unsigned int a, void *p);
 void  func_ov080_02124418(daChoro_Rock_c *t);
 }
 
-extern s16 FX_SinCosTable_[];
 extern int data_ov080_0212767c[];
 extern SharedFilePtr data_ov002_0210d9d8;
 extern SharedFilePtr *data_ov080_0212766c[];
@@ -241,11 +241,11 @@ void daChoropu_c::func_ov080_02123a34()
         }
 
         idx = (unsigned short)(short)(mAngleY - 0x4000) >> 4;
-        s = FX_SinCosTable_[idx << 1];
+        s = FX_SinIdx(idx);
         pos.x = s * (short)0x50 + px;
 
         idx = (unsigned short)(short)(mAngleY - 0x4000) >> 4;
-        s = FX_SinCosTable_[(idx << 1) + 1];
+        s = FX_CosIdx(idx);
         pos.z = s * (short)0x50 + pz;
 
         a = dActor_c::Spawn(

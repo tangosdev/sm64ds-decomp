@@ -2309,8 +2309,8 @@ void daKpa_c::SetGoalInvisible() {
         zero.y = 0;
         zero.z = 0;
         a = (int)(unsigned short)Vec3_HorzAngle(&zero, &mPos) >> 4;
-        this->mPosX = (short)FX_SinCosTable_[a * 2] * (short)0xed8;
-        this->mPosZ = (short)FX_SinCosTable_[a * 2 + 1] * (short)0xed8;
+        this->mPosX = (short)FX_SinIdx(a) * (short)0xed8;
+        this->mPosZ = (short)FX_CosIdx(a) * (short)0xed8;
     }
 }
 
@@ -3278,9 +3278,9 @@ int daKpa_c::UpdateIntroCamera() {
         dist = Vec3_HorzDist(&mPos, &sp);
         k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x2000) >> 4;
         v = FX_MUL(dist, 0xA00);
-        this->mCamPosX = this->mPosX + FX_MUL(v, FX_SinCosTable_[k * 2]);
+        this->mCamPosX = this->mPosX + FX_MUL(v, FX_SinIdx(k));
         this->mCamPosY = this->mPosY + 0xc8000;
-        this->mCamPosZ = this->mPosZ + FX_MUL(v, FX_SinCosTable_[k * 2 + 1]);
+        this->mCamPosZ = this->mPosZ + FX_MUL(v, FX_CosIdx(k));
         cam->SetPos(*(const Vector3 *)(&this->mCamPosX));
         this->mCutsceneStep++;
         break;
@@ -3303,8 +3303,8 @@ int daKpa_c::UpdateIntroCamera() {
         if (d < 0x1f4000)
             d = 0x1f4000;
         k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x1000) >> 4;
-        sp.x = this->mPosX + FX_MUL(d, FX_SinCosTable_[k * 2]);
-        sp.z = this->mPosZ + FX_MUL(d, FX_SinCosTable_[k * 2 + 1]);
+        sp.x = this->mPosX + FX_MUL(d, FX_SinIdx(k));
+        sp.z = this->mPosZ + FX_MUL(d, FX_CosIdx(k));
         ApproachLinear(this->mCamPosX, sp.x, 0x4000);
         ApproachLinear(this->mCamPosZ, sp.z, 0x4000);
         ApproachLinear(this->mCamLookAtX, this->mPosX, 0x1e000);
@@ -3316,9 +3316,9 @@ int daKpa_c::UpdateIntroCamera() {
     case 3: {
         int ty, tz, tx;
         k = (int)((unsigned short)this->mAngleY) >> 4;
-        tz = FX_SinCosTable_[k * 2 + 1] * 0xc0 + this->mPosZ;
+        tz = FX_CosIdx(k) * 0xc0 + this->mPosZ;
         ty = this->mPosY + 0xfa000;
-        tx = FX_SinCosTable_[k * 2] * 0xc0 + this->mPosX;
+        tx = FX_SinIdx(k) * 0xc0 + this->mPosX;
         sp.x = tx;
         sp.y = ty;
         sp.z = tz;

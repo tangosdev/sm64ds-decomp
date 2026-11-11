@@ -40,6 +40,7 @@ enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 #include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Only ApproachStateValue needs this: without it the two (short)accel casts
  * share one sign-extend and both smulbb become muls (21 of 44 words differ). */
@@ -370,7 +371,7 @@ void daChair_c::State3() {
     ApproachStateValue(tracked, &mStateValue0, mTargetAngle, 0xfa0, 0x14, 2);
     angle = AngleDiff(*mTrackedAngle, 0);
     ip = mTrackedAngle;
-    sample = FX_SinCosTable_[((u16)*ip >> 4) * 2];
+    sample = FX_SinIdx((u16)*ip >> 4);
     wrapped = (s16)angle;
     offset = (s16)sample * (s16)0x50;
     if (ip != &mAngleX) {
@@ -384,10 +385,10 @@ void daChair_c::State3() {
     }
     if (wrapped >= 0x4000) {
         s16 past = (s16)(wrapped - 0x4000);
-        s16 tip = FX_SinCosTable_[((u16)past >> 4) * 2];
+        s16 tip = FX_SinIdx((u16)past >> 4);
         mPosY = (s16)tip * (s16)0x28 + (mHomePos.y + 0x28000);
     } else {
-        s16 tip = FX_SinCosTable_[((u16)wrapped >> 4) * 2];
+        s16 tip = FX_SinIdx((u16)wrapped >> 4);
         mPosY = (s16)tip * (s16)0x28 + mHomePos.y;
     }
 }

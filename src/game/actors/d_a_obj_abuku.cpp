@@ -34,11 +34,11 @@
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "nitro/fx/fx_trig.h"
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
 int SurfaceInfo_TestFlag0x20(int *p);
-extern short FX_SinCosTable_[];
 unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
@@ -65,7 +65,7 @@ int daObjAbuku_c::Behavior() {
     mSwayAngle += 0x400;
     int v = *(volatile unsigned short *)(&mSwayAngle);
     int x = v >> 4;
-    short tv = FX_SinCosTable_[2 * x + 1];
+    short tv = FX_CosIdx(x);
     mHorzSpeed = FX_MUL(mDriftSpeed, tv);
     ApproachLinear(mDriftSpeed, 0x6000, 0x332);
     UpdatePos((dCc_c *)0);

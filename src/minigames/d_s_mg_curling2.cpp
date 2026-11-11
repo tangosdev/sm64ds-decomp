@@ -47,6 +47,7 @@ enum dScMgCurling2_c_AssetId {
 #include "LevelRng.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The receiver for the pointer-to-member tables. It must stay incomplete:
  * mwccarm picks the pointer-to-member layout from whether the class is
@@ -1127,7 +1128,7 @@ void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
 void dScMgCurling2_c::StoneSpin(int stoneIndex) {
     char *o = (char *)this + stoneIndex * 0x30;
     int heading = ((dScMgCurling2_c *)o)->mStone[0].angle;
-    int cosHeading = FX_SinCosTable_[((heading >> 4) << 1) + 1];
+    int cosHeading = FX_CosIdx(heading >> 4);
     int speed = ((dScMgCurling2_c *)o)->mStone[0].speed;
     long long product = (long long)cosHeading * speed;
     int velocityX = (int)((product + 0x800) >> 12);
@@ -1211,9 +1212,9 @@ void dScMgCurling2_c::StoneSlide(int stoneIndex) {
     pX = &mStone[stoneIndex].x;
     pY = &mStone[stoneIndex].y;
 
-    cosAngle = FX_SinCosTable_[((*pHeading) >> 4) * 2 + 1];
+    cosAngle = FX_CosIdx((*pHeading) >> 4);
     *pX += FX_MUL(cosAngle, *pSpeed);
-    sinAngle = FX_SinCosTable_[((*pHeading) >> 4) * 2];
+    sinAngle = FX_SinIdx((*pHeading) >> 4);
     *pY += FX_MUL(sinAngle, *pSpeed);
     mStone[stoneIndex].spinAngle += mStone[stoneIndex].spinVel;
 

@@ -48,6 +48,7 @@ enum daObjCtRotateBlock_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 /* One record per mVariant: the base model's and the collision mesh's file
  * handles, and the CLPS block SetFile gets with that mesh. */
@@ -81,7 +82,6 @@ extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
 }
 
-extern short FX_SinCosTable_[];
 extern u8 data_0209f2c0;
 
 #pragma defer_codegen off
@@ -109,7 +109,7 @@ void daObjCtRotateBlock_c::UpdateShadow() {
     mShadowMat.m[11] = mPosZ >> 3;
     {
         int idx = (unsigned short)(short)(mAngleZ << 1) >> 4;
-        int s = FX_SinCosTable_[idx << 1];
+        int s = FX_SinIdx(idx);
         int sa = s < 0 ? -s : s;
         int depthAdd = FX_MUL(sa, 0x64000);
         DropShadowScaleXYZ(mShadowModel, mShadowMat, d + depthAdd, b, d, 0xf);

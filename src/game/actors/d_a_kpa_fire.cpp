@@ -450,13 +450,13 @@ void daKpaFire_c::func_ov060_0211712c() {
     int p = (unsigned short)phase >> 4;
     int *px = &this->mPosX;
     int *pz;
-    *px = *px + ((FX_SinCosTable_[((int)*(unsigned short *)&this->mPrevAngleY >> 4) * 2] *
-                  FX_SinCosTable_[p * 2])
+    *px = *px + ((FX_SinIdx((int)*(unsigned short *)&this->mPrevAngleY >> 4) *
+                  FX_SinIdx(p))
                  << 2) /
                     0x1000;
     pz = &this->mPosZ;
-    *pz = *pz + ((FX_SinCosTable_[((int)*(unsigned short *)&this->mPrevAngleY >> 4) * 2 + 1] *
-                  FX_SinCosTable_[p * 2 + 1])
+    *pz = *pz + ((FX_CosIdx((int)*(unsigned short *)&this->mPrevAngleY >> 4) *
+                  FX_CosIdx(p))
                  << 2) /
                     0x1000;
 }
@@ -558,12 +558,12 @@ void daKpaFire_c::func_ov060_02116d78() {
     }
     {
         int speed = this->mHorzSpeed;
-        int s0 = FX_SinCosTable_[((*(unsigned short *)&this->mPrevAngleX) >> 4) * 2];
+        int s0 = FX_SinIdx((*(unsigned short *)&this->mPrevAngleX) >> 4);
         this->mVertSpeed = (-speed) * s0;
     }
     {
-        int s0 = FX_SinCosTable_[((*(unsigned short *)&this->mPrevAngleX) >> 4) * 2];
-        int s1 = FX_SinCosTable_[((*(unsigned short *)&this->mPrevAngleY) >> 4) * 2];
+        int s0 = FX_SinIdx((*(unsigned short *)&this->mPrevAngleX) >> 4);
+        int s1 = FX_SinIdx((*(unsigned short *)&this->mPrevAngleY) >> 4);
         int speed = this->mHorzSpeed;
         this->mSpeedZ = (s1 * ((-speed) * s0)) / 896;
     }

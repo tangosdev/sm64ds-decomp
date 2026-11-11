@@ -52,6 +52,7 @@ enum daOnms_c_AssetId {
 #include "dBgW.h"
 #include "Sound.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx_trig.h"
 
 /* mMoveDir indexes the member-pointer table this file defines below. The
    compiler copies the nine pointer-to-member descriptors into it at
@@ -435,9 +436,9 @@ void daOnms_c::Launch(dActor_c *player, u32 how)
     else mPrevAngleY = Vec3_HorzAngle(ActorPos(player), ActorPos(this));
 
     unsigned n = ((u16)mPrevAngleY) >> 4;
-    mTumbleVelX = (s16)(FX_SinCosTable_[(n << 1) + 1] >> 2);
+    mTumbleVelX = (s16)(FX_CosIdx(n) >> 2);
     mTumbleVelY = 0;
-    mTumbleVelZ = (s16)((-(int)FX_SinCosTable_[n << 1]) >> 2);
+    mTumbleVelZ = (s16)((-(int)FX_SinIdx(n)) >> 2);
     mFlags &= ~0x2000000;
     mdCcAcPos_c.radius = 0x1a9000;
 }

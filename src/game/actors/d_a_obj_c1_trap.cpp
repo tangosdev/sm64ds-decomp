@@ -36,6 +36,7 @@ enum d_a_obj_c1_trap_AssetId { ASSET_C1_TRAP_BMD = 0x05af, ASSET_C1_TRAP_KCL = 0
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The two copied position locals must stay POD. The shared Vector3 has an
  * empty destructor, which would add an unrelated compiler helper to this TU. */
@@ -131,7 +132,7 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     relativeAngle = (s16)(angle + spawner->mAngleY);
     distance = Vec3_HorzDist((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
     index = (u16)relativeAngle >> 4;
-    projection = FX_SinCosTable_[index * 2];
+    projection = FX_SinIdx(index);
     projectedDistance = FX_MUL(distance, projection);
     if (projectedDistance < 0x10e000)
         spawner->mTrapActive = 1;
@@ -238,9 +239,9 @@ int daObjC1_Trap_c::CleanupResources() {
 void daObjC1_Trap_c::UpdateModelTransform() {
     int angleY = (int)(u16)mAngleY >> 4;
     int angleZ = (int)(u16)mAngleZ >> 4;
-    int sinZ = FX_SinCosTable_[angleZ * 2];
-    int cosY = FX_SinCosTable_[angleY * 2 + 1];
-    int sinY = FX_SinCosTable_[angleY * 2];
+    int sinZ = FX_SinIdx(angleZ);
+    int cosY = FX_CosIdx(angleY);
+    int sinY = FX_SinIdx(angleY);
     int radius = sinZ * 5;
     int offsetX = FX_MUL(radius, cosY);
     int offsetZ = FX_MUL(radius, sinY);
