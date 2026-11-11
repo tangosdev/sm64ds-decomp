@@ -604,14 +604,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@369",
+      "from": "@352",
       "to": "@295",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @309 now; licensed under the existing pin @295 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @309 now; licensed under the existing pin @295 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @369 to @352 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@370",
+      "from": "@353",
       "to": "@296",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @310 now; licensed under the existing pin @296 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @310 now; licensed under the existing pin @296 | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @370 to @353 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

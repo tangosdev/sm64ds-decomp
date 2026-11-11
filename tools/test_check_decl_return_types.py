@@ -625,11 +625,11 @@ class ReadsTheDefinitionAndNotADeclaration(unittest.TestCase):
         fixing lane works, because "correct the declaration to match the body"
         is the wrong instruction when the body is hand-written assembly.
         """
-        body = "asm void func_0205a588(void *p, int a, int b)\n{\n}\n"
-        with Tree("extern void*func_0205a588(void*, int, int);\n",
-                  src={"func_0205a588.c": body}) as t:
+        body = "asm void MI_CpuFill8(void *p, int a, int b)\n{\n}\n"
+        with Tree("extern void*MI_CpuFill8(void*, int, int);\n",
+                  src={"MI_CpuFill8.c": body}) as t:
             rows, acct = t.check_c()
-            self.assertEqual(t.kinds(), {"func_0205a588": "asm-body"})
+            self.assertEqual(t.kinds(), {"MI_CpuFill8": "asm-body"})
             self.assertEqual(acct["asm_body"], 1)
 
     def test_an_asm_body_that_agrees_is_not_a_disagreement(self):

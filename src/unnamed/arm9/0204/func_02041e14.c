@@ -2,7 +2,7 @@
 #include "private/arm9_a1fc0_file_share.h"
 
 extern int WBT_SetPacketSize(int a, int b);
-extern int func_020656d4(u16 arg0, const void *arg1, int arg2, u32 arg3);
+extern int WBT_PutUserData(u16 arg0, const void *arg1, int arg2, u32 arg3);
 extern void func_02042160();
 
 void func_02041e14(void)
@@ -41,7 +41,7 @@ void func_02041e14(void)
         cmd.mFileId = 0;
         cmd.mPacketSizeHigh = (u8)(data_020a1fc0.mParentPacketSize >> 8);
         cmd.mPacketSizeLow = (u8)data_020a1fc0.mParentPacketSize;
-        func_020656d4((u16)snd, &cmd, 9, (u32)func_02042160);
+        WBT_PutUserData((u16)snd, &cmd, 9, (u32)func_02042160);
         s->mReplySending = 1;
         s->mResizeChildren = 0;
     } else {
@@ -112,7 +112,7 @@ void func_02041e14(void)
         cmd2.mFileId = w4;
         cmd2.mPacketSizeHigh = (u8)(c >> 8);
         cmd2.mPacketSizeLow = (u8)c;
-        func_020656d4((u16)mask, &cmd2, 9, (u32)func_02042160);
+        WBT_PutUserData((u16)mask, &cmd2, 9, (u32)func_02042160);
         s->mReplySending = 1;
         s->mReplyPending &= ~mask;
     }

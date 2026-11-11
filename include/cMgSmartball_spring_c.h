@@ -10,8 +10,9 @@
  * (ov006 0x02118b70), which had no matched source when this class was
  * recovered. The literal was read straight off the ROM:
  * `MOV r0, #0x48` immediately before `BL _Znwm` at 0x02119098, with the
- * constructor called at 0x021190c0. Base ends at 0x34, so this class adds
- * 0x14 bytes -- five s32 fields.
+ * constructor called at 0x021190c0. The base's data ends at 0x31, so this
+ * class adds a flag byte in the base's tail padding (0x31) and five s32
+ * fields from 0x34.
  *
  * FIELD EVIDENCE is SaveSnapshot alone; Update never touches offsets past
  * the base, and RestoreInitial's own zero pass touches only mSoundHandle (see
@@ -20,7 +21,7 @@
  * SaveSnapshot is a three-way state machine gated by two slot-indexed
  * byte tables (gTouchHeld/gTouchEdge) and driven by the touch x/y lanes -- the two more (gTouchX/
  * gTouchY, both shifted left 12 to become fixed-point):
- *   - "trigger" (a new flag byte set): sets the base's mTriggered, zeroes the
+ *   - "trigger" (a new flag byte set): sets mTriggered, zeroes the
  *     base's mVel0/mVel1, latches mGrabX/mDriveNow from the tables and
  *     mirrors each into mGrabXSaved/mDriveBase -- then, only if mCurrent1 is above
  *     the 0xa0000 baseline, pulls mDriveBase down by the excess.
@@ -29,7 +30,7 @@
  *     mCurrent1 from mDriveNow - mDriveBase + 0xa0000, and plays a sound via
  *     Sound_PlayIfNotActive (stored back into mSoundHandle) whenever that new
  *     mCurrent1 differs from the snapshot mSnapshot1.
- *   - "release": clears the base's mTriggered/mVel0/mVel1, OR (if neither
+ *   - "release": clears mTriggered and the base's mVel0/mVel1, OR (if neither
  *     the trigger nor the release condition holds) eases mCurrent1 back
  *     toward the 0xa0000 baseline using the base's mVel1 as velocity.
  *
@@ -71,6 +72,7 @@ struct cMgSmartball_spring_c : cMgSmartball_object_c {
     virtual void RestoreInitial(); /* slot 2 */
     ~cMgSmartball_spring_c() {}
 
+    u8 mTriggered;   /* 0x031 -- the spring is held */
     s32 mGrabXSaved; /* 0x034 -- copied from mGrabX in the trigger branch and
                           never read again by anything in the tree. No evidence
                           of a use, so no name. */

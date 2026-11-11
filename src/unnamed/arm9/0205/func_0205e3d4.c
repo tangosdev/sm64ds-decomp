@@ -1,6 +1,10 @@
-/* SHA-1 block transform (RFC 3174 SHA1ProcessMessageBlock), plus a
-   game-specific patch that temporarily zeroes two words of the message
-   block (words 6 and 14, bytes 0x18 and 0x38) while data_020a80c4 is set.
+/* SHA-1 block transform (RFC 3174 SHA1ProcessMessageBlock), plus the
+   SDK's overlay-table mode: while DGT_SetOverlayTableMode's flag
+   (data_020a80c4) is set, words 6 and 14 of the block (bytes 0x18 and 0x38)
+   are zeroed for the transform and put back after it. Those are the file_id
+   fields of the two 0x20-byte overlay-table entries a 64-byte block holds
+   (FSOverlayInfoHeader, nitro/fs/overlay.h), so an overlay table's digest
+   does not depend on where its files sit in the ROM.
 
    Matching notes:
    - RFC 3174 declaration order is load-bearing: K, t, temp, W, A..E.

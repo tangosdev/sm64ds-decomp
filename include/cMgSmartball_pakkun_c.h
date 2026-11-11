@@ -3,9 +3,10 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * ADDS TWO s32 FIELDS. Its allocation is operator new(0x3c) in dScMgSmartball_c::SpawnObjects,
- * 0x8 past the base's 0x34 -- exactly the two ints below. Both are read and
- * written only by this child's own SaveSnapshot/Update/RestoreInitial.
+ * ADDS A TOGGLE BYTE AND TWO s32 FIELDS. Its allocation is operator new(0x3c)
+ * in dScMgSmartball_c::SpawnObjects. The toggle sits at 0x31, in the base's
+ * tail padding; the two ints follow at 0x34. All three are read and written
+ * only by this child's own SaveSnapshot/Update/RestoreInitial.
  *
  * CONSTRUCTED BY cMgSmartball_pakkun_c_Construct, left a free function for the same
  * reason the base's is (this tree has migrated zero constructors). It calls
@@ -17,15 +18,7 @@
  *
  * SLOT 2 IS A REAL OVERRIDE, NOT A VENEER: it calls the base's
  * RestoreInitial() (qualified -- see the .cpp) and then also zeroes its own
- * two fields plus the base's mTriggered.
- *
- * THIS CLASS IS HALF THE EVIDENCE that 0x031 is a field and not padding. It
- * reads and writes that byte as a real toggle in all three overrides --
- * SaveSnapshot flips it, Update reads it, RestoreInitial clears it -- and
- * cMgSmartball_wing_c independently showed the same for 0x032. The base
- * header used to call 0x031-0x033 padding and no longer does; the byte is
- * reached here through the base's own member name, because the base declares
- * it u8 and every access here is a byte.
+ * fields.
  *
  * mIdleTimer counts scans that find no target and wraps at 0x3c, flipping
  * mTriggered; mActionTimer is set to 0x61 when a target IS found and then
@@ -48,9 +41,11 @@ struct cMgSmartball_pakkun_c : cMgSmartball_object_c {
        triangles and the swallow circle while the piranha's state allows. */
     int  CheckBall(int *pos);
 
+    u8 mTriggered;    /* 0x031 -- the mouth toggle: SaveSnapshot flips it,
+                          Update picks the idle frame from it */
     s32 mIdleTimer;   /* 0x034 -- SaveSnapshot increments it once per scan
                           that finds no target; at 0x3c it wraps to 0 and
-                          flips the base's mTriggered toggle. RestoreInitial
+                          flips the mTriggered toggle. RestoreInitial
                           zeroes it. */
     s32 mActionTimer; /* 0x038 -- SaveSnapshot sets it to 0x61 when a target
                           is found; while it is counting down (>0), each

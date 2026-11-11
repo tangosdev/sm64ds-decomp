@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -16,8 +16,8 @@ extern UnkStruct_020a3fc0 data_020a3fc0;
    when there are more than two players (data_02099e18). */
 void func_02040a5c(u32 val)
 {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     data_020a3fc0.field_b50 = val & ~1u;
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 }

@@ -5,7 +5,7 @@
   "promoted_source": "src/engine/particle/Particle_Behavior.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
-  "boundary_evidence": "Contiguous .text span 0x0204d4d0..0x0204d8e8: six functions tile the span exactly with no hole and no tail (recomputed from config/arm9/symbols.txt), and every one carries the _ZN8Particle<Name>4FuncERNS_10EffectDataEPcR7Vector3 label -- the static Func of each POD behavior struct declared in include/Particle__Behavior.h (RadiusConverge, LimitPlane, Turn, Converge, Jitter, Acceleration). Both neighbours are unlabeled free functions: func_0204d440 ends at 0x0204d4d0 below and func_0204d8e8 begins at 0x0204d8e8 above, so the boundary is a class change on both edges. The other Particle::System/SysTracker/Texture members live in the 0x02022d80..0x02023178 band and are deliberately out of scope -- the linker places one object's .text contiguously, so the behavior-Func run is its own TU.",
+  "boundary_evidence": "Contiguous .text span 0x0204d4d0..0x0204d8e8: six functions tile the span exactly with no hole and no tail (recomputed from config/arm9/symbols.txt). They are the six particle behaviours of the NitroSystem particle library (SPL), SPLBehavior_ApplyConvergence .. SPLBehavior_ApplyGravity, whose bodies are, body for body and in reverse emission order, pret pokeplatinum's lib/spl/src/spl_behavior.c (Gravity, Random, Magnet, Spin, CollisionPlane, Convergence). SPLAnim_Scale (spl_anim.c) ends at 0x0204d4d0 below and func_0204d8e8 begins at 0x0204d8e8 above, so the boundary is a file change on both edges -- the linker places one object's .text contiguously, so the behaviour run is its own TU.",
   "sections": [
     {
       "name": ".text",
@@ -15,42 +15,42 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN8Particle14RadiusConverge4FuncERNS_10EffectDataEPcR7Vector3",
+      "symbol": "SPLBehavior_ApplyConvergence",
       "address": "0x0204d4d0",
       "size": "0xac",
       "ordinal": 0,
       "legacy_source": "src/_ZN8Particle14RadiusConverge4FuncERNS_10EffectDataEPcR7Vector3.cpp"
     },
     {
-      "symbol": "_ZN8Particle10LimitPlane4FuncERNS_10EffectDataEPcR7Vector3",
+      "symbol": "SPLBehavior_ApplyCollisionPlane",
       "address": "0x0204d57c",
       "size": "0x104",
       "ordinal": 1,
       "legacy_source": "src/_ZN8Particle10LimitPlane4FuncERNS_10EffectDataEPcR7Vector3.cpp"
     },
     {
-      "symbol": "_ZN8Particle4Turn4FuncERNS_10EffectDataEPcR7Vector3",
+      "symbol": "SPLBehavior_ApplySpin",
       "address": "0x0204d680",
       "size": "0xd8",
       "ordinal": 2,
       "legacy_source": "src/_ZN8Particle4Turn4FuncERNS_10EffectDataEPcR7Vector3.cpp"
     },
     {
-      "symbol": "_ZN8Particle8Converge4FuncERNS_10EffectDataEPcR7Vector3",
+      "symbol": "SPLBehavior_ApplyMagnet",
       "address": "0x0204d758",
       "size": "0x94",
       "ordinal": 3,
       "legacy_source": "src/_ZN8Particle8Converge4FuncERNS_10EffectDataEPcR7Vector3.cpp"
     },
     {
-      "symbol": "_ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3",
+      "symbol": "SPLBehavior_ApplyRandom",
       "address": "0x0204d7ec",
       "size": "0xc4",
       "ordinal": 4,
       "legacy_source": "src/_ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3.cpp"
     },
     {
-      "symbol": "_ZN8Particle12Acceleration4FuncERNS_10EffectDataEPcR7Vector3",
+      "symbol": "SPLBehavior_ApplyGravity",
       "address": "0x0204d8b0",
       "size": "0x38",
       "ordinal": 5,
@@ -78,5 +78,8 @@
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     }
-  }
+  },
+  "notes": [
+    "The six functions were Particle::<Name>::Func statics of coined POD structs (Acceleration, Jitter, Converge, Turn, LimitPlane, RadiusConverge) over a coined EffectData union. SPL is a C library and every body is the function pret's spl_behavior.c gives the same job, so they are extern \"C\" SPLBehavior_Apply* over the SPL record types in include/Particle__Behavior.h. The names are pret's coinages, not ROM or SDK symbols. This cartridge's SPL is older than pokeplatinum's: no emitter argument, the spin angle is shifted down four bits into a sine-table index, and the collision plane always uses the record's height."
+  ]
 }

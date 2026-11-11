@@ -13,9 +13,8 @@
    CreateSolidHeap, CreateExpandingHeap and CreateRootHeap; then the three
    classes' destructors and constructors; then the root-heap bootstrap,
    InitializeRootHeap and SetupRootHeap; and last the global allocation
-   entry points over the default heap -- Memory's operator_new2 and
-   operator_delete2, the global operator new and operator delete, and the
-   two unnamed veneers beside them. Written back-to-front: mwccarm emits
+   entry points over the default heap -- the global operator new, new[],
+   delete and delete[], and the two unnamed bodies they forward to. Written back-to-front: mwccarm emits
    .text in reverse source order under default deferred codegen.
  *
  * leftovers:
@@ -33,9 +32,8 @@
 #include "Heap.h"
 #include "decl_common.h"
 #include "SolidHeap.h"
-#include "SolidHeapAllocator.h"
 #include "ExpandingHeap.h"
-#include "ExpandingHeapAllocator.h"
+#include "nnsys/fnd.h"
 #include "Memory.h"
 
 /* Placement new, as <new> declares it. The factories construct each heap
@@ -74,82 +72,64 @@ extern "C" {
     void *OS_AllocFromArenaLo(s32 arena, unsigned int size, unsigned int align);
 }
 
-/* The global allocation entry points, highest addresses first. Every class
-   that routes its own operator new or delete through Memory lands here, and
-   all of it bottoms out in the default heap.
+/* The global allocation entry points, highest addresses first: two bodies
+   over the default heap, then the four global operators as three-word
+   tail-call veneers to them (`ldr ip,[pc] / bx ip / .word'). The ROM's call
+   sites settle which operator is which: every deleting destructor calls
+   0x0203cbcc, so that is operator delete; new[] buffers are released through
+   0x0203cbc0, which __cxa_vec_delete and __cxa_vec_new's cleanup call as the
+   array deallocator; 0x0203cbd8 is what __cxa_vec_new allocates the array
+   with. The two bodies are reached only through the veneers (two loads each)
+   and keep their address names.
 
-   THE HOST KEEPS ITS OWN GLOBAL OPERATORS. Defining operator delete here would
-   replace the CRT's for the whole PC port, and port/hal already answers the
-   DS spellings the headers reference (_ZdlPv and Memory's two operators).
-   Only the two unnamed veneers have no host bridge, so the host gets them
-   over the same default heap. Nothing here reaches mwccarm. */
-#ifdef _MSC_VER
-extern "C" void *func_0203cc0c(u32 size) {
-    return Memory::defaultHeapPtr->Allocate(size);
-}
-extern "C" void func_0203cbc0(void *ptr) {
-    Memory::defaultHeapPtr->_Deallocate(ptr);
-}
-#else
+   mwccarm's size_t is unsigned long, so the two allocators mangle to _Znwm
+   and _Znam. An explicit call is spelled `::operator new': inside a member
+   of an fBase_c-derived class, plain `operator new' finds fBase_c's class
+   allocator first. The library declarations of the deallocators carry
+   `throw()', so the definitions do as well.
+
+   THE HOST KEEPS ITS OWN GLOBAL OPERATORS. Defining them here would replace
+   the CRT's for the whole PC port, so on the host every new and delete,
+   array or not, is the CRT's. Nothing here reaches MSVC. */
+#ifndef _MSC_VER
 
 extern "C" {
 
 /* func_0203cc0c at 0x0203cc0c -- allocate from the default heap with the
- * default alignment. The body of the global operator new and of
- * Memory::operator_new2; both are veneers to it. It keeps its address name. */
+ * default alignment. The body of operator new and operator new[]. */
 void *func_0203cc0c(u32 size) {
     return Memory::defaultHeapPtr->Allocate(size);
 }
-}
 
-/* operator delete(void*) at 0x0203cbf0 -- the global deallocator. Hands the
- * block to the default heap's _Deallocate veneer. The library declaration
- * carries `throw()', so the definition has to as well. */
-void operator delete(void *ptr) throw() {
+/* func_0203cbf0 at 0x0203cbf0 -- hand a block back to the default heap
+ * through its _Deallocate veneer. The body of operator delete and
+ * operator delete[]. */
+void func_0203cbf0(void *ptr) {
     Memory::defaultHeapPtr->_Deallocate(ptr);
 }
+}
 
-/* operator new(size_t) at 0x0203cbe4 -- a three-word tail-call veneer to
- * func_0203cc0c (`ldr ip,[pc] / bx ip / .word 0x0203cc0c').
- *
- * mwccarm's size_t is unsigned long, so the global allocator mangles to
- * _Znwm. The tree used to carry it as the GCC spelling _Znwj, defined
- * hand-spelled under extern "C" because `operator new(unsigned int)' is an
- * illegal 'operator' declaration here; the cartridge carries no mangled
- * names, so the name was ours to correct. Every new-expression in src/ now
- * resolves to this definition. An explicit call is spelled `::operator new':
- * inside a member of an fBase_c-derived class, plain `operator new' finds
- * fBase_c's class allocator first. */
+/* operator new(size_t) at 0x0203cbe4. Every new-expression in src/ resolves
+ * here. */
 void *operator new(size_t size) {
     return func_0203cc0c(size);
 }
 
-namespace Memory {
-
-/* Memory::operator_new2(u32) at 0x0203cbd8 -- a three-word tail-call veneer
- * to func_0203cc0c. The veneer is emitted for the call, not for the argument
- * list, so the real signature costs nothing. */
-void *operator_new2(u32 size) {
+/* operator new[](size_t) at 0x0203cbd8. */
+void *operator new[](size_t size) {
     return func_0203cc0c(size);
 }
 
-/* Memory::operator_delete2(void*) at 0x0203cbcc -- a three-word tail-call
- * veneer to the global operator delete at 0x0203cbf0. */
-void operator_delete2(void *ptr) {
-    ::operator delete(ptr);
+/* operator delete(void*) at 0x0203cbcc. */
+void operator delete(void *ptr) throw() {
+    func_0203cbf0(ptr);
 }
 
+/* operator delete[](void*) at 0x0203cbc0. */
+void operator delete[](void *ptr) throw() {
+    func_0203cbf0(ptr);
 }
-
-extern "C" {
-
-/* func_0203cbc0 at 0x0203cbc0 -- a second three-word tail-call veneer to the
- * global operator delete, just below Memory's own. It keeps its address name. */
-void func_0203cbc0(void *ptr) {
-    ::operator delete(ptr);
-}
-}
-#endif /* _MSC_VER */
+#endif /* !_MSC_VER */
 
 namespace mHeap {
 
@@ -213,49 +193,11 @@ Heap_t::Heap_t(void* start, u32 size, Heap_t* root)
     flags = 0x4000;
 }
 
-ExpHeap_t::ExpHeap_t(void* start, u32 size, Heap_t* root,
-                     ExpandingHeapAllocator* allocator_)
-    : Heap_t(start, size, root), allocator(allocator_)
-{
-}
+ExpHeap_t::ExpHeap_t(void *start, u32 size, Heap_t *root, NNSFndHeapHandle allocator_)
+    : Heap_t(start, size, root), allocator(allocator_) {}
 
-SolidHeap_t::SolidHeap_t(void* start, u32 size, Heap_t* root,
-                         SolidHeapAllocator* allocator_)
-    : Heap_t(start, size, root), allocator(allocator_)
-{
-}
-
-#ifdef _MSC_VER
-} /* namespace mHeap */
-
-/* THE HOST NEEDS THE ROM'S FLAT D0 NAMES, AND MSVC NEVER EMITS THEM. MSVC folds
- * the Itanium destructor variants into the one ~X() it emits, so each deleting
- * destructor is spelled out in terms of it: the complete-object body, called
- * qualified so it is a direct call, then the class-specific operator delete.
- * Nothing here reaches mwccarm, which emits D0 from the definitions below. */
-extern "C" Heap *_ZN5mHeap6Heap_tD0Ev(Heap *thiz)
-{
-    thiz->mHeap::Heap_t::~Heap_t();
-    Heap::operator delete(thiz);
-    return thiz;
-}
-
-extern "C" ExpandingHeap *_ZN5mHeap9ExpHeap_tD0Ev(ExpandingHeap *thiz)
-{
-    thiz->mHeap::ExpHeap_t::~ExpHeap_t();
-    ExpandingHeap::operator delete(thiz);
-    return thiz;
-}
-
-extern "C" SolidHeap *_ZN5mHeap11SolidHeap_tD0Ev(SolidHeap *thiz)
-{
-    thiz->mHeap::SolidHeap_t::~SolidHeap_t();
-    SolidHeap::operator delete(thiz);
-    return thiz;
-}
-
-namespace mHeap {
-#endif
+SolidHeap_t::SolidHeap_t(void *start, u32 size, Heap_t *root, NNSFndHeapHandle allocator_)
+    : Heap_t(start, size, root), allocator(allocator_) {}
 
 /* The destructors are empty: CodeWarrior supplies each vptr transition, the
    base teardown and, in D0, the inline operator delete. ~Heap_t is the
@@ -299,7 +241,7 @@ Heap_t* Heap_t::CreateRootHeap(void* mem, u32 size)
     ExpandingHeap* heap = (ExpandingHeap*)mem;
 
     heap->heapStart = heap + 1;
-    heap->allocator = CreateExpandingHeapAllocator(heap->heapStart, size - 0x18, 3);
+    heap->allocator = NNS_FndCreateExpHeapEx(heap->heapStart, size - 0x18, 3);
     if (heap->allocator != 0)
     {
         heap->heapSize = size - 0x18;
@@ -329,7 +271,7 @@ Heap_t* Heap_t::CreateExpandingHeap(u32 size, Heap_t* root, int align)
     if (heap != 0)
     {
         heap->heapStart = heap + 1;
-        heap->allocator = CreateExpandingHeapAllocator(heap->heapStart, size, 3);
+        heap->allocator = NNS_FndCreateExpHeapEx(heap->heapStart, size, 3);
         if (heap->allocator == 0)
         {
             parent->Deallocate(heap);
@@ -377,7 +319,7 @@ Heap_t* Heap_t::CreateSolidHeap(u32 size, Heap_t* root, int align)
     if (heap != 0)
     {
         heap->heapStart = heap + 1;
-        heap->allocator = CreateSolidHeapAllocator(heap->heapStart, size, 3);
+        heap->allocator = NNS_FndCreateFrmHeapEx(heap->heapStart, size, 3);
         if (heap->allocator == 0)
         {
             parent->Deallocate(heap);
@@ -436,13 +378,12 @@ void Heap_t::_Destroy()
  * allocator down and forget it; Heap::Destroy calls this before returning the
  * block to the parent heap.
  *
- * The call goes to HeapAllocator::Destroy(), not a derived override. The typed
- * ExpandingHeapAllocator inheritance records that base relationship directly;
- * SolidHeap::VDestroy's parallel but still-unnamed target remains raw. */
+ * The allocator is a NitroSystem expanded heap; NNS_FndDestroyExpHeap
+ * unlinks it from the heap that contains it. */
 
 void ExpHeap_t::VDestroy()
 {
-    allocator->Destroy();
+    NNS_FndDestroyExpHeap(allocator);
     allocator = 0;
 }
 
@@ -454,25 +395,20 @@ void ExpHeap_t::VDestroy()
  * being adapted: its comments named ExpandingHeap::VDestroy, quoted
  * ExpandingHeap's address 0x0203c72c instead of this one, and its local struct
  * was called `ExpandingHeap'. Only the symbol on the definition made it a
- * SolidHeap function at all. */
-
-/* 0x0204ebb8, twelve bytes and still unnamed. It is almost certainly
-   SolidHeapAllocator::Destroy -- HeapAllocator::Destroy() at 0x0204e3b4 is
-   the same size and shape -- but "almost certainly" is not evidence, and minting
-   a mangled symbol is a claim with its own gate (see the naming rule in
-   notes/plan-cpp-language-mode.md section 4). The call stays raw until then;
-   migration is per-reference, not only per-function. */
-extern "C" void func_0204ebb8(SolidHeapAllocator* allocator);
+ * SolidHeap function at all.
+ *
+ * The allocator is a NitroSystem frame heap; NNS_FndDestroyFrmHeap unlinks
+ * it from the heap that contains it. */
 
 void SolidHeap_t::VDestroy()
 {
-    func_0204ebb8(allocator);
+    NNS_FndDestroyFrmHeap(allocator);
     allocator = 0;
 }
 
 /* Heap::Allocate(u32, int) at 0x0203c6cc -- the allocation entry point: call
  * slot 3, and if it comes back empty on a fail-fast heap, do not return the
- * NULL to the caller, Crash() instead.
+ * NULL to the caller, OS_Terminate() instead.
  *
  * RETURN TYPE: void*, from the definition. Its old shard declared `int
  * Heap::Allocate(...)' while the sibling overload in this file, which
@@ -488,7 +424,7 @@ void* Heap_t::Allocate(u32 size, int align)
 {
     void* block = VAllocate(size, align);
     if (block == 0 && (flags & 0x4000))
-        Crash();
+        OS_Terminate();
     return block;
 }
 
@@ -502,7 +438,7 @@ void* Heap_t::Allocate(u32 size, int align)
 
 void* ExpHeap_t::VAllocate(u32 size, int align)
 {
-    return allocator->Allocate(size, align);
+    return NNS_FndAllocFromExpHeapEx(allocator, size, align);
 }
 
 /* SolidHeap::VAllocate(u32, int) at 0x0203c6ac -- Heap vtable slot 3. Four
@@ -518,7 +454,7 @@ void* ExpHeap_t::VAllocate(u32 size, int align)
  * Heap nothing compiled the two declarations against each other.
  *
  * The ROM decides it. This function forwards r2 straight into
- * SolidHeapAllocator::Allocate (0x0204eb70), which does:
+ * NNS_FndAllocFromFrmHeapEx (0x0204eb70), which does:
  *
  *     cmp r2, #0
  *     blt 0x0204eba4        <- SIGNED branch
@@ -529,8 +465,8 @@ void* ExpHeap_t::VAllocate(u32 size, int align)
  * negate-and-allocate-backwards path becomes unreachable, so the alignment
  * argument is an `int' whose sign selects the direction. Every sibling in the
  * family already spelled it that way: Heap::Allocate,
- * SolidHeapAllocator::Allocate and ExpandingHeapAllocator::Allocate are all
- * `Eji'. The symbol is renamed in config/arm9/symbols.txt to match, and this
+ * NNS_FndAllocFromFrmHeapEx and NNS_FndAllocFromExpHeapEx all take an int
+ * alignment. The symbol is renamed in config/arm9/symbols.txt to match, and this
  * file with it.
  *
  * It also carried a local `class SolidHeap { u32 unk00; ... }' rather than
@@ -538,7 +474,7 @@ void* ExpHeap_t::VAllocate(u32 size, int align)
 
 void* SolidHeap_t::VAllocate(u32 size, int align)
 {
-    return allocator->Allocate(size, align);
+    return NNS_FndAllocFromFrmHeapEx(allocator, size, align);
 }
 
 /* Heap::Intact() at 0x0203c664. Asks the concrete heap whether its bookkeeping
@@ -590,7 +526,7 @@ bool SolidHeap_t::VIntact()
 }
 
 /* Heap::Rescue() at 0x0203c634 -- plain forward to slot 7, the concrete heap's
- * last-ditch recovery. Called from Heap::ResizeToFit just before Crash().
+ * last-ditch recovery. Called from Heap::ResizeToFit just before OS_Terminate().
  *
  * RETURN TYPE: void, from the definitions. The old shadow here declared its
  * fake slot as `int m()' and returned it, which is unobservable for a pure
@@ -608,11 +544,11 @@ void Heap_t::Rescue()
  * `bx lr'. No recovery is attempted.
  *
  * The previous comment guessed that the name "appears to be called just
- * before/by Crash, perhaps to rescue heap data before a fatal exception". The
+ * before/by OS_Terminate, perhaps to rescue heap data before a fatal exception". The
  * caller is known and it is Heap::ResizeToFit, which calls Rescue() and then
- * Crash() when a fail-fast heap cannot shrink -- so the guess had the order
- * right and the direction wrong: Rescue runs before Crash because Crash is what
- * follows a failure, not because Crash calls it. */
+ * OS_Terminate() when a fail-fast heap cannot shrink -- so the guess had the order
+ * right and the direction wrong: Rescue runs before OS_Terminate because OS_Terminate is what
+ * follows a failure, not because OS_Terminate calls it. */
 
 void ExpHeap_t::VRescue()
 {
@@ -641,7 +577,7 @@ u32 Heap_t::MaxAllocationUnitSize()
 
 u32 ExpHeap_t::VMaxAllocationUnitSize()
 {
-    return allocator->MaxAllocatableSize(4);
+    return NNS_FndGetAllocatableSizeForExpHeapEx(allocator, 4);
 }
 
 /* SolidHeap::VMaxAllocationUnitSize() at 0x0203c5e4 -- Heap vtable slot 10.
@@ -649,7 +585,7 @@ u32 ExpHeap_t::VMaxAllocationUnitSize()
 
 u32 SolidHeap_t::VMaxAllocationUnitSize()
 {
-    return allocator->MemoryLeft(4);
+    return NNS_FndGetAllocatableSizeForFrmHeapEx(allocator, 4);
 }
 
 /* ExpandingHeap::VMaxAllocatableSize() at 0x0203c5d0 -- Heap vtable slot 11.
@@ -661,7 +597,7 @@ u32 SolidHeap_t::VMaxAllocationUnitSize()
 
 u32 ExpHeap_t::VMaxAllocatableSize()
 {
-    return allocator->MaxAllocatableSize(4);
+    return NNS_FndGetAllocatableSizeForExpHeapEx(allocator, 4);
 }
 
 /* SolidHeap::VMaxAllocatableSize() at 0x0203c5bc -- Heap vtable slot 11.
@@ -669,7 +605,7 @@ u32 ExpHeap_t::VMaxAllocatableSize()
 
 u32 SolidHeap_t::VMaxAllocatableSize()
 {
-    return allocator->MemoryLeft(4);
+    return NNS_FndGetAllocatableSizeForFrmHeapEx(allocator, 4);
 }
 
 /* ExpandingHeap::VMemoryLeft() at 0x0203c5ac -- Heap vtable slot 12. The SUM of
@@ -682,19 +618,20 @@ u32 SolidHeap_t::VMaxAllocatableSize()
 
 u32 ExpHeap_t::VMemoryLeft()
 {
-    return allocator->MemoryLeft();
+    return NNS_FndGetTotalFreeSizeForExpHeap(allocator);
 }
 
 /* SolidHeap::VMemoryLeft() at 0x0203c598 -- Heap vtable slot 12.
  *
- * Slots 10, 11 and 12 all forward to the same MemoryLeft(4) on a solid heap:
+ * Slots 10, 11 and 12 all make the same
+ * NNS_FndGetAllocatableSizeForFrmHeapEx(allocator, 4) call on a solid heap:
  * the allocator is linear, so the memory left, the largest allocatable block
  * and the largest single unit are all the same number. On an expanding heap
  * they differ, which is why the three slots exist at all. */
 
 u32 SolidHeap_t::VMemoryLeft()
 {
-    return allocator->MemoryLeft(4);
+    return NNS_FndGetAllocatableSizeForFrmHeapEx(allocator, 4);
 }
 
 /* Heap::Reallocate(void*, u32) at 0x0203c578 -- forwards to slot 8 and hands
@@ -710,8 +647,8 @@ u32 SolidHeap_t::VMemoryLeft()
  * those was available before.
  *
  * It is a SIZE and not a moved pointer. Both allocators say so in their own
- * bodies: SolidHeapAllocator::Reallocate returns `size' or 0, and
- * ExpandingHeapAllocator::Reallocate returns `size', 0 or `node->size'. The
+ * bodies: NNS_FndResizeForMBlockFrmHeap returns `size' or 0, and
+ * NNS_FndResizeForMBlockExpHeap returns `size', 0 or the block's old size. The
  * `void*' this once claimed came from a local shadow in
  * ExpandingHeap::VReallocate's old shard that declared the allocator method
  * itself as pointer-returning -- a guess nothing ever checked, because a
@@ -729,30 +666,31 @@ u32 Heap_t::Reallocate(void* ptr, u32 size)
  * Four instructions: load the allocator from this+0x14 and tail-call it.
  *
  * RETURN TYPE: u32, changed from void*. THIS FILE IS WHERE THE void* CAME FROM.
- * It declared its own `class ExpandingHeapAllocator { void* Reallocate(void*,
- * u32); }', and that local guess propagated outwards until Heap vtable slot 8
- * was documented as returning a moved pointer. The real definition returns
- * `size', 0 or `node->size' -- a size every time. Nothing could catch it,
+ * It declared its own allocator class with a `void* Reallocate(void*, u32)',
+ * and that local guess propagated outwards until Heap vtable slot 8
+ * was documented as returning a moved pointer. The real definition,
+ * NNS_FndResizeForMBlockExpHeap, returns `size', 0 or the block's old size --
+ * a size every time. Nothing could catch it,
  * because a tail-call forwarder cannot disagree with its callee about a value it
  * merely passes on. */
 
 u32 ExpHeap_t::VReallocate(void* ptr, u32 size)
 {
-    return allocator->Reallocate(ptr, size);
+    return NNS_FndResizeForMBlockExpHeap(allocator, ptr, size);
 }
 
 /* SolidHeap::VReallocate(void*, u32) at 0x0203c558 -- Heap vtable slot 8.
  * Four instructions: load the allocator from this+0x14 and tail-call it.
  *
- * Returns the new SIZE, not a moved pointer -- SolidHeapAllocator::Reallocate
+ * Returns the new SIZE, not a moved pointer -- NNS_FndResizeForMBlockFrmHeap
  * resizes in place and returns `size' or 0. This file used to declare its own
- * `class SolidHeap' with members named unk00..unk10 plus a `class
- * SolidHeapAllocator' whose Reallocate it declared pointer-returning, which is
+ * `class SolidHeap' with members named unk00..unk10 plus an allocator class
+ * whose Reallocate it declared pointer-returning, which is
  * where the tree's `void*' for this slot came from. */
 
 u32 SolidHeap_t::VReallocate(void* ptr, u32 size)
 {
-    return allocator->Reallocate(ptr, size);
+    return NNS_FndResizeForMBlockFrmHeap(allocator, ptr, size);
 }
 
 /* Heap::Deallocate(void*) at 0x0203c538 -- forwards to the concrete heap's
@@ -780,7 +718,7 @@ void ExpHeap_t::VDeallocate(void* ptr)
     if (!ptr)
         return;
 
-    allocator->Deallocate(ptr);
+    NNS_FndFreeToExpHeap(allocator, ptr);
 }
 
 /* SolidHeap::VDeallocate(void*) at 0x0203c4e4 -- Heap vtable slot 4.
@@ -794,75 +732,46 @@ void SolidHeap_t::VDeallocate(void* ptr)
 {
     if (ptr == 0)
         return;
-    Crash();
+    OS_Terminate();
 }
 
 } /* namespace mHeap */
 
-
-/* ExpandingHeapAllocator::InvokeDeallocate(void*, ExpandingHeapAllocator*, u32)
- * at 0x0203c4cc -- STATIC.
- *
- * The mangled name declares three parameters (`EPvPS_j`, where `S_` is a substitution
- * for ExpandingHeapAllocator itself) and the ROM body takes exactly three arguments,
- * leaving no room for a `this`. It is the default trampoline DeallocateAll hands each
- * live block to, so it has to match that callback's shape -- (block, allocator, arg)
- * -- which is exactly why the allocator arrives as an ordinary parameter.
- *
- * It ignores `size` and forwards to the ordinary Deallocate. Note the argument order
- * flips: the callback receives (block, allocator) and the method needs (allocator,
- * block).
- *
- * Deallocate is now a real member call, replacing the hand-spelled
- * extern spelling of ExpandingHeapAllocator::Deallocate(void*) as a free
- * function taking (void*, void*) -- which in a C++ TU would have mangled a
- * second time.
- */
-void ExpandingHeapAllocator::InvokeDeallocate(void* p, ExpandingHeapAllocator* alloc, u32 size)
-{
-    alloc->Deallocate(p);
+/* FreeVisitedBlock(void*, NNSFndHeapHandle, u32) at 0x0203c4cc -- the visitor
+ * ExpHeap_t::VDeallocateAll hands to NNS_FndVisitAllocatedForExpHeap. It has
+ * the NNSFndHeapVisitor shape (block, heap, user parameter), ignores the user
+ * parameter, and frees the block. The ROM keeps no name for it; this one is
+ * coined. It used to be spelled as a static member of a coined allocator
+ * class, ExpandingHeapAllocator::InvokeDeallocate; the NitroSystem heap
+ * underneath was never a class. */
+void FreeVisitedBlock(void *memBlock, NNSFndHeapHandle heap, u32 userParam) {
+    NNS_FndFreeToExpHeap(heap, memBlock);
 }
 
 namespace mHeap {
 
-/* ExpandingHeap::VDeallocateAll() at 0x0203c4b0 -- Heap vtable slot 5. Forwards
- * to the allocator, passing the InvokeDeallocate trampoline as the visitor.
+/* ExpandingHeap::VDeallocateAll() at 0x0203c4b0 -- Heap vtable slot 5. Visits
+ * every allocated block of the expanded heap with FreeVisitedBlock, which
+ * frees each one.
  *
- * THIS FILE ONCE CARRIED ITS OWN COPY OF ExpandingHeapAllocator and that copy is
- * what kept a wrong signature alive: it declared `DeallocateAll(Visitor*
- * visitor, u32)', pointer-to-pointer-to-function, so the call mangled
- * `PPFvPvPS_jE' and the linker was satisfied. The tell was sitting in the call
- * itself --
- *
- *     (Visitor*)&ExpandingHeapAllocator::InvokeDeallocate
- *
- * `&InvokeDeallocate' already IS a Visitor; casting it to `Visitor*' is a fudge
- * the wrong declaration demanded, and a cast that exists only to satisfy a
- * signature is evidence against the signature. With DeallocateAll taking a plain
- * DeallocationFunction, the trampoline goes in as itself and the cast
- * disappears. Byte-identical either way -- an address is an address -- which is
- * exactly why nothing caught it for as long as the declaration lived here
- * instead of in the header.
- *
- * The last local shape goes with this slice: ExpandingHeap was still spelled
- * here as a flat `class ExpandingHeap { u32 unk00; ... }' because the class had
- * not been reconstructed. It has now, so the allocator comes from the header
- * like everything else. */
+ * An earlier copy of the allocator declared in this file took the visitor as
+ * a pointer to a function pointer, and the call carried a cast to fit it.
+ * Byte-identical either way -- an address is an address -- which is why
+ * nothing caught it while the declaration lived here. */
 
 void ExpHeap_t::VDeallocateAll()
 {
-    allocator->DeallocateAll(&ExpandingHeapAllocator::InvokeDeallocate, 0);
+    NNS_FndVisitAllocatedForExpHeap(allocator, FreeVisitedBlock, 0);
 }
 
 /* SolidHeap::VDeallocateAll() at 0x0203c49c -- Heap vtable slot 5. Throws the
  * whole arena away at once, which for a linear allocator is the only kind of
  * free that works: individual blocks cannot be returned (VDeallocate calls
- * Crash), so everything goes together or nothing does. */
+ * OS_Terminate), so everything goes together or nothing does. */
 
 void SolidHeap_t::VDeallocateAll()
 {
-    /* 3 = both bits -- ResetStart and ResetEnd. */
-    allocator->Reset(3);
+    NNS_FndFreeToFrmHeap(allocator, NNS_FND_FRMHEAP_FREE_ALL);
 }
 
 /* Heap::Sizeof(void*) at 0x0203c454 -- asks slot 9 how large an allocated block
@@ -886,13 +795,14 @@ int Heap_t::Sizeof(void* ptr)
 {
     int size = VSizeof(ptr);
     if (size == -1 && (flags & 0x4000))
-        Crash();
+        OS_Terminate();
     return size;
 }
 
 /* ExpandingHeap::VSizeof(void*) at 0x0203c444 -- Heap vtable slot 9. Node
  * headers carry their own size, so this ignores `this' entirely and forwards to
- * the STATIC ExpandingHeapAllocator::SizeofInternal -- which is why the ROM body
+ * NNS_FndGetSizeForMBlockExpHeap, which takes the block alone -- which is why
+ * the ROM body
  * is `mov r0, r1' followed by a tail call: it moves the pointer argument into
  * r0 over the incoming `this'.
  *
@@ -901,13 +811,13 @@ int Heap_t::Sizeof(void* ptr)
 
 u32 ExpHeap_t::VSizeof(void* ptr)
 {
-    return ExpandingHeapAllocator::SizeofInternal(ptr);
+    return NNS_FndGetSizeForMBlockExpHeap(ptr);
 }
 
 /* SolidHeap::VSizeof(void*) at 0x0203c428 -- Heap vtable slot 9.
  *
  * A linear allocator does not record block sizes, so asking is a programming
- * error: it calls Crash() and, if that ever returns, reports -1 -- the failure
+ * error: it calls OS_Terminate() and, if that ever returns, reports -1 -- the failure
  * value Heap::Sizeof tests for.
  *
  * Return type widened from int to u32 to match the slot. Byte-unobservable:
@@ -916,14 +826,13 @@ u32 ExpHeap_t::VSizeof(void* ptr)
 
 u32 SolidHeap_t::VSizeof(void* ptr)
 {
-    Crash();
+    OS_Terminate();
     return (u32)-1;
 }
 
 /* Heap::SetNodeID(u32) at 0x0203c408 -- plain forward to slot 13. The node id
  * is the tag the allocator stamps on blocks it hands out, so a later sweep can
- * free everything belonging to one id (see
- * ExpandingHeapAllocator::DeallocateAll).
+ * free everything belonging to one id (see NNS_FndVisitAllocatedForExpHeap).
  *
  * Slot 13 returns u32 -- SolidHeap's override is eight bytes of `mov r0,#0 /
  * bx lr', which a void declaration could not emit. This wrapper drops it, so
@@ -942,14 +851,14 @@ void Heap_t::SetNodeID(u32 id)
  * instructions: load the allocator from this+0x14 and tail-call it.
  *
  * RETURN TYPE: u32, changed from void. The slot returns the PREVIOUS id --
- * ExpandingHeapAllocator::SetNodeID is declared that way from its own body, and
+ * NNS_FndSetGroupIDForExpHeap returns it, and
  * SolidHeap's override materializes `mov r0,#0' in eight bytes, which void
  * cannot emit. This one is a pure tail call, so it byte-matches either way and
  * could never have settled the question itself; it just has to agree. */
 
 u32 ExpHeap_t::VSetNodeID(u32 id)
 {
-    return allocator->SetNodeID(id);
+    return NNS_FndSetGroupIDForExpHeap(allocator, id);
 }
 
 /* SolidHeap::VSetNodeID(u32) at 0x0203c3f0 -- Heap vtable slot 13. Eight bytes:
@@ -972,13 +881,13 @@ u32 SolidHeap_t::VSetNodeID(u32 id)
 
 /* ExpandingHeap::VGetNodeID() at 0x0203c3e0 -- Heap vtable slot 14. Forwards to
  * the allocator, which really does keep an id: it stamps every node it hands
- * out, so DeallocateAll can later free just one id's worth. SolidHeap's
+ * out, so a visitor can later free just one id's worth. SolidHeap's
  * override returns a constant 0 because a linear allocator has nothing to
  * stamp. */
 
 u32 ExpHeap_t::VGetNodeID()
 {
-    return allocator->GetNodeID();
+    return NNS_FndGetGroupIDForExpHeap(allocator);
 }
 
 /* SolidHeap::VGetNodeID() at 0x0203c3d8 -- Heap vtable slot 14. Eight bytes:
@@ -1012,7 +921,7 @@ u32 Heap_t::ResizeToFit()
         if (flags & 0x4000)
         {
             Rescue();
-            Crash();
+            OS_Terminate();
         }
     }
     return shrunk;
@@ -1049,7 +958,7 @@ u32 ExpHeap_t::VResizeToFit()
 
 u32 SolidHeap_t::VResizeToFit()
 {
-    u32 used = allocator->TryResizeToFit();
+    u32 used = NNS_FndAdjustFrmHeap(allocator);
     if (!used)
         return 0;
 

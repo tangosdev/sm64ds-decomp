@@ -7,9 +7,9 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "One contiguous run of the Nitro SDK's gx_load3d.c, 0x020568cc..0x02056c1c: 6 functions. pret/pokediamond's arm9/lib/NitroSDK/src/GX_load3d.c, compiled with its own pinned mwccarm 1.2/sp2p3, emits 10: the four clear-image loaders, then GX_EndLoadTexPltt 0x58, GX_LoadTexPltt 0x74, GX_BeginLoadTexPltt 0x48, GX_EndLoadTex 0x70, GX_LoadTex 0x164, GX_BeginLoadTex 0x80. The last six land here in that order, five at pret's sizes and LoadTex at 0x14c (SDK version drift). The clear-image loaders are absent because nothing in this game calls them.",
-    "BOTTOM EDGE: GX::LoadBGPltt at 0x02056870 is GX_LoadBGPltt, gx_load2d.c's last function (arm9/GXS); the edge is the file edge 0x020568cc, not the GX/GXS namespace change at 0x02056870.",
+    "BOTTOM EDGE: GX_LoadBGPltt at 0x02056870 is gx_load2d.c's last function (arm9/GXS); the edge is the file edge 0x020568cc.",
     "TOP EDGE: Copy48BytesFixed (0x02056c1c) is a hand-assembled MI block-copy primitive.",
-    "GX is a namespace (Nitro SDK family), not a class: no this, no vtable, no layout -- plain static functions only."
+    "These are NitroSDK C functions under their SDK names (extern \"C\"), not a class: no this, no vtable, no layout."
   ],
   "sections": [
     {
@@ -20,42 +20,42 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN2GX14EndLoadTexPlttEv",
+      "symbol": "GX_EndLoadTexPltt",
       "address": "0x020568cc",
       "size": "0x00000058",
       "legacy_source": "src/_ZN2GX14EndLoadTexPlttEv.cpp",
       "ordinal": 0
     },
     {
-      "symbol": "_ZN2GX11LoadTexPlttEPKvjj",
+      "symbol": "GX_LoadTexPltt",
       "address": "0x02056924",
       "size": "0x00000074",
       "legacy_source": "src/_ZN2GX11LoadTexPlttEPKvjj.cpp",
       "ordinal": 1
     },
     {
-      "symbol": "_ZN2GX16BeginLoadTexPlttEv",
+      "symbol": "GX_BeginLoadTexPltt",
       "address": "0x02056998",
       "size": "0x00000048",
       "legacy_source": "src/_ZN2GX16BeginLoadTexPlttEv.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN2GX10EndLoadTexEv",
+      "symbol": "GX_EndLoadTex",
       "address": "0x020569e0",
       "size": "0x00000070",
       "legacy_source": "src/_ZN2GX10EndLoadTexEv.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN2GX7LoadTexEPKvjj",
+      "symbol": "GX_LoadTex",
       "address": "0x02056a50",
       "size": "0x0000014c",
       "legacy_source": "src/_ZN2GX7LoadTexEPKvjj.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN2GX12BeginLoadTexEv",
+      "symbol": "GX_BeginLoadTex",
       "address": "0x02056b9c",
       "size": "0x00000080",
       "legacy_source": "src/_ZN2GX12BeginLoadTexEv.cpp",

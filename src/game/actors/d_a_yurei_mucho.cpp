@@ -72,7 +72,7 @@ extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern void func_02012694(unsigned int id, void *v);
 
 /* ov002 -- unnamed particle helper. */
@@ -205,10 +205,7 @@ int daYurei_Mucho_c::Behavior()
     DecIfAbove0_Short((unsigned short *)&mStateTimer);
     {
         State *q = mCurrentState;
-        /* Reads the handler's pointer word directly rather than as `&q->mMain`:
-           taking the ADDRESS of a pointer-to-member makes mwcc materialise the
-           whole 8-byte pmf. Reading one to CALL it is free. */
-        if (*(int *)((char *)q + 8) != 0) {
+        if (q->mMain != 0) {
             (this->*(q->mMain))();
         }
     }
@@ -302,7 +299,7 @@ void daYurei_Mucho_c::UpdateModelTransform() {
     mShotPosZ = 0;
     *(Mtx43 *)&data_020a0e68 = *(Mtx43 *)&mAnmModel.mat4x3;
 
-    MulMat4x3Mat4x3(&mAnmModel.data.transforms[4], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&mAnmModel.data.transforms[4], &data_020a0e68, &data_020a0e68);
 
     mShotPosX = data_020a0e68.t.x;
     mShotPosY = data_020a0e68.t.y;
@@ -374,7 +371,7 @@ int daYurei_Mucho_c::UpdateIdle() {
 
     in.z = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&in, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&in, &data_020a0e68, (Vector3 *)&mSpeedX);
 
     if ((u16)mStateTimer == 0) {
         ChangeState(&data_ov065_0211d670);
@@ -439,7 +436,7 @@ int daYurei_Mucho_c::UpdateChase() {
             v.x = 0;
             v.y = 0;
             Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-            MulVec3Mat4x3(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
+            MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
         }
     } else {
         mStateTimer = pitch;
@@ -488,7 +485,7 @@ int daYurei_Mucho_c::UpdateShoot() {
                 L.sout.z = 0;
                 Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
                 Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-                MulVec3Mat4x3(&L.spv, &data_020a0e68, &L.sout);
+                MTX_MultVec43(&L.spv, &data_020a0e68, &L.sout);
                 shot->mSpeedX = L.sout.x;
                 shot->mVertSpeed = L.sout.y;
                 shot->mSpeedZ = L.sout.z;

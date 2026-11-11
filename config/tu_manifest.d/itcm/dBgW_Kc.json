@@ -10,7 +10,7 @@
     "CLASS IDENTITY FROM ROM RTTI: these are the six ITCM-resident vtable slots _ZTV7dBgW_Kc (arm9:0x020993dc) points at -- GetSurfaceInfo (slot 3), GetNormal (4), GetTriangleOrigin (5), DetectClsn(Gnd/Lin/SphCrr) (6..8) -- plus the two const octree accessors and six flag/field helpers the derived classes' own code calls by raw address. The arm9 half of the same class lives in src/engine/collision/d_bg_w_kc.cpp.",
     "EMISSION ORDER: mwccarm 2004/b56 emits a TU's plain members in reverse source order, so the file defines GetSurfaceInfo (0x01ffd920) first and SetDepthDir (0x01ffb07c) last -- no lifecycle group exists in ITCM.",
     "HELPERS ARE THIS TU'S OWN: SetDepthDir (0x01ffb07c) copies a Vector3 into the collider's 0x38 axis; ClearDepthByDir/SetDepthByDir/ClearShallowOnly/SetShallowOnly (0x01ffb098..0x01ffb0bc) are the 0x35/0x34 flag pair accessors; GetFile (0x01ffb0c8) returns kclFile. All six are dBgW_Kc members called from the derived colliders' and actors' own TUs -- not vtable slots.",
-    "NEIGHBOURS ARE OTHER SUBJECTS: below, __fp_status (0x01ffb030..0x01ffb07c) is hand-written runtime support code, a different TU. Above, _ZN3IRQ20UserInterruptHandlerEv (0x01ffd97c..0x01ffd9d4) is the IRQ module's own function -- the ROM literally names it."
+    "NEIGHBOURS ARE OTHER SUBJECTS: below, __fp_status (0x01ffb030..0x01ffb07c) is hand-written runtime support code, a different TU. Above, OS_IrqHandler (0x01ffd97c..0x01ffd9d4) opens the SDK's os_irqHandler.c (itcm/IRQHandler)."
   ],
   "sections": [
     {

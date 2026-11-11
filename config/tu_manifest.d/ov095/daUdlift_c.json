@@ -650,34 +650,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@730",
+      "from": "@661",
       "to": "@100",
-      "evidence": "mwcc numbers this registration node @744 per TU and the fleet already defines a global @744, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc numbers this registration node @744 per TU and the fleet already defines a global @744, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @730 to @661 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@731",
+      "from": "@662",
       "to": "@101",
-      "evidence": "mwcc numbers this registration node @745 per TU and the fleet already defines a global @745, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc numbers this registration node @745 per TU and the fleet already defines a global @745, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @731 to @662 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@732",
+      "from": "@663",
       "to": "@102",
-      "evidence": "mwcc numbers this registration node @746 per TU and the fleet already defines a global @746, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc numbers this registration node @746 per TU and the fleet already defines a global @746, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @732 to @663 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@733",
+      "from": "@664",
       "to": "@103",
-      "evidence": "mwcc numbers this registration node @747 per TU and the fleet already defines a global @747, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc numbers this registration node @747 per TU and the fleet already defines a global @747, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @733 to @664 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@734",
+      "from": "@665",
       "to": "@104",
-      "evidence": "mwcc numbers this registration node @748 per TU and the fleet already defines a global @748, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc numbers this registration node @748 per TU and the fleet already defines a global @748, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @734 to @665 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@735",
+      "from": "@666",
       "to": "@105",
-      "evidence": "mwcc numbers this registration node @749 per TU and the fleet already defines a global @749, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "mwcc numbers this registration node @749 per TU and the fleet already defines a global @749, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @735 to @666 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

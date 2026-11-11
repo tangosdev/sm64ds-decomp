@@ -16,11 +16,9 @@
 
 namespace cstd {
 int sqrt(unsigned long long);
-int fdiv_result();
 }
 extern "C" {
 int _ZN4cstd4sqrtEy(unsigned long long value) { return cstd::sqrt(value); }
-int _ZN4cstd11fdiv_resultEv() { return cstd::fdiv_result(); }
 bool _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
     void *p, const CLPS &clps, const dBgCh &bg, bool flag)
 { return dBgCh::ShouldPassThroughImpl(p, clps, bg, flag); }

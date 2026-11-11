@@ -17,10 +17,6 @@
 #include "dBgCh.h"
 #include "dBgPi.h"
 
-namespace Memory {
-void operator_delete2(void *);
-}
-
 /* fwd */
 struct dActor_c;
 
@@ -53,19 +49,6 @@ struct dBgCh_Gnd : dBgCh, dBgPi {
      * The ROM kept no C2 sibling: nothing derives from dBgCh_Gnd.
      */
     dBgCh_Gnd();
-
-    /* ITS OWN COPY, TO RESOLVE AN AMBIGUITY THE MULTIPLE INHERITANCE CREATES.
-       dBgCh_Gnd derives from both dBgCh and dBgPi, and each of those declares
-       an inline operator delete, so an inherited one is "ambiguous access to
-       name found: dBgCh::operator delete and dBgPi::operator delete".
-       Declaring it here picks the same deallocator both bases name
-       (Memory::operator_delete2, 0x0203cbcc) and satisfies the rule in
-       include/dActor_c.h that mwcc only inlines the member when it is in the
-       class or its immediate base. This is load-bearing for the D0 at
-       0x020374f0; a non-virtual inline member adds no field or vtable slot. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 
     /* methods */
     void SetObjAndPos(const Vector3 &pos, dActor_c *actor);

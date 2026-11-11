@@ -103,7 +103,7 @@
       "ordinal": 11
     },
     {
-      "symbol": "_ZN4cstd3absEi",
+      "symbol": "abs",
       "address": "0x0206df84",
       "size": "0x0000000c",
       "legacy_source": "src/_ZN4cstd3absEi.cpp",
@@ -138,77 +138,77 @@
       "ordinal": 16
     },
     {
-      "symbol": "func_0206e184",
+      "symbol": "wcstombs",
       "address": "0x0206e184",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e184.c",
       "ordinal": 17
     },
     {
-      "symbol": "func_0206e218",
+      "symbol": "wctomb",
       "address": "0x0206e218",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e218.c",
       "ordinal": 18
     },
     {
-      "symbol": "func_0206e240",
+      "symbol": "__wctomb_noconv",
       "address": "0x0206e240",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e240.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_0206e254",
+      "symbol": "__mbtowc_noconv",
       "address": "0x0206e254",
       "size": "0x00000038",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e254.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_0206e28c",
+      "symbol": "memcmp",
       "address": "0x0206e28c",
       "size": "0x00000040",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e28c.c",
       "ordinal": 21
     },
     {
-      "symbol": "func_0206e2cc",
+      "symbol": "memchr",
       "address": "0x0206e2cc",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e2cc.c",
       "ordinal": 22
     },
     {
-      "symbol": "func_0206e2f8",
+      "symbol": "memset",
       "address": "0x0206e2f8",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e2f8.c",
       "ordinal": 23
     },
     {
-      "symbol": "func_0206e310",
+      "symbol": "memcpy",
       "address": "0x0206e310",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e310.c",
       "ordinal": 24
     },
     {
-      "symbol": "func_0206e330",
+      "symbol": "__fill_mem",
       "address": "0x0206e330",
       "size": "0x000000ac",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e330.c",
       "ordinal": 25
     },
     {
-      "symbol": "func_0206e3dc",
+      "symbol": "vsnprintf",
       "address": "0x0206e3dc",
       "size": "0x00000074",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e3dc.c",
       "ordinal": 26
     },
     {
-      "symbol": "func_0206e450",
+      "symbol": "__StringWrite",
       "address": "0x0206e450",
       "size": "0x00000054",
       "legacy_source": "src/unnamed/arm9/0206/func_0206e450.c",

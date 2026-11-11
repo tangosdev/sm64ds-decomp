@@ -1,5 +1,5 @@
 //cpp
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "CaptureEffect.h"
 
 extern "C" {
@@ -9,23 +9,23 @@ extern "C" {
    effect's work (data_020a4c70) and store the kind under the IRQ lock, and
    for kind 1 send SNDi_SetSurroundDecay(0x3000) as func_02049cd8 does. */
 
-extern void MultiStore16(unsigned short val, void *dest, int size);
+extern void MIi_CpuClear16(unsigned short val, void *dest, int size);
 extern void SNDi_SetSurroundDecay(int val);
 
 void func_02049c48(int kind) {
     int current = data_020a4c64.kind;
     volatile unsigned short tmp;
-    unsigned int savedIRQ;
+    OSIntrMode savedIRQ;
     if (kind == current)
         return;
     if (current == 1) {
         SNDi_SetSurroundDecay(0);
     }
-    savedIRQ = IRQ::Disable();
+    savedIRQ = OS_DisableInterrupts();
     tmp = 0;
-    MultiStore16(tmp, &data_020a4c70, sizeof(data_020a4c70));
+    MIi_CpuClear16(tmp, &data_020a4c70, sizeof(data_020a4c70));
     data_020a4c64.kind = kind;
-    IRQ::Restore(savedIRQ);
+    OS_RestoreInterrupts(savedIRQ);
     if (kind == 1) {
         SNDi_SetSurroundDecay(0x3000);
     }

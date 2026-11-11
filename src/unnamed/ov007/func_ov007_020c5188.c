@@ -2,7 +2,7 @@
 #include "nitro/fx/fx.h"
 #include "Ov007Picker.h"
 
-extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+extern void VEC_Add(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern void func_ov007_020c7560(Ov007PointList *list, int stiffness, int damping);
 extern void func_ov007_020c7b2c(struct Ov007Link *link, int stiffness, int damping);
 extern void func_ov007_020c81a0(Ov007Follower *f, int damping, int shift);
@@ -33,7 +33,7 @@ void func_ov007_020c5188(char *sb, int arg1) {
     backup = self->pos;
     min = &self->boundsMin;
     max = &self->boundsMax;
-    AddVec3(&self->posOffset, &self->pos, &self->pos);
+    VEC_Add(&self->posOffset, &self->pos, &self->pos);
 
     oc = 0;
     if (count > 0) {

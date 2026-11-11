@@ -39,8 +39,8 @@
  */
 #include "types.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "nnsys/snd/player.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -48,7 +48,6 @@ extern void func_0204f934(int **);
 extern void func_0204f94c(int *);
 extern int func_0204fa2c(int *, int);
 extern int func_02051f1c(int *, unsigned int, int);
-extern int func_020531a4(int);
 extern void *func_ov007_020c3df4(const char *name, int size);
 extern void func_ov007_020c3d1c(void *);
 
@@ -164,14 +163,14 @@ void func_ov007_020bdbcc(int dx, int dy) {
     lengthSq = FX_MUL(x, x) + FX_MUL(y, y);
     data_ov007_02104bb4 = x;
 
-    speed = func_020531a4(lengthSq);
+    speed = FX_Sqrt(lengthSq);
 
     if (speed <= 0x1388) {
         loudness = 0;
     } else if (speed >= 0x1b58) {
         loudness = 0x1000;
     } else {
-        loudness = cstd::fdiv(speed - 0x1388, 0x7d0);
+        loudness = FX_Div(speed - 0x1388, 0x7d0);
     }
 
     if (data_ov007_02104bbc[0x35] == 0) {
@@ -204,7 +203,7 @@ void func_ov007_020bdbcc(int dx, int dy) {
     } else if (speed >= 0x5000) {
         t = 0x1000;
     } else {
-        t = cstd::fdiv(speed - 0x1388, 0x3c78);
+        t = FX_Div(speed - 0x1388, 0x3c78);
     }
 
     handle = &data_ov007_02104bbc[0x35];
@@ -222,7 +221,7 @@ static inline int scale_div(int v, int range, int scale) {
     else if (v >= range)
         q = 0x1000;
     else
-        q = cstd::div(v << 12, range);
+        q = FX_DivS32(v << 12, range);
     return (q * scale) >> 12;
 }
 

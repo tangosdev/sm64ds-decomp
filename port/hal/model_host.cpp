@@ -4,7 +4,7 @@
 // walk; this file provides only what hardware/asm provided on the DS:
 //
 // - the two asm copy/matrix primitives the walk calls,
-// - the VRAM window globals GX::LoadTex/LoadTexPltt resolve against
+// - the VRAM window globals GX_LoadTex/GX_LoadTexPltt resolve against
 //   (on hardware these come from bank assignment at GX init; here they
 //   point into the ntr mapped VRAM so a slot offset IS a host address),
 // - the texture-VRAM budget globals dExtSimpleModel_c::GetVramOffset bump-allocates
@@ -18,7 +18,7 @@ extern "C" {
 
 // ---- asm primitives ------------------------------------------------------
 /* 4x3 fx32 scale matrix from (sx,sy,sz): rows {sx,0,0},{0,sy,0},{0,0,sz},0 */
-void func_020527e8(int *m, int sx, int sy, int sz)
+void MTX_Scale43_(int *m, int sx, int sy, int sz)
 {
     memset(m, 0, 12 * sizeof(int));
     m[0] = sx;
@@ -27,13 +27,13 @@ void func_020527e8(int *m, int sx, int sy, int sz)
 }
 
 /* word copy primitive used by the VRAM upload CPU path */
-void MultiCopy_Int(int *src, int *dst, int len)
+void MIi_CpuCopy32(int *src, int *dst, int len)
 {
     memcpy(dst, src, len);
 }
 
 /* 32-byte-block copy primitive (asm on the DS) */
-void MultiCopy32Bytes(const void *src, void *dst, int len) {
+void MIi_CpuCopyFast(const void *src, void *dst, int len) {
     memcpy(dst, src, len);
 }
 
@@ -51,16 +51,16 @@ int data_0209e67c[0x20];
 int data_0209e694[0x100];
 
 /* asm primitive: 4x3 fx32 identity */
-void Matrix4x3_LoadIdentity(int *m)
+void MTX_Identity43_(int *m)
 {
     memset(m, 0, 12 * sizeof(int));
     m[0] = m[4] = m[8] = 0x1000;
 }
 
 /* asm primitive: expand a 3x3 fx32 matrix (read from a) into a 4x4 (b):
- * fourth column zero, last row {0,0,0,1.0}. The decomp declares the args
- * (dst,src) but r0 is the READ side; register semantics win here. */
-void func_02052514(int *a, int *b)
+ * fourth column zero, last row {0,0,0,1.0}. NitroSDK's MTX_Copy33To44_
+ * takes (src, dst). */
+void MTX_Copy33To44_(int *a, int *b)
 {
     for (int r = 0; r < 3; ++r) {
         b[r * 4 + 0] = a[r * 3 + 0];
@@ -81,23 +81,15 @@ void MI_SendGXCommand(int ch, int src, int size)
     MI_SendGXCommandAsync(ch, src, size, 0, 0);
 }
 
-// ---- GX bank plumbing ----------------------------------------------------
-// Begin/End LoadTex unmap the destination banks to LCDC and remap after; the
-// host VRAM window is always CPU-visible, so they are no-ops.
-void _ZN2GX12BeginLoadTexEv(void) {}
-void _ZN2GX10EndLoadTexEv(void) {}
-void _ZN2GX16BeginLoadTexPlttEv(void) {}
-void _ZN2GX14EndLoadTexPlttEv(void) {}
-
-// GX::LoadTex destination resolution (see src/engine/gx/GX.cpp):
+// GX_LoadTex destination resolution (see src/engine/gx/GX.cpp):
 //   data_020a60ac  base window address        -> texture slots at 0x06800000
 //   data_020a60bc  secondary bank address     -> 0 = single flat window
 //   data_020a60c0  where the window splits    -> unused while _bc is 0
-//   data_02099fd0  preferred DMA channel      -> -1 = CPU copy path
+//   GXi_DmaId      preferred DMA channel      -> -1 = CPU copy path
 u32 data_020a60ac = 0x06800000u;
 u32 data_020a60bc = 0;
 u32 data_020a60c0 = 0;
-int data_02099fd0 = -1;
+int GXi_DmaId = -1;
 
 // LoadTexPltt destination base (palette slots, same convention)
 u32 data_020a60b0 = 0x06880000u;
@@ -176,27 +168,9 @@ unsigned short data_02099f94[8];
 #pragma comment(linker, "/alternatename:?data_020a60ac@@3IA=_data_020a60ac")
 #pragma comment(linker, "/alternatename:?data_020a60bc@@3IA=_data_020a60bc")
 #pragma comment(linker, "/alternatename:?data_020a60c0@@3IA=_data_020a60c0")
-#pragma comment(linker, "/alternatename:?data_02099fd0@@3HA=_data_02099fd0")
+#pragma comment(linker, "/alternatename:?GXi_DmaId@@3HA=_GXi_DmaId")
 
 // ---- upload-chain bridges -------------------------------------------------
-// C name -> the real namespace-style GX::LoadTex from src/.
-namespace GX {
-void LoadTex(const void *src, unsigned offset, unsigned size);
-}
-extern "C" void _ZN2GX7LoadTexEPKvjj(const void *s, unsigned o, unsigned z)
-{
-    GX::LoadTex(s, o, z);
-}
-
-// operator_new2 on the DS is a register-passthrough tail-call veneer to
-// func_0203cc0c; that shape breaks on cdecl (the callee would read the
-// wrong stack slot), so the host bridge passes the argument explicitly.
-extern "C" void *func_0203cc0c(unsigned size);
-extern "C" void *_ZN6Memory13operator_new2Ej(unsigned size)
-{
-    return func_0203cc0c(size);
-}
-
 // OAM::Reset declares its globals at C++ linkage; alias them onto the
 // C-named storage above (same mechanism as the LoadTex globals).
 #pragma comment(linker, "/alternatename:?data_0209e660@@3EA=_data_0209e660")

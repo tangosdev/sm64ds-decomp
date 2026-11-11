@@ -1,11 +1,11 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/fs/overlay.h"
 
 extern "C" {
 
-extern void MultiStore_Int(s32 val, void *dst, s32 size);
+extern void MIi_CpuClear32(s32 val, void *dst, s32 size);
 
 /* Poison an unloaded overlay's RAM (UnloadOverlay): invalidate both caches
    over its code and bss, then fill them with 0xe6000010, an ARM undefined
@@ -22,10 +22,10 @@ void func_02017fd0(FSOverlayInfo *info) {
     ptr = info->header.ram_address;
     len = ramSize + bssSize;
 
-    CP15::InvalidateInstructionCache((u32)ptr, len);
-    CP15::InvalidateDataCache((u32)ptr, len);
+    IC_InvalidateRange(ptr, len);
+    DC_InvalidateRange(ptr, len);
 
     fillVal = 0xe6000010;
-    MultiStore_Int(fillVal, ptr, len);
+    MIi_CpuClear32(fillVal, ptr, len);
 }
 }

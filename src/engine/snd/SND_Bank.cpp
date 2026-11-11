@@ -10,7 +10,7 @@
  * This SDK is older than pret's: nothing here takes the sound mutex, and
  * the linker dropped the instrument and wave-data readers. */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 
 extern "C" {
 
@@ -46,8 +46,7 @@ void SND_AssignWaveArc(SNDBankData *bank, int index, SNDWaveArc *waveArc) {
             return;
         if (&bank->waveArcLink[index] == prev->topLink) {
             prev->topLink = bank->waveArcLink[index].next;
-            CP15::FlushDataCache((unsigned int)bank->waveArcLink[index].waveArc,
-                                 sizeof(SNDWaveArc));
+            DC_StoreRange(bank->waveArcLink[index].waveArc, sizeof(SNDWaveArc));
         } else {
             SNDWaveArcLink *link;
             for (link = prev->topLink; link != 0; link = link->next) {
@@ -55,7 +54,7 @@ void SND_AssignWaveArc(SNDBankData *bank, int index, SNDWaveArc *waveArc) {
                     break;
             }
             link->next = bank->waveArcLink[index].next;
-            CP15::FlushDataCache((unsigned int)link, sizeof(SNDWaveArcLink));
+            DC_StoreRange(link, sizeof(SNDWaveArcLink));
         }
     }
     {
@@ -63,8 +62,8 @@ void SND_AssignWaveArc(SNDBankData *bank, int index, SNDWaveArc *waveArc) {
         waveArc->topLink = &bank->waveArcLink[index];
         bank->waveArcLink[index].next = oldTop;
         bank->waveArcLink[index].waveArc = waveArc;
-        CP15::FlushDataCache((unsigned int)bank, sizeof(SNDBankData));
-        CP15::FlushDataCache((unsigned int)waveArc, sizeof(SNDWaveArc));
+        DC_StoreRange(bank, sizeof(SNDBankData));
+        DC_StoreRange(waveArc, sizeof(SNDWaveArc));
     }
 }
 
@@ -77,7 +76,7 @@ void SND_DestroyBank(SNDBankData *bank) {
             continue;
         if (&bank->waveArcLink[i] == waveArc->topLink) {
             waveArc->topLink = bank->waveArcLink[i].next;
-            CP15::FlushDataCache((unsigned int)waveArc, sizeof(SNDWaveArc));
+            DC_StoreRange(waveArc, sizeof(SNDWaveArc));
         } else {
             SNDWaveArcLink *link;
             for (link = waveArc->topLink; link != 0; link = link->next) {
@@ -85,7 +84,7 @@ void SND_DestroyBank(SNDBankData *bank) {
                     break;
             }
             link->next = bank->waveArcLink[i].next;
-            CP15::FlushDataCache((unsigned int)link, sizeof(SNDWaveArcLink));
+            DC_StoreRange(link, sizeof(SNDWaveArcLink));
         }
     }
 }
@@ -97,7 +96,7 @@ void SND_DestroyWaveArc(SNDWaveArc *waveArc) {
         SNDWaveArcLink *next = link->next;
         link->waveArc = 0;
         link->next = 0;
-        CP15::FlushDataCache((unsigned int)link, sizeof(SNDWaveArcLink));
+        DC_StoreRange(link, sizeof(SNDWaveArcLink));
         link = next;
     }
 }

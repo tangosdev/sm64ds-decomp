@@ -1,9 +1,9 @@
 //cpp
 #include "types.h"
-#include "cstd.h"
 #include "dCamera_c.h"
 #include "daPly_c.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -58,7 +58,7 @@ int func_02005110(dCamera_c *cam) {
         dist = Vec3_Dist(&eye, &aim);
         if (dist > 0x30000) {
             Vec3_Sub(&diff, &aim, &eye);
-            scale = cstd::fdiv(0x30000, dist);
+            scale = FX_Div(0x30000, dist);
             Vec3_MulScalarInPlace(&diff, scale);
             Vec3_Add(&newAim, &eye, &diff);
             aim.x = newAim.x;

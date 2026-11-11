@@ -11,7 +11,7 @@
  * tables, GET_BLOCKINFO into the peer record's own bitmap words.
  * The WBTCommand / WBTWork views are in private/arm9_wbt.h. */
 
-extern void MultiCopy_Int(void *src, void *dst, int n); /* loads through r0, stores through r1 */
+extern void MIi_CpuCopy32(void *src, void *dst, int n); /* loads through r0, stores through r1 */
 extern void func_02065bf4(void);
 extern int func_02065c1c(void);
 extern int func_02065bc0(void);
@@ -42,14 +42,14 @@ int func_02063718(WBTWork *work, unsigned char *q) {
     t = func_02065c1c();
     switch (st->command) {
     case 2:
-        MultiCopy_Int(st, &work->cmd, sizeof(WBTCommand));
+        MIi_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
         work->cmd.my_cmd_counter = t;
         ret = func_02065bc0();
         b = func_02065bd0();
         ret = func_02064f54(q, work->cmd.target_bmp, work->cmd.my_cmd_counter, ret, b);
         break;
     case 6:
-        MultiCopy_Int(st, &work->cmd, sizeof(WBTCommand));
+        MIi_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
         work->cmd.my_cmd_counter = t;
         recv = &work->peer[0].recv;
         for (i = 0; i < 0x10; i++, recv = (WBTPeerRecv *)((char *)recv + sizeof(WBTPeerRecord))) {
@@ -65,7 +65,7 @@ int func_02063718(WBTWork *work, unsigned char *q) {
                                 work->cmd.u.get.block_id, 0);
         break;
     case 4:
-        MultiCopy_Int(st, &work->cmd, sizeof(WBTCommand));
+        MIi_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
         work->cmd.my_cmd_counter = t;
         recv = &work->peer[0].recv;
         for (i = 0; i < 0x10; i++, recv = (WBTPeerRecv *)((char *)recv + sizeof(WBTPeerRecord))) {
@@ -81,7 +81,7 @@ int func_02063718(WBTWork *work, unsigned char *q) {
                                 work->cmd.u.get.block_id, 0);
         break;
     case 0xa:
-        MultiCopy_Int(st, &work->cmd, sizeof(WBTCommand));
+        MIi_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
         work->cmd.my_cmd_counter = t;
         ret = func_02064a94(q, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                             work->cmd.u.user_data.data, work->cmd.u.user_data.size);

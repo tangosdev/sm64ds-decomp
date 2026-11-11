@@ -3,8 +3,8 @@
 #include "common.h"
 #include "Ov007StrokePath.h"
 #include "Ov007Picker.h"
-extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
-extern int LenVec3(const Vector3 *v);
+extern void VEC_Subtract(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+extern int VEC_Mag(const Vector3 *v);
 
 /* Re-measures group idx's links at a pose blended between groupPoints
  * (weight t, Q12) and groupPointCopies: x and y blended, z from the copies.
@@ -48,8 +48,8 @@ void func_ov007_020c5fc8(Ov007Picker *self, int idx, int t) {
 
         if (i > 0) {
             Ov007Link *link = self->pointLists[idx]->links[i - 1];
-            SubVec3(&prev, &cur, &link->dir);
-            link->length = LenVec3(&link->dir);
+            VEC_Subtract(&prev, &cur, &link->dir);
+            link->length = VEC_Mag(&link->dir);
         }
 
         prev = cur;

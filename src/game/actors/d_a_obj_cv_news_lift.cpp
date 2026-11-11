@@ -20,8 +20,10 @@
  *   by 20 words.
  * - OnMainMeshRide: copying mTargetRotation in a loop is 0x100 against
  *   0x104.
- * - Behavior: reset reads of data_02092768 without volatile are 0x594
- *   against 0x5a4. Dropping (u16)(s16) on mWobblePhase is 0x59c, and so
+ * - Behavior: the reset assigns both quaternions from data_02092768 by
+ *   value, and each struct copy reloads its four words. A const
+ *   Quaternion source lets the second copy reuse the first one's loads:
+ *   0x594 against 0x5a4. Dropping (u16)(s16) on mWobblePhase is 0x59c, and so
  *   is writing rayStart[1] and rayStart[2] by name. Dropping the zero
  *   fills of rayFrom and rayTo is 0x54c.
  * - UpdateClsnTransforms: mPlatformMats[i] = differs by 8 words;
@@ -32,7 +34,7 @@
  * - MainMeshCallback and Platform0Callback: testing actorID == 0xbf
  *   inline is 0x34 against 0x40. The int temporary stays on all five
  *   callbacks.
- * - data_02092768, data_020a0e68 and data_02082214 stay address names.
+ * - data_02092768 and data_020a0e68 stay address names.
  */
 
 #include "daObjCvNewsLift_c.h"
@@ -44,8 +46,6 @@
 #include "Sound.h"
 #include "nitro/fx/fx.h"
 #include "math/MtxStack.h"
-
-struct Quaternion;
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daObjCvNewsLift_c_AssetId {
@@ -89,9 +89,9 @@ extern CLPS_Block data_ov021_02113a80;
 extern "C" {
 void Matrix4x3_FromQuaternion(const struct Quaternion *q, struct Matrix4x3 *mF);
 void Vec3_Asr(void *d, void *s, int sh);
-int InvMat4x3(const struct Matrix4x3 *s, struct Matrix4x3 *d);
-void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
+int MTX_Inverse43(const struct Matrix4x3 *s, struct Matrix4x3 *d);
+void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 void Quaternion_FromVector3(void *q, Vector3 *axis, Vector3 *v);
 void Quaternion_Normalize(void *q);
 void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
@@ -101,8 +101,10 @@ u8 DecIfAbove0_Byte(u8 *p);
 
 }
 
+/* The identity quaternion. Its other readers still declare it int[4], so this
+   TU copies it through a Quaternion view. */
 extern s32 data_02092768[];
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 /* Yaw for the +Z, -Z, +X and -X platforms, in the transform loops' order. */
 extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 
@@ -126,22 +128,19 @@ void daObjCvNewsLift_c::OnMainMeshRide(dActor_c *player) {
     mPlayerOnMesh = 1;
     mResetTimer = 300;
     if (mBumped) {
-        mTargetRotation[0] = data_02092768[0];
-        mTargetRotation[1] = data_02092768[1];
-        mTargetRotation[2] = data_02092768[2];
-        mTargetRotation[3] = data_02092768[3];
+        mTargetRotation = *(Quaternion *)data_02092768;
     } else {
         data_020a0e68 = mClsnMat;
-        InvMat4x3(&data_020a0e68, &data_020a0e68);
+        MTX_Inverse43(&data_020a0e68, &data_020a0e68);
         Vector3 inFrame;
-        MulVec3Mat4x3(&player->mPos, &data_020a0e68, &inFrame);
+        MTX_MultVec43(&player->mPos, &data_020a0e68, &inFrame);
         inFrame.y *= 0x30;
         Vector3 axis;
         axis.x = 0;
         axis.y = 0x1000;
         axis.z = 0;
-        Quaternion_FromVector3(&mTargetRotation[0], &axis, &inFrame);
-        Quaternion_Normalize(&mTargetRotation[0]);
+        Quaternion_FromVector3(&mTargetRotation, &axis, &inFrame);
+        Quaternion_Normalize(&mTargetRotation);
         mTiltHoldTimer = 10;
     }
 }
@@ -260,7 +259,7 @@ s32 daObjCvNewsLift_c::Behavior() {
         if (DecIfAbove0_Short(&mWobbleTimer)) {
             mWobblePhase += 0x1f00;
             {
-                s16 sine = data_02082214[((u16)(s16)mWobblePhase >> 4) * 2];
+                s16 sine = FX_SinCosTable_[((u16)(s16)mWobblePhase >> 4) * 2];
                 s32 amp = mWobbleTimer * 0x1a;
                 s8 which = mLoweredPlatform;
                 s16 wobble = (s16)FX_MUL(amp, sine);
@@ -350,10 +349,10 @@ s32 daObjCvNewsLift_c::Behavior() {
                 for (i = 0; i < 3; i++) {
                     ahead = *start;
                     ahead.z += 0x28000;
-                    MulVec3Mat4x3(start, &data_020a0e68, from);
-                    MulVec3Mat4x3(&ahead, &data_020a0e68, to);
-                    AddVec3(from, &mPos, from);
-                    AddVec3(to, &mPos, to);
+                    MTX_MultVec43(start, &data_020a0e68, from);
+                    MTX_MultVec43(&ahead, &data_020a0e68, to);
+                    VEC_Add(from, &mPos, from);
+                    VEC_Add(to, &mPos, to);
                     start++;
                     from++;
                     to++;
@@ -386,25 +385,16 @@ s32 daObjCvNewsLift_c::Behavior() {
             }
         }
         if (!DecIfAbove0_Byte(&mTiltHoldTimer)) {
-            mTargetRotation[0] = data_02092768[0];
-            mTargetRotation[1] = data_02092768[1];
-            mTargetRotation[2] = data_02092768[2];
-            mTargetRotation[3] = data_02092768[3];
+            mTargetRotation = *(Quaternion *)data_02092768;
         }
     }
-    Quaternion_SLerp(&mRotation[0], &mTargetRotation[0], 0x199, &mRotation[0]);
+    Quaternion_SLerp(&mRotation, &mTargetRotation, 0x199, &mRotation);
     if (Vec3_Equal(&mPos, &mHomePos))
         mResetTimer = 300;
     if (!DecIfAbove0_Short(&mResetTimer)) {
         mPos = mHomePos;
-        mRotation[0] = *(volatile s32 *)&data_02092768[0];
-        mRotation[1] = *(volatile s32 *)&data_02092768[1];
-        mRotation[2] = *(volatile s32 *)&data_02092768[2];
-        mRotation[3] = *(volatile s32 *)&data_02092768[3];
-        mTargetRotation[0] = *(volatile s32 *)&data_02092768[0];
-        mTargetRotation[1] = *(volatile s32 *)&data_02092768[1];
-        mTargetRotation[2] = *(volatile s32 *)&data_02092768[2];
-        mTargetRotation[3] = *(volatile s32 *)&data_02092768[3];
+        mRotation = *(Quaternion *)data_02092768;
+        mTargetRotation = *(Quaternion *)data_02092768;
         mLoweredPlatform = -1;
         mWobblePhase = 0;
         mBumped = 0;
@@ -459,7 +449,7 @@ void daObjCvNewsLift_c::UpdateModelTransforms() {
     Vector3 pos;
     Vector3 scaled;
 
-    Matrix4x3_FromQuaternion((Quaternion *)mRotation, &tilt);
+    Matrix4x3_FromQuaternion(&mRotation, &tilt);
     Vec3_Asr(&pos, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     MtxStack::concat(tilt);
@@ -498,7 +488,7 @@ void daObjCvNewsLift_c::UpdateClsnTransforms() {
     dBgW_KcMbg *platformCollider;
     Vector3 hang;
 
-    Matrix4x3_FromQuaternion((Quaternion *)mRotation, &tilt);
+    Matrix4x3_FromQuaternion(&mRotation, &tilt);
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
     MtxStack::concat(tilt);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);

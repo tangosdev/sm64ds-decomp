@@ -9,9 +9,6 @@ namespace Memory {
 
 extern Heap *defaultHeapPtr;
 
-void* operator_new2(u32 size);
-void  operator_delete2(void* ptr);
-
 /* src/engine/heap/Heap.cpp. A null heap means the current one; the short
    forms pass 4 for the alignment and null for the heap. Unnamed: a named
    parameter takes an @NNN in every includer. */

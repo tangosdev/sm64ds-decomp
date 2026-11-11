@@ -21,7 +21,7 @@
  *     Heap's own slots 2..15 are null, so Heap is abstract and these are its
  *     implementations, not incidental methods that happen to share names.
  *   - The constructor
- *     _ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP18SolidHeapAllocator calls
+ *     _ZN5mHeap11SolidHeap_tC1EPvjPNS_6Heap_tEP15NNSiFndHeapHead calls
  *     Heap's constructor first and only then writes 0x14, which is exactly a
  *     base subobject followed by a derived field.
  *
@@ -33,8 +33,7 @@
  *
  * The generator also emitted `struct a; struct id_;' as forward declarations --
  * parameter names mistaken for type names. No source file referenced them; they
- * are dropped, as they were in ExpandingHeapAllocator.h (#1211) and
- * SolidHeapAllocator.h (#1215).
+ * are dropped, as they were from the old allocator headers (#1211, #1215).
  *
  * ==== SIGNATURES THAT CHANGED, AND WHY ====
  *
@@ -44,7 +43,7 @@
  *
  *   VAllocate  was (u32, u32) -- the symbol then read ...SolidHeap9VAllocateEjj.
  *              Slot 3 is shared with ExpandingHeap's VAllocate (u32, int), so they
- *              could not both be right. SolidHeapAllocator::Allocate
+ *              could not both be right. NNS_FndAllocFromFrmHeapEx
  *              (0x0204eb70), which this override tail-calls with r1/r2
  *              untouched, does `cmp r2,#0' then `blt' -- a SIGNED branch -- and
  *              negates with `rsb' to allocate backwards. A u32 alignment would
@@ -63,29 +62,20 @@
 #define SOLIDHEAP_H
 #include "types.h"
 #include "Heap.h"
-
-/* SolidHeapAllocator is only ever pointed at from here, so a declaration is
- * enough -- no definition is pulled in. The guard is common.h's idiom for the
- * same job. */
-#ifndef SOLIDHEAPALLOCATOR_FWD_DECLARED
-#define SOLIDHEAPALLOCATOR_FWD_DECLARED
-struct SolidHeapAllocator;
-typedef struct SolidHeapAllocator SolidHeapAllocator;
-#endif
+#include "nnsys/fnd.h"
 
 namespace mHeap {
 
 struct SolidHeap_t : Heap_t {
     /* The one field of its own. Everything below 0x14 belongs to the base. */
-    SolidHeapAllocator* allocator;  /* 0x14 -- fixed-size linear allocator; it
-                                       lives inside the arena it manages, which
-                                       is why Heap::CreateSolidHeapAllocator
-                                       constructs it at the arena's own start. */
+    NNSFndHeapHandle allocator; /* 0x14 -- the NitroSystem frame heap that
+                                   hands out this heap's blocks. Its header
+                                   lives inside the arena it manages, at the
+                                   arena's start (NNS_FndCreateFrmHeapEx). */
 
     /* The constructor's initializer list is the ROM body: construct Heap, then
        store the allocator pointer. CodeWarrior owns the intervening vptr store. */
-    SolidHeap_t(void* start, u32 size, Heap_t* root,
-                SolidHeapAllocator* allocator);
+    SolidHeap_t(void *start, u32 size, Heap_t *root, NNSFndHeapHandle allocator);
 
     /* D1 and D0 are independently enrolled compiler-owned variants of this
        empty real destructor; Heap's teardown is generated, not hand-called. */

@@ -1,7 +1,7 @@
 //cpp
 #include "OAM.h"
 #include "dGraph_c.h"
-#include "G3X.h"
+#include "nitro/gx/g3x.h"
 
 extern "C" {
 
@@ -34,7 +34,7 @@ extern short gSubBg3VOffset;
    screens' BG scroll registers from their shadow words (each H/V pair is
    set by its SetBgNOffset or SetSubBgNOffset). With BG0 in 3D
    mode (DISPCNT bit 3) its horizontal offset goes through
-   G3X::SetHOffset instead. */
+   G3X_SetHOffset instead. */
 void func_02019144(void)
 {
     dGraph_c::callback_c *callback = gGraphCallback;
@@ -49,7 +49,7 @@ void func_02019144(void)
     if (!(*(vu32 *)0x4000000 & 8)) {
         *(vu32 *)0x4000010 = (gBg0HOffset & 0x1ff) | (0x1ff0000 & (gBg0VOffset << 16));
     } else {
-        G3X::SetHOffset(gBg0HOffset);
+        G3X_SetHOffset(gBg0HOffset);
     }
     *(vu32 *)0x4000014 = (gBg1HOffset & 0x1ff) | (0x1ff0000 & (gBg1VOffset << 16));
     *(vu32 *)0x4000018 = (gBg2HOffset & 0x1ff) | (0x1ff0000 & (gBg2VOffset << 16));
