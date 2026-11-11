@@ -36907,7 +36907,7 @@
     },
     "ov064:0x021192bc": {
       "author": "ruspecial",
-      "name": "func_ov064_021192bc"
+      "name": "_ZN16daObjFl_Puzzle_c15StoodOnCallbackEP4dBgWP8dActor_cS3_"
     },
     "ov064:0x021192d0": {
       "author": "tangosdev",
@@ -38007,11 +38007,11 @@
     },
     "ov066:0x0211a2e4": {
       "author": "tangosdev",
-      "name": "func_ov066_0211a2e4"
+      "name": "_ZN10daIwante_c9OnStoodOnEP8dActor_c"
     },
     "ov066:0x0211a35c": {
       "author": "tangosdev",
-      "name": "func_ov066_0211a35c"
+      "name": "_ZN10daIwante_c15StoodOnCallbackEP4dBgWP8dActor_cS3_"
     },
     "ov066:0x0211a370": {
       "author": "tangosdev",

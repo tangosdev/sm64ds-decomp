@@ -229,6 +229,10 @@ struct daIwante_c : dBgActor_c {
     int SetState(void *pv);          /* install a state descriptor */
     void UpdateCollisionMatrix();    /* refresh the collision matrix */
     void UpdateModelMatrices();      /* refresh the model matrices */
+
+    /* mMeshCollider2's stood-on handler and the dBgW veneer that reaches it. */
+    void OnStoodOn(dActor_c *other);
+    static void StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other);
 };
 
 #ifndef SM64DS_PLATFORM_PC
