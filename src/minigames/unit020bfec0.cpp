@@ -134,30 +134,30 @@ unsigned int func_02012174(unsigned int, unsigned int);
 void func_0203ccd4(void *, short);
 void func_0203cd80(void *, short);
 void func_0203cebc(void *, void *, void *, void *);
-void MascotWalker_StatePause(char *c);
-void MascotWalker_StartPause(int *t);
-void MascotWalker_StateWalk(char *c);
-void MascotWalker_StartNextPath(char *c);
+void MascotWalker_StatePause(MascotWalker *walker);
+void MascotWalker_StartPause(MascotWalker *walker);
+void MascotWalker_StateWalk(MascotWalker *walker);
+void MascotWalker_StartNextPath(MascotWalker *walker);
 void MascotWalker_UpdateMatrix(MascotWalker *walker);
 void MascotWalker_Draw(char *t);
 void MascotWalker_Update(MascotWalker *walker);
 void MascotWalker_Load(MascotWalker *walker);
 void Dealer_ResetMatrices(char *c);
-void Dealer_StateWin(char *p);
-void Dealer_PlayWin(void *c);
-void Dealer_StateLose(char *c);
+void Dealer_StateWin(Dealer *dealer);
+void Dealer_PlayWin(Dealer *dealer);
+void Dealer_StateLose(Dealer *dealer);
 void Dealer_PlayLose(char *c);
-void Dealer_StateSwap(char *c);
+void Dealer_StateSwap(Dealer *dealer);
 void Dealer_StartSwap(int *t);
-int Dealer_IsAnimDone(void *a);
-int Dealer_IsBusy(int *c);
-void Dealer_StateReveal(void *cc);
-void Dealer_StartReveal(int *t, int count, s16 *counter);
-void Dealer_StateDeal(char *c);
-void Dealer_StartDeal(char *c, short count, s16 *counter);
-void Dealer_StateShuffle(char *c);
-void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter);
-int Dealer_IsIdleAtRest(char *c);
+int Dealer_IsAnimDone(Dealer *dealer);
+int Dealer_IsBusy(Dealer *dealer);
+void Dealer_StateReveal(Dealer *dealer);
+void Dealer_StartReveal(Dealer *dealer, int count, s16 *counter);
+void Dealer_StateDeal(Dealer *dealer);
+void Dealer_StartDeal(Dealer *dealer, short count, s16 *counter);
+void Dealer_StateShuffle(Dealer *dealer);
+void Dealer_StartShuffle(Dealer *dealer, int, short count, s16 *counter);
+int Dealer_IsIdleAtRest(Dealer *dealer);
 int Dealer_IsIdle(Dealer *dealer);
 void Dealer_StateIdle(void);
 void Dealer_PlayIdle(char *c);
@@ -166,46 +166,46 @@ void Dealer_Update(Dealer *dealer);
 int Dealer_Load(char *c);
 void Mascot_StopLooking(int *p);
 void Mascot_LookAt(char *c, int *src);
-void Mascot_UpdateMatrix(char *c);
+void Mascot_UpdateMatrix(Mascot *mascot);
 void Mascot_Draw(Mascot *c);
-void Mascot_Update(void *a);
+void Mascot_Update(Mascot *mascot);
 void Mascot_Load(char *c);
 void Presenter_UpdateMatrix(char *c);
-void Presenter_StateSurprisedThenIdle(char *t);
-void Presenter_PlayCheerLoop(void *c);
-void Presenter_StateLoseStart(void *c);
+void Presenter_StateSurprisedThenIdle(Presenter *presenter);
+void Presenter_PlayCheerLoop(Presenter *presenter);
+void Presenter_StateLoseStart(Presenter *presenter);
 void Presenter_PlayLose(char *c);
-void Presenter_StateSurprisedThenSmile(void *c);
-void Presenter_PlayCheer(void *c);
-void Presenter_StateMistake(char *t);
+void Presenter_StateSurprisedThenSmile(Presenter *presenter);
+void Presenter_PlayCheer(Presenter *presenter);
+void Presenter_StateMistake(Presenter *presenter);
 void Presenter_PlayMiss(char *c);
-void Presenter_StateWin(char *t);
-void Presenter_PlayMatch(void *c);
-void Presenter_StateIdle(char *c);
+void Presenter_StateWin(Presenter *presenter);
+void Presenter_PlayMatch(Presenter *presenter);
+void Presenter_StateIdle(Presenter *presenter);
 void Presenter_PlayIdle(char *c);
 void Presenter_ResetPose(char *c);
-int Presenter_IsAnimDone(void *a);
-int Presenter_IsIdle(StateSlot *c);
-void Presenter_Draw(char *c);
-void Presenter_Update(Presenter *c);
-void Presenter_TrackStylus(char *c);
+int Presenter_IsAnimDone(Presenter *presenter);
+int Presenter_IsIdle(Presenter *presenter);
+void Presenter_Draw(Presenter *presenter);
+void Presenter_Update(Presenter *presenter);
+void Presenter_TrackStylus(Presenter *presenter);
 int Presenter_Load(char *c);
 void FallingPetal_UpdateMatrix(char *c);
 void FallingPetal_Draw(char *c);
-void FallingPetal_Update(char *self);
+void FallingPetal_Update(FallingPetal *petal);
 void FallingPetal_Spawn(FallingPetal *petal, const VecFx32 *pos, const VecFx32 *vel);
-void FallingPetal_SetModel(char *t, int a1);
+void FallingPetal_SetModel(FallingPetal *petal, BMD_File *model);
 void FlowerFace_StateHate(void);
 void FlowerFace_PlayHate(char *p);
 void FlowerFace_StateLike(void);
 void FlowerFace_PlayLike(char *p);
-void FlowerFace_StatePick(int *c);
+void FlowerFace_StatePick(FlowerFace *face);
 void FlowerFace_PlayPetalPulled(char *c);
 void FlowerFace_StateIdle(void);
-void FlowerFace_PlayIdle(char *p);
+void FlowerFace_PlayIdle(FlowerFace *face);
 int FlowerFace_IsIdle(int *c);
-void FlowerFace_Reset(void *a);
-void FlowerFace_Draw(void *self);
+void FlowerFace_Reset(FlowerFace *face);
+void FlowerFace_Draw(FlowerFace *face);
 void FlowerFace_Update(char *c);
 int FlowerFace_Load(char *c);
 
@@ -362,13 +362,13 @@ extern "C" int FlowerFace_Load(char *c) {
     dExtFrameCtrl_c::LoadFile(FLOWERFACE(c)->mPickAnim);
     dExtFrameCtrl_c::LoadFile(FLOWERFACE(c)->mLikeAnim);
     dExtFrameCtrl_c::LoadFile(FLOWERFACE(c)->mHateAnim);
-    FlowerFace_PlayIdle(c);
-    int petalFile = (int)dExtSimpleModel_c::LoadFile(FLOWERFACE(c)->mPetalFile);
+    FlowerFace_PlayIdle((FlowerFace *)c);
+    BMD_File *petalFile = (BMD_File *)dExtSimpleModel_c::LoadFile(FLOWERFACE(c)->mPetalFile);
     int i = 0;
     char *p = (char *)FLOWERFACE(c)->mPetals;
     /* c steps a petal at a time too, so mPetals[0] is petal i. */
     for (; i < 0x16; i++) {
-        FallingPetal_SetModel(p, petalFile);
+        FallingPetal_SetModel((FallingPetal *)p, petalFile);
         FLOWERFACE(c)->mPetals[0].mActive = 0;
         p += sizeof(FallingPetal);
         c += sizeof(FallingPetal);
@@ -385,7 +385,7 @@ void FlowerFace_Update(char *c) {
     /* c steps a petal at a time, so mPetals[0] is petal i. */
     do {
         if (FLOWERFACE(c)->mPetals[0].mActive != 0)
-            FallingPetal_Update(e);
+            FallingPetal_Update((FallingPetal *)e);
         i++;
         c += sizeof(FallingPetal);
         e += sizeof(FallingPetal);
@@ -395,9 +395,9 @@ void FlowerFace_Update(char *c) {
 
 
 
-extern "C" void FlowerFace_Draw(void *self) {
-    char *c = (char *)self;
-    struct Vector3 light;
+extern "C" void FlowerFace_Draw(FlowerFace *face) {
+    char *c = (char *)face;
+    Vector3 light;
     int i;
 
     light.x = 0;
@@ -418,7 +418,7 @@ extern "C" void FlowerFace_Draw(void *self) {
 
     i = 0;
     {
-        char *p = (char *)FLOWERFACE(c)->mPetals;
+        char *p = (char *)face->mPetals;
         /* c steps a petal at a time, so mPetals[0] is petal i. */
         for (; i < 0x16; i++) {
             if (FLOWERFACE(c)->mPetals[0].mActive != 0)
@@ -430,15 +430,15 @@ extern "C" void FlowerFace_Draw(void *self) {
 }
 
 extern "C" {
-void FlowerFace_Reset(void *a) {
+void FlowerFace_Reset(FlowerFace *face) {
     int i = 0;
-    char *p = (char *)a;
+    char *p = (char *)face;
     /* p steps a petal at a time, so mPetals[0] is petal i. */
     for (; i < 22; i++) {
         FLOWERFACE(p)->mPetals[0].mActive = 0;
         p += sizeof(FallingPetal);
     }
-    FlowerFace_PlayIdle((char *)a);
+    FlowerFace_PlayIdle(face);
 }
 }
 
@@ -475,9 +475,9 @@ void Camera_InitFlowerView(MgCamera *camera) {
 }
 
 extern "C" {
-void FlowerFace_PlayIdle(char *p) {
-    FLOWERFACE(p)->mModel.SetAnim((BCA_File *)FLOWERFACE(p)->mWaitAnim.filePtr, 0, 0x800, 0);
-    *(StateSlot *)FLOWERFACE(p)->mState = pmf_FlowerFace_StateIdle;
+void FlowerFace_PlayIdle(FlowerFace *face) {
+    face->mModel.SetAnim((BCA_File *)face->mWaitAnim.filePtr, 0, 0x800, 0);
+    *(StateSlot *)face->mState = pmf_FlowerFace_StateIdle;
 }
 }
 
@@ -540,10 +540,10 @@ void FlowerFace_PlayPetalPulled(char *c) {
 }
 
 extern "C" {
-void FlowerFace_StatePick(int *c) {
-    if (FLOWERFACE(c)->mModel.Finished() == 0)
+void FlowerFace_StatePick(FlowerFace *face) {
+    if (face->mModel.Finished() == 0)
         return;
-    FlowerFace_PlayIdle((char *)c);
+    FlowerFace_PlayIdle(face);
 }
 }
 
@@ -572,9 +572,9 @@ void FlowerFace_StateHate(void) {}
 }
 
 extern "C" {
-void FallingPetal_SetModel(char *t, int a1) {
-    PETAL(t)->mModel.SetFile((BMD_File *)a1, 1, -1);
-    PETAL(t)->mActive = 0;
+void FallingPetal_SetModel(FallingPetal *petal, BMD_File *model) {
+    petal->mModel.SetFile(model, 1, -1);
+    petal->mActive = 0;
 }
 }
 
@@ -611,7 +611,7 @@ void FallingPetal_Spawn(FallingPetal *petal, const VecFx32 *pos, const VecFx32 *
 extern "C" {
 
 
-void FallingPetal_Update(char *self) {
+void FallingPetal_Update(FallingPetal *petal) {
     Vector3 sway;
     Vector3 flow;
     Vector3 drag;
@@ -622,34 +622,34 @@ void FallingPetal_Update(char *self) {
     int wave;
     int dot;
 
-    if (ApproachLinear2(PETAL(self)->mLife, 0, 1) != 0) {
-        PETAL(self)->mActive = 0;
+    if (ApproachLinear2(petal->mLife, 0, 1) != 0) {
+        petal->mActive = 0;
         return;
     }
-    AddVec3(&PETAL(self)->mPos, &PETAL(self)->mVel, &PETAL(self)->mPos);
-    PETAL(self)->mAccel.y = -0x40;
-    AddVec3(&PETAL(self)->mVel, &PETAL(self)->mAccel, &PETAL(self)->mVel);
-    phase = ((PETAL(self)->mPos.y >> 1) << 16) >> 20;
+    AddVec3(&petal->mPos, &petal->mVel, &petal->mPos);
+    petal->mAccel.y = -0x40;
+    AddVec3(&petal->mVel, &petal->mAccel, &petal->mVel);
+    phase = ((petal->mPos.y >> 1) << 16) >> 20;
     wave = FX_SinIdx(phase);
     sway.x = wave;
     sway.y = 0;
     sway.z = wave;
     Vec3_MulScalarInPlace(&sway, 0x400);
-    Vec3_Add(&flow, &PETAL(self)->mVel, &sway);
-    dot = DotVec3(&PETAL(self)->mAxis, &flow);
-    Vec3_MulScalar(&drag, &PETAL(self)->mAxis, dot);
+    Vec3_Add(&flow, &petal->mVel, &sway);
+    dot = DotVec3(&petal->mAxis, &flow);
+    Vec3_MulScalar(&drag, &petal->mAxis, dot);
     Vec3_MulScalarInPlace(&drag, 0x300);
-    SubVec3(&PETAL(self)->mVel, &drag, &PETAL(self)->mVel);
+    SubVec3(&petal->mVel, &drag, &petal->mVel);
     dir.x = flow.x;
     dir.y = flow.y;
     dir.z = flow.z;
     if (NormalizeVec3IfNonZero(&dir) == 0)
         return;
     turn = data_02092768;
-    Quaternion_FromVector3(&target, &PETAL(self)->mAxis, &dir);
+    Quaternion_FromVector3(&target, &petal->mAxis, &dir);
     Quaternion_SLerp(&turn, &target, 0x200, &turn);
     Quaternion_Normalize(&turn);
-    Quaternion_Multiply(PETAL(self)->mRot, &turn, PETAL(self)->mRot);
+    Quaternion_Multiply(petal->mRot, &turn, petal->mRot);
 }
 }
 
@@ -665,7 +665,7 @@ extern "C" void FallingPetal_Draw(char *c) {
 
 extern "C" {
 void FallingPetal_UpdateMatrix(char *c) {
-    struct Matrix4x3 rot;
+    Matrix4x3 rot;
     Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(PETAL(c)->mRot), &rot);
     MulVec3Mat3x3(&sPetalUpAxis, &rot, &PETAL(c)->mAxis);
     Matrix4x3_FromTranslation(&data_020a0e68, PETAL(c)->mPos.x, PETAL(c)->mPos.y, PETAL(c)->mPos.z);
@@ -803,56 +803,56 @@ extern "C" {
         } \
         { \
             int lift = FX_MUL(fracY, 0x20) + FX_MUL(below, 0x500); \
-            int sway0 = PRESENTER(c)->mSway[0]; \
-            int sway2 = PRESENTER(c)->mSway[2]; \
+            int sway0 = c->mSway[0]; \
+            int sway2 = c->mSway[2]; \
             tiltY -= sway2; \
-            int sway1 = PRESENTER(c)->mSway[1]; \
-            int sway3 = PRESENTER(c)->mSway[3]; \
-            PRESENTER(c)->mSway[0] += (tiltX - sway0) >> 2; \
-            PRESENTER(c)->mSway[2] += tiltY >> 2; \
+            int sway1 = c->mSway[1]; \
+            int sway3 = c->mSway[3]; \
+            c->mSway[0] += (tiltX - sway0) >> 2; \
+            c->mSway[2] += tiltY >> 2; \
             sway1 = lift - sway1; \
-            PRESENTER(c)->mSway[1] += sway1 >> 2; \
+            c->mSway[1] += sway1 >> 2; \
             sway3 = lift - sway3; \
-            PRESENTER(c)->mSway[3] += sway3 >> 2; \
+            c->mSway[3] += sway3 >> 2; \
         } \
     }
 
-void Presenter_TrackStylus(char *c) {
-    if (PRESENTER(c)->mTouchLocked != 0) {
-        int x = PRESENTER(c)->mTouchX;
-        int y = PRESENTER(c)->mTouchY;
-        PRESENTER_TRACK(c, x, y);
+void Presenter_TrackStylus(Presenter *presenter) {
+    if (presenter->mTouchLocked != 0) {
+        int x = presenter->mTouchX;
+        int y = presenter->mTouchY;
+        PRESENTER_TRACK(presenter, x, y);
         return;
     }
-    if (Presenter_IsIdle((StateSlot *)c) != 0) {
+    if (Presenter_IsIdle(presenter) != 0) {
         int i = gActivePlayerSlot;
         if (gTouchHeld[i * 4] != 0) {
             int x = gTouchX[i * 4];
             int y = gTouchY[i * 4];
-            PRESENTER_TRACK(c, x, y);
+            PRESENTER_TRACK(presenter, x, y);
             return;
         }
     }
-    PRESENTER(c)->mSway[0] = FX_MUL(PRESENTER(c)->mSway[0], 0xE00);
-    PRESENTER(c)->mSway[1] = FX_MUL(PRESENTER(c)->mSway[1], 0xE00);
-    PRESENTER(c)->mSway[2] = FX_MUL(PRESENTER(c)->mSway[2], 0xE00);
-    PRESENTER(c)->mSway[3] = FX_MUL(PRESENTER(c)->mSway[3], 0xE00);
+    presenter->mSway[0] = FX_MUL(presenter->mSway[0], 0xE00);
+    presenter->mSway[1] = FX_MUL(presenter->mSway[1], 0xE00);
+    presenter->mSway[2] = FX_MUL(presenter->mSway[2], 0xE00);
+    presenter->mSway[3] = FX_MUL(presenter->mSway[3], 0xE00);
 }
 }
 
 extern "C" {
-void Presenter_Update(Presenter *c) {
-    Presenter_TrackStylus((char *)c);
-    if (*(PresenterState *)c)
-        (c->*(*(PresenterState *)c))();
-    PRESENTER(c)->mTexSeq.Advance();
-    PRESENTER(c)->mTexAnim.Advance();
-    PRESENTER(c)->mFace.Advance();
-    Presenter_UpdateMatrix((char *)c);
+void Presenter_Update(Presenter *presenter) {
+    Presenter_TrackStylus(presenter);
+    if (*(PresenterState *)presenter)
+        (presenter->*(*(PresenterState *)presenter))();
+    presenter->mTexSeq.Advance();
+    presenter->mTexAnim.Advance();
+    presenter->mFace.Advance();
+    Presenter_UpdateMatrix((char *)presenter);
 }
 }
 
-extern "C" void Presenter_Draw(char *c) {
+extern "C" void Presenter_Draw(Presenter *presenter) {
     int keyLight[3];
     int fillLight[3];
     int *materials;
@@ -864,7 +864,7 @@ extern "C" void Presenter_Draw(char *c) {
     fillLight[0] = 0;
     fillLight[1] = 0;
     fillLight[2] = 0xfffff008;
-    func_02016a04(&PRESENTER(c)->mFace, 0x3d6d);
+    func_02016a04(&presenter->mFace, 0x3d6d);
     func_0203cd80(keyLight, -0x2000);
     func_0203ccd4(keyLight, 0x2000);
     func_0203cd80(fillLight, 0x4200);
@@ -874,7 +874,7 @@ extern "C" void Presenter_Draw(char *c) {
     REG_LIGHT_VECTOR = (((short)keyLight[0] >> 3) & 0x3ff) |
                        ((((short)keyLight[1] >> 3) & 0x3ff) << 10) |
                        ((((short)keyLight[2] >> 3) & 0x3ff) << 20);
-    components = (char *)&PRESENTER(c)->mFace.data;
+    components = (char *)&presenter->mFace.data;
     REG_LIGHT_COLOR = 0x4000294b;
     REG_LIGHT_VECTOR = (((short)fillLight[0] >> 3) & 0x3ff) |
                        ((((short)fillLight[1] >> 3) & 0x3ff) << 10) |
@@ -884,22 +884,22 @@ extern "C" void Presenter_Draw(char *c) {
        0x104..0x138 are +0x14/+0x18 of materials 5 and 6, which BMD_Material
        leaves in its unnamed pad_0c, so they stay offsets. */
     materials = *(int **)(components + 4);
-    PRESENTER(c)->mTexSeq.Update(*(ModelComponents *)components);
-    PRESENTER(c)->mTexAnim.Update(*(ModelComponents *)components);
-    *(int *)((int)materials + 0x104) -= PRESENTER(c)->mSway[2];
-    *(int *)((int)materials + 0x108) += PRESENTER(c)->mSway[3];
-    *(int *)((int)materials + 0x134) += PRESENTER(c)->mSway[0];
-    *(int *)((int)materials + 0x138) += PRESENTER(c)->mSway[1];
-    PRESENTER(c)->mFace.Render(0);
-    PRESENTER(c)->mBack.Render(&sPresenterScale);
+    presenter->mTexSeq.Update(*(ModelComponents *)components);
+    presenter->mTexAnim.Update(*(ModelComponents *)components);
+    *(int *)((int)materials + 0x104) -= presenter->mSway[2];
+    *(int *)((int)materials + 0x108) += presenter->mSway[3];
+    *(int *)((int)materials + 0x134) += presenter->mSway[0];
+    *(int *)((int)materials + 0x138) += presenter->mSway[1];
+    presenter->mFace.Render(0);
+    presenter->mBack.Render(&sPresenterScale);
 }
 
 extern "C" {
-int Presenter_IsIdle(StateSlot *c) {
+int Presenter_IsIdle(Presenter *presenter) {
     int differs = 1;
     StateSlot *idle = &pmf_Presenter_StateIdle;
-    if (c->w[0] == idle->w[0]) {
-        if (c->w[1] != idle->w[1] && c->w[0] != 0)
+    if (presenter->mState[0] == idle->w[0]) {
+        if (presenter->mState[1] != idle->w[1] && presenter->mState[0] != 0)
             ;
         else
             differs = 0;
@@ -911,8 +911,8 @@ int Presenter_IsIdle(StateSlot *c) {
 extern "C" {
 /* Presenter_IsAnimDone @ 0x20c2984 (ov006) -- veneer: add r0,r0,#0x58; b dExtFrameCtrl_c::Finished(). */
 
-int Presenter_IsAnimDone(void *a) {
-    return PRESENTER(a)->mFace.Finished();
+int Presenter_IsAnimDone(Presenter *presenter) {
+    return presenter->mFace.Finished();
 }
 }
 
@@ -960,42 +960,42 @@ extern "C" void Presenter_PlayIdle(char *c) {
 }
 
 extern "C" {
-void Presenter_StateIdle(char *c) {
-    if (!PRESENTER(c)->mFace.Finished())
+void Presenter_StateIdle(Presenter *presenter) {
+    if (!presenter->mFace.Finished())
         return;
-    PRESENTER(c)->mFace.SetAnim(*(BCA_File *)PRESENTER(c)->mWaitAnim.filePtr, 0, 0, 0x800, 0);
-    PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mWaitTexSeq.filePtr, 0, 0x800, 0);
-    PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterIdleTexAnim, 0, 0x800, 0);
+    presenter->mFace.SetAnim(*(BCA_File *)presenter->mWaitAnim.filePtr, 0, 0, 0x800, 0);
+    presenter->mTexSeq.SetFile(*(BTP_File *)presenter->mWaitTexSeq.filePtr, 0, 0x800, 0);
+    presenter->mTexAnim.SetFile(*(BTA_File *)sPresenterIdleTexAnim, 0, 0x800, 0);
 }
 }
 
 extern "C" {
-void Presenter_PlayMatch(void *c) {
+void Presenter_PlayMatch(Presenter *presenter) {
     unsigned long long next;
     long long *state;
-    if (PRESENTER(c)->mQuiet == 0) {
+    if (presenter->mQuiet == 0) {
         func_02012174(0, 0x1c);
     }
-    PRESENTER(c)->mFace.SetAnim(*(BCA_File *)PRESENTER(c)->mWinAnim.filePtr, 4, 0x40000000, 0x800,
+    presenter->mFace.SetAnim(*(BCA_File *)presenter->mWinAnim.filePtr, 4, 0x40000000, 0x800,
                                 0);
     /* The state pointer and the unsigned copy are load-bearing: storing
-       pmf_Presenter_StateWin straight through c costs the function its bytes
+       pmf_Presenter_StateWin straight through the record costs the function its bytes
        (measured 2026-11-08). */
-    state = (long long *)c;
-    PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mWinTexSeq.filePtr, 0x40000000, 0x800,
+    state = (long long *)presenter;
+    presenter->mTexSeq.SetFile(*(BTP_File *)presenter->mWinTexSeq.filePtr, 0x40000000, 0x800,
                                   0);
-    PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterMatchTexAnim, 0x40000000, 0x800, 0);
+    presenter->mTexAnim.SetFile(*(BTA_File *)sPresenterMatchTexAnim, 0x40000000, 0x800, 0);
     next = pmf_Presenter_StateWin;
     *state = next;
 }
 }
 
 extern "C" {
-void Presenter_StateWin(char *t) {
-    int r = Presenter_IsAnimDone(t);
+void Presenter_StateWin(Presenter *presenter) {
+    int r = Presenter_IsAnimDone(presenter);
     if (r == 0)
         return;
-    Presenter_PlayIdle(t);
+    Presenter_PlayIdle((char *)presenter);
 }
 }
 
@@ -1013,41 +1013,41 @@ void Presenter_PlayMiss(char *c) {
 }
 
 extern "C" {
-void Presenter_StateMistake(char *t) {
-    int r = Presenter_IsAnimDone(t);
+void Presenter_StateMistake(Presenter *presenter) {
+    int r = Presenter_IsAnimDone(presenter);
     if (r == 0)
         return;
-    Presenter_PlayIdle(t);
+    Presenter_PlayIdle((char *)presenter);
 }
 }
 
 extern "C" {
 /* volatile is load-bearing: a plain long long load costs Presenter_PlayCheer
    its bytes (measured 2026-11-08). */
-void Presenter_PlayCheer(void *c) {
-    if ((PRESENTER(c)->mQuiet) == 0) {
+void Presenter_PlayCheer(Presenter *presenter) {
+    if ((presenter->mQuiet) == 0) {
         func_02012174(0, 3);
     }
-    PRESENTER(c)->mFace.SetAnim(*(BCA_File *)PRESENTER(c)->mSurprisedAnim.filePtr, 8, 0x40000000,
+    presenter->mFace.SetAnim(*(BCA_File *)presenter->mSurprisedAnim.filePtr, 8, 0x40000000,
                                 0x800, 0);
-    PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mSurprisedTexSeq.filePtr, 0x40000000,
+    presenter->mTexSeq.SetFile(*(BTP_File *)presenter->mSurprisedTexSeq.filePtr, 0x40000000,
                                   0x800, 0);
-    PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
-    *((long long *)c) = pmf_Presenter_StateSurprisedThenSmile;
+    presenter->mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
+    *((long long *)presenter) = pmf_Presenter_StateSurprisedThenSmile;
 }
 }
 
 extern "C" {
-void Presenter_StateSurprisedThenSmile(void *c) {
-    if (!Presenter_IsAnimDone(c))
+void Presenter_StateSurprisedThenSmile(Presenter *presenter) {
+    if (!Presenter_IsAnimDone(presenter))
         return;
-    if (PRESENTER(c)->mFace.file != (BCA_File *)PRESENTER(c)->mSurprisedAnim.filePtr)
+    if (presenter->mFace.file != (BCA_File *)presenter->mSurprisedAnim.filePtr)
         return;
-    if (PRESENTER(c)->mQuiet == 0)
+    if (presenter->mQuiet == 0)
         Sound::PlayBank2_2D(0x1d1);
-    PRESENTER(c)->mFace.SetAnim(*(BCA_File *)PRESENTER(c)->mSmileAnim.filePtr, 8, 0, 0x800, 0);
-    PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mSmileTexSeq.filePtr, 0, 0x800, 0);
-    PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterSmileTexAnim, 0, 0x800, 0);
+    presenter->mFace.SetAnim(*(BCA_File *)presenter->mSmileAnim.filePtr, 8, 0, 0x800, 0);
+    presenter->mTexSeq.SetFile(*(BTP_File *)presenter->mSmileTexSeq.filePtr, 0, 0x800, 0);
+    presenter->mTexAnim.SetFile(*(BTA_File *)sPresenterSmileTexAnim, 0, 0x800, 0);
 }
 }
 
@@ -1065,40 +1065,40 @@ void Presenter_PlayLose(char *c) {
 }
 
 extern "C" {
-void Presenter_StateLoseStart(void *c) {
-    if (!Presenter_IsAnimDone(c))
+void Presenter_StateLoseStart(Presenter *presenter) {
+    if (!Presenter_IsAnimDone(presenter))
         return;
-    if (PRESENTER(c)->mFace.file != (BCA_File *)PRESENTER(c)->mLoseStartAnim.filePtr)
+    if (presenter->mFace.file != (BCA_File *)presenter->mLoseStartAnim.filePtr)
         return;
-    PRESENTER(c)->mFace.SetAnim(*(BCA_File *)PRESENTER(c)->mLoseAnim.filePtr, 0, 0, 0x800, 0);
-    PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mLoseTexSeq.filePtr, 0, 0x800, 0);
-    PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterLoseLoopTexAnim, 0, 0x800, 0);
+    presenter->mFace.SetAnim(*(BCA_File *)presenter->mLoseAnim.filePtr, 0, 0, 0x800, 0);
+    presenter->mTexSeq.SetFile(*(BTP_File *)presenter->mLoseTexSeq.filePtr, 0, 0x800, 0);
+    presenter->mTexAnim.SetFile(*(BTA_File *)sPresenterLoseLoopTexAnim, 0, 0x800, 0);
 }
 }
 
 extern "C" {
-void Presenter_PlayCheerLoop(void *c) {
-    long long new_var;
-    if ((PRESENTER(c)->mQuiet) == 0) {
+void Presenter_PlayCheerLoop(Presenter *presenter) {
+    unsigned long long state;
+    if ((presenter->mQuiet) == 0) {
         func_02012174(0, 3);
     }
-    PRESENTER(c)->mFace.SetAnim(*(BCA_File *)PRESENTER(c)->mSurprisedAnim.filePtr, 8, 0x40000000,
+    presenter->mFace.SetAnim(*(BCA_File *)presenter->mSurprisedAnim.filePtr, 8, 0x40000000,
                                 0x800, 0);
-    PRESENTER(c)->mTexSeq.SetFile(*(BTP_File *)PRESENTER(c)->mSurprisedTexSeq.filePtr, 0x40000000,
+    presenter->mTexSeq.SetFile(*(BTP_File *)presenter->mSurprisedTexSeq.filePtr, 0x40000000,
                                   0x800, 0);
-    PRESENTER(c)->mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
+    presenter->mTexAnim.SetFile(*(BTA_File *)sPresenterCheerTexAnim, 0x40000000, 0x800, 0);
     /* The u64 identity mask is load-bearing (measured 2026-11-06); removing it
        costs the function its bytes. */
-    *((long long *)c) = (new_var = pmf_Presenter_StateSurprisedThenIdle & 0xFFFFFFFFFFFFFFFF);
+    *((long long *)presenter) = (state = pmf_Presenter_StateSurprisedThenIdle & 0xFFFFFFFFFFFFFFFF);
 }
 }
 
 extern "C" {
-void Presenter_StateSurprisedThenIdle(char *t) {
-    int r = Presenter_IsAnimDone(t);
+void Presenter_StateSurprisedThenIdle(Presenter *presenter) {
+    int r = Presenter_IsAnimDone(presenter);
     if (r == 0)
         return;
-    Presenter_PlayIdle(t);
+    Presenter_PlayIdle((char *)presenter);
 }
 }
 
@@ -1163,8 +1163,8 @@ void Mascot_Load(char *c) {
 extern "C" {
 /* Mascot_Update @ 0x20c2144 (ov006) -- veneer: add r0,r0,#0x10; b dExtBlendAnmModel_c::Advance(). */
 
-void Mascot_Update(void *a) {
-    MASCOT(a)->mModel.Advance();
+void Mascot_Update(Mascot *mascot) {
+    mascot->mModel.Advance();
 }
 }
 
@@ -1193,23 +1193,23 @@ extern "C" void Mascot_Draw(Mascot *c) {
         UpdateAngle(c->mHeadYaw, 0x800, 8, 0x200);
         UpdateAngle(c->mRot[1], -0x1400, 8, 0x200);
     }
-    Mascot_UpdateMatrix((char *)c);
+    Mascot_UpdateMatrix(c);
     c->mModel.dExtSimpleModel_c::Render(0);
 }
 
 
 
-extern "C" void Mascot_UpdateMatrix(char *c) {
-    Matrix4x3_FromTranslation(&data_020a0e68, MASCOT(c)->mPos.x, MASCOT(c)->mPos.y,
-                              MASCOT(c)->mPos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, MASCOT(c)->mRot[1]);
-    MASCOT(c)->mModel.mat4x3 = data_020a0e68;
-    MASCOT(c)->mModel.UpdateVerts();
+extern "C" void Mascot_UpdateMatrix(Mascot *mascot) {
+    Matrix4x3_FromTranslation(&data_020a0e68, mascot->mPos.x, mascot->mPos.y,
+                              mascot->mPos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mascot->mRot[1]);
+    mascot->mModel.mat4x3 = data_020a0e68;
+    mascot->mModel.UpdateVerts();
     /* bone 6, the head */
-    data_020a0e68 = MASCOT(c)->mModel.data.transforms[6];
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, MASCOT(c)->mHeadYaw);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, MASCOT(c)->mHeadPitch);
-    MASCOT(c)->mModel.data.transforms[6] = data_020a0e68;
+    data_020a0e68 = mascot->mModel.data.transforms[6];
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mascot->mHeadYaw);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mascot->mHeadPitch);
+    mascot->mModel.data.transforms[6] = data_020a0e68;
 }
 
 extern "C" {
@@ -1296,9 +1296,9 @@ int Dealer_Load(char *c) {
     BMD_Material *materials;
 
     dExtShadowModel_c::CleanAll();
-    DEALER(c)->mModelData = (int)dExtSimpleModel_c::LoadFile(DEALER(c)->mModelFile);
-    DEALER(c)->mTableData = (int)dExtSimpleModel_c::LoadFile(DEALER(c)->mTableFile);
-    file = (void *)DEALER(c)->mModelData;
+    DEALER(c)->mModelData = dExtSimpleModel_c::LoadFile(DEALER(c)->mModelFile);
+    DEALER(c)->mTableData = dExtSimpleModel_c::LoadFile(DEALER(c)->mTableFile);
+    file = DEALER(c)->mModelData;
     if (file == 0 || DEALER(c)->mModel.SetFile((BMD_File *)file, 1, -1) == 0) {
         return 0;
     }
@@ -1326,7 +1326,7 @@ int Dealer_Load(char *c) {
     DEALER(c)->mDealCounter = 0;
     DEALER(c)->mModel.HideMaterial(1, 0);
     Dealer_PlayIdle(c);
-    file = (void *)DEALER(c)->mTableData;
+    file = DEALER(c)->mTableData;
     if (file == 0 || DEALER(c)->mTable.SetFile((BMD_File *)file, 1, -1) == 0) {
         return 0;
     }
@@ -1362,7 +1362,7 @@ extern "C" void Dealer_Update(Dealer *dealer) {
 
 extern "C" void Dealer_Draw(void *self) {
     char *c = (char *)self;
-    struct Vector3 keyLight, spinLight;
+    Vector3 keyLight, spinLight;
     short angle;
     unsigned char lamp[3];
     int i;
@@ -1448,14 +1448,14 @@ int Dealer_IsIdle(Dealer *dealer) {
 }
 
 extern "C" {
-int Dealer_IsIdleAtRest(char *c) {
+int Dealer_IsIdleAtRest(Dealer *dealer) {
     int *idle = pmf_Dealer_StateIdle_3;
-    int fn = DEALER(c)->mState[0];
+    int fn = dealer->mState[0];
     int atRest = 0;
     int differs = 1;
-    if (fn == idle[0] && (DEALER(c)->mState[1] == idle[1] || fn == 0))
+    if (fn == idle[0] && (dealer->mState[1] == idle[1] || fn == 0))
         differs = 0;
-    if (differs == 0 && DEALER(c)->mModel.file == (BCA_File *)DEALER(c)->mWaitAnim.filePtr)
+    if (differs == 0 && dealer->mModel.file == (BCA_File *)dealer->mWaitAnim.filePtr)
         atRest = 1;
     return atRest;
 }
@@ -1463,7 +1463,7 @@ int Dealer_IsIdleAtRest(char *c) {
 
 extern "C" {
 
-void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter) {
+void Dealer_StartShuffle(Dealer *dealer, int, short count, s16 *counter) {
     if (dealer->mShuffleRound == 0) {
         dealer->mShuffleLeft = 4;
         dealer->mDealDoneAt = 3;
@@ -1483,30 +1483,30 @@ void Dealer_StartShuffle(Dealer *dealer, int unused, short count, s16 *counter) 
 }
 
 
-extern "C" void Dealer_StateShuffle(char *c) {
-    if (DEALER(c)->mShuffleSoundPlayed == 0) {
+extern "C" void Dealer_StateShuffle(Dealer *dealer) {
+    if (dealer->mShuffleSoundPlayed == 0) {
         Sound::PlayBank2_2D(0x139);
-        DEALER(c)->mShuffleSoundPlayed = 1;
+        dealer->mShuffleSoundPlayed = 1;
     }
 
-    if (DEALER(c)->mModel.file == (BCA_File *)DEALER(c)->mShuffleStartAnim.filePtr) {
-        if (DEALER(c)->mModel.Finished())
-            DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mShuffleAnim.filePtr, 0, 0, 0x800, 0);
+    if (dealer->mModel.file == (BCA_File *)dealer->mShuffleStartAnim.filePtr) {
+        if (dealer->mModel.Finished())
+            dealer->mModel.SetAnim(*(BCA_File *)dealer->mShuffleAnim.filePtr, 0, 0, 0x800, 0);
         return;
     }
 
-    if (DEALER(c)->mModel.WillHitFrame(0)) {
-        if (DEALER(c)->mShuffleLeft-- <= 0) {
-            Dealer_StartDeal(c, DEALER(c)->mDealLeft, DEALER(c)->mDealCounter);
+    if (dealer->mModel.WillHitFrame(0)) {
+        if (dealer->mShuffleLeft-- <= 0) {
+            Dealer_StartDeal(dealer, dealer->mDealLeft, dealer->mDealCounter);
             return;
         }
     }
 
-    if (!DEALER(c)->mModel.WillHitFrame(4))
+    if (!dealer->mModel.WillHitFrame(4))
         return;
 
     Sound::PlayBank2_2D(0x141);
-    if (DEALER(c)->mShuffleLeft == DEALER(c)->mDealDoneAt) {
+    if (dealer->mShuffleLeft == dealer->mDealDoneAt) {
         dScMgBase_c *scene = gMgScene;
         if (scene)
             scene->OnDealDone();
@@ -1515,80 +1515,80 @@ extern "C" void Dealer_StateShuffle(char *c) {
 
 
 
-extern "C" void Dealer_StartDeal(char *c, short count, s16 *counter) {
-    DEALER(c)->mDealLeft = count;
-    DEALER(c)->mDealCounter = counter;
-    if (Dealer_IsIdle(DEALER(c)) &&
-        DEALER(c)->mModel.file != (BCA_File *)DEALER(c)->mDealWaitAnim.filePtr) {
-        DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mShuffleStartAnim.filePtr, 0, 0x40000000,
+extern "C" void Dealer_StartDeal(Dealer *dealer, short count, s16 *counter) {
+    dealer->mDealLeft = count;
+    dealer->mDealCounter = counter;
+    if (Dealer_IsIdle(dealer) &&
+        dealer->mModel.file != (BCA_File *)dealer->mDealWaitAnim.filePtr) {
+        dealer->mModel.SetAnim(*(BCA_File *)dealer->mShuffleStartAnim.filePtr, 0, 0x40000000,
                                   0x800, 0);
     } else {
-        DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mDealStartAnim.filePtr, 0, 0x40000000,
+        dealer->mModel.SetAnim(*(BCA_File *)dealer->mDealStartAnim.filePtr, 0, 0x40000000,
                                   0x800, 0);
     }
-    *(StateSlot *)c = pmf_Dealer_StateDeal;
+    *(StateSlot *)dealer = pmf_Dealer_StateDeal;
 }
 
 extern "C" {
 
-void Dealer_StateDeal(char *c) {
-    void *anim = DEALER(c)->mModel.file;
+void Dealer_StateDeal(Dealer *dealer) {
+    void *anim = dealer->mModel.file;
 
-    if (anim == (void *)DEALER(c)->mDealStartAnim.filePtr) {
-        if (DEALER(c)->mModel.Finished()) {
-            DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mDealAnim.filePtr, 0, 0, 0x800, 0);
+    if (anim == (void *)dealer->mDealStartAnim.filePtr) {
+        if (dealer->mModel.Finished()) {
+            dealer->mModel.SetAnim(*(BCA_File *)dealer->mDealAnim.filePtr, 0, 0, 0x800, 0);
         }
     }
 
-    anim = DEALER(c)->mModel.file;
-    if (anim == (void *)DEALER(c)->mDealEndAnim.filePtr ||
-        anim == (void *)DEALER(c)->mDealEnd2Anim.filePtr) {
-        if (DEALER(c)->mModel.Finished()) {
-            DEALER(c)->mDealCounter = 0;
-            Dealer_PlayIdle(c);
+    anim = dealer->mModel.file;
+    if (anim == (void *)dealer->mDealEndAnim.filePtr ||
+        anim == (void *)dealer->mDealEnd2Anim.filePtr) {
+        if (dealer->mModel.Finished()) {
+            dealer->mDealCounter = 0;
+            Dealer_PlayIdle((char *)dealer);
         }
         return;
     }
 
-    if (anim == (void *)DEALER(c)->mDealAnim.filePtr) {
-        if (DEALER(c)->mModel.WillHitFrame(0)) {
-            if (DEALER(c)->mDealLeft-- <= 0) {
-                short state = DEALER(c)->mHand;
+    if (anim == (void *)dealer->mDealAnim.filePtr) {
+        if (dealer->mModel.WillHitFrame(0)) {
+            if (dealer->mDealLeft-- <= 0) {
+                short state = dealer->mHand;
                 if (state == 0) {
-                    DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mDealEndAnim.filePtr, 0,
+                    dealer->mModel.SetAnim(*(BCA_File *)dealer->mDealEndAnim.filePtr, 0,
                                               0x40000000, 0x800, 0);
-                    if (DEALER(c)->mDealSoundPlayed != 0)
+                    if (dealer->mDealSoundPlayed != 0)
                         return;
                     Sound::PlayBank2_2D(0x13a);
-                    DEALER(c)->mDealSoundPlayed = 1;
+                    dealer->mDealSoundPlayed = 1;
                     return;
                 } else if (state == 2) {
-                    DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mDealEnd2Anim.filePtr, 0,
+                    dealer->mModel.SetAnim(*(BCA_File *)dealer->mDealEnd2Anim.filePtr, 0,
                                               0x40000000, 0x800, 0);
-                    if (DEALER(c)->mDealSoundPlayed != 0)
+                    if (dealer->mDealSoundPlayed != 0)
                         return;
                     Sound::PlayBank2_2D(0x13a);
-                    DEALER(c)->mDealSoundPlayed = 1;
+                    dealer->mDealSoundPlayed = 1;
                     return;
                 } else {
-                    Dealer_PlayIdle(c);
+                    Dealer_PlayIdle((char *)dealer);
                     return;
                 }
             }
         }
 
-        if (DEALER(c)->mDealCounter == 0)
+        if (dealer->mDealCounter == 0)
             return;
-        if (!DEALER(c)->mModel.WillHitFrame(5))
+        if (!dealer->mModel.WillHitFrame(5))
             return;
         Sound::PlayBank2_2D(0x142);
-        *DEALER(c)->mDealCounter += 1;
+        *dealer->mDealCounter += 1;
         return;
     }
 
-    if (anim == (void *)DEALER(c)->mShuffleStartAnim.filePtr) {
-        if (DEALER(c)->mModel.Finished()) {
-            DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mDealStartAnim.filePtr, 0, 0x40000000,
+    if (anim == (void *)dealer->mShuffleStartAnim.filePtr) {
+        if (dealer->mModel.Finished()) {
+            dealer->mModel.SetAnim(*(BCA_File *)dealer->mDealStartAnim.filePtr, 0, 0x40000000,
                                       0x800, 0);
         }
     }
@@ -1597,81 +1597,79 @@ void Dealer_StateDeal(char *c) {
 
 extern "C" {
 
-void Dealer_StartReveal(int *t, int count, s16 *counter) {
-    DEALER(t)->mDealLeft = count;
-    DEALER(t)->mDealCounter = counter;
-    DEALER(t)->mModel.SetAnim(*(BCA_File *)DEALER(t)->mDealAnim.filePtr, 8, 0, 0x800, 0);
-    *(StateSlot *)t = pmf_Dealer_StateReveal_2;
+void Dealer_StartReveal(Dealer *dealer, int count, s16 *counter) {
+    dealer->mDealLeft = count;
+    dealer->mDealCounter = counter;
+    dealer->mModel.SetAnim(*(BCA_File *)dealer->mDealAnim.filePtr, 8, 0, 0x800, 0);
+    *(StateSlot *)dealer = pmf_Dealer_StateReveal_2;
 }
 }
 
 
-extern "C" void Dealer_StateReveal(void *cc) {
-    char *c = (char *)cc;
-
-    if (DEALER(c)->mModel.file != (BCA_File *)DEALER(c)->mDealAnim.filePtr)
+extern "C" void Dealer_StateReveal(Dealer *dealer) {
+    if (dealer->mModel.file != (BCA_File *)dealer->mDealAnim.filePtr)
         goto other;
 
-    if (DEALER(c)->mModel.WillHitFrame(0)) {
-        if (DEALER(c)->mDealLeft-- <= 0) {
+    if (dealer->mModel.WillHitFrame(0)) {
+        if (dealer->mDealLeft-- <= 0) {
             int hand;
-            DEALER(c)->mDealCounter = 0;
-            hand = DEALER(c)->mHand;
+            dealer->mDealCounter = 0;
+            hand = dealer->mHand;
             if (hand == 0) {
-                DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mDealEndAnim.filePtr, 0,
-                                          0x40000000, 0x800, 0);
-                if (DEALER(c)->mDealSoundPlayed != 0)
+                dealer->mModel.SetAnim(*(BCA_File *)dealer->mDealEndAnim.filePtr, 0, 0x40000000,
+                                       0x800, 0);
+                if (dealer->mDealSoundPlayed != 0)
                     return;
                 Sound::PlayBank2_2D(0x13a);
-                DEALER(c)->mDealSoundPlayed = 1;
+                dealer->mDealSoundPlayed = 1;
                 return;
             } else if (hand == 2) {
-                DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mDealEnd2Anim.filePtr, 0,
-                                          0x40000000, 0x800, 0);
-                if (DEALER(c)->mDealSoundPlayed != 0)
+                dealer->mModel.SetAnim(*(BCA_File *)dealer->mDealEnd2Anim.filePtr, 0, 0x40000000,
+                                       0x800, 0);
+                if (dealer->mDealSoundPlayed != 0)
                     return;
                 Sound::PlayBank2_2D(0x13a);
-                DEALER(c)->mDealSoundPlayed = 1;
+                dealer->mDealSoundPlayed = 1;
                 return;
             } else {
-                Dealer_PlayIdle(c);
+                Dealer_PlayIdle((char *)dealer);
                 return;
             }
         }
     }
 
-    if (DEALER(c)->mDealCounter == 0)
+    if (dealer->mDealCounter == 0)
         return;
-    if (!DEALER(c)->mModel.WillHitFrame(5))
+    if (!dealer->mModel.WillHitFrame(5))
         return;
     Sound::PlayBank2_2D(0x142);
-    *DEALER(c)->mDealCounter += 1;
+    *dealer->mDealCounter += 1;
     return;
 
 other:
-    if (DEALER(c)->mModel.file == (BCA_File *)DEALER(c)->mDealEndAnim.filePtr ||
-        DEALER(c)->mModel.file == (BCA_File *)DEALER(c)->mDealEnd2Anim.filePtr) {
-        if (DEALER(c)->mModel.Finished())
-            Dealer_PlayIdle(c);
+    if (dealer->mModel.file == (BCA_File *)dealer->mDealEndAnim.filePtr ||
+        dealer->mModel.file == (BCA_File *)dealer->mDealEnd2Anim.filePtr) {
+        if (dealer->mModel.Finished())
+            Dealer_PlayIdle((char *)dealer);
     }
 }
 
 extern "C" {
 
-int Dealer_IsBusy(int *c) {
+int Dealer_IsBusy(Dealer *dealer) {
     int *pmf = pmf_Dealer_StateDeal_2;
     int busy = 1;
     int notDealing = busy;
-    int fn = *c;
-    if (fn == *pmf) {
-        if (c[1] == pmf[1] || fn == 0)
+    int fn = dealer->mState[0];
+    if (fn == pmf[0]) {
+        if (dealer->mState[1] == pmf[1] || fn == 0)
             notDealing = 0;
     }
     if (notDealing != 0) {
         int notRevealing = 1;
         pmf = pmf_Dealer_StateReveal;
-        if (fn == *pmf) {
-            if (c[1] == pmf[1] || fn == 0)
+        if (fn == pmf[0]) {
+            if (dealer->mState[1] == pmf[1] || fn == 0)
                 notRevealing = 0;
         }
         if (notRevealing)
@@ -1684,8 +1682,8 @@ int Dealer_IsBusy(int *c) {
 extern "C" {
 /* Dealer_IsAnimDone @ 0x20c0efc (ov006) -- veneer: add r0,r0,#0x6c; b dExtFrameCtrl_c::Finished(). */
 
-int Dealer_IsAnimDone(void *a) {
-    return DEALER(a)->mModel.Finished();
+int Dealer_IsAnimDone(Dealer *dealer) {
+    return dealer->mModel.Finished();
 }
 }
 
@@ -1700,19 +1698,19 @@ void Dealer_StartSwap(int *t) {
 }
 
 
-extern "C" void Dealer_StateSwap(char *c) {
-    if (DEALER(c)->mShuffleSoundPlayed == 0) {
+extern "C" void Dealer_StateSwap(Dealer *dealer) {
+    if (dealer->mShuffleSoundPlayed == 0) {
         Sound::PlayBank2_2D(0x139);
-        DEALER(c)->mShuffleSoundPlayed = 1;
+        dealer->mShuffleSoundPlayed = 1;
     }
     /* 0x6c is the dExtFrameCtrl_c inside mModel (its +0x50). */
-    if (DEALER(c)->mModel.file == (BCA_File *)DEALER(c)->mThrowAnim.filePtr &&
-        DEALER(c)->mModel.Finished()) {
-        DEALER(c)->mModel.HideMaterial(1, 0);
-        DEALER(c)->mModel.ShowMaterial(2, 0);
+    if (dealer->mModel.file == (BCA_File *)dealer->mThrowAnim.filePtr &&
+        dealer->mModel.Finished()) {
+        dealer->mModel.HideMaterial(1, 0);
+        dealer->mModel.ShowMaterial(2, 0);
         return;
     }
-    if (DEALER(c)->mModel.WillHitFrame(0x14))
+    if (dealer->mModel.WillHitFrame(0x14))
         Sound::PlayBank2_2D(0x156);
 }
 
@@ -1732,55 +1730,55 @@ extern "C" void Dealer_PlayLose(char *c) {
 }
 
 extern "C" {
-void Dealer_StateLose(char *c) {
-    if (!DEALER(c)->mModel.Finished())
+void Dealer_StateLose(Dealer *dealer) {
+    if (!dealer->mModel.Finished())
         return;
-    if (DEALER(c)->mModel.file == (BCA_File *)DEALER(c)->mLoseAnim.filePtr) {
-        Dealer_PlayIdle(c);
+    if (dealer->mModel.file == (BCA_File *)dealer->mLoseAnim.filePtr) {
+        Dealer_PlayIdle((char *)dealer);
         return;
     }
     Sound::PlayBank2_2D(0x13c);
-    DEALER(c)->mHand = 0;
-    DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mLoseAnim.filePtr, 0, 0x40000000, 0x800, 0);
+    dealer->mHand = 0;
+    dealer->mModel.SetAnim(*(BCA_File *)dealer->mLoseAnim.filePtr, 0, 0x40000000, 0x800, 0);
 }
 }
 
 extern "C" {
-void Dealer_PlayWin(void *c) {
+void Dealer_PlayWin(Dealer *dealer) {
     Sound::PlayBank2_2D(0x13b);
-    DEALER(c)->mModel.SetAnim(*(BCA_File *)DEALER(c)->mWinStartAnim.filePtr, 0, 0x40000000, 0x800,
+    dealer->mModel.SetAnim(*(BCA_File *)dealer->mWinStartAnim.filePtr, 0, 0x40000000, 0x800,
                               0);
-    DEALER(c)->mShuffleLeft = 5;
-    *(StateSlot *)c = pmf_Dealer_StateWin;
+    dealer->mShuffleLeft = 5;
+    *(StateSlot *)dealer = pmf_Dealer_StateWin;
 }
 }
 
 extern "C" {
-void Dealer_StateWin(char *p) {
-    if (DEALER(p)->mModel.file == (BCA_File *)DEALER(p)->mWinStartAnim.filePtr &&
-        DEALER(p)->mModel.Finished()) {
-        DEALER(p)->mModel.SetAnim(*(BCA_File *)DEALER(p)->mWinAnim.filePtr, 0, 0, 0x800, 0);
+void Dealer_StateWin(Dealer *dealer) {
+    if (dealer->mModel.file == (BCA_File *)dealer->mWinStartAnim.filePtr &&
+        dealer->mModel.Finished()) {
+        dealer->mModel.SetAnim(*(BCA_File *)dealer->mWinAnim.filePtr, 0, 0, 0x800, 0);
         return;
     }
-    if (DEALER(p)->mModel.file == (BCA_File *)DEALER(p)->mWinAnim.filePtr &&
-        DEALER(p)->mModel.WillHitFrame(0)) {
-        DEALER(p)->mShuffleLeft -= 1;
-        if (DEALER(p)->mShuffleLeft == 0) {
-            DEALER(p)->mModel.SetAnim(*(BCA_File *)DEALER(p)->mWinEndAnim.filePtr, 0, 0x40000000,
+    if (dealer->mModel.file == (BCA_File *)dealer->mWinAnim.filePtr &&
+        dealer->mModel.WillHitFrame(0)) {
+        dealer->mShuffleLeft -= 1;
+        if (dealer->mShuffleLeft == 0) {
+            dealer->mModel.SetAnim(*(BCA_File *)dealer->mWinEndAnim.filePtr, 0, 0x40000000,
                                       0x800, 0);
             return;
         }
     }
-    if (DEALER(p)->mModel.file == (BCA_File *)DEALER(p)->mWinEndAnim.filePtr &&
-        DEALER(p)->mModel.Finished()) {
-        Dealer_PlayIdle(p);
+    if (dealer->mModel.file == (BCA_File *)dealer->mWinEndAnim.filePtr &&
+        dealer->mModel.Finished()) {
+        Dealer_PlayIdle((char *)dealer);
     }
 }
 }
 
 extern "C" {
 void Dealer_ResetMatrices(char *c) {
-    struct Matrix4x3 identity = sDealerIdentityMtx;
+    Matrix4x3 identity = sDealerIdentityMtx;
     DEALER(c)->mModel.mat4x3 = sDealerIdentityMtx;
     DEALER(c)->mTable.mat4x3 = identity;
 }
@@ -1844,7 +1842,7 @@ extern "C" void MascotWalker_Load(MascotWalker *walker) {
     walker->mAngleX = data_020a0edc.x;
     walker->mAngleY = data_020a0edc.y;
     walker->mAngleZ = data_020a0edc.z;
-    MascotWalker_StartNextPath((char *)walker);
+    MascotWalker_StartNextPath(walker);
 }
 
 
@@ -1886,13 +1884,12 @@ extern "C" void MascotWalker_Update(MascotWalker *walker) {
     }
 }
 
-extern "C" {
-void MascotWalker_Draw(char *t) {
-    MascotWalker_UpdateMatrix((MascotWalker *)t);
-    (&WALKER(t)->mShadow)->InitModel(&WALKER(t)->mModel.mat4x3, 0x3c000, 0x14000, 0x3c000, 0xc);
+extern "C" void MascotWalker_Draw(char *t) {
+    MascotWalker *walker = WALKER(t);
+    MascotWalker_UpdateMatrix(walker);
+    walker->mShadow.InitModel(&walker->mModel.mat4x3, 0x3c000, 0x14000, 0x3c000, 0xc);
     /* dExtSimpleModel_c's own render, called directly (0x02016b78), as Mascot_Draw does. */
-    WALKER(t)->mModel.dExtSimpleModel_c::Render(0);
-}
+    walker->mModel.dExtSimpleModel_c::Render(0);
 }
 
 
@@ -1909,143 +1906,143 @@ extern "C" void MascotWalker_UpdateMatrix(MascotWalker *walker) {
 }
 
 extern "C" {
-void MascotWalker_StartNextPath(char *c) {
+void MascotWalker_StartNextPath(MascotWalker *walker) {
     Vector3 toNext;
     Vector3 target;
-    WALKER(c)->mModel.SetAnim(*(BCA_File *)WALKER(c)->mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
-    if (WALKER(c)->mPathIndex < 3) {
-        WALKER(c)->mPathIndex += 1;
+    walker->mModel.SetAnim(*(BCA_File *)walker->mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
+    if (walker->mPathIndex < 3) {
+        walker->mPathIndex += 1;
     } else {
-        WALKER(c)->mPathIndex = 0;
+        walker->mPathIndex = 0;
     }
-    WALKER(c)->mPath = (int)&sMascotWalkerPaths[WALKER(c)->mPathIndex];
-    WALKER(c)->mPathPoint = 0;
+    walker->mPath = &sMascotWalkerPaths[walker->mPathIndex];
+    walker->mPathPoint = 0;
     {
-        Vector3 *point = &((WalkPath *)WALKER(c)->mPath)->points[WALKER(c)->mPathPoint];
-        WALKER(c)->mPos.x = point->x;
-        WALKER(c)->mPos.y = point->y;
-        WALKER(c)->mPos.z = point->z;
+        Vector3 *point = &(walker->mPath)->points[walker->mPathPoint];
+        walker->mPos.x = point->x;
+        walker->mPos.y = point->y;
+        walker->mPos.z = point->z;
     }
-    WALKER(c)->mPathPoint += 1;
-    Vec3_Sub(&toNext, &WALKER(c)->mPos,
-             &((WalkPath *)WALKER(c)->mPath)->points[WALKER(c)->mPathPoint]);
-    WALKER(c)->mDir.x = toNext.x;
-    WALKER(c)->mDir.y = toNext.y;
-    WALKER(c)->mDir.z = toNext.z;
-    if (NormalizeVec3IfNonZero(&WALKER(c)->mDir) == 0) {
-        WALKER(c)->mDir.x = 0xb50;
-        WALKER(c)->mDir.y = 0xb50;
-        WALKER(c)->mDir.z = 0;
+    walker->mPathPoint += 1;
+    Vec3_Sub(&toNext, &walker->mPos,
+             &(walker->mPath)->points[walker->mPathPoint]);
+    walker->mDir.x = toNext.x;
+    walker->mDir.y = toNext.y;
+    walker->mDir.z = toNext.z;
+    if (NormalizeVec3IfNonZero(&walker->mDir) == 0) {
+        walker->mDir.x = 0xb50;
+        walker->mDir.y = 0xb50;
+        walker->mDir.z = 0;
     }
     {
-        Vector3 *point = &((WalkPath *)WALKER(c)->mPath)->points[WALKER(c)->mPathPoint];
+        Vector3 *point = &(walker->mPath)->points[walker->mPathPoint];
         target.x = point->x;
         target.y = point->y;
         target.z = point->z;
     }
-    WALKER(c)->mTargetAngle = (short)Vec3_HorzAngle(&WALKER(c)->mPos, &target);
+    walker->mTargetAngle = (short)Vec3_HorzAngle(&walker->mPos, &target);
     {
         int fn = pmf_MascotWalker_StateWalk[0];
         int adj = pmf_MascotWalker_StateWalk[1];
         /* The no-op ternary is load-bearing: plain stores, or a copy through
            two locals, move three words (measured 2026-11-08). */
-        WALKER(c)->mState[0] = adj ? fn : fn;
-        WALKER(c)->mState[1] = adj;
+        walker->mState[0] = adj ? fn : fn;
+        walker->mState[1] = adj;
     }
 }
 }
 
 extern "C" {
-void MascotWalker_StateWalk(char *c) {
+void MascotWalker_StateWalk(MascotWalker *walker) {
     int dx, dz;
     int stepX, stepZ;
     int doneX, doneZ;
 
-    UpdateAngle(WALKER(c)->mAngleY, WALKER(c)->mTargetAngle, 8, 0x100);
+    UpdateAngle(walker->mAngleY, walker->mTargetAngle, 8, 0x100);
 
-    dx = WALKER(c)->mDir.x;
+    dx = walker->mDir.x;
     if (dx < 0)
         dx = -dx;
     stepX = FX_MUL(dx, 0x1a9);
 
-    dz = WALKER(c)->mDir.z;
+    dz = walker->mDir.z;
     if (dz < 0)
         dz = -dz;
 
-    doneX = ApproachLinear(WALKER(c)->mPos.x,
-                           ((WalkPath *)WALKER(c)->mPath)->points[WALKER(c)->mPathPoint].x, stepX);
+    doneX = ApproachLinear(walker->mPos.x,
+                           (walker->mPath)->points[walker->mPathPoint].x, stepX);
 
     stepZ = FX_MUL(dz, 0x1a9);
 
-    doneZ = ApproachLinear(WALKER(c)->mPos.z,
-                           ((WalkPath *)WALKER(c)->mPath)->points[WALKER(c)->mPathPoint].z, stepZ);
+    doneZ = ApproachLinear(walker->mPos.z,
+                           (walker->mPath)->points[walker->mPathPoint].z, stepZ);
 
     if (doneX != 0 && doneZ != 0) {
-        if (WALKER(c)->mPathPoint < ((WalkPath *)WALKER(c)->mPath)->count - 1) {
+        if (walker->mPathPoint < (walker->mPath)->count - 1) {
             Vector3 dir;
             Vector3 next;
 
-            WALKER(c)->mPathPoint++;
+            walker->mPathPoint++;
 
-            Vec3_Sub(&dir, &WALKER(c)->mPos,
-                     &((WalkPath *)WALKER(c)->mPath)->points[WALKER(c)->mPathPoint]);
+            Vec3_Sub(&dir, &walker->mPos,
+                     &(walker->mPath)->points[walker->mPathPoint]);
 
-            WALKER(c)->mDir.x = dir.x;
-            WALKER(c)->mDir.y = dir.y;
-            WALKER(c)->mDir.z = dir.z;
+            walker->mDir.x = dir.x;
+            walker->mDir.y = dir.y;
+            walker->mDir.z = dir.z;
 
-            if (NormalizeVec3IfNonZero(&WALKER(c)->mDir) == 0) {
-                WALKER(c)->mDir.x = 0xb50;
-                WALKER(c)->mDir.y = 0xb50;
-                WALKER(c)->mDir.z = 0;
+            if (NormalizeVec3IfNonZero(&walker->mDir) == 0) {
+                walker->mDir.x = 0xb50;
+                walker->mDir.y = 0xb50;
+                walker->mDir.z = 0;
             }
 
             {
-                Vector3 *point = &((WalkPath *)WALKER(c)->mPath)->points[WALKER(c)->mPathPoint];
+                Vector3 *point = &(walker->mPath)->points[walker->mPathPoint];
                 next.x = point->x;
                 next.y = point->y;
                 next.z = point->z;
             }
 
-            WALKER(c)->mTargetAngle = Vec3_HorzAngle(&WALKER(c)->mPos, &next);
+            walker->mTargetAngle = Vec3_HorzAngle(&walker->mPos, &next);
             return;
         }
 
-        MascotWalker_StartNextPath(c);
+        MascotWalker_StartNextPath(walker);
         return;
     }
 
-    if (ApproachLinear2(WALKER(c)->mStateTimer, 0, 1) == 0)
+    if (ApproachLinear2(walker->mStateTimer, 0, 1) == 0)
         return;
 
-    if (WALKER(c)->mModel.WillHitFrame(0) == 0)
+    if (walker->mModel.WillHitFrame(0) == 0)
         return;
 
-    MascotWalker_StartPause((int *)c);
+    MascotWalker_StartPause(walker);
 }
 }
 
 extern "C" {
 
-void MascotWalker_StartPause(int *t) {
-    WALKER(t)->mModel.SetAnim(*(BCA_File *)WALKER(t)->mPauseAnimFile.filePtr, 8, 0, 0x800, 0);
-    WALKER(t)->mStateTimer = 0x78;
-    WALKER(t)->mPaused = 1;
-    *(StateSlot *)WALKER(t)->mState = pmf_MascotWalker_StatePause;
+void MascotWalker_StartPause(MascotWalker *walker) {
+    walker->mModel.SetAnim(*(BCA_File *)walker->mPauseAnimFile.filePtr, 8, 0, 0x800, 0);
+    walker->mStateTimer = 0x78;
+    walker->mPaused = 1;
+    *(StateSlot *)walker->mState = pmf_MascotWalker_StatePause;
 }
 }
 
 
 
-extern "C" void MascotWalker_StatePause(char *c) {
-    if (ApproachLinear2(WALKER(c)->mStateTimer, 0, 1) == 0)
+extern "C" void MascotWalker_StatePause(MascotWalker *walker) {
+    if (ApproachLinear2(walker->mStateTimer, 0, 1) == 0)
         return;
-    WALKER(c)->mModel.SetAnim(*(BCA_File *)WALKER(c)->mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
+    walker->mModel.SetAnim(*(BCA_File *)walker->mWalkAnimFile.filePtr, 0, 0, 0x800, 0);
     int roll = RandomIntInternal(&data_0209e650.value);
     int frac = (int)((unsigned int)(roll & 0x7fffffff) >> 0x13);
-    WALKER(c)->mStateTimer = (short)(((frac * 0x258) >> 12) + 0x258);
-    WALKER(c)->mPaused = 0;
-    *(StateSlot *)WALKER(c)->mState = pmf_MascotWalker_StateWalk_3;
+    walker->mStateTimer = (short)(((frac * 0x258) >> 12) + 0x258);
+    walker->mPaused = 0;
+    *(StateSlot *)walker->mState = pmf_MascotWalker_StateWalk_3;
 }
 
 extern "C" {
@@ -2055,11 +2052,11 @@ extern "C" {
  */
 
 void Camera_UpdateMatrices(MgCamera *camera) {
-    struct Vector3 up;
-    struct Vector3 forward;
-    struct Vector3 right;
-    struct Vector3 scratch0;
-    struct Vector3 scratch1;
+    Vector3 up;
+    Vector3 forward;
+    Vector3 right;
+    Vector3 scratch0;
+    Vector3 scratch1;
 
     up.x = 0;
     up.y = 0x1000;

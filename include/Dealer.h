@@ -74,8 +74,8 @@ struct Dealer {
     DealerAnimationFileHandle mWinAnim;          /* 0x248 -- win.bca */
     DealerAnimationFileHandle mWinEndAnim;       /* 0x250 -- win_end.bca */
     DealerAnimationFileHandle mLoseAnim;         /* 0x258 -- lose.bca */
-    s32 mModelData;                              /* 0x260 -- the loaded luigi_d.bmd */
-    s32 mTableData;                              /* 0x264 */
+    void *mModelData;                            /* 0x260 -- the loaded luigi_d.bmd */
+    void *mTableData;                            /* 0x264 */
     s32 mShuffleSoundPlayed;                     /* 0x268 -- sound 0x139, once per shuffle */
     s32 mDealSoundPlayed;                        /* 0x26c -- sound 0x13a, once per deal */
 };

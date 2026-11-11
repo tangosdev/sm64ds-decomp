@@ -22,6 +22,9 @@ struct MascotWalkerAnimationFileHandle : SharedFilePtr {
     ~MascotWalkerAnimationFileHandle();
 };
 
+/* One of the four walks mPath points at: a point count, then the points. */
+struct WalkPath;
+
 /* MascotWalker, the small figure that walks the card table's paths in the card
  * games (the dealer embeds one at +0xdc, which fixes the 0xf8 size): a Toad,
  * whose files resolve (tools/asset_catalog.py) to MG/kino_d.bmd, kino_wait.bca
@@ -29,9 +32,8 @@ struct MascotWalkerAnimationFileHandle : SharedFilePtr {
  * the class's own (ov006 0x020c0a48 and 0x020c09f8, in
  * src/minigames/unit020bfec0.cpp), so Dealer's own constructor and destructor
  * build and tear it down as a member. The other MascotWalker_* helpers there
- * are free functions over a char* record and read it through their WALKER()
- * cast. Unnamed regions are touched in one place at most, or sit inside an
- * embedded object. */
+ * are free functions over the record. Unnamed regions are touched in one place
+ * at most, or sit inside an embedded object. */
 struct MascotWalker {
     MascotWalker();
     ~MascotWalker();
@@ -47,7 +49,7 @@ struct MascotWalker {
     dExtBlendAnmModel_c mModel; /* 0x18 */
     /* InitCylinder'd by Load and InitModel'd on mModel.mat4x3 by Draw. */
     dExtShadowModel_c mShadow; /* 0x88 */
-    s32 mPath;        /* 0xb0 -- the path walked: a point count, then the points */
+    WalkPath *mPath;   /* 0xb0 -- the path walked: a point count, then the points */
     s32 mState[2];    /* 0xb4 -- the current state's member-pointer record */
     /* Load sets all three to 0x1000 (1.0), beside mPos and the angles; nothing
        in this file reads it back. */
