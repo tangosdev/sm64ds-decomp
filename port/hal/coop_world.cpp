@@ -2656,6 +2656,10 @@ void boohit_solo() {
         if (*(const unsigned short *)(a + 0x0c) != 209) continue;
         const short sl = *(const short *)(a + 0xce);
         if (sl < 0 && !going(a)) ++unslotted;
+        if (fr % 300u == 0)
+            std::fprintf(stderr, "[boo-solo] Boo slot %d variant %u state %u cap %d area %d dormant-ish flags %08x (frame %u)\n", (int)sl,
+                         (unsigned)*(const unsigned char *)(a + kBooVar), (unsigned)*(const unsigned char *)(a + kBooState),
+                         *(const unsigned char *)(a + 0x113) & 0xf, (int)*(const signed char *)(a + 0x5d0), *(const unsigned *)(a + 0xb0), fr);
         if (sl != slot || going(a) || *(const unsigned char *)(a + kBooState) >= 3) continue;
         const int *bp = (const int *)(a + 0x5c); int *pp = (int *)(body + 0x5c);
         if (fr % 150u == 0) {   // stand by it with its room shown (a hidden room keeps a Boo at home), as the coop knob does
