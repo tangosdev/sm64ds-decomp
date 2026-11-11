@@ -32095,15 +32095,15 @@
     },
     "ov022:0x02112654": {
       "author": "tangosdev",
-      "name": "func_ov022_02112654"
+      "name": "_ZN21daObj_volcanoCannon_c14CheckPlayerHitEv"
     },
     "ov022:0x021126ac": {
       "author": "tangosdev",
-      "name": "func_ov022_021126ac"
+      "name": "_ZN21daObj_volcanoCannon_c10ExecuteFlyEv"
     },
     "ov022:0x02112710": {
       "author": "tangosdev",
-      "name": "func_ov022_02112710"
+      "name": "_ZN21daObj_volcanoCannon_c8EnterFlyEv"
     },
     "ov022:0x02112790": {
       "author": "andrewboudreau",
@@ -32447,11 +32447,11 @@
     },
     "ov026:0x02111234": {
       "author": "tangosdev",
-      "name": "func_ov026_02111234"
+      "name": "_ZN17daObjWlPolelift_c12UpdateShadowEv"
     },
     "ov026:0x021112a4": {
       "author": "tangosdev",
-      "name": "func_ov026_021112a4"
+      "name": "_ZN17daObjWlPolelift_c20UpdateModelTransformEv"
     },
     "ov026:0x021112e4": {
       "author": "tangosdev",
@@ -35259,11 +35259,11 @@
     },
     "ov060:0x021183cc": {
       "author": "tangosdev",
-      "name": "func_ov060_021183cc"
+      "name": "_ZN10daKpa3Bg_c9OnStoodOnEP8dActor_c"
     },
     "ov060:0x021183f4": {
       "author": "ruspecial",
-      "name": "func_ov060_021183f4"
+      "name": "_ZN10daKpa3Bg_c15StoodOnCallbackEP4dBgWP8dActor_cS3_"
     },
     "ov060:0x02118408": {
       "author": "andrewboudreau",
@@ -35399,7 +35399,7 @@
     },
     "ov062:0x02116010": {
       "author": "lunavyqo",
-      "name": "func_ov062_02116010"
+      "name": "_ZN10daHolhei_c17HandleCylinderHitEv"
     },
     "ov062:0x021161a8": {
       "author": "ruspecial",
@@ -35487,11 +35487,11 @@
     },
     "ov062:0x02116d28": {
       "author": "tangosdev",
-      "name": "_ZN10daHolhei_c19func_ov062_02116d28Ev"
+      "name": "_ZN10daHolhei_c16UpdateHeldShadowEv"
     },
     "ov062:0x02116dbc": {
       "author": "tangosdev",
-      "name": "func_ov062_02116dbc"
+      "name": "_ZN10daHolhei_c12UpdateShadowEv"
     },
     "ov062:0x02116e80": {
       "author": "tangosdev",
@@ -36307,11 +36307,11 @@
     },
     "ov063:0x0211c6f8": {
       "author": "tangosdev",
-      "name": "func_ov063_0211c6f8"
+      "name": "_ZN11daTrsTrap_c16UpdateClsnMatrixEv"
     },
     "ov063:0x0211c770": {
       "author": "tangosdev",
-      "name": "func_ov063_0211c770"
+      "name": "_ZN11daTrsTrap_c15SettleStaircaseEi"
     },
     "ov063:0x0211c7b0": {
       "author": "tangosdev",
