@@ -17,8 +17,7 @@
  *   [6] 0x020b3568  daObjAbuku_c_classInit
  *
  * Notes:
- * - data_02082214 is the link name (arm9 symbols.txt kind:data(any));
- *   no named alias exists. Sway lookup off (mSwayAngle >> 4).
+ * - The sway reads NitroSDK's FX_SinCosTable_ at (mSwayAngle >> 4).
  * - g_profile_OBJ_ABUKU is a SpawnInfo, the shared 0x1c actor-profile
  *   layout. The manifest proves the descriptor,
  *   then deadstrip-discards it (canonical home outside .text).
@@ -39,7 +38,7 @@
 /* arm9 C helpers with no shared header. */
 extern "C" {
 int SurfaceInfo_TestFlag0x20(int *p);
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
@@ -66,7 +65,7 @@ int daObjAbuku_c::Behavior() {
     mSwayAngle += 0x400;
     int v = *(volatile unsigned short *)(&mSwayAngle);
     int x = v >> 4;
-    short tv = data_02082214[2 * x + 1];
+    short tv = FX_SinCosTable_[2 * x + 1];
     mHorzSpeed = FX_MUL(mDriftSpeed, tv);
     ApproachLinear(mDriftSpeed, 0x6000, 0x332);
     UpdatePos((dCc_c *)0);

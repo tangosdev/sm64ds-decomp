@@ -167,6 +167,10 @@
   },
   {
    "file": "notes/archive/plan-scalar-markers.md",
+   "ref": "include/G2x.h"
+  },
+  {
+   "file": "notes/archive/plan-scalar-markers.md",
    "ref": "src/_ZN20SwitchActivatedPlank8BehaviorEv.cpp"
   },
   {
@@ -544,10 +548,6 @@
   {
    "file": "port/docs/mmio-inventory.md",
    "ref": "src/_ZN4cstd4ldivEii.c"
-  },
-  {
-   "file": "port/docs/opie-assessment.md",
-   "ref": "include/nitro/gx/g3imm.h"
   },
   {
    "file": "port/docs/opie-assessment.md",

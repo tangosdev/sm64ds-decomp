@@ -5,7 +5,8 @@
 extern "C" {
 
 /* MB_ReadMultiBootParentBssDesc */
-extern void func_020672d0(void *thiz, int parentMaxSize, int childMaxSize, int ksFlag, int csFlag);
+extern void MB_ReadMultiBootParentBssDesc(void *thiz, int parentMaxSize, int childMaxSize,
+                                          int ksFlag, int csFlag);
 extern int WM_Init(void *buf, int ch);
 
 extern unsigned short data_020a0f14;
@@ -42,7 +43,7 @@ void func_020408b0(unsigned short arg) {
     b = (*(volatile unsigned short *)0x27ffc40 == 2);
     if (b != 0) {
         WMBssDesc *desc;
-        func_020672d0(data_020a0f54, 0x200, 0x20, 0, 1);
+        MB_ReadMultiBootParentBssDesc(data_020a0f54, 0x200, 0x20, 0, 1);
         desc = (WMBssDesc *)data_020a0f54;
         data_020a0f28 = desc->channel;
         ++desc->gameInfo.tgid;

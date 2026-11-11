@@ -338,7 +338,7 @@ struct daPly_c : dActor_c {
     s32 mToxicSurfaceY; /* 0x650 */
     /* Yoshi's tongue against walls. TongueWallProbe, run by the tongue
        grab func_ov002_020d6998 (mHatCharacter 3), casts a dBgCh_Lin between
-       two bones of mHeadModels[3] and stores func_02053274's distance from
+       two bones of mHeadModels[3] and stores VEC_Distance's distance from
        the first to the hit point here; Behavior scales that model's bone by
        |dist| >> 3 while it is nonzero, and ChangeState zeroes it. */
     s32 mTongueHitDist; /* 0x654 */
@@ -632,7 +632,7 @@ struct daPly_c : dActor_c {
        down one per call while the hazard persists, cleared when it ends. */
     u8 mDamageTickTimer; /* 0x71d */
     /* A one-shot event sequence. func_ov002_020c43c4(id) latches the id
-       (once per save, via a bit in data_0209caa0[2]) and zeroes the step;
+       (once per save, via a bit in data_0209caa0.file.flags2) and zeroes the step;
        func_ov002_020c4188 then walks mEventStep 0..4, holding mEventWait
        ticks before handing data_ov002_020ff26c[mEventId - 1] to
        func_0201f32c. */
@@ -1491,5 +1491,9 @@ typedef char Player_State_size_must_be_0x18[sizeof(daPly_c::State) == 0x18 ? 1 :
  * spellings match whichever is right. It needs the module question answered
  * first.
  */
+
+/* Actor-table factory. C linkage keeps the bare `daPly_c_classInit` symbol
+   that the PLAYER registry profile refers to. */
+extern "C" daPly_c *daPly_c_classInit();
 
 #endif

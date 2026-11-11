@@ -1,6 +1,6 @@
 //cpp
 #include "private/arm9_a1fc0_file_share.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -13,7 +13,7 @@ void func_02041224(char *thiz, int n)
     FileShareChildArea *child = (FileShareChildArea *)thiz;
     int work;
     int oldWork;
-    unsigned int saved;
+    OSIntrMode saved;
     unsigned int q;
     if (n < 0) {
         n = child->mMaxReadSize;
@@ -24,18 +24,18 @@ void func_02041224(char *thiz, int n)
     child->mMaxReadSize = n;
     oldWork = child->mRecvWork;
     if (oldWork != 0) {
-        saved = IRQ::Disable();
+        saved = OS_DisableInterrupts();
         ((FnT)data_020a1fc0.mAllocFunc)(data_020a1fc0.mAllocArg, 0, oldWork);
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
     }
     {
         u32 dm = data_020a1fc0.mParentPacketSize - 0xe;
         q = (child->mMaxReadSize + dm - 1) / dm;
     }
     work = ((q + 0x1f) >> 2) << 4; /* the bitmap's size, then the work itself */
-    saved = IRQ::Disable();
+    saved = OS_DisableInterrupts();
     work = ((FnT)data_020a1fc0.mAllocFunc)(data_020a1fc0.mAllocArg, work, 0);
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     child->mRecvWork = work;
     child->mPacketBitmapTable[0] = child->mRecvWork;
 }

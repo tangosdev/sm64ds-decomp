@@ -25,7 +25,7 @@
  * FS_UnloadArchive does not resume the archive it suspended.
  */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/os/thread.h"
 #include "private/fs_views.h"
 
@@ -68,8 +68,8 @@ extern "C" {
 extern FSArchive *data_020a8048;
 extern FSDirPos data_020a804c;
 
-void CpuCopy8(const void *src, void *dst, u32 size);
-void func_0205a588(void *dst, u8 value, u32 size);
+void MI_CpuCopy8(const void *src, void *dst, u32 size);
+void MI_CpuFill8(void *dst, u8 value, u32 size);
 
 void FS_InitFile(FSFile *p_file);
 int FS_ReadFile(FSFile *p_file, void *dst, int len);
@@ -181,20 +181,20 @@ u32 FSi_GetPackedName(const char *name, int name_len) {
 
 /* FS_LoadArchive's default read_func: copy from base + pos. */
 int FSi_ReadMemCallback(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
-    CpuCopy8((const void *)FS_GetArchiveOffset(p_arc, pos), dst, size);
+    MI_CpuCopy8((const void *)FS_GetArchiveOffset(p_arc, pos), dst, size);
     return FS_RESULT_SUCCESS;
 }
 
 /* FS_LoadArchive's default write_func: copy to base + pos. */
 int FSi_WriteMemCallback(FSArchive *p_arc, const void *src, u32 pos, u32 size) {
-    CpuCopy8(src, (void *)FS_GetArchiveOffset(p_arc, pos), size);
+    MI_CpuCopy8(src, (void *)FS_GetArchiveOffset(p_arc, pos), size);
     return FS_RESULT_SUCCESS;
 }
 
 /* The table_func of an archive whose tables are loaded: pos is already an
  * address. */
 int FSi_ReadMemoryCore(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
-    CpuCopy8((const void *)pos, dst, size);
+    MI_CpuCopy8((const void *)pos, dst, size);
     return FS_RESULT_SUCCESS;
 }
 
@@ -202,12 +202,12 @@ int FSi_ReadMemoryCore(FSArchive *p_arc, void *dst, u32 pos, u32 size) {
  * archive list with interrupts off; NULL if there is none. */
 FSArchive *FS_FindArchive(const char *name, int name_len) {
     u32 pack = FSi_GetPackedName(name, name_len);
-    u32 bak_psr = IRQ::Disable();
+    OSIntrMode bak_psr = OS_DisableInterrupts();
     FSArchive *p_arc = data_020a8048;
     while (p_arc != 0 && p_arc->name.pack != pack) {
         p_arc = p_arc->next;
     }
-    IRQ::Restore(bak_psr);
+    OS_RestoreInterrupts(bak_psr);
     return p_arc;
 }
 
@@ -219,7 +219,7 @@ FSArchive *FS_FindArchive(const char *name, int name_len) {
  * FS_COMMAND_IDLE on a scratch FSFile, and a pending suspend takes effect
  * and wakes stat_q. */
 FSFile *FSi_NextCommand(FSArchive *p_arc) {
-    u32 bak_psr = IRQ::Disable();
+    OSIntrMode bak_psr = OS_DisableInterrupts();
     if (FSi_IsArchiveCanceling(p_arc)) {
         FSFile *p, *q;
         p_arc->flag &= ~FS_ARCHIVE_FLAG_CANCELING;
@@ -240,7 +240,7 @@ FSFile *FSi_NextCommand(FSArchive *p_arc) {
             const int is_start = !FSi_IsArchiveRunning(p_arc);
             if (is_start)
                 p_arc->flag |= FS_ARCHIVE_FLAG_RUNNING;
-            IRQ::Restore(bak_psr);
+            OS_RestoreInterrupts(bak_psr);
             if (is_start) {
                 if (p_arc->proc_flag & FS_ARCHIVE_PROC_ACTIVATE)
                     (*p_arc->proc)(p_file, FS_COMMAND_ACTIVATE);
@@ -266,7 +266,7 @@ FSFile *FSi_NextCommand(FSArchive *p_arc) {
         p_arc->flag |= FS_ARCHIVE_FLAG_SUSPEND;
         OS_WakeupThread(&p_arc->stat_q);
     }
-    IRQ::Restore(bak_psr);
+    OS_RestoreInterrupts(bak_psr);
     return 0;
 }
 
@@ -278,13 +278,13 @@ FSFile *FSi_NextCommand(FSArchive *p_arc) {
 void FSi_ExecuteAsyncCommand(FSFile *p_file) {
     FSArchive *const p_arc = p_file->arc;
     while (p_file) {
-        u32 bak_psr = IRQ::Disable();
+        OSIntrMode bak_psr = OS_DisableInterrupts();
         if (FS_IsFileSyncMode(p_file)) {
             OS_WakeupThread(&p_file->queue);
             break;
         }
         p_file->stat |= FS_FILE_STATUS_ASYNC;
-        IRQ::Restore(bak_psr);
+        OS_RestoreInterrupts(bak_psr);
         if (FSi_TranslateCommand(p_file, p_file->command) == FS_RESULT_PROC_ASYNC)
             break;
         p_file = FSi_NextCommand(p_arc);
@@ -318,10 +318,10 @@ int FSi_SendCommand(FSFile *p_file, int command) {
     p_file->error = FS_RESULT_BUSY;
     p_file->stat |= FS_FILE_STATUS_BUSY;
     {
-        u32 bak_psr = IRQ::Disable();
+        OSIntrMode bak_psr = OS_DisableInterrupts();
         if (p_arc->flag & FS_ARCHIVE_FLAG_UNLOADING) {
             FSi_ReleaseCommand(p_file, FS_RESULT_CANCELED);
-            IRQ::Restore(bak_psr);
+            OS_RestoreInterrupts(bak_psr);
             return 0;
         }
         if ((bit & FS_ARCHIVE_PROC_SYNC) != 0)
@@ -329,7 +329,7 @@ int FSi_SendCommand(FSFile *p_file, int command) {
         FSi_AppendToList(p_file, (FSFile *)&p_arc->list);
         if (!FSi_IsArchiveRunning(p_arc)) {
             p_arc->flag |= FS_ARCHIVE_FLAG_RUNNING;
-            IRQ::Restore(bak_psr);
+            OS_RestoreInterrupts(bak_psr);
             if (p_arc->proc_flag & FS_ARCHIVE_PROC_ACTIVATE)
                 (*p_arc->proc)(p_file, FS_COMMAND_ACTIVATE);
             if (!FS_IsFileSyncMode(p_file)) {
@@ -337,13 +337,13 @@ int FSi_SendCommand(FSFile *p_file, int command) {
                 return 1;
             }
         } else if (!FS_IsFileSyncMode(p_file)) {
-            IRQ::Restore(bak_psr);
+            OS_RestoreInterrupts(bak_psr);
             return 1;
         } else {
             do {
                 OS_SleepThread(&p_file->queue);
             } while (p_file != p_arc->list.next);
-            IRQ::Restore(bak_psr);
+            OS_RestoreInterrupts(bak_psr);
         }
     }
     return FSi_ExecuteSyncCommand(p_file);
@@ -363,19 +363,19 @@ void FS_NotifyArchiveAsyncEnd(FSArchive *p_arc, int ret) {
             FSi_ExecuteAsyncCommand(p_file);
     } else {
         FSFile *p_file = p_arc->list.next;
-        u32 bak_psr = IRQ::Disable();
+        OSIntrMode bak_psr = OS_DisableInterrupts();
         p_file->error = ret;
         p_arc->flag &= ~FS_ARCHIVE_FLAG_IS_SYNC;
         OS_WakeupThread(&p_arc->sync_q);
-        IRQ::Restore(bak_psr);
+        OS_RestoreInterrupts(bak_psr);
     }
 }
 
 /* Clear the archive, then empty its two thread queues. A thread queue here
  * is a 16-bit mask of thread ids, so emptying one is a store of 0 where
- * pret's calls OS_InitThreadQueue. func_0205a588 is MI_CpuFill8. */
+ * pret's calls OS_InitThreadQueue. */
 void FS_InitArchive(FSArchive *p_arc) {
-    func_0205a588(p_arc, 0, sizeof(FSArchive));
+    MI_CpuFill8(p_arc, 0, sizeof(FSArchive));
     p_arc->sync_q = 0;
     p_arc->stat_q = 0;
 }
@@ -385,7 +385,7 @@ void FS_InitArchive(FSArchive *p_arc) {
  * directory) and store its packed name. TRUE if it was registered. */
 int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len) {
     int ret = 0;
-    u32 bak_psr = IRQ::Disable();
+    OSIntrMode bak_psr = OS_DisableInterrupts();
     if (!FS_FindArchive(name, name_len)) {
         FSArchive *p_tail = data_020a8048;
         if (!p_tail) {
@@ -403,7 +403,7 @@ int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len) {
         p_arc->name.pack = FSi_GetPackedName(name, name_len);
         ret = 1;
     }
-    IRQ::Restore(bak_psr);
+    OS_RestoreInterrupts(bak_psr);
     return ret;
 }
 
@@ -413,7 +413,7 @@ int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len) {
  * current directory moves to the root of the list head. */
 void FS_ReleaseArchiveName(FSArchive *p_arc) {
     if (p_arc->name.pack) {
-        u32 bak_psr = IRQ::Disable();
+        OSIntrMode bak_psr = OS_DisableInterrupts();
         if (p_arc->next)
             p_arc->next->prev = p_arc->prev;
         if (p_arc->prev)
@@ -427,7 +427,7 @@ void FS_ReleaseArchiveName(FSArchive *p_arc) {
             data_020a804c.index = 0;
             data_020a804c.own_id = 0;
         }
-        IRQ::Restore(bak_psr);
+        OS_RestoreInterrupts(bak_psr);
     }
 }
 
@@ -453,7 +453,7 @@ int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32 fnt, u
 /* With interrupts off: suspend a loaded archive, mark it unloading, cancel
  * every queued command, then clear its base and tables. */
 int FS_UnloadArchive(FSArchive *p_arc) {
-    u32 bak_psr = IRQ::Disable();
+    OSIntrMode bak_psr = OS_DisableInterrupts();
     if (FS_IsArchiveLoaded(p_arc)) {
         if (FS_IsArchiveTableLoaded(p_arc)) {
             /* pret warns here that the preloaded tables may leak; this
@@ -478,7 +478,7 @@ int FS_UnloadArchive(FSArchive *p_arc) {
         p_arc->flag &=
             ~(FS_ARCHIVE_FLAG_CANCELING | FS_ARCHIVE_FLAG_LOADED | FS_ARCHIVE_FLAG_UNLOADING);
     }
-    IRQ::Restore(bak_psr);
+    OS_RestoreInterrupts(bak_psr);
     return 1;
 }
 
@@ -533,7 +533,7 @@ void *FS_UnloadArchiveTables(FSArchive *p_arc) {
  * an idle one is suspended at once. Returns whether it was not suspended
  * before. */
 int FS_SuspendArchive(FSArchive *p_arc) {
-    u32 bak_psr = IRQ::Disable();
+    OSIntrMode bak_psr = OS_DisableInterrupts();
     const int bak_stat = !FS_IsArchiveSuspended(p_arc);
     if (bak_stat) {
         if (FSi_IsArchiveRunning(p_arc)) {
@@ -545,7 +545,7 @@ int FS_SuspendArchive(FSArchive *p_arc) {
             p_arc->flag |= FS_ARCHIVE_FLAG_SUSPEND;
         }
     }
-    IRQ::Restore(bak_psr);
+    OS_RestoreInterrupts(bak_psr);
     return bak_stat;
 }
 
@@ -554,13 +554,13 @@ int FS_SuspendArchive(FSArchive *p_arc) {
  * back. Returns whether the archive was not suspended. */
 int FS_ResumeArchive(FSArchive *p_arc) {
     FSFile *p_target = 0;
-    u32 bak_psr = IRQ::Disable();
+    OSIntrMode bak_psr = OS_DisableInterrupts();
     const int bak_stat = !FS_IsArchiveSuspended(p_arc);
     if (!bak_stat) {
         p_arc->flag &= ~FS_ARCHIVE_FLAG_SUSPEND;
         p_target = FSi_NextCommand(p_arc);
     }
-    IRQ::Restore(bak_psr);
+    OS_RestoreInterrupts(bak_psr);
     if (p_target)
         FSi_ExecuteAsyncCommand(p_target);
     return bak_stat;

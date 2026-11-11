@@ -2,7 +2,7 @@
 
 /* The parent's ready-list search: the first ready node (mState 2) whose
  * registered block is blockId (mRegion's first word: the WBT block id
- * func_020658c0, WBT_RegisterBlock, stored), else 0. */
+ * WBT_RegisterBlock, WBT_RegisterBlock, stored), else 0. */
 FileShareNode *func_02041c2c(FileShareParentArea *area, int blockId) {
     FileShareNode *node = area->mReadyList;
     if (node == 0)

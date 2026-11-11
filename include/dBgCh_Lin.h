@@ -35,10 +35,6 @@
 #include "dM3dGLin.h"
 #include "dM3dGSph.h"
 
-namespace Memory {
-void operator_delete2(void *);
-}
-
 struct dActor_c;
 
 struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
@@ -103,20 +99,6 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
      * real C++ -- complete-object context for every ROM caller, hence C1.
      */
     dBgCh_Lin();
-
-    /* ITS OWN COPY, TO RESOLVE AN AMBIGUITY THE MULTIPLE INHERITANCE CREATES.
-       dBgCh_Lin derives from both dBgCh and dBgPi, and each of those declares
-       an inline operator delete, so an inherited one is "ambiguous access to
-       name found: dBgCh::operator delete and dBgPi::operator delete".
-       Declaring it here picks the same deallocator both bases name
-       (Memory::operator_delete2, 0x0203cbcc) and satisfies the rule in
-       include/dActor_c.h that mwcc only inlines the member when it is in the
-       class or its immediate base. This is load-bearing for the D0 at
-       0x02037710, which ends at Memory::operator_delete2; a non-virtual inline
-       member adds no field and no vtable slot. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 
     /* methods */
     Vector3 GetClsnPos();

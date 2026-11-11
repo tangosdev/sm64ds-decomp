@@ -5,16 +5,15 @@
  * ladders), so the asm blocks are the faithful source.
  *
  * mwccarm emits an asm function where it stands (only C bodies are deferred
- * and come out reversed), so the file reads in ROM order. The linker names
- * are the repo's existing ones; the SDK name of each function, from
- * pret/pokediamond's mi_memory.c, is in its comment. MIi_CpuSend32 and
- * MI_Copy64B are not in this ROM (nothing called them, so the linker dropped
- * them).
+ * and come out reversed), so the file reads in ROM order. The names are the
+ * SDK's, as pret/pokediamond's MI_memory.c spells them; each one's size and
+ * place in this run match that file. MIi_CpuSend32 and MI_Copy64B are not in
+ * this ROM (nothing called them, so the linker dropped them).
  */
 #include "types.h"
 
-/* MIi_CpuClear16: fills nbytes bytes with the halfword val. */
-asm void MultiStore16(unsigned short val, char *dst, int nbytes)
+/* Fills nbytes bytes with the halfword val. */
+asm void MIi_CpuClear16(unsigned short val, char *dst, int nbytes)
 {
     mov r3, #0
 loop:
@@ -25,8 +24,8 @@ loop:
     bx lr
 }
 
-/* MIi_CpuCopy16: copies size bytes one halfword at a time. */
-asm void MultiCopyHalf(const void *src, void *dst, s32 size)
+/* Copies size bytes one halfword at a time. */
+asm void MIi_CpuCopy16(const void *src, void *dst, s32 size)
 {
     mov ip, #0
 loop:
@@ -38,8 +37,8 @@ loop:
     bx lr
 }
 
-/* MIi_CpuClear32 */
-asm void MultiStore_Int(int val, int *dst, int len)
+/* Fills len bytes (a multiple of 4) with the word val. */
+asm void MIi_CpuClear32(int val, int *dst, int len)
 {
     add ip, r1, r2
 loop:
@@ -49,8 +48,8 @@ loop:
     bx lr
 }
 
-/* MIi_CpuCopy32: copies len bytes (a multiple of 4) one word at a time. */
-asm void MultiCopy_Int(int *src, int *dst, int len)
+/* Copies len bytes (a multiple of 4) one word at a time. */
+asm void MIi_CpuCopy32(int *src, int *dst, int len)
 {
     add ip, r1, r2
 loop:
@@ -61,8 +60,8 @@ loop:
     bx lr
 }
 
-/* MIi_CpuClearFast: 32 bytes per stm, then a word tail. */
-asm void MultiStore32Bytes(unsigned val, void *dst, int len) {
+/* Fills len bytes with the word val: 32 bytes per stm, then a word tail. */
+asm void MIi_CpuClearFast(unsigned val, void *dst, int len) {
     stmdb sp!, {r4, r5, r6, r7, r8, r9}
     add r9, r1, r2
     mov ip, r2, lsr #5
@@ -86,8 +85,8 @@ loop4:
     bx lr
 }
 
-/* MIi_CpuCopyFast: 32 bytes per ldm/stm, then a word tail. */
-asm void MultiCopy32Bytes(const void *src, void *dst, int len) {
+/* Copies len bytes: 32 bytes per ldm/stm, then a word tail. */
+asm void MIi_CpuCopyFast(const void *src, void *dst, int len) {
     stmdb sp!, {r4, r5, r6, r7, r8, r9, r10}
     add r10, r1, r2
     mov ip, r2, lsr #5
@@ -106,8 +105,8 @@ loop4:
     bx lr
 }
 
-/* MI_Copy32B */
-asm void Copy32Bytes(const void *src, void *dst)
+/* Copies 32 bytes, three words per ldm/stm. */
+asm void MI_Copy32B(const void *src, void *dst)
 {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
@@ -118,8 +117,8 @@ asm void Copy32Bytes(const void *src, void *dst)
     bx lr
 }
 
-/* MI_Copy36B */
-asm void Copy36Bytes(const void *src, void *dst)
+/* Copies 36 bytes, three words per ldm/stm. */
+asm void MI_Copy36B(const void *src, void *dst)
 {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
@@ -130,8 +129,8 @@ asm void Copy36Bytes(const void *src, void *dst)
     bx lr
 }
 
-/* MI_Copy48B */
-asm void Copy48Bytes(const void *src, void *dst)
+/* Copies 48 bytes, three words per ldm/stm. */
+asm void MI_Copy48B(const void *src, void *dst)
 {
     ldmia r0!, {r2, r3, ip}
     stmia r1!, {r2, r3, ip}
@@ -144,11 +143,11 @@ asm void Copy48Bytes(const void *src, void *dst)
     bx lr
 }
 
-/* MI_CpuFill8: the byte fill that pairs with CpuCopy8. It aligns to a
+/* The byte fill that pairs with MI_CpuCopy8. It aligns to a
  * halfword and then a word with read-modify-write at the unaligned head and
  * tail (so the adjacent byte survives), replicates the fill byte across the
  * word, and runs a str-writeback word loop. */
-asm void func_0205a588(void *dst, u8 data, u32 size)
+asm void MI_CpuFill8(void *dst, u8 data, u32 size)
 {
     cmp r2, #0
     bxeq lr
@@ -194,12 +193,12 @@ L74:
     bx lr
 }
 
-/* MI_CpuCopy8: an unaligned byte copy that never issues an 8-bit store. The
+/* An unaligned byte copy that never issues an 8-bit store. The
  * destination is aligned to a halfword with an edge-preserving read-modify-
  * write, then the copy runs as a halfword shift (when source and destination
  * parity differ) or a word+halfword bulk loop, closing with the same edge RMW
  * tail. */
-asm void CpuCopy8(const void *src, void *dst, u32 size)
+asm void MI_CpuCopy8(const void *src, void *dst, u32 size)
 {
     cmp r2, #0
     bxeq lr

@@ -2,12 +2,12 @@
 #include "types.h"
 #include "private/arm9_wbt.h"
 #include "private/wbt_block_info_list.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
 extern int data_020a94c0;
-extern void func_02065a84(int x);
+extern void WBT_SetOwnAid(int x);
 extern void func_02065ad0(struct WBTBlockInfoList *list);
 extern WBTWork *func_02065b94(void);
 extern int func_02065af0(int *thiz);
@@ -16,21 +16,21 @@ extern void func_02065ba0(int v);
 extern void func_02065bb0(int v);
 
 /* NitroSDK WBT_InitChild(callback): as WBT_InitParent (WBT_InitParent), but
- * stores -1 through func_02065a84 and sets both packet sizes to 0. The
+ * stores -1 through WBT_SetOwnAid and sets both packet sizes to 0. The
  * callback becomes the system command's callback; func_02040c34
  * passes func_02040f30, the file-share child's. */
 void WBT_InitChild(void (*callback)(void *)) {
-    unsigned int saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     int i;
     WBTWork *work;
     WBTCommand cmd;
 
     if (data_020a94c0 == 1) {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return;
     }
     data_020a94c0 = 1;
-    func_02065a84(-1);
+    WBT_SetOwnAid(-1);
     func_02065ad0(0);
     work = func_02065b94();
     work->cmd.command = 0;
@@ -49,6 +49,6 @@ void WBT_InitChild(void (*callback)(void *)) {
     func_02065be0();
     func_02065ba0(0);
     func_02065bb0(0);
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 }

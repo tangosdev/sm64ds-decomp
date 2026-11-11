@@ -17,7 +17,7 @@
  *
  *     mKoopaUniqueId   0x320  uniqueID of the daKpa actor (actor id 0x117)
  *     mTimer           0x324  counts while mActive is set
- *     mPhase           0x326  counts in func_ov060_02117db8; destruction past 0x12c
+ *     mPhase           0x326  counts in StateFall; destruction past 0x12c
  *     mState           0x328  index into the data_ov060_0211b1ac handler table
  *     mVariant         0x329  param1 & 0xf, index of the model/collision pair
  *     mActive          0x32a
@@ -53,14 +53,11 @@ struct daKpa3Bg_c : dBgActor_c {
     virtual s32 Behavior();                /* slot  6 */
     virtual s32 Render();                  /* slot  9 */
 
-    /* The mState handlers. Declared here so &daKpa3Bg_c::func_ov060_... is a
-       pointer-to-member constant for the data_ov060_0211b1ac table. The TU
-       defines StateStart and StateCheck as members and
-       func_ov060_02117db8, which is parsed as C, as a free function under
-       the member's mangled spelling. */
+    /* The mState handlers, in data_ov060_0211b1ac's pointer-to-member
+       table. N64's falling_bowser_plat_act_start, _check and _fall. */
     int StateStart();
     void StateCheck();
-    void func_ov060_02117db8();
+    void StateFall();
 };
 
 #ifndef SM64DS_PLATFORM_PC

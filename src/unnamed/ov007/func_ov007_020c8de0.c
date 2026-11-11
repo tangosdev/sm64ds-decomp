@@ -2,10 +2,10 @@
 #include "Ov007Tween.h"
 
 extern void func_ov007_020c90c0(void *self);
-extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int LenVec3(const Vector3 *v);
-extern void NormalizeVec3(const Vector3 *v, Vector3 *out);
-extern void func_02053320(int s, int *a, int *b, int *out);
+extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
+extern int VEC_Mag(const Vector3 *v);
+extern void VEC_Normalize(const Vector3 *v, Vector3 *out);
+extern void VEC_MultAdd(int s, int *a, int *b, int *out);
 
 /* One frame of a vector tween: mode 0 blends *out from `from` to `to` by t
  * (then steps t, func_ov007_020c90c0), mode 1 moves *out toward `to` by
@@ -59,13 +59,13 @@ int func_ov007_020c8de0(Ov007VecTween *o) {
             Vector3 *dst = o->out;
             int step = o->step;
             int ok; /* stays a flag: setting state inside the arm shrinks it (0x170) */
-            SubVec3((Vector3 *)&o->to, (Vector3 *)dst, (Vector3 *)&tmp);
-            if (LenVec3(&tmp) <= step) {
+            VEC_Subtract((Vector3 *)&o->to, (Vector3 *)dst, (Vector3 *)&tmp);
+            if (VEC_Mag(&tmp) <= step) {
                 *dst = o->to;
                 ok = 1;
             } else {
-                NormalizeVec3(&tmp, &tmp);
-                func_02053320(step, (int *)&tmp, (int *)dst, (int *)dst);
+                VEC_Normalize(&tmp, &tmp);
+                VEC_MultAdd(step, (int *)&tmp, (int *)dst, (int *)dst);
                 ok = 0;
             }
             if (ok) {

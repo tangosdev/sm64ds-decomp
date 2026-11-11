@@ -1,7 +1,7 @@
 #include "Ov007Spring.h"
 
-extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int LenVec3(const Vector3 *v);
+extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
+extern int VEC_Mag(const Vector3 *v);
 
 /* Sets each link's rest offset and length from the rest points: link i
  * runs from rest[i] to rest[i + 1], and in a closed list (flags bit 1) the
@@ -29,8 +29,8 @@ void func_ov007_020c7694(Ov007PointList *list, Vector3 *rest) {
         do {
             int j = (i < list->count - 1) ? i + 1 : 0;
             Ov007Link *e = list->links[i];
-            SubVec3(&rest[i], &rest[j], &e->dir);
-            e->length = LenVec3(&e->dir);
+            VEC_Subtract(&rest[i], &rest[j], &e->dir);
+            e->length = VEC_Mag(&e->dir);
             i++;
         } while (i < cnt);
         break;

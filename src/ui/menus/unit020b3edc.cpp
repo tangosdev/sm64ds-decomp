@@ -31,7 +31,7 @@
  * The functions keep their ROM names under C linkage.
  */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtFrameCtrl_c.h"
 #include "dExtAnmTexPat_c.h"
@@ -90,7 +90,7 @@ void *func_ov007_020b3f20(int idx) {
             void *dst = func_ov007_020c3df4(0, hv);
             DecompressLZ16(obj, dst);
             data_ov007_0210336c(obj);
-            CP15::FlushDataCache((u32)dst, hv);
+            DC_StoreRange(dst, hv);
             data_ov007_02103370[idx] = dst;
         } break;
 

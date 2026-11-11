@@ -462,8 +462,8 @@ void gx_bind_texture(const uint32_t *rgba, int width, int height) {
 
 // --- VRAM-sourced texturing: the game path ----------------------------------
 // The game binds textures by writing TEXIMAGE_PARAM / PLTT_BASE around each
-// display list; the texel data was already uploaded through GX::LoadTex into
-// the mapped texture-slot window and palettes through GX::LoadTexPltt. On
+// display list; the texel data was already uploaded through GX_LoadTex into
+// the mapped texture-slot window and palettes through GX_LoadTexPltt. On
 // hardware the slot addresses come from bank assignment; the port's HAL
 // points the game's upload-base globals at these same windows, so a slot
 // offset here is a plain host address.
