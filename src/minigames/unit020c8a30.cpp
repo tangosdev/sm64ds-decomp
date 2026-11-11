@@ -5,7 +5,8 @@
  * Trampoline2 reset the pool through Puff_ClearAll; dMgJump3DMario_c and
  * the Trampoline Mario unit claim records through Puff_Spawn.
  * No RTTI or vtable, so the record name is coined and the C entries keep
- * the names their callers use.
+ * the names their callers use. Draw, Update and Clear act on one record and
+ * are its members; the pool entries call them on each of sPuffs.
  *
  * The file defines the pool. mwcc builds sPuffs in this file's static
  * initializer (retail 0x0212f660) with __cxa_vec_ctor and registers the
@@ -33,6 +34,10 @@ struct Puff {
     short mIndex;
     short mAngle;
     short mTimer;
+
+    void Draw();
+    void Update();
+    void Clear();
 };
 
 extern "C" {
@@ -80,49 +85,49 @@ void Puff_Spawn(int x, int y) {
     }
 }
 
-void Puff_Clear(Puff *p) {
-    p->mActive = 0;
+void Puff::Clear() {
+    mActive = 0;
 }
 
-void Puff_Update(Puff *entry) {
-    if (entry->mActive == 0)
+void Puff::Update() {
+    if (mActive == 0)
         return;
-    entry->mAngle += 0x200;
-    entry->mSpread = FX_MUL(entry->mSpread, entry->mScale);
-    entry->mVelY -= 0x40;
-    ApproachLinear(entry->mScale, 0x800, 0x10);
-    if (ApproachLinear2(entry->mTimer, 0, 1) != 0) {
-        if (entry->mIndex != 2)
-            entry->mActive = 0;
+    mAngle += 0x200;
+    mSpread = FX_MUL(mSpread, mScale);
+    mVelY -= 0x40;
+    ApproachLinear(mScale, 0x800, 0x10);
+    if (ApproachLinear2(mTimer, 0, 1) != 0) {
+        if (mIndex != 2)
+            mActive = 0;
     } else {
-        entry->x += entry->mVelX;
-        entry->y += entry->mVelY;
+        x += mVelX;
+        y += mVelY;
     }
 }
 
-void Puff_Draw(Puff *entry) {
+void Puff::Draw() {
     void *sprite;
     int sine;
     int offsetX;
     int drawX;
-    if (entry->mActive == 0)
+    if (mActive == 0)
         return;
     if (sPuffXTable != 0) {
-        sprite = sPuffXTable[entry->mIndex];
+        sprite = sPuffXTable[mIndex];
     } else {
         int language = GetGameLanguage();
-        sprite = sPuffSprites[language][entry->mIndex];
+        sprite = sPuffSprites[language][mIndex];
     }
-    sine = FX_SinIdx((unsigned short)entry->mAngle >> 4);
-    offsetX = FX_MUL(entry->mSpread, sine);
-    drawX = entry->x + offsetX;
-    Hud_RenderSprite(sprite, drawX >> 12, entry->y >> 12, -1, -1);
+    sine = FX_SinIdx((unsigned short)mAngle >> 4);
+    offsetX = FX_MUL(mSpread, sine);
+    drawX = x + offsetX;
+    Hud_RenderSprite(sprite, drawX >> 12, y >> 12, -1, -1);
 }
 
 void Puff_ClearAll(int a0, int a1) {
     int i;
     for (i = 0; i < 3; i++) {
-        Puff_Clear(&sPuffs[i]);
+        sPuffs[i].Clear();
     }
     sPuffNextIndex = a0;
     sPuffXTable = (void **)a1;
@@ -131,14 +136,14 @@ void Puff_ClearAll(int a0, int a1) {
 void Puff_UpdateAll(void) {
     int i;
     for (i = 0; i < 3; i++) {
-        Puff_Update(&sPuffs[i]);
+        sPuffs[i].Update();
     }
 }
 
 void Puff_DrawAll(void) {
     int i;
     for (i = 2; i >= 0; i--) {
-        Puff_Draw(&sPuffs[i]);
+        sPuffs[i].Draw();
     }
 }
 

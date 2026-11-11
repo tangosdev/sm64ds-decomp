@@ -20891,15 +20891,15 @@
     },
     "ov006:0x020c8af4": {
       "author": "tangosdev",
-      "name": "_Z9Puff_DrawP4Puff"
+      "name": "_ZN4Puff4DrawEv"
     },
     "ov006:0x020c8ba8": {
       "author": "tangosdev",
-      "name": "_Z11Puff_UpdateP4Puff"
+      "name": "_ZN4Puff6UpdateEv"
     },
     "ov006:0x020c8c6c": {
       "author": "tangosdev",
-      "name": "_Z10Puff_ClearP4Puff"
+      "name": "_ZN4Puff5ClearEv"
     },
     "ov006:0x020c8c78": {
       "author": "andrewboudreau",
