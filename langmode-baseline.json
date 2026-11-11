@@ -15,12 +15,12 @@
       "opt_lifetimes": 2,
       "opt_loop_invariants": 12,
       "opt_prelinearize": 1,
-      "opt_propagation": 15,
+      "opt_propagation": 13,
       "opt_strength_reduction": 26,
       "optimize_for_size": 13
     },
-    "pragma_files": 56,
-    "pragma_overrides": 101,
+    "pragma_files": 55,
+    "pragma_overrides": 99,
     "pragma_resets": 0,
     "pragma_resets_by_name": {}
   },
@@ -56,16 +56,16 @@
       },
       "method": {
         "draft": 0,
-        "migrated": 6313,
-        "unmigrated": 1
+        "migrated": 6409,
+        "unmigrated": 0
       }
     },
-    "cpp_still_handspelled": 1,
+    "cpp_still_handspelled": 0,
     "mangled_c": 0,
-    "mangled_cpp": 7267,
-    "mangled_total": 7267,
+    "mangled_cpp": 7362,
+    "mangled_total": 7362,
     "nonmatching_drafts": 0,
-    "unmigrated_total": 1
+    "unmigrated_total": 0
   },
   "shadow_decls": {
     "header_shadows": 1,
