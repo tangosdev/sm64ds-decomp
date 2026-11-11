@@ -685,6 +685,13 @@
       "canonical_module": "ov010",
       "canonical_address": "0x02112ae4",
       "reason": "InitResources owns the complete 0x88-byte vtable storage. romdata_check applies the eight-byte public-address-point bias and proves the preamble plus every retail slot before isolation discards the copy."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "include/types.h gives Vector3 an empty inline destructor, so InitResources' Vector3 spawn position re-emits it with vague linkage. The cartridge keeps exactly one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by src/engine/view/d_camera_dtor.cpp; this object's copy is the identical 4-byte `bx lr` body with no relocations, and rombuild compares it against those cartridge bytes before discarding the duplicate."
     }
   ],
   "notes": [
