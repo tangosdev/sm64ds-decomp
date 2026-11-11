@@ -54,7 +54,6 @@ struct C1HikariModelFilePtr : SharedFilePtr {
 
 /* Defined at the end of this file so its constructor does not enter .text. */
 extern C1HikariModelFilePtr gC1HikariModelFile;
-extern SaveBlock data_0209caa0;
 
 /* local extern: arm9 math and save helpers with no shared header. */
 extern "C" {

@@ -18,10 +18,11 @@
  * mIsActive. cMgSmartball_object_c_Construct writes those same stores into
  * the object it is given.
  *
- * SIZE 0x34. The constructor's last write is the u8 at 0x30, which alone
- * would only give 0x31 rounded to 0x34; the upper bound comes from a child,
- * whose own constructor writes 0x34 and 0x4c. Base ends where the first
- * derived field begins.
+ * SIZE 0x34, DATA SIZE 0x31. The constructor's last write is the u8 at 0x30
+ * and nothing in the class lies past it. The class is not a POD (it has a
+ * vtable), so mwccarm lays a child's first fields into its tail padding:
+ * each child owns its own bytes from 0x31 on (pushswitch's mTriggered, the
+ * board's nine-cell array, the wing's and propeller's angle at 0x32).
  *
  * THE THREE 2-WORD PAIRS ARE THE INTERESTING PART, and their RELATIONSHIP
  * is what is evidenced, not their meaning. The constructor writes the same
@@ -99,36 +100,6 @@ struct cMgSmartball_object_c {
                           expiry, and both cMgSmartball_board_c::SaveSnapshot
                           and cMgSmartball_kinoko_c::SaveSnapshot skip a
                           tracked ball whose byte at 0x30 is 0. */
-    /* 0x031-0x033 IS A THREE-BYTE REGION WITH NO SINGLE TYPE, and that is the
-       answer, not a gap in the evidence. Three children read the same three
-       bytes three incompatible ways, all of them byte-matching:
-
-         - cMgSmartball_ana_c writes 0x031 and 0x032 as independent u8 0/1
-           flags and never touches 0x033.
-         - cMgSmartball_wing_c and cMgSmartball_propeller_c read a 16-bit
-           angle spanning 0x032-0x033 -- wing signed (compares < 0x3000,
-           += 0x200), propeller unsigned (>> 4 to index a sine table, lsr not
-           asr, a real codegen difference). They disagree with each other, so
-           no one signedness is right for both.
-         - cMgSmartball_board_c treats 0x031 as the HEAD of a nine-element
-           per-cell byte array that runs to 0x039 -- i.e. through all three
-           of these bytes and on into the derived class.
-
-       An earlier revision declared 0x032 as a single s16 and called the
-       signedness "contested". It is not contested; it is per-reader. Three
-       u8s is the declaration that lets each reader spell its own access
-       correctly with a cast, and misstates none of them. Every caller reaches
-       these bytes by raw cast today, so this is byte-free -- but a future
-       caller that wants the 16-bit angle must cast, not add a name. */
-    u8 mTriggered;    /* 0x031 -- raised when the object is triggered: a ball
-                          dropped in (ana), a hit (ball), a press (pushswitch), a
-                          launch (spring), the piranha's toggle (pakkun). Also
-                          the first cell of cMgSmartball_board_c's nine-byte
-                          cell array. */
-    u8  unk_032;      /* 0x032 -- low byte of the wing/propeller angle, an
-                          independent flag to ana, a board cell to board.
-                          43 files touch this span. */
-    u8  unk_033;      /* 0x033 -- high byte of that angle; a board cell. */
 
     cMgSmartball_object_c(char *a1, int a2, int *a3) {
         int lo, hi;

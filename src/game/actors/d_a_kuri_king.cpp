@@ -48,10 +48,8 @@
  *
  * deslop leftovers:
  * - func_ov074_0212087c and func_ov074_02121270 take the object as arg1 (out
- *   param in arg0); func_ov074_02121a4c is reached through a (char*,int,int)
- *   cast call whose third argument survives in the emitted code; and
- *   func_ov074_0212007c/021201ec/021203e0 are (void) stubs whose data records
- *   don't carry `this`. Those six stay free.
+ *   param in arg0), and func_ov074_0212007c/021201ec/021203e0 are (void)
+ *   stubs whose data records don't carry `this`. Those five stay free.
  * - mBodyMatrix is raw s32 words reached through a Matrix4x3 cast; a
  *   Matrix4x3 member there would run ~Vector3 from ~daKuriKing_c.
  *   mShadowMatrices is left untyped with it [GUESS: same ~Vector3 cost].
@@ -212,7 +210,6 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_);
 extern "C" void func_ov074_021203e0(void);
 extern "C" void func_ov074_021201ec(void);
 extern "C" void func_ov074_0212007c(void);
-extern "C" void func_ov074_02121a4c(char* c, int idx);
 
 /* data_ov074_021230f8 is copied as 8-byte records (__sinit_ov074). daKuriKing_c
  * has virtuals, so a daKuriKing_c::* is wider than that; the call stays on this
@@ -411,7 +408,7 @@ void daKuriKing_c::UpdateDefeat() {
     player = this->mTalkPlayer;
 
     if (this->mAnmModel.Finished() != 0) {
-        func_ov074_02121a4c((char*)this, 4);
+        PlayAnim(4);
     }
 
     switch (this->mSubState) {
@@ -537,7 +534,7 @@ void daKuriKing_c::EnterDefeat() {
     this->mTextureSequence.currFrame = 0x2000;
     this->mMaterialChanger.currFrame = ((int)data_ov074_02122e04[1]) << 0xc;
     this->mSubState = 0;
-    ((void (*)(char *, int, int))func_ov074_02121a4c)((char *)this, 3, 0);
+    PlayAnim(3);
     this->mScaleSteps = 3;
 }
 
@@ -554,7 +551,7 @@ void daKuriKing_c::UpdateScaleChange() {
             if (b == 0) return;
             p = (unsigned char*)(((int)&this->mSubState));
             *p = *p + 1;
-            func_ov074_02121a4c((char*)this, 0);
+            PlayAnim(0);
             func_02012694(0x15c, &this->mCamSpacePosX);
             return;
         }
@@ -562,7 +559,7 @@ void daKuriKing_c::UpdateScaleChange() {
             unsigned char* p = (unsigned char*)(((int)&this->mSubState));
             *p = *p + 1;
         }
-        func_ov074_02121a4c((char*)this, 0);
+        PlayAnim(0);
         func_02012694(0x15c, &this->mCamSpacePosX);
         return;
     case 1:
@@ -609,7 +606,7 @@ void daKuriKing_c::UpdateKnockback() {
         if (player->StartTalk(*this, 1) == 0) return;
         Message::PrepareTalk();
         if (IsAnimPlaying(1) != 0 || IsAnimPlaying(2) != 0) {
-            func_ov074_02121a4c((char*)this, 0xc);
+            PlayAnim(0xc);
             return;
         }
         ChangeState(7);
@@ -637,14 +634,14 @@ void daKuriKing_c::UpdateSummonGoombas() {
     if (IsAnimPlaying(6) != 0) {
         if (FinishTurnAround() == 0)
             return;
-        func_ov074_02121a4c((char*)this, 0xb);
+        PlayAnim(0xb);
         return;
     } else {
         if (IsAnimPlaying(0xb) != 0)
             goto L90;
         if (StopWalking() == 0)
             return;
-        func_ov074_02121a4c((char*)this, 0xb);
+        PlayAnim(0xb);
         return;
     }
 
@@ -705,7 +702,7 @@ void daKuriKing_c::func_ov074_0211ffcc() {
     if (IsAnimPlaying(5) == 0) {
         if (StopWalking() == 0)
             return;
-        func_ov074_02121a4c((char *)this, 5);
+        PlayAnim(5);
         return;
     }
   if (this->DistToCPlayer() >= 0x4b0000) {
@@ -732,7 +729,7 @@ void daKuriKing_c::UpdateWalk() {
     if (IsAnimPlaying(0xa) != 0) {
         if (this->mAnmModel.Finished() == 0)
             return;
-        func_ov074_02121a4c((char *)this, 8);
+        PlayAnim(8);
         return;
     }
     ApproachAngle(&this->mWalkSpeed, this->mMaxWalkSpeed, 0xa, 0x20, 1);
@@ -745,7 +742,7 @@ void daKuriKing_c::UpdateWalk() {
 }
 
 void daKuriKing_c::EnterWalk() {
-    func_ov074_02121a4c((char*)this, 0xa);
+    PlayAnim(0xa);
     UpdateMaxWalkSpeed();
 }
 
@@ -941,7 +938,7 @@ int daKuriKing_c::StopWalking() {
     if (IsAnimPlaying(8) != 0) {
         if (ApproachAngle(&this->mWalkSpeed, 0, 0x1e, 0x20, 1) == 0) {
             if ((unsigned short)(this->mAnmModel.currFrame >> 12) == 0) {
-                func_ov074_02121a4c((char*)this, 9);
+                PlayAnim(9);
             }
             goto ret0;
         }
@@ -949,7 +946,7 @@ int daKuriKing_c::StopWalking() {
         goto ret0;
     }
     if (IsAnimPlaying(0xa) != 0) {
-        func_ov074_02121a4c((char*)this, 9);
+        PlayAnim(9);
         goto ret0;
     }
     if (IsAnimPlaying(9) != 0) {
@@ -980,7 +977,7 @@ void daKuriKing_c::TurnIfPlayerBehind() {
     int ang = (short)(this->mWalkAngle + this->mDirection * 0x4500);
     if (AngleDiff(ang, this->HorzAngleToCPlayer()) <= 0x4000)
         return;
-    func_ov074_02121a4c((char*)this, 6);
+    PlayAnim(6);
     this->mDirection *= -1;
 }
 
@@ -1223,7 +1220,7 @@ void daKuriKing_c::HandleCylinderHits() {
                         dir = 1;
                         if (AngleDiff(ang, this->mAngleY) > 0x4000)
                             dir = -1;
-                        func_ov074_02121a4c((char *)this, 7);
+                        PlayAnim(7);
                         ChangeState(8);
                         SpawnHitParticles(pl, cur, 0);
                         func_02012694(0x15a, &this->mCamSpacePosX);
@@ -1276,10 +1273,10 @@ void daKuriKing_c::HandleCylinderHits() {
         int ang2 = Vec3_HorzAngle(&this->mPos, &player->mPos);
         dir2 = 1;
         if (AngleDiff(ang2, this->mAngleY) > 0x4000) {
-            func_ov074_02121a4c((char *)this, dir2);
+            PlayAnim(dir2);
             dir2 = -1;
         } else {
-            func_ov074_02121a4c((char *)this, 2);
+            PlayAnim(2);
         }
     }
     this->mWalkSpeed = dir2 * (this->mDirection * -0x190);
@@ -1509,15 +1506,14 @@ int daKuriKing_c::IsAnimPlaying(int idx) {
     return this->mAnmModel.file == anim->filePtr;
 }
 
-extern "C" void func_ov074_02121a4c(char* c, int idx)
-{
+/* Start clip `idx`: its BCA on the dExtAnmModel_c and its BTA on the texture
+ * transformer. */
+void daKuriKing_c::PlayAnim(int idx) {
     int off = idx * 0xc;
     void* file1 = data_ov074_02122f34[idx].anim->filePtr;
     int arg2 = *(int*)(data_ov074_02122f3c + off);
-    ((dExtAnmModel_c *)&((daKuriKing_c *)c)->mAnmModel)
-        ->SetAnim((BCA_File *)file1, arg2, 0x1000, 0);
-    ((daKuriKing_c *)c)
-        ->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
+    ((dExtAnmModel_c *)&this->mAnmModel)->SetAnim((BCA_File *)file1, arg2, 0x1000, 0);
+    this->mTextureTransformer.SetFile(**(BTA_File **)(data_ov074_02122f38 + off), 0, 0x1000, 0);
 }
 
 int daKuriKing_c::CleanupResources()

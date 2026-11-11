@@ -73,7 +73,6 @@ extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern signed char gCurrentSublevel;
 extern u8 gCurrentStarId;
-extern SaveBlock data_0209caa0;
 int SublevelToLevel(int i);
 int IsStarCollected(int level, int star);
 

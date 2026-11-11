@@ -54,6 +54,7 @@ enum d_a_cnn_AssetId { ASSET_HOUDAI_BMD = 0x045e };
 
 #include "common.h"
 #include "daCnn_c.h"
+#include "daBmb_c.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "Sound.h"
@@ -84,7 +85,6 @@ int AngleDiff(int a, int b);
 short GetAngleToCamera(int playerNo);
 
 int func_ov002_020df300(daPly_c *player);
-void func_ov102_0214ae1c(dActor_c *bomb);
 }
 
 /* The cannon's file-scope SharedFilePtr object, spelled through the same
@@ -370,7 +370,7 @@ void daCnn_c::StateWaitForRider() {
         if (held != 0) {
             int isBobOmb = held->actorID == kBobOmbActorID;
             if (isBobOmb) {
-                func_ov102_0214ae1c(held);
+                ((daBmb_c *)held)->func_ov102_0214ae1c();
                 return;
             }
         }

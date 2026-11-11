@@ -56,7 +56,6 @@ void VEC_Subtract(Vector3 *out, Vector3 *a, Vector3 *b);
 void func_ov026_02111234(daObjWlPolelift_c *actor);
 void func_ov026_021112a4(daObjWlPolelift_c *actor);
 
-extern SaveBlock data_0209caa0;
 extern Vector3 data_ov026_02113a9c;
 extern PoleliftModelFile data_ov026_02113ea0;
 }

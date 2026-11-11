@@ -38,6 +38,7 @@ struct dBgPi : dBgPc {
     dBgPi &operator=(const dBgPi &other);
     void CopyTo(dBgPi &dst) const;
     u32 GetClsnID() const;
+    struct dActor_c *GetOwner() const;
 
     int GetColliderIndex() const;
     void SetColliderIndex(int idx);
@@ -49,10 +50,6 @@ struct dBgPi : dBgPc {
                      struct dBgW *collider);
     void Reset();
 };
-
-/* The result's owner (+0x20), an arm9 free function that ends the dBgPi
-   run in src/engine/collision/d_bg_ch_sph_crr_query.cpp. */
-extern "C" struct dActor_c *func_02037f44(const dBgPi *);
 
 /* Size is the dBgPi's own span AND the stride of the three consecutive results
    dBgCh_SphCrr holds at 0x74/0x9c/0xc4 -- notes/collision-system.md 3.2. */

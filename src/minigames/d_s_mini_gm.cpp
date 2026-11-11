@@ -91,7 +91,6 @@ extern u8 gMgMenuPage;
 extern MgEntry gMgMenuRow;
 extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
-extern SaveBlock data_0209caa0;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern short gSubBg3HOffset;

@@ -93,7 +93,6 @@ extern int data_0208eeac[];
 extern int data_0208eecc[];
 extern u8 data_0208f074[];
 extern u8 data_0208f174[];
-extern SaveBlock data_0209caa0;
 extern u32 gNextActorUpdateMask;
 extern u8 gGameMode;
 extern s16 data_0209f4a2[];

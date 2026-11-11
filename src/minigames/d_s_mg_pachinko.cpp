@@ -114,7 +114,7 @@ extern void Mg_SetTopScreenYOffset(int a);
 extern void Mg_InitBrush(char *a, char b, int c, int d);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern void func_02012718(int a, int b);
-extern int  Sound_PlayIfNotActive(int handle, int player, int id, int unused);
+extern int Sound_PlayIfNotActive(int handle, int player, int id, short unused);
 extern s16 atan2_hold_d_s_mg_pachinko_1(int y, int x);
 extern void FreeGfxSlotsById(int arg);
 extern void *LoadFile(int handle);

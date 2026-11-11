@@ -122,7 +122,7 @@ void func_02020334(void);
 void func_02020124(void);
 int func_0203d890(void);
 u32 LoadCompressedFileAt(int, void *);
-int Sound_PlayIfNotActive(int, int, int, int);
+int Sound_PlayIfNotActive(int, int, int, short);
 }
 
 /* The entry scene's one global graph callback, ov075 .bss 0x0211d71c. The

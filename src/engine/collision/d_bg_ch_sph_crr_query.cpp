@@ -606,8 +606,8 @@ u32 dBgPi::GetClsnID() const
 
 /* The owner of the collider that produced this result; it ends the dBgPi
    run. d_a_mky.cpp is its caller. */
-extern "C" dActor_c *func_02037f44(const dBgPi *p) {
-    return p->owner;
+dActor_c *dBgPi::GetOwner() const {
+    return owner;
 }
 
 /* The constructor is defined before the destructor so the deferred

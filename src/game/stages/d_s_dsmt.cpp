@@ -58,7 +58,6 @@ extern u8 data_0209b34b[];
 extern u8 data_0209b34e[];
 extern u8 data_0209b3d8[];
 extern u8 data_0208ee3c;
-extern SaveBlock data_0209caa0;
 extern MinigameSaveData data_0209cae4;
 extern u8 gSoftResetPending;
 /* The scene's graph callback: the scene registers its own object here and

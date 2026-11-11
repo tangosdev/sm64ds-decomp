@@ -64,7 +64,6 @@ void Matrix4x3_FromRotationY(Matrix4x3 *matrix, int angle);
 extern u8 gLocalPlayerId;
 extern dCamera_c *gCamera;
 extern daPly_c *gPlayers[];
-extern SaveBlock data_0209caa0;
 extern Vector3 data_020a0ebc;
 
 struct StarGateModelFilePtr : SharedFilePtr {
