@@ -16,11 +16,11 @@
       "opt_loop_invariants": 12,
       "opt_prelinearize": 1,
       "opt_propagation": 13,
-      "opt_strength_reduction": 26,
+      "opt_strength_reduction": 25,
       "optimize_for_size": 13
     },
-    "pragma_files": 55,
-    "pragma_overrides": 99,
+    "pragma_files": 54,
+    "pragma_overrides": 98,
     "pragma_resets": 0,
     "pragma_resets_by_name": {}
   },
