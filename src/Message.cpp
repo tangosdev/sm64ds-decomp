@@ -540,34 +540,40 @@ extern "C" void Message_DrawCenteredLine(int a, int b)
     data_0209d6a8 = data_0209d6a8 + ((u8) (((data_0209d6b0 + 7) / 8) << new_var4));
 }
 
-extern "C" void func_0201d850(u32 arg0)
-{
-    u16 var_r5;
-    u16 var_r4;
-    volatile u16 sp0;
-    volatile s32 sp4;
-    volatile s32 sp8;
+/* Lays out the pause and level-clear titles on BG3. Each line is rendered
+   into the next run of character tiles from 0x200 (the 0x100 tiles cleared
+   below; 0x2ff, the last, is the blank the map is filled with) and centred
+   in the 32-column map, two tile rows per line, from row 4. Which lines
+   appear depends on the course and on data_0209f20c. A main course
+   (course < 15) gets its number line, the course name and the star line.
+   The star line leads with glyph 0xf0 when the star is collected or
+   data_0209f20c is set, and with 0xf1 otherwise. */
+extern "C" void func_0201d850(u32 course) {
+    u16 tile = 0x200;
+    u16 mapPos = 0x80;
+    /* The fill values go through the stack, as the cartridge does. */
+    volatile u16 blank;
+    volatile s32 zero;
+    volatile s32 zeroGlyphs;
 
     data_0209d660 = 0;
-    var_r5 = 0x200;
-    var_r4 = 0x80;
     func_0201eaac();
     data_0209d6a8 = 0;
     data_0209d65c = 0;
 
     {
         void *pa = (char *)G2_GetBG3CharPtr() + 0x4000;
-        sp4 = 0;
-        MIi_CpuClear32(sp4, (int *)pa, 0x2000);
+        zero = 0;
+        MIi_CpuClear32(zero, (int *)pa, 0x2000);
     }
     {
         void *pb = G2_GetBG3ScrPtr();
-        sp0 = 0x2ff;
-        MIi_CpuClear16(sp0, (char *)pb, 0x800);
+        blank = 0x2ff;
+        MIi_CpuClear16(blank, (char *)pb, 0x800);
     }
     SetBg3Offset(0, 0);
 
-    if (arg0 < 0xf) {
+    if (course < 0xf) {
         MessageEntry *ep = &data_0209d708[0x28d];
         s32 base;
         s32 num;
@@ -581,49 +587,41 @@ extern "C" void func_0201d850(u32 arg0)
         Message::LayoutLine();
         Message::AddChar(0x4d);
 
-        num = (arg0 + 1) & 0xff;
-        if (num / 10 != 0) {
+        num = (course + 1) & 0xff;
+        if (num / 10 != 0)
             Message::AddChar(data_0208ee74[num / 10]);
-        }
         Message::AddChar(data_0208ee74[num % 10]);
 
         data_0209d6a8 = (data_0209d6b0 + 7) / 8;
         func_0201b388(data_0209d6a8);
         data_0209d6c0 = 1;
         n = data_0209d6a8;
-        p = (u16 *)G2_GetBG3ScrPtr() + (var_r4 + ((0x20 - n) >> 1));
+        p = (u16 *)G2_GetBG3ScrPtr() + (mapPos + ((0x20 - n) >> 1));
         for (i = 0; i < n; i++) {
-            p[i] = (u16)(var_r5 + i);
-            (p + i)[0x20] = (u16)(n + (var_r5 + i));
+            p[i] = (u16)(tile + i);
+            (p + i)[0x20] = (u16)(n + (tile + i));
         }
-        var_r4 += 0x40;
-        var_r5 += (u16)(n * 2);
+        mapPos += 0x40;
+        tile += (u16)(n * 2);
     }
 
-    if (((data_0209f20c != 0) && (arg0 < 0x15)) || (data_0209f20c == 0)) {
+    if (data_0209f20c != 0 && course < 0x15 || data_0209f20c == 0) {
         s32 n;
-        s32 tile;
+        s32 t;
         u16 *p;
         s32 i;
 
-        if (data_0209f20c != 0) {
-            if (arg0 >= 0xf) {
-                var_r4 = 0x100;
-            } else {
-                goto L_r4_else;
-            }
-        } else {
-L_r4_else:
-            if (arg0 >= 0xf) var_r4 = 0x140;
-        }
+        if (data_0209f20c != 0 && course >= 0xf)
+            mapPos = 0x100;
+        else if (course >= 0xf)
+            mapPos = 0x140;
 
         data_0209d65c = 0;
         data_0209d6a4 = 0;
-        data_0209d6f0 = (u8 *)(
-            (char *)data_0209d708 + (arg0 + 0x196) * 8);
+        data_0209d6f0 = (u8 *)((char *)data_0209d708 + (course + 0x196) * 8);
         {
             s32 sum = data_0209d6fc + 0x28 + data_0209d70c[1] +
-                      ((MessageEntry *)((char *)data_0209d708 + (arg0 + 0x196) * 8))->textOffset;
+                      ((MessageEntry *)((char *)data_0209d708 + (course + 0x196) * 8))->textOffset;
             data_0209d6f4 = sum;
             data_0209d6f4 = sum + 3;
         }
@@ -631,57 +629,58 @@ L_r4_else:
 
         n = (u8)((data_0209d6b0 + 7) / 8);
         func_0201b388(n);
-        p = (u16 *)G2_GetBG3ScrPtr() + (var_r4 + ((0x20 - n) >> 1));
+        p = (u16 *)G2_GetBG3ScrPtr() + (mapPos + ((0x20 - n) >> 1));
+        /* The counter is set up behind the loop's entry test, as written
+           here; a for loop starts it ahead of the test (10 words differ). */
         i = 0;
         if (i < n) {
-            tile = var_r5;
+            t = tile;
             do {
-                p[i] = (u16)tile;
-                (p + i)[0x20] = (u16)(n + tile);
-                tile++;
+                p[i] = (u16)t;
+                (p + i)[0x20] = (u16)(n + t);
+                t++;
                 i++;
             } while (i < n);
         }
         data_0209d6a8 += n;
         data_0209d6c0 = 1;
-        var_r5 += (u16)(n * 2);
-        var_r4 += 0x40;
+        tile += (u16)(n * 2);
+        mapPos += 0x40;
     }
 
-    if ((arg0 < 0xf) || ((data_0209f20c != 0) && ((arg0 < 0xf) || (arg0 >= 0x15)))) {
+    if (course < 0xf || data_0209f20c != 0 && (course < 0xf || course >= 0x15)) {
         s32 n;
-        s32 tile;
+        s32 t;
         u16 *p;
         s32 i;
 
-        sp8 = 0;
+        zeroGlyphs = 0;
         data_0209d65c = 0;
         data_0209d678 = 0;
         data_0209d704 = 0;
         data_0209d6a4 = 0;
         data_0209d6b0 = 0;
-        MIi_CpuClear32(sp8, data_0209d74c, 0xf00);
+        MIi_CpuClear32(zeroGlyphs, data_0209d74c, 0xf00);
         data_0209d6b8 = 1;
-        if ((IsStarCollected(arg0, gCurrentStarId) != 0) || (data_0209f20c != 0)) {
+        if (IsStarCollected(course, gCurrentStarId) || data_0209f20c != 0)
             Message::AddChar(0xf0);
-        } else {
+        else
             Message::AddChar(0xf1);
-        }
         data_0209d65c += data_0208f074[0xf0];
         Message::AddChar(0x4d);
         data_0209d65c += data_0208f074[0x4d];
-        if (arg0 < 0xf) {
+        if (course < 0xf) {
             if (data_0209f20c != 0) {
-                s32 off = arg0 * 7 + 0x1b3;
+                s32 off = course * 7 + 0x1b3;
                 data_0209d6f0 = (u8 *)&data_0209d708[off + gCollectedStarId];
             } else {
-                s32 off = arg0 * 7 + 0x1b3;
+                s32 off = course * 7 + 0x1b3;
                 data_0209d6f0 = (u8 *)&data_0209d708[off + gCurrentStarId];
             }
-            var_r4 = 0x140;
+            mapPos = 0x140;
         } else {
             data_0209d6f0 = (u8 *)&data_0209d708[0x21d];
-            var_r4 = 0x100;
+            mapPos = 0x100;
         }
         {
             s32 base = data_0209d6fc + 0x28 + data_0209d70c[1];
@@ -692,34 +691,32 @@ L_r4_else:
 
         n = (u8)((data_0209d6b0 + 7) / 8);
         func_0201b388(n);
-        p = (u16 *)G2_GetBG3ScrPtr() + (var_r4 + ((0x20 - n) >> 1));
+        p = (u16 *)G2_GetBG3ScrPtr() + (mapPos + ((0x20 - n) >> 1));
         i = 0;
         if (i < n) {
-            tile = var_r5;
+            t = tile;
             do {
-                p[i] = (u16)tile;
-                (p + i)[0x20] = (u16)(n + tile);
-                tile++;
+                p[i] = (u16)t;
+                (p + i)[0x20] = (u16)(n + t);
+                t++;
                 i++;
             } while (i < n);
         }
         data_0209d6a8 += n;
         data_0209d6c0 = 1;
-        var_r5 += (u16)(n * 2);
-        var_r4 += 0x40;
+        tile += (u16)(n * 2);
+        mapPos += 0x40;
     }
 
     if (data_0209f20c != 0) {
         s32 n;
-        s32 tile;
         u16 *p;
         s32 i;
 
-        if ((arg0 < 0xf) || (arg0 >= 0x15)) {
+        if (course < 0xf || course >= 0x15)
             data_0209d6f0 = (u8 *)&data_0209d708[0x28c];
-        } else {
+        else
             data_0209d6f0 = (u8 *)&data_0209d708[0x2b3];
-        }
         data_0209d6b8 = 0;
         {
             s32 base = data_0209d6fc + 0x28 + data_0209d70c[1];
@@ -729,32 +726,24 @@ L_r4_else:
 
         n = (u8)((data_0209d6b0 + 7) / 8);
         func_0201b388(n);
-        p = (u16 *)G2_GetBG3ScrPtr() + (var_r4 + ((0x20 - n) >> 1));
-        i = 0;
-        if (i < n) {
-            tile = var_r5;
-            do {
-                p[i] = (u16)tile;
-                (p + i)[0x20] = (u16)(n + tile);
-                tile++;
-                i++;
-            } while (i < n);
+        p = (u16 *)G2_GetBG3ScrPtr() + (mapPos + ((0x20 - n) >> 1));
+        for (i = 0; i < n; i++) {
+            p[i] = (u16)(tile + i);
+            (p + i)[0x20] = (u16)(n + (tile + i));
         }
         data_0209d6a8 += n;
         data_0209d6c0 = 1;
         return;
     }
 
-    if (arg0 >= 0xf) {
+    if (course >= 0xf)
         return;
-    }
 
     data_0209d6b8 = 0;
     {
         MessageEntry *ep = &data_0209d708[0x28e];
         s32 base;
         s32 n;
-        s32 tile;
         u16 *p;
         s32 i;
 
@@ -765,16 +754,10 @@ L_r4_else:
 
         n = (u8)((data_0209d6b0 + 7) / 8);
         func_0201b388(n);
-        p = (u16 *)G2_GetBG3ScrPtr() + ((u16)(var_r4 + 0x40) + ((0x20 - n) >> 1));
-        i = 0;
-        if (i < n) {
-            tile = var_r5;
-            do {
-                p[i] = (u16)tile;
-                (p + i)[0x20] = (u16)(n + tile);
-                tile++;
-                i++;
-            } while (i < n);
+        p = (u16 *)G2_GetBG3ScrPtr() + ((u16)(mapPos + 0x40) + ((0x20 - n) >> 1));
+        for (i = 0; i < n; i++) {
+            p[i] = (u16)(tile + i);
+            (p + i)[0x20] = (u16)(n + (tile + i));
         }
     }
 }
@@ -1325,28 +1308,39 @@ extern "C" void func_0201f138(void)
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
 }
 
+static inline int IsKuppaScriptRunning() {
+    return gRunningKuppaScript != 0;
+}
+
+static inline int IsGameMode(int mode) {
+    return gGameMode == mode;
+}
+
+/* Opens message arg0. Places the box one of three ways: against the left edge in
+   game mode 0 before the intro is done (unless a Kuppa script runs), low on
+   the screen in game mode 2, and centred otherwise. Then clears the target
+   screen's text tiles and map, lays the box's tiles out row by row from tile
+   0x200 (0x2200 on the sub screen), and pumps Message::Update until the
+   open state reaches 4. */
 extern "C" void func_0201f32c(int arg0)
 {
     MessageEntry *entry;
-    u8 disp;
-    u8 f2d8_val;
     u8 disp2;
     u8 t;
-    void *var_r8;
-    s32 var_r7;
-    s32 last_rem;
+    u16 *map;
+    s32 tile;
     u8 divisor;
     s32 i;
-    volatile u16 sp0;
-    volatile u16 sp2;
-    volatile u16 sp4;
-    volatile s32 sp8;
-    volatile s32 spC;
-    volatile s32 sp10;
+    /* Each screen's fill values go through their own stack slots, as the cartridge does. */
+    volatile u16 mainBlank;
+    volatile u16 subBlank;
+    volatile u16 bg3Blank;
+    volatile s32 mainZero;
+    volatile s32 subZero;
+    volatile s32 bg3Zero;
 
-    if (((MessageInfoSection *)data_0209d70c)->messageCount <= (u16)arg0) {
+    if (((MessageInfoSection *)data_0209d70c)->messageCount <= (u16)arg0)
         return;
-    }
 
     data_0209d6d4 = arg0;
     func_0201eaac();
@@ -1358,12 +1352,9 @@ extern "C" void func_0201f32c(int arg0)
         gMsgBoxStyle = 1;
         func_02012790(0x20);
     } else {
-        u32 b0;
         gMsgBoxStyle = 0;
-        b0 = (gGameMode == 2);
-        if (b0 == 0) {
+        if (!IsGameMode(2))
             func_02012790(4);
-        }
     }
 
     entry = &data_0209d708[data_0209d6d4];
@@ -1375,43 +1366,30 @@ extern "C" void func_0201f32c(int arg0)
     }
     data_0209d6a8 = (u8)((entry->width + 7) / 8);
 
-    f2d8_val = gGameMode;
-    {
-        u32 b1 = (f2d8_val == 0);
-        if (b1 != 0 && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE)) {
-            u32 b2 = (gRunningKuppaScript != 0);
-            if (b2 == 0) {
-                gMsgBoxLeft = 0x10;
-                gMsgBoxTop = 0x64;
-                gMsgBoxCenterX = (u8)((((data_0209d6a8 + 2) / 2) * 8) + 0xf);
-                gMsgBoxCenterY = (u8)((((entry->lineCount * 2 + 1) * 8) / 2) + 0x63);
-                gMsgBoxWinLeft = gMsgBoxCenterX;
-                gMsgBoxWinTop = gMsgBoxCenterY;
-                goto branchDone;
-            }
-        }
-        {
-            u32 b3 = (f2d8_val == 2);
-            if (b3 != 0) {
-                gMsgBoxLeft = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
-                gMsgBoxCenterX = 0x7f;
-                gMsgBoxTop = 0xa0;
-                gMsgBoxCenterY = (u8)((((entry->lineCount) * 16) / 2) + 0x9f);
-                gMsgBoxWinLeft = 0x7f;
-                gMsgBoxWinTop = gMsgBoxCenterY;
-            } else {
-                gMsgBoxLeft = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
-                gMsgBoxCenterX = 0x7f;
-                gMsgBoxCenterY = 0x63;
-                gMsgBoxTop = (u8)(0x64 - (((entry->lineCount * 2 + 2) * 8) / 2));
-                gMsgBoxWinLeft = 0x7f;
-                gMsgBoxWinTop = 0x63;
-                if (func_0201fb4c() != 0) {
-                    Sound::ChangeMusicVolume(0x40, 0xc999);
-                }
-            }
-        }
-    branchDone: ;
+    if (IsGameMode(0) && !(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE) &&
+        !IsKuppaScriptRunning()) {
+        gMsgBoxLeft = 0x10;
+        gMsgBoxTop = 0x64;
+        gMsgBoxCenterX = (u8)((((data_0209d6a8 + 2) / 2) * 8) + 0xf);
+        gMsgBoxCenterY = (u8)((((entry->lineCount * 2 + 1) * 8) / 2) + 0x63);
+        gMsgBoxWinLeft = gMsgBoxCenterX;
+        gMsgBoxWinTop = gMsgBoxCenterY;
+    } else if (IsGameMode(2)) {
+        gMsgBoxLeft = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
+        gMsgBoxCenterX = 0x7f;
+        gMsgBoxTop = 0xa0;
+        gMsgBoxCenterY = (u8)((((entry->lineCount) * 16) / 2) + 0x9f);
+        gMsgBoxWinLeft = 0x7f;
+        gMsgBoxWinTop = gMsgBoxCenterY;
+    } else {
+        gMsgBoxLeft = (u8)(((0x20 - (data_0209d6a8 + 2)) / 2) * 8);
+        gMsgBoxCenterX = 0x7f;
+        gMsgBoxCenterY = 0x63;
+        gMsgBoxTop = (u8)(0x64 - (((entry->lineCount * 2 + 2) * 8) / 2));
+        gMsgBoxWinLeft = 0x7f;
+        gMsgBoxWinTop = 0x63;
+        if (func_0201fb4c() != 0)
+            Sound::ChangeMusicVolume(0x40, 0xc999);
     }
 
     data_0209d680 = 0;
@@ -1419,78 +1397,62 @@ extern "C" void func_0201f32c(int arg0)
     if (data_0209d698 == 2) {
         {
             void *pa = (char *)G2_GetBG1CharPtr() + 0x4000;
-            sp8 = 0;
-            MIi_CpuClear32(sp8, (int *)pa, 0x4000);
+            mainZero = 0;
+            MIi_CpuClear32(mainZero, (int *)pa, 0x4000);
         }
         {
             void *pb = (char *)G2_GetBG1ScrPtr() + 0x200;
-            sp0 = 0x3ff;
-            MIi_CpuClear16(sp0, (char *)pb, 0x400);
+            mainBlank = 0x3ff;
+            MIi_CpuClear16(mainBlank, (char *)pb, 0x400);
         }
-        var_r8 = (char *)G2_GetBG1ScrPtr() + 0x24e;
+        map = (u16 *)((char *)G2_GetBG1ScrPtr() + 0x24e);
         SetBg1Offset(0, 0);
-        var_r7 = 0x200;
+        tile = 0x200;
         data_0209d660 = 0;
     } else if (data_0209d698 == 1) {
         {
             void *pa = (char *)G2S_GetBG1CharPtr() + 0x4000;
-            spC = 0;
-            MIi_CpuClear32(spC, (int *)pa, 0x2000);
+            subZero = 0;
+            MIi_CpuClear32(subZero, (int *)pa, 0x2000);
         }
         {
             void *pb = (void *)G2S_GetBG1ScrPtr();
-            sp2 = 0x22ff;
-            MIi_CpuClear16(sp2, (char *)pb, 0x800);
+            subBlank = 0x22ff;
+            MIi_CpuClear16(subBlank, (char *)pb, 0x800);
         }
-        var_r8 = (char *)G2S_GetBG1ScrPtr() + 0x42;
+        map = (u16 *)((char *)G2S_GetBG1ScrPtr() + 0x42);
         SetSubBg1Offset(4 - gMsgBoxLeft, 4 - gMsgBoxTop);
-        var_r7 = 0x2200;
+        tile = 0x2200;
     } else {
         {
             void *pa = (char *)G2_GetBG3CharPtr() + 0x4000;
-            sp10 = 0;
-            MIi_CpuClear32(sp10, (int *)pa, 0x3000);
+            bg3Zero = 0;
+            MIi_CpuClear32(bg3Zero, (int *)pa, 0x3000);
         }
         {
             void *pb = G2_GetBG3ScrPtr();
-            sp4 = 0x37f;
-            MIi_CpuClear16(sp4, (char *)pb, 0x800);
+            bg3Blank = 0x37f;
+            MIi_CpuClear16(bg3Blank, (char *)pb, 0x800);
         }
-        var_r8 = (char *)G2_GetBG3ScrPtr() + 0x42;
-        {
-            u32 b4 = (gGameMode == 2);
-            if (b4 != 0) {
-                SetBg3Offset(0 - gMsgBoxLeft, 8 - gMsgBoxTop);
-            } else {
-                SetBg3Offset(0 - gMsgBoxLeft, 4 - gMsgBoxTop);
-            }
-        }
-        var_r7 = 0x200;
+        map = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x42);
+        if (IsGameMode(2))
+            SetBg3Offset(-gMsgBoxLeft, 8 - gMsgBoxTop);
+        else
+            SetBg3Offset(-gMsgBoxLeft, 4 - gMsgBoxTop);
+        tile = 0x200;
     }
 
-    {
-        divisor = data_0209d6a8;
-        i = 0;
-        if ((s32)(divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2) > 0) {
-            do {
-                s32 rem = i % divisor;
-                *(u16 *)((char *)var_r8 + rem * 2) = (u16)var_r7;
-                if (divisor - 1 == rem) {
-                    var_r8 = (char *)var_r8 + 0x40;
-                }
-                i++;
-                var_r7++;
-            } while (i < (s32)(divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2));
-        }
+    divisor = data_0209d6a8;
+    for (i = 0; i < (s32)(divisor * ((MessageEntry *)data_0209d6f0)->lineCount * 2); i++) {
+        s32 rem = i % divisor;
+        map[rem] = (u16)tile;
+        if (divisor - 1 == rem)
+            map += 0x20;
+        tile++;
     }
 
-    t = data_0209d6bc;
-    if (t < 4) {
-        do {
-            Message::Update();
-            t = data_0209d6bc;
-        } while (t < 4);
-    }
+    while ((t = data_0209d6bc) < 4)
+        Message::Update();
     data_0209d6ac = t;
 
     disp2 = data_0209d698;
