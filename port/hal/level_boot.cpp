@@ -2190,6 +2190,9 @@ extern void *data_0209f318;              /* the Camera LoadEntranceObjects spawn
 }
 
 extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3);
+extern "C" void port_coop_entry_begin(void *tbl, unsigned p3, int local, int hold, int level);
+extern "C" void port_coop_entry_end();
+extern "C" int port_coop_entry_extra(int slot, int *pos);
 /* run mp1 lane OPENCOUNT1: the hub's spare bodies, held the moment the
    new-file opening's closing load spawns them (hal/comms_sync.cpp). */
 extern "C" void port_adventure_hub_spawned();
@@ -2375,7 +2378,11 @@ static void port_load1(void *t, int a, unsigned b)
                        data_0209fc5c[saved_local] == 0);
     if (hold)
         data_0209f250 = 0;
+    /* COOPENTRY2: this console's own body starts beside the entrance, not on it (seat 1..3), so four players leaving a
+       painting together do not stack. The record is put back right after the ROM's loop; see hal/coop_entry_slots.cpp. */
+    port_coop_entry_begin(t, b, (int)saved_local, hold ? 1 : 0, (int)a);
     _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b);
+    port_coop_entry_end();
     data_0209f21c = saved_count;
     port_vs_spawn_extra_players(t, b);
     port_adventure_hub_spawned();
@@ -4953,6 +4960,7 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
 
         int pos[3];
         port_vs_extra_start(base->x, base->y, base->z, i, pos);
+        port_coop_entry_extra(i, pos);   /* COOPENTRY2: the local body's own spread spot, when set */
 
         /* THE CHARACTER IS FLAG BITS 0..2, NOT BITS 3..5, and getting that
            backwards is why both players came up Mario in every capture this
