@@ -49,6 +49,7 @@ enum dScMgSnowball_c_AssetId {
 #include "dScMgSnowball_c.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "SpawnInfo.h"
 #include "types.h"
 #include "nitro/os/cache.h"
@@ -1209,10 +1210,10 @@ void dScMgSnowball_c::ResetScene() {
     SetSubBg2Offset(0, (mScrollY >> 12) + 0x110);
     SetSubBg3Offset(0, (mScrollY >> 12) + 0x110);
 
-    *(volatile u32 *)0x04000018 = 0x100 | (((mScrollY >> 12) << 16) & 0x01ff0000);
-    *(volatile u32 *)0x0400001c = ((mScrollY >> 12) << 16) & 0x01ff0000;
-    *(volatile u32 *)0x04001018 = (((mScrollY >> 12) + 0x110) << 16) & 0x01ff0000;
-    *(volatile u32 *)0x0400101c = (((mScrollY >> 12) + 0x110) << 16) & 0x01ff0000;
+    G2_SetBG2Offset(0x100, mScrollY >> 12);
+    G2_SetBG3Offset(0, mScrollY >> 12);
+    G2S_SetBG2Offset(0, (mScrollY >> 12) + 0x110);
+    G2S_SetBG3Offset(0, (mScrollY >> 12) + 0x110);
 
     mPrevPosX = mPosX;
     mPrevPosY = mPosY;
@@ -1709,20 +1710,20 @@ int dScMgSnowball_c::OnGraphCallback2() {
             SetBg3Offset(0, mScrollY >> 12);
             SetSubBg2Offset(0x100, (mScrollY >> 12) + 0x110);
             SetSubBg3Offset(0, (mScrollY >> 12) + 0x110);
-            *(volatile int *)0x4000018 = ((mScrollY >> 12) << 16) & 0x1ff0000;
-            *(volatile int *)0x400001c = ((mScrollY >> 12) << 16) & 0x1ff0000;
-            *(volatile int *)0x4001018 = ((((mScrollY >> 12) + 0x110) << 16) & 0x1ff0000) | 0x100;
-            *(volatile int *)0x400101c = (((mScrollY >> 12) + 0x110) << 16) & 0x1ff0000;
+            G2_SetBG2Offset(0, mScrollY >> 12);
+            G2_SetBG3Offset(0, mScrollY >> 12);
+            G2S_SetBG2Offset(0x100, (mScrollY >> 12) + 0x110);
+            G2S_SetBG3Offset(0, (mScrollY >> 12) + 0x110);
         } else {
             *(volatile unsigned short *)0x4000304 &= ~0x8000;
             SetBg2Offset(0x100, (mScrollY >> 12) + 0x110);
             SetBg3Offset(0, (mScrollY >> 12) + 0x110);
             SetSubBg2Offset(0, mScrollY >> 12);
             SetSubBg3Offset(0, mScrollY >> 12);
-            *(volatile int *)0x4000018 = ((((mScrollY >> 12) + 0x110) << 16) & 0x1ff0000) | 0x100;
-            *(volatile int *)0x400001c = (((mScrollY >> 12) + 0x110) << 16) & 0x1ff0000;
-            *(volatile int *)0x4001018 = ((mScrollY >> 12) << 16) & 0x1ff0000;
-            *(volatile int *)0x400101c = ((mScrollY >> 12) << 16) & 0x1ff0000;
+            G2_SetBG2Offset(0x100, (mScrollY >> 12) + 0x110);
+            G2_SetBG3Offset(0, (mScrollY >> 12) + 0x110);
+            G2S_SetBG2Offset(0, mScrollY >> 12);
+            G2S_SetBG3Offset(0, mScrollY >> 12);
         }
     }
     return dScMgBase_c::OnGraphCallback2() != 0;

@@ -54,6 +54,7 @@ enum dScMgPanel_c_AssetId {
 #include "Sound.h"
 #include "OamAttr.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
 
@@ -1612,7 +1613,7 @@ s32 dScMgPanel_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     G2_SetBG3Priority(1);
     G2_BG3Mosaic(false);
-    REG_BG3OFS = 0;
+    G2_SetBG3Offset(0, 0);
     G2_SetBG3Priority(1);
     G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
                          GX_BG_CHARBASE_0x10000);
@@ -1631,7 +1632,7 @@ s32 dScMgPanel_c::InitResources() {
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     G2_BG2Mosaic(false);
-    REG_BG2OFS = 0;
+    G2_SetBG2Offset(0, 0);
     G2_SetBG2Priority(1);
     G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
                          GX_BG_CHARBASE_0x10000);
@@ -1662,7 +1663,7 @@ s32 dScMgPanel_c::InitResources() {
     gSubScreenLayers |= 8;
     G2S_SetBG3Priority(1);
     G2S_BG3Mosaic(false);
-    REG_DB_BG3OFS = 0;
+    G2S_SetBG3Offset(0, 0);
     G2S_SetBG3Priority(1);
     G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
                           GX_BG_CHARBASE_0x10000);
@@ -1682,7 +1683,7 @@ s32 dScMgPanel_c::InitResources() {
 
         gSubScreenLayers |= 4;
         G2S_BG2Mosaic(false);
-        REG_DB_BG2OFS = 0;
+        G2S_SetBG2Offset(0, 0);
         G2S_SetBG2Priority(1);
         G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x512, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
                               GX_BG_CHARBASE_0x10000);

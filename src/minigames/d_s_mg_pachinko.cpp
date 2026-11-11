@@ -105,6 +105,7 @@ extern int  RandomIntInternal(int *seed);
 struct OamAttr;
 #include "OAM.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
 extern void Mg_RenderSpriteBothPalMtx(void *sprite, int x, int y, int a3, void *m);
@@ -322,7 +323,7 @@ void dScMgPachinko_c::Bg_StateWaiting(int idx) {
     x = mBg[idx].x >> 12;
     y = mBg[idx].y >> 12;
     mBg[idx].state = 1;
-    *(volatile int *)0x4000018 = (0x1ff & x) | (0x1ff0000 & (y << 16));
+    G2_SetBG2Offset(x, y);
     Deco_ShowAll();
 }
 
@@ -342,8 +343,7 @@ void dScMgPachinko_c::Bg_Start() {
     mBg[0].vy = 0;
     mBg[0].state = 0;
     mBg[0].timer = 0;
-    *(volatile int *)0x4000018 =
-        (0x1ff & (mBg[0].x >> 12)) | (0x1ff0000 & ((mBg[0].y >> 12) << 16));
+    G2_SetBG2Offset(mBg[0].x >> 12, mBg[0].y >> 12);
 }
 
 void dScMgPachinko_c::Bg_Stop() {
@@ -2163,7 +2163,7 @@ s32 dScMgPachinko_c::InitResources()
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     G2_SetBG3Priority(1);
     G2_BG3Mosaic(false);
-    REG_BG3OFS = 0;
+    G2_SetBG3Offset(0, 0);
     G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
                          GX_BG_CHARBASE_0x10000);
 
@@ -2204,7 +2204,7 @@ s32 dScMgPachinko_c::InitResources()
     gSubScreenLayers |= 0xd;
     G2S_SetBG2Priority(0);
     G2S_BG2Mosaic(false);
-    REG_DB_BG2OFS = 0;
+    G2S_SetBG2Offset(0, 0);
     G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
                           GX_BG_CHARBASE_0x18000);
 
@@ -2226,7 +2226,7 @@ s32 dScMgPachinko_c::InitResources()
 
     G2S_SetBG3Priority(2);
     G2S_BG3Mosaic(false);
-    REG_DB_BG3OFS = 0;
+    G2S_SetBG3Offset(0, 0);
     G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
                           GX_BG_CHARBASE_0x08000);
 
@@ -2244,7 +2244,7 @@ s32 dScMgPachinko_c::InitResources()
 
     G2S_SetBG0Priority(1);
     G2S_BG0Mosaic(false);
-    REG_DB_BG0OFS = 0;
+    G2S_SetBG0Offset(0, 0);
     G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x3000,
                       GX_BG_CHARBASE_0x08000, GX_BG_EXTPLTT_01);
 

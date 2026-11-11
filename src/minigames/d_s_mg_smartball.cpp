@@ -5422,7 +5422,7 @@ s32 dScMgSmartball_c::InitResources() {
     G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
                       GX_BG_CHARBASE_0x0c000, GX_BG_EXTPLTT_01);
     G2S_BG0Mosaic(false);
-    G2S_SetBG0Offset(256, 0);
+    G2S_SetBG0Offset(0x100, 0);
     G2S_SetBG0Priority(0);
     f = Ov004_LoadFileByPath(&sSmartballResultBgNcgPath);
     DecompressLZ16(f, G2S_GetBG0CharPtr());
