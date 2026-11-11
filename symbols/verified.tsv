@@ -1096,7 +1096,7 @@
 0x0205e91c	ARMMathLoadState	function
 0x0205e988	ARMMathSaveState	function
 0x020610ac	_ZN3IRQ21GameCardIREQMCHandlerEv	function
-0x0206cd44	_ZN4cstd8__assertEPKcS1_S1_i	function
+0x0206cd44	_ZN4cstd8__assertEPKciS1_i	function
 0x0206d9dc	_ZN3IRQ11SetFIQStateEb	data
 0x0206da28	_ZN3IRQ11SetIRQStateEb	data
 0x0206daa4	_ZN4CP1517MPUGetDataRegion7Ev	function
