@@ -12,6 +12,7 @@
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/mi/memory.h"
+#include "nitro/mi/dma.h"
 
 /* OBJ character VRAM has a fixed base, so the SDK's getters
  * (G2_/G2S_GetOBJCharPtr, nitro/gx/gx_bgcnt.h) are inlines, not calls.
@@ -27,11 +28,6 @@ extern u32 data_020a60a4;  // BG ext-palette bank saved by BeginLoadBG, restored
 extern u32 data_020a60a8;  // OBJ ext-palette bank saved by BeginLoadOBJ, restored by EndLoadOBJ
 
 extern "C" {
-extern void MI_WaitDma(u32 dmaNo);
-extern void MI_DmaCopy32Async(u32 dmaNo, const void *src, void *dest, u32 size,
-                              void (*callback)(void *), void *arg);
-extern void MI_DmaCopy32(u32 ch, const void *src, void *dst, u32 size);
-extern void MI_DmaCopy16(u32 ch, const void *src, volatile void *dst, u32 count);
 
 // Loads BG palette data to main-screen (GX) palette VRAM at 0x05000000.
 void GX_LoadBGPltt(const void *src, unsigned int offset, unsigned int size) {

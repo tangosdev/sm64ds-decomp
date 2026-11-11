@@ -4,10 +4,10 @@
  * card IRQ (IE bit 19) off and end the read, else start the next page. */
 #include "nitro/os/interrupt.h"
 #include "nitro/card/card_rom.h"
+#include "nitro/mi/dma.h"
 
 extern "C" {
 
-extern void MI_StopDma(u32 dmaNo);
 extern void CARDi_ReadEnd(void);
 extern void CARDi_SetCardDma(void);
 

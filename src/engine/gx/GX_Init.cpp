@@ -28,6 +28,7 @@
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx.h"
 #include "nitro/mi/memory.h"
+#include "nitro/mi/dma.h"
 
 #define REG_BG2PD         (*(volatile u16 *)0x04000026)
 #define REG_BG3PD         (*(volatile u16 *)0x04000036)
@@ -65,7 +66,6 @@ extern int GXi_DmaId; // GX DMA channel, -1 if none
 extern u16 sDispMode; // display mode parked by GX_DispOff
 
 void GX_InitGXState(void);
-void MI_DmaFill32(u32 channel, void *dst, u32 data, u32 size);
 
 // Power the display engines, reset the VRAM state, and clear both
 // engines' 2D registers. The ROM spills each zero of the CPU path to its own

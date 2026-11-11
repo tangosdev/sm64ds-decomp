@@ -26,12 +26,10 @@
 #include "nitro/gx/g3x.h"
 #include "nitro/hw/registers.h"
 #include "nitro/mi/memory.h"
+#include "nitro/mi/dma.h"
 
 extern "C" {
 extern int GXi_DmaId;
-void MI_DmaFill32Async(unsigned int dmaNo, void *dest, unsigned int data, unsigned int size,
-                       void (*callback)(void *), void *arg);
-void MI_DmaFill32(unsigned int channel, void *dst, unsigned int data, unsigned int size);
 void GXi_NopClearFifo128_(unsigned addr);
 }
 

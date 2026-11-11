@@ -12,12 +12,12 @@
 #include "nitro/os/cache.h"
 #include "private/wm_views.h"
 #include "nitro/os/message.h"
+#include "nitro/mi/dma.h"
 
 extern "C" {
 
 extern void PXI_Init(void);
 extern int PXI_IsCallbackReady(int tag, int proc);
-extern void MI_DmaFill32(u32 dmaNo, void *dest, u32 data, u32 size);
 extern void WmClearFifoRecvFlag(void);
 extern int WM_SetPortCallback(int port, void *callback, void *arg);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
