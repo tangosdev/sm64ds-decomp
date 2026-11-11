@@ -4,7 +4,6 @@
  * FSi_ReleaseCommand. */
 #include "private/fs_views.h"
 
-
 void FSi_CutFromList(FSFile *elem) {
     FSFile *prev = elem->link.prev;
     FSFile *next = elem->link.next;
