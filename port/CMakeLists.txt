@@ -11980,6 +11980,9 @@ list(APPEND SLICE_COMMS_SOURCES hal/coop_switch.cpp)
 # Run mp1 coop phase 2 lane COOPSPAWN1: ? / ! block hits, red-coin counter, announced
 # runtime stars and prizes. INERT unless SM64DS_COOP is set in a coop room; see hal/coop_spawn.h.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_spawn.cpp)
+# Run coopfix1 lane CANNON2: a coop friend's star never takes my camera (the star side is in src/game/actors/d_a_star.cpp,
+# its _MSC_VER hook). INERT outside a coop room; see hal/coop_camshield.cpp.
+list(APPEND SLICE_COMMS_SOURCES hal/coop_camshield.cpp)
 # Run mp1 lane COOPTP1: TP to friends by clicking a player-list row, coop rooms only; see hal/coop_tp.h.
 list(APPEND SLICE_COMMS_SOURCES hal/coop_tp.cpp)
 # Run mp1 lane COOPMOVE1: coop phase 2, live enemies and movers kept in step. INERT

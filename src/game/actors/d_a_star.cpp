@@ -198,6 +198,25 @@ extern int _ZN15dExtFrameCtrl_c8FinishedEv(void* anim);
 extern void func_ov002_020e8244(void *out, daStar_c *b);
 extern "C" void SubVec3(Vector3* a, Vector3* b, Vector3* c);
 extern "C" void AddVec3(Vector3* a, Vector3* b, Vector3* c);
+
+#ifdef _MSC_VER
+/* PC port, coop (lane CANNON2): ONE CAMERA PER CONSOLE. The star's camera
+   cutscene (func_ov002_020e763c) and the freeze word bit it sets
+   (data_0209b454 |= CUTSCENE_FLAG) belong to the console whose player made or
+   took the star. A coop friend's star also stands on my console (announced,
+   or spawned by his eighth red coin) and the cartridge would film it there
+   too: my camera turns to it, Behavior of the mode stops (camera flag 8), and
+   every actor without the flag stands still, wherever I am in the level.
+   The hook is null outside a coop room (hal/coop_camshield.cpp sets it), so
+   single player and VS run the cartridge's code unchanged.
+     star != 0, player == 0: 0 mine, 1 a friend's (never film it here),
+       2 a friend's that was already filming when it became his (hand back);
+     player != 0: nonzero when the collector is not my own player. */
+extern "C" int (*port_star_cam_foreign_hook)(const void *star, const void *player);
+extern "C" int (*port_star_cam_foreign_hook)(const void *star, const void *player) = 0;
+static int port_star_foreign(const void *star) { return port_star_cam_foreign_hook ? port_star_cam_foreign_hook(star, 0) : 0; }
+static int port_collector_foreign(const void *pl) { return port_star_cam_foreign_hook && pl && port_star_cam_foreign_hook(0, pl); }
+#endif
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* mF, s16 angY);
 extern void MulMat4x3Mat4x3(void* out, void* a, void* b);
@@ -1104,6 +1123,9 @@ void daStar_c::func_ov002_020ea9d0() {
         }
     }
     mFlags |= CUTSCENE_FLAG;
+#ifdef _MSC_VER
+    if (!port_star_foreign(this))      /* a friend's star: no freeze here (see port_star_cam_foreign_hook) */
+#endif
     data_0209b454 |= CUTSCENE_FLAG;
     mCamSeq = 0;
     func_02012694(0x57, &mCamSpacePosX);
@@ -2176,6 +2198,9 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
         if (!b4) {
             mPlayer->mFlags |= CUTSCENE_FLAG;
             mFlags |= CUTSCENE_FLAG;
+#ifdef _MSC_VER
+            if (!port_collector_foreign(mPlayer))   /* a friend's body took it here: his console has the freeze, not mine */
+#endif
             data_0209b454 |= CUTSCENE_FLAG;
         }
     }
@@ -3023,6 +3048,28 @@ void daStar_c::func_ov002_020e763c() {
     Vec3 v;
     dCamera_c *cam;
 
+#ifdef _MSC_VER
+    /* A friend's star never films here. A sequence that has not taken the
+       camera yet (0 and 0x64 are the steps that save the view and take it;
+       every later step only runs after one of them) ends at once, the way
+       0x1f5 ends it, with no view saved, moved or restored and no freeze bit
+       touched (the launch did not set one here). A friend's star that was
+       already filming when it became his (hook answer 2: a native copy
+       adopted for his announce) gives the camera back the cartridge's way:
+       0x1f4 restores the saved view, 0x1f5 next frame ends the scene. */
+    if (mCamSeq != 0xffff) {
+        const int fr = port_star_foreign(this);
+        if (fr == 1) {
+            mFlags &= ~CUTSCENE_FLAG;
+            mCamSeq = 0xffff;
+            mAreaId = mSavedAreaId;
+            return;
+        }
+        if (fr == 2 && mCamSeq < 0x1f4)
+            mCamSeq = 0x1f4;
+    }
+#endif
+
     if ((data_0209b454 & CUTSCENE_FLAG) == 0)
         return;
 
@@ -3095,6 +3142,54 @@ void daStar_c::func_ov002_020e763c() {
         break;
     }
 }
+
+#ifdef _MSC_VER
+/* PC port, coop (lane CANNON2): a star copy removed from outside (a friend
+   took his copy: hal/coop_spawn.cpp kill_quiet) can be in the middle of its
+   camera scene or of a collect here. Destroying it there leaves what only its
+   own last steps clear: the camera keeps flag 8 (its mode's Behavior stays
+   off, the view stays on the star's spot) and the freeze word keeps
+   CUTSCENE_FLAG (every actor without the flag, my player included, stands
+   still), for the rest of the visit. This runs those last steps first: 0x1f4
+   (the saved view back) and 0x1f5 (flag 8 and the freeze bit off) when the
+   scene had taken the camera, func_ov002_020e8618's flag clears for a
+   collect. Returns 1 when something was ended. */
+extern "C" int port_star_end_cutscene(void *star)
+{
+    daStar_c *s = (daStar_c *)star;
+    int ended = 0;
+    if (s == 0)
+        return 0;
+    if (s->mCamSeq != 0xffff) {
+        const u16 q = s->mCamSeq;
+        const int filmed = q != 0 && q != 0x64 && (s->mFlags & CUTSCENE_FLAG) != 0 &&
+                           (data_0209b454 & CUTSCENE_FLAG) != 0 && port_star_foreign(s) != 1;
+        dCamera_c *cam = (dCamera_c *)data_0209f318;
+        if (filmed && cam != 0) {
+            if (q <= 0x1f4) {
+                cam->SetLookAt(*(const Vector3 *)&s->mCamLookAtX);
+                cam->SetPos(*(const Vector3 *)&s->mCamPosX);
+            }
+            cam->mFlags &= ~8;
+            data_0209b454 &= ~CUTSCENE_FLAG;
+            ended = 1;
+        }
+        s->mCamSeq = 0xffff;
+        s->mAreaId = s->mSavedAreaId;
+    }
+    const int st = (int)s->mState;
+    if ((st == daStar_c::STATE_COLLECT_BEGIN || st == daStar_c::STATE_COLLECT_HOLD ||
+         st == daStar_c::STATE_COLLECT_TALK || st == daStar_c::STATE_SAVE_MESSAGE) &&
+        s->mPlayer != 0 && (s->mFlags & CUTSCENE_FLAG) != 0) {
+        s->mPlayer->mFlags &= ~CUTSCENE_FLAG;
+        if (!port_collector_foreign(s->mPlayer))
+            data_0209b454 &= ~CUTSCENE_FLAG;
+        ended = 1;
+    }
+    s->mFlags &= ~CUTSCENE_FLAG;
+    return ended;
+}
+#endif
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov002_020e7554, 0x020e7554, size 0xe8 */
@@ -3342,6 +3437,9 @@ void daStar_c::func_ov002_020e7090(int arg) {
     mPlayer = (Player *)arg;
   mPlayer->mFlags |= CUTSCENE_FLAG;
   mFlags |= CUTSCENE_FLAG;
+#ifdef _MSC_VER
+  if (!port_collector_foreign(mPlayer))
+#endif
   data_0209b454 |= CUTSCENE_FLAG;
   func_ov002_020e6fbc(0);
   mSoundObjMode = 1;
