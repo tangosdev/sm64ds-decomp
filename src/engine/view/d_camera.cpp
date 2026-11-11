@@ -146,7 +146,9 @@ extern void MTX_Identity43_(Matrix4x3 *matrix);
 
 /* Camera-side records used by the follow handlers. Ground and line queries
    use the real dBgCh_Gnd and dBgCh_Lin classes above. */
-typedef struct Entry3 { int a, b, c; } Entry3; /* data_02086f58: max distance, max distance with mFlags 0xc00, fraction */
+typedef struct Entry3 {
+    int a, b, c;
+} Entry3; /* data_02086f58: max distance, max distance with mFlags 0xc00, fraction */
 extern Entry3 data_02086f58[];
 /* The 0x28-byte mode record dCamera_c::mMode and mAreaMode point at, entry N
    of the table at 0x02086fcc (SetMode). func_02009e70 calls it CamMode.
@@ -656,8 +658,7 @@ void dCamera_c::func_0200d508(unsigned char playerID) {
 
 void dCamera_c::StartDanceCutscene(unsigned int playerID, int arg2) {
     unsigned char localID = gLocalPlayerId;
-    if (playerID == localID)
-    {
+    if (playerID == localID) {
         volatile int dummy;
         struct dActor_c *player;
         mOrbitTargetYaw = mAngleY;
@@ -2572,7 +2573,8 @@ int func_02009aa8(dCamera_c *cam) {
     src.y = data_02086e90[1];
     src.z = data_02086e90[2];
 
-    Vec3_RotateYAndTranslate(orbitOffset, &cam->mTargetPlayer->mPos, cam->mTargetPlayer->mAngleY, &src);
+    Vec3_RotateYAndTranslate(orbitOffset, &cam->mTargetPlayer->mPos, cam->mTargetPlayer->mAngleY,
+                             &src);
 
     if (cam->mTurningToTarget != 0) {
         Vector3 *playerPos;
@@ -2870,7 +2872,8 @@ int func_02009414(dCamera_c *cam) {
 
     CutsceneSpline *lookAtPath = cam->mLookAtPath;
     if (lookAtPath != 0) {
-        if (MovePointAlongSpline(&cam->lookAt, &cam->mPathIndex, &cam->mPathProgress, lookAtPath) == 0) {
+        if (MovePointAlongSpline(&cam->lookAt, &cam->mPathIndex, &cam->mPathProgress, lookAtPath) ==
+            0) {
             ok = 0;
         }
     }
