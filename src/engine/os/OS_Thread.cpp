@@ -37,10 +37,6 @@ typedef int BOOL;
 #define OS_THREAD_LAUNCHER_PRIORITY 16
 #define OS_THREAD_PRIORITY_MAX 31
 
-#define OS_THREAD_STATE_WAITING 0
-#define OS_THREAD_STATE_READY 1
-#define OS_THREAD_STATE_TERMINATED 2
-
 #define OSi_STACK_CHECKNUM_BOTTOM 0xfddb597dUL
 #define OSi_STACK_CHECKNUM_TOP 0x7bf9dd5bUL
 #define OSi_STACK_CHECKNUM_WARN 0x597dfbd9UL
@@ -59,12 +55,8 @@ extern "C" {
 extern void SDK_SYS_STACKSIZE(void);
 extern void SDK_IRQ_STACKSIZE(void);
 
-/* local extern: no header declares these yet. Their SDK names:
- * ARMSaveContext is OS_SaveContext, ARMRestoreContext OS_LoadContext;
- * OSi_UnlockAllMutex is src/engine/os/OS_Mutex.cpp. */
-extern int ARMSaveContext(void *ctx);
-extern void ARMRestoreContext(void *ctx);
-extern void OS_InitContext(void *ctx, unsigned int pc, unsigned int sp);
+/* local extern: no header declares these yet. OSi_UnlockAllMutex is
+ * src/engine/os/OS_Mutex.cpp. */
 extern void MIi_CpuClear32(int val, int *dst, int len);
 extern void OSi_UnlockAllMutex(OSThread *thread);
 
@@ -300,7 +292,7 @@ void OS_RescheduleThread(void) {
     if (currentThread == nextThread || nextThread == 0) {
         return;
     }
-    if (ARMSaveContext(&currentThread->context) != 0) {
+    if (OS_SaveContext(&currentThread->context) != 0) {
         return;
     }
     if (data_020a6128 != 0) {
@@ -310,7 +302,7 @@ void OS_RescheduleThread(void) {
         info->switchCallback(currentThread, nextThread);
     }
     data_020a6134.current = nextThread;
-    ARMRestoreContext(&nextThread->context);
+    OS_LoadContext(&nextThread->context);
 }
 
 void OS_SetThreadStackWarningOffset(OSThread *thread, u32 offset) {

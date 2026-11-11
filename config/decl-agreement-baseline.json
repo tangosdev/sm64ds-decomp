@@ -1,15 +1,5 @@
 {
   "known": {
-    "ARMMathLoadState": {
-      "src/ui/menus/unit020b6eb4.cpp": [
-        "param:#1 ARMMathState *"
-      ]
-    },
-    "ARMMathSaveState": {
-      "src/ARMSaveContext.c": [
-        "arity:0"
-      ]
-    },
     "VEC_Add": {
       "src/engine/view/d_camera.cpp": [
         "param:#2 const void *",

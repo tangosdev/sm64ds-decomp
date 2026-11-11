@@ -9647,11 +9647,11 @@
     },
     "arm9:0x020585cc": {
       "author": "tangosdev",
-      "name": "ARMSaveContext"
+      "name": "OS_SaveContext"
     },
     "arm9:0x02058618": {
       "author": "tangosdev",
-      "name": "ARMRestoreContext"
+      "name": "OS_LoadContext"
     },
     "arm9:0x0205865c": {
       "author": "tangosdev",
@@ -10599,11 +10599,11 @@
     },
     "arm9:0x0205e91c": {
       "author": "andrewboudreau",
-      "name": "ARMMathLoadState"
+      "name": "CPi_RestoreContext"
     },
     "arm9:0x0205e988": {
       "author": "tangosdev",
-      "name": "ARMMathSaveState"
+      "name": "CP_SaveContext"
     },
     "arm9:0x0205e9fc": {
       "author": "tangosdev",
