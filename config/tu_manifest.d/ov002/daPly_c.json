@@ -4493,7 +4493,7 @@
       "address": "0x02109e2c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "func_ov002_020c9b7c as a free handler; explicit PMF data record"
+      "evidence": "_ZN7daPly_c19func_ov002_020c9b7cEv as a handler; compiler-emitted PMF literal"
     },
     {
       "symbol": "data_ov002_02109e34",
@@ -4738,7 +4738,7 @@
       "address": "0x02109f44",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "func_ov002_020c990c as a free handler; explicit PMF data record"
+      "evidence": "_ZN7daPly_c19func_ov002_020c990cEv as a handler; compiler-emitted PMF literal"
     },
     {
       "symbol": "data_ov002_02109f4c",
@@ -5228,7 +5228,7 @@
       "address": "0x0210a174",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "func_ov002_020c9998 as a free handler; explicit PMF data record"
+      "evidence": "_ZN7daPly_c19func_ov002_020c9998Ev as a handler; compiler-emitted PMF literal"
     },
     {
       "symbol": "data_ov002_0210a17c",
@@ -17108,6 +17108,24 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-generated PMF literal emits a local @NNN symbol; the configured ROM data symbol uses global binding"
+    },
+    {
+      "symbol": "data_ov002_02109e2c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF literal emits a local @NNN symbol; the configured ROM data symbol uses global binding"
+    },
+    {
+      "symbol": "data_ov002_0210a174",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF literal emits a local @NNN symbol; the configured ROM data symbol uses global binding"
+    },
+    {
+      "symbol": "data_ov002_02109f44",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-generated PMF literal emits a local @NNN symbol; the configured ROM data symbol uses global binding"
     }
   ],
   "defined_symbol_renames": [
@@ -18212,74 +18230,89 @@
       "evidence": "_ZN7daPly_c19func_ov002_020c9c00Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
     },
     {
-      "from": "@19290",
-      "to": "data_ov002_0210a1cc",
-      "evidence": "_ZN7daPly_c19func_ov002_020c9b5cEv as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
-    },
-    {
       "from": "@19292",
-      "to": "data_ov002_0210a1b4",
-      "evidence": "_ZN7daPly_c19func_ov002_020c9ac0Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
+      "to": "data_ov002_0210a1cc",
+      "evidence": "_ZN7daPly_c19func_ov002_020c9b5cEv as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
     },
     {
       "from": "@19294",
-      "to": "data_ov002_02109f54",
-      "evidence": "_ZN7daPly_c19func_ov002_020c9b10Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
+      "to": "data_ov002_0210a1b4",
+      "evidence": "_ZN7daPly_c19func_ov002_020c9ac0Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
     },
     {
       "from": "@19296",
-      "to": "data_ov002_0210a30c",
-      "evidence": "_ZN7daPly_c19func_ov002_020c9a04Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
+      "to": "data_ov002_02109f54",
+      "evidence": "_ZN7daPly_c19func_ov002_020c9b10Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
     },
     {
       "from": "@19298",
-      "to": "data_ov002_0210a154",
-      "evidence": "_ZN7daPly_c19func_ov002_020c98a4Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
-    },
-    {
-      "from": "@19300",
-      "to": "data_ov002_0210a144",
-      "evidence": "_ZN7daPly_c19func_ov002_020c9840Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
-    },
-    {
-      "from": "@19302",
-      "to": "data_ov002_0210a134",
-      "evidence": "_ZN7daPly_c19func_ov002_020c97f8Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
+      "to": "data_ov002_0210a30c",
+      "evidence": "_ZN7daPly_c19func_ov002_020c9a04Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
     },
     {
       "from": "@19304",
-      "to": "data_ov002_0210a12c",
-      "evidence": "_ZN7daPly_c19func_ov002_020c97e0Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
+      "to": "data_ov002_0210a154",
+      "evidence": "_ZN7daPly_c19func_ov002_020c98a4Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
     },
     {
       "from": "@19306",
-      "to": "data_ov002_0210a48c",
-      "evidence": "_ZN7daPly_c19func_ov002_020c75f0Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
+      "to": "data_ov002_0210a144",
+      "evidence": "_ZN7daPly_c19func_ov002_020c9840Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
     },
     {
       "from": "@19308",
-      "to": "data_ov002_0210a46c",
-      "evidence": "_ZN7daPly_c19func_ov002_020c7350Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
+      "to": "data_ov002_0210a134",
+      "evidence": "_ZN7daPly_c19func_ov002_020c97f8Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
     },
     {
       "from": "@19310",
-      "to": "data_ov002_0210a3ac",
-      "evidence": "_ZN7daPly_c19func_ov002_020c71e0Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
+      "to": "data_ov002_0210a12c",
+      "evidence": "_ZN7daPly_c19func_ov002_020c97e0Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
     },
     {
       "from": "@19312",
-      "to": "data_ov002_0210a074",
-      "evidence": "_ZN7daPly_c19func_ov002_020c7194Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
+      "to": "data_ov002_0210a48c",
+      "evidence": "_ZN7daPly_c19func_ov002_020c75f0Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
     },
     {
       "from": "@19314",
-      "to": "data_ov002_0210a404",
-      "evidence": "_ZN7daPly_c19func_ov002_020c70acEv as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
+      "to": "data_ov002_0210a46c",
+      "evidence": "_ZN7daPly_c19func_ov002_020c7350Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
     },
     {
       "from": "@19316",
+      "to": "data_ov002_0210a3ac",
+      "evidence": "_ZN7daPly_c19func_ov002_020c71e0Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
+    },
+    {
+      "from": "@19318",
+      "to": "data_ov002_0210a074",
+      "evidence": "_ZN7daPly_c19func_ov002_020c7194Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
+    },
+    {
+      "from": "@19320",
+      "to": "data_ov002_0210a404",
+      "evidence": "_ZN7daPly_c19func_ov002_020c70acEv as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
+    },
+    {
+      "from": "@19322",
       "to": "data_ov002_0210a3f4",
-      "evidence": "_ZN7daPly_c19func_ov002_020c6fe4Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off."
+      "evidence": "_ZN7daPly_c19func_ov002_020c6fe4Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol; section and relocation target are unchanged Re-keyed when merging origin/main; the new source name is what mwcc emitted from the merged TU. Re-keyed by handler: #4799 pinned these against a pre-#5237/#5239 source, which left every literal one handler-slot off. Re-keyed after the three free-function union records became PMF literals."
+    },
+    {
+      "from": "@19290",
+      "to": "data_ov002_02109e2c",
+      "evidence": "_ZN7daPly_c19func_ov002_020c9b7cEv as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol. The handler became a daPly_c method, so the record is the literal from `&daPly_c::func_ov002_020c9b7c` like its neighbours, not a free-function union. Re-keyed after the three free-function union records became PMF literals."
+    },
+    {
+      "from": "@19300",
+      "to": "data_ov002_0210a174",
+      "evidence": "_ZN7daPly_c19func_ov002_020c9998Ev as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol. The handler became a daPly_c method, so the record is the literal from `&daPly_c::func_ov002_020c9998` like its neighbours, not a free-function union. Re-keyed after the three free-function union records became PMF literals."
+    },
+    {
+      "from": "@19302",
+      "to": "data_ov002_02109f44",
+      "evidence": "_ZN7daPly_c19func_ov002_020c990cEv as a handler; compiler-generated PMF literal renamed to its configured ov002 data symbol. The handler became a daPly_c method, so the record is the literal from `&daPly_c::func_ov002_020c990c` like its neighbours, not a free-function union. Re-keyed after the three free-function union records became PMF literals."
     }
   ],
   "relocations": [
@@ -36808,7 +36841,7 @@
       "source": "0x02109e2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020c9b7c",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9b7cEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c9b7c"
@@ -37158,7 +37191,7 @@
       "source": "0x02109f44",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020c990c",
+      "symbol": "_ZN7daPly_c19func_ov002_020c990cEv",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c990c"
@@ -37838,7 +37871,7 @@
       "source": "0x0210a174",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_ov002_020c9998",
+      "symbol": "_ZN7daPly_c19func_ov002_020c9998Ev",
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x020c9998"
