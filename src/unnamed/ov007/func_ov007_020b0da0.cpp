@@ -23,6 +23,7 @@ typedef struct Vec3Words {
 #include "nitro/fx/fx_trig.h"
 #include "Ov007Work.h"
 #include "Ov007Figure.h"
+#include "math/ProgressRatio.h"
 
 extern void MTX_Identity43_(void *mat);
 
@@ -82,13 +83,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
             FX_ModS32(counter, 0x28);
             {
                 int m1 = FX_ModS32(counter, 0x28);
-                if (m1 <= 0) {
-                    var_r4 = 0;
-                } else if (m1 >= 0x28) {
-                    var_r4 = 0x1000;
-                } else {
-                    var_r4 = FX_DivS32(m1 << 12, 0x28);
-                }
+                var_r4 = ProgressRatio(m1, 0x28);
             }
 
             {
@@ -99,13 +94,7 @@ void func_ov007_020b0da0(Ov007Figure *figure) {
             {
                 int var_r8;
                 int m2 = FX_ModS32(counter, 0xa0);
-                if (m2 <= 0) {
-                    var_r8 = 0;
-                } else if (m2 >= 0xa0) {
-                    var_r8 = 0x1000;
-                } else {
-                    var_r8 = FX_DivS32(m2 << 12, 0xa0);
-                }
+                var_r8 = ProgressRatio(m2, 0xa0);
 
                 MTX_Identity43_(mat);
 
