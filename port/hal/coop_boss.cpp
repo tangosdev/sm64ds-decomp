@@ -58,6 +58,10 @@ extern char data_ov078_02126ffc[], data_ov078_0212700c[], data_ov078_0212701c[],
             data_ov078_021270ec[], data_ov078_021270fc[], data_ov078_0212710c[];
 }
 
+// COOPBOO5: daTrs_c::func_ov063_02116244 (src/game/actors/d_a_trs.cpp): with the count at 5 or more and nothing spawned yet, a Big
+// Boo spawns his icon, the actor his star comes from. Declared bare, as in coop_world.cpp: only the member's name is needed.
+class daTrs_c { public: void func_ov063_02116244(); };
+
 namespace port {
 namespace {
 
@@ -704,6 +708,35 @@ void scan() {
 int hp_of(const Boss &b) { return (int)read_field(b.a, b.d->f[b.d->hp]); }
 uint32_t state_of(const Boss &b) { return read_field(b.a, b.d->f[b.d->state]); }
 
+// COOPBOO5: the Big Boos that wait hidden for their small Boos (variants 0xc balcony, 0xd merry-go-round, 0xe lobby: d_a_trs.cpp
+// func_ov063_021189f4, states 0..5). State 0 (func_ov063_02119074) keeps him hidden and out of reach until this console's count
+// (+0x180) is 5 or more and the local player is within 742 units; only then does it make him visible, hittable, sized, at 3 HP.
+// A state forced onto a copy skips that code: forced out of 0 he chased invisible and could not be hit, forced back into 0 he
+// came out again at full health and was forced back, over and over. So state 0 is never forced in or out on these: a copy whose
+// authority is out takes a count of 5 and comes out by the cartridge's own code once its player is near.
+enum : int { kTrsCount = 0x180, kTrsVariant = 0x5cf, kTrsFlags = 0x5d4, kTrsDefeated = 0x80 };
+bool hidden_big_boo(const Boss &b) {
+    if (b.d->cls != 210) return false;
+    const unsigned char v = (unsigned char)b.a[kTrsVariant];
+    return v >= 0xc && v <= 0xe;
+}
+void big_boo_bring_out(Boss &b, int slot, const char *why) {
+    int32_t cnt = rd32(b.a, kTrsCount);
+    if (cnt >= 5) return;
+    if (g_log) std::fprintf(stderr, "[cbs] big boo slot=%d count %d->5 here (%s): he comes out by his own code w=%lld\n", slot, (int)cnt, why, wall_ms());
+    cnt = 5; std::memcpy(b.a + kTrsCount, &cnt, 4);
+    reinterpret_cast<::daTrs_c *>(b.a)->func_ov063_02116244();   // his icon, as the fifth small Boo's talk would spawn it
+}
+// The group beat him while this copy was still hidden in state 0: it goes straight into his defeat (state 4, d_a_trs.cpp
+// func_ov063_02118b98), the way his last hit ends (func_ov063_02118cd8: hidden, DEFEATED), so the icon gives the star where this
+// console is the authority and the stairs open when a player comes near.
+void big_boo_defeat_hidden(Boss &b, int slot, const char *why) {
+    big_boo_bring_out(b, slot, why);
+    b.a[0x5cc] = 4;
+    uint16_t fl = (uint16_t)rd16(b.a, kTrsFlags); fl = (uint16_t)((fl & ~0x8u) | kTrsDefeated); std::memcpy(b.a + kTrsFlags, &fl, 2);
+    if (g_log) std::fprintf(stderr, "[cbs] big boo slot=%d beaten by the group while hidden here: put in his defeat (%s) w=%lld\n", slot, why, wall_ms());
+}
+
 // The point of no return of each boss: after it the ROM only runs the defeat (and the reward). Latched once seen.
 bool is_defeated(const Boss &b) {
     const int hp = hp_of(b);
@@ -713,7 +746,11 @@ bool is_defeated(const Boss &b) {
     case 189: return hp <= 0;                                                       // King Bob-omb
     case 218: return hp <= 0 && (st == 13u || st == 9u || st == 12u || st == 15u || st == 5u);   // Chilly: after the last blow (the revive happens before it)
     case 216: return hp == 0;                                                       // Big Bully: "alive" field 0 = dying or gone
-    case 210: return hp <= 0 && state_of(b) >= 6u;                                  // Big Boo: no hits left and in a late state
+    case 210:                                                                       // Big Boo: no hits left and in his defeat
+        // COOPBOO5: the hidden Big Boos (0xc..0xe) have states 0..5 and are beaten in state 4 (d_a_trs.cpp func_ov063_02118cd8 sets
+        // it with the DEFEATED flag); state 6 and on is the Big Boo's Battle one (0xf)
+        if (hidden_big_boo(b)) return hp <= 0 && (st == 4u || (rd16(b.a, kTrsFlags) & kTrsDefeated));
+        return hp <= 0 && st >= 6u;
     case 248: return st == 7u;                                                      // Wiggler: DEAD
     case 198: return hp <= 0;                                                       // Goomboss: size index 0 = the defeat talk
     case 279: return hp <= 0 && st == 4u;                                           // Bowser: the defeat state
@@ -737,6 +774,9 @@ void log_sample(int slot, const Boss &b, int auth) {
     for (int k = 2; k < b.d->nf && n < (int)sizeof line - 20; ++k) n += std::snprintf(line + n, sizeof line - n, " f%d=%u", k, read_field(b.a, b.d->f[k]));
     if (b.d->cls == 279) n += std::snprintf(line + n, sizeof line - n, " talk=%d cnt=%d", (int)(signed char)b.a[0x424], (int)rd16(b.a, 0x3fe));
     if (b.d->cls == 198) n += std::snprintf(line + n, sizeof line - n, " goombas_live=%d goombas_cnt=%u", count_minions(b.a), (unsigned)(unsigned char)b.a[0x602]);
+    if (b.d->cls == 210)   // COOPBOO5: the Big Boo's count, VISIBLE flag, collider off bit (dCc_c flags +0x18 of mdCcAcPos_c +0x184)
+        n += std::snprintf(line + n, sizeof line - n, " var=%x cnt=%d vis=%d cc_off=%d", (unsigned)(unsigned char)b.a[0x5cf], (int)rd32(b.a, 0x180),
+                           (rd16(b.a, 0x5d4) & 0x8) ? 1 : 0, (int)(rd32(b.a, 0x19c) & 1));
     n += std::snprintf(line + n, sizeof line - n, " tgt=%d", coop_target_seat_of_slot(slot));
     std::fprintf(stderr, "%s\n", line);
 }
@@ -876,6 +916,16 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
     if (d.cls == 189 && rs == kKboTalk) force = false;
     // King Bob-omb's defeat talk on a copy: skip_defeat_talk owns it
     if (d.cls == 189 && !mine && ls == kKboDefeat) force = false;
+    // COOPBOO5: a hidden Big Boo is never forced into or out of his hidden state 0 (see hidden_big_boo)
+    if (hidden_big_boo(b) && (ls == 0u || rs == 0u)) {
+        static unsigned s_logged = 0;
+        if (force && g_log && (unsigned)(now - s_logged) >= 1000u) {
+            s_logged = now;
+            std::fprintf(stderr, "[cbs] big boo slot=%d st %u->%u not forced (hidden state) from seat %d w=%lld\n", slot, ls, rs, x.from, wall_ms());
+        }
+        force = false; b.mism = 0;
+        if (ls == 0u && rs != 0u) big_boo_bring_out(b, slot, "the authority's is out");
+    }
     // Bowser's defeat talk: the target seat's body is a parked friend on every console but the authority's; coop_target now answers the
     // LOCAL player for a Bowser in state 4 (coop_boss_prefer_local), so every console runs the whole talk with its own player.
     if (force) {
@@ -968,6 +1018,12 @@ void process(unsigned now) {
         // a hit that landed on my copy: HP below what was last synced
         const int hp = hp_of(b);
         if (hp > b.synced_hp && d.cls == 218) b.synced_hp = hp;    // Chilly's revive raises it by himself
+        // COOPBOO5: a hidden Big Boo coming out sets 3 HP (d_a_trs.cpp func_ov063_02119074); the group's fight already took some
+        if (hp > b.synced_hp && hidden_big_boo(b)) {
+            write_field(b.a, d, d.hp, (uint32_t)b.synced_hp);
+            if (g_log) std::fprintf(stderr, "[cbs] big boo slot=%d came out here at hp %d, kept at the group's %d w=%lld\n", slot, hp, b.synced_hp, wall_ms());
+        }
+        if (hidden_big_boo(b) && state_of(b) == 0u && hp_of(b) <= 0) big_boo_defeat_hidden(b, slot, mine ? "I am the authority" : "a copy");
         // A console that is NOT the authority only reports a drop in its own copy's HP as a hit when the hit can have come from ITS player:
         // the proof knob made it, or its player is within reach of the boss. Anything else is the copy's own ROM chain walking into a hit
         // state after a state was forced onto it (it sees a friend's placed body as the attacker): REVBOSSCORE1 item 4, King Bob-omb lost a
@@ -1559,6 +1615,10 @@ void coop_boss_on_world(int seat, int sub, const unsigned char *p, int len) {
                 if (g_log) std::fprintf(stderr, "[cbs] hit-rx slot=%d hp %d->%u from seat %d (auth %d) w=%lld\n", (int)r.slot, lhp, w[d->hp], seat, auth, wall_ms());
                 if (auth != g_my && (int32_t)w[d->hp] <= 0) skip_defeat_talk(b, true);
             }
+            // COOPBOO5: my hidden Big Boo is not forced out of (or into) state 0 by a friend's hit: he comes out by his own code
+            const uint32_t hst = state_of(b), rst = w[d->state];
+            if (hidden_big_boo(b) && hst == 0u && rst != 0u) big_boo_bring_out(b, (int)r.slot, "a friend hit his");
+            if (auth == g_my && hidden_big_boo(b) && (hst == 0u || rst == 0u)) continue;
             if (auth == g_my) {
                 const int hp_keep = (int)read_field(b.a, d->f[d->hp]);
                 give_player_ptrs(b);

@@ -515,9 +515,10 @@ bool count_boo(const char *a) {
     const unsigned char v = *(const unsigned char *)(a + kBooVar);
     return v == 2 || (v != 0 && *(const unsigned *)(a + kBooBig) != 0);
 }
-// A Boo in its hit states (3 fade, 4, 5 talk: d_a_trs.cpp func_ov063_021162c8 and on) is being beaten on this console
-// by the cartridge's own code, which counts it.
-bool boo_beaten_here(const char *a) { const unsigned st = *(const unsigned char *)(a + kBooState); return st >= 3 && st <= 5; }
+// A Boo in its defeat states (3 spin and fade, 5 talk: d_a_trs.cpp func_ov063_021162c8 and on) is being beaten on this console
+// by the cartridge's own code, which counts it. COOPBOO5: state 4 is not one of them: it is the knock-back a Yoshi's hit gives,
+// and the Boo chases again after it.
+bool boo_beaten_here(const char *a) { const unsigned st = *(const unsigned char *)(a + kBooState); return st == 3 || st == 5; }
 char *lobby_big_boo() {
     for (char *b = (char *)_ZN8dActor_c4NextEPKS_(0); b; b = (char *)_ZN8dActor_c4NextEPKS_(b)) {   // func_ov063_02119c58's pick
         if (*(const unsigned short *)(b + 0x0c) != 210) continue;
@@ -1087,6 +1088,30 @@ void gone_push(unsigned now) {
     g_gone_push_at = now + 700u;
 }
 
+// COOPBOO5: the Boo message goes out three times in 360 ms and is never answered, so a console that lost all three kept a
+// short count and never saw the Big Boo (Tango's 4-player field report, 11-10). While the Big Boo the lobby Boos report to
+// stands here undefeated, the beaten Boos on the group list go out again, one every 300 ms in turn (a list of five is
+// round in 1.5 s). A console that counted the slot already only removes its copy (boo_counted), so a repeat never counts twice.
+enum : unsigned { kBooResendGapMs = 300u };
+unsigned g_boo_resend_at = 0; int g_boo_resend_i = 0;
+void boo_resend(unsigned now) {
+    if (g_gone_n == 0 || g_grp.others() == 0 || (int)(now - g_boo_resend_at) < 0) return;
+    const char *big = lobby_big_boo();
+    if (!big || (*(const unsigned short *)(big + 0x5d4) & 0x80u)) return;   // no Big Boo here, or he is beaten (TRS_FLAG_DEFEATED)
+    for (int n = 0; n < g_gone_n; ++n) {
+        const int i = (g_boo_resend_i + n) % g_gone_n;
+        if (g_gone[i].cls != 209) continue;
+        CoopBooWire w; std::memset(&w, 0, sizeof w);
+        w.head.key = wire_key(g_key); w.head.slot = g_gone[i].slot; w.head.cls = 209; w.count = *(const int *)(big + kBooCount);
+        send_kind(kHubTagCoopWorld, kWorldSwallowGone, &w, (int)sizeof w);
+        if (g_log) std::fprintf(stderr, "[coop] boo: resent beaten Boo slot %d (Big Boo count %d here) wall=%lld\n", (int)g_gone[i].slot,
+                                w.count, wall_ms());
+        g_boo_resend_i = i + 1;
+        break;
+    }
+    g_boo_resend_at = now + kBooResendGapMs;
+}
+
 // ---------------------------------------------------------------------------
 // The courtyard's cage Boo (run after093, lane COOPBOO1). In the castle garden (level 3, 15 stars or more) the variant-5 Boo
 // (daTrs_c, class 209, src/game/actors/d_a_trs.cpp) carries the cage (T_BASKET, class 212) that is the way into Big Boo's Haunt.
@@ -1292,7 +1317,19 @@ void boohit_knob() {
         const int *bp = (const int *)(b + 0x5c);
         int *pp = (int *)(body + 0x5c);
         const long long dx = (long long)(pp[0] - bp[0]) >> 12, dz = (long long)(pp[2] - bp[2]) >> 12;
-        if (dx * dx + dz * dz < 600LL * 600LL) return;
+        if (dx * dx + dz * dz < 600LL * 600LL) {
+            // COOPBOO5: SM64DS_COOP_BOOHIT_BIG=1 punches the Big Boo the same way, but only while the cartridge shows him and lets
+            // him be hit (chasing in state 1, VISIBLE +0x5d4 bit 0x8, collider +0x19c bit 0x1 clear), so a hit taken proves both
+            static const bool big = [] { const char *e = std::getenv("SM64DS_COOP_BOOHIT_BIG"); return e && *e && *e != '0'; }();
+            const bool vis = (*(const unsigned short *)(b + 0x5d4) & 0x8u) != 0, cc_on = !(*(const unsigned *)(b + 0x19c) & 1u);
+            if (big && *(const unsigned char *)(b + kBooState) == 1 && vis && cc_on) {
+                *(unsigned *)(b + 0x184 + 0x20) |= 0x40u;
+                *(unsigned *)(b + 0x184 + 0x24) = *(const unsigned *)(body + 0x04);
+                std::fprintf(stderr, "[coop-knob] big boo hit: Big Boo (visible, hittable) reads as punched by my player, hp %d (est %u)\n",
+                             (int)*(const unsigned char *)(b + 0x5ca), g_est_frames);
+            }
+            return;
+        }
         pp[0] = bp[0]; pp[1] = bp[1]; pp[2] = bp[2] + (400 << 12);
         const signed char area = *(const signed char *)(b + 0x5d0);
         if (area >= 0 && data_02092120 != area) ChangeArea(area);
@@ -2422,6 +2459,7 @@ void tick_est(unsigned now) {
         watch_capped(now);
         send_swallows(now);
         gone_push(now);
+        boo_resend(now);   // COOPBOO5
         watch_cage(now);   // COOPBOO1
         watch_boos(now);   // COOPBOO2
         boohit_knob();     // COOPBOO2 proof knob, inert unless SM64DS_COOP_BOOHIT is set
@@ -2585,6 +2623,16 @@ extern "C" int (*port_coop_cap_keep_all)(void);   // src/runtime/actor/d_cap_ene
 bool coop_world_active();
 int cap_keep_all() { return coop_world_active() ? 1 : 0; }
 struct CapKeepHook { CapKeepHook() { port_coop_cap_keep_all = cap_keep_all; } } g_cap_keep_hook;
+// COOPBOO5 (Tango: "Yes, stays gone"): in a coop room a beaten cap Boo leaves no dormant replacement (d_cap_enemy_arm9.cpp
+// RespawnIfHasCap). The replacement had no death table slot, so it stood on the killer's console only and a second defeat of it
+// counted for that console's Big Boo alone.
+extern "C" int (*port_coop_cap_no_respawn)(unsigned int actorID);
+int cap_no_respawn(unsigned int id) {
+    if (id != 209 || !coop_world_active()) return 0;
+    if (g_log) std::fprintf(stderr, "[coop] boo: a beaten cap Boo leaves no replacement here (coop room) wall=%lld\n", wall_ms());
+    return 1;
+}
+struct CapNoRespawnHook { CapNoRespawnHook() { port_coop_cap_no_respawn = cap_no_respawn; } } g_cap_no_respawn_hook;
 
 bool coop_world_active() {
     read_env();
@@ -2673,9 +2721,49 @@ extern "C" void port_coop_world_level_latched(void) {
     join_group(CoopKey((int)data_0209f2f8, data_0209f220[0] & 0xff));   // fires latched, then established
 }
 
+namespace port {
+// COOPBOO5 solo proof knob SM64DS_BOOHIT_SOLO=F:SLOT (inert unless set, outside a coop room only): from frame F the Boo of that slot
+// reads as punched by the player whenever it chases, the way SM64DS_COOP_BOOHIT does in a room, and every 60 frames the log says
+// how many Boos stand with no death table slot (a cap Boo's replacement). Shows that solo play still leaves the replacement.
+void boohit_solo() {
+    static int at = -2, slot = -1; static unsigned fr = 0;
+    if (at == -2) {
+        at = -1;
+        if (const char *e = std::getenv("SM64DS_BOOHIT_SOLO")) { int a = 0, s = 0; if (std::sscanf(e, "%d:%d", &a, &s) == 2) { at = a; slot = s; } }
+    }
+    if (at < 0 || (int)++fr < at) return;
+    const int me = (int)data_0209f250;
+    char *body = (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
+    if (!body) return;
+    int unslotted = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 209) continue;
+        const short sl = *(const short *)(a + 0xce);
+        if (sl < 0 && !going(a)) ++unslotted;
+        if (fr % 300u == 0)
+            std::fprintf(stderr, "[boo-solo] Boo slot %d variant %u state %u cap %d area %d dormant-ish flags %08x (frame %u)\n", (int)sl,
+                         (unsigned)*(const unsigned char *)(a + kBooVar), (unsigned)*(const unsigned char *)(a + kBooState),
+                         *(const unsigned char *)(a + 0x113) & 0xf, (int)*(const signed char *)(a + 0x5d0), *(const unsigned *)(a + 0xb0), fr);
+        if (sl != slot || going(a) || *(const unsigned char *)(a + kBooState) >= 3) continue;
+        const int *bp = (const int *)(a + 0x5c); int *pp = (int *)(body + 0x5c);
+        if (fr % 150u == 0) {   // stand by it with its room shown (a hidden room keeps a Boo at home), as the coop knob does
+            pp[0] = bp[0] + (80 << 12); pp[1] = bp[1]; pp[2] = bp[2];
+            const signed char area = *(const signed char *)(a + 0x5d0);
+            if (area >= 0 && data_02092120 != area) ChangeArea(area);
+        }
+        if (*(const unsigned char *)(a + kBooState) != 1) continue;
+        *(unsigned *)(a + 0x184 + 0x20) |= 0x40u;
+        *(unsigned *)(a + 0x184 + 0x24) = *(const unsigned *)(body + 0x04);
+        if (fr % 60u == 0) std::fprintf(stderr, "[boo-solo] Boo slot %d (cap %d) reads as punched by my player (frame %u)\n", slot,
+                                        *(const unsigned char *)(a + 0x113) & 0xf, fr);
+    }
+    if (fr % 60u == 0) std::fprintf(stderr, "[boo-solo] Boos standing with no death table slot (cap Boo replacements): %d (frame %u)\n", unslotted, fr);
+}
+}  // namespace port
+
 extern "C" void port_coop_world_frame(void) {
     using namespace port;
-    if (!coop_world_active()) return;
+    if (!coop_world_active()) { boohit_solo(); return; }
     ensure_handlers();
     ++g_frame;
     const bool ticking = coop_boot_ticking();
