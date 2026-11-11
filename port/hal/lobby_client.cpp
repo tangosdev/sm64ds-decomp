@@ -1367,7 +1367,7 @@ bool launch_due(JV *plan, LobbyKind *kind, bool *host, std::string *match)
 
 #ifndef PORT_ROM_CLEAN
 /* SM64DS_LOBBY_TEST=<step>,<step>,... (dev only): create:coop | create:vs | join:<CODE> | join:@<file> | ready | start | chat:<text> |
-   kick:<seat> | ban:<seat> | seats:<n> | set:<index>=<value> | save:<0|1> | leave | mute:<seat> | wait:<frames>. One step at a time, each once the previous
+   kick:<seat> | ban:<seat> | seats:<n> | set:<index>=<value> | save:<0|1> | leave | rejoin | rejoinable | mute:<seat> | wait:<frames>. One step at a time, each once the previous
    one has landed; SM64DS_LOBBY_TEST_CODEFILE=<file>: the room code is written there once the room is made (a second console's join:@).
    SM64DS_LOBBY_TEST_SEATS=<n> (default 2): "start" waits for n seats, all ready. Lines "[lobbytest] ..." say what happened. */
 void test_tick()
@@ -1451,6 +1451,8 @@ void test_tick()
         done = true;
     } else if (!s.compare(0, 5, "save:")) { lobby_set_coop_save(std::atoi(s.c_str() + 5)); done = true; }
     else if (s == "leave") { lobby_leave(); done = true; }
+    else if (s == "rejoin") { if (st->can_rejoin) { lobby_rejoin_game(); done = true; } }   /* REJOIN1: waits for can_rejoin */
+    else if (s == "rejoinable") { if (st->can_rejoin) done = true; }   /* REJOIN1: only waits (then join:<same code>) */
     else if (s == "seats2") { if (st->n_seats >= 2) done = true; }
     else if (s == "seats1") { if (st->n_seats == 1) done = true; }
     else if (!s.compare(0, 6, "seats:")) { if (st->n_seats >= std::atoi(s.c_str() + 6)) done = true; }
@@ -1504,6 +1506,29 @@ void copy(char *dst, size_t cap, const std::string &s)
     std::snprintf(dst, cap, "%s", s.c_str());
 }
 
+/* REJOIN1 (run coopfix1). A coop room lives on after a console's own game ended in place (its Save and Quit, or a lost
+   connection: hal/coop_boot.cpp), and the room's launch number does not move, so launch_due never started it again and
+   joining the same code said "Leave this room first.". A member of a STARTED coop room whose game is not up (this
+   process is at the title with no hand-off running) and that already played this launch can go back in: the launch
+   number this console took is forgotten and the next title frame starts the room again in place, as a late joiner. */
+bool can_rejoin_locked()
+{
+    if (g.room.empty() || g.kind != LOBBY_COOP || g.phase != LOBBY_IN_ROOM || !g.plan_set) return false;
+    if (!g.plan.flag("started")) return false;
+    const int n = (int)g.plan.i("launch");
+    return n > 0 && g.launched_no >= n && port_handoff_busy() == 0 && port_scene_live_id() == 1;
+}
+
+bool rejoin_locked(const char *how)
+{
+    if (!can_rejoin_locked()) return false;
+    say("rejoin: back into room %s's running game (%s): launch %d is taken again at the title", g.room.c_str(), how,
+        (int)g.plan.i("launch"));
+    g.launched_no = 0;
+    g.error.clear();
+    return true;
+}
+
 void snapshot_locked()
 {
     LobbyState &s = g_snap;
@@ -1514,6 +1539,7 @@ void snapshot_locked()
     copy(s.server_name, sizeof s.server_name, g.server_name);
     copy(s.error, sizeof s.error, g.error);
     copy(s.error_head, sizeof s.error_head, g.phase == LOBBY_FAILED ? g.error_head : std::string());
+    s.can_rejoin = can_rejoin_locked() ? 1 : 0;   /* REJOIN1 */
     s.max_seats = g.max_seats;
     s.n_seats = 0;
     for (const Member &m : g.members) {
@@ -1661,10 +1687,19 @@ void lobby_join(const char *code)
     init_once();
     start_threads();
     Lock l;
-    if (!g.room.empty()) { g.error = "Leave this room first."; return; }
     std::string c;
     for (const char *p = code ? code : ""; *p; ++p)
         if (*p != ' ' && *p != '-') c += (char)std::toupper((unsigned char)*p);
+    if (!g.room.empty()) {
+        if (c == g.room) {
+            /* REJOIN1: the code of the room this console is still in opens that room, and takes its running game back */
+            if (!rejoin_locked("its code typed again")) g.error.clear();
+            say("join %s: already in that room", c.c_str());
+            return;
+        }
+        g.error = "Leave this room first.";
+        return;
+    }
     bool ok = c.size() == 6;
     for (char ch : c) ok = ok && std::strchr("ABCDEFGHJKMNPQRSTUVWXYZ23456789", ch);
     begin_session_locked(LOBBY_COOP);
@@ -1677,6 +1712,13 @@ void lobby_join(const char *code)
                     ",\"pre_ok\":false,\"game\":" + jesc(g.game) + colours_json_locked() + "}";
     say("join %s on %s as \"%s\" (game %s)", c.c_str(), g.base.c_str(), g.nick.c_str(), g.game.c_str());
     enqueue("join", b, 2);
+}
+
+void lobby_rejoin_game(void)
+{
+    if (!g_init) return;
+    Lock l;
+    if (!rejoin_locked("JOIN GAME")) say("rejoin refused: no running coop game this console left");
 }
 
 void lobby_leave(void)
