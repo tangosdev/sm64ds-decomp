@@ -24,7 +24,8 @@
 //   T3  a scripted state (9 first person, 11 into the cannon, 13 / 16 talks, 15 exit look-at, 17 no-control hold) held 300
 //       frames.
 // Acts in a coop room only; elsewhere it logs the trip and leaves the camera alone. At most one recovery every 10 s.
-// SM64DS_CAMWD=0 off entirely, SM64DS_CAMWD=1 acts in single player too (proof rows).
+// SM64DS_CAMWD=0 off entirely, SM64DS_CAMWD=1 acts in single player too (proof rows), SM64DS_CAMWD=L logs trips but never
+// acts (the before arm of a proof row: the knobs below still fire).
 // Proof knob, off by default: SM64DS_CAMWD_LEAK=<frame>[:8|:15] at that guard frame leaves flag 8 set on my camera (:8, the
 // default) or puts it in state 15 looking at the spot my player stood on with flag 0x10 set (:15), the two leaks above.
 // SM64DS_CAMWD_TRACE=<every> logs the guard's counters every N frames.
@@ -54,7 +55,7 @@ enum : int { kFlags = 0x154, kState = 0x138, kAt = 0x80, kEye = 0x8c, kPrevAt = 
              kExitYaw = 0x186, kPlPos = 0x5c, kPlYaw = 0x8e, kPlTalk = 0x368 };
 const long long kUnit = 1 << 12;
 
-int g_env = -1;           // -1 unread, 0 off, 1 coop only, 2 always
+int g_env = -1;           // -1 unread, 0 off, 1 coop only, 2 always, 3 log only
 int g_leak_frame = -1, g_leak_kind = 8;
 unsigned g_trace = 0;
 const void *g_cam;        // the camera the counters belong to (a new level makes a new one)
@@ -69,14 +70,14 @@ unsigned g_trips, g_fixes;
 void read_env() {
     if (g_env >= 0) return;
     const char *e = std::getenv("SM64DS_CAMWD");
-    g_env = (e && *e == '0') ? 0 : (e && *e == '1') ? 2 : 1;
+    g_env = (e && *e == '0') ? 0 : (e && *e == '1') ? 2 : (e && (*e == 'L' || *e == 'l')) ? 3 : 1;
     if (const char *l = std::getenv("SM64DS_CAMWD_LEAK")) {
         g_leak_frame = std::atoi(l);
         if (const char *k = std::strchr(l, ':')) g_leak_kind = std::atoi(k + 1);
     }
     if (const char *t = std::getenv("SM64DS_CAMWD_TRACE")) g_trace = (unsigned)std::atoi(t);
     std::fprintf(stderr, "[camwd] %s (SM64DS_CAMWD=0 off, =1 acts in single player too)\n",
-                 g_env == 0 ? "off" : g_env == 2 ? "on, acts everywhere" : "on, acts in coop rooms");
+                 g_env == 0 ? "off" : g_env == 2 ? "on, acts everywhere" : g_env == 3 ? "on, logs only (never acts)" : "on, acts in coop rooms");
 }
 
 long long dist3(const int *a, const int *b) {      // fixed point in, fixed point out; doubles so far apart cannot overflow
@@ -171,12 +172,12 @@ extern "C" int cam_guard_frame(void *camv, void *player, const int *shown_eye, c
                      g_t3, dist3(shown_at, me) >> 12, still);
     if (!trip1 && !trip2 && !trip3) return 0;
     const int which = trip2 ? 2 : trip3 ? 3 : 1;
-    const int acts = g_env == 2 || port::coop_world_active();
+    const int acts = g_env == 2 || (g_env == 1 && port::coop_world_active());
     const int rate = g_have_fix && g_frame - g_last_fix < 300;
     ++g_trips;
     std::fprintf(stderr, "[camwd] trip T%d f%u st=%d cf=%x look=%lld me=%d,%d,%d -> %s\n", which, g_frame, st, fl,
                  dist3(shown_at, me) >> 12, me[0] >> 12, me[1] >> 12, me[2] >> 12,
-                 !acts ? "logged (single player: left alone)" : rate ? "held (recovered under 10 s ago)" : "recovered");
+                 !acts ? (g_env == 3 ? "logged (SM64DS_CAMWD=L: left alone)" : "logged (single player: left alone)") : rate ? "held (recovered under 10 s ago)" : "recovered");
     g_t1 = g_t2 = g_t3 = 0;
     if (!acts || rate) return 0;
     *(unsigned *)(cam + kFlags) &= ~(8u | 0x10u | 0x4000u | 0x8000u);
