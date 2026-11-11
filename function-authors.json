@@ -35399,7 +35399,7 @@
     },
     "ov062:0x02116010": {
       "author": "lunavyqo",
-      "name": "func_ov062_02116010"
+      "name": "_ZN10daHolhei_c17HandleCylinderHitEv"
     },
     "ov062:0x021161a8": {
       "author": "ruspecial",
@@ -35487,11 +35487,11 @@
     },
     "ov062:0x02116d28": {
       "author": "tangosdev",
-      "name": "_ZN10daHolhei_c19func_ov062_02116d28Ev"
+      "name": "_ZN10daHolhei_c16UpdateHeldShadowEv"
     },
     "ov062:0x02116dbc": {
       "author": "tangosdev",
-      "name": "func_ov062_02116dbc"
+      "name": "_ZN10daHolhei_c12UpdateShadowEv"
     },
     "ov062:0x02116e80": {
       "author": "tangosdev",
