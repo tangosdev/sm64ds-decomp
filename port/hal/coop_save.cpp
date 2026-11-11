@@ -45,6 +45,12 @@ void *_ZN8dActor_c4NextEPKS_(const void *prev);   // KEYDOOR10 proof knob: walk 
 extern void *data_0209f394[];                      // the players
 extern int   data_0209f250;                        // my player index
 extern signed char data_0209f2f8;                  // LEVEL_ID
+// RABBIT1: the rabbit key's own save calls (src/engine/save/SaveData.cpp, src/unnamed/arm9/0201/func_02013638.c)
+void func_02013868(int kind, int character);       // the key's carried entry: +0x0c bit and minigame unlock bit
+int  func_02013638(int n);                          // the minigame menu's unlock test (MiniGm_IsUnlocked)
+int  func_02013890(int kind, int character);        // the rabbit's "already caught" test (daMip_c::StateCaughtMain)
+int  _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(void *dest);
+int  _ZN8SaveData13SaveMinigamesEP16MinigameSaveData(void *data);
 }
 
 namespace port {
@@ -477,6 +483,98 @@ void run_keydoor() {
     if (g_kd_t >= 900) g_kd_var = -1;
 }
 
+// ---- RABBIT1 (run coopfix1): the rabbit keys ---------------------------------
+// A caught rabbit's key is ONE ROM call, func_02013868(kind, character), made by the key's carried entry (d_a_obj_mip_key.cpp,
+// func_ov085_0212d038). It sets bit (kind << 2 | character) in TWO words: the file record's +0x0c (what the rabbit asks to know it was
+// caught, func_02013890, and what the room record carries) and the minigame record's unlock word at +0x48 of the live block
+// (func_0201361c; the minigame menu reads ONLY this one: MiniGm_IsUnlocked -> func_02013638). The minigame record is not part of
+// the coop record (+0x00..+0x43), so before this a friend's key reached everyone's +0x0c and nobody's minigame menu, the host saved
+// the merged +0x0c with SaveFile only (never the minigame record), and the catcher's own unlock lived in a guest temp image that is
+// deleted when the room ends. So, every frame of a coop room, once the file is open:
+//   1. the live minigame unlock word takes every key bit of the room's +0x0c word (the ROM's own invariant: func_02013868 is the
+//      only writer of +0x0c and it always sets both). The host then saves its minigame record into the .coopsav, so the room's
+//      file holds the unlock as well as the key; a late joiner or a restarted host gets it from +0x0c on the first frame.
+//   2. every key bit the room holds is ORed into the minigame record of this player's OWN single player save on disk
+//      (ntr/backup.cpp solo_minigame_unlock), at once, so it survives the room ending, the window being closed or a crash.
+// SM64DS_COOP_RABBIT_FIX=0 turns both off (the "before" of the proof rows).
+// Proof knobs, off unless set:
+//   SM64DS_COOP_RABBIT_GRANT=<frame>:<kind>  at that frame of the room, what the key pickup does for MY character: func_02013868
+//                                            (kind, my character) and SaveData::SaveCurrentFile (the "Saving" box after the key)
+//   SM64DS_COOP_RABBIT_LOG=<kind>            a [cooprabbit] line when the key or unlock word changes, and every 600 frames: both
+//                                            words, the rabbit's "already caught" answer for that kind per character, the menu's test
+constexpr uint32_t kKeyBits = 0x0FFFFFFFu;   // 7 kinds x 4 characters (coop_save_wire.h: +0x0c is 28 bits)
+uint32_t  g_home_done = 0;                   // key bits already in this player's own save
+ULONGLONG g_home_ms = 0;
+uint32_t  g_rl_keys = 0xFFFFFFFFu, g_rl_mg = 0xFFFFFFFFu;
+bool      g_grant_done = false;
+
+bool rabbit_fix() {
+    static int v = -1;
+    if (v < 0) { const char *e = std::getenv("SM64DS_COOP_RABBIT_FIX"); v = (e && *e == '0') ? 0 : 1; }
+    return v == 1;
+}
+uint32_t rd32le(const uint8_t *p) { uint32_t v; std::memcpy(&v, p, 4); return v; }
+int my_character() {
+    const int me = data_0209f250;
+    const char *pl = (me >= 0 && me < 16) ? (const char *)data_0209f394[me] : nullptr;
+    return pl ? (int)(*(const unsigned *)(pl + 0x08) & 3) : -1;   // Player param1 = the character (d_a_mip.cpp reads pl->param1)
+}
+
+void rabbit_frame() {
+    if (!live_valid()) return;
+    const char *gr = std::getenv("SM64DS_COOP_RABBIT_GRANT");
+    if (gr && !g_grant_done) {
+        unsigned f = 0; int kind = 0;
+        if (std::sscanf(gr, "%u:%d", &f, &kind) == 2 && g_frame >= f && kind >= 0 && kind < 7) {
+            const int ch = my_character();
+            if (ch >= 0) {
+                g_grant_done = true;
+                const int before = func_02013890(kind, ch) != 0;
+                func_02013868(kind, ch);
+                const int saved = _ZN8SaveData15SaveCurrentFileEv();
+                std::fprintf(stderr, "[cooprabbit-knob] f=%u key caught: kind %d character %d (bit %d), had it before %d; "
+                             "SaveCurrentFile ok=%d; +0x0c=%08x unlock=%08x\n", g_frame, kind, ch, kind * 4 + ch, before, saved,
+                             rd32le(data_0209caa0 + 0x0c), rd32le(data_0209caa0 + 0x48));
+            }
+        }
+    }
+    const uint32_t keys = rd32le(data_0209caa0 + 0x0c) & kKeyBits;
+    if (rabbit_fix()) {
+        const uint32_t mg = rd32le(data_0209caa0 + 0x48);
+        const uint32_t add = keys & ~mg;
+        if (add) {
+            const uint32_t now_mg = mg | add;
+            std::memcpy(data_0209caa0 + 0x48, &now_mg, 4);
+            int ok = -1;
+            if (host()) ok = _ZN8SaveData13SaveMinigamesEP16MinigameSaveData(data_0209caa0 + 0x44);
+            std::fprintf(stderr, "[cooprabbit] f=%u minigame unlock word took the room's key bits %08x: %08x -> %08x (%s)\n", g_frame,
+                         add, mg, now_mg, host() ? (ok ? "host: minigame record saved to the room file" : "host: minigame save FAILED")
+                                                   : "guest");
+        }
+        const ULONGLONG now = GetTickCount64();
+        if ((keys & ~g_home_done) && (g_home_ms == 0 || now - g_home_ms >= 2000)) {
+            g_home_ms = now;
+            char msg[1400];
+            const int r = ntr::backup::solo_minigame_unlock(keys, msg, sizeof msg);
+            if (r >= 0) g_home_done |= keys;
+            std::fprintf(stderr, "[cooprabbit] f=%u own save: %s: %s\n", g_frame,
+                         r > 0 ? "key bits written" : r == 0 ? "already there" : "NOT written (retry in 2 s)", msg);
+        }
+    }
+    if (const char *lg = std::getenv("SM64DS_COOP_RABBIT_LOG")) {
+        const int kind = std::atoi(lg);
+        const uint32_t mg = rd32le(data_0209caa0 + 0x48);
+        if (keys != g_rl_keys || mg != g_rl_mg || (g_frame % 600) == 0) {
+            g_rl_keys = keys; g_rl_mg = mg;
+            std::fprintf(stderr, "[cooprabbit] f=%u me=char%d keys(+0x0c)=%08x unlock(+0x48)=%08x kind %d: caught-before "
+                         "m%d l%d w%d y%d, menu-unlocked m%d l%d w%d y%d\n", g_frame, my_character(), keys, mg, kind,
+                         func_02013890(kind, 0) != 0, func_02013890(kind, 1) != 0, func_02013890(kind, 2) != 0,
+                         func_02013890(kind, 3) != 0, func_02013638(kind * 4 + 0) != 0, func_02013638(kind * 4 + 1) != 0,
+                         func_02013638(kind * 4 + 2) != 0, func_02013638(kind * 4 + 3) != 0);
+        }
+    }
+}
+
 }  // namespace
 
 // ---- public ----------------------------------------------------------------
@@ -713,6 +811,28 @@ bool coop_save_fetch(int timeout_ms) {
 
 extern "C" void port_coop_save_frame(void) {
     using namespace port;
+    // RABBIT1 proof knob, any session (solo too): SM64DS_RABBIT_READBACK=<frame>:<kind> does what the title's command 21 does
+    // (src/game/stages/d_s_dsmt.cpp: SaveData::ReadMinigameData into the live record at +0x44, from the medium this process has
+    // selected) and prints the unlock word it read and the minigame menu's own test (func_02013638) for that kind, per character.
+    if (const char *rb = std::getenv("SM64DS_RABBIT_READBACK")) {
+        static unsigned rbf = 0; static bool rb_done = false;
+        unsigned f = 0; int kind = 0;
+        ++rbf;
+        if (!rb_done && std::sscanf(rb, "%u:%d", &f, &kind) == 2 && rbf >= f && kind >= 0 && kind < 7) {
+            rb_done = true;
+            uint32_t was, now_w, magic;
+            std::memcpy(&was, data_0209caa0 + 0x48, 4);
+            const int r = _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(data_0209caa0 + 0x44);
+            std::memcpy(&now_w, data_0209caa0 + 0x48, 4);
+            std::memcpy(&magic, data_0209caa0 + 0x44, 4);
+            std::fprintf(stderr, "[rabbit-readback] f=%u medium %s (coop %d): ReadMinigameData=%d magic=%08x unlock word read=%08x "
+                         "(live before %08x); kind %d menu-unlocked m%d l%d w%d y%d; file keys(+0x0c)=%08x
+", rbf, ntr::backup::path(),
+                         coop() ? 1 : 0, r, magic, now_w, was, kind, func_02013638(kind * 4) != 0,
+                         func_02013638(kind * 4 + 1) != 0, func_02013638(kind * 4 + 2) != 0, func_02013638(kind * 4 + 3) != 0,
+                         *(const uint32_t *)(data_0209caa0 + 0x0c));
+        }
+    }
     if (!coop()) return;
     ensure_init();
     ++g_frame;
@@ -728,6 +848,7 @@ extern "C" void port_coop_save_frame(void) {
     run_probe();
     run_forge();
     run_keydoor();
+    rabbit_frame();
     const ULONGLONG now = GetTickCount64();
     const bool live = comms_hub_state() == kHubLive;
     const bool others = live && comms_hub_seat_mask() != 0;
