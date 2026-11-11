@@ -3,15 +3,9 @@
 #include "nitro/gx/gx.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/g2.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 extern "C" {
-
-#define BG0CNT (*(volatile u16 *)0x4000008)
-#define BG1CNT (*(volatile u16 *)0x400000a)
-#define BG2CNT (*(volatile u16 *)0x400000c)
-#define BG3CNT (*(volatile u16 *)0x400000e)
-#define DISPCNT (*(volatile u32 *)0x4000000)
-#define DISPCNT_SUB (*(volatile u32 *)0x4001000)
 
 void MenuGfx_SetBgMode(int mode) {
     switch (mode) {
@@ -19,13 +13,16 @@ void MenuGfx_SetBgMode(int mode) {
         GX_ResetBankForBG();
         GX_SetGraphicsMode(1, 0, 1);
         GX_SetBankForBG(8);
-        BG1CNT = (BG1CNT & 0x43) | 4;
-        BG3CNT = (BG3CNT & 0x43) | 0x10c;
-        BG2CNT = (BG2CNT & 0x43) | 0x210;
-        BG0CNT = (BG0CNT & ~3) | 2;
-        BG1CNT = (BG1CNT & ~3) | 3;
-        BG3CNT = (BG3CNT & ~3) | 1;
-        BG2CNT = (BG2CNT & ~3);
+        G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                         GX_BG_CHARBASE_0x04000, GX_BG_EXTPLTT_01);
+        G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0800,
+                             GX_BG_CHARBASE_0x0c000);
+        G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                             GX_BG_CHARBASE_0x10000);
+        G2_SetBG0Priority(2);
+        G2_SetBG1Priority(3);
+        G2_SetBG3Priority(1);
+        G2_SetBG2Priority(0);
         break;
     case 2:
         GX_ResetBankForBG();
@@ -36,45 +33,52 @@ void MenuGfx_SetBgMode(int mode) {
         GX_ResetBankForBG();
         GX_SetGraphicsMode(1, 3, 1);
         GX_SetBankForBG(8);
-        BG3CNT = (BG3CNT & 0x43) | 0x4284;
-        BG3CNT = (BG3CNT & ~3) | 1;
-        BG2CNT = (BG2CNT & 0x43) | 4;
-        BG2CNT = (BG2CNT & ~3);
+        G2_SetBG3ControlDCBmp(GX_BG_SCRSIZE_DCBMP_256x256, GX_BG_AREAOVER_XLU,
+                              GX_BG_BMPSCRBASE_0x08000);
+        G2_SetBG3Priority(1);
+        G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                             GX_BG_CHARBASE_0x04000);
+        G2_SetBG2Priority(0);
         G2_SetBlendAlpha(0, 8, 0, 0x10);
         break;
     case 4:
-        BG0CNT = (BG0CNT & ~3) | 1;
+        G2_SetBG0Priority(1);
         break;
     case 6:
         GX_ResetBankForBG();
         GX_SetGraphicsMode(1, 0, 1);
         GX_SetBankForBG(8);
-        BG1CNT = (BG1CNT & 0x43) | 4;
-        BG3CNT = (BG3CNT & 0x43) | 0x210;
-        BG2CNT = (BG2CNT & 0x43) | 0x10c;
-        BG0CNT = (BG0CNT & ~3) | 2;
-        BG1CNT = (BG1CNT & ~3) | 3;
-        BG2CNT = (BG2CNT & ~3);
+        G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
+                         GX_BG_CHARBASE_0x04000, GX_BG_EXTPLTT_01);
+        G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                             GX_BG_CHARBASE_0x10000);
+        G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0800,
+                             GX_BG_CHARBASE_0x0c000);
+        G2_SetBG0Priority(2);
+        G2_SetBG1Priority(3);
+        G2_SetBG2Priority(0);
         break;
     }
 
     switch (mode) {
     case 1:
-        DISPCNT = (DISPCNT & ~0x1f00) | 0x1b00;
-        DISPCNT_SUB = (DISPCNT_SUB & ~0x1f00) | 0x1c00;
+        GX_SetVisiblePlane(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG3 |
+                           DISPLAY_LAYER_OBJ);
+        GXS_SetVisiblePlane(DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
         break;
     case 3:
-        DISPCNT = (DISPCNT & ~0x1f00) | 0x800;
+        GX_SetVisiblePlane(DISPLAY_LAYER_BG3);
         break;
     case 4:
-        DISPCNT = (DISPCNT & ~0x1f00) | 0x1900;
+        GX_SetVisiblePlane(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
         break;
     case 5:
-        DISPCNT = (DISPCNT & ~0x1f00) | 0x1900;
+        GX_SetVisiblePlane(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
         break;
     case 6:
-        DISPCNT = (DISPCNT & ~0x1f00) | 0x1300;
-        DISPCNT_SUB = (DISPCNT_SUB & ~0x1f00) | 0x1700;
+        GX_SetVisiblePlane(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_OBJ);
+        GXS_SetVisiblePlane(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
+                            DISPLAY_LAYER_OBJ);
         break;
     }
 }

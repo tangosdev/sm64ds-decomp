@@ -207,8 +207,10 @@ s32 dScMgRoulette_c::InitResources() {
 
     Mg_SetTopScreenYOffset(0x20);
 
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x404;
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x504;
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2000,
+                          GX_BG_CHARBASE_0x04000);
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x2800,
+                      GX_BG_CHARBASE_0x04000, GX_BG_EXTPLTT_01);
 
     bgChars = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NCG_BIN);
     bgMap = LoadFile(ASSET_D_2D_MG_BG_ROULETTE_NSC_BIN);

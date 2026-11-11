@@ -928,12 +928,14 @@ s32 dScStarSel_c::InitResources() {
     G2_SetBG0Priority(2);
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
     G2_SetBG3Priority(0);
-    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1700;
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb800,
+                         GX_BG_CHARBASE_0x00000);
     G2_BG3Mosaic(0);
     LoadFont(0);
     if (SublevelToLevel(gNextSublevel) >= 0xF) {
         G2_SetBG2Priority(1);
-        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
+        G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                             GX_BG_CHARBASE_0x10000);
         G2_BG2Mosaic(0);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NCG_BIN);
         DecompressLZ16(file, G2_GetBG2CharPtr());
@@ -950,7 +952,8 @@ s32 dScStarSel_c::InitResources() {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
     } else {
         G2_SetBG2Priority(1);
-        REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
+        G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                             GX_BG_CHARBASE_0x10000);
         G2_BG2Mosaic(0);
         if (GetOwnerLanguage() == 5) {
             file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_S_NCG_BIN);

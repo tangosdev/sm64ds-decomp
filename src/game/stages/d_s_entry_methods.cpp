@@ -381,7 +381,8 @@ s32 dScEntry_c::InitResultResources() {
     int step;
     int n;
 
-    REG_BG1CNT = (u16)((REG_BG1CNT & 0x43) | 0x208);
+    G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                     GX_BG_CHARBASE_0x08000, GX_BG_EXTPLTT_01);
     G2_BG1Mosaic(0);
 
     LoadCompressedFileAt(0x8413, G2_GetBG2CharPtr());
