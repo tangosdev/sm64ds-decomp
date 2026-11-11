@@ -419,20 +419,14 @@ int daObjBlockL_c::InitResources() {
     if (idx <= 1) {
         if (IsActorID(this, 0x10)) {
             KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
-            ((dBgW_KcMbg *)(&mMeshCollider))
-                ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x1800, mAngleY,
-                                      *data_ov002_02108ab0[idx].clps);
+            mMeshCollider.SetFile(kcl, mClsnMat, 0x1800, mAngleY, *data_ov002_02108ab0[idx].clps);
         } else {
             KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
-            ((dBgW_KcMbg *)(&mMeshCollider))
-                ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x1000, mAngleY,
-                                      *data_ov002_02108ab0[idx].clps);
+            mMeshCollider.SetFile(kcl, mClsnMat, 0x1000, mAngleY, *data_ov002_02108ab0[idx].clps);
         }
     } else {
         KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab0[idx].clsnFile);
-        ((dBgW_KcMbg *)(&mMeshCollider))
-            ->dBgW_KcMbg::SetFile(kcl, *(&mClsnMat), 0x199, mAngleY,
-                                  *data_ov002_02108ab0[idx].clps);
+        mMeshCollider.SetFile(kcl, mClsnMat, 0x199, mAngleY, *data_ov002_02108ab0[idx].clps);
     }
 
     if (IsActorID(this, 0x13))
