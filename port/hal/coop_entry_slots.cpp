@@ -118,7 +118,7 @@ int pick(const Entry *e, int step, int seat, int *ox, int *oz, int *why) {
     if (step == 9 || step == 12) { fx = -fx; fz = -fz; }           // turned 180
     const double rx = fz, rz = -fx;                                  // right of forward
     auto R = [](double v) { return (int)std::lround(v); };
-    Cand c[4];
+    Cand c[32];
     int n = 0;
     const int S = kSpacing;
     if (seat == 1) {
@@ -131,6 +131,19 @@ int pick(const Entry *e, int step, int seat, int *ox, int *oz, int *why) {
         c[n++] = {R(fx * S), R(fz * S)};                             // front
         c[n++] = {R(-rx * S * 2), R(-rz * S * 2)};
         c[n++] = {R(rx * S * 2), R(rz * S * 2)};
+    }
+    // More spots when the first choices fail: behind and the two back diagonals at 120, then 60-unit versions of each
+    // direction (so a tight painting alcove still gets every seat somewhere apart from the entrance point).
+    {
+        const double d8[8][2] = {{-fx, -fz}, {-fx - rx, -fz - rz}, {-fx + rx, -fz + rz}, {fx, fz},
+                                 {-rx, -rz}, {rx, rz}, {fx - rx, fz - rz}, {fx + rx, fz + rz}};
+        const double sc[8] = {1, 0.7071, 0.7071, 1, 1, 1, 0.7071, 0.7071};
+        for (int pass = 0; pass < 2; ++pass)
+            for (int d = 0; d < 8 && n < 32; ++d) {
+                if (pass == 0 && d >= 3) continue;                       // pass 0: behind + back diagonals only
+                const int len = pass == 0 ? S : S / 2;
+                c[n++] = {R(d8[d][0] * len * sc[d]), R(d8[d][1] * len * sc[d])};
+            }
     }
     int gy0 = 0;
     if (!ground_at(e->x, (int)e->y << 12, e->z, &gy0)) { *why = 1; return -1; }
