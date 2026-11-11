@@ -84,6 +84,8 @@ struct daTrsTrap_c : dActor_c {
     /* Called from Behavior and the merry-go-round state: the model matrix
        refresh and the merry-go-round occupancy test. */
     void UpdateModelTransform();
+    void UpdateClsnMatrix();
+    int SettleStaircase(int);
     void UpdateOccupiedFlag();
 
     /* Mesh-collision rider hook, defined in d_a_trs_trap_classinits.cpp.

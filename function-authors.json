@@ -36307,11 +36307,11 @@
     },
     "ov063:0x0211c6f8": {
       "author": "tangosdev",
-      "name": "func_ov063_0211c6f8"
+      "name": "_ZN11daTrsTrap_c16UpdateClsnMatrixEv"
     },
     "ov063:0x0211c770": {
       "author": "tangosdev",
-      "name": "func_ov063_0211c770"
+      "name": "_ZN11daTrsTrap_c15SettleStaircaseEi"
     },
     "ov063:0x0211c7b0": {
       "author": "tangosdev",
