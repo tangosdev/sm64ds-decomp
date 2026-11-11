@@ -31,7 +31,7 @@ Vector3 data_ov002_0210ddd0[4] = {
 
 /* local extern: no shared header declares these. */
 extern "C" {
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
@@ -101,7 +101,7 @@ s32 daObjKurumajiku_c::Behavior() {
                 mid.y = 0;
                 mid.z = 0;
                 Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-                MulVec3Mat4x3(&data_ov002_0210ddd0[i], &data_020a0e68, &mid);
+                MTX_MultVec43(&data_ov002_0210ddd0[i], &data_020a0e68, &mid);
                 Vec3_Add(&res, &mPos, &mid);
                 rider->mPosX = res.x;
                 rider->mPosY = res.y;

@@ -110,19 +110,15 @@ enum {
 
 extern "C" {
 extern int IsStarCollectedInLevel(signed char levelID, int starID);
-extern SaveBlock data_0209caa0;
 extern Matrix4x3 data_0209b3ec;
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u8 data_ov080_02127714[];
 extern void G3_LoadMtx43(void *mtx);
 extern void *data_ov080_02127834;
-extern void func_0203cbc0(void *a);
 }
 
 /* The cartridge's vtable label is the address point (slot 0), and the
    vtable itself is emitted with the destructor, outside this file. */
-namespace Memory { void *operator_new2(unsigned int size); }
-
 /* The helpers are daPicGate_c members declared on the class and defined in
  * src/game/actors/d_a_pic_gate.cpp. */
 #define LoadMtx43 G3_LoadMtx43
@@ -220,7 +216,7 @@ void daPicGate_c::DrawRippleImage() {
     }
 
     G3_MTX_PUSH = 0;
-    MulMat4x3Mat4x3(&this->mMtx, &data_0209b3ec, &tmp);
+    MTX_Concat43(&this->mMtx, &data_0209b3ec, &tmp);
     G3_MTX_MODE = kMtxPosVec;
     LoadMtx43(&tmp);
     G3_MTX_MODE = kMtxPos;
@@ -302,7 +298,7 @@ void daPicGate_c::InitProximityRipple() {
 }
 
 s32 daPicGate_c::CleanupResources() {
-    func_0203cbc0(mCells);
+    ::operator delete[](mCells);
     return 1;
 }
 
@@ -373,7 +369,7 @@ s32 daPicGate_c::InitResources() {
         mNumCells = (u16)(mCols * mRows);
     }
 
-    mCells = (Vertex *)Memory::operator_new2((unsigned)mNumCells * 0x18u);
+    mCells = (Vertex *)::operator new[]((unsigned)mNumCells * 0x18u);
     mTexRecord = (s32)this->LoadTexture((int)((unsigned char)((param1 >> 8) & 0x1f)));
     mWaveParams = (const daPicGate_c::WaveParams *)&kDefaultWave;
     mState = &kStates[(unsigned char)((param1 >> 0xd) & 3)];

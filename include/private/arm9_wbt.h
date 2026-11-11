@@ -35,7 +35,7 @@ typedef struct WBTCommand {
             short peer_packet_size; /* 0x16 */
             short my_packet_size;   /* 0x18 */
         } sync;
-        /* The layout WBT_GetBlock (func_02065730) builds. */
+        /* The layout WBT_GetBlock (WBT_GetBlock) builds. */
         struct {
             unsigned int block_id;             /* 0x14 */
             unsigned int recv_data_size;       /* 0x18 */

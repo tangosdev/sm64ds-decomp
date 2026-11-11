@@ -34,7 +34,6 @@ extern "C" {
 /* data_0209caa0 is the live save block; its first 0x44 bytes are the
  * current file. LoadEntranceObjects reads the character, LoadClsnAndObjects
  * flags2. */
-extern SaveBlock data_0209caa0;
 
 /* gCurrentScene, the running scene, is the parent passed to dBase_c::Spawn. */
 extern fBase_c *gCurrentScene;

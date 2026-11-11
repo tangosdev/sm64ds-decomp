@@ -4,10 +4,10 @@
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/fx/fx.h"
 #include "nitro/gx/g3x.h"
+#include "nitro/fx/fx_cp.h"
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_s_mg_trampoline2_AssetId {
     ASSET_D_2D_MG_BG_TRAMPOLINE_HARD_NCG_BIN = 0x00a2,
@@ -55,6 +55,7 @@ enum d_s_mg_trampoline2_AssetId {
 #include "Sound.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+
 /* local: the ROM re-reads the slot byte at each use here, so keep the read volatile. */
 #define ACTIVE_SLOT (*(volatile unsigned char *)&gActivePlayerSlot)
 /* local: these readers only reproduce through a 4-byte-record view of the lane. */
@@ -99,7 +100,7 @@ struct dExtSimpleModel_c { ~dExtSimpleModel_c(); };
 
 extern "C" {
 extern void Trmp2Spinner_UpdateMatrix(char *c);
-extern void AddVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+extern void VEC_Add(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern Trampoline2ModelFilePtr sTrmp2StarModelFile;
 extern int sTrmp2SpinnerCount;
 extern unsigned char *sTrmp2Spinners;
@@ -191,7 +192,6 @@ extern OamAttr *sMgTextSpritesItalian[];
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for _ZN18dScMgTrampoline2_c11CanEndStateEi, NOT applied: extern int GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for _ZN18dScMgTrampoline2_c10StartRoundEi, NOT applied: extern "C" s32 GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for _ZN18dScMgTrampoline2_c10StartRoundEi, NOT applied: extern "C" void MIi_CpuClear16(u16 val, char *dst, int nbytes); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd4fdivEii, from the legacy file for _ZN18dScMgTrampoline2_c13InitResourcesEv, NOT applied: extern s32 _ZN4cstd4fdivEii(s32 a, s32 b); */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov006_021245a8, NOT applied: extern s32 GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_021245a8, NOT applied: extern void MIi_CpuClear16(u16 val, char *dst, int nbytes); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN2GX10LoadBGPlttEPKvjj, from the legacy file for func_ov006_021245a8, NOT applied: extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b); */
@@ -254,7 +254,7 @@ void dScMgTrampoline2_c::InitDisplay() {
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1318;
     *(volatile u16 *)0x400000e &= ~0x40;
 
-    DecompressLZ16(objChar, (void *)0x6400000);
+    DecompressLZ16(objChar, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x60);
 
     Deallocate(bgChar);
@@ -278,7 +278,7 @@ s32 dScMgTrampoline2_c::InitResources() {
     *(u16 *)0x4000060 = (*(u16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
-    fov = cstd::fdiv(0xc0000, (s32)data_02082414);
+    fov = FX_Div(0xc0000, (s32)data_02082414);
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
     this->mCameras[0].mLookAt.z = 0;
@@ -395,7 +395,7 @@ void dScMgTrampoline2_c::StateIntro() {
     }
 
     {
-        int t = cstd::fdiv(counter << 12, 0x5a000);
+        int t = FX_Div(counter << 12, 0x5a000);
         volatile s16 old9c = mTouchX;
         volatile s16 old9e = mTouchY;
         int mixRaw = sTrmp2IntroToX * t + sTrmp2IntroFromX * (0x1000 - t);
@@ -1166,7 +1166,7 @@ void Trmp2Spinner_Update(char *raw) {
     ApproachLinear2(SPINNER(raw)->mLifeTimer, 0, 1);
     short *p = &SPINNER(raw)->mAngleZ;
     *p = *p + 0x400;
-    AddVec3(&SPINNER(raw)->mPos, &SPINNER(raw)->mVel, &SPINNER(raw)->mPos);
+    VEC_Add(&SPINNER(raw)->mPos, &SPINNER(raw)->mVel, &SPINNER(raw)->mPos);
 }
 }
 

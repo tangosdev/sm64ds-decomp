@@ -83,7 +83,6 @@ extern u8 gMgMenuPage;
 extern MgEntry gMgMenuRow;
 extern MgRecordDefaults gMgMenuRowMid;
 extern MinigameSaveData data_0209cae4;
-extern SaveBlock data_0209caa0;
 extern u8 gSubScreenLayers;
 extern u8 gMainScreenLayers;
 extern short gSubBg3HOffset;
@@ -276,7 +275,7 @@ s32 dScMiniGm_c::InitResources()
     } else {
         f = LoadFile(0xd8);
     }
-    DecompressLZ16(f, (void *)0x6400000);
+    DecompressLZ16(f, G2_GetOBJCharPtr());
     Deallocate(f);
 
     f = LoadFile(0xd9);
@@ -331,7 +330,7 @@ s32 dScMiniGm_c::InitResources()
     } else {
         f = LoadFile(0xd8);
     }
-    DecompressLZ16(f, (void *)0x6600000);
+    DecompressLZ16(f, G2S_GetOBJCharPtr());
     Deallocate(f);
 
     f = LoadFile(0xd9);
@@ -1065,16 +1064,15 @@ void dScMiniGm_c::UpdatePageScroll() {
 }
 
 extern "C" {
-int MiniGm_HasSecondPage(void *self){
-  int i, j;
-  for(i=0;i<4;i++){
-    char *p = (char*)i + 0x18;
-    for(j=6;j<9;j++){
-      if(MiniGm_IsUnlocked(self, (int)p)) return 1;
-      p += 4;
+int MiniGm_HasSecondPage(void *self) {
+    int i, j;
+    for (i = 0; i < 4; i++) {
+        for (j = 6; j < 9; j++) {
+            if (MiniGm_IsUnlocked(self, j * 4 + i))
+                return 1;
+        }
     }
-  }
-  return 0;
+    return 0;
 }
 }
 

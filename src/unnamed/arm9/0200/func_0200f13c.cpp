@@ -73,15 +73,11 @@ void func_0200f13c(void) {
     LoadCompressedFileAt(0x9808, G2_GetBG2ScrPtr());
     LoadCompressedFileAt(0x9809, (char *)G2_GetBG2ScrPtr() + 0x800);
     LoadCompressedFileAt(0x980a, (char *)G2_GetBG2ScrPtr() + 0x1000);
-    char *a5 = (char *)0x6400000;
-    a5 += 0x2000;
-    LoadCompressedFileAt(data_0208a15c[GetLanguageIndex()], a5);
+    LoadCompressedFileAt(data_0208a15c[GetLanguageIndex()], (u8 *)G2_GetOBJCharPtr() + 0x2000);
     void *p = LoadFile(0x980f);
     GX_LoadOBJPltt(p, 0x120, 0xe0);
     Deallocate(p);
-    char *a6 = (char *)0x6600000;
-    a6 += 0x800;
-    LoadCompressedFileAt(data_0208a120[GetLanguageIndex()], a6);
+    LoadCompressedFileAt(data_0208a120[GetLanguageIndex()], (u8 *)G2S_GetOBJCharPtr() + 0x800);
     void *q = LoadFile(0x8400);
     GXS_LoadOBJPltt(q, 0, 0x200);
     Deallocate(q);

@@ -25,9 +25,8 @@
 
 extern "C" {
 
-/* local extern: no header declares these yet. Crash's SDK name is
- * OS_Terminate. */
-extern void Crash(void);
+/* local extern: no header declares this yet. */
+extern void OS_Terminate(void);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 
@@ -72,7 +71,7 @@ void CARDi_LockResource(int owner, int target) {
     OSIntrMode saved = OS_DisableInterrupts();
     if (p->lock_owner == owner) {
         if (p->lock_target != target)
-            Crash();
+            OS_Terminate();
     } else {
         while (p->lock_owner != OS_LOCK_ID_ERROR)
             OS_SleepThread(&p->lock_queue);
@@ -88,10 +87,10 @@ void CARDi_UnlockResource(int owner, int target) {
     CARDiCommon *p = &cardi_common;
     OSIntrMode saved = OS_DisableInterrupts();
     if (p->lock_owner != owner || !p->lock_ref) {
-        Crash();
+        OS_Terminate();
     } else {
         if (p->lock_target != target)
-            Crash();
+            OS_Terminate();
         if (!--p->lock_ref) {
             p->lock_owner = OS_LOCK_ID_ERROR;
             p->lock_target = CARD_TARGET_NONE;

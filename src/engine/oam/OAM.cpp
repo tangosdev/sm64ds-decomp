@@ -15,7 +15,7 @@
  * Source order is ROM-ascending under `#pragma defer_codegen off` -- the
  * deferred default would read optimization pragmas last-wins at end of file
  * and this member needs a positional bracket: the 10-arg Render keeps its
- * opt_common_subs/opt_propagation/opt_loop_invariants offs, and the bracket
+ * opt_propagation/opt_loop_invariants offs, and the bracket
  * restores `on` so the rest of the file gets defaults.
  *
  * The bodies read and write OAM records as NitroSDK's GXOamAttr: the
@@ -43,9 +43,9 @@
 #include "nitro/gx/gxcommon.h"
 #include "OamAnimation.h"
 #include "nitro/os/cache.h"
-#include "cstd.h"
 
 #include "Matrix2x2.h"
+#include "nitro/fx/fx_cp.h"
 
 extern u8  data_0209e660;    /* sub-OAM suppress flag / single-buffer select */
 extern int data_0209e664;    /* main-buffer fill counter */
@@ -153,7 +153,6 @@ u8 OAM::GetObjWidth(int shape, int sizeBits)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- OAM::Render(bool, OamAttr *, int, int, int, int, int, int, int, int)
  * 0x02020994  size 0x690 */
-#pragma opt_common_subs off
 #pragma opt_propagation off
 #pragma opt_loop_invariants off
 
@@ -236,13 +235,13 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
                     halfW = w >> 1;
                     halfH = h >> 1;
                     if (scaleX != 0x1000)
-                        x = cstd::fdiv(x, scaleX);
+                        x = FX_Div(x, scaleX);
                     if (scaleY != 0x1000)
-                        y = cstd::fdiv(y, scaleY);
+                        y = FX_Div(y, scaleY);
                     if (rotation != 0) {
                         s16 s, c;
-                        s = data_02082214[sinIdx];
-                        c = data_02082214[cosIdx];
+                        s = FX_SinCosTable_[sinIdx];
+                        c = FX_SinCosTable_[cosIdx];
                         tcy = (s64)c * y;
                         tcx = (s64)c * x;
                         tsy = (s64)s * y;
@@ -314,10 +313,10 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
             int aff;
             u32 ipVal;
             if (scaleX != 0x1000 || scaleY != 0x1000 || rotation != 0) {
-                s16 c2 = data_02082214[mtxIdx + 1];
+                s16 c2 = FX_SinCosTable_[mtxIdx + 1];
                 m.m00 = (c2 * scaleX + 0x800) >> 12;
                 {
-                    s16 s2 = data_02082214[mtxIdx];
+                    s16 s2 = FX_SinCosTable_[mtxIdx];
                     m.m01 = (s2 * scaleX + 0x800) >> 12;
                     m.m10 = -((s2 * scaleY + 0x800) >> 12);
                 }
@@ -385,7 +384,6 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
     }
 }
 #pragma cplusplus on
-#pragma opt_common_subs on
 #pragma opt_propagation on
 #pragma opt_loop_invariants on
 

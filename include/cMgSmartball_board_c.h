@@ -5,8 +5,8 @@
  * header for the family's shape (a root, three slots, no virtual destructor).
  *
  * SIZE 0x9c, from operator new(0x9c) in dScMgSmartball_c::SpawnObjects immediately before the
- * call to this class's constructor cMgSmartball_board_c_Construct. Base ends at 0x34, so
- * this class adds 0x68 bytes.
+ * call to this class's constructor cMgSmartball_board_c_Construct. The base's data
+ * ends at 0x31, so this class adds 0x6b bytes.
  *
  * FIELD EVIDENCE. RestoreInitial (ov006:0x0210f914) is exhaustive: it
  * zeroes every field this class owns, in address order, with the loop bounds
@@ -34,24 +34,9 @@
  * diagonals). That reading is why the nine-element arrays and the
  * eight-element arrays are two different lengths and not one.
  *
- * THE NINE-BYTE CELL ARRAY STRADDLES THE BASE BOUNDARY, and that is the one
- * thing about this class C++ cannot say. It runs 0x31..0x39; the base ends at
- * 0x34, so its first THREE elements are the base's mTriggered/unk_032/unk_033
- * and only the last six are ours. A member cannot begin inside the base, and
- * widening the base to swallow it would change cMgSmartball_object_c's size
- * for its other ten children. So only the tail is declared (mCellsTail[6]) and
- * the array is indexed as `(&mTriggered)[i]` -- pointer arithmetic off the
- * base's first cell byte, walking through unk_032/unk_033 and into
- * mCellsTail[6]. That spelling is not a stylistic pick: it is the only one of
- * six measured that reproduces. `((u8 *)this)[0x31 + i]` compiles a
- * register-offset store where the ROM has a displacement, and
- * `*(u8 *)((char *)this + i + 0x31)` lets strength reduction build an
- * induction variable the ROM does not have.
- *
- * This class is also what settled the base's 0x31-0x33 span: see
- * cMgSmartball_object_c.h, where those three bytes are now three u8s because
- * three children read them three incompatible ways and a board cell is one of
- * the three.
+ * THE NINE-BYTE CELL ARRAY BEGINS AT 0x31, inside the base's tail padding.
+ * cMgSmartball_object_c is not a POD and its data ends at 0x31, so mwccarm
+ * places this class's first member there; mCells runs 0x31..0x39.
  *
  * CONSTRUCTED BY cMgSmartball_board_c_Construct, left a free function per the recipe
  * (this tree has migrated zero constructors), with only its vtable-symbol
@@ -79,25 +64,15 @@ struct cMgSmartball_board_c : cMgSmartball_object_c {
     void ClaimCell(int idx);
     static void ShuffleCells();
 
-    u8 mCellsTail[6]; /* 0x034-0x039 -- the TAIL of a 9-element per-cell CLAIMED
-                        flag array that BEGINS AT 0x31, inside the base (1 = a
-                        ball has flipped this cell). Never indexed through this
-                        name: the whole array is reached as (&mTriggered)[i],
-                        because a member cannot straddle the base boundary.
-                        Declared only so the layout below sits at the right
-                        offsets. cMgSmartball_board_c::ClaimCell's former shadow struct
-                        modelled the same nine bytes as a plain `u8 cells[9]`
-                        at 0x31, which is the corroboration for the length. */
-
-    /* Genuine gap -- RestoreInitial's exhaustive zero pass steps straight from
-       the 9 bytes ending at 0x39 to the s32 array at 0x3c. UNMODELLED, NOT
-       UNREAD; the alignment of the next member accounts for it. */
-    u8  pad_03a[2]; /* 0x03a-0x03b */
+    u8 mCells[9]; /* 0x031 -- per-cell CLAIMED flag (1 = a ball has flipped
+                        this cell). cMgSmartball_board_c::ClaimCell's former
+                        shadow struct modelled the same nine bytes as a plain
+                        `u8 cells[9]` at 0x31. */
 
     s32 mCellFlipAngle[9]; /* 0x03c -- per-cell flip angle. SaveSnapshot advances a
                         claimed cell's angle by 0x400 a frame and clamps at
                         0x8000 (a half turn); Update feeds it to the shared
-                        sine table data_02082214 to shear the sprite, and
+                        sine table FX_SinCosTable_ to shear the sprite, and
                         picks a flipped-face sprite once it passes 0x4000. */
     u8  mCellHighlight[9]; /* 0x060 -- per-cell: this cell is part of a line that
                         is currently scoring. Update sets it for each of a

@@ -305,34 +305,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1104",
+      "from": "@1035",
       "to": "@1701",
-      "evidence": "mwcc numbers this registration node @1072 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "mwcc numbers this registration node @1072 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1104 to @1035 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@1105",
+      "from": "@1036",
       "to": "@1702",
-      "evidence": "mwcc numbers this registration node @1073 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "mwcc numbers this registration node @1073 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1105 to @1036 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@1106",
+      "from": "@1037",
       "to": "@1703",
-      "evidence": "mwcc numbers this registration node @1074 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "mwcc numbers this registration node @1074 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1106 to @1037 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@1107",
+      "from": "@1038",
       "to": "@1704",
-      "evidence": "mwcc numbers this registration node @1075 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "mwcc numbers this registration node @1075 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1107 to @1038 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@1108",
+      "from": "@1039",
       "to": "@1705",
-      "evidence": "mwcc numbers this registration node @1076 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "mwcc numbers this registration node @1076 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1108 to @1039 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@1109",
+      "from": "@1040",
       "to": "@1706",
-      "evidence": "mwcc numbers this registration node @1077 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "mwcc numbers this registration node @1077 per TU (the @NNN numbering shifted when cleanup added the Event.h/daObjBlockItemTag_c.h includes); renamed to a fleet-unique name because anonymous compiler temporaries collide across TUs in the scratch link | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1109 to @1040 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

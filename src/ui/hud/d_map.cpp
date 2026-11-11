@@ -42,10 +42,10 @@
 #include "SaveData.h"
 #include "OAM.h"
 #include "nitro/gx/g2.h"
-#include "cstd.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/hw/registers.h"
+#include "nitro/fx/fx_cp.h"
 
 #pragma defer_codegen off
 /* Codegen is deferred by default in mwccarm 2004/b56, which makes its
@@ -73,7 +73,6 @@ extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern signed char gCurrentSublevel;
 extern u8 gCurrentStarId;
-extern SaveBlock data_0209caa0;
 int SublevelToLevel(int i);
 int IsStarCollected(int level, int star);
 
@@ -113,7 +112,7 @@ extern dActor_c *STAR_MARKERS[12];
 extern int data_0209f3e8[];
 extern void *data_0209f3a4[];
 extern void SetSubBg2Offset(s32 a, s32 b);
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 extern s32 GetMinimapID(dActor_c *actor, s32 arg);
 extern s32  GetMinimapScale(s32 idx);
 extern void UpdateMinimap(s32 *a, u32 b, u32 c, u32 d, u32 e);
@@ -176,7 +175,7 @@ void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
     if (v->z <= p0.z) {
         int factor;
         Vec3_Sub(&out, v, &p0);
-        factor = 0xc00 - (cstd::fdiv(out.z, (int)0xffffd1a0) >> 12);
+        factor = 0xc00 - (FX_Div(out.z, (int)0xffffd1a0) >> 12);
         v->x = p0.x + FX_MUL(out.x, factor);
         v->z = p0.z + FX_MUL(out.z, 0x200);
     } else {
@@ -704,7 +703,7 @@ L4b0:
         this->mInvScale = this->mTargetInvScale;
 
 L4d8:
-    this->mCurrentScale = cstd::fdiv(this->mScale, this->mInvScale);
+    this->mCurrentScale = FX_Div(this->mScale, this->mInvScale);
     {
         fx32 cs = FX_CosIdx(this->mAngle >> 4);
         this->mBgMatrixA = FX_MUL(cs, this->mInvScale);
@@ -764,7 +763,7 @@ L738:
     GetPosFromMinimapPos(miniPos, *(Vector3 *)&this->mMapCenterWorldX, this->mCurrentScale,
                          this->mAngle, clampedWorld);
     Vec3_Sub(&scrollDelta, &focusPos, &clampedWorld);
-    AddVec3((Vector3*)&this->mMapCenterWorldX, &scrollDelta, (Vector3*)&this->mMapCenterWorldX);
+    VEC_Add((Vector3 *)&this->mMapCenterWorldX, &scrollDelta, (Vector3 *)&this->mMapCenterWorldX);
     this->mMapCenterX =
         this->mMapCenterOffset +
         ((FX_MUL(((Vector3 *)&this->mMapCenterWorldX)->x, this->mScale) + 0x800) >> 12);

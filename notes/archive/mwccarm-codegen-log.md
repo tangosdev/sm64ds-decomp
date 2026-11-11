@@ -230,7 +230,7 @@ Three things this batch adds to the recipe:
   the namespace, so their calls need `cstd::` qualification -- an unqualified
   call compiles nowhere and the error (`undefined identifier`) is the only
   symptom.
-- **A `.c` caller cannot follow at all.** `src/InvMat4x3.cpp` was still C then
+- **A `.c` caller cannot follow at all.** `src/MTX_Inverse43.cpp` was still C then
   and could not name a C++ namespaced function, so it kept a mangled extern under
   the new spelling with a `local extern:` reason. This is a third category
   alongside shadow scaffolds and raw-offset TUs. (A later batch made it C++, and
@@ -5187,7 +5187,7 @@ So the ROM's fabricated fourth word -- a zero that rides along in the store mult
 never in the load multiple -- has no C spelling. Combined with the leaf frame
 `stmdb sp!,{r4}` / `ldm sp!,{r4}` (mwccarm spends `push {r4,lr}` here because its block move
 needs `lr` as a scratch), this is a hand-written primitive and the existing HAND-ASM header on
-`src/unnamed/arm9/0205/func_02052514.c` is correct. Do not re-open it.
+`src/MTX_Copy33To44_.c` is correct. Do not re-open it.
 
 The transferable test: **an `ldm`/`stm` pair with different register counts, or an `stm` whose
 register list contains a value the matching `ldm` did not load, is hand-asm.** Equal widths

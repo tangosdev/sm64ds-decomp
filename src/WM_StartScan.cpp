@@ -5,7 +5,7 @@
 extern "C" {
 
 /* NitroSDK WMScanParam, WM_StartScan's argument (same names as
- * func_020690b0's WmScanParam, which passes data_020a9dc0 here). */
+ * MBi_ChildCallback's WmScanParam, which passes data_020a9dc0 here). */
 struct WmScanParam {
     void *scanBuf;                 /* 0x0 */
     unsigned short channel;        /* 0x4 -- 1..14 */

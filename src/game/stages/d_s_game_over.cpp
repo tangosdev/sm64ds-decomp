@@ -215,7 +215,7 @@ s32 dScGameOver_c::InitResources() {
     LoadFont(0);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_NCG_BIN);
-    DecompressLZ16(f, (void *)0x6400000);
+    DecompressLZ16(f, G2_GetOBJCharPtr());
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_GAME_OVER_NCL_BIN);

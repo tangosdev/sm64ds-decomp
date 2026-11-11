@@ -6,7 +6,7 @@
 // file it stands in for.
 //
 // Linkage matters and is not uniform in the decomp:
-//   src/VBlankIntrWait.c        `asm void VBlankIntrWait(void)`      -> C++ linkage
+//   src/SVC_WaitVBlankIntr.c        `asm void SVC_WaitVBlankIntr(void)`      -> C++ linkage
 //   src/IRQ3.cpp                `asm OSIntrMode OS_DisableInterrupts` -> C linkage
 // The decomp's filenames are already Itanium mangled names, so a .c file built as
 // C++ gets mangled a second time. Match whichever form the original used, or the
@@ -33,20 +33,20 @@ extern "C" unsigned int OS_RestoreInterrupts(unsigned int prev) {
 // BIOS SWI wrappers. These are .c files in the decomp, so C++ linkage.
 // ---------------------------------------------------------------------------
 
-void VBlankIntrWait(void) { ntr::rt_vblank_wait(); }
+void SVC_WaitVBlankIntr(void) { ntr::rt_vblank_wait(); }
 
 // swi 0x04. The game only ever waits on VBlank in practice.
-void IntrWait(void) { ntr::rt_vblank_wait(); }
+void SVC_WaitIntr(void) { ntr::rt_vblank_wait(); }
 
 // swi 0x06 -- halt until an interrupt. Same thing here.
-void Halt(void) { ntr::rt_vblank_wait(); }
+void SVC_Halt(void) { ntr::rt_vblank_wait(); }
 
 // swi 0x03 -- burn `count` loop iterations. Nothing to wait for on a host.
-void WaitByLoop(void) {}
+void SVC_WaitByLoop(void) {}
 
 // swi 0x0B/0x0C. The DS BIOS copies in 4- or 32-byte units, with an optional
 // fixed-source fill mode; bit 24 selects fill, bit 26 selects 32-bit units.
-extern "C" void CpuSet(const void *src, void *dst, unsigned int ctrl) {
+extern "C" void SVC_CpuSet(const void *src, void *dst, unsigned int ctrl) {
     const unsigned int count = ctrl & 0x1FFFFF;
     const bool fill = (ctrl >> 24) & 1;
     const bool word = (ctrl >> 26) & 1;
@@ -61,7 +61,7 @@ extern "C" void CpuSet(const void *src, void *dst, unsigned int ctrl) {
     }
 }
 
-extern "C" void CpuFastSet(const void *src, void *dst, unsigned int ctrl) {
+extern "C" void SVC_CpuSetFast(const void *src, void *dst, unsigned int ctrl) {
     const unsigned int count = ctrl & 0x1FFFFF;
     const bool fill = (ctrl >> 24) & 1;
     const uint32_t *s = static_cast<const uint32_t *>(src);

@@ -184,7 +184,7 @@ void hal_m43_roty(void *m, int a) { Matrix4x3_FromRotationY(m, a); }
 extern "C" {
 /* asm primitive: 4x3 fx32 Y-rotation from (sin, cos):
    rows {c,0,-s},{0,1,0},{s,0,c},{0,0,0} */
-void func_02052820(struct Matrix4x3 *mtx, int s, int c)
+void MTX_RotY43_(struct Matrix4x3 *mtx, int s, int c)
 {
     int *m = (int *)mtx; /* the twelve fx32 words, row-major */
     m[0] = c;     m[1] = 0; m[2] = -s;

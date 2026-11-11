@@ -21,7 +21,7 @@
  * - data_0209caa0.file.flags1 & 0x80000000; this Init is the consumer, no recovered
  *   name for that save-flag bit
  * - Sound::PlaySmallSecretSound stays TU-local; Sound.h has no declaration.
- *   MulVec3Mat4x3, Vec3_Add, AngleDiff and NumStars have no shared header
+ *   MTX_MultVec43, Vec3_Add, AngleDiff and NumStars have no shared header
  *   either, so they keep a local extern "C" block.
  * - S14 no g_profile_C1_HIKARI (sinit / data outside this .text)
  */
@@ -54,11 +54,10 @@ struct C1HikariModelFilePtr : SharedFilePtr {
 
 /* Defined at the end of this file so its constructor does not enter .text. */
 extern C1HikariModelFilePtr gC1HikariModelFile;
-extern SaveBlock data_0209caa0;
 
 /* local extern: arm9 math and save helpers with no shared header. */
 extern "C" {
-extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
 extern unsigned char NumStars(void);
@@ -111,7 +110,7 @@ int daObjC1Hikari_c::Behavior() {
         vMid.y = 0;
         vMid.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MulVec3Mat4x3((Vector3 *)&vIn, &data_020a0e68, (Vector3 *)&vMid);
+        MTX_MultVec43((Vector3 *)&vIn, &data_020a0e68, (Vector3 *)&vMid);
         Vec3_Add((Vector3 *)&vRes, (const Vector3 *)&mPosX, (const Vector3 *)&vMid);
 
         switch (p->GetTalkState()) {
@@ -157,7 +156,7 @@ int daObjC1Hikari_c::Behavior() {
     vMid2.y = 0;
     vMid2.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3((Vector3 *)&vIn2, &data_020a0e68, (Vector3 *)&vMid2);
+    MTX_MultVec43((Vector3 *)&vIn2, &data_020a0e68, (Vector3 *)&vMid2);
     Vec3_Add((Vector3 *)&vRes2, (const Vector3 *)&mPosX, (const Vector3 *)&vMid2);
     mCylinder.pos.x = vRes2.x;
     mCylinder.pos.y = vRes2.y;

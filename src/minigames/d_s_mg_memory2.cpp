@@ -32,6 +32,8 @@ enum dScMgMemory2_c_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "LevelRng.h"
 #include "PlayerInput.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/gx/gx_bgcnt.h"
+
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -96,7 +98,7 @@ extern "C" {
 extern void Mg_DrawScoreTally(void *thiz, int a, int b, int c);
 extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern s16 atan2_hold_d_s_mg_memory2_1(int y, int x);
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern void MgCoins_StartLoseOneMore(void);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemory2CardFrameSprites[];
@@ -215,9 +217,9 @@ void dScMgMemory2_c::PlayerMove(int player) {
     mPlayers[player].speed = mPlayers[player].speed + 0x200;
     angle = (u16 *)&mPlayers[player].angle;
     mPlayers[player].x = mPlayers[player].x +
-                         FX_MUL(data_02082214[((*angle >> 4) << 1) + 1], mPlayers[player].speed);
+                         FX_MUL(FX_SinCosTable_[((*angle >> 4) << 1) + 1], mPlayers[player].speed);
     mPlayers[player].y =
-        mPlayers[player].y + FX_MUL(data_02082214[(*angle >> 4) << 1], mPlayers[player].speed);
+        mPlayers[player].y + FX_MUL(FX_SinCosTable_[(*angle >> 4) << 1], mPlayers[player].speed);
     dx = targetX - (mPlayers[player].x >> 12);
     dy = targetY - (mPlayers[player].y >> 12);
     if (dx < -3 || dx > 3) {
@@ -502,11 +504,11 @@ void dScMgMemory2_c::CardMove(int cardIndex) {
     mCards[cardIndex].angle = cstd::atan2(dy, dx);
 
     {
-        s16 tv = data_02082214[((static_cast<u16>(mCards[cardIndex].angle) >> 4) << 1) + 1];
+        s16 tv = FX_SinCosTable_[((static_cast<u16>(mCards[cardIndex].angle) >> 4) << 1) + 1];
         mCards[cardIndex].x += FX_MUL(tv, mCards[cardIndex].speed);
     }
     {
-        s16 tv = data_02082214[(static_cast<u16>(mCards[cardIndex].angle) >> 4) << 1];
+        s16 tv = FX_SinCosTable_[(static_cast<u16>(mCards[cardIndex].angle) >> 4) << 1];
         mCards[cardIndex].y += FX_MUL(tv, mCards[cardIndex].speed);
     }
 
@@ -1143,9 +1145,9 @@ s32 dScMgMemory2_c::InitResources() {
     LoadCard2SubBg3(this);
     art = LoadFile(sMemory2CardNcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
-    DecompressLZ16(art, (void *)0x6400000);
+    DecompressLZ16(art, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(palette, 0, 0x100);
-    DecompressLZ16(art, (void *)0x6600000);
+    DecompressLZ16(art, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(palette, 0, 0x100);
     Deallocate(art);
     Deallocate(palette);

@@ -17,7 +17,7 @@ typedef struct FSFile FSFile;
 extern int func_0203d7d4(int);
 extern void *data_0209d3c0;
 extern int FS_ConvertPathToFileID(void *out_file_id, const char *path);
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern int data_0208ecd8[7];
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                              u32 file_index);
@@ -47,7 +47,7 @@ int myFS_ConvertPathToFileID(void *out_file_id, const char *path) {
     int r = FS_ConvertPathToFileID(out_file_id, path);
     if (!r) {
         func_02018e68(data_0208ecd8);
-        Crash();
+        OS_Terminate();
     }
     return r;
 }
@@ -57,7 +57,7 @@ int myFS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image
     int r = FS_OpenFileDirect(p_file, p_arc, image_top, image_bottom, file_index);
     if (r == 0) {
         func_02018e68(&data_0208ecc4);
-        Crash();
+        OS_Terminate();
     }
     return r;
 }
@@ -66,7 +66,7 @@ int myFS_OpenFileFast(FSFile *p_file, FSFileID id) {
     int r = FS_OpenFileFast(p_file, id);
     if (r == 0) {
         func_02018e68(&data_0208ec74);
-        Crash();
+        OS_Terminate();
     }
     return r;
 }
@@ -78,7 +78,7 @@ int myFS_OpenFile(void *file, const char *path) {
     int r = FS_OpenFile(file, path);
     if (!r) {
         func_02018e68(data_0208eb8c);
-        Crash();
+        OS_Terminate();
     }
     return r;
 }
@@ -89,7 +89,7 @@ int myFS_ReadFile(FSFile *p_file, void *dst, int len) {
     if (r != len) {
         func_02018e68(&data_0208eb9c);
         FS_GetPathName(p_file, buf, 0x100);
-        Crash();
+        OS_Terminate();
     }
     return r;
 }

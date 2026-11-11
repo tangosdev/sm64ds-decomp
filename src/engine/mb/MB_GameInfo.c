@@ -23,8 +23,8 @@
  *   same order (0x020daa6c..0x020db2a8).
  * - The send status data_020a9d2c and the beacon buffer data_020a9d40
  *   are used by these functions and by no other code.
- * - Bottom edge: func_02067f2c (cache flush, then a DMA copy) is not game
- *   record code. The SDK file's other functions (MB_DeleteGameInfo and the
+ * - Bottom edge: MBi_BlockHeaderEnd (mb_common.c: cache flush, then
+ *   MBi_SendMP) is not game record code. The SDK file's other functions (MB_DeleteGameInfo and the
  *   child's beacon-receive side) are not in this ROM, nor in Lego Star
  *   Wars II's: nothing calls them, so they were dead-stripped. Top edge:
  *   arm9/MB_WmBase begins at 0x0206879c.
@@ -50,7 +50,7 @@ extern void FS_InitFile(FSFile *p_file);
 extern int FS_OpenFile(void *file, const char *path);
 extern int FS_CloseFile(void *p_file);
 extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
-extern u16 func_02067ee4(u16 *p, int len);
+extern u16 MBi_calc_cksum(u16 *p, int len);
 extern int func_020688e4(void);
 extern int func_020688cc(void);
 extern int MBi_GetTgid(void);
@@ -135,7 +135,7 @@ void MBi_InitSendVolatBeacon(void);
 void MBi_SendVolatBeacon(void);
 
 /* NitroSDK MBi_MakeGameInfo(gameInfo, mbGameList, parent): build the game
- * record a parent beacons from the game's registry entry. func_02067928
+ * record a parent beacons from the game's registry entry. MB_RegisterFile
  * builds it into each registered file's slot of the data_020a9db8 work
  * block, with data_020a9db8 + 0x1300 as the parent's user record.
  * MBi_ReadIconInfo reads the icon's 0x20-byte palette and 0x200-byte
@@ -239,7 +239,7 @@ int mystrlen(const u16 *str) {
 }
 
 /* NitroSDK MB_AddGameInfo: append a game record to the beacon list. The new
- * record ends the list. func_02067928 adds each registered file's record
+ * record ends the list. MB_RegisterFile adds each registered file's record
  * this way. */
 void MB_AddGameInfo(MBGameInfo *n) {
     MBGameInfo *p = data_020a9d2c.gameInfoListTop;
@@ -256,7 +256,7 @@ void MB_AddGameInfo(MBGameInfo *n) {
 
 /* NitroSDK MB_InitSendGameInfoStatus: reset the beacon send status. It
  * empties the record list, clears the current record, sets state 1 (pick a
- * record) and clears the send counters. The parent setup func_02068ae8
+ * record) and clears the send counters. The parent setup MB_StartParent
  * calls it after it clears the file table.
  *
  * Later SDKs have one more statement, `sSendVolatCallback = NULL;`. It
@@ -405,7 +405,7 @@ void MBi_SendFixedBeacon(void) {
     data_020a9d40.fileNo = data_020a9d2c.nowGameInfop->fileNo;
     data_020a9d40.beaconNo = data_020a9d2c.beaconNo++;
     data_020a9d40.data.fixed.sum = 0;
-    data_020a9d40.data.fixed.sum = func_02067ee4(data_020a9d48, 0x68);
+    data_020a9d40.data.fixed.sum = MBi_calc_cksum(data_020a9d48, 0x68);
 
     if (++data_020a9d2c.fragmentNo < data_020a9d2c.fragmentMaxNum)
         data_020a9d2c.srcp += 0x62;
@@ -489,7 +489,7 @@ void MBi_SendVolatBeacon(void) {
     }
 
     data_020a9d40.data.volat.sum = 0;
-    data_020a9d40.data.volat.sum = func_02067ee4(data_020a9d48, 0x68);
+    data_020a9d40.data.volat.sum = MBi_calc_cksum(data_020a9d48, 0x68);
 
     ptr = data_020a9d2c.nowGameInfop;
     if (ptr->volat.broadcastedPlayerFlag == ptr->volat.nowPlayerFlag) {

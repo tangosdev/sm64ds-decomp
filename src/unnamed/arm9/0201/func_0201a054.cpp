@@ -3,6 +3,7 @@
 #include "Heap.h"
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
+#include "nitro/fx/fx.h"
 #include "dScene_c.h"
 #include "private/watchdog_alarm.h"
 
@@ -10,7 +11,6 @@ extern "C" {
 
 extern void func_020427f8(void);
 extern u64 func_02042784(void);
-extern void func_02053a8c(void);
 extern void GX_Init(void);
 extern void PXI_Init(void);
 extern void func_0203d740(void);
@@ -54,7 +54,7 @@ void func_0201a054(void) {
     int isChild = (*(u16 *)0x27ffc40 == 2);
     func_020427f8();
     func_02042784();
-    func_02053a8c();
+    FX_Init();
     GX_Init();
     PXI_Init();
     func_0203d740();

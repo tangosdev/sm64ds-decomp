@@ -45,7 +45,7 @@ typedef struct OSiAlarmQueue {
 extern long long OS_GetTick(void);
 extern void OSi_SetTimerReserved(int timerNum);
 extern void OSi_EnterTimerCallback(u32 idx, u32 handler, u32 arg);
-extern void Crash(void); /* OS_Terminate */
+extern void OS_Terminate(void);
 
 extern u16 data_020a6440;           /* OSi_UseAlarm */
 extern OSiAlarmQueue data_020a6444; /* OSi_AlarmQueue */
@@ -141,7 +141,7 @@ void OSi_InsertAlarm(OSAlarm *alarm, u64 fire) {
 void OS_SetAlarm(OSAlarm *alarm, long long tick, OSAlarmHandler handler, void *arg) {
     OSIntrMode saved;
     if (alarm == 0 || alarm->handler != 0)
-        Crash();
+        OS_Terminate();
     saved = OS_DisableInterrupts();
     alarm->period = 0;
     alarm->handler = handler;

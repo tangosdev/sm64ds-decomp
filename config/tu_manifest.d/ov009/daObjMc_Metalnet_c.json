@@ -412,14 +412,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@386",
+      "from": "@364",
       "to": "@400",
-      "evidence": "compiler-local registration node; @394 is taken by ov032 daObjTdWater_c on pending branch sinit/ov032-tdwater, renamed to an unused fleet temp of equal length | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "compiler-local registration node; @394 is taken by ov032 daObjTdWater_c on pending branch sinit/ov032-tdwater, renamed to an unused fleet temp of equal length | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @386 to @364 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@387",
+      "from": "@365",
       "to": "@401",
-      "evidence": "compiler-local registration node; @395 is taken by ov032 daObjTdWater_c on pending branch sinit/ov032-tdwater, renamed to an unused fleet temp of equal length | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "compiler-local registration node; @395 is taken by ov032 daObjTdWater_c on pending branch sinit/ov032-tdwater, renamed to an unused fleet temp of equal length | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @387 to @365 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "undefined_symbol_aliases": [

@@ -141,7 +141,7 @@ extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g
 extern void func_020127a4(int a0, int a1, int a2, int a3);
 extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
 extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
-extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 extern void FreeGfxSlotsById(int arg);
 extern void Mg_SetSharedState(int c);
 
@@ -1708,7 +1708,7 @@ s32 dScMgLuigi_c::InitResources() {
 
     objectTiles = LoadFile(ASSET_D_2D_MG_LUIGI_NCG_BIN);
     fileData = LoadFile(ASSET_D_2D_MG_LUIGI_NCL_BIN);
-    DecompressLZ16(objectTiles, (void *)0x6400000);
+    DecompressLZ16(objectTiles, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(fileData, 0, 0x100);
 
     REG_DB_BG2CNT &= ~3;
@@ -1741,7 +1741,7 @@ s32 dScMgLuigi_c::InitResources() {
         Deallocate(subFileData);
     }
 
-    DecompressLZ16(objectTiles, (void *)0x6600000);
+    DecompressLZ16(objectTiles, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(fileData, 0, 0x100);
     Deallocate(objectTiles);
     Deallocate(fileData);

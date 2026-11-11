@@ -122,7 +122,7 @@ extern void *sSoundWinSpriteASprites[];
 /* Stored timing suffixes are retained; WinSpriteA reads only indices 0 and 1. */
 extern const u16 sSoundWinSpriteATimes[4] = {50, 4, 50, 0};
 extern void Mg_DrawStockCounter(int a, int b);
-extern const short data_02082214[];
+extern const short FX_SinCosTable_[];
 extern u8 data_ov006_0213f54c[];
 extern u8 data_ov006_0213f544[];
 extern u8 data_ov006_0213f65c[];
@@ -301,7 +301,7 @@ s32 dScMgSound_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     objChars = LoadFile(ASSET_D_2D_MG_SOUND_NCG_BIN);
     objPltt = LoadFile(ASSET_D_2D_MG_SOUND_NCL_BIN);
-    DecompressLZ16(objChars, (void *)0x6400000);
+    DecompressLZ16(objChars, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 4;
@@ -321,7 +321,7 @@ s32 dScMgSound_c::InitResources() {
     *(volatile u16 *)0x400100c &= ~0x40;
     *(volatile u32 *)0x4001018 = 0;
     *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
-    DecompressLZ16(objChars, (void *)0x6600000);
+    DecompressLZ16(objChars, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(objPltt, 0, 0x100);
     Deallocate(objChars);
     Deallocate(objPltt);
@@ -1496,8 +1496,8 @@ extern "C" void Mg_RenderSpriteBothPalMtx(void *a0, int a1, int a2, int a3, void
 void dScMgSound_c::DrawPops() {
     char *popCursor = (char *)this;
     int slot;
-    int sinAngle = data_02082214[0];
-    long long cosAngle = data_02082214[1];
+    int sinAngle = FX_SinCosTable_[0];
+    long long cosAngle = FX_SinCosTable_[1];
 
     for (slot = 0; slot < 30; slot++) {
         dMgSoundPopCur *pop = (dMgSoundPopCur *)popCursor;
@@ -1515,7 +1515,7 @@ void dScMgSound_c::DrawPops() {
             Mg_RenderSpriteBothPalMtx(sSoundPopsSprites[pop->pop.sprite], (x >> 12) - 8,
                                       (y >> 12) - 0x10, -1, matrix);
         }
-        sinAngle = data_02082214[0];
+        sinAngle = FX_SinCosTable_[0];
         popCursor += 0x24;
     }
 }

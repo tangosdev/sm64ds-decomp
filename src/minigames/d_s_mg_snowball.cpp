@@ -68,6 +68,7 @@ enum dScMgSnowball_c_AssetId {
 #include "OamAttr.h"
 #include "Vector2Math.h"
 #include "nitro/gx/g3x.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -85,7 +86,7 @@ typedef struct Pair {
 extern "C" {
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
 extern OamAttr *sSnowballBitSprites[];
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int m);
@@ -93,7 +94,7 @@ extern u32 d_s_mg_snowballNewHold(u32 uniqueID, u32 effectID, int x, int y, int 
                                   void *callback);
 extern void func_02012718(int a, int b);
 extern int atan2_hold_d_s_mg_snowball_1(int y, int x);
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
@@ -165,7 +166,7 @@ void dScMgSnowball_c::SnowSpray_UpdateAll() {
                 }
             }
             mSprays[i].vz -= 0x200;
-            AddVec3((Vector3 *)&mSprays[i].x, (Vector3 *)&mSprays[i].vx, (Vector3 *)&mSprays[i].x);
+            VEC_Add((Vector3 *)&mSprays[i].x, (Vector3 *)&mSprays[i].vx, (Vector3 *)&mSprays[i].x);
             if (mSprays[i].vz < 0 && mSprays[i].z < 0) {
                 mSprays[i].active = 0;
                 return;
@@ -610,7 +611,7 @@ void dScMgSnowball_c::UpdateSnowball() {
         normalVelocity = FX_MUL(normalVelocity, 0x1800);
         mVelX -= FX_MUL(normalVelocity, push[0]);
         mVelY -= FX_MUL(normalVelocity, push[1]);
-        headingComponent = data_02082214[((unsigned short)cstd::atan2(mVelY, mVelX) >> 4) * 2];
+        headingComponent = FX_SinCosTable_[((unsigned short)cstd::atan2(mVelY, mVelX) >> 4) * 2];
         vx = mVelX;
         mVelX = vx / 8 + FX_MUL(vx, headingComponent) / 4;
         vy = mVelY;
@@ -623,7 +624,7 @@ void dScMgSnowball_c::UpdateSnowball() {
 }
 
 void dScMgSnowball_c::UpdateCamera() {
-    int t = cstd::fdiv(0xc0000, data_02082314);
+    int t = FX_Div(0xc0000, data_02082314);
     Vector3 v;
     int x, y;
     if (mScreensSwapped == 0) {
@@ -711,7 +712,7 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
 
     if (flag == 1) {
         masked = col & 0xf;
-        tile = *(u16 *)((char *)sSnowballCourseTiles + 6);
+        tile = sSnowballCourseTiles[3];
         row = scene;
         i = 0;
         j = i;
@@ -1801,8 +1802,8 @@ s32 dScMgSnowball_c::InitResources() {
     Ov004_Deallocate(buf);
 
     buf = Ov004_LoadFileByPath(&sSnowballNcgPath);
-    DecompressLZ16(buf, (void *)0x6400000);
-    DecompressLZ16(buf, (void *)0x6600000);
+    DecompressLZ16(buf, G2_GetOBJCharPtr());
+    DecompressLZ16(buf, G2S_GetOBJCharPtr());
     Ov004_Deallocate(buf);
 
     buf = Ov004_LoadFileByPath(&sSnowballNclPath);

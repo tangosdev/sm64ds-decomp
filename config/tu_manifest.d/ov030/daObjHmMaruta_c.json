@@ -518,14 +518,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@373",
+      "from": "@351",
       "to": "@613",
-      "evidence": "mwcc numbers this registration node @363 per TU and another module already defines @363"
+      "evidence": "mwcc numbers this registration node @363 per TU and another module already defines @363 Re-keyed from @373 to @351 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@374",
+      "from": "@352",
       "to": "@166",
-      "evidence": "mwcc numbers this registration node @364 per TU and another module already defines @364"
+      "evidence": "mwcc numbers this registration node @364 per TU and another module already defines @364 Re-keyed from @374 to @352 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

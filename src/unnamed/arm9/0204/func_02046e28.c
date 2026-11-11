@@ -5,7 +5,7 @@ struct Material { u8 pad0[0x24]; u32 polyAttr; u32 diffAmb; u32 specEmi; };
 struct MatAnimData { u8 pad0[4]; u8 *values; u16 count; u8 pad_a[2]; struct MatAnimEntry *entries; };
 struct Model { u8 pad0[4]; struct Material *materials; };
 
-extern void Crash(void);
+extern void OS_Terminate(void);
 
 /* dExtAnmMaterial_c::Update's body: for each animated material, set its
    13 colour channels for this frame. Each channel's value is
@@ -28,7 +28,7 @@ void func_02046e28(struct Model *model, struct MatAnimData *anim, unsigned short
     for (i = 0; i < anim->count; i++) {
         e = &anim->entries[i];
         if (e->matIdx == 0xffff)
-            Crash();
+            OS_Terminate();
 
         mat = &model->materials[e->matIdx];
         mat->diffAmb = 0x8000;

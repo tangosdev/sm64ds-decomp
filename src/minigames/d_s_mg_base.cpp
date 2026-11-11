@@ -47,9 +47,9 @@
 #include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "Memory.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "nitro/hw/registers.h"
+#include "nitro/fx/fx_cp.h"
 
 #pragma defer_codegen off
 
@@ -103,7 +103,6 @@ extern unsigned short data_020a0e5a[];
 extern int data_0208ee44;
 extern void Mg_CommitRecords(void);
 extern void FreeGfxSlotsById(int arg);
-extern void func_0203cbc0(void *ptr);
 extern void func_02012e1c(void);
 void Mg_InitMusic();
 extern void Enable3dEngines(void);
@@ -602,10 +601,10 @@ void MgFx::UpdateFlyTo() {
         }
         int a = mTimer;
         int b = mDuration;
-        int s = cstd::fdiv(a << 0xc, b << 0xc);
+        int s = FX_Div(a << 0xc, b << 0xc);
         int c3 = mDuration;
         int c2 = mTimer;
-        int t = cstd::fdiv((c3 - c2) << 0xc, c3 << 0xc);
+        int t = FX_Div((c3 - c2) << 0xc, c3 << 0xc);
         int v8 = mVecA[0];
         int v10 = mVecB[0];
         long long m1 = inline_fn(v8) * inline_fn(s);
@@ -1107,9 +1106,6 @@ void dScMgBase_c::Mg_DrawLine(int x0, int y0, int x1, int y1, int colour, int si
     }
 }
 
-// Kept: the cartridge reloads tbl[i] after the cursor-item loop; with CSE on it is reused.
-#pragma push
-#pragma opt_common_subs off
 namespace s20ae858 {
 extern "C" {
 extern "C" {
@@ -1125,7 +1121,7 @@ extern OamAttr *data_ov006_021346bc;
 /* Draws the three-item overlay menu: each item's per-language sprite list
    at its mMenuItemNX/Y, followed by data_ov006_021346bc at the same spot.
    The highlighted item (mMenuCursor) goes through a matrix whose diagonal
-   is func_02053200 of a pulse that mMenuCursorPhase drives through
+   is FX_Inv of a pulse that mMenuCursorPhase drives through
    FX_SinIdx. Nothing is drawn while mTouchOptions.Draw() returns
    nonzero. */
 extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
@@ -1153,7 +1149,7 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
             s16 *pos;
             u16 v;
             int *pbuf = buf;
-            int scale = func_02053200(FX_MUL(FX_SinIdx(idx), 0x800) + 0x1000);
+            int scale = FX_Inv(FX_MUL(FX_SinIdx(idx), 0x800) + 0x1000);
 
             {
                 volatile int *vp = pbuf;
@@ -1183,7 +1179,6 @@ extern "C" void Mg_DrawMenu(dScMgBase_c *scene)
 }
 }
 }
-#pragma pop
 
 namespace s20aea30 {
 extern "C" {
@@ -1411,10 +1406,9 @@ void dScMgBase_c::RestoreScreenFromMenu() {
         GXS_LoadBGPltt(p, 0, 0x80);
     }
 
-    if (GetDisplayMode() != 2)
-    {
-        char *src = (char*)0x6600000; src += 0x6000;
-        MIi_CpuCopy32((int *)save->subObjChars, (int *)src, 0x2000);
+    if (GetDisplayMode() != 2) {
+        MIi_CpuCopy32((int *)save->subObjChars, (int *)((u8 *)G2S_GetOBJCharPtr() + 0x6000),
+                      0x2000);
     }
 
     gMainScreenLayers = (u8)mSavedMainBgBits;
@@ -1549,8 +1543,7 @@ int dScMgBase_c::SaveScreenForMenu() {
     gSubScreenLayers = 0x10;
 
     if (GetDisplayMode() != 2) {
-        int *vbase = (int *)0x6600000;
-        int *vram = vbase + 0x1800;
+        int *vram = (int *)((u8 *)G2S_GetOBJCharPtr() + 0x6000);
         MIi_CpuCopy32(vram, (int *)save->subObjChars, 0x2000);
         int idx = GetGameLanguage();
         DecompressLZ16(sMgMenuScreenByLanguage[idx], vram);
@@ -1699,10 +1692,15 @@ void Mg_InitBrush(char* sb, char en, int mode, int base)
 
 namespace s20af5e0 {
 extern "C" {
+/* One OAM record: GXOamAttr's attr0/attr1 word, then attr2's fields and
+   attr3. Spelled locally because including nitro/gx/gxcommon.h renumbers
+   this TU's @NNN symbols. */
 typedef struct Item {
-    u32 w0;
-    u32 val : 10;
-    u32 rest : 22;
+    u32 attr01;
+    u32 charNo : 10;
+    u32 priority : 2;
+    u32 cParam : 4;
+    u32 attr3 : 16;
 } Item;
 
 /* Copies an OAM sprite list (8-byte entries, ending at the one whose
@@ -1715,11 +1713,11 @@ int Mg_CopySpriteList(Item* src, Item* dst, int add)
     int i;
     for (i = 0; i < 0x20; i++) {
         dst[i] = *src;
-        dst[i].val = (add + src->val) & 0x3ff;
-        if (*(u16*)((char*)src + 6) == 0xffff)
+        dst[i].charNo = (add + src->charNo) & 0x3ff;
+        if (src->attr3 == 0xffff)
             break;
         if (i == 0x1f) {
-            *(u16*)((char*)&dst[i] + 6) = 0xffff;
+            dst[i].attr3 = 0xffff;
             break;
         }
         src++;
@@ -2245,7 +2243,7 @@ void dScMgBase_c::AfterCleanupResources(u32 vfSuccess)
         sMgGraphCallback.mScene = 0;
         FreeGfxSlotsById(0x1d);
         if (sMgWorkBuffer != 0) {
-            func_0203cbc0(sMgWorkBuffer);
+            ::operator delete[](sMgWorkBuffer);
             sMgWorkBuffer = 0;
         }
         if (mMenuOpen != 0) {
@@ -2288,7 +2286,7 @@ bool dScMgBase_c::BeforeInitResources()
         Enable3dEngines();
     mMusicTrack = gMgMenuRow.musicTrack;
     if (sMgWorkBuffer == 0)
-        sMgWorkBuffer = Memory::operator_new2(0x4000);
+        sMgWorkBuffer = ::operator new[](0x4000);
     /* +0xb0 is the header's pad_0b0. Scanning ov004 and ov006 turns up no
        other word access at +0xb0 in a scene method or through gMgScene, so
        no role is established and the store stays raw. */
@@ -3401,14 +3399,8 @@ void dScMgBase_c::InitEngines() {
     GX_SetBankForSubBG(4);
     GX_SetBankForSubOBJ(8);
     p = Ov004_LoadFile(sMgStockCounterFiles[GetGameLanguage()]);
-    {
-        char *dst = (char *)0x6400000; dst += 0x4000;
-        DecompressLZ16(p, dst);
-    }
-    {
-        char *dst = (char *)0x6600000; dst += 0x4000;
-        DecompressLZ16(p, dst);
-    }
+    DecompressLZ16(p, (u8 *)G2_GetOBJCharPtr() + 0x4000);
+    DecompressLZ16(p, (u8 *)G2S_GetOBJCharPtr() + 0x4000);
     Ov004_Deallocate(p);
     p = Ov004_LoadFile(0xc3);
     DC_FlushRange(p, 0x100u);

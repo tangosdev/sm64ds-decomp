@@ -134,7 +134,6 @@ extern u8 data_0209f20c;
 extern u8 gCurrentStarId;
 extern u8 gCollectedStarId;
 extern u8 gGameMode;
-extern SaveBlock data_0209caa0;
 extern s32 gRunningKuppaScript;
 extern s8 gNextSublevel;
 extern u32 gNextActorUpdateMask;

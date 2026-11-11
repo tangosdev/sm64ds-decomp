@@ -1654,7 +1654,7 @@ s32 dScMgPanel_c::InitResources() {
     }
 
     file = LoadFile(ASSET_D_2D_MG_PAZZLE_PANEL_NCL_BIN);
-    DecompressLZ16(msgFile, (void *)0x6400000);
+    DecompressLZ16(msgFile, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(file, 0, 0x100);
 
     gSubScreenLayers |= 8;
@@ -1699,7 +1699,7 @@ s32 dScMgPanel_c::InitResources() {
         Deallocate(subFile);
     }
 
-    DecompressLZ16(msgFile, (void *)0x6600000);
+    DecompressLZ16(msgFile, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(file, 0, 0x100);
     Deallocate(msgFile);
     Deallocate(file);

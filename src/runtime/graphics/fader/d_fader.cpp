@@ -27,11 +27,9 @@
 #include "dExtModel_c.h"
 #include "math/MtxStack.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/fx/fx_cp.h"
 
 // These helpers have native definitions but no shared declaration yet.
-namespace cstd {
-Fix12i fdiv(Fix12i a, Fix12i b);
-}
 #include "nitro/os/cache.h"
 int ApproachLinear(Fix12i &value, Fix12i target, Fix12i step);
 
@@ -81,7 +79,7 @@ int dFdBrightness_c::SetBackwardTime(u32 frames, u32 extra) {
     if (frames == 0) {
         speed = -(Fix12i)0x1000;
     } else {
-        speed = cstd::fdiv(-(Fix12i)0x1000, (Fix12i)(frames << 12));
+        speed = FX_Div(-(Fix12i)0x1000, (Fix12i)(frames << 12));
     }
     return IsAtStart();
 }
@@ -91,7 +89,7 @@ int dFdBrightness_c::SetForwardTime(u32 frames, u32 extra) {
     if (frames == 0) {
         speed = (Fix12i)0x1000;
     } else {
-        speed = cstd::fdiv(0x1000, (Fix12i)(frames << 12));
+        speed = FX_Div(0x1000, (Fix12i)(frames << 12));
     }
     return IsAtEnd();
 }
@@ -173,8 +171,8 @@ dFdWipe_c::dFdWipe_c()
 }
 
 /* ~dFdWipe_c: store this class's vptr, destroy the dExtSimpleModel_c member (out of
-   line), run the dFdColor_c sub-object destructor, and -- for D0 -- dFader_c's
-   class operator delete inlined to Memory::operator_delete2. */
+   line), run the dFdColor_c sub-object destructor, and -- for D0 -- operator
+   delete. */
 dFdWipe_c::~dFdWipe_c()
 {
 }

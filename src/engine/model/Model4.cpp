@@ -12,9 +12,9 @@
 
 #include "dExtSimpleModel_c.h"
 #include "nitro/gx/g3x.h"
-#include "cstd.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_load.h"
+#include "msl/string.h"
 #include "GX.h"
 #include "nitro/os/tcm.h"
 
@@ -26,8 +26,7 @@ extern u32 data_020a4bdc;
 extern u32 data_020a4be0;
 extern u32 data_020a4be4;
 extern u32 data_020a4be8;
-void Crash();
-
+void OS_Terminate();
 }
 
 #define REBASE(p) ((char *)(p) + base)
@@ -102,7 +101,7 @@ extern "C" int func_02046590(const void *tbl, const char *name)
         BMD_Material *entry = t->materials;
         while (1)
         {
-            if (cstd::strcmp(entry->name, name) == 0)
+            if (strcmp(entry->name, name) == 0)
                 return (int)i;
             i++;
             entry++;
@@ -110,7 +109,7 @@ extern "C" int func_02046590(const void *tbl, const char *name)
                 break;
         }
     }
-    Crash();
+    OS_Terminate();
     return -1;
 }
 
@@ -219,7 +218,7 @@ void func_020462d0(Dst *d, Desc *h, ElemA *arr)
         if (idx2 != -1) {
             u32 v2;
             if (h->f20 == 0)
-                Crash();
+                OS_Terminate();
             v2 = h->f20[idx2].fc;
             if (shift == 2)
                 e->f20 = v2 >> 3;
@@ -425,12 +424,12 @@ extern "C" void func_02045d9c(void)
     *(volatile u16 *)0x4000060 = ip;
     G3X_SetClearColor(0, 0, r2, 0, false);
     if (GX_GetBankForTex() == 0) {
-        Crash();
+        OS_Terminate();
     }
     if (GX_GetBankForTexPltt() != 0) {
         return;
     }
-    Crash();
+    OS_Terminate();
 }
 
 extern "C" void InitialiseVramGlobals(void)
@@ -462,7 +461,7 @@ u32 dExtSimpleModel_c::GetVramOffset(u32 size) {
     } else if (b > size) {
         p = &data_020a4be8;
     } else {
-        Crash();
+        OS_Terminate();
     }
     *p -= size;
     return *p;
@@ -481,7 +480,7 @@ u32 dExtSimpleModel_c::LoadCompressedTextureToVram(char *src, u32 size, char *ds
     u32 vramOffset;
 
     if ((data_020a4be8 - data_020a4bc8) < size)
-        Crash();
+        OS_Terminate();
     GX_BeginLoadTex();
     GX_LoadTex(src, data_020a4bc8, size);
     data_020a4be4 += size;
@@ -504,7 +503,7 @@ extern "C" u32 func_02045ad8(const void *src, u32 size)
     end  = data_020a4bd8;
 
     if (slot + size > end)
-        Crash();
+        OS_Terminate();
 
     GX_BeginLoadTexPltt();
     GX_LoadTexPltt(src, data_020a4bcc, size);
@@ -526,7 +525,7 @@ extern "C" u32 func_02045a50(const void *src, u32 size)
     end  = data_020a4bd8;
 
     if (slot + size > end)
-        Crash();
+        OS_Terminate();
 
     data_020a4bd8 -= (size + 0xf) & 0xfff0;
 
@@ -562,7 +561,7 @@ void dExtSimpleModel_c::LoadTexAndPal(BMD_File &file) {
         p = &file.palettes[i];
         sz = p->size;
         if (data_020a4bcc + sz > data_020a4bd8)
-            Crash();
+            OS_Terminate();
         if (sz <= 8) {
             GX_LoadTexPltt(p->data, data_020a4bcc, sz);
             p->vramOffset = data_020a4bcc;

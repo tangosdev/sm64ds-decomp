@@ -111,7 +111,7 @@ int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, void *self, int v);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int *Vec3_LslInPlace(void *v, int sh);
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 
 /* Called by their mangled names: each carries a Fix12<int> by value and
    the member spelling DIFFs. */
@@ -128,7 +128,7 @@ extern SharedFilePtr data_ov084_02130e24;   /* death animation */
 extern int data_ov084_0213029c[];           /* SpawnDeathBurst reach per frame */
 extern int data_ov084_021302c4[];           /* SpawnDeathBurst height per frame */
 extern u8 data_ov084_02130294[];            /* UpdateClsnOffset's five bone indices */
-extern s16 data_02082214[];                 /* the sin and cos table, two shorts a step */
+extern s16 FX_SinCosTable_[];               /* the sin and cos table, two shorts a step */
 }
 
 /* One vtable store and four destructor calls, every one a consequence of
@@ -181,9 +181,9 @@ void daFPkn_c::SpawnDeathBurst()
     pos.y = mPosY;
     pos.z = mPosZ;
     burstReach = data_ov084_0213029c[frame];
-    product = burstReach * data_02082214[((u16)mAngleY >> 4) * 2];
+    product = burstReach * FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
     pos.x = pos.x + FX_MUL(product, mScale);
-    product = burstReach * data_02082214[((u16)mAngleY >> 4) * 2 + 1];
+    product = burstReach * FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
     pos.z = pos.z + FX_MUL(product, mScale);
     pos.y = pos.y + mScale * data_ov084_021302c4[frame];
     mParticleHandle1 =
@@ -228,29 +228,29 @@ void daFPkn_c::UpdateClsnOffset()
 
     Vec3_Asr((Vector3 *)locals.tmp, (Vector3 *)&mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, locals.tmp[0], locals.tmp[1], locals.tmp[2]);
-    MulMat4x3Mat4x3(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
     mClsnOffset.x = data_020a0e68.m[9];
     mClsnOffset.y = data_020a0e68.m[10];
     mClsnOffset.z = data_020a0e68.m[11];
     Vec3_LslInPlace(&mClsnOffset, 3);
-    SubVec3((Vector3 *)&mClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mClsnOffset);
+    VEC_Subtract((Vector3 *)&mClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mClsnOffset);
 
-    scaledSinAcc0 = data_02082214[((u16)locals.acc[0] >> 4) * 2] * 0x32;
-    sinAcc1 = data_02082214[((u16)locals.acc[1] >> 4) * 2];
+    scaledSinAcc0 = FX_SinCosTable_[((u16)locals.acc[0] >> 4) * 2] * 0x32;
+    sinAcc1 = FX_SinCosTable_[((u16)locals.acc[1] >> 4) * 2];
 
     mClsnOffset.x = mClsnOffset.x + FX_MUL(scaledSinAcc0, sinAcc1);
 
     /* The int isFirepakun keeps the ROM's compare; a direct test DIFFs. */
     isFirepakun = (actorID == ACTOR_FIREPAKUN);
     if (isFirepakun != false) {
-        scaledCosAcc0 = data_02082214[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
+        scaledCosAcc0 = FX_SinCosTable_[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
         mClsnOffset.y = mClsnOffset.y - (0x19000 - scaledCosAcc0);
     } else {
-        scaledCosAcc0 = data_02082214[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
+        scaledCosAcc0 = FX_SinCosTable_[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
         mClsnOffset.y = mClsnOffset.y - (0x32000 - scaledCosAcc0);
     }
 
-    cosAcc1 = data_02082214[((u16)locals.acc[1] >> 4) * 2 + 1];
+    cosAcc1 = FX_SinCosTable_[((u16)locals.acc[1] >> 4) * 2 + 1];
     mClsnOffset.z = mClsnOffset.z + FX_MUL(scaledSinAcc0, cosAcc1);
 
     mClsnOffset.x = FX_MUL(mClsnOffset.x, mScale);
@@ -468,8 +468,8 @@ void daFPkn_c::StateSpit()
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
-    pos.x += FX_MUL((mMaxScale * 0x3c), data_02082214[((u16)mAngleY >> 4) * 2]);
-    pos.z += FX_MUL((mMaxScale * 0x3c), data_02082214[((u16)mAngleY >> 4) * 2 + 1]);
+    pos.x += FX_MUL((mMaxScale * 0x3c), FX_SinCosTable_[((u16)mAngleY >> 4) * 2]);
+    pos.z += FX_MUL((mMaxScale * 0x3c), FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1]);
     pos.y += mMaxScale * 0x5a;
     mAngleX = 0x1000;
 

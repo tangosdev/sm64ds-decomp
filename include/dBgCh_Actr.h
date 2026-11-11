@@ -157,6 +157,8 @@ struct dBgCh_Actr : dBgCh {
     int TestLeftGroundFlag();    /* mFlags & 0x40 */
     void SetJustHitGroundFlag(); /* mFlags |= 0x20 */
     dBgPi *GetSphereResult();    /* mSphereClsn as its dBgPi base */
+    void SetRadius(Fix12i);      /* mRadius = radius */
+    void SetHeight(Fix12i);      /* mHeight = height */
     /* Both the raycast line and the sphere collider take the flag. */
     void StartIgnoringVanishSurfaces();
     void StopIgnoringVanishSurfaces();

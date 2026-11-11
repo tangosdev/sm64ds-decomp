@@ -13,7 +13,7 @@ extern "C" {
 #define ROM_HEADER_ARM7_SIZE       (*(u32 *)0x027FFE3C)
 #define ROM_SECURE_AREA_END 0x8000
 
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern void OSi_SendToPxi(u16 data);
 extern void OSi_ReloadRomData(void);
 extern void OSi_DoBoot(void);
@@ -24,7 +24,7 @@ extern void OSReadROMArea(u32 romOffset, void *dest, s32 size);
  * inlined. Identified against pret/pokediamond's OS_reset.c, whose OS_ResetSystem and
  * OSi_DoResetSystem run the same steps in the same order:
  *   - a multiboot child cannot reset: MB_IsMultiBootChild() is the halfword at 0x027ffc40
- *     (HW_BOOT_CHECK_INFO_BUF) == 2, and the SDK calls OS_Terminate there (Crash here);
+ *     (HW_BOOT_CHECK_INFO_BUF) == 2, and the SDK calls OS_Terminate there;
  *   - the parameter goes to HW_RESET_PARAMETER_BUF (0x027ffc20) for the rebooted image;
  *   - OSi_SendToPxi(OS_PXI_COMMAND_RESET) sends 0x10 << 8 on PXI tag 0xc
  *     (PXI_FIFO_TAG_OS), retrying until the FIFO takes it;
@@ -39,7 +39,7 @@ extern void OSReadROMArea(u32 romOffset, void *dest, s32 size);
  */
 void OS_ResetSystem(u32 resetArg) {
     if (*(vu16 *)0x27ffc40 == 2)
-        Crash();
+        OS_Terminate();
 
     *(vu32 *)0x27ffc20 = resetArg;
     OSi_SendToPxi(0x10);

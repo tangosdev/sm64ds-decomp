@@ -14,9 +14,9 @@
  *
  * GXi_DmaId is the GX DMA channel (-1: none), shared by the whole GX
  * library. GX_InitGXState (src/GX_InitGXState.c, the file above) clears the VRAM
- * state block. The empty function just below this run (func_02053a8c) is
- * FX_Init, which the boot sequence calls just before GX_Init; it belongs to
- * the fixed-point library, not to this file.
+ * state block. The empty function just below this run is
+ * FX_Init (src/FX_Init.c), which the boot sequence calls just before
+ * GX_Init; it belongs to the fixed-point library's fx.c, not to this file.
  *
  * This TU owns .text only: the three variables above stay at their ROM
  * addresses, which is why gx.c's two file statics, sIsDispOn and sDispMode,

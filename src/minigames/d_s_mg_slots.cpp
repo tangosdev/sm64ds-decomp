@@ -101,7 +101,7 @@ void Mg_SubCredits(void *c, int val);
 extern void Mg_SubmitScore(int self);
 extern int data_ov006_0213e948[];
 extern void Slot3_ReelDigits(char *c, int i);
-extern int Sound_PlayIfNotActive(int, int, int, int);
+extern int Sound_PlayIfNotActive(int, int, int, short);
 extern int RandomIntInternal(int *seed);
 void OamRender10_d_s_mg_slots(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7,
                               int a8, int a9);
@@ -815,7 +815,7 @@ s32 dScMgSlot3_c::InitResources() {
         Deallocate(h);
     }
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, (void *)0x6400000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, G2_GetOBJCharPtr());
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
                         DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
@@ -825,7 +825,7 @@ s32 dScMgSlot3_c::InitResources() {
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NCG_BIN, G2S_GetBG2CharPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_DOWN_NSC_BIN, G2S_GetBG2ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, (void *)0x6600000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_SLOT_FACE_NCG_BIN, G2S_GetOBJCharPtr());
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_SLOT_FACE_NCL_BIN);
@@ -1462,8 +1462,8 @@ s32 dScMgSlot1_c::InitResources() {
         MIi_CpuClear16(fill, d3, 0x800);
     }
 
-    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], (void *)0x6400000);
-    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], (void *)0x6600000);
+    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], G2_GetOBJCharPtr());
+    LoadCompressedFileAt(sSlotNcgByLanguage[GetGameLanguage()], G2S_GetOBJCharPtr());
 
     {
         void *h = LoadFile(ASSET_D_2D_MG_SLOT_NCL_BIN);

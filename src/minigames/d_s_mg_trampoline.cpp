@@ -3,6 +3,7 @@
 #include "nitro/hw/registers.h"
 #include "math/Approach.h"
 #include "nitro/gx/g3x.h"
+#include "nitro/fx/fx_cp.h"
 /* dScMgTrampoline_c -- Trampoline Time. Draw a line on the touch screen
  * (up to three at once) and bounce Mario to the lit door. Three misses
  * end the round.
@@ -44,14 +45,12 @@ enum d_s_mg_trampoline_AssetId {
 #include "decl_common.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
+
 /* local: UpdateTouchInput only reproduces through a 4-byte-record view of
    each lane; the flat `gTouchHeld[slot * 4]` and TouchInfo forms DIFF there
    (measured 2026-11-08). */
 #define TOUCH_REC(lane) ((unsigned char (*)[4])(lane))
 
-namespace cstd {
-int fdiv(int numerator, int denominator);
-}
 
 typedef struct Vec2s {
     s16 x, y;
@@ -201,7 +200,6 @@ int sTrmpPuffXByLanguage[] = {(int)sTrmpPuffEnglish, (int)sTrmpPuffSpanish, (int
 /* TUBUILD CONFLICT -- alternate declaration of sTrmpStartTouchX, from the legacy file for func_ov006_02121f04, NOT applied: extern short sTrmpStartTouchX; */
 /* TUBUILD CONFLICT -- alternate declaration of sTrmpStartTouchY, from the legacy file for func_ov006_02121f04, NOT applied: extern short sTrmpStartTouchY; */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for _ZN17dScMgTrampoline_c11CanEndStateEi, NOT applied: extern int GetGameLanguage(void); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN4cstd4fdivEii, from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied: extern s32 _ZN4cstd4fdivEii(s32 a, s32 b); */
 /* TUBUILD CONFLICT -- alternate declaration of gMainScreenLayers, from the legacy file for _ZN17dScMgTrampoline_c13InitResourcesEv, NOT applied: extern u8 gMainScreenLayers; */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov006_0212231c, NOT applied: extern s32 GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of MIi_CpuClear16, from the legacy file for func_ov006_0212231c, NOT applied: extern void MIi_CpuClear16(u16 val, char *dst, int nbytes); */
@@ -244,7 +242,7 @@ void dScMgTrampoline_c::InitDisplay() {
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1318;
     REG_BG3CNT &= ~0x40;
 
-    DecompressLZ16(objChar, (void *)0x6400000);
+    DecompressLZ16(objChar, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x60);
 
     Deallocate(bgChar);
@@ -270,7 +268,7 @@ s32 dScMgTrampoline_c::InitResources() {
     REG_DISP3DCNT = (REG_DISP3DCNT & ~0x3000) | 8;
     InitialiseVramGlobals();
     REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
-    fov = cstd::fdiv(0xc0000, (s32)data_02082414);
+    fov = FX_Div(0xc0000, (s32)data_02082414);
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
     this->mCameras[0].mLookAt.z = 0;
@@ -401,7 +399,7 @@ void dScMgTrampoline_c::StateIntro() {
     }
 
     {
-        int t = cstd::fdiv(counter << 12, 0x5a000);
+        int t = FX_Div(counter << 12, 0x5a000);
         /* Kept volatile: the ROM spills the previous point to the stack
            across the random draw; plain locals DIFF (measured 2026-11-08). */
         volatile s16 prevX = mTouchX;

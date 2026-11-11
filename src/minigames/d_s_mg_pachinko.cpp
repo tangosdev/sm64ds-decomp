@@ -114,7 +114,7 @@ extern void Mg_SetTopScreenYOffset(int a);
 extern void Mg_InitBrush(char *a, char b, int c, int d);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern void func_02012718(int a, int b);
-extern int  Sound_PlayIfNotActive(int handle, int player, int id, int unused);
+extern int Sound_PlayIfNotActive(int handle, int player, int id, short unused);
 extern s16 atan2_hold_d_s_mg_pachinko_1(int y, int x);
 extern void FreeGfxSlotsById(int arg);
 extern void *LoadFile(int handle);
@@ -1759,13 +1759,13 @@ void dScMgPachinko_c::BobOmb_StateWaitGrab(int i) {
  * - dy is taken before dx in both distance blocks;
  * - the second sine read goes through a named `const s16 *` (non-const changes
  *   the size; doing the same to the first read is worse), which keeps the two
- *   reads of data_02082214 from sharing one table base;
+ *   reads of FX_SinCosTable_ from sharing one table base;
  * - the last y clamp stores through `py`, assigned between the two x clamps;
  * - the first velocity word's table index is a block-scope local, not inline
  *   and not at function scope.
  * `opt_propagation off` was measured against deleting it outright.
  * opt_propagation stays: a typed mShot[i] rewrite without it is the right size but schedules the touch loads and clamps differently (88 words).
- * The two velocity reads stay hand-indexed into data_02082214: through
+ * The two velocity reads stay hand-indexed into FX_SinCosTable_: through
  * FX_CosIdx / FX_SinIdx the products take swapped registers (17-22 DIFF in
  * eleven spellings: inline, index local, fx16 local, speed read first).
  */
@@ -1851,10 +1851,10 @@ void dScMgPachinko_c::BobOmb_StateAim(int i) {
             {
                 int ai = (*(u16 *)(c + SHOT_OFF(angle) + off) >> 4) * 2 + 1;
                 *(s32 *)(c + SHOT_OFF(velX) + off) =
-                    FX_MUL(data_02082214[ai], *(s32 *)(c + SHOT_OFF(speed) + off));
+                    FX_MUL(FX_SinCosTable_[ai], *(s32 *)(c + SHOT_OFF(speed) + off));
             }
             {
-                const s16 *sp = &data_02082214[(*(u16 *)(c + SHOT_OFF(angle) + off) >> 4) * 2];
+                const s16 *sp = &FX_SinCosTable_[(*(u16 *)(c + SHOT_OFF(angle) + off) >> 4) * 2];
                 *(s32 *)(c + SHOT_OFF(velY) + off) =
                     FX_MUL(*sp, *(s32 *)(c + SHOT_OFF(speed) + off));
             }
@@ -2196,7 +2196,7 @@ s32 dScMgPachinko_c::InitResources()
 
     objChar = LoadFile(0xe0);
     objPltt = LoadFile(0xe1);
-    DecompressLZ16(objChar, (void *)0x6400000);
+    DecompressLZ16(objChar, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd;
@@ -2247,7 +2247,7 @@ s32 dScMgPachinko_c::InitResources()
     GXS_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);
 
-    DecompressLZ16(objChar, (void *)0x6600000);
+    DecompressLZ16(objChar, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(objPltt, 0, 0x100);
     Deallocate(objChar);
     Deallocate(objPltt);

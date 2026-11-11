@@ -88,6 +88,8 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "dGraph_c.h"
 #include "dClipper.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
+#include "msl/string.h"
 
 struct OamAttr;
 
@@ -264,7 +266,6 @@ extern unsigned int data_02092134;
 extern int data_02092138;
 extern u16 *data_0209214c[];
 extern s32 data_02092208[];
-extern SaveBlock data_0209caa0;
 extern s32 data_0209cef0;
 /* The scene's graph callback: the scene registers its own object here and
    clears it on the way out. The frame calls its four slots: GraphCallback0 at
@@ -3821,8 +3822,8 @@ extern "C" int CopyTexPalFromLevelModel(void *p) {
         int found = 0;
         u32 j;
         for (j = 0; j < sm->count; j++) {
-            if (cstd::strcmp(texName, mtex[s->texIdx].name) == 0 &&
-                cstd::strcmp(palName, mpal[s->palIdx].name) == 0) {
+            if (strcmp(texName, mtex[s->texIdx].name) == 0 &&
+                strcmp(palName, mpal[s->palIdx].name) == 0) {
                 e->f1c = s->f1c;
                 e->f20 = s->f20;
                 found = 1;
@@ -4304,7 +4305,7 @@ void dScStage_c::CheckInput() {
                 else
                     maxDistance = 0x24;
                 if (distance > maxDistance) {
-                    int scale = cstd::fdiv(maxDistance, distance);
+                    int scale = FX_Div(maxDistance, distance);
                     deltaX = FX_MUL(deltaX, scale);
                     control->tx = touchX - deltaX;
                     deltaY = FX_MUL(deltaY, scale);
@@ -4475,7 +4476,7 @@ int dScStage_c::CleanupResources() {
                 MinimapChangeNode *block = (MinimapChangeNode *)area->mBlockList;
                 while (block) {
                     MinimapChangeNode *next = block->next;
-                    Memory::operator_delete2(block);
+                    ::operator delete(block);
                     block = next;
                 }
             }
@@ -4951,7 +4952,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadFileAt(ASSET_D_2D_OP_BG_CL_NCL_BIN, 0x5000400);
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL02_NSC_BIN, G2S_GetBG0ScrPtr());
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NSC_BIN, (char *)G2S_GetBG1ScrPtr());
-        LoadCompressedFileAt(ASSET_D_2D_OP_OBJ_CL_NCG_BIN, (void *)0x6600000);
+        LoadCompressedFileAt(ASSET_D_2D_OP_OBJ_CL_NCG_BIN, G2S_GetOBJCharPtr());
         LoadFileAt(ASSET_D_2D_OP_OBJ_CL_NCL_BIN, 0x5000600);
         {
             char *clearScreenMap = (char *)G2S_GetBG2ScrPtr();
@@ -5099,7 +5100,7 @@ extern "C" void func_0202deac(int levelID) {
 void LoadLevelOverlays(int level) {
     if (data_0209f278) {
         if (data_02092130 != data_020758c8[level])
-            Crash();
+            OS_Terminate();
         data_0209f278 = 0;
         return;
     }

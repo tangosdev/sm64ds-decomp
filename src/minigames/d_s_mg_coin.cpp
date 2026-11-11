@@ -233,10 +233,10 @@ void dScMgCoin_c::Bag_Draw() {
         int vec[4];
         u8 idx_l = mBouncer[0].sprite;
 
-        vec[0] = FX_MUL(data_02082214[i + 1], 0x1000);
-        vec[1] = FX_MUL(data_02082214[i], 0x1000);
-        vec[2] = -FX_MUL(data_02082214[i], 0x1000);
-        vec[3] = FX_MUL(data_02082214[i + 1], 0x1000);
+        vec[0] = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
+        vec[1] = FX_MUL(FX_SinCosTable_[i], 0x1000);
+        vec[2] = -FX_MUL(FX_SinCosTable_[i], 0x1000);
+        vec[3] = FX_MUL(FX_SinCosTable_[i + 1], 0x1000);
         Mg_RenderSpriteBothPalMtx(sCoinBagSprites[idx_l], xr >> 12, yr >> 12, -1, vec);
     }
 }
@@ -1357,7 +1357,7 @@ int dScMgCoin_c::InitResources() {
 
     b = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCG_BIN);
     a = LoadFile(ASSET_D_2D_MG_WRECKING_CREW_NCL_BIN);
-    DecompressLZ16(b, (void *)0x6400000);
+    DecompressLZ16(b, G2_GetOBJCharPtr());
     GX_LoadOBJPltt(a, 0, 0x100);
 
     gSubScreenLayers |= 8;
@@ -1376,7 +1376,7 @@ int dScMgCoin_c::InitResources() {
     GXS_LoadBG3Scr(d, 0, 0x800);
     Deallocate(d);
 
-    DecompressLZ16(b, (void *)0x6600000);
+    DecompressLZ16(b, G2S_GetOBJCharPtr());
     GXS_LoadOBJPltt(a, 0, 0x100);
     Deallocate(b);
     Deallocate(a);

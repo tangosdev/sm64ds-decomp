@@ -37,11 +37,11 @@ struct MaterialState {
 typedef char MaterialState_size_must_be_0x30[sizeof(struct MaterialState) == 0x30 ? 1 : -1];
 #endif
 
-extern void Crash(void);
+extern void OS_Terminate(void);
 void func_02046bbc(struct ModelComponents *model, struct BTP_File *file, unsigned int frame) {
     int i;
     if (frame >= file->numFrames) {
-        Crash();
+        OS_Terminate();
     }
     for (i = 0; i < file->numSeqRecords; i++) {
         int j;
@@ -55,7 +55,7 @@ void func_02046bbc(struct ModelComponents *model, struct BTP_File *file, unsigne
         int flags;
         e = &file->seqRecords[i];
         if (e->materialId == 0xffff) {
-            Crash();
+            OS_Terminate();
         }
         mat = &((struct MaterialState *)model->materials)[e->materialId];
         j = e->numKeys - 1;
@@ -67,7 +67,7 @@ void func_02046bbc(struct ModelComponents *model, struct BTP_File *file, unsigne
             p--;
             j--;
             if (j < 0) {
-                Crash();
+                OS_Terminate();
             }
         }
 

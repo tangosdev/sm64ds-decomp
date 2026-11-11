@@ -20,7 +20,7 @@ struct Ov007Figure {
     u8 particleIndex;
     char pad_03;
     struct Ov007Model *model; /* 0x04: func_ov007_020bc6d4 */
-    /* 0x08: bone 0's yaw, from func_020538b8 (atan2) of its third rotation
+    /* 0x08: bone 0's yaw, from FX_Atan2 (atan2) of its third rotation
      * row; func_ov007_020beb80 refreshes it on the stepped frames */
     int yaw;
     Vector3 prevPos; /* 0x0c: bone 0's translation on the last stepped frame */

@@ -18,7 +18,7 @@
  *   addresses. Those that work on the camera they are passed are dCamera_c
  *   members; the rest keep C linkage. The three line-query handlers use C++
  *   for native collision-result initialization, and the state-change, shake
- *   and FOV handlers use C++ so they can call ChangeState and cstd::fdiv
+ *   and FOV handlers use C++ so they can call ChangeState and FX_Div
  *   directly; other handlers remain in cplusplus-off regions.
  * - Vec3 remains the POD scratch triple in the older handlers. Native
  *   collision results use Vector3 and its empty destructor.
@@ -50,6 +50,7 @@
 #include "OAM.h"
 #include "nitro/gx/g2.h"
 #include "nitro/gx/g3_util.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Defined at the bottom of this file; every use here only takes the address. */
 extern dCamera_c::State data_0209b008;
@@ -74,7 +75,7 @@ extern dCamera_c::State data_0209b128;
 extern Matrix4x3 data_0209b41c;
 extern unsigned int gNextActorUpdateMask;
 
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern void *data_02086efc;
 extern void *data_02086f08;
 extern s32 data_02086f14[3];
@@ -122,23 +123,23 @@ extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(const void *v);
-extern int LenVec3(void *v);
+extern int VEC_Mag(void *v);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void AddVec3(void *a, void *b, void *c);
-extern void SubVec3(void *a, void *b, void *c);
+extern void VEC_Add(void *a, void *b, void *c);
+extern void VEC_Subtract(void *a, void *b, void *c);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
 extern void Vec3_MulScalarInPlace(void *v, int s);
 extern int *Vec3_LslInPlace(int *v, int sh);
 extern void Vec3_RotateYAndTranslate(void *out, const void *in, short angle, const void *src);
-extern void MulVec3Mat4x3(void *dst, Matrix4x3 *src, void *out);
+extern void MTX_MultVec43(void *dst, Matrix4x3 *src, void *out);
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 /* local extern: including math/MtxStack.h renumbers this TU's function-local
    statics (sScriptOps, sPrevTurnInput), whose numbered names symbols.txt
    records, so its matrix routines stay declared here. */
 extern void Matrix4x3_FromRotationZ(void *m, int angle);
-extern void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
-extern void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
+extern void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
+extern void MTX_Identity43_(Matrix4x3 *matrix);
 }
 
 /* Opaque camera-side records used by the older handlers. Ground and line
@@ -330,7 +331,7 @@ block_7:
             }
         }
         if (r5 >= 0) {
-            MulVec3Mat4x3(&CAM_SPACE_CAM_POS_ASR_3, &data_0209b41c, spVec);
+            MTX_MultVec43(&CAM_SPACE_CAM_POS_ASR_3, &data_0209b41c, spVec);
             Vec3_LslInPlace(spVec, 3);
             int flag;
             if (r5 != 0xbc) {
@@ -351,7 +352,7 @@ block_7:
         daPly_c *m = (daPly_c *)mTargetPlayer;
         enum Bool isBf = (enum Bool)(m->actorID == 0xbf);
         if (isBf != FALSE) {
-            s32 t2 = data_0209f32c - (data_02082214[((u16)mAngleX >> 4) * 2] * 0x10);
+            s32 t2 = data_0209f32c - (FX_SinCosTable_[((u16)mAngleX >> 4) * 2] * 0x10);
             if (!(mFlags & 1)) {
                 if (m->mIsUnderwater != 0 || m->mIsInShallowWater != 0) {
                     if (pos.y <= t2) {
@@ -437,13 +438,13 @@ int dCamera_c::Render()
 
     s16 tr3 = self->mRollShake;
     if (tr3 != 0) {
-        s16 c = data_02082214[((s32)(u16)self->mRollShakePhase >> 4) * 2];
+        s16 c = FX_SinCosTable_[((s32)(u16)self->mRollShakePhase >> 4) * 2];
         var_r4 = (s16)(var_r4 + (s16)FX_MUL(tr3, c));
     }
 
     s16 tr0 = self->mFovShake;
     if (tr0 != 0) {
-        s16 c = data_02082214[((s32)(u16)self->mFovShakePhase >> 4) * 2 + 1];
+        s16 c = FX_SinCosTable_[((s32)(u16)self->mFovShakePhase >> 4) * 2 + 1];
         s32 m = FX_MUL(c, 0x360);
         sp18 = (s16)(sp18 + ((tr0 * m) << 4 >> 16));
     }
@@ -461,7 +462,7 @@ int dCamera_c::Render()
     }
 
     s32 idx = ((s32)(u16)sp18 >> 4) * 2;
-    G3i_PerspectiveW_(data_02082214[idx], data_02082214[idx + 1], self->mAspect, self->mNear,
+    G3i_PerspectiveW_(FX_SinCosTable_[idx], FX_SinCosTable_[idx + 1], self->mAspect, self->mNear,
                       self->mFar, var_r6, 1, (Matrix4x3 *)0);
 
     {
@@ -485,7 +486,7 @@ int dCamera_c::Render()
 
     if (var_r4 != 0) {
         Matrix4x3_FromRotationZ(&data_020a0e68, var_r4);
-        MulMat4x3Mat4x3(&self->viewMat, &data_020a0e68, &self->viewMat);
+        MTX_Concat43(&self->viewMat, &data_020a0e68, &self->viewMat);
     }
 
     dView_c::Render();
@@ -506,7 +507,7 @@ int dCamera_c::CleanupResources()
     void *p = mFixedViewPos;
     if (p) {
         if (p)
-            Memory::operator_delete2(p);
+            ::operator delete(p);
     }
     return 1;
 }
@@ -515,8 +516,8 @@ extern "C" {
 void dCamera_c::SetFovAngle(short arg) {
     int i = (int)(unsigned short)arg >> 4;
     int j = i * 2;
-    mInvSinFov = func_02053200(data_02082214[j]);
-    mInvCosFov = func_02053200(data_02082214[j + 1]);
+    mInvSinFov = FX_Inv(FX_SinCosTable_[j]);
+    mInvCosFov = FX_Inv(FX_SinCosTable_[j + 1]);
     data_0209f43c.Func_020156DC(mAspect, arg, mNear, mFar);
 }
 }
@@ -538,7 +539,7 @@ void dCamera_c::func_0200d8c8(const Vector3 *v, int strength) {
     if (strength <= dist)
         return;
 
-    offset = FX_MUL(cstd::fdiv(strength, dist), 0x9000);
+    offset = FX_MUL(FX_Div(strength, dist), 0x9000);
 
     if (offset <= mShakeY)
         return;
@@ -582,8 +583,8 @@ int dCamera_c::IsUnderwater() const
  * Lakitu's goal and transition points and Mario's water level, so the
  * address name stays. */
 void dCamera_c::func_0200d858(const Vector3 *offset) {
-    AddVec3(&lookAt, (void *)offset, &lookAt);
-    AddVec3(&pos, (void *)offset, &pos);
+    VEC_Add(&lookAt, (void *)offset, &lookAt);
+    VEC_Add(&pos, (void *)offset, &pos);
 }
 
 void dCamera_c::func_0200d81c(int playerID) {
@@ -1037,9 +1038,9 @@ void dCamera_c::SetMode(int index) {
 int dCamera_c::EnterState() {
     CamPmfHost *c = (CamPmfHost *)this;
     if (c->flags & 0x4000) {
-        volatile unsigned int *flags = (volatile unsigned int *)&c->flags;
-        *flags &= ~0x4000u;
-        *flags |= 0x8000u;
+        unsigned int &flags = c->flags;
+        flags &= ~0x4000u;
+        flags |= 0x8000u;
     }
     CamPmf *p = c->pp;
     if (*(int *)p == 0)
@@ -1257,7 +1258,7 @@ body:
                     mLookTargetPos.z = t.z;
                 }
                 Vec3_Sub((Vector3 *)&local, &mLookTargetPos, (const Vector3 *)a3);
-                mFocusDist = LenVec3(&local) >> 1;
+                mFocusDist = VEC_Mag(&local) >> 1;
                 g = gCurrentSublevel;
                 v = (g == 0x2d);
                 if (v) {
@@ -1273,7 +1274,7 @@ body:
                     mFocusDist = FX_MUL(mFocusDist, 0x1800);
                 }
                 if (g == 0x2f && mFocusDist > 0xc0000) {
-                    int s = cstd::fdiv(0xc0000, mFocusDist << 1);
+                    int s = FX_Div(0xc0000, mFocusDist << 1);
                     Vec3_MulScalarInPlace(&local, s);
                     Vec3_Add((Vector3 *)&local2, (const Vector3 *)a3, (const Vector3 *)&local);
                     mLookTargetPos.x = local2.x;
@@ -1281,7 +1282,7 @@ body:
                     mLookTargetPos.z = local2.z;
                     mFocusDist = 0xc0000;
                 } else {
-                    AddVec3((VecFx32 *)&mLookTargetPos, a3, (VecFx32 *)&mLookTargetPos);
+                    VEC_Add((VecFx32 *)&mLookTargetPos, a3, (VecFx32 *)&mLookTargetPos);
                     Vec3_AsrInPlace((VecFx32 *)&mLookTargetPos, 1);
                 }
                 *a5 = &data_02087274;
@@ -1368,7 +1369,7 @@ int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
             sp8.y += d;
         }
     }
-    SubVec3(&sp8, arg1, &sp8);
+    VEC_Subtract(&sp8, arg1, &sp8);
     t = ((CamMode *)arg3)->lookAtHeight;
     if (mFlags & 0x20000) {
         t = FX_MUL(t, 0x3000);
@@ -1377,7 +1378,7 @@ int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
     sl = Vec3_HorzLen(&sp8);
     VecFx32 sp68;
     Vec3_MulScalar((Vector3 *)&sp68, &mLookTargetPos, mFocusBlend);
-    AddVec3(&sp8, &sp68, &sp8);
+    VEC_Add(&sp8, &sp68, &sp8);
     if (mFlags & 4) {
         mLookAtOffset.x = sp8.x;
         mLookAtOffset.y = sp8.y;
@@ -1396,7 +1397,7 @@ int dCamera_c::func_0200bec4(int *arg1, int arg2, char *arg3, int arg4) {
             int fd;
             if (sl != 0) {
                 Math_Function_0203b14c(&f, 0, 0x100, FX_MUL(r5, 0x600), 0x1000);
-                fd = cstd::fdiv(f, sl);
+                fd = FX_Div(f, sl);
                 mLookAtOffset.x = sp8.x - FX_MUL(sp38.x, fd);
                 mLookAtOffset.z = sp8.z - FX_MUL(sp38.z, fd);
             }
@@ -1465,13 +1466,13 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short angle);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short angle);
 
 extern int NormalizeVec3IfNonZero(Vector3 *v);
-extern Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
+extern Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 /* The 64-bit squared distance between two points. */
 extern long long func_0203cf94(int *a, int *b);
 extern void func_ov002_020effb8(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 *p2,
                                 Vector3 *p3);
 extern void FUN_02029ab0(void);
-extern int Sound_PlayIfNotActive(int handle, int bank, int id, int arg);
+extern int Sound_PlayIfNotActive(int handle, int bank, int id, short arg);
 extern void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarget,
                           short vertDiv, short horzTarget, short horzDiv);
 extern void StarDanceBoundYaw(dCamera_c *cam, short ang, int threshold);
@@ -1760,7 +1761,7 @@ void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int arg2) {
     v2.x = viewPos.x + FX_MUL(v1.x, c);
     v2.z = viewPos.z + FX_MUL(v1.z, c);
 
-    len = LenVec3(&v1);
+    len = VEC_Mag(&v1);
     if (len < 0x220000) {
         v2.y += 0x220000 - len;
     }
@@ -1769,14 +1770,14 @@ void dCamera_c::UpdateFixedCamera(CamViewObj *obj, int arg2) {
     v1.x = v3.x;
     v1.y = v3.y;
     v1.z = v3.z;
-    len = LenVec3(&v1);
+    len = VEC_Mag(&v1);
 
     limit = e->a;
     if (mFlags & 0xc00)
         limit = e->b;
 
     if (len > limit) {
-        scale = cstd::fdiv(limit, len);
+        scale = FX_Div(limit, len);
         Vec3_MulScalarInPlace(&v1, scale);
         Vec3_Add(&v4, &lookAt, &v1);
         v2.x = v4.x;
@@ -1929,7 +1930,7 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
     path.GetNode(node0, mPathNode);
     path.GetNode(node1, idx);
     Vec3_Sub(&dir, &node1, &node0);
-    segLen = LenVec3(&dir);
+    segLen = VEC_Mag(&dir);
     NormalizeVec3IfNonZero(&dir);
 
     Vec3_Sub(&toPos, &lookAt, &node0);
@@ -1938,9 +1939,9 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
     func_0203cf00(&side, &dir, &cross1);
     NormalizeVec3IfNonZero(&side);
 
-    projSide = DotVec3(&toPos, &side);
-    projDir = DotVec3(&toPos, &dir);
-    diff = projDir - DotVec3(&toTarget, &dir);
+    projSide = VEC_DotProduct(&toPos, &side);
+    projDir = VEC_DotProduct(&toPos, &dir);
+    diff = projDir - VEC_DotProduct(&toTarget, &dir);
 
     if (path.GetUnk004() == 0xff) {
         maxDelta = 0;
@@ -1960,7 +1961,7 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
     if (idx + 1 < (int)path.NumNodes()) {
         path.GetNode(node2, idx + 1);
         Vec3_Sub(&tmp, &node2, &node1);
-        Vec3_MulScalarInPlace(&tmp, cstd::fdiv(0x190000, LenVec3(&tmp)));
+        Vec3_MulScalarInPlace(&tmp, FX_Div(0x190000, VEC_Mag(&tmp)));
         Vec3_Add(&farPoint, &node1, &tmp);
         Vec3_Sub(&diffFar, &farPoint, &lookAt);
         tmp.x = diffFar.x;
@@ -1971,8 +1972,8 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
         Vec3_Add(&farBack, &node1, &back);
         Vec3_Sub(&diffBack, &farBack, &lookAt);
 
-        lenBack = LenVec3(&diffBack);
-        lenFwd = LenVec3(&tmp);
+        lenBack = VEC_Mag(&diffBack);
+        lenFwd = VEC_Mag(&tmp);
         if (lenFwd < lenBack) {
             mPathNode++;
         }
@@ -1988,15 +1989,15 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
 
         path.GetNode(prevNode, mPathNode - 1);
         Vec3_Sub(&diffPrev, &prevNode, &node0);
-        Vec3_MulScalarInPlace(&diffPrev, cstd::fdiv(0x190000, LenVec3(&diffPrev)));
+        Vec3_MulScalarInPlace(&diffPrev, FX_Div(0x190000, VEC_Mag(&diffPrev)));
         Vec3_Add(&farPrev, &node0, &diffPrev);
         Vec3_Sub(&diffFarPrev, &farPrev, &lookAt);
         diffPrev.x = diffFarPrev.x;
         diffPrev.y = diffFarPrev.y;
         diffPrev.z = diffFarPrev.z;
 
-        lenA = LenVec3(&diffFwd2);
-        lenB = LenVec3(&diffPrev);
+        lenA = VEC_Mag(&diffFwd2);
+        lenB = VEC_Mag(&diffPrev);
         if (lenB < lenA) {
             mPathNode--;
         }
@@ -2025,7 +2026,7 @@ void dCamera_c::UpdateParallelTrackingCamera(CamViewObj *obj, int floorY) {
     }
 
     Vec3_MulScalarInPlace(&side, projSide);
-    AddVec3(&targetPos, &side, &targetPos);
+    VEC_Add(&targetPos, &side, &targetPos);
 
     if (mFlags & 4) {
         pos.x = targetPos.x;
@@ -2074,8 +2075,8 @@ void dCamera_c::func_0200af20(Vector3 *v1, Vector3 *v2, short *out) {
     idx = (ang >> 4) * 2;
 
     v2->y = mTargetPos.y + 0x8f7690;
-    v2->x = mTargetPos.x + FX_MUL(data_02082214[idx], 0x15a6f80);
-    v2->z = mTargetPos.z + FX_MUL(data_02082214[idx + 1], 0x15a6f80);
+    v2->x = mTargetPos.x + FX_MUL(FX_SinCosTable_[idx], 0x15a6f80);
+    v2->z = mTargetPos.z + FX_MUL(FX_SinCosTable_[idx + 1], 0x15a6f80);
 
     if (b != 0) {
         {
@@ -2232,7 +2233,7 @@ s32 dCamera_c::func_02009e70() {
         r4 = 0;
         if (sp24 != 0) {
             r4 = 0x1000;
-            SubVec3(&mLookTargetPos, &mTargetPos, &mLookTargetPos);
+            VEC_Subtract(&mLookTargetPos, &mTargetPos, &mLookTargetPos);
         }
         Math_Function_0203b14c(&mFocusBlend, r4, 0x100, 0x80, 0x10);
 
@@ -2302,7 +2303,7 @@ s32 dCamera_c::func_02009e70() {
                     }
                 }
                 Vec3_Sub(&sp40, &pos, &lookAt);
-                sp28 = LenVec3(&sp40);
+                sp28 = VEC_Mag(&sp40);
                 {
                     sp10 = 0x80000000;
                     Vector3 sp4c(mTargetPos.x, mTargetPos.y + 0x3e8000, mTargetPos.z);
@@ -2438,13 +2439,13 @@ s32 dCamera_c::func_02009e70() {
                                     sp18 = cstd::atan2(-sp40.y, fp);
                                     ApproachAngle((s16 *)&sp18, sb, 0x20, 0x800, 0);
                                     t0 = (sp18 >> 4) * 2;
-                                    sp40.y = FX_MUL(sp28, -data_02082214[t0]);
-                                    t0 = cstd::fdiv(FX_MUL(sp28, data_02082214[t0 + 1]), fp);
+                                    sp40.y = FX_MUL(sp28, -FX_SinCosTable_[t0]);
+                                    t0 = FX_Div(FX_MUL(sp28, FX_SinCosTable_[t0 + 1]), fp);
                                     sp40.x = FX_MUL(sp40.x, t0);
                                     sp40.z = FX_MUL(sp40.z, t0);
                                 }
                                 Math_Function_0203b14c(&sp28, r4, 0x400, r7 + 0x20000, 0x100);
-                                Vec3_MulScalarInPlace(&sp40, cstd::fdiv(sp28, sp14));
+                                Vec3_MulScalarInPlace(&sp40, FX_Div(sp28, sp14));
                             } else if (sp28 < fp) {
                                 Math_Function_0203b14c(&sp28, fp, 0x400, r7 + 0x20000, 0x100);
                                 {
@@ -2453,7 +2454,7 @@ s32 dCamera_c::func_02009e70() {
                                     distanceSq -= (s64)sp40.y * sp40.y;
                                     r7 = cstd::sqrt((u64)distanceSq);
                                 }
-                                t0 = cstd::fdiv(r7, Vec3_HorzLen(&sp40));
+                                t0 = FX_Div(r7, Vec3_HorzLen(&sp40));
                                 sp40.x = FX_MUL(sp40.x, t0);
                                 sp40.z = FX_MUL(sp40.z, t0);
                                 mInputYawLag -= mAngleY - sb;
@@ -2467,7 +2468,7 @@ s32 dCamera_c::func_02009e70() {
                         } else {
                             if (sb > r4) {
                                 Math_Function_0203b14c(&sp28, r4, 0x400, r7 + 0x20000, 0x100);
-                                Vec3_MulScalarInPlace(&sp40, cstd::fdiv(sp28, sb));
+                                Vec3_MulScalarInPlace(&sp40, FX_Div(sp28, sb));
                                 MoveCameraPosition(this, sp40);
                             }
                         }
@@ -2649,8 +2650,8 @@ int func_02009aa8(dCamera_c *cam) {
         int r;
 
         Vec3_Sub(&delta, &cam->mTargetPlayer->mPos, &cam->mTargetPos);
-        AddVec3(&cam->lookAt, &delta, &cam->lookAt);
-        AddVec3(&cam->pos, &delta, &cam->pos);
+        VEC_Add(&cam->lookAt, &delta, &cam->lookAt);
+        VEC_Add(&cam->pos, &delta, &cam->pos);
 
         base = &cam->mTargetPlayer->mPos;
         cam->mTargetPos.x = base->x;
@@ -2855,7 +2856,7 @@ int func_020095e4(dCamera_c *cam) {
         }
         cam->mAngleY = cam->mBehindAngleY + cam->mTargetAngleY;
         old17e = cam->mAngleX;
-        cam->mAngleX += FX_MUL(r7, (long long)func_02008a70(cam));
+        cam->mAngleX += FX_MUL(r7, func_02008a70(cam));
         {
             int t = cam->mAngleX;
             if (t < 0)
@@ -2875,7 +2876,7 @@ int func_020095e4(dCamera_c *cam) {
     Matrix4x3_FromTranslation(&data_020a0e68, cam->pos.x, cam->pos.y, cam->pos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, cam->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, cam->mAngleX);
-    MulVec3Mat4x3(&v, &data_020a0e68, &cam->lookAt);
+    MTX_MultVec43(&v, &data_020a0e68, &cam->lookAt);
     cam->mTargetPlayer->mAngleY = cam->mAngleY - 0x8000;
     return 1;
 }
@@ -2999,12 +3000,12 @@ int func_020092c4(void *cam, Vector3 *out, const Vector3 *target) {
     int r5;
     int scratch;
     Vec3_Sub(&d, out, target);
-    len = LenVec3(&d);
+    len = VEC_Mag(&d);
     if (len == 0)
         return 1;
     scratch = len;
     r5 = Math_Function_0203b14c(&scratch, 0, 0x200, 0x40000, 0x8000);
-    Vec3_MulScalarInPlace(&d, cstd::fdiv(scratch, len));
+    Vec3_MulScalarInPlace(&d, FX_Div(scratch, len));
     {
         struct Vector3 res;
         Vec3_Add(&res, target, &d);
@@ -3045,7 +3046,7 @@ int dCamera_c::ApproachDist(int dist) {
     int len;
     int r;
     Vec3_Sub(&v, &pos, &lookAt);
-    len = LenVec3(&v);
+    len = VEC_Mag(&v);
     r = Math_Function_0203b14c(&len, dist, 0x300, 0x60000, 0x200);
     v.x = 0;
     v.y = 0;
@@ -3053,7 +3054,7 @@ int dCamera_c::ApproachDist(int dist) {
     Matrix4x3_FromTranslation(&data_020a0e68, lookAt.x, lookAt.y, lookAt.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mAngleX);
-    MulVec3Mat4x3(&v, &data_020a0e68, &pos);
+    MTX_MultVec43(&v, &data_020a0e68, &pos);
     return (r == 0) ? 1 : 0;
 }
 
@@ -3095,16 +3096,16 @@ int dCamera_c::KeepPosOutOfWalls() {
         v0.y = vy;
         v0.z = vz;
         Vec3_Sub(&dir1, &pos, &v0);
-        len = LenVec3(&dir1);
+        len = VEC_Mag(&dir1);
         if (len != 0) {
-            Vec3_MulScalarInPlace(&dir1, cstd::fdiv(0x100000, len));
+            Vec3_MulScalarInPlace(&dir1, FX_Div(0x100000, len));
             Vec3_Add(&end1, &pos, &dir1);
             dBgCh_Lin rc1;
             PrepareBgCh(rc1);
             rc1.SetObjAndLine(end1, v0, 0);
             if (rc1.DetectClsn() != 0) {
                 rc1.surface.CopyNormalTo(n1);
-                if (DotVec3(&mWallNormal, &n1) > 0) {
+                if (VEC_DotProduct(&mWallNormal, &n1) > 0) {
                     mFlags &= ~0x80000;
                     return 0;
                 }
@@ -3146,12 +3147,12 @@ int dCamera_c::KeepPosOutOfWalls() {
     }
 
     Vec3_Sub(&dir2, &pos, &v0);
-    len = LenVec3(&dir2);
+    len = VEC_Mag(&dir2);
     if (len == 0) {
         mFlags &= ~0x80000;
         return 0;
     }
-    Vec3_MulScalarInPlace(&dir2, cstd::fdiv(0x60000, len));
+    Vec3_MulScalarInPlace(&dir2, FX_Div(0x60000, len));
     Vec3_Add(&end2, &pos, &dir2);
     dBgCh_Lin rc2;
     PrepareBgCh(rc2);
@@ -3179,8 +3180,8 @@ int dCamera_c::KeepPosOutOfWalls() {
     pos.y = np.y;
     pos.z = np.z;
     Vec3_Sub(&diff, &pos, &lookAt);
-    if (LenVec3(&diff) >= d) {
-        Vec3_MulScalarInPlace(&diff, cstd::fdiv(d, LenVec3(&diff)));
+    if (VEC_Mag(&diff) >= d) {
+        Vec3_MulScalarInPlace(&diff, FX_Div(d, VEC_Mag(&diff)));
         Vector3 cl;
         Vec3_Add(&cl, &lookAt, &diff);
         pos.x = cl.x;
@@ -3233,10 +3234,10 @@ int MovePointAlongSpline(Vector3 *pos, s16 *segment, s32 *progress, CutsceneSpli
     lo = 0;
     hi = 0;
     if (elem[1].speed != 0) {
-        lo = func_02053200(elem[1].speed << 12);
+        lo = FX_Inv(elem[1].speed << 12);
     }
     if (elem[2].speed != 0) {
-        hi = func_02053200(elem[2].speed << 12);
+        hi = FX_Inv(elem[2].speed << 12);
     }
 
     {
@@ -3410,13 +3411,13 @@ int func_0200840c(dCamera_c *cam, u8 *data) {
 /* Script op: grow the viewport from the given rectangle to the full screen
    over frames lo..hi, keeping mAspect in step. */
 int func_020082f8(dCamera_c *cam, u8 *src, int lo, int hi) {
-    Fix12i slope = cstd::fdiv((gKuppaScriptFrame - lo) << 12, (hi - lo) << 12);
+    Fix12i slope = FX_Div((gKuppaScriptFrame - lo) << 12, (hi - lo) << 12);
     cam->mViewport[0] = (u8)(FX_MUL(((int)src[0] << 12), slope) >> 12);
     cam->mViewport[1] = (u8)(FX_MUL(((int)src[1] << 12), slope) >> 12);
     cam->mViewport[2] = (u8)((FX_MUL((((int)src[2] - 0xff) << 12), slope) >> 12) + 0xff);
     cam->mViewport[3] = (u8)((FX_MUL((((int)src[3] - 0xbf) << 12), slope) >> 12) + 0xbf);
-    cam->mAspect = cstd::fdiv((((u8)cam->mViewport[2] - (u8)cam->mViewport[0]) + 1) << 12,
-                              (((u8)cam->mViewport[3] - (u8)cam->mViewport[1]) + 1) << 12);
+    cam->mAspect = FX_Div((((u8)cam->mViewport[2] - (u8)cam->mViewport[0]) + 1) << 12,
+                          (((u8)cam->mViewport[3] - (u8)cam->mViewport[1]) + 1) << 12);
     return 1;
 }
 
@@ -3659,8 +3660,8 @@ void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, Fix12i mag, short 
     unsigned idx = (unsigned short)ang >> 4;
 
     v.x = 0;
-    v.y = FX_MUL(mag, data_02082214[idx * 2]);
-    v.z = FX_MUL(mag, data_02082214[idx * 2 + 1]);
+    v.y = FX_MUL(mag, FX_SinCosTable_[idx * 2]);
+    v.z = FX_MUL(mag, FX_SinCosTable_[idx * 2 + 1]);
     Vec3_RotateYAndTranslate(res, trans, angY, &v);
 }
 
@@ -3677,7 +3678,7 @@ int func_02007b98(dCamera_c *cam, u8 *data) {
     v.y = y;
     v.z = z;
     b = data[6] << 4;
-    AddVec3(&v, &cam->mTargetPlayer->mPos, &v);
+    VEC_Add(&v, &cam->mTargetPlayer->mPos, &v);
     func_02007cec(&cam->lookAt, &v, b);
     return 1;
 }

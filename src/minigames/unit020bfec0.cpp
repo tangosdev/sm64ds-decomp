@@ -39,7 +39,6 @@
 #include "BMD_File.h"
 #include "dExtAnmTexPat_c.h"
 #include "dExtAnmTexSRT_c.h"
-#include "cstd.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "math/Approach.h"
 #include "dScMgBase_c.h"
@@ -47,6 +46,7 @@
 #include "LevelRng.h"
 #include "MgCamera.h"
 #include "math/Quaternion.h"
+#include "nitro/fx/fx_cp.h"
 /* Typed access to a MascotWalker record from the char* helpers below. */
 #define WALKER(p) ((MascotWalker *)(p))
 /* Typed access to a Presenter record from the char* helpers below. */
@@ -66,19 +66,19 @@ struct Sound {
 void CopyToViewMat(const Matrix4x3 *);
 
 extern "C" {
-/* local extern: no shared math header declares MulVec3Mat4x3. */
-void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
+/* local extern: no shared math header declares MTX_MultVec43. */
+void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *, short);
 void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
-void MulVec3Mat3x3(void *, void *, void *);
-void MulMat4x3Mat4x3(void *, void *, void *);
+void MTX_MultVec33(void *, void *, void *);
+void MTX_Concat43(void *, void *, void *);
 void __cxa_vec_cleanup(void *, unsigned int, unsigned int, dtor_t);
 void func_020169d8(void *, int, unsigned int);
 void func_0203cebc(void *, void *, void *, void *);
 /* local extern: CalcLib conflicts with this TU's void* Vec3_HorzAngle
  * spelling; keep these declarations local but use the shared vector types. */
-void AddVec3(Vector3 *, Vector3 *, Vector3 *);
-int DotVec3(const Vector3 *, const Vector3 *);
+void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
+int VEC_DotProduct(const Vector3 *, const Vector3 *);
 void Matrix4x3_ApplyInPlaceToRotationX(void *, short);
 void Matrix4x3_ApplyInPlaceToRotationY(void *, short);
 void Matrix4x3_FromTranslation(void *, int, int, int);
@@ -89,7 +89,7 @@ void Quaternion_SLerp(void *, void *, int, void *);
 int RandomIntInternal(int *);
 /* local extern: CalcLib cannot be included without conflicting with this TU's
  * other helper spellings, including its Vec3_HorzAngle declaration. */
-void SubVec3(Vector3 *, Vector3 *, Vector3 *);
+void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 short Vec3_HorzAngle(const Vector3 *, const Vector3 *);
 // local extern: no shared header declares Vec3_VertAngle.
@@ -610,9 +610,9 @@ void FallingPetal_Update(char *self) {
         PETAL(self)->mActive = 0;
         return;
     }
-    AddVec3(&PETAL(self)->mPos, &PETAL(self)->mVel, &PETAL(self)->mPos);
+    VEC_Add(&PETAL(self)->mPos, &PETAL(self)->mVel, &PETAL(self)->mPos);
     PETAL(self)->mAccel.y = -0x40;
-    AddVec3(&PETAL(self)->mVel, &PETAL(self)->mAccel, &PETAL(self)->mVel);
+    VEC_Add(&PETAL(self)->mVel, &PETAL(self)->mAccel, &PETAL(self)->mVel);
     phase = ((PETAL(self)->mPos.y >> 1) << 16) >> 20;
     wave = FX_SinIdx(phase);
     sway.x = wave;
@@ -620,10 +620,10 @@ void FallingPetal_Update(char *self) {
     sway.z = wave;
     Vec3_MulScalarInPlace(&sway, 0x400);
     Vec3_Add(&flow, &PETAL(self)->mVel, &sway);
-    dot = DotVec3(&PETAL(self)->mAxis, &flow);
+    dot = VEC_DotProduct(&PETAL(self)->mAxis, &flow);
     Vec3_MulScalar(&drag, &PETAL(self)->mAxis, dot);
     Vec3_MulScalarInPlace(&drag, 0x300);
-    SubVec3(&PETAL(self)->mVel, &drag, &PETAL(self)->mVel);
+    VEC_Subtract(&PETAL(self)->mVel, &drag, &PETAL(self)->mVel);
     dir.x = flow.x;
     dir.y = flow.y;
     dir.z = flow.z;
@@ -657,9 +657,9 @@ extern struct Matrix4x3 data_020a0e68;
 void FallingPetal_UpdateMatrix(char *c) {
     struct Matrix4x3 rot;
     Matrix4x3_FromQuaternion(reinterpret_cast<const Quaternion *>(PETAL(c)->mRot), &rot);
-    MulVec3Mat3x3(&sPetalUpAxis, &rot, &PETAL(c)->mAxis);
+    MTX_MultVec33(&sPetalUpAxis, &rot, &PETAL(c)->mAxis);
     Matrix4x3_FromTranslation(&data_020a0e68, PETAL(c)->mPos.x, PETAL(c)->mPos.y, PETAL(c)->mPos.z);
-    MulMat4x3Mat4x3(&rot, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&rot, &data_020a0e68, &data_020a0e68);
     PETAL(c)->mModel.mat4x3 = data_020a0e68;
 }
 }
@@ -2315,7 +2315,7 @@ void Camera_UpdateMatrices(MgCamera *camera) {
     up.y = 0x1000;
     up.z = 0;
 
-    SubVec3((Vector3 *)&camera->mLookAt, (Vector3 *)&camera->mPos, &forward);
+    VEC_Subtract((Vector3 *)&camera->mLookAt, (Vector3 *)&camera->mPos, &forward);
     if (NormalizeVec3IfNonZero(&forward)) {
         func_0203cebc(&scratch0, &right, &forward, &up);
         if (NormalizeVec3IfNonZero(&right)) {
@@ -2345,15 +2345,15 @@ extern "C" {
 
 void Camera_ProjectToScreen(MgCamera *camera, void *pos, int *screenX, int *screenY) {
     int view[3];
-    MulVec3Mat4x3((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
+    MTX_MultVec43((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
     int fovIdx = camera->mFovAngle >> 4;
-    int tanFov = cstd::fdiv(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
+    int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
     int height = FX_MUL(tanFov, -view[2]);
-    int fracY = cstd::fdiv(view[1], height);
+    int fracY = FX_Div(view[1], height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screenY[0] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = cstd::fdiv(view[0], width);
+    int fracX = FX_Div(view[0], width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screenX[0] = (pixelX + 0x7f800) >> 0xc;
 }
@@ -2365,15 +2365,15 @@ extern "C" {
 
 void Camera_ProjectToScreen16(MgCamera *camera, void *pos, short *screen) {
     int view[3];
-    MulVec3Mat4x3((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
+    MTX_MultVec43((Vector3 *)pos, (Matrix4x3 *)&camera->mViewMtx, (Vector3 *)view);
     int fovIdx = camera->mFovAngle >> 4;
-    int tanFov = cstd::fdiv(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
+    int tanFov = FX_Div(FX_SinIdx(fovIdx), FX_CosIdx(fovIdx));
     int height = FX_MUL(tanFov, -view[2]);
-    int fracY = cstd::fdiv(view[1], height);
+    int fracY = FX_Div(view[1], height);
     int pixelY = FX_MUL(fracY, 0x5f800u);
     screen[1] = -((pixelY + (int)0xfffa0800) >> 0xc);
     int width = FX_MUL(height, 0x1555u);
-    int fracX = cstd::fdiv(view[0], width);
+    int fracX = FX_Div(view[0], width);
     int pixelX = FX_MUL(fracX, 0x7f800u);
     screen[0] = (pixelX + 0x7f800) >> 0xc;
 }

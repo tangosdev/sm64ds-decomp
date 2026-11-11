@@ -895,23 +895,23 @@ void dScMgCurling_c::ResolveStoneCollision(int stoneIndex) {
              * reads, with or without an index local, reallocate registers
              * across the function (57-99 words). */
             angleIndex = (mStone[stoneIndex].angle >> 4) * 2;
-            movingVelocityX = FX_MUL(data_02082214[angleIndex + 1], mStone[stoneIndex].speed);
-            movingVelocityY = FX_MUL(data_02082214[angleIndex], mStone[stoneIndex].speed);
+            movingVelocityX = FX_MUL(FX_SinCosTable_[angleIndex + 1], mStone[stoneIndex].speed);
+            movingVelocityY = FX_MUL(FX_SinCosTable_[angleIndex], mStone[stoneIndex].speed);
             pHitAngle = &mStone[hitIndex].angle;
             angleIndex = (mStone[hitIndex].angle >> 4) * 2;
-            hitVelocityX = FX_MUL(data_02082214[angleIndex + 1], mStone[hitIndex].speed);
-            hitVelocityY = FX_MUL(data_02082214[angleIndex], mStone[hitIndex].speed);
+            hitVelocityX = FX_MUL(FX_SinCosTable_[angleIndex + 1], mStone[hitIndex].speed);
+            hitVelocityY = FX_MUL(FX_SinCosTable_[angleIndex], mStone[hitIndex].speed);
             if (hitVelocityY == 0)
                 hitVelocityY = movingVelocityY >> 1;
             /* sin/cos of -contactAngle rotate into the contact frame; sin/cos of
              * +contactAngle rotate back out. */
             angleIndex = (relativeAngle >> 4) * 2;
-            inverseContactSin = data_02082214[angleIndex];
-            inverseContactCos = data_02082214[angleIndex + 1];
+            inverseContactSin = FX_SinCosTable_[angleIndex];
+            inverseContactCos = FX_SinCosTable_[angleIndex + 1];
             relativeAngle = -relativeAngle;
             angleIndex = (relativeAngle >> 4) * 2;
-            contactSin = data_02082214[angleIndex];
-            contactCos = data_02082214[angleIndex + 1];
+            contactSin = FX_SinCosTable_[angleIndex];
+            contactCos = FX_SinCosTable_[angleIndex + 1];
 
             /* Normal and tangential components of each velocity. */
             movingNormal = FX_MUL(inverseContactCos, movingVelocityX);
@@ -1486,7 +1486,7 @@ s32 dScMgCurling_c::InitResources() {
     {
         void *c7 = LoadFile(ASSET_D_2D_MG_CURLING_NCG_BIN);
         void *c8 = LoadFile(ASSET_D_2D_MG_CURLING_NCL_BIN);
-        DecompressLZ16(c7, (void *)0x6400000);
+        DecompressLZ16(c7, G2_GetOBJCharPtr());
         GX_LoadOBJPltt(c8, 0, 0x100);
 
         gSubScreenLayers |= 4;
@@ -1505,7 +1505,7 @@ s32 dScMgCurling_c::InitResources() {
         Ov004_Deallocate(a);
         Ov004_Deallocate(b);
 
-        DecompressLZ16(c7, (void *)0x6600000);
+        DecompressLZ16(c7, G2S_GetOBJCharPtr());
         GXS_LoadOBJPltt(c8, 0, 0x100);
         Deallocate(c7);
         Deallocate(c8);

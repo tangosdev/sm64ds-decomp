@@ -1,11 +1,11 @@
 //cpp
 #include "types.h"
-#include "cstd.h"
+#include "msl/string.h"
 #include "BMD_File.h"
 
 extern "C" {
 
-extern void Crash(void);
+extern void OS_Terminate(void);
 
 /* The index of the BMD palette named name: a search of the model's palette
    table (BMD_File::palettes). An unknown name crashes. dExtAnmTexPat_c's
@@ -16,12 +16,12 @@ int func_02047144(const BMD_File *tbl, const char *name) {
     if (i < count) {
         BMD_Palette *entries = tbl->palettes;
         do {
-            if (cstd::strcmp(entries[i].name, name) == 0)
+            if (strcmp(entries[i].name, name) == 0)
                 return (int)i;
             i++;
         } while (i < tbl->numPalettes);
     }
-    Crash();
+    OS_Terminate();
     return -1;
 }
 }

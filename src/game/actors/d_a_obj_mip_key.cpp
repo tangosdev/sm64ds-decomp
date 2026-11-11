@@ -6,7 +6,7 @@
 // - unk_190 and unk_19c stay the header's names. The loose update
 //   approaches through mSpeedX/mSpeedZ, and 19c selects the entry.
 // - CollectMinigameKey, StartMinigameMenu, Vec3_VertAngle, Vec3_Asr and
-//   MulVec3Mat4x3 are arm9 C helpers no header declares yet.
+//   MTX_MultVec43 are arm9 C helpers no header declares yet.
 // - The model handle data_ov085_021305d8 is constructed by daMip_c.
 //   g_profile stays with the registry.
 
@@ -26,13 +26,12 @@
 extern "C" {
 s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int sh);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void CollectMinigameKey(int t, int x);
 void StartMinigameMenu(u8 a);
 }
 
 extern dCamera_c *gCamera;
-extern SaveBlock data_0209caa0;
 extern u8 data_0209d660;
 extern u8 data_0209d684;
 /* MIPS's model-file handle, owned and constructed by d_a_mip.cpp's static
@@ -225,7 +224,7 @@ int daObj_Mip_Key_c::StateLoose() {
     v.z = 0x14000;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mPrevAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, c->mPrevAngleX);
-    MulVec3Mat4x3(&v, &data_020a0e68, &out);
+    MTX_MultVec43(&v, &data_020a0e68, &out);
     ApproachLinear(c->mSpeedX, out.x, 0x1000);
     ApproachLinear(c->mVertSpeed, out.y, 0x1000);
     ApproachLinear(c->mSpeedZ, out.z, 0x1000);

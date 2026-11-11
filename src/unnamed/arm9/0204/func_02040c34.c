@@ -14,13 +14,13 @@ static inline void FlushFileShareArea(char *base, unsigned int size) {
  * The other callees are C. */
 extern "C" {
 extern int WM_SetPortCallback(int port, void *callback, void *arg);
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern void FS_Init(int x);
 extern void FS_InitFile(void *s);
 extern void WBT_InitParent(int a, int b, void (*c)(char *));
 extern void func_020424c0(void);
 extern void MI_CpuFill8(void *p, u8 v, u32 n);
-extern int func_020658c0(void *node, int a1, void *a2, int a3, int arg5, unsigned short arg6);
+extern int WBT_RegisterBlock(void *node, int a1, void *a2, int a3, int arg5, unsigned short arg6);
 extern void func_02042200(void);
 extern void func_02041224(char *thiz, int n);
 extern void WBT_InitChild(void (*arg)(void *));
@@ -65,7 +65,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
         G->mChildPacketSize = 0xe;
         data_020a0f88 = 0;
         if (WM_SetPortCallback((u16)port, (void *)func_020417d0, 0) != 0)
-            Crash();
+            OS_Terminate();
         FS_Init(-1);
 
         if (G->mIsParent != 0) {
@@ -122,8 +122,8 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
                 MI_CpuFill8(nd, 0, FILE_SHARE_NODE_SIZE);
                 /* mTableSize is read through data_020a1fc0, not G, here and in the
                    child branch: the G-> spelling comes out 8 bytes short */
-                func_020658c0(nd->mRegion, 0x20000, data_02082158, G->mTable,
-                              data_020a1fc0.mTableSize, 0);
+                WBT_RegisterBlock(nd->mRegion, 0x20000, data_02082158, G->mTable,
+                                  data_020a1fc0.mTableSize, 0);
                 nd->mNext = *(FileShareNode **)((base + 0x2000) + 0x704);
                 *(FileShareNode **)((base + 0x2000) + 0x704) = nd;
                 nd->mRefCount = 1;

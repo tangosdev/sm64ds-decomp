@@ -40,7 +40,6 @@ add_executable(smoke
     hal/cstd_div.c
     hal/os_time.cpp
     hal/shims.cpp
-    hal/mem_delete2.cpp
     ${SLICE_SOURCES})
 
 target_include_directories(smoke PRIVATE
@@ -89,7 +88,7 @@ endforeach()
 sm64ds_honor_cpp_markers(SLICE3A_SOURCES)
 
 add_executable(smoke_roots tests/smoke_roots.cpp
-    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/mem_delete2.cpp
+    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES})
 target_include_directories(smoke_roots PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -194,7 +193,7 @@ endif()
 # feeders to the hostgen set and the dExtSimpleModel_c/render slice on top of everything.
 set(GATE4B_SYMS _ZN15ModelComponents13func_02044b30Ei G3_MultMtx33
     G3_LoadTexMtxEnv _ZN15ModelComponents13func_02044534EiP9Matrix4x3P7Vector3
-    _ZN15ModelComponents13func_0204488cEiP7Vector3 NormalizeVec3)
+    _ZN15ModelComponents13func_0204488cEiP7Vector3 VEC_Normalize)
 sm64ds_hostgen_symbols(GATE4B_GEN ${GATE4B_SYMS})
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate4b.txt" SLICE4B_LINES)
@@ -264,8 +263,10 @@ if(MSVC)
 endif()
 
 # Gate 8: collision -- the octree walk over real KCL data. cstd::sqrt
-# drives the hardware sqrt unit through literal MMIO -> hostgen.
-set(GATE8_SYMS _ZN4cstd4sqrtEy _ZN4cstd11fdiv_resultEv _ZN4cstd16reciprocal_asyncEi
+# drives the hardware sqrt unit through literal MMIO -> hostgen. The hostgen
+# copy of src/cstd.cpp also defines FX_Div, so these targets drop
+# hal/cstd_div.c.
+set(GATE8_SYMS _ZN4cstd4sqrtEy FX_GetDivResult FX_InvAsync
     Matrix4x3_ApplyInPlaceToScale)
 sm64ds_hostgen_symbols(GATE8_GEN ${GATE8_SYMS})
 
@@ -282,7 +283,7 @@ sm64ds_honor_cpp_markers(SLICE8_SOURCES)
 
 add_executable(smoke_clsn tests/smoke_clsn.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     hal/clsn_vtable.cpp hal/bg_ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE8_SOURCES} ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} "${ROMDATA_C}")
@@ -392,7 +393,6 @@ endif()
 
 add_executable(smoke_fs tests/smoke_fs.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/mem_delete2.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES})
 target_include_directories(smoke_fs PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -422,7 +422,7 @@ sm64ds_honor_cpp_markers(SLICE9_SOURCES)
 
 add_executable(smoke_actor tests/smoke_actor.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     hal/clsn_vtable.cpp hal/bg_ctor_bridge.cpp hal/actor_vtables.cpp hal/actor_ctor_bridge.cpp hal/host_d0_demo.cpp hal/anim_bridge.cpp hal/anim_ctor_bridge.cpp hal/host_d0.cpp
     hal/cxxname_bridge.cpp hal/megachar_stub.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}

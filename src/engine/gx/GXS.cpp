@@ -12,13 +12,10 @@
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_bgcnt.h"
 
-/* OBJ character VRAM has a fixed base, so the SDK's getter is an inline, not a
- * call. LoadOBJ reads the base through it, which keeps the base in a register
- * where a literal would fold into each copy's address add. The sub engine's
- * twin, G2S_GetOBJCharPtr, is in nitro/gx/gx_bgcnt.h. */
-static inline void *G2_GetOBJCharPtr(void) {
-    return (void *)HW_OBJ_VRAM;
-}
+/* OBJ character VRAM has a fixed base, so the SDK's getters
+ * (G2_/G2S_GetOBJCharPtr, nitro/gx/gx_bgcnt.h) are inlines, not calls.
+ * LoadOBJ reads the base through one, which keeps the base in a register
+ * where a literal would fold into each copy's address add. */
 
 /* GX sub-screen extended palette VRAM bases */
 #define GXS_OBJ_EXT_PLTT_BASE 0x068a0000u

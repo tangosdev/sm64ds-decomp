@@ -114,7 +114,7 @@ void func_02020334(void);
 void func_02020124(void);
 int func_0203d890(void);
 u32 LoadCompressedFileAt(int, void *);
-int Sound_PlayIfNotActive(int, int, int, int);
+int Sound_PlayIfNotActive(int, int, int, short);
 }
 
 /* The entry scene's one global graph callback, ov075 .bss 0x0211d71c. The
@@ -134,7 +134,7 @@ void func_ov001_020ab3f0(void *);
 
 extern u8 data_0208f274;
 extern OamAttr *data_0208a0f8[];
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern dScEntry_c::StepSet data_ov075_0211d918;
 // Behavior slot of the player-sync step set, at data_ov075_0211d918 + 8.
 extern dScEntry_c::Step data_ov075_0211d920;
@@ -379,7 +379,6 @@ s32 dScEntry_c::InitResultResources() {
     int acc;
     int base;
     int step;
-    char *sub;
     int n;
 
     REG_BG1CNT = (u16)((REG_BG1CNT & 0x43) | 0x208);
@@ -413,16 +412,16 @@ s32 dScEntry_c::InitResultResources() {
         } while (i < n);
     }
 
-    LoadCompressedFileAt(data_ov075_0211c990[GetLanguageIndex()], (void *)0x6400000);
+    LoadCompressedFileAt(data_ov075_0211c990[GetLanguageIndex()], G2_GetOBJCharPtr());
     tmp = LoadFile(0x8415);
     GX_LoadOBJPltt(tmp, 0, 0x140);
     Deallocate(tmp);
 
     REG_BG1CNT = (u16)((REG_BG1CNT & ~3) | 2);
     SetBg1Offset(0, 0);
-    sub = (char *)0x6600000;
-    LoadCompressedFileAt(0x8402, sub);
-    LoadCompressedFileAt(data_ov075_0211c97c[GetLanguageIndex()], sub + 0x6000);
+    LoadCompressedFileAt(0x8402, G2S_GetOBJCharPtr());
+    LoadCompressedFileAt(data_ov075_0211c97c[GetLanguageIndex()],
+                         (u8 *)G2S_GetOBJCharPtr() + 0x6000);
     tmp = LoadFile(0x8403);
     GXS_LoadOBJPltt(tmp, 0, 0x200);
     Deallocate(tmp);
@@ -479,9 +478,9 @@ s32 dScEntry_c::InitEntryResources() {
             LoadCompressedFileAt(ASSET_D_2D_BATTLE_FRAMEWORK_GAMESTART_P_NSC_BIN,
                                  G2S_GetBG2ScrPtr());
         }
-        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], (void *)0x6600000);
+        DecompressLZ16(data_0208a0e4[GetLanguageIndex()], G2S_GetOBJCharPtr());
     }
-    LoadCompressedFileAt(data_ov075_0211c9a4[GetLanguageIndex()], (void *)0x6400000);
+    LoadCompressedFileAt(data_ov075_0211c9a4[GetLanguageIndex()], G2_GetOBJCharPtr());
 
     tmp = LoadFile(0x8412);
     GX_LoadOBJPltt(tmp, 0, 0xc0);
@@ -1645,7 +1644,7 @@ void dScEntry_c::RenderWaitingText() {
             if (phase >= 0 && phase < 0x10000) {
                 waving = true;
                 // The intermediate narrowing preserves the retail ARM shifts.
-                y = (data_02082214[2 * ((u16)(s16)(u16)phase >> 4)] >> 10) + 96;
+                y = (FX_SinCosTable_[2 * ((u16)(s16)(u16)phase >> 4)] >> 10) + 96;
             } else {
                 y = 96;
             }
@@ -1803,7 +1802,7 @@ void dScEntry_c::RenderRecruitText() {
 
             if (ang >= 0 && ang < 0x10000) {
                 flag = one;
-                y = (((SinePair *)data_02082214)[(unsigned short)(short)(unsigned short)ang >> 4]
+                y = (((SinePair *)FX_SinCosTable_)[(unsigned short)(short)(unsigned short)ang >> 4]
                          .a >>
                      0xa) +
                     fallback;

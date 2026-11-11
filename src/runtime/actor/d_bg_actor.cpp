@@ -49,7 +49,7 @@ s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 }
 
@@ -431,7 +431,7 @@ int dBgActor_c::UpdateKillByMegaChar(s16 angStepX, s16 angStepY, s16 angStepZ, F
     rayEnd.y = 0;
     rayEnd.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-    MulVec3Mat4x3(&probe, &data_020a0e68, &rayEnd);
+    MTX_MultVec43(&probe, &data_020a0e68, &rayEnd);
     Vec3_Add(&sum, &mPos, &rayEnd);
     rayEnd = sum;
 
