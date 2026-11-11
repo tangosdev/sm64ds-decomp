@@ -138,7 +138,6 @@ extern "C" dCamera_c *gCamera;
 extern "C" int RandomIntInternal(int *seed);
 extern "C" u16 DecIfAbove0_Short(u16* p);
 extern "C" s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern "C" s16 FX_SinCosTable_[];
 extern "C" void func_02012694(u32 a, void* b);
 
 /* local extern: include/Sound.h does not declare the layer-3 pair yet. */
@@ -371,11 +370,8 @@ int daKuriKing_c::SpawnVanishCopy() {
             spawnAngle.y=(short)((this->mSpawnedCount-0xc)*0x5555+spawnAngle.y);
             radius=0x84000;
         }
-        {
-            int sinIdx=((u16)spawnAngle.y>>4)<<1;
-            spawnPos.x += FX_MUL(radius, FX_SinCosTable_[sinIdx]);
-            spawnPos.z += FX_MUL(radius, FX_SinCosTable_[sinIdx + 1]);
-        }
+        spawnPos.x += FX_MUL(radius, FX_SinIdx((u16)spawnAngle.y >> 4));
+        spawnPos.z += FX_MUL(radius, FX_CosIdx((u16)spawnAngle.y >> 4));
         spawnAngle.x=Vec3_VertAngle(&basePos, &spawnPos);
         dActor_c::Spawn(0xc7, 0x1111, spawnPos, &spawnAngle, this->mAreaId, -1);
         this->mSpawnedCount += 1;
@@ -991,7 +987,6 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         int sum;
         int prod;
         int diff;
-        int idx;
         u8 mode;
 
         rem = n % 3;
@@ -1009,11 +1004,9 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         sum = (s16)(q * 0x350 + 0x500) + (s16)(rem * 0x600);
         prod = self->mDirection * sum;
         diff = (self->mWalkAngle + self->mMaxWalkSpeed) - prod;
-        idx = ((u16)(s16)diff >> 4) * 2;
-
-        out[0] = FX_MUL(scale, FX_SinCosTable_[idx]);
+        out[0] = FX_MUL(scale, FX_SinIdx((u16)(s16)diff >> 4));
         out[1] += 0x32000;
-        out[2] = FX_MUL(scale, FX_SinCosTable_[idx + 1]);
+        out[2] = FX_MUL(scale, FX_CosIdx((u16)(s16)diff >> 4));
     } else {
         int lim;
         int one;
@@ -1025,7 +1018,6 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         int prod2;
         int prod3;
         int diff2;
-        int idx2;
 
         lim = 3;
         if (self->mSizeIndex == 1)
@@ -1048,11 +1040,9 @@ extern "C" void func_ov074_0212087c(int* out, daKuriKing_c* self, int n_)
         prod2 = self->mDirection * sum2;
         prod3 = sign * prod2;
         diff2 = (self->mWalkAngle + self->mWalkSpeed) - prod3;
-        idx2 = ((u16)(s16)diff2 >> 4) * 2;
-
-        out[0] = FX_MUL(scale2, FX_SinCosTable_[idx2]);
+        out[0] = FX_MUL(scale2, FX_SinIdx((u16)(s16)diff2 >> 4));
         out[1] += 0x32000;
-        out[2] = FX_MUL(scale2, FX_SinCosTable_[idx2 + 1]);
+        out[2] = FX_MUL(scale2, FX_CosIdx((u16)(s16)diff2 >> 4));
     }
 }
 
