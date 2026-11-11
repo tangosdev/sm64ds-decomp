@@ -142,42 +142,38 @@ int daObjC1_Trap_c::InitResources() {
     mSpawnerID = 0;
 
     if ((param1 & 0xff) == 0xff) {
-        VecFx32 position;
-        int index;
+        Vector3 position;
         int sinAngle;
         int cosAngle;
         int x;
         int y;
         int z;
-        void *spawned;
+        daObjC1_Trap_c *spawned;
 
         mIsSpawner = 1;
         mPlayerDist = 0;
 
-        index = ((int)(u16)mAngleY >> 4) * 2;
-        /* FX_SinCosTable_[2i] = sin, [2i+1] = cos (dScStarSel COS()). */
-        cosAngle = FX_SinCosTable_[index + 1];
-        sinAngle = FX_SinCosTable_[index];
+        cosAngle = FX_CosIdx((u16)mAngleY >> 4);
+        sinAngle = FX_SinIdx((u16)mAngleY >> 4);
         z = mPosZ + sinAngle * 0x15d;
         x = mPosX - cosAngle * 0x15d;
         y = mPosY;
         position.x = x;
         position.y = y;
         position.z = z;
-        spawned = dActor_c::Spawn(0x24, 0, *(const Vector3 *)&position, &mAngle, mAreaId, -1);
-        ((daObjC1_Trap_c *)spawned)->mSpawnerID = uniqueID;
+        spawned = (daObjC1_Trap_c *)dActor_c::Spawn(0x24, 0, position, &mAngle, mAreaId, -1);
+        spawned->mSpawnerID = uniqueID;
 
-        index = ((int)(u16)mAngleY >> 4) * 2;
-        sinAngle = FX_SinCosTable_[index];
-        cosAngle = FX_SinCosTable_[index + 1];
+        sinAngle = FX_SinIdx((u16)mAngleY >> 4);
+        cosAngle = FX_CosIdx((u16)mAngleY >> 4);
         z = mPosZ - sinAngle * 0x15d;
         x = cosAngle * 0x15d + mPosX;
         y = mPosY;
         position.x = x;
         position.y = y;
         position.z = z;
-        spawned = dActor_c::Spawn(0x24, 1, *(const Vector3 *)&position, &mAngle, mAreaId, -1);
-        ((daObjC1_Trap_c *)spawned)->mSpawnerID = uniqueID;
+        spawned = (daObjC1_Trap_c *)dActor_c::Spawn(0x24, 1, position, &mAngle, mAreaId, -1);
+        spawned->mSpawnerID = uniqueID;
         return 1;
     }
 
@@ -193,10 +189,7 @@ int daObjC1_Trap_c::InitResources() {
     mState = 0;
 
     if ((param1 & 0xff) == 1) {
-        /* Named `mAngleY += 0x8000` size-DIFFs InitResources (addressing
-         * shape / CSE); the pointer local keeps the ROM form. */
-        s16 *angleY = &mAngleY;
-        *angleY = *angleY + 0x8000;
+        mAngle.y += 0x8000;
     }
     return 1;
 }
