@@ -625,7 +625,14 @@ void moat_frame() {
         const unsigned cls = *(const unsigned short *)(a + 0x0c);
         if (cls == 338) {
             int &y = *(int *)(a + 0x60);
-            if (y <= kMoatDrainedY) continue;
+            if (y <= kMoatDrainedY) {
+                if (!g_moat_logged) {   // this console's water spawned drained (the room's bit was in before the level loaded)
+                    g_moat_logged = true;
+                    std::fprintf(stderr, "[coopmoat] f=%u this console's moat is already drained (y %d, water at x %d z %d), nothing to do\n",
+                                 g_frame, y >> 12, *(int *)(a + 0x5c) >> 12, *(int *)(a + 0x64) >> 12);
+                }
+                continue;
+            }
             if (!g_moat_logged) {
                 g_moat_logged = true;
                 std::fprintf(stderr, "[coopmoat] f=%u the moat is drained in the room record and this console's moat is up (y %d): "
@@ -643,7 +650,8 @@ void moat_frame() {
             // fBase_c: +0x0f shouldBeKilled (MarkForDestruction), +0x0e aliveState 2 once the frame moved it to the cleanup list
             if (*(const unsigned char *)(a + 0x0f) == 0 && *(const unsigned char *)(a + 0x0e) != 2) {
                 _ZN7fBase_c18MarkForDestructionEv(a);
-                std::fprintf(stderr, "[coopmoat] f=%u the moat grate removed (it is never created on a drained moat)\n", g_frame);
+                std::fprintf(stderr, "[coopmoat] f=%u the moat grate removed at x %d y %d z %d (it is never created on a drained moat)\n",
+                             g_frame, *(int *)(a + 0x5c) >> 12, *(int *)(a + 0x60) >> 12, *(int *)(a + 0x64) >> 12);
             }
         }
     }
