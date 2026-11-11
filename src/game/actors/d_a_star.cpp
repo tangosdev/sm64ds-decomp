@@ -2031,6 +2031,12 @@ void daStar_c::func_ov002_020e930c() {
     flags = mdCc_c.hitFlags;
     if (flags & 0x400000) {
         if (b->mIsNoControl != 0) return;
+#ifdef _MSC_VER
+        /* coop: a friend's body never collects my copy. His console runs his collect (its pose, its camera, its freeze) and
+           tells mine, which removes this copy; collecting it here put HIS body in the star pose on my console and pointed my
+           camera at it (Player::SetNoControlState) with nothing on this console to end it. */
+        if (port_collector_foreign(o)) return;
+#endif
         if (_ZN5Event6GetBitEj(0x1e) != 0) return;
         if (func_ov002_020e8ef0(o) == 0) return;
         if (mKind != KIND_6) return;
@@ -2250,6 +2256,9 @@ void daStar_c::OnTurnIntoEgg(Player &player)
 /* A Yoshi egg took the star (OnTurnIntoEgg): unlinks the marker, stops the
  * motion, clears the hidden flag and collects the star for player a. */
 void daStar_c::func_ov002_020e8e80(int a) {
+#ifdef _MSC_VER
+    if (port_collector_foreign((const void *)a)) return;      /* coop: a friend's egg, see func_ov002_020e930c */
+#endif
     daStarBase_c *marker = (daStarBase_c *)_ZN8dActor_c10FindWithIDEj(mMarkerID);
     if (marker != 0)
         marker->LinkSilverStarAndStarMarker(0);

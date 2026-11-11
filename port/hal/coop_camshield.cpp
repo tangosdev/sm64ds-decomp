@@ -89,7 +89,14 @@ int hook(const void *star, const void *player) {
     if (g_off || !coop_world_active()) return 0;
     if (player) {
         const char *me = my_player();
-        return me && player != me ? 1 : 0;
+        if (!me || player == me) return 0;
+        for (int i = 0; i < 16; ++i)
+            if (data_0209f394[i] == player) {
+                static unsigned n = 0;
+                if (g_log && n++ < 20) std::fprintf(stderr, "[camshield] a friend's body (slot %d) touched or held a star copy here: his console collects it, not mine\n", i);
+                return 1;
+            }
+        return 0;
     }
     Foreign *f = star ? find(star) : nullptr;
     if (!f) return 0;
