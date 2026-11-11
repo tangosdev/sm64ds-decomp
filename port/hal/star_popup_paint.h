@@ -183,7 +183,7 @@ static void star_popup_draw(const OvlSurface &fb)
     int cw = 0;
     for (const char *p = cnt; *p; ++p) cw += chat_adv100((unsigned char)*p, rom, csc100);
     if (cw) {
-        const int need = lw[v.n - 1] + 2 * (cw + pad);      /* the last line centred, the count clear of it on the right */
+        const int need = lw[v.n - 1] + 2 * (cw + 2 * pad);    /* the last line centred, the count clear of it on the right */
         if (need > maxw) maxw = need < avail ? need : avail;
     }
     int bx = (ntr::active_w - maxw) / 2 - pad;
