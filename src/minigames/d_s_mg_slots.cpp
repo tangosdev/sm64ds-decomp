@@ -180,7 +180,7 @@ dScMgSlot3_c::~dScMgSlot3_c() {}
    in include/dScMgBase_c.h's slot-30 block.  The read-modify-write below clobbers
    r1 before the tail call, so the base cannot be taking a second argument. */
 void dScMgSlot3_c::RestoreScreenFromMenu() {
-    *(volatile unsigned short *)0x400000A = (*(volatile unsigned short *)0x400000A & 0x43) | 0x1118;
+    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1118;
     dScMgBase_c::RestoreScreenFromMenu();
 }
 
@@ -193,7 +193,7 @@ void dScMgSlot3_c::RestoreScreenFromMenu() {
    argument passed in r1 would reach dScMgBase_c::SaveScreenForMenu as a
    display-control word, so the base cannot be reading one. */
 int dScMgSlot3_c::SaveScreenForMenu() {
-    *(volatile unsigned short *)0x400000A = (*(volatile unsigned short *)0x400000A & 0x43) | 0x1000;
+    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1000;
     return dScMgBase_c::SaveScreenForMenu();
 }
 
@@ -211,9 +211,9 @@ int dScMgSlot3_c::SaveScreenForMenu() {
 void dScMgSlot3_c::InitMainScreenBg() {
     int idx;
 
-    *(volatile unsigned short *)0x400000a &= ~3;
-    *(volatile unsigned short *)0x400000a = (*(volatile unsigned short *)0x400000a & 0x43) | 0x1000;
-    *(volatile unsigned short *)0x400000a &= ~0x40;
+    REG_BG1CNT &= ~3;
+    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1000;
+    REG_BG1CNT &= ~0x40;
 
     SetBg1Offset(0, 0);
 
@@ -223,7 +223,7 @@ void dScMgSlot3_c::InitMainScreenBg() {
     LoadCompressedFileAt(sSlotPauseBgNcgByLanguage[idx], G2_GetBG1CharPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_PAUSE_NSC_BIN, G2_GetBG1ScrPtr());
 
-    *(volatile unsigned short *)0x400000a = (*(volatile unsigned short *)0x400000a & 0x43) | 0x1118;
+    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1118;
 }
 
 extern "C" { /* .c-derived member: C linkage for the whole block */
@@ -785,17 +785,17 @@ s32 dScMgSlot3_c::Behavior() {
 s32 dScMgSlot3_c::InitResources() {
     char *c = (char *)this;
 
-    *(volatile u16 *)0x400000a = (*(volatile u16 *)0x400000a & 0x43) | 0x1118;
-    *(volatile u16 *)0x400000a = *(volatile u16 *)0x400000a & ~0x40;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x1218;
-    *(volatile u16 *)0x400000c = *(volatile u16 *)0x400000c & ~0x40;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1418;
-    *(volatile u16 *)0x400000e = *(volatile u16 *)0x400000e & ~0x40;
+    REG_BG1CNT = (REG_BG1CNT & 0x43) | 0x1118;
+    REG_BG1CNT = REG_BG1CNT & ~0x40;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1218;
+    REG_BG2CNT = REG_BG2CNT & ~0x40;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1418;
+    REG_BG3CNT = REG_BG3CNT & ~0x40;
 
-    *(volatile u16 *)0x4000008 = *(volatile u16 *)0x4000008 & ~3;
-    *(volatile u16 *)0x400000a = *(volatile u16 *)0x400000a & ~3;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 3;
+    REG_BG0CNT = REG_BG0CNT & ~3;
+    REG_BG1CNT = REG_BG1CNT & ~3;
+    REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 3;
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NCG_BIN, (void *)G2_GetBG3CharPtr());
 
@@ -819,9 +819,9 @@ s32 dScMgSlot3_c::InitResources() {
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
                         DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 3;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x1218;
-    *(volatile u16 *)0x400100c = *(volatile u16 *)0x400100c & ~0x40;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 3;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1218;
+    REG_DB_BG2CNT = REG_DB_BG2CNT & ~0x40;
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_NCG_BIN, G2S_GetBG2CharPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_FACE_DOWN_NSC_BIN, G2S_GetBG2ScrPtr());
@@ -1411,12 +1411,12 @@ s32 dScMgSlot1_c::InitResources() {
     volatile unsigned short fill;
     int i, j;
 
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 2;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x1210;
-    *(volatile u16 *)0x400000c = *(volatile u16 *)0x400000c & ~0x40;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 3;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1310;
-    *(volatile u16 *)0x400000e = *(volatile u16 *)0x400000e & ~0x40;
+    REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1210;
+    REG_BG2CNT = REG_BG2CNT & ~0x40;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 3;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1310;
+    REG_BG3CNT = REG_BG3CNT & ~0x40;
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_UP_NCG_BIN, (void *)G2_GetBG3CharPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN, (char *)G2_GetBG2CharPtr() + 0x7800);
@@ -1430,20 +1430,20 @@ s32 dScMgSlot1_c::InitResources() {
 
     gMainScreenLayers = DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
 
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x1410;
-    *(volatile u16 *)0x4001008 = *(volatile u16 *)0x4001008 & ~0x40;
-    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & ~3) | 1;
-    *(volatile u16 *)0x400100a = (*(volatile u16 *)0x400100a & 0x43) | 0x4010;
-    *(volatile u16 *)0x4001008 = *(volatile u16 *)0x4001008 & ~0x40;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 1;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x1410;
+    REG_DB_BG0CNT = REG_DB_BG0CNT & ~0x40;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & ~3) | 1;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x4010;
+    REG_DB_BG0CNT = REG_DB_BG0CNT & ~0x40;
     SetSubBg1Offset(0x100, 0);
 
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 2;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x1218;
-    *(volatile u16 *)0x400100c = *(volatile u16 *)0x400100c & ~0x40;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x1310;
-    *(volatile u16 *)0x400100e = *(volatile u16 *)0x400100e & ~0x40;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x1218;
+    REG_DB_BG2CNT = REG_DB_BG2CNT & ~0x40;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 3;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x1310;
+    REG_DB_BG3CNT = REG_DB_BG3CNT & ~0x40;
 
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_DOWN_NCG_BIN, G2S_GetBG2CharPtr());
     LoadCompressedFileAt(ASSET_D_2D_MG_BG_SLOT_GRADE_NCG_BIN, (char *)G2S_GetBG0CharPtr() + 0x7800);
@@ -1473,7 +1473,7 @@ s32 dScMgSlot1_c::InitResources() {
     }
 
     gSubScreenLayers = 0x1d;
-    *(volatile u16 *)0x4000050 = 0;
+    REG_BLDCNT = 0;
     G2x_SetBlendAlpha_((volatile u16 *)0x4001050, 1, 0x1c, 7, 9);
 
     sMgWinBannerX = 0x80;
