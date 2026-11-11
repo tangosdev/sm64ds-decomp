@@ -188,6 +188,12 @@ static void star_popup_draw(const OvlSurface &fb)
     }
     int bx = (ntr::active_w - maxw) / 2 - pad;
     if (bx < 0) bx = 0;
+    /* STARPOP3: never over the player list (drawn just before this, top left): when the box would cover its rows, the box
+       moves down to start just under them */
+    if (g_plist_drawn_bottom > 0 && bx < g_plist_drawn_right && y - pad / 2 < g_plist_drawn_bottom + scale) {
+        y = g_plist_drawn_bottom + 2 * scale + pad / 2;
+        if (y + total_h + pad / 2 > ntr::active_h) y = ntr::active_h - total_h - pad / 2;
+    }
     ovl_shade(fb, bx, y - pad / 2, maxw + 2 * pad, total_h + pad);
     for (int i = 0; i < v.n; ++i) {
         const char *s = v.line[i];
