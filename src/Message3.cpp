@@ -782,15 +782,15 @@ extern "C" int func_020321fc(void) {
                 data_0209fcc8 = data_0209fcb4;
 
             if (data_0209fca8 != 0) {
-                *(volatile u16 *)0x4001040 = ((data_0209fc8c << 8) & 0xff00) |
-                                             ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-                *(volatile u16 *)0x4001044 = ((data_0209fc74 << 8) & 0xff00) |
-                                             ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
+                REG_DB_WIN0H = ((data_0209fc8c << 8) & 0xff00) |
+                               ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
+                REG_DB_WIN0V = ((data_0209fc74 << 8) & 0xff00) |
+                               ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
             } else {
-                *(volatile u16 *)0x4000040 = ((data_0209fc8c << 8) & 0xff00) |
-                                             ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-                *(volatile u16 *)0x4000044 = ((data_0209fc74 << 8) & 0xff00) |
-                                             ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
+                REG_WIN0H = ((data_0209fc8c << 8) & 0xff00) |
+                            ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
+                REG_WIN0V = ((data_0209fc74 << 8) & 0xff00) |
+                            ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
             }
             return 0;
         }
@@ -814,14 +814,14 @@ extern "C" int func_020321fc(void) {
             data_0209fc74 = data_0209fcc0;
 
         if (data_0209fca8 != 0) {
-            *(volatile u16 *)0x4001040 =
+            REG_DB_WIN0H =
                 ((data_0209fc8c << 8) & 0xff00) | ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-            *(volatile u16 *)0x4001044 =
+            REG_DB_WIN0V =
                 ((data_0209fc74 << 8) & 0xff00) | ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
         } else {
-            *(volatile u16 *)0x4000040 =
+            REG_WIN0H =
                 ((data_0209fc8c << 8) & 0xff00) | ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-            *(volatile u16 *)0x4000044 =
+            REG_WIN0V =
                 ((data_0209fc74 << 8) & 0xff00) | ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
         }
         return 0;
@@ -831,20 +831,18 @@ extern "C" int func_020321fc(void) {
     data_0209fcb8 = 0;
     if (data_0209fca8 != 0) {
         gSubScreenLayers &= ~2;
-        *(volatile u32 *)0x4001000 =
-            (*(volatile u32 *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
-        *(volatile u16 *)0x4001050 = 0;
-        *(volatile u16 *)0x4001048 &= ~0x3f;
-        *(volatile u16 *)0x400104a &= ~0x3f;
-        *(volatile u32 *)0x4001000 &= ~0xe000;
+        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | (gSubScreenLayers << 8);
+        REG_DB_BLDCNT = 0;
+        REG_DB_WININ &= ~0x3f;
+        REG_DB_WINOUT &= ~0x3f;
+        REG_DISPCNT_SUB &= ~0xe000;
     } else {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
-        *(volatile u32 *)0x4000000 =
-            (*(volatile u32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
-        *(volatile u16 *)0x4000050 = 0;
-        *(volatile u16 *)0x4000048 &= ~0x3f;
-        *(volatile u16 *)0x400004a &= ~0x3f;
-        *(volatile u32 *)0x4000000 &= ~0xe000;
+        REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | (gMainScreenLayers << 8);
+        REG_BLDCNT = 0;
+        REG_WININ &= ~0x3f;
+        REG_WINOUT &= ~0x3f;
+        REG_DISPCNT &= ~0xe000;
     }
     return 0;
 }
@@ -1833,9 +1831,8 @@ extern "C" void func_020345b0(int arg0) {
 
     G2x_SetBlendBrightness_((volatile u16 *)0x4000050, (gMainScreenLayers ^ 0x10) | 0x20, -8);
 
-    *(volatile u16 *)0x4000048 =
-        (*(volatile u16 *)0x4000048 & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
-    *(volatile u16 *)0x400004a = (*(volatile u16 *)0x400004a & ~0x3f) | 0x17;
+    REG_WININ = (REG_WININ & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
+    REG_WINOUT = (REG_WINOUT & ~0x3f) | 0x17;
     *(volatile s16 *)0x4000040 =
         ((data_0209fc8c << 8) & 0xff00) | (u8)(((data_0209fce4 * 2) - data_0209fc8c) + 1);
     *(volatile s16 *)0x4000044 =

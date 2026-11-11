@@ -289,7 +289,7 @@ int daYurei_Mucho_c::CleanupResources()
 void daYurei_Mucho_c::UpdateModelTransform() {
     Vector3 v;
 
-    Vec3_Asr(&v, (Vector3 *)&mPosX, 3);
+    Vec3_Asr(&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
 

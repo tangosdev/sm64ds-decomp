@@ -218,7 +218,7 @@ s32 dScMiniGm_c::InitResources()
     mGfxSlot = 0;
 
     GX::DisableAllBanks();
-    *(volatile u16 *)0x4000304 |= 0x8000;
+    REG_POWCNT1 |= 0x8000;
     GX_SetBankForTex(1);
     GX_SetBankForBG(2);
     GX_SetBankForSubBG(4);
@@ -229,27 +229,27 @@ s32 dScMiniGm_c::InitResources()
     gMainScreenLayers &= ~(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 |
                            DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ);
     gSubScreenLayers &= ~0x1f;
-    *(volatile u32 *)0x4000000 &= ~0x1f00;
-    *(volatile u32 *)0x4001000 &= ~0x1f00;
+    REG_DISPCNT &= ~0x1f00;
+    REG_DISPCNT_SUB &= ~0x1f00;
     GX_SetGraphicsMode(1, 0, 1);
     GXS_SetGraphicsMode(0);
 
-    *(volatile u32 *)0x4000000 &= 0xffcfffef;
-    *(volatile u32 *)0x4001000 &= 0xffcfffef;
-    *(volatile u32 *)0x4000000 &= ~0x7000000;
-    *(volatile u32 *)0x4000000 &= ~0x38000000;
+    REG_DISPCNT &= 0xffcfffef;
+    REG_DISPCNT_SUB &= 0xffcfffef;
+    REG_DISPCNT &= ~0x7000000;
+    REG_DISPCNT &= ~0x38000000;
     GX_DispOn();
-    *(volatile u32 *)0x4001000 |= 0x10000;
+    REG_DISPCNT_SUB |= 0x10000;
     G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
     func_020233f4();
 
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x410;
-    *(volatile u16 *)0x400000c &= ~0x40;
-    *(volatile u32 *)0x4000018 = 0;
+    REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x410;
+    REG_BG2CNT &= ~0x40;
+    REG_BG2OFS = 0;
     SetBg2Offset(0, 0);
 
     f = LoadFile(0x4e);
@@ -284,16 +284,16 @@ s32 dScMiniGm_c::InitResources()
     GX_LoadOBJPltt(f, 0, 0x100);
     Deallocate(f);
 
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & ~3) | 1;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x404;
-    *(volatile u16 *)0x400100c &= ~0x40;
-    *(volatile u32 *)0x4001018 = 0;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 1;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x404;
+    REG_DB_BG2CNT &= ~0x40;
+    REG_DB_BG2OFS = 0;
     SetSubBg2Offset(0, 0);
 
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x4604;
-    *(volatile u16 *)0x400100e &= ~0x40;
-    *(volatile u32 *)0x400101c = mSubBgScrollX & 0x1ff;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 3;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x4604;
+    REG_DB_BG3CNT &= ~0x40;
+    REG_DB_BG3OFS = mSubBgScrollX & 0x1ff;
     SetSubBg3Offset(mSubBgScrollX, 0);
 
     f = LoadFile(0x53);
@@ -305,10 +305,10 @@ s32 dScMiniGm_c::InitResources()
     GXS_LoadBGPltt(f, 0, 0x200);
     Deallocate(f);
 
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 2;
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x6010;
-    *(volatile u16 *)0x4001008 &= ~0x40;
-    *(volatile u32 *)0x4001010 = mSubBgScrollX & 0x1ff;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 2;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x6010;
+    REG_DB_BG0CNT &= ~0x40;
+    REG_DB_BG0OFS = mSubBgScrollX & 0x1ff;
     SetSubBg0Offset(mSubBgScrollX, 0);
 
     dst = (char *)G2S_GetBG0CharPtr();

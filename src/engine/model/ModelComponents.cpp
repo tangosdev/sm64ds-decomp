@@ -362,9 +362,8 @@ void ModelComponents::func_02044b30(int idx) {
            out with the two loads and their registers swapped (3 words). */
         u32 textureId = *(volatile const u32 *)&mat.textureId;
         const BMD_Texture &tex = modelFile->textures[textureId];
-        int angle = (u16)(mat.texRotation << 4) >> 4;
-        s16 sin = FX_SinIdx(angle);
-        s16 cos = FX_CosIdx(angle);
+        s16 sin = FX_SinIdx((u16)(mat.texRotation << 4) >> 4);
+        s16 cos = FX_CosIdx((u16)(mat.texRotation << 4) >> 4);
         int sSin = (int)(((s64)mat.texScaleS * sin) >> 12);
         int sCos = (int)(((s64)mat.texScaleS * cos) >> 12);
         int tSin = (int)(((s64)mat.texScaleT * sin) >> 12);

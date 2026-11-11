@@ -4,10 +4,10 @@
  * (src/cstd4.cpp: buffer, length, format, args; it NUL-terminates within the
  * length), then drawn with nds_print. */
 #include "types.h"
-extern unsigned int vsnprintf(char *buf, u32 size, u32 fmtAddr, u32 val);
+extern int vsnprintf(char *s, size_t n, const char *format, char *arg);
 extern void nds_print(void *arg0, char *buf);
 extern char data_0209cde8[]; /* 0x0209cde8 */
-void nds_vprintf(void *dst, u32 fmt, u32 args) {
+void nds_vprintf(void *dst, const char *fmt, char *args) {
     vsnprintf(data_0209cde8, 0x100, fmt, args);
     nds_print(dst, data_0209cde8);
 }

@@ -7515,47 +7515,47 @@
     },
     "arm9:0x02045e70": {
       "author": "tangosdev",
-      "name": "func_02045e70"
+      "name": "_ZN15ModelComponents11SetEmissionEj"
     },
     "arm9:0x02045ec4": {
       "author": "lplaat",
-      "name": "func_02045ec4"
+      "name": "_ZN15ModelComponents19SetMaterialEmissionEji"
     },
     "arm9:0x02045ef8": {
       "author": "tangosdev",
-      "name": "func_02045ef8"
+      "name": "_ZN15ModelComponents10SetAmbientEj"
     },
     "arm9:0x02045f4c": {
       "author": "lplaat",
-      "name": "func_02045f4c"
+      "name": "_ZN15ModelComponents18SetMaterialAmbientEji"
     },
     "arm9:0x02045f80": {
       "author": "tangosdev",
-      "name": "func_02045f80"
+      "name": "_ZN15ModelComponents10SetDiffuseEj"
     },
     "arm9:0x02045fd4": {
       "author": "lplaat",
-      "name": "func_02045fd4"
+      "name": "_ZN15ModelComponents18SetMaterialDiffuseEji"
     },
     "arm9:0x02046008": {
       "author": "tangosdev",
-      "name": "func_02046008"
+      "name": "_ZN15ModelComponents12SetPolygonIDEi"
     },
     "arm9:0x0204605c": {
       "author": "lplaat",
-      "name": "func_0204605c"
+      "name": "_ZN15ModelComponents20SetMaterialPolygonIDEii"
     },
     "arm9:0x02046088": {
       "author": "ruspecial",
-      "name": "func_02046088"
+      "name": "_ZN15ModelComponents13SetShadowDrawEii"
     },
     "arm9:0x02046120": {
       "author": "tangosdev",
-      "name": "func_02046120"
+      "name": "_ZN15ModelComponents13SetShadowMaskEi"
     },
     "arm9:0x020461b4": {
       "author": "tangosdev",
-      "name": "func_020461b4"
+      "name": "_ZN15ModelComponents8SetAlphaEj"
     },
     "arm9:0x02046208": {
       "author": "lplaat",
@@ -7563,11 +7563,11 @@
     },
     "arm9:0x02046234": {
       "author": "tangosdev",
-      "name": "func_02046234"
+      "name": "_ZN15ModelComponents14SetPolygonModeEi"
     },
     "arm9:0x02046288": {
       "author": "lplaat",
-      "name": "func_02046288"
+      "name": "_ZN15ModelComponents22SetMaterialPolygonModeEii"
     },
     "arm9:0x020462b4": {
       "author": "tangosdev",
@@ -20551,163 +20551,163 @@
     },
     "ov006:0x020c4710": {
       "author": "ruspecial",
-      "name": "Heyho_IsChasing"
+      "name": "_ZN5Heyho9IsChasingEv"
     },
     "ov006:0x020c47d4": {
       "author": "tangosdev",
-      "name": "Heyho_CheckHitA"
+      "name": "_ZN5Heyho9CheckHitAEv"
     },
     "ov006:0x020c49d8": {
       "author": "tangosdev",
-      "name": "Heyho_CheckHitB"
+      "name": "_ZN5Heyho9CheckHitBEv"
     },
     "ov006:0x020c4c00": {
       "author": "tangosdev",
-      "name": "Heyho_UpdateMatrix"
+      "name": "_ZN5Heyho12UpdateMatrixEv"
     },
     "ov006:0x020c4c54": {
       "author": "tangosdev",
-      "name": "Heyho_Draw"
+      "name": "_ZN5Heyho4DrawEv"
     },
     "ov006:0x020c4cd8": {
       "author": "tangosdev",
-      "name": "Heyho_Update"
+      "name": "_ZN5Heyho6UpdateEv"
     },
     "ov006:0x020c4d1c": {
       "author": "tangosdev",
-      "name": "Heyho_StateIdle"
+      "name": "_ZN5Heyho9StateIdleEv"
     },
     "ov006:0x020c4d20": {
       "author": "tangosdev",
-      "name": "Heyho_SetIdle"
+      "name": "_ZN5Heyho7SetIdleEv"
     },
     "ov006:0x020c4d3c": {
       "author": "tangosdev",
-      "name": "Heyho_Settle"
+      "name": "_ZN5Heyho6SettleEv"
     },
     "ov006:0x020c4e8c": {
       "author": "ruspecial",
-      "name": "Heyho_MotionHitSpin"
+      "name": "_ZN5Heyho13MotionHitSpinEv"
     },
     "ov006:0x020c4f68": {
       "author": "tangosdev",
-      "name": "Heyho_StartMotionHitSpin"
+      "name": "_ZN5Heyho18StartMotionHitSpinEv"
     },
     "ov006:0x020c4fa4": {
       "author": "andrewboudreau",
-      "name": "Heyho_MotionChase"
+      "name": "_ZN5Heyho11MotionChaseEv"
     },
     "ov006:0x020c5370": {
       "author": "tangosdev",
-      "name": "Heyho_StartMotionChase"
+      "name": "_ZN5Heyho16StartMotionChaseEv"
     },
     "ov006:0x020c53f8": {
       "author": "tangosdev",
-      "name": "Heyho_MotionCircleLower"
+      "name": "_ZN5Heyho17MotionCircleLowerEv"
     },
     "ov006:0x020c54f4": {
       "author": "tangosdev",
-      "name": "Heyho_StartMotionCircleLower"
+      "name": "_ZN5Heyho22StartMotionCircleLowerEv"
     },
     "ov006:0x020c5530": {
       "author": "tangosdev",
-      "name": "Heyho_MotionCircleUpper"
+      "name": "_ZN5Heyho17MotionCircleUpperEv"
     },
     "ov006:0x020c561c": {
       "author": "tangosdev",
-      "name": "Heyho_StartMotionCircleUpper"
+      "name": "_ZN5Heyho22StartMotionCircleUpperEv"
     },
     "ov006:0x020c5658": {
       "author": "ruspecial",
-      "name": "Heyho_MotionDiagonalMirror"
+      "name": "_ZN5Heyho20MotionDiagonalMirrorEv"
     },
     "ov006:0x020c57d4": {
       "author": "lunavyqo",
-      "name": "Heyho_StartMotionDiagonalMirror"
+      "name": "_ZN5Heyho25StartMotionDiagonalMirrorEv"
     },
     "ov006:0x020c5928": {
       "author": "ruspecial",
-      "name": "Heyho_MotionDiagonal"
+      "name": "_ZN5Heyho14MotionDiagonalEv"
     },
     "ov006:0x020c5aa4": {
       "author": "lunavyqo",
-      "name": "Heyho_StartMotionDiagonal"
+      "name": "_ZN5Heyho19StartMotionDiagonalEv"
     },
     "ov006:0x020c5bf8": {
       "author": "tangosdev",
-      "name": "Heyho_MotionBounceInRange"
+      "name": "_ZN5Heyho19MotionBounceInRangeEv"
     },
     "ov006:0x020c5cf4": {
       "author": "tangosdev",
-      "name": "Heyho_StartMotionBounceInRange"
+      "name": "_ZN5Heyho24StartMotionBounceInRangeEv"
     },
     "ov006:0x020c5d28": {
       "author": "tangosdev",
-      "name": "Heyho_MotionVShape"
+      "name": "_ZN5Heyho12MotionVShapeEv"
     },
     "ov006:0x020c5ec8": {
       "author": "ruspecial",
-      "name": "Heyho_StartMotionVShape"
+      "name": "_ZN5Heyho17StartMotionVShapeEv"
     },
     "ov006:0x020c6088": {
       "author": "lunavyqo",
-      "name": "Heyho_MotionBounceNear"
+      "name": "_ZN5Heyho16MotionBounceNearEv"
     },
     "ov006:0x020c6188": {
       "author": "tangosdev",
-      "name": "Heyho_StartMotionBounceNear"
+      "name": "_ZN5Heyho21StartMotionBounceNearEv"
     },
     "ov006:0x020c61c4": {
       "author": "tangosdev",
-      "name": "Heyho_MotionBobVertical"
+      "name": "_ZN5Heyho17MotionBobVerticalEv"
     },
     "ov006:0x020c6248": {
       "author": "tangosdev",
-      "name": "Heyho_StartMotionBobVertical"
+      "name": "_ZN5Heyho22StartMotionBobVerticalEv"
     },
     "ov006:0x020c627c": {
       "author": "tangosdev",
-      "name": "Heyho_MotionPatrolBob"
+      "name": "_ZN5Heyho15MotionPatrolBobEv"
     },
     "ov006:0x020c6348": {
       "author": "tangosdev",
-      "name": "Heyho_StartMotionPatrolBob"
+      "name": "_ZN5Heyho20StartMotionPatrolBobEv"
     },
     "ov006:0x020c6378": {
       "author": "tangosdev",
-      "name": "Heyho_MotionHover"
+      "name": "_ZN5Heyho11MotionHoverEv"
     },
     "ov006:0x020c63dc": {
       "author": "tangosdev",
-      "name": "Heyho_StartMotionHover"
+      "name": "_ZN5Heyho16StartMotionHoverEv"
     },
     "ov006:0x020c6400": {
       "author": "ruspecial",
-      "name": "Heyho_MotionLeave"
+      "name": "_ZN5Heyho11MotionLeaveEv"
     },
     "ov006:0x020c64e4": {
       "author": "lunavyqo",
-      "name": "Heyho_React"
+      "name": "_ZN5Heyho5ReactEv"
     },
     "ov006:0x020c66bc": {
       "author": "tangosdev",
-      "name": "Heyho_MotionRegroup"
+      "name": "_ZN5Heyho13MotionRegroupEv"
     },
     "ov006:0x020c68f4": {
       "author": "andrewboudreau",
-      "name": "Heyho_StartMotionRegroup"
+      "name": "_ZN5Heyho18StartMotionRegroupEPK9HeyhoPath"
     },
     "ov006:0x020c6a9c": {
       "author": "tangosdev",
-      "name": "Heyho_MotionFlyIn"
+      "name": "_ZN5Heyho11MotionFlyInEv"
     },
     "ov006:0x020c6ca4": {
       "author": "andrewboudreau",
-      "name": "Heyho_StartMotionFlyIn"
+      "name": "_ZN5Heyho16StartMotionFlyInEPK9HeyhoPath"
     },
     "ov006:0x020c6e4c": {
       "author": "tangosdev",
-      "name": "Heyho_LoadResources"
+      "name": "_ZN5Heyho13LoadResourcesEv"
     },
     "ov006:0x020c6f3c": {
       "author": "tangosdev",
@@ -22379,35 +22379,35 @@
     },
     "ov006:0x020dec5c": {
       "author": "ruspecial",
-      "name": "CupFx_Move"
+      "name": "_ZN5CupFx4MoveEii"
     },
     "ov006:0x020dec88": {
       "author": "tangosdev",
-      "name": "CupFx_Draw"
+      "name": "_ZN5CupFx4DrawEv"
     },
     "ov006:0x020ded00": {
       "author": "tangosdev",
-      "name": "CupFx_Update"
+      "name": "_ZN5CupFx6UpdateEv"
     },
     "ov006:0x020ded84": {
       "author": "tangosdev",
-      "name": "CupFx_Init"
+      "name": "_ZN5CupFx4InitEiiia"
     },
     "ov006:0x020dedfc": {
       "author": "tangosdev",
-      "name": "Cup_PlayAnimSound"
+      "name": "_ZN10dScMgCup_c13PlayAnimSoundEiii"
     },
     "ov006:0x020deed8": {
       "author": "andrewboudreau",
-      "name": "Cup_DrawOamList"
+      "name": "_ZN10dScMgCup_c11DrawOamListEP7OamAttriiii"
     },
     "ov006:0x020def80": {
       "author": "tangosdev",
-      "name": "Cup_UpdateAnim"
+      "name": "_ZN10dScMgCup_c10UpdateAnimEi"
     },
     "ov006:0x020df024": {
       "author": "tangosdev",
-      "name": "Cup_PickShuffleSpeed"
+      "name": "_ZN10dScMgCup_c9SetupSwapEv"
     },
     "ov006:0x020df1bc": {
       "author": "tangosdev",
@@ -32095,15 +32095,15 @@
     },
     "ov022:0x02112654": {
       "author": "tangosdev",
-      "name": "func_ov022_02112654"
+      "name": "_ZN21daObj_volcanoCannon_c14CheckPlayerHitEv"
     },
     "ov022:0x021126ac": {
       "author": "tangosdev",
-      "name": "func_ov022_021126ac"
+      "name": "_ZN21daObj_volcanoCannon_c10ExecuteFlyEv"
     },
     "ov022:0x02112710": {
       "author": "tangosdev",
-      "name": "func_ov022_02112710"
+      "name": "_ZN21daObj_volcanoCannon_c8EnterFlyEv"
     },
     "ov022:0x02112790": {
       "author": "andrewboudreau",
@@ -32447,11 +32447,11 @@
     },
     "ov026:0x02111234": {
       "author": "tangosdev",
-      "name": "func_ov026_02111234"
+      "name": "_ZN17daObjWlPolelift_c12UpdateShadowEv"
     },
     "ov026:0x021112a4": {
       "author": "tangosdev",
-      "name": "func_ov026_021112a4"
+      "name": "_ZN17daObjWlPolelift_c20UpdateModelTransformEv"
     },
     "ov026:0x021112e4": {
       "author": "tangosdev",
@@ -35259,11 +35259,11 @@
     },
     "ov060:0x021183cc": {
       "author": "tangosdev",
-      "name": "func_ov060_021183cc"
+      "name": "_ZN10daKpa3Bg_c9OnStoodOnEP8dActor_c"
     },
     "ov060:0x021183f4": {
       "author": "ruspecial",
-      "name": "func_ov060_021183f4"
+      "name": "_ZN10daKpa3Bg_c15StoodOnCallbackEP4dBgWP8dActor_cS3_"
     },
     "ov060:0x02118408": {
       "author": "andrewboudreau",
@@ -35399,7 +35399,7 @@
     },
     "ov062:0x02116010": {
       "author": "lunavyqo",
-      "name": "func_ov062_02116010"
+      "name": "_ZN10daHolhei_c17HandleCylinderHitEv"
     },
     "ov062:0x021161a8": {
       "author": "ruspecial",
@@ -35487,11 +35487,11 @@
     },
     "ov062:0x02116d28": {
       "author": "tangosdev",
-      "name": "_ZN10daHolhei_c19func_ov062_02116d28Ev"
+      "name": "_ZN10daHolhei_c16UpdateHeldShadowEv"
     },
     "ov062:0x02116dbc": {
       "author": "tangosdev",
-      "name": "func_ov062_02116dbc"
+      "name": "_ZN10daHolhei_c12UpdateShadowEv"
     },
     "ov062:0x02116e80": {
       "author": "tangosdev",
@@ -36307,11 +36307,11 @@
     },
     "ov063:0x0211c6f8": {
       "author": "tangosdev",
-      "name": "func_ov063_0211c6f8"
+      "name": "_ZN11daTrsTrap_c16UpdateClsnMatrixEv"
     },
     "ov063:0x0211c770": {
       "author": "tangosdev",
-      "name": "func_ov063_0211c770"
+      "name": "_ZN11daTrsTrap_c15SettleStaircaseEi"
     },
     "ov063:0x0211c7b0": {
       "author": "tangosdev",
@@ -36907,7 +36907,7 @@
     },
     "ov064:0x021192bc": {
       "author": "ruspecial",
-      "name": "func_ov064_021192bc"
+      "name": "_ZN16daObjFl_Puzzle_c15StoodOnCallbackEP4dBgWP8dActor_cS3_"
     },
     "ov064:0x021192d0": {
       "author": "tangosdev",
@@ -38007,11 +38007,11 @@
     },
     "ov066:0x0211a2e4": {
       "author": "tangosdev",
-      "name": "func_ov066_0211a2e4"
+      "name": "_ZN10daIwante_c9OnStoodOnEP8dActor_c"
     },
     "ov066:0x0211a35c": {
       "author": "tangosdev",
-      "name": "func_ov066_0211a35c"
+      "name": "_ZN10daIwante_c15StoodOnCallbackEP4dBgWP8dActor_cS3_"
     },
     "ov066:0x0211a370": {
       "author": "tangosdev",

@@ -21,6 +21,7 @@
 #include "math/Approach.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The carry matrix is copied through the flat Mtx43: assigning Matrix4x3
    grows .text by 0x1c bytes. */
@@ -49,7 +50,6 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Matrix4x3_FromRotationY(void *m, int angle);
 
-extern short FX_SinCosTable_[]; /* sine/cosine table */
 extern dClipper data_0209f43c;
 extern Matrix4x3 data_0209b3ec;
 
@@ -469,12 +469,12 @@ int daPgBby_c::func_ov072_02121368()
     }
 
     index = mAngleY;
-    angle = FX_SinCosTable_[(index >> 4) * 2];
+    angle = FX_SinIdx(index >> 4);
     *posX = *posX + (int)(((s64)angle * dist + round) >> 12);
     *posY = *posY + dist;
 
     index = mAngleY;
-    angle = FX_SinCosTable_[(index >> 4) * 2 + 1];
+    angle = FX_CosIdx(index >> 4);
     *posZ = *posZ + (int)(((s64)angle * dist + round) >> 12);
 
     eater = mEatingPlayer;

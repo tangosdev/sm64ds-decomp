@@ -1,8 +1,8 @@
 #include "types.h"
-extern void nds_vprintf(void *arg0, u32 fmtAddr, u32 val);
+extern void nds_vprintf(void *dst, const char *fmt, char *args);
 
-void nds_printf(void *arg0, u32 fmt, ...)
-{
-    u32 ap = (((u32)&fmt) & ~3u) + 4;
-    nds_vprintf(arg0, fmt, ap);
+/* The variable arguments start on the stack word after fmt (va_start). */
+void nds_printf(void *dst, const char *fmt, ...) {
+    char *args = (char *)(((u32)&fmt & ~3u) + 4);
+    nds_vprintf(dst, fmt, args);
 }

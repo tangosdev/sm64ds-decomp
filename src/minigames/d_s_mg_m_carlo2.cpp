@@ -108,8 +108,8 @@ s32 dScMgMCarlo2_c::InitResources()
     Deallocate(palette);
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x18;
-    *(volatile unsigned short *)0x4000008 = (*(volatile unsigned short *)0x4000008 & ~3) | 1;
-    *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
+    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
+    REG_DB_BG1CNT = REG_DB_BG1CNT & ~3;
     Camera_InitDealerView(&mCamera);
     if (Dealer_Load(&mDealer) == 0)
         return 0;

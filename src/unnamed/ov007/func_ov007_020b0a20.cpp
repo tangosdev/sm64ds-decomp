@@ -10,6 +10,7 @@
 #include "Ov007Figure.h"
 #include "Ov007Model.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -75,15 +76,9 @@ void func_ov007_020b0a20(void) {
         if (model->boneAnim->state != 0) {
             func_ov007_020be980(WORK->figure, 1, 0);
         } else if (noSaveFiles != 0) {
-            int v = model->boneAnim->frame;
-            if (v <= 0x10) {
-                v = 0;
-            } else if (v >= 0x14) {
-                v = 0x1000;
-            } else {
-                v = FX_DivS32((v - 0x10) << 12, 4);
-            }
-            model->scale.z = 0x1770 - FX_MUL(v, 0x9C4);
+            /* scale falls from 0x1770 to 0xdac over frames 0x10..0x14 */
+            int shrink = RangeRatio(model->boneAnim->frame, 0x10, 0x14);
+            model->scale.z = 0x1770 - FX_MUL(shrink, 0x9C4);
             model->scale.y = model->scale.z;
             model->scale.x = model->scale.y;
         }
