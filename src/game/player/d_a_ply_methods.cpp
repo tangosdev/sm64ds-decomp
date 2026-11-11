@@ -819,6 +819,7 @@ void func_ov002_020bcdf0(char *self)
             anim = &static_cast<dExtFrameCtrl_c &>(
                 *player->mModels.mBodyModels[player->GetBodyModelID(player->param1 & 0xff, 0)]);
             frame = (unsigned int)(anim->currFrame << 4) >> 0x10;
+            // a spawn flag grows the function 0x27c -> 0x288
             if (frame >= 0x1e)
                 goto particle;
         }
@@ -1120,6 +1121,7 @@ int daPly_c::CanPause() {
 
     if (*(unsigned char *)((char *)&mIsUnderwater)) {
         if (this->IsState(data_ov002_0211067c))
+            // early return predicates each exit (movne/popne/bxne) instead of one shared return 0 (size 0x84 -> 0x88)
             goto ret1a;
         if (this->IsState(data_ov002_021106ac))
             goto ret1a;
@@ -2094,6 +2096,7 @@ void daPly_c::func_ov002_020bf5e0() {
     flag = 0;
     if (this->IsAnim(0x9e) || this->IsAnim(0xa4)) {
         id = this->GetBodyModelID(param1 & 0xff, 0);
+        // if/else on the two WillHitFrame tests diffs 12 words from +0x74
         if (mModels.mBodyModels[id]->WillHitFrame(0xe))
             goto set_flag;
         id = this->GetBodyModelID(param1 & 0xff, 0);
@@ -2133,21 +2136,16 @@ flag_done:
 
     state = mGroundSoundType;
     target = -1;
-    if (state == 6)
-        goto state_case6;
-    if (state == 8)
-        goto state_case8;
-    if (state == 9) {
-        target = 0xe6;
+    if (state != 6) {
+        if (state != 8) {
+            if (state == 9)
+                target = 0xe6;
+        } else {
+            target = 0xe4;
+        }
+    } else {
+        target = 0xe5;
     }
-    goto state_merge;
-state_case8:
-    target = 0xe4;
-    goto state_merge;
-state_case6:
-    target = 0xe5;
-state_merge:
-    ;
 
     if (target == -1)
         return;
@@ -2320,14 +2318,10 @@ int daPly_c::func_ov002_020bfec0() {
     {
         int flag = mRidingShell;
         flag = (flag != 0);
-        if (flag) goto reset_timer;
-        if (mQuicksandRunTimer == 0)
-            goto after_timer_check;
-    reset_timer:
-        mSinkDepth = 0;
-        return 0;
-    after_timer_check:
-        ;
+        if (flag || mQuicksandRunTimer != 0) {
+            mSinkDepth = 0;
+            return 0;
+        }
     }
 
     inc = 0x400;
@@ -2347,23 +2341,23 @@ int daPly_c::func_ov002_020bfec0() {
     case 6:
         mSinkDepth += inc;
         if (mSinkDepth >= 0xa000) mSinkDepth = 0xa000;
-        goto ret0;
+        break;
     case 7:
         mSinkDepth += inc;
         if (mSinkDepth >= 0x3c000) mSinkDepth = 0x3c000;
-        goto ret0;
+        break;
     case 8:
         mSinkDepth += inc;
-        if (mSinkDepth < 0xa0000) goto ret0;
+        if (mSinkDepth < 0xa0000)
+            break;
         /* fallthrough */
     case 9:
         func_ov002_020c5dec(3);
         return 1;
     default:
         mSinkDepth = 0;
-        goto ret0;
+        break;
     }
-ret0:
     return 0;
 }
 
@@ -2912,32 +2906,33 @@ void daPly_c::func_ov002_020c133c() {
     if (mIsMetal != 0) return;
     {
         int lim = mToxicSurfaceY;
-        if (lim == (int)0x80000000) goto set0;
-        if (this->mPosY >= lim - 0x64000) goto set0;
-    }
-    if (!func_ov002_020d82f0())
-        return;
-    if (mIsAirborne != 0) return;
-    if (this->GetHealth() <= 2)
-        mSurfaceSoundHandle = Sound::PlayLong(mSurfaceSoundHandle, 2, 0x27, mCamSpacePos, 0);
-    if (mDamageTickTimer != 0) {
-        mDamageTickTimer--;
-        return;
-    }
-    {
-        Vector3 v;
-        v.x = this->mPosX;
-        v.y = this->mPosY;
-        v.z = this->mPosZ;
-        if (!this->Hurt(v, 0, 0, 1, 0, 0))
+        if (lim != (int)0x80000000 && this->mPosY < lim - 0x64000) {
+            if (!func_ov002_020d82f0())
+                return;
+            if (mIsAirborne != 0)
+                return;
+            if (this->GetHealth() <= 2)
+                mSurfaceSoundHandle =
+                    Sound::PlayLong(mSurfaceSoundHandle, 2, 0x27, mCamSpacePos, 0);
+            if (mDamageTickTimer != 0) {
+                mDamageTickTimer--;
+                return;
+            }
+            {
+                Vector3 v;
+                v.x = this->mPosX;
+                v.y = this->mPosY;
+                v.z = this->mPosZ;
+                if (!this->Hurt(v, 0, 0, 1, 0, 0))
+                    return;
+            }
+            Sound::PlayCharVoice(mCharacter, 6, mCamSpacePos);
+            if (func_ov002_020d91e0(0x100, 0) != 0 && this->GetHealth() == 0)
+                func_ov002_020c5dec(5);
+            mDamageTickTimer = 0x40;
             return;
+        }
     }
-    Sound::PlayCharVoice(mCharacter, 6, mCamSpacePos);
-    if (func_ov002_020d91e0(0x100, 0) != 0 && this->GetHealth() == 0)
-        func_ov002_020c5dec(5);
-    mDamageTickTimer = 0x40;
-    return;
-set0:
     mDamageTickTimer = 0;
 }
 
@@ -3576,6 +3571,7 @@ void daPly_c::func_ov002_020c2b08() {
     }
 
     if (mWaterRunTimer != 0) {
+        // combining the ground tests with || reorders 73 words from +0xd4
         if (!mMeshClsn.IsOnGround())
             goto clear_timer;
         if (!SurfaceInfo_TestFlag0x20((int *)&mMeshClsn.GetFloorResult()->surface.clps))
@@ -4222,20 +4218,19 @@ int daPly_c::func_ov002_020c4188() {
     case 0:
         if (mEventId == 6) {
             mEventStep++;
-            goto case1;
-        }
-        if (mEventId < 7) {
-            ((::dCamera_c *)p)->func_0200d3f8(mPlayerNo, 0);
         } else {
-            ((dCamera_c *)p)->SetFlag_3();
+            if (mEventId < 7) {
+                ((::dCamera_c *)p)->func_0200d3f8(mPlayerNo, 0);
+            } else {
+                ((dCamera_c *)p)->SetFlag_3();
+            }
+            mEventStep++;
+            if (mEventId >= 7) {
+                break;
+            }
+            return 0;
         }
-        mEventStep++;
-        if (mEventId >= 7) {
-            break;
-        }
-        return 0;
     case 1:
-    case1:
         mFlags |= 0x800000;
         gNextActorUpdateMask |= 0x800000;
         mEventWait = 0xa;
@@ -4346,6 +4341,7 @@ int daPly_c::func_ov002_020c44c4() {
     f2d8 = gGameMode;
     r4val = -1;
     b0 = (int)(f2d8 == 1);
+    // returns nested ahead of the body grow the function 0x29c -> 0x2a4
     if (b0 != 0) {
         goto cont;
     }
@@ -4475,6 +4471,7 @@ int daPly_c::func_ov002_020c47f4() {
                       (short)(Vec3_HorzAngle((Vector3 *)&mStateTargetX, &vec) + 0x8000), 4, 0x1000,
                       0x200);
     mHeadRotMode = 3;
+    // early return schedules the r==0 exit before the mHeadRotMode store at +0xb0
     if (r == 0) goto ret0;
     if (a == 0) return 1;
 ret0:
@@ -4625,31 +4622,31 @@ int daPly_c::ShowMessage2(fBase_c &actor_, unsigned int msg, const Vector3 *pos,
 
     if (IsState(data_ov002_0211046c)) {
         u8 sub = mStateStep;
-        if (sub == 0 || sub == 3)
-            goto finish;
-        return 0;
-    }
-
-    r7 = 0;
-    if (IsState(data_ov002_0211013c) || IsState(data_ov002_02110364) || IsState(data_ov002_0211043c) || IsState(data_ov002_02110154) || IsState(data_ov002_02110424) || IsState(data_ov002_021104e4) || IsState(data_ov002_02110514)) {
-        r7 = 1;
-    }
-
-    if (IsState(data_ov002_0211022c)) {
-        u8 v = mNoCtrlKind;
-        if (!(v == 0 || v == 1 || v == 3 || v == 2 || v == 0xd)) {
-            if (v != 8)
-                r7 = 1;
+        if (!(sub == 0 || sub == 3))
+            return 0;
+    } else {
+        r7 = 0;
+        if (IsState(data_ov002_0211013c) || IsState(data_ov002_02110364) ||
+            IsState(data_ov002_0211043c) || IsState(data_ov002_02110154) ||
+            IsState(data_ov002_02110424) || IsState(data_ov002_021104e4) ||
+            IsState(data_ov002_02110514)) {
+            r7 = 1;
         }
+
+        if (IsState(data_ov002_0211022c)) {
+            u8 v = mNoCtrlKind;
+            if (!(v == 0 || v == 1 || v == 3 || v == 2 || v == 0xd)) {
+                if (v != 8)
+                    r7 = 1;
+            }
+        }
+
+        if (!r7)
+            return 0;
+
+        this->ChangeState(*reinterpret_cast<daPly_c::State *>(&data_ov002_0211046c));
+        mTalkActor = actor;
     }
-
-    if (!r7)
-        return 0;
-
-    this->ChangeState(*reinterpret_cast<daPly_c::State *>(&data_ov002_0211046c));
-    mTalkActor = actor;
-
-finish:
     mStateWork = 0;
     mStateArg = d & 3;
     *(u8 *)(&mStateArg) |= (e & 3) << 2;
@@ -4745,6 +4742,7 @@ int daPly_c::StartTalk(fBase_c &actor_, bool b_) {
         return 0;
 
     if (b_ == 0) {
+        // early return 0 grows the function 0x230 -> 0x234
         if (!(*(u16 *)(data_0209f49e + (u8)gActivePlayerSlot * 0x18) & 3))
             goto ret0;
 
@@ -5539,16 +5537,13 @@ int daPly_c::func_ov002_020c6908() {
             return 1;
         }
         this->mPosY = old;
-        goto ret0;
     } else if (mStateWork == 2) {
         if (func_ov002_020c6538() == 0) {
             this->ChangeState(data_ov002_021101b4);
             return 1;
         }
-        goto ret0;
     }
-ret0:
-  return 0;
+    return 0;
 }
 
 /* recovered: named members + shared header, real C++ method */
@@ -5965,6 +5960,7 @@ void daPly_c::func_ov002_020c7350() {
     {
         u8 v = gGameMode;
         int isOne = (v == 1);
+        // a doAnim flag grows the function 0x2a0 -> 0x2b0
         if (isOne != false)
             goto setanim2;
         if (!(data_0209caa0.file.flags2 & FILE_FLAGS2_INTRO_DONE))
@@ -6268,6 +6264,7 @@ int daPly_c::IsStateEnteringLevel() {
 int daPly_c::func_ov002_020c7f10() {
     unsigned char v;
     if (!this->IsState(data_ov002_0211022c))
+        // early return duplicates the shared fail epilogue (size 0xe8 -> 0x10c)
         goto fail;
     if (mStateStep != 0)
         goto fail;
@@ -6944,47 +6941,42 @@ int daPly_c::func_ov002_020c94a4() {
     st = mStateTimer;
     if (st != 0) {
         unsigned char sub;
-        if (st != 1)
-            goto ret1;
-
-        sub = mNoCtrlKind;
-        if (sub == 0) {
-            if (gCurrentSublevel == 0x21) {
-                gReturnSublevel = 4;
-                gReturnEntranceId = 7;
+        if (st == 1) {
+            sub = mNoCtrlKind;
+            if (sub == 0) {
+                if (gCurrentSublevel == 0x21) {
+                    gReturnSublevel = 4;
+                    gReturnEntranceId = 7;
+                }
+                ExitLevel();
+                mStateStep = 6;
+            } else if (sub == 3) {
+                switch (gCurrentSublevel) {
+                case 0x24:
+                    gReturnSublevel = 2;
+                    gReturnEntranceId = 0xa;
+                    break;
+                case 0x26:
+                    gReturnSublevel = 4;
+                    gReturnEntranceId = 9;
+                    break;
+                case 0x2d:
+                    gReturnSublevel = 0x32;
+                    gReturnEntranceId = 3;
+                    break;
+                case 0x2f:
+                    gReturnSublevel = 3;
+                    gReturnEntranceId = 0;
+                    break;
+                case 0x31:
+                    gReturnSublevel = 5;
+                    gReturnEntranceId = 0xb;
+                    break;
+                }
+                ExitLevel();
+                mStateStep = 6;
             }
-            ExitLevel();
-            mStateStep = 6;
-            goto ret1;
         }
-
-        if (sub == 3) {
-            switch (gCurrentSublevel) {
-            case 0x24:
-                gReturnSublevel = 2;
-                gReturnEntranceId = 0xa;
-                break;
-            case 0x26:
-                gReturnSublevel = 4;
-                gReturnEntranceId = 9;
-                break;
-            case 0x2d:
-                gReturnSublevel = 0x32;
-                gReturnEntranceId = 3;
-                break;
-            case 0x2f:
-                gReturnSublevel = 3;
-                gReturnEntranceId = 0;
-                break;
-            case 0x31:
-                gReturnSublevel = 5;
-                gReturnEntranceId = 0xb;
-                break;
-            }
-            ExitLevel();
-            mStateStep = 6;
-        }
-    ret1:
         return 1;
     }
 
@@ -7001,6 +6993,7 @@ int daPly_c::func_ov002_020c965c() {
     u8 st;
 
     if (mIsAirborne != 0) {
+        // early return duplicates each return-0 epilogue (size 0xbc -> 0xe0)
         if (mIsUnderwater == 0) goto done;
     }
 
@@ -7237,6 +7230,7 @@ int daPly_c::func_ov002_020c9d1c() {
 void daPly_c::func_ov002_020c9d68() {
   if(mIsAirborne == 0){
     int b = (int)(mRidingShell != 0);
+    // a flag in front of one SetAnim diffs 7 words from +0x10; duplicating SetAnim grows 0x7c -> 0x98
     if(b == 0) goto tail;
   }
   this->SetAnim(0x54, 0x40000000, 0x1000, 0);
@@ -7881,6 +7875,7 @@ int daPly_c::StartClimb(dCc_c *clsn) {
             b358 = (mHeldObj != 0);
             if (b358 == 0 && mIsTakingDamage == 0 && mIsNoControl == 0 && mIsUnderwater == 0 &&
                 mIsMega == 0) {
+                // structured returns grow the function 0x1c4 -> 0x1e0
                 goto cont;
             }
         }
@@ -8126,7 +8121,7 @@ int daPly_c::St_Climb_Main() {
             this->SetAnim(0x26, 0, 0x1000, 0);
             mStateStep = 1;
         }
-        goto tail;
+        break;
 
     case 1: {
         s16 v;
@@ -8183,7 +8178,6 @@ int daPly_c::St_Climb_Main() {
                     }
                     mStateWork = 0;
                 }
-                goto end;
             } else if (v > 0x200) {
                 func_ov002_020cb400();
                 mStateTimer = 0x1e;
@@ -8216,7 +8210,6 @@ int daPly_c::St_Climb_Main() {
                     this->ChangeState(data_ov002_021101b4);
                     return 1;
                 }
-                goto end;
             } else {
                 mStateTimer = 0x1e;
                 mVertSpeed = 0;
@@ -8224,32 +8217,30 @@ int daPly_c::St_Climb_Main() {
                 if (!IsAnim(0x26)) {
                     this->SetAnim(0x26, 0, 0x1000, 0);
                 }
-                goto end;
             }
         }
+        if (mIsAirborne == 0) {
+            this->ChangeState(data_ov002_0211013c);
+            return 1;
+        }
+        if (*(u16 *)((char *)data_0209f49e + (u32)gActivePlayerSlot * 0x18) & 2) {
+            mPrevAngleY = mAngleY;
+            this->ChangeState(data_ov002_0211070c);
+            return 1;
+        }
+        break;
     }
 
     default:
-        goto tail;
+        break;
     }
 
-end:
-    if (mIsAirborne == 0) {
-        this->ChangeState(data_ov002_0211013c);
-        return 1;
+    {
+        s32 y = mClimbClsn->GetPos().y;
+        if ((mPosY - y) < -0x64000) {
+            mPosY = y - 0x64000;
+        }
     }
-    if (*(u16 *)((char *)data_0209f49e + (u32)gActivePlayerSlot * 0x18) & 2) {
-        mPrevAngleY = mAngleY;
-        this->ChangeState(data_ov002_0211070c);
-        return 1;
-    }
-
-tail: {
-    s32 y = mClimbClsn->GetPos().y;
-    if ((mPosY - y) < -0x64000) {
-        mPosY = y - 0x64000;
-    }
-}
     if (mAttachOffsetY < -0x64000) {
         mAttachOffsetY = -0x64000;
     }
@@ -8867,15 +8858,13 @@ int daPly_c::St_MetalWaterGround_Init() {
     if (b0) {
         int h = p->actorID;
         int b1 = (h == 0x10c);
-        if (!b1) {
-            int b2 = (h == 0x10b);
-            if (!b2) goto tail;
+        int b2;
+        if (b1 || (b2 = (h == 0x10b)) != 0) {
+            p->mFlags &= ~0x4000;
+            ((dActor_c *)mHeldObj)->mFlags &= ~0x100;
+            *(int **)((char *)&mHeldObj) = 0;
         }
-        p->mFlags &= ~0x4000;
-        ((dActor_c *)mHeldObj)->mFlags &= ~0x100;
-        *(int**)((char*)&mHeldObj) = 0;
     }
-tail:
     Sound::PlayCharVoice(mCharacter, 0x2e, mCamSpacePos);
     mVertAccel = -0x1800;
     mTerminalVelocity = -0x14000;
@@ -8954,34 +8943,31 @@ void daPly_c::StartAnim0xA9() {
 
 void daPly_c::func_ov002_020cd448() {
     unsigned char fl;
-    if (mStateStep < 2)
-        goto tail;
-    fl = mClsnFlags;
-    if (fl & 1) {
-        short before;
-        mAngleX = mPrevAngleX;
-        before = mAngleX;
-        func_ov002_020c18b0(0);
-        if (before < mAngleX)
-            goto tail;
-        ApproachLinear2(mPrevAngleX, mAngleX, 0x200);
-        goto tail;
-    }
-    if (fl & 2) {
-        if (*(short*)((char*)&data_0209f4a4 + gActivePlayerSlot * 0x18) != 0) goto tail;
-        if (mPrevAngleX > 0) {
-            short *q = &mPrevAngleX;
-            *q += 0x200;
-            if (mPrevAngleX > 0x3f00)
-                mPrevAngleX = 0x3f00;
-        } else {
-            short *q = &mPrevAngleX;
-            *q -= 0x200;
-            if (mPrevAngleX < -0x3f00)
-                mPrevAngleX = -0x3f00;
+    if (mStateStep >= 2) {
+        fl = mClsnFlags;
+        if (fl & 1) {
+            short before;
+            mAngleX = mPrevAngleX;
+            before = mAngleX;
+            func_ov002_020c18b0(0);
+            if (before >= mAngleX)
+                ApproachLinear2(mPrevAngleX, mAngleX, 0x200);
+        } else if (fl & 2) {
+            if (*(short *)((char *)&data_0209f4a4 + gActivePlayerSlot * 0x18) == 0) {
+                if (mPrevAngleX > 0) {
+                    short *q = &mPrevAngleX;
+                    *q += 0x200;
+                    if (mPrevAngleX > 0x3f00)
+                        mPrevAngleX = 0x3f00;
+                } else {
+                    short *q = &mPrevAngleX;
+                    *q -= 0x200;
+                    if (mPrevAngleX < -0x3f00)
+                        mPrevAngleX = -0x3f00;
+                }
+            }
         }
     }
-tail:
     ApproachLinear2(mAngleXSpeed, mAngleZ, 0x200);
     mAngleZ = mAngleXSpeed;
 }
@@ -9302,6 +9288,7 @@ int daPly_c::St_Swim_Main() {
         }
         if (mStateTimer != 0) {
             has = (mHeldObj != 0) ? 1 : 0;
+            // retesting mStateTimer grows the function 0x9d8 -> 0x9e0
             if (has == 0) goto case8_block107;
         } else {
         case8_block107:
@@ -9661,18 +9648,14 @@ int daPly_c::func_ov002_020cec2c() {
         *p = *p + 1;
     }
 
-    if (mAirDrainCounter < thresh)
-        goto ret0;
-
-    mAirDrainCounter = 0;
-    if (func_ov002_020d91e0(0x100, 0) == 0)
-        goto ret0;
-
-    DropHeldObj();
-    func_ov002_020c5dec(7);
-    return 1;
-
-ret0:
+    if (mAirDrainCounter >= thresh) {
+        mAirDrainCounter = 0;
+        if (func_ov002_020d91e0(0x100, 0) != 0) {
+            DropHeldObj();
+            func_ov002_020c5dec(7);
+            return 1;
+        }
+    }
     return 0;
 }
 }
@@ -10416,6 +10399,7 @@ int daPly_c::func_ov002_020d0580() {
             b358 = (mHeldObj != 0);
             if (b358 == 0 && mIsTakingDamage == 0 && mIsBalloon == 0 && IsInAir() != 0 &&
                 func_ov002_020d0d2c() == 0) {
+                // else-return grows the function 0x140 -> 0x158
                 goto cont;
             }
         }
@@ -10453,6 +10437,7 @@ int daPly_c::func_ov002_020d06c0() {
             b358 = (mHeldObj != 0);
             if (b358 == 0 && mIsTakingDamage == 0 && mIsBalloon == 0 &&
                 IsState(data_ov002_0211001c) == 0 && mIsAirborne != 0) {
+                // else-return grows the function 0x164 -> 0x17c
                 goto cont;
             }
         }
@@ -10678,16 +10663,14 @@ int daPly_c::St_WallSlide_Main() {
             }
             this->ChangeState(data_ov002_021103dc);
         } else {
-            if ((*((unsigned char *)((char *)&mClsnFlags))) & 2) {
-                goto end;
+            if (((*((unsigned char *)((char *)&mClsnFlags))) & 2) == 0) {
+                this->ChangeState(data_ov002_021101b4);
             }
-            this->ChangeState(data_ov002_021101b4);
         }
     }
-  end:
-      AdvanceAnims();
-      return 1;
-  }
+    AdvanceAnims();
+    return 1;
+}
 }
 
 /* recovered: named members + shared header, real C++ method */
@@ -10820,6 +10803,7 @@ extern "C" {
 int daPly_c::func_ov002_020d12b0() {
     extern u8 data_0209f49e[];
 
+    // early return drops the shared return-0 block (size 0xa4 -> 0xa0)
     if ((*(u16 *)(data_0209f49e + gActivePlayerSlot * 0x18) & 1) == 0) goto ret0;
     if (mIsMega != 0) {
         mPunchKickStep = 2;
@@ -10964,63 +10948,62 @@ int daPly_c::St_HoldHeavy_Main() {
             }
         }
         ApproachLinear(*((int *)((char *)&mHorzSpeed)), 0, 0x1000);
-        goto end;
-    }
+    } else {
 
-    {
-        int off = gActivePlayerSlot * 0x18;
-        u16 flags = *(u16*)((char*)data_0209f49e + off);
-        if (flags & 1) {
-            this->ChangeState(data_ov002_021105d4);
-            return 1;
-        }
+        {
+            int off = gActivePlayerSlot * 0x18;
+            u16 flags = *(u16 *)((char *)data_0209f49e + off);
+            if (flags & 1) {
+                this->ChangeState(data_ov002_021105d4);
+                return 1;
+            }
 
-        if (mIsAirborne != 0) {
-            DropHeldObj();
-            this->ChangeState(data_ov002_021101b4);
-            mHoldHeavyTimer = 0xa;
-            return 1;
+            if (mIsAirborne != 0) {
+                DropHeldObj();
+                this->ChangeState(data_ov002_021101b4);
+                mHoldHeavyTimer = 0xa;
+                return 1;
+            }
+
+            {
+                s16 t = *(s16 *)((char *)data_0209f4a0 + off);
+                if (t != 0) {
+                    ApproachAngle((short *)((char *)&mPrevAngleY), mDesiredAngleY, 8, 0x1000,
+                                  0x400);
+                    var_r1 = data_ov002_020ff1d0[param1];
+                }
+            }
         }
 
         {
-            s16 t = *(s16*)((char*)data_0209f4a0 + off);
-            if (t != 0) {
-                ApproachAngle((short*)((char*)&mPrevAngleY), mDesiredAngleY, 8, 0x1000, 0x400);
-                var_r1 = data_ov002_020ff1d0[param1];
+            int off2 = gActivePlayerSlot * 0x18;
+            if (*((u8 *)data_0209f4ac + off2) == 0) {
+                if (!(*(u16 *)((char *)data_0209f49c + off2) & 0x800)) {
+                    var_r1 >>= 1;
+                }
+            } else {
+                var_r1 = func_ov002_020bf224(var_r1, 0);
             }
+            func_ov002_020d4d88(var_r1, 0x1000);
         }
-    }
 
-    {
-        int off2 = gActivePlayerSlot * 0x18;
-        if (*((u8*)data_0209f4ac + off2) == 0) {
-            if (!(*(u16*)((char*)data_0209f49c + off2) & 0x800)) {
-                var_r1 >>= 1;
+        if (mHorzSpeed == 0) {
+            mAngleY = mPrevAngleY;
+        } else if (param1 == 1) {
+            ApproachAngle((short *)((char *)&mAngleY), mPrevAngleY, 0x10, 0x1000, 0x100);
+        } else {
+            ApproachAngle((short *)((char *)&mAngleY), mPrevAngleY, 8, 0x2000, 0x400);
+        }
+
+        if (mHorzSpeed == 0) {
+            if (this->FinishedAnim() ||
+                !mModels.mBodyModels[this->GetBodyModelID((u8)param1, 0)]->GetFlags()) {
+                this->SetAnim(data_ov002_020ff254[mStateWork + 2], 0, 0x1000, 0);
             }
         } else {
-            var_r1 = func_ov002_020bf224(var_r1, 0);
+            func_ov002_020d1f78(data_ov002_020ff254[mStateWork + 4]);
         }
-        func_ov002_020d4d88(var_r1, 0x1000);
     }
-
-    if (mHorzSpeed == 0) {
-        mAngleY = mPrevAngleY;
-    } else if (param1 == 1) {
-        ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 0x10, 0x1000, 0x100);
-    } else {
-        ApproachAngle((short*)((char*)&mAngleY), mPrevAngleY, 8, 0x2000, 0x400);
-    }
-
-    if (mHorzSpeed == 0) {
-        if (this->FinishedAnim() ||
-            !mModels.mBodyModels[this->GetBodyModelID((u8)param1, 0)]->GetFlags()) {
-            this->SetAnim(data_ov002_020ff254[mStateWork + 2], 0, 0x1000, 0);
-        }
-    } else {
-        func_ov002_020d1f78(data_ov002_020ff254[mStateWork + 4]);
-    }
-
-end:
     AdvanceAnims();
     return 1;
 }
