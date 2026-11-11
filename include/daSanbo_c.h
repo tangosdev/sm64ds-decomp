@@ -43,7 +43,7 @@ struct daSanbo_c : dActor_c {
        that segment's mRootPos at this same 0x36c offset. Each segment
        therefore inherits the head's root position through the chain.
        [InitResources, in src/game/actors/d_a_sanbo.cpp] */
-    Vector3 mRootPos;         /* 0x36c */
+    Vector3 mRootPos; /* 0x36c */
     /* Segment-follow offset: sin/cos of mSegAngY * 0xe000. UpdateStackedBody
        / UpdateStackedOnGrowingBody write it; UpdateModelAndShadow adds it to pos for
        the model translation. */

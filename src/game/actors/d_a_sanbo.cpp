@@ -622,8 +622,7 @@ void daSanbo_c::HandleAttacks() {
         int shove = (other->actorID == 0x135);
         if (shove) {
         radius = mdCcAc_c.radius;
-        if (Vec3_HorzDist(&mPos, &other->mPos) <
-            radius + 0x1a9000) {
+        if (Vec3_HorzDist(&mPos, &other->mPos) < radius + 0x1a9000) {
             angle = Vec3_HorzAngle(&other->mPos, &mPos);
             index = (unsigned short)angle >> 4;
             sine = FX_SinIdx(index);

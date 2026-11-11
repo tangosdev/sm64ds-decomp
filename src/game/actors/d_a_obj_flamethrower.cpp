@@ -252,8 +252,7 @@ int daObjFlamethrower_c::Behavior() {
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum.y;
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum.z;
                     } else {
-                        Vec3_Add((Vector3 *)sum2, (const Vector3 *)&mFlamePositions[im1],
-                                 &dst);
+                        Vec3_Add((Vector3 *)sum2, (const Vector3 *)&mFlamePositions[im1], &dst);
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum2[0];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum2[1];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum2[2];

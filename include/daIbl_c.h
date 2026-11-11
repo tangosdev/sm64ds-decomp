@@ -141,7 +141,7 @@ struct daIbl_c : dEnemyBase_c {
     /* Where PathPtr::GetNode writes the node it was asked for -- the node the
        ball is heading for. InitResources compares it against the actor's own
        position to decide whether to skip ahead one node. */
-    Vector3                      mNextNodePos;          /* 0x3e8 */
+    Vector3 mNextNodePos;                               /* 0x3e8 */
     PathPtr                      mPathPtr;              /* 0x3f4 */
 
     /* --- vtable --- */

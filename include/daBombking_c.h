@@ -72,9 +72,9 @@ struct daBombking_c : dEnemyBase_c {
     s32 mSpawnSlot;                   /* 0x49c */
     s32 mPhase;                       /* 0x4a0 */
     /* Bone 0x1e0 * model mtx. Behavior points actor+0xc8 here while holding. */
-    Matrix4x3 mHoldMtx;               /* 0x4a4 */
-    Vector3 mArenaPos;                /* 0x4d4 */
-    Vector3 mHomePos;                 /* 0x4e0 */
+    Matrix4x3 mHoldMtx; /* 0x4a4 */
+    Vector3 mArenaPos;  /* 0x4d4 */
+    Vector3 mHomePos;   /* 0x4e0 */
     /* Hand world pos, LSL'd from mHoldMtx translation. Copied onto a spawned
        bob-omb in TickThrowBomb. */
     Vector3 mThrowPos;                /* 0x4ec */

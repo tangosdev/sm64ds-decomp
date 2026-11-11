@@ -543,8 +543,7 @@ void daBtn_c::func_ov079_02125b44()
                 pos.x = FX_SinCosTable_[i * 2] * 0xd7 + pos.x;
                 pos.z = FX_SinCosTable_[i * 2 + 1] * 0xd7 + pos.z;
                 pos.y = y;
-                if (mPlayers[mNearestPlayer]->ShowMessage(
-                        *this, 0xa4, &pos, 0, 0) != 0) {
+                if (mPlayers[mNearestPlayer]->ShowMessage(*this, 0xa4, &pos, 0, 0) != 0) {
                     mSubState++;
                     Message::PrepareTalk();
                     func_0201267c(0x133, &mCamSpacePos);

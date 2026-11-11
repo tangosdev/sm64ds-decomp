@@ -271,8 +271,7 @@ void daTrs_c::func_ov063_021160d4() {
     this->mClsnOff.y = inline_fn(10);
     this->mClsnOff.z = inline_fn(11);
     VEC_Subtract(&this->mClsnOff, &this->mPos, &this->mClsnOff);
-    VEC_Subtract(&this->mClsnOff, &this->mClsnBase,
-                 &this->mClsnOff);
+    VEC_Subtract(&this->mClsnOff, &this->mClsnBase, &this->mClsnOff);
     Vec3_MulScalarInPlace((VecFx32 *)&this->mClsnOff.x, 0x6800);
     p = (int *)&this->mClsnOff.z;
     *p += this->mClsnZBias;
@@ -555,8 +554,7 @@ void daTrs_c::func_ov063_02116a1c() {
     }
 
     this->mVertSpeed = 0;
-    ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &v),
-                   0x5a8);
+    ApproachLinear(this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &v), 0x5a8);
     Oscillate(1);
 }
 
@@ -1820,8 +1818,7 @@ void daTrs_c::func_ov063_02119074() {
             r = (char *)dActor_c::FindWithActorID(TRS_ID_MERRYGOROUND, (dActor_c *)(0));
 
             if (r != 0)
-                this->mPrevAngleY =
-                    Vec3_HorzAngle(&this->mPos, &((dActor_c *)r)->mPos);
+                this->mPrevAngleY = Vec3_HorzAngle(&this->mPos, &((dActor_c *)r)->mPos);
         } else {
             if (this->mVariant == 0xe)
                 func_ov063_02116244();
@@ -2235,8 +2232,7 @@ void daTrs_c::func_ov063_02119cc0(int unused, s16 a2, int a3) {
     if (Vec3_HorzDist(&this->mPos, &this->mHomePos) >= this->mLeashDist) {
         this->mTargetAngleY = Vec3_HorzAngle(&this->mPos, &this->mHomePos);
         this->mStateTimer = 0;
-    } else if (Vec3_HorzDist(&this->mHomePos, &this->mClosestPlayer->mPos) <
-               this->mLeashDist) {
+    } else if (Vec3_HorzDist(&this->mHomePos, &this->mClosestPlayer->mPos) < this->mLeashDist) {
         this->mTargetAngleY = this->mAngleToPlayer;
         this->mStateTimer = 0;
     } else {
@@ -2293,12 +2289,10 @@ void daTrs_c::ChaseMario(int a1, short a2, int a3) {
         }
 
         if (gCurrentSublevel == 3 &&
-            Vec3_HorzDist(&this->mHomePos, &this->mClosestPlayer->mPos) >
-                thresh) {
+            Vec3_HorzDist(&this->mHomePos, &this->mClosestPlayer->mPos) > thresh) {
             angle = Vec3_HorzAngle(&this->mPos, &this->mHomePos);
         } else {
-            if (Vec3_HorzDist(&this->mPos, &this->mClosestPlayer->mPos) <=
-                thresh)
+            if (Vec3_HorzDist(&this->mPos, &this->mClosestPlayer->mPos) <= thresh)
                 angle = this->mAngleToPlayer;
             else
                 angle = Vec3_HorzAngle(&this->mPos, &this->mHomePos);
@@ -3265,8 +3259,7 @@ int daTrs_c::InitResources()
         mClsnOff.x = 0;
         mClsnOff.y = 0;
         mClsnOff.z = tmp598;
-        mdCcAcPos_c.Init(this, mClsnOff, mClsnRadius << 0xc, mClsnHeight << 0xc,
-                         0x200000, 0x207e0);
+        mdCcAcPos_c.Init(this, mClsnOff, mClsnRadius << 0xc, mClsnHeight << 0xc, 0x200000, 0x207e0);
         if (mVariant != 0xf) {
             mWithMeshClsn.Init(this, 0xdc000, 0xdc000, 0, 0);
         } else {
@@ -3295,8 +3288,7 @@ int daTrs_c::InitResources()
             mClsnRadius = 0x4a;
             mClsnHeight = 0x64;
         }
-        mdCcAcPos_c.Init(this, mClsnOff, mClsnRadius << 0xc, mClsnHeight << 0xc,
-                         0x200000, 0x207e0);
+        mdCcAcPos_c.Init(this, mClsnOff, mClsnRadius << 0xc, mClsnHeight << 0xc, 0x200000, 0x207e0);
         if (gCurrentSublevel == 0xc && mPosX == 0xbb8000 && mAreaId == 2) {
             mBooFlags.limitZ = 1;
         }

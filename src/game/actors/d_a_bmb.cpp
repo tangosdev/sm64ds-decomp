@@ -406,8 +406,7 @@ void daBmb_c::State0() {
                     ApproachLinear(mPrevAngleY, ang, 0x200);
                     mAngleY = mPrevAngleY;
                 } else {
-                    if (mTurnTimer == 0 ||
-                        Vec3_Dist(&mPos, &mHomePos) >= 0x500000) {
+                    if (mTurnTimer == 0 || Vec3_Dist(&mPos, &mHomePos) >= 0x500000) {
                         mHorzSpeed = 0x5000;
                         func_ov102_0214beb4();
                     }
@@ -442,8 +441,7 @@ void daBmb_c::func_ov102_0214beb4() {
     mTurnCount += 1;
     daPly_c *o = mChasePlayer;
     if (o == 0) {
-        *(short *)&mTargetAngY =
-            Vec3_HorzAngle(&mPos, &mHomePos);
+        *(short *)&mTargetAngY = Vec3_HorzAngle(&mPos, &mHomePos);
         if (Vec3_Dist(&mPos, &mHomePos) >= 0x500000)
             return;
         unsigned int r = RandomIntInternal(&data_0209e650);

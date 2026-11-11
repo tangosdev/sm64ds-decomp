@@ -64,7 +64,7 @@ struct daBmb_c : dEnemyBase_c {
        do not pull common.h. InitResources copies IDENTITY_MATRIX4X3 here.
        0214b444 writes the translation at [9..11] before the shadow drop. */
     s32                          mMatrix[12];           /* 0x394 */
-    Vector3                      mHomePos;              /* 0x3c4 */
+    Vector3 mHomePos;                                   /* 0x3c4 */
     /* UpdateCarry offset. Zeroed when the Bob-omb is not in a player's hand. */
     s32                          mCarryOff[3];          /* 0x3d0 */
     /* Behavior skips the body at 5, the egg hand-off is 4, the wall bounce

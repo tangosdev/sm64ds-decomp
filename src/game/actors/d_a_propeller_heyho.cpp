@@ -580,8 +580,7 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
     vd.x = vb.x;
     vd.y = vb.y;
     vd.z = vb.z;
-    ApproachAngle(&c->mPrevAngleX, Vec3_VertAngle(&c->mPos, &vd), 1, 0x500,
-                  0x500);
+    ApproachAngle(&c->mPrevAngleX, Vec3_VertAngle(&c->mPos, &vd), 1, 0x500, 0x500);
 
     ApproachAngle(&c->mPrevAngleZ,
                   (c->mPrevAngleY - c->mTargetAngY) / 2,

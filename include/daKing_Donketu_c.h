@@ -57,7 +57,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        camera looks at it, the part-1 camera is placed relative to it, the key
        spawns above it, and the ..3390 and leap states turn toward it. Whether
        it is the middle of the arena is not established. */
-    Vector3 mSpawnPos;                                     /* 0x3d8 */
+    Vector3 mSpawnPos; /* 0x3d8 */
     /* The player the talk cut scenes address: the opening-talk state
        (..3330) and the second cut scene (..33e0) store their ClosestPlayer
        result here, and the states that wait out a talk (..3350, ..3410) ask

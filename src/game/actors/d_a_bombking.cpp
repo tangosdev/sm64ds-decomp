@@ -527,8 +527,7 @@ int daBombking_c::EnterKnockback() {
     this->mBlendAnmModel.SetAnim(*(BCA_File *)gBombkingDamageAnimationFile.filePtr, 0, 0, 0x1000,
                                  0);
     this->mStateTimer = 0xc8;
-    this->mTargetAngY =
-        Vec3_HorzAngle(&this->mPos, &this->mArenaPos);
+    this->mTargetAngY = Vec3_HorzAngle(&this->mPos, &this->mArenaPos);
     this->mHealth -= 1;
     this->mActionStep = 0;
     this->mVertSpeed = 0x28000;
@@ -698,8 +697,7 @@ int daBombking_c::TickReturnHome() {
         daPly_c *pl = this->ClosestPlayer();
         if (pl != 0) {
             *(struct M3 *)&D = *(struct M3 *)&pl->mPosX;
-            if (Vec3_Dist(&this->mArenaPos, &D) > 0x640000 ||
-                this->mArenaPos.y - 0x64000 > D.y) {
+            if (Vec3_Dist(&this->mArenaPos, &D) > 0x640000 || this->mArenaPos.y - 0x64000 > D.y) {
                 this->mSpeedX = 0;
                 this->mVertSpeed = 0;
                 this->mSpeedZ = 0;
@@ -1491,9 +1489,8 @@ int daBombking_c::Behavior()
     }
 
     if ((char *)mState == (char *)data_ov078_0212703c || (char *)mState == (char *)data_ov078_021270fc) {
-        if (mWithMeshClsn.IsOnWall() != 0
-            || mWithMeshClsn.IsOnGround() == 0
-            || (mArenaPos.y - 0x28000) > mPosY) {
+        if (mWithMeshClsn.IsOnWall() != 0 || mWithMeshClsn.IsOnGround() == 0 ||
+            (mArenaPos.y - 0x28000) > mPosY) {
             KingBobOmb_SetState(data_ov078_021270bc);
         }
     }
