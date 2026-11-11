@@ -41,6 +41,7 @@
 #define PORT_HAL_COOP_SAVE_WIRE_H
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 namespace port {
@@ -118,11 +119,17 @@ inline const uint8_t *coop_mono_mask() {
     static bool built = false;
     if (!built) {
         memset(m, 0, sizeof m);
-        const uint32_t f1 = 0xC0FFFFFFu;   // KEYDOOR10: + 0x214 (key door bits); RABBIT1: + 0x40000000 (Toad wakes the rabbits)
+        // RABBIT1: the bits this lane added go with its kill switches, so a "before" row gets the 1.0.2 mask.
+        // SM64DS_COOP_RABBIT_FIX=0 drops Toad, the buddy line, the rabbit hunt and the picture; SM64DS_COOP_MOAT_LIVE=0 drops the moat.
+        const char *rf = getenv("SM64DS_COOP_RABBIT_FIX"), *ml = getenv("SM64DS_COOP_MOAT_LIVE");
+        const bool rabbit_on = !(rf && *rf == '0'), moat_on = !(ml && *ml == '0');
+        const uint32_t f1 = 0x80FFFFFFu |                     // KEYDOOR10: + 0x214 (key door bits)
+                            (rabbit_on ? 0x40000000u : 0u);   // RABBIT1: Toad wakes the rabbits
         const uint32_t f2 = 0x0000000Fu | 0x80u | 0x200u | 0x400u | 0x800u |
                             0x1000u | 0x2000u | 0x4000u | 0x0FF00000u |
                             0x10000000u |
-                            0x8000u | 0x20000u | 0x40000u | 0x80000u;   // RABBIT1: buddy line, rabbit hunt, picture, moat
+                            (rabbit_on ? (0x8000u | 0x20000u | 0x40000u) : 0u) |   // RABBIT1: buddy line, rabbit hunt, picture
+                            (moat_on ? 0x80000u : 0u);                             // RABBIT1: the moat
         const uint32_t wd = 0x0FFFFFFFu;     // +0x0c: 28 bits
         const uint32_t cn = 0xFFFFFFFFu;     // +0x10: cannons
         memcpy(m + 0x04, &f1, 4);            // little endian host

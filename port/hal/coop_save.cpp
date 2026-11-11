@@ -297,6 +297,12 @@ void ensure_init() {
                  host() ? "host" : "guest",
                  g_external ? "external" : (g_registered ? "own" : "NONE"),
                  host() ? g_sav : "(temp image)");
+    {   // RABBIT1: which shared mask this process merges with (the kill switches drop the bits that lane added)
+        uint32_t mf1, mf2;
+        std::memcpy(&mf1, coop_mono_mask() + 0x04, 4);
+        std::memcpy(&mf2, coop_mono_mask() + 0x08, 4);
+        std::fprintf(stderr, "[coopsave] shared mask flags1=%08x flags2=%08x\n", mf1, mf2);
+    }
 }
 
 // Frame the seed record the ROM way (the guest first record only).
@@ -562,9 +568,12 @@ void rabbit_frame() {
             g_home_ms = now;
             char msg[1400];
             const int r = ntr::backup::solo_minigame_unlock(keys, msg, sizeof msg);
-            if (r >= 0) g_home_done |= keys;
-            std::fprintf(stderr, "[cooprabbit] f=%u own save: %s: %s\n", g_frame,
-                         r > 0 ? "key bits written" : r == 0 ? "already there" : "NOT written (retry in 2 s)", msg);
+            static bool refused_said = false;   // a refusal is said once, not on every 2 s retry
+            if (r >= 0) { g_home_done |= keys; refused_said = false; }
+            if (r >= 0 || !refused_said)
+                std::fprintf(stderr, "[cooprabbit] f=%u own save: %s: %s\n", g_frame,
+                             r > 0 ? "key bits written" : r == 0 ? "already there" : "NOT written (retrying every 2 s, said once)", msg);
+            if (r < 0) refused_said = true;
         }
     }
     if (const char *lg = std::getenv("SM64DS_COOP_RABBIT_LOG")) {
