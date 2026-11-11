@@ -28,6 +28,17 @@
 //   * a star that every console spawns natively (the red-coin star, linked to
 //     a placed star marker) is not announced; its collect is sent as a "gone
 //     for marker slot S" so the other copies vanish.
+//   * switch stars (STARCASE2). The star a star switch (class 12) grows in its
+//     glass case is spawned natively on every console by a placed kind-6 marker
+//     at level load, with no death slot and a runtime case: neither path above
+//     sees it. Its take is sent as a "gone for switch star N" (kSpGoneSwitch);
+//     every other console turns its copy see-through, waits for its camera
+//     cutscene to end, ends its switch the ROM's way (the timer runs out), breaks
+//     the case and removes the star. Only the console whose player pressed the
+//     switch plays the star's camera: on a friend's console (the press came over
+//     the wire) the star still grows and can be taken, but its cutscene request
+//     is taken back every frame and the switch timer is held for as long as the
+//     presser's camera would have held it.
 //
 // OTHER LANES CALL (documented API, below): coop_spawn_announce(). The boss
 // lane spawns its defeat star through it.
@@ -50,6 +61,13 @@
 //   SM64DS_SPAWN_FORGE=F:name[,..]  one forged datagram: cls, kind, param,
 //                                counter, pos, short, long, gone, goneslot,
 //                                blockslot, blockcls, redsum, key
+//   SM64DS_SWSTAR_OFF=a,b,..     must-fail controls for switch stars: cam (friends
+//                                play the presser's camera), gone (no take sent or
+//                                applied), look (no see-through when the bit lands)
+//   SM64DS_SWSTAR_TAKE=F[:W][;..] armed at group frame F: once the live switch star
+//                                is full size, wait W frames (default 0), then walk
+//                                my player onto it every frame (up to 180 frames)
+//                                until the ROM's own touch takes it
 
 #ifndef PORT_HAL_COOP_SPAWN_H
 #define PORT_HAL_COOP_SPAWN_H
@@ -82,6 +100,7 @@ enum : int {
     kSpKindSilver  = 2,     // silver star + its marker (the brick block's pair)
     kSpGoneAnn     = 1,     // gone: announced actor (origin seat, counter)
     kSpGoneLinked  = 2,     // gone: native star linked to placed marker slot
+    kSpGoneSwitch  = 3,     // gone: switch star, by star number (STARCASE2; a 1.0.2 peer drops it as bad)
     kSpSlots       = 512,
     kSpPosLimit    = 1 << 28,
 };
@@ -104,8 +123,8 @@ struct SpSpawnWire {
 struct SpGoneWire {
     CoopKeyWire key;
     uint8_t  origin;      // announced: spawner seat; linked: 0xFF
-    uint8_t  kind;        // kSpGoneAnn / kSpGoneLinked
-    uint16_t id;          // announced: counter; linked: marker slot
+    uint8_t  kind;        // kSpGoneAnn / kSpGoneLinked / kSpGoneSwitch
+    uint16_t id;          // announced: counter; linked: marker slot; switch: star number 0..7
     uint32_t reserved;    // 0
 };
 // BLOCK, 16 B.
@@ -183,6 +202,7 @@ inline bool sp_gone_validate(const void *p, int len) {
     if (!coop_key_ok(w.key) || w.reserved) return false;
     if (w.kind == kSpGoneAnn) return w.origin < kCoopMaxSeats && w.id != 0;
     if (w.kind == kSpGoneLinked) return w.origin == 0xFF && w.id < kSpSlots;
+    if (w.kind == kSpGoneSwitch) return w.origin == 0xFF && w.id < 8;
     return false;
 }
 inline bool sp_block_validate(const void *p, int len) {
@@ -233,6 +253,9 @@ bool coop_spawn_announce(void *local_actor, int cls, unsigned param, const int p
 // Spawn on THIS console AND announce, in one call: the ROM's own spawn, then
 // coop_spawn_announce. Returns the local actor (null = spawn failed, nothing sent).
 void *coop_spawn_and_announce(int cls, unsigned param, const int pos[3], int area);
+// STARCASE2: coop_switch calls this when it applied a FRIEND's press to a star switch (class 12) here, so the star it
+// grows is not this console's to film: its camera cutscene is skipped here. A press by my own player never calls it.
+void coop_spawn_note_remote_press(void *switch_actor);
 
 }  // namespace port
 
