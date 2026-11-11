@@ -691,15 +691,13 @@ int Message::UpdateWindow() {
                 data_0209d6bc = data_0209d6ac;
 
             if (data_0209d698 != 0) {
-                REG_DB_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                               ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-                REG_DB_WIN0V = ((gMsgBoxWinTop << 8) & 0xff00) |
-                               ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+                G2S_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                                    gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                                    gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
             } else {
-                REG_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                            ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-                REG_WIN0V = ((gMsgBoxWinTop << 8) & 0xff00) |
-                            ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+                G2_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                                   gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                                   gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
             }
             return 0;
         }
@@ -723,15 +721,13 @@ int Message::UpdateWindow() {
             gMsgBoxWinTop = gMsgBoxCenterY;
 
         if (data_0209d698 != 0) {
-            REG_DB_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                           ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-            REG_DB_WIN0V =
-                ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+            G2S_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                                gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                                gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
         } else {
-            REG_WIN0H = ((gMsgBoxWinLeft << 8) & 0xff00) |
-                        ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff);
-            REG_WIN0V =
-                ((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff);
+            G2_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop,
+                               gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                               gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
         }
         return 0;
     }
@@ -746,15 +742,15 @@ int Message::UpdateWindow() {
         gSubScreenLayers &= ~2;
         GXS_SetVisiblePlane(gSubScreenLayers);
         G2S_BlendNone();
-        REG_DB_WININ &= ~0x3f;
-        REG_DB_WINOUT &= ~0x3f;
+        G2S_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
         GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     } else {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
         GX_SetVisiblePlane(gMainScreenLayers);
         G2_BlendNone();
-        REG_WININ &= ~0x3f;
-        REG_WINOUT &= ~0x3f;
+        G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        G2_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
         GX_SetVisibleWnd(GX_WNDMASK_NONE);
     }
     return 0;

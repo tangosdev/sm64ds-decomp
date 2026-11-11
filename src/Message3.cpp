@@ -783,15 +783,13 @@ extern "C" int func_020321fc(void) {
                 data_0209fcc8 = data_0209fcb4;
 
             if (data_0209fca8 != 0) {
-                REG_DB_WIN0H = ((data_0209fc8c << 8) & 0xff00) |
-                               ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-                REG_DB_WIN0V = ((data_0209fc74 << 8) & 0xff00) |
-                               ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
+                G2S_SetWnd0Position(data_0209fc8c, data_0209fc74,
+                                    data_0209fce4 * 2 - data_0209fc8c + 1,
+                                    data_0209fcc0 * 2 - data_0209fc74 + 1);
             } else {
-                REG_WIN0H = ((data_0209fc8c << 8) & 0xff00) |
-                            ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-                REG_WIN0V = ((data_0209fc74 << 8) & 0xff00) |
-                            ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
+                G2_SetWnd0Position(data_0209fc8c, data_0209fc74,
+                                   data_0209fce4 * 2 - data_0209fc8c + 1,
+                                   data_0209fcc0 * 2 - data_0209fc74 + 1);
             }
             return 0;
         }
@@ -815,15 +813,11 @@ extern "C" int func_020321fc(void) {
             data_0209fc74 = data_0209fcc0;
 
         if (data_0209fca8 != 0) {
-            REG_DB_WIN0H =
-                ((data_0209fc8c << 8) & 0xff00) | ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-            REG_DB_WIN0V =
-                ((data_0209fc74 << 8) & 0xff00) | ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
+            G2S_SetWnd0Position(data_0209fc8c, data_0209fc74, data_0209fce4 * 2 - data_0209fc8c + 1,
+                                data_0209fcc0 * 2 - data_0209fc74 + 1);
         } else {
-            REG_WIN0H =
-                ((data_0209fc8c << 8) & 0xff00) | ((data_0209fce4 * 2 - data_0209fc8c + 1) & 0xff);
-            REG_WIN0V =
-                ((data_0209fc74 << 8) & 0xff00) | ((data_0209fcc0 * 2 - data_0209fc74 + 1) & 0xff);
+            G2_SetWnd0Position(data_0209fc8c, data_0209fc74, data_0209fce4 * 2 - data_0209fc8c + 1,
+                               data_0209fcc0 * 2 - data_0209fc74 + 1);
         }
         return 0;
     }
@@ -834,15 +828,15 @@ extern "C" int func_020321fc(void) {
         gSubScreenLayers &= ~2;
         GXS_SetVisiblePlane(gSubScreenLayers);
         G2S_BlendNone();
-        REG_DB_WININ &= ~0x3f;
-        REG_DB_WINOUT &= ~0x3f;
+        G2S_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
         GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     } else {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
         GX_SetVisiblePlane(gMainScreenLayers);
         G2_BlendNone();
-        REG_WININ &= ~0x3f;
-        REG_WINOUT &= ~0x3f;
+        G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+        G2_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
         GX_SetVisibleWnd(GX_WNDMASK_NONE);
     }
     return 0;
@@ -1832,17 +1826,17 @@ extern "C" void func_020345b0(int arg0) {
 
     G2_SetBlendBrightness((gMainScreenLayers ^ 0x10) | 0x20, -8);
 
-    REG_WININ = (REG_WININ & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
-    REG_WINOUT = (REG_WINOUT & ~0x3f) | 0x17;
-    *(volatile s16 *)0x4000040 =
-        ((data_0209fc8c << 8) & 0xff00) | (u8)(((data_0209fce4 * 2) - data_0209fc8c) + 1);
-    *(volatile s16 *)0x4000044 =
-        ((data_0209fc74 << 8) & 0xff00) | (u8)(((data_0209fcc0 * 2) - data_0209fc74) + 1);
+    G2_SetWnd0InsidePlane(gMainScreenLayers | GX_WND_PLANEMASK_BG3, 1);
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                              GX_WND_PLANEMASK_OBJ,
+                          0);
+    G2_SetWnd0Position(data_0209fc8c, data_0209fc74, data_0209fce4 * 2 - data_0209fc8c + 1,
+                       data_0209fcc0 * 2 - data_0209fc74 + 1);
 
     data_0209fcc8 = 0;
-    *(volatile s32 *)0x4000000 = (*(volatile s32 *)0x4000000 & ~0xe000) | 0x2000;
+    GX_SetVisibleWnd(GX_WNDMASK_W0);
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile s32 *)0x4000000 = (*(volatile s32 *)0x4000000 & ~0x1f00) | (gMainScreenLayers << 8);
+    GX_SetVisiblePlane(gMainScreenLayers);
 }
 
 extern "C" void LoadFont3D(void) {

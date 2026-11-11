@@ -119,14 +119,10 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
 
         wipeInterp = 0;
 
-        REG_WIN0H = 0x7f7f;
-        REG_WIN0V = 0xc0;
-        REG_DB_WIN0H = 0x7f7f;
-        REG_DB_WIN0V = 0xc0;
-        REG_WIN1H = 0x8080;
-        REG_WIN1V = 0xc0;
-        REG_DB_WIN1H = 0x8080;
-        REG_DB_WIN1V = 0xc0;
+        G2_SetWnd0Position(0x7f, 0, 0x7f, 0xc0);
+        G2S_SetWnd0Position(0x7f, 0, 0x7f, 0xc0);
+        G2_SetWnd1Position(0x80, 0, 0x80, 0xc0);
+        G2S_SetWnd1Position(0x80, 0, 0x80, 0xc0);
 
         state = 1;
         EnableWindows();
@@ -184,14 +180,10 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
         }
 
         wipeInterp = 0x200000;
-        REG_WIN0H = 0x7f;
-        REG_WIN0V = 0xc0;
-        REG_DB_WIN0H = 0x7f;
-        REG_DB_WIN0V = 0xc0;
-        REG_WIN1H = 0x80ff;
-        REG_WIN1V = 0xc0;
-        REG_DB_WIN1H = 0x80ff;
-        REG_DB_WIN1V = 0xc0;
+        G2_SetWnd0Position(0, 0, 0x7f, 0xc0);
+        G2S_SetWnd0Position(0, 0, 0x7f, 0xc0);
+        G2_SetWnd1Position(0x80, 0, 0xff, 0xc0);
+        G2S_SetWnd1Position(0x80, 0, 0xff, 0xc0);
 
         state = 3;
         EnableWindows();
@@ -221,33 +213,21 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
 void dWipe_c::EnableWindows() {
     unk_00e = 1;
 
-    {
-        u32 v = REG_WININ;
-        v = (v & ~0x3f) | 0x1f;
-        v = v | 0x20;
-        REG_WININ = v;
-    }
-    {
-        u32 v = REG_DB_WININ;
-        v = (v & ~0x3f) | 0x1f;
-        v = v | 0x20;
-        REG_DB_WININ = v;
-    }
-    {
-        u32 v = REG_WININ;
-        v = (v & ~0x3f00) | 0x1f00;
-        v = v | 0x2000;
-        REG_WININ = v;
-    }
-    {
-        u32 v = REG_DB_WININ;
-        v = (v & ~0x3f00) | 0x1f00;
-        v = v | 0x2000;
-        REG_DB_WININ = v;
-    }
+    G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                              GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                          1);
+    G2S_SetWnd0InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                               GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                           1);
+    G2_SetWnd1InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                              GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                          1);
+    G2S_SetWnd1InsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                               GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ,
+                           1);
 
-    REG_WINOUT &= ~0x3f;
-    REG_DB_WINOUT &= ~0x3f;
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
 
     GX_SetVisibleWnd(GX_WNDMASK_W0 | GX_WNDMASK_W1);
 

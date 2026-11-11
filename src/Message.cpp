@@ -41,6 +41,7 @@
 #include "Sound.h"
 #include "MessageBank.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx.h"
 
 extern "C" {
 extern u8 gMainScreenLayers;
@@ -1145,24 +1146,18 @@ void Message::DisplaySaving(unsigned short n)
     }
 
     {
-        volatile u16 *win0h = (volatile u16 *)0x4000048;
-        volatile u16 *win0v = (volatile u16 *)0x400004a;
-        u8 d = gMainScreenLayers;
-        *win0h = (u16)((*win0h & ~0x3f) | (d | 8) | 0x20);
-        *win0v = (u16)((*win0v & ~0x3f) | 0x17);
+        u8 planes = gMainScreenLayers;
+        G2_SetWnd0InsidePlane(planes | GX_WND_PLANEMASK_BG3, 1);
+        G2_SetWndOutsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                                  GX_WND_PLANEMASK_OBJ,
+                              0);
     }
 
-    REG_WIN0H = (u16)(((gMsgBoxWinLeft << 8) & 0xff00) |
-                      ((gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1) & 0xff));
-    REG_WIN0V =
-        (u16)(((gMsgBoxWinTop << 8) & 0xff00) | ((gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1) & 0xff));
-
-    {
-        volatile unsigned int *disp = (volatile unsigned int *)0x4000000;
-        *disp = (*disp & ~0xe000u) | 0x2000u;
-        gMainScreenLayers |= DISPLAY_LAYER_BG3;
-        *disp = (*disp & ~0x1f00u) | ((unsigned int)gMainScreenLayers << 8);
-    }
+    G2_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop, gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                       gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
+    GX_SetVisibleWnd(GX_WNDMASK_W0);
+    gMainScreenLayers |= DISPLAY_LAYER_BG3;
+    GX_SetVisiblePlane(gMainScreenLayers);
 }
 
 extern "C" void func_0201ef38(void) {
@@ -1431,22 +1426,20 @@ extern "C" void func_0201f32c(int arg0)
     disp2 = data_0209d698;
     if (disp2 == 2) {
         gMainScreenLayers |= DISPLAY_LAYER_BG1;
-        *(volatile s32 *)0x04000000 =
-            (*(volatile s32 *)0x04000000 & ~0x1f00) | (gMainScreenLayers << 8);
+        GX_SetVisiblePlane(gMainScreenLayers);
         return;
     }
     if (disp2 == 1) {
         G2S_SetBlendBrightness(gSubScreenLayers | 0x20, -7);
-        REG_DB_WININ = (REG_DB_WININ & ~0x3f) | (gSubScreenLayers | 2) | 0x20;
-        REG_DB_WINOUT = (REG_DB_WINOUT & ~0x3f) | 0x1d;
-        *(volatile s16 *)0x04001040 =
-            ((gMsgBoxWinLeft << 8) & 0xff00) | (u8)(((gMsgBoxCenterX * 2) - gMsgBoxWinLeft) + 1);
-        REG_DB_WIN0V =
-            ((gMsgBoxWinTop << 8) & 0xff00) | (u8)(((gMsgBoxCenterY * 2) - gMsgBoxWinTop) + 1);
-        *(volatile s32 *)0x04001000 = (*(volatile s32 *)0x04001000 & ~0xe000) | 0x2000;
+        G2S_SetWnd0InsidePlane(gSubScreenLayers | GX_WND_PLANEMASK_BG1, 1);
+        G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG2 | GX_WND_PLANEMASK_BG3 |
+                                   GX_WND_PLANEMASK_OBJ,
+                               0);
+        G2S_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop, gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                            gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
+        GXS_SetVisibleWnd(GX_WNDMASK_W0);
         gSubScreenLayers |= 2;
-        *(volatile s32 *)0x04001000 =
-            (*(volatile s32 *)0x04001000 & ~0x1f00) | (gSubScreenLayers << 8);
+        GXS_SetVisiblePlane(gSubScreenLayers);
         return;
     }
 
@@ -1455,17 +1448,16 @@ extern "C" void func_0201f32c(int arg0)
     } else {
         G2_SetBlendBrightness(gMainScreenLayers & ~0x38, -8);
     }
-    REG_WININ = (REG_WININ & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
-    REG_WINOUT = (REG_WINOUT & ~0x3f) | 0x17;
-    *(volatile s16 *)0x04000040 =
-        ((gMsgBoxWinLeft << 8) & 0xff00) | (u8)(((gMsgBoxCenterX * 2) - gMsgBoxWinLeft) + 1);
-    *(volatile s16 *)0x04000044 =
-        ((gMsgBoxWinTop << 8) & 0xff00) | (u8)(((gMsgBoxCenterY * 2) - gMsgBoxWinTop) + 1);
+    G2_SetWnd0InsidePlane(gMainScreenLayers | GX_WND_PLANEMASK_BG3, 1);
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_BG0 | GX_WND_PLANEMASK_BG1 | GX_WND_PLANEMASK_BG2 |
+                              GX_WND_PLANEMASK_OBJ,
+                          0);
+    G2_SetWnd0Position(gMsgBoxWinLeft, gMsgBoxWinTop, gMsgBoxCenterX * 2 - gMsgBoxWinLeft + 1,
+                       gMsgBoxCenterY * 2 - gMsgBoxWinTop + 1);
     data_0209d6bc = 0;
-    *(volatile s32 *)0x04000000 = (*(volatile s32 *)0x04000000 & ~0xe000) | 0x2000;
+    GX_SetVisibleWnd(GX_WNDMASK_W0);
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile s32 *)0x04000000 =
-        (*(volatile s32 *)0x04000000 & ~0x1f00) | (gMainScreenLayers << 8);
+    GX_SetVisiblePlane(gMainScreenLayers);
 }
 
 /* Course ids that must not open the talk window. data_0209d664 is the byte

@@ -143,15 +143,13 @@ void dScene_c::ResetHardwareRegisters()
     G2_SetBG2Affine(&m, 0, 0, 0, 0);
     G2_SetBG3Affine(&m, 0, 0, 0, 0);
 
-    REG_WININ &= ~0x3f;
-    REG_WININ &= ~0x3f00;
-    REG_WINOUT &= ~0x3f;
-    REG_WINOUT &= ~0x3f00;
+    G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2_SetWnd1InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2_SetWndOBJInsidePlane(GX_WND_PLANEMASK_NONE, 0);
 
-    REG_WIN0H = 0;
-    REG_WIN0V = 0;
-    REG_WIN1H = 0;
-    REG_WIN1V = 0;
+    G2_SetWnd0Position(0, 0, 0, 0);
+    G2_SetWnd1Position(0, 0, 0, 0);
     REG_MOSAIC_BG = 0;
     REG_MOSAIC_OBJ = 0;
 
@@ -189,15 +187,13 @@ void dScene_c::ResetHardwareRegisters()
     G2S_SetBG2Affine(&m, 0, 0, 0, 0);
     G2S_SetBG3Affine(&m, 0, 0, 0, 0);
 
-    REG_DB_WININ &= ~0x3f;
-    REG_DB_WININ &= ~0x3f00;
-    REG_DB_WINOUT &= ~0x3f;
-    REG_DB_WINOUT &= ~0x3f00;
+    G2S_SetWnd0InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWnd1InsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWndOutsidePlane(GX_WND_PLANEMASK_NONE, 0);
+    G2S_SetWndOBJInsidePlane(GX_WND_PLANEMASK_NONE, 0);
 
-    REG_DB_WIN0H = 0;
-    REG_DB_WIN0V = 0;
-    REG_DB_WIN1H = 0;
-    REG_DB_WIN1V = 0;
+    G2S_SetWnd0Position(0, 0, 0, 0);
+    G2S_SetWnd1Position(0, 0, 0, 0);
     REG_DB_MOSAIC_BG = 0;
     REG_DB_MOSAIC_OBJ = 0;
 
