@@ -10,6 +10,8 @@
 #include "nitro/fx/fx.h"
 #include "nitro/gx/g3imm.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_cmd.h"
+#include "nitro/gx/g3imm_light.h"
 #include "nitro/fx/fx_cp.h"
 
 /* ROM order: the ENTRY factory, then EntryMesh (0x0211a948..0x0211b524). */
@@ -269,88 +271,43 @@ void EntryMesh::StartRipple(int x, int y) {
 }
 
 /* The render handler. Concatenates mMtx with the camera matrix
- * (data_0209b3ec) and loads the result as both the position and the
- * directional matrix, sets a full-white diffuse/ambient and specular/emission
- * pair, sends the material, then draws the (mGridDim[0] - 1) x mGridDim[1]
- * grid as triangle strips: each inner iteration emits vertex (i, j) and
- * vertex (i + 1, j), converting each 1.19.12 coordinate to VTX_16 with
- * (v << 9) >> 16 and packing x and y into one command word.
- *
- * Two spellings in the vertex emission are load-bearing for the register
- * colouring of the second emission (notes/mwccarm-codegen.md 6ct): the z
- * coordinate is loaded straight into `sz` and shifted in place, and x << 9 is
- * parked in `cols`, the inner loop's bound, which the loop reloads from
- * mGridDim[1] before its next use. Both keep the shift out of the register of
- * the value it consumes, which is where the ROM's compiler puts it. */
+ * (data_0209b3ec) and loads the result as both the directional and the
+ * position matrix, shines white light 3 straight down -z, sends the material,
+ * then draws the (mGridDim[0] - 1) x mGridDim[1] grid as triangle strips:
+ * each inner iteration emits vertex (i, j) and vertex (i + 1, j), its 1.19.12
+ * position at >>7. The same draw as daPicGate_c::DrawRippleImage. */
 void EntryMesh::DrawGrid() {
-    int z0;
-    int z1;
     Matrix4x3 tmp;
-    int i;
-    int j;
-    int cols;
-    EntryMeshVertex *p0;
-    EntryMeshVertex *p1;
-    int vx;
-    int vy;
-    int sx;
-    int sz;
+    int i, j;
 
-    *(int *)0x4000444 = 0;
+    G3_PushMtx();
     MTX_Concat43((const Matrix4x3 *)&mMtx, &data_0209b3ec, &tmp);
-    *(int *)0x4000440 = 2;
+    G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(&tmp);
-    *(int *)0x4000440 = 1;
+    G3_MtxMode(GX_MTXMODE_POSITION);
     G3_LoadMtx43(&tmp);
-    *(int *)0x40004c8 = 0xe0000000;
-    *(int *)0x40004cc = 0xc0007fff;
+    G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
+    G3_LightColor(GX_LIGHTID_3, GX_RGB(31, 31, 31));
     SendMaterial();
 
-    *(int *)0x400046c = 0x10000;
-    *(int *)0x400046c = 0x10000;
-    *(int *)0x400046c = 0x10000;
+    G3_Scale(0x10000, 0x10000, 0x10000);
 
-    z0 = 0;
-    z1 = 0;
-    i = 0;
-    if ((int)(mGridDim[0] - 1) > 0) {
-        do {
-            j = z0;
-            *(int *)0x4000500 = 2;
-            cols = mGridDim[1];
-            if (cols > 0) {
-                do {
-                    p0 = &mVertices[i + j * cols];
-                    p1 = &mVertices[i + 1 + j * cols];
-                    *(int *)0x4000488 = p0->texCoord;
-                    j = j + 1;
-                    *(int *)0x4000484 = p0->normal;
-                    vx = p0->pos.x;
-                    sz = p0->pos.z;
-                    cols = vx << 9;
-                    sx = cols >> 16;
-                    sz = (sz << 9) >> 16;
-                    vy = p0->pos.y;
-                    *(int *)0x400048c = (u16)sx | ((u16)((vy << 9) >> 16) << 16);
-                    *(int *)0x400048c = (u16)sz;
-                    *(int *)0x4000488 = p1->texCoord;
-                    *(int *)0x4000484 = p1->normal;
-                    vx = p1->pos.x;
-                    sz = p1->pos.z;
-                    cols = vx << 9;
-                    sx = cols >> 16;
-                    sz = (sz << 9) >> 16;
-                    vy = p1->pos.y;
-                    *(int *)0x400048c = (u16)sx | ((u16)((vy << 9) >> 16) << 16);
-                    *(int *)0x400048c = (u16)sz;
-                    cols = mGridDim[1];
-                } while (j < cols);
-            }
-            i = i + 1;
-            *(int *)0x4000504 = z1;
-        } while (i < (int)(mGridDim[0] - 1));
+    for (i = 0; i < mGridDim[0] - 1; i++) {
+        G3_Begin(GX_BEGIN_TRIANGLE_STRIP);
+        for (j = 0; j < mGridDim[1]; j++) {
+            EntryMeshVertex *p0 = &mVertices[i + j * mGridDim[1]];
+            EntryMeshVertex *p1 = &mVertices[i + 1 + j * mGridDim[1]];
+
+            REG_TEXCOORD = p0->texCoord;
+            REG_NORMAL = p0->normal;
+            G3_Vtx(p0->pos.x >> 7, p0->pos.y >> 7, p0->pos.z >> 7);
+            REG_TEXCOORD = p1->texCoord;
+            REG_NORMAL = p1->normal;
+            G3_Vtx(p1->pos.x >> 7, p1->pos.y >> 7, p1->pos.z >> 7);
+        }
+        G3_End();
     }
-    *(int *)0x4000448 = 1;
+    G3_PopMtx(1);
 }
 
 /* The behavior handler: while the ripple runs, set every vertex's height,
@@ -372,62 +329,33 @@ void EntryMesh::UpdateRipple() {
  * the last row and column snapped to the far edge, with texture
  * coordinates across 0..0x80000 (v flipped). */
 void EntryMesh::InitGrid() {
-    int q[4];
-    int acc;
-    int j;
-    int i;
-    int uu;
-    int vv;
-    int nb;
+    int x = 0;
+    int y = 0;
+    int row, col;
 
-    acc = 0;
-    q[0] = acc;
-    j = 0;
-    if (((int)mGridDim[1]) <= 0)
-        return;
-
-    q[2] = acc;
-    q[3] = acc;
-    q[1] = acc;
-
-    do {
-        i = q[1];
-        if (((int)mGridDim[0]) > 0) {
-            do {
-                EntryMeshVertex *e;
-                int b;
-                int c;
-
-                e = &mVertices[j * mGridDim[1] + i];
-                e->pos.x = acc;
-                e->pos.y = q[0];
-                e->pos.z = q[2];
-                e->normal = 0x1ff00000;
-
-                uu = 0x80000 / (mGridDim[0] - 1);
-                vv = 0x80000 / (mGridDim[1] - 1);
-                c = ((0x80000 - vv * j) << 8) >> 16;
-                b = ((uu * i) << 8) >> 16;
-                e->texCoord = (unsigned short)b | ((unsigned short)c << 16);
-
-                nb = (int)mGridDim[0];
-                if (i == nb - 2)
-                    acc = 0x1f4000;
-                else
-                    acc += 0x1f4000 / (nb - 1);
-                i++;
-            } while (i < nb);
+    for (row = 0; row < mGridDim[1]; row++) {
+        for (col = 0; col < mGridDim[0]; col++) {
+            EntryMeshVertex *v = &mVertices[row * mGridDim[1] + col];
+            v->pos.x = x;
+            v->pos.y = y;
+            v->pos.z = 0;
+            v->normal = GX_VECFX10(0, 0, 0xfff);
+            int du = 0x80000 / (mGridDim[0] - 1);
+            int dv = 0x80000 / (mGridDim[1] - 1);
+            int s = du * col;
+            int t = 0x80000 - dv * row;
+            v->texCoord = GX_ST(s, t);
+            if (col == mGridDim[0] - 2)
+                x = 0x1f4000;
+            else
+                x += 0x1f4000 / (mGridDim[0] - 1);
         }
-
-        nb = (int)mGridDim[1];
-        acc = q[3];
-        if (j == nb - 2)
-            q[0] = 0x1f4000;
+        x = 0;
+        if (row == mGridDim[1] - 2)
+            y = 0x1f4000;
         else
-            q[0] += 0x1f4000 / (nb - 1);
-
-        j++;
-    } while (j < nb);
+            y += 0x1f4000 / (mGridDim[1] - 1);
+    }
 }
 
 /* Free the vertex array. */
