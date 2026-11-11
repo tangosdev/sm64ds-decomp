@@ -30,6 +30,7 @@ enum dScMgMemory2_c_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "common.h"
 #include "decl_common.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 #include "PlayerInput.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -121,7 +122,6 @@ extern int sMemory2FourthDealsPerDifficulty[];
 extern int sMemory2HardDealsPerMode[];
 extern int sMemory2NormalDealsPerDifficulty[];
 extern int sMemory2EasyDealsPerDifficulty[];
-extern int RandomIntInternal(int *seed);
 extern int sMemory2PreviewCountPerDifficulty[];
 extern int sMemory2PreviewTimePerDifficulty[];
 extern void FreeGfxSlotsById(int x);
@@ -152,6 +152,11 @@ extern u8 gSubScreenLayers;
 /* A field's byte offset in the scene, for the CardFlyAway sites that add it
    to a stepped pointer, as the ROM does. */
 #define MEMORY2_OFF(member) ((int)&((dScMgMemory2_c *)0)->member)
+
+/* A random integer in [0, n): the generator's top 15 bits, scaled. */
+static inline u32 MgRandom(u32 n) {
+    return (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * n >> 15;
+}
 
 #pragma defer_codegen off
 
@@ -874,15 +879,13 @@ void dScMgMemory2_c::ShuffleCards() {
     if (difficulty == 0) {
         int cardIndex;
         for (cardIndex = 0; cardIndex < 16; cardIndex++) {
-            u32 cardValue =
-                1 + ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 8 >> 15);
+            u32 cardValue = 1 + MgRandom(8);
         check0:
             if (mValueCounts[cardValue] < 2) {
                 mCards[cardIndex].value = cardValue;
                 mValueCounts[cardValue]++;
             } else {
-                cardValue =
-                    1 + ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 8 >> 15);
+                cardValue = 1 + MgRandom(8);
                 goto check0;
             }
         }
@@ -899,15 +902,13 @@ void dScMgMemory2_c::ShuffleCards() {
     } else if (difficulty == 1) {
         int cardIndex;
         for (cardIndex = 0; cardIndex < 18; cardIndex++) {
-            u32 cardValue =
-                1 + ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9 >> 15);
+            u32 cardValue = 1 + MgRandom(9);
         check1:
             if (mValueCounts[cardValue] < 2) {
                 mCards[cardIndex].value = cardValue;
                 mValueCounts[cardValue]++;
             } else {
-                cardValue =
-                    1 + ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9 >> 15);
+                cardValue = 1 + MgRandom(9);
                 goto check1;
             }
         }
@@ -924,16 +925,13 @@ void dScMgMemory2_c::ShuffleCards() {
     } else {
         int cardIndex;
         for (cardIndex = 0; cardIndex < 20; cardIndex++) {
-            u32 cardValue =
-                1 + ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 10 >> 15);
+            u32 cardValue = 1 + MgRandom(10);
         check2:
             if (mValueCounts[cardValue] < 2) {
                 mCards[cardIndex].value = cardValue;
                 mValueCounts[cardValue]++;
             } else {
-                cardValue =
-                    1 +
-                    ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 10 >> 15);
+                cardValue = 1 + MgRandom(10);
                 goto check2;
             }
         }
@@ -958,9 +956,7 @@ void dScMgMemory2_c::ChoosePreviewCards() {
     int zero = 0;
     for (previewIndex = 0; previewIndex < previewCount; previewIndex++) {
         int cardIndex;
-        cardIndex = (cardCount *
-                     (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)) >>
-                    15;
+        cardIndex = MgRandom(cardCount);
         if (previewIndex != 0) {
             int duplicate;
             int previousIndex;
@@ -974,10 +970,7 @@ void dScMgMemory2_c::ChoosePreviewCards() {
                 }
                 if (duplicate == 0)
                     break;
-                cardIndex =
-                    (cardCount *
-                     (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)) >>
-                    15;
+                cardIndex = MgRandom(cardCount);
             } while (1);
         }
         mPreviewCards[previewIndex] = (unsigned char)cardIndex;
