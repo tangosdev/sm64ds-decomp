@@ -31,10 +31,10 @@
 #include "nitro/fs/overlay.h"
 #include "nitro/mb/mb.h"
 #include "private/fs_views.h"
+#include "nitro/fs/file.h"
 #include "private/fs_rom.h"
 #include "isdbglib.h"
 
-typedef struct FSFile FSFile;
 typedef int BOOL;
 #define TRUE  1
 #define FALSE 0
@@ -67,11 +67,6 @@ void MI_CpuCopy8(const void *src, void *dst, u32 size);
 void MI_CpuFill8(void *dst, u8 value, u32 size);
 void DGT_Hash2CalcHmac(u8 *out, u8 *msg, int msglen, u8 *key, int keylen);
 void MIi_UncompressBackward(void *bottom);
-void FS_InitFile(FSFile *p_file);
-int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
-                      u32 file_index);
-int FS_ReadFile(FSFile *file, void *dst, int len);
-int FS_CloseFile(void *self);
 int DGT_SetOverlayTableMode(int flag);
 void OS_Terminate(void);
 
@@ -118,8 +113,7 @@ BOOL FSi_LoadOverlayInfoCore(FSOverlayInfo *p_ovi, MIProcessor target, FSOverlay
     } else {
         FSFile file[1];
         FS_InitFile(file);
-        (void)FS_OpenFileDirect((char *)file, p_arc, pr->offset + pos, pr->offset + pr->length,
-                                (u32)~0);
+        (void)FS_OpenFileDirect(file, p_arc, pr->offset + pos, pr->offset + pr->length, (u32)~0);
         (void)FS_ReadFile(file, p_ovi, sizeof(FSOverlayInfoHeader));
         (void)FS_CloseFile(file);
         p_ovi->target = target;

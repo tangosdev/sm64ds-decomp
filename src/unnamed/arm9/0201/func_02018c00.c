@@ -1,15 +1,12 @@
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
 #include "private/fs_views.h"
+#include "nitro/fs/file.h"
 #include "private/fs_rom.h"
 
-typedef struct FSFile FSFile;
-
-extern void FS_InitFile(void *s);
-extern int myFS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
+extern int myFS_OpenFileDirect(FSFile *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                                u32 file_index);
-extern int myFS_ReadFile(void *s, void *b, int c);
-extern int FS_CloseFile(void *self);
+extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
 
 /* The card half of func_02018c00: read overlay table entry index (0x20
@@ -34,7 +31,7 @@ int func_02018cbc(FSOverlayInfo *info, int flag, int index, FSArchive *archive, 
     if (off >= size)
         return 0;
     FS_InitFile(&file);
-    myFS_OpenFileDirect((char *)&file, archive, base + off, base + size, -1);
+    myFS_OpenFileDirect(&file, archive, base + off, base + size, -1);
     myFS_ReadFile(&file, &info->header, 0x20);
     FS_CloseFile(&file);
     info->target = flag;

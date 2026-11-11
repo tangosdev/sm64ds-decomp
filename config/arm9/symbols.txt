@@ -5207,9 +5207,9 @@ data_020a7f60 kind:bss addr:0x020a7f60
 data_020a7fc0 kind:bss addr:0x020a7fc0
 data_020a7fc4 kind:bss addr:0x020a7fc4
 data_020a7fc8 kind:bss addr:0x020a7fc8
-data_020a8048 kind:bss addr:0x020a8048
-data_020a804c kind:bss addr:0x020a804c
-data_020a8058 kind:bss addr:0x020a8058
+arc_list kind:bss addr:0x020a8048
+current_dir_pos kind:bss addr:0x020a804c
+is_init kind:bss addr:0x020a8058
 fsi_card_lock_id kind:bss addr:0x020a805c
 fsi_default_dma_no kind:bss addr:0x020a8060
 fsi_ovt9 kind:bss addr:0x020a8064

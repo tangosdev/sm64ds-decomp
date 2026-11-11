@@ -9,6 +9,8 @@
  * func_020412f0 and func_02041224 do not include types.h. data_020a2400 is
  * the same address as mArea (data_020a1fc0 + 0x440), a symbol of its own. */
 
+#include "private/fs_views.h"
+
 /* Parent area at +0x440: a pool of three 0xcc0-byte nodes, each holding one
  * registered region. A node moves free -> busy (state 1, loading; func_02041b60)
  * -> ready (state 2; func_02041b24) -> busy (state 3, releasing; func_02041ae8)
@@ -22,7 +24,7 @@ typedef struct FileShareNode {
     unsigned char mRegion[0x34];
     /* 0x38 -- FS_InitFile here; func_02042254 opens, reads and closes the
      * region's file through it, func_020412f0 refills a page through it */
-    unsigned char mFile[0x44];
+    FSFile mFile;
     int mState; /* 0x7c -- 0 free, 1 loading, 2 ready, 3 releasing */
     /* 0x80 -- func_020412f0: +1 per child reading the region, -1 when it is
      * done; at 0 the node is released */
@@ -59,18 +61,6 @@ typedef struct FileShareNode {
     unsigned char pad_0ac[0x14];
     unsigned char mPages[3][0x400]; /* 0xc0 -- the cached file pages */
 } FileShareNode;
-
-/* mFile's open extent: FSFile prop.file.top and prop.file.bottom (this ROM's
- * FSFile has its prop union at 0x1c; see func_02040f30.cpp). func_02041ce0
- * matches a request against it and func_02041d28 sizes the registration by
- * it. */
-typedef struct FileShareFileExtent {
-    unsigned char pad_00[0x20];
-    int top;    /* 0x20 -- prop.file.top */
-    int bottom; /* 0x24 -- prop.file.bottom */
-} FileShareFileExtent;
-
-#define FILE_SHARE_EXTENT(node) ((FileShareFileExtent *)(node)->mFile)
 
 /* One file-share message: 9 bytes on the air (WBT_PutUserData), 0xc as a slot
  * of FileShareParentArea::mReplies. mKind is 0 for a child's open request,

@@ -25,8 +25,6 @@
 #include "private/fs_views.h"
 #include "private/fs_rom.h"
 
-typedef struct FSFile FSFile;
-
 extern "C" {
 
 #define FS_COMMAND_WRITEFILE 1

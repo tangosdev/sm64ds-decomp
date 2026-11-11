@@ -17,14 +17,11 @@
  */
 #include "types.h"
 #include "private/fs_views.h"
+#include "nitro/fs/file.h"
 #include "nitro/os/thread.h"
-
-typedef struct FSFile FSFile;
 
 extern "C" {
 
-#define FS_FILE_STATUS_SYNC 0x00000004
-#define FS_FILE_STATUS_IS_DIR 0x00000020
 #define FS_ARCHIVE_FLAG_IS_SYNC 0x00000200
 
 #define FS_COMMAND_SEEKDIR 2
@@ -89,7 +86,6 @@ typedef struct FSiSyncReadParam {
 } FSiSyncReadParam;
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
-void FS_InitFile(void *p_file);
 void MI_CpuCopy8(const void *src, void *dst, u32 size);
 extern const char data_0209a044[]; /* ":/" */
 

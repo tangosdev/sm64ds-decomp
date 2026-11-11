@@ -1,5 +1,6 @@
 #include "nitro/fs/overlay.h"
 #include "private/fs_views.h"
+#include "nitro/fs/file.h"
 #include "isdbglib.h"
 /* The game's copy of NitroSDK's FS_LoadOverlayImage, in an older SDK's
  * shape: open the overlay's file by its file_id, clear the overlay's RAM
@@ -7,12 +8,9 @@
  * (myFS_ReadFile), then register the overlay with the IS-NITRO debugger
  * (_ISDbgLib_RegistOverlayInfo) by its processor, address, ROM offset and
  * image size. */
-typedef struct FSFile FSFile;
 
-extern void FS_InitFile(FSFile *p_file);
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
-extern int FS_CloseFile(void *self);
 
 /* NitroSDK nitro/fs/file.h's accessors, with their volatile parameter: a
  * plain field read schedules the ROM-offset load one slot later. No header

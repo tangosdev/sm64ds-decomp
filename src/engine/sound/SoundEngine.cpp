@@ -17,6 +17,7 @@
  */
 #include "types.h"
 #include "private/fs_views.h"
+#include "nitro/fs/file.h"
 #include "Sound.h"
 #include "SoundPlayerRecord.h"
 #include "nnsys/fnd.h"
@@ -34,7 +35,6 @@ struct HeapAllocator_205212c;
 struct Obj_205212c;
 
 typedef short s16;
-typedef struct FSFile FSFile;
 /* A block func_020511d4 carves from a sound heap: its link in the heap's
    newest level, then what freeing the level calls back with. The caller's
    memory starts at 0x20. */
@@ -252,9 +252,8 @@ struct HeapAllocator_205212c {
 /* The 4 streams at data_020a5bd4 (stride 0x12c), each a C (0x00..0x44)
    followed by its own state. */
 struct Obj_205212c : C {
-    /* 0x044 */ char file[0xc]; /* NitroSDK FSFile; u50 is its stat word */
-    /* 0x050 */ u32 u50;
-    /* 0x054 */ char pad1[0xc8 - 0x54];
+    /* 0x044 */ FSFile file;
+    /* 0x088 */ char pad1[0xc8 - 0x88];
     /* volume ramp func_020522c4 steps; its value >> 8 indexes data_02086384 */
     /* 0x0c8 */ NNSSndFader fade;
     /* 0x0d8 */ char pad1b[0xf0 - 0xd8];
@@ -288,9 +287,6 @@ struct Elem_204f278 {
 extern "C" {
 /* C-linkage callback types used by foreign decls. */
 /* Foreign callees and data. */
-extern int FS_CloseFile(char *p_file);
-extern void FS_InitFile(FSFile *p_file);
-extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
 extern void MIi_CpuClear32(int val, int *dst, int len);
 
 extern int __aeabi_idiv(int a, int b);
@@ -363,9 +359,6 @@ extern int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32
 extern void FS_ReleaseArchiveName(void *thiz);
 extern int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len);
 extern void FS_InitArchive(void *o);
-extern int FS_SeekFile(FSFile *p_file, int offset, FSSeekFileMode origin);
-extern int FS_OpenFileFast(FSFile *p_file, FSFileID id);
-extern int FS_ConvertPathToFileID(FSFileID *p_file_id, const char *path);
 
 /* In-span forward declarations. */
 extern int func_0204eda4(int r0, char* a, u32 idx);
@@ -619,9 +612,9 @@ extern "C" void func_0205212c(Obj_205212c *self) {
         self->u114 = 0;
     }
     func_020520dc(self);
-    int b = (int)((self->u50 & 0x10) != 0);
+    int b = (int)((self->file.stat & FS_FILE_STATUS_IS_FILE) != 0);
     if (b != 0) {
-        FS_CloseFile(self->file);
+        FS_CloseFile(&self->file);
     }
     OSIntrMode irq = OS_DisableInterrupts();
     HeapAllocator_205212c *node = (HeapAllocator_205212c *)((

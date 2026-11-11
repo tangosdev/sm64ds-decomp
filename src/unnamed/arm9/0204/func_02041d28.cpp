@@ -27,7 +27,7 @@ void func_02041d28(char *r7, FileShareNode *node, int) {
         node->mWaitingChildren = 0;
         *q |= mask;
         if (node->mRefCount <= 0) {
-            unsigned int diff = FILE_SHARE_EXTENT(node)->bottom - FILE_SHARE_EXTENT(node)->top;
+            unsigned int diff = node->mFile.prop.file.bottom - node->mFile.prop.file.top;
             int fileId = node->mFileId;
             WBT_RegisterBlock(node->mRegion, fileId, data_02082158,
                               (diff <= 0x400) ? (int)node->mPages[0] : 0, diff, 0);

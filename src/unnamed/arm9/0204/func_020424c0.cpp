@@ -4,9 +4,8 @@
 #include "nitro/os/system.h"
 #include "nitro/card/card_rom.h"
 #include "private/fs_views.h"
+#include "nitro/fs/file.h"
 #include "private/file_share_alloc.h"
-
-typedef struct FSFile FSFile;
 
 extern "C" {
 
@@ -26,11 +25,6 @@ typedef struct {
 extern char data_02099e6c[]; /* "rom" */
 
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
-extern void FS_InitFile(FSFile *p_file);
-extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
-                             u32 file_index);
-extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
-extern int FS_CloseFile(char *self);
 
 /* Allocate one block for the card's FAT, FNT and both overlay tables (each
  * as its size word followed by the data rounded up to 0x20 bytes, after one
@@ -85,9 +79,9 @@ void func_020424c0(void) {
             buf += 4;
             data0 = (int)p->offset;
             end = roundedSize + data0;
-            FS_OpenFileDirect((char *)&file, sb, data0, end, -1);
+            FS_OpenFileDirect(&file, sb, data0, end, -1);
             FS_ReadFile(&file, buf, roundedSize);
-            FS_CloseFile((char *)&file);
+            FS_CloseFile(&file);
             buf += roundedSize;
             j++;
         } while (j < 4);

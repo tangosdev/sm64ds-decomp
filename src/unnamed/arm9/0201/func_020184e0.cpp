@@ -1,13 +1,11 @@
 //cpp
 #include "nitro/os/cache.h"
 #include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 extern "C" {
 
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
-extern int FS_CloseFile(void *a);
 extern void func_02018770(void);
 extern int func_02018568(int a);
 

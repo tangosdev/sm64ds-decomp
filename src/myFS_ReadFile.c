@@ -10,26 +10,16 @@
  * failure. */
 #include "types.h"
 #include "private/fs_views.h"
+#include "nitro/fs/file.h"
 #include "nitro/os/thread.h"
-
-typedef struct FSFile FSFile;
 
 extern int func_0203d7d4(int);
 extern void *data_0209d3c0;
-extern int FS_ConvertPathToFileID(void *out_file_id, const char *path);
 extern void OS_Terminate(void);
 extern int data_0208ecd8[7];
-extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
-                             u32 file_index);
 extern int data_0208ecc4;
 extern char data_0208ec74;
-/* NitroSDK FS_OpenFileFast. SoundEngine.cpp still declares it
- * `int, ...` and calls it through casts. */
-int FS_OpenFileFast(FSFile *p_file, FSFileID id);
-extern int FS_OpenFile(void *file, const char *path);
 extern int data_0208eb8c[];
-extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
-extern int FS_GetPathName(FSFile *p_file, char *buf, u32 len);
 extern char data_0208eb9c;
 
 void func_02018e68(void *c) {
@@ -43,8 +33,8 @@ void func_02018e68(void *c) {
  * function's own two arguments (push {r4, lr} / bl FS_ConvertPathToFileID / movs r4, r0),
  * so both parameters are real and are forwarded. Every caller in the image
  * already passes two: func_020182bc, func_02018434, func_020189f0. */
-int myFS_ConvertPathToFileID(void *out_file_id, const char *path) {
-    int r = FS_ConvertPathToFileID(out_file_id, path);
+int myFS_ConvertPathToFileID(FSFileID *p_file_id, const char *path) {
+    int r = FS_ConvertPathToFileID(p_file_id, path);
     if (!r) {
         func_02018e68(data_0208ecd8);
         OS_Terminate();
@@ -52,7 +42,7 @@ int myFS_ConvertPathToFileID(void *out_file_id, const char *path) {
     return r;
 }
 
-int myFS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
+int myFS_OpenFileDirect(FSFile *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                         u32 file_index) {
     int r = FS_OpenFileDirect(p_file, p_arc, image_top, image_bottom, file_index);
     if (r == 0) {
@@ -74,8 +64,8 @@ int myFS_OpenFileFast(FSFile *p_file, FSFileID id) {
 /* recovered: both arguments ride through. The body is push {r4, lr} / bl
  * FS_OpenFile / movs r4, r0, so r0 (the FSFile) and r1 (the path) reach the
  * callee untouched. func_02018934 already calls this with two. */
-int myFS_OpenFile(void *file, const char *path) {
-    int r = FS_OpenFile(file, path);
+int myFS_OpenFile(FSFile *p_file, const char *path) {
+    int r = FS_OpenFile(p_file, path);
     if (!r) {
         func_02018e68(data_0208eb8c);
         OS_Terminate();

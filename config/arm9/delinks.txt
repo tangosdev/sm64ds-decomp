@@ -2509,52 +2509,10 @@ src/engine/fs/FS_Archive.cpp:
     complete
     .text start:0x0205c7c4 end:0x0205d368
 
-src/FS_SeekFile.c:
+src/engine/fs/FS_File.c:
     complete
-    .text start:0x0205d368 end:0x0205d3d4
-
-src/FS_ReadFile.c:
-    complete
-    .text start:0x0205d3d4 end:0x0205d3e4
-
-src/FS_ReadFileAsync.cpp:
-    complete
-    .text start:0x0205d3e4 end:0x0205d4cc
-src/FS_CloseFile.c:
-    complete
-    .text start:0x0205d4cc end:0x0205d518
-
-src/FS_OpenFile.c:
-    complete
-    .text start:0x0205d518 end:0x0205d568
-
-src/FS_OpenFileFast.c:
-    complete
-    .text start:0x0205d568 end:0x0205d5e8
-
-src/FS_OpenFileDirect.c:
-    complete
-    .text start:0x0205d5e8 end:0x0205d644
-
-src/FS_ConvertPathToFileID.c:
-    complete
-    .text start:0x0205d644 end:0x0205d688
-
-src/FSi_ReadFileCore.c:
-    complete
-    .text start:0x0205d688 end:0x0205d714
-
-src/FSi_FindPath.c:
-    complete
-    .text start:0x0205d714 end:0x0205d874
-
-src/FS_InitFile.c:
-    complete
-    .text start:0x0205d874 end:0x0205d89c
-
-src/FS_Init.c:
-    complete
-    .text start:0x0205d89c end:0x0205d8d8
+    .text start:0x0205d368 end:0x0205d8d8
+    .bss start:0x020a8058 end:0x020a805c
 
 src/FSi_AppendToList.c:
     complete
