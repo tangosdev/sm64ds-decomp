@@ -41,6 +41,7 @@ void _ZN7fBase_c18MarkForDestructionEv(void *self);
 // coopgoomboss2: a minion's home point (what the summon calls after the Spawn) and the Goomba's own removal at the end of its death
 void func_ov084_021296b0(void *goomba, void *pos);
 void func_ov084_02129498(void *goomba);
+extern unsigned char data_ov074_02122d80[];     // Goomboss's set size by size index (the summon's spawnTarget)
 void _ZN12daKuriKing_c19func_ov074_021203e4Ei(char *c, int state);
 void func_ov074_02121a4c(char *c, int idx);
 int _ZN6Eyerok19func_ov066_02119454EPv(void *c, void *state);
@@ -1026,6 +1027,27 @@ void process(unsigned now) {
                 if (g_log) std::fprintf(stderr, "[cbs] goomboss summon held on this copy (auth %d me %d): its goombas come from the authority w=%lld\n", auth, g_my, wall_ms());
             }
         } else if (d.cls == 198) b.summon_held = false;
+        // coopgoomboss2: a console that BECOMES the authority while its copy still waits in the summon with the whole set already out
+        // (built from the old authority's announcements) would summon one more: the ROM's tick spawns before it tests the count. The
+        // ROM itself never sits in state 2 with a full set (its last spawn enters state 3), so the copy goes on to state 3 as the ROM's
+        // last spawn would. The set size is the summon's own (func_ov074_0211fd74): the table by size index, one more at size 1 unless
+        // the closest player is Yoshi (param1 3).
+        if (g_on && mine && d.cls == 198 && g_minion_share && state_of(b) == 2u && b.heard) {
+            const unsigned sz = (unsigned char)b.a[0x604];
+            if (sz <= 3u) {
+                unsigned target = data_ov074_02122d80[sz];
+                if (sz == 1u) {
+                    const char *pl = (const char *)((dActor_c *)b.a)->ClosestPlayer();
+                    if (pl && (int)rd32(pl, 0x08) != 3) ++target;
+                }
+                const unsigned cnt = (unsigned char)b.a[0x602];
+                if (target && cnt >= target) {
+                    _ZN12daKuriKing_c19func_ov074_021203e4Ei(b.a, 3);
+                    b.lw_valid = false;
+                    if (g_log) std::fprintf(stderr, "[cbs] goomboss authority found the set already out (%u of %u) in the summon: on to state 3, no extra goomba w=%lld\n", cnt, target, wall_ms());
+                }
+            }
+        }
         // coopkbo1: the authority's King Bob-omb at HP 0 outside the states that end in his defeat (his last point arrived by merge)
         // never runs the defeat, so nobody got the star. Put him in the hurt state, whose tick on the ground runs the defeat talk and
         // the star; its entry takes a point, the HP is put back.
