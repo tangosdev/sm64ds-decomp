@@ -9512,7 +9512,11 @@
     "gMeterShownHealth": {
       "src/_ZN7daPly_c16St_BurnLava_MainEv.cpp": [
         "return:unsigned char"
+      ],
+      "src/game/player/d_a_ply_methods.cpp": [
+        "return:unsigned char"
       ]
+
     },
     "gShowRaceTimer": {
       "src/ui/hud/d_meter.cpp": [

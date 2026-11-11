@@ -378,6 +378,7 @@ extern s32 data_0209f32c;
 extern struct P2 data_ov002_0210a084;
 extern struct P2 data_ov002_0210a34c;
 extern u8 gMeterShownHealth;
+/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
 extern int RandomIntInternal(int *seed);
 extern u32 PlayerNewHold7(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                           void *callback);
