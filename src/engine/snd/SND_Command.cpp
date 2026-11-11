@@ -19,8 +19,8 @@
  * OS_IsRunOnEmulator says so.
  */
 #include "types.h"
-#include "CP15.h"
-#include "IRQ.h"
+#include "nitro/os/cache.h"
+#include "nitro/os/system.h"
 #include "nitro/snd/command.h"
 
 extern "C" {
@@ -203,7 +203,7 @@ int SND_FlushCommand(u32 flags) {
         } while (data_020a64a0 >= SND_CMD_WAIT_QUEUE_COUNT);
     }
 
-    CP15::FlushAndInvalidateDataCache((u32)data_020a6760, SND_CMD_COUNT * sizeof(SNDCommand));
+    DC_FlushRange(data_020a6760, SND_CMD_COUNT * sizeof(SNDCommand));
 
     if (PXI_SendWordByFifo(PXI_FIFO_TAG_SOUND, (u32)data_020a648c, 0) < 0) {
         if (flags == SND_CMD_FLAG_NOBLOCK)
@@ -279,9 +279,9 @@ s32 SND_CountWaitingCommand(void) {
 }
 
 void PxiFifoCallback(int tag, u32 data, int err) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     SNDi_CallAlarmHandler((s32)data);
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 void InitPXI(void) {

@@ -489,14 +489,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@368",
+      "from": "@346",
       "to": "@95",
-      "evidence": "emitted destructor-registration node name collides with the configured @362 on ov036 on main; @95 is unused everywhere and shorter than the original"
+      "evidence": "emitted destructor-registration node name collides with the configured @362 on ov036 on main; @95 is unused everywhere and shorter than the original Re-keyed from @368 to @346 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@369",
+      "from": "@347",
       "to": "@78",
-      "evidence": "emitted destructor-registration node name collides with the configured @363 on ov036 on main; @78 is unused everywhere and shorter than the original"
+      "evidence": "emitted destructor-registration node name collides with the configured @363 on ov036 on main; @78 is unused everywhere and shorter than the original Re-keyed from @369 to @347 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "relocations": [

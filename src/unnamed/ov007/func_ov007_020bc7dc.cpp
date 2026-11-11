@@ -1,7 +1,7 @@
 //cpp
 #include "dExtModel_c.h"
-#include "cstd.h"
 #include "Ov007Model.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -15,7 +15,7 @@ void func_ov007_020bc7dc(Ov007Model *m) {
     ModelComponents *model = m->model;
     Ov007AnimPlayer *p = m->blendAnim;
     BCA_File *entry = m->boneAnims[p->anim];
-    int quot = cstd::div(m->blendFrames << 12, m->blendFrameCount);
+    int quot = FX_DivS32(m->blendFrames << 12, m->blendFrameCount);
 
     if (m->animTick != 0)
         func_ov007_020c9110(m->blendAnim);

@@ -80,7 +80,6 @@ BkKillerdaiCollisionFile gBkKillerDaiCollisionFile(ASSET_BK_KILLER_DAI_KCL);
 extern void *data_ov079_02127f64[];
 
 extern s8 gCurrentSublevel;
-extern SaveBlock data_0209caa0;
 extern u8 gCurrentStarId;
 
 /* arm9 C helpers with no shared header. */

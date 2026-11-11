@@ -126,9 +126,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@53",
+      "from": "@48",
       "to": "data_0209d528",
-      "evidence": "compiler temp: the destructor-registration node for data_0209d574. mwcc numbers it @52, which ov002 already defines, so it keeps its configured address name"
+      "evidence": "compiler temp: the destructor-registration node for data_0209d574. mwcc numbers it @52, which ov002 already defines, so it keeps its configured address name. Re-keyed from @53 to @48 when include/IRQ.h, whose five named parameters each held an @NNN number, gave way to the unnamed-parameter nitro/os/system.h and nitro/os/interrupt.h."
     }
   ],
   "relocations": [

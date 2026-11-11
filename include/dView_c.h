@@ -4,7 +4,7 @@
 #include "dBase_c.h"
 #include "math/Matrix.h"
 
-extern "C" void Matrix4x3_LoadIdentity(Matrix4x3 *matrix);
+extern "C" void MTX_Identity43_(Matrix4x3 *matrix);
 
 /* The shared 0x80-byte view base used by dCamera_c.
  *
@@ -27,7 +27,7 @@ struct dView_c : dBase_c {
     Matrix4x3 viewMat; /* 0x50 */
 
     dView_c() {
-        Matrix4x3_LoadIdentity(&viewMat);
+        MTX_Identity43_(&viewMat);
     }
     virtual ~dView_c() {}
     virtual s32 Render();

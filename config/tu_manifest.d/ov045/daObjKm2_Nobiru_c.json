@@ -608,14 +608,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@506",
+      "from": "@484",
       "to": "@405",
-      "evidence": "compiler-local registration node; @420 is taken by ov035 on main, renamed to an unused fleet temp of equal length | re-keyed by __sinit relocation-site order after including math/MtxStack.h (its inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler-local registration node; @420 is taken by ov035 on main, renamed to an unused fleet temp of equal length | re-keyed by __sinit relocation-site order after including math/MtxStack.h (its inline statics) shifted the TU's @NNN uniquifier Re-keyed from @506 to @484 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@507",
+      "from": "@485",
       "to": "@408",
-      "evidence": "compiler-local registration node; @421 is taken by ov035 on main, renamed to an unused fleet temp of equal length | re-keyed by __sinit relocation-site order after including math/MtxStack.h (its inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler-local registration node; @421 is taken by ov035 on main, renamed to an unused fleet temp of equal length | re-keyed by __sinit relocation-site order after including math/MtxStack.h (its inline statics) shifted the TU's @NNN uniquifier Re-keyed from @507 to @485 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

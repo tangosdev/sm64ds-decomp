@@ -11,14 +11,15 @@
 #define DAOBJCVNEWSLIFT_C_H
 #include "types.h"
 #include "dBgActor_c.h"
+#include "math/Quaternion.h"
 
 struct daObjCvNewsLift_c : dBgActor_c {
     dExtSimpleModel_c mPlatformModels[4]; /* 0x320 */
     Matrix4x3 mPlatformMats[4];           /* 0x460 - the platform colliders' matrices */
     dBgW_KcMbg mPlatformColliders[4];     /* 0x520 */
     Vector3 mHomePos;                     /* 0xc40 - spawn position, restored on reset */
-    s32 mRotation[4];                     /* 0xc4c - current tilt quaternion */
-    s32 mTargetRotation[4];               /* 0xc5c - slerped toward each frame */
+    Quaternion mRotation;                 /* 0xc4c - current tilt */
+    Quaternion mTargetRotation;           /* 0xc5c - slerped toward each frame */
     s32 mGroundY;                         /* 0xc6c - floor height below the spawn point */
     u32 mMotorSound;                      /* 0xc70 - Sound::PlayLong handle */
     u16 mResetTimer;                      /* 0xc74 - 300 while ridden; the lift resets at 0 */

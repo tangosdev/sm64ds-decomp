@@ -48,12 +48,13 @@
 #include "dBgCh_Gnd.h"
 #include "decl_Particle.h"
 #include "dBgCh_Actr.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "SpawnInfo.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 #pragma defer_codegen off
 
@@ -118,8 +119,6 @@ int SurfaceInfo_TestFlag0x20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
 s16 func_02010844(void *unused, Vector3 *v, s16 angle);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern s16 data_02082214[];
-void func_02035684(int *p, int v);
 int RandomIntInternal(int *seed);
 unsigned int d_a_tgzNewHold(unsigned int uniqueID, unsigned int effectID, int x, int y, int z,
                             const void *dir, void *callback);
@@ -217,8 +216,8 @@ extern "C" void func_ov077_02124d08(daTgz_c *self, dBgCh_Actr *clsn)
             }
             if (normal.y != 0) {
                 self->mVertSpeed =
-                    -(cstd::fdiv(FX_MUL(normal.x, self->mSpeedX) + FX_MUL(normal.z, self->mSpeedZ),
-                                 normal.y) +
+                    -(FX_Div(FX_MUL(normal.x, self->mSpeedX) + FX_MUL(normal.z, self->mSpeedZ),
+                             normal.y) +
                       0x8000);
             }
             self->mAngleX = func_02010844(self, &normal, self->mAngleY);
@@ -281,8 +280,7 @@ extern "C" void func_ov077_02124eb0(daTgz_c *self) {
     }
 
     if (self->mdCcAc_c.hitFlags & 0x10) {
-        self->mPrevAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&player->mPosX),
-                                           reinterpret_cast<const Vector3 *>(&self->mPosX));
+        self->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &self->mPos);
         player->IncMegaKillCount();
         func_ov077_02125e94(self, 5);
         return;
@@ -319,8 +317,7 @@ extern "C" void func_ov077_021250a8(daTgz_c *self) {
     }
     int flags = self->mdCcAc_c.hitFlags;
     if ((flags & 0x10) != 0) {
-        self->mPrevAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&player->mPosX),
-                                           reinterpret_cast<const Vector3 *>(&self->mPosX));
+        self->mPrevAngleY = Vec3_HorzAngle(&player->mPos, &self->mPos);
         self->mAngleY = self->mPrevAngleY + 0x8000;
         player->IncMegaKillCount();
         func_ov077_02125e94(self, 5);
@@ -339,7 +336,7 @@ extern "C" void func_ov077_021250a8(daTgz_c *self) {
  * back down by that height, and keep the result on the anim model's matrix. */
 extern "C" void func_ov077_021251d0(daTgz_c *self) {
     int v[3];
-    Vec3_Asr(reinterpret_cast<Vector3 *>(v), reinterpret_cast<Vector3 *>(&self->mPosX), 3);
+    Vec3_Asr(reinterpret_cast<Vector3 *>(v), &self->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
     int aimHeight = self->OnAimedAtWithEgg();
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, aimHeight >> 3, 0);
@@ -474,7 +471,6 @@ int daTgz_c::func_ov077_02125550() {
 /* State 4 entry: leave the carrier, pop up in front of it, and start spinning. */
 int daTgz_c::func_ov077_021256b4() {
     dActor_c *carrier;
-    int idx;
     s16 sinv;
     s16 cosv;
     s16 carrierYaw;
@@ -500,12 +496,10 @@ int daTgz_c::func_ov077_021256b4() {
     mPosY = src[1];
     mPosZ = src[2];
 
-    idx = ((int)(u16)mAngleY) >> 4;
-    sinv = data_02082214[idx * 2];
+    sinv = FX_SinIdx((u16)mAngleY >> 4);
     mPosX = mPosX + FX_MUL(sinv, 0x3c000);
     mPosY = mPosY + 0x85000;
-    idx = ((int)(u16)mAngleY) >> 4;
-    cosv = data_02082214[idx * 2 + 1];
+    cosv = FX_CosIdx((u16)mAngleY >> 4);
     mPosZ = mPosZ + FX_MUL(cosv, 0x3c000);
 
     carrier = mCarrier;
@@ -597,8 +591,7 @@ int daTgz_c::func_ov077_02125908() {
 int daTgz_c::func_ov077_02125a0c() {
     mHorzSpeed = 0x5000;
     mVertSpeed = 0xd000;
-    short ang = (short)Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mChasePlayer->mPosX),
-                                      reinterpret_cast<const Vector3 *>(&mPosX));
+    short ang = (short)Vec3_HorzAngle(&mChasePlayer->mPos, &mPos);
     mPrevAngleY = ang;
     mWithMeshClsn.SetLimMovFlag();
     mState = 2;
@@ -630,14 +623,13 @@ int daTgz_c::func_ov077_02125a54() {
     return 1;
 }
 
-/* State 1 entry. func_02035684 stores its second argument at int offset 7,
- * which is dBgCh_Actr::mHeight. */
+/* State 1 entry. */
 void daTgz_c::func_ov077_02125b1c() {
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mAnmModel.SetAnim((BCA_File *)TGZ_BCA, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
-    func_02035684((int *)&mWithMeshClsn, 0x28000);
+    mWithMeshClsn.SetHeight(0x28000);
     mHorzSpeed = 0x1b33;
     mTurnTarget = RandomIntInternal(&data_0209e650.value);
     mActionTimer = RandomIntInternal(&data_0209e650.value);

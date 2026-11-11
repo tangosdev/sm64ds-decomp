@@ -6,8 +6,9 @@
 #include "Ov007Sprite.h"
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
-#include "cstd.h"
 #include "Ov007Item.h"
+#include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -37,16 +38,10 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
             int timer = item->wiggleTimer;
             int elapsed = item->wiggleFrames - timer;
             int progress;
-            if (elapsed <= 0) {
-                progress = 0;
-            } else if (elapsed >= item->wiggleFrames) {
-                progress = 0x1000;
-            } else {
-                progress = cstd::div(elapsed << 0xc, item->wiggleFrames);
-            }
+            progress = ProgressRatio(elapsed, item->wiggleFrames);
             {
                 int degrees = (progress * (item->wiggleFrames * 0x48)) >> 0xc;
-                int angle = cstd::div(degrees << 0x10, 0x168);
+                int angle = FX_DivS32(degrees << 0x10, 0x168);
                 fx16 sine;
                 int decay;
                 u16 id;
@@ -61,7 +56,7 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
                 wave = FX_MUL(sine, decay);
                 amplitude = (id == 0) ? 4 : 8;
                 tilt = (wave * amplitude) >> 0xc;
-                view->sprite->rotZ = cstd::div(tilt << 0x10, 0x168);
+                view->sprite->rotZ = FX_DivS32(tilt << 0x10, 0x168);
             }
         } else {
             view->sprite->rotZ = 0;

@@ -45,7 +45,7 @@ game data. `build-port.cmd` builds all of them into `build\port\`.
 | Gate | Smoke | What runs on host |
 |---|---|---|
 | 1 | `smoke` | types, fx math, matrices, Timer, dFader_c hierarchy |
-| 2 | `smoke_heap` | ExpandingHeapAllocator, 5,000-op torture |
+| 2 | `smoke_heap` | NitroSystem expanded heap (`NNS_FndCreateExpHeapEx`), 5,000-op torture |
 | 3a | `smoke_roots` | SetupRootHeap + the Memory:: layer (game global heap) |
 | 3b | `smoke_fs` | SharedFilePtr over the catalog card seam, LZ77 cross-checked |
 | 4a | `smoke_gx` | the interrupt-driven display-list pump, byte-equal vs harness |

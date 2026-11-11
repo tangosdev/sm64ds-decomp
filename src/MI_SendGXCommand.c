@@ -5,7 +5,7 @@
  *
  * Identified by its body and placement: pret/pokediamond's MI_dma_gxcommand.c has the
  * same function, the same chunk size and the same two waits, inside
- * `#pragma section ITCM`. DMAStartTransfer is the SDK's MIi_DmaSetParams.
+ * `#pragma section ITCM`.
  */
 
 #include "nitro/hw/registers.h"
@@ -13,7 +13,7 @@
 #define DMA_CONTROL_DEST_FIXED (2u << 21)
 #define GXFIFO_DMA_CONTROL (DMA_CONTROL_ENABLE | DMA_CONTROL_32_BIT | DMA_CONTROL_DEST_FIXED)
 
-extern void DMAStartTransfer(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
+extern void MIi_DmaSetParams(u32 dmaNo, u32 src, u32 dest, u32 ctrl);
 
 void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength) {
     volatile u32 *dmaCtrl;
@@ -31,7 +31,7 @@ void MI_SendGXCommand(u32 dmaNo, const void *src, u32 commandLength) {
     currentSrc = (u32)src;
     while (commandLength != 0) {
         chunk = commandLength > 0x1d8 ? 0x1d8 : commandLength;
-        DMAStartTransfer(dmaNo, currentSrc, 0x04000400, GXFIFO_DMA_CONTROL | (chunk >> 2));
+        MIi_DmaSetParams(dmaNo, currentSrc, 0x04000400, GXFIFO_DMA_CONTROL | (chunk >> 2));
         commandLength -= chunk;
         currentSrc += chunk;
     }

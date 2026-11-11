@@ -9,16 +9,10 @@
  * reorder. The helpers are all dScMgCurling_c members: the state tables
  * call them through pointers to member, the rest with the scene as r0.
  *
- * comment leftovers: a few spellings keep `pointer + offset` arithmetic
- * because every member spelling changes codegen; their offsets are named
- * through CURL_OFF:
- * - Scene_Play and ClearStones walk the stone rows with a stepped `char *`.
+ * Leftovers, each kept because the plain spelling changes codegen:
  * - Stone_Slide keeps its angle/speed/position pointer temporaries; the
  *   angle and speed ones stay `&mStone[0].f + offset`, since
  *   &mStone[idx] moves their address math.
- * - Bit_InitAll's second init walk keeps `char *bit`, and its x, y, holdTimer
- *   and spriteA accesses stay `bit + CURL_OFF(...)`: the member spelling grows
- *   the function by one to four words.
  * - ResolveStoneCollision indexes the sine table by hand; FX_SinIdx and
  *   FX_CosIdx there reallocate registers across the function.
  */
@@ -42,26 +36,10 @@ enum dScMgCurling_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "LevelRng.h"
-
-namespace G2 {
-void *GetBG2CharPtr(void);
-}
-
-namespace G2S {
-unsigned GetBG2CharPtr(void);
-}
-
-namespace GX {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
-
-namespace GXS {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 /* `C` is the receiver of the pointer-to-member state tables. It must stay
  * incomplete: mwccarm picks the pointer-to-member layout from whether the
@@ -82,10 +60,6 @@ struct B4 {
     unsigned char v;
     unsigned char pad[3];
 };
-
-/* Byte offset of a dScMgCurling_c member, for the sites that must keep
-   `pointer + constant` arithmetic because every member spelling moved bytes. */
-#define CURL_OFF(m) ((int)&((dScMgCurling_c *)0)->m)
 
 /* A random integer in [0, n): the top 15 bits of the minigame generator,
    scaled. */
@@ -121,8 +95,8 @@ extern void DecompressLZ16(const void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *ptr);
 extern void Ov004_Deallocate(void *p);
-extern void func_020563d4(const void *src, u32 offset, u32 count);
-extern void func_02056374(const void *src, u32 offset, u32 count);
+extern void GX_LoadBG2Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
 
 extern unsigned char sCurlingBitAStates[];
 extern unsigned char sCurlingBitBStates[];
@@ -439,13 +413,15 @@ void dScMgCurling_c::Bit_UpdateAll() {
     }
 }
 
+/* Clear every bit, then seed it: active, a random x, two sprite indices
+ * (the second is the first plus one to four, modulo five) and a y spread
+ * over the screen. The first x, the y at -0x8000 and the first holdTimer
+ * store are overwritten a few lines later; those dead stores are the ROM's. */
 void dScMgCurling_c::Bit_InitAll() {
     int i;
-    char *bit;
     unsigned int v;
 
-    i = 0;
-    for (; i < 0x32; i++) {
+    for (i = 0; i < 0x32; i++) {
         mBit[i].x = 0;
         mBit[i].y = 0;
         mBit[i].vx = 0;
@@ -462,33 +438,28 @@ void dScMgCurling_c::Bit_InitAll() {
         mBit[i].spriteB = 1;
     }
 
-    /* bit walks `this` one dScMgCurling_bit per pass, so its mBit[0] is
-       mBit[i]. The spriteA read and the second x/y/holdTimer stores stay raw: spelled
-       as members they change the generated code. */
-    i = 0;
-    bit = (char *)this;
-    for (; i < 0x32; i++) {
-        ((dScMgCurling_c *)bit)->mBit[0].x = CURL_RAND(0x20) << 0xf;
-        ((dScMgCurling_c *)bit)->mBit[0].y = -0x8000;
-        ((dScMgCurling_c *)bit)->mBit[0].active = 1;
-        ((dScMgCurling_c *)bit)->mBit[0].visible = 1;
-        ((dScMgCurling_c *)bit)->mBit[0].kind = 0;
-        ((dScMgCurling_c *)bit)->mBit[0].driftState = 0;
+    for (i = 0; i < 0x32; i++) {
+        mBit[i].x = CURL_RAND(0x20) << 0xf;
+        mBit[i].y = -0x8000;
+        mBit[i].active = 1;
+        mBit[i].visible = 1;
+        mBit[i].kind = 0;
+        mBit[i].driftState = 0;
 
-        ((dScMgCurling_c *)bit)->mBit[0].spriteA = (u8)CURL_RAND(5);
+        mBit[i].spriteA = CURL_RAND(5);
 
-        v = *(unsigned char *)(bit + CURL_OFF(mBit[0].spriteA)) + CURL_RAND(4) + 1;
+        v = mBit[i].spriteA + CURL_RAND(4) + 1;
         v = v & 0xff;
         if (v >= 5)
             v = (v - 5) & 0xff;
-        ((dScMgCurling_c *)bit)->mBit[0].spriteB = (char)v;
+        mBit[i].spriteB = (char)v;
 
-        ((dScMgCurling_c *)bit)->mBit[0].holdTimer = (short)(((i & 7) << 6) + CURL_RAND(0x30));
+        mBit[i].holdTimer = (short)(((i & 7) << 6) + CURL_RAND(0x30));
 
-        *(int *)(bit + CURL_OFF(mBit[0].x)) = CURL_RAND(0x20) << 0xf;
-        *(int *)(bit + CURL_OFF(mBit[0].y)) = ((CURL_RAND(0x1a) << 3) - 8) << 0xc;
-        *(short *)(bit + CURL_OFF(mBit[0].holdTimer)) = 0;
-        bit += 0x24;
+        mBit[i].x = CURL_RAND(0x20) << 0xf;
+
+        mBit[i].y = ((CURL_RAND(0x1a) << 3) - 8) << 0xc;
+        mBit[i].holdTimer = 0;
     }
 }
 
@@ -911,23 +882,23 @@ void dScMgCurling_c::ResolveStoneCollision(int stoneIndex) {
              * reads, with or without an index local, reallocate registers
              * across the function (57-99 words). */
             angleIndex = (mStone[stoneIndex].angle >> 4) * 2;
-            movingVelocityX = FX_MUL(data_02082214[angleIndex + 1], mStone[stoneIndex].speed);
-            movingVelocityY = FX_MUL(data_02082214[angleIndex], mStone[stoneIndex].speed);
+            movingVelocityX = FX_MUL(FX_SinCosTable_[angleIndex + 1], mStone[stoneIndex].speed);
+            movingVelocityY = FX_MUL(FX_SinCosTable_[angleIndex], mStone[stoneIndex].speed);
             pHitAngle = &mStone[hitIndex].angle;
             angleIndex = (mStone[hitIndex].angle >> 4) * 2;
-            hitVelocityX = FX_MUL(data_02082214[angleIndex + 1], mStone[hitIndex].speed);
-            hitVelocityY = FX_MUL(data_02082214[angleIndex], mStone[hitIndex].speed);
+            hitVelocityX = FX_MUL(FX_SinCosTable_[angleIndex + 1], mStone[hitIndex].speed);
+            hitVelocityY = FX_MUL(FX_SinCosTable_[angleIndex], mStone[hitIndex].speed);
             if (hitVelocityY == 0)
                 hitVelocityY = movingVelocityY >> 1;
             /* sin/cos of -contactAngle rotate into the contact frame; sin/cos of
              * +contactAngle rotate back out. */
             angleIndex = (relativeAngle >> 4) * 2;
-            inverseContactSin = data_02082214[angleIndex];
-            inverseContactCos = data_02082214[angleIndex + 1];
+            inverseContactSin = FX_SinCosTable_[angleIndex];
+            inverseContactCos = FX_SinCosTable_[angleIndex + 1];
             relativeAngle = -relativeAngle;
             angleIndex = (relativeAngle >> 4) * 2;
-            contactSin = data_02082214[angleIndex];
-            contactCos = data_02082214[angleIndex + 1];
+            contactSin = FX_SinCosTable_[angleIndex];
+            contactCos = FX_SinCosTable_[angleIndex + 1];
 
             /* Normal and tangential components of each velocity. */
             movingNormal = FX_MUL(inverseContactCos, movingVelocityX);
@@ -986,12 +957,9 @@ void dScMgCurling_c::ResolveStoneCollision(int stoneIndex) {
 /* Sets stone i's spin from the x component of its velocity:
  * -(cos(angle) * speed) / 4. */
 void dScMgCurling_c::SetStoneSpin(int stoneIndex) {
-    int heading = mStone[stoneIndex].angle;
-    int cosHeading = FX_CosIdx(heading >> 4);
+    int cosHeading = FX_CosIdx(mStone[stoneIndex].angle >> 4);
     int speed = mStone[stoneIndex].speed;
-    long long product = (long long)cosHeading * speed;
-    int velocityX = (int)((product + 0x800) >> 12);
-    mStone[stoneIndex].spin = (short)((-velocityX) >> 2);
+    mStone[stoneIndex].spin = -FX_MUL(cosHeading, speed) >> 2;
 }
 
 /* Stone i while it is being dragged. With the stylus down the stone
@@ -1043,7 +1011,6 @@ void dScMgCurling_c::Stone_Collide(int idx) {
  * speed the stone stops (state 2). The collision and spin helpers run, and
  * the slide sound (slideSnd) is retuned to the speed. */
 void dScMgCurling_c::Stone_Slide(int stoneIndex) {
-    char *c = (char *)this;
     int stoneOffset;
     int zi;
     u16 *pAngle;
@@ -1309,7 +1276,6 @@ void dScMgCurling_c::Scene_Score() {
  * When no stone is still moving, the popups are scored and the scene moves
  * to state 2 with a 0xc0 delay. */
 void dScMgCurling_c::Scene_Play() {
-    char *c = (char *)this;
     if (mStateDelay != 0) {
         mStateDelay--;
         return;
@@ -1322,22 +1288,19 @@ void dScMgCurling_c::Scene_Play() {
     if (mSwingTimer != 0) {
         mSwingTimer--;
     }
-    (((C *)c)->*sCurlingAimTable[mStylusHeld])();
+    (((C *)this)->*sCurlingAimTable[mStylusHeld])();
 
     {
         int count = 0;
         int i = 0;
-        char *p = c;
-        for (; i < 5; i++, p += 0x2c) {
-            if (((dScMgCurling_c *)p)->mStone[0].active != 0) {
-                ((dScMgCurling_c *)p)->mStone[0].lastX = ((dScMgCurling_c *)p)->mStone[0].x;
-                ((dScMgCurling_c *)p)->mStone[0].lastY = ((dScMgCurling_c *)p)->mStone[0].y;
-                if (((dScMgCurling_c *)p)->mStone[0].timer != 0) {
-                    u16 *q = (u16 *)(p + CURL_OFF(mStone[0].timer));
-                    *q = *q - 1;
-                }
-                (((C *)c)->*sCurlingStoneTable[*(u8 *)(p + CURL_OFF(mStone[0].state))])(i);
-                if (*(u8 *)(p + CURL_OFF(mStone[0].state)) != 2)
+        for (; i < 5; i++) {
+            if (mStone[i].active != 0) {
+                mStone[i].lastX = mStone[i].x;
+                mStone[i].lastY = mStone[i].y;
+                if (mStone[i].timer != 0)
+                    mStone[i].timer--;
+                (((C *)this)->*sCurlingStoneTable[mStone[i].state])(i);
+                if (mStone[i].state != 2)
                     count++;
             }
         }
@@ -1386,7 +1349,7 @@ void dScMgCurling_c::PickHouse() {
     } else if (mHouse == 2) {
         file = LoadFile(ASSET_D_2D_MG_BG_CURLING1_RIGHT_NSC_BIN);
     }
-    func_020563d4(file, 0, 0x800);
+    GX_LoadBG2Scr(file, 0, 0x800);
     Deallocate(file);
 }
 
@@ -1399,22 +1362,19 @@ void dScMgCurling_c::ResetHouse() {
  * resets the score. */
 void dScMgCurling_c::ClearStones() {
     int i;
-    char *c = (char *)this;
-    char *r = c;
     for (i = 0; i < 5; i++) {
-        ((dScMgCurling_c *)r)->mStone[0].x = 0;
-        ((dScMgCurling_c *)r)->mStone[0].y = 0;
-        ((dScMgCurling_c *)r)->mStone[0].speed = 0;
-        ((dScMgCurling_c *)r)->mStone[0].lastX = 0;
-        ((dScMgCurling_c *)r)->mStone[0].lastY = 0;
-        ((dScMgCurling_c *)r)->mStone[0].slideSnd = 0;
-        ((dScMgCurling_c *)r)->mStone[0].spin = 0;
-        ((dScMgCurling_c *)r)->mStone[0].heading = 0;
-        ((dScMgCurling_c *)r)->mStone[0].angle = 0;
-        ((dScMgCurling_c *)r)->mStone[0].state = 0;
-        ((dScMgCurling_c *)r)->mStone[0].active = 0;
-        ((dScMgCurling_c *)r)->mStone[0].dealt = 0;
-        r += 0x2c;
+        mStone[i].x = 0;
+        mStone[i].y = 0;
+        mStone[i].speed = 0;
+        mStone[i].lastX = 0;
+        mStone[i].lastY = 0;
+        mStone[i].slideSnd = 0;
+        mStone[i].spin = 0;
+        mStone[i].heading = 0;
+        mStone[i].angle = 0;
+        mStone[i].state = 0;
+        mStone[i].active = 0;
+        mStone[i].dealt = 0;
     }
     for (i = 0; i < 5; i++) {
         mPopup[i].x = 0;
@@ -1450,8 +1410,8 @@ void dScMgCurling_c::StartRound(int /* arg */) {
     mState = 0;
     ClearStones();
     PickHouse();
-    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xd, 2, 0x10);
-    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xd, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
 }
 
@@ -1489,40 +1449,40 @@ s32 dScMgCurling_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
     REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1220;
-    DecompressLZ16(a, G2::GetBG2CharPtr());
+    DecompressLZ16(a, G2_GetBG2CharPtr());
 
     f = LoadFile(ASSET_D_2D_MG_BG_CURLING1_NCL_BIN);
-    GX::LoadBGPltt(f, 0x60, 0x1a0);
+    GX_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_CURLING1_NSC_BIN);
-    func_020563d4(f, 0, 0x800);
+    GX_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     {
         void *c7 = LoadFile(ASSET_D_2D_MG_CURLING_NCG_BIN);
         void *c8 = LoadFile(ASSET_D_2D_MG_CURLING_NCL_BIN);
-        DecompressLZ16(c7, (void *)0x6400000);
-        GX::LoadOBJPltt(c8, 0, 0x100);
+        DecompressLZ16(c7, G2_GetOBJCharPtr());
+        GX_LoadOBJPltt(c8, 0, 0x100);
 
         gSubScreenLayers |= 4;
         REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
         REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x814;
-        DecompressLZ16(b, (void *)G2S::GetBG2CharPtr());
+        DecompressLZ16(b, (void *)G2S_GetBG2CharPtr());
 
         f = LoadFile(ASSET_D_2D_MG_BG_CURLING2_NCL_BIN);
-        GXS::LoadBGPltt(f, 0x60, 0x1a0);
+        GXS_LoadBGPltt(f, 0x60, 0x1a0);
         Deallocate(f);
 
         f = LoadFile(ASSET_D_2D_MG_BG_CURLING2_NSC_BIN);
-        func_02056374(f, 0, 0x800);
+        GXS_LoadBG2Scr(f, 0, 0x800);
         Deallocate(f);
 
         Ov004_Deallocate(a);
         Ov004_Deallocate(b);
 
-        DecompressLZ16(c7, (void *)0x6600000);
-        GXS::LoadOBJPltt(c8, 0, 0x100);
+        DecompressLZ16(c7, G2S_GetOBJCharPtr());
+        GXS_LoadOBJPltt(c8, 0, 0x100);
         Deallocate(c7);
         Deallocate(c8);
     }
@@ -1538,8 +1498,8 @@ s32 dScMgCurling_c::InitResources() {
     Mg_SetTopScreenYOffset(0x20);
     mStateDelay = 0x40;
     mRunDuringFade = 1;
-    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xd, 2, 0x10);
-    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xd, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
     return 1;
 }

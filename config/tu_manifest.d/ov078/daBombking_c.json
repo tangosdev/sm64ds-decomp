@@ -3778,259 +3778,259 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@637",
-      "to": "data_ov078_02126f48",
-      "evidence": "compiler temp mapped to 0x02126f48 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@638",
-      "to": "data_ov078_02126f54",
-      "evidence": "compiler temp mapped to 0x02126f54 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@639",
-      "to": "data_ov078_02126f60",
-      "evidence": "compiler temp mapped to 0x02126f60 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@640",
-      "to": "data_ov078_02126f6c",
-      "evidence": "compiler temp mapped to 0x02126f6c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@641",
-      "to": "data_ov078_02126f78",
-      "evidence": "compiler temp mapped to 0x02126f78 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@642",
-      "to": "data_ov078_02126f84",
-      "evidence": "compiler temp mapped to 0x02126f84 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@643",
-      "to": "data_ov078_02126f90",
-      "evidence": "compiler temp mapped to 0x02126f90 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@644",
-      "to": "data_ov078_02126f9c",
-      "evidence": "compiler temp mapped to 0x02126f9c by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@645",
-      "to": "data_ov078_02126fa8",
-      "evidence": "compiler temp mapped to 0x02126fa8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@646",
-      "to": "data_ov078_02126fb4",
-      "evidence": "compiler temp mapped to 0x02126fb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@647",
-      "to": "data_ov078_02126fc0",
-      "evidence": "compiler temp mapped to 0x02126fc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
-      "from": "@648",
-      "to": "data_ov078_02126fcc",
-      "evidence": "compiler temp mapped to 0x02126fcc by the retail initializer relocation at the same pool offset; no bytes or relocations change"
-    },
-    {
       "from": "@649",
-      "to": "data_ov078_02126fd8",
-      "evidence": "compiler temp mapped to 0x02126fd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126f48",
+      "evidence": "compiler temp mapped to 0x02126f48 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @637 to @573 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @573 to @649 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@650",
+      "to": "data_ov078_02126f54",
+      "evidence": "compiler temp mapped to 0x02126f54 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @638 to @574 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @574 to @650 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@651",
-      "to": "data_ov078_02126fe4",
-      "evidence": "compiler temp mapped to 0x02126fe4 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126f60",
+      "evidence": "compiler temp mapped to 0x02126f60 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @639 to @575 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @575 to @651 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@652",
+      "to": "data_ov078_02126f6c",
+      "evidence": "compiler temp mapped to 0x02126f6c by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @640 to @576 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @576 to @652 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@653",
+      "to": "data_ov078_02126f78",
+      "evidence": "compiler temp mapped to 0x02126f78 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @641 to @577 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @577 to @653 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@654",
-      "to": "data_ov078_02126ff0",
-      "evidence": "compiler temp mapped to 0x02126ff0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126f84",
+      "evidence": "compiler temp mapped to 0x02126f84 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @642 to @578 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @578 to @654 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@655",
+      "to": "data_ov078_02126f90",
+      "evidence": "compiler temp mapped to 0x02126f90 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @643 to @579 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @579 to @655 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@656",
-      "to": "data_ov078_02126d78",
-      "evidence": "compiler temp mapped to 0x02126d78 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126f9c",
+      "evidence": "compiler temp mapped to 0x02126f9c by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @644 to @580 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @580 to @656 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@657",
+      "to": "data_ov078_02126fa8",
+      "evidence": "compiler temp mapped to 0x02126fa8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @645 to @581 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @581 to @657 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@658",
-      "to": "data_ov078_02126d40",
-      "evidence": "compiler temp mapped to 0x02126d40 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126fb4",
+      "evidence": "compiler temp mapped to 0x02126fb4 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @646 to @582 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @582 to @658 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@659",
+      "to": "data_ov078_02126fc0",
+      "evidence": "compiler temp mapped to 0x02126fc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @647 to @583 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @583 to @659 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@660",
-      "to": "data_ov078_02126cf8",
-      "evidence": "compiler temp mapped to 0x02126cf8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126fcc",
+      "evidence": "compiler temp mapped to 0x02126fcc by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @648 to @584 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @584 to @660 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "@662",
-      "to": "data_ov078_02126db8",
-      "evidence": "compiler temp mapped to 0x02126db8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "from": "@661",
+      "to": "data_ov078_02126fd8",
+      "evidence": "compiler temp mapped to 0x02126fd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @649 to @585 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @585 to @661 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "@664",
-      "to": "data_ov078_02126ce8",
-      "evidence": "compiler temp mapped to 0x02126ce8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "from": "@663",
+      "to": "data_ov078_02126fe4",
+      "evidence": "compiler temp mapped to 0x02126fe4 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @651 to @587 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @587 to @663 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@666",
-      "to": "data_ov078_02126ce0",
-      "evidence": "compiler temp mapped to 0x02126ce0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126ff0",
+      "evidence": "compiler temp mapped to 0x02126ff0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @654 to @590 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @590 to @666 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@668",
-      "to": "data_ov078_02126d00",
-      "evidence": "compiler temp mapped to 0x02126d00 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d78",
+      "evidence": "compiler temp mapped to 0x02126d78 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @656 to @592 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @592 to @668 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@670",
-      "to": "data_ov078_02126dc8",
-      "evidence": "compiler temp mapped to 0x02126dc8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d40",
+      "evidence": "compiler temp mapped to 0x02126d40 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @658 to @594 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @594 to @670 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@672",
-      "to": "data_ov078_02126df0",
-      "evidence": "compiler temp mapped to 0x02126df0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126cf8",
+      "evidence": "compiler temp mapped to 0x02126cf8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @660 to @596 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @596 to @672 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@674",
-      "to": "data_ov078_02126de8",
-      "evidence": "compiler temp mapped to 0x02126de8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126db8",
+      "evidence": "compiler temp mapped to 0x02126db8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @662 to @598 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @598 to @674 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@676",
-      "to": "data_ov078_02126dd8",
-      "evidence": "compiler temp mapped to 0x02126dd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126ce8",
+      "evidence": "compiler temp mapped to 0x02126ce8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @664 to @600 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @600 to @676 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@678",
-      "to": "data_ov078_02126dd0",
-      "evidence": "compiler temp mapped to 0x02126dd0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126ce0",
+      "evidence": "compiler temp mapped to 0x02126ce0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @666 to @602 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @602 to @678 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@680",
-      "to": "data_ov078_02126d28",
-      "evidence": "compiler temp mapped to 0x02126d28 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d00",
+      "evidence": "compiler temp mapped to 0x02126d00 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @668 to @604 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @604 to @680 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@682",
-      "to": "data_ov078_02126d38",
-      "evidence": "compiler temp mapped to 0x02126d38 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126dc8",
+      "evidence": "compiler temp mapped to 0x02126dc8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @670 to @606 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @606 to @682 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@684",
-      "to": "data_ov078_02126d98",
-      "evidence": "compiler temp mapped to 0x02126d98 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126df0",
+      "evidence": "compiler temp mapped to 0x02126df0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @672 to @608 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @608 to @684 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@686",
-      "to": "data_ov078_02126d50",
-      "evidence": "compiler temp mapped to 0x02126d50 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126de8",
+      "evidence": "compiler temp mapped to 0x02126de8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @674 to @610 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @610 to @686 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@688",
-      "to": "data_ov078_02126d60",
-      "evidence": "compiler temp mapped to 0x02126d60 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126dd8",
+      "evidence": "compiler temp mapped to 0x02126dd8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @676 to @612 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @612 to @688 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@690",
-      "to": "data_ov078_02126d20",
-      "evidence": "compiler temp mapped to 0x02126d20 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126dd0",
+      "evidence": "compiler temp mapped to 0x02126dd0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @678 to @614 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @614 to @690 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@692",
-      "to": "data_ov078_02126d70",
-      "evidence": "compiler temp mapped to 0x02126d70 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d28",
+      "evidence": "compiler temp mapped to 0x02126d28 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @680 to @616 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @616 to @692 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@694",
-      "to": "data_ov078_02126d88",
-      "evidence": "compiler temp mapped to 0x02126d88 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d38",
+      "evidence": "compiler temp mapped to 0x02126d38 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @682 to @618 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @618 to @694 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@696",
-      "to": "data_ov078_02126d30",
-      "evidence": "compiler temp mapped to 0x02126d30 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d98",
+      "evidence": "compiler temp mapped to 0x02126d98 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @684 to @620 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @620 to @696 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@698",
-      "to": "data_ov078_02126da0",
-      "evidence": "compiler temp mapped to 0x02126da0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d50",
+      "evidence": "compiler temp mapped to 0x02126d50 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @686 to @622 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @622 to @698 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@700",
-      "to": "data_ov078_02126d08",
-      "evidence": "compiler temp mapped to 0x02126d08 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d60",
+      "evidence": "compiler temp mapped to 0x02126d60 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @688 to @624 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @624 to @700 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@702",
-      "to": "data_ov078_02126d80",
-      "evidence": "compiler temp mapped to 0x02126d80 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d20",
+      "evidence": "compiler temp mapped to 0x02126d20 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @690 to @626 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @626 to @702 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@704",
-      "to": "data_ov078_02126d10",
-      "evidence": "compiler temp mapped to 0x02126d10 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d70",
+      "evidence": "compiler temp mapped to 0x02126d70 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @692 to @628 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @628 to @704 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@706",
-      "to": "data_ov078_02126cf0",
-      "evidence": "compiler temp mapped to 0x02126cf0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d88",
+      "evidence": "compiler temp mapped to 0x02126d88 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @694 to @630 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @630 to @706 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@708",
-      "to": "data_ov078_02126df8",
-      "evidence": "compiler temp mapped to 0x02126df8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d30",
+      "evidence": "compiler temp mapped to 0x02126d30 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @696 to @632 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @632 to @708 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@710",
-      "to": "data_ov078_02126de0",
-      "evidence": "compiler temp mapped to 0x02126de0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126da0",
+      "evidence": "compiler temp mapped to 0x02126da0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @698 to @634 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @634 to @710 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@712",
-      "to": "data_ov078_02126dc0",
-      "evidence": "compiler temp mapped to 0x02126dc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d08",
+      "evidence": "compiler temp mapped to 0x02126d08 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @700 to @636 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @636 to @712 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@714",
-      "to": "data_ov078_02126db0",
-      "evidence": "compiler temp mapped to 0x02126db0 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d80",
+      "evidence": "compiler temp mapped to 0x02126d80 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @702 to @638 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @638 to @714 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@716",
-      "to": "data_ov078_02126d18",
-      "evidence": "compiler temp mapped to 0x02126d18 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126d10",
+      "evidence": "compiler temp mapped to 0x02126d10 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @704 to @640 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @640 to @716 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@718",
-      "to": "data_ov078_02126d48",
-      "evidence": "compiler temp mapped to 0x02126d48 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126cf0",
+      "evidence": "compiler temp mapped to 0x02126cf0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @706 to @642 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @642 to @718 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@720",
-      "to": "data_ov078_02126d90",
-      "evidence": "compiler temp mapped to 0x02126d90 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126df8",
+      "evidence": "compiler temp mapped to 0x02126df8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @708 to @644 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @644 to @720 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@722",
-      "to": "data_ov078_02126da8",
-      "evidence": "compiler temp mapped to 0x02126da8 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126de0",
+      "evidence": "compiler temp mapped to 0x02126de0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @710 to @646 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @646 to @722 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@724",
-      "to": "data_ov078_02126d68",
-      "evidence": "compiler temp mapped to 0x02126d68 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "to": "data_ov078_02126dc0",
+      "evidence": "compiler temp mapped to 0x02126dc0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @712 to @648 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @648 to @724 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     },
     {
       "from": "@726",
+      "to": "data_ov078_02126db0",
+      "evidence": "compiler temp mapped to 0x02126db0 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @714 to @650 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @650 to @726 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@728",
+      "to": "data_ov078_02126d18",
+      "evidence": "compiler temp mapped to 0x02126d18 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @716 to @652 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @652 to @728 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@730",
+      "to": "data_ov078_02126d48",
+      "evidence": "compiler temp mapped to 0x02126d48 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @718 to @654 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @654 to @730 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@732",
+      "to": "data_ov078_02126d90",
+      "evidence": "compiler temp mapped to 0x02126d90 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @720 to @656 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @656 to @732 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@734",
+      "to": "data_ov078_02126da8",
+      "evidence": "compiler temp mapped to 0x02126da8 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @722 to @658 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @658 to @734 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@736",
+      "to": "data_ov078_02126d68",
+      "evidence": "compiler temp mapped to 0x02126d68 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @724 to @660 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @660 to @736 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
+    },
+    {
+      "from": "@738",
       "to": "data_ov078_02126d58",
-      "evidence": "compiler temp mapped to 0x02126d58 by the retail initializer relocation at the same pool offset; no bytes or relocations change"
+      "evidence": "compiler temp mapped to 0x02126d58 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @726 to @662 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @662 to @738 when the TU included math/MtxStack.h in place of its local MTX_Concat43 and void * matrix externs (measured from the compiled object: same section, size and order)."
     }
   ],
   "symbol_binding_rewrites": [

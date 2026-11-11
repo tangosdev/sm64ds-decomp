@@ -1,17 +1,17 @@
 //cpp
-/* engine/gx/G2x.cpp — G2x TU (arm9 0x020551f0..0x0205532c)
+/* engine/gx/G2x.cpp -- the Nitro SDK's gx_g2.c (arm9 0x020551f0..0x0205532c)
  *
- * G2x has no instance state: every member is static and writes the 2D
- * engine's blend/affine registers through the caller's `volatile u16*`
- * (include/G2x.h). The file is written ROM-descending because mwccarm
- * emits .text in reverse source order under default deferred codegen.
+ * The 2D engine's blend/affine register writers, under the SDK's names with
+ * C linkage (include/nitro/gx/g2.h; ntrtwl/NitroSDK libraries/gx/src/g2.c).
+ * Each writes the registers behind the caller's `volatile u16 *`. The file
+ * is written ROM-descending because mwccarm emits .text in reverse source
+ * order under default deferred codegen.
  *
- * The run is the Nitro SDK's GX_g2.c (pret/pokediamond). Four of its five
- * functions are here, in the SDK's order and at the SDK's sizes. The fifth,
- * G2x_SetBlendBrightnessExt_, is not in this ROM: nothing calls it, so the
- * linker dropped it.
+ * Four of the SDK file's five functions are here, in the SDK's order and at
+ * the SDK's sizes. The fifth, G2x_SetBlendBrightnessExt_, is not in this
+ * ROM: nothing calls it, so the linker dropped it.
  */
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "types.h"
 
 #include "Matrix2x2.h"
@@ -26,8 +26,7 @@
  * to (c,d), and the displacement written is `m * d + (origin << 12)`. So the
  * caller gives a point to rotate ABOUT and a point to rotate TO, and this
  * resolves them into the single origin the hardware actually takes. */
-void G2x::SetBGyAffine(volatile unsigned short *p, Matrix2x2 *m, int a, int b, int c, int d)
-{
+void G2x_SetBGyAffine_(volatile unsigned short *p, Matrix2x2 *m, int a, int b, int c, int d) {
     u16 pa = (u16)(s16)(m->m00 >> 4);
     u16 pb = (u16)(s16)(m->m01 >> 4);
     *(volatile unsigned int *)p = pa | (pb << 16);
@@ -45,9 +44,9 @@ void G2x::SetBGyAffine(volatile unsigned short *p, Matrix2x2 *m, int a, int b, i
     *(volatile int *)(p + 6) = y >> 4;
 }
 
-/* The Nitro SDK's G2x_SetBlendAlpha_(vu16 *, int, int, int, int). The final
-   argument is 32-bit: the ROM loads its stack slot with `ldr`, not `ldrh`. */
-void G2x::SetBlendAlpha(volatile u16 *reg, int firstTarget, int secondTarget, int firstAlpha,
+/* The final argument is 32-bit: the ROM loads its stack slot with `ldr`,
+   not `ldrh`. */
+void G2x_SetBlendAlpha_(volatile u16 *reg, int firstTarget, int secondTarget, int firstAlpha,
                         int secondAlpha) {
     *(volatile u32 *)reg =
         ((firstTarget | 0x40) | (secondTarget << 8)) |
@@ -59,7 +58,7 @@ void G2x::SetBlendAlpha(volatile u16 *reg, int firstTarget, int secondTarget, in
  * (fade to black) and writes the magnitude, positive sets 0x80 (fade to
  * white) and writes the value as-is. So one signed argument carries both
  * "which way" and "how much". */
-void G2x::SetBlendBrightness(volatile unsigned short *p, int val, int amt) {
+void G2x_SetBlendBrightness_(volatile unsigned short *p, int val, int amt) {
     if (amt < 0) {
         p[0] = val | 0xc0;
         p[2] = -amt;
@@ -69,14 +68,13 @@ void G2x::SetBlendBrightness(volatile unsigned short *p, int val, int amt) {
     }
 }
 
-/* The Nitro SDK's G2x_ChangeBlendBrightness_, the first function of GX_g2.c;
- * the ROM puts it directly below SetBlendBrightness. It retunes a fade that
+/* The first function of the SDK's file; the ROM puts it directly below
+ * G2x_SetBlendBrightness_. It retunes a fade that
  * is already set up: the magnitude always goes to p[2], but the direction
  * bits in p[0] are rewritten only when the sign of `amt` reverses an existing
  * fade (0x80 to white, 0xc0 to black). A register with no fade selected keeps
- * its mode. It stays a free C-linkage function under the SDK name: one of
- * its callers is a C file. */
-extern "C" void G2x_ChangeBlendBrightness_(volatile unsigned short *p, int amt) {
+ * its mode. */
+void G2x_ChangeBlendBrightness_(volatile unsigned short *p, int amt) {
     unsigned short h = p[0];
     if (amt < 0) {
         if ((h & 0xc0) == 0x80) {

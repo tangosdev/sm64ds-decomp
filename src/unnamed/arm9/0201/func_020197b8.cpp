@@ -1,7 +1,7 @@
 //cpp
 #include "PlayerInput.h"
-#include "G2x.h"
-#include "IRQ.h"
+#include "nitro/gx/g2.h"
+#include "nitro/os/interrupt.h"
 #include "dScene_c.h"
 #include "nitro/hw/registers.h"
 #include "private/controller_input.h"
@@ -47,8 +47,8 @@ int func_02030e4c(void);
    the link started or a link error up, the session check
    (func_02030e4c). */
 void func_020197b8(void) {
-    G2x::SetBlendBrightness(&REG_BLDCNT, 0x3f, 0x1f);
-    G2x::SetBlendBrightness(&REG_DB_BLDCNT, 0x3f, 0x1f);
+    G2x_SetBlendBrightness_(&REG_BLDCNT, 0x3f, 0x1f);
+    G2x_SetBlendBrightness_(&REG_DB_BLDCNT, 0x3f, 0x1f);
     do {
         unsigned short v;
         data_0209d50c = 0xb; func_02019ac4();
@@ -66,10 +66,10 @@ void func_020197b8(void) {
         data_0209d50c = 5; func_02019404();
         data_0209d50c = 6;
         data_020a0db0 = data_020a0db0 + 1;
-        IRQ::DisableIRQs(1);
+        OS_DisableIrqMask(1);
         func_020190b8();
         data_0209d4f0 = 1;
-        IRQ::EnableIRQs(1);
+        OS_EnableIrqMask(1);
         data_0209d50c = 7; func_0201a4bc();
         data_0209d4f0 = 0;
         data_0209d50c = 0x15; func_0201ffcc();

@@ -48,6 +48,7 @@ enum daObjCtRotateBlock_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 /* One record per mVariant: the base model's and the collision mesh's file
  * handles, and the CLPS block SetFile gets with that mesh. */
@@ -76,12 +77,11 @@ struct RotateBlockCollisionFilePtr : SharedFilePtr {
 };
 
 extern "C" {
-extern void MulVec3Mat4x3(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
+extern void MTX_MultVec43(Vector3 *src, Matrix4x3 *mtx, Vector3 *dst);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
 }
 
-extern short data_02082214[];
 extern u8 data_0209f2c0;
 
 #pragma defer_codegen off
@@ -108,8 +108,7 @@ void daObjCtRotateBlock_c::UpdateShadow() {
     mShadowMat.m[10] = (mFloorY + 0x1000) >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
     {
-        int idx = (unsigned short)(short)(mAngleZ << 1) >> 4;
-        int s = data_02082214[idx << 1];
+        int s = FX_SinIdx((u16)(s16)(mAngleZ << 1) >> 4);
         int sa = s < 0 ? -s : s;
         int depthAdd = FX_MUL(sa, 0x64000);
         DropShadowScaleXYZ(mShadowModel, mShadowMat, d + depthAdd, b, d, 0xf);
@@ -255,8 +254,8 @@ int daObjCtRotateBlock_c::InitResources() {
         va.z = 0x64000;
 
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MulVec3Mat4x3(&va, &data_020a0e68, &vb);
-        AddVec3(&vb, &mPos, &vb);
+        MTX_MultVec43(&va, &data_020a0e68, &vb);
+        VEC_Add(&vb, &mPos, &vb);
         vb.y -= 0xd2000;
 
         dBgCh_Gnd ground;

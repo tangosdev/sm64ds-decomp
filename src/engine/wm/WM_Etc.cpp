@@ -6,14 +6,14 @@
  * WM_SetLifeTime sends three parameters, not four, and WM_SetGameInfo six,
  * not five. */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
 
 extern int data_020a9440[]; /* the game-info buffer ARM7 reads (pret's UNK_021D68C0) */
 extern int WMi_CheckIdle(void);
-extern void MultiCopy_Int(int *src, int *dst, int len);
+extern void MIi_CpuCopy32(int *src, int *dst, int len);
 
 /* NitroSDK WM_SetGameInfo: refuse unless WM is PARENT (7) or MP_PARENT (9),
  * copy the user game info (at most 0x70 bytes) to the buffer ARM7 reads,
@@ -28,8 +28,8 @@ int WM_SetGameInfo(int callback, int *userGameInfo, int userGameInfoSize, int gg
         return 6;
     if ((unsigned int)userGameInfoSize > 0x70)
         return 6;
-    MultiCopy_Int(userGameInfo, data_020a9440, userGameInfoSize);
-    CP15::FlushDataCache((unsigned int)data_020a9440, userGameInfoSize);
+    MIi_CpuCopy32(userGameInfo, data_020a9440, userGameInfoSize);
+    DC_StoreRange(data_020a9440, userGameInfoSize);
     WM_SetCallbackTable(0x18, (void *)callback);
     ret = WM_SendCommand(0x18, 6, data_020a9440, userGameInfoSize, ggid, arg5, arg6, arg7);
     if (ret == 0)

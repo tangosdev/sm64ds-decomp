@@ -84,7 +84,7 @@ struct SnowSpray {
     SnowSpray() {}
     ~SnowSpray() {}
 
-    s32 x;      /* 0x00 position, AddVec3'd with vx..vz each tick; drawn at x >> 12 */
+    s32 x;      /* 0x00 position, VEC_Add'd with vx..vz each tick; drawn at x >> 12 */
     s32 y;      /* 0x04 drawn at (y - z - mScrollY) >> 12 */
     s32 z;      /* 0x08 height above the course; the chunk dies once it is
                    below 0 while still falling */

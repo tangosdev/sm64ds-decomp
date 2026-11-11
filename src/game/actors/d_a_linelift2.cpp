@@ -25,7 +25,7 @@
 // - &mTargetPosX / &mSpeedX: this class and dActor_c store those triples
 //   as scalars, so the vector helpers take the first word's address.
 // - Vec3_Sub is defined on a file-local struct Vec3, so no shared header
-//   declares it yet; it is declared here. AddVec3 takes Vector3 now.
+//   declares it yet; it is declared here. VEC_Add takes Vector3 now.
 // - Behavior lowers mPosY by the sink offset and restores it before the
 //   model update, which the cartridge does too; the dead store is its own.
 
@@ -44,6 +44,7 @@ enum d_a_linelift2_AssetId {
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "cstd.h"
+#include "nitro/fx/fx_trig.h"
 
 struct Vec3;
 
@@ -66,12 +67,11 @@ extern SharedFilePtr *gLinelift2ModelFiles[];     /* BMD, by mVariant */
 extern SharedFilePtr *gLinelift2CollisionFiles[]; /* KCL, by mVariant */
 extern CLPS_Block *gLinelift2ClpsBlocks[];        /* CLPS, by mVariant */
 extern StateFunc gLinelift2StateFuncs[];          /* by mState */
-extern s16 data_02082214[];                       /* sin/cos pairs */
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
 void Vec3_Sub(Vector3 *res, const Vector3 *a, const Vector3 *b);
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *out);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *out);
 }
 
 enum {
@@ -239,7 +239,7 @@ void daLinelift2_c::StateReturn() {
    off either end of the path, 1 on reaching a node, 0 in between. */
 int daLinelift2_c::StepAlongPath() {
     int result;
-    AddVec3((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
+    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
     if (Vec3_Dist(&mPos, (const Vector3 *)&mTargetPosX) < (mHorzSpeed >> 1)) {
         result = 1;
         mBasePosX = mTargetPosX;
@@ -286,10 +286,10 @@ void daLinelift2_c::SetVelocityToward(const Vector3 *to, const Vector3 *from) {
     Vec3_Sub(&d, to, from);
     mPrevAngleY = cstd::atan2(d.x, d.z);
     mPrevAngleX = cstd::atan2(d.y, Vec3_HorzLen(&d));
-    s32 horz = FX_MUL(mHorzSpeed, data_02082214[((u16)mPrevAngleX >> 4) * 2 + 1]);
-    mSpeedX = FX_MUL(horz, data_02082214[((u16)mPrevAngleY >> 4) * 2]);
-    mVertSpeed = FX_MUL(mHorzSpeed, data_02082214[((u16)mPrevAngleX >> 4) * 2]);
-    mSpeedZ = FX_MUL(horz, data_02082214[((u16)mPrevAngleY >> 4) * 2 + 1]);
+    s32 horz = FX_MUL(mHorzSpeed, FX_CosIdx((u16)mPrevAngleX >> 4));
+    mSpeedX = FX_MUL(horz, FX_SinIdx((u16)mPrevAngleY >> 4));
+    mVertSpeed = FX_MUL(mHorzSpeed, FX_SinIdx((u16)mPrevAngleX >> 4));
+    mSpeedZ = FX_MUL(horz, FX_CosIdx((u16)mPrevAngleY >> 4));
 }
 
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header

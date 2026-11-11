@@ -17,15 +17,15 @@
  *
  *     mKoopaUniqueId   0x320  uniqueID of the daKpa actor (actor id 0x117)
  *     mTimer           0x324  counts while mActive is set
- *     mPhase           0x326  counts in func_ov060_02117db8; destruction past 0x12c
+ *     mPhase           0x326  counts in StateFall; destruction past 0x12c
  *     mState           0x328  index into the data_ov060_0211b1ac handler table
  *     mVariant         0x329  param1 & 0xf, index of the model/collision pair
  *     mActive          0x32a
- *     mTouchedKoopa    0x32b  set by func_ov060_021183cc when the other actor is 0x117
+ *     mTouchedKoopa    0x32b  set by OnStoodOn when the other actor is 0x117
  *
  * src/game/actors/d_a_kpa3_bg.cpp licenses 0x02117d1c..0x02118438: D1 through
- * InitResources, then func_ov060_021183cc, its collider veneer
- * func_ov060_021183f4 and daKpa3Bg_c_classInit at 0x02118408. The factory
+ * InitResources, then OnStoodOn, its collider veneer StoodOnCallback and
+ * daKpa3Bg_c_classInit at 0x02118408. The factory
  * (historical alias BowserSkyPlatform_Spawn) installs _ZTV10daKpa3Bg_c for
  * g_profile_KOOPA3BG (historical alias BowserSkyPlatform_SpawnInfo).
  */
@@ -53,14 +53,14 @@ struct daKpa3Bg_c : dBgActor_c {
     virtual s32 Behavior();                /* slot  6 */
     virtual s32 Render();                  /* slot  9 */
 
-    /* The mState handlers. Declared here so &daKpa3Bg_c::func_ov060_... is a
-       pointer-to-member constant for the data_ov060_0211b1ac table. The TU
-       defines StateStart and StateCheck as members and
-       func_ov060_02117db8, which is parsed as C, as a free function under
-       the member's mangled spelling. */
+    /* The mState handlers, in data_ov060_0211b1ac's pointer-to-member
+       table. N64's falling_bowser_plat_act_start, _check and _fall. */
     int StateStart();
     void StateCheck();
-    void func_ov060_02117db8();
+    void StateFall();
+
+    void OnStoodOn(dActor_c *);
+    static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

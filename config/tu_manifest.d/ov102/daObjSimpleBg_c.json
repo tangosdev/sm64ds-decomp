@@ -747,64 +747,64 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@549",
+      "from": "@527",
       "to": "@953",
-      "evidence": "mwcc numbers this registration node @545 per TU and another module already defines @545"
+      "evidence": "mwcc numbers this registration node @545 per TU and another module already defines @545 Re-keyed from @549 to @527 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@550",
+      "from": "@528",
       "to": "@896",
-      "evidence": "mwcc numbers this registration node @546 per TU and another module already defines @546"
+      "evidence": "mwcc numbers this registration node @546 per TU and another module already defines @546 Re-keyed from @550 to @528 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@551",
+      "from": "@529",
       "to": "@892",
-      "evidence": "mwcc numbers this registration node @547 per TU and another module already defines @547"
+      "evidence": "mwcc numbers this registration node @547 per TU and another module already defines @547 Re-keyed from @551 to @529 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@552",
+      "from": "@530",
       "to": "@888",
-      "evidence": "mwcc numbers this registration node @548 per TU and another module already defines @548"
+      "evidence": "mwcc numbers this registration node @548 per TU and another module already defines @548 Re-keyed from @552 to @530 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@553",
+      "from": "@531",
       "to": "@883",
-      "evidence": "mwcc numbers this registration node @549 per TU and another module already defines @549"
+      "evidence": "mwcc numbers this registration node @549 per TU and another module already defines @549 Re-keyed from @553 to @531 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@554",
+      "from": "@532",
       "to": "@879",
-      "evidence": "mwcc numbers this registration node @550 per TU and another module already defines @550"
+      "evidence": "mwcc numbers this registration node @550 per TU and another module already defines @550 Re-keyed from @554 to @532 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@556",
+      "from": "@534",
       "to": "@868",
-      "evidence": "mwcc numbers this registration node @552 per TU and another module already defines @552"
+      "evidence": "mwcc numbers this registration node @552 per TU and another module already defines @552 Re-keyed from @556 to @534 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@558",
+      "from": "@536",
       "to": "@864",
-      "evidence": "mwcc numbers this registration node @554 per TU and another module already defines @554"
+      "evidence": "mwcc numbers this registration node @554 per TU and another module already defines @554 Re-keyed from @558 to @536 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@560",
+      "from": "@538",
       "to": "@859",
-      "evidence": "mwcc numbers this registration node @556 per TU and another module already defines @556"
+      "evidence": "mwcc numbers this registration node @556 per TU and another module already defines @556 Re-keyed from @560 to @538 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@557",
+      "from": "@535",
       "to": "@596",
-      "evidence": "batch-5 atdup: @553 collides cross-module (temps are fleet-global); renumber to unused same-length @596"
+      "evidence": "batch-5 atdup: @553 collides cross-module (temps are fleet-global); renumber to unused same-length @596 Re-keyed from @557 to @535 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@559",
+      "from": "@537",
       "to": "@595",
-      "evidence": "batch-5 atdup: @555 collides cross-module (temps are fleet-global); renumber to unused same-length @595"
+      "evidence": "batch-5 atdup: @555 collides cross-module (temps are fleet-global); renumber to unused same-length @595 Re-keyed from @559 to @537 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@555",
+      "from": "@533",
       "to": "@551",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @569 now; licensed under the existing pin @551"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @569 now; licensed under the existing pin @551 Re-keyed from @555 to @533 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

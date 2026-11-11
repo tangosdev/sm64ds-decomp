@@ -47,13 +47,13 @@ enum { ACTOR_FL_KUZURE = 0x53, ACTOR_KM2_KUZURE = 0x8b, ACTOR_STAR = 0xb2 };
 #include "ResourceDescriptor.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx_trig.h"
 
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int AngleDiff(int a, int b);
 }
 
-extern s16 data_02082214[];       /* sine table */
 extern signed char gCurrentSublevel; /* current level id */
 
 /* ROM ordinals 0 and 1 -- ov098 0x02139f70 (D0, 0x58) and 0x02139fc8 (D1,
@@ -303,7 +303,7 @@ s32 daObjFallBlock_c::Behavior() {
             Sound::PlayBank3(0x2d, mCamSpacePos);
             mStateTimer = 0x5a;
         } else {
-            sinv = data_02082214[(*(u16 *)&mBobPhase >> 4) << 1];
+            sinv = FX_SinIdx(*(u16 *)&mBobPhase >> 4);
             /* (long long) is load-bearing: a plain int mul changes the code
                size. */
             mPosY = mRestPos.y + FX_MUL(sinv, 0x19000);

@@ -36,9 +36,9 @@
  *   so this TU keeps the address-true spelling, the way d_a_obj_bk_lift.cpp
  *   does for its pair.
  * - data_ov015_02113574 is the CLPS block in overlay .data that
- *   this TU does not own; data_02082214 is arm9's sin/cos table,
+ *   this TU does not own; FX_SinCosTable_ is arm9's sin/cos table,
  *   data_020a0e68 arm9's scratch matrix, and gCurrentStarId / gCurrentSublevel
- *   arm9 scene state. AngleDiff, IsStarCollectedInCurLevel, MulVec3Mat4x3
+ *   arm9 scene state. AngleDiff, IsStarCollectedInCurLevel, MTX_MultVec43
  *   and Vec3_Add have no shared header, so they keep a local extern "C" block.
  * - g_profile_BK_BOTAOSI lives outside this TU.
  */
@@ -57,6 +57,7 @@ enum daObjBk_Botaosi_c_AssetId { ASSET_BK_BOTAOSI_BMD = 0x0589, ASSET_BK_BOTAOSI
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The constructors and destructors are the ROM resource-family veneers,
  * aliased in the manifest. */
@@ -73,7 +74,6 @@ struct BkBotaosiCollisionFilePtr : SharedFilePtr {
 extern BkBotaosiCollisionFilePtr data_ov015_02114974; /* collision KCL */
 extern BkBotaosiModelFilePtr data_ov015_0211497c;     /* plank BMD */
 extern CLPS_Block data_ov015_02113574;
-extern s16 data_02082214[]; /* arm9 sin/cos table */
 extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 
@@ -81,7 +81,7 @@ extern u8 gCurrentStarId;
 extern "C" {
 int AngleDiff(int a, int b);
 int IsStarCollectedInCurLevel(int starID);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
@@ -168,8 +168,7 @@ void daObjBk_Botaosi_c::HandleHit(dActor_c *other) {
 void daObjBk_Botaosi_c::UpdateShadow() {
     u16 yaw;
     int lean = 0;
-    int idx = (u16)mAngleX >> 4;
-    int sine = data_02082214[idx * 2];
+    int sine = FX_SinIdx((u16)mAngleX >> 4);
     int tilt = FX_MUL(sine, 0x7d0000);
     yaw = 0x8000;
     if (tilt <= 0) {
@@ -180,13 +179,13 @@ void daObjBk_Botaosi_c::UpdateShadow() {
     Matrix4x3_FromRotationY(&mShadowMat, (s16)(mAngleY + yaw));
     {
         int front = mFrontPosX;
-        int cosine = data_02082214[((u16)(s16)(mAngleY + yaw) >> 4) * 2 + 1];
+        int cosine = FX_CosIdx((u16)(s16)(mAngleY + yaw) >> 4);
         mShadowMat.t.x = (front + FX_MUL(cosine, (lean >> 1))) >> 3;
     }
     mShadowMat.t.y = mFrontPosY >> 3;
     {
         int front = mFrontPosZ;
-        int sine2 = data_02082214[((u16)(s16)(mAngleY + yaw) >> 4) * 2];
+        int sine2 = FX_SinIdx((u16)(s16)(mAngleY + yaw) >> 4);
         mShadowMat.t.z = (front + FX_MUL(sine2, (lean >> 1))) >> 3;
     }
     if (mState >= 2)
@@ -228,8 +227,7 @@ int daObjBk_Botaosi_c::Behavior() {
         break;
     case 1: {
         unsigned short ang = mWobbleAng;
-        int idx = ang >> 4;
-        int s = data_02082214[idx * 2];
+        int s = FX_SinIdx(ang >> 4);
         int amp = mKnockDir;
         int prod = amp * s;
         int d = FX_MUL(prod, mWobbleTimer);
@@ -319,7 +317,7 @@ int daObjBk_Botaosi_c::InitResources() {
     b.z = 0;
 
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&a, &data_020a0e68, &b);
+    MTX_MultVec43(&a, &data_020a0e68, &b);
     Vec3_Add(&c, &b, &mPos);
     c.y += 0x14000;
     /* The floor probe under the swing's far end. The ROM destroys it on
@@ -338,7 +336,7 @@ int daObjBk_Botaosi_c::InitResources() {
     b.z = 0;
 
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3(&a, &data_020a0e68, &b);
+    MTX_MultVec43(&a, &data_020a0e68, &b);
     Vec3_Add(&d, &b, &mPos);
 
     one = 1;

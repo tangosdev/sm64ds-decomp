@@ -41,12 +41,12 @@ enum daObjDlPyramid_c_AssetId { ASSET_DL_PYRAMID_BMD = 0x05dd, ASSET_DL_PYRAMID_
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 struct BMD_File;
 struct KCL_File;
 struct CLPS_Block;
 
-extern s16 data_02082214[];            /* sine/cosine table, interleaved */
 extern CLPS_Block data_ov024_021129f0; /* the collision CLPS block */
 
 /* The retail static initializer constructs these two 8-byte resource handles
@@ -109,12 +109,9 @@ void daObjDlPyramid_c::FinishDescent() {
  * for the first two seconds, then spin up and sink. Keeps the dust
  * particle alive and moves to state 2 at frame 150. */
 void daObjDlPyramid_c::Descend() {
-    s16 *tbl = data_02082214;
-    int a1 = ((int)((unsigned int)mStateTimer << 0x1e)) >> 0x10;
-    mPosX = tbl[((u16)a1 >> 4) * 2] * (s16)0x28 + mHomePosX;
+    mPosX = FX_SinIdx((u16)(s16)(mStateTimer << 14) >> 4) * 0x28 + mHomePosX;
     if (mStateTimer < 0x3c) {
-        int a2 = ((int)((unsigned int)mStateTimer << 0x1d)) >> 0x10;
-        int bob = tbl[((u16)a2 >> 4) * 2] * (s16)0xa;
+        int bob = FX_SinIdx((u16)(s16)(mStateTimer << 13) >> 4) * 0xa;
         if (bob < 0)
             bob = -bob;
         mPosY = mHomePosY + bob;
