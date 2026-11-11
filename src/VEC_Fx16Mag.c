@@ -7,6 +7,7 @@ int VEC_Fx16Mag(s16 *v) {
     s64 sq = v[0] * v[0];
     sq += v[1] * v[1];
     sq += v[2] * v[2];
-    CP_SetSqrt64((u64)(sq << 2));
+    sq <<= 2;
+    CP_SetSqrt64((u64)sq);
     return ((s32)CP_GetSqrtResult32() + 1) >> 1;
 }

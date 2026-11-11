@@ -16,7 +16,8 @@ void VEC_Normalize(const Vector3 *v, Vector3 *out) {
     sq += (s64)v->z * v->z;
 
     CP_SetDiv64_64((u64)0x1000000 << 32, (u64)sq);
-    CP_SetSqrt64((u64)(sq << 2));
+    sq <<= 2;
+    CP_SetSqrt64((u64)sq);
 
     len = CP_GetSqrtResult32();
     recip = CP_GetDivResult64();
