@@ -301,21 +301,21 @@
       "ordinal": 39
     },
     {
-      "symbol": "_Z17dBgS_RideCallBackii",
+      "symbol": "_Z17dBgS_RideCallBackP5dBgPiP8dActor_c",
       "address": "0x02038234",
       "size": "0x00000064",
       "legacy_source": "src/engine/collision/CLPS_BlockRef.cpp",
       "ordinal": 40
     },
     {
-      "symbol": "_Z16dBgS_ChkPolySafePv",
+      "symbol": "_Z16dBgS_ChkPolySafeP5dBgPi",
       "address": "0x02038298",
       "size": "0x0000008c",
       "legacy_source": "src/unnamed/arm9/0203/func_02038298.c",
       "ordinal": 41
     },
     {
-      "symbol": "_Z17dBgS_MoveBgCrrPosPviii",
+      "symbol": "_Z17dBgS_MoveBgCrrPosP5dBgPiP7Vector3P10Vector3_16S4_",
       "address": "0x02038324",
       "size": "0x000000c0",
       "legacy_source": "src/unnamed/arm9/0203/func_02038324.cpp",

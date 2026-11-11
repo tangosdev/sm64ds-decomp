@@ -30,7 +30,7 @@
 extern "C" {
 extern CLPS data_020a0c78;
 }
-int dBgS_ChkPolySafe(void *arg);
+int dBgS_ChkPolySafe(dBgPi *hit);
 
 /* Ground and line scans use the real dBgW virtual interface and dActor_c
    clip-volume fields, as the sphere scans do below. PFN retains its pending
@@ -427,8 +427,7 @@ extern "C" void func_020383e4(dBgCh_Actr *self) {
    Named after TWW's dBgS::MoveBgCrrPos, which runs the same guards and calls
    the collider's position correction; the dBgS_ prefix is coined (there is
    no dBgS object here, the table is a global). */
-void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d) {
-    dBgPi *hit = (dBgPi *)arg;
+void dBgS_MoveBgCrrPos(dBgPi *hit, Vector3 *pos, Vector3_16 *motionAng, Vector3_16 *ang) {
     int idx;
     dBgW *obj;
     if (hit->HasCollider() == 0)
@@ -441,16 +440,14 @@ void dBgS_MoveBgCrrPos(void *arg, int b, int c, int d) {
         return;
     if (dBgS_ChkPolySafe(hit) == 0)
         return;
-    obj->BeforeClsn(*hit, data_020a0c80[idx]->GetActor(), *(Vector3 *)b, (Vector3_16 *)c,
-                    (Vector3_16 *)d);
+    obj->BeforeClsn(*hit, data_020a0c80[idx]->GetActor(), *pos, motionAng, ang);
 }
 
 /* Enabled-collider gate: the record must be valid, name a live table slot,
    and re-identify against its entry. Named after TWW's cBgS::ChkPolySafe,
    same checks in the same order; the dBgS_ prefix is coined. Member-called: the mangled free
    spellings emit the same bl and read worse under decl agreement. */
-int dBgS_ChkPolySafe(void *arg) {
-    dBgPi *hit = (dBgPi *)arg;
+int dBgS_ChkPolySafe(dBgPi *hit) {
     int idx;
     dBgW *collider;
     int clsnID;
@@ -473,17 +470,17 @@ int dBgS_ChkPolySafe(void *arg) {
    dispatches the entry's stored callback. Named after
    TWW's dBgS::RideCallBack (the stored callback is its ride callback); the
    dBgS_ prefix is coined. */
-void dBgS_RideCallBack(int a, int b) {
+void dBgS_RideCallBack(dBgPi *hit, dActor_c *rider) {
     int idx;
     dBgW *entry;
     StoodOnCallback fn;
-    if (dBgS_ChkPolySafe((void *)a) == 0)
+    if (dBgS_ChkPolySafe(hit) == 0)
         return;
-    idx = ((dBgPi *)a)->GetColliderIndex();
+    idx = hit->GetColliderIndex();
     entry = data_020a0c80[idx];
     fn = entry->GetStoodOnCallback();
     if (fn == 0) return;
-    fn(entry, entry->GetActor(), (dActor_c *)b);
+    fn(entry, entry->GetActor(), rider);
 }
 
 CLPS_BlockRef::CLPS_BlockRef() : ptr(0) {}

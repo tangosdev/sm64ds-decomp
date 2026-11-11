@@ -54,10 +54,9 @@ struct dActor_c;
  * INFERRED, not pinned:
  *   - 0x12c / 0x130 receive Init's two Vector3_16 * parameters (the mangled
  *     name spells P10Vector3_16S5_). 0x12c is mSphereClsn.mMotionAngPtr; 0x130 is
- *     our own field, since sizeof(dBgCh_SphCrr) is pinned at 0x110. The FIELDS
- *     stay s32: whether they are pointer-typed is a separate question from
- *     what Init stores, and UpdateDiscreteNoLava passes them straight on to
- *     dBgS_MoveBgCrrPos, which takes ints.
+ *     our own field, since sizeof(dBgCh_SphCrr) is pinned at 0x110. Both are
+ *     Vector3_16 *: Init stores its arguments uncast and the Update* bodies
+ *     pass them on to dBgS_MoveBgCrrPos as they are.
  *   - The 0x1bc size is convergent evidence, not a single instruction: some
  *     forty embedding actor headers place their next field at exactly
  *     mWithMeshClsn + 0x1bc. Nothing in matched code allocates by sizeof.
@@ -91,7 +90,7 @@ struct dBgCh_Actr : dBgCh {
        .mMotionAngPtr. 0x130 stays ours -- sizeof(dBgCh_SphCrr) is pinned at
        0x110, so 0x130 falls outside the sub-object (include/dBgCh_SphCrr.h). */
     dBgCh_SphCrr mSphereClsn;   /* 0x020 - spans [0x20,0x130) */
-    s32 mAngPtr; /* 0x130 - Init stores its Vector3_16 * arg 5; dBgW::BeforeClsn's `ang` */
+    Vector3_16 *mAngPtr;        /* 0x130 - Init stores its arg 5; dBgW::BeforeClsn's `ang` */
     dBgCh_Lin mRaycastLine;     /* 0x134 - spans [0x134,0x1ac) */
     Vector3 mGroundNormal;      /* 0x1ac - func_02037318 copies mSphereClsn.mFloorNormal here
                                    on a grounded frame. That payload is the floor normal with
