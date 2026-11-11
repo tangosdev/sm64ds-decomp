@@ -29,6 +29,7 @@
  * matrices; only the flat spelling reproduces the block move. */
 #include "common.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "daBombking_c.h"
 #include "SpawnInfo.h"
 #include "daBmb_c.h"
@@ -150,27 +151,19 @@ extern "C" {
      * preamble carried up to three contradictory spellings of each. */
 extern unsigned char gCurrentStarId;
 extern dCamera_c *gCamera;
-/* local extern: math/MtxStack.h's spellings of the matrix calls below
-   clash with these (illegal function overloading). */
 extern Matrix4x3 data_020a0e68;
 extern int data_02092138;
-extern void MTX_Concat43(void *dst, void *a, void *b);
-extern void Vec3_Lsl(void *d, void *s, int sh);
 extern void func_02012694(unsigned int a, void *p);
 extern void func_02011cfc(void);
 }
 extern "C" {
-extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 // local extern: CalcLib.h does not declare Vec3_VertAngle yet.
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
 extern void func_0200fa8c(void *c, int a);
 extern int atan2_hold_d_a_bombking_1(int a, int b);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
-extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 }
 
 /* `defer_codegen off` flips .text emission from reversed to source order,
@@ -209,9 +202,9 @@ void daBombking_c::DetonateSpawnedBombs() {
 
 int daBombking_c::TickDefeated() {
     dCamera_c *cam = gCamera;
-    VecFx32 v;
-    VecFx32 t;
-    VecFx32 u;
+    Vector3 v;
+    Vector3 t;
+    Vector3 u;
 
     if (this->mTalkingPlayer->GetTalkState() != -1) {
         cam->SetFlag_3();
@@ -234,12 +227,12 @@ int daBombking_c::TickDefeated() {
     v.z = t.z;
     func_02012694(0x130, &this->mCamSpacePosX);
 
-    this->UntrackAndSpawnStar(*(s8 *)&this->mStarTracked, this->mStarID, *(Vector3 *)&v, 4);
+    this->UntrackAndSpawnStar(*(s8 *)&this->mStarTracked, this->mStarID, v, 4);
     Particle::System::NewSimple(kPtclKingBobOmbDefeat, v.x, v.y, v.z);
     u.x = v.x;
     u.y = v.y;
     u.z = v.z;
-    this->TriplePoofDustAt(*(Vector3 *)&u);
+    this->TriplePoofDustAt(u);
 
     if (this->mMusicLayer3 == 1) {
         this->mMusicLayer3 = 0;
@@ -266,14 +259,14 @@ int daBombking_c::EnterDefeated() {
 /* -------------------------------------------------------------------------- */
 
 int daBombking_c::TickWalkHome() {
-    short ang = Vec3_HorzAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mHomePosX);
+    short ang = Vec3_HorzAngle(&this->mPos, &this->mHomePos);
     if (CheckKnockbackHit() == 1)
         return 1;
     daPly_c *p = this->ClosestPlayer();
     if (p != 0) {
         VecFx32 v = *(VecFx32 *)&p->mPosX;
-        if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&v) < 0x640000) {
-            if (this->mArenaPosY - 0x64000 < v.y) {
+        if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&v) < 0x640000) {
+            if (this->mArenaPos.y - 0x64000 < v.y) {
                 KingBobOmb_SetState(data_ov078_0212703c);
                 return 1;
             }
@@ -285,7 +278,7 @@ int daBombking_c::TickWalkHome() {
     }
     ApproachAngle(&this->mPrevAngleY, ang, 5, 0x1000, 0x100);
     this->mAngleY = this->mPrevAngleY;
-    if (Vec3_Dist((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mHomePosX) < 0x32000) {
+    if (Vec3_Dist(&this->mPos, &this->mHomePos) < 0x32000) {
         KingBobOmb_SetState(data_ov078_0212710c);
     }
     return 1;
@@ -355,9 +348,9 @@ int daBombking_c::TickCarryPlayer() {
     }
 
     Vector3 v;
-    v.x = this->mArenaPosX;
-    v.y = this->mArenaPosY;
-    v.z = this->mArenaPosZ;
+    v.x = this->mArenaPos.x;
+    v.y = this->mArenaPos.y;
+    v.z = this->mArenaPos.z;
 
     if (gCurrentStarId != 1) {
         v.x = this->mPosX;
@@ -493,7 +486,7 @@ int daBombking_c::TickKnockback() {
             KingBobOmb_SetState(&data_ov078_0212702c);
             return 1;
         }
-        if (Vec3_Dist((const Vector3 *)&mArenaPosX, (const Vector3 *)&mPosX) < 0x258000) {
+        if (Vec3_Dist(&mArenaPos, &mPos) < 0x258000) {
             short d = (((unsigned)RandomIntInternal(&data_0209e650.value) >> 8) & 0xf) << 12;
             if (d < -0x4000)
                 d = -0x4000;
@@ -501,7 +494,7 @@ int daBombking_c::TickKnockback() {
                 d = 0x4000;
             mTargetAngY += d;
         } else {
-            mTargetAngY = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&mArenaPosX);
+            mTargetAngY = Vec3_HorzAngle(&mPos, &mArenaPos);
         }
         mActionStep = 0;
         mVertSpeed = 0x1e000;
@@ -535,7 +528,7 @@ int daBombking_c::EnterKnockback() {
                                  0);
     this->mStateTimer = 0xc8;
     this->mTargetAngY =
-        Vec3_HorzAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
+        Vec3_HorzAngle(&this->mPos, &this->mArenaPos);
     this->mHealth -= 1;
     this->mActionStep = 0;
     this->mVertSpeed = 0x28000;
@@ -655,16 +648,16 @@ int daBombking_c::EnterHomeTalk() {
 int daBombking_c::TickReturnHome() {
     short horz;
     short vert;
-    VecFx32 vA;
-    VecFx32 vB;
-    VecFx32 vC;
-    VecFx32 D;
-    VecFx32 E;
+    Vector3 vA;
+    Vector3 vB;
+    Vector3 vC;
+    Vector3 D;
+    Vector3 E;
 
     if (this->mActionStep != 2) {
-        horz = Vec3_HorzAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
-        vert = Vec3_VertAngle((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
-        Vec3_Dist((const Vector3 *)&this->mPosX, (const Vector3 *)&this->mArenaPosX);
+        horz = Vec3_HorzAngle(&this->mPos, &this->mArenaPos);
+        vert = Vec3_VertAngle(&this->mPos, &this->mArenaPos);
+        Vec3_Dist(&this->mPos, &this->mArenaPos);
         vA.x = 0;
         vA.y = 0;
         vA.z = 0;
@@ -681,7 +674,7 @@ int daBombking_c::TickReturnHome() {
         vC.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, this->mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, this->mPrevAngleX);
-        MTX_MultVec43((Vector3 *)&vB, &data_020a0e68, (Vector3 *)&vC);
+        MTX_MultVec43(&vB, &data_020a0e68, &vC);
         this->mSpeedX = vC.x;
         if (this->mActionStep == 0) {
             this->mVertSpeed = vC.y;
@@ -695,8 +688,8 @@ int daBombking_c::TickReturnHome() {
         vA.x = this->mPosX;
         vA.y = this->mPosY;
         vA.z = this->mPosZ;
-        vA.y = this->mArenaPosY;
-        if (Vec3_Dist((const Vector3 *)&vA, (const Vector3 *)&this->mArenaPosX) > 0x640000)
+        vA.y = this->mArenaPos.y;
+        if (Vec3_Dist(&vA, &this->mArenaPos) > 0x640000)
             return 1;
         this->mActionStep = 1;
     }
@@ -705,8 +698,8 @@ int daBombking_c::TickReturnHome() {
         daPly_c *pl = this->ClosestPlayer();
         if (pl != 0) {
             *(struct M3 *)&D = *(struct M3 *)&pl->mPosX;
-            if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&D) > 0x640000 ||
-                this->mArenaPosY - 0x64000 > D.y) {
+            if (Vec3_Dist(&this->mArenaPos, &D) > 0x640000 ||
+                this->mArenaPos.y - 0x64000 > D.y) {
                 this->mSpeedX = 0;
                 this->mVertSpeed = 0;
                 this->mSpeedZ = 0;
@@ -739,7 +732,7 @@ int daBombking_c::TickReturnHome() {
             E.y += 0xc8000;
             m = pl2->mStateFlags & 0x800;
             if (m == 0) {
-                if (pl2->ShowMessage(*(fBase_c *)this, 0x94, (Vector3 *)(&E), 0, 0) != 0) {
+                if (pl2->ShowMessage(*(fBase_c *)this, 0x94, &E, 0, 0) != 0) {
                     gCamera->SetFlag_3();
                     func_02012694(0x12a, &this->mCamSpacePosX);
                     KingBobOmb_SetState(&data_ov078_021270dc);
@@ -810,7 +803,7 @@ int daBombking_c::EnterBounceOffHill() {
 int daBombking_c::TickThrown() {
     if (this->mWithMeshClsn.IsOnGround() == 0) goto done;
     this->mHorzSpeed = 0;
-    if ((int)(this->mArenaPosY - 0x28000) > this->mPosY) {
+    if ((int)(this->mArenaPos.y - 0x28000) > this->mPosY) {
         func_02012694(0x128, &this->mCamSpacePosX);
         KingBobOmb_SetState(&data_ov078_021270ac);
         goto done;
@@ -884,9 +877,9 @@ int daBombking_c::TickHeldByPlayer() {
         }
         {
             VecFx32 copy = *(VecFx32 *)&obj->mPosX;
-            if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&copy) > 0x640000)
+            if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&copy) > 0x640000)
                 goto drop;
-            if (this->mArenaPosY - 0xa000 <= copy.y)
+            if (this->mArenaPos.y - 0xa000 <= copy.y)
                 goto flags;
         }
     }
@@ -958,9 +951,9 @@ int daBombking_c::TickThrowBomb() {
     if (this->mSpawnedThrown[this->mSpawnSlot] == 0) {
         target = (daBmb_c *)dActor_c::FindWithID(this->mSpawnedId[this->mSpawnSlot]);
         if (target != 0) {
-            target->mPosX = this->mThrowPosX;
-            target->mPosY = this->mThrowPosY;
-            target->mPosZ = this->mThrowPosZ;
+            target->mPosX = this->mThrowPos.x;
+            target->mPosY = this->mThrowPos.y;
+            target->mPosZ = this->mThrowPos.z;
             target->mPrevAngleX = this->mPrevAngleX;
             target->mPrevAngleY = this->mPrevAngleY;
             target->mPrevAngleZ = this->mPrevAngleZ;
@@ -979,9 +972,9 @@ int daBombking_c::TickThrowBomb() {
                     v[1].x = q[0];
                     v[1].y = q[1];
                     v[1].z = q[2];
-                    v[0].x = v[1].x - this->mThrowPosX;
-                    v[0].y = v[1].y - this->mThrowPosY;
-                    v[0].z = v[1].z - this->mThrowPosZ;
+                    v[0].x = v[1].x - this->mThrowPos.x;
+                    v[0].y = v[1].y - this->mThrowPos.y;
+                    v[0].z = v[1].z - this->mThrowPos.z;
                     Matrix4x3_FromRotationY(&data_020a0e68, cstd::atan2(v[0].x, v[0].z));
                     Matrix4x3_ApplyInPlaceToRotationX(
                         &data_020a0e68, (short)(-cstd::atan2(v[0].y, Vec3_HorzLen(&v[0]))));
@@ -1031,7 +1024,7 @@ int daBombking_c::EnterThrowBomb() {
 
     for (i = 0; i < this->mPhase; i++) {
         if (this->mSpawnedId[i] == 0) {
-            r = (int)dActor_c::Spawn(0xce, 2, *(Vector3 *)(&this->mThrowPosX), 0, this->mAreaId, -1);
+            r = (int)dActor_c::Spawn(0xce, 2, this->mThrowPos, 0, this->mAreaId, -1);
             if (r != 0) {
                 this->mSpawnedId[i] = ((dActor_c *)r)->uniqueID;
                 this->mSpawnSlot = i;
@@ -1069,8 +1062,8 @@ int daBombking_c::TickChase() {
     p = this->ClosestPlayer();
     if (p != 0) {
         VecFx32 v = *(const VecFx32 *)&p->mPosX;
-        if (Vec3_Dist((const Vector3 *)&this->mArenaPosX, (const Vector3 *)&v) > 0x640000 ||
-            (this->mArenaPosY - 0xa000) > v.y) {
+        if (Vec3_Dist(&this->mArenaPos, (const Vector3 *)&v) > 0x640000 ||
+            (this->mArenaPos.y - 0xa000) > v.y) {
             this->mHorzSpeed = 0;
             KingBobOmb_SetState(data_ov078_021270fc);
             return 1;
@@ -1211,7 +1204,7 @@ int daBombking_c::TickIntroTalk() {
     v.x = t;
     v.y = src[1];
     v.z = src[2];
-    short ang = Vec3_HorzAngle((const Vector3 *)&this->mPosX, &v);
+    short ang = Vec3_HorzAngle(&this->mPos, &v);
     ApproachLinear(this->mAngleY, ang, 0x800);
     this->mPrevAngleY = this->mAngleY;
     if (target->GetTalkState() == -1) {
@@ -1275,7 +1268,7 @@ int daBombking_c::TickInactive() {
                 if (this->mTalkingPlayer->StartTalk(*(fBase_c *)this, 1)) {
                     Message::PrepareTalk();
                     b = (gCurrentStarId != 1) ? 0x93 : (unsigned int)(short)(player->param1 + 0x96);
-                    if (player->ShowMessage(*(fBase_c *)this, b, (Vector3 *)(&v), 0, 0)) {
+                    if (player->ShowMessage(*(fBase_c *)this, b, &v, 0, 0)) {
                         func_02012694(0x12a, &this->mCamSpacePosX);
                         this->mIntroTalked = 1;
                         KingBobOmb_SetState(&data_ov078_0212700c);
@@ -1285,7 +1278,7 @@ int daBombking_c::TickInactive() {
         } else {
             dist = Vec3_Dist(&this->mPos, &ppos);
             if (dist < 0x258000) {
-                if (this->mArenaPosY - 0xa000 < ppos.y) {
+                if (this->mArenaPos.y - 0xa000 < ppos.y) {
                     KingBobOmb_SetState(&data_ov078_0212701c);
                 }
             }
@@ -1357,20 +1350,20 @@ void daBombking_c::UpdateHandMatrix() {
     this->mBlendAnmModel.mat4x3.m[10] = this->mPosY >> 3;
     this->mBlendAnmModel.mat4x3.m[11] = this->mPosZ >> 3;
     MTX_Concat43(&this->mBlendAnmModel.data.transforms[10], &this->mBlendAnmModel.mat4x3,
-                 this->mHoldMtx);
+                 &this->mHoldMtx);
 
     /* Held-matrix pointer: dActor_c's mCarryMatrix. */
-    this->mCarryMatrix = (Matrix4x3 *)this->mHoldMtx;
-    this->mThrowPosX = 0;
-    this->mThrowPosY = 0;
-    this->mThrowPosZ = 0;
-    this->mThrowPosX = this->mHoldMtx[9];
-    this->mThrowPosY = this->mHoldMtx[10];
-    this->mThrowPosZ = this->mHoldMtx[11];
-    Vec3_Lsl(&lv, &this->mThrowPosX, 3);
-    this->mThrowPosX = lv.x;
-    this->mThrowPosY = lv.y;
-    this->mThrowPosZ = lv.z;
+    this->mCarryMatrix = &this->mHoldMtx;
+    this->mThrowPos.x = 0;
+    this->mThrowPos.y = 0;
+    this->mThrowPos.z = 0;
+    this->mThrowPos.x = this->mHoldMtx.m[9];
+    this->mThrowPos.y = this->mHoldMtx.m[10];
+    this->mThrowPos.z = this->mHoldMtx.m[11];
+    Vec3_Lsl(&lv, &this->mThrowPos, 3);
+    this->mThrowPos.x = lv.x;
+    this->mThrowPos.y = lv.y;
+    this->mThrowPos.z = lv.z;
 
     for (i = 0; i < 2; i++) {
         unsigned int id;
@@ -1385,11 +1378,11 @@ void daBombking_c::UpdateHandMatrix() {
         if (actor == 0)
             continue;
 
-        data_020a0e68 = *(Matrix4x3 *)this->mHoldMtx;
+        data_020a0e68 = this->mHoldMtx;
         Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0xb000, -0x7000, -0x6000);
         Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0x4000, -0x1000, 0x2000);
-        *(Matrix4x3 *)this->mHoldMtx = data_020a0e68;
-        ((dActor_c *)actor)->mCarryMatrix = (struct Matrix4x3 *)this->mHoldMtx;
+        this->mHoldMtx = data_020a0e68;
+        ((dActor_c *)actor)->mCarryMatrix = &this->mHoldMtx;
     }
 }
 
@@ -1500,7 +1493,7 @@ int daBombking_c::Behavior()
     if ((char *)mState == (char *)data_ov078_0212703c || (char *)mState == (char *)data_ov078_021270fc) {
         if (mWithMeshClsn.IsOnWall() != 0
             || mWithMeshClsn.IsOnGround() == 0
-            || (mArenaPosY - 0x28000) > mPosY) {
+            || (mArenaPos.y - 0x28000) > mPosY) {
             KingBobOmb_SetState(data_ov078_021270bc);
         }
     }
@@ -1564,12 +1557,12 @@ int daBombking_c::InitResources()
     v1.z = data_ov078_02126e00.z;
     mdCcAcPos_c2.Init(this, v1, 0xc8000, 0xc8000, 0x200000, 0x207000);
     unk_498 = 0x1f;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
-    mArenaPosX = 0xb1d000;
-    mArenaPosY = 0x1060000;
-    mArenaPosZ = 0xfee15000;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
+    mArenaPos.x = 0xb1d000;
+    mArenaPos.y = 0x1060000;
+    mArenaPos.z = 0xfee15000;
     mWithMeshClsn.Init(this, 0x190000, 0x190000, 0, 0);
     mWithMeshClsn.SetWaterTrackFlag();
     mAnimSpeed = 1;

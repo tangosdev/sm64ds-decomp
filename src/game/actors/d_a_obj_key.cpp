@@ -437,9 +437,9 @@ void daObjKey_c::StateFlyToCenter()
     v.x = data_020a0e68.m[9];
     v.y = data_020a0e68.m[10];
     v.z = data_020a0e68.m[11];
-    VEC_Subtract(&v, (Vector3 *)&mPosX, &v);
+    VEC_Subtract(&v, &mPos, &v);
     Vec3_LslInPlace(&v, 3);
-    VEC_Add(&v, (Vector3 *)&mPosX, &v);
+    VEC_Add(&v, &mPos, &v);
     v.y = mScaleX * 13 + v.y;
     mParticleID[0] = (u32)Particle::System::New(mParticleID[0], FX_TRAIL_A, v.x, v.y, v.z, 0, 0);
     mParticleID[1] = (u32)Particle::System::New(mParticleID[1], FX_TRAIL_B, v.x, v.y, v.z, 0, 0);
@@ -805,9 +805,9 @@ int daObjKey_c::Behavior()
                 vec.x = data_020a0e68.m[9];
                 vec.y = data_020a0e68.m[10];
                 vec.z = data_020a0e68.m[11];
-                VEC_Subtract(&vec, (Vector3 *)&mPosX, &vec);
+                VEC_Subtract(&vec, &mPos, &vec);
                 Vec3_LslInPlace(&vec, 3);
-                VEC_Add(&vec, (Vector3 *)&mPosX, &vec);
+                VEC_Add(&vec, &mPos, &vec);
                 /* First bone, word at +0xc. BMD_Bone has no field there. */
                 vec.y = *(int *)((char *)mAnmModel.data.bones + 0xc) * BONE_Y_MUL + vec.y;
                 vec.y = vec.y - Y_BONE;

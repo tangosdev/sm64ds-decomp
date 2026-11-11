@@ -177,9 +177,9 @@ int daPukupuku_c::CleanupResources() {
 /* Model matrix: position (>> 3, Vec3_Asr) and the X/Y/Z angles, built in the
  * scratch matrix and copied out. */
 void daPukupuku_c::UpdateModelMatrix() {
-    int v[3];
-    Vec3_Asr((Vector3 *)v, (Vector3 *)&mPosX, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
+    Vector3 v;
+    Vec3_Asr(&v, &mPos, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     mAnmModel.mat4x3 = data_020a0e68;
 }

@@ -131,7 +131,7 @@ void daPicGate_c::LoadMaterial() {
  * mesh sits centred on its position, and mInvMtx maps back into it. */
 void daPicGate_c::BuildGateMatrix() {
     VecFx32 v;
-    Vec3_Asr((Vector3 *)&v, (Vector3 *)&mPosX, 3);
+    Vec3_Asr((Vector3 *)&v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68,
@@ -195,7 +195,7 @@ void daPicGate_c::HitTest() {
         return;
 
     Vec3_Asr((Vector3 *)&a, (Vector3 *)&r5->mPrevPosX, 3);
-    Vec3_Asr((Vector3 *)&b, (Vector3 *)&r5->mPosX, 3);
+    Vec3_Asr((Vector3 *)&b, &r5->mPos, 3);
     data_020a0e68 = mInvMtx;
     MTX_MultVec43((Vector3 *)&a, &data_020a0e68, (Vector3 *)&oa);
     MTX_MultVec43((Vector3 *)&b, &data_020a0e68, (Vector3 *)&ob);

@@ -69,9 +69,7 @@ struct daBtn_c : dEnemyBase_c {
     s16                          mTargetAngle;          /* 0x3b8 */
     u8  pad_3ba[0x2];
     /* InitResources copies mPosX/mPosY/mPosZ here once. */
-    s32                          mSpawnPosX;            /* 0x3bc */
-    s32                          mSpawnPosY;            /* 0x3c0 */
-    s32                          mSpawnPosZ;            /* 0x3c4 */
+    Vector3                      mSpawnPos;             /* 0x3bc */
     /* Added to mAngleX every frame while the body tips over (states 4 and 11)
        or rises again (state 6). */
     s32                          mPitchSpeed;           /* 0x3c8 */

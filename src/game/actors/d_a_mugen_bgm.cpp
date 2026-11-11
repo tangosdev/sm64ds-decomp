@@ -89,7 +89,7 @@ int daMugenBGM_c::Behavior() {
     int diff[3];
     int rotated[3];
 
-    Vec3_Sub((Vector3 *)diff, &gPlayers[gLocalPlayerId]->mPos, (const Vector3 *)&mPosX);
+    Vec3_Sub((Vector3 *)diff, &gPlayers[gLocalPlayerId]->mPos, &mPos);
     Vec3_RotateYAndTranslate(rotated, &data_020a0ebc, mAngleY, diff);
 
     if (param1 == 1) {

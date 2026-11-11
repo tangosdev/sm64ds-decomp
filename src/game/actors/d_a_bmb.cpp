@@ -195,9 +195,9 @@ int daBmb_c::InitResources()
         mCoinType = 1;
     }
 
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
     *(Matrix4x3 *)mMatrix = IDENTITY_MATRIX4X3;
     mTurnTimer = 0;
     mFuse = 0;
@@ -402,12 +402,12 @@ void daBmb_c::State0() {
                 mState = 2;
             } else {
                 if (mVariant == 5) {
-                    s16 ang = Vec3_HorzAngle(&mPos, (const Vector3 *)&mHomePosX);
+                    s16 ang = Vec3_HorzAngle(&mPos, &mHomePos);
                     ApproachLinear(mPrevAngleY, ang, 0x200);
                     mAngleY = mPrevAngleY;
                 } else {
                     if (mTurnTimer == 0 ||
-                        Vec3_Dist(&mPos, (const Vector3 *)&mHomePosX) >= 0x500000) {
+                        Vec3_Dist(&mPos, &mHomePos) >= 0x500000) {
                         mHorzSpeed = 0x5000;
                         func_ov102_0214beb4();
                     }
@@ -443,14 +443,14 @@ void daBmb_c::func_ov102_0214beb4() {
     daPly_c *o = mChasePlayer;
     if (o == 0) {
         *(short *)&mTargetAngY =
-            Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&mHomePosX);
-        if (Vec3_Dist((const Vector3 *)&mPosX, (const Vector3 *)&mHomePosX) >= 0x500000)
+            Vec3_HorzAngle(&mPos, &mHomePos);
+        if (Vec3_Dist(&mPos, &mHomePos) >= 0x500000)
             return;
         unsigned int r = RandomIntInternal(&data_0209e650);
         *(short *)&mTargetAngY += (short)(r >> 0x10);
         return;
     }
-    *(short *)&mTargetAngY = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)&o->mPosX);
+    *(short *)&mTargetAngY = Vec3_HorzAngle(&mPos, &o->mPos);
 }
 }
 
@@ -620,9 +620,9 @@ void daBmb_c::func_ov102_0214baa0() {
     mdCc_c.Clear();
 
     mFlags &= 0xfff1fffe;
-    mPosX = mHomePosX;
-    mPosY = mHomePosY;
-    mPosZ = mHomePosZ;
+    mPosX = mHomePos.x;
+    mPosY = mHomePos.y;
+    mPosZ = mHomePos.z;
     mShouldRender = 0;
     mChasePlayer = 0;
     mCarrier = 0;
@@ -1085,7 +1085,7 @@ void daBmb_c::OnTurnIntoEgg(daPly_c &player) {
 void daBmb_c::func_ov102_0214ad40() {
     if ((unsigned char)(mVariant + 0xfe) > 1)
         return;
-    if (mPosY >= mHomePosY - 0x12c000)
+    if (mPosY >= mHomePos.y - 0x12c000)
         return;
     {
         unsigned short v = mFuse;

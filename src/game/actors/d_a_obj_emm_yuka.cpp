@@ -108,15 +108,15 @@ int daObjEmmYuka_c::Behavior()
         mPath.GetNode(*(Vector3 *)&node, delta);
     }
     mPath.GetNode(*(Vector3 *)&prev, mNodeIndex);
-    Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&mPosX, (const Vector3 *)&prev);
+    Vec3_Sub((Vector3 *)&diff, &mPos, (const Vector3 *)&prev);
     len = VEC_Mag((const Vector3 *)&diff);
     if (len == 0 || len <= mHorzSpeed) {
         Vec3_MulScalar((Vector3 *)&scaled1, (const Vector3 *)&diff, FX_Div(mHorzSpeed, len));
-        VEC_Subtract((Vector3 *)&mPosX, (Vector3 *)&scaled1, (Vector3 *)&mPosX);
+        VEC_Subtract(&mPos, (Vector3 *)&scaled1, &mPos);
         looped = 1;
     } else {
         Vec3_MulScalar((Vector3 *)&scaled2, (const Vector3 *)&diff, FX_Div(mHorzSpeed, len));
-        VEC_Subtract((Vector3 *)&mPosX, (Vector3 *)&scaled2, (Vector3 *)&mPosX);
+        VEC_Subtract(&mPos, (Vector3 *)&scaled2, &mPos);
     }
     if (looped) {
         mNodeIndex += mPathDir;

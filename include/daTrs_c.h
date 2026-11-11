@@ -163,9 +163,7 @@ struct daTrs_c : dCapEnemy_c {
     s32 mCarriedScaleZ;        /* 0x518 */
     /* Spawn position; Behavior restores here on hide and on respawn, and the
        leash distance is measured from here. */
-    s32 mHomePosX;             /* 0x51c */
-    s32 mHomePosY;             /* 0x520 */
-    s32 mHomePosZ;             /* 0x524 */
+    Vector3 mHomePos;          /* 0x51c */
     /* Last grounded position; Behavior falls back here when the raycast finds
        no ground within range. */
     s32 mLastGroundPosX;       /* 0x528 */
@@ -173,14 +171,10 @@ struct daTrs_c : dCapEnemy_c {
     s32 mLastGroundPosZ;       /* 0x530 */
     /* Collision center, as an offset from the actor position: the Init offset
        for mdCcAcPos_c, recomputed by 021160d4 from the bone matrix. */
-    s32 mClsnOffX;             /* 0x534 */
-    s32 mClsnOffY;             /* 0x538 */
-    s32 mClsnOffZ;             /* 0x53c */
+    Vector3 mClsnOff;          /* 0x534 */
     /* Bone-matrix offset captured at Init; 021160d4 subtracts it back out of
        the recomputed collision center. */
-    s32 mClsnBaseX;            /* 0x540 */
-    s32 mClsnBaseY;            /* 0x544 */
-    s32 mClsnBaseZ;            /* 0x548 */
+    Vector3 mClsnBase;         /* 0x540 */
     /* Camera goals for variant 0xf's intro scene (02117cdc), built from the
        talking player's position in case 2 and moved in case 5:
        func_020092c4 is handed dCamera_c::pos with mTalkCamPos* and
@@ -221,7 +215,7 @@ struct daTrs_c : dCapEnemy_c {
     /* Z bias added to mClsnOffZ (Init seeds the offset with it; 021160d4 adds
        it after the recompute). -0x14000, -0x24000 for variant 5. */
     s32 mClsnZBias;            /* 0x598 */
-    /* Chase leash from mHomePosX: ((param1 >> 8) & 0xff) * 0x64000. */
+    /* Chase leash from mHomePos: ((param1 >> 8) & 0xff) * 0x64000. */
     s32 mLeashDist;            /* 0x59c */
     /* Children lost: CleanupResources increments the spawner's (see
        mSpawnerID); variant 3 stops spawning at 5. 0211a3d0 also writes it on

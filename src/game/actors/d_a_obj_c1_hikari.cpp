@@ -111,7 +111,7 @@ int daObjC1Hikari_c::Behavior() {
         vMid.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         MTX_MultVec43((Vector3 *)&vIn, &data_020a0e68, (Vector3 *)&vMid);
-        Vec3_Add((Vector3 *)&vRes, (const Vector3 *)&mPosX, (const Vector3 *)&vMid);
+        Vec3_Add((Vector3 *)&vRes, &mPos, (const Vector3 *)&vMid);
 
         switch (p->GetTalkState()) {
         case 0:
@@ -157,7 +157,7 @@ int daObjC1Hikari_c::Behavior() {
     vMid2.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MTX_MultVec43((Vector3 *)&vIn2, &data_020a0e68, (Vector3 *)&vMid2);
-    Vec3_Add((Vector3 *)&vRes2, (const Vector3 *)&mPosX, (const Vector3 *)&vMid2);
+    Vec3_Add((Vector3 *)&vRes2, &mPos, (const Vector3 *)&vMid2);
     mCylinder.pos.x = vRes2.x;
     mCylinder.pos.y = vRes2.y;
     mCylinder.pos.z = vRes2.z;

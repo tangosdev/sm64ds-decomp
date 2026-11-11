@@ -28,7 +28,7 @@
  *   ..33a0     ..0d80    ..0c7c    hit reaction: slide to a stop; when the
  *                                  ground ray misses, mHitsRemaining drops.
  *   ..33c0     ..0c08    ..0b78    leap (20.0 out, 30.0 up) until the boss is
- *                                  below mSpawnPosY and on the ground, then
+ *                                  below mSpawnPos.y and on the ground, then
  *                                  face mSpawnPos and go to ..3400.
  *   ..3400     ..081c    ..0610    waypoint hop whose landing sets mJumpCount
  *                                  to 1 and returns to ..3320.
@@ -46,7 +46,7 @@
  *                                  nonzero 0211f61c (a hit, or the
  *                                  boss hurting the player) goes to ..33f0.
  *   ..33f0     ..08e4    ..0844    leap, tilting mAngleX toward -0x4000, until
- *                                  it is below mSpawnPosY and on the ground,
+ *                                  it is below mSpawnPos.y and on the ground,
  *                                  then ..33b0.
  *   ..33b0     ..000c    ..fe8c    cut scene, part 1: StartTalk the player,
  *                                  camera on the boss, until mStateTimer (0x32
@@ -280,7 +280,7 @@ void daKing_Donketu_c::RenewLoopedParticles() {
     ((int*)&pos)[2] = c->mPosZ;
     ((int *)&pos)[1] = y + FX_MUL(c->mScaleX, 0x1e000);
 
-    Vec3_HorzAngle(&c->mPos, (Vector3 *)&c->mSpawnPosX);
+    Vec3_HorzAngle(&c->mPos, &c->mSpawnPos);
     in.z = 0; in.z = 0xc8000; in.x = 0; in.y = 0;
     out.x = 0; out.y = 0; out.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mPrevAngleY);
@@ -580,9 +580,9 @@ int daKing_Donketu_c::UpdateDefeat() {
     c->mScaleY = c->mScaleZ;
     c->RenewLoopedParticles();
     if (c->mScaleX >= 0x100) goto end;
-    pos.x = c->mSpawnPosX;
-    pos.y = c->mSpawnPosY;
-    pos.z = c->mSpawnPosZ;
+    pos.x = c->mSpawnPos.x;
+    pos.y = c->mSpawnPos.y;
+    pos.z = c->mSpawnPos.z;
     Message::EndTalk();
     Sound::StopLoadedMusic_Layer3();
     func_02011cfc();
@@ -680,9 +680,9 @@ int daKing_Donketu_c::UpdateDefeatCutscene2() {
     in.x = 0; in.y = 0; in.z = 0;
     out.x = 0; out.y = 0; out.z = 0;
 
-    la.x = c->mSpawnPosX;
-    la.y = c->mSpawnPosY;
-    la.z = c->mSpawnPosZ;
+    la.x = c->mSpawnPos.x;
+    la.y = c->mSpawnPos.y;
+    la.z = c->mSpawnPos.z;
     ps.x = c->mPosX;
     ps.y = c->mPosY;
     ps.z = c->mPosZ;
@@ -758,9 +758,9 @@ int daKing_Donketu_c::UpdateDefeatCutscene1() {
     look.x = c->mPosX;
     look.y = c->mPosY;
     look.z = c->mPosZ;
-    pos.x = c->mSpawnPosX;
-    pos.y = c->mSpawnPosY;
-    pos.z = c->mSpawnPosZ;
+    pos.x = c->mSpawnPos.x;
+    pos.y = c->mSpawnPos.y;
+    pos.z = c->mSpawnPos.z;
 
     look.y += 0x100000;
     in.z = -0x59c000;
@@ -848,8 +848,8 @@ int daKing_Donketu_c::UpdateLeapToSpawn() {
         VecFx32 rotated;
         s16 horz;
         ApproachLinear(mAngleX, 0, 0x2000);
-        horz = Vec3_HorzAngle(&mPos, (const Vector3 *)&mSpawnPosX);
-        Vec3_VertAngle((const Vector3 *)&mPosX, (const Vector3 *)&mSpawnPosX);
+        horz = Vec3_HorzAngle(&mPos, &mSpawnPos);
+        Vec3_VertAngle(&mPos, &mSpawnPos);
         ApproachLinear(mPrevAngleY, horz, 0x800);
         offset.x = 0;
         offset.y = 0;
@@ -929,7 +929,7 @@ int daKing_Donketu_c::EnterLeapToSpawn() {
 int daKing_Donketu_c::UpdateWaypointHop() {
     daKing_Donketu_c *c = this;
     int *src;
-    int v[3];
+    Vector3 v;
 
     if ((unsigned short)c->mStateTimer == 0)
         goto mainblock;
@@ -954,18 +954,18 @@ int daKing_Donketu_c::UpdateWaypointHop() {
 mainblock:
     if (c->mHitsRemaining == 2) {
         src = (int *)&c->mWaypointsB[c->mWaypointCursor];
-        v[0] = src[0];
-        v[1] = src[1];
-        v[2] = src[2];
+        v.x = src[0];
+        v.y = src[1];
+        v.z = src[2];
     } else {
         src = (int *)&c->mWaypointsA[c->mWaypointCursor];
-        v[0] = src[0];
-        v[1] = src[1];
-        v[2] = src[2];
+        v.x = src[0];
+        v.y = src[1];
+        v.z = src[2];
     }
     {
-        short hz = Vec3_HorzAngle(&c->mPos, (const Vector3 *)v);
-        short vt = Vec3_VertAngle((const Vector3 *)&c->mPosX, (const Vector3 *)v);
+        short hz = Vec3_HorzAngle(&c->mPos, &v);
+        short vt = Vec3_VertAngle(&c->mPos, &v);
         int in[3];
         int out[3];
         ApproachLinear(c->mPrevAngleY, hz, 0x800);
@@ -1019,7 +1019,7 @@ int daKing_Donketu_c::EnterWaypointHop() {
 int daKing_Donketu_c::func_ov073_02120610() {
     daKing_Donketu_c *c = this;
     int *src;
-    int v[3];
+    Vector3 v;
 
     if ((unsigned short)c->mStateTimer == 0)
         goto mainblock;
@@ -1036,18 +1036,18 @@ mainblock:
     ApproachLinear(c->mAngleX, 0, 0x2000);
     if (c->mHitsRemaining == 2) {
         src = (int *)&c->mWaypointsB[c->mWaypointCursor];
-        v[0] = src[0];
-        v[1] = src[1];
-        v[2] = src[2];
+        v.x = src[0];
+        v.y = src[1];
+        v.z = src[2];
     } else {
         src = (int *)&c->mWaypointsA[c->mWaypointCursor];
-        v[0] = src[0];
-        v[1] = src[1];
-        v[2] = src[2];
+        v.x = src[0];
+        v.y = src[1];
+        v.z = src[2];
     }
     {
-        short hz = Vec3_HorzAngle(&c->mPos, (const Vector3 *)v);
-        short vt = Vec3_VertAngle((const Vector3 *)&c->mPosX, (const Vector3 *)v);
+        short hz = Vec3_HorzAngle(&c->mPos, &v);
+        short vt = Vec3_VertAngle(&c->mPos, &v);
         int in[3];
         int out[3];
         in[2] = 0;
@@ -1094,7 +1094,7 @@ int daKing_Donketu_c::func_ov073_0212081c() {
 }
 
 /* ..33f0 update: mAngleX approaches -0x4000 (a quarter turn) by 0x400 a frame
-   with the looped sound playing. Once the boss is below mSpawnPosY and on the
+   with the looped sound playing. Once the boss is below mSpawnPos.y and on the
    ground it shakes the camera (0x7d0000), plays SND_BIG_LANDING, zeroes
    mHorzSpeed and goes to ..33b0. */
 int daKing_Donketu_c::func_ov073_02120844()
@@ -1102,7 +1102,7 @@ int daKing_Donketu_c::func_ov073_02120844()
     daKing_Donketu_c *t = this;
     ApproachLinear(t->mAngleX, -0x4000, 0x400);
     t->mSoundHandle = Sound::PlayLong(t->mSoundHandle, 3, 0x170, *(Vector3 *)&t->mCamSpacePos, 0);
-    if (t->mSpawnPosY > t->mPosY && t->mWithMeshClsn.IsOnGround()) {
+    if (t->mSpawnPos.y > t->mPosY && t->mWithMeshClsn.IsOnGround()) {
         t->SpawnLandingEffects(0x7d0000);
         func_02012694(SND_BIG_LANDING, &t->mCamSpacePosX);
         t->mHorzSpeed = 0;
@@ -1166,7 +1166,7 @@ int daKing_Donketu_c::UpdateEdgeWobble() {
     in.y = c->mEdgePosY;
     in.z = c->mEdgePosZ + out.z;
     Vec3_ApproachHorz(&c->mPosX, &in, 0x14000);
-    c->mAngleY = Vec3_HorzAngle(&c->mPos, (const Vector3 *)&c->mSpawnPosX);
+    c->mAngleY = Vec3_HorzAngle(&c->mPos, &c->mSpawnPos);
     c->mPrevAngleY = c->mAngleY + 0x8000;
     c->mStateScratch += 0x500;
     ApproachLinear(c->mAngleX, FX_MUL(c->mStateParam, FX_SinIdx((u16)(s16)c->mStateScratch >> 4)),
@@ -1203,17 +1203,17 @@ int daKing_Donketu_c::EnterEdgeWobble() {
 }
 
 /* ..33c0 update: mAngleX approaches -0x4000 by 0x400 a frame. Once the boss is
-   below mSpawnPosY and on the ground it shakes the camera (0xfa0000), stops,
+   below mSpawnPos.y and on the ground it shakes the camera (0xfa0000), stops,
    turns to face mSpawnPos (both angles), plays SND_BIG_LANDING and goes to
    ..3400. */
 int daKing_Donketu_c::func_ov073_02120b78() {
     daKing_Donketu_c *c = this;
     ApproachLinear(c->mAngleX, -0x4000, 0x400);
-    if (c->mSpawnPosY > c->mPosY) {
+    if (c->mSpawnPos.y > c->mPosY) {
         if (c->mWithMeshClsn.IsOnGround()) {
             c->SpawnLandingEffects(0xfa0000);
             c->mHorzSpeed = 0;
-            c->mPrevAngleY = Vec3_HorzAngle(&c->mPos, (const Vector3 *)&c->mSpawnPosX);
+            c->mPrevAngleY = Vec3_HorzAngle(&c->mPos, &c->mSpawnPos);
             c->mAngleY = c->mPrevAngleY;
             func_02012694(SND_BIG_LANDING, &c->mCamSpacePosX);
             ChiefChilly_ChangeState((C *)(c), (PMF *)&data_ov073_02123400);
@@ -1320,7 +1320,7 @@ int daKing_Donketu_c::EnterTurnToSpawn() {
     c->mBlendAnmModel.SetAnim(*(BCA_File *)((BCA_File *)gKingIceDonketuWalkAnimationFile.filePtr),
                               4, 0, 0x1000, 0);
     c->mBlendAnmModel.speed = 0x2000;
-    c->mTargetAngle = Vec3_HorzAngle(&c->mPos, (const Vector3 *)&c->mSpawnPosX);
+    c->mTargetAngle = Vec3_HorzAngle(&c->mPos, &c->mSpawnPos);
     c->mStateScratch = 0;
     c->mPrevAngleY = c->mAngleY;
     return 1;
@@ -1434,7 +1434,7 @@ int daKing_Donketu_c::UpdateChase() {
                 t = p->mIsNoControl ? 1 : 0;
                 if (t == 1) {
                 hz:
-                    c->mTargetAngle = Vec3_HorzAngle(&c->mPos, (Vector3 *)&c->mSpawnPosX);
+                    c->mTargetAngle = Vec3_HorzAngle(&c->mPos, &c->mSpawnPos);
                 } else {
                     c->mTargetAngle = c->HorzAngleToCPlayer();
                 }
@@ -1614,14 +1614,14 @@ extern "C" int ChiefChilly_ChangeState(C *c, PMF *p) { c->pp = p; PMF *q = c->pp
 void daKing_Donketu_c::UpdateModelAndShadow() {
     daKing_Donketu_c *c = this;
     int sh;
-    VecFx32 v;
+    Vector3 v;
     VecFx32 out;
     void* m;
     Mtx43* saved;
     int i;
     VecFx32 *p;
 
-    Vec3_Asr((Vector3 *)&v, (Vector3 *)&c->mPosX, 3);
+    Vec3_Asr(&v, &c->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, c->mAngleX, c->mAngleY, c->mAngleZ);
 
@@ -1870,9 +1870,9 @@ int daKing_Donketu_c::InitResources()
     mdCcAcPos_c.Init(this, v, 0xa4000, 0x1e4000, 0x200000, 0x567f0);
     mBlendAnmModel.speed = 0x2000;
     mWithMeshClsn.Init(this, 0x96000, 0x94000, 0, 0);
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     for (i = 0; i < 8; i++) {
         mWaypointsA[i].x = mPosX;
         mWaypointsA[i].y = mPosY;

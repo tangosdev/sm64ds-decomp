@@ -14679,7 +14679,7 @@ void daPly_c::func_ov002_020d8854() {
         tr.x = 0;
         tr.y = 0x50000;
         tr.z = 0x64000;
-        Vec3_RotateYAndTranslate(&out, (Vector3 *)(&mPosX), mAngleY, &tr);
+        Vec3_RotateYAndTranslate(&out, &mPos, mAngleY, &tr);
         cp = out;
         func_ov002_020d8d10(&cp);
     }

@@ -36,16 +36,14 @@ struct daSanbo_c : dActor_c {
     dExtShadowModel_c mShadowModel;                /* 0x124 */
     dCcAc_c mdCcAc_c;  /* 0x14c */
     dBgCh_Actr mWithMeshClsn;              /* 0x180 */
-    Matrix4x3 mMatrix;      /* 0x33c -- initialized from IDENTITY_MATRIX4X3 */
+    Matrix4x3 mMatrix;                     /* 0x33c -- initialized from IDENTITY_MATRIX4X3 */
     /* A daSanbo_c is two actors: the head (actorID 0xf0) and its body segments
-       (actorID 0xf1). The head seeds mRootPos from its OWN mPosX/Y/Z; a segment
+       (actorID 0xf1). The head seeds mRootPos from its OWN mPos; a segment
        finds its previous segment with dActor_c::FindWithID(param1), and copies
-       that segment's mRootPos triple at this same 0x36c offset. Each segment
+       that segment's mRootPos at this same 0x36c offset. Each segment
        therefore inherits the head's root position through the chain.
        [InitResources, in src/game/actors/d_a_sanbo.cpp] */
-    s32 mRootPosX;            /* 0x36c */
-    s32 mRootPosY;            /* 0x370 */
-    s32 mRootPosZ;            /* 0x374 */
+    Vector3 mRootPos;         /* 0x36c */
     /* Segment-follow offset: sin/cos of mSegAngY * 0xe000. UpdateStackedBody
        / UpdateStackedOnGrowingBody write it; UpdateModelAndShadow adds it to pos for
        the model translation. */

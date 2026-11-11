@@ -400,7 +400,7 @@ extern "C" void func_ov100_021437d4(daWanwan2_c *thisx)
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, thisx->mAngleX, thisx->mAngleY, thisx->mAngleZ);
     MTX_MultVec43((Vector3 *)&in, &data_020a0e68, (Vector3 *)&out);
-    Vec3_Add((Vector3 *)&added, (const Vector3 *)&thisx->mPosX, (const Vector3 *)&out);
+    Vec3_Add((Vector3 *)&added, &thisx->mPos, (const Vector3 *)&out);
 
     {
         int ax = added.x, ay = added.y, az = added.z;

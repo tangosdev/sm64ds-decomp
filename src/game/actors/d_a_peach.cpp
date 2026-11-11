@@ -115,7 +115,7 @@ void daPeach_c::UpdateLookAt() {
     if (player == 0)
         return;
     Vector3 target;
-    Vector3 *playerPos = (Vector3 *)(&player->mPosX);
+    Vector3 *playerPos = &player->mPos;
     target = *playerPos;
     int dist = Vec3_HorzDist(&mPos, &target);
     target.y = target.y - 0x1e000;

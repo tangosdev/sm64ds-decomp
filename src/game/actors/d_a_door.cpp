@@ -920,9 +920,9 @@ fail:
    mScaleX/Y/Z, which a door does not use as a scale; returns the player
    (gPlayers[gLocalPlayerId], the current one). Was a C source. */
 daPly_c *daDoor_c::func_ov100_02145370() {
-    VecFx32 v;
+    Vector3 v;
     daPly_c *r5 = gPlayers[gLocalPlayerId];
-    Vec3_Sub((Vector3 *)&v, (const Vector3 *)&r5->mPosX, (const Vector3 *)&mPosX);
+    Vec3_Sub(&v, &r5->mPos, &mPos);
     Vec3_RotateYAndTranslate(&mScaleX, &data_020a0ebc, (short)(-mAngleY), &v);
     return r5;
 }

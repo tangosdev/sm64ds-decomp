@@ -101,8 +101,8 @@ extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern short data_ov034_02113820[];
 extern void **data_ov034_021138b0[];
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int VEC_Mag(void *v);
-extern int Vec3_HorzDist(void *a, void *b);
+extern int VEC_Mag(const Vector3 *v);
+extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int RandomIntInternal(int *seed);
 extern int data_ov034_02114488[];
 extern Matrix4x3 data_020a0e68;
@@ -398,14 +398,14 @@ void daHanachan_c::StateMoveMain()
 {
     int len;
     int rnd;
-    int v[3];
+    Vector3 v;
 
-    Vec3_Sub((Vector3 *)v, (const Vector3 *)&mPosX, (const Vector3 *)&mHomePos);
-    len = VEC_Mag(v);
+    Vec3_Sub(&v, &mPos, &mHomePos);
+    len = VEC_Mag(&v);
 
     if (mDefeated != 0 && mFalling == 0) {
         daPly_c *cp = ClosestPlayer();
-        if (Vec3_HorzDist(&mPosX, &cp->mPosX) < 0xc8000) {
+        if (Vec3_HorzDist(&mPos, &cp->mPos) < 0xc8000) {
             mFalling = 1;
             mVertAccel = -0x1000;
             mTerminalVelocity = -0x3c000;
@@ -624,7 +624,7 @@ void daHanachan_c::StateDemoWaitMain()
     int len;
     daPly_c *player;
 
-    Vec3_Sub(&v, (const Vector3 *)&mPosX, (const Vector3 *)&mHomePos);
+    Vec3_Sub(&v, &mPos, &mHomePos);
     len = VEC_Mag(&v);
     player = ClosestPlayer();
     if (player->mPosY > mPosY + 0x12c000) {

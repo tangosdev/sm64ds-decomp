@@ -137,7 +137,7 @@ int daObjFm_Battan_c::Behavior() {
 
             offset.x = FX_MUL(FX_SinIdx((u16)mAngleY >> 4), -0x190000);
             offset.z = FX_MUL(FX_CosIdx((u16)mAngleY >> 4), -0x190000);
-            VEC_Add((Vector3 *)&offset, (Vector3 *)&mPosX, (Vector3 *)&offset);
+            VEC_Add((Vector3 *)&offset, &mPos, (Vector3 *)&offset);
 
             dustPos.x = offset.x;
             dustPos.y = offset.y;

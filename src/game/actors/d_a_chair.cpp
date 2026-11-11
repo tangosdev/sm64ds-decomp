@@ -292,8 +292,8 @@ void daChair_c::State2() {
             if (mActionTimer == 0) {
                 dActor_c *player;
                 VecFx32 *pp;
-                VecFx32 playerPos;
-                VecFx32 diff;
+                Vector3 playerPos;
+                Vector3 diff;
                 s32 reach;
                 func_0201267c(kSfxHop, &mCamSpacePos);
                 player = ClosestPlayer();
@@ -305,9 +305,9 @@ void daChair_c::State2() {
                 playerPos.x = pp->x;
                 playerPos.y = pp->y;
                 playerPos.z = pp->z;
-                Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&playerPos, (const Vector3 *)&mPosX);
+                Vec3_Sub(&diff, &playerPos, &mPos);
                 mPrevAngleY = cstd::atan2(diff.x, diff.z);
-                mPrevAngleX = cstd::atan2(diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
+                mPrevAngleX = cstd::atan2(diff.y, Vec3_HorzLen(&diff)) * -1;
                 /* mSpeedX / mSpeedZ: lateral velocity beside mVertSpeed. */
                 reach = FX_MUL(FX_SinCosTable_[SINCOS_INDEX(mPrevAngleX) + 1], 0x32000);
                 mSpeedX = FX_MUL(reach, FX_SinCosTable_[SINCOS_INDEX(mPrevAngleY)]);
@@ -331,7 +331,7 @@ void daChair_c::State2() {
         }
     }
 
-    VEC_Add((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
+    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
 
     {
         u32 id = mCylinder.otherOwner;
