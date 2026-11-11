@@ -8296,707 +8296,707 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "_ZGVsLookTarget$3649",
+      "from": "_ZGVsLookTarget$3652",
       "to": "_ZGVsLookTarget$3570",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsLookTarget$3586 to _ZGVsLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from _ZGVsLookTarget$3584 to _ZGVsLookTarget$3663 when the opt pragma was removed (#821). Re-keyed from _ZGVsLookTarget$3663 to _ZGVsLookTarget$3665 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from _ZGVsLookTarget$3666 to _ZGVsLookTarget$3617 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsLookTarget$3586 to _ZGVsLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from _ZGVsLookTarget$3584 to _ZGVsLookTarget$3663 when the opt pragma was removed (#821). Re-keyed from _ZGVsLookTarget$3663 to _ZGVsLookTarget$3665 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from _ZGVsLookTarget$3666 to _ZGVsLookTarget$3617 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from _ZGVsLookTarget$3617 to _ZGVsLookTarget$3620 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "@3652",
+      "from": "@3655",
       "to": "@3573",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3589 to @3587 when the opt pragma was removed (#821). Re-keyed from @3587 to @3666 when the opt pragma was removed (#821). Re-keyed from @3666 to @3668 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @3669 to @3620 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3589 to @3587 when the opt pragma was removed (#821). Re-keyed from @3587 to @3666 when the opt pragma was removed (#821). Re-keyed from @3666 to @3668 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @3669 to @3620 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @3620 to @3623 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "sLookTarget$3649",
+      "from": "sLookTarget$3652",
       "to": "sLookTarget$3570",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sLookTarget$3586 to sLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from sLookTarget$3584 to sLookTarget$3663 when the opt pragma was removed (#821). Re-keyed from sLookTarget$3663 to sLookTarget$3665 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from sLookTarget$3666 to sLookTarget$3617 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sLookTarget$3586 to sLookTarget$3584 when the opt pragma was removed (#821). Re-keyed from sLookTarget$3584 to sLookTarget$3663 when the opt pragma was removed (#821). Re-keyed from sLookTarget$3663 to sLookTarget$3665 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from sLookTarget$3666 to sLookTarget$3617 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from sLookTarget$3617 to sLookTarget$3620 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsViewStart$3825",
+      "from": "_ZGVsViewStart$3828",
       "to": "_ZGVsViewStart$3746",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewStart$3762 to _ZGVsViewStart$3760 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewStart$3760 to _ZGVsViewStart$3839 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewStart$3839 to _ZGVsViewStart$3841 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from _ZGVsViewStart$3842 to _ZGVsViewStart$3793 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewStart$3762 to _ZGVsViewStart$3760 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewStart$3760 to _ZGVsViewStart$3839 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewStart$3839 to _ZGVsViewStart$3841 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from _ZGVsViewStart$3842 to _ZGVsViewStart$3793 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from _ZGVsViewStart$3793 to _ZGVsViewStart$3796 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "@3828",
+      "from": "@3831",
       "to": "@3749",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3765 to @3763 when the opt pragma was removed (#821). Re-keyed from @3763 to @3842 when the opt pragma was removed (#821). Re-keyed from @3842 to @3844 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @3845 to @3796 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3765 to @3763 when the opt pragma was removed (#821). Re-keyed from @3763 to @3842 when the opt pragma was removed (#821). Re-keyed from @3842 to @3844 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @3845 to @3796 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @3796 to @3799 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "sViewStart$3825",
+      "from": "sViewStart$3828",
       "to": "sViewStart$3746",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewStart$3762 to sViewStart$3760 when the opt pragma was removed (#821). Re-keyed from sViewStart$3760 to sViewStart$3839 when the opt pragma was removed (#821). Re-keyed from sViewStart$3839 to sViewStart$3841 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from sViewStart$3842 to sViewStart$3793 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewStart$3762 to sViewStart$3760 when the opt pragma was removed (#821). Re-keyed from sViewStart$3760 to sViewStart$3839 when the opt pragma was removed (#821). Re-keyed from sViewStart$3839 to sViewStart$3841 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from sViewStart$3842 to sViewStart$3793 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from sViewStart$3793 to sViewStart$3796 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsViewEnd$3829",
+      "from": "_ZGVsViewEnd$3832",
       "to": "_ZGVsViewEnd$3750",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewEnd$3766 to _ZGVsViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewEnd$3764 to _ZGVsViewEnd$3843 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewEnd$3843 to _ZGVsViewEnd$3845 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from _ZGVsViewEnd$3846 to _ZGVsViewEnd$3797 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewEnd$3766 to _ZGVsViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewEnd$3764 to _ZGVsViewEnd$3843 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewEnd$3843 to _ZGVsViewEnd$3845 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from _ZGVsViewEnd$3846 to _ZGVsViewEnd$3797 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from _ZGVsViewEnd$3797 to _ZGVsViewEnd$3800 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "@3832",
+      "from": "@3835",
       "to": "@3753",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3769 to @3767 when the opt pragma was removed (#821). Re-keyed from @3767 to @3846 when the opt pragma was removed (#821). Re-keyed from @3846 to @3848 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @3849 to @3800 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3769 to @3767 when the opt pragma was removed (#821). Re-keyed from @3767 to @3846 when the opt pragma was removed (#821). Re-keyed from @3846 to @3848 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @3849 to @3800 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @3800 to @3803 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "sViewEnd$3829",
+      "from": "sViewEnd$3832",
       "to": "sViewEnd$3750",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewEnd$3766 to sViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from sViewEnd$3764 to sViewEnd$3843 when the opt pragma was removed (#821). Re-keyed from sViewEnd$3843 to sViewEnd$3845 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from sViewEnd$3846 to sViewEnd$3797 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewEnd$3766 to sViewEnd$3764 when the opt pragma was removed (#821). Re-keyed from sViewEnd$3764 to sViewEnd$3843 when the opt pragma was removed (#821). Re-keyed from sViewEnd$3843 to sViewEnd$3845 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from sViewEnd$3846 to sViewEnd$3797 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from sViewEnd$3797 to sViewEnd$3800 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsViewIdle$3833",
+      "from": "_ZGVsViewIdle$3836",
       "to": "_ZGVsViewIdle$3754",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewIdle$3770 to _ZGVsViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewIdle$3768 to _ZGVsViewIdle$3847 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewIdle$3847 to _ZGVsViewIdle$3849 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from _ZGVsViewIdle$3850 to _ZGVsViewIdle$3801 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from _ZGVsViewIdle$3770 to _ZGVsViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewIdle$3768 to _ZGVsViewIdle$3847 when the opt pragma was removed (#821). Re-keyed from _ZGVsViewIdle$3847 to _ZGVsViewIdle$3849 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from _ZGVsViewIdle$3850 to _ZGVsViewIdle$3801 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from _ZGVsViewIdle$3801 to _ZGVsViewIdle$3804 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "@3836",
+      "from": "@3839",
       "to": "@3757",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3773 to @3771 when the opt pragma was removed (#821). Re-keyed from @3771 to @3850 when the opt pragma was removed (#821). Re-keyed from @3850 to @3852 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @3853 to @3804 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from @3773 to @3771 when the opt pragma was removed (#821). Re-keyed from @3771 to @3850 when the opt pragma was removed (#821). Re-keyed from @3850 to @3852 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @3853 to @3804 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @3804 to @3807 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "sViewIdle$3833",
+      "from": "sViewIdle$3836",
       "to": "sViewIdle$3754",
-      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewIdle$3770 to sViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from sViewIdle$3768 to sViewIdle$3847 when the opt pragma was removed (#821). Re-keyed from sViewIdle$3847 to sViewIdle$3849 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from sViewIdle$3850 to sViewIdle$3801 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
-    },
-    {
-      "from": "@4436",
-      "to": "@4355",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4373 to @4371 when the opt pragma was removed (#821). Re-keyed from @4371 to @4450 when the opt pragma was removed (#821). Re-keyed from @4450 to @4425 when the local M48 copy struct was retired (#4570). Re-keyed from @4425 to @4427 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4428 to @4379 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
-    },
-    {
-      "from": "@4437",
-      "to": "@4356",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4374 to @4372 when the opt pragma was removed (#821). Re-keyed from @4372 to @4451 when the opt pragma was removed (#821). Re-keyed from @4451 to @4426 when the local M48 copy struct was retired (#4570). Re-keyed from @4426 to @4428 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4429 to @4380 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
-    },
-    {
-      "from": "@4438",
-      "to": "@4357",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4375 to @4373 when the opt pragma was removed (#821). Re-keyed from @4373 to @4452 when the opt pragma was removed (#821). Re-keyed from @4452 to @4427 when the local M48 copy struct was retired (#4570). Re-keyed from @4427 to @4429 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4430 to @4381 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "evidence": "Shared collision headers changed the compiler local counter. Complete before/after objects preserve allocated bytes, section properties, symbol attributes and relocation destinations; keep the configured retail identity. See notes/collision-readability-1027.md. Re-keyed from sViewIdle$3770 to sViewIdle$3768 when the opt pragma was removed (#821). Re-keyed from sViewIdle$3768 to sViewIdle$3847 when the opt pragma was removed (#821). Re-keyed from sViewIdle$3847 to sViewIdle$3849 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from sViewIdle$3850 to sViewIdle$3801 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from sViewIdle$3801 to sViewIdle$3804 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4439",
-      "to": "@4358",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4376 to @4374 when the opt pragma was removed (#821). Re-keyed from @4374 to @4453 when the opt pragma was removed (#821). Re-keyed from @4453 to @4428 when the local M48 copy struct was retired (#4570). Re-keyed from @4428 to @4430 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4431 to @4382 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4355",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4373 to @4371 when the opt pragma was removed (#821). Re-keyed from @4371 to @4450 when the opt pragma was removed (#821). Re-keyed from @4450 to @4425 when the local M48 copy struct was retired (#4570). Re-keyed from @4425 to @4427 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4428 to @4379 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4379 to @4382 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4440",
-      "to": "@4359",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4377 to @4375 when the opt pragma was removed (#821). Re-keyed from @4375 to @4454 when the opt pragma was removed (#821). Re-keyed from @4454 to @4429 when the local M48 copy struct was retired (#4570). Re-keyed from @4429 to @4431 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4432 to @4383 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4356",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4374 to @4372 when the opt pragma was removed (#821). Re-keyed from @4372 to @4451 when the opt pragma was removed (#821). Re-keyed from @4451 to @4426 when the local M48 copy struct was retired (#4570). Re-keyed from @4426 to @4428 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4429 to @4380 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4380 to @4383 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4441",
-      "to": "@4360",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4378 to @4376 when the opt pragma was removed (#821). Re-keyed from @4376 to @4455 when the opt pragma was removed (#821). Re-keyed from @4455 to @4430 when the local M48 copy struct was retired (#4570). Re-keyed from @4430 to @4432 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4433 to @4384 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4357",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4375 to @4373 when the opt pragma was removed (#821). Re-keyed from @4373 to @4452 when the opt pragma was removed (#821). Re-keyed from @4452 to @4427 when the local M48 copy struct was retired (#4570). Re-keyed from @4427 to @4429 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4430 to @4381 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4381 to @4384 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4442",
-      "to": "@4361",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4379 to @4377 when the opt pragma was removed (#821). Re-keyed from @4377 to @4456 when the opt pragma was removed (#821). Re-keyed from @4456 to @4431 when the local M48 copy struct was retired (#4570). Re-keyed from @4431 to @4433 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4434 to @4385 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4358",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4376 to @4374 when the opt pragma was removed (#821). Re-keyed from @4374 to @4453 when the opt pragma was removed (#821). Re-keyed from @4453 to @4428 when the local M48 copy struct was retired (#4570). Re-keyed from @4428 to @4430 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4431 to @4382 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4382 to @4385 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4443",
-      "to": "@4362",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4380 to @4378 when the opt pragma was removed (#821). Re-keyed from @4378 to @4457 when the opt pragma was removed (#821). Re-keyed from @4457 to @4432 when the local M48 copy struct was retired (#4570). Re-keyed from @4432 to @4434 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4435 to @4386 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4359",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4377 to @4375 when the opt pragma was removed (#821). Re-keyed from @4375 to @4454 when the opt pragma was removed (#821). Re-keyed from @4454 to @4429 when the local M48 copy struct was retired (#4570). Re-keyed from @4429 to @4431 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4432 to @4383 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4383 to @4386 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4444",
-      "to": "@4363",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4381 to @4379 when the opt pragma was removed (#821). Re-keyed from @4379 to @4458 when the opt pragma was removed (#821). Re-keyed from @4458 to @4433 when the local M48 copy struct was retired (#4570). Re-keyed from @4433 to @4435 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4436 to @4387 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4360",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4378 to @4376 when the opt pragma was removed (#821). Re-keyed from @4376 to @4455 when the opt pragma was removed (#821). Re-keyed from @4455 to @4430 when the local M48 copy struct was retired (#4570). Re-keyed from @4430 to @4432 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4433 to @4384 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4384 to @4387 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4445",
-      "to": "@4364",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4382 to @4380 when the opt pragma was removed (#821). Re-keyed from @4380 to @4459 when the opt pragma was removed (#821). Re-keyed from @4459 to @4434 when the local M48 copy struct was retired (#4570). Re-keyed from @4434 to @4436 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4437 to @4388 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4361",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4379 to @4377 when the opt pragma was removed (#821). Re-keyed from @4377 to @4456 when the opt pragma was removed (#821). Re-keyed from @4456 to @4431 when the local M48 copy struct was retired (#4570). Re-keyed from @4431 to @4433 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4434 to @4385 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4385 to @4388 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4446",
-      "to": "@4365",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4383 to @4381 when the opt pragma was removed (#821). Re-keyed from @4381 to @4460 when the opt pragma was removed (#821). Re-keyed from @4460 to @4435 when the local M48 copy struct was retired (#4570). Re-keyed from @4435 to @4437 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4438 to @4389 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4362",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4380 to @4378 when the opt pragma was removed (#821). Re-keyed from @4378 to @4457 when the opt pragma was removed (#821). Re-keyed from @4457 to @4432 when the local M48 copy struct was retired (#4570). Re-keyed from @4432 to @4434 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4435 to @4386 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4386 to @4389 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4447",
-      "to": "@4366",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4384 to @4382 when the opt pragma was removed (#821). Re-keyed from @4382 to @4461 when the opt pragma was removed (#821). Re-keyed from @4461 to @4436 when the local M48 copy struct was retired (#4570). Re-keyed from @4436 to @4438 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4439 to @4390 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4363",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4381 to @4379 when the opt pragma was removed (#821). Re-keyed from @4379 to @4458 when the opt pragma was removed (#821). Re-keyed from @4458 to @4433 when the local M48 copy struct was retired (#4570). Re-keyed from @4433 to @4435 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4436 to @4387 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4387 to @4390 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4448",
-      "to": "@4367",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4385 to @4383 when the opt pragma was removed (#821). Re-keyed from @4383 to @4462 when the opt pragma was removed (#821). Re-keyed from @4462 to @4437 when the local M48 copy struct was retired (#4570). Re-keyed from @4437 to @4439 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4440 to @4391 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4364",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4382 to @4380 when the opt pragma was removed (#821). Re-keyed from @4380 to @4459 when the opt pragma was removed (#821). Re-keyed from @4459 to @4434 when the local M48 copy struct was retired (#4570). Re-keyed from @4434 to @4436 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4437 to @4388 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4388 to @4391 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4449",
-      "to": "@4368",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4386 to @4384 when the opt pragma was removed (#821). Re-keyed from @4384 to @4463 when the opt pragma was removed (#821). Re-keyed from @4463 to @4438 when the local M48 copy struct was retired (#4570). Re-keyed from @4438 to @4440 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4441 to @4392 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4365",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4383 to @4381 when the opt pragma was removed (#821). Re-keyed from @4381 to @4460 when the opt pragma was removed (#821). Re-keyed from @4460 to @4435 when the local M48 copy struct was retired (#4570). Re-keyed from @4435 to @4437 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4438 to @4389 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4389 to @4392 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4450",
-      "to": "@4369",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4387 to @4385 when the opt pragma was removed (#821). Re-keyed from @4385 to @4464 when the opt pragma was removed (#821). Re-keyed from @4464 to @4439 when the local M48 copy struct was retired (#4570). Re-keyed from @4439 to @4441 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4442 to @4393 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4366",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4384 to @4382 when the opt pragma was removed (#821). Re-keyed from @4382 to @4461 when the opt pragma was removed (#821). Re-keyed from @4461 to @4436 when the local M48 copy struct was retired (#4570). Re-keyed from @4436 to @4438 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4439 to @4390 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4390 to @4393 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4451",
-      "to": "@4370",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4388 to @4386 when the opt pragma was removed (#821). Re-keyed from @4386 to @4465 when the opt pragma was removed (#821). Re-keyed from @4465 to @4440 when the local M48 copy struct was retired (#4570). Re-keyed from @4440 to @4442 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4443 to @4394 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4367",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4385 to @4383 when the opt pragma was removed (#821). Re-keyed from @4383 to @4462 when the opt pragma was removed (#821). Re-keyed from @4462 to @4437 when the local M48 copy struct was retired (#4570). Re-keyed from @4437 to @4439 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4440 to @4391 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4391 to @4394 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4452",
-      "to": "@4371",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4389 to @4387 when the opt pragma was removed (#821). Re-keyed from @4387 to @4466 when the opt pragma was removed (#821). Re-keyed from @4466 to @4441 when the local M48 copy struct was retired (#4570). Re-keyed from @4441 to @4443 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4444 to @4395 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4368",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4386 to @4384 when the opt pragma was removed (#821). Re-keyed from @4384 to @4463 when the opt pragma was removed (#821). Re-keyed from @4463 to @4438 when the local M48 copy struct was retired (#4570). Re-keyed from @4438 to @4440 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4441 to @4392 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4392 to @4395 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4453",
-      "to": "@4372",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4390 to @4388 when the opt pragma was removed (#821). Re-keyed from @4388 to @4467 when the opt pragma was removed (#821). Re-keyed from @4467 to @4442 when the local M48 copy struct was retired (#4570). Re-keyed from @4442 to @4444 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4445 to @4396 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4369",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4387 to @4385 when the opt pragma was removed (#821). Re-keyed from @4385 to @4464 when the opt pragma was removed (#821). Re-keyed from @4464 to @4439 when the local M48 copy struct was retired (#4570). Re-keyed from @4439 to @4441 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4442 to @4393 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4393 to @4396 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4454",
-      "to": "@4373",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4391 to @4389 when the opt pragma was removed (#821). Re-keyed from @4389 to @4468 when the opt pragma was removed (#821). Re-keyed from @4468 to @4443 when the local M48 copy struct was retired (#4570). Re-keyed from @4443 to @4445 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4446 to @4397 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4370",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4388 to @4386 when the opt pragma was removed (#821). Re-keyed from @4386 to @4465 when the opt pragma was removed (#821). Re-keyed from @4465 to @4440 when the local M48 copy struct was retired (#4570). Re-keyed from @4440 to @4442 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4443 to @4394 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4394 to @4397 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4455",
-      "to": "@4374",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4392 to @4390 when the opt pragma was removed (#821). Re-keyed from @4390 to @4469 when the opt pragma was removed (#821). Re-keyed from @4469 to @4444 when the local M48 copy struct was retired (#4570). Re-keyed from @4444 to @4446 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4447 to @4398 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4371",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4389 to @4387 when the opt pragma was removed (#821). Re-keyed from @4387 to @4466 when the opt pragma was removed (#821). Re-keyed from @4466 to @4441 when the local M48 copy struct was retired (#4570). Re-keyed from @4441 to @4443 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4444 to @4395 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4395 to @4398 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4456",
-      "to": "@4375",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4393 to @4391 when the opt pragma was removed (#821). Re-keyed from @4391 to @4470 when the opt pragma was removed (#821). Re-keyed from @4470 to @4445 when the local M48 copy struct was retired (#4570). Re-keyed from @4445 to @4447 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4448 to @4399 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4372",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4390 to @4388 when the opt pragma was removed (#821). Re-keyed from @4388 to @4467 when the opt pragma was removed (#821). Re-keyed from @4467 to @4442 when the local M48 copy struct was retired (#4570). Re-keyed from @4442 to @4444 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4445 to @4396 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4396 to @4399 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4457",
-      "to": "@4376",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4394 to @4392 when the opt pragma was removed (#821). Re-keyed from @4392 to @4471 when the opt pragma was removed (#821). Re-keyed from @4471 to @4446 when the local M48 copy struct was retired (#4570). Re-keyed from @4446 to @4448 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4449 to @4400 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4373",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4391 to @4389 when the opt pragma was removed (#821). Re-keyed from @4389 to @4468 when the opt pragma was removed (#821). Re-keyed from @4468 to @4443 when the local M48 copy struct was retired (#4570). Re-keyed from @4443 to @4445 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4446 to @4397 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4397 to @4400 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4458",
-      "to": "@4377",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4395 to @4393 when the opt pragma was removed (#821). Re-keyed from @4393 to @4472 when the opt pragma was removed (#821). Re-keyed from @4472 to @4447 when the local M48 copy struct was retired (#4570). Re-keyed from @4447 to @4449 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4450 to @4401 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4374",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4392 to @4390 when the opt pragma was removed (#821). Re-keyed from @4390 to @4469 when the opt pragma was removed (#821). Re-keyed from @4469 to @4444 when the local M48 copy struct was retired (#4570). Re-keyed from @4444 to @4446 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4447 to @4398 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4398 to @4401 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4459",
-      "to": "@4378",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4396 to @4394 when the opt pragma was removed (#821). Re-keyed from @4394 to @4473 when the opt pragma was removed (#821). Re-keyed from @4473 to @4448 when the local M48 copy struct was retired (#4570). Re-keyed from @4448 to @4450 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4451 to @4402 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4375",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4393 to @4391 when the opt pragma was removed (#821). Re-keyed from @4391 to @4470 when the opt pragma was removed (#821). Re-keyed from @4470 to @4445 when the local M48 copy struct was retired (#4570). Re-keyed from @4445 to @4447 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4448 to @4399 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4399 to @4402 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4460",
-      "to": "@4379",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4397 to @4395 when the opt pragma was removed (#821). Re-keyed from @4395 to @4474 when the opt pragma was removed (#821). Re-keyed from @4474 to @4449 when the local M48 copy struct was retired (#4570). Re-keyed from @4449 to @4451 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4452 to @4403 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4376",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4394 to @4392 when the opt pragma was removed (#821). Re-keyed from @4392 to @4471 when the opt pragma was removed (#821). Re-keyed from @4471 to @4446 when the local M48 copy struct was retired (#4570). Re-keyed from @4446 to @4448 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4449 to @4400 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4400 to @4403 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4461",
-      "to": "@4380",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4398 to @4396 when the opt pragma was removed (#821). Re-keyed from @4396 to @4475 when the opt pragma was removed (#821). Re-keyed from @4475 to @4450 when the local M48 copy struct was retired (#4570). Re-keyed from @4450 to @4452 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4453 to @4404 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4377",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4395 to @4393 when the opt pragma was removed (#821). Re-keyed from @4393 to @4472 when the opt pragma was removed (#821). Re-keyed from @4472 to @4447 when the local M48 copy struct was retired (#4570). Re-keyed from @4447 to @4449 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4450 to @4401 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4401 to @4404 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4462",
-      "to": "@4381",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4399 to @4397 when the opt pragma was removed (#821). Re-keyed from @4397 to @4476 when the opt pragma was removed (#821). Re-keyed from @4476 to @4451 when the local M48 copy struct was retired (#4570). Re-keyed from @4451 to @4453 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4454 to @4405 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4378",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4396 to @4394 when the opt pragma was removed (#821). Re-keyed from @4394 to @4473 when the opt pragma was removed (#821). Re-keyed from @4473 to @4448 when the local M48 copy struct was retired (#4570). Re-keyed from @4448 to @4450 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4451 to @4402 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4402 to @4405 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4463",
-      "to": "@4382",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4400 to @4398 when the opt pragma was removed (#821). Re-keyed from @4398 to @4477 when the opt pragma was removed (#821). Re-keyed from @4477 to @4452 when the local M48 copy struct was retired (#4570). Re-keyed from @4452 to @4454 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4455 to @4406 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4379",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4397 to @4395 when the opt pragma was removed (#821). Re-keyed from @4395 to @4474 when the opt pragma was removed (#821). Re-keyed from @4474 to @4449 when the local M48 copy struct was retired (#4570). Re-keyed from @4449 to @4451 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4452 to @4403 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4403 to @4406 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4464",
-      "to": "@4383",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4401 to @4399 when the opt pragma was removed (#821). Re-keyed from @4399 to @4478 when the opt pragma was removed (#821). Re-keyed from @4478 to @4453 when the local M48 copy struct was retired (#4570). Re-keyed from @4453 to @4455 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4456 to @4407 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4380",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4398 to @4396 when the opt pragma was removed (#821). Re-keyed from @4396 to @4475 when the opt pragma was removed (#821). Re-keyed from @4475 to @4450 when the local M48 copy struct was retired (#4570). Re-keyed from @4450 to @4452 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4453 to @4404 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4404 to @4407 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4465",
-      "to": "@4384",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4402 to @4400 when the opt pragma was removed (#821). Re-keyed from @4400 to @4479 when the opt pragma was removed (#821). Re-keyed from @4479 to @4454 when the local M48 copy struct was retired (#4570). Re-keyed from @4454 to @4456 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4457 to @4408 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4381",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4399 to @4397 when the opt pragma was removed (#821). Re-keyed from @4397 to @4476 when the opt pragma was removed (#821). Re-keyed from @4476 to @4451 when the local M48 copy struct was retired (#4570). Re-keyed from @4451 to @4453 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4454 to @4405 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4405 to @4408 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4466",
-      "to": "@4385",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4403 to @4401 when the opt pragma was removed (#821). Re-keyed from @4401 to @4480 when the opt pragma was removed (#821). Re-keyed from @4480 to @4455 when the local M48 copy struct was retired (#4570). Re-keyed from @4455 to @4457 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4458 to @4409 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4382",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4400 to @4398 when the opt pragma was removed (#821). Re-keyed from @4398 to @4477 when the opt pragma was removed (#821). Re-keyed from @4477 to @4452 when the local M48 copy struct was retired (#4570). Re-keyed from @4452 to @4454 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4455 to @4406 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4406 to @4409 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4467",
-      "to": "@4386",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4404 to @4402 when the opt pragma was removed (#821). Re-keyed from @4402 to @4481 when the opt pragma was removed (#821). Re-keyed from @4481 to @4456 when the local M48 copy struct was retired (#4570). Re-keyed from @4456 to @4458 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4459 to @4410 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4383",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4401 to @4399 when the opt pragma was removed (#821). Re-keyed from @4399 to @4478 when the opt pragma was removed (#821). Re-keyed from @4478 to @4453 when the local M48 copy struct was retired (#4570). Re-keyed from @4453 to @4455 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4456 to @4407 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4407 to @4410 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4468",
-      "to": "@4387",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4405 to @4403 when the opt pragma was removed (#821). Re-keyed from @4403 to @4482 when the opt pragma was removed (#821). Re-keyed from @4482 to @4457 when the local M48 copy struct was retired (#4570). Re-keyed from @4457 to @4459 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4460 to @4411 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4384",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4402 to @4400 when the opt pragma was removed (#821). Re-keyed from @4400 to @4479 when the opt pragma was removed (#821). Re-keyed from @4479 to @4454 when the local M48 copy struct was retired (#4570). Re-keyed from @4454 to @4456 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4457 to @4408 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4408 to @4411 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
       "from": "@4469",
-      "to": "@4388",
-      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4406 to @4404 when the opt pragma was removed (#821). Re-keyed from @4404 to @4483 when the opt pragma was removed (#821). Re-keyed from @4483 to @4458 when the local M48 copy struct was retired (#4570). Re-keyed from @4458 to @4460 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4461 to @4412 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
+      "to": "@4385",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4403 to @4401 when the opt pragma was removed (#821). Re-keyed from @4401 to @4480 when the opt pragma was removed (#821). Re-keyed from @4480 to @4455 when the local M48 copy struct was retired (#4570). Re-keyed from @4455 to @4457 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4458 to @4409 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4409 to @4412 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
     },
     {
-      "from": "sCommandTable$3972",
+      "from": "@4470",
+      "to": "@4386",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4404 to @4402 when the opt pragma was removed (#821). Re-keyed from @4402 to @4481 when the opt pragma was removed (#821). Re-keyed from @4481 to @4456 when the local M48 copy struct was retired (#4570). Re-keyed from @4456 to @4458 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4459 to @4410 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4410 to @4413 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
+    },
+    {
+      "from": "@4471",
+      "to": "@4387",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4405 to @4403 when the opt pragma was removed (#821). Re-keyed from @4403 to @4482 when the opt pragma was removed (#821). Re-keyed from @4482 to @4457 when the local M48 copy struct was retired (#4570). Re-keyed from @4457 to @4459 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4460 to @4411 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4411 to @4414 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
+    },
+    {
+      "from": "@4472",
+      "to": "@4388",
+      "evidence": "the compiler's number for this local moved when include/dPa_c.h dropped eight declarations; this row keeps the ROM-side name Re-keyed from @4406 to @4404 when the opt pragma was removed (#821). Re-keyed from @4404 to @4483 when the opt pragma was removed (#821). Re-keyed from @4483 to @4458 when the local M48 copy struct was retired (#4570). Re-keyed from @4458 to @4460 when the file-local anonymous POD vector typedef was retired (#4570). | Making the KuppaScript command dispatcher daDemo_c::RunCommand a member shifts this TU's local numbering up by three; re-keyed from tubuild verify's EXTRA list on 2026-11-07. Re-keyed -2 when d_a_demo.cpp began including KuppaScript.h (#4991). Re-keyed from @4461 to @4412 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | RunCommand's command table became a function-local static (sCommandTable) of &daDemo_c:: member pointers, which adds the static and its 24 literals to this TU's local numbering; re-keyed from tubuild verify. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired. Re-keyed from @4412 to @4415 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object)."
+    },
+    {
+      "from": "sCommandTable$3975",
       "to": "data_ov002_0211104c",
       "evidence": "RunCommand's function-local static PMF3 sCommandTable[24]; retail copies the 24 literals into 0x0211104c under the guard. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "_ZGVsCommandTable$3972",
+      "from": "_ZGVsCommandTable$3975",
       "to": "data_ov002_02110b00",
       "evidence": "guard word of RunCommand's sCommandTable; RunCommand tests and sets bit 0 of 0x02110b00 exactly as retail. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3973",
+      "from": "@3976",
       "to": "data_ov002_0210b708",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f7bb8, 0} for sCommandTable[0]; retail places it at 0x0210b708. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3974",
+      "from": "@3977",
       "to": "data_ov002_0210b678",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f79c0, 0} for sCommandTable[1]; retail places it at 0x0210b678. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3975",
+      "from": "@3978",
       "to": "data_ov002_0210b618",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f7780, 0} for sCommandTable[2]; retail places it at 0x0210b618. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3976",
+      "from": "@3979",
       "to": "data_ov002_0210b620",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f7538, 0} for sCommandTable[3]; retail places it at 0x0210b620. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3977",
+      "from": "@3980",
       "to": "data_ov002_0210b640",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f7410, 0} for sCommandTable[4]; retail places it at 0x0210b640. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3978",
+      "from": "@3981",
       "to": "data_ov002_0210b628",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f7384, 0} for sCommandTable[5]; retail places it at 0x0210b628. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3979",
+      "from": "@3982",
       "to": "data_ov002_0210b648",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f72bc, 0} for sCommandTable[6]; retail places it at 0x0210b648. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3980",
+      "from": "@3983",
       "to": "data_ov002_0210b8c0",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f71c4, 0} for sCommandTable[7]; retail places it at 0x0210b8c0. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3981",
+      "from": "@3984",
       "to": "data_ov002_0210b900",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f7038, 0} for sCommandTable[8]; retail places it at 0x0210b900. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3982",
+      "from": "@3985",
       "to": "data_ov002_0210b938",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f7020, 0} for sCommandTable[9]; retail places it at 0x0210b938. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3983",
+      "from": "@3986",
       "to": "data_ov002_0210b930",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f6e48, 0} for sCommandTable[10]; retail places it at 0x0210b930. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3984",
+      "from": "@3987",
       "to": "data_ov002_0210b928",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f6c60, 0} for sCommandTable[11]; retail places it at 0x0210b928. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3985",
+      "from": "@3988",
       "to": "data_ov002_0210b920",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f6c34, 0} for sCommandTable[12]; retail places it at 0x0210b920. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3986",
+      "from": "@3989",
       "to": "data_ov002_0210b918",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f6c24, 0} for sCommandTable[13]; retail places it at 0x0210b918. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3987",
+      "from": "@3990",
       "to": "data_ov002_0210b910",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f6bc0, 0} for sCommandTable[14]; retail places it at 0x0210b910. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3988",
+      "from": "@3991",
       "to": "data_ov002_0210b908",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f6b4c, 0} for sCommandTable[15]; retail places it at 0x0210b908. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3989",
+      "from": "@3992",
       "to": "data_ov002_0210b750",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f6b28, 0} for sCommandTable[16]; retail places it at 0x0210b750. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3990",
+      "from": "@3993",
       "to": "data_ov002_0210b8f8",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f6ae4, 0} for sCommandTable[17]; retail places it at 0x0210b8f8. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3991",
+      "from": "@3994",
       "to": "data_ov002_0210b8f0",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f6ab8, 0} for sCommandTable[18]; retail places it at 0x0210b8f0. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3992",
+      "from": "@3995",
       "to": "data_ov002_0210b8e8",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f6a9c, 0} for sCommandTable[19]; retail places it at 0x0210b8e8. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3993",
+      "from": "@3996",
       "to": "data_ov002_0210b8e0",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f6448, 0} for sCommandTable[20]; retail places it at 0x0210b8e0. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3994",
+      "from": "@3997",
       "to": "data_ov002_0210b8d8",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f63f8, 0} for sCommandTable[21]; retail places it at 0x0210b8d8. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3995",
+      "from": "@3998",
       "to": "data_ov002_0210b8d0",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f26d4, 0} for sCommandTable[22]; retail places it at 0x0210b8d0. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@3996",
+      "from": "@3999",
       "to": "data_ov002_0210b8c8",
       "evidence": "compiler PMF literal {&daDemo_c::func_ov002_020f26c4, 0} for sCommandTable[23]; retail places it at 0x0210b8c8. Re-keyed +2 when d_a_demo.cpp declared jugem's animation and texture-sequence file types for data_ov002_0210b608/60c. Re-keyed +29 when the StaffRoll step and cue handlers became daDemo_c::StaffRoll members and the shadow receiver types C, C37, C2dd4 and the W descriptor words were retired."
     },
     {
-      "from": "@4471",
+      "from": "@4474",
       "to": "data_ov002_0210b718",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5efc, 0} for data_ov002_02110f9c[0]; retail places it at 0x0210b718"
     },
     {
-      "from": "@4473",
+      "from": "@4476",
       "to": "data_ov002_0210b690",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5ef0, 0} for data_ov002_02110f9c[1]; retail places it at 0x0210b690"
     },
     {
-      "from": "@4475",
+      "from": "@4478",
       "to": "data_ov002_0210b6a0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5ee4, 0} for data_ov002_02110f9c[2]; retail places it at 0x0210b6a0"
     },
     {
-      "from": "@4477",
+      "from": "@4480",
       "to": "data_ov002_0210b850",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5ed8, 0} for data_ov002_02110f9c[3]; retail places it at 0x0210b850"
     },
     {
-      "from": "@4479",
+      "from": "@4482",
       "to": "data_ov002_0210b7f0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5eb8, 0} for data_ov002_02110f9c[4]; retail places it at 0x0210b7f0"
     },
     {
-      "from": "@4481",
+      "from": "@4484",
       "to": "data_ov002_0210b898",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e98, 0} for data_ov002_02110f9c[5]; retail places it at 0x0210b898"
     },
     {
-      "from": "@4483",
+      "from": "@4486",
       "to": "data_ov002_0210b688",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e98, 0} for data_ov002_02110f9c[6]; retail places it at 0x0210b688"
     },
     {
-      "from": "@4485",
+      "from": "@4488",
       "to": "data_ov002_0210b698",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e98, 0} for data_ov002_02110f9c[7]; retail places it at 0x0210b698"
     },
     {
-      "from": "@4487",
+      "from": "@4490",
       "to": "data_ov002_0210b830",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e98, 0} for data_ov002_02110f9c[8]; retail places it at 0x0210b830"
     },
     {
-      "from": "@4489",
+      "from": "@4492",
       "to": "data_ov002_0210b880",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e78, 0} for data_ov002_02110f9c[9]; retail places it at 0x0210b880"
     },
     {
-      "from": "@4491",
+      "from": "@4494",
       "to": "data_ov002_0210b8a0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e78, 0} for data_ov002_02110f9c[10]; retail places it at 0x0210b8a0"
     },
     {
-      "from": "@4493",
+      "from": "@4496",
       "to": "data_ov002_0210b840",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e78, 0} for data_ov002_02110f9c[11]; retail places it at 0x0210b840"
     },
     {
-      "from": "@4495",
+      "from": "@4498",
       "to": "data_ov002_0210b860",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e78, 0} for data_ov002_02110f9c[12]; retail places it at 0x0210b860"
     },
     {
-      "from": "@4497",
+      "from": "@4500",
       "to": "data_ov002_0210b8b8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e58, 0} for data_ov002_02110f9c[13]; retail places it at 0x0210b8b8"
     },
     {
-      "from": "@4499",
+      "from": "@4502",
       "to": "data_ov002_0210b660",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e58, 0} for data_ov002_02110f9c[14]; retail places it at 0x0210b660"
     },
     {
-      "from": "@4501",
+      "from": "@4504",
       "to": "data_ov002_0210b858",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e58, 0} for data_ov002_02110f9c[15]; retail places it at 0x0210b858"
     },
     {
-      "from": "@4503",
+      "from": "@4506",
       "to": "data_ov002_0210b670",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e58, 0} for data_ov002_02110f9c[16]; retail places it at 0x0210b670"
     },
     {
-      "from": "@4505",
+      "from": "@4508",
       "to": "data_ov002_0210b7e0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e38, 0} for data_ov002_02110f9c[17]; retail places it at 0x0210b7e0"
     },
     {
-      "from": "@4507",
+      "from": "@4510",
       "to": "data_ov002_0210b828",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e38, 0} for data_ov002_02110f9c[18]; retail places it at 0x0210b828"
     },
     {
-      "from": "@4509",
+      "from": "@4512",
       "to": "data_ov002_0210b8a8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e38, 0} for data_ov002_02110f9c[19]; retail places it at 0x0210b8a8"
     },
     {
-      "from": "@4511",
+      "from": "@4514",
       "to": "data_ov002_0210b808",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e38, 0} for data_ov002_02110f9c[20]; retail places it at 0x0210b808"
     },
     {
-      "from": "@4513",
+      "from": "@4516",
       "to": "data_ov002_0210b838",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5e18, 0} for data_ov002_02110f9c[21]; retail places it at 0x0210b838"
     },
     {
-      "from": "@4515",
+      "from": "@4518",
       "to": "data_ov002_0210b7f8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5d34, 0} for data_ov002_02110f34[0]; retail places it at 0x0210b7f8"
     },
     {
-      "from": "@4517",
+      "from": "@4520",
       "to": "data_ov002_0210b6b8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5cd0, 0} for data_ov002_02110f34[1]; retail places it at 0x0210b6b8"
     },
     {
-      "from": "@4519",
+      "from": "@4522",
       "to": "data_ov002_0210b7e8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5c88, 0} for data_ov002_02110f34[2]; retail places it at 0x0210b7e8"
     },
     {
-      "from": "@4521",
+      "from": "@4524",
       "to": "data_ov002_0210b680",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5c40, 0} for data_ov002_02110f34[3]; retail places it at 0x0210b680"
     },
     {
-      "from": "@4523",
+      "from": "@4526",
       "to": "data_ov002_0210b720",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5bf4, 0} for data_ov002_02110f34[4]; retail places it at 0x0210b720"
     },
     {
-      "from": "@4525",
+      "from": "@4528",
       "to": "data_ov002_0210b6c8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5bcc, 0} for data_ov002_02110f34[5]; retail places it at 0x0210b6c8"
     },
     {
-      "from": "@4527",
+      "from": "@4530",
       "to": "data_ov002_0210b6d0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5b98, 0} for data_ov002_02110f34[6]; retail places it at 0x0210b6d0"
     },
     {
-      "from": "@4529",
+      "from": "@4532",
       "to": "data_ov002_0210b650",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5b8c, 0} for data_ov002_02110f34[7]; retail places it at 0x0210b650"
     },
     {
-      "from": "@4531",
+      "from": "@4534",
       "to": "data_ov002_0210b7c8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5b88, 0} for data_ov002_02110f34[8]; retail places it at 0x0210b7c8"
     },
     {
-      "from": "@4533",
+      "from": "@4536",
       "to": "data_ov002_0210b818",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5b84, 0} for data_ov002_02110f34[9]; retail places it at 0x0210b818"
     },
     {
-      "from": "@4535",
+      "from": "@4538",
       "to": "data_ov002_0210b820",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5b80, 0} for data_ov002_02110f34[10]; retail places it at 0x0210b820"
     },
     {
-      "from": "@4537",
+      "from": "@4540",
       "to": "data_ov002_0210b7c0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5b7c, 0} for data_ov002_02110f34[11]; retail places it at 0x0210b7c0"
     },
     {
-      "from": "@4539",
+      "from": "@4542",
       "to": "data_ov002_0210b7b8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5b24, 0} for data_ov002_02110f34[12]; retail places it at 0x0210b7b8"
     },
     {
-      "from": "@4541",
+      "from": "@4544",
       "to": "data_ov002_0210b668",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5894, 0} for data_ov002_02110e7c[0]; retail places it at 0x0210b668"
     },
     {
-      "from": "@4543",
+      "from": "@4546",
       "to": "data_ov002_0210b7a8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5848, 0} for data_ov002_02110e7c[1]; retail places it at 0x0210b7a8"
     },
     {
-      "from": "@4545",
+      "from": "@4548",
       "to": "data_ov002_0210b848",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f562c, 0} for data_ov002_02110e7c[2]; retail places it at 0x0210b848"
     },
     {
-      "from": "@4547",
+      "from": "@4550",
       "to": "data_ov002_0210b700",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f3d98, 0} for data_ov002_02110e7c[3]; retail places it at 0x0210b700"
     },
     {
-      "from": "@4549",
+      "from": "@4552",
       "to": "data_ov002_0210b788",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f57c0, 0} for data_ov002_02110e64[0]; retail places it at 0x0210b788"
     },
     {
-      "from": "@4551",
+      "from": "@4554",
       "to": "data_ov002_0210b780",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f569c, 0} for data_ov002_02110e64[1]; retail places it at 0x0210b780"
     },
     {
-      "from": "@4553",
+      "from": "@4556",
       "to": "data_ov002_0210b778",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5678, 0} for data_ov002_02110e64[2]; retail places it at 0x0210b778"
     },
     {
-      "from": "@4555",
+      "from": "@4558",
       "to": "data_ov002_0210b758",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f55b4, 0} for data_ov002_02110eec[0]; retail places it at 0x0210b758"
     },
     {
-      "from": "@4557",
+      "from": "@4560",
       "to": "data_ov002_0210b710",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5328, 0} for data_ov002_02110eec[1]; retail places it at 0x0210b710"
     },
     {
-      "from": "@4559",
+      "from": "@4562",
       "to": "data_ov002_0210b748",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f5010, 0} for data_ov002_02110eec[2]; retail places it at 0x0210b748"
     },
     {
-      "from": "@4561",
+      "from": "@4564",
       "to": "data_ov002_0210b740",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f4d70, 0} for data_ov002_02110eec[3]; retail places it at 0x0210b740"
     },
     {
-      "from": "@4563",
+      "from": "@4566",
       "to": "data_ov002_0210b738",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f4a2c, 0} for data_ov002_02110eec[4]; retail places it at 0x0210b738"
     },
     {
-      "from": "@4565",
+      "from": "@4568",
       "to": "data_ov002_0210b730",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f4710, 0} for data_ov002_02110eec[5]; retail places it at 0x0210b730"
     },
     {
-      "from": "@4567",
+      "from": "@4570",
       "to": "data_ov002_0210b8b0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f43cc, 0} for data_ov002_02110eec[6]; retail places it at 0x0210b8b0"
     },
     {
-      "from": "@4569",
+      "from": "@4572",
       "to": "data_ov002_0210b728",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f40fc, 0} for data_ov002_02110eec[7]; retail places it at 0x0210b728"
     },
     {
-      "from": "@4571",
+      "from": "@4574",
       "to": "data_ov002_0210b890",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f3de4, 0} for data_ov002_02110eec[8]; retail places it at 0x0210b890"
     },
     {
-      "from": "@4573",
+      "from": "@4576",
       "to": "data_ov002_0210b810",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f3d38, 0} for data_ov002_02110e34[0]; retail places it at 0x0210b810"
     },
     {
-      "from": "@4575",
+      "from": "@4578",
       "to": "data_ov002_0210b6d8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f3ba0, 0} for data_ov002_02110e34[1]; retail places it at 0x0210b6d8"
     },
     {
-      "from": "@4577",
+      "from": "@4580",
       "to": "data_ov002_0210b800",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f3ae8, 0} for data_ov002_02110e34[2]; retail places it at 0x0210b800"
     },
     {
-      "from": "@4579",
+      "from": "@4582",
       "to": "data_ov002_0210b7d8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f378c, 0} for data_ov002_02110e4c[0]; retail places it at 0x0210b7d8"
     },
     {
-      "from": "@4581",
+      "from": "@4584",
       "to": "data_ov002_0210b7d0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f3740, 0} for data_ov002_02110e4c[1]; retail places it at 0x0210b7d0"
     },
     {
-      "from": "@4583",
+      "from": "@4586",
       "to": "data_ov002_0210b6c0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f3310, 0} for data_ov002_02110e4c[2]; retail places it at 0x0210b6c0"
     },
     {
-      "from": "@4585",
+      "from": "@4588",
       "to": "data_ov002_0210b6b0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f35e4, 0} for data_ov002_02110e9c[0]; retail places it at 0x0210b6b0"
     },
     {
-      "from": "@4587",
+      "from": "@4590",
       "to": "data_ov002_0210b7b0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f34bc, 0} for data_ov002_02110e9c[1]; retail places it at 0x0210b7b0"
     },
     {
-      "from": "@4589",
+      "from": "@4592",
       "to": "data_ov002_0210b7a0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f340c, 0} for data_ov002_02110e9c[2]; retail places it at 0x0210b7a0"
     },
     {
-      "from": "@4591",
+      "from": "@4594",
       "to": "data_ov002_0210b798",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f335c, 0} for data_ov002_02110e9c[3]; retail places it at 0x0210b798"
     },
     {
-      "from": "@4593",
+      "from": "@4596",
       "to": "data_ov002_0210b770",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f32e4, 0} for data_ov002_02110e24[0]; retail places it at 0x0210b770"
     },
     {
-      "from": "@4595",
+      "from": "@4598",
       "to": "data_ov002_0210b760",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f30f8, 0} for data_ov002_02110e24[1]; retail places it at 0x0210b760"
     },
     {
-      "from": "@4597",
+      "from": "@4600",
       "to": "data_ov002_0210b790",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f2d70, 0} for data_ov002_02110ebc[0]; retail places it at 0x0210b790"
     },
     {
-      "from": "@4599",
+      "from": "@4602",
       "to": "data_ov002_0210b878",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f2d0c, 0} for data_ov002_02110ebc[1]; retail places it at 0x0210b878"
     },
     {
-      "from": "@4601",
+      "from": "@4604",
       "to": "data_ov002_0210b870",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f2bf4, 0} for data_ov002_02110ebc[2]; retail places it at 0x0210b870"
     },
     {
-      "from": "@4603",
+      "from": "@4606",
       "to": "data_ov002_0210b6f8",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f2aec, 0} for data_ov002_02110ebc[3]; retail places it at 0x0210b6f8"
     },
     {
-      "from": "@4605",
+      "from": "@4608",
       "to": "data_ov002_0210b6f0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f2a88, 0} for data_ov002_02110ebc[4]; retail places it at 0x0210b6f0"
     },
     {
-      "from": "@4607",
+      "from": "@4610",
       "to": "data_ov002_0210b6e0",
       "evidence": "compiler PMF literal {&StaffRoll::func_ov002_020f2a78, 0} for data_ov002_02110ebc[5]; retail places it at 0x0210b6e0"
     }

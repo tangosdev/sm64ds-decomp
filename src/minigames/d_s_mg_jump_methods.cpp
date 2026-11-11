@@ -43,14 +43,6 @@ struct C { char pad[0x5004]; PMF m; };
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
 
-/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
-   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
-   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
-   d_a_demo.cpp's pinned @NNN symbols. */
-static inline void *G2_GetOBJCharPtr(void) {
-    return (void *)HW_OBJ_VRAM;
-}
-
 struct V3 { int w[3]; };
 
 /* The two model file handles InitResources swaps between through

@@ -51,14 +51,6 @@
 #include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
 
-/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
-   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
-   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
-   d_a_demo.cpp's pinned @NNN symbols. */
-static inline void *G2_GetOBJCharPtr(void) {
-    return (void *)HW_OBJ_VRAM;
-}
-
 #pragma defer_codegen off
 
 /* The 0x40 records at sMgFxPool are 0x20 bytes each. Mg_InitFx
