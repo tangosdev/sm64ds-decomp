@@ -5,20 +5,12 @@
 #include "nitro/hw/mmap_shared.h"
 #include "nitro/mb/mb.h"
 
-#define ROM_HEADER_ARM9_ROM_OFFSET (*(u32 *)0x027FFE20)
-#define ROM_HEADER_ARM9_RAM_ADDR   (*(u8 **)0x027FFE28)
-#define ROM_HEADER_ARM9_SIZE       (*(u32 *)0x027FFE2C)
-#define ROM_HEADER_ARM7_ROM_OFFSET (*(u32 *)0x027FFE30)
-#define ROM_HEADER_ARM7_RAM_ADDR   (*(void **)0x027FFE38)
-#define ROM_HEADER_ARM7_SIZE       (*(u32 *)0x027FFE3C)
-#define ROM_SECURE_AREA_END 0x8000
-
 extern void OS_Terminate(void);
 extern void OSi_SendToPxi(u16 data);
 extern void OSi_ReloadRomData(void);
 extern void OSi_DoBoot(void);
 extern vu16 OSi_IsResetOccurred;
-extern void OSReadROMArea(u32 romOffset, void *dest, s32 size);
+extern void OSReadROMArea(u32 src, void *dst, int len);
 
 /* OS_ResetSystem at 0x01ffdd98 (ITCM) -- NitroSDK soft reset, with OSi_DoResetSystem
  * inlined. Identified against pret/pokediamond's OS_reset.c, whose OS_ResetSystem and
@@ -52,34 +44,41 @@ void OS_ResetSystem(u32 resetArg) {
     OSi_DoBoot();
 }
 
-/* OSi_ReloadRomData at 0x01ffdd08 (ITCM) -- NitroSDK. Re-reads the ARM9 and ARM7 binaries
- * from the card into the RAM addresses the boot loader used, from the rom offset / ram
- * address / size fields of the cartridge header copy at 0x027ffe00 (+0x20/+0x28/+0x2c for
- * ARM9, +0x30/+0x38/+0x3c for ARM7). Cartridge offsets below 0x8000 are the header and
- * the secure area, which the plain page-read command cannot reach, so the ARM9 read is
- * clamped to start at 0x8000 and the part below is left as it is in RAM. OSReadROMArea is
- * the SDK's OSi_ReadCardRom32.
+/* OSi_ReloadRomData at 0x01ffdd08 (ITCM) -- NitroSDK os_reset.c. Re-reads the ARM9 and
+ * ARM7 binaries from the card into the RAM the boot loader put them in, using the rom
+ * offset / ram address / size fields of the cartridge header copy at HW_ROM_HEADER_BUF.
+ * Card offsets below 0x8000 are the header and the secure area, which the page-read
+ * command cannot reach, so the ARM9 read starts at 0x8000 and the RAM below that is left
+ * as it is. OSReadROMArea (src/OSReadROMArea.c) is the SDK's OSi_ReadCardRom32.
  *
- * pret/pokediamond's later version adds a rom-base offset and disables interrupts around
- * the cache flush. This one starts with OS_TryLockCard((u16)OS_GetLockID()) (the SDK's
- * os_spinLock.c, src/engine/os/OS_SpinLock.cpp), the shape of the later OS_ResetSystem's
- * CARD_LockRom((u16)OS_GetLockID()).
+ * The SDK's later version adds HW_ROM_BASE_OFFSET_BUF and reads all six header fields
+ * after the cache maintenance. This one reads the ARM9 fields first, then takes the card
+ * lock (OS_TryLockCard((u16)OS_GetLockID()), the shape of the later OS_ResetSystem's
+ * CARD_LockRom) and flushes the data cache with DC_FlushAll.
  */
 void OSi_ReloadRomData(void) {
-    u32 romOffset = ROM_HEADER_ARM9_ROM_OFFSET;
-    u8 *dest = ROM_HEADER_ARM9_RAM_ADDR;
-    u32 size = ROM_HEADER_ARM9_SIZE;
+    u32 p = (u32)HW_ROM_HEADER_BUF;
+    u32 src_arm9 = *(u32 *)(p + 0x20);
+    u32 dst_arm9 = *(u32 *)(p + 0x28);
+    u32 len_arm9 = *(u32 *)(p + 0x2c);
 
     OS_TryLockCard((u16)OS_GetLockID());
     DC_FlushAll();
 
-    if (romOffset < ROM_SECURE_AREA_END) {
-        u32 skipped = ROM_SECURE_AREA_END - romOffset;
-        dest += skipped;
-        size -= skipped;
-        romOffset = ROM_SECURE_AREA_END;
+    if (src_arm9 < 0x8000) {
+        u32 diff = 0x8000 - src_arm9;
+        src_arm9 = 0x8000;
+        dst_arm9 += diff;
+        len_arm9 -= diff;
     }
-    OSReadROMArea(romOffset, dest, size);
 
-    OSReadROMArea(ROM_HEADER_ARM7_ROM_OFFSET, ROM_HEADER_ARM7_RAM_ADDR, ROM_HEADER_ARM7_SIZE);
+    OSReadROMArea(src_arm9, (void *)dst_arm9, (int)len_arm9);
+
+    {
+        u32 src_arm7 = *(u32 *)(p + 0x30);
+        u32 dst_arm7 = *(u32 *)(p + 0x38);
+        u32 len_arm7 = *(u32 *)(p + 0x3c);
+
+        OSReadROMArea(src_arm7, (void *)dst_arm7, (int)len_arm7);
+    }
 }
