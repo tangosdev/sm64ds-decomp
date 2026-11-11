@@ -1246,6 +1246,22 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
                 }
             }
         }
+        {   /* coopfix1 LOBBYUI1: SM64DS_LOBBY_AUTOCOLOR=<col>,<row>@<seats>: once the room holds <seats> players this console presses its paint
+               bucket, the picker's Yoshi body cell (col, row) and OK, one press a frame (joint rows: the friend's page must show the new colour) */
+            static int step;
+            const char *ac = getenv("SM64DS_LOBBY_AUTOCOLOR");
+            int col = 0, row = 0, want = 0;
+            if (ac && step < 3 && sscanf(ac, "%d,%d@%d", &col, &row, &want) == 3 && in_room(s) && s->n_seats >= want && s->phase == LOBBY_IN_ROOM) {
+                const int c = step == 0 ? C_PAINT : step == 1 ? C_PK_CELL0 + row * PROF_COLS + col : C_PK_OK;
+                if (live(s, c)) {
+                    char b[64];
+                    snprintf(b, sizeof b, "AUTOCOLOR presses control %d", c);
+                    log_line(b);
+                    press(s, c);
+                    ++step;
+                }
+            }
+        }
 #endif
     }
     make_geom(&g_geom, P.pw > 0 ? P.pw : 512, P.ph > 0 ? P.ph : 384, s);
