@@ -1513,6 +1513,9 @@ void copy(char *dst, size_t cap, const std::string &s)
    number this console took is forgotten and the next title frame starts the room again in place, as a late joiner. */
 bool can_rejoin_locked()
 {
+    static int off = -1;   /* SM64DS_COOP_REJOIN=0: the old rules (the before rows) */
+    if (off < 0) { const char *e = std::getenv("SM64DS_COOP_REJOIN"); off = (e && *e == '0') ? 1 : 0; }
+    if (off) return false;
     if (g.room.empty() || g.kind != LOBBY_COOP || g.phase != LOBBY_IN_ROOM || !g.plan_set) return false;
     if (!g.plan.flag("started")) return false;
     const int n = (int)g.plan.i("launch");
