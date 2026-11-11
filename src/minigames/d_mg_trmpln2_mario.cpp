@@ -60,6 +60,8 @@
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 /* Typed access to the Mario records from the char* helpers below. */
 #define MARIO2(p) ((dMgTrmpln2Mario_c *)(p))
 #define MARIO3D(p) ((dMgTrmpln3DMario_c *)(p))
@@ -1322,22 +1324,17 @@ void Trmp2Mario_DrawAll(void) {
     int i, n, off;
     v.x = 0;
     v.y = 0;
-    v.z = 0xfffff008;
+    v.z = -0xff8;
     func_0203cd80(&v, -0x2000);
     func_0203ccd4(&v, -0x3000);
-    *(volatile unsigned *)0x40004c8 = (((short)v.x >> 3) & 0x3ff) |
-                                      ((((short)v.y >> 3) & 0x3ff) << 10) |
-                                      ((((short)v.z >> 3) & 0x3ff) << 20);
+    G3_LightVector(GX_LIGHTID_0, v.x, v.y, v.z);
     w.x = 0;
     w.y = 0;
-    w.z = 0xfffff008;
+    w.z = -0xff8;
     func_0203cd80(&w, -0x2000);
-    *(volatile unsigned *)0x40004c8 =
-        ((((short)w.x >> 3) & 0x3ff) | ((((short)w.y >> 3) & 0x3ff) << 10) |
-         ((((short)w.z >> 3) & 0x3ff) << 20)) |
-        0x40000000;
-    *(volatile unsigned *)0x40004cc = 0x7fff;
-    *(volatile unsigned *)0x40004cc = 0x40007fff;
+    G3_LightVector(GX_LIGHTID_1, w.x, w.y, w.z);
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
 
     n = sTrmp2MarioCount;
     i = 0;
@@ -2969,20 +2966,16 @@ void Trmp3DMario_DrawAll(void) {
 
     v[0] = 0;
     v[1] = 0;
-    v[2] = 0xfffff008;
+    v[2] = -0xff8;
     func_0203cd80(v, 0x2000);
     func_0203ccd4(v, 0);
-    *(volatile int *)0x040004c8 = (((short)v[0] >> 3) & 0x3ff) |
-                                  ((((short)v[1] >> 3) & 0x3ff) << 10) |
-                                  ((((short)v[2] >> 3) & 0x3ff) << 20);
+    G3_LightVector(GX_LIGHTID_0, v[0], v[1], v[2]);
 
     w[0] = 0;
     w[1] = 0;
-    w[2] = 0xfffff008;
+    w[2] = -0xff8;
     func_0203cd80(w, -0x2000);
-    *(volatile int *)0x040004c8 = (((short)w[0] >> 3) & 0x3ff) |
-                                  ((((short)w[1] >> 3) & 0x3ff) << 10) |
-                                  ((((short)w[2] >> 3) & 0x3ff) << 20) | 0x40000000;
+    G3_LightVector(GX_LIGHTID_1, w[0], w[1], w[2]);
 
     {
         int i;

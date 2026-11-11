@@ -31,6 +31,8 @@ enum d_s_mg_jump2_AssetId {
 
 #include "dScMgJump2_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_cmd.h"
+#include "nitro/gx/g3imm_light.h"
 #include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
 #include "types.h"
@@ -375,27 +377,22 @@ void func_0203cd80(int *m, int x);
 void Jump2_SetLights(void) {
     int light0[3];
     int light1[3];
-    *(volatile int *)0x40004cc = 0x7fff;
-    *(volatile int *)0x40004cc = 0x40007fff;
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
     light0[0] = 0;
     light0[1] = 0;
-    light0[2] = 0xfffff008;
+    light0[2] = -0xff8;
     func_0203cd80(light0, 0x2000);
     func_0203ccd4((struct Vector3 *)light0, 0);
-    *(volatile int *)0x40004c8 = (((short)light0[0] >> 3) & 0x3ff) |
-                                 ((((short)light0[1] >> 3) & 0x3ff) << 10) |
-                                 ((((short)light0[2] >> 3) & 0x3ff) << 20);
-    light1[2] = 0xfffff008;
+    G3_LightVector(GX_LIGHTID_0, light0[0], light0[1], light0[2]);
+    light1[2] = -0xff8;
     light1[0] = 0;
     light1[1] = 0;
-    *(volatile int *)0x4000440 = 2;
-    *(volatile int *)0x4000454 = 0;
+    G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
+    G3_Identity();
     func_0203cd80(light1, 0x2000);
     func_0203ccd4((struct Vector3 *)light1, 0);
-    *(volatile int *)0x40004c8 =
-        ((((short)light1[0] >> 3) & 0x3ff) | ((((short)light1[1] >> 3) & 0x3ff) << 10) |
-         ((((short)light1[2] >> 3) & 0x3ff) << 20)) |
-        0x40000000;
+    G3_LightVector(GX_LIGHTID_1, light1[0], light1[1], light1[2]);
 }
 }
 

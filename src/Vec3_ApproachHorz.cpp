@@ -5,9 +5,14 @@
  * - Vec3 and Vector3 are the same three ints. VEC_Mag, Vec3_Sub, VEC_Subtract,
  *   Vec3_HorzLen, Vec3_Equal and Vec3_MulScalar take Vector3; the local POD
  *   Vector3 keeps those calls on their declared interface without adding
- *   types.h Vector3 lifetimes. Vec3_ApproachHorz's own parameters are
- *   use the local POD Vector3 spelling too, which agrees with the actors'
- *   public Vector3 declaration without adding a Vector3 lifetime here.
+ *   types.h Vector3 lifetimes. Vec3_ApproachHorz's own parameters use the
+ *   local POD Vector3 spelling too. That matches the public Vector3
+ *   declaration the actors call through, without adding a Vector3 lifetime
+ *   here.
+ * - This local Vector3 is the tree's last header shadow, and it is kept on
+ *   purpose. It is not known whether EAD wrote these locals as NitroSDK's
+ *   VecFx32: VEC_Mag and VEC_Subtract are SDK functions, but Vec3_Sub and the
+ *   other game helpers take the game type. Issue #5207 tracks that question.
  */
 #include "math/Approach.h"
 #include "nitro/fx/fx_cp.h"

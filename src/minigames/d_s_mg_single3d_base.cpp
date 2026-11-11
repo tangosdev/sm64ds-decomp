@@ -27,6 +27,7 @@ enum d_s_mg_single3_d_base_AssetId {
 #include "types.h"
 #include "decl_common.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 #include "nitro/gx/gx.h"
 #include "nitro/gx/gx_vramcnt.h"
 #include "nitro/gx/gx_load.h"
@@ -99,8 +100,8 @@ void dScMgSingle3DBase_c::InitEngines()
     FreeGfxSlotsById(0x1d);
     sMgGraphCallback.mScene = this;
     gGraphCallback = &sMgGraphCallback;
-    *(vu32 *)0x40004ccu = 0x7fff;
-    *(vu32 *)0x40004ccu = 0x40007fff;
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
 }
 
 /* Slot 2 runs the base, then initializes particles. */
@@ -129,14 +130,14 @@ int dScMgSingle3DBase_c::BeforeRender()
     return 1;
 }
 
-/* Slot 5: when vfSuccess is 2, reset light 0's vector and color and free
- * the common model data, then run the base. Keep the hardware stores'
- * width and order. */
+/* Slot 5: when vfSuccess is 2, put light 0 back to the scene default (white,
+ * from (0, -1/sqrt2, -1/sqrt2)) and free the common model data, then run the
+ * base. */
 void dScMgSingle3DBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess == 2) {
-        *(vu32 *)0x40004c8u = 0x296a5800;
-        *(vu32 *)0x40004ccu = 0x7fff;
+        G3_LightVector(GX_LIGHTID_0, 0, -0xb50, -0xb50);
+        G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
         CleanCommonModelDataArr();
     }
     dScMgBase_c::AfterCleanupResources(vfSuccess);

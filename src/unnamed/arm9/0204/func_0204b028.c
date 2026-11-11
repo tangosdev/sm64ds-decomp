@@ -2,10 +2,9 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "private/spl_particle_views.h"
+#include "nitro/gx/g3imm_cmd.h"
 #include "math/MtxStack.h"
 
-#define reg_G3_COLOR        (*(volatile u32 *)0x04000480)
-#define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
 
 extern void (*data_02099fbc[])(int, int, void *); /* func_0204c0a8, func_0204c0e8 */
 extern void (*data_02099fb4[])(u8, u8);           /* func_0204c24c, func_0204c194 */
@@ -33,8 +32,8 @@ void func_0204b028(ManagerView *mgr, ParticleElement *ptcl) {
     v = mgr->mPolygonAttr | 0xc0;
     v |= id << 24;
     v |= alpha << 16;
-    reg_G3_POLYGON_ATTR = v;
-    reg_G3_POLYGON_ATTR;
+    REG_POLYGON_ATTR = v;
+    REG_POLYGON_ATTR;
     {
         PolygonIDs *ids = &sys->polygonIDs;
         ids->current++;
@@ -68,7 +67,7 @@ void func_0204b028(ManagerView *mgr, ParticleElement *ptcl) {
     G3_LoadMtx43(mgr->mDrawMatrix);
     G3_MultMtx43(&out);
 
-    reg_G3_COLOR = ptcl->color;
+    G3_Color(ptcl->color);
     {
         PtclChild *child = mgr->mCurrentSystem->mDefinition->child;
         data_02099fb4[child->flags.polygonReferencePlane](child->textureTileCountS,

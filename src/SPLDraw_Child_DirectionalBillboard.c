@@ -2,10 +2,7 @@
 #include "nitro/fx/fx.h"
 #include "math/Matrix.h"
 #include "private/spl_particle_views.h"
-
-#define reg_G3_COLOR        (*(volatile u32 *)0x04000480)
-#define reg_G3_IDENTITY     (*(volatile u32 *)0x04000454)
-#define reg_G3_POLYGON_ATTR (*(volatile u32 *)0x040004a4)
+#include "nitro/gx/g3imm_cmd.h"
 
 /* No header declares these. */
 extern void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
@@ -43,8 +40,8 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
     v = mgr->mPolygonAttr | 0xc0;
     v |= id << 24;
     v |= alpha << 16;
-    reg_G3_POLYGON_ATTR = v;
-    reg_G3_POLYGON_ATTR;
+    REG_POLYGON_ATTR = v;
+    REG_POLYGON_ATTR;
     {
         PolygonIDs *ids = &sys->polygonIDs;
         ids->current++;
@@ -104,11 +101,11 @@ void SPLDraw_Child_DirectionalBillboard(ManagerView *mgr, ParticleElement *ptcl)
         mat[7] = 0;
         mat[2] = 0;
         mat[5] = 0;
-        reg_G3_IDENTITY = 0;
+        G3_Identity();
         G3_MultMtx43(mat);
     }
 
-    reg_G3_COLOR = ptcl->color;
+    G3_Color(ptcl->color);
     {
         PtclChild *child = mgr->mCurrentSystem->mDefinition->child;
         /* Keep the retail u8 narrowing; passing these bitfields as int changes MWCC output. */
