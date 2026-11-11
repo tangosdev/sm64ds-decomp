@@ -214,4 +214,10 @@ void func_020383e4(dBgCh_Actr *);                          /* UpdateExtraContino
 void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *); /* UpdateDiscreteNoLava */
 }
 
+/* The ground-normal latch and the ground snap the player runs on its mesh
+   collision each frame, defined in src/engine/collision/d_bg_ch_actr.cpp;
+   their method names are not recovered. */
+void func_02037318(dBgCh_Actr *);            /* latch mGroundNormal */
+extern "C" void func_020371fc(dBgCh_Actr *); /* snap onto a dBgCh_Gnd surface */
+
 #endif /* DBGCH_ACTR_H */

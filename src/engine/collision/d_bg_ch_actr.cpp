@@ -78,8 +78,7 @@ void func_02037318(dBgCh_Actr *clsn) {
 /* The ground-snap step run once per landing: when the sphere query flagged a
    floor hit and the actor is close to a dBgCh_Gnd probed surface, snap the
    actor's position onto it and raise the on-ground state. */
-extern "C" void func_020371fc(char *self) {
-    dBgCh_Actr *clsn = (dBgCh_Actr *)self;
+extern "C" void func_020371fc(dBgCh_Actr *clsn) {
     if ((clsn->mSphereClsn.flags & 1) == 0) return;
     if ((clsn->mSphereClsn.flags & 8) == 0) return;
     if ((clsn->mFlags & 0x100) == 0) return;
