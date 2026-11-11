@@ -31,6 +31,7 @@ void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int);
 extern void *data_0209f318;             // bowser2: the dCamera_c (+0x154 flags; bit 0x8 = the boss intro holds the camera)
 int _ZN6Player7TryGrabER8dActor_c(void *self, void *actor);
 int _ZN6Player9DropActorEv(void *self);
+int func_ov002_020dacb4(char *p, char *actor);   // Player: take hold of an actor (the body of TryGrab once its checks pass)
 // bossdesc1: Chief Chilly's state records (16 x 0x10 at ov073 0x02123320), his ROM transition, Wiggler's ROM transition, ModelAnim::SetAnim
 int ChiefChilly_ChangeState(void *c, void *state);
 void _ZN12daHanachan_c8SetStateEi(void *c, int state);
@@ -1495,8 +1496,10 @@ void do_swing_knob() {
         const int32_t zero = 0; std::memcpy(pl + 0x98, &zero, 4);
         ++g_swing.tries;
         if (!_ZN6Player7TryGrabER8dActor_c(pl, tail)) {
-            if ((g_swing.tries % 60) == 1) std::fprintf(stderr, "[cbs-knob] swing: TryGrab refused (try %u, bowser st=%u) w=%lld\n", g_swing.tries, st, wall_ms());
-            return;
+            // no punch on this tick: after 30 tries the hold is taken the way TryGrab takes it once its checks pass
+            if (g_swing.tries < 30 || rd32(pl, 0x358) != 0) return;
+            func_ov002_020dacb4(pl, tail);
+            std::fprintf(stderr, "[cbs-knob] swing: TryGrab refused %u times (no punch), the player takes the hold directly w=%lld\n", g_swing.tries, wall_ms());
         }
         const int16_t *ip = (const int16_t *)(b.a + 0x8c);
         std::memcpy(pl + 0x8c, ip, 6);
