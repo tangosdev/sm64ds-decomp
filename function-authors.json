@@ -22379,35 +22379,35 @@
     },
     "ov006:0x020dec5c": {
       "author": "ruspecial",
-      "name": "CupFx_Move"
+      "name": "_ZN5CupFx4MoveEii"
     },
     "ov006:0x020dec88": {
       "author": "tangosdev",
-      "name": "CupFx_Draw"
+      "name": "_ZN5CupFx4DrawEv"
     },
     "ov006:0x020ded00": {
       "author": "tangosdev",
-      "name": "CupFx_Update"
+      "name": "_ZN5CupFx6UpdateEv"
     },
     "ov006:0x020ded84": {
       "author": "tangosdev",
-      "name": "CupFx_Init"
+      "name": "_ZN5CupFx4InitEiiia"
     },
     "ov006:0x020dedfc": {
       "author": "tangosdev",
-      "name": "Cup_PlayAnimSound"
+      "name": "_ZN10dScMgCup_c13PlayAnimSoundEiii"
     },
     "ov006:0x020deed8": {
       "author": "andrewboudreau",
-      "name": "Cup_DrawOamList"
+      "name": "_ZN10dScMgCup_c11DrawOamListEP7OamAttriiii"
     },
     "ov006:0x020def80": {
       "author": "tangosdev",
-      "name": "Cup_UpdateAnim"
+      "name": "_ZN10dScMgCup_c10UpdateAnimEi"
     },
     "ov006:0x020df024": {
       "author": "tangosdev",
-      "name": "Cup_PickShuffleSpeed"
+      "name": "_ZN10dScMgCup_c9SetupSwapEv"
     },
     "ov006:0x020df1bc": {
       "author": "tangosdev",

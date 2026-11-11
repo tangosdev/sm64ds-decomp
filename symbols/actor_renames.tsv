@@ -9769,3 +9769,11 @@ ov006	0x020ec84c	Wiggler_StartBounce	_ZN15dScMgHanachan_c7Wiggler11StartBounceEi
 ov006	0x020ec9c0	Wiggler_StartPathB	_ZN15dScMgHanachan_c7Wiggler10StartPathBEi	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
 ov006	0x020ecba4	Wiggler_StartPathC	_ZN15dScMgHanachan_c7Wiggler10StartPathCEi	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
 ov006	0x020ecdb8	Hana_SpawnWigglers	_ZN15dScMgHanachan_c7Wiggler5SpawnEii	Which Wiggler draw, segment and path helpers become dScMgHanachan_c::Wiggler members: each takes one wiggler record as its first argument
+ov006	0x020dec5c	CupFx_Move	_ZN5CupFx4MoveEii	Which cup effect helpers become CupFx members: each takes one effect slot as its first argument
+ov006	0x020dec88	CupFx_Draw	_ZN5CupFx4DrawEv	Which cup effect helpers become CupFx members: each takes one effect slot as its first argument
+ov006	0x020ded00	CupFx_Update	_ZN5CupFx6UpdateEv	Which cup effect helpers become CupFx members: each takes one effect slot as its first argument
+ov006	0x020ded84	CupFx_Init	_ZN5CupFx4InitEiiia	Which cup effect helpers become CupFx members: each takes one effect slot as its first argument
+ov006	0x020dedfc	Cup_PlayAnimSound	_ZN10dScMgCup_c13PlayAnimSoundEiii	Which cup scene helpers become dScMgCup_c members: each takes the scene as its first argument
+ov006	0x020deed8	Cup_DrawOamList	_ZN10dScMgCup_c11DrawOamListEP7OamAttriiii	Which cup scene helpers become dScMgCup_c members: each takes the scene as its first argument
+ov006	0x020def80	Cup_UpdateAnim	_ZN10dScMgCup_c10UpdateAnimEi	Which cup scene helpers become dScMgCup_c members: each takes the scene as its first argument
+ov006	0x020df024	Cup_PickShuffleSpeed	_ZN10dScMgCup_c9SetupSwapEv	cup scene helper becomes a dScMgCup_c member; named SetupSwap per notes/minigames/names.md: it picks the swapping pair, its midpoint and start angle and the fake-out, not only the speed
