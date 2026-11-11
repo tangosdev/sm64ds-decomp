@@ -267,11 +267,14 @@ namespace bro {
 namespace {
 
 const char *const kBroChoice[2] = { "Original", "Custom" };
-// Yoshi's four: the cartridge's multiplayer rows as the profile popup's classic cells give them (hal/menu_online_profile.h
-// kOnlineYoshiColors, the drawn body and shoe shade of each row), then Custom
-const char *const kYoshiChoice[5] = { "Green", "Red", "Blue", "Yellow", "Custom" };
-const unsigned kYoshiPair[4][2] = {
+// Yoshi's eight: the profile popup's eight cells, in its order (hal/menu_online_profile.h kOnlineYoshiColors: the cartridge's four
+// multiplayer rows as the classic cells give them, the drawn body and shoe shade of each row, then Pink, Cyan, Purple, Orange),
+// then Custom. A popup pick reads back as its own name, never as Custom.
+enum : int { kYoshiPresets = 8, kYoshiCustom = kYoshiPresets };
+const char *const kYoshiChoice[kYoshiPresets + 1] = { "Green", "Red", "Blue", "Yellow", "Pink", "Cyan", "Purple", "Orange", "Custom" };
+const unsigned kYoshiPair[kYoshiPresets][2] = {
     { 0x31A431u, 0xE66218u }, { 0xFF3139u, 0x004AFFu }, { 0x4A52B4u, 0xB410B4u }, { 0xFFCD00u, 0x31BD08u },
+    { 0xFF7FBFu, 0x8A1F5Cu }, { 0x20D8E0u, 0x0E5E7Au }, { 0x8A4FD8u, 0x3A1A7Au }, { 0xFF8A1Eu, 0x7A3A10u },
 };
 
 // this session's memory of a Custom the player stepped away from, so Original then Custom brings it back
@@ -343,9 +346,9 @@ bool yoshi_now(unsigned pair[2])
 
 int yoshi_preset_of(const unsigned pair[2])
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < kYoshiPresets; ++i)
         if (q555(pair[0]) == q555(kYoshiPair[i][0]) && q555(pair[1]) == q555(kYoshiPair[i][1])) return i;
-    return 4;
+    return kYoshiCustom;
 }
 
 void yoshi_write(const unsigned pair[2])
@@ -375,7 +378,7 @@ extern "C" int port_bro_my_row(int chr, int row, unsigned *rgb)
 
 extern "C" int port_bro_choice_count(int chr)
 {
-    return chr >= 0 && chr <= 2 ? 2 : chr == 3 ? 5 : 0;
+    return chr >= 0 && chr <= 2 ? 2 : chr == 3 ? kYoshiPresets + 1 : 0;
 }
 
 extern "C" const char *port_bro_choice_name(int chr, int i)
@@ -422,7 +425,7 @@ extern "C" int port_bro_custom_get(int chr, int part, unsigned *rgb)
         if (part < 0 || part > 1) return 0;
         unsigned pair[2];
         yoshi_now(pair);
-        if (yoshi_preset_of(pair) != 4 && g_ycust_have) {
+        if (yoshi_preset_of(pair) != kYoshiCustom && g_ycust_have) {
             pair[0] = g_ycust[0];
             pair[1] = g_ycust[1];
         }
@@ -467,12 +470,12 @@ extern "C" int port_bro_choice_set(int chr, int i)
     if (i < 0 || i >= port_bro_choice_count(chr)) return 0;
     if (chr == 3) {
         unsigned pair[2];
-        if (yoshi_now(pair) && yoshi_preset_of(pair) == 4) {
+        if (yoshi_now(pair) && yoshi_preset_of(pair) == kYoshiCustom) {
             g_ycust[0] = pair[0];
             g_ycust[1] = pair[1];
             g_ycust_have = true;
         }
-        if (i < 4) {
+        if (i < kYoshiPresets) {
             pair[0] = kYoshiPair[i][0];
             pair[1] = kYoshiPair[i][1];
         } else if (g_ycust_have) {
@@ -508,7 +511,7 @@ extern "C" unsigned port_bro_choice_swatch(int chr, int i)
     if (i < 0 || i >= port_bro_choice_count(chr)) return 0;
     unsigned v = 0;
     if (chr == 3) {
-        if (i < 4) return kYoshiPair[i][0];
+        if (i < kYoshiPresets) return kYoshiPair[i][0];
         port_bro_custom_get(3, 0, &v);
         return v;
     }

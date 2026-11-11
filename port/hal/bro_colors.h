@@ -63,12 +63,13 @@ extern "C" int port_bro_picks_for_body(void *body, port::bro::Picks *out);
 
 // BROSCOLOR1 (run coopfix1): THE COLOUR CHOICES A PLAYER HAS IN A ROOM, the character-palettes mod's own list, offered
 // without the mod: Mario, Luigi and Wario each "Original" or "Custom" (Custom = his own Hat, Overalls and Shoes colours),
-// Yoshi "Green" "Red" "Blue" "Yellow" (the cartridge's four multiplayer rows) or "Custom" (his own Body and Shoes). The
+// Yoshi "Green" "Red" "Blue" "Yellow" (the cartridge's four multiplayer rows), "Pink" "Cyan" "Purple" "Orange" (the profile popup's
+// other four cells) or "Custom" (his own Body and Shoes). The
 // choice is stored in settings.json (a bro: OnlineMarioHat ...; Yoshi: OnlineBodyColor / OnlineShoeColor, the profile
 // popup's keys), so the popup and these calls agree; the identity carries a bro's rows to every console (SYNI bro block)
 // and the join exports Yoshi's pair. Logic thread only. chr: 0 Mario, 1 Luigi, 2 Wario, 3 Yoshi.
 extern "C" {
-int         port_bro_choice_count(int chr);                        // 2 for a bro, 5 for Yoshi; 0 for a bad chr
+int         port_bro_choice_count(int chr);                        // 2 for a bro, 9 for Yoshi; 0 for a bad chr
 const char *port_bro_choice_name(int chr, int i);                  // the choice's label, or 0 out of range
 int         port_bro_choice_current(int chr);                      // the local player's current choice (index)
 int         port_bro_choice_set(int chr, int i);                   // store it; 1 ok. Custom brings back his last Custom colours
