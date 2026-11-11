@@ -2637,9 +2637,45 @@ extern "C" void port_coop_world_level_latched(void) {
     join_group(CoopKey((int)data_0209f2f8, data_0209f220[0] & 0xff));   // fires latched, then established
 }
 
+namespace port {
+// COOPBOO5 solo proof knob SM64DS_BOOHIT_SOLO=F:SLOT (inert unless set, outside a coop room only): from frame F the Boo of that slot
+// reads as punched by the player whenever it chases, the way SM64DS_COOP_BOOHIT does in a room, and every 60 frames the log says
+// how many Boos stand with no death table slot (a cap Boo's replacement). Shows that solo play still leaves the replacement.
+void boohit_solo() {
+    static int at = -2, slot = -1; static unsigned fr = 0;
+    if (at == -2) {
+        at = -1;
+        if (const char *e = std::getenv("SM64DS_BOOHIT_SOLO")) { int a = 0, s = 0; if (std::sscanf(e, "%d:%d", &a, &s) == 2) { at = a; slot = s; } }
+    }
+    if (at < 0 || (int)++fr < at) return;
+    const int me = (int)data_0209f250;
+    char *body = (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
+    if (!body) return;
+    int unslotted = 0;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (*(const unsigned short *)(a + 0x0c) != 209) continue;
+        const short sl = *(const short *)(a + 0xce);
+        if (sl < 0 && !going(a)) ++unslotted;
+        if (sl != slot || going(a) || *(const unsigned char *)(a + kBooState) >= 3) continue;
+        const int *bp = (const int *)(a + 0x5c); int *pp = (int *)(body + 0x5c);
+        if (fr % 150u == 0) {   // stand by it with its room shown (a hidden room keeps a Boo at home), as the coop knob does
+            pp[0] = bp[0] + (80 << 12); pp[1] = bp[1]; pp[2] = bp[2];
+            const signed char area = *(const signed char *)(a + 0x5d0);
+            if (area >= 0 && data_02092120 != area) ChangeArea(area);
+        }
+        if (*(const unsigned char *)(a + kBooState) != 1) continue;
+        *(unsigned *)(a + 0x184 + 0x20) |= 0x40u;
+        *(unsigned *)(a + 0x184 + 0x24) = *(const unsigned *)(body + 0x04);
+        if (fr % 60u == 0) std::fprintf(stderr, "[boo-solo] Boo slot %d (cap %d) reads as punched by my player (frame %u)\n", slot,
+                                        *(const unsigned char *)(a + 0x113) & 0xf, fr);
+    }
+    if (fr % 60u == 0) std::fprintf(stderr, "[boo-solo] Boos standing with no death table slot (cap Boo replacements): %d (frame %u)\n", unslotted, fr);
+}
+}  // namespace port
+
 extern "C" void port_coop_world_frame(void) {
     using namespace port;
-    if (!coop_world_active()) return;
+    if (!coop_world_active()) { boohit_solo(); return; }
     ensure_handlers();
     ++g_frame;
     const bool ticking = coop_boot_ticking();
