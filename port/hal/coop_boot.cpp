@@ -304,6 +304,7 @@ void leave_host_left() { leave(kCoopExitHostLeft, "The host left. Room closed.")
 //   * Grace spent: today's in-place end, with honest words.
 // The roster lines ("<name> lost connection." / "<name> left." / "<name> is back." / "<name> joined.") run on every
 // console. SM64DS_COOP_REJOIN=0 turns all of it off (the before rows).
+const ULONGLONG kHostHungMs = 20000;     // a connected host seat with no beat this long has hung: lost (the 60 s hold starts)
 const ULONGLONG kHostBeatLostMs = 2500;  // no STATE from the host's seat this long: that seat is not (or no longer) the host
 struct Rejoin {
     bool lost = false;       // the host's seat is quiet past the settle
@@ -366,7 +367,12 @@ void check_host_quiet() {
     HubSeatInfo si;
     // Presence is the hub's (its network thread keeps a frozen host's seat alive); the beat only says WHO the host is:
     // the stay on that seat must be the one the host's beat came from, so a stranger who took the seat is not the host.
-    const bool here = comms_hub_state() == kHubLive && host_stay_here(&si);
+    // Backstop: a host whose game hangs for good while its network thread keeps the seat connected sends no beat; after
+    // kHostHungMs of that it counts as lost (a short freeze, a window drag or a slow load, stays silent).
+    const bool hung = C.host_state_at && now - C.host_state_at >= kHostHungMs;
+    const bool here = comms_hub_state() == kHubLive && host_stay_here(&si) && !hung;
+    if (hung && !RJ.lost && !C.gone_since)
+        LOG("REJOIN the host's seat %d is connected but sent no host beat for %u s", C.host_seat, (unsigned)(kHostHungMs / 1000));
     if (here) {
         if (RJ.lost) {
             LOG("REJOIN the host's seat %d is heard again after %llu ms; the room goes on", C.host_seat,
@@ -505,8 +511,8 @@ void roster_watch() {
             }
             const bool skip = skip_host || skip_mine;
             if (skip_mine) LOG("REJOIN seat %d is %s: listed before my own drop, back without a line", s, w.name[0] ? w.name : "unnamed");
-            LOG("REJOIN seat %d is %s (%s)", s, w.name[0] ? w.name : "unnamed",
-                was >= 0 ? "the same name dropped before: back" : "a new player");
+            if (!skip_mine) LOG("REJOIN seat %d is %s (%s)", s, w.name[0] ? w.name : "unnamed",
+                was >= 0 ? "the same name dropped before: back" : skip_host ? "the host" : "a new player");
             std::snprintf(line, sizeof line, was >= 0 ? "%s is back." : "%s joined.", nm);
             if (!skip) rejoin_say(line);
             w.join_pending = false;
