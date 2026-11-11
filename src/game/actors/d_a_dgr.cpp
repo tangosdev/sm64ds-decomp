@@ -16,11 +16,10 @@
  * not have.
  *
  * Kept shapes (each alternative was measured against the ROM):
- * - Behavior: `mAngleX = (s16)(mAngleX + mAngleXSpeed)` size-DIFF
- *   0x3ec->0x3e8. The halfword is updated through an s16*.
- * - Behavior: `speedDivisor = -speedDivisor` size-DIFF 0x3ec->0x3e4, and
- *   `bob = -bob` size-DIFF 0x3ec->0x3e4. Both keep
- *   `s32 neg = -1; x = x * neg`.
+ * - Behavior: `mAngleX = mAngleX + mAngleXSpeed` size-DIFF 0x3ec->0x3e8;
+ *   the ROM's update is `mAngleX += mAngleXSpeed`.
+ * - Behavior: `speedDivisor = -speedDivisor` and `bob = -bob` size-DIFF
+ *   0x3ec->0x3e4. The ROM multiplies, `x *= -1`.
  * - Behavior: deleting the `loc[0..2] = mPos*` seed size-DIFF 0x3ec->0x3d4.
  *   Two Vec3 locals instead of `s32 loc[6]` size-DIFF 0x3ec->0x3ac
  *   (a Vector3 local emits ~Vector3). The six words stay.
@@ -74,7 +73,6 @@ enum {
 
 extern DgrModelFilePtr data_ov025_02113a68;
 extern DgrCollisionFilePtr data_ov025_02113a60;
-extern s16 FX_SinCosTable_[];
 /* CLPS.h keeps the block opaque: header with the entry stride at +4, then
    the entries. This TU hands SetFile a one-entry block. */
 struct CLPS_Block {
@@ -142,10 +140,8 @@ s32 daDgr_c::Behavior() {
     }
 
     speedDivisor = 10 - mRollStage;
-    if (speedDivisor < 0) {
-        s32 neg = -1;
-        speedDivisor = speedDivisor * neg;
-    }
+    if (speedDivisor < 0)
+        speedDivisor *= -1;
     speedDivisor = speedDivisor - 6;
     if (speedDivisor < 0)
         speedDivisor = 0;
@@ -177,24 +173,15 @@ s32 daDgr_c::Behavior() {
             mAngleXSpeed = (s16)((-kRollAngleStep) / speedDivisor);
         }
 
-        {
-            s16 *angleX = &mAngleX;
-            mPosZ = mPosZ + mSpeedZ;
-            *angleX = (s16)(*angleX + mAngleXSpeed);
-            if ((mAngleX & kGrindAngleMask) < kGrindWindow) {
-                if (mAngleXSpeed != 0)
-                    func_02012694(kGrindSound, &mCamSpacePos);
-            }
-        }
+        mPosZ += mSpeedZ;
+        mAngleX += mAngleXSpeed;
+        if ((mAngleX & kGrindAngleMask) < kGrindWindow && mAngleXSpeed != 0)
+            func_02012694(kGrindSound, &mCamSpacePos);
 
         {
-            s16 angleX = mAngleX;
-            s32 idx = ((u16)(s16)(angleX << 2) >> 4) * 2;
-            s32 bob = (s32)FX_SinCosTable_[idx] * kBobScale;
-            if (bob < 0) {
-                s32 neg = -1;
-                bob = bob * neg;
-            }
+            s32 bob = FX_SinIdx((u16)(s16)(mAngleX << 2) >> 4) * kBobScale;
+            if (bob < 0)
+                bob *= -1;
             mPosY = mBasePosY + bob;
         }
 

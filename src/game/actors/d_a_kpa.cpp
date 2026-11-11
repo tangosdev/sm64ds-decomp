@@ -33,8 +33,7 @@
  *    function): the mOpacity += / -= 0x14 form; the angle-copy pointer in
  *    func_ov060_02115d68; the overwritten first pos[] stores in
  *    RunIntroTalk; the (unsigned short) and *(u16 *)& angle reads; the
- *    new_var temp and the `dp != 0 && this != 0` barrier in
- *    ActSpitFireOntoFloor; the volatile walk pointer in ActTiltLavaPlatform; the gotos
+ *    volatile walk pointer in ActTiltLavaPlatform; the gotos
  *    in func_ov060_02115c1c; the data_ov060_02119294/6/8 + offset reads; and the
  *    `obj` copy of this in Bowser_IsAnimAtLastFrame.
  *  - Callees known only by address, whose purpose this file does not establish:
@@ -1160,7 +1159,6 @@ void daKpa_c::RunIntroTalk() {
                 int zero;
                 int scale;
                 int msg;
-                s16 *tbl;
                 s16 *msgs;
                 u16 ang;
                 s16 sx;
@@ -1169,7 +1167,6 @@ void daKpa_c::RunIntroTalk() {
                  * before use; dropping those first three stores builds 12 bytes
                  * shorter (measured). */
                 x = this->mPosX;
-                tbl = FX_SinCosTable_;
                 pos[0] = x;
                 y = this->mPosY;
                 scale = 0xc8;
@@ -1180,10 +1177,10 @@ void daKpa_c::RunIntroTalk() {
                 ang = this->mAngleY;
                 zero = 0;
                 msgs = data_ov060_0211a4e0;
-                sx = tbl[(ang >> 4) * 2];
+                sx = FX_SinIdx(ang >> 4);
                 pos[0] = sx * scale + x;
                 ang = this->mAngleY;
-                sz = tbl[(ang >> 4) * 2 + 1];
+                sz = FX_CosIdx(ang >> 4);
                 pos[1] = y2;
                 pos[2] = sz * scale + z;
                 msg = (s16) msgs[this->mVariantID];
@@ -1993,7 +1990,6 @@ plus 0xe8 (232) units out along mAngleY and 0x58000 (88 units) up, with sound
 shot in mStep and go to BOWSER_STATE_IDLE once mStep reaches mFireballShots;
 otherwise start animation 0x14; then restart the animation from frame 0. */
 void daKpa_c::ActSpitFireOntoFloor() {
-    int new_var;
     if (this->mTimer == 0) {
         daPly_c *player = this->mTargetPlayer;
         if (player == 0 || player->GetHealth() > 4) {
@@ -2007,42 +2003,13 @@ void daKpa_c::ActSpitFireOntoFloor() {
     }
     if ((int)this->mAnmModel.file == (int)data_ov060_0211abe0.filePtr) {
         if (this->mAnmModel.WillHitFrame(5)) {
-            Vector3 pos;
-            u16 dir[3];
-            u16 ax, ay, az;
-            s16* tbl;
-            s16 scale;
-            int grav;
-            /* `dp` must be a live pointer here, not a folded `&dir` at the call: the
-               address has to be materialised before the two smlabb steps so it holds
-               r2 across them, which is what pushes pos.x to r3 and `scale` to ip. */
-            u16* dp;
-
-            pos.x = this->mPosX;
-            tbl = FX_SinCosTable_;
-            pos.y = this->mPosY;
-            scale = 0xe8;
-            pos.z = this->mPosZ;
-            ax = *(u16 *)&this->mAngleX;
-            ay = *(u16 *)&this->mAngleY;
-            dir[1] = ay;
-            dir[0] = ax;
-            az = *(u16 *)&this->mAngleZ;
-            dir[2] = az;
-            pos.x = (tbl[(dir[1] >> 4) * 2] * scale) + pos.x;
-            new_var = pos.y + 0x58000;
-            dp = dir;
-            pos.z = (tbl[((dp[1] >> 4) * 2) + 1] * scale) + pos.z;
-            /* Scheduling barrier, not dead code. Both operands are provably non-null,
-               so this changes nothing at runtime, but the short-circuit `&&` splits the
-               block and stops the scheduler hoisting the 0xa000 constant into the slot
-               the ROM gives to `dp`. Without it this function is 11 words off. */
-            if (dp != 0 && this != 0) {
-            }
-            pos.y = new_var;
-            dir[0] = 0x1000;
-            grav = 0xa000;
-            SpawnFireball(pos, (const Vector3_16 *)dp, 0x1e000, grav, 0);
+            Vector3 pos = mPos;
+            Vector3_16 dir = mAngle;
+            pos.x += FX_SinIdx((u16)dir.y >> 4) * 0xe8;
+            pos.y += 0x58000;
+            pos.z += FX_CosIdx((u16)dir.y >> 4) * 0xe8;
+            dir.x = 0x1000;
+            SpawnFireball(pos, &dir, 0x1e000, 0xa000, 0);
             func_02012694(BOWSER_SND_FIREBALL, &mCamSpacePos);
         }
     }
@@ -2819,11 +2786,9 @@ void daKpa_c::TiltPlatform(int tiltSpeed) {
     daKpa2Bg_c *arena = (daKpa2Bg_c *)dActor_c::FindWithID(this->mArenaBgUniqueID);
     if (arena == 0)
         return;
-    short angle = this->mAngleToCenter;
-    unsigned int idx = (unsigned short)(short)(angle + 0x8000) >> 4;
-    int k = idx * 2;
-    arena->mAngleXSpeed = (short)((tiltSpeed * FX_SinCosTable_[k + 1]) >> 12);
-    arena->mAngleZSpeed = (short)((tiltSpeed * -FX_SinCosTable_[k]) >> 12);
+    s16 angle = mAngleToCenter + 0x8000;
+    arena->mAngleXSpeed = (tiltSpeed * FX_CosIdx((u16)angle >> 4)) >> 12;
+    arena->mAngleZSpeed = (tiltSpeed * -FX_SinIdx((u16)angle >> 4)) >> 12;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2975,20 +2940,11 @@ void daKpa_c::FreeUpdate() {
 
     if (data_ov060_02119268[idx] != 0) {
         if (!this->mWithMeshClsn.IsOnGround()) {
-            s32* px = &this->mPosX;
-            s32* pz = &this->mPosZ;
-            s16 *tab = FX_SinCosTable_;
-            this->mPosX = this->mLastGroundPosX;
-            this->mPosY = this->mLastGroundPosY;
-            this->mPosZ = this->mLastGroundPosZ;
-            {
-                s32 a = (*(u16*)&this->mAngleToCenter >> 4);
-                *px = *px + ((s32)tab[a * 2] << 3);
-            }
-            {
-                s32 a = (*(u16*)&this->mAngleToCenter >> 4);
-                *pz = *pz + ((s32)tab[a * 2 + 1] << 3);
-            }
+            mPosX = mLastGroundPosX;
+            mPosY = mLastGroundPosY;
+            mPosZ = mLastGroundPosZ;
+            mPosX += FX_SinIdx((u16)mAngleToCenter >> 4) << 3;
+            mPosZ += FX_CosIdx((u16)mAngleToCenter >> 4) << 3;
         } else {
             this->mLastGroundPosX = this->mPosX;
             this->mLastGroundPosY = this->mPosY;
@@ -3019,10 +2975,6 @@ units out along the daPly_c's facing (X and Z) and 0x18000 (24 units) up minus
 void daKpa_c::HeldUpdate() {
     int v;
     short a;
-    int i;
-    int j;
-    Vector3 *s;
-
     this->mCondFlags &= ~BOWSER_COND_BREATHING;
 
     switch (this->mHoldStep) {
@@ -3053,17 +3005,10 @@ void daKpa_c::HeldUpdate() {
     this->mAngleX = -v;
     this->mAngleY = a;
 
-    s = &this->mGrabbedPlayer->mPos;
-    this->mPosX = s->x;
-    this->mPosY = s->y;
-    this->mPosZ = s->z;
-
-    i = ((unsigned short)a >> 4) * 2;
-
-    this->mPosX += FX_SinCosTable_[i] * 0xa0;
-    j = ((unsigned short)this->mAngleX >> 4) * 2;
-    this->mPosY += 0x18000 - FX_SinCosTable_[j] * 0xa0;
-    this->mPosZ += FX_SinCosTable_[i + 1] * 0xa0;
+    mPos = mGrabbedPlayer->mPos;
+    mPosX += FX_SinIdx((u16)a >> 4) * 0xa0;
+    mPosY += 0x18000 - FX_SinIdx((u16)mAngleX >> 4) * 0xa0;
+    mPosZ += FX_CosIdx((u16)a >> 4) * 0xa0;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -3079,7 +3024,7 @@ when v is above 0x2d; mHorzSpeed = v * cos(mAngleX) and mVertSpeed =
 to BOWSER_TAIL_COOLDOWN with mTimer 0; mAngleX, mTimer and mStep are cleared and
 the floor collider's ground flag is cleared. */
 void daKpa_c::ThrownDroppedUpdate() {
-    int v, nv;
+    int v;
     daKpaTail_c *tail;
 
     InitAnimation(0xe, 0x40000000);
@@ -3097,9 +3042,8 @@ void daKpa_c::ThrownDroppedUpdate() {
     v = v * 0x46 / 6000;
     if (v > 0x2d)
         v = v * 0x19 / 10;
-    nv = -v;
-    this->mHorzSpeed = v * FX_SinCosTable_[((unsigned short)this->mAngleX >> 4 << 1) + 1];
-    this->mVertSpeed = nv * FX_SinCosTable_[(unsigned short)this->mAngleX >> 4 << 1];
+    this->mHorzSpeed = v * FX_CosIdx((u16)mAngleX >> 4);
+    this->mVertSpeed = -v * FX_SinIdx((u16)mAngleX >> 4);
     tail = (daKpaTail_c *)dActor_c::FindWithID(this->mTailUniqueID);
     if (tail != 0) {
         tail->mState = BOWSER_TAIL_COOLDOWN;
