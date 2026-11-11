@@ -950,10 +950,7 @@ int daHanachan_c::Behavior()
             if (DecIfAbove0_Byte(&mSegmentBounceTimer[i]) != 0) {
                 mSegmentBouncePhase[i] += 0x1200;
                 mSegmentScale[i].y =
-                    (FX_MUL(FX_CosIdx((u16)mSegmentBouncePhase[i] >> 4),
-                            0x3000) +
-                     0xc000) /
-                    10;
+                    (FX_MUL(FX_CosIdx((u16)mSegmentBouncePhase[i] >> 4), 0x3000) + 0xc000) / 10;
             } else {
                 ApproachLinear(mSegmentScale[i].y, 0x1000, 0x199);
             }

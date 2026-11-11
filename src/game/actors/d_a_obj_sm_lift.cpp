@@ -121,9 +121,9 @@ int daObjSm_Lift_c::Behavior() {
         Vector3 *otherPos = &other->mPos;
         int dist = Vec3_HorzDist(&mPos, otherPos);
         target =
-            (s16)(FX_MUL(dist, FX_CosIdx((u16)(s16)AngleDiff(Vec3_HorzAngle(&mPos, otherPos),
-                                                                    mAngleY) >>
-                                                4)) /
+            (s16)(FX_MUL(dist,
+                         FX_CosIdx((u16)(s16)AngleDiff(Vec3_HorzAngle(&mPos, otherPos), mAngleY) >>
+                                   4)) /
                   256);
     } else {
         if (mNodeStep > 0 && mNodeIndex == 1) {

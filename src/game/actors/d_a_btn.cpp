@@ -1557,8 +1557,7 @@ extern "C" void func_ov079_02123d4c(Vector3 *out, daBtn_c *self) {
         d = self->OnAimedAtWithEgg();
         {
             out->y += d;
-            out->z =
-                out->z + FX_MUL(m, FX_CosIdx((unsigned short)self->mAngleY >> 4));
+            out->z = out->z + FX_MUL(m, FX_CosIdx((unsigned short)self->mAngleY >> 4));
         }
     }
 }
