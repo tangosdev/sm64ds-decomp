@@ -1592,6 +1592,23 @@ struct Reg {
 
 CoopSpawnStats coop_spawn_stats() { return g_st; }
 
+// AREACOIN1: the red coin count for a friend in another sublevel of the same course (coop_world.cpp kWorldRedCount).
+int coop_spawn_red_sum(int *star) {
+    if (star) *star = g_red_star & 7;
+    int s = (int)NumRedCoins(); if (s < 0) s = 0; if (s > 8) s = 8;
+    return s;
+}
+// Raise my count to a friend's (max, never down): his red coins were in a sublevel I was not in, so no copy of mine saw them
+// go. The ROM's red coin star check runs as for any other red coin credit (red_bump).
+bool coop_spawn_red_raise(int sum, int star, int seat) {
+    if (g_off.red || !g_red_armed) return false;
+    const int have = red_sum();
+    if (sum <= have) return false;
+    if (g_log) std::fprintf(stderr, "[coopspawn] red coin count from seat %d in another part of the course: %d, mine %d\n", seat, sum, have);
+    red_bump(sum - have, star > 0 ? star : g_red_star, "course");
+    return true;
+}
+
 bool coop_spawn_announce(void *local_actor, int cls, unsigned param, const int pos[3], int area) {
     if (!coop_world_active() || !coop_group_established() || !g_have_key || g_my < 0) return false;
     if (!is_ann_cls((unsigned)cls) || !pos || !sp_param_ok(cls, param) || area < -1 || area > 7) return false;

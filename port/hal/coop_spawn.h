@@ -230,6 +230,9 @@ CoopSpawnStats coop_spawn_stats();
 // coop group, the class is off the list, or the table is full. Safe to call
 // from any frame hook; inert outside a coop room.
 bool coop_spawn_announce(void *local_actor, int cls, unsigned param, const int pos[3], int area);
+// AREACOIN1: my red coin count (0..8) and the star its coins carry; raise mine to a friend's from another sublevel of the course.
+int coop_spawn_red_sum(int *star);
+bool coop_spawn_red_raise(int sum, int star, int seat);
 // Spawn on THIS console AND announce, in one call: the ROM's own spawn, then
 // coop_spawn_announce. Returns the local actor (null = spawn failed, nothing sent).
 void *coop_spawn_and_announce(int cls, unsigned param, const int pos[3], int area);
