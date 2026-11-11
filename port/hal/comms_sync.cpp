@@ -3520,7 +3520,7 @@ bool gw_drawn(int body) {
     return body >= 0 && body < kPortBodySlots && g_drawpos_have[body] != 0;
 }
 
-/* One line each time a body starts or stops being one the two rules disagree on: the old rule
+/* One line (with SM64DS_COOP_DRAWGATE_LOG set) each time a body starts or stops being one the two rules disagree on: the old rule
    (fresh frames) would draw it, the follower parked it. Under SM64DS_COOP_DRAWGATE=0 such a body is
    drawn at its last matrix with colour row -1 (the stand-in); otherwise it is not drawn. */
 void coop_drawgate_note(int body, int seat, bool old_rule, bool placed) {
@@ -3531,6 +3531,8 @@ void coop_drawgate_note(int body, int seat, bool old_rule, bool placed) {
     if (odd == was[body]) return;
     was[body] = odd;
     if (odd) ++n;
+    static const bool log = std::getenv("SM64DS_COOP_DRAWGATE_LOG") != nullptr;   // INT: the line is a proof log, off by default
+    if (!log) return;
     std::fprintf(stderr, "[coopdraw] f=%u body %d seat %d: %s (gate %d, pal %d, rule %s, count %llu)\n",
                  g_gw_frame, body, seat,
                  odd ? "fresh frames but parked by the follower" : "rules agree again",
