@@ -1020,8 +1020,8 @@ void daKpa_c::UpdateModelMatrix() {
         goto skip_angles;
     if (this->mHoldState != BOWSER_HOLD_NONE)
         goto skip_angles;
-    this->mAngleX = func_02010844(&this->mGroundNormalX, this->mAngleY);
-    this->mAngleZ = func_02010844(&this->mGroundNormalX, (s16)(this->mAngleY - 0x4000));
+    this->mAngleX = func_02010844((Vector3 *)&this->mGroundNormalX, this->mAngleY);
+    this->mAngleZ = func_02010844((Vector3 *)&this->mGroundNormalX, (s16)(this->mAngleY - 0x4000));
 skip_angles:
     Vec3_Asr(&v, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);

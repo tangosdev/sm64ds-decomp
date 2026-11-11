@@ -1024,8 +1024,8 @@ int daObjMarioCap_c::Slide()
     mVertSpeed =
         -(FX_Div(FX_MUL(mFloorNormalX, mSpeedX) + FX_MUL(mFloorNormalZ, mSpeedZ), mFloorNormalY) +
           0x8000);
-    pitch = func_02010844(&mFloorNormalX, mAngleY);
-    roll = func_02010844(&mFloorNormalX, mAngleY - 0x4000);
+    pitch = func_02010844((Vector3 *)&mFloorNormalX, mAngleY);
+    roll = func_02010844((Vector3 *)&mFloorNormalX, mAngleY - 0x4000);
     UpdateAngle(mAngleX, pitch, 4, 0x1000);
     UpdateAngle(mAngleZ, roll, 4, 0x1000);
     return 1;
