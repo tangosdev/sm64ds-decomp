@@ -2103,13 +2103,51 @@ unsigned gw_rgb_of555(unsigned short w) {
     const unsigned r = w & 31, g = (w >> 5) & 31, b = (w >> 10) & 31;
     return (((r << 3) | (r >> 2)) << 16) | (((g << 3) | (g >> 2)) << 8) | ((b << 3) | (b >> 2));
 }
+#ifndef PORT_ROM_CLEAN
+// BROSCOLOR1 proof knob (dev builds only): SM64DS_BRO_CHOICE=<chr>:<i>[/...] picks choice i for chr through the lobby's own
+// calls (hal/bro_colors.h port_bro_choice_set), or <chr>:c:RRGGBB,RRGGBB[,RRGGBB] sets the Custom parts (port_bro_custom_set),
+// once, before the first identity reads the picks. chr 0 Mario 1 Luigi 2 Wario 3 Yoshi.
+static void gw_bro_choice_knob() {
+    static bool done;
+    if (done) return;
+    done = true;
+    const char *e = std::getenv("SM64DS_BRO_CHOICE");
+    if (!e || !*e) return;
+    char buf[160];
+    std::snprintf(buf, sizeof buf, "%s", e);
+    for (char *tok = std::strtok(buf, "/"); tok; tok = std::strtok(0, "/")) {
+        const int chr = std::atoi(tok);
+        const char *a = std::strchr(tok, ':');
+        if (!a) continue;
+        ++a;
+        if (*a == 'c' && a[1] == ':') {
+            const char *p = a + 2;
+            for (int part = 0; part < 3 && *p; ++part) {
+                const unsigned v = (unsigned)std::strtoul(p, 0, 16);
+                port_bro_custom_set(chr, part, v);
+                p = std::strchr(p, ',');
+                if (!p) break;
+                ++p;
+            }
+        } else {
+            port_bro_choice_set(chr, std::atoi(a));
+        }
+        std::fprintf(stderr, "[bro] knob: chr %d now choice %d (%s), default %d\n", chr, port_bro_choice_current(chr),
+                     port_bro_choice_name(chr, port_bro_choice_current(chr)) ? port_bro_choice_name(chr, port_bro_choice_current(chr)) : "?",
+                     port_bro_choice_is_default(chr));
+    }
+}
+#endif
 void gw_my_bros(unsigned short *mask, unsigned short bgr[9]) {
+#ifndef PORT_ROM_CLEAN
+    gw_bro_choice_knob();
+#endif
     *mask = 0;
     for (int c = 0; c < 3; ++c)
         for (int r = 0; r < 3; ++r) {
             unsigned v = 0;
             bgr[c * 3 + r] = 0;
-            if (host_setting_online_bro(c, r, &v)) {
+            if (port_bro_my_row(c, r, &v)) {   /* BROSCOLOR1: his online pick, else the palette mod's Custom */
                 *mask = (unsigned short)(*mask | (1u << (c * 3 + r)));
                 bgr[c * 3 + r] = gw_bgr555(v);
             }
