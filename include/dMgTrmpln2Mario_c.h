@@ -32,28 +32,28 @@ struct dMgTrmpln2Mario_c : dMgTrmpRingObjAdapter_c {
     virtual int IsActive();         /* 0x020c8ddc -- neither missed nor hidden */
 
     /* out of line, in ROM order */
-    void Render();                  /* 0x020c8e90 */
-    void UpdateMatrix();            /* 0x020c8ecc */
-    void Update();                  /* 0x020c8f20 -- dispatch, gravity, trail */
-    void ApplyGravity();            /* 0x020c9024 */
-    void StateKnockedOut();         /* 0x020c905c */
-    void EnterByKind();             /* 0x020c9098 */
-    void StateBounce();             /* 0x020c91ac */
-    void BounceOffLineA();          /* 0x020c94e0 */
-    void StateWallBounce();         /* 0x020c97bc */
-    void BounceOffLineB();          /* 0x020c9aa0 */
-    void EnterBounce();             /* 0x020c9c8c */
-    void StateRespawnWait();        /* 0x020c9d7c */
-    void EnterRespawnWait();        /* 0x020c9e7c */
-    void StateMissed();             /* 0x020c9efc */
-    void EnterMissed();             /* 0x020c9fe4 */
-    void StateFall();               /* 0x020ca070 */
-    void EnterFall();               /* 0x020ca2ec */
-    void StateAppearWait();         /* 0x020ca310 */
+    void Render();                     /* 0x020c8e90 */
+    void UpdateMatrix();               /* 0x020c8ecc */
+    void Update();                     /* 0x020c8f20 -- dispatch, gravity, trail */
+    void ApplyGravity();               /* 0x020c9024 */
+    void StateKnockedOut();            /* 0x020c905c */
+    void EnterByKind();                /* 0x020c9098 */
+    void StateBounce();                /* 0x020c91ac */
+    void BounceOffLineA();             /* 0x020c94e0 */
+    void StateWallBounce();            /* 0x020c97bc */
+    void BounceOffLineB();             /* 0x020c9aa0 */
+    void EnterBounce();                /* 0x020c9c8c */
+    void StateRespawnWait();           /* 0x020c9d7c */
+    void EnterRespawnWait();           /* 0x020c9e7c */
+    void StateMissed();                /* 0x020c9efc */
+    void EnterMissed();                /* 0x020c9fe4 */
+    void StateFall();                  /* 0x020ca070 */
+    void EnterFall();                  /* 0x020ca2ec */
+    void StateAppearWait();            /* 0x020ca310 */
     void EnterAppearWait(short timer); /* 0x020ca374 */
-    void StateHidden();             /* 0x020ca39c */
-    void EnterHidden();             /* 0x020ca3a8 */
-    int Load();                     /* 0x020ca430 -- anim banks, then hidden */
+    void StateHidden();                /* 0x020ca39c */
+    void EnterHidden();                /* 0x020ca3a8 */
+    int Load();                        /* 0x020ca430 -- anim banks, then hidden */
 
     Vector3 mPos;           /* 0x24 */
     Vector3 mPrevPos;       /* 0x30 -- mPos before this frame's move */

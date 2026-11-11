@@ -32,37 +32,37 @@ struct dMgTrmpln3DMario_c : dMgTrmpObjAdapter_c {
     virtual int IsActive();         /* 0x020caf4c -- anything but missed */
 
     /* out of line, in ROM order */
-    void Render();                  /* 0x020cafb4 */
-    void UpdateMatrix();            /* 0x020cafdc */
-    void Update();                  /* 0x020cb030 -- dispatch, gravity, trail */
-    void ApplyGravity();            /* 0x020cb134 */
-    void StateKnockedOut();         /* 0x020cb16c */
-    void EnterByKind();             /* 0x020cb1a8 */
-    void StateGoal();               /* 0x020cb2b4 */
-    void EnterGoal();               /* 0x020cb528 */
-    void StateLand();               /* 0x020cb5c4 */
-    void EnterLand();               /* 0x020cb690 */
-    void StateFallToLedge();        /* 0x020cb72c */
-    void EnterFallToLedge();        /* 0x020cb814 */
-    void StateHardBounce();         /* 0x020cb838 */
-    void BounceOffLineA();          /* 0x020cbaec */
-    void StateBounce();             /* 0x020cbd7c */
-    void BounceOffLineB();          /* 0x020cbfd8 */
-    void JumpOff();                 /* 0x020cc198 */
-    void StateMissed();             /* 0x020cc2ac */
-    void EnterMissed();             /* 0x020cc37c */
-    void StateFall();               /* 0x020cc408 */
-    void EnterFall();               /* 0x020cc618 */
-    void StateWalkBack();           /* 0x020cc63c */
-    void EnterWalkBack();           /* 0x020cc698 */
-    void StateOnLedge();            /* 0x020cc724 */
-    void EnterOnLedge();            /* 0x020cc8c8 */
-    void StateWalkIn();             /* 0x020cc9b8 */
-    void StateOnGround();           /* 0x020ccae0 */
-    void EnterOnGround();           /* 0x020ccc8c */
-    void StateOffstage();           /* 0x020ccd64 */
-    void EnterOffstage();           /* 0x020ccd78 */
-    int Load();                     /* 0x020cce0c -- anim banks, then offstage */
+    void Render();           /* 0x020cafb4 */
+    void UpdateMatrix();     /* 0x020cafdc */
+    void Update();           /* 0x020cb030 -- dispatch, gravity, trail */
+    void ApplyGravity();     /* 0x020cb134 */
+    void StateKnockedOut();  /* 0x020cb16c */
+    void EnterByKind();      /* 0x020cb1a8 */
+    void StateGoal();        /* 0x020cb2b4 */
+    void EnterGoal();        /* 0x020cb528 */
+    void StateLand();        /* 0x020cb5c4 */
+    void EnterLand();        /* 0x020cb690 */
+    void StateFallToLedge(); /* 0x020cb72c */
+    void EnterFallToLedge(); /* 0x020cb814 */
+    void StateHardBounce();  /* 0x020cb838 */
+    void BounceOffLineA();   /* 0x020cbaec */
+    void StateBounce();      /* 0x020cbd7c */
+    void BounceOffLineB();   /* 0x020cbfd8 */
+    void JumpOff();          /* 0x020cc198 */
+    void StateMissed();      /* 0x020cc2ac */
+    void EnterMissed();      /* 0x020cc37c */
+    void StateFall();        /* 0x020cc408 */
+    void EnterFall();        /* 0x020cc618 */
+    void StateWalkBack();    /* 0x020cc63c */
+    void EnterWalkBack();    /* 0x020cc698 */
+    void StateOnLedge();     /* 0x020cc724 */
+    void EnterOnLedge();     /* 0x020cc8c8 */
+    void StateWalkIn();      /* 0x020cc9b8 */
+    void StateOnGround();    /* 0x020ccae0 */
+    void EnterOnGround();    /* 0x020ccc8c */
+    void StateOffstage();    /* 0x020ccd64 */
+    void EnterOffstage();    /* 0x020ccd78 */
+    int Load();              /* 0x020cce0c -- anim banks, then offstage */
 
     Vector3 mPos;           /* 0x1c */
     Vector3 mPrevPos;       /* 0x28 -- mPos before this frame's move */

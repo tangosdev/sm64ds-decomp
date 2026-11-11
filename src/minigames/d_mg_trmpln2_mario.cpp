@@ -301,8 +301,7 @@ void dMgTrmpln2Mario_c::Render() {
 }
 
 void dMgTrmpln2Mario_c::UpdateMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y,
-                              mPos.z);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mRotY);
     mAnmModel.mat4x3 = data_020a0e68;
 }
@@ -327,9 +326,8 @@ void dMgTrmpln2Mario_c::Update() {
     Fix12i v = FX_MUL(mBounceVy, 0xb4b);
     if (mVel.y > v) {
         if (mAnmModel.file == sTrmpAnimBounce) {
-            mParticleId = (int)Particle::System::New(
-                mParticleId, kPtclMgTrampolineTrail, mPos.x << 3,
-                mPos.y << 3, mPos.z << 3, 0, 0);
+            mParticleId = (int)Particle::System::New(mParticleId, kPtclMgTrampolineTrail,
+                                                     mPos.x << 3, mPos.y << 3, mPos.z << 3, 0, 0);
         }
     }
     UpdateMatrix();
@@ -391,8 +389,7 @@ void dMgTrmpln2Mario_c::StateBounce() {
     }
 
     if (mAnmModel.file == sTrmpAnimBounce) {
-        if (mAnmModel.WillHitFrame(0xc) != 0 ||
-            mAnmModel.WillHitFrame(0x18) != 0) {
+        if (mAnmModel.WillHitFrame(0xc) != 0 || mAnmModel.WillHitFrame(0x18) != 0) {
             D3D_PlaySeAtX(0x1b5, mPos.x);
         }
     }
@@ -553,15 +550,13 @@ void dMgTrmpln2Mario_c::BounceOffLineA() {
         int *q = pmf_Trmp2Mario_StateAppearWait_2;
         if (s[0] != q[0] || (s[1] != q[1] && mState[0] != 0)) {
 
-            Particle::System::New(0, kPtclMgTrampolineBounceA, (mPos.x) << 3,
-                                  (mPos.y) << 3, (mPos.z) << 3,
-                                  (const Vector3_16f *)(&vec16), 0);
-            Particle::System::New(0, kPtclMgTrampolineBounceB, (mPos.x) << 3,
-                                  (mPos.y) << 3, (mPos.z) << 3,
-                                  (const Vector3_16f *)(&vec16), 0);
-            mParticleId = (int)Particle::System::New(
-                mParticleId, kPtclMgTrampolineTrail, (mPos.x) << 3,
-                (mPos.y) << 3, (mPos.z) << 3, 0, 0);
+            Particle::System::New(0, kPtclMgTrampolineBounceA, (mPos.x) << 3, (mPos.y) << 3,
+                                  (mPos.z) << 3, (const Vector3_16f *)(&vec16), 0);
+            Particle::System::New(0, kPtclMgTrampolineBounceB, (mPos.x) << 3, (mPos.y) << 3,
+                                  (mPos.z) << 3, (const Vector3_16f *)(&vec16), 0);
+            mParticleId =
+                (int)Particle::System::New(mParticleId, kPtclMgTrampolineTrail, (mPos.x) << 3,
+                                           (mPos.y) << 3, (mPos.z) << 3, 0, 0);
         }
     }
 
@@ -1265,13 +1260,12 @@ void dMgTrmpln3DMario_c::Render() {
 }
 
 void dMgTrmpln3DMario_c::UpdateMatrix() {
-    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y,
-                              mPos.z);
+    Matrix4x3_FromTranslation(&data_020a0e68, mPos.x, mPos.y, mPos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mRotY);
     mAnmModel.mat4x3 = data_020a0e68;
 }
 
-    /* The ROM relocates this call to 0x020cb134 (the 3D ApplyGravity); a byte
+/* The ROM relocates this call to 0x020cb134 (the 3D ApplyGravity); a byte
        compare cannot see the difference because a bl is a wildcarded reloc. */
 void dMgTrmpln3DMario_c::Update() {
     mPrevPos.x = mPos.x;
@@ -1293,9 +1287,8 @@ void dMgTrmpln3DMario_c::Update() {
     Fix12i v = FX_MUL(mBounceVy, 0xb4b);
     if (mVel.y > v) {
         if (mAnmModel.file == sTrmpAnimBounce) {
-            mParticleId = (int)Particle::System::New(
-                mParticleId, kPtclMgTrampolineTrail, mPos.x << 3,
-                mPos.y << 3, mPos.z << 3, 0, 0);
+            mParticleId = (int)Particle::System::New(mParticleId, kPtclMgTrampolineTrail,
+                                                     mPos.x << 3, mPos.y << 3, mPos.z << 3, 0, 0);
         }
     }
     UpdateMatrix();
@@ -1575,8 +1568,7 @@ Ld0:
 L134:
     if (mVel.y > 0) {
         mAnim = 2;
-        mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800,
-                                      0);
+        mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
 
         mAnmModel.currFrame = 0;
         Sound_PlayBank1Panned(0, mAnim, mPos.x);
@@ -1640,17 +1632,14 @@ void dMgTrmpln3DMario_c::BounceOffLineA() {
         v.y = (s16)tmp.y;
         v.z = (s16)tmp.z;
 
-        Particle::System::New(0, kPtclMgTrampolineBounceA, mPos.x << 3,
-                              mPos.y << 3, mPos.z << 3,
+        Particle::System::New(0, kPtclMgTrampolineBounceA, mPos.x << 3, mPos.y << 3, mPos.z << 3,
                               (const Vector3_16f *)(&v), 0);
-        Particle::System::New(0, kPtclMgTrampolineBounceB, mPos.x << 3,
-                              mPos.y << 3, mPos.z << 3,
+        Particle::System::New(0, kPtclMgTrampolineBounceB, mPos.x << 3, mPos.y << 3, mPos.z << 3,
                               (const Vector3_16f *)(&v), 0);
     }
 
-    mParticleId = (int)Particle::System::New(
-        mParticleId, kPtclMgTrampolineTrail, mPos.x << 3,
-        mPos.y << 3, mPos.z << 3, 0, 0);
+    mParticleId = (int)Particle::System::New(mParticleId, kPtclMgTrampolineTrail, mPos.x << 3,
+                                             mPos.y << 3, mPos.z << 3, 0, 0);
 
     scale = FX_MUL(sTrmp3DHardBounceScale, fdivr);
     Vec3_MulScalar(&tmp4, &tmp, scale);
@@ -1764,8 +1753,7 @@ Ld0:
 L134:
     if (mVel.y > 0) {
         mAnim = 2;
-        mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800,
-                                      0);
+        mAnmModel.SetAnim(*sTrmpBounceAnimTable[mAnim], 0x40000000, 0x800, 0);
 
         mAnmModel.currFrame = 0;
         Sound_PlayBank1Panned(0, mAnim, mPos.x);
@@ -1866,9 +1854,8 @@ void dMgTrmpln3DMario_c::JumpOff() {
     int b;
 
     mGravityStep = sTrmp3DGravityStep;
-    mVel.x =
-        sTrmp3DJumpOffSpeed +
-        (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19);
+    mVel.x = sTrmp3DJumpOffSpeed +
+             (int)(((unsigned int)RandomIntInternal(&data_0209e650.value) & 0x7fffffff) >> 19);
 
     b = mPos.x;
     if (b > 0)
