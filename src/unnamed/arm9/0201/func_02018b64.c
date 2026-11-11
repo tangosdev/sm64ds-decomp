@@ -7,9 +7,7 @@
 typedef struct FSFile FSFile;
 
 extern void FS_InitFile(FSFile *p_file);
-extern FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi);
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
-extern void FS_ClearOverlayImage(FSOverlayInfo *p_ovi);
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern int func_0206d32c(int target, unsigned int ramAddress, unsigned int romOffset,
                          unsigned int ramSize);

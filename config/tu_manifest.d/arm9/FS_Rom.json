@@ -70,7 +70,7 @@
   "notes": [
     "Hand-assembled, following arm9/FS_Archive: tu_map cannot segment arm9/main.",
     "FS_TryLoadTable, FSi_RomArchiveProc, FSi_WriteDummyCallback, FSi_ReadRomCallback and FSi_OnRomReadDone were renamed from their func_ names in this change. symbols/actor_renames.tsv records the evidence. FSi_InitRom kept its name.",
-    "Text-only. The data symbols keep their address names and their owners: data_020a8060 (fsi_default_dma_no), data_020a805c (fsi_card_lock_id), data_020a8064 and data_020a806c (fsi_ovt9 and fsi_ovt7), data_020a8074 (fsi_arc_rom) and data_0209a048 (\"rom\")."
+    "Text-only. The data symbols stay in the data link under fs_rom.c's names (fsi_default_dma_no, fsi_card_lock_id, fsi_ovt9, fsi_ovt7, fsi_arc_rom), declared in include/private/fs_rom.h. The \"rom\" string keeps its address name, data_0209a048."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
