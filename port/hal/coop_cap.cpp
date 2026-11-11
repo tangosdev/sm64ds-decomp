@@ -352,8 +352,7 @@ void knobs(char *me) {
             if (k->mHeldActorID && k->mCarriedItem != 0) {
                 // a star carrier never steals (its hands are full): for the proof it lets the star go first
                 char *star = _ZN8dActor_c10FindWithIDEj((unsigned)k->mHeldActorID);
-                std::fprintf(stderr, "[coopcap] KNOB steal lf=%u: Klepto carried a star (uid %d, class %d): removed for the proof
-", g_lf,
+                std::fprintf(stderr, "[coopcap] KNOB steal lf=%u: Klepto carried a star (uid %d, class %d): removed for the proof\n", g_lf,
                              k->mHeldActorID, star ? rd32(star, 0x0c) & 0xffff : -1);
                 if (star) _ZN7fBase_c18MarkForDestructionEv(star);
                 k->mHeldActorID = 0;
