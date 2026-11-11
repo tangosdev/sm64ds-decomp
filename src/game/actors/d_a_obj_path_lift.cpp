@@ -30,9 +30,9 @@
 #include "Sound.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 extern CLPS_Block data_ov002_0210d7d4;
-extern short data_02082214[];
 extern signed char gCurrentSublevel;
 extern unsigned char gGameMode;
 
@@ -156,7 +156,6 @@ void daObjPathLift_c::UpdateShadow() {
     int scaleZ;
     int yOff;
     int groundDepth;
-    int idx;
     int sinVal;
     int cosVal;
     int t;
@@ -168,12 +167,11 @@ void daObjPathLift_c::UpdateShadow() {
 
     groundDepth = (mPosY - mGroundY) + 0x64000;
 
-    idx = (unsigned short)mAngleX >> 4;
-    sinVal = data_02082214[idx << 1];
+    sinVal = FX_SinIdx((u16)mAngleX >> 4);
     yOff = FX_MUL(sinVal, 0x17c000);
     if (yOff < 0)
         yOff = -yOff;
-    cosVal = data_02082214[(idx << 1) + 1];
+    cosVal = FX_CosIdx((u16)mAngleX >> 4);
     scaleZ = FX_MUL(cosVal, 0x17c000);
     if (scaleZ < 0)
         scaleZ = -scaleZ;

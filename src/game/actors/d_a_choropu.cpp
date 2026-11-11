@@ -56,6 +56,7 @@ enum daChoropu_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 /* daChoropu_c's state table: one pointer-to-member per state, indexed by
  * the state number at +0x17c. */
@@ -102,7 +103,6 @@ void func_02012694(unsigned int a, void *p);
 void  func_ov080_02124418(daChoro_Rock_c *t);
 }
 
-extern s16 data_02082214[];
 extern int data_ov080_0212767c[];
 extern SharedFilePtr data_ov002_0210d9d8;
 extern SharedFilePtr *data_ov080_0212766c[];
@@ -199,7 +199,7 @@ void daChoropu_c::func_ov080_02123924()
  * frame 10 it spawns a daChoro_Rock_c (actor 0x137, spawn parameter 0 = the big
  * rock) 80 units out from the mole along (mAngleY - 0x4000), a quarter turn off the way it
  * faces, looked up in the
- * sine/cosine pair table data_02082214 (entries are Fix12, indexed by angle >> 4),
+ * sine/cosine pair table FX_SinCosTable_ (entries are Fix12, indexed by angle >> 4),
  * 10 units (0xa000) above its position, with the angle triple (mAngleX, mAngleY +
  * 0x400, mAngleZ) and the mole's area. The rock is then given horizontal speed
  * 30 units/frame (0x1e000) and vertical speed 4 units (0x4000) plus 4% of the
@@ -217,7 +217,6 @@ void daChoropu_c::func_ov080_02123a34()
         dActor_c *a;
         int d;
         short s;
-        int idx;
         int px, py, pz;
         Vector3_16 *pAng = &v16;
 
@@ -240,12 +239,10 @@ void daChoropu_c::func_ov080_02123a34()
             pos.y = py + 0xa000;
         }
 
-        idx = (unsigned short)(short)(mAngleY - 0x4000) >> 4;
-        s = data_02082214[idx << 1];
+        s = FX_SinIdx((u16)(s16)(mAngleY - 0x4000) >> 4);
         pos.x = s * (short)0x50 + px;
 
-        idx = (unsigned short)(short)(mAngleY - 0x4000) >> 4;
-        s = data_02082214[(idx << 1) + 1];
+        s = FX_CosIdx((u16)(s16)(mAngleY - 0x4000) >> 4);
         pos.z = s * (short)0x50 + pz;
 
         a = dActor_c::Spawn(

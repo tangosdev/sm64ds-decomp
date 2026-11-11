@@ -6,6 +6,7 @@
  * requested precision would exceed 509 characters.
  */
 #include "Decimal.h"
+#include "msl/string.h"
 
 typedef struct {
     unsigned char justification_options;
@@ -35,7 +36,6 @@ enum { left_justification = 0, right_justification = 1, zero_fill = 2 };
 
 extern void __num2dec(decform *f, double x, decimal *d);
 extern double fabs(double x);
-extern char *func_020706b0(char *dst, const char *src);      /* strcpy */
 extern char *long2str(long num, char *buff_end, print_format format);
 
 extern char data_0209a5ec[]; /* "-INF" */
@@ -80,7 +80,7 @@ char *double2hex(double x, char *buff_end, print_format format) {
 
     if (fabs(x) == 0.0) {
         p = buff_end - 6;
-        func_020706b0(p, data_0209a61c);
+        strcpy(p, data_0209a61c);
         return p;
     }
 
@@ -88,30 +88,30 @@ char *double2hex(double x, char *buff_end, print_format format) {
         if (dec.sgn) {
             p = buff_end - 5;
             if (code == 'A')
-                func_020706b0(p, data_0209a5ec);
+                strcpy(p, data_0209a5ec);
             else
-                func_020706b0(p, data_0209a5f4);
+                strcpy(p, data_0209a5f4);
         } else {
             p = buff_end - 4;
             if (code == 'A')
-                func_020706b0(p, data_0209a5fc);
+                strcpy(p, data_0209a5fc);
             else
-                func_020706b0(p, data_0209a600);
+                strcpy(p, data_0209a600);
         }
         return p;
     } else if (dec.sig.text[0] == 'N') {
         if (dec.sgn) {
             p = buff_end - 5;
             if (code == 'A')
-                func_020706b0(p, data_0209a604);
+                strcpy(p, data_0209a604);
             else
-                func_020706b0(p, data_0209a60c);
+                strcpy(p, data_0209a60c);
         } else {
             p = buff_end - 4;
             if (code == 'A')
-                func_020706b0(p, data_0209a614);
+                strcpy(p, data_0209a614);
             else
-                func_020706b0(p, data_0209a618);
+                strcpy(p, data_0209a618);
         }
         return p;
     }

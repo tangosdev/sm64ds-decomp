@@ -1,13 +1,12 @@
 //cpp
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 #include "nitro/os/message.h"
 
 extern "C" {
 
-/* MI_DmaCopy32 */
-extern void DMASyncWordTransfer(u32 dmaNo, const void *src, void *dest, u32 size);
+extern void MI_DmaCopy32(u32 dmaNo, const void *src, void *dest, u32 size);
 extern int PXI_SendWordByFifo(u32 a, u32 c, u32 b);
 extern OSMessageQueue data_020a89b0;
 
@@ -23,9 +22,9 @@ int WM_SendCommand(short a0, unsigned short count, ...)
     OS_ReceiveMessage(&data_020a89b0, (OSMessage *)&buf, OS_MESSAGE_BLOCK);
 
     if (count == 0) {
-        CP15::FlushDataCache((u32)data_020a89ac->fifo9to7, 0x100);
-        CP15::InvalidateDataCache((u32)buf, 0x100);
-        DMASyncWordTransfer(data_020a89ac->dmaNo, data_020a89ac->fifo9to7, buf, 0x100);
+        DC_StoreRange(data_020a89ac->fifo9to7, 0x100);
+        DC_InvalidateRange(buf, 0x100);
+        MI_DmaCopy32(data_020a89ac->dmaNo, data_020a89ac->fifo9to7, buf, 0x100);
     }
 
     *(u16 *)buf = a0;
@@ -35,7 +34,7 @@ int WM_SendCommand(short a0, unsigned short count, ...)
         (buf + i)[1] = src[-1];
     }
 
-    CP15::FlushDataCache((u32)buf, 0x100);
+    DC_StoreRange(buf, 0x100);
     r = PXI_SendWordByFifo(0xa, (u32)buf, 0);
     OS_SendMessage(&data_020a89b0, buf, OS_MESSAGE_BLOCK);
     if (r < 0) return 8;

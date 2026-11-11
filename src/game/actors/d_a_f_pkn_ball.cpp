@@ -36,6 +36,7 @@
 #include "ParticleIds.h"
 #include "nitro/fx/fx.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Actor IDs, from symbols/actor_debug_names.tsv. */
 enum {
@@ -59,7 +60,6 @@ enum { HIT_MEGA_CHARACTER = 0x10 };
 extern s32 data_ov002_02100320[];
 extern s32 data_ov002_02100334[];
 extern s32 data_ov002_02100348[];
-extern s16 data_02082214[];
 
 /* local extern: arm9/ov002 C helpers with no shared header yet. Vec3_Asr is
    not among them any more -- math/CalcLib.h, included above, declares it. */
@@ -281,12 +281,12 @@ int daFPknBall_c::Behavior() {
     }
 
     /* mPrevAngleY is the heading (ApproachLinear steers it toward
-     * mTargetAngleY) and mPrevAngleX the pitch; data_02082214 holds (sin, cos)
+     * mTargetAngleY) and mPrevAngleX the pitch; FX_SinCosTable_ holds (sin, cos)
      * pairs in fix12. */
-    flatSpeed = (mHorzSpeed * data_02082214[((u16)mPrevAngleX >> 4) * 2 + 1]) / 4096;
-    mSpeedX = (flatSpeed * data_02082214[((u16)mPrevAngleY >> 4) * 2]) / 4096;
-    mVertSpeed = (-mHorzSpeed * data_02082214[((u16)mPrevAngleX >> 4) * 2]) / 4096;
-    mSpeedZ = (flatSpeed * data_02082214[((u16)mPrevAngleY >> 4) * 2 + 1]) / 4096;
+    flatSpeed = (mHorzSpeed * FX_CosIdx((u16)mPrevAngleX >> 4)) / 4096;
+    mSpeedX = (flatSpeed * FX_SinIdx((u16)mPrevAngleY >> 4)) / 4096;
+    mVertSpeed = (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 4096;
+    mSpeedZ = (flatSpeed * FX_CosIdx((u16)mPrevAngleY >> 4)) / 4096;
     mPosX += mSpeedX;
     mPosY += mVertSpeed;
     mPosZ += mSpeedZ;

@@ -88,9 +88,9 @@ extern unsigned char gGameMode;
 extern "C" {
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(const Vector3 *v);
+int VEC_Mag(const Vector3 *v);
 short Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 }
 
 extern MantaState data_ov090_0213454c;
@@ -234,7 +234,7 @@ void daManta_c::UpdateModelAndRingPos() {
     mRingPos.y = 0;
     mRingPos.z = 0;
     data_020a0e68 = mAnmModel.mat4x3;
-    MulMat4x3Mat4x3(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
     mRingPos.x = data_020a0e68.m[9];
     mRingPos.y = data_020a0e68.m[10];
     mRingPos.z = data_020a0e68.m[11];
@@ -275,7 +275,7 @@ int daManta_c::Behavior() {
         path.FromID(*(unsigned int *)&mPathID);
         path.GetNode(node, *(unsigned int *)&mPathNode);
         Vec3_Sub(&diff, &mPos, &node);
-        len = LenVec3(&diff);
+        len = VEC_Mag(&diff);
         if (len == 0 || len <= MANTA_NODE_REACH) {
             mPathNode++;
             if (mPathNode >= mNumNodes)
@@ -290,7 +290,7 @@ int daManta_c::Behavior() {
         forward.z = MANTA_FORWARD;
         Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-        MulVec3Mat4x3(&forward, &data_020a0e68, (Vector3 *)&mSpeedX);
+        MTX_MultVec43(&forward, &data_020a0e68, (Vector3 *)&mSpeedX);
     }
     {
         int speed = mVertSpeed + mVertAccel;

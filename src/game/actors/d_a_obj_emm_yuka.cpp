@@ -26,6 +26,7 @@ enum daObjEmmYuka_c_AssetId {
 #include "daObjEmmYuka_c.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
 
 struct CLPS_Block;
 
@@ -52,14 +53,10 @@ extern EmmYukaFiles data_ov052_021125a0;
 extern void hold_d_a_obj_emm_yuka(dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mtx, int scale,
                                   s16 angleY, CLPS_Block *clps);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(const Vector3 *v);
+int VEC_Mag(const Vector3 *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* local extern: CalcLib conflicts with this TU's Vec3_MulScalar spelling. */
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-}
-
-namespace cstd {
-int fdiv(int a, int b);
+void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 }
 
 #pragma defer_codegen off
@@ -85,9 +82,7 @@ int daObjEmmYuka_c::Render()
 
 int daObjEmmYuka_c::Behavior()
 {
-    /* VecFx32, not Vector3: its inline destructor comes out out-of-line
-     * here (_ZN7Vector3D1Ev), which the link step refuses as unlicensed. */
-    VecFx32 prev, node, diff, scaled1, scaled2;
+    Vector3 prev, node, diff, scaled1, scaled2;
     int looped;
     int delta;
     int len;
@@ -102,24 +97,22 @@ int daObjEmmYuka_c::Behavior()
         } else if (delta >= (int)mPath.NumNodes()) {
             delta = 0;
         }
-        mPath.GetNode(*(Vector3 *)&node, delta);
+        mPath.GetNode(node, delta);
     } else if (delta < 0 || delta >= (int)mPath.NumNodes()) {
-        node.x = mPosX;
-        node.y = mPosY;
-        node.z = mPosZ;
+        node = mPos;
     } else {
-        mPath.GetNode(*(Vector3 *)&node, delta);
+        mPath.GetNode(node, delta);
     }
-    mPath.GetNode(*(Vector3 *)&prev, mNodeIndex);
-    Vec3_Sub((Vector3 *)&diff, (const Vector3 *)&mPosX, (const Vector3 *)&prev);
-    len = LenVec3((const Vector3 *)&diff);
+    mPath.GetNode(prev, mNodeIndex);
+    Vec3_Sub(&diff, &mPos, &prev);
+    len = VEC_Mag(&diff);
     if (len == 0 || len <= mHorzSpeed) {
-        Vec3_MulScalar((Vector3 *)&scaled1, (const Vector3 *)&diff, cstd::fdiv(mHorzSpeed, len));
-        SubVec3((Vector3 *)&mPosX, (Vector3 *)&scaled1, (Vector3 *)&mPosX);
+        Vec3_MulScalar(&scaled1, &diff, FX_Div(mHorzSpeed, len));
+        VEC_Subtract(&mPos, &scaled1, &mPos);
         looped = 1;
     } else {
-        Vec3_MulScalar((Vector3 *)&scaled2, (const Vector3 *)&diff, cstd::fdiv(mHorzSpeed, len));
-        SubVec3((Vector3 *)&mPosX, (Vector3 *)&scaled2, (Vector3 *)&mPosX);
+        Vec3_MulScalar(&scaled2, &diff, FX_Div(mHorzSpeed, len));
+        VEC_Subtract(&mPos, &scaled2, &mPos);
     }
     if (looped) {
         mNodeIndex += mPathDir;

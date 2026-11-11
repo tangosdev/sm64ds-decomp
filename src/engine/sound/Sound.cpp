@@ -14,8 +14,6 @@
  *   leaves in r0.
  * - ChangeMusicVolume is Sound::ChangeMusicVolume(unsigned int, int). The
  *   second value is a 0x1000-scaled volume, spelled Fix12i in the header.
- * - Sound_PlayIfNotActive calls func_0201186c through an int-arity pointer:
- *   the def takes short #4 and the site passes d untruncated.
  * - `int dd = (int)(((long long)d))' in func_02012468 is a no-op tower of
  *   unknown load-bearing status.
  * - func_02013078 reads the player object raw (+0x706 flag byte, +0x60 word);
@@ -28,19 +26,21 @@
 #include "math/Approach.h"
 #include "nnsys/snd/player.h"
 
-struct HeapOwner {
-    void func_020510a4(int);
-};
+/* SoundEngine's sound heap, opaque here. */
+struct SndHeap;
+typedef void (*SndHeapDisposeCallback)(void *mem, u32 size, u32 data1, u32 data2);
 
 extern "C" {
 
 /* Foreign callees. */
 extern int func_02051f1c(void *a, u32 b, int c);
 extern int func_02051e60(int a, int b, int c, int d, unsigned int e, int f);
-extern unsigned int func_02051074(int a);
-extern int func_020511d4(int a, unsigned int b, unsigned int c, unsigned int d, unsigned int e);
+extern u32 func_02051074(struct SndHeap *heap);
+extern void func_020510a4(struct SndHeap *heap, int level);
+extern void *func_020511d4(struct SndHeap *heap, u32 size, SndHeapDisposeCallback callback,
+                           u32 data1, u32 data2);
 extern int func_0203d974(void);
-extern int func_0205117c(int a);
+extern s32 func_0205117c(struct SndHeap *heap);
 extern int func_0203d7d4(int a);
 extern int func_02048a1c(int *a0, int kind, int id);
 extern int func_02048a18(int x, int y);
@@ -54,15 +54,15 @@ extern void func_0204f958(int a, int b);
 extern int func_0204fa2c(int *g, int z);
 extern void func_0204f94c(void *p);
 extern void func_0204f070(void);
-extern void *func_0205130c(u32 addr, u32 size);
+extern struct SndHeap *func_0205130c(u32 addr, u32 size);
 extern void func_0201a9fc(char *c);
-extern void func_02050f34(void *self, int a1, int a2, int a3);
-extern int func_02052008(int arg);
+extern void func_02050f34(void *arc, const char *path, struct SndHeap *heap, int loadSymbols);
+extern int func_02052008(struct SndHeap *heap);
 extern void func_020506fc(int arg);
 extern void func_02049cd8(void *a, int b, int mode);
 extern void func_02048f34(void *owner);
 extern int func_0201a9ec(int *c);
-extern int func_02051918(unsigned int id, int arg);
+extern int func_02051918(unsigned int id, struct SndHeap *heap);
 extern unsigned char func_0201a96c(struct WatchdogAlarm *context, int suspended);
 extern int func_02051fb4(void *g, unsigned int x);
 extern void func_02049764(void);
@@ -87,7 +87,7 @@ extern void func_0204effc(void);
 
 /* In-TU functions, declared once so callers ahead of their definitions link. */
 extern void func_02013524(int fileRef, int vol, int mode);
-extern int func_020134d8(void *a, void *b);
+extern int func_020134d8(void *a, struct SndHeap *heap);
 extern void func_020133bc(void);
 extern int func_02013078(void);
 extern void func_02012d64(void);
@@ -105,12 +105,11 @@ extern int func_02011aa0(void *c);
 extern void func_02011a28(char *c);
 extern void func_020119c8(void *base);
 extern void *func_02011934(char *table, int id);
-extern int _ZN11SndRegTable13func_0201186cEiis(char *thiz, int a1, int a2, short a3);
 extern int func_020116c4(char *c, int a1, int a2, int a3, int s0, short s1);
 extern void func_02011698(char *table, char *n);
 extern int func_02011654(char *table, char *n);
 extern int Player_PlaySoundEffect(int arg0, int arg1, int arg2);
-extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
+extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 
 /* Module state. Volumes are 0..0x7f; the current ones are 20.12 fixed point
    and ramp toward their targets by one shared step (func_02012d64,
@@ -168,7 +167,7 @@ int gMusicVolume;
 static int sVolumeRampStep;
 
 /* The sound heap func_020133bc carves out of a 0x100000-byte block. */
-static int sSndHeap;
+static struct SndHeap *sSndHeap;
 
 int gSubVolume;
 
@@ -236,8 +235,8 @@ typedef struct SndRegTable {
     SndRegEntry entries[0x40];   /* 0x08 */
     SndRegEntry *buckets[16];    /* 0x508 - chain heads by id&0xf */
 
-    int func_0201186c(int a1, int a2, short a3);
     int func_0201179c(int a1, int a2, int a3, short s1);
+    int func_0201186c(int a1, int a2, short a3);
 
     SndRegTable() {
         func_02011a5c(this);
@@ -655,20 +654,13 @@ extern "C" void func_0201251c(int a, int b, int c, int d)
     func_02048af4(&data_0209b4a4, c, d);
 }
 
-extern "C" int Sound_PlayIfNotActive(int a, int b, int c, int d)
-{
+extern "C" int Sound_PlayIfNotActive(int a, int b, int c, short d) {
     SndRegEntry *o = (SndRegEntry *)func_02011934((char *)&data_0209b53c, a);
     if (o) {
         o->inUse = 1;
         return o->id;
     }
-    /* original TU declared func_0201186c's #4 as int (def is short):
-       the call site passes d untruncated -- cast through an int-arity
-       pointer to reproduce it without the narrowing sequence.
-       A method call narrows d; the member pointer will not cast to a
-       function pointer, so the cast names the mangled symbol. */
-    return ((int (*)(char *, int, int, int))_ZN11SndRegTable13func_0201186cEiis)(
-        (char *)&data_0209b53c, b, c, d);
+    return data_0209b53c.func_0201186c(b, c, d);
 }
 
 extern "C" int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h)
@@ -720,8 +712,7 @@ int PlayLong(u32 handle, u32 a, u32 b, const Vector3 &pos, s16 e)
 
 }
 
-extern "C" int func_02012310(int handle, int sound, int arg)
-{
+extern "C" int func_02012310(int handle, int sound, short arg) {
     return Sound_PlayIfNotActive(handle, 2, sound, arg);
 }
 
@@ -785,17 +776,17 @@ void LoadGroupAndSetBank(int a, int b)
 {
     if (func_0203d974() != 0) {
         if (a != 0x2f) return;
-        func_0203d7d4(func_020134d8((void *)a, (void *)sSndHeap));
+        func_0203d7d4(func_020134d8((void *)a, sSndHeap));
         sCurrentBank = b;
         sLoadedGroup = a;
         return;
     }
     if (a == 0) {
-        func_020134d8((void *)a, (void *)sSndHeap);
+        func_020134d8((void *)a, sSndHeap);
         data_0209b4a8 = func_0205117c(sSndHeap);
     } else if (sLoadedGroup != a) {
-        ((HeapOwner *)sSndHeap)->func_020510a4(data_0209b4a8);
-        func_020134d8((void *)a, (void *)sSndHeap);
+        func_020510a4(sSndHeap, data_0209b4a8);
+        func_020134d8((void *)a, sSndHeap);
         data_0209b484 = func_0205117c(sSndHeap);
     }
     sCurrentBank = b;
@@ -818,8 +809,8 @@ void UnsetPlayerVoiceGroup(void)
 extern "C" void func_02011f7c(void *self)
 {
     if (!func_0203d974()) {
-        ((HeapOwner *)sSndHeap)->func_020510a4(data_0209b484);
-        func_020134d8(self, (void *)sSndHeap);
+        func_020510a4(sSndHeap, data_0209b484);
+        func_020134d8(self, sSndHeap);
         data_0209b488 = func_0205117c(sSndHeap);
     }
     sPlayerVoiceGroup = (unsigned char)(int)self;
@@ -830,7 +821,7 @@ namespace Sound {
 void ResetPlayerVoiceGroup(void)
 {
     if (func_0203d974() == 0) {
-        ((HeapOwner *)sSndHeap)->func_020510a4(data_0209b484);
+        func_020510a4(sSndHeap, data_0209b484);
     }
     sPlayerVoiceGroup = 0;
 }
@@ -841,13 +832,13 @@ extern "C" int func_02011ee4(void *c)
 {
     int x = func_0203d974();
     if (x != 0) return x;
-    ((HeapOwner *)sSndHeap)->func_020510a4(data_0209b488);
-    return func_020134d8(c, (void *)sSndHeap);
+    func_020510a4(sSndHeap, data_0209b488);
+    return func_020134d8(c, sSndHeap);
 }
 
 extern "C" void *func_02011e94(int *out) {
     int r = func_02051074(sSndHeap);
-    void *block = (void *)func_020511d4(sSndHeap, r, 0, 0, 0);
+    void *block = func_020511d4(sSndHeap, r, 0, 0, 0);
     if (out != 0)
         *out = r;
     return block;
@@ -1205,15 +1196,15 @@ extern "C" void func_020133bc(void)
 {
     char *anim;
     func_0204f070();
-    sSndHeap = (int)func_0205130c((u32)Memory::Allocate(0x100000), 0x100000);
+    sSndHeap = func_0205130c((u32)Memory::Allocate(0x100000), 0x100000);
     anim = data_0208e498;
     func_0201a9fc((char *)&data_0209d574);
-    func_02050f34(&sSndArc, (int)anim, sSndHeap, 0);
+    func_02050f34(&sSndArc, anim, sSndHeap, 0);
     func_0201a9fc((char *)&data_0209d574);
     func_02052008(func_0203d974() == 0 ? sSndHeap : 0);
     if (func_0203d974() == 0) {
         func_0201a9fc((char *)&data_0209d574);
-        func_020134d8((void *)1, (void *)sSndHeap);
+        func_020134d8((void *)1, sSndHeap);
         func_0201a9fc((char *)&data_0209d574);
     }
     func_0204f94c(&sMusicHandle);
@@ -1241,10 +1232,9 @@ extern "C" void func_02013524(int a, int b, int c)
     NNS_SndPlayerMoveVolume((NNSSndHandle *)a, b, c);
 }
 
-extern "C" int func_020134d8(void *a, void *b)
-{
+extern "C" int func_020134d8(void *a, struct SndHeap *heap) {
     int s = func_0201a9ec((int *)&data_0209d574);
-    int r = func_02051918((u32)a, (int)b);
+    int r = func_02051918((u32)a, heap);
     func_0201a9fc((char *)&data_0209d574);
     func_0201a96c(&data_0209d574, s);
     return r;

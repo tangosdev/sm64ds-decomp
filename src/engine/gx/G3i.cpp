@@ -1,28 +1,32 @@
 //cpp
-/* engine/gx/G3i.cpp — G3i TU (arm9 0x02055998..0x02055dec)
+/* engine/gx/G3i.cpp -- the Nitro SDK's gx_g3_util.c (arm9 0x02055998..0x02055dec)
  *
- * G3i is the geometry engine's matrix-command writer set: LookAt_ builds a
- * camera basis (right/up2/forward) and streams it to the position-matrix port,
- * PerspectiveW_ drives the division unit at 0x4000290 to build a perspective
- * projection and streams it to the projection port. Both are static (no this)
- * and both optionally mirror the matrix into a caller's Matrix4x3.
+ * The geometry engine's matrix builders, under the SDK's names with C
+ * linkage (include/nitro/gx/g3_util.h; ntrtwl/NitroSDK
+ * libraries/gx/src/g3_util.c): G3i_LookAt_ builds a camera basis
+ * (right/up2/forward) and streams it to the position-matrix port,
+ * G3i_PerspectiveW_ drives the division unit at 0x4000290 to build a
+ * perspective projection and streams it to the projection port. Both
+ * optionally mirror the matrix into the caller's Matrix4x3.
  */
-// leftovers: func_02055998 keeps its address name (no recovered name exists).
-#include "G3i.h"
+// G3_LoadTexMtxEnv, the TU's first function, is the Nitro SDK's g3_util.c
+// function of that name: it selects the texture matrix mode and loads a 4x4
+// matrix, the first twelve words shifted left by 4.
+#include "nitro/gx/g3_util.h"
 #include "math/Matrix.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
-void NormalizeVec3(const Vector3 *v, Vector3 *out);
-void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
-Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
+void VEC_Normalize(const Vector3 *v, Vector3 *out);
+void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
+Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 }
 
 /* The Nitro SDK's G3i_PerspectiveW_: the load flag is a BOOL. Spelled bool,
    the body tests it differently from the ROM; int reproduces it. */
-void G3i::PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i f, Fix12i scaleW,
-                        int flag, Matrix4x3 *mtxp) {
+void G3i_PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12i f, Fix12i scaleW,
+                       int flag, Matrix4x3 *mtxp) {
     int *mtx = (int *)mtxp;
     int tmp;
     volatile int *port;
@@ -32,7 +36,7 @@ void G3i::PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12
     int v;
     int wz;
 
-    tmp = cstd::fdiv(cosF, sinF);
+    tmp = FX_Div(cosF, sinF);
     if (scaleW != 0x1000)
         tmp = tmp * scaleW / 0x1000;
 
@@ -56,7 +60,7 @@ void G3i::PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12
         mtx[13] = 0;
         mtx[15] = 0;
     }
-    xx = cstd::fdiv_result();
+    xx = FX_GetDivResult();
     *(volatile u64 *)0x4000290 = (u64)0x1000 << 32;
     *(volatile u64 *)0x4000298 = (unsigned)(n - f);
     if (flag) {
@@ -75,7 +79,7 @@ void G3i::PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12
         mtx[0] = xx;
         mtx[5] = tmp;
     }
-    q = cstd::ldiv_result();
+    q = FX_GetDivResultFx64c();
     if (scaleW != 0x1000)
         q = q * scaleW / 0x1000;
     zz = (int)(((f + n) * q + 0x80000000LL) >> 32);
@@ -95,8 +99,8 @@ void G3i::PerspectiveW_(Fix12i sinF, Fix12i cosF, Fix12i aspect, Fix12i n, Fix12
     }
 }
 
-void G3i::LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target, bool draw,
-                  Matrix4x3 *mat) {
+void G3i_LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *target, bool draw,
+                 Matrix4x3 *mat) {
     Vector3 forward;
     Vector3 right;
     Vector3 up2;
@@ -110,12 +114,12 @@ void G3i::LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *targe
     forward.x = camPos->x - target->x;
     forward.y = camPos->y - target->y;
     forward.z = camPos->z - target->z;
-    NormalizeVec3(&forward, &forward);
+    VEC_Normalize(&forward, &forward);
 
-    CrossVec3(up, &forward, &right);
-    NormalizeVec3(&right, &right);
+    VEC_CrossProduct(up, &forward, &right);
+    VEC_Normalize(&right, &right);
 
-    CrossVec3(&forward, &right, &up2);
+    VEC_CrossProduct(&forward, &right, &up2);
 
     if (draw) {
         *(volatile int *)0x4000440 = 2;
@@ -131,9 +135,9 @@ void G3i::LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *targe
         *mtx = forward.z;
     }
 
-    tx = -DotVec3(camPos, &right);
-    ty = -DotVec3(camPos, &up2);
-    tz = -DotVec3(camPos, &forward);
+    tx = -VEC_DotProduct(camPos, &right);
+    ty = -VEC_DotProduct(camPos, &up2);
+    tz = -VEC_DotProduct(camPos, &forward);
 
     if (draw) {
         *mtx = tx;
@@ -159,8 +163,7 @@ void G3i::LookAt_(const Vector3 *camPos, const Vector3 *up, const Vector3 *targe
     mat->t.z = tz;
 }
 
-extern "C" void func_02055998(int *m)
-{
+extern "C" void G3_LoadTexMtxEnv(int *m) {
     *(volatile int *)0x4000440 = 3;
     *(volatile int *)0x4000458 = m[0] << 4;
     *(volatile int *)0x4000458 = m[1] << 4;

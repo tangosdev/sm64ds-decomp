@@ -56,7 +56,7 @@
  * their ROM names.
  */
 #include "types.h"
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "Ov007Sprite.h"
 #include "Ov007Settings.h"
 
@@ -124,9 +124,9 @@ extern u32 data_ov007_020d7aa0[];   /* keep-masks per pixel offset in a tile */
 extern u32 data_ov007_020d7ac4[];   /* colour masks per text colour */
 extern u8 data_ov007_020d7b04[][6]; /* first text line per kind and language */
 
-extern void MultiCopy32Bytes(const void *src, void *dst, int len);
-extern void MultiStore16(unsigned short val, char *dst, int nbytes);
-extern void MultiStore32Bytes(unsigned val, void *dst, int len);
+extern void MIi_CpuCopyFast(const void *src, void *dst, int len);
+extern void MIi_CpuClear16(unsigned short val, char *dst, int nbytes);
+extern void MIi_CpuClearFast(unsigned val, void *dst, int len);
 
 extern int func_ov007_020bdeb0(int sound);
 extern void func_ov007_020c0308(unsigned short *dst, int b, int c);
@@ -354,7 +354,7 @@ void MenuText_DrawSlotHeading(int plane, int slot) {
 /* Lays out the frame's tile map for the frame's size (8-pixel tiles: the
  * corners 0, 2, 8 and 0xa, the edges 1, 4, 6 and 9, the inside 0xffff) and
  * fits the fill inside the frame. The fill values go through volatile
- * locals, the corpus idiom for MultiStore16's value argument, and the
+ * locals, the corpus idiom for MIi_CpuClear16's value argument, and the
  * right-edge index's no-op long long round trip is load-bearing. */
 void MessageWindow_LayoutFrame(void) {
     volatile u16 v0;
@@ -373,12 +373,12 @@ void MessageWindow_LayoutFrame(void) {
     }
 
     v0 = 0xffff;
-    MultiStore16(v0, (char *)data_ov007_02103484, (w * h) << 1);
+    MIi_CpuClear16(v0, (char *)data_ov007_02103484, (w * h) << 1);
     v1 = 1;
-    MultiStore16(v1, (char *)data_ov007_02103484, w << 1);
+    MIi_CpuClear16(v1, (char *)data_ov007_02103484, w << 1);
     v2 = 9;
     botrow = (h - 1) * w;
-    MultiStore16(v2, (char *)(data_ov007_02103484 + botrow), w << 1);
+    MIi_CpuClear16(v2, (char *)(data_ov007_02103484 + botrow), w << 1);
 
     i = 0;
     if (h > 0) {
@@ -416,7 +416,7 @@ void MessageWindow_Start(int kind, int state) {
     data_ov007_02102ddc.timer = 0;
     data_ov007_02102ddc.scale = 0;
     data_ov007_02102ddc.textDrawn = 0;
-    MultiStore32Bytes((unsigned)z, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
+    MIi_CpuClearFast((unsigned)z, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
     func_ov007_020c1d8c(0);
 }
 
@@ -480,7 +480,7 @@ void func_ov007_020b8690(void) {
 /* Binds message bank `bank`, glyph sheet `sheet` (first tile `baseTile`)
  * and the planes (the third optional), clears them, lays out the BG
  * screen and its two copies, and opens no window. The zero values go
- * through volatile locals, the corpus idiom for MultiStore32Bytes's value
+ * through volatile locals, the corpus idiom for MIi_CpuClearFast's value
  * argument. */
 void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *plane1, int plane2,
                    void *bank) {
@@ -499,21 +499,21 @@ void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *
 
     {
         volatile int v1 = 0;
-        MultiStore32Bytes(v1, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
+        MIi_CpuClearFast(v1, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
     }
     {
         volatile int v2 = 0;
-        MultiStore32Bytes(v2, data_ov007_02103478[1], data_ov007_020d7a5c[1]);
+        MIi_CpuClearFast(v2, data_ov007_02103478[1], data_ov007_020d7a5c[1]);
     }
 
     if (plane2 != 0) {
         volatile int v3 = 0;
-        MultiStore32Bytes(v3, data_ov007_02103478[2], data_ov007_020d7a5c[2]);
+        MIi_CpuClearFast(v3, data_ov007_02103478[2], data_ov007_020d7a5c[2]);
     }
 
     func_ov007_020c0308(data_ov007_02103998, 0x18, 0xf);
-    MultiCopy32Bytes(data_ov007_02103998, data_ov007_02104598, 0x600);
-    MultiCopy32Bytes(data_ov007_02103998, data_ov007_02103f98, 0x600);
+    MIi_CpuCopyFast(data_ov007_02103998, data_ov007_02104598, 0x600);
+    MIi_CpuCopyFast(data_ov007_02103998, data_ov007_02103f98, 0x600);
 
     MessageWindow_Start(0, OV007_WINDOW_CLOSED);
     MenuText_ClearMainPlane();
@@ -521,8 +521,8 @@ void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *
 
 /* Loads the font palette into both engines' BG palettes. */
 void MenuText_LoadFontPalette(void) {
-    GX::LoadBGPltt(data_ov007_020d7a44, 0x1f6, 0xa);
-    GXS::LoadBGPltt(data_ov007_020d7a44, 0x1f6, 0xa);
+    GX_LoadBGPltt(data_ov007_020d7a44, 0x1f6, 0xa);
+    GXS_LoadBGPltt(data_ov007_020d7a44, 0x1f6, 0xa);
 }
 
 void *MenuText_GetMainScreen(void) {
@@ -551,7 +551,7 @@ void *MenuText_GetSourceScreen(void) {
  * them at each use; the register set is the counter, the parameter, five
  * register constants and the column pointer. Shapes that were load-bearing:
  * `zero` is a volatile local assigned right before the call (the corpus idiom
- * for MultiStore32Bytes's value argument); `boardLine = 0; cursorLine = 0;`
+ * for MIi_CpuClearFast's value argument); `boardLine = 0; cursorLine = 0;`
  * precede the loop so the zero-valued slots store from the counter register;
  * base15 is assigned AFTER the call (a declaration initializer computes it
  * before); the clamp is a ternary, not an if, which raises s48's web priority
@@ -573,7 +573,7 @@ void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
     int s34 = 0xc, s38 = 0, s3c = 0x9c, s40 = 6, s44 = 0, s48 = 7, s4c = 0xee;
 
     zero = 0;
-    MultiStore32Bytes(zero, data_ov007_02103478[2], data_ov007_020d7a5c[2]);
+    MIi_CpuClearFast(zero, data_ov007_02103478[2], data_ov007_020d7a5c[2]);
     base15 = slot * 0xf;
     data_ov007_02102dd8 = 0xe;
 
@@ -658,22 +658,22 @@ void MenuText_ScrollRecordBoard(int n) {
         b = 0x24 - a;
         if (b >= 0x17)
             b = 0x16;
-        MultiCopy32Bytes(data_ov007_02103478[2], data_ov007_02103478[1] + n * 0x100, a * 0x400);
+        MIi_CpuCopyFast(data_ov007_02103478[2], data_ov007_02103478[1] + n * 0x100, a * 0x400);
         z1 = 0;
-        MultiStore32Bytes((unsigned)z1, data_ov007_02103478[1], n * 0x400);
-        MultiCopy32Bytes(data_ov007_02103478[2] + a * 0x100, data_ov007_02103478[0] + 0x100,
-                         b * 0x400);
+        MIi_CpuClearFast((unsigned)z1, data_ov007_02103478[1], n * 0x400);
+        MIi_CpuCopyFast(data_ov007_02103478[2] + a * 0x100, data_ov007_02103478[0] + 0x100,
+                        b * 0x400);
         z2 = 0;
-        MultiStore32Bytes((unsigned)z2, data_ov007_02103478[0] + (b + 1) * 0x100,
-                          (0x17 - b) * 0x400);
+        MIi_CpuClearFast((unsigned)z2, data_ov007_02103478[0] + (b + 1) * 0x100,
+                         (0x17 - b) * 0x400);
     } else {
         int a = n - 0x16;
         z4 = 0;
-        MultiStore32Bytes((unsigned)z4, data_ov007_02103478[1], data_ov007_020d7a5c[1]);
+        MIi_CpuClearFast((unsigned)z4, data_ov007_02103478[1], data_ov007_020d7a5c[1]);
         z3 = 0;
-        MultiStore32Bytes((unsigned)z3, data_ov007_02103478[0], a * 0x400);
-        MultiCopy32Bytes(data_ov007_02103478[2], data_ov007_02103478[0] + a * 0x100,
-                         (0x17 - a) * 0x400);
+        MIi_CpuClearFast((unsigned)z3, data_ov007_02103478[0], a * 0x400);
+        MIi_CpuCopyFast(data_ov007_02103478[2], data_ov007_02103478[0] + a * 0x100,
+                        (0x17 - a) * 0x400);
     }
 }
 
@@ -686,7 +686,7 @@ void func_ov007_020b7eec(Ov007BootArgs *bootArgs) {
     func_ov007_020c0308(data_ov007_02104598, 0x18, 0xf);
     {
         volatile int z = 0;
-        MultiStore32Bytes((unsigned)z, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
+        MIi_CpuClearFast((unsigned)z, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
     }
     data_ov007_02102dd8 = 0xb;
     data_ov007_02103464 = 0xac;
@@ -775,7 +775,7 @@ void MessageWindow_Update(void) {
             if (data_ov007_02102ddc.scale == 0) {
                 volatile int zero;
                 zero = 0;
-                MultiStore32Bytes(zero, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
+                MIi_CpuClearFast(zero, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
             } else if (data_ov007_02102ddc.scale >= 0xAF0) {
                 data_ov007_02102dd8 = 0xF;
                 data_ov007_02103464 = 0x80;
@@ -835,7 +835,7 @@ void MessageWindow_Update(void) {
             volatile int zero;
             zero = 0;
             data_ov007_02102ddc.textDrawn = 0;
-            MultiStore32Bytes(zero, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
+            MIi_CpuClearFast(zero, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
         }
         data_ov007_02102ddc.scale -= 0x100;
         if (data_ov007_02102ddc.scale < 0) {
@@ -888,7 +888,7 @@ int func_ov007_020b79c8(void) {
 /* Clears plane 0. */
 void MenuText_ClearMainPlane(void) {
     volatile int x = 0;
-    MultiStore32Bytes(x, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
+    MIi_CpuClearFast(x, data_ov007_02103478[0], data_ov007_020d7a5c[0]);
     data_ov007_02102ddc.pad_14 = 0;
 }
 }

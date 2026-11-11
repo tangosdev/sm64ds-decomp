@@ -14,14 +14,16 @@
  * then D0 pair without a D2 or a forcing helper.
  *
  * What stays, and why:
- * - VecFx32 POD locals; Vector3's empty destructor would add
- *   _ZN7Vector3D1Ev to this TU
+ * - Behavior's locals take the type of the call that fills them: the NitroSDK
+ *   MTX_MultVec43 inputs/outputs are VecFx32, the Vec3_Add results and the
+ *   copied position are Vector3. The SDK prototype still says Vector3 (#5207),
+ *   hence the casts on the VecFx32 side.
  * - gC1HikariModelFile is the model SharedFilePtr this Init LoadFile's,
  *   defined at the end of this file (constructed as file ID 1453)
  * - data_0209caa0.file.flags1 & 0x80000000; this Init is the consumer, no recovered
  *   name for that save-flag bit
  * - Sound::PlaySmallSecretSound stays TU-local; Sound.h has no declaration.
- *   MulVec3Mat4x3, Vec3_Add, AngleDiff and NumStars have no shared header
+ *   MTX_MultVec43, Vec3_Add, AngleDiff and NumStars have no shared header
  *   either, so they keep a local extern "C" block.
  * - S14 no g_profile_C1_HIKARI (sinit / data outside this .text)
  */
@@ -39,9 +41,6 @@ enum d_a_obj_c1_hikari_AssetId { ASSET_C1_HIKARI_BMD = 0x05ad };
 #include "nitro/fx/fx.h"
 #include "SaveBlock.h"
 
-/* Behavior's copies of the two world-space offsets it rotates through
- * data_020a0e68 are VecFx32. The shared Vector3 has an empty destructor,
- * which would add an unrelated compiler helper to this TU. */
 /* The beam's file-scope SharedFilePtr object, spelled through the same
    wrapper idiom the landed folds use: the handle's code is the veneer pair
    the cartridge already carries, so the wrapper gets no bodies of its own.
@@ -54,11 +53,10 @@ struct C1HikariModelFilePtr : SharedFilePtr {
 
 /* Defined at the end of this file so its constructor does not enter .text. */
 extern C1HikariModelFilePtr gC1HikariModelFile;
-extern SaveBlock data_0209caa0;
 
 /* local extern: arm9 math and save helpers with no shared header. */
 extern "C" {
-extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern int AngleDiff(int a, int b);
 extern unsigned char NumStars(void);
@@ -94,9 +92,11 @@ int daObjC1Hikari_c::InitResources() {
 }
 
 int daObjC1Hikari_c::Behavior() {
-    VecFx32 vIn, vMid, vRes;
-    VecFx32 hv;
-    VecFx32 vIn2, vMid2, vRes2;
+    VecFx32 vIn, vMid;
+    Vector3 vRes;
+    Vector3 hv;
+    VecFx32 vIn2, vMid2;
+    Vector3 vRes2;
 
     if (mTalkPlayer != 0) {
         daPly_c *p;
@@ -111,14 +111,14 @@ int daObjC1Hikari_c::Behavior() {
         vMid.y = 0;
         vMid.z = 0;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MulVec3Mat4x3((Vector3 *)&vIn, &data_020a0e68, (Vector3 *)&vMid);
-        Vec3_Add((Vector3 *)&vRes, (const Vector3 *)&mPosX, (const Vector3 *)&vMid);
+        MTX_MultVec43((Vector3 *)&vIn, &data_020a0e68, (Vector3 *)&vMid);
+        Vec3_Add(&vRes, &mPos, (const Vector3 *)&vMid);
 
         switch (p->GetTalkState()) {
         case 0:
             if (ApproachLinear(p->mAngleY, mAngleY + 0x8000, 0x800)) {
                 Message::PrepareTalk();
-                p->ShowMessage(*this, 0x192, (const Vector3 *)&vRes, 0, 0);
+                p->ShowMessage(*this, 0x192, &vRes, 0, 0);
             }
             break;
         case 1:
@@ -134,9 +134,9 @@ int daObjC1Hikari_c::Behavior() {
             if (o) {
                 int b = (int)(o->actorID == 0xbf);
                 if (b) {
-                    VecFx32 *op = (VecFx32 *)&o->mPosX;
+                    Vector3 *op = &o->mPos;
                     hv = *op;
-                    if (AngleDiff(Vec3_HorzAngle(&mPos, (const Vector3 *)&hv), mAngleY) < 0x4000) {
+                    if (AngleDiff(Vec3_HorzAngle(&mPos, &hv), mAngleY) < 0x4000) {
                         daPly_c *player = static_cast<daPly_c *>(o);
                         if (player->mSurfaceType == 0xd) {
                             if (player->StartTalk(*this, false)) {
@@ -157,8 +157,8 @@ int daObjC1Hikari_c::Behavior() {
     vMid2.y = 0;
     vMid2.z = 0;
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-    MulVec3Mat4x3((Vector3 *)&vIn2, &data_020a0e68, (Vector3 *)&vMid2);
-    Vec3_Add((Vector3 *)&vRes2, (const Vector3 *)&mPosX, (const Vector3 *)&vMid2);
+    MTX_MultVec43((Vector3 *)&vIn2, &data_020a0e68, (Vector3 *)&vMid2);
+    Vec3_Add(&vRes2, &mPos, (const Vector3 *)&vMid2);
     mCylinder.pos.x = vRes2.x;
     mCylinder.pos.y = vRes2.y;
     mCylinder.pos.z = vRes2.z;

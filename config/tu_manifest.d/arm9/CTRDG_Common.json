@@ -76,7 +76,7 @@
   "notes": [
     "Hand-assembled, following arm9/MI_Memory and arm9/OS_SpinLock: tu_map cannot segment arm9/main.",
     "Every symbol was renamed from its func_ name to the SDK name in this change (symbols/actor_renames.tsv records the evidence).",
-    "Text-only: CTRDGi_Work (data_020a9de0) stays an extern. The file claims no data.",
+    "Text-only: CTRDGi_Work (0x020a9de0) stays an extern. The file claims no data.",
     "The lock-info and access-cycle records stay int arrays: every caller declares them that way."
   ],
   "verification": {

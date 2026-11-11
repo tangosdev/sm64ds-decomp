@@ -778,3 +778,4 @@
 {"id":"arm9:0x020524e4","module":"arm9","addr":33891556,"name":"MTX_Rot22_","matchProvenance":{"kind":"human","note":"hand-written assembly"},"author":"ruspecial","srcPath":"src/MTX_Rot22_.c"}
 {"id":"arm9:0x02052550","module":"arm9","addr":33891664,"name":"MTX_RotX33_","matchProvenance":{"kind":"human","note":"hand-written assembly"},"author":"ruspecial","srcPath":"src/MTX_RotX33_.c"}
 {"id":"arm9:0x02004800","module":"arm9","addr":33572864,"name":"_start","matchProvenance":{"kind":"human","note":"hand-written assembly"},"author":"ruspecial","srcPath":"src/_start.c"}
+{"id":"arm9:0x020593ec","module":"arm9","addr":33919980,"name":"OS_SetProtectionRegion1","matchProvenance":{"kind":"human","note":"hand-written assembly"},"author":"tangosdev","srcPath":"src/engine/cp15/OS_SetProtectionRegion1.cpp"}

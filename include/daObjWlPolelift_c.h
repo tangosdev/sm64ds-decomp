@@ -88,6 +88,9 @@ struct daObjWlPolelift_c : dActor_c {
     virtual s32 CleanupResources();                        /* slot  3 */
     virtual s32 Behavior();                                 /* slot  6 */
     virtual s32 Render();                                   /* slot  9 */
+
+    void UpdateShadow();
+    void UpdateModelTransform();
 };
 
 #ifndef SM64DS_PLATFORM_PC

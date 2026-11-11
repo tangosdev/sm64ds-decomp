@@ -15,49 +15,49 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN4CP1514FlushDataCacheEv",
+      "symbol": "DC_StoreAll",
       "address": "0x02058bb0",
       "size": "0x2c",
       "ordinal": 0,
       "legacy_source": "src/_ZN4CP1514FlushDataCacheEv.cpp"
     },
     {
-      "symbol": "_ZN4CP1527FlushAndInvalidateDataCacheEv",
+      "symbol": "DC_FlushAll",
       "address": "0x02058bdc",
       "size": "0x2c",
       "ordinal": 1,
       "legacy_source": "src/_ZN4CP1527FlushAndInvalidateDataCacheEv.cpp"
     },
     {
-      "symbol": "_ZN4CP1519InvalidateDataCacheEjj",
+      "symbol": "DC_InvalidateRange",
       "address": "0x02058c08",
       "size": "0x1c",
       "ordinal": 2,
       "legacy_source": "src/_ZN4CP1519InvalidateDataCacheEjj.cpp"
     },
     {
-      "symbol": "_ZN4CP1514FlushDataCacheEjj",
+      "symbol": "DC_StoreRange",
       "address": "0x02058c24",
       "size": "0x1c",
       "ordinal": 3,
       "legacy_source": "src/_ZN4CP1514FlushDataCacheEjj.cpp"
     },
     {
-      "symbol": "_ZN4CP1527FlushAndInvalidateDataCacheEjj",
+      "symbol": "DC_FlushRange",
       "address": "0x02058c40",
       "size": "0x1c",
       "ordinal": 4,
       "legacy_source": "src/_ZN4CP1527FlushAndInvalidateDataCacheEjj.cpp"
     },
     {
-      "symbol": "_ZN4CP1516DrainWriteBufferEv",
+      "symbol": "DC_WaitWriteBufferEmpty",
       "address": "0x02058c5c",
       "size": "0xc",
       "ordinal": 5,
       "legacy_source": "src/_ZN4CP1516DrainWriteBufferEv.cpp"
     },
     {
-      "symbol": "_ZN4CP1526InvalidateInstructionCacheEjj",
+      "symbol": "IC_InvalidateRange",
       "address": "0x02058c68",
       "size": "0x1c",
       "ordinal": 6,

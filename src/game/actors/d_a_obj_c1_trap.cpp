@@ -36,6 +36,7 @@ enum d_a_obj_c1_trap_AssetId { ASSET_C1_TRAP_BMD = 0x05af, ASSET_C1_TRAP_KCL = 0
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The two copied position locals must stay POD. The shared Vector3 has an
  * empty destructor, which would add an unrelated compiler helper to this TU. */
@@ -62,7 +63,6 @@ struct TrapCollisionFilePtr : SharedFilePtr {
     ~TrapCollisionFilePtr();
 };
 
-extern s16 data_02082214[];
 extern CLPS_Block data_ov010_021122f8;
 extern TrapModelFilePtr data_ov010_02112d08;
 extern TrapCollisionFilePtr data_ov010_02112d00;
@@ -100,7 +100,6 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     s16 angle;
     s16 relativeAngle;
     s32 distance;
-    s32 index;
     s16 projection;
     s32 projectedDistance;
     s32 isPlayer;
@@ -130,8 +129,7 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     angle = Vec3_HorzAngle((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
     relativeAngle = (s16)(angle + spawner->mAngleY);
     distance = Vec3_HorzDist((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
-    index = (u16)relativeAngle >> 4;
-    projection = data_02082214[index * 2];
+    projection = FX_SinIdx((u16)relativeAngle >> 4);
     projectedDistance = FX_MUL(distance, projection);
     if (projectedDistance < 0x10e000)
         spawner->mTrapActive = 1;
@@ -143,42 +141,38 @@ int daObjC1_Trap_c::InitResources() {
     mSpawnerID = 0;
 
     if ((param1 & 0xff) == 0xff) {
-        VecFx32 position;
-        int index;
+        Vector3 position;
         int sinAngle;
         int cosAngle;
         int x;
         int y;
         int z;
-        void *spawned;
+        daObjC1_Trap_c *spawned;
 
         mIsSpawner = 1;
         mPlayerDist = 0;
 
-        index = ((int)(u16)mAngleY >> 4) * 2;
-        /* data_02082214[2i] = sin, [2i+1] = cos (dScStarSel COS()). */
-        cosAngle = data_02082214[index + 1];
-        sinAngle = data_02082214[index];
+        cosAngle = FX_CosIdx((u16)mAngleY >> 4);
+        sinAngle = FX_SinIdx((u16)mAngleY >> 4);
         z = mPosZ + sinAngle * 0x15d;
         x = mPosX - cosAngle * 0x15d;
         y = mPosY;
         position.x = x;
         position.y = y;
         position.z = z;
-        spawned = dActor_c::Spawn(0x24, 0, *(const Vector3 *)&position, &mAngle, mAreaId, -1);
-        ((daObjC1_Trap_c *)spawned)->mSpawnerID = uniqueID;
+        spawned = (daObjC1_Trap_c *)dActor_c::Spawn(0x24, 0, position, &mAngle, mAreaId, -1);
+        spawned->mSpawnerID = uniqueID;
 
-        index = ((int)(u16)mAngleY >> 4) * 2;
-        sinAngle = data_02082214[index];
-        cosAngle = data_02082214[index + 1];
+        sinAngle = FX_SinIdx((u16)mAngleY >> 4);
+        cosAngle = FX_CosIdx((u16)mAngleY >> 4);
         z = mPosZ - sinAngle * 0x15d;
         x = cosAngle * 0x15d + mPosX;
         y = mPosY;
         position.x = x;
         position.y = y;
         position.z = z;
-        spawned = dActor_c::Spawn(0x24, 1, *(const Vector3 *)&position, &mAngle, mAreaId, -1);
-        ((daObjC1_Trap_c *)spawned)->mSpawnerID = uniqueID;
+        spawned = (daObjC1_Trap_c *)dActor_c::Spawn(0x24, 1, position, &mAngle, mAreaId, -1);
+        spawned->mSpawnerID = uniqueID;
         return 1;
     }
 
@@ -194,10 +188,7 @@ int daObjC1_Trap_c::InitResources() {
     mState = 0;
 
     if ((param1 & 0xff) == 1) {
-        /* Named `mAngleY += 0x8000` size-DIFFs InitResources (addressing
-         * shape / CSE); the pointer local keeps the ROM form. */
-        s16 *angleY = &mAngleY;
-        *angleY = *angleY + 0x8000;
+        mAngle.y += 0x8000;
     }
     return 1;
 }
@@ -236,11 +227,9 @@ int daObjC1_Trap_c::CleanupResources() {
 
 
 void daObjC1_Trap_c::UpdateModelTransform() {
-    int angleY = (int)(u16)mAngleY >> 4;
-    int angleZ = (int)(u16)mAngleZ >> 4;
-    int sinZ = data_02082214[angleZ * 2];
-    int cosY = data_02082214[angleY * 2 + 1];
-    int sinY = data_02082214[angleY * 2];
+    int sinZ = FX_SinIdx((u16)mAngleZ >> 4);
+    int cosY = FX_CosIdx((u16)mAngleY >> 4);
+    int sinY = FX_SinIdx((u16)mAngleY >> 4);
     int radius = sinZ * 5;
     int offsetX = FX_MUL(radius, cosY);
     int offsetZ = FX_MUL(radius, sinY);

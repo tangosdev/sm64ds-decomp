@@ -30,10 +30,13 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g3imm.h"
+#include "nitro/gx/g3imm_cmd.h"
+#include "nitro/gx/g3imm_light.h"
 #include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "common.h"
 #include "SharedFilePtr.h"
+#include "nitro/fx/fx_cp.h"
 #include "TrmpLine.h"
 #include "TrmpItem.h"
 #include "dExtSimpleModel_c.h"
@@ -48,10 +51,6 @@
 #define TRMPITEM(p) ((TrmpItem *)(p))
 
 #pragma defer_codegen off
-
-namespace cstd {
-int fdiv(s32, s32);
-}
 
 /* The jumper a line bounces: a trampoline Mario, read through the five virtual
    slots of the vtable at 0x0213b2c4 (dMgTrmpl3DMario_c) or 0x0213b2e0
@@ -191,7 +190,7 @@ void func_0203d704(int *, int *, int *);
 void func_0203cd80(int *, short);
 void Matrix4x3_FromQuaternion(const Quaternion *, Matrix4x3 *);
 void Matrix4x3_FromTranslation(Matrix4x3 *, int, int, int);
-void MulMat4x3Mat4x3(const Matrix4x3 *, const Matrix4x3 *, Matrix4x3 *);
+void MTX_Concat43(const Matrix4x3 *, const Matrix4x3 *, Matrix4x3 *);
 void Matrix4x3_ApplyInPlaceToScale(Matrix4x3 *, int, int, int);
 unsigned int func_02045a50(const void *, unsigned int);
 
@@ -200,13 +199,13 @@ void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void Vec3_Add(Vector3 *, const Vector3 *, const Vector3 *);
 void Vec3_MulScalar(Vector3 *, const Vector3 *, int);
 void Vec3_MulScalarInPlace(Vector3 *, int);
-void AddVec3(Vector3 *, Vector3 *, Vector3 *);
-void SubVec3(Vector3 *, Vector3 *, Vector3 *);
+void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
+void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
 int Vec3_Dist(const Vector3 *, const Vector3 *);
-int LenVec3(const Vector3 *);
-int DotVec3(const Vector3 *, const Vector3 *);
-void CrossVec3(const Vector3 *, const Vector3 *, Vector3 *);
-void NormalizeVec3(const Vector3 *, Vector3 *);
+int VEC_Mag(const Vector3 *);
+int VEC_DotProduct(const Vector3 *, const Vector3 *);
+void VEC_CrossProduct(const Vector3 *, const Vector3 *, Vector3 *);
+void VEC_Normalize(const Vector3 *, Vector3 *);
 int NormalizeVec3IfNonZero(Vector3 *);
 void Vec2_Sub(int *, int *, int *);
 
@@ -363,7 +362,7 @@ extern "C" void TrmpItem_MotionSway(void *self) {
     distanceFromCenterY = TRMPITEM(self)->mPos.y - 0x74000;
     if (distanceFromCenterY < 0)
         distanceFromCenterY = -distanceFromCenterY;
-    xSpeed += cstd::fdiv(distanceFromCenterY, 0x4c000) >> 3;
+    xSpeed += FX_Div(distanceFromCenterY, 0x4c000) >> 3;
 
     if (TRMPITEM(self)->mPhase & 0x4000)
         TRMPITEM(self)->mVel.x = xSpeed;
@@ -527,37 +526,37 @@ extern "C" void TrmpItem_ReflectOffLine(TrmpItem *item, TrampolineObjectCallback
     itemToJumper = relativePosition;
 
     Vec3_MulScalar(&halfSpan, &item->mSide, sTrmpItemHitWidths[item->mSizeIdx]);
-    AddVec3(&negativeEndOffset, &halfSpan, &negativeEndOffset);
-    SubVec3(&positiveEndOffset, &halfSpan, &positiveEndOffset);
+    VEC_Add(&negativeEndOffset, &halfSpan, &negativeEndOffset);
+    VEC_Subtract(&positiveEndOffset, &halfSpan, &positiveEndOffset);
 
     negativeEndOffset.y += 0xE000;
     positiveEndOffset.y += 0xE000;
     negativeEndOffset.y >>= 1;
     positiveEndOffset.y >>= 1;
 
-    negativeEndDistance = LenVec3(&negativeEndOffset);
-    positiveEndDistance = LenVec3(&positiveEndOffset);
-    along = DotVec3(&itemToJumper, &item->mSide);
-    across = DotVec3(&itemToJumper, &item->mForward);
+    negativeEndDistance = VEC_Mag(&negativeEndOffset);
+    positiveEndDistance = VEC_Mag(&positiveEndOffset);
+    along = VEC_DotProduct(&itemToJumper, &item->mSide);
+    across = VEC_DotProduct(&itemToJumper, &item->mForward);
 
     if (negativeEndDistance < 0xE000 && NormalizeVec3IfNonZero(&negativeEndOffset) != 0) {
         Vec3_MulScalarInPlace(&negativeEndOffset, 0xE000 - negativeEndDistance);
         negativeEndOffset.y <<= 1;
         Vec3_MulScalar(&negativeEndCorrection, &negativeEndOffset, item->mAppearScale);
-        AddVec3(position, &negativeEndCorrection, position);
-        AddVec3(&pushSum, &negativeEndOffset, &pushSum);
+        VEC_Add(position, &negativeEndCorrection, position);
+        VEC_Add(&pushSum, &negativeEndOffset, &pushSum);
         ((TrampolineJumperCounts *)jumper)->mItemPushCount += 1;
     } else if (positiveEndDistance < 0xE000 && NormalizeVec3IfNonZero(&positiveEndOffset) != 0) {
         Vec3_MulScalarInPlace(&positiveEndOffset, 0xE000 - positiveEndDistance);
         positiveEndOffset.y <<= 1;
         Vec3_MulScalar(&positiveEndCorrection, &positiveEndOffset, item->mAppearScale);
-        AddVec3(position, &positiveEndCorrection, position);
-        AddVec3(&pushSum, &positiveEndOffset, &pushSum);
+        VEC_Add(position, &positiveEndCorrection, position);
+        VEC_Add(&pushSum, &positiveEndOffset, &pushSum);
         ((TrampolineJumperCounts *)jumper)->mItemPushCount += 1;
     }
 
     Vec3_MulScalar(&endVelocityChange, &pushSum, 0x100);
-    AddVec3(velocity, &endVelocityChange, velocity);
+    VEC_Add(velocity, &endVelocityChange, velocity);
 
     {
         int x = velocity->x;
@@ -597,7 +596,7 @@ extern "C" void TrmpItem_ReflectOffLine(TrmpItem *item, TrampolineObjectCallback
             yChange = 0x80;
         normalVelocityChange.y = yChange;
     }
-    AddVec3(velocity, &normalVelocityChange, velocity);
+    VEC_Add(velocity, &normalVelocityChange, velocity);
 }
 
 /* The ROM re-reads sTrmpItems and recomputes the element address at each use;
@@ -745,11 +744,11 @@ extern "C" void TrmpItem_ProjectOnLine(TrmpItem *item, TrampolineObjectCallbacks
     Vec3_Sub(&previousRelative, &previousPosition, &item->mPrevPos);
     // Only the current relative position receives this vertical offset.
     currentRelative.y += 0xc000;
-    across = DotVec3(&item->mForward, &currentRelative);
-    currentProjection->x = DotVec3(&item->mSide, &currentRelative);
+    across = VEC_DotProduct(&item->mForward, &currentRelative);
+    currentProjection->x = VEC_DotProduct(&item->mSide, &currentRelative);
     currentProjection->y = across;
-    across = DotVec3(&item->mPrevForward, &previousRelative);
-    previousProjection->x = DotVec3(&item->mPrevSide, &previousRelative);
+    across = VEC_DotProduct(&item->mPrevForward, &previousRelative);
+    previousProjection->x = VEC_DotProduct(&item->mPrevSide, &previousRelative);
     previousProjection->y = across;
 }
 
@@ -759,7 +758,7 @@ extern "C" void TrmpItem_UpdateMatrix(TrmpItem *self) {
                              &rotation);
     Matrix4x3_FromTranslation(&data_020a0e68, self->mPos.x, self->mPos.y,
                               self->mPos.z);
-    MulMat4x3Mat4x3(&rotation, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&rotation, &data_020a0e68, &data_020a0e68);
     self->mModel->mat4x3 = data_020a0e68;
     self->mTexAnim.Update(self->mModel->data);
     self->mModel->ApplyOpacity(self->mAlpha, 0);
@@ -769,7 +768,7 @@ extern "C" void TrmpItem_UpdateMatrix(TrmpItem *self) {
 extern "C" void TrmpItem_Update(TrmpItem *item) {
     PMF *state = (PMF *)item;
     (((C *)item)->**state)();
-    AddVec3(&item->mPos, &item->mVel, &item->mPos);
+    VEC_Add(&item->mPos, &item->mVel, &item->mPos);
     item->mTexAnim.Advance();
     item->mPrevPos.x = item->mPos.x;
     item->mPrevPos.y = item->mPos.y;
@@ -937,7 +936,7 @@ extern "C" char *TrmpItem_Spawn(int position, int *normal, int itemType, int mot
 extern "C" void TrmpLine_PointDistance(TrmpLine *sl, void *referencePoint,
                                        const Vector3 *offsetVector) {
     int row;
-    int negatedProjection = -DotVec3(offsetVector, &sl->mNormal);
+    int negatedProjection = -VEC_DotProduct(offsetVector, &sl->mNormal);
     int *amplitude = sl->mFlexAmplitude;
     char *restVertex = (char *)sl->mRestVerts;
     int weightedAmplitude;
@@ -946,13 +945,13 @@ extern "C" void TrmpLine_PointDistance(TrmpLine *sl, void *referencePoint,
         int column;
         for (column = 0; column < 4; column++) {
             Vector3 delta;
-            SubVec3((Vector3 *)restVertex, (Vector3 *)referencePoint, &delta);
+            VEC_Subtract((Vector3 *)restVertex, (Vector3 *)referencePoint, &delta);
             /* The long long widening is load-bearing (measured 2026-11-06).
                tools/delaunder.py accepts its removal because it byte-checks only
                one function of this TU; the per-function gate reports NO-REPRO. */
             int halfLength = (long long)(sl->mHalfWidth);
-            int distance = LenVec3(&delta);
-            int distanceWeight = cstd::fdiv(halfLength, halfLength + distance);
+            int distance = VEC_Mag(&delta);
+            int distanceWeight = FX_Div(halfLength, halfLength + distance);
             int weightedProjection = FX_MUL(negatedProjection, *gridWeight);
             weightedAmplitude = FX_MUL(weightedProjection, distanceWeight);
             *amplitude = weightedAmplitude;
@@ -991,21 +990,21 @@ extern "C" void TrmpLine_ComputeNormals(TrmpLine *self) {
             components[2] = zero;
 
             if (column == 0)
-                SubVec3((Vector3 *)p, (Vector3 *)p + 1, &columnEdge);
+                VEC_Subtract((Vector3 *)p, (Vector3 *)p + 1, &columnEdge);
             else if (column == 3)
-                SubVec3((Vector3 *)p - 1, (Vector3 *)p, &columnEdge);
+                VEC_Subtract((Vector3 *)p - 1, (Vector3 *)p, &columnEdge);
             else
-                SubVec3((Vector3 *)p - 1, (Vector3 *)p + 1, &columnEdge);
+                VEC_Subtract((Vector3 *)p - 1, (Vector3 *)p + 1, &columnEdge);
 
             if (row == 0)
-                SubVec3((Vector3 *)p, (Vector3 *)p + 4, &rowEdge);
+                VEC_Subtract((Vector3 *)p, (Vector3 *)p + 4, &rowEdge);
             else if (row == 3)
-                SubVec3((Vector3 *)p - 4, (Vector3 *)p, &rowEdge);
+                VEC_Subtract((Vector3 *)p - 4, (Vector3 *)p, &rowEdge);
             else
-                SubVec3((Vector3 *)p - 4, (Vector3 *)p + 4, &rowEdge);
+                VEC_Subtract((Vector3 *)p - 4, (Vector3 *)p + 4, &rowEdge);
 
-            CrossVec3(&columnEdge, &rowEdge, normal);
-            NormalizeVec3(normal, normal);
+            VEC_CrossProduct(&columnEdge, &rowEdge, normal);
+            VEC_Normalize(normal, normal);
 
             normal->x = FX_MUL(normal->x, 0xff8);
             normal->y = FX_MUL(normal->y, 0xff8);
@@ -1021,13 +1020,6 @@ extern "C" void TrmpLine_ComputeNormals(TrmpLine *self) {
     }
 }
 
-static inline void G3_Vtx(s16 x, s16 y, s16 z) {
-    REG_VTX_16 = (u16)x | ((u16)y << 16);
-    REG_VTX_16 = (u16)z;
-}
-
-#define SEND_VTX(p) G3_Vtx((s16)((p)->x >> 8), (s16)((p)->y >> 8), (s16)((p)->z >> 8))
-
 /* Loads the object's placement and scale matrices, then draws its 4x4 vertex
  * patch (positions mVerts, packed normals mPackedNormals) as three triangle
  * strips per face, the back face first with negated normals. Each normal
@@ -1039,19 +1031,17 @@ extern "C" void TrmpLine_Draw(TrmpLine *obj) {
     Matrix4x3 m1;
     Matrix4x3_FromTranslation(&data_020a0e68, obj->mCenter.x, obj->mCenter.y,
                               obj->mCenter.z);
-    MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &m1);
+    MTX_Concat43(&data_020a0e68, &data_0209b3ec, &m1);
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, obj->mScale.x, obj->mScale.y,
                                   obj->mScale.z);
-    MulMat4x3Mat4x3(&data_020a0e68, &data_0209b3ec, &m2);
-    REG_MTX_MODE = 2;
-    func_020553a4(m1.m);
-    REG_MTX_MODE = 1;
-    func_020553a4(m2.m);
-    REG_MTX_SCALE = 0x100000;
-    REG_MTX_SCALE = 0x100000;
-    REG_MTX_SCALE = 0x100000;
-    REG_MTX_MODE = 3;
-    REG_MTX_IDENTITY = 0;
+    MTX_Concat43(&data_020a0e68, &data_0209b3ec, &m2);
+    G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
+    G3_LoadMtx43(m1.m);
+    G3_MtxMode(GX_MTXMODE_POSITION);
+    G3_LoadMtx43(m2.m);
+    G3_Scale(0x100000, 0x100000, 0x100000);
+    G3_MtxMode(GX_MTXMODE_TEXTURE);
+    G3_Identity();
     G3_TexImageParam(GX_TEXFMT_PLTT16, GX_TEXGEN_NORMAL, GX_TEXSIZE_S32, GX_TEXSIZE_T64,
                      GX_TEXREPEAT_ST, GX_TEXFLIP_S, GX_TEXPLTTCOLOR0_USE, (u32)sTrmpLineTexAddr);
     G3_TexPlttBase((u32)sTrmpLinePlttAddr, GX_TEXFMT_PLTT16);
@@ -1077,20 +1067,20 @@ extern "C" void TrmpLine_Draw(TrmpLine *obj) {
         int *n0 = &obj->mPackedNormals[i * 4];
         int *n1 = &obj->mPackedNormals[(i + 1) * 4];
         int k;
-        REG_BEGIN_VTXS = 2;
+        G3_Begin(GX_BEGIN_TRIANGLE_STRIP);
         for (k = 0; k < 4; k++) {
             REG_TEXCOORD = sTrmpLineTexCoords[i * 4 + k];
             REG_NORMAL = -*n0 & 0x3fffffff;
             n0++;
-            SEND_VTX(v0);
+            G3_Vtx(v0->x >> 8, v0->y >> 8, v0->z >> 8);
             v0++;
             REG_TEXCOORD = sTrmpLineTexCoords[(i + 1) * 4 + k];
             REG_NORMAL = -*n1 & 0x3fffffff;
             n1++;
-            SEND_VTX(v1);
+            G3_Vtx(v1->x >> 8, v1->y >> 8, v1->z >> 8);
             v1++;
         }
-        REG_END_VTXS = 0;
+        G3_End();
     }
 
     /* front face: row i+1 then row i */
@@ -1100,20 +1090,20 @@ extern "C" void TrmpLine_Draw(TrmpLine *obj) {
         int *n0 = &obj->mPackedNormals[i * 4];
         int *n1 = &obj->mPackedNormals[(i + 1) * 4];
         int k;
-        REG_BEGIN_VTXS = 2;
+        G3_Begin(GX_BEGIN_TRIANGLE_STRIP);
         for (k = 0; k < 4; k++) {
             REG_TEXCOORD = sTrmpLineTexCoords[(i + 1) * 4 + k];
             REG_NORMAL = *n1;
             n1++;
-            SEND_VTX(v1);
+            G3_Vtx(v1->x >> 8, v1->y >> 8, v1->z >> 8);
             v1++;
             REG_TEXCOORD = sTrmpLineTexCoords[i * 4 + k];
             REG_NORMAL = *n0;
             n0++;
-            SEND_VTX(v0);
+            G3_Vtx(v0->x >> 8, v0->y >> 8, v0->z >> 8);
             v0++;
         }
-        REG_END_VTXS = 0;
+        G3_End();
     }
 }
 
@@ -1315,16 +1305,16 @@ extern "C" int TrmpLine_PushJumper(TrmpLine *c) {
         previousPos.z = previousPositionPtr->z;
 
         Vec3_Sub(&movementDelta, &currentPos, &previousPos);
-        SubVec3(&currentPos, &c->mCenter, &currentPos);
-        SubVec3(&previousPos, &c->mCenter, &previousPos);
+        VEC_Subtract(&currentPos, &c->mCenter, &currentPos);
+        VEC_Subtract(&previousPos, &c->mCenter, &previousPos);
 
         // Test the previous-to-current segment against the c in its own frame.
-        currentAlong = DotVec3(&c->mAxis, &currentPos);
-        currentAcross = DotVec3(&c->mNormal, &currentPos);
-        previousAlong = DotVec3(&c->mAxis, &previousPos);
-        previousAcross = DotVec3(&c->mNormal, &previousPos);
-        DotVec3(&c->mNormal, &movementDelta);
-        DotVec3(&c->mAxis, &movementDelta);
+        currentAlong = VEC_DotProduct(&c->mAxis, &currentPos);
+        currentAcross = VEC_DotProduct(&c->mNormal, &currentPos);
+        previousAlong = VEC_DotProduct(&c->mAxis, &previousPos);
+        previousAcross = VEC_DotProduct(&c->mNormal, &previousPos);
+        VEC_DotProduct(&c->mNormal, &movementDelta);
+        VEC_DotProduct(&c->mAxis, &movementDelta);
 
         currentProjection.y = currentAcross;
         previousProjection.x = previousAlong;
@@ -1373,7 +1363,7 @@ extern "C" int TrmpLine_PushJumper(TrmpLine *c) {
             c->mContactMotion.y = movementDelta.y;
             c->mContactMotion.z = movementDelta.z;
 
-            edgeRatio = cstd::fdiv((currentAlong < 0) ? -currentAlong : currentAlong,
+            edgeRatio = FX_Div((currentAlong < 0) ? -currentAlong : currentAlong,
                                    c->mHalfWidth);
             {
                 int halfLength = c->mHalfWidth;
@@ -1560,8 +1550,8 @@ extern "C" void TrmpLine_Build(TrmpLine *c, short *startPoint, short *endPoint) 
     c->mContactMotion.z = 0 - c->mNormal.z;
     Vec3_MulScalarInPlace(&c->mContactMotion, 0x800);
 
-    SubVec3(&startPosition, &c->mCenter, &startPosition);
-    SubVec3(&endPosition, &c->mCenter, &endPosition);
+    VEC_Subtract(&startPosition, &c->mCenter, &startPosition);
+    VEC_Subtract(&endPosition, &c->mCenter, &endPosition);
     lineLength = Vec3_Dist(&startPosition, &endPosition);
     c->mHalfWidth = lineLength >> 1;
     rowStep = lineLength / 3;
@@ -1656,11 +1646,11 @@ extern "C" void TrmpLine_Build(TrmpLine *c, short *startPoint, short *endPoint) 
                 velocity.y = velocityPtr->y;
                 velocity.z = velocityPtr->z;
 
-                SubVec3(&relativePosition, &c->mCenter, &relativePosition);
-                along = DotVec3(&c->mAxis, &relativePosition);
-                across = DotVec3(&c->mNormal, &relativePosition);
-                normalVelocity = DotVec3(&c->mNormal, &velocity);
-                DotVec3(&c->mAxis, &velocity);
+                VEC_Subtract(&relativePosition, &c->mCenter, &relativePosition);
+                along = VEC_DotProduct(&c->mAxis, &relativePosition);
+                across = VEC_DotProduct(&c->mNormal, &relativePosition);
+                normalVelocity = VEC_DotProduct(&c->mNormal, &velocity);
+                VEC_DotProduct(&c->mAxis, &velocity);
 
                 if (normalVelocity < 0x100 && across <= selectedAcross && across > -0x24000) {
                     s32 halfLength = c->mHalfWidth;
@@ -1686,7 +1676,7 @@ extern "C" void TrmpLine_Build(TrmpLine *c, short *startPoint, short *endPoint) 
         c->mContactMotion.z = selectedVelocity.z;
 
         absoluteAlong = (selectedAlong < 0) ? (0 - selectedAlong) : selectedAlong;
-        edgeRatio = cstd::fdiv(absoluteAlong, c->mHalfWidth);
+        edgeRatio = FX_Div(absoluteAlong, c->mHalfWidth);
         halfLength = c->mHalfWidth;
         absoluteAlong = (selectedAlong < 0) ? (0 - selectedAlong) : selectedAlong;
         offsetTimesHalfLength = FX_MUL(absoluteAlong, halfLength);
@@ -1721,15 +1711,14 @@ extern "C" void TrmpLine_Build(TrmpLine *c, short *startPoint, short *endPoint) 
 
 extern "C" void TrmpLine_DrawAll(void) {
     int light[3];
-    REG_MTX_MODE = 2;
-    func_020553a4(&data_0209b3ec);
+    G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
+    G3_LoadMtx43(&data_0209b3ec);
     light[0] = 0;
     light[1] = 0;
-    light[2] = 0xfffff008;
+    light[2] = -0xff8;
     func_0203cd80(light, -0x2000);
-    REG_LIGHT_VECTOR = (((short)light[0] >> 3) & 0x3ff) | ((((short)light[1] >> 3) & 0x3ff) << 10) |
-                       ((((short)light[2] >> 3) & 0x3ff) << 20) | 0x40000000;
-    REG_LIGHT_COLOR = 0x40007fff;
+    G3_LightVector(GX_LIGHTID_1, light[0], light[1], light[2]);
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
     int i;
     for (i = 0; i < 4; i++) {
         if (sTrmpLines[i].mStatus != 0) {
@@ -1885,7 +1874,7 @@ extern "C" int TrmpLine_Create(s16 *startPoint, s16 *endPoint) {
         scaledDirection[1] = direction[1];
         scaledDirection[1] = weightedY;
         scaledDirectionLength = Vec2_Len((const Vector2 *)scaledDirection);
-        func_0203d630(direction, cstd::fdiv(0x18000, scaledDirectionLength));
+        func_0203d630(direction, FX_Div(0x18000, scaledDirectionLength));
 
         func_0203d704(adjustedStart, midpoint, direction);
         Vec2_Sub(adjustedEnd, midpoint, direction);

@@ -54,8 +54,10 @@
  *   is discarded here), the extra arguments of Math_Function_0203b14c and
  *   IsClsnInRangeOnScreen, the 0x199 passed to dBgW_KcMbg::SetFile, and what
  *   daPly_c::Hurt's trailing arguments select.
- * Leftover: the SurfaceInfo inside a dBgCh_Actr result is reached as
- *   `(char *)fr + 4`.
+ * Leftover: SurfaceInfo_TestFlag0x20 is declared here (and at its
+ *   definition) as taking int *, so its two callers still pass the floor
+ *   result's surface as `(int *)((char *)... + 4)`; the other reads use
+ *   dBgPi::surface.
  * Leftover: the state names STATE_IN_MOUTH and STATE_SPIT_OUT rest on how the
  *   handlers use mFlags bit 0x80000 and the 0x20000 / 0x40000 bits (nothing
  *   in this file sets 0x80000); mSlideSoundHandle rests on PlayLong's id
@@ -90,6 +92,7 @@ enum daObjBlockS_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Actor profile IDs this file compares against (symbols/actor_debug_names.tsv). */
 enum {
@@ -854,7 +857,7 @@ void daObjBlockS_c::HandleWallHit() {
         return;
     }
     Vector3 v;
-    ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))->CopyNormalTo(v);
+    mWithMeshClsn.GetWallResult()->surface.CopyNormalTo(v);
     mPrevAngleY = ReflectAngle(v.x, v.z, mPrevAngleY);
 }
 
@@ -875,7 +878,7 @@ void daObjBlockS_c::HandleWallHit() {
  * floor class (CLPS::GetFloorClass; include/daPly_c.h calls it the slipperiness class),
  * hl its slide acceleration (func_ov002_020f02c8). a1 is the current
  * velocity (mHorzSpeed along mPrevAngleY, through the sin / cos table at
- * data_02082214), a2 is hl in the direction atan2 of the normal's x and z
+ * FX_SinCosTable_), a2 is hl in the direction atan2 of the normal's x and z
  * gives (through the same table), scaled by Vec3_HorzLen of the normal;
  * their sum becomes the new mPrevAngleY and mHorzSpeed (capped at 100 units,
  * 0x64000). mVertSpeed is set to -((normalX * mSpeedX + normalZ * mSpeedZ)
@@ -893,7 +896,7 @@ void daObjBlockS_c::HandleWallHit() {
  * difference, at most 0x1000 per call) toward the angles func_02010844 gives
  * for the floor normal, the crate's yaw and the yaw minus a quarter turn. */
 int daObjBlockS_c::UpdateFloorContact() {
-    void *fr;
+    dBgPi *fr;
     int n;
     int ang;
     int newAng;
@@ -907,7 +910,7 @@ int daObjBlockS_c::UpdateFloorContact() {
         return 0;
 
     fr = mWithMeshClsn.GetFloorResult();
-    switch (((SurfaceInfo *)((char *)fr + 4))->clps.GetSurfaceType()) {
+    switch (fr->surface.clps.GetSurfaceType()) {
     case 6:
         mClsnYOffsetTarget = 0x1e000;
         break;
@@ -937,23 +940,22 @@ int daObjBlockS_c::UpdateFloorContact() {
         Kill();
     }
 
-    ((SurfaceInfo *)((char *)fr + 4))->CopyNormalTo(*(Vector3 *)&mFloorNormalX);
-    n = ((SurfaceInfo *)((char *)fr + 4))->clps.GetFloorClass();
+    fr->surface.CopyNormalTo(*(Vector3 *)&mFloorNormalX);
+    n = fr->surface.clps.GetFloorClass();
     ang = cstd::atan2(mFloorNormalX, mFloorNormalZ);
     hl = func_ov002_020f02c8(n);
     func_ov002_020f030c(n);
 
 
     {
-        int sMove = (u16)ang >> 4;
         int sPrev = (u16)mPrevAngleY >> 4;
         s32 speed = mHorzSpeed;
-        a1.x = FX_MUL(speed, data_02082214[sPrev * 2]);
+        a1.x = FX_MUL(speed, FX_SinIdx(sPrev));
         a1.y = 0;
-        a1.z = FX_MUL(speed, data_02082214[sPrev * 2 + 1]);
-        a2.x = FX_MUL(hl, data_02082214[sMove * 2]);
+        a1.z = FX_MUL(speed, FX_CosIdx(sPrev));
+        a2.x = FX_MUL(hl, FX_SinIdx((u16)ang >> 4));
         a2.y = 0;
-        a2.z = FX_MUL(hl, data_02082214[sMove * 2 + 1]);
+        a2.z = FX_MUL(hl, FX_CosIdx((u16)ang >> 4));
     }
     Vec3_MulScalarInPlace(&a2, Vec3_HorzLen((Vector3 *)&mFloorNormalX));
     Vec3_Add(&sum, &a1, &a2);
@@ -967,7 +969,7 @@ int daObjBlockS_c::UpdateFloorContact() {
     {
         s32 m0 = FX_MUL(mFloorNormalX, mSpeedX);
         s32 m1 = FX_MUL(mFloorNormalZ, mSpeedZ);
-        mVertSpeed = -(cstd::fdiv(m0 + m1, mFloorNormalY) + 0x8000);
+        mVertSpeed = -(FX_Div(m0 + m1, mFloorNormalY) + 0x8000);
     }
 
     if (func_ov002_020f035c(n, mFloorNormalY) != 0 && mHorzSpeed > 0x5000) {
@@ -979,7 +981,7 @@ int daObjBlockS_c::UpdateFloorContact() {
             q1 = mAngleZ;
             if (q1 < 0) q1 = ((-q1) << 16) >> 16;
             if (q1 < 0x10) {
-                sd = cstd::fdiv(FX_MUL(mHorzSpeed, 8), 0xa);
+                sd = FX_Div(FX_MUL(mHorzSpeed, 8), 0xa);
                 if (sd < 0) sd = -sd;
                 if (mVertSpeed > 0xa000)
                     Sound::PlayBank3(0x51, mCamSpacePos);

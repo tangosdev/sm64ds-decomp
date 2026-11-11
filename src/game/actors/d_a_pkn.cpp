@@ -104,7 +104,7 @@ int   Vec3_Dist(const Vector3 *a, const Vector3 *b);
 short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 int *Vec3_LslInPlace(int *v, int sh);
-void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
 
 void *d_a_pknNewHold(u32 handle, u32 id, int x, int y, int z, const void *f, void *cb);
 int d_a_pknPlaySubHold(u32 a, u32 b, u32 c, int t, int flag);
@@ -722,7 +722,7 @@ void daPkn_c::UpdatePose()
     int lr;
     int scale;
 
-    Vec3_Asr((Vector3 *)&L.v, (Vector3 *)&mPosX, 3);
+    Vec3_Asr((Vector3 *)&L.v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, L.v.x, L.v.y, L.v.z);
     L.saved = data_020a0e68;
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
@@ -740,17 +740,17 @@ void daPkn_c::UpdatePose()
     mHeadClsnOffset.y = 0;
     mHeadClsnOffset.z = 0;
     data_020a0e68 = L.saved;
-    MulMat4x3Mat4x3(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
     mHeadClsnOffset.x = data_020a0e68.m[9];
     mHeadClsnOffset.y = data_020a0e68.m[10];
     mHeadClsnOffset.z = data_020a0e68.m[11];
     Vec3_LslInPlace((int *)&mHeadClsnOffset, 3);
-    SubVec3((Vector3 *)&mHeadClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mHeadClsnOffset);
+    VEC_Subtract(&mHeadClsnOffset, &mPos, &mHeadClsnOffset);
 
     /* Still a hand-indexed FX_SinIdx: through the inline the table base loads
        before mHeadClsnOffset.y and ang[0], and no spelling tried (local, index
        local, y read first, split subtraction) gets the ROM's order back. */
-    mHeadClsnOffset.y -= data_02082214[((u16)ang[0] >> 4) << 1] * (s16)0x14 + 0x32000;
+    mHeadClsnOffset.y -= FX_SinCosTable_[((u16)ang[0] >> 4) << 1] * (s16)0x14 + 0x32000;
     mHeadClsnOffset.z += 0x32000;
 
     L.tv.x = mPosX;

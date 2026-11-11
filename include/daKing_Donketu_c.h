@@ -57,9 +57,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        camera looks at it, the part-1 camera is placed relative to it, the key
        spawns above it, and the ..3390 and leap states turn toward it. Whether
        it is the middle of the arena is not established. */
-    s32 mSpawnPosX;                                        /* 0x3d8 */
-    s32 mSpawnPosY;                                        /* 0x3dc */
-    s32 mSpawnPosZ;                                        /* 0x3e0 */
+    Vector3 mSpawnPos; /* 0x3d8 */
     /* The player the talk cut scenes address: the opening-talk state
        (..3330) and the second cut scene (..33e0) store their ClosestPlayer
        result here, and the states that wait out a talk (..3350, ..3410) ask
@@ -84,7 +82,7 @@ struct daKing_Donketu_c : dEnemyBase_c {
        rely on it zero it; ..3360 zeroes it from its update instead): a 0/1 latch in several, a frame count that
        runs up to 0x82 in the state at data_ov073_02123340, and in the state
        at data_ov073_021233d0 a phase angle that advances 0x500 a frame and
-       indexes the data_02082214 sine table. */
+       indexes the FX_SinCosTable_ sine table. */
     s32 mStateScratch;                                     /* 0x4b4 */
     /* Hops counted by the waypoint-hop states: the update handler of the
        state at data_ov073_02123320 adds one per landing and switches to

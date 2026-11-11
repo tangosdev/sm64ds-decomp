@@ -54,6 +54,7 @@ enum d_a_cnn_AssetId { ASSET_HOUDAI_BMD = 0x045e };
 
 #include "common.h"
 #include "daCnn_c.h"
+#include "daBmb_c.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "Sound.h"
@@ -63,6 +64,7 @@ enum d_a_cnn_AssetId { ASSET_HOUDAI_BMD = 0x045e };
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 typedef void (daCnn_c::*State)();
 
@@ -74,7 +76,7 @@ extern SharedFilePtr data_ov002_0210da38;
 /* The smoke particles' base rotation, x/y/z. */
 extern u16 data_ov098_0213c63c[3];
 /* The sine and cosine table. */
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 
 /* local extern: arm9/ov002/ov102 C helpers with no shared header yet. The
    two daPly_c helpers are defined in d_a_ply_methods.cpp, the Bob-omb one in
@@ -84,7 +86,6 @@ int AngleDiff(int a, int b);
 short GetAngleToCamera(int playerNo);
 
 int func_ov002_020df300(daPly_c *player);
-void func_ov102_0214ae1c(dActor_c *bomb);
 }
 
 /* The cannon's file-scope SharedFilePtr object, spelled through the same
@@ -278,7 +279,7 @@ void daCnn_c::StateFire() {
 
         {
             dActor_c *spawned = dActor_c::Spawn(kWaterBombActorID, 3, pos, 0, mAreaId, -1);
-            s16 *table = data_02082214;
+            s16 *table = FX_SinCosTable_;
             int launchSpeed = 100;
             s16 pitch = mPrevAngleX;
             int up = (s16)(0x4000 - pitch);
@@ -328,8 +329,8 @@ void daCnn_c::StateFire() {
         rot.x = data_ov098_0213c63c[0];
         rot.y = data_ov098_0213c63c[1];
         rot.z = data_ov098_0213c63c[2];
-        rot.x = (u16)data_02082214[((u16)mPrevAngleY >> 4) * 2];
-        rot.z = (u16)data_02082214[((u16)mPrevAngleY >> 4) * 2 + 1];
+        rot.x = (u16)FX_SinIdx((u16)mPrevAngleY >> 4);
+        rot.z = (u16)FX_CosIdx((u16)mPrevAngleY >> 4);
 
         Particle::System::New(0, kPtclCannonShotA, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ,
                               (const Vector3_16f *)(&rot), 0);
@@ -370,7 +371,7 @@ void daCnn_c::StateWaitForRider() {
         if (held != 0) {
             int isBobOmb = held->actorID == kBobOmbActorID;
             if (isBobOmb) {
-                func_ov102_0214ae1c(held);
+                ((daBmb_c *)held)->func_ov102_0214ae1c();
                 return;
             }
         }
@@ -502,18 +503,16 @@ void daCnn_c::UpdateModel() {
     u16 pitch = mAngleX;
     s16 yaw = mAngleY;
     ModelBone *bones;
-    int idx;
 
     Matrix4x3_FromTranslation(&mModel.mat4x3, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
 
     bones = mModel.data.bones;
-    idx = pitch >> 4;
 
     bones[0].rotY = yaw;
     bones[1].rotX = pitch;
     bones[1].transX = 0;
-    bones[1].transY = mBarrelRestY + (mRecoil * data_02082214[idx * 2 + 1]) / 0x1000;
-    bones[1].transZ = (mRecoil * data_02082214[idx * 2]) / 0x1000;
+    bones[1].transY = mBarrelRestY + (mRecoil * FX_CosIdx(pitch >> 4)) / 0x1000;
+    bones[1].transZ = (mRecoil * FX_SinIdx(pitch >> 4)) / 0x1000;
 }
 
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header

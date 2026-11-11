@@ -1,14 +1,14 @@
 //cpp
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 extern "C" {
 
-extern void MultiStore16(unsigned short value, void *dst, int count);
+extern void MIi_CpuClear16(unsigned short value, void *dst, int count);
 
 void ResetCrashScreen(void)
 {
-    void *ptr = G2::GetBG1ScrPtr();
+    void *ptr = G2_GetBG1ScrPtr();
     volatile unsigned short val = 0xff;
-    MultiStore16(val, ptr, 0x800);
+    MIi_CpuClear16(val, ptr, 0x800);
 }
 }

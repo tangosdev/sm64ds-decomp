@@ -27,10 +27,15 @@ enum dScMgMemory2_c_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "Sound.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "common.h"
 #include "decl_common.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 #include "PlayerInput.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/gx/gx_bgcnt.h"
+
 namespace cstd {
 s16 atan2(s32, s32);
 }
@@ -91,19 +96,11 @@ extern "C" dScMgMemory2_cState sMemory2ResultTable[];
 extern "C" dScMgMemory2_cState sMemory2StateTable[];
 extern "C" dScMgMemory2_cState sMemory2RoundTable[];
 
-namespace GX {
-void LoadOBJPltt(void const *, unsigned int, unsigned int);
-}
-
-namespace GXS {
-void LoadOBJPltt(void const *, unsigned int, unsigned int);
-}
-
 extern "C" {
 extern void Mg_DrawScoreTally(void *thiz, int a, int b, int c);
 extern void Mg_DrawBlinkSprite(void *c, int arg1, int arg2);
 extern s16 atan2_hold_d_s_mg_memory2_1(int y, int x);
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern void MgCoins_StartLoseOneMore(void);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern u16 sMemory2CardFrameSprites[];
@@ -126,7 +123,6 @@ extern int sMemory2FourthDealsPerDifficulty[];
 extern int sMemory2HardDealsPerMode[];
 extern int sMemory2NormalDealsPerDifficulty[];
 extern int sMemory2EasyDealsPerDifficulty[];
-extern int RandomIntInternal(int *seed);
 extern int sMemory2PreviewCountPerDifficulty[];
 extern int sMemory2PreviewTimePerDifficulty[];
 extern void FreeGfxSlotsById(int x);
@@ -220,11 +216,14 @@ void dScMgMemory2_c::PlayerMove(int player) {
     dy = targetY - (mPlayers[player].y >> 12);
     mPlayers[player].angle = cstd::atan2(dy, dx);
     mPlayers[player].speed = mPlayers[player].speed + 0x200;
+    /* The index stays by hand here: through FX_CosIdx/FX_SinIdx, with or
+       without the angle pointer, the second product takes other registers
+       (17 words). */
     angle = (u16 *)&mPlayers[player].angle;
     mPlayers[player].x = mPlayers[player].x +
-                         FX_MUL(data_02082214[((*angle >> 4) << 1) + 1], mPlayers[player].speed);
+                         FX_MUL(FX_SinCosTable_[((*angle >> 4) << 1) + 1], mPlayers[player].speed);
     mPlayers[player].y =
-        mPlayers[player].y + FX_MUL(data_02082214[(*angle >> 4) << 1], mPlayers[player].speed);
+        mPlayers[player].y + FX_MUL(FX_SinCosTable_[(*angle >> 4) << 1], mPlayers[player].speed);
     dx = targetX - (mPlayers[player].x >> 12);
     dy = targetY - (mPlayers[player].y >> 12);
     if (dx < -3 || dx > 3) {
@@ -509,11 +508,11 @@ void dScMgMemory2_c::CardMove(int cardIndex) {
     mCards[cardIndex].angle = cstd::atan2(dy, dx);
 
     {
-        s16 tv = data_02082214[((static_cast<u16>(mCards[cardIndex].angle) >> 4) << 1) + 1];
+        s16 tv = FX_CosIdx((u16)mCards[cardIndex].angle >> 4);
         mCards[cardIndex].x += FX_MUL(tv, mCards[cardIndex].speed);
     }
     {
-        s16 tv = data_02082214[(static_cast<u16>(mCards[cardIndex].angle) >> 4) << 1];
+        s16 tv = FX_SinIdx((u16)mCards[cardIndex].angle >> 4);
         mCards[cardIndex].y += FX_MUL(tv, mCards[cardIndex].speed);
     }
 
@@ -879,15 +878,13 @@ void dScMgMemory2_c::ShuffleCards() {
     if (difficulty == 0) {
         int cardIndex;
         for (cardIndex = 0; cardIndex < 16; cardIndex++) {
-            u32 cardValue =
-                1 + ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 8 >> 15);
+            u32 cardValue = 1 + MG_RAND(8);
         check0:
             if (mValueCounts[cardValue] < 2) {
                 mCards[cardIndex].value = cardValue;
                 mValueCounts[cardValue]++;
             } else {
-                cardValue =
-                    1 + ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 8 >> 15);
+                cardValue = 1 + MG_RAND(8);
                 goto check0;
             }
         }
@@ -904,15 +901,13 @@ void dScMgMemory2_c::ShuffleCards() {
     } else if (difficulty == 1) {
         int cardIndex;
         for (cardIndex = 0; cardIndex < 18; cardIndex++) {
-            u32 cardValue =
-                1 + ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9 >> 15);
+            u32 cardValue = 1 + MG_RAND(9);
         check1:
             if (mValueCounts[cardValue] < 2) {
                 mCards[cardIndex].value = cardValue;
                 mValueCounts[cardValue]++;
             } else {
-                cardValue =
-                    1 + ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 9 >> 15);
+                cardValue = 1 + MG_RAND(9);
                 goto check1;
             }
         }
@@ -929,16 +924,13 @@ void dScMgMemory2_c::ShuffleCards() {
     } else {
         int cardIndex;
         for (cardIndex = 0; cardIndex < 20; cardIndex++) {
-            u32 cardValue =
-                1 + ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 10 >> 15);
+            u32 cardValue = 1 + MG_RAND(10);
         check2:
             if (mValueCounts[cardValue] < 2) {
                 mCards[cardIndex].value = cardValue;
                 mValueCounts[cardValue]++;
             } else {
-                cardValue =
-                    1 +
-                    ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 10 >> 15);
+                cardValue = 1 + MG_RAND(10);
                 goto check2;
             }
         }
@@ -963,9 +955,7 @@ void dScMgMemory2_c::ChoosePreviewCards() {
     int zero = 0;
     for (previewIndex = 0; previewIndex < previewCount; previewIndex++) {
         int cardIndex;
-        cardIndex = (cardCount *
-                     (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)) >>
-                    15;
+        cardIndex = MG_RAND(cardCount);
         if (previewIndex != 0) {
             int duplicate;
             int previousIndex;
@@ -979,10 +969,7 @@ void dScMgMemory2_c::ChoosePreviewCards() {
                 }
                 if (duplicate == 0)
                     break;
-                cardIndex =
-                    (cardCount *
-                     (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)) >>
-                    15;
+                cardIndex = MG_RAND(cardCount);
             } while (1);
         }
         mPreviewCards[previewIndex] = (unsigned char)cardIndex;
@@ -1150,10 +1137,10 @@ s32 dScMgMemory2_c::InitResources() {
     LoadCard2SubBg3(this);
     art = LoadFile(sMemory2CardNcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_CARD_NCL_BIN);
-    DecompressLZ16(art, (void *)0x6400000);
-    GX::LoadOBJPltt(palette, 0, 0x100);
-    DecompressLZ16(art, (void *)0x6600000);
-    GXS::LoadOBJPltt(palette, 0, 0x100);
+    DecompressLZ16(art, G2_GetOBJCharPtr());
+    GX_LoadOBJPltt(palette, 0, 0x100);
+    DecompressLZ16(art, G2S_GetOBJCharPtr());
+    GXS_LoadOBJPltt(palette, 0, 0x100);
     Deallocate(art);
     Deallocate(palette);
     gSubScreenLayers = 0x18;

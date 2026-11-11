@@ -4,7 +4,7 @@
  * src into backup_cache_page_buf (CARD_REQ_READ_BACKUP), copy it out to dst,
  * and advance until len is 0 or a request fails; then end the task. */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "nitro/card/card_common.h"
 
 extern "C" {
@@ -15,7 +15,7 @@ extern "C" {
    the `buf` alias. */
 #pragma opt_loop_invariants off
 /* MI_CpuCopy8 */
-extern void CpuCopy8(const void *src, void *dst, unsigned int len);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int len);
 
 void func_0206071c(CARDiCommon *p) {
     u32 len;
@@ -27,13 +27,13 @@ void func_0206071c(CARDiCommon *p) {
         len = p->len;
         if (len > sizeof(p->backup_cache_page_buf))
             len = sizeof(p->backup_cache_page_buf);
-        CP15::InvalidateDataCache((u32)p->backup_cache_page_buf, sizeof(p->backup_cache_page_buf));
+        DC_InvalidateRange(p->backup_cache_page_buf, sizeof(p->backup_cache_page_buf));
         p->cmd->src = p->src;
         p->cmd->dest = (u32)p->backup_cache_page_buf;
         p->cmd->len = len;
         if (!CARDi_Request(p, CARD_REQ_READ_BACKUP, 1))
             break;
-        CpuCopy8(buf, (void *)p->dst, len);
+        MI_CpuCopy8(buf, (void *)p->dst, len);
         p->src += len;
         p->dst += len;
         p->len -= len;

@@ -3,8 +3,6 @@
  * - common.h stays first.
  * - The destructor stays inline. Out of line it emits D0 before D1,
  *   and a D2.
- * - func_ov026_02111234 and func_ov026_021112a4 stay address-named
- *   C-linkage helpers.
  * - data_ov026_02113ea0 is the BMD handle and data_ov026_02113a9c
  *   the collision offset. data_0209caa0 is the save block.
  *   g_profile_WL_POLELIFT is outside this TU.
@@ -16,7 +14,7 @@
  * and the vtable at 0x02113ae0 name the class. classInit is
  * reconstructed.
  */
-/* common.h FIRST: func_ov026_02111234 whole-struct-assigns the model matrix
+/* common.h FIRST: UpdateShadow whole-struct-assigns the model matrix
  * into the drop-shadow matrix, and the cartridge does it as one flat
  * twelve-word ldm/stm run. common.h's flat `s32 m[12]` spelling of Matrix4x3
  * is that copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} -- which
@@ -34,6 +32,7 @@ enum d_a_obj_wl_polelift_AssetId {
 #include "dBgCh_Gnd.h"
 #include "math/MtxStack.h"
 #include "SaveBlock.h"
+#include "nitro/fx/fx_cp.h"
 
 /* The file-scope object at the end of this file constructs the resource
  * handle (model file 0x6db). mwcc emits __sinit_d_a_obj_wl_polelift.cpp
@@ -45,21 +44,13 @@ struct PoleliftModelFile : SharedFilePtr {
     ~PoleliftModelFile();
 };
 
-namespace cstd {
-int fdiv(int a, int b);
-}
-
 extern "C" {
 u16 DecIfAbove0_Short(u16 *timer);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(const Vector3 *v);
+int VEC_Mag(const Vector3 *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *a, int scale);
-void SubVec3(Vector3 *out, Vector3 *a, Vector3 *b);
+void VEC_Subtract(Vector3 *out, Vector3 *a, Vector3 *b);
 
-void func_ov026_02111234(daObjWlPolelift_c *actor);
-void func_ov026_021112a4(daObjWlPolelift_c *actor);
-
-extern SaveBlock data_0209caa0;
 extern Vector3 data_ov026_02113a9c;
 extern PoleliftModelFile data_ov026_02113ea0;
 }
@@ -87,7 +78,7 @@ s32 daObjWlPolelift_c::InitResources()
     offset.y = data_ov026_02113a9c.y;
     offset.z = data_ov026_02113a9c.z;
     clsn.Init(this, offset, 0x50000, 0x12c000, 0x80000c, 0);
-    func_ov026_021112a4(this);
+    UpdateModelTransform();
     return 1;
 }
 
@@ -124,16 +115,16 @@ s32 daObjWlPolelift_c::Behavior()
         path.GetNode(node, current);
         path.GetNode(prevNode, prevNodeIdx);
         Vec3_Sub(&delta, &mPos, &node);
-        length = LenVec3(&delta);
+        length = VEC_Mag(&delta);
         if (length == 0 || length <= 0xa000) {
             mPosX = node.x;
             moved = 1;
             mPosY = node.y;
             mPosZ = node.z;
         } else {
-            scale = cstd::fdiv(0xa000, length);
+            scale = FX_Div(0xa000, length);
             Vec3_MulScalar(&step, &delta, scale);
-            SubVec3(&mPos, &step, &mPos);
+            VEC_Subtract(&mPos, &step, &mPos);
         }
 
         if (moved) {
@@ -174,8 +165,8 @@ s32 daObjWlPolelift_c::Behavior()
         clsnOffset = data_ov026_02113a9c;
         clsn.SetPosRelativeToActor(clsnOffset);
         clsn.Update();
-        func_ov026_021112a4(this);
-        func_ov026_02111234(this);
+        UpdateModelTransform();
+        UpdateShadow();
     }
     return 1;
 }
@@ -195,23 +186,20 @@ s32 daObjWlPolelift_c::CleanupResources()
     return 1;
 }
 
-/* File-local helper: rebuild the model matrix from the actor's Y rotation and
- * position. */
-extern "C" void func_ov026_021112a4(daObjWlPolelift_c *actor)
-{
-    Matrix4x3_FromRotationY(&actor->model.mat4x3, actor->mAngleY);
-    actor->model.mat4x3.m[9] = actor->mPosX >> 3;
-    actor->model.mat4x3.m[10] = actor->mPosY >> 3;
-    actor->model.mat4x3.m[11] = actor->mPosZ >> 3;
+/* Rebuild the model matrix from the actor's Y rotation and position. */
+void daObjWlPolelift_c::UpdateModelTransform() {
+    Matrix4x3_FromRotationY(&model.mat4x3, mAngleY);
+    model.mat4x3.m[9] = mPosX >> 3;
+    model.mat4x3.m[10] = mPosY >> 3;
+    model.mat4x3.m[11] = mPosZ >> 3;
 }
 
-/* File-local helper: copy the model matrix into the drop-shadow matrix and
- * hand the owned dExtShadowModel_c to dActor_c::DropShadowScaleXYZ. */
-extern "C" void func_ov026_02111234(daObjWlPolelift_c *actor)
-{
-    actor->dropShadowMtx = actor->model.mat4x3;
-    actor->dropShadowMtx.m[10] = actor->groundY >> 3;
-    actor->DropShadowScaleXYZ(actor->shadow, actor->dropShadowMtx, 0x64000, 0xc8000, 0x64000, 0xf);
+/* Copy the model matrix into the drop-shadow matrix, drop it to the ground
+ * and hand the owned dExtShadowModel_c to dActor_c::DropShadowScaleXYZ. */
+void daObjWlPolelift_c::UpdateShadow() {
+    dropShadowMtx = model.mat4x3;
+    dropShadowMtx.m[10] = groundY >> 3;
+    DropShadowScaleXYZ(shadow, dropShadowMtx, 0x64000, 0xc8000, 0x64000, 0xf);
 }
 
 /* _ZN17daObjWlPolelift_cD1Ev and _ZN17daObjWlPolelift_cD0Ev are NOT written

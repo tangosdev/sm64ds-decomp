@@ -18,9 +18,7 @@
  *   header method mangles as int.
  * - daPly_c::Hurt, daPly_c::Bounce and dActor_c::IsTooFarAwayFromPlayer
  *   are not declared on those classes.
- * - dBgCh_Actr::GetFloorResult has no header member. UpdateCapPos is a
- *   header member but still needs the equal-arm ternary so the rotation
- *   argument (r2) is set up before the position (r1).
+ * - dBgCh_Actr::GetFloorResult has no header member.
  * - dExtFrameCtrl_c::Advance is called on the subobject at +0x3c0.
  *   mAnmModel.Advance() this-adjusts.
  * - func_ov084_021290d4 recomputes the chase radius at each store.
@@ -35,7 +33,8 @@
  * - The flag test is lsl/lsrs. `&= ~n` on the u8 compiles to and;
  *   the ROM has bic.
  * - Several direct member spellings shrink the function and DIFF:
- *   func_ov084_0212a580 with `(mFlags & 0x40000) == 0` (3 words),
+ *   func_ov084_0212a580 testing `(mFlags & 0x40000) == 0` in place of
+ *   its inYoshiMouth int (3 words),
  *   Render without the `locked` materialization (3 words), Behavior
  *   with `(mFlags & 8) == 0`, `mStateTimer`/`mStuckTimer` named on
  *   both sides (3 words), 0212abd4 with `mHeadingHoldTimer` named on
@@ -83,6 +82,8 @@ enum daKrb_c_AssetId {
 #include "daStarBase_c.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* daStar_c::mMarkerID (daStar_c.h, 0x434), seen through a local view:
    including daStar_c.h renumbers this TU's @NNN labels. */
@@ -91,10 +92,6 @@ struct SilverStarView {
     u32 mMarkerID;
 };
 typedef char SilverStarView_size_must_be_0x438[sizeof(SilverStarView) == 0x438 ? 1 : -1];
-
-namespace cstd {
-int fdiv(int a, int b);
-}
 
 typedef struct {
     unsigned char b0 : 1;
@@ -191,7 +188,6 @@ extern int *data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern short data_02082214[];
 extern char data_ov084_0213089c;
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
@@ -282,7 +278,7 @@ void daKrb_c::func_ov084_021290d4() {
 void daKrb_c::func_ov084_02129168(dActor_c *actor) {
     daKrb_c *goomba = this;
     goomba->mBounceCountdown = 0x3c;
-    goomba->mVertSpeed = cstd::fdiv(0xd000 - goomba->mVertAccel, goomba->mFloorNormalY);
+    goomba->mVertSpeed = FX_Div(0xd000 - goomba->mVertAccel, goomba->mFloorNormalY);
     goomba->mHorzSpeed = Vec3_HorzLen((const Vector3 *)&goomba->mSpeedX) * -1;
     if (actor != 0)
         goomba->mPrevAngleY = Vec3_HorzAngle(&goomba->mPos, &actor->mPos);
@@ -1003,52 +999,36 @@ block_68:
     }
 }
 
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az.
- *
- * Per-frame model, shadow and cap placement. Rebuilds the model matrix from
+/* Per-frame model, shadow and cap placement. Rebuilds the model matrix from
  * mAngleY, sets its translation to the position >> 3, and draws the drop
  * shadow (radius 80 * mScaleX; depth 30.0 on the ground, 150.0 in the air)
- * unless mFlags bit 0x40000 is set. Then the cap is attached (UpdateCapPos)
- * 108.0 above the origin, offset horizontally (x, z) by 10 * the sine/cosine
- * pair read from data_02082214 at (mAngleY >> 4). */
+ * unless the actor is in Yoshi's mouth (mFlags 0x40000). Then the cap is attached (UpdateCapPos)
+ * 108.0 above the origin and 10 * (sin, cos) of mAngleY out along the
+ * heading. UpdateCapPos is handed temporary copies of both, the rotation
+ * built first (mwcc evaluates arguments right to left); passing pos and
+ * rotation themselves drops the copies. */
 void daKrb_c::func_ov084_0212a580() {
     Vector3_16 rotation;
     Vector3 pos;
-    Vector3 arg;
-    Vector3_16 arg16;
 
     Matrix4x3_FromRotationY(&mAnmModel.mat4x3, mAngleY);
     mAnmModel.mat4x3.t.x = mPosX >> 3;
     mAnmModel.mat4x3.t.y = mPosY >> 3;
     mAnmModel.mat4x3.t.z = mPosZ >> 3;
-    rotation.x = mAngleX;
-    rotation.y = mAngleY;
-    rotation.z = mAngleZ;
-    if ((mFlags & 0x40000 ? 1 : 0) == 0) {
-        if (mWithMeshClsn.IsOnGround()) {
-            ((dActor_c *)this)
-                ->DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScaleX * 0x50, 0x1e000, 0xf);
-        } else {
-            ((dActor_c *)this)
-                ->DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScaleX * 0x50, 0x96000, 0xf);
-        }
+    rotation = mAngle;
+    int inYoshiMouth = (mFlags & 0x40000) ? 1 : 0;
+    if (!inYoshiMouth) {
+        if (mWithMeshClsn.IsOnGround())
+            DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScaleX * 0x50, 0x1e000, 0xf);
+        else
+            DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, mScaleX * 0x50, 0x96000, 0xf);
     }
     pos.x = 0;
     pos.z = 0;
     pos.y = 0x6c000;     /* 108.0 */
-    pos.x += ((short*)data_02082214)[((unsigned short)mAngleY >> 4) * 2] * 10;
-    pos.z += ((short*)data_02082214)[((unsigned short)mAngleY >> 4) * 2 + 1] * 10;
-    arg.x = ((int*)&pos)[0];
-    arg.y = ((int*)&pos)[1];
-    arg.z = ((int*)&pos)[2];
-    arg16.x = ((unsigned short*)&rotation)[0];
-    arg16.y = ((unsigned short*)&rotation)[1];
-    arg16.z = ((unsigned short*)&rotation)[2];
-    /* equal-arm ternary forces arg16 setup (r2) before arg (r1) — matches ROM call-arg order */
-    UpdateCapPos(arg, (this ? arg16 : arg16));
+    pos.x += FX_SinIdx((u16)mAngleY >> 4) * 10;
+    pos.z += FX_CosIdx((u16)mAngleY >> 4) * 10;
+    UpdateCapPos(Vector3(pos), Vector3_16(rotation));
 }
 
 /* STATE_PAUSE: stand still (horizontal speed 0) until mWanderRerollTimer runs
@@ -1140,7 +1120,7 @@ void daKrb_c::ActTumble() {
             if (aa <= cnt * 0x500) {
                 goomba->mVertSpeed = (cnt << 0xa) - goomba->mVertAccel;
             } else {
-                goomba->mVertSpeed = cstd::fdiv((a8 * -0x50) / 100, goomba->mFloorNormalY);
+                goomba->mVertSpeed = FX_Div((a8 * -0x50) / 100, goomba->mFloorNormalY);
             }
         }
         {
@@ -1678,7 +1658,7 @@ int daKrb_c::Behavior()
                                    (int)mAnmModel.file == (int)data_ov084_02130cc8.filePtr)) {
         mAnmModel.speed = 0x1000;
     } else {
-        int v = cstd::fdiv(mHorzSpeed, mScaleX * 2);
+        int v = FX_Div(mHorzSpeed, mScaleX * 2);
         if (v > 0x3000)
             v = 0x3000;
         mAnmModel.speed = v;

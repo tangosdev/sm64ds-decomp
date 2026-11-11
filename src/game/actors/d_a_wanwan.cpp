@@ -16,6 +16,7 @@
 
 #include "common.h"
 #include "daWanwan_c.h"
+#include "daBmb_c.h"
 #include "daObjPile_c.h"
 #include "daObjWanwanShutter_c.h"
 #include "SharedFilePtr.h"
@@ -27,6 +28,8 @@
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 enum {
     kYoshiEggId = 9,
@@ -66,22 +69,19 @@ extern WanwanAnimationFileHandle data_ov014_02114980;
 extern WanwanAnimationFileHandle data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern const Matrix4x3 IDENTITY_MATRIX4X3;
-extern s16 data_02082214[]; /* SINE_TABLE: sin, cos pairs */
 extern dCamera_c *gCamera;  /* CAMERA */
-
-void func_ov102_0214ae1c(void *bomb);
 
 short atan2_hold_d_a_wanwan_1(int y, int x);
 
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 /* local extern: CalcLib's declaration is unnamed; retain these names so this
  * TU's compiler-numbered aliases remain stable. */
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 int Vec3_HorzLen(void *v);
-int LenVec3(const Vector3 *v);
+int VEC_Mag(const Vector3 *v);
 short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 int AngleDiff(int a, int b);
@@ -96,7 +96,6 @@ s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
 
 namespace cstd {
 s16 atan2(s32, s32);
-int fdiv(int a, int b);
 }
 
 #define SetChompAnim(self, bca) \
@@ -339,8 +338,8 @@ void daWanwan_c::UpdateChainSegments() {
     }
 
     Matrix4x3_FromRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
-    MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
-    Vec3_Add(&tmp, (const Vector3 *)&mPosX, &rotated);
+    MTX_MultVec43(&head, &data_020a0e68, &rotated);
+    Vec3_Add(&tmp, &mPos, &rotated);
     saved.x = tmp.x;
     saved.y = tmp.y;
     saved.z = tmp.z;
@@ -375,7 +374,7 @@ void daWanwan_c::UpdateChainSegments() {
         angX = (short)(-cstd::atan2(dvec.y, Vec3_HorzLen(&dvec)));
         Matrix4x3_FromRotationY(&data_020a0e68, angY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
-        MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
+        MTX_MultVec43(&head, &data_020a0e68, &rotated);
 
         dst->x = seg->x;
         dst->y = seg->y;
@@ -458,7 +457,7 @@ void daWanwan_c::CapChainToPivot() {
         angX = (short)(-cstd::atan2(tmp.y, Vec3_HorzLen(&tmp)));
         Matrix4x3_FromRotationY(&data_020a0e68, angY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angX);
-        MulVec3Mat4x3(&head, &data_020a0e68, &rotated);
+        MTX_MultVec43(&head, &data_020a0e68, &rotated);
         sum.x = cur->x;
         sum.y = cur->y;
         sum.z = cur->z;
@@ -484,12 +483,12 @@ void daWanwan_c::PinChainToHead() {
     Vector3 diff;
     Vector3 scaled;
 
-    Vec3_Sub(&diff, (const Vector3 *)&mPosX, &mLinkPos[0]);
+    Vec3_Sub(&diff, &mPos, &mLinkPos[0]);
     p = &mLinkPos[0];
     i = 0;
     do {
         Vec3_MulScalar(&scaled, &diff, (7 - i) / 7);
-        AddVec3(p, &scaled, p);
+        VEC_Add(p, &scaled, p);
         i++;
         p++;
     } while (i < 7);
@@ -551,7 +550,7 @@ void daWanwan_c::HandleCylinderHit() {
     if (mState == 4)
         return;
     if ((int)(other->actorID == kBobOmbActorId) != 0) {
-        func_ov102_0214ae1c(other);
+        ((daBmb_c *)other)->func_ov102_0214ae1c();
         SetState(4);
     }
 }
@@ -564,13 +563,13 @@ void daWanwan_c::RestrictToChain() {
     int len;
     int lim;
     Vec3_Sub(&v, &mPos, (const Vector3 *)&mSpawnPosX);
-    len = LenVec3(&v);
+    len = VEC_Mag(&v);
     lim = mChainExtension * 7 + kRestLift;
     if (len <= lim)
         return;
-    v.x = FX_MUL(v.x, cstd::fdiv(lim, len));
-    v.y = FX_MUL(v.y, cstd::fdiv(lim, len));
-    v.z = FX_MUL(v.z, cstd::fdiv(lim, len));
+    v.x = FX_MUL(v.x, FX_Div(lim, len));
+    v.y = FX_MUL(v.y, FX_Div(lim, len));
+    v.z = FX_MUL(v.z, FX_Div(lim, len));
     Vec3_Add(&out, (Vector3 *)&mSpawnPosX, &v);
     mPosX = out.x;
     mPosY = out.y;
@@ -720,7 +719,6 @@ void daWanwan_c::StateAttackInit() {
     Vector3 tgt;
     daPly_c *player;
     int a;
-    int i;
     int v;
 
     mVertAccel = 0;
@@ -739,15 +737,14 @@ void daWanwan_c::StateAttackInit() {
     }
 
     a = (unsigned short)Vec3_VertAngle(&mPos, &tgt);
-    i = (a >> 4) << 1;
-    mVertSpeed = -FX_MUL(data_02082214[i], 0x8c000);
+    mVertSpeed = -FX_MUL(FX_SinIdx(a >> 4), 0x8c000);
     v = mVertSpeed;
     if (v < 0x5000)
         v = 0x5000;
     else if (v > 0x2d000)
         v = 0x2d000;
     mVertSpeed = v;
-    mHorzSpeed = FX_MUL(data_02082214[i + 1], 0x8c000);
+    mHorzSpeed = FX_MUL(FX_CosIdx(a >> 4), 0x8c000);
     mActionTimer = 0x3c;
 }
 
@@ -853,27 +850,9 @@ void daWanwan_c::StateEscapeDemoMain() {
             mReleaseSpeed = kChainMax;
         }
         {
-            Vector3 target;
-            s32 x = partnerPos.x;
-            target.x = x;
-            s32 z = partnerPos.z;
-            target.z = z;
-            s32 y = partnerPos.y;
-            target.y = y;
-            {
-                s16 *tbl = data_02082214;
-                u16 ang = fence->mAngleY;
-                s32 s = tbl[(ang >> 4) << 1];
-                s32 add = FX_MUL(s, 0x96000);
-                target.x = x + add;
-            }
-            {
-                s16 *tbl = data_02082214;
-                u16 ang = fence->mAngleY;
-                s32 s = tbl[(((ang >> 4) << 1) + 1)];
-                s32 add = FX_MUL(s, 0x96000);
-                target.z = z + add;
-            }
+            Vector3 target = partnerPos;
+            target.x += FX_MUL(FX_SinIdx((u16)fence->mAngleY >> 4), 0x96000);
+            target.z += FX_MUL(FX_CosIdx((u16)fence->mAngleY >> 4), 0x96000);
             if (Vec3_ApproachHorz(&mPos, &target, mReleaseSpeed) != 0) {
                 incRelease(this);
                 mPrevAngleY = (s16)(Vec3_HorzAngle(&mPos, &partnerPos) + 0x8000);

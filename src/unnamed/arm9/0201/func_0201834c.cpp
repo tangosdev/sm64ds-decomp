@@ -1,5 +1,5 @@
 //cpp
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "Memory.h"
 #include "private/fs_views.h"
 
@@ -11,8 +11,8 @@ extern int myFS_ReadFile(void *s, void *b, int c);
 extern int func_02018568(void *a);
 extern unsigned int func_02018ac4(void *p);
 extern void DecompressLZ16(void *src, void *dst);
-extern void CpuCopy8(const void *src, void *dst, unsigned int size);
-extern void Crash(void);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int size);
+extern void OS_Terminate(void);
 extern int FS_CloseFile(void *self);
 extern void func_02018770(void);
 
@@ -25,7 +25,7 @@ void *func_0201834c(FSFile *self, int flag) {
     unsigned int len = self->prop.file.bottom - self->prop.file.top;
     if (len > 8) {
         void *buf = Memory::Allocate(len, -4);
-        CP15::FlushAndInvalidateDataCache((unsigned int)buf, len);
+        DC_FlushRange(buf, len);
         int r = myFS_ReadFile(self, buf, len);
         if (r != len)
             return result;
@@ -35,16 +35,16 @@ void *func_0201834c(FSFile *self, int flag) {
             DecompressLZ16((void *)((char *)buf + 4), result);
         } else {
             result = Memory::Allocate(len);
-            CpuCopy8(buf, result, len);
+            MI_CpuCopy8(buf, result, len);
         }
         Memory::Deallocate(buf);
     } else {
-        Crash();
+        OS_Terminate();
     }
     FS_CloseFile(self);
     func_02018770();
     if (flag != 0)
-        CP15::FlushDataCache((unsigned int)result, len);
+        DC_StoreRange(result, len);
     return result;
 }
 }

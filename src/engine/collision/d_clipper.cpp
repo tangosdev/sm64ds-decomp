@@ -27,18 +27,16 @@
 #include "dClipper.h"
 #include "math/Matrix.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
-/* local extern: no non-generated header declares these vector helpers, the
-   cstd fdiv, or the sine/cosine pair table. */
-namespace cstd {
-int fdiv(s32, s32);
-}
+/* local extern: no non-generated header declares these vector helpers or the
+   sine/cosine pair table. */
 extern "C" {
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
-void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *result);
-void NormalizeVec3(const Vector3 *src, Vector3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *result);
+void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 }
-extern short data_02082214[];
 
 /* Signed distance of (x, y, z) from a frustum side plane, each product rounded to Fix12. */
 static inline int PlaneDistance(const ClipperPlane &n, long long x, long long y, long long z) {
@@ -121,7 +119,7 @@ int dClipper::ClipSphere(Vector3 &viewPos, Fix12i radius, u8 *cachedPlane) {
 
 int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i radius,
                                Vector3 &viewPos) {
-    MulVec3Mat4x3(&worldPos, &worldToView, &viewPos);
+    MTX_MultVec43(&worldPos, &worldToView, &viewPos);
     return ClipSphere(viewPos, radius, (u8 *)0);
 }
 
@@ -129,15 +127,14 @@ int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i
  * and near-plane distance.
  *
  * mFovAngle is an angle; its top 12 bits index a sine/cosine pair table at
- * data_02082214, and fdiv of that pair gives the tangent. Scaling by mNearZ
+ * FX_SinCosTable_, and fdiv of that pair gives the tangent. Scaling by mNearZ
  * (the plane distance) gives the half-height, and by mAspectRatio (the
  * aspect ratio) the half-width. The four corner vectors at z = -mNearZ
  * follow, and each adjacent pair crossed and normalised is one side plane's
  * normal.
  */
 void dClipper::UpdateFrustumPlanes() {
-    int angleIndex = (int)mFovAngle >> 4;
-    int tanHalfFov = cstd::fdiv(data_02082214[2 * angleIndex], data_02082214[2 * angleIndex + 1]);
+    int tanHalfFov = FX_Div(FX_SinIdx(mFovAngle >> 4), FX_CosIdx(mFovAngle >> 4));
     Fix12i halfHeight = FX_MUL(mNearZ, tanHalfFov);
     Fix12i halfWidth = FX_MUL(mAspectRatio, halfHeight);
     Vector3 corner0, corner1, corner2, corner3;
@@ -153,14 +150,14 @@ void dClipper::UpdateFrustumPlanes() {
     corner3.x = halfWidth;
     corner3.y = -halfHeight;
     corner3.z = -mNearZ;
-    CrossVec3(&corner1, &corner0, (Vector3 *)&mPlaneNormals[0]);
-    CrossVec3(&corner2, &corner1, (Vector3 *)&mPlaneNormals[1]);
-    CrossVec3(&corner3, &corner2, (Vector3 *)&mPlaneNormals[2]);
-    CrossVec3(&corner0, &corner3, (Vector3 *)&mPlaneNormals[3]);
-    NormalizeVec3((Vector3 *)&mPlaneNormals[0], (Vector3 *)&mPlaneNormals[0]);
-    NormalizeVec3((Vector3 *)&mPlaneNormals[1], (Vector3 *)&mPlaneNormals[1]);
-    NormalizeVec3((Vector3 *)&mPlaneNormals[2], (Vector3 *)&mPlaneNormals[2]);
-    NormalizeVec3((Vector3 *)&mPlaneNormals[3], (Vector3 *)&mPlaneNormals[3]);
+    VEC_CrossProduct(&corner1, &corner0, (Vector3 *)&mPlaneNormals[0]);
+    VEC_CrossProduct(&corner2, &corner1, (Vector3 *)&mPlaneNormals[1]);
+    VEC_CrossProduct(&corner3, &corner2, (Vector3 *)&mPlaneNormals[2]);
+    VEC_CrossProduct(&corner0, &corner3, (Vector3 *)&mPlaneNormals[3]);
+    VEC_Normalize((Vector3 *)&mPlaneNormals[0], (Vector3 *)&mPlaneNormals[0]);
+    VEC_Normalize((Vector3 *)&mPlaneNormals[1], (Vector3 *)&mPlaneNormals[1]);
+    VEC_Normalize((Vector3 *)&mPlaneNormals[2], (Vector3 *)&mPlaneNormals[2]);
+    VEC_Normalize((Vector3 *)&mPlaneNormals[3], (Vector3 *)&mPlaneNormals[3]);
 }
 
 /* The former `Ev` spelling claimed this method took no arguments, contradicting

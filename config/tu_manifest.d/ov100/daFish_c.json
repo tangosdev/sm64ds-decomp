@@ -625,34 +625,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@763",
+      "from": "@709",
       "to": "@152",
-      "evidence": "compiler temporary; mwcc numbers it @679 per TU and ov070 daKrpa_c (this batch) also defines a global @679, so the scratch link collides"
+      "evidence": "compiler temporary; mwcc numbers it @679 per TU and ov070 daKrpa_c (this batch) also defines a global @679, so the scratch link collides Re-keyed from @763 to @709 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@764",
+      "from": "@710",
       "to": "@153",
-      "evidence": "compiler temporary; mwcc numbers it @680 per TU and ov070 daKrpa_c (this batch) also defines a global @680, so the scratch link collides"
+      "evidence": "compiler temporary; mwcc numbers it @680 per TU and ov070 daKrpa_c (this batch) also defines a global @680, so the scratch link collides Re-keyed from @764 to @710 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@765",
+      "from": "@711",
       "to": "@154",
-      "evidence": "compiler temporary; mwcc numbers it @681 per TU and ov070 daKrpa_c (this batch) also defines a global @681, so the scratch link collides"
+      "evidence": "compiler temporary; mwcc numbers it @681 per TU and ov070 daKrpa_c (this batch) also defines a global @681, so the scratch link collides Re-keyed from @765 to @711 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@766",
+      "from": "@712",
       "to": "@155",
-      "evidence": "compiler temporary; mwcc numbers it @682 per TU and ov070 daKrpa_c (this batch) also defines a global @682, so the scratch link collides"
+      "evidence": "compiler temporary; mwcc numbers it @682 per TU and ov070 daKrpa_c (this batch) also defines a global @682, so the scratch link collides Re-keyed from @766 to @712 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@767",
+      "from": "@713",
       "to": "@156",
-      "evidence": "compiler temporary; mwcc numbers it @683 per TU and ov070 daKrpa_c (this batch) also defines a global @683, so the scratch link collides"
+      "evidence": "compiler temporary; mwcc numbers it @683 per TU and ov070 daKrpa_c (this batch) also defines a global @683, so the scratch link collides Re-keyed from @767 to @713 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@768",
+      "from": "@714",
       "to": "@157",
-      "evidence": "compiler temporary; mwcc numbers it @684 per TU and ov070 daKrpa_c (this batch) also defines a global @684, so the scratch link collides"
+      "evidence": "compiler temporary; mwcc numbers it @684 per TU and ov070 daKrpa_c (this batch) also defines a global @684, so the scratch link collides Re-keyed from @768 to @714 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

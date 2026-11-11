@@ -1,5 +1,5 @@
 //cpp
-#include "GX.h"
+#include "nitro/gx/gx_load.h"
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
 #include "Ov007Display.h"
@@ -33,7 +33,7 @@ void func_ov007_020bcdb8(int idx) {
     int slot = idx + 0x17 + (k << 1);
     Ov007CharRecord *rec = func_ov007_020c99d8((int)func_ov007_020b3f20(slot));
     func_ov007_020c33d0(rec, 5, 0);
-    GX::LoadOBJ(rec->tiles, 0, 0x2000);
+    GX_LoadOBJ(rec->tiles, 0, 0x2000);
     func_ov007_020c3544(rec);
     func_ov007_020b3edc(slot);
 }
