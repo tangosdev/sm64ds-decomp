@@ -432,7 +432,7 @@ void lab_warp() {
     if (at == -2) { at = -1; if (const char *e = std::getenv("SM64DS_GHOST_LAB_WARP")) std::sscanf(e, "%d:%d:%d", &at, &lv, &ac); }
     if (at < 0 || g_lf != (unsigned)at) return;
     std::fprintf(stderr, "[geggs] LAB warp lf=%u to level %d act %d\n", g_lf, lv, ac);
-    LoadLevelNoReturn((unsigned)lv, 0, (unsigned)ac, 1);
+    LoadLevelNoReturn((unsigned)lv, 0, (unsigned)ac, 0);   // reason 0, as a real move: 1 runs the cartridge's course-clear coin tally
 }
 
 void ghost_eggs_party_frame(char *me, int level, void (*send)(const GhostEggRec &rec, int vx, int vy, int vz)) {
