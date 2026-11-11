@@ -48,7 +48,11 @@
 extern "C" {
 void *sTrmpLinePlttAddr;
 void *sTrmpLineTexAddr;
+int sTrmpItemsHit;
+int sTrmpItemsActive;
 char *sTrmpItems;
+int sTrmp2Score;
+int sTrmpItemCount;
 void *sTrmp2MarioPtrs[5];
 void *sTrmpJumpers[5];
 }

@@ -59,6 +59,7 @@ struct PathLiftState {
    label number, and every @NNN of the state table would move up by one. */
 struct BMD_File;
 struct PathStuff {
+    u16 fileID;
     u8 numRefs;
     void *filePtr;
 };
