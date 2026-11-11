@@ -1,12 +1,11 @@
 //cpp
 #include "nitro/fx/fx_cp.h"
+#include "nitro/hw/registers.h"
 
 extern "C" {
 /* opt_strength_reduction stays off: with it on the row walks become induction
    variables and the function grows to 0x460 against the ROM's 0x440. */
 #pragma opt_strength_reduction off
-
-typedef unsigned short u16;
 
 void func_ov007_020c49bc(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, u16 *arg6,
                          int arg7) {
@@ -76,7 +75,7 @@ void func_ov007_020c49bc(int arg0, int arg1, int arg2, int arg3, int arg4, int a
             temp_r7 = arg4 << 0xF;
             sp38 = sp10;
             do {
-                *(volatile int *)0x04000500 = sp34;
+                REG_BEGIN_VTXS = sp34;
                 temp_r1_2 = sp4 + sp28;
                 var_r8 = sp38;
                 temp_r0 = spC * (sp8 - sp10);
@@ -92,28 +91,28 @@ void func_ov007_020c49bc(int arg0, int arg1, int arg2, int arg3, int arg4, int a
                         var_r8 += 1;
                         temp_r0_2 = sp0 + var_r6;
                         temp_r1_3 = (temp_r0_2 << 8) >> 0x10;
-                        *(volatile int *)0x04000488 = temp_r4 | (u16)temp_r1_3;
-                        *(volatile int *)0x0400048C = sp4C | (u16)(short)var_r5;
+                        REG_TEXCOORD = temp_r4 | (u16)temp_r1_3;
+                        REG_VTX_16 = sp4C | (u16)(short)var_r5;
                         temp_r0_3 = ((temp_r0_2 + temp_r7) << 8) >> 0x10;
-                        *(volatile int *)0x0400048C = sp3C;
-                        *(volatile int *)0x04000488 = temp_r3 | (u16)temp_r1_3;
-                        *(volatile int *)0x0400049C = sp30;
-                        *(volatile int *)0x04000488 = temp_r3 | (u16)temp_r0_3;
-                        *(volatile int *)0x04000498 = (int)(u16)(short)(temp_sb * var_r8);
-                        *(volatile int *)0x04000488 = temp_r4 | (u16)temp_r0_3;
-                        *(volatile int *)0x0400049C = (int)temp_lr;
+                        REG_VTX_16 = sp3C;
+                        REG_TEXCOORD = temp_r3 | (u16)temp_r1_3;
+                        REG_VTX_YZ = sp30;
+                        REG_TEXCOORD = temp_r3 | (u16)temp_r0_3;
+                        REG_VTX_XZ = (int)(u16)(short)(temp_sb * var_r8);
+                        REG_TEXCOORD = temp_r4 | (u16)temp_r0_3;
+                        REG_VTX_YZ = (int)temp_lr;
                         var_r6 += temp_r7;
                         var_r5 += temp_sb;
                     } while (var_r8 < temp_sl);
                 }
-                *(volatile int *)0x04000504 = sp40;
+                REG_END_VTXS = sp40;
                 sp28 += sp2C;
                 temp_r1 = sp10 + 1;
                 sp10 = temp_r1;
             } while (temp_r1 < sp8);
         }
     } else {
-        *(volatile int *)0x04000500 = 1;
+        REG_BEGIN_VTXS = 1;
         sp14 = 0;
         if (sp8 > 0) {
             sp18 = 0;
@@ -138,16 +137,15 @@ void func_ov007_020c49bc(int arg0, int arg1, int arg2, int arg3, int arg4, int a
                             temp_r1_7 = (u16)((temp_r6 << 8) >> 0x10);
                             temp_r4_3 = (u16)(((temp_r6 + 0x8000) << 8) >> 0x10);
                             temp_r0_5 = (u16)(((temp_r1_6 + 0x8000) << 8) >> 0x10);
-                            *(volatile int *)0x04000488 = temp_r1_7 | (temp_r3_2 << 0x10);
-                            *(volatile int *)0x0400048C = sp1C | (u16)(short)var_r5_2;
-                            *(volatile int *)0x0400048C = sp48;
-                            *(volatile int *)0x04000488 = temp_r1_7 | (temp_r0_5 << 0x10);
-                            *(volatile int *)0x0400049C = sp20;
-                            *(volatile int *)0x04000488 = temp_r4_3 | (temp_r0_5 << 0x10);
-                            *(volatile int *)0x04000498 =
-                                (int)(u16)(short)(temp_sb * (var_r8_2 + 1));
-                            *(volatile int *)0x04000488 = temp_r4_3 | (temp_r3_2 << 0x10);
-                            *(volatile int *)0x0400049C = sp24;
+                            REG_TEXCOORD = temp_r1_7 | (temp_r3_2 << 0x10);
+                            REG_VTX_16 = sp1C | (u16)(short)var_r5_2;
+                            REG_VTX_16 = sp48;
+                            REG_TEXCOORD = temp_r1_7 | (temp_r0_5 << 0x10);
+                            REG_VTX_YZ = sp20;
+                            REG_TEXCOORD = temp_r4_3 | (temp_r0_5 << 0x10);
+                            REG_VTX_XZ = (int)(u16)(short)(temp_sb * (var_r8_2 + 1));
+                            REG_TEXCOORD = temp_r4_3 | (temp_r3_2 << 0x10);
+                            REG_VTX_YZ = sp24;
                         }
                         var_r5_2 += temp_sb;
                         var_r8_2 += 1;
@@ -159,6 +157,6 @@ void func_ov007_020c49bc(int arg0, int arg1, int arg2, int arg3, int arg4, int a
             } while (temp_r1_4 < sp8);
         }
     }
-    *(volatile int *)0x04000504 = 0;
+    REG_END_VTXS = 0;
 }
 }

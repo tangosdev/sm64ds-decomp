@@ -1295,10 +1295,9 @@ s32 dScMgSnowball_c::Render() {
     m[1] = 0;
     m[0] = 0;
     func_0203cd80(m, -0x2000);
-    *(volatile int *)0x040004c8 = (((short)m[0] >> 3) & 0x3ff) |
-                                  ((((short)m[1] >> 3) & 0x3ff) << 10) |
-                                  ((((short)m[2] >> 3) & 0x3ff) << 20);
-    *(int *)0x040004cc = 0x7fff;
+    REG_LIGHT_VECTOR = (((short)m[0] >> 3) & 0x3ff) | ((((short)m[1] >> 3) & 0x3ff) << 10) |
+                       ((((short)m[2] >> 3) & 0x3ff) << 20);
+    REG_LIGHT_COLOR = 0x7fff;
 
     {
         int t = mBallSize / 2 + mBallSize * 4;

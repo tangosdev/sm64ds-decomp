@@ -9,6 +9,7 @@
 #include "math/CalcLib.h"
 #include "nitro/fx/fx.h"
 #include "nitro/gx/g3imm.h"
+#include "nitro/hw/registers.h"
 #include "nitro/fx/fx_cp.h"
 
 /* ROM order: the ENTRY factory, then EntryMesh (0x0211a948..0x0211b524). */
@@ -57,24 +58,20 @@ struct EntryMeshTexture : SharedFilePtr {
 extern EntryMeshTexture EntryMeshTextureFile;
 extern EntryMeshHandler EntryMeshHandlers[3];
 
-#define reg_G3_DIF_AMB        (*(volatile u32 *)0x040004c0)
-#define reg_G3_SPE_EMI        (*(volatile u32 *)0x040004c4)
-#define reg_G3_POLYGON_ATTR   (*(volatile u32 *)0x040004a4)
-
 /* Push the cached material to the geometry engine: diffuse/ambient,
  * specular/emission, the texture image param and the palette base, then a
  * fixed polygon attribute, through NitroSDK's G3 immediate inlines. Same
  * shape as daPicGate_c::LoadMaterial. */
 void EntryMesh::SendMaterial() {
-    reg_G3_DIF_AMB = mMaterial.difAmb;
-    reg_G3_SPE_EMI = mMaterial.speEmi;
+    REG_DIF_AMB = mMaterial.difAmb;
+    REG_SPE_EMI = mMaterial.speEmi;
     G3_TexImageParam((GXTexFmt)((mMaterial.param >> 0x1a) & 7), GX_TEXGEN_NONE,
                      (GXTexSizeS)((mMaterial.param >> 0x14) & 7),
                      (GXTexSizeT)((mMaterial.param >> 0x17) & 7), GX_TEXREPEAT_NONE,
                      GX_TEXFLIP_NONE, (GXTexPlttColor0)((mMaterial.param >> 0x1d) & 1),
                      mMaterial.texAddr);
     G3_TexPlttBase(mMaterial.pltAddr, (GXTexFmt)((mMaterial.param >> 0x1a) & 7));
-    reg_G3_POLYGON_ATTR = 0x11f0088;
+    REG_POLYGON_ATTR = 0x11f0088;
 }
 
 /* Build mMtx from mPos (recentred on the 0xfa000 grid middle, in 1/8

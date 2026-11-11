@@ -23,6 +23,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g3imm.h"
+#include "nitro/gx/g3imm_cmd.h"
 #include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "common.h"
@@ -1231,11 +1232,6 @@ extern "C" void G3_LoadMtx43(int *m);
 #define PATCH_VTX(obj) ((Vec3 *)TRMPLINE(obj)->mVerts)
 #define PATCH_NRM(obj) (TRMPLINE(obj)->mPackedNormals)
 
-static inline void G3_Vtx(s16 x, s16 y, s16 z) {
-    REG_VTX_16 = (u16)x | ((u16)y << 16);
-    REG_VTX_16 = (u16)z;
-}
-
 #define SEND_VTX(p) G3_Vtx((s16)((p)->x >> 8), (s16)((p)->y >> 8), (s16)((p)->z >> 8))
 
 /* Loads the object's placement and scale matrices, then draws its 4x4 vertex
@@ -1253,15 +1249,13 @@ extern "C" void TrmpLine_Draw(char *obj) {
     Matrix4x3_ApplyInPlaceToScale(&data_020a0e68, TRMPLINE(obj)->mScale.x, TRMPLINE(obj)->mScale.y,
                                   TRMPLINE(obj)->mScale.z);
     MTX_Concat43(&data_020a0e68, &data_0209b3ec, &m2);
-    REG_MTX_MODE = 2;
+    G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(m1.m);
-    REG_MTX_MODE = 1;
+    G3_MtxMode(GX_MTXMODE_POSITION);
     G3_LoadMtx43(m2.m);
-    REG_MTX_SCALE = 0x100000;
-    REG_MTX_SCALE = 0x100000;
-    REG_MTX_SCALE = 0x100000;
-    REG_MTX_MODE = 3;
-    REG_MTX_IDENTITY = 0;
+    G3_Scale(0x100000, 0x100000, 0x100000);
+    G3_MtxMode(GX_MTXMODE_TEXTURE);
+    G3_Identity();
     G3_TexImageParam(GX_TEXFMT_PLTT16, GX_TEXGEN_NORMAL, GX_TEXSIZE_S32, GX_TEXSIZE_T64,
                      GX_TEXREPEAT_ST, GX_TEXFLIP_S, GX_TEXPLTTCOLOR0_USE, (u32)sTrmpLineTexAddr);
     G3_TexPlttBase((u32)sTrmpLinePlttAddr, GX_TEXFMT_PLTT16);
@@ -1287,7 +1281,7 @@ extern "C" void TrmpLine_Draw(char *obj) {
         int *n0 = &PATCH_NRM(obj)[i * 4];
         int *n1 = &PATCH_NRM(obj)[(i + 1) * 4];
         int k;
-        REG_BEGIN_VTXS = 2;
+        G3_Begin(GX_BEGIN_TRIANGLE_STRIP);
         for (k = 0; k < 4; k++) {
             REG_TEXCOORD = sTrmpLineTexCoords[i * 4 + k];
             REG_NORMAL = -*n0 & 0x3fffffff;
@@ -1300,7 +1294,7 @@ extern "C" void TrmpLine_Draw(char *obj) {
             SEND_VTX(v1);
             v1++;
         }
-        REG_END_VTXS = 0;
+        G3_End();
     }
 
     /* front face: row i+1 then row i */
@@ -1310,7 +1304,7 @@ extern "C" void TrmpLine_Draw(char *obj) {
         int *n0 = &PATCH_NRM(obj)[i * 4];
         int *n1 = &PATCH_NRM(obj)[(i + 1) * 4];
         int k;
-        REG_BEGIN_VTXS = 2;
+        G3_Begin(GX_BEGIN_TRIANGLE_STRIP);
         for (k = 0; k < 4; k++) {
             REG_TEXCOORD = sTrmpLineTexCoords[(i + 1) * 4 + k];
             REG_NORMAL = *n1;
@@ -1323,7 +1317,7 @@ extern "C" void TrmpLine_Draw(char *obj) {
             SEND_VTX(v0);
             v0++;
         }
-        REG_END_VTXS = 0;
+        G3_End();
     }
 }
 }
@@ -2050,7 +2044,7 @@ extern Matrix4x3 data_0209b3ec; /* local extern: the view matrix (Graphics3D.cpp
 }
 extern "C" void TrmpLine_DrawAll(void) {
     int light[3];
-    REG_MTX_MODE = 2;
+    G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(&data_0209b3ec);
     light[0] = 0;
     light[1] = 0;
