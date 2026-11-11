@@ -8,5 +8,6 @@
 struct Quaternion {
     Fix12i x, y, z, w;
 };
+typedef char Quaternion_size_must_be_0x10[sizeof(struct Quaternion) == 0x10 ? 1 : -1];
 
 #endif

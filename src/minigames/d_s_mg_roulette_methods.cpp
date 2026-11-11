@@ -141,7 +141,7 @@ extern int data_020a0db0;
    marker: {0, 2, 6, 8} for strips 0..3. A horizontal pair adds 2. */
 extern s32 sRouletteStripSpriteBase[];
 extern void *sRouletteStripSprites[];
-extern void *sRouletteTextSpritesByLanguage[];
+extern void **sRouletteTextSpritesByLanguage[];
 extern int sRoulettePayoutMultipliers[];
 extern void *sRouletteRacerSprites;
 extern Matrix4x3 data_020a0e68;
@@ -1228,9 +1228,7 @@ void RouletteBoard_StateSlow(RouletteBoard *board) {
 
 extern "C" void RouletteBoard_Update(RouletteBoard *c) {
     c->mBoardAngle += c->mBoardSpin;
-    /* -boardAngle lands at bones + 0x82, inside the third 0x40-byte
-       BMD_Bone's unk_00; BMD_File.h names no field there. */
-    *(short *)((char *)c->mWheel.data.bones + 0x82) = (short)(-c->mBoardAngle);
+    c->mWheel.data.bones[2].rotX = -c->mBoardAngle;
     c->mWheel.UpdateVerts();
     Matrix4x3_FromTranslation(&data_020a0e68, 0, 0, 0);
     c->mWheel.mat4x3 = data_020a0e68;
@@ -1278,7 +1276,7 @@ void RouletteStrip_AddRacer(RouletteStrip *strip, RouletteRacer *racer) {
 extern "C" {
 void RouletteStrip_Draw(RouletteStrip *strip, int y) {
     int idx = GetGameLanguage();
-    void *p = *(void **)((char *)sRouletteTextSpritesByLanguage[idx] + 0x50);
+    void *p = sRouletteTextSpritesByLanguage[idx][20];
     Hud_RenderSprite(p, 0xc, y, -1, -1);
 
     Mg_DrawBigNumber(0x1e, y, sRoulettePayoutMultipliers[strip->payoutIndex], 0, -1, 2, 0);

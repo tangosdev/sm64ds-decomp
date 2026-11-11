@@ -21378,7 +21378,12 @@ s32 daPly_c::InitResources() {
     int StartWithFarCamera(void);
     /* local extern: `new Vector3[50]` elides both structor args to 0 because
        types.h's ctor/dtor are inline-empty; the ROM passes them, so the
-       __cxa_vec_new call is spelled by hand. The two callees cannot be renamed
+       __cxa_vec_new call is spelled by hand. Measured under the pin: mwccarm
+       elides each pointer independently when that structor's empty inline
+       body is visible where the new-expression is parsed; a body defined
+       after it is passed (and locals still inline it). types.h defines both
+       in the class, so only a shared-header change could pass them here, and
+       __cxa_vec_ctor (member arrays) never elides. The two callees cannot be renamed
        to readable aliases: enroll.candidates() enrolls the defining file for
        every symbols.txt row at its address, so a second name at a compiled
        function's address fails its isolate (one emitted def only), and
@@ -21422,7 +21427,7 @@ s32 daPly_c::InitResources() {
             if (sub != cur) {
                 data_02092114 = -1;
                 sub = cur;
-                data_02092128[mPlayerNo] = *(volatile u8*)(&mCharacter);
+                data_02092128[mPlayerNo] = mCharacter;
                 changed = 1;
             }
         }
@@ -21512,8 +21517,6 @@ Ld0:
 }
 
 /* defined in src/game/actors/d_a_obj1up_logo.cpp */
-#pragma push
-#pragma opt_propagation off
 extern "C" {
 void daPly_c::func_ov002_020e5948() {
     extern s8 gNumStageStars[];
@@ -21527,8 +21530,6 @@ void daPly_c::func_ov002_020e5948() {
     s32 j;
     s32 bodyId;
     void* ma;
-    void* t;
-    s32 t2;
     void* p;
     s32 n;
     s32 k;
@@ -21750,12 +21751,8 @@ void daPly_c::func_ov002_020e5948() {
 
     bodyId = GetBodyModelID(3, 0);
     ma = player->mModels.mBodyModels[bodyId];
-    {
-        u8 pid = player->mPlayerNo;
-        t = ((dExtAnmModel_c *)ma)->data.materials;
-        t2 = *(s32*)((char*)t + 0x20);
-        player->mVsYoshiMaterialParam = t2 + (pid << 1);
-    }
+    player->mVsYoshiMaterialParam =
+        (player->mPlayerNo << 1) + ((dExtAnmModel_c *)ma)->data.materials->texImageParam;
 
     n = 0;
     {
@@ -21796,7 +21793,6 @@ void daPly_c::func_ov002_020e5948() {
                                              0);
 }
 }
-#pragma pop
 
 extern "C" {
 void daPly_c::PlayCharacterSound() {
