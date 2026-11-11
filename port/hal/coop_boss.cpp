@@ -596,7 +596,7 @@ void read_env() {
     g_face = flag("SM64DS_COOP_BOSS_FACE", false);
     check_descriptors();
     g_deadmark = flag("SM64DS_COOP_BOSS_DEADMARK", true);
-    g_minion_share = flag("SM64DS_COOP_GOOMBAS", true);
+    g_minion_share = g_on && flag("SM64DS_COOP_GOOMBAS", true);   // INT: boss sync off (SM64DS_COOP_BOSS=0) keeps the goombas as in 1.0.2 too
     if (const char *mk = std::getenv("SM64DS_COOP_GOOMBA_KILL")) {
         const char *p = mk;
         while (*p && g_nmkill < 8) {
@@ -2031,7 +2031,8 @@ bool coop_boss_minion_mine(const char *minion) {
     if (!boss || *(const unsigned short *)(boss + 0x0c) != 198) return false;
     read_env();
     if (!g_minion_share) return false;                       // control: nothing is announced, each console keeps its own set
-    if (!g_on || !coop_world_active() || !coop_group_established()) return true;
+    if (!g_on) return false;                                 // INT (REVIEW-A note 1): boss sync off, no shared set and nothing announced
+    if (!coop_world_active() || !coop_group_established()) return true;
     const short slot = rd16(boss, 0xce);
     if (slot < 0 || slot >= kSlots) return true;
     if (g_my < 0) g_my = comms_hub_my_seat();
