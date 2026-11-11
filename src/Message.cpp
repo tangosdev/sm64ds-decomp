@@ -1077,79 +1077,66 @@ extern "C" void func_0201eaac(void)
 
 void Message::DisplaySaving(unsigned short n)
 {
-    volatile int li;
-    volatile unsigned short ls;
-    int p;
-    int s;
-    u8* scr;
+    volatile int zero;
+    volatile unsigned short blank;
+    u8 *map;
     int i;
     int cols;
     int rem;
     int idx;
-    int one;
-    int v7f;
-    int v87;
-    int v43;
-    unsigned w;
+    unsigned tiles;
     MessageEntry *base;
     MessageEntry *entry;
 
     data_0209d6d4 = (s16)n;
     func_0201eaac();
 
-    one = 1;
-    v7f = 0x7f;
-    v87 = 0x87;
     data_0209d67c = 0x3c;
-    data_0209d660 = (u8)one;
-    data_0209d654 = (u8)one;
-    gMsgBoxWinLeft = (u8)v7f;
-    gMsgBoxWinTop = (u8)v87;
+    data_0209d660 = 1;
+    data_0209d654 = 1;
+    gMsgBoxWinLeft = 0x7f;
+    gMsgBoxWinTop = 0x87;
     gMsgBoxStyle = 0;
     func_02012790(4);
 
     idx = data_0209d6d4;
     base = data_0209d708;
     entry = (MessageEntry *)((char *)base + idx * 8);
-    data_0209d6f0 = (u8*)entry;
+    data_0209d6f0 = (u8 *)entry;
     data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
                     ((MessageEntry *)((char *)base + idx * 8))->textOffset;
 
-    w = entry->width;
-    w = w >> 3;
-    data_0209d6a8 = (u8)((int)(w * 9 + 7) / 8);
-    gMsgBoxLeft = (u8)(((0x20 - ((int)data_0209d6a8 + 2)) / 2) << 3);
-    gMsgBoxCenterX = (u8)v7f;
-    v43 = 0x43;
-    gMsgBoxCenterY = (u8)v43;
-    gMsgBoxTop = (u8)(0x44 - (int)(((((int)entry->lineCount << 1) + 1) << 3) / 2));
-    gMsgBoxWinLeft = (u8)v7f;
-    gMsgBoxWinTop = (u8)v43;
+    tiles = entry->width / 8;
+    data_0209d6a8 = (u8)((int)(tiles * 9 + 7) / 8); /* an eighth wider than the text */
+    gMsgBoxLeft = (u8)((0x20 - (data_0209d6a8 + 2)) / 2 * 8);
+    gMsgBoxCenterX = 0x7f;
+    gMsgBoxCenterY = 0x43;
+    gMsgBoxTop = (u8)(0x44 - (entry->lineCount * 2 + 1) * 8 / 2);
+    gMsgBoxWinLeft = 0x7f;
+    gMsgBoxWinTop = 0x43;
     data_0209d680 = 0;
     data_0209d65c = 0;
 
-    p = (int)G2_GetBG3CharPtr() + 0x4000;
-    li = 0;
-    MIi_CpuClear32(li, (int *)p, 0x2000);
+    {
+        void *chars = (char *)G2_GetBG3CharPtr() + 0x4000;
+        zero = 0;
+        MIi_CpuClear32(zero, (int *)chars, 0x2000);
+    }
+    {
+        void *scr = G2_GetBG3ScrPtr();
+        blank = 0x2ff;
+        MIi_CpuClear16(blank, (char *)scr, 0x800);
+    }
 
-    s = (int)G2_GetBG3ScrPtr();
-    ls = 0x2ff;
-    MIi_CpuClear16(ls, (char *)s, 0x800);
-
-    scr = (u8 *)((char *)G2_GetBG3ScrPtr() + 0x42);
-    SetBg3Offset(-(int)gMsgBoxLeft, 4 - (int)gMsgBoxTop);
+    map = (u8 *)G2_GetBG3ScrPtr() + 0x42;
+    SetBg3Offset(-gMsgBoxLeft, 4 - gMsgBoxTop);
 
     cols = data_0209d6a8;
-    i = 0;
-    if ((cols * (int)((MessageEntry *)data_0209d6f0)->lineCount) * 2 > 0) {
-        int last = cols - 1;
-        do {
-            rem = i % cols;
-            *(u16*)(scr + (rem << 1)) = (u16)(i + 0x200);
-            if (last == rem)
-                scr += 0x40;
-            i++;
-        } while (i < (cols * (int)((MessageEntry *)data_0209d6f0)->lineCount) * 2);
+    for (i = 0; i < cols * ((MessageEntry *)data_0209d6f0)->lineCount * 2; i++) {
+        rem = i % cols;
+        *(u16 *)(map + rem * 2) = i + 0x200;
+        if (cols - 1 == rem)
+            map += 0x40;
     }
 
     while (data_0209d6bc < 4)
@@ -1186,51 +1173,51 @@ extern "C" void func_0201ef38(void) {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
 }
 
+/* Shows a credit text (message arg + 0x24e) on the sub screen's BG0: clears
+   all of BG0's character tiles, then lays the message out one 32-tile line
+   at a time, centred vertically on the screen. A negative arg only clears. */
 extern "C" void func_0201ef50(int arg)
 {
-    volatile int li;
-    volatile int li2;
-    int b;
-    int new_var;
-    int t;
+    volatile int zero;
+    volatile int lineZero;
+    int lines;
+    int top;
     int idx;
-    int sl;
-    int cp;
+    int charOffset;
+    char *chars;
+    char *line;
+
     func_0201eaac();
     data_0209d660 = 0;
     gMsgBoxStyle = 0;
     data_0209d690 = 1;
-    cp = (u32)G2S_GetBG0CharPtr();
-    li = 0;
-    MIi_CpuClear32(li, (int *)cp, 0x8000);
+    chars = (char *)G2S_GetBG0CharPtr();
+    zero = 0;
+    MIi_CpuClear32(zero, (int *)chars, 0x8000);
     if (arg < 0)
-    {
         return;
-    }
-    data_0209d6d4 = (s16) (arg + 0x24e);
+
+    data_0209d6d4 = (s16)(arg + 0x24e);
     idx = data_0209d6d4;
-    data_0209d6f0 = (u8 *) (((char *) data_0209d708) + (idx * 8));
-    data_0209d6f4 = ((data_0209d6fc + 0x28) + data_0209d70c[1]) +
-                    ((MessageEntry *)(((char *)data_0209d708) + (idx * 8)))->textOffset;
+    data_0209d6f0 = (u8 *)((char *)data_0209d708 + idx * 8);
+    data_0209d6f4 = data_0209d6fc + 0x28 + data_0209d70c[1] +
+                    ((MessageEntry *)((char *)data_0209d708 + idx * 8))->textOffset;
     data_0209d6a8 = 0x20;
     data_0209d680 = 0;
     data_0209d65c = 0;
-    b = ((MessageEntry *)(((char *)data_0209d708) + (idx * 8)))->lineCount;
-    t = 0xc - b;
-    sl = (u16) (t << 10);
-    data_0209d6e0 = (s16) (t << 5);
-    while (data_0209d6bc != 8)
-    {
+    lines = ((MessageEntry *)((char *)data_0209d708 + idx * 8))->lineCount;
+    top = 0xc - lines;
+    charOffset = (u16)(top << 10);
+    data_0209d6e0 = (s16)(top << 5);
+    while (data_0209d6bc != 8) {
         func_0201b6f8(0);
-        data_0209d65c = (0x100 - ((int) data_0209d6b0)) >> 1;
-        cp = (u32)G2S_GetBG0CharPtr();
-        new_var = cp;
-        new_var = new_var + sl;
-        li2 = 0;
-        MIi_CpuClear32(li2, (int *)new_var, 0x800);
+        data_0209d65c = (0x100 - data_0209d6b0) >> 1;
+        line = (char *)G2S_GetBG0CharPtr() + charOffset;
+        lineZero = 0;
+        MIi_CpuClear32(lineZero, (int *)line, 0x800);
         Message::LayoutLine();
         func_0201b388(0x20);
-        sl = (u16) (sl + 0x800);
+        charOffset = (u16)(charOffset + 0x800);
         data_0209d6e0 = data_0209d6e0 + 0x40;
     }
 }
