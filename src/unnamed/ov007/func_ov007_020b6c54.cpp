@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "G3X.h"
+#include "nitro/gx/g3x.h"
 
 extern "C" {
 void func_ov007_020b6c54(void) {
@@ -9,6 +9,6 @@ void func_ov007_020b6c54(void) {
     *reg = (*reg & ~0x3000) | 8;
     *reg = *reg & ~0x3002;
     *(int *)0x4000540 = 2;
-    G3X::SetClearColor(0, 0, 0x7fff, 0x3f, 0);
+    G3X_SetClearColor(0, 0, 0x7fff, 0x3f, 0);
 }
 }

@@ -2,9 +2,9 @@
 #include "nitro/fx/fx.h"
 #include "Ov007Spring.h"
 
-extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void func_02053320(int s, int *a, int *b, int *out);
-extern int DotVec3(const Vector3 *a, const Vector3 *b);
+extern void VEC_Subtract(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void VEC_MultAdd(int s, int *a, int *b, int *out);
+extern int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
 
 /* func_ov007_020c7560's spring step that holds the link's rest length: adds
  * -r5 times the stretch along the unit from - to direction into each end's
@@ -19,7 +19,7 @@ void func_ov007_020c7d60(Ov007Link *link, int r5, int r4) {
     Vector3 v1, v2;
     int delta;
 
-    SubVec3((Vector3 *)link->from->target, (Vector3 *)link->to->target, (Vector3 *)&d);
+    VEC_Subtract((Vector3 *)link->from->target, (Vector3 *)link->to->target, (Vector3 *)&d);
 
     /* x-first in source; mwccarm emits y-first loads (same as Vec3_DistSq) */
     sq = (s64)(d.x) * (d.x);
@@ -58,20 +58,20 @@ void func_ov007_020c7d60(Ov007Link *link, int r5, int r4) {
         d.z = (int)((t * d.z + (1LL << 44)) >> 45);
     }
 
-    func_02053320(r5, &d.x, &link->from->force.x, &link->from->force.x);
-    func_02053320(-r5, &d.x, &link->to->force.x, &link->to->force.x);
+    VEC_MultAdd(r5, &d.x, &link->from->force.x, &link->from->force.x);
+    VEC_MultAdd(-r5, &d.x, &link->to->force.x, &link->to->force.x);
 
-    dot = DotVec3(&d, &link->from->velocity);
+    dot = VEC_DotProduct(&d, &link->from->velocity);
     v1.x = (int)(((s64)dot * d.x) >> 12);
     v1.y = (int)(((s64)dot * d.y) >> 12);
     v1.z = (int)(((s64)dot * d.z) >> 12);
 
-    dot = DotVec3(&d, &link->to->velocity);
+    dot = VEC_DotProduct(&d, &link->to->velocity);
     v2.x = (int)(((s64)dot * d.x) >> 12);
     v2.y = (int)(((s64)dot * d.y) >> 12);
     v2.z = (int)(((s64)dot * d.z) >> 12);
 
     s = -r4;
-    func_02053320(s, &v1.x, &link->from->force.x, &link->from->force.x);
-    func_02053320(s, &v2.x, &link->to->force.x, &link->to->force.x);
+    VEC_MultAdd(s, &v1.x, &link->from->force.x, &link->from->force.x);
+    VEC_MultAdd(s, &v2.x, &link->to->force.x, &link->to->force.x);
 }

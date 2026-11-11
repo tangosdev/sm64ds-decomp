@@ -555,29 +555,29 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@468",
+      "from": "@414",
       "to": "@72",
-      "evidence": "emitted destructor-registration node name collides with the configured @463 on ov100 on main; @72 is unused everywhere and shorter than the original; Re-keyed from @469 to @468 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821)."
+      "evidence": "emitted destructor-registration node name collides with the configured @463 on ov100 on main; @72 is unused everywhere and shorter than the original; Re-keyed from @469 to @468 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821). Re-keyed from @468 to @414 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@470",
+      "from": "@416",
       "to": "@73",
-      "evidence": "emitted destructor-registration node name collides with the configured @465 on ov100 on main; @73 is unused everywhere and shorter than the original; Re-keyed from @471 to @470 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821)."
+      "evidence": "emitted destructor-registration node name collides with the configured @465 on ov100 on main; @73 is unused everywhere and shorter than the original; Re-keyed from @471 to @470 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821). Re-keyed from @470 to @416 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@472",
+      "from": "@418",
       "to": "@74",
-      "evidence": "emitted destructor-registration node name collides with the configured @467 on ov100 on main; @74 is unused everywhere and shorter than the original; Re-keyed from @473 to @472 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821)."
+      "evidence": "emitted destructor-registration node name collides with the configured @467 on ov100 on main; @74 is unused everywhere and shorter than the original; Re-keyed from @473 to @472 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821). Re-keyed from @472 to @418 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@469",
+      "from": "@415",
       "to": "@601",
-      "evidence": "batch-5 atdup: @464 collides cross-module (temps are fleet-global); renumber to unused same-length @601; Re-keyed from @470 to @469 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821)."
+      "evidence": "batch-5 atdup: @464 collides cross-module (temps are fleet-global); renumber to unused same-length @601; Re-keyed from @470 to @469 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821). Re-keyed from @469 to @415 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@471",
+      "from": "@417",
       "to": "@598",
-      "evidence": "batch-5 atdup: @466 collides cross-module (temps are fleet-global); renumber to unused same-length @598; Re-keyed from @472 to @471 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821)."
+      "evidence": "batch-5 atdup: @466 collides cross-module (temps are fleet-global); renumber to unused same-length @598; Re-keyed from @472 to @471 when UpdateRunState's guard and wrap read mStateTimer through u16 value conversions (#821). Re-keyed from @471 to @417 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "undefined_symbol_aliases": [

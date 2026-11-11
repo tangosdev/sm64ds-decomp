@@ -16,11 +16,11 @@
 #include "dCc_c.h"
 #include "types.h"
 #include "dBgCh_Actr.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 #include "SpawnInfo.h"
+#include "nitro/fx/fx_cp.h"
 
 struct BMD_File;
 struct Vector3_16;
@@ -144,7 +144,7 @@ void daPeach_c::UpdateGroundCollision(dBgCh_Actr *clsn) {
         if (floorN.y != 0) {
             int x = FX_MUL(floorN.x, mSpeedX);
             int z = FX_MUL(floorN.z, mSpeedZ);
-            mVertSpeed = -(cstd::fdiv(x + z, floorN.y) + 0x8000);
+            mVertSpeed = -(FX_Div(x + z, floorN.y) + 0x8000);
         }
     }
     if (clsn->IsOnWall()) {

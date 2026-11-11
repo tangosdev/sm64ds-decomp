@@ -10,7 +10,7 @@
  *   nnsys/snd types (NNSSndSeqPlayer, NNSSndHandle, NNSSndFader); the
  *   heap records (HeapOwner, AllocNode, Node, SolidHeapWithIter,
  *   Obj_2050fd4, HeapAllocator_205212c) keep their own local layouts.
- * - IRQ::Disable and IRQ::Restore stay namespace-scope externs so
+ * - OS_DisableInterrupts and OS_RestoreInterrupts stay namespace-scope externs so
  *   they mangle as the IRQ TU defines them.
  * - Channel and heap records stay address arithmetic. A guessed
  *   sequencer member is not what these bodies share.
@@ -19,23 +19,15 @@
 #include "private/fs_views.h"
 #include "Sound.h"
 #include "SoundPlayerRecord.h"
-#include "NestedHeapIterator.h"
-#include "HeapAllocator.h"
-#include "SolidHeapAllocator.h"
+#include "nnsys/fnd.h"
 #include "Heap.h"
-#include "cstd.h"
-#include "CP15.h"
+#include "msl/string.h"
+#include "nitro/os/cache.h"
 #include "nnsys/snd/player.h"
 #include "nitro/os/message.h"
 #include "nitro/os/thread.h"
 #include "nitro/snd/alarm.h"
-
-namespace IRQ {
-    /* Defined at 0x02059d1c/0x02059d30 (the IRQ TU); namespace-scope externs
-       mangle exactly like the ROM's IRQ::Disable/IRQ::Restore. */
-    u32 Disable(void);
-    u32 Restore(u32 state);
-}
+#include "nitro/os/system.h"
 
 struct Elem_204f278;
 struct HeapAllocator_204f460;
@@ -46,8 +38,8 @@ struct Obj_205212c;
 typedef short s16;
 typedef void (*Fn)(void *a, int b, int c, int d);
 typedef struct HeapOwner {
-    HeapAllocator     *heap;
-    NestedHeapIterator iter;
+    NNSFndHeapHandle heap;
+    NNSFndList iter;
     void func_02051244();
     void func_020510a4(int);
 } HeapOwner;
@@ -125,11 +117,8 @@ struct Node {
     char body;   
 };
 struct SolidHeapWithIter {
-    void* allocator;       
-    void* nhi_first;       
-    void* nhi_last;        
-    u16 id;                
-    u16 nhi_offset;        
+    NNSFndHeapHandle allocator;
+    NNSFndList sections;
 };
 struct TwoInt { int a, b; };
 /* The sound archive data_020a5bb8 points at, opened by func_02050f34.
@@ -146,7 +135,7 @@ struct data_020a5bb8_t {
     /* 0x28 */ int fileImageOffset; /* the FILE block; files are read by fileTable offset */
     /* 0x2c */ int fileImageSize;
     /* 0x30 */ char file[0x44];         /* NitroSDK FSFile */
-    /* 0x74 */ struct TwoInt fileId;    /* filled from the path by func_0205d644 */
+    /* 0x74 */ struct TwoInt fileId;    /* filled from the path by FS_ConvertPathToFileID */
     /* 0x7c */ struct Hdr84 *fileTable; /* per-file records (func_020509b0, func_020509d8) */
     /* 0x80 */ void *symbols;           /* loaded only when func_02050d54's flag is set */
     /* 0x84 */ void *info;              /* the Info*Entry::GetWithID tables */
@@ -289,8 +278,8 @@ struct Obj_205212c : C {
     /* 0x124 */ char pad5[0x12c - 0x124];
 };
 struct Obj_2050fd4 {
-    struct SolidHeapAllocator *heapAlloc;
-    struct NestedHeapIterator iter;
+    NNSFndHeapHandle heapAlloc;
+    NNSFndList iter;
 };
 struct HeapAllocator_204f460 : NNSSndSeqPlayer {
     void func_0204f214(int);
@@ -313,14 +302,8 @@ extern struct Elem;
 extern int FS_CloseFile(char *self);
 extern void FS_InitFile(void *s);
 extern int FS_ReadFile(int a, int b, int c);
-extern struct HeapAllocator;
-extern void MultiStore_Int(int val, int *dst, int len);
-extern struct NestedHeapIterator;
+extern void MIi_CpuClear32(int val, int *dst, int len);
 extern struct ElemTable;
-/* local extern: these callers run the constructor over storage that already
-   exists (and func_02051064 returns its r0), which C++ cannot spell without a
-   placement new the tree does not have. */
-extern int _ZN18NestedHeapIteratorC1Ej(int a, int b);
 
 extern int __aeabi_idiv(int a, int b);
 extern unsigned int __aeabi_uidiv(unsigned int a, unsigned int b);
@@ -329,11 +312,11 @@ extern int data_020a4d44;
 extern unsigned int data_020a4d48;
 extern unsigned int data_020a4d4c;
 extern unsigned int data_020a4d50;
-extern char data_020a4d54[];
-extern NestedHeapIterator data_020a4d60;
+extern NNSFndList data_020a4d54;
+extern NNSFndList data_020a4d60;
 extern SoundPlayerRecord data_020a4d6c[];
 extern struct E1 data_020a50ec[];
-extern int data_020a552c[];
+extern NNSFndList data_020a552c;
 extern int data_020a5538[];
 extern struct E data_020a5578[];
 extern int data_020a55f8;
@@ -344,10 +327,9 @@ extern struct T data_020a5634;
 extern OSThread data_020a5684;
 extern struct Q data_020a5718[];
 extern char *data_020a5bb8;
-extern NestedHeapIterator data_020a5bbc;
-extern NestedHeapIterator data_020a5bc8;
+extern NNSFndList data_020a5bbc;
+extern NNSFndList data_020a5bc8;
 extern struct Obj_205212c data_020a5bd4[];
-extern void func_0204ebb8(void *alloc);
 extern void SND_Init(void);
 extern void SND_SetOutputSelector(s32 left, s32 right, s32 channel1, s32 channel3);
 extern void SND_InvalidateWaveData(const void *start, const void *end);
@@ -394,9 +376,9 @@ extern int FS_LoadArchive(FSArchive *p_arc, u32 base, u32 fat, u32 fat_size, u32
 extern void FS_ReleaseArchiveName(void *thiz);
 extern int FS_RegisterArchiveName(FSArchive *p_arc, const char *name, int name_len);
 extern void FS_InitArchive(void *o);
-extern int func_0205d368(void *o, int r1, int sel);
-extern int func_0205d568(Node *node, int b, ...);
-extern int func_0205d644(void *out_file_id, const char *path);
+extern int FS_SeekFile(void *o, int r1, int sel);
+extern int FS_OpenFileFast(Node *node, int b, ...);
+extern int FS_ConvertPathToFileID(void *out_file_id, const char *path);
 
 /* In-span forward declarations. */
 extern int func_0204eda4(int r0, char* a, u32 idx);
@@ -420,7 +402,7 @@ extern void func_0204f2d4(NNSSndSeqPlayer *obj);
 extern char* func_0204f364(int key);
 extern void func_0204f3e0(unsigned char *c);
 extern void func_0204f400(NNSSndSeqPlayer *self);
-extern void func_0204f460(NestedHeapIterator* self, HeapAllocator_204f460* node);
+extern void func_0204f460(NNSFndList *self, HeapAllocator_204f460 *node);
 extern void func_0204f4bc(struct E1 *obj);
 extern void* func_0204f504(int index, void* unk);
 extern void func_0204f558(struct E1 *self, int val);
@@ -473,9 +455,9 @@ extern int func_02050d54(data_020a5bb8_t *obj, void *owner, int flag);
 extern void func_02050f34(data_020a5bb8_t *self, int a1, int a2, int a3);
 extern void func_02050fb0(void);
 extern s32 func_02050fd4(struct Obj_2050fd4 *self);
-extern s32 func_02051024(struct SolidHeapWithIter* self, void* allocator);
-extern int func_02051064(int a);
-extern u32 func_02051074(SolidHeapAllocator **pHeap);
+extern s32 func_02051024(struct SolidHeapWithIter *self, NNSFndHeapHandle allocator);
+extern void func_02051064(NNSFndList *list);
+extern u32 func_02051074(NNSFndHeapHandle *pHeap);
 extern s32 func_0205117c(struct SolidHeapWithIter* self);
 extern void *func_020511d4(HeapOwner *owner, u32 elemSize, u32 param2, u32 param3, u32 param4);
 extern void func_020512f0(int *p);
@@ -506,7 +488,7 @@ extern int func_02051e60(int a, int b, int c, int d, unsigned int arg5, int arg6
 extern int func_02051f1c(void *a0, u32 a1, int a2);
 extern int func_02051fb4(void *thiz, unsigned int id);
 extern int func_02052008(int arg);
-extern void func_020520a4(HeapAllocator *node);
+extern void func_020520a4(void *node);
 extern void func_020520dc(Obj_205212c *self);
 extern void func_0205212c(Obj_205212c *self);
 extern void func_02052208(void *obj);
@@ -644,17 +626,19 @@ extern "C" void func_0205212c(Obj_205212c *self) {
     if (b != 0) {
         ((void (*)(void *p))FS_CloseFile)(self->file);
     }
-    u32 irq = IRQ::Disable();
-    HeapAllocator_205212c *node = (HeapAllocator_205212c*)((HeapAllocator_205212c*)(data_020a5bc8.Next(0)));
+    OSIntrMode irq = OS_DisableInterrupts();
+    HeapAllocator_205212c *node = (HeapAllocator_205212c *)((
+        HeapAllocator_205212c *)(NNS_FndGetNextListObject(&data_020a5bc8, 0)));
     while (node != 0) {
-        HeapAllocator_205212c *next = (HeapAllocator_205212c*)((HeapAllocator_205212c*)(data_020a5bc8.Next((HeapAllocator*)(node))));
+        HeapAllocator_205212c *next = (HeapAllocator_205212c *)((
+            HeapAllocator_205212c *)(NNS_FndGetNextListObject(&data_020a5bc8, node)));
         if (node->owner_8 == self) {
-            data_020a5bc8.Remove((HeapAllocator*)(node));
+            NNS_FndRemoveListObject(&data_020a5bc8, node);
             ((void(*)(HeapAllocator_205212c *node))func_020520a4)(node);
         }
         node = next;
     }
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
     u32 *p = &self->uf0;
     *p &= ~1u;
     *p &= ~4u;
@@ -673,13 +657,12 @@ extern "C" void func_020520dc(Obj_205212c *self) {
     func_02050008(self);
 }
 
-extern "C" void func_020520a4(HeapAllocator *node)
-{
-    u32 state;
+extern "C" void func_020520a4(void *node) {
+    OSIntrMode state;
 
-    state = IRQ::Disable();
-    ((NestedHeapIterator*)(&data_020a5bbc))->AddLast((HeapAllocator*)(node));
-    IRQ::Restore(state);
+    state = OS_DisableInterrupts();
+    NNS_FndAppendListObject(&data_020a5bbc, node);
+    OS_RestoreInterrupts(state);
 }
 
 extern "C" int func_02052008(int arg)
@@ -1009,7 +992,7 @@ extern "C" void* func_02051634(unsigned int a0, unsigned int a1, unsigned int a2
     r4 = ((extern void*(*)(void *owner, unsigned int elemSize, unsigned int p2, unsigned int p3, unsigned int p4))func_020511d4)(owner, r5 + 0x20, a1, a2, a3);
     if (r4 == 0) return 0;
     if (r5 != ((extern int(*)(unsigned int a, void* b, int c, int d))func_020509d8)(a0, r4, r5, 0)) return 0;
-    CP15::FlushDataCache((unsigned int)r4, r5);
+    DC_StoreRange(r4, r5);
     return r4;
 }
 
@@ -1063,14 +1046,14 @@ extern "C" int func_020514b4(int a, int b)
 
 extern "C" void func_02051454(int a, int b, unsigned int c) {
     int t;
-    unsigned int irq;
-    irq = IRQ::Disable();
+    OSIntrMode irq;
+    irq = OS_DisableInterrupts();
     t = func_02050d3c(b);
     if (a == func_020509b0(c)) {
         func_02050994(c, 0);
     }
     func_02050d3c(t);
-    IRQ::Restore(irq);
+    OS_RestoreInterrupts(irq);
 }
 
 extern "C" void func_02051420(char *a, int b, int c, int d)
@@ -1095,47 +1078,46 @@ extern "C" void *func_0205130c(unsigned int addr, unsigned int size)
 {
     unsigned int end = addr + size;
     unsigned int aligned = (addr + 3) & ~3u;
-    void *alloc;
+    NNSFndHeapHandle alloc;
     if (aligned > end)
         return 0;
     /* The SolidHeapWithIter header func_02051024 fills sits at aligned; the
        solid heap takes the rest. */
     if (end - aligned < sizeof(struct SolidHeapWithIter))
         return 0;
-    alloc = mHeap::Heap_t::CreateSolidHeapAllocator(
-        (void *)(aligned + sizeof(struct SolidHeapWithIter)),
-        (end - aligned) - sizeof(struct SolidHeapWithIter), 0);
+    alloc = NNS_FndCreateFrmHeapEx((void *)(aligned + sizeof(struct SolidHeapWithIter)),
+                                   (end - aligned) - sizeof(struct SolidHeapWithIter), 0);
     if (alloc == 0)
         return 0;
     if (((int(*)(void *self, void *alloc))func_02051024)((void *)aligned, alloc) != 0)
         return (void *)aligned;
-    func_0204ebb8(alloc);
+    NNS_FndDestroyFrmHeap(alloc);
     return 0;
 }
 
 extern "C" void func_020512f0(int *p) {
     ((HeapOwner *)p)->func_02051244();
-    ((void(*)(void *p))func_0204ebb8)((void*)*p);
+    NNS_FndDestroyFrmHeap(((HeapOwner *)p)->heap);
 }
 
 void HeapOwner::func_02051244() {
     struct Node *r7;
     struct Node *r6;
-    r7 = (struct Node *)(this->iter.Previous(0));
+    r7 = (struct Node *)(NNS_FndGetPrevListObject(&this->iter, 0));
     if (r7 == 0) goto end;
     do {
-        r6 = (struct Node*)(((NestedHeapIterator*)(r7))->Previous(0));
+        r6 = (struct Node *)(NNS_FndGetPrevListObject((NNSFndList *)r7, 0));
         while (r6 != 0) {
             if (r6->fc != 0) {
                 r6->fc(&r6->body, r6->f8, r6->f10, r6->f14);
             }
-            r6 = (struct Node*)(((NestedHeapIterator*)(r7))->Previous((HeapAllocator*)(r6)));
+            r6 = (struct Node *)(NNS_FndGetPrevListObject((NNSFndList *)r7, r6));
         }
-        this->iter.Remove((HeapAllocator *)(r7));
-        r7 = (struct Node *)(this->iter.Previous(0));
+        NNS_FndRemoveListObject(&this->iter, r7);
+        r7 = (struct Node *)(NNS_FndGetPrevListObject(&this->iter, 0));
     } while (r7 != 0);
 end:
-    ((SolidHeapAllocator *)(this->heap))->Reset(3);
+    NNS_FndFreeToFrmHeap(this->heap, NNS_FND_FRMHEAP_FREE_ALL);
     func_02050fb0();
     ((void (*)(void *thiz))func_02050fd4)(this);
 }
@@ -1143,33 +1125,34 @@ end:
 extern "C" void *func_020511d4(HeapOwner *owner, u32 elemSize, u32 param2, u32 param3, u32 param4)
 {
     AllocNode *node;
-    NestedHeapIterator *iter;
+    NNSFndList *iter;
 
-    node = (AllocNode *)((SolidHeapAllocator*)(owner->heap))->Allocate(((elemSize + 0x1f) & ~0x1fu) + 0x20, 0x20);
+    node = (AllocNode *)NNS_FndAllocFromFrmHeapEx(owner->heap, ((elemSize + 0x1f) & ~0x1fu) + 0x20,
+                                                  0x20);
     if (node == 0)
         return 0;
 
-    iter = (NestedHeapIterator*)(((NestedHeapIterator*)(&owner->iter))->Previous(0));
+    iter = (NNSFndList *)(NNS_FndGetPrevListObject(&owner->iter, 0));
     node->unk8  = elemSize;
     node->unkc  = param2;
     node->unk10 = param3;
     node->unk14 = param4;
-    ((NestedHeapIterator*)(iter))->AddLast((HeapAllocator *)node);
+    NNS_FndAppendListObject(iter, node);
 
     return (void *)((u32)node + 0x20);
 }
 
 extern "C" s32 func_0205117c(struct SolidHeapWithIter* self)
 {
-    u16 id = self->id;
-    void* alloc = self->allocator;
-    if (!((SolidHeapAllocator*)(alloc))->SaveState((u32)id)) {
+    u16 id = self->sections.numObjects;
+    NNSFndHeapHandle alloc = self->allocator;
+    if (!NNS_FndRecordStateForFrmHeap(alloc, id)) {
         return ~0;
     }
     if (((s32(*)(struct SolidHeapWithIter* self))func_02050fd4)(self)) {
-        return (s32)((u32)self->id - 1);
+        return (s32)((u32)self->sections.numObjects - 1);
     }
-    ((SolidHeapAllocator*)(self->allocator))->LoadState(0);
+    NNS_FndFreeByStateToFrmHeap(self->allocator, 0);
     return ~0;
 }
 
@@ -1182,29 +1165,28 @@ void HeapOwner::func_020510a4(int n) {
         this->func_02051244();
         return;
     }
-    if (n < this->iter.mCount) {
+    if (n < this->iter.numObjects) {
         do {
-            first = (struct Node *)(this->iter.Previous(0));
-            a = (struct Node*)(((NestedHeapIterator*)(first))->Previous((HeapAllocator*)(a)));
+            first = (struct Node *)(NNS_FndGetPrevListObject(&this->iter, 0));
+            a = (struct Node *)(NNS_FndGetPrevListObject((NNSFndList *)first, a));
             while (a != 0) {
                 if (a->fc != 0) {
                     a->fc(&a->body, a->f8, a->f10, a->f14);
                 }
-                a = (struct Node*)(((NestedHeapIterator*)(first))->Previous((HeapAllocator*)(a)));
+                a = (struct Node *)(NNS_FndGetPrevListObject((NNSFndList *)first, a));
             }
-            this->iter.Remove((HeapAllocator *)(first));
-        } while (n < this->iter.mCount);
+            NNS_FndRemoveListObject(&this->iter, first);
+        } while (n < this->iter.numObjects);
     }
-    ((SolidHeapAllocator *)(this->heap))->LoadState(n);
+    NNS_FndFreeByStateToFrmHeap(this->heap, n);
     func_02050fb0();
-    ((SolidHeapAllocator *)(this->heap))->SaveState(this->iter.mCount);
+    NNS_FndRecordStateForFrmHeap(this->heap, this->iter.numObjects);
     ((void (*)(void *thiz))func_02050fd4)(this);
 }
 
-extern "C" u32 func_02051074(SolidHeapAllocator **pHeap)
-{
+extern "C" u32 func_02051074(NNSFndHeapHandle *pHeap) {
     u32 mem;
-    mem = ((SolidHeapAllocator*)(*pHeap))->MemoryLeft(0x20);
+    mem = NNS_FndGetAllocatableSizeForFrmHeapEx(*pHeap, 0x20);
     if (mem < 0x20)
         return 0;
     mem -= 0x20;
@@ -1212,14 +1194,12 @@ extern "C" u32 func_02051074(SolidHeapAllocator **pHeap)
     return mem;
 }
 
-extern "C" int func_02051064(int a)
-{
-    return _ZN18NestedHeapIteratorC1Ej(a, 0);
+extern "C" void func_02051064(NNSFndList *list) {
+    NNS_FndInitList(list, 0);
 }
 
-extern "C" s32 func_02051024(struct SolidHeapWithIter* self, void* allocator)
-{
-    ((void(*)(void* self, u32 offset))_ZN18NestedHeapIteratorC1Ej)(&self->nhi_first, 0xc);
+extern "C" s32 func_02051024(struct SolidHeapWithIter *self, NNSFndHeapHandle allocator) {
+    NNS_FndInitList(&self->sections, 0xc);
     self->allocator = allocator;
     if (((s32(*)(struct SolidHeapWithIter* self))func_02050fd4)(self)) {
         return 1;
@@ -1228,12 +1208,12 @@ extern "C" s32 func_02051024(struct SolidHeapWithIter* self, void* allocator)
 }
 
 extern "C" s32 func_02050fd4(struct Obj_2050fd4 *self) {
-    struct HeapAllocator *r4 = (struct HeapAllocator *)((SolidHeapAllocator*)(self->heapAlloc))->Allocate(0x14, 4);
+    void *r4 = NNS_FndAllocFromFrmHeapEx(self->heapAlloc, 0x14, 4);
     if (!r4) {
         return 0;
     }
-    ((extern void(*)(struct HeapAllocator *alloc))func_02051064)(r4);
-    ((NestedHeapIterator*)(&self->iter))->AddLast((HeapAllocator*)(r4));
+    func_02051064((NNSFndList *)r4);
+    NNS_FndAppendListObject(&self->iter, r4);
     return 1;
 }
 
@@ -1248,9 +1228,9 @@ extern "C" void func_02050f34(data_020a5bb8_t *self, int a1, int a2, int a3) {
     self->info = 0;
     self->fileTable = 0;
     self->symbols = 0;
-    ((int (*)(void *p, int b))func_0205d644)(&self->fileId, a1);
+    ((int (*)(void *p, int b))FS_ConvertPathToFileID)(&self->fileId, a1);
     FS_InitFile(self->file);
-    ((void (*)(void *p, struct TwoInt v))func_0205d568)(self->file, self->fileId);
+    ((void (*)(void *p, struct TwoInt v))FS_OpenFileFast)(self->file, self->fileId);
     ((void (*)(void *dst, void *src, int n))FS_ReadFile)(self->file, self, 0x30);
     if (a2 != 0)
         ((void(*)(void *self, int a, int b))func_02050d54)(self, a2, a3);
@@ -1277,19 +1257,19 @@ extern "C" int func_02050d54(data_020a5bb8_t *obj, void *owner, int flag) {
         if (obj->symbols == 0)
             return 0;
     }
-    if (func_0205d368(obj->file, obj->infoOffset, 0) == 0)
+    if (FS_SeekFile(obj->file, obj->infoOffset, 0) == 0)
         return 0;
     r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->info, obj->infoSize);
     if (r != obj->infoSize)
         return 0;
-    if (func_0205d368(obj->file, obj->fileTableOffset, 0) == 0)
+    if (FS_SeekFile(obj->file, obj->fileTableOffset, 0) == 0)
         return 0;
     r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->fileTable,
                                                       obj->fileTableSize);
     if (r != obj->fileTableSize)
         return 0;
     if (flag != 0 && obj->symbolSize != 0) {
-        if (func_0205d368(obj->file, obj->symbolOffset, 0) == 0)
+        if (FS_SeekFile(obj->file, obj->symbolOffset, 0) == 0)
             return 0;
         r = ((int (*)(void *o, int a, int b))FS_ReadFile)(obj->file, (int)obj->symbols,
                                                           obj->symbolSize);
@@ -1318,7 +1298,7 @@ extern "C" void *func_02050cdc(int a, int idx)
     e = ((struct Elem * (*)(struct ElemTable * obj, int idx)) func_020523e0)(o, idx);
     if (e == 0)
         return 0;
-    return (char *)e + 4;
+    return &e->bankId;
 }
 
 Sound::InfoSequenceEntry *Sound::InfoSequenceEntry::GetWithID(u32 id)
@@ -1426,8 +1406,8 @@ extern "C" int func_020509d8(unsigned int idx, int a1, unsigned int len, unsigne
     if (len > avail)
         len = avail;
 
-    if (((int (*)(int *o, int r1, int sel))func_0205d368)((int *)((data_020a5bb8_t *)G)->file,
-                                                          entry->offset + off, 0) == 0)
+    if (((int (*)(int *o, int r1, int sel))FS_SeekFile)((int *)((data_020a5bb8_t *)G)->file,
+                                                        entry->offset + off, 0) == 0)
         return -1;
 
     return ((int (*)(int *o, int a1, unsigned int len))FS_ReadFile)(
@@ -1495,8 +1475,8 @@ extern "C" int func_020507e0(void *a0, unsigned int a1, int a2, int a3, int a4, 
     if (data_020a5634.f0 != 0)
         return 0;
     z = 0;
-    MultiStore_Int(z, (int *)a0, a1);
-    CP15::FlushAndInvalidateDataCache((unsigned int)a0, a1);
+    MIi_CpuClear32(z, (int *)a0, a1);
+    DC_FlushRange(a0, a1);
     return ((int (*)(int a0, int a1, int a2, int a3, int s0, int s1, int s2, int s3, int s4, int s5,
                      int s6, int s7, int s8, int s9, int s10))func_020503a4)(
         1, (int)a0, (int)a0 + (a1 >> 1), a1 >> 1, a2, 0, 0, 1, a3, 0x7f, 0, 0x7f, a4, (int)a5,
@@ -1548,8 +1528,8 @@ extern "C" int func_020503a4(int a, int b, int c, int d, int p5, int p6, int p7,
 
     handle = -1;
     g = &data_020a5634;
-    CP15::FlushAndInvalidateDataCache(b, dd);
-    CP15::FlushAndInvalidateDataCache(c, dd);
+    DC_FlushRange((void *)b, dd);
+    DC_FlushRange((void *)c, dd);
     stereo = (p5 == 1) ? 1 : 0;
     align = 0xffb0ff / p9;
     if (p14 != 0) {
@@ -1664,13 +1644,11 @@ extern "C" void func_020501b8(void)
     if (g->f0 == 0) return;
     g->f18 = 0;
     a = 0;
-    ((extern void (*)(int val, int *dst, int len))MultiStore_Int)(a, (int *)g->fc, g->f14);
+    ((extern void (*)(int val, int *dst, int len))MIi_CpuClear32)(a, (int *)g->fc, g->f14);
     b = 0;
-    ((extern void (*)(int val, int *dst, int len))MultiStore_Int)(b, (int *)g->f10, g->f14);
-    ((extern void (*)(unsigned int a, unsigned int b))CP15::FlushAndInvalidateDataCache)(
-        (unsigned int)g->fc, g->f14);
-    ((extern void (*)(unsigned int a, unsigned int b))CP15::FlushAndInvalidateDataCache)(
-        (unsigned int)g->f10, g->f14);
+    ((extern void (*)(int val, int *dst, int len))MIi_CpuClear32)(b, (int *)g->f10, g->f14);
+    DC_FlushRange((void *)g->fc, g->f14);
+    DC_FlushRange((void *)g->f10, g->f14);
     {
         int sh = g->f28;
         int mask = (sh >= 0) ? (1 << sh) : 0;
@@ -1696,8 +1674,8 @@ extern "C" void func_020500a4(void *arg) {
         data_020a55f8 = data_020a55f8 + 1;
         if (data_020a55f8 >= 8) data_020a55f8 = 0;
     } else {
-        CP15::InvalidateDataCache(e6, quot);
-        CP15::InvalidateDataCache(e5, quot);
+        DC_InvalidateRange((void *)e6, quot);
+        DC_InvalidateRange((void *)e5, quot);
         strm->f30(e6, e5, quot, strm->f8, strm->f34);
     }
     strm->f18++;
@@ -1711,10 +1689,8 @@ extern "C" void func_02050038(void *arg) {
     for (;;) {
         OS_ReceiveMessage(&data_020a5600, &out, 1);
         r = (struct Q *)out;
-        ((void (*)(unsigned int a, unsigned int b))CP15::InvalidateDataCache)((unsigned int)r->fc,
-                                                                              (unsigned int)r->f4);
-        ((void (*)(unsigned int a, unsigned int b))CP15::InvalidateDataCache)((unsigned int)r->f10,
-                                                                              (unsigned int)r->f4);
+        DC_InvalidateRange((void *)r->fc, r->f4);
+        DC_InvalidateRange((void *)r->f10, r->f4);
         r->f0->f30(r->fc, r->f10, r->f4, r->f0->f8, r->f0->f34);
     }
 }
@@ -1753,9 +1729,9 @@ extern "C" void func_0204ff48(struct C *p) {
 extern "C" void func_0204fed0(struct C *c) {
     if (((c->fc << 30) >> 31) == 0) return;
     while (c->f20 != 0) {
-        unsigned int saved = IRQ::Disable();
+        OSIntrMode saved = OS_DisableInterrupts();
         c->func_0204fce8((void *)1);
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
     }
     SND_StartTimer(c->f2c, 0, 1 << c->f28, 0);
 }
@@ -1794,7 +1770,7 @@ extern "C" void func_0204fde8(struct C *obj) {
 extern "C" void func_0204fda4(struct C *c) {
     int* p;
     func_0204f0b8(c->f28);
-    ((NestedHeapIterator*)&data_020a552c)->Remove((HeapAllocator*)(c));
+    NNS_FndRemoveListObject(&data_020a552c, c);
     p = &c->fc;
     *p &= ~1;
     *p &= ~2;
@@ -1823,18 +1799,16 @@ void C::func_0204fce8(void *arg) {
 extern "C" void func_0204fc40(void)
 {
     int i;
-    ((void(*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(((char*)&data_020a4d60), 0x14);
-    ((void(*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(data_020a4d54, 0x14);
+    NNS_FndInitList(&data_020a4d60, 0x14);
+    NNS_FndInitList(&data_020a4d54, 0x14);
     for (i = 0; i < 0x10; i++) {
         data_020a50ec[i].status = 0;
         data_020a50ec[i].playerNo = (unsigned char)i;
-        ((NestedHeapIterator*)&data_020a4d54)->AddLast((HeapAllocator*)(&data_020a50ec[i]));
+        NNS_FndAppendListObject(&data_020a4d54, &data_020a50ec[i]);
     }
     for (i = 0; i < 0x20; i++) {
-        ((void (*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(
-            &data_020a4d6c[i].mLists[0], 0xc);
-        ((void (*)(void *thiz, unsigned int n))_ZN18NestedHeapIteratorC1Ej)(
-            &data_020a4d6c[i].mLists[1], 0);
+        NNS_FndInitList(&data_020a4d6c[i].mLists[0], 0xc);
+        NNS_FndInitList(&data_020a4d6c[i].mLists[1], 0);
         data_020a4d6c[i].mPlayableSeqCount = 1;
     }
 }
@@ -1846,13 +1820,12 @@ extern "C" void func_0204fafc(void) {
     int v;
 
     mask = SND_GetPlayerStatus();
-    node = (struct E1 *)(((NestedHeapIterator *)(((char *)&data_020a4d60)))->Next(0));
+    node = (struct E1 *)(NNS_FndGetNextListObject(&data_020a4d60, 0));
     if (node == 0) {
         return;
     }
     do {
-        next = (struct E1 *)(((NestedHeapIterator *)(((char *)&data_020a4d60)))
-                                 ->Next((HeapAllocator *)(node)));
+        next = (struct E1 *)(NNS_FndGetNextListObject(&data_020a4d60, node));
         if (node->startFlag == 0) {
             if (SND_IsFinishedCommandTag(node->commandTag)) {
                 node->startFlag = 1;
@@ -1904,7 +1877,7 @@ extern "C" int func_0204fa3c(int owner, void *b, u32 c)
     res = func_0205130c((unsigned int)(r4 + sizeof(Elem_204f278)), c);
     if (!res) return 0;
     ((Elem_204f278 *)r4)->heap = (int *)res;
-    data_020a4d6c[owner].mLists[1].AddLast((HeapAllocator *)(r4));
+    NNS_FndAppendListObject(&data_020a4d6c[owner].mLists[1], r4);
     return 1;
 }
 
@@ -1928,11 +1901,11 @@ extern "C" void func_0204f9c4(int idx, int arg1) {
 extern "C" void func_0204f958(int idx, int val) {
     u8 *cur;
     u8 *next;
-    NestedHeapIterator *iter = &data_020a4d6c[idx].mLists[0];
-    cur = (u8*)(((NestedHeapIterator*)(iter))->Next(0));
+    NNSFndList *iter = &data_020a4d6c[idx].mLists[0];
+    cur = (u8 *)(NNS_FndGetNextListObject(iter, 0));
     if (cur == 0) return;
     do {
-        next = (u8*)(((NestedHeapIterator*)(iter))->Next((HeapAllocator*)(cur)));
+        next = (u8 *)(NNS_FndGetNextListObject(iter, cur));
         ((void(*)(u8 *thiz, int val))func_0204f558)(cur, val);
         cur = next;
     } while (cur != 0);
@@ -2076,8 +2049,8 @@ extern "C" void *func_0204f63c(void **p, int idx, int r7)
     void *prev = p[0];
     void **r5;
     if (prev != 0) ((void(*)(void **p))func_0204f934)(p);
-    if (node->mLists[0].mCount >= node->mPlayableSeqCount) {
-        unsigned char *it = (unsigned char *)(node->mLists[0].Next(0));
+    if (node->mLists[0].numObjects >= node->mPlayableSeqCount) {
+        unsigned char *it = (unsigned char *)(NNS_FndGetNextListObject(&node->mLists[0], 0));
         if (it == 0) return 0;
         if (r7 < (int)((struct E1 *)it)->prio)
             return 0;
@@ -2129,10 +2102,10 @@ extern "C" void func_0204f558(struct E1 *self, int val) {
 
 extern "C" void* func_0204f504(int index, void* unk) {
     SoundPlayerRecord *entry = &data_020a4d6c[index];
-    Elem_204f278 *first = (Elem_204f278 *)(((NestedHeapIterator *)(&entry->mLists[1]))->Next(0));
+    Elem_204f278 *first = (Elem_204f278 *)(NNS_FndGetNextListObject(&entry->mLists[1], 0));
     if (first == 0)
         return 0;
-    ((NestedHeapIterator *)(&entry->mLists[1]))->Remove((HeapAllocator *)(first));
+    NNS_FndRemoveListObject(&entry->mLists[1], first);
     first->player = (NNSSndSeqPlayer *)unk;
     ((NNSSndSeqPlayer *)unk)->heap = first;
     return first->heap;
@@ -2149,38 +2122,35 @@ extern "C" void func_0204f4bc(struct E1 *obj) {
     ((void (*)(void *o, int a, int b))func_02052494)(&obj->fader, 0x7f00, 1);
 }
 
-extern "C" void func_0204f460(NestedHeapIterator* self, HeapAllocator_204f460* node) {
+extern "C" void func_0204f460(NNSFndList *self, HeapAllocator_204f460 *node) {
     HeapAllocator_204f460* cur;
-    cur = (HeapAllocator_204f460*)(((NestedHeapIterator*)(self))->Next(0));
+    cur = (HeapAllocator_204f460 *)(NNS_FndGetNextListObject(self, 0));
     if (cur != 0) {
         for (;;) {
             if (node->prio < cur->prio)
                 break;
-            cur = (HeapAllocator_204f460*)(((NestedHeapIterator*)(self))->Next((HeapAllocator*)(cur)));
+            cur = (HeapAllocator_204f460 *)(NNS_FndGetNextListObject(self, cur));
             if (cur == 0)
                 break;
         }
     }
-    ((NestedHeapIterator*)(self))->AddAt((HeapAllocator*)(cur), (HeapAllocator*)(node));
+    NNS_FndInsertListObject(self, cur, node);
     node->player = self;
 }
 
 extern "C" void func_0204f400(NNSSndSeqPlayer *self) {
     NNSSndSeqPlayer *cur;
-    cur = (NNSSndSeqPlayer *)(((NestedHeapIterator *)(((NestedHeapIterator *)&data_020a4d60)))
-                                  ->Next(0));
+    cur = (NNSSndSeqPlayer *)(NNS_FndGetNextListObject(&data_020a4d60, 0));
     if (cur != 0) {
         for (;;) {
             if (self->prio < cur->prio)
                 break;
-            cur =
-                (NNSSndSeqPlayer *)(((NestedHeapIterator *)(((NestedHeapIterator *)&data_020a4d60)))
-                                        ->Next((HeapAllocator *)(cur)));
+            cur = (NNSSndSeqPlayer *)(NNS_FndGetNextListObject(&data_020a4d60, cur));
             if (cur == 0)
                 break;
         }
     }
-    ((NestedHeapIterator*)(((NestedHeapIterator*)&data_020a4d60)))->AddAt((HeapAllocator*)(cur), (HeapAllocator*)(self));
+    NNS_FndInsertListObject(&data_020a4d60, cur, self);
 }
 
 extern "C" void func_0204f3e0(unsigned char *c)
@@ -2191,15 +2161,15 @@ extern "C" void func_0204f3e0(unsigned char *c)
 
 extern "C" char* func_0204f364(int key)
 {
-    char* node = (char*)(((NestedHeapIterator*)&data_020a4d54)->Next(0));
+    char *node = (char *)(NNS_FndGetNextListObject(&data_020a4d54, 0));
     if (node == 0) {
-        node = (char*)(((NestedHeapIterator*)(((char*)&data_020a4d60)))->Next(0));
+        node = (char *)(NNS_FndGetNextListObject(&data_020a4d60, 0));
         if (key < ((struct E1 *)node)->prio) {
             return 0;
         }
         ((extern void(*)(unsigned char* c))func_0204f3e0)((unsigned char*)node);
     }
-    ((NestedHeapIterator*)&data_020a4d54)->Remove((HeapAllocator*)(node));
+    NNS_FndRemoveListObject(&data_020a4d54, node);
     ((struct E1 *)node)->prio = key;
     ((extern void(*)(char* self))func_0204f400)(node);
     return node;
@@ -2212,15 +2182,15 @@ extern "C" void func_0204f2d4(NNSSndSeqPlayer *obj) {
         obj->handle = 0;
     }
     SoundPlayerRecord *player = (SoundPlayerRecord *)obj->player;
-    player->mLists[0].Remove((HeapAllocator *)obj);
+    NNS_FndRemoveListObject(&player->mLists[0], obj);
     obj->player = 0;
     if (obj->heap != 0) {
-        player->mLists[1].AddLast((HeapAllocator *)(obj->heap));
+        NNS_FndAppendListObject(&player->mLists[1], obj->heap);
         ((Elem_204f278 *)obj->heap)->player = 0;
         obj->heap = 0;
     }
-    ((NestedHeapIterator*)(((HeapAllocator*)&data_020a4d60)))->Remove((HeapAllocator*)obj);
-    ((NestedHeapIterator*)(((HeapAllocator*)data_020a4d54)))->AddLast((HeapAllocator*)obj);
+    NNS_FndRemoveListObject(&data_020a4d60, obj);
+    NNS_FndAppendListObject(&data_020a4d54, obj);
     obj->status = 0;
 }
 
@@ -2235,16 +2205,16 @@ extern "C" void func_0204f278(void *mem, u32 size, u32 data1, u32 data2) {
         return;
     }
     int idx = ph->playerIndex;
-    data_020a4d6c[idx].mLists[1].Remove((HeapAllocator *)(ph));
+    NNS_FndRemoveListObject(&data_020a4d6c[idx].mLists[1], ph);
 }
 
 void HeapAllocator_204f460::func_0204f214(int b) {
     void *node = this->player;
     if (node != 0) {
-        ((NestedHeapIterator *)(node))->Remove((HeapAllocator *)(this));
+        NNS_FndRemoveListObject((NNSFndList *)node, this);
         this->player = 0;
     }
-    ((NestedHeapIterator *)(((char *)&data_020a4d60)))->Remove((HeapAllocator *)(this));
+    NNS_FndRemoveListObject(&data_020a4d60, this);
     this->prio = (unsigned char)b;
     if (node != 0) {
         ((void (*)(void *node, void *self))func_0204f460)(node, this);
@@ -2396,7 +2366,7 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
     fimg_off = fimg + 8;
     self->f58 = (unsigned char *)fimg_off;
 
-    if (FS_RegisterArchiveName(&self->arc, name, cstd::strlen(name)) == 0)
+    if (FS_RegisterArchiveName(&self->arc, name, strlen(name)) == 0)
         return 0;
 
     if (FS_LoadArchive(&self->arc, (u32)fimg_off, (u32)(fatb + 0xc) - (u32)fimg_off,
@@ -2431,7 +2401,7 @@ extern "C" int func_0204eda4(int r0, char* a, u32 idx) {
         struct Pair p;
         p.a = a;
         p.idx = idx;
-        r = ((int(*)(int r0, struct Pair p))func_0205d568)(r0, p);
+        r = ((int (*)(int r0, struct Pair p))FS_OpenFileFast)(r0, p);
     }
     return r;
 }

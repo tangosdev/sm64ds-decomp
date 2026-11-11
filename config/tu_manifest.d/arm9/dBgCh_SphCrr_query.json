@@ -154,7 +154,7 @@
       "ordinal": 18
     },
     {
-      "symbol": "func_02037f44",
+      "symbol": "_ZNK5dBgPi8GetOwnerEv",
       "address": "0x02037f44",
       "size": "0x00000008",
       "legacy_source": "src/engine/collision/dBgPc.cpp",

@@ -46,7 +46,6 @@ struct CLPS_Block;
 extern BTA_File data_ov009_02112bc4;
 extern CLPS_Block data_ov009_02112c38;
 extern unsigned char gGameMode;
-extern SaveBlock data_0209caa0;
 extern int data_0209f32c;
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */

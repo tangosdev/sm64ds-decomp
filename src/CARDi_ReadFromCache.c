@@ -3,9 +3,9 @@
  * whether bytes are left to read. */
 #include "nitro/card/card_rom.h"
 
-/* MI_CpuCopy8. local extern: no include/ header declares CpuCopy8; it is
+/* MI_CpuCopy8. local extern: no include/ header declares MI_CpuCopy8; it is
  * defined as an asm body in src/engine/mi/MI_Memory.c. */
-extern void CpuCopy8(const void *src, void *dst, unsigned int len);
+extern void MI_CpuCopy8(const void *src, void *dst, unsigned int len);
 
 int CARDi_ReadFromCache(CARDRomStat *p) {
     CARDiCommon *c = &cardi_common;
@@ -15,7 +15,7 @@ int CARDi_ReadFromCache(CARDRomStat *p) {
         u32 len = CARD_ROM_PAGE_SIZE - mod;
         if (len > c->len)
             len = c->len;
-        CpuCopy8(p->cache_buf + mod, (void *)c->dst, len);
+        MI_CpuCopy8(p->cache_buf + mod, (void *)c->dst, len);
         c->src += len;
         c->dst += len;
         c->len -= len;

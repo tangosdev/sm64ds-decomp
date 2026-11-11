@@ -62,8 +62,8 @@ extern PushblockClsnFilePtr data_ov002_0210df94;
 
 /* local extern: no shared header declares these engine free functions. */
 extern "C" {
-extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -151,8 +151,8 @@ int daObjPushblock_c::Behavior() {
         v.y = 0x96000;
         v.z = 0x96000;
         Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
-        MulVec3Mat4x3(&v, &data_020a0e68, &dst);
-        AddVec3(&dst, &mPos, &dst);
+        MTX_MultVec43(&v, &data_020a0e68, &dst);
+        VEC_Add(&dst, &mPos, &dst);
         dBgCh_Gnd ray;
         ray.SetObjAndPos(dst, 0);
         if (ray.DetectClsn()) {

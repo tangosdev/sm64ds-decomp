@@ -118,7 +118,7 @@ void UnloadKeyModels(int n);
 unsigned char NumStars(void);
 int IsStarCollectedInCurLevel(int n);
 void Matrix4x3_FromTranslation(void *m, s32 x, s32 y, s32 z);
-void MulMat4x3Mat4x3(void *a, void *b, void *dst);
+void MTX_Concat43(void *a, void *b, void *dst);
 u8 IsAreaShowing(int idx);
 
 /* ABI seams whose header member forms do not reproduce the ROM (see notes) */
@@ -171,7 +171,7 @@ int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, in
 int func_020092c4(void *cam, void *out, void *target);
 void func_02012694(unsigned int a, const Vector3 *p);
 u16 func_0201277c(unsigned int a);
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern dCamera_c *gCamera;
 void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
 int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
@@ -181,7 +181,7 @@ void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 extern void d_a_trsChangeMusicVolumeHold(unsigned a, int fx);
 extern void func_02011cfc(void);
 extern s16 data_ov063_0211e1c8[];
-extern int LenVec3(const Vector3 *v);
+extern int VEC_Mag(const Vector3 *v);
 /* The call at 0x02118004 relocates to overlays(27,55). r0 still holds the
    state timer there, so the callee takes no object: ov055's free function at
    0x02111264, not ov027's daObjSlIceBlock_c::CleanupResources. */
@@ -189,7 +189,6 @@ extern void func_ov055_02111264(void);
 extern int func_ov002_020c51d0(void *c, int *st);
 extern u16 func_02011d14(void);
 extern int data_ov008_02111b6c;
-extern SaveBlock data_0209caa0;
 extern s16 data_ov063_0211e1dc[];
 extern s16 data_ov063_0211e1e4[];
 extern s16 data_ov063_0211e1c0[];
@@ -267,12 +266,13 @@ void daTrs_c::func_ov063_021160d4() {
     this->mClsnOffY = 0;
     this->mClsnOffZ = 0;
     Matrix4x3_FromTranslation(&data_020a0e68, this->mPosX, this->mPosY, this->mPosZ);
-    MulMat4x3Mat4x3(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
     this->mClsnOffX = data_020a0e68.m[9];
     this->mClsnOffY = inline_fn(10);
     this->mClsnOffZ = inline_fn(11);
-    SubVec3((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mPosX, (Vector3 *)&this->mClsnOffX);
-    SubVec3((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mClsnBaseX, (Vector3 *)&this->mClsnOffX);
+    VEC_Subtract((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mPosX, (Vector3 *)&this->mClsnOffX);
+    VEC_Subtract((Vector3 *)&this->mClsnOffX, (Vector3 *)&this->mClsnBaseX,
+                 (Vector3 *)&this->mClsnOffX);
     Vec3_MulScalarInPlace((VecFx32 *)&this->mClsnOffX, 0x6800);
     p = (int *)&this->mClsnOffZ;
     *p += this->mClsnZBias;
@@ -982,7 +982,7 @@ void daTrs_c::func_ov063_021177b0() {
 
                 if (look.x <= (int)0xFF894000) {
                     ang = Vec3_HorzAngle((Vector3 *)&v, (Vector3 *)&this->mPosX);
-                    sn = data_02082214[(((unsigned short)ang >> 4) * 2) + 1];
+                    sn = FX_SinCosTable_[(((unsigned short)ang >> 4) * 2) + 1];
                     t = (int)0xFF894000 - look.x;
                     mid.z = mid.z + FX_MUL(t, sn);
                     look.x = (int)0xFF894000;
@@ -1144,7 +1144,7 @@ void daTrs_c::func_ov063_02117cdc() {
         w[0] = src->x;
         w[1] = src->y;
         w[2] = src->z;
-        if (LenVec3((const Vector3 *)w) >= 0x12c000) {
+        if (VEC_Mag((const Vector3 *)w) >= 0x12c000) {
             return;
         }
         if (this->mTalkPlayer->StartTalk(*(fBase_c *)(this), 1) == 0) {
@@ -1222,7 +1222,7 @@ void daTrs_c::func_ov063_02117cdc() {
         int *d560;
         u8 *st;
         int v0;
-        if ((&data_ov008_02111b6c)[0] == 0x1f000 || (data_0209caa0.file.flags1 & 0x10)) {
+        if (data_ov008_02111b6c == 0x1f000 || (data_0209caa0.file.flags1 & 0x10)) {
             v0 = 1;
         } else {
             v0 = 0;
@@ -1393,8 +1393,8 @@ void daTrs_c::func_ov063_02118458() {
             v.x = this->mPosX;
             v.y = this->mPosY;
             v.z = this->mPosZ;
-            v.x = data_02082214[(*(u16 *)&this->mAngleY >> 4) * 2] * m + v.x;
-            v.z = data_02082214[(*(u16 *)&this->mAngleY >> 4) * 2 + 1] * m + v.z;
+            v.x = FX_SinCosTable_[(*(u16 *)&this->mAngleY >> 4) * 2] * m + v.x;
+            v.z = FX_SinCosTable_[(*(u16 *)&this->mAngleY >> 4) * 2 + 1] * m + v.z;
             dActor_c *fb;
             this->mAngleX = 0x1000;
             func_02012694(0x156, &this->mCamSpacePos);
@@ -2592,7 +2592,7 @@ void daTrs_c::ShakeAfterHit() {
     a = (u16)(s16)((*(u16 *)&this->mStateTimer - 0x1f) << 13) >> 4;
     p = (s16*)&this->mAngleY;
     v = *p;
-    *p = v + (data_02082214[a * 2 + 1] << 10) / 4096;
+    *p = v + (FX_SinCosTable_[a * 2 + 1] << 10) / 4096;
 }
 
 void daTrs_c::MoveDuringHit(int cond, int val) {
@@ -2605,7 +2605,7 @@ void daTrs_c::MoveDuringHit(int cond, int val) {
     ip = (ip << 1) + 1;
 
     this->mHorzSpeed = val;
-    this->mVertSpeed = data_02082214[ip];
+    this->mVertSpeed = FX_SinCosTable_[ip];
     this->mPrevAngleY = this->mKnockbackAngleY;
     if (cond == 0) return;
 
@@ -2637,7 +2637,7 @@ void daTrs_c::SetMoveYawForDuringHit(int cond) {
         d = (unsigned short)d;
         d >>= 4;
         {
-            short t = data_02082214[(d << 1) + 1];
+            short t = FX_SinCosTable_[(d << 1) + 1];
             if (t < 0)
                 this->mKnockbackAngleY = base;
             else
@@ -2682,11 +2682,10 @@ void daTrs_c::Oscillate(int arg1) {
             return;
     }
     t = this->mWobblePhase >> 4;
-    this->mScaleX = this->mClsnScale +
-        ((*(short *)((char *)data_02082214 + t * 4) << 3) / 100);
+    this->mScaleX = this->mClsnScale + ((*(short *)((char *)FX_SinCosTable_ + t * 4) << 3) / 100);
     t = this->mWobblePhase >> 4;
-    this->mScaleY = this->mClsnScale +
-        ((-(*(short *)((char *)data_02082214 + t * 4) << 3)) / 100);
+    this->mScaleY =
+        this->mClsnScale + ((-(*(short *)((char *)FX_SinCosTable_ + t * 4) << 3)) / 100);
     this->mScaleZ = this->mScaleX;
     func_ov063_0211a960();
     this->mdCcAcPos_c.radius = this->mClsnRadius * this->mScaleX;
@@ -3455,11 +3454,11 @@ int daTrs_c::InitResources()
     mClsnBaseY = 0;
     mClsnBaseZ = 0;
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
-    MulMat4x3Mat4x3(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(this->mAnmModel.data.transforms, &data_020a0e68, &data_020a0e68);
     mClsnBaseX = data_020a0e68.m[9];
     mClsnBaseY = data_020a0e68.m[10];
     mClsnBaseZ = data_020a0e68.m[11];
-    SubVec3((Vector3 *)&mClsnBaseX, &mPos, (Vector3 *)&mClsnBaseX);
+    VEC_Subtract((Vector3 *)&mClsnBaseX, &mPos, (Vector3 *)&mClsnBaseX);
     mTalkStep = 0;
     mTargetAngleY = mPrevAngleY;
     mParticle1 = 0;

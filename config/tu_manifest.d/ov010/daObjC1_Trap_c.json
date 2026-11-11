@@ -283,39 +283,39 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@801",
+      "from": "@732",
       "to": "@744",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification. Re-keyed from @801 to @732 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@810",
+      "from": "@741",
       "to": "@753",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification. Re-keyed from @810 to @741 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@812",
+      "from": "@743",
       "to": "@755",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification. Re-keyed from @812 to @743 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@802",
+      "from": "@733",
       "to": "@993",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification. Re-keyed from @802 to @733 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@806",
+      "from": "@737",
       "to": "@994",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification. Re-keyed from @806 to @737 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@808",
+      "from": "@739",
       "to": "@995",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification. Re-keyed from @808 to @739 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@804",
+      "from": "@735",
       "to": "@996",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed after using math/CalcLib.h for the shared Vector3 helper declarations; compiler-local sources were matched to their existing aliases by section, size, and relocation destination, then checked by intact-TU verification. Re-keyed from @804 to @735 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

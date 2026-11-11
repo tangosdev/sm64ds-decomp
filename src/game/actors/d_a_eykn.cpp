@@ -122,7 +122,7 @@ u32 d_a_eyknNewCleanParticleHold(u32 uniqueID, u32 effectID, int x, int y, int z
 void d_a_eyknNewSimpleHold(u32 effectID, int x, int y, int z);
 
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern s8 gCurrentSublevel; /* current sublevel id */
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern SharedFilePtr data_ov002_0210da38; /* sleep-bubble model, out of ov002 */
@@ -389,7 +389,7 @@ int daEykn_c::St_Die_Main()
 
     switch (mSubState) {
     case 0: {
-        s16 sinv = data_02082214[((int)mWobblePhase >> 4) * 2];
+        s16 sinv = FX_SinCosTable_[((int)mWobblePhase >> 4) * 2];
         mAngleX = (s16)(FX_MUL(mWobbleAmp, sinv));
         mWobblePhase = (u16)((s16)mWobblePhase + 0xe000);
         ApproachLinear(mWobbleAmp, 0, 0x1b);
@@ -576,11 +576,11 @@ int daEykn_c::St_Attack_Main()
             }
 
             idx = (u16)mAngleY >> 4;
-            s = data_02082214[idx * 2];
+            s = FX_SinCosTable_[idx * 2];
             pos.x = px + (s32)(((s64)s * scale + round) >> 12);
 
             idx = (u16)mAngleY >> 4;
-            s = data_02082214[idx * 2 + 1];
+            s = FX_SinCosTable_[idx * 2 + 1];
             pos.z = pz + (s32)(((s64)s * scale + round) >> 12);
 
             rot.x = Vec3_VertAngle(&pos, &target2);

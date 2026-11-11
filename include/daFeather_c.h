@@ -44,7 +44,7 @@ struct daFeather_c : dActor_c {
     u8 pad_36c[0xc];      /* 0x36c -- unread */
     /* The float. mSwayAngle advances 0x400 per airborne frame and eases back
        to 0 on the ground; (mSwayAngle >> 4) * 2 indexes the sin/cos table at
-       data_02082214, which drives mAngleX/mAngleZ and, scaled by mDriftSpeed,
+       FX_SinCosTable_, which drives mAngleX/mAngleZ and, scaled by mDriftSpeed,
        mHorzSpeed. mDriftSpeed itself eases toward 0x10000 every frame. */
     s32 mDriftSpeed; /* 0x378 */
     u16 mSwayAngle;  /* 0x37c */

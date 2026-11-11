@@ -71,10 +71,6 @@ struct KCL_File {
     u32 zShift;            /* 0x34 */
 };
 
-namespace Memory {
-void operator_delete2(void *);
-}
-
 struct dBgW_Kc : dBgW {
     KCL_File *kclFile;        /* 0x20 */
     CLPS_BlockRef clps;       /* 0x24 - compiler-owned value lifetime */
@@ -163,24 +159,6 @@ struct dBgW_Kc : dBgW {
     /* Face class from a normal's y: 0 floor (> 0x600), 1 wall (> -0xccc),
        2 underside. Inferred name, beside the other two KCL predicates. */
     static int ClassifyNormalY(int);
-
-    /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
-       The compiler generates D0 as "run the destructor body, then call operator
-       delete on the class". Without this it emits the global `_ZdlPv`, which
-       exists nowhere in this image, and the D0 comes out one relocated word
-       different from the ROM -- a difference build_pin.verify CANNOT SEE,
-       because it wildcards relocated words. Only the link catches it.
-
-       This family deallocates through Memory::operator_delete2, not the actor
-       heap: every D0 below ends with a call to 0x0203cbcc. dActor_c's copy of this
-       member calls Memory::Deallocate instead, which is why each needs its own.
-
-       Inline, and in the IMMEDIATE base -- mwcc inlines it only when it finds it
-       in the class or one level up, as include/dActor_c.h records. No layout
-       effect: a non-virtual inline member adds no field and no vtable slot. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

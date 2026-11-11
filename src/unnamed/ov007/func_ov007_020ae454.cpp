@@ -2,8 +2,8 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "Ov007MenuState.h"
-#include "cstd.h"
 #include "Ov007Item.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -26,9 +26,9 @@ void func_ov007_020ae454(Ov007ItemNode *self) {
         else if (d >= b)
             r4 = 0x1000;
         else
-            r4 = cstd::div(d << 0xc, b);
+            r4 = FX_DivS32(d << 0xc, b);
         int t = ((r4 * (s->wiggleFrames * 0x2d)) >> 0xc) << 0x10;
-        int r = cstd::div(t, 0x168);
+        int r = FX_DivS32(t, 0x168);
         r = (unsigned short)r;
         int sv = FX_SinIdx(r >> 4);
         int inv = 0x1000 - r4;

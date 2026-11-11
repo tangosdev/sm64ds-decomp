@@ -37,6 +37,7 @@
 #include "SurfaceInfo.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx_cp.h"
 
 /* The registry factory behind the KERONPA_FIRE profile.
  * `return new daKpFr_c()` emits 0x48 with the synthesized ctor storing
@@ -209,9 +210,6 @@ void daKpFr_c::func_ov070_02121e14() {
 /* GetFloorResult is not declared in the shared header yet; keep only that
  * proven typed ABI seam. ROM calls the UpdateContinuous veneer, not the
  * method. FX_MUL's 64-bit product is the smull the ROM uses. */
-namespace cstd {
-int fdiv(int a, int b);
-}
 
 void daKpFr_c::func_ov070_02121d50(void* vclsn) {
     dBgCh_Actr* clsn = (dBgCh_Actr*)vclsn;
@@ -222,7 +220,7 @@ void daKpFr_c::func_ov070_02121d50(void* vclsn) {
         if (normal[1] != 0) {
             int a = FX_MUL(normal[0], mSpeedX);
             int b = FX_MUL(normal[2], mSpeedZ);
-            mVertSpeed = -(cstd::fdiv(a + b, normal[1]) + 0x8000);
+            mVertSpeed = -(FX_Div(a + b, normal[1]) + 0x8000);
         }
     }
     if (clsn->IsOnWall())

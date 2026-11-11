@@ -55,9 +55,9 @@ extern "C" {
 extern void func_02012694(unsigned int, void *);
 extern void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern s32 LenVec3(const Vector3 *value);
+extern s32 VEC_Mag(const Vector3 *value);
 extern s16 Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
-extern void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *matrix, Vector3 *b);
+extern void MTX_MultVec43(Vector3 *a, Matrix4x3 *matrix, Vector3 *b);
 }
 
 typedef daShark_c::StateFn SharkFn;
@@ -125,7 +125,7 @@ void daShark_c::CheckPlayerHit() {
     else if (mSwingPhase == 2)
         offset.z = -0x8c000;
     Matrix4x3_FromRotationY(&data_020a0e68, 0);
-    MulVec3Mat4x3(&offset, &data_020a0e68, &mClsnOffset);
+    MTX_MultVec43(&offset, &data_020a0e68, &mClsnOffset);
     mdCcAcPos_c.SetPosRelativeToActor(mClsnOffset);
     if (mdCcAcPos_c.otherOwner == 0)
         return;
@@ -217,7 +217,7 @@ int daShark_c::Behavior() {
         path.FromID(mPathID);
         path.GetNode(node, mPathNodeIdx);
         Vec3_Sub(&difference, &mPos, &node);
-        distance = LenVec3(&difference);
+        distance = VEC_Mag(&difference);
         if (distance == 0 || distance <= 0x258000) {
             mPathNodeIdx++;
             if (mPathNodeIdx >= mPathNodeCount)
@@ -232,7 +232,7 @@ int daShark_c::Behavior() {
         velocity.z = 0x14000;
         Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-        MulVec3Mat4x3(&velocity, &data_020a0e68, (Vector3 *)&mSpeedX);
+        MTX_MultVec43(&velocity, &data_020a0e68, (Vector3 *)&mSpeedX);
     }
     {
         /* mSpeedZ is the z word of the vector just stored at mSpeedX.

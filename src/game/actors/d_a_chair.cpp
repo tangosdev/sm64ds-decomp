@@ -12,7 +12,7 @@
  */
 // What stays, and why:
 // - The extern "C" block holds the arm9 helpers that have no shared header
-//   (Vec3_Sub, AddVec3, AngleDiff,
+//   (Vec3_Sub, VEC_Add, AngleDiff,
 //   Matrix4x3_FromRotationZXYExt).
 // - The ROM calls dBgCh_Actr_UpdateContinuous_Veneer (0x020383fc), not
 //   UpdateContinuous. func_0201267c is Sound.h's bank-3 player, one past
@@ -71,20 +71,20 @@ enum ChairSfxId {
     kSfxHop = 0x5d,    /* State2: hop timer expires, aims at the player */
 };
 
-/* Index of an unsigned 16-bit angle into data_02082214, the sin/cos
+/* Index of an unsigned 16-bit angle into FX_SinCosTable_, the sin/cos
  * table: one s16 sin, s16 cos pair per 16 angle units. */
 #define SINCOS_INDEX(angle) ((*(u16 *)&(angle) >> 4) * 2)
 
 /* local extern: arm9 C helpers with no shared header yet. Vec3_Sub takes the
-   shared Vector3 interface; this TU keeps NitroSDK VecFx32 views. AddVec3
+   shared Vector3 interface; this TU keeps NitroSDK VecFx32 views. VEC_Add
    also takes Vector3 (math/CalcLib.h declares it). */
 extern "C" {
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-void AddVec3(Vector3 *dst, Vector3 *add, Vector3 *src);
+void VEC_Add(Vector3 *dst, Vector3 *add, Vector3 *src);
 int AngleDiff(int a, int b);
 }
 
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 
 /* CHAIR registry factory. */
 extern "C" daChair_c *daChair_c_classInit(void) {
@@ -309,10 +309,10 @@ void daChair_c::State2() {
                 mPrevAngleY = cstd::atan2(diff.x, diff.z);
                 mPrevAngleX = cstd::atan2(diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
                 /* mSpeedX / mSpeedZ: lateral velocity beside mVertSpeed. */
-                reach = FX_MUL(data_02082214[SINCOS_INDEX(mPrevAngleX) + 1], 0x32000);
-                mSpeedX = FX_MUL(reach, data_02082214[SINCOS_INDEX(mPrevAngleY)]);
-                mVertSpeed = FX_MUL(data_02082214[SINCOS_INDEX(mPrevAngleX)], -0x32000);
-                mSpeedZ = FX_MUL(reach, data_02082214[SINCOS_INDEX(mPrevAngleY) + 1]);
+                reach = FX_MUL(FX_SinCosTable_[SINCOS_INDEX(mPrevAngleX) + 1], 0x32000);
+                mSpeedX = FX_MUL(reach, FX_SinCosTable_[SINCOS_INDEX(mPrevAngleY)]);
+                mVertSpeed = FX_MUL(FX_SinCosTable_[SINCOS_INDEX(mPrevAngleX)], -0x32000);
+                mSpeedZ = FX_MUL(reach, FX_SinCosTable_[SINCOS_INDEX(mPrevAngleY) + 1]);
             } else {
                 if (mActionTimer > 0x14) {
                     mAngleY += 0x2710;
@@ -331,7 +331,7 @@ void daChair_c::State2() {
         }
     }
 
-    AddVec3((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
+    VEC_Add((Vector3 *)&mPosX, (Vector3 *)&mSpeedX, (Vector3 *)&mPosX);
 
     {
         u32 id = mCylinder.otherOwner;
@@ -370,7 +370,7 @@ void daChair_c::State3() {
     ApproachStateValue(tracked, &mStateValue0, mTargetAngle, 0xfa0, 0x14, 2);
     angle = AngleDiff(*mTrackedAngle, 0);
     ip = mTrackedAngle;
-    sample = data_02082214[((u16)*ip >> 4) * 2];
+    sample = FX_SinCosTable_[((u16)*ip >> 4) * 2];
     wrapped = (s16)angle;
     offset = (s16)sample * (s16)0x50;
     if (ip != &mAngleX) {
@@ -384,10 +384,10 @@ void daChair_c::State3() {
     }
     if (wrapped >= 0x4000) {
         s16 past = (s16)(wrapped - 0x4000);
-        s16 tip = data_02082214[((u16)past >> 4) * 2];
+        s16 tip = FX_SinCosTable_[((u16)past >> 4) * 2];
         mPosY = (s16)tip * (s16)0x28 + (mHomePos.y + 0x28000);
     } else {
-        s16 tip = data_02082214[((u16)wrapped >> 4) * 2];
+        s16 tip = FX_SinCosTable_[((u16)wrapped >> 4) * 2];
         mPosY = (s16)tip * (s16)0x28 + mHomePos.y;
     }
 }
