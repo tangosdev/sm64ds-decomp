@@ -195,6 +195,7 @@ int daDossyCap_c::InitResources()
 int daDossy_c::InitResources()
 {
     int i;
+    int j;
     void *f = dExtSimpleModel_c::LoadFile(data_ov065_0211d720);
     mAnmModel.SetFile((BMD_File *)f, 1, -1);
     dExtSimpleModel_c::LoadFile(data_ov002_0210d9c0);
@@ -204,39 +205,30 @@ int daDossy_c::InitResources()
     func_ov065_02118cc4();
     func_ov065_02118838();
 
-    {
-        int j;
-        for (j = 0; j < 7; j++) {
-            KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov065_0211c08c[j]);
-            mPlatforms[j].mClsn.dBgW_KcMbg::SetFile(kcl, mPlatforms[j].mClsnNextMat, 0x1000, mAngleY,
-                                                    *(CLPS_Block *)data_ov065_0211cd68[j]);
-            if ((unsigned)j <= 2) {
-                mPlatforms[j].mClsn.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
-                if (j == 2)
-                    mPlatforms[j].mClsn.SetStoodOnCallback(func_ov065_021195bc);
-                else
-                    mPlatforms[j].mClsn.SetStoodOnCallback(func_ov065_021195d0);
-            }
-            mPlatforms[j].mClsn.Enable(this);
+    for (j = 0; j < 7; j++) {
+        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov065_0211c08c[j]);
+        mPlatforms[j].mClsn.dBgW_KcMbg::SetFile(kcl, mPlatforms[j].mClsnNextMat, 0x1000, mAngleY,
+                                                *(CLPS_Block *)data_ov065_0211cd68[j]);
+        if ((unsigned)j <= 2) {
+            mPlatforms[j].mClsn.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
+            if (j == 2)
+                mPlatforms[j].mClsn.SetStoodOnCallback(func_ov065_021195bc);
+            else
+                mPlatforms[j].mClsn.SetStoodOnCallback(func_ov065_021195d0);
         }
+        mPlatforms[j].mClsn.Enable(this);
     }
 
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos = mPos;
     mPosX += 0x7d0000;
     mWithMeshClsn.Init(this, 0x1e0000, 0xa0000, 0, 0);
     mCylClsn1.Init(this, 0xdc000, 0xfa000, 2, 0x20);
-    {
-        Vector3 offset;
-        offset.x = 0;
-        offset.y = 0x50000;
-        offset.z = 0x150000;
-        mCylClsn2.Init(this, offset, 0x60000, 0x1b0000, 2, 0x400000);
-    }
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    Vector3 offset;
+    offset.x = 0;
+    offset.y = 0x50000;
+    offset.z = 0x150000;
+    mCylClsn2.Init(this, offset, 0x60000, 0x1b0000, 2, 0x400000);
+    mHomePos = mPos;
     mStateTimer = 0;
     mClsnState = 0;
     mClsnPlayer = 0;
@@ -252,15 +244,12 @@ int daDossy_c::InitResources()
         mCapPos.y = 0;
         mCapPos.z = 0;
         func_ov065_02118838();
-        {
-            daDossyCap_c *cap =
-                (daDossyCap_c *)dActor_c::Spawn(0xa9, 0, mPos, &mAngle, mAreaId, -1);
-            if (cap != 0) {
-                mCap = cap;
-                cap->mCarrier = this;
-            } else {
-                mHasCap = 0;
-            }
+        daDossyCap_c *cap = (daDossyCap_c *)dActor_c::Spawn(0xa9, 0, mPos, &mAngle, mAreaId, -1);
+        if (cap != 0) {
+            mCap = cap;
+            cap->mCarrier = this;
+        } else {
+            mHasCap = 0;
         }
     }
     return 1;
@@ -309,9 +298,11 @@ int daDossyCap_c::Behavior()
 
 int daDossy_c::Behavior()
 {
-    int offCenter;
+    s16 offCenter;
     int outer;
     int inner;
+    int neck;
+    int neckReach;
 
     if (mClsnState != 0)
         ApproachLinear(mSinkHeight, 0xa000, 0x1000);
@@ -320,43 +311,38 @@ int daDossy_c::Behavior()
 
     (this->*data_ov065_0211d7fc[mState])();
 
-    mDistToCenter = Vec3_HorzDist(reinterpret_cast<const Vector3 *>(&mPosX),
-                                  reinterpret_cast<const Vector3 *>(&mSpawnPosX));
-    mAngToCenter = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
-                                  reinterpret_cast<const Vector3 *>(&mSpawnPosX));
+    mDistToCenter = Vec3_HorzDist(&mPos, &mSpawnPos);
+    mAngToCenter = Vec3_HorzAngle(&mPos, &mSpawnPos);
 
-    offCenter = (short)AngleDiff(mAngToCenter, mAngleY);
+    offCenter = AngleDiff(mAngToCenter, mAngleY);
 
-    {
-        /* Her neck's horizontal reach pushes out the inner edge of the
-           ring she swims in, or the outer edge once offCenter is 0x4000
-           or more. */
-        int neck = FX_CosIdx((u16)offCenter >> 4) * 0x190;
-        int neckReach = FX_MUL(neck, FX_SinIdx((u16)mPlatforms[1].mRot.x >> 4));
-        if (offCenter < 0x4000) {
-            inner = neckReach + 0x5f8000;
-            outer = 0x97c000;
-        } else {
-            inner = 0x5f8000;
-            outer = neckReach + 0x97c000;
-        }
+    /* Her neck's horizontal reach pushes out the inner edge of the ring
+       she swims in, or the outer edge once offCenter is 0x4000 or more. */
+    neck = FX_CosIdx((u16)offCenter >> 4) * 0x190;
+    neckReach = FX_MUL(neck, FX_SinIdx((u16)mPlatforms[1].mRot.x >> 4));
+    if (offCenter < 0x4000) {
+        inner = neckReach + 0x5f8000;
+        outer = 0x97c000;
+    } else {
+        inner = 0x5f8000;
+        outer = neckReach + 0x97c000;
     }
 
     if (mDistToCenter >= outer) {
         mPosX =
-            mSpawnPosX - FX_MUL(outer, FX_SinIdx((u16)mAngToCenter >> 4));
-        mPosZ = mSpawnPosZ -
+            mSpawnPos.x - FX_MUL(outer, FX_SinIdx((u16)mAngToCenter >> 4));
+        mPosZ = mSpawnPos.z -
                 FX_MUL(outer, FX_CosIdx((u16)mAngToCenter >> 4));
     } else if (mDistToCenter <= inner) {
         mPosX =
-            mSpawnPosX - FX_MUL(inner, FX_SinIdx((u16)mAngToCenter >> 4));
-        mPosZ = mSpawnPosZ -
+            mSpawnPos.x - FX_MUL(inner, FX_SinIdx((u16)mAngToCenter >> 4));
+        mPosZ = mSpawnPos.z -
                 FX_MUL(inner, FX_CosIdx((u16)mAngToCenter >> 4));
     }
 
     UpdatePos(0);
     dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
-    mPosY = mSpawnPosY - mSinkHeight - mPushDownHeight;
+    mPosY = mSpawnPos.y - mSinkHeight - mPushDownHeight;
     mAnmModel.Advance();
     func_ov065_02118cc4();
     func_ov065_02118838();
@@ -410,7 +396,7 @@ void daDossy_c::func_ov065_02118cc4()
 extern "C" void func_ov065_02118c4c(daDossyCap_c *cap)
 {
     Vector3 pos;
-    Vec3_Asr(reinterpret_cast<Vector3 *>(&pos), reinterpret_cast<Vector3 *>(&cap->mPosX), 3);
+    Vec3_Asr(&pos, &cap->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, cap->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, cap->mAngleX);
@@ -423,14 +409,12 @@ void daDossy_c::func_ov065_02118838()
     Vector3 v;
     Matrix4x3 base;
     s32 i;
-    u8 *tbl;
 
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     base = data_020a0e68;
-    tbl = data_ov065_0211c078;
     for (i = 0; i < 7; i++) {
-        ModelBone *bone = &mAnmModel.data.bones[*tbl];
+        ModelBone *bone = &mAnmModel.data.bones[data_ov065_0211c078[i]];
         {
             u16 tz = bone->rotZ;
             u16 ty = bone->rotY;
@@ -449,7 +433,7 @@ void daDossy_c::func_ov065_02118838()
         v.y = 0;
         v.z = 0;
         data_020a0e68 = base;
-        MTX_Concat43(&mAnmModel.data.transforms[*tbl], &data_020a0e68, &data_020a0e68);
+        MTX_Concat43(&mAnmModel.data.transforms[data_ov065_0211c078[i]], &data_020a0e68, &data_020a0e68);
         v.x = data_020a0e68.m[9];
         v.y = data_020a0e68.m[10];
         v.z = data_020a0e68.m[11];
@@ -459,19 +443,15 @@ void daDossy_c::func_ov065_02118838()
         if (i == 2) {
             s32 scaled;
             mHeadRotX = mPlatforms[2].mRot.x;
-            mHomePosX = v.x;
-            mHomePosY = v.y;
-            mHomePosZ = v.z;
+            mHomePos = v;
             scaled = FX_SinIdx((u16)mHeadRotX >> 4) * 0x96;
-            mCapPos.x = mHomePosX;
-            mCapPos.y = mHomePosY;
-            mCapPos.z = mHomePosZ;
+            mCapPos = mHomePos;
             mCapPos.x += FX_MUL(scaled, FX_SinIdx((u16)mAngleY >> 4));
             mCapPos.y += 0x8c000 - FX_SinIdx((u16)mHeadRotX >> 4) * 0x1e;
             mCapPos.z += FX_MUL(scaled, FX_CosIdx((u16)mAngleY >> 4));
-            mHomePosX += FX_SinIdx((u16)mAngleY >> 4) * 0x82;
-            mHomePosY += 0x50000;
-            mHomePosZ += FX_CosIdx((u16)mAngleY >> 4) * 0x82;
+            mHomePos.x += FX_SinIdx((u16)mAngleY >> 4) * 0x82;
+            mHomePos.y += 0x50000;
+            mHomePos.z += FX_CosIdx((u16)mAngleY >> 4) * 0x82;
         }
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         Matrix4x3_ApplyInPlaceToRotationY(
@@ -482,7 +462,6 @@ void daDossy_c::func_ov065_02118838()
                                           mPlatforms[i].mRot.z);
         mPlatforms[i].mClsnNextMat = data_020a0e68;
         mPlatforms[i].mClsn.Transform(mPlatforms[i].mClsnNextMat, mAngleY);
-        tbl++;
     }
 }
 
@@ -514,19 +493,15 @@ void daDossy_c::func_ov065_02118634()
             target = player->mAngleY;
             speed = 0x7000;
         } else {
-            int a = cstd::atan2(0x7d0000, mDistToCenter - 0x7d0000);
-            s16 base = mAngToCenter;
-            s16 diff = (s16)(mAngleY - base);
-            if (diff < 0) a = (s16)(-a);
-            target = (s16)(base + a);
+            s16 a = cstd::atan2(0x7d0000, mDistToCenter - 0x7d0000);
+            if ((s16)(mAngleY - mAngToCenter) < 0)
+                a = -a;
+            target = mAngToCenter + a;
             speed = 0x3800;
         }
         ApproachLinear(mHorzSpeed, speed, 0x400);
 
-        {
-            int d = (s16)(target - mAngleY);
-            ApproachLinear(mAngVelY, (s16)(d / 100), 5);
-        }
+        ApproachLinear(mAngVelY, (s16)(target - mAngleY) / 100, 5);
 
         mAngleY += mAngVelY;
         mPrevAngleY = mAngleY;
@@ -534,13 +509,11 @@ void daDossy_c::func_ov065_02118634()
         mCylClsn1.Clear();
         mCylClsn2.Clear();
         mCylClsn1.Update();
-        {
-            Vector3 offset;
-            offset.x = 0;
-            offset.y = 0x50000;
-            offset.z = 0x150000;
-            mCylClsn2.SetPosRelativeToActor(offset);
-        }
+        Vector3 offset;
+        offset.x = 0;
+        offset.y = 0x50000;
+        offset.z = 0x150000;
+        mCylClsn2.SetPosRelativeToActor(offset);
         mCylClsn2.Update();
     }
 }
@@ -548,15 +521,14 @@ void daDossy_c::func_ov065_02118634()
 void daDossy_c::func_ov065_021183c8()
 {
     Vector3 playerPos;
-    u8 st = mStateState;
 
-    if (st == 0) {
+    if (mStateState == 0) {
         mPushDownHeight += 0xa000;
         if (mPushDownHeight >= 0x64000) {
             mPushDownHeight = 0x64000;
             mStateState++;
         }
-    } else if (st == 1) {
+    } else if (mStateState == 1) {
         mPushDownHeight -= 0x5000;
         if (mPushDownHeight <= 0) {
             mPushDownHeight = 0;
@@ -574,8 +546,8 @@ void daDossy_c::func_ov065_021183c8()
         if (mClsnState == 2 && mRideCooldown == 0) {
             if (mCap == 0 || func_ov065_02119210(mCap) == 0) {
                 playerPos = mClsnPlayer->mPos;
-                if (playerPos.y >= mHomePosY &&
-                    Vec3_HorzDist(&playerPos, reinterpret_cast<const Vector3 *>(&mHomePosX)) <
+                if (playerPos.y >= mHomePos.y &&
+                    Vec3_HorzDist(&playerPos, &mHomePos) <
                         0x88000 &&
                     ((daPly_c *)mClsnPlayer)->SetNoControlState(5, -1, 0) != 0) {
                     mState++;
@@ -586,8 +558,7 @@ void daDossy_c::func_ov065_021183c8()
                 }
             }
         }
-        if (Vec3_HorzDist(reinterpret_cast<const Vector3 *>(&mPosX),
-                          reinterpret_cast<const Vector3 *>(&mClsnPlayer->mPosX)) < 0x1f4000)
+        if (Vec3_HorzDist(&mPos, &mClsnPlayer->mPos) < 0x1f4000)
             mStateTimer = 0;
     } else {
         if (mStateTimer > 0x96) {

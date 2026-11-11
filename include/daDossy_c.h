@@ -69,14 +69,10 @@ struct daDossy_c : dActor_c {
     dBgCh_Actr mWithMeshClsn;   /* 0xf50 */
     dCcAc_c mCylClsn1;          /* 0x110c */
     dCcAcPos_c mCylClsn2;       /* 0x1140 */
-    s32 mHomePosX;              /* 0x1180 */
-    s32 mHomePosY;              /* 0x1184 */
-    s32 mHomePosZ;              /* 0x1188 */
+    Vector3 mHomePos;           /* 0x1180 */
     dActor_c *mClsnPlayer;      /* 0x118c */
     dActor_c *mRider;           /* 0x1190 */
-    s32 mSpawnPosX;             /* 0x1194 */
-    s32 mSpawnPosY;             /* 0x1198 */
-    s32 mSpawnPosZ;             /* 0x119c */
+    Vector3 mSpawnPos;          /* 0x1194 */
     s32 mDistToCenter;          /* 0x11a0 */
     s16 mAngToCenter;           /* 0x11a4 */
     s16 mAngVelY;               /* 0x11a6 */
