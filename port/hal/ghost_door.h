@@ -22,6 +22,11 @@
 //                  128 + n (n = slide / 2 units, 0..69) a star gate (actor 354),
 //                  which has no model animation, only sliding leaves. The follower never reads vy (Y is held, not
 //                  reckoned), so the field is free.
+//   vy while NO door kind is set (SWIM2): the swim tilt, (pitch_hi8 << 8) | roll_hi8,
+//                  the high bytes of the body's nose angle (+0x8c) and turn lean
+//                  (+0x90), 1.4 degree steps. A 1.0.2 receiver reads vy only when a
+//                  door kind is set, so it ignores this; a 1.0.2 sender sends 0,
+//                  which reads as level. Never use flags bit 7 for this.
 //
 // comms_hub.h stays WIRE1's file; its SYNG comment should point here.
 #ifndef PORT_HAL_GHOST_DOOR_H
