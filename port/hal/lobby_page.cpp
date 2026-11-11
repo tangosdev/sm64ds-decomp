@@ -1876,25 +1876,42 @@ void poly(const Surf &s, const float *vx, const float *vy, int n, uint32_t rgb, 
 void icon_bucket(const Surf &s, const Rect &r, uint32_t paint, uint32_t pail, uint32_t edge, uint32_t handle, float u)
 {
     const float W = (float)r.w, H = (float)r.h, X = (float)r.x, Y = (float)r.y;
-    const float wd = 1.4f * u > 1.0f ? 1.4f * u : 1.0f;
-    /* the pail: a trapezoid, wide at the mouth */
-    const float bx[4] = { X + W * 0.18f, X + W * 0.70f, X + W * 0.62f, X + W * 0.26f };
-    const float by[4] = { Y + H * 0.40f, Y + H * 0.40f, Y + H * 0.86f, Y + H * 0.86f };
-    poly(s, bx, by, 4, pail);
-    for (int i = 0; i < 4; ++i) line(s, bx[i], by[i], bx[(i + 1) & 3], by[(i + 1) & 3], wd, edge);
+    const float wd = 1.3f * u > 1.0f ? 1.3f * u : 1.0f;
+    /* the pail is drawn upright in a unit box, then tipped 28 degrees to the right about its middle so it pours */
+    const float ca = 0.8829f, sa = 0.4695f, ox = 0.40f, oy = 0.50f;
+    auto P2 = [&](float x, float y, float *qx, float *qy) {
+        const float dx = x - ox, dy = y - oy;
+        *qx = X + W * (ox + dx * ca - dy * sa);
+        *qy = Y + H * (oy + dx * sa + dy * ca);
+    };
+    float bx[4], by[4];
+    P2(0.16f, 0.30f, &bx[0], &by[0]); P2(0.64f, 0.30f, &bx[1], &by[1]);
+    P2(0.56f, 0.80f, &bx[2], &by[2]); P2(0.24f, 0.80f, &bx[3], &by[3]);
     /* the handle: a half ring over the mouth */
-    const float cx = X + W * 0.44f, cy = Y + H * 0.40f, R = W * 0.25f;
     for (int i = 0; i < 12; ++i) {
         const float a0 = 3.14159f + 3.14159f * i / 12, a1 = 3.14159f + 3.14159f * (i + 1) / 12;
-        line(s, cx + cosf(a0) * R, cy + sinf(a0) * R * 0.95f, cx + cosf(a1) * R, cy + sinf(a1) * R * 0.95f, wd, handle);
+        float x0, y0, x1, y1;
+        P2(0.40f + cosf(a0) * 0.22f, 0.30f + sinf(a0) * 0.20f, &x0, &y0);
+        P2(0.40f + cosf(a1) * 0.22f, 0.30f + sinf(a1) * 0.20f, &x1, &y1);
+        line(s, x0, y0, x1, y1, wd, handle);
     }
-    /* the paint: an oval in the mouth and a run over the right lip with a drop under it */
-    ring(s, X + W * 0.44f, Y + H * 0.41f, W * 0.25f, H * 0.065f, wd, paint, 1);
-    const float px[5] = { X + W * 0.60f, X + W * 0.74f, X + W * 0.82f, X + W * 0.78f, X + W * 0.66f };
-    const float py[5] = { Y + H * 0.37f, Y + H * 0.38f, Y + H * 0.56f, Y + H * 0.66f, Y + H * 0.50f };
-    poly(s, px, py, 5, paint);
-    ring(s, X + W * 0.80f, Y + H * 0.76f, W * 0.055f, H * 0.075f, wd, paint, 1);
-    line(s, X + W * 0.18f, Y + H * 0.40f, X + W * 0.70f, Y + H * 0.40f, wd, edge);
+    poly(s, bx, by, 4, pail);
+    for (int i = 0; i < 4; ++i) line(s, bx[i], by[i], bx[(i + 1) & 3], by[(i + 1) & 3], wd, edge);
+    /* the paint: out of the lower lip, down the right side, into a drop at the bottom right; a dark edge so it shows on any face */
+    float px[7], py[7];
+    px[0] = bx[1] - W * 0.10f; py[0] = by[1] - H * 0.02f;
+    px[1] = bx[1] + W * 0.04f; py[1] = by[1];
+    px[2] = X + W * 0.90f;     py[2] = Y + H * 0.66f;
+    px[3] = X + W * 0.92f;     py[3] = Y + H * 0.82f;
+    px[4] = X + W * 0.82f;     py[4] = Y + H * 0.90f;
+    px[5] = X + W * 0.73f;     py[5] = Y + H * 0.82f;
+    px[6] = X + W * 0.76f;     py[6] = Y + H * 0.62f;
+    for (int i = 0; i < 7; ++i) line(s, px[i], py[i], px[(i + 1) % 7], py[(i + 1) % 7], wd * 1.6f, edge);
+    poly(s, px, py, 7, paint);
+    /* the paint's face in the mouth */
+    float mx0, my0, mx1, my1;
+    P2(0.20f, 0.31f, &mx0, &my0); P2(0.60f, 0.31f, &mx1, &my1);
+    line(s, mx0, my0, mx1, my1, wd * 1.4f, paint);
 }
 /* coopfix1 LOBBYUI1: the arrow at the bucket: a gold arrow pointing down, its tip at (cx, ty), with a dark edge */
 void icon_arrow_down(const Surf &s, float cx, float ty, float u)
