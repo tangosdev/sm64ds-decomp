@@ -82,6 +82,7 @@ enum : int {
     kSpKindSilver  = 2,     // silver star + its marker (the brick block's pair)
     kSpGoneAnn     = 1,     // gone: announced actor (origin seat, counter)
     kSpGoneLinked  = 2,     // gone: native star linked to placed marker slot
+    kSpGoneTook    = 1,     // SpGoneWire.reserved bit: an announced star was taken by a player (not a copy removed or lost)
     kSpSlots       = 512,
     kSpPosLimit    = 1 << 28,
 };
@@ -106,7 +107,7 @@ struct SpGoneWire {
     uint8_t  origin;      // announced: spawner seat; linked: 0xFF
     uint8_t  kind;        // kSpGoneAnn / kSpGoneLinked
     uint16_t id;          // announced: counter; linked: marker slot
-    uint32_t reserved;    // 0
+    uint32_t reserved;    // 0, or kSpGoneTook on an announced star
 };
 // BLOCK, 16 B.
 struct SpBlockWire {
@@ -180,7 +181,7 @@ inline bool sp_spawn_validate(const void *p, int len) {
 inline bool sp_gone_validate(const void *p, int len) {
     if (!p || len != (int)sizeof(SpGoneWire)) return false;
     SpGoneWire w; std::memcpy(&w, p, sizeof w);
-    if (!coop_key_ok(w.key) || w.reserved) return false;
+    if (!coop_key_ok(w.key) || (w.reserved & ~(uint32_t)kSpGoneTook) || (w.reserved && w.kind != kSpGoneAnn)) return false;
     if (w.kind == kSpGoneAnn) return w.origin < kCoopMaxSeats && w.id != 0;
     if (w.kind == kSpGoneLinked) return w.origin == 0xFF && w.id < kSpSlots;
     return false;
