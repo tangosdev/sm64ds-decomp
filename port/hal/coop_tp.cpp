@@ -228,9 +228,11 @@ void try_tp(int seat, unsigned now) {
         // Entered like the painting does: the castle sublevel and the painting's entrance are recorded, so a
         // star exit, Exit Course or death puts this player back at that painting.
         // A saved sub-area chain (LLL, SSL, TTM) must not survive: LoadLevel's return branch would redirect into it.
-        data_02092118 = -1;
+        static const bool late_clear = std::getenv("SM64DS_COOP_TP_LATECLEAR") != nullptr;   // proof knob: the order before review
+        if (!late_clear) data_02092118 = -1;
         LoadLevel((unsigned)p.level, 0, (unsigned)p.act, 0, (unsigned)ret);
         data_0209211c = (signed char)castle;
+        if (late_clear) data_02092118 = -1;
         if (g.log) std::fprintf(stderr, "[cotp] return set: course %d -> castle sublevel %d entrance %d\n", p.level, castle, ret);
     } else {
         LoadLevelNoReturn((unsigned)p.level, 0, (unsigned)p.act, 0);
