@@ -57,14 +57,6 @@ enum dScGameOver_c_AssetId {
 #include "dFdBrightness_c.h"
 #include "Sound.h"
 
-/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
-   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
-   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
-   d_a_demo.cpp's pinned @NNN symbols. */
-static inline void *G2_GetOBJCharPtr(void) {
-    return (void *)HW_OBJ_VRAM;
-}
-
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
 
 /* Native scene data: prompt selection and the animated GAME OVER sprites. */

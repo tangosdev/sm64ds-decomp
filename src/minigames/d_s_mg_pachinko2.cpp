@@ -51,14 +51,6 @@ enum dScMgPachinko2_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "LevelRng.h"
 
-/* NitroSDK's main-engine OBJ character base getter (nitro/gx/gx_bgcnt.h).
-   local copy: include/nitro/gx/gx_bgcnt.h carries only the sub-engine
-   G2S_GetOBJCharPtr, and adding a second inline body there renumbers
-   d_a_demo.cpp's pinned @NNN symbols. */
-static inline void *G2_GetOBJCharPtr(void) {
-    return (void *)HW_OBJ_VRAM;
-}
-
 namespace Sound {
 void PlayBank2_2D(unsigned int id);
 }
