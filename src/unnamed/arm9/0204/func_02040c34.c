@@ -40,8 +40,9 @@ typedef char
 typedef char FileShareChildArea_mRecvWork_must_be_0xc70
     [(int)&((FileShareChildArea *)0)->mRecvWork == 0xc70 ? 1 : -1];
 
-extern "C" void func_02040c34(int isParent, int port, int stateCallback, int allocFunc,
-                              int allocArg) {
+extern "C" void func_02040c34(int isParent, int port, void (*stateCallback)(int),
+                              void *(*allocFunc)(void *arg, unsigned int size, void *ptr),
+                              void *allocArg) {
     FileShareWork *G = &data_020a1fc0;
     OSIntrMode state = OS_DisableInterrupts();
     if (data_020a0f84 != 0) {
@@ -122,7 +123,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
                 MI_CpuFill8(nd, 0, FILE_SHARE_NODE_SIZE);
                 /* mTableSize is read through data_020a1fc0, not G, here and in the
                    child branch: the G-> spelling comes out 8 bytes short */
-                WBT_RegisterBlock(nd->mRegion, 0x20000, data_02082158, G->mTable,
+                WBT_RegisterBlock(nd->mRegion, 0x20000, data_02082158, (int)G->mTable,
                                   data_020a1fc0.mTableSize, 0);
                 nd->mNext = *(FileShareNode **)((base + 0x2000) + 0x704);
                 *(FileShareNode **)((base + 0x2000) + 0x704) = nd;
@@ -138,7 +139,7 @@ extern "C" void func_02040c34(int isParent, int port, int stateCallback, int all
             DC_WaitWriteBufferEmpty();
             p = base + 0xc0;
             for (i = 0; i < 0x10; i++) {
-                arr->mBlockInfoTable[i] = (int)p;
+                arr->mBlockInfoTable[i] = p;
                 arr->mRecvBufTable[i] = 0;
                 arr->mPacketBitmapTable[i] = 0;
                 p += 0x28;

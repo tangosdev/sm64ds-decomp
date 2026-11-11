@@ -16,7 +16,7 @@
  * table entry casts the pointer-to-member to the table's void handler type.
  *
  * __sinit at the end of this file emits compiler-numbered statics; they
- * compile as @652..@676 and the manifest maps them to the ROM's
+ * compile as @578..@598, @600 and @602, and the manifest maps them to the ROM's
  * @456..@479 and @506. mwcc's counter for those names advances for
  * named variables, named parameters (prototypes included) and some
  * compiler temporaries declared before them (`new daKpa3Bg_c` alone
@@ -33,7 +33,7 @@
  * - dBgW_KcMbg::SetFile is called through its mangled name, with the
  *   Fix12<int> argument passed as a raw int.
  * - dBgW::SetBeforeClsnCallback stores dBgW::UpdatePosWithTransform.
- *   dBgW::SetStoodOnCallback stores the touch veneer func_ov060_021183f4.
+ *   dBgW::SetStoodOnCallback stores the touch veneer StoodOnCallback.
  * - data_ov060_02119564 is the ten-row (x, z, angle) table. Its pool
  *   words point at row 0's x, z and angle; the delinker named each of
  *   those (02119564 / 02119568 / 0211956c), and the struct fields' base
@@ -73,10 +73,6 @@ extern SharedFilePtr *data_ov060_02119514[];
 extern SharedFilePtr *data_ov060_0211953c[];
 extern CLPS_Block *data_ov060_0211a980[];
 extern int data_0208e738;
-
-void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other);
-void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other);
-
 }
 
 typedef void (daKpa3Bg_c::*Handler)();
@@ -108,20 +104,18 @@ extern "C" daKpa3Bg_c *daKpa3Bg_c_classInit(void)
 }
 
 /* dBgW callback veneer, armed by dBgW::SetStoodOnCallback in InitResources. Drops the
-   collider and forwards the platform and the touching actor into
-   func_ov060_021183cc. */
-extern "C" void func_ov060_021183f4(dBgW *collider, dActor_c *owner, dActor_c *other) {
-    func_ov060_021183cc(static_cast<daKpa3Bg_c *>(owner), other);
+   collider and forwards the touching actor to the platform's OnStoodOn. */
+void daKpa3Bg_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daKpa3Bg_c *>(owner)->OnStoodOn(other);
 }
 
 /* Flags the platform when the actor that touched it is Bowser
    (actor ID 0x117); Behavior clears the flag every frame. The comparison
    is materialised into an int before the test, as the ROM does. */
-extern "C" void func_ov060_021183cc(daKpa3Bg_c *self, dActor_c *other)
-{
+void daKpa3Bg_c::OnStoodOn(dActor_c *other) {
     int isKoopa = other->actorID == 0x117;
     if (isKoopa != 0)
-        self->mTouchedKoopa = 1;
+        mTouchedKoopa = 1;
 }
 
 s32 daKpa3Bg_c::InitResources()
@@ -138,7 +132,7 @@ s32 daKpa3Bg_c::InitResources()
         ->dBgW_KcMbg::SetFile((KCL_File *)dBgW_Kc::LoadFile(*data_ov060_0211953c[mVariant]),
                               mClsnMat, 0x1000, mAngleY, *data_ov060_0211a980[mVariant]);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
-    mMeshCollider.SetStoodOnCallback(&func_ov060_021183f4);
+    mMeshCollider.SetStoodOnCallback(&StoodOnCallback);
     mMeshCollider.Enable(this);
     mKoopaUniqueId = 0;
     mTouchedKoopa = 0;

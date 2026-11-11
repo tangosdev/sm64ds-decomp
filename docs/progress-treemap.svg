@@ -7441,47 +7441,47 @@ matched: yes</title></rect><rect x="152.16" y="584.36" width="6.40" height="4.61
 module: arm9
 addr: 0x02045e44
 size: 44 bytes
-matched: yes</title></rect><rect x="158.56" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02045e70
+matched: yes</title></rect><rect x="158.56" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents11SetEmissionEj
 module: arm9
 addr: 0x02045e70
 size: 84 bytes
-matched: yes</title></rect><rect x="170.77" y="584.36" width="7.56" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02045ec4
+matched: yes</title></rect><rect x="170.77" y="584.36" width="7.56" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents19SetMaterialEmissionEji
 module: arm9
 addr: 0x02045ec4
 size: 52 bytes
-matched: yes</title></rect><rect x="178.33" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02045ef8
+matched: yes</title></rect><rect x="178.33" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents10SetAmbientEj
 module: arm9
 addr: 0x02045ef8
 size: 84 bytes
-matched: yes</title></rect><rect x="190.55" y="584.36" width="7.56" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02045f4c
+matched: yes</title></rect><rect x="190.55" y="584.36" width="7.56" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents18SetMaterialAmbientEji
 module: arm9
 addr: 0x02045f4c
 size: 52 bytes
-matched: yes</title></rect><rect x="198.11" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02045f80
+matched: yes</title></rect><rect x="198.11" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents10SetDiffuseEj
 module: arm9
 addr: 0x02045f80
 size: 84 bytes
-matched: yes</title></rect><rect x="210.32" y="584.36" width="7.56" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02045fd4
+matched: yes</title></rect><rect x="210.32" y="584.36" width="7.56" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents18SetMaterialDiffuseEji
 module: arm9
 addr: 0x02045fd4
 size: 52 bytes
-matched: yes</title></rect><rect x="217.88" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02046008
+matched: yes</title></rect><rect x="217.88" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents12SetPolygonIDEi
 module: arm9
 addr: 0x02046008
 size: 84 bytes
-matched: yes</title></rect><rect x="230.10" y="584.36" width="6.40" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204605c
+matched: yes</title></rect><rect x="230.10" y="584.36" width="6.40" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents20SetMaterialPolygonIDEii
 module: arm9
 addr: 0x0204605c
 size: 44 bytes
-matched: yes</title></rect><rect x="236.50" y="584.36" width="22.10" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02046088
+matched: yes</title></rect><rect x="236.50" y="584.36" width="22.10" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents13SetShadowDrawEii
 module: arm9
 addr: 0x02046088
 size: 152 bytes
-matched: yes</title></rect><rect x="258.60" y="584.36" width="21.52" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02046120
+matched: yes</title></rect><rect x="258.60" y="584.36" width="21.52" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents13SetShadowMaskEi
 module: arm9
 addr: 0x02046120
 size: 148 bytes
-matched: yes</title></rect><rect x="280.12" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020461b4
+matched: yes</title></rect><rect x="280.12" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents8SetAlphaEj
 module: arm9
 addr: 0x020461b4
 size: 84 bytes
@@ -7489,11 +7489,11 @@ matched: yes</title></rect><rect x="292.34" y="584.36" width="6.40" height="4.61
 module: arm9
 addr: 0x02046208
 size: 44 bytes
-matched: yes</title></rect><rect x="298.73" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02046234
+matched: yes</title></rect><rect x="298.73" y="584.36" width="12.21" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents14SetPolygonModeEi
 module: arm9
 addr: 0x02046234
 size: 84 bytes
-matched: yes</title></rect><rect x="310.95" y="584.36" width="6.40" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02046288
+matched: yes</title></rect><rect x="310.95" y="584.36" width="6.40" height="4.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN15ModelComponents22SetMaterialPolygonModeEii
 module: arm9
 addr: 0x02046288
 size: 44 bytes
@@ -8145,7 +8145,7 @@ matched: yes</title></rect><rect x="101.53" y="664.65" width="4.54" height="6.50
 module: arm9
 addr: 0x0204f1e8
 size: 44 bytes
-matched: yes</title></rect><rect x="106.07" y="664.65" width="10.31" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21HeapAllocator_204f46013func_0204f214Ei
+matched: yes</title></rect><rect x="106.07" y="664.65" width="10.31" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f214
 module: arm9
 addr: 0x0204f214
 size: 100 bytes
@@ -8185,11 +8185,11 @@ matched: yes</title></rect><rect x="192.29" y="664.65" width="7.43" height="6.50
 module: arm9
 addr: 0x0204f558
 size: 72 bytes
-matched: yes</title></rect><rect x="199.72" y="664.65" width="9.90" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN2E113func_0204f5a0Ei
+matched: yes</title></rect><rect x="199.72" y="664.65" width="9.90" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f5a0
 module: arm9
 addr: 0x0204f5a0
 size: 96 bytes
-matched: yes</title></rect><rect x="209.62" y="664.65" width="4.95" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN2E113func_0204f600Eiii
+matched: yes</title></rect><rect x="209.62" y="664.65" width="4.95" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0204f600
 module: arm9
 addr: 0x0204f600
 size: 48 bytes
@@ -8461,7 +8461,7 @@ matched: yes</title></rect><rect x="270.03" y="676.26" width="3.88" height="8.30
 module: arm9
 addr: 0x02051074
 size: 48 bytes
-matched: yes</title></rect><rect x="273.91" y="676.26" width="17.45" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9HeapOwner13func_020510a4Ei
+matched: yes</title></rect><rect x="273.91" y="676.26" width="17.45" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020510a4
 module: arm9
 addr: 0x020510a4
 size: 216 bytes
@@ -8473,7 +8473,7 @@ matched: yes</title></rect><rect x="298.47" y="676.26" width="9.05" height="8.30
 module: arm9
 addr: 0x020511d4
 size: 112 bytes
-matched: yes</title></rect><rect x="307.52" y="676.26" width="13.90" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9HeapOwner13func_02051244Ev
+matched: yes</title></rect><rect x="307.52" y="676.26" width="13.90" height="8.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02051244
 module: arm9
 addr: 0x02051244
 size: 172 bytes
@@ -20405,163 +20405,163 @@ matched: yes</title></rect><rect x="742.43" y="108.26" width="18.33" height="5.1
 module: ov006
 addr: 0x020c4684
 size: 140 bytes
-matched: yes</title></rect><rect x="760.77" y="108.26" width="25.67" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_IsChasing
+matched: yes</title></rect><rect x="760.77" y="108.26" width="25.67" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho9IsChasingEv
 module: ov006
 addr: 0x020c4710
 size: 196 bytes
-matched: yes</title></rect><rect x="786.44" y="108.26" width="67.57" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_CheckHitA
+matched: yes</title></rect><rect x="786.44" y="108.26" width="67.57" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho9CheckHitAEv
 module: ov006
 addr: 0x020c47d4
 size: 516 bytes
-matched: yes</title></rect><rect x="854.01" y="108.26" width="72.29" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_CheckHitB
+matched: yes</title></rect><rect x="854.01" y="108.26" width="72.29" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho9CheckHitBEv
 module: ov006
 addr: 0x020c49d8
 size: 552 bytes
-matched: yes</title></rect><rect x="926.30" y="108.26" width="11.00" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_UpdateMatrix
+matched: yes</title></rect><rect x="926.30" y="108.26" width="11.00" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho12UpdateMatrixEv
 module: ov006
 addr: 0x020c4c00
 size: 84 bytes
-matched: yes</title></rect><rect x="937.30" y="108.26" width="17.29" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_Draw
+matched: yes</title></rect><rect x="937.30" y="108.26" width="17.29" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho4DrawEv
 module: ov006
 addr: 0x020c4c54
 size: 132 bytes
-matched: yes</title></rect><rect x="954.59" y="108.26" width="8.91" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_Update
+matched: yes</title></rect><rect x="954.59" y="108.26" width="8.91" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho6UpdateEv
 module: ov006
 addr: 0x020c4cd8
 size: 68 bytes
-matched: yes</title></rect><rect x="963.49" y="108.26" width="0.52" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StateIdle
+matched: yes</title></rect><rect x="963.49" y="108.26" width="0.52" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho9StateIdleEv
 module: ov006
 addr: 0x020c4d1c
 size: 4 bytes
-matched: yes</title></rect><rect x="964.02" y="108.26" width="3.67" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_SetIdle
+matched: yes</title></rect><rect x="964.02" y="108.26" width="3.67" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho7SetIdleEv
 module: ov006
 addr: 0x020c4d20
 size: 28 bytes
-matched: yes</title></rect><rect x="967.68" y="108.26" width="44.00" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_Settle
+matched: yes</title></rect><rect x="967.68" y="108.26" width="44.00" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho6SettleEv
 module: ov006
 addr: 0x020c4d3c
 size: 336 bytes
-matched: yes</title></rect><rect x="1011.69" y="108.26" width="28.81" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionHitSpin
+matched: yes</title></rect><rect x="1011.69" y="108.26" width="28.81" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho13MotionHitSpinEv
 module: ov006
 addr: 0x020c4e8c
 size: 220 bytes
-matched: yes</title></rect><rect x="1040.50" y="108.26" width="7.86" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionHitSpin
+matched: yes</title></rect><rect x="1040.50" y="108.26" width="7.86" height="5.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho18StartMotionHitSpinEv
 module: ov006
 addr: 0x020c4f68
 size: 60 bytes
-matched: yes</title></rect><rect x="615.67" y="113.36" width="56.65" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionChase
+matched: yes</title></rect><rect x="615.67" y="113.36" width="56.65" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho11MotionChaseEv
 module: ov006
 addr: 0x020c4fa4
 size: 972 bytes
-matched: yes</title></rect><rect x="672.32" y="113.36" width="7.93" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionChase
+matched: yes</title></rect><rect x="672.32" y="113.36" width="7.93" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho16StartMotionChaseEv
 module: ov006
 addr: 0x020c5370
 size: 136 bytes
-matched: yes</title></rect><rect x="680.24" y="113.36" width="14.69" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionCircleLower
+matched: yes</title></rect><rect x="680.24" y="113.36" width="14.69" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho17MotionCircleLowerEv
 module: ov006
 addr: 0x020c53f8
 size: 252 bytes
-matched: yes</title></rect><rect x="694.93" y="113.36" width="3.50" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionCircleLower
+matched: yes</title></rect><rect x="694.93" y="113.36" width="3.50" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho22StartMotionCircleLowerEv
 module: ov006
 addr: 0x020c54f4
 size: 60 bytes
-matched: yes</title></rect><rect x="698.43" y="113.36" width="13.75" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionCircleUpper
+matched: yes</title></rect><rect x="698.43" y="113.36" width="13.75" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho17MotionCircleUpperEv
 module: ov006
 addr: 0x020c5530
 size: 236 bytes
-matched: yes</title></rect><rect x="712.18" y="113.36" width="3.50" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionCircleUpper
+matched: yes</title></rect><rect x="712.18" y="113.36" width="3.50" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho22StartMotionCircleUpperEv
 module: ov006
 addr: 0x020c561c
 size: 60 bytes
-matched: yes</title></rect><rect x="715.68" y="113.36" width="22.15" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionDiagonalMirror
+matched: yes</title></rect><rect x="715.68" y="113.36" width="22.15" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho20MotionDiagonalMirrorEv
 module: ov006
 addr: 0x020c5658
 size: 380 bytes
-matched: yes</title></rect><rect x="737.83" y="113.36" width="19.82" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionDiagonalMirror
+matched: yes</title></rect><rect x="737.83" y="113.36" width="19.82" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho25StartMotionDiagonalMirrorEv
 module: ov006
 addr: 0x020c57d4
 size: 340 bytes
-matched: yes</title></rect><rect x="757.64" y="113.36" width="22.15" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionDiagonal
+matched: yes</title></rect><rect x="757.64" y="113.36" width="22.15" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho14MotionDiagonalEv
 module: ov006
 addr: 0x020c5928
 size: 380 bytes
-matched: yes</title></rect><rect x="779.79" y="113.36" width="19.82" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionDiagonal
+matched: yes</title></rect><rect x="779.79" y="113.36" width="19.82" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho19StartMotionDiagonalEv
 module: ov006
 addr: 0x020c5aa4
 size: 340 bytes
-matched: yes</title></rect><rect x="799.61" y="113.36" width="14.69" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionBounceInRange
+matched: yes</title></rect><rect x="799.61" y="113.36" width="14.69" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho19MotionBounceInRangeEv
 module: ov006
 addr: 0x020c5bf8
 size: 252 bytes
-matched: yes</title></rect><rect x="814.29" y="113.36" width="3.03" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionBounceInRange
+matched: yes</title></rect><rect x="814.29" y="113.36" width="3.03" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho24StartMotionBounceInRangeEv
 module: ov006
 addr: 0x020c5cf4
 size: 52 bytes
-matched: yes</title></rect><rect x="817.32" y="113.36" width="24.25" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionVShape
+matched: yes</title></rect><rect x="817.32" y="113.36" width="24.25" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho12MotionVShapeEv
 module: ov006
 addr: 0x020c5d28
 size: 416 bytes
-matched: yes</title></rect><rect x="841.57" y="113.36" width="26.11" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionVShape
+matched: yes</title></rect><rect x="841.57" y="113.36" width="26.11" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho17StartMotionVShapeEv
 module: ov006
 addr: 0x020c5ec8
 size: 448 bytes
-matched: yes</title></rect><rect x="867.68" y="113.36" width="14.92" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionBounceNear
+matched: yes</title></rect><rect x="867.68" y="113.36" width="14.92" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho16MotionBounceNearEv
 module: ov006
 addr: 0x020c6088
 size: 256 bytes
-matched: yes</title></rect><rect x="882.60" y="113.36" width="3.50" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionBounceNear
+matched: yes</title></rect><rect x="882.60" y="113.36" width="3.50" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho21StartMotionBounceNearEv
 module: ov006
 addr: 0x020c6188
 size: 60 bytes
-matched: yes</title></rect><rect x="886.10" y="113.36" width="7.69" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionBobVertical
+matched: yes</title></rect><rect x="886.10" y="113.36" width="7.69" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho17MotionBobVerticalEv
 module: ov006
 addr: 0x020c61c4
 size: 132 bytes
-matched: yes</title></rect><rect x="893.79" y="113.36" width="3.03" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionBobVertical
+matched: yes</title></rect><rect x="893.79" y="113.36" width="3.03" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho22StartMotionBobVerticalEv
 module: ov006
 addr: 0x020c6248
 size: 52 bytes
-matched: yes</title></rect><rect x="896.82" y="113.36" width="11.89" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionPatrolBob
+matched: yes</title></rect><rect x="896.82" y="113.36" width="11.89" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho15MotionPatrolBobEv
 module: ov006
 addr: 0x020c627c
 size: 204 bytes
-matched: yes</title></rect><rect x="908.71" y="113.36" width="2.80" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionPatrolBob
+matched: yes</title></rect><rect x="908.71" y="113.36" width="2.80" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho20StartMotionPatrolBobEv
 module: ov006
 addr: 0x020c6348
 size: 48 bytes
-matched: yes</title></rect><rect x="911.51" y="113.36" width="5.83" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionHover
+matched: yes</title></rect><rect x="911.51" y="113.36" width="5.83" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho11MotionHoverEv
 module: ov006
 addr: 0x020c6378
 size: 100 bytes
-matched: yes</title></rect><rect x="917.34" y="113.36" width="2.10" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionHover
+matched: yes</title></rect><rect x="917.34" y="113.36" width="2.10" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho16StartMotionHoverEv
 module: ov006
 addr: 0x020c63dc
 size: 36 bytes
-matched: yes</title></rect><rect x="919.43" y="113.36" width="13.29" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionLeave
+matched: yes</title></rect><rect x="919.43" y="113.36" width="13.29" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho11MotionLeaveEv
 module: ov006
 addr: 0x020c6400
 size: 228 bytes
-matched: yes</title></rect><rect x="932.72" y="113.36" width="27.51" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_React
+matched: yes</title></rect><rect x="932.72" y="113.36" width="27.51" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho5ReactEv
 module: ov006
 addr: 0x020c64e4
 size: 472 bytes
-matched: yes</title></rect><rect x="960.23" y="113.36" width="33.10" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionRegroup
+matched: yes</title></rect><rect x="960.23" y="113.36" width="33.10" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho13MotionRegroupEv
 module: ov006
 addr: 0x020c66bc
 size: 568 bytes
-matched: yes</title></rect><rect x="993.34" y="113.36" width="24.71" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionRegroup
+matched: yes</title></rect><rect x="993.34" y="113.36" width="24.71" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho18StartMotionRegroupEPK9HeyhoPath
 module: ov006
 addr: 0x020c68f4
 size: 424 bytes
-matched: yes</title></rect><rect x="1018.05" y="113.36" width="30.31" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_MotionFlyIn
+matched: yes</title></rect><rect x="1018.05" y="113.36" width="30.31" height="11.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho11MotionFlyInEv
 module: ov006
 addr: 0x020c6a9c
 size: 520 bytes
-matched: yes</title></rect><rect x="615.67" y="124.83" width="45.46" height="6.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_StartMotionFlyIn
+matched: yes</title></rect><rect x="615.67" y="124.83" width="45.46" height="6.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho16StartMotionFlyInEPK9HeyhoPath
 module: ov006
 addr: 0x020c6ca4
 size: 424 bytes
-matched: yes</title></rect><rect x="661.12" y="124.83" width="25.73" height="6.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Heyho_LoadResources
+matched: yes</title></rect><rect x="661.12" y="124.83" width="25.73" height="6.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5Heyho13LoadResourcesEv
 module: ov006
 addr: 0x020c6e4c
 size: 240 bytes
@@ -22205,35 +22205,35 @@ matched: yes</title></rect><rect x="799.84" y="276.03" width="17.75" height="1.2
 module: ov006
 addr: 0x020dec3c
 size: 32 bytes
-matched: yes</title></rect><rect x="817.59" y="276.03" width="24.41" height="1.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CupFx_Move
+matched: yes</title></rect><rect x="817.59" y="276.03" width="24.41" height="1.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5CupFx4MoveEii
 module: ov006
 addr: 0x020dec5c
 size: 44 bytes
-matched: yes</title></rect><rect x="842.00" y="276.03" width="66.57" height="1.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CupFx_Draw
+matched: yes</title></rect><rect x="842.00" y="276.03" width="66.57" height="1.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5CupFx4DrawEv
 module: ov006
 addr: 0x020dec88
 size: 120 bytes
-matched: yes</title></rect><rect x="908.56" y="276.03" width="73.22" height="1.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CupFx_Update
+matched: yes</title></rect><rect x="908.56" y="276.03" width="73.22" height="1.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5CupFx6UpdateEv
 module: ov006
 addr: 0x020ded00
 size: 132 bytes
-matched: yes</title></rect><rect x="981.79" y="276.03" width="66.57" height="1.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CupFx_Init
+matched: yes</title></rect><rect x="981.79" y="276.03" width="66.57" height="1.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5CupFx4InitEiiia
 module: ov006
 addr: 0x020ded84
 size: 120 bytes
-matched: yes</title></rect><rect x="615.67" y="277.23" width="48.08" height="3.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Cup_PlayAnimSound
+matched: yes</title></rect><rect x="615.67" y="277.23" width="48.08" height="3.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10dScMgCup_c13PlayAnimSoundEiii
 module: ov006
 addr: 0x020dedfc
 size: 220 bytes
-matched: yes</title></rect><rect x="663.74" y="277.23" width="36.71" height="3.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Cup_DrawOamList
+matched: yes</title></rect><rect x="663.74" y="277.23" width="36.71" height="3.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10dScMgCup_c11DrawOamListEP7OamAttriiii
 module: ov006
 addr: 0x020deed8
 size: 168 bytes
-matched: yes</title></rect><rect x="700.46" y="277.23" width="35.84" height="3.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Cup_UpdateAnim
+matched: yes</title></rect><rect x="700.46" y="277.23" width="35.84" height="3.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10dScMgCup_c10UpdateAnimEi
 module: ov006
 addr: 0x020def80
 size: 164 bytes
-matched: yes</title></rect><rect x="736.29" y="277.23" width="89.16" height="3.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Cup_PickShuffleSpeed
+matched: yes</title></rect><rect x="736.29" y="277.23" width="89.16" height="3.06" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10dScMgCup_c9SetupSwapEv
 module: ov006
 addr: 0x020df024
 size: 408 bytes
@@ -31885,15 +31885,15 @@ matched: yes</title></rect><rect x="1130.40" y="175.78" width="3.53" height="4.0
 module: ov022
 addr: 0x02112610
 size: 68 bytes
-matched: yes</title></rect><rect x="1130.40" y="179.80" width="3.53" height="5.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov022_02112654
+matched: yes</title></rect><rect x="1130.40" y="179.80" width="3.53" height="5.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21daObj_volcanoCannon_c14CheckPlayerHitEv
 module: ov022
 addr: 0x02112654
 size: 88 bytes
-matched: yes</title></rect><rect x="1130.40" y="185.01" width="3.53" height="5.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov022_021126ac
+matched: yes</title></rect><rect x="1130.40" y="185.01" width="3.53" height="5.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21daObj_volcanoCannon_c10ExecuteFlyEv
 module: ov022
 addr: 0x021126ac
 size: 100 bytes
-matched: yes</title></rect><rect x="1133.93" y="175.78" width="3.31" height="8.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov022_02112710
+matched: yes</title></rect><rect x="1133.93" y="175.78" width="3.31" height="8.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21daObj_volcanoCannon_c8EnterFlyEv
 module: ov022
 addr: 0x02112710
 size: 128 bytes
@@ -32237,11 +32237,11 @@ matched: yes</title></rect><rect x="1306.84" y="178.77" width="4.31" height="3.9
 module: ov026
 addr: 0x021111e0
 size: 84 bytes
-matched: yes</title></rect><rect x="1306.84" y="182.70" width="4.31" height="5.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov026_02111234
+matched: yes</title></rect><rect x="1306.84" y="182.70" width="4.31" height="5.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjWlPolelift_c12UpdateShadowEv
 module: ov026
 addr: 0x02111234
 size: 112 bytes
-matched: yes</title></rect><rect x="1306.84" y="187.93" width="4.31" height="2.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov026_021112a4
+matched: yes</title></rect><rect x="1306.84" y="187.93" width="4.31" height="2.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN17daObjWlPolelift_c20UpdateModelTransformEv
 module: ov026
 addr: 0x021112a4
 size: 64 bytes
@@ -35005,11 +35005,11 @@ matched: yes</title></rect><rect x="1195.35" y="335.99" width="23.03" height="6.
 module: ov060
 addr: 0x021182b0
 size: 284 bytes
-matched: yes</title></rect><rect x="1218.38" y="335.99" width="3.24" height="6.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov060_021183cc
+matched: yes</title></rect><rect x="1218.38" y="335.99" width="3.24" height="6.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daKpa3Bg_c9OnStoodOnEP8dActor_c
 module: ov060
 addr: 0x021183cc
 size: 40 bytes
-matched: yes</title></rect><rect x="1221.63" y="335.99" width="1.62" height="6.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov060_021183f4
+matched: yes</title></rect><rect x="1221.63" y="335.99" width="1.62" height="6.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daKpa3Bg_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 module: ov060
 addr: 0x021183f4
 size: 20 bytes
@@ -35145,7 +35145,7 @@ matched: yes</title></rect><rect x="1247.85" y="311.30" width="9.16" height="7.7
 module: ov062
 addr: 0x02115f84
 size: 140 bytes
-matched: yes</title></rect><rect x="1247.85" y="319.08" width="9.16" height="22.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov062_02116010
+matched: yes</title></rect><rect x="1247.85" y="319.08" width="9.16" height="22.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_c17HandleCylinderHitEv
 module: ov062
 addr: 0x02116010
 size: 408 bytes
@@ -35233,11 +35233,11 @@ matched: yes</title></rect><rect x="1262.45" y="348.15" width="7.97" height="5.1
 module: ov062
 addr: 0x02116cd8
 size: 80 bytes
-matched: yes</title></rect><rect x="1262.45" y="353.26" width="7.97" height="9.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_c19func_ov062_02116d28Ev
+matched: yes</title></rect><rect x="1262.45" y="353.26" width="7.97" height="9.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_c16UpdateHeldShadowEv
 module: ov062
 addr: 0x02116d28
 size: 148 bytes
-matched: yes</title></rect><rect x="1262.45" y="362.71" width="7.97" height="12.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov062_02116dbc
+matched: yes</title></rect><rect x="1262.45" y="362.71" width="7.97" height="12.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daHolhei_c12UpdateShadowEv
 module: ov062
 addr: 0x02116dbc
 size: 196 bytes
@@ -36041,11 +36041,11 @@ matched: yes</title></rect><rect x="1530.77" y="337.25" width="13.90" height="4.
 module: ov063
 addr: 0x0211c684
 size: 116 bytes
-matched: yes</title></rect><rect x="1544.67" y="337.25" width="14.38" height="4.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov063_0211c6f8
+matched: yes</title></rect><rect x="1544.67" y="337.25" width="14.38" height="4.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daTrsTrap_c16UpdateClsnMatrixEv
 module: ov063
 addr: 0x0211c6f8
 size: 120 bytes
-matched: yes</title></rect><rect x="1559.05" y="337.25" width="7.67" height="4.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov063_0211c770
+matched: yes</title></rect><rect x="1559.05" y="337.25" width="7.67" height="4.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daTrsTrap_c15SettleStaircaseEi
 module: ov063
 addr: 0x0211c770
 size: 64 bytes
@@ -36641,7 +36641,7 @@ matched: yes</title></rect><rect x="1170.89" y="442.00" width="2.75" height="5.5
 module: ov064
 addr: 0x0211929c
 size: 32 bytes
-matched: yes</title></rect><rect x="1173.63" y="442.00" width="1.72" height="5.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov064_021192bc
+matched: yes</title></rect><rect x="1173.63" y="442.00" width="1.72" height="5.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daObjFl_Puzzle_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 module: ov064
 addr: 0x021192bc
 size: 20 bytes
@@ -37741,11 +37741,11 @@ matched: yes</title></rect><rect x="1455.48" y="488.73" width="3.02" height="1.2
 module: ov066
 addr: 0x0211a2dc
 size: 8 bytes
-matched: yes</title></rect><rect x="1455.48" y="489.97" width="3.02" height="18.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov066_0211a2e4
+matched: yes</title></rect><rect x="1455.48" y="489.97" width="3.02" height="18.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daIwante_c9OnStoodOnEP8dActor_c
 module: ov066
 addr: 0x0211a2e4
 size: 120 bytes
-matched: yes</title></rect><rect x="1455.48" y="508.56" width="3.02" height="3.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov066_0211a35c
+matched: yes</title></rect><rect x="1455.48" y="508.56" width="3.02" height="3.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10daIwante_c15StoodOnCallbackEP4dBgWP8dActor_cS3_
 module: ov066
 addr: 0x0211a35c
 size: 20 bytes
@@ -43517,7 +43517,7 @@ matched: yes</title></rect><rect x="1372.27" y="779.74" width="14.44" height="6.
 module: ov095
 addr: 0x021357d8
 size: 244 bytes
-matched: yes</title></rect><rect x="1386.70" y="779.74" width="10.41" height="6.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13daObjSeesaw_c11SpringAngleEPsS0_isis
+matched: yes</title></rect><rect x="1386.70" y="779.74" width="10.41" height="6.61" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13daObjSeesaw_c11SpringAngleEPsS0_isss
 module: ov095
 addr: 0x021358cc
 size: 176 bytes

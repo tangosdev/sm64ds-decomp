@@ -8,8 +8,8 @@
  * The manifest compares all three against the cartridge's copies and
  * discards them, along with the homeless D2 variant. The
  * tail folds the three zero-gap neighbours and the static initializer up to
- * the .ctor word at 0x0211abc0: the free helper func_ov066_0211a2e4, its
- * tail-call veneer func_ov066_0211a35c (this unit's dBgW callback), the
+ * the .ctor word at 0x0211abc0: the stood-on handler OnStoodOn, its
+ * tail-call veneer StoodOnCallback (this unit's dBgW callback), the
  * registry factory daIwante_c_classInit, which installs this unit's vtable,
  * and __sinit_d_a_iwante.cpp (0x0211a418..0x0211abc0, emitted from the resource
  * and state definitions at the bottom of this file; see the comment there).
@@ -365,10 +365,6 @@ extern void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, 
 }
 extern "C" {
 extern u32 d_a_iwanteNewHold(u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
-
-/* ---- the dBgW callback veneer (0x0211a35c), defined at the bottom of this
- *      file; seven call sites pass its address to dBgW::SetStoodOnCallback ---- */
-extern void func_ov066_0211a35c(dBgW *collider, dActor_c *owner, dActor_c *other);
 }
 
 
@@ -635,7 +631,7 @@ void daIwante_c::SetLoweredPose() {
     }
 
     mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
-    mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
+    mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
     mMeshCollider2.SetFilterByMoveDir();
     mMeshCollider2.Enable(this);
 
@@ -923,7 +919,7 @@ int daIwante_c::HandPattern9Execute() {
                                           *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
                                           *(CLPS_Block *)(&data_ov025_02112d48));
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
-            mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
+            mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
             mMeshCollider2.Enable(this);
             mSubState = 4;
@@ -1284,7 +1280,7 @@ int daIwante_c::HandPattern7Execute() {
                                           *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
                                           *(CLPS_Block *)(&data_ov025_02112d48));
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
-            mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
+            mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
             mMeshCollider2.Enable(this);
             data_ov066_0211ae08 += 1;
@@ -1464,7 +1460,7 @@ int daIwante_c::HandPattern6Execute() {
                                           *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
                                           *(CLPS_Block *)(&data_ov025_02112d48));
             mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
-            mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
+            mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
             mMeshCollider2.SetFilterByMoveDir();
             mMeshCollider2.Enable(this);
             data_ov066_0211ae08 += 1;
@@ -1608,7 +1604,7 @@ int daIwante_c::HandPattern5Execute() {
         }
 
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
-        mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
+        mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
         mMeshCollider2.SetFilterByMoveDir();
         mMeshCollider2.Enable(this);
 
@@ -2563,7 +2559,7 @@ int daIwante_c::InitResources() {
                                   *(const Matrix4x3 *)(&mClsnMat2), 0x199, mAngleY,
                                   *(CLPS_Block *)(&data_ov025_02112ca8));
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
-        mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
+        mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
         mMeshCollider2.Enable(this);
         mTimer2 = 0x64;
         SetState(&data_ov066_0211b09c);
@@ -2588,7 +2584,7 @@ int daIwante_c::InitResources() {
             mRestPosX += 0x31F000;
         }
         mMeshCollider2.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
-        mMeshCollider2.SetStoodOnCallback(func_ov066_0211a35c);
+        mMeshCollider2.SetStoodOnCallback(&StoodOnCallback);
         mMeshCollider2.SetFilterByMoveDir();
         mRestPosZ -= 0x32000;
         mHitPoints = 3;
@@ -2616,36 +2612,29 @@ int daIwante_c::OnAimedAtWithEgg() {
    signed char, which is the wrong one. */
 extern unsigned char data_ov066_0211ae08;
 
-extern "C" void func_ov066_0211a2e4(void *a, int b)
-{
-    daPly_c *p;
-    if (data_ov066_0211ae04 != PHASE_DORMANT) return;
-    if (b == 0) return;
-    p = ((dActor_c *)a)->ClosestPlayer();
-    if (p == 0) return;
-    Vector3 playerPos = p->mPos;
-    if (playerPos.z < (int)0xff387000) {
+/* Something stood on mMeshCollider2 while the fight is still dormant: when
+   the closest player is past the trigger depth, bump the shared count. */
+void daIwante_c::OnStoodOn(dActor_c *other) {
+    if (data_ov066_0211ae04 != PHASE_DORMANT)
+        return;
+    if (other == 0)
+        return;
+    daPly_c *player = ClosestPlayer();
+    if (player == 0)
+        return;
+    Vector3 playerPos = player->mPos;
+    if (playerPos.z < -0xc79000)
         data_ov066_0211ae08++;
-    }
 }
 
-/* Arg-shifting tail-call veneer. Drops the first argument and forwards the next
-   two. long_calls is scoped to this one function: the pooled
-   `ldr ip,[pc,#8]; bx ip` absolute tail-call it needs is a file-global
-   pragma, and leaving it on for the 59 functions above would change their
-   call emission.
-
-   The forwarder's second argument is an int, not a pointer, and the
-   forwarder itself is void. Its old one-function sources declared it
-   `extern int func_ov066_0211a2e4(void*, void*)` and gave the veneer an
-   `int` return it never produced; in C both mismatches were invisible and
-   every spelling passed the same register. With the real prototypes in
-   scope the body is spelled against them. The emitted code is unchanged:
-   the veneer is a `ldr ip,[pc,#8]; bx ip` tail-call, which never writes r0
-   itself. */
+/* dBgW stood-on veneer: drops the collider and forwards the touching actor
+   to the owner's OnStoodOn. long_calls is scoped to this one function: the
+   pooled `ldr ip,[pc,#8]; bx ip` absolute tail-call it needs is a
+   file-global pragma, and leaving it on for the functions above would
+   change their call emission. */
 #pragma long_calls on
-extern "C" void func_ov066_0211a35c(dBgW *collider, dActor_c *owner, dActor_c *other) {
-    func_ov066_0211a2e4(owner, (int)other);
+void daIwante_c::StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other) {
+    static_cast<daIwante_c *>(owner)->OnStoodOn(other);
 }
 #pragma long_calls off
 

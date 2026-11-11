@@ -38,13 +38,16 @@ struct daObj_volcanoCannon_c : dActor_c {
      * src/game/actors/d_a_obj_volcano_cannon.cpp pins the D1/D0 sections to the
      * TU's ROM-ascending order. (An inline body leaves the variants'
      * emission positions to the compiler, which parks them after the last
-     * defined function -- past func_ov022_02112654.) */
+     * defined function -- past CheckPlayerHit.) */
     virtual ~daObj_volcanoCannon_c();
 
     virtual int InitResources();       /* slot 0 */
     virtual int CleanupResources();    /* slot 3 */
     virtual int Behavior();            /* slot 6 */
 
+    void CheckPlayerHit();
+    int ExecuteFly();
+    int EnterFly();
     int ChangeState(State *state);
 };
 
