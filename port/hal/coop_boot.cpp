@@ -89,6 +89,7 @@ struct Ctl {
     ULONGLONG last_req_ms = 0;
     // guest
     int host_seat = -1;
+    ULONGLONG host_state_at = 0;   // REJOIN1: when the host's STATE beat (500 ms) was last heard from host_seat
     bool state_heard = false;
     CoopBootState hs = {0, 0, 0};
     bool host_left_msg = false;
@@ -302,6 +303,7 @@ void leave_host_left() { leave(kCoopExitHostLeft, "The host left. Room closed.")
 //   * Grace spent: today's in-place end, with honest words.
 // The roster lines ("<name> lost connection." / "<name> left." / "<name> is back." / "<name> joined.") run on every
 // console. SM64DS_COOP_REJOIN=0 turns all of it off (the before rows).
+const ULONGLONG kHostBeatLostMs = 2500;  // no STATE from the host's seat this long: that seat is not (or no longer) the host
 struct Rejoin {
     bool lost = false;       // the host's seat is quiet past the settle
     bool mine = false;       // ...and the relay is quiet too: my own line is out
@@ -318,10 +320,12 @@ struct SeatWatch {
     ULONGLONG bye_at = 0;    // when; a BYE counts only if the seat goes within kByeLastsMs (a quick rejoin keeps the seat)
     bool join_pending = false;
     ULONGLONG join_at = 0;
-    char name[kPlistNameMax + 1] = {0};
+    char name[kPlistNameMax + 1] = {0};   // this stay's own name (from a SYNI sent after it came), "" until then
 };
 SeatWatch SW[4];
 const ULONGLONG kByeLastsMs = 10000;
+const ULONGLONG kNameWaitMs = 5000;      // a new stay waits this long for its own SYNI (sent on join and every 2 s)
+char g_gone_name[4][kPlistNameMax + 1];  // who sat on each seat when it went (cleared once they are back)
 bool g_sw_frozen = false;    // my own line is out: every seat looks gone, and none of that is news
 
 int host_grace_ms() {
@@ -351,7 +355,8 @@ void rejoin_bye_heard(int seat) {
 void check_host_quiet() {
     const ULONGLONG now = tick();
     HubSeatInfo si;
-    const bool here = comms_hub_state() == kHubLive && comms_hub_seat_info(C.host_seat, &si) && si.present;
+    const bool here = comms_hub_state() == kHubLive && comms_hub_seat_info(C.host_seat, &si) && si.present &&
+                      C.host_state_at && now - C.host_state_at < 3000ULL;   // a stranger on the old seat sends no beat
     if (here) {
         if (RJ.lost) {
             LOG("REJOIN the host's seat %d is heard again after %llu ms; the room goes on", C.host_seat,
@@ -372,16 +377,37 @@ void check_host_quiet() {
         LOG("REJOIN the host's seat %d is quiet (hub %d, relay quiet %u ms): the room is held up to %d s", C.host_seat,
             comms_hub_state(), comms_hub_relay_quiet_ms(), host_grace_ms() / 1000);
     }
-    RJ.mine = mine;
-    const int want = mine ? 2 : 1;
+    RJ.mine = RJ.mine || mine;   // once my own line was out in this outage, the way back is mine ("Reconnected.")
+    const int want = RJ.mine ? 2 : 1;
     if (RJ.said != want) {
         RJ.said = want;
-        rejoin_say(mine ? "Connection lost. Reconnecting..." : "Lost the host. Reconnecting...");
+        rejoin_say(RJ.mine ? "Connection lost. Reconnecting..." : "Lost the host. Reconnecting...");
     }
     if ((int)(now - RJ.since) >= host_grace_ms()) {
         LOG("REJOIN no host for %d s: the room ends on this console", host_grace_ms() / 1000);
-        leave(kCoopExitNoHost, mine ? "Lost the connection. Left the room." : "Lost the connection to the host.");
+        leave(kCoopExitNoHost, RJ.mine ? "Lost the connection. Left the room." : "Lost the connection to the host.");
     }
+}
+
+// The newest SYNI name from `seat`, if it arrived within the last `within_ms` (the stay so far); false otherwise.
+bool ident_name(int seat, ULONGLONG within_ms, char *out) {
+    unsigned char id[64];
+    unsigned age = 0;
+    const int n = comms_hub_latest(kHubIdent, seat, id, (int)sizeof id, &age);
+    if (n < (int)sizeof(HubIdentHead) || (ULONGLONG)age > within_ms) return false;
+    HubIdentHead h;
+    std::memcpy(&h, id, sizeof h);
+    int nl = h.name_len;
+    if (nl > kHubIdentNameMax) nl = kHubIdentNameMax;
+    if ((int)sizeof h + nl > n) nl = n - (int)sizeof h;
+    int o = 0;
+    for (int i = 0; i < nl && o < kPlistNameMax; ++i) {
+        const unsigned char c = id[sizeof h + i];
+        out[o++] = (c >= 0x20 && c <= 0x7e) ? (char)c : '?';
+    }
+    while (o > 0 && out[o - 1] == ' ') --o;
+    out[o] = 0;
+    return o > 0;
 }
 
 // Who left and who came back, on every console (host included). The host's own seat is the guest's check above.
@@ -393,15 +419,6 @@ void roster_watch() {
         return;
     }
     const ULONGLONG now = tick();
-    PlayerListView v;
-    player_list_view(&v);
-    for (int i = 0; i < v.n && i < kPlistMaxRows; ++i) {
-        const PlayerListRow &r = v.row[i];
-        if (!r.me && r.seat >= 0 && r.seat < 4 && r.name[0]) {
-            std::strncpy(SW[r.seat].name, r.name, kPlistNameMax);
-            SW[r.seat].name[kPlistNameMax] = 0;
-        }
-    }
     const bool resync = g_sw_frozen;
     if (g_sw_frozen) { g_sw_frozen = false; LOG("REJOIN roster lines back on: my line is back"); }
     for (int s = 0; s < 4; ++s) {
@@ -411,9 +428,16 @@ void roster_watch() {
         const bool p = comms_hub_seat_info(s, &si) && si.present;
         const unsigned ep = p ? si.join_epoch : w.epoch;
         const bool host_seat = !C.host && s == C.host_seat;
+        if (p) {   // this stay's name: only a SYNI that arrived after the stay began (the hub keeps the last one per seat)
+            char nm[kPlistNameMax + 1];
+            const ULONGLONG stay = (w.known && w.present && ep == w.epoch) ? now - w.join_at : (w.known ? 0 : ~0ULL);
+            if (ident_name(s, stay, nm)) std::strcpy(w.name, nm);
+        }
         if (!w.known || resync) {
             if (resync && w.known && p && !w.present && w.ever)
                 LOG("REJOIN seat %d is here after my own line came back", s);
+            if (!w.known || (p && (!w.present || ep != w.epoch))) w.join_at = now;
+            if (!p) w.name[0] = 0;
             w.known = true;
             w.present = p;
             w.epoch = ep;
@@ -424,10 +448,11 @@ void roster_watch() {
         char line[96];
         const char *nm = w.name[0] ? w.name : "A player";
         if (p && (!w.present || ep != w.epoch)) {
-            w.join_pending = !host_seat;   // the guest's host line is check_host_quiet's
+            w.join_pending = true;         // the guest's host line is check_host_quiet's: decided when it is said
             w.join_at = now;
             w.bye = false;                 // a new stay: an old BYE is spent
-            LOG("REJOIN seat %d %s (epoch %u)", s, w.ever ? "is back" : "joined", ep);
+            w.name[0] = 0;                 // and so is the last stay's name: wait for this one's own SYNI
+            LOG("REJOIN seat %d has someone (epoch %u): waiting for their name", s, ep);
         } else if (!p && w.present) {
             if (w.bye && now - w.bye_at > kByeLastsMs) w.bye = false;   // that BYE was for a stay that already came back
             LOG("REJOIN seat %d is gone (%s)", s, w.bye ? "it said BYE" : "no BYE: lost connection");
@@ -435,12 +460,24 @@ void roster_watch() {
                 std::snprintf(line, sizeof line, w.bye ? "%s left." : "%s lost connection.", nm);
                 rejoin_say(line);
             }
+            // a quit is not someone to wait for; a lost connection is, on whatever seat they get next
+            if (!w.bye && w.name[0]) std::strcpy(g_gone_name[s], w.name);
+            else g_gone_name[s][0] = 0;
             w.join_pending = false;
+            w.name[0] = 0;
         }
-        if (w.join_pending && (w.name[0] || now - w.join_at > 3000ULL)) {
-            // wait a moment for the name (SYNI comes every 2 s)
-            std::snprintf(line, sizeof line, w.ever ? "%s is back." : "%s joined.", nm);
-            rejoin_say(line);
+        if (w.join_pending && (w.name[0] || now - w.join_at > kNameWaitMs)) {
+            // "is back" only for the same name as someone who dropped (any seat: the relay may hand out another one)
+            int was = -1;
+            if (w.name[0])
+                for (int k = 0; k < 4; ++k)
+                    if (g_gone_name[k][0] && !std::strcmp(g_gone_name[k], w.name)) { was = k; break; }
+            if (was >= 0) g_gone_name[was][0] = 0;
+            const bool skip = !C.host && s == C.host_seat && C.host_state_at && now - C.host_state_at < kHostBeatLostMs;
+            LOG("REJOIN seat %d is %s (%s)", s, w.name[0] ? w.name : "unnamed",
+                was >= 0 ? "the same name dropped before: back" : "a new player");
+            std::snprintf(line, sizeof line, was >= 0 ? "%s is back." : "%s joined.", nm);
+            if (!skip) rejoin_say(line);
             w.join_pending = false;
         }
         if (p) w.ever = true;
@@ -478,13 +515,14 @@ void handle_mine(int seat, const unsigned char *d, int len) {
         if (C.host) { drop_role(seat, sub); return; }
         if (C.host_seat < 0) { C.host_seat = seat; LOG("host is seat %d", seat); }
         if (seat != C.host_seat) {
-            // REJOIN1: a host that came back on another seat number is the host still, once its old seat is quiet
-            HubSeatInfo hi;
-            const bool old_here = comms_hub_seat_info(C.host_seat, &hi) && hi.present;
-            if (!comms_hub_coop_rejoin() || old_here) { drop_role(seat, sub); return; }
-            LOG("REJOIN the host speaks from seat %d now (seat %d is quiet)", seat, C.host_seat);
+            // REJOIN1: a host that came back on another seat number is the host still. Only a host sends STATE, so the
+            // old seat's beat going quiet is what counts, not the seat being empty: someone else may sit on it now.
+            const bool old_beat = C.host_state_at && tick() - C.host_state_at < kHostBeatLostMs;
+            if (!comms_hub_coop_rejoin() || old_beat) { drop_role(seat, sub); return; }
+            LOG("REJOIN the host speaks from seat %d now (seat %d sends no host beat)", seat, C.host_seat);
             C.host_seat = seat;
         }
+        C.host_state_at = tick();
         CoopBootState s;
         if (!coop_boot_decode_state(d, len, &s)) { ++C.st.dropped_bad; return; }
         ++C.st.state_recv;
@@ -1379,6 +1417,7 @@ void boot_state_reset() {
     C = Ctl{};
     RJ = Rejoin{};                        // REJOIN1
     for (SeatWatch &w : SW) w = SeatWatch{};
+    std::memset(g_gone_name, 0, sizeof g_gone_name);
     g_sw_frozen = false;
     C.title_seen = true;
     S9 = SpawnState{};
