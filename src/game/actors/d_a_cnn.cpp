@@ -64,6 +64,7 @@ enum d_a_cnn_AssetId { ASSET_HOUDAI_BMD = 0x045e };
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 typedef void (daCnn_c::*State)();
 
@@ -328,8 +329,8 @@ void daCnn_c::StateFire() {
         rot.x = data_ov098_0213c63c[0];
         rot.y = data_ov098_0213c63c[1];
         rot.z = data_ov098_0213c63c[2];
-        rot.x = (u16)FX_SinCosTable_[((u16)mPrevAngleY >> 4) * 2];
-        rot.z = (u16)FX_SinCosTable_[((u16)mPrevAngleY >> 4) * 2 + 1];
+        rot.x = (u16)FX_SinIdx((u16)mPrevAngleY >> 4);
+        rot.z = (u16)FX_CosIdx((u16)mPrevAngleY >> 4);
 
         Particle::System::New(0, kPtclCannonShotA, mMuzzlePosX, mMuzzlePosY, mMuzzlePosZ,
                               (const Vector3_16f *)(&rot), 0);
@@ -502,18 +503,16 @@ void daCnn_c::UpdateModel() {
     u16 pitch = mAngleX;
     s16 yaw = mAngleY;
     ModelBone *bones;
-    int idx;
 
     Matrix4x3_FromTranslation(&mModel.mat4x3, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
 
     bones = mModel.data.bones;
-    idx = pitch >> 4;
 
     bones[0].rotY = yaw;
     bones[1].rotX = pitch;
     bones[1].transX = 0;
-    bones[1].transY = mBarrelRestY + (mRecoil * FX_SinCosTable_[idx * 2 + 1]) / 0x1000;
-    bones[1].transZ = (mRecoil * FX_SinCosTable_[idx * 2]) / 0x1000;
+    bones[1].transY = mBarrelRestY + (mRecoil * FX_CosIdx(pitch >> 4)) / 0x1000;
+    bones[1].transZ = (mRecoil * FX_SinIdx(pitch >> 4)) / 0x1000;
 }
 
 /* NOT WRITTEN HERE ON PURPOSE. The inline destructor in the header

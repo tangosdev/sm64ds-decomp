@@ -834,34 +834,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@353",
+      "from": "@494",
       "to": "@263",
-      "evidence": "compiler temp: state 0 descriptor (StateSpawnFlock); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @362 to @370 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @370 to @353 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp: state 0 descriptor (StateSpawnFlock); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @362 to @370 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @370 to @353 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @353 to @494 when the TU included daPly_c.h to read the ClosestPlayer result's mPos, and an int[3] scratch became a Vector3 local (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "@355",
+      "from": "@496",
       "to": "@265",
-      "evidence": "compiler temp: state 1 descriptor (StateWaitForPlayer); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @364 to @372 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @372 to @355 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp: state 1 descriptor (StateWaitForPlayer); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @364 to @372 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @372 to @355 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @355 to @496 when the TU included daPly_c.h to read the ClosestPlayer result's mPos, and an int[3] scratch became a Vector3 local (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "@357",
+      "from": "@498",
       "to": "data_ov009_021138fc",
-      "evidence": "compiler temp: state 2 descriptor (StateLaunchFlock), formerly a named definition; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @366 to @374 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @374 to @357 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp: state 2 descriptor (StateLaunchFlock), formerly a named definition; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @366 to @374 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @374 to @357 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @357 to @498 when the TU included daPly_c.h to read the ClosestPlayer result's mPos, and an int[3] scratch became a Vector3 local (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "@359",
+      "from": "@500",
       "to": "@267",
-      "evidence": "compiler temp: state 3 descriptor (StateFly); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @368 to @376 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @376 to @359 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp: state 3 descriptor (StateFly); re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @368 to @376 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @376 to @359 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @359 to @500 when the TU included daPly_c.h to read the ClosestPlayer result's mPos, and an int[3] scratch became a Vector3 local (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "@639",
+      "from": "@786",
       "to": "@381",
-      "evidence": "compiler-local model registration node; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @642 to @656 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @656 to @639 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler-local model registration node; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @642 to @656 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @656 to @639 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @639 to @786 when the TU included daPly_c.h to read the ClosestPlayer result's mPos, and an int[3] scratch became a Vector3 local (measured from the compiled object: same section, size and order)."
     },
     {
-      "from": "@640",
+      "from": "@787",
       "to": "@382",
-      "evidence": "compiler-local animation registration node; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @643 to @657 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @657 to @640 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler-local animation registration node; re-keyed by relocation target after the daSBird_c fold (one TU, defer_codegen off) Re-keyed from @643 to @657 when Re-keyed when fx_trig.h was included for StateFly's FX_CosIdx/FX_SinIdx (#821).. Re-keyed from @657 to @640 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @640 to @787 when the TU included daPly_c.h to read the ClosestPlayer result's mPos, and an int[3] scratch became a Vector3 local (measured from the compiled object: same section, size and order)."
     }
   ]
 }

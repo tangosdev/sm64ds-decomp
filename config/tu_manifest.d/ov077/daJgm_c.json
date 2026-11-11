@@ -1329,44 +1329,44 @@
   "production_mode": "intact-object",
   "defined_symbol_renames": [
     {
-      "from": "@901",
-      "to": "@959",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @905 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @960 to @901 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@902",
-      "to": "@961",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @906 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @961 to @902 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
       "from": "@903",
-      "to": "@739",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @907 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @962 to @903 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@959",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @905 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @960 to @901 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @901 to @909 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @909 to @903 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object)."
     },
     {
       "from": "@904",
-      "to": "@740",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @908 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @963 to @904 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@961",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @906 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @961 to @902 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @902 to @910 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @910 to @904 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object)."
     },
     {
       "from": "@905",
-      "to": "@945",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @909 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @964 to @905 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@739",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @907 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @962 to @903 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @903 to @911 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @911 to @905 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object)."
     },
     {
       "from": "@906",
-      "to": "@965",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @910 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @965 to @906 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@740",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @908 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @963 to @904 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @904 to @912 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @912 to @906 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object)."
     },
     {
       "from": "@907",
-      "to": "@947",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @911 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @966 to @907 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@945",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @909 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @964 to @905 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @905 to @913 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @913 to @907 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object)."
     },
     {
       "from": "@908",
+      "to": "@965",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @910 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @965 to @906 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @906 to @914 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @914 to @908 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object)."
+    },
+    {
+      "from": "@909",
+      "to": "@947",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @911 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @966 to @907 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @907 to @915 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @915 to @909 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object)."
+    },
+    {
+      "from": "@910",
       "to": "@967",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @912 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @967 to @908 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin; re-keyed from @912 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @967 to @908 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @908 to @916 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @916 to @910 when the TU took the hand pass over the sine-table holdouts (measured from the compiled object)."
     }
   ]
 }

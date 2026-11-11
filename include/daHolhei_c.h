@@ -27,7 +27,7 @@ struct daHolhei_c : dEnemyBase_c {
        daHolhei_c_ChangeState. */
     HolheiState *mState;       /* 0x364 */
     dExtShadowModel_c mShadowModel;  /* 0x368 */
-    /* func_ov062_02116dbc / 02116d28 copy identity here, write pos>>3 into
+    /* UpdateShadow / UpdateHeldShadow copy identity here, write pos>>3 into
        the translation, and pass it to DropShadowRadHeight. */
     Matrix4x3   mShadowMtx;    /* 0x390 */
     s32         mHomePosX;     /* 0x3c0 -- InitResources copies mPos here */
@@ -103,7 +103,9 @@ struct daHolhei_c : dEnemyBase_c {
     int func_ov062_02116b80();
     int func_ov062_02116bf8();
     int func_ov062_02116c78();
-    void func_ov062_02116d28();
+    void UpdateHeldShadow();
+    void UpdateShadow();
+    void HandleCylinderHit();
     /* 1 on a wall, 2 on a slope steeper than 0x1000, else 0. */
     int ClassifyObstruction();
     /* Bone 3's transform times the model's yaw, stored where a holder looks. */

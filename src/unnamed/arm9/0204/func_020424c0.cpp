@@ -3,6 +3,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/os/system.h"
 #include "private/fs_views.h"
+#include "private/file_share_alloc.h"
 
 typedef struct FSFile FSFile;
 
@@ -16,19 +17,6 @@ extern "C" {
  * ...)` all fold the seed to a constant. (The opt_loop_invariants off this file
  * also carried is inert now: the function is exact without it.) */
 #pragma opt_propagation off
-/* data_020a1fc0, the file-sharing work block, under FileShareWork's names
- * (include/private/arm9_a1fc0_file_share.h); typed here for the allocator
- * call. Only the fields this function touches are spelled out. */
-typedef struct {
-    int mIsParent; /* 0x00 */
-    char pad_04[0x10];
-    void *(*mAllocFunc)(void *, u32, u32); /* 0x14 */
-    void *mAllocArg;                       /* 0x18 */
-    char pad_1c[4];
-    void *mTable;   /* 0x20 -- the card header's FAT, FNT and overlay tables */
-    u32 mTableSize; /* 0x24 */
-} WorkInfo;
-
 typedef struct {
     int start;
     int end;
@@ -40,10 +28,6 @@ typedef struct {
     int size;
 } RomRegion;
 
-/* local extern: the header's FileShareWork (arm9_a1fc0_file_share.h) types
- * mAllocFunc, mAllocArg and mTable as int, so through it this function would
- * cast the allocator, its argument and the result back. Same layout. */
-extern WorkInfo data_020a1fc0;
 extern char data_02099e6c[]; /* "rom" */
 
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
@@ -66,7 +50,6 @@ void func_020424c0(void) {
     RomRegion *ptrs[4];
     FSFile file;
     u32 sl;
-    OSIntrMode irq;
     void *fp;
     int i;
 
@@ -83,9 +66,7 @@ void func_020424c0(void) {
         i++;
     } while (i < 4);
 
-    irq = OS_DisableInterrupts();
-    fp = data_020a1fc0.mAllocFunc(data_020a1fc0.mAllocArg, sl, 0);
-    OS_RestoreInterrupts(irq);
+    fp = FileShareAlloc(sl);
 
     if (data_020a1fc0.mIsParent != 0) {
         FSArchive *sb;

@@ -164,9 +164,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@565",
+      "from": "@567",
       "to": "@555",
-      "evidence": "mwcc numbers this registration node @542 per TU and ov080/daPicGate_c already defines a global @542 at 0x0212826c, so the scratch link would multiply-define it Re-keyed from @619 to @565 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "mwcc numbers this registration node @542 per TU and ov080/daPicGate_c already defines a global @542 at 0x0212826c, so the scratch link would multiply-define it Re-keyed from @619 to @565 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @565 to @567 when Vector3 locals (measured from the compiled object: same section, size and order)."
     }
   ],
   "relocations": [
@@ -463,6 +463,13 @@
       "canonical_module": "ov010",
       "canonical_address": "0x02112ba8",
       "reason": "InitResources owns the complete 0x84-byte vtable storage. romdata_check applies the eight-byte public-address-point bias and proves the preamble plus every retail slot before isolation discards the copy. symbols.txt address 0x02112ba8 is unchanged."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Behavior holds Vector3 locals for Vec3_Add's results and the copied position, so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
     }
   ]
 }
