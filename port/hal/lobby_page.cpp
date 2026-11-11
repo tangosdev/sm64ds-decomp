@@ -347,7 +347,7 @@ struct Rect { int x, y, w, h; };
 inline bool in_rect(const Rect &r, int x, int y) { return r.w > 0 && x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h; }
 
 struct Page {
-    int want;              /* 0 none, 1 host (choose), 2 join */
+    int want;              /* 0 none, 1 host (a coop room), 2 join, 3 proof scenario, 4 VS room (PORTMENU1) */
     char want_code[8];
     int screen;
     int focus, hover;      /* Ctl ids */
