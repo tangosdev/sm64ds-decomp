@@ -17,4 +17,10 @@ extern LevelRng data_0209e650;
 /* The minigames' state, defined in Timer.cpp. */
 extern LevelRng data_0209d4b8;
 
+/* A random integer in [0, n) from the minigames' state: the generator's
+   top 15 bits, scaled by n. A macro, not an inline, because the minigames
+   expand it in place: at several sites only the expanded form reproduces
+   their code. The user includes math/CalcLib.h for RandomIntInternal. */
+#define MG_RAND(n) ((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n) >> 15)
+
 #endif

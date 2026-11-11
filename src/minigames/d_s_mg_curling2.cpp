@@ -93,11 +93,6 @@ extern void GX_LoadBG3Scr(void *a, u32 b, u32 c);
 extern void GX_LoadBG2Scr(const void *a, u32 b, u32 c);
 extern void GXS_LoadBG2Scr(const void *a, u32 b, u32 c);
 
-/* A random integer in [0, n): the generator's top 15 bits, scaled. */
-static inline u32 MgRandom(u32 n) {
-    return (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * n >> 15;
-}
-
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 extern unsigned char sCurling2StepXPicks[];
@@ -303,16 +298,16 @@ void dScMgCurling2_c::StepYRampUp(int entry) {
             mPiece[entry].countdown3 = 0;
     } else {
         mPiece[entry].yIndex = 2;
-        mPiece[entry].countdown3 = (u8)(MgRandom(32) + 0x20);
+        mPiece[entry].countdown3 = (u8)(MG_RAND(32) + 0x20);
     }
 }
 
 /* Zero yInc, pick a fresh yTarget and countdown3, set yIndex to 1. */
 void dScMgCurling2_c::StepYRestart(int entry) {
     mPiece[entry].yInc = 0;
-    mPiece[entry].yTarget = (MgRandom(16) << 4) + 0x300;
+    mPiece[entry].yTarget = (MG_RAND(16) << 4) + 0x300;
     mPiece[entry].yIndex = 1;
-    mPiece[entry].countdown3 = (u8)(MgRandom(32) + 0x20);
+    mPiece[entry].countdown3 = (u8)(MG_RAND(32) + 0x20);
 }
 
 /* Step the piece, hold while countdown is set (the hold decrements
@@ -373,7 +368,7 @@ void dScMgCurling2_c::StepXPushNeg(int entry) {
     }
 
     mPiece[entry].xIndex = 3;
-    mPiece[entry].countdown2 = (u8)(MgRandom(32) + 0x20);
+    mPiece[entry].countdown2 = (u8)(MG_RAND(32) + 0x20);
 }
 
 /* The mirror of StepXPushNeg: same shape, x increment pushed the
@@ -403,7 +398,7 @@ void dScMgCurling2_c::StepXPushPos(int entry) {
     }
 
     mPiece[entry].xIndex = 3;
-    mPiece[entry].countdown2 = (u8)(MgRandom(32) + 0x20);
+    mPiece[entry].countdown2 = (u8)(MG_RAND(32) + 0x20);
 }
 
 /* Hold for countdown, then zero xInc, pick xIndex from
@@ -416,9 +411,9 @@ void dScMgCurling2_c::StepXPick(int entry) {
         return;
     }
     mPiece[entry].xInc = 0;
-    mPiece[entry].xIndex = sCurling2StepXPicks[MgRandom(2)];
-    mPiece[entry].countdown = (u8)MgRandom(16);
-    mPiece[entry].countdown2 = (u8)(MgRandom(0x40) + 0x60);
+    mPiece[entry].xIndex = sCurling2StepXPicks[MG_RAND(2)];
+    mPiece[entry].countdown = (u8)MG_RAND(16);
+    mPiece[entry].countdown2 = (u8)(MG_RAND(0x40) + 0x60);
 }
 
 /* Run one piece's xIndex callback, then its yIndex callback.
@@ -520,10 +515,10 @@ void dScMgCurling2_c::StepXPickFast(int entry) {
         return;
     }
     mPiece[entry].xInc = 0;
-    mPiece[entry].yInc = (MgRandom(32) << 4) + 0x600;
-    mPiece[entry].xIndex = sCurling2StepXFastPicks[MgRandom(2)];
-    mPiece[entry].countdown = (u8)MgRandom(16);
-    mPiece[entry].countdown2 = (u8)(MgRandom(0x30) + 0x30);
+    mPiece[entry].yInc = (MG_RAND(32) << 4) + 0x600;
+    mPiece[entry].xIndex = sCurling2StepXFastPicks[MG_RAND(2)];
+    mPiece[entry].countdown = (u8)MG_RAND(16);
+    mPiece[entry].countdown2 = (u8)(MG_RAND(0x30) + 0x30);
 }
 
 /* Run one piece's sCurling2StepXFastTable callback, indexed by xIndex. */
@@ -535,7 +530,7 @@ void dScMgCurling2_c::StepXOnly(int entry) {
 /* Pick modeIndex from sCurling2StepModes (1 on one roll in eight)
  * and clear xIndex. */
 void dScMgCurling2_c::PickStepMode(int entry) {
-    unsigned roll = MgRandom(8);
+    unsigned roll = MG_RAND(8);
     int pick = 0;
     if (roll == 5)
         pick = 1;
@@ -552,7 +547,7 @@ void dScMgCurling2_c::StepPieces() {
             unsigned char idx = mPiece[i].modeIndex;
             (((C *)this)->*sCurling2StepModeTable[idx])(i);
             if ((mPiece[i].y >> 0xc) >= 0xc8) {
-                mPiece[i].x = MgRandom(32) << 15;
+                mPiece[i].x = MG_RAND(32) << 15;
                 mPiece[i].y = -0x8000;
                 mPiece[i].xIndex = 0;
                 mPiece[i].modeIndex = 0;
@@ -566,11 +561,9 @@ void dScMgCurling2_c::StepPieces() {
  * indices (the second is the first plus one to four, modulo five) and a
  * y spread over the screen. The first x, the y at -0x8000 and the first
  * countdown store are overwritten a few lines later; those dead stores
- * are the ROM's. The sprite1 and countdown draws keep the raw value in
- * `rnd`: through MgRandom they colour differently (4 and 3-5 words). */
+ * are the ROM's. */
 void dScMgCurling2_c::SeedPieces() {
     int i;
-    unsigned int rnd;
     unsigned int v;
 
     i = 0;
@@ -593,30 +586,26 @@ void dScMgCurling2_c::SeedPieces() {
 
     i = 0;
     for (; i < 0x32; i++) {
-        mPiece[i].x = MgRandom(32) << 15;
+        mPiece[i].x = MG_RAND(32) << 15;
         mPiece[i].y = -0x8000;
         mPiece[i].updateEnable = 1;
         mPiece[i].drawEnable = 1;
         mPiece[i].modeIndex = 0;
         mPiece[i].xIndex = 0;
 
-        mPiece[i].sprite0 = MgRandom(5);
+        mPiece[i].sprite0 = MG_RAND(5);
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
-        /* Own local: `mPiece[i].sprite0 + shift` puts the byte in r0. */
-        unsigned char spr = mPiece[i].sprite0;
-        v = spr + ((((rnd >> 16) & 0x7fff) << 2) >> 0xf) + 1;
+        v = mPiece[i].sprite0 + MG_RAND(4) + 1;
         v = v & 0xff;
         if (v >= 5)
             v = (v - 5) & 0xff;
         mPiece[i].sprite1 = (char)v;
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
-        mPiece[i].countdown = (short)(((i & 7) << 6) + (((rnd >> 16) & 0x7fff) * 0x30 >> 0xf));
+        mPiece[i].countdown = (short)(((i & 7) << 6) + MG_RAND(0x30));
 
-        mPiece[i].x = MgRandom(32) << 15;
+        mPiece[i].x = MG_RAND(32) << 15;
 
-        mPiece[i].y = ((MgRandom(0x1a) << 3) - 8) << 0xc;
+        mPiece[i].y = ((MG_RAND(0x1a) << 3) - 8) << 0xc;
         mPiece[i].countdown = 0;
     }
 }
@@ -1432,9 +1421,9 @@ void dScMgCurling2_c::Scroll() {
     if (scrollIdx == 0xff) {
         scrollIdx = 0;
     } else {
-        idx = MgRandom(4);
+        idx = MG_RAND(4);
         if (scrollIdx == idx) {
-            idx += MgRandom(3) + 1;
+            idx += MG_RAND(3) + 1;
             if (idx >= 4)
                 idx -= 4;
         }

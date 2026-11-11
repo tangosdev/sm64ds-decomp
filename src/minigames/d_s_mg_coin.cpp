@@ -60,11 +60,6 @@ enum dScMgCoin_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/gx_load.h"
 
-/* A random integer in [0, n): the generator's top 15 bits, scaled. */
-static inline u32 MgRandom(u32 n) {
-    return (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * n >> 15;
-}
-
 #pragma defer_codegen off /* ROM-ascending emission; dropping this inverts it */
 
 enum {
@@ -273,7 +268,7 @@ void dScMgCoin_c::Bag_StateBounceDown(int i) {
     if (mBouncer[i].bouncesLeft != 0) {
         if (height < (sCoinBagRowTopY[stageIndex] - sCoinBagRowHeight[stageIndex]))
             return;
-        mBouncer[i].vx = sCoinBagHopVX[MgRandom(2)];
+        mBouncer[i].vx = sCoinBagHopVX[MG_RAND(2)];
         mBouncer[i].vy = kHopVy;
         mBouncer[i].bouncesLeft--;
         func_02012718(kSndBounce, mBouncer[i].x);
@@ -738,11 +733,11 @@ void dScMgCoin_c::LayOutCoins() {
     int i;
 
     for (k = 0; k < 3; k++) {
-        a[k] = MgRandom(8);
+        a[k] = MG_RAND(8);
     }
 
     for (k = 0; k < 3; k++) {
-        b[k] = (a[k] + MgRandom(6) + 1) & 7;
+        b[k] = (a[k] + MG_RAND(6) + 1) & 7;
     }
 
     row = 0;
@@ -906,7 +901,7 @@ void dScMgCoin_c::Block_StateWander(int i) {
         mBlocks[i].y = rowY * 0x1000;
         mBlocks[i].vy = 0;
         if (mBlocks[i].vx == 0) {
-            if (MgRandom(2))
+            if (MG_RAND(2))
                 mBlocks[i].vx = 0xc00;
             else
                 mBlocks[i].vx = -0xc00;
@@ -961,7 +956,7 @@ void dScMgCoin_c::Block_StateHopDown(int i) {
         if (y < sCoinBlockHopRowY[stage] - sCoinBlockHopRowHeight[stage])
             return;
 
-        mBlocks[i].vx = sCoinBlockHopVX[MgRandom(3)];
+        mBlocks[i].vx = sCoinBlockHopVX[MG_RAND(3)];
         mBlocks[i].vy = -0x2e00;
         mBlocks[i].y = (sCoinBlockHopRowY[stage] - sCoinBlockHopRowHeight[stage]) << 12;
         mBlocks[i].hops--;
@@ -980,7 +975,7 @@ void dScMgCoin_c::Block_StateHopDown(int i) {
     } else {
         unsigned int r;
         mBlocks[i].hops = 1;
-        r = MgRandom(8);
+        r = MG_RAND(8);
         if (r == 2 || r == 5)
             mBlocks[i].hops++;
     }
@@ -1052,16 +1047,11 @@ void dScMgCoin_c::SpawnBlocks() {
     int i;
     n = IsAltVariant() != 0 ? 0x10 : 0x28;
     for (i = 0; i < n; i++) {
-        mBlocks[i].x = ((MgRandom(8) << 5) + 0x10) << 12;
+        mBlocks[i].x = ((MG_RAND(8) << 5) + 0x10) << 12;
         mBlocks[i].y = -0xf0000;
         mBlocks[i].active = 1;
         mBlocks[i].visible = 1;
-        {
-            /* The delay keeps its draw in `w`: through MgRandom the store
-               colours differently (6 words). */
-            unsigned int w = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            mBlocks[i].delay = ((i & 0xf) << 3) + (((w << 4) >> 15) << 4);
-        }
+        mBlocks[i].delay = ((i & 0xf) << 3) + (MG_RAND(16) << 4);
         mBlocks[i].row = row + 3;
         row++;
         if (row >= 3)

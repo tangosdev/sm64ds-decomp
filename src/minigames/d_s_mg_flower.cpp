@@ -44,11 +44,6 @@
 #include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 
-/* A random integer in [0, n): the generator's top 15 bits, scaled. */
-static inline u32 MgRandom(u32 n) {
-    return (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * n >> 15;
-}
-
 #pragma defer_codegen off
 
 /* The first two OAM attribute words, copied whole from the petal template. */
@@ -152,13 +147,13 @@ void dScMgFlower_c::DealPetals() {
         self->mPetals[clearIndex].fallSpeed = 0;
     }
     if (self->mHoldTimer == 0x14) {
-        self->mPetalsLeft = MgRandom(2) + 1;
-    } else if (MgRandom(10) == 0) {
-        self->mPetalsLeft = MgRandom(2) + 0x14;
+        self->mPetalsLeft = MG_RAND(2) + 1;
+    } else if (MG_RAND(10) == 0) {
+        self->mPetalsLeft = MG_RAND(2) + 0x14;
     } else {
-        self->mPetalsLeft = MgRandom(8) + 8;
+        self->mPetalsLeft = MG_RAND(8) + 8;
     }
-    baseAngle = MgRandom(0x10000);
+    baseAngle = MG_RAND(0x10000);
     for (petalIndex = 0; petalIndex < self->mPetalsLeft; petalIndex++) {
         self->mPetals[petalIndex].angle = baseAngle + petalIndex * 0x10000 / self->mPetalsLeft;
         self->mPetals[petalIndex].x = 0;
@@ -170,11 +165,7 @@ void dScMgFlower_c::DealPetals() {
     }
     for (shuffleIndex = 0; shuffleIndex < self->mPetalsLeft; shuffleIndex++) {
         int swapIndex;
-        /* count * roll, the multiply the other way round from MgRandom's
-           roll * n: through the inline the function shrinks by a word. */
-        swapIndex = (self->mPetalsLeft *
-                     (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)) >>
-                    15;
+        swapIndex = MG_RAND(self->mPetalsLeft);
         if (swapIndex != shuffleIndex) {
             u16 savedAngle;
             dScMgFlower_c::Vec2 savedPosition;

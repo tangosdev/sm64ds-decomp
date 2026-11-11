@@ -104,11 +104,6 @@ extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
 }
 
-/* A random integer in [0, n): the generator's top 15 bits, scaled. */
-static inline u32 MgRandom(u32 n) {
-    return (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * n >> 15;
-}
-
 /* Load-bearing: source order, and the opt pragmas on DrawCards and
  * CardFlyAway. Under deferred emission the last pragma setting wins for the
  * whole file; defer_codegen off lets push/pop scope them to one function. */
@@ -759,7 +754,7 @@ void dScMgMemory_c::ShuffleCards() {
     if (mDifficulty == 0) {
         cardBase = raw + 0x60;
         for (valueIndex = 4; valueIndex < 12; valueIndex++) {
-            cardValue = MgRandom(4) + 1;
+            cardValue = MG_RAND(4) + 1;
             for (;;) {
                 /* mValueCounts[cardValue] hoists the base. Same spelling below. */
                 valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
@@ -768,7 +763,7 @@ void dScMgMemory_c::ShuffleCards() {
                     *valueCount += 1;
                     break;
                 }
-                cardValue = MgRandom(4) + 1;
+                cardValue = MG_RAND(4) + 1;
             }
             cardBase += 0x18;
         }
@@ -784,7 +779,7 @@ void dScMgMemory_c::ShuffleCards() {
     } else if (mDifficulty == 1) {
         cardBase = raw + 0x30;
         for (cardIndex = 2; cardIndex < 12; cardIndex++) {
-            cardValue = MgRandom(5) + 1;
+            cardValue = MG_RAND(5) + 1;
             for (;;) {
                 valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
                 if (*valueCount < 2) {
@@ -792,7 +787,7 @@ void dScMgMemory_c::ShuffleCards() {
                     *valueCount += 1;
                     break;
                 }
-                cardValue = MgRandom(5) + 1;
+                cardValue = MG_RAND(5) + 1;
             }
             cardBase += 0x18;
         }
@@ -808,7 +803,7 @@ void dScMgMemory_c::ShuffleCards() {
     } else {
         cardBase = raw;
         for (cardIndex = 0; cardIndex < 12; cardIndex++) {
-            cardValue = MgRandom(6) + 1;
+            cardValue = MG_RAND(6) + 1;
             for (;;) {
                 valueCount = &((dScMgMemory_c *)(raw + cardValue))->mValueCounts[0];
                 if (*valueCount < 2) {
@@ -816,7 +811,7 @@ void dScMgMemory_c::ShuffleCards() {
                     *valueCount += 1;
                     break;
                 }
-                cardValue = MgRandom(6) + 1;
+                cardValue = MG_RAND(6) + 1;
             }
             cardBase += 0x18;
         }

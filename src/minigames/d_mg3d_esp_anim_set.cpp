@@ -110,11 +110,6 @@ void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void GXS_LoadBG2Scr(const void *, u32, u32);
 
-/* A random integer in [0, n): the generator's top 15 bits, scaled. */
-static inline u32 MgRandom(u32 n) {
-    return (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * n >> 15;
-}
-
 extern int sEsp3DMaterialAnim;
 extern int pmf_dMg3DEspModel_c_Idle_2[];
 extern dMg3DEspModel_c::State pmf_dMg3DEspModel_c_Idle;
@@ -547,7 +542,7 @@ void dScMg3DEsp_c::SlotKick(int i)
             mSlots[i].mPushTime = 0;
         return;
     }
-    mSlots[i].mDelay = (u8)(MgRandom(16) + 0x10);
+    mSlots[i].mDelay = (u8)(MG_RAND(16) + 0x10);
     mSlots[i].mType = 3;
 }
 
@@ -587,7 +582,7 @@ void dScMg3DEsp_c::SlotRise(int i)
         return;
     }
 
-    mSlots[i].mDelay = (u8)(MgRandom(16) + 0x10);
+    mSlots[i].mDelay = (u8)(MG_RAND(16) + 0x10);
     mSlots[i].mType = 3;
 }
 
@@ -595,12 +590,12 @@ extern unsigned char data_ov006_0212e57c[];
 
 void dScMg3DEsp_c::SlotSetup(int idx) {
     mSlots[idx].mVelX = 0;
-    mSlots[idx].mAccel = MgRandom(8);
-    mSlots[idx].mGravity = MgRandom(8);
+    mSlots[idx].mAccel = MG_RAND(8);
+    mSlots[idx].mGravity = MG_RAND(8);
     mSlots[idx].mVisible = 1;
-    mSlots[idx].mDelay = (u8)(MgRandom(16) + 8);
-    mSlots[idx].mPushTime = (u8)(MgRandom(32) + 0x10);
-    mSlots[idx].mType = data_ov006_0212e57c[MgRandom(2)];
+    mSlots[idx].mDelay = (u8)(MG_RAND(16) + 8);
+    mSlots[idx].mPushTime = (u8)(MG_RAND(32) + 0x10);
+    mSlots[idx].mType = data_ov006_0212e57c[MG_RAND(2)];
 }
 
 void dScMg3DEsp_c::SlotFall(int idx)
@@ -630,12 +625,12 @@ void dScMg3DEsp_c::SlotWait(int idx)
         if ((s16)mSlots[idx].mWait < 0)
             mSlots[idx].mWait = 0;
     } else {
-        mSlots[idx].mLife = MgRandom(32) + 0x40;
+        mSlots[idx].mLife = MG_RAND(32) + 0x40;
         mSlots[idx].mState = 1;
         mSlots[idx].mType = 0;
         mSlots[idx].mVisible = 0;
-        mSlots[idx].mX = MgRandom(32) << 15;
-        mSlots[idx].mY = ((MgRandom(16) << 3) + 0x40) << 12;
+        mSlots[idx].mX = MG_RAND(32) << 15;
+        mSlots[idx].mY = ((MG_RAND(16) << 3) + 0x40) << 12;
         mSlots[idx].mVelY = -0x200;
         mSlots[idx].mFrame = 0;
     }
@@ -823,7 +818,7 @@ void dScMg3DEsp_c::CardSeek(int i) {
         if (mTarget == mCards[i].mFace) {
             mCorrect = 1;
         } else {
-            if (MgRandom(2) == 0) {
+            if (MG_RAND(2) == 0) {
                 mCorrect = 0;
             } else {
                 mTarget = mCards[i].mFace;
@@ -919,20 +914,19 @@ void dScMg3DEsp_c::DealCards() {
     int o;
 
     n = sEsp3DCardsPerDifficulty[mDifficulty];
-    mTarget = MgRandom(5);
+    mTarget = MG_RAND(5);
     for (i = 0; i < 5; i++) {
         a[i] = 0;
         b[i] = 0;
     }
     for (i = 0; i < 5; i++) {
         do {
-            k = MgRandom(5);
+            k = MG_RAND(5);
         } while (b[k] != 0);
         b[k] = 1;
         a[i] = k & 0xff;
     }
-    m = (int)((n * ((((unsigned int)RandomIntInternal(&data_0209d4b8.value)) >> 16) & 0x7fff)) >>
-              15);
+    m = MG_RAND(n);
     v = mTarget;
     for (j = 0; j < 5; j++) {
         if (v == a[j]) {
@@ -986,8 +980,7 @@ void dScMg3DEsp_c::SetDifficulty()
         mDifficulty = 0;
         mult = 3;
     }
-    unsigned int rnd = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-    mFlashMode = (unsigned char)((mult * rnd) >> 0xf);
+    mFlashMode = MG_RAND(mult);
 }
 
 void dScMg3DEsp_c::Resolve()

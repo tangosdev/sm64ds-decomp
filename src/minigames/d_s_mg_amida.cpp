@@ -189,11 +189,6 @@ extern AmidaRenderPeriods sAmidaRenderPeriods;
 #define IP(p, o) (*(int*)((char*)(p)+(o)))
 #define IAP(p, o) (*(int*)AT(p,(o)))
 
-/* A random integer in [0, n): the generator's top 15 bits, scaled. */
-static inline u32 MgRandom(u32 n) {
-    return (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * n >> 15;
-}
-
 #pragma defer_codegen off
 
 /* Empty: the compiler tears the four member arrays down in reverse
@@ -1301,7 +1296,7 @@ extern "C" void Amida_SaveBgChars(void *) {
 }
 
 /* Both four-lane shuffles keep the generator's value in `rand` and mask it
- * at the multiply: through MgRandom the function grows by a word. */
+ * at the multiply: through MG_RAND the function grows by a word. */
 void dScMgAmida_c::InitWalkers() {
     int i;
     int j;
@@ -1370,12 +1365,12 @@ void dScMgAmida_c::InitWalkers() {
         } while (again == 1);
     } else if (this->mWalkerCount == 1) {
         if (this->mRoundCount == 0) {
-            pick = MgRandom(4);
+            pick = MG_RAND(4);
             tmp = this->mLanePerm[0];
             this->mLanePerm[0] = this->mLanePerm[pick];
             this->mLanePerm[pick] = tmp;
         } else {
-            pick = MgRandom(3) + 1;
+            pick = MG_RAND(3) + 1;
             tmp = this->mLanePerm[0];
             this->mLanePerm[0] = this->mLanePerm[pick];
             this->mLanePerm[pick] = tmp;
@@ -1439,8 +1434,6 @@ void dScMgAmida_c::InitWalkers() {
     this->mRoundTimer = 0;
 }
 
-/* The one-rung skip keeps the hand-expanded draw: as skip[MgRandom(5)] the
- * index lands in a different register (4 words). */
 void dScMgAmida_c::SetupRound() {
     char *raw = (char *)this;
     int level;
@@ -1464,7 +1457,7 @@ void dScMgAmida_c::SetupRound() {
         }
     } else if (level >= 0xa) {
         shuffle = 1;
-        level = MgRandom(5) + 4;
+        level = MG_RAND(5) + 4;
         if (level == mPatternIndex) {
             level = 9;
         }
@@ -1573,7 +1566,7 @@ void dScMgAmida_c::SetupRound() {
         if (IsVariant2() != 0) {
             int remaining = 3;
             do {
-                int idx = MgRandom(0xb);
+                int idx = MG_RAND(0xb);
                 if (skip[idx] == 0) {
                     remaining--;
                     skip[idx] = 1;
@@ -1585,15 +1578,14 @@ void dScMgAmida_c::SetupRound() {
             case 0:
                 break;
             case 1:
-                skip[((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5) >>
-                     15] = 1;
+                skip[MG_RAND(5)] = 1;
                 break;
             case 2: {
-                int count = MgRandom(3) + 1;
+                int count = MG_RAND(3) + 1;
                 int j = 0;
                 if (count > 0) {
                     do {
-                        skip[MgRandom(0xb)] = 1;
+                        skip[MG_RAND(0xb)] = 1;
                         j++;
                     } while (j < count);
                 }
