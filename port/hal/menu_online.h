@@ -3,7 +3,7 @@
    The title's MP plank is ONLINE. Pressing it morphs ADVENTURE into ADVENTURE ONLINE and REC ROOM into VS (the planks turn like a file select
    tile); pressing it again, or Back, turns them back. ADVENTURE ONLINE opens the file select on the ONLINE saves (the signed online save of
    ntr/backup.cpp, never the solo files), picking a file asks the launcher for a server (hal/online_join.h) behind a "Finding a server..."
-   screen, VS for now says the lobby is the launcher's. A ? button explains the mode.
+   screen, VS opens a VS lobby (PORTMENU1). A ? button explains the mode.
 
    THE SPLIT. This file's state (g_on) lives on the LOGIC thread: the title recipe's menu_title_facts copies it into the facts blob (OnlFacts, at
    the fixed offset ONL_FACTS_OFF so the draw side finds it without knowing the recipe's own struct), and build() / the draw callbacks read only

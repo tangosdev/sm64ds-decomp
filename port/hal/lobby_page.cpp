@@ -239,7 +239,6 @@ void fk_set_colors(void)
     for (int i = 0; i < F.s.n_seats; ++i) if (F.s.seats[i].is_me) { F.s.seats[i].body_rgb = b; F.s.seats[i].shoe_rgb = sh; }
 }
 
-int g_auto_coop;                   /* SM64DS_LOBBY_SHOW realhost:coop (proof rows): press COOP on the choice */
 int g_fake = !LP_CLIENT_REAL;      /* the stand-in answers (always without the real client; with it only when a proof knob asks) */
 
 const LobbyState *C_state(void)
@@ -321,11 +320,12 @@ int clip_copy(const char *text)
 
 /* ================================================================ page state ===================================================== */
 
-enum Screen { SCR_CLOSED = 0, SCR_CHOOSE, SCR_ROOM };
+enum Screen { SCR_CLOSED = 0, SCR_ROOM = 2 };      /* PORTMENU1: the Coop / VS choice (screen 1) is gone: HOST makes a coop room, the title's VS plank a VS room */
 enum Ctl {
     C_NONE = -1,
     C_BACK = 0, C_CODE, C_EYE, C_COPY, C_CHAT, C_NAME, C_SETTINGS, C_SAVE, C_MODS, C_PRIVACY, C_READY,
-    C_CHOOSE_COOP, C_CHOOSE_VS, C_FAIL_BACK,
+    /* 11 and 12 were the Coop / VS choice's two buttons (PORTMENU1 removed that screen); the numbers stay so no later control moves */
+    C_FAIL_BACK = 13,
     C_SET_ROW0 = 20,                      /* the settings panel's rows (C_SET_ROW0 + i), its Back */
     C_SET_BACK = 40,
     C_SEAT0 = 50,                         /* a seat's plate (C_SEAT0 + i) */
@@ -417,11 +417,6 @@ void make_geom(Geom *g, int w, int h, const LobbyState *s)
     const float mx = 14;
     g->title = R(W * 0.5f - 90, 6, 180, 44);
     g->r[C_BACK] = R(W - mx - 58, 10, 58, 34);
-    if (P.screen == SCR_CHOOSE) {
-        g->r[C_CHOOSE_COOP] = R(W * 0.5f - 170, 150, 160, 72);
-        g->r[C_CHOOSE_VS] = R(W * 0.5f + 10, 150, 160, 72);
-        return;
-    }
     if (!s || s->phase == LOBBY_BUSY || s->phase == LOBBY_NONE) return;
     if (s->phase == LOBBY_FAILED) {
         g->fail_box = R(W * 0.5f - 180, 110, 360, 150);
@@ -521,7 +516,6 @@ int in_room(const LobbyState *s) { return s && (s->phase == LOBBY_IN_ROOM || s->
 bool live(const LobbyState *s, int c)
 {
     if (c == C_BACK) return P.screen != SCR_CLOSED && !(s && s->phase == LOBBY_FAILED && P.screen == SCR_ROOM);
-    if (P.screen == SCR_CHOOSE) return c == C_CHOOSE_COOP || c == C_CHOOSE_VS;
     if (!s) return false;
     if (s->phase == LOBBY_FAILED) return c == C_FAIL_BACK;
     if (!in_room(s)) return false;
@@ -573,7 +567,6 @@ int step_focus(const Geom &g, const LobbyState *s, int from, int dx, int dy)
 int pk_current_cell(void);
 int first_focus(const LobbyState *s)
 {
-    if (P.screen == SCR_CHOOSE) return C_CHOOSE_COOP;
     if (s && s->phase == LOBBY_FAILED) return C_FAIL_BACK;
     if (in_room(s) && P.picker) return pk_current_cell();
     if (in_room(s)) return P.panel ? (s->am_host && s->n_settings ? C_SET_ROW0 : C_SET_BACK) : C_READY;
@@ -582,6 +575,7 @@ int first_focus(const LobbyState *s)
 
 /* ================================================================ actions ======================================================== */
 
+unsigned g_closed;      /* PORTMENU1: how many times the page has closed (the online menu under it reads this to hold the press that closed it) */
 void close_page(const char *why)
 {
     char b[96];
@@ -590,6 +584,7 @@ void close_page(const char *why)
     P.screen = SCR_CLOSED;
     P.field = 0;
     P.panel = 0;
+    ++g_closed;
     if (pkb_owner() == 1) pkb_close();      /* LOBBYKEYS1: the page's letter grid goes with it (kPkbOwner) */
 }
 
@@ -717,17 +712,7 @@ void press(const LobbyState *s, int c)
 {
     char b[128];
     if (c == C_BACK) {
-        if (P.screen == SCR_CHOOSE) { close_page("back from the choice"); return; }
         leave_room("leave");
-        return;
-    }
-    if (c == C_CHOOSE_COOP || c == C_CHOOSE_VS) {
-        const LobbyKind k = c == C_CHOOSE_COOP ? LOBBY_COOP : LOBBY_VS;
-        snprintf(b, sizeof b, "host: creating a %s room", k == LOBBY_COOP ? "coop" : "VS");
-        log_line(b);
-        C_create(k);
-        P.screen = SCR_ROOM;
-        P.focus = -1;
         return;
     }
     if (c == C_FAIL_BACK) { leave_room("back after a failure"); return; }
@@ -984,7 +969,8 @@ Geom g_geom;
 
 /* ================================================================ the seat's calls =============================================== */
 
-extern "C" void lobby_page_request_host(void) { P.want = 1; log_line("request: HOST (the Coop / VS choice)"); }
+extern "C" void lobby_page_request_host(void) { P.want = 1; log_line("request: HOST (a coop room)"); }
+extern "C" void lobby_page_request_vs(void) { P.want = 4; log_line("request: VS (a VS room)"); }
 extern "C" void lobby_page_request_join(const char *code)
 {
     P.want = 2;
@@ -996,6 +982,7 @@ extern "C" void lobby_page_request_join(const char *code)
 extern "C" int lobby_page_pending(void) { return P.want != 0; }
 extern "C" void lobby_page_clear_request(void) { P.want = 0; }
 extern "C" int lobby_page_open(void) { return P.screen != SCR_CLOSED; }
+extern "C" unsigned lobby_page_closed_count(void) { return g_closed; }
 
 extern "C" void lobby_page_open_now(void)
 {
@@ -1025,8 +1012,14 @@ extern "C" void lobby_page_open_now(void)
         P.screen = SCR_ROOM;          /* proof rows: the stand-in's scenario is already set */
         log_line("open: a proof scenario");
     } else {
-        P.screen = SCR_CHOOSE;
-        log_line("open: the Coop / VS choice");
+        /* PORTMENU1: HOST (want 1) is always a coop room, the title's VS plank (want 4) a VS room: no choice screen in between */
+        const LobbyKind k = want == 4 ? LOBBY_VS : LOBBY_COOP;
+        char b[64];
+        snprintf(b, sizeof b, "open: host: creating a %s room", k == LOBBY_COOP ? "coop" : "VS");
+        log_line(b);
+        C_create(k);
+        P.screen = SCR_ROOM;
+        P.focus = -1;
     }
 }
 
@@ -1069,11 +1062,12 @@ extern "C" int lobby_page_env_poll(void)
     char b[96];
     snprintf(b, sizeof b, "SM64DS_LOBBY_SHOW %s at frame %d", P.env_what, P.env_frames);
     log_line(b);
-    if (!strcmp(P.env_what, "choose")) { P.want = 1; return 1; }
+    if (!strcmp(P.env_what, "choose")) { P.want = 1; return 1; }      /* PORTMENU1: no choice any more: the same as realhost (a coop room) */
     if (!strncmp(P.env_what, "join:", 5)) { g_fake = 1; P.want = 2; snprintf(P.want_code, sizeof P.want_code, "%s", P.env_what + 5); return 1; }
     if (!strncmp(P.env_what, "realjoin:", 9)) { P.want = 2; snprintf(P.want_code, sizeof P.want_code, "%s", P.env_what + 9); return 1; }
     if (!strcmp(P.env_what, "realhost")) { P.want = 1; return 1; }
-    if (!strcmp(P.env_what, "realhost:coop")) { P.want = 1; g_auto_coop = 1; return 1; }   /* the choice answered COOP by itself */
+    if (!strcmp(P.env_what, "realhost:coop")) { P.want = 1; return 1; }
+    if (!strcmp(P.env_what, "realhost:vs")) { P.want = 4; return 1; }      /* PORTMENU1: the title's VS plank */
     /* <coop|vs>:<scenario> on the stand-in */
     const char *colon = strchr(P.env_what, ':');
     const LobbyKind k = !strncmp(P.env_what, "vs", 2) ? LOBBY_VS : LOBBY_COOP;
@@ -1157,7 +1151,6 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
     C_tick();
     const LobbyState *s = C_state();
 #if LP_PROOF
-    if (g_auto_coop && P.screen == SCR_CHOOSE && P.frames > 30) { g_auto_coop = 0; log_line("realhost:coop presses COOP"); press(s, C_CHOOSE_COOP); }
     if (P.frames == 2) {      /* proof pictures: the hover buttons of a seat, the focus on a control, the settings panel */
         const char *e1 = getenv("SM64DS_LOBBY_SEATMENU"), *e2 = getenv("SM64DS_LOBBY_FOCUS"), *e3 = getenv("SM64DS_LOBBY_PANEL");
         if (e1 && *e1) P.seat_menu = atoi(e1);
@@ -1390,7 +1383,6 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
         if (P.picker) close_picker(0);
         else if (P.panel) open_panel(0);
         else if (P.seat_menu >= 0 && P.focus >= C_MUTE0) { P.focus = C_SEAT0 + P.seat_menu; }
-        else if (P.screen == SCR_CHOOSE) close_page("back from the choice");
         else if (s->phase == LOBBY_FAILED) leave_room("back after a failure");
         else leave_room("back");
     }
@@ -2310,20 +2302,6 @@ extern "C" void lobby_page_draw(uint32_t *px, int stride, int w, int h)
     draw_cork(s, hd);
     draw_title(s, f, g, "LOBBY");
     const int focus = P.focus;
-    if (P.screen == SCR_CHOOSE) {
-        draw_back(s, f, hd, g, focus == C_BACK);
-        const Rect sub = { 0, (int)(90 * g.u), w, (int)(30 * g.u) };
-        f.centred(s, sub, "Host a room", 20.0f, 0x2A1404u);
-        draw_box(s, f, hd, g.r[C_CHOOSE_COOP], 0, focus == C_CHOOSE_COOP);
-        f.centred(s, g.r[C_CHOOSE_COOP], "COOP", 30.0f, ink_on(hd, 0));
-        draw_box(s, f, hd, g.r[C_CHOOSE_VS], 0, focus == C_CHOOSE_VS);
-        f.centred(s, g.r[C_CHOOSE_VS], "VS", 30.0f, ink_on(hd, 0));
-        const Rect n1 = { g.r[C_CHOOSE_COOP].x, g.r[C_CHOOSE_COOP].y + g.r[C_CHOOSE_COOP].h + (int)(6 * g.u), g.r[C_CHOOSE_COOP].w, (int)(20 * g.u) };
-        const Rect n2 = { g.r[C_CHOOSE_VS].x, n1.y, g.r[C_CHOOSE_VS].w, n1.h };
-        f.centred(s, n1, "Adventure together", 12.0f, 0x5A2A0Au);
-        f.centred(s, n2, "Battle in an arena", 12.0f, 0x5A2A0Au);
-        return;
-    }
     if (st->phase == LOBBY_FAILED) {
         draw_box(s, f, hd, g.fail_box, 2, 0);
         const Rect hr = { g.fail_box.x, g.fail_box.y + (int)(12 * g.u), g.fail_box.w, (int)(28 * g.u) };

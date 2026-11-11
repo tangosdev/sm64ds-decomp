@@ -132,7 +132,7 @@ void open_profile(int pending)
 /* LOBBYUI1: THE ROOM CODE PLANK AND HOST. The keyboard types the code straight into the plank (polled once a tick like the NAME popup's field: the window
    must have focus, or a scripted SM64DS_HOST_KEY press stands in): the 31 letters and digits of the lobby server's code alphabet, upper case, six at
    most; Backspace deletes; Enter with six letters asks for the lobby page joining that room; Escape lets go. While it has the keyboard it is a modal
-   screen (ONL_SCR_ROOMCODE): the pad and the keys never reach the ROM's file select underneath. HOST asks for the lobby page's Coop / VS choice. */
+   screen (ONL_SCR_ROOMCODE): the pad and the keys never reach the ROM's file select underneath. HOST opens a coop lobby (PORTMENU1: no Coop / VS choice any more; the title's VS plank opens a VS lobby). */
 SHORT (WINAPI *p_GetAsyncKeyState)(int);
 int key_down(int vk)
 {
@@ -220,6 +220,21 @@ void rc_grid_event(int ev, char ch)
     case PKB_CLOSE: rc_close("the grid"); break;
     default: break;
     }
+}
+
+/* PORTMENU1: the lobby page closed since this was last asked (a click on its Back, a key, a pad B): whatever press that was is still down and must not
+   land as a fresh press on the file select / title under it (it used to open the ? text, the Back button sits where the ? plank is). The press is
+   held until it is lifted, and a pad focus the page left behind is dropped. */
+void lobby_sync()
+{
+    static unsigned seen;
+    const unsigned n = lobby_page_closed_count();
+    if (n == seen) return;
+    seen = n;
+    g.touch_hold = 1;
+    g.padfocus = 0;
+    fprintf(stderr, "[online] the lobby page closed: the press that closed it is held back
+");
 }
 
 void host_press(const char *how)
@@ -354,6 +369,7 @@ static int pad_focus_press(int kind, int edge)
 
 int menu_online_press_main(int elem, int edge)
 {
+    lobby_sync();
     if (lobby_page_open()) return 1;      /* LOBBYUI1: the lobby page is up over the title: no press reaches the menu under it */
     if (!menu_online_enabled()) return elem == 1 ? 1 : 0;       /* the classic title: the MP / VS plate takes no press, as before */
     if (pad_focus_press(1, edge)) return 1;
@@ -363,7 +379,8 @@ int menu_online_press_main(int elem, int edge)
     }
     if (elem == 1) { if (edge) toggle_on(); return 1; }
     if (elem == 2 && g.on) {
-        if (edge) { set_screen(ONL_SCR_VS); }
+        if (edge) { fprintf(stderr, "[online] VS plank: a VS room
+"); lobby_page_request_vs(); }      /* PORTMENU1: was the "made in the launcher" note */
         return 1;
     }
     if (elem == 0 && g.on) {
@@ -380,6 +397,7 @@ int menu_online_press_main(int elem, int edge)
 
 int menu_online_press_file(int elem, int edge)
 {
+    lobby_sync();
     if (lobby_page_open()) return 1;      /* LOBBYUI1: as above (a click on the page landed on file A under it and opened the name popup) */
     if (!g.flow) return 0;
     if (g.scr == ONL_SCR_ROOMCODE) {
@@ -424,6 +442,7 @@ static int in_box(int sx, int sy, int x, int y, int w, int h) { return sx >= x &
 
 int menu_online_touch(int kind, int down, int sx, int sy)
 {
+    lobby_sync();
     if (lobby_page_open()) { g.last_down = down; return 1; }      /* LOBBYUI1 */
     const int edge = down && !g.last_down;
     g.last_down = down;
@@ -628,6 +647,7 @@ int menu_online_flow_now(void) { return g.flow && menu_online_enabled(); }
 
 int menu_online_back(int kind)
 {
+    lobby_sync();
     if (lobby_page_open()) return 1;      /* LOBBYUI1 */
     if (!menu_online_enabled()) return 0;
     if (g.scr == ONL_SCR_PROFILE) { profile_back(); return 1; }
