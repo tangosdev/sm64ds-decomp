@@ -96,8 +96,8 @@ s32 dScBoot_c::InitResources() {
 
     GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
-    GX_SetGraphicsMode(1, 0, 0);
-    GXS_SetGraphicsMode(0);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_2D);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
 
     GX_SetBGScrOffset(1);
     REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;

@@ -105,7 +105,7 @@ extern "C" void D3D_CaptureToSub(void)
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
     GX_SetBankForLCDC(GX_VRAM_LCDC_C);
     *(volatile int *)0x4000064 = 0x80360010;
-    GXS_SetGraphicsMode(5);
+    GXS_SetGraphicsMode(GX_BGMODE_5);
     gSubScreenLayers |= 0x10;
     gSubScreenLayers &= ~4;
     *(volatile int *)0x4001000 = (*(volatile int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
@@ -226,8 +226,8 @@ void dScMgD3DBase_c::InitEngines()
     Mg_ResetOverlays();
     D3D_DrawSpriteTable();
     data_0208ee44 = 1;
-    GX_SetGraphicsMode(1, 0, 1);
-    GXS_SetGraphicsMode(5);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
+    GXS_SetGraphicsMode(GX_BGMODE_5);
     *(vu32 *)0x4000000u &= 0xffcfffefu;
     sMgCurCamera = (int)&mCameras[0];
     sMgMainCamera = &mCameras[0];

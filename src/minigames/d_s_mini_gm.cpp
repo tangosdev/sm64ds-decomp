@@ -231,8 +231,8 @@ s32 dScMiniGm_c::InitResources()
     gSubScreenLayers &= ~0x1f;
     REG_DISPCNT &= ~0x1f00;
     REG_DISPCNT_SUB &= ~0x1f00;
-    GX_SetGraphicsMode(1, 0, 1);
-    GXS_SetGraphicsMode(0);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
 
     REG_DISPCNT &= 0xffcfffef;
     REG_DISPCNT_SUB &= 0xffcfffef;

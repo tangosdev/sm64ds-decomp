@@ -80,7 +80,7 @@ void dScMgSingle3DBase_c::InitEngines()
     GX_SetBankForOBJ(GX_VRAM_OBJ_64_E);
     GX_SetBankForTex(GX_VRAM_TEX_0_A);
     GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_0_F);
-    GX_SetGraphicsMode(1, 0, 1);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
     REG_DISPCNT &= ~0x300010u;
     GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);

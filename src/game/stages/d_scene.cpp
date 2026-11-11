@@ -107,7 +107,7 @@ void dScene_c::ResetHardwareRegisters()
     GX::DisableAllBanks();
     GX_HBlankIntr(0);
     GX_VBlankIntr(1);
-    GX_SetGraphicsMode(1, 0, 0);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_2D);
 
     GX_SetVisiblePlane(0);
     GX_SetVisibleWnd(GX_WNDMASK_NONE);
@@ -154,7 +154,7 @@ void dScene_c::ResetHardwareRegisters()
     REG_MOSAIC_OBJ = 0;
 
     GX_SetMasterBrightness(0);
-    GXS_SetGraphicsMode(0);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
 
     GXS_SetVisiblePlane(0);
     GXS_SetVisibleWnd(GX_WNDMASK_NONE);
@@ -234,7 +234,7 @@ void dScene_c::Initialise3dGraphics()
 {
     ResetHardwareRegisters();
     G3X_Init();
-    GX_SetGraphicsMode(1, 0, 1);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
     G3_LightVector(GX_LIGHTID_0, 0, -0xb50, -0xb50); /* (0, -1/sqrt2, -1/sqrt2) */
     G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
     REG_DIF_AMB = GX_RGB(31, 31, 31);

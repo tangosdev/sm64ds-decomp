@@ -53,13 +53,13 @@ void func_02030500(void) {
     G2S_BlendNone();
     GX_SetVisibleWnd(GX_WNDMASK_NONE);
     GXS_SetVisibleWnd(GX_WNDMASK_NONE);
-    GX_SetGraphicsMode(1, 0, 0);
+    GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_2D);
 
     GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
                      GX_BG_CHARBASE_0x08000, GX_BG_EXTPLTT_01);
     G2_BG1Mosaic(0);
-    GXS_SetGraphicsMode(0);
+    GXS_SetGraphicsMode(GX_BGMODE_0);
 
     GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,

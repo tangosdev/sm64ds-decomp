@@ -11,7 +11,7 @@ void MenuGfx_SetBgMode(int mode) {
     switch (mode) {
     case 1:
         GX_ResetBankForBG();
-        GX_SetGraphicsMode(1, 0, 1);
+        GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
         GX_SetBankForBG(GX_VRAM_BG_128_D);
         G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
                          GX_BG_CHARBASE_0x04000, GX_BG_EXTPLTT_01);
@@ -31,7 +31,7 @@ void MenuGfx_SetBgMode(int mode) {
         break;
     case 3:
         GX_ResetBankForBG();
-        GX_SetGraphicsMode(1, 3, 1);
+        GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_3, GX_BG0_AS_3D);
         GX_SetBankForBG(GX_VRAM_BG_128_D);
         G2_SetBG3ControlDCBmp(GX_BG_SCRSIZE_DCBMP_256x256, GX_BG_AREAOVER_XLU,
                               GX_BG_BMPSCRBASE_0x08000);
@@ -46,7 +46,7 @@ void MenuGfx_SetBgMode(int mode) {
         break;
     case 6:
         GX_ResetBankForBG();
-        GX_SetGraphicsMode(1, 0, 1);
+        GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS, GX_BGMODE_0, GX_BG0_AS_3D);
         GX_SetBankForBG(GX_VRAM_BG_128_D);
         G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
                          GX_BG_CHARBASE_0x04000, GX_BG_EXTPLTT_01);
