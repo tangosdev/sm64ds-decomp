@@ -4,6 +4,7 @@
  * callback. */
 #include "types.h"
 #include "nitro/spi/tp.h"
+#include "nitro/os/systemWork.h"
 typedef struct {
     u32 x : 12;
     u32 y : 12;
@@ -38,8 +39,8 @@ void TPi_TpCallback(int a0, unsigned int a1, int a2) {
         if (data_020a80cc.mIndex >= data_020a80cc.mBufSize)
             data_020a80cc.mIndex = 0;
         e = data_020a80cc.mSamplingBufs + data_020a80cc.mIndex;
-        t.h[0] = *(volatile u16 *)0x27fffaa;
-        t.h[1] = *(volatile u16 *)0x27fffac;
+        t.h[0] = *(u16 *)(&(OS_GetSystemWork()->touch_panel[0]));
+        t.h[1] = *(u16 *)(&(OS_GetSystemWork()->touch_panel[2]));
         e->x = t.f.x;
         e->y = t.f.y;
         e->touch = (unsigned char)t.f.a;
@@ -59,8 +60,8 @@ void TPi_TpCallback(int a0, unsigned int a1, int a2) {
             switch (bit) {
             case 0: {
                 TPU t;
-                t.h[0] = *(volatile u16 *)0x27fffaa;
-                t.h[1] = *(volatile u16 *)0x27fffac;
+                t.h[0] = *(u16 *)(&(OS_GetSystemWork()->touch_panel[0]));
+                t.h[1] = *(u16 *)(&(OS_GetSystemWork()->touch_panel[2]));
                 data_020a80cc.mState = 0;
                 data_020a80cc.mBuf.x = t.f.x;
                 data_020a80cc.mBuf.y = t.f.y;

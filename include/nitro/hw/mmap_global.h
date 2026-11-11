@@ -19,6 +19,9 @@ extern u32 SDK_AUTOLOAD_DTCM_START[];
 }
 #endif
 
+#define HW_MAIN_MEM  0x02000000
+#define HW_CTRDG_ROM 0x08000000
+
 #define HW_DTCM      ((u32)SDK_AUTOLOAD_DTCM_START)
 #define HW_DTCM_SIZE 0x4000
 #define HW_DTCM_END  (HW_DTCM + HW_DTCM_SIZE)

@@ -51,8 +51,8 @@ int func_02018cbc(FSOverlayInfo *info, int flag, int index, FSArchive *archive, 
    the 0x24-byte FSOverlayInfo with overlay `index`'s 0x20-byte table entry,
    then the target processor (0 ARM9, 1 ARM7) at +0x20. The entry comes from the
    in-memory table if there is one, else from the card, with the table's ROM
-   offset and length from the cartridge header copy at 0x27ffe00 (+0x50 ARM9,
-   +0x58 ARM7). 0 if index is past the table. */
+   offset and length from the ROM header's overlay table regions. 0 if index is
+   past the table. */
 int func_02018c00(FSOverlayInfo *info, int flag, int index) {
     struct CARDRomRegion *base = (flag == 0) ? &data_020a8064 : &data_020a806c;
     u32 ptr = base->offset;
@@ -65,9 +65,9 @@ int func_02018c00(FSOverlayInfo *info, int flag, int index) {
         return 1;
     }
     {
-        struct CARDRomRegion *m = (struct CARDRomRegion *)0x27ffe50;
-        struct CARDRomRegion *n = (struct CARDRomRegion *)0x27ffe58;
-        return func_02018cbc(info, flag, index, &data_020a8074, m->offset, m->length, n->offset,
-                             n->length);
+        const CARDRomRegion *const p_ovt9 = CARD_GetRomRegionOVT(MI_PROCESSOR_ARM9);
+        const CARDRomRegion *const p_ovt7 = CARD_GetRomRegionOVT(MI_PROCESSOR_ARM7);
+        return func_02018cbc(info, flag, index, &data_020a8074, p_ovt9->offset, p_ovt9->length,
+                             p_ovt7->offset, p_ovt7->length);
     }
 }

@@ -17,7 +17,7 @@
  * the PXI command it sends (0x60 sleep start, 0x63 utility, 0x65 register
  * read, 0x66 LED pattern), the utility command numbers (LED 1..3, backlight
  * 4..9, power off 0xe), and the registers it reads and writes (POWCNT1
- * 0x04000304, IME 0x04000208, the VBlank count 0x027ffc3c). mwccarm emits the
+ * 0x04000304, IME 0x04000208, OS_GetVBlankCount). mwccarm emits the
  * bodies in reverse, so PMi_Lock, the first in source, is the highest in the
  * ROM.
  *
@@ -34,16 +34,14 @@
 #include "types.h"
 #include "nitro/os/system.h"
 #include "nitro/os/interrupt.h"
+#include "nitro/os/interrupt_vblank.h"
+#include "nitro/hw/registers.h"
 #include "nitro/spi/pm.h"
 #include "nitro/ctrdg/ctrdg_common.h"
 
 #define PXI_FIFO_TAG_PM 8
 #define PXI_PROC_ARM7 1
 
-#define REG_IME (*(volatile u16 *)0x04000208)
-#define REG_IF (*(volatile u32 *)0x04000214)
-#define REG_POWCNT1 (*(volatile u16 *)0x04000304)
-#define HW_VBLANK_COUNT (*(u32 *)0x027ffc3c) /* the SDK's HW_VBLANK_COUNT_BUF */
 
 #define PM_TRIGGER_CARD 0x08
 #define PM_TRIGGER_CARTRIDGE 0x10
@@ -75,7 +73,7 @@ extern "C" {
 extern u16 data_020a8104;          /* set once PM_Init has run */
 extern volatile int data_020a8108; /* command 0x60 answered */
 extern int data_020a810c;          /* command 0x62 answered */
-extern u32 data_020a8110;          /* HW_VBLANK_COUNT when the LCD last went off */
+extern u32 data_020a8110;          /* the VBlank count when the LCD last went off */
 extern char data_020a8124;         /* an OSMutex */
 
 void OS_SpinWait(u32 cycles);
@@ -138,7 +136,7 @@ void PM_Init(void) {
     for (i = 0; i < 4; i++)
         data_020a8138[i].flag = 0;
     OS_InitMutex(&data_020a8124);
-    data_020a8110 = HW_VBLANK_COUNT;
+    data_020a8110 = OS_GetVBlankCount();
 }
 
 void PMi_CommonCallback(int tag, u32 data, int err) {
@@ -365,7 +363,7 @@ int PMi_SetLCDPower(u32 sw, u32 led, int skip, int isSync) {
     switch (sw) {
     case PM_LCD_POWER_ON:
         if (skip == 0) {
-            if (HW_VBLANK_COUNT - data_020a8110 <= 7)
+            if (OS_GetVBlankCount() - data_020a8110 <= 7)
                 return 0;
         }
         if (led != 0) {
@@ -378,7 +376,7 @@ int PMi_SetLCDPower(u32 sw, u32 led, int skip, int isSync) {
         break;
     case PM_LCD_POWER_OFF:
         REG_POWCNT1 &= ~1;
-        data_020a8110 = HW_VBLANK_COUNT;
+        data_020a8110 = OS_GetVBlankCount();
         if (led != 0) {
             if (isSync != 0)
                 PMi_SetLED(led);
