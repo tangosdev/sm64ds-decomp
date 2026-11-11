@@ -1079,125 +1079,119 @@ void dCamera_c::func_0200c9e0(s32 *r1, s32 *r2) {
     }
 }
 
-int dCamera_c::func_0200c66c(void *pos_, int *out2_, int *out1_, int *arg5_) {
-    VecFx32 *pos = (VecFx32 *)pos_;
-    void **out2 = (void **)out2_;
-    void **out1 = (void **)out1_;
-    VecFx32 tmp;
-    int hval;
-    int col1;
-    int col2;
-    daPly_c *p;
-    daPly_c *obj;
-    int res;
+/* Chooses the camera mode and view object from the floor under pos: the
+ * target player's own floor record when it is the player (except in level
+ * 0x1c), otherwise a ground check from up to 0x100 units above pos. Records
+ * the choice in mAreaMode and mViewObj. Returns the player's ground height,
+ * or the floor height when a type-4 view object takes over. */
+int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outFramed) {
+    VecFx32 *pos = (VecFx32 *)posArg;
+    void **outView = (void **)viewArg;
+    void **outMode = (void **)modeArg;
+    VecFx32 above;
+    int floorY;
+    int areaType;
+    int viewId;
+    daPly_c *target;
+    daPly_c *player;
+    int groundY;
 
-    p = (daPly_c *)mTargetPlayer;
-    obj = 0;
-    {
-        int b = p->actorID;
-        b = b == 0xbf;
-        if (b != 0) {
-            res = p->mGroundY;
-            if ((u32)res == 0x80000000)
-                res = p->mPosY;
-            obj = p;
-        }
+    target = (daPly_c *)mTargetPlayer;
+    player = 0;
+    if (IsPlayer(target)) {
+        groundY = target->mGroundY;
+        if ((u32)groundY == 0x80000000)
+            groundY = target->mPosY;
+        player = target;
     }
 
-    if (obj != 0 && gCurrentSublevel != 0x1c) {
-        col1 = obj->mFloorCameraBehavior & 0xff;
-        col2 = obj->mFloorViewID & 0xff;
-        hval = res;
+    if (player != 0 && gCurrentSublevel != 0x1c) {
+        areaType = player->mFloorCameraBehavior & 0xff;
+        viewId = player->mFloorViewID & 0xff;
+        floorY = groundY;
     } else {
         dBgCh_Lin line;
         PrepareBgCh(line);
         {
-            int tx, tz, ty;
-            tx = pos->x;
-            tz = pos->z;
-            ty = pos->y + 0x100000;
-            tmp.x = tx;
-            tmp.y = ty;
-            tmp.z = tz;
+            int x = pos->x;
+            int z = pos->z;
+            int y = pos->y + 0x100000;
+            above.x = x;
+            above.y = y;
+            above.z = z;
         }
-        line.SetObjAndLine(*(Vector3 *)pos, *(Vector3 *)&tmp, 0);
+        line.SetObjAndLine(*(Vector3 *)pos, *(Vector3 *)&above, 0);
         if (line.DetectClsn() != 0) {
-            Vector3 clsn = line.GetClsnPos();
-            tmp.x = clsn.x;
-            tmp.y = clsn.y;
-            tmp.z = clsn.z;
+            Vector3 hit = line.GetClsnPos();
+            above.x = hit.x;
+            above.y = hit.y;
+            above.z = hit.z;
         }
         dBgCh_Gnd ground;
         PrepareBgCh(ground);
-        ground.SetObjAndPos(*(Vector3 *)&tmp, 0);
+        ground.SetObjAndPos(*(Vector3 *)&above, 0);
         if (ground.DetectClsn() == 0) {
-            hval = pos->y;
-            col1 = 0;
-            col2 = 0x3f;
+            floorY = pos->y;
+            areaType = 0;
+            viewId = 0x3f;
         } else {
-            hval = ground.clsnY;
-            col1 = ((const CLPS *)&ground.surface)->GetCameraBehavior() & 0xff;
-            col2 = ((const CLPS *)&ground.surface)->GetViewID() & 0xff;
+            floorY = ground.clsnY;
+            areaType = ((const CLPS *)&ground.surface)->GetCameraBehavior() & 0xff;
+            viewId = ((const CLPS *)&ground.surface)->GetViewID() & 0xff;
         }
     }
 
-    if (col1 == 0 || (mFlags & 0x400) != 0) {
+    if (areaType == 0 || (mFlags & 0x400) != 0) {
         if (mMode->flags & 0x10) {
             if (mAreaMode)
-                *out1 = mAreaMode;
+                *outMode = mAreaMode;
             if (mViewObj)
-                *out2 = mViewObj;
+                *outView = mViewObj;
         }
     } else {
-        int b0;
-        if (col2 != 0x3f) *out2 = GetViewObj(col2);
-        if (func_0200c394(col1, *out2, pos, out1, arg5_) == 0) {
-            if ((u32)mMode <= (u32)&data_02086ff4 || *out1 == (void *)&data_02087274) {
-                if (*out2 != 0) {
-                    if (*(unsigned char*)(*out2) == 6) *out1 = (void*)&data_0208742c;
+        if (viewId != 0x3f)
+            *outView = GetViewObj(viewId);
+        if (func_0200c394(areaType, *outView, pos, outMode, outFramed) == 0) {
+            if ((u32)mMode <= (u32)&data_02086ff4 || *outMode == (void *)&data_02087274) {
+                if (*outView != 0 && ((CamViewObj *)*outView)->type == 6)
+                    *outMode = (void *)&data_0208742c;
+            }
+        } else if (viewId != 0x3f) {
+            int type = ((CamViewObj *)*outView)->type;
+            if (type == 4) {
+                *outMode = (void *)&data_020873dc;
+                if (((CamViewObj *)*outView)->p1 == 2) {
+                    if (mAreaMode != *outMode)
+                        mFlags |= 4;
+                }
+                groundY = floorY;
+            } else if (type == 6) {
+                *outMode = (void *)&data_0208742c;
+            } else if ((mMode->flags & 4) == 0) {
+                if (type == 0) {
+                    if (*outMode == (void *)&data_02087274 && gCurrentSublevel == 0x2d) {
+                        mLookTargetPos = mTargetPos;
+                    }
+                    *outMode = (void *)&data_020871ac;
+                } else if (type == 1) {
+                    *outMode = (void *)&data_020871d4;
+                } else if (type == 5) {
+                    *outMode = (void *)&data_02087404;
                 }
             }
-        } else {
-            if (col2 != 0x3f) {
-                b0 = *(unsigned char*)(*out2);
-                if (b0 == 4) {
-                    *out1 = (void*)&data_020873dc;
-                    if (*(unsigned char*)((char*)*out2 + 1) == 2) {
-                        if (mAreaMode != *out1)
-                            mFlags |= 4;
-                    }
-                    res = hval;
-                } else if (b0 == 6) {
-                    *out1 = (void*)&data_0208742c;
-                } else {
-                    if ((mMode->flags & 4) == 0) {
-                        if (b0 == 0) {
-                            if (*out1 == (void *)&data_02087274 && gCurrentSublevel == 0x2d) {
-                                mLookTargetPos.x = mTargetPos.x;
-                                mLookTargetPos.y = mTargetPos.y;
-                                mLookTargetPos.z = mTargetPos.z;
-                            }
-                            *out1 = (void*)&data_020871ac;
-                        } else if (b0 == 1) {
-                            *out1 = (void*)&data_020871d4;
-                        } else if (b0 == 5) {
-                            *out1 = (void*)&data_02087404;
-                        }
-                    }
-                }
-                mFlags &= ~0x100;
-            }
+            mFlags &= ~0x100;
         }
-        if (*out1 != (void *)&data_02087094)
-            mAreaMode = (CamMode *)*out1;
-        if (*out1 != (void*)&data_0208733c) {
-            if (*out2 != 0 && *(unsigned char*)(*out2) != 2)
-                mViewObj = *out2;
+        if (*outMode != (void *)&data_02087094)
+            mAreaMode = (CamMode *)*outMode;
+        if (*outMode != (void *)&data_0208733c) {
+            if (*outView != 0 && ((CamViewObj *)*outView)->type != 2)
+                mViewObj = *outView;
         }
     }
 
-    return res;
+    return groundY;
 }
+
 
 /* Picks *outMode for the camera-area type under the target (the ground's CLPS
  * camera behaviour) and its view object. Type 7, or an actor to frame, aims
