@@ -115,7 +115,7 @@ struct SpSpawnWire {
     uint16_t counter;     // non-zero, per origin
     uint16_t cls;         // whitelisted class
     int8_t   area;        // -1 .. 7
-    uint8_t  reserved;    // 0
+    uint8_t  reserved;    // 0; coopgoomboss2: a Goomboss minion (class 200) carries its minion index here (0..40)
     uint32_t param;       // the spawn parameter
     int32_t  pos[3];      // Fix12 world position
     uint32_t reserved2;   // 0
@@ -182,7 +182,7 @@ static_assert(sizeof(SpRedWire) == 12, "red");
 
 // ---- what a datagram may name ------------------------------------------------
 inline bool sp_block_class_ok(int c) { return c >= 20 && c <= 25; }
-inline bool sp_actor_class_ok(int c) { return c == 178 || c == 276 || c == 277 || c == 282 || c == 283 || c == 229; }
+inline bool sp_actor_class_ok(int c) { return c == 178 || c == 276 || c == 277 || c == 282 || c == 283 || c == 229 || c == 200; }   // 200: Goomboss's goombas (coopgoomboss2)
 inline bool sp_silver_class_ok(int c) { return c == 179; }
 inline bool sp_class_ok(int kind, int c) {
     return kind == kSpKindActor ? sp_actor_class_ok(c) : kind == kSpKindSilver ? sp_silver_class_ok(c) : false;
@@ -191,6 +191,7 @@ inline bool sp_class_ok(int kind, int c) {
 // A star's number is (param & 0xf), 0..7 (bossfix1: 8..15 are not real stars).
 inline bool sp_param_ok(int cls, uint32_t p) {
     if (cls == 178 || cls == 179) return p < 0x100u && (p & 0xfu) <= 7u;
+    if (cls == 200) return p == 0xeeeeu || p == 0xeeefu;     // the two minion parameters the summon uses (func_ov074_0211fd74)
     return (cls == 282 || cls == 283 || cls == 229) ? p < 0x100u : p == 0u;
 }
 inline bool sp_pos_ok(int32_t v) { return v > -kSpPosLimit && v < kSpPosLimit; }
@@ -199,7 +200,7 @@ inline bool sp_spawn_validate(const void *p, int len) {
     if (!p || len != (int)sizeof(SpSpawnWire)) return false;
     SpSpawnWire w; std::memcpy(&w, p, sizeof w);
     if (!coop_key_ok(w.key) || w.origin >= kCoopMaxSeats || w.counter == 0) return false;
-    if (w.reserved || w.reserved2) return false;
+    if (w.reserved2 || (w.reserved && !(w.cls == 200 && w.reserved <= 40))) return false;
     if (w.kind != kSpKindActor && w.kind != kSpKindSilver) return false;
     if (!sp_class_ok(w.kind, w.cls) || !sp_param_ok(w.cls, w.param)) return false;
     if (w.area < -1 || w.area > 7) return false;

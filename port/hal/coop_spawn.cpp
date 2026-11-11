@@ -185,6 +185,7 @@ struct Net {
     char *a; unsigned uid; bool seen;
     bool sil_took, sil_fell;      // SILVERCOOP1: a player took this silver star here / my copy fell off the level (the others keep theirs)
     bool alias; uint8_t alias_o; uint16_t alias_c;      // bossfix1: the other console's id for the SAME boss reward (each console keeps its own native key)
+    uint8_t extra;                                       // coopgoomboss2: a Goomboss minion's index (the wire's reserved byte)
     int sends; unsigned next; int gsends; unsigned gnext;
 };
 Net g_net[kNetMax];
@@ -386,7 +387,7 @@ char *my_player() {
     return (me >= 0 && me < 16) ? (char *)data_0209f394[me] : nullptr;
 }
 bool is_block_cls(unsigned c) { return c >= 20 && c <= 25; }
-bool is_ann_cls(unsigned c) { return c == 178 || c == 179 || c == 276 || c == 277 || c == 282 || c == 283 || c == 229; }
+bool is_ann_cls(unsigned c) { return c == 178 || c == 179 || c == 276 || c == 277 || c == 282 || c == 283 || c == 229 || c == 200; }   // 200: only Goomboss's goombas (coop_boss_minion_mine)
 bool is_star_cls(unsigned c) { return c == 178 || c == 179; }
 
 CoopKeyWire wkey() { CoopKeyWire k; k.level = (uint16_t)g_lvl; k.act = (uint8_t)g_act; k.reserved = 0; return k; }
@@ -523,6 +524,7 @@ bool register_local(char *a, int cls, unsigned param, const int pos[3], int area
     n->kind = (uint8_t)(cls == 179 ? kSpKindSilver : kSpKindActor);
     n->param = param; n->pos[0] = pos[0]; n->pos[1] = pos[1]; n->pos[2] = pos[2]; n->area = (int8_t)area;
     n->a = a; n->uid = a ? a_uid(a) : 0; n->sends = 0; n->next = 0; n->seen = true;
+    if (cls == 200 && a) { const unsigned ix = *(const unsigned char *)(a + 0x474); n->extra = (uint8_t)(ix <= 40u ? ix : 0u); }   // mMinionIndex
     ++g_st.spawn_local;
     if (g_log)
         std::fprintf(stderr, "[coopspawn] announce cls=%d param=%u pos=%d,%d,%d area=%d id=%d/%d uid=%u frame=%u wall=%lld\n",
@@ -534,6 +536,7 @@ void send_spawn_of(const Net &n) {
     SpSpawnWire w; std::memset(&w, 0, sizeof w);
     w.key = wkey(); w.origin = n.origin; w.kind = n.kind; w.counter = n.counter; w.cls = n.cls;
     w.area = n.area; w.param = n.param; w.pos[0] = n.pos[0]; w.pos[1] = n.pos[1]; w.pos[2] = n.pos[2];
+    if (n.cls == 200) w.reserved = n.extra;
     if (send_world(kSpWorldSpawn, &w, sizeof w)) ++g_st.sent_spawn;
 }
 
@@ -1201,6 +1204,8 @@ void scan(unsigned now) {
                         }
                     } else if ((cls == 276 || cls == 277) && born_at_hit_block(a, blk_pos, nblk)) {
                         // a block's own prize: per player, not announced
+                    } else if (cls == 200 && !coop_boss_minion_mine(a)) {
+                        // coopgoomboss2: a Goomba that is not a minion of a Goomboss this console is the authority of: not announced
                     } else {
                         const int *p = (const int *)(a + 0x5c);
                         const int pos[3] = {p[0], p[1], p[2]};
@@ -1370,6 +1375,12 @@ void apply_spawn(int seat, const SpSpawnWire &w, unsigned now) {
         return;
     }
     if (w.cls == 283 && g_lvl != 40) { ++g_st.drop_class; return; }           // the Grand Star only exists in Bowser's last arena
+    if (w.cls == 200 && !coop_boss_minion_ready()) {                         // coopgoomboss2: a minion only follows a Goomboss that is here
+        ack_add(w.origin, w.counter, now);
+        ++g_st.drop_class;
+        if (g_log) std::fprintf(stderr, "[coopspawn] goomba id=%d/%d refused: no Goomboss on this console wall=%lld\n", (int)w.origin, (int)w.counter, wall_ms());
+        return;
+    }
     if (ack_has(w.origin, w.counter)) { ++g_st.spawn_dup; return; }
     if (net_find(w.origin, w.counter)) { ++g_st.spawn_dup; return; }
     if (Net *o = reward_net(w.cls)) {
@@ -1414,12 +1425,12 @@ void apply_spawn(int seat, const SpSpawnWire &w, unsigned now) {
         if (taken || (w.cls != 282 && w.cls != 283 && !near_same(a, w))) continue;     // a boss reward: the native key of this console IS the reward, wherever it stands
         adopt = a; break;
     }
-    char *a = adopt ? adopt : do_spawn(w);
+    char *a = adopt ? adopt : (w.cls == 200 ? coop_boss_spawn_minion(w.pos, w.param, w.area, w.reserved) : do_spawn(w));
     if (!a) { ++g_st.spawn_failed; return; }
     *n = Net();
     n->used = true; n->remote = true; n->origin = w.origin; n->kind = w.kind; n->counter = w.counter; n->cls = w.cls;
     n->param = w.param; n->pos[0] = w.pos[0]; n->pos[1] = w.pos[1]; n->pos[2] = w.pos[2]; n->area = w.area;
-    n->a = a; n->uid = a_uid(a); n->seen = true; n->sends = 3;
+    n->a = a; n->uid = a_uid(a); n->seen = true; n->sends = 3; n->extra = w.reserved;
     if (a_uid(a) > g_wm) g_wm = a_uid(a);
     // TOTALS9 (field item 11): a friend's 100-coin star (the ROM spawns it with param 0x20 when a counter reaches 100). Mark the ROM's own
     // "100 coin star is out" event bit, so this console's counter, shared with theirs, does not spawn a second one at its next pickup.
@@ -1531,6 +1542,17 @@ bool rate_ok(int seat) {
     return true;
 }
 
+// coopgoomboss2: Goomboss summons a goomba every third frame (up to ten in a set), so his minions have their own, wider bucket.
+Rate g_rate_minion[kCoopMaxSeats];
+bool rate_minion_ok(int seat) {
+    const unsigned now = comms_hub_now_ms();
+    Rate &r = g_rate_minion[seat];
+    if ((unsigned)(now - r.t0) >= kRateWindowMs) { r.t0 = now; r.n = 0; }
+    if (r.n >= 40) return false;
+    ++r.n;
+    return true;
+}
+
 void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
     if (!coop_world_active()) return;
     if (seat == g_my || seat < 0 || seat >= kCoopMaxSeats) return;
@@ -1549,7 +1571,7 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
                 SpSpawnWire q; std::memcpy(&q, e.buf, sizeof q);
                 if (q.origin == w.origin && q.counter == w.counter) { ++g_st.spawn_dup; return; }
             }
-        if (!rate_ok(seat)) { ++g_st.drop_rate; return; }
+        if (!(w.cls == 200 ? rate_minion_ok(seat) : rate_ok(seat))) { ++g_st.drop_rate; return; }
         ++g_st.spawn_queued;
         push_in(kEvSpawn, seat, &w, (int)sizeof w, now);
         return;
