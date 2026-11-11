@@ -3388,11 +3388,11 @@ void dScMgBase_c::InitEngines() {
     Mg_ResetBgOffsets();
     *(vu32 *)0x4000000u &= ~0x7000000u;
     *(vu32 *)0x4000000u &= ~0x38000000u;
-    GX_SetBankForBG(3);
-    GX_SetBankForOBJ(0x10);
+    GX_SetBankForBG(GX_VRAM_BG_256_AB);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_64_E);
     gMainScreenLayers = DISPLAY_LAYER_OBJ;
-    GX_SetBankForSubBG(4);
-    GX_SetBankForSubOBJ(8);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
     p = Ov004_LoadFile(sMgStockCounterFiles[GetGameLanguage()]);
     DecompressLZ16(p, (u8 *)G2_GetOBJCharPtr() + 0x4000);
     DecompressLZ16(p, (u8 *)G2S_GetOBJCharPtr() + 0x4000);

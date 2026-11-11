@@ -11,6 +11,7 @@
  * g3imm.h: an inline body there renumbers ov075/d_s_entry_entry's pinned
  * @NNN (src/unnamed/ov007/func_ov007_020c4684.c). */
 
+#define REG_G3X_DISP3DCNT_TME_MASK 0x0001
 #define REG_G3X_DISP3DCNT_THS_MASK 0x0002
 #define REG_G3X_DISP3DCNT_ATE_MASK 0x0004
 #define REG_G3X_DISP3DCNT_ABE_MASK 0x0008

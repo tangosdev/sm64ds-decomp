@@ -33,7 +33,7 @@ void func_02019440(void) {
     func_0203bd24();
     REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
     GX_VBlankIntr(1);
-    GX_SetBankForLCDC(0x1ff);
+    GX_SetBankForLCDC(GX_VRAM_LCDC_ALL);
     a = 0;
     MI_CpuFillFast((int *)0x6800000, a, 0xa4000);
     GX_DisableBankForLCDC();

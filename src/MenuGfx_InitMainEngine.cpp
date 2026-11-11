@@ -4,9 +4,9 @@
 #include "nitro/gx/gx.h"
 
 extern "C" void MenuGfx_InitMainEngine(void) {
-    GX_SetBankForTex(3);
-    GX_SetBankForTexPltt(0x20);
-    GX_SetBankForOBJ(0x40);
+    GX_SetBankForTex(GX_VRAM_TEX_01_AB);
+    GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_0_F);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_16_G);
 
     G2_BG0Mosaic(0);
     G2_BG1Mosaic(0);

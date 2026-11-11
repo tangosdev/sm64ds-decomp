@@ -41,10 +41,10 @@ void func_02030500(void) {
 
     Disable3dEngines();
     GX::DisableAllBanks();
-    GX_SetBankForBG(1);
-    GX_SetBankForOBJ(2);
-    GX_SetBankForSubBG(4);
-    GX_SetBankForSubOBJ(8);
+    GX_SetBankForBG(GX_VRAM_BG_128_A);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_128_B);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
 
     GX_SetBGCharOffset(0);
     GX_SetBGScrOffset(0);

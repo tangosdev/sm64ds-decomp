@@ -4,8 +4,8 @@
 #include "nitro/hw/registers.h"
 
 extern "C" void MenuGfx_InitSubEngine(void) {
-    GX_SetBankForSubBG(4);
-    GX_SetBankForSubOBJ(0x100);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_16_I);
     GXS_SetGraphicsMode(0);
 
     REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x314;

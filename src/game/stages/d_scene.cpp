@@ -221,13 +221,13 @@ void DisableAllBanks() {
 
 void dScStage_c::SetVramBanks() {
     GX::DisableAllBanks();
-    GX_SetBankForTex(3);
-    GX_SetBankForTexPltt(0x30);
-    GX_SetBankForBG(8);
-    GX_SetBankForOBJ(0x40);
-    GX_SetBankForSubBG(4);
-    GX_SetBankForSubBGExtPltt(0x80);
-    GX_SetBankForSubOBJ(0x100);
+    GX_SetBankForTex(GX_VRAM_TEX_01_AB);
+    GX_SetBankForTexPltt(GX_VRAM_TEXPLTT_01234_EF);
+    GX_SetBankForBG(GX_VRAM_BG_128_D);
+    GX_SetBankForOBJ(GX_VRAM_OBJ_16_G);
+    GX_SetBankForSubBG(GX_VRAM_SUB_BG_128_C);
+    GX_SetBankForSubBGExtPltt(GX_VRAM_SUB_BGEXTPLTT_0123_H);
+    GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_16_I);
 }
 
 void dScene_c::Initialise3dGraphics()

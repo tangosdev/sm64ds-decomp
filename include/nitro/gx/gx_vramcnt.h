@@ -15,6 +15,115 @@
  * the user held. Parameters stay unnamed: a name in a shared header takes an
  * @NNN in every includer. */
 
+/* The SDK's bank bits (GXVRam) and the bank sets each user can be given
+ * (GXVRamBG, GXVRamOBJ, ...), as macros: the setters below take int. A
+ * set's name gives its size in KiB, then the slots it fills for the palette
+ * users, then its banks. */
+#define GX_VRAM_NONE 0x0000
+#define GX_VRAM_A    0x0001
+#define GX_VRAM_B    0x0002
+#define GX_VRAM_C    0x0004
+#define GX_VRAM_D    0x0008
+#define GX_VRAM_E    0x0010
+#define GX_VRAM_F    0x0020
+#define GX_VRAM_G    0x0040
+#define GX_VRAM_H    0x0080
+#define GX_VRAM_I    0x0100
+
+#define GX_VRAM_LCDC_NONE GX_VRAM_NONE
+#define GX_VRAM_LCDC_A    GX_VRAM_A
+#define GX_VRAM_LCDC_B    GX_VRAM_B
+#define GX_VRAM_LCDC_C    GX_VRAM_C
+#define GX_VRAM_LCDC_D    GX_VRAM_D
+#define GX_VRAM_LCDC_E    GX_VRAM_E
+#define GX_VRAM_LCDC_F    GX_VRAM_F
+#define GX_VRAM_LCDC_G    GX_VRAM_G
+#define GX_VRAM_LCDC_H    GX_VRAM_H
+#define GX_VRAM_LCDC_I    GX_VRAM_I
+#define GX_VRAM_LCDC_ALL  0x01ff
+
+#define GX_VRAM_BG_NONE     GX_VRAM_NONE
+#define GX_VRAM_BG_16_F     GX_VRAM_F
+#define GX_VRAM_BG_16_G     GX_VRAM_G
+#define GX_VRAM_BG_32_FG    (GX_VRAM_F | GX_VRAM_G)
+#define GX_VRAM_BG_64_E     GX_VRAM_E
+#define GX_VRAM_BG_80_EF    (GX_VRAM_E | GX_VRAM_F)
+#define GX_VRAM_BG_80_EG    (GX_VRAM_E | GX_VRAM_G)
+#define GX_VRAM_BG_96_EFG   (GX_VRAM_E | GX_VRAM_F | GX_VRAM_G)
+#define GX_VRAM_BG_128_A    GX_VRAM_A
+#define GX_VRAM_BG_128_B    GX_VRAM_B
+#define GX_VRAM_BG_128_C    GX_VRAM_C
+#define GX_VRAM_BG_128_D    GX_VRAM_D
+#define GX_VRAM_BG_256_AB   (GX_VRAM_A | GX_VRAM_B)
+#define GX_VRAM_BG_256_BC   (GX_VRAM_B | GX_VRAM_C)
+#define GX_VRAM_BG_256_CD   (GX_VRAM_C | GX_VRAM_D)
+#define GX_VRAM_BG_256_AC   (GX_VRAM_A | GX_VRAM_C)
+#define GX_VRAM_BG_256_AD   (GX_VRAM_A | GX_VRAM_D)
+#define GX_VRAM_BG_256_BD   (GX_VRAM_B | GX_VRAM_D)
+#define GX_VRAM_BG_384_ABC  (GX_VRAM_A | GX_VRAM_B | GX_VRAM_C)
+#define GX_VRAM_BG_384_BCD  (GX_VRAM_B | GX_VRAM_C | GX_VRAM_D)
+#define GX_VRAM_BG_384_ABD  (GX_VRAM_A | GX_VRAM_B | GX_VRAM_D)
+#define GX_VRAM_BG_384_ACD  (GX_VRAM_A | GX_VRAM_C | GX_VRAM_D)
+#define GX_VRAM_BG_512_ABCD (GX_VRAM_A | GX_VRAM_B | GX_VRAM_C | GX_VRAM_D)
+
+#define GX_VRAM_OBJ_NONE   GX_VRAM_NONE
+#define GX_VRAM_OBJ_16_F   GX_VRAM_F
+#define GX_VRAM_OBJ_16_G   GX_VRAM_G
+#define GX_VRAM_OBJ_32_FG  (GX_VRAM_F | GX_VRAM_G)
+#define GX_VRAM_OBJ_64_E   GX_VRAM_E
+#define GX_VRAM_OBJ_80_EF  (GX_VRAM_E | GX_VRAM_F)
+#define GX_VRAM_OBJ_80_EG  (GX_VRAM_E | GX_VRAM_G)
+#define GX_VRAM_OBJ_96_EFG (GX_VRAM_E | GX_VRAM_F | GX_VRAM_G)
+#define GX_VRAM_OBJ_128_A  GX_VRAM_A
+#define GX_VRAM_OBJ_128_B  GX_VRAM_B
+#define GX_VRAM_OBJ_256_AB (GX_VRAM_A | GX_VRAM_B)
+
+#define GX_VRAM_BGEXTPLTT_NONE    GX_VRAM_NONE
+#define GX_VRAM_BGEXTPLTT_0123_E  GX_VRAM_E
+#define GX_VRAM_BGEXTPLTT_01_F    GX_VRAM_F
+#define GX_VRAM_BGEXTPLTT_23_G    GX_VRAM_G
+#define GX_VRAM_BGEXTPLTT_0123_FG (GX_VRAM_F | GX_VRAM_G)
+
+#define GX_VRAM_TEX_NONE      GX_VRAM_NONE
+#define GX_VRAM_TEX_0_A       GX_VRAM_A
+#define GX_VRAM_TEX_0_B       GX_VRAM_B
+#define GX_VRAM_TEX_0_C       GX_VRAM_C
+#define GX_VRAM_TEX_0_D       GX_VRAM_D
+#define GX_VRAM_TEX_01_AB     (GX_VRAM_A | GX_VRAM_B)
+#define GX_VRAM_TEX_01_BC     (GX_VRAM_B | GX_VRAM_C)
+#define GX_VRAM_TEX_01_CD     (GX_VRAM_C | GX_VRAM_D)
+#define GX_VRAM_TEX_01_AC     (GX_VRAM_A | GX_VRAM_C)
+#define GX_VRAM_TEX_01_AD     (GX_VRAM_A | GX_VRAM_D)
+#define GX_VRAM_TEX_01_BD     (GX_VRAM_B | GX_VRAM_D)
+#define GX_VRAM_TEX_012_ABC   (GX_VRAM_A | GX_VRAM_B | GX_VRAM_C)
+#define GX_VRAM_TEX_012_BCD   (GX_VRAM_B | GX_VRAM_C | GX_VRAM_D)
+#define GX_VRAM_TEX_012_ABD   (GX_VRAM_A | GX_VRAM_B | GX_VRAM_D)
+#define GX_VRAM_TEX_012_ACD   (GX_VRAM_A | GX_VRAM_C | GX_VRAM_D)
+#define GX_VRAM_TEX_0123_ABCD (GX_VRAM_A | GX_VRAM_B | GX_VRAM_C | GX_VRAM_D)
+
+#define GX_VRAM_TEXPLTT_NONE       GX_VRAM_NONE
+#define GX_VRAM_TEXPLTT_0_F        GX_VRAM_F
+#define GX_VRAM_TEXPLTT_0_G        GX_VRAM_G
+#define GX_VRAM_TEXPLTT_01_FG      (GX_VRAM_F | GX_VRAM_G)
+#define GX_VRAM_TEXPLTT_0123_E     GX_VRAM_E
+#define GX_VRAM_TEXPLTT_01234_EF   (GX_VRAM_E | GX_VRAM_F)
+#define GX_VRAM_TEXPLTT_012345_EFG (GX_VRAM_E | GX_VRAM_F | GX_VRAM_G)
+
+#define GX_VRAM_SUB_BG_NONE  GX_VRAM_NONE
+#define GX_VRAM_SUB_BG_128_C GX_VRAM_C
+#define GX_VRAM_SUB_BG_32_H  GX_VRAM_H
+#define GX_VRAM_SUB_BG_48_HI (GX_VRAM_H | GX_VRAM_I)
+
+#define GX_VRAM_SUB_OBJ_NONE  GX_VRAM_NONE
+#define GX_VRAM_SUB_OBJ_128_D GX_VRAM_D
+#define GX_VRAM_SUB_OBJ_16_I  GX_VRAM_I
+
+#define GX_VRAM_SUB_BGEXTPLTT_NONE   GX_VRAM_NONE
+#define GX_VRAM_SUB_BGEXTPLTT_0123_H GX_VRAM_H
+
+#define GX_VRAM_SUB_OBJEXTPLTT_NONE GX_VRAM_NONE
+#define GX_VRAM_SUB_OBJEXTPLTT_0_I  GX_VRAM_I
+
 #ifdef __cplusplus
 extern "C" {
 #endif
