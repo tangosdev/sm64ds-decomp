@@ -36,13 +36,14 @@ void port_chat_system_line(const char *text);
 namespace port {
 namespace {
 
-enum : int { kSubToggle = 0x40, kSettleMs = 1500, kPresMaxAgeMs = 4000, kToggleEveryMs = 3000, kSeats = 4, kHostSeat = 0, kHeardMaxAgeMs = 10000 };
+enum : int { kSubToggle = 0x40, kSettleMs = 1500, kPresMaxAgeMs = 4000, kToggleEveryMs = 3000, kSeats = 4, kHeardMaxAgeMs = 10000 };
 
 struct Seen { int level, act; unsigned since; bool valid; };
 
 struct State {
     bool env_on;                 // my own env (default on)
     bool host;                   // SM64DS_COOP_HOST
+    int  heard_seat = -1;        // the seat the setting came from
     int  heard;                  // -1 never, else the host's setting 0/1
     unsigned heard_ms;           // when the host last said it (comms_hub_now_ms)
     int  log;
@@ -118,7 +119,7 @@ bool on_now() {
     // the host repeats its setting every kToggleEveryMs; silence (or the host
     // seat gone) means the last word no longer stands and my own env decides
     if (g.heard >= 0 && ((int)(comms_hub_now_ms() - g.heard_ms) > kHeardMaxAgeMs ||
-                         !(comms_hub_seat_mask() & (1u << kHostSeat))))
+                         g.heard_seat < 0 || !(comms_hub_seat_mask() & (1u << g.heard_seat))))
         g.heard = -1;
     return g.heard >= 0 ? g.heard != 0 : g.env_on;
 }
@@ -270,11 +271,12 @@ void on_ctl(int seat, int sub, const unsigned char *pl, int len, void *) {
     init();
     if (sub != kSubToggle || len != 4 || !pl || pl[1] != 1 || pl[2] || pl[3] || pl[0] > 1) return;
     if (g.host) return;                        // the host's own setting stands
-    if (seat != kHostSeat) return;             // only the host seat sets it for the others
+    if (seat < 0 || seat >= kSeats || seat == comms_hub_my_seat()) return;   // the host may sit on any hub seat (a lobby room can make it 1); only the host console ever sends this
     ++g.st.toggle_rx;
     if (g.heard != (int)pl[0] && g.log)
         std::fprintf(stderr, "[cotp] host setting from seat %d: TP %s wall=%lld\n", seat, pl[0] ? "ON" : "OFF", wall_ms());
     g.heard = pl[0];
+    g.heard_seat = seat;
     g.heard_ms = comms_hub_now_ms();
 }
 
