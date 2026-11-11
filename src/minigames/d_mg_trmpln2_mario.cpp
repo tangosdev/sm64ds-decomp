@@ -20,11 +20,14 @@
  * functions called from d_s_mg_trampoline{,2}.cpp and walk the pool by byte
  * offset, so they keep their char* pool and the MARIO2/MARIO3D view macro.
  * Trmp3DMario_EnterWalkIn and Trmp3DMario_IsOffstage are called by the scene
- * with the same byte view and stay free. The dispatch in Update and the state
- * tests are spelled out word by word: the typed forms do not reproduce the
- * cartridge. Measured on this tree, `(this->*fn)()` in Update makes mwccarm
- * call its out-of-line PMF helper and lose the 0x104-byte shape, and
- * `state != pmf` in IsActive grows it from 0xa4 to 0xb0 bytes; both DIFF.
+ * with the same byte view and stay free. The pool entry points decl_common.h
+ * does not declare are declared here with C linkage, one statement per symbol,
+ * and the definitions inherit it; no block wraps a definition. The dispatch in
+ * Update and the state tests are spelled out word by word: the typed forms do
+ * not reproduce the cartridge. Measured on this tree, `(this->*fn)()` in
+ * Update makes mwccarm call its out-of-line PMF helper and lose the
+ * 0x104-byte shape, and `state != pmf` in IsActive grows it from 0xa4 to 0xb0
+ * bytes; both DIFF.
  * The bounce states still walk the line in gotos and raw offsets -- that is
  * the matched state machine, not decoration. Helper prototypes with no owning
  * header (Puff_*, Sound_PlayBank1Panned, Camera_ProjectToScreen*,
@@ -72,10 +75,10 @@ struct Closure {
 
 /* The animation banks, loaded by the Load methods and released by the
  * destructors; the states select one through sTrmpBounceAnimTable. */
-extern "C" BCA_File *sTrmpAnimJump, *sTrmpAnimDoubleJump1, *sTrmpAnimWallJump, *sTrmpAnimHangUp,
+extern BCA_File *sTrmpAnimJump, *sTrmpAnimDoubleJump1, *sTrmpAnimWallJump, *sTrmpAnimHangUp,
     *sTrmpAnimRollJumpEnd, *sTrmpAnimWalk, *sTrmpAnimDoubleJump2, *sTrmpAnimJumpEnd, *sTrmpAnimTurn,
     *sTrmpAnimTurnEnd, *sTrmpAnimBounce, *sTrmpAnimStruggle, *sTrmpAnimSdown;
-extern "C" BCA_File **sTrmpBounceAnimTable[];
+extern BCA_File **sTrmpBounceAnimTable[];
 
 /* The model handle constructs through func_02017a24, the animation handles
  * through SharedFilePtr::Construct. Neither constructor nor destructor is
@@ -129,7 +132,6 @@ extern Trmpln2MarioAnimFilePtr sTrmpMarioSdownAnimFile;
 /* One declaration per symbol for the whole unit. The state records live in
  * unit020cd744; the tuning words and pools are defined at the bottom of this
  * file. Each record is declared in the shape its one consumer copies it in. */
-extern "C" {
 /* .data / .rodata owned by other units */
 extern Vector3 data_020a0ebc;
 extern Vector3 sTrmp2MarioScale;
@@ -210,39 +212,33 @@ extern int sTrmpAnyOnLedge;
 /* the goal-slot bank StateGoal walks; a run of separate 12-byte globals */
 extern TrmpGoal sTrmpGoalSlots;
 
-/* module-level entry points called from the trampoline scenes; K&R-style
- * bodies, so they keep C linkage */
-int Trmp2Mario_Hide();
-void Trmp2Mario_EnterAll();
-void Trmp2Mario_MoveToStart();
-void Trmp2Mario_PlaceAtStart();
-void Trmp2Mario_DrawAll();
-void Trmp2Mario_UpdateAll();
-void Trmp2Mario_ResetAll(u32);
-void Trmp2Mario_SetTuning(int a);
-void Trmp3DMario_EnterWalkIn(char *c);
-int Trmp3DMario_IsOffstage(int *r0);
-int Trmp3DMario_CountFinished();
-void Trmp3DMario_StartAll();
-void Trmp3DMario_DrawAll();
-void Trmp3DMario_UpdateAll();
-void Trmp3DMario_ResetAll(unsigned int n, int arg1);
-void Trmp3DMario_SetTuning(int a);
-void Trmp3DMario_SetSpawnHeight(int n);
-int Trmp3DMario_InitPool(unsigned char *base, int n);
+/* Pool entry points the trampoline scenes call by their unmangled names.
+ * decl_common.h already declares the draw / reset / tuning / init-pool family
+ * for both classes, so only the rest is declared here. */
+extern "C" int Trmp2Mario_Hide();
+extern "C" void Trmp2Mario_EnterAll();
+extern "C" void Trmp2Mario_MoveToStart();
+extern "C" void Trmp2Mario_PlaceAtStart();
+extern "C" void Trmp2Mario_UpdateAll();
+extern "C" void Trmp3DMario_EnterWalkIn(char *c);
+extern "C" int Trmp3DMario_IsOffstage(int *r0);
+extern "C" int Trmp3DMario_CountFinished();
+extern "C" void Trmp3DMario_StartAll();
+extern "C" void Trmp3DMario_UpdateAll();
+extern "C" void Trmp3DMario_SetTuning(int a);
+extern "C" void Trmp3DMario_SetSpawnHeight(int n);
 
-/* helpers with no owning header (leftover: they belong in include/) */
-int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
-void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
-void Camera_ProjectToScreen(void *camera, void *pos, int *outX, int *outY);
-void Sound_PlayBank1Panned(int bank, int id, int panX);
-void Puff_Spawn(int x, int y);
-void Puff_DrawAll();
-void Puff_UpdateAll();
-void TrmpFx_Spawn(int y, int combo);
-void TrmpItem_UpdateWithJumper(void *jumper, int index);
-void func_0203cd80(VecFx32 *v, short angle);
-}
+/* C callees owned by other units; no shared header declares them yet. */
+extern "C" int VEC_DotProduct(const Vector3 *a, const Vector3 *b);
+extern "C" void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int scale);
+extern "C" void Camera_ProjectToScreen(void *camera, void *pos, int *outX, int *outY);
+extern "C" void Sound_PlayBank1Panned(int bank, int id, int panX);
+extern "C" void Puff_Spawn(int x, int y);
+extern "C" void Puff_DrawAll();
+extern "C" void Puff_UpdateAll();
+extern "C" void TrmpFx_Spawn(int y, int combo);
+extern "C" void TrmpItem_UpdateWithJumper(void *jumper, int index);
+extern "C" void func_0203cd80(VecFx32 *v, short angle);
 
 Vector3 *dMgTrmpln2Mario_c::GetVelocity() {
     return &mVel;
@@ -2424,7 +2420,6 @@ dMgTrmpObjAdapter_c::dMgTrmpObjAdapter_c() {
 
 /* Zero-filled .bss in the same span as the handles; none of it is dynamic.
  * The anim pointers are declared above. */
-extern "C" {
 BCA_File *sTrmpAnimJump;
 BCA_File *sTrmpAnimDoubleJump1;
 BCA_File *sTrmpAnimWallJump;
@@ -2449,7 +2444,6 @@ int data_ov006_02140598;
 int sTrmpItemHitsOff;
 int sTrmp2MarioTarget;
 int sTrmp2MarioCount;
-}
 
 /* Definition order is the retail __sinit order. The rodata words are copied
  * at startup, so these stay dynamic. */
@@ -2480,14 +2474,12 @@ Trmpln2MarioAnimFilePtr sTrmpMarioRollJumpAnimFile(0x808e);
 Trmpln2MarioAnimFilePtr sTrmpMarioStruggleAnimFile(0x80a4);
 Trmpln2MarioAnimFilePtr sTrmpMarioSdownAnimFile(0x8092);
 
-extern "C" {
 int sTrmpRowHeights[2] = {sTrmpRowBaseHeights[0], sTrmpRowBaseHeights[1]};
 int sTrmp3DFallSpeed = data_ov006_0212e000;
 int sTrmp3DGravityStep = data_ov006_0212e020;
 int sTrmp3DJumpOffSpeed = data_ov006_0212dffc;
 int sTrmp3DBounceScale = data_ov006_0212e008;
 int sTrmp3DHardBounceScale = data_ov006_0212e004;
-}
 
 TrmpGoal sTrmpGoalSlots((int)-0x50000, 0x100000, 0, 0);
 TrmpGoal data_ov006_02140784((int)-0x30000, 0x100000, 0);
@@ -2496,14 +2488,12 @@ TrmpGoal data_ov006_0214079c(0x10000, 0x100000, 0);
 TrmpGoal data_ov006_021407a8(0x30000, 0x100000, 0);
 TrmpGoal data_ov006_021407b4(0x50000, 0x100000, 0);
 
-extern "C" {
 int sTrmp2FallSpeed = data_ov006_0212e010;
 int sTrmp2GravityStep = data_ov006_0212e00c;
 int data_ov006_0214053c = data_ov006_0212e018;
 int sTrmpSpeedScale = data_ov006_0212e014;
 int sTrmp2RiseSpeedMax = data_ov006_0212dff8;
 int sTrmp2DriftScale = data_ov006_0212e01c;
-}
 
 TrmpGoal data_ov006_021407c0((int)-0x50000, 0x100000, 0, 0);
 TrmpGoal data_ov006_021407cc((int)-0x30000, 0x100000, 0);
