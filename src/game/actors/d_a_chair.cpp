@@ -40,6 +40,7 @@ enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 #include "ParticleIds.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Only ApproachStateValue needs this: without it the two (short)accel casts
  * share one sign-extend and both smulbb become muls (21 of 44 words differ). */
@@ -71,10 +72,6 @@ enum ChairSfxId {
     kSfxHop = 0x5d,    /* State2: hop timer expires, aims at the player */
 };
 
-/* Index of an unsigned 16-bit angle into FX_SinCosTable_, the sin/cos
- * table: one s16 sin, s16 cos pair per 16 angle units. */
-#define SINCOS_INDEX(angle) ((*(u16 *)&(angle) >> 4) * 2)
-
 /* local extern: arm9 C helpers with no shared header yet. Vec3_Sub takes the
    shared Vector3 interface; this TU keeps NitroSDK VecFx32 views. VEC_Add
    also takes Vector3 (math/CalcLib.h declares it). */
@@ -84,7 +81,6 @@ void VEC_Add(Vector3 *dst, Vector3 *add, Vector3 *src);
 int AngleDiff(int a, int b);
 }
 
-extern s16 FX_SinCosTable_[];
 
 /* CHAIR registry factory. */
 extern "C" daChair_c *daChair_c_classInit(void) {
@@ -309,10 +305,10 @@ void daChair_c::State2() {
                 mPrevAngleY = cstd::atan2(diff.x, diff.z);
                 mPrevAngleX = cstd::atan2(diff.y, Vec3_HorzLen((const Vector3 *)&diff)) * -1;
                 /* mSpeedX / mSpeedZ: lateral velocity beside mVertSpeed. */
-                reach = FX_MUL(FX_SinCosTable_[SINCOS_INDEX(mPrevAngleX) + 1], 0x32000);
-                mSpeedX = FX_MUL(reach, FX_SinCosTable_[SINCOS_INDEX(mPrevAngleY)]);
-                mVertSpeed = FX_MUL(FX_SinCosTable_[SINCOS_INDEX(mPrevAngleX)], -0x32000);
-                mSpeedZ = FX_MUL(reach, FX_SinCosTable_[SINCOS_INDEX(mPrevAngleY) + 1]);
+                reach = FX_MUL(FX_CosIdx((u16)mPrevAngleX >> 4), 0x32000);
+                mSpeedX = FX_MUL(reach, FX_SinIdx((u16)mPrevAngleY >> 4));
+                mVertSpeed = FX_MUL(FX_SinIdx((u16)mPrevAngleX >> 4), -0x32000);
+                mSpeedZ = FX_MUL(reach, FX_CosIdx((u16)mPrevAngleY >> 4));
             } else {
                 if (mActionTimer > 0x14) {
                     mAngleY += 0x2710;
@@ -370,7 +366,7 @@ void daChair_c::State3() {
     ApproachStateValue(tracked, &mStateValue0, mTargetAngle, 0xfa0, 0x14, 2);
     angle = AngleDiff(*mTrackedAngle, 0);
     ip = mTrackedAngle;
-    sample = FX_SinCosTable_[((u16)*ip >> 4) * 2];
+    sample = FX_SinIdx((u16)*ip >> 4);
     wrapped = (s16)angle;
     offset = (s16)sample * (s16)0x50;
     if (ip != &mAngleX) {
@@ -384,10 +380,10 @@ void daChair_c::State3() {
     }
     if (wrapped >= 0x4000) {
         s16 past = (s16)(wrapped - 0x4000);
-        s16 tip = FX_SinCosTable_[((u16)past >> 4) * 2];
+        s16 tip = FX_SinIdx((u16)past >> 4);
         mPosY = (s16)tip * (s16)0x28 + (mHomePos.y + 0x28000);
     } else {
-        s16 tip = FX_SinCosTable_[((u16)wrapped >> 4) * 2];
+        s16 tip = FX_SinIdx((u16)wrapped >> 4);
         mPosY = (s16)tip * (s16)0x28 + mHomePos.y;
     }
 }

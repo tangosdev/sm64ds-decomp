@@ -55,6 +55,7 @@ enum d_a_hyuhyu_AssetId {
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 struct BCA_File;
 struct BMD_File;
@@ -65,7 +66,6 @@ extern SharedFilePtr data_ov002_0210d9c0;
 extern daHyuhyu_c_State data_ov091_021356b0; /* cloud: blowing */
 extern daHyuhyu_c_State data_ov091_021356c0; /* gust: flying */
 extern daHyuhyu_c_State data_ov091_021356d0; /* cloud: waiting */
-extern s16 FX_SinCosTable_[];                /* sin/cos pairs */
 
 /* C helpers with no shared header. */
 extern "C" {
@@ -316,9 +316,9 @@ int daHyuhyu_c::StateBlowMain() {
         func_02012694(0x164, &mCamSpacePos);
 
     if ((u16)(mAnmModel.currFrame >> 12) > 0x1e) {
-        rot.x = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
+        rot.x = FX_SinIdx((u16)mAngleY >> 4);
         rot.y = 0;
-        rot.z = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
+        rot.z = FX_CosIdx((u16)mAngleY >> 4);
 
         pos.y = pos.y + 0x28000;
 

@@ -71,6 +71,7 @@ enum daTrs_c_AssetId {
 #include "math/CalcLib.h"
 #include "LevelRng.h"
 #include "SaveBlock.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Views of three classes this Boo reaches through other actors' pointers.
    Their headers are not included because each one renumbers this file's
@@ -171,7 +172,6 @@ int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, in
 int func_020092c4(void *cam, void *out, void *target);
 void func_02012694(unsigned int a, const Vector3 *p);
 u16 func_0201277c(unsigned int a);
-extern s16 FX_SinCosTable_[];
 extern dCamera_c *gCamera;
 void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
 int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);
@@ -982,7 +982,7 @@ void daTrs_c::func_ov063_021177b0() {
 
                 if (look.x <= (int)0xFF894000) {
                     ang = Vec3_HorzAngle((Vector3 *)&v, (Vector3 *)&this->mPosX);
-                    sn = FX_SinCosTable_[(((unsigned short)ang >> 4) * 2) + 1];
+                    sn = FX_CosIdx((unsigned short)ang >> 4);
                     t = (int)0xFF894000 - look.x;
                     mid.z = mid.z + FX_MUL(t, sn);
                     look.x = (int)0xFF894000;
@@ -1393,8 +1393,8 @@ void daTrs_c::func_ov063_02118458() {
             v.x = this->mPosX;
             v.y = this->mPosY;
             v.z = this->mPosZ;
-            v.x = FX_SinCosTable_[(*(u16 *)&this->mAngleY >> 4) * 2] * m + v.x;
-            v.z = FX_SinCosTable_[(*(u16 *)&this->mAngleY >> 4) * 2 + 1] * m + v.z;
+            v.x = FX_SinIdx(*(u16 *)&this->mAngleY >> 4) * m + v.x;
+            v.z = FX_CosIdx(*(u16 *)&this->mAngleY >> 4) * m + v.z;
             dActor_c *fb;
             this->mAngleX = 0x1000;
             func_02012694(0x156, &this->mCamSpacePos);
@@ -2531,48 +2531,44 @@ fall:
 }
 
 int daTrs_c::UpdateDuringNonlethalHit(int arg1) {
-
     Stop();
-    if (*(u16 *)&this->mStateTimer == 0)
+    if (*(u16 *)&mStateTimer == 0)
         SetMoveYawForDuringHit(1);
     {
-        u16 v = *(u16 *)&this->mStateTimer;
-        if (v < 0x20) {
-            int result = ((arg1 * data_ov063_0211e7e0[v]) << 12) / 5000;
-            MoveDuringHit(1, result);
+        u16 t = *(u16 *)&mStateTimer;
+        if (t < 0x20) {
+            MoveDuringHit(1, ((arg1 * data_ov063_0211e7e0[t]) << 12) / 5000);
             goto ret0;
         }
-        if (v < 0x30) {
+        if (t < 0x30) {
             ShakeAfterHit();
             goto ret0;
         }
     }
-    (this->mdCcAcPos_c.flags) &= ~1;
+    mdCcAcPos_c.flags &= ~1;
     ResetAfterHit();
-    this->mState = 1;
+    mState = 1;
     return 1;
 ret0:
     return 0;
 }
 
 int daTrs_c::UpdateAfterBouncedOn(int arg) {
-
-    unsigned int idx;
-    int *pf;
+    unsigned int t;
     int rv;
+
     Stop();
-    if (*(u16 *)&this->mStateTimer == 0)
+    if (*(u16 *)&mStateTimer == 0)
         SetMoveYawForDuringHit(0);
-    idx = *(u16 *)&this->mStateTimer;
-    if (idx < 0x20) {
-        MoveDuringHit(0, ((arg * data_ov063_0211e7e0[idx]) << 12) / 5000);
+    t = *(u16 *)&mStateTimer;
+    if (t < 0x20) {
+        MoveDuringHit(0, ((arg * data_ov063_0211e7e0[t]) << 12) / 5000);
         rv = 0;
         goto done;
     }
-    pf = (int*)&this->mdCcAcPos_c.flags;
-    *pf &= ~1;
+    mdCcAcPos_c.flags &= ~1;
     ResetAfterHit();
-    this->mState = 1;
+    mState = 1;
     return 1;
 done:
     return rv;
@@ -2585,65 +2581,35 @@ void daTrs_c::ResetAfterHit() {
 }
 
 void daTrs_c::ShakeAfterHit() {
-
-    int a;
-    s16 v;
-    s16* p;
-    a = (u16)(s16)((*(u16 *)&this->mStateTimer - 0x1f) << 13) >> 4;
-    p = (s16*)&this->mAngleY;
-    v = *p;
-    *p = v + (FX_SinCosTable_[a * 2 + 1] << 10) / 4096;
+    mAngle.y += (FX_CosIdx((u16)(s16)((*(u16 *)&mStateTimer - 0x1f) << 13) >> 4) << 10) / 4096;
 }
 
 void daTrs_c::MoveDuringHit(int cond, int val) {
+    s16 ang = (*(u16 *)&mStateTimer + 1) << 11;
 
-    int ip = *(u16 *)&this->mStateTimer + 1;
+    mHorzSpeed = val;
+    mVertSpeed = FX_CosIdx((u16)ang >> 4);
+    mPrevAngleY = mKnockbackAngleY;
+    if (cond == 0)
+        return;
 
-    ip = ((ip << 0x1b) >> 0x10);
-    ip = (unsigned short)ip;
-    ip = ip >> 4;
-    ip = (ip << 1) + 1;
-
-    this->mHorzSpeed = val;
-    this->mVertSpeed = FX_SinCosTable_[ip];
-    this->mPrevAngleY = this->mKnockbackAngleY;
-    if (cond == 0) return;
-
-    {
-        short* p8e = (short*)&this->mAngleY;
-        *p8e = *p8e + data_ov063_0211e7e0[*(u16 *)&this->mStateTimer];
-        {
-            short* p90 = (short*)&this->mAngleZ;
-            *p90 = *p90 + data_ov063_0211e7e0[*(u16 *)&this->mStateTimer];
-        }
-    }
+    mAngle.y += data_ov063_0211e7e0[*(u16 *)&mStateTimer];
+    mAngle.z += data_ov063_0211e7e0[*(u16 *)&mStateTimer];
 }
 
 void daTrs_c::SetMoveYawForDuringHit(int cond) {
-
-    int *f = (int *)&this->mdCcAcPos_c.flags;
-    unsigned short *h = (unsigned short *)&this->mBooFlags;
-    *f |= 1;
-    *h &= ~TRS_FLAG_FOLLOW_HEADING;
-    this->mPreKnockbackAngleY = this->mPrevAngleY;
+    mdCcAcPos_c.flags |= 1;
+    mBooFlags.followHeading = 0;
+    mPreKnockbackAngleY = mPrevAngleY;
     if (cond != 0) {
-        this->mKnockbackAngleY = this->mClosestPlayer->mAngleY;
+        mKnockbackAngleY = mClosestPlayer->mAngleY;
         return;
     }
-    {
-        short base = this->mPrevAngleY;
-        int d = (int)base - (int)this->mAngleToPlayer;
-        d = (short)d;
-        d = (unsigned short)d;
-        d >>= 4;
-        {
-            short t = FX_SinCosTable_[(d << 1) + 1];
-            if (t < 0)
-                this->mKnockbackAngleY = base;
-            else
-                this->mKnockbackAngleY = (short)(base + 0x8000);
-        }
-    }
+    s16 base = mPrevAngleY;
+    if (FX_CosIdx((u16)(s16)(base - mAngleToPlayer) >> 4) < 0)
+        mKnockbackAngleY = base;
+    else
+        mKnockbackAngleY = base + 0x8000;
 }
 
 int daTrs_c::VanishOrAppear() {
@@ -2676,20 +2642,14 @@ void daTrs_c::func_ov063_0211a960() {
 
 void daTrs_c::Oscillate(int arg1) {
 
-    int t;
-    if (this->mOpacity != 0xff) {
-        if (arg1 == 0)
-            return;
-    }
-    t = this->mWobblePhase >> 4;
-    this->mScaleX = this->mClsnScale + ((*(short *)((char *)FX_SinCosTable_ + t * 4) << 3) / 100);
-    t = this->mWobblePhase >> 4;
-    this->mScaleY =
-        this->mClsnScale + ((-(*(short *)((char *)FX_SinCosTable_ + t * 4) << 3)) / 100);
-    this->mScaleZ = this->mScaleX;
+    if (mOpacity != 0xff && arg1 == 0)
+        return;
+    mScaleX = mClsnScale + (FX_SinIdx(mWobblePhase >> 4) << 3) / 100;
+    mScaleY = mClsnScale + -(FX_SinIdx(mWobblePhase >> 4) << 3) / 100;
+    mScaleZ = mScaleX;
     func_ov063_0211a960();
-    this->mdCcAcPos_c.radius = this->mClsnRadius * this->mScaleX;
-    this->mdCcAcPos_c.height = this->mClsnHeight * this->mScaleY;
+    mdCcAcPos_c.radius = mClsnRadius * mScaleX;
+    mdCcAcPos_c.height = mClsnHeight * mScaleY;
 }
 
 void daTrs_c::ApproachTargetOpacityAndUpdateScale() {

@@ -25,6 +25,7 @@ enum d_a_obj_ki_fune_AssetId {
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "dBgW.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Two model handles construct through func_02017acc and destroy through
  * func_02017ab4. Two collision handles construct through func_02017b4c and
@@ -44,7 +45,6 @@ typedef char KiFuneClsnFileHandle_size_must_be_8[sizeof(KiFuneClsnFileHandle) ==
 extern "C" {
 
 extern int IsStarCollected(int a, int b);
-extern short FX_SinCosTable_[];
 extern unsigned char gCurrentStarId;
 }
 
@@ -102,7 +102,7 @@ int daObjKi_Fune_c::Behavior() {
     mMeshCollider.SetClipRadius(0x2000000);
     if (mModelIndex == 0) {
         *(s16 *)&mBobAngle += 0xda;
-        mAngleX = (s16)((FX_SinCosTable_[(mBobAngle >> 4) * 2] << 0xa) >> 0xc);
+        mAngleX = (s16)((FX_SinIdx(mBobAngle >> 4) << 0xa) >> 0xc);
         if (DistToCPlayer() < 0xbb8000) {
             mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x8b, mCamSpacePos, 0);
         }

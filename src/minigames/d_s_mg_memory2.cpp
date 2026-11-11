@@ -27,6 +27,7 @@ enum dScMgMemory2_c_AssetId { ASSET_D_2D_MG_CARD_NCL_BIN = 0x00bb };
 #include "Sound.h"
 #include "types.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "common.h"
 #include "decl_common.h"
 #include "LevelRng.h"
@@ -215,6 +216,9 @@ void dScMgMemory2_c::PlayerMove(int player) {
     dy = targetY - (mPlayers[player].y >> 12);
     mPlayers[player].angle = cstd::atan2(dy, dx);
     mPlayers[player].speed = mPlayers[player].speed + 0x200;
+    /* The index stays by hand here: through FX_CosIdx/FX_SinIdx, with or
+       without the angle pointer, the second product takes other registers
+       (17 words). */
     angle = (u16 *)&mPlayers[player].angle;
     mPlayers[player].x = mPlayers[player].x +
                          FX_MUL(FX_SinCosTable_[((*angle >> 4) << 1) + 1], mPlayers[player].speed);
@@ -504,11 +508,11 @@ void dScMgMemory2_c::CardMove(int cardIndex) {
     mCards[cardIndex].angle = cstd::atan2(dy, dx);
 
     {
-        s16 tv = FX_SinCosTable_[((static_cast<u16>(mCards[cardIndex].angle) >> 4) << 1) + 1];
+        s16 tv = FX_CosIdx((u16)mCards[cardIndex].angle >> 4);
         mCards[cardIndex].x += FX_MUL(tv, mCards[cardIndex].speed);
     }
     {
-        s16 tv = FX_SinCosTable_[(static_cast<u16>(mCards[cardIndex].angle) >> 4) << 1];
+        s16 tv = FX_SinIdx((u16)mCards[cardIndex].angle >> 4);
         mCards[cardIndex].y += FX_MUL(tv, mCards[cardIndex].speed);
     }
 

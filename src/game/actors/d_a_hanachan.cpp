@@ -70,6 +70,7 @@ enum daHanachan_c_AssetId {
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The file-scope resource handles. The model five use the plain SharedFilePtr
  * pair (func_02017acc / func_02017ab4), the animation twenty-five use
@@ -123,7 +124,6 @@ extern unsigned char data_ov034_0211433c[];
 extern s32 data_ov034_021138d8[];
 extern int func_020092c4(void *arg0, void *out, void *target);
 extern u32 data_ov034_02113828[];
-extern s16 FX_SinCosTable_[];
 extern dCamera_c *gCamera;
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int fix1, int fix2, void *v, int t);
@@ -950,10 +950,7 @@ int daHanachan_c::Behavior()
             if (DecIfAbove0_Byte(&mSegmentBounceTimer[i]) != 0) {
                 mSegmentBouncePhase[i] += 0x1200;
                 mSegmentScale[i].y =
-                    (FX_MUL(FX_SinCosTable_[(((u16)mSegmentBouncePhase[i] >> 4) << 1) + 1],
-                            0x3000) +
-                     0xc000) /
-                    10;
+                    (FX_MUL(FX_CosIdx((u16)mSegmentBouncePhase[i] >> 4), 0x3000) + 0xc000) / 10;
             } else {
                 ApproachLinear(mSegmentScale[i].y, 0x1000, 0x199);
             }
@@ -980,8 +977,8 @@ int daHanachan_c::Behavior()
 
     mSegmentPos[0].y = mSegmentPos[1].y + 0x1000;
     head = mSegmentPos[0];
-    head.x += FX_MUL(FX_SinCosTable_[((u16)mSegmentRot[0].y >> 4) << 1], 0x64000);
-    head.z += FX_MUL(FX_SinCosTable_[(((u16)mSegmentRot[0].y >> 4) << 1) + 1], 0x64000);
+    head.x += FX_MUL(FX_SinIdx((u16)mSegmentRot[0].y >> 4), 0x64000);
+    head.z += FX_MUL(FX_CosIdx((u16)mSegmentRot[0].y >> 4), 0x64000);
     mdCc_cs1[0].pos = head;
     mdCc_cs2[0].pos = head;
 
@@ -989,8 +986,8 @@ int daHanachan_c::Behavior()
         u32 n = (u8)(4 - mHealth);
         if (n < 3) {
             part = mSegmentPos[0];
-            part.x += FX_MUL(FX_SinCosTable_[((u16)mSegmentRot[0].y >> 4) << 1], 0x23000);
-            part.z += FX_MUL(FX_SinCosTable_[(((u16)mSegmentRot[0].y >> 4) << 1) + 1], 0x23000);
+            part.x += FX_MUL(FX_SinIdx((u16)mSegmentRot[0].y >> 4), 0x23000);
+            part.z += FX_MUL(FX_CosIdx((u16)mSegmentRot[0].y >> 4), 0x23000);
             if (n == 0)
                 part.y += 0x89000;
             else

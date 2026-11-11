@@ -71,6 +71,7 @@ enum daOwl_c_AssetId {
 
 #include "decl_common.h"
 #include "daOwl_c.h"
+#include "nitro/fx/fx_trig.h"
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
@@ -152,7 +153,6 @@ int PlayLong(u32, u32, u32, const Vector3 &, s16);
 extern "C" {
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
-extern short FX_SinCosTable_[];
 
 void d_a_owlPlayLongHold(unsigned int a, unsigned int b, unsigned int cc, void *pos,
                          unsigned int d);
@@ -336,11 +336,6 @@ int daOwl_c::EnterCarrying() {
  * back toward it, else it picks a random heading and duration. It bobs on a
  * sine table around the anchor's height and moves along its heading. */
 int daOwl_c::UpdateHover() {
-    int result;
-    int ang;
-    int *p3e8;
-    short tbl;
-    int idx;
     V6 buf;
 
     if (mTalkState == TALK_IDLE) {
@@ -379,13 +374,8 @@ int daOwl_c::UpdateHover() {
     buf.v[4] = 0;
     buf.v[5] = 0;
 
-    p3e8 = &unk_3e8;
-    *p3e8 += 0x200;
-    ang = unk_3e8;
-    idx = ((u16)(short)ang >> 4) * 2;
-    tbl = FX_SinCosTable_[idx];
-    result = FX_MUL(tbl, 0x64000);
-    ApproachLinear(mPosY, mAnchor.y + result, 0x3000);
+    unk_3e8 += 0x200;
+    ApproachLinear(mPosY, mAnchor.y + FX_MUL(FX_SinIdx((u16)(s16)unk_3e8 >> 4), 0x64000), 0x3000);
 
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
     MTX_MultVec43((Vector3 *)&buf, &data_020a0e68, (Vector3 *)&mSpeedX);

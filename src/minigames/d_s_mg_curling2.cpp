@@ -47,6 +47,7 @@ enum dScMgCurling2_c_AssetId {
 #include "LevelRng.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The receiver for the pointer-to-member tables. It must stay incomplete:
  * mwccarm picks the pointer-to-member layout from whether the class is
@@ -929,7 +930,6 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
     int dy;
     int distance;
     u16 contactAngle;
-    int angleIndex;
 
     for (hitIndex = 0; hitIndex < 11; hitIndex++) {
         if (mStone[hitIndex].active == 0)
@@ -948,11 +948,10 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
             int separationX;
             int separationY;
 
-            angleIndex = (contactAngle >> 4) * 2;
-            contactCos = FX_SinCosTable_[angleIndex + 1];
+            contactCos = FX_CosIdx(contactAngle >> 4);
             separationX = FX_MUL(contactCos, 0x1a);
             mStone[hitIndex].x = mStone[stoneIndex].x + (separationX << 12);
-            contactSin = FX_SinCosTable_[angleIndex];
+            contactSin = FX_SinIdx(contactAngle >> 4);
             separationY = FX_MUL(contactSin, 0x1a);
             mStone[hitIndex].y = mStone[stoneIndex].y + (separationY << 12);
             for (nextIndex = 0; nextIndex < 11; nextIndex++) {
@@ -977,11 +976,10 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
                     int nextSeparationX;
                     int nextSeparationY;
 
-                    angleIndex = (nextContactAngle >> 4) * 2;
-                    nextContactCos = FX_SinCosTable_[angleIndex + 1];
+                    nextContactCos = FX_CosIdx(nextContactAngle >> 4);
                     nextSeparationX = FX_MUL(nextContactCos, 0x1a);
                     mStone[nextIndex].x = mStone[hitIndex].x + (nextSeparationX << 12);
-                    nextContactSin = FX_SinCosTable_[angleIndex];
+                    nextContactSin = FX_SinIdx(nextContactAngle >> 4);
                     nextSeparationY = FX_MUL(nextContactSin, 0x1a);
                     mStone[nextIndex].y = mStone[hitIndex].y + (nextSeparationY << 12);
                     func_02012718(0xe8, mStone[stoneIndex].x);
@@ -1127,7 +1125,7 @@ void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
 void dScMgCurling2_c::StoneSpin(int stoneIndex) {
     char *o = (char *)this + stoneIndex * 0x30;
     int heading = ((dScMgCurling2_c *)o)->mStone[0].angle;
-    int cosHeading = FX_SinCosTable_[((heading >> 4) << 1) + 1];
+    int cosHeading = FX_CosIdx(heading >> 4);
     int speed = ((dScMgCurling2_c *)o)->mStone[0].speed;
     long long product = (long long)cosHeading * speed;
     int velocityX = (int)((product + 0x800) >> 12);
@@ -1211,9 +1209,9 @@ void dScMgCurling2_c::StoneSlide(int stoneIndex) {
     pX = &mStone[stoneIndex].x;
     pY = &mStone[stoneIndex].y;
 
-    cosAngle = FX_SinCosTable_[((*pHeading) >> 4) * 2 + 1];
+    cosAngle = FX_CosIdx((*pHeading) >> 4);
     *pX += FX_MUL(cosAngle, *pSpeed);
-    sinAngle = FX_SinCosTable_[((*pHeading) >> 4) * 2];
+    sinAngle = FX_SinIdx((*pHeading) >> 4);
     *pY += FX_MUL(sinAngle, *pSpeed);
     mStone[stoneIndex].spinAngle += mStone[stoneIndex].spinVel;
 

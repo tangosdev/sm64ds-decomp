@@ -41,6 +41,7 @@
 #include "dBgCh_Gnd.h"
 #include "daPly_c.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
@@ -48,7 +49,6 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
 void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 short Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
 }
-extern short FX_SinCosTable_[];
 extern signed char gCurrentSublevel;
 
 /* Inferred eight-byte resource-family ABI views, not recovered original
@@ -238,50 +238,30 @@ s32 daBrq_c::EnterActiveState() {
 s32 daBrq_c::UpdateActiveState() {
     ApproachLinear(mTurnSpeed, 1000, 20);
 
-    unsigned char bit0 = (unsigned char)(param1 & 1);
-    if (bit0) {
-        mPrevAngleY = (short)(mPrevAngleY + mTurnSpeed);
+    if ((u8)(param1 & 1)) {
+        mPrevAngleY = mPrevAngleY + mTurnSpeed;
     } else {
-        mPrevAngleY = (short)(mPrevAngleY - mTurnSpeed);
+        mPrevAngleY = mPrevAngleY - mTurnSpeed;
     }
 
-    mOrbitAngle = (short)(mOrbitAngle + 0xa00);
+    mOrbitAngle = mOrbitAngle + 0xa00;
 
-    unsigned char bit1 = (unsigned char)((param1 >> 1) & 1);
-    int orbitRadius = bit1 ? 0xb4000 : 0x168000;
+    int orbitRadius = (u8)(param1 >> 1 & 1) ? 0xb4000 : 0x168000;
 
-    mOrbitCenter.x = mPosX;
-    mOrbitCenter.y = mPosY;
-    mOrbitCenter.z = mPosZ;
+    mOrbitCenter = mPos;
 
-    {
-        int idx = ((unsigned short)mPrevAngleY) >> 4;
-        int sinv = FX_SinCosTable_[idx * 2];
-        mCylinderOffset.x = FX_MUL(orbitRadius, sinv);
-    }
-    {
-        int idx = ((unsigned short)mOrbitAngle) >> 4;
-        int sinv = FX_SinCosTable_[idx * 2];
-        mCylinderOffset.y = FX_MUL(0x14000, sinv);
-    }
-    {
-        int idx = ((unsigned short)mPrevAngleY) >> 4;
-        int cosv = FX_SinCosTable_[idx * 2 + 1];
-        mCylinderOffset.z = FX_MUL(orbitRadius, cosv);
-    }
+    mCylinderOffset.x = FX_MUL(orbitRadius, FX_SinIdx((u16)mPrevAngleY >> 4));
+    mCylinderOffset.y = FX_MUL(0x14000, FX_SinIdx((u16)mOrbitAngle >> 4));
+    mCylinderOffset.z = FX_MUL(orbitRadius, FX_CosIdx((u16)mPrevAngleY >> 4));
 
     VEC_Add(&mOrbitCenter, &mCylinderOffset, &mOrbitCenter);
 
-    mSpinAngle = (short)(mSpinAngle + 0x4000);
+    mSpinAngle = mSpinAngle + 0x4000;
 
-    {
-        int idx = ((unsigned short)mSpinAngle) >> 4;
-        int sinv = FX_SinCosTable_[idx * 2];
-        int scale = FX_MUL(0x555, sinv) + 0x800;
-        mScaleX = scale;
-        mScaleY = scale;
-        mScaleZ = scale;
-    }
+    int scale = FX_MUL(0x555, FX_SinIdx((u16)mSpinAngle >> 4)) + 0x800;
+    mScaleX = scale;
+    mScaleY = scale;
+    mScaleZ = scale;
 
     mAnmModel.Advance();
     mTextureSequence.Advance();

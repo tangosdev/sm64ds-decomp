@@ -1148,7 +1148,7 @@ extern void*data_ov065_0211cfd8[];
 extern void*data_ov065_0211d768[];
 extern void*data_ov065_0211d770[];
 extern void*data_ov072_02121ffc;
-extern void*data_ov074_02122e4c[];
+extern float data_ov074_02122e4c[];
 extern void*data_ov074_02122e5c[];
 extern void*data_ov074_02123030;
 extern void*data_ov075_0211c800;
