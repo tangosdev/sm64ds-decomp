@@ -1171,6 +1171,20 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
             last_phase = (int)s->phase;
         }
     }
+    {   /* coopfix1 LOBBYUI1: every seat's colours, in the log when they change (a bucket pick on one console shows on the others) */
+        static unsigned last_col[16][2];
+        static int last_n = -1;
+        for (int i = 0; i < seat_count(s); ++i)
+            if (last_n < 0 || i >= last_n || last_col[i][0] != s->seats[i].body_rgb || last_col[i][1] != s->seats[i].shoe_rgb) {
+                char b[96];
+                snprintf(b, sizeof b, "seat %d (%s%s) colours %06X/%06X", i, s->seats[i].name, s->seats[i].is_me ? ", me" : "",
+                         s->seats[i].body_rgb & 0xFFFFFFu, s->seats[i].shoe_rgb & 0xFFFFFFu);
+                log_line(b);
+                last_col[i][0] = s->seats[i].body_rgb;
+                last_col[i][1] = s->seats[i].shoe_rgb;
+            }
+        last_n = seat_count(s);
+    }
     /* the client's state moves the page */
     if (P.screen == SCR_ROOM) {
         if (s->phase != LOBBY_NONE) P.seen_phase = 1;
