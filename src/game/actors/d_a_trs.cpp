@@ -172,7 +172,6 @@ int d_a_trsPlaySubHold(unsigned int a, unsigned int b, unsigned int c, s32 d, in
 int func_020092c4(void *cam, void *out, void *target);
 void func_02012694(unsigned int a, const Vector3 *p);
 u16 func_0201277c(unsigned int a);
-extern s16 FX_SinCosTable_[];
 extern dCamera_c *gCamera;
 void func_ov063_02118f24(daTrsIcon_c *icon, const Vector3 &pos);
 int func_ov063_0211a0a8(int a0, int a1, int a2, int a3, int a4);

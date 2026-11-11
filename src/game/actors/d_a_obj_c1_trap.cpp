@@ -63,7 +63,6 @@ struct TrapCollisionFilePtr : SharedFilePtr {
     ~TrapCollisionFilePtr();
 };
 
-extern s16 FX_SinCosTable_[];
 extern CLPS_Block data_ov010_021122f8;
 extern TrapModelFilePtr data_ov010_02112d08;
 extern TrapCollisionFilePtr data_ov010_02112d00;
