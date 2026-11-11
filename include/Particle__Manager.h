@@ -4,11 +4,11 @@
 #include "types.h"
 
 struct Matrix4x3;
+struct SPLBehavior;
 
 namespace Particle {
 
 struct System;
-struct Behavior;
 
 /* One 0x20-byte entry in the manager's effect-definition table, filled by
    func_0204a17c from the particle resource. Each pointer addresses a record
@@ -28,7 +28,7 @@ struct SystemDefinition {
     void *optionalC;     /* 0x0c - 8-byte record, flags bit 10 */
     void *optionalD;     /* 0x10 - 0xc-byte record, flags bit 11 */
     void *child;         /* 0x14 - 0x14-byte child record, flags bit 16 */
-    Behavior *behaviors; /* 0x18 - one entry per flags bit 24..29 set */
+    SPLBehavior *behaviors; /* 0x18 - one entry per flags bit 24..29 set */
     u16 numBehaviors;    /* 0x1c */
     u8 pad_01e[2];
 };

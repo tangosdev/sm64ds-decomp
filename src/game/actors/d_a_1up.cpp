@@ -123,6 +123,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Actor IDs, from the profile ids in symbols/actor_debug_names.tsv: 276 and
    277 are this class's two profiles, 331 is the 1UP logo it spawns. */
@@ -831,7 +832,7 @@ void da1up_c::UpdateStationary() {
 /* State 1 of index 2 (MUSHROOM_WAIT_THEN_ACCELERATE). On the ground it adds 25
    units (0x19000) to mHorzSpeed and zeroes mVertSpeed. In the air it multiplies
    mHorzSpeed by 0xfae / 0x1000 (about 0.98) and passes the product through
-   cstd::fdiv(t, 0x1000). mHorzSpeed is capped at 40 units (0x28000). When the
+   FX_Div(t, 0x1000). mHorzSpeed is capped at 40 units (0x28000). When the
    player is not within 5000 units (0x1388) it goes to state 2. */
 void da1up_c::AccelerateOnGround() {
 
@@ -840,7 +841,7 @@ void da1up_c::AccelerateOnGround() {
         mVertSpeed = 0;
     } else {
         int t = FX_MUL(mHorzSpeed, 0xfae);
-        mHorzSpeed = cstd::fdiv(t, 0x1000);
+        mHorzSpeed = FX_Div(t, 0x1000);
     }
     if (mHorzSpeed > 0x28000) {
         mHorzSpeed = 0x28000;

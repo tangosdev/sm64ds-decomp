@@ -12,7 +12,6 @@
  *   - the Dealer_* helpers are still free functions over mDealer.
  */
 
-
 #include "dScMgMCarlo2_c.h"
 #include "nitro/hw/registers.h"
 #include "dScMgCard_c.h"
@@ -22,6 +21,8 @@
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* sMCarlo2Cards is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
@@ -74,9 +75,6 @@ int  Dealer_Load(void* t);
 
 }
 
-namespace GX { void LoadOBJPltt(const void*, unsigned int, unsigned int); }
-namespace GXS { void LoadOBJPltt(const void*, unsigned int, unsigned int); }
-
 /* C++ linkage: the reference parameters are part of the ROM names. */
 
 dMgMCarlo2CardObj_c::dMgMCarlo2CardObj_c()
@@ -102,16 +100,16 @@ s32 dScMgMCarlo2_c::InitResources()
     lang = GetGameLanguage();
     tiles = LoadFile(sMCarlo2CardNcgByLanguage[lang]);
     palette = LoadFile(0xbb);
-    DecompressLZ16(tiles, (void *)0x6400000);
-    DecompressLZ16(tiles, (void *)0x6600000);
-    GX::LoadOBJPltt(palette, 0, 0x100);
-    GXS::LoadOBJPltt(palette, 0, 0x100);
+    DecompressLZ16(tiles, G2_GetOBJCharPtr());
+    DecompressLZ16(tiles, G2S_GetOBJCharPtr());
+    GX_LoadOBJPltt(palette, 0, 0x100);
+    GXS_LoadOBJPltt(palette, 0, 0x100);
     Deallocate(tiles);
     Deallocate(palette);
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     gSubScreenLayers = 0x18;
-    *(volatile unsigned short *)0x4000008 = (*(volatile unsigned short *)0x4000008 & ~3) | 1;
-    *(volatile unsigned short *)0x400100a = *(volatile unsigned short *)0x400100a & ~3;
+    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
+    REG_DB_BG1CNT = REG_DB_BG1CNT & ~3;
     Camera_InitDealerView(&mCamera);
     if (Dealer_Load(&mDealer) == 0)
         return 0;
@@ -493,7 +491,8 @@ void dMgMCarlo2CardObj_c::Render()
     state = mState;
     if (state == 0) return;
     if (state == 3) {
-        if (((&data_020a0db0)[0] & 8) != 0) return;
+        if ((data_020a0db0 & 8) != 0)
+            return;
     }
     {
         int idx = (mFace + 1) * 5 + (mLift >> 12);

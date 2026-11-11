@@ -24,10 +24,6 @@
 
 #ifdef __cplusplus
 
-namespace Memory {
-void operator_delete2(void *);
-}
-
 struct dExtAnm2Model_c : dExtAnmModel_c {
     u32 otherFile;             /* 0x64 - the second animation's BCA, stored as a word */
     dExtFrameCtrl_c otherAnim;       /* 0x68 - a member, built with dExtFrameCtrl_c::C1 */
@@ -58,17 +54,6 @@ struct dExtAnm2Model_c : dExtAnmModel_c {
     /* --- non-virtual --- */
     void Copy(const dExtAnm2Model_c &src, char *newFile, u32 newOtherFile);
     void Func_020162C4(u32 animFile, int flags, Fix12i speed, u16 startFrame);
-
-    /* ITS OWN, TO RESOLVE AN AMBIGUITY MULTIPLE INHERITANCE CREATES. dExtAnmModel_c
-       derives from dExtSimpleModel_c (so dExtModel_c) and from dExtFrameCtrl_c, and both bases
-       declare operator delete, so an inherited one is "ambiguous access to
-       name found: dExtModel_c::operator delete and dExtFrameCtrl_c::operator delete".
-       Declaring it here picks the same deallocator both bases name, and also
-       satisfies the rule in include/dActor_c.h that mwcc only inlines the member
-       when it is in the class or its immediate base. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

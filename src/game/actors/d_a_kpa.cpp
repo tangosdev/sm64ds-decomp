@@ -26,17 +26,15 @@
  * Leftovers:
  *  - Measured spellings: the mOpacity += / -= 0x14 form; the angle-copy
  *    pointer in func_ov060_02115d68; the overwritten first pos[] stores in
- *    RunIntroTalk; the (unsigned short) and *(u16 *)& angle reads; the
- *    `dp != 0 && this != 0` scheduling barrier in ActSpitFireOntoFloor; the
- *    volatile walk pointer in ActTiltLavaPlatform; the gotos in
- *    func_ov060_02115c1c; the data_ov060_02119294/6/8 + offset reads; and the
- *    `obj` copy of `this` in Bowser_IsAnimAtLastFrame.
+ *    RunIntroTalk; the volatile walk pointer in ActTiltLavaPlatform; the
+ *    gotos in func_ov060_02115c1c; the data_ov060_02119294/6/8 + offset
+ *    reads; and the `obj` copy of `this` in Bowser_IsAnimAtLastFrame.
  *  - Address-named callees with a known body but no header: func_020092c4 eases
  *    a camera vector toward a target (d_camera.cpp); func_0200fa04 spawns the
  *    boss landing dust (d_actor.cpp); func_02038408 is the
  *    UpdateContinuousExceptSlot0 veneer; func_02011d50 / func_02011cfc are the
  *    Sound.cpp init/cleanup veneers; func_ov002_020c56f0 is a daPly_c state
- *    transition. The trailing arguments of daPly_c::Hurt and
+ *    transition. The unnamed arguments of daPly_c::Hurt and
  *    Sound::ChangeMusicVolume and the KOOPAFIRE spawn-parameter bits are still
  *    numbers where no name is proven.
  *  - Animation indices stay numbers (only the idle pose is named);
@@ -112,11 +110,11 @@ enum daKpa_c_AssetId {
 #include "Message.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Names for the numbers this file uses. A name describes what the value does
  * at its use sites here; it is not a recovered symbol. */
@@ -311,8 +309,8 @@ extern void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, s16 angY);
 extern void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, s16 angX);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, s16 angZ);
-/* local extern: MtxStack.h spells this (a, b, out); the ROM passes dst in r0. */
-extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
+/* local extern: MtxStack.h declares (a, b, out); the ROM passes dst in r0. */
+extern void MTX_Concat43(void *dst, void *a, void *b);
 extern int *Vec3_LslInPlace(void *v, int sh);
 extern Matrix4x3 data_020a0e68;
 /* Unused; the named parameters pin this TU's @NNN counter (see the header). */
@@ -854,7 +852,7 @@ skip_angles:
     this->mFootPosBX = zero;
     this->mFootPosBY = zero;
     this->mFootPosBZ = zero;
-    MulMat4x3Mat4x3((char *)&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43((char *)&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
     this->mFootPosBX = data_020a0e68.m[9];
     this->mFootPosBY = data_020a0e68.m[10];
     this->mFootPosBZ = data_020a0e68.m[11];
@@ -864,7 +862,7 @@ skip_angles:
     this->mFootPosAY = zero;
     this->mFootPosAZ = zero;
     data_020a0e68 = saved;
-    MulMat4x3Mat4x3((char *)&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43((char *)&this->mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
     this->mFootPosAX = data_020a0e68.m[9];
     this->mFootPosAY = data_020a0e68.m[10];
     this->mFootPosAZ = data_020a0e68.m[11];
@@ -963,7 +961,6 @@ void daKpa_c::RunIntroTalk() {
                 int zero;
                 int scale;
                 int msg;
-                s16 *tbl;
                 s16 *msgs;
                 u16 ang;
                 s16 sx;
@@ -972,7 +969,6 @@ void daKpa_c::RunIntroTalk() {
                  * before use; dropping those first three stores builds 12 bytes
                  * shorter (measured). */
                 x = this->mPosX;
-                tbl = data_02082214;
                 pos[0] = x;
                 y = this->mPosY;
                 scale = 0xc8;
@@ -983,10 +979,10 @@ void daKpa_c::RunIntroTalk() {
                 ang = this->mAngleY;
                 zero = 0;
                 msgs = data_ov060_0211a4e0;
-                sx = tbl[(ang >> 4) * 2];
+                sx = FX_SinIdx(ang >> 4);
                 pos[0] = sx * scale + x;
                 ang = this->mAngleY;
-                sz = tbl[(ang >> 4) * 2 + 1];
+                sz = FX_CosIdx(ang >> 4);
                 pos[1] = y2;
                 pos[2] = sz * scale + z;
                 msg = (s16) msgs[this->mVariantID];
@@ -1726,7 +1722,6 @@ plus 0xe8 (232) units out along mAngleY and 0x58000 (88 units) up, with sound
 shot in mStep and go to BOWSER_STATE_IDLE once mStep reaches mFireballShots;
 otherwise start animation 0x14; then restart the animation from frame 0. */
 void daKpa_c::ActSpitFireOntoFloor() {
-    int spawnY;
     if (this->mTimer == 0) {
         daPly_c *player = this->mTargetPlayer;
         if (player == 0 || player->GetHealth() > 4) {
@@ -1740,42 +1735,13 @@ void daKpa_c::ActSpitFireOntoFloor() {
     }
     if ((int)this->mAnmModel.file == (int)data_ov060_0211abe0.filePtr) {
         if (this->mAnmModel.WillHitFrame(5)) {
-            Vector3 pos;
-            u16 dir[3];
-            u16 ax, ay, az;
-            s16* tbl;
-            s16 scale;
-            int grav;
-            /* `dp` must be a live pointer here, not a folded `&dir` at the call: the
-               address has to be materialised before the two smlabb steps so it holds
-               r2 across them, which is what pushes pos.x to r3 and `scale` to ip. */
-            u16* dp;
-
-            pos.x = this->mPosX;
-            tbl = data_02082214;
-            pos.y = this->mPosY;
-            scale = 0xe8;
-            pos.z = this->mPosZ;
-            ax = *(u16 *)&this->mAngleX;
-            ay = *(u16 *)&this->mAngleY;
-            dir[1] = ay;
-            dir[0] = ax;
-            az = *(u16 *)&this->mAngleZ;
-            dir[2] = az;
-            pos.x = (tbl[(dir[1] >> 4) * 2] * scale) + pos.x;
-            spawnY = pos.y + 0x58000;
-            dp = dir;
-            pos.z = (tbl[((dp[1] >> 4) * 2) + 1] * scale) + pos.z;
-            /* Scheduling barrier, not dead code. Both operands are provably non-null,
-               so this changes nothing at runtime, but the short-circuit `&&` splits the
-               block and stops the scheduler hoisting the 0xa000 constant into the slot
-               the ROM gives to `dp`. Without it this function is 11 words off. */
-            if (dp != 0 && this != 0) {
-            }
-            pos.y = spawnY;
-            dir[0] = 0x1000;
-            grav = 0xa000;
-            SpawnFireball(pos, (const Vector3_16 *)dp, 0x1e000, grav, 0);
+            Vector3 pos = mPos;
+            Vector3_16 dir = mAngle;
+            pos.x += FX_SinIdx((u16)dir.y >> 4) * 0xe8;
+            pos.y += 0x58000;
+            pos.z += FX_CosIdx((u16)dir.y >> 4) * 0xe8;
+            dir.x = 0x1000;
+            SpawnFireball(pos, &dir, 0x1e000, 0xa000, 0);
             func_02012694(BOWSER_SND_FIREBALL, &mCamSpacePos);
         }
     }
@@ -2022,8 +1988,8 @@ void daKpa_c::SetGoalInvisible() {
         zero.y = 0;
         zero.z = 0;
         a = (int)(unsigned short)Vec3_HorzAngle(&zero, &mPos) >> 4;
-        this->mPosX = (short)data_02082214[a * 2] * (short)0xed8;
-        this->mPosZ = (short)data_02082214[a * 2 + 1] * (short)0xed8;
+        this->mPosX = (short)FX_SinIdx(a) * (short)0xed8;
+        this->mPosZ = (short)FX_CosIdx(a) * (short)0xed8;
     }
 }
 
@@ -2496,11 +2462,9 @@ void daKpa_c::TiltPlatform(int tiltSpeed) {
     daKpa2Bg_c *arena = (daKpa2Bg_c *)dActor_c::FindWithID(this->mArenaBgUniqueID);
     if (arena == 0)
         return;
-    short angle = this->mAngleToCenter;
-    unsigned int idx = (unsigned short)(short)(angle + 0x8000) >> 4;
-    int k = idx * 2;
-    arena->mAngleXSpeed = (short)((tiltSpeed * data_02082214[k + 1]) >> 12);
-    arena->mAngleZSpeed = (short)((tiltSpeed * -data_02082214[k]) >> 12);
+    s16 angle = mAngleToCenter + 0x8000;
+    arena->mAngleXSpeed = (tiltSpeed * FX_CosIdx((u16)angle >> 4)) >> 12;
+    arena->mAngleZSpeed = (tiltSpeed * -FX_SinIdx((u16)angle >> 4)) >> 12;
 }
 
 /*
@@ -2634,29 +2598,20 @@ void daKpa_c::FreeUpdate() {
             if (this->mVertSpeed >= 0x14000)
                 this->mVertSpeed = 0x14000;
         } else if (this->mGroundNormalY != 0) {
-            this->mVertSpeed = -(cstd::fdiv(FX_MUL(this->mGroundNormalX, this->mSpeedX) +
-                                                FX_MUL(this->mGroundNormalZ, this->mSpeedZ),
-                                            this->mGroundNormalY) +
+            this->mVertSpeed = -(FX_Div(FX_MUL(this->mGroundNormalX, this->mSpeedX) +
+                                            FX_MUL(this->mGroundNormalZ, this->mSpeedZ),
+                                        this->mGroundNormalY) +
                                  0x8000);
         }
     }
 
     if (data_ov060_02119268[idx] != 0) {
         if (!this->mWithMeshClsn.IsOnGround()) {
-            s32* px = &this->mPosX;
-            s32* pz = &this->mPosZ;
-            s16* tab = data_02082214;
-            this->mPosX = this->mLastGroundPosX;
-            this->mPosY = this->mLastGroundPosY;
-            this->mPosZ = this->mLastGroundPosZ;
-            {
-                s32 a = (*(u16*)&this->mAngleToCenter >> 4);
-                *px = *px + ((s32)tab[a * 2] << 3);
-            }
-            {
-                s32 a = (*(u16*)&this->mAngleToCenter >> 4);
-                *pz = *pz + ((s32)tab[a * 2 + 1] << 3);
-            }
+            mPosX = mLastGroundPosX;
+            mPosY = mLastGroundPosY;
+            mPosZ = mLastGroundPosZ;
+            mPosX += FX_SinIdx((u16)mAngleToCenter >> 4) << 3;
+            mPosZ += FX_CosIdx((u16)mAngleToCenter >> 4) << 3;
         } else {
             this->mLastGroundPosX = this->mPosX;
             this->mLastGroundPosY = this->mPosY;
@@ -2684,10 +2639,6 @@ units out along the daPly_c's facing (X and Z) and 0x18000 (24 units) up minus
 void daKpa_c::HeldUpdate() {
     int v;
     short a;
-    int i;
-    int j;
-    Vector3 *s;
-
     this->mCondFlags &= ~BOWSER_COND_BREATHING;
 
     switch (this->mHoldStep) {
@@ -2718,17 +2669,10 @@ void daKpa_c::HeldUpdate() {
     this->mAngleX = -v;
     this->mAngleY = a;
 
-    s = &this->mGrabbedPlayer->mPos;
-    this->mPosX = s->x;
-    this->mPosY = s->y;
-    this->mPosZ = s->z;
-
-    i = ((unsigned short)a >> 4) * 2;
-
-    this->mPosX += data_02082214[i] * 0xa0;
-    j = ((unsigned short)this->mAngleX >> 4) * 2;
-    this->mPosY += 0x18000 - data_02082214[j] * 0xa0;
-    this->mPosZ += data_02082214[i + 1] * 0xa0;
+    mPos = mGrabbedPlayer->mPos;
+    mPosX += FX_SinIdx((u16)a >> 4) * 0xa0;
+    mPosY += 0x18000 - FX_SinIdx((u16)mAngleX >> 4) * 0xa0;
+    mPosZ += FX_CosIdx((u16)a >> 4) * 0xa0;
 }
 
 /*
@@ -2741,7 +2685,7 @@ when v is above 0x2d; mHorzSpeed = v * cos(mAngleX) and mVertSpeed =
 to BOWSER_TAIL_COOLDOWN with mTimer 0; mAngleX, mTimer and mStep are cleared and
 the floor collider's ground flag is cleared. */
 void daKpa_c::ThrownDroppedUpdate() {
-    int v, nv;
+    int v;
     daKpaTail_c *tail;
 
     InitAnimation(0xe, 0x40000000);
@@ -2759,9 +2703,8 @@ void daKpa_c::ThrownDroppedUpdate() {
     v = v * 0x46 / 6000;
     if (v > 0x2d)
         v = v * 0x19 / 10;
-    nv = -v;
-    this->mHorzSpeed = v * data_02082214[((unsigned short)this->mAngleX >> 4 << 1) + 1];
-    this->mVertSpeed = nv * data_02082214[(unsigned short)this->mAngleX >> 4 << 1];
+    this->mHorzSpeed = v * FX_CosIdx((u16)mAngleX >> 4);
+    this->mVertSpeed = -v * FX_SinIdx((u16)mAngleX >> 4);
     tail = (daKpaTail_c *)dActor_c::FindWithID(this->mTailUniqueID);
     if (tail != 0) {
         tail->mState = BOWSER_TAIL_COOLDOWN;
@@ -2910,7 +2853,7 @@ int daKpa_c::UpdateIntroCamera() {
     switch (this->mCutsceneStep) {
     case 0:
         cam->SetFlag_3();
-        pv = (struct Vector3*)&((dActor_c *)player)->mPosX;
+        pv = &((dActor_c *)player)->mPos;
         sp.x = pv->x;
         sp.y = pv->y;
         sp.z = pv->z;
@@ -2922,9 +2865,9 @@ int daKpa_c::UpdateIntroCamera() {
         dist = Vec3_HorzDist(&mPos, &sp);
         k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x2000) >> 4;
         v = FX_MUL(dist, 0xA00);
-        this->mCamPosX = this->mPosX + FX_MUL(v, data_02082214[k * 2]);
+        this->mCamPosX = this->mPosX + FX_MUL(v, FX_SinIdx(k));
         this->mCamPosY = this->mPosY + 0xc8000;
-        this->mCamPosZ = this->mPosZ + FX_MUL(v, data_02082214[k * 2 + 1]);
+        this->mCamPosZ = this->mPosZ + FX_MUL(v, FX_CosIdx(k));
         cam->SetPos(*(const Vector3 *)(&this->mCamPosX));
         this->mCutsceneStep++;
         break;
@@ -2938,7 +2881,7 @@ int daKpa_c::UpdateIntroCamera() {
             this->mCutsceneStep++;
         break;
     case 2:
-        pv = (struct Vector3*)&((dActor_c *)player)->mPosX;
+        pv = &((dActor_c *)player)->mPos;
         sp.x = pv->x;
         sp.y = pv->y;
         sp.z = pv->z;
@@ -2947,8 +2890,8 @@ int daKpa_c::UpdateIntroCamera() {
         if (d < 0x1f4000)
             d = 0x1f4000;
         k = (unsigned short)(short)(Vec3_HorzAngle(&mPos, &sp) - 0x1000) >> 4;
-        sp.x = this->mPosX + FX_MUL(d, data_02082214[k * 2]);
-        sp.z = this->mPosZ + FX_MUL(d, data_02082214[k * 2 + 1]);
+        sp.x = this->mPosX + FX_MUL(d, FX_SinIdx(k));
+        sp.z = this->mPosZ + FX_MUL(d, FX_CosIdx(k));
         ApproachLinear(this->mCamPosX, sp.x, 0x4000);
         ApproachLinear(this->mCamPosZ, sp.z, 0x4000);
         ApproachLinear(this->mCamLookAtX, this->mPosX, 0x1e000);
@@ -2959,10 +2902,9 @@ int daKpa_c::UpdateIntroCamera() {
         break;
     case 3: {
         int ty, tz, tx;
-        k = (int)((unsigned short)this->mAngleY) >> 4;
-        tz = data_02082214[k * 2 + 1] * 0xc0 + this->mPosZ;
+        tz = FX_CosIdx((u16)this->mAngleY >> 4) * 0xc0 + this->mPosZ;
         ty = this->mPosY + 0xfa000;
-        tx = data_02082214[k * 2] * 0xc0 + this->mPosX;
+        tx = FX_SinIdx((u16)this->mAngleY >> 4) * 0xc0 + this->mPosX;
         sp.x = tx;
         sp.y = ty;
         sp.z = tz;

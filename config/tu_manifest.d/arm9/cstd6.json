@@ -19,7 +19,7 @@
   ],
   "functions": [
     {
-      "symbol": "func_02070348",
+      "symbol": "rand",
       "address": "0x02070348",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0207/func_02070348.c",
@@ -33,35 +33,35 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN4cstd6strchrEPKcc",
+      "symbol": "strchr",
       "address": "0x020704cc",
       "size": "0x0000003c",
       "legacy_source": "src/_ZN4cstd6strchrEPKcc.cpp",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN4cstd6strcmpEPKcS1_",
+      "symbol": "strcmp",
       "address": "0x02070508",
       "size": "0x00000134",
       "legacy_source": "src/_ZN4cstd6strcmpEPKcS1_.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN4cstd7strncpyEPcPKcj",
+      "symbol": "strncpy",
       "address": "0x0207063c",
       "size": "0x00000074",
       "legacy_source": "src/_ZN4cstd7strncpyEPcPKcj.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "func_020706b0",
+      "symbol": "strcpy",
       "address": "0x020706b0",
       "size": "0x000000d8",
       "legacy_source": "src/unnamed/arm9/0207/func_020706b0.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN4cstd6strlenEPKc",
+      "symbol": "strlen",
       "address": "0x02070788",
       "size": "0x0000001c",
       "legacy_source": "src/_ZN4cstd6strlenEPKc.cpp",
@@ -74,7 +74,7 @@
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
     "cstd6 takes the tree's existing class name plus the numeric suffix style already used in the tree (Name2.cpp, as in d_s_mg_jump2.cpp), per Juan 2026-10-11. No vtable, RTTI, or emitted data.",
-    "mwccarm emits .text in reverse source order here, so the file runs from the highest address (strlen) down to the lowest (func_02070348).",
+    "mwccarm emits .text in reverse source order here, so the file runs from the highest address (strlen) down to the lowest (rand).",
     "No helper is promoted: none has ROM method evidence, so all three stay extern \"C\" under their existing names. The four string members were already real namespace members in their shards and stay namespace members."
   ],
   "verification": {

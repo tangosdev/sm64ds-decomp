@@ -6,7 +6,7 @@
 /* func_02072168 @ 0x02072168 (arm9, size 0x88c)   [mwccarm 1.2/base, 1.2/sp2, 1.2/sp2p3, 2004/b56]
  * C++ exception unwinder: interprets a function's exception-action table, running
  * the destructors of everything live in the frame, until it reaches `end`. (An
- * earlier banner called it a wireless bytecode VM and a sibling of func_020690b0;
+ * earlier banner called it a wireless bytecode VM and a sibling of MBi_ChildCallback;
  * the ThrowContext/CatchInfo evidence below says otherwise.) When s->mAction runs
  * out, func_02071910 unwinds one frame, func_02072dac finds that frame's table
  * (std::terminate runs when none covers the PC) and func_02071864 reads the

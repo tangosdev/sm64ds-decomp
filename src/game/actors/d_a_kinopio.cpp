@@ -96,7 +96,6 @@ extern SharedFilePtr data_ov002_0210d9c0;
 
 /* arm9 statics */
 extern s8 gCurrentSublevel;
-extern SaveBlock data_0209caa0;
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 /* math / vector helpers. (ApproachLinear, from math/Approach.h, returns whether
@@ -327,7 +326,7 @@ void daKinopio_c::UpdateModelPose()
             capPos.y = 0;
             capPos.z = 0;
             dst = &mAnmModel.data.transforms[5];
-            MulMat4x3Mat4x3(dst, &mAnmModel.mat4x3, &mCapTransform);
+            MTX_Concat43(dst, &mAnmModel.mat4x3, &mCapTransform);
 
             data_020a0e68 = mCapTransform;
             Matrix4x3_ApplyInPlaceToTranslation(

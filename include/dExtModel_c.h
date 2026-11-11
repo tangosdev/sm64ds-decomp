@@ -126,11 +126,27 @@ struct ModelComponents {
     void func_02044b30(int);
     void func_02045074(BMD_Bone *);
     void func_020453c0(BMD_Bone *, BCA_File *, int);
-};
 
-namespace Memory {
-void operator_delete2(void *);
-}
+    /* Material setters (src/engine/model/Model4.cpp). Set*(value) sets every
+       material; SetMaterial*(value, index) sets one. BMD_Material::flags is
+       its POLYGON_ATTR word: polygon mode in bits 4..5, back/front display in
+       6..7, alpha in 16..20, polygon ID in 24..29. The colours are the low
+       (diffuse, specular) or high (ambient, emission) half of
+       diffuseAmbient / specularEmission. */
+    void SetMaterialPolygonMode(int, int);
+    void SetPolygonMode(int);
+    void SetAlpha(unsigned int);
+    void SetShadowMask(int);
+    void SetShadowDraw(int, int);
+    void SetMaterialPolygonID(int, int);
+    void SetPolygonID(int);
+    void SetMaterialDiffuse(unsigned int, int);
+    void SetDiffuse(unsigned int);
+    void SetMaterialAmbient(unsigned int, int);
+    void SetAmbient(unsigned int);
+    void SetMaterialEmission(unsigned int, int);
+    void SetEmission(unsigned int);
+};
 
 struct dExtModel_c {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
@@ -200,24 +216,6 @@ struct dExtModel_c {
        its unsigned type/name are reconstructed, not recovered source spelling.
        See notes/experiments/applyopacity-api-0920.md. */
     void ApplyOpacity(u32 opacity, u32);
-
-    /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
-       The compiler generates D0 as "run the destructor body, then call operator
-       delete on the class". Without this it emits the global `_ZdlPv`, which
-       exists nowhere in this image, and the D0 comes out one relocated word
-       different from the ROM -- a difference build_pin.verify CANNOT SEE,
-       because it wildcards relocated words. Only the link catches it.
-
-       This family deallocates through Memory::operator_delete2, not the actor
-       heap: every D0 below ends with a call to 0x0203cbcc. dActor_c's copy of this
-       member calls Memory::Deallocate instead, which is why each needs its own.
-
-       Inline, and in the IMMEDIATE base -- mwcc inlines it only when it finds it
-       in the class or one level up, as include/dActor_c.h records. No layout
-       effect: a non-virtual inline member adds no field and no vtable slot. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

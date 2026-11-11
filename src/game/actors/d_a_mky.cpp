@@ -25,7 +25,7 @@
  *   bl targets. dBgCh_Actr::GetSphereResult returns its argument plus 0x30;
  *   GetFloorResult is the previous symbol, and this TU still calls
  *   dBgCh_Actr::GetSphereResult. DetectClsnSlot0 only queries collider slot zero.
- *   func_02037f44 returns word 8 of the record it is handed. Real
+ *   dBgPi::GetOwner returns the result's owner (+0x20). Real
  *   dBgPi copy construction avoids the unwanted default-constructor call.
  * - Native Matrix4x3 copies use common.h's shared flat representation.
  *   common.h and math/Matrix.h still define incompatible C++ forms under
@@ -61,7 +61,8 @@
 #include "Sound.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
-#include "cstd.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* The callees of this TU's members, spelled by their mangled or ROM names.
  * They cannot be declared inside a method body: a block-scope extern in a
@@ -356,7 +357,7 @@ void daMky_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
         static_cast<const dBgPi *>(w->GetFloorResult())->surface.CopyNormalTo(n);
         if (n.y != 0) {
             int s = FX_MUL(n.x, this->mSpeedX) + FX_MUL(n.z, this->mSpeedZ);
-            this->mVertSpeed = -(cstd::fdiv(s, n.y) + 0x8000);
+            this->mVertSpeed = -(FX_Div(s, n.y) + 0x8000);
         }
     }
     if (w->IsOnWall() != 0) {
@@ -475,7 +476,7 @@ int daMky_c::func_ov030_02112400()
     } else {
         if (this->mWithMeshClsn.IsOnGround()) {
             dBgPi res = *mWithMeshClsn.GetSphereResult();
-            if (res.GetClsnID() == -1 || func_02037f44(&res) == 0) {
+            if (res.GetClsnID() == -1 || res.GetOwner() == 0) {
                 ChangeState(0);
             }
         }
@@ -683,7 +684,6 @@ int daMky_c::EnterState7()
     typedef unsigned char u8;
     typedef unsigned short u16;
     typedef short s16;
-    extern short data_02082214[];
     extern void *gMonkeyJumpStAnimationFile[];
     u8 *new_var;
     int *pos;
@@ -717,11 +717,11 @@ int daMky_c::EnterState7()
         this->mPosZ = t2;
     }
     ang = (u16)this->mAngleY;
-    s = data_02082214[(ang >> 4) * 2];
+    s = FX_SinIdx(ang >> 4);
     *pos = (*pos) + FX_MUL(s, mul);
     *py = (*py) + 0x50000;
     ang = (u16)this->mAngleY;
-    s = data_02082214[((ang >> 4) * 2) + 1];
+    s = FX_CosIdx(ang >> 4);
     *pz = (*pz) + FX_MUL(s, mul);
     other = this->mPlayer;
     {

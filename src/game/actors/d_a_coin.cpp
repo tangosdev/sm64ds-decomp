@@ -22,7 +22,7 @@
 //   not a coin.
 // - DiscreteNoLava_veneer keeps a local extern. Its definition drops the r0
 //   it forwards.
-// - Several bodies keep `(int)ptr + off` and `(long long)` casts. PMF records
+// - Several bodies keep `(int)ptr + off` casts. PMF records
 //   stay on the sinit side, not this TU's .data.
 
 #pragma defer_codegen off
@@ -44,6 +44,7 @@
 #include "cstd.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Views of daObjBC_Switch_c.h and daObjFl_Coin_c.h, same member names and
    offsets: including either header renumbers this TU's @NNN labels. */
@@ -93,7 +94,7 @@ extern "C" {
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzLen(void *v);
-extern int LenVec3(const Vector3 *v);
+extern int VEC_Mag(const Vector3 *v);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void GiveCoins(int idx, int amount);
@@ -170,7 +171,7 @@ void daCoin_c::ProbeFloor() {
                     int dist = Vec3_HorzDist(&mPos, &platform->mPos);
                     if (dist < (radius << 3) && dy <= 0x1f4000 && dy >= 0) {
                         mFloorPosY = platform->mPosY + 0x32000;
-                        ((CoinFlagBits*)((long long)&mCoinFlags))->floorState = FLOOR_FIXED;
+                        ((CoinFlagBits *)&mCoinFlags)->floorState = FLOOR_FIXED;
                         return;
                     }
                 }
@@ -195,11 +196,11 @@ void daCoin_c::ProbeFloor() {
         if (ray.DetectClsn()) {
             ray.CopyTo(hit);
             if (hit.GetClsnID() != (u32)-1 && dActor_c::FindWithID(hit.GetClsnID()) != 0) {
-                ((CoinFlagBits*)((long long)&mCoinFlags))->floorState = FLOOR_DYNAMIC;
+                ((CoinFlagBits *)&mCoinFlags)->floorState = FLOOR_DYNAMIC;
             } else {
                 Vector3 pos = ray.GetClsnPos();
                 mFloorPosY = pos.y;
-                ((CoinFlagBits*)((long long)&mCoinFlags))->floorState = FLOOR_FIXED;
+                ((CoinFlagBits *)&mCoinFlags)->floorState = FLOOR_FIXED;
             }
         }
     }
@@ -251,8 +252,8 @@ daStarBase_c *daCoin_c::FindStarMarker() {
 void daCoin_c::BounceOffWall() {
     if (mWithMeshClsn.IsOnWall() == 0) return;
     int normal[3];
-    void *wall = mWithMeshClsn.GetWallResult();
-    ((SurfaceInfo*)((char*)wall + 4))->CopyNormalTo(*(Vector3*)normal);
+    dBgPi *wall = mWithMeshClsn.GetWallResult();
+    wall->surface.CopyNormalTo(*(Vector3 *)normal);
     mPrevAngleY = ReflectAngle(normal[0], normal[2], mPrevAngleY);
 }
 
@@ -270,7 +271,7 @@ void daCoin_c::Step() {
         return;
     }
     UpdatePos(&mdCc_c);
-    if (LenVec3((const Vector3 *)&mSpeedX) > mWithMeshClsn.mRadius)
+    if (VEC_Mag((const Vector3 *)&mSpeedX) > mWithMeshClsn.mRadius)
         dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
     else
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&mWithMeshClsn);
@@ -646,7 +647,7 @@ void daCoin_c::StateBounce() {
     if (normal.y != 0) {
         int dotX = FX_MUL(normal.x, mSpeedX);
         int dotZ = FX_MUL(normal.z, mSpeedZ);
-        mVertSpeed = -(cstd::fdiv(dotX + dotZ, normal.y) + 0x8000);
+        mVertSpeed = -(FX_Div(dotX + dotZ, normal.y) + 0x8000);
     }
 
     if ((unsigned)(floorClass - 1) <= 1) {
@@ -792,7 +793,7 @@ int daCoin_c::Behavior()
     (this->*data_ov002_0210dc70[mBehaviorType])();
     if ((int)(gGameMode == 1) == 0 && (int)((mFlags & 8) != 0) != 0) {
         mdCc_c.Clear();
-        if (mNoClsnTimer == 0 && LenVec3(&mCamSpacePos) < 0x64000) {
+        if (mNoClsnTimer == 0 && VEC_Mag(&mCamSpacePos) < 0x64000) {
             if (mCoinType != COIN_RED || mInBrickBlock == 0)
                 mdCc_c.Update();
         }

@@ -3,8 +3,8 @@
 
 #include "common.h"
 
-/* The arm9 matrix library (0x0203bd28..0x0203c1b4; MulMat4x3Mat4x3 sits apart
- * at 0x02052914, beside MulVec3Mat4x3 and InvMat4x3) and the scratch matrix
+/* The arm9 matrix library (0x0203bd28..0x0203c1b4; MTX_Concat43 sits apart
+ * at 0x02052914, beside MTX_MultVec43 and MTX_Inverse43) and the scratch matrix
  * the actors build in.
  *
  * Every routine comes as a "set" form (FromRotationY: overwrite with a
@@ -40,7 +40,7 @@ void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationZXYExt(Matrix4x3 *, int, int, int);
 void Matrix4x3_FromRotationXYZExt(Matrix4x3 *, int, int, int);
 void Matrix4x3_FromRotationZXYExt(Matrix4x3 *, int, int, int);
-void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
+void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
 
 extern Matrix4x3 data_020a0e68;
 
@@ -56,7 +56,7 @@ struct MtxStack {
     }
     /* now = m * now */
     static void concat(const Matrix4x3 &m) {
-        MulMat4x3Mat4x3(&m, &data_020a0e68, &data_020a0e68);
+        MTX_Concat43(&m, &data_020a0e68, &data_020a0e68);
     }
     static void transS(int x, int y, int z) {
         Matrix4x3_FromTranslation(&data_020a0e68, x, y, z);

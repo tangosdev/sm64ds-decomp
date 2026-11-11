@@ -1,9 +1,10 @@
 //cpp
-#include "cstd.h"
 #include "types.h"
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
 #include "Ov007PaletteBuf.h"
+#include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 /* 32-colour palettes, 0x40 bytes each */
 extern char data_ov007_02102f28[];
@@ -40,12 +41,7 @@ extern "C" void func_ov007_020bce70(short n, int frames) {
 
     if (t >= 0 && t <= frames) {
         int ratio;
-        if (t <= 0)
-            ratio = 0;
-        else if (t >= frames)
-            ratio = 0x1000;
-        else
-            ratio = cstd::div(t << 12, frames);
+        ratio = ProgressRatio(t, frames);
         func_ov007_020c93c4(ratio, WORK->paletteBufs[1], WORK->paletteBufs[2],
                             WORK->paletteBufs[0]);
         WORK->paletteState->stateWork = 1;

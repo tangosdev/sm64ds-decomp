@@ -51,6 +51,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import match as M            # noqa: E402
 import reloc_audit as RA     # noqa: E402
+import relocs as RL          # noqa: E402
 import modules as MOD        # noqa: E402
 
 # The relocation section that applies to a given section index, matched by sh_info.
@@ -151,7 +152,7 @@ def is_thumb_pointer(rtype, rom_t, cand_t):
     WRONG.
 
     Proven on func_0203c178 (arm9 0x0203c178), a veneer whose literal is 0x020527e9
-    for the Thumb symbol func_020527e8: enrolling that range and building the ROM
+    for the Thumb symbol MTX_Scale43_: enrolling that range and building the ROM
     reproduces the cartridge byte for byte while this check called it WRONG.
     """
     return (rtype == R_ARM_ABS32 and cand_t is not None
@@ -204,7 +205,28 @@ def is_benign(rom_t, cand_t, prefer):
     return a is not None and b is not None and a == b
 
 
-def func_relocs_typed(obj, func, name_index):
+def _reloc_target(name, bind, name_index, module):
+    """Address the relocation's symbol resolves to, or None when the object cannot
+    name it.
+
+    A locally DEFINED symbol is resolved by the linker inside its own module, so the
+    global name index may only answer when it agrees on the module. mwccarm's
+    compiler-local names (`@689`, `_ZGVs...$N`) are numbered per translation unit and
+    repeat across overlays; a name-index hit in another module is a different symbol.
+    Linking the slot to it compares the candidate against the wrong bytes and reports
+    a correct source as WRONG. A local reference stays local whether the object keeps
+    the definition or the delink strips it to SHN_UNDEF, so the binding alone decides;
+    global imports keep the plain name-index lookup."""
+    res = RA.resolve_candidate(name, name_index)
+    if res is None:
+        return None
+    if (bind == "STB_LOCAL" and module is not None and res[0] is not None
+            and RL.normalize_module(res[0]) != RL.normalize_module(module)):
+        return None
+    return res
+
+
+def func_relocs_typed(obj, func, name_index, module=None):
     """[{off, type, sym, addr, add}] for relocs inside func; addr is the resolved
     target base or None if the symbol name carries no address; add is the relocation
     addend (so the linked word is base + add, e.g. &array[i].field). Returns None if
@@ -233,7 +255,8 @@ def func_relocs_typed(obj, func, name_index):
             if not (0 <= o < size):
                 continue
             tsym = syms[r["r_info_sym"]]
-            res = RA.resolve_candidate(tsym.name, name_index)
+            res = _reloc_target(tsym.name, tsym["st_info"]["bind"],
+                                name_index, module)
             rtype = r["r_info_type"]
             if is_rela:
                 add = r["r_addend"]
@@ -346,7 +369,7 @@ def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=()
                 "reason": "requested-size-mismatch" if near else "len-mismatch",
                 "diffs": [], "blind": 0,
                 **({"expected_size": size, "emitted_sizes": [emitted_size]} if near else {})}
-    relocs = func_relocs_typed(obj, sym, name_index)
+    relocs = func_relocs_typed(obj, sym, name_index, mod)
     if off:
         relocs = [dict(rl, off=rl["off"] - off) for rl in relocs
                   if off <= rl["off"] < off + size]

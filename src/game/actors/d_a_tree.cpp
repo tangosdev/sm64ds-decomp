@@ -190,7 +190,7 @@ int daTree_c::CleanupResources()
                  * node test and the link store both survive in the ROM. */
                 if (node != 0) {
                     node->clsn.dCcPos_c::~dCcPos_c();
-                    Memory::operator_delete2(node);
+                    ::operator delete(node);
                 }
             }
         }

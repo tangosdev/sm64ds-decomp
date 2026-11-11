@@ -33,10 +33,7 @@
  * daYegg_c_classInit. Each member keeps the provenance notes its source
  * carried.
  *
- * `#pragma defer_codegen off` keeps this file in ROM order. It also scopes
- * opt_strength_reduction off to FindTarget and InitResources, the
- * two members whose sources carried it; with codegen deferred the pragma is
- * last-wins over the whole file.
+ * `#pragma defer_codegen off` keeps this file in ROM order.
  *
  * The twenty-four self-first helpers are real daYegg_c members; the two
  * called from daPly_c code (func_ov002_020ed63c by St_YoshiPower_Init,
@@ -90,12 +87,12 @@
 #include "dBgCh_Actr.h"
 #include "dCc_c.h"
 #include "Sound.h"
-#include "cstd.h"
 #include "daStar_c.h"
 #include "daBtn_c.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 struct dBgPi;
 
@@ -166,8 +163,7 @@ extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
-extern void func_0203568c(void *p, int v);
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int radius, int height, void *a, void *b);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
@@ -497,8 +493,7 @@ void daYegg_c::SeekStraight() {
                 rot.z = FX_CosIdx((u16)mAngleY >> 4);
                 mParticleHandle = Particle::System::New(mParticleHandle, kPtclYoshiEggTrail, pos.x,
                                                         pos.y, pos.z, (const Vector3_16f *)&rot, 0);
-                mSoundHandle =
-                    Sound::PlayLong(mSoundHandle, 3, 0x93, *(Vector3 *)&mCamSpacePosX, 0);
+                mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x93, mCamSpacePos, 0);
                 flag = 1;
                 UpdateTilt();
                 if (HandleCylinderHit() != 0)
@@ -632,8 +627,8 @@ void daYegg_c::ExecuteSeek() {
 /* State 1 (SEEK), enter. Clears the target, plays the moving animation (file
  * 0x0210e6b0) at normal speed and sets the horizontal speed to 0x64000 (100
  * units). For the variant func_ov002_020ec654 calls zero: no gravity, a
- * target search within 0x7d0000 (2000 units) and func_0203568c on the ground
- * collision with 0x2a000 (42 units; what that sets is not recovered). For the other variant: gravity -0xa000
+ * target search within 0x7d0000 (2000 units) and the ground
+ * collision's radius set to 0x2a000 (42 units). For the other variant: gravity -0xa000
  * (-10 units per frame squared) and a search within 0xfa0000 (4000 units). If
  * a target is found the egg turns to face it; if not, and it has already
  * targeted at least one actor, the zero variant bursts at once. Finally the
@@ -648,7 +643,7 @@ void daYegg_c::EnterSeek() {
     if (!func_ov002_020ec654()) {
         mVertAccel = 0;
         r5 = (dActor_c *)FindTarget(0, 0x7d0000);
-        func_0203568c(&mWithMeshClsn, 0x2a000);
+        mWithMeshClsn.SetRadius(0x2a000);
     } else {
         mVertAccel = -0xa000;
         r5 = (dActor_c *)FindTarget(0, 0xfa0000);
@@ -722,7 +717,7 @@ void daYegg_c::ExecuteFollowPlayer() {
         in.z = mHoldOffsetZ;
 
         Matrix4x3_FromRotationZXYExt(&data_020a0e68, mEasedAngleX, mEasedAngleY, mEasedAngleZ);
-        MulVec3Mat4x3(&in, &data_020a0e68, &out);
+        MTX_MultVec43(&in, &data_020a0e68, &out);
 
         if (mPlayer->mClimbClsn != 0 || func_ov002_020cf700(mPlayer) != 0 ||
             mPlayer->func_ov002_020d0d2c() != 0) {
@@ -769,7 +764,7 @@ void daYegg_c::ExecuteFollowPlayer() {
 
     {
         /* 0x1000 / 0x3000 as Fix12: a third. */
-        int fd = cstd::fdiv(0x1000, 0x3000);
+        int fd = FX_Div(0x1000, 0x3000);
         Math_Function_0203b14c(&mPosX, mHoldTargetX, fd, 0x3e8000, 4);
         Math_Function_0203b14c(&mPosY, mHoldTargetY, fd, 0x3e8000, 4);
         Math_Function_0203b14c(&mPosZ, mHoldTargetZ, fd, 0x3e8000, 4);
@@ -812,7 +807,7 @@ void daYegg_c::ExecuteFollowPlayer() {
         }
         a4 = mSpeedX;
         {
-            int fd1 = cstd::fdiv(a4, 0x20000);
+            int fd1 = FX_Div(a4, 0x20000);
             int r1 = FX_MUL(fd1, 0xe39);
             short a4ang = (short)(-r1);
             ac = mSpeedZ;
@@ -822,7 +817,7 @@ void daYegg_c::ExecuteFollowPlayer() {
             }
             ac = mSpeedZ;
             {
-                int fd2 = cstd::fdiv(ac, 0x20000);
+                int fd2 = FX_Div(ac, 0x20000);
                 int r2 = FX_MUL(fd2, 0xe39);
                 mAngleX = a4ang;
                 mAngleZ = (short)r2;
@@ -1306,7 +1301,7 @@ int daYegg_c::Behavior()
             vmid.z = 0;
             ang = &mPlayer->mAngleX;
             Matrix4x3_FromRotationZXYExt(&data_020a0e68, ang[0], ang[1], ang[2]);
-            MulVec3Mat4x3(&vin, &data_020a0e68, &vmid);
+            MTX_MultVec43(&vin, &data_020a0e68, &vmid);
             Vec3_Add(&vout, &mPlayer->mPos, &vmid);
             mPosX = vout.x;
             mPosY = vout.y;

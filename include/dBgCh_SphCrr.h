@@ -86,19 +86,6 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
      */
     dBgCh_SphCrr();
 
-    /* ITS OWN COPY, TO RESOLVE AN AMBIGUITY THE MULTIPLE INHERITANCE CREATES.
-       dBgCh_SphCrr derives from both dBgCh and dBgPi, and each of those declares
-       an inline operator delete, so an inherited one is "ambiguous access to
-       name found: dBgCh::operator delete and dBgPi::operator delete".
-       Declaring it here picks the same deallocator both bases name
-       (Memory::operator_delete2, 0x0203cbcc) and satisfies the rule in
-       include/dActor_c.h that mwcc only inlines the member when it is in the
-       class or its immediate base. This is load-bearing for the D0 at
-       0x02037c40; a non-virtual inline member adds no field or vtable slot. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
-
     /* methods */
     void SetFloorResult(const dBgPi &result);
     void SetObjAndSphere(const Vector3 &pos, Fix12i radius, dActor_c *actor);

@@ -27,9 +27,11 @@
  */
 #include "types.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "math/CalcLib.h"
 #include "Ov007Swing.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -49,7 +51,6 @@ extern Ov007Link *func_ov007_020c80a4(void);
 extern void func_ov007_020c80c8(Ov007Follower *f, int damping, int shift);
 extern void func_ov007_020c8440(void *p);
 extern Ov007Follower *func_ov007_020c844c(Vector3 *p, int q);
-extern int func_020538b8(int x, int y);
 
 /* The ROM copies a Vector3 here as a block move (ldm/stm). The C++ front end
    copies Vector3, and any struct of three named ints, member by member; a
@@ -180,8 +181,8 @@ void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
         nearestY = func_ov007_020c30ac(mesh->verts, count, &self->yPointPos[i], -1, 0);
 
         grid = mesh->grid;
-        column = cstd::mod(nearestX, grid->columns);
-        row = cstd::div(nearestX, grid->rows);
+        column = FX_ModS32(nearestX, grid->columns);
+        row = FX_DivS32(nearestX, grid->rows);
         point = grid->rowLists[row]->items[column];
         oldZ = point->target->z;
         point->target->z = mesh->params.restZ;
@@ -189,8 +190,8 @@ void func_ov007_020c9d90(Ov007Swing *self, Ov007Mesh *mesh) {
         point->target->z = oldZ;
 
         grid = mesh->grid;
-        column = cstd::mod(nearestY, grid->columns);
-        row = cstd::div(nearestY, grid->rows);
+        column = FX_ModS32(nearestY, grid->columns);
+        row = FX_DivS32(nearestY, grid->rows);
         point = grid->rowLists[row]->items[column];
         oldZ = point->target->z;
         point->target->z = mesh->params.restZ;
@@ -244,15 +245,6 @@ static inline int Sign(int v) {
     return (v >= 0) ? 1 : -1;
 }
 
-/* size / cap as a 20.12 fraction, held to [0, 1]. */
-static inline int CapFraction(int size, u16 cap) {
-    if (size <= 0)
-        return 0;
-    if (size >= cap)
-        return 0x1000;
-    return cstd::div(size << 12, cap);
-}
-
 /* Turns the swing into the item sprite's pose (func_ov007_020beeb0 passes
  * the sprite's posOffset, rotX and rotY). offset takes the x and y of the
  * chain's last point. Each side pair's tilt is the atan2 of the span between
@@ -271,17 +263,17 @@ void func_ov007_020c9a84(Ov007Swing *self, Vector3 *offset, u16 *rotX, u16 *rotY
     offset->x = self->chainPositions[self->chain->count - 1].x;
     offset->y = self->chainPositions[self->chain->count - 1].y;
 
-    SubVec3(&self->xPointPos[0], &self->xPointPos[1], &span);
-    angleX = func_020538b8(span.x, span.z);
-    SubVec3(&self->yPointPos[0], &self->yPointPos[1], &span);
-    angleY = func_020538b8(span.z, span.y);
+    VEC_Subtract(&self->xPointPos[0], &self->xPointPos[1], &span);
+    angleX = FX_Atan2(span.x, span.z);
+    VEC_Subtract(&self->yPointPos[0], &self->yPointPos[1], &span);
+    angleY = FX_Atan2(span.z, span.y);
     tiltX = (u16)(angleX + 0x3fff);
     tiltY = (u16)(angleY + 0x7fff);
 
     sizeX = (tiltX >= 0) ? tiltX : -tiltX;
-    fracX = CapFraction(sizeX, self->params->maxRotX);
+    fracX = ProgressRatio(sizeX, self->params->maxRotX);
     sizeY = (tiltY >= 0) ? tiltY : -tiltY;
-    fracY = CapFraction(sizeY, self->params->maxRotY);
+    fracY = ProgressRatio(sizeY, self->params->maxRotY);
 
     easeX = MulFx(fracX, 0x2000 - fracX);
     easeY = MulFx(fracY, 0x2000 - fracY);

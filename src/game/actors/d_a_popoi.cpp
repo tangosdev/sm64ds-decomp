@@ -128,8 +128,8 @@ extern int func_ov002_020db674(void *c, int a1, int a2, int a3);
 void func_02012694(unsigned int id, const Vector3 *pos);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
-/* local extern: no shared math header declares MulVec3Mat4x3. */
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+/* local extern: no shared math header declares MTX_MultVec43. */
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 }
 
 /* Actor ID daPopoi_ACTOR_PLAYER (0xbf) is the daPly_c. These int-returning
@@ -231,8 +231,8 @@ int daPopoi_c::Behavior()
     /* Slope under the feet, as an angle relative to the way we are facing. */
     slope = 0;
     if (mWithMeshClsn.IsOnGround()) {
-        void *floorResult = mWithMeshClsn.GetFloorResult();
-        ((SurfaceInfo *)((char *)floorResult + 4))->CopyNormalTo(floorNormal);
+        dBgPi *floorResult = mWithMeshClsn.GetFloorResult();
+        floorResult->surface.CopyNormalTo(floorNormal);
         slope = func_02010844(((char *)this), &floorNormal, mAngleY);
     }
 
@@ -372,8 +372,7 @@ int daPopoi_c::UpdateWanderState() {
     daPly_c *player;
     struct Vector3 pp;
 
-    dist = Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
-                     reinterpret_cast<const Vector3 *>(&mHomePosX));
+    dist = Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
     mSoundHandle = Sound::PlayLong(mSoundHandle, 3, daPopoi_SND_MOVE_LOOP, mCamSpacePos, 0);
 
     if (IsBlockedAhead() != 0) {
@@ -388,8 +387,7 @@ int daPopoi_c::UpdateWanderState() {
     }
 
     if (dist > 0x1f4000) {
-        mTargetAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
-                                       reinterpret_cast<const Vector3 *>(&mHomePosX));
+        mTargetAngleY = Vec3_HorzAngle(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
         if ((unsigned short)mStateTimer < 0x14)
             mStateTimer = 0x14;
         ApproachLinear(mPrevAngleY, mTargetAngleY, 0x400);
@@ -507,8 +505,7 @@ int daPopoi_c::UpdateChaseState() {
     daPly_c *p;
     unsigned short spd;
 
-    dist = Vec3_Dist(reinterpret_cast<const Vector3 *>(&mPosX),
-                     reinterpret_cast<const Vector3 *>(&mHomePosX));
+    dist = Vec3_Dist(&mPos, reinterpret_cast<const Vector3 *>(&mHomePosX));
 
     if (IsBlockedAhead() != 0) {
         ChangeState((daPopoi_StateRecord *)&data_ov077_02127d18); /* TurnAway */
@@ -527,7 +524,7 @@ int daPopoi_c::UpdateChaseState() {
         pv.x = pp->x;
         pv.y = pp->y;
         pv.z = pp->z;
-        mTargetAngleY = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX), &pv);
+        mTargetAngleY = Vec3_HorzAngle(&mPos, &pv);
     }
 
     ApproachLinear(mPrevAngleY, mTargetAngleY, mTurnRate);
@@ -685,7 +682,7 @@ int daPopoi_c::IsBlockedAhead() {
         start.y = y + 0x28000;
         dir.z = 0xc8000;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
-        MulVec3Mat4x3(&dir, &data_020a0e68, &out);
+        MTX_MultVec43(&dir, &data_020a0e68, &out);
         {
             int sx = start.x;
             int ox = out.x;
@@ -714,7 +711,7 @@ int daPopoi_c::IsBlockedAhead() {
         dir.z = 0x2c000;
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x3000);
-        MulVec3Mat4x3(&dir, &data_020a0e68, &out);
+        MTX_MultVec43(&dir, &data_020a0e68, &out);
         {
             int sx = start.x;
             int ox = out.x;

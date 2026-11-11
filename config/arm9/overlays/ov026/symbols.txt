@@ -1,7 +1,7 @@
 _ZN17daObjWlPolelift_cD1Ev kind:function(arm,size=0x40) addr:0x021111a0
 _ZN17daObjWlPolelift_cD0Ev kind:function(arm,size=0x54) addr:0x021111e0
-func_ov026_02111234 kind:function(arm,size=0x70) addr:0x02111234
-func_ov026_021112a4 kind:function(arm,size=0x40) addr:0x021112a4
+_ZN17daObjWlPolelift_c12UpdateShadowEv kind:function(arm,size=0x70) addr:0x02111234
+_ZN17daObjWlPolelift_c20UpdateModelTransformEv kind:function(arm,size=0x40) addr:0x021112a4
 _ZN17daObjWlPolelift_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021112e4
 _ZN17daObjWlPolelift_c6RenderEv kind:function(arm,size=0x28) addr:0x02111308
 _ZN17daObjWlPolelift_c8BehaviorEv kind:function(arm,size=0x268) addr:0x02111330

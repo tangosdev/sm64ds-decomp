@@ -165,6 +165,7 @@ struct daKuriKing_c : dEnemyBase_c {
     void UpdateModelMatrix();
     void UpdateAnimation();
     int IsAnimPlaying(int idx);
+    void PlayAnim(int);
     int CleanupVanishResources();
     int RenderVanish();
     int BehaviorVanish();

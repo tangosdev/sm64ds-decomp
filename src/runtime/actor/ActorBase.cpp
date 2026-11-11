@@ -29,6 +29,7 @@
 #include "fBase_c.h"
 #include "Heap.h"
 #include "Memory.h"
+#include "msl/string.h"
 
 struct fBaseActorInfo {
     fBase_c *(*classInit)();
@@ -69,7 +70,6 @@ extern fBaseActorInfo **data_020a4bb8;
 
 extern void func_02044334(void *p);
 extern int  func_0204424c(char *p);
-extern void *func_0206e2f8(void *p, int fill, unsigned int size);
 
 /* Heap's methods and fields come from include/Heap.h. The heap locals stay
    `void *` (and are cast at each use): Virtual34 and Virtual38 read its
@@ -605,7 +605,7 @@ void *fBase_c::operator new(size_t size) {
     void *p = Memory::Allocate(size, -4, data_020a0eac);
     if (!p)
         return 0;
-    func_0206e2f8(p, 0, size);
+    memset(p, 0, size);
     return p;
 }
 

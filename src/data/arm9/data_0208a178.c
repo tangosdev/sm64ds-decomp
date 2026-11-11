@@ -1,4 +1,4 @@
-/* Crash-screen and title font. 0x2000 bytes; the tail is zero. */
+/* OS_Terminate-screen and title font. 0x2000 bytes; the tail is zero. */
 #include "types.h"
 
 u8 data_0208a178[0x2000] = {

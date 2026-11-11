@@ -1,7 +1,7 @@
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
 typedef int s32;
 typedef long long s64;
-extern s32 FX_InvSqrt(s32 r0);
 
 void Quaternion_Normalize(s32 *q)
 {

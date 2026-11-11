@@ -16,8 +16,7 @@ typedef union {
     u16 h[2];
 } TPU;
 
-
-extern void Crash(void);
+extern void OS_Terminate(void);
 
 void TPi_TpCallback(int a0, unsigned int a1, int a2) {
     u16 msg = (u16)a1;
@@ -90,7 +89,7 @@ void TPi_TpCallback(int a0, unsigned int a1, int a2) {
             r4 = 2;
             break;
         default:
-            goto crash; /* kept: default: Crash(); return; adds a branch (0x2c4) */
+            goto crash; /* kept: default: OS_Terminate(); return; adds a branch (0x2c4) */
         }
         data_020a80cc.mErrFlags |= 1 << bit;
         data_020a80cc.mCommandFlags &= ~(1 << bit);
@@ -99,5 +98,5 @@ void TPi_TpCallback(int a0, unsigned int a1, int a2) {
         return;
     }
 crash:
-    Crash();
+    OS_Terminate();
 }

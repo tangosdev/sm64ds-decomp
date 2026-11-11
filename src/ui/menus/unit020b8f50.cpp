@@ -47,7 +47,6 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "cstd.h"
 #include "Ov007Work.h"
 #include "Ov007Sprite.h"
 #include "Ov007MenuState.h"
@@ -59,6 +58,8 @@
 #include "Ov007Item.h"
 #include "Ov007Pad.h"
 #include "private/ov007_picker_scene.h"
+#include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -141,7 +142,7 @@ int PickerScene_UpdateReplay(int param) {
     else
         r4 = 0x168;
 
-    r4 = cstd::div(SCENE->totalStrokeTime << 0xc, r4);
+    r4 = FX_DivS32(SCENE->totalStrokeTime << 0xc, r4);
     if (r4 < 0x1000)
         r4 = 0x1000;
 
@@ -250,7 +251,7 @@ void PickerScene_HandleEditKeys(void) {
         if (v <= w) {
             v = w;
         }
-        if (cstd::mod(v, 5) == 1) {
+        if (FX_ModS32(v, 5) == 1) {
             PickerScene_SetDeform(2, 0xa, 0x1000);
             SCENE->springSet = 0;
         } else {
@@ -288,41 +289,17 @@ void PickerScene_HandleEditKeys(void) {
             b = a;
             int ratio, ease, v2, half, fpv;
             SCENE->springSet = 0;
-            if (t1 <= 0) {
-                ratio = 0;
-            } else if (t1 >= 0x64) {
-                ratio = 0x1000;
-            } else {
-                ratio = cstd::div(t1 << 0xc, 0x64);
-            }
+            ratio = ProgressRatio(t1, 0x64);
             ease = (int)(((s64)ratio * (0x2000 - ratio)) >> 0xc);
-            if (t1 <= 0x50) {
-                v2 = 0;
-            } else if (t1 >= 0xc8) {
-                v2 = 0x1000;
-            } else {
-                v2 = cstd::div((t1 - 0x50) << 0xc, 0x78);
-            }
+            v2 = RangeRatio(t1, 0x50, 0xc8);
             half = ((int)(((s64)v2 * (0x2000 - v2)) >> 0xc)) / 2;
             fpv = half + 0x1000;
             if (t1 >= 0xa0) {
-                int m = cstd::mod(t1 - 0xa0, 5);
+                int m = FX_ModS32(t1 - 0xa0, 5);
                 int mc, v3, v3sq;
                 s16 tbl;
-                if (m <= 0) {
-                    mc = 0;
-                } else if (m >= 5) {
-                    mc = 0x1000;
-                } else {
-                    mc = cstd::div(m << 0xc, 5);
-                }
-                if (t1 <= 0xa0) {
-                    v3 = 0;
-                } else if (t1 >= 0xc8) {
-                    v3 = 0x1000;
-                } else {
-                    v3 = cstd::div((t1 - 0xa0) << 0xc, 0x28);
-                }
+                mc = ProgressRatio(m, 5);
+                v3 = RangeRatio(t1, 0xa0, 0xc8);
                 v3sq = (int)(((s64)v3 * v3) >> 0xc);
                 tbl = FX_SinIdx((u16)((mc * 0xffff) >> 12) >> 4);
                 extra = FX_MUL(v3sq, (tbl * (s16)0xa));
@@ -365,39 +342,21 @@ void PickerScene_HandleEditKeys(void) {
         dir2 = (c1 > c2) ? 1 : -1;
         c1 = (c1 > c2) ? c1 : c2;
         if (c1 > 0) {
-            int md = cstd::mod(c1, 5);
+            int md = FX_ModS32(c1, 5);
             if (c1 < 0x64) {
                 int r;
-                if (c1 <= 0) {
-                    r = 0;
-                } else if (c1 >= 0x64) {
-                    r = 0x1000;
-                } else {
-                    r = cstd::div(c1 << 0xc, 0x64);
-                }
+                r = ProgressRatio(c1, 0x64);
                 amp = r / 2;
             } else {
                 int v, sq;
-                if (c1 <= 0x64) {
-                    v = 0;
-                } else if (c1 >= 0x12c) {
-                    v = 0x1000;
-                } else {
-                    v = cstd::div((c1 - 0x64) << 0xc, 0xc8);
-                }
+                v = RangeRatio(c1, 0x64, 0x12c);
                 sq = (int)(((s64)v * v) >> 0xc);
                 amp = sq / 2 + 0x800;
                 if (c1 >= 0x12c) {
-                    int m2 = cstd::mod(c1, 0x64);
+                    int m2 = FX_ModS32(c1, 0x64);
                     int mc2;
                     int t2v;
-                    if (m2 <= 0) {
-                        mc2 = 0;
-                    } else if (m2 >= 0x64) {
-                        mc2 = 0x1000;
-                    } else {
-                        mc2 = cstd::div(m2 << 0xc, 0x64);
-                    }
+                    mc2 = ProgressRatio(m2, 0x64);
                     t2v = FX_SinIdx((u16)((mc2 * 0xffff) >> 12) >> 4);
                     if (t2v < 0) {
                         t2v = -t2v;
@@ -410,7 +369,7 @@ void PickerScene_HandleEditKeys(void) {
                 MTX_Rot22_(mat, FX_SinIdx(idx), FX_CosIdx(idx));
                 func_ov007_020c5490(s, mat);
             } else {
-                int n = cstd::div(s->groupCount, 4) + 1;
+                int n = FX_DivS32(s->groupCount, 4) + 1;
                 if (n == 1) {
                     n = s->groupCount;
                 }
@@ -623,14 +582,8 @@ void PickerScene_UpdateScaleAnim(void) {
     obj = SCENE->states[2];
     r5 = obj->stateTicks;
     period = data_ov007_020d7b54[obj->currentState];
-    t = cstd::mod(r5, period);
-    if (t <= 0) {
-        phase = 0;
-    } else if (t >= period) {
-        phase = 0x1000;
-    } else {
-        phase = cstd::div(t << 0xc, period);
-    }
+    t = FX_ModS32(r5, period);
+    phase = ProgressRatio(t, period);
 
     mgr = SCENE;
     obj = mgr->states[2];
@@ -645,7 +598,7 @@ void PickerScene_UpdateScaleAnim(void) {
         return;
     case 1:
         mgr->springSet = 0;
-        if (cstd::mod(r5, 6) != 0) {
+        if (FX_ModS32(r5, 6) != 0) {
             return;
         }
         {
@@ -693,14 +646,8 @@ void PickerScene_UpdateScaleAnim(void) {
             return;
         }
         p3 = data_ov007_020d7b54[3];
-        m = cstd::mod(d, p3);
-        if (m <= 0) {
-            wobble = 0;
-        } else if (m >= p3) {
-            wobble = 0x1000;
-        } else {
-            wobble = cstd::div(m << 0xc, p3);
-        }
+        m = FX_ModS32(d, p3);
+        wobble = ProgressRatio(m, p3);
         {
             int idx = (u16)((wobble * 0xffff) >> 12) >> 4;
             short tblval;
@@ -713,7 +660,7 @@ void PickerScene_UpdateScaleAnim(void) {
         return;
     }
     case 4: {
-        int m = cstd::mod(r5, 0x3c);
+        int m = FX_ModS32(r5, 0x3c);
         SCENE->springSet = 2;
         if (m == 0) {
             PickerScene_SetDeform(1, 0, 0);
@@ -761,13 +708,8 @@ void PickerScene_UpdateMoveAnim(void) {
     case 1:
     case 2: {
         int v;
-        int m = cstd::mod(counter, 0x3c);
-        if (m <= 0)
-            v = 0;
-        else if (m >= 0x3c)
-            v = 0x1000;
-        else
-            v = cstd::div(m << 12, 0x3c);
+        int m = FX_ModS32(counter, 0x3c);
+        v = ProgressRatio(m, 0x3c);
         s = FX_SinIdx((u16)((v * 0xffff) >> 12) >> 4);
         if (state == 2) {
             a->posOffset.x = -dx / 48 + func_ov007_020c3ba8(dx / 48 - -dx / 48);
@@ -782,13 +724,8 @@ void PickerScene_UpdateMoveAnim(void) {
     case 4: {
         int v;
         int idx;
-        int m = cstd::mod(counter, 0x3c);
-        if (m <= 0)
-            v = 0;
-        else if (m >= 0x3c)
-            v = 0x1000;
-        else
-            v = cstd::div(m << 12, 0x3c);
+        int m = FX_ModS32(counter, 0x3c);
+        v = ProgressRatio(m, 0x3c);
         if (SCENE->states[3]->currentState == 4)
             v = 0x1000 - v;
         idx = (u16)((v * 0xffff) >> 12) >> 4;
@@ -846,13 +783,7 @@ int PickerScene_UpdateIntro(int t) {
 
     if (((Ov007Picker *)s)->groupCount == 0 || SCENE->totalPoints == 0) {
         int ratio;
-        if (t <= 0) {
-            ratio = 0;
-        } else if (t >= 0x1e) {
-            ratio = 0x1000;
-        } else {
-            ratio = cstd::div(t << 0xc, 0x1e);
-        }
+        ratio = ProgressRatio(t, 0x1e);
         SPRITES->sprites[1]->alpha = ratio * 0x1f;
         return ratio >= 0x1000;
     }
@@ -869,12 +800,13 @@ int PickerScene_UpdateIntro(int t) {
         v1 = *p1;
         v2 = *p2;
         d = v2 - v1;
+        /* ProgressRatio(t, 0x28), spelled out: the inline re-colours this case. */
         if (t <= 0) {
             ratio = 0;
         } else if (t >= 0x28) {
             ratio = 0x1000;
         } else {
-            ratio = cstd::div(t << 0xc, 0x28);
+            ratio = FX_DivS32(t << 0xc, 0x28);
         }
         ease = (int)(((s64)ratio * (0x2000 - ratio)) >> 0xc);
         SCENE->springSet = 1;
@@ -894,13 +826,7 @@ int PickerScene_UpdateIntro(int t) {
     case 1:
     case 4: {
         int r8arg, v, ratio;
-        if (t <= 0) {
-            ratio = 0;
-        } else if (t >= 0x78) {
-            ratio = 0x1000;
-        } else {
-            ratio = cstd::div(t << 0xc, 0x78);
-        }
+        ratio = ProgressRatio(t, 0x78);
         if (t == 0) {
             SPRITES->slideProgress = 0x1000;
             data_ov007_02104b98[0] = -1;
@@ -915,13 +841,7 @@ int PickerScene_UpdateIntro(int t) {
             func_ov007_020bfe4c(o, 0xe8000, 0xa8000, -o->distance, local);
         }
         PickerScene_UpdatePicker();
-        if (t <= 0xc8) {
-            v = 0;
-        } else if (t >= 0x258) {
-            v = 0x1000;
-        } else {
-            v = cstd::div((t - 0xc8) << 0xc, 0x190);
-        }
+        v = RangeRatio(t, 0xc8, 0x258);
         ratio += FX_MUL(v, 0x1e000);
         r8arg = 0x1000;
         if (SCENE->introVariant == 4) {
@@ -940,7 +860,7 @@ int PickerScene_UpdateIntro(int t) {
         {
             int ret = func_ov007_020c5854(s, (Vector3 *)local, (ratio * 0xc8) >> 0xc, 0x2000,
                                           ratio * 0x12c, r8arg);
-            int dv = cstd::div(ret << 0xc, SCENE->totalPoints);
+            int dv = FX_DivS32(ret << 0xc, SCENE->totalPoints);
             SPRITES->sprites[1]->alpha = dv * 0x1f;
             if (dv >= 0x1000) {
                 s16 c = data_ov007_02104b98[0];
@@ -970,29 +890,18 @@ int PickerScene_UpdateIntro(int t) {
             int ratio, m, mc, r2c, ease1, ease2, term, sinval;
             int idx;
             short tblval;
-            if (t <= 0) {
-                ratio = 0;
-            } else if (t >= 0x28) {
-                ratio = 0x1000;
-            } else {
-                ratio = cstd::div(t << 0xc, 0x28);
-            }
+            ratio = ProgressRatio(t, 0x28);
             ease1 = (int)(((s64)ratio * (0x2000 - ratio)) >> 0xc);
-            m = cstd::mod(t, 6);
+            m = FX_ModS32(t, 6);
+            /* ProgressRatio(m, 6), spelled out for the same reason. */
             if (m <= 0) {
                 mc = 0;
             } else if (m >= 6) {
                 mc = 0x1000;
             } else {
-                mc = cstd::div(m << 0xc, 6);
+                mc = FX_DivS32(m << 0xc, 6);
             }
-            if (t <= 0x14) {
-                r2c = 0;
-            } else if (t >= 0x3c) {
-                r2c = 0x1000;
-            } else {
-                r2c = cstd::div((t - 0x14) << 0xc, 0x28);
-            }
+            r2c = RangeRatio(t, 0x14, 0x3c);
             ease2 = (int)(((s64)r2c * (0x2000 - r2c)) >> 0xc);
             idx = (u16)((mc * 0xffff) >> 12) >> 4;
             tblval = FX_SinIdx(idx);
@@ -1009,13 +918,7 @@ int PickerScene_UpdateIntro(int t) {
             SCENE->springSet = 2;
         } else {
             int v;
-            if (t <= 0x50) {
-                v = 0;
-            } else if (t >= 0x64) {
-                v = 0x1000;
-            } else {
-                v = cstd::div((t - 0x50) << 0xc, 0x14);
-            }
+            v = RangeRatio(t, 0x50, 0x64);
             a -= v;
             b -= v;
             if (t == 0x51) {
@@ -1150,7 +1053,7 @@ int PickerScene_FadeToEdit(void) {
         }
     }
 
-    SCENE->tweenOut[1] = cstd::div(*addr4, 0x1f);
+    SCENE->tweenOut[1] = FX_DivS32(*addr4, 0x1f);
 
     return (*addr4 == 0) ? 1 : 0;
 }
@@ -1188,8 +1091,8 @@ void PickerScene_UpdateEdit(void) {
             int s;
             func_ov007_020c5a6c(r5, v, 0);
             s = 0x25;
-            if (cstd::mod(SCENE->restartCount, 3) == 2) {
-                switch (cstd::mod(SCENE->restartCount, 9)) {
+            if (FX_ModS32(SCENE->restartCount, 3) == 2) {
+                switch (FX_ModS32(SCENE->restartCount, 9)) {
                 case 2:
                     s = 0x26;
                     break;
@@ -1215,7 +1118,7 @@ void PickerScene_UpdateEdit(void) {
             else if ((int)t >= 0x12c)
                 f = 0x1000;
             else
-                f = cstd::div((t - 5) << 12, 0x127);
+                f = FX_DivS32((t - 5) << 12, 0x127);
             picker = SCENE->picker;
             if (picker->groupCount >= 2)
                 func_ov007_020c6314(picker, picker->hitGroup, 2);
@@ -1470,13 +1373,7 @@ void func_ov007_020b91b4(void) {
             }
             {
                 int q;
-                if (r4 <= 0) {
-                    q = 0;
-                } else if (r4 >= 0x28) {
-                    q = 0x1000;
-                } else {
-                    q = cstd::div(r4 << 0xc, 0x28);
-                }
+                q = ProgressRatio(r4, 0x28);
                 SPRITES->sprites[1]->alpha = q * 0xc;
                 if (q < 0x1000) {
                     return;
@@ -1521,13 +1418,7 @@ void func_ov007_020b91b4(void) {
             } else {
                 r8v = (r6->groupCount) - 1;
             }
-            if (r4 <= 0) {
-                q = 0;
-            } else if (r4 >= 0xf) {
-                q = 0x1000;
-            } else {
-                q = cstd::div(r4 << 0xc, 0xf);
-            }
+            q = ProgressRatio(r4, 0xf);
             if ((SCENE->states[1]->currentState) == 6) {
                 q = 0x1000 - q;
             }
@@ -1623,8 +1514,8 @@ void func_ov007_020b8fd4(Ov007Camera *camera) {
     if (sh == 1) {
         return;
     }
-    scale = cstd::div(f14 << 12, 500);
-    other = cstd::div(f8 << 12, 200);
+    scale = FX_DivS32(f14 << 12, 500);
+    other = FX_DivS32(f8 << 12, 200);
     if (scale <= other) {
         scale = other;
     }

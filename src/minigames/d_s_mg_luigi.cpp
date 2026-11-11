@@ -40,12 +40,14 @@ enum dScMgLuigi_c_AssetId {
 #include "dScMgLuigi_c.h"
 #include "LevelRng.h"
 #include "Sound.h"
-#include "IRQ.h"
+#include "nitro/os/interrupt.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "SpawnInfo.h"
 #include "OamAttr.h"
 #include "nitro/gx/g2_oam.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 /* A random integer in [0, n): the top 15 bits of the shared generator, scaled. */
 #define LUIGI_RAND(n) (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * (n)) >> 15)
@@ -125,7 +127,7 @@ struct IrisScanline {
 
 /* C-linkage engine calls and the remaining local helpers. */
 extern "C" {
-extern int func_02053c10(int);
+extern int GX_HBlankIntr(int);
 /* Functions the members call need C linkage at file scope. Data names do
    not mangle, so the data_* declarations stay next to their users. */
 extern int RandomIntInternal(int *seed);
@@ -138,8 +140,8 @@ extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void Mg_DrawNumberRotated(int a, int b, int c, int d, int e, int f, u16 g);
 extern void func_020127a4(int a0, int a1, int a2, int a3);
 extern void Hud_RenderSprite(void *sprite, int b, int c, int d, int e);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
-extern int Sound_PlayIfNotActive(int a, int b, int c, int d);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
+extern int Sound_PlayIfNotActive(int a, int b, int c, short d);
 extern void FreeGfxSlotsById(int arg);
 extern void Mg_SetSharedState(int c);
 
@@ -147,26 +149,7 @@ extern void Luigi_PrepareScanlines(void);
 extern void Luigi_PushScanlineRecord(void);
 extern dScMgLuigi_c *dScMgLuigi_c_classInit(void);
 }
-namespace GXS {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
-}
-namespace GX {
-void LoadBGPltt(const void *src, u32 offset, u32 size);
-void LoadOBJPltt(const void *src, u32 offset, u32 size);
-}
-namespace G2S {
-unsigned GetBG2CharPtr();
-char *GetBG3ScrPtr();
-}
-namespace G2 {
-char *GetBG2CharPtr();
-char *GetBG2ScrPtr();
-char *GetBG3ScrPtr();
-}
-namespace CP15 {
-void FlushAndInvalidateDataCache(u32 addr, u32 size);
-}
+#include "nitro/os/cache.h"
 
 namespace cstd {
 int sqrt(unsigned long long x);
@@ -178,14 +161,14 @@ dScMgLuigi_c::~dScMgLuigi_c() {}
 
 /* The base cleanup returns void; call it, don't return it. */
 void dScMgLuigi_c::AfterCleanupResources(u32 vfSuccess) {
-    if (vfSuccess == 2 && IRQ::GetIRQHandler(OS_IE_H_BLANK) == Luigi_PrepareScanlines) {
+    if (vfSuccess == 2 && OS_GetIrqFunction(OS_IE_H_BLANK) == Luigi_PrepareScanlines) {
         /* The ROM reads IME back until it comes back clear, so this is a
            loop, not the save/restore pair IrisStop uses. */
         while (OS_DisableIrq() != 0) {
         }
-        IRQ::DisableIRQs(OS_IE_H_BLANK);
-        func_02053c10(0); /* GX_HBlankIntr(FALSE) */
-        IRQ::SetIRQHandler(OS_IE_H_BLANK, 0);
+        OS_DisableIrqMask(OS_IE_H_BLANK);
+        GX_HBlankIntr(0);
+        OS_SetIrqFunction(OS_IE_H_BLANK, 0);
         OS_EnableIrq();
     }
     dScMgBase_c::AfterCleanupResources(vfSuccess);
@@ -206,7 +189,7 @@ extern "C" {
 void Luigi_PrepareScanlines(void) {
     extern int data_0209f608;
     extern int data_0209f648[][192];
-    extern void MultiCopy_Int(int *src, int *dst, int byteCount);
+    extern void MIi_CpuCopy32(int *src, int *dst, int byteCount);
     int nextLine;
     OS_SetIrqCheckFlag(OS_IE_H_BLANK);
     nextLine = REG_VCOUNT + 1;
@@ -214,7 +197,7 @@ void Luigi_PrepareScanlines(void) {
         Luigi_PushScanlineRecord();
     } else if (nextLine <= 0xc0) {
         if (REG_DISPSTAT & DISPSTAT_HBLANK) {
-            MultiCopy_Int(&data_0209f648[data_0209f608][nextLine], (int *)0x04000040, 4);
+            MIi_CpuCopy32(&data_0209f648[data_0209f608][nextLine], (int *)0x04000040, 4);
         }
     }
 }
@@ -227,9 +210,9 @@ void Luigi_PushScanlineRecord(void) {
     extern u32 data_0209f60c;
     extern volatile u32 data_0209f608;
     extern struct IrisScanlineTable data_0209f648[];
-    extern void MultiCopy_Int(int *src, int *dst, int byteCount);
+    extern void MIi_CpuCopy32(int *src, int *dst, int byteCount);
     data_0209f608 = data_0209f60c;
-    MultiCopy_Int((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
+    MIi_CpuCopy32((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
 }
 }
 
@@ -271,7 +254,7 @@ void dScMgLuigi_c::BuildIrisTable(int irisIndex) {
         data_0209f648[writeBuffer][mirrorLine + 0x60].right =
             data_0209f648[writeBuffer][sourceLine].right;
     }
-    CP15::FlushAndInvalidateDataCache((u32)data_0209f648, 0x600);
+    DC_FlushRange(data_0209f648, 0x600);
     data_0209f60c = writeBuffer;
 }
 
@@ -282,9 +265,9 @@ void dScMgLuigi_c::IrisStop(int idx) {
     int enabled;
     mIris[idx].active = 0;
     enabled = OS_DisableIrq();
-    IRQ::DisableIRQs(OS_IE_H_BLANK);
-    func_02053c10(0);
-    IRQ::SetIRQHandler(OS_IE_H_BLANK, 0);
+    OS_DisableIrqMask(OS_IE_H_BLANK);
+    GX_HBlankIntr(0);
+    OS_SetIrqFunction(OS_IE_H_BLANK, 0);
     if (enabled != 0)
         OS_EnableIrq();
     GX_SetVisibleWnd(GX_WNDMASK_NONE);
@@ -335,15 +318,15 @@ void dScMgLuigi_c::StartIris() {
 
     data_0209f608 = 0;
     enabled = OS_DisableIrq();
-    IRQ::SetIRQHandler(OS_IE_H_BLANK, Luigi_PrepareScanlines);
+    OS_SetIrqFunction(OS_IE_H_BLANK, Luigi_PrepareScanlines);
 
     GX_SetVisibleWnd(GX_WNDMASK_W0);
     data_0209d460 = 1;
     G2_SetWnd0InsidePlane(GX_WND_PLANEMASK_BG3 | GX_WND_PLANEMASK_OBJ, 1);
     G2_SetWndOutsidePlane(GX_WND_PLANEMASK_BG2 | GX_WND_PLANEMASK_OBJ, 0);
     G2_SetWnd0Position(0, 0, 0, 0xc0);
-    IRQ::EnableIRQs(OS_IE_H_BLANK);
-    func_02053c10(1);
+    OS_EnableIrqMask(OS_IE_H_BLANK);
+    GX_HBlankIntr(1);
     if (enabled != 0)
         OS_EnableIrq();
 }
@@ -1434,11 +1417,11 @@ void dScMgLuigi_c::ChooseTarget() {
     }
 
     for (tileRow = 0; tileRow < 8; tileRow++) {
-        dst = (u16 *)(G2::GetBG3ScrPtr() + 0x1d8) + tileRow * 0x20;
+        dst = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x1d8) + tileRow * 0x20;
         sourceTile = sLuigiWantedPosterTiles[mWanted] + tileRow * 0x20;
         for (tileColumn = 0; tileColumn < 8; tileColumn++) {
-            tile = ((u16 *)G2::GetBG3ScrPtr())[sourceTile];
-            MultiStore16(tile, (char *)dst, 2);
+            tile = ((u16 *)G2_GetBG3ScrPtr())[sourceTile];
+            MIi_CpuClear16(tile, (char *)dst, 2);
             sourceTile++;
             dst++;
         }
@@ -1519,7 +1502,6 @@ void dScMgLuigi_c::ResetBoard() {
     mFound = 0;
     mFilled = 0;
 }
-
 
 void dScMgLuigi_c::StateCatch() {
     extern LuigiSlotHandler sLuigiSlotHandlers[];
@@ -1619,11 +1601,10 @@ extern void *sLuigiBg1NcgPath;
 extern void *Ov004_LoadFileByPath(const char *path);
 extern void DecompressLZ16(void *src, void *dst);
 extern void *LoadFile(int handle);
-extern void MultiStore16(u16 val, char *dst, int nbytes);
+extern void MIi_CpuClear16(u16 val, char *dst, int nbytes);
 extern void Ov004_Deallocate(void *ptr);
-extern int func_02054d88(void);
-extern void func_02056314(void *, u32, u32);
-extern void func_02056374(const void *, u32, u32);
+extern void GX_LoadBG3Scr(void *, u32, u32);
+extern void GXS_LoadBG2Scr(const void *, u32, u32);
 extern void Deallocate(void *);
 extern void Mg_SetTopScreenYOffset(int);
 extern int sMgResultsBannerX;
@@ -1697,14 +1678,14 @@ s32 dScMgLuigi_c::InitResources() {
     REG_BG3CNT = (REG_BG3CNT & ~3) | 2;
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1218;
 
-    DecompressLZ16(arc, (void *)func_02054d88());
+    DecompressLZ16(arc, (void *)G2_GetBG3CharPtr());
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI1_NCL_BIN);
-    GX::LoadBGPltt(fileData, 0x60, 0x1a0);
+    GX_LoadBGPltt(fileData, 0x60, 0x1a0);
     Deallocate(fileData);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI1_NSC_BIN);
-    func_02056314(fileData, 0, 0x800);
+    GX_LoadBG3Scr(fileData, 0, 0x800);
     Deallocate(fileData);
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
@@ -1714,21 +1695,21 @@ s32 dScMgLuigi_c::InitResources() {
     REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1410;
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
-    DecompressLZ16(fileData, (void *)(G2::GetBG2CharPtr() + 0x4000));
+    DecompressLZ16(fileData, (void *)((char *)G2_GetBG2CharPtr() + 0x4000));
     Deallocate(fileData);
 
     fileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCL_BIN);
-    GX::LoadBGPltt(fileData, 0x40, 0x20);
+    GX_LoadBGPltt(fileData, 0x40, 0x20);
     Deallocate(fileData);
 
-    screenMap = G2::GetBG2ScrPtr();
+    screenMap = (char *)G2_GetBG2ScrPtr();
     fillMain = 0x23e1;
-    MultiStore16(fillMain, screenMap, 0x800);
+    MIi_CpuClear16(fillMain, screenMap, 0x800);
 
     objectTiles = LoadFile(ASSET_D_2D_MG_LUIGI_NCG_BIN);
     fileData = LoadFile(ASSET_D_2D_MG_LUIGI_NCL_BIN);
-    DecompressLZ16(objectTiles, (void *)0x6400000);
-    GX::LoadOBJPltt(fileData, 0, 0x100);
+    DecompressLZ16(objectTiles, G2_GetOBJCharPtr());
+    GX_LoadOBJPltt(fileData, 0, 0x100);
 
     REG_DB_BG2CNT &= ~3;
     REG_DB_BG2CNT &= ~BG_CONTROL_MOSAIC;
@@ -1738,15 +1719,15 @@ s32 dScMgLuigi_c::InitResources() {
     {
         void *subFileData;
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCG_BIN);
-        DecompressLZ16(subFileData, (void *)(G2S::GetBG2CharPtr() + 0x4000));
+        DecompressLZ16(subFileData, (void *)((u32)G2S_GetBG2CharPtr() + 0x4000));
         Deallocate(subFileData);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NCL_BIN);
-        GXS::LoadBGPltt(subFileData, 0x1e0, 0x20);
+        GXS_LoadBGPltt(subFileData, 0x1e0, 0x20);
         Deallocate(subFileData);
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_NSC_BIN);
-        func_02056374(subFileData, 0, 0x800);
+        GXS_LoadBG2Scr(subFileData, 0, 0x800);
         Deallocate(subFileData);
 
         gSubScreenLayers |= DISPLAY_LAYER_BG3;
@@ -1754,14 +1735,14 @@ s32 dScMgLuigi_c::InitResources() {
         REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x1410;
 
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_BLACK_NSC_BIN);
-        screenMap = G2S::GetBG3ScrPtr();
+        screenMap = (char *)G2S_GetBG3ScrPtr();
         fillSub = 0xf3e1;
-        MultiStore16(fillSub, screenMap, 0x800);
+        MIi_CpuClear16(fillSub, screenMap, 0x800);
         Deallocate(subFileData);
     }
 
-    DecompressLZ16(objectTiles, (void *)0x6600000);
-    GXS::LoadOBJPltt(fileData, 0, 0x100);
+    DecompressLZ16(objectTiles, G2S_GetOBJCharPtr());
+    GXS_LoadOBJPltt(fileData, 0, 0x100);
     Deallocate(objectTiles);
     Deallocate(fileData);
 

@@ -12,17 +12,11 @@
  * Member spellings below are descriptive; the ROM proves their offsets and
  * roles, while only the class and namespace spellings survive in RTTI.
  */
-namespace Memory {
-void operator_delete2(void *ptr);
-}
-
 namespace std {
 
 class type_info {
 public:
     virtual ~type_info();
-
-    void operator delete(void *ptr) { Memory::operator_delete2(ptr); }
 
 protected:
     const char *typeName;
@@ -35,15 +29,11 @@ namespace abi {
 class __class_type_info : public std::type_info {
 public:
     virtual ~__class_type_info();
-
-    void operator delete(void *ptr) { Memory::operator_delete2(ptr); }
 };
 
 class __si_class_type_info : public __class_type_info {
 public:
     virtual ~__si_class_type_info();
-
-    void operator delete(void *ptr) { Memory::operator_delete2(ptr); }
 
 private:
     const __class_type_info *baseType;
@@ -57,8 +47,6 @@ struct __base_class_type_info {
 class __vmi_class_type_info : public __class_type_info {
 public:
     virtual ~__vmi_class_type_info();
-
-    void operator delete(void *ptr) { Memory::operator_delete2(ptr); }
 
 private:
     unsigned long flags;

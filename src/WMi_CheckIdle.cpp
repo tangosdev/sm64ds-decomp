@@ -3,7 +3,7 @@
  * flag WM_Init sets once; data_020a89ac the ARM9 system work buffer,
  * whose second word points at the status block ARM7 shares (its first
  * halfword the WM state). */
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "private/wm_views.h"
 
 extern "C" {
@@ -23,7 +23,7 @@ int WMi_CheckIdle(void) {
     int result = WMi_CheckInitialized();
     if (result != 0)
         return result;
-    CP15::InvalidateDataCache((unsigned int)data_020a89ac->status, 2);
+    DC_InvalidateRange(data_020a89ac->status, 2);
     return data_020a89ac->status->state <= 1 ? 3 : 0;
 }
 }

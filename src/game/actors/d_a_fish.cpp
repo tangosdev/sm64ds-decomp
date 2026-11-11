@@ -98,7 +98,6 @@ extern daFishState data_ov100_02148468;
 extern daFishState data_ov100_02148458;
 extern daFishState data_ov100_02148470;
 extern daFishState data_ov100_02148478;
-extern SaveBlock data_0209caa0;
 extern int data_0209f32c;
 
 /* local extern: arm9 C helpers with no shared header yet. */

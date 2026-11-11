@@ -2012,14 +2012,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@365",
+      "from": "@343",
       "to": "@955",
-      "evidence": "Current pinned compiler emits model destructor-registration node @380; canonical configured identity is @955. Earlier promotion used @366/@367, which conflicted with ov036; those old temporary ordinals are historical, not current output. Complete native initializer relocation sites preserve the mapping."
+      "evidence": "Current pinned compiler emits model destructor-registration node @380; canonical configured identity is @955. Earlier promotion used @366/@367, which conflicted with ov036; those old temporary ordinals are historical, not current output. Complete native initializer relocation sites preserve the mapping. Re-keyed from @365 to @343 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@366",
+      "from": "@344",
       "to": "@957",
-      "evidence": "Current pinned compiler emits collision destructor-registration node @381; canonical configured identity is @957. Earlier promotion used @366/@367, which conflicted with ov036; those old temporary ordinals are historical, not current output. Complete native initializer relocation sites preserve the mapping."
+      "evidence": "Current pinned compiler emits collision destructor-registration node @381; canonical configured identity is @957. Earlier promotion used @366/@367, which conflicted with ov036; those old temporary ordinals are historical, not current output. Complete native initializer relocation sites preserve the mapping. Re-keyed from @366 to @344 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

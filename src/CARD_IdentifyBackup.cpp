@@ -5,7 +5,7 @@
  * spec for the type (func_02060364), clear the callback, then run the
  * identify task func_020607e8 on this thread. */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/card/card_common.h"
 
 extern "C" {
@@ -17,11 +17,11 @@ void CARD_IdentifyBackup(int type) {
     CARDiCommon *const p = &cardi_common;
 
     {
-        u32 mask = IRQ::Disable();
+        OSIntrMode mask = OS_DisableInterrupts();
         while (p->flag & CARD_STAT_BUSY)
             OS_SleepThread(&p->busy_q);
         p->flag |= CARD_STAT_BUSY;
-        IRQ::Restore(mask);
+        OS_RestoreInterrupts(mask);
     }
 
     func_02060364(type);

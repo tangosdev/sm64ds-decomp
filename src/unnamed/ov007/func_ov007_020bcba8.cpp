@@ -2,19 +2,17 @@
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
 #include "Ov007Display.h"
-#include "G2.h"
-#include "GX.h"
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 extern "C" {
 
 extern void *func_ov007_020b3f20(int n);
-extern void *func_02054ea8(void);
-extern int func_02054d88(void);
 extern void MenuText_Init(void *unused, void *sheet, int baseTile, void *plane0, void *plane1,
                           int plane2, void *bank);
 extern void func_ov007_020c32e8(Ov007Palette *pal, int target, unsigned int row, int skip);
 extern void func_ov007_020b3edc(int r0);
-extern void func_02056014(const void *src, unsigned int offset, unsigned int count);
+extern void GX_LoadBG3Char(const void *src, unsigned int offset, unsigned int count);
 extern void func_ov007_020bcdb8(int idx);
 extern void func_ov007_020c33d0(Ov007CharRecord *rec, int target, unsigned int offset);
 extern void MenuText_LoadFontPalette(void);
@@ -33,23 +31,23 @@ void func_ov007_020bcba8(int idx) {
         return;
     case 1: {
         void *sheet = func_ov007_020b3f20(0x25);
-        void *mainBg1 = func_02054ea8();
-        void *subBg1 = G2S::GetBG1CharPtr();
+        void *mainBg1 = G2_GetBG1CharPtr();
+        void *subBg1 = G2S_GetBG1CharPtr();
         void *messages = g->settings->bootArgs->messages;
         int langFile;
         MenuText_Init(0, sheet, 0, mainBg1, subBg1, 0, messages);
 
-        GX::LoadOBJ(s->characters[1]->tiles, 0, 0x2000);
+        GX_LoadOBJ(s->characters[1]->tiles, 0, 0x2000);
         func_ov007_020c32e8(s->palettes[1], 0, 0, 0);
-        GX::LoadOBJ(func_ov007_020b3f20(0x2c), 0x2000, 0x2000);
+        GX_LoadOBJ(func_ov007_020b3f20(0x2c), 0x2000, 0x2000);
         /* file 0x2d is 16-colour rows; its row 6 becomes OBJ palette 15 */
-        GX::LoadOBJPltt(((const u16(*)[16])func_ov007_020b3f20(0x2d))[6], 0x1e0, 0x20);
+        GX_LoadOBJPltt(((const u16(*)[16])func_ov007_020b3f20(0x2d))[6], 0x1e0, 0x20);
         func_ov007_020b3edc(0x2c);
         func_ov007_020b3edc(0x2d);
 
         langFile = WORK->settings->language + 0x25;
-        func_02056014(func_ov007_020b3f20(langFile), 0, 0x4000);
-        GX::LoadBGPltt(func_ov007_020b3f20(0x2b), 0, 0x200);
+        GX_LoadBG3Char(func_ov007_020b3f20(langFile), 0, 0x4000);
+        GX_LoadBGPltt(func_ov007_020b3f20(0x2b), 0, 0x200);
         func_ov007_020b3edc(langFile);
         func_ov007_020b3edc(0x2b);
 
@@ -60,9 +58,9 @@ void func_ov007_020bcba8(int idx) {
     } break;
     case 3: {
         void *sheet = func_ov007_020b3f20(0x25);
-        void *mainBg1 = func_02054ea8();
-        void *subBg1 = G2S::GetBG1CharPtr();
-        int mainBg3 = func_02054d88();
+        void *mainBg1 = G2_GetBG1CharPtr();
+        void *subBg1 = G2S_GetBG1CharPtr();
+        int mainBg3 = (int)G2_GetBG3CharPtr();
         void *messages = g->settings->bootArgs->messages;
         MenuText_Init(0, sheet, 0, mainBg1, subBg1, mainBg3, messages);
 

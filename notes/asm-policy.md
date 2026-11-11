@@ -78,7 +78,7 @@ were excluded:
 | `func_0207199c` | `swi` |
 
 These are indistinguishable in kind from `ARMSaveContext` (`mrs`/`msr`), `Div` (`swi`), and
-`CP15::FlushDataCache` (`mcr`), which were never in question. They were restored to matched
+`CP15::FlushDataCache` (`mcr`; now the SDK's `DC_StoreAll`), which were never in question. They were restored to matched
 status — not as a change of policy, but as a correction of how it was applied. Each was
 restored to its exact pre-reclassify content and re-verified: nine `VERIFIED`, one
 (`OSi_DisplayExContext`) `BLIND-3`, meaning three relocation slots reference symbols not yet in
