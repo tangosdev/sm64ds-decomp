@@ -48,6 +48,7 @@
 #include "Ov007Pad.h"
 #include "Ov007Touch.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -762,13 +763,7 @@ void func_ov007_020b2cf0(void) {
         y = dy + (q->screenY >> 12);
     }
     if (ticks <= 4) {
-        if (ticks <= 0) {
-            factor = 0;
-        } else if (ticks >= 4) {
-            factor = 0x1000;
-        } else {
-            factor = FX_DivS32(ticks << 12, 4);
-        }
+        factor = ProgressRatio(ticks, 4);
         factor = 0x1000 - factor;
         easeX = -data_ov007_02103360->nudgeX * factor * 6;
         easeY = -data_ov007_02103360->nudgeY * factor * 6;

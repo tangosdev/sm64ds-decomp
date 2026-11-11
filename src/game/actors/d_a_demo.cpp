@@ -336,8 +336,7 @@ extern void Vec3_RotateYAndTranslate(void *out, void *in, short angle, void *src
 extern int data_ov002_0210b964[3];
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern Fix12i Vec3_HorzLen(const Vector3 *v);
-/* local extern: the Vector3 spelling math/CalcLib.h declares. The locals
-   are the POD VecFx32, so the call casts. */
+/* local extern: the Vector3 spelling math/CalcLib.h declares. */
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);
@@ -2892,7 +2891,7 @@ int daDemo_c::func_ov002_020f6c60(void *arg1, int arg2, int arg3)
           int m = FX_MUL(r, 0xa000);
           this->mMagnitude = m + 0x19000;
       }
-      VEC_Add((Vector3 *)&this->mPosX, &((dCamera_c *)gCamera)->pos, (Vector3 *)&this->mPosX);
+      VEC_Add(&this->mPos, &((dCamera_c *)gCamera)->pos, &this->mPos);
       if (arg2 > 0x2bc) {
           this->mPosY -= 0x96000;
       }
@@ -3498,7 +3497,7 @@ int daDemo_c::Render() {
 int daDemo_c::Behavior()
 {
     Vector3 v;
-    VecFx32 asr;
+    Vector3 asr;
     int new_var2;
     s32 t;
     t = this->param1;
@@ -3536,7 +3535,7 @@ int daDemo_c::Behavior()
             }
         }
     }
-    Vec3_Asr((Vector3 *)&asr, (Vector3 *)&this->mPosX, 3);
+    Vec3_Asr(&asr, &this->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
     t = this->param1;
     if ((((u32)t) >= 0x1a) && (((u32)t) <= 0x2d)) {

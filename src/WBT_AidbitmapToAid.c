@@ -1,7 +1,9 @@
-int WBT_AidbitmapToAid(int x) {
+#include "private/arm9_wbt.h"
+
+int WBT_AidbitmapToAid(int aid_bmp) {
     int i;
     for (i = 0; i < 16; i++)
-        if ((x >> i) & 1)
+        if ((aid_bmp >> i) & 1)
             return i;
     return -1;
 }

@@ -8,6 +8,7 @@
 #include "Ov007Model.h"
 #include "Ov007Light.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -70,12 +71,7 @@ void func_ov007_020b1718(void) {
         r7val = (int)F18->frame - ((int)F18->frameCount - 0x12);
 
         if (v < 0xc) {
-            if (v <= 0)
-                q = 0;
-            else if (v >= 0xc)
-                q = 0x1000;
-            else
-                q = FX_DivS32(v << 0xc, 0xc);
+            q = ProgressRatio(v, 0xc);
             r3 = q << 2;
 
             if (r3 <= 0x1000)
@@ -118,13 +114,7 @@ void func_ov007_020b1718(void) {
             func_ov007_020b2454(&m->targetTween->to, &m->distanceTween->to);
         }
 
-        if (v <= 0)
-            q = 0;
-        else if (v >= 0x1e)
-            q = 0x1000;
-        else
-            q = FX_DivS32(v << 0xc, 0x1e);
-
+        q = ProgressRatio(v, 0x1e);
         t = (int)(((s64)q * (0x2000 - q)) >> 12);
         u = (int)(((s64)t * (0x2000 - t)) >> 12);
         w = (int)(((s64)u * u) >> 12);
@@ -166,23 +156,13 @@ void func_ov007_020b1718(void) {
         int qq;
         func_ov007_020bce70(2, 0xf);
         w = WORK->paletteState->stateTicks;
-        if (w <= 0)
-            qq = 0;
-        else if (w >= 0xf)
-            qq = 0x1000;
-        else
-            qq = FX_DivS32(w << 0xc, 0xf);
+        qq = ProgressRatio(w, 0xf);
         WORK->lights[1]->color = func_ov007_020c3be0(qq, WORK->lights[1]->color, 0);
     }
 
     {
         int qq2;
-        if (v <= 0)
-            qq2 = 0;
-        else if (v >= divisor)
-            qq2 = 0x1000;
-        else
-            qq2 = FX_DivS32(v << 0xc, divisor);
+        qq2 = ProgressRatio(v, divisor);
         FigureScene_SetScreenBlend(0x1000 - qq2);
     }
 }

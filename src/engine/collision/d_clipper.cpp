@@ -28,6 +28,7 @@
 #include "math/Matrix.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* local extern: no non-generated header declares these vector helpers or the
    sine/cosine pair table. */
@@ -36,7 +37,6 @@ void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *result);
 void VEC_Normalize(const Vector3 *src, Vector3 *dst);
 }
-extern short FX_SinCosTable_[];
 
 /* Signed distance of (x, y, z) from a frustum side plane, each product rounded to Fix12. */
 static inline int PlaneDistance(const ClipperPlane &n, long long x, long long y, long long z) {
@@ -134,8 +134,7 @@ int dClipper::TransformAndClip(Matrix4x3 &worldToView, Vector3 &worldPos, Fix12i
  * normal.
  */
 void dClipper::UpdateFrustumPlanes() {
-    int angleIndex = (int)mFovAngle >> 4;
-    int tanHalfFov = FX_Div(FX_SinCosTable_[2 * angleIndex], FX_SinCosTable_[2 * angleIndex + 1]);
+    int tanHalfFov = FX_Div(FX_SinIdx(mFovAngle >> 4), FX_CosIdx(mFovAngle >> 4));
     Fix12i halfHeight = FX_MUL(mNearZ, tanHalfFov);
     Fix12i halfWidth = FX_MUL(mAspectRatio, halfHeight);
     Vector3 corner0, corner1, corner2, corner3;

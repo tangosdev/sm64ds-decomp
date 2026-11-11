@@ -87,6 +87,7 @@ enum dScMgAmida_c_AssetId {
 #include "nitro/gx/gx_bgcnt.h"
 #include "decl_common.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 #include "dScMgAmida_c.h"
 #include "Vector2Math.h"
 #include "SpawnInfo.h"
@@ -103,7 +104,6 @@ extern void Mg_RenderSpriteBoth(void *a0, int a1, int a2, int a3, int a4);
 extern void Mg_DrawScoreTally(void *a0, int a1, int a2, int a3);
 extern void MIi_CpuCopy16(void *dst, void *src, int nbytes);
 extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
-extern int RandomIntInternal(int *seed);
 extern void FreeGfxSlotsById(int a);
 extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern void *LoadFile(int handle);
@@ -1295,6 +1295,8 @@ extern "C" void Amida_SaveBgChars(void *) {
     MIi_CpuCopy16(G2S_GetBG0CharPtr(), subChars, 0x6000);
 }
 
+/* Both four-lane shuffles keep the generator's value in `rand` and mask it
+ * at the multiply: through MG_RAND the function grows by a word. */
 void dScMgAmida_c::InitWalkers() {
     int i;
     int j;
@@ -1363,13 +1365,12 @@ void dScMgAmida_c::InitWalkers() {
         } while (again == 1);
     } else if (this->mWalkerCount == 1) {
         if (this->mRoundCount == 0) {
-            pick = ((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 4) >> 15;
+            pick = MG_RAND(4);
             tmp = this->mLanePerm[0];
             this->mLanePerm[0] = this->mLanePerm[pick];
             this->mLanePerm[pick] = tmp;
         } else {
-            pick =
-                (((((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >> 15) + 1;
+            pick = MG_RAND(3) + 1;
             tmp = this->mLanePerm[0];
             this->mLanePerm[0] = this->mLanePerm[pick];
             this->mLanePerm[pick] = tmp;
@@ -1456,8 +1457,7 @@ void dScMgAmida_c::SetupRound() {
         }
     } else if (level >= 0xa) {
         shuffle = 1;
-        level =
-            (((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5) >> 15) + 4;
+        level = MG_RAND(5) + 4;
         if (level == mPatternIndex) {
             level = 9;
         }
@@ -1566,9 +1566,7 @@ void dScMgAmida_c::SetupRound() {
         if (IsVariant2() != 0) {
             int remaining = 3;
             do {
-                int idx =
-                    ((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 0xb) >>
-                    15;
+                int idx = MG_RAND(0xb);
                 if (skip[idx] == 0) {
                     remaining--;
                     skip[idx] = 1;
@@ -1580,20 +1578,14 @@ void dScMgAmida_c::SetupRound() {
             case 0:
                 break;
             case 1:
-                skip[((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 5) >>
-                     15] = 1;
+                skip[MG_RAND(5)] = 1;
                 break;
             case 2: {
-                int count =
-                    (((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >>
-                     15) +
-                    1;
+                int count = MG_RAND(3) + 1;
                 int j = 0;
                 if (count > 0) {
                     do {
-                        skip[((u32)(((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) *
-                              0xb) >>
-                             15] = 1;
+                        skip[MG_RAND(0xb)] = 1;
                         j++;
                     } while (j < count);
                 }

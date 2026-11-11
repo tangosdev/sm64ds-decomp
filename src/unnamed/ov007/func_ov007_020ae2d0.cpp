@@ -5,6 +5,7 @@
 #include "Ov007Item.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -47,12 +48,7 @@ void func_ov007_020ae2d0(Ov007ItemNode *self) {
         int m;
         short sine, base;
         Ov007Item *q;
-        if (n <= 0)
-            n = 0;
-        else if (n >= 0x32)
-            n = 0x1000;
-        else
-            n = FX_DivS32(n << 0xc, 0x32);
+        n = ProgressRatio(n, 0x32);
         m = (-n) * 0xffff;
         m = (int)(((unsigned)(m << 4)) >> 0x10);
         sine = FX_SinIdx(m >> 4);

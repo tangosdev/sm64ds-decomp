@@ -60,7 +60,7 @@
       "ordinal": 2
     },
     {
-      "symbol": "func_ov062_02116010",
+      "symbol": "_ZN10daHolhei_c17HandleCylinderHitEv",
       "address": "0x02116010",
       "size": "0x00000198",
       "legacy_source": "src/func_ov062_02116010.c",
@@ -214,14 +214,14 @@
       "ordinal": 24
     },
     {
-      "symbol": "_ZN10daHolhei_c19func_ov062_02116d28Ev",
+      "symbol": "_ZN10daHolhei_c16UpdateHeldShadowEv",
       "address": "0x02116d28",
       "size": "0x00000094",
       "legacy_source": "src/func_ov062_02116d28.cpp",
       "ordinal": 25
     },
     {
-      "symbol": "func_ov062_02116dbc",
+      "symbol": "_ZN10daHolhei_c12UpdateShadowEv",
       "address": "0x02116dbc",
       "size": "0x000000c4",
       "legacy_source": "src/func_ov062_02116dbc.cpp",
@@ -1159,144 +1159,144 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@489",
+      "from": "@487",
       "to": "data_ov062_0211de10",
-      "evidence": "compiler temp mapped to 0x0211de10 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @543 to @489 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x0211de10 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @543 to @489 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
+    },
+    {
+      "from": "@488",
+      "to": "data_ov062_0211de1c",
+      "evidence": "compiler temp mapped to 0x0211de1c by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @544 to @490 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
+    },
+    {
+      "from": "@489",
+      "to": "data_ov062_0211de28",
+      "evidence": "compiler temp mapped to 0x0211de28 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @545 to @491 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@490",
-      "to": "data_ov062_0211de1c",
-      "evidence": "compiler temp mapped to 0x0211de1c by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @544 to @490 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211de34",
+      "evidence": "compiler temp mapped to 0x0211de34 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @546 to @492 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@491",
-      "to": "data_ov062_0211de28",
-      "evidence": "compiler temp mapped to 0x0211de28 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @545 to @491 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211de40",
+      "evidence": "compiler temp mapped to 0x0211de40 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @547 to @493 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@492",
-      "to": "data_ov062_0211de34",
-      "evidence": "compiler temp mapped to 0x0211de34 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @546 to @492 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@493",
-      "to": "data_ov062_0211de40",
-      "evidence": "compiler temp mapped to 0x0211de40 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @547 to @493 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211de4c",
+      "evidence": "compiler temp mapped to 0x0211de4c by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @548 to @494 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@494",
-      "to": "data_ov062_0211de4c",
-      "evidence": "compiler temp mapped to 0x0211de4c by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @548 to @494 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211de58",
+      "evidence": "compiler temp mapped to 0x0211de58 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @550 to @496 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
-      "from": "@496",
-      "to": "data_ov062_0211de58",
-      "evidence": "compiler temp mapped to 0x0211de58 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @550 to @496 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "from": "@497",
+      "to": "data_ov062_0211de64",
+      "evidence": "compiler temp mapped to 0x0211de64 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @553 to @499 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@499",
-      "to": "data_ov062_0211de64",
-      "evidence": "compiler temp mapped to 0x0211de64 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @553 to @499 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d940",
+      "evidence": "compiler temp mapped to 0x0211d940 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @555 to @501 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@501",
-      "to": "data_ov062_0211d940",
-      "evidence": "compiler temp mapped to 0x0211d940 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @555 to @501 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d938",
+      "evidence": "compiler temp mapped to 0x0211d938 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @557 to @503 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@503",
-      "to": "data_ov062_0211d938",
-      "evidence": "compiler temp mapped to 0x0211d938 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @557 to @503 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d998",
+      "evidence": "compiler temp mapped to 0x0211d998 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @559 to @505 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@505",
-      "to": "data_ov062_0211d998",
-      "evidence": "compiler temp mapped to 0x0211d998 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @559 to @505 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d950",
+      "evidence": "compiler temp mapped to 0x0211d950 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @561 to @507 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@507",
-      "to": "data_ov062_0211d950",
-      "evidence": "compiler temp mapped to 0x0211d950 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @561 to @507 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d958",
+      "evidence": "compiler temp mapped to 0x0211d958 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @563 to @509 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@509",
-      "to": "data_ov062_0211d958",
-      "evidence": "compiler temp mapped to 0x0211d958 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @563 to @509 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d960",
+      "evidence": "compiler temp mapped to 0x0211d960 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @565 to @511 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@511",
-      "to": "data_ov062_0211d960",
-      "evidence": "compiler temp mapped to 0x0211d960 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @565 to @511 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d920",
+      "evidence": "compiler temp mapped to 0x0211d920 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @567 to @513 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@513",
-      "to": "data_ov062_0211d920",
-      "evidence": "compiler temp mapped to 0x0211d920 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @567 to @513 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d908",
+      "evidence": "compiler temp mapped to 0x0211d908 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @569 to @515 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@515",
-      "to": "data_ov062_0211d908",
-      "evidence": "compiler temp mapped to 0x0211d908 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @569 to @515 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d900",
+      "evidence": "compiler temp mapped to 0x0211d900 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @571 to @517 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@517",
-      "to": "data_ov062_0211d900",
-      "evidence": "compiler temp mapped to 0x0211d900 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @571 to @517 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d918",
+      "evidence": "compiler temp mapped to 0x0211d918 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @573 to @519 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@519",
-      "to": "data_ov062_0211d918",
-      "evidence": "compiler temp mapped to 0x0211d918 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @573 to @519 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d980",
+      "evidence": "compiler temp mapped to 0x0211d980 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @575 to @521 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@521",
-      "to": "data_ov062_0211d980",
-      "evidence": "compiler temp mapped to 0x0211d980 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @575 to @521 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d990",
+      "evidence": "compiler temp mapped to 0x0211d990 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @577 to @523 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@523",
-      "to": "data_ov062_0211d990",
-      "evidence": "compiler temp mapped to 0x0211d990 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @577 to @523 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d988",
+      "evidence": "compiler temp mapped to 0x0211d988 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @579 to @525 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@525",
-      "to": "data_ov062_0211d988",
-      "evidence": "compiler temp mapped to 0x0211d988 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @579 to @525 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d930",
+      "evidence": "compiler temp mapped to 0x0211d930 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @581 to @527 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@527",
-      "to": "data_ov062_0211d930",
-      "evidence": "compiler temp mapped to 0x0211d930 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @581 to @527 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d978",
+      "evidence": "compiler temp mapped to 0x0211d978 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @583 to @529 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@529",
-      "to": "data_ov062_0211d978",
-      "evidence": "compiler temp mapped to 0x0211d978 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @583 to @529 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d910",
+      "evidence": "compiler temp mapped to 0x0211d910 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @585 to @531 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@531",
-      "to": "data_ov062_0211d910",
-      "evidence": "compiler temp mapped to 0x0211d910 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @585 to @531 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d968",
+      "evidence": "compiler temp mapped to 0x0211d968 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @587 to @533 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@533",
-      "to": "data_ov062_0211d968",
-      "evidence": "compiler temp mapped to 0x0211d968 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @587 to @533 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d928",
+      "evidence": "compiler temp mapped to 0x0211d928 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @589 to @535 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@535",
-      "to": "data_ov062_0211d928",
-      "evidence": "compiler temp mapped to 0x0211d928 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @589 to @535 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "data_ov062_0211d948",
+      "evidence": "compiler temp mapped to 0x0211d948 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @591 to @537 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     },
     {
       "from": "@537",
-      "to": "data_ov062_0211d948",
-      "evidence": "compiler temp mapped to 0x0211d948 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @591 to @537 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@539",
       "to": "data_ov062_0211d970",
-      "evidence": "compiler temp mapped to 0x0211d970 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @593 to @539 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x0211d970 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @593 to @539 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed down by 2 when func_ov062_02116010 / 02116dbc became daHolhei_c::HandleCylinderHit / UpdateShadow and their two named-parameter local externs left the TU (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

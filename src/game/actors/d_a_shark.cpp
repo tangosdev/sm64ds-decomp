@@ -179,10 +179,10 @@ int daShark_c::SetState(StateFn *state) {
 /* Model matrix: position (>> 3, Vec3_Asr) and the X/Y/Z angles, built in
  * the scratch matrix and copied out. */
 void daShark_c::UpdateModelMatrix() {
-    int pos[3];
+    Vector3 pos;
 
-    Vec3_Asr((Vector3 *)pos, (Vector3 *)&mPosX, 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, pos[0], pos[1], pos[2]);
+    Vec3_Asr(&pos, &mPos, 3);
+    Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     mAnmModel.mat4x3 = data_020a0e68;
 }

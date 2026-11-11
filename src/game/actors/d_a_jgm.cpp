@@ -75,6 +75,7 @@ enum d_a_jgm_AssetId {
 #include "math/Approach.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Vector stack values are NitroSDK VecFx32. Vector3 has a genuine non-trivial
  * destructor and must not instantiate its otherwise unrelated vague-linkage D1
@@ -142,7 +143,6 @@ extern DaJgmStateHandler data_ov077_021277f0;
 extern DaJgmStateHandler data_ov077_02127808;
 extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
-extern s16 FX_SinCosTable_[];
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
@@ -402,40 +402,14 @@ s32 daJgm_c::UpdateYoshiMouthState()
 
 s32 daJgm_c::EnterSpitState()
 {
-    dActor_c *carrier;
-    int *pPosX;
-    int *pPosY;
-    int *pPosZ;
-    int *src;
-    int idx;
-    s16 sinv;
-    s16 cosv;
-
     mFlags &= ~0x80000;
 
-    carrier = mCarryActor;
-    pPosX = &mPosX;
-    mHorzSpeed = carrier->mHorzSpeed + 0xa000;
-
-    carrier = mCarryActor;
-    pPosY = &mPosY;
-    pPosZ = &mPosZ;
-    mPrevAngleY = carrier->mAngleY;
-
-    carrier = mCarryActor;
-
-    src = &carrier->mPosX;
-    mPosX = src[0];
-    mPosY = src[1];
-    mPosZ = src[2];
-
-    idx = ((int)(u16)mPrevAngleY) >> 4;
-    sinv = FX_SinCosTable_[idx * 2];
-    *pPosX = *pPosX + FX_MUL(sinv, 0x50000);
-    *pPosY = *pPosY + 0x50000;
-    idx = ((int)(u16)mPrevAngleY) >> 4;
-    cosv = FX_SinCosTable_[idx * 2 + 1];
-    *pPosZ = *pPosZ + FX_MUL(cosv, 0x50000);
+    mHorzSpeed = mCarryActor->mHorzSpeed + 0xa000;
+    mPrevAngleY = mCarryActor->mAngleY;
+    mPos = mCarryActor->mPos;
+    mPosX += FX_MUL(FX_SinIdx((u16)mPrevAngleY >> 4), 0x50000);
+    mPosY += 0x50000;
+    mPosZ += FX_MUL(FX_CosIdx((u16)mPrevAngleY >> 4), 0x50000);
 
     mAngVelY = 0x7000;
     mTimer = 0x1e;
@@ -713,7 +687,7 @@ int daJgm_c::CountSpinies()
 void daJgm_c::UpdateHoverBob()
 {
     unsigned short v = (unsigned short)mBobAngle;
-    short s = FX_SinCosTable_[(v >> 4) * 2];
+    short s = FX_SinIdx(v >> 4);
     long long prod = (long long)s * 0x27000;
     mBobOffsetY = (int)((prod + 0x800) >> 12);
     mBobAngle = (short)(mBobAngle + 0x700);

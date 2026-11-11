@@ -64,7 +64,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "_ZN13daObjSeesaw_c11SpringAngleEPsS0_isis",
+      "symbol": "_ZN13daObjSeesaw_c11SpringAngleEPsS0_isss",
       "address": "0x021358cc",
       "size": "0x000000b0",
       "legacy_source": "src/func_ov095_021358cc.c",
@@ -942,74 +942,74 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@830",
-      "to": "@982",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @905 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @897 to @891 when the opt pragma was removed (#821). Re-keyed from @887 to @899 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @899 to @830 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@831",
-      "to": "@898",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @906 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @898 to @892 when the opt pragma was removed (#821). Re-keyed from @888 to @900 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @900 to @831 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@832",
-      "to": "@893",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @907 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @899 to @893 when the opt pragma was removed (#821). Re-keyed from @889 to @901 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @901 to @832 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@833",
-      "to": "@889",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @908 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @900 to @894 when the opt pragma was removed (#821). Re-keyed from @890 to @902 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @902 to @833 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@834",
-      "to": "@884",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @909 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @901 to @895 when the opt pragma was removed (#821). Re-keyed from @891 to @903 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @903 to @834 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@835",
-      "to": "@880",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @910 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @902 to @896 when the opt pragma was removed (#821). Re-keyed from @892 to @904 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @904 to @835 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
-      "from": "@836",
-      "to": "@876",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @911 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @903 to @897 when the opt pragma was removed (#821). Re-keyed from @893 to @905 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @905 to @836 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
       "from": "@837",
-      "to": "@865",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @912 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @904 to @898 when the opt pragma was removed (#821). Re-keyed from @894 to @906 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @906 to @837 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@982",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @905 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @897 to @891 when the opt pragma was removed (#821). Re-keyed from @887 to @899 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @899 to @830 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @830 to @837 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
     },
     {
       "from": "@838",
-      "to": "@861",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @913 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @905 to @899 when the opt pragma was removed (#821). Re-keyed from @895 to @907 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @907 to @838 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@898",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @906 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @898 to @892 when the opt pragma was removed (#821). Re-keyed from @888 to @900 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @900 to @831 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @831 to @838 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
     },
     {
       "from": "@839",
-      "to": "@814",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @914 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @906 to @900 when the opt pragma was removed (#821). Re-keyed from @896 to @908 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @908 to @839 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@893",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @907 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @899 to @893 when the opt pragma was removed (#821). Re-keyed from @889 to @901 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @901 to @832 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @832 to @839 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
     },
     {
       "from": "@840",
-      "to": "@788",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @915 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @907 to @901 when the opt pragma was removed (#821). Re-keyed from @897 to @909 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @909 to @840 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@889",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @908 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @900 to @894 when the opt pragma was removed (#821). Re-keyed from @890 to @902 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @902 to @833 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @833 to @840 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
     },
     {
       "from": "@841",
-      "to": "@782",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @916 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @908 to @902 when the opt pragma was removed (#821). Re-keyed from @898 to @910 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @910 to @841 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@884",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @909 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @901 to @895 when the opt pragma was removed (#821). Re-keyed from @891 to @903 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @903 to @834 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @834 to @841 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
     },
     {
       "from": "@842",
-      "to": "@780",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @917 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @909 to @903 when the opt pragma was removed (#821). Re-keyed from @899 to @911 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @911 to @842 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@880",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @910 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @902 to @896 when the opt pragma was removed (#821). Re-keyed from @892 to @904 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @904 to @835 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @835 to @842 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
     },
     {
       "from": "@843",
+      "to": "@876",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @911 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @903 to @897 when the opt pragma was removed (#821). Re-keyed from @893 to @905 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @905 to @836 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @836 to @843 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
+    },
+    {
+      "from": "@844",
+      "to": "@865",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @912 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @904 to @898 when the opt pragma was removed (#821). Re-keyed from @894 to @906 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @906 to @837 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @837 to @844 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
+    },
+    {
+      "from": "@845",
+      "to": "@861",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @913 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @905 to @899 when the opt pragma was removed (#821). Re-keyed from @895 to @907 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @907 to @838 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @838 to @845 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
+    },
+    {
+      "from": "@846",
+      "to": "@814",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @914 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @906 to @900 when the opt pragma was removed (#821). Re-keyed from @896 to @908 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @908 to @839 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @839 to @846 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
+    },
+    {
+      "from": "@847",
+      "to": "@788",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @915 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @907 to @901 when the opt pragma was removed (#821). Re-keyed from @897 to @909 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @909 to @840 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @840 to @847 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
+    },
+    {
+      "from": "@848",
+      "to": "@782",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @916 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @908 to @902 when the opt pragma was removed (#821). Re-keyed from @898 to @910 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @910 to @841 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @841 to @848 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
+    },
+    {
+      "from": "@849",
+      "to": "@780",
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @917 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @909 to @903 when the opt pragma was removed (#821). Re-keyed from @899 to @911 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @911 to @842 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @842 to @849 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
+    },
+    {
+      "from": "@850",
       "to": "@650",
-      "evidence": "compiler-local destructor-registration node; mwcc numbers it @918 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @910 to @904 when the opt pragma was removed (#821). Re-keyed from @900 to @912 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @912 to @843 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler-local destructor-registration node; mwcc numbers it @918 per TU and that name collides with global @NNN rows owned by other TUs on main. Re-keyed from @910 to @904 when the opt pragma was removed (#821). Re-keyed from @900 to @912 when the two cosine-table reads became FX_CosIdx from nitro/fx/fx_trig.h (the header's inlines raise the per-TU uniquifier; measured from the compiled object). Re-keyed from @912 to @843 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @843 to @850 when daObjSeesaw_c::SpringAngle lost its opt_common_subs bracket and took accel as a short (measured from the compiled object)."
     }
   ],
   "relocations": [

@@ -706,8 +706,8 @@ void dScStage_c::VE_Init() {
 
     a = gMainScreenLayers ^ DISPLAY_LAYER_OBJ;
     b = gSubScreenLayers ^ DISPLAY_LAYER_OBJ;
-    *(volatile unsigned short *)0x400100a = (*(volatile unsigned short *)0x400100a & 0x43) | 0x1100;
-    *(volatile unsigned short *)0x400000c = (*(volatile unsigned short *)0x400000c & 0x43) | 0x1010;
+    REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 0x1100;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1010;
     Message::DisplayVsExitText(0x1f);
     sMenuButtonTileOffsets[0] = 0xe0;
     sMenuButtonTileOffsets[1] = 0x1a0;
@@ -2886,7 +2886,7 @@ extern "C" void FUN_02029934(void) {
     dFdBrightness_c *o = gSceneFader;
     if (o->IsBetweenStartAndEnd() == 0) {
         data_0209d4b0 = 0;
-        *(volatile unsigned short *)0x4000050 = 0;
+        REG_BLDCNT = 0;
     }
 }
 
@@ -2926,7 +2926,7 @@ extern "C" void FUN_020299f4(void) {
 extern "C" void FUN_02029a68(void) {
     if (data_0209d4b0 == (int)((dFdWipe_c *)data_0209f324 + 6)) {
         data_0209d4b0 = 0;
-        *(volatile unsigned short *)0x4000050 = 0;
+        REG_BLDCNT = 0;
     }
     data_0209f274 = 0;
 }

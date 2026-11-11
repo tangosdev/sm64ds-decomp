@@ -46,6 +46,7 @@
 #include "Sound.h"
 #include "nitro/fx/fx.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daObjCvNewsLift_c_AssetId {
@@ -104,7 +105,6 @@ u8 DecIfAbove0_Byte(u8 *p);
 /* The identity quaternion. Its other readers still declare it int[4], so this
    TU copies it through a Quaternion view. */
 extern s32 data_02092768[];
-extern s16 FX_SinCosTable_[];
 /* Yaw for the +Z, -Z, +X and -X platforms, in the transform loops' order. */
 extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 
@@ -259,7 +259,7 @@ s32 daObjCvNewsLift_c::Behavior() {
         if (DecIfAbove0_Short(&mWobbleTimer)) {
             mWobblePhase += 0x1f00;
             {
-                s16 sine = FX_SinCosTable_[((u16)(s16)mWobblePhase >> 4) * 2];
+                s16 sine = FX_SinIdx((u16)(s16)mWobblePhase >> 4);
                 s32 amp = mWobbleTimer * 0x1a;
                 s8 which = mLoweredPlatform;
                 s16 wobble = (s16)FX_MUL(amp, sine);

@@ -44,15 +44,14 @@ void G3X_Init(void) {
     *(volatile unsigned int *)0x4000504 = 0;
     while (*(volatile unsigned int *)0x4000600 & 0x8000000)
         ;
-    *(volatile unsigned short *)0x4000060 = 0;
+    REG_DISP3DCNT = 0;
     *(volatile unsigned int *)0x4000600 = 0;
-    *(volatile unsigned int *)0x4000010 = 0;
-    *(volatile unsigned short *)0x4000060 |= 0x2000;
-    *(volatile unsigned short *)0x4000060 |= 0x1000;
-    *(volatile unsigned short *)0x4000060 &= ~0x3002;
-    *(volatile unsigned short *)0x4000060 =
-        (*(volatile unsigned short *)0x4000060 & ~0x3000) | 0x10;
-    *(volatile unsigned short *)0x4000060 &= 0xcffb;
+    REG_BG0OFS = 0;
+    REG_DISP3DCNT |= 0x2000;
+    REG_DISP3DCNT |= 0x1000;
+    REG_DISP3DCNT &= ~0x3002;
+    REG_DISP3DCNT = (REG_DISP3DCNT & ~0x3000) | 0x10;
+    REG_DISP3DCNT &= 0xcffb;
     *(volatile unsigned int *)0x4000600 |= 0x8000;
     *(volatile unsigned int *)0x4000600 =
         (*(volatile unsigned int *)0x4000600 & ~0xc0000000) | 0x80000000;
@@ -62,7 +61,7 @@ void G3X_Init(void) {
     *(volatile unsigned short *)0x4000356 = 0;
     *(volatile unsigned int *)0x4000358 = 0;
     *(volatile unsigned short *)0x400035c = 0;
-    *(volatile unsigned short *)0x4000008 &= ~3;
+    REG_BG0CNT &= ~3;
     G3X_InitTable();
     *(volatile unsigned int *)0x40004a4 = 0x1f0080;
     *(volatile unsigned int *)0x40004a8 = 0;
@@ -73,8 +72,8 @@ void G3X_Reset(void) {
     while (*(volatile unsigned int *)0x4000600 & 0x8000000)
         ;
     *(volatile unsigned int *)0x4000600 |= 0x8000;
-    *(volatile unsigned short *)0x4000060 |= 0x2000;
-    *(volatile unsigned short *)0x4000060 |= 0x1000;
+    REG_DISP3DCNT |= 0x2000;
+    REG_DISP3DCNT |= 0x1000;
     G3X_ResetMtxStack();
     *(volatile unsigned int *)0x40004a4 = 0x1f0080;
     *(volatile unsigned int *)0x40004a8 = 0;
@@ -135,10 +134,9 @@ void G3X_ResetMtxStack(void) {
 void G3X_SetFog(int enable, int a, int b, int c) {
     if (enable) {
         *(volatile unsigned short *)0x400035c = (unsigned short)c;
-        *(volatile unsigned short *)0x4000060 =
-            (b << 8) | (a << 6) | 0x80 | (*(volatile unsigned short *)0x4000060 & ~0x3f40);
+        REG_DISP3DCNT = (b << 8) | (a << 6) | 0x80 | (REG_DISP3DCNT & ~0x3f40);
     } else {
-        *(volatile unsigned short *)0x4000060 = *(volatile unsigned short *)0x4000060 & 0xcf7f;
+        REG_DISP3DCNT = REG_DISP3DCNT & 0xcf7f;
     }
 }
 
