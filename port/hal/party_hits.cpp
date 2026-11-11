@@ -45,6 +45,7 @@ int _ZN6Player9DropActorEv(void *holder);
 void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);   // LAB kill held (YOSHIPWR1)
 void _ZN6Player6BounceE5Fix12IiE(void *self, int speed);   // the bounce a stomped Goomba gives (St_Jump, voice, sound 0xb6)
 extern unsigned char data_ov002_02110064[];   // St_InYoshiMouth
+extern unsigned char data_ov002_021105a4[];   // St_GroundPound (HEADBOUNCE1 lab drop)
 extern unsigned char data_ov002_0211016c[];   // St_Grabbed
 extern unsigned char data_ov002_02110604[];   // St_SwingPlayer
 int func_ov002_020d5f34(char *c, void *eater);   // victim: into the mouth (state, +0xd0, anim 0x3f)
@@ -128,15 +129,14 @@ struct G {
     unsigned squash_at[kHubPartySeats] = {};
     unsigned self_squash_at = 0; bool self_squashed = false;
     bool headbounce = true;          // SM64DS_HEADBOUNCE=0, the CONTROL: the old stomp (my bare hop, the friend knocked down)
-    // the climb after a bounce I made, for the proof line (peak height over the bounce point, A held at the bounce)
-    bool climb = false; int climb_y0 = 0, climb_peak = 0; bool climb_a = false; unsigned climb_f0 = 0; int climb_seat = -1;
+    // the climb after a bounce I made, for the proof line (peak height over the bounce point)
+    bool climb = false; int climb_y0 = 0, climb_peak = 0; unsigned climb_f0 = 0; int climb_seat = -1;
     // LAB (HEADBOUNCE1, SM64DS_PHIT_LAB_DROP=<first>,<every>,<height>): from frame <first>, every <every> frames, a non-host
     // console puts its body <height> units over the host's ghost, still, and lets it fall
-    unsigned drop_first = 0, drop_every = 0; int drop_height = 0; unsigned drop_n = 0;
+    unsigned drop_first = 0, drop_every = 0; int drop_height = 0; unsigned drop_n = 0, drop_gp = 0;
     unsigned long long squished = 0, squish_air = 0;
     // LAB (SM64DS_HEADBOUNCE_FLAG=<file>): the file exists while a squash runs here (for SM64DS_STACK_BMP_ON pictures)
     const char *shot_flag = nullptr; bool shot_on = false; unsigned shot_tail = 0;
-    unsigned short pad_held = 0;     // my DS pad's held bits, read in the prewalk hook (proof lines only)
     // INTERACT9: who is in whose mouth / hands, from the victim's own broadcast
     Attach att[kHubPartySeats];
     // I am eaten through the ROM's own mouth state (else the synthetic hold)
@@ -227,7 +227,7 @@ void read_env() {
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_GATHER")) { g.gather = true; g.gather_dx = 150; g.gather_dz = 0; std::sscanf(e, "%d,%d", &g.gather_dx, &g.gather_dz); }
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_AT")) g.forge_at = (unsigned)std::atoi(e);
     g.headbounce = env_flag(std::getenv("SM64DS_HEADBOUNCE"), true);
-    if (const char *e = std::getenv("SM64DS_PHIT_LAB_DROP")) std::sscanf(e, "%u,%u,%d", &g.drop_first, &g.drop_every, &g.drop_height);
+    if (const char *e = std::getenv("SM64DS_PHIT_LAB_DROP")) std::sscanf(e, "%u,%u,%d,%u", &g.drop_first, &g.drop_every, &g.drop_height, &g.drop_gp);
     if (const char *e = std::getenv("SM64DS_HEADBOUNCE_FLAG")) g.shot_flag = e;
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEAT")) g.lab_seat = std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SWING")) g.lab_swing = std::atoi(e);
@@ -1162,7 +1162,8 @@ void handle_reply(int seat, unsigned ik, int yaw, int x, int y, int z) {
         break;
     case kSquish:                                  // HEADBOUNCE1: the friend says he was stomped: his ghost squashes here
         if (seat >= 0 && seat < kHubPartySeats) {
-            if (squash_curve(g.squash_at[seat]) == 0x1000) g.squash_at[seat] = g.frame ? g.frame : 1;
+            // my own stomp started his squash already: a late echo within 20 frames does not squash him twice
+            if (!(g.squash_at[seat] && g.frame - g.squash_at[seat] < 20u)) g.squash_at[seat] = g.frame ? g.frame : 1;
             if (g.log > 0 || g.drop_every) std::fprintf(stderr, "[headbounce] f=%u seat %d says seat %d landed on him: his ghost squashes\n", g.frame, seat, yaw & 0xFFFF);
         }
         break;
@@ -1347,28 +1348,23 @@ int squash_curve(unsigned at) {
     if (f < (unsigned)kSquashHold) return kSquashLow;
     return kSquashLow + (int)(f - kSquashHold + 1) * kSquashStep;
 }
-unsigned short my_held_buttons() {     // the DS pad this frame, sampled before the walk (proof lines only)
-    return g.pad_held;
-}
 void head_bounce(char *me, int seat) {
     const int vy0 = *(const int *)(me + kVertSpeed), st0 = g.state;
     _ZN6Player6BounceE5Fix12IiE(me, kRomStompBounce);
     const int vy1 = *(const int *)(me + kVertSpeed);
     if (vy1 <= 0) *(int *)(me + kVertSpeed) = kBounceUp;      // the ROM refused (a ground pound, no health): the old hop
     g.climb = true; g.climb_y0 = g.climb_peak = u(*player::pos_y(me)); g.climb_f0 = g.frame; g.climb_seat = seat;
-    g.climb_a = (my_held_buttons() & 1) != 0;                  // DS A
-    std::fprintf(stderr, "[headbounce] f=%u BOUNCE off seat %d: state %d -> %d, vy 0x%x -> 0x%x, A %s, y %d\n", g.frame, seat, st0,
-                 port::vs_arena_state_index(me), (unsigned)vy0, (unsigned)*(const int *)(me + kVertSpeed), g.climb_a ? "held" : "up", g.climb_y0);
+    if (g.log > 0) std::fprintf(stderr, "[headbounce] f=%u BOUNCE off seat %d: state %d -> %d, vy 0x%x -> 0x%x, y %d\n", g.frame, seat, st0,
+                 port::vs_arena_state_index(me), (unsigned)vy0, (unsigned)*(const int *)(me + kVertSpeed), g.climb_y0);
 }
 void climb_tick(char *me) {
     if (!g.climb) return;
     const int y = u(*player::pos_y(me));
     if (y > g.climb_peak) g.climb_peak = y;
-    if ((my_held_buttons() & 1) == 0) g.climb_a = false;      // "A held" means held the whole climb
     if (*(const int *)(me + kVertSpeed) < 0 || g.frame - g.climb_f0 > 90) {
         g.climb = false;
-        std::fprintf(stderr, "[headbounce] f=%u PEAK off seat %d: +%d units in %u frames, A held the whole climb: %s\n", g.frame, g.climb_seat,
-                     g.climb_peak - g.climb_y0, g.frame - g.climb_f0, g.climb_a ? "yes" : "no");
+        if (g.log > 0) std::fprintf(stderr, "[headbounce] f=%u PEAK off seat %d: +%d units in %u frames\n", g.frame, g.climb_seat,
+                     g.climb_peak - g.climb_y0, g.frame - g.climb_f0);
     }
 }
 // The friend underneath: my own body. Called from the frame hook (after the walk), like apply_effect.
@@ -1376,12 +1372,16 @@ void head_squish(char *me, const Claim &c) {
     const int st = port::vs_arena_state_index(me);
     const int hs = *(const int *)(me + kHorzSpeed), vy = *(const int *)(me + kVertSpeed);
     const bool air = !player::on_ground(me);
-    if (air && vy > kHeadPushDown) *(int *)(me + kVertSpeed) = kHeadPushDown;
+    // "not on the ground" is also swimming, hanging from a ledge or a grate, a pole or a tree: no push down there
+    bool held_up = false;
+    switch (st) { case 0: case 1: case 2: case 70: case 71: case 72: case 73: case 74: case 75: case 77: held_up = true; }
+    const bool push = air && !held_up;
+    if (push && vy > kHeadPushDown) *(int *)(me + kVertSpeed) = kHeadPushDown;
     if (*(const int *)(me + 0x84) == 0x1000 || g.self_squashed) { g.self_squash_at = g.frame ? g.frame : 1; g.self_squashed = true; }
-    ++g.squished; if (air) ++g.squish_air;
+    ++g.squished; if (push) ++g.squish_air;
     ++g.st.applied;
-    std::fprintf(stderr, "[headbounce] f=%u SQUISH by seat %d: %s, state %d -> %d, horz speed 0x%x -> 0x%x, vy 0x%x -> 0x%x, blink %u\n", g.frame,
-                 c.attacker, air ? "in the air, pushed down" : "on the ground", st, port::vs_arena_state_index(me), (unsigned)hs,
+    if (g.log > 0) std::fprintf(stderr, "[headbounce] f=%u SQUISH by seat %d: %s, state %d -> %d, horz speed 0x%x -> 0x%x, vy 0x%x -> 0x%x, blink %u\n", g.frame,
+                 c.attacker, push ? "in the air, pushed down" : air ? "swimming or hanging, not pushed" : "on the ground", st, port::vs_arena_state_index(me), (unsigned)hs,
                  (unsigned)*(const int *)(me + kHorzSpeed), (unsigned)vy, (unsigned)*(const int *)(me + kVertSpeed),
                  (unsigned)*(unsigned short *)(me + player::kInvincibleTimer));
     for (int seat = 0; seat < kHubPartySeats; ++seat) {   // every other console draws the squash on my ghost
@@ -1396,7 +1396,7 @@ void self_squash_tick(char *me) {
     const int sy = squash_curve(g.self_squash_at);
     *(int *)(me + 0x84) = sy;
     if (sy == 0x1000) g.self_squashed = false;
-    if (g.log > 0 || g.drop_every) std::fprintf(stderr, "[headbounce] f=%u my squash Y scale 0x%x\n", g.frame, (unsigned)sy);
+    if (g.log > 1) std::fprintf(stderr, "[headbounce] f=%u my squash Y scale 0x%x\n", g.frame, (unsigned)sy);
 }
 // LAB: the picture flag, on while any squash runs on this console and 3 frames after.
 void shot_flag_tick() {
@@ -1424,7 +1424,11 @@ void lab_drop(char *me) {
     *player::pos_y(me) = (s.y + g.drop_height) << 12;
     *player::pos_z(me) = s.z << 12;
     *(int *)(me + kHorzSpeed) = 0; *(int *)(me + kVertSpeed) = 0;
-    std::fprintf(stderr, "[headbounce] f=%u LAB drop #%u: %d units over seat %d at (%d,%d,%d)\n", g.frame, ++g.drop_n, g.drop_height, to, s.x, s.y, s.z);
+    ++g.drop_n;
+    const bool gp = g.drop_gp && (g.drop_n % g.drop_gp) == 0;
+    if (gp) _ZN6Player11ChangeStateERNS_5StateE(me, data_ov002_021105a4);   // the ROM's own ground pound from here
+    std::fprintf(stderr, "[headbounce] f=%u LAB drop #%u: %d units over seat %d at (%d,%d,%d)%s\n", g.frame, g.drop_n, g.drop_height, to, s.x, s.y, s.z,
+                 gp ? ", ground pound" : "");
 }
 
 void attacker_scan(char *me) {
@@ -1432,6 +1436,11 @@ void attacker_scan(char *me) {
     p.state = g.state; p.prev_state = g.prev_state; p.frames_in_state = g.in_state;
     p.vy = *(const int *)(me + kVertSpeed);
     int ik = attack_for_pose(p);
+    // HEADBOUNCE1: a ground pound coming down on a friend's head squashes him like a stomp (never the pound's knock).
+    // My pound goes on and lands as the ROM lands it. The per-seat send gap (30 frames) keeps the landing's own pound
+    // claim off that friend.
+    const bool gp_head = g.headbounce && ik < 0 && p.state == kStGroundPound && p.vy < 0;
+    if (gp_head) ik = kStomp;
     const int mx = u(*player::pos_x(me)), my = u(*player::pos_y(me)), mz = u(*player::pos_z(me));
     const int yaw = *(const short *)(me + kYawAngle) & 0xFFFF;
     const bool lab = g.forge_kind && !g.forged && g.frame >= g.forge_at;
@@ -1506,7 +1515,8 @@ void attacker_scan(char *me) {
         if (kind == kEatClaim) { g.book.sent(seat, g.frame); g.tongue_said = true; ++g.tongue_sent; }
         if (kind == kStomp) {
             // my own bounce, whatever the friend's console decides
-            if (g.headbounce) head_bounce(me, seat);
+            if (gp_head) { if (g.log > 0) std::fprintf(stderr, "[headbounce] f=%u GROUND POUND onto seat %d's head: he squashes, my pound goes on (vy 0x%x)\n", g.frame, seat, (unsigned)*(const int *)(me + kVertSpeed)); }
+            else if (g.headbounce) head_bounce(me, seat);
             else *(int *)(me + kVertSpeed) = kBounceUp;
             g.squash_at[seat] = g.frame ? g.frame : 1;
             ++g.st.bounces;
@@ -1749,10 +1759,6 @@ extern "C" void port_party_hits_prewalk(void) {
     char *me = my_body();
     if (!me) return;
     diag_links("prewalk-before", me);
-    {   // HEADBOUNCE1 proof lines: my DS pad's held bits for this frame (PadData {held, pressed} per slot)
-        const int slot = (int)data_0209f250;
-        g.pad_held = (slot >= 0 && slot < 4) ? data_020a0e58[slot * 2] : 0;
-    }
     lab_seek(me);                                 // LAB (TONGUE1): inert unless SM64DS_PHIT_LAB_SEEK
     if (g.hold.active() && g.rom_mouth) {
         if (char *ep = body_of_seat(g.hold.eater())) {
