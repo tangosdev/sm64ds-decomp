@@ -2313,7 +2313,7 @@ src/GX_SendFifo48B.c:
     complete
     .text start:0x02056c1c end:0x02056c40
 
-src/data/arm9/data_02099fd4.c:
+src/OSi_IrqCallbackInfoIndex.c:
     complete
     .data start:0x02099fd4 end:0x02099fe4
 

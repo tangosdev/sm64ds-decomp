@@ -48,6 +48,20 @@ typedef u32 OSIrqMask;
 #define OS_IE_CARD_IREQ   (1UL << 20)
 #define OS_IE_GXFIFO      (1UL << 21)
 
+/* OS_IRQTable has one handler per IE bit; the DMA channels and the timers
+ * dispatch through OSi_IrqCallbackInfo instead, at these indices. */
+#define OS_IRQ_TABLE_MAX 22
+
+#define OSi_IRQCALLBACK_NO_DMA0   0
+#define OSi_IRQCALLBACK_NO_DMA1   1
+#define OSi_IRQCALLBACK_NO_DMA2   2
+#define OSi_IRQCALLBACK_NO_DMA3   3
+#define OSi_IRQCALLBACK_NO_TIMER0 4
+#define OSi_IRQCALLBACK_NO_TIMER1 5
+#define OSi_IRQCALLBACK_NO_TIMER2 6
+#define OSi_IRQCALLBACK_NO_TIMER3 7
+#define OSi_IRQCALLBACK_NUM       (7 + 1)
+
 typedef void (*OSIrqFunction)(void);
 
 typedef struct OSIrqCallbackInfo {
@@ -55,6 +69,9 @@ typedef struct OSIrqCallbackInfo {
     u32 enable;           /* 0x4 -- zero: mask the interrupt again after it */
     void *arg;            /* 0x8 */
 } OSIrqCallbackInfo;
+
+extern OSIrqFunction OS_IRQTable[];
+extern OSIrqCallbackInfo OSi_IrqCallbackInfo[OSi_IRQCALLBACK_NUM];
 
 /* os_interrupt.c */
 void OS_InitIrqTable(void);

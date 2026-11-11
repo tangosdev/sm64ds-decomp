@@ -32,7 +32,7 @@ void OS_InitMutex(OSMutex *mutex) {
 
 void OS_LockMutex(OSMutex *mutex) {
     OSIntrMode saved = OS_DisableInterrupts();
-    OSThread *current = data_020a6134.current;
+    OSThread *current = OSi_ThreadInfo.current;
 
     for (;;) {
         if (mutex->thread == 0) {
@@ -55,7 +55,7 @@ void OS_LockMutex(OSMutex *mutex) {
 
 void OS_UnlockMutex(OSMutex *mutex) {
     OSIntrMode saved = OS_DisableInterrupts();
-    OSThread *current = data_020a6134.current;
+    OSThread *current = OSi_ThreadInfo.current;
     if (mutex->thread == current) {
         if (--mutex->count == 0) {
             OSi_DequeueItem(current, mutex);
@@ -78,7 +78,7 @@ void OSi_UnlockAllMutex(OSThread *thread) {
 
 int OS_TryLockMutex(OSMutex *mutex) {
     OSIntrMode saved = OS_DisableInterrupts();
-    OSThread *current = data_020a6134.current;
+    OSThread *current = OSi_ThreadInfo.current;
     int locked;
     if (mutex->thread == 0) {
         mutex->thread = current;

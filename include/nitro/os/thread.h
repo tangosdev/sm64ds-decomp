@@ -93,8 +93,8 @@ typedef struct OSThreadInfo {
 #define OS_THREAD_OFFSET_NEXT (sizeof(OSContext) + sizeof(s32))
 #define OS_THREAD_OFFSET_ID (OS_THREAD_OFFSET_NEXT + sizeof(OSThread *))
 
-extern OSThreadInfo data_020a6134; /* OSi_ThreadInfo */
-extern OSThread data_020a621c;     /* OSi_LauncherThread: the thread NitroMain() runs on */
+extern OSThreadInfo OSi_ThreadInfo;
+extern OSThread OSi_LauncherThread;     /* the thread NitroMain() runs on */
 
 void OS_InitThread(void);
 void OS_CreateThread(OSThread *, void (*)(void *), void *, void *, u32, u32);

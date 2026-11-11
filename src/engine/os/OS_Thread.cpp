@@ -61,10 +61,10 @@ extern void SDK_IRQ_STACKSIZE(void);
 extern void MIi_CpuClear32(int val, int *dst, int len);
 extern void OSi_UnlockAllMutex(OSThread *thread);
 
-extern OSSwitchThreadCallback data_020a6128; /* OSi_SystemCallbackInSwitchThread */
-extern OSThread **data_020a612c;             /* OSi_CurrentThreadPtr */
-extern BOOL data_020a6130;                   /* OSi_IsThreadInitialized */
-extern OSThread data_020a6188;               /* OSi_IdleThread */
+extern OSSwitchThreadCallback OSi_SystemCallbackInSwitchThread;
+extern OSThread **OSi_CurrentThreadPtr;
+extern BOOL OSi_IsThreadInitialized;
+extern OSThread OSi_IdleThread;
 /* The word just past OSi_IdleThreadStack (200 bytes from 0x020a62b0): its
  * address is the idle stack's top. The word itself is OS_Arena.cpp's
  * OSi_Initialized. */
@@ -76,7 +76,7 @@ void OSi_IdleThreadProc(void *unused);
 s32 OSi_GetUnusedThreadId(void) {
     int i;
     for (i = 0; i < OS_THREAD_MAX_NUM; i++) {
-        if (data_020a6134.entry[i] == 0) {
+        if (OSi_ThreadInfo.entry[i] == 0) {
             return i;
         }
     }
@@ -84,7 +84,7 @@ s32 OSi_GetUnusedThreadId(void) {
 }
 
 void OSi_InsertThreadToList(OSThread *thread) {
-    OSThread *t = data_020a6134.list;
+    OSThread *t = OSi_ThreadInfo.list;
     OSThread *pre = 0;
 
     while (t != 0 && t->priority < thread->priority) {
@@ -93,8 +93,8 @@ void OSi_InsertThreadToList(OSThread *thread) {
     }
 
     if (pre == 0) {
-        thread->next = data_020a6134.list;
-        data_020a6134.list = thread;
+        thread->next = OSi_ThreadInfo.list;
+        OSi_ThreadInfo.list = thread;
     } else {
         thread->next = pre->next;
         pre->next = thread;
@@ -102,7 +102,7 @@ void OSi_InsertThreadToList(OSThread *thread) {
 }
 
 void OSi_RemoveThreadFromList(OSThread *thread) {
-    OSThread *t = data_020a6134.list;
+    OSThread *t = OSi_ThreadInfo.list;
     OSThread *pre = 0;
 
     while (t != 0 && t != thread) {
@@ -111,7 +111,7 @@ void OSi_RemoveThreadFromList(OSThread *thread) {
     }
 
     if (pre == 0) {
-        data_020a6134.list = thread->next;
+        OSi_ThreadInfo.list = thread->next;
     } else {
         pre->next = thread->next;
     }
@@ -122,26 +122,26 @@ void OS_InitThread(void) {
     u32 stackLo;
     u32 stackHi;
 
-    if (data_020a6130) {
+    if (OSi_IsThreadInitialized) {
         return;
     }
-    data_020a6130 = TRUE;
+    OSi_IsThreadInitialized = TRUE;
 
     for (i = 0; i < OS_THREAD_MAX_NUM; i++) {
-        data_020a6134.entry[i] = 0;
+        OSi_ThreadInfo.entry[i] = 0;
     }
 
-    data_020a612c = &data_020a6134.current;
+    OSi_CurrentThreadPtr = &OSi_ThreadInfo.current;
 
-    data_020a621c.priority = OS_THREAD_LAUNCHER_PRIORITY;
-    data_020a621c.id = 0;
-    data_020a621c.state = OS_THREAD_STATE_READY;
-    data_020a621c.next = 0;
-    data_020a621c.profiler = 0;
+    OSi_LauncherThread.priority = OS_THREAD_LAUNCHER_PRIORITY;
+    OSi_LauncherThread.id = 0;
+    OSi_LauncherThread.state = OS_THREAD_STATE_READY;
+    OSi_LauncherThread.next = 0;
+    OSi_LauncherThread.profiler = 0;
 
-    data_020a6134.entry[0] = &data_020a621c;
-    data_020a6134.list = &data_020a621c;
-    data_020a6134.current = &data_020a621c;
+    OSi_ThreadInfo.entry[0] = &OSi_LauncherThread;
+    OSi_ThreadInfo.list = &OSi_LauncherThread;
+    OSi_ThreadInfo.current = &OSi_LauncherThread;
 
     if ((s32)SDK_SYS_STACKSIZE == 0) {
         stackLo = 0x23c0020 - (s32)SDK_SYS_STACKSIZE;
@@ -150,25 +150,25 @@ void OS_InitThread(void) {
     }
     stackHi = (u32)HW_DTCM_SVC_STACK_END - (s32)SDK_IRQ_STACKSIZE;
 
-    data_020a621c.stackBottom = stackHi;
-    data_020a621c.stackTop = stackLo;
-    data_020a621c.stackWarningOffset = 0;
+    OSi_LauncherThread.stackBottom = stackHi;
+    OSi_LauncherThread.stackTop = stackLo;
+    OSi_LauncherThread.stackWarningOffset = 0;
     *(u32 *)(stackHi - sizeof(u32)) = OSi_STACK_CHECKNUM_BOTTOM;
-    *(u32 *)data_020a621c.stackTop = OSi_STACK_CHECKNUM_TOP;
-    data_020a621c.joinQueue = 0;
+    *(u32 *)OSi_LauncherThread.stackTop = OSi_STACK_CHECKNUM_TOP;
+    OSi_LauncherThread.joinQueue = 0;
 
-    data_020a6134.max_entry = OS_THREAD_MAX_NUM;
-    data_020a6134.isNeedRescheduling = FALSE;
-    data_020a6134.irqDepth = 0;
-    *(OSThreadInfo **)0x027fffa0 = &data_020a6134;
+    OSi_ThreadInfo.max_entry = OS_THREAD_MAX_NUM;
+    OSi_ThreadInfo.isNeedRescheduling = FALSE;
+    OSi_ThreadInfo.irqDepth = 0;
+    *(OSThreadInfo **)0x027fffa0 = &OSi_ThreadInfo;
 
     OS_SetSwitchThreadCallback(0);
 
-    OS_CreateThread(&data_020a6188, OSi_IdleThreadProc, 0, &data_020a6378, 200,
+    OS_CreateThread(&OSi_IdleThread, OSi_IdleThreadProc, 0, &data_020a6378, 200,
                     OS_THREAD_PRIORITY_MAX);
 
-    data_020a6188.priority = OS_THREAD_PRIORITY_MAX + 1;
-    data_020a6188.state = OS_THREAD_STATE_READY;
+    OSi_IdleThread.priority = OS_THREAD_PRIORITY_MAX + 1;
+    OSi_IdleThread.state = OS_THREAD_STATE_READY;
 }
 
 void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *stack, u32 stackSize,
@@ -184,7 +184,7 @@ void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *st
     thread->id = index;
     thread->state = OS_THREAD_STATE_WAITING;
     thread->profiler = 0;
-    data_020a6134.entry[index] = thread;
+    OSi_ThreadInfo.entry[index] = thread;
     OSi_InsertThreadToList(thread);
 
     thread->stackBottom = (u32)stack;
@@ -214,10 +214,10 @@ void OS_ExitThread(void) {
     OSThread *currentThread;
 
     OS_DisableInterrupts();
-    currentThread = *data_020a612c;
+    currentThread = *OSi_CurrentThreadPtr;
     OSi_UnlockAllMutex(currentThread);
     OSi_RemoveThreadFromList(currentThread);
-    data_020a6134.entry[currentThread->id] = 0;
+    OSi_ThreadInfo.entry[currentThread->id] = 0;
     currentThread->state = OS_THREAD_STATE_TERMINATED;
     OS_WakeupThread(&currentThread->joinQueue);
     OS_RescheduleThread();
@@ -237,7 +237,7 @@ BOOL OS_IsThreadTerminated(const OSThread *thread) {
 
 void OS_SleepThread(OSThreadQueue *queue) {
     OSIntrMode enabled = OS_DisableInterrupts();
-    OSThread *currentThread = *data_020a612c;
+    OSThread *currentThread = *OSi_CurrentThreadPtr;
     if (queue != 0) {
         *queue = *queue | (u16)(1 << currentThread->id);
     }
@@ -251,7 +251,7 @@ void OS_WakeupThread(OSThreadQueue *queue) {
     u32 mask = *queue;
     if (mask != 0) {
         OSThread *thread;
-        for (thread = data_020a6134.list; thread != 0; thread = thread->next) {
+        for (thread = OSi_ThreadInfo.list; thread != 0; thread = thread->next) {
             if (mask & (1 << thread->id)) {
                 thread->state = OS_THREAD_STATE_READY;
             }
@@ -270,7 +270,7 @@ void OS_WakeupThreadDirect(OSThread *thread) {
 }
 
 OSThread *OS_SelectThread(void) {
-    OSThread *thread = data_020a6134.list;
+    OSThread *thread = OSi_ThreadInfo.list;
     while (thread != 0 && thread->state != OS_THREAD_STATE_READY) {
         thread = thread->next;
     }
@@ -280,14 +280,14 @@ OSThread *OS_SelectThread(void) {
 void OS_RescheduleThread(void) {
     OSThread *currentThread;
     OSThread *nextThread;
-    OSThreadInfo *info = &data_020a6134;
+    OSThreadInfo *info = &OSi_ThreadInfo;
 
     if (info->irqDepth != 0 || OS_GetProcMode() == OS_PROCMODE_IRQ) {
         info->isNeedRescheduling = TRUE;
         return;
     }
 
-    currentThread = *data_020a612c;
+    currentThread = *OSi_CurrentThreadPtr;
     nextThread = OS_SelectThread();
     if (currentThread == nextThread || nextThread == 0) {
         return;
@@ -295,13 +295,13 @@ void OS_RescheduleThread(void) {
     if (OS_SaveContext(&currentThread->context) != 0) {
         return;
     }
-    if (data_020a6128 != 0) {
-        data_020a6128(currentThread, nextThread);
+    if (OSi_SystemCallbackInSwitchThread != 0) {
+        OSi_SystemCallbackInSwitchThread(currentThread, nextThread);
     }
     if (info->switchCallback != 0) {
         info->switchCallback(currentThread, nextThread);
     }
-    data_020a6134.current = nextThread;
+    OSi_ThreadInfo.current = nextThread;
     OS_LoadContext(&nextThread->context);
 }
 
@@ -311,7 +311,7 @@ void OS_SetThreadStackWarningOffset(OSThread *thread, u32 offset) {
 }
 
 BOOL OS_SetThreadPriority(OSThread *thread, u32 prio) {
-    OSThread *t = data_020a6134.list;
+    OSThread *t = OSi_ThreadInfo.list;
     OSThread *pre = 0;
     OSIntrMode enabled = OS_DisableInterrupts();
 
@@ -320,14 +320,14 @@ BOOL OS_SetThreadPriority(OSThread *thread, u32 prio) {
         t = t->next;
     }
 
-    if (t == 0 || t == &data_020a6188) {
+    if (t == 0 || t == &OSi_IdleThread) {
         OS_RestoreInterrupts(enabled);
         return FALSE;
     }
 
     if (t->priority != prio) {
         if (pre == 0) {
-            data_020a6134.list = thread->next;
+            OSi_ThreadInfo.list = thread->next;
         } else {
             pre->next = thread->next;
         }
@@ -346,8 +346,8 @@ u32 OS_GetThreadPriority(const OSThread *thread) {
 
 OSSwitchThreadCallback OS_SetSwitchThreadCallback(OSSwitchThreadCallback callback) {
     OSIntrMode enabled = OS_DisableInterrupts();
-    OSSwitchThreadCallback prev = data_020a6134.switchCallback;
-    data_020a6134.switchCallback = callback;
+    OSSwitchThreadCallback prev = OSi_ThreadInfo.switchCallback;
+    OSi_ThreadInfo.switchCallback = callback;
     OS_RestoreInterrupts(enabled);
     return prev;
 }
