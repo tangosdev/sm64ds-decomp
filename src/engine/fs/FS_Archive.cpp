@@ -67,7 +67,6 @@ extern "C" {
 extern FSArchive *data_020a8048;
 extern FSDirPos data_020a804c;
 
-
 int FSi_TranslateCommand(FSFile *p_file, int command);
 void FSi_ReleaseCommand(FSFile *p_file, int ret);
 void FSi_AppendToList(FSFile *elem, FSFile *list);
