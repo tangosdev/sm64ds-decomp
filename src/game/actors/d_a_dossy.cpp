@@ -130,7 +130,6 @@ void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
 void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
 }
 
-
 typedef void (daDossy_c::*StateFunc)();
 extern "C" StateFunc data_ov065_0211d7fc[];
 
@@ -329,15 +328,11 @@ int daDossy_c::Behavior()
     }
 
     if (mDistToCenter >= outer) {
-        mPosX =
-            mSpawnPos.x - FX_MUL(outer, FX_SinIdx((u16)mAngToCenter >> 4));
-        mPosZ = mSpawnPos.z -
-                FX_MUL(outer, FX_CosIdx((u16)mAngToCenter >> 4));
+        mPosX = mSpawnPos.x - FX_MUL(outer, FX_SinIdx((u16)mAngToCenter >> 4));
+        mPosZ = mSpawnPos.z - FX_MUL(outer, FX_CosIdx((u16)mAngToCenter >> 4));
     } else if (mDistToCenter <= inner) {
-        mPosX =
-            mSpawnPos.x - FX_MUL(inner, FX_SinIdx((u16)mAngToCenter >> 4));
-        mPosZ = mSpawnPos.z -
-                FX_MUL(inner, FX_CosIdx((u16)mAngToCenter >> 4));
+        mPosX = mSpawnPos.x - FX_MUL(inner, FX_SinIdx((u16)mAngToCenter >> 4));
+        mPosZ = mSpawnPos.z - FX_MUL(inner, FX_CosIdx((u16)mAngToCenter >> 4));
     }
 
     UpdatePos(0);
@@ -393,8 +388,7 @@ void daDossy_c::func_ov065_02118cc4()
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-extern "C" void func_ov065_02118c4c(daDossyCap_c *cap)
-{
+extern "C" void func_ov065_02118c4c(daDossyCap_c *cap) {
     Vector3 pos;
     Vec3_Asr(&pos, &cap->mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
@@ -403,8 +397,7 @@ extern "C" void func_ov065_02118c4c(daDossyCap_c *cap)
     cap->mModel.mat4x3 = data_020a0e68;
 }
 
-void daDossy_c::func_ov065_02118838()
-{
+void daDossy_c::func_ov065_02118838() {
     Vector3s rot;
     Vector3 v;
     Matrix4x3 base;
@@ -433,7 +426,8 @@ void daDossy_c::func_ov065_02118838()
         v.y = 0;
         v.z = 0;
         data_020a0e68 = base;
-        MTX_Concat43(&mAnmModel.data.transforms[data_ov065_0211c078[i]], &data_020a0e68, &data_020a0e68);
+        MTX_Concat43(&mAnmModel.data.transforms[data_ov065_0211c078[i]], &data_020a0e68,
+                     &data_020a0e68);
         v.x = data_020a0e68.m[9];
         v.y = data_020a0e68.m[10];
         v.z = data_020a0e68.m[11];
@@ -454,12 +448,9 @@ void daDossy_c::func_ov065_02118838()
             mHomePos.z += FX_CosIdx((u16)mAngleY >> 4) * 0x82;
         }
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-        Matrix4x3_ApplyInPlaceToRotationY(
-            &data_020a0e68, mAngleY + mPlatforms[i].mRot.y);
-        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68,
-                                          mPlatforms[i].mRot.x);
-        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68,
-                                          mPlatforms[i].mRot.z);
+        Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY + mPlatforms[i].mRot.y);
+        Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPlatforms[i].mRot.x);
+        Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mPlatforms[i].mRot.z);
         mPlatforms[i].mClsnNextMat = data_020a0e68;
         mPlatforms[i].mClsn.Transform(mPlatforms[i].mClsnNextMat, mAngleY);
     }
@@ -546,9 +537,7 @@ void daDossy_c::func_ov065_021183c8()
         if (mClsnState == 2 && mRideCooldown == 0) {
             if (mCap == 0 || func_ov065_02119210(mCap) == 0) {
                 playerPos = mClsnPlayer->mPos;
-                if (playerPos.y >= mHomePos.y &&
-                    Vec3_HorzDist(&playerPos, &mHomePos) <
-                        0x88000 &&
+                if (playerPos.y >= mHomePos.y && Vec3_HorzDist(&playerPos, &mHomePos) < 0x88000 &&
                     ((daPly_c *)mClsnPlayer)->SetNoControlState(5, -1, 0) != 0) {
                     mState++;
                     mStateState = 0;
@@ -612,8 +601,7 @@ int daDossy_c::func_ov065_02118248()
     return 0;
 }
 
-extern "C" int func_ov065_021180d4(daDossyCap_c *cap)
-{
+extern "C" int func_ov065_021180d4(daDossyCap_c *cap) {
     daPly_c *player;
     u32 id;
 

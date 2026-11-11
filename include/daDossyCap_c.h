@@ -55,7 +55,7 @@ struct daDossyCap_c : dActor_c {
     /* The Dorrie wearing this cap. Behavior bails out when it is null, and
        otherwise copies the cap position out of her mCapPos triple and its two
        angles out of mHeadRotX and mAngleY. */
-    daDossy_c         *mCarrier;                 /* 0x174 */
+    daDossy_c *mCarrier; /* 0x174 */
     u8                 pad_178[0xc];
 
     /* Inline is load-bearing: src/game/actors/d_a_dossy.cpp defines the key

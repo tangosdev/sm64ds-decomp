@@ -40,7 +40,7 @@ struct DorriePlatform {
        Vector3s local in, and the ROM copies member by member (ldrsh/strh)
        as it does for a class with a declared destructor. A POD copy goes
        by word. */
-    Vector3s mRot;              /* 0x1f8 */
+    Vector3s mRot; /* 0x1f8 */
 
     DorriePlatform();
     ~DorriePlatform();
