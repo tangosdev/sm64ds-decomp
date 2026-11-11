@@ -47,6 +47,7 @@
 #include "nitro/fx/fx.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
+#include "nitro/fx/fx_trig.h"
 
 /* LEVEL_ID 0xc is Big Boo's Haunt (its course overlay is ov020). */
 enum {
@@ -65,7 +66,6 @@ enum {
 };
 
 extern signed char gCurrentSublevel;
-extern short FX_SinCosTable_[];
 /* Second particle parameter per segment: 0xe61 + i * 0x689. */
 extern short data_ov095_02136f98[];
 
@@ -124,7 +124,7 @@ int daObjFlamethrower_c::InitResources() {
             offset.z = data_ov095_02136fb0[i];
             MTX_MultVec43(&offset, &mTransform, &dst);
             if (im1 < 0) {
-                Vec3_Add(&firstPos, (const Vector3 *)&mPosX, &dst);
+                Vec3_Add(&firstPos, &mPos, &dst);
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = firstPos.x;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].y = firstPos.y;
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].z = firstPos.z;
@@ -162,10 +162,10 @@ int daObjFlamethrower_c::Behavior() {
     int wavePhase;
     char *pclsn;
     int j;
-    int in[3];
-    int dst[3];
+    Vector3 in;
+    Vector3 dst;
     Vector3 part;
-    int sum[3];
+    Vector3 sum;
     int sum2[3];
     int hidden;
     u32 id;
@@ -238,28 +238,27 @@ int daObjFlamethrower_c::Behavior() {
                     break;
                 if (((param1 & 0xff) != kAltParam) || (gCurrentSublevel == kBigBoosHaunt)) {
                     im1 = i - 1;
-                    in[0] = zero;
-                    in[1] = zero;
-                    in[2] = zero;
-                    dst[0] = zero;
-                    dst[1] = zero;
-                    dst[2] = zero;
-                    in[2] = data_ov095_02136fb0[i];
-                    MTX_MultVec43((Vector3 *)in, &mTransform, (Vector3 *)dst);
+                    in.x = zero;
+                    in.y = zero;
+                    in.z = zero;
+                    dst.x = zero;
+                    dst.y = zero;
+                    dst.z = zero;
+                    in.z = data_ov095_02136fb0[i];
+                    MTX_MultVec43(&in, &mTransform, &dst);
                     if (im1 < 0) {
-                        Vec3_Add((Vector3 *)sum, (const Vector3 *)&mPosX, (const Vector3 *)dst);
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum[0];
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum[1];
-                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum[2];
+                        Vec3_Add(&sum, &mPos, &dst);
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum.x;
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum.y;
+                        ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum.z;
                     } else {
-                        Vec3_Add((Vector3 *)sum2, (const Vector3 *)&mFlamePositions[im1],
-                                 (const Vector3 *)dst);
+                        Vec3_Add((Vector3 *)sum2, (const Vector3 *)&mFlamePositions[im1], &dst);
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum2[0];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y = sum2[1];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum2[2];
                     }
                     if (gCurrentSublevel == kBigBoosHaunt) {
-                        s16 wave = FX_SinCosTable_[(((u16)(s16)wavePhase) >> 4) * 2];
+                        s16 wave = FX_SinIdx(((u16)(s16)wavePhase) >> 4);
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y =
                             mPosY + FX_MUL(wave, -0xaa000);
                     }

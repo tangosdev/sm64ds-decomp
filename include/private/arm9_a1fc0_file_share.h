@@ -134,13 +134,13 @@ typedef struct FileShareChildArea {
     /* 0x000 -- a WBTBlockInfoTable: func_02040c34 points entry i at the 0x28-byte
      * WBTBlockInfo at 0xc0 + i * 0x28; func_02040f30 passes the table to
      * WBT_GetBlockInfo (WBT_GetBlockInfo) */
-    int mBlockInfoTable[0x10];
+    void *mBlockInfoTable[0x10];
     /* 0x040 -- a WBTRecvBufTable: func_02040f30 sets the peer's entry to the
      * receive buffer before WBT_GetBlock (WBT_GetBlock) */
-    int mRecvBufTable[0x10];
+    void *mRecvBufTable[0x10];
     /* 0x080 -- a WBTPacketBitmapTable, WBT_GetBlock's last table: func_02041224
      * points entry 0 at mRecvWork */
-    int mPacketBitmapTable[0x10];
+    void *mPacketBitmapTable[0x10];
     /* 0x0c0 -- the sixteen 0x28-byte WBTBlockInfo mBlockInfoTable points at
      * (func_02040c34) */
     unsigned char mBlockInfo[0x10][0x28];
@@ -149,7 +149,7 @@ typedef struct FileShareChildArea {
     unsigned char mStatus[0x930];
     /* 0xc70 -- func_02041224 allocates it (about four bytes per packet of
      * mMaxReadSize); func_02040aa4 frees it */
-    int mRecvWork;
+    void *mRecvWork;
     int mMaxReadSize; /* 0xc74 -- func_02041224 grows it to the largest read */
     /* 0xc78 -- func_02040f30: offset of the region being read, as the parent
      * registered it (the tables are 0x20000) */
@@ -167,15 +167,16 @@ typedef struct FileShareWork {
     int mSendBusy;         /* 0x08 -- func_02041930: the port send returned 2 */
     int mState;            /* 0x0c -- 1 here, 2 once ready (func_02040bb0,
                               func_02040f30), 0 at shutdown (func_02040aa4) */
-    int mStateCallback;    /* 0x10 -- stateCallback; called with 0 when mState becomes 2 */
-    int mAllocFunc;        /* 0x14 -- allocFunc; (arg, size, 0) allocates, (arg, 0, ptr)
+    void (*mStateCallback)(int); /* 0x10 -- stateCallback; called with 0 when mState becomes 2 */
+    void *(*mAllocFunc)(void *arg, unsigned int size,
+                        void *ptr); /* 0x14 -- allocFunc; (arg, size, 0) allocates, (arg, 0, ptr)
                               frees (func_02041224, func_02040aa4) */
-    int mAllocArg;         /* 0x18 -- allocArg; first argument to mAllocFunc */
-    int mReadRequest;      /* 0x1c -- child read in flight, an FSFile: func_02041a00
+    void *mAllocArg;                /* 0x18 -- allocArg; first argument to mAllocFunc */
+    struct FSFile *mReadRequest;    /* 0x1c -- child read in flight, an FSFile: func_02041a00
                               sets it, func_02040f30 completes and clears it */
-    int mTable;            /* 0x20 -- func_020424c0: the card header's FNT, FAT and
+    void *mTable;                   /* 0x20 -- func_020424c0: the card header's FNT, FAT and
                               overlay tables, read into one allocation */
-    int mTableSize;        /* 0x24 -- that allocation's size */
+    unsigned int mTableSize;        /* 0x24 -- that allocation's size */
     int mParentPacketSize; /* 0x28 -- parent MP send size; func_02040f30 sets it
                               from the WBT sync's peer packet size + 0xe */
     int mChildPacketSize;  /* 0x2c -- child MP send size, likewise */

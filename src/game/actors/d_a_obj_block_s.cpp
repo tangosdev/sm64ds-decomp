@@ -948,15 +948,14 @@ int daObjBlockS_c::UpdateFloorContact() {
 
 
     {
-        int sMove = (u16)ang >> 4;
         int sPrev = (u16)mPrevAngleY >> 4;
         s32 speed = mHorzSpeed;
-        a1.x = FX_MUL(speed, FX_SinCosTable_[sPrev * 2]);
+        a1.x = FX_MUL(speed, FX_SinIdx(sPrev));
         a1.y = 0;
-        a1.z = FX_MUL(speed, FX_SinCosTable_[sPrev * 2 + 1]);
-        a2.x = FX_MUL(hl, FX_SinCosTable_[sMove * 2]);
+        a1.z = FX_MUL(speed, FX_CosIdx(sPrev));
+        a2.x = FX_MUL(hl, FX_SinIdx((u16)ang >> 4));
         a2.y = 0;
-        a2.z = FX_MUL(hl, FX_SinCosTable_[sMove * 2 + 1]);
+        a2.z = FX_MUL(hl, FX_CosIdx((u16)ang >> 4));
     }
     Vec3_MulScalarInPlace(&a2, Vec3_HorzLen((Vector3 *)&mFloorNormalX));
     Vec3_Add(&sum, &a1, &a2);

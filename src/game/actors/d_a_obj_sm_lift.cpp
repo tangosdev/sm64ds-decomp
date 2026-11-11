@@ -36,8 +36,8 @@ enum daObjSm_Lift_c_AssetId { ASSET_SM_LIFT_BMD = 0x06b3, ASSET_SM_LIFT_KCL = 0x
 #include "math/MtxStack.h"
 #include "Sound.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/fx/fx_trig.h"
 
-extern s16 FX_SinCosTable_[];
 /* Two CLPS blocks the lift hands to its colliders, back to back. */
 int data_ov018_02112f48[4] = {0x53504c43, 0x00020008, 0x00000fc5, 0x000000ff};
 int data_ov018_02112f58[4] = {0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff};
@@ -121,11 +121,9 @@ int daObjSm_Lift_c::Behavior() {
         Vector3 *otherPos = &other->mPos;
         int dist = Vec3_HorzDist(&mPos, otherPos);
         target =
-            (s16)(FX_MUL(dist, FX_SinCosTable_[((u16)(s16)AngleDiff(Vec3_HorzAngle(&mPos, otherPos),
-                                                                    mAngleY) >>
-                                                4) *
-                                                   2 +
-                                               1]) /
+            (s16)(FX_MUL(dist,
+                         FX_CosIdx((u16)(s16)AngleDiff(Vec3_HorzAngle(&mPos, otherPos), mAngleY) >>
+                                   4)) /
                   256);
     } else {
         if (mNodeStep > 0 && mNodeIndex == 1) {
@@ -165,7 +163,7 @@ int daObjSm_Lift_c::Behavior() {
 
         Math_Function_0203b14c(&mHorzSpeed, 0xa000, 0x200, 0x2000, 0x200);
 
-        Vec3_Sub(&diff, (const Vector3 *)&mPosX, &nodeA);
+        Vec3_Sub(&diff, &mPos, &nodeA);
         {
             int len = VEC_Mag(&diff);
             if (len == 0 || len <= mHorzSpeed) {
@@ -176,7 +174,7 @@ int daObjSm_Lift_c::Behavior() {
             } else {
                 int scale = FX_Div(mHorzSpeed, len);
                 Vec3_MulScalar(&scaled, &diff, scale);
-                VEC_Subtract((Vector3 *)&mPosX, (Vector3 *)&scaled, (Vector3 *)&mPosX);
+                VEC_Subtract(&mPos, &scaled, &mPos);
             }
         }
 

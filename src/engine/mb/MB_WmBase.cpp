@@ -222,8 +222,8 @@ int MBi_IsSendEnabled(void) {
  * refreshes the bitmap through WM_ReadStatus and decides on starting MP from
  * the status's mp_flag instead of mpStarted; mStartMpBusy is the SDK's
  * start_mp_busy. */
-void MBi_ParentCallback(char *arg0) {
-    WmCallback *cb = (WmCallback *)arg0;
+void MBi_ParentCallback(void *arg) {
+    WmCallback *cb = (WmCallback *)arg;
 
     switch (cb->apiid) {
     case 0x0:
@@ -233,7 +233,7 @@ void MBi_ParentCallback(char *arg0) {
             MBi_CheckWmErrcode(0x1D, WM_SetLifeTime((void *)MBi_ParentCallback, 0xFFFF, 0x28, 5));
             return;
         }
-        WM_WORK->userCallback(0x100, arg0);
+        WM_WORK->userCallback(0x100, arg);
         return;
 
     case 0x1D:
@@ -242,11 +242,11 @@ void MBi_ParentCallback(char *arg0) {
                 7, WM_SetParentParameter((void *)MBi_ParentCallback, &WM_WORK->parentParam));
             return;
         }
-        WM_WORK->userCallback(0x100, arg0);
+        WM_WORK->userCallback(0x100, arg);
         return;
 
     case 0x7:
-        WM_WORK->userCallback(0x15, arg0);
+        WM_WORK->userCallback(0x15, arg);
         MBi_CheckWmErrcode(0x19, WM_SetBeaconIndication((void *)MBi_ParentCallback, 1));
         return;
 
@@ -255,30 +255,30 @@ void MBi_ParentCallback(char *arg0) {
             MBi_CheckWmErrcode(8, WM_StartParent((void *)MBi_ParentCallback));
             return;
         }
-        WM_WORK->userCallback(0x100, arg0);
+        WM_WORK->userCallback(0x100, arg);
         return;
 
     case 0x8:
         if (cb->errcode == 0) {
-            switch (((WmStartParentCallback *)arg0)->state) {
+            switch (((WmStartParentCallback *)arg)->state) {
             case 0:
                 return;
             case 7:
                 MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&WM_WORK->status));
                 WM_WORK->childBitmap = WM_WORK->status.child_bitmap;
-                WM_WORK->userCallback(0, arg0);
+                WM_WORK->userCallback(0, arg);
                 if (WM_WORK->status.mp_flag == 0) {
                     MbParentWork *mb = MB_WORK;
                     if (mb->mStartMpBusy == 0) {
-                        int v = 1;
+                        int mpFreq = 1;
                         mb->mStartMpBusy = 1;
                         if (WM_WORK->mpContinuous != 0) {
-                            v = 0;
+                            mpFreq = 0;
                         }
                         MBi_CheckWmErrcode(
                             0xE, WM_StartMPEx((void *)MBi_ParentCallback, (int)WM_WORK->recvBuf,
                                               WM_WORK->recvBufSize, (int)WM_WORK->sendBuf,
-                                              WM_WORK->sendBufSize, (u16)v, 0, 0, 0, 1, 1));
+                                              WM_WORK->sendBufSize, (u16)mpFreq, 0, 0, 0, 1, 1));
                         return;
                     }
                 }
@@ -290,49 +290,49 @@ void MBi_ParentCallback(char *arg0) {
             case 9:
                 MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&WM_WORK->status));
                 WM_WORK->childBitmap = WM_WORK->status.child_bitmap;
-                WM_WORK->userCallback(1, arg0);
+                WM_WORK->userCallback(1, arg);
                 return;
             case 2:
-                WM_WORK->userCallback(0x1C, arg0);
+                WM_WORK->userCallback(0x1C, arg);
                 return;
             default:
-                WM_WORK->userCallback(0x100, arg0);
+                WM_WORK->userCallback(0x100, arg);
                 return;
             }
         } else {
-            WM_WORK->userCallback(0x100, arg0);
+            WM_WORK->userCallback(0x100, arg);
             return;
         }
 
     case 0xE:
         MB_WORK->mStartMpBusy = 0;
-        switch (((WmStartMPCallback *)arg0)->state) {
+        switch (((WmStartMPCallback *)arg)->state) {
         case 0xA:
             WM_WORK->mpStarted = 1;
             WM_WORK->userCallback(0x19, 0);
             return;
         case 0xB:
-            WM_WORK->userCallback(3, ((WmStartMPCallback *)arg0)->recvBuf);
+            WM_WORK->userCallback(3, ((WmStartMPCallback *)arg)->recvBuf);
             return;
         default:
-            WM_WORK->userCallback(0x100, arg0);
+            WM_WORK->userCallback(0x100, arg);
             return;
         }
 
     case 0xF:
         WM_WORK->mpSending = 0;
         {
-            u16 t = cb->errcode;
-            if (t == 0) {
-                WM_WORK->userCallback(2, arg0);
+            u16 err = cb->errcode;
+            if (err == 0) {
+                WM_WORK->userCallback(2, arg);
                 WM_WORK->userCallback(0x19, 0);
                 return;
             }
-            if (t == 0xA) {
-                WM_WORK->userCallback(0x2A, arg0);
+            if (err == 0xA) {
+                WM_WORK->userCallback(0x2A, arg);
                 return;
             }
-            WM_WORK->userCallback(0x13, arg0);
+            WM_WORK->userCallback(0x13, arg);
             WM_WORK->userCallback(0x19, 0);
             return;
         }
@@ -343,18 +343,18 @@ void MBi_ParentCallback(char *arg0) {
             return;
         }
         WM_WORK->resetting = 0;
-        WM_WORK->userCallback(0x100, arg0);
+        WM_WORK->userCallback(0x100, arg);
         return;
 
     case 0x2:
         if (cb->errcode == 0) {
             WM_WORK->initialized = 0;
             MB_WORK->mIsMbInitialized = 0;
-            WM_WORK->userCallback(0x11, arg0);
+            WM_WORK->userCallback(0x11, arg);
             return;
         }
         WM_WORK->resetting = 0;
-        WM_WORK->userCallback(0x100, arg0);
+        WM_WORK->userCallback(0x100, arg);
         return;
 
     case 0xD:
@@ -373,24 +373,24 @@ void MBi_ParentCallback(char *arg0) {
         return;
 
     case 0x80:
-        switch (((WmIndCallback *)arg0)->state - 0x10) {
+        switch (((WmIndCallback *)arg)->state - 0x10) {
         case 0:
-            WM_WORK->userCallback(0x1D, arg0);
+            WM_WORK->userCallback(0x1D, arg);
             return;
         case 1:
-            WM_WORK->userCallback(0x1F, arg0);
+            WM_WORK->userCallback(0x1F, arg);
             return;
         case 2:
-            WM_WORK->userCallback(0x20, arg0);
+            WM_WORK->userCallback(0x20, arg);
             return;
         case 3:
-            WM_WORK->userCallback(0x21, arg0);
+            WM_WORK->userCallback(0x21, arg);
             return;
         }
         break;
 
     default:
-        WM_WORK->userCallback(0x100, arg0);
+        WM_WORK->userCallback(0x100, arg);
         return;
     }
 }
@@ -420,8 +420,7 @@ void MBi_ChildPortCallback(void *arg) {
  * add one, and point lastParentIndex at it. The record's first 0xc0 bytes are
  * the WMBssDesc DMA'd from the scan buffer, and +0xc0 is a copy of the
  * 0xb8-byte WMStartScanCallback. */
-static inline void RecordScannedParent(WmWork *const w, char *arg0) {
-    WmStartScanCallback *const cb = (WmStartScanCallback *)arg0;
+static inline void RecordScannedParent(WmWork *const w, WmStartScanCallback *const cb) {
     WmParentRecord *tbl = w->parents;
     int i;
     for (i = 0; i < w->parentCount; i++) {
@@ -438,7 +437,7 @@ static inline void RecordScannedParent(WmWork *const w, char *arg0) {
     }
     if (i < 0x10) {
         w->parentCount = i + 1;
-        MIi_CpuCopy16(arg0, &tbl[i].scan, 0xb8);
+        MIi_CpuCopy16(cb, &tbl[i].scan, 0xb8);
         DC_InvalidateRange(&w->parents[i], 0xc0);
         MI_DmaCopy16(data_020a9db0, &w->scanBuf, &w->parents[i], 0xc0);
         w->lastParentIndex = i;
@@ -453,45 +452,46 @@ static inline void RecordScannedParent(WmWork *const w, char *arg0) {
  * While resetting is set only the RESET and END results are taken. Lead: the
  * reconstruction's version scans with WM_StartScanEx and filters parents by
  * GGID; this one uses WM_StartScan and keeps every parent it finds. */
-void MBi_ChildCallback(char *arg0) {
+void MBi_ChildCallback(void *arg) {
+    WmCallback *cb = (WmCallback *)arg;
     WmWork *const w = (WmWork *)data_020a9db4;
 
     if (w->resetting != 0) {
-        if (*(u16 *)arg0 == 1) {
-            if (*(u16 *)(arg0 + 2) == 0) {
+        if (cb->apiid == 1) {
+            if (cb->errcode == 0) {
                 MBi_CheckWmErrcode(2, WM_End((void *)MBi_ChildCallback));
                 return;
             }
             w->resetting = 0;
-            w->userCallback(0x100, arg0);
+            w->userCallback(0x100, arg);
             return;
         }
-        if (*(u16 *)arg0 != 2)
+        if (cb->apiid != 2)
             return;
-        if (*(u16 *)(arg0 + 2) == 0) {
+        if (cb->errcode == 0) {
             w->initialized = 0;
             MB_WORK->mIsMbInitialized = 0;
-            w->userCallback(0x11, arg0);
+            w->userCallback(0x11, arg);
             return;
         }
         w->resetting = 0;
-        w->userCallback(0x100, arg0);
+        w->userCallback(0x100, arg);
         return;
     }
 
-    switch (*(u16 *)arg0) {
+    switch (cb->apiid) {
     case 0:
-        if (*(u16 *)(arg0 + 2) == 0) {
-            w->userCallback(0x15, arg0);
+        if (cb->errcode == 0) {
+            w->userCallback(0x15, arg);
             MBi_CheckWmErrcode(0x83, WM_ReadStatus((int *)&w->status));
             MBi_CheckWmErrcode(0x1d, WM_SetLifeTime((void *)MBi_ChildCallback, 0xffff, 0x28, 5));
             return;
         }
-        w->userCallback(0x100, arg0);
+        w->userCallback(0x100, arg);
         return;
 
     case 0x1d:
-        if (*(u16 *)(arg0 + 2) == 0) {
+        if (cb->errcode == 0) {
             SCAN_PARAM->scanBuf = &w->scanBuf;
             if (SCAN_PARAM->channel == 0)
                 SCAN_PARAM->channel = 1;
@@ -505,17 +505,17 @@ void MBi_ChildCallback(char *arg0) {
             MBi_CheckWmErrcode(0xa, WM_StartScan((void *)MBi_ChildCallback, data_020a9dc0));
             return;
         }
-        w->userCallback(0x100, arg0);
+        w->userCallback(0x100, arg);
         return;
 
     case 0xa:
-        if (*(u16 *)(arg0 + 2) == 0) {
-            switch (*(u16 *)(arg0 + 8)) {
+        if (cb->errcode == 0) {
+            switch (((WmStartScanCallback *)arg)->state) {
             case 3:
                 return;
             case 5:
-                RecordScannedParent(w, arg0);
-                w->userCallback(4, arg0);
+                RecordScannedParent(w, (WmStartScanCallback *)arg);
+                w->userCallback(4, arg);
                 if (w->scanContinue == 0)
                     return;
                 if (w->scanNextChannel != 0 && changeScanChannel(SCAN_PARAM) == 0)
@@ -523,7 +523,7 @@ void MBi_ChildCallback(char *arg0) {
                 MBi_CheckWmErrcode(0xa, WM_StartScan((void *)MBi_ChildCallback, data_020a9dc0));
                 return;
             case 4:
-                w->userCallback(5, arg0);
+                w->userCallback(5, arg);
                 if (w->scanContinue == 0)
                     return;
                 if (w->scanNextChannel != 0 && changeScanChannel(SCAN_PARAM) == 0)
@@ -531,31 +531,31 @@ void MBi_ChildCallback(char *arg0) {
                 MBi_CheckWmErrcode(0xa, WM_StartScan((void *)MBi_ChildCallback, data_020a9dc0));
                 return;
             default:
-                w->userCallback(0x100, arg0);
+                w->userCallback(0x100, arg);
                 return;
             }
         } else {
-            w->userCallback(0x100, arg0);
+            w->userCallback(0x100, arg);
         }
         return;
 
     case 0xb:
-        if (*(u16 *)(arg0 + 2) == 0) {
+        if (cb->errcode == 0) {
             MBi_CheckWmErrcode(0xc,
                                WM_StartConnect((void *)MBi_ChildCallback, w->connectBssDesc, 0));
             return;
         }
-        w->userCallback(0x100, arg0);
+        w->userCallback(0x100, arg);
         return;
 
     case 0xc:
-        if (*(u16 *)(arg0 + 2) == 0) {
-            switch (*(u16 *)(arg0 + 8)) {
+        if (cb->errcode == 0) {
+            switch (((WmStartConnectCallback *)arg)->state) {
             case 6:
                 return;
             case 7:
-                w->aid = ((WmStartConnectCallback *)arg0)->aid;
-                w->userCallback(6, arg0);
+                w->aid = ((WmStartConnectCallback *)arg)->aid;
+                w->userCallback(6, arg);
                 w->childBitmap = 1;
                 if (WM_SetPortCallback(1, (void *)MBi_ChildPortCallback, 0) != 0)
                     return;
@@ -565,21 +565,21 @@ void MBi_ChildCallback(char *arg0) {
                                       (u16)(w->mpContinuous == 0 ? 1 : 0), 0, 0, 0, 1, 1));
                 return;
             case 9:
-                w->userCallback(0xa, arg0);
+                w->userCallback(0xa, arg);
                 w->childBitmap = 0;
                 return;
             default:
-                w->userCallback(0x100, arg0);
+                w->userCallback(0x100, arg);
                 return;
             }
         } else {
             w->parentCount = 0;
-            w->userCallback(0xb, arg0);
+            w->userCallback(0xb, arg);
         }
         return;
 
     case 0xe:
-        switch (*(u16 *)(arg0 + 4)) {
+        switch (((WmStartMPCallback *)arg)->state) {
         case 0xa:
             w->mpStarted = 1;
             if (MBi_IsSendEnabled() == 0)
@@ -591,18 +591,18 @@ void MBi_ChildCallback(char *arg0) {
         case 0xd:
             return;
         default:
-            w->userCallback(0x100, arg0);
+            w->userCallback(0x100, arg);
             return;
         }
 
     case 0xf:
         w->mpSending = 0;
-        if (*(u16 *)(arg0 + 2) == 0)
-            w->userCallback(8, arg0);
-        else if (*(u16 *)(arg0 + 2) == 9)
-            w->userCallback(0x29, arg0);
+        if (cb->errcode == 0)
+            w->userCallback(8, arg);
+        else if (cb->errcode == 9)
+            w->userCallback(0x29, arg);
         else
-            w->userCallback(0x12, arg0);
+            w->userCallback(0x12, arg);
         w->userCallback(0x19, 0);
         return;
 
@@ -616,7 +616,7 @@ void MBi_ChildCallback(char *arg0) {
         return;
 
     default:
-        w->userCallback(0x100, arg0);
+        w->userCallback(0x100, arg);
         return;
     }
 }
@@ -641,50 +641,49 @@ int MBi_GetBeaconPeriodDispersion(void) {
  * mIsMbInitialized (the SDK's isMbInitialized) is set. Lead: the reconstruction's MB_Init
  * takes (work, user, ggid, tgid, dma), resolves MB_TGID_AUTO and sets the
  * lifetimes and the power-save flag; this one takes the GGID as two halves
- * (a2, a3) and does none of that. */
+ * (ggid0, ggid1) and does none of that. */
 int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, int dma) {
     volatile unsigned short fill_s;
     volatile int fill_i;
-    /* base1 (the WmWork) and base2 are byte pointers, not ints: every WmWork
-     store below (parentMaxSize, sendBufSize, sendBuf, ...) is add-high /
-     small-offset on the cartridge (add r0,r7,#0x1e00 / strh r3,[r0,#0x18]),
-     which mwcc only emits for pointer arithmetic. With int bases each offset
-     is materialized from the literal pool and stored through a register
-     index, 15 words longer. */
-    char *base1;
-    char *base2;
+    /* Pointers, not ints: every WmWork store below (parentMaxSize,
+     sendBufSize, sendBuf, ...) is add-high / small-offset on the cartridge
+     (add r0,r7,#0x1e00 / strh r3,[r0,#0x18]), which mwcc only emits for
+     pointer arithmetic. With int bases each offset is materialized from the
+     literal pool and stored through a register index, 15 words longer. */
+    WmWork *wm;
+    MbParentWork *mb;
     OSIntrMode irq;
     if ((data_020a9db8 != 0) && (MB_WORK->mIsMbInitialized != 0)) {
         return 2;
     }
-    base1 = (char *)MATH_ROUNDUP((u32)work, 32);
-    base2 = (char *)MATH_ROUNDUP((int)base1 + sizeof(WmWork), 32);
+    wm = (WmWork *)MATH_ROUNDUP((u32)work, 32);
+    mb = (MbParentWork *)MATH_ROUNDUP((int)wm + sizeof(WmWork), 32);
     irq = OS_DisableInterrupts();
     fill_i = 0;
     data_020a9db0 = (u16)dma;
-    data_020a9db4 = base1;
-    data_020a9db8 = base2;
-    MIi_CpuClear32(fill_i, (int *)base1, sizeof(WmWork));
+    data_020a9db4 = (char *)wm;
+    data_020a9db8 = (char *)mb;
+    MIi_CpuClear32(fill_i, (int *)wm, sizeof(WmWork));
     fill_s = 0;
-    MIi_CpuClear16(fill_s, base2, 0x1340);
+    MIi_CpuClear16(fill_s, (char *)mb, 0x1340);
     /* The user's name and L"multiboot" (MB_Init's static game-name pointer,
      stepped as it is read); 10 halfwords overrun the 8-byte uname into
      gname, which the second copy then overwrites */
     {
         int i = 0;
-        u16 *dst = (u16 *)((WmWork *)base1)->uname;
-        u16 v;
+        u16 *dst = (u16 *)wm->uname;
+        u16 c;
         do {
-            v = user->name[i];
-            if (v == 0) {
+            c = user->name[i];
+            if (c == 0) {
                 break;
             }
             i++;
-            *(dst++) = v;
+            *(dst++) = c;
         } while (i < 0xa);
     }
     {
-        u16 *dst = (u16 *)((WmWork *)base1)->gname;
+        u16 *dst = (u16 *)wm->gname;
         int j = 0;
         do {
             u16 *ptr = data_0209a084;
@@ -696,16 +695,16 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
             *(dst++) = *ptr;
         } while (j < 0x10);
     }
-    MI_CpuCopy8(user, base2 + 0x1300, 0x16);
-    ((WmWork *)base1)->parentMaxSize = 0x100;
-    ((WmWork *)base1)->childMaxSize = 8;
-    ((WmWork *)base1)->sendBufSize = 0;
-    ((WmWork *)base1)->recvBufSize = 0;
-    ((WmWork *)base1)->mpContinuous = 1;
-    ((WmWork *)base1)->sendBuf = base2;
-    ((WmWork *)base1)->recvBuf = base2 + 0x400;
+    MI_CpuCopy8(user, mb->mParentUser, 0x16);
+    wm->parentMaxSize = 0x100;
+    wm->childMaxSize = 8;
+    wm->sendBufSize = 0;
+    wm->recvBufSize = 0;
+    wm->mpContinuous = 1;
+    wm->sendBuf = (char *)mb->mSendBuf;
+    wm->recvBuf = (char *)mb->mRecvBuf;
     {
-        WmParentParam *hdr = &((WmWork *)base1)->parentParam;
+        WmParentParam *hdr = &wm->parentParam;
         hdr->CS_Flag = 1;
         hdr->KS_Flag = 0;
         hdr->ggid[0] = (short)ggid0;
@@ -716,11 +715,11 @@ int MB_Init(void *work, const MBUserInfo *user, int ggid0, int ggid1, u16 tgid, 
         hdr->beaconPeriod = (u16)(MBi_GetBeaconPeriodDispersion() + 0xc8);
         hdr->maxEntry = 0xf;
     }
-    ((WmWork *)base1)->mpSending = 0;
-    ((WmWork *)base1)->initialized = 0;
-    ((MbParentWork *)base2)->mStartMpBusy = 0;
+    wm->mpSending = 0;
+    wm->initialized = 0;
+    mb->mStartMpBusy = 0;
     OS_RestoreInterrupts(irq);
-    ((MbParentWork *)base2)->mIsMbInitialized = 1;
+    mb->mIsMbInitialized = 1;
     return 0;
 }
 
@@ -779,22 +778,22 @@ int MBi_StartCommon(void) {
  * start. Lead: the reconstruction's sets mbc->is_started_ex in a separate
  * MB_StartParent, sizes the request pieces through MBi_SetChildMPMaxSize and
  * reads PXI_IsCallbackReady for useWvrFlag at the end. */
-int MB_StartParent(int param0) {
+int MB_StartParent(int channel) {
     OSIntrMode saved;
-    volatile u16 sp0;
-    volatile u16 sp2;
+    volatile u16 fill0;
+    volatile u16 fill1;
     u32 cb;
     int i;
     int result;
 
     saved = OS_DisableInterrupts();
 
-    WM_WORK->parentParam.channel = param0;
+    WM_WORK->parentParam.channel = channel;
 
     cb = MB_WORK->mParentCallback;
 
-    sp0 = 0;
-    MIi_CpuClear16(sp0, (char *)MB_WORK->mChildUser, 0x60a0);
+    fill0 = 0;
+    MIi_CpuClear16(fill0, (char *)MB_WORK->mChildUser, 0x60a0);
 
     MB_CommSetParentStateCallback(cb);
 
@@ -808,8 +807,8 @@ int MB_StartParent(int param0) {
     }
     MB_WORK->mFileCount = 0;
 
-    sp2 = 0;
-    MIi_CpuClear16(sp2, (char *)MB_WORK->mFiles, 0x5c40);
+    fill1 = 0;
+    MIi_CpuClear16(fill1, (char *)MB_WORK->mFiles, 0x5c40);
 
     MI_CpuFill8(MB_WORK->mChildResponse, 0, 0x1e);
 
@@ -873,26 +872,27 @@ int MBi_SetMPData(int callback, int data, int size, int unused, u16 aidBitmap) {
  * returns 0; any other code is returned as it is. Lead: the reconstruction's
  * has the same two cases, but this parent case first pads the size up to
  * data_0209a088 (6). */
-int MBi_SendMP(int arg0, int arg1, int arg2) {
+int MBi_SendMP(int data, int len, int aidBitmap) {
     WmWork *hdr = WM_WORK;
-    int a = (u16)arg1;
-    u16 b = arg2;
+    int size = (u16)len;
+    u16 aids = aidBitmap;
     int ret;
-    int u;
+    int wait;
     if ((hdr->mpStarted == 0) || (hdr->resetting == 1)) {
         return 1;
     }
     switch (hdr->mode) {
     case 1:
-        if (a < data_0209a088) {
-            a = (u16)data_0209a088;
+        if (size < data_0209a088) {
+            size = (u16)data_0209a088;
         }
         if (hdr->mpContinuous == 0) {
-            u = 1000;
+            wait = 1000;
         } else {
-            u = 0;
+            wait = 0;
         }
-        ret = MBi_SetMPData((int)hdr->stateCallback, arg0, a, (u16)u, b);
+        ret = MBi_SetMPData((int)hdr->stateCallback, data, size, (u16)wait, aids);
+        /* Two tests of OPERATING, as shipped: one if for both costs a word. */
         if (ret == 2) {
             WM_WORK->mpSending = 1;
         }
@@ -902,7 +902,7 @@ int MBi_SendMP(int arg0, int arg1, int arg2) {
         return ret;
 
     case 2:
-        ret = MBi_SetMPData((int)MBi_ChildCallback, arg0, a, 0, b);
+        ret = MBi_SetMPData((int)MBi_ChildCallback, data, size, 0, aids);
         if (ret == 2) {
             WM_WORK->mpSending = 1;
         }

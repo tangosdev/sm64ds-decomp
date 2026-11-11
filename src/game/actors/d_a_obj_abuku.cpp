@@ -17,12 +17,13 @@
  *   [6] 0x020b3568  daObjAbuku_c_classInit
  *
  * Notes:
- * - The sway reads NitroSDK's FX_SinCosTable_ at (mSwayAngle >> 4).
+ * - The sway is FX_CosIdx((u16)mSwayAngle >> 4): an s16 angle, sign-extended
+ *   by the increment and re-read zero-extended for the index.
  * - g_profile_OBJ_ABUKU is a SpawnInfo, the shared 0x1c actor-profile
  *   layout. The manifest proves the descriptor,
  *   then deadstrip-discards it (canonical home outside .text).
- * - mSwayAngle volatile-u16 reload + >> 4, and the actorID == 0xbf
- *   int-then-if, kept in matched form.
+ * - The actorID == 0xbf int-then-if is kept in matched form: a plain
+ *   `if` compiles to a different body.
  */
 
 #include "daObjAbuku_c.h"
@@ -34,11 +35,11 @@
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
+#include "nitro/fx/fx_trig.h"
 
 /* arm9 C helpers with no shared header. */
 extern "C" {
 int SurfaceInfo_TestFlag0x20(int *p);
-extern short FX_SinCosTable_[];
 unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
@@ -63,10 +64,7 @@ int daObjAbuku_c::InitResources() {
 /* -------------------------------------------------------------------------- */
 int daObjAbuku_c::Behavior() {
     mSwayAngle += 0x400;
-    int v = *(volatile unsigned short *)(&mSwayAngle);
-    int x = v >> 4;
-    short tv = FX_SinCosTable_[2 * x + 1];
-    mHorzSpeed = FX_MUL(mDriftSpeed, tv);
+    mHorzSpeed = FX_MUL(mDriftSpeed, FX_CosIdx((u16)mSwayAngle >> 4));
     ApproachLinear(mDriftSpeed, 0x6000, 0x332);
     UpdatePos((dCc_c *)0);
     unsigned int id = mdCcAc_c.otherOwner;

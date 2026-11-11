@@ -43,6 +43,7 @@
 #include "Ov007Item.h"
 #include "Ov007Light.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -245,15 +246,6 @@ void func_ov007_020bf304(void) {
     SCENE = 0;
 }
 
-/* ticks over frames as a Q12 fraction, held to [0, 1]. */
-static inline int FadeRatio(int ticks, int frames) {
-    if (ticks <= 0)
-        return 0;
-    if (ticks >= frames)
-        return 0x1000;
-    return FX_DivS32(ticks << 12, frames);
-}
-
 /* One frame of the backdrop: pokes the mesh under the stylus (harder for a
  * fast stroke) or, with no touch, under the cursor's settled item; ripples
  * and steps the mesh; lets each visible item's swing move its sprite; then
@@ -364,7 +356,7 @@ void func_ov007_020beeb0(void) {
         int ticks = WORK->paletteState->stateTicks;
         u16 *diffuse = &mat->diffuse;
         u16 *ambient = &mat->ambient;
-        int ratio = FadeRatio(ticks, fadeFrames);
+        int ratio = ProgressRatio(ticks, fadeFrames);
         *diffuse = func_ov007_020c3be0(ratio, *diffuse, diffuseTarget);
         *ambient = func_ov007_020c3be0(ratio, *ambient, ambientTarget);
     }
@@ -377,9 +369,9 @@ void func_ov007_020beeb0(void) {
         int state = fileState->currentState;
         if (state == 0xb) {
             color = 0x3def;
-            ratio = FadeRatio(fileState->stateTicks, 30);
+            ratio = ProgressRatio(fileState->stateTicks, 30);
         } else if (state == 0xa) {
-            ratio = FadeRatio(fileState->stateTicks, 30);
+            ratio = ProgressRatio(fileState->stateTicks, 30);
         }
         WORK->lights[0]->color = func_ov007_020c3be0(ratio, WORK->lights[0]->color, color);
     }
