@@ -86,7 +86,7 @@ Foreign *find(const void *a) {
 // d_a_star.cpp asks: 0 mine, 1 a friend's, 2 a friend's that was already filming when it became his; or, for a collector, nonzero
 // when it is not my player.
 int hook(const void *star, const void *player) {
-    if (g_off || !coop_world_active()) return 0;
+    if (g_off || !port::coop_world_active()) return 0;
     if (player) {
         const char *me = my_player();
         if (!me || player == me) return 0;
