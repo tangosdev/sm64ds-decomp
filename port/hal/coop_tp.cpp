@@ -211,7 +211,8 @@ void try_tp(int seat, unsigned now) {
     // Landing: the level's own START (entrance 0), as entering the course from its painting. The friend's
     // position is never read here: only their level and act.
     int castle = 0, ret = 0;
-    if (coop_castle_entrance_for_course(p.level, &castle, &ret)) {
+    static const bool old_way = std::getenv("SM64DS_COOP_TP_NORET") != nullptr;   // proof knob: the pre-fix load
+    if (!old_way && coop_castle_entrance_for_course(p.level, &castle, &ret)) {
         // Entered like the painting does: the castle sublevel and the painting's entrance are recorded, so a
         // star exit, Exit Course or death puts this player back at that painting.
         LoadLevel((unsigned)p.level, 0, (unsigned)p.act, 0, (unsigned)ret);
