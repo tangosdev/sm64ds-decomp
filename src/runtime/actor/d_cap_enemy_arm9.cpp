@@ -41,6 +41,10 @@ struct Vector3_16 { s16 x, y, z; };
    (data_0209f2d8 == 1 below). port/hal/coop_world.cpp sets the hook while it runs; with no room (solo) it stays 0 and
    this function is the cartridge's. The DS build never sees this. */
 extern "C" { int (*port_coop_cap_keep_all)(void) = 0; }
+/* Host only (run coopfix1, lane COOPBOO5, Tango: "Yes, stays gone"). In a coop room a beaten cap Boo (class 209) leaves no
+   dormant replacement: RespawnIfHasCap's Spawn gives it no death table slot (-1), so no other console ever had it, and beating it
+   again counted for the Big Boo on one console only. The hook answers 1 for such an actor id in a coop room; solo it stays 0. */
+extern "C" { int (*port_coop_cap_no_respawn)(unsigned int actorID) = 0; }
 #endif
 
 extern "C" {
@@ -202,6 +206,9 @@ struct dActor_c * dCapEnemy_c::RespawnIfHasCap()
     struct dActor_c *r;
     func_02005ed8();
     if ((mCapId & 0xf) >= 6) return 0;
+#ifdef _MSC_VER
+    if (port_coop_cap_no_respawn && port_coop_cap_no_respawn(actorID)) return 0;
+#endif
     r = dActor_c::Spawn(
         actorID, param1,
         *(const Vector3 *)&mPosX,

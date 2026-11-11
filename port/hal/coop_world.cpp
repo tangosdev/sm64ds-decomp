@@ -2527,6 +2527,16 @@ extern "C" int (*port_coop_cap_keep_all)(void);   // src/runtime/actor/d_cap_ene
 bool coop_world_active();
 int cap_keep_all() { return coop_world_active() ? 1 : 0; }
 struct CapKeepHook { CapKeepHook() { port_coop_cap_keep_all = cap_keep_all; } } g_cap_keep_hook;
+// COOPBOO5 (Tango: "Yes, stays gone"): in a coop room a beaten cap Boo leaves no dormant replacement (d_cap_enemy_arm9.cpp
+// RespawnIfHasCap). The replacement had no death table slot, so it stood on the killer's console only and a second defeat of it
+// counted for that console's Big Boo alone.
+extern "C" int (*port_coop_cap_no_respawn)(unsigned int actorID);
+int cap_no_respawn(unsigned int id) {
+    if (id != 209 || !coop_world_active()) return 0;
+    if (g_log) std::fprintf(stderr, "[coop] boo: a beaten cap Boo leaves no replacement here (coop room) wall=%lld\n", wall_ms());
+    return 1;
+}
+struct CapNoRespawnHook { CapNoRespawnHook() { port_coop_cap_no_respawn = cap_no_respawn; } } g_cap_no_respawn_hook;
 
 bool coop_world_active() {
     read_env();
