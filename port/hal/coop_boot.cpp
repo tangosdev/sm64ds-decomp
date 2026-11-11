@@ -423,6 +423,7 @@ void roster_watch() {
         if (p && (!w.present || ep != w.epoch)) {
             w.join_pending = !host_seat;   // the guest's host line is check_host_quiet's
             w.join_at = now;
+            w.bye = false;                 // a new stay: an old BYE is spent
             LOG("REJOIN seat %d %s (epoch %u)", s, w.ever ? "is back" : "joined", ep);
         } else if (!p && w.present) {
             LOG("REJOIN seat %d is gone (%s)", s, w.bye ? "it said BYE" : "no BYE: lost connection");
@@ -438,7 +439,7 @@ void roster_watch() {
             rejoin_say(line);
             w.join_pending = false;
         }
-        if (p) { w.ever = true; w.bye = false; }
+        if (p) w.ever = true;
         w.present = p;
         w.epoch = ep;
     }
@@ -1080,6 +1081,10 @@ void spawn_frame() {
 /* REJOIN1 piece 5: this guest came into a room whose game had already started (a late joiner, or back by JOIN GAME).
    0 = not; else a number that changes on every such entry (an in-place rejoin is a new entry in the same process). */
 static int g_late_entry;
+extern "C" int port_coop_host_seat(void) {   /* the host's hub seat as this guest knows it, -1 unknown (not always 0 from the lobby) */
+    using namespace port;
+    return (C.on && !C.host) ? C.host_seat : -1;
+}
 extern "C" int port_coop_late_joiner(void) {
     using namespace port;
     return (C.on && !C.host && C.at_first_frame && C.late_at_first) ? g_late_entry : 0;

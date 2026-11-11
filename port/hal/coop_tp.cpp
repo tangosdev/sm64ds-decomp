@@ -32,6 +32,7 @@ void LoadLevelNoReturn(unsigned level, unsigned entrance, unsigned star, unsigne
 int port_level_is_mounted(int level);
 void port_chat_system_line(const char *text);
 int port_coop_late_joiner(void);
+int port_coop_host_seat(void);
 }
 
 namespace port {
@@ -289,17 +290,19 @@ void follow_host(unsigned now) {
         g.follow = 2; std::fprintf(stderr, "[cotp] REJOIN follow: the host never settled in a course within 60 s, staying\n"); return;
     }
     if (!on_now()) return;
+    const int hs = port_coop_host_seat();   // a lobby room can put the host on hub seat 1
+    if (hs < 0 || hs >= kSeats || hs == comms_hub_my_seat()) return;
     HubPresence p; unsigned age = 0;
-    if (!hub_presence_get(kHostSeat, &p, &age) || age > (unsigned)kPresMaxAgeMs || !p.in_level()) return;
+    if (!hub_presence_get(hs, &p, &age) || age > (unsigned)kPresMaxAgeMs || !p.in_level()) return;
     if (p.level >= 1 && p.level <= 5) {     // the host is in the castle too: nothing to follow
         g.follow = 2; std::fprintf(stderr, "[cotp] REJOIN follow: the host is in the castle (sublevel %d), no follow\n", p.level); return;
     }
-    const Seen &z = g.seen[kHostSeat];
+    const Seen &z = g.seen[hs];
     if (p.in_menu() || p.in_cutscene() || !z.valid || (int)(now - z.since) < kSettleMs || p.level > 51 || p.act < 0 || p.act > 7) return;
     if (!port_level_is_mounted(p.level) || my_gate()) return;
     g.follow = 2;
     std::fprintf(stderr, "[cotp] REJOIN follow: the host is in level %d act %d, going there\n", p.level, p.act);
-    try_tp(kHostSeat, now);
+    try_tp(hs, now);
 }
 
 void on_frame(unsigned now) {
