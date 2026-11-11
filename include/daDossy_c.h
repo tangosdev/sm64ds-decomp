@@ -11,9 +11,9 @@
  *
  * DorriePlatform is independently corroborated by the two 0x1c callbacks used
  * by daDossy_c_classInit and the D1/D0 pair: each callback constructs or destroys a
- * dBgW_KcMbg at +0x30, the array stride is 0x200, and InitResources advances
- * the matrix and collider views at exactly that stride. Matrix4x3 (0x30) plus
- * dBgW_KcMbg (0x1c8) plus Vector3_16 (0x6) naturally pads to 0x200.
+ * dBgW_KcMbg at +0x30, the array stride is 0x200, and every platform loop's
+ * strength-reduced pointers advance at exactly that stride. Matrix4x3 (0x30)
+ * plus dBgW_KcMbg (0x1c8) plus Vector3s (0x6) naturally pads to 0x200.
  *
  * SM64DS RTTI names the implementation daDossy_c. The reconstructed
  * factory daDossy_c_classInit (historical alias
@@ -29,13 +29,18 @@
 #include "dBgCh_Actr.h"
 #include "dCcAc_c.h"
 #include "dCcAcPos_c.h"
+#include "Vector3s.h"
 
 struct daDossyCap_c;
 
 struct DorriePlatform {
     Matrix4x3 mClsnNextMat;     /* 0x000 */
     dBgW_KcMbg mClsn;           /* 0x030 */
-    Vector3_16 mRot;            /* 0x1f8 */
+    /* A Vector3s, not the POD Vector3_16: func_ov065_02118838 copies a
+       Vector3s local in, and the ROM copies member by member (ldrsh/strh)
+       as it does for a class with a declared destructor. A POD copy goes
+       by word. */
+    Vector3s mRot;              /* 0x1f8 */
 
     DorriePlatform();
     ~DorriePlatform();

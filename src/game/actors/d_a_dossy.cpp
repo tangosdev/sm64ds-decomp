@@ -6,11 +6,10 @@
  * _ZTI8dActor_c. _ZTV9daDossy_c 0x0211ce48, _ZTV12daDossyCap_c 0x0211cdc4.
  * Both destructors are inline, so each D1/D0 pair lands at the bottom of
  * the run and InitResources is the key function. Highest address first.
- * opt_common_subs off and opt_strength_reduction off are file-wide:
- * func_ov065_02118838 needs both, and a bracket around that function
- * does not bind. With either one on, its platform loop recolours and
- * grows (common subexpressions on: 0x418 bytes, strength reduction on:
- * 0x430; the ROM's is 0x414).
+ *
+ * The platform loops index mPlatforms[i] and compile under the default
+ * optimisation: the 0x200-stride pointers the ROM walks are strength
+ * reduction's, not the source's.
  */
 // leftovers:
 // - dExtAnmModel_c::SetAnim and the other Fix12<int>-by-value calls stay
@@ -19,13 +18,9 @@
 // - These three helpers stay as address-named free-function seams. The
 //   original ownership and names are unproven; func_ov065_02119210 is typed
 //   with its caller's daDossyCap_c * view.
-// - func_ov065_02118838 keeps `(i << 9)` platform addressing, spelled
-//   `((daDossy_c *)(c + (i << 9)))->mPlatforms[0].field`. A typed
-//   DorriePlatform walk, a DorriePlatform * local over that address, or
-//   mPlatforms[i], changes that function and the char* walks in
-//   CleanupResources and InitResources. Casting `c + (i << 9) + 0x150` to
-//   DorriePlatform * is 4 bytes longer, and `(char *)mPlatforms + (i << 9)`
-//   is 12 bytes longer.
+// - func_ov065_02118838 reads each bone's angles z, y, x into a Vector3s
+//   before storing them x, y, z: assigning rot.x/y/z straight from the bone
+//   is 9 words off.
 // - The seven parameter names on Matrix4x3_FromRotationY,
 //   DecIfAbove0_Short and the four extra names on BgchInitAt_ hold the
 //   @NNN count: removing the gotos from func_ov065_021183c8 and
@@ -58,8 +53,6 @@ enum daDossy_c_AssetId {
     ASSET_DOSSY_SWIM_BCA = 0x02f3
 };
 
-#pragma opt_common_subs off
-#pragma opt_strength_reduction off
 #include "common.h"
 #include "daDossy_c.h"
 #include "daDossyCap_c.h"
@@ -236,23 +229,18 @@ int daDossy_c::InitResources()
 
     {
         int j;
-        char* mtx = (char *)&mPlatforms[0].mClsnNextMat;
-        char* mmc = (char *)&mPlatforms[0].mClsn;
         for (j = 0; j < 7; j++) {
             KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov065_0211c08c[j]);
-            ((dBgW_KcMbg *)(mmc))
-                ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), *(const Matrix4x3 *)(mtx), 0x1000, mAngleY,
-                                      *(CLPS_Block *)(data_ov065_0211cd68[j]));
+            mPlatforms[j].mClsn.dBgW_KcMbg::SetFile(kcl, mPlatforms[j].mClsnNextMat, 0x1000, mAngleY,
+                                                    *(CLPS_Block *)data_ov065_0211cd68[j]);
             if ((unsigned)j <= 2) {
-                ((dBgW *)mmc)->SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
+                mPlatforms[j].mClsn.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
                 if (j == 2)
-                    ((dBgW *)mmc)->SetStoodOnCallback(func_ov065_021195bc);
+                    mPlatforms[j].mClsn.SetStoodOnCallback(func_ov065_021195bc);
                 else
-                    ((dBgW *)mmc)->SetStoodOnCallback(func_ov065_021195d0);
+                    mPlatforms[j].mClsn.SetStoodOnCallback(func_ov065_021195d0);
             }
-            ((dBgW_KcMbg *)mmc)->Enable(this);
-            mtx += sizeof(DorriePlatform);
-            mmc += sizeof(DorriePlatform);
+            mPlatforms[j].mClsn.Enable(this);
         }
     }
 
@@ -349,7 +337,7 @@ int daDossyCap_c::Behavior()
 
 int daDossy_c::Behavior()
 {
-    int d;
+    int offCenter;
     int outer;
     int inner;
 
@@ -365,32 +353,33 @@ int daDossy_c::Behavior()
     mAngToCenter = Vec3_HorzAngle(reinterpret_cast<const Vector3 *>(&mPosX),
                                   reinterpret_cast<const Vector3 *>(&mSpawnPosX));
 
-    d = (short)AngleDiff(mAngToCenter, mAngleY);
+    offCenter = (short)AngleDiff(mAngToCenter, mAngleY);
 
     {
-        short sv = FX_CosIdx((unsigned short)d >> 4);
-        short cv = FX_SinIdx((unsigned short)mPlatforms[1].mRot.x >> 4);
-        int sm = sv * 0x190;
-        int t = FX_MUL(sm, cv);
-        if (d < 0x4000) {
-            inner = t + 0x5f8000;
+        /* Her neck's horizontal reach pushes out the inner edge of the
+           ring she swims in, or the outer edge once offCenter is 0x4000
+           or more. */
+        int neck = FX_CosIdx((u16)offCenter >> 4) * 0x190;
+        int neckReach = FX_MUL(neck, FX_SinIdx((u16)mPlatforms[1].mRot.x >> 4));
+        if (offCenter < 0x4000) {
+            inner = neckReach + 0x5f8000;
             outer = 0x97c000;
         } else {
             inner = 0x5f8000;
-            outer = t + 0x97c000;
+            outer = neckReach + 0x97c000;
         }
     }
 
     if (mDistToCenter >= outer) {
         mPosX =
-            mSpawnPosX - FX_MUL(outer, FX_SinIdx((unsigned short)mAngToCenter >> 4));
+            mSpawnPosX - FX_MUL(outer, FX_SinIdx((u16)mAngToCenter >> 4));
         mPosZ = mSpawnPosZ -
-                FX_MUL(outer, FX_CosIdx((unsigned short)mAngToCenter >> 4));
+                FX_MUL(outer, FX_CosIdx((u16)mAngToCenter >> 4));
     } else if (mDistToCenter <= inner) {
         mPosX =
-            mSpawnPosX - FX_MUL(inner, FX_SinIdx((unsigned short)mAngToCenter >> 4));
+            mSpawnPosX - FX_MUL(inner, FX_SinIdx((u16)mAngToCenter >> 4));
         mPosZ = mSpawnPosZ -
-                FX_MUL(inner, FX_CosIdx((unsigned short)mAngToCenter >> 4));
+                FX_MUL(inner, FX_CosIdx((u16)mAngToCenter >> 4));
     }
 
     UpdatePos(0);
@@ -427,13 +416,10 @@ int daDossy_c::Render()
 int daDossy_c::CleanupResources()
 {
     int i;
-    char *clsn;
     data_ov002_0210d9c0.Release();
-    clsn = (char *)&mPlatforms[0].mClsn;
     for (i = 0; i < 7; i++) {
-        ((dBgW_KcMbg *)clsn)->Disable();
+        mPlatforms[i].mClsn.Disable();
         data_ov065_0211c08c[i]->Release();
-        clsn += sizeof(DorriePlatform);
     }
     for (i = 0; i < 3; i++)
         data_ov065_0211c080[i]->Release();
@@ -462,9 +448,6 @@ extern "C" void func_ov065_02118c4c(char *c)
 
 void daDossy_c::func_ov065_02118838()
 {
-    char *c = (char *)this;
-    char *pm;
-    char *pk;
     Vector3s rot;
     Vector3 v;
     Matrix4x3 base;
@@ -474,8 +457,6 @@ void daDossy_c::func_ov065_02118838()
     Matrix4x3_FromTranslation(&data_020a0e68, mPosX, mPosY, mPosZ);
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
     base = data_020a0e68;
-    pm = (char *)&mPlatforms[0].mClsnNextMat;
-    pk = (char *)&mPlatforms[0].mClsn;
     tbl = data_ov065_0211c078;
     for (i = 0; i < 7; i++) {
         ModelBone *bone = &mAnmModel.data.bones[*tbl];
@@ -487,11 +468,11 @@ void daDossy_c::func_ov065_02118838()
             rot.y = ty;
             rot.z = tz;
         }
-        *(Vector3s *)&((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot = rot;
+        mPlatforms[i].mRot = rot;
         if (i == 2) {
-            ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.x += mPlatforms[1].mRot.x;
-            ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.y += mPlatforms[1].mRot.y;
-            ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.z += mPlatforms[1].mRot.z;
+            mPlatforms[i].mRot.x += mPlatforms[1].mRot.x;
+            mPlatforms[i].mRot.y += mPlatforms[1].mRot.y;
+            mPlatforms[i].mRot.z += mPlatforms[1].mRot.z;
         }
         v.x = 0;
         v.y = 0;
@@ -523,15 +504,13 @@ void daDossy_c::func_ov065_02118838()
         }
         Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
         Matrix4x3_ApplyInPlaceToRotationY(
-            &data_020a0e68, (s16)(mAngleY + ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.y));
+            &data_020a0e68, mAngleY + mPlatforms[i].mRot.y);
         Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68,
-                                          ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.x);
+                                          mPlatforms[i].mRot.x);
         Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68,
-                                          ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mRot.z);
-        ((daDossy_c *)(c + (i << 9)))->mPlatforms[0].mClsnNextMat = data_020a0e68;
-        ((dBgW_KcMbg *)pk)->Transform(*(Matrix4x3 *)pm, mAngleY);
-        pm += 0x200;
-        pk += 0x200;
+                                          mPlatforms[i].mRot.z);
+        mPlatforms[i].mClsnNextMat = data_020a0e68;
+        mPlatforms[i].mClsn.Transform(mPlatforms[i].mClsnNextMat, mAngleY);
         tbl++;
     }
 }
@@ -679,23 +658,19 @@ void daDossy_c::func_ov065_021182e4()
 
 int daDossy_c::func_ov065_02118248()
 {
+    int i;
+
     int hidden = (int)((mFlags & 8) != 0);
     if (hidden != 0) {
-        int i;
-        char *clsn = (char *)&mPlatforms[0].mClsn;
         for (i = 0; i < 7; i++) {
-            if (((dBgW_KcMbg *)clsn)->IsEnabled())
-                ((dBgW_KcMbg *)clsn)->Disable();
-            clsn += sizeof(DorriePlatform);
+            if (mPlatforms[i].mClsn.IsEnabled())
+                mPlatforms[i].mClsn.Disable();
         }
         return 1;
     }
-    char *clsn = (char *)&mPlatforms[0].mClsn;
-    int i;
     for (i = 0; i < 7; i++) {
-        if (!((dBgW_KcMbg *)clsn)->IsEnabled())
-            ((dBgW_KcMbg *)clsn)->Enable(this);
-        clsn += sizeof(DorriePlatform);
+        if (!mPlatforms[i].mClsn.IsEnabled())
+            mPlatforms[i].mClsn.Enable(this);
     }
     return 0;
 }
