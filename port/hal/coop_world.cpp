@@ -2416,8 +2416,7 @@ void tick_est(unsigned now) {
         static unsigned af = 0; static int aa = -2;
         if (aa == -2) { aa = -1; if (const char *e = std::getenv("SM64DS_COOP_AREA")) { unsigned f = 0; int a = -1; if (std::sscanf(e, "%u:%i", &f, &a) == 2) { af = f; aa = a; } } }
         if (knobs_on && aa >= 0 && g_est_frames >= af) {
-            if (data_02092120 != aa) { ChangeArea(aa); std::fprintf(stderr, "[coop-knob] area %d shown (frame %u)
-", aa, g_est_frames); }
+            if (data_02092120 != aa) { ChangeArea(aa); std::fprintf(stderr, "[coop-knob] area %d shown (frame %u)\n", aa, g_est_frames); }
             aa = -1;
         }
     }
