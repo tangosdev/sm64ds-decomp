@@ -27,6 +27,7 @@ extern short data_02092144[];
 extern dActor_c *STAR_MARKERS[12];      // 0x0209f40c: the actors showing a star glint on the minimap
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 int _ZN12daBombking_c19KingBobOmb_SetStateEPv(void *c, void *state);
+void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int);
 // bossdesc1: Chief Chilly's state records (16 x 0x10 at ov073 0x02123320), his ROM transition, Wiggler's ROM transition, ModelAnim::SetAnim
 int ChiefChilly_ChangeState(void *c, void *state);
 void _ZN12daHanachan_c8SetStateEi(void *c, int state);
@@ -439,7 +440,7 @@ bool value_ok(const BDesc &d, int idx, uint32_t v) {
     }
     if (d.cls == 189) {
         if (idx == 0) return v < 18;                 // a table id
-        if (idx == 1) return v <= 8;                 // mHealth
+        if (idx == 1) return (int32_t)v >= -4 && (int32_t)v <= 8;   // mHealth (coopkbo1: a landing past 0 reads -1; refusing it lost every record after)
         return true;
     }
     if (d.cls == 218) {
@@ -722,7 +723,76 @@ void post_force(Boss &b) {
     }
 }
 
-void apply_rx(int slot, Boss &b, unsigned now) {
+// ---------------------------------------------------------------------------
+// coopkbo1: King Bob-omb and Whomp King on a console that is NOT the boss's authority (Tango's 4-player field report, 11-10).
+// State ids are kbo_states() order: 0 hurt (6ffc, enter takes a health point), 1 intro talk (700c, its tick reloads the boss music
+// when the talk is over), 5 bomb throw (704c, enter spawns a bob-omb into his hand), 6 defeat talk (705c, tick spawns the star),
+// 8 carried by a player (707c), 9 thrown (708c, the landing takes a health point), 17 idle (710c).
+// ---------------------------------------------------------------------------
+enum : uint32_t { kKboHurt = 0, kKboTalk = 1, kKboThrowBomb = 5, kKboDefeat = 6, kKboHeld = 8, kKboThrown = 9, kKboIdle = 17 };
+
+// A copy taken out of the bomb throw before its throw frame keeps the bob-omb pinned to his hand (func_ov078_02125de0 re-pins every
+// unthrown one each frame). Let go of it the ROM's own way (func_ov078_02123864, what a hit does) and mark it thrown.
+void kbo_release_bombs(char *a) {
+    for (int i = 0; i < 2; ++i) {
+        const uint32_t id = (uint32_t)rd32(a, 0x424 + 4 * i);
+        if (!id || a[0x42c + i]) continue;
+        char *bmb = (char *)dActor_c::FindWithID(id);
+        if (!bmb) continue;
+        const int32_t zero = 0; std::memcpy(bmb + 0x3e0, &zero, 4); bmb[0x3f6] = 1;
+        void *nul = nullptr; std::memcpy(bmb + 0xc8, &nul, sizeof nul);
+        a[0x42c + i] = 1;
+        if (g_log) std::fprintf(stderr, "[cbs] kbo bomb released (copy left the throw before the throw frame) w=%lld\n", wall_ms());
+    }
+}
+
+// Carried on another console: without this the copy stays in its walk state while the pose lifts it off the floor, and its own
+// Behavior (d_a_bombking.cpp: not on the ground in 703c) sends it into the JUMP-back-to-the-arena state. The copy is put into the
+// carried state with the carrier's body on this console as the holder and the flags the carrying code would set (0x4000 held, 0x100
+// so the carried tick waits instead of throwing). The throw itself arrives as state 9 from the carrier.
+bool kbo_show_held(Boss &b, int seat) {
+    char *body = (char *)coop_target_body_for_seat(seat);
+    if (!body || seat == g_my) return false;
+    _ZN12daBombking_c19KingBobOmb_SetStateEPv(b.a, kbo_id_to_ptr(kKboHeld));
+    std::memcpy(b.a + 0x494, &body, sizeof body);
+    uint32_t fl = (uint32_t)rd32(b.a, 0xb0);
+    fl = (fl | 0x4000u | 0x100u) & ~(0x400u | 0x2000u);
+    std::memcpy(b.a + 0xb0, &fl, 4);
+    return true;
+}
+void kbo_clear_held(Boss &b) {
+    char *holder = nullptr; std::memcpy(&holder, b.a + 0x494, sizeof holder);
+    const int me = (int)data_0209f250;
+    if (!holder || (me >= 0 && me < 16 && holder == (char *)data_0209f394[me])) return;
+    void *nul = nullptr; std::memcpy(b.a + 0x494, &nul, sizeof nul);
+    uint32_t fl = (uint32_t)rd32(b.a, 0xb0); fl &= ~(0x4000u | 0x100u | 0x400u | 0x2000u); std::memcpy(b.a + 0xb0, &fl, 4);
+}
+
+// The defeat talk belongs to the authority's player only. On every other console it froze the player mid-jump with the boss's
+// last words. A copy that reaches HP 0 goes straight to its end: King Bob-omb into the defeat state, whose tick finds no talk on
+// this console and ends (the star is suppressed here, the authority's arrives by announcement); Whomp King to step 3 of his
+// defeat (the burst). Only before this console's own copy started a talk: a talk that was started is left to finish.
+void skip_defeat_talk(Boss &b, bool hp_just_written) {
+    if (b.d->cls == 189) {
+        if (hp_of(b) > 0) return;
+        const uint32_t st = state_of(b);
+        if (st == kKboDefeat) return;
+        // states 0 and 9 start the talk from their own tick once he is on the ground: only safe when the HP was set to 0 just now
+        if (!hp_just_written && (st == kKboHurt || st == kKboThrown)) return;
+        kbo_release_bombs(b.a);
+        kbo_clear_held(b);
+        give_player_ptrs(b);
+        _ZN12daBombking_c19KingBobOmb_SetStateEPv(b.a, kbo_id_to_ptr(kKboDefeat));
+        if (g_log) std::fprintf(stderr, "[cbs] kbo defeat talk skipped on this console (not the authority) from st=%u w=%lld\n", st, wall_ms());
+    } else if (b.d->cls == 165) {
+        if (state_of(b) == 8u && (unsigned char)b.a[0x40c] == 0) {
+            b.a[0x40c] = 3;
+            if (g_log) std::fprintf(stderr, "[cbs] whomp king defeat talk skipped on this console (not the authority) w=%lld\n", wall_ms());
+        }
+    }
+}
+
+void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
     Rx &x = b.rx;
     if (!x.valid || !x.fresh) return;
     x.fresh = false;
@@ -731,7 +801,7 @@ void apply_rx(int slot, Boss &b, unsigned now) {
     // HP only goes down.
     const int lhp = hp_of(b);
     int rhp = (int)x.w[d.hp];
-    if ((d.f[d.hp].kind & kS8) && rhp < 0) rhp = 0;       // a signed byte HP: anything at or below 0 is "down"; do not chase a double decrement
+    if (((d.f[d.hp].kind & kS8) || d.cls == 189) && rhp < 0) rhp = 0;   // a signed byte HP (and King Bob-omb's, coopkbo1): anything at or below 0 is "down"; do not chase a double decrement
     // Chief Chilly's knock-down count also goes UP once: after the last fall he waits for a hit and, if none comes, his state function
     // sets it back to 1 (src/func_ov073_02120910.c). Both copies do that by themselves; a record from the other state would put the
     // revived copy back to 0, so HP is only compared when both are in the same state, and 0 -> 1 is accepted in the same state.
@@ -741,6 +811,7 @@ void apply_rx(int slot, Boss &b, unsigned now) {
         b.synced_hp = rhp;
         ++g_st.applied_hp;
         if (g_log) std::fprintf(stderr, "[cbs] apply-hp slot=%d hp %d->%d from seat %d w=%lld\n", slot, lhp, rhp, x.from, wall_ms());
+        if (!mine && rhp <= 0) skip_defeat_talk(b, true);
     } else if (!hold && d.cls == 218 && lhp == 0 && rhp == 1) {
         write_field(b.a, d, d.hp, 1u);
         b.synced_hp = 1;
@@ -763,6 +834,16 @@ void apply_rx(int slot, Boss &b, unsigned now) {
     if (!b.heard) force = ls != rs;
     else if (b.mism >= 2) force = true;
     if (carry_state) force = false;
+    // coopkbo1: carried by a friend: the copy shows the carried state at once (see kbo_show_held), not the jump back to the arena.
+    if (d.cls == 189 && !mine && rs == kKboHeld && ls != kKboHeld && ls != kKboDefeat && hp_of(b) > 0 && kbo_show_held(b, x.from)) {
+        ++g_st.applied_state;
+        if (g_log) std::fprintf(stderr, "[cbs] kbo held by seat %d shown on this copy (was st=%u) w=%lld\n", x.from, ls, wall_ms());
+    }
+    // coopkbo1: the intro talk is never forced onto a copy. Its tick sees no talk running on this console, reloads the boss music and
+    // moves on, the authority's next records force it back, and the music started over and over for the whole dialogue.
+    if (d.cls == 189 && rs == kKboTalk) force = false;
+    // King Bob-omb's defeat talk on a copy: skip_defeat_talk owns it
+    if (d.cls == 189 && !mine && ls == kKboDefeat) force = false;
     // Bowser's defeat talk: the target seat's body is a parked friend on every console but the authority's; coop_target now answers the
     // LOCAL player for a Bowser in state 4 (coop_boss_prefer_local), so every console runs the whole talk with its own player.
     if (force) {
@@ -770,10 +851,23 @@ void apply_rx(int slot, Boss &b, unsigned now) {
         // The state's enter code can have side effects of its own (King Bob-omb's hurt states take a health point): the HP
         // stays what the min-merge above made it.
         const int hp_keep = hp_of(b);
+        const bool kbo_music_was = d.cls == 189 && b.a[0x506] != 0;
+        if (d.cls == 189) {
+            if (ls == kKboThrowBomb && rs != kKboThrowBomb) kbo_release_bombs(b.a);
+            if (ls == kKboHeld) kbo_clear_held(b);
+        }
         give_player_ptrs(b);
         for (int k = 0; k < d.nf; ++k) if (k != d.hp && value_ok(d, k, x.w[k])) write_field(b.a, d, k, x.w[k]);
         write_field(b.a, d, d.hp, (uint32_t)hp_keep);
         post_force(b);
+        // coopkbo1: the music starts once on a copy that joins the fight by a forced state (the intro talk that starts it is not forced)
+        if (d.cls == 189 && !kbo_music_was && rs != kKboIdle && rs != kKboTalk && rs != kKboDefeat) {
+            _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
+            b.a[0x506] = 1;
+            if (g_log) std::fprintf(stderr, "[cbs] kbo boss music started once on this copy (forced into st=%u) w=%lld\n", rs, wall_ms());
+        }
+        // coopkbo1: Whomp King forced into his defeat by the authority: this copy never started the talk, so it goes to the burst
+        if (d.cls == 165 && !mine && ls != 8u && rs == 8u) { b.a[0x40c] = 3; if (g_log) std::fprintf(stderr, "[cbs] whomp king forced defeat: talk skipped w=%lld\n", wall_ms()); }
         b.synced_hp = hp_keep;
         b.mism = 0;
         ++g_st.applied_state;
@@ -854,6 +948,10 @@ void process(unsigned now) {
                 const double dx = ((double)rd32(pl, 0x5c) - rd32(b.a, 0x5c)) / 4096.0, dy = ((double)rd32(pl, 0x60) - rd32(b.a, 0x60)) / 4096.0, dz = ((double)rd32(pl, 0x64) - rd32(b.a, 0x64)) / 4096.0;
                 near_me = std::sqrt(dx * dx + dy * dy + dz * dz) < 900.0;
             }
+            // coopkbo1: King Bob-omb is only hurt by a throw, and the console whose player threw him holds the claim and so IS the
+            // authority. A non-authority drop is its forced copy landing from the throw (state 9's tick takes a point after the
+            // thrower's point was already merged: one throw cost two). Only his hurt state's own entry (a hit on this copy) counts.
+            if (d.cls == 189 && state_of(b) != kKboHurt) near_me = false;
             if (!near_me) {
                 ++g_st.hit_spurious;
                 if (g_log) std::fprintf(stderr, "[cbs] drop ignored slot=%d hp %d->%d (not from my player; auth %d me %d) w=%lld\n", slot, b.synced_hp, hp, auth, g_my, wall_ms());
@@ -884,7 +982,21 @@ void process(unsigned now) {
             }
             b.last_st = stn;
         }
-        if (g_on) apply_rx(slot, b, now);
+        if (g_on) apply_rx(slot, b, now, mine);
+        if (g_on && !mine) skip_defeat_talk(b, false);
+        // coopkbo1: the authority's King Bob-omb at HP 0 outside the states that end in his defeat (his last point arrived by merge)
+        // never runs the defeat, so nobody got the star. Put him in the hurt state, whose tick on the ground runs the defeat talk and
+        // the star; its entry takes a point, the HP is put back.
+        if (g_on && mine && d.cls == 189 && hp_of(b) <= 0) {
+            const uint32_t st = state_of(b);
+            if (st != kKboHurt && st != kKboThrown && st != kKboDefeat && st != kKboHeld && st != 7u) {
+                give_player_ptrs(b);
+                _ZN12daBombking_c19KingBobOmb_SetStateEPv(b.a, kbo_id_to_ptr(kKboHurt));
+                write_field(b.a, d, d.hp, 0u);
+                b.synced_hp = 0; b.lw_valid = false;
+                if (g_log) std::fprintf(stderr, "[cbs] kbo authority at hp 0 in st=%u: sent to the hurt state for the defeat w=%lld\n", st, wall_ms());
+            }
+        }
         if (g_log && (unsigned)(now - b.sample_t) >= 500u) { b.sample_t = now; log_sample(slot, b, auth); }
         if (!b.announced_dead && hp_of(b) == 0 && g_log) {
             b.announced_dead = true;
@@ -1314,6 +1426,7 @@ void coop_boss_on_world(int seat, int sub, const unsigned char *p, int len) {
                 b.synced_hp = (int)w[d->hp];
                 ++g_st.applied_hp;
                 if (g_log) std::fprintf(stderr, "[cbs] hit-rx slot=%d hp %d->%u from seat %d (auth %d) w=%lld\n", (int)r.slot, lhp, w[d->hp], seat, auth, wall_ms());
+                if (auth != g_my && (int32_t)w[d->hp] <= 0) skip_defeat_talk(b, true);
             }
             if (auth == g_my) {
                 const int hp_keep = (int)read_field(b.a, d->f[d->hp]);
@@ -1335,11 +1448,12 @@ void coop_boss_on_world(int seat, int sub, const unsigned char *p, int len) {
             if (!(b.last_auth == seat && (unsigned)(now - b.auth_t) < 2000u)) {
                 // two consoles can briefly disagree about the authority (the target seat changes with a 1 s hold): a lower HP is a hit and
                 // counts for everybody whoever sent it, so the hit is never lost to the disagreement
-                int rh = (int)w[d->hp]; if ((d->f[d->hp].kind & kS8) && rh < 0) rh = 0;
+                int rh = (int)w[d->hp]; if (((d->f[d->hp].kind & kS8) || d->cls == 189) && rh < 0) rh = 0;
                 const int lh = (int)read_field(b.a, d->f[d->hp]);
                 if (d->cls != 218 && rh >= 0 && rh < lh) {
                     write_field(b.a, *d, d->hp, (uint32_t)rh); b.synced_hp = rh; ++g_st.applied_hp;
                     if (g_log) std::fprintf(stderr, "[cbs] hp-from-nonauth slot=%d hp %d->%d from seat %d (auth %d) w=%lld\n", (int)r.slot, lh, rh, seat, auth, wall_ms());
+                    if (auth != g_my && rh <= 0) skip_defeat_talk(b, true);
                 }
                 ++g_st.drop_notauth; continue;
             }
