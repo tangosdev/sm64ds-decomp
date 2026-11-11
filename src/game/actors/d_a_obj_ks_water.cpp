@@ -22,15 +22,6 @@ enum d_a_obj_ks_water_AssetId { ASSET_KS_MIZU_BMD = 0x0689, ASSET_KS_MIZU_KCL = 
  *   handles; this TU consumes them, overlay .bss/.data owns them.
  * - no daPly_c.h.
  * - homeless _ZN10dBgActor_cD2Ev from the inline dtor chain (deadstrip).
- *
- * Consolidated from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN14daObjKsWater_cD1Ev.cpp
- *   [1] 0x021111ec  src/_ZN14daObjKsWater_cD0Ev.cpp
- *   [2] 0x0211124c  src/_ZN14daObjKsWater_c16CleanupResourcesEv.cpp
- *   [3] 0x02111290  src/_ZN14daObjKsWater_c6RenderEv.cpp
- *   [4] 0x021112c4  src/_ZN14daObjKsWater_c8BehaviorEv.cpp
- *   [5] 0x021113c0  src/_ZN14daObjKsWater_c13InitResourcesEv.cpp
- *   [6] 0x02111480  src/daObjKsWater_c_classInit.c
  */
 
 #include "daObjKsWater_c.h"
