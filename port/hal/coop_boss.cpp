@@ -1150,6 +1150,11 @@ void process(unsigned now) {
             char *holder = nullptr; std::memcpy(&holder, b.a + 0x3a4, sizeof holder);
             const int me = (int)data_0209f250;
             if ((sub == 1 || sub == 2) && holder && me >= 0 && me < 16 && holder == (char *)data_0209f394[me]) {
+                // a quiet let-go's hit window is over once MY player has him: his throw from my hands is real
+                if (b.kpa_quiet_t) {
+                    b.kpa_quiet_t = 0;
+                    if (g_log) std::fprintf(stderr, "[cbs] bowser quiet window ended: my player has him (sub=%d) w=%lld\n", (int)sub, wall_ms());
+                }
                 if ((int)(g_claim_until[g_my] - wnow) <= 0) {
                     ++g_st.claims;
                     if (g_log) std::fprintf(stderr, "[cbs] claim slot=%d sub=%d holder=me w=%lld\n", slot, (int)sub, wall_ms());
