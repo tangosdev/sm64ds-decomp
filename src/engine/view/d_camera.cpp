@@ -1198,95 +1198,82 @@ int dCamera_c::func_0200c66c(void *pos_, int *out2_, int *out1_, int *arg5_) {
 
     return res;
 }
-extern "C" {
 
-int dCamera_c::func_0200c394(int a1, void *a2_, void *a3, void **a5, int *a6) {
-    unsigned char *a2 = (unsigned char *)a2_;
-    CamMode *p = mMode;
-    VecFx32 local, local2;
-    signed char g;
-    int flags = p->flags;
-    int v;
-    short sz, sy, sx;
+/* Picks *outMode for the camera-area type under the target (the ground's CLPS
+ * camera behaviour) and its view object. Type 7, or an actor to frame, aims
+ * mLookTargetPos midway between that point and pos at half their distance.
+ * Otherwise the default follow mode maps the other area types to their modes.
+ * Returns 0 when the current mode (flag 0x20) or mFlags 0x100 holds the mode. */
+int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outMode, int *outFramed) {
+    CamViewObj *view = (CamViewObj *)viewArg;
+    CamMode *mode = mMode;
+    VecFx32 toFocus;
+    Vector3 focus;
+    int modeFlags = mode->flags;
+    int locked;
 
-    if ((flags & 0x20) == 0) {
-        v = mFlags & 0x100;
-        if (v == 0) goto body;
-    }
-    return 0;
-body:
-    {
-            if (a1 == 7) {
-                struct dActor_c *o = mFramedActor;
-                if (o == 0) {
-                    if (a2 == 0) goto other;
-                    if (a2[0] != 3) goto other;
-                }
-                *a6 = 1;
-                o = mFramedActor;
-                if (o) {
-                    Vector3 *q = &o->mPos;
-                    mLookTargetPos.x = q->x;
-                    mLookTargetPos.y = q->y;
-                    mLookTargetPos.z = q->z;
-                } else {
-                    VecFx32 t;
-                    sx = *(short *)(a2 + 2);
-                    sz = *(short *)(a2 + 6);
-                    sy = *(short *)(a2 + 4);
-                    t.x = sx << 12; t.z = sz << 12; t.y = sy << 12;
-                    mLookTargetPos.x = t.x;
-                    mLookTargetPos.y = t.y;
-                    mLookTargetPos.z = t.z;
-                }
-                Vec3_Sub((Vector3 *)&local, &mLookTargetPos, (const Vector3 *)a3);
-                mFocusDist = VEC_Mag(&local) >> 1;
-                g = gCurrentSublevel;
-                v = (g == 0x2d);
-                if (v) {
-                    if (mFocusDist < 0x100000)
-                        mFocusDist = 0x100000;
-                    else if (mFocusDist > 0x180000)
-                        mFocusDist = 0x180000;
-                } else {
-                    if (mFocusDist < 0x180000)
-                        mFocusDist = 0x180000;
-                }
-                if (mFlags & 2) {
-                    mFocusDist = FX_MUL(mFocusDist, 0x1800);
-                }
-                if (g == 0x2f && mFocusDist > 0xc0000) {
-                    int s = FX_Div(0xc0000, mFocusDist << 1);
-                    Vec3_MulScalarInPlace(&local, s);
-                    Vec3_Add((Vector3 *)&local2, (const Vector3 *)a3, (const Vector3 *)&local);
-                    mLookTargetPos.x = local2.x;
-                    mLookTargetPos.y = local2.y;
-                    mLookTargetPos.z = local2.z;
-                    mFocusDist = 0xc0000;
-                } else {
-                    VEC_Add((VecFx32 *)&mLookTargetPos, a3, (VecFx32 *)&mLookTargetPos);
-                    Vec3_AsrInPlace((VecFx32 *)&mLookTargetPos, 1);
-                }
-                *a5 = &data_02087274;
-                return v;
-            }
+    if ((modeFlags & 0x20) || (locked = mFlags & 0x100) != 0)
+        return 0;
 
-        other:
-            if (flags & 4) {
-                return (p == (CamMode *)&data_0208706c) ? 0 : 1;
-            }
-            if (p == (CamMode *)&data_0208715c) {
-                if (v) { *a5 = &data_0208747c; }
-                else if (a1 == 8) { *a5 = &data_0208715c; }
-                else if (a1 == 6) { *a5 = &data_02087184; }
-                else if (a1 == 0xa) { *a5 = &data_020871fc; }
-                else if (a1 == 0xb) { *a5 = &data_02087224; }
-                else if (a1 == 9) { *a5 = &data_0208733c; }
-                else if (a1 == 2) { *a5 = &data_02087314; }
-            }
-            return 1;
+    if (areaType == 7 && (mFramedActor != 0 || (view != 0 && view->type == 3))) {
+        *outFramed = 1;
+        if (mFramedActor != 0) {
+            mLookTargetPos = mFramedActor->mPos;
+        } else {
+            int x = view->x << 12;
+            int z = view->z << 12;
+            int y = view->y << 12;
+            mLookTargetPos.x = x;
+            mLookTargetPos.y = y;
+            mLookTargetPos.z = z;
+        }
+        Vec3_Sub((Vector3 *)&toFocus, &mLookTargetPos, (const Vector3 *)pos);
+        mFocusDist = VEC_Mag(&toFocus) >> 1;
+        signed char level = gCurrentSublevel;
+        int inLevel2d = level == 0x2d;
+        if (inLevel2d) {
+            if (mFocusDist < 0x100000)
+                mFocusDist = 0x100000;
+            else if (mFocusDist > 0x180000)
+                mFocusDist = 0x180000;
+        } else if (mFocusDist < 0x180000) {
+            mFocusDist = 0x180000;
+        }
+        if (mFlags & 2) {
+            mFocusDist = FX_MUL(mFocusDist, 0x1800);
+        }
+        if (level == 0x2f && mFocusDist > 0xc0000) {
+            Vec3_MulScalarInPlace(&toFocus, FX_Div(0xc0000, mFocusDist << 1));
+            Vec3_Add(&focus, (const Vector3 *)pos, (const Vector3 *)&toFocus);
+            mLookTargetPos = focus;
+            mFocusDist = 0xc0000;
+        } else {
+            VEC_Add((VecFx32 *)&mLookTargetPos, pos, (VecFx32 *)&mLookTargetPos);
+            Vec3_AsrInPlace((VecFx32 *)&mLookTargetPos, 1);
+        }
+        *outMode = &data_02087274;
+        return inLevel2d;
     }
+
+    if (modeFlags & 4)
+        return mode != (CamMode *)&data_0208706c;
+    if (mode == (CamMode *)&data_0208715c) {
+        if (locked)
+            *outMode = &data_0208747c;
+        else if (areaType == 8)
+            *outMode = &data_0208715c;
+        else if (areaType == 6)
+            *outMode = &data_02087184;
+        else if (areaType == 0xa)
+            *outMode = &data_020871fc;
+        else if (areaType == 0xb)
+            *outMode = &data_02087224;
+        else if (areaType == 9)
+            *outMode = &data_0208733c;
+        else if (areaType == 2)
+            *outMode = &data_02087314;
     }
+    return 1;
 }
 
 /* Places lookAt for the follow modes: mode's look-at point ahead of the
