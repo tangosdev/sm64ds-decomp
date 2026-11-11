@@ -362,41 +362,33 @@ extern "C" int FlowerFace_Load(char *c) {
     dExtFrameCtrl_c::LoadFile(FLOWERFACE(c)->mPickAnim);
     dExtFrameCtrl_c::LoadFile(FLOWERFACE(c)->mLikeAnim);
     dExtFrameCtrl_c::LoadFile(FLOWERFACE(c)->mHateAnim);
-    FlowerFace_PlayIdle((FlowerFace *)c);
-    BMD_File *petalFile = (BMD_File *)dExtSimpleModel_c::LoadFile(FLOWERFACE(c)->mPetalFile);
-    int i = 0;
-    char *p = (char *)FLOWERFACE(c)->mPetals;
-    /* c steps a petal at a time too, so mPetals[0] is petal i. */
-    for (; i < 0x16; i++) {
-        FallingPetal_SetModel((FallingPetal *)p, petalFile);
-        FLOWERFACE(c)->mPetals[0].mActive = 0;
-        p += sizeof(FallingPetal);
-        c += sizeof(FallingPetal);
+    FlowerFace *face = FLOWERFACE(c);
+    FlowerFace_PlayIdle(face);
+    BMD_File *petalFile = (BMD_File *)dExtSimpleModel_c::LoadFile(face->mPetalFile);
+    for (int i = 0; i < 22; i++) {
+        FallingPetal_SetModel(&face->mPetals[i], petalFile);
+        face->mPetals[i].mActive = 0;
     }
     return 1;
 }
 
 extern "C" {
 void FlowerFace_Update(char *c) {
-    (((FlowerFace *)c)->*(*(FlowerFaceState *)c))();
-    FLOWERFACE(c)->mModel.Advance();
+    FlowerFace *face = FLOWERFACE(c);
+    (face->*(*(FlowerFaceState *)face))();
+    face->mModel.Advance();
     int i = 0;
-    char *e = (char *)FLOWERFACE(c)->mPetals;
-    /* c steps a petal at a time, so mPetals[0] is petal i. */
     do {
-        if (FLOWERFACE(c)->mPetals[0].mActive != 0)
-            FallingPetal_Update((FallingPetal *)e);
+        if (face->mPetals[i].mActive != 0)
+            FallingPetal_Update(&face->mPetals[i]);
         i++;
-        c += sizeof(FallingPetal);
-        e += sizeof(FallingPetal);
-    } while (i < 0x16);
+    } while (i < 22);
 }
 }
 
 
 
 extern "C" void FlowerFace_Draw(FlowerFace *face) {
-    char *c = (char *)face;
     Vector3 light;
     int i;
 
@@ -409,35 +401,23 @@ extern "C" void FlowerFace_Draw(FlowerFace *face) {
     REG_LIGHT_VECTOR = (((short)light.x >> 3) & 0x3ff) | ((((short)light.y >> 3) & 0x3ff) << 10) |
                        ((((short)light.z >> 3) & 0x3ff) << 20);
 
-    func_02016a14(&FLOWERFACE(c)->mModel, 0x2bff);
-    func_02016a04(&FLOWERFACE(c)->mModel, 0x1211);
+    func_02016a14(&face->mModel, 0x2bff);
+    func_02016a04(&face->mModel, 0x1211);
 
-    FLOWERFACE(c)->mModel.mat4x3 = data_ov006_0213aee8;
+    face->mModel.mat4x3 = data_ov006_0213aee8;
 
-    FLOWERFACE(c)->mModel.Render(0);
+    face->mModel.Render(0);
 
-    i = 0;
-    {
-        char *p = (char *)face->mPetals;
-        /* c steps a petal at a time, so mPetals[0] is petal i. */
-        for (; i < 0x16; i++) {
-            if (FLOWERFACE(c)->mPetals[0].mActive != 0)
-                FallingPetal_Draw(p);
-            c += sizeof(FallingPetal);
-            p += sizeof(FallingPetal);
-        }
+    for (i = 0; i < 22; i++) {
+        if (face->mPetals[i].mActive != 0)
+            FallingPetal_Draw((char *)&face->mPetals[i]);
     }
 }
 
 extern "C" {
 void FlowerFace_Reset(FlowerFace *face) {
-    int i = 0;
-    char *p = (char *)face;
-    /* p steps a petal at a time, so mPetals[0] is petal i. */
-    for (; i < 22; i++) {
-        FLOWERFACE(p)->mPetals[0].mActive = 0;
-        p += sizeof(FallingPetal);
-    }
+    for (int i = 0; i < 22; i++)
+        face->mPetals[i].mActive = 0;
     FlowerFace_PlayIdle(face);
 }
 }
@@ -446,6 +426,8 @@ extern "C" {
 int FlowerFace_IsIdle(int *c) {
     int *idle = pmf_FlowerFace_StateIdle_2;
     int fn = c[0];
+    /* The 0/1 result goes through a flag: returning the test directly emits a
+       shorter function than the ROM's (measured). */
     int differs = 1;
     if (fn == idle[0]) {
         if (c[1] == idle[1] || fn == 0)
@@ -490,9 +472,10 @@ extern "C" {
 
 void FlowerFace_PlayPetalPulled(char *c) {
     int i;
-    char *p;
-    struct {
-        VecFx32 pos, vel, pos2, vel2;
+    /* The spawn point and velocity, and the copies Spawn is handed. */
+    struct PetalSpawn {
+        VecFx32 pos, vel;
+        VecFx32 pos2, vel2;
     } b;
 
     FLOWERFACE(c)->mModel.SetAnim((BCA_File *)FLOWERFACE(c)->mPickAnim.filePtr, 0x40000000, 0x800,
@@ -500,12 +483,8 @@ void FlowerFace_PlayPetalPulled(char *c) {
 
     FLOWERFACE(c)->mModel.currFrame = 0; /* rewind */
 
-    /* p steps a petal at a time, so FLOWERFACE(p)->mPetals[0] is the same
-       petal as FLOWERFACE(c)->mPetals[i]. Spelling both the test and the spawn
-       one way (either way) moves bytes. */
-    p = c;
-    for (i = 0; i < 0x16; i++, p += sizeof(FallingPetal)) {
-        if (FLOWERFACE(p)->mPetals[0].mActive == 0) {
+    for (i = 0; i < 0x16; i++) {
+        if (FLOWERFACE(c)->mPetals[i].mActive == 0) {
             b.pos.x = 0x2000;
             b.pos.y = 0xa000;
             b.pos.z = 0x1000;
@@ -656,11 +635,12 @@ void FallingPetal_Update(FallingPetal *petal) {
 
 extern "C" void FallingPetal_Draw(char *c) {
     FallingPetal_UpdateMatrix(c);
-    Vector3 v;
-    v.z = 0x1000;
-    v.y = 0x1000;
-    v.x = 0x1000;
-    PETAL(c)->mModel.Render(&v);
+    /* Stored z, y, x: the ROM's order (measured; x, y, z moves two words). */
+    Vector3 scale;
+    scale.z = 0x1000;
+    scale.y = 0x1000;
+    scale.x = 0x1000;
+    PETAL(c)->mModel.Render(&scale);
 }
 
 extern "C" {
@@ -930,9 +910,6 @@ void Presenter_ResetPose(char *c) {
     PRESENTER(c)->mTexSeq.currFrame = 0;
     PRESENTER(c)->mTexAnim.currFrame = 0;
 }
-}
-
-extern "C" {
 }
 
 extern "C" void Presenter_PlayIdle(char *c) {
@@ -1392,6 +1369,8 @@ extern "C" void Dealer_Draw(void *self) {
 
     {
         short pattern = DEALER(c)->mLampPattern;
+        /* Filled through a walking pointer with an if/else body: indexing the
+           array, or a value-select, moves 3 words (measured). */
         unsigned char *p = lamp;
         for (i = 0; i < 3; i++) {
             if ((pattern >> i) & 1)
@@ -1712,9 +1691,6 @@ extern "C" void Dealer_StateSwap(Dealer *dealer) {
     }
     if (dealer->mModel.WillHitFrame(0x14))
         Sound::PlayBank2_2D(0x156);
-}
-
-extern "C" {
 }
 
 extern "C" void Dealer_PlayLose(char *c) {
