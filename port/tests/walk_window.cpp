@@ -5569,10 +5569,16 @@ static int g_left_game_hold;
 static int g_left_eaten;
 extern int g_mouse_left_down;    /* the window procedure's left hold (WM_LBUTTONDOWN / WM_LBUTTONUP) */
 /* CAMPACK1: a mouse-button binding (settings.json MouseCam*; values are the Win32 VK of the button). */
+static int mo_left_down(void);
 static int mouse_act(int action)
 {
     bindings_load();
     const int vk = host_setting_mouse(action);
+    /* MOUSEBIND1: THE LEFT BUTTON'S STALE LATCH IS LET GO WHEN THE BUTTON IS UP. key_live clears a key's latch only when it is asked about
+       the key and finds it up, and the gates below return before asking while left is up (no WM_LBUTTONDOWN pumped, or left is the stylus
+       this frame). mo_left_frame sets the latch as play begins, so a real left click stayed stale for the whole session and a left bound to
+       an action never fired (a scripted press clears the latch itself, which is why every row passed). */
+    if (vk == VK_LBUTTON && !mo_left_down()) key_stale[VK_LBUTTON] = 0;
     if (vk == VK_LBUTTON && (!g_left_game || g_left_eaten)) return 0;     /* MOUSELOCK1: left is the stylus this frame, or a list row took it */
     /* ROUND 3: a real left press counts only once its WM_LBUTTONDOWN has been pumped, so a press that lands between this frame's message
        pump and this read waits one frame for mo_click to decide whether a list row or the Tab relock uses it up (scripted presses send
@@ -9403,6 +9409,21 @@ static unsigned short host_ds_buttons(int pad_live, const XPad *pad)
         /* the bumpers are camera-rotate and go in with the rest of the rotate
            input at the level loop's own call site, where the freecam gate is */
     }
+#ifndef PORT_ROM_CLEAN
+    /* MOUSEBIND1 proof knob, dev builds only: SM64DS_ACT_LOG=1 prints one line each time the Attack or Jump bit changes, with the
+       source that made it (key, mouse button, pad), so a row can see a mouse button fire an action without a picture */
+    {
+        static int act_log = -1;
+        static unsigned short seen;
+        if (act_log < 0) { const char *e = getenv("SM64DS_ACT_LOG"); act_log = (e && *e && *e != '0') ? 1 : 0; }
+        if (act_log && ((btn ^ seen) & 3)) {
+            fprintf(stderr, "[act] f%d attack %d (key %d mouse %d) jump %d (key %d mouse %d)\n", g_host_key_frame,
+                    btn & 1, key_act(HOST_KEY_ATTACK), mouse_act(HOST_MOUSE_ATTACK),
+                    (btn >> 1) & 1, key_act(HOST_KEY_JUMP), mouse_act(HOST_MOUSE_JUMP));
+            seen = btn;
+        }
+    }
+#endif
     return btn;
 }
 
@@ -9554,6 +9575,14 @@ static void chat_key_test_frame(void)
         const ChatKeyHold &k = g_ckt_hold[i];
         if (k.vk <= 0) continue;
         const LPARAM scan = map ? (LPARAM)(map((UINT)k.vk, 0) & 0xff) << 16 : 0;
+        if (k.vk <= 2) {
+            /* MOUSEBIND1: a mouse button (1 left, 2 right) posts the mouse message a real press posts (WM_LBUTTONDOWN also sets
+               g_mouse_left_down; the up message is posted on the last held frame, so the pump delivers it before the button reads up, as a real release does) and is not probed through key_live below, which would clear a stale latch a real click never clears */
+            const LPARAM at = (LPARAM)(100 | (100 << 16));
+            if (f == k.f0 && post && g_present_hwnd) post(g_present_hwnd, k.vk == 1 ? WM_LBUTTONDOWN : WM_RBUTTONDOWN, k.vk == 1 ? MK_LBUTTON : MK_RBUTTON, at);
+            if (f == k.f1 && post && g_present_hwnd) post(g_present_hwnd, k.vk == 1 ? WM_LBUTTONUP : WM_RBUTTONUP, 0, at);
+            continue;
+        }
         if (f == k.f0 && post && g_present_hwnd) {
             post(g_present_hwnd, WM_KEYDOWN, (WPARAM)k.vk, 1 | scan);
             fprintf(stderr, "[chat] keytest f%d vk %02x WM_KEYDOWN posted\n",
@@ -9565,7 +9594,7 @@ static void chat_key_test_frame(void)
     }
     for (int i = 0; i < g_ckt_holds; ++i) {
         const int vk = g_ckt_hold[i].vk;
-        if (vk <= 0) continue;
+        if (vk <= 2) continue;     /* MOUSEBIND1: not the mouse buttons (see above) */
         int first = 1;
         for (int j = 0; j < i; ++j) first &= g_ckt_hold[j].vk != vk;
         if (!first) continue;     /* one probe per key */
@@ -13653,6 +13682,7 @@ static int mo_capture_want(int selftest, int stacked)
 static int mo_left_down(void)
 {
     if (host_key_script(VK_LBUTTON)) return 1;
+    { int d = 0; if (chat_key_test_down(VK_LBUTTON, &d)) return d; }     /* proof knob SM64DS_CHAT_KEY_TEST=01@.. (dev builds only) */
     return hal_window_focused() && W.GetAsyncKeyState_ && W.GetAsyncKeyState_(VK_LBUTTON) < 0;
 }
 /* MOUSELOCK1 round 2: a left click at framebuffer pixel cx,cy offered to the coop player list (the window procedure's WM_LBUTTONDOWN and
