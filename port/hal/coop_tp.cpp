@@ -227,13 +227,21 @@ void try_tp(int seat, unsigned now) {
     // Landing: the level's own START (entrance 0), as entering the course from its painting. The friend's
     // position is never read here: only their level and act.
     int castle = 0, ret = 0;
+#ifndef PORT_ROM_CLEAN
     static const bool old_way = std::getenv("SM64DS_COOP_TP_NORET") != nullptr;   // proof knob: the pre-fix load
+#else
+    const bool old_way = false;
+#endif
     if (!old_way && coop_castle_entrance_for_course(p.level, &castle, &ret)) {
         // Entered like the painting does: the castle sublevel and the painting's entrance are recorded, so a
         // star exit, Exit Course or death puts this player back at that painting.
         // A saved sub-area chain (LLL, SSL, TTM) must not survive: LoadLevel's return branch would redirect into it.
         if (g.log) std::fprintf(stderr, "[cotp] saved chain before the load: data_02092118 = %d\n", (int)data_02092118);
+#ifndef PORT_ROM_CLEAN
         static const bool late_clear = std::getenv("SM64DS_COOP_TP_LATECLEAR") != nullptr;   // proof knob: the order before review
+#else
+        const bool late_clear = false;
+#endif
         if (!late_clear) data_02092118 = -1;
         LoadLevel((unsigned)p.level, 0, (unsigned)p.act, 0, (unsigned)ret);
         data_0209211c = (signed char)castle;
