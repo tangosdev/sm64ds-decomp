@@ -360,30 +360,36 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov006-dScMgSlot1_c+dScMgSlot3_c/dScMgSlots.o (gitignored)",
+    "object": "build/tu/ov006-dScMgSlot1_c+dScMgSlot3_c/d_s_mg_slots.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 42,
     "functions_declared": 42,
     "compilerOnlyOutput": {
       "requested": [
         "_ZN12dScMgSlot1_cD2Ev",
-        "_ZN12dScMgSlot3_cD2Ev"
+        "_ZN12dScMgSlot3_cD2Ev",
+        "_ZN12dScMgSlot1_c9betIcon_cD1Ev",
+        "_ZN9dThIcon_cD2Ev",
+        "_ZN19dScMgSingle3DBase_cD2Ev"
       ],
       "deadstripped": [
+        "_ZN12dScMgSlot1_c9betIcon_cD1Ev",
         "_ZN12dScMgSlot1_cD2Ev",
-        "_ZN12dScMgSlot3_cD2Ev"
+        "_ZN12dScMgSlot3_cD2Ev",
+        "_ZN19dScMgSingle3DBase_cD2Ev",
+        "_ZN9dThIcon_cD2Ev"
       ],
       "droppedSections": [
         9,
         10,
         15,
         16,
-        85,
+        47,
+        48,
         86,
         87,
         88,
         89,
-        90,
         91,
         92,
         93,
@@ -410,7 +416,13 @@
         114,
         115,
         116,
-        117
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123
       ],
       "data": [
         "_ZTV12dScMgSlot1_c",
@@ -457,7 +469,8 @@
         "_ZTV12dScMgSlot1_c",
         "_ZTV12dScMgSlot3_c",
         "_ZTVN12dScMgSlot1_c9betIcon_cE"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",

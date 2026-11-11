@@ -539,6 +539,8 @@
     "functions_declared": 67,
     "compilerOnlyOutput": {
       "requested": [
+        "_ZN8dScene_cD2Ev",
+        "_ZN7dBase_cD2Ev",
         "_ZN12OamAnimationC2Ev",
         "_ZN10dScEntry_c6icon_cC2Ev",
         "_ZN9dThIcon_cD2Ev"
@@ -546,14 +548,20 @@
       "deadstripped": [
         "_ZN10dScEntry_c6icon_cC2Ev",
         "_ZN12OamAnimationC2Ev",
+        "_ZN7dBase_cD2Ev",
+        "_ZN8dScene_cD2Ev",
         "_ZN9dThIcon_cD2Ev"
       ],
       "droppedSections": [
         132,
+        133,
         134,
         135,
+        136,
         138,
-        139
+        139,
+        142,
+        143
       ],
       "data": [],
       "dataExternalized": [],
