@@ -402,40 +402,14 @@ s32 daJgm_c::UpdateYoshiMouthState()
 
 s32 daJgm_c::EnterSpitState()
 {
-    dActor_c *carrier;
-    int *pPosX;
-    int *pPosY;
-    int *pPosZ;
-    int *src;
-    int idx;
-    s16 sinv;
-    s16 cosv;
-
     mFlags &= ~0x80000;
 
-    carrier = mCarryActor;
-    pPosX = &mPosX;
-    mHorzSpeed = carrier->mHorzSpeed + 0xa000;
-
-    carrier = mCarryActor;
-    pPosY = &mPosY;
-    pPosZ = &mPosZ;
-    mPrevAngleY = carrier->mAngleY;
-
-    carrier = mCarryActor;
-
-    src = &carrier->mPosX;
-    mPosX = src[0];
-    mPosY = src[1];
-    mPosZ = src[2];
-
-    idx = ((int)(u16)mPrevAngleY) >> 4;
-    sinv = FX_SinIdx(idx);
-    *pPosX = *pPosX + FX_MUL(sinv, 0x50000);
-    *pPosY = *pPosY + 0x50000;
-    idx = ((int)(u16)mPrevAngleY) >> 4;
-    cosv = FX_CosIdx(idx);
-    *pPosZ = *pPosZ + FX_MUL(cosv, 0x50000);
+    mHorzSpeed = mCarryActor->mHorzSpeed + 0xa000;
+    mPrevAngleY = mCarryActor->mAngleY;
+    mPos = mCarryActor->mPos;
+    mPosX += FX_MUL(FX_SinIdx((u16)mPrevAngleY >> 4), 0x50000);
+    mPosY += 0x50000;
+    mPosZ += FX_MUL(FX_CosIdx((u16)mPrevAngleY >> 4), 0x50000);
 
     mAngVelY = 0x7000;
     mTimer = 0x1e;
