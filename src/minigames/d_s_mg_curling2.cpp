@@ -1453,6 +1453,7 @@ void dScMgCurling2_c::ResetScroll() {
 /* Clear the stones, the score marks and every game variable back to a
  * fresh round, then clear the collision values. */
 void dScMgCurling2_c::ResetGame() {
+    char *c = (char *)this;
     int i;
     for (i = 0; i < 0xb; i++) {
         mStone[i].x = 0;
@@ -1491,7 +1492,9 @@ void dScMgCurling2_c::ResetGame() {
     spawning = 0;
     gameOver = 0;
     mStateTimer = 0;
-    unk_55b0 = 0;
+    /* 0x55b0 is write-only (this store is its only access); left raw
+       until something gives it a name. */
+    *((short *)(c + 0x55b0)) = 0;
     sndCooldown = 0;
     Mg_SubmitScore(0);
     ClearValues();
