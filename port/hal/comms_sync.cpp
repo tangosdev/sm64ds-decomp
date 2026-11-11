@@ -1584,21 +1584,47 @@ struct GwSample {
     unsigned char door_kind;   // GHOSTDOOR1: from the frame at the draw time
     unsigned char door_frame;
     bool hidden;               // ...and: his own state hides his body
+    short ax, az;              // SWIM2: nose pitch (+0x8c) and turn lean (+0x90)
 };
 GwSample g_gw_last[kHubMaxSeats];   // GHOSTDOOR1: the last sample drawn per seat
 
 // GHOSTDOOR1: the door look the frame carries (ghost_door.h). Only a
 // frame-clock frame (a build-6 sender) means it; the legacy 15 Hz stream's
 // vy is a real velocity.
+// SWIM2: the swim tilt a frame carries (ghost_door.h). With no door kind, vy
+// holds the nose pitch's high byte over the turn lean's high byte (1.4 degree
+// steps). A 1.0.2 sender sends 0 there, which reads as level.
+inline void gw_tilt_of(const HubGhostFrame &f, short *ax, short *az) {
+    if ((f.flags & kGwFrameClock) && (f.area >> ghostdoor::kDoorShift) == 0) {
+        *ax = (short)((int)(signed char)((f.vy >> 8) & 0xff) * 256);
+        *az = (short)((int)(signed char)(f.vy & 0xff) * 256);
+    } else {
+        *ax = *az = 0;
+    }
+}
+// SWIM2: an angle to its high byte, rounded to the nearest 1.4 degree step (a
+// plain shift rounds down, so a small negative angle would arrive as -256).
+inline int gw_tilt_byte(int a) {
+    int b = (a + 128) >> 8;
+    if (b > 127) b = 127; else if (b < -128) b = -128;
+    return b & 0xff;
+}
+inline short gw_tilt_lerp(short a, short b, double num, double den) {
+    const short d = (short)(b - a);              // the short way round
+    return (short)(a + (int)((double)d * num / den));
+}
+
 inline void gw_look_of(const HubGhostFrame &f, GwSample *o) {
     if (f.flags & kGwFrameClock) {
         o->door_kind = (unsigned char)(f.area >> ghostdoor::kDoorShift);
         o->door_frame = o->door_kind ? (unsigned char)(f.vy & 0xff) : 0;
         o->hidden = (f.flags & ghostdoor::kFlagHidden) != 0;
+        gw_tilt_of(f, &o->ax, &o->az);
     } else {
         o->door_kind = 0;
         o->door_frame = 0;
         o->hidden = false;
+        o->ax = o->az = 0;
     }
 }
 
@@ -1840,6 +1866,12 @@ bool gw_sample_fc(int seat, unsigned tnow, GwSample *o) {
         o->z = gw_lerpd(a->f.z, b->f.z, num, den);
         const short dy = (short)(b->f.yaw - a->f.yaw);   // the short way round
         o->yaw = (short)(a->f.yaw + (int)((double)dy * num / den));
+        {   // SWIM2: the tilt eases between the two frames like the facing
+            short bx, bz;
+            gw_tilt_of(b->f, &bx, &bz);
+            o->ax = gw_tilt_lerp(o->ax, bx, num, den);
+            o->az = gw_tilt_lerp(o->az, bz, num, den);
+        }
         o->teleport = false;
         if (a->f.anim_id == b->f.anim_id && b->f.anim_frame >= a->f.anim_frame) {
             o->anim = a->f.anim_id;                        // same cycle
@@ -1900,6 +1932,7 @@ bool gw_sample(int seat, unsigned now, GwSample *o) {
     o->door_kind = 0;
     o->door_frame = 0;
     o->hidden = false;
+    o->ax = o->az = 0;
     return gw_legacy() ? gw_sample_legacy(seat, now, o)
                        : gw_sample_fc(seat, now, o);
 }
@@ -2403,7 +2436,13 @@ void gw_send(unsigned now) {
             if (g_gw_hid) f.flags |= ghostdoor::kFlagHidden;
         }
 
-        f.vy = dkind ? (short)ghostdoor::sender_frame(a) : (short)0;
+        /* SWIM2: with no door kind, vy carries the swim tilt (ghost_door.h) */
+        {
+            const int px = *(const short *)((const char *)a + 0x8c);
+            const int pz = *(const short *)((const char *)a + 0x90);
+            f.vy = dkind ? (short)ghostdoor::sender_frame(a) :
+                (short)((gw_tilt_byte(px) << 8) | gw_tilt_byte(pz));
+        }
         {
             const unsigned st = comms_hub_now_ms() & 0xffffffu;
             f.reserved[0] = (unsigned char)(st & 0xff);
@@ -3708,15 +3747,19 @@ void gw_follow() {
         if (gw_err_log())
             std::fprintf(stderr, "[gwdraw] t=%u f=%u seat=%d mode=%c pos=%d,%d,%d "
                          "yaw=%d anim=%u buf=%d dk=%u df=%u tp=%d lv=%d "
-                         "ch=%u\n", comms_hub_now_ms(),
+                         "ch=%u tilt=%d,%d\n", comms_hub_now_ms(),
                          g_gw_frame, s, sm.mode, sm.x, sm.y, sm.z, (int)sm.yaw,
                          (unsigned)sm.anim, sm.buf_ms, (unsigned)sm.door_kind,
                          (unsigned)sm.door_frame, sm.teleport ? 1 : 0,
-                         g_gw[s].leaving ? 1 : 0, (unsigned)sm.character);
+                         g_gw[s].leaving ? 1 : 0, (unsigned)sm.character, (int)sm.ax, (int)sm.az);
         *player::pos_x(a) = sm.x;
         *player::pos_y(a) = sm.y;
         *player::pos_z(a) = sm.z;
         *player::facing(a) = sm.yaw;
+        /* SWIM2: the swim tilt, so the body swims nose up or down on this
+           screen; zero when he is held (carried bodies stand upright) */
+        *(short *)((char *)a + 0x8c) = (holder >= 0) ? (short)0 : sm.ax;
+        *(short *)((char *)a + 0x90) = (holder >= 0) ? (short)0 : sm.az;
         g_drawpos[i][0] = sm.x; g_drawpos[i][1] = sm.y; g_drawpos[i][2] = sm.z;
         g_drawpos_have[i] = 1;
         /* GHOSTDOOR1 (A2): the door he is using opens on this screen too, by
