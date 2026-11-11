@@ -959,6 +959,8 @@ int g_camera_collision = 1;
 int g_wide_drawing = 1;
 /* PeachJingle (PEACHJINGLE1): 1 plays the cartridge's own NCS_BGM_PEACH tune when a star quota message opens. Default 1. Read live. */
 int g_peach_jingle = 1;
+/* LobbyColorPicked (coopfix1, lane LOBBYUI1): 1 once the player has changed the colours from the lobby page's paint bucket; the arrow at the bucket shows only while 0. Default 0. */
+int g_lobby_color_picked = 0;
 
 /* Aspect: the presentation ratio, WIDTH DIVIDED BY HEIGHT. 0 (the default) is
    the explicit native sentinel -- the DS's own 4:3 at the 512x384 window the
@@ -1644,6 +1646,7 @@ void load_once(void)
     g_camera_collision = 1;
     g_wide_drawing = 1;
     g_peach_jingle = 1;
+    g_lobby_color_picked = 0;
     g_aspect = 0.0;
     g_vs_luigi_infection = 0;
     g_vs_luigi_seconds = 0;
@@ -1901,6 +1904,7 @@ void load_once(void)
         g_camera_collision = json_bool(text, "CameraCollision", 1);
         g_wide_drawing = json_bool(text, "WideDrawingPage", 1);
         g_peach_jingle = json_bool(text, "PeachJingle", 1);
+        g_lobby_color_picked = json_bool(text, "LobbyColorPicked", 0);
         /* the presentation aspect, read against its own default of 0 (native)
            so a file written before this key existed reads as the 4:3 window.
            Sanitised HERE rather than at the accessor, so the stored value is
@@ -3742,6 +3746,22 @@ extern "C" int host_setting_set_peach_jingle(int on)
     g_peach_jingle = on;
     g_poll_flag = 1;
     queue_bool("PeachJingle", on);
+    return 1;
+}
+
+extern "C" int host_setting_lobby_color_picked(void)
+{
+    load_once();
+    return g_lobby_color_picked;
+}
+extern "C" int host_setting_set_lobby_color_picked(int on)
+{
+    load_once();
+    on = on ? 1 : 0;
+    g_lobby_color_picked = on;
+    g_poll_flag = 1;
+    queue_bool("LobbyColorPicked", on);
+    host_settings_save_flush();
     return 1;
 }
 

@@ -535,6 +535,10 @@ int host_online_rgb_parse(const char *s);
    writes all nine at once (a 0 in set[][] writes "") and flushes. These are NOT the offline .pal mod keys (PaletteMario ...). */
 int host_setting_online_bro(int chr, int cat, unsigned *rgb);
 int host_setting_set_online_bros(const unsigned rgb[3][3], const unsigned char set[3][3]);
+/* coopfix1, lane LOBBYUI1: settings.json LobbyColorPicked, bool, 0 by default. 1 once the player has changed the colours from the lobby page's
+   paint bucket: the arrow at the bucket shows only while it is 0 (and the colours are still the default ones). The set flushes. */
+int host_setting_lobby_color_picked(void);
+int host_setting_set_lobby_color_picked(int on);
 
 /* Aspect: the presentation ratio, WIDTH DIVIDED BY HEIGHT. 0 (the default) is
    the explicit native sentinel -- the 4:3 window the port has always opened;
