@@ -10,7 +10,7 @@
     "Order: mwccarm emits the bodies in reverse, so the ROM runs from FS_SetArchiveProc (lowest) to FSi_GetPackedName (highest), pret's source order reversed with two differences from this older SDK: FS_FindArchive sits between FSi_ReadMemoryCore and FSi_NextCommand (pret has it after FS_InitArchive), and FS_NotifyArchiveAsyncEnd sits between FSi_SendCommand and FS_InitArchive (pret has it last).",
     "Older SDK: FSi_SendCommand has no suspend test and no OPERATING bit, FSi_NextCommand does not test SUSPENDING before it starts a command, FS_RegisterArchiveName sets no FS_ARCHIVE_FLAG_REGISTER, FS_LoadArchiveTables does not check its reads, FS_UnloadArchive does not resume the archive it suspended, and the thread queues are 16-bit masks of thread ids.",
     "BOTTOM EDGE: FSi_TranslateCommand and FSi_ReleaseCommand, pret's FS_command.c (arm9/FS_Command), end at 0x0205c7c4.",
-    "TOP EDGE: func_0205d368 (0x0205d368) starts FS_file.c. Its body is a lead for pret's pokediamond FS_SeekFile (whence 0/1/2 add the file's top, pos or bottom, the result is clamped to [top, bottom] and stored as pos), not yet a name: it keeps its address name here. FS_ReadFile, FS_CloseFile, FS_OpenFileDirect and FS_InitFile follow it."
+    "TOP EDGE: FS_SeekFile (0x0205d368) starts FS_file.c: whence 0/1/2 add the file's top, pos or bottom, the result is clamped to [top, bottom] and stored as pos, as in pret's pokediamond FS_SeekFile. The rest of FS_file.c follows it in reverse source order, FS_ReadFile through FS_Init."
   ],
   "sections": [
     {

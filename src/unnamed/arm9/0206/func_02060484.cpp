@@ -6,7 +6,7 @@
  * func_0206062c, on the card thread if is_async. Synchronous calls return
  * whether the request succeeded. */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/card/card_common.h"
 
 extern "C" {
@@ -18,11 +18,11 @@ int func_02060484(u32 dst, const void *src, u32 len, MIDmaCallback callback, voi
     CARDiCommon *const p = &cardi_common;
 
     {
-        u32 mask = IRQ::Disable();
+        OSIntrMode mask = OS_DisableInterrupts();
         while (p->flag & CARD_STAT_BUSY)
             OS_SleepThread(&p->busy_q);
         p->flag |= CARD_STAT_BUSY;
-        IRQ::Restore(mask);
+        OS_RestoreInterrupts(mask);
     }
 
     p->src = (u32)src;

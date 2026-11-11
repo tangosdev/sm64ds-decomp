@@ -44,7 +44,6 @@ struct SubmarineCollisionFilePtr : SharedFilePtr {
 extern SubmarineCollisionFilePtr Submarine_ClsnFile;
 
 extern CLPS_Block data_ov026_02112fd4;
-extern SaveBlock data_0209caa0;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */

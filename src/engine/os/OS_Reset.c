@@ -28,7 +28,7 @@ extern int PXI_IsCallbackReady(int tag, int proc);
 extern void PXI_SetFifoRecvCallback(int tag, void *callback);
 extern int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int err);
 
-extern void Crash(void); /* OS_Terminate */
+extern void OS_Terminate(void);
 
 extern u16 OSi_IsInitReset;
 extern vu16 OSi_IsResetOccurred;
@@ -51,7 +51,7 @@ void OSi_CommonCallback(int tag, u32 data, int err) {
         OSi_IsResetOccurred = 1;
         return;
     }
-    Crash();
+    OS_Terminate();
 }
 
 /* Sends one OS command to the ARM7, retrying until the FIFO takes it.

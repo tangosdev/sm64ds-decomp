@@ -31,6 +31,8 @@ enum d_s_mg_jump2_AssetId {
 
 #include "dScMgJump2_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_cmd.h"
+#include "nitro/gx/g3imm_light.h"
 #include "dExtSimpleModel_c.h"
 #include "SharedFilePtr.h"
 #include "types.h"
@@ -38,6 +40,10 @@ enum d_s_mg_jump2_AssetId {
 #include "Particle__System.h"
 #include "math/Approach.h"
 #include "private/mtx43.h"
+#include "nitro/gx/gx_load.h"
+#include "nitro/gx/g3x.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 /* The list link at the head of each Jump2Popup. Its two methods link `this` into
  * and back out of the live list at sJump2PopupList. */
@@ -119,15 +125,6 @@ extern u8 gMainScreenLayers;
 extern s16 data_02082614;
 }
 
-namespace GX {
-void LoadOBJPltt(const void *src, unsigned int offset, unsigned int size);
-}
-namespace G3X {
-void SetFog(int enable, int mode, int slope, int offset);
-}
-namespace cstd {
-s32 fdiv(s32 a, s32 b);
-}
 
 /* Empty and out of line: mPopups' element constructor, which the factory
  * below registers with __cxa_vec_ctor (dScMgTrampoline2_c's factory reuses
@@ -168,16 +165,16 @@ s32 dScMgJump2_c::InitResources() {
 
     tiles = LoadFile(sJump2NcgByLanguage[GetGameLanguage()]);
     palette = LoadFile(ASSET_D_2D_MG_JUMP_NCL_BIN);
-    DecompressLZ16(tiles, (void *)0x6400000);
-    GX::LoadOBJPltt(palette, 0, 0x80);
+    DecompressLZ16(tiles, G2_GetOBJCharPtr());
+    GX_LoadOBJPltt(palette, 0, 0x80);
     Deallocate(tiles);
     Deallocate(palette);
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
-    fov = cstd::fdiv(0xc0000, (s32)data_02082614);
+    fov = FX_Div(0xc0000, (s32)data_02082614);
 
     this->mCameras[0].mLookAt.x = 0;
     this->mCameras[0].mLookAt.y = -0x64000;
@@ -380,27 +377,22 @@ void func_0203cd80(int *m, int x);
 void Jump2_SetLights(void) {
     int light0[3];
     int light1[3];
-    *(volatile int *)0x40004cc = 0x7fff;
-    *(volatile int *)0x40004cc = 0x40007fff;
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
     light0[0] = 0;
     light0[1] = 0;
-    light0[2] = 0xfffff008;
+    light0[2] = -0xff8;
     func_0203cd80(light0, 0x2000);
     func_0203ccd4((struct Vector3 *)light0, 0);
-    *(volatile int *)0x40004c8 = (((short)light0[0] >> 3) & 0x3ff) |
-                                 ((((short)light0[1] >> 3) & 0x3ff) << 10) |
-                                 ((((short)light0[2] >> 3) & 0x3ff) << 20);
-    light1[2] = 0xfffff008;
+    G3_LightVector(GX_LIGHTID_0, light0[0], light0[1], light0[2]);
+    light1[2] = -0xff8;
     light1[0] = 0;
     light1[1] = 0;
-    *(volatile int *)0x4000440 = 2;
-    *(volatile int *)0x4000454 = 0;
+    G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
+    G3_Identity();
     func_0203cd80(light1, 0x2000);
     func_0203ccd4((struct Vector3 *)light1, 0);
-    *(volatile int *)0x40004c8 =
-        ((((short)light1[0] >> 3) & 0x3ff) | ((((short)light1[1] >> 3) & 0x3ff) << 10) |
-         ((((short)light1[2] >> 3) & 0x3ff) << 20)) |
-        0x40000000;
+    G3_LightVector(GX_LIGHTID_1, light1[0], light1[1], light1[2]);
 }
 }
 

@@ -382,8 +382,8 @@ struct dActor_c : dBase_c {
     /* INLINE, AND ON THIS CLASS RATHER THAN A BASE -- both are load-bearing.
        CW builds D0 (slot 17) as "run the destructor, then call operator delete",
        and inlines it only when it is found in the class itself or its IMMEDIATE
-       base. Without this every dActor_c-derived D0 calls the global _ZdlPv,
-       which exists nowhere in this image, and comes out short. */
+       base. Without this every dActor_c-derived D0 calls the global operator
+       delete, which frees to the default heap instead of the actor heap. */
     void operator delete(void *ptr) {
         Memory::Deallocate(ptr, data_020a0eac);
     }

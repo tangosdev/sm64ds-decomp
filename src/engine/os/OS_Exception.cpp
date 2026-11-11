@@ -16,7 +16,7 @@
  * modes; the SDK writes them as asm, and they stay asm here.
  */
 #include "types.h"
-#include "CP15.h"
+#include "nitro/os/protectionUnit.h"
 #include "nitro/os/exception.h"
 
 /* The debugger's exception vector slot in the shared work area. A debugger
@@ -161,8 +161,8 @@ void OSi_DisplayExContext(void) {
         msr cpsr_fsxc, r1
         mov sp, r0
     }
-    CP15::EnableMPU();
+    OS_EnableProtectionUnit();
     data_020a63a0((u32)&data_020a63ac, data_020a63a4);
-    CP15::DisableMPU();
+    OS_DisableProtectionUnit();
 }
 }

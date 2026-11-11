@@ -38,10 +38,10 @@
 #include "SaveData.h"
 #include "daObjCannonShutter_c.h"
 #include "Sound.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
 #include "private/mtx43.h"
+#include "nitro/fx/fx_cp.h"
 
 struct BCA_File;
 
@@ -117,7 +117,6 @@ extern s8 gCurrentSublevel;                /* current level */
 extern u8 gCurrentStarId;
 extern u8 gShowTouchScreenArrows;
 extern u8 gShowRedCoinMarkers;
-extern SaveBlock data_0209caa0;         /* the live save block */
 extern u8  data_0209d660;               /* nonzero while a message box is open */
 extern u8  data_0209d6bc;               /* message box page state */
 extern u16 data_0209d6d4;               /* message on screen */
@@ -137,9 +136,9 @@ short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int   Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 void  Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int   LenVec3(const Vector3 *v);
+int VEC_Mag(const Vector3 *v);
 void  Vec3_MulScalarInPlace(Vector3 *v, int s);
-void  MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void  Matrix4x3_FromRotationY(void *m, int angle);
 int   Math_Function_0203b14c(int *value, int target, int a, int b, int c);
 
@@ -268,11 +267,11 @@ int daRedBombhei_c::StepCameraPoint(Vector3 *cur, Vector3 *target) {
     int remaining;
     int newLen;
     Vec3_Sub(&delta, cur, target);
-    len = LenVec3(&delta);
+    len = VEC_Mag(&delta);
     if (len == 0) return 1;
     newLen = len;
     remaining = Math_Function_0203b14c(&newLen, 0, 0x400, 0x100000, 0x1000);
-    Vec3_MulScalarInPlace(&delta, cstd::fdiv(newLen, len));
+    Vec3_MulScalarInPlace(&delta, FX_Div(newLen, len));
     {
         Vector3 next;
         Vec3_Add(&next, target, &delta);
@@ -336,13 +335,13 @@ int daRedBombhei_c::PanCameraToShutter() {
             offset.y = 0;
             offset.z = 0;
             Matrix4x3_FromRotationY(&data_020a0e68, shutter->mAngleY);
-            MulVec3Mat4x3(&targetLookAt, &data_020a0e68, &offset);
+            MTX_MultVec43(&targetLookAt, &data_020a0e68, &offset);
             Vec3_Add(&sum, &shutter->mPos, &offset);
             targetLookAt = sum;
             offset.x = 0;
             offset.y = 0;
             offset.z = 0;
-            MulVec3Mat4x3(&targetPos, &data_020a0e68, &offset);
+            MTX_MultVec43(&targetPos, &data_020a0e68, &offset);
             Vec3_Add(&sum2, &shutter->mPos, &offset);
             targetPos = sum2;
             {

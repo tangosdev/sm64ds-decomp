@@ -53,7 +53,7 @@ enum d_a_krpa_AssetId { ASSET_KERONPA_BMD = 0x0351 };
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern int data_0209f32c;
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 
 /* `return new daKrpa_c()` emits 0x50, calling the inherited
  * fBase_c::operator new (`_ZN7fBase_cnwEm`). Historical aliases:
@@ -202,8 +202,8 @@ int daKrpa_c::ExecuteSpit() {
     if (this->mFrameController.cursor == 0x1e) {
         Vector3 firePos;
         int idx = (int)(u16)this->mAngleY >> 4;
-        int cosv = data_02082214[idx * 2 + 1];
-        int sinv = data_02082214[idx * 2];
+        int cosv = FX_SinCosTable_[idx * 2 + 1];
+        int sinv = FX_SinCosTable_[idx * 2];
         int offZ = FX_MUL(cosv, 0x50000);
         int offX = FX_MUL(sinv, 0x50000);
         int x = this->mPosX + offX;

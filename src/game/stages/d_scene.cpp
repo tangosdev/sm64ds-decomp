@@ -12,22 +12,18 @@
 // - dScStage_c::SetVramBanks and GX::DisableAllBanks sit between the scene
 //   graphics methods in this span; co-residence is inferred from the
 //   contiguous run, not from an object map.
-// - func_02053c10/02053be0/02053a90/02053fxx and data_02092660/68 keep
-//   linker names: no header home proven for them yet.
+// - func_02053fxx and data_02092660/68 keep linker names: no header home
+//   proven for them yet.
 #include "dScene_c.h"
 #include "dScStage_c.h"
 #include "dFdColor_c.h"
-#include "G2x.h"
+#include "nitro/gx/gx.h"
+#include "nitro/gx/gx_vramcnt.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/g3x.h"
 #include "GX.h"
 #include "nitro/hw/registers.h"
-
-namespace GX {
-void SetGraphicsMode(int a, int b, int c);
-}
-
-namespace GXS {
-void SetGraphicsMode(int a);
-}
+#include "nitro/gx/g3imm_light.h"
 
 #include "Matrix2x2.h"
 
@@ -43,17 +39,14 @@ struct Matrix2x2Words {
 namespace GX { void DisableAllBanks(); }
 
 extern "C" {
-/* src/engine/gx/GX_Init.cpp names these three in comments but they keep their
-   address symbols: the H-blank and V-blank interrupt enables (each returns the
-   previous bit) and the MASTER_BRIGHT writer (negative darkens). */
-extern int  func_02053c10(int enable);
-extern int  func_02053be0(int enable);
+/* local extern: nitro/gx/gx.h declares these three; the parameter names here
+   hold this TU's @NNN numbers. */
+extern int GX_HBlankIntr(int enable);
+extern int GX_VBlankIntr(int enable);
 
-extern void func_02053a90(u16* out, int v);
+extern void GXx_SetMasterBrightness_(u16 *out, int v);
 
 extern Matrix2x2 data_02092668;
-
-extern void func_0205583c(void);
 
 extern void Initialise3dGraphics(int arg);
 
@@ -113,9 +106,9 @@ void dScene_c::ResetHardwareRegisters()
     REG_POWCNT1 |= 1;
 
     GX::DisableAllBanks();
-    func_02053c10(0);
-    func_02053be0(1);
-    GX::SetGraphicsMode(1, 0, 0);
+    GX_HBlankIntr(0);
+    GX_VBlankIntr(1);
+    GX_SetGraphicsMode(1, 0, 0);
 
     REG_DISPCNT &= ~0x1f00;
     REG_DISPCNT &= ~0xe000;
@@ -144,8 +137,8 @@ void dScene_c::ResetHardwareRegisters()
     REG_BG2OFS = 0;
     REG_BG3OFS = 0;
 
-    G2x::SetBGyAffine(&REG_BG2PA, &m, 0, 0, 0, 0);
-    G2x::SetBGyAffine(&REG_BG3PA, &m, 0, 0, 0, 0);
+    G2x_SetBGyAffine_(&REG_BG2PA, &m, 0, 0, 0, 0);
+    G2x_SetBGyAffine_(&REG_BG3PA, &m, 0, 0, 0, 0);
 
     REG_WININ &= ~0x3f;
     REG_WININ &= ~0x3f00;
@@ -159,8 +152,8 @@ void dScene_c::ResetHardwareRegisters()
     REG_MOSAIC_BG = 0;
     REG_MOSAIC_OBJ = 0;
 
-    func_02053a90((u16*)0x400006c, 0);
-    GXS::SetGraphicsMode(0);
+    GXx_SetMasterBrightness_((u16 *)0x400006c, 0);
+    GXS_SetGraphicsMode(0);
 
     REG_DISPCNT_SUB &= ~0x1f00;
     REG_DISPCNT_SUB &= ~0xe000;
@@ -186,8 +179,8 @@ void dScene_c::ResetHardwareRegisters()
     REG_DB_BG2OFS = 0;
     REG_DB_BG3OFS = 0;
 
-    G2x::SetBGyAffine(&REG_DB_BG2PA, &m, 0, 0, 0, 0);
-    G2x::SetBGyAffine(&REG_DB_BG3PA, &m, 0, 0, 0, 0);
+    G2x_SetBGyAffine_(&REG_DB_BG2PA, &m, 0, 0, 0, 0);
+    G2x_SetBGyAffine_(&REG_DB_BG3PA, &m, 0, 0, 0, 0);
 
     REG_DB_WININ &= ~0x3f;
     REG_DB_WININ &= ~0x3f00;
@@ -201,47 +194,47 @@ void dScene_c::ResetHardwareRegisters()
     REG_DB_MOSAIC_BG = 0;
     REG_DB_MOSAIC_OBJ = 0;
 
-    func_02053a90((u16*)0x400106c, 0);
+    GXx_SetMasterBrightness_((u16 *)0x400106c, 0);
 }
 
 namespace GX {
 /* Hand every VRAM user's banks back to the LCDC, in the SDK's own order. */
 void DisableAllBanks() {
-    DisableBankForLCDC();
-    DisableBankForBG();
-    DisableBankForOBJ();
-    DisableBankForARM7();
-    DisableBankForTex();
-    DisableBankForTexPltt();
-    DisableBankForClearImage();
-    DisableBankForBGExtPltt();
-    DisableBankForOBJExtPltt();
-    DisableBankForSubBG();
-    DisableBankForSubOBJ();
-    DisableBankForSubBGExtPltt();
-    DisableBankForSubOBJExtPltt();
+    GX_DisableBankForLCDC();
+    GX_DisableBankForBG();
+    GX_DisableBankForOBJ();
+    GX_DisableBankForARM7();
+    GX_DisableBankForTex();
+    GX_DisableBankForTexPltt();
+    GX_DisableBankForClearImage();
+    GX_DisableBankForBGExtPltt();
+    GX_DisableBankForOBJExtPltt();
+    GX_DisableBankForSubBG();
+    GX_DisableBankForSubOBJ();
+    GX_DisableBankForSubBGExtPltt();
+    GX_DisableBankForSubOBJExtPltt();
 }
 }
 
 void dScStage_c::SetVramBanks() {
     GX::DisableAllBanks();
-    GX::SetBankForTex(3);
-    GX::SetBankForTexPltt(0x30);
-    GX::SetBankForBG(8);
-    GX::SetBankForOBJ(0x40);
-    GX::SetBankForSubBG(4);
-    GX::SetBankForSubBGExtPltt(0x80);
-    GX::SetBankForSubOBJ(0x100);
+    GX_SetBankForTex(3);
+    GX_SetBankForTexPltt(0x30);
+    GX_SetBankForBG(8);
+    GX_SetBankForOBJ(0x40);
+    GX_SetBankForSubBG(4);
+    GX_SetBankForSubBGExtPltt(0x80);
+    GX_SetBankForSubOBJ(0x100);
 }
 
 void dScene_c::Initialise3dGraphics()
 {
     ResetHardwareRegisters();
-    func_0205583c();
-    GX::SetGraphicsMode(1, 0, 1);
-    REG_LIGHT_VECTOR = 0x296a5800;
-    REG_LIGHT_COLOR = 0x7fff;
-    REG_DIF_AMB = 0x7fff;
+    G3X_Init();
+    GX_SetGraphicsMode(1, 0, 1);
+    G3_LightVector(GX_LIGHTID_0, 0, -0xb50, -0xb50); /* (0, -1/sqrt2, -1/sqrt2) */
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    REG_DIF_AMB = GX_RGB(31, 31, 31);
     REG_SPE_EMI = 0;
     ::Initialise3dGraphics(0);
 }

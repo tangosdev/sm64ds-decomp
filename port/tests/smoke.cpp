@@ -27,8 +27,8 @@ static_assert(offsetof(dFader_c, speed) == 8, "dFader_c +0x8");
 // Vector3 comes from the shared headers (common.h via the dFader_c includes);
 // redefining it here was a redefinition error, which is itself a small ABI
 // win: the test uses the same type the game does.
-extern "C" Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
-extern "C" void CrossVec3(const Vector3 *a, const Vector3 *b, Vector3 *out);
+extern "C" Fix12i VEC_DotProduct(const Vector3 *a, const Vector3 *b);
+extern "C" void VEC_CrossProduct(const Vector3 *a, const Vector3 *b, Vector3 *out);
 extern "C" void sm64ds_hal_advance_ticks(s64 n);
 int ApproachLinear(int &ref, int target, int step);
 
@@ -43,12 +43,12 @@ static void test_math(void)
 {
     Vector3 x = {ONE, 0, 0}, y = {0, ONE, 0}, out;
 
-    CHECK(DotVec3(&x, &x) == ONE);            /* 1.0 . 1.0 */
-    CHECK(DotVec3(&x, &y) == 0);              /* orthogonal */
+    CHECK(VEC_DotProduct(&x, &x) == ONE);            /* 1.0 . 1.0 */
+    CHECK(VEC_DotProduct(&x, &y) == 0);              /* orthogonal */
     Vector3 half = {ONE / 2, 0, 0};
-    CHECK(DotVec3(&x, &half) == ONE / 2);     /* 1.0 * 0.5 */
+    CHECK(VEC_DotProduct(&x, &half) == ONE / 2);     /* 1.0 * 0.5 */
 
-    CrossVec3(&x, &y, &out);                  /* x cross y = z */
+    VEC_CrossProduct(&x, &y, &out);                  /* x cross y = z */
     CHECK(out.x == 0 && out.y == 0 && out.z == ONE);
 
     int v = 0;

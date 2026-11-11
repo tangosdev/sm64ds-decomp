@@ -12,7 +12,7 @@ What each piece is:
 | `gx.cpp` | the geometry engine: command decode from FIFO/port writes, matrix stacks, vertex assembly, lighting at NORMAL time, software raster |
 | `texture.cpp` | all seven DS texture formats, decoded from mapped VRAM |
 | `ppu.cpp` | 2D engine text-mode background scan-out, BMP writer |
-| `rt.cpp` / `runtime.cpp` | fiber scheduler (the game blocks in VBlankIntrWait; the host frame loop lives on the other fiber), IRQ state, CpuSet/DMA/CP15 shims |
+| `rt.cpp` / `runtime.cpp` | fiber scheduler (the game blocks in SVC_WaitVBlankIntr; the host frame loop lives on the other fiber), IRQ state, SVC_CpuSet/DMA/CP15 shims |
 | `lz77.cpp` | LZ77 type-0x10 decode (third implementation in the project; cross-checks welcome) |
 | `fs.cpp` | FNT/FAT parsing, ROM-image and extracted-directory backends (the port's live seam is port/hal/fs.cpp over the asset catalog; this one reads ROM structures directly and serves as a harness backend) |
 | `bmd.cpp` | host-side BMD parsing for harnesses. The GAME parses BMDs itself in the real path; this exists to render a model without the game and to cross-check |

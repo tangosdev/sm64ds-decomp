@@ -23,10 +23,6 @@
  * gC1PeachModelFile is the model SharedFilePtr this Init LoadFile's,
  * defined at the end of this file (constructed as file ID 1454).
  * g_profile_C1_PEACH stays outside this .text run.
- *
- * deslop
- * Leftover: cstd::fdiv is the shared coined fixed-point division used
- *   across TUs; naming belongs at a shared home, not this leaf.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -38,10 +34,7 @@ enum daObjC1Peach_c_AssetId {
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
 #include "math/MtxStack.h"
-
-namespace cstd {
-int fdiv(int a, int b);
-}
+#include "nitro/fx/fx_cp.h"
 
 /* The cartridge's ctor/dtor imports are the functions the wrapper's aliases
  * name. */
@@ -82,7 +75,7 @@ int daObjC1Peach_c::Behavior()
     } else if (distance <= 0xbf4000) {
         mOpacity = 0;
     } else {
-        int fraction = cstd::fdiv(distance - 0xbf4000, 0x21c000);
+        int fraction = FX_Div(distance - 0xbf4000, 0x21c000);
         int opacity = FX_MUL(fraction, 0xff);
         mOpacity = (u8)(opacity >> 3);
     }

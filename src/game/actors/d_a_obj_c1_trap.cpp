@@ -62,7 +62,7 @@ struct TrapCollisionFilePtr : SharedFilePtr {
     ~TrapCollisionFilePtr();
 };
 
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern CLPS_Block data_ov010_021122f8;
 extern TrapModelFilePtr data_ov010_02112d08;
 extern TrapCollisionFilePtr data_ov010_02112d00;
@@ -131,7 +131,7 @@ void daObjC1_Trap_c::OnCollision(dActor_c &other) {
     relativeAngle = (s16)(angle + spawner->mAngleY);
     distance = Vec3_HorzDist((const Vector3 *)&spawnerPos, (const Vector3 *)&otherPos);
     index = (u16)relativeAngle >> 4;
-    projection = data_02082214[index * 2];
+    projection = FX_SinCosTable_[index * 2];
     projectedDistance = FX_MUL(distance, projection);
     if (projectedDistance < 0x10e000)
         spawner->mTrapActive = 1;
@@ -156,9 +156,9 @@ int daObjC1_Trap_c::InitResources() {
         mPlayerDist = 0;
 
         index = ((int)(u16)mAngleY >> 4) * 2;
-        /* data_02082214[2i] = sin, [2i+1] = cos (dScStarSel COS()). */
-        cosAngle = data_02082214[index + 1];
-        sinAngle = data_02082214[index];
+        /* FX_SinCosTable_[2i] = sin, [2i+1] = cos (dScStarSel COS()). */
+        cosAngle = FX_SinCosTable_[index + 1];
+        sinAngle = FX_SinCosTable_[index];
         z = mPosZ + sinAngle * 0x15d;
         x = mPosX - cosAngle * 0x15d;
         y = mPosY;
@@ -169,8 +169,8 @@ int daObjC1_Trap_c::InitResources() {
         ((daObjC1_Trap_c *)spawned)->mSpawnerID = uniqueID;
 
         index = ((int)(u16)mAngleY >> 4) * 2;
-        sinAngle = data_02082214[index];
-        cosAngle = data_02082214[index + 1];
+        sinAngle = FX_SinCosTable_[index];
+        cosAngle = FX_SinCosTable_[index + 1];
         z = mPosZ - sinAngle * 0x15d;
         x = cosAngle * 0x15d + mPosX;
         y = mPosY;
@@ -238,9 +238,9 @@ int daObjC1_Trap_c::CleanupResources() {
 void daObjC1_Trap_c::UpdateModelTransform() {
     int angleY = (int)(u16)mAngleY >> 4;
     int angleZ = (int)(u16)mAngleZ >> 4;
-    int sinZ = data_02082214[angleZ * 2];
-    int cosY = data_02082214[angleY * 2 + 1];
-    int sinY = data_02082214[angleY * 2];
+    int sinZ = FX_SinCosTable_[angleZ * 2];
+    int cosY = FX_SinCosTable_[angleY * 2 + 1];
+    int sinY = FX_SinCosTable_[angleY * 2];
     int radius = sinZ * 5;
     int offsetX = FX_MUL(radius, cosY);
     int offsetZ = FX_MUL(radius, sinY);

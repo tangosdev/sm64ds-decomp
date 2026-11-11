@@ -206,7 +206,7 @@ T track0(const std::vector<uint8_t> &b, uint32_t pool, uint16_t index) {
 // as s16 fields: f0 (0x00) is the bone index and the slot, f8 (0x08) a parent
 // delta, fa/fc (0x0a/0x0c) sibling and child links in 0x40-byte units.
 //
-//     MulMat4x3Mat4x3(m, (a + f8)*0x30 + t, a*0x30 + t, t)   // world = local * parent
+//     MTX_Concat43(m, (a + f8)*0x30 + t, a*0x30 + t, t)   // world = local * parent
 //
 // The local transform is NOT in the BMD. func_0204547c fills a per-bone Elem
 // record (stride 0x34) out of a BCA animation:

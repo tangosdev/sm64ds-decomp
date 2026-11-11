@@ -10,7 +10,7 @@ DCD_DUMP = ("asm void func_ov002_020cfea4(void) {\n"
             "    dcd 0xe92d43f0\n"
             "    dcd 0xe12fff1e\n"
             "}\n")
-MNEMONIC_ASM = ("asm void Copy32Bytes(void)\n"
+MNEMONIC_ASM = ("asm void MI_Copy32B(void)\n"
                 "{\n"
                 "    ldmia r0!, {r2, r3, ip}\n"
                 "    stmia r1!, {r2, r3, ip}\n"

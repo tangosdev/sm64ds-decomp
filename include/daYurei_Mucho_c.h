@@ -46,7 +46,7 @@ struct daYurei_Mucho_c : dEnemyBase_c {
     s32 mHomePosX;                    /* 0x3cc */
     s32 mHomePosY;                    /* 0x3d0 */
     s32 mHomePosZ;                    /* 0x3d4 */
-    /* Hover phase: Behavior adds 0x200 a frame and indexes data_02082214 to
+    /* Hover phase: Behavior adds 0x200 a frame and indexes FX_SinCosTable_ to
        bob mPosY around mHomePosY + 0xb4000. */
     s32 mBobAngle;                    /* 0x3d8 */
     s32 mShotCount;                   /* 0x3dc */
