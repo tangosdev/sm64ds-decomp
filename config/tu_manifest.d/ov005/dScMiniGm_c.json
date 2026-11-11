@@ -33,7 +33,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "_Z18MiniGm_SaveIfDirtyPc",
+      "symbol": "_ZN11dScMiniGm_c11SaveIfDirtyEv",
       "address": "0x020bff4c",
       "size": "0x0000007c",
       "legacy_source": "src/func_ov005_020bff4c.cpp",
@@ -47,14 +47,14 @@
       "ordinal": 3
     },
     {
-      "symbol": "_Z16MiniGm_GetRecordPvii",
+      "symbol": "_ZN11dScMiniGm_c9GetRecordEii",
       "address": "0x020bfff4",
       "size": "0x0000001c",
       "legacy_source": "src/func_ov005_020bfff4.c",
       "ordinal": 4
     },
     {
-      "symbol": "_Z19MiniGm_GetSaveTablePvi",
+      "symbol": "_ZN11dScMiniGm_c12GetSaveTableEi",
       "address": "0x020c0010",
       "size": "0x00000020",
       "legacy_source": "src/func_ov005_020c0010.c",
@@ -68,21 +68,21 @@
       "ordinal": 6
     },
     {
-      "symbol": "_Z12MiniGm_IsNewPvi",
+      "symbol": "_ZN11dScMiniGm_c5IsNewEi",
       "address": "0x020c007c",
       "size": "0x00000038",
       "legacy_source": "src/func_ov005_020c007c.c",
       "ordinal": 7
     },
     {
-      "symbol": "_Z17MiniGm_IsUnlockedPvi",
+      "symbol": "_ZN11dScMiniGm_c10IsUnlockedEi",
       "address": "0x020c00b4",
       "size": "0x00000030",
       "legacy_source": "src/func_ov005_020c00b4.c",
       "ordinal": 8
     },
     {
-      "symbol": "_Z20MiniGm_HasSecondPagePv",
+      "symbol": "_ZN11dScMiniGm_c13HasSecondPageEv",
       "address": "0x020c00e4",
       "size": "0x0000005c",
       "legacy_source": "src/func_ov005_020c00e4.c",
@@ -145,7 +145,7 @@
       "ordinal": 17
     },
     {
-      "symbol": "_Z17MiniGm_DrawNumberPviii",
+      "symbol": "_ZN11dScMiniGm_c10DrawNumberEiii",
       "address": "0x020c1030",
       "size": "0x00000100",
       "legacy_source": "src/func_ov005_020c1030.cpp",
@@ -180,7 +180,7 @@
       "ordinal": 22
     },
     {
-      "symbol": "_ZN11dScMiniGm_c21MiniGm_LoadGroupIconsEv",
+      "symbol": "_ZN11dScMiniGm_c14LoadGroupIconsEv",
       "address": "0x020c16e4",
       "size": "0x0000033c",
       "legacy_source": "src/func_ov005_020c16e4.c",

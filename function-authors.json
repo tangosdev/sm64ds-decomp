@@ -20051,7 +20051,7 @@
     },
     "ov005:0x020bff4c": {
       "author": "tangosdev",
-      "name": "_Z18MiniGm_SaveIfDirtyPc"
+      "name": "_ZN11dScMiniGm_c11SaveIfDirtyEv"
     },
     "ov005:0x020bffc8": {
       "author": "tangosdev",
@@ -20059,11 +20059,11 @@
     },
     "ov005:0x020bfff4": {
       "author": "tangosdev",
-      "name": "_Z16MiniGm_GetRecordPvii"
+      "name": "_ZN11dScMiniGm_c9GetRecordEii"
     },
     "ov005:0x020c0010": {
       "author": "tangosdev",
-      "name": "_Z19MiniGm_GetSaveTablePvi"
+      "name": "_ZN11dScMiniGm_c12GetSaveTableEi"
     },
     "ov005:0x020c0030": {
       "author": "tangosdev",
@@ -20071,15 +20071,15 @@
     },
     "ov005:0x020c007c": {
       "author": "tangosdev",
-      "name": "_Z12MiniGm_IsNewPvi"
+      "name": "_ZN11dScMiniGm_c5IsNewEi"
     },
     "ov005:0x020c00b4": {
       "author": "tangosdev",
-      "name": "_Z17MiniGm_IsUnlockedPvi"
+      "name": "_ZN11dScMiniGm_c10IsUnlockedEi"
     },
     "ov005:0x020c00e4": {
       "author": "tangosdev",
-      "name": "_Z20MiniGm_HasSecondPagePv"
+      "name": "_ZN11dScMiniGm_c13HasSecondPageEv"
     },
     "ov005:0x020c0140": {
       "author": "lunavyqo",
@@ -20115,7 +20115,7 @@
     },
     "ov005:0x020c1030": {
       "author": "tangosdev",
-      "name": "_Z17MiniGm_DrawNumberPviii"
+      "name": "_ZN11dScMiniGm_c10DrawNumberEiii"
     },
     "ov005:0x020c1130": {
       "author": "lunavyqo",
@@ -20135,7 +20135,7 @@
     },
     "ov005:0x020c16e4": {
       "author": "lunavyqo",
-      "name": "_ZN11dScMiniGm_c21MiniGm_LoadGroupIconsEv"
+      "name": "_ZN11dScMiniGm_c14LoadGroupIconsEv"
     },
     "ov005:0x020c1a20": {
       "author": "tangosdev",

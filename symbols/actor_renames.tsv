@@ -10456,3 +10456,11 @@ arm9	0x0203cbf0	func_0203cbf0	_Z13func_0203cbf0Pv	C++ linkage; symbols.txt emits
 ov006	0x020c8af4	_Z9Puff_DrawP4Puff	_ZN4Puff4DrawEv	Puff record helpers become Puff members
 ov006	0x020c8ba8	_Z11Puff_UpdateP4Puff	_ZN4Puff6UpdateEv	Puff record helpers become Puff members
 ov006	0x020c8c6c	_Z10Puff_ClearP4Puff	_ZN4Puff5ClearEv	Puff record helpers become Puff members
+ov005	0x020bff4c	_Z18MiniGm_SaveIfDirtyPc	_ZN11dScMiniGm_c11SaveIfDirtyEv	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020bfff4	_Z16MiniGm_GetRecordPvii	_ZN11dScMiniGm_c9GetRecordEii	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c0010	_Z19MiniGm_GetSaveTablePvi	_ZN11dScMiniGm_c12GetSaveTableEi	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c007c	_Z12MiniGm_IsNewPvi	_ZN11dScMiniGm_c5IsNewEi	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c00b4	_Z17MiniGm_IsUnlockedPvi	_ZN11dScMiniGm_c10IsUnlockedEi	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c00e4	_Z20MiniGm_HasSecondPagePv	_ZN11dScMiniGm_c13HasSecondPageEv	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c1030	_Z17MiniGm_DrawNumberPviii	_ZN11dScMiniGm_c10DrawNumberEiii	dScMiniGm_c helpers become members: every caller passes the scene as the first argument
+ov005	0x020c16e4	_ZN11dScMiniGm_c21MiniGm_LoadGroupIconsEv	_ZN11dScMiniGm_c14LoadGroupIconsEv	dScMiniGm_c helpers become members: every caller passes the scene as the first argument

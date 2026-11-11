@@ -17,9 +17,9 @@
  *   coined here.
  * Leftover: func_02013568 / func_02013580 / func_02013598 /
  *   func_020135d0 / func_02013638 are arm9 save-table helpers. This
- *   TU's InitResources, MiniGm_IsUnlocked, MiniGm_IsNew,
- *   ClearNew, MiniGm_GetRecord, SetRecord
- *   call them; MiniGm_GetSaveTable reads the table's save-slot byte
+ *   TU's InitResources, IsUnlocked, IsNew,
+ *   ClearNew, GetRecord, SetRecord
+ *   call them; GetSaveTable reads the table's save-slot byte
  *   and hands it over. Naming belongs in arm9.
  * Leftover: func_02012790 is still the linker name of Sound::Play2D(2,
  *   id). This TU's Behavior and tap handlers (UpdateGameSelect /
@@ -66,6 +66,7 @@
 #include "LevelRng.h"
 #include "SaveData.h"
 #include "nitro/mi/memory.h"
+#include "math/CalcLib.h"
 
 struct OamAttr;
 
@@ -123,15 +124,15 @@ extern struct Off9 sMiniGmIconScreenOffsets; /* 9-entry screen-offset table, not
    0x0a00 and 0x2201. Bytes 1 and 2 each give every row a distinct number
    0..35. */
 extern const MgEntry sMiniGmRows[];
-extern int sMiniGmSaveTable[];
-extern int sMiniGmDigits[];
-extern void *sMiniGmRecordLabels[];
-
-/* ---- this TU's own members not already declared in decl_common.h ----
- * The file is written in REVERSE ROM order, so every intra-TU call is a
- * forward reference. */
-int  MiniGm_GetSaveTable(void *self, int i);
-void MiniGm_DrawNumber(void *self, int x, int y, int val);
+/* OAM sprite tables: each entry points at one sprite's OamAttr list. */
+extern OamAttr *sMiniGmGroupTabs[];
+extern OamAttr *sMiniGmExitButton;
+extern OamAttr *sMiniGmPageArrows[];
+extern OamAttr *sMiniGmDigits[];
+extern OamAttr *sMiniGmRecordLabels[];
+extern OamAttr *sMiniGmNewBadge[];
+extern OamAttr *sMiniGmSavingCaption;
+extern OamAttr *sMiniGmCaption;
 
 /* ---- arm9 / cross-overlay externals ---- */
 void func_02013568(int a, int b, int v);
@@ -139,12 +140,8 @@ int  func_02013580(int a, int b);
 void func_02013598(int x);
 int  func_020135d0(int r0);
 int  func_02013638(int n);
-extern "C" int RandomIntInternal(int *seed);
 extern "C" void *LoadFile(int id);
 extern "C" void DecompressLZ16(void *src, void *dst);
-
-extern "C" void OamRender10_d_s_mini_gm(int sub, OamAttr *attr, int x, int y, int pal, int prio,
-                                        int sx, int sy, int c, int d);
 
 dScMiniGm_c *dScMiniGm_c_classInit() {
     return new dScMiniGm_c();
@@ -186,12 +183,12 @@ s32 dScMiniGm_c::InitResources()
         flag = 0;
         if (tbl2->scoreCap != 0) {
             if (tbl2->ownRecords == 1) {
-                if ((u32)MiniGm_GetRecord(this, i2, 0) > (u32)tbl2->scoreCap) {
+                if ((u32)GetRecord(i2, 0) > (u32)tbl2->scoreCap) {
                     flag = 1;
                 }
             } else {
                 for (j2 = 0; j2 < 5; j2++) {
-                    if ((u32)MiniGm_GetRecord(this, i2, j2) > (u32)tbl2->scoreCap) {
+                    if ((u32)GetRecord(i2, j2) > (u32)tbl2->scoreCap) {
                         flag = 1;
                     }
                 }
@@ -318,7 +315,7 @@ s32 dScMiniGm_c::InitResources()
     sp2 = 0x1f;
     MI_CpuFill16(dst, sp2, 0x1000);
 
-    MiniGm_LoadGroupIcons();
+    LoadGroupIcons();
 
     if (GetOwnerLanguage() == 5) {
         f = LoadFile(0xda);
@@ -373,9 +370,7 @@ s32 dScMiniGm_c::InitResources()
     return 1;
 }
 
-void dScMiniGm_c::MiniGm_LoadGroupIcons() {
-    dScMiniGm_c *scene = this;
-    char *self = (char *)this;
+void dScMiniGm_c::LoadGroupIcons() {
     int i;
     int rowB;
     int j;
@@ -421,7 +416,7 @@ void dScMiniGm_c::MiniGm_LoadGroupIcons() {
 
     do {
         tbl = sMiniGmIconScreenOffsets;
-        if (MiniGm_IsUnlocked(self, gMgGroupBase + j) == 0) {
+        if (IsUnlocked(gMgGroupBase + j) == 0) {
             int off;
             int row;
             int col;
@@ -464,7 +459,7 @@ void dScMiniGm_c::MiniGm_LoadGroupIcons() {
             row = m;
             destOff = row;
             do {
-                idx = scene->mGfxSlot;
+                idx = mGfxSlot;
                 ch = (char *)G2S_GetBG0CharPtr();
                 scr = ch + (idx / 4) * 0x2400 + (idx % 4) * 0xc0 + destOff;
                 ch = (char *)G2S_GetBG0CharPtr();
@@ -474,10 +469,10 @@ void dScMiniGm_c::MiniGm_LoadGroupIcons() {
 
             f = LoadFile(sMiniGmIconPalettes[gMgGroupBase + j]);
             DC_FlushRange(f, flushSize);
-            GXS_LoadBGPltt(f, scene->mGfxSlot << 5, plttSize);
+            GXS_LoadBGPltt(f, mGfxSlot << 5, plttSize);
             Deallocate(f);
 
-            scene->mGfxSlots[i] = scene->mGfxSlot;
+            mGfxSlots[i] = mGfxSlot;
 
             off = tbl.v[i];
             rowB = pInit;
@@ -487,7 +482,7 @@ void dScMiniGm_c::MiniGm_LoadGroupIcons() {
                 destOff = off << 1;
                 do {
                     char *dstp;
-                    idx = scene->mGfxSlot;
+                    idx = mGfxSlot;
                     scr = (char *)G2S_GetBG0ScrPtr();
                     dstp = scr + destOff;
                     dstp = idx ? dstp : dstp; /* register-dest pin; arms identical */
@@ -503,10 +498,10 @@ void dScMiniGm_c::MiniGm_LoadGroupIcons() {
             } while (rowB < 9);
 
             {
-                int *slot = &scene->mGfxSlot;
+                int *slot = &mGfxSlot;
                 *slot = *slot + 1;
-                if (scene->mGfxSlot >= 10)
-                    scene->mGfxSlot = resetVal;
+                if (mGfxSlot >= 10)
+                    mGfxSlot = resetVal;
             }
         }
         j += 4;
@@ -537,7 +532,7 @@ s32 dScMiniGm_c::Behavior()
         func_02012790(0xe);
     }
     if (gMgSaveDirty == 1) {
-        MiniGm_SaveIfDirty((char *)this);
+        SaveIfDirty();
         return 1;
     }
     RandomIntInternal(&data_0209d4b8.value);
@@ -609,52 +604,52 @@ void dScMiniGm_c::DrawRecords() {
     neg1 = -1;
     r8 = i * 4;
     do {
-        if (MiniGm_IsUnlocked(this, gMgGroupBase + r8) != 0) {
+        if (IsUnlocked(gMgGroupBase + r8) != 0) {
             type = sMiniGmRows[gMgGroupBase + r8].scoringMode;
             if (type != 0) {
                 if (type == 1) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[0], x - 0x10, y, neg1, zero);
-                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
-                    MiniGm_DrawNumber(this, x - 4, y, val);
+                    OAM::RenderSub(sMiniGmRecordLabels[0], x - 0x10, y, neg1, zero);
+                    val = GetRecord(gMgGroupBase + r8, zero);
+                    DrawNumber(x - 4, y, val);
                 } else if (type == 2) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[1], x - 0x10, y, neg1, zero);
-                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
-                    MiniGm_DrawNumber(this, x - 4, y, val);
+                    OAM::RenderSub(sMiniGmRecordLabels[1], x - 0x10, y, neg1, zero);
+                    val = GetRecord(gMgGroupBase + r8, zero);
+                    DrawNumber(x - 4, y, val);
                 } else if (type == 4) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[2], x - 0x10, y, neg1, zero);
-                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
-                    MiniGm_DrawNumber(this, x - 4, y, val);
+                    OAM::RenderSub(sMiniGmRecordLabels[2], x - 0x10, y, neg1, zero);
+                    val = GetRecord(gMgGroupBase + r8, zero);
+                    DrawNumber(x - 4, y, val);
                 } else if (type == 3) {
-                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + r8, zero);
                     x = sMiniGmRecordPos[i].x;
                     y = sMiniGmRecordPos[i].y;
-                    MiniGm_DrawNumber(this, x - 0x14, y, val);
+                    DrawNumber(x - 0x14, y, val);
                 } else if (type == 5) {
                     y = sMiniGmRecordPos[i].y;
                     x = sMiniGmRecordPos[i].x;
-                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + r8, zero);
                     u = (unsigned int)val;
                     major = u / 60u;
-                    MiniGm_DrawNumber(this, x - 0x10, y, (int)major);
-                    OAM::RenderSub((OamAttr *)sMiniGmRecordLabels[4], x, y - 8, neg1, zero);
+                    DrawNumber(x - 0x10, y, (int)major);
+                    OAM::RenderSub(sMiniGmRecordLabels[4], x, y - 8, neg1, zero);
 
-                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + r8, zero);
                     u = (unsigned int)val;
                     rem = u % 60u;
                     pct = rem * 100u;
-                    MiniGm_DrawNumber(this, x + 8, y, (int)(pct / 600u));
+                    DrawNumber(x + 8, y, (int)(pct / 600u));
 
-                    val = MiniGm_GetRecord(this, gMgGroupBase + r8, zero);
+                    val = GetRecord(gMgGroupBase + r8, zero);
                     u = (unsigned int)val;
                     rem = u % 60u;
                     pct = rem * 100u / 60u;
-                    MiniGm_DrawNumber(this, x + 0x10, y, (int)(pct % 10u));
+                    DrawNumber(x + 0x10, y, (int)(pct % 10u));
                 }
             }
         }
@@ -663,27 +658,28 @@ void dScMiniGm_c::DrawRecords() {
     } while (i <= end);
 }
 
-void MiniGm_DrawNumber(void *a0, int x, int y, int val){
-    if(val==0){
-        OAM::RenderSub((OamAttr *)sMiniGmDigits[0], x, y, -1, 0);
+void dScMiniGm_c::DrawNumber(int x, int y, int val) {
+    if (val == 0) {
+        OAM::RenderSub(sMiniGmDigits[0], x, y, -1, 0);
         return;
     }
-    int n=1;
+    int n = 1;
     {
-        int q=val;
-        while(q>=10){
-            q=q/10;
+        int q = val;
+        while (q >= 10) {
+            q = q / 10;
             n++;
         }
     }
-    int xx=(n-1)*8;
-    if(val<=0) return;
-    do{
-        int dig=val%10;
-        OAM::RenderSub((OamAttr *)sMiniGmDigits[dig], x+xx, y, -1, 0);
-        val=val/10;
-        xx-=8;
-    }while(val>0);
+    int xx = (n - 1) * 8;
+    if (val <= 0)
+        return;
+    do {
+        int dig = val % 10;
+        OAM::RenderSub(sMiniGmDigits[dig], x + xx, y, -1, 0);
+        val = val / 10;
+        xx -= 8;
+    } while (val > 0);
 }
 
 void dScMiniGm_c::DrawNewBadges() {
@@ -700,12 +696,12 @@ void dScMiniGm_c::DrawNewBadges() {
         return;
     int i;
     for (i = start; i <= end; i++) {
-        if (MiniGm_IsUnlocked(this, gMgGroupBase + i * 4) == 0)
+        if (IsUnlocked(gMgGroupBase + i * 4) == 0)
             continue;
-        if (MiniGm_IsNew(this, gMgGroupBase + i * 4) == 0)
+        if (IsNew(gMgGroupBase + i * 4) == 0)
             continue;
-        OAM::RenderSub((OamAttr *)sMiniGmNewBadge[g],
-            sMiniGmBadgePos[i].x, sMiniGmBadgePos[i].y + 0x30, -1, 0);
+        OAM::RenderSub(sMiniGmNewBadge[g], sMiniGmBadgePos[i].x, sMiniGmBadgePos[i].y + 0x30, -1,
+                       0);
     }
 }
 
@@ -719,9 +715,9 @@ s32 dScMiniGm_c::Render()
     int scale;
 
     if (gMgSaveDirty == 1) {
-        OAM::Render(0, (OamAttr *)sMiniGmSavingCaption, 0x80, 0xa4, -1, 0, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, sMiniGmSavingCaption, 0x80, 0xa4, -1, 0, 0x1000, 0x1000, 0, -1);
     } else {
-        OAM::Render(0, (OamAttr *)sMiniGmCaption, 0x80, 0xa4, -1, 0, 0x1000, 0x1000, 0, -1);
+        OAM::Render(0, sMiniGmCaption, 0x80, 0xa4, -1, 0, 0x1000, 0x1000, 0, -1);
     }
 
     y0 = 0x18;
@@ -734,14 +730,15 @@ s32 dScMiniGm_c::Render()
         else
             blink = 0;
         for (j = 0; j < 9; j++) {
-            if (MiniGm_IsUnlocked(this, sMiniGmGroupBases[i] + j * 4) != 0 && MiniGm_IsNew(this, j * 4 + sMiniGmGroupBases[i]) != 0) {
-                OAM::RenderSub((OamAttr *)sMiniGmNewBadge[blink], 0x18, y1, -1, 0);
+            if (IsUnlocked(sMiniGmGroupBases[i] + j * 4) != 0 &&
+                IsNew(j * 4 + sMiniGmGroupBases[i]) != 0) {
+                OAM::RenderSub(sMiniGmNewBadge[blink], 0x18, y1, -1, 0);
                 break;
             }
         }
         if (mGroupBase != sMiniGmGroupBases[i])
             k += 4;
-        OAM::RenderSub((OamAttr *)sMiniGmGroupTabs[k], 0x18, y0, -1, 0);
+        OAM::RenderSub(sMiniGmGroupTabs[k], 0x18, y0, -1, 0);
         y1 += 0x30;
         y0 += 0x30;
     }
@@ -756,12 +753,12 @@ s32 dScMiniGm_c::Render()
             else
                 scale = (((0x12 - t) << 12) / 16) + 0x1000;
             if (mArrowBobPhase < 0x20)
-                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[0], 0x50 - mArrowBobPhase / 2, 0x60, -1,
-                            0, scale, 0);
+                OAM::Render(1, sMiniGmPageArrows[0], 0x50 - mArrowBobPhase / 2, 0x60, -1, 0, scale,
+                            0);
             else
-                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[0], 0x50 - (0x40 - mArrowBobPhase) / 2,
-                            0x60, -1, 0, scale, 0);
-        } else if (MiniGm_HasSecondPage(this) != 0) {
+                OAM::Render(1, sMiniGmPageArrows[0], 0x50 - (0x40 - mArrowBobPhase) / 2, 0x60, -1,
+                            0, scale, 0);
+        } else if (HasSecondPage() != 0) {
             t = mNextPageTimer;
             if (t < 0xa)
                 scale = 0x1000;
@@ -770,11 +767,11 @@ s32 dScMiniGm_c::Render()
             else
                 scale = (((0x12 - t) << 12) / 16) + 0x1000;
             if (mArrowBobPhase < 0x20)
-                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[1], mArrowBobPhase / 2 + 0xe0, 0x60, -1,
-                            0, scale, 0);
+                OAM::Render(1, sMiniGmPageArrows[1], mArrowBobPhase / 2 + 0xe0, 0x60, -1, 0, scale,
+                            0);
             else
-                OAM::Render(1, (OamAttr *)sMiniGmPageArrows[1], (0x40 - mArrowBobPhase) / 2 + 0xe0,
-                            0x60, -1, 0, scale, 0);
+                OAM::Render(1, sMiniGmPageArrows[1], (0x40 - mArrowBobPhase) / 2 + 0xe0, 0x60, -1,
+                            0, scale, 0);
         }
     }
 
@@ -788,7 +785,7 @@ s32 dScMiniGm_c::Render()
         scale = (((t - 0x14) << 12) / 16) + 0x1000;
     else
         scale = (((0x1c - t) << 12) / 16) + 0x1000;
-    OAM::Render(1, (OamAttr *)sMiniGmExitButton, 0xe8, 0xa0, -1, 0, scale, 0);
+    OAM::Render(1, sMiniGmExitButton, 0xe8, 0xa0, -1, 0, scale, 0);
     return 1;
 }
 
@@ -817,7 +814,7 @@ void dScMiniGm_c::UpdateGroupTabs() {
             int f58 = mGroupBase;
             if (f58 != gMgGroupBase) {
                 gMgGroupBase = f58;
-                MiniGm_LoadGroupIcons();
+                LoadGroupIcons();
                 mScrollDelay = 0x1e;
             }
         }
@@ -846,7 +843,7 @@ void dScMiniGm_c::UpdateGroupTabs() {
                         gMgGroupBase = e;
                         mGroupBase = e;
                         func_02012790(z);
-                        MiniGm_LoadGroupIcons();
+                        LoadGroupIcons();
                         mScrollDelay = t;
                     }
                 }
@@ -899,7 +896,7 @@ void dScMiniGm_c::UpdatePageArrows() {
         return;
     if (mExitTimer > 0)
         return;
-    if (MiniGm_HasSecondPage(this) == 0)
+    if (HasSecondPage() == 0)
         return;
 
     {
@@ -969,8 +966,10 @@ void dScMiniGm_c::UpdateGameSelect()
         }
     }
 
-    if (sel < 0) return;
-    if (MiniGm_IsUnlocked(this, sel) == 0) return;
+    if (sel < 0)
+        return;
+    if (IsUnlocked(sel) == 0)
+        return;
 
     {
         const MgEntry *src = &sMiniGmRows[sel];
@@ -1058,25 +1057,25 @@ void dScMiniGm_c::UpdatePageScroll() {
     gSubBg3HOffset = (short)mSubBgScrollX;
 }
 
-int MiniGm_HasSecondPage(void *self) {
+int dScMiniGm_c::HasSecondPage() {
     int i, j;
     for (i = 0; i < 4; i++) {
         for (j = 6; j < 9; j++) {
-            if (MiniGm_IsUnlocked(self, j * 4 + i))
+            if (IsUnlocked(j * 4 + i))
                 return 1;
         }
     }
     return 0;
 }
 
-int MiniGm_IsUnlocked(void *self, int n) {
+int dScMiniGm_c::IsUnlocked(int n) {
     if (n < 8) {
         return 1;
     }
     return func_02013638(n - 8);
 }
 
-int MiniGm_IsNew(void *self, int n) {
+int dScMiniGm_c::IsNew(int n) {
     if (n < 8) {
         return func_020135d0(n + 0x1c);
     } else {
@@ -1085,7 +1084,7 @@ int MiniGm_IsNew(void *self, int n) {
 }
 
 void dScMiniGm_c::ClearNew(int n) {
-    int seen = MiniGm_IsNew(this, n);
+    int seen = IsNew(n);
     if (seen == 0)
         return;
     if (n < 8)
@@ -1095,24 +1094,23 @@ void dScMiniGm_c::ClearNew(int n) {
     gMgSaveDirty = 1;
 }
 
-int MiniGm_GetSaveTable(void *a, int i) {
-    int offset = i * 0x34;
-    return (*(unsigned int *)((char *)sMiniGmSaveTable + offset) >> 8) & 0xff;
+int dScMiniGm_c::GetSaveTable(int i) {
+    return ((u32)sMiniGmRows[i].sceneParam >> 8) & 0xff;
 }
 
-int MiniGm_GetRecord(void *a, int b, int c) {
-    int res = MiniGm_GetSaveTable(a, b);
+int dScMiniGm_c::GetRecord(int b, int c) {
+    int res = GetSaveTable(b);
     return func_02013580(res, c);
 }
 
 void dScMiniGm_c::SetRecord(int a1, int r2, int r3) {
     int r5 = r2;
     int r4 = r3;
-    int r0 = MiniGm_GetSaveTable(this, a1);
+    int r0 = GetSaveTable(a1);
     func_02013568(r0, r5, r4);
 }
 
-void MiniGm_SaveIfDirty(char *self) {
+void dScMiniGm_c::SaveIfDirty() {
     if (gMgSaveDirty != 1) return;
     if (gSceneFader->IsAtStart() == 0)
         return;
