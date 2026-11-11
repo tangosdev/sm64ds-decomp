@@ -1465,7 +1465,7 @@ extern "C" void Heyho_Draw(int this_) {
     if (p[0] == d->x) {
         if (p[1] == d->y)
             return;
-        if (*(volatile int *)&HEYHO(this_)->mMotion[0] == 0)
+        if (HEYHO(this_)->mMotion[0] == 0)
             return;
     }
     Vec3_MulScalar(&v, &HEYHO(this_)->mScale, HEYHO(this_)->mSize);

@@ -1038,9 +1038,9 @@ void dCamera_c::SetMode(int index) {
 int dCamera_c::EnterState() {
     CamPmfHost *c = (CamPmfHost *)this;
     if (c->flags & 0x4000) {
-        volatile unsigned int *flags = (volatile unsigned int *)&c->flags;
-        *flags &= ~0x4000u;
-        *flags |= 0x8000u;
+        unsigned int &flags = c->flags;
+        flags &= ~0x4000u;
+        flags |= 0x8000u;
     }
     CamPmf *p = c->pp;
     if (*(int *)p == 0)
@@ -2856,7 +2856,7 @@ int func_020095e4(dCamera_c *cam) {
         }
         cam->mAngleY = cam->mBehindAngleY + cam->mTargetAngleY;
         old17e = cam->mAngleX;
-        cam->mAngleX += FX_MUL(r7, (long long)func_02008a70(cam));
+        cam->mAngleX += FX_MUL(r7, func_02008a70(cam));
         {
             int t = cam->mAngleX;
             if (t < 0)

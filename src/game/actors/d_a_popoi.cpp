@@ -231,8 +231,8 @@ int daPopoi_c::Behavior()
     /* Slope under the feet, as an angle relative to the way we are facing. */
     slope = 0;
     if (mWithMeshClsn.IsOnGround()) {
-        void *floorResult = mWithMeshClsn.GetFloorResult();
-        ((SurfaceInfo *)((char *)floorResult + 4))->CopyNormalTo(floorNormal);
+        dBgPi *floorResult = mWithMeshClsn.GetFloorResult();
+        floorResult->surface.CopyNormalTo(floorNormal);
         slope = func_02010844(((char *)this), &floorNormal, mAngleY);
     }
 

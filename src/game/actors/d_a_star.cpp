@@ -1625,9 +1625,9 @@ void daStar_c::AimArcTo(Vector3 *p, int n) {
     if (dy < 0)
         dy = -dy;
     {
-        int s0 = cstd::sqrt((s64)n);
-        int s1 = cstd::sqrt((n + dy));
-        int s2 = cstd::sqrt((s64)n);
+        int s0 = cstd::sqrt(n);
+        int s1 = cstd::sqrt(n + dy);
+        int s2 = cstd::sqrt(n);
         dy = (s0 * 0x32) / (s1 + s2);
     }
     {
@@ -2353,8 +2353,7 @@ void daStar_c::UpdateTrailEffect() {
     v.y = mPosY;
     v.z = mPosZ;
     v.y += 0xd000;
-    *(void **)&mParticle[0] = (void *)Particle::System::New(*(volatile unsigned int *)&mParticle[0],
-                                                            kPtclStarTrail, v.x, v.y, v.z, 0, 0);
+    mParticle[0] = Particle::System::New(mParticle[0], kPtclStarTrail, v.x, v.y, v.z, 0, 0);
 }
 
 /* -------------------------------------------------------------------------- */

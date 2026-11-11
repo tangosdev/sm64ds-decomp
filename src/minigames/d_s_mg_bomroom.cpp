@@ -269,82 +269,82 @@ void Bomroom_DrawScore(void)
 }
 
 void dScMgBomroom_c::TopDoor_Close() {
-    mTopDoor.state = 3;
+    mTopDoor[0].state = 3;
     Sound::PlayBank2_2D(0x1e3);
 }
 
 void dScMgBomroom_c::TopDoor_Open() {
-    mTopDoor.state = 1;
+    mTopDoor[0].state = 1;
     Sound::PlayBank2_2D(0x1e2);
 }
 
 void dScMgBomroom_c::TopDoor_Draw() {
-    if (mTopDoor.level == 0)
+    if (mTopDoor[0].level == 0)
         return;
-    RenderOamMainScreen(sBomroomTopDoorSprites[mTopDoor.idx], mTopDoor.x >> 0xc, mTopDoor.y >> 0xc,
-                        -1, 2);
+    RenderOamMainScreen(sBomroomTopDoorSprites[mTopDoor[0].idx], mTopDoor[0].x >> 0xc,
+                        mTopDoor[0].y >> 0xc, -1, 2);
 }
 
-// The top door is a single record, but its state handlers keep the index the
-// shared PMF signature passes (TopDoor_Update always passes 0), indexing off
-// mTopDoor the way the two-slot mPenGates handlers index their array.
+// The top door is a one-record array: its state handlers take the index the
+// shared PMF signature passes (TopDoor_Update always passes 0), the same way
+// the two-slot mPenGates handlers index theirs.
 
 void dScMgBomroom_c::TopDoor_StateClosing(int index) {
-    if ((&mTopDoor)[index].idx != 0) {
-        (&mTopDoor)[index].timer++;
-        if ((&mTopDoor)[index].timer < 3)
+    if (mTopDoor[index].idx != 0) {
+        mTopDoor[index].timer++;
+        if (mTopDoor[index].timer < 3)
             return;
-        (&mTopDoor)[index].timer = 0;
-        (&mTopDoor)[index].idx--;
+        mTopDoor[index].timer = 0;
+        mTopDoor[index].idx--;
     } else {
-        (&mTopDoor)[index].state = 0;
+        mTopDoor[index].state = 0;
     }
 }
 
 void dScMgBomroom_c::TopDoor_StateOpen() {}
 
 void dScMgBomroom_c::TopDoor_StateOpening(int index) {
-    if ((&mTopDoor)[index].idx >= 4) {
-        (&mTopDoor)[index].idx = 4;
-        (&mTopDoor)[index].state = 2;
+    if (mTopDoor[index].idx >= 4) {
+        mTopDoor[index].idx = 4;
+        mTopDoor[index].state = 2;
         return;
     }
-    (&mTopDoor)[index].timer++;
-    if ((&mTopDoor)[index].timer < 3) {
+    mTopDoor[index].timer++;
+    if (mTopDoor[index].timer < 3) {
         return;
     }
-    (&mTopDoor)[index].timer = 0;
-    (&mTopDoor)[index].idx++;
-    if ((&mTopDoor)[index].idx >= 4) {
-        (&mTopDoor)[index].idx = 4;
-        (&mTopDoor)[index].state = 2;
+    mTopDoor[index].timer = 0;
+    mTopDoor[index].idx++;
+    if (mTopDoor[index].idx >= 4) {
+        mTopDoor[index].idx = 4;
+        mTopDoor[index].state = 2;
     }
 }
 
 void dScMgBomroom_c::TopDoor_StateShut(int index) {
-    (&mTopDoor)[index].timer = 0;
+    mTopDoor[index].timer = 0;
 }
 
 extern "C" PMF sBomroomTopDoorStateTable[];
 void dScMgBomroom_c::TopDoor_Update() {
-    if (!mTopDoor.gate)
+    if (!mTopDoor[0].gate)
         return;
-    (this->*sBomroomTopDoorStateTable[mTopDoor.state])(0);
+    (this->*sBomroomTopDoorStateTable[mTopDoor[0].state])(0);
 }
 
 void dScMgBomroom_c::TopDoor_Show() {
-    mTopDoor.gate = 1;
-    mTopDoor.state = 0;
-    mTopDoor.idx = 0;
-    mTopDoor.level = 1;
-    mTopDoor.timer = 0;
-    mTopDoor.x = 0x80000;
-    mTopDoor.y = 0x8000;
+    mTopDoor[0].gate = 1;
+    mTopDoor[0].state = 0;
+    mTopDoor[0].idx = 0;
+    mTopDoor[0].level = 1;
+    mTopDoor[0].timer = 0;
+    mTopDoor[0].x = 0x80000;
+    mTopDoor[0].y = 0x8000;
 }
 
 void dScMgBomroom_c::TopDoor_Hide() {
-    mTopDoor.gate = 0;
-    mTopDoor.level = 0;
+    mTopDoor[0].gate = 0;
+    mTopDoor[0].level = 0;
 }
 
 void dScMgBomroom_c::PenGate_DrawAll() {

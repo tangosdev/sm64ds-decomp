@@ -1307,8 +1307,8 @@ void daObjMarioCap_c::CheckTouch()
     int state;
 
     if (mWithMeshClsn.IsOnWall() != 0) {
-        void *wr = mWithMeshClsn.GetWallResult();
-        ((SurfaceInfo *)((char*)wr + 4))->CopyNormalTo(*(Vector3 *)&normal[0]);
+        dBgPi *wr = mWithMeshClsn.GetWallResult();
+        wr->surface.CopyNormalTo(*(Vector3 *)&normal[0]);
         mPrevAngleY = ReflectAngle(normal[0], normal[2], mPrevAngleY);
     }
 
