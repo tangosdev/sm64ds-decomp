@@ -21,11 +21,11 @@
  *     mState           0x328  index into the data_ov060_0211b1ac handler table
  *     mVariant         0x329  param1 & 0xf, index of the model/collision pair
  *     mActive          0x32a
- *     mTouchedKoopa    0x32b  set by func_ov060_021183cc when the other actor is 0x117
+ *     mTouchedKoopa    0x32b  set by OnStoodOn when the other actor is 0x117
  *
  * src/game/actors/d_a_kpa3_bg.cpp licenses 0x02117d1c..0x02118438: D1 through
- * InitResources, then func_ov060_021183cc, its collider veneer
- * func_ov060_021183f4 and daKpa3Bg_c_classInit at 0x02118408. The factory
+ * InitResources, then OnStoodOn, its collider veneer StoodOnCallback and
+ * daKpa3Bg_c_classInit at 0x02118408. The factory
  * (historical alias BowserSkyPlatform_Spawn) installs _ZTV10daKpa3Bg_c for
  * g_profile_KOOPA3BG (historical alias BowserSkyPlatform_SpawnInfo).
  */
@@ -58,6 +58,9 @@ struct daKpa3Bg_c : dBgActor_c {
     int StateStart();
     void StateCheck();
     void StateFall();
+
+    void OnStoodOn(dActor_c *);
+    static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
 };
 
 #ifndef SM64DS_PLATFORM_PC

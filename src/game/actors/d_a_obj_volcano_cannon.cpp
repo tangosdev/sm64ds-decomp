@@ -3,8 +3,8 @@
  * Lethal Lava Land's volcano flame (daObj_volcanoCannon_c).
  *
  * .text 0x021125e0..0x02112950, immediately after daObjFlMaruta_c.
- * func_ov022_02112654 burns Mario; 0x021126ac and 0x02112710 are the
- * state's behavior and init, bound by the member-pointer constants
+ * CheckPlayerHit burns Mario; ExecuteFly and EnterFly are the one state's
+ * behavior and init, bound by the member-pointer constants
  * data_ov022_02114424 and data_ov022_0211442c.
  *
  * _ZTS21daObj_volcanoCannon_c 0x02114440. _ZTI21daObj_volcanoCannon_c
@@ -30,7 +30,6 @@ unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 extern "C" {
 int RandomIntInternal(int *seed);
-void func_ov022_02112654(daObj_volcanoCannon_c *c);
 
 /* The state table, ov022 .bss; the definition at the end of this file
  * fills it from the two .data handler constants. One State (init + behavior). */
@@ -55,49 +54,49 @@ daObj_volcanoCannon_c::~daObj_volcanoCannon_c() {}
 
 /* Burns Mario (actor type 0xbf) if the actor the flame's cylinder last hit
  * is Mario, then retires itself. */
-extern "C" void func_ov022_02112654(daObj_volcanoCannon_c *c) {
-    if (c->mCylinderClsn.otherOwner == 0)
+void daObj_volcanoCannon_c::CheckPlayerHit() {
+    if (mCylinderClsn.otherOwner == 0)
         return;
-    daPly_c *a = static_cast<daPly_c *>(dActor_c::FindWithID(c->mCylinderClsn.otherOwner));
-    if (a == 0)
+    daPly_c *player = static_cast<daPly_c *>(dActor_c::FindWithID(mCylinderClsn.otherOwner));
+    if (player == 0)
         return;
-    unsigned int b = ((dActor_c *)a)->actorID == 0xbf;
-    if (b == 0)
+    unsigned int isPlayer = ((dActor_c *)player)->actorID == 0xbf;
+    if (isPlayer == 0)
         return;
-    a->Burn();
-    c->MarkForDestruction();
+    player->Burn();
+    MarkForDestruction();
 }
 
 /* The state's behavior handler, bound through data_ov022_02114424.
  * The flame dies once it falls below mKillPosY or mKillTimer runs out. */
-extern "C" int func_ov022_021126ac(daObj_volcanoCannon_c *c) {
-    int a = c->mPosY;
-    int b = c->mKillPosY;
-    if (a < b) {
-        c->MarkForDestruction();
+int daObj_volcanoCannon_c::ExecuteFly() {
+    int y = mPosY;
+    int killY = mKillPosY;
+    if (y < killY) {
+        MarkForDestruction();
         return 1;
     }
-    unsigned short h = c->mKillTimer;
-    if (h == 0) {
-        c->MarkForDestruction();
+    unsigned short timer = mKillTimer;
+    if (timer == 0) {
+        MarkForDestruction();
         return 1;
     }
-    func_ov022_02112654(c);
+    CheckPlayerHit();
     return 1;
 }
 
 /* The state's init handler, bound through data_ov022_0211442c.
  * Launches the flame: a 0x3c kill timer, a random heading, and randomised
  * horizontal and vertical speed in 12-bit fixed point, under a -4.0 gravity. */
-extern "C" int func_ov022_02112710(daObj_volcanoCannon_c *c) {
+int daObj_volcanoCannon_c::EnterFly() {
     unsigned int r = (unsigned int)RandomIntInternal(&data_0209e650.value) >> 8;
-    c->mKillTimer = 0x3c;
-    c->mPrevAngleY = (short)((r & 0xf) << 0xc);
-    c->mHorzSpeed = (r & 0x1f) + 0x14;
-    c->mHorzSpeed <<= 0xc;
-    c->mVertAccel = -0x4000;
-    c->mVertSpeed = (r & 0x3f) + 0x28;
-    c->mVertSpeed <<= 0xc;
+    mKillTimer = 0x3c;
+    mPrevAngleY = (short)((r & 0xf) << 0xc);
+    mHorzSpeed = (r & 0x1f) + 0x14;
+    mHorzSpeed <<= 0xc;
+    mVertAccel = -0x4000;
+    mVertSpeed = (r & 0x3f) + 0x28;
+    mVertSpeed <<= 0xc;
     return 1;
 }
 

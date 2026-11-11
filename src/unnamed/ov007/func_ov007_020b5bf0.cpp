@@ -8,6 +8,7 @@
 #include "Ov007Settings.h"
 #include "Ov007Item.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -37,13 +38,7 @@ void func_ov007_020b5bf0(Ov007ItemView *view) {
             int timer = item->wiggleTimer;
             int elapsed = item->wiggleFrames - timer;
             int progress;
-            if (elapsed <= 0) {
-                progress = 0;
-            } else if (elapsed >= item->wiggleFrames) {
-                progress = 0x1000;
-            } else {
-                progress = FX_DivS32(elapsed << 0xc, item->wiggleFrames);
-            }
+            progress = ProgressRatio(elapsed, item->wiggleFrames);
             {
                 int degrees = (progress * (item->wiggleFrames * 0x48)) >> 0xc;
                 int angle = FX_DivS32(degrees << 0x10, 0x168);

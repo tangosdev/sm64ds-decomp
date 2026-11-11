@@ -13,8 +13,6 @@
  */
 
 // What stays, and why:
-// - Behavior's collider slot writes keep their raw w offsets (see the note
-//   at the stores).
 // - This TU emits its own __sinit for the file handles below, which the
 //   manifest does not license. The handles stay: nothing else defines
 //   their BSS or .init range.
@@ -29,6 +27,7 @@ enum daObjFl_KomaU_c_AssetId { ASSET_FL_KOMA_U_BMD = 0x05f7, ASSET_FL_KOMA_U_KCL
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
+#include "math/CalcLib.h"
 
 /* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (func_02017acc /
  * func_02017ab4 for the model, func_02017b4c / SharedFilePtr_Destruct_Clsn
@@ -57,11 +56,9 @@ struct FileTable {
 
 extern FileTable data_ov064_0211adbc;
 
-/* local extern: arm9 vector helpers and the dBgW callback store, with no
- * shared header yet. */
+/* local extern: MTX_MultVec43 has no shared header yet. */
 extern "C" {
 void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
-void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 }
 
 daObjFl_KomaU_c::~daObjFl_KomaU_c() {}
@@ -79,19 +76,22 @@ s32 daObjFl_KomaU_c::Render() {
     return 1;
 }
 
+/* dActor_c::mFlags bit 0x08 is set by the framework while the actor is off
+   screen; actor 0xbf is PLAYER. Int-returning, as the ROM materializes each
+   0/1 before testing it. */
+static inline int IsOffScreen(dActor_c *actor) {
+    return (actor->mFlags & 8) != 0;
+}
+
+static inline int IsPlayerActor(dActor_c *actor) {
+    return actor->actorID == 0xbf;
+}
+
 s32 daObjFl_KomaU_c::Behavior() {
-    int i;
-    char *w;
-    dCcPos_c *cyl;
-    int b;
-    s16 *angle;
+    mAngleY -= 0x100;
 
-    angle = &mAngleY;
-    *angle = *angle - 0x100;
-
-    b = ((mFlags & 8) != 0) ? 1 : 0;
-    if (b) {
-        if (mMeshCollider.IsEnabled() != 0)
+    if (IsOffScreen(this)) {
+        if (mMeshCollider.IsEnabled())
             mMeshCollider.Disable();
         return 1;
     }
@@ -99,61 +99,44 @@ s32 daObjFl_KomaU_c::Behavior() {
     UpdateModelPosAndRotY();
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
 
-    w = (char *)this;
-    cyl = mColliders;
-    i = 0;
-
-    do {
+    for (int i = 0; i < 8; i++) {
         Vector3 in;
         Vector3 out;
-        dActor_c *actor;
-        u32 id;
-        int is_burn;
-
+        /* The early in.z store is dead but load-bearing: without it the
+           zeroing stores schedule differently. */
         in.z = 0;
         out.x = 0;
         out.y = 0;
         out.z = 0;
         in.x = 0;
         in.y = 0;
-        in.z = (i < 4) ? ((int)(long long)i - 4) * 0x96000 - 0x64000
-                       : ((int)(long long)i - 3) * 0x96000 + 0x64000;
+        /* Four flames on each side of the hub, 150 units apart, the
+           innermost 250 units out. The long spacing is NitroSDK's fx32
+           (signed long; the tree's fx.h says int): with an int, the
+           multiply is strength-reduced away. */
+        in.z = i < 4 ? (i - 4) * 0x96000L - 0x64000 : (i - 3) * 0x96000L + 0x64000;
 
         MTX_MultVec43(&in, &data_020a0e68, &out);
         VEC_Add(&out, &mPos, &out);
 
-        /* Strided through w, not cyl->pos / cyl->otherOwner. The cyl
-         * spelling makes mwccarm recompute the element address and Behavior
-         * stops matching; cyl++ does the same. The (int)(long long)i round
-         * trip and the pointer-local mAngleY decrement are instruction
-         * selection: the plain forms stop matching. */
-        ((daObjFl_KomaU_c *)w)->mColliders[0].pos.x = out.x;
-        ((daObjFl_KomaU_c *)w)->mColliders[0].pos.y = out.y;
-        ((daObjFl_KomaU_c *)w)->mColliders[0].pos.z = out.z;
+        mColliders[i].pos = out;
 
-        id = ((daObjFl_KomaU_c *)w)->mColliders[0].otherOwner;
+        u32 id = mColliders[i].otherOwner;
         if (id != 0) {
-            actor = dActor_c::FindWithID(id);
-            if (actor != 0) {
-                is_burn = (actor->actorID == 0xbf) ? 1 : 0;
-                if (is_burn != 0)
-                    ((daPly_c *)actor)->Burn();
-            }
+            dActor_c *actor = dActor_c::FindWithID(id);
+            if (actor != 0 && IsPlayerActor(actor))
+                ((daPly_c *)actor)->Burn();
         }
 
-        out.y = out.y + 0x64000;
+        out.y += 0x64000;
         mParticleID[0][i] =
             Particle::System::New(mParticleID[0][i], kPtclFireBarA, out.x, out.y, out.z, 0, 0);
         mParticleID[1][i] =
             Particle::System::New(mParticleID[1][i], kPtclFireBarB, out.x, out.y, out.z, 0, 0);
 
-        cyl->Clear();
-        cyl->Update();
-
-        w += 0x3c;
-        cyl = (dCcPos_c *)((char *)cyl + 0x3c);
-        i += 1;
-    } while (i < 8);
+        mColliders[i].Clear();
+        mColliders[i].Update();
+    }
 
     if (IsClsnInRange(0, 0) != 0)
         UpdateClsnPosAndRot();

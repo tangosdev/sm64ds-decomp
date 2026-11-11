@@ -41,6 +41,7 @@
 #include "nitro/fx/fx.h"
 #include "nnsys/snd/player.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -216,12 +217,7 @@ void func_ov007_020bdbcc(int dx, int dy) {
 
 static inline int scale_div(int v, int range, int scale) {
     int q;
-    if (v <= 0)
-        q = 0;
-    else if (v >= range)
-        q = 0x1000;
-    else
-        q = FX_DivS32(v << 12, range);
+    q = ProgressRatio(v, range);
     return (q * scale) >> 12;
 }
 

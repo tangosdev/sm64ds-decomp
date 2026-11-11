@@ -85,24 +85,22 @@ int  D3D_PanForX(int a);
 namespace Particle { void RenderAll(); }
 
 extern "C" void D3D_CaptureToMain(void) {
-    *(volatile unsigned short *)0x4000304 |= 0x8000;
+    REG_POWCNT1 |= 0x8000;
     GX_ResetBankForSubOBJ();
     GX_SetBankForSubBG(4);
     GX_SetBankForLCDC(8);
-    *(volatile unsigned int *)0x4000064 = 0x80330010;
+    REG_DISPCAPCNT = 0x80330010;
     gSubScreenLayers &= ~0x10;
     gSubScreenLayers |= 4;
-    *(volatile unsigned int *)0x4001000 =
-        (*(volatile unsigned int *)0x4001000 & ~0x1f00) | (gSubScreenLayers << 8);
-    *(volatile unsigned short *)0x400100c =
-        (*(volatile unsigned short *)0x400100c & 0x43) | 0x4284;
-    *(volatile unsigned short *)0x400100c &= ~3;
-    *(volatile unsigned short *)0x400100c &= ~0x40;
+    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | (gSubScreenLayers << 8);
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x4284;
+    REG_DB_BG2CNT &= ~3;
+    REG_DB_BG2CNT &= ~0x40;
 }
 
 extern "C" void D3D_CaptureToSub(void)
 {
-    *(volatile unsigned short *)0x4000304 &= ~0x8000;
+    REG_POWCNT1 &= ~0x8000;
     GX_ResetBankForSubBG();
     GX_SetBankForSubOBJ(8);
     GX_SetBankForLCDC(4);
@@ -123,8 +121,8 @@ extern "C" void D3D_DrawSpriteTable(void)
     int tileX;
     u32 displayControl;
 
-    displayControl = *(volatile u32 *)0x4001000;
-    *(volatile u32 *)0x4001000 = (displayControl & 0xffbfff9f) | 0x20;
+    displayControl = REG_DISPCNT_SUB;
+    REG_DISPCNT_SUB = (displayControl & 0xffbfff9f) | 0x20;
 
     /* Keep the index round trips through long long: without them this
      * function grows from 0xe0 to 0xe8 bytes. */

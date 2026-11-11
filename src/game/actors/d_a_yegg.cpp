@@ -33,10 +33,7 @@
  * daYegg_c_classInit. Each member keeps the provenance notes its source
  * carried.
  *
- * `#pragma defer_codegen off` keeps this file in ROM order. It also scopes
- * opt_strength_reduction off to FindTarget and InitResources, the
- * two members whose sources carried it; with codegen deferred the pragma is
- * last-wins over the whole file.
+ * `#pragma defer_codegen off` keeps this file in ROM order.
  *
  * The twenty-four self-first helpers are real daYegg_c members; the two
  * called from daPly_c code (func_ov002_020ed63c by St_YoshiPower_Init,
@@ -496,8 +493,7 @@ void daYegg_c::SeekStraight() {
                 rot.z = FX_CosIdx((u16)mAngleY >> 4);
                 mParticleHandle = Particle::System::New(mParticleHandle, kPtclYoshiEggTrail, pos.x,
                                                         pos.y, pos.z, (const Vector3_16f *)&rot, 0);
-                mSoundHandle =
-                    Sound::PlayLong(mSoundHandle, 3, 0x93, *(Vector3 *)&mCamSpacePosX, 0);
+                mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x93, mCamSpacePos, 0);
                 flag = 1;
                 UpdateTilt();
                 if (HandleCylinderHit() != 0)

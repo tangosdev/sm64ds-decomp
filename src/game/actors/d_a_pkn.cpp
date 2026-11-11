@@ -722,7 +722,7 @@ void daPkn_c::UpdatePose()
     int lr;
     int scale;
 
-    Vec3_Asr((Vector3 *)&L.v, (Vector3 *)&mPosX, 3);
+    Vec3_Asr((Vector3 *)&L.v, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, L.v.x, L.v.y, L.v.z);
     L.saved = data_020a0e68;
     Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
@@ -745,7 +745,7 @@ void daPkn_c::UpdatePose()
     mHeadClsnOffset.y = data_020a0e68.m[10];
     mHeadClsnOffset.z = data_020a0e68.m[11];
     Vec3_LslInPlace((int *)&mHeadClsnOffset, 3);
-    VEC_Subtract((Vector3 *)&mHeadClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mHeadClsnOffset);
+    VEC_Subtract(&mHeadClsnOffset, &mPos, &mHeadClsnOffset);
 
     /* Still a hand-indexed FX_SinIdx: through the inline the table base loads
        before mHeadClsnOffset.y and ang[0], and no spelling tried (local, index

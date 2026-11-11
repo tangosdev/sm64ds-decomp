@@ -39,6 +39,7 @@
 #include "nitro/fx/fx.h"
 #include "math/Approach.h"
 #include "math/MtxStack.h"
+#include "nitro/fx/fx_trig.h"
 
 #pragma defer_codegen off
 
@@ -128,7 +129,6 @@ extern SharedFilePtr data_ov084_02130e24;   /* death animation */
 extern int data_ov084_0213029c[];           /* SpawnDeathBurst reach per frame */
 extern int data_ov084_021302c4[];           /* SpawnDeathBurst height per frame */
 extern u8 data_ov084_02130294[];            /* UpdateClsnOffset's five bone indices */
-extern s16 FX_SinCosTable_[];               /* the sin and cos table, two shorts a step */
 }
 
 /* One vtable store and four destructor calls, every one a consequence of
@@ -181,9 +181,9 @@ void daFPkn_c::SpawnDeathBurst()
     pos.y = mPosY;
     pos.z = mPosZ;
     burstReach = data_ov084_0213029c[frame];
-    product = burstReach * FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
+    product = burstReach * FX_SinIdx((u16)mAngleY >> 4);
     pos.x = pos.x + FX_MUL(product, mScale);
-    product = burstReach * FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
+    product = burstReach * FX_CosIdx((u16)mAngleY >> 4);
     pos.z = pos.z + FX_MUL(product, mScale);
     pos.y = pos.y + mScale * data_ov084_021302c4[frame];
     mParticleHandle1 =
@@ -226,31 +226,31 @@ void daFPkn_c::UpdateClsnOffset()
     mClsnOffset.y = 0;
     mClsnOffset.z = 0;
 
-    Vec3_Asr((Vector3 *)locals.tmp, (Vector3 *)&mPosX, 3);
+    Vec3_Asr((Vector3 *)locals.tmp, &mPos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, locals.tmp[0], locals.tmp[1], locals.tmp[2]);
     MTX_Concat43(&mAnmModel.data.transforms[6], &data_020a0e68, &data_020a0e68);
     mClsnOffset.x = data_020a0e68.m[9];
     mClsnOffset.y = data_020a0e68.m[10];
     mClsnOffset.z = data_020a0e68.m[11];
     Vec3_LslInPlace(&mClsnOffset, 3);
-    VEC_Subtract((Vector3 *)&mClsnOffset, (Vector3 *)&mPosX, (Vector3 *)&mClsnOffset);
+    VEC_Subtract(&mClsnOffset, &mPos, &mClsnOffset);
 
-    scaledSinAcc0 = FX_SinCosTable_[((u16)locals.acc[0] >> 4) * 2] * 0x32;
-    sinAcc1 = FX_SinCosTable_[((u16)locals.acc[1] >> 4) * 2];
+    scaledSinAcc0 = FX_SinIdx((u16)locals.acc[0] >> 4) * 0x32;
+    sinAcc1 = FX_SinIdx((u16)locals.acc[1] >> 4);
 
     mClsnOffset.x = mClsnOffset.x + FX_MUL(scaledSinAcc0, sinAcc1);
 
     /* The int isFirepakun keeps the ROM's compare; a direct test DIFFs. */
     isFirepakun = (actorID == ACTOR_FIREPAKUN);
     if (isFirepakun != false) {
-        scaledCosAcc0 = FX_SinCosTable_[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
+        scaledCosAcc0 = FX_CosIdx((u16)locals.acc[0] >> 4) * 0x32;
         mClsnOffset.y = mClsnOffset.y - (0x19000 - scaledCosAcc0);
     } else {
-        scaledCosAcc0 = FX_SinCosTable_[((u16)locals.acc[0] >> 4) * 2 + 1] * 0x32;
+        scaledCosAcc0 = FX_CosIdx((u16)locals.acc[0] >> 4) * 0x32;
         mClsnOffset.y = mClsnOffset.y - (0x32000 - scaledCosAcc0);
     }
 
-    cosAcc1 = FX_SinCosTable_[((u16)locals.acc[1] >> 4) * 2 + 1];
+    cosAcc1 = FX_CosIdx((u16)locals.acc[1] >> 4);
     mClsnOffset.z = mClsnOffset.z + FX_MUL(scaledSinAcc0, cosAcc1);
 
     mClsnOffset.x = FX_MUL(mClsnOffset.x, mScale);
@@ -468,8 +468,8 @@ void daFPkn_c::StateSpit()
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
-    pos.x += FX_MUL((mMaxScale * 0x3c), FX_SinCosTable_[((u16)mAngleY >> 4) * 2]);
-    pos.z += FX_MUL((mMaxScale * 0x3c), FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1]);
+    pos.x += FX_MUL((mMaxScale * 0x3c), FX_SinIdx((u16)mAngleY >> 4));
+    pos.z += FX_MUL((mMaxScale * 0x3c), FX_CosIdx((u16)mAngleY >> 4));
     pos.y += mMaxScale * 0x5a;
     mAngleX = 0x1000;
 

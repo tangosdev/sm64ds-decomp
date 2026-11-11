@@ -31,6 +31,7 @@
 #include "Ov007Swing.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
+#include "math/ProgressRatio.h"
 
 extern "C" {
 
@@ -244,15 +245,6 @@ static inline int Sign(int v) {
     return (v >= 0) ? 1 : -1;
 }
 
-/* size / cap as a 20.12 fraction, held to [0, 1]. */
-static inline int CapFraction(int size, u16 cap) {
-    if (size <= 0)
-        return 0;
-    if (size >= cap)
-        return 0x1000;
-    return FX_DivS32(size << 12, cap);
-}
-
 /* Turns the swing into the item sprite's pose (func_ov007_020beeb0 passes
  * the sprite's posOffset, rotX and rotY). offset takes the x and y of the
  * chain's last point. Each side pair's tilt is the atan2 of the span between
@@ -279,9 +271,9 @@ void func_ov007_020c9a84(Ov007Swing *self, Vector3 *offset, u16 *rotX, u16 *rotY
     tiltY = (u16)(angleY + 0x7fff);
 
     sizeX = (tiltX >= 0) ? tiltX : -tiltX;
-    fracX = CapFraction(sizeX, self->params->maxRotX);
+    fracX = ProgressRatio(sizeX, self->params->maxRotX);
     sizeY = (tiltY >= 0) ? tiltY : -tiltY;
-    fracY = CapFraction(sizeY, self->params->maxRotY);
+    fracY = ProgressRatio(sizeY, self->params->maxRotY);
 
     easeX = MulFx(fracX, 0x2000 - fracX);
     easeY = MulFx(fracY, 0x2000 - fracY);
