@@ -199,7 +199,8 @@ extern void func_ov002_020e8244(void *out, daStar_c *b);
 extern "C" void SubVec3(Vector3* a, Vector3* b, Vector3* c);
 extern "C" void AddVec3(Vector3* a, Vector3* b, Vector3* c);
 
-#ifdef _MSC_VER
+/* "#if defined", not "#ifdef": port/tools/hostgen.py MSC_ARMS_BOTH reads an "#ifdef _MSC_VER" as the start of a two-arm block. */
+#if defined(_MSC_VER)
 /* PC port, coop (lane CANNON2): ONE CAMERA PER CONSOLE. The star's camera
    cutscene (func_ov002_020e763c) and the freeze word bit it sets
    (data_0209b454 |= CUTSCENE_FLAG) belong to the console whose player made or
@@ -1123,7 +1124,7 @@ void daStar_c::func_ov002_020ea9d0() {
         }
     }
     mFlags |= CUTSCENE_FLAG;
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
     if (!port_star_foreign(this))      /* a friend's star: no freeze here (see port_star_cam_foreign_hook) */
 #endif
     data_0209b454 |= CUTSCENE_FLAG;
@@ -2031,7 +2032,7 @@ void daStar_c::func_ov002_020e930c() {
     flags = mdCc_c.hitFlags;
     if (flags & 0x400000) {
         if (b->mIsNoControl != 0) return;
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
         /* coop: a friend's body never collects my copy. His console runs his collect (its pose, its camera, its freeze) and
            tells mine, which removes this copy; collecting it here put HIS body in the star pose on my console and pointed my
            camera at it (Player::SetNoControlState) with nothing on this console to end it. */
@@ -2204,7 +2205,7 @@ int daStar_c::func_ov002_020e8ef0(void* p) {
         if (!b4) {
             mPlayer->mFlags |= CUTSCENE_FLAG;
             mFlags |= CUTSCENE_FLAG;
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
             if (!port_collector_foreign(mPlayer))   /* a friend's body took it here: his console has the freeze, not mine */
 #endif
             data_0209b454 |= CUTSCENE_FLAG;
@@ -2256,7 +2257,7 @@ void daStar_c::OnTurnIntoEgg(Player &player)
 /* A Yoshi egg took the star (OnTurnIntoEgg): unlinks the marker, stops the
  * motion, clears the hidden flag and collects the star for player a. */
 void daStar_c::func_ov002_020e8e80(int a) {
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
     if (port_collector_foreign((const void *)a)) return;      /* coop: a friend's egg, see func_ov002_020e930c */
 #endif
     daStarBase_c *marker = (daStarBase_c *)_ZN8dActor_c10FindWithIDEj(mMarkerID);
@@ -3057,7 +3058,7 @@ void daStar_c::func_ov002_020e763c() {
     Vec3 v;
     dCamera_c *cam;
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
     /* A friend's star never films here. A sequence that has not taken the
        camera yet (0 and 0x64 are the steps that save the view and take it;
        every later step only runs after one of them) ends at once, the way
@@ -3152,7 +3153,7 @@ void daStar_c::func_ov002_020e763c() {
     }
 }
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 /* PC port, coop (lane CANNON2): a star copy removed from outside (a friend
    took his copy: hal/coop_spawn.cpp kill_quiet) can be in the middle of its
    camera scene or of a collect here. Destroying it there leaves what only its
@@ -3446,7 +3447,7 @@ void daStar_c::func_ov002_020e7090(int arg) {
     mPlayer = (Player *)arg;
   mPlayer->mFlags |= CUTSCENE_FLAG;
   mFlags |= CUTSCENE_FLAG;
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
   if (!port_collector_foreign(mPlayer))
 #endif
   data_0209b454 |= CUTSCENE_FLAG;
