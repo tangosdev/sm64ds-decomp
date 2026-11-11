@@ -93,7 +93,7 @@ enum : int { kNetMax = 24, kLnkMax = 8, kInMax = 48, kBlkOutMax = 16, kAckMax = 
 bool g_env = false, g_log = false, g_census_log = false;
 struct Off { bool block, red, spawn, gone, snap; } g_off = {};
 // TOTALS9 must-fail switches (SM64DS_TOTALS_OFF=redlocal,guard,coinstar): the same build with the r3 behaviour back.
-struct TOff { bool redlocal, guard, coinstar, keyview, stardup; } g_toff = {};
+struct TOff { bool redlocal, guard, coinstar, keyview, stardup, startaken; } g_toff = {};
 CoopSpawnStats g_st = {};
 bool g_registered = false;
 int g_my = -1;
@@ -186,12 +186,22 @@ struct Net {
     bool sil_took, sil_fell;      // SILVERCOOP1: a player took this silver star here / my copy fell off the level (the others keep theirs)
     bool alias; uint8_t alias_o; uint16_t alias_c;      // bossfix1: the other console's id for the SAME boss reward (each console keeps its own native key)
     uint8_t extra;                                       // coopgoomboss2: a Goomboss minion's index (the wire's reserved byte)
+    bool took;                    // SNOWMAN2: a player took this star (its GONE says so)
     int sends; unsigned next; int gsends; unsigned gnext;
 };
 Net g_net[kNetMax];
+// SNOWMAN2 (Tango: "Snowman's head: desynced snowball, 3 stars"): the star numbers a player took in this visit of the level. Every console
+// runs its own snowman, penguin race and Koopa race, so each one that finishes makes the star again; the copy check above only sees copies
+// that stand at the same moment, so finishes far apart made one star each. A star number in this set is never made again here.
+bool g_star_taken[256];
+void star_taken_mark(unsigned param, const char *why) {
+    if (g_star_taken[param & 0xff]) return;
+    g_star_taken[param & 0xff] = true;
+    if (g_log) std::fprintf(stderr, "[coopspawn] star taken: star %u is done for this visit (%s) frame=%u wall=%lld\n", param & 0xff, why, g_frames, wall_ms());
+}
 bool key_model_ready(unsigned param);
 uint16_t g_counter = 0;
-struct Lnk { bool used, taken; char *a; unsigned uid; short mslot; int area; bool seen; int gsends; unsigned gnext; };
+struct Lnk { bool used, taken; char *a; unsigned uid; short mslot; int area; bool seen; int gsends; unsigned gnext; unsigned param; };
 Lnk g_lnk[kLnkMax];
 bool g_lnk_gone[kSpSlots];
 struct Ack { bool on; uint8_t origin; uint16_t counter; unsigned t; };
@@ -270,6 +280,7 @@ void read_env() {
         g_toff.guard = std::strstr(o, "guard") != nullptr;
         g_toff.coinstar = std::strstr(o, "coinstar") != nullptr;
         g_toff.keyview = std::strstr(o, "keyview") != nullptr;
+        g_toff.startaken = std::strstr(o, "startaken") != nullptr;    // SNOWMAN2 control: a star number taken this visit can be made again
         g_toff.stardup = std::strstr(o, "stardup") != nullptr;      // COOPCOUNT2 control: two consoles' copies of one star both stand      // SMALLS9B control: the old behaviour (a watcher builds the key copy)
     }
     if (const char *o = std::getenv("SM64DS_SPAWN_OFF")) {
@@ -499,6 +510,14 @@ bool register_local(char *a, int cls, unsigned param, const int pos[3], int area
             return false;
         }
     }
+    // SNOWMAN2: a player already took this star number in this visit (here or on a friend's console): my late finish makes no new one.
+    if (!g_toff.startaken && cls == 178 && a && g_star_taken[param & 0xff]) {
+        kill_quiet(a);
+        ++g_st.spawn_dup;
+        if (g_log) std::fprintf(stderr, "[coopspawn] star taken: my native star %u was already taken this visit: removed, not announced frame=%u wall=%lld\n",
+                                param & 0xff, g_frames, wall_ms());
+        return false;
+    }
     // COOPCOUNT2: the same star number already came from a friend (his announce beat my native spawn): the lower seat's copy stays
     // (see apply_spawn). A lower seat's copy here: mine goes unannounced. A higher seat's: his copy goes and mine is announced.
     if (!g_toff.stardup && cls == 178 && a) {
@@ -551,6 +570,7 @@ void send_net(unsigned now) {
             if (others_here()) {
                 SpGoneWire g; std::memset(&g, 0, sizeof g);
                 g.key = wkey(); g.origin = n.origin; g.kind = kSpGoneAnn; g.id = n.counter;
+                g.reserved = n.took ? kSpGoneTook : 0u;     // SNOWMAN2: a take, not a copy removed or lost
                 if (send_world(kSpWorldGone, &g, sizeof g)) ++g_st.sent_gone;
                 ++n.gsends; n.gnext = now + kResendMs;
             } else n.gsends = 3;
@@ -1164,12 +1184,16 @@ void scan(unsigned now) {
             for (Net &n : g_net)
                 if (n.used && !n.gone && n.a == a && n.uid == uid) {
                     n.seen = !dead && !taken_now;
+                    if (cls == 178 && taken_now && !n.took) { n.took = true; star_taken_mark(n.param, "taken here"); }
                     if (cls == 179 && !dead && (taken_now || (is_player_ptr(*(void *const *)(a + 0x438)) && *(const unsigned *)(a + 0x440) >= 5u &&
                                                               *(const unsigned *)(a + 0x440) != 8u && *(const unsigned *)(a + 0x440) != 9u)))
                         n.sil_took = true;          // SILVERCOOP1: a player has it here
                 }
             for (Lnk &l : g_lnk)
-                if (l.used && !l.taken && l.a == a && l.uid == uid) { l.seen = !dead && !taken_now; }
+                if (l.used && !l.taken && l.a == a && l.uid == uid) {
+                    l.seen = !dead && !taken_now;
+                    if (taken_now) star_taken_mark(l.param, "taken here (linked)");
+                }
         }
 
         // ---- new runtime actors -------------------------------------------
@@ -1191,12 +1215,15 @@ void scan(unsigned now) {
                     if (cls == 178 && linked_to_placed_marker(a, &mslot)) {
                         Lnk *l = lnk_alloc();
                         if (l) {
-                            *l = Lnk(); l->used = true; l->a = a; l->uid = uid; l->mslot = mslot; l->area = a_area(a); l->seen = true;
+                            *l = Lnk(); l->used = true; l->a = a; l->uid = uid; l->mslot = mslot; l->area = a_area(a); l->seen = true; l->param = a_param(a);
                             if (g_log)
                                 std::fprintf(stderr, "[coopspawn] linked star cls=%u marker slot=%d uid=%u pos=%d,%d,%d frame=%u wall=%lld\n",
                                              cls, (int)mslot, uid, ((const int *)(a + 0x5c))[0] >> 12, ((const int *)(a + 0x5c))[1] >> 12,
                                              ((const int *)(a + 0x5c))[2] >> 12, g_frames, wall_ms());
-                            if (g_lnk_gone[mslot] && !g_off.gone) {       // the friend already took it
+                            if (!g_toff.startaken && g_star_taken[l->param & 0xff] && !g_lnk_gone[mslot]) {      // SNOWMAN2: taken this visit as an announced star
+                                kill_quiet(a); l->taken = true; l->gsends = 3;
+                                if (g_log) std::fprintf(stderr, "[coopspawn] star taken: my linked star %u (marker slot=%d) was already taken this visit: removed wall=%lld\n", l->param & 0xff, (int)mslot, wall_ms());
+                            } else if (g_lnk_gone[mslot] && !g_off.gone) {       // the friend already took it
                                 kill_quiet(a); l->taken = true; l->gsends = 3;
                                 ++g_st.gone_applied;
                                 if (g_log) std::fprintf(stderr, "[coopspawn] linked star marker slot=%d was already taken: removed wall=%lld\n", (int)mslot, wall_ms());
@@ -1395,6 +1422,20 @@ void apply_spawn(int seat, const SpSpawnWire &w, unsigned now) {
     // counters crossing 100 in the same frame, the same last secret coin taken on both, the fifth secret settled on two consoles):
     // each announces its own. Every console keeps the copy of the LOWER origin seat and removes the other (a native one I made goes
     // too; scan then tells the group it is gone, so a third console drops its copy of it). A copy already being taken stays.
+    // SNOWMAN2: a player took this star number here before the friend's late copy arrived. It is not built, and the group hears it is
+    // gone as a take, so the friend removes his own copy and every console drops it.
+    if (!g_toff.startaken && w.cls == 178 && g_star_taken[w.param & 0xff]) {
+        ack_add(w.origin, w.counter, now);
+        ++g_st.spawn_dup;
+        if (Net *t = net_alloc()) {
+            *t = Net();
+            t->used = true; t->remote = true; t->gone = true; t->took = true; t->origin = w.origin; t->counter = w.counter; t->cls = w.cls;
+            t->kind = w.kind; t->param = w.param; t->area = w.area; t->sends = 3; t->gsends = 0; t->gnext = now;
+        }
+        if (g_log) std::fprintf(stderr, "[coopspawn] star taken: seat %d's star %u (id %d/%d) was already taken this visit: not built, sent back as taken frame=%u wall=%lld\n",
+                                seat, w.param & 0xff, (int)w.origin, (int)w.counter, g_frames, wall_ms());
+        return;
+    }
     if (!g_toff.stardup && w.cls == 178) {
         for (Net &o : g_net) {
             if (!o.used || o.gone || o.cls != 178 || (o.param & 0xff) != (w.param & 0xff) || o.origin == w.origin || !o.a || a_dead(o.a)) continue;
@@ -1459,6 +1500,7 @@ void apply_gone(int seat, const SpGoneWire &w, unsigned now) {
         ack_add(w.origin, w.id, now);
         Net *n = net_find(w.origin, w.id);
         if (!n) { ++g_st.gone_unknown; return; }
+        if (n->cls == 178 && (w.reserved & kSpGoneTook)) star_taken_mark(n->param, "a friend took it");
         if (n->gone) return;
         if (n->a && n->seen && n->cls == 179) sil_on_remote_gone(n->a);      // SILVERCOOP1: a friend's take counts here too
         else if (n->sil_fell && !g_sil_off && g_sil_last >= 0) {     // ...also when my copy of it had fallen
@@ -1476,6 +1518,7 @@ void apply_gone(int seat, const SpGoneWire &w, unsigned now) {
     for (Lnk &l : g_lnk) {
         if (!l.used || l.mslot != (short)w.id || l.taken) continue;
         if (l.seen && l.a) kill_quiet(l.a);
+        if (!g_toff.startaken) star_taken_mark(l.param, "a friend took it (linked)");
         l.taken = true; l.gsends = 3;
         ++g_st.gone_applied;
         if (g_log) std::fprintf(stderr, "[coopspawn] gone applied linked star marker slot=%d from seat %d frame=%u wall=%lld\n", (int)w.id, seat, g_frames, wall_ms());
@@ -1821,6 +1864,7 @@ void new_level() {
     std::memset(g_net, 0, sizeof g_net);
     std::memset(g_lnk, 0, sizeof g_lnk);
     std::memset(g_lnk_gone, 0, sizeof g_lnk_gone);
+    std::memset(g_star_taken, 0, sizeof g_star_taken);      // SNOWMAN2: per visit
     std::memset(g_ack, 0, sizeof g_ack);
     std::memset(g_in, 0, sizeof g_in);
     std::memset(g_job, 0, sizeof g_job);
