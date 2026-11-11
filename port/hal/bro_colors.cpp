@@ -253,3 +253,266 @@ void unstamp(Stamp &st)
 
 }  // namespace bro
 }  // namespace port
+
+// ---- BROSCOLOR1 (run coopfix1): the room's colour choices, the character-palettes mod's list. See bro_colors.h. ----
+extern "C" int host_setting_online_bro(int chr, int cat, unsigned *rgb);                       /* hal/host_settings.h */
+extern "C" int host_setting_set_online_bros(const unsigned rgb[3][3], const unsigned char set[3][3]);
+extern "C" int host_setting_online_colours(unsigned *body, unsigned *shoes);
+extern "C" int host_setting_set_online_profile(const char *name, unsigned body, unsigned shoes);
+extern "C" const char *host_setting_online_name(void);
+extern "C" int port_fs_mods_bro_custom(int chr, int part, unsigned *rgb);                       /* hal/fs_mods.cpp */
+
+namespace port {
+namespace bro {
+namespace {
+
+const char *const kBroChoice[2] = { "Original", "Custom" };
+// Yoshi's four: the cartridge's multiplayer rows as the profile popup's classic cells give them (hal/menu_online_profile.h
+// kOnlineYoshiColors, the drawn body and shoe shade of each row), then Custom
+const char *const kYoshiChoice[5] = { "Green", "Red", "Blue", "Yellow", "Custom" };
+const unsigned kYoshiPair[4][2] = {
+    { 0x31A431u, 0xE66218u }, { 0xFF3139u, 0x004AFFu }, { 0x4A52B4u, 0xB410B4u }, { 0xFFCD00u, 0x31BD08u },
+};
+
+// this session's memory of a Custom the player stepped away from, so Original then Custom brings it back
+unsigned g_cust[3][kRows];
+bool g_cust_have[3];
+unsigned g_ycust[2];
+bool g_ycust_have;
+// Original picked this session: the mod's Custom stops standing in for that bro's online pick
+bool g_orig_explicit[3];
+
+unsigned cart_of(int chr, int row) { return vscg::kBroCart[chr][kCatOfRow[row]] & 0xFFFFFFu; }
+
+bool online_any(int chr)
+{
+    for (int r = 0; r < kRows; ++r)
+        if (host_setting_online_bro(chr, r, 0)) return true;
+    return false;
+}
+
+// the rows a bro wears now (online pick, the mod standing in, else the cartridge); *picked when any row is a stored pick
+void wearing(int chr, unsigned out[kRows], bool *picked)
+{
+    bool any_set = false;
+    for (int r = 0; r < kRows; ++r) {
+        unsigned v = 0;
+        if (port_bro_my_row(chr, r, &v)) { out[r] = v & 0xFFFFFFu; any_set = true; }
+        else out[r] = cart_of(chr, r);
+    }
+    if (picked) *picked = any_set;
+}
+
+bool not_cart(int chr, const unsigned rows[kRows])
+{
+    for (int r = 0; r < kRows; ++r)
+        if (q555(rows[r]) != q555(cart_of(chr, r))) return true;
+    return false;
+}
+
+// write one bro's three rows (all set, or all unset), keeping the other two bros' rows as they are
+void write_bro(int chr, const unsigned rows[kRows], bool set)
+{
+    unsigned rgb[3][3];
+    unsigned char st[3][3];
+    for (int c = 0; c < 3; ++c)
+        for (int r = 0; r < kRows; ++r) {
+            unsigned v = 0;
+            if (c == chr) {
+                st[c][r] = set ? 1 : 0;
+                rgb[c][r] = set ? rows[r] & 0xFFFFFFu : 0;
+                continue;
+            }
+            st[c][r] = host_setting_online_bro(c, r, &v) ? 1 : 0;
+            rgb[c][r] = st[c][r] ? v : 0;
+        }
+    host_setting_set_online_bros(rgb, st);
+}
+
+bool yoshi_now(unsigned pair[2])
+{
+    if (host_setting_online_colours(&pair[0], &pair[1])) {
+        pair[0] &= 0xFFFFFFu;
+        pair[1] &= 0xFFFFFFu;
+        return true;
+    }
+    pair[0] = kYoshiPair[0][0];
+    pair[1] = kYoshiPair[0][1];
+    return false;
+}
+
+int yoshi_preset_of(const unsigned pair[2])
+{
+    for (int i = 0; i < 4; ++i)
+        if (q555(pair[0]) == q555(kYoshiPair[i][0]) && q555(pair[1]) == q555(kYoshiPair[i][1])) return i;
+    return 4;
+}
+
+void yoshi_write(const unsigned pair[2])
+{
+    host_setting_set_online_profile(host_setting_online_name(), pair[0], pair[1]);
+}
+
+void choice_log(int chr, int i)
+{
+    const char *n = port_bro_choice_name(chr, i);
+    std::fprintf(stderr, "[bro] choice set: chr %d -> %d (%s)\n", chr, i, n ? n : "?");
+}
+
+}  // namespace
+}  // namespace bro
+}  // namespace port
+
+using namespace port::bro;
+
+extern "C" int port_bro_my_row(int chr, int row, unsigned *rgb)
+{
+    if (chr < 0 || chr > 2 || row < 0 || row >= kRows) return 0;
+    if (host_setting_online_bro(chr, row, rgb)) return 1;
+    if (online_any(chr) || g_orig_explicit[chr]) return 0;
+    return port_fs_mods_bro_custom(chr, row, rgb);
+}
+
+extern "C" int port_bro_choice_count(int chr)
+{
+    return chr >= 0 && chr <= 2 ? 2 : chr == 3 ? 5 : 0;
+}
+
+extern "C" const char *port_bro_choice_name(int chr, int i)
+{
+    if (i < 0 || i >= port_bro_choice_count(chr)) return 0;
+    return chr == 3 ? kYoshiChoice[i] : kBroChoice[i];
+}
+
+extern "C" int port_bro_choice_current(int chr)
+{
+    if (chr == 3) {
+        unsigned pair[2];
+        yoshi_now(pair);
+        return yoshi_preset_of(pair);
+    }
+    if (chr < 0 || chr > 2) return 0;
+    bool picked = false;
+    unsigned rows[kRows];
+    wearing(chr, rows, &picked);
+    return picked ? 1 : 0;
+}
+
+extern "C" int port_bro_choice_is_default(int chr)
+{
+    if (chr < 0) {
+        for (int c = 0; c < 4; ++c)
+            if (!port_bro_choice_is_default(c)) return 0;
+        return 1;
+    }
+    if (chr == 3) {
+        unsigned pair[2];
+        return yoshi_now(pair) && yoshi_preset_of(pair) != 0 ? 0 : 1;
+    }
+    if (chr > 2) return 1;
+    unsigned rows[kRows];
+    wearing(chr, rows, 0);
+    return not_cart(chr, rows) ? 0 : 1;
+}
+
+extern "C" int port_bro_custom_get(int chr, int part, unsigned *rgb)
+{
+    if (!rgb) return 0;
+    if (chr == 3) {
+        if (part < 0 || part > 1) return 0;
+        unsigned pair[2];
+        yoshi_now(pair);
+        if (yoshi_preset_of(pair) != 4 && g_ycust_have) {
+            pair[0] = g_ycust[0];
+            pair[1] = g_ycust[1];
+        }
+        *rgb = pair[part];
+        return 1;
+    }
+    if (chr < 0 || chr > 2 || part < 0 || part >= kRows) return 0;
+    bool picked = false;
+    unsigned rows[kRows];
+    wearing(chr, rows, &picked);
+    *rgb = !picked && g_cust_have[chr] ? g_cust[chr][part] : rows[part];
+    return 1;
+}
+
+extern "C" int port_bro_custom_set(int chr, int part, unsigned rgb)
+{
+    if (chr == 3) {
+        if (part < 0 || part > 1) return 0;
+        unsigned pair[2];
+        port_bro_custom_get(3, 0, &pair[0]);
+        port_bro_custom_get(3, 1, &pair[1]);
+        pair[part] = rgb & 0xFFFFFFu;
+        g_ycust[0] = pair[0];
+        g_ycust[1] = pair[1];
+        g_ycust_have = true;
+        yoshi_write(pair);
+        return 1;
+    }
+    if (chr < 0 || chr > 2 || part < 0 || part >= kRows) return 0;
+    unsigned rows[kRows];
+    for (int r = 0; r < kRows; ++r) port_bro_custom_get(chr, r, &rows[r]);
+    rows[part] = rgb & 0xFFFFFFu;
+    for (int r = 0; r < kRows; ++r) g_cust[chr][r] = rows[r];
+    g_cust_have[chr] = true;
+    g_orig_explicit[chr] = false;
+    write_bro(chr, rows, true);
+    return 1;
+}
+
+extern "C" int port_bro_choice_set(int chr, int i)
+{
+    if (i < 0 || i >= port_bro_choice_count(chr)) return 0;
+    if (chr == 3) {
+        unsigned pair[2];
+        if (yoshi_now(pair) && yoshi_preset_of(pair) == 4) {
+            g_ycust[0] = pair[0];
+            g_ycust[1] = pair[1];
+            g_ycust_have = true;
+        }
+        if (i < 4) {
+            pair[0] = kYoshiPair[i][0];
+            pair[1] = kYoshiPair[i][1];
+        } else if (g_ycust_have) {
+            pair[0] = g_ycust[0];
+            pair[1] = g_ycust[1];
+        }
+        yoshi_write(pair);
+        choice_log(chr, i);
+        return 1;
+    }
+    bool picked = false;
+    unsigned rows[kRows];
+    wearing(chr, rows, &picked);
+    if (i == 0) {
+        if (picked) {
+            for (int r = 0; r < kRows; ++r) g_cust[chr][r] = rows[r];
+            g_cust_have[chr] = true;
+        }
+        g_orig_explicit[chr] = true;
+        write_bro(chr, rows, false);
+    } else {
+        if (!picked && g_cust_have[chr])
+            for (int r = 0; r < kRows; ++r) rows[r] = g_cust[chr][r];
+        g_orig_explicit[chr] = false;
+        write_bro(chr, rows, true);
+    }
+    choice_log(chr, i);
+    return 1;
+}
+
+extern "C" unsigned port_bro_choice_swatch(int chr, int i)
+{
+    if (i < 0 || i >= port_bro_choice_count(chr)) return 0;
+    unsigned v = 0;
+    if (chr == 3) {
+        if (i < 4) return kYoshiPair[i][0];
+        port_bro_custom_get(3, 0, &v);
+        return v;
+    }
+    if (i == 0) return cart_of(chr, kRowHat);
+    port_bro_custom_get(chr, kRowHat, &v);
+    return v;
+}
