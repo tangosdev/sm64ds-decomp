@@ -44,6 +44,7 @@ struct NobiruClsnFileHandle : SharedFilePtr {
 
 extern NobiruClsnFileHandle PoleLift_ClsnFile;
 extern NobiruModelFileHandle PoleLift_ModelFile;
+extern CLPS_Block data_ov045_021125b0;
 
 daObjKm2_Nobiru_c::~daObjKm2_Nobiru_c() {}
 
@@ -105,7 +106,7 @@ int daObjKm2_Nobiru_c::InitResources() {
     /* dBgW_Kc::SetEdgeToleranceShift stays a call because the direct
      * mCollider.edgeToleranceShift = 4 store makes InitResources differ. */
     mCollider.SetFile((KCL_File *)dBgW_Kc::LoadFile(PoleLift_ClsnFile), mColliderTransform, 0x1000,
-                      mAngleY, *(CLPS_Block *)data_ov045_021125b0);
+                      mAngleY, data_ov045_021125b0);
     mCollider.SetEdgeToleranceShift(4);
     mCollider.tolerantWallEdges = true;
     mCollider.Enable(this);
