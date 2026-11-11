@@ -1,11 +1,9 @@
 //cpp
 #include "nitro/os/cache.h"
 #include "Memory.h"
-#include "private/fs_views.h"
 #include "nitro/mi/memory.h"
 #include "nitro/os/system.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 extern "C" {
 
@@ -13,7 +11,6 @@ extern int myFS_ReadFile(void *s, void *b, int c);
 extern int func_02018568(void *a);
 extern unsigned int func_02018ac4(void *p);
 extern void DecompressLZ16(void *src, void *dst);
-extern int FS_CloseFile(void *self);
 extern void func_02018770(void);
 
 /* Read the whole open file (more than 8 bytes, or crash) into a new heap
@@ -22,7 +19,7 @@ extern void func_02018770(void);
    mounted, and with flag set flushes the result from the data cache. */
 void *func_0201834c(FSFile *self, int flag) {
     void *result = 0;
-    unsigned int len = self->prop.file.bottom - self->prop.file.top;
+    unsigned int len = FS_GetLength(self);
     if (len > 8) {
         void *buf = Memory::Allocate(len, -4);
         DC_FlushRange(buf, len);

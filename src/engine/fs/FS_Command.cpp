@@ -19,7 +19,6 @@
 #include "nitro/os/thread.h"
 #include "private/fs_views.h"
 
-typedef struct FSFile FSFile;
 
 extern "C" {
 

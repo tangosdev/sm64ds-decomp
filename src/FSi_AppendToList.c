@@ -5,7 +5,6 @@
  * starts with its FSFileLink, prev at 0 and next at 4. */
 #include "private/fs_views.h"
 
-typedef struct FSFile FSFile;
 
 void FSi_AppendToList(FSFile *elem, FSFile *list) {
     FSFile *prev = elem->link.prev;

@@ -1,19 +1,16 @@
 #include "nitro/fs/overlay.h"
-#include "private/fs_views.h"
+#include "nitro/fs/file.h"
 /* NitroSDK FS_LoadOverlayImage: open the overlay's file by its file_id,
  * clear the overlay's RAM image (FS_ClearOverlayImage), read
  * the whole file to ram_address (myFS_ReadFile), then pass the target
  * processor, RAM address, ROM offset and RAM size to func_0206d32c. */
-typedef struct FSFile FSFile;
 
-extern void FS_InitFile(FSFile *p_file);
 extern FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi);
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
 extern void FS_ClearOverlayImage(FSOverlayInfo *p_ovi);
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern int func_0206d32c(int target, unsigned int ramAddress, unsigned int romOffset,
                          unsigned int ramSize);
-extern int FS_CloseFile(void *self);
 
 int func_02018b64(FSOverlayInfo *ovi) {
     FSFile file;
@@ -25,7 +22,7 @@ int func_02018b64(FSOverlayInfo *ovi) {
         return 0;
 
     FS_ClearOverlayImage(ovi);
-    myFS_ReadFile(&file, ovi->header.ram_address, file.prop.file.bottom - file.prop.file.top);
+    myFS_ReadFile(&file, ovi->header.ram_address, FS_GetLength(&file));
 
     {
         int ramSize = ovi->header.ram_size;

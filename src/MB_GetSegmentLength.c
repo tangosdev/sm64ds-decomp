@@ -1,9 +1,4 @@
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
-
-extern int FS_ReadFile(FSFile *obj, void *buf, int size);
-extern int FS_SeekFile(FSFile *p_file, int offset, FSSeekFileMode origin);
+#include "nitro/fs/file.h"
 
 struct G {
     char pad[0x2c];

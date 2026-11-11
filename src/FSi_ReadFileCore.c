@@ -7,12 +7,9 @@
  * FS_ReadFileAsync returns the clamped length at once.
  * The body follows the SDK's: pos, rest and the requested length are taken
  * up front as constants and len is clamped in place. */
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 extern int FSi_SendCommand(FSFile *p_file, int command);
-extern int FS_WaitAsync(FSFile *p_file);
 int FSi_ReadFileCore(FSFile *p_file, void *dst, int len, int async) {
     const int pos = p_file->prop.file.pos;
     const int rest = p_file->prop.file.bottom - pos;

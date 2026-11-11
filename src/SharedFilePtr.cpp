@@ -52,14 +52,9 @@ void Deallocate(void *ptr);
 #include "nitro/os/cache.h"
 #include "nitro/mi/memory.h"
 #include "nitro/os/system.h"
-
-/* The card stream Load reads through; only the cursor and end words are known. */
-struct FileStream {
-    char pad[0x20];
-    unsigned int cur;
-    unsigned int end;
-    char pad2[0x1c];
-};
+#ifndef _MSC_VER
+#include "nitro/fs/file.h"
+#endif
 
 extern "C" {
 /* The last file ID any handle touched: every entry point stores it first,
@@ -74,7 +69,6 @@ int func_02018568(int a);
 unsigned int func_02018ac4(unsigned int *p);
 void DecompressLZ16(void *src, void *dst);
 int func_020185c0(void *buf, unsigned int x);
-int FS_CloseFile(void *a);
 void func_02018770(void);
 int myFS_ReadFile(void *a, void *b, int c);
 }
@@ -116,9 +110,9 @@ void *SharedFilePtr::Load() {
             mem = Memory::Allocate(size);
             DecompressLZ16(q, mem);
         } else {
-            struct FileStream obj;
+            FSFile obj;
             func_020185c0(&obj, fileID);
-            size = obj.end - obj.cur;
+            size = FS_GetLength(&obj);
             FS_CloseFile(&obj);
             mem = Memory::Allocate(size, 0x20);
             MI_CpuCopy8((void *)p, mem, size);
@@ -129,14 +123,14 @@ void *SharedFilePtr::Load() {
         return filePtr;
     }
 
-    struct FileStream obj2;
+    FSFile obj2;
     void *cp;
     unsigned int csize;
     int raw;
     int fsize;
 
     func_020185c0(&obj2, fileID);
-    fsize = obj2.end - obj2.cur;
+    fsize = FS_GetLength(&obj2);
     if (fsize <= 8)
         OS_Terminate();
     raw = (int)Memory::Allocate(fsize, 0x20);

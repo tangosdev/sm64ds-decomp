@@ -3,8 +3,7 @@
 #include "Memory.h"
 #include "private/mb_views.h"
 #include "nitro/mi/memory.h"
-
-typedef struct FSFile FSFile;
+#include "private/fs_views.h"
 
 extern "C" {
 

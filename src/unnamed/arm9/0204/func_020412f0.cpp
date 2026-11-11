@@ -22,6 +22,7 @@
 #include "private/arm9_wbt.h"
 #include "private/wbt_block_info_list.h"
 #include "nitro/os/system.h"
+#include "nitro/fs/file.h"
 
 extern "C" {
 
@@ -38,8 +39,6 @@ extern struct WBTBlockInfoList *WBT_UnregisterBlock(int key);
 extern void func_02041ae8(void *base, void *node);
 extern void func_020423c8(void);
 extern void func_0204175c(void);
-extern int FS_SeekFile(void *o, int a, int b);
-extern int FS_ReadFileAsync(void *p_file, void *dst, int len);
 
 extern char data_020a2400[];
 extern char data_020a2404[];
@@ -180,8 +179,7 @@ void func_020412f0(char *thiz)
         unk18v = n->block_seq_no;
 
         if (p->mLoadingPage != 3) {
-            /* mFile's FSFile stat, bit 0: its read is still in flight */
-            int t = (*(int *)(p->mFile + 0xc) & 1) ? 1 : 0;
+            int t = FS_IsBusy(&p->mFile);
             if (t == 0)
                 p->mLoadingPage = 3;
         }
@@ -237,8 +235,8 @@ void func_020412f0(char *thiz)
                 p->mLoadingPage = nxt;
                 masked = prod2 & -0x200;
                 p->mPageOffset[nxt] = masked;
-                FS_SeekFile(p->mFile, masked, 0);
-                FS_ReadFileAsync(p->mFile, p->mPages[nxt], 0x400);
+                FS_SeekFile(&p->mFile, masked, FS_SEEK_SET);
+                FS_ReadFileAsync(&p->mFile, p->mPages[nxt], 0x400);
             }
         }
 

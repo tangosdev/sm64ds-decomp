@@ -1,15 +1,11 @@
 #include "nitro/card/card_rom.h"
 #include "nitro/fs/overlay.h"
-#include "private/fs_views.h"
 #include "nitro/mi/memory.h"
+#include "nitro/fs/file.h"
 
-typedef struct FSFile FSFile;
-
-extern void FS_InitFile(void *s);
-extern int myFS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
+extern int myFS_OpenFileDirect(FSFile *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                                u32 file_index);
 extern int myFS_ReadFile(void *s, void *b, int c);
-extern int FS_CloseFile(void *self);
 /* The ARM9 and ARM7 overlay tables when they are in memory: {address,
    length}, address 0 while not loaded. */
 extern struct CARDRomRegion data_020a8064; /* fsi_ovt9 */
@@ -39,7 +35,7 @@ int func_02018cbc(FSOverlayInfo *info, int flag, int index, FSArchive *archive, 
     if (off >= size)
         return 0;
     FS_InitFile(&file);
-    myFS_OpenFileDirect((char *)&file, archive, base + off, base + size, -1);
+    myFS_OpenFileDirect(&file, archive, base + off, base + size, -1);
     myFS_ReadFile(&file, &info->header, 0x20);
     FS_CloseFile(&file);
     info->target = flag;

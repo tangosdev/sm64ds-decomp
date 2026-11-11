@@ -38,16 +38,10 @@
  */
 #include "types.h"
 #include "private/mb_views.h"
-#include "private/fs_views.h"
 #include "nitro/mi/memory.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 /* local extern: MI_Memory.c's asm fills and copies; no header declares them. */
-extern void FS_InitFile(FSFile *p_file);
-extern int FS_OpenFile(void *file, const char *path);
-extern int FS_CloseFile(void *p_file);
-extern int FS_ReadFile(FSFile *p_file, void *dst, int len);
 extern u16 MBi_calc_cksum(u16 *p, int len);
 extern int func_020688e4(void);
 extern int func_020688cc(void);
@@ -170,8 +164,7 @@ void MBi_MakeGameInfo(char *dst, MBGameRegistry *src, const void *parent) {
 /* NitroSDK MBi_ReadIconInfo: read one icon file into a game record. With
  * char_flag set it reads 0x200 bytes of character data to iconp + 0x20,
  * otherwise 0x20 bytes of palette to iconp. It fails (0) on a null path, a
- * failed open, or a file whose length (bottom - top, words 9 and 8 of the
- * FSFile) is not exactly that size. Newer SDKs open with
+ * failed open, or a file whose FS_GetLength is not exactly that size. Newer SDKs open with
  * FS_OpenFileEx(file, path, FS_FILEMODE_R); this one takes the
  * two-argument open FS_OpenFile. */
 int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
@@ -191,7 +184,7 @@ int MBi_ReadIconInfo(const char *filePathp, char *iconp, int char_flag) {
     if (FS_OpenFile(&file, filePathp) == 0)
         return 0;
 
-    param = file.prop.file.bottom - file.prop.file.top;
+    param = FS_GetLength(&file);
     if (sz != param) {
         FS_CloseFile(&file);
         return 0;

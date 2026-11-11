@@ -1,7 +1,5 @@
 /* NitroSDK FS_ReadFile: a synchronous FSi_ReadFileCore. */
-#include "private/fs_views.h"
-
-typedef struct FSFile FSFile;
+#include "nitro/fs/file.h"
 
 extern int FSi_ReadFileCore(FSFile *p_file, void *dst, int len, int async);
 
