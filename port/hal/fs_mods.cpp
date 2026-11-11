@@ -3606,3 +3606,23 @@ extern "C" void port_fs_mods_relatch_reset(void)
     memset(g_vsc, 0, sizeof g_vsc);
     g_vsc_state = 0;
 }
+
+/* BROSCOLOR1 (run coopfix1): the character-palettes mod's Custom colour for one bro part (chr 0 Mario 1 Luigi 2 Wario; part 0 HAT
+   1 OVERALLS 2 SHOES), when the mod is on and that bro's choice is Custom; 0 otherwise. Asked whatever the session is: in a
+   multiplayer run Custom stands down here (it would recolour every body wearing the file), and the room's picks
+   (hal/bro_colors.cpp port_bro_my_row) start from this answer when the player has no online pick of his own for that bro, so the
+   colours he chose in the mod are the ones he wears in a coop room by default. */
+extern "C" int port_fs_mods_bro_custom(int chr, int part, unsigned *rgb)
+{
+    int row = 0;
+    if (chr < 0 || chr > 2 || part < 0 || part > 2)
+        return 0;
+    cp_mod_read();
+    if (!g_cpm.on || modval::choice_kind(g_cpm.choice[chr], 0, &row) != modval::CP_CUSTOM)
+        return 0;
+    if (g_cpm.rgb[chr][part] < 0)
+        return 0;
+    if (rgb)
+        *rgb = (unsigned)g_cpm.rgb[chr][part] & 0xFFFFFFu;
+    return 1;
+}
