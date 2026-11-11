@@ -181,6 +181,7 @@ char *my_lost_cap(bool *held) {
         const int t = c->mType;
         if (t != 0 && t != 1 && t != 2 && t != 3 && t != 12) continue;
         if (c->mDormant == 1) continue;
+        if (c->unk_403) continue;          // InitTaken sets it: the cap is going back on my head
         *held = rd32(a, 0xc8) != 0;
         return a;
     }
