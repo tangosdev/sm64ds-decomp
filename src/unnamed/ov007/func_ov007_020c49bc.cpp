@@ -1,164 +1,72 @@
 //cpp
+#include "nitro/fx/fx.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/gx/g3imm_cmd.h"
 
 extern "C" {
-/* opt_strength_reduction stays off: with it on the row walks become induction
-   variables and the function grows to 0x460 against the ROM's 0x440. */
-#pragma opt_strength_reduction off
 
-typedef unsigned short u16;
+/* Fills the unit square func_ov007_020c4684 has scaled onto a sprite with one
+ * quad per 8x8-texel cell, top row first. Without a tile map the texture runs
+ * on from (s0, t0), each cell advancing repeatU texels across and repeatV
+ * down, and every row is its own QUADS list. With one, each cell draws the
+ * 8x8 tile its map entry names (counted across a texture texWidth texels
+ * wide); 0xffff leaves the cell empty.
+ *
+ * The cell steps dx and dy are `long`, which is what NitroSDK's fx32 is. This
+ * tree's fx32 is an `int`, and here the difference reaches the code: with an
+ * int dx the compiler turns the right edge dx * (col + 1) into a second running
+ * sum beside the left edge's, and the cartridge multiplies it out per cell. */
+void func_ov007_020c49bc(int width, int height, fx32 s0, fx32 t0, int repeatU, int repeatV,
+                         u16 *tilemap, int texWidth) {
+    int cols = width >> 3;
+    int rows = height >> 3;
+    long dx = FX_DivS32(0x1000, cols);
+    long dy = FX_DivS32(0x1000, rows);
 
-void func_ov007_020c49bc(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, u16 *arg6,
-                         int arg7) {
-    int temp_sl;
-    int temp_sb;
-    int sp0;
-    int sp4;
-    int sp8;
-    int spC;
-    int sp10;
-    int sp14;
-    int sp18;
-    int sp1C;
-    int sp20;
-    int sp24;
-    int sp28;
-    int sp2C;
-    int sp34;
-    int sp38;
-    int sp3C;
-    int sp40;
-    int sp44;
-    int sp48;
-    int sp4C;
-    int sp30;
-    int var_r8;
-    int var_r8_2;
-    int temp_r7;
-    int temp_r6;
-    int var_r6;
-    int var_r5;
-    int temp_r4;
-    int temp_r3;
-    int temp_r0;
-    int temp_r1_5;
-    int temp_r0_2;
-    int temp_r0_3;
-    int temp_r1;
-    int temp_r1_2;
-    int temp_r1_3;
-    int temp_r1_4;
-    int temp_r1_6;
-    int temp_r7_2;
-    int var_r5_2;
-    u16 temp_lr;
-    u16 temp_r0_4;
-    u16 temp_r0_5;
-    u16 temp_r1_7;
-    u16 temp_r3_2;
-    u16 temp_r4_2;
-    u16 temp_r4_3;
+    if (tilemap == 0) {
+        for (int row = 0; row < rows; row++) {
+            fx32 t = t0 + row * (repeatV << 15);
+            fx32 y = dy * (rows - row);
 
-    temp_sl = arg0 >> 3;
-    sp8 = arg1 >> 3;
-    sp0 = arg2;
-    sp4 = arg3;
-    temp_sb = FX_DivS32(0x1000, temp_sl);
-    spC = FX_DivS32(0x1000, sp8);
-    if (arg6 == 0) {
-        sp10 = 0;
-        if (sp8 > 0) {
-            sp28 = 0;
-            sp2C = arg5 << 0xF;
-            sp3C = sp10;
-            sp40 = sp10;
-            sp34 = 1;
-            temp_r7 = arg4 << 0xF;
-            sp38 = sp10;
-            do {
-                *(volatile int *)0x04000500 = sp34;
-                temp_r1_2 = sp4 + sp28;
-                var_r8 = sp38;
-                temp_r0 = spC * (sp8 - sp10);
-                if (temp_sl > 0) {
-                    temp_r4 = (u16)((temp_r1_2 << 8) >> 0x10) << 0x10;
-                    var_r6 = var_r8;
-                    temp_r3 = (u16)(((temp_r1_2 + sp2C) << 8) >> 0x10) << 0x10;
-                    temp_lr = (u16)(short)temp_r0;
-                    var_r5 = var_r8;
-                    sp30 = (int)(u16)(short)(temp_r0 - spC);
-                    sp4C = temp_lr << 0x10;
-                    do {
-                        var_r8 += 1;
-                        temp_r0_2 = sp0 + var_r6;
-                        temp_r1_3 = (temp_r0_2 << 8) >> 0x10;
-                        *(volatile int *)0x04000488 = temp_r4 | (u16)temp_r1_3;
-                        *(volatile int *)0x0400048C = sp4C | (u16)(short)var_r5;
-                        temp_r0_3 = ((temp_r0_2 + temp_r7) << 8) >> 0x10;
-                        *(volatile int *)0x0400048C = sp3C;
-                        *(volatile int *)0x04000488 = temp_r3 | (u16)temp_r1_3;
-                        *(volatile int *)0x0400049C = sp30;
-                        *(volatile int *)0x04000488 = temp_r3 | (u16)temp_r0_3;
-                        *(volatile int *)0x04000498 = (int)(u16)(short)(temp_sb * var_r8);
-                        *(volatile int *)0x04000488 = temp_r4 | (u16)temp_r0_3;
-                        *(volatile int *)0x0400049C = (int)temp_lr;
-                        var_r6 += temp_r7;
-                        var_r5 += temp_sb;
-                    } while (var_r8 < temp_sl);
-                }
-                *(volatile int *)0x04000504 = sp40;
-                sp28 += sp2C;
-                temp_r1 = sp10 + 1;
-                sp10 = temp_r1;
-            } while (temp_r1 < sp8);
+            G3_Begin(GX_BEGIN_QUADS);
+            for (int col = 0; col < cols; col++) {
+                fx32 s = s0 + col * (repeatU << 15);
+
+                G3_TexCoord(s, t);
+                G3_Vtx(dx * col, y, 0);
+                G3_TexCoord(s, t + (repeatV << 15));
+                G3_VtxYZ(y - dy, 0);
+                G3_TexCoord(s + (repeatU << 15), t + (repeatV << 15));
+                G3_VtxXZ(dx * (col + 1), 0);
+                G3_TexCoord(s + (repeatU << 15), t);
+                G3_VtxYZ(y, 0);
+            }
+            G3_End();
         }
     } else {
-        *(volatile int *)0x04000500 = 1;
-        sp14 = 0;
-        if (sp8 > 0) {
-            sp18 = 0;
-            temp_r7_2 = arg7 >> 3;
-            sp48 = sp14;
-            sp44 = sp14;
-            do {
-                var_r8_2 = sp44;
-                temp_r1_5 = spC * (sp8 - sp14);
-                if (temp_sl > 0) {
-                    temp_r0_4 = (u16)(short)temp_r1_5;
-                    sp24 = (int)temp_r0_4;
-                    var_r5_2 = var_r8_2;
-                    sp20 = (int)(u16)(short)(temp_r1_5 - spC);
-                    sp1C = temp_r0_4 << 0x10;
-                    do {
-                        temp_r4_2 = arg6[var_r8_2 + sp18];
-                        if (temp_r4_2 != 0xFFFF && arg7 > 0) {
-                            temp_r6 = FX_ModS32(temp_r4_2, temp_r7_2) << 0xF;
-                            temp_r1_6 = FX_DivS32(temp_r4_2, temp_r7_2) << 0xF;
-                            temp_r3_2 = (u16)((temp_r1_6 << 8) >> 0x10);
-                            temp_r1_7 = (u16)((temp_r6 << 8) >> 0x10);
-                            temp_r4_3 = (u16)(((temp_r6 + 0x8000) << 8) >> 0x10);
-                            temp_r0_5 = (u16)(((temp_r1_6 + 0x8000) << 8) >> 0x10);
-                            *(volatile int *)0x04000488 = temp_r1_7 | (temp_r3_2 << 0x10);
-                            *(volatile int *)0x0400048C = sp1C | (u16)(short)var_r5_2;
-                            *(volatile int *)0x0400048C = sp48;
-                            *(volatile int *)0x04000488 = temp_r1_7 | (temp_r0_5 << 0x10);
-                            *(volatile int *)0x0400049C = sp20;
-                            *(volatile int *)0x04000488 = temp_r4_3 | (temp_r0_5 << 0x10);
-                            *(volatile int *)0x04000498 =
-                                (int)(u16)(short)(temp_sb * (var_r8_2 + 1));
-                            *(volatile int *)0x04000488 = temp_r4_3 | (temp_r3_2 << 0x10);
-                            *(volatile int *)0x0400049C = sp24;
-                        }
-                        var_r5_2 += temp_sb;
-                        var_r8_2 += 1;
-                    } while (var_r8_2 < temp_sl);
+        G3_Begin(GX_BEGIN_QUADS);
+        for (int row = 0; row < rows; row++) {
+            fx32 y = dy * (rows - row);
+
+            for (int col = 0; col < cols; col++) {
+                u16 tile = tilemap[row * cols + col];
+
+                if (tile != 0xffff && texWidth > 0) {
+                    fx32 s = FX_ModS32(tile, texWidth >> 3) << 15;
+                    fx32 t = FX_DivS32(tile, texWidth >> 3) << 15;
+
+                    G3_TexCoord(s, t);
+                    G3_Vtx(dx * col, y, 0);
+                    G3_TexCoord(s, t + 0x8000);
+                    G3_VtxYZ(y - dy, 0);
+                    G3_TexCoord(s + 0x8000, t + 0x8000);
+                    G3_VtxXZ(dx * (col + 1), 0);
+                    G3_TexCoord(s + 0x8000, t);
+                    G3_VtxYZ(y, 0);
                 }
-                sp18 += temp_sl;
-                temp_r1_4 = sp14 + 1;
-                sp14 = temp_r1_4;
-            } while (temp_r1_4 < sp8);
+            }
         }
     }
-    *(volatile int *)0x04000504 = 0;
+    G3_End();
 }
 }

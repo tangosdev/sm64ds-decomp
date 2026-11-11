@@ -60,6 +60,7 @@
 #include "math/Approach.h"
 #include "LevelRng.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/hw/registers.h"
 /* Typed access to the Mario records from the char* helpers below. */
 #define MARIO2(p) ((dMgTrmpln2Mario_c *)(p))
 #define MARIO3D(p) ((dMgTrmpln3DMario_c *)(p))
@@ -2972,17 +2973,15 @@ void Trmp3DMario_DrawAll(void) {
     v[2] = 0xfffff008;
     func_0203cd80(v, 0x2000);
     func_0203ccd4(v, 0);
-    *(volatile int *)0x040004c8 = (((short)v[0] >> 3) & 0x3ff) |
-                                  ((((short)v[1] >> 3) & 0x3ff) << 10) |
-                                  ((((short)v[2] >> 3) & 0x3ff) << 20);
+    REG_LIGHT_VECTOR = (((short)v[0] >> 3) & 0x3ff) | ((((short)v[1] >> 3) & 0x3ff) << 10) |
+                       ((((short)v[2] >> 3) & 0x3ff) << 20);
 
     w[0] = 0;
     w[1] = 0;
     w[2] = 0xfffff008;
     func_0203cd80(w, -0x2000);
-    *(volatile int *)0x040004c8 = (((short)w[0] >> 3) & 0x3ff) |
-                                  ((((short)w[1] >> 3) & 0x3ff) << 10) |
-                                  ((((short)w[2] >> 3) & 0x3ff) << 20) | 0x40000000;
+    REG_LIGHT_VECTOR = (((short)w[0] >> 3) & 0x3ff) | ((((short)w[1] >> 3) & 0x3ff) << 10) |
+                       ((((short)w[2] >> 3) & 0x3ff) << 20) | 0x40000000;
 
     {
         int i;
