@@ -35259,11 +35259,11 @@
     },
     "ov060:0x021183cc": {
       "author": "tangosdev",
-      "name": "func_ov060_021183cc"
+      "name": "_ZN10daKpa3Bg_c9OnStoodOnEP8dActor_c"
     },
     "ov060:0x021183f4": {
       "author": "ruspecial",
-      "name": "func_ov060_021183f4"
+      "name": "_ZN10daKpa3Bg_c15StoodOnCallbackEP4dBgWP8dActor_cS3_"
     },
     "ov060:0x02118408": {
       "author": "andrewboudreau",

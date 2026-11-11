@@ -9774,3 +9774,5 @@ ov022	0x021126ac	func_ov022_021126ac	_ZN21daObj_volcanoCannon_c10ExecuteFlyEv	da
 ov022	0x02112710	func_ov022_02112710	_ZN21daObj_volcanoCannon_c8EnterFlyEv	daObj_volcanoCannon_c members: the flame's player check and its one state's behavior/init, reached through this and the State PMF constants
 ov026	0x02111234	func_ov026_02111234	_ZN17daObjWlPolelift_c12UpdateShadowEv	daObjWlPolelift_c members: file-local helpers called only on this; named after the repo's UpdateShadow / UpdateModelTransform family
 ov026	0x021112a4	func_ov026_021112a4	_ZN17daObjWlPolelift_c20UpdateModelTransformEv	daObjWlPolelift_c members: file-local helpers called only on this; named after the repo's UpdateShadow / UpdateModelTransform family
+ov060	0x021183cc	func_ov060_021183cc	_ZN10daKpa3Bg_c9OnStoodOnEP8dActor_c	daKpa3Bg_c members: the dBgW stood-on veneer and the handler it forwards to, after daDpLift_c / daObjBC_Switch_c's StoodOnCallback / OnStoodOn
+ov060	0x021183f4	func_ov060_021183f4	_ZN10daKpa3Bg_c15StoodOnCallbackEP4dBgWP8dActor_cS3_	daKpa3Bg_c members: the dBgW stood-on veneer and the handler it forwards to, after daDpLift_c / daObjBC_Switch_c's StoodOnCallback / OnStoodOn
