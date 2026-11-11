@@ -582,5 +582,17 @@
       "target_module": "arm9",
       "target_address": "0x02074fb8"
     }
+  ],
+  "defined_symbol_renames": [
+    {
+      "from": "sPrevHeap$387",
+      "to": "sPrevHeap$390",
+      "evidence": "configured name kept; the TU emits sPrevHeap$387 since nitro/mi/memory.h replaced a local MIi_CpuClear16 declaration whose three named parameters held compiler numbers ahead of it (measured from the compiled object: same .bss slot, every other symbol unchanged)."
+    },
+    {
+      "from": "_ZGVsPrevHeap$387",
+      "to": "_ZGVsPrevHeap$390",
+      "evidence": "configured name kept; the TU emits _ZGVsPrevHeap$387 since nitro/mi/memory.h replaced a local MIi_CpuClear16 declaration whose three named parameters held compiler numbers ahead of it (measured from the compiled object: same .bss slot, every other symbol unchanged)."
+    }
   ]
 }
