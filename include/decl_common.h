@@ -531,7 +531,7 @@ extern int func_ov010_02111984[];
    r0 set. Definition in src/game/actors/d_a_pg_mthr.cpp. */
 extern int func_ov025_0211123c(char*);
 extern int func_ov062_02115f84(void*);
-extern int func_ov065_021180d4(char*);
+extern int func_ov065_021180d4(struct daDossyCap_c *);
 extern int func_ov065_02119210(struct daDossyCap_c *);
 extern int func_ov070_0211f0a4(void*);
 extern int func_ov080_0212714c(void*, void*);
@@ -1055,7 +1055,7 @@ extern void func_ov062_0211aac0(void*);
 
 extern void func_ov065_02115ff0(char*);
 extern void func_ov065_0211696c(char*);
-extern void func_ov065_02118c4c(char*);
+extern void func_ov065_02118c4c(struct daDossyCap_c *);
 extern void func_ov065_021195bc(void *, void *, void *);
 extern void func_ov065_021195d0(void *, void *, void *);
 extern void func_ov070_0211f100(char*);
