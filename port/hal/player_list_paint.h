@@ -100,9 +100,14 @@ static void plist_pointer(void)
         port::player_list_set_pointer(fx, fy);
 }
 
+/* STARPOP3: the bottom and right edges of the rows drawn this frame (0 = none), so the star popup drawn after it can sit
+   below the list instead of over it. */
+static int g_plist_drawn_bottom, g_plist_drawn_right;
+
 static void player_list_draw(const OvlSurface &fb)
 {
     port::player_list_layout_begin();
+    g_plist_drawn_bottom = 0; g_plist_drawn_right = 0;
     port::PlayerListView v;
     port::player_list_view(&v);
     if (v.n <= 0) return;
@@ -150,6 +155,8 @@ static void player_list_draw(const OvlSurface &fb)
             continue;                                   /* never over the corner map */
         const bool hot = port::player_list_hovered(r.seat);
         ovl_shade(fb, x0, ry, w, row_h);
+        if (ry + row_h > g_plist_drawn_bottom) g_plist_drawn_bottom = ry + row_h;
+        if (x0 + w > g_plist_drawn_right) g_plist_drawn_right = x0 + w;
         if (hot) ovl_shade(fb, x0, ry, w, row_h);       /* deeper shade = hover */
         if (!r.me) port::player_list_layout_row(r.seat, x0, ry, w, row_h);   /* your own row is not a button */
         const int alpha = r.same_place ? 255 : 170;

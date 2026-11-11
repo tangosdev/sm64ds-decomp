@@ -5506,6 +5506,11 @@ static void chat_pad_gate(int *pad_live, XPad *pad)
                             key_live(port::world_party_vk_invite()) != 0 || mouse_act(HOST_MOUSE_PARTY_INVITE),
                             key_live(port::world_party_vk_leave()) != 0 || mouse_act(HOST_MOUSE_PARTY_LEAVE));
     if (wp_used && *pad_live) pad->buttons = (unsigned short)((unsigned)pad->buttons & ~wp_used);   /* the press was the party's */
+    /* hook: STARPOP2, "Press UP to exit stage" on the star popup takes the Party invite binding (d-pad UP / B); inert unless asked */
+    const unsigned sp_used = port::star_popup_exit_input(*pad_live ? (unsigned)pad->buttons : 0u,
+                            (unsigned)host_setting_pad(HOST_PAD_PARTY_INVITE),
+                            key_live(host_setting_key(HOST_KEY_PARTY_INVITE)) != 0 || mouse_act(HOST_MOUSE_PARTY_INVITE));
+    if (sp_used && *pad_live) pad->buttons = (unsigned short)((unsigned)pad->buttons & ~sp_used);
     if (!port::chat_typing()) return;
     memset(pad, 0, sizeof *pad);
     *pad_live = 0;

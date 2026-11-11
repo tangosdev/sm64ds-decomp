@@ -55,9 +55,17 @@ enum : int { kStarPopupLines = 4, kStarPopupLineMax = 64 };
 
 struct StarPopupView {
     int  n;                                          // lines to draw, 0 = nothing
-    char line[kStarPopupLines][kStarPopupLineMax];   // printable ASCII
+    char line[kStarPopupLines][kStarPopupLineMax];   // printable ASCII; STARPOP2: \x01 = the d-pad picture, UP lit
+    int  count;                                      // STARPOP2: 1..5 = the yellow seconds left at the box's bottom right (the
+                                                     // "Press UP to exit stage" choice), 0 = none
 };
 void star_popup_view(StarPopupView *out);
+
+// STARPOP2: the "Press UP to exit stage" choice. Called once a frame from the window's input path with the pad's buttons word,
+// the pad mask that means UP (the Party invite binding, d-pad UP by default) and whether the keyboard / mouse half of that
+// binding is down. A fresh press while the choice is up starts the exit. Returns the pad bits the choice took this frame (the
+// caller clears them so the press does not also walk); 0 when no choice is up.
+unsigned star_popup_exit_input(unsigned pad_buttons, unsigned up_mask, bool key_down);
 
 // PSTAR1's SYNX handler hands a datagram with a non-zero reserved word here.
 // Returns true when it was an event (consumed, whatever came of it).
@@ -65,6 +73,7 @@ bool star_popup_party_rx(int seat, const unsigned char *d, int len);
 
 struct StarPopupStats {
     unsigned long long tx, rx, shown, toast, exits, dropped, dup, notes;
+    unsigned long long ups, stays;   // STARPOP2: choices answered with UP / left to run out
 };
 StarPopupStats star_popup_stats();
 
