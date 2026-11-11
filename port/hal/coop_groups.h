@@ -21,7 +21,14 @@
 // counting each console's own belief. On a draw, a claimant that followed the
 // other one earlier in this visit gives way to it (so a joiner that lost the
 // hellos for a moment hands the group back to the console it took its state
-// from); only when neither ever followed the other does the lower seat win. Every
+// from); only when neither ever followed the other does the lower seat win.
+// A console's own follow record can know more than the others' copies of it (a
+// follow not yet heard in a hello). That is still safe: the follower always
+// yields to the one it followed, so the worst case is both claimants yielding
+// for one hello cycle, after which neither claims, the lowest established seat
+// takes the group and the rest follow it. Follow records (mine and the copies)
+// are dropped whenever a seat stops being a member of my group, which is also how
+// a new player in that seat shows up (the seat leaves, then joins again). Every
 // console sees the same hellos, so they all reach the same answer within about
 // a hello period; a claimant that loses stops claiming, and whoever followed it
 // moves on with it. (Before coopfix1 a late claim never displaced a standing

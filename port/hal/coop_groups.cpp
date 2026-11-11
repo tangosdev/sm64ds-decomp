@@ -112,6 +112,7 @@ void CoopGroups::note_presence(int seat, bool present, const CoopKey &theirs,
         s.pinned = false;
         s.names = -1;
         s.followed = 0;
+        followed_ &= ~(1u << seat);   // left my group: forget that I followed it (a new player may take the seat)
     }
 }
 
