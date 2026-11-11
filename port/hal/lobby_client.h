@@ -43,5 +43,6 @@ void lobby_send_chat(const char *text);
 void lobby_kick(int seat);                        /* host */
 void lobby_ban(int seat);                         /* host: a kick that keeps that player out until the room closes (lobby v7) */
 void lobby_mute(int seat, int muted);             /* local only */
+void lobby_set_colors(void);                      /* coopfix1 LOBBYUI1: send the colours saved in the settings (the `color` verb, lobby state only) */
 
 #endif

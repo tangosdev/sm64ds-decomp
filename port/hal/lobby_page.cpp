@@ -16,6 +16,8 @@
 #include "mods.h"
 #include "settings_page.h"
 #include "ui_text.h"
+#include "host_settings.h"
+#include "menu_online_profile.h"
 #include "../third_party/stb/stb_image.h"
 
 /* the build defines LP_CLIENT_REAL=1 when the tree carries hal/lobby_client.h (port/CMakeLists.txt; MSVC's preprocessor here has no
@@ -103,6 +105,7 @@ void fk_seat(const char *name, unsigned body, unsigned shoe, int ready, int host
     memset(&t, 0, sizeof t);
     snprintf(t.name, sizeof t.name, "%s", name);
     t.body_rgb = body; t.shoe_rgb = shoe; t.ready = ready; t.is_host = host; t.is_me = me;
+    if (me) { unsigned b = 0, sh = 0; if (host_setting_online_colours(&b, &sh)) { t.body_rgb = b; t.shoe_rgb = sh; } }   /* as create / join send them */
     static int next_member;
     t.member = ++next_member;
 }
@@ -229,6 +232,12 @@ void fk_kick(int seat)
 }
 void fk_mute(int seat, int m) { if (seat >= 0 && seat < F.s.n_seats) F.s.seats[seat].muted = m; }
 void fk_ban(int seat) { fk_kick(seat); }
+void fk_set_colors(void)
+{
+    unsigned b = 0, sh = 0;
+    if (!host_setting_online_colours(&b, &sh)) return;
+    for (int i = 0; i < F.s.n_seats; ++i) if (F.s.seats[i].is_me) { F.s.seats[i].body_rgb = b; F.s.seats[i].shoe_rgb = sh; }
+}
 
 int g_auto_coop;                   /* SM64DS_LOBBY_SHOW realhost:coop (proof rows): press COOP on the choice */
 int g_fake = !LP_CLIENT_REAL;      /* the stand-in answers (always without the real client; with it only when a proof knob asks) */
@@ -258,6 +267,7 @@ void C_chat(const char *t) { C_CALL(lobby_send_chat(t), fk_send_chat(t)); }
 void C_kick(int s) { C_CALL(lobby_kick(s), fk_kick(s)); }
 void C_mute(int s, int m) { C_CALL(lobby_mute(s, m), fk_mute(s, m)); }
 void C_ban(int s) { C_CALL(lobby_ban(s), fk_ban(s)); }
+void C_colors(void) { C_CALL(lobby_set_colors(), fk_set_colors()); }
 
 /* ================================================================ keyboard ====================================================== */
 /* typed text is read by polling the keys once a logic frame (hal/menu_online_profile.cpp does the same for the NAME popup): the window
@@ -322,10 +332,16 @@ enum Ctl {
     C_MUTE0 = 70,                         /* a seat's mute button */
     C_KICK0 = 90,                         /* a seat's kick button (host) */
     C_BAN0 = 110,                         /* a seat's ban button (host) */
-    C_COUNT = 130
+    C_PAINT = 130,                        /* coopfix1 LOBBYUI1: the paint bucket on the player's own seat (not ready only) */
+    C_PK_CHAR0 = 131,                     /* the colour picker: the four characters (Yoshi, Mario, Luigi, Wario) */
+    C_PK_ROW0 = 135,                      /* its rows (Yoshi: Body, Shoes; a bro: Hat, Overalls, Shoes) */
+    C_PK_OK = 138, C_PK_BACK = 139,
+    C_PK_CELL0 = 140,                     /* its grid, PROF_COLS x PROF_ROWS cells (C_PK_CELL0 + row * PROF_COLS + col) */
+    C_COUNT = 200
 };
-/* the small buttons on a seat's plate: mute, kick, ban */
-inline bool seat_button(int c) { return c >= C_MUTE0 && c < C_BAN0 + 16; }
+/* the small buttons on a seat's plate: mute, kick, ban, and the paint bucket on the player's own */
+inline bool seat_button(int c) { return (c >= C_MUTE0 && c < C_BAN0 + 16) || c == C_PAINT; }
+inline bool picker_ctl(int c) { return c >= C_PK_CHAR0 && c < C_PK_CELL0 + PROF_COLS * PROF_ROWS; }
 
 struct Rect { int x, y, w, h; };
 inline bool in_rect(const Rect &r, int x, int y) { return r.w > 0 && x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h; }
@@ -347,6 +363,7 @@ struct Page {
     int input_ready;       /* every device was let go once since the page opened */
     unsigned prev_keys, prev_pad;
     int prev_ml;
+    int prev_mr;           /* coopfix1 LOBBYUI1: the right button last frame (a right click closes the colour picker once) */
     unsigned char prev_vk[256];
     int bs_hold;
     int pw, ph;            /* the picture the layout was made for */
@@ -360,6 +377,13 @@ struct Page {
     int joining;           /* the page was opened by a room code */
     int seen_phase;        /* the client has been out of LOBBY_NONE since the page opened */
     int keep_tick;         /* the page closed for the start: lobby_tick() goes on once a frame until the client is back to NONE or FAILED */
+    /* coopfix1 LOBBYUI1: the colour picker the paint bucket opens (a sheet over the page, like the settings panel). The picks are worked on
+       here and saved to the settings only on OK (host_settings.h OnlineBodyColor / OnlineShoeColor, OnlineMarioHat ...). */
+    int picker;
+    int pk_chr;            /* 0 Yoshi, 1 Mario, 2 Luigi, 3 Wario */
+    int pk_row;            /* Yoshi 0 BODY 1 SHOES; a bro 0 HAT 1 OVERALLS 2 SHOES */
+    unsigned pk_yoshi[2];  /* body, shoes */
+    unsigned pk_bro[3][3]; /* [bro][row], 0xRRGGBB (a row with no pick holds its cartridge colour) */
 } P = { 0 };
 
 void log_line(const char *what) { fprintf(stderr, "[lobbypage] %s\n", what); }
@@ -379,6 +403,7 @@ struct Geom {
     int n_seat_slots;
 };
 
+int my_seat(const LobbyState *s);
 void make_geom(Geom *g, int w, int h, const LobbyState *s)
 {
     memset(g, 0, sizeof *g);
@@ -448,6 +473,24 @@ void make_geom(Geom *g, int w, int h, const LobbyState *s)
         g->r[C_MUTE0 + i] = R(x + 3, y + 3, b, b);
         g->r[C_KICK0 + i] = R(x + 3 + b + 3, y + 3, b, b);
         g->r[C_BAN0 + i] = R(x + 3 + 2 * (b + 3), y + 3, b, b);
+        /* the paint bucket: the top right corner of the player's own plate, a little larger than the seat buttons */
+        if (i == my_seat(s)) { const float pb = sh > 60 ? 22 : 16; g->r[C_PAINT] = R(x + sw - pad - 3 - pb, y + 3, pb, pb); }
+    }
+    if (P.picker) {
+        /* the colour picker's sheet: a heading, the four characters, the row tabs, the grid, OK and Back */
+        const float cw = 20, ch = 17, sx = 21, sy = 19;           /* a cell and its step */
+        const float gw = PROF_COLS * sx - 1, pw = gw + 40, ph = 252;
+        const float px = W * 0.5f - pw * 0.5f, py = 192 - ph * 0.5f;
+        g->panel = R(px, py, pw, ph);
+        const float tw = 68, tg = 6, t0 = W * 0.5f - (4 * tw + 3 * tg) * 0.5f;
+        for (int k = 0; k < 4; ++k) g->r[C_PK_CHAR0 + k] = R(t0 + k * (tw + tg), py + 42, tw, 26);
+        const int nrows = P.pk_chr == 0 ? 2 : 3;
+        const float rg = 6, rw = (gw - (nrows - 1) * rg) / nrows;
+        for (int k = 0; k < nrows; ++k) g->r[C_PK_ROW0 + k] = R(px + 20 + k * (rw + rg), py + 76, rw, 24);
+        for (int row = 0; row < PROF_ROWS; ++row)
+            for (int col = 0; col < PROF_COLS; ++col) g->r[C_PK_CELL0 + row * PROF_COLS + col] = R(px + 20 + col * sx, py + 110 + row * sy, cw, ch);
+        g->r[C_PK_OK] = R(W * 0.5f - 104, py + ph - 46, 96, 32);
+        g->r[C_PK_BACK] = R(W * 0.5f + 8, py + ph - 46, 96, 32);
     }
     if (P.panel) {
         const int n = s->n_settings;
@@ -482,6 +525,10 @@ bool live(const LobbyState *s, int c)
     if (!s) return false;
     if (s->phase == LOBBY_FAILED) return c == C_FAIL_BACK;
     if (!in_room(s)) return false;
+    if (P.picker) {
+        if (c >= C_PK_ROW0 && c < C_PK_ROW0 + 3) return c - C_PK_ROW0 < (P.pk_chr == 0 ? 2 : 3);
+        return picker_ctl(c);
+    }
     if (P.panel) {
         if (c == C_SET_BACK) return true;
         return c >= C_SET_ROW0 && c < C_SET_ROW0 + s->n_settings && s->am_host;
@@ -493,6 +540,7 @@ bool live(const LobbyState *s, int c)
     default: break;
     }
     if (c >= C_SEAT0 && c < C_SEAT0 + 16) return c - C_SEAT0 < seat_count(s);
+    if (c == C_PAINT) { const int me = my_seat(s); return me >= 0 && s->phase == LOBBY_IN_ROOM && !s->seats[me].ready; }
     if (c >= C_MUTE0 && c < C_MUTE0 + 16) { const int i = c - C_MUTE0; return i < seat_count(s) && !s->seats[i].is_me && P.seat_menu == i; }
     if (c >= C_KICK0 && c < C_KICK0 + 16) { const int i = c - C_KICK0; return i < seat_count(s) && !s->seats[i].is_me && s->am_host && P.seat_menu == i; }
     if (c >= C_BAN0 && c < C_BAN0 + 16) { const int i = c - C_BAN0; return i < seat_count(s) && !s->seats[i].is_me && s->am_host && P.seat_menu == i; }
@@ -522,10 +570,12 @@ int step_focus(const Geom &g, const LobbyState *s, int from, int dx, int dy)
     return best;
 }
 
+int pk_current_cell(void);
 int first_focus(const LobbyState *s)
 {
     if (P.screen == SCR_CHOOSE) return C_CHOOSE_COOP;
     if (s && s->phase == LOBBY_FAILED) return C_FAIL_BACK;
+    if (in_room(s) && P.picker) return pk_current_cell();
     if (in_room(s)) return P.panel ? (s->am_host && s->n_settings ? C_SET_ROW0 : C_SET_BACK) : C_READY;
     return C_BACK;
 }
@@ -563,10 +613,94 @@ void open_panel(int on)
     log_line(on ? "settings panel open" : "settings panel closed");
 }
 
+/* ---------------------------------------------------------------- coopfix1 LOBBYUI1: the colour picker ---------------------------- */
+/* The grid is the name and colour popup's (hal/menu_online_profile.h profile_cell_colour / profile_bro_cell), so a colour picked here is a
+   colour the popup can show and the comms identity already carries. */
+const char *const kPkChar[4] = { "Yoshi", "Mario", "Luigi", "Wario" };
+const char *const kPkRowYoshi[2] = { "Body", "Shoes" };
+const char *const kPkRowBro[3] = { "Hat", "Overalls", "Shoes" };
+const uint32_t kYoshiBody = 0x31A431u, kYoshiShoes = 0xE66218u;       /* the cartridge green Yoshi (kOnlineYoshiColors[0]) */
+
+uint32_t pk_cell_colour(int col, int row)
+{
+    if (P.pk_chr == 0) return profile_cell_colour(P.pk_row, col, row);
+    return profile_bro_cell(P.pk_chr - 1, P.pk_row, col, row);
+}
+unsigned *pk_slot(int chr, int row) { return chr == 0 ? &P.pk_yoshi[row & 1] : &P.pk_bro[chr - 1][row]; }
+int pk_current_cell(void)
+{
+    const unsigned cur = *pk_slot(P.pk_chr, P.pk_row) & 0xFFFFFFu;
+    for (int row = 0; row < PROF_ROWS; ++row)
+        for (int col = 0; col < PROF_COLS; ++col)
+            if ((pk_cell_colour(col, row) & 0xFFFFFFu) == cur) return C_PK_CELL0 + row * PROF_COLS + col;
+    return C_PK_CELL0;
+}
+
+/* the saved colours (or the cartridge's where none are saved) */
+void saved_colours(unsigned yoshi[2], unsigned bro[3][3])
+{
+    if (!host_setting_online_colours(&yoshi[0], &yoshi[1])) { yoshi[0] = kYoshiBody; yoshi[1] = kYoshiShoes; }
+    for (int c = 0; c < 3; ++c)
+        for (int k = 0; k < 3; ++k)
+            if (!host_setting_online_bro(c, k, &bro[c][k])) bro[c][k] = profile_bro_cart(c, k);
+}
+
+/* the arrow at the bucket: the player has never confirmed colours from the bucket and still wears the cartridge's */
+int colours_default(void)
+{
+    if (host_setting_lobby_color_picked()) return 0;
+    unsigned y[2], b[3][3];
+    saved_colours(y, b);
+    if ((y[0] & 0xFFFFFFu) != kYoshiBody || (y[1] & 0xFFFFFFu) != kYoshiShoes) return 0;
+    for (int c = 0; c < 3; ++c)
+        for (int k = 0; k < 3; ++k)
+            if ((b[c][k] & 0xFFFFFFu) != (profile_bro_cart(c, k) & 0xFFFFFFu)) return 0;
+    return 1;
+}
+
+void open_picker(void)
+{
+    saved_colours(P.pk_yoshi, P.pk_bro);
+    P.picker = 1;
+    P.pk_chr = 0;
+    P.pk_row = 0;
+    P.seat_menu = -1;
+    P.focus = pk_current_cell();
+    log_line("colour picker open");
+}
+
+void close_picker(int ok)
+{
+    char b[160];
+    if (ok) {
+        unsigned y[2], br[3][3];
+        saved_colours(y, br);
+        const int yoshi_moved = (y[0] & 0xFFFFFFu) != (P.pk_yoshi[0] & 0xFFFFFFu) || (y[1] & 0xFFFFFFu) != (P.pk_yoshi[1] & 0xFFFFFFu);
+        int bro_moved = 0;
+        for (int c = 0; c < 3; ++c) for (int k = 0; k < 3; ++k) bro_moved |= (br[c][k] & 0xFFFFFFu) != (P.pk_bro[c][k] & 0xFFFFFFu);
+        if (yoshi_moved) host_setting_set_online_profile(host_setting_online_name(), P.pk_yoshi[0], P.pk_yoshi[1]);
+        if (bro_moved) {
+            unsigned char set[3][3];
+            for (int c = 0; c < 3; ++c)
+                for (int k = 0; k < 3; ++k) set[c][k] = (P.pk_bro[c][k] & 0xFFFFFFu) != (profile_bro_cart(c, k) & 0xFFFFFFu);
+            host_setting_set_online_bros(P.pk_bro, set);
+        }
+        host_setting_set_lobby_color_picked(1);      /* the arrow never shows again */
+        if (yoshi_moved) C_colors();
+        snprintf(b, sizeof b, "colours saved: yoshi %06X/%06X mario %06X/%06X/%06X luigi %06X/%06X/%06X wario %06X/%06X/%06X (yoshi %s, bros %s)",
+                 P.pk_yoshi[0], P.pk_yoshi[1], P.pk_bro[0][0], P.pk_bro[0][1], P.pk_bro[0][2], P.pk_bro[1][0], P.pk_bro[1][1], P.pk_bro[1][2],
+                 P.pk_bro[2][0], P.pk_bro[2][1], P.pk_bro[2][2], yoshi_moved ? "changed, sent to the room" : "same", bro_moved ? "changed" : "same");
+        log_line(b);
+    } else log_line("colour picker closed (Back)");
+    P.picker = 0;
+    P.focus = C_PAINT;
+}
+
 /* LOBBYKEYS1: THE LETTER GRID (hal/pad_keyboard.h). A field opened by the pad's A gets the grid; opened by the keyboard or a click it types with the
    keyboard alone, as before. The grid belongs to the page while the page's field is open (kPkbOwner). */
 const int kPkbOwner = 1;
 int g_press_by_pad;        /* the press being handled came from the pad's A */
+int g_press_by_accept;     /* coopfix1 LOBBYUI1: the press came from the pad's A or the keyboard's accept, not a click */
 void grid_for_field(void)
 {
     if (g_press_by_pad) {
@@ -598,6 +732,32 @@ void press(const LobbyState *s, int c)
     }
     if (c == C_FAIL_BACK) { leave_room("back after a failure"); return; }
     if (!s) return;
+    /* coopfix1 LOBBYUI1: the paint bucket and its picker */
+    if (c == C_PAINT) { open_picker(); return; }
+    if (c == C_PK_OK) { close_picker(1); return; }
+    if (c == C_PK_BACK) { close_picker(0); return; }
+    if (c >= C_PK_CHAR0 && c < C_PK_CHAR0 + 4) {
+        P.pk_chr = c - C_PK_CHAR0;
+        P.pk_row = 0;
+        snprintf(b, sizeof b, "picker: %s", kPkChar[P.pk_chr]);
+        log_line(b);
+        return;
+    }
+    if (c >= C_PK_ROW0 && c < C_PK_ROW0 + 3) {
+        P.pk_row = c - C_PK_ROW0;
+        snprintf(b, sizeof b, "picker: %s %s", kPkChar[P.pk_chr], P.pk_chr == 0 ? kPkRowYoshi[P.pk_row & 1] : kPkRowBro[P.pk_row]);
+        log_line(b);
+        return;
+    }
+    if (c >= C_PK_CELL0 && c < C_PK_CELL0 + PROF_COLS * PROF_ROWS) {
+        const int i = c - C_PK_CELL0, col = i % PROF_COLS, row = i / PROF_COLS;
+        const unsigned v = pk_cell_colour(col, row) & 0xFFFFFFu;
+        *pk_slot(P.pk_chr, P.pk_row) = v;
+        snprintf(b, sizeof b, "picker: %s %s -> %06X (cell %d,%d)", kPkChar[P.pk_chr], P.pk_chr == 0 ? kPkRowYoshi[P.pk_row & 1] : kPkRowBro[P.pk_row],
+                 v, col, row);
+        log_line(b);
+        return;
+    }
     if (c == C_SET_BACK) { open_panel(0); return; }
     if (c >= C_SET_ROW0 && c < C_SET_ROW0 + 16) {
         const int i = c - C_SET_ROW0;
@@ -654,7 +814,12 @@ void press(const LobbyState *s, int c)
     }
     default: break;
     }
-    if (c >= C_SEAT0 && c < C_SEAT0 + 16) { P.seat_menu = c - C_SEAT0; return; }
+    if (c >= C_SEAT0 && c < C_SEAT0 + 16) {
+        /* the pad's A (or Enter / Space) on the player's own plate is the bucket, while it shows */
+        if (g_press_by_accept && c - C_SEAT0 == my_seat(s) && live(s, C_PAINT)) { open_picker(); return; }
+        P.seat_menu = c - C_SEAT0;
+        return;
+    }
     if (c >= C_MUTE0 && c < C_MUTE0 + 16) {
         const int i = c - C_MUTE0;
         C_mute(i, !s->seats[i].muted);
@@ -993,6 +1158,8 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
         if (e1 && *e1) P.seat_menu = atoi(e1);
         if (e2 && *e2) P.focus = atoi(e2);
         if (e3 && *e3 == '1') P.panel = 1;
+        const char *e4 = getenv("SM64DS_LOBBY_PICKER");      /* coopfix1 LOBBYUI1: the colour picker open (a picture of it) */
+        if (e4 && *e4 == '1' && in_room(s)) open_picker();
     }
 #endif
     {   /* every phase change of the client, in the log */
@@ -1028,7 +1195,7 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
             close_page("the game starts");
             return 0;
         }
-        if (!in_room(s)) { P.panel = 0; P.field = 0; }
+        if (!in_room(s)) { P.panel = 0; P.field = 0; P.picker = 0; }
 #if LP_PROOF
         {
             static int room_frames;
@@ -1117,7 +1284,7 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
             if (hov < 0 || seat_button(c)) hov = c;       /* the small seat buttons sit on the plate */
         }
         /* a hover on a seat shows its buttons */
-        if (P.screen == SCR_ROOM && in_room(s) && !P.panel) {
+        if (P.screen == SCR_ROOM && in_room(s) && !P.panel && !P.picker) {
             for (int i = 0; i < seat_count(s); ++i)
                 if (in_rect(g.r[C_SEAT0 + i], in->mouse_x, in->mouse_y) && !s->seats[i].is_me) {
                     P.seat_menu = i;
@@ -1144,8 +1311,11 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
             return P.screen != SCR_CLOSED;
         }
         if (P.panel && !in_rect(g.panel, in->mouse_x, in->mouse_y)) open_panel(0);
+        if (P.picker && !in_rect(g.panel, in->mouse_x, in->mouse_y)) close_picker(0);
     }
     if (in && in->mouse_r && P.panel) open_panel(0);
+    if (in && in->mouse_r && P.picker && !P.prev_mr) close_picker(0);
+    P.prev_mr = in && in->mouse_r;
     /* the pad and the keyboard */
     if (P.focus < 0 || !live(s, P.focus)) {
         if (edge & (SPK_UP | SPK_DOWN | SPK_LEFT | SPK_RIGHT | SPK_ACCEPT)) { P.focus = first_focus(s); host_menu_cursor_sound(); P.prev_pad = pad_buttons; return 1; }
@@ -1176,11 +1346,14 @@ extern "C" int lobby_page_frame(const SpInput *in, unsigned pad_buttons)
         snprintf(b, sizeof b, "accept on control %d", P.focus);
         log_line(b);
         g_press_by_pad = ((pad_buttons & ~P.prev_pad) & 0x1000) != 0;      /* LOBBYKEYS1: the pad's A opens a field with the letter grid */
+        g_press_by_accept = 1;
         press(s, P.focus);
         g_press_by_pad = 0;
+        g_press_by_accept = 0;
     }
     else if (edge & SPK_BACK) {
-        if (P.panel) open_panel(0);
+        if (P.picker) close_picker(0);
+        else if (P.panel) open_panel(0);
         else if (P.seat_menu >= 0 && P.focus >= C_MUTE0) { P.focus = C_SEAT0 + P.seat_menu; }
         else if (P.screen == SCR_CHOOSE) close_page("back from the choice");
         else if (s->phase == LOBBY_FAILED) leave_room("back after a failure");
@@ -1512,18 +1685,12 @@ void draw_box(const Surf &s, const Font &f, bool hd, const Rect &r, int kind, in
     if (lit) rim(s, f.u, r);
 }
 
-/* the focus: a bright rim inside a box's edge */
+/* the focus (a hover, or the pad's cursor): the box glows a little, a warm light wash over its face. coopfix1 LOBBYUI1, Tango 11-11: "needs to
+   not have the white outline when hovering"; this used to be a bright white rim inside the box's edge. */
 void rim(const Surf &s, float u, const Rect &r)
 {
-    {
-        const int e = (int)(2 * u) > 1 ? (int)(2 * u) : 1;
-        struct { float u; } f = { u };
-        for (int i = 0; i < e; ++i) {
-            const Rect q = { r.x + (int)(3 * f.u) + i, r.y + (int)(3 * f.u) + i, r.w - 2 * ((int)(3 * f.u) + i), r.h - 2 * ((int)(3 * f.u) + i) };
-            for (int x = q.x; x < q.x + q.w; ++x) { put_pm(s, x, q.y, 0xFFFFFFFFu, 200); put_pm(s, x, q.y + q.h - 1, 0xFFFFFFFFu, 200); }
-            for (int y = q.y; y < q.y + q.h; ++y) { put_pm(s, q.x, y, 0xFFFFFFFFu, 200); put_pm(s, q.x + q.w - 1, y, 0xFFFFFFFFu, 200); }
-        }
-    }
+    const int e = (int)(3 * u) > 1 ? (int)(3 * u) : 1;
+    rrect(s, r.x + e, r.y + e, r.w - 2 * e, r.h - 2 * e, 6 * u, 0xFFE9A8u, 70);
 }
 
 /* text colour on a box of that kind */
@@ -1649,6 +1816,61 @@ void icon_back(const Surf &s, const Rect &r, uint32_t rgb, float u)
     line(s, cx - R * 1.2f, cy - R, cx - R * 0.6f, cy - R * 1.6f, wd, rgb);
     line(s, cx - R * 1.2f, cy - R, cx - R * 0.6f, cy - R * 0.4f, wd, rgb);
     line(s, cx, cy + R, cx - R * 0.8f, cy + R, wd, rgb);
+}
+
+/* a filled polygon, four samples a pixel (the star's way) */
+void poly(const Surf &s, const float *vx, const float *vy, int n, uint32_t rgb, int alpha = 255)
+{
+    float x0 = vx[0], x1 = vx[0], y0 = vy[0], y1 = vy[0];
+    for (int i = 1; i < n; ++i) { x0 = fminf(x0, vx[i]); x1 = fmaxf(x1, vx[i]); y0 = fminf(y0, vy[i]); y1 = fmaxf(y1, vy[i]); }
+    for (int y = (int)floorf(y0); y <= (int)ceilf(y1); ++y)
+        for (int x = (int)floorf(x0); x <= (int)ceilf(x1); ++x) {
+            int hit = 0;
+            for (int sub = 0; sub < 4; ++sub) {
+                const float px = x + 0.25f + (sub & 1) * 0.5f, py = y + 0.25f + (sub >> 1) * 0.5f;
+                bool in = false;
+                for (int i = 0, j = n - 1; i < n; j = i++)
+                    if (((vy[i] > py) != (vy[j] > py)) && (px < (vx[j] - vx[i]) * (py - vy[i]) / (vy[j] - vy[i]) + vx[i])) in = !in;
+                hit += in;
+            }
+            if (hit) put_pm(s, x, y, 0xFF000000u | rgb, hit * alpha / 4);
+        }
+}
+/* coopfix1 LOBBYUI1: the paint bucket. A cream pail tipped a little to the right, its handle over it, paint in the player's own body colour
+   in its mouth and running down over the lip. Drawn on a seat button's dark face (or the lit one). */
+void icon_bucket(const Surf &s, const Rect &r, uint32_t paint, uint32_t pail, uint32_t edge, uint32_t handle, float u)
+{
+    const float W = (float)r.w, H = (float)r.h, X = (float)r.x, Y = (float)r.y;
+    const float wd = 1.4f * u > 1.0f ? 1.4f * u : 1.0f;
+    /* the pail: a trapezoid, wide at the mouth */
+    const float bx[4] = { X + W * 0.18f, X + W * 0.70f, X + W * 0.62f, X + W * 0.26f };
+    const float by[4] = { Y + H * 0.40f, Y + H * 0.40f, Y + H * 0.86f, Y + H * 0.86f };
+    poly(s, bx, by, 4, pail);
+    for (int i = 0; i < 4; ++i) line(s, bx[i], by[i], bx[(i + 1) & 3], by[(i + 1) & 3], wd, edge);
+    /* the handle: a half ring over the mouth */
+    const float cx = X + W * 0.44f, cy = Y + H * 0.40f, R = W * 0.25f;
+    for (int i = 0; i < 12; ++i) {
+        const float a0 = 3.14159f + 3.14159f * i / 12, a1 = 3.14159f + 3.14159f * (i + 1) / 12;
+        line(s, cx + cosf(a0) * R, cy + sinf(a0) * R * 0.95f, cx + cosf(a1) * R, cy + sinf(a1) * R * 0.95f, wd, handle);
+    }
+    /* the paint: an oval in the mouth and a run over the right lip with a drop under it */
+    ring(s, X + W * 0.44f, Y + H * 0.41f, W * 0.25f, H * 0.065f, wd, paint, 1);
+    const float px[5] = { X + W * 0.60f, X + W * 0.74f, X + W * 0.82f, X + W * 0.78f, X + W * 0.66f };
+    const float py[5] = { Y + H * 0.37f, Y + H * 0.38f, Y + H * 0.56f, Y + H * 0.66f, Y + H * 0.50f };
+    poly(s, px, py, 5, paint);
+    ring(s, X + W * 0.80f, Y + H * 0.76f, W * 0.055f, H * 0.075f, wd, paint, 1);
+    line(s, X + W * 0.18f, Y + H * 0.40f, X + W * 0.70f, Y + H * 0.40f, wd, edge);
+}
+/* coopfix1 LOBBYUI1: the arrow at the bucket: a gold arrow pointing down, its tip at (cx, ty), with a dark edge */
+void icon_arrow_down(const Surf &s, float cx, float ty, float u)
+{
+    const float hw = 7.5f * u, sw = 3.2f * u, hh = 8.0f * u, len = 17.0f * u;
+    const float vx[7] = { cx, cx - hw, cx - sw, cx - sw, cx + sw, cx + sw, cx + hw };
+    const float vy[7] = { ty, ty - hh, ty - hh, ty - len, ty - len, ty - hh, ty - hh };
+    const float wd = 2.0f * u > 1.4f ? 2.0f * u : 1.4f;
+    for (int i = 0; i < 7; ++i) line(s, vx[i], vy[i], vx[(i + 1) % 7], vy[(i + 1) % 7], wd * 1.8f, 0x1A0C02u);
+    poly(s, vx, vy, 7, 0xFFD23Cu);
+    for (int i = 0; i < 7; ++i) line(s, vx[i], vy[i], vx[(i + 1) % 7], vy[(i + 1) % 7], wd * 0.6f, 0x6A3208u);
 }
 
 uint32_t contrast_ink(uint32_t rgb)
@@ -1881,7 +2103,15 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
         const uint32_t sink = contrast_ink(t.shoe_rgb);
         const Rect band = { r.x, r.y + r.h - edge - (int)(r.h * 0.26f), r.w, (int)(r.h * 0.26f) };
         f.centred(s, band, status, sem, sink, t.ready ? 255 : 190);
-        if (t.is_host) icon_star(s, r.x + r.w - 10 * u, r.y + 10 * u, 7 * u, 0xFFD23Cu);
+        /* coopfix1 LOBBYUI1: the paint bucket on the player's own plate while not ready (the host's star moves left of it) */
+        const int bucket = t.is_me && st->phase == LOBBY_IN_ROOM && !t.ready && g.r[C_PAINT].w > 0;
+        if (t.is_host) icon_star(s, bucket ? g.r[C_PAINT].x - 9 * u : r.x + r.w - 10 * u, r.y + 10 * u, 7 * u, 0xFFD23Cu);
+        if (bucket) {
+            const Rect &pb = g.r[C_PAINT];
+            const int on = lit(C_PAINT);
+            framed(s, pb.x, pb.y, pb.w, pb.h, 3 * u, (int)u > 1 ? (int)u : 1, on ? 0xFFF6D8u : 0x5A3010u, 0x1A0C02u);
+            icon_bucket(s, pb, t.body_rgb & 0xFFFFFF, on ? 0xD8CCB0u : 0xFFF3CCu, 0x3A1C06u, on ? 0x3A1C06u : 0xFFF3CCu, u);
+        }
         if (t.is_me) f.draw(s, r.x + 6 * u, r.y + 5 * u, "you", 10.0f, ink, 200);
         if (t.muted) { const Rect q = { r.x + r.w - (int)(40 * u), r.y + (int)(2 * u), (int)(18 * u), (int)(18 * u) }; icon_speaker(s, q, 1, ink, u); }
         if (P.seat_menu == i && !t.is_me && !P.panel) {
@@ -1927,6 +2157,57 @@ void draw_room(const Surf &s, const Font &f, bool hd, const Geom &g, const Lobby
                 }
             }
         }
+    }
+    /* coopfix1 LOBBYUI1: the arrow at the bucket, bobbing over the plate, while the player still wears the default colours and has never
+       confirmed colours from the bucket (settings.json LobbyColorPicked) */
+    {
+        const int me = my_seat(st);
+        if (me >= 0 && st->phase == LOBBY_IN_ROOM && !st->seats[me].ready && g.r[C_PAINT].w > 0 && !P.picker && !P.panel && colours_default()) {
+            const Rect &pb = g.r[C_PAINT];
+            const float bob = (0.5f + 0.5f * sinf(P.frames * 0.12f)) * 3.0f * u;
+            icon_arrow_down(s, pb.x + pb.w * 0.5f, pb.y - 1.0f * u - bob, u);
+        }
+    }
+    /* coopfix1 LOBBYUI1: the colour picker over everything */
+    if (P.picker) {
+        for (int y = 0; y < s.h; ++y) for (int x = 0; x < s.w; ++x) put_pm(s, x, y, 0xFF000000u, 90);
+        draw_box(s, f, hd, g.panel, 2, 0);
+        const Rect hr = { g.panel.x, g.panel.y + (int)(8 * u), g.panel.w, (int)(30 * u) };
+        f.centred(s, hr, "Colors", 22.0f, C_INK);
+        for (int k = 0; k < 4; ++k) {
+            const Rect &r = g.r[C_PK_CHAR0 + k];
+            draw_box(s, f, hd, r, 0, lit(C_PK_CHAR0 + k), P.pk_chr != k);
+            f.centred(s, r, kPkChar[k], 13.0f, ink_on(hd, 0), P.pk_chr == k ? 255 : 170);
+        }
+        const int nrows = P.pk_chr == 0 ? 2 : 3;
+        for (int k = 0; k < nrows; ++k) {
+            const Rect &r = g.r[C_PK_ROW0 + k];
+            const int on = P.pk_row == k;
+            const unsigned col = *pk_slot(P.pk_chr, k) & 0xFFFFFFu;
+            framed(s, r.x, r.y, r.w, r.h, 5 * u, (int)(2 * u) > 1 ? (int)(2 * u) : 1, on ? 0xFFF1C9u : 0xD9C49Au, on ? 0x3A1C06u : 0x9A7A50u);
+            if (lit(C_PK_ROW0 + k)) rim(s, u, r);
+            const int sq = r.h - (int)(8 * u);
+            const Rect sw = { r.x + r.w - sq - (int)(4 * u), r.y + (int)(4 * u), sq, sq };
+            framed(s, sw.x, sw.y, sw.w, sw.h, 3 * u, (int)u > 1 ? (int)u : 1, col, 0x1A0C02u);
+            const char *lab = P.pk_chr == 0 ? kPkRowYoshi[k] : kPkRowBro[k];
+            const Rect lr = { r.x, r.y, r.w - sq - (int)(4 * u), r.h };
+            f.centred(s, lr, lab, 13.0f, C_INK, on ? 255 : 170);
+        }
+        const unsigned cur = *pk_slot(P.pk_chr, P.pk_row) & 0xFFFFFFu;
+        for (int row = 0; row < PROF_ROWS; ++row)
+            for (int col = 0; col < PROF_COLS; ++col) {
+                const int c = C_PK_CELL0 + row * PROF_COLS + col;
+                const Rect &r = g.r[c];
+                const unsigned v = pk_cell_colour(col, row) & 0xFFFFFFu;
+                const int e1 = (int)u > 1 ? (int)u : 1;
+                if (lit(c)) rrect(s, r.x - 2 * e1, r.y - 2 * e1, r.w + 4 * e1, r.h + 4 * e1, 4 * u, 0x3A1C06u, 255);   /* the cursor: a dark frame */
+                framed(s, r.x, r.y, r.w, r.h, 3 * u, e1, v, 0x1A0C02u);
+                if (v == cur) ring(s, r.x + r.w * 0.5f, r.y + r.h * 0.5f, 3.2f * u, 3.2f * u, 1.0f, contrast_ink(v), 1);   /* the pick: a dot */
+            }
+        draw_box(s, f, hd, g.r[C_PK_OK], 0, lit(C_PK_OK));
+        f.centred(s, g.r[C_PK_OK], "OK", 16.0f, ink_on(hd, 0));
+        draw_box(s, f, hd, g.r[C_PK_BACK], 0, lit(C_PK_BACK));
+        f.centred(s, g.r[C_PK_BACK], "Back", 16.0f, ink_on(hd, 0));
     }
     /* the settings panel over everything */
     if (P.panel) {

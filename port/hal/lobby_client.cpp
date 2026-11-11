@@ -1698,6 +1698,23 @@ void lobby_set_ready(int ready)
     enqueue("preflight", head() + ",\"pre_ok\":" + (ready ? "true" : "false") + "}");
 }
 
+/* coopfix1, lane LOBBYUI1: the page's paint bucket saved new colours: read them back from the settings (the same identity create / join
+   sent) and tell the room with the `color` verb, so every seat card shows them now. Only in the room's lobby state; the start reads the
+   settings again on its own (launch). */
+void lobby_set_colors(void)
+{
+    if (!g_init) return;
+    std::string nick, body, shoes;
+    identity(&nick, &body, &shoes);
+    Lock l;
+    g.color = body;
+    g.shoes = shoes;
+    if (g.room.empty()) return;
+    for (Member &m : g.members)
+        if (m.seat == g.you) { m.color = body; m.shoes = shoes; }   /* shown at once; the next poll confirms */
+    enqueue("color", head() + ",\"color\":" + jesc(body) + ",\"shoes\":" + jesc(shoes) + "}");
+}
+
 void lobby_start(void)
 {
     if (!g_init) return;
