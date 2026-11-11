@@ -4989,13 +4989,96 @@ static void cam93_collide(char *player, const int *pivot, int *eye)
 }
 
 /* the rig's picture: eye from the pivot, collided, pushed. One place for both frame loops. */
+static const int *c3_free_pivot(void *cam, char *player);   /* CAMERA3, below */
 static void cam93_rig_draw(void *cam, char *player)
 {
     int fceye[3];
-    const int *pivot = cam_mode == CAM_ANALOG ? an_pivot : (const int *)((char *)cam + 0x80);
+    const int *pivot = cam_mode == CAM_ANALOG ? an_pivot : c3_free_pivot(cam, player);
     fc_eye(pivot, fceye);
     cam93_collide(player, pivot, fceye);
     fc_push_view(cam, fceye, pivot);
+}
+
+/* ---- CAMERA3: ONE OWNER RULE, NO BORROWED NUMBERS, ONE HAND-BACK, A WATCHDOG ----
+   (run coopfix1, lane CAMERA3.)
+   Tango 11-11: the analog and free cameras were behind most of the coop "camera stuck" reports. The rig copies three
+   things off the game's Camera actor: its distance (every frame), its look-at (the freecam's centre) and its yaw and
+   pitch (every hand-back). Any actor can take that camera (Camera::SetFlag_3, flag 8) and only its own later step gives
+   it back; in coop a friend's boss or star copy can be forced past that step or removed before it, and the camera stays
+   where the scene left it. So:
+     1. cam_rig_owns: the one rule for who draws, read by the hook, the hand render and the heading write.
+     2. The rig copies nothing off a camera hal/camera_guard.cpp's cam_guard_trust does not trust (held by an actor in a
+        coop room, look-at over 3000 units from the player, or a length outside the clamp). Outside a coop room it
+        always trusts, so single player is what it was.
+     3. cam_handover: every seed goes through it; an untrusted camera seeds from behind the player instead.
+     4. c3_watchdog: hal/camera_guard.cpp's watchdog, fed the picture actually shown; when it frees the game camera the rig
+        is handed back from the freed one.
+   SM64DS_CAMERA3_OLD=1: proof only, the build before (copies everything, no watchdog). */
+extern "C" int cam_guard_trust(const void *cam, const void *player);
+extern "C" int cam_guard_frame(void *cam, void *player, const int *shown_eye, const int *shown_at, int host_excused);
+static int c3_old(void) { static int o = -1; if (o < 0) o = getenv("SM64DS_CAMERA3_OLD") ? 1 : 0; return o; }
+static int c3_trust(void *cam, const char *player)
+{
+    return c3_old() || !cam || !player || cam_guard_trust(cam, player);
+}
+/* the rig draws (and owns the heading) this frame: not DS mode, no cutscene script, no scripted game-camera state */
+static int cam_rig_owns(void *cam)
+{
+    static int no_cutscene_cam = -1;
+    if (no_cutscene_cam < 0) no_cutscene_cam = getenv("SM64DS_NO_CUTSCENE_CAM") ? 1 : 0;
+    const int cutscene_cam = !no_cutscene_cam && data_0209fc48 != 0;
+    return cam_mode != CAM_DS && !cutscene_cam && !cam93_ds_owned(cam);
+}
+/* the freecam's centre: the game camera's look-at while it is trusted, held otherwise, and after a second eased to the
+   player's chest (the analog pivot's rule) */
+static int fc_pivot[3], fc_pivot_ok, fc_pivot_hold;
+static const int *c3_free_pivot(void *cam, char *player)
+{
+    const int *at = (const int *)((char *)cam + 0x80);
+    if (c3_trust(cam, player)) {
+        fc_pivot[0] = at[0]; fc_pivot[1] = at[1]; fc_pivot[2] = at[2];
+        fc_pivot_ok = 1;
+        fc_pivot_hold = 0;
+        return fc_pivot;
+    }
+    const int tgt[3] = {*(int *)(player + 0x5c), *(int *)(player + 0x60) + AN_LIFT, *(int *)(player + 0x64)};
+    if (!fc_pivot_ok) { fc_pivot[0] = tgt[0]; fc_pivot[1] = tgt[1]; fc_pivot[2] = tgt[2]; fc_pivot_ok = 1; }
+    if (++fc_pivot_hold > 30)
+        for (int k = 0; k < 3; ++k) fc_pivot[k] += (tgt[k] - fc_pivot[k]) / 4;
+    return fc_pivot;
+}
+/* every seed of the rig: from the game camera when it is trusted (fc_seed, as always), else from behind the player at
+   800 units (about what the follow modes settle to) and the follow modes' usual pitch */
+static void cam_handover(void *cam, char *player, const char *why)
+{
+    if (!cam) return;
+    const int trusted = c3_trust(cam, player);
+    if (trusted) {
+        fc_seed(cam);
+    } else {
+        fc_yaw = (short)(*(short *)(player + 0x8e) + 0x8000);
+        fc_pitch = 0x0c00;
+        fc_dist = 800 << 12;
+        fc_dist_owned = 0;
+    }
+    an_pivot_live = 0;
+    fc_pivot_ok = 0;
+    fc_pivot_hold = 0;
+    fprintf(stderr, "[cam] handover %s: mode %s, seed from %s\n", why, cam_mode_name(cam_mode),
+            trusted ? "the game camera" : "behind the player (the game camera is held or far away)");
+}
+/* once per play frame, after the heading write: the watchdog, fed the picture actually shown */
+static void c3_watchdog(void *cam, char *player, int host_excused)
+{
+    if (c3_old() || !cam || !player) return;
+    int eye[3], at[3];
+    const int *e = (const int *)((char *)cam + 0x8c), *a = (const int *)((char *)cam + 0x80);
+    if (cam_rig_owns(cam)) { e = g_cam93_eye; a = cam_mode == CAM_ANALOG ? an_pivot : fc_pivot; }
+    for (int k = 0; k < 3; ++k) { eye[k] = e[k]; at[k] = a[k]; }
+    if (cam_guard_frame(cam, player, eye, at, host_excused)) {
+        if (cam_mode != CAM_DS) cam_handover(cam, player, "watchdog");
+        g_cam93_scale = 4096;
+    }
 }
 
 /* THE RIG'S SEAT ON THE ROM'S CAMERA::RENDER (run linkfull, lane K1LOOP). On a
@@ -5018,7 +5101,8 @@ static void k1_level_camera_render_hook(void *cam)
     const int cutscene_cam = !no_cutscene_cam && data_0209fc48 != 0;
     if (cam_mode == CAM_ANALOG && !rb_replaying() && g_k1_player)
         an_step_pivot(g_k1_player);
-    if (cam_mode != CAM_DS && !cutscene_cam && !cam93_ds_owned(cam))
+    (void)cutscene_cam;
+    if (cam_rig_owns(cam))   /* CAMERA3: the one rule */
         cam93_rig_draw(cam, g_k1_player);
     if (ntr::widescreen)
         hal_camera_widen_frustum();
@@ -18494,7 +18578,7 @@ int main(void)
         }
         cam = nc;
         an_pivot_live = 0;
-        if (cam_mode != CAM_DS && cam) fc_seed(cam);
+        if (cam_mode != CAM_DS && cam) cam_handover(cam, c, "state load");
         /* g_mc IS A FOURTH POINTER INTO THE WORLD, and RELOADRV's reverse scan
            found it: it is the Stage's level MeshCollider at Stage+0x91c, set
            once during setup and then read by every ground and line ray this
@@ -19337,13 +19421,13 @@ int main(void)
                 if (getenv("SM64DS_ANALOG_CAMERA")) cam_mode = CAM_ANALOG;
                 if (getenv("SM64DS_DS_CAMERA")) cam_mode = CAM_DS;
                 if (getenv("SM64DS_FREECAM")) cam_mode = CAM_FREE;
-                if (cam_mode != CAM_DS) fc_seed(cam);
+                if (cam_mode != CAM_DS) cam_handover(cam, c, "boot");
             }
             /* the settings page (or a launcher edit) set the camera mode */
             if (g_cam_req >= 0) {
                 if (!selftest && g_cam_req != cam_mode) {
                     cam_mode = g_cam_req;
-                    if (cam_mode != CAM_DS) fc_seed(cam);
+                    if (cam_mode != CAM_DS) cam_handover(cam, c, "settings");
                     if (cam_mode == CAM_ANALOG) an_pivot_live = 0;
                     fprintf(stderr, "[cam] mode %s (settings)\n", cam_mode_name(cam_mode));
                 }
@@ -19368,7 +19452,7 @@ int main(void)
             }
             if (now && !fc_edge) {
                 cam_mode = (cam_mode + 1) % 3;   /* analog -> freecam -> DS */
-                if (cam_mode != CAM_DS) fc_seed(cam);
+                if (cam_mode != CAM_DS) cam_handover(cam, c, "mode key");
                 if (cam_mode == CAM_ANALOG) an_pivot_live = 0;
                 fprintf(stderr, "[cam] mode %s\n", cam_mode_name(cam_mode));
             }
@@ -19380,7 +19464,7 @@ int main(void)
             static int was_ds;
             const int ds = (cam && cam93_ds_owned(cam)) || cam10_cutscene();
             if (was_ds && !ds && cam_mode != CAM_DS) {
-                fc_seed(cam);
+                cam_handover(cam, c, "back from a game-camera moment");
                 if (cam_mode == CAM_ANALOG) an_pivot_live = 0;
                 g_cam93_scale = 4096;
             }
@@ -19400,7 +19484,7 @@ int main(void)
             /* the distance the game's camera converged to on the frame just
                gone -- see the block above fc_seed. Ahead of the zoom keys so
                a press this frame still lands on top of it. */
-            if (cam && !fc_dist_owned) fc_dist = fc_cam_dist(cam);
+            if (cam && !fc_dist_owned && c3_trust(cam, c)) fc_dist = fc_cam_dist(cam);   /* CAMERA3: never off a held camera */
             {
                 /* stick and mouse are both a rightward push measured to the
                    right, so both take cam_turn as-is */
@@ -22139,7 +22223,7 @@ int main(void)
                     _ZN10dScStage_c10LoadSkyboxEv(stage);
                 }
                 an_pivot_live = 0;        /* do not ease the camera across it */
-                if (cam_mode != CAM_DS && cam) fc_seed(cam);
+                if (cam_mode != CAM_DS && cam) cam_handover(cam, c, "level");
                 printf("[lvl] re-seated: player %p camera %p scaleShift %d, "
                        "heap free %u\n", player, cam, level_shift,
                        port_level_heap_free_bytes());
@@ -23233,8 +23317,9 @@ int main(void)
                (cutscene_cam) the rig stands down so the actor's own heading --
                the one Camera::Behavior just wrote from the script -- survives
                into the echo below. */
-            if (cam_mode != CAM_DS && !cutscene_cam && !cam93_ds_owned(cam))
+            if (cam_rig_owns(cam))   /* CAMERA3: the one rule */
                 *(short *)data_020a1050 = fc_yaw;
+            c3_watchdog(cam, c, menu_on || rb_replaying());   /* CAMERA3: frees a stuck game camera (coop rooms) */
             /* run mg16 lane MP3: THE ROM'S OWN DISPATCHER, LINKED.
                src/func_0203df40.c fills the local comms record from the pad and
                the touch panel and then switches on the role byte: 1 and 2 reach
@@ -23939,7 +24024,7 @@ int main(void)
                    view: hal_camera_render has just parked the script-driven view in
                    data_0209b3ec, and leaving it there is what makes the star-get
                    fly-around visible instead of overwritten. */
-                if (cam_mode != CAM_DS && !cutscene_cam && !cam93_ds_owned(cam))
+                if (cam_rig_owns(cam))   /* CAMERA3: the one rule */
                     cam93_rig_draw(cam, (char *)c);
                 /* WIDESCREEN: widen the object-cull frustum to match the Hor+ 3D
                    field, AFTER the camera Render just seeded the global Clipper
