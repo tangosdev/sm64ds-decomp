@@ -72,7 +72,9 @@ extern "C" OSIrqFunction OS_GetIrqFunction(OSIrqMask intrBit) {
             if (REG_OS_IE_D0_SHIFT <= i && i <= REG_OS_IE_D3_SHIFT)
                 return (OSIrqFunction)OSi_IrqCallbackInfo[i - REG_OS_IE_D0_SHIFT].func;
             if (REG_OS_IE_T0_SHIFT <= i && i <= REG_OS_IE_T3_SHIFT)
-                return (OSIrqFunction)OSi_IrqCallbackInfo[i - REG_OS_IE_T0_SHIFT + OSi_IRQCALLBACK_NO_TIMER0].func;
+                return (OSIrqFunction)
+                    OSi_IrqCallbackInfo[i - REG_OS_IE_T0_SHIFT + OSi_IRQCALLBACK_NO_TIMER0]
+                        .func;
             return *funcPtr;
         }
         intrBit >>= 1;
