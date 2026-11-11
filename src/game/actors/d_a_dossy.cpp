@@ -21,10 +21,6 @@
 // - func_ov065_02118838 reads each bone's angles z, y, x into a Vector3s
 //   before storing them x, y, z: assigning rot.x/y/z straight from the bone
 //   is 9 words off.
-// - The seven parameter names on Matrix4x3_FromRotationY,
-//   DecIfAbove0_Short and the four extra names on BgchInitAt_ hold the
-//   @NNN count: removing the gotos from func_ov065_021183c8 and
-//   func_ov065_021180d4 dropped it by 7, and these 7 names put it back.
 // - daDossyCap_c::Render tests the cap-icon flag as `(flags << 30) >> 31`.
 //   `>> 1 & 1` selects asr/ands instead of lsl/lsrs.
 // - data_ov065_* keep their address names, including the state table
@@ -124,30 +120,11 @@ extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr *data_ov065_0211c080[];
 extern SharedFilePtr *data_ov065_0211c08c[];
 
-extern int atan2_hold_d_a_dossy_1(int a, int b);
-/* The named local declarations below keep this TU's @NNN compiler-temp
-   identities stable. Their signatures now match CalcLib.h exactly. */
-void VEC_Subtract(Vector3 *a, Vector3 *b,
-                  Vector3 *o); /* local extern: named parameters preserve @NNN identities */
-void VEC_Add(Vector3 *a, Vector3 *b,
-             Vector3 *o); /* local extern: named parameters preserve @NNN identities */
-void Vec3_Asr(Vector3 *d, Vector3 *s,
-              int sh); /* local extern: named parameters preserve @NNN identities */
-int Vec3_HorzDist(const Vector3 *a,
-                  const Vector3 *b); /* local extern: named parameters preserve @NNN identities */
-short Vec3_HorzAngle(
-    const Vector3 *a,
-    const Vector3 *b); /* local extern: named parameters preserve @NNN identities */
-unsigned short DecIfAbove0_Short(
-    unsigned short *counter); /* local extern: named parameters preserve @NNN identities */
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
-extern void hold_d_a_dossy(void *self, void *kcl, void *mtx, Fix12i r, short s, void *clps);
-/* Parameter names keep this TU's @NNN. */
-typedef void BgchInitAt_(void *self, void *a, Fix12i r, Fix12i h, void *p, void *q);
 extern int AngleDiff(int a, int b);
 
-int func_ov065_021180d4(char* self);
-void func_ov065_02118c4c(char* c);
+int func_ov065_021180d4(daDossyCap_c *cap);
+void func_ov065_02118c4c(daDossyCap_c *cap);
 int func_ov065_02119210(daDossyCap_c *cap);
 void func_ov065_021195bc(dBgW *collider, dActor_c *owner, dActor_c *other);
 void func_ov065_021195d0(dBgW *collider, dActor_c *owner, dActor_c *other);
@@ -251,39 +228,36 @@ int daDossy_c::InitResources()
     mWithMeshClsn.Init(this, 0x1e0000, 0xa0000, 0, 0);
     mCylClsn1.Init(this, 0xdc000, 0xfa000, 2, 0x20);
     {
-        int v[3];
-        v[0] = 0;
-        v[1] = 0x50000;
-        v[2] = 0x150000;
-        mCylClsn2.Init(this, *(Vector3 *)v, 0x60000, 0x1b0000, 2, 0x400000);
+        Vector3 offset;
+        offset.x = 0;
+        offset.y = 0x50000;
+        offset.z = 0x150000;
+        mCylClsn2.Init(this, offset, 0x60000, 0x1b0000, 2, 0x400000);
     }
-    {
-        mHomePosX = mPosX;
-        mHomePosY = mPosY;
-        mHomePosZ = mPosZ;
-        mStateTimer = 0;
-        mClsnState = 0;
-        mClsnPlayer = 0;
-        mRider = 0;
-        mSinkHeight = 0;
-        mPushDownHeight = mSinkHeight;
-    }
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
+    mStateTimer = 0;
+    mClsnState = 0;
+    mClsnPlayer = 0;
+    mRider = 0;
+    mPushDownHeight = mSinkHeight = 0;
     if ((param1 & 0xff) == 1)
         mHasCap = 1;
     else
         mHasCap = 0;
     mCap = 0;
     if (mHasCap != 0) {
-        mCapPosX = 0;
-        mCapPosY = 0;
-        mCapPosZ = 0;
+        mCapPos.x = 0;
+        mCapPos.y = 0;
+        mCapPos.z = 0;
         func_ov065_02118838();
         {
             daDossyCap_c *cap =
                 (daDossyCap_c *)dActor_c::Spawn(0xa9, 0, mPos, &mAngle, mAreaId, -1);
             if (cap != 0) {
                 mCap = cap;
-                cap->mCarrier = (s32)this;
+                cap->mCarrier = this;
             } else {
                 mHasCap = 0;
             }
@@ -299,7 +273,7 @@ extern "C" int func_ov065_02119210(daDossyCap_c *cap) {
 
 int daDossyCap_c::Behavior()
 {
-    daDossy_c *carrier = (daDossy_c *)mCarrier;
+    daDossy_c *carrier = mCarrier;
     if (carrier == 0)
         return 1;
     int eaten = (mFlags & 0x20000) != 0;
@@ -316,16 +290,14 @@ int daDossyCap_c::Behavior()
         }
         return 1;
     }
-    s32 *capPos = &carrier->mCapPosX;
-    mPosX = capPos[0];
-    mPosY = capPos[1];
-    mPosZ = capPos[2];
-    mAngleX = ((daDossy_c *)mCarrier)->mHeadRotX;
-    mAngleY = ((daDossy_c *)mCarrier)->mAngleY;
+    Vector3 *capPos = &carrier->mCapPos;
+    mPos = *capPos;
+    mAngleX = mCarrier->mHeadRotX;
+    mAngleY = mCarrier->mAngleY;
     unsigned int flags = mCapIcon.mFlags;
     if ((flags << 30) >> 31) {
-        func_ov065_02118c4c((char *)this);
-        if (func_ov065_021180d4((char *)this) != 0) {
+        func_ov065_02118c4c(this);
+        if (func_ov065_021180d4(this) != 0) {
             mdCcAc_c.Clear();
             return 1;
         }
@@ -435,9 +407,8 @@ void daDossy_c::func_ov065_02118cc4()
     mAnmModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-extern "C" void func_ov065_02118c4c(char *c)
+extern "C" void func_ov065_02118c4c(daDossyCap_c *cap)
 {
-    daDossyCap_c *cap = (daDossyCap_c *)c;
     Vector3 pos;
     Vec3_Asr(reinterpret_cast<Vector3 *>(&pos), reinterpret_cast<Vector3 *>(&cap->mPosX), 3);
     Matrix4x3_FromTranslation(&data_020a0e68, pos.x, pos.y, pos.z);
@@ -492,12 +463,12 @@ void daDossy_c::func_ov065_02118838()
             mHomePosY = v.y;
             mHomePosZ = v.z;
             scaled = FX_SinIdx((u16)mHeadRotX >> 4) * 0x96;
-            mCapPosX = mHomePosX;
-            mCapPosY = mHomePosY;
-            mCapPosZ = mHomePosZ;
-            mCapPosX += FX_MUL(scaled, FX_SinIdx((u16)mAngleY >> 4));
-            mCapPosY += 0x8c000 - FX_SinIdx((u16)mHeadRotX >> 4) * 0x1e;
-            mCapPosZ += FX_MUL(scaled, FX_CosIdx((u16)mAngleY >> 4));
+            mCapPos.x = mHomePosX;
+            mCapPos.y = mHomePosY;
+            mCapPos.z = mHomePosZ;
+            mCapPos.x += FX_MUL(scaled, FX_SinIdx((u16)mAngleY >> 4));
+            mCapPos.y += 0x8c000 - FX_SinIdx((u16)mHeadRotX >> 4) * 0x1e;
+            mCapPos.z += FX_MUL(scaled, FX_CosIdx((u16)mAngleY >> 4));
             mHomePosX += FX_SinIdx((u16)mAngleY >> 4) * 0x82;
             mHomePosY += 0x50000;
             mHomePosZ += FX_CosIdx((u16)mAngleY >> 4) * 0x82;
@@ -519,14 +490,10 @@ void daDossy_c::func_ov065_02118634()
 {
     int landed = 0;
 
-    {
-        u32 id = mCylClsn2.otherOwner;
-        if (id != 0) {
-            daPly_c *player = (daPly_c *)dActor_c::FindWithID(id);
-            if (player != 0) {
-                if (player->mIsAirborne == 0) landed = 1;
-            }
-        }
+    if (mCylClsn2.otherOwner != 0) {
+        daPly_c *player = (daPly_c *)dActor_c::FindWithID(mCylClsn2.otherOwner);
+        if (player != 0 && player->mIsAirborne == 0)
+            landed = 1;
     }
 
     if (mCylClsn1.otherOwner != 0 || landed != 0) {
@@ -537,8 +504,7 @@ void daDossy_c::func_ov065_02118634()
         mCylClsn1.Clear();
         mCylClsn2.Clear();
         mStateTimer = 0;
-        mStateState = 0;
-        mPushDownHeight = mStateState;
+        mPushDownHeight = mStateState = 0;
         func_0201267c(0xe6, &mCamSpacePos);
     } else {
         s16 target;
@@ -675,9 +641,8 @@ int daDossy_c::func_ov065_02118248()
     return 0;
 }
 
-extern "C" int func_ov065_021180d4(char *self)
+extern "C" int func_ov065_021180d4(daDossyCap_c *cap)
 {
-    daDossyCap_c *cap = (daDossyCap_c *)self;
     daPly_c *player;
     u32 id;
 
@@ -690,31 +655,18 @@ extern "C" int func_ov065_021180d4(char *self)
             int isPlayer = (int)(player->actorID == 0xbf);
             if (isPlayer != 0 && player->mIsAirborne == 0
                 && player->Unk_020c9e5c(5) == 0) {
-                /* The inner block holds the @NNN count: without it the
-                   pins move up by 2. */
-                {
-                    Vector3 pos;
-                    Vector3 *playerPos;
-                    int idx;
-                    int speed;
+                Vector3 *playerPos = &player->mPos;
+                Vector3 pos = *playerPos;
+                int idx = (u16)player->mAngleY >> 4;
+                int speed = player->mHorzSpeed;
 
-                    playerPos = &player->mPos;
-                    pos.x = playerPos->x;
-                    pos.y = playerPos->y;
-                    pos.z = playerPos->z;
-
-                    idx = (u16)player->mAngleY >> 4;
-                    speed = player->mHorzSpeed;
-
-                    pos.y += 0x50000;
-                    pos.x += FX_MUL(speed, FX_SinIdx(idx));
-                    pos.z += FX_MUL(speed, FX_CosIdx(idx));
-
-                    if (dActor_c::Spawn(0x10d, 0x1210, pos, &cap->mAngle, cap->mAreaId, -1) != 0) {
-                        cap->mCapIcon.Unlink();
-                        cap->mCapIcon.Link(self, 2, 0, 0);
-                        ((daDossy_c *)cap->mCarrier)->mRideCooldown = 0x1e;
-                    }
+                pos.y += 0x50000;
+                pos.x += FX_MUL(speed, FX_SinIdx(idx));
+                pos.z += FX_MUL(speed, FX_CosIdx(idx));
+                if (dActor_c::Spawn(0x10d, 0x1210, pos, &cap->mAngle, cap->mAreaId, -1) != 0) {
+                    cap->mCapIcon.Unlink();
+                    cap->mCapIcon.Link((char *)cap, 2, 0, 0);
+                    cap->mCarrier->mRideCooldown = 0x1e;
                 }
                 return 1;
             }

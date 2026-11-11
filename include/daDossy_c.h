@@ -55,9 +55,7 @@ typedef char DorriePlatform_size_must_be_0x200[
 struct daDossy_c : dActor_c {
     u32 unk_0d0;                 /* 0x0d0 */
     daDossyCap_c *mCap;         /* 0x0d4 */
-    s32 mCapPosX;               /* 0x0d8 */
-    s32 mCapPosY;               /* 0x0dc */
-    s32 mCapPosZ;               /* 0x0e0 */
+    Vector3 mCapPos;            /* 0x0d8 */
     s16 mHeadRotX;              /* 0x0e4 */
     /* Frames before Dorrie accepts a rider again. func_ov065_021180d4
        sets it to 30 when a player's hit (0x400000) pops the cap;

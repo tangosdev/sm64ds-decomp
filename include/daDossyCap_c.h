@@ -6,6 +6,8 @@
 #include "dCcAc_c.h"
 #include "dActor_c.h"
 
+struct daDossy_c;
+
 /* daDossyCap_c is the ROM's own RTTI name for this class (this tree once
  * coined it DorrieCap): the typeinfo at ov065
  * 0x0211cd4c names dActor_c as the sole base at offset 0, and the class's
@@ -50,11 +52,10 @@ struct daDossyCap_c : dActor_c {
     dCapIcon_c         mCapIcon;                /* 0x0d4 */
     dExtSimpleModel_c mModel;                   /* 0x0f0 */
     dCcAc_c mdCcAc_c;     /* 0x140 */
-    /* The actor this cap is riding, a pointer spelt s32. Behavior bails out
-       when it is null, and otherwise copies the cap position out of that actor
-       0x0d8 triple and its two angles out of the actor +0xe4 and
-       dActor_c::mAngleY (daDossyCap_c::Behavior, src/game/actors/d_a_dossy.cpp). */
-    s32                mCarrier;                 /* 0x174 */
+    /* The Dorrie wearing this cap. Behavior bails out when it is null, and
+       otherwise copies the cap position out of her mCapPos triple and its two
+       angles out of mHeadRotX and mAngleY. */
+    daDossy_c         *mCarrier;                 /* 0x174 */
     u8                 pad_178[0xc];
 
     /* Inline is load-bearing: src/game/actors/d_a_dossy.cpp defines the key
