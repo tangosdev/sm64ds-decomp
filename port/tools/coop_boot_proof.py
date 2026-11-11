@@ -148,7 +148,7 @@ static void row(const char *n, bool ok) { printf("ROW %s %s\n", n, ok ? "ok" : "
 // accepts a non-zero reserved byte
 static int val(const unsigned char *d, int len) {
     if (len != kCoopBootDatagram || !hub_coop_validate(kHubTagCoopCtl, d, len)) return -1;
-    int s = d[6]; return (s >= 0x30 && s <= 0x34) ? s : -1;
+    int s = d[6]; return (s >= 0x30 && s <= 0x35) ? s : -1;
 }
 #else
 static int val(const unsigned char *d, int len) { return coop_boot_validate(d, len); }
@@ -161,10 +161,10 @@ static bool start_due(unsigned pm, unsigned rm, bool hr, unsigned w) { return co
 int main() {
     unsigned char dg[64];
     int n;
-    for (int sub = 0x30; sub <= 0x34; ++sub) {
+    for (int sub = 0x30; sub <= 0x35; ++sub) {
         CoopBootState s = {1, 2, 1};
         n = coop_boot_encode(sub, 7, &s, dg, sizeof dg);
-        row(sub == 0x31 ? "state_ok" : (sub == 0x30 ? "ready_ok" : (sub == 0x32 ? "arrived_ok" : (sub == 0x33 ? "close_ok" : "hostleft_ok"))),
+        row(sub == 0x31 ? "state_ok" : (sub == 0x30 ? "ready_ok" : (sub == 0x32 ? "arrived_ok" : (sub == 0x33 ? "close_ok" : (sub == 0x34 ? "hostleft_ok" : "bye_ok")))),
             n == 16 && val(dg, n) == sub);
     }
     CoopBootState s = {1, 2, 1}, d2;
@@ -189,8 +189,8 @@ int main() {
     row("flags_refused", val(b, n) == -1);
     n = coop_boot_encode(0x30, 1, nullptr, b, sizeof b); b[10] = 8;
     row("payload_len_refused", val(b, n) == -1);
-    n = coop_boot_encode(0x30, 1, nullptr, b, sizeof b); b[6] = 0x35;
-    row("sub35_refused", val(b, n) == -1);
+    n = coop_boot_encode(0x30, 1, nullptr, b, sizeof b); b[6] = 0x36;
+    row("sub36_refused", val(b, n) == -1);
     n = coop_boot_encode(0x30, 1, nullptr, b, sizeof b); b[6] = 0x21;
     row("sub21_not_mine", val(b, n) == -1 && !coop_boot_sub_mine(0x21) && coop_boot_sub_mine(0x3f) && coop_boot_sub_mine(0x30));
     row("null_refused", val(nullptr, 16) == -1);

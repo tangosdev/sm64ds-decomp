@@ -23,6 +23,9 @@
 //   0x33 CLOSE    host -> all. The end barrier is open. payload: 0 0 0 0
 //   0x34 HOST_LEFT host -> all, three times as the host process exits.
 //                 payload: 0 0 0 0
+//   0x35 BYE      guest -> all, three times as a guest quits the room on
+//                 purpose (REJOIN1). Only words: the others say "<name> left."
+//                 instead of "<name> lost connection." payload: 0 0 0 0
 //
 // WHO MAY SAY WHAT. READY / ARRIVED are only used by the host (from guests).
 // STATE / CLOSE / HOST_LEFT are only used by a guest, and only from the seat
@@ -47,6 +50,7 @@ enum : int {
     kCoopBootSubArrived  = 0x32,
     kCoopBootSubClose    = 0x33,
     kCoopBootSubHostLeft = 0x34,
+    kCoopBootSubBye      = 0x35,   // REJOIN1
     kCoopBootSubLo       = 0x30,
     kCoopBootSubHi       = 0x3f,
     kCoopBootPayload     = 4,
@@ -72,12 +76,12 @@ inline bool coop_boot_sub_mine(int sub) {
 }
 
 // Validates a whole SYNB datagram of this lane: head, sub-type, length 16, and
-// the payload rules above. Returns the sub-type (0x30..0x34) or -1.
+// the payload rules above. Returns the sub-type (0x30..0x35) or -1.
 inline int coop_boot_validate(const unsigned char *d, int len) {
     if (!d || len != kCoopBootDatagram) return -1;
     if (!hub_coop_validate(kHubTagCoopCtl, d, len)) return -1;
     const int sub = d[6];
-    if (sub < kCoopBootSubReady || sub > kCoopBootSubHostLeft) return -1;
+    if (sub < kCoopBootSubReady || sub > kCoopBootSubBye) return -1;
     const unsigned char *p = d + kHubCoopHeaderBytes;
     if (sub == kCoopBootSubState) {
         if (p[0] > 1 || p[1] > 3 || p[2] > 1 || p[3] != 0) return -1;
@@ -102,7 +106,7 @@ inline int coop_boot_encode(int sub, unsigned seq, const CoopBootState *st,
         if (!st) return 0;
         pl[0] = (unsigned char)st->go; pl[1] = (unsigned char)st->phase;
         pl[2] = (unsigned char)st->closed;
-    } else if (sub < kCoopBootSubReady || sub > kCoopBootSubHostLeft) {
+    } else if (sub < kCoopBootSubReady || sub > kCoopBootSubBye) {
         return 0;
     }
     return hub_coop_encode(kHubTagCoopCtl, sub, seq, pl, kCoopBootPayload, out,

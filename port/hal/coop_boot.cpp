@@ -30,6 +30,7 @@
 #include "comms_hub.h"
 #include "hub_presence.h"
 #include "coop_world.h"
+#include "player_list.h"
 #include "ui_text.h"
 
 #include <windows.h>
@@ -51,6 +52,7 @@ int port_adventure_hub_opening_held(void);
 int port_adventure_ghost_drawpos(int slot, int out[3]);
 int port_adventure_ghost_seat(int slot);
 short Vec3_HorzAngle(const void *a, const void *b);
+void port_chat_system_line(const char *text);   // hal/adv_chat.cpp: a gray note with no name (REJOIN1)
 extern unsigned char data_0209f498[];   // Stage's per-player stick record, 0x18 bytes each (probe only)
 extern unsigned char data_020a0de8[];   // touch records, 4 bytes each (probe only)
 extern int data_020a0e58[];             // pad mirror (probe only)
@@ -288,6 +290,160 @@ void leave(int code, const char *line);
 bool coop_leave_holds();
 void leave_host_left() { leave(kCoopExitHostLeft, "The host left. Room closed."); }
 
+// ==== REJOIN1 (run coopfix1): the room holds through a quiet host, and everyone hears who left and who came back ======
+// Tango 11-11: "if someone leaves or gets network issues, they should be able to join the lobby back and rejoin mid game".
+// Before this, a guest ended the room 1.5 s after the host's hub seat went quiet (3 s unheard), so a 4.5 s hiccup on the
+// host's line sent every guest to the title with "The host left", and a hiccup on the guest's OWN line did the same with
+// the same wrong words. Now, once the game is running (GO given, first level frame):
+//   * HOST_LEFT (the host's own quit) still ends the room at once.
+//   * A quiet host seat holds the room for SM64DS_COOP_HOST_GRACE_S (default 60, 2..600) with a gray line, and the game
+//     keeps ticking. The relay's ACKs tell whose line is out: they stop too when it is mine (comms_hub_relay_quiet_ms).
+//   * The host heard again (on its seat, or on a new seat once the old one is quiet: the STATE handler above) clears it.
+//   * Grace spent: today's in-place end, with honest words.
+// The roster lines ("<name> lost connection." / "<name> left." / "<name> is back." / "<name> joined.") run on every
+// console. SM64DS_COOP_REJOIN=0 turns all of it off (the before rows).
+struct Rejoin {
+    bool lost = false;       // the host's seat is quiet past the settle
+    bool mine = false;       // ...and the relay is quiet too: my own line is out
+    ULONGLONG since = 0;
+    int said = 0;            // 0 nothing said, 1 "lost the host", 2 "connection lost"
+} RJ;
+
+struct SeatWatch {
+    bool known = false;      // looked at once since the game started (no lines for the first look)
+    bool present = false;
+    unsigned epoch = 0;
+    bool ever = false;       // was in the room at some point this game
+    bool bye = false;        // said BYE before it went
+    bool join_pending = false;
+    ULONGLONG join_at = 0;
+    char name[kPlistNameMax + 1] = {0};
+};
+SeatWatch SW[4];
+bool g_sw_frozen = false;    // my own line is out: every seat looks gone, and none of that is news
+
+int host_grace_ms() {
+    int g = env_int("SM64DS_COOP_HOST_GRACE_S", 60);
+    if (g < 2) g = 2;
+    if (g > 600) g = 600;
+    return g * 1000;
+}
+
+bool my_line_out() {
+    return comms_hub_state() != kHubLive || comms_hub_relay_quiet_ms() > 2500u;
+}
+
+void rejoin_say(const char *line) {
+    port_chat_system_line(line);
+    LOG("REJOIN line: %s", line);
+}
+
+void rejoin_bye_heard(int seat) {
+    if (seat < 0 || seat > 3) return;
+    SW[seat].bye = true;
+    LOG("BYE from seat %d (a guest quit the room)", seat);
+}
+
+// The guest's host check, once the game runs. Called instead of the old 1.5 s rule.
+void check_host_quiet() {
+    const ULONGLONG now = tick();
+    HubSeatInfo si;
+    const bool here = comms_hub_state() == kHubLive && comms_hub_seat_info(C.host_seat, &si) && si.present;
+    if (here) {
+        if (RJ.lost) {
+            LOG("REJOIN the host's seat %d is heard again after %llu ms; the room goes on", C.host_seat,
+                (unsigned long long)(now - RJ.since));
+            rejoin_say(RJ.mine ? "Reconnected." : "The host is back.");
+        }
+        RJ = Rejoin{};
+        C.gone_since = 0;
+        return;
+    }
+    // a console that stalled for a few seconds drops every seat for a moment and gets them straight back
+    if (!C.gone_since) C.gone_since = now;
+    if (now - C.gone_since < 1500ULL) return;
+    const bool mine = my_line_out();
+    if (!RJ.lost) {
+        RJ.lost = true;
+        RJ.since = C.gone_since;
+        LOG("REJOIN the host's seat %d is quiet (hub %d, relay quiet %u ms): the room is held up to %d s", C.host_seat,
+            comms_hub_state(), comms_hub_relay_quiet_ms(), host_grace_ms() / 1000);
+    }
+    RJ.mine = mine;
+    const int want = mine ? 2 : 1;
+    if (RJ.said != want) {
+        RJ.said = want;
+        rejoin_say(mine ? "Connection lost. Reconnecting..." : "Lost the host. Reconnecting...");
+    }
+    if ((int)(now - RJ.since) >= host_grace_ms()) {
+        LOG("REJOIN no host for %d s: the room ends on this console", host_grace_ms() / 1000);
+        leave(kCoopExitNoHost, mine ? "Lost the connection. Left the room." : "Lost the connection to the host.");
+    }
+}
+
+// Who left and who came back, on every console (host included). The host's own seat is the guest's check above.
+void roster_watch() {
+    if (!comms_hub_coop_rejoin() || C.exiting) return;
+    const int me = my_seat();
+    if (my_line_out()) {
+        if (!g_sw_frozen) { g_sw_frozen = true; LOG("REJOIN roster lines paused: my own line is out"); }
+        return;
+    }
+    const ULONGLONG now = tick();
+    PlayerListView v;
+    player_list_view(&v);
+    for (int i = 0; i < v.n && i < kPlistMaxRows; ++i) {
+        const PlayerListRow &r = v.row[i];
+        if (!r.me && r.seat >= 0 && r.seat < 4 && r.name[0]) {
+            std::strncpy(SW[r.seat].name, r.name, kPlistNameMax);
+            SW[r.seat].name[kPlistNameMax] = 0;
+        }
+    }
+    const bool resync = g_sw_frozen;
+    if (g_sw_frozen) { g_sw_frozen = false; LOG("REJOIN roster lines back on: my line is back"); }
+    for (int s = 0; s < 4; ++s) {
+        if (s == me) continue;
+        SeatWatch &w = SW[s];
+        HubSeatInfo si;
+        const bool p = comms_hub_seat_info(s, &si) && si.present;
+        const unsigned ep = p ? si.join_epoch : w.epoch;
+        const bool host_seat = !C.host && s == C.host_seat;
+        if (!w.known || resync) {
+            if (resync && w.known && p && !w.present && w.ever)
+                LOG("REJOIN seat %d is here after my own line came back", s);
+            w.known = true;
+            w.present = p;
+            w.epoch = ep;
+            w.ever = w.ever || p;
+            w.join_pending = false;
+            continue;
+        }
+        char line[96];
+        const char *nm = w.name[0] ? w.name : "A player";
+        if (p && (!w.present || ep != w.epoch)) {
+            w.join_pending = !host_seat;   // the guest's host line is check_host_quiet's
+            w.join_at = now;
+            LOG("REJOIN seat %d %s (epoch %u)", s, w.ever ? "is back" : "joined", ep);
+        } else if (!p && w.present) {
+            LOG("REJOIN seat %d is gone (%s)", s, w.bye ? "it said BYE" : "no BYE: lost connection");
+            if (!host_seat) {
+                std::snprintf(line, sizeof line, w.bye ? "%s left." : "%s lost connection.", nm);
+                rejoin_say(line);
+            }
+            w.join_pending = false;
+        }
+        if (w.join_pending && (w.name[0] || now - w.join_at > 3000ULL)) {
+            // wait a moment for the name (SYNI comes every 2 s)
+            std::snprintf(line, sizeof line, w.ever ? "%s is back." : "%s joined.", nm);
+            rejoin_say(line);
+            w.join_pending = false;
+        }
+        if (p) { w.ever = true; w.bye = false; }
+        w.present = p;
+        w.epoch = ep;
+    }
+}
+
 // ---- receive -----------------------------------------------------------------
 void drop_role(int seat, int sub) {
     ++C.st.dropped_role;
@@ -316,7 +472,14 @@ void handle_mine(int seat, const unsigned char *d, int len) {
     case kCoopBootSubState: {
         if (C.host) { drop_role(seat, sub); return; }
         if (C.host_seat < 0) { C.host_seat = seat; LOG("host is seat %d", seat); }
-        if (seat != C.host_seat) { drop_role(seat, sub); return; }
+        if (seat != C.host_seat) {
+            // REJOIN1: a host that came back on another seat number is the host still, once its old seat is quiet
+            HubSeatInfo hi;
+            const bool old_here = comms_hub_seat_info(C.host_seat, &hi) && hi.present;
+            if (!comms_hub_coop_rejoin() || old_here) { drop_role(seat, sub); return; }
+            LOG("REJOIN the host speaks from seat %d now (seat %d is quiet)", seat, C.host_seat);
+            C.host_seat = seat;
+        }
         CoopBootState s;
         if (!coop_boot_decode_state(d, len, &s)) { ++C.st.dropped_bad; return; }
         ++C.st.state_recv;
@@ -345,6 +508,9 @@ void handle_mine(int seat, const unsigned char *d, int len) {
         ++C.st.hostleft_recv;
         C.host_left_msg = true;
         LOG("HOST_LEFT heard");
+        break;
+    case kCoopBootSubBye:
+        rejoin_bye_heard(seat);
         break;
     default: break;
     }
@@ -431,7 +597,9 @@ void run_forge() {
 // ---- the per-frame engine ------------------------------------------------------
 void check_host_gone() {
     if (C.host || C.exiting) return;
-    if (C.host_left_msg) leave_host_left();
+    if (C.host_left_msg) { leave_host_left(); return; }
+    // REJOIN1: once the game runs, a quiet host is held for the grace (the boot gates keep the old rule below)
+    if (comms_hub_coop_rejoin() && C.released && C.at_first_frame && C.host_seat >= 0) { check_host_quiet(); return; }
     if (C.host_seat >= 0 && comms_hub_state() == kHubLive) {
         HubSeatInfo si;
         ULONGLONG &gone_since = C.gone_since;
@@ -452,6 +620,7 @@ void check_host_gone() {
 void service() {
     comms_hub_pump();
     check_host_gone();
+    if (C.released && C.at_first_frame) roster_watch();   // REJOIN1
     const ULONGLONG now = tick();
     if (comms_hub_state() != kHubLive) {
         // a host with no live hub plays alone: no one to wait for
@@ -1190,6 +1359,9 @@ void lv_restart(const char *why, bool mods_refused = false) {
 /* the coop layer of this file back to a process that never was in a room (the title exists: title_seen stays) */
 void boot_state_reset() {
     C = Ctl{};
+    RJ = Rejoin{};                        // REJOIN1
+    for (SeatWatch &w : SW) w = SeatWatch{};
+    g_sw_frozen = false;
     C.title_seen = true;
     S9 = SpawnState{};
 }
@@ -1391,6 +1563,12 @@ extern "C" void port_coop_leave_begin(int frame) {
         for (int i = 0; i < 3; ++i)
             if (send_sub(kCoopBootSubHostLeft, nullptr)) ++C.st.hostleft_sent;
         LOG("f%d host quitting the room: HOST_LEFT sent %u times (what the exit used to send)", frame, C.st.hostleft_sent);
+    }
+    if (!C.host && !C.exiting && comms_hub_state() == kHubLive && comms_hub_coop_rejoin()) {   // REJOIN1
+        unsigned n = 0;
+        for (int i = 0; i < 3; ++i)
+            if (send_sub(kCoopBootSubBye, nullptr)) ++n;
+        LOG("f%d guest quitting the room: BYE sent %u times", frame, n);
     }
     if (C.host) coop_save_leave_flush();
     C.exiting = true;

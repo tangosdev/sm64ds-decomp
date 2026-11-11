@@ -433,6 +433,52 @@ int g_ref_cap_ms = -1;
 int g_delay_ms = 0, g_loss_pct = 0, g_report_s = 10;
 unsigned g_rng = 0x2545F491u;
 
+// REJOIN1 (run coopfix1): SM64DS_HUB_BLACKOUT=<at_ms>:<for_ms>, off by default. From at_ms after the install, for for_ms,
+// this console neither sends nor takes a datagram (a pulled cable): the proof rows of a dropped connection. Up to four
+// windows, separated by ';' or ','.
+enum : int { kBlackoutMax = 4 };
+unsigned g_bo_from[kBlackoutMax], g_bo_to[kBlackoutMax];
+int g_bo_n = 0;
+unsigned g_install_ms = 0;
+LONG g_bo_on = 0;                   // the I/O thread's view, for the transition lines
+volatile LONG g_bo_dropped = 0;     // sends dropped by the blackout
+bool blackout_now(unsigned now) {
+    if (!g_bo_n) return false;
+    const unsigned t = now - g_install_ms;
+    for (int i = 0; i < g_bo_n; ++i)
+        if (t >= g_bo_from[i] && t < g_bo_to[i]) return true;
+    return false;
+}
+void blackout_parse() {
+    g_bo_n = 0;
+    const char *e = std::getenv("SM64DS_HUB_BLACKOUT");
+    if (!e || !*e) return;
+    const char *q = e;
+    while (*q && g_bo_n < kBlackoutMax) {
+        char *end = nullptr;
+        const long at = std::strtol(q, &end, 10);
+        if (!end || *end != ':') break;
+        const long len = std::strtol(end + 1, &end, 10);
+        if (at >= 0 && len > 0) {
+            g_bo_from[g_bo_n] = (unsigned)at;
+            g_bo_to[g_bo_n] = (unsigned)(at + len);
+            std::fprintf(stderr, "[hub] test: blackout %d from %ld ms for %ld ms after the install\n", g_bo_n, at, len);
+            ++g_bo_n;
+        }
+        q = end;
+        while (*q == ';' || *q == ',' || *q == ' ') ++q;
+    }
+}
+
+// REJOIN1: SM64DS_COOP_REJOIN=0 is the old behaviour (the before rows): a coop hub re-pairs for any seat, and a guest
+// ends the room 1.5 s after the host's seat goes quiet. Default on.
+bool coop_rejoin_on() {
+    static int v = -1;
+    if (v < 0) { const char *e = std::getenv("SM64DS_COOP_REJOIN"); v = (e && *e == '0') ? 0 : 1; }
+    return v != 0;
+}
+const unsigned kCoopSeatRetryMs = 12000;   // REJOIN1: the relay frees a silent coop seat after 10 s (relay.py hub idle)
+
 struct Held { unsigned due; int len; sockaddr_in from; unsigned char b[kHubMaxDatagram]; };
 enum : int { kHeldRing = 512 };
 Held g_held[kHeldRing];   // I/O thread only
@@ -461,6 +507,7 @@ const char *state_name(int s) {
 // calls happen outside it.
 // ---------------------------------------------------------------------------
 void raw_send_to(const unsigned char *p, int len, const sockaddr_in &to) {
+    if (g_bo_n && blackout_now(now_ms())) { ::InterlockedIncrement(&g_bo_dropped); return; }   // REJOIN1 test knob
     WS.sendto(g_sock, (const char *)p, len, 0, (const sockaddr *)&to,
               (int)sizeof to);
 }
@@ -767,7 +814,7 @@ void on_ack(const unsigned char *p, unsigned now) {
                          "playing solo and asking again once a second\n");
         g_state = kHubFull;
         return;
-    case 4:
+    case 4: {
         // ARENA: the seat is pinned to a body, and the relay holds a console's
         // seat until it has been silent 3 s (relay.py SEAT_RECLAIM_S, HELLO role 3). A
         // console that comes back faster than that (a restart is usually 4 s)
@@ -777,16 +824,18 @@ void on_ack(const unsigned char *p, unsigned now) {
         // a seat that is still taken after kArenaSeatRetryMs is a live console,
         // and the old behaviour (ask for any free seat) takes over. Lockstep
         // and adventure hubs never keep the pin.
-        if (g_arena && g_want_seat != 0xFF) {
+        const bool coop_pin = !g_arena && g_room == kHubRoomCoop && coop_rejoin_on();   // REJOIN1: my old coop seat
+        if ((g_arena || coop_pin) && g_want_seat != 0xFF) {
+            const unsigned retry = coop_pin ? kCoopSeatRetryMs : kArenaSeatRetryMs;
             if (g_seat_taken_since == 0) {
                 g_seat_taken_since = now ? now : 1;
                 std::fprintf(stderr, "[hub] seat %d is still held by the "
                              "console that was here; asking again for it "
                              "(up to %u ms)\n", g_want_seat,
-                             kArenaSeatRetryMs);
+                             retry);
                 return;
             }
-            if (now - g_seat_taken_since < kArenaSeatRetryMs) return;
+            if (now - g_seat_taken_since < retry) return;
             std::fprintf(stderr, "[hub] seat %d is held by a live console; "
                          "asking for any free seat\n", g_want_seat);
             g_want_seat = 0xFF;
@@ -797,6 +846,7 @@ void on_ack(const unsigned char *p, unsigned now) {
                      "seat\n", g_want_seat);
         g_want_seat = 0xFF;
         return;
+    }
     default:
         if (g_state != kHubRefused) {
             if (g_arena)
@@ -954,6 +1004,12 @@ DWORD WINAPI hub_thread(void *) {
                     std::fprintf(stderr, "[hub] no ACK from the relay for 5 s;"
                                  " re-pairing\n");
                     g_state = kHubPairing;
+                    if (!g_arena && g_room == kHubRoomCoop && coop_rejoin_on() && g_seat >= 0 && g_seat < kHubPartySeats) {
+                        // REJOIN1: a coop console comes back on the seat it had, so nothing keyed on seats shuffles
+                        g_want_seat = g_seat;
+                        g_seat_taken_since = 0;
+                        std::fprintf(stderr, "[hub] coop: asking the relay for my old seat %d again\n", g_seat);
+                    }
                     state = g_state;
                 }
             }
@@ -984,6 +1040,14 @@ DWORD WINAPI hub_thread(void *) {
             send_ref_ping(relay, me);
         }
 
+        if (g_bo_n) {   // REJOIN1 test knob: say when a blackout starts and ends
+            const LONG on = blackout_now(now) ? 1 : 0;
+            if (on != g_bo_on) {
+                g_bo_on = on;
+                std::fprintf(stderr, "[hub] test: blackout %s at %u ms after the install (%ld sends dropped so far)\n",
+                             on ? "STARTS" : "ENDS", now - g_install_ms, (long)g_bo_dropped);
+            }
+        }
         fd_set rd;
         FD_ZERO(&rd);
         FD_SET(g_sock, &rd);
@@ -1007,6 +1071,11 @@ DWORD WINAPI hub_thread(void *) {
                 if (n > kHubMaxDatagram) {
                     Lock l;
                     ++g_st.drop_cap;
+                    continue;
+                }
+                if (g_bo_n && blackout_now(t)) {   // REJOIN1 test knob: the cable is out
+                    Lock l;
+                    ++g_st.drop_test;
                     continue;
                 }
                 if (g_loss_pct > 0) {
@@ -1179,6 +1248,8 @@ bool install_open(bool want_relay, const char *relay, const char *code,
     g_delay_ms = env_int("SM64DS_HUB_DELAY_MS", 0, 0, 2000);
     g_loss_pct = env_int("SM64DS_HUB_LOSS_PCT", 0, 0, 90);
     g_report_s = env_int("SM64DS_HUB_REPORT_S", 10, 0, 3600);
+    g_install_ms = now_ms();
+    blackout_parse();
     g_rng ^= (unsigned)::GetCurrentProcessId() * 2654435761u;
 
     if (!ws_up()) return true;
@@ -1527,6 +1598,15 @@ int comms_hub_state() {
     Lock l;
     return g_installed ? g_state : kHubOff;
 }
+
+// REJOIN1: how long since the relay last answered a HELLO (relay mode, after the first pairing); 0 otherwise. A guest
+// whose own line is out stops hearing the relay too, which is how it tells "my connection" from "the host's".
+unsigned comms_hub_relay_quiet_ms() {
+    Lock l;
+    if (g_mode != kModeRelay || !g_ever_paired) return 0;
+    return now_ms() - g_last_ack;
+}
+bool comms_hub_coop_rejoin() { return coop_rejoin_on(); }
 
 int comms_hub_my_seat() {
     Lock l;

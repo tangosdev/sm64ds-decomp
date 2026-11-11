@@ -287,6 +287,13 @@ int comms_hub_state();
 
 // My seat, 0..15, or -1 until the relay's ACK (loopback: the bound port).
 int comms_hub_my_seat();
+// REJOIN1 (run coopfix1). Milliseconds since the relay last ACKed this console's HELLO (relay mode, once paired), else
+// 0. And SM64DS_COOP_REJOIN (default on; 0 = the old drop rules, for the before rows): a coop hub that loses the relay
+// asks for its old seat back, and a guest holds the room through a quiet host (hal/coop_boot.cpp).
+// Test knob SM64DS_HUB_BLACKOUT=<at_ms>:<for_ms>[;...] (off by default): no datagram in or out in that window, counted
+// from the install.
+unsigned comms_hub_relay_quiet_ms();
+bool comms_hub_coop_rejoin();
 
 // ---------------------------------------------------------------------------
 // SEND / RECEIVE. Thread-safe; never block. The hub runs its own I/O thread
