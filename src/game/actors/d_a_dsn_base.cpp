@@ -58,26 +58,6 @@ enum {
                                the particle path in StateSlam */
 };
 
-/* The per-leaf resource table both InitResources store into mFileTable (the
- * Thwomp's at data_ov091_02135138, Grindel's at data_ov025_02113814). Shaped
- * from its consumers: Init loads the model/collision files,
- * binds the CLPS block and, when [3] is non-null, the texture animation;
- * CleanupResources releases [0], [1] and [3]; Render animates only when [3]
- * is set; UpdateDropShadow reads [4]/[5] as shadow extents. Owned by the
- * leaf overlays, never defined here. */
-struct DsnBaseFileTable {
-    SharedFilePtr *model;     /* +0x00, BMD */
-    SharedFilePtr *collision; /* +0x04, KCL */
-    CLPS_Block *clps;         /* +0x08, CLPS block: not a file, not released */
-    SharedFilePtr *texAnim;   /* +0x0c, BTP, or null when the leaf has none */
-    int shadowExtentX;        /* +0x10, DropShadow X base */
-    int shadowExtentZ;        /* +0x14, DropShadow Z base */
-};
-
-#ifndef SM64DS_PLATFORM_PC
-typedef char DsnBaseFileTable_size_must_be_0x18[sizeof(DsnBaseFileTable) == 0x18 ? 1 : -1];
-#endif
-
 /* 0x360..0x39f is the same on both leaves, and daDsn_c.h / daDkk_c.h already
  * declare it, so the view stays in this TU. Based at the actor, shadowMtx.m[9]
  * is the store at 0x384. */
@@ -249,7 +229,7 @@ void daDsnBase_c::UpdateDropShadow() {
     }
     int radius = FX_MUL(heightAboveGround, 0x60);
     s32 *clipRadius = &mClipRadius;
-    DsnBaseFileTable *files = (DsnBaseFileTable *)mFileTable;
+    DsnBaseFileTable *files = mFileTable;
     int scaleX = files->shadowExtentX - radius;
     if (scaleX < 0xa000)
         scaleX = 0xa000;
@@ -280,11 +260,11 @@ int daDsnBase_c::CleanupResources() {
     DsnBaseFileTable *files;
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    files = (DsnBaseFileTable *)mFileTable;
+    files = mFileTable;
     files->model->Release();
-    files = (DsnBaseFileTable *)mFileTable;
+    files = mFileTable;
     files->collision->Release();
-    files = (DsnBaseFileTable *)mFileTable;
+    files = mFileTable;
     if (files->texAnim != 0)
         files->texAnim->Release();
     return 1;
@@ -294,7 +274,7 @@ int daDsnBase_c::CleanupResources() {
  * when the leaf bound one: Grindel's table carries null at [3], the Thwomp's
  * carries its BTP handle. */
 int daDsnBase_c::Render() {
-    DsnBaseFileTable *files = (DsnBaseFileTable *)mFileTable;
+    DsnBaseFileTable *files = mFileTable;
     if (files->texAnim != 0)
         mTextureSequence.Update(mModel.data);
     mModel.Render(0);
@@ -313,13 +293,13 @@ s32 daDsnBase_c::Init() {
     CLPS_Block *clps;
     SharedFilePtr *texAnim;
 
-    files = (DsnBaseFileTable *)mFileTable;
+    files = mFileTable;
     bmd = (BMD_File *)dExtSimpleModel_c::LoadFile(*files->model);
     mModel.SetFile(bmd, 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
-    files = (DsnBaseFileTable *)mFileTable;
+    files = mFileTable;
     kcl = (KCL_File *)dBgW_Kc::LoadFile(*files->collision);
     clps = files->clps;
     ((dBgW_KcMbg *)(&mMeshCollider))
@@ -327,13 +307,13 @@ s32 daDsnBase_c::Init() {
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
 
-    texAnim = ((DsnBaseFileTable *)mFileTable)->texAnim;
+    texAnim = mFileTable->texAnim;
     if (texAnim != 0) {
         dExtAnmTexPat_c::LoadFile(*texAnim);
-        files = (DsnBaseFileTable *)mFileTable;
+        files = mFileTable;
         dExtAnmTexPat_c::Prepare(*(BMD_File *)files->model->filePtr,
                                  *(BTP_File *)files->texAnim->filePtr);
-        files = (DsnBaseFileTable *)mFileTable;
+        files = mFileTable;
         texAnim = files->texAnim;
         mTextureSequence.SetFile(*(BTP_File *)texAnim->filePtr, 0x40000000, 0x1000, 0);
     }
