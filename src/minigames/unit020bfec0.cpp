@@ -26,6 +26,7 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 #include "common.h"
 #include "SharedFilePtr.h"
 #include "PlayerInput.h"
@@ -336,12 +337,11 @@ extern "C" void FlowerFace_Draw(void *self) {
 
     light.x = 0;
     light.y = 0;
-    light.z = 0xfffff008;
+    light.z = -0xff8;
     func_0203cd80(&light, 0);
     func_0203ccd4(&light, 0x600);
 
-    REG_LIGHT_VECTOR = (((short)light.x >> 3) & 0x3ff) | ((((short)light.y >> 3) & 0x3ff) << 10) |
-                       ((((short)light.z >> 3) & 0x3ff) << 20);
+    G3_LightVector(GX_LIGHTID_0, light.x, light.y, light.z);
 
     func_02016a14(&FLOWERFACE(c)->mModel, 0x2bff);
     func_02016a04(&FLOWERFACE(c)->mModel, 0x1211);
@@ -875,25 +875,21 @@ extern "C" void Presenter_Draw(char *c) {
 
     keyLight[0] = 0;
     keyLight[1] = 0;
-    keyLight[2] = 0xfffff008;
+    keyLight[2] = -0xff8;
     fillLight[0] = 0;
     fillLight[1] = 0;
-    fillLight[2] = 0xfffff008;
+    fillLight[2] = -0xff8;
     func_02016a04(&PRESENTER(c)->mFace, 0x3d6d);
     func_0203cd80(keyLight, -0x2000);
     func_0203ccd4(keyLight, 0x2000);
     func_0203cd80(fillLight, 0x4200);
     func_0203ccd4(fillLight, 0x7000);
 
-    REG_LIGHT_COLOR = 0x7fff;
-    REG_LIGHT_VECTOR = (((short)keyLight[0] >> 3) & 0x3ff) |
-                       ((((short)keyLight[1] >> 3) & 0x3ff) << 10) |
-                       ((((short)keyLight[2] >> 3) & 0x3ff) << 20);
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    G3_LightVector(GX_LIGHTID_0, keyLight[0], keyLight[1], keyLight[2]);
     components = (char *)&PRESENTER(c)->mFace.data;
-    REG_LIGHT_COLOR = 0x4000294b;
-    REG_LIGHT_VECTOR = (((short)fillLight[0] >> 3) & 0x3ff) |
-                       ((((short)fillLight[1] >> 3) & 0x3ff) << 10) |
-                       ((((short)fillLight[2] >> 3) & 0x3ff) << 20) | 0x40000000;
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(11, 10, 10));
+    G3_LightVector(GX_LIGHTID_1, fillLight[0], fillLight[1], fillLight[2]);
 
     /* materials is mFace's material table (ModelComponents +0x4, 0x30-byte records);
        0x104..0x138 are +0x14/+0x18 of materials 5 and 6, which BMD_Material
@@ -1486,23 +1482,18 @@ extern "C" void Dealer_Draw(void *self) {
 
     keyLight.x = 0;
     keyLight.y = 0;
-    keyLight.z = 0xfffff008;
+    keyLight.z = -0xff8;
     spinLight.x = 0;
     spinLight.y = 0;
-    spinLight.z = 0xfffff008;
+    spinLight.z = -0xff8;
     func_0203cd80(&keyLight, -0x1000);
     func_0203ccd4(&keyLight, 0x1000);
 
     angle = DEALER(c)->mLightAngle;
     func_0203ccd4(&spinLight, angle);
 
-    REG_LIGHT_VECTOR = (((short)keyLight.x >> 3) & 0x3ff) |
-                       ((((short)keyLight.y >> 3) & 0x3ff) << 10) |
-                       ((((short)keyLight.z >> 3) & 0x3ff) << 20);
-
-    REG_LIGHT_VECTOR = (((short)spinLight.x >> 3) & 0x3ff) |
-                       ((((short)spinLight.y >> 3) & 0x3ff) << 10) |
-                       ((((short)spinLight.z >> 3) & 0x3ff) << 20) | 0x40000000;
+    G3_LightVector(GX_LIGHTID_0, keyLight.x, keyLight.y, keyLight.z);
+    G3_LightVector(GX_LIGHTID_1, spinLight.x, spinLight.y, spinLight.z);
 
     func_02016a14(&DEALER(c)->mModel, 0x7fff);
     func_02016a04(&DEALER(c)->mModel, 0x4210);

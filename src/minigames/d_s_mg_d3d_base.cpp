@@ -14,6 +14,7 @@
 
 #include "dScMgD3DBase_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 #include "decl_common.h"
 #include "types.h"
 #include "nitro/gx/gx.h"
@@ -291,10 +292,10 @@ void dScMgD3DBase_c::AfterCleanupResources(unsigned int vfSuccess)
 {
     if (vfSuccess == 2) {
         CleanCommonModelDataArr();
-        *(int*)0x40004c8 = 0x296a5800;
-        *(int*)0x40004cc = 0x7fff;
-        *(int*)0x40004c8 = 0x696a5800;
-        *(int*)0x40004cc = 0x40007fff;
+        G3_LightVector(GX_LIGHTID_0, 0, -0xb50, -0xb50);
+        G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+        G3_LightVector(GX_LIGHTID_1, 0, -0xb50, -0xb50);
+        G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
         D3D_ReleaseSubBg1(this);
         Ov004_Deallocate(sD3DLanguageFile);
         Ov004_Deallocate(sD3DSubObjPalette);

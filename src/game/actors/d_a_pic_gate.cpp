@@ -47,6 +47,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g3imm.h"
 #include "nitro/gx/g3imm_cmd.h"
+#include "nitro/gx/g3imm_light.h"
 #include "nitro/hw/registers.h"
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
@@ -430,8 +431,8 @@ void daPicGate_c::DrawFlat() {
     MTX_Concat43(&mMtx, &data_0209b3ec, &tmp);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(&tmp);
-    REG_LIGHT_VECTOR = 0xe0000000;
-    REG_LIGHT_COLOR = 0xc0007fff;
+    G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
+    G3_LightColor(GX_LIGHTID_3, GX_RGB(31, 31, 31));
     LoadMaterial();
 
     G3_Scale(0x20000, 0x20000, 0x20000);
@@ -495,8 +496,8 @@ void daPicGate_c::DrawRippleEnvMapped() {
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(&tmp);
     G3_TexCoord(0x40000, 0x40000);
-    REG_LIGHT_VECTOR = 0xe0000000;
-    REG_LIGHT_COLOR = 0xc0007fff;
+    G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
+    G3_LightColor(GX_LIGHTID_3, GX_RGB(31, 31, 31));
     {
         struct Ov080Mat *m2 = (struct Ov080Mat *)mTexRecord;
         REG_DIF_AMB = m2->difAmb | 0x7fff0000;

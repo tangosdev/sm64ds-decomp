@@ -1,6 +1,7 @@
 //cpp
 #include "dFdBrightness_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/g2.h"
 #include "nitro/gx/gx_load.h"
@@ -789,8 +790,8 @@ s32 dScMgTrampoline2_c::Behavior() {
     return 1;
 }
 
-/* Vtable slot 9. The two volatile stores set the 3D fog and clear registers
- * (0x040004c8 and 0x040004cc) from a rotated vector. */
+/* Vtable slot 9. Light 0 points down -z tilted -0x4000 about x; lights 0 and
+ * 1 are white. */
 s32 dScMgTrampoline2_c::Render() {
     int m[3];
     int count;
@@ -799,14 +800,12 @@ s32 dScMgTrampoline2_c::Render() {
 
     m[0] = 0;
     m[1] = 0;
-    m[2] = 0xfffff008;
+    m[2] = -0xff8;
     func_0203cd80(m, -0x4000);
 
-    *(volatile int *)0x40004c8 = (((short)m[0] >> 3) & 0x3ff) |
-                                 ((((short)m[1] >> 3) & 0x3ff) << 10) |
-                                 ((((short)m[2] >> 3) & 0x3ff) << 20);
-    *(volatile int *)0x40004cc = 0x7fff;
-    *(volatile int *)0x40004cc = 0x40007fff;
+    G3_LightVector(GX_LIGHTID_0, m[0], m[1], m[2]);
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
 
     TrmpFx_DrawAll();
     Jump2Popup_DrawAll();

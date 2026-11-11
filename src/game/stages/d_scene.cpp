@@ -23,6 +23,7 @@
 #include "nitro/gx/g3x.h"
 #include "GX.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 
 #include "Matrix2x2.h"
 
@@ -231,9 +232,9 @@ void dScene_c::Initialise3dGraphics()
     ResetHardwareRegisters();
     G3X_Init();
     GX_SetGraphicsMode(1, 0, 1);
-    REG_LIGHT_VECTOR = 0x296a5800;
-    REG_LIGHT_COLOR = 0x7fff;
-    REG_DIF_AMB = 0x7fff;
+    G3_LightVector(GX_LIGHTID_0, 0, -0xb50, -0xb50); /* (0, -1/sqrt2, -1/sqrt2) */
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+    REG_DIF_AMB = GX_RGB(31, 31, 31);
     REG_SPE_EMI = 0;
     ::Initialise3dGraphics(0);
 }

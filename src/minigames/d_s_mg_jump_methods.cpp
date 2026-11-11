@@ -22,6 +22,7 @@
 
 #include "dScMgJump_c.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g3imm_light.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "types.h"
@@ -393,9 +394,9 @@ s32 dScMgJump_c::Behavior()
     return 1;
 }
 
-/* Slot 9. Draws the instruction rows while mDrawSubScreen == 1, then programs the
- * light vector and light color registers at 0x040004c8 and 0x040004cc
- * (lights 0 and 1, hence volatile) and renders the model. The row
+/* Slot 9. Draws the instruction rows while mDrawSubScreen == 1, then sets
+ * lights 0 and 1 (white, both tilted by -0x2000 about x) and renders the
+ * model. The row
  * sprites and the ov006 draw helpers are unnamed in symbols.txt. */
 s32 dScMgJump_c::Render()
 {
@@ -424,26 +425,20 @@ s32 dScMgJump_c::Render()
         int m[3];
         m[0] = 0;
         m[1] = 0;
-        m[2] = 0xfffff008;
+        m[2] = -0xff8;
         func_0203cd80(m, -0x2000);
-        *(volatile int *)0x40004c8 =
-            (((short)m[0] >> 3) & 0x3ff) |
-            ((((short)m[1] >> 3) & 0x3ff) << 10) |
-            ((((short)m[2] >> 3) & 0x3ff) << 20);
-        *(volatile int *)0x40004cc = 0x7fff;
-        *(volatile int *)0x40004cc = 0x40007fff;
+        G3_LightVector(GX_LIGHTID_0, m[0], m[1], m[2]);
+        G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
+        G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
         Matrix4x3_FromTranslation(&data_020a0e68, 0, -0xef000, 0);
     }
     {
         int m[3];
         m[0] = 0;
         m[1] = 0;
-        m[2] = 0xfffff008;
+        m[2] = -0xff8;
         func_0203cd80(m, -0x2000);
-        *(volatile int *)0x40004c8 =
-            ((((short)m[0] >> 3) & 0x3ff) |
-            ((((short)m[1] >> 3) & 0x3ff) << 10) |
-            ((((short)m[2] >> 3) & 0x3ff) << 20)) | 0x40000000;
+        G3_LightVector(GX_LIGHTID_1, m[0], m[1], m[2]);
     }
 
     *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
