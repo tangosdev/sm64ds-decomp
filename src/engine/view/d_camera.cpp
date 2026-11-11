@@ -46,6 +46,7 @@
 #include "PathPtr.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "OAM.h"
 #include "nitro/gx/g2.h"
@@ -75,7 +76,6 @@ extern dCamera_c::State data_0209b128;
 extern Matrix4x3 data_0209b41c;
 extern unsigned int gNextActorUpdateMask;
 
-extern s16 FX_SinCosTable_[];
 extern void *data_02086efc;
 extern void *data_02086f08;
 extern s32 data_02086f14[3];
@@ -337,11 +337,11 @@ int dCamera_c::Behavior()
                 flag = 1;
             else
                 flag = IsUnderwater();
-            mWeather = Particle::System::NewWeather(mWeather, (u32)weather, weatherPos[0], weatherPos[1], weatherPos[2],
-                                                    0, flag);
+            mWeather = Particle::System::NewWeather(mWeather, (u32)weather, weatherPos[0],
+                                                    weatherPos[1], weatherPos[2], 0, flag);
             if (weather == 0x86) {
-                mWeather2 = Particle::System::NewWeather(mWeather2, 0x87, weatherPos[0], weatherPos[1],
-                                                         weatherPos[2], 0, 1);
+                mWeather2 = Particle::System::NewWeather(mWeather2, 0x87, weatherPos[0],
+                                                         weatherPos[1], weatherPos[2], 0, 1);
             }
         }
     }
@@ -349,7 +349,7 @@ int dCamera_c::Behavior()
     {
         if (IsPlayer(mTargetPlayer)) {
             daPly_c *player = (daPly_c *)mTargetPlayer;
-            s32 waterLine = data_0209f32c - (FX_SinCosTable_[((u16)mAngleX >> 4) * 2] * 0x10);
+            s32 waterLine = data_0209f32c - FX_SinIdx((u16)mAngleX >> 4) * 0x10;
             if (!(mFlags & 1)) {
                 if (player->mIsUnderwater != 0 || player->mIsInShallowWater != 0) {
                     if (pos.y <= waterLine) {
@@ -384,6 +384,9 @@ static inline void ToCameraUnits(Vector3 &v) {
     SetVec(v, (v.x + 4) >> 3, (v.y + 4) >> 3, (v.z + 4) >> 3);
 }
 
+/* Builds this frame's view: last frame's eye and target when the camera barely
+ * moved (no sub-unit jitter), the FOV blend and fixed-view override, the
+ * vertical, roll and FOV shakes, then the projection and the look-at matrix. */
 int dCamera_c::Render()
 {
     Vector3 target;
@@ -434,13 +437,13 @@ int dCamera_c::Render()
 
     s16 rollShake = mRollShake;
     if (rollShake != 0) {
-        s16 sin = FX_SinCosTable_[((s32)(u16)mRollShakePhase >> 4) * 2];
+        s16 sin = FX_SinIdx((u16)mRollShakePhase >> 4);
         roll += (s16)FX_MUL(rollShake, sin);
     }
 
     s16 fovShake = mFovShake;
     if (fovShake != 0) {
-        s16 cos = FX_SinCosTable_[((s32)(u16)mFovShakePhase >> 4) * 2 + 1];
+        s16 cos = FX_CosIdx((u16)mFovShakePhase >> 4);
         s32 scaled = FX_MUL(cos, 0x360);
         fov += (fovShake * scaled) << 4 >> 16;
     }
@@ -457,9 +460,8 @@ int dCamera_c::Render()
         scaleW = data_0209ee90[0x44 / 4];
     }
 
-    s32 idx = ((s32)(u16)fov >> 4) * 2;
-    G3i_PerspectiveW_(FX_SinCosTable_[idx], FX_SinCosTable_[idx + 1], mAspect, mNear, mFar, scaleW,
-                      1, (Matrix4x3 *)0);
+    G3i_PerspectiveW_(FX_SinIdx((u16)fov >> 4), FX_CosIdx((u16)fov >> 4), mAspect, mNear, mFar,
+                      scaleW, 1, (Matrix4x3 *)0);
 
     ToCameraUnits(target);
     ToCameraUnits(eye);
@@ -478,7 +480,6 @@ int dCamera_c::Render()
     dView_c::Render();
     return 1;
 }
-
 
 /* No-op override; the camera does nothing extra when flagged for destruction. */
 void dCamera_c::OnPendingDestroy()
@@ -499,14 +500,11 @@ int dCamera_c::CleanupResources()
     return 1;
 }
 
-extern "C" {
 void dCamera_c::SetFovAngle(short arg) {
-    int i = (int)(unsigned short)arg >> 4;
-    int j = i * 2;
-    mInvSinFov = FX_Inv(FX_SinCosTable_[j]);
-    mInvCosFov = FX_Inv(FX_SinCosTable_[j + 1]);
+    int idx = (u16)arg >> 4;
+    mInvSinFov = FX_Inv(FX_SinIdx(idx));
+    mInvCosFov = FX_Inv(FX_CosIdx(idx));
     data_0209f43c.Func_020156DC(mAspect, arg, mNear, mFar);
-}
 }
 
 /* Shake from a point (landings, bonks, ground pounds, boss steps): if the
@@ -858,7 +856,6 @@ void dCamera_c::func_0200cf40() {
     SetFovAngle(mFovAngle);
     func_0200cce4();
 }
-
 
 void dCamera_c::func_0200cce4() {
     VecFx32 vec;
@@ -2031,7 +2028,6 @@ void dCamera_c::func_0200af20(Vector3 *v1, Vector3 *v2, short *out) {
     Vector3 *f = (Vector3 *)mFixedViewPos;
     int *b;
     unsigned short ang;
-    int idx;
     int y;
     int z;
 
@@ -2057,11 +2053,10 @@ void dCamera_c::func_0200af20(Vector3 *v1, Vector3 *v2, short *out) {
     v1->y = y >> 1;
     v1->z = z;
     ang = Vec3_HorzAngle(v1, &mTargetPos);
-    idx = (ang >> 4) * 2;
 
     v2->y = mTargetPos.y + 0x8f7690;
-    v2->x = mTargetPos.x + FX_MUL(FX_SinCosTable_[idx], 0x15a6f80);
-    v2->z = mTargetPos.z + FX_MUL(FX_SinCosTable_[idx + 1], 0x15a6f80);
+    v2->x = mTargetPos.x + FX_MUL(FX_SinIdx(ang >> 4), 0x15a6f80);
+    v2->z = mTargetPos.z + FX_MUL(FX_CosIdx(ang >> 4), 0x15a6f80);
 
     if (b != 0) {
         {
@@ -2417,9 +2412,8 @@ s32 dCamera_c::func_02009e70() {
                                     fp = Vec3_HorzLen(&sp40);
                                     sp18 = cstd::atan2(-sp40.y, fp);
                                     ApproachAngle((s16 *)&sp18, sb, 0x20, 0x800, 0);
-                                    t0 = (sp18 >> 4) * 2;
-                                    sp40.y = FX_MUL(sp28, -FX_SinCosTable_[t0]);
-                                    t0 = FX_Div(FX_MUL(sp28, FX_SinCosTable_[t0 + 1]), fp);
+                                    sp40.y = FX_MUL(sp28, -FX_SinIdx(sp18 >> 4));
+                                    t0 = FX_Div(FX_MUL(sp28, FX_CosIdx(sp18 >> 4)), fp);
                                     sp40.x = FX_MUL(sp40.x, t0);
                                     sp40.z = FX_MUL(sp40.z, t0);
                                 }
@@ -3639,8 +3633,8 @@ void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, Fix12i mag, short 
     unsigned idx = (unsigned short)ang >> 4;
 
     v.x = 0;
-    v.y = FX_MUL(mag, FX_SinCosTable_[idx * 2]);
-    v.z = FX_MUL(mag, FX_SinCosTable_[idx * 2 + 1]);
+    v.y = FX_MUL(mag, FX_SinIdx(idx));
+    v.z = FX_MUL(mag, FX_CosIdx(idx));
     Vec3_RotateYAndTranslate(res, trans, angY, &v);
 }
 
