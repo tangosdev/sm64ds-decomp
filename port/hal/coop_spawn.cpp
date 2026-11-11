@@ -159,7 +159,7 @@ void star_taken_mark(unsigned param, const char *why) {
 }
 bool key_model_ready(unsigned param);
 uint16_t g_counter = 0;
-struct Lnk { bool used, taken; char *a; unsigned uid; short mslot; int area; bool seen; int gsends; unsigned gnext; };
+struct Lnk { bool used, taken; char *a; unsigned uid; short mslot; int area; bool seen; int gsends; unsigned gnext; unsigned param; };
 Lnk g_lnk[kLnkMax];
 bool g_lnk_gone[kSpSlots];
 struct Ack { bool on; uint8_t origin; uint16_t counter; unsigned t; };
@@ -786,7 +786,10 @@ void scan(unsigned now) {
                         n.sil_took = true;          // SILVERCOOP1: a player has it here
                 }
             for (Lnk &l : g_lnk)
-                if (l.used && !l.taken && l.a == a && l.uid == uid) { l.seen = !dead && !taken_now; }
+                if (l.used && !l.taken && l.a == a && l.uid == uid) {
+                    l.seen = !dead && !taken_now;
+                    if (taken_now) star_taken_mark(l.param, "taken here (linked)");
+                }
         }
 
         // ---- new runtime actors -------------------------------------------
@@ -807,12 +810,15 @@ void scan(unsigned now) {
                     if (cls == 178 && linked_to_placed_marker(a, &mslot)) {
                         Lnk *l = lnk_alloc();
                         if (l) {
-                            *l = Lnk(); l->used = true; l->a = a; l->uid = uid; l->mslot = mslot; l->area = a_area(a); l->seen = true;
+                            *l = Lnk(); l->used = true; l->a = a; l->uid = uid; l->mslot = mslot; l->area = a_area(a); l->seen = true; l->param = a_param(a);
                             if (g_log)
                                 std::fprintf(stderr, "[coopspawn] linked star cls=%u marker slot=%d uid=%u pos=%d,%d,%d frame=%u wall=%lld\n",
                                              cls, (int)mslot, uid, ((const int *)(a + 0x5c))[0] >> 12, ((const int *)(a + 0x5c))[1] >> 12,
                                              ((const int *)(a + 0x5c))[2] >> 12, g_frames, wall_ms());
-                            if (g_lnk_gone[mslot] && !g_off.gone) {       // the friend already took it
+                            if (!g_toff.startaken && g_star_taken[l->param & 0xff] && !g_lnk_gone[mslot]) {      // SNOWMAN2: taken this visit as an announced star
+                                kill_quiet(a); l->taken = true; l->gsends = 3;
+                                if (g_log) std::fprintf(stderr, "[coopspawn] star taken: my linked star %u (marker slot=%d) was already taken this visit: removed wall=%lld\n", l->param & 0xff, (int)mslot, wall_ms());
+                            } else if (g_lnk_gone[mslot] && !g_off.gone) {       // the friend already took it
                                 kill_quiet(a); l->taken = true; l->gsends = 3;
                                 ++g_st.gone_applied;
                                 if (g_log) std::fprintf(stderr, "[coopspawn] linked star marker slot=%d was already taken: removed wall=%lld\n", (int)mslot, wall_ms());
@@ -1084,6 +1090,7 @@ void apply_gone(int seat, const SpGoneWire &w, unsigned now) {
     for (Lnk &l : g_lnk) {
         if (!l.used || l.mslot != (short)w.id || l.taken) continue;
         if (l.seen && l.a) kill_quiet(l.a);
+        if (!g_toff.startaken) star_taken_mark(l.param, "a friend took it (linked)");
         l.taken = true; l.gsends = 3;
         ++g_st.gone_applied;
         if (g_log) std::fprintf(stderr, "[coopspawn] gone applied linked star marker slot=%d from seat %d frame=%u wall=%lld\n", (int)w.id, seat, g_frames, wall_ms());
