@@ -2007,9 +2007,9 @@ void cMgSmartball_propeller_c::RebuildVerts() {
  * mCurrent1) using that matrix; touches nothing in this class's own 0x34+
  * region at all. */
 void cMgSmartball_propeller_c::Update() {
-    int b =
-        (short)((((long long)FX_SinCosTable_[((unsigned short)mAngle >> 4) * 2 + 1] << 12) + 0x800) >>
-                12);
+    int b = (short)((((long long)FX_SinCosTable_[((unsigned short)mAngle >> 4) * 2 + 1] << 12) +
+                     0x800) >>
+                    12);
     int a;
     int vec[4];
 
