@@ -2,11 +2,11 @@
 
 extern void func_02041e14(void);
 
-/* The parent's reply-send callback: once the file-sharing work is up
- * (mState) and running as the parent, clear mReplySending, which
- * func_02041e14 set after its send, and let it send the next reply. */
-void func_02042160(void)
-{
+/* The parent's reply-send callback (WBT_PutUserData's; the WBTCommand it
+ * is called with goes unread): once the file-sharing work is up (mState) and
+ * running as the parent, clear mReplySending, which func_02041e14 set after
+ * its send, and let it send the next reply. */
+void func_02042160(void *arg) {
     FileShareWork *g = &data_020a1fc0;
     if (g->mState == 0)
         return;

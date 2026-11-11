@@ -25,7 +25,7 @@ extern void MI_CpuFill8(void *dst, u8 val, u32 len);
 extern s32 func_02040714(void);
 extern void func_02040820(void);
 extern void func_02040790(void);
-extern void func_02040c34(s32 a, s32 b, void *c, void *d, s32 e);
+extern void func_02040c34(s32 a, s32 b, void *c, void *d, void *e);
 extern s32 func_020406b4(void *a, void *b);
 extern int func_02040704(void);
 extern void *func_0204068c(u16 aid);
