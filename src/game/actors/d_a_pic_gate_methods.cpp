@@ -80,7 +80,7 @@ enum {
     kSlide = 0x802000,       /* 2050.0 */
     kSlideStep = 0x13e72,
     kOpened = 0x40000,
-    kFlatNormal = 0x1ff00000,
+    kFlatNormal = GX_VECFX10(0, 0, 0xfff),
     kTexSpan = 0x80000,
     kRangePad = 0xc8000,     /* 200.0, added to the clip radius */
     kFar = 0x1964000,        /* 6500.0, clip distance and far distance */
@@ -205,10 +205,10 @@ void daPicGate_c::DrawRippleImage() {
 
             REG_TEXCOORD = v1->texCoord;
             REG_NORMAL = v1->normal;
-            G3_Vtx((fx16)(v1->x >> 8), (fx16)(v1->y >> 8), (fx16)(v1->z >> 8));
+            G3_Vtx(v1->x >> 8, v1->y >> 8, v1->z >> 8);
             REG_TEXCOORD = v2->texCoord;
             REG_NORMAL = v2->normal;
-            G3_Vtx((fx16)(v2->x >> 8), (fx16)(v2->y >> 8), (fx16)(v2->z >> 8));
+            G3_Vtx(v2->x >> 8, v2->y >> 8, v2->z >> 8);
         }
         G3_End();
     }
@@ -251,7 +251,7 @@ void daPicGate_c::InitProximityRipple() {
             int dv = kTexSpan / (this->mRows - 1);
             int s = du * col;
             int t = kTexSpan - dv * row;
-            v->texCoord = (u16)(s16)(s >> 8) | (((u16)(s16)(t >> 8) << 1) << 15);
+            v->texCoord = GX_ST(s, t);
             if (col == this->mCols - 2)
                 x = (u8)(this->param1 & 0xf) * kCell + kCell;
             else

@@ -399,23 +399,23 @@ void daPicGate_c::PlaceCornersMirrored() {
     mCorners[0].x = 0;
     mCorners[0].y = 0;
     mCorners[0].z = 0;
-    mCorners[0].normal = 0x20000000;
-    mCorners[0].texCoord = 0x8000800;
+    mCorners[0].normal = GX_VECFX10(0, 0, -0x1000);
+    mCorners[0].texCoord = GX_ST(0x80000, 0x80000);
     mCorners[1].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
     mCorners[1].y = 0;
     mCorners[1].z = 0;
-    mCorners[1].normal = 0x20000000;
-    mCorners[1].texCoord = 0x8000000;
+    mCorners[1].normal = GX_VECFX10(0, 0, -0x1000);
+    mCorners[1].texCoord = GX_ST(0, 0x80000);
     mCorners[2].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
     mCorners[2].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
     mCorners[2].z = 0;
-    mCorners[2].normal = 0x20000000;
-    mCorners[2].texCoord = 0;
+    mCorners[2].normal = GX_VECFX10(0, 0, -0x1000);
+    mCorners[2].texCoord = GX_ST(0, 0);
     mCorners[3].x = 0;
     mCorners[3].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
     mCorners[3].z = 0;
-    mCorners[3].normal = 0x20000000;
-    mCorners[3].texCoord = 0x800;
+    mCorners[3].normal = GX_VECFX10(0, 0, -0x1000);
+    mCorners[3].texCoord = GX_ST(0x80000, 0);
 }
 
 /* DrawFlat: the flat 2x2 quad for states 2/3. mMtx is composed onto the
@@ -437,15 +437,11 @@ void daPicGate_c::DrawFlat() {
     G3_Scale(0x20000, 0x20000, 0x20000);
     G3_Begin(GX_BEGIN_QUADS);
 
-    i = 0;
-    p = mCorners;
-    do {
+    for (i = 0, p = mCorners; i < 4; i++, p++) {
         REG_TEXCOORD = p->texCoord;
         REG_NORMAL = p->normal;
-        G3_Vtx((fx16)(p->x >> 8), (fx16)(p->y >> 8), (fx16)(p->z >> 8));
-        i++;
-        p++;
-    } while (i < 4);
+        G3_Vtx(p->x >> 8, p->y >> 8, p->z >> 8);
+    }
 
     G3_End();
     G3_PopMtx(1);
@@ -460,23 +456,23 @@ void daPicGate_c::PlaceCorners() {
     mCorners[0].x = 0;
     mCorners[0].y = 0;
     mCorners[0].z = 0;
-    mCorners[0].normal = 0x20000000;
-    mCorners[0].texCoord = 0x8000000;
+    mCorners[0].normal = GX_VECFX10(0, 0, -0x1000);
+    mCorners[0].texCoord = GX_ST(0, 0x80000);
     mCorners[1].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
     mCorners[1].y = 0;
     mCorners[1].z = 0;
-    mCorners[1].normal = 0x20000000;
-    mCorners[1].texCoord = 0x8000800;
+    mCorners[1].normal = GX_VECFX10(0, 0, -0x1000);
+    mCorners[1].texCoord = GX_ST(0x80000, 0x80000);
     mCorners[2].x = (u8)(param1 & 0xf) * 0x64000 + 0x64000;
     mCorners[2].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
     mCorners[2].z = 0;
-    mCorners[2].normal = 0x20000000;
-    mCorners[2].texCoord = 0x800;
+    mCorners[2].normal = GX_VECFX10(0, 0, -0x1000);
+    mCorners[2].texCoord = GX_ST(0x80000, 0);
     mCorners[3].x = 0;
     mCorners[3].y = (u8)((param1 >> 4) & 0xf) * 0x64000 + 0x64000;
     mCorners[3].z = 0;
-    mCorners[3].normal = 0x20000000;
-    mCorners[3].texCoord = 0;
+    mCorners[3].normal = GX_VECFX10(0, 0, -0x1000);
+    mCorners[3].texCoord = GX_ST(0, 0);
 }
 
 extern "C" {
@@ -490,7 +486,7 @@ extern int data_ov080_0212771c[];
  * NORMAL and its position at >>7. */
 void daPicGate_c::DrawRippleEnvMapped() {
     Matrix4x3 tmp;
-    int i, j, n;
+    int i, j;
 
     MTX_Concat43(&mMtx, &data_0209b3ec, &tmp);
     G3_PushMtx();
@@ -498,7 +494,7 @@ void daPicGate_c::DrawRippleEnvMapped() {
     G3_MultMtx43(&tmp);
     G3_MtxMode(GX_MTXMODE_POSITION_VECTOR);
     G3_LoadMtx43(&tmp);
-    REG_TEXCOORD = 0x04000400;
+    G3_TexCoord(0x40000, 0x40000);
     REG_LIGHT_VECTOR = 0xe0000000;
     REG_LIGHT_COLOR = 0xc0007fff;
     {
@@ -520,31 +516,18 @@ void daPicGate_c::DrawRippleEnvMapped() {
     REG_POLYGON_ATTR = 0x01000088 | ((((u8)((param1 >> 8) & 0x1f)) == 7) ? 0x14 : 0x1f) << 16;
     G3_Scale(0x10000, 0x10000, 0x10000);
 
-    n = (int)mCols;
-    i = 0;
-    n = n - 1;
-    if (n > 0) {
-        do {
-            G3_Begin(GX_BEGIN_TRIANGLE_STRIP);
-            j = 0;
-            if ((int)mRows > 0) {
-                do {
-                    Vertex *base = mCells;
-                    int rows = (int)mRows;
-                    Vertex *v1 = &base[i + j * rows];
-                    Vertex *v2 = &base[(i + 1) + j * rows];
+    for (i = 0; i < mCols - 1; i++) {
+        G3_Begin(GX_BEGIN_TRIANGLE_STRIP);
+        for (j = 0; j < mRows; j++) {
+            Vertex *v1 = &mCells[i + j * mRows];
+            Vertex *v2 = &mCells[(i + 1) + j * mRows];
 
-                    REG_NORMAL = v1->normal;
-                    G3_Vtx((fx16)(v1->x >> 7), (fx16)(v1->y >> 7), (fx16)(v1->z >> 7));
-                    REG_NORMAL = v2->normal;
-                    G3_Vtx((fx16)(v2->x >> 7), (fx16)(v2->y >> 7), (fx16)(v2->z >> 7));
-
-                    j++;
-                } while (j < (int)mRows);
-            }
-            G3_End();
-            i++;
-        } while (i < (int)mCols - 1);
+            REG_NORMAL = v1->normal;
+            G3_Vtx(v1->x >> 7, v1->y >> 7, v1->z >> 7);
+            REG_NORMAL = v2->normal;
+            G3_Vtx(v2->x >> 7, v2->y >> 7, v2->z >> 7);
+        }
+        G3_End();
     }
     G3_PopMtx(1);
 }
