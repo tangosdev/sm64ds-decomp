@@ -804,74 +804,74 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@528",
-      "to": "@983",
-      "evidence": "compiler-local __register_global_object node; @554 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @550 to @528 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
-    },
-    {
       "from": "@529",
-      "to": "@949",
-      "evidence": "compiler-local __register_global_object node; @555 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @551 to @529 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@983",
+      "evidence": "compiler-local __register_global_object node; @554 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @550 to @528 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @528: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
       "from": "@530",
-      "to": "@894",
-      "evidence": "compiler-local __register_global_object node; @556 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @552 to @530 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@949",
+      "evidence": "compiler-local __register_global_object node; @555 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @551 to @529 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @529: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
       "from": "@531",
-      "to": "@890",
-      "evidence": "compiler-local __register_global_object node; @557 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @553 to @531 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@894",
+      "evidence": "compiler-local __register_global_object node; @556 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @552 to @530 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @530: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
       "from": "@532",
-      "to": "@885",
-      "evidence": "compiler-local __register_global_object node; @558 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @554 to @532 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@890",
+      "evidence": "compiler-local __register_global_object node; @557 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @553 to @531 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @531: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
       "from": "@533",
-      "to": "@881",
-      "evidence": "compiler-local __register_global_object node; @559 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @555 to @533 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@885",
+      "evidence": "compiler-local __register_global_object node; @558 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @554 to @532 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @532: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
       "from": "@534",
-      "to": "@877",
-      "evidence": "compiler-local __register_global_object node; @560 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @556 to @534 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@881",
+      "evidence": "compiler-local __register_global_object node; @559 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @555 to @533 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @533: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
       "from": "@535",
-      "to": "@866",
-      "evidence": "compiler-local __register_global_object node; @561 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @557 to @535 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@877",
+      "evidence": "compiler-local __register_global_object node; @560 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @556 to @534 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @534: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
       "from": "@536",
-      "to": "@862",
-      "evidence": "compiler-local __register_global_object node; @562 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @558 to @536 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@866",
+      "evidence": "compiler-local __register_global_object node; @561 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @557 to @535 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @535: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
       "from": "@537",
-      "to": "@816",
-      "evidence": "compiler-local __register_global_object node; @563 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @559 to @537 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@862",
+      "evidence": "compiler-local __register_global_object node; @562 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @558 to @536 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @536: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
       "from": "@538",
-      "to": "@810",
-      "evidence": "compiler-local __register_global_object node; @564 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @560 to @538 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@816",
+      "evidence": "compiler-local __register_global_object node; @563 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @559 to @537 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @537: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
       "from": "@539",
-      "to": "@806",
-      "evidence": "compiler-local __register_global_object node; @565 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @561 to @539 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@810",
+      "evidence": "compiler-local __register_global_object node; @564 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @560 to @538 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @538: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
       "from": "@540",
-      "to": "@799",
-      "evidence": "compiler-local __register_global_object node; @566 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @562 to @540 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "to": "@806",
+      "evidence": "compiler-local __register_global_object node; @565 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @561 to @539 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @539: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     },
     {
-      "from": "@527",
+      "from": "@541",
+      "to": "@799",
+      "evidence": "compiler-local __register_global_object node; @566 is taken on main after batch 3 merged (temps are fleet-global), renamed to an unused fleet temp of equal length Re-keyed from @562 to @540 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @540: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
+    },
+    {
+      "from": "@528",
       "to": "@553",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @567 now; licensed under the existing pin @553 Re-keyed from @549 to @527 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @567 now; licensed under the existing pin @553 Re-keyed from @549 to @527 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). | Re-keyed from @527: typing the asset table as SimpleLiftAssets rows renumbers the nodes +1 (measured)"
     }
   ],
   "relocations": [

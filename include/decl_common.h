@@ -127,8 +127,6 @@ extern char data_ov073_021231c0[];
 extern char data_ov073_021231c4[];
 extern char data_ov075_0211c654;
 extern char data_ov084_0213089c;
-extern char data_ov091_02135024[];
-extern char data_ov091_02135028[];
 extern char data_ov092_02132220;
 extern char data_ov092_02132294;
 extern char data_ov095_021374a0[];
