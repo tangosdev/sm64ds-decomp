@@ -1381,8 +1381,8 @@ void daBtn_c::func_ov079_02124188()
     Vector3 pos;
     Vector3 asr;
     int shadowRad;
-    int cosv;
-    int sinComp;
+    int tiltSin;
+    int lean;
     char *bone;
 
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngleX, mAngleY, mAngleZ);
@@ -1401,17 +1401,17 @@ void daBtn_c::func_ov079_02124188()
     mBodyRoll = (short)(*(unsigned short *)(bone + 0x1e) - 0x4000);
 
     if (mIsKing != 0) {
-        cosv = FX_SinIdx((unsigned short)mAngleX >> 4);
-        sinComp = cosv * 0x190;
-        shadowRad = cosv * 0x1a9 + 0xc8000;
+        tiltSin = FX_SinIdx((unsigned short)mAngleX >> 4);
+        lean = tiltSin * 0x190;
+        shadowRad = tiltSin * 0x1a9 + 0xc8000;
     } else {
-        cosv = FX_SinIdx((unsigned short)mAngleX >> 4);
-        sinComp = cosv * 0xc8;
-        shadowRad = cosv * 0xd2 + 0x64000;
+        tiltSin = FX_SinIdx((unsigned short)mAngleX >> 4);
+        lean = tiltSin * 0xc8;
+        shadowRad = tiltSin * 0xd2 + 0x64000;
     }
 
-    pos.x += FX_MUL(sinComp, FX_SinIdx((unsigned short)mAngleY >> 4));
-    pos.z += FX_MUL(sinComp, FX_CosIdx((unsigned short)mAngleY >> 4));
+    pos.x += FX_MUL(lean, FX_SinIdx((unsigned short)mAngleY >> 4));
+    pos.z += FX_MUL(lean, FX_CosIdx((unsigned short)mAngleY >> 4));
 
     ::Vec3_Asr((::Vector3 *)&asr, (::Vector3 *)&pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, asr.x, asr.y, asr.z);
@@ -1658,9 +1658,11 @@ int daBtn_c::func_ov079_02123a8c()
 void daBtn_c::func_ov079_02123804(dActor_c *other)
 {
     Vector3 v;
-    s16 cosv, sinv;
+    s16 sinv, cosv;
     int ang;
 
+    /* Copied through a pointer: `v = other->mPrevPos` loads the three words
+       in a different order and moves the literal pool. */
     {
         int* q = &other->mPrevPosX;
         v.x = q[0];
@@ -1668,12 +1670,12 @@ void daBtn_c::func_ov079_02123804(dActor_c *other)
         v.z = q[2];
     }
 
-    cosv = FX_SinIdx((u16)other->mPrevAngleY >> 4);
-    sinv = FX_CosIdx((u16)other->mPrevAngleY >> 4);
-    v.x = v.x - cosv * 0x50;
-    v.z = v.z - sinv * 0x50;
+    sinv = FX_SinIdx((u16)other->mPrevAngleY >> 4);
+    cosv = FX_CosIdx((u16)other->mPrevAngleY >> 4);
+    v.x = v.x - sinv * 0x50;
+    v.z = v.z - cosv * 0x50;
 
-    ang = ::Vec3_HorzAngle((const ::Vector3 *)&mPosX, (const ::Vector3 *)&v);
+    ang = ::Vec3_HorzAngle(&mPos, &v);
 
     if (AngleDiff(ang, (s16)(mAngleY + mBodyYaw)) < 0x3c00) {
         int r1 = mState;
