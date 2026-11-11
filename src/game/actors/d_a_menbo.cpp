@@ -97,13 +97,6 @@ extern "C" u16 DecIfAbove0_Short(u16 *p);
 extern "C" int RandomIntInternal(int *seed);
 void func_02012694(unsigned int id, const Vector3 *pos);
 
-extern "C" int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3, int a4, int a5,
-                                int a6);
-
-/* Parameter names keep this TU's @NNN. */
-extern "C" {
-typedef void BgchInitAt_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
-}
 int SurfaceInfo_TestFlag0x20(int *p);
 extern "C" int func_02035638(u8 *p);
 
