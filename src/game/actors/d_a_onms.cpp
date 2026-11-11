@@ -367,10 +367,10 @@ void daOnms_c::Roll(s32 stepZ, s32 stepX, s32 pitch, s16 bank)
 
     {
         s16 t = (s16)((mStateTimer + 1) << 12);
-        idx = ((u16)t >> 4) * 2;
+        idx = (u16)t >> 4;
     }
     y = mRestPos.y + 0x3000;
-    mv = FX_SinCosTable_[idx];
+    mv = FX_SinIdx(idx);
     mPosY = y + ((mv * 0x6793a) >> 12);
 
     mPosX += stepX;
