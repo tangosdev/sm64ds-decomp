@@ -95,6 +95,11 @@ bool     g_armed = false;
 bool     g_have_globals = false;
 unsigned g_prev_word = 0;       // what the word was when I last looked
 unsigned g_shadow = 0;          // the word I have announced or applied
+// STAYSTAR1: event bits 0x1d (the HUD's star-get / key bit) and 0x1e ("a star is being got here", the pickup lock) are the
+// state of a collect running on ONE console (src/game/actors/d_a_star.cpp func_ov002_020e8ef0 / func_ov002_020e8618,
+// d_a_obj_key.cpp). Copied, a collector's lock reached the friends who stayed (no star could be got for the rest of the visit)
+// and their clear reached the collector mid-dance. Never sent, never applied, whoever sends them.
+const unsigned kSwLocalOnly = (1u << 0x1d) | (1u << 0x1e);
 unsigned g_counter = 0;         // my Lamport counter
 SwBitModel g_bit[kSwBits];
 unsigned g_word_t = 0;
@@ -562,7 +567,7 @@ void send_bits(unsigned now) {
 
 void send_word(unsigned now) {
     SwWordWire w; std::memset(&w, 0, sizeof w);
-    w.key = wkey(); w.word = (unsigned)data_0209f34c;
+    w.key = wkey(); w.word = (unsigned)data_0209f34c & ~kSwLocalOnly;
     bool any = false;
     for (int i = 0; i < kSwBits; ++i) { w.stamp[i] = (uint16_t)g_bit[i].stamp; any = any || g_bit[i].stamp; }
     g_word_t = now;
@@ -623,7 +628,7 @@ int collect_states(SwStateEntry *out, int cap) {
 
 void serve_job(Job &j) {
     SwGlobalsWire g; std::memset(&g, 0, sizeof g);
-    g.key = wkey(); g.nonce = j.nonce; g.target = (uint8_t)j.seat; g.word = (unsigned)data_0209f34c;
+    g.key = wkey(); g.nonce = j.nonce; g.target = (uint8_t)j.seat; g.word = (unsigned)data_0209f34c & ~kSwLocalOnly;
     std::memcpy(g.globals, data_0209f2c0, 4);
     for (int i = 0; i < 4; ++i) if (g.globals[i] > 7) g.globals[i] = 0;
     for (int i = 0; i < kSwBits; ++i) g.stamp[i] = (uint16_t)g_bit[i].stamp;
@@ -661,6 +666,7 @@ unsigned next_stamp() {
 
 // A remote bit change. Highest stamp wins; the stamp's low nibble is the seat, so no ties.
 void adopt_bit(int b, int v, unsigned stamp) {
+    if (b < 0 || b >= kSwBits || (kSwLocalOnly >> b) & 1u) return;     // STAYSTAR1: a collect's own bits stay on its console
     if (!sw_adopt(g_bit[b], stamp, v)) { if (stamp != g_bit[b].stamp) ++g_st.drop_old; return; }
     if (sw_stamp_counter(stamp) > g_counter) g_counter = sw_stamp_counter(stamp);
     const int cur = (data_0209f34c >> b) & 1;
@@ -670,7 +676,7 @@ void adopt_bit(int b, int v, unsigned stamp) {
 
 void local_word_changes(unsigned now) {
     const unsigned cur = (unsigned)data_0209f34c;
-    unsigned d = cur ^ g_shadow;
+    unsigned d = (cur ^ g_shadow) & ~kSwLocalOnly;
     if (!d) return;
     for (int b = 0; b < kSwBits; ++b) {
         if (!((d >> b) & 1u)) continue;
@@ -691,7 +697,7 @@ void local_word_changes(unsigned now) {
 void settle_word() {
     bool changed = false;
     for (int b = 0; b < kSwBits; ++b)
-        if (g_bit[b].stamp) {
+        if (g_bit[b].stamp && !((kSwLocalOnly >> b) & 1u)) {
             const int cur = (data_0209f34c >> b) & 1;
             if (cur != g_bit[b].val) { set_word_bit(b, g_bit[b].val); changed = true; }
         }

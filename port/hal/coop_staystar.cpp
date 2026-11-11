@@ -13,7 +13,12 @@
 // kill_quiet), or simply waits for the dance of a body my console does not drive. Either way 0x1e and 0x1d stay set on my console
 // for the rest of the visit: every later star touch is refused and my power meter stays hidden.
 //
-// THE FIX. Once per game frame, in a coop or party room: when 0x1e or 0x1d is set and no collect of MINE runs on this console
+// REVIEW-D found the main road one layer down: hal/coop_switch.cpp copied the whole event word (data_0209f34c) between
+// consoles, bits 0x1d and 0x1e included, so the collector's lock reached everyone who stayed, and a clear here went back to the
+// collector mid-dance. coop_switch now keeps both bits on their own console (kSwLocalOnly). What is below is the local backstop for
+// the other road (a friend's body starting a collect on my copy); its clear stays here, since coop_switch never sends the bits.
+//
+// THE BACKSTOP. Once per game frame, in a coop or party room: when 0x1e or 0x1d is set and no collect of MINE runs on this console
 // (no star or silver star in a collect state whose player is my body, my body not in a no-control state, no level change
 // pending) for kQuietFrames frames in a row, both bits are cleared, as the star's own last step clears them. A collect of my own
 // keeps them for as long as it runs (its exit then clears them by the level load, as on the cartridge). Single player and VS
