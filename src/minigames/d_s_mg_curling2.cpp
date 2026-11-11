@@ -1571,7 +1571,7 @@ s32 dScMgCurling2_c::InitResources() {
     {
         char *b = (char *)G2_GetBG2ScrPtr();
         sp4 = 0x4300;
-        MIi_CpuClear16(sp4, b, 0x1000);
+        MI_CpuFill16(b, sp4, 0x1000);
     }
     GX_LoadBG2Scr(f, 0, 0x800);
 
@@ -1581,7 +1581,7 @@ s32 dScMgCurling2_c::InitResources() {
     {
         char *b = (char *)G2_GetBG0ScrPtr();
         sp6 = 0x4300;
-        MIi_CpuClear16(sp6, b, 0x1000);
+        MI_CpuFill16(b, sp6, 0x1000);
     }
     GX_LoadBG0Scr(f, 0, 0x800);
     Deallocate(f);

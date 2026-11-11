@@ -652,7 +652,7 @@ void dScMgPachinko_c::CheckTargetsLeft() {
     {
         unsigned chars = (unsigned)G2S_GetBG2CharPtr();
         zero = 0;
-        MIi_CpuClear16(zero, (char *)chars, 0x6000);
+        MI_CpuFill16((void *)chars, zero, 0x6000);
     }
     mUnused5c30 = 0;
     BobOmb_ClearAll();
@@ -728,7 +728,7 @@ void dScMgPachinko_c::ClearAimLine() {
     {
         char *dst = (char *)G2S_GetBG2CharPtr();
         zero = 0;
-        MIi_CpuClear16(zero, dst, 0x6000);
+        MI_CpuFill16(dst, zero, 0x6000);
     }
 }
 
@@ -780,7 +780,7 @@ void dScMgPachinko_c::DrawAimLine() {
     if (mShot[idx].x != mShot[idx].prevX || mShot[idx].y != mShot[idx].prevY) {
         char *buf = (char *)G2S_GetBG2CharPtr();
         fill = 0;
-        MIi_CpuClear16(fill, buf, 0x6000);
+        MI_CpuFill16(buf, fill, 0x6000);
         for (i = 0; i < 2; i++) {
             if (i == 0) {
                 cx = 0x6c;
@@ -2188,7 +2188,7 @@ s32 dScMgPachinko_c::InitResources()
 
     b = (char *)G2_GetBG2ScrPtr();
     fillScr = 0x3073;
-    MIi_CpuClear16(fillScr, b, 0x1000);
+    MI_CpuFill16(b, fillScr, 0x1000);
 
     f = LoadFile(6);
     GX_LoadBG2Scr(f, 0, 0x800);
@@ -2209,14 +2209,14 @@ s32 dScMgPachinko_c::InitResources()
 
     b = (char *)G2S_GetBG2CharPtr();
     fillZero = 0;
-    MIi_CpuClear16(fillZero, b, 0x6000);
+    MI_CpuFill16(b, fillZero, 0x6000);
 
     n = 0;
     for (y = 0; y < 0x18; y++) {
         for (x = 0; x < 0x20; x++) {
             dst = (char *)((u16 *)G2S_GetBG2ScrPtr() + x + y * 0x20);
             fillIdx = n;
-            MIi_CpuClear16(fillIdx, dst, 2);
+            MI_CpuFill16(dst, fillIdx, 2);
             n++;
         }
     }

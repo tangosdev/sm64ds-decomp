@@ -81,7 +81,7 @@ static inline u16 GetOptForHeap(const NNSiFndHeapHead *pHeapHd) {
 static inline void FillAllocMemory(NNSiFndHeapHead *pHeapHd, void *address, u32 size) {
     if (GetOptForHeap(pHeapHd) & 1) {
         volatile int fill = 0;
-        MIi_CpuClear32(fill, (int *)address, size);
+        MI_CpuFill32(address, fill, size);
     }
 }
 

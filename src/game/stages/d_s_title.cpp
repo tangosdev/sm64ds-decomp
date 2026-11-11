@@ -156,26 +156,26 @@ extern "C" void TitlePrintLevelRow(int level, int row, int col) {
     short *scr = (short *)G2_GetBG0ScrPtr();
     short *d = scr + (col + (row << 5));
     t0 = tens == 0 ? 0xff : tens + 0x30;
-    MIi_CpuClear16(t0, (char *)d, 2);
+    MI_CpuFill16(d, t0, 2);
     t1 = ones + 0x30;
-    MIi_CpuClear16(t1, (char *)(d + 1), 2);
+    MI_CpuFill16(d + 1, t1, 2);
     t2 = 0xff;
     short *d2 = d + 2;
     d += 3;
-    MIi_CpuClear16(t2, (char *)d2, 2);
+    MI_CpuFill16(d2, t2, 2);
     int cnt = 0x1d - col;
     volatile const signed char *s =
         reinterpret_cast<volatile const signed char *>(sTitleLevelEntries[level].name);
     while (*s != 0) {
         t3 = *s;
-        MIi_CpuClear16(t3, (char *)d, 2);
+        MI_CpuFill16(d, t3, 2);
         s++;
         d++;
         cnt--;
     }
     for (int i = 0; i < cnt; i++) {
         t4 = 0xff;
-        MIi_CpuClear16(t4, (char *)d, 2);
+        MI_CpuFill16(d, t4, 2);
         d++;
     }
 }

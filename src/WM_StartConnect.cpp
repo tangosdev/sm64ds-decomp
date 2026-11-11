@@ -34,7 +34,7 @@ int WM_StartConnect(void *callback, int b, void *c) {
     if (c != 0) {
         MI_CpuCopy8(c, q->ssid, 0x18);
     } else {
-        MI_CpuFill8(q->ssid, 0, 0x18);
+        MI_CpuClear8(q->ssid, 0x18);
     }
     r = WM_SendCommand(0xc, 0);
     return (r == 0) ? 2 : r;

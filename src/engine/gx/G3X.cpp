@@ -145,7 +145,7 @@ void G3X_SetFogTable(void *table) {
 
 // The 32-entry toon table to TOON_TABLE (0x4000380).
 void G3X_SetToonTable(void *dst) {
-    MIi_CpuCopy16(dst, (void *)0x04000380, 0x40);
+    MI_CpuCopy16(dst, (void *)0x04000380, 0x40);
 }
 
 void G3X_SetClearColor(unsigned short a, int b, int c, int d, int fog) {
@@ -164,9 +164,9 @@ void G3X_InitTable(void) {
     } else {
         volatile int a = 0;
         volatile int b;
-        MIi_CpuClear32(a, (int *)0x4000330, 0x10);
+        MI_CpuFill32((int *)0x4000330, a, 0x10);
         b = 0;
-        MIi_CpuClear32(b, (int *)0x4000360, 0x50);
+        MI_CpuFill32((int *)0x4000360, b, 0x50);
     }
     for (i = 0; i < 0x20; i++)
         *(volatile int *)0x40004d0 = 0;

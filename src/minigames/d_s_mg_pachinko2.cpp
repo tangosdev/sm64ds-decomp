@@ -620,7 +620,7 @@ void dScMgPachinko2_c::StartRoundEnd(int a) {
     mEndTimer = 0x40;
     dst = (char *)G2S_GetBG2CharPtr();
     v = 0;
-    MIi_CpuClear16(v, dst, 0x6000);
+    MI_CpuFill16(dst, v, 0x6000);
     mResult = a;
     Ball_ClearAll();
 }
@@ -1440,7 +1440,7 @@ void dScMgPachinko2_c::CheckCountdownEnd() {
     mEndTimer = 0x40;
     dst = (char *)G2S_GetBG2CharPtr();
     v = 0;
-    MIi_CpuClear16(v, dst, 0x6000);
+    MI_CpuFill16(dst, v, 0x6000);
     mResult = 0;
     Ball_ClearAll();
 }
@@ -1497,7 +1497,7 @@ void dScMgPachinko2_c::ClearAimLine() {
     {
         char *dst = (char *)G2S_GetBG2CharPtr();
         tmp = 0;
-        MIi_CpuClear16(tmp, dst, 0x6000);
+        MI_CpuFill16(dst, tmp, 0x6000);
     }
 }
 
@@ -1551,7 +1551,7 @@ void dScMgPachinko2_c::DrawAimLine() {
     if (mBalls[idx].x != mBalls[idx].prevX || mBalls[idx].y != mBalls[idx].prevY) {
         char *dst = (char *)G2S_GetBG2CharPtr();
         tmp = 0;
-        MIi_CpuClear16(tmp, dst, 0x6000);
+        MI_CpuFill16(dst, tmp, 0x6000);
 
         k = 0;
         pivot[0] = 0x6c;
@@ -2267,14 +2267,14 @@ s32 dScMgPachinko2_c::InitResources() {
 
     b = (char *)G2S_GetBG2CharPtr();
     spC = 0;
-    MIi_CpuClear16(spC, b, 0x6000);
+    MI_CpuFill16(b, spC, 0x6000);
 
     n = 0;
     for (y = 0; y < 0x18; y++) {
         for (x = 0; x < 0x20; x++) {
             dst = (char *)((u16 *)G2S_GetBG2ScrPtr() + x + y * 0x20);
             spE = n;
-            MIi_CpuClear16(spE, dst, 2);
+            MI_CpuFill16(dst, spE, 2);
             n++;
         }
     }

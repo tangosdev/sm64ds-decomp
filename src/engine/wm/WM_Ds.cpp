@@ -83,7 +83,7 @@ int WM_StartDataSharing(WMDataSharingInfo *dsInfo, int port, int aidBitmap, int 
     }
 
     zero = 0;
-    MIi_CpuClearFast(zero, dsInfo, 0x420);
+    MI_CpuFillFast(dsInfo, zero, 0x420);
 
     dsInfo->writeIndex = 0;
     dsInfo->sendIndex = 0;
@@ -220,7 +220,7 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
 
         if (dsInfo->readIndex != dsInfo->sendIndex) {
             dsInfo->ds[dsInfo->readIndex].aidHeader |= 1;
-            MIi_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, 0x100);
+            MI_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, 0x100);
             did = 1;
             result = 0;
             dsInfo->currentSeqNum = dsInfo->seqNum[dsInfo->readIndex];
@@ -251,7 +251,7 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
                 if ((dsInfo->ds[dsInfo->readIndex].aidHeader & 1) == 0) {
                     dsInfo->ds[dsInfo->readIndex].aidHeader |= 1;
                 } else {
-                    MIi_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, 0x100);
+                    MI_CpuCopy16(&dsInfo->ds[dsInfo->readIndex], receiveData, 0x100);
                     changed = 1;
                     result = 0;
                     dsInfo->currentSeqNum = dsInfo->seqNum[dsInfo->readIndex];
@@ -264,7 +264,7 @@ int WM_StepDataSharing(WMDataSharingInfo *dsInfo, const void *sendData, WMDataSe
             /* the child stages its own data 0x20 bytes into the set it sends */
             u8 *addr = (u8 *)&dsInfo->ds[dsInfo->sendIndex] + 0x20;
             int cr;
-            MIi_CpuCopy16(sendData, addr, dsInfo->dataLength);
+            MI_CpuCopy16(sendData, addr, dsInfo->dataLength);
             cr = WM_SetMPDataToPort(WmDataSharingSetDataCallback, (int)addr, dsInfo->dataLength,
                                     dsInfo->aidBitmap, dsInfo->port, 1);
             dsInfo->sendIndex = (u16)((dsInfo->sendIndex + 1) % 4);
@@ -376,7 +376,7 @@ void WmDataSharingReceiveCallback_Child(WMPortRecvCallback *callback) {
             return;
         if ((1u << h->status->aid) == 0)
             return;
-        MIi_CpuCopy16(src, &r5->ds[r5->writeIndex], r4);
+        MI_CpuCopy16(src, &r5->ds[r5->writeIndex], r4);
         r5->seqNum[r5->writeIndex] = callback->seqNo >> 1;
         r5->writeIndex = (r5->writeIndex + 1) % 4;
     } else {
@@ -410,10 +410,10 @@ void WmDataSharingReceiveData(WMDataSharingInfo *dsInfo, int aid, const void *da
 
     slot = WmGetSharedDataAddress(dsInfo, aidBitmap, dsInfo->ds[idx].data, aid);
     if (data != 0) {
-        MIi_CpuCopy16(data, slot, dsInfo->dataLength);
+        MI_CpuCopy16(data, slot, dsInfo->dataLength);
     } else {
         zero = 0;
-        MIi_CpuClear16(zero, slot, dsInfo->dataLength);
+        MI_CpuFill16(slot, zero, dsInfo->dataLength);
     }
     s = OS_DisableInterrupts();
     dsInfo->ds[idx].aidHeader &= ~mask;
@@ -449,7 +449,7 @@ void WmDataSharingSendDataSet(WMDataSharingInfo *dsInfo, int excludeParent) {
         newSlot = (dsInfo->doubleMode == 1) ? (u16)((next + 1) % 4) : next;
 
         zero = 0;
-        MIi_CpuClear16(zero, &dsInfo->ds[newSlot], 0x100);
+        MI_CpuFill16(&dsInfo->ds[newSlot], zero, 0x100);
 
         dsInfo->ds[newSlot].aidHeader = (u16)(dsInfo->aidBitmap & (mask | 1));
         dsInfo->writeIndex = next;

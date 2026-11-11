@@ -96,19 +96,19 @@ void *MenuMem_AllocClear(const char *name, int n) {
     case 0:
         if (n - (n & ~0x1f) != 0) {
             v32 = 0;
-            MIi_CpuClearFast(v32, r, n);
+            MI_CpuFillFast(r, v32, n);
         } else {
             vint = 0;
-            MIi_CpuClear32(vint, r, n);
+            MI_CpuFill32(r, vint, n);
         }
         break;
     case 2:
         v16 = 0;
-        MIi_CpuClear16(v16, (char *)r, n);
+        MI_CpuFill16(r, v16, n);
         break;
     case 1:
     case 3:
-        MI_CpuFill8(r, 0, n);
+        MI_CpuClear8(r, n);
         break;
     }
     return r;

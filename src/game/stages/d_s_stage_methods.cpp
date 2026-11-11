@@ -4446,7 +4446,7 @@ extern "C" void ResetInput(void) {
             mode = p->mode;
         else
             mode = GetControllerMode(i);
-        MI_CpuFill8(p, 0, 0x18);
+        MI_CpuClear8(p, 0x18);
         p->mode = mode;
         p->delay = 5;
         p++;
@@ -4983,7 +4983,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         {
             char *clearScreenMap = (char *)G2S_GetBG2ScrPtr();
             volatile u16 fillTile = 0x10d0;
-            MIi_CpuClear16(fillTile, clearScreenMap, 0x800);
+            MI_CpuFill16(clearScreenMap, fillTile, 0x800);
         }
         gSubScreenLayers = 0x17;
         SetSubBg0Offset(0, 0);
@@ -5067,7 +5067,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
 
     if (SublevelToLevel(sublevel) == 0x1d) {
         volatile u16 blankTile = 0;
-        MIi_CpuClear16(blankTile, screenMap, 0x40);
+        MI_CpuFill16(screenMap, blankTile, 0x40);
         LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_SELECT_PAUSE_NSC_BIN, screenMap + 0x40);
         LoadCompressedFileAt(ASSET_D_2D_FRAMEWORK_PAGE_NSC_BIN, (char *)G2_GetBG2ScrPtr() + 0x1800);
         LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,

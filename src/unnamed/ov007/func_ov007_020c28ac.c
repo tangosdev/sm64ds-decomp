@@ -11,32 +11,32 @@ void func_ov007_020c28ac(Ov007StrokePath *c) {
     switch (c->representation) {
     case OV007_PATH_PLANAR: {
         volatile int a = 0;
-        MIi_CpuClear32(a, c->xCoords, c->capacity << 2);
+        MI_CpuFill32(c->xCoords, a, c->capacity << 2);
         {
             volatile int b = 0;
-            MIi_CpuClear32(b, c->yCoords, c->capacity << 2);
+            MI_CpuFill32(c->yCoords, b, c->capacity << 2);
         }
         break;
     }
     case 1: {
         volatile int a = 0;
-        MIi_CpuClear32(a, (int *)c->pointStorage, c->capacity * 0xc);
+        MI_CpuFill32(c->pointStorage, a, c->capacity * 0xc);
         break;
     }
     }
     switch (c->representation) {
     case OV007_PATH_PLANAR: {
         volatile u16 a = 0;
-        MIi_CpuClear16(a, (char *)c->segmentAngles, c->capacity << 1);
+        MI_CpuFill16(c->segmentAngles, a, c->capacity << 1);
     }
     case 1:
     default: {
         volatile int b = 0;
-        MIi_CpuClear32(b, c->segmentLengths, c->capacity << 2);
+        MI_CpuFill32(c->segmentLengths, b, c->capacity << 2);
     }
     }
     if (c->flags & OV007_PATH_HAS_PROGRESS) {
         volatile int a = 0;
-        MIi_CpuClear32(a, c->progressThresholds, c->capacity << 2);
+        MI_CpuFill32(c->progressThresholds, a, c->capacity << 2);
     }
 }

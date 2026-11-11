@@ -28,7 +28,7 @@ int WM_SetGameInfo(int callback, int *userGameInfo, int userGameInfoSize, int gg
         return 6;
     if ((unsigned int)userGameInfoSize > 0x70)
         return 6;
-    MIi_CpuCopy32(userGameInfo, data_020a9440, userGameInfoSize);
+    MI_CpuCopy32(userGameInfo, data_020a9440, userGameInfoSize);
     DC_StoreRange(data_020a9440, userGameInfoSize);
     WM_SetCallbackTable(0x18, (void *)callback);
     ret = WM_SendCommand(0x18, 6, data_020a9440, userGameInfoSize, ggid, arg5, arg6, arg7);

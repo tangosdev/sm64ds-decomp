@@ -15,7 +15,7 @@ void MBi_ReadSegmentHeader(struct S *s, unsigned int start, unsigned int end, in
     if (end > top) end = top;
     if (start >= end) return;
     if (flag)
-        MI_CpuFill8(s->f8 + start, 0, end - start);
+        MI_CpuClear8(s->f8 + start, end - start);
     else
         MI_CpuCopy8(s->f4 + start, s->f8 + start, end - start);
 }

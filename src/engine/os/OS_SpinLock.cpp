@@ -53,7 +53,7 @@ void OS_InitLock(void)
     ((u32 *)HW_LOCK_ID_FLAG_MAIN)[1] = 0xffff0000;
 
     zero = 0;
-    MIi_CpuClear32(zero, (int *)HW_SHARED_LOCK_BUF, 0x28);
+    MI_CpuFill32((void *)HW_SHARED_LOCK_BUF, zero, 0x28);
 
     // Card and cartridge buses to the ARM7.
     REG_EXMEMCNT |= 0x800;

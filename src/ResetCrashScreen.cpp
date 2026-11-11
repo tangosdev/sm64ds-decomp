@@ -8,6 +8,6 @@ void ResetCrashScreen(void)
 {
     void *ptr = G2_GetBG1ScrPtr();
     volatile unsigned short val = 0xff;
-    MIi_CpuClear16(val, ptr, 0x800);
+    MI_CpuFill16(ptr, val, 0x800);
 }
 }

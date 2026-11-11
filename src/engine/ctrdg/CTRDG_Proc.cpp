@@ -130,7 +130,7 @@ void CTRDGi_InitModuleInfo(void) {
         cip->makerCode = chd->makerCode;
         cip->gameCode = chd->gameCode;
     }
-    MIi_CpuCopy32((int *)0xffff0020, &data_020a9e04, 0x9c);
+    MI_CpuCopy32((int *)0xffff0020, &data_020a9e04, 0x9c);
     DC_FlushAll();
     data = (((unsigned int)&data_020a9e00 + 0xfe000000) >> 5) << 6 | 1;
     CTRDGi_SendtoPxi(data);

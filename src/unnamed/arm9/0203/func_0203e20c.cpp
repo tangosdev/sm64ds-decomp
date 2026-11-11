@@ -144,7 +144,7 @@ void func_0203e20c(void)
         data_020a0f08 = cnt2;
         do {
             *p9 = 0;
-            MI_CpuFill8(p11, 0, 0x16);
+            MI_CpuClear8(p11, 0x16);
             i2 += 1;
             p9 += 1;
             p11 += 0x16;
@@ -265,8 +265,8 @@ void func_0203e20c(void)
             sl = 1;
             do {
                 *p9d = 0;
-                MI_CpuFill8(p1112, 0, 0x16);
-                MI_CpuFill8(pbe, 0, 6);
+                MI_CpuClear8(p1112, 0x16);
+                MI_CpuClear8(pbe, 6);
                 sl += 1;
                 p9d += 1;
                 p1112 += 0x16;

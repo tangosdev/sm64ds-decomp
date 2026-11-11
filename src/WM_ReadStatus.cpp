@@ -20,7 +20,7 @@ int WM_ReadStatus(int *statusBuf) {
     if (statusBuf == 0)
         return 6;
     DC_InvalidateRange(sys->status, 0x930);
-    MIi_CpuCopyFast(sys->status, statusBuf, 0x930);
+    MI_CpuCopyFast(sys->status, statusBuf, 0x930);
     return 0;
 }
 }

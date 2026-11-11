@@ -676,9 +676,9 @@ void OAM::Reset() {
     } else {
         data_0209e674[0].attr01 = 0xc0;
         data_0209e674[0].attr2 = 0;
-        MIi_CpuCopy32((int *)data_0209e674, data_0209e67c, 0x18);
-        MIi_CpuCopyFast(data_0209e674, data_0209e694, 0x3e0);
-        MIi_CpuCopyFast(data_0209e674, data_0209ea74, 0x400);
+        MI_CpuCopy32(data_0209e674, data_0209e67c, 0x18);
+        MI_CpuCopyFast(data_0209e674, data_0209e694, 0x3e0);
+        MI_CpuCopyFast(data_0209e674, data_0209ea74, 0x400);
         data_0209e670 = 0;
         data_0209e66c = 0;
     }

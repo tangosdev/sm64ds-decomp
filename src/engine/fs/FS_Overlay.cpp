@@ -66,7 +66,7 @@ void FS_ClearOverlayImage(FSOverlayInfo *p_ovi) {
     u32 total_size = ram_size + bss_size;
     IC_InvalidateRange((void *)im_start, total_size);
     DC_InvalidateRange((void *)im_start, total_size);
-    MI_CpuFill8((void *)(im_start + ram_size), 0, total_size - ram_size);
+    MI_CpuClear8((void *)(im_start + ram_size), total_size - ram_size);
 }
 
 /* The overlay's FSFileID: the ROM archive and the header's file_id. */
@@ -132,7 +132,7 @@ int FSi_CompareDigest(char *spec_digest, void *src, int len) {
     int digest_key[16];
     unsigned int i;
     int *p;
-    MI_CpuFill8(digest, 0, 0x14);
+    MI_CpuClear8(digest, 0x14);
     MI_CpuCopy8(data_0209a04c, digest_key, data_0209a050);
     DGT_Hash2CalcHmac(digest, src, len, digest_key, data_0209a050);
     p = digest;
@@ -169,7 +169,7 @@ void FS_StartOverlay(FSOverlayInfo *p_ovi) {
             }
         }
         if (ret == 0) {
-            MI_CpuFill8(p_ovi->header.ram_address, 0, rare_size);
+            MI_CpuClear8(p_ovi->header.ram_address, rare_size);
             OS_Terminate();
             return;
         }

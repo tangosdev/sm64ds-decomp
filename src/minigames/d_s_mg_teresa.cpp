@@ -1629,9 +1629,9 @@ void dScMgTeresa_c::PaintSquare(int cx, int cy, int val, int n)
                         if (y >= -0xc0 - sMgTopScreenYOffset && y >= 0 && y < 0xc0) {
                             addr = (int *)((char *)G2S_GetBG0CharPtr() +
                                            ((x / 8) + (y / 8) * 32) * 32 + (y & 7) * 4);
-                            MIi_CpuCopy32(addr, &buf, 4);
+                            MI_CpuCopy32(addr, &buf, 4);
                             buf = (buf & (-1 ^ (0xf << ((x & 7) * 4)))) | (val << ((x & 7) * 4));
-                            MIi_CpuCopy32(&buf, addr, 4);
+                            MI_CpuCopy32(&buf, addr, 4);
                         }
                     }
                 }
@@ -1678,7 +1678,7 @@ void dScMgTeresa_c::StartRound(int reset) {
     SpawnBoos();
     char *dst = (char *)G2S_GetBG0CharPtr();
     val = 0x1111;
-    MIi_CpuClear16(val, dst, 0x6000);
+    MI_CpuFill16(dst, val, 0x6000);
     mSceneState = 0;
     FreeGfxSlotsById(0x1d);
     mBannerTimer = 0x20;
@@ -1731,7 +1731,7 @@ s32 dScMgTeresa_c::InitResources()
     {
         void *p = G2_GetBG2ScrPtr();
         fa = 0x5300;
-        MIi_CpuClear16(fa, p, 0x800);
+        MI_CpuFill16(p, fa, 0x800);
     }
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
     G2_SetBG3Priority(0);
@@ -1763,13 +1763,13 @@ s32 dScMgTeresa_c::InitResources()
     {
         void *p = G2S_GetBG0ScrPtr();
         fb = 0;
-        MIi_CpuClear16(fb, p, 0x800);
+        MI_CpuFill16(p, fb, 0x800);
     }
     Mg_InitBrush((char *)this, 0, 0, 0);
     {
         void *p = (char *)G2S_GetBG0CharPtr();
         fc = 0x1111;
-        MIi_CpuClear16(fc, p, 0x6000);
+        MI_CpuFill16(p, fc, 0x6000);
     }
     gSubScreenLayers |= 4;
     G2S_SetBG2Priority(1);

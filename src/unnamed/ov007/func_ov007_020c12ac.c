@@ -16,7 +16,7 @@ Ov007SpriteBank *func_ov007_020c12ac(int cellCount, int animCount) {
         int i;
         for (i = 0; i < cellCount; i++) {
             v1 = 0;
-            MIi_CpuClear32(v1, (int *)&bank->cells[i], sizeof(Ov007Cell));
+            MI_CpuFill32((int *)&bank->cells[i], v1, sizeof(Ov007Cell));
         }
     }
     {
@@ -24,7 +24,7 @@ Ov007SpriteBank *func_ov007_020c12ac(int cellCount, int animCount) {
         int j;
         for (j = 0; j < animCount; j++) {
             v2 = 0;
-            MIi_CpuClear32(v2, (int *)&bank->anims[j], sizeof(Ov007CellAnim));
+            MI_CpuFill32((int *)&bank->anims[j], v2, sizeof(Ov007CellAnim));
         }
     }
     return bank;

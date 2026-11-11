@@ -209,19 +209,19 @@ void func_0203ea5c(void) {
                                 break;
                             case 0:
                                 data_020a1040.flags &= 0xFFFE;
-                                MI_CpuFill8(&data_020a10a4[0], 0, 0x16);
+                                MI_CpuClear8(&data_020a10a4[0], 0x16);
                                 MI_CpuCopy8(hostPkt + 3, &data_020a10a4[0], 0x16);
                                 break;
                             case 1:
-                                MI_CpuFill8(&data_020a10a4[1], 0, 0x16);
+                                MI_CpuClear8(&data_020a10a4[1], 0x16);
                                 MI_CpuCopy8(hostPkt + 3, &data_020a10a4[1], 0x16);
                                 break;
                             case 2:
-                                MI_CpuFill8(&data_020a10a4[2], 0, 0x16);
+                                MI_CpuClear8(&data_020a10a4[2], 0x16);
                                 MI_CpuCopy8(hostPkt + 3, &data_020a10a4[2], 0x16);
                                 break;
                             case 3:
-                                MI_CpuFill8(&data_020a10a4[3], 0, 0x16);
+                                MI_CpuClear8(&data_020a10a4[3], 0x16);
                                 MI_CpuCopy8(hostPkt + 3, &data_020a10a4[3], 0x16);
                                 break;
                             }
@@ -230,7 +230,7 @@ void func_0203ea5c(void) {
                     } else {
                         for (aid = 0; aid < 4; aid++) {
                             pkt = func_0204068c(aid);
-                            MI_CpuFill8(&data_020a1154[aid], 0, sizeof(Rec));
+                            MI_CpuClear8(&data_020a1154[aid], sizeof(Rec));
                             if (pkt != 0) {
                                 MI_CpuCopy8(pkt, &data_020a1154[aid].flags, 2);
                                 if (data_020a1154[aid].flags & 0x8000) {

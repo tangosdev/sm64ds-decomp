@@ -209,7 +209,7 @@ void OS_CreateThread(OSThread *thread, void (*func)(void *), void *arg, void *st
     {
         /* MI_CpuClear32's value: the ROM passes it through a stack slot. */
         volatile int fill = 0;
-        MIi_CpuClear32(fill, (int *)((u32)stack - stackSize + 4), stackSize - 8);
+        MI_CpuFill32((void *)((u32)stack - stackSize + 4), fill, stackSize - 8);
     }
 
     thread->mutex = 0;

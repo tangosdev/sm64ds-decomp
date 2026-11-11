@@ -798,7 +798,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
             }
             p = (char *)G2S_GetBG3ScrPtr();
             t1 = tile | 0xf000;
-            MIi_CpuClear16(t1, p + row + cx * 2 + kk, layer);
+            MI_CpuFill16(p + row + cx * 2 + kk, t1, layer);
             kk += 2;
             jj++;
         } while (jj <= 0);
@@ -819,7 +819,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         for (i2 = -1; i2 <= 1; i2++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i2) << 6);
             t2 = (bas2 + 0x20 * i2) | 0xf000;
-            MIi_CpuClear16(t2, p + cx * 2 - 4, lay2);
+            MI_CpuFill16(p + cx * 2 - 4, t2, lay2);
         }
     }
 
@@ -830,7 +830,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         for (i3 = -1; i3 <= 0; i3++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i3) << 6);
             t3 = (bas3 + 0x20 * i3) | 0xf000;
-            MIi_CpuClear16(t3, p + cx * 2 + 2, lay3);
+            MI_CpuFill16(p + cx * 2 + 2, t3, lay3);
         }
         return;
     }
@@ -842,7 +842,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         for (i4 = -1; i4 <= 1; i4++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i4) << 6);
             t4 = (bas4 + 0x20 * i4) | 0xf000;
-            MIi_CpuClear16(t4, p + cx * 2 + 2, lay4);
+            MI_CpuFill16(p + cx * 2 + 2, t4, lay4);
         }
         return;
     }
@@ -854,7 +854,7 @@ void cMgSmartball_board_c::PaintCell(int idx, int *pos) {
         for (i5 = -1; i5 <= 1; i5++) {
             p = (char *)G2S_GetBG3ScrPtr() + ((cy + i5) << 6);
             t5 = (bas5 + 0x20 * i5) | 0xf000;
-            MIi_CpuClear16(t5, p + cx * 2 + 2, lay5);
+            MI_CpuFill16(p + cx * 2 + 2, t5, lay5);
         }
     }
 }
@@ -5429,7 +5429,7 @@ s32 dScMgSmartball_c::InitResources() {
     {
         /* volatile: same stack round trip of the fill value as PaintCell. */
         volatile u16 v;
-        MIi_CpuClear16((u16)(v = 0), G2S_GetBG0ScrPtr(), 0x1000);
+        MI_CpuFill16(G2S_GetBG0ScrPtr(), (u16)(v = 0), 0x1000);
     }
     f = Ov004_LoadFileByPath(&sSmartballResultBgNscPath);
     DecompressLZ16(f, G2S_GetBG0ScrPtr());

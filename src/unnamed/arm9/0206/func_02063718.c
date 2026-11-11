@@ -42,14 +42,14 @@ int func_02063718(WBTWork *work, unsigned char *q) {
     t = func_02065c1c();
     switch (st->command) {
     case 2:
-        MIi_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
+        MI_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
         work->cmd.my_cmd_counter = t;
         ret = func_02065bc0();
         b = func_02065bd0();
         ret = func_02064f54(q, work->cmd.target_bmp, work->cmd.my_cmd_counter, ret, b);
         break;
     case 6:
-        MIi_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
+        MI_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
         work->cmd.my_cmd_counter = t;
         recv = &work->peer[0].recv;
         for (i = 0; i < 0x10; i++, recv = (WBTPeerRecv *)((char *)recv + sizeof(WBTPeerRecord))) {
@@ -65,7 +65,7 @@ int func_02063718(WBTWork *work, unsigned char *q) {
                                 work->cmd.u.get.block_id, 0);
         break;
     case 4:
-        MIi_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
+        MI_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
         work->cmd.my_cmd_counter = t;
         recv = &work->peer[0].recv;
         for (i = 0; i < 0x10; i++, recv = (WBTPeerRecv *)((char *)recv + sizeof(WBTPeerRecord))) {
@@ -81,7 +81,7 @@ int func_02063718(WBTWork *work, unsigned char *q) {
                                 work->cmd.u.get.block_id, 0);
         break;
     case 0xa:
-        MIi_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
+        MI_CpuCopy32(st, &work->cmd, sizeof(WBTCommand));
         work->cmd.my_cmd_counter = t;
         ret = func_02064a94(q, work->cmd.target_bmp, work->cmd.my_cmd_counter,
                             work->cmd.u.user_data.data, work->cmd.u.user_data.size);

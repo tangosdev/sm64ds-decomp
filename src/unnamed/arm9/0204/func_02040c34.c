@@ -119,7 +119,7 @@ extern "C" void func_02040c34(int isParent, int port, void (*stateCallback)(int)
                 FileShareNode *nd;
                 nd = *(FileShareNode **)((base + 0x2000) + 0x700);
                 *(FileShareNode **)((base + 0x2000) + 0x700) = nd->mNext;
-                MI_CpuFill8(nd, 0, FILE_SHARE_NODE_SIZE);
+                MI_CpuClear8(nd, FILE_SHARE_NODE_SIZE);
                 /* mTableSize is read through data_020a1fc0, not G, here and in the
                    child branch: the G-> spelling comes out 8 bytes short */
                 WBT_RegisterBlock(nd->mRegion, 0x20000, data_02082158, (int)G->mTable,

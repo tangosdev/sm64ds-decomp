@@ -264,14 +264,14 @@ void func_0201adfc(void) {
 
     for (i = 0; i < data_0209d6f0[6] * 2; i++) {
         for (j = 0; j < data_0209d6a8; j++) {
-            MIi_CpuCopy32((int *)(p + 4), (int *)p, 0x10);
+            MI_CpuCopy32(p + 4, p, 0x10);
             if (i == data_0209d6f0[6] * 2 - 1) {
                 p[4] = 0;
                 p[5] = 0;
                 p[6] = 0;
                 p[7] = 0;
             } else {
-                MIi_CpuCopy32((int *)(p + data_0209d6a8 * 8), (int *)(p + 4), 0x10);
+                MI_CpuCopy32(p + data_0209d6a8 * 8, p + 4, 0x10);
             }
             p += 8;
         }
@@ -358,10 +358,10 @@ void func_0201b100(int mode) {
             int lo2 = opcode & 0xf;
             int hi2 = opcode & 0xf0;
             int w;
-            MIi_CpuCopy32((int *)(base + (((lo2 << 1) + (hi2 << 2)) << 5)), (int *)r4addr, size);
+            MI_CpuCopy32((void *)(base + (((lo2 << 1) + (hi2 << 2)) << 5)), (void *)r4addr, size);
             w = ((int)data_0209d6b0 + 7) / 8;
-            MIi_CpuCopy32((int *)(base + ((lo2 + ((hi2 << 1) + 0x10)) << 6)),
-                          (int *)(r4addr + (w << 5)), size);
+            MI_CpuCopy32((void *)(base + ((lo2 + ((hi2 << 1) + 0x10)) << 6)),
+                         (void *)(r4addr + (w << 5)), size);
         } else {
             int lo;
             int hi;
@@ -555,7 +555,7 @@ void Message::LayoutLine() {
         data_0209d704 = 0;
         data_0209d6a4 = 0;
         data_0209d6b0 = 0;
-        MIi_CpuClear32(fill, data_0209d74c, 0xf00);
+        MI_CpuFill32(data_0209d74c, fill, 0xf00);
     }
 
     while (1) {

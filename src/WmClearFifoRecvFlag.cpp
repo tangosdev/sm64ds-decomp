@@ -113,7 +113,7 @@ void WmReceiveFifo(int tag, u16 *msg, int err) {
                     data_020a89ec.w10 = 0;
                     data_020a89ec.w12 = v5;
                     data_020a89ec.w1a = 0xffff;
-                    MIi_CpuCopy16(p, &data_020a8a00, 6);
+                    MI_CpuCopy16(p, &data_020a8a00, 6);
                     for (i = 0; i < 0x10; i++) {
                         data_020a89ec.w6 = i;
                         if (data_020a89ac->portCallbackTable[i] != 0) {

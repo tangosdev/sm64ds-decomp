@@ -193,7 +193,7 @@ void Luigi_PrepareScanlines(void) {
         Luigi_PushScanlineRecord();
     } else if (nextLine <= 0xc0) {
         if (REG_DISPSTAT & DISPSTAT_HBLANK) {
-            MIi_CpuCopy32(&data_0209f648[data_0209f608][nextLine], (int *)0x04000040, 4);
+            MI_CpuCopy32(&data_0209f648[data_0209f608][nextLine], (int *)0x04000040, 4);
         }
     }
 }
@@ -207,7 +207,7 @@ void Luigi_PushScanlineRecord(void) {
     extern volatile u32 data_0209f608;
     extern struct IrisScanlineTable data_0209f648[];
     data_0209f608 = data_0209f60c;
-    MIi_CpuCopy32((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
+    MI_CpuCopy32((int *)&data_0209f648[data_0209f608], (int *)0x04000040, 4);
 }
 }
 
@@ -1416,7 +1416,7 @@ void dScMgLuigi_c::ChooseTarget() {
         sourceTile = sLuigiWantedPosterTiles[mWanted] + tileRow * 0x20;
         for (tileColumn = 0; tileColumn < 8; tileColumn++) {
             tile = ((u16 *)G2_GetBG3ScrPtr())[sourceTile];
-            MIi_CpuClear16(tile, (char *)dst, 2);
+            MI_CpuFill16(dst, tile, 2);
             sourceTile++;
             dst++;
         }
@@ -1698,7 +1698,7 @@ s32 dScMgLuigi_c::InitResources() {
 
     screenMap = (char *)G2_GetBG2ScrPtr();
     fillMain = 0x23e1;
-    MIi_CpuClear16(fillMain, screenMap, 0x800);
+    MI_CpuFill16(screenMap, fillMain, 0x800);
 
     objectTiles = LoadFile(ASSET_D_2D_MG_LUIGI_NCG_BIN);
     fileData = LoadFile(ASSET_D_2D_MG_LUIGI_NCL_BIN);
@@ -1731,7 +1731,7 @@ s32 dScMgLuigi_c::InitResources() {
         subFileData = LoadFile(ASSET_D_2D_MG_BG_LUIGI2_BLACK_NSC_BIN);
         screenMap = (char *)G2S_GetBG3ScrPtr();
         fillSub = 0xf3e1;
-        MIi_CpuClear16(fillSub, screenMap, 0x800);
+        MI_CpuFill16(screenMap, fillSub, 0x800);
         Deallocate(subFileData);
     }
 

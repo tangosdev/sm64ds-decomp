@@ -43,6 +43,6 @@ void OS_GetOwnerInfo(unsigned char *dst) {
     info->birthdayDay = src->owner.birthdayDay;
     info->nickNameLength = src->owner.nickNameLength;
     info->commentLength = src->owner.commentLength;
-    MIi_CpuCopy16(src->owner.nickName, info->nickName, sizeof(info->nickName));
-    MIi_CpuCopy16(src->owner.comment, info->comment, sizeof(info->comment));
+    MI_CpuCopy16(src->owner.nickName, info->nickName, sizeof(info->nickName));
+    MI_CpuCopy16(src->owner.comment, info->comment, sizeof(info->comment));
 }
