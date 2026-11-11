@@ -420,8 +420,6 @@ bool register_local(char *a, int cls, unsigned param, const int pos[3], int area
             return false;
         }
     }
-    // COOPCOUNT2: the same star number already came from a friend (his announce beat my native spawn): the lower seat's copy stays
-    // (see apply_spawn). A lower seat's copy here: mine goes unannounced. A higher seat's: his copy goes and mine is announced.
     // SNOWMAN2: a player already took this star number in this visit (here or on a friend's console): my late finish makes no new one.
     if (!g_toff.startaken && cls == 178 && a && g_star_taken[param & 0xff]) {
         kill_quiet(a);
@@ -430,6 +428,8 @@ bool register_local(char *a, int cls, unsigned param, const int pos[3], int area
                                 param & 0xff, g_frames, wall_ms());
         return false;
     }
+    // COOPCOUNT2: the same star number already came from a friend (his announce beat my native spawn): the lower seat's copy stays
+    // (see apply_spawn). A lower seat's copy here: mine goes unannounced. A higher seat's: his copy goes and mine is announced.
     if (!g_toff.stardup && cls == 178 && a) {
         for (Net &o : g_net) {
             if (!o.used || o.gone || !o.remote || o.cls != 178 || (o.param & 0xff) != (param & 0xff) || !o.a || a_dead(o.a)) continue;
