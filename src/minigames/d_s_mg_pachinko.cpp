@@ -2161,10 +2161,10 @@ s32 dScMgPachinko_c::InitResources()
     int x;
 
     gMainScreenLayers |= DISPLAY_LAYER_BG3;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & ~3) | 1;
-    *(volatile u16 *)0x400000e &= ~0x40;
-    *(volatile u32 *)0x400001c = 0;
-    *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x1210;
+    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
+    REG_BG3CNT &= ~0x40;
+    REG_BG3OFS = 0;
+    REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1210;
 
     f = LoadFile(0x5f);
     DecompressLZ16(f, (void *)G2_GetBG3CharPtr());
@@ -2178,9 +2178,9 @@ s32 dScMgPachinko_c::InitResources()
     GX_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & ~3) | 1;
-    *(volatile u16 *)0x400000c &= ~0x40;
-    *(volatile u16 *)0x400000c = (*(volatile u16 *)0x400000c & 0x43) | 0x5418;
+    REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+    REG_BG2CNT &= ~0x40;
+    REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x5418;
 
     f = LoadFile(0x46);
     DecompressLZ16(f, G2_GetBG2CharPtr());
@@ -2200,10 +2200,10 @@ s32 dScMgPachinko_c::InitResources()
     GX_LoadOBJPltt(objPltt, 0, 0x100);
 
     gSubScreenLayers |= 0xd;
-    *(volatile u16 *)0x400100c &= ~3;
-    *(volatile u16 *)0x400100c &= ~0x40;
-    *(volatile u32 *)0x4001018 = 0;
-    *(volatile u16 *)0x400100c = (*(volatile u16 *)0x400100c & 0x43) | 0x418;
+    REG_DB_BG2CNT &= ~3;
+    REG_DB_BG2CNT &= ~0x40;
+    REG_DB_BG2OFS = 0;
+    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x418;
 
     Mg_InitBrush(c, 0, 2, 0);
 
@@ -2221,10 +2221,10 @@ s32 dScMgPachinko_c::InitResources()
         }
     }
 
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 2;
-    *(volatile u16 *)0x400100e &= ~0x40;
-    *(volatile u32 *)0x400101c = 0;
-    *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x208;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 2;
+    REG_DB_BG3CNT &= ~0x40;
+    REG_DB_BG3OFS = 0;
+    REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x208;
 
     f = LoadFile(0x5c);
     DecompressLZ16(f, (void *)G2S_GetBG3CharPtr());
@@ -2238,10 +2238,10 @@ s32 dScMgPachinko_c::InitResources()
     GXS_LoadBG3Scr(f, 0, 0x800);
     Deallocate(f);
 
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 1;
-    *(volatile u16 *)0x4001008 &= ~0x40;
-    *(volatile u32 *)0x4001010 = 0;
-    *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x608;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 1;
+    REG_DB_BG0CNT &= ~0x40;
+    REG_DB_BG0OFS = 0;
+    REG_DB_BG0CNT = (REG_DB_BG0CNT & 0x43) | 0x608;
 
     f = LoadFile(5);
     GXS_LoadBG0Scr(f, 0, 0x800);

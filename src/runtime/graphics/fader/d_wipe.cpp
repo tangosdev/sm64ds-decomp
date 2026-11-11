@@ -27,6 +27,7 @@
 #include "nitro/os/cache.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
+#include "nitro/hw/registers.h"
 
 extern "C" {
 void MIi_CpuClear32(int val, int *dst, int len);
@@ -57,18 +58,18 @@ dWipe_c::~dWipe_c()
    WIN0/WIN1/OBJWIN enables in both engines' DISPCNT, and if a type change
    was stashed mid-transition, commit it now. */
 void dWipe_c::DisableWindows() {
-    u16 ime = *(volatile u16 *)0x4000208;
-    *(volatile u16 *)0x4000208 = 0;
+    u16 ime = REG_IME;
+    REG_IME = 0;
     OS_DisableIrqMask(2);
     GX_HBlankIntr(0);
     OS_SetIrqFunction(2, 0);
     if (ime != 0) {
-        u16 dead = *(volatile u16 *)0x4000208;
-        *(volatile u16 *)0x4000208 = 1;
+        u16 dead = REG_IME;
+        REG_IME = 1;
         (void)dead;
     }
-    *(volatile u32 *)0x4000000 &= ~0xe000;
-    *(volatile u32 *)0x4001000 &= ~0xe000;
+    REG_DISPCNT &= ~0xe000;
+    REG_DISPCNT_SUB &= ~0xe000;
     if (typePending == 1) {
         type = pendingType;
         typePending = 0;
@@ -106,27 +107,27 @@ int dWipe_c::SetBackwardTime(u32 frames, u32 extra) {
 
         wipeInterp = 0;
 
-        *(volatile u16 *)0x4000040 = 0x7f7f;
-        *(volatile u16 *)0x4000044 = 0xc0;
-        *(volatile u16 *)0x4001040 = 0x7f7f;
-        *(volatile u16 *)0x4001044 = 0xc0;
-        *(volatile u16 *)0x4000042 = 0x8080;
-        *(volatile u16 *)0x4000046 = 0xc0;
-        *(volatile u16 *)0x4001042 = 0x8080;
-        *(volatile u16 *)0x4001046 = 0xc0;
+        REG_WIN0H = 0x7f7f;
+        REG_WIN0V = 0xc0;
+        REG_DB_WIN0H = 0x7f7f;
+        REG_DB_WIN0V = 0xc0;
+        REG_WIN1H = 0x8080;
+        REG_WIN1V = 0xc0;
+        REG_DB_WIN1H = 0x8080;
+        REG_DB_WIN1V = 0xc0;
 
         state = 1;
         EnableWindows();
 
         {
-            u16 ime = *(volatile u16 *)0x4000208;
-            *(volatile u16 *)0x4000208 = 0;
+            u16 ime = REG_IME;
+            REG_IME = 0;
             OS_SetIrqFunction(2, Wipe_HBlankHandler);
             OS_EnableIrqMask(2);
             GX_HBlankIntr(1);
             if (ime != 0) {
-                u16 dead = *(volatile u16 *)0x4000208;
-                *(volatile u16 *)0x4000208 = 1;
+                u16 dead = REG_IME;
+                REG_IME = 1;
                 (void)dead;
             }
         }
@@ -175,26 +176,26 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
         }
 
         wipeInterp = 0x200000;
-        *(volatile u16 *)0x4000040 = 0x7f;
-        *(volatile u16 *)0x4000044 = 0xc0;
-        *(volatile u16 *)0x4001040 = 0x7f;
-        *(volatile u16 *)0x4001044 = 0xc0;
-        *(volatile u16 *)0x4000042 = 0x80ff;
-        *(volatile u16 *)0x4000046 = 0xc0;
-        *(volatile u16 *)0x4001042 = 0x80ff;
-        *(volatile u16 *)0x4001046 = 0xc0;
+        REG_WIN0H = 0x7f;
+        REG_WIN0V = 0xc0;
+        REG_DB_WIN0H = 0x7f;
+        REG_DB_WIN0V = 0xc0;
+        REG_WIN1H = 0x80ff;
+        REG_WIN1V = 0xc0;
+        REG_DB_WIN1H = 0x80ff;
+        REG_DB_WIN1V = 0xc0;
 
         state = 3;
         EnableWindows();
 
-        saved = *(volatile u16 *)0x4000208;
-        *(volatile u16 *)0x4000208 = 0;
+        saved = REG_IME;
+        REG_IME = 0;
         OS_SetIrqFunction(2, Wipe_HBlankHandler);
         OS_EnableIrqMask(2);
         GX_HBlankIntr(1);
         if (saved != 0) {
-            u16 dead = *(volatile u16 *)0x4000208;
-            *(volatile u16 *)0x4000208 = 1;
+            u16 dead = REG_IME;
+            REG_IME = 1;
             (void)dead;
         }
 
@@ -216,20 +217,20 @@ int dWipe_c::SetForwardTime(u32 frames, u32 extra) {
 void dWipe_c::EnableWindows() {
     unk_00e = 1;
 
-    { u32 v = *(volatile u16 *)0x4000048; v = (v & ~0x3f) | 0x1f; v = v | 0x20; *(volatile u16 *)0x4000048 = v; }
-    { u32 v = *(volatile u16 *)0x4001048; v = (v & ~0x3f) | 0x1f; v = v | 0x20; *(volatile u16 *)0x4001048 = v; }
-    { u32 v = *(volatile u16 *)0x4000048; v = (v & ~0x3f00) | 0x1f00; v = v | 0x2000; *(volatile u16 *)0x4000048 = v; }
-    { u32 v = *(volatile u16 *)0x4001048; v = (v & ~0x3f00) | 0x1f00; v = v | 0x2000; *(volatile u16 *)0x4001048 = v; }
+    { u32 v = REG_WININ; v = (v & ~0x3f) | 0x1f; v = v | 0x20; REG_WININ = v; }
+    { u32 v = REG_DB_WININ; v = (v & ~0x3f) | 0x1f; v = v | 0x20; REG_DB_WININ = v; }
+    { u32 v = REG_WININ; v = (v & ~0x3f00) | 0x1f00; v = v | 0x2000; REG_WININ = v; }
+    { u32 v = REG_DB_WININ; v = (v & ~0x3f00) | 0x1f00; v = v | 0x2000; REG_DB_WININ = v; }
 
-    *(volatile u16 *)0x400004a &= ~0x3f;
-    *(volatile u16 *)0x400104a &= ~0x3f;
+    REG_WINOUT &= ~0x3f;
+    REG_DB_WINOUT &= ~0x3f;
 
-    *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0xe000) | 0x6000;
+    REG_DISPCNT = (REG_DISPCNT & ~0xe000) | 0x6000;
 
     if (data_0209f5f8 != 0) {
-        *(volatile u32 *)0x4001000 &= ~0xe000;
+        REG_DISPCNT_SUB &= ~0xe000;
     } else {
-        *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0xe000) | 0x6000;
+        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0xe000) | 0x6000;
     }
 
     data_0209f608 = 0;
@@ -241,8 +242,8 @@ void dWipe_c::EnableWindows() {
     data_0209f5fc = 0;
     BuildTable();
 
-    if ((*(volatile u16 *)0x4000050 & 0x80) == 0x80) *(volatile u16 *)0x4000050 = 0;
-    if ((*(volatile u16 *)0x4001050 & 0x80) == 0x80) *(volatile u16 *)0x4001050 = 0;
+    if ((REG_BLDCNT & 0x80) == 0x80) REG_BLDCNT = 0;
+    if ((REG_DB_BLDCNT & 0x80) == 0x80) REG_DB_BLDCNT = 0;
 }
 
 /* Vtable slot 2. Type 1 is the plain colour fade and the base owns it.
@@ -318,7 +319,7 @@ extern "C" void Wipe_HBlankHandler(void) {
         return;
     }
 
-    if ((*(volatile u16 *)0x4000004 & 2) == 0)
+    if ((REG_DISPSTAT & 2) == 0)
         return;
 
     MIi_CpuCopy32((int *)(data_0209f648 + data_0209f608 * 0x300u + line * 4), (int *)0x4000040, 4);
