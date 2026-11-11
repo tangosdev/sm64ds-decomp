@@ -913,11 +913,11 @@ s32 dScStarSel_c::InitResources() {
     GX_SetBankForSubBG(0x80);
     GX_SetBankForSubOBJ(8);
     GX_SetBankForSubOBJExtPltt(0x100);
-    REG_DISPCNT &= 0xFFCFFFEF;
-    REG_DISPCNT_SUB &= 0xFFCFFFEF;
+    GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
+    GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     GX_SetGraphicsMode(1, 0, 1);
     GXS_SetGraphicsMode(0);
-    REG_DISPCNT = (REG_DISPCNT & ~0x38000000) | 0x08000000;
+    GX_SetBGScrOffset(1);
     REG_POWCNT1 = (REG_POWCNT1 & 0xFFFFFDF1) | 0x20E;
     GX_DispOn();
     REG_DISPCNT_SUB |= 0x10000;
@@ -925,16 +925,16 @@ s32 dScStarSel_c::InitResources() {
     InitialiseVramGlobals();
     models[0].LoadAndSetFile(0x8015, 1, -1);
     models[1].LoadAndSetFile(0x8017, 1, -1);
-    REG_BG0CNT = (REG_BG0CNT & ~3) | 2;
+    G2_SetBG0Priority(2);
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG3 | DISPLAY_LAYER_OBJ;
-    REG_BG3CNT &= ~3;
+    G2_SetBG3Priority(0);
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x1700;
-    REG_BG3CNT &= ~0x40;
+    G2_BG3Mosaic(0);
     LoadFont(0);
     if (SublevelToLevel(gNextSublevel) >= 0xF) {
-        REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+        G2_SetBG2Priority(1);
         REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
-        REG_BG2CNT &= ~0x40;
+        G2_BG2Mosaic(0);
         file = LoadFile(ASSET_D_2D_PLAYER_SELECT_KOOPA_BG_NCG_BIN);
         DecompressLZ16(file, G2_GetBG2CharPtr());
         Deallocate(file);
@@ -949,9 +949,9 @@ s32 dScStarSel_c::InitResources() {
         gMainScreenLayers |= DISPLAY_LAYER_BG2;
         gMainScreenLayers &= ~DISPLAY_LAYER_BG0;
     } else {
-        REG_BG2CNT = (REG_BG2CNT & ~3) | 1;
+        G2_SetBG2Priority(1);
         REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1610;
-        REG_BG2CNT &= ~0x40;
+        G2_BG2Mosaic(0);
         if (GetOwnerLanguage() == 5) {
             file = LoadFile(ASSET_D_2D_SCENARIO_PLAYER_SELECT_COURSE_NUMBER_BG_S_NCG_BIN);
         } else if (GetOwnerLanguage() == 4) {
@@ -1187,8 +1187,8 @@ s32 dScStarSel_c::InitResources() {
     mBounceDelay = 0x78;
     mAnimFlip = 0;
     gSubScreenLayers = 0x10;
-    REG_DISPCNT = (REG_DISPCNT & ~0x1F00) | (gMainScreenLayers << 8);
-    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1F00) | 0x1000;
+    GX_SetVisiblePlane(gMainScreenLayers);
+    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | 0x1000;
     mLifeIcon = data_0209caa0.file.mCharacter;
     data_0208ee44 = 1;
     return 1;

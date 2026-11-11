@@ -24,6 +24,7 @@
 #include "GX.h"
 #include "nitro/hw/registers.h"
 #include "nitro/gx/g3imm_light.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 #include "Matrix2x2.h"
 
@@ -108,32 +109,32 @@ void dScene_c::ResetHardwareRegisters()
     GX_VBlankIntr(1);
     GX_SetGraphicsMode(1, 0, 0);
 
-    REG_DISPCNT &= ~0x1f00;
-    REG_DISPCNT &= ~0xe000;
-    REG_DISPCNT &= ~0x38000000;
-    REG_DISPCNT &= ~0x7000000;
-    REG_DISPCNT &= 0xffcfffef;
-    REG_DISPCNT &= 0xffbfff9f;
-    REG_DISPCNT &= ~0x800000;
+    GX_SetVisiblePlane(0);
+    GX_SetVisibleWnd(0);
+    GX_SetBGScrOffset(0);
+    GX_SetBGCharOffset(0);
+    GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
+    GX_SetOBJVRamModeBmp(GX_OBJVRAMMODE_BMP_2D_W128);
+    GX_HBlankOBJProc(0);
     REG_DISPCAPCNT = 0x80000000;
 
     REG_BG0CNT &= 0x43;
     REG_BG1CNT &= 0x43;
     REG_BG2CNT &= 0x43;
     REG_BG3CNT &= 0x43;
-    REG_BG0CNT &= ~0x40;
-    REG_BG1CNT &= ~0x40;
-    REG_BG2CNT &= ~0x40;
-    REG_BG3CNT &= ~0x40;
-    REG_BG0CNT &= ~3;
-    REG_BG1CNT &= ~3;
-    REG_BG2CNT &= ~3;
-    REG_BG3CNT &= ~3;
+    G2_BG0Mosaic(0);
+    G2_BG1Mosaic(0);
+    G2_BG2Mosaic(0);
+    G2_BG3Mosaic(0);
+    G2_SetBG0Priority(0);
+    G2_SetBG1Priority(0);
+    G2_SetBG2Priority(0);
+    G2_SetBG3Priority(0);
 
-    REG_BG0OFS = 0;
-    REG_BG1OFS = 0;
-    REG_BG2OFS = 0;
-    REG_BG3OFS = 0;
+    G2_SetBG0Offset(0, 0);
+    G2_SetBG1Offset(0, 0);
+    G2_SetBG2Offset(0, 0);
+    G2_SetBG3Offset(0, 0);
 
     G2_SetBG2Affine(&m, 0, 0, 0, 0);
     G2_SetBG3Affine(&m, 0, 0, 0, 0);
@@ -153,9 +154,9 @@ void dScene_c::ResetHardwareRegisters()
     GX_SetMasterBrightness(0);
     GXS_SetGraphicsMode(0);
 
-    REG_DISPCNT_SUB &= ~0x1f00;
+    GXS_SetVisiblePlane(0);
     REG_DISPCNT_SUB &= ~0xe000;
-    REG_DISPCNT_SUB &= 0xffcfffef;
+    GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     REG_DISPCNT_SUB &= 0xffbfff9f;
     REG_DISPCNT_SUB &= ~0x800000;
 
@@ -163,19 +164,19 @@ void dScene_c::ResetHardwareRegisters()
     REG_DB_BG1CNT &= 0x43;
     REG_DB_BG2CNT &= 0x43;
     REG_DB_BG3CNT &= 0x43;
-    REG_DB_BG0CNT &= ~0x40;
-    REG_DB_BG1CNT &= ~0x40;
-    REG_DB_BG2CNT &= ~0x40;
-    REG_DB_BG3CNT &= ~0x40;
-    REG_DB_BG0CNT &= ~3;
-    REG_DB_BG1CNT &= ~3;
-    REG_DB_BG2CNT &= ~3;
-    REG_DB_BG3CNT &= ~3;
+    G2S_BG0Mosaic(0);
+    G2S_BG1Mosaic(0);
+    G2S_BG2Mosaic(0);
+    G2S_BG3Mosaic(0);
+    G2S_SetBG0Priority(0);
+    G2S_SetBG1Priority(0);
+    G2S_SetBG2Priority(0);
+    G2S_SetBG3Priority(0);
 
-    REG_DB_BG0OFS = 0;
-    REG_DB_BG1OFS = 0;
-    REG_DB_BG2OFS = 0;
-    REG_DB_BG3OFS = 0;
+    G2S_SetBG0Offset(0, 0);
+    G2S_SetBG1Offset(0, 0);
+    G2S_SetBG2Offset(0, 0);
+    G2S_SetBG3Offset(0, 0);
 
     G2S_SetBG2Affine(&m, 0, 0, 0, 0);
     G2S_SetBG3Affine(&m, 0, 0, 0, 0);

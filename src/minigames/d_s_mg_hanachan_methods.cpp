@@ -2013,7 +2013,7 @@ void Hana_LoadBackground(void) {
     void *ncg = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NCG_BIN);
     void *nsc = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NSC_BIN);
     void *ncl = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE1_NCL_BIN);
-    REG_BG3CNT = (REG_BG3CNT & ~3) | 1;
+    G2_SetBG3Priority(1);
     REG_BG3CNT = (REG_BG3CNT & 0x43) | 0x614;
     DecompressLZ16(ncg, (void *)G2_GetBG3CharPtr());
     GX_LoadBG3Scr(nsc, 0, 0x800);
@@ -2026,7 +2026,7 @@ void Hana_LoadBackground(void) {
     ncg = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE2_NCG_BIN);
     nsc = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE2_NSC_BIN);
     ncl = LoadFile(ASSET_D_2D_MG_BG_HANA_SAGASE2_NCL_BIN);
-    REG_DB_BG3CNT = (REG_DB_BG3CNT & ~3) | 2;
+    G2S_SetBG3Priority(2);
     REG_DB_BG3CNT = (REG_DB_BG3CNT & 0x43) | 0x614;
     DecompressLZ16(ncg, G2S_GetBG3CharPtr());
     GXS_LoadBG3Scr(nsc, 0, 0x800);

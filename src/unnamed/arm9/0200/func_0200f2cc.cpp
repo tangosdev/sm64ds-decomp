@@ -4,6 +4,7 @@
 #include "nitro/gx/gx_vramcnt.h"
 #include "GX.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/gx_bgcnt.h"
 
 extern "C" {
 
@@ -22,27 +23,25 @@ void func_0200f2cc(void)
     GX_SetBankForSubBG(0x180);
     GX_SetBankForSubOBJ(8);
 
-    /* Main engine character and screen base offsets to 0. */
-    REG_DISPCNT &= ~0x7000000;
-    REG_DISPCNT &= ~0x38000000;
+    GX_SetBGCharOffset(0);
+    GX_SetBGScrOffset(0);
     /* Main engine on the top screen. */
     REG_POWCNT1 |= 0x8000;
     GX_SetGraphicsMode(1, 0, 1);
 
-    /* OBJ characters 2D-mapped (bit 4 and the 1D boundary bits 20-21 clear). */
-    REG_DISPCNT &= 0xffcfffef;
+    GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     REG_BG3CNT = (u16)((REG_BG3CNT & 0x43) | 0x10);
-    REG_BG3CNT &= ~0x40;
+    G2_BG3Mosaic(0);
     REG_BG2CNT = (u16)((REG_BG2CNT & 0x43) | 0xc108);
-    REG_BG2CNT &= ~0x40;
+    G2_BG2Mosaic(0);
     GXS_SetGraphicsMode(0);
 
-    REG_DISPCNT_SUB &= 0xffcfffef;
+    GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     REG_DB_BG0CNT = (u16)((REG_DB_BG0CNT & 0x43) | 4);
-    REG_DB_BG0CNT &= ~0x40;
+    G2S_BG0Mosaic(0);
     REG_DB_BG2CNT = (u16)((REG_DB_BG2CNT & 0x43) | 0x104);
-    REG_DB_BG2CNT &= ~0x40;
+    G2S_BG2Mosaic(0);
     REG_DB_BG3CNT = (u16)((REG_DB_BG3CNT & 0x43) | 0x704);
-    REG_DB_BG3CNT &= ~0x40;
+    G2S_BG3Mosaic(0);
 }
 }

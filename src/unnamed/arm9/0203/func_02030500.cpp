@@ -6,6 +6,7 @@
 #include "nitro/gx/gx_load.h"
 #include "GX.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g2.h"
 
 extern "C" {
 
@@ -31,13 +32,12 @@ extern u8 data_0209fc58;
    characters, palette and one of two screen maps (data_0209fc58 bits 4-5
    choose) on both engines, then show BG1 alone. */
 void func_02030500(void) {
-    u32 tmp;
     void *p;
 
     gMainScreenLayers = 0;
     gSubScreenLayers = 0;
-    REG_DISPCNT &= ~0x1f00;
-    REG_DISPCNT_SUB &= ~0x1f00;
+    GX_SetVisiblePlane(0);
+    GXS_SetVisiblePlane(0);
 
     Disable3dEngines();
     GX::DisableAllBanks();
@@ -46,28 +46,23 @@ void func_02030500(void) {
     GX_SetBankForSubBG(4);
     GX_SetBankForSubOBJ(8);
 
-    /* engine A's character and screen base offsets (bits 24-26, 27-29) to 0 */
-    tmp = REG_DISPCNT & ~0x7000000;
-    REG_DISPCNT = tmp;
-    tmp = REG_DISPCNT & ~0x38000000;
-    REG_DISPCNT = tmp;
+    GX_SetBGCharOffset(0);
+    GX_SetBGScrOffset(0);
     REG_POWCNT1 |= 0x8000; /* bit 15: engine A on the top screen */
-    REG_BLDCNT = 0;
-    REG_DB_BLDCNT = 0;
-    /* the window enables (bits 13-15) off on both engines */
-    tmp = REG_DISPCNT & ~0xe000;
-    REG_DISPCNT = tmp;
-    REG_DISPCNT_SUB &= ~0xe000;
+    G2_BlendNone();
+    G2S_BlendNone();
+    GX_SetVisibleWnd(0);
+    GXS_SetVisibleWnd(0);
     GX_SetGraphicsMode(1, 0, 0);
 
-    REG_DISPCNT &= 0xffcfffef;
+    GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     REG_BG1CNT = (REG_BG1CNT & 0x43) | 8;
-    REG_BG1CNT &= ~0x40;
+    G2_BG1Mosaic(0);
     GXS_SetGraphicsMode(0);
 
-    REG_DISPCNT_SUB &= 0xffcfffef;
+    GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     REG_DB_BG1CNT = (REG_DB_BG1CNT & 0x43) | 8;
-    REG_DB_BG1CNT &= ~0x40;
+    G2S_BG1Mosaic(0);
 
     DecompressLZ16(data_020927b0[GetLanguageIndexVS()], G2_GetBG1CharPtr());
     DecompressLZ16(data_020927b0[GetLanguageIndexVS()], G2S_GetBG1CharPtr());
@@ -83,14 +78,14 @@ void func_02030500(void) {
     DecompressLZ16(p, G2_GetBG1ScrPtr());
     DecompressLZ16(p, G2S_GetBG1ScrPtr());
 
-    REG_BG1CNT &= ~3; /* priority 0 */
-    REG_DB_BG1CNT &= ~3;
+    G2_SetBG1Priority(0);
+    G2S_SetBG1Priority(0);
     SetBg1Offset(0, 0);
     SetSubBg1Offset(0, 0);
 
     gMainScreenLayers = DISPLAY_LAYER_BG1;
-    gSubScreenLayers = 2;
-    REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x200;
-    REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | 0x200;
+    gSubScreenLayers = DISPLAY_LAYER_BG1;
+    GX_SetVisiblePlane(DISPLAY_LAYER_BG1);
+    GXS_SetVisiblePlane(DISPLAY_LAYER_BG1);
 }
 }

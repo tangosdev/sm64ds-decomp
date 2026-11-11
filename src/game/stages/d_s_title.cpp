@@ -49,6 +49,7 @@
 #include "GX.h"
 #include "OAM.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/g2.h"
 
 /* SetFaders stores the fade controller here; slot 5 waits for the entrance fade. */
 
@@ -215,13 +216,13 @@ s32 dScTitle_c::InitResources() {
     GX::DisableAllBanks();
     GX_SetBankForBG(8);
     GX_SetBankForOBJ(1);
-    REG_DISPCNT &= 0xffcfffef;
+    GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
     GX_SetGraphicsMode(1, 0, 0);
     REG_DISPCNT_SUB |= 0x10000;
     func_020233f4();
-    REG_BG0CNT &= ~3;
+    G2_SetBG0Priority(0);
     REG_BG0CNT = (REG_BG0CNT & 0x43) | 0x1f00;
-    REG_BG0CNT &= ~0x40;
+    G2_BG0Mosaic(0);
     GX_LoadBG0Char(data_0208a178, 0, 0x2000);
     GX_LoadBGPltt(data_0208c178, 0, 0x200);
     {
@@ -235,10 +236,10 @@ s32 dScTitle_c::InitResources() {
     GX_LoadOBJ(data_0208c378, 0, 0x2000);
     GX_LoadOBJPltt(data_0208c178, 0, 0x200);
     gMainScreenLayers = 0x11;
-    REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | 0x1100;
+    GX_SetVisiblePlane(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ);
     data_0208ee44 = 2;
     TitleScrollLevelList(this);
-    REG_BG0OFS = 0;
+    G2_SetBG0Offset(0, 0);
     data_0209ee90[0x340] = 0;
     data_0209ee90[0x341] = 0;
     Sound::LoadInitialGroup(2);

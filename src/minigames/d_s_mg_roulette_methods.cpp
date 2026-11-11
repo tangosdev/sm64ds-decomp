@@ -223,12 +223,12 @@ s32 dScMgRoulette_c::InitResources() {
     Deallocate(file);
     Deallocate(pltt);
 
-    REG_DB_BG0CNT = REG_DB_BG0CNT & ~0x40;
-    REG_DB_BG2CNT = REG_DB_BG2CNT & ~0x40;
+    G2S_BG0Mosaic(0);
+    G2S_BG2Mosaic(0);
     SetSubBg0Offset(0, 0);
     SetSubBg2Offset(0, 0);
-    REG_DB_BG0CNT = (REG_DB_BG0CNT & ~3) | 2;
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
+    G2S_SetBG0Priority(2);
+    G2S_SetBG2Priority(2);
 
     file = LoadFile(ASSET_D_2D_MG_ROULETTE_NCG_BIN);
     pltt = LoadFile(ASSET_D_2D_MG_ROULETTE_NCL_BIN);
@@ -241,7 +241,7 @@ s32 dScMgRoulette_c::InitResources() {
 
     gMainScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ;
     gSubScreenLayers = DISPLAY_LAYER_BG0 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_OBJ;
-    REG_BG0CNT = (REG_BG0CNT & ~3) | 1;
+    G2_SetBG0Priority(1);
 
     Camera_InitDealerView(&mCamera);
     if (Dealer_Load(&mDealer) == 0)
