@@ -13,12 +13,35 @@
 // It stays owner until it leaves the group or drops out; then the LOWEST
 // remaining established seat takes over and announces it. A console that is
 // still loading (not established) is never an owner and never counted as one.
-// Two consoles that both claim it (they entered in the same breath) settle on
-// the lower seat, but only when both claims show up within kTieMs of each
-// other. A claim that arrives later never displaces an owner the group
-// already has (a late lower-seat claimant is not a tie), and the owner a
-// joiner took its state from is never displaced while it lives. Everything the owner does is idempotent, so a moment of
-// disagreement costs nothing.
+//
+// Two standing claims (two consoles that entered in the same breath, a joiner
+// whose snapshot timed out, or a console that lost the owner's hello for a few
+// seconds and took over) are settled the same way on every console, from the
+// hellos alone: the claimant more established consoles name as owner wins,
+// counting each console's own belief. On a draw, a claimant that followed the
+// other one earlier in this visit gives way to it (so a joiner that lost the
+// hellos for a moment hands the group back to the console it took its state
+// from); only when neither ever followed the other does the lower seat win.
+// A console's own follow record can know more than the others' copies of it (a
+// follow not yet heard in a hello). That is still safe: the follower always
+// yields to the one it followed, so the worst case is both claimants yielding
+// for one hello cycle, after which neither claims, the lowest established seat
+// takes the group and the rest follow it. Follow records (mine and the copies)
+// are dropped whenever a seat stops being a member of my group, which is also how
+// a new player in that seat shows up (the seat leaves, then joins again). Every
+// console sees the same hellos, so they all reach the same answer within about
+// a hello period; a claimant that loses stops claiming, and whoever followed it
+// moves on with it. (Before coopfix1 a late claim never displaced a standing
+// owner, but the late claimant never yielded to a higher seat either, so the
+// two kept owning the group side by side for the whole visit.) The owner a
+// joiner took its state from keeps the joiner while it still claims the group;
+// an owner with that joiner behind it outvotes a lone claimant. Everything the
+// owner does is idempotent, so a moment of disagreement costs nothing.
+//
+// Proof knobs (off by default): SM64DS_COOP_OWNER_LEGACY=1 runs the old rule,
+// SM64DS_COOP_OWNERBLIND=<start ms>,<length ms> deafens this console to the
+// others' hellos for that window after each establish (a lost hello), and
+// SM64DS_COOP_OWNERLOG=1 prints the owner once a second.
 
 #ifndef PORT_HAL_COOP_GROUPS_H
 #define PORT_HAL_COOP_GROUPS_H
@@ -83,13 +106,27 @@ private:
         unsigned hello_ms;
         unsigned claim_ms;   // when this seat's standing claim was first heard
         bool pinned;         // the owner I took my state from: nobody displaces it while it lives
+        int  names;          // the owner this seat's last established hello named, else -1
+        unsigned followed;   // every owner this seat's established hellos named during this visit, bit = seat
     };
+    unsigned followed_ = 0;                   // every owner I followed during this visit, bit = seat
+    bool deferred(int a, int b) const;        // claimant a followed b earlier in this visit
+    int  votes(int seat) const;               // established consoles (me included) that name this seat owner
+    bool beats(int a, int b) const;           // claimant a wins over claimant b
+    void update_legacy(unsigned now);         // the rule before coopfix1 (proof knob)
+    void set_owner(int o, unsigned now, const char *why);
     int me_ = -1;
     CoopKey key_;
     bool est_ = false;
     int owner_ = -1;
     bool announce_ = false;
     unsigned own_ms_ = 0;     // when I became owner
+    unsigned est_ms_ = 0;     // when I established in this group
+    unsigned log_ms_ = 0;     // last once-a-second owner line
+    bool legacy_ = false;     // proof knob SM64DS_COOP_OWNER_LEGACY
+    bool log_ = false;        // proof knob SM64DS_COOP_OWNERLOG
+    unsigned blind_at_ = 0, blind_len_ = 0;   // proof knob SM64DS_COOP_OWNERBLIND
+    bool blind(unsigned now) const;
     Seat s_[kSeats] = {};
 };
 
