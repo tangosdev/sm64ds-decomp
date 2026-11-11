@@ -61,7 +61,6 @@ extern C0WaterModelFilePtr data_ov012_021124d0;
 extern C0WaterCollisionFilePtr data_ov012_021124c8;
 extern BTA_File data_ov012_02111c24;
 extern CLPS_Block data_ov012_02111c90;
-extern SaveBlock data_0209caa0;
 extern int data_0209f32c;
 
 /* Reconstructed source-style name; exact original SM64DS spelling is not

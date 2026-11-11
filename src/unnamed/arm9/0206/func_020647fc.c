@@ -2,7 +2,7 @@
 
 extern int func_02065bd0(void);
 extern int WBT_CalcPacketbitmapSize(int a);
-extern void func_0205a588(void *dst, unsigned char value, unsigned int size);
+extern void MI_CpuFill8(void *dst, unsigned char value, unsigned int size);
 
 /* NitroSDK WBT: reset one peer's packet bitmap for a transfer of length
  * bytes into buffer: the packet count (length over the packet size,
@@ -18,5 +18,5 @@ void func_020647fc(WBTPacketBitmap *pkt, int length, unsigned int *bitmap, unsig
     pkt->bitmap = bitmap;
     pkt->buffer = buffer;
     r = WBT_CalcPacketbitmapSize(length);
-    func_0205a588(bitmap, 0, r);
+    MI_CpuFill8(bitmap, 0, r);
 }

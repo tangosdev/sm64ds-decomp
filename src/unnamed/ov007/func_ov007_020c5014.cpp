@@ -1,7 +1,7 @@
 //cpp
 #include "Ov007StrokePath.h"
-#include "cstd.h"
 #include "Ov007Picker.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -50,7 +50,7 @@ int func_ov007_020c5014(char *c, int x) {
             den = arr[j] - arr[j - 1];
             if (den == 0)
                 den = 1;
-            self->limitFraction = 0x1000 - cstd::div(d << 12, den);
+            self->limitFraction = 0x1000 - FX_DivS32(d << 12, den);
         }
         return 0;
     }

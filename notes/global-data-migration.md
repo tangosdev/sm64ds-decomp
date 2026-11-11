@@ -473,7 +473,7 @@ roughly **430 of the tree's 3,116 disagreements in one cluster**.
 The cause is one line repeated: each leaf defines its own POD triple.
 
 ```c
-/* src/AddVec3.c */
+/* src/VEC_Add.c */
 struct Vec3 { int x, y, z; };
 void AddVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c) { ... }
 ```

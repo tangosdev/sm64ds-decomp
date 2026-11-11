@@ -12,7 +12,8 @@
  * 48-bit high part, OSi_TickCounter, and a tick is (high << 16) | TM0CNT_L.
  */
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
+#include "nitro/os/interrupt.h"
 
 #define REG_TM0CNT_L (*(volatile u16 *)0x04000100)
 #define REG_TM0CNT_H (*(volatile u16 *)0x04000102)
@@ -41,8 +42,8 @@ void OS_InitTick(void) {
     REG_TM0CNT_H = 0;
     REG_TM0CNT_L = 0;
     REG_TM0CNT_H = OSi_TICK_TIMERCONTROL;
-    IRQ::SetIRQHandler(OS_IE_TIMER0, OSi_CountUpTick);
-    IRQ::EnableIRQs(OS_IE_TIMER0);
+    OS_SetIrqFunction(OS_IE_TIMER0, OSi_CountUpTick);
+    OS_EnableIrqMask(OS_IE_TIMER0);
     data_020a6434 = 0;
 }
 
@@ -58,12 +59,12 @@ void OSi_CountUpTick(void) {
 }
 
 long long OS_GetTick(void) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     volatile u16 countL = REG_TM0CNT_L;
     volatile u64 countH = data_020a6438 & 0xffffffffffffULL;
     if ((REG_IF & OS_IE_TIMER0) && !(countL & 0x8000))
         countH = countH + 1;
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     return ((long long)countH << 16) | (int)countL;
 }
 

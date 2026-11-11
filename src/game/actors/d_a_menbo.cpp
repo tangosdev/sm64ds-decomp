@@ -79,8 +79,8 @@ typedef int LocFix12;
 
 extern "C" {
 
-void MulMat4x3Mat4x3(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *out);
+void MTX_Concat43(const Matrix4x3 *a, const Matrix4x3 *b, Matrix4x3 *out);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *out);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void  Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void  Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
@@ -102,7 +102,6 @@ int d_a_menboNewHold(unsigned int a0, unsigned int a1, int a2, int a3, int a4, i
 typedef void BgchInitAt_(dBgCh_Actr *self, int a, LocFix12 r, LocFix12 h, int p, int q);
 int   SurfaceInfo_TestFlag0x20(const SurfaceInfo *p);
 int   func_02035638(u8 *p);
-void  func_02035684(int *p, int v);
 
 void  func_ov002_020aea30(void *self, void *actor, void *collision);
 
@@ -175,8 +174,8 @@ extern "C" void func_ov090_02130f94(daMenbo_c *c_)
         Vector3 r;
 
         data_020a0e68 = *src;
-        MulMat4x3Mat4x3((const Matrix4x3 *)c->mAnmModel.data.transforms + (6 + i * 3),
-                        &data_020a0e68, &data_020a0e68);
+        MTX_Concat43((const Matrix4x3 *)c->mAnmModel.data.transforms + (6 + i * 3), &data_020a0e68,
+                     &data_020a0e68);
         v.x = *(int *)((char *)&data_020a0e68 + 0x24);
         v.y = *(int *)((char *)&data_020a0e68 + 0x28);
         v.z = *(int *)((char *)&data_020a0e68 + 0x2c);
@@ -405,7 +404,7 @@ int daMenbo_c::func_ov090_02131648()
 
     Matrix4x3_FromRotationY(&data_020a0e68, self->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
-    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+    MTX_MultVec43(&in, &data_020a0e68, &out);
 
     b.x = a.x;
     b.x = a.x + out.x;
@@ -679,7 +678,7 @@ int daMenbo_c::Behavior()
         return 1;
 
     if (mDeathState != 0) {
-        func_02035684((int *)(&mWithMeshClsn), 0xd2000);
+        mWithMeshClsn.SetHeight(0xd2000);
         UpdateWMClsn(mWithMeshClsn, 0);
         if (UpdateDeath(mWithMeshClsn))
             return 1;

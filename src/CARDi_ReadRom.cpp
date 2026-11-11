@@ -1,6 +1,6 @@
 //cpp
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/card/card_rom.h"
 
 extern "C" {
@@ -17,11 +17,11 @@ void CARDi_ReadRom(u32 dma, const void *src, void *dst, u32 len, MIDmaCallback c
     CARDRomStat *const p = &rom_stat;
 
     {
-        u32 mask = IRQ::Disable();
+        OSIntrMode mask = OS_DisableInterrupts();
         while (c->flag & 4)
             OS_SleepThread(&c->busy_q);
         c->flag |= 4;
-        IRQ::Restore(mask);
+        OS_RestoreInterrupts(mask);
     }
 
     c->dma = dma;

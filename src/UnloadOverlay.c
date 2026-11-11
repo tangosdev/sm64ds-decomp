@@ -1,5 +1,5 @@
 #include "nitro/fs/overlay.h"
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern int FS_UnloadOverlay(int a, int b);
 extern int func_0203d7b8(void);
 
@@ -26,7 +26,7 @@ void UnloadOverlay(int id) {
         }
     }
     if (found == 0)
-        Crash();
+        OS_Terminate();
     FS_UnloadOverlay(0, id);
     func_02018c00(&info, 0, id);
     if (func_0203d7b8() != 0)

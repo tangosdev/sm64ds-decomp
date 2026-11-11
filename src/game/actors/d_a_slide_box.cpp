@@ -56,10 +56,7 @@ enum daSlide_Box_c_AssetId {
 #include "dBgPi.h"
 #include "dBgCh_Actr.h"
 #include "nitro/fx/fx_trig.h"
-
-namespace cstd {
-int fdiv(int a, int b);
-}
+#include "nitro/fx/fx_cp.h"
 
 /* File 1605 / 1606 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
@@ -217,7 +214,7 @@ int daSlide_Box_c::Behavior()
             floor->surface.CopyNormalTo(normal);
             if (normal.y != 0) {
                 mVertSpeed =
-                    -(cstd::fdiv(FixMul(normal.x, mSpeedX) + FixMul(normal.z, mSpeedZ), normal.y) +
+                    -(FX_Div(FixMul(normal.x, mSpeedX) + FixMul(normal.z, mSpeedZ), normal.y) +
                       kDeckSink);
             }
         }

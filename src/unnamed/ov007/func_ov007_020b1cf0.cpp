@@ -3,10 +3,10 @@
 #include "Ov007MenuState.h"
 #include "Ov007Touch.h"
 #include "Ov007Work.h"
-#include "cstd.h"
 #include "Ov007Item.h"
 #include "Ov007Model.h"
 #include "Ov007Pad.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -29,7 +29,7 @@ void func_ov007_020b1cf0(void) {
     }
 
     if (r5 >= 0x28) {
-        int m = cstd::mod(r5 - 0x28, 0x154);
+        int m = FX_ModS32(r5 - 0x28, 0x154);
         Ov007Item *p;
         switch (m) {
         case 0:

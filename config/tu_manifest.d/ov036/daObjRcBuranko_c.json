@@ -669,14 +669,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@451",
+      "from": "@429",
       "to": "@387",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @401 now; licensed under the existing pin @387; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @401 now; licensed under the existing pin @387; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @451 to @429 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@450",
+      "from": "@428",
       "to": "@386",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @400 now; licensed under the existing pin @386; including math/MtxStack.h in place of local prototypes shifts this local number (#4570)"
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @400 now; licensed under the existing pin @386; including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @450 to @428 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

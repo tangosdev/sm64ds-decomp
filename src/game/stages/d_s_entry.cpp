@@ -64,7 +64,7 @@
 #include "dScEntry_c.h"
 #include "OAM.h"
 #include "OamAttr.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "math/Approach.h"
 
 extern "C" {
@@ -179,7 +179,7 @@ void dScEntry_c::icon_c::Render() {
         paletteBits = (mOn != 0) ? 0x2000 : 0x1000;
     fill:
         halfWidth = mHalfW;
-        screenMap = (u16 *)G2S::GetBG2ScrPtr();
+        screenMap = (u16 *)G2S_GetBG2ScrPtr();
         x = mX;
         halfHeight = mHalfH;
         x -= halfWidth;
@@ -291,7 +291,7 @@ int dScEntry_c::graphCallback_c::GraphCallback2() {
     *reg = value | (bg2ScreenBase << 8);
 
     if (compressedBg2Screen != 0) {
-        unsigned short *screen = (unsigned short *)G2S::GetBG2ScrPtr();
+        unsigned short *screen = (unsigned short *)G2S_GetBG2ScrPtr();
         DecompressLZ16(compressedBg2Screen, screen);
         Deallocate(compressedBg2Screen);
         compressedBg2Screen = 0;
@@ -322,7 +322,7 @@ void dScEntry_c::RenderIcons() {
 
 /* recovered: dScEntry_c recolours the border of one VS/wireless entry-menu slot box.
  *
- * G2::GetBG1ScrPtr gives the BG1 screen map and func_02030958 maps the slot index to
+ * G2_GetBG1ScrPtr gives the BG1 screen map and func_02030958 maps the slot index to
  * the entry's palette row. The box for `slot` starts at row 4 + 2n, column 4, with a
  * row pitch of 5 + n rows, where n = 4 - data_0209fc50 (the player count), so the
  * entry offset is slot * (32n + 0xa0) + (64n + 0x84).
@@ -352,7 +352,7 @@ static inline void SetPalette(u16 *entry, u16 pal) {
 
 void dScEntry_c::SetSlotBorderPalette(int slot, int dim) {
     int players = data_0209fc50;
-    u16 *map = (u16 *)G2::GetBG1ScrPtr();
+    u16 *map = (u16 *)G2_GetBG1ScrPtr();
     u16 pal = func_02030958(slot) + 10;
     u16 *p;
     int i;

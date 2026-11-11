@@ -1,27 +1,7 @@
 #include "types.h"
 #include "nitro/fx/fx.h"
 #include "nitro/gx/g3imm.h"
-
-#define reg_G3_MTX_MODE       (*(volatile u32 *)0x04000440)
-#define reg_G3_IDENTITY       (*(volatile u32 *)0x04000454)
-#define reg_G3_SCALE          (*(volatile u32 *)0x0400046c)
-
-static inline void G3_MtxMode(int mode)
-{
-    reg_G3_MTX_MODE = (u32)mode;
-}
-
-static inline void G3_Identity(void)
-{
-    reg_G3_IDENTITY = 0;
-}
-
-static inline void G3_Scale(fx32 x, fx32 y, fx32 z)
-{
-    reg_G3_SCALE = (u32)x;
-    reg_G3_SCALE = (u32)y;
-    reg_G3_SCALE = (u32)z;
-}
+#include "nitro/gx/g3imm_cmd.h"
 
 struct TexParam
 {
@@ -53,8 +33,8 @@ void func_0204af3c(struct Tex *self)
     G3_TexImageParam(p.fmt, GX_TEXGEN_TEXCOORD, p.sizeS, p.sizeT, p.repeat, p.flip, p.color0,
                      self->texAddr);
     G3_TexPlttBase(self->pltAddr, p.fmt);
-    G3_MtxMode(3);
+    G3_MtxMode(GX_MTXMODE_TEXTURE);
     G3_Identity();
     G3_Scale(self->width << 12, self->height << 12, 0);
-    G3_MtxMode(1);
+    G3_MtxMode(GX_MTXMODE_POSITION);
 }

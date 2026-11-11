@@ -14,8 +14,8 @@
  * neither dPathLiftActor_c nor daSCoin_c is evidence of an owner. All four
  * keep C linkage because those other TUs call them by their C names. */
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "math/CalcLib.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -107,8 +107,8 @@ void func_ov002_020effb8(Vector3 *out, s32 t, Vector3 *p0, Vector3 *p1, Vector3 
     uSq = FX_MUL(u16, u);
     uCube = FX_MUL(uSq, u);
     halfT3 = (tCube + 1) >> 1;
-    w0 = cstd::fdiv(uCube, 0x6000);
-    w3 = cstd::fdiv(tCube, 0x6000);
+    w0 = FX_Div(uCube, 0x6000);
+    w3 = FX_Div(tCube, 0x6000);
     rest = ((tSq + 1) >> 1) - halfT3;
     w2 = (rest + ((t16 + 1) >> 1)) + 0x2aab;
     w1 = (halfT3 - tSq) + 0xaaab;

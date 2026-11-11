@@ -75,18 +75,18 @@ or used as a DMA destination — it cannot be redirected by redefining an lvalue
 - `src/engine/sound/Sound2.cpp:87` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000)`
 - `src/engine/sound/Sound2.cpp:89` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000)`
 - `src/cstd.cpp:2` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000)`
-- `src/unnamed/arm9/0205/func_02053320.c:32` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000) {`
+- `src/VEC_MultAdd.c:32` — `while (*(volatile unsigned short *)0x40002b0 & 0x8000) {`
 
 ## Address-passed sites (not lvalue-redirectable)
 
 - `src/game/actors/d_a_obj_fm_battan.cpp:148` — `_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, &pos, 0x04000000);`
-- `src/engine/gx/GX_Init.cpp:87` — `DMASyncFillTransfer(data_02099fd0, REG_BG0CNT_ADDR, 0, 0x60);`
-- `src/engine/gx/GX_Init.cpp:89` — `DMASyncFillTransfer(data_02099fd0, REG_DB_DISPCNT_ADDR, 0, 0x70);`
-- `src/engine/gx/G3X.cpp:83` — `MI_DmaFill32Async((&data_02099fd0)[0], 0x4000330, 0, 0x10, 0, 0);`
-- `src/engine/gx/G3X.cpp:84` — `DMASyncFillTransfer((&data_02099fd0)[0], 0x4000360, 0, 0x50);`
+- `src/engine/gx/GX_Init.cpp:87` — `MI_DmaFill32(GXi_DmaId, REG_BG0CNT_ADDR, 0, 0x60);`
+- `src/engine/gx/GX_Init.cpp:89` — `MI_DmaFill32(GXi_DmaId, REG_DB_DISPCNT_ADDR, 0, 0x70);`
+- `src/engine/gx/G3X.cpp:83` — `MI_DmaFill32Async((&GXi_DmaId)[0], 0x4000330, 0, 0x10, 0, 0);`
+- `src/engine/gx/G3X.cpp:84` — `MI_DmaFill32((&GXi_DmaId)[0], 0x4000360, 0, 0x50);`
 - `src/engine/gx/G3X.cpp:101` — `GXi_NopClearFifo128_(0x4000400);`
-- `src/engine/mi/MI_DmaGXCommand.cpp:115` — `DMAStartTransfer(MIi_GXDmaParams.dmaNo, src, REG_GXFIFO_ADDR, MI_CNT_SEND32_IF(length));`
-- `src/engine/mi/MI_DmaGXCommand.cpp:118` — `DMAStartTransfer(MIi_GXDmaParams.dmaNo, src, REG_GXFIFO_ADDR, MI_CNT_SEND32(length));`
+- `src/engine/mi/MI_DmaGXCommand.cpp:115` — `MIi_DmaSetParams(MIi_GXDmaParams.dmaNo, src, REG_GXFIFO_ADDR, MI_CNT_SEND32_IF(length));`
+- `src/engine/mi/MI_DmaGXCommand.cpp:118` — `MIi_DmaSetParams(MIi_GXDmaParams.dmaNo, src, REG_GXFIFO_ADDR, MI_CNT_SEND32(length));`
 - `src/func_ov007_020c0078.cpp:8` — `* Camera-style perspective setup: writes the viewport register (0x4000580)`
 
 ## Hottest addresses

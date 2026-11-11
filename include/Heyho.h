@@ -40,7 +40,7 @@ struct Heyho {
     Vector3 mScale;      /* 0xcc -- 0x1400 on each axis at rest */
     s32 mSize;           /* 0xd8 -- copied from mBaseSize; scales the drawn model (Heyho_Draw), the
                           * hit radius (Heyho_CheckHitA/B) and the settle particles (Heyho_Settle) */
-    s32 mSpeed;          /* 0xdc -- LenVec3(mVel) before mVel is normalised */
+    s32 mSpeed;          /* 0xdc -- VEC_Mag(mVel) before mVel is normalised */
     s32 mSeparated;      /* 0xe0 -- 1 once Heyho_SeparateAll pushed this Heyho off a neighbour this
                           * frame; Heyho_MotionChase then pulls mWaypoint back toward mPos */
     u8 pad_e4[0x2];      /* 0xe4 */
