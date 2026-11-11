@@ -219,9 +219,9 @@ SUB screen, called last by `BeforeInitResources`; 32 is the MAIN screen, called 
 same `&= ~2` on the engine's BG-enable shadow (`data_0209d454` / `data_0209d45c` -- the
 two words slot 30 restores the DISPCNTs from), same language-indexed character file plus
 a shared screen map, file `0x5b` against `0x67`. 31 reaches them through
-`G2S::GetBG1CharPtr` / `G2S::GetBG1ScrPtr`; 32 through `func_02054ea8` /
-`_ZN2G212GetBG1ScrPtrEv`. That last pairing also identifies `func_02054ea8` as
-`G2::GetBG1CharPtr` by position -- the G2S pair is `0x02054e88`/`0x02055148` and the G2
+`G2S_GetBG1CharPtr` / `G2S_GetBG1ScrPtr`; 32 through `G2_GetBG1CharPtr` /
+`G2_GetBG1ScrPtr`. That last pairing also identifies `G2_GetBG1CharPtr` as
+`G2_GetBG1CharPtr` by position -- the G2S pair is `0x02054e88`/`0x02055148` and the G2
 pair is `0x02054ea8`/`0x02055168`, the same `+0x20` apart -- but that is an arm9 rename
 outside this campaign's scope and is deliberately NOT taken here.
 

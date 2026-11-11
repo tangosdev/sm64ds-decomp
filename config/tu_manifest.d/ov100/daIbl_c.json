@@ -538,34 +538,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@572",
+      "from": "@518",
       "to": "data_ov100_02148670",
-      "evidence": "compiler temp mapped to 0x02148670 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @564 to @572 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
+      "evidence": "compiler temp mapped to 0x02148670 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @564 to @572 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.. Re-keyed from @572 to @518 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@574",
+      "from": "@520",
       "to": "data_ov100_02147f38",
-      "evidence": "compiler temp mapped to 0x02147f38 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @566 to @574 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
+      "evidence": "compiler temp mapped to 0x02147f38 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @566 to @574 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.. Re-keyed from @574 to @520 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@576",
+      "from": "@522",
       "to": "data_ov100_02147f18",
-      "evidence": "compiler temp mapped to 0x02147f18 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @568 to @576 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
+      "evidence": "compiler temp mapped to 0x02147f18 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @568 to @576 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.. Re-keyed from @576 to @522 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@578",
+      "from": "@524",
       "to": "data_ov100_02147f20",
-      "evidence": "compiler temp mapped to 0x02147f20 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @570 to @578 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
+      "evidence": "compiler temp mapped to 0x02147f20 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @570 to @578 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.. Re-keyed from @578 to @524 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@580",
+      "from": "@526",
       "to": "data_ov100_02147f30",
-      "evidence": "compiler temp mapped to 0x02147f30 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @572 to @580 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
+      "evidence": "compiler temp mapped to 0x02147f30 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @572 to @580 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.. Re-keyed from @580 to @526 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@582",
+      "from": "@528",
       "to": "data_ov100_02147f28",
-      "evidence": "compiler temp mapped to 0x02147f28 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @574 to @582 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.."
+      "evidence": "compiler temp mapped to 0x02147f28 by the retail initializer relocation at the same pool offset; no bytes or relocations change Re-keyed from @574 to @582 when Re-keyed after d_a_ibl.cpp began including nitro/fx/fx_trig.h (#821), which shifts the compiler's numbering by 8.. Re-keyed from @582 to @528 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

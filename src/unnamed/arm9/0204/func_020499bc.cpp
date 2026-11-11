@@ -1,5 +1,5 @@
 //cpp
-#include "CP15.h"
+#include "nitro/os/cache.h"
 #include "CaptureEffect.h"
 
 extern "C" {
@@ -69,7 +69,7 @@ void func_020499bc(s16 *left, s16 *right, unsigned int len, CaptureEffect *ctx) 
         ctx->work.history[i] = carry[i];
     }
 
-    CP15::FlushAndInvalidateDataCache((unsigned int)left, len);
-    CP15::FlushAndInvalidateDataCache((unsigned int)right, len);
+    DC_FlushRange(left, len);
+    DC_FlushRange(right, len);
 }
 }

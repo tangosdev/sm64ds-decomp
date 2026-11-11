@@ -4,16 +4,20 @@
  * the coprocessor. No C construct compiles to either, so the asm blocks are
  * the faithful source.
  *
- * The IRQ operations set or clear CPSR bit 0x80 (IRQ) or 0xc0 (IRQ and FIQ)
- * and return the previous state for restoration. ARMProcessorMode returns
- * the CPSR mode field. CP15::WaitForInterrupt halts the core until an
- * interrupt arrives (c7,c0,4); the value written is ignored by the hardware.
+ * The interrupt calls take pret/pokediamond's OS_system.c names
+ * (OS_EnableInterrupts .. OS_RestoreInterrupts_IrqAndFiq, declared in
+ * nitro/os/system.h): each sets or clears CPSR bit 0x80 (IRQ) or 0xc0 (IRQ
+ * and FIQ) and returns the previous state for restoration.
+ * OS_GetProcMode (pret OS_system.c) returns the CPSR mode field. OS_Halt
+ * (pret OS_terminate_proc.c, which a later SDK split out of os_system.c)
+ * halts the core until an interrupt arrives (c7,c0,4); the value written is
+ * ignored by the hardware.
  * The preceding IRQ-state initializer has its own compiler input.
  */
 
-namespace IRQ {
+#include "nitro/os/system.h"
 
-asm unsigned int Enable(void)
+asm OSIntrMode OS_EnableInterrupts(void)
 {
     mrs r0, cpsr
     bic r1, r0, #0x80
@@ -22,7 +26,7 @@ asm unsigned int Enable(void)
     bx lr
 }
 
-asm unsigned int Disable(void)
+asm OSIntrMode OS_DisableInterrupts(void)
 {
     mrs r0, cpsr
     orr r1, r0, #0x80
@@ -31,7 +35,7 @@ asm unsigned int Disable(void)
     bx lr
 }
 
-asm unsigned int Restore(unsigned int state)
+asm OSIntrMode OS_RestoreInterrupts(OSIntrMode state)
 {
     mrs r1, cpsr
     bic r2, r1, #0x80
@@ -41,7 +45,7 @@ asm unsigned int Restore(unsigned int state)
     bx lr
 }
 
-asm unsigned int DisableAll(void)
+asm OSIntrMode OS_DisableInterrupts_IrqAndFiq(void)
 {
     mrs r0, cpsr
     orr r1, r0, #0xc0
@@ -50,7 +54,7 @@ asm unsigned int DisableAll(void)
     bx lr
 }
 
-asm unsigned int RestoreAll(unsigned int state)
+asm OSIntrMode OS_RestoreInterrupts_IrqAndFiq(OSIntrMode state)
 {
     mrs r1, cpsr
     bic r2, r1, #0xc0
@@ -60,22 +64,16 @@ asm unsigned int RestoreAll(unsigned int state)
     bx lr
 }
 
-}
-
-extern "C" asm int ARMProcessorMode(void)
+asm OSProcMode OS_GetProcMode(void)
 {
     mrs r0, cpsr
     and r0, r0, #0x1f
     bx lr
 }
 
-namespace CP15 {
-
-asm void WaitForInterrupt(void)
+asm void OS_Halt(void)
 {
     mov r0, #0
     mcr p15, 0, r0, c7, c0, 4
     bx lr
-}
-
 }

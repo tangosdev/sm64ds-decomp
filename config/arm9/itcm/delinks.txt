@@ -91,11 +91,11 @@ src/OSReadROMArea.c:
 src/OSi_ReloadRomData.cpp:
     complete
     .text start:0x01ffdd08 end:0x01ffde00
-src/DMAStartTransferFB.cpp:
+src/MIi_DmaSetParams_wait.cpp:
     complete
     .text start:0x01ffde00 end:0x01ffde50
 
-src/DMAStartTransfer.cpp:
+src/MIi_DmaSetParams.cpp:
     complete
     .text start:0x01ffde50 end:0x01ffde98
 

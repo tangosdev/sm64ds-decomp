@@ -11,14 +11,8 @@
  * leftovers: the callback table and the init flag (data_020a7fc4) are not
  * claimed here.
  */
-#include "IRQ.h"
-
-namespace IRQ {
-
-u32 Disable(void);
-u32 Restore(u32 saved);
-
-}
+#include "nitro/os/system.h"
+#include "nitro/os/interrupt.h"
 
 typedef void (*PxiCallback)(u32 tag, u32 data, u32 reply);
 
@@ -62,7 +56,7 @@ void PXIi_HandlerRecvFifoNotEmpty(void);
 /* PXI_InitFifo: clear the callback table, hook the receive IRQ, enable the
  * FIFO, then handshake with the ARM7 through the SUBPINTF nibble. */
 void PXI_InitFifo(void) {
-    u32 state;
+    OSIntrMode state;
     int i;
     int r5;
     int lr;
@@ -71,7 +65,7 @@ void PXI_InitFifo(void) {
     volatile u16 *reg;
     int ip;
 
-    state = IRQ::Disable();
+    state = OS_DisableInterrupts();
     if (data_020a7fc4 == 0) {
         data_020a7fc4 = 1;
         work = SYSTEM_WORK;
@@ -79,8 +73,8 @@ void PXI_InitFifo(void) {
         for (i = 0; i < 0x20; i++) {
             data_020a7fc8[i] = 0;
         }
-        IRQ::SetIRQHandler(IRQ_RECV_FIFO_NOT_EMPTY, PXIi_HandlerRecvFifoNotEmpty);
-        IRQ::EnableIRQs(IRQ_RECV_FIFO_NOT_EMPTY);
+        OS_SetIrqFunction(IRQ_RECV_FIFO_NOT_EMPTY, PXIi_HandlerRecvFifoNotEmpty);
+        OS_EnableIrqMask(IRQ_RECV_FIFO_NOT_EMPTY);
         REG_SUBP_FIFO_CNT = 0xc408;
 
         ip = 0;
@@ -107,12 +101,12 @@ void PXI_InitFifo(void) {
             ip++;
         }
     }
-    IRQ::Restore(state);
+    OS_RestoreInterrupts(state);
 }
 
 /* PXI_SetFifoRecvCallback. Every caller passes the callback as a void *. */
 void PXI_SetFifoRecvCallback(int tag, void *callback) {
-    u32 saved = IRQ::Disable();
+    OSIntrMode saved = OS_DisableInterrupts();
     SystemWork *work = SYSTEM_WORK;
     data_020a7fc8[tag] = (PxiCallback)callback;
     if (callback != 0) {
@@ -120,7 +114,7 @@ void PXI_SetFifoRecvCallback(int tag, void *callback) {
     } else {
         work->pxiHandleChecker[0] &= ~(1u << tag);
     }
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
 }
 
 /* PXI_IsCallbackReady: is `tag` registered on processor `proc`? */
@@ -132,7 +126,7 @@ int PXI_IsCallbackReady(int tag, int proc) {
 /* PXI_SendWordByFifo: 0 on success, -1 on a FIFO error, -2 if full. */
 int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int reply) {
     PxiFifoWord word;
-    u32 saved;
+    OSIntrMode saved;
 
     word.f.tag = tag;
     word.f.reply = reply;
@@ -143,15 +137,15 @@ int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int reply) 
         return -1;
     }
 
-    saved = IRQ::Disable();
+    saved = OS_DisableInterrupts();
 
     if (REG_SUBP_FIFO_CNT & FIFO_CNT_SEND_FULL) {
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         return -2;
     }
 
     REG_SEND_FIFO = word.raw;
-    IRQ::Restore(saved);
+    OS_RestoreInterrupts(saved);
     return 0;
 }
 
@@ -161,19 +155,19 @@ int PXI_SendWordByFifo(unsigned int tag, unsigned int data, unsigned int reply) 
 void PXIi_HandlerRecvFifoNotEmpty(void) {
     PxiFifoWord word;
     int code;
-    u32 saved;
+    OSIntrMode saved;
     for (;;) {
         if (REG_SUBP_FIFO_CNT & FIFO_CNT_ERROR) {
             REG_SUBP_FIFO_CNT = REG_SUBP_FIFO_CNT | FIFO_CNT_ERROR_CLEAR;
             code = -3;
         } else {
-            saved = IRQ::Disable();
+            saved = OS_DisableInterrupts();
             if (REG_SUBP_FIFO_CNT & FIFO_CNT_RECV_EMPTY) {
-                IRQ::Restore(saved);
+                OS_RestoreInterrupts(saved);
                 code = -4;
             } else {
                 word.raw = REG_RECV_FIFO;
-                IRQ::Restore(saved);
+                OS_RestoreInterrupts(saved);
                 code = 0;
             }
         }
@@ -197,13 +191,13 @@ void PXIi_HandlerRecvFifoNotEmpty(void) {
                 REG_SUBP_FIFO_CNT = REG_SUBP_FIFO_CNT | FIFO_CNT_ERROR_CLEAR;
                 continue;
             }
-            saved = IRQ::Disable();
+            saved = OS_DisableInterrupts();
             if (REG_SUBP_FIFO_CNT & FIFO_CNT_SEND_FULL) {
-                IRQ::Restore(saved);
+                OS_RestoreInterrupts(saved);
                 continue;
             }
             REG_SEND_FIFO = word.raw;
-            IRQ::Restore(saved);
+            OS_RestoreInterrupts(saved);
         }
     }
 }

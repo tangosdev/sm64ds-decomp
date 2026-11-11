@@ -1,8 +1,8 @@
 //cpp
 #include "types.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "Ov007Spring.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -13,7 +13,6 @@ typedef struct Vec3Words {
     Fix12i w[3];
 } Vec3Words;
 
-extern int func_020531a4(int a);
 
 /* Pulls follower f toward target. Within snapRadius it snaps onto target,
  * its velocity and force cleared (returns 2). Within reach, a force of
@@ -40,8 +39,8 @@ int func_ov007_020c704c(Ov007Follower *f, Vector3 *target, int pull, int reach, 
     }
 
     if (sum <= FX_MUL(reach, reach)) {
-        spd = func_020531a4(sum);
-        ratio = cstd::fdiv(pull, spd);
+        spd = FX_Sqrt(sum);
+        ratio = FX_Div(pull, spd);
 
         f->force.x += FX_MUL(ratio, sdx);
         f->force.y += FX_MUL(ratio, sdy);

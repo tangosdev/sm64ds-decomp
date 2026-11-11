@@ -17,7 +17,7 @@ Verdict per function:
 
 Usage:
   python tools/trace/behavior_diff.py behavior/retail behavior/recompiled
-  python tools/trace/behavior_diff.py behavior/retail behavior/retail2 --name NormalizeVec3
+  python tools/trace/behavior_diff.py behavior/retail behavior/retail2 --name VEC_Normalize
 """
 import argparse
 import json

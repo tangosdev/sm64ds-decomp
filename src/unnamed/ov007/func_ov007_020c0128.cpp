@@ -1,8 +1,8 @@
 //cpp
 #include "types.h"
-#include "cstd.h"
 #include "Ov007Camera.h"
-extern "C" void Matrix4x3_LoadIdentity(void *m);
+#include "nitro/fx/fx_cp.h"
+extern "C" void MTX_Identity43_(void *m);
 extern "C" void MTX_Identity44_(void *p);
 
 /* Resets a camera: eye at z 1.0 looking at the origin, y up, a 30-degree
@@ -24,8 +24,8 @@ extern "C" void func_ov007_020c0128(Ov007Camera *cam) {
     cam->up.y = 0x1000;
     cam->nearZ = 0x1000;
     cam->farZ = 0x190000;
-    cam->fovy = (short)cstd::div(0x1e0000, 0x168);
-    long long l = cstd::ldiv(0x4000, 0x3000);
+    cam->fovy = (short)FX_DivS32(0x1e0000, 0x168);
+    long long l = FX_DivFx64c(0x4000, 0x3000);
     cam->aspect = l;
     cam->viewportMinX = 0;
     cam->viewportMaxX = 0xff;
@@ -33,7 +33,7 @@ extern "C" void func_ov007_020c0128(Ov007Camera *cam) {
     cam->viewportMaxY = 0xbf;
     cam->wordCC = 0x1000;
     cam->wordD0 = 0xc00;
-    Matrix4x3_LoadIdentity(&cam->viewMatrix);
+    MTX_Identity43_(&cam->viewMatrix);
     MTX_Identity44_(cam->projMatrix);
     cam->scaleW = 0x1000;
     cam->word00 = 0;

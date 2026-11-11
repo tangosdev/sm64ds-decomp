@@ -496,14 +496,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@363",
+      "from": "@341",
       "to": "@99",
-      "evidence": "emitted destructor-registration node name collides with ov036's configured @364 on main; @99 is unused fleet-wide and shorter than the original | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "emitted destructor-registration node name collides with ov036's configured @364 on main; @99 is unused fleet-wide and shorter than the original | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @363 to @341 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@364",
+      "from": "@342",
       "to": "@98",
-      "evidence": "emitted destructor-registration node name collides with ov036's configured @365 on main; @98 is unused fleet-wide and shorter than the original | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier"
+      "evidence": "emitted destructor-registration node name collides with ov036's configured @365 on main; @98 is unused fleet-wide and shorter than the original | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @364 to @342 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

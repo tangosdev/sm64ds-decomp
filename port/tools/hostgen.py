@@ -14,7 +14,7 @@ registers run their side effect. Accesses the transform cannot see textually --
 a pointer bound to a register and dereferenced later -- still work, because the
 host maps real memory at the DS I/O addresses; they just do not trigger.
 
-    python tools/hostgen.py --decomp ../sm64ds-decomp _ZN4cstd3divEii
+    python tools/hostgen.py --decomp ../sm64ds-decomp FX_DivS32
     python tools/hostgen.py --decomp ../sm64ds-decomp --all
 """
 

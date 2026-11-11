@@ -36,8 +36,8 @@ enum d_a_pg_mthr_AssetId {
 #include "daPly_c.h"
 #include "dBgCh_Actr.h"
 #include "Sound.h"
-#include "cstd.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx_cp.h"
 
 enum {
     ACTOR_PLAYER = 0xbf,
@@ -160,9 +160,7 @@ int daPgMthr_c::InitResources()
         mPosY = ground.clsnY;
     else
         mPosY = pos.y;
-    mHomePosX = mPosX;
-    mHomePosY = mPosY;
-    mHomePosZ = mPosZ;
+    mHomePos = mPos;
     mPlayer = 0;
     UpdateModelAndShadow();
     return 1;
@@ -352,7 +350,7 @@ int daPgMthr_c::StateFollowUpdate() {
         holding = (mPlayer->mObjInMouth != 0);
     else
         holding = (mPlayer->mHeldObj != 0);
-    if (holding == 0 || Vec3_Dist((Vector3 *)&mHomePosX, &mPlayer->mPos) > HOME_RANGE) {
+    if (holding == 0 || Vec3_Dist(&mHomePos, &mPlayer->mPos) > HOME_RANGE) {
         mPlayer = 0;
         ChangeState(0);
     }
@@ -386,7 +384,7 @@ void daPgMthr_c::UpdateFloorAndWalls(dBgCh_Actr *w) {
         floor->surface.CopyNormalTo(n);
         if (n.y != 0) {
             int s = FX_MUL(n.x, mSpeedX) + FX_MUL(n.z, mSpeedZ);
-            mVertSpeed = -(cstd::fdiv(s, n.y) + 0x8000);
+            mVertSpeed = -(FX_Div(s, n.y) + 0x8000);
         }
     }
     if (w->IsOnWall() != 0) {
@@ -402,7 +400,7 @@ void daPgMthr_c::CheckFollow() {
 
     if (p == 0)
         return;
-    if (Vec3_Dist((Vector3 *)&mHomePosX, &p->mPos) > HOME_RANGE)
+    if (Vec3_Dist(&mHomePos, &p->mPos) > HOME_RANGE)
         return;
     if (p->param1 == CHAR_YOSHI)
         held = (dActor_c *)p->mObjInMouth;

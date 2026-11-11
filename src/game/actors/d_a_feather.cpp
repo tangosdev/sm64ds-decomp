@@ -21,7 +21,7 @@
  *   re-read holds the reload (volatile disproved, FEATHER-2713-01).
  * - dCamera_c::mAngleY (gCamera): the halfword InitResources and Behavior
  *   add 0x4000 to.
- * - gGameMode game-mode flag, data_02082214 sin/cos table,
+ * - gGameMode game-mode flag, FX_SinCosTable_ sin/cos table,
  *   data_020a0e68 scratch matrix, data_ov002_0210da58 file handle: ROM labels.
  * - g_profile_FEATHER stays carved (unowned) between the stripped _ZTI/_ZTS
  *   and the stripped vtable (all three deadstrip-data, BBH-leaf shape);
@@ -48,7 +48,7 @@ extern "C" void Vec3_Asr(struct Vector3 *d, struct Vector3 *s, int sh);
 extern SharedFilePtr data_ov002_0210da58;
 extern unsigned char gGameMode;
 extern dCamera_c *gCamera;
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 
 /* ==========================================================================
  *
@@ -142,16 +142,16 @@ int daFeather_c::Behavior() {
         *(short *)&mSwayAngle += 0x400;
         u16 newv = mSwayAngle;
         int idx = ((newv >> 4) << 1) + 1;
-        mHorzSpeed = FX_MUL(mDriftSpeed, data_02082214[idx]);
+        mHorzSpeed = FX_MUL(mDriftSpeed, FX_SinCosTable_[idx]);
     }
 
     ApproachLinear(mDriftSpeed, 0x10000, 0x332);
 
     {
         int idx2 = (mSwayAngle >> 4) << 1;
-        mAngleX = data_02082214[idx2] + 0x4000;
+        mAngleX = FX_SinCosTable_[idx2] + 0x4000;
         int idx3 = ((mSwayAngle >> 4) << 1) + 1;
-        mAngleZ = data_02082214[idx3] * 2 - 0x6000;
+        mAngleZ = FX_SinCosTable_[idx3] * 2 - 0x6000;
     }
 
     {

@@ -449,14 +449,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@480",
+      "from": "@458",
       "to": "@423",
-      "evidence": "mwcc numbers this destructor-registration node @419 per TU; ov035's daObjCtMecha10_c already licenses @419 globally, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this destructor-registration node @419 per TU; ov035's daObjCtMecha10_c already licenses @419 globally, so the scratch link would multiply-define it Re-keyed from @480 to @458 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@481",
+      "from": "@459",
       "to": "@424",
-      "evidence": "mwcc numbers this destructor-registration node @420 per TU; ov035's daObjCtMecha10_c already licenses @420 globally, so the scratch link would multiply-define it"
+      "evidence": "mwcc numbers this destructor-registration node @420 per TU; ov035's daObjCtMecha10_c already licenses @420 globally, so the scratch link would multiply-define it Re-keyed from @481 to @459 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "undefined_symbol_aliases": [

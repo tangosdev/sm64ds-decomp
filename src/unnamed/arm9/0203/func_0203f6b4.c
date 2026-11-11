@@ -1,5 +1,5 @@
 extern int WM_End(void *p);
-extern void Crash(void);
+extern void OS_Terminate(void);
 extern void func_0203f920(unsigned short *cb);
 /* Shut the wireless hardware down after a measurement: WM_End
    sends WM_APIID_END (2) through callback slot 2, with
@@ -8,5 +8,5 @@ extern void func_0203f920(unsigned short *cb);
 void func_0203f6b4(void) {
     if (WM_End((void *)func_0203f920) == 2)
         return;
-    Crash();
+    OS_Terminate();
 }

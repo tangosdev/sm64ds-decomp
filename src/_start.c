@@ -8,13 +8,13 @@
 //
 // pret/pokediamond's crt0.c has the same _start, from an SDK a little newer than this
 // one: it clears with its own INITi_CpuClear32 where this calls the MI library's copy
-// (MultiStore_Int, the same five instructions), and it aligns sp before the jump.
+// (MIi_CpuClear32, the same five instructions), and it aligns sp before the jump.
 // 0x02004ad8 is _start_ModuleParams (BuildInfo, the name dsd needs); +0x14 is the end of
 // the compressed static image.
 extern void init_cp15(void);
 extern void MIi_UncompressBackward(void *bottom);
 extern void do_autoload(void);
-extern void MultiStore_Int(int val, int *dst, int len);
+extern void MIi_CpuClear32(int val, int *dst, int len);
 extern void _fp_init(void);
 extern void NitroStartUp(void);
 extern void __call_static_initializers(void);
@@ -45,15 +45,15 @@ asm void _start(void) {
     mov     r0, #0
     ldr     r1, =0x023c0000
     mov     r2, #0x4000
-    bl      MultiStore_Int
+    bl      MIi_CpuClear32
     mov     r0, #0
     ldr     r1, =0x5000000
     mov     r2, #0x400
-    bl      MultiStore_Int
+    bl      MIi_CpuClear32
     mov     r0, #0x200
     ldr     r1, =0x7000000
     mov     r2, #0x400
-    bl      MultiStore_Int
+    bl      MIi_CpuClear32
     ldr     r1, =0x023c0000
     add     r1, r1, #0x3fc0
     add     r1, r1, #0x3c

@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void NormalizeVec3(const struct Vector3 *src, struct Vector3 *dst);
+extern void VEC_Normalize(const struct Vector3 *src, struct Vector3 *dst);
 
 /* A random unit vector in the XY plane: two draws from the SPL LCG, each
  * shifted down 8, for x and y, z = 0, then normalized. The name is pret's
@@ -19,5 +19,5 @@ void SPLRandom_VecFx32_XY(struct Vector3 *out) {
     data_020a4d30 = y;
     out->y = y >> 8;
     out->z = 0;
-    NormalizeVec3(out, out);
+    VEC_Normalize(out, out);
 }

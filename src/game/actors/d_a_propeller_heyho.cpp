@@ -270,10 +270,7 @@ int daPropeller_Heyho_c::Behavior()
 
     {
         State *q = mCurrentState;
-        /* Reads the handler's pointer word directly rather than as `&q->mMain`:
-           taking the ADDRESS of a pointer-to-member makes mwcc materialise the
-           whole 8-byte pmf. Reading one to CALL it is free. */
-        if (*(int *)((char *)q + 8) != 0) {
+        if (q->mMain != 0) {
             (this->*(q->mMain))();
         }
     }
@@ -424,8 +421,8 @@ extern int ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-/* local extern: no shared math header declares MulVec3Mat4x3. */
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+/* local extern: no shared math header declares MTX_MultVec43. */
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 
 extern Matrix4x3 data_020a0e68;
@@ -468,7 +465,7 @@ int func_ov070_0211fd98(daPropeller_Heyho_c *c)
     in[2] = 0xa000;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, c->mPrevAngleX);
-    MulVec3Mat4x3((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
+    MTX_MultVec43((Vector3 *)in, &data_020a0e68, (Vector3 *)out);
 
     ApproachLinear(c->mSpeedX, out[0], 0x1000);
     ApproachLinear(c->mVertSpeed, out[1], 0x800);
@@ -513,8 +510,8 @@ extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-/* local extern: no shared math header declares MulVec3Mat4x3. */
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+/* local extern: no shared math header declares MTX_MultVec43. */
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 /* local extern: see the named CalcLib-signature exception above. */
 extern int RandomIntInternal(int *seed);
@@ -593,7 +590,7 @@ int func_ov070_0211fae4(daPropeller_Heyho_c *c)
     vin.z = 0xf000;
     Matrix4x3_FromRotationY(&data_020a0e68, c->mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, c->mPrevAngleX);
-    MulVec3Mat4x3(&vin, &data_020a0e68, (Vector3 *)&c->mSpeedX);
+    MTX_MultVec43(&vin, &data_020a0e68, (Vector3 *)&c->mSpeedX);
 
     if (Vec3_Dist(&c->mPos, &c->mHomePos) > kHomeLeashDist) {
         FlyGuy_ChangeState(c, &data_ov070_0212359c);
@@ -660,8 +657,8 @@ extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern u16 DecIfAbove0_Short(u16* p);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* mF, s16 angX);
-/* local extern: no shared math header declares MulVec3Mat4x3. */
-extern void MulVec3Mat4x3(Vector3 *in, Matrix4x3 *m, Vector3 *out);
+/* local extern: no shared math header declares MTX_MultVec43. */
+extern void MTX_MultVec43(Vector3 *in, Matrix4x3 *m, Vector3 *out);
 }
 
 /* Dive main. Turns toward mTargetAngY and levels the Z bank. When the animation
@@ -782,7 +779,7 @@ int daPropeller_Heyho_c::func_ov070_0211f6e0()
 
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-    MulVec3Mat4x3(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&v, &data_020a0e68, (Vector3 *)&mSpeedX);
 
     return 1;
 }
