@@ -115,8 +115,8 @@ int func_ov007_020b7138(Ov007MenuHooks *hooks, Ov007BootArgs *bootArgs) {
     MenuGfx_InitSubEngine();
     MenuGfx_SetBgMode(1);
     func_02045d9c();
-    G2x_SetBlendBrightness_(&REG_BLDCNT, 0x3f, -0x10);
-    G2x_SetBlendBrightness_(&REG_DB_BLDCNT, 0x3f, -0x10);
+    G2_SetBlendBrightness(0x3f, -0x10);
+    G2S_SetBlendBrightness(0x3f, -0x10);
     REG_DISPCNT &= ~0x1f00;
     REG_DISPCNT_SUB &= ~0x1f00;
     REG_POWCNT1 &= ~0x8000;
@@ -173,13 +173,13 @@ int func_ov007_020b6f4c(void) {
     sFrameReady = 0;
     flags |= strokeBits;
     if (work->pendingChoice != 0xa && work->pendingChoice != 0xb && work->choiceReady != 0) {
-        G2x_SetBlendBrightness_(&REG_BLDCNT, 0x3f, 0x10);
-        G2x_SetBlendBrightness_(&REG_DB_BLDCNT, 0x3f, 0x10);
+        G2_SetBlendBrightness(0x3f, 0x10);
+        G2S_SetBlendBrightness(0x3f, 0x10);
         REG_DISPCNT &= ~0x1f00;
         REG_DISPCNT_SUB &= ~0x1f00;
     } else {
-        G2x_SetBlendBrightness_(&REG_BLDCNT, 0x20, -0x10);
-        G2x_SetBlendBrightness_(&REG_DB_BLDCNT, 0x20, -0x10);
+        G2_SetBlendBrightness(0x20, -0x10);
+        G2S_SetBlendBrightness(0x20, -0x10);
     }
     func_ov007_020b65e0();
     func_ov007_020b3050();

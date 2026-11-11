@@ -39,12 +39,10 @@ struct Matrix2x2Words {
 namespace GX { void DisableAllBanks(); }
 
 extern "C" {
-/* local extern: nitro/gx/gx.h declares these three; the parameter names here
+/* local extern: nitro/gx/gx.h declares these two; the parameter names here
    hold this TU's @NNN numbers. */
 extern int GX_HBlankIntr(int enable);
 extern int GX_VBlankIntr(int enable);
-
-extern void GXx_SetMasterBrightness_(u16 *out, int v);
 
 extern Matrix2x2 data_02092668;
 
@@ -137,8 +135,8 @@ void dScene_c::ResetHardwareRegisters()
     REG_BG2OFS = 0;
     REG_BG3OFS = 0;
 
-    G2x_SetBGyAffine_(&REG_BG2PA, &m, 0, 0, 0, 0);
-    G2x_SetBGyAffine_(&REG_BG3PA, &m, 0, 0, 0, 0);
+    G2_SetBG2Affine(&m, 0, 0, 0, 0);
+    G2_SetBG3Affine(&m, 0, 0, 0, 0);
 
     REG_WININ &= ~0x3f;
     REG_WININ &= ~0x3f00;
@@ -152,7 +150,7 @@ void dScene_c::ResetHardwareRegisters()
     REG_MOSAIC_BG = 0;
     REG_MOSAIC_OBJ = 0;
 
-    GXx_SetMasterBrightness_((u16 *)0x400006c, 0);
+    GX_SetMasterBrightness(0);
     GXS_SetGraphicsMode(0);
 
     REG_DISPCNT_SUB &= ~0x1f00;
@@ -179,8 +177,8 @@ void dScene_c::ResetHardwareRegisters()
     REG_DB_BG2OFS = 0;
     REG_DB_BG3OFS = 0;
 
-    G2x_SetBGyAffine_(&REG_DB_BG2PA, &m, 0, 0, 0, 0);
-    G2x_SetBGyAffine_(&REG_DB_BG3PA, &m, 0, 0, 0, 0);
+    G2S_SetBG2Affine(&m, 0, 0, 0, 0);
+    G2S_SetBG3Affine(&m, 0, 0, 0, 0);
 
     REG_DB_WININ &= ~0x3f;
     REG_DB_WININ &= ~0x3f00;
@@ -194,7 +192,7 @@ void dScene_c::ResetHardwareRegisters()
     REG_DB_MOSAIC_BG = 0;
     REG_DB_MOSAIC_OBJ = 0;
 
-    GXx_SetMasterBrightness_((u16 *)0x400106c, 0);
+    GXS_SetMasterBrightness(0);
 }
 
 namespace GX {

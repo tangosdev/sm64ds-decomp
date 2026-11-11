@@ -54,6 +54,10 @@
 #define REG_BLDCNT    (*(volatile u16 *)0x04000050)
 #define REG_DB_BLDCNT (*(volatile u16 *)0x04001050)
 
+/* Master brightness: fades the whole engine toward white or black. */
+#define REG_MASTER_BRIGHT    (*(volatile u16 *)0x0400006c)
+#define REG_DB_MASTER_BRIGHT (*(volatile u16 *)0x0400106c)
+
 /* DISPSTAT bit 1 is the HBlank flag; VCOUNT is the line being drawn. */
 #define REG_DISPSTAT (*(volatile u16 *)0x04000004)
 #define DISPSTAT_HBLANK (1u << 1)

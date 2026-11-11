@@ -28,8 +28,6 @@
 #include "nitro/hw/registers.h"
 #include "nitro/gx/gx.h"
 
-#define REG_DISPSTAT      (*(volatile u16 *)0x04000004)
-#define REG_MASTER_BRIGHT (*(volatile u16 *)0x0400006c)
 #define REG_BG2PD         (*(volatile u16 *)0x04000026)
 #define REG_BG3PD         (*(volatile u16 *)0x04000036)
 #define REG_DB_BG2PD      (*(volatile u16 *)0x04001026)
@@ -158,7 +156,7 @@ void GXS_SetGraphicsMode(int bgMode) {
 
 // reg is either engine's MASTER_BRIGHT. Positive
 // levels fade up toward white, negative ones down toward black.
-void GXx_SetMasterBrightness_(u16 *reg, int brightness) {
+void GXx_SetMasterBrightness_(volatile u16 *reg, int brightness) {
     if (brightness == 0)
         *reg = 0;
     else if (brightness > 0)
