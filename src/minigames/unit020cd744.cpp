@@ -24,6 +24,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g3imm.h"
 #include "nitro/gx/g3imm_cmd.h"
+#include "nitro/gx/g3imm_light.h"
 #include "nitro/hw/registers.h"
 #include "decl_common.h"
 #include "common.h"
@@ -2046,11 +2047,10 @@ extern "C" void TrmpLine_DrawAll(void) {
     G3_LoadMtx43(&data_0209b3ec);
     light[0] = 0;
     light[1] = 0;
-    light[2] = 0xfffff008;
+    light[2] = -0xff8;
     func_0203cd80(light, -0x2000);
-    REG_LIGHT_VECTOR = (((short)light[0] >> 3) & 0x3ff) | ((((short)light[1] >> 3) & 0x3ff) << 10) |
-                       ((((short)light[2] >> 3) & 0x3ff) << 20) | 0x40000000;
-    REG_LIGHT_COLOR = 0x40007fff;
+    G3_LightVector(GX_LIGHTID_1, light[0], light[1], light[2]);
+    G3_LightColor(GX_LIGHTID_1, GX_RGB(31, 31, 31));
     int i;
     for (i = 0; i < 4; i++) {
         if (sTrmpLines[i].mStatus != 0) {

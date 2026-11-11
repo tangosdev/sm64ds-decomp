@@ -69,6 +69,7 @@ enum dScMgSnowball_c_AssetId {
 #include "Vector2Math.h"
 #include "nitro/gx/g3x.h"
 #include "nitro/fx/fx_cp.h"
+#include "nitro/gx/g3imm_light.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -1276,7 +1277,7 @@ void dScMgSnowball_c::ResetScene() {
  * go through an int cast of `&(this + i * 8)->mArray[0].y` because the ROM loads them
  * as `[this + i * 8, pool offset]`, which `mArray1[i].y` does not reproduce. */
 s32 dScMgSnowball_c::Render() {
-    int m[3];
+    int light[3];
     int vecArr[3];
 
     mAnimCounter++;
@@ -1291,13 +1292,12 @@ s32 dScMgSnowball_c::Render() {
     }
     Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[1], 0xf0, 0x60, -1, 0);
 
-    m[2] = 0xfffff008;
-    m[1] = 0;
-    m[0] = 0;
-    func_0203cd80(m, -0x2000);
-    REG_LIGHT_VECTOR = (((short)m[0] >> 3) & 0x3ff) | ((((short)m[1] >> 3) & 0x3ff) << 10) |
-                       ((((short)m[2] >> 3) & 0x3ff) << 20);
-    REG_LIGHT_COLOR = 0x7fff;
+    light[2] = -0xff8;
+    light[1] = 0;
+    light[0] = 0;
+    func_0203cd80(light, -0x2000);
+    G3_LightVector(GX_LIGHTID_0, light[0], light[1], light[2]);
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
 
     {
         int t = mBallSize / 2 + mBallSize * 4;

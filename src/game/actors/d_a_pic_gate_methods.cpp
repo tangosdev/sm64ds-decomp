@@ -74,6 +74,7 @@ enum daPicGate_c_AssetId {
 #include "math/MtxStack.h"
 #include "SaveBlock.h"
 #include "nitro/gx/g3imm_cmd.h"
+#include "nitro/gx/g3imm_light.h"
 
 enum {
     kCell = 0x64000,         /* 100.0, one width or height step */
@@ -191,8 +192,8 @@ void daPicGate_c::DrawRippleImage() {
     G3_MtxMode(GX_MTXMODE_POSITION);
     LoadMtx43(&tmp);
 
-    REG_LIGHT_VECTOR = 0xe0000000;
-    REG_LIGHT_COLOR = 0xc0007fff;
+    G3_LightVector(GX_LIGHTID_3, 0, 0, -0x1000);
+    G3_LightColor(GX_LIGHTID_3, GX_RGB(31, 31, 31));
     this->LoadMaterial();
 
     G3_Scale(0x20000, 0x20000, 0x20000);

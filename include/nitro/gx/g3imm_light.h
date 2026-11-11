@@ -19,12 +19,7 @@
  * gxcommon.h's, kept here (as g3imm_cmd.h keeps GX_VECFX10) because that
  * header's GXOamAttr costs every includer four more @NNN numbers. */
 
-typedef enum {
-    GX_LIGHTID_0 = 0,
-    GX_LIGHTID_1 = 1,
-    GX_LIGHTID_2 = 2,
-    GX_LIGHTID_3 = 3
-} GXLightId;
+typedef enum { GX_LIGHTID_0 = 0, GX_LIGHTID_1 = 1, GX_LIGHTID_2 = 2, GX_LIGHTID_3 = 3 } GXLightId;
 
 /* A 15-bit BGR555 colour from 5-bit red, green and blue. */
 #define GX_RGB(r, g, b) ((u16)(((r) << 0) | ((g) << 5) | ((b) << 10)))
