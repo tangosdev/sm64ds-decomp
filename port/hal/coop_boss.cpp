@@ -347,6 +347,7 @@ struct Boss {
     unsigned kpa_t;                // bowser2: wall ms of the last record that said he is held
     int16_t kpa_yaw;               // bowser2: the holder body's facing last tick (its turn per tick is his swing speed)
     unsigned kpa_talk_t;           // bowser2: wall ms since which this copy's own intro talk kept a forced state away (0 = not)
+    unsigned kpa_air_t;            // bowser2 BFS: wall ms since which this copy has been far above the authority's Bowser (0 = not)
     Rx rx;
 };
 
@@ -365,6 +366,8 @@ unsigned g_behind_tick = 0, g_behind_every = 0; int g_behind_dist = 0; bool g_be
 // ROM's way (Player::TryGrab during a real punch: the row's pad presses B), turns S angle units a tick for N ticks, then lets go.
 struct SwingKnob { unsigned from; int speed; unsigned dur; int phase; unsigned t0; unsigned tries; };
 SwingKnob g_swing = { 0, 0, 0, -1, 0, 0 };
+unsigned g_kpa_jump_every = 0, g_kpa_jump_t = 0;   // bowser2 proof knob SM64DS_COOP_BOWSER_JUMP=N: the authority's idle Bowser jumps every N ticks
+char *kpa_arena();
 bool g_kpa_fix = true;   // bowser2: SM64DS_COOP_BOWSER_FIX=0 is the before control (no held copy, no intro guard, no camera give-back)
 bool g_regd = false;
 int  g_my = -1;
@@ -536,6 +539,7 @@ void read_env() {
         if (std::sscanf(sw, "%u:%i:%u", &f, &sp, &n) == 3 && n > 0) g_swing = { f, sp, n, 0, 0, 0 };
     }
     g_kpa_fix = flag("SM64DS_COOP_BOWSER_FIX", true);
+    if (const char *j = std::getenv("SM64DS_COOP_BOWSER_JUMP")) g_kpa_jump_every = (unsigned)std::atoi(j);
     g_god = flag("SM64DS_COOP_BOSS_GOD", false);
     g_bomb = flag("SM64DS_COOP_BOSS_BOMB", false);
     g_face = flag("SM64DS_COOP_BOSS_FACE", false);
@@ -718,7 +722,7 @@ bool is_defeated(const Boss &b) {
 }
 
 void log_sample(int slot, const Boss &b, int auth) {
-    char line[320]; int n = std::snprintf(line, sizeof line, "[cbs] w=%lld t=%u slot=%d cls=%u pos=%d,%d,%d auth=%d me=%d hp=%d st=%u",
+    char line[768]; int n = std::snprintf(line, sizeof line, "[cbs] w=%lld t=%u slot=%d cls=%u pos=%d,%d,%d auth=%d me=%d hp=%d st=%u",
                                           wall_ms(), g_ticks, slot, (unsigned)b.d->cls, rd32(b.a, 0x5c) >> 12, rd32(b.a, 0x60) >> 12, rd32(b.a, 0x64) >> 12,
                                           auth, g_my, hp_of(b), state_of(b));
     for (int k = 2; k < b.d->nf && n < (int)sizeof line - 20; ++k) n += std::snprintf(line + n, sizeof line - n, " f%d=%u", k, read_field(b.a, b.d->f[k]));
@@ -726,6 +730,9 @@ void log_sample(int slot, const Boss &b, int auth) {
         n += std::snprintf(line + n, sizeof line - n, " talk=%d cnt=%d", (int)(signed char)b.a[0x424], (int)rd16(b.a, 0x3fe));
         // bowser2: hold mode, the intro camera's step and the camera itself (flags; 0x8 = held by the intro), so a frozen camera shows
         const char *cam = (const char *)data_0209f318;
+        { const char *ar = (unsigned char)b.a[0x414] == 1 ? kpa_arena() : nullptr;
+          n += std::snprintf(line + n, sizeof line - n, " y=%d gy=%d vs=%d g=%d disc=%d,%d", rd32(b.a, 0x60) >> 12, rd32(b.a, 0x3cc) >> 12, rd32(b.a, 0xa8) >> 12, rd32(b.a, 0x9c),
+                             ar ? rd16(ar, 0x8c) : 0, ar ? rd16(ar, 0x90) : 0); }
         n += std::snprintf(line + n, sizeof line - n, " hold=%d grab=%s shown=%d ang=%d cs=%d cam=0x%x campos=%d,%d,%d",
                            rd32(b.a, 0x410), rd32(b.a, 0x3a4) ? "y" : "n", (int)b.kpa_shown, (int)(uint16_t)rd16(b.a, 0x8e), (int)(unsigned char)b.a[0x444],
                            cam ? (unsigned)rd32(cam, 0x154) : 0u, cam ? rd32(cam, 0x8c) >> 12 : 0, cam ? rd32(cam, 0x90) >> 12 : 0, cam ? rd32(cam, 0x94) >> 12 : 0);
@@ -900,6 +907,70 @@ void kpa_intro_camera_done(Boss &b) {
                             st, cs, before, cam ? (unsigned)rd32(cam, 0x154) : 0u, wall_ms());
 }
 
+// ---------------------------------------------------------------------------
+// bowser2, Bowser in the Fire Sea (variant 1). His landing from a jump or from the recovery leap puts him in the arena-tilt state
+// (0x13), which writes the tilting disc's (KOOPA2BG, actor 0xa6) angular speeds every frame for 186 frames and zeroes its speeds and
+// angles at the end (d_a_kpa.cpp func_ov060_02112bfc). The disc turns by its own speeds every frame (d_a_kpa2_bg.cpp Behavior) and
+// is not synced: each console's disc is driven by its own Bowser copy. Three ways a copy went wrong (Tango 11-11: on one console
+// Bowser hung in the air after the platform rocked while a friend grabbed him off the floor):
+//  - a copy forced OUT of the tilt state by the authority's record before its own tilt ended never zeroed the disc: it kept turning
+//    or stayed tipped, and his ground snap (states that may not leave the floor go back to the last floor point every frame they are
+//    off it, d_a_kpa.cpp func_ov060_021128c0) held him at a floor point that was no longer there, in the air;
+//  - a copy forced INTO the tilt state never found the disc (+0x3ac is only recorded by its own landing) and left it at once.
+//  - the records carry his gravity (+0x9c): a value taken during the authority's recovery leap (0 there) written onto a copy in any
+//    other state left that copy with no gravity. Outside the recovery (2) and the defeat (4) the ROM's gravity is always -0x2000.
+// ---------------------------------------------------------------------------
+char *kpa_arena() {
+    for (char *x = (char *)_ZN8dActor_c4NextEPKS_(0); x; x = (char *)_ZN8dActor_c4NextEPKS_(x))
+        if (*(const unsigned short *)(x + 0x0c) == 0xa6) return x;
+    return nullptr;
+}
+
+void kpa_bfs_guard(Boss &b, bool mine, unsigned now) {
+    const uint32_t st = state_of(b);
+    // the disc is left level and still whenever this copy is not tilting it (the ROM's own end of the tilt)
+    if ((unsigned char)b.a[0x414] == 1 && st != 0x13u) {
+        if (char *ar = kpa_arena()) {
+            if (rd16(ar, 0x31e) || rd16(ar, 0x320) || rd16(ar, 0x322) || rd16(ar, 0x8c) || rd16(ar, 0x90)) {
+                if (g_log) std::fprintf(stderr, "[cbs] bowser BFS disc left tilted on this console (st=%u speeds %d,%d,%d angles %d,%d): levelled w=%lld\n",
+                                        st, rd16(ar, 0x31e), rd16(ar, 0x320), rd16(ar, 0x322), rd16(ar, 0x8c), rd16(ar, 0x90), wall_ms());
+                const int16_t z = 0;
+                std::memcpy(ar + 0x31e, &z, 2); std::memcpy(ar + 0x320, &z, 2); std::memcpy(ar + 0x322, &z, 2);
+                std::memcpy(ar + 0x8c, &z, 2); std::memcpy(ar + 0x90, &z, 2);
+            }
+        }
+    }
+    if (mine) { b.kpa_air_t = 0; return; }
+    // gravity outside the recovery and the defeat
+    if (st != 2u && st != 4u && (rd32(b.a, 0x9c) != -0x2000 || rd32(b.a, 0xa0) != -0x3c000)) {
+        if (g_log) std::fprintf(stderr, "[cbs] bowser copy gravity %d / %d in st=%u: the ROM's -0x2000 / -0x3c000 put back w=%lld\n", rd32(b.a, 0x9c), rd32(b.a, 0xa0), st, wall_ms());
+        const int32_t g = -0x2000, tv = -0x3c000;
+        std::memcpy(b.a + 0x9c, &g, 4); std::memcpy(b.a + 0xa0, &tv, 4);
+    }
+    // the watchdog: far above the authority's Bowser for longer than any jump of his (a jump is about 1.5 s) while neither is in the
+    // recovery, held or defeated: put down where the authority has him, his floor point with him, falling normally
+    const BDesc &d = *b.d;
+    const Rx &x = b.rx;
+    if (!x.valid || d.pos < 0 || b.kpa_shown || st == 2u || st == 4u || rd32(b.a, 0x410) != 0) { b.kpa_air_t = 0; return; }
+    const uint32_t rs = x.w[d.state];
+    if (rs == 2u || rs == 4u || rs == 1u || x.w[2] != 0u) { b.kpa_air_t = 0; return; }
+    const int32_t ry = (int32_t)x.w[d.pos + 1];
+    const int dy = (rd32(b.a, 0x60) - ry) >> 12;
+    if (dy < 150) { b.kpa_air_t = 0; return; }
+    if (!b.kpa_air_t) { b.kpa_air_t = now ? now : 1u; return; }
+    if ((unsigned)(now - b.kpa_air_t) < 3000u) return;
+    b.kpa_air_t = 0;
+    for (int k = 0; k < 3; ++k) { const int32_t v = (int32_t)x.w[d.pos + k]; std::memcpy(b.a + 0x5c + 4 * k, &v, 4); std::memcpy(b.a + 0x3c8 + 4 * k, &v, 4); }
+    const int32_t zero = 0, g = -0x2000;
+    std::memcpy(b.a + 0xa8, &zero, 4); std::memcpy(b.a + 0x98, &zero, 4); std::memcpy(b.a + 0x9c, &g, 4);
+    if (rs != st && rs <= 0x13u) {
+        const int32_t ns = (int32_t)rs; std::memcpy(b.a + 0x40c, &ns, 4); b.a[0x423] = 0;
+        if (rs == 0x13u) { if (char *ar = kpa_arena()) std::memcpy(b.a + 0x3ac, ar + 4, 4); }
+    }
+    if (g_log) std::fprintf(stderr, "[cbs] bowser airborne watchdog: this copy was %d units above the authority's for 3 s (st=%u, authority st=%u): put down at %d,%d,%d w=%lld\n",
+                            dy, st, rs, rd32(b.a, 0x5c) >> 12, rd32(b.a, 0x60) >> 12, rd32(b.a, 0x64) >> 12, wall_ms());
+}
+
 void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
     Rx &x = b.rx;
     if (!x.valid || !x.fresh) return;
@@ -994,6 +1065,8 @@ void apply_rx(int slot, Boss &b, unsigned now, bool mine) {
         for (int k = 0; k < d.nf; ++k) if (k != d.hp && value_ok(d, k, x.w[k])) write_field(b.a, d, k, x.w[k]);
         write_field(b.a, d, d.hp, (uint32_t)hp_keep);
         post_force(b);
+        // bowser2 BFS: a copy forced into the arena-tilt state is given its disc (only its own landing records it), so it rocks here too
+        if (d.cls == 279 && g_kpa_fix && rs == 0x13u) { if (char *ar = kpa_arena()) std::memcpy(b.a + 0x3ac, ar + 4, 4); }
         // coopkbo1: the music starts once on a copy that joins the fight by a forced state (the intro talk that starts it is not forced)
         if (d.cls == 189 && !kbo_music_was && rs != kKboIdle && rs != kKboTalk && rs != kKboDefeat) {
             _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2d);
@@ -1117,7 +1190,13 @@ void process(unsigned now) {
             b.last_st = stn;
         }
         if (g_on) apply_rx(slot, b, now, mine);
-        if (g_on && d.cls == 279) { kpa_tick(b, mine, now); if (g_kpa_fix) kpa_intro_camera_done(b); }
+        if (g_on && d.cls == 279) { kpa_tick(b, mine, now); if (g_kpa_fix) { kpa_intro_camera_done(b); kpa_bfs_guard(b, mine, now); } }
+        // bowser2 proof knob: the authority's idle Bowser jumps (variant 1 lands in the arena-tilt state: the rocking slam)
+        if (g_kpa_jump_every && d.cls == 279 && mine && state_of(b) == 0u && rd32(b.a, 0x410) == 0 && g_ticks - g_kpa_jump_t >= g_kpa_jump_every) {
+            g_kpa_jump_t = g_ticks;
+            const int32_t j = 0xd; std::memcpy(b.a + 0x40c, &j, 4); b.a[0x423] = 0; const uint16_t z = 0; std::memcpy(b.a + 0x3fc, &z, 2);
+            std::fprintf(stderr, "[cbs-knob] jump: the authority's Bowser sent to his jump w=%lld\n", wall_ms());
+        }
         if (g_on && !mine) skip_defeat_talk(b, false);
         // coopkbo1: the authority's King Bob-omb at HP 0 outside the states that end in his defeat (his last point arrived by merge)
         // never runs the defeat, so nobody got the star. Put him in the hurt state, whose tick on the ground runs the defeat talk and
