@@ -218,12 +218,10 @@ void try_tp(int seat, unsigned now) {
         LoadLevel((unsigned)p.level, 0, (unsigned)p.act, 0, (unsigned)ret);
         data_0209211c = (signed char)castle;
         data_02092118 = -1;
-        if (g.log) std::fprintf(stderr, "[cotp] return set: course %d -> castle sublevel %d entrance %d
-", p.level, castle, ret);
+        if (g.log) std::fprintf(stderr, "[cotp] return set: course %d -> castle sublevel %d entrance %d\n", p.level, castle, ret);
     } else {
         LoadLevelNoReturn((unsigned)p.level, 0, (unsigned)p.act, 0);
-        if (g.log) std::fprintf(stderr, "[cotp] no painting known for course %d: no-return load
-", p.level);
+        if (g.log) std::fprintf(stderr, "[cotp] no painting known for course %d: no-return load\n", p.level);
     }
     ++g.st.warps;
     std::snprintf(t, sizeof t, "Going to %s", nm);
