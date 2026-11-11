@@ -86,9 +86,7 @@ extern "C" int port_coop_minimap_ghost(int slot, int pos[3]) {
         if ((nw[slot]++ % 240u) == 0) {
             int mp[3] = {0, 0, 0}, ch = 0;
             const int m = port_adventure_ghost_mappos(slot, mp, &ch);
-            std::fprintf(stderr, "[comap] ask slot %d answer %d mappos %d my area %d seat %d"
-                         "
-", slot, r, m, (int)data_02092120, port_adventure_ghost_seat(slot));
+            std::fprintf(stderr, "[comap] ask slot %d answer %d mappos %d my area %d seat %d\n", slot, r, m, (int)data_02092120, port_adventure_ghost_seat(slot));
         }
     }
     return r;
