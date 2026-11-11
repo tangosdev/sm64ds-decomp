@@ -377,8 +377,8 @@ unsigned g_claim_until[kSeats];     // wall ms until which a seat's claim holds
 enum : unsigned { kBullyClaimMs = 1500 };
 unsigned g_bclaim[kSlots][kSeats];  // hub ms until which a seat's claim on a bully slot holds
 bool g_bully_on = true;             // SM64DS_COOP_BULLY=0: must-fail control, no bully claim (the 1.0.2 behaviour, plus the small Bully row)
-struct BumpKnob { unsigned tick, every; int cls; int ang; bool on; int left; };
-BumpKnob g_bump = {};               // SM64DS_COOP_BULLY_BUMP=F:cls[:every[:count[:angle]]]
+struct BumpKnob { unsigned tick, every; int cls; int ang; bool on; int left; int speed; };
+BumpKnob g_bump = {};               // SM64DS_COOP_BULLY_BUMP=F:cls[:every[:count[:angle[:speed]]]]
 bool is_bully(unsigned cls) { return cls == 215 || cls == 216; }
 unsigned g_tok_t = 0; double g_tokens = 6.0;
 unsigned g_stat_t = 0;
@@ -548,8 +548,9 @@ void read_env() {
     g_deadmark = flag("SM64DS_COOP_BOSS_DEADMARK", true);
     g_bully_on = flag("SM64DS_COOP_BULLY", true);
     if (const char *bp = std::getenv("SM64DS_COOP_BULLY_BUMP")) {
-        unsigned f = 0, ev = 0; int cls = 0, cnt = 1, ang = -1;
-        const int n = std::sscanf(bp, "%u:%i:%u:%i:%i", &f, &cls, &ev, &cnt, &ang);
+        unsigned f = 0, ev = 0; int cls = 0, cnt = 1, ang = -1, spd = 40;
+        const int n = std::sscanf(bp, "%u:%i:%u:%i:%i:%i", &f, &cls, &ev, &cnt, &ang, &spd);
+        g_bump.speed = n >= 6 && spd > 0 && spd <= 200 ? spd : 40;
         if (n >= 2 && (cls == 215 || cls == 216)) { g_bump.tick = f; g_bump.cls = cls; g_bump.every = n >= 3 ? ev : 0; g_bump.left = n >= 4 && cnt > 0 ? cnt : 1; g_bump.ang = n >= 5 ? ang : -1; g_bump.on = true; }
     }
     if (const char *f = std::getenv("SM64DS_COOP_BOSS_FORGE")) {
@@ -1280,7 +1281,8 @@ bool bossdesc2_knob(Boss &b, HitKnob &k) {
 // coopbully1 proof knob SM64DS_COOP_BULLY_BUMP=F:cls[:every[:count[:angle]]]: from boss tick F, on THIS console, the nearest live bully of
 // class cls (215 or 216) is knocked back as the ROM's hit reaction does it for a punch (daOts_c::func_ov064_02116754: heading, 40 units a
 // frame, the hit animation, STATE_KNOCKED_BACK, hops cleared), with the local player put 150 units behind it, facing the push. The
-// push goes away from where the player stood, or along `angle` (0..65535) when given. Repeated every `every` ticks, `count` times.
+// push goes away from where the player stood, or along `angle` (0..65535, -1 = away) when given, at `speed` units a frame (default 40).
+// Repeated every `every` ticks, `count` times.
 void do_bump() {
     const int me = (int)data_0209f250;
     if (me < 0 || me >= 16 || !data_0209f394[me]) return;
@@ -1311,13 +1313,13 @@ void do_bump() {
     std::memcpy(pl + 0x5c, &px, 4); std::memcpy(pl + 0x60, &py, 4); std::memcpy(pl + 0x64, &pz, 4);
     std::memcpy(pl + 0x8e, &ang, 2);
     std::memcpy(a + 0x94, &ang, 2);                     // mPrevAngleY = the player's mAngleY
-    const int32_t spd = 0x28000; std::memcpy(a + 0x98, &spd, 4);
+    const int32_t spd = g_bump.speed << 12; std::memcpy(a + 0x98, &spd, 4);   // 40 = the ROM's punch; more only to reach the lava in a row
     a[0x3f9] = 0;                                       // mHopCount
     const uint32_t was = state_of(b);
     bully_enter(a, 2u);
     --g_bump.left;
-    std::fprintf(stderr, "[cbs-knob] bully bump slot=%d cls=%u st %u->%u at %d,%d,%d heading %d speed 40, my player put behind it (%d left) w=%lld\n", best, (unsigned)b.d->cls,
-                 was, state_of(b), rd32(a, 0x5c) >> 12, rd32(a, 0x60) >> 12, rd32(a, 0x64) >> 12, (int)(uint16_t)ang, g_bump.left, wall_ms());
+    std::fprintf(stderr, "[cbs-knob] bully bump slot=%d cls=%u st %u->%u at %d,%d,%d heading %d speed %d, my player put behind it (%d left) w=%lld\n", best, (unsigned)b.d->cls,
+                 was, state_of(b), rd32(a, 0x5c) >> 12, rd32(a, 0x60) >> 12, rd32(a, 0x64) >> 12, (int)(uint16_t)ang, g_bump.speed, g_bump.left, wall_ms());
 }
 
 void do_forge(const char *name) {
