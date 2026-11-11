@@ -103,7 +103,7 @@ s32 dScBoot_c::InitResources() {
     REG_POWCNT1 = (REG_POWCNT1 & 0xfffffdf1) | 0x20e;
     GX_DispOn();
 
-    REG_DISPCNT_SUB |= 0x10000;
+    GXS_DispOn();
     G2_SetBG0Priority(1);
     G2_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb800,
                      GX_BG_CHARBASE_0x10000, GX_BG_EXTPLTT_01);

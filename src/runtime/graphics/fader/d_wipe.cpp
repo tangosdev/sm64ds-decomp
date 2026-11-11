@@ -28,6 +28,7 @@
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/g2.h"
 #include "nitro/hw/registers.h"
+#include "nitro/gx/gx.h"
 
 extern "C" {
 void MIi_CpuClear32(int val, int *dst, int len);
@@ -79,8 +80,8 @@ void dWipe_c::DisableWindows() {
     OS_SetIrqFunction(OS_IE_H_BLANK, 0);
     if (enabled)
         (void)OS_EnableIrq();
-    REG_DISPCNT &= ~0xe000;
-    REG_DISPCNT_SUB &= ~0xe000;
+    GX_SetVisibleWnd(GX_WNDMASK_NONE);
+    GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     if (typePending == 1) {
         type = pendingType;
         typePending = 0;
@@ -248,12 +249,12 @@ void dWipe_c::EnableWindows() {
     REG_WINOUT &= ~0x3f;
     REG_DB_WINOUT &= ~0x3f;
 
-    REG_DISPCNT = (REG_DISPCNT & ~0xe000) | 0x6000;
+    GX_SetVisibleWnd(GX_WNDMASK_W0 | GX_WNDMASK_W1);
 
     if (data_0209f5f8 != 0) {
-        REG_DISPCNT_SUB &= ~0xe000;
+        GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     } else {
-        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0xe000) | 0x6000;
+        GXS_SetVisibleWnd(GX_WNDMASK_W0 | GX_WNDMASK_W1);
     }
 
     data_0209f608 = 0;
@@ -266,9 +267,9 @@ void dWipe_c::EnableWindows() {
     BuildTable();
 
     if ((REG_BLDCNT & 0x80) == 0x80)
-        REG_BLDCNT = 0;
+        G2_BlendNone();
     if ((REG_DB_BLDCNT & 0x80) == 0x80)
-        REG_DB_BLDCNT = 0;
+        G2S_BlendNone();
 }
 
 /* Vtable slot 2. Type 1 is the plain colour fade and the base owns it.
@@ -305,8 +306,8 @@ void dWipe_c::AdvanceFade()
             wipeInterp = 0;
             needsCleanup = 0;
             b = (type == 0) ? 0x10 : -0x10;
-            G2x_SetBlendBrightness_((u16 *)0x4000050, 0x3f, b);
-            G2x_SetBlendBrightness_((u16 *)0x4001050, 0x3f, b);
+            G2_SetBlendBrightness(0x3f, b);
+            G2S_SetBlendBrightness(0x3f, b);
             DisableWindows();
             state = 4;
         }

@@ -119,6 +119,8 @@ void OamRender10_Message2(int a, void *b, int c, int d, int e, int f, int g, int
 struct OamAttr;
 #include "OAM.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/g2.h"
+#include "nitro/gx/gx.h"
 
 /* gGameMode (CURRENT_GAMEMODE) is 2 while the fall-in-front-of-castle
  * cutscene runs: ContinueKuppaScriptIfNecessary stores 2 only when the
@@ -742,18 +744,18 @@ int Message::UpdateWindow() {
     data_0209d670 = 0;
     if (data_0209d698 != 0) {
         gSubScreenLayers &= ~2;
-        REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | (gSubScreenLayers << 8);
-        REG_DB_BLDCNT = 0;
+        GXS_SetVisiblePlane(gSubScreenLayers);
+        G2S_BlendNone();
         REG_DB_WININ &= ~0x3f;
         REG_DB_WINOUT &= ~0x3f;
-        REG_DISPCNT_SUB &= ~0xe000;
+        GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     } else {
         gMainScreenLayers &= ~DISPLAY_LAYER_BG3;
-        REG_DISPCNT = (REG_DISPCNT & ~0x1f00) | (gMainScreenLayers << 8);
-        REG_BLDCNT = 0;
+        GX_SetVisiblePlane(gMainScreenLayers);
+        G2_BlendNone();
         REG_WININ &= ~0x3f;
         REG_WINOUT &= ~0x3f;
-        REG_DISPCNT &= ~0xe000;
+        GX_SetVisibleWnd(GX_WNDMASK_NONE);
     }
     return 0;
 }

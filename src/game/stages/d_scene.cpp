@@ -110,7 +110,7 @@ void dScene_c::ResetHardwareRegisters()
     GX_SetGraphicsMode(1, 0, 0);
 
     GX_SetVisiblePlane(0);
-    GX_SetVisibleWnd(0);
+    GX_SetVisibleWnd(GX_WNDMASK_NONE);
     GX_SetBGScrOffset(0);
     GX_SetBGCharOffset(0);
     GX_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
@@ -159,10 +159,10 @@ void dScene_c::ResetHardwareRegisters()
     GXS_SetGraphicsMode(0);
 
     GXS_SetVisiblePlane(0);
-    REG_DISPCNT_SUB &= ~0xe000;
+    GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
-    REG_DISPCNT_SUB &= 0xffbfff9f;
-    REG_DISPCNT_SUB &= ~0x800000;
+    GXS_SetOBJVRamModeBmp(GX_OBJVRAMMODE_BMP_2D_W128);
+    GXS_HBlankOBJProc(0);
 
     G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
                       GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);

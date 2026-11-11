@@ -1141,7 +1141,7 @@ void Message::DisplaySaving(unsigned short n)
     {
         int b = gMainScreenLayers | 0x20;
         gNextActorUpdateMask |= 0x80000000u;
-        G2x_SetBlendBrightness_((volatile u16 *)0x4000050, b, -8);
+        G2_SetBlendBrightness(b, -8);
     }
 
     {
@@ -1436,7 +1436,7 @@ extern "C" void func_0201f32c(int arg0)
         return;
     }
     if (disp2 == 1) {
-        G2x_SetBlendBrightness_((volatile u16 *)0x04001050, gSubScreenLayers | 0x20, -7);
+        G2S_SetBlendBrightness(gSubScreenLayers | 0x20, -7);
         REG_DB_WININ = (REG_DB_WININ & ~0x3f) | (gSubScreenLayers | 2) | 0x20;
         REG_DB_WINOUT = (REG_DB_WINOUT & ~0x3f) | 0x1d;
         *(volatile s16 *)0x04001040 =
@@ -1451,9 +1451,9 @@ extern "C" void func_0201f32c(int arg0)
     }
 
     if (data_0209d6d4 >= 0x2a && data_0209d6d4 < 0x83) {
-        G2x_SetBlendBrightness_((volatile u16 *)0x04000050, gMainScreenLayers & ~0x38, 7);
+        G2_SetBlendBrightness(gMainScreenLayers & ~0x38, 7);
     } else {
-        G2x_SetBlendBrightness_((volatile u16 *)0x04000050, gMainScreenLayers & ~0x38, -8);
+        G2_SetBlendBrightness(gMainScreenLayers & ~0x38, -8);
     }
     REG_WININ = (REG_WININ & ~0x3f) | (gMainScreenLayers | 8) | 0x20;
     REG_WINOUT = (REG_WINOUT & ~0x3f) | 0x17;

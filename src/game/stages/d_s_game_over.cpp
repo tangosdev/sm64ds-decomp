@@ -164,7 +164,7 @@ s32 dScGameOver_c::InitResources() {
     REG_POWCNT1 = (REG_POWCNT1 & ~0x20e) | 0x20e;
     GX_DispOn();
 
-    REG_DISPCNT_SUB |= 0x10000;
+    GXS_DispOn();
 
     G2_SetBG0Priority(0);
     G2_BG0Mosaic(0);
