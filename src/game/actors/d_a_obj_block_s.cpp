@@ -1062,8 +1062,8 @@ void daObjBlockS_c::UpdateMeshCollider() {
 /* dExtSimpleModel_c matrix. When mHoldingPlayer is set, mFlags bit 0x4000 is set and the
  * player's mCarryMatrix is nonzero, the
  * crate follows the player's hand: it picks a row r5 of the carry-offset
- * table (data_ov098_0213bf60 / 64 / 68 are its x / y / z columns, stride 12
- * bytes) -- 0 normally, 1 if the player is front-sliding, or if it has lost its grabbed
+ * table (data_ov098_0213bf60, one Vector3 per row) -- 0 normally, 1 if the
+ * player is front-sliding, or if it has lost its grabbed
  * object and ((w << 4) >> 16) < 14 for the word w at +0x58 of what
  * func_ov002_020e496c returns (unrecovered), plus 2 if the player's param1 is 2 -- eases
  * mCarryOffset toward that row, takes the matrix UpdateCarry returns as the
@@ -1091,12 +1091,9 @@ void daObjBlockS_c::UpdateModelMatrix() {
             if (mHoldingPlayer->param1 == 2) {
                 r5 = (r5 + 2) & 0xff;
             }
-            Math_Function_0203b14c(&mCarryOffsetX, *(int *)((char *)data_ov098_0213bf60 + r5 * 0xc),
-                                   0x800, 0x3e8000, 4);
-            Math_Function_0203b14c(&mCarryOffsetY, *(int *)((char *)data_ov098_0213bf64 + r5 * 0xc),
-                                   0x800, 0x3e8000, 4);
-            Math_Function_0203b14c(&mCarryOffsetZ, *(int *)((char *)data_ov098_0213bf68 + r5 * 0xc),
-                                   0x800, 0x3e8000, 4);
+            Math_Function_0203b14c(&mCarryOffsetX, data_ov098_0213bf60[r5].x, 0x800, 0x3e8000, 4);
+            Math_Function_0203b14c(&mCarryOffsetY, data_ov098_0213bf60[r5].y, 0x800, 0x3e8000, 4);
+            Math_Function_0203b14c(&mCarryOffsetZ, data_ov098_0213bf60[r5].z, 0x800, 0x3e8000, 4);
             {
                 char *res = (char *)UpdateCarry(*mHoldingPlayer, *(Vector3 *)&mCarryOffsetX);
                 mModel.mat4x3 = *(struct Matrix4x3 *)res;

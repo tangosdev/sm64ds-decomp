@@ -178,9 +178,9 @@ void func_ov090_02130f94(daMenbo_c *c_) {
         data_020a0e68 = *src;
         MTX_Concat43((const Matrix4x3 *)c->mAnmModel.data.transforms + (6 + i * 3), &data_020a0e68,
                      &data_020a0e68);
-        v.x = *(int *)((char *)&data_020a0e68 + 0x24);
-        v.y = *(int *)((char *)&data_020a0e68 + 0x28);
-        v.z = *(int *)((char *)&data_020a0e68 + 0x2c);
+        v.x = data_020a0e68.m[9];
+        v.y = data_020a0e68.m[10];
+        v.z = data_020a0e68.m[11];
         Vec3_Lsl(&r, &v, sh);
         v.x = r.x;
         v.y = r.y;
