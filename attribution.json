@@ -5304,7 +5304,7 @@
     "src/game/actors/d_a_obj_seesaw.cpp#_ZN13daObjSeesaw_cD0Ev": "tangosdev",
     "src/game/actors/d_a_obj_seesaw.cpp#_ZN13daObjSeesaw_c14GetActorWeightEP8dActor_c": "tangosdev",
     "src/game/actors/d_a_obj_seesaw.cpp#_ZN13daObjSeesaw_c15OnGroundPoundedER8dActor_c": "lunavyqo",
-    "src/game/actors/d_a_obj_seesaw.cpp#_ZN13daObjSeesaw_c11SpringAngleEPsS0_isis": "aitddlabs",
+    "src/game/actors/d_a_obj_seesaw.cpp#_ZN13daObjSeesaw_c11SpringAngleEPsS0_isss": "aitddlabs",
     "src/game/actors/d_a_obj_seesaw.cpp#_ZN13daObjSeesaw_c17UpdateModelMatrixEv": "tangosdev",
     "src/game/actors/d_a_obj_seesaw.cpp#_ZN13daObjSeesaw_c16CleanupResourcesEv": "tangosdev",
     "src/game/actors/d_a_obj_seesaw.cpp#_ZN13daObjSeesaw_c6RenderEv": "tangosdev",
