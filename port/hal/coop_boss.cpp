@@ -736,6 +736,7 @@ void scan() {
         }
         const BDesc *d = desc_of(id);
         if (!d) continue;
+        if (id == 215 && !g_bully_on) continue;                    // coopbully1 control: the small Bully stays unsynced, as in 1.0.2
         short slot = rd16(a, 0xce);
         // bossdesc2: Eyerok's two hands are runtime spawns (slot -1); their record slot is 509 + the part number
         if (slot < 0 && id == 176) { const int part = rd32(a, 0x49c); if (part == 1 || part == 2) slot = (short)(509 + part); }
