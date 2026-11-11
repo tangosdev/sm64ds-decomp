@@ -349,6 +349,16 @@ void knobs(char *me) {
             std::fprintf(stderr, "[coopcap] KNOB steal lf=%u: no Klepto (%p) or no body (%p)\n", g_lf, (void *)k, (void *)who);
         } else {
             const int lost0 = _ZN8SaveData16HasPlayerLostCapEv() ? 1 : 0;
+            if (k->mHeldActorID && k->mCarriedItem != 0) {
+                // a star carrier never steals (its hands are full): for the proof it lets the star go first
+                char *star = _ZN8dActor_c10FindWithIDEj((unsigned)k->mHeldActorID);
+                std::fprintf(stderr, "[coopcap] KNOB steal lf=%u: Klepto carried a star (uid %d, class %d): removed for the proof
+", g_lf,
+                             k->mHeldActorID, star ? rd32(star, 0x0c) & 0xffff : -1);
+                if (star) _ZN7fBase_c18MarkForDestructionEv(star);
+                k->mHeldActorID = 0;
+                k->mCarriedItem = 0;
+            }
             k->func_ov062_0211c658(&data_ov062_0211e18c);          // SWOOP, the ROM's own state setter
             k->mdCcAc_c2.otherOwner = uid_of(who);
             k->func_ov062_0211b51c();                              // the ROM's own contact test
@@ -356,7 +366,7 @@ void knobs(char *me) {
             std::fprintf(stderr, "[coopcap] KNOB steal lf=%u: Klepto at (%d,%d,%d) touched by %s body (char %d); my save lost bit %d -> %d; "
                          "Klepto holds %s (class %d model %d)\n", g_lf, k->mPosX >> 12, k->mPosY >> 12, k->mPosZ >> 12,
                          steal_friend ? "a FRIEND's" : "MY", ((Player *)who)->mCharacter, lost0, _ZN8SaveData16HasPlayerLostCapEv() ? 1 : 0,
-                         held ? "a cap" : "nothing", held ? rd32(held, 0x0c) & 0xffff : -1, held ? as_cap(held)->mModelIndex : -1);
+                         !held ? "nothing" : (rd32(held, 0x0c) & 0xffff) == kCapClass ? "a CAP" : "something else", held ? rd32(held, 0x0c) & 0xffff : -1, held && (rd32(held, 0x0c) & 0xffff) == kCapClass ? as_cap(held)->mModelIndex : -1);
         }
     }
     if (hit_at >= 0 && g_lf == (unsigned)hit_at) {
