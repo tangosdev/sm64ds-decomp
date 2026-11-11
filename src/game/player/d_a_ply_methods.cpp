@@ -374,6 +374,7 @@ extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
 extern void func_ov002_020e6b3c(void *model);
 extern int func_ov002_020f02c8(int sel);
+/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
 extern void VEC_Add(Vector3 *, Vector3 *, Vector3 *);
 extern u32 PlayerNewHold(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, const void *dir,
                          void *callback);
@@ -383,7 +384,9 @@ extern u32 PlayerNewHold4(u32 handle, u32 kind, Fix12i x, Fix12i y, Fix12i z, co
                           void *callback);
 extern void PlayerPlayLongHold_c133c(unsigned int a, unsigned int b, unsigned int c,
                                      Vector3 const *v, unsigned int d);
+/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
 extern void VEC_Subtract(Vector3 *, Vector3 *, Vector3 *);
+/* local extern: including CalcLib.h renumbers this TU's @NNN aliases. */
 extern Fix12i Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern signed char data_02092114;
 extern unsigned char data_0209f2bc[];
