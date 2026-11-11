@@ -301,8 +301,7 @@ void on_frame(unsigned now) {
     }
     if (g.chain_level && !g.chain_done && g.tick >= g.chain_tick && (int)data_0209f2f8 == g.chain_from && (data_0209f22c[0] == 0)) {
         g.chain_done = true;
-        std::fprintf(stderr, "[cotp] chain knob: door from level %d to %d, no return
-", (int)data_0209f2f8, g.chain_level);
+        std::fprintf(stderr, "[cotp] chain knob: door from level %d to %d, no return\n", (int)data_0209f2f8, g.chain_level);
         LoadLevel((unsigned)g.chain_level, 0, 1, 0, (unsigned)-1);
     }
 #endif
