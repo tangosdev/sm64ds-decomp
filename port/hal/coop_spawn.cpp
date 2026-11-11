@@ -56,6 +56,12 @@ unsigned DeathTable_GetBit(int id);
 void _ZN5Event6SetBitEj(unsigned b);
 extern int data_ov089_02132894[];      // Key kinds 0..6: pointers to the kind's SharedFilePtr (src/_ZN3Key13InitResourcesEv.cpp)
 extern char data_ov002_0211094c;       // kind 7's model
+// STARCASE2 (switch stars)
+extern int data_0209b454[];             // the persistent freeze-request word (the star's camera request is 0x4000000)
+extern unsigned int data_0209b464;      // this frame's latched copy, the mask Actor::BeforeBehavior reads
+extern char *data_0209f318;             // the Camera singleton (+0x154 bit 8 while a star films)
+int IsStarCollectedInCurLevel(int starID);
+void _ZN12daStarBase_c7CollectEv(char *marker);    // the glass case breaks: sound, hidden, effects (face, port/faces_sync.txt)
 }
 
 extern "C" unsigned char data_0209caa0[];             // the live working copy of the save record
@@ -216,6 +222,30 @@ Forge g_forge[24]; int g_nforge = 0;
 struct TakeKnob { unsigned frame; bool done; };
 TakeKnob g_kt[4]; int g_nkt = 0;
 
+// switch stars (STARCASE2). daStar_c offsets (include/daStar_c.h): +0x80 scale X, +0xb0 mFlags, +0x434 mMarkerID (the glass
+// case), +0x438 mPlayer, +0x43c mKind, +0x440 mState, +0x496 mCamSeq (0xffff = no camera), +0x49d mStarID, +0x4a2 mStarFlags
+// (4 see-through, 0x80 switch star, 0x100 switch on). daObjSwitch_c (include/daObjSwitch_c.h): +0x338 mTimer (u16), +0x33a
+// mTimeLimit (u16), +0x340 mState, +0x344 mTargetActorID, +0x34d mMusicFadeDone. daStarBase_c: +0x1db mBits (2 = visible).
+enum : unsigned { kCut = 0x4000000u };   // CUTSCENE_FLAG (src/game/actors/d_a_star.cpp): the star's camera request
+enum : int { kSwpMax = 4, kSwsMax = 4, kSwHold = 64, kSwMusicWait = 240, kSwTakeFrames = 180, kSwTakeArm = 3600 };
+struct SwPress { char *a; unsigned uid; int last; bool note, remote; };     // a star switch: who pressed it last
+SwPress g_swp[kSwpMax]; int g_nswp = 0;
+struct SwStar {
+    char *a; unsigned uid; uint8_t id; bool seen;
+    bool rm, expired; unsigned home_since;   // a friend took it: removal phase, switch timer ended, frame its switch got home
+    int hold; uint16_t held;                 // a friend's press: the switch timer held while the presser's camera would run
+    unsigned sup;                            // camera requests taken back
+    int logf;
+};
+SwStar g_sws[kSwsMax]; int g_nsws = 0;
+bool g_sw_gone[8];                           // star numbers a friend took this visit
+struct SwSend { int n; unsigned next; } g_swsend[8];      // my take, told 3 times
+struct SwOff { bool cam, gone, look; } g_swoff = {};
+struct SwTake { unsigned frame, wait; bool done; };
+SwTake g_swtake[4]; int g_nswtake = 0; unsigned g_swtake_until = 0, g_swtake_wait = 0, g_swtake_full = 0;
+struct SwStats { unsigned long long sup, held, look_bit, look_gone, sent, recv, removed, expired, cases; } g_swst = {};
+unsigned g_sw_post = 0; char *g_sw_post_sw = nullptr; unsigned g_sw_post_uid = 0;     // proof lines after a removal
+
 // ---------------------------------------------------------------------------
 // Env.
 // ---------------------------------------------------------------------------
@@ -316,6 +346,24 @@ void read_env() {
             g_forge[g_nforge].done = false; ++g_nforge;
             p += used;
             while (*p == ',' || *p == ';' || *p == ' ') ++p;
+        }
+    }
+    if (const char *o = std::getenv("SM64DS_SWSTAR_OFF")) {
+        g_swoff.cam = std::strstr(o, "cam") != nullptr;
+        g_swoff.gone = std::strstr(o, "gone") != nullptr;
+        g_swoff.look = std::strstr(o, "look") != nullptr;
+    }
+    if (const char *e = std::getenv("SM64DS_SWSTAR_TAKE")) {      // F[:W] list: from frame F, W frames after the star is full size, walk onto it
+        const char *p = e;
+        while (*p && g_nswtake < 4) {
+            unsigned f = 0, w = 0; int used = 0;
+            if (std::sscanf(p, "%u:%u%n", &f, &w, &used) < 2 || used <= 0) {
+                w = 0; used = 0;
+                if (std::sscanf(p, "%u%n", &f, &used) < 1 || used <= 0) break;
+            }
+            g_swtake[g_nswtake] = {f, w, false}; ++g_nswtake;
+            p += used;
+            while (*p == ';' || *p == ',' || *p == ' ') ++p;
         }
     }
 }
@@ -823,6 +871,224 @@ void sil_auth_apply(unsigned now) {
 }
 
 // ---------------------------------------------------------------------------
+// Switch stars (STARCASE2).
+// ---------------------------------------------------------------------------
+// A placed STAR_MARKER of kind 6 spawns the switch star on every console at level load (Spawn(0xb2, id | 0x60, .., -1),
+// src/game/actors/d_a_star.cpp daStarBase_c::InitResources), and the star spawns its own glass case (STAR_MARKER param
+// 0x40, also slot -1). The star switch (class 12) turns it on; it grows in the case with a camera cutscene (STATE_IDLE,
+// KIND_6) and, if nobody takes it, shrinks away when the switch's timer runs out. No death slot and a runtime case: the
+// death-bit sync and the linked-star path never saw a take, so the presser's copy stayed gold.
+inline unsigned short &u16at(char *a, int off) { return *(unsigned short *)(a + off); }
+bool is_switch_star(const char *a) {
+    return a_cls(a) == 178 && (*(const unsigned short *)(a + 0x4a2) & 0x80u) && *(const int *)(a + 0x43c) == 6;
+}
+bool star_taken(const char *a) {           // a body has it (STATE_COLLECT_* and on), not the silver states 8 / 9
+    const unsigned st = *(const unsigned *)(a + 0x440);
+    return st >= 5u && st != 8u && st != 9u && *(const void *const *)(a + 0x438) != nullptr;
+}
+SwPress *swp_for(char *a, bool add, int last) {
+    const unsigned uid = a_uid(a);
+    for (int i = 0; i < g_nswp; ++i) if (g_swp[i].a == a && g_swp[i].uid == uid) return &g_swp[i];
+    if (!add || g_nswp >= kSwpMax) return nullptr;
+    g_swp[g_nswp] = {a, uid, last, false, false};
+    return &g_swp[g_nswp++];
+}
+SwPress *swp_target(unsigned star_uid) {
+    for (int i = 0; i < g_nswp; ++i)
+        if (g_swp[i].a && !a_dead(g_swp[i].a) && a_uid(g_swp[i].a) == g_swp[i].uid && *(const unsigned *)(g_swp[i].a + 0x344) == star_uid)
+            return &g_swp[i];
+    return nullptr;
+}
+SwStar *sws_for(char *a) {
+    const unsigned uid = a_uid(a);
+    for (int i = 0; i < g_nsws; ++i) if (g_sws[i].a == a && g_sws[i].uid == uid) return &g_sws[i];
+    if (g_nsws >= kSwsMax) return nullptr;
+    SwStar &s = g_sws[g_nsws++];
+    s = SwStar(); s.a = a; s.uid = uid; s.id = (uint8_t)(*(const unsigned char *)(a + 0x49d) & 7u);
+    return &s;
+}
+
+void sw_tick(unsigned now) {
+    char *pl = my_player();
+    // 1. star switches: was the last press mine or a friend's (coop_spawn_note_remote_press)
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (a_cls(a) != 12 || a_dead(a) || is_player_ptr(a)) continue;
+        const int st = *(const int *)(a + 0x340);
+        SwPress *p = swp_for(a, true, st);
+        if (!p) continue;
+        if (p->last == 0 && st != 0) {
+            p->remote = p->note; p->note = false;
+            for (int i = 0; i < g_nsws; ++i) if (*(const unsigned *)(a + 0x344) == g_sws[i].uid) g_sws[i].logf = 240;
+            if (g_log) std::fprintf(stderr, "[coopswstar] switch slot=%d pressed by %s frame=%u wall=%lld\n", (int)a_slot(a),
+                                    p->remote ? "a friend: the star's camera is not mine" : "my player: the camera is mine", g_frames, wall_ms());
+        }
+        p->last = st;
+    }
+
+    // 2. the proof knob: walk my player onto the switch star until the ROM's own touch takes it
+    for (int i = 0; i < g_nswtake; ++i)
+        if (!g_swtake[i].done && g_armed && g_frames >= g_swtake[i].frame) {
+            g_swtake[i].done = true; g_swtake_until = g_frames + kSwTakeArm; g_swtake_wait = g_swtake[i].wait; g_swtake_full = 0;
+            std::fprintf(stderr, "[coopswstar-knob] take: armed, walking onto the switch star %u frames after it is full size frame=%u wall=%lld\n",
+                         g_swtake_wait, g_frames, wall_ms());
+        }
+
+    // 3. switch stars
+    for (int i = 0; i < g_nsws; ++i) g_sws[i].seen = false;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        if (!is_switch_star(a) || a_dead(a) || is_player_ptr(a)) continue;
+        SwStar *s = sws_for(a);
+        if (!s) continue;
+        s->seen = true;
+        const int id = s->id;
+        SwPress *sp = swp_target(s->uid);
+        char *sw = sp ? sp->a : nullptr;
+        unsigned short &fl = u16at(a, 0x4a2);
+        unsigned &af = *(unsigned *)(a + 0xb0);
+        if (star_taken(a)) {
+            if (*(char *const *)(a + 0x438) == pl && pl && !g_swoff.gone && g_swsend[id].n == 0 && g_swsend[id].next == 0) {
+                g_swsend[id].next = now ? now : 1;
+                if (g_log) std::fprintf(stderr, "[coopswstar] my player took switch star %d: telling the group frame=%u wall=%lld\n", id, g_frames, wall_ms());
+            }
+            if (g_swtake_until && *(char *const *)(a + 0x438) == pl) {
+                g_swtake_until = 0;
+                std::fprintf(stderr, "[coopswstar-knob] take: the ROM took it (state %d) frame=%u wall=%lld\n", *(const int *)(a + 0x440), g_frames, wall_ms());
+            }
+            continue;                // a body has it here: the ROM's own collect flow, its own camera
+        }
+        if (g_swtake_until && pl) {
+            const bool full = (fl & 0x100u) && *(const int *)(a + 0x80) == 0x1000;
+            if (full && !g_swtake_full) {
+                g_swtake_full = g_frames ? g_frames : 1;
+                std::fprintf(stderr, "[coopswstar-knob] take: the star is full size frame=%u wall=%lld\n", g_frames, wall_ms());
+            }
+            if (g_frames > g_swtake_until || (g_swtake_full && g_frames > g_swtake_full + g_swtake_wait + kSwTakeFrames)) {
+                g_swtake_until = 0;
+                std::fprintf(stderr, "[coopswstar-knob] take: gave up, scale=%x frame=%u wall=%lld\n", *(const int *)(a + 0x80), g_frames, wall_ms());
+            } else if (g_swtake_full && g_frames >= g_swtake_full + g_swtake_wait) {
+                std::memcpy(pl + 0x5c, a + 0x5c, 12);
+            }
+        }
+
+        // the collected look: a friend's take heard, or the star bit already in my save (the record merge)
+        if (!(fl & 4u)) {
+            const bool by_gone = g_sw_gone[id] && !g_swoff.gone;
+            const bool by_bit = !g_swoff.look && IsStarCollectedInCurLevel(id) != 0;
+            if (by_gone || by_bit) {
+                fl |= 4u;
+                if (by_gone) ++g_swst.look_gone; else ++g_swst.look_bit;
+                s->logf = s->logf > 120 ? s->logf : 120;
+                if (g_log) std::fprintf(stderr, "[coopswstar] switch star %d turned see-through (%s) scale=%x frame=%u wall=%lld\n", id,
+                                        by_gone ? "a friend took it" : "its bit is in my save", *(const int *)(a + 0x80), g_frames, wall_ms());
+            }
+        }
+
+        // a friend took it: once my own camera (if I pressed) is done, end its switch, break the case, remove it
+        if (g_sw_gone[id] && !g_swoff.gone && !s->rm && !(af & kCut) && u16at(a, 0x496) == 0xffff) {
+            s->rm = true; s->hold = 0; s->logf = 600;
+            char *m = _ZN8dActor_c10FindWithIDEj(*(const unsigned *)(a + 0x434));
+            const bool glass = m && a_cls(m) == 0xb4 && (*(const unsigned char *)(m + 0x1db) & 2u);
+            if (glass) { _ZN12daStarBase_c7CollectEv(m); ++g_swst.cases; }
+            if (g_log) std::fprintf(stderr, "[coopswstar] removing switch star %d (a friend took it): case %s, switch state=%d scale=%x frame=%u wall=%lld\n", id,
+                                    glass ? "broken" : "already gone", sw ? *(const int *)(sw + 0x340) : -1, *(const int *)(a + 0x80), g_frames, wall_ms());
+        }
+
+        // only the console whose player pressed the switch films the star: take its camera request back
+        bool took_back = false;
+        if (((sp && sp->remote) || s->rm) && !g_swoff.cam) {
+            unsigned short &seq = u16at(a, 0x496);
+            if (seq == 0xffff || seq == 0x64) {
+                // not filming yet: the star asked in its state handler, after this frame's camera step. Take the request back
+                // (the star sets its mFlags and the global word together, and only while the global bit is clear).
+                if (af & kCut) {
+                    af &= ~kCut;
+                    data_0209b454[0] &= ~(int)kCut;
+                    took_back = true; ++s->sup; ++g_swst.sup;
+                }
+                seq = 0xffff;
+            } else if (seq < 0x1f4 && (af & kCut)) {
+                // the switch turned it off (func_ov002_020e7104(0)) before the star ran this frame, so the camera step
+                // already ran once and moved the camera: end it the ROM's way (0x1f4 puts the saved view back, 0x1f5 ends it)
+                seq = 0x1f4;
+                if (g_log) std::fprintf(stderr, "[coopswstar] switch star %d: its camera had started, ended at once frame=%u wall=%lld\n", id, g_frames, wall_ms());
+            }
+        }
+        // ...and its switch timer waits as long as the presser's camera holds his (d_a_obj_switch.cpp: mTimer only counts
+        // while the global bit is clear), so the star leaves every screen together
+        if (sw && sp && sp->remote && !s->rm && !g_swoff.cam) {
+            if (took_back && (fl & 0x100u) && *(const int *)(a + 0x80) != 0x1000) {
+                if (s->hold == 0) s->held = u16at(sw, 0x338);
+                s->hold = kSwHold;
+            }
+            if (s->hold > 0) {
+                --s->hold;
+                if (*(const int *)(sw + 0x340) == 2) {
+                    unsigned short &t = u16at(sw, 0x338);
+                    if (t > s->held) { t = s->held; ++g_swst.held; } else s->held = t;
+                }
+            }
+        }
+
+        if (s->rm) {
+            const int sst = sw ? *(const int *)(sw + 0x340) : 0;
+            if (sw && sst == 2 && !s->expired) {          // the ROM's own end: the timer runs out (state 2 -> 4 -> 3 -> 0)
+                u16at(sw, 0x338) = (unsigned short)(u16at(sw, 0x33a) + 1);
+                s->expired = true; ++g_swst.expired;
+                if (g_log) std::fprintf(stderr, "[coopswstar] switch of star %d timed out early frame=%u wall=%lld\n", id, g_frames, wall_ms());
+            }
+            if (!sw || sst == 0) { if (!s->home_since) s->home_since = g_frames ? g_frames : 1; } else s->home_since = 0;
+            const bool shrunk = *(const int *)(a + 0x80) == 0 && !(fl & 0x100u);
+            const bool music = !sw || *(const unsigned char *)(sw + 0x34d) != 0 || (s->home_since && g_frames - s->home_since >= (unsigned)kSwMusicWait);
+            if (shrunk && s->home_since && music && !(af & kCut) && u16at(a, 0x496) == 0xffff) {
+                if (sw) u16at(sw, 0x338) = 3;    // with no star the switch draws itself by mTimer / 3 (its Behavior's no-target arm): raised
+                if (g_log) std::fprintf(stderr, "[coopswstar] switch star %d removed (camera requests taken back %u) b454=%08x cam8=%d frame=%u wall=%lld\n", id,
+                                        s->sup, (unsigned)data_0209b454[0], data_0209f318 ? (int)((*(const unsigned *)(data_0209f318 + 0x154) >> 3) & 1u) : -1,
+                                        g_frames, wall_ms());
+                kill_quiet(a); ++g_swst.removed;
+                s->seen = false;
+                g_sw_post = 150; g_sw_post_sw = sw; g_sw_post_uid = sw ? a_uid(sw) : 0;
+                continue;
+            }
+        }
+
+        // proof: what this console runs with while the star appears or goes
+        const int sc = *(const int *)(a + 0x80);
+        if (s->logf > 0) --s->logf;
+        if (g_log && (g_frames % 6u) == 0 && (s->logf > 0 || (sc != 0 && sc != 0x1000))) {
+            std::fprintf(stderr, "[coopswstar] probe star=%d mine=%d scale=%x on=%d camseq=%x touch=%d b454cut=%d b464cut=%d cam8=%d sw=%d timer=%u/%u hold=%d sup=%u look=%d frame=%u\n",
+                         id, sp ? (int)!sp->remote : -1, sc, (int)((fl >> 8) & 1u), (unsigned)u16at(a, 0x496), (int)!(*(const unsigned *)(a + 0x110 + 0x18) & 1u),
+                         (int)(((unsigned)data_0209b454[0] & kCut) != 0), (int)((data_0209b464 & kCut) != 0),
+                         data_0209f318 ? (int)((*(const unsigned *)(data_0209f318 + 0x154) >> 3) & 1u) : -1,
+                         sw ? *(const int *)(sw + 0x340) : -1, sw ? (unsigned)u16at(sw, 0x338) : 0u, sw ? (unsigned)u16at(sw, 0x33a) : 0u,
+                         s->hold, s->sup, (int)((fl >> 2) & 1u), g_frames);
+        }
+    }
+    for (int i = 0; i < g_nsws;) { if (g_sws[i].seen) ++i; else g_sws[i] = g_sws[--g_nsws]; }
+    // proof: after a removal, the switch, the freeze mask and the camera stay free
+    if (g_sw_post) {
+        --g_sw_post;
+        if (g_log && (g_sw_post % 30u) == 0) {
+            char *sw = g_sw_post_sw && !a_dead(g_sw_post_sw) && a_uid(g_sw_post_sw) == g_sw_post_uid ? g_sw_post_sw : nullptr;
+            std::fprintf(stderr, "[coopswstar] after removal: switch state=%d timer=%u drawn=%x b454=%08x b464=%08x cam8=%d frame=%u\n",
+                         sw ? *(const int *)(sw + 0x340) : -1, sw ? (unsigned)u16at(sw, 0x338) : 0u, sw ? *(const int *)(sw + 0x324) : 0,
+                         (unsigned)data_0209b454[0], data_0209b464,
+                         data_0209f318 ? (int)((*(const unsigned *)(data_0209f318 + 0x154) >> 3) & 1u) : -1, g_frames);
+        }
+    }
+
+    // 4. my takes, told three times
+    for (int id = 0; id < 8; ++id) {
+        SwSend &o = g_swsend[id];
+        if (o.next == 0 || o.n >= 3 || (int)(now - o.next) < 0) continue;
+        if (!others_here()) { o.n = 3; continue; }
+        SpGoneWire g; std::memset(&g, 0, sizeof g);
+        g.key = wkey(); g.origin = 0xFF; g.kind = kSpGoneSwitch; g.id = (uint16_t)id;
+        if (send_world(kSpWorldGone, &g, sizeof g)) { ++g_st.sent_gone; ++g_swst.sent; }
+        ++o.n; o.next = now + kResendMs;
+    }
+}
+
+// ---------------------------------------------------------------------------
 // One walk of the live actors per frame.
 // ---------------------------------------------------------------------------
 void scan(unsigned now) {
@@ -912,7 +1178,8 @@ void scan(unsigned now) {
                 std::fprintf(stderr, "[coopspawn] new actor cls=%u uid=%u pos=%d,%d,%d area=%d param=%u frame=%u wall=%lld\n",
                              cls, uid, p[0] >> 12, p[1] >> 12, p[2] >> 12, a_area(a), a_param(a), g_frames, wall_ms());
             }
-            if (is_ann_cls(cls) && !g_off.spawn) {
+            // a switch star is made natively on every console (its kind-6 marker): never announced (STARCASE2)
+            if (is_ann_cls(cls) && !g_off.spawn && !(cls == 178 && is_switch_star(a))) {
                 short mslot = -1;
                 bool registered = false;
                 for (Net &n : g_net) if (n.used && n.a == a && n.uid == uid) registered = true;
@@ -1168,6 +1435,15 @@ void apply_spawn(int seat, const SpSpawnWire &w, unsigned now) {
 }
 
 void apply_gone(int seat, const SpGoneWire &w, unsigned now) {
+    if (w.kind == kSpGoneSwitch) {          // STARCASE2: sw_tick removes my copy once its camera is done
+        if (g_swoff.gone || w.id >= 8) return;
+        ++g_swst.recv;
+        if (!g_sw_gone[w.id]) {
+            g_sw_gone[w.id] = true; ++g_st.gone_applied;
+            if (g_log) std::fprintf(stderr, "[coopswstar] seat %d took switch star %d frame=%u wall=%lld\n", seat, (int)w.id, g_frames, wall_ms());
+        }
+        return;
+    }
     if (w.kind == kSpGoneAnn) {
         ack_add(w.origin, w.id, now);
         Net *n = net_find(w.origin, w.id);
@@ -1552,6 +1828,14 @@ void new_level() {
     g_sil_skew_done = g_sil_skew_frame == 0;
     g_sil_goomba_done = g_sil_goomba_frame == 0;
     g_early_sil = keep_sil;
+    std::memset(g_swp, 0, sizeof g_swp); g_nswp = 0;
+    for (SwStar &s : g_sws) s = SwStar();
+    g_nsws = 0;
+    std::memset(g_sw_gone, 0, sizeof g_sw_gone);
+    std::memset(g_swsend, 0, sizeof g_swsend);
+    for (int i = 0; i < g_nswtake; ++i) g_swtake[i].done = false;
+    g_swtake_until = 0;
+    g_sw_post = 0; g_sw_post_sw = nullptr;
 }
 
 void on_latched(int level, int act) {
@@ -1665,6 +1949,7 @@ void on_frame(unsigned now) {
     }
 
     if (g_frames >= 3) scan(now);
+    if (g_frames >= 3) sw_tick(now);
     if (g_armed) { sil_scan(); apply_silver_snap(); }
     drain_in(now);
     sil_auth_apply(now);
@@ -1793,6 +2078,9 @@ void on_frame(unsigned now) {
         std::fprintf(stderr, "[coopsilver] auth synced=%d lead=%d owner=%d iam=%d follow=%d said=%llu heard=%llu adopted=%llu late=%llu left=%llu\n",
                      (int)g_sil_synced, sil_lead(), coop_group_owner(), (int)coop_group_i_am_owner(), (int)sil_follow(), g_sst.auth_sent, g_sst.auth_recv, g_sst.auth_adopt,
                      g_sst.auth_late, g_sst.auth_left);
+        std::fprintf(stderr, "[coopswstar] stat tracked=%d switches=%d camera taken back=%llu timer held=%llu see-through gone=%llu bit=%llu sent=%llu recv=%llu "
+                     "timed out=%llu cases=%llu removed=%llu frame=%u\n", g_nsws, g_nswp, g_swst.sup, g_swst.held, g_swst.look_gone, g_swst.look_bit,
+                     g_swst.sent, g_swst.recv, g_swst.expired, g_swst.cases, g_swst.removed, g_frames);
     }
 }
 
@@ -1832,6 +2120,16 @@ void *coop_spawn_and_announce(int cls, unsigned param, const int pos[3], int are
     }
     coop_spawn_announce(a, cls, param, pos, area);
     return a;
+}
+
+void coop_spawn_note_remote_press(void *switch_actor) {
+    if (!switch_actor || !coop_world_active()) return;
+    char *a = (char *)switch_actor;
+    // a switch first seen here was idle before this press (the press is only applied to an idle switch)
+    SwPress *p = swp_for(a, true, 0);
+    if (!p) return;
+    p->note = true;
+    if (g_log) std::fprintf(stderr, "[coopswstar] a friend's press reached switch slot=%d frame=%u wall=%lld\n", (int)a_slot(a), g_frames, wall_ms());
 }
 
 }  // namespace port

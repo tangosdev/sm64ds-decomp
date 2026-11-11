@@ -53,6 +53,7 @@ void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);     // dBgActor_c: the 
 }
 
 namespace port {
+void coop_spawn_note_remote_press(void *switch_actor);      // hal/coop_spawn.h (STARCASE2)
 namespace {
 
 long long wall_ms() {
@@ -750,6 +751,7 @@ void apply_to(Trk &t, char *a, const Watch *w, int state, int value, int seat) {
         t.last = w->read(a);
         t.mine_on = false;
         if (w->kind == kSwKindPress) ++g_st.press_applied; else if (w->kind == kSwKindKick) ++g_st.kick_applied; else ++g_st.field_applied;
+        if (w->cls == 12) coop_spawn_note_remote_press(a);     // STARCASE2: a friend's press, so the star's camera is not mine
         if (g_log)
             std::fprintf(stderr, "[coopsw] apply %s slot=%d cls=%d state=%d value=%d wall=%lld\n", w->name,
                          (int)a_slot(a), (int)a_cls(a), state, value, wall_ms());
