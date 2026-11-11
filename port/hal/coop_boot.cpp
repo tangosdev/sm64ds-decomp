@@ -1232,8 +1232,7 @@ void leave_at_title() {
         const int r = _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(data_0209caa0 + 0x44);
         uint32_t w;
         std::memcpy(&w, data_0209caa0 + 0x48, 4);
-        std::fprintf(stderr, "[seamless] the minigame record read again from the single player save: ok=%d unlock word %08x
-", r, w);
+        std::fprintf(stderr, "[seamless] the minigame record read again from the single player save: ok=%d unlock word %08x\n", r, w);
     }
     unsigned extra = 0;
     const bool after_level = hub_game_heap_carved(&extra);

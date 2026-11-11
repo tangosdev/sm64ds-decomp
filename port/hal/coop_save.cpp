@@ -605,8 +605,7 @@ void moat_frame() {
             f2 |= 0x80000u;
             std::memcpy(data_0209caa0 + 0x08, &f2, 4);
             const int saved = _ZN8SaveData15SaveCurrentFileEv();
-            std::fprintf(stderr, "[coopmoat-knob] f=%u the pillars' bit set here (flags2 |= 0x80000, now %08x), SaveCurrentFile ok=%d
-",
+            std::fprintf(stderr, "[coopmoat-knob] f=%u the pillars' bit set here (flags2 |= 0x80000, now %08x), SaveCurrentFile ok=%d\n",
                          g_frame, f2, saved);
         }
     }
@@ -621,8 +620,7 @@ void moat_frame() {
             if (!g_moat_logged) {
                 g_moat_logged = true;
                 std::fprintf(stderr, "[coopmoat] f=%u the moat is drained in the room record and this console's moat is up (y %d): "
-                             "draining it live
-", g_frame, y >> 12);
+                             "draining it live\n", g_frame, y >> 12);
             }
             y -= 0x5000;
             if (y < kMoatDrainedY) y = kMoatDrainedY;
@@ -630,14 +628,12 @@ void moat_frame() {
             _ZN10dBgActor_c19UpdateClsnPosAndRotEv(a);
             if (data_0209f32c > y - 0x64000) data_0209f32c = y - 0x64000;
             if (y == kMoatDrainedY || (++g_moat_frames % 60) == 0)
-                std::fprintf(stderr, "[coopmoat] f=%u moat y %d%s, water height word %d
-", g_frame, y >> 12,
+                std::fprintf(stderr, "[coopmoat] f=%u moat y %d%s, water height word %d\n", g_frame, y >> 12,
                              y == kMoatDrainedY ? " (drained)" : "", data_0209f32c >> 12);
         } else if (cls == 339 && (*(const unsigned *)(a + 0x08) & 0xff) == 0xff) {
             if (*(const unsigned char *)(a + 0x0f) == 0) {
                 _ZN7fBase_c18MarkForDestructionEv(a);
-                std::fprintf(stderr, "[coopmoat] f=%u the moat grate removed (it is never created on a drained moat)
-", g_frame);
+                std::fprintf(stderr, "[coopmoat] f=%u the moat grate removed (it is never created on a drained moat)\n", g_frame);
             }
         }
     }
@@ -894,8 +890,7 @@ extern "C" void port_coop_save_frame(void) {
             std::memcpy(&now_w, data_0209caa0 + 0x48, 4);
             std::memcpy(&magic, data_0209caa0 + 0x44, 4);
             std::fprintf(stderr, "[rabbit-readback] f=%u medium %s (coop %d): ReadMinigameData=%d magic=%08x unlock word read=%08x "
-                         "(live before %08x); kind %d menu-unlocked m%d l%d w%d y%d; file keys(+0x0c)=%08x
-", rbf, ntr::backup::path(),
+                         "(live before %08x); kind %d menu-unlocked m%d l%d w%d y%d; file keys(+0x0c)=%08x\n", rbf, ntr::backup::path(),
                          coop() ? 1 : 0, r, magic, now_w, was, kind, func_02013638(kind * 4) != 0,
                          func_02013638(kind * 4 + 1) != 0, func_02013638(kind * 4 + 2) != 0, func_02013638(kind * 4 + 3) != 0,
                          *(const uint32_t *)(data_0209caa0 + 0x0c));
