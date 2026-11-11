@@ -689,5 +689,33 @@ print('configured overlay constants:', len(constants))
             self.assertEqual(result["verdict"], expected)
 
 
+class LocalSymbolModuleCollisionUnit(unittest.TestCase):
+    """A compiler-local name that another module also configures must not resolve.
+
+    mwccarm numbers `@N` locals per translation unit. A header that adds class
+    members renumbers them, so an arm9 TU's `@689` can land on a name ov079 already
+    has in symbols.txt. The linker resolves the local inside arm9; reading ov079's
+    address instead links the slot to another module's bytes and reports a correct
+    source as WRONG. The binding decides: STB_LOCAL never crosses a module boundary,
+    while a global import still resolves by name. The undefined shape is the one the
+    delink hands linkcheck (objisolate strips the local's `.bss` definition), so the
+    guard must not depend on the symbol still being defined."""
+
+    index = {"@689": ("ov079", 0x021281E4), "SomeGlobal": ("arm9", 0x02012345),
+             "@3573": ("ov002", 0x02110DB8)}
+
+    def test_a_local_name_configured_in_another_module_stays_unresolved(self):
+        self.assertIsNone(LC._reloc_target("@689", "STB_LOCAL", self.index, "arm9"))
+
+    def test_a_local_name_in_the_same_module_resolves(self):
+        self.assertEqual(LC._reloc_target("@3573", "STB_LOCAL", self.index, "ov002"),
+                         ("ov002", 0x02110DB8))
+
+    def test_a_global_import_resolves_across_modules(self):
+        self.assertEqual(
+            LC._reloc_target("SomeGlobal", "STB_GLOBAL", self.index, "ov002"),
+            ("arm9", 0x02012345))
+
+
 if __name__ == "__main__":
     unittest.main()

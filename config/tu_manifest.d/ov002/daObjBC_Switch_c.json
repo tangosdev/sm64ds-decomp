@@ -204,7 +204,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV16daObjBC_Switch_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
