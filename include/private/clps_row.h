@@ -6,7 +6,7 @@
 struct CLPS_Block;
 
 /* One 0xc-stride row of a CLPS resource table (daObjBlockL_c's
- * data_ov002_02108ab8, daObjSimpleBg_c's data_ov102_0214e190): the first word
+ * data_ov002_02108ab8): the first word
  * points at the CLPS block; the rest of the row is read by nothing here. */
 struct ClpsRow {
     struct CLPS_Block *block; /* 0x00 */

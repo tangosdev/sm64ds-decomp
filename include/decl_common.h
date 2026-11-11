@@ -1141,7 +1141,6 @@ extern void*data_ov081_02128da8;
 extern void*data_ov081_02128db0;
 extern void*data_ov081_02128db8;
 extern void*data_ov100_0214857c[];
-extern void*data_ov102_0214e190[];
 extern void*func_0201787c(void*);
 extern void*func_0204d958(void*);
 extern void*func_02050cdc(int, int);
