@@ -22,6 +22,12 @@ int mode_env() {
     return v;
 }
 
+int mapdots_off() {
+    static int v = -1;
+    if (v < 0) v = std::getenv("SM64DS_COOP_MAPDOTS_OFF") ? 1 : 0;
+    return v;
+}
+
 int log_env() {
     static int v = -1;
     if (v < 0) {
@@ -57,7 +63,7 @@ static int minimap_ghost_impl(int slot, int pos[3]) {
         // MAPDOTS1: not drawn here. A friend in another area of THIS level is still on the
         // map, from his newest synced frame (answer 3); another level shows nothing (2).
         int ch = 0;
-        if (std::getenv("SM64DS_COOP_MAPDOTS_OFF") == 0 && port_adventure_ghost_mappos(slot, pos, &ch) == 2) {
+        if (!mapdots_off() && port_adventure_ghost_mappos(slot, pos, &ch) == 2) {
             s_char[slot & 31] = ch;
             if (log_env()) {
                 static unsigned n3[kMinimapWidePlayers];

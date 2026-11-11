@@ -176,9 +176,9 @@ int Minimap::Render()
                                 gicon = gp2->unk6D9 * 4 + 3;
                             else
                                 gicon = gp2->unk8 + gp2->unk6D9 * 4;
-                            if (gk == 3) {   /* MAPDOTS1: his body is parked unswapped here; the frame's character */
+                            if (gk == 3) {   /* MAPDOTS1: his body is parked unswapped here; the frame's character and his own cap */
                                 const int gc = port_coop_minimap_char(i);
-                                if (gc >= 0 && gc < 4) gicon = (gp2->HasNoCap() != 0) ? gc * 4 + 3 : gp2->unk8 + gc * 4;
+                                if (gc >= 0 && gc < 4) gicon = gc * 4 + (gc < 3 ? gc : 3);   /* his own cap: the frame carries only the character; the stand-in body's cap and HasNoCap are someone else's */
                             }
                             if (gicon < 0 || gicon > 15) gicon = 0;
                             _ZN3OAM9RenderSubEP7OamAttriiii(_ZN3OAM15MM_PLAYER_ICONSE[gicon],

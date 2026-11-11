@@ -4237,6 +4237,8 @@ extern "C" int port_adventure_ghost_mappos(int slot, int out[3], int *character)
     const HubGhostFrame &nw = z.ring[z.n - 1].f;
     if ((int)nw.level_id != (int)data_0209f2f8) return 0;
     out[0] = nw.x; out[1] = nw.y; out[2] = nw.z;
+    /* hidden by his own state (cannon, pipe, warp): off the map, as a same-room friend is */
+    if ((nw.flags & kGwFrameClock) && (nw.flags & ghostdoor::kFlagHidden)) return 0;
     if (character) *character = (int)nw.character;
     return h == 1 ? 1 : 2;
 }
