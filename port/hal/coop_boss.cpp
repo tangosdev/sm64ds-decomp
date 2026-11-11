@@ -348,6 +348,7 @@ struct Boss {
     unsigned kpa_t;                // bowser2: wall ms of the last record that said he is held
     int16_t kpa_yaw;               // bowser2: the holder body's facing last tick (its turn per tick is his swing speed)
     unsigned kpa_talk_t;           // bowser2: wall ms since which this copy's own intro talk kept a forced state away (0 = not)
+    unsigned kpa_quiet_t;          // bowser2: when this copy was let go quietly (kpa_release quiet; 0 = not): hits ignored for 5 s
     unsigned kpa_air_t;            // bowser2 BFS: wall ms since which this copy has been far above the authority's Bowser (0 = not)
     Rx rx;
 };
@@ -367,7 +368,8 @@ unsigned g_behind_tick = 0, g_behind_every = 0; int g_behind_dist = 0; bool g_be
 // ROM's way (Player::TryGrab during a real punch: the row's pad presses B), turns S angle units a tick for N ticks, then lets go.
 struct SwingKnob { unsigned from; int speed; unsigned dur; int phase; unsigned t0; unsigned tries; };
 SwingKnob g_swing = { 0, 0, 0, -1, 0, 0 };
-unsigned g_kpa_jump_every = 0, g_kpa_jump_t = 0;   // bowser2 proof knob SM64DS_COOP_BOWSER_JUMP=N: the authority's idle Bowser jumps every N ticks
+unsigned g_kpa_jump_every = 0, g_kpa_jump_t = 0;
+struct StallKnob { unsigned at, ms; bool req; } g_stall[2] = {}; int g_nstall = 0; unsigned g_stall_until = 0; bool g_stall_on = false;   // bowser2 proof knob SM64DS_COOP_BOWSER_JUMP=N: the authority's idle Bowser jumps every N ticks
 char *kpa_arena();
 bool g_kpa_fix = true;   // bowser2: SM64DS_COOP_BOWSER_FIX=0 is the before control (no held copy, no intro guard, no camera give-back)
 bool g_regd = false;
@@ -541,6 +543,13 @@ void read_env() {
     }
     g_kpa_fix = flag("SM64DS_COOP_BOWSER_FIX", true);
     if (const char *j = std::getenv("SM64DS_COOP_BOWSER_JUMP")) g_kpa_jump_every = (unsigned)std::atoi(j);
+    if (const char *j = std::getenv("SM64DS_COOP_BOWSER_STALL")) {
+        while (*j && g_nstall < 2) {
+            unsigned at = 0, ms = 0; if (std::sscanf(j, "%u:%u", &at, &ms) != 2) break;
+            g_stall[g_nstall].at = at; g_stall[g_nstall].ms = ms; g_stall[g_nstall].req = false; ++g_nstall;
+            const char *c = std::strchr(j, ','); if (!c) break; j = c + 1;
+        }
+    }
     g_god = flag("SM64DS_COOP_BOSS_GOD", false);
     g_bomb = flag("SM64DS_COOP_BOSS_BOMB", false);
     g_face = flag("SM64DS_COOP_BOSS_FACE", false);
@@ -852,6 +861,7 @@ bool kpa_show_held(Boss &b, int seat, unsigned now) {
         const int32_t holding = 2; std::memcpy(t + 0x110, &holding, 4);
         void *nul = nullptr; std::memcpy(t + 0x10c, &nul, sizeof nul);
     }
+    b.kpa_quiet_t = 0;
     b.kpa_shown = true; b.kpa_seat = seat; b.kpa_t = now; b.kpa_yaw = rd16(body, 0x8e);
     const int16_t zero = 0; std::memcpy(body + 0x69c, &zero, 2);
     return true;
@@ -861,13 +871,21 @@ bool kpa_show_held(Boss &b, int seat, unsigned now) {
 // the let-go animation (the friend dropped him); either way the release (func_ov060_021125f0) launches him from the swing speed and
 // angle he has, puts him in the thrown state and sends the tail to its cooldown. The holder is forgotten the way the tail does it
 // (func_ov060_021123c8: bounce on landing, no grabbed player). The position snap of the records then keeps the flight honest.
-void kpa_release(Boss &b, int mode, const char *why) {
+// quiet: the friend never let go as far as this console knows (records stopped, the body went, the claim ran out): his swing speed and
+// tilt are cleared first, so the release launches him with no speed (he drops where he hangs, no throw from the local swing), and a
+// hit on this copy in the next 5 s is not reported (a throw that never happened must not cost him a point).
+void kpa_release(Boss &b, int mode, const char *why, unsigned now = 0, bool quiet = false) {
     b.kpa_shown = false;
     if (rd32(b.a, 0x410) != 1) return;
+    if (quiet) {
+        const int32_t z = 0; const int16_t z16 = 0;
+        std::memcpy(b.a + 0x3f0, &z, 4); std::memcpy(b.a + 0x8c, &z16, 2);
+        b.kpa_quiet_t = now ? now : 1u;
+    }
     const int32_t m = mode; std::memcpy(b.a + 0x410, &m, 4);
     void *nul = nullptr; std::memcpy(b.a + 0x3a4, &nul, sizeof nul);
     b.a[0x427] = 1;
-    if (g_log) std::fprintf(stderr, "[cbs] bowser let go on this copy (%s, mode %d, swing %d) pos=%d,%d,%d w=%lld\n", why, mode, rd32(b.a, 0x3f0),
+    if (g_log) std::fprintf(stderr, "[cbs] bowser let go on this copy (%s, mode %d%s, swing %d) pos=%d,%d,%d w=%lld\n", why, mode, quiet ? ", quiet: no launch" : "", rd32(b.a, 0x3f0),
                             rd32(b.a, 0x5c) >> 12, rd32(b.a, 0x60) >> 12, rd32(b.a, 0x64) >> 12, wall_ms());
 }
 
@@ -877,10 +895,10 @@ void kpa_release(Boss &b, int mode, const char *why) {
 void kpa_tick(Boss &b, bool mine, unsigned now) {
     if (!b.kpa_shown) return;
     if (rd32(b.a, 0x410) != 1) { b.kpa_shown = false; return; }
-    if (mine) { kpa_release(b, 2, "this console became the authority"); return; }
-    if ((unsigned)(now - b.kpa_t) > 1500u) { kpa_release(b, 2, "no held record for 1.5 s"); return; }
+    if (mine) { kpa_release(b, 2, "this console became the authority", now, true); return; }
+    if ((unsigned)(now - b.kpa_t) > 3000u) { kpa_release(b, 2, "no held record for 3 s", now, true); return; }
     char *body = (char *)coop_target_body_for_seat(b.kpa_seat);
-    if (!body) { kpa_release(b, 2, "the holder's body is gone"); return; }
+    if (!body) { kpa_release(b, 2, "the holder's body is gone", now, true); return; }
     std::memcpy(b.a + 0x3a4, &body, sizeof body);
     const int16_t yaw = rd16(body, 0x8e);
     const int16_t turn = (int16_t)(yaw - b.kpa_yaw);
@@ -1169,6 +1187,14 @@ void process(unsigned now) {
                 write_field(b.a, d, d.hp, (uint32_t)b.synced_hp);
             }
         }
+        // bowser2: a copy let go quietly (its holder's records stopped mid-swing) reports no hit for 5 s, authority or not
+        if (d.cls == 279 && b.kpa_quiet_t && hp_of(b) < b.synced_hp) {
+            if ((unsigned)(now - b.kpa_quiet_t) < 5000u) {
+                ++g_st.hit_spurious;
+                if (g_log) std::fprintf(stderr, "[cbs] bowser drop ignored slot=%d hp %d->%d (this copy was let go quietly %u ms ago) w=%lld\n", slot, b.synced_hp, hp_of(b), now - b.kpa_quiet_t, wall_ms());
+                write_field(b.a, d, d.hp, (uint32_t)b.synced_hp);
+            } else b.kpa_quiet_t = 0;
+        }
         if (hp_of(b) < b.synced_hp) {
             ++g_st.hit_local;
             if (g_log) std::fprintf(stderr, "[cbs] hit slot=%d hp %d->%d (auth %d me %d) w=%lld\n", slot, b.synced_hp, hp_of(b), auth, g_my, wall_ms());
@@ -1225,6 +1251,17 @@ void process(unsigned now) {
             b.last_auth = auth; b.auth_t = now; b.mism = 0;
         }
         if (!mine || !g_on) continue;
+        if (d.cls == 279 && g_nstall) {
+            for (int i = 0; i < g_nstall; ++i) if (g_stall[i].req) {
+                g_stall[i].req = false; g_stall_until = now + g_stall[i].ms; g_stall_on = true;
+                std::fprintf(stderr, "[cbs-knob] stall: no Bowser record from this console for %u ms (hold=%d) w=%lld\n", g_stall[i].ms, rd32(b.a, 0x410), wall_ms());
+            }
+            if (g_stall_on) {
+                if ((int)(g_stall_until - now) > 0) continue;
+                g_stall_on = false;
+                std::fprintf(stderr, "[cbs-knob] stall: Bowser records from this console again (hold=%d) w=%lld\n", rd32(b.a, 0x410), wall_ms());
+            }
+        }
         // I am the authority: publish when anything changed, and as a heartbeat
         uint32_t w[kBossMaxFields]; bool changed = !b.lw_valid;
         // a hit is never held back by the rate limit: the boss can be gone (a dead Eyerok hand destroys itself) before the next heartbeat
@@ -1523,6 +1560,7 @@ void do_swing_knob() {
         g_swing.phase = 2; return;
     }
     if (g_ticks - g_swing.t0 < g_swing.dur) {
+        for (int i = 0; i < g_nstall; ++i) if (g_ticks - g_swing.t0 == g_stall[i].at) g_stall[i].req = true;
         const int16_t sp = (int16_t)g_swing.speed;
         int16_t yaw = rd16(pl, 0x8e); yaw = (int16_t)(yaw + sp);
         std::memcpy(pl + 0x8e, &yaw, 2); std::memcpy(pl + 0x69c, &sp, 2);
