@@ -5170,7 +5170,8 @@ data_020a613c kind:bss addr:0x020a613c
 data_020a6148 kind:bss addr:0x020a6148
 OSi_IdleThread kind:bss addr:0x020a6188
 OSi_LauncherThread kind:bss addr:0x020a621c
-data_020a6378 kind:bss addr:0x020a6378
+OSi_IdleThreadStack kind:bss addr:0x020a62b0
+OSi_Initialized kind:bss addr:0x020a6378
 OSiHeapInfo kind:bss addr:0x020a637c
 data_020a63a0 kind:bss addr:0x020a63a0
 data_020a63a4 kind:bss addr:0x020a63a4

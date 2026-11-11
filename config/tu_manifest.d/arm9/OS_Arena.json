@@ -90,7 +90,7 @@
   "notes": [
     "Hand-assembled, following arm9/MI_Memory, arm9/OS_SpinLock, arm9/CTRDG_Common, arm9/CARD_Common and arm9/OS_Thread: tu_map cannot segment arm9/main.",
     "Eight symbols were renamed from their func_ names to the SDK names in this change (symbols/actor_renames.tsv records the evidence); OS_GetInitArenaLo already carried its name.",
-    "Text-only: OSi_Initialized (data_020a6378) stays an extern, and the arena bounds are the OSArenaInfo block at 0x027ffda0. The file claims no data."
+    "Text-only: OSi_Initialized stays an extern, and the arena bounds are the OSArenaInfo block at 0x027ffda0. The file claims no data."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

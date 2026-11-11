@@ -65,10 +65,12 @@ extern OSSwitchThreadCallback OSi_SystemCallbackInSwitchThread;
 extern OSThread **OSi_CurrentThreadPtr;
 extern BOOL OSi_IsThreadInitialized;
 extern OSThread OSi_IdleThread;
-/* The word just past OSi_IdleThreadStack (200 bytes from 0x020a62b0): its
- * address is the idle stack's top. The word itself is OS_Arena.cpp's
- * OSi_Initialized. */
-extern u32 data_020a6378;
+
+#define OSi_IDLE_CHECKNUM_SIZE     (sizeof(u32) * 2 + HW_SVC_STACK_SIZE)
+#define OSi_IDLE_SVC_SIZE          (sizeof(u32) * 32)
+#define OSi_IDLE_THREAD_STACK_SIZE (OSi_IDLE_CHECKNUM_SIZE + OSi_IDLE_SVC_SIZE)
+
+extern u32 OSi_IdleThreadStack[OSi_IDLE_THREAD_STACK_SIZE / sizeof(u32)];
 
 OSSwitchThreadCallback OS_SetSwitchThreadCallback(OSSwitchThreadCallback callback);
 void OSi_IdleThreadProc(void *unused);
@@ -164,8 +166,9 @@ void OS_InitThread(void) {
 
     OS_SetSwitchThreadCallback(0);
 
-    OS_CreateThread(&OSi_IdleThread, OSi_IdleThreadProc, 0, &data_020a6378, 200,
-                    OS_THREAD_PRIORITY_MAX);
+    OS_CreateThread(&OSi_IdleThread, OSi_IdleThreadProc, 0,
+                    OSi_IdleThreadStack + OSi_IDLE_THREAD_STACK_SIZE / sizeof(u32),
+                    OSi_IDLE_THREAD_STACK_SIZE, OS_THREAD_PRIORITY_MAX);
 
     OSi_IdleThread.priority = OS_THREAD_PRIORITY_MAX + 1;
     OSi_IdleThread.state = OS_THREAD_STATE_READY;
