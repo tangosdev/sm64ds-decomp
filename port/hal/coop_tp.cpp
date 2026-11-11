@@ -56,6 +56,8 @@ struct State {
     int badge_log[kSeats];
     bool inited;
     int fake_seat; unsigned fake_tick; bool fake_done;
+    int fake2_seat = -1; unsigned fake2_tick; bool fake2_done;
+    unsigned chain_tick; int chain_level; bool chain_done;
 };
 State g;
 
@@ -86,6 +88,16 @@ void init() {
     if (const char *f = std::getenv("SM64DS_COOP_TP_FAKE")) {
         int s = -1; unsigned t = 0;
         if (std::sscanf(f, "%d@%u", &s, &t) == 2 && s >= 0 && s < kSeats) { g.fake_seat = s; g.fake_tick = t; }
+    }
+    // Proof knobs for the saved sub-area chain: SM64DS_COOP_TP_FAKE2=<seat>@<tick> is a second click;
+    // SM64DS_COOP_TP_CHAIN=<tick>:<level> goes through a course's own door (LoadLevel with no return).
+    if (const char *f = std::getenv("SM64DS_COOP_TP_FAKE2")) {
+        int s = -1; unsigned t = 0;
+        if (std::sscanf(f, "%d@%u", &s, &t) == 2 && s >= 0 && s < kSeats) { g.fake2_seat = s; g.fake2_tick = t; }
+    }
+    if (const char *f = std::getenv("SM64DS_COOP_TP_CHAIN")) {
+        unsigned t = 0; int lv = 0;
+        if (std::sscanf(f, "%u:%d", &t, &lv) == 2) { g.chain_tick = t; g.chain_level = lv; }
     }
 #endif
 }
@@ -282,6 +294,16 @@ void on_frame(unsigned now) {
     if (g.fake_seat >= 0 && !g.fake_done && g.tick >= g.fake_tick) {
         g.fake_done = true;
         if (on_now()) s = g.fake_seat; else if (g.log) std::fprintf(stderr, "[cotp] fake click ignored: TP is off\n");
+    }
+    if (g.fake2_seat >= 0 && !g.fake2_done && g.tick >= g.fake2_tick) {
+        g.fake2_done = true;
+        if (on_now()) s = g.fake2_seat;
+    }
+    if (g.chain_level && !g.chain_done && g.tick >= g.chain_tick && data_0209f2f8 > 0 && data_0209f2f8 != g.chain_level) {
+        g.chain_done = true;
+        std::fprintf(stderr, "[cotp] chain knob: door from level %d to %d, no return
+", (int)data_0209f2f8, g.chain_level);
+        LoadLevel((unsigned)g.chain_level, 0, 1, 0, (unsigned)-1);
     }
 #endif
     if (s >= 0) try_tp(s, now);
