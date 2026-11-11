@@ -19,16 +19,14 @@
  *   members; the rest keep C linkage. The three line-query handlers use C++
  *   for native collision-result initialization, and the state-change, shake
  *   and FOV handlers use C++ so they can call ChangeState and FX_Div
- *   directly; other handlers remain in cplusplus-off regions.
- * - Vec3 remains the POD scratch triple in the older handlers. Native
+ *   directly.
+ * - NitroSDK's POD VecFx32 remains the scratch triple in the older handlers. Native
  *   collision results use Vector3 and its empty destructor.
  * - The 0x0209b008 state table is nineteen dCamera_c::State records
  *   defined at the bottom of this file. These bodies only take their
  *   address.
  * - CleanupResources keeps both null checks. The second is the
  *   inlined deleting destructor.
- * - The controller records at 0x0209f498 are read through the separate
- *   data_0209f49c..data_0209f4ae symbols with (char *) stride arithmetic.
  */
 #include "KuppaScript.h"
 #include "dCamera_c.h"
@@ -43,6 +41,7 @@
 #include "cstd.h"
 #include "math/Approach.h"
 #include "PlayerInput.h"
+#include "private/controller_input.h"
 #include "PathPtr.h"
 #include "Particle__System.h"
 #include "nitro/fx/fx.h"
@@ -1192,13 +1191,13 @@ int dCamera_c::func_0200c66c(void *posArg, int *viewArg, int *modeArg, int *outF
     return groundY;
 }
 
-
 /* Picks *outMode for the camera-area type under the target (the ground's CLPS
  * camera behaviour) and its view object. Type 7, or an actor to frame, aims
  * mLookTargetPos midway between that point and pos at half their distance.
  * Otherwise the default follow mode maps the other area types to their modes.
  * Returns 0 when the current mode (flag 0x20) or mFlags 0x100 holds the mode. */
-int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outMode, int *outFramed) {
+int dCamera_c::func_0200c394(int areaType, void *viewArg, void *pos, void **outMode,
+                             int *outFramed) {
     CamViewObj *view = (CamViewObj *)viewArg;
     CamMode *mode = mMode;
     VecFx32 toFocus;
@@ -1430,15 +1429,10 @@ extern void StarDanceBoundYaw(dCamera_c *cam, short ang, int threshold);
 extern dActor_c *STAR_MARKERS[12];
 extern Matrix4x3 data_020a0e68;
 extern u8 data_0209f224;
-/* The stride-0x18 controller records at 0x0209f498, indexed by
-   gActivePlayerSlot: +4 and +6 are button words, +8 the camera-input scale,
-   +0xa and +0xc the camera axes, +0x16 a mode byte. */
-extern u16 data_0209f49c[];
-extern u16 data_0209f49e[];
-extern s16 data_0209f4a0[];
-extern s16 data_0209f4a2[];
-extern s16 data_0209f4a4[];
-extern u8 data_0209f4ae[];
+/* The per-player controller records, indexed by gActivePlayerSlot: the
+   camera reads the turn buttons (held, pressed), the camera-input scale (mag)
+   and axes (nx, ny), and the control mode. */
+extern ControllerInput data_0209f498[];
 extern u8 gGameMode;
 extern int data_02086cc8[2];
 extern int data_02086d50[2];
@@ -1486,15 +1480,13 @@ void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
     struct Vector3 vout;
     s32 *tbl;
     s32 comp;
-    s32 m;
 
     mFlags |= 0x1000;
 
-    m = gActivePlayerSlot * 0x18;
-    flag4000 = *(u16 *)((char *)data_0209f49c + m) & 0x4000;
+    flag4000 = data_0209f498[gActivePlayerSlot].held & 0x4000;
 
     if (flag4000 != 0 || mRecentering != 0) {
-        if (*(u16 *)((char *)data_0209f49e + m) & 0x4000) {
+        if (data_0209f498[gActivePlayerSlot].pressed & 0x4000) {
             func_02012790(0x1a);
         }
         if (flag4000 != 0) {
@@ -1519,15 +1511,13 @@ void dCamera_c::Mode8DirectionsCamera(CamViewObj *view) {
             mViewObj = 0;
         }
         if (!(mFlags & 0x60)) {
-            s32 m2;
             s32 f1;
             /* Here mStateTimer is the delay before a held turn button
                repeats. */
             DecIfAbove0_Short(&mStateTimer);
-            m2 = gActivePlayerSlot * 0x18;
-            f1 = *(u16 *)((char *)data_0209f49c + m2) & 0x300;
+            f1 = data_0209f498[gActivePlayerSlot].held & 0x300;
             if (f1 != 0) {
-                s32 f2 = *(u16 *)((char *)data_0209f49e + m2) & 0x300;
+                s32 f2 = data_0209f498[gActivePlayerSlot].pressed & 0x300;
                 if (f2 != 0) {
                     mTurnButtons = f2;
                 } else if (!(mTurnButtons & f1)) {
@@ -2207,7 +2197,7 @@ s32 dCamera_c::func_02009e70() {
             r4 = ScaleDistByFov(r5);
         }
         lookAtGroundY = func_0200bec4(&mTargetPos.x, r6, (char *)mode, r7);
-        turnInput = *(u16 *)((char *)data_0209f49e + gActivePlayerSlot * 0x18) & 0x4300;
+        turnInput = data_0209f498[gActivePlayerSlot].pressed & 0x4300;
         if (mFocusActor != 0) {
             mAngleY = Vec3_HorzAngle(&lookAt, &pos);
         } else if (mode == (CamMode *)&data_0208733c) {
@@ -2310,8 +2300,7 @@ s32 dCamera_c::func_02009e70() {
                             mTurningToTarget = 0;
                         } else {
                             if (mTurningToTarget == 0) {
-                                turnInput = *(u16 *)((char *)data_0209f49c + gActivePlayerSlot * 0x18) &
-                                     0x4300;
+                                turnInput = data_0209f498[gActivePlayerSlot].held & 0x4300;
                             }
                         }
                         if (mFlags & 0x100) {
@@ -2320,8 +2309,8 @@ s32 dCamera_c::func_02009e70() {
                         }
                         /* sb = dist is assigned inside the test: hoisting it above the if
                            re-lays the function (290 words differ). */
-                        if (turnInput != 0 || mRecentering != 0 || mTurningToTarget != 0 || r7 <= nearDist ||
-                            (sb = dist) < fp || sb <= farDist) {
+                        if (turnInput != 0 || mRecentering != 0 || mTurningToTarget != 0 ||
+                            r7 <= nearDist || (sb = dist) < fp || sb <= farDist) {
                             sb = mAngleY;
                             mAngleY = Vec3_HorzAngle(&lookAt, &pos);
                             if (turnInput != 0 || mRecentering != 0) {
@@ -2450,7 +2439,7 @@ s32 dCamera_c::func_02009e70() {
                             if (sb < r6)
                                 goalY = r6;
                             goalY = goalY + ScaleHeightByFov((r6 - lookAtGroundY) +
-                                                         ((mFlags & 2) ? 0x1e8000 : 0x138000));
+                                                             ((mFlags & 2) ? 0x1e8000 : 0x138000));
                             if (mode->flags & 0x80) {
                                 if (pos.y > (s32)goalY)
                                     goalY = pos.y;
@@ -2607,7 +2596,6 @@ int func_02009aa8(dCamera_c *cam) {
         cam->mLookAtOffset.z = 0;
     } else {
         s16 newAngle;
-        int idx;
         s16 t1, t2;
         s16 rem;
         int diff2;
@@ -2622,8 +2610,7 @@ int func_02009aa8(dCamera_c *cam) {
         cam->lookAt.y = tmp[1];
         cam->lookAt.z = tmp[2];
 
-        idx = gActivePlayerSlot * 0x18;
-        t1 = *(s16 *)((char *)data_0209f4a2 + idx);
+        t1 = data_0209f498[gActivePlayerSlot].nx;
         cam->mAngleY -= FX_MUL(t1, 0x200);
 
         diff2 = (s16)(cam->mAngleY - newAngle);
@@ -2641,7 +2628,7 @@ int func_02009aa8(dCamera_c *cam) {
         cam->mTargetPlayer->mAngleY += rem;
         cam->mTargetAngleY += rem;
 
-        t2 = *(s16 *)((char *)data_0209f4a4 + idx);
+        t2 = data_0209f498[gActivePlayerSlot].ny;
         cam->mAngleX += FX_MUL(t2, 0x200);
 
         v17e = cam->mAngleX;
@@ -2687,9 +2674,7 @@ int dCamera_c::func_020098e0() {
             mTurningToTarget = 0;
         }
     } else {
-        int idx = gActivePlayerSlot;
-        int off = idx * 0x18;
-        s16 t1 = *(short *)((char *)data_0209f4a2 + off);
+        s16 t1 = data_0209f498[gActivePlayerSlot].nx;
         int scaled1 = FX_MUL(t1, 0x200);
 
         mAngleY -= scaled1;
@@ -2705,7 +2690,7 @@ int dCamera_c::func_020098e0() {
         }
 
         {
-            s16 t2 = *(short *)((char *)data_0209f4a4 + off);
+            s16 t2 = data_0209f498[gActivePlayerSlot].ny;
             int scaled2 = FX_MUL(t2, 0x200);
             mAngleX += scaled2;
         }
@@ -2772,16 +2757,14 @@ int func_020097ec(dCamera_c *cam) {
    camera. */
 int func_020095e4(dCamera_c *cam) {
     Vector3 v;
-    int off;
     int r7;
     short old186, old17e;
 
     FUN_02029ab0();
     func_02008b08(cam);
 
-    off = gActivePlayerSlot * 0x18;
-    if (*(short *)((char *)data_0209f4a0 + off) != 0) {
-        r7 = (data_0209f4ae[off] == 2) ? 0x240 : 0x200;
+    if (data_0209f498[gActivePlayerSlot].mag != 0) {
+        r7 = (data_0209f498[gActivePlayerSlot].mode == 2) ? 0x240 : 0x200;
         old186 = cam->mTargetAngleY;
         {
             int a = func_02008abc(cam);
@@ -3198,30 +3181,22 @@ int MovePointAlongSpline(Vector3 *pos, s16 *segment, s32 *progress, CutsceneSpli
 /* Ease mInputScale toward the active player's camera-input entry: slowly
    while it is nonzero, quickly back to 0. */
 int func_02008b08(dCamera_c *cam) {
-    s16 dest = *(s16 *)((char *)data_0209f4a0 + gActivePlayerSlot * 0x18);
+    s16 dest = data_0209f498[gActivePlayerSlot].mag;
     return ApproachLinear2(cam->mInputScale, dest, dest != 0 ? 0xa0 : 0x400);
 }
 
 /* The camera's horizontal input axis, scaled by mInputScale. */
 short func_02008abc(dCamera_c *cam) {
-    unsigned char idx = *(unsigned char *)&gActivePlayerSlot;
-    short tbl = *(short *)((char *)data_0209f4a2 + idx * 0x18);
-    short val = cam->mInputScale;
-    long long prod = (long long)tbl * (long long)val;
-    prod += 0x800LL;
-    int tmp = (int)(prod >> 12);
-    return (short)tmp;
+    short axis = data_0209f498[gActivePlayerSlot].nx;
+    short scale = cam->mInputScale;
+    return FX_MUL(axis, scale);
 }
 
 /* The camera's vertical input axis, scaled by mInputScale. */
 short func_02008a70(dCamera_c *cam) {
-    unsigned char idx = *(unsigned char *)&gActivePlayerSlot;
-    short tbl = *(short *)((char *)data_0209f4a4 + idx * 0x18);
-    short val = cam->mInputScale;
-    long long prod = (long long)tbl * (long long)val;
-    prod += 0x800LL;
-    int tmp = (int)(prod >> 12);
-    return (short)tmp;
+    short axis = data_0209f498[gActivePlayerSlot].ny;
+    short scale = cam->mInputScale;
+    return FX_MUL(axis, scale);
 }
 
 /* Copy the target player's position into mTargetPos and keep lookAt's
