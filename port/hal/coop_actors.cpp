@@ -27,10 +27,14 @@ extern "C" {
 extern void *data_0209f394[];
 extern unsigned char data_0209f250;
 extern short data_02092144[];
+void ChangeArea(int areaID);
 // Player::State objects (ov002 bss, the order of hal/vs_arena.cpp kStateObjects): St_BurnLava (11), St_DeadHit (12), St_DeadPit (13).
 extern unsigned char data_ov002_021100f4[], data_ov002_0211010c[], data_ov002_02110124[];
 void *_ZN8dActor_c4NextEPKS_(const void *prev);
 }
+// proof pictures (SM64DS_COOP_MOVE_SHOT): the level loop's top-screen framebuffer, written by the same writer coop_boot.cpp uses
+namespace ntr { struct Framebuffer; bool ppu_write_bmp(const char *path, const Framebuffer &fb); }
+extern "C" const void *port_level_fb_ptr;   // coop_boot.cpp
 
 namespace port {
 namespace {
@@ -211,6 +215,9 @@ struct Slot {
     int16_t  lax, lay, laz;
     uint32_t lf[kMoverMaxFields];
     bool     heard;           // a remote record for this slot was ever taken
+    bool     hconf;           // COOPDIAMOND2: the copy's heading was checked against an owner's record (class 135)
+    bool     bvalid;          // COOPDIAMOND2: bx/by/bz hold the spawn point a cycle mover's place is measured from
+    int32_t  bx, by, bz;
 };
 struct Rx {
     bool     valid, fresh, snap;
@@ -224,6 +231,7 @@ struct Rx {
     int32_t  px, py, pz;
     int16_t  pax, pay, paz;
     unsigned pt;
+    uint32_t pf0;             // COOPDIAMOND2: the previous record's first phase field (the diamond lift's turn timer)
 };
 struct Job { bool on; int passes; unsigned next; int cursor; };
 
@@ -232,8 +240,17 @@ bool g_dead_guard = true;     // COOPPUZZLE1: SM64DS_COOP_DEAD_GUARD=0 is the co
 bool g_rider_own = true;      // COOPROWS1: SM64DS_COOP_SEESAW_RIDER=0 is the control (nearest to the pivot owns the plank, as before)
 bool g_lift_heading = true;  // SM64DS_COOP_LIFT_HEADING=0 is the MUST-FAIL control (run after093, lane COOPPLAT1): a sliding slab keeps its own heading
 unsigned g_lift_flips = 0;
+bool g_dia_heading = true;   // SM64DS_COOP_DIAMOND_HEADING=0 is the MUST-FAIL control (run coopfix1, lane DIAMOND2): the diamond lift keeps its own heading
+unsigned g_dia_flips = 0, g_dia_ok = 0, g_dia_held = 0;
+bool g_derive = true;        // SM64DS_COOP_MOVER_DERIVE=0 is the MUST-FAIL control (lane DIAMOND2): cycle movers keep the place the pin left them
+unsigned long long g_der_fix = 0; double g_der_max = 0; unsigned g_der_logs = 0, g_der_refused = 0;
+unsigned long long g_der_hold = 0;
+bool g_linked = true;        // SM64DS_COOP_LINKED=0 is the MUST-FAIL control (lane DIAMOND2): each linked BFS pole / floor has its own owner
+unsigned g_link_sets = 0, g_link_follow = 0;
 unsigned g_sample_every = 0;
 unsigned g_dump_at[4]; int g_ndump = 0;
+unsigned g_shot_at[16]; int g_nshot = 0;   // SM64DS_COOP_MOVE_SHOT=t1,t2,...: top-screen pictures that many ticks after the movers show up (proof only, lane DIAMOND2)
+unsigned g_area_at = 0; int g_area_to = -1; bool g_area_done = false;   // SM64DS_COOP_MOVE_AREA=F:area (proof only, lane DIAMOND2)
 struct ForgeKnob { unsigned tick; char name[12]; bool done; };
 ForgeKnob g_forge[12]; int g_nforge = 0;
 
@@ -269,6 +286,9 @@ void read_env() {
     auto flag = [](const char *n, bool dflt) { const char *e = std::getenv(n); return (e && *e) ? *e != '0' : dflt; };
     g_log = flag("SM64DS_COOP_MOVE_LOG", false);
     g_lift_heading = flag("SM64DS_COOP_LIFT_HEADING", true);
+    g_dia_heading = flag("SM64DS_COOP_DIAMOND_HEADING", true);
+    g_derive = flag("SM64DS_COOP_MOVER_DERIVE", true);
+    g_linked = flag("SM64DS_COOP_LINKED", true);
     g_boss_own = flag("SM64DS_MOVERS_BOSSOWN", true);
     g_new_rows = flag("SM64DS_MOVERS_NEWROWS", true);
     g_hold_mips = flag("SM64DS_MOVERS_MIPSHOLD", true);
@@ -282,6 +302,22 @@ void read_env() {
     g_rider_own = flag("SM64DS_COOP_SEESAW_RIDER", true);
     if (const char *ld = std::getenv("SM64DS_COOP_MOVE_LEAD")) g_lead_ms = std::atoi(ld);
     if (const char *s = std::getenv("SM64DS_COOP_MOVE_SAMPLE")) g_sample_every = (unsigned)std::strtoul(s, nullptr, 0);
+    if (const char *ar = std::getenv("SM64DS_COOP_MOVE_AREA")) {
+        // F:area: F ticks after the movers first show up in a level, put the local player in that area the way a CHANGE_ROOM trigger does
+        // (src/game/actors/d_a_ch_room.cpp: player->mAreaId, then ChangeArea), so a proof row whose player was placed by a knob runs
+        // the area-bound actors there (dActor_c::BeforeBehavior skips an actor whose area is not showing).
+        unsigned f = 0; int to = -1;
+        if (std::sscanf(ar, "%u:%i", &f, &to) == 2 && to >= 0 && to < 8) { g_area_at = f; g_area_to = to; }
+    }
+    if (const char *sh = std::getenv("SM64DS_COOP_MOVE_SHOT")) {
+        for (const char *q = sh; *q && g_nshot < 16;) {
+            char *end = nullptr;
+            const unsigned long v = std::strtoul(q, &end, 10);
+            if (end == q) break;
+            g_shot_at[g_nshot++] = (unsigned)v;
+            q = end; while (*q == ',' || *q == ' ') ++q;
+        }
+    }
     if (const char *d = std::getenv("SM64DS_COOP_MOVE_DUMP")) {
         const char *p = d;
         while (*p && g_ndump < 4) {
@@ -455,7 +491,7 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
     for (int i = 0; i < (int)h.count; ++i) {
         MoverRec r; std::memcpy(&r, p + off, sizeof r);
         Rx &x = g_rx[r.slot][seat];
-        if (x.valid && !(h.flags & 1) && !x.snap) { x.pvalid = true; x.px = x.x; x.py = x.y; x.pz = x.z; x.pax = x.ax; x.pay = x.ay; x.paz = x.az; x.pt = x.t; } else x.pvalid = false;
+        if (x.valid && !(h.flags & 1) && !x.snap) { x.pvalid = true; x.px = x.x; x.py = x.y; x.pz = x.z; x.pax = x.ax; x.pay = x.ay; x.paz = x.az; x.pt = x.t; x.pf0 = x.f[0]; } else x.pvalid = false;
         x.valid = true; x.fresh = true; x.snap = (h.flags & 1) != 0; x.t = now;
         x.cls = r.cls; x.cd = r.cd; x.x = r.x; x.y = r.y; x.z = r.z;
         x.ax = r.ax; x.ay = r.ay; x.az = r.az; x.rflags = r.rflags; x.nf = r.nf;
@@ -560,6 +596,192 @@ void fix_lift_heading(int slot, char *a, const Prof &p, const Rx &x) {
                      (int)p.id, slot, (unsigned)(uint16_t)cur, along, len, timer, (unsigned)(uint16_t)want);
 }
 
+// Run coopfix1, lane DIAMOND2. The BitDW diamond lift (135, daObjKm1_Ukishima_c, src/game/actors/d_a_obj_km1_ukishima.cpp)
+// drives along mPrevAngleY (+0x94) at 10 units a frame and adds a quarter turn each time its 60-frame mTurnTimer (+0x31e) runs
+// out, so it traces a 600-unit square. The record carries its pose and the timer but not the heading, and the heading lies below
+// the field window. A copy that spawned later, or took a timer write across a turn, faces another side of the square: the pin
+// hides it while the owner streams, but the copy carries its rider the wrong way, and once its console takes the platform over
+// the room follows that copy off its square. Each handover can turn the square again, so the lift wanders off.
+// The owner's own move says the heading: between two stream records on one leg (the timer went down, no reset) it moved along
+// one of the four headings mAngleY + k * 0x4000 (InitResources sets mPrevAngleY = mAngleY). The copy takes the nearest one,
+// using the ROM's own table pair the way dActor_c::UpdatePosWithHorzSpeedAndAng does (velocity x from [j], z from [j + 1]).
+extern "C" { extern short data_02082214[]; }
+bool dia_solve_heading(const Slot &s, const char *a, const Rx &x, int16_t *want);
+void fix_diamond_heading(int slot, Slot &s, char *a, const Prof &p, const Rx &x) {
+    if (!g_dia_heading || p.id != 135 || p.nf < 1) return;
+    auto take = [&](int16_t want, const char *how, int pt, int t, double units) {
+        const int16_t cur = rd16(a, 0x94);
+        s.hconf = true;
+        if (cur == want) { ++g_dia_ok; return; }
+        wr16(a, 0x94, want);
+        ++g_dia_flips;
+        if (g_dia_flips <= 40)
+            std::fprintf(stderr, "[coopmove] diamond heading: slot %d had %04x, the owner's %s (timer %d to %d, %.0f units) says %04x wall=%lld\n",
+                         slot, (unsigned)(uint16_t)cur, how, pt, t, units, (unsigned)(uint16_t)want, wall_ms());
+    };
+    // With the spawn point known (derive_base), the record's place and timer name the side of the square outright: the one
+    // whose cycle place for that timer is where the owner says the lift is. No second record and no leg rule needed, so a
+    // timer write that lands across a turn is matched with its own heading in the same breath.
+    {
+        int16_t want = 0;
+        if (dia_solve_heading(s, a, x, &want)) { take(want, "place", (int)(x.f[0] & 0xffu), (int)(x.f[0] & 0xffu), 0.0); return; }
+    }
+    if (x.snap || !x.pvalid) return;
+    const unsigned dtm = x.t - x.pt;
+    if (dtm < 20u || dtm > 1000u) return;
+    const int t = (int)(x.f[0] & 0xffu), pt = (int)(x.pf0 & 0xffu);
+    if (!(pt > t && pt <= 0x3c)) return;                                   // a turn between the two records, or not this row's timer
+    const double dx = (double)(x.x - x.px), dz = (double)(x.z - x.pz);
+    const double mag = std::sqrt(dx * dx + dz * dz);
+    if (mag < 4.0 * 4096.0) return;                                         // too short a move to read
+    int best = -1; double bdot = -1e300;
+    for (int k = 0; k < 4; ++k) {
+        const unsigned h = (uint16_t)(x.ay + k * 0x4000);
+        const int j = (int)((h >> 4) << 1);
+        const double dot = dx * (double)data_02082214[j] + dz * (double)data_02082214[j + 1];
+        if (dot > bdot) { bdot = dot; best = k; }
+    }
+    if (best < 0 || bdot < 0.94 * mag * 4096.0) return;                     // not along one heading (about 20 degrees): leave it
+    take((int16_t)(uint16_t)(x.ay + best * 0x4000), "move", pt, t, mag / 4096.0);
+}
+
+// Run coopfix1, lane DIAMOND2. THE CYCLE MOVERS' PLACE IS A FUNCTION OF THEIR CYCLE STATE, so a copy never keeps a stray offset.
+// These movers integrate: each frame adds a step to the place, the step chosen by a counter, so the cartridge's place is always
+// spawn point + (sum of the steps the counter has been through):
+//   135 diamond lift (d_a_obj_km1_ukishima.cpp): 10 units a frame along mPrevAngleY, a quarter turn when mTurnTimer runs out;
+//   142 pole lift (d_a_obj_km2_ami_bou.cpp): y += 7 * sin(mHeightAng) (or -= 3 * sin), then mHeightAng += 0x100;
+//   75 / 76 / 145 floating floors (d_a_obj_ukiyuka.cpp): mBobPhase += 0x100, y -= amp * sin(mBobPhase), rest 60 frames at mRestY.
+// Each cycle sums to exactly zero (checked against the sine table data_02082214), which is what brings the cartridge's platforms
+// back to the same place forever. A coop copy breaks that: the pin writes the owner's place extrapolated along its velocity (a few
+// units off on a curve or at a corner), and a copy that runs free afterwards (owner stale, area left, handover, a death and a
+// re-entry) keeps that offset and adds the next one, so the platforms creep: the floors sink under the lava, the poles open a gap
+// at the chain, the diamond lifts leave their squares. Here every console (the owner too) puts each such mover at spawn point +
+// the sum for its counter every frame. The counter is synced (phase fields); the spawn point is the copy's own, taken the first
+// tick it is seen, before any record touches it (the floors keep theirs in mRestY).
+int sin_at(unsigned h) { return data_02082214[((h & 0xffffu) >> 4) << 1]; }
+int cos_at(unsigned h) { return data_02082214[(((h & 0xffffu) >> 4) << 1) + 1]; }
+int rnd12(long long v) { return (int)((v + 0x800) >> 12); }
+bool is_bobber(unsigned id) { return id == 75 || id == 76 || id == 145; }
+bool is_derived(unsigned id) { return id == 135 || id == 142 || is_bobber(id); }
+// 142: how far the pole has moved from its spawn height at mHeightAng (Behavior uses the angle, then adds 0x100)
+bool pole_rise(const char *a, int *out) {
+    const unsigned ph = (uint16_t)rd16(a, 0x354);
+    if (ph & 0xffu) return false;
+    const bool up = (uint32_t)rd32(a, 0x08) != 0xffffu;                     // param1 != 0xffff: lowered 300 and rising by 7
+    const int amp = up ? 0x7000 : 0x3000;
+    long long sum = 0;
+    for (unsigned p = 0; p != ph; p = (p + 0x100) & 0xffffu) sum += rnd12((long long)amp * sin_at(p));
+    *out = (int)(up ? sum : -sum);
+    return true;
+}
+// 75 / 76 / 145: the floor's height at mBobPhase (Behavior adds 0x100, then subtracts)
+bool bob_y(const char *a, int *out) {
+    const unsigned ph = (uint16_t)rd16(a, 0x328);
+    const int amp = rd32(a, 0x324);
+    if ((ph & 0xffu) || amp <= 0 || amp > 0x10000) return false;
+    long long sum = 0;
+    for (unsigned p = ph; p != 0; p = (p - 0x100) & 0xffffu) sum += rnd12((long long)amp * sin_at(p));
+    *out = rd32(a, 0x320) - (int)sum;
+    return true;
+}
+// 135: the lift's x / z offset from its spawn point for (quarter turns since mAngleY, mTurnTimer). The first leg is one step short
+// (InitResources arms 60 and Behavior counts before it moves), so corner 0 sits one step behind the spawn point.
+void dia_off_k(unsigned h0, int k, int t, int sp, int *ox, int *oz) {
+    long long x = 0, z = 0;
+    auto step = [&](int q, int n) {
+        const unsigned hq = (h0 + (unsigned)q * 0x4000u) & 0xffffu;            // velocity x from [j], z from [j + 1] (UpdatePosWithHorzSpeedAndAng)
+        x += (long long)n * rnd12((long long)sp * sin_at(hq));
+        z += (long long)n * rnd12((long long)sp * cos_at(hq));
+    };
+    step(0, -1);
+    for (int q = 0; q < k; ++q) step(q, 60);
+    step(k, 61 - t);
+    *ox = (int)x; *oz = (int)z;
+}
+bool dia_off(const char *a, int *ox, int *oz) {
+    const unsigned h0 = (uint16_t)rd16(a, 0x8e), dk = ((unsigned)(uint16_t)rd16(a, 0x94) - h0) & 0xffffu;
+    const int t = *(const unsigned char *)(a + 0x31e), sp = rd32(a, 0x98);
+    if ((dk & 0x3fffu) || t < 1 || t > 60 || sp <= 0 || sp > 0x40000) return false;
+    dia_off_k(h0, (int)(dk >> 14), t, sp, ox, oz);
+    return true;
+}
+bool dia_solve_heading(const Slot &s, const char *a, const Rx &x, int16_t *want) {
+    if (!g_derive || !s.bvalid) return false;
+    const unsigned h0 = (uint16_t)rd16(a, 0x8e);
+    const int t = (int)(x.f[0] & 0xffu), sp = rd32(a, 0x98);
+    if (t < 1 || t > 60 || sp <= 0 || sp > 0x40000) return false;
+    int best = -1; double bd = 1e300;
+    for (int k = 0; k < 4; ++k) {
+        int ox, oz;
+        dia_off_k(h0, k, t, sp, &ox, &oz);
+        const double ex = ((double)x.x - s.bx - ox) / 4096.0, ez = ((double)x.z - s.bz - oz) / 4096.0;
+        const double e = std::sqrt(ex * ex + ez * ez);
+        if (e < bd) { bd = e; best = k; }
+    }
+    if (best < 0 || bd > 40.0) return false;
+    *want = (int16_t)(uint16_t)(h0 + (unsigned)best * 0x4000u);
+    return true;
+}
+void derive_base(Slot &s) {
+    const Prof &p = g_prof[s.prof];
+    const char *a = s.a;
+    if (s.bvalid || !is_derived(p.id)) return;
+    if (p.id == 135) {
+        int ox, oz;
+        if (!dia_off(a, &ox, &oz)) return;
+        s.bx = rd32(a, 0x5c) - ox; s.bz = rd32(a, 0x64) - oz; s.by = 0;
+    } else if (p.id == 142) {
+        int r;
+        if (!pole_rise(a, &r)) return;
+        s.by = rd32(a, 0x60) - r; s.bx = s.bz = 0;
+    }
+    s.bvalid = true;
+}
+void derive_apply(int slot, Slot &s, unsigned now) {
+    if (!g_derive || !s.bvalid) return;
+    const Prof &p = g_prof[s.prof];
+    char *a = s.a;
+    // A busy owner sends these counters every period. When its records stop while the owner is still fresh, its copy is
+    // asleep (out of its camera's range, frozen_state: it does not publish) or stopped, and its counters are standing still.
+    // My own copy may be awake and would count on alone, so it waits on the owner's last counters instead (and, for the
+    // diamond lift, the heading that goes with them). Past kStaleMs the owner is gone and the ownership moves as before.
+    if (s.owner >= 0 && s.owner != g_my && p.nf > 0) {
+        const Rx &x = g_rx[slot][s.owner];
+        const unsigned age = now - x.t, hold = (std::max)(3u * (unsigned)p.period, 120u);
+        if (x.valid && x.cls == p.id && x.nf == p.nf && age > hold && age <= (unsigned)kStaleMs) {
+            for (int k = 0; k < p.nf; ++k) write_field(a, p, p.f[k], x.f[k]);
+            if (p.id == 135) { int16_t want; if (dia_solve_heading(s, a, x, &want)) wr16(a, 0x94, want); }
+            ++g_der_hold;
+        }
+    }
+    int wx = rd32(a, 0x5c), wy = rd32(a, 0x60), wz = rd32(a, 0x64);
+    if (p.id == 135) {
+        int ox, oz;
+        if (!dia_off(a, &ox, &oz)) return;
+        wx = s.bx + ox; wz = s.bz + oz;
+    } else if (p.id == 142) {
+        int r;
+        if (!pole_rise(a, &r)) return;
+        wy = s.by + r;
+    } else if (is_bobber(p.id)) {
+        if (!bob_y(a, &wy)) return;
+    } else return;
+    const double d = dist3(a, wx, wy, wz);
+    if (d == 0.0) return;
+    if (d > 3000.0) {                                    // not the same cycle at all: leave it and say so
+        if (++g_der_refused <= 8)
+            std::fprintf(stderr, "[coopmove] derive: class %d slot %d is %.0f units from its cycle place, left alone wall=%lld\n",
+                         (int)p.id, slot, d, wall_ms());
+        return;
+    }
+    wr32(a, 0x5c, wx); wr32(a, 0x60, wy); wr32(a, 0x64, wz);
+    ++g_der_fix;
+    if (d > g_der_max) g_der_max = d;
+    if (d >= 4.0 && ++g_der_logs <= 40)
+        std::fprintf(stderr, "[coopmove] derive: class %d slot %d put back %.1f units on its cycle (owner %d) wall=%lld\n",
+                     (int)p.id, slot, d, s.owner, wall_ms());
+}
+
 void apply_rec(int slot, Slot &s, Rx &x) {
     const Prof &p = g_prof[s.prof];
     char *a = s.a;
@@ -599,6 +821,7 @@ void apply_rec(int slot, Slot &s, Rx &x) {
         }
         for (int k = 0; k < p.nf; ++k) write_field(a, p, p.f[k], x.f[k]);
         fix_lift_heading(slot, a, p, x);
+        fix_diamond_heading(slot, s, a, p, x);
         ++g_st.applied_write; ++g_cs[s.prof].applied;
         s.lvalid = false;
         return;
@@ -638,6 +861,7 @@ void reset_level() {
     g_god_set = false;
     g_lf = 0; g_spawned = false; g_spawn_lf = 0; g_ents = 0;
     g_req_done = false; g_req_tries = 0; g_req_last = 0; g_req_nonce = 0; g_snap_base = g_st.snap_applied; g_hold = g_snap_on;
+    g_area_done = false;
     for (int i = 0; i < g_nforge; ++i) g_forge[i].done = false;
 }
 
@@ -677,10 +901,11 @@ void scan_ents() {
         Slot &s = g_slot[slot];
         if (s.a) continue;                                    // two actors in one slot: the first wins
         if (s.prof != g_prof_of[id]) {                        // a different class (or first sight): start clean
-            s.prof = g_prof_of[id]; s.seen = 0; s.lvalid = false; s.owner = -1; s.last_pub = 0; s.pin_lf = 0;
+            s.prof = g_prof_of[id]; s.seen = 0; s.lvalid = false; s.owner = -1; s.last_pub = 0; s.pin_lf = 0; s.hconf = false; s.bvalid = false;
         }
         s.a = a;
         ++s.seen;
+        derive_base(s);                                       // COOPDIAMOND2: first sight, before any record of this tick is applied
         ++n;
     }
     for (int i = 0; i < kSlots; ++i) if (!g_slot[i].a) g_slot[i].seen = 0;
@@ -785,6 +1010,89 @@ unsigned claim_cd(const char *pl, const Slot &s) {
     return (unsigned)(std::min)(65535.0, dist3(pl, rd32(s.a, 0x5c), rd32(s.a, 0x60), rd32(s.a, 0x64)));
 }
 
+// COOPDIAMOND2: linked BFS movers. The three pole lifts at the yellow chain (142, rising, spawn y 3500) and the two
+// floating floors at y 3400 (145) spawn on the same tick and run in step on the cartridge. In co-op each had its own
+// owner; when one owner's copy slept its counter stood while the others ran on, and that pole left the chain (bfs_f3:
+// seam median 234 units). A set is the copies of one class with the same param, the same base height and the same z
+// (within 64 units); its lead is the lowest slot. Every member takes the lead's owner, the lead's claim distance is the
+// nearest member's, and every member runs on the lead's counters. Every console builds the same sets from the same spawns.
+const int kLinkMax = 32;
+int g_link_lead[kSlots];
+int g_link_idx[kLinkMax], g_link_n = 0;
+bool link_key(const Slot &s, int32_t *ky) {
+    if (!s.a) return false;
+    const Prof &p = g_prof[s.prof];
+    if (p.id == 142) { if (!s.bvalid) return false; *ky = s.by; return true; }
+    if (p.id == 145) { *ky = rd32(s.a, 0x320); return true; }   // mRestY
+    return false;
+}
+void link_build() {
+    static bool init = false;
+    if (!init) { for (int i = 0; i < kSlots; ++i) g_link_lead[i] = -1; init = true; }
+    for (int i = 0; i < g_link_n; ++i) g_link_lead[g_link_idx[i]] = -1;
+    g_link_n = 0;
+    if (!g_linked) return;
+    for (int i = 0; i < kSlots && g_link_n < kLinkMax; ++i) {
+        int32_t k;
+        if (link_key(g_slot[i], &k)) { g_link_idx[g_link_n++] = i; g_link_lead[i] = -1; }
+    }
+    unsigned sets = 0, sig = 0;
+    for (int a = 0; a < g_link_n; ++a) {
+        const int i = g_link_idx[a];
+        const Slot &si = g_slot[i];
+        int32_t ki;
+        if (g_link_lead[i] >= 0 || !link_key(si, &ki)) continue;
+        bool any = false;
+        for (int b = a + 1; b < g_link_n; ++b) {
+            const int j = g_link_idx[b];
+            const Slot &sj = g_slot[j];
+            int32_t kj;
+            if (g_link_lead[j] >= 0 || sj.prof != si.prof || !link_key(sj, &kj) || kj != ki) continue;
+            if (rd32(sj.a, 0x08) != rd32(si.a, 0x08)) continue;
+            const int dz = rd32(sj.a, 0x64) - rd32(si.a, 0x64);
+            if (dz > 0x40000 || dz < -0x40000) continue;
+            g_link_lead[j] = i; any = true; sig = sig * 31u + (unsigned)j;
+        }
+        if (any) { g_link_lead[i] = i; ++sets; sig = sig * 31u + (unsigned)i; }
+    }
+    static unsigned last_sig = 0;
+    if (sig != last_sig) {
+        last_sig = sig;
+        g_link_sets = sets;
+        if (g_log)
+            for (int a = 0; a < g_link_n; ++a) {
+                const int i = g_link_idx[a];
+                if (g_link_lead[i] != i) continue;
+                std::fprintf(stderr, "[coopmove] linked set: class %d lead slot %d, members", (int)g_prof[g_slot[i].prof].id, i);
+                for (int b = 0; b < g_link_n; ++b)
+                    if (g_link_lead[g_link_idx[b]] == i) std::fprintf(stderr, " %d", g_link_idx[b]);
+                std::fprintf(stderr, " wall=%lld\n", wall_ms());
+            }
+    }
+}
+int link_lead(int slot) { return g_linked ? g_link_lead[slot] : -1; }
+// the claim distance a linked copy carries: the nearest member's (the same number for every member, on every console)
+unsigned link_cd(const char *pl, int slot) {
+    const int ld = link_lead(slot);
+    if (ld < 0) return claim_cd(pl, g_slot[slot]);
+    unsigned best = 65535;
+    for (int b = 0; b < g_link_n; ++b)
+        if (g_link_lead[g_link_idx[b]] == ld) best = (std::min)(best, claim_cd(pl, g_slot[g_link_idx[b]]));
+    return best;
+}
+// a member runs on the lead's counters (the lead's copy here already took this tick's record)
+void link_follow(int slot, Slot &s) {
+    const int ld = link_lead(slot);
+    if (ld < 0 || ld == slot || !g_slot[ld].a) return;
+    const Prof &p = g_prof[s.prof];
+    bool moved = false;
+    for (int k = 0; k < p.nf; ++k) {
+        const uint32_t v = read_field(g_slot[ld].a, p.f[k]);
+        if (read_field(s.a, p.f[k]) != v) { write_field(s.a, p, p.f[k], v); moved = true; }
+    }
+    if (moved) ++g_link_follow;
+}
+
 // Ownership, apply, publish: one pass over the slots that exist here.
 void process(unsigned now) {
     char *pl = local_player();
@@ -797,6 +1105,7 @@ void process(unsigned now) {
             std::fprintf(stderr, "[coopmove] my body %s wall=%lld\n", dying ? "is dying: it claims nothing" : "claims again", wall_ms());
         dying_was = dying;
     }
+    link_build();
     unsigned char recs[kPayloadMax]; int nrec = 0, bytes = 0;
     struct Due { int slot; unsigned age; };
     Due due[kSlots]; int ndue = 0;
@@ -805,7 +1114,7 @@ void process(unsigned now) {
         if (!s.a) continue;
         const Prof &p = g_prof[s.prof];
         if (p.flags & kFSampleOnly) continue;          // the control: seen and sampled, never owned, applied, pinned or published
-        const unsigned my_cd = claim_cd(pl, s);
+        const unsigned my_cd = link_cd(pl, slot);
         // 1. who owns this actor
         int best = -1; unsigned best_cd = 0xffffffffu; unsigned cur_cd = 0xffffffffu; bool cur_fresh = false;
         for (int q = 0; q < kSeats; ++q) {
@@ -819,6 +1128,9 @@ void process(unsigned now) {
         int nown = decide_owner(s.owner, g_my, my_cd, cur_fresh, cur_cd, best, best_cd, g_hyst);
         if (g_hyst && was != nown && was >= 0 && (unsigned)(now - s.owner_t) < (unsigned)kDwellMs && ((was == g_my && s.last_pub != 0) || (was != g_my && cur_fresh)))
             nown = was;                                            // dwell: no flip within a second
+        // COOPDIAMOND2: a diamond lift copy whose heading no record has checked yet does not take the lift from a live owner (it would
+        // drive the room's lift off along its own side of the square); it confirms from that owner's next records, a few frames.
+        if (g_dia_heading && p.id == 135 && nown == g_my && was >= 0 && was != g_my && cur_fresh && !s.hconf) { nown = was; ++g_dia_held; }
         if (g_boss_own && (p.flags & kFBoss)) {       // MOVERS9: who steers the pose = who the boss chases (the boss lane's authority rule)
             const int ts = coop_target_seat_of_slot(slot);
             if (ts == g_my) nown = g_my;
@@ -828,6 +1140,10 @@ void process(unsigned now) {
             const int cs = coop_boss_bully_claim_seat(slot);
             if (cs == g_my) nown = g_my;
             else if (cs >= 0 && cs < kSeats && ((coop_group_member_mask() >> cs) & 1u) && alive_rx(g_rx[slot][cs], now)) nown = cs;
+        }
+        {   // COOPDIAMOND2: a linked member has the owner its lead has (the lead is a lower slot, decided earlier in this pass)
+            const int ld = link_lead(slot);
+            if (ld >= 0 && ld != slot && g_slot[ld].owner >= 0) nown = g_slot[ld].owner;
         }
         if (nown != was) {
             s.owner = nown; s.owner_t = now;
@@ -851,6 +1167,8 @@ void process(unsigned now) {
             x.fresh = false;
         }
         if (g_act && (p.flags & kFSlave) && s.owner >= 0 && s.owner != g_my && s.seen >= 2) slave(s, g_rx[slot][s.owner], now);
+        if (g_act) link_follow(slot, s);
+        if (g_act) derive_apply(slot, s, now);
         // 3. publish if I own it
         if (!g_act) continue;
         if (!g_hold && s.owner == g_my && s.seen >= 3 && !skip_state(s.a, p) && !frozen_state(s.a)) {
@@ -873,7 +1191,7 @@ void process(unsigned now) {
         int first = i;
         while (i < ndue && nrec < kMoverMaxRecs && bytes + rec_bytes(g_slot[due[i].slot].prof) + (int)sizeof(MoverBatchHead) <= kPayloadMax) {
             Slot &s = g_slot[due[i].slot];
-            const unsigned my_cd = claim_cd(pl, s);
+            const unsigned my_cd = link_cd(pl, due[i].slot);
             bytes += fill_rec(recs + bytes, due[i].slot, s, my_cd, false);
             ++nrec; ++i;
         }
@@ -908,7 +1226,7 @@ void process(unsigned now) {
                 if (mine && bytes + rec_bytes(s.prof) + (int)sizeof(MoverBatchHead) > kPayloadMax) break;
                 ++j.cursor;
                 if (!mine) continue;
-                const unsigned my_cd = claim_cd(pl, s);
+                const unsigned my_cd = link_cd(pl, slot);
                 bytes += fill_rec(recs + bytes, slot, s, my_cd, frozen_state(s.a));
                 ++nrec;
             }
@@ -1043,6 +1361,12 @@ void stats_line() {
         s.batches_rx, s.recs_rx, s.applied_write, s.applied_ease, s.in_band, s.skipped_state, s.cls_mismatch, s.snap_applied,
         s.no_ent, s.owner_changes, s.owner_stale, s.throttled, s.slaved, s.drop_bad, s.drop_group, s.drop_member, s.drop_ver, s.drop_far,
         s.drop_off, s.drop_seat, s.drop_val, s.rows_dropped, s.write_refused, s.size_mismatch, s.overrun);
+    if (g_dia_flips || g_dia_ok || g_dia_held)
+        std::fprintf(stderr, "[movestat] diamond heading: turned %u, already right %u, handovers held %u\n", g_dia_flips, g_dia_ok, g_dia_held);
+    if (g_link_sets)
+        std::fprintf(stderr, "[movestat] linked sets %u, members put on their lead's counters %u times\n", g_link_sets, g_link_follow);
+    if (g_der_fix || g_der_refused || g_der_hold)
+        std::fprintf(stderr, "[movestat] cycle movers: put back %llu times, largest %.1f units, refused %u, held on a quiet owner %llu\n", g_der_fix, g_der_max, g_der_refused, g_der_hold);
 }
 
 // ---------------------------------------------------------------------------
@@ -1074,7 +1398,19 @@ void on_frame(unsigned now) {
     if (g_spawned) {
         const unsigned since = g_lf - g_spawn_lf;
         if (g_sample_every && (since % g_sample_every) == 0) do_sample();
+        if (g_area_to >= 0 && !g_area_done && since >= g_area_at) {
+            g_area_done = true;
+            *(signed char *)(pl + 0xcc) = (signed char)g_area_to;
+            ChangeArea(g_area_to);
+            std::fprintf(stderr, "[coopmove-knob] area %d shown (tick %u)\n", g_area_to, since);
+        }
         for (int i = 0; i < g_ndump; ++i) if (since == g_dump_at[i]) do_dump(since);
+        for (int i = 0; i < g_nshot; ++i)
+            if (since == g_shot_at[i] && ::port_level_fb_ptr) {
+                char nm[64]; std::snprintf(nm, sizeof nm, "movshot_f%u_t%u.bmp", g_lf, since);
+                const bool w = ::ntr::ppu_write_bmp(nm, *(const ::ntr::Framebuffer *)::port_level_fb_ptr);
+                std::fprintf(stderr, "[coopmove-knob] picture %s %s (tick %u)\n", nm, w ? "written" : "FAILED", since);
+            }
         for (int i = 0; i < g_nforge; ++i)
             if (!g_forge[i].done && since >= g_forge[i].tick) { g_forge[i].done = true; do_forge(g_forge[i].name); }
     }

@@ -63,7 +63,10 @@ enum : uint8_t {
 enum : int {
     kMoverMaxFields   = 12,
     kMoverMaxRecs     = 40,
-    kMoverProfileVer  = 1,
+    kMoverProfileVer  = 2,        // 2 (1.0.3): COOPDIAMOND2 gave classes 75 / 76 / 145 two fields. A 1.0.2 console (ver 1) would
+                                  // refuse the WHOLE batch that carries one of them (field count != its profile), not just the new
+                                  // fields, so a mixed pair now drops every batch cleanly as drop_ver instead. The lobby refuses
+                                  // mixed game builds anyway; only direct relay codes could pair them.
     kMoverMaxUnits    = 40000,    // |coordinate| in world units
 };
 

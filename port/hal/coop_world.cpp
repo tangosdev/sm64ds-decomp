@@ -169,7 +169,7 @@ unsigned g_place_frame = 0; int g_place_xyz[3] = {0, 0, 0}; bool g_place_on = fa
 int g_place_level = -1;   // SM64DS_COOP_PLACE ...:L, only in level L (run after093, lane WHOMPBACK1)
 int g_trace_id = -1; unsigned g_trace_every = 5; int g_trace_off = -1;   // SM64DS_COOP_TRACE (run after093, lane SEESAW1)
 struct WarpKnob { unsigned frame; int level; int act; bool done; int entrance; };
-WarpKnob g_warp[4]; int g_nwarp = 0;
+WarpKnob g_warp[12]; int g_nwarp = 0;   // DIAMOND2: 12, so a proof row can leave and re-enter a level six times
 struct ForgeKnob { unsigned frame; char name[16]; bool done; };
 ForgeKnob g_forge[12]; int g_nforge = 0;
 
@@ -212,7 +212,7 @@ void read_env() {
         // F:level:act[:entrance][;F:level:act[:entrance]]  (F = ticked frames since the boot release / the end of a new
         // file's opening; entrance 0 unless given)
         const char *p = w;
-        while (*p && g_nwarp < 4) {
+        while (*p && g_nwarp < 12) {
             unsigned f = 0; int lv = 0, ac = 1, used = 0, en = 0, used2 = 0;
             if (std::sscanf(p, "%u:%i:%i%n", &f, &lv, &ac, &used) < 3 || used <= 0) break;
             p += used;

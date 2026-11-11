@@ -149,8 +149,11 @@ ROW(80,  "ROTATING_PLATFORM_LLL", 100, 8, 150, 2, 0)
 ROW(94,  "ROTATING_PLATFORM_WDW", 100, 8, 150, 2, 0)
 ROW(129, "ROTATING_PLATFORM_RR", 100, 8, 150, 2, 0)
 ROW(132, "ARMED_ROTATING_PLATFORM", 100, 8, 150, 2, 0)
-ROW(75,  "FLOATING_FLOOR_LLL_BIG", 100, 8, 150, 2, 0)
-ROW(76,  "FLOATING_FLOOR_LLL_SMALL", 100, 8, 150, 2, 0)
+// COOPDIAMOND2: the floating floors (daObjUkiyuka_c, src/game/actors/d_a_obj_ukiyuka.cpp) carry their bob phase (+0x328) and the rest
+// timer (+0x32a), so every copy is on the same point of the cycle; coop_actors.cpp then puts the floor at mRestY minus the cycle sum
+// for that phase, so a pin or a free run never leaves it sunk (Tango 11-11: the lava triangles end up deep under the lava).
+ROW(75,  "FLOATING_FLOOR_LLL_BIG", 100, 8, 150, 3, 2, {0x328, 2, 0, 0xffff}, {0x32a, 2, 0, 0x3c})
+ROW(76,  "FLOATING_FLOOR_LLL_SMALL", 100, 8, 150, 3, 2, {0x328, 2, 0, 0xffff}, {0x32a, 2, 0, 0x3c})
 // ---- COOPRIDE1 (audit G06): the movers the audit listed as ridden. The late-join rows showed most of them run on their own
 // clock (p95 437 units pole lift 142, 62 BFS floating floor 145, 645 diamond lift 135, a turn offset on the rickshaw axles
 // 137 / 152 and the BitS turntable 156, 3113 units Dorrie 168, who swims her loop alone); only the BFS elevator 140, the BFS
@@ -162,7 +165,7 @@ ROW(76,  "FLOATING_FLOOR_LLL_SMALL", 100, 8, 150, 2, 0)
 ROW(140, "FIRE_SEA_ELEVATOR",   100, 8, 150, 3, 2, {0x324, 2, 0, 0xffff}, {0x327, 1, 0, 2})
 ROW(141, "TILTING_PLATFORM_BFS", 100, 8, 150, 3, 9, {0x320, 4, -0x2000, 0x2000}, {0x324, 4, -0x2000, 0x2000}, {0x328, 4, -0x2000, 0x2000}, {0x32c, 4, -0x2000, 0x2000}, {0x330, 4, -0x2000, 0x2000}, {0x334, 4, -0x2000, 0x2000}, {0x338, 4, -0x2000, 0x2000}, {0x33c, 4, -0x2000, 0x2000}, {0x34d, 1, 0, 0xff})
 ROW(142, "POLE_LIFT",           100, 8, 150, 3, 1, {0x354, 2, 0, 0xffff})
-ROW(145, "FLOATING_FLOOR_BFS",  100, 8, 150, 2, 0)
+ROW(145, "FLOATING_FLOOR_BFS",  100, 8, 150, 3, 2, {0x328, 2, 0, 0xffff}, {0x32a, 2, 0, 0x3c})   // COOPDIAMOND2: bob phase and rest timer, as 75 / 76
 ROW(135, "DIAMOND_LIFT",         50, 8, 150, 3, 1, {0x31e, 1, 0, 0xff})
 ROW(137, "RICKSHAW_BDW",        100, 8, 150, 2, 0)
 ROW(152, "RICKSHAW_BS",          50, 8, 150, 2, 0)
