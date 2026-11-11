@@ -1133,6 +1133,14 @@ static int g_grid_defer = 0;     // this frame's grids may be kept for the card
    SM64DS_SMOOTH_DEPTHSNAP=0. The card's grid stage does the same, from the same four floats. */
 static const float kSnapReach = 0.2f;
 static const float kSnapBack = 1.0003f;   /* a hair behind the flat plane, so a flat polygon coplanar with the face (an eye, a screen) and drawn after it wins the tie as it does on the DS */
+/* STAREYES2: A FAN KEEPS ITS OWN DEPTH. The book's FAN (a flat polygon fan laid on a face: the
+   Power Star's eyes) is rounded in its own plane and never lifts, so the snap has nothing to put
+   back; what it did do was push every point kSnapBack behind the plane, 0.03% of the distance.
+   On the star select the camera is about 3936 units out, so that hair is over a unit, and the
+   eyes stand only a fraction of a unit off a star body the book leaves flat (FACET): the eyes
+   went behind the body and the body showed through them. Set by smooth_try around a FAN's
+   patch only; every other patch snaps exactly as before. */
+static thread_local bool g_snap_hold = false;
 static bool snap_enabled() {
     static int on = -1;
     if (on < 0) { const char *e = std::getenv("SM64DS_SMOOTH_DEPTHSNAP"); on = (e && e[0] == '0') ? 0 : 1; }
@@ -1159,7 +1167,7 @@ static bool snap_plane(const SmoothVertex s[3], float pl[4], float *lim) {
 static void smooth_emit_grid_cpu(const float *pts, int tf, const SmoothVertex s[3],
                                  const Mat *xform, const GxTriangle *st_in,
                                  const Mat *proj_in, const float *widen_in,
-                                 bool count_out) {
+                                 bool count_out, bool snap_ok) {
     GxVertex v[SMOOTH_MAX_GRID];
     /* view_to_clip's widen, read once for the grid: present_w()/present_h()
        cannot change between two vertices of one triangle's grid, and the
@@ -1191,7 +1199,7 @@ static void smooth_emit_grid_cpu(const float *pts, int tf, const SmoothVertex s[
     const __m128 one = _mm_set1_ps(1.0f);
     float pl[4] = {0, 0, 0, 0};
     float snap_lim = 0.0f;
-    bool snap_on = persp && snap_enabled() && snap_plane(s, pl, &snap_lim);
+    bool snap_on = snap_ok && persp && snap_enabled() && snap_plane(s, pl, &snap_lim);
     const float pnl = std::sqrt(pl[0] * pl[0] + pl[1] * pl[1] + pl[2] * pl[2]);
     for (int i = 0; i < n; ++i) {
         __m128 vw;                                   // the view-space point, w = 1
@@ -1281,7 +1289,7 @@ void smooth_emit_grid(const float *pts, int tf, const SmoothVertex s[3],
                       const Mat *xform, long pool_off = -1,
                       const float *box6 = 0) {
     if (g_grid_defer && grid_defer_try(pts, pool_off, tf, s, xform, box6)) return;
-    smooth_emit_grid_cpu(pts, tf, s, xform, 0, 0, 0, true);
+    smooth_emit_grid_cpu(pts, tf, s, xform, 0, 0, 0, true, !g_snap_hold);
 }
 
 /* ===========================================================================
@@ -1453,7 +1461,7 @@ static bool grid_defer_try(const float *pts, long pool_off, int tf,
     gr.at = (uint32_t)g.tris.size();
     gr.tf = (uint8_t)tf;
     gr.persp = persp ? 1 : 0;
-    gr.depth_snap = (persp && snap_enabled() && snap_plane(s, gr.pl, &gr.snap_lim)) ? 1 : 0;
+    gr.depth_snap = (!g_snap_hold && persp && snap_enabled() && snap_plane(s, gr.pl, &gr.snap_lim)) ? 1 : 0;
     if (pool_off >= 0) {
         gr.from_pool = 1;
         gr.off = (uint32_t)pool_off;
@@ -1511,7 +1519,7 @@ static void grids_materialize_w(int why) {
         Mat xf;
         if (gr.has_xform) std::memcpy(xf.m, gr.xform, sizeof xf.m);
         smooth_emit_grid_cpu(pts, gr.tf, sv, gr.has_xform ? &xf : 0, &gr.st,
-                             &g.proj, &gr.widen, false);
+                             &g.proj, &gr.widen, false, gr.depth_snap != 0);
     }
     if (src.size() > at)
         g.tris.insert(g.tris.end(), src.begin() + at, src.end());
@@ -2099,6 +2107,11 @@ int smooth_try(const GxVertex &a, const GxVertex &b, const GxVertex &c,
                     g_ck.en[i][0] = v.x * il; g_ck.en[i][1] = v.y * il; g_ck.en[i][2] = v.z * il;
                 }
             }
+            struct SnapHold {   /* STAREYES2: see g_snap_hold */
+                explicit SnapHold(bool on) : was(g_snap_hold) { if (on) g_snap_hold = true; }
+                ~SnapHold() { g_snap_hold = was; }
+                bool was;
+            } snap_hold(ov.cls == SMOOTH_CLASS_FAN);
             if (!smooth_live_mode() && store_eligible(ra, rb, rc) &&
                 smooth_try_store(s, ra, rb, rc, otf, pol, prof, &ov, okeyx))
                 return 1;
@@ -10842,6 +10855,15 @@ void gx_interp_dump_groups(void *fp, int frame) {
                      frame, i, (unsigned long long)G.key, G.nmtx, G.match,
                      G.px, G.py, G.pz, d, e0.cmd, e0.mode, G.has_rel, G.rx,
                      G.ry, G.rz);
+        if (ip_rot_log() >= 3) {   /* every matrix event of the group, and the events it spans */
+            std::fprintf(f, "[interpg]   ev %u..%u mtx", G.ev0, G.ev1);
+            for (int k = 0; k < G.nmtx; ++k) {
+                const IpEv &e = C.ev[C.mtx[G.mtx0 + k]];
+                std::fprintf(f, " %02x/m%d@%d b%d", e.cmd, e.mode, C.mtx[G.mtx0 + k],
+                             C.blend.empty() ? -9 : C.blend[C.mtx[G.mtx0 + k]]);
+            }
+            std::fprintf(f, "\n");
+        }
     }
 }
 

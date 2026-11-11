@@ -12291,6 +12291,7 @@ static void scene_ip_hook_body(int stage, void *fbp, int frame, int tick_game)
         ntr::GxInterpStats ist;
         const long long tcm = ip_qpc();
         g_ip_tick_ok = ntr::gx_interp_commit(data_0209b3ec, why >= 0 ? 1 : 0, &ist);
+        if (ip_trace() >= 3) ntr::gx_interp_dump_groups(stderr, port_rom_frame());   /* the scene's draw groups and their pairing */
         g_mgi_g3d[0] = g_mgi_g3d[1];   /* MGINTERP1: 3D draw groups of the last two ticks */
         g_mgi_g3d[1] = ist.groups;
         {   /* MGHIRES1 survey: ticks whose picture has 3D draw groups, and the most groups in one tick */
