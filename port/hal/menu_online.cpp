@@ -233,13 +233,12 @@ void lobby_sync()
     seen = n;
     g.touch_hold = 1;
     g.padfocus = 0;
-    fprintf(stderr, "[online] the lobby page closed: the press that closed it is held back
-");
+    fprintf(stderr, "[online] the lobby page closed: the press that closed it is held back\n");
 }
 
 void host_press(const char *how)
 {
-    fprintf(stderr, "[online] HOST (%s): the lobby page's Coop / VS choice\n", how);
+    fprintf(stderr, "[online] HOST (%s): a coop room\n", how);
     lobby_page_request_host();
 }
 
@@ -379,8 +378,7 @@ int menu_online_press_main(int elem, int edge)
     }
     if (elem == 1) { if (edge) toggle_on(); return 1; }
     if (elem == 2 && g.on) {
-        if (edge) { fprintf(stderr, "[online] VS plank: a VS room
-"); lobby_page_request_vs(); }      /* PORTMENU1: was the "made in the launcher" note */
+        if (edge) { fprintf(stderr, "[online] VS plank: a VS room\n"); lobby_page_request_vs(); }      /* PORTMENU1: was the "made in the launcher" note */
         return 1;
     }
     if (elem == 0 && g.on) {
