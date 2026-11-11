@@ -134,6 +134,8 @@ struct G {
     // console puts its body <height> units over the host's ghost, still, and lets it fall
     unsigned drop_first = 0, drop_every = 0; int drop_height = 0; unsigned drop_n = 0;
     unsigned long long squished = 0, squish_air = 0;
+    // LAB (SM64DS_HEADBOUNCE_FLAG=<file>): the file exists while a squash runs here (for SM64DS_STACK_BMP_ON pictures)
+    const char *shot_flag = nullptr; bool shot_on = false; unsigned shot_tail = 0;
     // INTERACT9: who is in whose mouth / hands, from the victim's own broadcast
     Attach att[kHubPartySeats];
     // I am eaten through the ROM's own mouth state (else the synthetic hold)
@@ -225,6 +227,7 @@ void read_env() {
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_AT")) g.forge_at = (unsigned)std::atoi(e);
     g.headbounce = env_flag(std::getenv("SM64DS_HEADBOUNCE"), true);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_DROP")) std::sscanf(e, "%u,%u,%d", &g.drop_first, &g.drop_every, &g.drop_height);
+    if (const char *e = std::getenv("SM64DS_HEADBOUNCE_FLAG")) g.shot_flag = e;
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SEAT")) g.lab_seat = std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_LAB_SWING")) g.lab_swing = std::atoi(e);
     if (const char *e = std::getenv("SM64DS_PHIT_EATHOLD")) g.eat_hold = (unsigned)std::atoi(e);
@@ -1395,6 +1398,18 @@ void self_squash_tick(char *me) {
     if (sy == 0x1000) g.self_squashed = false;
     if (g.log > 0 || g.drop_every) std::fprintf(stderr, "[headbounce] f=%u my squash Y scale 0x%x\n", g.frame, (unsigned)sy);
 }
+// LAB: the picture flag, on while any squash runs on this console and 3 frames after.
+void shot_flag_tick() {
+    if (!g.shot_flag) return;
+    bool any = g.self_squashed;
+    for (int i = 0; i < kHubPartySeats && !any; ++i) any = squash_curve(g.squash_at[i]) != 0x1000;
+    if (any) g.shot_tail = 3;
+    const bool want = any || (g.shot_tail && g.shot_tail--);
+    if (want == g.shot_on) return;
+    g.shot_on = want;
+    if (want) { if (FILE *f = std::fopen(g.shot_flag, "wb")) std::fclose(f); }
+    else std::remove(g.shot_flag);
+}
 // LAB: put my body over the host's ghost, still, every <every> frames from <first>.
 void lab_drop(char *me) {
     if (!g.drop_every || comms_hub_my_seat() <= 0 || g.frame < g.drop_first) return;
@@ -1720,6 +1735,7 @@ extern "C" void port_party_hits_frame(void) {
     climb_tick(me);
     self_squash_tick(me);
     if (!g.hold.active() && !g.cv.active) attacker_scan(me);
+    shot_flag_tick();
 }
 
 // Right before the actor walk. A ghost body is held and re-posed by the follower after the frame hook, and the
