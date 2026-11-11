@@ -43,8 +43,10 @@ enum dScMgCurling2_c_AssetId {
 #include "dScMgCurling2_c.h"
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_trig.h"
 #include "nitro/gx/g2.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "nitro/gx/gx_load.h"
 
@@ -81,9 +83,7 @@ struct OamAttr;
 struct Matrix2x2;
 extern void DrawOamSprite(OamAttr *attr, int x, int y, Matrix2x2 *mtx);
 extern void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5);
-extern int RandomIntInternal(int *seed);
 extern int GetGameLanguage(void);
-extern int atan2_hold_d_s_mg_curling2_1(int y, int x);
 extern void SetBg2Offset(int a, int b);
 extern void SetBg0Offset(int a, int b);
 extern void DecompressLZ16(const void *src, void *dst);
@@ -96,9 +96,13 @@ extern void GX_LoadBG3Scr(void *a, u32 b, u32 c);
 extern void GX_LoadBG2Scr(const void *a, u32 b, u32 c);
 extern void GXS_LoadBG2Scr(const void *a, u32 b, u32 c);
 
+/* A random integer in [0, n): the generator's top 15 bits, scaled. */
+static inline u32 MgRandom(u32 n) {
+    return (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * n >> 15;
+}
+
 extern u8 gMainScreenLayers;
 extern u8 gSubScreenLayers;
-extern s16 FX_SinCosTable_[];
 extern unsigned char sCurling2StepXPicks[];
 extern unsigned char sCurling2StepXFastPicks[];
 extern int sCurling2StepModes[];
@@ -302,27 +306,16 @@ void dScMgCurling2_c::StepYRampUp(int entry) {
             mPiece[entry].countdown3 = 0;
     } else {
         mPiece[entry].yIndex = 2;
-        mPiece[entry].countdown3 =
-            (short)(unsigned char)(((0x20 *
-                                     (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >>
-                                       16) &
-                                      0x7fff)) >>
-                                    0xf) +
-                                   0x20);
+        mPiece[entry].countdown3 = (u8)(MgRandom(32) + 0x20);
     }
 }
 
 /* Zero yInc, pick a fresh yTarget and countdown3, set yIndex to 1. */
 void dScMgCurling2_c::StepYRestart(int entry) {
-    unsigned int rnd;
-
     mPiece[entry].yInc = 0;
-    rnd = ((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-    mPiece[entry].yTarget = (((rnd << 4) >> 15) << 4) + 0x300;
+    mPiece[entry].yTarget = (MgRandom(16) << 4) + 0x300;
     mPiece[entry].yIndex = 1;
-    rnd = ((unsigned)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-    rnd = ((rnd << 5) >> 15) + 0x20;
-    mPiece[entry].countdown3 = (unsigned char)rnd;
+    mPiece[entry].countdown3 = (u8)(MgRandom(32) + 0x20);
 }
 
 /* Step the piece, hold while countdown is set (the hold decrements
@@ -383,11 +376,7 @@ void dScMgCurling2_c::StepXPushNeg(int entry) {
     }
 
     mPiece[entry].xIndex = 3;
-    mPiece[entry].countdown2 =
-        (unsigned char)(((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
-                             << 5 >>
-                         0xf) +
-                        0x20);
+    mPiece[entry].countdown2 = (u8)(MgRandom(32) + 0x20);
 }
 
 /* The mirror of StepXPushNeg: same shape, x increment pushed the
@@ -417,10 +406,7 @@ void dScMgCurling2_c::StepXPushPos(int entry) {
     }
 
     *(char *)&mPiece[entry].xIndex = 3;
-    mPiece[entry].countdown2 =
-        (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5) >> 0xf) +
-            0x20 &
-        0xff;
+    mPiece[entry].countdown2 = (u8)(MgRandom(32) + 0x20);
 }
 
 /* Hold for countdown, then zero xInc, pick xIndex from
@@ -433,21 +419,9 @@ void dScMgCurling2_c::StepXPick(int entry) {
         return;
     }
     mPiece[entry].xInc = 0;
-    mPiece[entry].xIndex =
-        sCurling2StepXPicks[(((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
-                                << 1 >>
-                            15];
-    mPiece[entry].countdown =
-        (short)(unsigned char)((0x10 *
-                                (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
-                                 0x7fff)) >>
-                               0xf);
-    mPiece[entry].countdown2 =
-        (short)(unsigned char)(((0x40 *
-                                 (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
-                                  0x7fff)) >>
-                                0xf) +
-                               0x60);
+    mPiece[entry].xIndex = sCurling2StepXPicks[MgRandom(2)];
+    mPiece[entry].countdown = (u8)MgRandom(16);
+    mPiece[entry].countdown2 = (u8)(MgRandom(0x40) + 0x60);
 }
 
 /* Run one piece's xIndex callback, then its yIndex callback.
@@ -549,24 +523,10 @@ void dScMgCurling2_c::StepXPickFast(int entry) {
         return;
     }
     mPiece[entry].xInc = 0;
-    mPiece[entry].yInc =
-        ((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5) >> 0xf)
-         << 4) +
-        0x600;
-    mPiece[entry].xIndex = sCurling2StepXFastPicks
-        [(((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 1 >> 15];
-    mPiece[entry].countdown =
-        (unsigned short)((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff)
-                           << 4) >>
-                          0xf) &
-                         0xff);
-    mPiece[entry].countdown2 =
-        (unsigned short)(((((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) &
-                             0x7fff) *
-                            0x30) >>
-                           0xf) +
-                          0x30) &
-                         0xff);
+    mPiece[entry].yInc = (MgRandom(32) << 4) + 0x600;
+    mPiece[entry].xIndex = sCurling2StepXFastPicks[MgRandom(2)];
+    mPiece[entry].countdown = (u8)MgRandom(16);
+    mPiece[entry].countdown2 = (u8)(MgRandom(0x30) + 0x30);
 }
 
 /* Run one piece's sCurling2StepXFastTable callback, indexed by xIndex. */
@@ -578,9 +538,8 @@ void dScMgCurling2_c::StepXOnly(int entry) {
 /* Pick modeIndex from sCurling2StepModes (1 on one roll in eight)
  * and clear xIndex. */
 void dScMgCurling2_c::PickStepMode(int entry) {
-    unsigned rnd = (unsigned)RandomIntInternal(&data_0209d4b8.value);
+    unsigned roll = MgRandom(8);
     int pick = 0;
-    unsigned roll = ((rnd >> 16) & 0x7fff) << 3 >> 0xf;
     if (roll == 5)
         pick = 1;
     mPiece[entry].modeIndex = sCurling2StepModes[pick];
@@ -596,9 +555,7 @@ void dScMgCurling2_c::StepPieces() {
             unsigned char idx = mPiece[i].modeIndex;
             (((C *)this)->*sCurling2StepModeTable[idx])(i);
             if ((mPiece[i].y >> 0xc) >= 0xc8) {
-                mPiece[i].x =
-                    (((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) << 5 >>
-                    0xf << 0xf;
+                mPiece[i].x = MgRandom(32) << 15;
                 mPiece[i].y = -0x8000;
                 mPiece[i].xIndex = 0;
                 mPiece[i].modeIndex = 0;
@@ -612,13 +569,12 @@ void dScMgCurling2_c::StepPieces() {
  * indices (the second is the first plus one to four, modulo five) and a
  * y spread over the screen. The first x, the y at -0x8000 and the first
  * countdown store are overwritten a few lines later; those dead stores
- * are the ROM's. */
+ * are the ROM's. The sprite1 and countdown draws keep the raw value in
+ * `rnd`: through MgRandom they colour differently (4 and 3-5 words). */
 void dScMgCurling2_c::SeedPieces() {
     int i;
     unsigned int rnd;
     unsigned int v;
-    int q;
-    unsigned int m;
 
     i = 0;
     for (; i < 0x32; i++) {
@@ -640,17 +596,14 @@ void dScMgCurling2_c::SeedPieces() {
 
     i = 0;
     for (; i < 0x32; i++) {
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
-        m = ((rnd >> 16) & 0x7fff) << 5;
-        mPiece[i].x = (int)(m >> 0xf) << 0xf;
+        mPiece[i].x = MgRandom(32) << 15;
         mPiece[i].y = -0x8000;
         mPiece[i].updateEnable = 1;
         mPiece[i].drawEnable = 1;
         mPiece[i].modeIndex = 0;
         mPiece[i].xIndex = 0;
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
-        mPiece[i].sprite0 = (char)(((rnd >> 16) & 0x7fff) * 5 >> 0xf);
+        mPiece[i].sprite0 = MgRandom(5);
 
         rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         /* Own local: `mPiece[i].sprite0 + shift` puts the byte in r0. */
@@ -664,13 +617,9 @@ void dScMgCurling2_c::SeedPieces() {
         rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
         mPiece[i].countdown = (short)(((i & 7) << 6) + (((rnd >> 16) & 0x7fff) * 0x30 >> 0xf));
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
-        m = ((rnd >> 16) & 0x7fff) << 5;
-        mPiece[i].x = (int)(m >> 0xf) << 0xf;
+        mPiece[i].x = MgRandom(32) << 15;
 
-        rnd = (unsigned int)RandomIntInternal(&data_0209d4b8.value);
-        q = (((rnd >> 16) & 0x7fff) * 0x1a) >> 0xf;
-        mPiece[i].y = ((q << 3) - 8) << 0xc;
+        mPiece[i].y = ((MgRandom(0x1a) << 3) - 8) << 0xc;
         mPiece[i].countdown = 0;
     }
 }
@@ -929,7 +878,6 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
     int dy;
     int distance;
     u16 contactAngle;
-    int angleIndex;
 
     for (hitIndex = 0; hitIndex < 11; hitIndex++) {
         if (mStone[hitIndex].active == 0)
@@ -948,11 +896,10 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
             int separationX;
             int separationY;
 
-            angleIndex = (contactAngle >> 4) * 2;
-            contactCos = FX_SinCosTable_[angleIndex + 1];
+            contactCos = FX_CosIdx(contactAngle >> 4);
             separationX = FX_MUL(contactCos, 0x1a);
             mStone[hitIndex].x = mStone[stoneIndex].x + (separationX << 12);
-            contactSin = FX_SinCosTable_[angleIndex];
+            contactSin = FX_SinIdx(contactAngle >> 4);
             separationY = FX_MUL(contactSin, 0x1a);
             mStone[hitIndex].y = mStone[stoneIndex].y + (separationY << 12);
             for (nextIndex = 0; nextIndex < 11; nextIndex++) {
@@ -977,11 +924,10 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
                     int nextSeparationX;
                     int nextSeparationY;
 
-                    angleIndex = (nextContactAngle >> 4) * 2;
-                    nextContactCos = FX_SinCosTable_[angleIndex + 1];
+                    nextContactCos = FX_CosIdx(nextContactAngle >> 4);
                     nextSeparationX = FX_MUL(nextContactCos, 0x1a);
                     mStone[nextIndex].x = mStone[hitIndex].x + (nextSeparationX << 12);
-                    nextContactSin = FX_SinCosTable_[angleIndex];
+                    nextContactSin = FX_SinIdx(nextContactAngle >> 4);
                     nextSeparationY = FX_MUL(nextContactSin, 0x1a);
                     mStone[nextIndex].y = mStone[hitIndex].y + (nextSeparationY << 12);
                     func_02012718(0xe8, mStone[stoneIndex].x);
@@ -1009,7 +955,9 @@ void dScMgCurling2_c::SeparateStones(int stoneIndex) {
  * are read, keeping both loads below that chain. The shared relative-angle
  * and sine/cosine temporaries, pointers to fields written after a call,
  * and hitAngle reference are
- * described in notes/mwccarm-codegen.md 6cz. */
+ * described in notes/mwccarm-codegen.md 6cz. The two relative-angle pairs
+ * index FX_SinCosTable_ by hand: through FX_CosIdx/FX_SinIdx, with or
+ * without the shared index local, the function grows to 0x580. */
 void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
     long long wideContactSin;
     long long wideContactCos;
@@ -1037,7 +985,6 @@ void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
             u16 contactAngle;
             u16 relativeAngle;
             int relativeAngleIndex;
-            int contactAngleIndex;
             int relativeCos;
             int relativeSin;
             int contactSin;
@@ -1059,7 +1006,6 @@ void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
             pHitY = &mStone[hitIndex].y;
             contactAngle = cstd::atan2(dy, dx);
             u16 &hitAngle = mStone[hitIndex].angle;
-            contactAngleIndex = (contactAngle >> 4) * 2;
             relativeAngle = mStone[stoneIndex].angle - contactAngle;
             relativeAngleIndex = (relativeAngle >> 4) * 2;
             relativeCos = FX_SinCosTable_[relativeAngleIndex + 1];
@@ -1071,8 +1017,8 @@ void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
             relativeCos = FX_SinCosTable_[relativeAngleIndex + 1];
             relativeSin = FX_SinCosTable_[relativeAngleIndex];
             hitNormal = FX_MUL(relativeCos, mStone[hitIndex].speed);
-            contactSin = FX_SinCosTable_[contactAngleIndex];
-            contactCos = FX_SinCosTable_[contactAngleIndex + 1];
+            contactSin = FX_SinIdx(contactAngle >> 4);
+            contactCos = FX_CosIdx(contactAngle >> 4);
             hitTangent = FX_MUL(relativeSin, mStone[hitIndex].speed);
             /* Reuse dy/dx for the moving stone's resulting x/y velocity. */
             wideContactCos = (long long)contactCos;
@@ -1127,7 +1073,7 @@ void dScMgCurling2_c::ResolveStoneCollision(int stoneIndex) {
 void dScMgCurling2_c::StoneSpin(int stoneIndex) {
     char *o = (char *)this + stoneIndex * 0x30;
     int heading = ((dScMgCurling2_c *)o)->mStone[0].angle;
-    int cosHeading = FX_SinCosTable_[((heading >> 4) << 1) + 1];
+    int cosHeading = FX_CosIdx(heading >> 4);
     int speed = ((dScMgCurling2_c *)o)->mStone[0].speed;
     long long product = (long long)cosHeading * speed;
     int velocityX = (int)((product + 0x800) >> 12);
@@ -1211,9 +1157,9 @@ void dScMgCurling2_c::StoneSlide(int stoneIndex) {
     pX = &mStone[stoneIndex].x;
     pY = &mStone[stoneIndex].y;
 
-    cosAngle = FX_SinCosTable_[((*pHeading) >> 4) * 2 + 1];
+    cosAngle = FX_CosIdx(*pHeading >> 4);
     *pX += FX_MUL(cosAngle, *pSpeed);
-    sinAngle = FX_SinCosTable_[((*pHeading) >> 4) * 2];
+    sinAngle = FX_SinIdx(*pHeading >> 4);
     *pY += FX_MUL(sinAngle, *pSpeed);
     mStone[stoneIndex].spinAngle += mStone[stoneIndex].spinVel;
 
@@ -1519,11 +1465,9 @@ void dScMgCurling2_c::Scroll() {
     if (scrollIdx == 0xff) {
         scrollIdx = 0;
     } else {
-        idx = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16 & 0x7fff) * 4 >> 15;
+        idx = MgRandom(4);
         if (scrollIdx == idx) {
-            int t = ((u32)RandomIntInternal(&data_0209d4b8.value) >> 16 & 0x7fff) * 3 >> 15;
-            t += 1;
-            idx += t;
+            idx += MgRandom(3) + 1;
             if (idx >= 4)
                 idx -= 4;
         }
