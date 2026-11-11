@@ -33,7 +33,7 @@ struct TtFutaCollisionFilePtr : SharedFilePtr {
 extern TtFutaModelFilePtr data_ov033_021124c8;
 extern TtFutaCollisionFilePtr data_ov033_021124c0;
 
-extern int data_ov033_02111bfc[];
+extern CLPS_Block data_ov033_02111bfc;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */
@@ -79,8 +79,7 @@ s32 daObjTtFuta_c::InitResources() {
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
     void *k = dBgW_Kc::LoadFile(data_ov033_021124c0);
-    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY,
-                          *(CLPS_Block *)data_ov033_02111bfc);
+    mMeshCollider.SetFile((KCL_File *)k, mClsnMat, 0x199, mAngleY, data_ov033_02111bfc);
     return Event::GetBit(0xe) == 0;
 }
 

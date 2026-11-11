@@ -43,7 +43,7 @@ struct SeesawCollisionFilePtr : SharedFilePtr {
 
 extern SeesawModelFile data_ov022_021145a8;
 extern SeesawCollisionFilePtr data_ov022_021145a0;
-extern char data_ov064_0211bacc[];
+extern CLPS_Block data_ov064_0211bacc;
 
 #pragma defer_codegen off
 
@@ -97,8 +97,7 @@ s32 daObjFl_Seesaw_c::InitResources() {
     UpdateClsnPosAndRot();
     char *kcl = dBgW_Kc::LoadFile(data_ov022_021145a0);
     ((dBgW_KcMbg *)(&mMeshCollider))
-        ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY,
-                              *(CLPS_Block *)(data_ov064_0211bacc));
+        ->dBgW_KcMbg::SetFile((KCL_File *)(kcl), mClsnMat, 0x1000, mAngleY, data_ov064_0211bacc);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mSwingStep = -0x10;
     return 1;
