@@ -47,6 +47,10 @@ signed char NumRedCoins(void);
 signed char NumVsStarsObtained(void);    // SILVERCOOP1: the ROM's silver-star sum (the gold star's "== 5" test)
 extern signed char data_0209f310[];       // the silver-star count per player (GiveVsStars)
 int _ZN6Player19func_ov002_020d94ccEv(void *player);   // the ROM's hurt drop of one silver star (SM64DS_SILVER_DROP proof knob)
+extern void *STAR_MARKERS[12];             // 0x0209f40c: the actors showing a star glint on the minimap (COOPSILVER3 proof log)
+void _ZN13daObjBlockL_c4KillEv(char *self);            // the brick block's break (SM64DS_SILVER_BRICK proof knob)
+void func_ov084_021296cc(void *goomba);                // the Goomba's silver star reward (SM64DS_SILVER_GOOMBA proof knob)
+void func_ov084_02129498(void *goomba);                // the Goomba's removal at the end of its death
 void _ZN12daStarBase_c27SpawnRedCoinStarIfNecessaryEv(void *self);
 unsigned DeathTable_GetBit(int id);
 void _ZN5Event6SetBitEj(unsigned b);
@@ -135,7 +139,38 @@ bool g_sil_pit_nomarker = false;
 bool g_sil_drop_nofree = false;    // SM64DS_SILVER_DROP=<frame>:nofree: no star marker counts as free during that drop (proof knob: zero free markers)   // ...and first forget its marker, so the ROM destroys even the dropper's own star
 long long g_sil_goto_wall = 0;     // SM64DS_SILVER_GOTO_WALL=<wall ms>: at that machine time put my player on the lowest-slot silver star once (proof knob: two consoles on one star at one moment)
 bool g_sil_off = false;            // SM64DS_SPAWN_OFF=silver: must-fail control, no silver sharing at all
-struct SilStats { unsigned long long credit_take, credit_ann, credit_snap, capped, drop_sent, drop_applied, drop_local, ghost_take, sent_snap, recv_snap, fell, fell_take; } g_sst = {};
+struct SilStats { unsigned long long credit_take, credit_ann, credit_snap, capped, drop_sent, drop_applied, drop_local, ghost_take, sent_snap, recv_snap, fell, fell_take,
+                  auth_sent, auth_recv, auth_adopt, auth_late, auth_left; } g_sst = {};
+// COOPSILVER3: one console's count is THE count: the lowest seat in the group that says a count (the "leader"). Not the
+// group owner: two consoles that enter a level apart can each stand as owner of the same group (seen in row cntF: seat 0
+// owner=0, seat 1 owner=1, each the other's member), and then nobody would follow anybody. The leader keeps counting the way SILVERCOOP1 does (its own takes and
+// drops, a friend's take seen as his copy going, a friend's DROP) and says its sum to the group on every change and once a
+// second (SILVER COUNT). A member that has heard the owner stops crediting friends' takes and drops itself (it would count
+// them a second time next to the owner's number) and takes the owner's sum, but only once its own last count change (a take
+// or a hurt drop here) is kSilGraceMs old, so a number the owner said before it heard of that change is never taken.
+// A member whose owner never says a count (an older build) keeps counting on its own, as before.
+unsigned g_sil_brick_frame = 0; bool g_sil_brick_done = true;     // SM64DS_SILVER_BRICK=<frame>: break (daObjBlockL_c::Kill) the first brick block holding a silver star tag (proof knob)
+unsigned g_sil_goomba_frame = 0; bool g_sil_goomba_done = true;   // SM64DS_SILVER_GOOMBA=<frame>: the first silver star Goomba gives its star and is removed, the ROM's two calls (proof knob)
+unsigned g_sil_skew_frame = 0; int g_sil_skew = 0; bool g_sil_skew_done = true;   // SM64DS_SILVER_SKEW=<frame>:<delta>: my count moves by delta with nothing said, a lost message's drift (proof knob)
+bool g_sil_auth_off = false;       // SM64DS_SILVER_AUTH_OFF=1: must-fail control, every console keeps its own count (the 1.0.2 behaviour)
+enum : unsigned { kSilGraceMs = 1500, kSilBeatMs = 1000, kSilSeqStaleMs = 3000, kSilCreditMs = 1300, kSilUnsyncMs = 6000, kSilAloneFrames = 300 };
+// REVIEW-C fixes:
+// (1) a console says a count only once it knows the room's number ("synced"): it applied the owner's snapshot, or took a
+//     leader's count, or stood alone in the group for kSilAloneFrames, or heard no count at all for kSilUnsyncMs after it
+//     armed (nobody who knows is around). Until then it follows any member that says a count, whatever its seat, so a late
+//     lowest seat never wipes the room's count with its own 0.
+// (2) a console that led through a hitch (no word from the leader for kSilSeqStaleMs) gives the lead back the moment the
+//     leader is heard again, and takes a LOWER number from it only from the second count it hears after that.
+// (3) while the leader has been quiet for more than kSilCreditMs a follower credits friends' takes and drops itself again,
+//     so a take in that window is not lost; the leader's next number settles it either way.
+bool g_sil_synced = false; unsigned g_sil_armed_t = 0; int g_sil_alone_frames = 0;
+unsigned g_sil_led_t = 0; bool g_sil_led = false;                 // when I last said a count as leader
+bool g_sil_regain = false; unsigned g_sil_regain_t = 0;          // the leader is back after I led: lower numbers wait a beat
+unsigned g_sil_change_t = 0; bool g_sil_changed = false;     // comms time of my last count change by a game event here
+int g_sil_sent_sum = -1; unsigned g_sil_beat_t = 0, g_sil_burst_t = 0; int g_sil_burst = 0; uint16_t g_scseq = 0;
+bool g_sil_auth_have = false; int g_sil_auth_sum = 0; int g_sil_auth_owner = -1;    // the last count heard, and the leader seat I follow
+unsigned g_cnt_heard_t[kCoopMaxSeats]; bool g_cnt_heard[kCoopMaxSeats];             // when each member last said a count
+uint16_t g_lastcseq[kCoopMaxSeats]; unsigned g_lastcseq_t[kCoopMaxSeats];
 
 // announced actors
 struct Net {
@@ -215,6 +250,10 @@ void read_env() {
         g_sil_off = std::strstr(o, "silver") != nullptr;
     }
     if (const char *e = std::getenv("SM64DS_SILVER_GOTO_WALL")) g_sil_goto_wall = std::atoll(e);
+    if (const char *e = std::getenv("SM64DS_SILVER_AUTH_OFF")) g_sil_auth_off = *e && *e != '0';
+    if (const char *e = std::getenv("SM64DS_SILVER_SKEW")) { unsigned f = 0; int d = 0; if (std::sscanf(e, "%u:%i", &f, &d) == 2) { g_sil_skew_frame = f; g_sil_skew = d; g_sil_skew_done = false; } }
+    if (const char *e = std::getenv("SM64DS_SILVER_BRICK")) { unsigned f = 0; if (std::sscanf(e, "%u", &f) == 1) { g_sil_brick_frame = f; g_sil_brick_done = false; } }
+    if (const char *e = std::getenv("SM64DS_SILVER_GOOMBA")) { unsigned f = 0; if (std::sscanf(e, "%u", &f) == 1) { g_sil_goomba_frame = f; g_sil_goomba_done = false; } }
     if (const char *e = std::getenv("SM64DS_SILVER_DROP")) {
         unsigned f = 0;
         if (std::sscanf(e, "%u", &f) == 1) { g_sil_drop_frame = f; g_sil_drop_done = false; }
@@ -309,6 +348,8 @@ bool send_ctl(int sub, const void *p, int n) { return coop_send_ctl(sub, p, n); 
 bool live_key_is(const CoopKeyWire &k) { int l = -1, a = 0; return coop_group_key(&l, &a) && (int)k.level == l && (int)k.act == a; }
 bool ready_for(const CoopKeyWire &k) { return g_have_key && (int)k.level == g_lvl && (int)k.act == g_act; }
 bool is_member(int seat) { return seat >= 0 && seat < kCoopMaxSeats && ((coop_group_member_mask() >> seat) & 1u); }
+// COOPSILVER3: the silver count's leader: the lowest member seat below mine that said a count in the last kSilSeqStaleMs, else me.
+int sil_lead();
 
 // ---------------------------------------------------------------------------
 // Acks (net ids that are gone: a late SPAWN of one is dropped).
@@ -571,12 +612,37 @@ void sil_write(int v) {
     data_0209f310[me] = (signed char)v;
     g_sil_last = v;
 }
+void sil_touch() { g_sil_change_t = comms_hub_now_ms(); g_sil_changed = true; }
+// A member following the owner's count (COOPSILVER3): friends' takes and drops reach it as the owner's sum, never here.
+int sil_lead() {
+    const unsigned now = comms_hub_now_ms();
+    const int top = g_sil_synced ? g_my : kCoopMaxSeats;     // not synced yet: any member that says a count leads me
+    for (int s = 0; s < top && s < kCoopMaxSeats; ++s)
+        if (s != g_my && g_cnt_heard[s] && is_member(s) && (unsigned)(now - g_cnt_heard_t[s]) <= kSilSeqStaleMs) return s;
+    return g_my;
+}
+void sil_set_synced(const char *why) {
+    if (g_sil_synced) return;
+    g_sil_synced = true;
+    if (g_log) std::fprintf(stderr, "[coopsilver] synced (%s): sum=%d frame=%u wall=%lld\n", why, sil_total(), g_frames, wall_ms());
+}
+bool sil_follow() {
+    if (g_sil_auth_off || g_sil_off || g_my < 0) return false;
+    const int lead = sil_lead();
+    if (lead == g_my) return false;
+    return (unsigned)(comms_hub_now_ms() - g_cnt_heard_t[lead]) <= kSilCreditMs;   // a quiet leader: I count friends myself
+}
 void sil_credit(int n, const char *why) {
     const int me = sil_me();
     if (me < 0 || n <= 0) return;
+    if (sil_follow()) {
+        ++g_sst.auth_left;
+        if (g_log) std::fprintf(stderr, "[coopsilver] credit %s +%d left to seat %d's count: mine=%d sum=%d frame=%u wall=%lld\n", why, n, g_sil_auth_owner, (int)data_0209f310[me], sil_total(), g_frames, wall_ms());
+        return;
+    }
     const int room = kSilGold - sil_total();
     if (n > room) { g_sst.capped += (unsigned)(n - (room > 0 ? room : 0)); n = room; }
-    if (n > 0) sil_write((int)data_0209f310[me] + n);
+    if (n > 0) { sil_write((int)data_0209f310[me] + n); sil_touch(); }
     if (g_log)
         std::fprintf(stderr, "[coopsilver] credit %s +%d: mine=%d sum=%d frame=%u wall=%lld\n", why, n > 0 ? n : 0, (int)data_0209f310[me], sil_total(), g_frames, wall_ms());
 }
@@ -612,6 +678,7 @@ void sil_send_drops(unsigned now) {
 void sil_arm() {
     const int me = sil_me();
     g_nsil = 0;
+    g_sil_armed_t = comms_hub_now_ms(); g_sil_alone_frames = 0;
     g_sil_last = me >= 0 ? (int)data_0209f310[me] : 0;
     unsigned m = g_sil_wm;
     for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) if (a_uid(a) > m) m = a_uid(a);
@@ -639,13 +706,14 @@ void sil_scan() {
         const char *by = *(const char *const *)(a + 0x438);
         const unsigned st = *(const unsigned *)(a + 0x440);
         if (by && st >= 5u && st != 8u && st != 9u) {
-            if (by == pl) t->mine = true;
+            if (by == pl) { t->mine = true; sil_touch(); }      // COOPSILVER3: my take is under way: the leader's number waits
             else if (is_player_ptr(by)) t->other = true;
         }
     }
     g_sil_wm = maxuid;
     // my own count: a rise is my take (the ROM's), a fall with a new dropped star is my hurt drop, told to the group
     const int cur = (int)data_0209f310[me];
+    if (cur != g_sil_last) sil_touch();
     if (cur < g_sil_last) {
         const int n = g_sil_last - cur;
         if (new_drops > 0) sil_queue_drop(n);
@@ -675,7 +743,13 @@ void sil_scan() {
 void apply_silver_drop(int seat, const SpSilverDropWire &w) {
     const int me = sil_me();
     if (me < 0 || g_sil_last < 0) return;
+    if (sil_follow()) {
+        ++g_sst.auth_left;
+        if (g_log) std::fprintf(stderr, "[coopsilver] seat %d dropped %d: left to seat %d's count: mine=%d sum=%d frame=%u wall=%lld\n", seat, (int)w.n, g_sil_auth_owner, (int)data_0209f310[me], sil_total(), g_frames, wall_ms());
+        return;
+    }
     sil_write((int)data_0209f310[me] - (int)w.n);
+    sil_touch();
     ++g_sst.drop_applied;
     if (g_log) std::fprintf(stderr, "[coopsilver] seat %d dropped %d: mine=%d sum=%d frame=%u wall=%lld\n", seat, (int)w.n, (int)data_0209f310[me], sil_total(), g_frames, wall_ms());
 }
@@ -683,8 +757,69 @@ void apply_silver_snap() {
     if (!g_sil_snap_have || g_sil_snap_done || g_sil_last < 0) return;
     g_sil_snap_done = true;
     const int have = sil_total();
+    if (!g_sil_auth_off) {
+        if (g_log) std::fprintf(stderr, "[coopsilver] snapshot from the owner: sum=%d (mine %d) wall=%lld\n", g_sil_snap_sum, have, wall_ms());
+        if (sil_lead() != g_my) return;          // a member already says the count: its number syncs me (row rlate0: a snapshot here, then leading with 0, wiped the room)
+        if (g_sil_snap_sum > have) { ++g_sst.credit_snap; sil_credit(g_sil_snap_sum - have, "snapshot"); }
+        sil_set_synced("owner's snapshot");
+        return;
+    }
     if (g_log) std::fprintf(stderr, "[coopsilver] snapshot from the owner: sum=%d (mine %d) wall=%lld\n", g_sil_snap_sum, have, wall_ms());
     if (g_sil_snap_sum > have) { ++g_sst.credit_snap; sil_credit(g_sil_snap_sum - have, "snapshot"); }
+}
+
+// COOPSILVER3: the owner says its count; a member takes it.
+int sil_clamped_total() { int s = sil_total(); if (s < 0) s = 0; if (s > kSilGold) s = kSilGold; return s; }
+void sil_auth_send(unsigned now) {
+    if (g_sil_off || g_sil_auth_off || !g_armed || g_sil_last < 0) return;
+    if (sil_lead() != g_my) { g_sil_sent_sum = -1; g_sil_burst = 0; return; }
+    if (!others_here()) {
+        if (++g_sil_alone_frames >= (int)kSilAloneFrames) sil_set_synced("alone in the group");
+        return;
+    }
+    g_sil_alone_frames = 0;
+    if (!g_sil_synced) {
+        bool heard = false;
+        for (int s = 0; s < kCoopMaxSeats; ++s) heard = heard || (g_cnt_heard[s] && (unsigned)(now - g_cnt_heard_t[s]) <= kSilUnsyncMs);
+        if (heard || (unsigned)(now - g_sil_armed_t) < kSilUnsyncMs) return;     // not knowing the room's number, I say nothing
+        sil_set_synced("no count heard from anybody");
+    }
+    const int sum = sil_clamped_total();
+    const bool changed = sum != g_sil_sent_sum;
+    if (changed) { g_sil_burst = 3; g_sil_burst_t = now; g_sil_sent_sum = sum; }
+    bool go = false;
+    if (g_sil_burst > 0 && (int)(now - g_sil_burst_t) >= 0) { go = true; --g_sil_burst; g_sil_burst_t = now + kResendMs; }
+    else if ((unsigned)(now - g_sil_beat_t) >= kSilBeatMs) go = true;
+    if (!go) return;
+    SpSilverCountWire w; std::memset(&w, 0, sizeof w);
+    ++g_scseq; if (!g_scseq) g_scseq = 1;
+    w.key = wkey(); w.seq = g_scseq; w.sum = (uint8_t)sum;
+    if (send_world(kSpWorldSilverCount, &w, sizeof w)) ++g_sst.auth_sent;
+    g_sil_beat_t = now; g_sil_led_t = now; g_sil_led = true;
+    if (changed && g_log) std::fprintf(stderr, "[coopsilver] count said (leader): sum=%d seq=%u frame=%u wall=%lld\n", sum, (unsigned)w.seq, g_frames, wall_ms());
+}
+void sil_auth_apply(unsigned now) {
+    if (!g_sil_auth_have) return;
+    if (!g_armed || g_sil_last < 0) return;               // kept until my level is up
+    g_sil_auth_have = false;
+    if (g_sil_auth_off || g_sil_off || g_sil_auth_owner != sil_lead() || g_sil_auth_owner == g_my) return;
+    const int me = sil_me();
+    if (me < 0) return;
+    if (g_sil_changed && (unsigned)(now - g_sil_change_t) < kSilGraceMs) { ++g_sst.auth_late; return; }   // said before the owner heard of my change
+    const int have = sil_total();
+    if (g_sil_regain && (unsigned)(now - g_sil_regain_t) > kSilBeatMs + kSilGraceMs) g_sil_regain = false;
+    if (g_sil_regain && g_sil_auth_sum < have && (unsigned)(now - g_sil_regain_t) <= kSilBeatMs + 2 * kResendMs) {     // REVIEW-C (2): a lower number waits one beat
+        ++g_sst.auth_late;
+        if (g_log) std::fprintf(stderr, "[coopsilver] leader seat %d back after my lead: its lower sum %d waits a beat (mine %d) frame=%u wall=%lld\n",
+                                g_sil_auth_owner, g_sil_auth_sum, have, g_frames, wall_ms());
+        return;
+    }
+    sil_set_synced("leader's count");
+    if (have == g_sil_auth_sum) return;
+    const int mine = (int)data_0209f310[me];
+    sil_write(mine + (g_sil_auth_sum - have));
+    ++g_sst.auth_adopt;
+    if (g_log) std::fprintf(stderr, "[coopsilver] count from leader seat %d: sum %d -> %d (mine %d -> %d) frame=%u wall=%lld\n", g_sil_auth_owner, have, sil_total(), mine, (int)data_0209f310[me], g_frames, wall_ms());
 }
 
 // ---------------------------------------------------------------------------
@@ -824,6 +959,12 @@ void scan(unsigned now) {
             n.sil_fell = true; n.a = nullptr;
             ++g_sst.fell;
             if (g_log) std::fprintf(stderr, "[coopsilver] my copy fell id=%d/%d (no take seen): not a take, nothing sent frame=%u wall=%lld\n", (int)n.origin, (int)n.counter, g_frames, wall_ms());
+            continue;
+        }
+        if (n.cls == 179 && !n.sil_took && !g_sil_off) {
+            // COOPSILVER3: a silver star unloaded with its area: no copy here now, but a friend's later take (his GONE) still counts
+            n.sil_fell = true; n.a = nullptr;
+            if (g_log) std::fprintf(stderr, "[coopsilver] my copy unloaded with its area id=%d/%d area=%d mine=%d: a later take still counts frame=%u wall=%lld\n", (int)n.origin, (int)n.counter, n.area, my_area, g_frames, wall_ms());
             continue;
         }
         n.gone = true; n.gsends = 0; n.gnext = now;
@@ -1172,6 +1313,29 @@ void on_world(int seat, int sub, const unsigned char *p, int len, void *) {
         push_in(kEvSilverDrop, seat, &w, (int)sizeof w, now);
         return;
     }
+    case kSpWorldSilverCount: {         // COOPSILVER3
+        if (!sp_silver_count_validate(p, len)) { ++g_st.drop_bad; return; }
+        SpSilverCountWire w; std::memcpy(&w, p, sizeof w);
+        if (!live_key_is(w.key)) { ++g_st.drop_group; return; }
+        if (!is_member(seat)) { ++g_st.drop_member; return; }
+        if (g_sil_off || g_sil_auth_off) { ++g_st.drop_off; return; }
+        uint16_t &last = g_lastcseq[seat];
+        if ((unsigned)(now - g_lastcseq_t[seat]) > kSilSeqStaleMs) last = 0;    // the owner's build restarted its numbering
+        if (!sp_seq_newer(w.seq, last)) { ++g_st.drop_old; return; }
+        last = w.seq; g_lastcseq_t[seat] = now;
+        ++g_sst.auth_recv;
+        const int lead_before = sil_lead();
+        g_cnt_heard[seat] = true; g_cnt_heard_t[seat] = now;
+        if (seat != sil_lead()) return;              // a higher seat that has not heard me yet: I lead
+        if (lead_before == g_my && g_sil_led && (unsigned)(now - g_sil_led_t) <= kSilSeqStaleMs + kSilBeatMs) {   // REVIEW-C (2)
+            g_sil_regain = true; g_sil_regain_t = now; g_sil_sent_sum = -1; g_sil_burst = 0;
+            if (g_log) std::fprintf(stderr, "[coopsilver] seat %d leads again: lead given back sum=%d wall=%lld\n", seat, (int)w.sum, wall_ms());
+        }
+        if (g_sil_auth_owner != seat && g_log)
+            std::fprintf(stderr, "[coopsilver] following seat %d's count: sum=%d wall=%lld\n", seat, (int)w.sum, wall_ms());
+        g_sil_auth_owner = seat; g_sil_auth_have = true; g_sil_auth_sum = w.sum;     // taken in the frame (sil_auth_apply)
+        return;
+    }
     default:
         ++g_st.drop_bad;
     }
@@ -1377,8 +1541,16 @@ void new_level() {
     g_nsil = 0; g_sil_last = -1; g_sil_wm = 0; g_sil_snap_have = false; g_sil_snap_done = false; g_sil_snap_sum = 0;
     std::memset(g_so, 0, sizeof g_so);
     std::memset(g_lastsseq, 0, sizeof g_lastsseq);
+    std::memset(g_lastcseq, 0, sizeof g_lastcseq); std::memset(g_lastcseq_t, 0, sizeof g_lastcseq_t);
+    g_sil_changed = false; g_sil_sent_sum = -1; g_sil_burst = 0; g_sil_beat_t = 0;
+    g_sil_auth_have = false; g_sil_auth_owner = -1;
+    std::memset(g_cnt_heard, 0, sizeof g_cnt_heard); std::memset(g_cnt_heard_t, 0, sizeof g_cnt_heard_t);
+    g_sil_synced = false; g_sil_alone_frames = 0; g_sil_led = false; g_sil_regain = false; g_sil_regain_t = 0;
     g_sil_drop_done = g_sil_drop_frame == 0;
     g_sil_pit_done = g_sil_pit_frame == 0;
+    g_sil_brick_done = g_sil_brick_frame == 0;
+    g_sil_skew_done = g_sil_skew_frame == 0;
+    g_sil_goomba_done = g_sil_goomba_frame == 0;
     g_early_sil = keep_sil;
 }
 
@@ -1495,6 +1667,7 @@ void on_frame(unsigned now) {
     if (g_frames >= 3) scan(now);
     if (g_armed) { sil_scan(); apply_silver_snap(); }
     drain_in(now);
+    sil_auth_apply(now);
     if (g_sil_goto_wall > 0 && g_armed && my_player() && wall_ms() >= g_sil_goto_wall) {    // proof knob: one star, one moment, every console
         char *best = nullptr;
         for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a))
@@ -1514,6 +1687,37 @@ void on_frame(unsigned now) {
         const int r = _ZN6Player19func_ov002_020d94ccEv(my_player());
         for (int i = 0; i < nk; ++i) *(unsigned char *)(mk[i] + 0x1d8) = keep[i];
         std::fprintf(stderr, "[coopsilver-knob] hurt drop on my player: %d (mine=%d) wall=%lld\n", r, sil_me() >= 0 ? (int)data_0209f310[sil_me()] : -1, wall_ms());
+    }
+    if (!g_sil_skew_done && g_armed && g_frames >= g_sil_skew_frame && sil_me() >= 0) {   // COOPSILVER3 proof knob: a silent drift
+        g_sil_skew_done = true;
+        const int was = (int)data_0209f310[sil_me()];
+        sil_write(was + g_sil_skew);
+        std::fprintf(stderr, "[coopsilver-knob] skew: mine %d -> %d sum=%d, nothing said frame=%u wall=%lld\n", was, (int)data_0209f310[sil_me()], sil_total(), g_frames, wall_ms());
+    }
+    if (!g_sil_brick_done && g_armed && g_frames >= g_sil_brick_frame) {     // COOPSILVER3 proof knob: a silver star brick block breaks here
+        g_sil_brick_done = true;
+        char *blk = nullptr;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && !blk; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            const unsigned c = a_cls(a);
+            if ((c != 15 && c != 16 && c != 17) || a_dead(a)) continue;
+            const char *tag = *(const char *const *)(a + 0x328);
+            if (tag && a_cls(tag) == 0x144) blk = a;
+        }
+        if (blk) _ZN13daObjBlockL_c4KillEv(blk);
+        std::fprintf(stderr, "[coopsilver-knob] brick: %s slot=%d frame=%u wall=%lld\n", blk ? "broke the silver star block" : "no block with a silver star tag",
+                     blk ? (int)a_slot(blk) : -1, g_frames, wall_ms());
+    }
+    if (!g_sil_goomba_done && g_armed && g_frames >= g_sil_goomba_frame) {   // COOPSILVER3 proof knob: a silver star Goomba is beaten here
+        g_sil_goomba_done = true;
+        char *g = nullptr;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && !g; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            const unsigned c = a_cls(a);
+            if (c < 200 || c > 202 || a_dead(a)) continue;
+            if (*(const signed char *)(a + 0x465) >= 0) g = a;
+        }
+        if (g) { func_ov084_021296cc(g); func_ov084_02129498(g); }
+        std::fprintf(stderr, "[coopsilver-knob] goomba: %s slot=%d frame=%u wall=%lld\n", g ? "beat the silver star Goomba" : "no Goomba holding a glint",
+                     g ? (int)a_slot(g) : -1, g_frames, wall_ms());
     }
     if (!g_sil_pit_done && g_armed && g_frames >= g_sil_pit_frame) {        // proof knob: a dropped star falls out of the level
         for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
@@ -1560,6 +1764,7 @@ void on_frame(unsigned now) {
     send_blocks(now);
     send_net(now);
     sil_send_drops(now);
+    sil_auth_send(now);
     if (coop_group_i_am_owner())
         for (Job &j : g_job) {
             if (!j.on || (int)(now - j.next) < 0) continue;
@@ -1575,6 +1780,19 @@ void on_frame(unsigned now) {
                      me >= 0 ? (int)data_0209f310[me] : -1, sil_total(), g_nsil, g_sst.credit_take, g_sst.credit_ann, g_sst.credit_snap, g_sst.capped,
                      g_sst.drop_sent, g_sst.drop_applied, g_sst.drop_local, g_sst.ghost_take, g_sst.sent_snap, g_sst.recv_snap,
                      g_sst.fell, g_sst.fell_take, g_frames);
+        {
+            char gl[160]; int o = 0, n = 0;
+            for (int m = 0; m < 12; ++m)
+                if (const char *g = (const char *)STAR_MARKERS[m]) {
+                    ++n;
+                    if (o < 140) o += std::snprintf(gl + o, sizeof gl - (size_t)o, " %d:%u/%d", m, a_cls(g), (int)a_slot(g));
+                }
+            gl[o < (int)sizeof gl ? o : (int)sizeof gl - 1] = 0;
+            std::fprintf(stderr, "[coopsilver] glints %d:%s frame=%u\n", n, gl, g_frames);
+        }
+        std::fprintf(stderr, "[coopsilver] auth synced=%d lead=%d owner=%d iam=%d follow=%d said=%llu heard=%llu adopted=%llu late=%llu left=%llu\n",
+                     (int)g_sil_synced, sil_lead(), coop_group_owner(), (int)coop_group_i_am_owner(), (int)sil_follow(), g_sst.auth_sent, g_sst.auth_recv, g_sst.auth_adopt,
+                     g_sst.auth_late, g_sst.auth_left);
     }
 }
 
