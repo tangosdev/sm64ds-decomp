@@ -440,24 +440,13 @@ void daKpaFire_c::func_ov060_021171e8() {
 
 /* Sideways wobble, called by the variant 2 handler and the variant 6/7
  * handler. Forms a phase angle ((mTickCount + mPhaseOffset) & 0x3f) << 10 --
- * 64 steps of a full turn (0x10000) -- and nudges x and z by products of two
- * sine-table entries each, `<< 2` then `/ 0x1000`:
- *   x += table[2h]     * table[2p]
- *   z += table[2h + 1] * table[2p + 1]
- * with h = mPrevAngleY >> 4 (the heading, read unsigned) and p = phase >> 4. */
+ * 64 steps of a full turn (0x10000) -- and nudges x by sin(heading) *
+ * sin(phase) and z by cos(heading) * cos(phase), each `<< 2` then `/ 0x1000`
+ * (the heading is mPrevAngleY). */
 void daKpaFire_c::func_ov060_0211712c() {
-    short phase = (short)(((this->mTickCount + this->mPhaseOffset) & 0x3f) << 10);
-    int *px = &this->mPosX;
-    int *pz;
-    *px = *px + ((FX_SinIdx((int)*(unsigned short *)&this->mPrevAngleY >> 4) *
-                  FX_SinIdx((u16)phase >> 4))
-                 << 2) /
-                    0x1000;
-    pz = &this->mPosZ;
-    *pz = *pz + ((FX_CosIdx((int)*(unsigned short *)&this->mPrevAngleY >> 4) *
-                  FX_CosIdx((u16)phase >> 4))
-                 << 2) /
-                    0x1000;
+    s16 phase = ((mTickCount + mPhaseOffset) & 0x3f) << 10;
+    mPosX += ((FX_SinIdx((u16)mPrevAngleY >> 4) * FX_SinIdx((u16)phase >> 4)) << 2) / 0x1000;
+    mPosZ += ((FX_CosIdx((u16)mPrevAngleY >> 4) * FX_CosIdx((u16)phase >> 4)) << 2) / 0x1000;
 }
 
 /* Variant 6 and 7 Behavior: a flame that falls, lands, burns down and bursts.
@@ -545,9 +534,11 @@ void daKpaFire_c::func_ov060_02116d78() {
     if (mPrevAngleX > 0x800)
         mPrevAngleX -= 0x200;
 
-    mSpeedX = FX_CosIdx((u16)mPrevAngleY >> 4) * (mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 896;
+    mSpeedX =
+        FX_CosIdx((u16)mPrevAngleY >> 4) * (mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 896;
     mVertSpeed = -mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4);
-    mSpeedZ = FX_SinIdx((u16)mPrevAngleY >> 4) * (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 896;
+    mSpeedZ =
+        FX_SinIdx((u16)mPrevAngleY >> 4) * (-mHorzSpeed * FX_SinIdx((u16)mPrevAngleX >> 4)) / 896;
     mPosX += mSpeedX;
     mPosY += mVertSpeed;
     mPosZ += mSpeedZ;
