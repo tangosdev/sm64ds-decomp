@@ -2,6 +2,7 @@
 #pragma long_calls on
 #include "types.h"
 #include "nitro/os/system.h"
+#include "nitro/os/thread.h"
 #include "private/fs_views.h"
 
 typedef struct FSFile FSFile;
@@ -9,7 +10,6 @@ typedef struct FSFile FSFile;
 extern "C" {
 
 extern int FSi_SendCommand(FSFile *self, int a);
-extern void OS_SleepThread(unsigned short *self);
 extern int FSi_ExecuteSyncCommand(FSFile *);
 extern int FSi_ReadFileCore(FSFile *p_file, void *dst, int len, int async);
 

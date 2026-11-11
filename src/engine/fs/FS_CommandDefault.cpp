@@ -17,6 +17,7 @@
  */
 #include "types.h"
 #include "private/fs_views.h"
+#include "nitro/os/thread.h"
 
 typedef struct FSFile FSFile;
 
@@ -90,7 +91,6 @@ typedef struct FSiSyncReadParam {
 int FSi_TranslateCommand(FSFile *p_file, int command);
 void FS_InitFile(void *p_file);
 void MI_CpuCopy8(const void *src, void *dst, u32 size);
-void OS_SleepThread(u16 *queue);
 extern const char data_0209a044[]; /* ":/" */
 
 void FSi_ReadTable(FSiSyncReadParam *p, void *dst, u32 len);

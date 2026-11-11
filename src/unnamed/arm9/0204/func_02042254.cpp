@@ -2,6 +2,7 @@
 
 #include "private/arm9_a1fc0_file_share.h"
 #include "nitro/os/system.h"
+#include "nitro/os/thread.h"
 #include "private/fs_views.h"
 
 typedef struct FSFile FSFile;
@@ -12,7 +13,6 @@ extern char data_02099e6c[]; /* "rom" */
 extern char data_020a2400[];
 
 extern FSArchive *FS_FindArchive(const char *name, int name_len);
-extern void OS_SleepThread(unsigned short *self);
 extern int FS_OpenFileDirect(char *p_file, FSArchive *p_arc, u32 image_top, u32 image_bottom,
                              u32 file_index);
 extern int FS_ReadFile(FSFile *file, void *dst, int len);

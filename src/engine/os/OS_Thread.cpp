@@ -235,7 +235,7 @@ BOOL OS_IsThreadTerminated(const OSThread *thread) {
     return thread->state == OS_THREAD_STATE_TERMINATED;
 }
 
-void OS_SleepThread(u16 *queue) {
+void OS_SleepThread(OSThreadQueue *queue) {
     OSIntrMode enabled = OS_DisableInterrupts();
     OSThread *currentThread = *data_020a612c;
     if (queue != 0) {
@@ -246,7 +246,7 @@ void OS_SleepThread(u16 *queue) {
     OS_RestoreInterrupts(enabled);
 }
 
-void OS_WakeupThread(u16 *queue) {
+void OS_WakeupThread(OSThreadQueue *queue) {
     OSIntrMode enabled = OS_DisableInterrupts();
     u32 mask = *queue;
     if (mask != 0) {
