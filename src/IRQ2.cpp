@@ -20,7 +20,7 @@
  */
 
 #include "types.h"
-#include "IRQ.h"
+#include "nitro/os/interrupt.h"
 #include "nitro/os/thread.h"
 
 extern "C" {
@@ -58,7 +58,7 @@ extern "C" void func_0201a4e4(void)
 {
     data_0209d4fc = 0;
     data_0209d500 = 0;
-    IRQ::SetIRQHandler(1, IRQ::VBlankHandler);
+    OS_SetIrqFunction(1, IRQ::VBlankHandler);
     data_0209d4dc = 1;
 }
 

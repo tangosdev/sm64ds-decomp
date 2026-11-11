@@ -89,7 +89,7 @@ typedef struct FSiSyncReadParam {
 
 int FSi_TranslateCommand(FSFile *p_file, int command);
 void FS_InitFile(void *p_file);
-void CpuCopy8(const void *src, void *dst, u32 size);
+void MI_CpuCopy8(const void *src, void *dst, u32 size);
 void OS_SleepThread(u16 *queue);
 extern const char data_0209a044[]; /* ":/" */
 
@@ -98,7 +98,7 @@ void FSi_SeekDirDirect(FSFile *p_dir, u32 id);
 int FSi_StrNICmp(const u8 *str1, const u8 *str2, int len);
 }
 
-#include "IRQ.h"
+#include "nitro/os/system.h"
 
 extern "C" {
 
@@ -123,11 +123,11 @@ void FSi_ReadTable(FSiSyncReadParam *p, void *dst, u32 len) {
         p_arc->flag &= ~FS_ARCHIVE_FLAG_IS_SYNC;
         break;
     case FS_RESULT_PROC_ASYNC: {
-        u32 saved = IRQ::Disable();
+        OSIntrMode saved = OS_DisableInterrupts();
         while (FSi_IsArchiveSync(p_arc)) {
             OS_SleepThread(&p_arc->sync_q);
         }
-        IRQ::Restore(saved);
+        OS_RestoreInterrupts(saved);
         break;
     }
     }
@@ -463,9 +463,9 @@ int FSi_GetPathCommand(FSFile *p_file) {
             else
                 nb = 3;
 
-            CpuCopy8(p_arc->name.ptr, buf, nb);
+            MI_CpuCopy8(p_arc->name.ptr, buf, nb);
             pos += nb;
-            CpuCopy8(data_0209a044, buf + pos, 2);
+            MI_CpuCopy8(data_0209a044, buf + pos, 2);
         }
 
         /* The rest is written backwards from the end of the buffer. */
@@ -483,7 +483,7 @@ int FSi_GetPathCommand(FSFile *p_file) {
             }
             {
                 int n = entry.name_len + 1;
-                CpuCopy8(entry.name, (buf + count) - n, n);
+                MI_CpuCopy8(entry.name, (buf + count) - n, n);
                 count -= n;
             }
         } else {
@@ -504,7 +504,7 @@ int FSi_GetPathCommand(FSFile *p_file) {
                     for (;;) {
                         if (entry.is_directory != 0 && entry.dir_id.own_id == dir_id) {
                             int n = entry.name_len;
-                            CpuCopy8(entry.name, (buf + count) - n, n);
+                            MI_CpuCopy8(entry.name, (buf + count) - n, n);
                             count -= n;
                             break;
                         }

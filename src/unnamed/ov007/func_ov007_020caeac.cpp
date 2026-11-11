@@ -1,28 +1,13 @@
 //cpp
 #include "common.h"
 #include "nitro/fx/fx.h"
+#include "nitro/gx/g3imm_cmd.h"
 
 extern "C" {
 
-#define REG_BEGIN (*(vu32 *)0x4000500)
-#define REG_END   (*(vu32 *)0x4000504)
-#define REG_NRM   (*(vu32 *)0x4000484)
-#define REG_TEX   (*(vu32 *)0x4000488)
-#define REG_VTX   (*(vu32 *)0x400048C)
-
-static inline void G3_Vtx(s16 x, s16 y, s16 z) {
-    REG_VTX = (u16)x | ((u16)y << 16);
-    REG_VTX = (u16)z;
-}
-
-static inline void G3_Tex(s32 s, s32 t) {
-    REG_TEX = (u16)s | ((u32)(u16)t << 16);
-}
-
 #define SEND_VTX(p) G3_Vtx((s16)((p)->x >> shift), (s16)((p)->y >> shift), (s16)((p)->z >> shift))
-#define SEND_NRM(q) \
-    REG_NRM = ((((q)->x) >> 3) & 0x3FF) | (((((q)->y) >> 3) & 0x3FF) << 10) | (((((q)->z) >> 3) & 0x3FF) << 20)
-#define SEND_TEX(s, t) G3_Tex(((s) << 8) >> 16, ((t) << 8) >> 16)
+#define SEND_NRM(q) G3_Normal((q)->x, (q)->y, (q)->z)
+#define SEND_TEX(s, t) G3_TexCoord((s), (t))
 
 /* Texture-mapped triangle-strip emitter for the ov007 water/cloth grid: one
  * strip per grid row, alternating direction each row. The per-column texcoord
@@ -80,7 +65,7 @@ void func_ov007_020caeac(Vector3 *vtx, Vector3_16 *nrm, s32 *tu, s32 *tv, s32 w,
             ua = u0 + oa;
             ob = (dir == 1) ? half : 0;
             ub = u0 + ob;
-            REG_BEGIN = 2;
+            G3_Begin(GX_BEGIN_TRIANGLE_STRIP);
             for (j = 0; j < w1; j++) {
                 s32 idx;
                 s32 vidx;
@@ -110,7 +95,7 @@ void func_ov007_020caeac(Vector3 *vtx, Vector3_16 *nrm, s32 *tu, s32 *tv, s32 w,
                 p2 = (Vector3 *)(vstride + (s32)p);
                 SEND_VTX(p2);
             }
-            REG_END = 0;
+            G3_End();
             v += dv;
             dir = -dir;
             rowbase += w1;

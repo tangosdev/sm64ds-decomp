@@ -11,7 +11,7 @@
  * - daPly_c::Bounce and daPly_c::Hurt stay mangled (Fix12<int> by value).
  * - GetFloorResult / GetWallResult return the raw word; a dBgPi* return
  *   disagrees with the definitions, so the callers still cast.
- *   TouchesWater and cstd::fdiv are the const method and the divide.
+ *   TouchesWater and FX_Div are the const method and the divide.
  * - holder->mPosX/Y/Z in place of the word triple changes EnterState7 and
  *   UpdateState6.
  * - UpdateState0 keeps mPhase++. mPhase = (u8)(mPhase + 1) is 0x144
@@ -36,6 +36,7 @@ enum daGmch_c_AssetId {
 
 #include "types.h"
 #include "math/Approach.h"
+#include "nitro/fx/fx_cp.h"
 /* BEFORE daGmch_c.h, and load-bearing: common.h and math/Matrix.h both define
    Matrix4x3 under one guard and whichever is seen FIRST stands.  InitResources
    assigns IDENTITY_MATRIX4X3 whole into mMatrix; under common.h flat s32[12]
@@ -164,10 +165,6 @@ extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *actor, int a, int b, void *v, int c);
-}
-
-namespace cstd {
-int fdiv(int a, int b);
 }
 
 /* One definition, two ROM variants (the D2 mwccarm also emits is
@@ -328,7 +325,7 @@ void daGmch_c::ApplySlopeToVertSpeed(void *clsn)
             int termX = FX_MUL(floorNormal.x, velX);
             int termZ = FX_MUL(floorNormal.z, velZ);
             int dot = termX + termZ;
-            int slope = cstd::fdiv(dot, floorNormal.y);
+            int slope = FX_Div(dot, floorNormal.y);
             mVertSpeed = -(slope + 0x8000);
         }
     }
@@ -443,7 +440,7 @@ int daGmch_c::UpdateState7()
    reload and the bytes keep it. */
 int daGmch_c::EnterState7()
 {
-    extern s16 data_02082214[];
+    extern s16 FX_SinCosTable_[];
 
     Vector3 rayStart;
     dActor_c *holder;
@@ -471,11 +468,11 @@ int daGmch_c::EnterState7()
     mPosZ = holderPos[2];
 
     angleIdx = ((u16)mAngleY >> 4);
-    trig = data_02082214[angleIdx * 2];
+    trig = FX_SinCosTable_[angleIdx * 2];
     mPosX = mPosX + FX_MUL(trig, 0x50000);
     mPosY = mPosY + 0x50000;
     angleIdx = ((u16)mAngleY >> 4);
-    trig = data_02082214[angleIdx * 2 + 1];
+    trig = FX_SinCosTable_[angleIdx * 2 + 1];
     mPosZ = mPosZ + FX_MUL(trig, 0x50000);
 
     holder = mHolder;

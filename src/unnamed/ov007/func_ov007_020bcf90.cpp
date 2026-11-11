@@ -1,5 +1,5 @@
 //cpp
-#include "G3X.h"
+#include "nitro/gx/g3x.h"
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
 #include "Ov007Settings.h"
@@ -42,9 +42,9 @@ void func_ov007_020bcf90(void) {
         drawModel = 0;
     }
     func_ov007_020c93b4(WORK->paletteBufs[0]);
-    G3X::Reset();
-    G3X::ResetMtxStack();
-    G3X::SetClearColor(0x7fff, 0, 0x7fff, 0x3f, true);
+    G3X_Reset();
+    G3X_ResetMtxStack();
+    G3X_SetClearColor(0x7fff, 0, 0x7fff, 0x3f, true);
     func_ov007_020b2160(1);
     switch (s0->currentState) {
     case 0:

@@ -240,7 +240,7 @@ void dActor_c::AfterCleanupResources(u32 vfSuccess)
  * 0x02010fd4  size 0x240 */
 extern "C" {
 u8 IsAreaShowing(int areaId);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern int data_0209fc68; /* nonzero forces the actor to think anyway */
 extern Matrix4x3 data_0209b3ec; /* world -> camera */
 extern dClipper data_0209f43c;  /* the dClipper instance */
@@ -274,7 +274,7 @@ int dActor_c::BeforeBehavior()
             tmp.x = mPosX >> 3;
             tmp.y = (mPosY + mClipOffsetY) >> 3;
             tmp.z = mPosZ >> 3;
-            MulVec3Mat4x3(&tmp, &data_0209b3ec, &mCamSpacePos);
+            MTX_MultVec43(&tmp, &data_0209b3ec, &mCamSpacePos);
         }
         if (mFlags & 0x10003) {
             int r = data_0209f43c.ClipSphere(mCamSpacePos, mClipRadius, &mClipResult);
@@ -455,12 +455,12 @@ void dActor_c::func_02010da4() {
 /* ROM ordinal 75 -- dActor_c::UpdatePosWithOnlySpeed(dCc_c *)
  * 0x02010d40  size 0x64 */
 extern "C" {
-void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
+void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *c);
 }
 /* Adds the velocity (mSpeedX, mVertSpeed, mSpeedZ) to mPos, then the
    cylinder's horizontal push-out, then clamps to the world bounds. */
 void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
-    AddVec3(&mPos, (Vector3 *)&mSpeedX, &mPos);
+    VEC_Add(&mPos, (Vector3 *)&mSpeedX, &mPos);
     if (clsn != 0) {
         mPosX += clsn->pushback.x;
         mPosZ += clsn->pushback.z;
@@ -975,7 +975,7 @@ Matrix4x3 *dActor_c::UpdateCarry(daPly_c &player, const Vector3 &vec) {
     dExtSimpleModel_c *body = (dExtSimpleModel_c *)func_ov002_020e496c(&player);
     Matrix4x3 *bones = body->data.transforms;
     data_020a0e68 = body->mat4x3;
-    MulMat4x3Mat4x3(&bones[14], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&bones[14], &data_020a0e68, &data_020a0e68);
     t = *(Vector3 *)&data_020a0e68.m[9];
     mPrevAngleY = player.mAngleY;
     mAngleY = mPrevAngleY;

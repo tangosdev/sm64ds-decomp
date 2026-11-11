@@ -34,6 +34,7 @@ enum d_a_obj_wl_polelift_AssetId {
 #include "dBgCh_Gnd.h"
 #include "math/MtxStack.h"
 #include "SaveBlock.h"
+#include "nitro/fx/fx_cp.h"
 
 /* The file-scope object at the end of this file constructs the resource
  * handle (model file 0x6db). mwcc emits __sinit_d_a_obj_wl_polelift.cpp
@@ -45,21 +46,16 @@ struct PoleliftModelFile : SharedFilePtr {
     ~PoleliftModelFile();
 };
 
-namespace cstd {
-int fdiv(int a, int b);
-}
-
 extern "C" {
 u16 DecIfAbove0_Short(u16 *timer);
 void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-int LenVec3(const Vector3 *v);
+int VEC_Mag(const Vector3 *v);
 void Vec3_MulScalar(Vector3 *out, const Vector3 *a, int scale);
-void SubVec3(Vector3 *out, Vector3 *a, Vector3 *b);
+void VEC_Subtract(Vector3 *out, Vector3 *a, Vector3 *b);
 
 void func_ov026_02111234(daObjWlPolelift_c *actor);
 void func_ov026_021112a4(daObjWlPolelift_c *actor);
 
-extern SaveBlock data_0209caa0;
 extern Vector3 data_ov026_02113a9c;
 extern PoleliftModelFile data_ov026_02113ea0;
 }
@@ -124,16 +120,16 @@ s32 daObjWlPolelift_c::Behavior()
         path.GetNode(node, current);
         path.GetNode(prevNode, prevNodeIdx);
         Vec3_Sub(&delta, &mPos, &node);
-        length = LenVec3(&delta);
+        length = VEC_Mag(&delta);
         if (length == 0 || length <= 0xa000) {
             mPosX = node.x;
             moved = 1;
             mPosY = node.y;
             mPosZ = node.z;
         } else {
-            scale = cstd::fdiv(0xa000, length);
+            scale = FX_Div(0xa000, length);
             Vec3_MulScalar(&step, &delta, scale);
-            SubVec3(&mPos, &step, &mPos);
+            VEC_Subtract(&mPos, &step, &mPos);
         }
 
         if (moved) {

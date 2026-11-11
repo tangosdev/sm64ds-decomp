@@ -65,12 +65,12 @@ enum {
 };
 
 extern signed char gCurrentSublevel;
-extern short data_02082214[];
+extern short FX_SinCosTable_[];
 /* Second particle parameter per segment: 0xe61 + i * 0x689. */
 extern short data_ov095_02136f98[];
 
 extern "C" {
-extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
+extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void Vec3_Add(Vector3 *out, const Vector3 *a, const Vector3 *b);
 }
 
@@ -122,7 +122,7 @@ int daObjFlamethrower_c::InitResources() {
             dst.y = zero;
             dst.z = zero;
             offset.z = data_ov095_02136fb0[i];
-            MulVec3Mat4x3(&offset, &mTransform, &dst);
+            MTX_MultVec43(&offset, &mTransform, &dst);
             if (im1 < 0) {
                 Vec3_Add(&firstPos, (const Vector3 *)&mPosX, &dst);
                 ((daObjFlamethrower_c *)rowBase)->mFlamePositions[0].x = firstPos.x;
@@ -245,7 +245,7 @@ int daObjFlamethrower_c::Behavior() {
                     dst[1] = zero;
                     dst[2] = zero;
                     in[2] = data_ov095_02136fb0[i];
-                    MulVec3Mat4x3((Vector3 *)in, &mTransform, (Vector3 *)dst);
+                    MTX_MultVec43((Vector3 *)in, &mTransform, (Vector3 *)dst);
                     if (im1 < 0) {
                         Vec3_Add((Vector3 *)sum, (const Vector3 *)&mPosX, (const Vector3 *)dst);
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].x = sum[0];
@@ -259,7 +259,7 @@ int daObjFlamethrower_c::Behavior() {
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].z = sum2[2];
                     }
                     if (gCurrentSublevel == kBigBoosHaunt) {
-                        s16 wave = data_02082214[(((u16)(s16)wavePhase) >> 4) * 2];
+                        s16 wave = FX_SinCosTable_[(((u16)(s16)wavePhase) >> 4) * 2];
                         ((daObjFlamethrower_c *)ppos)->mFlamePositions[0].y =
                             mPosY + FX_MUL(wave, -0xaa000);
                     }

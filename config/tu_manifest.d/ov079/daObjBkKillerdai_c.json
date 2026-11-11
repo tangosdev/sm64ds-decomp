@@ -516,24 +516,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@666",
+      "from": "@597",
       "to": "data_ov079_0212831c",
-      "evidence": "compiler temp mapped to 0x0212831c by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp mapped to 0x0212831c by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @666 to @597 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@667",
+      "from": "@598",
       "to": "data_ov079_02128328",
-      "evidence": "compiler temp mapped to 0x02128328 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp mapped to 0x02128328 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @667 to @598 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@668",
+      "from": "@599",
       "to": "data_ov079_02128334",
-      "evidence": "compiler temp mapped to 0x02128334 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp mapped to 0x02128334 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @668 to @599 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@669",
+      "from": "@600",
       "to": "data_ov079_02128310",
-      "evidence": "compiler temp mapped to 0x02128310 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp mapped to 0x02128310 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @669 to @600 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

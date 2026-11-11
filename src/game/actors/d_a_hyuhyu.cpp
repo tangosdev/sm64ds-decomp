@@ -35,7 +35,7 @@
  *   0210d9c0 are shared ov002 files the cloud also claims. symbols.txt has
  *   no recovered names for any of them.
  * - func_ov002_020aea30 (fire hit), func_02012694 (sound at a
- *   camera-space position), data_02082214 (sin/cos pairs) and
+ *   camera-space position), FX_SinCosTable_ (sin/cos pairs) and
  *   data_0209e650 (random seed) keep linker names.
  */
 
@@ -65,7 +65,7 @@ extern SharedFilePtr data_ov002_0210d9c0;
 extern daHyuhyu_c_State data_ov091_021356b0; /* cloud: blowing */
 extern daHyuhyu_c_State data_ov091_021356c0; /* gust: flying */
 extern daHyuhyu_c_State data_ov091_021356d0; /* cloud: waiting */
-extern s16 data_02082214[];                  /* sin/cos pairs */
+extern s16 FX_SinCosTable_[];                /* sin/cos pairs */
 
 /* C helpers with no shared header. */
 extern "C" {
@@ -78,7 +78,7 @@ s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 int ApproachAngle(s16 *cur, s16 target, int a, int b, int c);
 void Vec3_Asr(Vector3 *dst, Vector3 *src, int n);
-void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *res);
+void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
 }
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
@@ -316,9 +316,9 @@ int daHyuhyu_c::StateBlowMain() {
         func_02012694(0x164, &mCamSpacePos);
 
     if ((u16)(mAnmModel.currFrame >> 12) > 0x1e) {
-        rot.x = data_02082214[((u16)mAngleY >> 4) * 2];
+        rot.x = FX_SinCosTable_[((u16)mAngleY >> 4) * 2];
         rot.y = 0;
-        rot.z = data_02082214[((u16)mAngleY >> 4) * 2 + 1];
+        rot.z = FX_SinCosTable_[((u16)mAngleY >> 4) * 2 + 1];
 
         pos.y = pos.y + 0x28000;
 
@@ -378,7 +378,7 @@ int daHyuhyu_c::StateGustFlyMain() {
     mPrevAngleX -= 0x80;
     Matrix4x3_FromRotationY(&data_020a0e68, mPrevAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mPrevAngleX);
-    MulVec3Mat4x3(&fwd, &data_020a0e68, (Vector3 *)&mSpeedX);
+    MTX_MultVec43(&fwd, &data_020a0e68, (Vector3 *)&mSpeedX);
     if ((u16)mStateTimer == 0 || mWithMeshClsn.IsOnGround() != 0 || mWithMeshClsn.IsOnWall() != 0 ||
         (mFlags & 8))
         MarkForDestruction();

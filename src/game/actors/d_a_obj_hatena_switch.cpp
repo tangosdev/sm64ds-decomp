@@ -94,7 +94,6 @@ extern CLPS_Block data_ov002_0210d8b4;
 extern CLPS_Block data_ov002_0210d774;
 extern u8 data_0209d684;
 extern u8 data_0209d660;
-extern SaveBlock data_0209caa0;
 
 /*
  * Every instruction the cartridge has here falls out of the one `new`.

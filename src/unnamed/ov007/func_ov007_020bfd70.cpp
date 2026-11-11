@@ -3,8 +3,8 @@
  *
  * The point at `pos` is transformed by the camera's viewMatrix into a local
  * camera-space triple. The camera's 16-bit fovy, reduced by >> 4, indexes the
- * arm9 SINE_TABLE (data_02082214) in PAIRS: the even half multiplies the absolute depth
- * out[2] to give the denominator, and cstd::fdiv divides the odd half by it. Everything
+ * arm9 SINE_TABLE (FX_SinCosTable_) in PAIRS: the even half multiplies the absolute depth
+ * out[2] to give the denominator, and FX_Div divides the odd half by it. Everything
  * is 1.12 fixed point, so each product is rounded with + 0x800 and shifted down by 12.
  * The resulting factor scales the x and y components, and the last two lines land them
  * on the screen: x times 0x60 about the 0x80 centre column, y negated about the 0x60
@@ -26,17 +26,14 @@
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
 #include "Ov007Camera.h"
-
-namespace cstd {
-int fdiv(int, int);
-}
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
-void MulVec3Mat4x3(void* v, void* m, void* out);
+void MTX_MultVec43(void *v, void *m, void *out);
 
 void func_ov007_020bfd70(Ov007Camera *cam, void *pos, int *outX, int *outY) {
     int out[3];
-    MulVec3Mat4x3(pos, &cam->viewMatrix, out);
+    MTX_MultVec43(pos, &cam->viewMatrix, out);
     int z = out[2];
     if (z < 0)
         z = -z;
@@ -44,7 +41,7 @@ void func_ov007_020bfd70(Ov007Camera *cam, void *pos, int *outX, int *outY) {
     int sinv = FX_SinIdx(ang);
     int cosv = FX_CosIdx(ang);
     int r = FX_MUL(sinv, z);
-    int f = cstd::fdiv(cosv, r);
+    int f = FX_Div(cosv, r);
     int a = FX_MUL(f, out[1]);
     int b = FX_MUL(f, out[0]);
     outX[0] = ((b * 0x60) >> 0xc) + 0x80;

@@ -490,14 +490,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@362",
+      "from": "@340",
       "to": "@84",
-      "evidence": "emitted model registration-node temp collides with an existing configured @363; @84 is unused in every module's symbols.txt on origin/main and shorter than the emitted spelling"
+      "evidence": "emitted model registration-node temp collides with an existing configured @363; @84 is unused in every module's symbols.txt on origin/main and shorter than the emitted spelling Re-keyed from @362 to @340 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@363",
+      "from": "@341",
       "to": "@85",
-      "evidence": "emitted collision registration-node temp collides with an existing configured @364; @85 is unused in every module's symbols.txt on origin/main and shorter than the emitted spelling"
+      "evidence": "emitted collision registration-node temp collides with an existing configured @364; @85 is unused in every module's symbols.txt on origin/main and shorter than the emitted spelling Re-keyed from @363 to @341 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "relocations": [

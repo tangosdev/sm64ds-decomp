@@ -5,7 +5,7 @@
   "promoted_source": "src/engine/heap/ExpandingHeapAllocator.cpp",
   "status": "promoted",
   "boundary_confidence": "high",
-  "boundary_evidence": "Contiguous .text span 0x0204e084..0x0204e964: the eighteen ExpandingHeapAllocator members plus HeapAllocator::Destroy, Heap::CreateExpandingHeapAllocator and MemoryNode::Target's constructor. Left edge begins exactly where NestedHeapIterator's span ends, right edge ends where SolidHeapAllocator::Reallocate begins.",
+  "boundary_evidence": "Contiguous .text span 0x0204e084..0x0204e964: NitroSystem's NNS_FND_expheap.c, its public API from NNS_FndGetSizeForMBlockExpHeap down to NNS_FndCreateExpHeapEx followed by its helpers RecycleRegion..GetRegionOfMBlock, exactly the file order of pret's and the Sonic Rush Adventure decomp's copies reversed, with the unused API deadstripped. Left edge begins exactly where NestedHeapIterator's span (NNS_FND_list.c + NNS_FND_heapcommon.c) ends, right edge ends where the frame heap's NNS_FndResizeForMBlockFrmHeap begins.",
   "sections": [
     {
       "name": ".text",
@@ -15,140 +15,140 @@
   ],
   "functions": [
     {
-      "symbol": "_ZN22ExpandingHeapAllocator14SizeofInternalEPv",
+      "symbol": "NNS_FndGetSizeForMBlockExpHeap",
       "address": "0x0204e084",
       "size": "0x8",
       "ordinal": 0,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator14SizeofInternalEPv.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj",
+      "symbol": "NNS_FndVisitAllocatedForExpHeap",
       "address": "0x0204e08c",
       "size": "0x54",
       "ordinal": 1,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator9GetNodeIDEv",
+      "symbol": "NNS_FndGetGroupIDForExpHeap",
       "address": "0x0204e0e0",
       "size": "0x8",
       "ordinal": 2,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator9GetNodeIDEv.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator9SetNodeIDEj",
+      "symbol": "NNS_FndSetGroupIDForExpHeap",
       "address": "0x0204e0e8",
       "size": "0x10",
       "ordinal": 3,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator9SetNodeIDEj.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi",
+      "symbol": "NNS_FndGetAllocatableSizeForExpHeapEx",
       "address": "0x0204e0f8",
       "size": "0x88",
       "ordinal": 4,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator10MemoryLeftEv",
+      "symbol": "NNS_FndGetTotalFreeSizeForExpHeap",
       "address": "0x0204e180",
       "size": "0x28",
       "ordinal": 5,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator10MemoryLeftEv.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator10DeallocateEPv",
+      "symbol": "NNS_FndFreeToExpHeap",
       "address": "0x0204e1a8",
       "size": "0x40",
       "ordinal": 6,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator10DeallocateEPv.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator10ReallocateEPvj",
+      "symbol": "NNS_FndResizeForMBlockExpHeap",
       "address": "0x0204e1e8",
       "size": "0x188",
       "ordinal": 7,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator10ReallocateEPvj.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator8AllocateEji",
+      "symbol": "NNS_FndAllocFromExpHeapEx",
       "address": "0x0204e370",
       "size": "0x44",
       "ordinal": 8,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator8AllocateEji.cpp"
     },
     {
-      "symbol": "_ZN13HeapAllocator7DestroyEv",
+      "symbol": "NNS_FndDestroyExpHeap",
       "address": "0x0204e3b4",
       "size": "0xc",
       "ordinal": 9,
       "legacy_source": "src/_ZN13HeapAllocator7DestroyEv.cpp"
     },
     {
-      "symbol": "_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj",
+      "symbol": "NNS_FndCreateExpHeapEx",
       "address": "0x0204e3c0",
       "size": "0x4c",
       "ordinal": 10,
       "legacy_source": "src/_ZN5mHeap6Heap_t28CreateExpandingHeapAllocatorEPvjj.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE",
+      "symbol": "RecycleRegion",
       "address": "0x0204e40c",
       "size": "0xf8",
       "ordinal": 11,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator17AllocateBackwardsEjj",
+      "symbol": "AllocFromTail",
       "address": "0x0204e504",
       "size": "0xc4",
       "ordinal": 12,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator17AllocateBackwardsEjj.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator16AllocateForwardsEjj",
+      "symbol": "AllocFromHead",
       "address": "0x0204e5c8",
       "size": "0xc8",
       "ordinal": 13,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator16AllocateForwardsEjj.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt",
+      "symbol": "AllocUsedBlockFromFreeBlock",
       "address": "0x0204e690",
       "size": "0x198",
       "ordinal": 14,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocatorC1EPvj",
+      "symbol": "InitExpHeap",
       "address": "0x0204e828",
       "size": "0x88",
       "ordinal": 15,
       "legacy_source": "src/_ZN22ExpandingHeapAllocatorC1EPvj.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt",
+      "symbol": "InitMBlock",
       "address": "0x0204e8b0",
       "size": "0x30",
       "ordinal": 16,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_",
+      "symbol": "InsertMBlock",
       "address": "0x0204e8e0",
       "size": "0x30",
       "ordinal": 17,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_.cpp"
     },
     {
-      "symbol": "_ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_",
+      "symbol": "RemoveMBlock",
       "address": "0x0204e910",
       "size": "0x28",
       "ordinal": 18,
       "legacy_source": "src/_ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_.cpp"
     },
     {
-      "symbol": "_ZN10MemoryNode6TargetC1EPS_",
+      "symbol": "GetRegionOfMBlock",
       "address": "0x0204e938",
       "size": "0x2c",
       "ordinal": 19,
@@ -157,19 +157,8 @@
   ],
   "data": [],
   "bss": [],
-  "compiler_only_output": [
-    {
-      "symbol": "_ZN22ExpandingHeapAllocatorC2EPvj",
-      "disposition": "deadstrip",
-      "reason": "mwccarm emits the unused base-object constructor beside the licensed C1; the ROM has no configured C2 home and nothing references it."
-    },
-    {
-      "symbol": "_ZN10MemoryNode6TargetC2EPS_",
-      "disposition": "deadstrip",
-      "reason": "mwccarm emits the unused base-object constructor beside the licensed C1; the ROM has no configured C2 home and nothing references it."
-    }
-  ],
-  "notes": "Folded from twenty legacy shards; source definitions run ROM-descending because mwccarm emits .text in reverse source order.",
+  "compiler_only_output": [],
+  "notes": "Folded from twenty legacy shards; source definitions run ROM-descending because mwccarm emits .text in reverse source order. Rewritten as NNS_FND_expheap.c: the coined ExpandingHeapAllocator and MemoryNode classes are retired.",
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
@@ -179,19 +168,8 @@
     "functions_matched": 20,
     "functions_declared": 20,
     "compilerOnlyOutput": {
-      "requested": [
-        "_ZN22ExpandingHeapAllocatorC2EPvj",
-        "_ZN10MemoryNode6TargetC2EPS_"
-      ],
-      "deadstripped": [
-        "_ZN10MemoryNode6TargetC2EPS_",
-        "_ZN22ExpandingHeapAllocatorC2EPvj"
-      ],
-      "droppedSections": [
-        32,
-        33,
-        38
-      ],
+      "requested": [],
+      "deadstripped": [],
       "data": [],
       "dataExternalized": []
     },

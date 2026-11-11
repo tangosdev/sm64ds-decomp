@@ -78,10 +78,6 @@
  * scalar `local extern:` with its reason.
  */
 
-namespace Memory {
-void operator_delete2(void *);
-}
-
 struct dExtAnmModel_c : dExtSimpleModel_c, dExtFrameCtrl_c {
     BCA_File *file;            /* 0x60 */
 
@@ -103,17 +99,6 @@ struct dExtAnmModel_c : dExtSimpleModel_c, dExtFrameCtrl_c {
     dExtAnmModel_c();
     void SetAnim(BCA_File *animFile, int flags, Fix12i speed, u16 startFrame);
     void Copy(const dExtAnmModel_c &src, char *newFile);
-
-    /* ITS OWN, TO RESOLVE AN AMBIGUITY MULTIPLE INHERITANCE CREATES. dExtAnmModel_c
-       derives from dExtSimpleModel_c (so dExtModel_c) and from dExtFrameCtrl_c, and both bases
-       declare operator delete, so an inherited one is "ambiguous access to
-       name found: dExtModel_c::operator delete and dExtFrameCtrl_c::operator delete".
-       Declaring it here picks the same deallocator both bases name, and also
-       satisfies the rule in include/dActor_c.h that mwcc only inlines the member
-       when it is in the class or its immediate base. */
-    void operator delete(void *ptr) {
-        Memory::operator_delete2(ptr);
-    }
 };
 
 #ifndef SM64DS_PLATFORM_PC

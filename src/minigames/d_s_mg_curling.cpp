@@ -42,26 +42,10 @@ enum dScMgCurling_c_AssetId {
 #include "PlayerInput.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
-#include "G2x.h"
+#include "nitro/gx/g2.h"
 #include "LevelRng.h"
-
-namespace G2 {
-void *GetBG2CharPtr(void);
-}
-
-namespace G2S {
-unsigned GetBG2CharPtr(void);
-}
-
-namespace GX {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
-
-namespace GXS {
-void LoadBGPltt(const void *p, u32 a, u32 b);
-void LoadOBJPltt(const void *p, u32 a, u32 b);
-}
+#include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 
 /* `C` is the receiver of the pointer-to-member state tables. It must stay
  * incomplete: mwccarm picks the pointer-to-member layout from whether the
@@ -121,8 +105,8 @@ extern void DecompressLZ16(const void *src, void *dst);
 extern void *LoadFile(int handle);
 extern void Deallocate(void *ptr);
 extern void Ov004_Deallocate(void *p);
-extern void func_020563d4(const void *src, u32 offset, u32 count);
-extern void func_02056374(const void *src, u32 offset, u32 count);
+extern void GX_LoadBG2Scr(const void *src, u32 offset, u32 count);
+extern void GXS_LoadBG2Scr(const void *src, u32 offset, u32 count);
 
 extern unsigned char sCurlingBitAStates[];
 extern unsigned char sCurlingBitBStates[];
@@ -911,23 +895,23 @@ void dScMgCurling_c::ResolveStoneCollision(int stoneIndex) {
              * reads, with or without an index local, reallocate registers
              * across the function (57-99 words). */
             angleIndex = (mStone[stoneIndex].angle >> 4) * 2;
-            movingVelocityX = FX_MUL(data_02082214[angleIndex + 1], mStone[stoneIndex].speed);
-            movingVelocityY = FX_MUL(data_02082214[angleIndex], mStone[stoneIndex].speed);
+            movingVelocityX = FX_MUL(FX_SinCosTable_[angleIndex + 1], mStone[stoneIndex].speed);
+            movingVelocityY = FX_MUL(FX_SinCosTable_[angleIndex], mStone[stoneIndex].speed);
             pHitAngle = &mStone[hitIndex].angle;
             angleIndex = (mStone[hitIndex].angle >> 4) * 2;
-            hitVelocityX = FX_MUL(data_02082214[angleIndex + 1], mStone[hitIndex].speed);
-            hitVelocityY = FX_MUL(data_02082214[angleIndex], mStone[hitIndex].speed);
+            hitVelocityX = FX_MUL(FX_SinCosTable_[angleIndex + 1], mStone[hitIndex].speed);
+            hitVelocityY = FX_MUL(FX_SinCosTable_[angleIndex], mStone[hitIndex].speed);
             if (hitVelocityY == 0)
                 hitVelocityY = movingVelocityY >> 1;
             /* sin/cos of -contactAngle rotate into the contact frame; sin/cos of
              * +contactAngle rotate back out. */
             angleIndex = (relativeAngle >> 4) * 2;
-            inverseContactSin = data_02082214[angleIndex];
-            inverseContactCos = data_02082214[angleIndex + 1];
+            inverseContactSin = FX_SinCosTable_[angleIndex];
+            inverseContactCos = FX_SinCosTable_[angleIndex + 1];
             relativeAngle = -relativeAngle;
             angleIndex = (relativeAngle >> 4) * 2;
-            contactSin = data_02082214[angleIndex];
-            contactCos = data_02082214[angleIndex + 1];
+            contactSin = FX_SinCosTable_[angleIndex];
+            contactCos = FX_SinCosTable_[angleIndex + 1];
 
             /* Normal and tangential components of each velocity. */
             movingNormal = FX_MUL(inverseContactCos, movingVelocityX);
@@ -1386,7 +1370,7 @@ void dScMgCurling_c::PickHouse() {
     } else if (mHouse == 2) {
         file = LoadFile(ASSET_D_2D_MG_BG_CURLING1_RIGHT_NSC_BIN);
     }
-    func_020563d4(file, 0, 0x800);
+    GX_LoadBG2Scr(file, 0, 0x800);
     Deallocate(file);
 }
 
@@ -1450,8 +1434,8 @@ void dScMgCurling_c::StartRound(int /* arg */) {
     mState = 0;
     ClearStones();
     PickHouse();
-    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xd, 2, 0x10);
-    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xd, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
 }
 
@@ -1489,40 +1473,40 @@ s32 dScMgCurling_c::InitResources() {
     gMainScreenLayers |= DISPLAY_LAYER_BG2;
     REG_BG2CNT = (REG_BG2CNT & ~3) | 2;
     REG_BG2CNT = (REG_BG2CNT & 0x43) | 0x1220;
-    DecompressLZ16(a, G2::GetBG2CharPtr());
+    DecompressLZ16(a, G2_GetBG2CharPtr());
 
     f = LoadFile(ASSET_D_2D_MG_BG_CURLING1_NCL_BIN);
-    GX::LoadBGPltt(f, 0x60, 0x1a0);
+    GX_LoadBGPltt(f, 0x60, 0x1a0);
     Deallocate(f);
 
     f = LoadFile(ASSET_D_2D_MG_BG_CURLING1_NSC_BIN);
-    func_020563d4(f, 0, 0x800);
+    GX_LoadBG2Scr(f, 0, 0x800);
     Deallocate(f);
 
     {
         void *c7 = LoadFile(ASSET_D_2D_MG_CURLING_NCG_BIN);
         void *c8 = LoadFile(ASSET_D_2D_MG_CURLING_NCL_BIN);
-        DecompressLZ16(c7, (void *)0x6400000);
-        GX::LoadOBJPltt(c8, 0, 0x100);
+        DecompressLZ16(c7, G2_GetOBJCharPtr());
+        GX_LoadOBJPltt(c8, 0, 0x100);
 
         gSubScreenLayers |= 4;
         REG_DB_BG2CNT = (REG_DB_BG2CNT & ~3) | 2;
         REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x814;
-        DecompressLZ16(b, (void *)G2S::GetBG2CharPtr());
+        DecompressLZ16(b, (void *)G2S_GetBG2CharPtr());
 
         f = LoadFile(ASSET_D_2D_MG_BG_CURLING2_NCL_BIN);
-        GXS::LoadBGPltt(f, 0x60, 0x1a0);
+        GXS_LoadBGPltt(f, 0x60, 0x1a0);
         Deallocate(f);
 
         f = LoadFile(ASSET_D_2D_MG_BG_CURLING2_NSC_BIN);
-        func_02056374(f, 0, 0x800);
+        GXS_LoadBG2Scr(f, 0, 0x800);
         Deallocate(f);
 
         Ov004_Deallocate(a);
         Ov004_Deallocate(b);
 
-        DecompressLZ16(c7, (void *)0x6600000);
-        GXS::LoadOBJPltt(c8, 0, 0x100);
+        DecompressLZ16(c7, G2S_GetOBJCharPtr());
+        GXS_LoadOBJPltt(c8, 0, 0x100);
         Deallocate(c7);
         Deallocate(c8);
     }
@@ -1538,8 +1522,8 @@ s32 dScMgCurling_c::InitResources() {
     Mg_SetTopScreenYOffset(0x20);
     mStateDelay = 0x40;
     mRunDuringFade = 1;
-    G2x::SetBlendAlpha(&REG_BLDCNT, 0, 0xd, 2, 0x10);
-    G2x::SetBlendAlpha(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_BLDCNT, 0, 0xd, 2, 0x10);
+    G2x_SetBlendAlpha_(&REG_DB_BLDCNT, 0, 4, 2, 0x10);
     mTopRecord = Mg_GetTopRecord();
     return 1;
 }
