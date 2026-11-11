@@ -47,6 +47,10 @@ signed char NumRedCoins(void);
 signed char NumVsStarsObtained(void);    // SILVERCOOP1: the ROM's silver-star sum (the gold star's "== 5" test)
 extern signed char data_0209f310[];       // the silver-star count per player (GiveVsStars)
 int _ZN6Player19func_ov002_020d94ccEv(void *player);   // the ROM's hurt drop of one silver star (SM64DS_SILVER_DROP proof knob)
+extern void *STAR_MARKERS[12];             // 0x0209f40c: the actors showing a star glint on the minimap (COOPSILVER3 proof log)
+void _ZN13daObjBlockL_c4KillEv(char *self);            // the brick block's break (SM64DS_SILVER_BRICK proof knob)
+void func_ov084_021296cc(void *goomba);                // the Goomba's silver star reward (SM64DS_SILVER_GOOMBA proof knob)
+void func_ov084_02129498(void *goomba);                // the Goomba's removal at the end of its death
 void _ZN12daStarBase_c27SpawnRedCoinStarIfNecessaryEv(void *self);
 unsigned DeathTable_GetBit(int id);
 void _ZN5Event6SetBitEj(unsigned b);
@@ -143,6 +147,8 @@ struct SilStats { unsigned long long credit_take, credit_ann, credit_snap, cappe
 // them a second time next to the owner's number) and takes the owner's sum, but only once its own last count change (a take
 // or a hurt drop here) is kSilGraceMs old, so a number the owner said before it heard of that change is never taken.
 // A member whose owner never says a count (an older build) keeps counting on its own, as before.
+unsigned g_sil_brick_frame = 0; bool g_sil_brick_done = true;     // SM64DS_SILVER_BRICK=<frame>: break (daObjBlockL_c::Kill) the first brick block holding a silver star tag (proof knob)
+unsigned g_sil_goomba_frame = 0; bool g_sil_goomba_done = true;   // SM64DS_SILVER_GOOMBA=<frame>: the first silver star Goomba gives its star and is removed, the ROM's two calls (proof knob)
 bool g_sil_auth_off = false;       // SM64DS_SILVER_AUTH_OFF=1: must-fail control, every console keeps its own count (the 1.0.2 behaviour)
 enum : unsigned { kSilGraceMs = 1500, kSilBeatMs = 1000, kSilSeqStaleMs = 3000 };
 unsigned g_sil_change_t = 0; bool g_sil_changed = false;     // comms time of my last count change by a game event here
@@ -229,6 +235,8 @@ void read_env() {
     }
     if (const char *e = std::getenv("SM64DS_SILVER_GOTO_WALL")) g_sil_goto_wall = std::atoll(e);
     if (const char *e = std::getenv("SM64DS_SILVER_AUTH_OFF")) g_sil_auth_off = *e && *e != '0';
+    if (const char *e = std::getenv("SM64DS_SILVER_BRICK")) { unsigned f = 0; if (std::sscanf(e, "%u", &f) == 1) { g_sil_brick_frame = f; g_sil_brick_done = false; } }
+    if (const char *e = std::getenv("SM64DS_SILVER_GOOMBA")) { unsigned f = 0; if (std::sscanf(e, "%u", &f) == 1) { g_sil_goomba_frame = f; g_sil_goomba_done = false; } }
     if (const char *e = std::getenv("SM64DS_SILVER_DROP")) {
         unsigned f = 0;
         if (std::sscanf(e, "%u", &f) == 1) { g_sil_drop_frame = f; g_sil_drop_done = false; }
@@ -1472,6 +1480,8 @@ void new_level() {
     g_sil_auth_have = false; g_sil_auth_owner = -1;
     g_sil_drop_done = g_sil_drop_frame == 0;
     g_sil_pit_done = g_sil_pit_frame == 0;
+    g_sil_brick_done = g_sil_brick_frame == 0;
+    g_sil_goomba_done = g_sil_goomba_frame == 0;
     g_early_sil = keep_sil;
 }
 
@@ -1609,6 +1619,31 @@ void on_frame(unsigned now) {
         for (int i = 0; i < nk; ++i) *(unsigned char *)(mk[i] + 0x1d8) = keep[i];
         std::fprintf(stderr, "[coopsilver-knob] hurt drop on my player: %d (mine=%d) wall=%lld\n", r, sil_me() >= 0 ? (int)data_0209f310[sil_me()] : -1, wall_ms());
     }
+    if (!g_sil_brick_done && g_armed && g_frames >= g_sil_brick_frame) {     // COOPSILVER3 proof knob: a silver star brick block breaks here
+        g_sil_brick_done = true;
+        char *blk = nullptr;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && !blk; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            const unsigned c = a_cls(a);
+            if ((c != 15 && c != 16 && c != 17) || a_dead(a)) continue;
+            const char *tag = *(const char *const *)(a + 0x328);
+            if (tag && a_cls(tag) == 0x144) blk = a;
+        }
+        if (blk) _ZN13daObjBlockL_c4KillEv(blk);
+        std::fprintf(stderr, "[coopsilver-knob] brick: %s slot=%d frame=%u wall=%lld\n", blk ? "broke the silver star block" : "no block with a silver star tag",
+                     blk ? (int)a_slot(blk) : -1, g_frames, wall_ms());
+    }
+    if (!g_sil_goomba_done && g_armed && g_frames >= g_sil_goomba_frame) {   // COOPSILVER3 proof knob: a silver star Goomba is beaten here
+        g_sil_goomba_done = true;
+        char *g = nullptr;
+        for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a && !g; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+            const unsigned c = a_cls(a);
+            if (c < 200 || c > 202 || a_dead(a)) continue;
+            if (*(const signed char *)(a + 0x465) >= 0) g = a;
+        }
+        if (g) { func_ov084_021296cc(g); func_ov084_02129498(g); }
+        std::fprintf(stderr, "[coopsilver-knob] goomba: %s slot=%d frame=%u wall=%lld\n", g ? "beat the silver star Goomba" : "no Goomba holding a glint",
+                     g ? (int)a_slot(g) : -1, g_frames, wall_ms());
+    }
     if (!g_sil_pit_done && g_armed && g_frames >= g_sil_pit_frame) {        // proof knob: a dropped star falls out of the level
         for (char *a = (char *)_ZN8dActor_c4NextEPKS_(0); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
             if (a_cls(a) != 179 || a_dead(a) || is_player_ptr(a) || a_slot(a) != -1 || *(const unsigned *)(a + 0x440) != 8u) continue;
@@ -1670,6 +1705,16 @@ void on_frame(unsigned now) {
                      me >= 0 ? (int)data_0209f310[me] : -1, sil_total(), g_nsil, g_sst.credit_take, g_sst.credit_ann, g_sst.credit_snap, g_sst.capped,
                      g_sst.drop_sent, g_sst.drop_applied, g_sst.drop_local, g_sst.ghost_take, g_sst.sent_snap, g_sst.recv_snap,
                      g_sst.fell, g_sst.fell_take, g_frames);
+        {
+            char gl[160]; int o = 0, n = 0;
+            for (int m = 0; m < 12; ++m)
+                if (const char *g = (const char *)STAR_MARKERS[m]) {
+                    ++n;
+                    if (o < 140) o += std::snprintf(gl + o, sizeof gl - (size_t)o, " %d:%u/%d", m, a_cls(g), (int)a_slot(g));
+                }
+            gl[o < (int)sizeof gl ? o : (int)sizeof gl - 1] = 0;
+            std::fprintf(stderr, "[coopsilver] glints %d:%s frame=%u\n", n, gl, g_frames);
+        }
         std::fprintf(stderr, "[coopsilver] auth owner=%d iam=%d follow=%d said=%llu heard=%llu adopted=%llu late=%llu left=%llu\n",
                      coop_group_owner(), (int)coop_group_i_am_owner(), (int)sil_follow(), g_sst.auth_sent, g_sst.auth_recv, g_sst.auth_adopt,
                      g_sst.auth_late, g_sst.auth_left);
