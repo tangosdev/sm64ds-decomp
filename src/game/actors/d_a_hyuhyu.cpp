@@ -57,6 +57,12 @@ enum d_a_hyuhyu_AssetId {
 #include "SaveData.h"
 #include "SharedFilePtr.h"
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane CAPLOSS1): set by port/hal/coop_cap.cpp in a coop room, 1 for a friend's drawn body;
+   defined in d_a_obj_mario_cap.cpp. */
+extern "C" int (*port_coop_cap_foreign)(const void *player);
+#endif
+
 struct BCA_File;
 struct BMD_File;
 
@@ -496,6 +502,10 @@ void daHyuhyu_c::func_ov091_021339fc()
     if (player->IsCollectingCap() != 0)
         return;
     player->BlowAway(this->mPrevAngleY);
+#ifdef _MSC_VER
+    if (port_coop_cap_foreign && port_coop_cap_foreign(player))
+        return;     /* a friend's body in a coop room: his console blows his cap off */
+#endif
     {
         u8 hasWings = player->mHasWings;
         u8 character = player->mCharacter;

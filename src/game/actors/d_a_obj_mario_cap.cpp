@@ -140,6 +140,16 @@ enum daObjMarioCap_c_AssetId {
 #include "SurfaceInfo.h"
 #include "dBgCh_Gnd.h"
 
+#ifdef _MSC_VER
+/* Host only (run coopfix1, lane CAPLOSS1). In a coop room a friend's body is drawn on my console as a real Player
+   (actor 191), so a collider here can report it. Cap loss and cap pickup belong to the console that runs that player:
+   on mine they would set or clear MY save's cap bit (SaveData::PlayerLoseCap reads the local save) or hand a friend's
+   cap to my player. port/hal/coop_cap.cpp sets the hook while a coop room runs; it answers 1 for a friend's body.
+   With no room (solo) it stays 0 and every test below is the cartridge's. The DS build never sees this. Also read by
+   d_a_jango.cpp, d_a_hyuhyu.cpp and d_a_snm_bth.cpp. */
+extern "C" { int (*port_coop_cap_foreign)(const void *player) = 0; }
+#endif
+
 /* --------------------------------------------------------------------------
  * Local shapes the merged members need.
  * ------------------------------------------------------------------------ */
@@ -1399,6 +1409,9 @@ void daObjMarioCap_c::CheckTouch()
         int t = (mPlayer->actorID == kActorPlayer);
         if (t == false) return;
     }
+#ifdef _MSC_VER
+    if (port_coop_cap_foreign && port_coop_cap_foreign(mPlayer)) return;
+#endif
 
     if ((mdCcAc_c.hitFlags & 0x8000) != 0) return;
     if (mPlayer->IsCollectingCap() != 0) return;

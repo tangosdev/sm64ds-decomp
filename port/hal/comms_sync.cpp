@@ -179,6 +179,7 @@ unsigned _ZN6Player19func_ov002_020becf4Eii(char *self, unsigned v, int arg2);
 int _ZN6Player8HasNoCapEv(void *self);
 }
 
+namespace port { int coop_cap_seat_nocap(int seat); }   // hal/coop_cap.cpp (CAPLOSS1)
 namespace port {
 namespace {
 
@@ -3963,8 +3964,12 @@ void gw_follow() {
             *(unsigned char *)(c + 0x6fa) = *(unsigned char *)(c + 0x6f9);
             *(unsigned char *)(c + 0x6fc) = *(unsigned char *)(c + 0x6fb);
             *(unsigned char *)(c + 0x700) = *(unsigned char *)(c + 0x6ff);
+            /* CAPLOSS1: HasNoCap reads MY save's cap-lost bit, so a friend whose cap was lost was drawn
+               wearing it, and every friend lost his cap with mine. In a coop room the friend sends his own
+               answer (hal/coop_cap.cpp); without a fresh word the old latch stands. */
+            const int said = port::coop_cap_seat_nocap(s);
             *(unsigned char *)(c + 0x701) =
-                (unsigned char)_ZN6Player8HasNoCapEv(c);
+                (unsigned char)(said >= 0 ? said : _ZN6Player8HasNoCapEv(c));
         }
         g_gw_pal[i] = gw_colour_row(z, a);
         g_gw_pal_body[i] = a;
