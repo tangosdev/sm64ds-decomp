@@ -54,6 +54,7 @@
 #include "dScMgTeresa_c.h"
 #include "decl_common.h"
 #include "LevelRng.h"
+#include "math/CalcLib.h"
 #include "nitro/gx/g2.h"
 #include "PlayerInput.h"
 #include "nitro/gx/gx_bgcnt.h"
@@ -70,8 +71,7 @@ extern "C" {
 
 extern void  RenderOamMainScreen(void*, int, int, int, int);
 extern void *LoadFile(int handle);
-extern void  DecompressLZ16(const void *src, void *dst);
-extern int   RandomIntInternal(int *seed);
+extern void DecompressLZ16(const void *src, void *dst);
 extern void  FreeGfxSlotsById(int arg);
 extern int   GetGameLanguage(void);
 struct Matrix2x2;
@@ -86,6 +86,11 @@ extern void MIi_CpuClear16(u16 val, void *dst, int nbytes);
 #include "OAM.h"
 extern void OamRender10_d_s_mg_teresa(int sub, struct OamAttr *data, s32 x, s32 y, s32 palette,
                                       s32 priority, s32 scaleX, s32 scaleY, s32 rotation, s32 mode);
+
+/* A random integer in [0, n): the generator's top 15 bits, scaled. */
+static inline u32 MgRandom(u32 n) {
+    return (((u32)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * n >> 15;
+}
 
 extern unsigned char gSubScreenLayers;
 extern unsigned char gMainScreenLayers;
@@ -383,9 +388,10 @@ void dScMgTeresa_c::BigBoo_StateHover(int i) {
     gMainScreenLayers &= ~DISPLAY_LAYER_BG2;
     SetBg3Offset(0, 0x100);
     {
+        /* The draw lands in its own int: through MgRandom the pick colours
+           differently (5 words). */
         int rnd = RandomIntInternal(&data_0209d4b8.value);
-        mBigBoo[i].state =
-            sTeresaBigBooHoverPicks[((unsigned int)(((unsigned int)rnd >> 16) & 0x7fff) * 2) >> 15];
+        mBigBoo[i].state = sTeresaBigBooHoverPicks[((((u32)rnd >> 16) & 0x7fff) * 2) >> 15];
     }
     mBigBoo[i].frameTimer = 0;
     mBigBoo[i].frame = 0;
@@ -1313,17 +1319,13 @@ void dScMgTeresa_c::SpawnBoos() {
     int valB;
     int cval;
     int full;
-    unsigned int r;
 
     sel = mLevel;
     if (sel >= 0xf) {
         int k;
-        r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-        k = (r << 2) >> 15;
+        k = MgRandom(4);
         if (k + 0xa == mBooPattern) {
-            k += (((((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff) * 3) >>
-                  15) +
-                 1;
+            k += MgRandom(3) + 1;
             if (k >= 4) k -= 4;
         }
         sel = k + 0xa;
@@ -1332,12 +1334,9 @@ void dScMgTeresa_c::SpawnBoos() {
     count = sTeresaSpawnCounts[sel];
     mBooCount = count;
 
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-    phase = ((r << 4) >> 15) << 12;
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-    valA = ((((r << 3) >> 15) << 3) + 0x60) << 12;
-    r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-    valB = ((((r << 3) >> 15) << 3) + 0x60) << 12;
+    phase = MgRandom(16) << 12;
+    valA = ((MgRandom(8) << 3) + 0x60) << 12;
+    valB = ((MgRandom(8) << 3) + 0x60) << 12;
 
     i = 0;
     if (count <= 0) {
@@ -1348,12 +1347,9 @@ void dScMgTeresa_c::SpawnBoos() {
     full = 0x10000;
     do {
         if (flagA == 0) {
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            mBoos[i].mX = ((((r * 0xf) >> 15) << 4) + 0x10) << 12;
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            mBoos[i].mY = ((((r * 0xb) >> 15) << 4) + 0x10) << 12;
-            r = ((unsigned int)RandomIntInternal(&data_0209d4b8.value) >> 16) & 0x7fff;
-            mBoos[i].mHeading = ((r << 5) >> 15) << 11;
+            mBoos[i].mX = ((MgRandom(0xf) << 4) + 0x10) << 12;
+            mBoos[i].mY = ((MgRandom(0xb) << 4) + 0x10) << 12;
+            mBoos[i].mHeading = MgRandom(32) << 11;
         } else {
             mBoos[i].mX = valA;
             mBoos[i].mY = valB;
