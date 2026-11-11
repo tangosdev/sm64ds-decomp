@@ -129,22 +129,22 @@ void seat_name(int seat, char *out, int cap) {
 }
 
 // ---- course -> castle painting table ---------------------------------------
-// Read from the ROM's castle sublevels (1 grounds, 2 1F, 3 basement, 4 2F, 5 3F): every class 349 exit object
+// Read from the ROM's castle sublevels (1 grounds, 2 first floor, 3 courtyard, 4 basement, 5 upper floors): every class 349 exit object
 // whose return entrance is not 0xff is a painting or door into a course. param1 = dest << 24 | destEntrance << 16
 // | retEntrance << 8. Sub-areas of a course (a later sublevel reached from inside it) come back through their
 // parent course's painting. Courses not listed (the cloud, Bowser fights not entered by a castle door) keep the
 // old "no return" load.
 struct CourseDoor { signed char course, castle, ret; };
 const CourseDoor kDoors[] = {
-    // castle 1F (2)
+    // first floor (2)
     {6, 2, 8}, {8, 2, 9}, {10, 2, 6}, {7, 2, 7}, {35, 2, 10}, {29, 2, 14}, {30, 2, 13},
     // grounds (1)
     {32, 1, 11},
-    // basement (3)
+    // courtyard (3)
     {42, 3, 6},
-    // 2F (4)
+    // basement (4)
     {14, 4, 4}, {16, 4, 6}, {13, 4, 7}, {18, 4, 8}, {37, 4, 9},
-    // 3F (5)
+    // upper floors (5)
     {24, 5, 7}, {21, 5, 4}, {22, 5, 5}, {19, 5, 6}, {25, 5, 7}, {27, 5, 8}, {39, 5, 9}, {28, 5, 10}, {34, 5, 12}, {48, 5, 11},
     // sub-areas, through the parent course's painting
     {9, 2, 9}, {11, 2, 6}, {15, 4, 4}, {17, 4, 6}, {20, 5, 6}, {23, 5, 5}, {26, 5, 7}, {33, 4, 7},
@@ -215,9 +215,10 @@ void try_tp(int seat, unsigned now) {
     if (!old_way && coop_castle_entrance_for_course(p.level, &castle, &ret)) {
         // Entered like the painting does: the castle sublevel and the painting's entrance are recorded, so a
         // star exit, Exit Course or death puts this player back at that painting.
+        // A saved sub-area chain (LLL, SSL, TTM) must not survive: LoadLevel's return branch would redirect into it.
+        data_02092118 = -1;
         LoadLevel((unsigned)p.level, 0, (unsigned)p.act, 0, (unsigned)ret);
         data_0209211c = (signed char)castle;
-        data_02092118 = -1;
         if (g.log) std::fprintf(stderr, "[cotp] return set: course %d -> castle sublevel %d entrance %d\n", p.level, castle, ret);
     } else {
         LoadLevelNoReturn((unsigned)p.level, 0, (unsigned)p.act, 0);
