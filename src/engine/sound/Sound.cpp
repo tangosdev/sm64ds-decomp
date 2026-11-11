@@ -233,8 +233,8 @@ typedef struct SndRegTable {
     SndRegEntry entries[0x40];   /* 0x08 */
     SndRegEntry *buckets[16];    /* 0x508 - chain heads by id&0xf */
 
-    int func_0201186c(int a1, int a2, short a3);
     int func_0201179c(int a1, int a2, int a3, short s1);
+    int func_0201186c(int a1, int a2, short a3);
 
     SndRegTable() {
         func_02011a5c(this);
