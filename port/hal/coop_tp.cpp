@@ -289,6 +289,11 @@ void on_ctl(int seat, int sub, const unsigned char *pl, int len, void *) {
     if (sub != kSubToggle || len != 4 || !pl || pl[1] != 1 || pl[2] || pl[3] || pl[0] > 1) return;
     if (g.host) return;                        // the host's own setting stands
     if (seat < 0 || seat >= kSeats || seat == comms_hub_my_seat()) return;   // the host may sit on any hub seat (a lobby room can make it 1); only the host console ever sends this
+    {   // once this guest knows the host's seat (REJOIN1), only that seat's word counts: two consoles that both
+        // think they host can't flip the guests between their settings
+        const int hs = port_coop_host_seat();
+        if (hs >= 0 && seat != hs) return;
+    }
     ++g.st.toggle_rx;
     if (g.heard != (int)pl[0] && g.log)
         std::fprintf(stderr, "[cotp] host setting from seat %d: TP %s wall=%lld\n", seat, pl[0] ? "ON" : "OFF", wall_ms());
