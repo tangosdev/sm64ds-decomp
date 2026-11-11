@@ -45,7 +45,7 @@ static int sp_icon_side(int rom, int sc)
     if (s > (NT_GH + 2) * sc) s = (NT_GH + 2) * sc;
     return s < 9 ? 9 : s;
 }
-static int sp_icon_gap(int sc) { return (5 * sc + 1) / 2; }
+static int sp_icon_gap(int sc) { return 4 * sc; }
 
 /* signed distance from (px, py) to a box centred (cx, cy) with half sizes (hx, hy) and corner radius rr; negative inside */
 static float sp_box_sd(float px, float py, float cx, float cy, float hx, float hy, float rr)
