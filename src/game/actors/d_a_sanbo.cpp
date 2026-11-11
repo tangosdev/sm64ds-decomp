@@ -17,29 +17,29 @@
  * All helpers are daSanbo_c members; the func_ov096_<addr> names are
  * ours, not recovered. The state pairs they serve live in
  * data_ov096_02137b48, filled by this translation unit's native
- * static initializer. func_ov096_02135878's ROM signature carried a
+ * static initializer. CalcShyAwayAngle's ROM signature carried a
  * dead first argument (r0) that was never read -- as a member its
  * real argument lands in r1 either way.
  *
  * deslop leftovers:
  *   - dCcAc_c::Init, dBgCh_Actr::Init, DropShadowRadHeight and
  *   IsTooFarAwayFromPlayer take Fix12 by value, so the calls stay
- *   computed names (InitResources, Behavior, func_ov096_02135efc).
+ *   computed names (InitResources, Behavior, UpdateModelAndShadow).
  *   - func_02038414 is the veneer onto
- *   dBgCh_Actr::UpdateDiscreteNoLava_2 (func_ov096_02136434,
- *   func_ov096_021360c4, func_ov096_02135e2c).
+ *   dBgCh_Actr::UpdateDiscreteNoLava_2 (UpdateKnockback,
+ *   UpdateMegaKill, UpdateFloorAndWalls).
  *   - Particle::System::New, NewCleanParticle, NewSimple,
  *   RunningSlidingDustAt and daPly_c::Hurt take Fix12 by value
- *   (func_ov096_02136434, func_ov096_02135948, func_ov096_02136134,
- *   func_ov096_021365d4).
- *   - func_ov096_02135e2c copies the floor and wall collision normals;
+ *   (UpdateKnockback, HandleAttacks, EnterMegaKill,
+ *   UpdateLeader).
+ *   - UpdateFloorAndWalls copies the floor and wall collision normals;
  *   the wall normal is unused.
  *   - gSanboHeadModelFile and gSanboBodyModelFile are the head
  *   and segment file handles (InitResources LoadFile, CleanupResources
  *   Release). Both actor profiles are defined with their factories below.
- *   - func_ov096_02135948 keeps five int[3] positions. One
+ *   - HandleAttacks keeps five int[3] positions. One
  *   Vector3 in their place changes that function.
- *   - data_020a0e68 is the scratch matrix func_ov096_02135efc fills
+ *   - data_020a0e68 is the scratch matrix UpdateModelAndShadow fills
  *   before copying it onto the model. Actor id 0x135 is only the id that function shoves
  *   the segment away from.
  */
@@ -65,12 +65,9 @@ enum daSanbo_c_AssetId {
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
-
-namespace cstd {
-int fdiv(int, int);
-}
 
 extern "C" {
 extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, Fix12i x, Fix12i y, Fix12i z);
@@ -176,9 +173,9 @@ int daSanbo_c::InitResources()
         }
     }
 
-    func_ov096_02136928(1);
+    ChangeState(1);
     mMatrix = IDENTITY_MATRIX4X3;
-    func_ov096_02135efc();
+    UpdateModelAndShadow();
     return 1;
 }
 
@@ -189,9 +186,9 @@ int daSanbo_c::Behavior()
         if (IsTooFarAwayFromPlayer(0x5dc000))
             return 1;
     }
-    func_ov096_021368b4();
+    CallStateUpdate();
     MakeVanishLuigiWork(mdCcAc_c);
-    func_ov096_02135efc();
+    UpdateModelAndShadow();
     return 1;
 }
 
@@ -213,7 +210,7 @@ void daSanbo_c::OnPendingDestroy()
     daSanbo_c *p = mNextSegment;
     if (!p) return;
     do {
-        p->func_ov096_0213585c();
+        p->PoofAndDestroy();
         p = p->mNextSegment;
     } while (p);
 }
@@ -234,29 +231,25 @@ int daSanbo_c::CleanupResources() {
     return 1;
 }
 
-void daSanbo_c::func_ov096_02136928(int a) {
+void daSanbo_c::ChangeState(int a) {
     mStateFunctions = data_ov096_02137b48 + (a << 1);
-    func_ov096_021368f0();
+    CallStateEnter();
 }
 
-void daSanbo_c::func_ov096_021368f0()
-{
+void daSanbo_c::CallStateEnter() {
     daSanbo_c::StateFunc *p = mStateFunctions;
     (this->**p)();
 }
 
-void daSanbo_c::func_ov096_021368b4()
-{
+void daSanbo_c::CallStateUpdate() {
     daSanbo_c::StateFunc *p = mStateFunctions + 1;
     (this->**p)();
 }
 
-int daSanbo_c::func_ov096_021368a4()
-{
+int daSanbo_c::EnterStacked() {
     mState = 0;
     return 1;
 }
-
 
 namespace Sound { void PlayBank0(unsigned int id, const Vector3 &pos); }
 
@@ -269,12 +262,11 @@ unsigned d_a_sanboNewCleanParticleHold(unsigned a, unsigned b, int x, int y, int
 }
 
 /* A segment tracks the one in front of it while that piece is still small. */
-int daSanbo_c::func_ov096_02136754()
-{
+int daSanbo_c::UpdateStackedBody() {
     daSanbo_c *next = mNextSegment;
 
     if (!next) {
-        func_ov096_02136928(1);
+        ChangeState(1);
     } else {
         int offset = 0xe000;
         int vy;
@@ -313,15 +305,15 @@ int daSanbo_c::func_ov096_02136754()
         cosine = FX_CosIdx(ang >> 4);
         mOffsetZ = FX_MUL(cosine, offset);
     }
-    func_ov096_02135948();
+    HandleAttacks();
     mdCcAc_c.Clear();
     mdCcAc_c.dCc_c::Update();
     return 1;
 }
 
 /* mInstantSprout on the head picks a zero delay or a 90-frame one. */
-int daSanbo_c::func_ov096_0213670c() {
-    daSanbo_c *head = func_ov096_021357b4();
+int daSanbo_c::EnterLeader() {
+    daSanbo_c *head = GetHead();
     u8 timer = head->mInstantSprout;
 
     if (timer != 0)
@@ -340,8 +332,7 @@ int daSanbo_c::func_ov096_0213670c() {
 }
 
 /* Grow this segment, then sprout the next one when the timer expires. */
-int daSanbo_c::func_ov096_021365d4()
-{
+int daSanbo_c::UpdateLeader() {
     int scale = mScaleX;
     int copied;
 
@@ -354,21 +345,21 @@ int daSanbo_c::func_ov096_021365d4()
     mOffsetX = 0;
     mOffsetY = 0;
     mOffsetZ = 0;
-    func_ov096_021358c8();
-    if (func_ov096_02135838() < 4) {
+    UpdateWanderYaw();
+    if (GetSegmentIndex() < 4) {
         if (DecIfAbove0_Byte(&mTimer) == 0) {
             dActor_c *spawned = dActor_c::Spawn(SANBO_BODY, uniqueID, mPos, &mAngle, mAreaId, -1);
             if (spawned != 0) {
                 mNextSegment = (daSanbo_c *)spawned;
-                func_ov096_02136928(4);
-                if (func_ov096_02135838() >= 3)
-                    func_ov096_021357b4()->mInstantSprout = 0;
+                ChangeState(4);
+                if (GetSegmentIndex() >= 3)
+                    GetHead()->mInstantSprout = 0;
             }
         }
     }
     UpdatePos(&mdCcAc_c);
-    func_ov096_02135e2c(&mWithMeshClsn);
-    func_ov096_02135948();
+    UpdateFloorAndWalls(&mWithMeshClsn);
+    HandleAttacks();
     mdCcAc_c.Clear();
     mdCcAc_c.dCc_c::Update();
     if (mWithMeshClsn.IsOnGround() != 0) {
@@ -377,14 +368,13 @@ int daSanbo_c::func_ov096_021365d4()
     return 1;
 }
 
-int daSanbo_c::func_ov096_02136534()
-{
+int daSanbo_c::EnterKnockback() {
     int head = (actorID == SANBO_HEAD);
 
     if (head != 0) {
         dActor_c::Spawn(0x122, 2, mPos, (Vector3_16 *)0, mAreaId, -1);
     }
-    func_ov096_02135800();
+    UnlinkSegment();
     mPrevAngleY = Vec3_HorzAngle((const Vector3 *)&mHitActor->mPosX, (const Vector3 *)&mPosX);
     mVertSpeed = 0x14000;
     if (mHitActor->param1 == 2)
@@ -395,8 +385,7 @@ int daSanbo_c::func_ov096_02136534()
     return 1;
 }
 
-int daSanbo_c::func_ov096_02136434()
-{
+int daSanbo_c::UpdateKnockback() {
     struct Vector3 pos;
     Particle::System *p0;
     Particle::System *p1;
@@ -424,45 +413,41 @@ int daSanbo_c::func_ov096_02136434()
     }
     func_02038414(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround() != 0)
-        func_ov096_0213585c();
+        PoofAndDestroy();
     return 1;
 }
 
-int daSanbo_c::func_ov096_0213640c()
-{
+int daSanbo_c::EnterInMouth() {
 
-    func_ov096_02135800();
+    UnlinkSegment();
     mHorzSpeed = 0;
     mState = 3;
     return 1;
 }
 
-int daSanbo_c::func_ov096_021363c4()
-{
+int daSanbo_c::UpdateInMouth() {
     int flags = mFlags;
     int held = (flags & 0x20000) ? 1 : 0;
 
     if (held == 0) {
         held = (flags & 0x40000) ? 1 : 0;
         if (held == 0)
-            func_ov096_0213585c();
+            PoofAndDestroy();
     }
     return 1;
 }
 
-int daSanbo_c::func_ov096_021363b4()
-{
+int daSanbo_c::EnterStackedGrowing() {
     mState = 4;
     return 1;
 }
 
 /* Follow the segment ahead. Once its scale reaches full size, settle. */
-int daSanbo_c::func_ov096_02136264()
-{
+int daSanbo_c::UpdateStackedOnGrowingBody() {
     daSanbo_c *next = mNextSegment;
 
     if (!next) {
-        func_ov096_02136928(1);
+        ChangeState(1);
     } else {
         int fullHeight = 0x6e000;
         int scale = next->mScaleX;
@@ -490,16 +475,15 @@ int daSanbo_c::func_ov096_02136264()
         cosine = FX_CosIdx(ang >> 4);
         mOffsetZ = FX_MUL(cosine, offset);
         if (raised == fullHeight)
-            func_ov096_02136928(0);
+            ChangeState(0);
     }
-    func_ov096_02135948();
+    HandleAttacks();
     mdCcAc_c.Clear();
     mdCcAc_c.dCc_c::Update();
     return 1;
 }
 
-int daSanbo_c::func_ov096_02136134()
-{
+int daSanbo_c::EnterMegaKill() {
     int head = (actorID == SANBO_HEAD);
     int rnd;
 
@@ -507,7 +491,7 @@ int daSanbo_c::func_ov096_02136134()
         dActor_c::Spawn(0x122, 2, mPos, 0, mAreaId, -1);
     }
     Sound::PlayBank0(9, mCamSpacePos);
-    func_ov096_02135800();
+    UnlinkSegment();
     mPrevAngleY = Vec3_HorzAngle((const Vector3 *)&mHitActor->mPosX, (const Vector3 *)&mPosX);
     rnd = RandomIntInternal(&data_0209e650.value);
     mPrevAngleY = (s16)(mPrevAngleY + ((rnd & 0x7fff) - 0x4000));
@@ -521,8 +505,7 @@ int daSanbo_c::func_ov096_02136134()
     return 1;
 }
 
-int daSanbo_c::func_ov096_021360c4()
-{
+int daSanbo_c::UpdateMegaKill() {
     int head = (actorID == SANBO_HEAD) ? 1 : 0;
 
     if (head != 0)
@@ -530,12 +513,11 @@ int daSanbo_c::func_ov096_021360c4()
     UpdatePos(&mdCcAc_c);
     func_02038414(&mWithMeshClsn);
     if (mWithMeshClsn.JustHitGround() || !DecIfAbove0_Byte(&mTimer))
-        func_ov096_0213585c();
+        PoofAndDestroy();
     return 1;
 }
 
-void daSanbo_c::func_ov096_02135efc()
-{
+void daSanbo_c::UpdateModelAndShadow() {
     struct Vector3 cam;
     int head;
 
@@ -575,8 +557,7 @@ void daSanbo_c::func_ov096_02135efc()
     }
 }
 
-void daSanbo_c::func_ov096_02135e2c(dBgCh_Actr *clsn)
-{
+void daSanbo_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     int n0[3];
     int n1[3];
 
@@ -587,7 +568,7 @@ void daSanbo_c::func_ov096_02135e2c(dBgCh_Actr *clsn)
             int x = FX_MUL(n0[0], mSpeedX);
             int z = FX_MUL(n0[2], mSpeedZ);
             int dot = x + z;
-            int slope = cstd::fdiv(dot, n0[1]);
+            int slope = FX_Div(dot, n0[1]);
             mVertSpeed = -(slope + 0x8000);
         }
     }
@@ -599,8 +580,7 @@ void daSanbo_c::func_ov096_02135e2c(dBgCh_Actr *clsn)
 #include "decl_Actor.h"
 #include "decl_Player.h"
 
-void daSanbo_c::func_ov096_02135948()
-{
+void daSanbo_c::HandleAttacks() {
     unsigned int hitId;
     dActor_c *other;
     int radius;
@@ -627,13 +607,13 @@ void daSanbo_c::func_ov096_02135948()
     if (FindEgg(mdCcAc_c) != 0 ||
         FindExplosionActor(mdCcAc_c) != 0) {
         Sound::PlayBank0(9, mCamSpacePos);
-        func_ov096_02135800();
+        UnlinkSegment();
         {
             int head = (actorID == SANBO_HEAD);
             if (head)
                 dActor_c::Spawn(0x122, 2, mPos, 0, mAreaId, -1);
         }
-        func_ov096_0213585c();
+        PoofAndDestroy();
         return;
     }
 
@@ -685,16 +665,16 @@ void daSanbo_c::func_ov096_02135948()
                 Particle::System::NewCleanParticle(mParticle1, kPtclDeathB, pos.x, pos.y, pos.z, 0);
             Sound::PlayBank0(9, mCamSpacePos);
             mHitActor = player;
-            func_ov096_02136928(2);
+            ChangeState(2);
         } else if ((flags & 0x26fe0) || player->IsOnShell() != 0 ||
                    player->mIsMetal != 0) {
             Sound::PlayBank0(9, mCamSpacePos);
             mHitActor = player;
-            func_ov096_02136928(2);
+            ChangeState(2);
         } else if (mdCcAc_c.hitFlags & 0x10) {
             mHitActor = player;
             player->IncMegaKillCount();
-            func_ov096_02136928(5);
+            ChangeState(5);
         } else {
             state = mState;
             if (state == 0) {
@@ -739,12 +719,11 @@ void daSanbo_c::func_ov096_02135948()
     {
         int inMouth = (mFlags & 0x20000) != 0;
         if (inMouth)
-            func_ov096_02136928(3);
+            ChangeState(3);
     }
 }
 
-void daSanbo_c::func_ov096_021358c8()
-{
+void daSanbo_c::UpdateWanderYaw() {
     daPly_c *player = ClosestNonVanishPlayer();
     void *target;
     int dist;
@@ -763,29 +742,26 @@ void daSanbo_c::func_ov096_021358c8()
     dist = Vec3_HorzDist((const Vector3 *)&mPosX, (const Vector3 *)target);
     ang = Vec3_HorzAngle((const Vector3 *)&mPosX, (const Vector3 *)target);
     ApproachLinear(mAngleY, ang, (short)0x320);
-    turn = func_ov096_02135878(dist);
+    turn = CalcShyAwayAngle(dist);
     mPrevAngleY = (short)(mAngleY + turn);
 }
 
-int daSanbo_c::func_ov096_02135878(int x)
-{
+int daSanbo_c::CalcShyAwayAngle(int x) {
     if (x > 0x190000)
         return 0;
-    int rate = cstd::fdiv(0x4000, 0xc8000);
+    int rate = FX_Div(0x4000, 0xc8000);
     int drop = FX_MUL(rate, x);
     int r = 0x8000 - drop;
     return (short)r;
 }
 
-void daSanbo_c::func_ov096_0213585c()
-{
+void daSanbo_c::PoofAndDestroy() {
 
     PoofDust();
     MarkForDestruction();
 }
 
-int daSanbo_c::func_ov096_02135838()
-{
+int daSanbo_c::GetSegmentIndex() {
     daSanbo_c *seg = mPrevSegment;
     int count = 0;
 
@@ -798,8 +774,7 @@ int daSanbo_c::func_ov096_02135838()
     return count;
 }
 
-void daSanbo_c::func_ov096_02135800()
-{
+void daSanbo_c::UnlinkSegment() {
     daSanbo_c *next;
     daSanbo_c *prev;
     int head = (actorID == SANBO_HEAD);
@@ -814,8 +789,7 @@ void daSanbo_c::func_ov096_02135800()
         next->mPrevSegment = mPrevSegment;
 }
 
-daSanbo_c *daSanbo_c::func_ov096_021357b4()
-{
+daSanbo_c *daSanbo_c::GetHead() {
     daSanbo_c *prev = mPrevSegment;
 
     if (prev == 0)
@@ -852,12 +826,12 @@ SanboModelFilePtr gSanboBodyModelFile(ASSET_SANBO_BODY_BMD);   /* segment model 
  * numbers and address-named helpers are retained reconstruction identities. */
 
 daSanbo_c::StateFunc data_ov096_02137b48[12] = {
-    &daSanbo_c::func_ov096_021368a4, &daSanbo_c::func_ov096_02136754, /* state 0 */
-    &daSanbo_c::func_ov096_0213670c, &daSanbo_c::func_ov096_021365d4, /* state 1 */
-    &daSanbo_c::func_ov096_02136534, &daSanbo_c::func_ov096_02136434, /* state 2 */
-    &daSanbo_c::func_ov096_0213640c, &daSanbo_c::func_ov096_021363c4, /* state 3 */
-    &daSanbo_c::func_ov096_021363b4, &daSanbo_c::func_ov096_02136264, /* state 4 */
-    &daSanbo_c::func_ov096_02136134, &daSanbo_c::func_ov096_021360c4, /* state 5 */
+    &daSanbo_c::EnterStacked,        &daSanbo_c::UpdateStackedBody,          /* state 0 */
+    &daSanbo_c::EnterLeader,         &daSanbo_c::UpdateLeader,               /* state 1 */
+    &daSanbo_c::EnterKnockback,      &daSanbo_c::UpdateKnockback,            /* state 2 */
+    &daSanbo_c::EnterInMouth,        &daSanbo_c::UpdateInMouth,              /* state 3 */
+    &daSanbo_c::EnterStackedGrowing, &daSanbo_c::UpdateStackedOnGrowingBody, /* state 4 */
+    &daSanbo_c::EnterMegaKill,       &daSanbo_c::UpdateMegaKill,             /* state 5 */
 };
 SpawnInfo<daSanbo_c> g_profile_SANBO = {
     daSanbo_c_classInit_SANBO, 0xf0, 0x5f, 0x10000002, 0x1f4000, 0x1f4000, 0x1000000, 0x1000000};

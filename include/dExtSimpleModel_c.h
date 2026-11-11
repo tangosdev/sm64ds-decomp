@@ -25,8 +25,8 @@
  *
  * LAYOUT evidence: dExtSimpleModel_c::C2 calls dExtModel_c::C2, stores _ZTV17dExtSimpleModel_c, copies
  * mat4x3 from IDENTITY_MATRIX4X3 and zeroes +0x4c. dExtSimpleModel_c::DoSetFile allocates
- * transformsBuf with Memory::operator_new2 and the destructors operator
- * delete it. dExtSimpleModel_c::Render multiplies mat4x3 into a stack temp before
+ * transformsBuf with operator new[] and the destructors operator delete[]
+ * it. dExtSimpleModel_c::Render multiplies mat4x3 into a stack temp before
  * handing it to ModelComponents::Render.
  *
  * The static loaders (LoadFile, LoadTexAndPal, UpdateFileOffsets, the VRAM
@@ -74,6 +74,10 @@ struct dExtSimpleModel_c : dExtModel_c {
     void HideMaterial(int boneID, int listIdx);
     void ShowMaterial(int boneID, int listIdx);
     void SetPolygonID(int id);
+    /* ANDs ~mask / ORs mask into the flags of every material. The parameters
+       stay unnamed: a named parameter here renumbers every consumer's @NNN. */
+    void ClearMaterialFlags(u32);
+    void SetMaterialFlags(u32);
     void SetPolygonMode(int mode);
     void LoadAndSetFile(u16 ov0ID, int a, int b);
 

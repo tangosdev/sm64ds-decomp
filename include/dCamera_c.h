@@ -56,12 +56,12 @@ struct dCamera_c : dView_c {
        mWallNormal or which lies within 0x80000 of mWallPos. */
     Vector3 mWallPos;    /* 0x0e0 */
     Vector3 mWallNormal; /* 0x0ec */
-    /* Render passes these three as G3i::PerspectiveW_'s aspect, near and far
+    /* Render passes these three as G3i_PerspectiveW_'s aspect, near and far
        arguments; func_0200cf40 seeds them with 0x1555, 0x1000 and 0x1388000. */
     s32 mAspect; /* 0x0f8 */
     s32 mNear;   /* 0x0fc */
     s32 mFar;    /* 0x100 */
-    /* SetFovAngle stores func_02053200 (the fixed-point reciprocal) of the
+    /* SetFovAngle stores FX_Inv (the fixed-point reciprocal) of the
        sine and cosine table entries for the field-of-view angle it is given,
        beside the aspect/near/far it hands dClipper. Nothing in d_camera.cpp
        reads them back; the names follow the writer (medium confidence). */

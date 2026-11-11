@@ -15,18 +15,18 @@
  * daSnowman_c_classInit (0x02125ec0) abuts the rest and is written last.
  *
  * deslop leftovers:
- * - func_ov081_0212423c: naming player mPosX/Y/Z is 0x190 -> 0x18c.
- * - func_ov081_021245e8: the same loads are 0xb8 -> 0xb4.
- * - func_ov081_02124b98: the same loads differ by 3 words; size stays 0x17c.
- * - func_ov081_021243cc: `if (actorID == PLAYER)` is 0x21c -> 0x210.
+ * - RotateTowardPlayer: naming player mPosX/Y/Z is 0x190 -> 0x18c.
+ * - FindClosestPlayerDist: the same loads are 0xb8 -> 0xb4.
+ * - StateThrowSnowballExecute: the same loads differ by 3 words; size stays 0x17c.
+ * - CheckAttacks: `if (actorID == PLAYER)` is 0x21c -> 0x210.
  *   KillByInvincibleChar as the method is 0x21c -> 0x228.
- * - func_ov081_021246a0: SpawnCoins as the method is 0xfc -> 0x104.
- * - func_ov081_02124894: SpawnCoins as the method is 0xf8 -> 0x100.
- * - dExtAnmModel_c::SetAnim as the method is +8. func_ov081_02124b08
+ * - StateMeltExecute: SpawnCoins as the method is 0xfc -> 0x104.
+ * - StateDeathExecute: SpawnCoins as the method is 0xf8 -> 0x100.
+ * - dExtAnmModel_c::SetAnim as the method is +8. StateBurrowEnter
  *   0x90 -> 0x98, 02124d14 0x3c -> 0x44, 02124ec0 0x60 -> 0x68,
  *   02125068 0x60 -> 0x68, 021250c8 0x138 -> 0x140, 02125208
  *   0x184 -> 0x18c, 0212538c 0xfc -> 0x104.
- * - func_ov081_021254d8: DropShadowRadHeight as the method is 0x2d8 -> 0x2e8.
+ * - UpdateModelMatrices: DropShadowRadHeight as the method is 0x2d8 -> 0x2e8.
  * - InitResources: dCcAcPos_c::Init as the method, measured together
  *   with dBgCh_Actr::Init, is 0x318 -> 0x328. dBgCh_Actr::Init alone
  *   stays 0x318 but mangles ciiP10Vector3_16S3_, not the ROM
@@ -58,10 +58,10 @@ enum daSnowman_c_AssetId {
 #include "Sound.h"
 #include "math/Approach.h"
 #include "LevelRng.h"
+#include "nitro/fx/fx_cp.h"
 
 namespace cstd {
 s16 atan2(s32, s32);
-int fdiv(int numerator, int denominator);
 }
 
 /* Registry ids this file spawns or compares. */
@@ -96,14 +96,14 @@ extern daPly_c *gPlayers[];
 extern unsigned d_a_snowmanNewHold(unsigned a, unsigned b, int c, int d, int e, const void *f,
                                    void *g);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
-extern int LenVec3(const Vector3 *v);
+extern int VEC_Mag(const Vector3 *v);
 extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
-extern void SubVec3(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
+extern void VEC_Subtract(struct Vector3 *a, struct Vector3 *b, struct Vector3 *c);
 extern void Vec3_Asr(Vector3 *d, Vector3 *s, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
+extern void MTX_Concat43(void *dst, void *a, void *b);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern struct Matrix4x3 data_020a0e68;
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
@@ -113,7 +113,7 @@ extern int atan2_hold_d_a_snowman_1(int a, int b);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern int Vec3_HorzLen(void *v);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-extern void MulVec3Mat4x3(Vector3 *a, Matrix4x3 *m, Vector3 *b);
+extern void MTX_MultVec43(Vector3 *a, Matrix4x3 *m, Vector3 *b);
 }
 
 /* File handles the static initializer constructs. The two models use
@@ -164,8 +164,7 @@ daSnowman_c::~daSnowman_c()
 
 /* Drops the snowball and flings the cap. Kind 2 also plants a kind-3
    watcher at home. */
-void daSnowman_c::func_ov081_02124134()
-{
+void daSnowman_c::ReleaseHeldObjects() {
     dActor_c *a;
     unsigned int id = this->mSnowballID;
     if (id) {
@@ -202,8 +201,7 @@ void daSnowman_c::func_ov081_02124134()
 /* Turns toward the closest visible player at the rate row idx gives. With
    idx 1 it also leans back while the player stays off to one side, and
    after 40 frames of that topples over. */
-void daSnowman_c::func_ov081_0212423c(int idx)
-{
+void daSnowman_c::RotateTowardPlayer(int idx) {
     daPly_c *player;
     struct Vector3 v;
     int ang;
@@ -249,7 +247,7 @@ void daSnowman_c::func_ov081_0212423c(int idx)
             this->mTimer++;
             if (this->mTimer > 0x28) {
                 this->mStep = this->mAngleY - ang;
-                func_ov081_02125488(&data_ov081_02128e94);
+                SetState(&data_ov081_02128e94);
                 return;
             }
         }
@@ -263,8 +261,7 @@ void daSnowman_c::func_ov081_0212423c(int idx)
 }
 
 /* Reacts to whatever the collision cylinder touched this frame. */
-void daSnowman_c::func_ov081_021243cc()
-{
+void daSnowman_c::CheckAttacks() {
     Vector3 v;
     v = data_ov081_02128998;
     this->mdCcAcPos_c.SetPosRelativeToActor(v);
@@ -287,7 +284,7 @@ void daSnowman_c::func_ov081_021243cc()
     if (flags & 0x40000) {
         func_02012694(0xdb, &this->mCamSpacePosX);
         hit = 1;
-        func_ov081_02125488(&data_ov081_02128e24);
+        SetState(&data_ov081_02128e24);
     }
     if (IsPlayer(found)) {
         if (found->mIsVanish != 0) return;
@@ -320,12 +317,11 @@ void daSnowman_c::func_ov081_021243cc()
         }
     }
     if (hit != 1) return;
-    func_ov081_02124134();
+    ReleaseHeldObjects();
 }
 
 /* Distance to the closest player; leaves that player's index behind. */
-int daSnowman_c::func_ov081_021245e8()
-{
+int daSnowman_c::FindClosestPlayerDist() {
     int min = 0x2710000;
     int i = 0;
     Vector3 v;
@@ -355,8 +351,7 @@ int daSnowman_c::func_ov081_021245e8()
 }
 
 /* State "melt", execute: shrink and sink, then pay out coins and die. */
-int daSnowman_c::func_ov081_021246a0()
-{
+int daSnowman_c::StateMeltExecute() {
     Vector3 v;
     if (this->mType != 0 || this->mWithMeshClsn.IsOnGround() != 0) {
         ApproachLinear(this->mScaleX, 0x1700, 0x50);
@@ -373,7 +368,7 @@ int daSnowman_c::func_ov081_021246a0()
                 v.z = this->mPosZ;
                 SpawnCoins(v, this->mExtraCoinCount + 1, 0xa000, 0);
             }
-            func_ov081_02124134();
+            ReleaseHeldObjects();
             this->KillAndTrackInDeathTable();
         }
     }
@@ -381,8 +376,7 @@ int daSnowman_c::func_ov081_021246a0()
 }
 
 /* State "melt", enter. */
-int daSnowman_c::func_ov081_0212479c()
-{
+int daSnowman_c::StateMeltEnter() {
     this->mInitAngleY = 0;
     this->mTimer = 0;
     this->mStateTimer = 0;
@@ -411,8 +405,7 @@ int daSnowman_c::func_ov081_0212479c()
 }
 
 /* State "spin and fall", execute. */
-int daSnowman_c::func_ov081_02124894()
-{
+int daSnowman_c::StateDeathExecute() {
     Vector3 v;
     /* Source written as (>0 ? sub : add) so mwccarm inversion emits the
        ROM's le/add arm first, then the unconditional sub arm. */
@@ -431,15 +424,14 @@ int daSnowman_c::func_ov081_02124894()
             v.z = this->mPosZ;
             SpawnCoins(v, this->mExtraCoinCount + 1, 0xa000, 0);
         }
-        func_ov081_02124134();
+        ReleaseHeldObjects();
         this->KillAndTrackInDeathTable();
     }
     return 1;
 }
 
 /* State "spin and fall", enter. */
-int daSnowman_c::func_ov081_0212498c()
-{
+int daSnowman_c::StateDeathEnter() {
     int id = this->mSnowballID;
     if (id != 0) {
         dActor_c *a = dActor_c::FindWithID(id);
@@ -456,8 +448,7 @@ int daSnowman_c::func_ov081_0212498c()
 }
 
 /* State "sink", execute. */
-int daSnowman_c::func_ov081_021249f4()
-{
+int daSnowman_c::StateBurrowExecute() {
     struct Vector3 pos;
     int t;
 
@@ -476,7 +467,7 @@ int daSnowman_c::func_ov081_021249f4()
         this->mPosY = t;
         this->mVertSpeed = 0;
         this->mVertAccel = 0;
-        func_ov081_02125488(&data_ov081_02128e84);
+        SetState(&data_ov081_02128e84);
     }
     this->mPrevAngleY += 0x2000;
     this->mAngleY = this->mPrevAngleY;
@@ -484,8 +475,7 @@ int daSnowman_c::func_ov081_021249f4()
 }
 
 /* State "sink", enter. */
-int daSnowman_c::func_ov081_02124b08()
-{
+int daSnowman_c::StateBurrowEnter() {
     unsigned int id = this->mSnowballID;
     if (id != 0) {
         dActor_c *a = dActor_c::FindWithID(id);
@@ -503,8 +493,7 @@ int daSnowman_c::func_ov081_02124b08()
 }
 
 /* State "throw", execute: lets go on frame 10, aimed at the closest player. */
-int daSnowman_c::func_ov081_02124b98()
-{
+int daSnowman_c::StateThrowSnowballExecute() {
     Vector3 in, out, v[2];
     dActor_c *target;
     daPly_c *player;
@@ -533,7 +522,7 @@ int daSnowman_c::func_ov081_02124b98()
                     Matrix4x3_FromRotationY(&data_020a0e68, angle);
                     Matrix4x3_ApplyInPlaceToRotationX(
                         &data_020a0e68, (short)(-cstd::atan2(v[0].y, Vec3_HorzLen(&v[0]))));
-                    MulVec3Mat4x3(&in, &data_020a0e68, &out);
+                    MTX_MultVec43(&in, &data_020a0e68, &out);
                 }
                 out.y += 0x14000;
                 target->mSpeedX = out.x;
@@ -545,43 +534,40 @@ int daSnowman_c::func_ov081_02124b98()
         }
     }
     if (this->mAnmModel.Finished() != 0) {
-        func_ov081_02125488(&data_ov081_02128e14);
+        SetState(&data_ov081_02128e14);
     }
     return 1;
 }
 
 /* State "throw", enter. */
-int daSnowman_c::func_ov081_02124d14()
-{
+int daSnowman_c::StateThrowSnowballEnter() {
     this->mAnmModel.SetAnim((BCA_File *)data_ov081_02128db8.filePtr, 0x40000000, 0x1000, 0);
     return 1;
 }
 
 /* State "make a snowball", execute. */
-int daSnowman_c::func_ov081_02124d50()
-{
+int daSnowman_c::StateSpawnSnowballExecute() {
     dActor_c *ball = dActor_c::FindWithID(this->mSnowballID);
     if (ball != 0 && ball->mVertAccel == 0) {
-        func_ov081_0212423c(1);
+        RotateTowardPlayer(1);
         ball->mPosX = this->mHandPos.x;
         ball->mPosY = this->mHandPos.y;
         ball->mPosZ = this->mHandPos.z;
     }
 
     if ((u16)this->mStateTimer == 0) {
-        func_ov081_02125488(&data_ov081_02128e44);
+        SetState(&data_ov081_02128e44);
         return 1;
     }
 
-    if (func_ov081_021245e8() > 0x320000) {
-        func_ov081_02125488(&data_ov081_02128e64);
+    if (FindClosestPlayerDist() > 0x320000) {
+        SetState(&data_ov081_02128e64);
     }
     return 1;
 }
 
 /* State "make a snowball", enter: spawns it in the hand. */
-int daSnowman_c::func_ov081_02124dfc()
-{
+int daSnowman_c::StateSpawnSnowballEnter() {
     dActor_c *a = dActor_c::Spawn(kSnowballId, 0, this->mHandPos, 0, this->mAreaId, -1);
     if (a)
         this->mSnowballID = a->uniqueID;
@@ -591,19 +577,17 @@ int daSnowman_c::func_ov081_02124dfc()
 }
 
 /* State "face the player", execute. */
-int daSnowman_c::func_ov081_02124e64()
-{
-    func_ov081_0212423c(0);
+int daSnowman_c::StateRotateExecute() {
+    RotateTowardPlayer(0);
     if ((u16)this->mStateTimer == 0)
-        func_ov081_02125488(&data_ov081_02128e34);
-    if (func_ov081_021245e8() > 0x320000)
-        func_ov081_02125488(&data_ov081_02128e64);
+        SetState(&data_ov081_02128e34);
+    if (FindClosestPlayerDist() > 0x320000)
+        SetState(&data_ov081_02128e64);
     return 1;
 }
 
 /* State "face the player", enter. */
-int daSnowman_c::func_ov081_02124ec0()
-{
+int daSnowman_c::StateRotateEnter() {
     this->mAnmModel.SetAnim((BCA_File *)gSnowmanWaitAnimationFile.filePtr, 0, 0x1000, 0);
     if (this->mType == 2)
         this->mFlags = 0x18000002;
@@ -614,23 +598,21 @@ int daSnowman_c::func_ov081_02124ec0()
 }
 
 /* State "rise", execute. */
-int daSnowman_c::func_ov081_02124f20()
-{
+int daSnowman_c::StateRiseFromGroundExecute() {
     if (this->mVertSpeed < 0) {
         if (this->mHomePos.y > this->mPosY) {
             this->mVertSpeed = 0;
             this->mVertAccel = 0;
             this->mPosY = this->mHomePos.y;
-            func_ov081_02125488(&data_ov081_02128e14);
+            SetState(&data_ov081_02128e14);
         }
     }
-    func_ov081_0212423c(0);
+    RotateTowardPlayer(0);
     return 1;
 }
 
 /* State "rise", enter. */
-int daSnowman_c::func_ov081_02124f7c()
-{
+int daSnowman_c::StateRiseFromGroundEnter() {
     struct Vector3 pos;
 
     this->mVertSpeed = 0x3c000;
@@ -648,16 +630,14 @@ int daSnowman_c::func_ov081_02124f7c()
 }
 
 /* State "wait buried", execute: rise when a player comes near. */
-int daSnowman_c::func_ov081_02125038()
-{
-    if (func_ov081_021245e8() < 0x258000)
-        func_ov081_02125488(&data_ov081_02128ea4);
+int daSnowman_c::StateHideUnhideExecute() {
+    if (FindClosestPlayerDist() < 0x258000)
+        SetState(&data_ov081_02128ea4);
     return 1;
 }
 
 /* State "wait buried", enter. */
-int daSnowman_c::func_ov081_02125068()
-{
+int daSnowman_c::StateHideUnhideEnter() {
     int v = this->mType;
     if (v != 2 && v != 3) {
         this->mFlags = 3;
@@ -669,8 +649,7 @@ int daSnowman_c::func_ov081_02125068()
 }
 
 /* State "hop to a node", execute. */
-int daSnowman_c::func_ov081_021250c8()
-{
+int daSnowman_c::StateHopExecute() {
     struct Vector3 node;
     struct Vector3 diff;
     struct Vector3 scaled;
@@ -678,7 +657,7 @@ int daSnowman_c::func_ov081_021250c8()
 
     if (this->mWithMeshClsn.IsOnGround()) {
         func_02012694(0xe5, &this->mCamSpacePosX);
-        func_ov081_02125488(&data_ov081_02128e54);
+        SetState(&data_ov081_02128e54);
         this->mAnmModel.SetAnim((BCA_File *)gSnowmanJumpEdAnimationFile.filePtr, 0x40000000, 0x1000,
                                 0);
         return 1;
@@ -689,27 +668,25 @@ int daSnowman_c::func_ov081_021250c8()
     p.GetNode(node, this->mPathNodeIndex);
     node.y = this->mPosY;
     Vec3_Sub(&diff, &this->mPos, &node);
-    len = LenVec3(&diff);
+    len = VEC_Mag(&diff);
     ApproachAngle(&this->mPrevAngleY, Vec3_HorzAngle(&this->mPos, &node), 1, 0x1000, 0x500);
     if (len == 0 || len <= this->mHopStep)
         return 1;
     {
-        int q = cstd::fdiv(this->mHopStep, len);
+        int q = FX_Div(this->mHopStep, len);
         Vec3_MulScalar(&scaled, &diff, q);
-        SubVec3(&this->mPos, &scaled, &this->mPos);
+        VEC_Subtract(&this->mPos, &scaled, &this->mPos);
     }
     return 1;
 }
 
 /* State "hop to a node", enter: nothing to do. */
-int daSnowman_c::func_ov081_02125200()
-{
+int daSnowman_c::StateHopEnter() {
     return 1;
 }
 
 /* State "walk the path", execute. */
-int daSnowman_c::func_ov081_02125208()
-{
+int daSnowman_c::StateWalkExecute() {
     struct Vector3 node;
 
     if ((u16)this->mStateTimer == 0) {
@@ -741,15 +718,14 @@ int daSnowman_c::func_ov081_02125208()
             this->mAnmModel.SetAnim((BCA_File *)gSnowmanJumpStAnimationFile.filePtr, 0x40000000,
                                     0x1000, 0);
             func_02012694(0xdd, &this->mCamSpacePosX);
-            func_ov081_02125488(&data_ov081_02128e74);
+            SetState(&data_ov081_02128e74);
         }
     }
     return 1;
 }
 
 /* State "walk the path", enter: step onto the next node when close enough. */
-int daSnowman_c::func_ov081_0212538c()
-{
+int daSnowman_c::StateWalkEnter() {
     struct Vector3 node;
     struct Vector3 diff;
     int len;
@@ -759,7 +735,7 @@ int daSnowman_c::func_ov081_0212538c()
     pp.GetNode(node, this->mPathNodeIndex);
     node.y = this->mPosY;
     Vec3_Sub(&diff, &this->mPos, &node);
-    len = LenVec3(&diff);
+    len = VEC_Mag(&diff);
     this->mHopStep = 0xa000;
     this->mStep = 0;
     if (len == 0 || len <= this->mHopStep) {
@@ -777,8 +753,7 @@ int daSnowman_c::func_ov081_0212538c()
 }
 
 /* Enters a state: records it, then runs its enter handler if it has one. */
-int daSnowman_c::func_ov081_02125488(State *state)
-{
+int daSnowman_c::SetState(State *state) {
     this->mState = state;
     if (this->mState->enter == 0)
         return 1;
@@ -787,8 +762,7 @@ int daSnowman_c::func_ov081_02125488(State *state)
 
 /* Poses the model, then carries the cap on bone 5 and the snowball on
    bone 3, and drops the shadow while standing on the path. */
-void daSnowman_c::func_ov081_021254d8()
-{
+void daSnowman_c::UpdateModelMatrices() {
     int src[3], dst[3];
     int t;
     dActor_c *actor;
@@ -813,8 +787,8 @@ void daSnowman_c::func_ov081_021254d8()
         this->mCapPos.z = 0;
         actor = dActor_c::FindWithID(this->mCapUniqueID);
         if (actor != 0) {
-            MulMat4x3Mat4x3(&this->mAnmModel.data.transforms[5], &this->mAnmModel.mat4x3,
-                            &this->mCapMatrix);
+            MTX_Concat43(&this->mAnmModel.data.transforms[5], &this->mAnmModel.mat4x3,
+                         &this->mCapMatrix);
 
             this->mCapPos.x = data_020a0e68.m[9];
             this->mCapPos.y = data_020a0e68.m[10];
@@ -828,7 +802,7 @@ void daSnowman_c::func_ov081_021254d8()
 
             Matrix4x3_FromTranslation(&data_020a0e68, 0, 0x4000, 0);
             Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, 0, 0x2000, 0);
-            MulMat4x3Mat4x3(&data_020a0e68, &this->mCapMatrix, &this->mCapMatrix);
+            MTX_Concat43(&data_020a0e68, &this->mCapMatrix, &this->mCapMatrix);
             actor->mCarryMatrix = &this->mCapMatrix;
         }
     }
@@ -837,7 +811,7 @@ void daSnowman_c::func_ov081_021254d8()
     this->mHandPos.y = 0;
     this->mHandPos.z = 0;
     data_020a0e68 = this->mAnmModel.mat4x3;
-    MulMat4x3Mat4x3(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
+    MTX_Concat43(&this->mAnmModel.data.transforms[3], &data_020a0e68, &data_020a0e68);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0xc000, -0x1000, 0);
 
     this->mHandPos.x = data_020a0e68.m[9];
@@ -918,7 +892,7 @@ int daSnowman_c::Behavior()
             func_02012694(0x166, &mCamSpacePosX);
             mDeathSound = 0;
         }
-        func_ov081_021254d8();
+        UpdateModelMatrices();
         return 1;
     }
     if (mType == 2
@@ -948,12 +922,12 @@ int daSnowman_c::Behavior()
     UpdatePos(&mdCcAcPos_c);
     if (mType == 0)
         UpdateWMClsn(mWithMeshClsn, 0);
-    func_ov081_021254d8();
+    UpdateModelMatrices();
     if (mState != &data_ov081_02128e84
         && mState != &data_ov081_02128e64
         && mState != &data_ov081_02128e94
         && mState != &data_ov081_02128e24)
-        func_ov081_021243cc();
+        CheckAttacks();
     mdCcAcPos_c.Clear();
     {
         p = ClosestPlayer();
@@ -1032,10 +1006,10 @@ int daSnowman_c::InitResources()
         mPathNodeIndex = 1;
         mVertAccel = -0x2000;
         mFlags = 0x10000000;
-        func_ov081_02125488(&data_ov081_02128e54);
+        SetState(&data_ov081_02128e54);
     } else {
         mPosY -= 0x118000;
-        func_ov081_02125488(&data_ov081_02128e84);
+        SetState(&data_ov081_02128e84);
         if (mType == 3) {
             mCoinType = 0;
             mExtraCoinCount = 0;
@@ -1070,13 +1044,22 @@ daSnowmanAnimationFilePtr data_ov081_02128da8(ASSET_SNOWMAN_SLEEP_BCA);
 daSnowmanAnimationFilePtr gSnowmanJumpStAnimationFile(ASSET_SNOWMAN_JUMP_ST_BCA);
 daSnowmanAnimationFilePtr gSnowmanJumpEdAnimationFile(ASSET_SNOWMAN_JUMP_ED_BCA);
 
-daSnowman_c::State data_ov081_02128e54(&daSnowman_c::func_ov081_0212538c, &daSnowman_c::func_ov081_02125208);
-daSnowman_c::State data_ov081_02128e74(&daSnowman_c::func_ov081_02125200, &daSnowman_c::func_ov081_021250c8);
-daSnowman_c::State data_ov081_02128e84(&daSnowman_c::func_ov081_02125068, &daSnowman_c::func_ov081_02125038);
-daSnowman_c::State data_ov081_02128ea4(&daSnowman_c::func_ov081_02124f7c, &daSnowman_c::func_ov081_02124f20);
-daSnowman_c::State data_ov081_02128e14(&daSnowman_c::func_ov081_02124ec0, &daSnowman_c::func_ov081_02124e64);
-daSnowman_c::State data_ov081_02128e34(&daSnowman_c::func_ov081_02124dfc, &daSnowman_c::func_ov081_02124d50);
-daSnowman_c::State data_ov081_02128e44(&daSnowman_c::func_ov081_02124d14, &daSnowman_c::func_ov081_02124b98);
-daSnowman_c::State data_ov081_02128e64(&daSnowman_c::func_ov081_02124b08, &daSnowman_c::func_ov081_021249f4);
-daSnowman_c::State data_ov081_02128e94(&daSnowman_c::func_ov081_0212498c, &daSnowman_c::func_ov081_02124894);
-daSnowman_c::State data_ov081_02128e24(&daSnowman_c::func_ov081_0212479c, &daSnowman_c::func_ov081_021246a0);
+daSnowman_c::State data_ov081_02128e54(&daSnowman_c::StateWalkEnter,
+                                       &daSnowman_c::StateWalkExecute);
+daSnowman_c::State data_ov081_02128e74(&daSnowman_c::StateHopEnter, &daSnowman_c::StateHopExecute);
+daSnowman_c::State data_ov081_02128e84(&daSnowman_c::StateHideUnhideEnter,
+                                       &daSnowman_c::StateHideUnhideExecute);
+daSnowman_c::State data_ov081_02128ea4(&daSnowman_c::StateRiseFromGroundEnter,
+                                       &daSnowman_c::StateRiseFromGroundExecute);
+daSnowman_c::State data_ov081_02128e14(&daSnowman_c::StateRotateEnter,
+                                       &daSnowman_c::StateRotateExecute);
+daSnowman_c::State data_ov081_02128e34(&daSnowman_c::StateSpawnSnowballEnter,
+                                       &daSnowman_c::StateSpawnSnowballExecute);
+daSnowman_c::State data_ov081_02128e44(&daSnowman_c::StateThrowSnowballEnter,
+                                       &daSnowman_c::StateThrowSnowballExecute);
+daSnowman_c::State data_ov081_02128e64(&daSnowman_c::StateBurrowEnter,
+                                       &daSnowman_c::StateBurrowExecute);
+daSnowman_c::State data_ov081_02128e94(&daSnowman_c::StateDeathEnter,
+                                       &daSnowman_c::StateDeathExecute);
+daSnowman_c::State data_ov081_02128e24(&daSnowman_c::StateMeltEnter,
+                                       &daSnowman_c::StateMeltExecute);

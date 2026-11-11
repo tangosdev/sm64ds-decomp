@@ -24,9 +24,9 @@
 #include "dBgPi.h"
 #include "Sound.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "math/Approach.h"
 #include "SpawnInfo.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -595,7 +595,7 @@ int daPgRcer_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
         if (floorNormal.y != 0) {
             int x = FX_MUL(floorNormal.x, mSpeedX);
             int y = FX_MUL(floorNormal.z, mSpeedZ);
-            mVertSpeed = -(cstd::fdiv(x + y, floorNormal.y) + 0x8000);
+            mVertSpeed = -(FX_Div(x + y, floorNormal.y) + 0x8000);
             if (mVertSpeed > 0)
                 mVertSpeed = 0;
         }

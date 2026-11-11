@@ -3,7 +3,7 @@
 #include "private/fs_views.h"
 int func_0203d7b8(void);
 FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi);
-void Crash(void);
+void OS_Terminate(void);
 void FS_LoadOverlay(int a, int id);
 /* A loaded-overlay slot (see func_02017e60.c): the overlay id, 0xffffffff
    when the slot is free, and the RAM range the overlay occupies. */
@@ -38,7 +38,7 @@ void LoadOverlay(int id) {
                 slot = r;
             }
         } else if (((r->start + r->size) > start) && (end > r->start)) {
-            Crash();
+            OS_Terminate();
         }
     }
 

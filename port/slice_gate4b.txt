@@ -24,24 +24,23 @@ src/engine/model/ModelComponents.cpp
 # GX upload path (no textual MMIO; VRAM windows come from HAL globals)
 src/engine/gx/GX.cpp
 
-# render walk + math. func_02044534/func_0204488c/NormalizeVec3 are in the
+# render walk + math. func_02044534/func_0204488c/VEC_Normalize are in the
 # HOSTGEN list instead: they touch MMIO textually (geometry ports, the
 # hardware divider) and an untransformed build latches those writes
 # silently -- the exact failure hostgen exists to prevent.
-src/MulMat4x3Mat4x3.c
+src/MTX_Concat43.c
 src/func_020458a8.c
 src/func_02048234.c
-src/MulMat3x3Mat3x3.c
-# func_02016b24 and dExtModel_c::C2 live in src/engine/model/d_ext_model.cpp above.
-# DMASyncWordTransfer and MI_DmaCopy32Async live in src/engine/mi/MI_Dma.cpp,
+src/MTX_Concat33.c
+# dExtSimpleModel_c::SetMaterialFlags and dExtModel_c::C2 live in src/engine/model/d_ext_model.cpp above.
+# MI_DmaCopy32 and MI_DmaCopy32Async live in src/engine/mi/MI_Dma.cpp,
 # which the gate 4a hostgen set already emits for MI_WaitDma.
 
 # gate 4c additions: the animation path (UpdateBones recursion).
 # func_020453c0 lives in the ModelComponents TU listed above.
 src/func_0204547c.cpp
-# cstd::abs is defined host-side in hal/heap_globals.cpp: its src/ home,
-# src/cstd4.cpp, carries hand-asm the host cannot compile, and every target that
-# links this slice links heap_globals.cpp as well.
+# abs is MSL's C abs: its src/ home, src/cstd4.cpp, carries hand-asm the host
+# cannot compile, so the host C library's abs links in its place.
 # dExtFrameCtrl_c::LoadFile lives in src/SharedFilePtr.cpp (slice 3b),
 # compiled under SM64DS_PORT_GATE4B.
 src/engine/animation/dExtFrameCtrl_c_UpdateFileOffsets.cpp
@@ -51,6 +50,5 @@ src/engine/animation/dExtFrameCtrl_c_UpdateFileOffsets.cpp
 # vtable there -- which needs EVERY virtual defined, not the subset a gate
 # happens to exercise. A migrated class can no longer be sliced method by
 # method; it comes across whole. src/engine/model/d_ext_model.cpp (above) is that
-# TU for this class. Its destructor calls the delete veneer func_0203cbc0,
-# which src/engine/heap/Heap.cpp (slice 3a) now defines for the host, along
-# with the allocator func_0203cc0c this slice used to list as well.
+# TU for this class. Its destructor releases its buffer with operator
+# delete[], which on the host is the CRT's.

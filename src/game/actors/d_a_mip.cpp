@@ -49,13 +49,13 @@ enum daMip_c_AssetId {
 #include "dBgCh_Gnd.h"
 #include "daObj_Mip_Key_c.h"
 #include "Sound.h"
-#include "cstd.h"
 #include "math/CalcLib.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "LevelRng.h"
 #include "private/mtx43.h"
 #include "nitro/fx/fx.h"
+#include "nitro/fx/fx_cp.h"
 
 namespace Sound {
 bool PlaySub(u32, u32, u32, int, bool);
@@ -85,20 +85,18 @@ int   SurfaceInfo_TestFlag0x20(void *);
 /* maths and the still-unnamed helpers */
 void Vec3_Sub(Vector3 *, const Vector3 *, const Vector3 *);
 void  Vec3_MulScalar(void *, const void *, int);
-int LenVec3(const Vector3 *);
+int VEC_Mag(const Vector3 *);
 int   AngleDiff(int, int);
 void  Matrix4x3_FromTranslation(void *, int, int, int);
 void  Matrix4x3_FromRotationY(void *, int);
 void  Matrix4x3_ApplyInPlaceToRotationXYZExt(void *, int, int, int);
-void  MulMat4x3Mat4x3(void *, void *, void *);
-void  MulMat3x3Mat3x3(void *, void *, void *);
-void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
+void MTX_Concat43(void *, void *, void *);
+void MTX_Concat33(void *, void *, void *);
+void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
 u8 NumStars(void);
 int func_02013890(int, int);
 void func_02013944(void);
 void func_02012694(unsigned int id, const Vector3 *pos);
-void func_02016acc(void *, unsigned int);
-void func_02016b24(void *, unsigned int);
 void  func_0203c178(void *, int, int, int);
 
 }
@@ -600,7 +598,7 @@ int daMip_c::StateCaughtMain()
         }
     }
 
-    if (*(volatile s32 *)&mActionStep != 1)
+    if (mActionStep != 1)
         return 1;
 
     if (pl->GetTalkState() != -1) {
@@ -790,7 +788,7 @@ int daMip_c::StateFleeMain() {
         s32 y = mPosY;
         node.y = y;
         Vec3_Sub((::Vector3 *)&delta, (const ::Vector3 *)&mPos, (const ::Vector3 *)&node);
-        len = LenVec3((const Vector3 *)&delta);
+        len = VEC_Mag((const Vector3 *)&delta);
     }
     if ((len == 0) || (len <= lim)) {
         mPosX = node.x;
@@ -811,9 +809,9 @@ int daMip_c::StateFleeMain() {
         if (AngleDiff(ang, mPrevAngleY) < 0x2000) {
             ysave = mPosY;
             {
-                int s = cstd::fdiv(lim, len);
+                int s = FX_Div(lim, len);
                 Vec3_MulScalar(&scaled, &delta, s);
-                SubVec3((::Vector3 *)&mPos, (::Vector3 *)&scaled, (::Vector3 *)&mPos);
+                VEC_Subtract((::Vector3 *)&mPos, (::Vector3 *)&scaled, (::Vector3 *)&mPos);
             }
             if (mVertSpeed > 0) {
                 mPosY = ysave;
@@ -1017,7 +1015,7 @@ void daMip_c::UpdateMatrixAndShadow()
     Matrix4x3_FromTranslation(&data_020a0e68, t.x, t.y, t.z);
     Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, mAngleX, mAngleY, mAngleZ);
     *(Mtx43 *)&mAnmModel.mat4x3 = data_020a0e68;
-    MulMat4x3Mat4x3(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
+    MTX_Concat43(mAnmModel.data.transforms, &mAnmModel.mat4x3, tmp);
     Matrix4x3_FromTranslation(&data_020a0e68,
         mPosX >> 3,
         (mPosY - 0xe000) >> 3,
@@ -1086,7 +1084,7 @@ void daMip_c::UpdateMirrorShadow()
     v.z = Vec3_HorzDist((const Vector3 *)&c->v5c, (const Vector3 *)&vd);
     Matrix4x3_FromRotationY(&data_020a0e68,
                             Vec3_HorzAngle((const Vector3 *)&c->v5c, (const Vector3 *)&vd));
-    MulVec3Mat4x3((Vector3 *)&v, (Matrix4x3 *)&data_020a0e68, (Vector3 *)&res);
+    MTX_MultVec43((Vector3 *)&v, (Matrix4x3 *)&data_020a0e68, (Vector3 *)&res);
     {
         int t;
         vd.x = vd.x + res.x;
@@ -1175,13 +1173,13 @@ void daMip_c::RenderMirrorImage()
     tmp = *(Mtx43 *)&mAnmModel.mat4x3;
     mAnmModel.mat4x3.t.x = 0x421800 - mAnmModel.mat4x3.t.x;
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
-    MulMat3x3Mat3x3(&mAnmModel.mat4x3, &data_020a0e68, &mAnmModel.mat4x3);
-    func_02016acc(&mAnmModel, 0x80);
-    func_02016b24(&mAnmModel, 0x40);
+    MTX_Concat33(&mAnmModel.mat4x3, &data_020a0e68, &mAnmModel.mat4x3);
+    mAnmModel.ClearMaterialFlags(0x80);
+    mAnmModel.SetMaterialFlags(0x40);
     mAnmModel.dExtAnmModel_c::Render(&mScale);
     mAnmModel.ApplyOpacity(0xff, 0);
-    func_02016b24(&mAnmModel, 0x80);
-    func_02016acc(&mAnmModel, 0x40);
+    mAnmModel.SetMaterialFlags(0x80);
+    mAnmModel.ClearMaterialFlags(0x40);
     *(Mtx43 *)&mAnmModel.mat4x3 = tmp;
 }
 
@@ -1218,7 +1216,6 @@ int daMip_c::Behavior()
 
     extern s8 gCurrentSublevel;
     extern s8 gCurrentAreaId;
-    extern SaveBlock data_0209caa0;
     extern void* data_0209f33c;
     extern DaMipAnimationFilePtr data_ov085_021305c0;
     extern MipStatePair data_ov085_0213068c;
@@ -1392,7 +1389,6 @@ int daMip_c::InitResources()
     extern DaMipModelFile data_ov085_021305e0;
     extern MipStatePair data_ov085_021306cc;
     extern s32 data_ov085_021305ac;
-    extern SaveBlock data_0209caa0;
     extern s8 gCurrentSublevel;
 
     void* player;

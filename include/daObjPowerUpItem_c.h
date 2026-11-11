@@ -75,7 +75,7 @@ struct daObjPowerUpItem_c : dActor_c {
        first argument each frame, cleared to 0 when a state ends. */
     u32 mEffectHandle;            /* 0x3c4 */
     /* Angle stepped by 0x2000 per frame while the flower is popping; its top
-       twelve bits index the s16 table data_02082214 that scales mScaleX/Y. */
+       twelve bits index the s16 table FX_SinCosTable_ that scales mScaleX/Y. */
     u16 mWobbleAngle;            /* 0x3c8 */
     /* Seeded 0xb4 (180 frames, three seconds) in InitResources. Render skips
        drawing on odd values once it is below 0x2d, so the flower blinks through

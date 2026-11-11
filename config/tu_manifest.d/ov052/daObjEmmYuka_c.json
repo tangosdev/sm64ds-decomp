@@ -610,14 +610,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@484",
+      "from": "@460",
       "to": "@481",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @495 now; licensed under the existing pin @481 Re-keyed from @487 to @486 when Behavior's function-local POD Vec was respelled as VecFx32 (#4570)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @495 now; licensed under the existing pin @481 Re-keyed from @487 to @486 when Behavior's function-local POD Vec was respelled as VecFx32 (#4570). Re-keyed from @484 to @482 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @484 to @462 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@485",
+      "from": "@461",
       "to": "@482",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @496 now; licensed under the existing pin @482 Re-keyed from @488 to @487 when Behavior's function-local POD Vec was respelled as VecFx32 (#4570)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @496 now; licensed under the existing pin @482 Re-keyed from @488 to @487 when Behavior's function-local POD Vec was respelled as VecFx32 (#4570). Re-keyed from @485 to @483 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @485 to @463 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

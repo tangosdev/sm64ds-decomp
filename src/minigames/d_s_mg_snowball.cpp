@@ -24,9 +24,6 @@
  */
 
 // leftovers:
-// - Snowball_UpdateCamera stays a free function with its char* parameter and
-//   C linkage (decl_common.h declares it that way; callers are ResetScene and
-//   Behavior in this TU).
 // - dScMgSnowball_c::Vec2, the collision ring's hit pair, stays its own nested
 //   type with a destructor and no constructor (see the header); it was not
 //   swapped for Vector2 in the pass that typed mArray1/mArray2.
@@ -51,11 +48,11 @@ enum dScMgSnowball_c_AssetId {
    0x20 bytes more than the ROM has. */
 #include "dScMgSnowball_c.h"
 #include "nitro/hw/registers.h"
-#include "G2.h"
+#include "nitro/gx/gx_bgcnt.h"
 #include "SpawnInfo.h"
 #include "types.h"
-#include "CP15.h"
-#include "GX.h"
+#include "nitro/os/cache.h"
+#include "nitro/gx/gx_load.h"
 #include "cstd.h"
 #include "decl_common.h"
 #include "LevelRng.h"
@@ -70,6 +67,9 @@ enum dScMgSnowball_c_AssetId {
 #include "private/mtx43.h"
 #include "OamAttr.h"
 #include "Vector2Math.h"
+#include "nitro/gx/g3x.h"
+#include "nitro/fx/fx_cp.h"
+#include "nitro/gx/g3imm_light.h"
 
 /* Declarations the recovered sources need that no project header supplies.
  * Each one was checked against include/*.h first; these are the residue. */
@@ -83,14 +83,11 @@ typedef struct Pair {
    `pointer + constant` arithmetic because every member spelling moved bytes. */
 #define SNOW_OFF(m) ((int)&((dScMgSnowball_c *)0)->m)
 
-namespace G3X {
-void SetFog(int enable, int blend, int slope, int offset);
-}
 
 extern "C" {
 extern void RenderOamBothScreens(void *a, int b, int c, int d, int e, void *f);
 extern OamAttr *sSnowballBitSprites[];
-extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *dst);
+extern void VEC_Add(Vector3 *a, Vector3 *b, Vector3 *dst);
 extern void func_0203d388(int *p, int angle);
 extern int func_0203d434(int *p);
 extern void func_0203d630(int *p, int m);
@@ -98,13 +95,13 @@ extern u32 d_s_mg_snowballNewHold(u32 uniqueID, u32 effectID, int x, int y, int 
                                   void *callback);
 extern void func_02012718(int a, int b);
 extern int atan2_hold_d_s_mg_snowball_1(int y, int x);
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
 extern struct Matrix4x3 data_020a0e68;
-extern void MultiStore16(unsigned short value, void *dst, int count);
+extern void MIi_CpuClear16(unsigned short value, void *dst, int count);
 extern u16 sSnowballCourseTiles[];
 extern int RandomIntInternal(int *seed);
 extern unsigned char data_ov006_0212f3b0[];
@@ -170,7 +167,7 @@ void dScMgSnowball_c::SnowSpray_UpdateAll() {
                 }
             }
             mSprays[i].vz -= 0x200;
-            AddVec3((Vector3 *)&mSprays[i].x, (Vector3 *)&mSprays[i].vx, (Vector3 *)&mSprays[i].x);
+            VEC_Add((Vector3 *)&mSprays[i].x, (Vector3 *)&mSprays[i].vx, (Vector3 *)&mSprays[i].x);
             if (mSprays[i].vz < 0 && mSprays[i].z < 0) {
                 mSprays[i].active = 0;
                 return;
@@ -615,7 +612,7 @@ void dScMgSnowball_c::UpdateSnowball() {
         normalVelocity = FX_MUL(normalVelocity, 0x1800);
         mVelX -= FX_MUL(normalVelocity, push[0]);
         mVelY -= FX_MUL(normalVelocity, push[1]);
-        headingComponent = data_02082214[((unsigned short)cstd::atan2(mVelY, mVelX) >> 4) * 2];
+        headingComponent = FX_SinCosTable_[((unsigned short)cstd::atan2(mVelY, mVelX) >> 4) * 2];
         vx = mVelX;
         mVelX = vx / 8 + FX_MUL(vx, headingComponent) / 4;
         vy = mVelY;
@@ -627,42 +624,39 @@ void dScMgSnowball_c::UpdateSnowball() {
     }
 }
 
-extern "C" {
-void Snowball_UpdateCamera(char *scene) {
-    dScMgSnowball_c *self = (dScMgSnowball_c *)scene;
-    int t = cstd::fdiv(0xc0000, data_02082314);
+void dScMgSnowball_c::UpdateCamera() {
+    int t = FX_Div(0xc0000, data_02082314);
     Vector3 v;
     int x, y;
-    if (self->mScreensSwapped == 0) {
-        self->mCamera.mLookAt.x = 0;
-        self->mCamera.mLookAt.y = 0xd0000;
-        self->mCamera.mLookAt.z = 0;
-        self->mCamera.mPos.x = 0;
-        self->mCamera.mPos.y = 0;
-        self->mCamera.mPos.z = t;
-        self->mCamera.mFovAngle = 0x200;
-        Camera_UpdateMatrices(&self->mCamera);
+    if (mScreensSwapped == 0) {
+        mCamera.mLookAt.x = 0;
+        mCamera.mLookAt.y = 0xd0000;
+        mCamera.mLookAt.z = 0;
+        mCamera.mPos.x = 0;
+        mCamera.mPos.y = 0;
+        mCamera.mPos.z = t;
+        mCamera.mFovAngle = 0x200;
+        Camera_UpdateMatrices(&mCamera);
     } else {
-        self->mCamera.mLookAt.x = 0;
-        self->mCamera.mLookAt.y = -0x60000;
-        self->mCamera.mLookAt.z = 0;
-        self->mCamera.mPos.x = 0;
-        self->mCamera.mPos.y = 0;
-        self->mCamera.mPos.z = t;
-        self->mCamera.mFovAngle = 0x200;
-        Camera_UpdateMatrices(&self->mCamera);
+        mCamera.mLookAt.x = 0;
+        mCamera.mLookAt.y = -0x60000;
+        mCamera.mLookAt.z = 0;
+        mCamera.mPos.x = 0;
+        mCamera.mPos.y = 0;
+        mCamera.mPos.z = t;
+        mCamera.mFovAngle = 0x200;
+        Camera_UpdateMatrices(&mCamera);
     }
-    y = self->mScrollY - self->mPosY + 0x110000;
-    x = self->mPosX - 0x80000;
+    y = mScrollY - mPosY + 0x110000;
+    x = mPosX - 0x80000;
     v.x = x;
     v.y = y;
     v.z = 0;
     Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, self->mHeadingAngle);
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mRollAngle);
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
-    *(Mtx43 *)&self->mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
-}
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mHeadingAngle);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, mRollAngle);
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
+    *(Mtx43 *)&mModel.mat4x3 = *(Mtx43 *)&data_020a0e68;
 }
 
 void dScMgSnowball_c::RedrawCourse() {
@@ -690,7 +684,7 @@ void dScMgSnowball_c::RedrawCourse() {
  * Copies one 16-row column of 2x2 BG tiles into the BG2 screen of both the
  * main and the sub engine. Each cell index comes from the u16 grid at
  * self+0x4f38 (row stride 0x5c0, column `col`); its four tiles are the four
- * u16 words of sSnowballCourseTiles[idx], written with MultiStore16 (two
+ * u16 words of sSnowballCourseTiles[idx], written with MIi_CpuClear16 (two
  * halfwords each) at screen offset ((col & 0xf) << 7) + 2*j, +2, +0x40,
  * +0x42. flag == 1 targets the first half of the screen block, anything else
  * the half at +0x800.
@@ -719,7 +713,7 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
 
     if (flag == 1) {
         masked = col & 0xf;
-        tile = *(u16 *)((char *)sSnowballCourseTiles + 6);
+        tile = sSnowballCourseTiles[3];
         row = scene;
         i = 0;
         j = i;
@@ -731,43 +725,43 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
         do {
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
-            scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + off);
-            MultiStore16(v0 = tile, (char *)(scr + j), n);
+            scr = (volatile u16 *)((char *)G2_GetBG2ScrPtr() + off);
+            MIi_CpuClear16(v0 = tile, (char *)(scr + j), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
-            scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + off);
-            MultiStore16(v1 = tile, (char *)(scr + j + 1), n);
+            scr = (volatile u16 *)((char *)G2_GetBG2ScrPtr() + off);
+            MIi_CpuClear16(v1 = tile, (char *)(scr + j + 1), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
-            scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + off);
-            MultiStore16(v2 = tile, (char *)(scr + j + 0x20), n);
+            scr = (volatile u16 *)((char *)G2_GetBG2ScrPtr() + off);
+            MIi_CpuClear16(v2 = tile, (char *)(scr + j + 0x20), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
-            scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + off);
-            MultiStore16(v3 = tile, (char *)(scr + j + 0x21), n);
+            scr = (volatile u16 *)((char *)G2_GetBG2ScrPtr() + off);
+            MIi_CpuClear16(v3 = tile, (char *)(scr + j + 0x21), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
-            scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + off);
-            MultiStore16(v4 = tile, (char *)(scr + j), n);
+            scr = (volatile u16 *)((char *)G2S_GetBG2ScrPtr() + off);
+            MIi_CpuClear16(v4 = tile, (char *)(scr + j), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
-            scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + off);
-            MultiStore16(v5 = tile, (char *)(scr + j + 1), n);
+            scr = (volatile u16 *)((char *)G2S_GetBG2ScrPtr() + off);
+            MIi_CpuClear16(v5 = tile, (char *)(scr + j + 1), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
-            scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + off);
-            MultiStore16(v6 = tile, (char *)(scr + j + 0x20), n);
+            scr = (volatile u16 *)((char *)G2S_GetBG2ScrPtr() + off);
+            MIi_CpuClear16(v6 = tile, (char *)(scr + j + 0x20), n);
 
             idx = *(u16 *)(row + SNOW_OFF(mTileMap));
             tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
-            scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + off);
-            MultiStore16(v7 = tile, (char *)(scr + j + 0x21), n);
+            scr = (volatile u16 *)((char *)G2S_GetBG2ScrPtr() + off);
+            MIi_CpuClear16(v7 = tile, (char *)(scr + j + 0x21), n);
 
             row += 0x5c0;
             j += 2;
@@ -786,43 +780,43 @@ void dScMgSnowball_c::DrawCourseColumn(int col, int flag) {
     do {
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
-        scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + 0x800 + off);
-        MultiStore16(w0 = tile, (char *)(scr + j), n);
+        scr = (volatile u16 *)((char *)G2_GetBG2ScrPtr() + 0x800 + off);
+        MIi_CpuClear16(w0 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
-        scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + 0x802 + off);
-        MultiStore16(w1 = tile, (char *)(scr + j), n);
+        scr = (volatile u16 *)((char *)G2_GetBG2ScrPtr() + 0x802 + off);
+        MIi_CpuClear16(w1 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
-        scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + 0x840 + off);
-        MultiStore16(w2 = tile, (char *)(scr + j), n);
+        scr = (volatile u16 *)((char *)G2_GetBG2ScrPtr() + 0x840 + off);
+        MIi_CpuClear16(w2 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
-        scr = (volatile u16 *)((char *)G2::GetBG2ScrPtr() + k842 + off);
-        MultiStore16(w3 = tile, (char *)(scr + j), n);
+        scr = (volatile u16 *)((char *)G2_GetBG2ScrPtr() + k842 + off);
+        MIi_CpuClear16(w3 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3));
-        scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + 0x800 + off);
-        MultiStore16(w4 = tile, (char *)(scr + j), n);
+        scr = (volatile u16 *)((char *)G2S_GetBG2ScrPtr() + 0x800 + off);
+        MIi_CpuClear16(w4 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 2);
-        scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + 0x802 + off);
-        MultiStore16(w5 = tile, (char *)(scr + j), n);
+        scr = (volatile u16 *)((char *)G2S_GetBG2ScrPtr() + 0x802 + off);
+        MIi_CpuClear16(w5 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 4);
-        scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + 0x840 + off);
-        MultiStore16(w6 = tile, (char *)(scr + j), n);
+        scr = (volatile u16 *)((char *)G2S_GetBG2ScrPtr() + 0x840 + off);
+        MIi_CpuClear16(w6 = tile, (char *)(scr + j), n);
 
         idx = *(u16 *)(row + SNOW_OFF(mTileMap));
         tile = *(u16 *)((char *)sSnowballCourseTiles + (idx << 3) + 6);
-        scr = (volatile u16 *)((char *)G2S::GetBG2ScrPtr() + k842 + off);
-        MultiStore16(w7 = tile, (char *)(scr + j), n);
+        scr = (volatile u16 *)((char *)G2S_GetBG2ScrPtr() + k842 + off);
+        MIi_CpuClear16(w7 = tile, (char *)(scr + j), n);
 
         row += 0x5c0;
         j += 2;
@@ -1252,7 +1246,7 @@ void dScMgSnowball_c::ResetScene() {
     Quaternion_FromVector3(mSpinQuat, &sUnitY, (struct Vector3 *)mSpinAxis);
     Quaternion_Normalize(mSpinQuat);
 
-    Snowball_UpdateCamera((char *)this);
+    UpdateCamera();
     for (i = 0; i < 0x20; i++) {
         mProbeHit[i] = 0;
         mProbePush[i] = 0;
@@ -1283,7 +1277,7 @@ void dScMgSnowball_c::ResetScene() {
  * go through an int cast of `&(this + i * 8)->mArray[0].y` because the ROM loads them
  * as `[this + i * 8, pool offset]`, which `mArray1[i].y` does not reproduce. */
 s32 dScMgSnowball_c::Render() {
-    int m[3];
+    int light[3];
     int vecArr[3];
 
     mAnimCounter++;
@@ -1298,14 +1292,12 @@ s32 dScMgSnowball_c::Render() {
     }
     Mg_RenderSpriteBoth(sSnowballCourseMeterSprites[1], 0xf0, 0x60, -1, 0);
 
-    m[2] = 0xfffff008;
-    m[1] = 0;
-    m[0] = 0;
-    func_0203cd80(m, -0x2000);
-    *(volatile int *)0x040004c8 = (((short)m[0] >> 3) & 0x3ff) |
-                                  ((((short)m[1] >> 3) & 0x3ff) << 10) |
-                                  ((((short)m[2] >> 3) & 0x3ff) << 20);
-    *(int *)0x040004cc = 0x7fff;
+    light[2] = -0xff8;
+    light[1] = 0;
+    light[0] = 0;
+    func_0203cd80(light, -0x2000);
+    G3_LightVector(GX_LIGHTID_0, light[0], light[1], light[2]);
+    G3_LightColor(GX_LIGHTID_0, GX_RGB(31, 31, 31));
 
     {
         int t = mBallSize / 2 + mBallSize * 4;
@@ -1705,7 +1697,7 @@ s32 dScMgSnowball_c::Behavior() {
 
     Bit_UpdateAll();
     SnowSpray_UpdateAll();
-    Snowball_UpdateCamera((char *)this);
+    UpdateCamera();
     return 1;
 }
 
@@ -1794,33 +1786,33 @@ s32 dScMgSnowball_c::InitResources() {
     *(vu32 *)0x400101c = 0;
     *(vu16 *)0x400100e = (*(vu16 *)0x400100e & ~3) | 3;
 
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKIDAMA_NCG_BIN, (u8 *)G2::GetBG2CharPtr() + 0x4000);
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKIDAMA_NCG_BIN, (u8 *)G2S::GetBG2CharPtr() + 0x4000);
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKA_NSC_BIN, G2::GetBG3ScrPtr());
-    LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKA_NSC_BIN, G2S::GetBG3ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKIDAMA_NCG_BIN, (u8 *)G2_GetBG2CharPtr() + 0x4000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKIDAMA_NCG_BIN, (u8 *)G2S_GetBG2CharPtr() + 0x4000);
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKA_NSC_BIN, G2_GetBG3ScrPtr());
+    LoadCompressedFileAt(ASSET_D_2D_MG_BG_YUKA_NSC_BIN, G2S_GetBG3ScrPtr());
 
     gMainScreenLayers |= DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3;
     gSubScreenLayers |= 0xc;
 
     buf = Ov004_LoadFileByPath(&sSnowballBgNclPath);
-    CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
-    GX::LoadBGPltt(buf, 0x100, 0x100);
-    GXS::LoadBGPltt(buf, 0x100, 0x100);
+    DC_FlushRange(buf, 0x100);
+    GX_LoadBGPltt(buf, 0x100, 0x100);
+    GXS_LoadBGPltt(buf, 0x100, 0x100);
     Ov004_Deallocate(buf);
 
     buf = Ov004_LoadFileByPath(&sSnowballNcgPath);
-    DecompressLZ16(buf, (void *)0x6400000);
-    DecompressLZ16(buf, (void *)0x6600000);
+    DecompressLZ16(buf, G2_GetOBJCharPtr());
+    DecompressLZ16(buf, G2S_GetOBJCharPtr());
     Ov004_Deallocate(buf);
 
     buf = Ov004_LoadFileByPath(&sSnowballNclPath);
-    CP15::FlushAndInvalidateDataCache((u32)buf, 0x100);
-    GX::LoadOBJPltt(buf, 0, 0x100);
-    GXS::LoadOBJPltt(buf, 0, 0x100);
+    DC_FlushRange(buf, 0x100);
+    GX_LoadOBJPltt(buf, 0, 0x100);
+    GXS_LoadOBJPltt(buf, 0, 0x100);
     Ov004_Deallocate(buf);
 
     *(vu16 *)0x4000008 = (*(vu16 *)0x4000008 & ~3) | 1;
-    G3X::SetFog(false, 0, 2, 0x1000);
+    G3X_SetFog(false, 0, 2, 0x1000);
     *(vu16 *)0x4000060 = (*(vu16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
 
@@ -2096,7 +2088,6 @@ void dScMgSnowball_c::BitB_StatePause(int idx) {
     mBits[idx].driftTimer = (u8)(((v * 0x30) >> 15) + 0x30);
 }
 
-
 typedef void (dScMgSnowball_c::*PMF_0212a224)(int);
 extern "C" PMF_0212a224 sSnowballBitBStateTable[];
 
@@ -2113,7 +2104,6 @@ void dScMgSnowball_c::Bit_PickKind(int idx) {
     mBits[idx].kind = data_ov006_0212f3b4[b];
     mBits[idx].driftState = 0;
 }
-
 
 typedef void (dScMgSnowball_c::*PMF_0212a2e0)(int);
 

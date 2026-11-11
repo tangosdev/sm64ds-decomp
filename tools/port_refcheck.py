@@ -45,7 +45,7 @@ CHECKS
 Scope note on check 3: only bare func_/data_ address-style names are
 checked (the ones a src/ rename can actually break). Itanium-mangled names
 declared extern "C" (e.g. _ZN6Memory16rootHeapIteratorE) and MSVC C++-mangled
-symbols the pragmas reference (e.g. ?Crash@@YAXXZ) are decomp *identifiers*
+symbols the pragmas reference (e.g. ?OS_Terminate@@YAXXZ) are decomp *identifiers*
 that a rename tool would not touch the address-form of, so they are out of
 scope here -- see AGENTS.md/MERGE.md for the human-facing rule.
 

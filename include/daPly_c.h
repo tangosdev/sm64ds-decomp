@@ -39,6 +39,7 @@
 struct dActor_c;
 struct fBase_c;
 struct Vector3;
+struct Vector3_16f;
 /* Declared, not included: dExtAnm2Model_c.h carries an inline operator delete, and
    any function body in a header this widely consumed renumbers every
    consumer's compiler temporaries. mBodyModels only needs the name. */
@@ -337,7 +338,7 @@ struct daPly_c : dActor_c {
     s32 mToxicSurfaceY; /* 0x650 */
     /* Yoshi's tongue against walls. TongueWallProbe, run by the tongue
        grab func_ov002_020d6998 (mHatCharacter 3), casts a dBgCh_Lin between
-       two bones of mHeadModels[3] and stores func_02053274's distance from
+       two bones of mHeadModels[3] and stores VEC_Distance's distance from
        the first to the hit point here; Behavior scales that model's bone by
        |dist| >> 3 while it is nonzero, and ChangeState zeroes it. */
     s32 mTongueHitDist; /* 0x654 */
@@ -631,7 +632,7 @@ struct daPly_c : dActor_c {
        down one per call while the hazard persists, cleared when it ends. */
     u8 mDamageTickTimer; /* 0x71d */
     /* A one-shot event sequence. func_ov002_020c43c4(id) latches the id
-       (once per save, via a bit in data_0209caa0[2]) and zeroes the step;
+       (once per save, via a bit in data_0209caa0.file.flags2) and zeroes the step;
        func_ov002_020c4188 then walks mEventStep 0..4, holding mEventWait
        ticks before handing data_ov002_020ff26c[mEventId - 1] to
        func_0201f32c. */
@@ -1239,18 +1240,42 @@ struct daPly_c : dActor_c {
 
     /* Helpers that were free functions taking the player as their first
        argument. A melonDS `this` sweep saw only the player in r0, and each
-       body uses r0 as the player. Names not recovered; each keeps its
-       address. Parameters unnamed (see the Kuppa note above). */
+       body uses r0 as the player, except 020bf224 and 020bf340: every caller
+       passes the player, they sit inside the run of daPly_c members at
+       0x020bf13c..0x020bf36c, and they never read `this`. Names not
+       recovered; each keeps its address (ScaleByCharFactor was
+       Player_ScaleByCharFactor). Parameters unnamed (see the Kuppa note
+       above). */
     int func_ov002_020bd8ac();
     void func_ov002_020be008();
+    void func_ov002_020bebd4();
+    void func_ov002_020bec2c();
     void func_ov002_020bec9c(unsigned int, int, Fix12i, u16);
+    void AdvanceAnims();
+    int func_ov002_020bf224(int, int);
     int func_ov002_020bf27c(int);
+    Fix12i ScaleByCharFactor(Fix12i);
+    void func_ov002_020bf340(int *, int, int);
     int func_ov002_020bf56c(int);
+    void func_ov002_020bf800(Vector3_16f);
     int func_ov002_020c179c(int);
     void func_ov002_020c18b0(int);
+    int func_ov002_020c2270(void *, void *);
+    int func_ov002_020c5244();
+    int func_ov002_020c6e14();
+    void DisableInteraction();
     int func_ov002_020ca270();
     void func_ov002_020ca940();
     void func_ov002_020cabe0();
+    int func_ov002_020cac60();
+    void func_ov002_020cae10();
+    int func_ov002_020cb354();
+    int func_ov002_020cb400();
+    void func_ov002_020cb474();
+    int func_ov002_020cbea8();
+    int func_ov002_020cc01c();
+    void func_ov002_020cc05c(unsigned short);
+    void func_ov002_020cc660(int);
     void func_ov002_020cd218(int, int *, int *);
     void func_ov002_020cd364();
     void func_ov002_020cd448();
@@ -1267,6 +1292,9 @@ struct daPly_c : dActor_c {
     int func_ov002_020cec2c();
     Fix12i func_ov002_020cedb0(Fix12i);
     int func_ov002_020cef84();
+    int func_ov002_020cf20c();
+    void func_ov002_020cf2f8();
+    void func_ov002_020cf384();
     int func_ov002_020cfaf0();
     int func_ov002_020cfbdc();
     int func_ov002_020cfd84(void *, void *);
@@ -1276,10 +1304,17 @@ struct daPly_c : dActor_c {
     int func_ov002_020d06c0();
     void func_ov002_020d0948();
     int func_ov002_020d0d2c();
+    int func_ov002_020d1164();
+    int func_ov002_020d1204();
+    int func_ov002_020d12b0();
+    void func_ov002_020d1f78(u32);
     int func_ov002_020d225c();
+    void func_ov002_020d228c();
     int func_ov002_020d22ec(int);
     int func_ov002_020d2da0();
+    void func_ov002_020d2f24();
     int func_ov002_020d2fdc();
+    void func_ov002_020d3498();
     int func_ov002_020d36d8(int);
     int func_ov002_020d3b9c();
     void func_ov002_020d413c(int);
@@ -1290,35 +1325,65 @@ struct daPly_c : dActor_c {
     int func_ov002_020d5c6c();
     int func_ov002_020d6334(int);
     void func_ov002_020d6368();
+    int func_ov002_020d674c();
     int func_ov002_020d6790();
+    int func_ov002_020d6c60(daPly_c *);
     int func_ov002_020d7030(void *);
     void func_ov002_020d71ec(int);
     void func_ov002_020d80d0();
+    void func_ov002_020d8118();
     void func_ov002_020d8158();
     int func_ov002_020d82f0();
+    int func_ov002_020d8360(daPly_c *, unsigned int);
+    int func_ov002_020d853c(dActor_c *);
     int func_ov002_020d869c();
+    void func_ov002_020d8854();
+    int func_ov002_020d8944(daPly_c *, daPly_c *);
+    void func_ov002_020d8a50(int);
+    void func_ov002_020d8d10(Vector3 *);
     void func_ov002_020d91b8(int);
     int func_ov002_020d91e0(int, int);
     void func_ov002_020d9a4c();
     void func_ov002_020d9aac();
+    void func_ov002_020d9c70();
+    int func_ov002_020d9dcc();
+    int func_ov002_020da95c();
+    int ReleaseHeldActor();
+    int func_ov002_020dacb4(dActor_c *);
     void func_ov002_020db8bc(unsigned char);
     void func_ov002_020dba0c();
+    void func_ov002_020dbaec();
+    void func_ov002_020dbbc0();
+    void func_ov002_020dbc94();
+    void func_ov002_020dbd94();
+    void func_ov002_020dbe70();
     void func_ov002_020dbf4c();
     void func_ov002_020dc020();
     void func_ov002_020dc174(const Vector3 *, Fix12i, Fix12i, u32, u32);
+    void func_ov002_020dc560();
+    void func_ov002_020dcafc();
     int func_ov002_020dd2f4();
+    void func_ov002_020dd5ec();
     int func_ov002_020dd824();
+    void func_ov002_020dd8f4();
+    void func_ov002_020dd908();
     int func_ov002_020dde74();
+    void func_ov002_020de3d0(short *, short *);
+    void func_ov002_020de968();
+    int func_ov002_020dec70();
     void func_ov002_020e032c();
+    int func_ov002_020e0478();
     void func_ov002_020e04a4();
     int func_ov002_020e0a64();
     int func_ov002_020e0ccc(void *);
+    void func_ov002_020e0f38(int);
     void func_ov002_020e1c20();
     void func_ov002_020e25f0(int);
     int func_ov002_020e2664();
     void func_ov002_020e28d4(int, int);
     void func_ov002_020e2ad0();
     int func_ov002_020e2b6c();
+    int func_ov002_020e2ba8();
     int func_ov002_020e2be4();
     int func_ov002_020e2c84();
     void func_ov002_020e301c();
@@ -1426,5 +1491,9 @@ typedef char Player_State_size_must_be_0x18[sizeof(daPly_c::State) == 0x18 ? 1 :
  * spellings match whichever is right. It needs the module question answered
  * first.
  */
+
+/* Actor-table factory. C linkage keeps the bare `daPly_c_classInit` symbol
+   that the PLAYER registry profile refers to. */
+extern "C" daPly_c *daPly_c_classInit();
 
 #endif

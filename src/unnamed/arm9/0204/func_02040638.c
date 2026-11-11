@@ -9,7 +9,7 @@ extern u16             data_020a0f20;   /* 0x020a0f20 - counter */
 /* Reload the parent parameters from the 0x40-byte template at data_020a1064
  * and give the session the next tgid. */
 void func_02040638(void) {
-    MultiCopy_Int((int *)data_020a1064, (int *)data_020a0f44, 0x40);
+    MIi_CpuCopy32((int *)data_020a1064, (int *)data_020a0f44, 0x40);
     data_020a0f20 = data_020a0f20 + 1;
     data_020a0f44->tgid = data_020a0f20;
 }

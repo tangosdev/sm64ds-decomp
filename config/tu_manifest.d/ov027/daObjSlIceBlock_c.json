@@ -633,14 +633,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@699",
+      "from": "@630",
       "to": "@671",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by __sinit relocation-site order after including the shared math/Sound headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by __sinit relocation-site order after including the shared math/Sound headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @699 to @630 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@700",
+      "from": "@631",
       "to": "@672",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by __sinit relocation-site order after including the shared math/Sound headers (their inline statics) shifted the TU's @NNN uniquifier"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | re-keyed by __sinit relocation-site order after including the shared math/Sound headers (their inline statics) shifted the TU's @NNN uniquifier Re-keyed from @700 to @631 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

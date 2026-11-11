@@ -4,22 +4,6 @@
     {
       "path": "src/game/stages/d_s_star_sel_methods.cpp",
       "rule": "handspelled-member",
-      "match": "_ZN2G212GetBG2ScrPtrEv",
-      "count": 3,
-      "reason": "G2 cannot be declared as a namespace in this TU: it includes decl_common.h, whose `extern int G2[];` (a real ROM data symbol) hides `namespace G2` and turns G2:: into an undefined identifier, the same wall d_s_title.cpp records. The GX/GXS/G3X calls beside it are real namespace calls. Follow-up: give G2's functions a header once the G2 data symbol is renamed or moved out of decl_common.h.",
-      "evidence": "include/decl_common.h:290 `extern int G2[];`; src/game/stages/d_s_title.cpp G2 note; carried verbatim from src/_ZN12dScStarSel_c13InitResourcesEv.cpp on main (6 occurrences), which this PR folds; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_star_sel_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN2G213GetBG2CharPtrEv",
-      "count": 3,
-      "reason": "G2 cannot be declared as a namespace in this TU: it includes decl_common.h, whose `extern int G2[];` (a real ROM data symbol) hides `namespace G2` and turns G2:: into an undefined identifier, the same wall d_s_title.cpp records. The GX/GXS/G3X calls beside it are real namespace calls. Follow-up: give G2's functions a header once the G2 data symbol is renamed or moved out of decl_common.h.",
-      "evidence": "include/decl_common.h:290 `extern int G2[];`; src/game/stages/d_s_title.cpp G2 note; carried verbatim from src/_ZN12dScStarSel_c13InitResourcesEv.cpp on main (6 occurrences), which this PR folds; ov003/dScStarSel_c 15/15 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_star_sel_methods.cpp",
-      "rule": "handspelled-member",
       "match": "_ZN17dExtSimpleModel_cC1Ev",
       "count": 2,
       "reason": "dScStarSel_c_classInit is the profile factory, moved verbatim from the retired src/game/stages/d_s_star_sel.cpp, which spells these names on main. dExtSimpleModel_c's C1/D1 are passed by address to __cxa_vec_ctor, and C++ cannot take a constructor's or destructor's address. fBase_c's operator new and C2 are the inlined steps of a `new dScStarSel_c` expression. Follow-up: rewrite the factory as `new dScStarSel_c` once dScStarSel_c's constructor is reconstructed, which retires all four.",
@@ -107,22 +91,6 @@
     },
     {
       "path": "src/game/stages/d_s_stage_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN2G213GetBG2CharPtrEv",
-      "count": 11,
-      "reason": "G2 cannot be declared as a namespace in this TU: it includes decl_common.h, whose `extern int G2[];` (a real ROM data symbol) hides `namespace G2` and turns G2:: into an undefined identifier, the same wall d_s_title.cpp and d_s_star_sel_methods.cpp record. Follow-up: give G2's functions a header once the G2 data symbol is renamed or moved out of decl_common.h.",
-      "evidence": "include/decl_common.h:290 `extern int G2[];`; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
-    },
-    {
-      "path": "src/game/stages/d_s_stage_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN2G212GetBG2ScrPtrEv",
-      "count": 6,
-      "reason": "G2 cannot be declared as a namespace in this TU: it includes decl_common.h, whose `extern int G2[];` (a real ROM data symbol) hides `namespace G2` and turns G2:: into an undefined identifier, the same wall d_s_title.cpp and d_s_star_sel_methods.cpp record. Follow-up: give G2's functions a header once the G2 data symbol is renamed or moved out of decl_common.h.",
-      "evidence": "include/decl_common.h:290 `extern int G2[];`; arm9/dScStage_c 123/123 TEXT-VERIFIED (tubuild verify); carried from the standalone shards this fold absorbs (0x02029408..0x0202e118)"
-    },
-    {
-      "path": "src/game/stages/d_s_stage_methods.cpp",
       "rule": "raw-offset",
       "match": "(u8*)(p+0x711",
       "count": 1,
@@ -146,30 +114,6 @@
       "evidence": "src/game/stages/d_s_entry_methods.cpp owns ov075 0x021165b0..0x0211a854. 67/67 functions byte-match the ROM under mwccarm 2004/b56 with relocation destinations checked (tools/tubuild.py verify ov075/d_s_entry_methods); rombuild 106/106 exact."
     },
     {
-      "path": "src/Message.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN3G2S13GetBG0CharPtrEv",
-      "count": 14,
-      "reason": "No header declares G2S's BG pointer getters; they are defined in src/engine/gx/G2.cpp as unsigned-returning members of namespace G2S, and Message.cpp's leftover note already keeps every one of its calls to them mangled for that reason. Follow-up: give G2S a header and convert all of this file's calls together.",
-      "evidence": "src/Message.cpp header leftover note (G2S BG pointer getters stay mangled); the count caps the whole file: its existing calls plus one carried verbatim from src/unnamed/arm9/0201/func_0201cd08.cpp, which this PR folds; arm9/Message 32/32 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/Message.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN3G2S12GetBG0ScrPtrEv",
-      "count": 13,
-      "reason": "No header declares G2S's BG pointer getters; they are defined in src/engine/gx/G2.cpp as unsigned-returning members of namespace G2S, and Message.cpp's leftover note already keeps every one of its calls to them mangled for that reason. Follow-up: give G2S a header and convert all of this file's calls together.",
-      "evidence": "src/Message.cpp header leftover note (G2S BG pointer getters stay mangled); the count caps the whole file: its existing calls plus one carried verbatim from src/unnamed/arm9/0201/func_0201cd08.cpp, which this PR folds; arm9/Message 32/32 TEXT-VERIFIED"
-    },
-    {
-      "path": "src/game/stages/d_s_entry.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN2G212GetBG1ScrPtrEv",
-      "count": 2,
-      "reason": "Inherited BG1-screen-map binding from absorbed helper 02116128; no shared G2 function header exists. Retained partial interface reconstruction, not a measured compiler wall. Follow-up: recover the shared G2 interface and prove its consumers.",
-      "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
-    },
-    {
       "path": "src/game/stages/d_s_entry.cpp",
       "rule": "handspelled-member",
       "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
@@ -184,38 +128,6 @@
       "count": 1,
       "reason": "Inherited score field access in absorbed helper 0211621c; ROM loads the base score at offset 0x1d4 then adds the per-player delta. The cross-overlay global layout is not yet reconstructed. Follow-up: recover its owning arm9 type and verify all consumers before substituting a shared field.",
       "evidence": "Original helpers at main 67bf07b, ov075 02116128..021165b0; retained 15-function entry TU strictly verified in 6f196502, full 106/106 module proof. Formatting preserves complete raw ELF; follow-up scope recorded in overlay-functions1016 handoff."
-    },
-    {
-      "path": "src/game/actors/d_a_krb.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN7daKrb_c19func_ov084_0212a774Ev",
-      "count": 2,
-      "reason": "Retained flat bindings initialize the existing KrbFreeHandler descriptor union. Direct member-pointer globals, including const globals, add four descriptor-copy sequences and expand the retail initializer from 0x1fc to 0x23c. Follow-up: recover a member-pointer descriptor construction that retains the retail initializer.",
-      "evidence": "PR #3737 repair: pinned 2004/b56 direct and const member-pointer experiments; restored union with WALK targeting wrapper 0x0212b2dc passes production object preparation, all 36 relocated functions including the 0x1fc initializer, and full ROM build (106/106 modules exact)."
-    },
-    {
-      "path": "src/game/actors/d_a_krb.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN7daKrb_c19func_ov084_0212ab48Ev",
-      "count": 2,
-      "reason": "Retained flat bindings initialize the existing KrbFreeHandler descriptor union. Direct member-pointer globals, including const globals, add four descriptor-copy sequences and expand the retail initializer from 0x1fc to 0x23c. Follow-up: recover a member-pointer descriptor construction that retains the retail initializer.",
-      "evidence": "PR #3737 repair: pinned 2004/b56 direct and const member-pointer experiments; restored union with WALK targeting wrapper 0x0212b2dc passes production object preparation, all 36 relocated functions including the 0x1fc initializer, and full ROM build (106/106 modules exact)."
-    },
-    {
-      "path": "src/game/actors/d_a_krb.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN7daKrb_c19func_ov084_0212b2dcEv",
-      "count": 2,
-      "reason": "Retained flat bindings initialize the existing KrbFreeHandler descriptor union. Direct member-pointer globals, including const globals, add four descriptor-copy sequences and expand the retail initializer from 0x1fc to 0x23c. Follow-up: recover a member-pointer descriptor construction that retains the retail initializer.",
-      "evidence": "PR #3737 repair: pinned 2004/b56 direct and const member-pointer experiments; restored union with WALK targeting wrapper 0x0212b2dc passes production object preparation, all 36 relocated functions including the 0x1fc initializer, and full ROM build (106/106 modules exact)."
-    },
-    {
-      "path": "src/game/actors/d_a_krb.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN7daKrb_c19func_ov084_0212a6f8Ev",
-      "count": 2,
-      "reason": "Retained flat bindings initialize the existing KrbFreeHandler descriptor union. Direct member-pointer globals, including const globals, add four descriptor-copy sequences and expand the retail initializer from 0x1fc to 0x23c. Follow-up: recover a member-pointer descriptor construction that retains the retail initializer.",
-      "evidence": "PR #3737 repair: pinned 2004/b56 direct and const member-pointer experiments; restored union with WALK targeting wrapper 0x0212b2dc passes production object preparation, all 36 relocated functions including the 0x1fc initializer, and full ROM build (106/106 modules exact)."
     },
     {
       "path": "src/engine/collision/d_bg_w.cpp",
@@ -754,14 +666,6 @@
       "evidence": "The file's banner Leftover note and the comment on the declaration (#4326). Before #4326 the same calls spelled _ZN5Sound7PlaySubEjjj5Fix12IiEb, which the Fix12-by-value exemption covered."
     },
     {
-      "path": "src/game/actors/d_a_kpa3_bg.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN8dActor_c10EarthquakeERK7Vector3i",
-      "count": 2,
-      "reason": "func_ov060_02117db8 parses as C (cplusplus off; the same body as C++ DIFFs), so it cannot call dActor_c::Earthquake as a member and keeps the linker spelling, as its PoofDustAt and MarkForDestruction calls already do. Making Earthquake a scalar-Fix12i member respells the existing extern from _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE (exempt as Fix12-by-value) with its count unchanged. Follow-up: call the member once func_ov060_02117db8 matches as C++.",
-      "evidence": "origin/main:src/game/actors/d_a_kpa3_bg.cpp 2x _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE; head 2x _ZN8dActor_c10EarthquakeERK7Vector3i; file banner (func_ov060_02117db8 parses as C); tools/source_style.py --base origin/main"
-    },
-    {
       "path": "src/unnamed/arm9/0201/func_02018c00.c",
       "rule": "raw-offset",
       "match": "(int*)(self+0x20",
@@ -964,26 +868,10 @@
     {
       "path": "src/engine/sound/SoundEngine.cpp",
       "rule": "handspelled-member",
-      "match": "_ZN12Elem_204f27813func_0204f278Ev",
-      "count": 2,
-      "reason": "Elem_204f278::func_0204f278 is passed as a function pointer into func_020511d4. mwccarm will not form that pointer from the member, so the call names the mangled symbol. The local extern exists for the same pointer.",
-      "evidence": "arm9/SoundEngine 138/138 MATCH with the mangled pointer; a member-pointer conversion is not a legal argument to the int-arity callee."
-    },
-    {
-      "path": "src/engine/sound/SoundEngine.cpp",
-      "rule": "handspelled-member",
       "match": "_ZN2E113func_0204f5a0Ei",
       "count": 2,
       "reason": "E1::func_0204f5a0 is called through an int-arity cast because the receiver at that site is a raw byte. The local extern keeps the pool word pointed at the method.",
       "evidence": "arm9/SoundEngine 138/138 MATCH. The direct E1 method call is used at the typed site; this cast is the untyped one."
-    },
-    {
-      "path": "src/engine/sound/SoundEngine.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN1T13func_020500a4Ev",
-      "count": 2,
-      "reason": "T::func_020500a4 is passed as a callback word to SND_SetupAlarm. A member cannot be cast to that function pointer, so the call names the mangled symbol. The local extern is the same pointer.",
-      "evidence": "arm9/SoundEngine 138/138 MATCH with the mangled callback word."
     },
     {
       "path": "src/minigames/d_s_mg_m_carlo2.cpp",
@@ -1046,7 +934,7 @@
       "rule": "handspelled-member",
       "match": "_ZN3IRQ11SetFIQStateEb",
       "count": 2,
-      "reason": "IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry labels inside the hand-written func_0206d9cc and func_0206da18, and func_0206d868 passes them the saved word unnormalised. Declared in namespace IRQ with their bool parameter, the call adds the `!= 0` the ROM lacks; declared with int, the name mangles to a symbol the ROM does not have. No header declares IRQ. Follow-up: give IRQ a header once its primitives are reconstructed as C++.",
+      "reason": "IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry labels inside the hand-written func_0206d9cc and func_0206da18, and func_0206d868 passes them the saved word unnormalised. Declared in namespace IRQ with their bool parameter, the call adds the `!= 0` the ROM lacks; declared with int, the name mangles to a symbol the ROM does not have. The SDK primitives that shared the IRQ namespace now carry their NitroSDK names in nitro/os/system.h and nitro/os/interrupt.h; these two labels have no SDK counterpart, so no header declares them. Follow-up: give them a header once their primitives are reconstructed as C++.",
       "evidence": "arm9/isdoverlay 6/6 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from src/unnamed/arm9/0206/func_0206d868.cpp on main, which this fold absorbs, with its `local extern:` note"
     },
     {
@@ -1054,7 +942,7 @@
       "rule": "handspelled-member",
       "match": "_ZN3IRQ11SetIRQStateEb",
       "count": 2,
-      "reason": "IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry labels inside the hand-written func_0206d9cc and func_0206da18, and func_0206d868 passes them the saved word unnormalised. Declared in namespace IRQ with their bool parameter, the call adds the `!= 0` the ROM lacks; declared with int, the name mangles to a symbol the ROM does not have. No header declares IRQ. Follow-up: give IRQ a header once its primitives are reconstructed as C++.",
+      "reason": "IRQ::SetFIQState(bool) and IRQ::SetIRQState(bool) are entry labels inside the hand-written func_0206d9cc and func_0206da18, and func_0206d868 passes them the saved word unnormalised. Declared in namespace IRQ with their bool parameter, the call adds the `!= 0` the ROM lacks; declared with int, the name mangles to a symbol the ROM does not have. The SDK primitives that shared the IRQ namespace now carry their NitroSDK names in nitro/os/system.h and nitro/os/interrupt.h; these two labels have no SDK counterpart, so no header declares them. Follow-up: give them a header once their primitives are reconstructed as C++.",
       "evidence": "arm9/isdoverlay 6/6 TEXT-VERIFIED (tools/tubuild.py verify); carried unchanged from src/unnamed/arm9/0206/func_0206d868.cpp on main, which this fold absorbs, with its `local extern:` note"
     },
     {
@@ -1072,6 +960,390 @@
       "count": 1,
       "reason": "ResetGame clears byte 0x5407 of the scene and nothing in the ROM reads it. This PR replaces the raw `(p + 0x407)` store off `this + 0x5000` with the header's existing member name; with no reader there is no evidence for a name, so none is invented. Follow-up: name it if a reader is found.",
       "evidence": "include/dScMgMemory2_c.h line 183 (`u8 unk_5407; /* 0x5407 */`); ov006/dScMgMemory2_c tubuild verify 52/52 relocs ok order ok"
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG1CharPtr()+0x4000",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG1CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG1ScrPtr()+0x42",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG1ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG1CharPtr()+0x4000",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG1CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG1ScrPtr()+0x200",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG1ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG1ScrPtr()+0x24e",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG1ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG3CharPtr()+0x4000",
+      "count": 2,
+      "reason": "Not an object view: G2_GetBG3CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG3ScrPtr()+0x180",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG3ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG3ScrPtr()+0x240",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG3ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG3ScrPtr()+0x400",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG3ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG3ScrPtr()+0x42",
+      "count": 3,
+      "reason": "Not an object view: G2_GetBG3ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG3ScrPtr()+0x4c0",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG3ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message3.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG0CharPtr()+0x4000",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG0CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message3.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2ScrPtr()+0x1040",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message3.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2ScrPtr()+0x40",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message3.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2ScrPtr()+0x840",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message3.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG3CharPtr()+0x4000",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG3CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/Message3.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG3ScrPtr()+0x40",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG3ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/game/stages/d_s_boot_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG1ScrPtr()+0x800",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG1ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2ScrPtr()+0x1800",
+      "count": 3,
+      "reason": "Not an object view: G2_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/game/stages/d_s_stage_methods.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2ScrPtr()+0x2800",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_mg_ps_opt.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG1ScrPtr()+0x19e",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG1ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_amida.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG0CharPtr()+0x6000",
+      "count": 2,
+      "reason": "Not an object view: G2S_GetBG0CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_amida.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG0CharPtr()+0xc000",
+      "count": 2,
+      "reason": "Not an object view: G2_GetBG0CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_bomroom.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG3CharPtr()+0x4000",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG3CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_coin.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG3CharPtr()+0x4000",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG3CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_cup.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG2CharPtr()+0x4000",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG2CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_luigi.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2CharPtr()+0x4000",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_luigi.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG3ScrPtr()+0x1d8",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG3ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_panel.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG3CharPtr()+0x4000",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG3CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_slots.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG0CharPtr()+0x7800",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG0CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_slots.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG1ScrPtr()+0x800",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG1ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_slots.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2CharPtr()+0x7800",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_snowball.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG2ScrPtr()+0x800",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_snowball.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG2ScrPtr()+0x802",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_snowball.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG2ScrPtr()+0x840",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_snowball.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2ScrPtr()+0x800",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_snowball.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2ScrPtr()+0x802",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_snowball.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2ScrPtr()+0x840",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_trampoline.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2CharPtr()+0x4000",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mg_trampoline2.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2CharPtr()+0x4000",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/minigames/d_s_mini_gm.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG0CharPtr()+0x8000",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG0CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/unnamed/arm9/0200/func_0200f13c.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG2ScrPtr()+0x2000",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/unnamed/arm9/0200/func_0200f13c.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG2ScrPtr()+0x2800",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/unnamed/arm9/0200/func_0200f13c.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG2ScrPtr()+0x800",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/unnamed/arm9/0200/func_0200f13c.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG3CharPtr()+0x3000",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG3CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/unnamed/arm9/0200/func_0200f13c.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2S_GetBG3CharPtr()+0x6000",
+      "count": 1,
+      "reason": "Not an object view: G2S_GetBG3CharPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/unnamed/arm9/0200/func_0200f13c.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2ScrPtr()+0x1000",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
+    },
+    {
+      "path": "src/unnamed/arm9/0200/func_0200f13c.cpp",
+      "rule": "raw-offset",
+      "match": "(char*)G2_GetBG2ScrPtr()+0x800",
+      "count": 1,
+      "reason": "Not an object view: G2_GetBG2ScrPtr() is the Nitro SDK's BG base-address getter (nitro/gx/gx_bgcnt.h), and the constant is a byte offset into that layer's VRAM (a character-tile or screen-map position). The line predates this change; it was spelled through the coined G2::/G2S:: namespace (or an address name), which the rule's pattern did not reach through `::`. Follow-up: none needed unless the rule learns to tell VRAM address arithmetic from object views.",
+      "evidence": "src/engine/gx/GX_BgCnt.c defines the getter as `void *` returning a VRAM address (0x06000000/0x06200000 based), matching pret pokediamond GX_bgcnt.c; the call site's bytes are unchanged (rombuild --no-rom 106/106 exact)."
     }
   ]
 }

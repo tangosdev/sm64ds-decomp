@@ -1,8 +1,8 @@
 //cpp
 #include "types.h"
 #include "nitro/fx/fx.h"
-#include "cstd.h"
 #include "Ov007Mesh.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -35,9 +35,9 @@ Ov007Mesh *func_ov007_020cbbb0(int columns, int rows, int width, Ov007MeshParams
 
     mesh = (Ov007Mesh *)func_ov007_020c3df4(0, sizeof(Ov007Mesh));
     cellColumns = columns - 1;
-    cellWidth = (int)cstd::div(width, cellColumns);
+    cellWidth = (int)FX_DivS32(width, cellColumns);
     t = FX_MUL(width, 0x16a1);
-    cellHeight = (int)cstd::div(t / 2, cellColumns);
+    cellHeight = (int)FX_DivS32(t / 2, cellColumns);
     {
         int n = columns - 1;
         cellColumns = n;

@@ -66,24 +66,24 @@
       "ordinal": 2
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02120d04Ev",
+      "symbol": "_ZN9daPgBby_c12CheckRespawnEv",
       "address": "0x02120d04",
       "size": "0x000000d8",
-      "legacy_source": "src/func_ov072_02120d04.cpp",
+      "legacy_source": "src/CheckRespawn.cpp",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02120ddcEv",
+      "symbol": "_ZN9daPgBby_c15CheckNearMotherEv",
       "address": "0x02120ddc",
       "size": "0x00000044",
-      "legacy_source": "src/func_ov072_02120ddc.c",
+      "legacy_source": "src/CheckNearMother.c",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02120e20Ev",
+      "symbol": "_ZN9daPgBby_c9CheckDiveEv",
       "address": "0x02120e20",
       "size": "0x00000030",
-      "legacy_source": "src/func_ov072_02120e20.cpp",
+      "legacy_source": "src/CheckDive.cpp",
       "ordinal": 5
     },
     {
@@ -94,24 +94,24 @@
       "ordinal": 6
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02120f14Ev",
+      "symbol": "_ZN9daPgBby_c15GuardStepHeightEv",
       "address": "0x02120f14",
       "size": "0x000000c0",
-      "legacy_source": "src/func_ov072_02120f14.cpp",
+      "legacy_source": "src/GuardStepHeight.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02120fd4EP10dBgCh_Actr",
+      "symbol": "_ZN9daPgBby_c19UpdateFloorAndWallsEP10dBgCh_Actr",
       "address": "0x02120fd4",
       "size": "0x000000f0",
-      "legacy_source": "src/func_ov072_02120fd4.cpp",
+      "legacy_source": "src/UpdateFloorAndWalls.cpp",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_021210c4Ev",
+      "symbol": "_ZN9daPgBby_c20UpdateModelAndShadowEv",
       "address": "0x021210c4",
       "size": "0x000001fc",
-      "legacy_source": "src/func_ov072_021210c4.cpp",
+      "legacy_source": "src/UpdateModelAndShadow.cpp",
       "ordinal": 9
     },
     {
@@ -143,80 +143,80 @@
       "ordinal": 13
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121670Ev",
+      "symbol": "_ZN9daPgBby_c23StateWalkToMotherUpdateEv",
       "address": "0x02121670",
       "size": "0x000000e8",
-      "legacy_source": "src/func_ov072_02121670.c",
+      "legacy_source": "src/StateWalkToMotherUpdate.c",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121758Ev",
+      "symbol": "_ZN9daPgBby_c22StateWalkToMotherEnterEv",
       "address": "0x02121758",
       "size": "0x00000054",
-      "legacy_source": "src/func_ov072_02121758.c",
+      "legacy_source": "src/StateWalkToMotherEnter.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_021217acEv",
+      "symbol": "_ZN9daPgBby_c15StateHeldUpdateEv",
       "address": "0x021217ac",
       "size": "0x000000e4",
-      "legacy_source": "src/func_ov072_021217ac.cpp",
+      "legacy_source": "src/StateHeldUpdate.cpp",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121890Ev",
+      "symbol": "_ZN9daPgBby_c14StateHeldEnterEv",
       "address": "0x02121890",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov072_02121890.c",
+      "legacy_source": "src/StateHeldEnter.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_021218dcEv",
+      "symbol": "_ZN9daPgBby_c15StateDiveUpdateEv",
       "address": "0x021218dc",
       "size": "0x0000014c",
-      "legacy_source": "src/func_ov072_021218dc.cpp",
+      "legacy_source": "src/StateDiveUpdate.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121a28Ev",
+      "symbol": "_ZN9daPgBby_c14StateDiveEnterEv",
       "address": "0x02121a28",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov072_02121a28.c",
+      "legacy_source": "src/StateDiveEnter.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121a84Ev",
+      "symbol": "_ZN9daPgBby_c23StateKeepDistanceUpdateEv",
       "address": "0x02121a84",
       "size": "0x00000210",
-      "legacy_source": "src/func_ov072_02121a84.c",
+      "legacy_source": "src/StateKeepDistanceUpdate.c",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121c94Ev",
+      "symbol": "_ZN9daPgBby_c22StateKeepDistanceEnterEv",
       "address": "0x02121c94",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov072_02121c94.c",
+      "legacy_source": "src/StateKeepDistanceEnter.c",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121cdcEv",
+      "symbol": "_ZN9daPgBby_c15CallStateUpdateEv",
       "address": "0x02121cdc",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov072_02121cdc.cpp",
+      "legacy_source": "src/CallStateUpdate.cpp",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121d18Ev",
+      "symbol": "_ZN9daPgBby_c14CallStateEnterEv",
       "address": "0x02121d18",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov072_02121d18.cpp",
+      "legacy_source": "src/CallStateEnter.cpp",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121d50Ei",
+      "symbol": "_ZN9daPgBby_c11ChangeStateEi",
       "address": "0x02121d50",
       "size": "0x0000001c",
-      "legacy_source": "src/func_ov072_02121d50.c",
+      "legacy_source": "src/ChangeState.c",
       "ordinal": 24
     },
     {
@@ -870,7 +870,7 @@
       "disposition": "deadstrip-duplicate",
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
-      "reason": "The Vector3 automatics in func_ov072_02120d04, func_ov072_02120f14, func_ov072_021210c4, func_ov072_02121368 and func_ov072_021217ac re-emit Vector3's empty destructor. The cartridge keeps one copy at arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp."
+      "reason": "The Vector3 automatics in CheckRespawn, GuardStepHeight, UpdateModelAndShadow, func_ov072_02121368 and StateHeldUpdate re-emit Vector3's empty destructor. The cartridge keeps one copy at arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp."
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -942,114 +942,114 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@916",
+      "from": "@852",
       "to": "data_ov072_02122a34",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @916 to @852 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@912",
+      "from": "@848",
       "to": "data_ov072_02122a44",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @912 to @848 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@914",
+      "from": "@850",
       "to": "data_ov072_02122a3c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @914 to @850 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@926",
+      "from": "@862",
       "to": "data_ov072_02122a24",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @926 to @862 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@908",
+      "from": "@844",
       "to": "data_ov072_02122a4c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @908 to @844 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@906",
+      "from": "@842",
       "to": "data_ov072_02122a14",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @906 to @842 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@910",
+      "from": "@846",
       "to": "data_ov072_02122a0c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @910 to @846 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@924",
+      "from": "@860",
       "to": "data_ov072_021229f4",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @924 to @860 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@920",
+      "from": "@856",
       "to": "data_ov072_02122a04",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @920 to @856 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@918",
+      "from": "@854",
       "to": "data_ov072_02122a2c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @918 to @854 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@904",
+      "from": "@840",
       "to": "data_ov072_021229fc",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @904 to @840 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@922",
+      "from": "@858",
       "to": "data_ov072_02122a1c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @922 to @858 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@897",
+      "from": "@833",
       "to": "data_ov072_02122d00",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @897 to @833 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@898",
+      "from": "@834",
       "to": "data_ov072_02122d0c",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @898 to @834 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@899",
+      "from": "@835",
       "to": "data_ov072_02122d18",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @899 to @835 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@900",
+      "from": "@836",
       "to": "data_ov072_02122d24",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @900 to @836 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@901",
+      "from": "@837",
       "to": "data_ov072_02122d30",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @901 to @837 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@902",
+      "from": "@838",
       "to": "data_ov072_02122cc4",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @902 to @838 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@928",
+      "from": "@864",
       "to": "data_ov072_02122cd0",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @928 to @864 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@931",
+      "from": "@867",
       "to": "data_ov072_02122cdc",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @931 to @867 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@934",
+      "from": "@870",
       "to": "data_ov072_02122ce8",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @934 to @870 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@937",
+      "from": "@873",
       "to": "data_ov072_02122cf4",
-      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "Actual emitted compiler-local symbol mapped by exact retail initializer relocation destination and native target identity; no claim of original source spelling | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @937 to @873 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "undefined_symbol_aliases": [
@@ -1246,7 +1246,7 @@
       "source": "0x02122a34",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121758Ev",
+      "symbol": "_ZN9daPgBby_c22StateWalkToMotherEnterEv",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x02121758"
@@ -1256,7 +1256,7 @@
       "source": "0x02122a44",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121890Ev",
+      "symbol": "_ZN9daPgBby_c14StateHeldEnterEv",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x02121890"
@@ -1266,7 +1266,7 @@
       "source": "0x02122a3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPgBby_c19func_ov072_021217acEv",
+      "symbol": "_ZN9daPgBby_c15StateHeldUpdateEv",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x021217ac"
@@ -1286,7 +1286,7 @@
       "source": "0x02122a4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121a28Ev",
+      "symbol": "_ZN9daPgBby_c14StateDiveEnterEv",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x02121a28"
@@ -1296,7 +1296,7 @@
       "source": "0x02122a14",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121a84Ev",
+      "symbol": "_ZN9daPgBby_c23StateKeepDistanceUpdateEv",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x02121a84"
@@ -1306,7 +1306,7 @@
       "source": "0x02122a0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPgBby_c19func_ov072_021218dcEv",
+      "symbol": "_ZN9daPgBby_c15StateDiveUpdateEv",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x021218dc"
@@ -1336,7 +1336,7 @@
       "source": "0x02122a2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121670Ev",
+      "symbol": "_ZN9daPgBby_c23StateWalkToMotherUpdateEv",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x02121670"
@@ -1346,7 +1346,7 @@
       "source": "0x021229fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN9daPgBby_c19func_ov072_02121c94Ev",
+      "symbol": "_ZN9daPgBby_c22StateKeepDistanceEnterEv",
       "addend": 0,
       "target_module": "ov072",
       "target_address": "0x02121c94"

@@ -266,7 +266,7 @@ void daKpaFire_c::func_ov060_02117624() {
  *
  * Looks up the daKpa_c by mKpaUniqueID; if it is gone, destroys this fire.
  * Otherwise it does nothing unless Bowser's mState is 0xf (d_a_kpa.cpp's
- * BOWSER_STATE_ANIM_CHAIN) and func_ov060_02111c68 returns a row number n --
+ * BOWSER_STATE_ANIM_CHAIN) and GetMouthFireRow returns a row number n --
  * from his animation 8 only once its frame is 0x31 or later (n = frame - 0x31),
  * from his animation 6 always (n = frame + 0xb) -- or -1 when neither is
  * playing. n wraps to 0 when it reaches the frame count of the
@@ -305,7 +305,7 @@ void daKpaFire_c::func_ov060_0211747c() {
     if (koopa->mState != 0xf)
         return;
 
-    n = koopa->func_ov060_02111c68();
+    n = koopa->GetMouthFireRow();
     if (n < 0)
         return;
 
@@ -450,13 +450,13 @@ void daKpaFire_c::func_ov060_0211712c() {
     int p = (unsigned short)phase >> 4;
     int *px = &this->mPosX;
     int *pz;
-    *px = *px + ((data_02082214[((int)*(unsigned short *)&this->mPrevAngleY >> 4) * 2] *
-                  data_02082214[p * 2])
+    *px = *px + ((FX_SinCosTable_[((int)*(unsigned short *)&this->mPrevAngleY >> 4) * 2] *
+                  FX_SinCosTable_[p * 2])
                  << 2) /
                     0x1000;
     pz = &this->mPosZ;
-    *pz = *pz + ((data_02082214[((int)*(unsigned short *)&this->mPrevAngleY >> 4) * 2 + 1] *
-                  data_02082214[p * 2 + 1])
+    *pz = *pz + ((FX_SinCosTable_[((int)*(unsigned short *)&this->mPrevAngleY >> 4) * 2 + 1] *
+                  FX_SinCosTable_[p * 2 + 1])
                  << 2) /
                     0x1000;
 }
@@ -551,19 +551,19 @@ void daKpaFire_c::func_ov060_02116d78() {
         int i1 = (*(unsigned short *)&this->mPrevAngleY) >> 4;
         i0 = i0 * 2;
         i1 = i1 * 2 + 1;
-        int s0 = data_02082214[i0];
+        int s0 = FX_SinCosTable_[i0];
         int speed = this->mHorzSpeed;
-        int s1 = data_02082214[i1];
+        int s1 = FX_SinCosTable_[i1];
         this->mSpeedX = (s1 * (speed * s0)) / 896;
     }
     {
         int speed = this->mHorzSpeed;
-        int s0 = data_02082214[((*(unsigned short *)&this->mPrevAngleX) >> 4) * 2];
+        int s0 = FX_SinCosTable_[((*(unsigned short *)&this->mPrevAngleX) >> 4) * 2];
         this->mVertSpeed = (-speed) * s0;
     }
     {
-        int s0 = data_02082214[((*(unsigned short *)&this->mPrevAngleX) >> 4) * 2];
-        int s1 = data_02082214[((*(unsigned short *)&this->mPrevAngleY) >> 4) * 2];
+        int s0 = FX_SinCosTable_[((*(unsigned short *)&this->mPrevAngleX) >> 4) * 2];
+        int s1 = FX_SinCosTable_[((*(unsigned short *)&this->mPrevAngleY) >> 4) * 2];
         int speed = this->mHorzSpeed;
         this->mSpeedZ = (s1 * ((-speed) * s0)) / 896;
     }

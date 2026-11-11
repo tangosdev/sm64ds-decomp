@@ -1,5 +1,5 @@
 //cpp
-#include "cstd.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 int func_ov007_020b1f2c(int x, int *out) {
@@ -10,7 +10,7 @@ int func_ov007_020b1f2c(int x, int *out) {
         else if (x >= 0x3c)
             r = 0x1000;
         else
-            r = cstd::div(x << 0xc, 0x3c);
+            r = FX_DivS32(x << 0xc, 0x3c);
         int v = (int)(((long long)r * r) >> 0xc);
         int v2 = (int)(((long long)v * v) >> 0xc);
         *out = 0x1000 - v2;

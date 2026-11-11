@@ -82,7 +82,7 @@
  * - Behavior 0x100: named ++mStateTimer size-DIFF vs unsigned-short launder
  *   (the u16 casts of dEnemyBase_c::mStateTimer at 0x100 stay everywhere they
  *   appear. The u16 at 0x38c is a distinct field, mStateFrames.)
- * - func_ov002_020af0c0: reading the player's position directly instead of
+ * - SteerTowardPlayer: reading the player's position directly instead of
  *   through the laundered int* changes the bytes, so the launder stays.
  * - The shared file handles keep their data_ov002_* address names
  * - decl_common.h stays out (its surviving claims are redundant with the
@@ -123,6 +123,7 @@
 #include "nitro/fx/fx_trig.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
+#include "nitro/fx/fx_cp.h"
 
 /* Actor IDs, from the profile ids in symbols/actor_debug_names.tsv: 276 and
    277 are this class's two profiles, 331 is the 1UP logo it spawns. */
@@ -159,8 +160,9 @@ enum {
 
 /* Particle effect ids handed to Particle::System::New / NewSimple. */
 enum {
-    PTCL_SCALEUP_KINOKO_TRAIL = 0x108, /* the effect func_ov002_020aeee4 starts for actorID 277 ("trail" is this file's word for it) */
-    PTCL_TYPE_11_12_CLEANUP   = 0xd2   /* started by CleanupResources for types 11 and 12 */
+    PTCL_SCALEUP_KINOKO_TRAIL =
+        0x108, /* the effect UpdateTrailEffect starts for actorID 277 ("trail" is this file's word for it) */
+    PTCL_TYPE_11_12_CLEANUP = 0xd2 /* started by CleanupResources for types 11 and 12 */
 };
 
 /* The only two intra-TU calls that run UPWARD in ROM address order, so the only
@@ -206,7 +208,7 @@ da1up_c::~da1up_c()
    back in and the new one stored in mParticleID. While
    the actor is off screen (mFlags bit 3) it only runs when CURRENT_GAMEMODE
    (gGameMode) is 1. */
-void da1up_c::func_ov002_020aeee4() {
+void da1up_c::UpdateTrailEffect() {
     extern unsigned char gGameMode;
 
     int t1 = (actorID == ACTOR_SCALEUP_KINOKO);
@@ -227,7 +229,7 @@ void da1up_c::func_ov002_020aeee4() {
 /* -------------------------------------------------------------------------- */
 /* Sets bit 0x8000 in the cylinder's vulnFlags -- the "yoshi tongue" bit of the
    table in include/dCc_c.h (a best-effort reading there) -- so the mushroom can
-   be eaten. func_ov002_020af218 calls it while the player is in range.
+   be eaten. UpdateShown calls it while the player is in range.
    MEASURED: it returns nothing. An `int` version that returns the new flags
    is one word longer (the value is kept out of r0 and moved back), so the
    callers that used to tail-return it as `int` were reading r0 left over
@@ -240,7 +242,7 @@ void da1up_c::func_ov002_020aefa4() {
 /* The shared per-frame physics step. Moves by mHorzSpeed along mPrevAngleY
    (UpdatePosWithHorzSpeedAndAng). While on the ground it adds ten times the
    floor normal's x and z to the words at 0xa4 / 0xac (the x and z of a velocity
-   whose y is mVertSpeed: func_ov002_020afd10 saves and restores them as that
+   whose y is mVertSpeed: UpdateWaitThenAccelerate saves and restores them as that
    triple), sets mVertSpeed to -0.4 times its value on the frame it lands and to
    0 otherwise, and raises mHorzSpeed to the horizontal length of that vector
    when that is larger, capped at 15 units (0xf000). Then it integrates position
@@ -253,7 +255,7 @@ void da1up_c::func_ov002_020aefa4() {
    ReflectAngle is a real member call: the by-value Fix12<int> its old
    mangled name claimed was never in the ROM, and with scalar parameters the
    typed call costs nothing (notes/mwccarm-codegen.md 6az, batch 5). */
-void da1up_c::func_ov002_020aefb8() {
+void da1up_c::UpdatePhysics() {
 
     UpdatePosWithHorzSpeedAndAng();
     if (mWithMeshClsn.IsOnGround()) {
@@ -284,8 +286,8 @@ void da1up_c::func_ov002_020aefb8() {
    mPrevAngleX toward the pitch (cstd::atan2(horizontal length, height
    difference)), at most 0x1000 (22.5 degrees) per frame each. mVertSpeed and
    mHorzSpeed are then 30 units (0x1e) times the cosine and the sine of
-   mPrevAngleX. Always finishes with func_ov002_020af3a8. */
-void da1up_c::func_ov002_020af0c0() {
+   mPrevAngleX. Always finishes with CollectOnTouch. */
+void da1up_c::SteerTowardPlayer() {
     /* Forward: ordinal 11 sits above this one in ROM order. */
 
     daPly_c *p = ClosestPlayer();
@@ -315,7 +317,7 @@ void da1up_c::func_ov002_020af0c0() {
         mVertSpeed = FX_CosIdx((u16)mPrevAngleX >> 4) * 0x1e;
         mHorzSpeed = FX_SinIdx((u16)mPrevAngleX >> 4) * 0x1e;
     }
-    func_ov002_020af3a8();
+    CollectOnTouch();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -325,7 +327,7 @@ void da1up_c::func_ov002_020af0c0() {
    when hitFlags bit 0x400000 is set -- the "player" bit of the table in
    include/dCc_c.h, a best-effort reading there that the callers' use of the
    result as a daPly_c agrees with. */
-daPly_c *da1up_c::func_ov002_020af1dc() {
+daPly_c *da1up_c::GetTouchingPlayer() {
     daPly_c *r = 0;
     unsigned int id = mdCcAc_c.otherOwner;
     if (id && (r = (daPly_c *)dActor_c::FindWithID(id)) && (mdCcAc_c.hitFlags & CC_HIT_PLAYER))
@@ -346,7 +348,7 @@ daPly_c *da1up_c::func_ov002_020af1dc() {
    because r1 still holds the incoming range, so naming the argument is
    byte-neutral here and stops the call from handing the callee whatever r1
    happens to hold on a host ABI. */
-void da1up_c::func_ov002_020af218(int range) {
+void da1up_c::UpdateShown(int range) {
     mShown = (char)IsPlayerInRange(range);
     if (mShown == 0)
         return;
@@ -359,16 +361,17 @@ void da1up_c::func_ov002_020af218(int range) {
    (n <= mStateFrames < n + 0x28) mBlinkOn follows the low bit of mStateFrames
    (visible on odd frames); from mStateFrames == n + 0x28 on the actor is removed
    (KillAndTrackInDeathTable) and 1 is returned. Returns 0 otherwise. */
-int da1up_c::func_ov002_020af248(int n) {
-  int v = mStateFrames;
-  if(v < n) return 0;
-  if(v < n + 0x28){
-    mBlinkOn = (v & 1) != 0;
-  } else {
-    KillAndTrackInDeathTable();
-    return 1;
-  }
-  return 0;
+int da1up_c::UpdateExpiryCountdown(int n) {
+    int v = mStateFrames;
+    if (v < n)
+        return 0;
+    if (v < n + 0x28) {
+        mBlinkOn = (v & 1) != 0;
+    } else {
+        KillAndTrackInDeathTable();
+        return 1;
+    }
+    return 0;
 }
 
 /* The first of the two file-scope `extern "C"` regions. Ordinal 9 is a class
@@ -388,17 +391,17 @@ void func_ov002_020bdf8c(daPly_c *player);
    _ZTV7da1up_c (0x021083c8) + 0x4c relocates to 0x020af2b0, this address.
    Collects the mushroom for `player` (the hook for a mushroom being turned
    into an egg, per its slot). Types 11 and 12 go through
-   func_ov002_020af684 with target 5 and 7, the same hand-off their touch
+   UnlockTargetAndRemove with target 5 and 7, the same hand-off their touch
    handlers make. Otherwise a 1-Up (actorID 276) plays sound 0x6e, gives one
    life, spawns the 1UP logo actor (331) 180 units (0xb4000) above itself and
    removes itself; any other actor ID calls daPly_c::func_ov002_020bdf8c on
    `player` and removes itself. */
 void da1up_c::OnTurnIntoEgg(daPly_c &player) {
     if (mMushroomType == MUSHROOM_SPIN_TRIGGER_FOR_5) {
-        return func_ov002_020af684(MUSHROOM_HIDDEN_FLEE, &player);
+        return UnlockTargetAndRemove(MUSHROOM_HIDDEN_FLEE, &player);
     }
     if (mMushroomType == MUSHROOM_SPIN_TRIGGER_FOR_7) {
-        return func_ov002_020af684(MUSHROOM_HIDDEN_CHASE, &player);
+        return UnlockTargetAndRemove(MUSHROOM_HIDDEN_CHASE, &player);
     }
     unsigned isMatch = (actorID == ACTOR_ONEUPKINOKO);
     if (isMatch) {
@@ -426,14 +429,14 @@ s32 da1up_c::OnYoshiTryEat()
 
 /* -------------------------------------------------------------------------- */
 /* The touch-collection step, called from every behaviour except types 6, 8, 9,
-   10, 11 and 12. Does nothing unless func_ov002_020af1dc finds a player touching
+   10, 11 and 12. Does nothing unless GetTouchingPlayer finds a player touching
    the cylinder. Then: the Mega Mushroom (actorID 277) calls
    daPly_c::func_ov002_020bdf8c on that player; the 1-Up (actorID 276) plays sound
    0x6e, gives one life and spawns the 1UP logo actor (331) 180 units (0xb4000)
    above itself; either way the mushroom then removes itself. */
-void da1up_c::func_ov002_020af3a8() {
+void da1up_c::CollectOnTouch() {
 
-    daPly_c *r = func_ov002_020af1dc();
+    daPly_c *r = GetTouchingPlayer();
     if (r == 0)
         return;
 
@@ -464,7 +467,7 @@ void da1up_c::func_ov002_020af3a8() {
    (0x28000). After that, every frame it lowers mPrevAngleX by 0x1000 (22.5
    degrees): mVertSpeed = 30 units (0x1e) times the cosine of mPrevAngleX plus
    2 units (0x2000); mHorzSpeed = -30 units times its sine. */
-void da1up_c::func_ov002_020af474() {
+void da1up_c::UpdateLaunchArc() {
     if ((u16)mStateTimer < 5) {
         mVertSpeed = 0x28000;
         return;
@@ -492,7 +495,7 @@ void da1up_c::func_ov002_020af474() {
                       minus depth * 0x180 / 0x1000 (a Fix12 multiply by 0.09375),
                       10 units at least, and then depth += 60 units (0x3c000);
      on the ground:   depth = 60 units, radius = twice (cylinder radius - 10 units). */
-void da1up_c::func_ov002_020af4ec() {
+void da1up_c::UpdateModelAndShadow() {
 
     int depth;
     int radius;
@@ -555,7 +558,7 @@ void da1up_c::func_ov002_020af4ec() {
    playing sound 0x12 when the player is underwater and 0x11 otherwise -- the
    same calls and sounds dActor_c::GivePlayerCoins makes for a single coin.
    Always ends by removing the mushroom. */
-void da1up_c::func_ov002_020af684(int target, daPly_c *player) {
+void da1up_c::UnlockTargetAndRemove(int target, daPly_c *player) {
     daPly_c *p = player;
     dActor_c* found = 0;
     for (;;) {
@@ -584,9 +587,9 @@ void da1up_c::func_ov002_020af684(int target, daPly_c *player) {
    collision (mWithMeshClsn) reports ground contact, then enables the cylinder
    (clears bit 0 of its flags, which disables it while set) and moves on; state 2
    runs the touch check. Then the range check (3000 units) and the trail effect. */
-void da1up_c::func_ov002_020af724() {
+void da1up_c::UpdateFallThenWait() {
 
-    func_ov002_020aefb8();
+    UpdatePhysics();
     switch (mState) {
     case 0:
         Sound::PlayBank3(SND3_UNK_69, mCamSpacePos);
@@ -599,11 +602,11 @@ void da1up_c::func_ov002_020af724() {
         }
         break;
     case 2:
-        func_ov002_020af3a8();
+        CollectOnTouch();
         break;
     }
-    func_ov002_020af218(0xbb8);
-    func_ov002_020aeee4();
+    UpdateShown(0xbb8);
+    UpdateTrailEffect();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -613,7 +616,7 @@ void da1up_c::func_ov002_020af724() {
    to it and turned into type 0 in state 0, with mStateTimer and mStateFrames set
    to 0xffff so the increments Behavior makes right after the call wrap them to
    0. */
-void da1up_c::func_ov002_020af7cc() {
+void da1up_c::UpdateRiseThenPopOut() {
     mShown = 1;
     if (mPosY >= mSpawnPosY + 0x64000) return;
     mPosY += 0x5000;
@@ -631,7 +634,7 @@ void da1up_c::func_ov002_020af7cc() {
    with mUnlockCount 2) 50 units (0x32000) above the spawn point, and two of
    param 0xb (type 11) at the spawn height, 500 units (0x1f4000) to the -x and +x
    side. */
-void da1up_c::func_ov002_020af838() {
+void da1up_c::UpdateSpawner() {
     struct Vector3 vec;
 
     vec.x = mSpawnPosX;
@@ -656,35 +659,34 @@ void da1up_c::func_ov002_020af838() {
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 12 (MUSHROOM_SPIN_TRIGGER_FOR_7). Turns mAngleY by 0xc00
    (16.875 degrees) a frame, then runs index 8's handler. */
-void da1up_c::func_ov002_020af908() {
+void da1up_c::UpdateSpinTriggerFor7() {
     mAngleY += 0xc00;
-    func_ov002_020af924();
+    UpdateTriggerFor7();
 }
 
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 8 (MUSHROOM_TRIGGER_FOR_7). If a player is touching it,
-   hands off to func_ov002_020af684 with target 7 (a waiting type 7 loses one
+   hands off to UnlockTargetAndRemove with target 7 (a waiting type 7 loses one
    from its mUnlockCount). */
-void da1up_c::func_ov002_020af924() {
-    daPly_c *r = func_ov002_020af1dc();
+void da1up_c::UpdateTriggerFor7() {
+    daPly_c *r = GetTouchingPlayer();
     if (!r)
         return;
-    func_ov002_020af684(7, r);
+    UnlockTargetAndRemove(7, r);
 }
 
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 7 (MUSHROOM_HIDDEN_CHASE). State 0: hidden (mShown 0)
    until mUnlockCount is 0; then it appears -- mVertSpeed 40 units (0x28000),
    state 3, shown, opened to Yoshi (func_ov002_020aefa4), sound 0x68, mFlags bit
-   0 cleared. State 3 is the launch arc (func_ov002_020af474) under physics, with
+   0 cleared. State 3 is the launch arc (UpdateLaunchArc) under physics, with
    the trail effect once mStateTimer is past 17 (0x11); at mStateTimer 0x25 (37)
    it enables the cylinder (clears bit 0 of its flags), goes to state 1, sets
    mVertAccel to 0 and mHorzSpeed to 10 units (0xa000). State 1 steers toward the
-   player (func_ov002_020af0c0) under physics. */
-void da1up_c::func_ov002_020af950() {
+   player (SteerTowardPlayer) under physics. */
+void da1up_c::UpdateHiddenChase() {
 
-  switch (mState)
-  {
+    switch (mState) {
     case 0:
       mShown = 0;
       if (mUnlockCount != 0)
@@ -699,43 +701,43 @@ void da1up_c::func_ov002_020af950() {
       return;
 
     case 1:
-      func_ov002_020af0c0();
-      func_ov002_020aefb8();
-      return;
-
-    case 3:
-      func_ov002_020aefb8();
-      if (*(unsigned short *)&mStateTimer > 0x11)
-        func_ov002_020aeee4();
-      func_ov002_020af474();
-      if (*(unsigned short *)&mStateTimer != 0x25)
+        SteerTowardPlayer();
+        UpdatePhysics();
         return;
 
-      mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
-      mState = 1;
-      mVertAccel = 0;
-      mHorzSpeed = 0xa000;
-      return;
+    case 3:
+        UpdatePhysics();
+        if (*(unsigned short *)&mStateTimer > 0x11)
+            UpdateTrailEffect();
+        UpdateLaunchArc();
+        if (*(unsigned short *)&mStateTimer != 0x25)
+            return;
+
+        mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
+        mState = 1;
+        mVertAccel = 0;
+        mHorzSpeed = 0xa000;
+        return;
   }
 }
 
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 11 (MUSHROOM_SPIN_TRIGGER_FOR_5). Turns mAngleY by 0xc00
    (16.875 degrees) a frame, then runs index 6's handler. */
-void da1up_c::func_ov002_020afa50() {
+void da1up_c::UpdateSpinTriggerFor5() {
     mAngleY += 0xc00;
-    func_ov002_020afa6c();
+    UpdateTriggerFor5();
 }
 
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 6 (MUSHROOM_TRIGGER_FOR_5). If a player is touching it,
-   hands off to func_ov002_020af684 with target 5 (a waiting type 5 loses one
+   hands off to UnlockTargetAndRemove with target 5 (a waiting type 5 loses one
    from its mUnlockCount). */
-void da1up_c::func_ov002_020afa6c() {
-    daPly_c *r = func_ov002_020af1dc();
+void da1up_c::UpdateTriggerFor5() {
+    daPly_c *r = GetTouchingPlayer();
     if (!r)
         return;
-    func_ov002_020af684(5, r);
+    UnlockTargetAndRemove(5, r);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -744,10 +746,10 @@ void da1up_c::func_ov002_020afa6c() {
    0x68, and so on). State 3 is the launch arc under physics with the trail
    effect once mStateTimer is past 17; at mStateTimer 0x25 (37) it enables the
    cylinder, goes to state 1 and sets mHorzSpeed to 8 units (0x8000). State 1
-   walks away from the player (func_ov002_020afde4) under physics with the trail
+   walks away from the player (WalkAwayFromPlayer) under physics with the trail
    effect; state 2 is physics, the touch check and the expiry countdown (30 frames, then 40 blinking, then removed)
-   (func_ov002_020af248). */
-void da1up_c::func_ov002_020afa98() {
+   (UpdateExpiryCountdown). */
+void da1up_c::UpdateHiddenFlee() {
 
     switch (mState) {
     case 0:
@@ -762,21 +764,21 @@ void da1up_c::func_ov002_020afa98() {
         mFlags &= ~ACTOR_FLAG_CLIP_TEST;
         return;
     case 1:
-        func_ov002_020aefb8();
-        func_ov002_020afde4();
-        func_ov002_020aeee4();
+        UpdatePhysics();
+        WalkAwayFromPlayer();
+        UpdateTrailEffect();
         return;
     case 2:
-        func_ov002_020aefb8();
-        func_ov002_020af3a8();
-        func_ov002_020af248(0x1e);
+        UpdatePhysics();
+        CollectOnTouch();
+        UpdateExpiryCountdown(0x1e);
         return;
     case 3:
-        func_ov002_020aefb8();
+        UpdatePhysics();
         if (*(u16 *)&mStateTimer > 0x11) {
-            func_ov002_020aeee4();
+            UpdateTrailEffect();
         }
-        func_ov002_020af474();
+        UpdateLaunchArc();
         if (*(u16 *)&mStateTimer != 0x25)
             return;
         mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
@@ -790,12 +792,12 @@ void da1up_c::func_ov002_020afa98() {
 /* Dispatch-table index 4 (MUSHROOM_WAIT_THEN_FACE_AWAY). State 0 waits for the
    player to come within 1000 units (0x3e8), then sets mVertSpeed to 40 units
    (0x28000) and goes to state 1. State 1 turns away from the player
-   (func_ov002_020afde4) with the trail effect; unlike types 1 and 5 it sets no
+   (WalkAwayFromPlayer) with the trail effect; unlike types 1 and 5 it sets no
    horizontal speed here; state 2 is the touch check plus
    the expiry countdown (30 frames, then 40 blinking, then removed). The 3000-unit range check runs every frame. The two
-   `func_ov002_020aefb8()` calls really do read as
+   `UpdatePhysics()` calls really do read as
    no-argument calls -- as member calls r0 already carries `this`. */
-void da1up_c::func_ov002_020afbb4() {
+void da1up_c::UpdateWaitThenFaceAway() {
 
     switch (mState) {
     case 0:
@@ -805,41 +807,41 @@ void da1up_c::func_ov002_020afbb4() {
         }
         break;
     case 1:
-        func_ov002_020aefb8();
-        func_ov002_020afde4();
-        func_ov002_020aeee4();
+        UpdatePhysics();
+        WalkAwayFromPlayer();
+        UpdateTrailEffect();
         break;
     case 2:
-        func_ov002_020aefb8();
-        func_ov002_020af3a8();
-        func_ov002_020af248(0x1e);
+        UpdatePhysics();
+        CollectOnTouch();
+        UpdateExpiryCountdown(0x1e);
         break;
     }
-    func_ov002_020af218(0xbb8);
+    UpdateShown(0xbb8);
 }
 
 /* -------------------------------------------------------------------------- */
 /* Dispatch-table index 3 (MUSHROOM_STATIONARY). Only the touch check and the
    3000-unit range check; no physics and no state. */
-void da1up_c::func_ov002_020afc44() {
-    func_ov002_020af3a8();
-    func_ov002_020af218(0xbb8);
+void da1up_c::UpdateStationary() {
+    CollectOnTouch();
+    UpdateShown(0xbb8);
 }
 
 /* -------------------------------------------------------------------------- */
 /* State 1 of index 2 (MUSHROOM_WAIT_THEN_ACCELERATE). On the ground it adds 25
    units (0x19000) to mHorzSpeed and zeroes mVertSpeed. In the air it multiplies
    mHorzSpeed by 0xfae / 0x1000 (about 0.98) and passes the product through
-   cstd::fdiv(t, 0x1000). mHorzSpeed is capped at 40 units (0x28000). When the
+   FX_Div(t, 0x1000). mHorzSpeed is capped at 40 units (0x28000). When the
    player is not within 5000 units (0x1388) it goes to state 2. */
-void da1up_c::func_ov002_020afc68() {
+void da1up_c::AccelerateOnGround() {
 
     if (mWithMeshClsn.IsOnGround() != 0) {
         mHorzSpeed += 0x19000;
         mVertSpeed = 0;
     } else {
         int t = FX_MUL(mHorzSpeed, 0xfae);
-        mHorzSpeed = cstd::fdiv(t, 0x1000);
+        mHorzSpeed = FX_Div(t, 0x1000);
     }
     if (mHorzSpeed > 0x28000) {
         mHorzSpeed = 0x28000;
@@ -854,37 +856,37 @@ void da1up_c::func_ov002_020afc68() {
    words at 0xa4 / 0xa8 / 0xac are saved before the physics step and the first
    and last restored afterwards. State 0: range check (3000 units), and when the
    player comes within 1000 units (0x3e8) it sets mVertAccel to -4 units
-   (-0x4000) and goes to state 1. State 1: func_ov002_020afc68. State 2: the
+   (-0x4000) and goes to state 1. State 1: AccelerateOnGround. State 2: the
    expiry countdown (30 frames, then 40 blinking, then removed). Every frame ends with the touch check and the trail effect. */
-void da1up_c::func_ov002_020afd10() {
+void da1up_c::UpdateWaitThenAccelerate() {
     if (mState != 0) {
         Vector3 speed;
         speed.x = mSpeedX;
         speed.y = mVertSpeed;
         speed.z = mSpeedZ;
-        func_ov002_020aefb8();
+        UpdatePhysics();
         mSpeedX = speed.x;
         mSpeedZ = speed.z;
     }
 
     switch (mState) {
     case 0:
-        func_ov002_020af218(0xbb8);
+        UpdateShown(0xbb8);
         if (IsPlayerInRange(0x3e8)) {
             mVertAccel = -0x4000;
             mState = 1;
         }
         break;
     case 1:
-        func_ov002_020afc68();
+        AccelerateOnGround();
         break;
     case 2:
-        func_ov002_020af248(0x1e);
+        UpdateExpiryCountdown(0x1e);
         break;
     }
 
-    func_ov002_020af3a8();
-    func_ov002_020aeee4();
+    CollectOnTouch();
+    UpdateTrailEffect();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -892,12 +894,12 @@ void da1up_c::func_ov002_020afd10() {
    mPrevAngleY to the bearing from the mushroom to the closest player plus half
    a turn (0x8000), runs the touch check, and goes to state 2 when the floor
    collision reports a wall or the player is not within 3000 units. */
-void da1up_c::func_ov002_020afde4() {
+void da1up_c::WalkAwayFromPlayer() {
     daPly_c *p = ClosestPlayer();
     if (p) {
         mPrevAngleY = Vec3_HorzAngle(&mPos, &p->mPos) + 0x8000;
     }
-    func_ov002_020af3a8();
+    CollectOnTouch();
     if (mWithMeshClsn.IsOnWall())
         mState = 2;
     if (IsPlayerInRange(0xbb8) == 0)
@@ -908,18 +910,18 @@ void da1up_c::func_ov002_020afde4() {
 /* Dispatch-table index 1 (MUSHROOM_POP_OUT_FLEE). Physics every frame. State 0:
    sound 0x68 on the first frame and the launch arc; at mStateTimer 0x25 (37) it
    enables the cylinder, goes to state 1 and sets mHorzSpeed to 8 units (0x8000).
-   State 1 walks away from the player (func_ov002_020afde4). State 2 is the
+   State 1 walks away from the player (WalkAwayFromPlayer). State 2 is the
    expiry countdown (30 frames, then 40 blinking, then removed) and the touch check. Every frame ends with the range check
    and the trail effect. */
-void da1up_c::func_ov002_020afe4c() {
+void da1up_c::UpdatePopOutFlee() {
 
-    func_ov002_020aefb8();
+    UpdatePhysics();
     switch (mState) {
     case 0:
         if (*(unsigned short*)&mStateTimer == 0) {
             Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
         }
-        func_ov002_020af474();
+        UpdateLaunchArc();
         if (*(unsigned short*)&mStateTimer == 0x25) {
             mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
             mState = 1;
@@ -927,15 +929,15 @@ void da1up_c::func_ov002_020afe4c() {
         }
         break;
     case 1:
-        func_ov002_020afde4();
+        WalkAwayFromPlayer();
         break;
     case 2:
-        func_ov002_020af248(0x1e);
-        func_ov002_020af3a8();
+        UpdateExpiryCountdown(0x1e);
+        CollectOnTouch();
         break;
     }
-    func_ov002_020af218(0xbb8);
-    func_ov002_020aeee4();
+    UpdateShown(0xbb8);
+    UpdateTrailEffect();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -945,14 +947,14 @@ void da1up_c::func_ov002_020afe4c() {
    2 units (0x2000), which this handler never clears. State 1: touch check, and
    state 2 once mStateTimer exceeds 300 (0x12c). State 2: the expiry countdown
    (30 frames, then 40 blinking, then removed) and the touch check. Every frame ends with the range check and the trail effect. */
-void da1up_c::func_ov002_020aff10() {
+void da1up_c::UpdatePopOutDrift() {
 
-    func_ov002_020aefb8();
+    UpdatePhysics();
     switch (mState) {
     case 0:
         if (*(unsigned short *)&mStateTimer == 0)
             Sound::PlayBank3(SND3_LAUNCH, mCamSpacePos);
-        func_ov002_020af474();
+        UpdateLaunchArc();
         if (*(unsigned short *)&mStateTimer != 0x25)
             break;
         mdCcAc_c.flags &= ~CC_FLAGS_DISABLED;
@@ -962,15 +964,15 @@ void da1up_c::func_ov002_020aff10() {
     case 1:
         if (*(unsigned short *)&mStateTimer > 0x12c)
             mState = 2;
-        func_ov002_020af3a8();
+        CollectOnTouch();
         break;
     case 2:
-        func_ov002_020af248(0x1e);
-        func_ov002_020af3a8();
+        UpdateExpiryCountdown(0x1e);
+        CollectOnTouch();
         break;
     }
-    func_ov002_020af218(0xbb8);
-    func_ov002_020aeee4();
+    UpdateShown(0xbb8);
+    UpdateTrailEffect();
 }
 
 /* File-scope `extern "C"` region for the members below. Every one of these
@@ -1041,15 +1043,15 @@ int da1up_c::Render()
    0x0210dc00 besides the static initializer, which fills it from the 14
    descriptors at 0x02108300..0x02108370. mMushroomType is the index.
    When UpdateYoshiEat returns nonzero only the matrix and shadow
-   (func_ov002_020af4ec) and the cylinder Clear run. Otherwise it zeroes
+   (UpdateModelAndShadow) and the cylinder Clear run. Otherwise it zeroes
    mEatingPlayer, calls the type's handler, advances mStateTimer and
    mStateFrames by one, and if the handler changed mState zeroes both. */
 int da1up_c::Behavior()
 {
   if(UpdateYoshiEat(mWithMeshClsn) != 0){
-    func_ov002_020af4ec();
-    mdCcAc_c.Clear();
-    return 1;
+      UpdateModelAndShadow();
+      mdCcAc_c.Clear();
+      return 1;
   }
   mEatingPlayer = 0;
   {
@@ -1066,7 +1068,7 @@ int da1up_c::Behavior()
   }
   mdCcAc_c.Clear();
   mdCcAc_c.Update();
-  func_ov002_020af4ec();
+  UpdateModelAndShadow();
   return 1;
 }
 
@@ -1197,18 +1199,18 @@ extern "C" da1up_c *da1up_c_classInit_ONEUPKINOKO()
    materializes for the PMF constants are numbered clear of the anonymous
    objects earlier TUs already pinned (@NNN is a shared namespace). */
 PMF data_ov002_0210dc00[14] = {
-    &da1up_c::func_ov002_020aff10, /*  0 MUSHROOM_POP_OUT_DRIFT */
-    &da1up_c::func_ov002_020afe4c, /*  1 MUSHROOM_POP_OUT_FLEE */
-    &da1up_c::func_ov002_020afd10, /*  2 MUSHROOM_WAIT_THEN_ACCELERATE */
-    &da1up_c::func_ov002_020afc44, /*  3 MUSHROOM_STATIONARY */
-    &da1up_c::func_ov002_020afbb4, /*  4 MUSHROOM_WAIT_THEN_FACE_AWAY */
-    &da1up_c::func_ov002_020afa98, /*  5 MUSHROOM_HIDDEN_FLEE */
-    &da1up_c::func_ov002_020afa6c, /*  6 MUSHROOM_TRIGGER_FOR_5 */
-    &da1up_c::func_ov002_020af950, /*  7 MUSHROOM_HIDDEN_CHASE */
-    &da1up_c::func_ov002_020af924, /*  8 MUSHROOM_TRIGGER_FOR_7 */
-    &da1up_c::func_ov002_020af838, /*  9 MUSHROOM_SPAWNER */
-    &da1up_c::func_ov002_020af7cc, /* 10 MUSHROOM_RISE_THEN_POP_OUT */
-    &da1up_c::func_ov002_020afa50, /* 11 MUSHROOM_SPIN_TRIGGER_FOR_5 */
-    &da1up_c::func_ov002_020af908, /* 12 MUSHROOM_SPIN_TRIGGER_FOR_7 */
-    &da1up_c::func_ov002_020af724, /* 13 MUSHROOM_FALL_THEN_WAIT */
+    &da1up_c::UpdatePopOutDrift,        /*  0 MUSHROOM_POP_OUT_DRIFT */
+    &da1up_c::UpdatePopOutFlee,         /*  1 MUSHROOM_POP_OUT_FLEE */
+    &da1up_c::UpdateWaitThenAccelerate, /*  2 MUSHROOM_WAIT_THEN_ACCELERATE */
+    &da1up_c::UpdateStationary,         /*  3 MUSHROOM_STATIONARY */
+    &da1up_c::UpdateWaitThenFaceAway,   /*  4 MUSHROOM_WAIT_THEN_FACE_AWAY */
+    &da1up_c::UpdateHiddenFlee,         /*  5 MUSHROOM_HIDDEN_FLEE */
+    &da1up_c::UpdateTriggerFor5,        /*  6 MUSHROOM_TRIGGER_FOR_5 */
+    &da1up_c::UpdateHiddenChase,        /*  7 MUSHROOM_HIDDEN_CHASE */
+    &da1up_c::UpdateTriggerFor7,        /*  8 MUSHROOM_TRIGGER_FOR_7 */
+    &da1up_c::UpdateSpawner,            /*  9 MUSHROOM_SPAWNER */
+    &da1up_c::UpdateRiseThenPopOut,     /* 10 MUSHROOM_RISE_THEN_POP_OUT */
+    &da1up_c::UpdateSpinTriggerFor5,    /* 11 MUSHROOM_SPIN_TRIGGER_FOR_5 */
+    &da1up_c::UpdateSpinTriggerFor7,    /* 12 MUSHROOM_SPIN_TRIGGER_FOR_7 */
+    &da1up_c::UpdateFallThenWait,       /* 13 MUSHROOM_FALL_THEN_WAIT */
 };

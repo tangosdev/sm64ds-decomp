@@ -2295,9 +2295,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@764",
+      "from": "@576",
       "to": "@259",
-      "evidence": "the compiler emits @645 (was @633 before the dPa_c.h naming, which daDemo_c.h includes), which ov002 already defines as a global, so the pin is the unused @259 Re-keyed @645 -> @764 when the 75 StaffRoll descriptor handlers became static members with an explicit self parameter (daDemo_c.h declaration shift)."
+      "evidence": "the compiler emits @645 (was @633 before the dPa_c.h naming, which daDemo_c.h includes), which ov002 already defines as a global, so the pin is the unused @259 Re-keyed from @645 to @576 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ],
   "relocations": [

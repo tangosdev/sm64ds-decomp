@@ -11,7 +11,7 @@
  *
  * This SDK's thread queue is a 16-bit mask of thread ids (nitro/os/thread.h).
  */
-#include "IRQ.h"
+#include "nitro/os/system.h"
 #include "nitro/os/thread.h"
 #include "nitro/os/message.h"
 
@@ -27,10 +27,10 @@ void OS_InitMessageQueue(OSMessageQueue *mq, OSMessage *msgArray, s32 msgCount) 
 }
 
 int OS_SendMessage(OSMessageQueue *mq, OSMessage msg, s32 flags) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     while (mq->msgCount <= mq->usedCount) {
         if (!(flags & OS_MESSAGE_BLOCK)) {
-            IRQ::Restore(enabled);
+            OS_RestoreInterrupts(enabled);
             return 0;
         }
         OS_SleepThread(&mq->queueSend);
@@ -40,16 +40,16 @@ int OS_SendMessage(OSMessageQueue *mq, OSMessage msg, s32 flags) {
         mq->msgArray[lastIndex] = msg;
         mq->usedCount++;
         OS_WakeupThread(&mq->queueReceive);
-        IRQ::Restore(enabled);
+        OS_RestoreInterrupts(enabled);
         return 1;
     }
 }
 
 int OS_ReceiveMessage(OSMessageQueue *mq, OSMessage *msg, s32 flags) {
-    u32 enabled = IRQ::Disable();
+    OSIntrMode enabled = OS_DisableInterrupts();
     while (mq->usedCount == 0) {
         if (!(flags & OS_MESSAGE_BLOCK)) {
-            IRQ::Restore(enabled);
+            OS_RestoreInterrupts(enabled);
             return 0;
         }
         OS_SleepThread(&mq->queueReceive);
@@ -59,7 +59,7 @@ int OS_ReceiveMessage(OSMessageQueue *mq, OSMessage *msg, s32 flags) {
     mq->firstIndex = (mq->firstIndex + 1) % mq->msgCount;
     mq->usedCount--;
     OS_WakeupThread(&mq->queueSend);
-    IRQ::Restore(enabled);
+    OS_RestoreInterrupts(enabled);
     return 1;
 }
 }

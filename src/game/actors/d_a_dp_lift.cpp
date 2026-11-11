@@ -33,7 +33,6 @@
  *   ("( expected"). The free call with two ints matches.
  * - Render: one Vector3 local then one Matrix4x3_FromTranslation
  *   size-DIFF 0x8c->0xa4.
- * - data_02082214 stays the unnamed sine table.
  * - The two file handles live after InitResources; the compiler's
  *   __sinit_d_a_dp_lift.cpp constructs them at overlay load. Their wrapper
  *   names are local -- the constructors are the ROM resource-family
@@ -71,7 +70,7 @@ extern SharedFilePtr data_ov002_0210d9f0;
 extern DpLiftCollisionFilePtr data_ov025_02113ad8;
 extern CLPS_Block data_ov025_02112d08;
 
-extern s16 data_02082214[];
+extern s16 FX_SinCosTable_[];
 
 daDpLift_c::~daDpLift_c() {}
 
@@ -106,7 +105,7 @@ s32 daDpLift_c::Behavior() {
         break;
     case STATE_SHAKE: {
         s16 ang = mShakeTimer << 12;
-        s32 wave = FX_MUL(data_02082214[((u16)ang >> 4) * 2], 10);
+        s32 wave = FX_MUL(FX_SinCosTable_[((u16)ang >> 4) * 2], 10);
         mPosY = mBasePosY + wave;
         if (mShakeTimer == 8) {
             mState = STATE_SINK;
@@ -128,7 +127,7 @@ s32 daDpLift_c::Behavior() {
     }
     case STATE_SETTLE: {
         s16 ang = mShakeTimer << 12;
-        s32 wave = FX_MUL(data_02082214[((u16)ang >> 4) * 2], 10);
+        s32 wave = FX_MUL(FX_SinCosTable_[((u16)ang >> 4) * 2], 10);
         mPosY = wave + 0x80000;
         if (mShakeTimer >= 8) {
             mVertSpeed = 0;

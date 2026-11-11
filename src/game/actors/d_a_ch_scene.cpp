@@ -10,7 +10,7 @@
  * 0x02108674 is pointed at by exactly one word, 0x021086b0, this class's
  * own vtable slot.
  *
- * LoadLevel, MulVec3Mat4x3, InvMat4x3, StartExitFaderWipe and
+ * LoadLevel, MTX_MultVec43, MTX_Inverse43, StartExitFaderWipe and
  * IsStarCollectedInLevel are arm9 C helpers with no shared header yet, so they
  * keep a local extern "C" block. The data_ globals are arm9 data this TU does
  * not own.
@@ -30,8 +30,8 @@ extern "C" {
 /* local extern: these four have no shared header yet. LoadLevel takes the
    definition's wide spelling; the caller narrows the packed bytes itself. */
 void LoadLevel(int levelID, u32 entranceID, int starID, u32 arg3, s8 returnState);
-void MulVec3Mat4x3(Vector3 *, Matrix4x3 *, Vector3 *);
-int InvMat4x3(const Matrix4x3 *in, Matrix4x3 *out);
+void MTX_MultVec43(Vector3 *, Matrix4x3 *, Vector3 *);
+int MTX_Inverse43(const Matrix4x3 *in, Matrix4x3 *out);
 void StartExitFaderWipe(int);
 int IsStarCollectedInLevel(signed char levelID, int starID);
 }
@@ -91,7 +91,7 @@ s32 daChScene_c::InitResources() {
     Matrix4x3_FromTranslation(&mInvMat, mPosX, mPosY, mPosZ);
     Matrix4x3_ApplyInPlaceToRotationY(&mInvMat, -mAngleY);
     Matrix4x3_ApplyInPlaceToRotationX(&mInvMat, -mAngleX);
-    InvMat4x3(&mInvMat, &mInvMat);
+    MTX_Inverse43(&mInvMat, &mInvMat);
 
     mPosY += mScaleY >> 1;
     return 1;
@@ -104,12 +104,12 @@ s32 daChScene_c::Behavior() {
     Vector3 out2;
     daPly_c *player = gPlayers[gLocalPlayerId];
     if (mHorzSpeed != 0) {
-        MulVec3Mat4x3(&player->mPos, &mInvMat, &out1);
+        MTX_MultVec43(&player->mPos, &mInvMat, &out1);
         if (out1.z > mHorzSpeed || out1.z < -0x300000) {
             out1.z = mHorzSpeed;
             data_020a0e68 = mInvMat;
-            InvMat4x3(&data_020a0e68, &data_020a0e68);
-            MulVec3Mat4x3(&out1, &data_020a0e68, &player->mPos);
+            MTX_Inverse43(&data_020a0e68, &data_020a0e68);
+            MTX_MultVec43(&out1, &data_020a0e68, &player->mPos);
         }
         mHorzSpeed -= 0x20000;
         if (mHorzSpeed < -0x300000) {
@@ -123,7 +123,7 @@ s32 daChScene_c::Behavior() {
     } else {
         if (gNextSublevel < 0) {
             if (player->IsStateEnteringLevel() == 0) {
-                MulVec3Mat4x3(&player->mPos, &mInvMat, &out2);
+                MTX_MultVec43(&player->mPos, &mInvMat, &out2);
                 {
                     int a = out2.x;
                     if (a < 0)

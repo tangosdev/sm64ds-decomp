@@ -54,185 +54,185 @@
       "ordinal": 1
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124134Ev",
+      "symbol": "_ZN11daSnowman_c18ReleaseHeldObjectsEv",
       "address": "0x02124134",
       "size": "0x00000108",
-      "legacy_source": "src/func_ov081_02124134.c",
+      "legacy_source": "src/ReleaseHeldObjects.c",
       "ordinal": 2
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_0212423cEi",
+      "symbol": "_ZN11daSnowman_c18RotateTowardPlayerEi",
       "address": "0x0212423c",
       "size": "0x00000190",
-      "legacy_source": "src/func_ov081_0212423c.c",
+      "legacy_source": "src/RotateTowardPlayer.c",
       "ordinal": 3
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_021243ccEv",
+      "symbol": "_ZN11daSnowman_c12CheckAttacksEv",
       "address": "0x021243cc",
       "size": "0x0000021c",
-      "legacy_source": "src/func_ov081_021243cc.cpp",
+      "legacy_source": "src/CheckAttacks.cpp",
       "ordinal": 4
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_021245e8Ev",
+      "symbol": "_ZN11daSnowman_c21FindClosestPlayerDistEv",
       "address": "0x021245e8",
       "size": "0x000000b8",
-      "legacy_source": "src/func_ov081_021245e8.c",
+      "legacy_source": "src/FindClosestPlayerDist.c",
       "ordinal": 5
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_021246a0Ev",
+      "symbol": "_ZN11daSnowman_c16StateMeltExecuteEv",
       "address": "0x021246a0",
       "size": "0x000000fc",
-      "legacy_source": "src/func_ov081_021246a0.c",
+      "legacy_source": "src/StateMeltExecute.c",
       "ordinal": 6
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_0212479cEv",
+      "symbol": "_ZN11daSnowman_c14StateMeltEnterEv",
       "address": "0x0212479c",
       "size": "0x000000f8",
-      "legacy_source": "src/func_ov081_0212479c.cpp",
+      "legacy_source": "src/StateMeltEnter.cpp",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124894Ev",
+      "symbol": "_ZN11daSnowman_c17StateDeathExecuteEv",
       "address": "0x02124894",
       "size": "0x000000f8",
-      "legacy_source": "src/func_ov081_02124894.c",
+      "legacy_source": "src/StateDeathExecute.c",
       "ordinal": 8
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_0212498cEv",
+      "symbol": "_ZN11daSnowman_c15StateDeathEnterEv",
       "address": "0x0212498c",
       "size": "0x00000068",
-      "legacy_source": "src/func_ov081_0212498c.c",
+      "legacy_source": "src/StateDeathEnter.c",
       "ordinal": 9
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_021249f4Ev",
+      "symbol": "_ZN11daSnowman_c18StateBurrowExecuteEv",
       "address": "0x021249f4",
       "size": "0x00000114",
-      "legacy_source": "src/func_ov081_021249f4.c",
+      "legacy_source": "src/StateBurrowExecute.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124b08Ev",
+      "symbol": "_ZN11daSnowman_c16StateBurrowEnterEv",
       "address": "0x02124b08",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov081_02124b08.c",
+      "legacy_source": "src/StateBurrowEnter.c",
       "ordinal": 11
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124b98Ev",
+      "symbol": "_ZN11daSnowman_c25StateThrowSnowballExecuteEv",
       "address": "0x02124b98",
       "size": "0x0000017c",
-      "legacy_source": "src/func_ov081_02124b98.cpp",
+      "legacy_source": "src/StateThrowSnowballExecute.cpp",
       "ordinal": 12
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124d14Ev",
+      "symbol": "_ZN11daSnowman_c23StateThrowSnowballEnterEv",
       "address": "0x02124d14",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov081_02124d14.cpp",
+      "legacy_source": "src/StateThrowSnowballEnter.cpp",
       "ordinal": 13
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124d50Ev",
+      "symbol": "_ZN11daSnowman_c25StateSpawnSnowballExecuteEv",
       "address": "0x02124d50",
       "size": "0x000000ac",
-      "legacy_source": "src/func_ov081_02124d50.cpp",
+      "legacy_source": "src/StateSpawnSnowballExecute.cpp",
       "ordinal": 14
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124dfcEv",
+      "symbol": "_ZN11daSnowman_c23StateSpawnSnowballEnterEv",
       "address": "0x02124dfc",
       "size": "0x00000068",
-      "legacy_source": "src/func_ov081_02124dfc.c",
+      "legacy_source": "src/StateSpawnSnowballEnter.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124e64Ev",
+      "symbol": "_ZN11daSnowman_c18StateRotateExecuteEv",
       "address": "0x02124e64",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov081_02124e64.c",
+      "legacy_source": "src/StateRotateExecute.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124ec0Ev",
+      "symbol": "_ZN11daSnowman_c16StateRotateEnterEv",
       "address": "0x02124ec0",
       "size": "0x00000060",
-      "legacy_source": "src/func_ov081_02124ec0.c",
+      "legacy_source": "src/StateRotateEnter.c",
       "ordinal": 17
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124f20Ev",
+      "symbol": "_ZN11daSnowman_c26StateRiseFromGroundExecuteEv",
       "address": "0x02124f20",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov081_02124f20.cpp",
+      "legacy_source": "src/StateRiseFromGroundExecute.cpp",
       "ordinal": 18
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124f7cEv",
+      "symbol": "_ZN11daSnowman_c24StateRiseFromGroundEnterEv",
       "address": "0x02124f7c",
       "size": "0x000000bc",
-      "legacy_source": "src/func_ov081_02124f7c.c",
+      "legacy_source": "src/StateRiseFromGroundEnter.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02125038Ev",
+      "symbol": "_ZN11daSnowman_c22StateHideUnhideExecuteEv",
       "address": "0x02125038",
       "size": "0x00000030",
-      "legacy_source": "src/func_ov081_02125038.cpp",
+      "legacy_source": "src/StateHideUnhideExecute.cpp",
       "ordinal": 20
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02125068Ev",
+      "symbol": "_ZN11daSnowman_c20StateHideUnhideEnterEv",
       "address": "0x02125068",
       "size": "0x00000060",
-      "legacy_source": "src/func_ov081_02125068.cpp",
+      "legacy_source": "src/StateHideUnhideEnter.cpp",
       "ordinal": 21
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_021250c8Ev",
+      "symbol": "_ZN11daSnowman_c15StateHopExecuteEv",
       "address": "0x021250c8",
       "size": "0x00000138",
-      "legacy_source": "src/func_ov081_021250c8.c",
+      "legacy_source": "src/StateHopExecute.c",
       "ordinal": 22
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02125200Ev",
+      "symbol": "_ZN11daSnowman_c13StateHopEnterEv",
       "address": "0x02125200",
       "size": "0x00000008",
-      "legacy_source": "src/func_ov081_02125200.c",
+      "legacy_source": "src/StateHopEnter.c",
       "ordinal": 23
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02125208Ev",
+      "symbol": "_ZN11daSnowman_c16StateWalkExecuteEv",
       "address": "0x02125208",
       "size": "0x00000184",
-      "legacy_source": "src/func_ov081_02125208.c",
+      "legacy_source": "src/StateWalkExecute.c",
       "ordinal": 24
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_0212538cEv",
+      "symbol": "_ZN11daSnowman_c14StateWalkEnterEv",
       "address": "0x0212538c",
       "size": "0x000000fc",
-      "legacy_source": "src/func_ov081_0212538c.c",
+      "legacy_source": "src/StateWalkEnter.c",
       "ordinal": 25
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_02125488EPNS_5StateE",
+      "symbol": "_ZN11daSnowman_c8SetStateEPNS_5StateE",
       "address": "0x02125488",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov081_02125488.cpp",
+      "legacy_source": "src/SetState.cpp",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN11daSnowman_c19func_ov081_021254d8Ev",
+      "symbol": "_ZN11daSnowman_c19UpdateModelMatricesEv",
       "address": "0x021254d8",
       "size": "0x000002d8",
-      "legacy_source": "src/func_ov081_021254d8.cpp",
+      "legacy_source": "src/UpdateModelMatrices.cpp",
       "ordinal": 27
     },
     {
@@ -298,140 +298,140 @@
       "address": "0x02128938",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_0212538cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c14StateWalkEnterEv"
     },
     {
       "symbol": "@1369",
       "address": "0x02128930",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02125208Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c16StateWalkExecuteEv"
     },
     {
       "symbol": "@1373",
       "address": "0x02128940",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02125200Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c13StateHopEnterEv"
     },
     {
       "symbol": "@1375",
       "address": "0x02128980",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_021250c8Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c15StateHopExecuteEv"
     },
     {
       "symbol": "@1379",
       "address": "0x02128948",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02125068Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c20StateHideUnhideEnterEv"
     },
     {
       "symbol": "@1381",
       "address": "0x02128918",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02125038Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c22StateHideUnhideExecuteEv"
     },
     {
       "symbol": "@1385",
       "address": "0x02128920",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02124f7cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c24StateRiseFromGroundEnterEv"
     },
     {
       "symbol": "@1387",
       "address": "0x02128900",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02124f20Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c26StateRiseFromGroundExecuteEv"
     },
     {
       "symbol": "@1391",
       "address": "0x02128910",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02124ec0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c16StateRotateEnterEv"
     },
     {
       "symbol": "@38",
       "address": "0x021288f8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02124e64Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c18StateRotateExecuteEv"
     },
     {
       "symbol": "@39",
       "address": "0x02128958",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02124dfcEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c23StateSpawnSnowballEnterEv"
     },
     {
       "symbol": "@40",
       "address": "0x02128960",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02124d50Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c25StateSpawnSnowballExecuteEv"
     },
     {
       "symbol": "@41",
       "address": "0x02128928",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02124d14Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c23StateThrowSnowballEnterEv"
     },
     {
       "symbol": "@202",
       "address": "0x02128990",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02124b98Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c25StateThrowSnowballExecuteEv"
     },
     {
       "symbol": "@204",
       "address": "0x02128978",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02124b08Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c16StateBurrowEnterEv"
     },
     {
       "symbol": "@205",
       "address": "0x02128970",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_021249f4Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c18StateBurrowExecuteEv"
     },
     {
       "symbol": "@206",
       "address": "0x02128988",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_0212498cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c15StateDeathEnterEv"
     },
     {
       "symbol": "@207",
       "address": "0x02128968",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_02124894Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c17StateDeathExecuteEv"
     },
     {
       "symbol": "@208",
       "address": "0x02128908",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_0212479cEv"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c14StateMeltEnterEv"
     },
     {
       "symbol": "@209",
       "address": "0x02128950",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c19func_ov081_021246a0Ev"
+      "evidence": "compiler temporary pointer-to-member descriptor; its first word relocates to _ZN11daSnowman_c16StateMeltExecuteEv"
     }
   ],
   "bss": [
@@ -707,7 +707,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov081-daSnowman_c/daSnowman_c.o (gitignored)",
+    "object": "build/tu/ov081-daSnowman_c/d_a_snowman.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 36,
     "functions_declared": 36,
@@ -767,12 +767,13 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV11daSnowman_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 27 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+      "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     },
@@ -1976,7 +1977,7 @@
       "source": "0x021288f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124e64Ev",
+      "symbol": "_ZN11daSnowman_c18StateRotateExecuteEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02124e64"
@@ -1986,7 +1987,7 @@
       "source": "0x02128900",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124f20Ev",
+      "symbol": "_ZN11daSnowman_c26StateRiseFromGroundExecuteEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02124f20"
@@ -1996,7 +1997,7 @@
       "source": "0x02128908",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_0212479cEv",
+      "symbol": "_ZN11daSnowman_c14StateMeltEnterEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x0212479c"
@@ -2006,7 +2007,7 @@
       "source": "0x02128910",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124ec0Ev",
+      "symbol": "_ZN11daSnowman_c16StateRotateEnterEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02124ec0"
@@ -2016,7 +2017,7 @@
       "source": "0x02128918",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02125038Ev",
+      "symbol": "_ZN11daSnowman_c22StateHideUnhideExecuteEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02125038"
@@ -2026,7 +2027,7 @@
       "source": "0x02128920",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124f7cEv",
+      "symbol": "_ZN11daSnowman_c24StateRiseFromGroundEnterEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02124f7c"
@@ -2036,7 +2037,7 @@
       "source": "0x02128928",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124d14Ev",
+      "symbol": "_ZN11daSnowman_c23StateThrowSnowballEnterEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02124d14"
@@ -2046,7 +2047,7 @@
       "source": "0x02128930",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02125208Ev",
+      "symbol": "_ZN11daSnowman_c16StateWalkExecuteEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02125208"
@@ -2056,7 +2057,7 @@
       "source": "0x02128938",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_0212538cEv",
+      "symbol": "_ZN11daSnowman_c14StateWalkEnterEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x0212538c"
@@ -2066,7 +2067,7 @@
       "source": "0x02128940",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02125200Ev",
+      "symbol": "_ZN11daSnowman_c13StateHopEnterEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02125200"
@@ -2076,7 +2077,7 @@
       "source": "0x02128948",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02125068Ev",
+      "symbol": "_ZN11daSnowman_c20StateHideUnhideEnterEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02125068"
@@ -2086,7 +2087,7 @@
       "source": "0x02128950",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_021246a0Ev",
+      "symbol": "_ZN11daSnowman_c16StateMeltExecuteEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x021246a0"
@@ -2096,7 +2097,7 @@
       "source": "0x02128958",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124dfcEv",
+      "symbol": "_ZN11daSnowman_c23StateSpawnSnowballEnterEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02124dfc"
@@ -2106,7 +2107,7 @@
       "source": "0x02128960",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124d50Ev",
+      "symbol": "_ZN11daSnowman_c25StateSpawnSnowballExecuteEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02124d50"
@@ -2116,7 +2117,7 @@
       "source": "0x02128968",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124894Ev",
+      "symbol": "_ZN11daSnowman_c17StateDeathExecuteEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02124894"
@@ -2126,7 +2127,7 @@
       "source": "0x02128970",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_021249f4Ev",
+      "symbol": "_ZN11daSnowman_c18StateBurrowExecuteEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x021249f4"
@@ -2136,7 +2137,7 @@
       "source": "0x02128978",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124b08Ev",
+      "symbol": "_ZN11daSnowman_c16StateBurrowEnterEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02124b08"
@@ -2146,7 +2147,7 @@
       "source": "0x02128980",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_021250c8Ev",
+      "symbol": "_ZN11daSnowman_c15StateHopExecuteEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x021250c8"
@@ -2156,7 +2157,7 @@
       "source": "0x02128988",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_0212498cEv",
+      "symbol": "_ZN11daSnowman_c15StateDeathEnterEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x0212498c"
@@ -2166,7 +2167,7 @@
       "source": "0x02128990",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN11daSnowman_c19func_ov081_02124b98Ev",
+      "symbol": "_ZN11daSnowman_c25StateThrowSnowballExecuteEv",
       "addend": 0,
       "target_module": "ov081",
       "target_address": "0x02124b98"
@@ -2174,139 +2175,139 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1424",
+      "from": "@1368",
       "to": "@1357",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1424 to @1422 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1424 to @1370 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@1425",
+      "from": "@1369",
       "to": "@1358",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1425 to @1423 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1425 to @1371 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1370",
+      "to": "@1359",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1426 to @1424 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1426 to @1372 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1371",
+      "to": "@1360",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1427 to @1425 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1427 to @1373 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1372",
+      "to": "@1361",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1428 to @1426 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1428 to @1374 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1373",
+      "to": "@1362",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1429 to @1427 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1429 to @1375 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1374",
+      "to": "@1363",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1430 to @1428 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1430 to @1376 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1378",
+      "to": "@1367",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1434 to @1432 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1434 to @1380 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1380",
+      "to": "@1369",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1436 to @1434 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1436 to @1382 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1384",
+      "to": "@1373",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1440 to @1438 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1440 to @1386 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1386",
+      "to": "@1375",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1442 to @1440 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1442 to @1388 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1390",
+      "to": "@1379",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1446 to @1444 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1446 to @1392 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1392",
+      "to": "@1381",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1448 to @1446 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1448 to @1394 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1396",
+      "to": "@1385",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1452 to @1450 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1452 to @1398 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1398",
+      "to": "@1387",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1454 to @1452 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1454 to @1400 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1402",
+      "to": "@1391",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1458 to @1456 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1458 to @1404 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1404",
+      "to": "@38",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1460 to @1458 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1460 to @1406 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1408",
+      "to": "@39",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1464 to @1462 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1464 to @1410 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1410",
+      "to": "@40",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1466 to @1464 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1466 to @1412 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1414",
+      "to": "@41",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1470 to @1468 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1470 to @1416 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1416",
+      "to": "@202",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1472 to @1470 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1472 to @1418 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1420",
+      "to": "@204",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1476 to @1474 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1476 to @1422 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@1422",
+      "to": "@205",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1478 to @1476 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1478 to @1424 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@1426",
-      "to": "@1359",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1427",
-      "to": "@1360",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@206",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1482 to @1480 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1482 to @1428 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@1428",
-      "to": "@1361",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "to": "@207",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1484 to @1482 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1484 to @1430 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@1429",
-      "to": "@1362",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1430",
-      "to": "@1363",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "from": "@1432",
+      "to": "@208",
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1488 to @1486 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1488 to @1434 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@1434",
-      "to": "@1367",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1436",
-      "to": "@1369",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1440",
-      "to": "@1373",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1442",
-      "to": "@1375",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1446",
-      "to": "@1379",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1448",
-      "to": "@1381",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1452",
-      "to": "@1385",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1454",
-      "to": "@1387",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1458",
-      "to": "@1391",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1460",
-      "to": "@38",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1464",
-      "to": "@39",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1466",
-      "to": "@40",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1470",
-      "to": "@41",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1472",
-      "to": "@202",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1476",
-      "to": "@204",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1478",
-      "to": "@205",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1482",
-      "to": "@206",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1484",
-      "to": "@207",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1488",
-      "to": "@208",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
-    },
-    {
-      "from": "@1490",
       "to": "@209",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az)"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @1490 to @1488 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @1490 to @1436 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

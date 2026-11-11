@@ -4,12 +4,12 @@
 #include "nitro/fx/fx_trig.h"
 #include "Ov007MenuState.h"
 #include "Ov007Work.h"
-#include "cstd.h"
 #include "Ov007BgLayer.h"
 #include "Ov007Item.h"
 #include "Ov007Model.h"
 #include "Ov007LayerSlot.h"
 #include "Ov007Figure.h"
+#include "nitro/fx/fx_cp.h"
 
 extern "C" {
 
@@ -119,11 +119,11 @@ void func_ov007_020ad660(Ov007LayerSlot *slot) {
             } else if (temp_r1 >= 0x50) {
                 var_r4 = 0x1000;
             } else {
-                var_r4 = cstd::div(temp_r1 << 0xc, 0x50);
+                var_r4 = FX_DivS32(temp_r1 << 0xc, 0x50);
             }
             {
                 int t = FX_MUL(var_r4, 0xe10);
-                int r = cstd::div(t << 0x10, 0x168);
+                int r = FX_DivS32(t << 0x10, 0x168);
                 int inv, inv2, prod, result;
                 r = (u16)r;
                 inv = 0x1000 - var_r4;
@@ -148,7 +148,7 @@ void func_ov007_020ad660(Ov007LayerSlot *slot) {
             } else if (temp_r1 >= 8) {
                 var_r0 = 0x1000;
             } else {
-                var_r0 = cstd::div(temp_r1 << 0xc, 8);
+                var_r0 = FX_DivS32(temp_r1 << 0xc, 8);
             }
             {
                 int inv = 0x1000 - var_r0;

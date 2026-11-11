@@ -1166,24 +1166,24 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@452",
+      "from": "@414",
       "to": "@396",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; including math/MtxStack.h for Matrix4x3_FromRotationY and spelling the cylinder offset as a plain Vector3 (retiring the SnwmnCylOffset wrapper) move this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; including math/MtxStack.h for Matrix4x3_FromRotationY and spelling the cylinder offset as a plain Vector3 (retiring the SnwmnCylOffset wrapper) move this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @452 to @414 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@453",
+      "from": "@415",
       "to": "@397",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; including math/MtxStack.h for Matrix4x3_FromRotationY and spelling the cylinder offset as a plain Vector3 (retiring the SnwmnCylOffset wrapper) move this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; including math/MtxStack.h for Matrix4x3_FromRotationY and spelling the cylinder offset as a plain Vector3 (retiring the SnwmnCylOffset wrapper) move this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @453 to @415 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@454",
+      "from": "@416",
       "to": "@398",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; including math/MtxStack.h for Matrix4x3_FromRotationY and spelling the cylinder offset as a plain Vector3 (retiring the SnwmnCylOffset wrapper) move this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; including math/MtxStack.h for Matrix4x3_FromRotationY and spelling the cylinder offset as a plain Vector3 (retiring the SnwmnCylOffset wrapper) move this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @454 to @416 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
-      "from": "@455",
+      "from": "@417",
       "to": "@399",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; including math/MtxStack.h for Matrix4x3_FromRotationY and spelling the cylinder offset as a plain Vector3 (retiring the SnwmnCylOffset wrapper) move this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now"
+      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) | compiler temp; including math/MtxStack.h for Matrix4x3_FromRotationY and spelling the cylinder offset as a plain Vector3 (retiring the SnwmnCylOffset wrapper) move this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @455 to @417 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     }
   ]
 }

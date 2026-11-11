@@ -110,7 +110,7 @@ struct daKpa_c : dActor_c {
     s32 mHoldState;           /* 0x410 -- see Bowser_HoldState in d_a_kpa.cpp */
     u8  mVariantID;            /* 0x414 -- param1 & 3: which of the three fights; 3 is treated as 0 */
     u8  mPickToggle;          /* 0x415 -- alternates between "choose an action" and "turn to face the target" */
-    u8  mChooseJumpOnly;      /* 0x416 -- param1 bit 2; when set, the variant-2 idle pick chooses the jump state instead of calling func_ov060_021150d0 */
+    u8 mChooseJumpOnly; /* 0x416 -- param1 bit 2; when set, the variant-2 idle pick chooses the jump state instead of calling BitsActionList */
     u8  pad_417[0x1];
     u32 mCondFlags;           /* 0x418 -- see Bowser_CondFlag in d_a_kpa.cpp */
     u8  mOpacity;            /* 0x41c -- 0..255, walked toward mTargetOpacity by 20 per frame */
@@ -120,7 +120,7 @@ struct daKpa_c : dActor_c {
     u16 unk_420;              /* 0x420 -- zeroed at init, never read in d_a_kpa.cpp */
     u8  unk_422;              /* 0x422 -- set to 1 during the hurt hop and the defeat launch and cleared to 0 in the idle state; never read in d_a_kpa.cpp */
     u8  mStep;                /* 0x423 -- step within the current state; reset on every state change */
-    u8  mTalkStep;            /* 0x424 -- step of the intro conversation (func_ov060_02115518) */
+    u8 mTalkStep;             /* 0x424 -- step of the intro conversation (RunIntroTalk) */
     u8  mHoldStep;            /* 0x425 -- step of the held handler (mHoldState 1) */
     u8  mDropsShadow;            /* 0x426 */
     u8  mBounceOnLand;            /* 0x427 */
@@ -129,7 +129,7 @@ struct daKpa_c : dActor_c {
     u8  mVanishChance;        /* 0x42a -- chance in tenths of picking the vanish-and-dash state; starts at 5 */
     u8  mCapActorAlive;            /* 0x42b */
     /* Cutscene camera: look-at target and camera position, written only by the
-       intro camera helper func_ov060_02111f08, which feeds them to the Camera. */
+       intro camera helper UpdateIntroCamera, which feeds them to the Camera. */
     s32 mCamLookAtX;          /* 0x42c */
     s32 mCamLookAtY;          /* 0x430 */
     s32 mCamLookAtZ;          /* 0x434 */
@@ -154,68 +154,68 @@ struct daKpa_c : dActor_c {
     int Render();
 
     /* state-table handlers and helpers, in ROM order */
-    void func_ov060_02111a28();
-    int func_ov060_02111c68();
-    void func_ov060_02111cc0(int idx, int animFlags);
-    int func_ov060_02111f08();
-    void func_ov060_02112350();
-    void func_ov060_021123a0(int enable);
-    void func_ov060_021123c8();
-    void func_ov060_021123dc();
-    void func_ov060_02112434();
-    void func_ov060_021125f0();
-    void func_ov060_02112724();
-    void func_ov060_021128c0();
-    int func_ov060_02112ba8();
-    void func_ov060_02112bfc();
-    void func_ov060_02112d48(int tiltSpeed);
-    void func_ov060_02112ddc();
-    int func_ov060_02112ee0();
-    int func_ov060_021130c0();
-    void func_ov060_02113260();
-    int func_ov060_021132a4();
-    int func_ov060_02113404();
-    void func_ov060_021134ac();
-    void func_ov060_02113564();
-    void func_ov060_021135fc();
-    void func_ov060_02113710();
-    void func_ov060_02113740();
-    void func_ov060_02113a94();
-    void func_ov060_02113b5c();
-    int func_ov060_02113d20();
-    void func_ov060_02113d8c();
-    void func_ov060_02113fcc();
-    int func_ov060_02113ff4(unsigned short minFrames, int turnStep);
-    void func_ov060_021140c0();
-    void func_ov060_021142b4();
-    void func_ov060_02114300();
-    void func_ov060_021143b8();
-    void func_ov060_021145a8();
-    int func_ov060_021145d4();
-    int func_ov060_0211469c();
-    void func_ov060_021146d0();
-    void func_ov060_02114858();
-    void func_ov060_02114b60();
-    void func_ov060_02114d08();
-    void func_ov060_02114e9c();
-    void func_ov060_02114f88();
-    void func_ov060_02114ff8();
-    void func_ov060_02115018();
-    void func_ov060_02115060();
-    void func_ov060_021150c4();
-    void func_ov060_021150d0();
-    void func_ov060_021151d4();
-    void func_ov060_02115314();
-    void func_ov060_021153f8();
-    void func_ov060_021154e8();
-    void func_ov060_02115518();
-    int func_ov060_021156ec();
-    int func_ov060_02115718();
-    int func_ov060_02115744();
-    void func_ov060_0211577c();
+    void UpdateFootfalls();
+    int GetMouthFireRow();
+    void InitAnimation(int idx, int animFlags);
+    int UpdateIntroCamera();
+    void LoopLayDownAnimation();
+    void SetTangible(int enable);
+    void OnTailReleased();
+    void InitFightState();
+    void BowserLoop();
+    void ThrownDroppedUpdate();
+    void HeldUpdate();
+    void FreeUpdate();
+    int CheckFallenOffStage();
+    void ActTiltLavaPlatform();
+    void TiltPlatform(int tiltSpeed);
+    void ActDead();
+    int DeadFinalStageEnding();
+    int DeadDefaultStageEnding();
+    void DeadHide();
+    int DeadTwirlUp();
+    int DeadWaitForMario();
+    void DeadBounce();
+    void FlyBackDead();
+    void SpawnCollectable();
+    void ActDance();
+    void ActJumpOntoStage();
+    void SetGoalInvisible();
+    void ActThrown();
+    int CheckHitMine();
+    void ActChargeMario();
+    void ActTurnFromEdge();
+    int TurnOnTimer(unsigned short minFrames, int turnStep);
+    void ActSpitFireOntoFloor();
+    void ActHitEdge();
+    void ActQuickJump();
+    void ActBigJump();
+    void ShortSecondHop();
+    int BowserLand();
+    int SetAnimJump();
+    void ActHitMine();
+    void ActSpitFireIntoSky();
+    void ActTeleport();
+    void ActWalkToMario();
+    void ActBreathFire();
+    void ActDefault();
+    void ActIdle();
+    void ResetFallenOffStage();
+    void BitsActions();
+    void SetActBigJump();
+    void BitsActionList();
+    void BitfsActions();
+    void BitdwActions();
+    void ActIntroWalk();
+    void ActWait();
+    void RunIntroTalk();
+    int SetAnimLookDownStopWalk();
+    int SetAnimSlowGait();
+    int SetAnimLookUpAndWalk();
+    void UpdateModelMatrix();
     bool Bowser_IsAnimAtLastFrame();
-    void func_ov060_02115a84(char* counter);
-    void func_ov060_02115b0c();
+    void BounceEffects(char *counter);
+    void SpawnShockwave();
 };
 
 #ifndef SM64DS_PLATFORM_PC
