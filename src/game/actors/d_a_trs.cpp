@@ -2670,20 +2670,14 @@ void daTrs_c::func_ov063_0211a960() {
 
 void daTrs_c::Oscillate(int arg1) {
 
-    int t;
-    if (this->mOpacity != 0xff) {
-        if (arg1 == 0)
-            return;
-    }
-    t = this->mWobblePhase >> 4;
-    this->mScaleX = this->mClsnScale + ((*(short *)((char *)FX_SinCosTable_ + t * 4) << 3) / 100);
-    t = this->mWobblePhase >> 4;
-    this->mScaleY =
-        this->mClsnScale + ((-(*(short *)((char *)FX_SinCosTable_ + t * 4) << 3)) / 100);
-    this->mScaleZ = this->mScaleX;
+    if (mOpacity != 0xff && arg1 == 0)
+        return;
+    mScaleX = mClsnScale + (FX_SinIdx(mWobblePhase >> 4) << 3) / 100;
+    mScaleY = mClsnScale + -(FX_SinIdx(mWobblePhase >> 4) << 3) / 100;
+    mScaleZ = mScaleX;
     func_ov063_0211a960();
-    this->mdCcAcPos_c.radius = this->mClsnRadius * this->mScaleX;
-    this->mdCcAcPos_c.height = this->mClsnHeight * this->mScaleY;
+    mdCcAcPos_c.radius = mClsnRadius * mScaleX;
+    mdCcAcPos_c.height = mClsnHeight * mScaleY;
 }
 
 void daTrs_c::ApproachTargetOpacityAndUpdateScale() {
