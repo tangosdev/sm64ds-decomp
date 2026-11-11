@@ -4716,10 +4716,10 @@ int dScStage_c::InitResources() {
         *p1 |= 0x10000;
         InitialiseVramGlobals();
 
-        volatile u16 *bg1Control = (volatile u16 *)0x0400000A;
-        *bg1Control = *bg1Control & ~3;
-        *bg1Control = (*bg1Control & 0x43) | 0x1F1C;
-        *bg1Control = *bg1Control & ~0x40;
+        G2_SetBG1Priority(0);
+        G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xf800,
+                         GX_BG_CHARBASE_0x1c000, GX_BG_EXTPLTT_01);
+        G2_BG1Mosaic(false);
         gSubScreenLayers = 0x18;
         data_0209f204 = 0;
         gGraphCallback = (dGraph_c::callback_c *)&sStageGraphCallback;

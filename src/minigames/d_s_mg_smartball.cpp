@@ -5419,10 +5419,11 @@ s32 dScMgSmartball_c::InitResources() {
         }
     }
     data_0208ee44 = 1;
-    *((volatile u16 *)0x4001008) = ((*((volatile u16 *)0x4001008)) & 0x43) | 0x520c;
-    *((volatile u16 *)0x4001008) &= ~0x40;
-    *((volatile s32 *)0x4001010) = 0x100;
-    *((volatile u16 *)0x4001008) &= ~3;
+    G2S_SetBG0Control(GX_BG_SCRSIZE_TEXT_512x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x9000,
+                      GX_BG_CHARBASE_0x0c000, GX_BG_EXTPLTT_01);
+    G2S_BG0Mosaic(false);
+    G2S_SetBG0Offset(256, 0);
+    G2S_SetBG0Priority(0);
     f = Ov004_LoadFileByPath(&sSmartballResultBgNcgPath);
     DecompressLZ16(f, G2S_GetBG0CharPtr());
     Ov004_Deallocate(f);
@@ -5438,22 +5439,26 @@ s32 dScMgSmartball_c::InitResources() {
     DC_FlushRange(f, 0x20);
     GXS_LoadBGPltt(((char *)f) + 2, 2, 0x1e);
     Ov004_Deallocate(f);
-    *((volatile u16 *)0x400000c) = (((*((volatile u16 *)0x400000c)) & 0xFFFF) & 0x43) | 0x1410;
-    *((volatile u16 *)0x400000c) &= ~0x40;
-    *((volatile s32 *)0x4000018) = 0;
-    *((volatile u16 *)0x400000c) = ((*((volatile u16 *)0x400000c)) & (~3)) | 1;
-    *((volatile u16 *)0x400100c) = ((*((volatile u16 *)0x400100c)) & 0x43) | 0x1410;
-    *((volatile u16 *)0x400100c) &= ~0x40;
-    *((volatile s32 *)0x4001018) = 0;
-    *((volatile u16 *)0x400100c) = ((*((volatile u16 *)0x400100c)) & (~3)) | 1;
-    *((volatile u16 *)0x400000e) = ((*((volatile u16 *)0x400000e)) & 0x43) | 0x1618;
-    *((volatile u16 *)0x400000e) &= ~0x40;
-    *((volatile s32 *)0x400001c) = 0;
-    *((volatile u16 *)0x400000e) = ((*((volatile u16 *)0x400000e)) & (~3)) | 2;
-    *((volatile u16 *)0x400100e) = ((*((volatile u16 *)0x400100e)) & 0x43) | 0x1618;
-    *((volatile u16 *)0x400100e) &= ~0x40;
-    *((volatile s32 *)0x400101c) = 0;
-    *((volatile u16 *)0x400100e) = ((*((volatile u16 *)0x400100e)) & (~3)) | 2;
+    G2_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                         GX_BG_CHARBASE_0x10000);
+    G2_BG2Mosaic(false);
+    G2_SetBG2Offset(0, 0);
+    G2_SetBG2Priority(1);
+    G2S_SetBG2ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xa000,
+                          GX_BG_CHARBASE_0x10000);
+    G2S_BG2Mosaic(false);
+    G2S_SetBG2Offset(0, 0);
+    G2S_SetBG2Priority(1);
+    G2_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                         GX_BG_CHARBASE_0x18000);
+    G2_BG3Mosaic(false);
+    G2_SetBG3Offset(0, 0);
+    G2_SetBG3Priority(2);
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0xb000,
+                          GX_BG_CHARBASE_0x18000);
+    G2S_BG3Mosaic(false);
+    G2S_SetBG3Offset(0, 0);
+    G2S_SetBG3Priority(2);
     if (((u8)(*((s32 *)(c + 8)))) == 0) {
         f = Ov004_LoadFileByPath(&sSmartballLay0Bg1FrameNcgPath);
         DecompressLZ16(f, G2_GetBG2CharPtr());

@@ -154,7 +154,8 @@ int dScMgSingle3DBase_c::GetDisplayMode()
 extern "C" void LoadCard2SubBg3(void *) {
     void *fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCG_BIN);
     gSubScreenLayers |= 8;
-    *(vu16 *)0x400100eu = (*(vu16 *)0x400100eu & 0x43) | 0x214;
+    G2S_SetBG3ControlText(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x1000,
+                          GX_BG_CHARBASE_0x14000);
     DecompressLZ16(fileData, (void *)G2S_GetBG3CharPtr());
     Ov004_Deallocate(fileData);
     fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NCL_BIN);
@@ -163,9 +164,9 @@ extern "C" void LoadCard2SubBg3(void *) {
     fileData = LoadFile(ASSET_D_2D_MG_BG_CARD2_NSC_BIN);
     GXS_LoadBG3Scr(fileData, 0, 0x800);
     Deallocate(fileData);
-    *(vu16 *)0x400100eu &= ~0x40;
+    G2S_BG3Mosaic(false);
     *(vu32 *)0x400101cu = 0;
-    *(vu16 *)0x400100eu = (*(vu16 *)0x400100eu & ~3) | 1;
+    G2S_SetBG3Priority(1);
 }
 
 /* The inline destructor plus AfterInitResources as key function emit D1

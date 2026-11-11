@@ -93,9 +93,10 @@ extern "C" void D3D_CaptureToMain(void) {
     gSubScreenLayers &= ~0x10;
     gSubScreenLayers |= 4;
     REG_DISPCNT_SUB = (REG_DISPCNT_SUB & ~0x1f00) | (gSubScreenLayers << 8);
-    REG_DB_BG2CNT = (REG_DB_BG2CNT & 0x43) | 0x4284;
-    REG_DB_BG2CNT &= ~3;
-    REG_DB_BG2CNT &= ~0x40;
+    G2S_SetBG2ControlDCBmp(GX_BG_SCRSIZE_DCBMP_256x256, GX_BG_AREAOVER_XLU,
+                           GX_BG_BMPSCRBASE_0x08000);
+    G2S_SetBG2Priority(0);
+    G2S_BG2Mosaic(false);
 }
 
 extern "C" void D3D_CaptureToSub(void)
@@ -178,12 +179,10 @@ int dScMgD3DBase_c::InitSubScreenBg()
     GX_SetBankForSubOBJ(mSavedSubObjBank);
     mSubBgBank = GX_GetBankForSubBG();
     GX_SetBankForSubBG(GX_VRAM_SUB_BG_32_H);
-    {
-        volatile u16 *p = (volatile u16*)0x400100a;
-        *p = (*p & 0x43) | 0x800;
-        *p = *p & ~3;
-        *p = *p & ~0x40;
-    }
+    G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x4000,
+                      GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
+    G2S_SetBG1Priority(0);
+    G2S_BG1Mosaic(false);
     SetSubBg1Offset(0, 0);
     gSubScreenLayers &= ~2;
     {
