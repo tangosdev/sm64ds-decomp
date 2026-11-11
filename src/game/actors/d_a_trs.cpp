@@ -2596,15 +2596,10 @@ void daTrs_c::ShakeAfterHit() {
 
 void daTrs_c::MoveDuringHit(int cond, int val) {
 
-    int ip = *(u16 *)&this->mStateTimer + 1;
+    s16 ang = (*(u16 *)&mStateTimer + 1) << 11;
 
-    ip = ((ip << 0x1b) >> 0x10);
-    ip = (unsigned short)ip;
-    ip = ip >> 4;
-    ip = (ip << 1) + 1;
-
-    this->mHorzSpeed = val;
-    this->mVertSpeed = FX_SinCosTable_[ip];
+    mHorzSpeed = val;
+    mVertSpeed = FX_CosIdx((u16)ang >> 4);
     this->mPrevAngleY = this->mKnockbackAngleY;
     if (cond == 0) return;
 
