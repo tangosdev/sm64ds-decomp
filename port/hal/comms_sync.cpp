@@ -1533,6 +1533,12 @@ int gw_here(GwSeat &z) {
        tag carries the pause mark (tests/nametag.h), instead of fading out
        after kGwPauseFadeMs as he used to. */
     if ((int)nw.level_id != (int)data_0209f2f8) return 2;
+    {   /* MAPDOTS1 proof knob SM64DS_GHOST_FAKE_OTHER_AREA=<follower frame>: from that frame on, treat every friend as standing in another area
+           of my level (what a door to a far room does), without touching either console's real area */
+        static int fk = -2;
+        if (fk == -2) { const char *e = std::getenv("SM64DS_GHOST_FAKE_OTHER_AREA"); fk = (e && *e) ? std::atoi(e) : -1; }
+        if (fk >= 0 && g_gw_frame >= (unsigned)fk) return 2;
+    }
     if (nw.flags & kGwFrameClock) {
         /* his area is not mine: HideArea hid that room's world for me, and a
            friend in it would float in a room I cannot see */
