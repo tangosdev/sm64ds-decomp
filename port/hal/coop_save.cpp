@@ -51,6 +51,12 @@ int  func_02013638(int n);                          // the minigame menu's unloc
 int  func_02013890(int kind, int character);        // the rabbit's "already caught" test (daMip_c::StateCaughtMain)
 int  _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(void *dest);
 int  _ZN8SaveData13SaveMinigamesEP16MinigameSaveData(void *data);
+// RABBIT1 moat: the castle water's own collider and model refresh (dBgActor_c), the removal call, the water height word
+int  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
+int  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
+extern unsigned char data_0209f2d8[];              // daObjMcWater_c's "b" gate (InitResources: == 1 keeps the water up)
+extern int data_0209f32c;                          // the level's water height word
 }
 
 namespace port {
@@ -575,6 +581,68 @@ void rabbit_frame() {
     }
 }
 
+// ---- RABBIT1 (run coopfix1, Tango 11-11): the moat drains live for everyone -------------------------------------------
+// The drain is one save bit, flags2 0x80000, set by the basement pillars (d_a_obj_c0_switch.cpp:198). It is in the room record
+// now (coop_save_wire.h), so it reaches every console within a record round trip. The basement water reads it EVERY frame and
+// drains by itself (daObjC0Water_c::Behavior); the castle grounds moat (CASTLE_WATER, 338) reads it only when it spawns
+// (daObjMcWater_c::InitResources: mPosY = -0x2bc000), and the chain-link grate in the moat wall (METAL_NET, 339, param 0xff) is
+// simply not created when it is set. So a console that is ON the castle grounds when the bit arrives drains its moat here:
+// 0x5000 a frame (the basement water's own rate) down to the drained height, the model and collider moved the ROM's way, the
+// level's water height word lowered with it as InitResources would have set it, and the grate removed. Reloading the grounds then
+// takes the ROM's own path. SM64DS_COOP_MOAT_LIVE=0 turns this off. Proof knob SM64DS_COOP_MOAT_DRAIN=<frame>: at that frame of
+// the room, what the pillars do (flags2 |= 0x80000, then SaveData::SaveCurrentFile).
+constexpr int kMoatDrainedY = -0x2bc000;
+bool     g_moat_drain_done = false, g_moat_logged = false;
+unsigned g_moat_frames = 0;
+
+void moat_frame() {
+    if (!live_valid()) return;
+    uint32_t f2 = rd32le(data_0209caa0 + 0x08);
+    if (const char *md = std::getenv("SM64DS_COOP_MOAT_DRAIN")) {
+        const unsigned f = (unsigned)std::strtoul(md, nullptr, 10);
+        if (!g_moat_drain_done && g_frame >= f) {
+            g_moat_drain_done = true;
+            f2 |= 0x80000u;
+            std::memcpy(data_0209caa0 + 0x08, &f2, 4);
+            const int saved = _ZN8SaveData15SaveCurrentFileEv();
+            std::fprintf(stderr, "[coopmoat-knob] f=%u the pillars' bit set here (flags2 |= 0x80000, now %08x), SaveCurrentFile ok=%d
+",
+                         g_frame, f2, saved);
+        }
+    }
+    static int live_on = -1;
+    if (live_on < 0) { const char *e = std::getenv("SM64DS_COOP_MOAT_LIVE"); live_on = (e && *e == '0') ? 0 : 1; }
+    if (!live_on || !(f2 & 0x80000u) || data_0209f2f8 != 1 || data_0209f2d8[0] == 1) return;
+    for (char *a = (char *)_ZN8dActor_c4NextEPKS_(nullptr); a; a = (char *)_ZN8dActor_c4NextEPKS_(a)) {
+        const unsigned cls = *(const unsigned short *)(a + 0x0c);
+        if (cls == 338) {
+            int &y = *(int *)(a + 0x60);
+            if (y <= kMoatDrainedY) continue;
+            if (!g_moat_logged) {
+                g_moat_logged = true;
+                std::fprintf(stderr, "[coopmoat] f=%u the moat is drained in the room record and this console's moat is up (y %d): "
+                             "draining it live
+", g_frame, y >> 12);
+            }
+            y -= 0x5000;
+            if (y < kMoatDrainedY) y = kMoatDrainedY;
+            _ZN10dBgActor_c21UpdateModelPosAndRotYEv(a);
+            _ZN10dBgActor_c19UpdateClsnPosAndRotEv(a);
+            if (data_0209f32c > y - 0x64000) data_0209f32c = y - 0x64000;
+            if (y == kMoatDrainedY || (++g_moat_frames % 60) == 0)
+                std::fprintf(stderr, "[coopmoat] f=%u moat y %d%s, water height word %d
+", g_frame, y >> 12,
+                             y == kMoatDrainedY ? " (drained)" : "", data_0209f32c >> 12);
+        } else if (cls == 339 && (*(const unsigned *)(a + 0x08) & 0xff) == 0xff) {
+            if (*(const unsigned char *)(a + 0x0f) == 0) {
+                _ZN7fBase_c18MarkForDestructionEv(a);
+                std::fprintf(stderr, "[coopmoat] f=%u the moat grate removed (it is never created on a drained moat)
+", g_frame);
+            }
+        }
+    }
+}
+
 }  // namespace
 
 // ---- public ----------------------------------------------------------------
@@ -849,6 +917,7 @@ extern "C" void port_coop_save_frame(void) {
     run_forge();
     run_keydoor();
     rabbit_frame();
+    moat_frame();
     const ULONGLONG now = GetTickCount64();
     const bool live = comms_hub_state() == kHubLive;
     const bool others = live && comms_hub_seat_mask() != 0;
