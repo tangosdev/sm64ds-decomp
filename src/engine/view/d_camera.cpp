@@ -372,121 +372,113 @@ int dCamera_c::Behavior()
     return 1;
 }
 
+static inline void SetVec(Vector3 &v, s32 x, s32 y, s32 z) {
+    v.x = x;
+    v.y = y;
+    v.z = z;
+}
+
+/* fx32 world position to the 1/8 scale the view matrix is built at, rounded.
+ * The arguments are evaluated right to left, so z is computed first. */
+static inline void ToCameraUnits(Vector3 &v) {
+    SetVec(v, (v.x + 4) >> 3, (v.y + 4) >> 3, (v.z + 4) >> 3);
+}
 
 int dCamera_c::Render()
 {
-    dCamera_c *self = this;
-    s32 sp[6];
-    s16 sp18;
-    s16 var_r4;
+    Vector3 target;
+    Vector3 eye;
+    s16 fov;
+    s16 roll;
 
-    sp[0] = self->lookAt.x;
-    sp[1] = self->lookAt.y;
-    sp[2] = self->lookAt.z;
-    sp[3] = self->pos.x;
-    sp[4] = self->pos.y;
-    sp[5] = self->pos.z;
-    sp18 = self->mFovAngle;
-    var_r4 = self->mAngleZ;
+    target = lookAt;
+    eye = pos;
+    fov = mFovAngle;
+    roll = mAngleZ;
 
-    if (Vec3_Dist((Vector3 *)&sp[0], &self->mPrevLookAt) < 0x1000 &&
-        Vec3_Dist((Vector3 *)&sp[3], &self->mPrevPos) < 0x1000) {
-        sp[0] = self->mPrevLookAt.x;
-        sp[1] = self->mPrevLookAt.y;
-        sp[2] = self->mPrevLookAt.z;
-        sp[3] = self->mPrevPos.x;
-        sp[4] = self->mPrevPos.y;
-        sp[5] = self->mPrevPos.z;
+    if (Vec3_Dist(&target, &mPrevLookAt) < 0x1000 && Vec3_Dist(&eye, &mPrevPos) < 0x1000) {
+        target = mPrevLookAt;
+        eye = mPrevPos;
     }
 
-    if (!(gRunningKuppaScript != 0 ? 1 : 0)) {
-        s32 f = self->mFlags;
-        if (!(f & 8)) {
-            if ((u8 *)self->mMode == &data_0208738c) {
+    if (!IsKuppaScriptRunning()) {
+        s32 flags = mFlags;
+        if (!(flags & 8)) {
+            if ((u8 *)mMode == &data_0208738c) {
                 OAM::Render(0, (OamAttr *)&data_ov002_0210c3b0, 0x80, 0x60, -1, -1, 0x1000, 0x1000,
                             0, -1);
                 G2x_SetBlendAlpha_((volatile unsigned short *)0x04000050, 0x10, 0x2f, 0xc, 6);
             } else {
-                if (f & 0x20) {
+                if (flags & 0x20) {
                     OAM::Render(0, (OamAttr *)data_ov002_0210c3e0[0], 0x14, 0x60, -1, -1, 0x1000,
                                 0x1000, 0, -1);
                 }
-                if (self->mFlags & 0x40) {
+                if (mFlags & 0x40) {
                     OAM::Render(0, (OamAttr *)data_ov002_0210c3e0[1], 0xec, 0x60, -1, -1, 0x1000,
                                 0x1000, 0, -1);
                 }
             }
-            s32 t = self->mFovBlend;
-            if (t != 0x1000) {
-                s32 d = 0xaaa - sp18;
-                sp18 = (s16)(sp18 + (s16)FX_MUL(d, t));
+            s32 blend = mFovBlend;
+            if (blend != 0x1000) {
+                fov += (s16)FX_MUL(0xaaa - fov, blend);
             }
             if (data_0209f20c == 0 && gVsExitScreenActive == 0 &&
                 (u8)(gVsExitScreenActive | (gGamePaused | data_0209f20c)) != 0) {
-                func_0200af20((Vector3 *)&sp[0], (Vector3 *)&sp[3], &sp18);
+                func_0200af20(&target, &eye, &fov);
             }
         }
     }
 
-    sp[1] += self->mShakeY;
-    sp[4] += self->mShakeY;
+    target.y += mShakeY;
+    eye.y += mShakeY;
 
-    s16 tr3 = self->mRollShake;
-    if (tr3 != 0) {
-        s16 c = FX_SinCosTable_[((s32)(u16)self->mRollShakePhase >> 4) * 2];
-        var_r4 = (s16)(var_r4 + (s16)FX_MUL(tr3, c));
+    s16 rollShake = mRollShake;
+    if (rollShake != 0) {
+        s16 sin = FX_SinCosTable_[((s32)(u16)mRollShakePhase >> 4) * 2];
+        roll += (s16)FX_MUL(rollShake, sin);
     }
 
-    s16 tr0 = self->mFovShake;
-    if (tr0 != 0) {
-        s16 c = FX_SinCosTable_[((s32)(u16)self->mFovShakePhase >> 4) * 2 + 1];
-        s32 m = FX_MUL(c, 0x360);
-        sp18 = (s16)(sp18 + ((tr0 * m) << 4 >> 16));
+    s16 fovShake = mFovShake;
+    if (fovShake != 0) {
+        s16 cos = FX_SinCosTable_[((s32)(u16)mFovShakePhase >> 4) * 2 + 1];
+        s32 scaled = FX_MUL(cos, 0x360);
+        fov += (fovShake * scaled) << 4 >> 16;
     }
 
-    SetFovAngle(sp18);
+    SetFovAngle(fov);
 
-    *(volatile s32 *)0x04000580 = self->mViewport[0] | (self->mViewport[1] << 8) |
-                                  (self->mViewport[2] << 16) | (self->mViewport[3] << 24);
+    *(volatile s32 *)0x04000580 =
+        mViewport[0] | (mViewport[1] << 8) | (mViewport[2] << 16) | (mViewport[3] << 24);
 
-    s32 var_r6;
+    s32 scaleW;
     if (gCurrentSublevel == 0x28) {
-        var_r6 = 0x10;
+        scaleW = 0x10;
     } else {
-        var_r6 = data_0209ee90[0x44 / 4];
+        scaleW = data_0209ee90[0x44 / 4];
     }
 
-    s32 idx = ((s32)(u16)sp18 >> 4) * 2;
-    G3i_PerspectiveW_(FX_SinCosTable_[idx], FX_SinCosTable_[idx + 1], self->mAspect, self->mNear,
-                      self->mFar, var_r6, 1, (Matrix4x3 *)0);
+    s32 idx = ((s32)(u16)fov >> 4) * 2;
+    G3i_PerspectiveW_(FX_SinCosTable_[idx], FX_SinCosTable_[idx + 1], mAspect, mNear, mFar, scaleW,
+                      1, (Matrix4x3 *)0);
 
-    {
-        s32 s2 = (s32)(sp[2] + 4) >> 3;
-        s32 s1 = (s32)(sp[1] + 4) >> 3;
-        s32 s0 = (s32)(sp[0] + 4) >> 3;
-        sp[0] = s0;
-        sp[1] = s1;
-        sp[2] = s2;
-        sp[5] = (s32)(sp[5] + 4) >> 3;
-        s32 s4 = (s32)(sp[4] + 4) >> 3;
-        sp[3] = (s32)(sp[3] + 4) >> 3;
-        sp[4] = s4;
+    ToCameraUnits(target);
+    ToCameraUnits(eye);
+
+    void *up = &data_02086efc;
+    if (Vec3_HorzDist(&target, &eye) == 0) {
+        up = &data_02086f08;
     }
+    G3i_LookAt_(&eye, (Vector3 *)up, &target, 1, &viewMat);
 
-    void *lookdir = &data_02086efc;
-    if (Vec3_HorzDist((Vector3 *)&sp[0], (Vector3 *)&sp[3]) == 0) {
-        lookdir = &data_02086f08;
-    }
-    G3i_LookAt_((Vector3 *)&sp[3], (Vector3 *)lookdir, (Vector3 *)&sp[0], 1, &self->viewMat);
-
-    if (var_r4 != 0) {
-        Matrix4x3_FromRotationZ(&data_020a0e68, var_r4);
-        MTX_Concat43(&self->viewMat, &data_020a0e68, &self->viewMat);
+    if (roll != 0) {
+        Matrix4x3_FromRotationZ(&data_020a0e68, roll);
+        MTX_Concat43(&viewMat, &data_020a0e68, &viewMat);
     }
 
     dView_c::Render();
     return 1;
 }
+
 
 /* No-op override; the camera does nothing extra when flagged for destruction. */
 void dCamera_c::OnPendingDestroy()
@@ -2106,13 +2098,7 @@ int dCamera_c::func_0200af0c() {
     return 1;
 }
 
-/* func_02009e70's helpers. */
-static inline void SetVec(struct Vector3 &v, s32 x, s32 y, s32 z) {
-    v.x = x;
-    v.y = y;
-    v.z = z;
-}
-
+/* func_02009e70's helper. */
 static inline int CheckMode(void) {
     return gGameMode == 1;
 }
