@@ -456,15 +456,17 @@ int coop_cap_seat_nocap(int seat) {
 // Once a frame in an established coop group (hal/coop_actors.cpp's frame, next to the ghost eggs).
 void coop_cap_frame(unsigned) {
     read_env();
-    if (g_off) return;
-    ensure_registered();
+    if (!g_off) ensure_registered();
     int lv = -1, ac = 0;
     if (!coop_group_key(&lv, &ac)) return;
     char *me = local_body();
     if (!me) return;
     ++g_lf;
-    send_tick(me, lv, ac);
-    recv_tick(me, lv, ac);
+    // the control (SM64DS_COOP_CAP=0) keeps only the proof knobs and the trace, so the same row runs with the fix off
+    if (!g_off) {
+        send_tick(me, lv, ac);
+        recv_tick(me, lv, ac);
+    }
     knobs(me);
     trace(me);
 }
