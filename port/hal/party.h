@@ -41,9 +41,11 @@ bool seat_is_party(int seat);
 // newest SYNL against what this console is showing.
 enum Gate : int {
     kGateOk = 0,      // same level, same area (or no word from him yet)
-    kGateHide = 1,    // he is in a menu / star select / cutscene / no level: no body at all
+    kGateHide = 1,    // he is in a cutscene / has no level: no body at all
     kGateLevel = 2,   // another level
     kGateArea = 3,    // another area (room) of this level
+    kGatePaused = 4,  // my level and area, but in a menu (the pause menu): his body stays where he paused,
+                      // drawn but not solid. SM64DS_COOP_DRAWGATE=0 folds it back into kGateHide.
 };
 int gate(int seat);
 

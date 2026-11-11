@@ -107,7 +107,9 @@ int gate(int seat) {
     // No word from him yet (or none for 3 s): his ghost frames decide, as they do
     // for an adventure ghost. The relay sends SYNL on every change and at 2 Hz.
     if (!hub_presence_get(seat, &p, &age) || age > 3000u) return kGateOk;
-    if (!p.in_level() || p.in_menu() || p.in_cutscene()) {
+    // COOPYOSHI2: a menu alone (the pause menu) no longer hides him; it is kGatePaused below, after the level checks.
+    static const bool old_gate = [] { const char *e = std::getenv("SM64DS_COOP_DRAWGATE"); return e && e[0] == '0' && !e[1]; }();
+    if (!p.in_level() || p.in_cutscene() || (old_gate && p.in_menu())) {
         ++g_st.gate_hide;
         return kGateHide;
     }
@@ -124,6 +126,7 @@ int gate(int seat) {
         ++g_st.gate_level;
         return kGateLevel;
     }
+    if (p.in_menu()) return kGatePaused;
     return kGateOk;
 }
 
