@@ -3683,7 +3683,7 @@ void gw_follow() {
         if (gw_err_log())
             std::fprintf(stderr, "[gwdraw] t=%u f=%u seat=%d mode=%c pos=%d,%d,%d "
                          "yaw=%d anim=%u buf=%d dk=%u df=%u tp=%d lv=%d "
-                         "ch=%u\n", comms_hub_now_ms(),
+                         "ch=%u tilt=%d,%d\n", comms_hub_now_ms(),
                          g_gw_frame, s, sm.mode, sm.x, sm.y, sm.z, (int)sm.yaw,
                          (unsigned)sm.anim, sm.buf_ms, (unsigned)sm.door_kind,
                          (unsigned)sm.door_frame, sm.teleport ? 1 : 0,
