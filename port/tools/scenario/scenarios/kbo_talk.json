@@ -5,7 +5,7 @@
   "proof": {"secs": 120, "shot_ms": 9000, "census": [189]},
   "env": {"SM64DS_COOP_TALK_LOG": "1", "SM64DS_COOP_BOSS_LOG": "1"},
   "players": [
-    {"character": "mario", "level": 6, "act": 1, "near": {"class": 189, "dist": 230}},
-    {"character": "luigi", "level": 6, "act": 1, "settle": 400, "near": {"class": 189, "dist": 240, "angle_deg": 45}}
+    {"character": "mario", "level": 6, "act": 1, "near": {"class": 189, "dist": 110}},
+    {"character": "luigi", "level": 6, "act": 1, "settle": 400, "near": {"class": 189, "dist": 140, "angle_deg": 45}}
   ]
 }

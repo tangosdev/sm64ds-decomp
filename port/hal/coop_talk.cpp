@@ -66,7 +66,7 @@ namespace {
 enum : uint8_t { kWorldTalk = 0x74 };
 enum : int {
     kSeats = 4, kPlayerMax = 16, kSlots = 512,
-    kSendMs = 66, kFreshMs = 600, kLingerMs = 1200, kLingerBossMs = 4000, kEndSends = 3, kLookTailMs = 2000,
+    kSendMs = 66, kFreshMs = 600, kLockStaleMs = 10000, kLingerMs = 1200, kLingerBossMs = 4000, kEndSends = 3, kLookTailMs = 2000,
     kClsKingBobOmb = 189,
 };
 enum : uint8_t { kFTalk = 1, kFLook = 2 };
@@ -241,7 +241,9 @@ void ensure_registered() {
     if (g_log || !ok) std::fprintf(stderr, "[cotalk] SYNW sub-type 0x%02x %s\n", kWorldTalk, ok ? "registered" : "NOT registered (range taken)");
 }
 
-bool friend_fresh(const Friend &f, unsigned now) { return f.have && (unsigned)(now - f.t) < (unsigned)kFreshMs; }
+// A talk lock stands until the holder says his talk is over (or leaves my group): a friend whose game hitches or sits in a
+// menu for a second keeps it. kLockStaleMs only covers a holder whose end datagrams were all lost.
+bool friend_fresh(const Friend &f, unsigned now) { return f.have && (unsigned)(now - f.t) < (unsigned)kLockStaleMs; }
 
 // The seat (not me) that holds the lock on `slot` now, -1 none.
 int holder_of(int slot, unsigned now) {
