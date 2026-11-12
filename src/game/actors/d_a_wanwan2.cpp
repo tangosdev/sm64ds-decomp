@@ -787,9 +787,8 @@ int daWanwan2_c::InitResources()
         path.GetNode(mPos, mPathNodeIndex);
     }
 
-    /* Raise it 100 units (0x64000). Preserve the ROM's materialized
-       read-modify-write address for mPosY. */
-    *(s32 *)((int)&mPosY) += 0x64000;
+    /* Raise it 100 units (0x64000). */
+    mPosY += 0x64000;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
