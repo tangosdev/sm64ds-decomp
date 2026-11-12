@@ -86,7 +86,7 @@ inline ReachRule reach_rule(unsigned ikind) {
     switch (ikind) {
     case kMelee:    return { 2 * kBodyRadius + 70 + kLagAllow, -120, 150 };
     case kPound:    return { 220 + kLagAllow, -120, 150 };
-    case kStomp:    return { 2 * kBodyRadius + kLagAllow, 115, 260 };   // HEADBOUNCE1: feet over feet; under 115 he passes the waist
+    case kStomp:    return { 2 * kBodyRadius + kLagAllow, 65, 260 };    // FRIENDLOOK1: down to one fastest fall (75) under his 150-unit head, -10 slack (HEADBOUNCE1 had 115)
     case kEatClaim: return { 420 + kLagAllow, -150, 200 };
     case kGrabCatch: return { 2 * kBodyRadius + 70 + kLagAllow, -120, 150 };
     }

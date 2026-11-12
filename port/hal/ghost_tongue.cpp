@@ -5,6 +5,7 @@
 #include "hitch_probe.h"
 
 #include <cstdio>
+#include <cstdlib>
 
 extern "C" {
 void func_ov002_020d71ec(char *p, int arg);
@@ -13,6 +14,8 @@ extern unsigned char data_ov002_0210a34c[];
 extern unsigned char data_ov002_0210a084[];
 extern unsigned char data_ov002_0210eb88[];
 extern unsigned data_ov002_0210a6d4[];       // St_Hurt_Init's eight hurt animation ids
+extern int data_ov002_0210a424[];            // St_DeadHit_Init's two death animation ids
+extern int data_ov002_0210a07c[];            // St_DeadHit_Main's two (the fall after the knock)
 }
 
 namespace port {
@@ -94,13 +97,56 @@ bool is_hurt_anim(unsigned anim) {
     return false;
 }
 
-unsigned blink_step(Blink &b, unsigned anim, bool *started) {
+// FRIENDLOOK1 (bug 9): THE BLINK AT THE END OF THE HURT. St_Hurt_Init arms nothing;
+// the hurt state's own end does, once its animation has played out (St_Hurt_Main:
+// FinishedAnim, then mInvincibleTimer = 0x24 as it changes state, when the hurt
+// took health; the land and water versions the same). A friend's hit on me
+// (party_hits apply_effect) also arms 0x24 at the START, so a hurt that costs
+// health blinks from the knock to 36 frames after it ends. The ghost only blinked
+// the first 36 frames from the start, so on a friend's screen it stopped a whole
+// knockback early while the player was still invincible on his own screen. Now:
+// 36 frames from the start as before, and when the hurt animation ends the count
+// is set to 36 again (end_rearm; the caller says false for a hurt known to carry no
+// health). The shock (Player::St_Electrocute_Init, animation 0x11) blinks from its
+// first frame (0x1e) and again at its end (St_Electrocute_Main, 0x24).
+// SM64DS_GHOST_BLINK_AT_START=1 puts back the old start-only count.
+namespace {
+enum : unsigned { kShockAnim = 0x11 };
+bool blink_at_start() {
+    static int v = -1;
+    if (v < 0) { const char *e = std::getenv("SM64DS_GHOST_BLINK_AT_START"); v = (e && e[0] == '1') ? 1 : 0; }
+    return v == 1;
+}
+}  // namespace
+
+// FRIENDLOOK1 review: a hurt that takes the last health ends in St_DeadHit (func_ov002_020c5dec(8)), and the ROM arms
+// no blink then. Its animations are the two of St_DeadHit_Init's table and the two of St_DeadHit_Main's.
+bool is_death_anim(unsigned anim) {
+    for (int i = 0; i < 2; ++i)
+        if ((unsigned)data_ov002_0210a424[i] == anim || (unsigned)data_ov002_0210a07c[i] == anim) return true;
+    return false;
+}
+
+unsigned blink_step(Blink &b, unsigned anim, bool *started, bool end_rearm) {
     if (started) *started = false;
     const bool hurt = is_hurt_anim(anim);
     if (hurt && !b.prev_hurt) {
         b.left = 0x24;
         ++b.starts;
         if (started) *started = true;
+    }
+    if (!blink_at_start()) {
+        const bool shock = anim == kShockAnim, was_shock = b.prev_anim == kShockAnim;
+        if (shock && !was_shock) {
+            b.left = 0x1e;
+            ++b.starts;
+            if (started) *started = true;
+        }
+        if ((b.prev_hurt && !hurt && end_rearm && !is_death_anim(anim)) || (was_shock && !shock && !is_death_anim(anim))) {
+            b.left = 0x24;
+            ++b.ends;
+            if (started) *started = true;
+        }
     }
     b.prev_hurt = hurt;
     b.prev_anim = anim;
@@ -110,7 +156,7 @@ unsigned blink_step(Blink &b, unsigned anim, bool *started) {
     return v;
 }
 
-void blink_forget(Blink &b) { b.left = 0; b.prev_hurt = false; }
+void blink_forget(Blink &b) { b.left = 0; b.prev_hurt = false; b.prev_anim = 0xffffffffu; }
 
 }  // namespace ghost_tongue
 }  // namespace port

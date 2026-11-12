@@ -39,6 +39,9 @@ void attach_offsets(int kind, int *ahead, int *up);
 void held_after_follow();
 // RABBIT2: the friend seat whose hands hold the level object (cls, slot) right now (his kHeldState, still fresh), or -1.
 int held_by(int cls, int slot);
+// FRIENDLOOK1: true when the friend on `seat` is in a hurt I gave him (a punch or a pound in the last 3 s) and the
+// room's damage is off, so his hurt took no health and the ROM arms no blink at its end (the ghost blink, bug 9).
+bool hurt_without_damage(int seat);
 
 struct Stats {
     unsigned long long claims_sent, claims_recv, applied, refused, bounces, eats_began, eats_spat, eats_aborted;

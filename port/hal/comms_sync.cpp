@@ -922,6 +922,11 @@ struct GwSeat {
     unsigned long long sm_hold_old, sm_hold_tele, sm_hold_still;
     unsigned  sm_streak, sm_streak_max;
     unsigned long long sm_swaps;   // character swaps made on its body
+    // FRIENDLOOK1 (bug 29): the character his frames ask for and since when (the change log)
+    bool      want_have;
+    unsigned char want_ch;
+    unsigned  want_ms;
+    unsigned  flips, flip_log_ms;
 };
 
 GwSeat g_gw[kHubMaxSeats];
@@ -3697,6 +3702,14 @@ bool gw_attach_target(int holder_seat, unsigned tnow, int *x, int *y, int *z, in
     return true;
 }
 
+// FRIENDLOOK1 proof knob (off by default): SM64DS_BLINK_PROOF=1 logs, on the hub clock, when my own
+// invincibility timer (+0x6a0) starts and runs out and when each friend's blink starts and ends here.
+bool blink_proof() {
+    static int v = -1;
+    if (v < 0) v = std::getenv("SM64DS_BLINK_PROOF") ? 1 : 0;
+    return v == 1;
+}
+
 void gw_follow() {
     HITCH_SCOPE(HK_GHOSTFOLLOW);
     static int no_repose = -1, no_swap = -1, no_tongue = -1, no_blink = -1;
@@ -3717,6 +3730,29 @@ void gw_follow() {
     const bool in_cut = data_0209fc48 != 0;
     bool shown_any = false;
     ++g_gw_follow_n;
+    /* FRIENDLOOK1 (bug 29): my own cap-change flash (Player::mCapFlags +0x73c, phase in bits 0..2,
+       Player::func_ov002_020be3b0), when it starts and ends: while it runs the look byte my ghost
+       frames carry flips between mPrevCharacter (+0x6dc) and mHatCharacter (+0x6dd). */
+    if (me >= 0 && me < kPortBodySlots && data_0209f394[me]) {
+        static unsigned prev_phase;
+        const char *mp = (const char *)data_0209f394[me];
+        const unsigned phase = *(const unsigned short *)(mp + 0x73c) & 7u;
+        if ((phase != 0) != (prev_phase != 0))
+            std::fprintf(stderr, "[capflash] t=%u f=%u my cap-change flash %s (phase %u, from character %u to %u, look %u)\n",
+                         tnow, g_gw_frame, phase ? "on" : "off", phase, (unsigned)*(const unsigned char *)(mp + 0x6dc),
+                         (unsigned)*(const unsigned char *)(mp + 0x6dd), gw_char(mp));
+        prev_phase = phase;
+    }
+    if (blink_proof() && me >= 0 && me < kPortBodySlots && data_0209f394[me]) {
+        static unsigned prev_own;
+        const unsigned own = *(const unsigned short *)((const char *)data_0209f394[me] + player::kInvincibleTimer);
+        if (own && !prev_own)
+            std::fprintf(stderr, "[blinkproof] t=%u f=%u OWN blink on (%u frames, anim %u)\n",
+                         tnow, g_gw_frame, own, (unsigned)player::anim_id(data_0209f394[me]));
+        if (!own && prev_own)
+            std::fprintf(stderr, "[blinkproof] t=%u f=%u OWN blink off\n", tnow, g_gw_frame);
+        prev_own = own;
+    }
     static bool exit_hooked = false;
     if (!exit_hooked) {
         exit_hooked = true;
@@ -3852,6 +3888,39 @@ void gw_follow() {
            have been driven 30 frames and swapped once every 2 s, so after
            every level entry each friend showed as MY character for about a
            second. A swap that did not take is tried again after 250 ms. */
+        /* FRIENDLOOK1 (bug 29): two 4-player rooms on 1.0.2 showed a friend's model flick between two
+           characters 8 to 10 times in about a second. The look his frames carry is the low byte of his
+           body's param1, and the cartridge's own cap-change flash (Player::func_ov002_020be3b0 case 4)
+           flips exactly that byte between the old and the new character on a timer before it settles,
+           so the copy here shows the same flash he sees on his own screen. It is drawn as it comes.
+           Each change of the character asked for is logged (rate limited) with what the frame ring holds;
+           the sender logs its own cap-change flash ([capflash]), so a log pair shows the source. */
+        {
+            if (!z.want_have || z.want_ch != sm.character) {
+                if (z.want_have) {
+                    ++z.flips;
+                    if (z.flips <= 4 || (unsigned)(now - z.flip_log_ms) >= 1000u) {
+                        z.flip_log_ms = now;
+                        char ring[kGwRing + 1];
+                        int rn = 0;
+                        for (int k = 0; k < z.n && rn < kGwRing; ++k)
+                            ring[rn++] = (char)('0' + (z.ring[k].f.character & 7));
+                        ring[rn] = 0;
+                        const HubGhostFrame &nf = z.ring[z.n ? z.n - 1 : 0].f;
+                        std::fprintf(stderr, "[ghost] seat %d asks character %u after %u (held %u ms, change #%u): "
+                                     "newest frame char %u seq %u lvl %u area %u, ring chars %s, sample mode %c, "
+                                     "body %d shows %u, my character %u\n",
+                                     s, (unsigned)sm.character, (unsigned)z.want_ch, now - z.want_ms, z.flips,
+                                     (unsigned)nf.character, (unsigned)nf.seq, (unsigned)nf.level_id,
+                                     (unsigned)(nf.area & 0x0f), ring, sm.mode ? sm.mode : '-', i, gw_char(a),
+                                     me >= 0 && data_0209f394[me] ? gw_char(data_0209f394[me]) : 9u);
+                    }
+                }
+                z.want_have = true;
+                z.want_ch = sm.character;
+                z.want_ms = now;
+            }
+        }
         if (!no_swap && gw_char(a) != (unsigned)sm.character) {
             if (!z.char_wait_ms) z.char_wait_ms = now ? now : 1u;
             if ((int)(z.char_try_ms - z.char_wait_ms) < 0 ||
@@ -4028,7 +4097,8 @@ void gw_follow() {
            frames; nothing counts a ghost's timer down, so this is the count. */
         if (!no_blink) {
             bool started = false;
-            unsigned v = ghost_tongue::blink_step(g_gblink[i], sm.anim, &started);
+            unsigned v = ghost_tongue::blink_step(g_gblink[i], sm.anim, &started,
+                                                  !port::party_hits::hurt_without_damage(s));
             /* LAB (POSE9 pictures): SM64DS_GHOST_BLINK_PIN=1 / 2 holds a ghost that has
                started a blink on the hidden (1) or the drawn (2) frame for good. */
             {
@@ -4039,8 +4109,24 @@ void gw_follow() {
             }
             *(unsigned short *)((char *)a + player::kInvincibleTimer) = (unsigned short)v;
             if (started)
-                std::fprintf(stderr, "[ghost-blink] f=%u seat=%d body=%d hurt anim %u: 36-frame blink\n",
-                             g_gw_frame, s, i, (unsigned)sm.anim);
+                std::fprintf(stderr, "[ghost-blink] f=%u seat=%d body=%d anim %u: %u-frame blink\n",
+                             g_gw_frame, s, i, (unsigned)sm.anim, v);
+            /* FRIENDLOOK1 proof: SM64DS_BLINK_PROOF=1, the wall time a friend's blink starts and ends here */
+            if (blink_proof()) {
+                static unsigned prev_v[kPortBodySlots];
+                if (v && !prev_v[i])
+                    std::fprintf(stderr, "[blinkproof] t=%u f=%u GHOST seat=%d blink on (%u frames, anim %u)\n",
+                                 comms_hub_now_ms(), g_gw_frame, s, v, (unsigned)sm.anim);
+                if (!v && prev_v[i])
+                    std::fprintf(stderr, "[blinkproof] t=%u f=%u GHOST seat=%d blink off\n",
+                                 comms_hub_now_ms(), g_gw_frame, s);
+                static unsigned prev_anim[kPortBodySlots];
+                if (sm.anim != prev_anim[i] && ghost_tongue::is_death_anim(sm.anim))
+                    std::fprintf(stderr, "[blinkproof] t=%u f=%u GHOST seat=%d death anim %u (no re-arm), blink left %u\n",
+                                 comms_hub_now_ms(), g_gw_frame, s, (unsigned)sm.anim, v);
+                prev_anim[i] = sm.anim;
+                prev_v[i] = v;
+            }
             static int blog = -1;       // LAB: SM64DS_GHOST_BLINK_LOG=1, a line per blink frame with the ROM's own draw gate
             if (blog < 0) blog = std::getenv("SM64DS_GHOST_BLINK_LOG") ? 1 : 0;
             if (v && blog)
@@ -4374,6 +4460,22 @@ extern "C" int port_adventure_ghost_drawpos(int slot, int out[3]) {
     out[1] = g_drawpos[slot][1];
     out[2] = g_drawpos[slot][2];
     return 1;
+}
+
+// FRIENDLOOK1 (bug 10): where the follower last drew a hub seat's body (Fix12, the interpolated
+// position about buf_ms behind his newest frame), and that draw delay. 0 when he is not drawn here.
+extern "C" int port_adventure_ghost_drawn_seat(int seat, int out[3], int *buf_ms) {
+    if (!g_hub || seat < 0 || seat >= kHubMaxSeats) return 0;
+    const int nb = (int)data_0209f21c < kPortBodySlots ? (int)data_0209f21c : kPortBodySlots;
+    for (int i = 0; i < nb; ++i) {
+        if (i == (int)data_0209f250 || !g_drawpos_have[i] || gw_seat_for_body(i) != seat) continue;
+        out[0] = g_drawpos[i][0];
+        out[1] = g_drawpos[i][1];
+        out[2] = g_drawpos[i][2];
+        if (buf_ms) *buf_ms = g_gw_last[seat].buf_ms;
+        return 1;
+    }
+    return 0;
 }
 
 // MAPDOTS1: where a hub friend stands in MY level, for the bottom-screen map, whether or
