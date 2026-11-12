@@ -23,6 +23,7 @@
 #include "LevelRng.h"
 #include "nitro/gx/gx_load.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "math/CalcLib.h"
 
 /* sMCarlo2Cards is the head of the live card list and _02142568 its
  * tail (SetupBoard builds it); _0214256c heads the list of cleared cards,
@@ -56,7 +57,6 @@ extern int data_020a0db0;
 extern unsigned char gSubScreenLayers;
 extern unsigned char gMainScreenLayers;
 
-int  RandomIntInternal(void* seed);
 void RenderOamMainScreen(OamAttr *a0, int a1, int a2, int a3, int a4);
 void Hud_RenderSprite(void* a0, int a1, int a2, int a3, int a4);
 int  GetGameLanguage(void);

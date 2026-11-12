@@ -30,6 +30,7 @@
 #include "math/Approach.h"
 #include "nitro/gx/g3x.h"
 #include "nitro/fx/fx_cp.h"
+#include "math/CalcLib.h"
 
 /* `C` stands in for the receiver of the state pointer-to-member at 0x5004.
  * It must stay non-polymorphic: mwccarm lays out a pointer-to-member of a
@@ -84,7 +85,6 @@ int  Heyho_AllIdle(void);
 int Heyho_InitPool(void *ptr, int n);
 int Jump3D_InitPool(void *base, int count);
 void Jump3D_EnableInput(void);
-int  RandomIntInternal(int *seed);
 
 extern Matrix4x3 data_020a0e68;
 extern int sJumpLastPick;
