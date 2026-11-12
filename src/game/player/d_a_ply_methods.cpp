@@ -1535,8 +1535,8 @@ void daPly_c::SetRealCharacter(unsigned int chr_) {
     mModels.mBodyModels[m1]->Copy(*mModels.mBodyModels[m2],
                                   (char *)data_ov002_020ff480[mCharFileBase + chr]->filePtr, 0);
     m1 = this->GetBodyModelID(chr, 0);
-    mModels.mBodyModels[m1]->Func_020162C4((BCA_File *)data_ov002_020ff480[chr + 0xc4]->filePtr, 0, 0x1000,
-                                           0);
+    mModels.mBodyModels[m1]->Func_020162C4((BCA_File *)data_ov002_020ff480[chr + 0xc4]->filePtr, 0,
+                                           0x1000, 0);
 }
 }
 
@@ -1609,8 +1609,7 @@ void daPly_c::func_ov002_020be3b0() {
             if ((mCapTimer % (var_r5 * 2)) == 0) {
                 func_ov002_020e6b74(case3_m1, mModels.mBodyTexParams[this->param1]);
                 func_ov002_020e6b74(
-                    case3_m2,
-                    mModels.mHeadTexParams[func_ov002_020becf4((u8)(this->param1), 0)]);
+                    case3_m2, mModels.mHeadTexParams[func_ov002_020becf4((u8)(this->param1), 0)]);
             } else {
                 func_ov002_020e6b3c(case3_m1);
                 func_ov002_020e6b3c(case3_m2);
@@ -1877,7 +1876,7 @@ void daPly_c::AdvanceAnims() {
 /* recovered: named members + shared header, real C++ method */
 int daPly_c::IsAnim(unsigned int a) {
   int ip = param1;
-  SharedFilePtr *p = data_ov002_020ff480[ip + a*4];
+  SharedFilePtr *p = data_ov002_020ff480[ip + a * 4];
   BCA_File *v = (BCA_File *)p->filePtr;
   unsigned int id = this->GetBodyModelID(ip&0xff, 0);
   dExtAnmModel_c *model = mModels.mBodyModels[id];
@@ -7564,8 +7563,7 @@ int daPly_c::CanEnterDoor(unsigned char door) {
            daPly_c), he spits it out first; any other code (4 for a coin, a
            cap, a key or a star; 5; ...) just refuses the door. */
         if (mObjInMouth != 0) {
-            if (mObjInMouth->OnYoshiTryEat() == 6 ||
-                mObjInMouth->OnYoshiTryEat() == 1) {
+            if (mObjInMouth->OnYoshiTryEat() == 6 || mObjInMouth->OnYoshiTryEat() == 1) {
                 this->ChangeState(data_ov002_0211004c);
             }
             return 0;
@@ -13372,7 +13370,8 @@ void daPly_c::func_ov002_020d6368() {
     rot.z = zero;
     rot.y = rotY;
 
-    spawned = (daYegg_c *)dActor_c::Spawn(9, mEggParams << 4, pos, (const Vector3_16 *)&rot, mAreaId, -1);
+    spawned =
+        (daYegg_c *)dActor_c::Spawn(9, mEggParams << 4, pos, (const Vector3_16 *)&rot, mAreaId, -1);
     spawned->mPlayer = this;
     func_ov002_020d6334(spawned);
     mEggParams = zero;
@@ -13999,8 +13998,7 @@ int daPly_c::St_YoshiPower_Main() {
                 } else {
                     ((dActor_c *)o)->mFlags |= 0x40000;
                     mObjInMouth->mFlags &= ~0x20000;
-                    if (mObjInMouth->OnYoshiTryEat() == 4 ||
-                        mObjInMouth->OnYoshiTryEat() == 2) {
+                    if (mObjInMouth->OnYoshiTryEat() == 4 || mObjInMouth->OnYoshiTryEat() == 2) {
                         mStateStep = 3;
                         int f2 = 1;
                         mUseAltBodyModel = f2;
@@ -17578,11 +17576,9 @@ int daPly_c::St_TornadoSpin_Main() {
             int k = (u16)v >> 4;
             int sinv = FX_SinCosTable_[k * 2 + 1];
             int cosv = FX_SinCosTable_[k * 2];
-            ((int *)&pos)[0] =
-                FX_MUL(sz, cosv) + (mAttachedActor->mPosX + FX_MUL(sx, sinv));
-            ((int *)&pos)[2] =
-                FX_MUL(sz, sinv) + (mAttachedActor->mPosZ - FX_MUL(sx, cosv));
-            ((int*)&pos)[1] = mAttachOffsetY + mAttachedActor->mPosY;
+            ((int *)&pos)[0] = FX_MUL(sz, cosv) + (mAttachedActor->mPosX + FX_MUL(sx, sinv));
+            ((int *)&pos)[2] = FX_MUL(sz, sinv) + (mAttachedActor->mPosZ - FX_MUL(sx, cosv));
+            ((int *)&pos)[1] = mAttachOffsetY + mAttachedActor->mPosY;
         }
     }
     dBgCh_Gnd rc;
@@ -19123,7 +19119,7 @@ int daPly_c::St_LongJump_Init() {
 /* recovered: named members + shared header, real C++ method */
 extern "C" {
 int daPly_c::St_SideFlip_Main() {
-    extern int func_ov002_020eeca8(dBgCh_Actr *a, dActor_c *b);
+    extern int func_ov002_020eeca8(dBgCh_Actr * a, dActor_c * b);
     extern u16 data_0209f49e[];
     extern u16 data_0209f49c[];
     func_ov002_020eeca8(&mMeshClsn, this);
@@ -21278,7 +21274,7 @@ Ld0:
         (Vector3 *)__cxa_vec_new(0x32, 0xc, 8, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
     mTrailFlags = (u8 *)::operator new[](0x32);
     mHeldObjQueue = (dActor_c **)::operator new[](5 * sizeof(dActor_c *));
-    __builtin__clear((void*)mHeldObjQueue, 5 * sizeof(dActor_c *));
+    __builtin__clear((void *)mHeldObjQueue, 5 * sizeof(dActor_c *));
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
@@ -21491,10 +21487,9 @@ void daPly_c::func_ov002_020e5948() {
         player->mModels.mBodyModels[i] = new dExtAnm2Model_c;
         player->mModels.mBodyModels[i]->SetFile(
             dExtSimpleModel_c::LoadFile(*data_ov002_0210a68c[i]), 1, 1);
-        player->mModels.mBodyModels[i]->Func_020162C4((BCA_File *)data_ov002_020ff480[i + 0xC4]->filePtr,
-                                                      0, 0x1000, 0);
-        player->mModels.mBodyTexParams[i] =
-            func_ov002_020e6bb0(player->mModels.mBodyModels[i]);
+        player->mModels.mBodyModels[i]->Func_020162C4(
+            (BCA_File *)data_ov002_020ff480[i + 0xC4]->filePtr, 0, 0x1000, 0);
+        player->mModels.mBodyTexParams[i] = func_ov002_020e6bb0(player->mModels.mBodyModels[i]);
         i++;
     } while (i < 4);
 
@@ -21513,8 +21508,7 @@ void daPly_c::func_ov002_020e5948() {
             player->mModels.mHeadModels[i]->SetFile(
                 dExtSimpleModel_c::LoadFile(*data_ov002_0210a69c[i]), 1, 1);
         }
-        player->mModels.mHeadTexParams[i] =
-            func_ov002_020e6bb0(player->mModels.mHeadModels[i]);
+        player->mModels.mHeadTexParams[i] = func_ov002_020e6bb0(player->mModels.mHeadModels[i]);
         i++;
     } while (i < 4);
 

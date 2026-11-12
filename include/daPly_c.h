@@ -110,7 +110,7 @@ struct daPly_c : dActor_c {
         int (daPly_c::*mCleanup)(); /* 0x10 */
     };
 
-    daPly_c *mEatingPlayer;            /* 0x0d0 */
+    daPly_c *mEatingPlayer; /* 0x0d0 */
     u8  pad_0d4[0x8];
     /* 0x0dc..0x2ac: the models and the texture/material animations drawn on
        them, grouped as one embedded sub-object. The grouping is what the
@@ -204,11 +204,11 @@ struct daPly_c : dActor_c {
     /* ~daPly_c calls _ZN10dCcAcPos_cD1Ev on this, and that
        type asserts 0x40 -- which closes exactly at mRidingShell. */
     dCcAcPos_c mAttackClsn;            /* 0x314 */
-    daShl_c *mRidingShell;            /* 0x354 */
-    dActor_c *mHeldObj;            /* 0x358 */
-    dActor_c *mGrabbedByActor;            /* 0x35c */
-    dActor_c *mObjInMouth;            /* 0x360 */
-    dActor_c *mAttachedActor;            /* 0x364 */
+    daShl_c *mRidingShell;             /* 0x354 */
+    dActor_c *mHeldObj;                /* 0x358 */
+    dActor_c *mGrabbedByActor;         /* 0x35c */
+    dActor_c *mObjInMouth;             /* 0x360 */
+    dActor_c *mAttachedActor;          /* 0x364 */
     /* An actor pointer, not a byte: StartTalk stores its fBase_c& argument
        here, St_Talk_Cleanup clears a bit in the pointee's +0xb0 (dActor_c's
        mFlags), and every access in the ROM is a full word. */

@@ -25,7 +25,7 @@
 #ifdef __cplusplus
 
 struct dExtAnm2Model_c : dExtAnmModel_c {
-    BCA_File *otherFile;       /* 0x64 - the second animation's BCA */
+    BCA_File *otherFile;             /* 0x64 - the second animation's BCA */
     dExtFrameCtrl_c otherAnim;       /* 0x68 - a member, built with dExtFrameCtrl_c::C1 */
 
     /* --- vtable order. Do not reorder. --- */
