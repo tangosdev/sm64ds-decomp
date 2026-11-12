@@ -1173,7 +1173,11 @@ void process(unsigned now) {
         if (g_act) derive_apply(slot, s, now);
         // 3. publish if I own it
         if (!g_act) continue;
-        if (!g_hold && s.owner == g_my && s.seen >= 3 && !skip_state(s.a, p) && !frozen_state(s.a)) {
+        // kbo2 (bug 16): King Bob-omb's driver publishes his pose even while it waits for the group's mover snapshot. Measured in the
+        // side-look row with the fix off: the group owner asked five times, nobody answered, and it published nothing for 1.6 s,
+        // so the friend's copy kept steering him and stood still while the owner's King turned to talk, then snapped round.
+        const bool kbo_drive = p.id == 189 && s.owner == g_my && coop_boss_driver_seat(slot) == g_my;
+        if ((!g_hold || kbo_drive) && s.owner == g_my && s.seen >= 3 && !skip_state(s.a, p) && !frozen_state(s.a)) {
             if (s.pin_lf == kPinStay || (s.pin_lf && g_lf - (s.pin_lf - 1) <= 1u)) { ++g_pin_skips; continue; }   // a friend's held pin owns the pose
             const unsigned age = now - s.last_pub;
             if (age >= p.period) {
