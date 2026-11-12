@@ -1,7 +1,6 @@
 #include "Ov007Sprite.h"
 #include "math/CalcLib.h"
 
-
 /* Draws sprite `child` relative to sprite `parent`: child takes parent's
  * scale, colour and alpha, is offset by parent's screen position and depth
  * for the screen -> world pass through the camera, drawn with its world

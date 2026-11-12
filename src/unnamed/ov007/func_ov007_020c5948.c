@@ -1,7 +1,6 @@
 #include "Ov007Picker.h"
 #include "math/CalcLib.h"
 
-
 /* Moves the picked point to src: its follower's velocity and force are
  * cleared and its x/y set. Then mode 0 moves pos to src, mode 1 moves it
  * to src plus hitOffset clamped to the bounds on x and y, and mode 2 moves

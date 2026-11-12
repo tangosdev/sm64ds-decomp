@@ -1,7 +1,6 @@
 #include "Ov007Picker.h"
 #include "math/CalcLib.h"
 
-
 /* Re-measures group idx's links: from restPos to each rest point (flag 0),
  * between their own end points (flag 1), or from restPos to each live point
  * (flag 2). */
