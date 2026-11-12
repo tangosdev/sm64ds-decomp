@@ -39,6 +39,9 @@
 //                             log still run.
 //   SM64DS_COOP_TALK_LOG=1    [cotalk] lines (talk start / end, lock in / out, refusals, facing, look)
 //   SM64DS_COOP_TALK_CLS=a,b  extra lock classes
+//   SM64DS_COOP_OWL_GRAB=F:me|friend[,...]  (NPCFIX1 proof) at frame F after Hoot is first seen this visit, run Hoot's own
+//                             grab as if my body (or the first friend's drawn body) touched him; logs what it took
+//   SM64DS_COOP_OWL_TRACE=N   (NPCFIX1 proof) every N frames one [cotalk] hoot trace line (state, rider, who holds him)
 
 #include "coop_wire.h"
 #include "coop_world.h"
@@ -60,9 +63,12 @@ extern unsigned char data_0209f21c;
 short Vec3_HorzAngle(const void *a, const void *b);
 char *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned id, char *prev);
 extern int (*port_coop_owl_refuse)(const void *owl, const void *player);
+int port_owl_grab_test(void *owl, void *body);
 }
 
 namespace port {
+
+void owl_knobs();   // NPCFIX1 proof knobs, below
 
 namespace {
 
@@ -387,6 +393,7 @@ void on_frame(unsigned) {
     }
     my_frame(now);
     if (g_on) face_frame(now);
+    if (coop_world_active()) owl_knobs();
     if (g_log && g_frame % 1800u == 0)
         std::fprintf(stderr, "[cotalk] stats: sent %llu rx %llu bad %llu other-group %llu refused %llu faced %llu looks %llu "
                      "races %llu my talks %llu/%llu\n", g_st.sent, g_st.rx, g_st.bad, g_st.group, g_st.refused, g_st.faced,
@@ -443,6 +450,65 @@ bool coop_talk_refuse(void *body, void *actor) {
 // never taken on my console (his own console runs his grab), and my own body is not taken while a friend in my group
 // holds Hoot (he talks to it or rides it).
 struct OwlStats { unsigned foreign, held; } g_owl = {};
+
+// ---- NPCFIX1 proof knobs (inert unless set) ----
+struct OwlKnob { unsigned f; bool friend_body; bool done; };
+OwlKnob g_owlk[6]; int g_nowlk = -1; int g_owl_trace = 0;
+const char *g_owl_seen = nullptr; unsigned g_owl_lf = 0;
+
+const char *body_name(const char *b) {
+    if (!b) return "none";
+    if (b == local_body()) return "MY body";
+    return "a FRIEND's body";
+}
+
+void owl_knobs() {
+    if (g_nowlk < 0) {
+        g_nowlk = 0;
+        if (const char *e = std::getenv("SM64DS_COOP_OWL_GRAB")) {
+            for (const char *q = e; *q && g_nowlk < 6;) {
+                char *end = nullptr; const unsigned long f = std::strtoul(q, &end, 10);
+                if (end == q || *end != ':') break;
+                q = end + 1;
+                const bool fr = std::strncmp(q, "friend", 6) == 0;
+                g_owlk[g_nowlk++] = { (unsigned)f, fr, false };
+                while (*q && *q != ',') ++q;
+                while (*q == ',' || *q == ' ') ++q;
+            }
+        }
+        if (const char *t = std::getenv("SM64DS_COOP_OWL_TRACE")) g_owl_trace = std::atoi(t);
+    }
+    if (!g_nowlk && g_owl_trace <= 0) return;
+    char *owl = _ZN8dActor_c15FindWithActorIDEjPS_(kClsHoot, nullptr);
+    if (owl != g_owl_seen) { g_owl_seen = owl; g_owl_lf = 0; for (int i = 0; i < g_nowlk; ++i) g_owlk[i].done = false; }
+    if (!owl) return;
+    ++g_owl_lf;
+    for (int i = 0; i < g_nowlk; ++i) {
+        OwlKnob &k = g_owlk[i];
+        if (k.done || g_owl_lf != k.f) continue;
+        k.done = true;
+        char *body = local_body();
+        if (k.friend_body) {
+            body = nullptr;
+            const int nb = (int)data_0209f21c < kPlayerMax ? (int)data_0209f21c : kPlayerMax;
+            for (int b = 0; b < nb; ++b) if (data_0209f394[b] && data_0209f394[b] != local_body()) { body = (char *)data_0209f394[b]; break; }
+        }
+        if (!body) { std::fprintf(stderr, "[cotalk] KNOB hoot grab f=%u: no %s body\n", g_owl_lf, k.friend_body ? "friend's" : "own"); continue; }
+        const char *before = *(const char *const *)(owl + kOwlRider);
+        const int took = port_owl_grab_test(owl, body);
+        const char *after = *(const char *const *)(owl + kOwlRider);
+        std::fprintf(stderr, "[cotalk] KNOB hoot grab f=%u: Hoot touched by %s (rider before: %s) -> %s (rider now: %s) w=%lld\n", g_owl_lf,
+                     k.friend_body ? "a FRIEND's body" : "MY body", body_name(before),
+                     took ? "TAKEN, he carries it" : "not taken", body_name(after), wall_ms());
+    }
+    if (g_owl_trace > 0 && (g_owl_lf % (unsigned)g_owl_trace) == 0) {
+        const int slot = rd16(owl, 0xce);
+        const int h = slot >= 0 && slot < kSlots ? holder_of(slot, now_ms()) : -1;
+        std::fprintf(stderr, "[cotalk] hoot trace f=%u: at (%d,%d,%d) rider %s | my ride lock %s | held by seat %d w=%lld\n", g_owl_lf,
+                     rd32(owl, 0x5c) >> 12, rd32(owl, 0x60) >> 12, rd32(owl, 0x64) >> 12,
+                     body_name(*(const char *const *)(owl + kOwlRider)), g_me.actor == owl ? "on" : "off", h, wall_ms());
+    }
+}
 int owl_refuse(const void *owl, const void *pl) {
     if (!owl || !pl || !coop_world_active()) return 0;
     read_env();

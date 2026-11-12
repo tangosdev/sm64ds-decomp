@@ -253,6 +253,17 @@ void daOwl_c::func_ov094_021357a4()
     func_ov094_02136188(OWL_STATE_CARRY);
 }
 
+#ifdef _MSC_VER
+/* Proof only (SM64DS_COOP_OWL_GRAB in port/hal/coop_talk.cpp): Hoot's own grab, run once as if `body` touched him. */
+extern "C" int port_owl_grab_test(void *owl, void *body)
+{
+    daOwl_c *self = (daOwl_c *)owl;
+    self->mdCcAcPos_c.otherOwner = ((dActor_c *)body)->uniqueID;
+    self->func_ov094_021357a4();
+    return self->mRider == (Player *)body;
+}
+#endif
+
 // @symbol _ZN7daOwl_c19func_ov094_021358b4Ev
 /* Main of the return state. Phase 0 fades the owl out (with an upward speed);
  * once invisible it jumps to just above the anchor and starts phase 1, which
