@@ -5,9 +5,7 @@
  * the whole file to ram_address (myFS_ReadFile), then pass the target
  * processor, RAM address, ROM offset and RAM size to func_0206d32c. */
 
-extern FSFileID FS_GetOverlayFileID(const FSOverlayInfo *p_ovi);
 extern int myFS_OpenFileFast(FSFile *p_file, FSFileID id);
-extern void FS_ClearOverlayImage(FSOverlayInfo *p_ovi);
 extern int myFS_ReadFile(FSFile *p_file, void *dst, int len);
 extern int func_0206d32c(int target, unsigned int ramAddress, unsigned int romOffset,
                          unsigned int ramSize);

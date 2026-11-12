@@ -2,13 +2,12 @@
 /* The ROM archive (the Nitro SDK's FS_rom.c), arm9 .text
  * 0x0205d94c..0x0205db88.
  *
- * FSi_InitRom sets up the cartridge as the archive "rom" (data_020a8074,
- * pret's fsi_arc_rom). It keeps the DMA channel reads use (data_020a8060,
- * fsi_default_dma_no) and a card lock id (data_020a805c, fsi_card_lock_id),
- * clears the two overlay-table regions (data_020a8064 and data_020a806c,
- * fsi_ovt9 and fsi_ovt7), and loads the archive from the FAT and FNT the ROM
- * header locates. Reads go to the card asynchronously through
- * FSi_ReadRomCallback and end in FSi_OnRomReadDone. Writes fail.
+ * FSi_InitRom sets up the cartridge as the archive "rom" (fsi_arc_rom). It
+ * keeps the DMA channel reads use (fsi_default_dma_no) and a card lock id
+ * (fsi_card_lock_id), clears the two overlay-table regions (fsi_ovt9 and
+ * fsi_ovt7), and loads the archive from the FAT and FNT the ROM header
+ * locates. Reads go to the card asynchronously through FSi_ReadRomCallback
+ * and end in FSi_OnRomReadDone. Writes fail.
  * FSi_RomArchiveProc locks the card ROM while the archive runs a command
  * and unlocks it when the archive goes idle.
  *
@@ -24,6 +23,7 @@
 #include "nitro/card/card_rom.h"
 #include "nitro/os/spinLock.h"
 #include "private/fs_views.h"
+#include "private/fs_rom.h"
 
 extern "C" {
 
@@ -41,11 +41,6 @@ extern "C" {
 #define FS_RESULT_PROC_ASYNC 6
 #define FS_RESULT_PROC_UNKNOWN 8
 
-extern u32 data_020a8060;           /* fsi_default_dma_no */
-extern s32 data_020a805c;           /* fsi_card_lock_id */
-extern CARDRomRegion data_020a8064; /* fsi_ovt9 */
-extern CARDRomRegion data_020a806c; /* fsi_ovt7 */
-extern FSArchive data_020a8074;     /* fsi_arc_rom */
 extern const char data_0209a048[];  /* "rom" */
 
 void CARD_Init(void);
@@ -62,7 +57,6 @@ void FSi_OnRomReadDone(void *p_arc);
 int FSi_ReadRomCallback(FSArchive *p_arc, void *dst, u32 src, u32 len);
 int FSi_WriteDummyCallback(FSArchive *p_arc, const void *src, u32 dst, u32 len);
 int FSi_RomArchiveProc(FSFile *p_arc, int cmd);
-void FSi_InitRom(u32 default_dma_no);
 u32 FS_TryLoadTable(void *p_mem, u32 size);
 
 /* pret's CARD_rom.h inline. */
@@ -77,7 +71,7 @@ void FSi_OnRomReadDone(void *p_arc) {
 }
 
 int FSi_ReadRomCallback(FSArchive *p_arc, void *dst, u32 src, u32 len) {
-    CARD_ReadRomAsync(data_020a8060, (const void *)src, dst, len, FSi_OnRomReadDone, p_arc);
+    CARD_ReadRomAsync(fsi_default_dma_no, (const void *)src, dst, len, FSi_OnRomReadDone, p_arc);
     return FS_RESULT_PROC_ASYNC;
 }
 
@@ -91,10 +85,10 @@ int FSi_WriteDummyCallback(FSArchive *p_arc, const void *src, u32 dst, u32 len) 
 int FSi_RomArchiveProc(FSFile *p_arc, int cmd) {
     switch (cmd) {
     case FS_COMMAND_ACTIVATE:
-        CARD_LockRom((u16)data_020a805c);
+        CARD_LockRom((u16)fsi_card_lock_id);
         return FS_RESULT_SUCCESS;
     case FS_COMMAND_IDLE:
-        CARD_UnlockRom((u16)data_020a805c);
+        CARD_UnlockRom((u16)fsi_card_lock_id);
         return FS_RESULT_SUCCESS;
     case FS_COMMAND_WRITEFILE:
         return FS_RESULT_UNSUPPORTED;
@@ -106,12 +100,12 @@ int FSi_RomArchiveProc(FSFile *p_arc, int cmd) {
 /* Set up the "rom" archive. A header whose FNT or FAT offset is 0 or ~0
    has no tables from the ROM maker, and the archive stays unloaded. */
 void FSi_InitRom(u32 default_dma_no) {
-    data_020a8060 = default_dma_no;
-    data_020a805c = OS_GetLockID();
-    data_020a8064.offset = 0;
-    data_020a8064.length = 0;
-    data_020a806c.offset = 0;
-    data_020a806c.length = 0;
+    fsi_default_dma_no = default_dma_no;
+    fsi_card_lock_id = OS_GetLockID();
+    fsi_ovt9.offset = 0;
+    fsi_ovt9.length = 0;
+    fsi_ovt7.offset = 0;
+    fsi_ovt7.length = 0;
 
     CARD_Init();
 
@@ -119,23 +113,23 @@ void FSi_InitRom(u32 default_dma_no) {
         const CARDRomRegion *const fnt = CARD_GetRomRegionFNT();
         const CARDRomRegion *const fat = CARD_GetRomRegionFAT();
 
-        FS_InitArchive(&data_020a8074);
-        FS_RegisterArchiveName(&data_020a8074, data_0209a048, 3);
+        FS_InitArchive(&fsi_arc_rom);
+        FS_RegisterArchiveName(&fsi_arc_rom, data_0209a048, 3);
 
         if (fnt->offset == 0xffffffff || fnt->offset == 0 || fat->offset == 0xffffffff ||
             fat->offset == 0) {
             return;
         }
-        FS_SetArchiveProc(&data_020a8074, FSi_RomArchiveProc,
+        FS_SetArchiveProc(&fsi_arc_rom, FSi_RomArchiveProc,
                           FS_ARCHIVE_PROC_WRITEFILE | FS_ARCHIVE_PROC_ACTIVATE |
                               FS_ARCHIVE_PROC_IDLE);
-        FS_LoadArchive(&data_020a8074, 0, fat->offset, fat->length, fnt->offset, fnt->length,
+        FS_LoadArchive(&fsi_arc_rom, 0, fat->offset, fat->length, fnt->offset, fnt->length,
                        FSi_ReadRomCallback, FSi_WriteDummyCallback);
     }
 }
 
 u32 FS_TryLoadTable(void *p_mem, u32 size) {
-    return FS_LoadArchiveTables(&data_020a8074, p_mem, size);
+    return FS_LoadArchiveTables(&fsi_arc_rom, p_mem, size);
 }
 
 } /* extern "C" */
