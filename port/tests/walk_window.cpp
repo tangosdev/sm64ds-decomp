@@ -16283,7 +16283,8 @@ extern "C" int port_interlude_frame(int f)
     int quit = scene_host_input_frame(g_present_hwnd, port_last_frame + f,
                                       &ipad, &ifocus);
     port_adventure_ghost_interlude();
-    ++g_hl_starsel;                  /* HITCH1: the [hitch] line of the level frame holding the select says so */
+    if (port_level_interlude_live())
+        ++g_hl_starsel;              /* HITCH1: the [hitch] line of the level frame holding a STAR SELECT says so (not the crossing's hand-back) */
     port_hub_presence_interlude();   /* HITCH1: friends' presence drained, mine sent, during the star select */
     if (!quit) {
         port_scene_tick(f, !menu_on);

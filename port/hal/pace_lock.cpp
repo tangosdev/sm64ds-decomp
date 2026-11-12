@@ -16,7 +16,7 @@
  * THE FIX. When the display's refresh period R is known and the pacer's budget B
  * is within 0.6% of k refreshes (60, 120, 240 Hz: k = 2, 4, 8 for a course tick;
  * 90 Hz: k = 3), the budget becomes exactly k * R, and the deadline grid is slewed
- * (at most half a millisecond a turn) so that a picture handed over after the
+ * (at most a quarter of a millisecond a turn) so that a picture handed over after the
  * tick's usual work lands in the MIDDLE of a refresh. Then the work can vary by
  * almost half a refresh either way without changing which refresh shows it, and
  * every picture is held k refreshes. Nothing about a tick changes: the same
@@ -30,9 +30,9 @@
  * LoadLibraryA/GetProcAddress so the import table does not move (see the rule at
  * the head of hal/perf_log.cpp). Without it (an old system, or a Wine that does
  * not fill it in), the display mode's refresh rate from EnumDisplaySettingsA,
- * which gives the period but no phase: the grid is still a whole number of
- * refreshes, so the hand-over stops sliding, and only its place inside the
- * refresh is unknown.
+ * which gives the period but no phase. A period without a trusted vblank
+ * time keeps the lock OFF (see THE VBLANK TRUST TEST below): a grid parked at
+ * an unknown phase can sit on a refresh edge for good.
  *
  * KNOBS (all off unless set):
  *   SM64DS_PACE_LOCK=0        the lock is off (the pacer as it was); the
@@ -45,6 +45,23 @@
  *                             timing (Steam: launch options
  *                             "SM64DS_PACE_LOG=1 %command%")
  *   SM64DS_PACE_SUM=0         no "[pace]" summary line (one every 30 s by default)
+ *
+ * PROOF KNOBS (rows only, never needed by a player):
+ *   SM64DS_PACE_VBLANK_TEST=frozen|none|jump  spoil the source's vblank time:
+ *                             stuck at its first reading, absent (period only),
+ *                             or every third reading 2 to 4 refreshes off; the
+ *                             trust test below must keep the lock off for frozen
+ *                             and none, and ride through jump
+ *   SM64DS_PACE_TOL=<x>       how near a whole number of refreshes a step must be
+ *                             (default 0.006, at most 0.25; a 144 Hz desk display
+ *                             locks a 16.65 ms turn to k = 2 refreshes with 0.2,
+ *                             which runs the game 20% fast: a proof of the lock on
+ *                             a real compositor vblank only, never for play)
+ *
+ * The 30 s [pace] line starts with the case the player is in: "vblank lock on",
+ * "period only, no trusted vblank time (why), lock off", "no refresh period
+ * known, lock off", "vblank trusted, but a pacer turn is N refreshes ... lock
+ * off" (144 Hz), or "lock off by SM64DS_PACE_LOCK=0".
  */
 #include <windows.h>
 #include <dwmapi.h>
@@ -65,7 +82,9 @@ const char *const kSrcName[] = {"none", "knob", "dwm", "mode"};
 
 struct Refresh {
     long long period;   /* QPC counts, 0 = unknown */
-    long long vblank;   /* QPC of a vblank, 0 = no phase */
+    long long vblank;   /* QPC of a TRUSTED vblank (the running estimate), 0 = no phase to lock to */
+    long long meas;     /* the vblank the [pace] summary measures holds against (0 = none) */
+    long long raw;      /* the source's own vblank reading this time, 0 = it gave none */
     int src;
 };
 
@@ -73,10 +92,116 @@ long long g_qpf;
 int g_init;
 int g_lock_on = 1, g_log_on, g_sum_on = 1;
 double g_knob_hz;
+double g_tol = 0.006;          /* how near a whole number of refreshes a step must be */
 DwmTimingFn g_dwm;
 EnumDsFn g_enumds;
 Refresh g_ref;
 long long g_ref_at;            /* when g_ref was read (QPC) */
+
+/* ---- THE VBLANK TRUST TEST ------------------------------------------------
+   The lock steers the hand-over to the middle of a refresh, so it needs a real
+   vblank time, not only the period. A source that gives the period but no
+   time (the display mode), or a time that does not move with the clock (a
+   compositor that fills the field in once, or makes it up), would park the
+   grid wherever it happened to land: lucky is perfect, unlucky sits on a
+   refresh edge and the 1-or-3 hold stutter never ends. So the lock turns on
+   only when the vblank time is trusted:
+     - three readings, each the latest vblank (no more than two refreshes
+       old, no more than one in the future; one that is not is skipped) and
+       each a whole number of refreshes after the one before, by about the
+       clock time between them (one that is not starts the count again);
+   and keeps being checked: a reading more than one refresh away from the
+   running estimate is ignored (counted in the summary), and four ignored in a
+   row (about a second) take the trust away until three good ones come back.
+   A trusted reading moves the estimate by a quarter of its disagreement, so a
+   source that wobbles inside a refresh moves the grid only a little.
+   Without trust the lock stays off and the pacer runs as it always did (a
+   few seconds of stutter every 16.7 s at 60 Hz, never a permanent one).
+   Steering by measured present-return times instead was not taken: what a
+   present call's return means differs between flip models, the presenter
+   thread and gamescope, and a wrong guess there is exactly the permanent
+   stutter this test exists to avoid. */
+enum { VBT_REAL = 0, VBT_FROZEN, VBT_NONE, VBT_JUMP };
+int g_vb_test;                 /* SM64DS_PACE_VBLANK_TEST: a proof knob that spoils the source's vblank */
+int g_vb_trusted, g_vb_good, g_vb_ignored_run;
+int g_vb_ignored_win, g_vb_lost_win;
+long long g_vb_prev, g_vb_prev_at, g_vb_est;
+const char *g_vb_why = "no reading yet";
+
+void vb_untrust(const char *why)
+{
+    if (g_vb_trusted) {
+        ++g_vb_lost_win;
+        fprintf(stderr, "[pace] vblank time no longer trusted (%s): the lock is off until it is again\n", why);
+    }
+    g_vb_trusted = 0;
+    g_vb_good = 0;
+    g_vb_ignored_run = 0;
+    g_vb_why = why;
+}
+
+/* one reading of the source's vblank; updates the trust and the estimate */
+void vb_reading(long long raw, long long period, long long now)
+{
+    if (!period || !raw) {
+        vb_untrust(period ? "the display gives its period but no vblank time" : "no refresh period");
+        g_vb_prev = 0;
+        return;
+    }
+    const long long age = now - raw;
+    const int recent = age <= 2 * period && age >= -period;
+    if (g_vb_trusted) {
+        /* the estimate's latest vblank at or before now, and the reading against it */
+        long long n = (now - g_vb_est) / period;
+        if (now < g_vb_est) n = -((g_vb_est - now + period - 1) / period);
+        const long long est_latest = g_vb_est + n * period;
+        const long long dis = raw - est_latest;
+        if (!recent || dis > period || dis < -period) {
+            ++g_vb_ignored_win;
+            if (++g_vb_ignored_run >= 4)
+                vb_untrust(recent ? "its vblank time jumps by more than a refresh" : "its vblank time is frozen or not the latest");
+            g_vb_prev = raw;
+            g_vb_prev_at = now;
+            return;
+        }
+        g_vb_ignored_run = 0;
+        long long w = dis % period;
+        if (w > period / 2) w -= period;
+        if (w < -period / 2) w += period;
+        g_vb_est = est_latest + w / 4;
+        g_vb_prev = raw;
+        g_vb_prev_at = now;
+        return;
+    }
+    if (!recent) {
+        /* not the latest vblank: skipped, neither counted for nor against (a
+           frozen time never becomes recent again, so it never earns trust;
+           a lone outlier does not undo two good readings) */
+        g_vb_why = "its vblank time is frozen or not the latest";
+        return;
+    }
+    int ok = 1;
+    if (g_vb_prev) {
+        const long long d = raw - g_vb_prev, el = now - g_vb_prev_at;
+        const double ratio = (double)d / (double)period;
+        const long long whole = (long long)floor(ratio + 0.5);
+        const long long resid = d - whole * period;
+        if (whole < 1 || resid * 10 > period || -resid * 10 > period || d - el > period || el - d > period) {
+            ok = 0;
+            g_vb_why = "its vblank time does not advance with the clock";
+        }
+    }
+    g_vb_prev = raw;
+    g_vb_prev_at = now;
+    if (!ok) { g_vb_good = 0; return; }
+    if (++g_vb_good >= 3) {
+        g_vb_trusted = 1;
+        g_vb_ignored_run = 0;
+        g_vb_est = raw;
+        g_vb_why = "";
+        fprintf(stderr, "[pace] vblank time trusted (3 readings in a row, each the latest vblank, advancing by whole refreshes with the clock)\n");
+    }
+}
 
 long long qpc_now(void)
 {
@@ -101,6 +226,16 @@ void init_once(void)
     e = getenv("SM64DS_PACE_REFRESH_HZ");
     g_knob_hz = e ? atof(e) : 0.0;
     if (g_knob_hz < 20.0 || g_knob_hz > 500.0) g_knob_hz = 0.0;
+    e = getenv("SM64DS_PACE_VBLANK_TEST");
+    if (e) g_vb_test = !strcmp(e, "frozen") ? VBT_FROZEN : !strcmp(e, "none") ? VBT_NONE : !strcmp(e, "jump") ? VBT_JUMP : VBT_REAL;
+    e = getenv("SM64DS_PACE_TOL");
+    if (e) {
+        const double t = atof(e);
+        if (t > 0.0 && t <= 0.25) g_tol = t;
+    }
+    if (g_vb_test || g_tol != 0.006)
+        fprintf(stderr, "[pace] proof knobs: SM64DS_PACE_VBLANK_TEST=%s, tolerance %.4f\n",
+                g_vb_test == VBT_FROZEN ? "frozen" : g_vb_test == VBT_NONE ? "none" : g_vb_test == VBT_JUMP ? "jump" : "real", g_tol);
     if (!g_knob_hz) {
         if (HMODULE d = LoadLibraryA("dwmapi.dll"))
             g_dwm = (DwmTimingFn)GetProcAddress(d, "DwmGetCompositionTimingInfo");
@@ -118,12 +253,12 @@ const Refresh &refresh(void)
     const long long now = qpc_now();
     if (g_ref_at && now - g_ref_at < g_qpf / 4) return g_ref;
     g_ref_at = now;
-    Refresh r = {0, 0, SRC_NONE};
+    Refresh r = {0, 0, 0, 0, SRC_NONE};
     if (g_knob_hz) {
         static long long anchor;
         if (!anchor) anchor = now;
         r.period = (long long)((double)g_qpf / g_knob_hz + 0.5);
-        r.vblank = anchor;
+        r.vblank = anchor + (now - anchor) / r.period * r.period;   /* the grid's latest vblank */
         r.src = SRC_KNOB;
     } else {
         if (g_dwm) {
@@ -153,10 +288,31 @@ const Refresh &refresh(void)
             }
         }
     }
+    /* the knob grid is the truth the proof rows measure against, whatever the
+       vblank test does to the reading the lock sees */
+    const long long knob_grid = r.src == SRC_KNOB ? r.vblank : 0;
+    if (g_vb_test == VBT_NONE) {
+        r.vblank = 0;
+    } else if (g_vb_test == VBT_FROZEN) {
+        static long long first;
+        if (!first) first = r.vblank;
+        r.vblank = first;
+    } else if (g_vb_test == VBT_JUMP && r.vblank) {
+        static unsigned n;
+        if (++n % 3 == 0) r.vblank += (long long)(2 + (n / 3) % 3) * r.period + r.period / 3;   /* every third reading off by 2.3 to 4.3 refreshes */
+    }
     if (r.src != g_ref.src || (g_ref.period && llabs(r.period - g_ref.period) * 200 > g_ref.period))
         fprintf(stderr, "[pace] display refresh %.3f Hz (source %s%s)%s\n",
                 r.period ? (double)g_qpf / (double)r.period : 0.0, kSrcName[r.src],
-                r.vblank ? ", with its vblank" : "", g_lock_on ? "" : "; SM64DS_PACE_LOCK=0: the lock is off");
+                r.vblank ? ", with a vblank time" : ", period only", g_lock_on ? "" : "; SM64DS_PACE_LOCK=0: the lock is off");
+    if (!g_ref.period || llabs(r.period - g_ref.period) * 200 > g_ref.period) {
+        g_vb_prev = 0;
+        if (g_vb_trusted) vb_untrust("the refresh period changed");
+    }
+    r.raw = r.vblank;
+    vb_reading(r.vblank, r.period, now);
+    r.vblank = g_vb_trusted ? g_vb_est : 0;
+    r.meas = knob_grid ? knob_grid : r.vblank;
     g_ref = r;
     return g_ref;
 }
@@ -164,11 +320,11 @@ const Refresh &refresh(void)
 /* k refreshes per step, or 0 when the step is not near a whole number of them */
 int lock_k(long long step, const Refresh &r)
 {
-    if (!g_lock_on || !r.period || step <= 0) return 0;
+    if (!g_lock_on || !r.period || !r.vblank || step <= 0) return 0;   /* r.vblank: only a trusted one */
     const double ratio = (double)step / (double)r.period;
     const int k = (int)floor(ratio + 0.5);
     if (k < 1 || k > 16) return 0;
-    if (fabs(ratio - (double)k) / ratio > 0.006) return 0;
+    if (fabs(ratio - (double)k) / ratio > g_tol) return 0;
     return k;
 }
 
@@ -189,6 +345,7 @@ long long g_last_idx;          /* its refresh index */
 int g_have_idx;
 long long g_last_turn_at;
 int g_k_now;
+long long g_tick_step;         /* the pacer's own step this turn (QPC), for the summary */
 
 char *g_log;
 size_t g_log_n, g_log_cap = 16u << 20;
@@ -221,10 +378,24 @@ void sum_maybe(long long now)
         for (int i = 0; i < 8; ++i)
             if (g_hold_hist[i]) n += _snprintf(h + n, sizeof h - n, " %d%s:%d", i, i == 7 ? "+" : "", g_hold_hist[i]);
         if (!n) _snprintf(h, sizeof h, " (no refresh phase to measure against)");
-        fprintf(stderr, "[pace] %.1fs: %d ticks, tick %.2f ms avg %.2f max, work %.2f ms avg, %d overran | display %.3f Hz (%s), "
+        /* which case the player is in, in words a Deck log answers at a glance */
+        char st[160];
+        if (!g_lock_on)
+            _snprintf(st, sizeof st, "lock off by SM64DS_PACE_LOCK=0");
+        else if (!r.period)
+            _snprintf(st, sizeof st, "no refresh period known, lock off");
+        else if (!g_vb_trusted)
+            _snprintf(st, sizeof st, "period only, no trusted vblank time (%s), lock off", g_vb_why);
+        else if (!g_k_now)
+            _snprintf(st, sizeof st, "vblank trusted, but a pacer turn is %.2f refreshes (not a whole number), lock off",
+                      ms_of(g_tick_step) / ms_of(r.period));
+        else
+            _snprintf(st, sizeof st, "vblank lock on");
+        st[sizeof st - 1] = 0;
+        fprintf(stderr, "[pace] %.1fs: %s | vblank readings ignored %d, trust lost %d | %d ticks, tick %.2f ms avg %.2f max, work %.2f ms avg, %d overran | display %.3f Hz (%s), "
                 "lock %s (k=%d, %d of %d turns) | refreshes each tick's picture was held:%s; longest uneven run %d ticks; "
                 "phase error %.2f ms avg | pictures %d (%d repeats)\n",
-                ms_of(now - g_win_t0) / 1000.0, g_win_ticks, g_win_tick_sum / g_win_ticks, g_win_tick_max,
+                ms_of(now - g_win_t0) / 1000.0, st, g_vb_ignored_win, g_vb_lost_win, g_win_ticks, g_win_tick_sum / g_win_ticks, g_win_tick_max,
                 g_win_work_sum / g_win_ticks, g_win_over, r.period ? (double)g_qpf / (double)r.period : 0.0,
                 kSrcName[r.src], g_win_lockturns ? "on" : "off", g_k_now, g_win_lockturns, g_win_turns, h, g_burst_max,
                 g_err_n ? g_err_abs_sum / g_err_n : 0.0, g_pics, g_reps);
@@ -240,6 +411,7 @@ void sum_maybe(long long now)
     g_err_abs_sum = 0.0;
     g_err_n = 0;
     g_burst_max = 0;
+    g_vb_ignored_win = g_vb_lost_win = 0;
 }
 
 double g_work_ema = -1.0;      /* the tick's usual work (ms), for the slew target */
@@ -253,6 +425,7 @@ extern "C" long long pace_lock_step(long long step, long long qpf)
     const Refresh &r = refresh();
     const int k = lock_k(step, r);
     g_k_now = k;
+    g_tick_step = step;
     ++g_win_turns;
     if (!k) return step;
     ++g_win_lockturns;
@@ -281,7 +454,7 @@ extern "C" long long pace_lock_slew(long long next, long long qpf, double work_m
     g_err_abs_sum += fabs(ms_of(e));
     ++g_err_n;
     long long c = e / 8;
-    const long long cap = g_qpf / 2000;   /* half a millisecond */
+    const long long cap = g_qpf / 4000;   /* a quarter of a millisecond a turn (1.5% of a vblank) */
     if (c > cap) c = cap;
     if (c < -cap) c = -cap;
     return c;
@@ -319,14 +492,14 @@ extern "C" void pace_lock_note_present(int repeat, int tick)
     if (tick == g_last_tick) return;
     g_last_tick = tick;
     const Refresh &r = refresh();
-    if (!r.period || !r.vblank) { g_have_idx = 0; return; }
+    if (!r.period || !r.meas) { g_have_idx = 0; return; }
     /* refreshes are counted from one fixed vblank, so a fresh reading of the
        compositor's clock does not renumber them */
     static long long anchor, anchor_period;
-    if (!anchor || anchor_period != r.period) { anchor = r.vblank; anchor_period = r.period; g_have_idx = 0; }
-    const long long base = (long long)floor((double)(r.vblank - anchor) / (double)r.period + 0.5);
+    if (!anchor || anchor_period != r.period) { anchor = r.meas; anchor_period = r.period; g_have_idx = 0; }
+    const long long base = (long long)floor((double)(r.meas - anchor) / (double)r.period + 0.5);
     /* the first vblank at or after the hand-over shows it */
-    const long long d = now - r.vblank;
+    const long long d = now - r.meas;
     const long long in = d >= 0 ? (d + r.period - 1) / r.period : -((-d) / r.period);
     const long long idx = base + in;
     if (g_have_idx) {
