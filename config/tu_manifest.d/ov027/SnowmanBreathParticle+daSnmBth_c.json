@@ -518,9 +518,9 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@886",
+      "from": "@884",
       "to": "@930",
-      "evidence": "The emitted 12-byte registration node at ov027:0x02113d04 is @818 in this TU, a spelling ov065 already owns (it was @826, owned by ov018, when @930 was chosen). @930 has no other configured home and preserves the native storage/relocations.; re-keyed from @871 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @940 to @886 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+      "evidence": "The emitted 12-byte registration node at ov027:0x02113d04 is @818 in this TU, a spelling ov065 already owns (it was @826, owned by ov018, when @930 was chosen). @930 has no other configured home and preserves the native storage/relocations.; re-keyed from @871 after this TU's local matrix-copy twin was retired (#4570); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @940 to @886 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @886 to @884 when the TU traded its local helper declarations for the shared headers (measured from the compiled object)."
     }
   ],
   "symbol_binding_rewrites": [

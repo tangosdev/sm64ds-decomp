@@ -53,6 +53,7 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 
 /* One row of the state table: enter action (pmf[0]), per-frame update
  * (pmf[1]) and a name literal. */
@@ -92,7 +93,6 @@ enum {
 extern "C" {
 extern void func_02012694(unsigned int id, const Vector3 *v);
 extern dCamera_c *gCamera;
-extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void *gPFlowerCloseModelFile[];
 extern void *gPFlowerOpenModelFile[];
 /* Parameter names keep this TU's @NNN. */

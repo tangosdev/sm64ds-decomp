@@ -21,7 +21,8 @@
  * Source runs REVERSE of ROM (highest address first). Do not reorder; the
  * classInit factory, now the highest address in the TU, is written first.
  * decl_common.h is deliberately NOT included; its remaining needed names
- * are declared locally, and shared vector functions come from CalcLib.h. SWOOP uses an array-backed position copy to retain
+ * are declared locally, and the shared vector and matrix functions come from
+ * math/CalcLib.h and math/MtxStack.h. SWOOP uses an array-backed position copy to retain
  * the ROM block move in C++; see its site.
  *
  * deslop leftovers:
@@ -60,6 +61,7 @@ enum daJango_c_AssetId {
 #include "types.h"
 #include "common.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "math/Approach.h"
 #include "Particle__System.h"
 #include "LevelRng.h"
@@ -141,21 +143,11 @@ struct BCA_File;
 struct SwoopPositionWords { int w[3]; };
 
 extern "C" {
-extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
-/* local extern: math/MtxStack.h would clash with the void * MTX_Concat43
-   below, which takes the POD s32[12] mHeldMat. */
-extern void MTX_MultVec43(Vector3 *v, Matrix4x3 *m, Vector3 *res);
-extern Matrix4x3 data_020a0e68;
 extern signed char gCurrentSublevel;
 extern void func_02012694(unsigned int, void *);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *in, int s);
-extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
-extern void MTX_Concat43(void *a, void *b, void *c);
 /* Parameter names keep this TU's @NNN. */
 typedef void BgchInitAt_(void *self, void *a, Fix12i b, Fix12i c, void *d, void *e);
 extern SharedFilePtr data_ov002_0210da40;
@@ -492,7 +484,8 @@ void daJango_c::UpdateModelAndShadow() {
             mHeldPosX = 0;
             mHeldPosY = 0;
             mHeldPosZ = 0;
-            MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3, &mHeldMat);
+            MTX_Concat43(&mBlendAnmModel.data.transforms[6], &mBlendAnmModel.mat4x3,
+                         (Matrix4x3 *)&mHeldMat);
             mHeldPosX = data_020a0e68.t.x;
             mHeldPosY = data_020a0e68.t.y;
             mHeldPosZ = data_020a0e68.t.z;
@@ -511,7 +504,7 @@ void daJango_c::UpdateModelAndShadow() {
                 Matrix4x3_FromTranslation(&data_020a0e68, -0x7000, 0x1800, 0);
                 Matrix4x3_ApplyInPlaceToRotationXYZExt(&data_020a0e68, -0x3000, -0x8000, -0x4000);
             }
-            MTX_Concat43(&data_020a0e68, &mHeldMat, &mHeldMat);
+            MTX_Concat43(&data_020a0e68, (Matrix4x3 *)&mHeldMat, (Matrix4x3 *)&mHeldMat);
             actor->mCarryMatrix = (Matrix4x3 *)&mHeldMat;
         }
     }

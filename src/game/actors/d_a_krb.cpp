@@ -82,6 +82,7 @@ enum daKrb_c_AssetId {
 #include "daStarBase_c.h"
 #include "math/Approach.h"
 #include "math/CalcLib.h"
+#include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
@@ -187,7 +188,6 @@ extern void func_ov002_020aea30(void *self, void *actor, void *collision);
 extern int *data_ov084_0213088c;
 extern int data_ov084_02130248[];
 extern u8 data_ov084_02130204[];
-extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern char data_ov084_0213089c;
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
