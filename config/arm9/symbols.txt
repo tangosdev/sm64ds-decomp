@@ -3097,7 +3097,7 @@ __sinit_func_0203bb5c.cpp kind:function(arm,size=0x4) addr:0x020750b4
 __sinit_Heap.cpp kind:function(arm,size=0x34) addr:0x020750b8
 __sinit_Vec2_Len.cpp kind:function(arm,size=0x30) addr:0x020750ec
 __sinit_cstd_sqrt.cpp kind:function(arm,size=0x34) addr:0x0207511c
-__sinit_func_02040384.cpp kind:function(arm,size=0x4) addr:0x02075150
+__sinit_unit0203d7b8.cpp kind:function(arm,size=0x4) addr:0x02075150
 __sinit_fListNode.cpp kind:function(arm,size=0xdc) addr:0x02075154
 data_02075230 kind:data(any) addr:0x02075230
 data_02075238 kind:data(any) addr:0x02075238
@@ -3228,7 +3228,7 @@ __ptmf_null kind:data(any) addr:0x02086b58
 .p__sinit_Heap.cpp kind:data(word) addr:0x02086ba8
 .p__sinit_Vec2_Len.cpp kind:data(word) addr:0x02086bac
 .p__sinit_cstd_sqrt.cpp kind:data(word) addr:0x02086bb0
-.p__sinit_func_02040384.cpp kind:data(word) addr:0x02086bb4
+.p__sinit_unit0203d7b8.cpp kind:data(word) addr:0x02086bb4
 .p__sinit_fListNode.cpp kind:data(word) addr:0x02086bb8
 data_02086bc0 kind:data(any) addr:0x02086bc0
 data_02086bc8 kind:data(any) addr:0x02086bc8

@@ -218,13 +218,6 @@
       "src/unnamed/arm9/0203/func_0203db64.c": [
         "param:#3 int"
       ],
-      "src/engine/link/unit0203d7b8.cpp": [
-        "param:#1 int",
-        "param:#3 int"
-      ],
-      "src/unnamed/arm9/0204/func_02040014.c": [
-        "param:#3 int"
-      ],
       "src/unnamed/arm9/0206/func_02063ea8.c": [
         "param:#1 int",
         "param:#3 int"
@@ -3714,9 +3707,6 @@
       ]
     },
     "_ZN3IRQ10EnableIRQsEj": {
-      "src/unnamed/arm9/0204/func_0204175c.cpp": [
-        "return:void"
-      ],
       "src/CARDi_TryReadCardDma.cpp": [
         "return:void"
       ]
@@ -3758,15 +3748,6 @@
     },
     "_ZN3IRQ7RestoreEj": {
       "src/MIi_DmaSetParams.cpp": [
-        "return:void"
-      ],
-      "src/unnamed/arm9/0204/func_02040a5c.cpp": [
-        "return:void"
-      ],
-      "src/unnamed/arm9/0204/func_0204175c.cpp": [
-        "return:void"
-      ],
-      "src/unnamed/arm9/0204/func_02041a94.cpp": [
         "return:void"
       ],
       "src/unnamed/arm9/0205/func_0205ff20.cpp": [
@@ -6884,7 +6865,6 @@
       "include/decl_common.h": [
         "return:unsigned char"
       ]
-
     },
     "gReturnSublevel": {
       "src/_ZN7daPly_c13InitResourcesEv.cpp": [
@@ -6893,7 +6873,6 @@
       "src/game/stages/d_s_stage_methods.cpp": [
         "return:signed char"
       ]
-
     },
     "data_02092128": {
       "src/game/stages/LevelObjects.cpp": [
@@ -7554,7 +7533,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "return:char * []"
       ]
-
     },
     "data_0209f3a4": {
       "src/ui/hud/d_map.cpp": [
@@ -7915,60 +7893,14 @@
         "return:Vector3_16"
       ]
     },
-    "data_020a0f44": {
-      "src/unnamed/arm9/0204/func_02040638.c": [
-        "return:ObjWithField0a *"
-      ],
-      "src/unnamed/arm9/0204/func_020408b0.cpp": [
-        "return:void *"
-      ]
-    },
-    "data_020a0f54": {
-      "src/unnamed/arm9/0204/func_020408b0.cpp": [
-        "return:void *"
-      ]
-    },
-    "data_020a0f60": {
-      "src/unnamed/arm9/0204/func_020408b0.cpp": [
-        "return:void *"
-      ]
-    },
-    "data_020a0f68": {
-      "src/unnamed/arm9/0204/func_020408b0.cpp": [
-        "return:void *"
-      ]
-    },
-    "data_020a0f90": {
-      "src/unnamed/arm9/0203/func_0203f650.c": [
-        "return:void (*)(short *)"
-      ]
-    },
-    "data_020a0fa0": {
-      "src/unnamed/arm9/0204/func_02040014.c": [
-        "return:unsigned short [][]"
-      ]
-    },
     "data_020a1040": {
       "include/private/player_input_record.h": [
         "return:PlayerInputRecord"
       ]
     },
-    "data_020a10a4": {
-      "src/engine/link/unit0203d7b8.cpp": [
-        "return:unsigned char []"
-      ]
-    },
     "data_020a1154": {
       "include/private/player_input_record.h": [
         "return:PlayerInputRecord []"
-      ]
-    },
-    "data_020a3fc0": {
-      "src/unnamed/arm9/0204/func_02040a5c.cpp": [
-        "return:UnkStruct_020a3fc0"
-      ],
-      "src/unnamed/arm9/0204/func_02040a84.c": [
-        "return:int []"
       ]
     },
     "data_020a4b68": {
@@ -9078,7 +9010,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "return:SharedFilePtr"
       ]
-
     },
     "data_ov002_02110ac4": {
       "src/unnamed/ov002/__sinit_ov002_02107304.c": [
@@ -12575,7 +12506,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "param:#1 int"
       ]
-
     },
     "func_02011f7c": {
       "src/unnamed/ov002/func_ov002_020e6330.c": [
@@ -12584,7 +12514,6 @@
       "src/game/player/d_a_ply_methods.cpp": [
         "param:#1 int"
       ]
-
     },
     "func_02012120": {
       "src/unnamed/ov002/func_ov002_020e1c20.c": [
@@ -14761,27 +14690,6 @@
         "return:unsigned int"
       ]
     },
-    "func_0203f604": {
-      "src/engine/link/unit0203d7b8.cpp": [
-        "return:void"
-      ]
-    },
-    "func_020406b4": {
-      "src/engine/link/unit0203d7b8.cpp": [
-        "param:#1 void *"
-      ]
-    },
-    "func_02040c34": {
-      "src/engine/link/unit0203d7b8.cpp": [
-        "param:#3 void *",
-        "param:#4 void *"
-      ]
-    },
-    "func_02041e14": {
-      "src/unnamed/arm9/0204/func_02042160.c": [
-        "arity:1"
-      ]
-    },
     "func_02042ffc": {
       "src/runtime/actor/ActorDerived.cpp": [
         "param:#1 unsigned int",
@@ -15149,11 +15057,6 @@
         "arity:1"
       ]
     },
-    "OS_CreateThread": {
-      "src/unnamed/arm9/0204/func_02042200.c": [
-        "param:#2 void *"
-      ]
-    },
     "OS_AllocFromArenaLo": {
       "src/engine/heap/Heap.cpp": [
         "return:void *"
@@ -15188,10 +15091,6 @@
         "param:#2 int"
       ],
       "src/unnamed/arm9/0203/func_0203db64.c": [
-        "param:#2 int",
-        "param:#3 int"
-      ],
-      "src/engine/link/unit0203d7b8.cpp": [
         "param:#2 int",
         "param:#3 int"
       ],
@@ -15322,11 +15221,6 @@
         "param:#1 int",
         "param:#2 int",
         "param:#3 int"
-      ]
-    },
-    "WBT_MpChildSendHook": {
-      "src/unnamed/arm9/0204/func_02041930.c": [
-        "return:int"
       ]
     },
     "func_02065ae0": {
