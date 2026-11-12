@@ -266,7 +266,7 @@ int daPgMthr_c::StateTalkUpdate() {
     switch (mTalkStep) {
     case 0:
         if (mdCcAc_c.hitFlags & HIT_TOUCH) {
-            if (mPlayer->StartTalk(*(fBase_c *)this, 1)) {
+            if (mPlayer->StartTalk(*this, 1)) {
                 u8 *p = &mTalkStep;
                 *p = *p + 1;
             }
@@ -284,7 +284,7 @@ int daPgMthr_c::StateTalkUpdate() {
                 mouth[0] = data_020a0e68.m[9];
                 mouth[1] = data_020a0e68.m[10];
                 mouth[2] = data_020a0e68.m[11];
-                if (mPlayer->ShowMessage(*(fBase_c *)this, mMessageId, (Vector3 *)mouth, 0, 0)) {
+                if (mPlayer->ShowMessage(*this, mMessageId, (Vector3 *)mouth, 0, 0)) {
                     func_0201267c(0xdf, &mCamSpacePos);
                     {
                         u8 *p = &mTalkStep;
